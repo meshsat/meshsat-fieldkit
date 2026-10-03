@@ -1002,6 +1002,10 @@ parts:
         sha256: "5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516"
         matches_fitted: "yes: section 3.12 operating temperature (charge 0 to 45 C, discharge -10 to 60 C), 3.13 storage"
 
+    update_l6pwr_2026_10_03:
+      read_on: "2026-10-03"
+      what_moved: "L4-E10 (FEA-008 final; U-01) judged the ruled cell on its Ver. 1.1 rows: suitable on published evidence for the envelope rows (charge 0 to 45 C, discharge -10 to 60 C at the cell surface with the heater mat below, storage 3 months -20 to 45 C, p.3) and UNSUITABLE on published evidence for the qualification margins LO-01d to LO-01g (+55 C operating, +71 C and -33 C storage, E5's dwell); the Layer 6 record l6pwr reads the same page (finding L6P-F11) and records the Saft MP 176065 xtd as the labelled PROPOSAL (entry pack-cell-proposal-saft-mp176065xtd). Ratings used by the pack design: at least 3,350 mAh; max. discharge 8,000 mA continuous (4S3P: 3.33 A a cell at 10 A held, 6 A at 18 A for 60 s), 13,000 mA not continuous; standard charge 1,700 mA, max. 2,000 mA (the charger's 3.0 A is 1.0 A a cell); cut-off 2.65 V (p.3). Price indicator USD 8.25 a cell (the l3batt reading). Nothing changed in the pack's identity."
+
   - id: pack-gauge-protection
     function: "4S pack gas gauge, primary protection and balancing"
     boards: [P]
@@ -3483,7 +3487,400 @@ parts:
         currency: "UltraChip publishes no public copy; this is the maker's document as a module maker serves it"
         matches_fitted: "yes for the driver: the PDi flyer names CHIP-UC8253c for the E2370KS0C1; DC characteristics (page 59): VDD, VDDIO and VDDA 2.3 / 3.3 / 3.6 V; IVDD digital operating current 0.1 mA max, IVDDIO IO operating current 0.1 mA max, IVDDA DCDC operating current 20.0 mA max at VDD = VDDA = VDDIO = 3.0 V, 25 C; absolute maximum VDD, VDDIO, VDDA -0.3 to +6.0 V (page 58). The panel's own current (the boost's inductor current) is not in this sheet"
 
+# ADDED 3 October 2026 (MESHSAT-1357, Layer 6 record l6pwr; the integration candidate fnd/l4e9 at 2c240414). The parts Layer 4
+# selected for the power design (L4-E5 to L4-E11), every one in a release-guarded draft and on NO committed netlist (`on_main: false`,
+# `adopted_in` names the draft); this record RECORDS and SOURCES them and reselects nothing. Every document below was read on this
+# host on 3 October 2026 from the file named (the held-back ones fetched by v2/docs/records/l6pwr/fetch_held_back.py and matching the
+# sha256 their Layer 4 record pinned; TI's IMPORTANT NOTICE, Nexperia's, Diodes' and Saft's terms, the owner's rule of 27 September
+# 2026). The page citations, the catalogue readings (LCSC and JLCPCB, 2 October 2026 23:20 UTC, v2/docs/records/l6pwr/inputs/) and
+# the findings L6P-F01 to L6P-F11 are printed by v2/docs/records/l6pwr/l6pwr_parts.py (l6pwr_parts.out). `identity` here follows this
+# file's vocabulary (MATCH, NOT_PINNED, MISMATCH); the identity table's finer status (RESOLVED, PART_NUMBER_INFERRED, CHOICE_OWED,
+# DOCUMENT_OWED) is in pcb_part_identities.yaml's block drafted_identities_l4_power. Nothing here has been built, bought or measured.
+  - id: charger-bq25730
+    function: "board A's charger U3 under U-04 (L4-E11 arrangement B1): the NVDC charger that regulates VSYS with no battery and drives an external P-channel battery FET"
+    boards: [A]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e11/apply_gen_sch_a_charger.py (E11-27, register R-157), release-guarded, not applied; Layer 8 applies it"
+    schematic_name: {text: "BQ25730RSNR (the draft replaces BQ25731RSNR in U3's land; pin 21 NC becomes CH_BATDRV)", where: "v2/docs/records/l4e11/apply_gen_sch_a_charger.py"}
+    fitted_mpn: "BQ25730RSNR (Texas Instruments)"
+    package: "WQFN-32 RSN, 4.0 x 4.0 mm, 0.4 mm pitch (RSN0032B, SLUSE65A p.108)"
+    lcsc: "C5219071"
+    lcsc_reading: {model: "BQ25730RSNR", maker: "TI", pkg: "QFN-32(4x4)", stock: 0, price_usd_1: 2.8553, read: "2026-10-02T23:20Z", source: "LCSC public product detail, v2/docs/records/l6pwr/inputs/lcsc-2026-10-02.json"}
+    identity: MATCH
+    grade_vs_envelope: "AT_LIMIT at the cold end: the recommended operating junction temperature is -20 to 125 C (SLUSE65A p.9), the electrical table is characterised over TJ -40 to +125 C (p.9), Tstg -55 to 150 C (p.8) covers the storage margins; the drawn BQ25731 prints the same row (finding L6P-F07)"
+    alternative: "BQ25731RSNR (C2871872, the drawn part, the same land): no battery FET, so arrangement (A) with E11-24's hold-up bank stands"
+    obligations: "E11-27, E11-28, E11-31, E11-32 (LCSC stock 0 on 2 October 2026), E11-37; register R-157, R-158, R-161, R-162, R-183"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/held/ti-bq25730-sluse65a.pdf"
+        doc_id: "TI BQ25730 datasheet"
+        revision: "SLUSE65A, February 2021, revised January 2024 (111 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/bq25730.pdf"
+        fetched: "2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical to the pin"
+        sha256: "e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.104 orderable addendum prints BQ25730RSNR, QFN (RSN) 32, 3000 LARGE T&R; p.8 recommended ACN, ACP, VBUS 0 to 26 V; p.17 BATDRV; p.92 the Ciss rule"
+  - id: battery-fets-buk6y10-30p
+    function: "board A's battery FET pair Q39 and Q40 for the BQ25730's BATDRV (L4-E11 15c option Q-c), two in parallel between VBAT and CH_BATQ"
+    boards: [A]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e11/apply_gen_sch_a_charger.py (E11-27), not applied"
+    schematic_name: {text: "BUK6Y10-30PX 30 V P-FET (the BQ25730's battery FET, one of two in parallel)", where: "v2/docs/records/l4e11/apply_gen_sch_a_charger.py"}
+    fitted_mpn: "BUK6Y10-30PX (Nexperia): the catalogue's model for C3278350; the sheet prints BUK6Y10-30P"
+    package: "LFPAK56 (Power-SO8), SOT669"
+    lcsc: "C3278350"
+    lcsc_reading: {model: "BUK6Y10-30PX", maker: "Nexperia", pkg: "LFPAK-56", stock: 67, price_usd_1: 2.0603, read: "2026-10-02T23:20Z", note: "C2846047 BUK6Y10-30P, SOT-669, stock 0 is the suffix-less listing"}
+    identity: "MATCH on the type, NOT_PINNED on the suffix: the sheet's ordering table (p.2) names BUK6Y10-30P only; the X of the fitted code is INFERRED to be Nexperia's packing code (finding L6P-F02); Nexperia's packing legend or Q-NXP-1's answer closes it"
+    grade_vs_envelope: "INSIDE: Tj -55 to 175 C, Tstg -65 to 175 C (p.3); AEC-Q101 qualified (p.1)"
+    alternative: "Vishay SQJ403EP (L4-E11 option Q-b, held sheet 67109 Rev. A): a PowerPAK SO-8 single on a different land drawing, one FET needing a case heat path; not a drop-in"
+    obligations: "E11-27, E11-29 (the installed pair's Zself + Zmut), E11-30 (the whole hot docking waveform; Q-NXP-1), E11-32 (stock 67 against a need of 10), E11-36 (RDS(on) at -8.5 V and 150 C: an allowance, no printed point), E11-37 (Ciss against TI's 5 nF); register R-157, R-159, R-160, R-162, R-182, R-183"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf"
+        doc_id: "Nexperia BUK6Y10-30P, 30 V P-channel Trench MOSFET, product data sheet"
+        revision: "17 April 2020 (14 pages)"
+        url: "https://assets.nexperia.com/documents/data-sheet/BUK6Y10-30P.pdf"
+        fetched: "2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40"
+        publication: "HELD BACK ('All rights reserved', no grant); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes for the type: p.1 BUK6Y10-30P, VDS -30 V, ID -80 A, RDSon 10 mOhm max at -10 V 25 C; p.3 IDM and ISM -320 A (10 us), Tj -55 to 175 C; p.6 Table 7 (16 mOhm at 175 C, 25 mOhm at -4.5 V); p.2 ordering BUK6Y10-30P LFPAK56 SOT669. The PX suffix is not printed"
+  - id: dock-vsys-efuse-tps16630
+    function: "board A's eFuse U42 on the dock's VSYS branch to board E (L4-E11 16e option E, 17a; L4-F03, D-15): I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm, auto-retry"
+    boards: [A]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e11/apply_gen_sch_a_charger.py (E11-27, register R-181), not applied; the draft carries no LCSC code (finding L6P-F06)"
+    schematic_name: {text: "TPS16630PWPR 60 V 6 A eFuse: the dock's VSYS branch to board E (I(OL) 18 / 11.0k)", where: "v2/docs/records/l4e11/apply_gen_sch_a_charger.py"}
+    fitted_mpn: "TPS16630PWPR (Texas Instruments)"
+    package: "HTSSOP-20 PWP, 6.50 x 4.40 mm (PWP0020T, SLVSET9G p.41)"
+    lcsc: "C1849461 (this record's reading; not in the draft)"
+    lcsc_reading: {model: "TPS16630PWPR", maker: "TI", pkg: "HTSSOP-20", stock: 1141, price_usd_1: 2.8002, read: "2026-10-02T23:20Z", found_by: "JLCPCB keyword search TPS16630, v2/docs/records/l6pwr/inputs/jlc-search-2026-10-02.json"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: recommended TJ -40 to 125 C, Tstg -65 to 150 C (p.7); the orderable addendum's -40 to 125 C (p.36)"
+    network: "R221 11.0 kOhm 0.1 percent on ILIM, C237 22 nF on dVdT, C238 1 uF at IN, C239 0.1 uF at OUT, D23 B540C-13-F at OUT (values, no part named but D23). FINDING L6P-F01: R221 is also L4-E8's first ballast designator (apply_gen_sch_a_bank.py RB_REFS R221 to R226); the two board A drafts collide, one must renumber (R-07 against R-157 / R-181)"
+    alternative: "none on the PWP land (p.36 lists TPS16630 alone in HTSSOP-20; TPS16632 is VQFN-24); latch-off is MODE's setting"
+    obligations: "E11-27, E11-35, E11-38 (the whole fault envelope, Q-TI-18), E11-39; register R-157, R-179, R-181, R-184, R-188"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf"
+        doc_id: "TI TPS1663 60 V 6 A eFuse datasheet"
+        revision: "SLVSET9G, September 2018, revised April 2026 (45 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/tps1663.pdf"
+        fetched: "2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.36 orderable addendum prints TPS16630PWPR, HTSSOP (PWP) 20, -40 to 125; p.4 device comparison; p.7 IN 4.5 to 60 V, TJ; p.8 I(OL) rows at 9 and 30 kOhm; p.10 timers; p.20 Equation 6"
+  - id: efuse-out-schottky-b540c
+    function: "board A's D23, the Schottky at U42's OUT for the negative spike of a hard short (TI SLVSET9G 9.4.1, 9.5.1; L4-E11 17a)"
+    boards: [A]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e11/apply_gen_sch_a_charger.py (E11-27), not applied"
+    schematic_name: {text: "B540C-13-F 40 V 5 A Schottky, U42's output clamp (cathode on OUT)", where: "v2/docs/records/l4e11/apply_gen_sch_a_charger.py"}
+    fitted_mpn: "B540C-13-F (Diodes Incorporated)"
+    package: "SMC (DO-214AB)"
+    lcsc: "C72264"
+    lcsc_reading: {model: "B540C-13-F", maker: "DIODES", pkg: "SMC(DO-214AB)", stock: 52515, read: "2026-10-02T23:20Z", price_note: "the answer carries no price ladder at 1 (min buy 5)"}
+    identity: "MATCH by the sheet's own ordering pattern (p.1: 'B5xxC-13-F ... xx = Device type, e.g., B520C-13-F', marking B540C); the string B540C-13-F is not printed, so the identity table reads it PART_NUMBER_INFERRED (finding L6P-F03)"
+    grade_vs_envelope: "INSIDE: TJ and TSTG -55 to +150 C (p.2); a commercial-grade sheet (an automotive variant under a separate sheet)"
+    alternative: "B550C-13-F (the same sheet and land, 50 V): VF at most 0.70 V against 0.55 V"
+    obligations: "E11-27; E11-38 (D23's VF at 5 A within +5 percent after every case); register R-157, R-184"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf"
+        doc_id: "Diodes Incorporated B520C to B560C 5.0 A surface-mount Schottky barrier rectifier"
+        revision: "DS13012 Rev. 18-2, March 2023 (5 pages)"
+        url: "https://www.diodes.com/assets/Datasheets/ds13012.pdf"
+        fetched: "2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff"
+        publication: "HELD BACK (Diodes' copyright, no grant); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes by pattern: p.1 B520C/B530C/B540C VRRM 20/30/40 V, IO 5.0 A, VF max 0.55 V, IR max 0.5 mA; ordering B5xxC-13-F SMC 3,000 Tape & Reel"
+  - id: entry-breaker-tps4811-q1
+    function: "board E's vehicle-entry breaker U6 (L4-E11 3c, replacing the LM5069) and the solar guard's over-voltage cut-off U21 (L4-E7's remedies, check 5): the same part twice"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 drafts v2/docs/records/l4e11/apply_gen_sch_e_entry.py (U6; E11-01, register R-123) and v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py (U21; R-173), not applied; the guard's instance PROVISIONAL (L4-E7's round 3 is running)"
+    schematic_name: {text: "TPS48110AQDGXRQ1 high-side driver with protection", where: "the two drafts named above"}
+    fitted_mpn: "TPS48110AQDGXRQ1 (Texas Instruments)"
+    package: "VSSOP-19 DGX, 5.10 x 3.00 mm (DGX0019A, SLUSEE5E p.47); the land is owed (E11-01: added to meshsat.pretty from TI's drawing)"
+    lcsc: "C17556513"
+    lcsc_reading: {model: "TPS48110AQDGXRQ1", maker: "TI", pkg: "VSSOP-19", stock: 326, price_usd_1: 4.4674, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: AEC-Q100 grade 1, -40 to +125 C ambient (p.1); TJ -40 to 125 C (p.8); Tstg -55 to 150 C (p.7). Automotive"
+    alternative: "TPS48111AQDGXRQ1 (the same land, p.4): no overvoltage protection and latch-off; the guard would lose its function, the entry would latch"
+    obligations: "E11-01, E11-17, E11-20, R-153 (D9); R-173, R-174, R-176. FINDING L6P-F10: the guard's modelled PV_F excursion 80.6 V exceeds the recommended operating V(VS) 80 V (p.8) while L4-E7 judges against the 100 V absolute maximum less 10 percent; L4-E7 states the basis"
+    status: PROVISIONAL
+    documents:
+      - path: "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf"
+        doc_id: "TI TPS4811-Q1 100 V automotive smart high-side driver with protection and diagnostics"
+        revision: "SLUSEE5E, January 2022, revised April 2026 (49 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/tps4811-q1.pdf"
+        fetched: "2026-10-01 by task L4-E7 and 2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.44 orderable addendum prints TPS48110AQDGXRQ1, VSSOP (DGX) 19; p.4 TPS48110Q1 OV protection yes, auto-retry 512 ms; p.7 absolute maxima (VS 100 V, INP -1 to 20 V); p.8 V(VS) 3.5 to 80 V"
+  - id: entry-fet-csd19536ktt
+    function: "board E's entry pass FET Q7 for the TPS4811-Q1 breaker (L4-E11 3c): 100 V D2PAK whose SOA carries the start into a short"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e11/apply_gen_sch_e_entry.py (E11-01, register R-123), not applied"
+    schematic_name: {text: "CSD19536KTT 100 V N-FET (D2PAK), the entry's pass FET", where: "v2/docs/records/l4e11/apply_gen_sch_e_entry.py"}
+    fitted_mpn: "CSD19536KTT (Texas Instruments)"
+    package: "D2PAK (TO-263) KTT; the land checked against TI's KTT drawing (E11-01)"
+    lcsc: "C2687963"
+    lcsc_reading: {model: "CSD19536KTT", maker: "TI", pkg: "TO-263-3", stock: 611, price_usd_1: 4.4897, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: TJ -55 to 175 C (p.1)"
+    alternative: "NOT READ: TI's other 100 V KTT parts share the land; each one's SOA figure decides E11-17"
+    obligations: "E11-01, E11-14, E11-17, E11-20; register R-123, R-153 (D10, the transconductance 329 S typical only)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf"
+        doc_id: "TI CSD19536KTT 100 V N-channel NexFET power MOSFET"
+        revision: "SLPS540C, March 2015, revised May 2025 (15 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/csd19536ktt.pdf"
+        fetched: "2026-10-02 by task L4-E11; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "19e1a9660fac8577743f40acc2cdc791539afd5232bbc1fc350e15fec735d78d"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.1 CSD19536KTT, VDS 100 V, ID 272 A, TJ -55 to 175 C; p.5 RDS(on) 2.3 mOhm max at 10 V; p.6 Figure 4-10 maximum safe operating area"
+  - id: guard-and-entry-fets-csd19532q5b
+    function: "board E's CSD19532Q5B in three places: Q1 the vehicle entry's ideal-diode FET (L4-E9 part A, 100 V against a reversed 36 V input), Q12 the solar guard's pass FET and Q13 its return switch (L4-E7's remedies); Q7 carries it today and is replaced by the CSD19536KTT"
+    boards: [E]
+    on_main: true
+    on_main_note: "the PART is on main as Q7 (gen_sch_e.py, C473333); the three NEW placements are drafts: v2/docs/records/l4e9/apply_gen_sch_e_q1.py (R-17) and v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py (R-173), not applied"
+    schematic_name: {text: "CSD19532Q5B 100 V N-FET (4.9 mOhm at VGS 10 V, PowerPAK SO-8 / SON-8 5x6)", where: "gen_sch_e.py (Q7); the two drafts"}
+    fitted_mpn: "CSD19532Q5B (Texas Instruments)"
+    package: "VSON-CLIP 8 (DNK), 5 x 6 mm (SLPS414B p.11)"
+    lcsc: "C473333"
+    lcsc_reading: {model: "CSD19532Q5B", maker: "TI", pkg: "SON-8(5x6)", stock: 2522, price_usd_1: 2.1572, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: TJ -55 to 150 C (p.1)"
+    alternative: "NOT READ: TI's Q5B family shares the land; Q13's hot leakage and Q1's avalanche figures are this part's"
+    obligations: "R-17 (Q1), R-112 (Q1's threshold), R-173, R-176 rows 1 to 7 (Q12's waveforms, Q13's leakage above +25 C: D-11 CONDITIONAL)"
+    status: PROVISIONAL
+    documents:
+      - path: "v2/vendor/power/ti-csd19532q5b-n-fet.pdf"
+        doc_id: "TI CSD19532Q5B 100 V N-channel NexFET power MOSFET"
+        revision: "SLPS414B, December 2013, revised May 2017"
+        url: "https://www.ti.com/lit/ds/symlink/csd19532q5b.pdf"
+        fetched: "filed before this record (sources.txt); L4-E9 read it byte-identical to ti.com on 2 October 2026"
+        sha256: "353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1"
+        matches_fitted: "yes: p.1 CSD19532Q5B, VDS 100 V, ID 140 A, IDM 400 A, TJ -55 to 150 C; p.3 RDS(on) 4.9 mOhm max at 10 V 17 A; p.11 orderable VSON-CLIP (DNK) 8"
+  - id: solar-guard-clamps-smcj30a-smcj40ca
+    function: "board E's solar guard clamps (L4-E7's remedies): D4 the stage's surge clamp raised from the SMCJ28A to the SMCJ30A, D11 the bidirectional SMCJ40CA across the panel port (the entry's D10 part)"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py (R-173), not applied; D4's LCSC code is 'owed' in the draft (this record's reading: C224048); PROVISIONAL (L4-E7's round 3)"
+    schematic_name: {text: "SMCJ30A (D4, unidirectional, cathode on TRK_VS); SMCJ40CA (D11, bidirectional, PV_F to PV_RTN)", where: "v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py"}
+    fitted_mpn: "SMCJ30A and SMCJ40CA (Littelfuse)"
+    package: "DO-214AB (SMC)"
+    lcsc: "C224048 (SMCJ30A, this record's reading; the draft carries none); C80273 (SMCJ40CA, in the draft)"
+    lcsc_reading: {smcj30a: {model: "SMCJ30A", maker: "Littelfuse", pkg: "DO-214AB", stock: 15670, price_usd_5: 0.2982}, smcj40ca: {model: "SMCJ40CA", maker: "Littelfuse", pkg: "DO-214AB", stock: 4925}, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: TJ -65 to 150 C, TSTG -65 to 175 C (p.1)"
+    alternative: "Diodes Incorporated SMCJ30A-13-F (C135160, SMC, -55 to +150 C): the same row by the series' naming, another maker, a substitution under condition 1 until its sheet is read"
+    obligations: "R-173, R-174 (CS116 and CS115: D4's clamp at each disturbance), R-176 row 2"
+    status: PROVISIONAL
+    documents:
+      - path: "v2/vendor/power/littelfuse-smcj-series-tvs.pdf"
+        doc_id: "Littelfuse SMCJ Series 1500 W transient voltage suppressors (the file tvs-surge-clamps already holds)"
+        revision: "Revised 11/20/15"
+        url: "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet)"
+        sha256: "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"
+        matches_fitted: "yes: p.2 SMCJ30A / SMCJ30CA row VR 30.0 V, VBR 33.30 to 36.80 V at 1 mA, VC 48.4 V at 31.0 A; SMCJ40A / SMCJ40CA row VR 40.0 V, VBR 44.40 to 49.10 V, VC 64.5 V at 23.3 A; p.1 TJ -65 to 150 C"
+  - id: solar-guard-ceramics-samsung-cl
+    function: "board E's ceramics whose maker's DC-bias curves L4-E7's B6 round 2 bounds: the port bank C131, C132, C135, C136 (CL32B225KCJSNNE, 2.2 uF 100 V X7R 1210), C133, C134 on PV_P and C71 to C74 on TRK_VS (CL32B106KBJNNNE, 10 uF 50 V X7R 1210), and the drawn C13, C14 on TRK_VIN (CL31B106KBHNNNE, 10 uF 50 V X7R 1206)"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py (R-173; C71 to C74 edit the backstop draft, R-21), not applied; the drafts carry no LCSC code for the 1210 parts (this record's readings: C55151, C138687); PROVISIONAL: L4-E7's round 3 may change the set"
+    schematic_name: {text: "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE; 10u 50V X7R 1210 Samsung CL32B106KBJNNNE; the drawn 10u 50V X7R 1206 C89632", where: "v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py; gen_sch_e.py (C13, C14)"}
+    fitted_mpn: "CL32B225KCJSNNE, CL32B106KBJNNNE, CL31B106KBHNNNE (Samsung Electro-Mechanics)"
+    package: "1210 (3.2 x 2.5 x 2.5 mm) and 1206 (3.2 x 1.6 x 1.6 mm), the maker's pages"
+    lcsc: "C55151, C138687, C89632"
+    lcsc_reading: {cl32b225: {stock_lcsc: 0, stock_jlcpcb: 4654, price_usd_1: 0.1599}, cl32b106: {stock_lcsc: 16710, stock_jlcpcb: 30940, price_usd_1: 0.3288}, cl31b106: {stock_lcsc: 0, stock_jlcpcb: 109264}, read: "2026-10-02T23:20Z", note: "LCSC's retail stock and JLCPCB's assembly stock are two pools"}
+    identity: "MATCH on the maker's page less its last character (the page prints CL32B225KCJSNN; the catalogue's model carries the packaging code E); the identity table reads PART_NUMBER_INFERRED (finding L6P-F03's Samsung rows)"
+    grade_vs_envelope: "NOT READ at the source: the maker's specification pages print capacitance, tolerance, rated Vdc, TCC X7R, size and dimensions and no temperature range (finding L6P-F08); X7R's -55 to +125 C is the EIA class"
+    alternative: "another maker's part on the same land is bounded again on its own curves before it is a substitute (the record's bound rests on Samsung's curves)"
+    obligations: "R-173, R-176 row 3, R-180, R-186, R-187 (B6-ENG-1), R-36"
+    status: PROVISIONAL
+    documents:
+      - path: "v2/docs/records/l6pwr/inputs/samsung-spec-pages-2026-10-02.json"
+        doc_id: "the properties Samsung's specification pages print, excerpted (the pages are date-stamped at every request and read 'All rights reserved': not filed)"
+        revision: "pages created 2026/10/03 08:12 KST"
+        url: "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL32B225KCJSNN (and CL32B106KBJNNN, CL31B106KBHNNN)"
+        fetched: "2026-10-02T23:20Z by record l6pwr (read_catalogue.py)"
+        sha256: "in the record's output pins (l6pwr_parts.out section 0)"
+        matches_fitted: "the properties: 2.2uF +-10% 100.0Vdc X7R 1210; 10.0uF +-10% 50.0Vdc X7R 1210; 10.0uF +-10% 50.0Vdc X7R 1206"
+      - path: "v2/vendor/passives/held/samsung-CL32B225KCJSNN-2026-10-02.json (and the two siblings)"
+        doc_id: "the DC-bias, bias-TCC and ESR series of the three parts, fetched by v2/docs/records/l4e7/fetch_maker_curves.py (L4-E7)"
+        revision: "as read 2026-10-02"
+        url: "https://product.samsungsem.com/mlcc/CL32B225KCJSNN.do (and siblings)"
+        sha256: "pinned by v2/docs/records/l4e7/l4e7_stage_settings.py"
+        publication: "HELD BACK by L4-E7 ('All rights reserved')"
+        matches_fitted: "the curves the bound uses"
+  - id: backstop-sense-bank-wsl2512
+    function: "board E's 100 W backstop sense bank R60 to R64 (L4-E7R control decision C): five WSL2512 70 mOhm in parallel, 14 mOhm, read by the INA169"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_backstop.py (register R-21, R-98), not applied"
+    schematic_name: {text: "70mOhm 1% 2512 (backstop sense bank, WSL2512R0700FEA)", where: "v2/docs/records/l4e7/apply_gen_sch_e_backstop.py"}
+    fitted_mpn: "WSL2512R0700FEA (Vishay Dale)"
+    package: "2512, 1.0 W at 70 C"
+    lcsc: "C2076144"
+    lcsc_reading: {model: "WSL2512R0700FEA", maker: "VISHAY", pkg: "2512", stock: 1970, price_usd_1: 0.8059, read: "2026-10-02T23:20Z", need: "25 for 5 kits"}
+    identity: "MATCH by Document 30100's global part numbering example (WSL25124L000FEA; R0700 = 0.07 Ohm by the 'R0100 = 0.01 Ohm' line; F = +-1 percent; EA = packaging): INFERRED from the example, the part number not printed (finding L6P-F03), as this file's board A WSL entry decodes"
+    grade_vs_envelope: "INSIDE: operating temperature range -65 to +170 C (p.2)"
+    alternative: "WSL2512R0700DEA, the same part at +-0.5 percent (tolerance code D; p.1 lists the WSL2512 at +-0.5 percent across its range): the trip's resistor error halves"
+    obligations: "R-21, R-98, R-101 (Vishay's clarification draft vishay-wsl2512.txt, the owner sends), R-70 (bench 7b.10, 7b.11, 7b.14)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf"
+        doc_id: "Vishay Dale WSL Power Metal Strip resistors, low value, Document Number 30100"
+        revision: "Revision 23-Nov-2023 (its legal page dated 01-Jan-2026); the same revision as LCSC's copy L4-E7 held back (v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf, sha256 1b5c68910aa562a0dcce11ec572b4dd1febe63cfb90d20f3eaf5f9c7e01b59ac, its legal page dated 2023)"
+        url: "https://www.vishay.com/docs/30100/wsl.pdf"
+        sha256: "96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc"
+        matches_fitted: "yes by decode: p.1 WSL2512 2512, P70 1.0 W, 0.003 to 0.5 Ohm at +-1 percent, 0.0005 to 0.5 at +-0.5 percent; global part numbering example; p.2 TCR +-75 ppm/K for 7 to 500 mOhm, operating -65 to +170 C"
+  - id: backstop-monitor-ina169
+    function: "board E's U18, the INA169 current-shunt monitor reading the backstop's sense bank into R65 and R66 (L4-E7R control decision C)"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_backstop.py (R-21), not applied"
+    schematic_name: {text: "INA169NA/3K high-side current-shunt monitor, current output", where: "v2/docs/records/l4e7/apply_gen_sch_e_backstop.py"}
+    fitted_mpn: "INA169NA/3K (Texas Instruments)"
+    package: "SOT-23-5 DBV"
+    lcsc: "C44322"
+    lcsc_reading: {model: "INA169NA/3K", maker: "TI", pkg: "SOT-23-5", stock: 61868, price_usd_1: 1.138, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: the specified range TMIN to TMAX -40 to +85 C (p.6) covers the 62.1 C board air; operating TA -55 to 125 C, Tstg -65 to 125 C (p.4)"
+    alternative: "INA139NA/3K (the same sheet and DBV land, 2.7 to 40 V, specified to 125 C): PV_P's 30 V is 75 percent of its range; INA169NA/250 is the same part on a 250 reel"
+    obligations: "R-21, R-33 / R-101 (TI's clarification draft texas-instruments-ina169.txt), R-70"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/held/ti-ina169-sbos181f.pdf"
+        doc_id: "TI INA139, INA169 high-side measurement current shunt monitor"
+        revision: "SBOS181F, December 2000, revised February 2017 (27 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/ina169.pdf"
+        fetched: "2026-10-01 by task L4-E7; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "dbb74b6cdc5431353f17b044b7d762df1f2f9049d03d2d1611a53058e570d62c"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.21 orderable addendum prints INA169NA/3K, SOT-23 (DBV) 5, 3000 LARGE T&R; p.6 INA169 2.7 to 60 V, specified -40 to +85 C; p.4 analog inputs 75 V absolute"
+  - id: backstop-comparator-tps3701
+    function: "board E's U19, the window comparator: INB the 100 W trip, INA the TRK_VS monitor (L4-E7R control decision C)"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_backstop.py (R-21), not applied"
+    schematic_name: {text: "TPS3701DDCR window comparator", where: "v2/docs/records/l4e7/apply_gen_sch_e_backstop.py"}
+    fitted_mpn: "TPS3701DDCR (Texas Instruments)"
+    package: "SOT-23-THIN-6 DDC"
+    lcsc: "C132788"
+    lcsc_reading: {model: "TPS3701DDCR", maker: "TI", pkg: "SOT-23-Thin-6", stock: 26813, price_usd_1: 0.6932, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: TJ -40 to 125 C, VDD 1.8 to 36 V (p.4); Tstg -65 to 150 C"
+    alternative: "TPS3700DDCR (the same DDC land, VDD to 18 V): fine on the 3.3 V supply the draft uses; the input absolute maximum changes"
+    obligations: "R-21, R-70"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"
+        doc_id: "TI TPS3701 high voltage (36 V) window voltage detector with internal reference"
+        revision: "SBVS240C, November 2014, revised February 2019 (27 pages)"
+        url: "https://www.ti.com/lit/ds/symlink/tps3701.pdf"
+        fetched: "2026-10-01 by task L4-E7; re-fetched 2026-10-03 by record l6pwr, byte-identical"
+        sha256: "27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560"
+        publication: "HELD BACK (TI's IMPORTANT NOTICE); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.21 orderable addendum prints TPS3701DDCR, SOT-23-THIN (DDC) 6; p.4 VDD 1.8 to 36 V, TJ -40 to 125 C; p.5 INB rising threshold 397 to 403 mV"
+  - id: backstop-supervisor-tps3808g33
+    function: "board E's U20, the supervisor holding SWEN low at least 180 ms after a trip, default-off on TRK_LDO33 (L4-E7R control decision C); the G33 threshold variant (board B's U221 is the G30, entry supervisor-tps3808g30)"
+    boards: [E]
+    on_main: false
+    adopted_in: "Layer 4 draft v2/docs/records/l4e7/apply_gen_sch_e_backstop.py (R-21), not applied"
+    schematic_name: {text: "TPS3808G33DBVR supervisor: the off-time after a trip", where: "v2/docs/records/l4e7/apply_gen_sch_e_backstop.py"}
+    fitted_mpn: "TPS3808G33DBVR (Texas Instruments)"
+    package: "SOT-23-6 DBV"
+    lcsc: "C43698"
+    lcsc_reading: {model: "TPS3808G33DBVR", maker: "TI", pkg: "SOT-23-6", stock: 36030, price_usd_1: 0.4435, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: TJ -40 to 125 C (p.6), VDD 1.7 to 6.5 V; Tstg -65 to 150 C (p.5)"
+    alternative: "TPS3808G33DBVT (the same part on a small reel, JLCPCB C702174); TPS3808G30DBVR (C189211, VIT 2.79 V) moves the off-time's supply threshold"
+    obligations: "R-21, R-70"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tps3808.pdf"
+        doc_id: "TI TPS3808 (the file supervisor-tps3808g30 already holds, read again for the G33 row)"
+        revision: "SBVS050N, May 2004, revised August 2026"
+        url: "https://www.ti.com/lit/ds/symlink/tps3808.pdf"
+        sha256: "74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed"
+        matches_fitted: "yes: p.22 orderable addendum prints TPS3808G33DBVR, SOT-23 (DBV) 6; p.3 TPS3808G33 3.3 V, VIT 3.07 V; p.7 td with CT = VDD 180 / 300 / 420 ms"
+  - id: milliohm-hojlr2512-sense-resistors
+    function: "board A's Milliohm HoJLR2512 current-sense resistors in the Layer 4 drafts: R11 8 mOhm (L4-E4, kept by L4-E5; 7 mOhm only if bench V-A07 fails), R12 12 mOhm (L4-E6), R227 5 mOhm (L4-E9, U17's shunt), the six ballasts R221 to R226 45 mOhm (L4-E8); R138 5 mOhm (L4-E4) shares the family"
+    boards: [A]
+    on_main: false
+    adopted_in: "Layer 4 drafts: l4e4 apply_gen_sch_a_r11.py (R-04), l4e6 apply_gen_sch_a_r12.py and apply_lcsc_fill_r12.py (R-01, R-02), l4e9 apply_gen_sch_a_u17.py (R-06), l4e8 apply_gen_sch_a_bank.py (R-07); none applied"
+    schematic_name: {text: "8mOhm / 12mOhm / 5mOhm / 45mOhm 1% 2512 (lcsc_fill.py maps the value to the code where the draft carries none)", where: "the drafts named above"}
+    fitted_mpn: "HoJLR2512-3W-8mR-1% (C2904240), HoJLR2512-3W-7mR-1% (C2904239, the V-A07 fallback), HoJLR2512-3W-12mR-1% (C2904242), HoJLR2512-3W-5mR-1% (C2903482), HoJLR2512-3W-45mR-1% (C2903491) (Shenzhen Milliohm Electronics)"
+    package: "2512 (6.4 x 3.2 mm), 3 W"
+    lcsc: "C2904240, C2904239, C2904242, C2903482, C2903491"
+    lcsc_reading: {stock: {C2904240: 9600, C2904239: 1830, C2904242: 3405, C2903482: 106575, C2903491: 15860}, price_usd_10: {C2904240: 0.0832, C2903491: 0.0621}, read: "2026-10-02T23:20Z", note: "several answers carry no price at quantity 1 (min buy 5 or 10)"}
+    identity: "MATCH by the sheet's numbering scheme (p.1: Ho JLR 2512 3W 100mR 1%; F = +-1 percent; 3 W from 0.5 to 500 mOhm), the part numbers not printed: the identity table reads PART_NUMBER_INFERRED (finding L6P-F03). The 4.5 mOhm code C2985708 the entry (R19) and guard (R87) drafts carry resolves to Milliohm's HoLLR2512 series, whose sheet is NOT held (finding L6P-F09)"
+    grade_vs_envelope: "INSIDE: operating temperature range -50 to +170 C (p.2); 3 W derated from 70 C to zero at 170 C (p.2, L4-E8's reading); TCR +-50 ppm/K for 2 to 500 mOhm"
+    alternative: "a Vishay WSL2512 at the same value fits the land at 1.0 W (70 C) against 3 W: R227's 1.037 W fault-bound dissipation exceeds it, R11, R12 and the ballasts stay under it; the TCR becomes +-75 ppm/K"
+    obligations: "R-04, R-37, R-62, R-75, R-155 (R11); R-01, R-02, R-64, R-66 (R12); R-06, R-27, R-84, R-97, R-101, R-117, R-120, R-121 (R227); R-07, R-09, R-40, R-68, R-91 (the ballasts); R-101 Milliohm's clarification (TCR from -40 to +25 C, R227's single-pulse rating)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/passives/milliohm-hojlr2512-series.pdf"
+        doc_id: "Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification (the file sources.txt line 463 records)"
+        revision: "version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3)"
+        url: "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468"
+        sha256: "3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb"
+        matches_fitted: "yes by decode: p.1 the numbering scheme and the 2 W (0.5 to 10 mOhm, D +-0.5 percent) and 3 W (0.5 to 500 mOhm, F +-1 percent, J +-5 percent) rows; p.2 operating -50 to +170 C, TCR +-50 ppm, the derating from 70 C"
+  - id: vbus20-bank-eehzk1v331p-and-vsys-eehzk1v181p
+    function: "board A's VBUS20 bulk bank, the six drawn Panasonic ZK cans C163, C178, C179, C180, C199, C200 (EEHZK1V331P) kept by L4-E8 behind the ballasts, and C236 (EEHZK1V181P) on VSYS for TI's 50 uF minimum (L4-E11 D5)"
+    boards: [A]
+    on_main: true
+    on_main_note: "the six EEHZK1V331P are on main (gen_sch_a.py's V331 tuple, C278516); C236 is L4-E11's draft (apply_gen_sch_a_charger.py, E11-27), not applied"
+    schematic_name: {text: "330u 35V Panasonic EEHZK1V331P hybrid polymer (10.2 mm); 180u 35V Panasonic EEHZK1V181P hybrid polymer (10.2 mm)", where: "v2/ecad/tools/gen_sch_a.py (V331); v2/docs/records/l4e11/apply_gen_sch_a_charger.py (C236)"}
+    fitted_mpn: "EEHZK1V331P and EEHZK1V181P (Panasonic)"
+    package: "SMD cans G 10.0 x 10.2 mm (CPOL10) and F 8.0 x 10.2 mm (CPOL8)"
+    lcsc: "C278516, C242139"
+    lcsc_reading: {C278516: {model: "EEHZK1V331P", stock: 6246, price_usd_1: 0.8074}, C242139: {model: "EEHZK1V181P", stock: 2843, price_usd_1: 1.1407}, read: "2026-10-02T23:20Z"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: category temperature range -55 to +125 C, endurance 4000 h at 125 C, AEC-Q200 compliant (p.1)"
+    ratings_used: "330 uF 35 V on VBUS20 at most 20.96 V (60 percent); ripple 2800 mA rms (100 kHz, 125 C) against each can's bound 2.4096 A at R11 8 mOhm (86 percent) or 2.7661 A at 7 mOhm (98.8 percent, the rule's limit 2.7709 A; L4-E8); ESR 20 mOhm; the rated temperature rise is not printed (L4-E8 CONDITIONAL B4). 180 uF 35 V on VBAT at most 17.375 V (50 percent), 2000 mA, 27 mOhm"
+    alternative: "EEHZK1V331V and EEHZK1V181V (the same rows' vibration-proof products, the same land and ratings): mechanical only"
+    obligations: "R-07, R-68 (7b.8: the ESR envelope at -20 C, each can's rise and current), R-102, R-51; E11-27, E11-07"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf"
+        doc_id: "Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors (LCSC's copy, filed before this record under the EEHZK1V101XP name)"
+        revision: "no revision date printed (the RoHS note cites October 2017)"
+        url: "NOT RECORDED in sources.txt (owed below)"
+        sha256: "5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389"
+        matches_fitted: "yes: p.2 prints EEHZK1V331P (330 uF, 35 V, case G 10 x 10.2, ripple 2800 mA rms, ESR 20 mOhm, tan d 0.12) and EEHZK1V181P (180 uF, case F 8 x 10.2, 2000 mA, 27 mOhm); p.1 category -55 to +125 C, endurance 4000 h at 125 C, AEC-Q200"
+  - id: pack-cell-proposal-saft-mp176065xtd
+    function: "the labelled PROPOSAL for the pack's cell (L4-E10 section 15, U-01's supported route on published evidence for the temperature windows): a 4S1P of Saft MP 176065 xtd prismatic cells; NOT adopted, the ruled cell stays the INR18650-35E (D-06, entry pack-cells) and adoption is the owner's"
+    boards: [P]
+    on_main: false
+    adopted_in: "not adopted: a proposal recorded by L4-E10 (U-01), the owner decides"
+    schematic_name: {text: "none (no schematic generator names a cell)", where: "v2/docs/records/l4e10/L4E10-CELL-THERMAL.md sections 15 and 16"}
+    fitted_mpn: "MP 176065 xtd (Saft)"
+    package: "prismatic cell, 18.65 x 60.5 x 68.7 mm (sleeved, including terminals), 135 g typical, 0.077 l (p.1)"
+    lcsc: null
+    purchase_route: "owner-side; a price indicator NZ$ 238.72 a cell (SIMPOWER listing archived 2025-01-16, L4-E10 inputs/prices-2026-10-02.json), a quote awaiting the owner's purchase"
+    placed_part: false
+    identity: MATCH
+    grade_vs_envelope: "INSIDE including the margins: charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C (recommended +15 to +30 C) (p.1)"
+    ratings_used: "5.6 Ah typical (C/5, +25 C, 2.5 V cut-off), 3.65 V, 20.4 Wh; recommended maximum discharge 11 A continuous, 22 A pulses, 'Can vary depending on temperatures. Consult Saft'; maximum continuous charge 5.6 A, 'for optimised operation below 0 C consult Saft' (p.1); 4S1P 81.6 Wh nominal, 53.5 to 58.8 Wh usable MODELLED against the 35E pack's 107.9 Wh (L4-E10 16)"
+    obligations: "R-167 (the pocket mock-up), R-168 (current at temperature, the storage dwell: Saft's statement, clarification/saft-mp176065xtd.txt, the owner sends), R-169 (the lot's capacity); U-01 the owner's"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf"
+        doc_id: "Saft MP 176065 xtd rechargeable Li-ion cell datasheet"
+        revision: "Doc. n 31109-2-0625, June 2025 (2 pages)"
+        url: "https://saft4u.saft.com/en/download_file/58d1fabc-9a46-4c07-8df1-0a00d3a1e7a9/English"
+        fetched: "2026-10-02T10:40Z by task L4-E10; re-fetched 2026-10-03 by record l6pwr (the portal omits its intermediate certificate; the sha256 decides), byte-identical"
+        sha256: "8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e"
+        publication: "HELD BACK ('Proprietary information. Any duplication or reproduction without authorization of Saft is strictly prohibited'); v2/docs/records/l6pwr/fetch_held_back.py"
+        matches_fitted: "yes: p.1 prints MP 176065 xtd with every figure above; p.2 the document number"
+
 owed:
+  - "3 October 2026 (Layer 6 record l6pwr): the source URL of v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf (Panasonic's ZK series sheet, LCSC's copy; the two ZK cans of board A are bound to it); Samsung's MLCC catalogue (the operating temperature range of the CL32B and CL31B X7R parts, which the specification pages do not print: finding L6P-F08); Milliohm's HoLLR2512 series sheet for the 4.5 mOhm code C2985708 the entry and guard drafts carry (finding L6P-F09); Nexperia's packing-code legend for the BUK6Y10-30PX suffix (finding L6P-F02); and, a tools item, DECODED schemes in part_identities.SCHEMES for Milliohm's HoJLR, Vishay's WSL and Diodes' B5xxC-13-F numbering (finding L6P-F03)"
   - "28 September 2026 (stream w5si2): four makers' IBIS models read for rule SI-001 and cited by v2/ecad/tools/pcb_edge_rates.yaml have NO PART ENTRY here to carry them. What is owed for each is the part entry itself (the part as the generator names it, the order code it resolves to, its grade against the envelope), an identity audit that is the parts stream's and is not made by filing a model; the model's row follows that entry. None of the four files is in the repository: v2/vendor/ibis-manifest.yaml pins them and v2/ecad/tools/ibis_fetch.py fetches them. v2/vendor/ti/ibis/sn74lvc08a.ibs (SN74LVC08APWR, board B's voters U70 to U75 and board A's U26; Texas Instruments, SCEM010, SN74LVC08A IBIS Model (Rev. A); https://www.ti.com/lit/zip/SCEM010; sha256 adb5d455adc3a057282075c94d7454b01a37d720ac993db1d1eeea9e5eda9779; header: PROHIBITS_DISTRIBUTION); v2/vendor/ti/ibis/sn74lvc32a.ibs (SN74LVC32APWR, board B's voters U76 to U79, U84 and U85; Texas Instruments, SCEM055, SN74LVC32A IBIS Model (Rev. B); https://www.ti.com/lit/ibs/SCEM055; sha256 396e2d220f1cc59f07c11d98a9294bcf5f44cc09db4802354ff318c7b99f4499; header: PROHIBITS_DISTRIBUTION); v2/vendor/ti/ibis/ina226.ibs (INA226, board A's six rail monitors; Texas Instruments, SBOM458, INA226 IBIS Model; https://www.ti.com/lit/zip/SBOM458; sha256 fb4ebf43bde617c24a1a15d3c8ad57731e1cf5abf6ad66631f435248185396f8; header: COPYRIGHT_NO_GRANT); v2/vendor/ti/ibis/tmp117.ibs (TMP117AIDRVR, board B's temperature sensor U10; Texas Instruments, SNOM652, TMP117 IBIS Model; https://www.ti.com/lit/zip/SNOM652; sha256 5c71fbcce9e138034fbe4d3053bbb2340af30e327053e3eb092144322d862391; header: COPYRIGHT_NO_GRANT)"
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
@@ -3655,3 +4052,76 @@ documents_filed_d8dec31:
     filing_note: "the fitted code C3685740 is gen_sch_a.py's for U34 (line 798); the code's match to the -DSKR suffix and the WSON-10 package is the parts stream's condition 1 check, not done here"
     status: VERIFIED
     matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"
+
+# ADDED 3 OCTOBER 2026 (MESHSAT-1357, Layer 7 record l7pwr: the fans D-18 / E11-35, the T-H1 mock-up bill, the dock lead's
+# pulse capability). Outside `parts:` on purpose: the fans are placed on no schematic as parts (board E's J_FAN1/J_FAN2 and board
+# B's J_FAN1..3 are their headers) and Layer 6 (records/l6pwr) integrates their identity rows; these are the documents the record
+# read, each fetched from the maker's own site unless the role says otherwise, and the fans' identities as the record selected
+# them (authority: SESSION). Nothing here has been bought, built or measured.
+documents_filed_l7pwr:
+  - for_entry: null
+    role: "the IP68 mixer fan selected for board E's J_FAN1 and J_FAN2 (D-18 settled by the session, record l7pwr): Sanyo Denki 9WL0612P4H001, San Ace 60W, 60 x 60 x 25 mm aluminium frame, 12 V, operating 10.8 to 13.2 V, 0.17 A, 2.04 W, 6150 min-1, 27.5 CFM, 97 Pa, 36 dB(A), -20 to +70 C, 180,000 h at 60 C, IP68, pulse sensor and PWM; needs a regulated 12.0 V rail on board E (the record's FINDING for board E's generator owner); alternative Sunon GF60151B7-1E00U-AE9 (prints -10 C, no tachometer)"
+    path: "v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md"
+    doc_id: "Sanyo Denki product-database pages, Splash Proof Fan San Ace 60W and 40W (9WL0612P4H001, P4J001, P4S001, 9WL0624P4H001, 9WPA0412P6G001, 9WPA0424P6G001), transcribed with each page's sha256"
+    revision: "the pages as served on 3 October 2026 (no revision printed)"
+    url: "https://products.sanyodenki.com/en/sanace/dc/splash-proof-fan/9WL0612P4H001/ (and the five sibling pages the file names)"
+    fetched: "2026-10-03T00:12Z to 00:25Z, curl from the runner, HTTP 200; the pages are served by script and the transcription is filed in their place"
+    sha256_of_the_file_read: "the HTML of each page: 9WL0612P4H001 ec42c4a8744d8a2bdda69a36cdf036761cc434b151244daa28f7bff3ab4b2112; the others in the file"
+    filing_note: "the maker's instruction manual (M0011876C) and CAD are behind a download form: the hole pattern, the PWM input levels and the starting current are NOT READ"
+    status: VERIFIED
+    matches_fitted: "the fan is fitted on no schematic; the record selects it for the J_FAN1/J_FAN2 headers of gen_sch_e.py, which the record's FINDING asks to become 4-wire on a 12.0 V rail"
+  - for_entry: null
+    role: "the IP68 cooler fan selected for board B's J_FAN1 to J_FAN3 over the three CM5 coolers (D-18 settled by the session, record l7pwr): Sanyo Denki 9WPA0412P6G001, San Ace 40W, 40 x 40 x 20 mm, 12 V, operating 10.8 to 13.2 V, 0.17 A, 2.0 W, 13700 min-1, 13.4 CFM, 210 Pa, 44 dB(A), -20 to +70 C, 40,000 h at 60 C, IP68, pulse sensor and PWM; no 5 V IP68 40 mm fan exists in the lines read, so the slot header's 5 V pin must become a 12.0 V feed (the record's FINDING for board B's generator owner); alternative Sunon GF40282B3-1000U-SEP (24 V, 28 mm thick, range and life not read)"
+    path: "v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md"
+    doc_id: "as above (the 9WPA0412P6G001 row)"
+    revision: "the page as served on 3 October 2026"
+    url: "https://products.sanyodenki.com/en/sanace/dc/splash-proof-fan/9WPA0412P6G001/"
+    fetched: "2026-10-03T00:15Z, curl from the runner, HTTP 200"
+    sha256_of_the_file_read: "the page's HTML 90a9c2d2fc1f7457401df03661e0addff609df0e5240733d2c1ba38635f2a90a"
+    filing_note: "the 9WP0412H6001 distributors list as a lower-power 40 mm IP68 model answers HTTP 404 on the maker's database and is not a candidate"
+    status: VERIFIED
+    matches_fitted: "the fan is fitted on no schematic; the record selects it for gen_sch_b.py's J_FAN headers (JST-SH 1.0, C160390), whose supply pin the record's FINDING moves to 12 V"
+  - for_entry: null
+    role: "the maker's own table of every IP68 (and IP56, GR487) GF-series fan: the 40 mm IP68 models are 24 V only (GF40282B), the 60 x 60 x 15 models 12 V (GF60151B6 to B9), the 60 x 60 x 25 24 V (GF60252B); read for the candidates and the alternatives of record l7pwr"
+    path: "v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf"
+    doc_id: "Sunon IP56/68 Rating Dustproof & Waterproof Fan Series and GR487 salt-spray series, model tables"
+    revision: "2023/04/07 (239-E)"
+    url: "https://www.sunon.com/eu/MANAGE/Docs/WEBCONT/Files/1242/IP56.68.GR487_(239-E)_new.pdf"
+    fetched: "2026-10-03T00:14Z, curl from the runner, 201,393 bytes, 3 pages"
+    sha256_of_the_file_read: "902af71be894edda5e78d2f3514547dc203fc2e56bdc355d198c84eb82164386"
+    filing_note: "the brochure prints no operating voltage range, temperature or life; the GF60151 family's figures were read from Sunon's GF60151B6 specification for approval as a distributor hosts it (official.cz, sha256 969a976e..., issue 12.06.2017, pages dated 2018.02.23), cited in records/l7pwr/inputs/sunon-gf60151b6-spec-reading-2026-10-03.md and NOT filed because it did not come from the maker's site: operating 4.5 to 13.8 V, -10 to +70 C, 70,000 h at 40 C, two leads"
+    status: VERIFIED
+    matches_fitted: "not a fitted part; the brochure rows name the alternatives GF60151B7-1E00U-AE9 and GF40282B3-1000U-SEP"
+  - for_entry: null
+    role: "Same Sky's IP68 60 x 60 x 25 fan series (READY-TO-ACT 5.2's stand-in mixer CFM-6025BG68, the -22 variant): operating input 10.8 to 13.2 V (12 V models) and 21.6 to 26.4 V (24 V models), starting voltage 7 and 14 V typical, operating temperature -10 to +70 C, life 70,000 h at 40 C, soft start, tachometer on -20 and -22, PWM on -22; read as a candidate of record l7pwr (it fails REQ-043's -20 C)"
+    path: "v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf"
+    doc_id: "Same Sky, SERIES: CFM-60BG68, DESCRIPTION: DC AXIAL FAN"
+    revision: "date 09/12/2024; revision history to 1.01 of 03/07/2024"
+    url: "https://www.sameskydevices.com/product/resource/cfm-60bg68.pdf"
+    fetched: "2026-10-03T00:22Z, curl from the runner, 1,694,102 bytes, 8 pages"
+    sha256_of_the_file_read: "72dd06bea8f5498b49676924d6dab50785bed5b01c2a2e0e0b73549140f4a3dc"
+    filing_note: "the sheet carries no redistribution restriction (a warranty and a critical-component notice only); filed"
+    status: VERIFIED
+    matches_fitted: "not a fitted part; the stand-in named by READY-TO-ACT.md 5.2 for T-H1 until the pick, now replaced by the picked fan"
+  - for_entry: null
+    role: "the CM5 cooler the three cooler fans sit on: Raspberry Pi's Cooler for Compute Module 5 is a PASSIVE heatsink, 56 x 41 x 12.7 mm, four M2.5 x 8 screws from below the carrier, list price USD 5, in production until at least January 2036; ASSEMBLY.md's 'coolers clipped on with their fan leads' and panel1450.py's 30 x 30 fan envelope describe a fan the maker does not supply (record l7pwr section 4, a FINDING for v2/cad's owner)"
+    path: "v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf"
+    doc_id: "Raspberry Pi Cooler for Raspberry Pi Compute Module 5, product brief"
+    revision: "RP-008184-DS-1, published December 2024"
+    url: "https://datasheets.raspberrypi.com/cm5/cooler-product-brief.pdf (served from pip-assets.raspberrypi.com, categories/1211-raspberry-pi-cooler/documents/RP-008184-DS-1-cooler-product-brief.pdf)"
+    fetched: "2026-10-03T00:16Z, curl from the runner, 1,066,268 bytes"
+    sha256_of_the_file_read: "98fd27302cffd3a6de96fc2b1e90deb577a4e675c30d3cab8e5afea37998ca28"
+    filing_note: "the physical drawing's dimensions are 'approximate and for reference purposes only' (the brief's own note); the fins' direction is not readable from the text layer"
+    status: VERIFIED
+    matches_fitted: "ASSEMBLY.md section 1 names 'the CM5 Cooler' on each module; this is that product's brief"
+  - for_entry: dock-spring-connector-precidip-813
+    role: "the whole SLC catalogue of which the entry's two pages are an extract, re-read for the dock contact's pulse question (record l7pwr section 7 and clarification/preci-dip-813.txt): the 813 solder-tail series prints 'OPERATING CURRENT Max. 3.5 A' and '10 mOhm (static measurement, halfway position)' and no pulse or peak figure; the surface-mount SLC series page prints 'Max. 3.5 A / 7A peak' with no duration; the general specifications page prints -55 to +85 C with the music-wire spring"
+    path: "v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf"
+    doc_id: "Preci-Dip, Spring-Loaded Connectors catalogue (SLC), 14 pages"
+    revision: "PDF created 20 March 2018; uploaded to the maker's site October 2024 and linked from https://precidip.com/catalogs-brochures/ as the current SLC catalogue"
+    url: "https://precidip.com/wp-content/uploads/2024/10/Catalog-SLC.pdf"
+    fetched: "2026-10-03T00:28Z, curl from the runner, 736,895 bytes"
+    sha256_of_the_file_read: "638a0debaf507825f6925e3dcdaa0eff765761d9202d2e0fbdde4f41923104b4"
+    filing_note: "the entry's 'contact current rating is not on these two pages' is superseded: page 34 of this catalogue (the entry's extract page) prints Max. 3.5 A, as records/w3de read it on 27 September 2026"
+    status: VERIFIED
+    matches_fitted: "yes: the 813-S1-NNN-10-XXX101 ordering row and the height table (XXX 016 = 7 mm) are the fitted code's"

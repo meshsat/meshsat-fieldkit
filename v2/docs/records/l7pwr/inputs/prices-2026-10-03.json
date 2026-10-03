@@ -1,0 +1,118 @@
+{
+ "what": "Public prices and availability read from makers' and sellers' own pages for the T-H1 mock-up bill and the fan picks (Layer 7 author l7pwr, MESHSAT-1357). Each figure is what the page showed at the time named; an indicator, never a quote; nothing was bought, no cart was used, no login. VAT treatment is quoted as the page states it.",
+ "read_utc": "2026-10-03T00:05Z to 2026-10-03T00:30Z",
+ "read_by": "Layer 7 author l7pwr (MESHSAT-1357)",
+ "items": [
+  {
+   "id": "peli-1450",
+   "item": "Peli 1450 Protector case (current moulding)",
+   "seller": "Guardique Products A/S (flight-cases.eu), Denmark",
+   "url": "https://flight-cases.eu/peli-1450.html",
+   "price": {
+    "EUR_excl_vat": 168.9,
+    "EUR_incl_vat": 211.13
+   },
+   "availability": "Normal in stock",
+   "note": "the same figures READY-TO-ACT.md 5.2 read on 26 September 2026 [W1]"
+  },
+  {
+   "id": "peli-1450pf",
+   "item": "Peli 1450PF Special Application Panel Frame Kit",
+   "seller": "Guardique Products A/S (flight-cases.eu)",
+   "url": "https://flight-cases.eu/peli-1450.html",
+   "price": {
+    "EUR_excl_vat": 29.66,
+    "EUR_incl_vat": 37.08,
+    "regular_EUR_excl_vat": 32.96,
+    "regular_EUR_incl_vat": 41.2
+   },
+   "availability": "stock not shown in the listing",
+   "note": "a special price on the page; the regular price beside it"
+  },
+  {
+   "id": "pico-tc-08",
+   "item": "Pico Technology PicoLog TC-08 thermocouple data logger, 8 channels plus CJC",
+   "seller": "Pico Technology (picotech.com), the maker",
+   "url": "https://www.picotech.com/data-logger/tc-08/thermocouple-data-logger",
+   "price": {
+    "GBP": 349.0,
+    "vat": "not stated in the text read"
+   },
+   "availability": "Currently In Stock",
+   "accuracy": "the page prints +-(0.2 % of reading + 0.5 C)"
+  },
+  {
+   "id": "pico-se000",
+   "item": "Pico SE000 thermocouple type K, exposed tip, PTFE insulated, 1 m",
+   "seller": "Pico Technology (picotech.com)",
+   "url": "https://www.picotech.com/data-logger/tc-08/thermocouple-data-logger",
+   "price": {
+    "GBP": 10.5,
+    "vat": "not stated"
+   },
+   "availability": "listed with the TC-08's accessories",
+   "alternatives": {
+    "SE001 fiberglass 1 m": 10.5,
+    "SE027 PTFE 2 m": 12.5,
+    "SE030 fiberglass 2 m": 12.5
+   }
+  },
+  {
+   "id": "rpi-cm5-cooler",
+   "item": "Raspberry Pi Cooler for Compute Module 5 (passive heatsink, 56 x 41 x 12.7 mm)",
+   "seller": "Kiwi Electronics (kiwi-electronics.com), the Netherlands, product code KW-3425",
+   "url": "https://www.kiwi-electronics.com/en/compute-module-5-passive-cooler-20297",
+   "price": {
+    "EUR_excl_vat": 4.49,
+    "EUR_incl_vat": 5.43,
+    "ten_or_more_EUR_incl_vat": 5.32
+   },
+   "availability": "75 piece(s) in stock; shipped on Monday when ordered now",
+   "maker_list_price": "USD 5 (the product brief, RP-008184-DS-1, December 2024)"
+  },
+  {
+   "id": "korad-ka3005p",
+   "item": "KORAD KA3005P laboratory power supply 0 to 30 V, 0 to 5 A, USB and RS232 remote control and data acquisition",
+   "seller": "reichelt elektronik (reichelt.com), Germany",
+   "url": "https://www.reichelt.com/de/en/shop/product/laboratory_power_supply_unit_0_-_30_v_0_-_5_a_stabilized_pro-135689",
+   "price": {
+    "EUR_incl_19pct_vat": 89.0,
+    "list_EUR_incl_vat": 109.0,
+    "EUR_excl_vat_computed": 74.79
+   },
+   "availability": "the page reads 'Available on 10/9/2026' (its own date format)",
+   "note": "EUR 74.79 is 89.00 / 1.19, this record's arithmetic"
+  },
+  {
+   "id": "metaalshopper-alu-3mm",
+   "item": "aluminium plate 3 mm EN AW-5754, raw, cut to size",
+   "seller": "Metaalshopper (metaalshopper.nl), the Netherlands",
+   "url": "https://www.metaalshopper.nl/p/aluminium-plaat-3-mm-348566/",
+   "price": {
+    "EUR_per_m2_excl_vat": 278.07,
+    "EUR_per_piece_cut": 0.44,
+    "EUR_handling_per_order": 9.95
+   },
+   "availability": "ordered today, shipped within 6 working days",
+   "limits": "40 mm minimum per side, 2500 x 1250 mm maximum",
+   "note": "the per-piece prices in the bill are computed from this per-m2 figure (MODELED); the plate's holes and corner radii are not in it"
+  },
+  {
+   "id": "rapid-hs50-6r8-j",
+   "item": "Arcol HS50 6R8 J aluminium housed wirewound resistor, 6.8 ohm 5 % 50 W",
+   "seller": "Rapid Electronics (rapidonline.com), United Kingdom, code 62-8148",
+   "url": "https://www.rapidonline.com/arcol-hs50-6r8-j-aluminium-clad-resistor-50w-62-8148",
+   "price": {
+    "GBP_1plus": 2.0,
+    "GBP_breaks": [
+     1.97,
+     1.9,
+     1.82
+    ],
+    "vat": "the page's VAT selector read 'Inc VAT' at the time; whether the figures are inclusive was not resolved"
+   },
+   "availability": "not read",
+   "note": "EU prices for the same part are in findchips-fans-heaters-2026-10-03.json (RS and Farnell rows)"
+  }
+ ]
+}

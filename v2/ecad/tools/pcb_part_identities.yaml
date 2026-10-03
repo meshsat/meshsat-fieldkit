@@ -4622,3 +4622,710 @@ selections:
     netlist_agrees: true
     in_this_trees_reading: true
     read_by: 'v2/docs/parts/readings/lcsc-2026-09-27.json: UNI-ROYAL 0603WAF470JT5E'
+# ADDED 3 October 2026 (MESHSAT-1357, Layer 6 record l6pwr). Outside `selections:` on purpose (see `what`). Rendered by l6pwr_parts.py --identities;
+# build_table.py does not carry this block: re-apply it with v2/docs/records/l6pwr/apply_part_identities_block.py after a regeneration.
+drafted_identities_l4_power:
+  what: The identities of the parts Layer 4 selected for the power design (L4-E5 to L4-E11), recorded by the Layer 6 record l6pwr (3 October 2026).
+    These parts exist only in release-guarded drafts on no committed netlist, so they are no `selections` and part_identities.py check does not
+    read them; test_l6pwr.py reads this block (rule D-2 on every RESOLVED binding where the document is present). When Layer 8 applies a draft
+    and the table is re-derived, each row becomes a selection and leaves this block.
+  taken_by: MESHSAT-1357 Layer 6 record l6pwr, 3 October 2026, on the integration candidate fnd/l4e9 at 2c240414
+  authority: 'SESSION, under the owner''s standing rule of 26 September 2026: identities and sources recorded, nothing reselected; reverse by
+    removing the block (apply_part_identities_block.py --remove)'
+  rendered_by: v2/docs/records/l6pwr/l6pwr_parts.py --identities
+  rows:
+  - id: L6P-01
+    board: A
+    refs:
+    - U3
+    draft: l4e11_charger
+    selected_by: L4-E11 section 14, arrangement (B1), the fix round 15 and the review round 16 (E11-27, R-157)
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: BQ25730RSNR
+      datasheet:
+        path: v2/vendor/ti/held/ti-bq25730-sluse65a.pdf
+        sha256: e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f
+        page: 104
+        binding: PRINTED
+        doc_id: TI BQ25730 datasheet
+        revision: SLUSE65A, February 2021, revised January 2024
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C5219071
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:31Z: BQ25730RSNR, TI, QFN-32(4x4), stock 0'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-02
+    board: A
+    refs:
+    - Q39
+    - Q40
+    draft: l4e11_charger
+    selected_by: L4-E11 section 15c, option (Q-c), two in parallel (E11-27, R-157)
+    identity:
+      status: UNRESOLVED
+      maker: Nexperia
+      mpn: BUK6Y10-30P
+      datasheet:
+        path: v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf
+        sha256: ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40
+        page: 1
+        binding: PRINTED
+        doc_id: Nexperia BUK6Y10-30P product data sheet
+        revision: 17 April 2020
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+      reason_class: PART_NUMBER_INFERRED
+      reason: the sheet prints BUK6Y10-30P (p.1, the ordering table p.2 names that type only); the fitted code C3278350 resolves to BUK6Y10-30PX,
+        a suffix the sheet does not print (LCSC and JLCPCB list BUK6Y10-30P, SOT-669, stock 0, and BUK6Y10-30PX, LFPAK-56, stock 67, with the
+        same ratings), so the X is INFERRED to be Nexperia's packing code
+      next_action: Nexperia's packing-code document or its written confirmation that BUK6Y10-30PX is BUK6Y10-30P on a reel (Q-NXP-1 can carry
+        it); then the identity reads PRINTED by rule D-2's packing clause
+    order_code:
+      code: C3278350
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:31Z: BUK6Y10-30PX, Nexperia, LFPAK-56, stock 67'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-03
+    board: A
+    refs:
+    - U42
+    draft: l4e11_charger
+    selected_by: L4-E11 section 16e, option (E), and 17a (L4-F03, D-15; E11-27, R-181)
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: TPS16630PWPR
+      datasheet:
+        path: v2/vendor/ti/held/ti-tps1663-slvset9g.pdf
+        sha256: 8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe
+        page: 36
+        binding: PRINTED
+        doc_id: TI TPS1663 datasheet
+        revision: SLVSET9G, September 2018, revised April 2026
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C1849461
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: TPS16630PWPR, TI, HTSSOP-20, stock 1141'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-04
+    board: A
+    refs:
+    - R221
+    - C237
+    - C238
+    - C239
+    draft: l4e11_charger
+    selected_by: 'L4-E11 16e and 17a: U42''s network (E11-27)'
+    identity:
+      status: UNRESOLVED
+      maker: not named
+      mpn: none
+      reason_class: CHOICE_OWED
+      reason: the draft names values and tolerances and no part number; a 0.1 percent 11k resistor and three capacitors are chosen by lcsc_fill.py's
+        value map at the regeneration (Layer 8)
+      next_action: the board A generator owner names the parts or lets the value map choose them; the identity table's selection then resolves
+        on the catalogue reading
+    order_code: {}
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-05
+    board: A
+    refs:
+    - D23
+    draft: l4e11_charger
+    selected_by: L4-E11 17a (TI 9.4.1 and 9.5.1's Schottky at OUT; E11-27)
+    identity:
+      status: UNRESOLVED
+      maker: Diodes Incorporated
+      mpn: B540C-13-F
+      datasheet:
+        path: v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf
+        sha256: 1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Diodes Incorporated B520C to B560C datasheet
+        revision: DS13012 Rev. 18-2, March 2023
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+      reason_class: PART_NUMBER_INFERRED
+      reason: page 1 prints the ordering pattern 'B5xxC-13-F ... xx = Device type, e.g., B520C-13-F' and the marking code 'B540C', not the string
+        B540C-13-F; the part number is decoded by the sheet's own pattern (x = 4 for B540C)
+      next_action: a DECODED scheme for Diodes' B5xxC-13-F pattern in part_identities.SCHEMES, or Diodes' orderable list naming B540C-13-F; until
+        then the catalogue reading (C72264, DIODES B540C-13-F, SMC) is the only text that names it
+    order_code:
+      code: C72264
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: B540C-13-F, DIODES, SMC(DO-214AB), stock 52515'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-06
+    board: A
+    refs:
+    - R11
+    draft: l4e4 apply_gen_sch_a_r11.py (R-04), kept by L4-E5
+    selected_by: L4-E4 (R-04); L4-E5 'What would change' keeps 8 mOhm unless V-A07 (R-75) fails, then 7 mOhm (C2904239, R-155)
+    identity:
+      status: UNRESOLVED
+      maker: Shenzhen Milliohm Electronics
+      mpn: HoJLR2512-3W-8mR-1%
+      datasheet:
+        path: v2/vendor/passives/milliohm-hojlr2512-series.pdf
+        sha256: 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification
+        revision: version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3)
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'page 1 prints the numbering scheme (Ho JLR 2512 3W 100mR 1%: maker, series, size, power, value, tolerance F = +-1 percent) and
+        not the part number; the string HoJLR2512-3W-8mR-1% appears nowhere in the sheet'
+      next_action: a DECODED scheme for Milliohm's HoJLR numbering in part_identities.SCHEMES (the page prints the layout), or the maker's confirmation;
+        the catalogue reading names the model
+    order_code:
+      code: C2904240
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: HoJLR2512-3W-8mR-1%, Milliohm, 2512, stock 9600'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-07
+    board: A
+    refs:
+    - R12
+    draft: l4e6 apply_gen_sch_a_r12.py and apply_lcsc_fill_r12.py (R-01, R-02)
+    selected_by: 'L4-E6, candidate (c): R12 12 mOhm, C147 330 pF (R-01)'
+    identity:
+      status: UNRESOLVED
+      maker: Shenzhen Milliohm Electronics
+      mpn: HoJLR2512-3W-12mR-1%
+      datasheet:
+        path: v2/vendor/passives/milliohm-hojlr2512-series.pdf
+        sha256: 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification
+        revision: version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3)
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-12mR-1%'
+      next_action: as R11
+    order_code:
+      code: C2904242
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: HoJLR2512-3W-12mR-1%, Milliohm, 2512, stock 3405'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-08
+    board: A
+    refs:
+    - R227
+    draft: l4e9 apply_gen_sch_a_u17.py (R-06)
+    selected_by: L4-E9 round 2 part A, section 3 (U17 on R227 in the PoE stage's input; R-06)
+    identity:
+      status: UNRESOLVED
+      maker: Shenzhen Milliohm Electronics
+      mpn: HoJLR2512-3W-5mR-1%
+      datasheet:
+        path: v2/vendor/passives/milliohm-hojlr2512-series.pdf
+        sha256: 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification
+        revision: version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3)
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-5mR-1%'
+      next_action: as R11
+    order_code:
+      code: C2903482
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: HoJLR2512-3W-5mR-1%, Milliohm, 2512, stock 106575'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-09
+    board: A
+    refs:
+    - R221
+    - R222
+    - R223
+    - R224
+    - R225
+    - R226
+    draft: l4e8_bank
+    selected_by: 'L4-E8 ''Status'': six ballasts, one in series with each EEHZK1V331P (R-07)'
+    identity:
+      status: UNRESOLVED
+      maker: Shenzhen Milliohm Electronics
+      mpn: HoJLR2512-3W-45mR-1%
+      datasheet:
+        path: v2/vendor/passives/milliohm-hojlr2512-series.pdf
+        sha256: 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification
+        revision: version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3)
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-45mR-1%'
+      next_action: as R11
+    order_code:
+      code: C2903491
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: HoJLR2512-3W-45mR-1%, Milliohm, 2512, stock 15860'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-10
+    board: A
+    refs:
+    - C163
+    - C178
+    - C179
+    - C180
+    - C199
+    - C200
+    draft: gen_a (drawn; kept by L4-E8 behind the ballasts)
+    selected_by: the drawn cans, kept by L4-E8 (B-4 closes on the bound at both R11 outcomes)
+    identity:
+      status: RESOLVED
+      maker: Panasonic
+      mpn: EEHZK1V331P
+      datasheet:
+        path: v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf
+        sha256: 5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389
+        page: 2
+        binding: PRINTED
+        doc_id: Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors
+        revision: no revision date printed (the sheet's RoHS note cites October 2017; LCSC's copy, filed before this record)
+    order_code:
+      code: C278516
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: EEHZK1V331P, PANASONIC, SMD,D10xL10.2mm, stock 6246'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-11
+    board: A
+    refs:
+    - C236
+    draft: l4e11_charger
+    selected_by: 'L4-E11 section 12 (D5) and 14: VSYS''s 50 uF effective by design (SLUSE65A 9.1); E11-27'
+    identity:
+      status: RESOLVED
+      maker: Panasonic
+      mpn: EEHZK1V181P
+      datasheet:
+        path: v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf
+        sha256: 5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389
+        page: 2
+        binding: PRINTED
+        doc_id: Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors
+        revision: no revision date printed (the sheet's RoHS note cites October 2017; LCSC's copy, filed before this record)
+    order_code:
+      code: C242139
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: EEHZK1V181P, PANASONIC, SMD,D8xL10.2mm, stock 2843'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-12
+    board: A
+    refs:
+    - C6
+    draft: l4e8_bank
+    selected_by: 'L4-E8 ''The choice (SESSION)'': Cc2 from 680 pF to 3.3 nF (R-07)'
+    identity:
+      status: UNRESOLVED
+      maker: Samsung Electro-Mechanics (the catalogue's model for C1613)
+      mpn: CL10B332KB8NNNC
+      reason_class: DOCUMENT_OWED
+      reason: the draft names the code C1613 and the value; the catalogue reads Samsung CL10B332KB8NNNC; no Samsung page for it is read here
+      next_action: read Samsung's specification page for CL10B332KB8NNN (read_catalogue.py's Samsung reader takes it) and bind it as the other
+        CL parts are
+    order_code:
+      code: C1613
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:35Z: CL10B332KB8NNNC, Samsung Electro-Mechanics, 0603, stock 32760'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-13
+    board: E
+    refs:
+    - U21 (guard)
+    - U6 (entry)
+    draft: l4e7_guard (U21), l4e11_entry (U6)
+    selected_by: L4-E11 3c (the entry, E11-01, R-123); L4-E7's solar-fault remedies, check 5 (the guard, R-173)
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: TPS48110AQDGXRQ1
+      datasheet:
+        path: v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf
+        sha256: 3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f
+        page: 44
+        binding: PRINTED
+        doc_id: TI TPS4811-Q1 datasheet
+        revision: SLUSEE5E, January 2022, revised April 2026
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C17556513
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: TPS48110AQDGXRQ1, TI, VSSOP-19, stock 326'
+    provisional: 'the guard''s instance (U21): L4-E7''s round 3 on the solar guard is running and may change the guard''s capacitor set; the entry''s
+      instance (U6) is not under that trigger'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-14
+    board: E
+    refs:
+    - Q7
+    draft: l4e11_entry
+    selected_by: L4-E11 3c, the entry's pass FET (E11-01, R-123)
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: CSD19536KTT
+      datasheet:
+        path: v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf
+        sha256: 19e1a9660fac8577743f40acc2cdc791539afd5232bbc1fc350e15fec735d78d
+        page: 1
+        binding: PRINTED
+        doc_id: TI CSD19536KTT datasheet
+        revision: SLPS540C, March 2015, revised May 2025
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C2687963
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: CSD19536KTT, TI, TO-263-3, stock 611'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-15
+    board: E
+    refs:
+    - Q12 (guard pass)
+    - Q13 (guard return)
+    - Q1 (entry ideal diode, L4-E9)
+    draft: l4e7_guard (Q12, Q13), l4e9 apply_gen_sch_e_q1.py (Q1)
+    selected_by: L4-E9 part A section 1 (Q1, R-17); L4-E7's remedies, check 5 (Q12, Q13; R-173)
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: CSD19532Q5B
+      datasheet:
+        path: v2/vendor/power/ti-csd19532q5b-n-fet.pdf
+        sha256: 353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1
+        page: 1
+        binding: PRINTED
+        doc_id: TI CSD19532Q5B datasheet
+        revision: SLPS414B, December 2013, revised May 2017
+    order_code:
+      code: C473333
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: CSD19532Q5B, TI, SON-8(5x6), stock 2522'
+    provisional: 'Q12 and Q13 belong to the guard: L4-E7''s round 3 may change the guard''s capacitor set (the FETs are not named as changing)'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-16
+    board: E
+    refs:
+    - D4
+    draft: l4e7_guard
+    selected_by: 'L4-E7''s remedies, check 5: D4 from the SMCJ28A to the SMCJ30A (R-173); its LCSC code ''owed'' in the draft'
+    identity:
+      status: RESOLVED
+      maker: Littelfuse
+      mpn: SMCJ30A
+      datasheet:
+        path: v2/vendor/power/littelfuse-smcj-series-tvs.pdf
+        sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+        page: 2
+        binding: PRINTED
+        doc_id: Littelfuse SMCJ series 1500 W TVS datasheet
+        revision: Revised 11/20/15
+    order_code:
+      code: C224048
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: SMCJ30A, Littelfuse, DO-214AB, stock 15670'
+    provisional: 'the guard: L4-E7''s round 3 may change the guard''s capacitor set'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-17
+    board: E
+    refs:
+    - D11
+    draft: l4e7_guard
+    selected_by: 'L4-E7''s remedies, check 5: the port''s clamp when the cut-off is off (R-173); the entry''s D10 part'
+    identity:
+      status: RESOLVED
+      maker: Littelfuse
+      mpn: SMCJ40CA
+      datasheet:
+        path: v2/vendor/power/littelfuse-smcj-series-tvs.pdf
+        sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+        page: 2
+        binding: PRINTED
+        doc_id: Littelfuse SMCJ series 1500 W TVS datasheet
+        revision: Revised 11/20/15
+    order_code:
+      code: C80273
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:32Z: SMCJ40CA, Littelfuse, DO-214AB, stock 4925'
+    provisional: 'the guard: L4-E7''s round 3 may change the guard''s capacitor set'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-18
+    board: E
+    refs:
+    - C131
+    - C132
+    - C135
+    - C136
+    draft: l4e7_guard
+    selected_by: L4-E7 round 2 for the review's B6 and L4-F01 (the port bank; R-173, R-176 row 3)
+    identity:
+      status: UNRESOLVED
+      maker: Samsung Electro-Mechanics
+      mpn: CL32B225KCJSNNE
+      reason_class: PART_NUMBER_INFERRED
+      reason: Samsung's specification page prints CL32B225KCJSNN (the part number less its last character, the packaging code E the catalogue's
+        model carries) and no temperature range; the page is date-stamped and not filed (the excerpt in inputs/ is the reading)
+      next_action: 'Samsung''s part-number legend (the catalogue''s packaging code) read and filed, or the catalogue reading accepted as the identity;
+        the grade needs Samsung''s MLCC catalogue (X7R: -55 to +125 C as the EIA class), NOT READ here'
+    order_code:
+      code: C55151
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: CL32B225KCJSNNE, Samsung Electro-Mechanics, 1210, stock 0'
+    provisional: L4-E7's round 3 on the solar guard is running and may change this capacitor set
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-19
+    board: E
+    refs:
+    - C133
+    - C134
+    - C71
+    - C72
+    - C73
+    - C74
+    draft: l4e7_guard (edits the backstop draft's C71 to C74)
+    selected_by: 'L4-E7 round 2 (B6): C133 and C134 on PV_P beside the bulk, C71 to C74 on TRK_VS (R-173, R-21)'
+    identity:
+      status: UNRESOLVED
+      maker: Samsung Electro-Mechanics
+      mpn: CL32B106KBJNNNE
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'as CL32B225KCJSNNE: the page prints CL32B106KBJNNN and no temperature range'
+      next_action: as CL32B225KCJSNNE
+    order_code:
+      code: C138687
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: CL32B106KBJNNNE, Samsung Electro-Mechanics, 1210, stock 16710'
+    provisional: L4-E7's round 3 may change this capacitor set
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-20
+    board: E
+    refs:
+    - C13
+    - C14
+    draft: gen_sch_e.py (drawn on TRK_VIN; L4-E7 bounds it)
+    selected_by: the drawn part; L4-E7 round 2 bounds its curve (TRK_VIN)
+    identity:
+      status: UNRESOLVED
+      maker: Samsung Electro-Mechanics
+      mpn: CL31B106KBHNNNE
+      reason_class: PART_NUMBER_INFERRED
+      reason: 'as CL32B225KCJSNNE: the page prints CL31B106KBHNNN and no temperature range'
+      next_action: as CL32B225KCJSNNE
+    order_code:
+      code: C89632
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: CL31B106KBHNNNE, Samsung Electro-Mechanics, 1206, stock 0'
+    provisional: L4-E7's round 3 may change the guard's capacitor set
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-21
+    board: E
+    refs:
+    - R60
+    - R61
+    - R62
+    - R63
+    - R64
+    draft: l4e7_backstop
+    selected_by: L4-E7R, the 100 W backstop's sense bank (R-21, R-98)
+    identity:
+      status: UNRESOLVED
+      maker: Vishay Dale
+      mpn: WSL2512R0700FEA
+      datasheet:
+        path: v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf
+        sha256: 96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc
+        page: 1
+        binding: DECODE_NOTE
+        doc_id: Vishay Dale WSL Power Metal Strip resistors, Document 30100
+        revision: Revision 23-Nov-2023 (the legal page dated 01-Jan-2026)
+      reason_class: PART_NUMBER_INFERRED
+      reason: Document 30100 prints the global numbering example WSL25124L000FEA and the decode lines (R0100 = 0.01 Ohm; F = +-1 percent; EA =
+        packaging) and not WSL2512R0700FEA; the catalogue reading names it
+      next_action: a DECODED scheme for Vishay's WSL global part number in part_identities.SCHEMES (the page prints the layout), as SOURCES.yaml's
+        board A WSL entry already decodes by the example
+    order_code:
+      code: C2076144
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: WSL2512R0700FEA, VISHAY, 2512, stock 1970'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-22
+    board: E
+    refs:
+    - U18
+    draft: l4e7_backstop
+    selected_by: 'L4-E7R control decision (C): the sense bank read by an INA169 (R-21)'
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: INA169NA/3K
+      datasheet:
+        path: v2/vendor/ti/held/ti-ina169-sbos181f.pdf
+        sha256: dbb74b6cdc5431353f17b044b7d762df1f2f9049d03d2d1611a53058e570d62c
+        page: 21
+        binding: PRINTED
+        doc_id: TI INA139, INA169 datasheet
+        revision: SBOS181F, December 2000, revised February 2017
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C44322
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: INA169NA/3K, TI, SOT-23-5, stock 61868'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-23
+    board: E
+    refs:
+    - U19
+    draft: l4e7_backstop
+    selected_by: 'L4-E7R control decision (C): the window comparator (R-21)'
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: TPS3701DDCR
+      datasheet:
+        path: v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
+        sha256: 27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560
+        page: 21
+        binding: PRINTED
+        doc_id: TI TPS3701 datasheet
+        revision: SBVS240C, November 2014, revised February 2019
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code:
+      code: C132788
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: TPS3701DDCR, TI, SOT-23-Thin-6, stock 26813'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-24
+    board: E
+    refs:
+    - U20
+    draft: l4e7_backstop
+    selected_by: 'L4-E7R control decision (C): the off-time after a trip, default-off on TRK_LDO33 (R-21)'
+    identity:
+      status: RESOLVED
+      maker: Texas Instruments
+      mpn: TPS3808G33DBVR
+      datasheet:
+        path: v2/vendor/ti/ti-tps3808.pdf
+        sha256: 74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed
+        page: 22
+        binding: PRINTED
+        doc_id: TI TPS3808 datasheet
+        revision: SBVS050N, May 2004, revised August 2026
+    order_code:
+      code: C43698
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:33Z: TPS3808G33DBVR, TI, SOT-23-6, stock 36030'
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-25
+    board: E
+    refs:
+    - R97
+    draft: l4e7_guard
+    selected_by: 'L4-E7 round 2 (B6): INP''s bottom resistor 28.0k (39k before B6; 30.0k in round 1) (R-173)'
+    identity:
+      status: UNRESOLVED
+      maker: not named
+      mpn: none
+      reason_class: CHOICE_OWED
+      reason: the draft names a value and tolerance (28.0k 1%) and no part number or code; the brief's 0.1 percent and the draft's 1 percent disagree
+        (L6P-F04)
+      next_action: L4-E7 states the tolerance its 18 V line needs (L6P-F04's arithmetic) and the board E generator owner names the part or lets
+        the value map choose it
+    order_code: {}
+    provisional: L4-E7's round 3 may change the guard set
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-26
+    board: E
+    refs:
+    - R19 (entry)
+    - R87 (guard)
+    draft: l4e11_entry (R19), l4e7_guard (R87)
+    selected_by: 'L4-E11 3c (R19, the breaker''s sense: 30.6 mV at 6.8 A; E11-01); L4-E7''s remedies (R87; R-173)'
+    identity:
+      status: UNRESOLVED
+      maker: Shenzhen Milliohm Electronics
+      mpn: HoLLR2512-3W-4.5mR-1%
+      reason_class: DOCUMENT_OWED
+      reason: 'the code C2985708 resolves to Milliohm''s HoLLR2512 series (LCSC: HoLLR2512-3W-4.5mR-1%), not the HoJLR2512 series whose sheet
+        the tree holds; no HoLLR sheet is held, so the 3 W, 1 percent and 50 ppm/K the drafts state are the catalogue''s words'
+      next_action: fetch Milliohm's HoLLR2512 sheet from LCSC's datasheet link for C2985708 and read its power, tolerance and TCR rows; or the
+        drafts name a HoJLR2512 4.5 mOhm code
+    order_code:
+      code: C2985708
+      route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
+      read: 'LCSC 2026-10-02T23:20:34Z: HoLLR2512-3W-4.5mR-1%, Milliohm, 2512, stock 4225'
+    provisional: R87 belongs to the guard (L4-E7's round 3)
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-27
+    board: P (pack build)
+    refs:
+    - the 12 cells, 4S3P (D-06)
+    draft: none (the ruled cell, D-06; pcb_pack_protection.yaml and pcb_energy_chain.yaml)
+    selected_by: 'the owner''s ruling D-06 (the 145 Wh 4S3P pack); L4-E10 FEA-008 final: ''suitable on published evidence'' for the envelope rows,
+      ''unsuitable on published evidence'' for LO-01d, e, f, g (the margins)'
+    identity:
+      status: RESOLVED
+      maker: Samsung SDI
+      mpn: INR18650-35E
+      datasheet:
+        path: v2/vendor/battery/samsung-35e-orbtronic.pdf
+        sha256: 5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516
+        page: 3
+        binding: PRINTED
+        doc_id: Samsung SDI INR18650-35E product specification (a distributor's copy)
+        revision: Ver. 1.1 (L4-E10 reads its date as 2015-07-09)
+    order_code: {}
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
+  - id: L6P-28
+    board: P (pack build)
+    refs:
+    - 'the PROPOSAL only: 4 cells, 4S1P'
+    draft: 'none: a labelled PROPOSAL (L4-E10 section 15, U-01''s supported route); adoption is the owner''s'
+    selected_by: 'L4-E10 section 15 (restated after Astra''s B5) and 16: ''a supported route exists on published manufacturer evidence for the
+      temperature windows''; NOT adopted'
+    identity:
+      status: RESOLVED
+      maker: Saft
+      mpn: MP 176065 xtd
+      datasheet:
+        path: v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf
+        sha256: 8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e
+        page: 1
+        binding: PRINTED
+        doc_id: Saft MP 176065 xtd rechargeable Li-ion cell datasheet
+        revision: Doc. n 31109-2-0625, June 2025
+        held_back: true
+        fetch: v2/docs/records/l6pwr/fetch_held_back.py
+    order_code: {}
+    provisional: 'no'
+    record: v2/docs/records/l6pwr/L6-POWER-PARTS.md

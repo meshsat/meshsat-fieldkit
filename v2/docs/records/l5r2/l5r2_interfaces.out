@@ -1,0 +1,606 @@
+L5-R2: LAYER 5'S SECOND ROUND, READ BACK (MESHSAT-1357, 3 October 2026). Prototype design: nothing built, powered or measured;
+a check of the contracts' text against their sources' text. Marks: MAKER, NETLIST, VERIFIED, INFERRED, MODELED, RULE, TEST,
+NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISIONAL: resting on an open condition, its trigger named.
+
+0. INPUTS (sha256)
+   yaml       4784a61af08405343a774ca4951fc6ea4ef9be1ad5cc68787cd29a15c0641a22  v2/ecad/tools/pcb_interfaces.yaml
+   hwfw       e5b4d65046f4ace5e0c4bf482105f95466ac967d6bb2ccf839a4686708613dc6  v2/docs/HW-FW-CONTRACT.md
+   base_yaml  22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  a1f696de@v2/ecad/tools/pcb_interfaces.yaml
+   base_hwfw  7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  a1f696de@v2/docs/HW-FW-CONTRACT.md
+   e18        0f3a1f39367c449c4ee6bdf7fc3a6212ea4981d51295381714f70a6be62698b3  v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md
+   l8gnd      6aebe7e9309a7452c33970b1c53c76cb07ea828ca7285bc5b6455fbc577dbcdd  v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md
+   l7pwr      d4d432207ae347ef6af9d6da6c07e8be3d0237fa2bcbad8da70df96ab35e02a6  v2/docs/records/l7pwr/L7-FANS-AND-TH1.md
+   sanyo      d47c98af1a1e3f285250120f28027a7264e7016e6182b9ccb21d9b4ad13e3611  v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md
+   l4e11md    db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   assembly   942d562edd128759c52ee976f7255862f7a2ef78b5fd76af0a2e223f328e64cd  v2/docs/ASSEMBLY.md
+   proc       6308d0b7335e294f714209f8e961e5ab15c2a4551d3d7119351e6229923346ed  v2/docs/parts/PROCUREMENT.md
+   net_a      6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   net_b      3ef9b8c49a01b72834dece18a69e8637305d97bbf7342d765d28be596f0464d6  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+   net_c      c9f7394594201045be328a07284328a7eef2c2f451e35e0828a98ac3e5510609  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+   net_d      a2d48972d171aad19e943c6e77ae31c45d0d33ff3ac94100f02c6c8777bca001  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+   intent_a   b75d0e156142af59ed19784eda4d1544804480eec95799baf9000bbd52419f8c  v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json
+   intent_d   19fa94a2bce5dd523389e5e183a0d1d288b2ffe78e1d5fde48f32eec60dc5fa6  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json
+   genb       3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8  v2/ecad/tools/gen_sch_b.py
+   gend       54f17c8187d3bd195b2df6447a46c6bcaeb09209fe69bb3f61a7670a47585bbd  v2/ecad/tools/gen_sch_d.py
+   qmx        ea72e0782d8ef82286f6ca8f32d8ee4f8faa489253b31e50b89663585b9c7bbf  v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt
+   ifaces     4784a61af08405343a774ca4951fc6ea4ef9be1ad5cc68787cd29a15c0641a22  v2/ecad/tools/pcb_interfaces.yaml
+   hdr2x13    38509e478ba394d0c87d25b3d16442d8f77d0eb3ccb90357a5a4639010fcc248  v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf
+   sock2x13   6f7254b5bcf6f837ddd0540a002071371b19e2586fca48979b00ebf3f2dff623  v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf
+   cab26      fdee657377aed9acce6d325d6dc53828fe7236be132a2f6c3b74641dc67ded8a  v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
+   vh         d51e669c597988b20c0963daf5bef7356cbd2104c1f867e9107c6fa6cd2b899c  v2/vendor/connectors/jst-vh-catalogue.pdf
+   msmf       a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed  v2/vendor/power/bourns-mf-msmf-pptc.pdf
+   ltc2954    1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae  v2/vendor/power/ltc2954.pdf
+   ra30       9fda757ab1acfb6b29125429035d2361ad711db44b6f40773469527fe17c6da0  v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
+   hc5        cb4f69e6f9e3afa95691047f74b15baa4a77092f1a85c790f10b69787bdadf4b  v2/docs/records/hc5/check_contract_fields.py
+   copied input e18: body sha256 12f7feedb75841fd1b1b235518673522b157a408bd56c266ea348910a5fbde6f, equal to the sha its header declares
+   copied input l8gnd: body sha256 60ee25758268bea97c01a852f6d07eebdebd136099643e41b582fd8eb5be3baa, equal to the sha its header declares
+
+1. HC5'S FIELD CONTRACT ON EVERY CONTRACT, BEFORE (a1f696de, 30 contracts) AND AFTER (the tree, 31 contracts)
+   IF-A-CHASSIS   before: (not in the file)
+                  after:  carries every field
+   IF-A-HEAT      before: carries every field
+                  after:  carries every field
+   IF-A-PA        before: no key for default_state, harness, levels, mating, sequencing, tbd; board d end has no `part`
+                  after:  carries every field
+   IF-AB-POWER    before: carries every field
+                  after:  carries every field
+   IF-AB-RIBBON   before: no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd
+                  after:  carries every field
+   IF-AB-WALL     before: no key for current, default_state, harness, hot_plug, judged_by, levels, mating, sequencing, tbd
+                  after:  carries every field
+   IF-AC-MAINSW   before: no key for current, default_state, harness, hot_plug, levels, mating, sequencing, tbd; board c end has no `part`; board a end has no `part`
+                  after:  carries every field
+   IF-AD-HARNESS  before: no key for current, default_state, harness, hot_plug, judged_by, levels, mating, sequencing, tbd; board a end has no `part`; board d end has no `part`
+                  after:  carries every field
+   IF-AE-DOCK     before: carries every field; board e5 end has no `part`; board e5 end has no `src`; board e5 end names no ref
+                  after:  carries every field
+   IF-AE-RF       before: no key for current, default_state, harness, hot_plug, levels, mating, sequencing, tbd; board a end has no `part`; board e end has no `part`; board e end names no ref
+                  after:  carries every field
+   IF-B-FANS      before: carries every field
+                  after:  carries every field
+   IF-B-LIME      before: carries every field
+                  after:  carries every field
+   IF-B-RB9704    before: carries every field
+                  after:  carries every field
+   IF-BA-RF       before: carries every field
+                  after:  carries every field
+   IF-BC-PANEL    before: no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd
+                  after:  carries every field
+   IF-CAM         before: carries every field
+                  after:  carries every field
+   IF-D-FLANGE    before: carries every field
+                  after:  carries every field
+   IF-DA-VHF      before: carries every field
+                  after:  carries every field
+   IF-E-FANS      before: carries every field
+                  after:  carries every field
+   IF-E-POD       before: carries every field
+                  after:  carries every field
+   IF-E-SENSORS   before: carries every field
+                  after:  carries every field
+   IF-E-TAMP      before: carries every field
+                  after:  carries every field
+   IF-E-WATER     before: carries every field
+                  after:  carries every field
+   IF-EXT-DC      before: carries every field
+                  after:  carries every field
+   IF-EXT-ETH     before: carries every field
+                  after:  carries every field
+   IF-EXT-USB     before: carries every field
+                  after:  carries every field
+   IF-HS          before: carries every field
+                  after:  carries every field
+   IF-LID-HF      before: no key for default_state, harness, levels, mating, sequencing, tbd; board a end has no `part`
+                  after:  carries every field
+   IF-MON         before: carries every field
+                  after:  carries every field
+   IF-P-CELLS     before: carries every field
+                  after:  carries every field
+   IF-PE-PACK     before: carries every field
+                  after:  carries every field
+
+   The fields each touched contract gained (keys new to it; board ends that gained a part; keys moved out):
+   IF-BC-PANEL    gained harness, judged_by, current, protection, levels, default_state, sequencing, mating, tbd; parts added 0; moved cable, power
+   IF-AB-RIBBON   gained harness, judged_by, levels, current, default_state, sequencing, mating, tbd; parts added 0; moved cable
+   IF-AB-WALL     gained harness, judged_by, levels, current, default_state, sequencing, mating, hot_plug, tbd; parts added 0; moved cable
+   IF-AD-HARNESS  gained harness, judged_by, current, levels, default_state, sequencing, mating, hot_plug, tbd; parts added 2; moved cable, power_lead
+   IF-AC-MAINSW   gained harness, levels, current, default_state, sequencing, mating, hot_plug, tbd; parts added 2; moved note
+   IF-AE-RF       gained harness, levels, current, default_state, sequencing, mating, hot_plug, tbd; parts added 2; moved none
+   IF-A-PA        gained harness, levels, default_state, sequencing, mating, tbd; parts added 1; moved none
+   IF-LID-HF      gained harness, levels, default_state, sequencing, mating, tbd; parts added 1; moved none
+   IF-AE-DOCK     gained grounding; parts added 1; moved none
+   IF-E-FANS      gained none; parts added 0; moved none
+   IF-B-FANS      gained none; parts added 0; moved none
+   IF-EXT-ETH     gained none; parts added 0; moved none
+   IF-EXT-DC      gained none; parts added 0; moved none
+   IF-A-CHASSIS   gained title, kind, ends, harness, levels, current, default_state, sequencing, mating, hot_plug, judged_by, tbd, findings, serves; parts added 1; moved none
+
+2. NO LOSS: every string and number of the eight old blocks is found in the new ones
+   IF-BC-PANEL    80 leaves, all found
+   IF-AB-RIBBON   47 leaves, all found
+   IF-AB-WALL     29 leaves, all found
+   IF-AD-HARNESS  46 leaves, all found
+   IF-AC-MAINSW   16 leaves, all found
+   IF-AE-RF       35 leaves, all found
+   IF-A-PA        27 leaves, all found
+   IF-LID-HF      23 leaves, all found
+
+3. THE TABLE (48 entries, 124 figures; every excerpt found in its target, every figure printed by a cited source)
+   R2-01 | IF-BC-PANEL | ends.b part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: Wurth WR-BHD 61202621621 (session pick HC6-SC-7, JLCPCB C17586777; 3 A per contact at 25 C, -40 to +105 C, 30 mating cycles
+      source: v2/docs/parts/PROCUREMENT.md, v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf, v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net; PROCUREMENT.md 5 (HC6-SC-7); the header's sheet; B netlist
+      figures: 61202621621, C17586777, @ 25 °C 3 A max, Durability 30 Mating cycles, IDC-Header_2x13_P2.54mm_Vertical_NarrowPad
+      mark: MAKER
+      trigger: a different pick under HC6-SC-7's reversal (a failed land comparison)
+      criteria: 5.2
+   R2-02 | IF-BC-PANEL | ends.c part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: XFCN BH254VS-26P (session pick HC6-SC-7, C48687640, no maker sheet read
+      source: v2/docs/parts/PROCUREMENT.md, v2/ecad/pcb-c-display-c8/out/pcb-c-display.net; PROCUREMENT.md 5; C netlist
+      figures: BH254VS-26P, C48687640, IDC-Header_2x13_P2.54mm_Vertical_SMD
+      mark: NETLIST; the part's sheet NOT READ
+      trigger: none: a TBD (the sheet), owner Layer 6
+      criteria: 5.2
+   R2-03 | IF-BC-PANEL | harness.rating (moved from cable) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: sockets Wurth WR-BHD 61202623021 (1 A per contact max, -40 to +105 C, 30 mating cycles) on flat cable WR-CAB 63912615521CAB (1.27 mm, 28 AWG, 1 A per conductor max, -25 to +105 C, 300 V RMS)
+      source: v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf, v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf, v2/docs/parts/PROCUREMENT.md; the socket's and the cable's sheets; HC6-SC-7
+      figures: 61202623021, 63912615521CAB, Rated Current IR 1 A max, Operating Temperature -40 up to +105, -25 °C up to +105, 300
+      mark: MAKER
+      trigger: none
+      criteria: 5.9
+   R2-04 | IF-BC-PANEL | current.per_conductor | target v2/ecad/tools/pcb_interfaces.yaml
+      text: F1 holds 1.10 A (0.55 A a conductor) and trips at 2.20 A at 23 C (Bourns MF-MSMF sheet, every MF-MSMF110 variant)
+      source: v2/vendor/power/bourns-mf-msmf-pptc.pdf, v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net; the MF-MSMF table; B netlist's F1
+      figures: MF-MSMF110/16 16 100 1.10 2.20, Bourns MF-MSMF110-2
+      mark: MAKER, INFERRED (the per-conductor split); a TBD for the 2.0 to 2.2 A band
+      trigger: none: a TBD (the cable's capability above 1 A), owner Layer 6
+      criteria: 5.5
+   R2-05 | IF-BC-PANEL | protection (a stale statement corrected, kept) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: since b76c18cb F1 IS the MF-MSMF110 (B19 netlist: '1.1A hold 1812 (Bourns MF-MSMF110-2)')
+      source: v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net; B netlist's F1
+      figures: 1.1A hold 1812 (Bourns MF-MSMF110-2)
+      mark: NETLIST
+      trigger: none
+      criteria: 5.13
+   R2-06 | IF-BC-PANEL | cable_out_states.SLOT_EN1..3 | target v2/ecad/tools/pcb_interfaces.yaml
+      text: held high at least 2.547 V, held low at most 0.266 V, the worst cases of l8gnd 3b
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3b
+      figures: **2.547 V**, **0.266 V**
+      mark: INFERRED (record l8gnd's arithmetic on MAKER rows); DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.7
+   R2-07 | IF-BC-PANEL | slot_power_semantics | target v2/ecad/tools/pcb_interfaces.yaml
+      text: keepers U43 (SN74LVC08A, one gate a line) with R230 to R232 (4.7 k) on board A keep each line at its last driven level
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3a, 3g
+      figures: U43, an SN74LVC08APWR, R230, R231, R232, 4.7 k
+      mark: NETLIST (the draft's text); DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.6
+   R2-08 | IF-AB-RIBBON | ends.a part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: IDC 2x13, top side: Wurth WR-BHD 61202621621 (session pick HC6-SC-7, JLCPCB C17586777
+      source: v2/docs/parts/PROCUREMENT.md, v2/ecad/pcb-a-power-a23/out/pcb-a-power.net; HC6-SC-7; A netlist
+      figures: 61202621621, IDC-Header_2x13_P2.54mm_Vertical_NarrowPad
+      mark: MAKER
+      trigger: as R2-01
+      criteria: 5.2
+   R2-09 | IF-AB-RIBBON | hot_plug | target v2/ecad/tools/pcb_interfaces.yaml
+      text: with the hold applied (record l8gnd, DRAFTED) it no longer drops SLOT_EN
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3g
+      figures: with the hold applied it no longer drops SLOT_EN
+      mark: DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.7
+   R2-10 | IF-AB-WALL | ends.a part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: IDC 2x5 vertical box header: Wurth WR-BHD 61201021621 (session pick HC6-SC-7, JLCPCB C4355000
+      source: v2/docs/parts/PROCUREMENT.md, v2/ecad/pcb-a-power-a23/out/pcb-a-power.net; HC6-SC-7; A netlist
+      figures: 61201021621, C4355000, IDC-Header_2x05_P2.54mm_Vertical_NarrowPad
+      mark: MAKER
+      trigger: as R2-01
+      criteria: 5.2
+   R2-11 | IF-AB-WALL | current | target v2/ecad/tools/pcb_interfaces.yaml
+      text: VBUS_WALL does not cross this ribbon (it leaves board A on J_USBW behind the eFuse U32, 0.9142 A
+      source: v2/docs/ASSEMBLY.md; ASSEMBLY.md section 4, the wall USB host row
+      figures: 0.9142 A, J_USBW
+      mark: VERIFIED
+      trigger: none
+      criteria: 5.5
+   R2-12 | IF-AB-WALL | hot_plug (a session choice) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: not hot-pluggable (the session's choice in record l5r2
+      source: this record, section 8
+      figures: none (a rule, a choice or a state)
+      mark: RULE (SESSION)
+      trigger: an interlock that makes live mating safe
+      criteria: 5.10
+   R2-13 | IF-AD-HARNESS | ends parts | target v2/ecad/tools/pcb_interfaces.yaml
+      text: J_MEZZ1 IDC 2x8 box header Wurth WR-BHD 61201621621 (session pick HC6-SC-7,
+      source: v2/docs/parts/PROCUREMENT.md, v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net; HC6-SC-7; A and D netlists
+      figures: 61201621621, C5364137, IDC-Header_2x08_P2.54mm_Vertical_NarrowPad, JST_VH_B2P-VH_1x02_P3.96mm_Vertical, C274411
+      mark: MAKER, NETLIST
+      trigger: as R2-01
+      criteria: 5.2
+   R2-14 | IF-AD-HARNESS | current.power_lead.contact | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the fitted lead is 18 AWG on the standard B2P-VH, a combination the catalogue does not rate
+      source: v2/vendor/connectors/jst-vh-catalogue.pdf, v2/docs/ASSEMBLY.md; JST VH catalogue p.1; ASSEMBLY.md's mezzanine 5 V row
+      figures: Current rating: 10 A, When using AWG #16 with the standard type header, When using AWG #18 with the shrouded type header, 18 AWG, 60 mm
+      mark: MAKER (INCONCLUSIVE for the fitted combination)
+      trigger: none: a TBD, owner Layer 6
+      criteria: 5.5
+   R2-15 | IF-AD-HARNESS | current.signals | target v2/ecad/tools/pcb_interfaces.yaml
+      text: board D's loads on it sum 0.0654 A (D intent: U16 0.06, U19 and U20 0.002 each, U22 0.0002, R92 0.0012)
+      source: v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json, v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json; D's and A's intent files
+      figures: "U16": 0.06, "U22": 0.0002, "R92": 0.0012, "J_MEZZ1": 0.1
+      mark: NETLIST (the intents' declarations)
+      trigger: none
+      criteria: 5.5
+   R2-16 | IF-AD-HARNESS | levels | target v2/ecad/tools/pcb_interfaces.yaml
+      text: +5V_D8 from U41 at 4.872 to 5.133 V behind U23 (A intent, stream s99a), board D's codec 4.44 to 4.48 V at the 1.0 A typical
+      source: v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json; A's intent, +5V_D8 and +5V_D8IN
+      figures: 4.872 to 5.133 V, 4.44 to 4.48 V
+      mark: INFERRED (stream s99a)
+      trigger: none (S-116 open, a TBD)
+      criteria: 5.4
+   R2-17 | IF-AC-MAINSW | ends parts | target v2/ecad/tools/pcb_interfaces.yaml
+      text: JST-XH B2B-XH-A 1x2 (C158012; 3 A per contact with AWG 22, JST XH catalogue) (A netlist)
+      source: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, v2/ecad/pcb-c-display-c8/out/pcb-c-display.net; A and C netlists
+      figures: C158012, JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical, meshsat:LeadLands_1x02
+      mark: NETLIST
+      trigger: none
+      criteria: 5.2
+   R2-18 | IF-AC-MAINSW | levels | target v2/ecad/tools/pcb_interfaces.yaml
+      text: open-circuit 1 to 2 V at -1 uA, falling threshold 0.6 to 1 V, pin range -1 to 26.4 V (Analog Devices 2954fb, p.3, MAKER)
+      source: v2/vendor/power/ltc2954.pdf; 2954fb p.3
+      figures: PB Open Circuit Voltage, PB Input Threshold, 26.4, 2954fb
+      mark: MAKER
+      trigger: none
+      criteria: 5.4
+   R2-19 | IF-AC-MAINSW | current | target v2/ecad/tools/pcb_interfaces.yaml
+      text: -3 to -15 uA at 0.6 V and -1 to -12 uA at 1 V (2954fb p.3,
+      source: v2/vendor/power/ltc2954.pdf; 2954fb p.3
+      figures: PB Input Current, VPB = 0.6V, VPB = 1V
+      mark: MAKER
+      trigger: none
+      criteria: 5.5
+   R2-20 | IF-AC-MAINSW | sequencing (moved from note) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: a tap while running raises PI_SHDN_REQ (FW-A10, FW-A12)
+      source: HW-FW-CONTRACT.md FW-A10, FW-A12
+      figures: none (a rule, a choice or a state)
+      mark: VERIFIED (the contract's own rows)
+      trigger: none
+      criteria: 5.6
+   R2-21 | IF-AE-RF | ends.a part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: Radiall SMP-MAX slide-on receptacles R222M00720 (land meshsat:Radiall_SMPMAX_R222M00720)
+      source: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net; A netlist
+      figures: R222M00720, meshsat:Radiall_SMPMAX_R222M00720, SMA_Amphenol_132134-11_Vertical, C3174425
+      mark: NETLIST
+      trigger: none
+      criteria: 5.2
+   R2-22 | IF-AE-RF | ends.e part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: holding eleven Radiall R222M80500 right-angle SMP-MAX plugs
+      source: v2/docs/ASSEMBLY.md; ASSEMBLY.md section 4, the RF jumpers row
+      figures: R222M80500
+      mark: VERIFIED
+      trigger: none
+      criteria: 5.2
+   R2-23 | IF-AE-RF | harness | target v2/ecad/tools/pcb_interfaces.yaml
+      text: RG-316 jumpers, each cut to its route plus 20 mm, 252 to 432 mm, bend radius 12.5 mm
+      source: v2/docs/ASSEMBLY.md; ASSEMBLY.md section 4, the RF jumpers row
+      figures: 252 to 432 mm, bend radius 12.5 mm
+      mark: VERIFIED
+      trigger: the jumper plug's pick (M17g, M17x)
+      criteria: 5.9
+   R2-24 | IF-A-PA | ends.d part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: J_VGG JST-PH B2B-PH-K 1x2 (C131337); J_PAIN U.FL Hirose U.FL-R-SMT-1 (C88373); J_PAOUT SMA Amphenol 132134 vertical (C3174425)
+      source: v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net; D netlist
+      figures: C131337, C88373, U.FL_Hirose_U.FL-R-SMT-1_Vertical, SMA_Amphenol_132134_Vertical
+      mark: NETLIST
+      trigger: none
+      criteria: 5.2
+   R2-25 | IF-A-PA | levels (the drive) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: 50 mW at J_PAIN (gen_sch_d.py), against the module's Pin absolute 100 mW
+      source: v2/ecad/tools/gen_sch_d.py, v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf; gen_sch_d.py's pad; the module's sheet
+      figures: 0.5 W in, 50 mW to the PA, Pin Input Power 100 mW, Pin=50mW
+      mark: MAKER, NETLIST
+      trigger: none
+      criteria: 5.4
+   R2-26 | IF-A-PA | current.contact | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the 6.0 A peak is 60 percent of it
+      source: v2/vendor/connectors/jst-vh-catalogue.pdf, v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json; the VH catalogue; A's intent
+      figures: Current rating: 10 A, "J_PA": 6.0
+      mark: MAKER, INFERRED
+      trigger: F-PR-02 (the drain current characterised)
+      criteria: 5.5
+   R2-27 | IF-LID-HF | ends.b part (finding L5R2-F04) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: gen_sch_b.py's land key PH1x4 is Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical
+      source: v2/ecad/tools/gen_sch_b.py, v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net; gen_sch_b.py's footprint table; B netlist
+      figures: "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+      mark: NETLIST
+      trigger: board B's land changed to a JST-PH part, or the contract and ASSEMBLY.md to the pin header
+      criteria: 5.10, 5.13
+   R2-28 | IF-LID-HF | current.maker | target v2/ecad/tools/pcb_interfaces.yaml
+      text: receive 80 mA, transmit around 0.7 A for 5 W with a 12 V supply
+      source: v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt; QRP Labs' product page
+      figures: Receive current 80mA, around 0.7A for 5W with 12V supply
+      mark: MAKER (approximate)
+      trigger: QRP Labs' manual's figure
+      criteria: 5.5
+   R2-29 | IF-LID-HF | levels (RF) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the QMX's 3 to 5 W output at a 12 V supply
+      source: v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt; QRP Labs' product page
+      figures: 3-5W output at 12V supply
+      mark: MAKER
+      trigger: none
+      criteria: 5.4
+   R2-30 | IF-E-FANS | ends.device | target v2/ecad/tools/pcb_interfaces.yaml
+      text: two Sanyo Denki 9WL0612P4H001 (San Ace 60W, 60 x 60 x 25, IP68, 12 V, 10.8 to 13.2 V, 0.17 A, 2.04 W, -20 to +70
+      source: v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md, v2/docs/records/l7pwr/L7-FANS-AND-TH1.md; the maker's page as transcribed; l7pwr 2d
+      figures: 9WL0612P4H001, 10.8 to 13.2, 0.17, 2.04, -20 to +70
+      mark: MAKER
+      trigger: a fan printing a covering range (D-18's reversal)
+      criteria: 5.2
+   R2-31 | IF-E-FANS | levels | target v2/ecad/tools/pcb_interfaces.yaml
+      text: +12V_FAN 12.001 V (11.512 to 12.431 V at FB's limits) from U22 on VSYS_E, inside the fans' 10.8 to 13.2 V by 0.71 V below and 0.77 V above
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18a
+      figures: 12.001 V, 11.512 to 12.431 V, 0.71 V below and 0.77 V above
+      mark: MODELED; DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+      criteria: 5.4
+   R2-32 | IF-E-FANS | current | target v2/ecad/tools/pcb_interfaces.yaml
+      text: at U22's input 0.5208 A for both at full speed at VSYS_E's floor (4.08 W over 0.85 at 9.508 V plus 16 mA), the dock branch 1.3208 A with U12, 89.8 percent of U42's least limit 1.4713 A
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18b
+      figures: 0.5208 A, 4.08 W over 0.85 at 9.508 V, 1.3208 A, 89.8 %, 1.4713 A
+      mark: MODELED (0.85 an ASSUMPTION); DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35, R-179)
+      criteria: 5.5
+   R2-33 | IF-E-FANS | power | target v2/ecad/tools/pcb_interfaces.yaml
+      text: RUN on at 8.33 V and off at 6.89 V of VSYS_E
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18a
+      figures: **8.33 V**, **6.89 V**, **0.72 W**
+      mark: INFERRED (the comparator's limits); DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+      criteria: 5.6
+   R2-34 | IF-E-FANS | sequencing | target v2/ecad/tools/pcb_interfaces.yaml
+      text: never while U12 or U22 starts (FW-E11, E11-39, R-188; L4-E11 18c)
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18c
+      figures: never while U12 or U22 starts
+      mark: RULE (L4-E11, SESSION); PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+      criteria: 5.6, 5.11
+   R2-35 | IF-B-FANS | ends.device | target v2/ecad/tools/pcb_interfaces.yaml
+      text: three Sanyo Denki 9WPA0412P6G001 (San Ace 40W, 40 x 40 x 20, IP68, 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W
+      source: v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md, v2/docs/records/l7pwr/L7-FANS-AND-TH1.md; the maker's page; l7pwr 2d
+      figures: 9WPA0412P6G001, 40 x 20
+      mark: MAKER
+      trigger: as R2-30
+      criteria: 5.2
+   R2-36 | IF-B-FANS | levels (E11-40) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the slot's +5V_Sn at 5.1 V on pin 1 (B netlist; L4-E11 18d), OUTSIDE the fans' 10.8 to 13.2 V
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18d
+      figures: **5.1 V**, E11-40
+      mark: NETLIST; PROVISIONAL (E11-40 open)
+      trigger: board B's owner drawing a regulated 12.0 V feed (E11-40)
+      criteria: 5.4
+   R2-37 | IF-B-FANS | current | target v2/ecad/tools/pcb_interfaces.yaml
+      text: about 0.436 A each at full speed (record l7pwr, F-L7-02, INFERRED)
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18d
+      figures: 0.436 A
+      mark: INFERRED; PROVISIONAL
+      trigger: E11-40's feed drawn (a step-up's efficiency or a 12 V feed changes the figure)
+      criteria: 5.5
+   R2-38 | IF-AE-DOCK | pin1_vsys_dock (round 2) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: is declared 1.3208 A (U12 0.8 A, U22 0.5208 A at the floor with both fans at full speed), 89.8 percent of U42's least limit 1.4713 A with 0.1504 A in hand
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18b
+      figures: 1.3208 A, 0.1504 A, 37.7 %, 9.508 V, 1.21 W
+      mark: MODELED; DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+      criteria: 5.5
+   R2-39 | IF-AE-DOCK | ends.e5 part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the dock block E5: twelve plated contact targets, four pack targets, a pre-charge target, eight VIN_RAW targets
+      source: v2/ecad/tools/pcb_interfaces.yaml; this file's boards.e5 and IF-AE-DOCK not_judged
+      figures: twelve plated contact targets, four pack targets, a pre-charge target, eight VIN_RAW targets
+      mark: VERIFIED (the file's own statements)
+      trigger: none
+      criteria: 5.2
+   R2-40 | power_line_states | SLOT_EN1..3 hold | target v2/ecad/tools/pcb_interfaces.yaml
+      text: held HIGH at least 2.547 V (the pad's pull-down at 50 k), held LOW at most 0.266 V (at 80 k)
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3b, 3d
+      figures: **2.547 V**, **0.266 V**, the pad at 50 k, the pad at 80 k
+      mark: INFERRED; DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.6, 5.7
+   R2-41 | power_line_states | U22_RUN_12V_FAN | target v2/ecad/tools/pcb_interfaces.yaml
+      text: on at 8.33 V of VSYS_E (7.98 to 8.67 V) and off at 6.89 V (6.55 to 7.23 V)
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18a
+      figures: 7.98 to 8.67 V, 6.55 to 7.23 V, R103 1.5M / R104 255k
+      mark: INFERRED; DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+      criteria: 5.7
+   R2-42 | IF-EXT-ETH | grounding | target v2/ecad/tools/pcb_interfaces.yaml
+      text: C33 to CHASSIS and J_ETH SH to CHASSIS, Microchip DS00004151A p.10
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 2a, 2c
+      figures: DS00004151A p.10, connected to chassis ground through a 1000 pF, 2 kV capacitor, The metal case shield of the RJ45 connector is also tied to chassis ground
+      mark: MAKER (the clause); DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.12
+   R2-43 | IF-EXT-ETH | tbd (l8gnd F01) | target v2/ecad/tools/pcb_interfaces.yaml
+      text: the PX0833's plastic body, the PX0888 backshell
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 2c
+      figures: Polyester (PET), Plastic Body, PX0888
+      mark: VERIFIED (record l8gnd's reading of the held sheet)
+      trigger: the wall RJ45's pick
+      criteria: 5.12
+   R2-44 | IF-A-CHASSIS | ends.a part | target v2/ecad/tools/pcb_interfaces.yaml
+      text: M4 bonding pad, land meshsat:ChassisLug_M4_CHASSIS (plated hole 4.3, 12.0 ring both sides)
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 2b
+      figures: meshsat:ChassisLug_M4_CHASSIS, plated hole 4.3, 12.0 ring both sides, R229
+      mark: NETLIST (the draft's text); DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.2, 5.12
+   R2-45 | FW-C02 | the keeper | target v2/docs/HW-FW-CONTRACT.md
+      text: SLOT_EN1..3 held at their last driven level across a panel reset by board A's keepers U43 (SN74LVC08A) with R230 to R232
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3f
+      figures: held at their last driven level across a panel reset by board A's keepers U43
+      mark: DRAFTED; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.11
+   R2-46 | V-C02 | extended | target v2/docs/HW-FW-CONTRACT.md
+      text: each SLOT_EN read on a scope at or above 2.5 V throughout (the held high)
+      source: v2/docs/records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md; l8gnd 3h
+      figures: each SLOT_EN read on a scope at or above 2.5 V throughout
+      mark: TEST; PROVISIONAL
+      trigger: record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+      criteria: 5.11
+   R2-47 | FW-E11 | U42's ILIM resistor | target v2/docs/HW-FW-CONTRACT.md
+      text: R228 11.0 kOhm, renamed from R221 by L4-E11 at `787e7b15`
+      source: v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md; L4-E11's record (in this tree since 787e7b15)
+      figures: R228
+      mark: VERIFIED
+      trigger: none
+      criteria: 5.13
+   R2-48 | FW-E11 | the start's room | target v2/docs/HW-FW-CONTRACT.md
+      text: leaves 0.1504 A of room, 1.21 W at the rail for the other fan's start (18b)
+      source: v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md; L4-E11 18b
+      figures: 0.1504 A, 1.21 W
+      mark: MODELED; DRAFTED; PROVISIONAL
+      trigger: L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35)
+      criteria: 5.11
+
+4. THE TBD ENTRIES OF THE TOUCHED CONTRACTS, WITH THEIR OWNERS (44)
+   IF-BC-PANEL | the ribbon's and the socket's capability above their 1 A maximum for F1's time to trip between 2.0 and 2.2 A (Wurth prints a maximum at laboratory conditions only); effect: a PANEL_5V fault in that band is not shown to stay inside the cable's rating (current.per_conductor) | owner: Layer 6 (Wurth's statement) or the bench (Layer 9)
+   IF-BC-PANEL | board C's XFCN BH254VS-26P: no maker sheet read (HC6-SC-7 names it the weakest pick); effect: its contact rating, temperature range and land are not shown | owner: Layer 6 components
+   IF-BC-PANEL | the SLOT_EN hold (record l8gnd's keeper U43): DRAFTED, not applied; effect: until applied a panel reset drops every module (slot_power_semantics) | owner: Layer 8 board A (record l8gnd's release)
+   IF-AB-RIBBON | SEG-A's buffer U_A at J_AB1 (SC-HF-02, owed on board A); effect: the kit bus's rise time over this ribbon stays HF-F01's until it is drawn | owner: Layer 8 board A (SC-HF-02)
+   IF-AB-RIBBON | the SLOT_EN hold (record l8gnd), DRAFTED, not applied; effect: as IF-BC-PANEL's | owner: Layer 8 board A (record l8gnd's release)
+   IF-AB-WALL | the ribbon's length (harness.length); effect: its route past board D is not fixed | owner: Layer 7 (ASSEMBLY.md's leads table)
+   IF-AB-WALL | W4-F17, A's J_AB2 inside board D's outline (mechanical); effect: the header and its socket do not fit as placed | owner: Layer 7 and Layer 8 board A
+   IF-AB-WALL | the bring-up link-speed test (usb); effect: the wall path's achieved speed is not shown | owner: Layer 9 bench (bring-up)
+   IF-AD-HARNESS | the 18 AWG lead on the standard VH header: no stated rating (JST VH catalogue page 1); effect: the 5 V lead's contact margin at U23's 2.0 A limit is unproven | owner: Layer 6 (JST's rating) or Layer 7 (a 16 AWG lead)
+   IF-AD-HARNESS | a +3V3 fault on board D: no branch limiter, so it is bounded only by board A's +3V3 converter (the TPS62933 at L7) through one 1 A ribbon conductor, its limit not read here; effect: the conductor's rating in that fault is not shown | owner: Layer 8 board A
+   IF-AD-HARNESS | S-116, board D's codec under 4.35 V at the lead's 2.0 A peak; effect: the codec's floor at the peak | owner: Layer 8 boards A and D (S-116)
+   IF-AC-MAINSW | the lead's length (ASSEMBLY.md's MAIN button row gives none); effect: its route past board B is not fixed | owner: Layer 7
+   IF-AE-RF | SMP-MAX and RG-316 power handling at 144 MHz for RF_VHF's 30 W (power_handling); effect: the VHF joint's rating is unproven | owner: Layer 6 components
+   IF-AE-RF | the right-angle SMA plug at the arrestors (M17g, M17x); effect: the east jumpers' layering under the plugs is OPEN | owner: Layer 7 (M17g, M17x)
+   IF-AE-RF | board A's twelfth site at X +46 (D-07), in no generator; effect: the 5G ANT3 joint does not exist on board A yet | owner: Layer 8 board A (D-07)
+   IF-AE-RF | a DC antenna feed on any joint; effect: the arrestors' and the joints' DC rating is not stated | owner: Layer 6 components
+   IF-A-PA | the drain current (F-PR-02: 75 to 113 W, uncharacterised); effect: the rail's and the lead's peak basis | owner: Layer 9 bench (F-PR-02)
+   IF-A-PA | the band lock (licence, D-04, owed); effect: the VHF path's operation inside the operator's licence | owner: the firmware owner (FW-D03, D-04)
+   IF-LID-HF | J_QMX's land, a 2.54 mm pin header as generated against PH 1x4 in this contract and ASSEMBLY.md (L5R2-F04); effect: the lead's housing does not mate as written | owner: Layer 8 board B and ASSEMBLY.md's owner (L5R2-F04)
+   IF-LID-HF | the 18 AWG HF lead on the standard VH header: no stated rating (JST VH catalogue page 1); effect: J_HF's contact margin at the 2.0 A peak | owner: Layer 6 or Layer 7
+   IF-LID-HF | the QMX's supply current at 12 V from QRP Labs' manual (the product page's 'around 0.7 A' is approximate); effect: the 1.0 A declaration's basis | owner: Layer 6 (QRP Labs' manual)
+   IF-AE-DOCK | the fans' part and so their start current behind U42 (E11-35, R-179); effect: pin1_vsys_dock's fans' start rule is a bound, not a part's figure | owner: Layer 9 bench (E11-35, R-179)
+   IF-AE-DOCK | the 813 contact's pulse capability and its resistance after E11-38's hard-short cases; effect: the dock's VSYS branch's fault qualification (L4-F03) stays open | owner: Layer 6 (Preci-Dip's statement) and Layer 9 (E11-38)
+   IF-E-FANS | the fans' start current (NOT READ; E11-35, R-179 the bench); effect: the stagger's margin under U42 | owner: Layer 9 bench (E11-35, R-179)
+   IF-E-FANS | the fans' PWM input level and their behaviour with PWM released (NOT READ, manual M0011876C); effect: Q9 and Q10's open-drain drive and the default state | owner: Layer 6 (the maker's manual, F-L7-11)
+   IF-E-FANS | the lead termination and board E's header (HF-F04); effect: the lead does not mate as written | owner: Layer 7 (HF-F04)
+   IF-E-FANS | the rail U22 and the four-pin headers are DRAFTED by L4-E11 at b929d8be, not in this tree; effect: as generated the fans sit on CELL_F, over their 13.2 V | owner: the Layer 4 coordinator and Layer 8 board E (L4-E11 section 18's release)
+   IF-B-FANS | E11-40: the coolers' 10.8 to 13.2 V not met by +5V_Sn as generated (L4-E11 18d, record l7pwr F-L7-02); PROVISIONAL until board B's owner draws a 12.0 V feed; effect: the cooler fans cannot run as generated | owner: Layer 8 board B
+   IF-B-FANS | the start current and the PWM input level (NOT READ); effect: the slot budget's fan row at start | owner: Layer 6 and Layer 9
+   IF-B-FANS | the fan's lead termination against the SH header; effect: whether the lead mates | owner: Layer 7
+   IF-EXT-ETH | the sealed RJ45 part; effect: plate, seal and shield bond not final | owner: Layer 7
+   IF-EXT-ETH | the wall RJ45's shield path to the plate (record l8gnd F01: the PX0833's plastic body, the PX0888 backshell); effect: C33 and the shell float under GND-002 until a pick carries the shield | owner: Layer 7 (the wall RJ45's pick, l8gnd F01)
+   IF-EXT-ETH | the PoE class the kit offers (class 4 assumed); effect: FW-B14's ICUT and the +54V_POE budget | owner: the firmware owner (FW-B14)
+   IF-EXT-ETH | the magnetics' surge rating against the arrestor-less wall port; effect: the port's surge protection is unproven | owner: Layer 6 components
+   IF-EXT-ETH | the MDI side (MDI_A..D, T1 to J_ETH): no net class target and no declared tolerance; the KSZ checklist (DS00004151A 6.2 to 6.4) states no intra-pair number, and B21 read 2.74 to 14.68 mm; effect: the cable-side pairs are unjudged at layout (board B's next phase) | owner: Layer 8 board B
+   IF-EXT-DC | the receptacle MPN (CASE-MARGINS.md section 6), and under D-06 the DC pair on size 12 contacts (insert 17-6, or 13-26; R-129, MISSING DRAFT); effect: plate cut-out and seal not final, and the pins map A to D above is the drawn one | owner: Layer 7 (R-129)
+   IF-EXT-DC | the interconnect's makers' installed and short-time ratings and F1's total clearing I2t at 900 A and 58 V DC (L4-E9 R-113, R-115, R-129 to R-132); the loop read four-wire at 58.51 to 64.21 mOhm on every assembly (R-130); effect: D-06's resolution rests on them | owner: Layer 6 and Layer 7 (R-113, R-115, R-129 to R-132)
+   IF-EXT-DC | A-3(c), a COMPONENT_LIMITATION: in a double contingency (an input fault present and F2 holding) J_SOLAR and PV_IN carry 13.82 A at the design level 2111.4 W/m2, over JST VH's printed 10 A with no short-time overload; effect: their rating or a bench row is owed before the panel is accepted (L4-E9 R-148) | owner: Layer 6 (R-148)
+   IF-EXT-DC | the size 16 contact rating as drawn, read into this record; effect: none at 6.15 A unless the sheets rate size 16 below it; superseded by R-129's size 12 contacts once drafted | owner: Layer 6
+   IF-EXT-DC | J_SOLAR pin 2 becomes PV_RTN through Q13 under the solar guard (R-173, drafted, not applied); effect: the pins map and the end's part text read the drawn board until then | owner: Layer 8 board E (R-173)
+   IF-A-CHASSIS | the strap and the lugs (Layer 7, l8gnd F07); effect: the bond's resistance and current capacity | owner: Layer 7 (l8gnd F07)
+   IF-A-CHASSIS | R229's BOM code C25469 to be confirmed on the regenerated BOM (l8gnd F09); effect: the link's rating | owner: Layer 6 (l8gnd F09)
+   IF-A-CHASSIS | the bond resistance read four-wire at pre-compliance (GROUNDING-AND-SHIELDS.md's list); effect: none until the chamber | owner: Layer 9 (pre-compliance)
+   IF-A-CHASSIS | record l8gnd's release; effect: until applied board A has no CHASSIS net and GND-002 reads NOT DRAWN | owner: Layer 8 (the integrator of l8gnd)
+
+5. THE PROVISIONAL ENTRIES AND THEIR TRIGGERS (17)
+   R2-06 (IF-BC-PANEL): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-07 (IF-BC-PANEL): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-09 (IF-AB-RIBBON): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-31 (IF-E-FANS): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+   R2-32 (IF-E-FANS): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35, R-179)
+   R2-33 (IF-E-FANS): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+   R2-34 (IF-E-FANS): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+   R2-36 (IF-B-FANS): board B's owner drawing a regulated 12.0 V feed (E11-40)
+   R2-37 (IF-B-FANS): E11-40's feed drawn (a step-up's efficiency or a 12 V feed changes the figure)
+   R2-38 (IF-AE-DOCK): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+   R2-40 (power_line_states): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-41 (power_line_states): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw
+   R2-42 (IF-EXT-ETH): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-44 (IF-A-CHASSIS): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-45 (FW-C02): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-46 (V-C02): record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record
+   R2-48 (FW-E11): L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35)
+
+6. THE LAYER 5 CRITERIA THIS ROUND MOVES (Layer 5's reading; LAYER-STATUS.md is the integrator's page)
+   5.10 mechanical mating of every interface: 2 entries (R2-12, R2-27)
+      OPEN, further: mating fields for every contract; W4-F17 (J_AB2 into board D), J_QMX's land and the fans' lead terminations keep it open
+   5.11 firmware obligations affecting hardware explicit: 4 entries (R2-34, R2-45, R2-46, R2-48)
+      PARTLY, further: FW-C02, FW-C01, FW-C14, V-C02 for the keeper, FW-E07 and FW-E11 for +12V_FAN (DRAFTED, PROVISIONAL); the reduced-mode duties of layer 2's m13 still owed
+   5.12 GND-002 implemented everywhere: 3 entries (R2-42, R2-43, R2-44)
+      OPEN: GND-002's four changes are DRAFTED by record l8gnd, not in a generator; the contracts carry them as PROVISIONAL (IF-A-CHASSIS, IF-EXT-ETH, IF-EXT-DC, IF-AE-DOCK); the wall RJ45's shield path (l8gnd F01) open
+   5.13 interface contracts consistent with the tree: 3 entries (R2-05, R2-27, R2-47)
+      PARTLY, further: stale texts corrected in place with their history kept (IF-BC-PANEL's F1, IF-A-PA's flange sensor, FW-E11's R228); check_contracts.py reads PASS 99 of 99 before and after; interfaces.py's readings owe a re-take (the yaml is its configuration input)
+   5.2 every interface owned at both ends with its connector: 13 entries (R2-01, R2-02, R2-08, R2-10, R2-13, R2-17, R2-21, R2-22, R2-24, R2-30, R2-35, R2-39, R2-44)
+      PARTLY, further: every contract in the file (31, IF-A-CHASSIS added) carries both ends with a part on every board end and every pass-2 field (hc5's checker, section 1), the IDC headers, sockets and cable named by HC6-SC-7; not claimed MET: no census shows that every interface of the netlists has a contract, and the generators still write no MPN (EQ-21)
+   5.4 electrical levels stated per interface: 6 entries (R2-16, R2-18, R2-25, R2-29, R2-31, R2-36)
+      PARTLY, further: levels stated for the eight first-twelve contracts, the fans (+12V_FAN DRAFTED, the coolers' +5V_Sn outside their range) and the chassis bond; the kit I2C's three segments still owed (SC-59)
+   5.5 power capacity of each power interface with margin: 10 entries (R2-04, R2-11, R2-14, R2-15, R2-19, R2-26, R2-28, R2-32, R2-37, R2-38)
+      PARTLY, further: the panel ribbon's PANEL_5V per conductor against the cable's 1 A with F1's trip band (a TBD), the mezzanine's +3V3 conductor, the PA lead at 60 percent of its VH contact, the MAIN lead's microamps, the fans' branch 1.3208 A at 89.8 percent of U42's least limit (DRAFTED); open: the 18 AWG VH leads' rating, the fans' start current
+   5.6 sequencing across interfaces: 5 entries (R2-07, R2-20, R2-33, R2-34, R2-40)
+      PARTLY: the SLOT_EN hold is DRAFTED (record l8gnd, the keeper U43) and written into the contracts and FW-C02 as PROVISIONAL; H2's named item stays open until the keeper is in a generator; the fans' stagger and U22's RUN as power lines
+   5.7 reset, default and cable-out states for every control line: 4 entries (R2-06, R2-09, R2-40, R2-41)
+      PARTLY, further: default_state for the eight contracts, SLOT_EN's cable-out state with the keeper (2.547 V, 0.266 V), U22's RUN line; EQ-25 unchanged
+   5.9 harnesses defined and consistent: 2 entries (R2-03, R2-23)
+      PARTLY, further: harness fields for the eight contracts from ASSEMBLY.md section 4 and HC6-SC-7's parts; found: J_QMX's land a 2.54 mm pin header against the PH lead (L5R2-F04), J_AB2's length (TBD)
+
+7. THE TABLE AS MARKDOWN (L5-INTERFACES-R2.md carries these lines)
+   | id | contract | field | text written (excerpt, verbatim in the target) | source (file; where) | mark | invalidation trigger | criterion (5.x) |
+   |---|---|---|---|---|---|---|---|
+   | R2-01 | IF-BC-PANEL | ends.b part | Wurth WR-BHD 61202621621 (session pick HC6-SC-7, JLCPCB C17586777; 3 A per contact at 25 C, -40 to +105 C, 30 mating cycles | PROCUREMENT.md; wurth-wr-bhd-box-header-61202621621.pdf; pcb-b-compute.net; PROCUREMENT.md 5 (HC6-SC-7); the header's sheet; B netlist | MAKER | a different pick under HC6-SC-7's reversal (a failed land comparison) | 5.2 |
+   | R2-02 | IF-BC-PANEL | ends.c part | XFCN BH254VS-26P (session pick HC6-SC-7, C48687640, no maker sheet read | PROCUREMENT.md; pcb-c-display.net; PROCUREMENT.md 5; C netlist | NETLIST; the part's sheet NOT READ | none: a TBD (the sheet), owner Layer 6 | 5.2 |
+   | R2-03 | IF-BC-PANEL | harness.rating (moved from cable) | sockets Wurth WR-BHD 61202623021 (1 A per contact max, -40 to +105 C, 30 mating cycles) on flat cable WR-CAB 63912615521CAB (1.27 mm, 28 AWG, 1 A per conductor max, -25 to +105 C, 300 V RMS) | wurth-wr-bhd-idc-socket-61202623021.pdf; wurth-wr-cab-ribbon-63912615521cab.pdf; PROCUREMENT.md; the socket's and the cable's sheets; HC6-SC-7 | MAKER | none | 5.9 |
+   | R2-04 | IF-BC-PANEL | current.per_conductor | F1 holds 1.10 A (0.55 A a conductor) and trips at 2.20 A at 23 C (Bourns MF-MSMF sheet, every MF-MSMF110 variant) | bourns-mf-msmf-pptc.pdf; pcb-b-compute.net; the MF-MSMF table; B netlist's F1 | MAKER, INFERRED (the per-conductor split); a TBD for the 2.0 to 2.2 A band | none: a TBD (the cable's capability above 1 A), owner Layer 6 | 5.5 |
+   | R2-05 | IF-BC-PANEL | protection (a stale statement corrected, kept) | since b76c18cb F1 IS the MF-MSMF110 (B19 netlist: '1.1A hold 1812 (Bourns MF-MSMF110-2)') | pcb-b-compute.net; B netlist's F1 | NETLIST | none | 5.13 |
+   | R2-06 | IF-BC-PANEL | cable_out_states.SLOT_EN1..3 | held high at least 2.547 V, held low at most 0.266 V, the worst cases of l8gnd 3b | l8gnd-sections-2-3-226e9143.md; l8gnd 3b | INFERRED (record l8gnd's arithmetic on MAKER rows); DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.7 |
+   | R2-07 | IF-BC-PANEL | slot_power_semantics | keepers U43 (SN74LVC08A, one gate a line) with R230 to R232 (4.7 k) on board A keep each line at its last driven level | l8gnd-sections-2-3-226e9143.md; l8gnd 3a, 3g | NETLIST (the draft's text); DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.6 |
+   | R2-08 | IF-AB-RIBBON | ends.a part | IDC 2x13, top side: Wurth WR-BHD 61202621621 (session pick HC6-SC-7, JLCPCB C17586777 | PROCUREMENT.md; pcb-a-power.net; HC6-SC-7; A netlist | MAKER | as R2-01 | 5.2 |
+   | R2-09 | IF-AB-RIBBON | hot_plug | with the hold applied (record l8gnd, DRAFTED) it no longer drops SLOT_EN | l8gnd-sections-2-3-226e9143.md; l8gnd 3g | DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.7 |
+   | R2-10 | IF-AB-WALL | ends.a part | IDC 2x5 vertical box header: Wurth WR-BHD 61201021621 (session pick HC6-SC-7, JLCPCB C4355000 | PROCUREMENT.md; pcb-a-power.net; HC6-SC-7; A netlist | MAKER | as R2-01 | 5.2 |
+   | R2-11 | IF-AB-WALL | current | VBUS_WALL does not cross this ribbon (it leaves board A on J_USBW behind the eFuse U32, 0.9142 A | ASSEMBLY.md; ASSEMBLY.md section 4, the wall USB host row | VERIFIED | none | 5.5 |
+   | R2-12 | IF-AB-WALL | hot_plug (a session choice) | not hot-pluggable (the session's choice in record l5r2 | this record, section 8 | RULE (SESSION) | an interlock that makes live mating safe | 5.10 |
+   | R2-13 | IF-AD-HARNESS | ends parts | J_MEZZ1 IDC 2x8 box header Wurth WR-BHD 61201621621 (session pick HC6-SC-7, | PROCUREMENT.md; pcb-a-power.net; pcb-d-aprs.net; HC6-SC-7; A and D netlists | MAKER, NETLIST | as R2-01 | 5.2 |
+   | R2-14 | IF-AD-HARNESS | current.power_lead.contact | the fitted lead is 18 AWG on the standard B2P-VH, a combination the catalogue does not rate | jst-vh-catalogue.pdf; ASSEMBLY.md; JST VH catalogue p.1; ASSEMBLY.md's mezzanine 5 V row | MAKER (INCONCLUSIVE for the fitted combination) | none: a TBD, owner Layer 6 | 5.5 |
+   | R2-15 | IF-AD-HARNESS | current.signals | board D's loads on it sum 0.0654 A (D intent: U16 0.06, U19 and U20 0.002 each, U22 0.0002, R92 0.0012) | pcb-d-aprs-intent.json; pcb-a-power-intent.json; D's and A's intent files | NETLIST (the intents' declarations) | none | 5.5 |
+   | R2-16 | IF-AD-HARNESS | levels | +5V_D8 from U41 at 4.872 to 5.133 V behind U23 (A intent, stream s99a), board D's codec 4.44 to 4.48 V at the 1.0 A typical | pcb-a-power-intent.json; A's intent, +5V_D8 and +5V_D8IN | INFERRED (stream s99a) | none (S-116 open, a TBD) | 5.4 |
+   | R2-17 | IF-AC-MAINSW | ends parts | JST-XH B2B-XH-A 1x2 (C158012; 3 A per contact with AWG 22, JST XH catalogue) (A netlist) | pcb-a-power.net; pcb-c-display.net; A and C netlists | NETLIST | none | 5.2 |
+   | R2-18 | IF-AC-MAINSW | levels | open-circuit 1 to 2 V at -1 uA, falling threshold 0.6 to 1 V, pin range -1 to 26.4 V (Analog Devices 2954fb, p.3, MAKER) | ltc2954.pdf; 2954fb p.3 | MAKER | none | 5.4 |
+   | R2-19 | IF-AC-MAINSW | current | -3 to -15 uA at 0.6 V and -1 to -12 uA at 1 V (2954fb p.3, | ltc2954.pdf; 2954fb p.3 | MAKER | none | 5.5 |
+   | R2-20 | IF-AC-MAINSW | sequencing (moved from note) | a tap while running raises PI_SHDN_REQ (FW-A10, FW-A12) | HW-FW-CONTRACT.md FW-A10, FW-A12 | VERIFIED (the contract's own rows) | none | 5.6 |
+   | R2-21 | IF-AE-RF | ends.a part | Radiall SMP-MAX slide-on receptacles R222M00720 (land meshsat:Radiall_SMPMAX_R222M00720) | pcb-a-power.net; A netlist | NETLIST | none | 5.2 |
+   | R2-22 | IF-AE-RF | ends.e part | holding eleven Radiall R222M80500 right-angle SMP-MAX plugs | ASSEMBLY.md; ASSEMBLY.md section 4, the RF jumpers row | VERIFIED | none | 5.2 |
+   | R2-23 | IF-AE-RF | harness | RG-316 jumpers, each cut to its route plus 20 mm, 252 to 432 mm, bend radius 12.5 mm | ASSEMBLY.md; ASSEMBLY.md section 4, the RF jumpers row | VERIFIED | the jumper plug's pick (M17g, M17x) | 5.9 |
+   | R2-24 | IF-A-PA | ends.d part | J_VGG JST-PH B2B-PH-K 1x2 (C131337); J_PAIN U.FL Hirose U.FL-R-SMT-1 (C88373); J_PAOUT SMA Amphenol 132134 vertical (C3174425) | pcb-d-aprs.net; D netlist | NETLIST | none | 5.2 |
+   | R2-25 | IF-A-PA | levels (the drive) | 50 mW at J_PAIN (gen_sch_d.py), against the module's Pin absolute 100 mW | gen_sch_d.py; ra30h1317m1-datasheet.pdf; gen_sch_d.py's pad; the module's sheet | MAKER, NETLIST | none | 5.4 |
+   | R2-26 | IF-A-PA | current.contact | the 6.0 A peak is 60 percent of it | jst-vh-catalogue.pdf; pcb-a-power-intent.json; the VH catalogue; A's intent | MAKER, INFERRED | F-PR-02 (the drain current characterised) | 5.5 |
+   | R2-27 | IF-LID-HF | ends.b part (finding L5R2-F04) | gen_sch_b.py's land key PH1x4 is Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical | gen_sch_b.py; pcb-b-compute.net; gen_sch_b.py's footprint table; B netlist | NETLIST | board B's land changed to a JST-PH part, or the contract and ASSEMBLY.md to the pin header | 5.10, 5.13 |
+   | R2-28 | IF-LID-HF | current.maker | receive 80 mA, transmit around 0.7 A for 5 W with a 12 V supply | qmx-product-page-2026-09-27.txt; QRP Labs' product page | MAKER (approximate) | QRP Labs' manual's figure | 5.5 |
+   | R2-29 | IF-LID-HF | levels (RF) | the QMX's 3 to 5 W output at a 12 V supply | qmx-product-page-2026-09-27.txt; QRP Labs' product page | MAKER | none | 5.4 |
+   | R2-30 | IF-E-FANS | ends.device | two Sanyo Denki 9WL0612P4H001 (San Ace 60W, 60 x 60 x 25, IP68, 12 V, 10.8 to 13.2 V, 0.17 A, 2.04 W, -20 to +70 | sanyo-denki-splash-proof-fan-pages-2026-10-03.md; L7-FANS-AND-TH1.md; the maker's page as transcribed; l7pwr 2d | MAKER | a fan printing a covering range (D-18's reversal) | 5.2 |
+   | R2-31 | IF-E-FANS | levels | +12V_FAN 12.001 V (11.512 to 12.431 V at FB's limits) from U22 on VSYS_E, inside the fans' 10.8 to 13.2 V by 0.71 V below and 0.77 V above | l4e11-section-18-b929d8be.md; L4-E11 18a | MODELED; DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw | 5.4 |
+   | R2-32 | IF-E-FANS | current | at U22's input 0.5208 A for both at full speed at VSYS_E's floor (4.08 W over 0.85 at 9.508 V plus 16 mA), the dock branch 1.3208 A with U12, 89.8 percent of U42's least limit 1.4713 A | l4e11-section-18-b929d8be.md; L4-E11 18b | MODELED (0.85 an ASSUMPTION); DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35, R-179) | 5.5 |
+   | R2-33 | IF-E-FANS | power | RUN on at 8.33 V and off at 6.89 V of VSYS_E | l4e11-section-18-b929d8be.md; L4-E11 18a | INFERRED (the comparator's limits); DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw | 5.6 |
+   | R2-34 | IF-E-FANS | sequencing | never while U12 or U22 starts (FW-E11, E11-39, R-188; L4-E11 18c) | l4e11-section-18-b929d8be.md; L4-E11 18c | RULE (L4-E11, SESSION); PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw | 5.6, 5.11 |
+   | R2-35 | IF-B-FANS | ends.device | three Sanyo Denki 9WPA0412P6G001 (San Ace 40W, 40 x 40 x 20, IP68, 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W | sanyo-denki-splash-proof-fan-pages-2026-10-03.md; L7-FANS-AND-TH1.md; the maker's page; l7pwr 2d | MAKER | as R2-30 | 5.2 |
+   | R2-36 | IF-B-FANS | levels (E11-40) | the slot's +5V_Sn at 5.1 V on pin 1 (B netlist; L4-E11 18d), OUTSIDE the fans' 10.8 to 13.2 V | l4e11-section-18-b929d8be.md; L4-E11 18d | NETLIST; PROVISIONAL (E11-40 open) | board B's owner drawing a regulated 12.0 V feed (E11-40) | 5.4 |
+   | R2-37 | IF-B-FANS | current | about 0.436 A each at full speed (record l7pwr, F-L7-02, INFERRED) | l4e11-section-18-b929d8be.md; L4-E11 18d | INFERRED; PROVISIONAL | E11-40's feed drawn (a step-up's efficiency or a 12 V feed changes the figure) | 5.5 |
+   | R2-38 | IF-AE-DOCK | pin1_vsys_dock (round 2) | is declared 1.3208 A (U12 0.8 A, U22 0.5208 A at the floor with both fans at full speed), 89.8 percent of U42's least limit 1.4713 A with 0.1504 A in hand | l4e11-section-18-b929d8be.md; L4-E11 18b | MODELED; DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw | 5.5 |
+   | R2-39 | IF-AE-DOCK | ends.e5 part | the dock block E5: twelve plated contact targets, four pack targets, a pre-charge target, eight VIN_RAW targets | pcb_interfaces.yaml; this file's boards.e5 and IF-AE-DOCK not_judged | VERIFIED (the file's own statements) | none | 5.2 |
+   | R2-40 | power_line_states | SLOT_EN1..3 hold | held HIGH at least 2.547 V (the pad's pull-down at 50 k), held LOW at most 0.266 V (at 80 k) | l8gnd-sections-2-3-226e9143.md; l8gnd 3b, 3d | INFERRED; DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.6, 5.7 |
+   | R2-41 | power_line_states | U22_RUN_12V_FAN | on at 8.33 V of VSYS_E (7.98 to 8.67 V) and off at 6.89 V (6.55 to 7.23 V) | l4e11-section-18-b929d8be.md; L4-E11 18a | INFERRED; DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw | 5.7 |
+   | R2-42 | IF-EXT-ETH | grounding | C33 to CHASSIS and J_ETH SH to CHASSIS, Microchip DS00004151A p.10 | l8gnd-sections-2-3-226e9143.md; l8gnd 2a, 2c | MAKER (the clause); DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.12 |
+   | R2-43 | IF-EXT-ETH | tbd (l8gnd F01) | the PX0833's plastic body, the PX0888 backshell | l8gnd-sections-2-3-226e9143.md; l8gnd 2c | VERIFIED (record l8gnd's reading of the held sheet) | the wall RJ45's pick | 5.12 |
+   | R2-44 | IF-A-CHASSIS | ends.a part | M4 bonding pad, land meshsat:ChassisLug_M4_CHASSIS (plated hole 4.3, 12.0 ring both sides) | l8gnd-sections-2-3-226e9143.md; l8gnd 2b | NETLIST (the draft's text); DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.2, 5.12 |
+   | R2-45 | FW-C02 | the keeper | SLOT_EN1..3 held at their last driven level across a panel reset by board A's keepers U43 (SN74LVC08A) with R230 to R232 | l8gnd-sections-2-3-226e9143.md; l8gnd 3f | DRAFTED; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.11 |
+   | R2-46 | V-C02 | extended | each SLOT_EN read on a scope at or above 2.5 V throughout (the held high) | l8gnd-sections-2-3-226e9143.md; l8gnd 3h | TEST; PROVISIONAL | record l8gnd's release (its drafts applied after a release record); a change of U43, R230 to R232, R229 or the two board B changes in that record | 5.11 |
+   | R2-47 | FW-E11 | U42's ILIM resistor | R228 11.0 kOhm, renamed from R221 by L4-E11 at `787e7b15` | L4E11-SOURCE-ONLY-AND-ENTRY.md; L4-E11's record (in this tree since 787e7b15) | VERIFIED | none | 5.13 |
+   | R2-48 | FW-E11 | the start's room | leaves 0.1504 A of room, 1.21 W at the rail for the other fan's start (18b) | l4e11-section-18-b929d8be.md; L4-E11 18b | MODELED; DRAFTED; PROVISIONAL | L4-E11 section 18's release (b929d8be merged and its draft applied); a change of U22's network or the fans' declared draw; the start current read (E11-35) | 5.11 |
+
+8. RESULT: every contract carries every pass-2 field; the eight old blocks lose nothing; every excerpt is in its target and
+   every figure is printed by a cited source; every tbd entry of the touched contracts has an owner.
