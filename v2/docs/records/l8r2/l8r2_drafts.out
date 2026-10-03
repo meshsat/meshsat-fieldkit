@@ -21,7 +21,7 @@ fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
 353ce937cff0b719 v2/vendor/power/ti-csd19532q5b-n-fet.pdf
 518a45fa2ecddc6f v2/docs/records/l8r2/inputs/l7pwr-cooler-identity-2087060b.md
 acd61db263e3cfda v2/docs/records/l8r2/inputs/l5r2-findings-and-rows-6902db8f.md
-fea4e8c8f3247c56 v2/docs/records/l8r2/inputs/SOURCES.txt
+42f50a0da36e83e3 v2/docs/records/l8r2/inputs/SOURCES.txt
 f35d7ed49845d4a2 v2/docs/records/l8r2/check_l8r2_netlist.py
 292383193915b424 v2/docs/records/l8r2/fetch_held_back.py
 c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
@@ -47,7 +47,7 @@ cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
 98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
 c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
 74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-4f954d457423d8d8 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+248ffd956403819f v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
 3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
 576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
 3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back by its terms, fetched by fetch_held_back.py)
