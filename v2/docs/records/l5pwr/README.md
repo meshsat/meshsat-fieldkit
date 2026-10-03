@@ -20,6 +20,16 @@ no generator is edited.
 
 **Since Layer 5's second round (record `../l5r2/`, 3 October 2026)** the reader reads the three targets as this pass committed them (`L5PWR_COMMIT = 1e18a1ca`, in this branch's own history) and the Layer 4 sources from the tree: the second round restated some of this pass's texts in place (FW-E11, the fans' start rule, the SLOT_EN line), and a reader of the current tree would refuse the day its subject moved on. `test_l5pwr.py` compares the apply script's result with that commit's files for the same reason.
 
+**Since set 28 (finding F-12 of `../int28b/RESULT.md`, 3 October 2026)** the reader restates six rows whose cited figures set 27's
+Layer 4 corrections changed (L4-E7's round 5: the solar guard's reference loop withdrawn as a passing floor; L4-E11's section 18:
+the mixer fans on U22's regulated rail, the hard short's figure a test target): S27-B6, S27-01, S27-02a, S27-02b, S27-03 and
+SEQ-08. The table keeps the text written; `RESTATED` in the script names the figures that no longer stand (checked as printed by
+the row's sources at `L4_BASE = 2c240414`, the pass's base, in this branch's history), the Layer 4 text that replaced them (a
+pattern with no typed number, matched once in the tree's source; its figures parsed from the match), the restated mark, trigger
+and where, the contract value that changes, and the targets as set 28 carries them (`SET28_COMMIT = 5515ecc0`, read from this
+branch's history): restated in place by record l5r2 or a withdrawn text still there (findings L5-F09 and L5-F10 of the page).
+Output section 1a and the page's section 4a carry it. No target and no Layer 4 record is edited.
+
 ## Run order (what was run, in this order, on 3 October 2026)
 
 1. `python3 v2/docs/records/l4e5/apply_fw_a16.py v2/docs/HW-FW-CONTRACT.md --write` (L4-E5's draft: FW-A16 restated, FW-A18, V-A06 to V-A10, FW-E04, FW-C01's step 5; its application is register row R-23's, assigned to Layer 5).

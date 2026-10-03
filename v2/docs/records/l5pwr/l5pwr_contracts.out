@@ -1,25 +1,35 @@
 L5-PWR: LAYER 5'S POWER PASS, READ BACK (MESHSAT-1357, set 27, 3 October 2026). Prototype design: nothing built, powered or
 measured; this is a check of the contracts' text against the Layer 4 records' text. Marks: MAKER (a maker's printed row),
 INFERRED, MODELED, PROVISIONAL (an open condition, its trigger named), RULE (a session rule), TEST (a bench row), NETLIST;
-DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet.
+DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet. Restated at set 28 (finding F-12):
+the rows whose cited figures set 27's Layer 4 corrections changed, against the tree's Layer 4 records (section 1a).
 
 0. INPUTS (sha256; the targets as written at 1e18a1ca, read from this branch's history, and the sources read from the tree)
    yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  1e18a1ca@v2/ecad/tools/pcb_interfaces.yaml
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
-   l4e9md     fce14ef53fdafd4924d0cdf1d2f3177d2e8c92bd3ba5cc140c6182c98cb3eeaa  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    41530bb0ba320fb92c890bf257a4859047aff71fbe3865fc27a27a08ff53738c  v2/docs/records/l4e9/l4e9_power_path.out
-   reg        75184896b0e0e4f4463b80ddb076311c2c19d12d81220fcc6cb64913ba722034  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   l4e9md     a760101cde41633adb8baa9eae198404857637622d6a66708d7feed247539e3c  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   l4e9out    e8ff8187c832858462e20b57df0374e90aeee3568152a3a5e55ef48d72972a83  v2/docs/records/l4e9/l4e9_power_path.out
+   reg        24418b62e0062d8c1ab1a83f1513d8bc48782da9934732bcc752567a9df04403  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       ebba684d01f219235aedf3ba20ccbae7f9c36a1c97443f18ed8997dee88dbeb9  v2/docs/records/l4e9/LAYER5-HANDOVER.md
-   l4e11md    db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   l4e11out   648e262f7033bc4b32763c4a612fbd5ffca4b02d8fd1dc0eec78c87c809c1979  v2/docs/records/l4e11/l4e11_power.out
+   l4e11md    f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   l4e11out   9a057f925a41d8969f56e31bc1c539b3a1ffc369f91b62fff094e93fbff8697a  v2/docs/records/l4e11/l4e11_power.out
    l4e11entry 418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12md    30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
+   l4e12md    b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    l4e13md    1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e4md     8673066ddef038e483202b6d906960f2a83fcc84c5a0a7f299308f71f6706b74  v2/docs/records/l4e4/L4E4-CURRENT-LIMITS.md
-   l4e7md     3a734c3920eb71bec9465f82c8b586b49e9559a118a833babc275a628e472cb9  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
+   l4e7md     241d0cc5b010b05d2674620c10ecd04c87936a9081f45008536c46786184c458  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
+   read at a commit for set 28's restatement (F-12): the restated rows' sources as this pass read them (2c240414) and the targets as
+   set 28 carries them (5515ecc0), both from this branch's history
+   hwfw@set28    d683b31a0ec5a9a4f34036c54a708f868cd8abd4d320c280e81db435fc5001d4  5515ecc0@v2/docs/HW-FW-CONTRACT.md
+   l4e11md@base  188ac85879346be5f896e6f8212abf853f4751cc25ec6a6ee4b495ee3b705cbd  2c240414@v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   l4e11out@base e287cbffb247de4ab96a9cde4e046fb891f22b7d8425146efd08dee766ea84ef  2c240414@v2/docs/records/l4e11/l4e11_power.out
+   l4e9md@base   5b818bceafdf1dfd8ba18738fe21ab0e839fe2c7f06ca11fb3a0ea1a842acfb4  2c240414@v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   reg@base      af4b17762723c20a6bf4dd0d8554319ffd8920fae2125495f2f5fd32ac963995  2c240414@v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   yaml@set28    4784a61af08405343a774ca4951fc6ea4ef9be1ad5cc68787cd29a15c0641a22  5515ecc0@v2/ecad/tools/pcb_interfaces.yaml
 
-1. THE TABLE (46 entries, 259 figures; every excerpt found in its target, every figure printed by a cited source)
+1. THE TABLE AS WRITTEN (46 entries, 259 figures; every excerpt found in its target, every figure printed by a cited source but
+   the 18 that no longer stand, which section 1a restates and checks as printed by their sources at 2c240414)
    LH-01a | IF-EXT-DC | levels (DC) | target v2/ecad/tools/pcb_interfaces.yaml
       text: per source at VBAT at the plug, the losses hot: 9 V 29.09 to 42.52 W, 12 V 32.22 to 47.72 W, 24 V 69.97 to 90.81 W, 36 V 84.55 to 99.64 W (INFERRED, U3 0.9733)
       source: v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md; 3h, the source envelope at the plug
@@ -83,6 +93,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: MODELED (L4-E7 round 2); DRAFTED R-173; PROVISIONAL, NOT CLOSED
       trigger: B6-ENG-1: R-180 (the loop bounded and measured), R-186 (Analog Devices' answer on a sense-pin filter) or R-187 (the sense moved); L4-E7's round 3 on B6 is running and re-reads this sentence
       criteria: 5.4
+      RESTATED AT SET 28 (F-12): section 1a
    LH-03a | IF-AE-DOCK | vin_raw.voltage | target v2/ecad/tools/pcb_interfaces.yaml
       text: solar 7.378 V (the corrected knee's certain HIZ, L4-E9 R-03, a specification) to 30.15 V (the tracker's raised ceiling, R10 232 k; L4-E5, DRAFTED); vehicle 9 to 36 V at the plug (VIN_RAW 8.148 V at 5.983 A from a 9.00 V plug; INFERRED); at most 41.22 V
       source: v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md; 1d row IF-06
@@ -125,6 +136,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: INFERRED from MAKER rows (SLVSET9G); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL (L4-F03: remedy drafted, qualification open)
       trigger: E11-38 (R-184): a limit read outside 1.471 to 1.802 A, the hard short's cases, the 813's resistance after them; E11-35 (R-179): a fan or U12 current over 1.471 A
       criteria: 5.2, 5.5, 5.7
+      RESTATED AT SET 28 (F-12): section 1a
    S27-02a | IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing | the fans' start rule | target v2/ecad/tools/pcb_interfaces.yaml
       text: both fans together at most 0.3356 A each, one at a time at most 0.5713 A (the other running at 0.1 A), VSYS_E at the least limit at least 9.494 V at the supplement floor
       source: v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md, v2/docs/records/l4e11/l4e11_power.out; 17a; out 17
@@ -132,6 +144,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: INFERRED; DRAFTED R-177, R-181; PROVISIONAL
       trigger: a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside its band (E11-38)
       criteria: 5.6, 5.11
+      RESTATED AT SET 28 (F-12): section 1a
    S27-02b | FW-E11 | the fans' start stagger as a firmware row | target v2/docs/HW-FW-CONTRACT.md
       text: Start the mixer fans one at a time, each with a PWM ramp, never both within 1 s and never while U12 starts (E11-39, R-188)
       source: v2/docs/records/l4e11/l4e11_power.out, v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; out 17 (E11-39); R-188
@@ -139,6 +152,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: RULE (L4-E11 17a, SESSION); DRAFTED R-177, R-181; PROVISIONAL
       trigger: a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside 1.471 to 1.802 A (E11-38, R-184)
       criteria: 5.6, 5.11
+      RESTATED AT SET 28 (F-12): section 1a
    S27-03 | V-E16 (IF-EXT-DC bench) | R-176 rows 1 to 6 where they bind the solar port | target v2/docs/HW-FW-CONTRACT.md
       text: (5) Q13's leakage at the hot end, under 32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174)
       source: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; R-176
@@ -146,6 +160,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 PROVISIONAL
       trigger: row 3 a pass only for a loop at or over 3.30 uH until B6-ENG-1 is decided
       criteria: 5.4
+      RESTATED AT SET 28 (F-12): section 1a
    LH-05 | IF-EXT-USB | current (the outlet's trip) | target v2/ecad/tools/pcb_interfaces.yaml
       text: U18's trip at 3.793 to 4.576 A (VI(TRIP) 19.2 to 22.6 mV, MAKER, with 1 percent and 50 ppm/K over 45 K), above every 3 A contract and under the Bulgin PXP4043/C receptacle's 5 A; as drawn R138 10 mOhm trips at 1.897 to 2.288 A
       source: v2/docs/records/l4e4/L4E4-CURRENT-LIMITS.md; the chosen values (R138); the outlet's bench procedure
@@ -328,6 +343,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: INFERRED; DRAFTED R-177; TBD (no fan named)
       trigger: E11-35 (R-179): a fan named with its range
       criteria: 5.4
+      RESTATED AT SET 28 (F-12): section 1a
    SEQ-09 | IF-EXT-DC default_state | the charger before any host write | target v2/ecad/tools/pcb_interfaces.yaml
       text: the charger before any host write: as drawn ChargeCurrent 256 mA at POR (TI's E2E answer) and after the 175 s watchdog, under (B1) 0 A until firmware writes it
       source: v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md; 4c (power-on under (B1)), 4g
@@ -342,6 +358,109 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
       mark: NETLIST (the draft's text); DRAFTED R-123
       trigger: R-123 applied
       criteria: 5.7
+
+1a. RESTATED AT SET 28 (finding F-12; authority SESSION): 6 rows whose cited figures set 27's Layer 4 corrections changed
+   S27-B6 | IF-EXT-DC | protection (the guard already on)
+      no longer standing (printed by l4e9md at 2c240414): 0.2396, 0.5287, 60.3, 3.30 uH
+      why: L4-E7's round 5 withdrew round 2's reference loop as a passing floor: at that loop a fault at the connector puts U5's pins past their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:794: "OPEN for the guard-on case: an absolute-rating violation at a connector fault (round 2's 3.30 uH WITHDRAWN as a passing floor"
+         v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:576: "at round 2's 3.30 uH reference loop, no loop claimed to pass (L4-E7's round 5)"
+         v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:576: "U5's pins, the complete budget, -0.3021 to +0.2591 V at a fault at the connector (past the -0.3 V ABSOLUTE MAXIMUM)"
+         v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:576: "inside 20 V; at 1.00 uH U5 0.5858 V"
+         v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:576: "turns Q12 off: at most 62.7 A within 11.4 us"
+      figures in the replacing text (parsed): 3.30 uH, -0.3021, +0.2591 V, -0.3 V, 20 V, 1.00 uH, 0.5858 V, 62.7 A, 11.4 us
+      contract value: CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; it is OPEN (an absolute-rating violation at a connector fault, no loop claimed to pass), with U5's pins at the reference loop and at the low loop and the turn-off current as parsed above; the stage question is the engineer's B6-ENG-1
+      mark now: MODELED (L4-E7 round 5); DRAFTED R-173; OPEN (D-10's guard-on case, an absolute-rating violation at a connector fault), PROVISIONAL
+      trigger now: B6-ENG-1, the engineer's stage question (R-180 an input only; R-186 Analog Devices' answer; R-187 does not hold, result (ii)); its wider form B6-ENG-2 (R-189, D-16)
+      where now: 1d row IF-01, 4e (the guard-on row), 8a D-10
+      the target at 5515ecc0: NOT RESTATED
+         v2/ecad/tools/pcb_interfaces.yaml:1243: the text written
+      finding: L5-F09 (L5-POWER-CONTRACTS.md section 9)
+   S27-01 | IF-AE-DOCK | pin1_vsys_dock (the new row of set 27)
+      no longer standing (printed by l4e11md, l4e11out at 2c240414): 0.1486, 9.539, 11.905, 28.6
+      why: L4-E11 section 18 put the mixer fans on U22's regulated rail and declared the dock branch afresh (18b), so the drop, VSYS_E at the floor and the contact's share are re-derived (18b restates the floor, not VSYS_MIN's start); and L4-E11 17a, after the recheck, calls the hard short's figure a resistive extrapolation and E11-38's test target, not a bound
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e11/l4e11_power.out:1037: "with U12's 0.8 A: 1.3208 A DECLARED on IF-AE-DOCK pin 1 (was 1.0 A"
+         v2/docs/records/l4e11/l4e11_power.out:1041: "the drop at the floor with 1.3208 A: 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V"
+         v2/docs/records/l4e11/l4e11_power.out:1039: "the contact at 37.7 % of 3.5 A"
+         v2/docs/records/l4e11/l4e11_power.out:977: "A resistive EXTRAPOLATION, not a bound (I): 566 A would flow"
+         v2/docs/records/l4e11/l4e11_power.out:979: "566 A for 4.5 us (1.441 A2s) is E11-38's TEST TARGET for the recorded peak"
+      figures in the replacing text (parsed): 0.8 A, 1.3208 A, 1.0 A, 0.1795 V, 9.508 V, 9.494 V, 37.7 %, 3.5 A, 566 A, 4.5 us, 1.441 A2s
+      contract value: CHANGES: the branch current, the drop, VSYS_E at the floor and the contact's share are 18b's, parsed above; the excerpt, U42's band at R(ILIM), stands (the resistor renamed R228); the hard short's figure keeps its number but is a test target, no longer a ceiling
+      mark now: INFERRED from MAKER rows (SLVSET9G), the branch current MODELED (L4-E11 18b); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL (L4-F03: remedy drafted, qualification open)
+      trigger now: E11-38 (R-184): U42's limit read outside its band, the hard short's recorded peak over its test target (it revises L4-E11 17a), the 813's resistance after the cases; E11-35 (R-179): a fan's measured start over U42's room at the declared branch
+      where now: 16e, 17a, 18b; out 16e, 17a, 18b
+      the target at 5515ecc0: SUPERSEDED IN PLACE (record l5r2)
+         v2/ecad/tools/pcb_interfaces.yaml:703: the text written
+         v2/ecad/tools/pcb_interfaces.yaml:720: restated: "so the branch is declared 1.3208 A (U12 0.8 A, U22 0.5208 A at the floor with both fans at full speed)"
+         v2/ecad/tools/pcb_interfaces.yaml:722: restated: "the contact at 37.7 percent of 3.5 A, VSYS_E 9.508 V at the floor"
+         v2/ecad/tools/pcb_interfaces.yaml:706: withdrawn text still there: "a short applied while on at most 566 A for at most 4.5 us (a ceiling, no inductance credited; INFERRED)"
+      finding: L5-F10 (L5-POWER-CONTRACTS.md section 9)
+   S27-02a | IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing | the fans' start rule
+      no longer standing (printed by l4e11md, l4e11out at 2c240414): 0.3356, 0.5713, 0.1 A
+      why: L4-E11 section 18 withdrew the fans directly on VSYS_E; on U22's regulated rail the start rule in amperes on VSYS_E is superseded (R-179) by the room U42 leaves at the declared branch (18b)
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e11/l4e11_power.out:1018: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:267: "the supply range question of 15a to 17a (17.375 V at the top, 9.539 V at the bottom, 0.3356 and 0.5713 A on VSYS_E) is superseded by the rail"
+         v2/docs/records/l4e11/l4e11_power.out:1043: "with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start"
+      figures in the replacing text (parsed): 9.494, 17.375 V, 9.539 V, 0.3356, 0.5713 A, 0.1504 A, 1.21 W
+      contract value: CHANGES: the rule is no longer the both-together and one-at-a-time currents on VSYS_E; it is U42's room at the declared branch, as power at U22's rail for one fan's start, the start current NOT READ (E11-35); VSYS_E at U42's least limit stands
+      mark now: INFERRED (L4-E11 18b); DRAFTED R-177, R-181; PROVISIONAL (the start current NOT READ)
+      trigger now: E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)
+      where now: 18, 18b; out 18, 18b; R-179
+      the target at 5515ecc0: SUPERSEDED IN PLACE (record l5r2)
+         v2/ecad/tools/pcb_interfaces.yaml:713: the text written
+         v2/ecad/tools/pcb_interfaces.yaml:723: restated: "the start rule above (0.5713 A and 0.3356 A on VSYS_E) is superseded by section 18b: with one fan running and U12 on, U42 leaves 0.1504 A of room, 1.21 W at the rail for the other fan's start"
+         v2/ecad/tools/pcb_interfaces.yaml:714: withdrawn text still there: "firmware starts them one at a time with a PWM ramp, never both within 1 s and never while U12 starts (R-188)"
+      finding: L5-F10 (L5-POWER-CONTRACTS.md section 9)
+   S27-02b | FW-E11 | the fans' start stagger as a firmware row
+      no longer standing (printed by l4e11out, reg at 2c240414): PWM ramp, 0.5713
+      why: L4-E11 18c restated the stagger for the fans on U22's rail (E11-39, R-188): the ramp is a PWM-duty ramp into the fan's PWM input, U22's start joins U12's, and the room is U42's at the declared branch (18b), the per-fan start current on VSYS_E superseded (R-179)
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e11/l4e11_power.out:485: "each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:276: "U42's room 0.1504 A at the floor"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:276: "the current through J_DOCK pin 1 under 1.4713 A at every start"
+      figures in the replacing text (parsed): 1 s, 0.1504 A, 1.4713 A
+      contract value: CHANGES the rule's wording, not its intent: a PWM ramp becomes a PWM-duty ramp into the fan's PWM input, and never while U12 starts becomes never while U12 or U22 starts; the trigger's per-fan start current gives way to U42's room
+      mark now: RULE (L4-E11 17a and 18c, SESSION); DRAFTED R-177, R-181; PROVISIONAL
+      trigger now: E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)
+      where now: out 18c (E11-39 restated); R-188
+      the target at 5515ecc0: RESTATED IN PLACE (record l5r2)
+         v2/docs/HW-FW-CONTRACT.md:187: restated: "Start the mixer fans one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (E11-39, R-188; L4-E11 18c)"
+   S27-03 | V-E16 (IF-EXT-DC bench) | R-176 rows 1 to 6 where they bind the solar port
+      no longer standing (printed by reg at 2c240414): 75 V, 61 A, 3.30 uH
+      why: L4-E7's round 5 restated R-176: row 2's bound on PV_F and row 3's turn-off current changed, and row 3's pass from the reference loop was withdrawn (no loop is claimed to pass)
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "PV_F at most 85 V, its slew and INP inside their absolute ratings"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "U21 turning Q12 off (at most 63 A, within 12 us)"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides"
+      figures in the replacing text (parsed): 85 V, 63 A, 12 us, 3.30 uH, +-0.240 V
+      contract value: CHANGES in V-E16's rows 2 and 3, not in the excerpt (rows 5 and 6 stand): the parsed bounds replace those the pass wrote for rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1 is decided
+      mark now: TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 OPEN (no loop claimed to pass), PROVISIONAL
+      trigger now: row 3: B6-ENG-1 decides the stage (R-180 an input only, R-186, R-187 not holding; B6-ENG-2, R-189); rows 2 and 3 filed against R-176's bounds at both fault positions
+      where now: R-176 (rows 2 and 3 as L4-E7's round 5 restated them)
+      the target at 5515ecc0: NOT RESTATED
+         v2/docs/HW-FW-CONTRACT.md:313: the text written
+         v2/docs/HW-FW-CONTRACT.md:313: withdrawn text still there: "D4 carries nothing, PV_F at most 75 V;"
+         v2/docs/HW-FW-CONTRACT.md:313: withdrawn text still there: "U21 turning Q12 off (at most 61 A, within 12 us)"
+         v2/docs/HW-FW-CONTRACT.md:313: withdrawn text still there: "a pass only for a loop at or over 3.30 uH until B6-ENG-1 is decided"
+         v2/docs/HW-FW-CONTRACT.md:261: withdrawn text still there: "row 3 a pass only from a 3.30 uH loop until B6-ENG-1"
+         v2/ecad/tools/pcb_interfaces.yaml:1274: withdrawn text still there: "row 3 a pass only for a source loop at or over 3.30 uH until B6-ENG-1 is decided"
+      finding: L5-F09 (L5-POWER-CONTRACTS.md section 9)
+   SEQ-08 | IF-E-FANS power | the fans' supply under (B1)
+      no longer standing (printed by l4e11md at 2c240414): 17.375, 9.539
+      why: L4-E11 section 18: no named fan's printed range covers VSYS_E, so the fans directly on VSYS_E are withdrawn; they run on U22's regulated rail, whose band sits inside the named fans' range (18a)
+      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
+         v2/docs/records/l4e11/l4e11_power.out:1018: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
+         v2/docs/records/l4e11/l4e11_power.out:1030: "the output 12.001 V (11.512 to 12.431 V at FB's limits with the 1 % divider) inside the fans' 10.8 to 13.2 V"
+      figures in the replacing text (parsed): 9.494, 17.375 V, 12.001 V, 11.512, 12.431 V, 1 %, 10.8, 13.2 V
+      contract value: CHANGES: the fans' supply is U22's +12V_FAN, not VSYS_E; the supply range TBD is closed by the rail (DRAFTED); the start current and the PWM input level stay NOT READ (R-179, F-L7-11)
+      mark now: INFERRED (L4-E11 18a); DRAFTED R-177; PROVISIONAL (the start current and the PWM input level NOT READ)
+      trigger now: E11-35 (R-179): the named fans' start current and PWM input level read; R-177's release (U22 and the four-wire headers drawn)
+      where now: 18, 18a; out 18, 18a
+      the target at 5515ecc0: RESTATED IN PLACE (record l5r2)
+         v2/ecad/tools/pcb_interfaces.yaml:1634: restated: "+12V_FAN 12.001 V (11.512 to 12.431 V at FB's limits) from U22 on VSYS_E, inside the fans' 10.8 to 13.2 V"
 
 2. THE LAYER 5 CRITERIA THIS PASS MOVES (Layer 5's reading; the handover page's status is the integrator's to set)
    5.11 firmware obligations affecting hardware explicit: 16 entries (S27-02a, S27-02b, LH-06a, LH-06b, LH-07a, LH-07b, LH-10a, LH-10b, LH-10c, LH-10e, LH-10f, LH-10g, LH-10h, S27-B1, LH-11a, LH-11b)
@@ -359,7 +478,7 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    5.7 reset, default and cable-out states for every control line: 12 entries (LH-03c, S27-01, LH-10a, LH-10b, LH-10d, SEQ-01, SEQ-02, SEQ-03, SEQ-04, SEQ-06, SEQ-09, SEQ-10)
       PARTLY, further: every power line of L4-E9 section 4 has its reset, default and cable-out state and the firmware row that drives it (power_line_states; the contracts' default_state and cable_out_states); EQ-25 unchanged
 
-3. THE PROVISIONAL ENTRIES AND THEIR INVALIDATION TRIGGERS (21)
+3. THE PROVISIONAL ENTRIES AND THEIR INVALIDATION TRIGGERS (22; a restated row's trigger as restated at set 28)
    LH-01a (IF-EXT-DC): E11-06: P1 over 20.51 W or the front end under 0.88021 at a 9.00 V plug; E11-09 (the knee drawn); E11-23 (the warm-up time)
    LH-01c (IF-EXT-DC): the loop's inductance under 2.08 uH for a hard short in service (R-134, OPEN); D-06's makers' installed and short-time ratings and F1's clearing I2t (R-113, R-115, R-129 to R-132)
    LH-01d (IF-EXT-DC): R-113, R-115, R-129 to R-132 filed
@@ -367,12 +486,12 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    LH-02b (IF-EXT-DC): R-29 (the lead's gauge named by Layer 7); R-148 (A-3(c))
    LH-02c (IF-EXT-DC): R-148: a rating of at least 13.82 A or a bench row before the panel is accepted
    LH-02d (IF-EXT-DC): the loop's typical rows (break-even 2.51 times), the bulk's temperature and the bank's pulse capability: M2 (R-122)
-   S27-B6 (IF-EXT-DC): B6-ENG-1: R-180 (the loop bounded and measured), R-186 (Analog Devices' answer on a sense-pin filter) or R-187 (the sense moved); L4-E7's round 3 on B6 is running and re-reads this sentence
+   S27-B6 (IF-EXT-DC) [restated, F-12]: B6-ENG-1, the engineer's stage question (R-180 an input only; R-186 Analog Devices' answer; R-187 does not hold, result (ii)); its wider form B6-ENG-2 (R-189, D-16)
    LH-04b (IF-AE-DOCK pack_pins; IF-PE-PACK power): PWR-F12 (FEA-004): the chain's short-time rating at 18 A and F2 near +60 C
-   S27-01 (IF-AE-DOCK): E11-38 (R-184): a limit read outside 1.471 to 1.802 A, the hard short's cases, the 813's resistance after them; E11-35 (R-179): a fan or U12 current over 1.471 A
-   S27-02a (IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing): a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside its band (E11-38)
-   S27-02b (FW-E11): a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside 1.471 to 1.802 A (E11-38, R-184)
-   S27-03 (V-E16 (IF-EXT-DC bench)): row 3 a pass only for a loop at or over 3.30 uH until B6-ENG-1 is decided
+   S27-01 (IF-AE-DOCK) [restated, F-12]: E11-38 (R-184): U42's limit read outside its band, the hard short's recorded peak over its test target (it revises L4-E11 17a), the 813's resistance after the cases; E11-35 (R-179): a fan's measured start over U42's room at the declared branch
+   S27-02a (IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing) [restated, F-12]: E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)
+   S27-02b (FW-E11) [restated, F-12]: E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)
+   S27-03 (V-E16 (IF-EXT-DC bench)) [restated, F-12]: row 3: B6-ENG-1 decides the stage (R-180 an input only, R-186, R-187 not holding; B6-ENG-2, R-189); rows 2 and 3 filed against R-176's bounds at both fault positions
    LH-06a (IF-AB-POWER currents (+54V_POE)): R-101 (R227's pulse rating and capacitance envelope); R-120, R-121 (L10's L(I) at temperature)
    LH-10f (FW-A20): E11-22: cases (ii) and (iii), and board P's copper giving TI's 50 C/W
    LH-10g (FW-A21): E11-06 (P1 measured, the front end's efficiency), E11-23 (the warm-up time), E11-31 (the start's first window)
@@ -381,8 +500,9 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    SEQ-05 (IF-PE-PACK sequencing): E11-30: the pulse qualification on six BUK6Y10-30PX samples at 267.2 A and 37.2 us; VF and ISM hot
    SEQ-06 (IF-PE-PACK sequencing): E11-31 (R-161): the held pack current at most 1 mA; D3's hot leakage and the body diodes' current not bounded on held evidence
    SEQ-07 (IF-A-HEAT sequencing): E11-06
+   SEQ-08 (IF-E-FANS power) [restated, F-12]: E11-35 (R-179): the named fans' start current and PWM input level read; R-177's release (U22 and the four-wire headers drawn)
 
-4. THE TABLE AS MARKDOWN (L5-POWER-CONTRACTS.md carries these lines)
+4. THE TABLE AS MARKDOWN (L5-POWER-CONTRACTS.md carries these lines; a restated row's mark and trigger as restated)
    | id | contract | field | text written (excerpt, verbatim in the target) | L4 source row (file; where) | mark | invalidation trigger | criterion (5.x) it moves |
    |---|---|---|---|---|---|---|---|
    | LH-01a | IF-EXT-DC | levels (DC) | per source at VBAT at the plug, the losses hot: 9 V 29.09 to 42.52 W, 12 V 32.22 to 47.72 W, 24 V 69.97 to 90.81 W, 36 V 84.55 to 99.64 W (INFERRED, U3 0.9733) | L4E11-SOURCE-ONLY-AND-ENTRY.md; 3h, the source envelope at the plug | INFERRED; PROVISIONAL (REQ-015 at 9.00 V a CONDITIONAL CANDIDATE) | E11-06: P1 over 20.51 W or the front end under 0.88021 at a 9.00 V plug; E11-09 (the knee drawn); E11-23 (the warm-up time) | 5.4 |
@@ -393,16 +513,16 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    | LH-02b | IF-EXT-DC | current.solar | in operation at most 3.987 A (PANEL-ACC A-3(a), INFERRED), the conservative bound over L4-E7R's regulation (RIMON_IN 31.6k, 2.5485 A nominal, at most 2.9337 A at 25 V) | L4-POWER-ARCHITECTURE.md; L4E13-PANEL.md; 1d row IF-01; L4E13-PANEL.md A-3 | INFERRED (the 1.25 factor MAKER); PROVISIONAL | R-29 (the lead's gauge named by Layer 7); R-148 (A-3(c)) | 5.5 |
    | LH-02c | IF-EXT-DC | tbd (A-3(c)) | J_SOLAR and PV_IN carry 13.82 A at the design level 2111.4 W/m2 | DOWNSTREAM-REGISTER.md; R-148 | INFERRED (a COMPONENT_LIMITATION); PROVISIONAL | R-148: a rating of at least 13.82 A or a bench row before the panel is accepted | 5.5 |
    | LH-02d | IF-EXT-DC | protection (the solar stage) | the INB filter, five 100 nF C0G across R66 8.45k (3.960 to 4.496 ms); SWEN off by default below 2.662 V on TRK_LDO33; a response inside 1.087 ms after the filter's 0.4205 J held charge | L4-POWER-ARCHITECTURE.md; 1d rows IF-01 and IF-02, 4e | MODELED (L4-E7R); DRAFTED R-12, R-19 to R-21, R-98; PROVISIONAL | the loop's typical rows (break-even 2.51 times), the bulk's temperature and the bank's pulse capability: M2 (R-122) | 5.4 |
-   | S27-B6 | IF-EXT-DC | protection (the guard already on) | every rating with its margin only from a source loop of at least 3.30 uH (U5 0.2396 V of +-0.240 V, a DESIGN TARGET), NOT under it (at 1.00 uH U5 0.5287 V) | L4-POWER-ARCHITECTURE.md; 4e (the guard-on row), 8a D-10 | MODELED (L4-E7 round 2); DRAFTED R-173; PROVISIONAL, NOT CLOSED | B6-ENG-1: R-180 (the loop bounded and measured), R-186 (Analog Devices' answer on a sense-pin filter) or R-187 (the sense moved); L4-E7's round 3 on B6 is running and re-reads this sentence | 5.4 |
+   | S27-B6 | IF-EXT-DC | protection (the guard already on) | every rating with its margin only from a source loop of at least 3.30 uH (U5 0.2396 V of +-0.240 V, a DESIGN TARGET), NOT under it (at 1.00 uH U5 0.5287 V) | L4-POWER-ARCHITECTURE.md; 1d row IF-01, 4e (the guard-on row), 8a D-10 (restated at set 28, F-12, section 4a; as written: 4e (the guard-on row), 8a D-10) | MODELED (L4-E7 round 5); DRAFTED R-173; OPEN (D-10's guard-on case, an absolute-rating violation at a connector fault), PROVISIONAL | B6-ENG-1, the engineer's stage question (R-180 an input only; R-186 Analog Devices' answer; R-187 does not hold, result (ii)); its wider form B6-ENG-2 (R-189, D-16) | 5.4 |
    | LH-03a | IF-AE-DOCK | vin_raw.voltage | solar 7.378 V (the corrected knee's certain HIZ, L4-E9 R-03, a specification) to 30.15 V (the tracker's raised ceiling, R10 232 k; L4-E5, DRAFTED); vehicle 9 to 36 V at the plug (VIN_RAW 8.148 V at 5.983 A from a 9.00 V plug; INFERRED); at most 41.22 V | L4-POWER-ARCHITECTURE.md; 1d row IF-06 | INFERRED; R-03 a specification; DRAFTED R-03, R-123 | R-03's network drawn to the knee (Layer 8); the OV maximum follows R-123's parts | 5.4 |
    | LH-03b | IF-AE-DOCK | vin_raw.in_service | fault current at most 11.65 A at R11 8 mOhm and R12 12 mOhm (13.315 A at 7 mOhm), inside the declared 14.10 A and the four 9 A pins (3.88 A each with one open) | L4-POWER-ARCHITECTURE.md; LAYER5-HANDOVER.md; 1d rows IF-06 and IF-07; LH-03 (the 3.88 A with one pin open) | MODELED; R11 and R12 DRAFTED R-04, R-01 | R11's 7 mOhm fallback (V-A07) moves the fault bound to 13.315 A, still inside 14.10 A | 5.5 |
    | LH-03c | IF-AE-DOCK | vin_raw.properties | U34's restart guard falls at 6.754 to 7.139 V (R14 76.8k, L4-E9 R-124, DRAFTED), at least 0.1 V under the knee's certain HIZ 7.378 V; as drawn it falls at up to 8.309 V | L4-POWER-ARCHITECTURE.md; 1d row IF-07, 4a | INFERRED; DRAFTED R-124 | R-124's fitted parts: the guard's fall read on the regenerated board | 5.7 |
    | LH-04a | IF-AE-DOCK pack_pins; IF-PE-PACK power | charge | at most 3.0 A (FW-A02; REQ-075 3.06 A), under the gauge's OCC 5 A | L4-POWER-ARCHITECTURE.md; 1d row IF-10 | MAKER (the gauge's OCC), INFERRED | FW-A02's setting; R-28 re-derives it at bring-up | 5.5 |
    | LH-04b | IF-AE-DOCK pack_pins; IF-PE-PACK power | service | PS-ALLTX's 18 A at an 11.48 V stack and OCD1's 20 A below 10.42 V (pwr_budget.out D-11 line; MODELED) | L4-POWER-ARCHITECTURE.md; LAYER5-HANDOVER.md; 1d row IF-10; LH-04 | MODELED; PROVISIONAL | PWR-F12 (FEA-004): the chain's short-time rating at 18 A and F2 near +60 C | 5.5 |
-   | S27-01 | IF-AE-DOCK | pin1_vsys_dock (the new row of set 27) | U42's I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm 0.1 percent | L4E11-SOURCE-ONLY-AND-ENTRY.md; l4e11_power.out; 16e, 17a; out 16 and 17 | INFERRED from MAKER rows (SLVSET9G); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL (L4-F03: remedy drafted, qualification open) | E11-38 (R-184): a limit read outside 1.471 to 1.802 A, the hard short's cases, the 813's resistance after them; E11-35 (R-179): a fan or U12 current over 1.471 A | 5.2, 5.5, 5.7 |
-   | S27-02a | IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing | the fans' start rule | both fans together at most 0.3356 A each, one at a time at most 0.5713 A (the other running at 0.1 A), VSYS_E at the least limit at least 9.494 V at the supplement floor | L4E11-SOURCE-ONLY-AND-ENTRY.md; l4e11_power.out; 17a; out 17 | INFERRED; DRAFTED R-177, R-181; PROVISIONAL | a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside its band (E11-38) | 5.6, 5.11 |
-   | S27-02b | FW-E11 | the fans' start stagger as a firmware row | Start the mixer fans one at a time, each with a PWM ramp, never both within 1 s and never while U12 starts (E11-39, R-188) | l4e11_power.out; DOWNSTREAM-REGISTER.md; out 17 (E11-39); R-188 | RULE (L4-E11 17a, SESSION); DRAFTED R-177, R-181; PROVISIONAL | a fan named whose start exceeds 0.5713 A (E11-35, R-179); U42's limit read outside 1.471 to 1.802 A (E11-38, R-184) | 5.6, 5.11 |
-   | S27-03 | V-E16 (IF-EXT-DC bench) | R-176 rows 1 to 6 where they bind the solar port | (5) Q13's leakage at the hot end, under 32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174) | DOWNSTREAM-REGISTER.md; R-176 | TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 PROVISIONAL | row 3 a pass only for a loop at or over 3.30 uH until B6-ENG-1 is decided | 5.4 |
+   | S27-01 | IF-AE-DOCK | pin1_vsys_dock (the new row of set 27) | U42's I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm 0.1 percent | L4E11-SOURCE-ONLY-AND-ENTRY.md; l4e11_power.out; 16e, 17a, 18b; out 16e, 17a, 18b (restated at set 28, F-12, section 4a; as written: 16e, 17a; out 16 and 17) | INFERRED from MAKER rows (SLVSET9G), the branch current MODELED (L4-E11 18b); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL (L4-F03: remedy drafted, qualification open) | E11-38 (R-184): U42's limit read outside its band, the hard short's recorded peak over its test target (it revises L4-E11 17a), the 813's resistance after the cases; E11-35 (R-179): a fan's measured start over U42's room at the declared branch | 5.2, 5.5, 5.7 |
+   | S27-02a | IF-AE-DOCK pin1_vsys_dock; IF-E-FANS sequencing | the fans' start rule | both fans together at most 0.3356 A each, one at a time at most 0.5713 A (the other running at 0.1 A), VSYS_E at the least limit at least 9.494 V at the supplement floor | L4E11-SOURCE-ONLY-AND-ENTRY.md; l4e11_power.out; DOWNSTREAM-REGISTER.md; 18, 18b; out 18, 18b; R-179 (restated at set 28, F-12, section 4a; as written: 17a; out 17) | INFERRED (L4-E11 18b); DRAFTED R-177, R-181; PROVISIONAL (the start current NOT READ) | E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184) | 5.6, 5.11 |
+   | S27-02b | FW-E11 | the fans' start stagger as a firmware row | Start the mixer fans one at a time, each with a PWM ramp, never both within 1 s and never while U12 starts (E11-39, R-188) | l4e11_power.out; DOWNSTREAM-REGISTER.md; out 18c (E11-39 restated); R-188 (restated at set 28, F-12, section 4a; as written: out 17 (E11-39); R-188) | RULE (L4-E11 17a and 18c, SESSION); DRAFTED R-177, R-181; PROVISIONAL | E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184) | 5.6, 5.11 |
+   | S27-03 | V-E16 (IF-EXT-DC bench) | R-176 rows 1 to 6 where they bind the solar port | (5) Q13's leakage at the hot end, under 32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174) | DOWNSTREAM-REGISTER.md; R-176 (rows 2 and 3 as L4-E7's round 5 restated them) (restated at set 28, F-12, section 4a; as written: R-176) | TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 OPEN (no loop claimed to pass), PROVISIONAL | row 3: B6-ENG-1 decides the stage (R-180 an input only, R-186, R-187 not holding; B6-ENG-2, R-189); rows 2 and 3 filed against R-176's bounds at both fault positions | 5.4 |
    | LH-05 | IF-EXT-USB | current (the outlet's trip) | U18's trip at 3.793 to 4.576 A (VI(TRIP) 19.2 to 22.6 mV, MAKER, with 1 percent and 50 ppm/K over 45 K), above every 3 A contract and under the Bulgin PXP4043/C receptacle's 5 A; as drawn R138 10 mOhm trips at 1.897 to 2.288 A | L4E4-CURRENT-LIMITS.md; the chosen values (R138); the outlet's bench procedure | MAKER rows (SLVSDG8B), INFERRED; DRAFTED R-02 | VI(TRIP)'s row at L4-E4's bench (a); J_USBC_OUT's header and its rating (R-30) | 5.5 |
    | LH-06a | IF-AB-POWER currents (+54V_POE) | monitor | full scale 81.92 mV over 5 mOhm is 16.384 A (Current_LSB 0.5 mA, CAL 2048); 3.682 A at a 10.0 V stack for 0.6 A at 54 V over 0.88, 14.33 A at the stage's fault bound (72.38 mV) | L4-POWER-ARCHITECTURE.md; DOWNSTREAM-REGISTER.md; 1d row IF-13 and part A; R-27 | INFERRED from MAKER rows (SBOS547C); DRAFTED R-06; PROVISIONAL (R227's pulse rating) | R-101 (R227's pulse rating and capacitance envelope); R-120, R-121 (L10's L(I) at temperature) | 5.4, 5.11 |
    | LH-06b | FW-A09 | U17's readings restated | its readings are the PoE stage's INPUT current and POE_VIN (VBUS pin 8 is on POE_VIN; VBAT is POE_VIN plus the shunt's drop) | DOWNSTREAM-REGISTER.md; R-27 | INFERRED; DRAFTED R-06 | as LH-06a | 5.11 |
@@ -428,9 +548,20 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    | SEQ-05 | IF-PE-PACK sequencing | the pack's connection pulse | the inrush into VBAT's capacitors 242.9 A peak, time constant 33.8 us (over ASCD's 55.6 A for 61.5 us against its 183 us delay | L4-POWER-ARCHITECTURE.md; L4E11-SOURCE-ONLY-AND-ENTRY.md; 4a (pack connected); 16d, 17b | MODELED; PROVISIONAL | E11-30: the pulse qualification on six BUK6Y10-30PX samples at 267.2 A and 37.2 us; VF and ISM hot | 5.6 |
    | SEQ-06 | IF-PE-PACK sequencing | the held pack under (B1) | VSYS piecewise (SRN under 12.054 V: at least 12.054 V; SRN over 12.546 V: VSRN + 150 mV within 2 percent; between: at least 11.96 V), the pack feeds no kit load (its monitor 0.1398 mA | L4-POWER-ARCHITECTURE.md; L4E11-SOURCE-ONLY-AND-ENTRY.md; 4a (the charge inhibited); 15a, 15d | MAKER rows (SLUSE65A), INFERRED; DRAFTED R-157; PROVISIONAL | E11-31 (R-161): the held pack current at most 1 mA; D3's hot leakage and the body diodes' current not bounded on held evidence | 5.6, 5.7 |
    | SEQ-07 | IF-A-HEAT sequencing | the mat on measured headroom | the mat runs on measured headroom (R-c, FW-A21): on only while the source's measured headroom over the load is at least its 8.58 W | L4E11-SOURCE-ONLY-AND-ENTRY.md; 3g | MODELED; PROVISIONAL | E11-06 | 5.6 |
-   | SEQ-08 | IF-E-FANS power | the fans' supply under (B1) | under (B1) VSYS_E, 9.539 to 17.375 V (L4-E11 15a, 16e; DRAFTED R-177): the fans are declared 12 V class, their maximum supply voltage against 17.375 V and their least operating voltage against 9.539 V TBD (HF-F05, E11-35, R-179) | L4E11-SOURCE-ONLY-AND-ENTRY.md; 15a (VSYS_E's range), 16e (the drop) | INFERRED; DRAFTED R-177; TBD (no fan named) | E11-35 (R-179): a fan named with its range | 5.4 |
+   | SEQ-08 | IF-E-FANS power | the fans' supply under (B1) | under (B1) VSYS_E, 9.539 to 17.375 V (L4-E11 15a, 16e; DRAFTED R-177): the fans are declared 12 V class, their maximum supply voltage against 17.375 V and their least operating voltage against 9.539 V TBD (HF-F05, E11-35, R-179) | L4E11-SOURCE-ONLY-AND-ENTRY.md; l4e11_power.out; 18, 18a; out 18, 18a (restated at set 28, F-12, section 4a; as written: 15a (VSYS_E's range), 16e (the drop)) | INFERRED (L4-E11 18a); DRAFTED R-177; PROVISIONAL (the start current and the PWM input level NOT READ) | E11-35 (R-179): the named fans' start current and PWM input level read; R-177's release (U22 and the four-wire headers drawn) | 5.4 |
    | SEQ-09 | IF-EXT-DC default_state | the charger before any host write | the charger before any host write: as drawn ChargeCurrent 256 mA at POR (TI's E2E answer) and after the 175 s watchdog, under (B1) 0 A until firmware writes it | L4-POWER-ARCHITECTURE.md; 4c (power-on under (B1)), 4g | MAKER (TI's E2E answer; SLUSE65A); DRAFTED R-157 | none | 5.7 |
    | SEQ-10 | FW-C08 hardware fact | the entry's UVLO pin under SHORE_INHIBIT | E's Q8 pulls the entry's UVLO pin low when it is high (as drawn the LM5069's HS_UVLO; on the selected entry the TPS48110-Q1's EN/UVLO on the same net, DRAFTED R-123) | apply_gen_sch_e_entry.py; the entry draft's pin map and part list (Q8 kept) | NETLIST (the draft's text); DRAFTED R-123 | R-123 applied | 5.7 |
 
-5. RESULT: every excerpt is in its target and every figure is printed by a cited Layer 4 source. check_contracts.py is a
-   netlist reader and reads none of these files: its reading is unchanged by this pass (L5-POWER-CONTRACTS.md section 5).
+4a. THE RESTATEMENT AS MARKDOWN (L5-POWER-CONTRACTS.md section 4a carries these lines)
+   | id | cited at `2c240414`, no longer standing | why (set 27's Layer 4 change) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`5515ecc0`) |
+   |---|---|---|---|---|---|
+   | S27-B6 | 0.2396, 0.5287, 60.3, 3.30 uH | L4-E7's round 5 withdrew round 2's reference loop as a passing floor: at that loop a fault at the connector puts U5's pins past their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass | L4-POWER-ARCHITECTURE.md: "OPEN for the guard-on case: an absolute-rating violation at a connector fault (round 2's 3.30 uH WITHDRAWN as a passing floor"; L4-POWER-ARCHITECTURE.md: "at round 2's 3.30 uH reference loop, no loop claimed to pass (L4-E7's round 5)"; L4-POWER-ARCHITECTURE.md: "U5's pins, the complete budget, -0.3021 to +0.2591 V at a fault at the connector (past the -0.3 V ABSOLUTE MAXIMUM)"; L4-POWER-ARCHITECTURE.md: "inside 20 V; at 1.00 uH U5 0.5858 V"; L4-POWER-ARCHITECTURE.md: "turns Q12 off: at most 62.7 A within 11.4 us" | CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; it is OPEN (an absolute-rating violation at a connector fault, no loop claimed to pass), with U5's pins at the reference loop and at the low loop and the turn-off current as parsed above; the stage question is the engineer's B6-ENG-1 | NOT RESTATED; the text written still at pcb_interfaces.yaml:1243; finding L5-F09 |
+   | S27-01 | 0.1486, 9.539, 11.905, 28.6 | L4-E11 section 18 put the mixer fans on U22's regulated rail and declared the dock branch afresh (18b), so the drop, VSYS_E at the floor and the contact's share are re-derived (18b restates the floor, not VSYS_MIN's start); and L4-E11 17a, after the recheck, calls the hard short's figure a resistive extrapolation and E11-38's test target, not a bound | l4e11_power.out: "with U12's 0.8 A: 1.3208 A DECLARED on IF-AE-DOCK pin 1 (was 1.0 A"; l4e11_power.out: "the drop at the floor with 1.3208 A: 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V"; l4e11_power.out: "the contact at 37.7 % of 3.5 A"; l4e11_power.out: "A resistive EXTRAPOLATION, not a bound (I): 566 A would flow"; l4e11_power.out: "566 A for 4.5 us (1.441 A2s) is E11-38's TEST TARGET for the recorded peak" | CHANGES: the branch current, the drop, VSYS_E at the floor and the contact's share are 18b's, parsed above; the excerpt, U42's band at R(ILIM), stands (the resistor renamed R228); the hard short's figure keeps its number but is a test target, no longer a ceiling | SUPERSEDED IN PLACE (record l5r2); the text written still at pcb_interfaces.yaml:703; restated pcb_interfaces.yaml:720: "so the branch is declared 1.3208 A (U12 0.8 A, U22 0.5208 A at the floor with both fans at full speed)"; restated pcb_interfaces.yaml:722: "the contact at 37.7 percent of 3.5 A, VSYS_E 9.508 V at the floor"; withdrawn text still at pcb_interfaces.yaml:706: "a short applied while on at most 566 A for at most 4.5 us (a ceiling, no inductance credited; INFERRED)"; finding L5-F10 |
+   | S27-02a | 0.3356, 0.5713, 0.1 A | L4-E11 section 18 withdrew the fans directly on VSYS_E; on U22's regulated rail the start rule in amperes on VSYS_E is superseded (R-179) by the room U42 leaves at the declared branch (18b) | l4e11_power.out: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"; DOWNSTREAM-REGISTER.md: "the supply range question of 15a to 17a (17.375 V at the top, 9.539 V at the bottom, 0.3356 and 0.5713 A on VSYS_E) is superseded by the rail"; l4e11_power.out: "with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start" | CHANGES: the rule is no longer the both-together and one-at-a-time currents on VSYS_E; it is U42's room at the declared branch, as power at U22's rail for one fan's start, the start current NOT READ (E11-35); VSYS_E at U42's least limit stands | SUPERSEDED IN PLACE (record l5r2); the text written still at pcb_interfaces.yaml:713; restated pcb_interfaces.yaml:723: "the start rule above (0.5713 A and 0.3356 A on VSYS_E) is superseded by section 18b: with one fan running and U12 on, U42 leaves 0.1504 A of room, 1.21 W at the rail for the other fan's start"; withdrawn text still at pcb_interfaces.yaml:714: "firmware starts them one at a time with a PWM ramp, never both within 1 s and never while U12 starts (R-188)"; finding L5-F10 |
+   | S27-02b | PWM ramp, 0.5713 | L4-E11 18c restated the stagger for the fans on U22's rail (E11-39, R-188): the ramp is a PWM-duty ramp into the fan's PWM input, U22's start joins U12's, and the room is U42's at the declared branch (18b), the per-fan start current on VSYS_E superseded (R-179) | l4e11_power.out: "each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts"; DOWNSTREAM-REGISTER.md: "U42's room 0.1504 A at the floor"; DOWNSTREAM-REGISTER.md: "the current through J_DOCK pin 1 under 1.4713 A at every start" | CHANGES the rule's wording, not its intent: a PWM ramp becomes a PWM-duty ramp into the fan's PWM input, and never while U12 starts becomes never while U12 or U22 starts; the trigger's per-fan start current gives way to U42's room | RESTATED IN PLACE (record l5r2); restated HW-FW-CONTRACT.md:187: "Start the mixer fans one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (E11-39, R-188; L4-E11 18c)" |
+   | S27-03 | 75 V, 61 A, 3.30 uH | L4-E7's round 5 restated R-176: row 2's bound on PV_F and row 3's turn-off current changed, and row 3's pass from the reference loop was withdrawn (no loop is claimed to pass) | DOWNSTREAM-REGISTER.md: "PV_F at most 85 V, its slew and INP inside their absolute ratings"; DOWNSTREAM-REGISTER.md: "U21 turning Q12 off (at most 63 A, within 12 us)"; DOWNSTREAM-REGISTER.md: "no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides" | CHANGES in V-E16's rows 2 and 3, not in the excerpt (rows 5 and 6 stand): the parsed bounds replace those the pass wrote for rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1 is decided | NOT RESTATED; the text written still at HW-FW-CONTRACT.md:313; withdrawn text still at HW-FW-CONTRACT.md:313: "D4 carries nothing, PV_F at most 75 V;"; withdrawn text still at HW-FW-CONTRACT.md:313: "U21 turning Q12 off (at most 61 A, within 12 us)"; withdrawn text still at HW-FW-CONTRACT.md:313: "a pass only for a loop at or over 3.30 uH until B6-ENG-1 is decided"; withdrawn text still at HW-FW-CONTRACT.md:261: "row 3 a pass only from a 3.30 uH loop until B6-ENG-1"; withdrawn text still at pcb_interfaces.yaml:1274: "row 3 a pass only for a source loop at or over 3.30 uH until B6-ENG-1 is decided"; finding L5-F09 |
+   | SEQ-08 | 17.375, 9.539 | L4-E11 section 18: no named fan's printed range covers VSYS_E, so the fans directly on VSYS_E are withdrawn; they run on U22's regulated rail, whose band sits inside the named fans' range (18a) | l4e11_power.out: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"; l4e11_power.out: "the output 12.001 V (11.512 to 12.431 V at FB's limits with the 1 % divider) inside the fans' 10.8 to 13.2 V" | CHANGES: the fans' supply is U22's +12V_FAN, not VSYS_E; the supply range TBD is closed by the rail (DRAFTED); the start current and the PWM input level stay NOT READ (R-179, F-L7-11) | RESTATED IN PLACE (record l5r2); restated pcb_interfaces.yaml:1634: "+12V_FAN 12.001 V (11.512 to 12.431 V at FB's limits) from U22 on VSYS_E, inside the fans' 10.8 to 13.2 V" |
+
+5. RESULT: every excerpt is in its target and every figure is printed by a cited Layer 4 source, but the figures restated at
+   set 28, which their sources printed at 2c240414; every replacing text is matched once in the tree's Layer 4 records. check_contracts.py
+   is a netlist reader and reads none of these files: its reading is unchanged by this pass (L5-POWER-CONTRACTS.md section 5).
