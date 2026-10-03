@@ -606,8 +606,10 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    # no material defect is open: D-10 and D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == [], "no material defect is open"
+    # the only open material defect is D-16 (L4-E7's B6-ENG-2), demonstrated and handed to the engineer with a register row; D-10 and
+    # D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
+    opn = [d for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    assert [d["id"] for d in opn] == ["D-16"] and "B6-ENG-2" in opn[0]["state"] and "R-189" in opn[0]["resolution"]
     assert all(d["state"].startswith("ADDRESSED IN DRAFTS") for d in m.DEFECTS if d["id"] in ("D-10", "D-11"))
     st = {d["id"]: d["state"] for d in m.DEFECTS}
     assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
@@ -1322,7 +1324,7 @@ def t_consolidation_the_panel_lead_surge():
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
     assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
-    assert g2["verdict"] != "PASS" and "no material defect is open" in g2["constraint"] and "R-175" in g2["constraint"]
+    assert g2["verdict"] != "PASS" and "one material defect is open, D-16" in g2["constraint"] and "R-175" in g2["constraint"]
     # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     r156, r173, r174, r175, r176 = (reg[x] for x in ("R-156", "R-173", "R-174", "R-175", "R-176"))
@@ -1418,7 +1420,7 @@ def t_fix_round_the_layer4_review_integrated():
     assert ch["R-157"][0] < ch["R-177"][0] < ch["R-22"][0] and ch["R-178"][1] == "3a"
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
-    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
     # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
@@ -1557,7 +1559,7 @@ def t_the_prototype_qualification_route():
             assert rid in reg, rid
             named.add(rid)
             assert reg[rid][1] in ("TEST", "EVIDENCE", "LAYOUT") or rid == "R-151", (rid, reg[rid][1])
-    for rid in ("R-104", "R-159", "R-160", "R-161", "R-168", "R-176", "R-179", "R-182", "R-183", "R-184", "R-185"):
+    for rid in ("R-104", "R-159", "R-160", "R-161", "R-168", "R-176", "R-179", "R-182", "R-183", "R-184", "R-185", "R-189"):
         assert rid in named, rid
     sp = F["cp"]["spec"]
     by = {r[0].split(" ")[0]: r for r in rows}
@@ -1603,6 +1605,10 @@ def t_the_prototype_qualification_route():
         assert "nothing" in low[max(0, mm.start() - 40):mm.start()], low[max(0, mm.start() - 60):mm.end()]
 
 
+def fmt_(x):
+    return _M().fmt(x)
+
+
 def t_the_decisions_are_kept_apart():
     """The second external review (of the 22:30 checkpoint): the page states three separate decisions and the handoff, each with what
     decides it; the closure gate's decision follows the gate's verdicts (BLOCKED while any criterion is not PASS); the status phrase is
@@ -1637,12 +1643,23 @@ def t_the_decisions_are_kept_apart():
     assert m.L4F03_STATUS in exd["D-15"][2] and m.L4F03_STATUS in short
     g2 = [g for g in m.GATE if g["n"] == 2][0]
     assert m.L4F03_STATUS in g2["constraint"]
-    assert "DESIGN TARGET" in m.RESERVE_NOTE and "DESIGN TARGET" in de["D-10"]["options"]
+    assert "budgeted" in m.RESERVE_NOTE and "3.0 nH" in m.RESERVE_NOTE and "3.0 nH" in de["D-10"]["options"]
     rows = {r["id"]: r for r in _C["R"]}
     b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
     assert m.RESERVE_NOTE in b6c.what and m.RESERVE_NOTE in exd["D-10"][2]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    assert "DESIGN TARGET" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+    assert "3.0 nH" in reg["R-176"][5] and "80.58 V" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+    # L4-E7's round 3: D-16 is a demonstrated defect handed to the engineer, its figures L4-E7's, its row and bench in the register
+    b6 = F["sv"]["rm"]["b6"]
+    assert b6["sense"][0] > 0.1 and b6["fig1"] < b6["sense"][0] and b6["r3_peaks"][0] <= b6["r3_peaks"][1] and 0 < b6["lsense"] < 5
+    assert b6["budget"][0] > 0.24 and b6["budget"][1] < -0.24 and b6["pvf80"][0] > 80.0 and b6["pvf80"][2] > b6["l_uh"]
+    assert [k for k, _ in b6["eng2"]][0] == "Affected circuit" and len(b6["eng2"]) == 8
+    assert de["D-16"]["state"].startswith("OPEN") and "B6-ENG-2" in de["D-16"]["state"] and de["D-16"]["rows"] == ["IF-01", "IF-02"]
+    assert fmt_(b6["sense"][0]) in de["D-16"]["constraint"] and fmt_(b6["fig1"]) in de["D-16"]["options"]
+    assert reg["R-189"][1] == "TEST" and "B6-ENG-2" in reg["R-189"][2] and "result (ii)" in reg["R-187"][2] and "R228" in reg["R-181"][2]
+    page = open(PAGE, encoding="utf-8").read()
+    assert "| Field | Entry (B6-ENG-2) |" in page.split("<!-- gen:b6eng:begin -->")[1].split("<!-- gen:b6eng:end -->")[0]
+    assert "R221 11.0k 0.1 % on ILIM," not in page and "R228" in page
 
 
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
@@ -1657,7 +1674,7 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert g["allow"] < g["rds_max"][0] and g["z_ev"][0][2] > g["z_ev"][1][2] > g["z_ev"][2][2] and g["svc"][0] < 150.0
     assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
     de = {d["id"]: d for d in m.DEFECTS}
-    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
     s14 = de["D-14"]["state"]
     assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
