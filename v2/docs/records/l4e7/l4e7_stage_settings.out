@@ -650,9 +650,9 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        path that loads D4. The lead's quarter wave is 15.0 MHz in free space (half wave 30.0 MHz), lower on soil: inside
        CS116's flat band, so it is added to the test frequencies as 5.14.2's installation resonance
      - THE LEAD'S LENGTH AS A CITED INPUT (set 27): v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md (read at digest
-       640af5776829a2d0): "the selected network holds every rating with its margin only from that loop (two conductors 6.09
+       f0e08c640468e200): "the selected network holds every rating with its margin only from that loop (two conductors 6.09
        mm apart over 5 m); no document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not
-       the kit's panel lead"; v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (read at digest 083462bf4e982dc2): "the selected
+       the kit's panel lead"; v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (read at digest 7f03bbd736a7ece6): "the selected
        network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no document
        gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead". The 5 m is
        this derivation's own a1solar ESTIMATE carried back by L4-E9's register, inside the envelope the guard-on transient
@@ -839,15 +839,16 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
          54.23 V): Q12 holds it against 100 V, U21's VS against 80 V, EN/UVLO 8.48 V, INP 12.60 V; D11 takes at most 3.7 mJ a
          pulse; the port bank holds PV_F within 0.007 V of GND against Q13's 918 pF: MEETS
        - a stiff 36 V source arriving with the block on (B6: a step from every state the guard is on in, and ramps): MODELED in
-         THE GUARD ALREADY ON, ROUND 2 below, every ceramic bank its maker's curves bounded on its own: every rating with its
-         margin (U5 within +-0.240 V, the timestep's error added) for a source loop of at least 3.30 uH: Q12 turns off at most
-         62.7 A within 11.4 us, PV_F at most 83.5 V (slew 26.6 V/us), PV_P 29.28 V, TRK_VS 29.15 V (D4's least breakdown at the
-         cold end 31.80 V: D4 carries no current), U5 0.2493 V and -0.0591 V, Q12 at 0.241 of its derated chart; a rising
-         source cut with D4's room at least 0.060 V at any rate. Under that loop U5 passes the margin and then the absolute
-         maximum (at 1.00 uH 0.5858 V), and no approach within the makers' printed rules removes the floor: NOT MET: no passing
-         loop is claimed (round 5); at round 2's 3.30 uH a fault at the connector reads U5 0.2485 V resistive and the pins
-         -0.3021 to +0.2591 V with RSENSE1's 5 nH and the Kelvin pair, against +-0.240 V; the complete stage question is the
-         engineer's (B6-ENG-1 with B6-ENG-2's stage-level note); PV_F over the recommended operating VS row (80 V) there, OPEN
+         THE GUARD ALREADY ON (rounds 2 to 5) below, every ceramic bank its maker's curves bounded on its own, both fault
+         positions: no loop is claimed to pass. At round 2's 3.30 uH, a reference loop only: Q12 turns off at most 62.7 A
+         within 11.4 us, PV_F at most 83.5 V (slew 26.6 V/us), PV_P 29.28 V, TRK_VS 29.15 V (D4's least breakdown at the cold
+         end 31.80 V: D4 carries no current), U5 0.2493 V and -0.0591 V against +-0.240 V (the timestep's error added), Q12 at
+         0.241 of its derated chart; a rising source cut with D4's room at least 0.060 V at any rate. At 1.00 uH U5 reads
+         0.5858 V, over the absolute maximum, and no approach within the makers' printed rules removes the dependency on the
+         source's loop: NOT MET: no passing loop is claimed (round 5); at round 2's 3.30 uH a fault at the connector reads U5
+         0.2485 V resistive and the pins -0.3021 to +0.2591 V with RSENSE1's 5 nH and the Kelvin pair, against +-0.240 V; the
+         complete stage question is the engineer's (B6-ENG-1 with B6-ENG-2's stage-level note); PV_F over the recommended
+         operating VS row (80 V) there, OPEN
        - the quiescent and conduction loss in normal operation: the series path at most 25.23 mOhm (Q12 9.56, Q13 11.12 at VGS
          8.5 V or more, R87 4.56; the FETs at their 150 C reading); 0.217 W at the regulation's highest 2.934 A and 0.353 W at
          the trip's highest 3.741 A; 1.75 mA around the bank at 25 V (IQ, CS- and ISCP bias, the dividers, the gate network),
@@ -910,16 +911,17 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        value sends more of the event downstream)
        THE ENVELOPE AND THE MODEL (MODELED, guard_event_b: the round-1 network's nodes, parts and U21's latest commands,
        every ceramic bank its curves at its own voltage, the chord capacitance iterated in each step): a stiff 36 V source
-       with no source impedance credited, its loop from 0.30 to 10.20 uH (38 values, 10 % apart, the floor bisected), whether
-       the fault sits at the connector (the loop is the source's own) or at the lead's far end (the lead's added), the lead's
-       resistance at the cold end (0.0363 Ohm; 0.0465 Ohm at a1solar's 40 C); the starts U21's least turn-off, idle; the
+       with no source impedance credited, its loop from 0.30 to 10.20 uH (38 values, 10 % apart; round 2 bisected a floor on
+       it, WITHDRAWN in round 5), whether the fault sits at the connector (the loop is the source's own and no lead
+       resistance is credited) or at the lead's far end (the lead and its resistance added), the lead's resistance at the
+       cold end for the far end only (0.0363 Ohm; 0.0465 Ohm at a1solar's 40 C); the starts U21's least turn-off, idle; the
        hold's least corner, idle; the hold's least corner, at the trip's highest current; REQ-016's open circuit, idle;
        REQ-016's open circuit, at the trip's highest current (a bound); the bulk the largest, no ESR credited; aged, at -40
-       C; new, at 20 C; D11 at both ends. THE TIMESTEP: the worst case near the floor (7.46 V, 0.0000 A) from 40 ns down to
-       0.5 ns, 40 ns 0.247894 V, 20 ns 0.248500 V, 10 ns 0.248803 V, 5 ns 0.248843 V, 2 ns 0.248868 V, 1 ns 0.248876 V, 0.5
-       ns 0.248891 V; the error bound added to U5 is twice the largest difference from the 0.5 ns value at 20 ns or less,
-       0.000781 V
-       THE SELECTED NETWORK (A) AT 3.30 uH (round 2's reference loop, WITHDRAWN as a passing floor in round 5), the worst over every start, bulk
+       C; new, at 20 C; D11 at both ends. THE TIMESTEP: the worst case near round 2's reference loop (7.46 V, 0.0000 A) from
+       40 ns down to 0.5 ns, 40 ns 0.247894 V, 20 ns 0.248500 V, 10 ns 0.248803 V, 5 ns 0.248843 V, 2 ns 0.248868 V, 1 ns
+       0.248876 V, 0.5 ns 0.248891 V; the error bound added to U5 is twice the largest difference from the 0.5 ns value at 20
+       ns or less, 0.000781 V
+       THE DRAFTED NETWORK (A) AT 3.30 uH (round 2's reference loop, WITHDRAWN as a passing floor in round 5), the worst over every start, bulk
        corner, D11 end and both fault positions (at the connector with no lead resistance credited; at the lead's far end), each resistive
        rating against its limit with its margin (and the least loop on the grid each holds from, a property of that rating alone):
          - PV_F (U21's VS, CS+, CS-, ISCP; the port bank)      83.4709 of  90.0000, margin  6.5291; holds from 2.44 uH
@@ -941,10 +943,10 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        TRK_VIN at its largest); over them PV_F at most 83.55 V and TRK_VS at most 29.90 V
        PV_F'S BASIS (round 4, L6P-F10): the 100 V absolute maximum less 10 % is the exclusion line above (the project's rule
        since L4-E12's B2: an absolute rating only excludes); the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS-
-       is 80 V (SLUSEE5E 6.2), which the floor's 83.47 V exceeds by 3.47 V: OPEN on the guard, under that row from 4.03 uH;
-       carried in R-176 row 3 and B6-ENG-1. THE INP DIVIDER (round 4, L6P-F04): R96 over R97 at 0.1 percent in this record
-       and in the draft (YAGEO RT0603BRD0728KL, 0.1 percent, 25 ppm/K, code owed); INP reads 18.2878 V at the floor against
-       18.0 V
+       is 80 V (SLUSEE5E 6.2), which the 83.47 V at round 2's reference loop exceeds by 3.47 V: OPEN on the guard, under that
+       row from 4.03 uH; carried in R-176 row 3 and B6-ENG-1. THE INP DIVIDER (rounds 4 and 5, L6P-F04): R96 over R97 at 0.1
+       percent in this record and in the draft (YAGEO RT0603BRD07100KL and RT0603BRD0728KL, 0.1 percent, 25 ppm/K, codes
+       owed); INP reads 18.2878 V at round 2's reference loop, over its 18.0 V margin line (inside the 20 V absolute maximum)
        AT 3.30 uH U5's resistive peak alone, with the numerical error, reads 0.2493 V at a fault at the connector and 0.2395
        V at the lead's far end against the 0.240 V line: the far-end case is round 2's figure, the connector case is over the
        line, and the complete budget with RSENSE1's inductance is in THE PARASITICS' BUDGET below (round 5). Under it: at
@@ -963,19 +965,22 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        margin lines hold from 0.53 uH; with the lead's resistance credited, round 2's case, 74.4 V, 45.7 V/us and 16.30 V);
        Q13's body diode at most 200.1 A; D11 at most 17.7 mJ. THE START: Q12 carries at most 6.109 A into the capacitors
        behind it at the gate's fastest slew, under U21's overcurrent least 6.364 A
-       THE THREE APPROACHES (at most three, the review's and the coordinator's): (A) SELECTED, the round-1 guard with parts a
-       maker characterises, bounded bank by bank: every rating with its margin for a loop of at least 3.30 uH (two conductors
-       6.09 mm apart over 5 m); the floor stays. (B) A pin-level limiter (series resistors into CSPIN and CSNIN with a clamp
-       or capacitor across the pins), which would bound the pins' differential whatever the loop: NOT TAKEN on the LT8705A's
-       printed statements. 8705af p.30: "all four of the current sense pins can draw bias current under normal operating
-       conditions. As such, do not place resistors in series with any of the CSxIN or CSxOUT pins", and CSNIN also feeds the
-       boost capacitor charge control, which "can draw current in certain conditions" (no figure); p.4 prints only a typical
-       sum of the two pins' bias, 31 uA, with no maximum and no split (10 Ohm a pin on that sum alone is 0.68 % of the sense
-       at the regulation's highest current, and the boost block's draw has no bound); the RC filter p.34 shows is for CSP and
-       CSN only, 10 Ohm at most, under 30 ns. The question is drafted for Analog Devices (clarification/analog-devices-
-       lt8705a.txt). (D) The TPS48111-Q1, its short-circuit propagation 1.60 us at most against the TPS48110-Q1's 5 us: the
-       floor falls to 1.64 uH (3.06 mm), but its pin 2 is INP_G, so it has no OV input and the cut-off would move to INP (1
-       us) through a reference whose response no held sheet prints: not taken. At 1.00 uH (D) still reads U5 0.3262 V
+       THE THREE APPROACHES (at most three, the review's and the coordinator's): (A) the round-1 guard with parts a maker
+       characterises, bounded bank by bank, the network drafted: NO PASSING LOOP (round 5). Round 2's 3.30 uH (two conductors
+       6.09 mm apart over 5 m) is a reference loop only, WITHDRAWN as a passing floor: there a fault at the connector reads
+       the pins -0.3021 to +0.2591 V against +-0.240 V; no approach passes, and the complete stage question is the engineer's
+       (B6-ENG-1). (B) A pin-level limiter (series resistors into CSPIN and CSNIN with a clamp or capacitor across the pins),
+       which would bound the pins' differential whatever the loop: NOT TAKEN on the LT8705A's printed statements. 8705af
+       p.30: "all four of the current sense pins can draw bias current under normal operating conditions. As such, do not
+       place resistors in series with any of the CSxIN or CSxOUT pins", and CSNIN also feeds the boost capacitor charge
+       control, which "can draw current in certain conditions" (no figure); p.4 prints only a typical sum of the two pins'
+       bias, 31 uA, with no maximum and no split (10 Ohm a pin on that sum alone is 0.68 % of the sense at the regulation's
+       highest current, and the boost block's draw has no bound); the RC filter p.34 shows is for CSP and CSN only, 10 Ohm at
+       most, under 30 ns. The question is drafted for Analog Devices (clarification/analog-devices-lt8705a.txt). (D) The
+       TPS48111-Q1, its short-circuit propagation 1.60 us at most against the TPS48110-Q1's 5 us: the loop where its U5
+       resistive peak alone meets the line falls to 1.64 uH (3.06 mm; no floor is claimed for it either), but its pin 2 is
+       INP_G, so it has no OV input and the cut-off would move to INP (1 us) through a reference whose response no held sheet
+       prints: not taken. At 1.00 uH (D) still reads U5 0.3262 V
        THE ENGINEER'S ROW B6-ENG-1 (restated in round 5 after the recheck: no approach within the makers' printed rules holds
        the margin independent of the source's loop, and no passing loop is claimed): affected circuit: board E's solar guard
        (U21, Q12, the port bank) and U5's input sense (RSENSE1, CSPIN, CSNIN, C13 to C15); evidence and failed condition: at
@@ -1054,16 +1059,17 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        bound 5 nH and the Kelvin pair's loop 1 nH (the layout obligation: the pair from the pad centres, together, over the
        ground return): RSENSE1's current rises at most 2.64 A/us during the charging (RSENSE1's inductance +0.0132 V, the
        pair +0.0026 V) and falls at most 70.0 A/us when Q12 turns off within its 243 ns gate fall (-0.3498 V and -0.0700 V).
-       The pins read at most +0.2591 V on the rise (resistive 0.2485, numerical 0.000781) and -0.3021 V at the turn-off,
-       against +-0.3 V: the rise EXCEEDS round 2's 0.240 V margin line (by +0.0191 V; the rise's inductive and Kelvin terms
-       are 0.0098 V at 5 nH), the turn-off at 5 nH does NOT. BY FAULT POSITION: at the connector (no lead resistance
-       credited) the pins read -0.3021 to +0.2591 V, at the lead's far end -0.2884 to +0.2486 V. Over RSENSE1's inductance at
-       this loop (0.5 nH -0.129 to +0.253 V OUT; 1.0 nH -0.130 to +0.253 V OUT; 1.5 nH -0.130 to +0.254 V OUT; 2.0 nH -0.138
-       to +0.255 V OUT; 3.0 nH -0.193 to +0.256 V OUT; 5.0 nH -0.302 to +0.259 V OUT; OUT: a polarity outside the line) no
-       inductance tried brings both polarities inside the line at this loop (information, not a search for a passing value).
-       The ceramics' ESL and tap (1.06 nH a part at most, 0.5 nH tap) move the node, not the pin difference, and are in the
-       operating model above. So RSENSE1's inductance, printed by no maker for the chosen part, is part of the stage question
-       handed to the engineer
+       THE PINS, the worst of both fault positions: at most +0.2591 V on the rise (resistive 0.2485, numerical 0.000781) and
+       -0.3021 V at the turn-off. Against the 0.240 V margin line the rise is over it by 0.0191 V (its inductive and Kelvin
+       terms 0.0098 V at 5 nH) and the turn-off is past it by 0.0621 V. BY FAULT POSITION: at the connector (no lead
+       resistance credited) the pins read -0.3021 to +0.2591 V, and the turn-off's -0.3021 V is PAST the -0.3 V absolute
+       maximum; at the lead's far end they read -0.2884 to +0.2486 V, and the turn-off's -0.2884 V is inside the absolute
+       maximum and past the -0.240 V margin line. Over RSENSE1's inductance at this loop (0.5 nH -0.129 to +0.253 V OUT; 1.0
+       nH -0.130 to +0.253 V OUT; 1.5 nH -0.130 to +0.254 V OUT; 2.0 nH -0.138 to +0.255 V OUT; 3.0 nH -0.193 to +0.256 V
+       OUT; 5.0 nH -0.302 to +0.259 V OUT; OUT: a polarity outside the line) no inductance tried brings both polarities
+       inside the line at this loop (information, not a search for a passing value). The ceramics' ESL and tap (1.06 nH a
+       part at most, 0.5 nH tap) move the node, not the pin difference, and are in the operating model above. So RSENSE1's
+       inductance, printed by no maker for the chosen part, is part of the stage question handed to the engineer
        IN OPERATION the same inductance sets the pins' swing at M1's edges for the as-drafted split (25 V in, 12.0 V out, the
        regulation's current): 1 nH: -0.0625 to +0.1210 V; 2 nH: -0.1116 to +0.1259 V; 5 nH: -0.1556 to +0.1295 V
        THE VERDICT ON ROUTE 3 (SESSION): route 3 does NOT hold over the whole envelope, result (ii). No split of the input
@@ -1088,12 +1094,12 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        the sense arrangement changes: the engineer's row B6-ENG-2 (affected circuit: U5's input sense, RSENSE1, CSPIN, CSNIN,
        C13 to C15, C71 to C74; evidence: this model, the sheet's p.5 and p.31; decision or measurement needed: the pins'
        waveform in operation at 25 V in and the lowest bus, or Analog Devices' statement of what the amplifier reads above
-       100 mV, or enough low-derating capacitance behind RSENSE1 (which raises B6's floor); pass criterion: the pins within
-       +-100 mV at every operating point, or the regulated input current measured within the error budget at the 25 V corner;
-       consequence of failure: the input limit regulating off its setting at high input and a low bus (this model: below it),
-       and a possible stress on the sense pins at the switching edges (the sensitivity at 10 ns edges reaches -0.4329 V at
-       the pins, beyond the -0.3 V absolute maximum); work blocked: the regulation's acceptance row at layer 9, not the
-       drafts)
+       100 mV, or enough low-derating capacitance behind RSENSE1 (which worsens B6's guard-on transient); pass criterion: the
+       pins within +-100 mV at every operating point, or the regulated input current measured within the error budget at the
+       25 V corner; consequence of failure: the input limit regulating off its setting at high input and a low bus (this
+       model: below it), and a possible stress on the sense pins at the switching edges (the sensitivity at 10 ns edges
+       reaches -0.4329 V at the pins, beyond the -0.3 V absolute maximum); work blocked: the regulation's acceptance row at
+       layer 9, not the drafts)
      THE VERDICTS, with the remedies:
        D4             a stiff 36 V source, connected cold          NOT MET (round 5: at a connector fault, no lead resistance credited, the ring near 0.30 uH takes PV_F's slew to 56.1 V/us against the 54 V/us margin line and INP to 18.54 V against 18 V, inside the 60 V/us and 20 V absolute ratings; the margin lines hold from 0.53 uH; with the lead's resistance credited, round 2's case, 74.4 V, 45.7 V/us and 16.30 V)
        D5             a reversed panel                             MEETS (CONDITIONAL on Q13's leakage above 25 C)
@@ -1113,11 +1119,11 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      U21's DGX-19 land, the regeneration and its gates, and R-176's bench rows, REVISED: (1) the cut-off's rise and fall on
      a ramped supply (28.55 to 31.06 V rising, 27.07 V or more falling); (2) a 36 V supply connected cold: Q12 never
      conducts, D4 carries nothing, PV_F at most 85 V, its slew and INP inside their absolute ratings (their 10 % margin
-     lines are not held at a connector fault near the envelope's floor, round 5); (3) at layer 9, the waveforms at the IC
-     pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and from 25 V, through a loop measured
-     first: U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 63 A, within 12 us), D4 carrying nothing,
-     PV_P under 31.80 V, PV_F under the recommended operating 80 V row (OPEN at round 2's loop, 83.47 V); no loop is
-     claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides; (4) a
+     lines are not held at a connector fault near the envelope's least loop, round 5); (3) at layer 9, the waveforms at the
+     IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and from 25 V, through a loop
+     measured first: U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 63 A, within 12 us), D4 carrying
+     nothing, PV_P under 31.80 V, PV_F under the recommended operating 80 V row (OPEN at round 2's loop, 83.47 V); no loop
+     is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides; (4) a
      reversed bench panel's curve (no current; the high side's pins against GND); (5) Q13's leakage at the hot end, under
      32.1 uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174)
    THE BACKSTOP UNDER CS101 (checks/check-l4e7r-3.md; the owner's instruction of 2 October 2026). The exposure is M2's
