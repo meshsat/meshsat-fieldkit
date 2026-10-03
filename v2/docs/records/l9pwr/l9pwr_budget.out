@@ -60,6 +60,11 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same
      PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would
      replace an unset duty by its maximum and hide the duty's effect inside the headline instead of showing it as a sensitivity
+   the pack: no difference. pcb_pack_protection.yaml declares '4S3P Samsung INR18650-35E, about 145 Wh', 4S3P; rv-pwr already models it (C_MIN 3.35 Ah a cell, R_CELL 0.035 / 0.050 / 0.060 Ohm
+     LOW / PLAN / HIGH); L4-E10's usable 107.9 Wh enters only B7's consequence (section 8, R3), energy being item 9.2's
+   the states: rv-pwr's eight and record hc2's three (CONOPS 4c: the reduced mode PS-RED2, slots 2 and 3; the heat stage PS-SURV as board B is
+     generated and PS-SURV-R after BANK-R1); charging on shore is the B4 balance (section 8, R2); source-only operation and its entry current are
+     L4-E11's (its section 3), not a pack-side figure; the system-node demand per state (VBAT, section 3) is what the charger must carry there
    the pack path (ohms): RV 0.0225 (rv-pwr's R_DIST 0.0225); DRAWN 0.0275 (rv-pwr's R_DIST 0.0225, board A's R17, 5 mOhm 0.0050); DRAFTED 0.0381 (rv-pwr's R_DIST 0.0225, board A's R17, 5 mOhm 0.0050, Q39 and Q40, BUK6Y10-30P in parallel at L4-E11's 150 C bound 21.136 mOhm each 0.0106)
    NOT MODELLED, each with its reason:
      l8gnd (GND-002 and the HOT-R1 SLOT_EN hold): ground bonding and a logic hold: no load and no converter; nothing for the budget
@@ -70,10 +75,11 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      L4-E10 (the cell and its thermal design) and L4-E12 (the electronics' thermal): the pack model and the heat: this record's pack-side watts are their input, not the other way round
      the rails' INA226 shunts (5 and 6 mOhm on the slot, device, PA and HF rails): not in rv-pwr's tree; their I2R is bounded in section 5 per state from the rails' own currents
      the BQ25730's own quiescent draw on battery: no figure read in this record; a charger's battery-only quiescent is milliwatts against the states' tens of watts
+     board E's CELL_F loads as drawn (U12 and the mixers, declared 1.0 A, before R17): the DRAWN tree passes them through R17 with the rest; at their PLAN current, about 0.2 A, that is under a milliwatt; DRAFTED moves them to VSYS_E (D2)
      the USB-C outlet's tablet budget (an 18 W cap, a proposal) and source-only operation: an outlet overlay and a source-side question (L4-E11 section 3); the system-node demand per state is printed for it in section 3
 
 2. THE MODEL CHECK: this script's evaluator on rv-pwr's own tree against rv-pwr's functions (state_full), every state and scenario and record
-   hc2's three states: largest difference 2.8e-14 W (within 1e-9 W)
+   hc2's three states: largest difference 0.000000000 W (within 1e-9 W; printed at 1e-9 W, below which a float sum's order may move it)
    rv-pwr's committed output (pwr_budget.out, its first table at 0.1 W) against this evaluator rounded the same way: equal on all eight states
 
 3. PACK-SIDE TOTALS PER STATE (W): LOW / PLAN / HIGH for RV, DRAWN and DRAFTED; at VBAT (the system node, PLAN); the pack current at 14.4 V
@@ -141,8 +147,9 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
 
 5. PER STATE, DRAFTED: every load (LOW / PLAN / HIGH at its pins, its battery-side share at PLAN, tier, status), every rail (output W
    LOW / PLAN / HIGH, output A PLAN / HIGH, efficiency and loss at PLAN), and each converter against its limit (the current judged at PLAN /
-   HIGH, the limit, the margin at HIGH; an input-side limit is judged at VBAT's 9.688 V floor with every load at HIGH). DRAWN's margins follow
-   where its converters differ. Status: RV rv-pwr's row unchanged, MAIN a change on main since 1f614233, DRAFTED a draft not applied.
+   HIGH, the limit, the margin at HIGH; an input-side limit is judged on the state's input power over VBAT's 9.688 V floor, at HIGH with
+   every load evaluated at that floor). DRAWN's margins follow where its converters differ. Status: RV rv-pwr's row unchanged, MAIN a change on main since 1f614233, DRAFTED a draft not
+   applied.
    == PS-IDLE (pack side 31.815 / 41.095 / 90.752 W)
      load CM5 slot 1                                   S1         2.000   2.000   2.000  pack   2.175  S RV
      load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.652  R DRAFTED

@@ -268,7 +268,7 @@ def parse_inputs(pb):
     F["ap64500_a"] = grab(pdf("ap64500", last=1), r"The AP64500 is a (\d+)A", "AP64500's rating")
     F["ap632_a"] = grab(pdf("ap632", last=1), r"is a (\d+)A, synchronous buck", "AP6320x's rating")
     F["tps62933_a"] = grab(flat(pdf("tps62933", last=1)), r"(\d)-A \(TPS62933 and", "TPS62933's rating")
-    F["ap2112_a"] = grab(pdf("ap2112", last=1), r"guaranteed (\d+)mA \(min\.\)", "AP2112's rating") / 1000.0
+    F["ap2112_a"] = grab(pdf("ap2112", last=1), r"delivers a \w+ (\d+)mA \(min\.\)", "AP2112's rating") / 1000.0
     F["tlv755_a"] = grab(pdf("tlv755", last=1), r"TLV755P (\d+)mA", "TLV755P's rating") / 1000.0
     F["vsns"] = tuple(v / 1000.0 for v in grab(pdf("lm5176", layout=True), r"VSNS\s+Average current loop regulation target\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "LM5176 VSNS", 3))
     # ---- the pack contract
@@ -278,6 +278,8 @@ def parse_inputs(pb):
     F["i_ocd"] = grab(pk, r"PACK_OVER_CURRENT_DISCHARGE\n[^\n]*\n[^\n]*\n\s+threshold: \{value: ([\d.]+), unit: A", "OCD's threshold")
     F["cuv"] = grab(pk, r"CELL_UNDER_VOLTAGE\n[^\n]*\n[^\n]*\n\s+threshold: \{value: ([\d.]+), unit: V", "CUV's threshold")
     F["series"] = grab(pk, r"\n  series: (\d+)", "the series count", conv=int)
+    F["topology"] = grab(pk, r'\n  topology: "([^"]+)"', "the pack's topology", conv=str)
+    F["parallel"] = grab(pk, r"\n  parallel_min: (\d+)", "the parallel count", conv=int)
     # ---- rv-pwr's D-11 floors (constants inside its main())
     rv = text("rvpwr")
     F["floor"] = grab(rv, r"\n    FLOOR = ([\d.]+)", "rv-pwr's D-11 floor")
@@ -639,6 +641,7 @@ NOT_MODELLED = [
     ("L4-E10 (the cell and its thermal design) and L4-E12 (the electronics' thermal)", "the pack model and the heat: this record's pack-side watts are their input, not the other way round"),
     ("the rails' INA226 shunts (5 and 6 mOhm on the slot, device, PA and HF rails)", "not in rv-pwr's tree; their I2R is bounded in section 5 per state from the rails' own currents"),
     ("the BQ25730's own quiescent draw on battery", "no figure read in this record; a charger's battery-only quiescent is milliwatts against the states' tens of watts"),
+    ("board E's CELL_F loads as drawn (U12 and the mixers, declared 1.0 A, before R17)", "the DRAWN tree passes them through R17 with the rest; at their PLAN current, about 0.2 A, that is under a milliwatt; DRAFTED moves them to VSYS_E (D2)"),
     ("the USB-C outlet's tablet budget (an 18 W cap, a proposal) and source-only operation", "an outlet overlay and a source-side question (L4-E11 section 3); the system-node demand per state is printed for it in section 3"),
 ]
 
@@ -1231,13 +1234,18 @@ def render(R):
     w("     LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same")
     w("     PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would")
     w("     replace an unset duty by its maximum and hide the duty's effect inside the headline instead of showing it as a sensitivity")
+    w("   the pack: no difference. pcb_pack_protection.yaml declares '%s', %dS%dP; rv-pwr already models it (C_MIN %.2f Ah a cell, R_CELL %s Ohm" % (F["topology"], F["series"], F["parallel"], pb.C_MIN, " / ".join("%.3f" % v for v in pb.R_CELL.values())))
+    w("     LOW / PLAN / HIGH); L4-E10's usable %.1f Wh enters only B7's consequence (section 8, R3), energy being item 9.2's" % F["usable_wh"])
+    w("   the states: rv-pwr's eight and record hc2's three (CONOPS 4c: the reduced mode PS-RED2, slots 2 and 3; the heat stage PS-SURV as board B is")
+    w("     generated and PS-SURV-R after BANK-R1); charging on shore is the B4 balance (section 8, R2); source-only operation and its entry current are")
+    w("     L4-E11's (its section 3), not a pack-side figure; the system-node demand per state (VBAT, section 3) is what the charger must carry there")
     w("   the pack path (ohms): " + "; ".join("%s %.4f %s" % (cn, R["r_path"][cn][0], "(" + ", ".join("%s %.4f" % (a.split(" (")[0], b) for a, b, s in R["r_path"][cn][1]) + ")") for cn in ("RV", "DRAWN", "DRAFTED")))
     w("   NOT MODELLED, each with its reason:")
     for a, b in NOT_MODELLED:
         w("     %s: %s" % (a, b))
     w("")
     w("2. THE MODEL CHECK: this script's evaluator on rv-pwr's own tree against rv-pwr's functions (state_full), every state and scenario and record")
-    w("   hc2's three states: largest difference %.1e W (%s)" % (R["check_worst"], "within 1e-9 W" if R["check_worst"] < 1e-9 else "OVER 1e-9 W"))
+    w("   hc2's three states: largest difference %.9f W (%s; printed at 1e-9 W, below which a float sum's order may move it)" % (R["check_worst"], "within 1e-9 W" if R["check_worst"] < 1e-9 else "OVER 1e-9 W"))
     cm = R["committed"]
     ok = R["pred"]["rv-pwr's committed headline table equals this evaluator at 0.1 W"]
     w("   rv-pwr's committed output (pwr_budget.out, its first table at 0.1 W) against this evaluator rounded the same way: %s" % ("equal on all eight states" if ok else "DIFFERS"))
@@ -1268,8 +1276,10 @@ def render(R):
     w("")
     w("5. PER STATE, DRAFTED: every load (LOW / PLAN / HIGH at its pins, its battery-side share at PLAN, tier, status), every rail (output W")
     w("   LOW / PLAN / HIGH, output A PLAN / HIGH, efficiency and loss at PLAN), and each converter against its limit (the current judged at PLAN /")
-    w("   HIGH, the limit, the margin at HIGH; an input-side limit is judged at VBAT's %.3f V floor with every load at HIGH). DRAWN's margins follow" % F["vsys"][0])
-    w("   where its converters differ. Status: RV rv-pwr's row unchanged, MAIN a change on main since 1f614233, DRAFTED a draft not applied.")
+    w("   HIGH, the limit, the margin at HIGH; an input-side limit is judged on the state's input power over VBAT's %.3f V floor, at HIGH with" % F["vsys"][0])
+    w("   every load evaluated at that floor). DRAWN's margins follow"
+      + " where its converters differ. Status: RV rv-pwr's row unchanged, MAIN a change on main since 1f614233, DRAFTED a draft not")
+    w("   applied.")
     for st in STATES:
         P = R["per"][("DRAFTED", st)]
         w("   == %s (pack side %.3f / %.3f / %.3f W)" % (STATE_NAME[st], R["tot"][("DRAFTED", st)]["lo"]["pb"], R["tot"][("DRAFTED", st)]["plan"]["pb"], R["tot"][("DRAFTED", st)]["hi"]["pb"]))
