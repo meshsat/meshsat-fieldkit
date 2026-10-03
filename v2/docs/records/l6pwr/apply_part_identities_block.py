@@ -44,7 +44,8 @@ def main(argv):
         if not present:
             print("apply_part_identities_block: %s has no %s block: nothing to remove" % (target, KEY)); return 3
         i = old.index(MARK)
-        new = old[:i].rstrip("\n") + "\n"
+        j = old.find("\n# ADDED ", i + len(MARK))   # the next block after this one stays (each record removes only its own)
+        new = old[:i].rstrip("\n") + "\n" + (old[j + 1:] if j >= 0 else "")
     else:
         if present:
             print("apply_part_identities_block: %s already carries %s: a second application is refused" % (target, KEY)); return 3
