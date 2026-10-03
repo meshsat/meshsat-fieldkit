@@ -143,10 +143,28 @@ protection for parts handled hot; a lithium-ion cell or pack is handled under th
 enclosure, voltage and temperature monitoring with automatic cut-off, an exhaust for venting gases). No procedure here is to be
 run on the owner's kit hardware or by the owner.
 
-## 7. The checker
+## 7. The bring-up page
+
+`v2/docs/PCB-BRING-UP.md` carries, since 3 October 2026, the supplier's bring-up procedure for the first prototype of each board (A,
+B, C, D, E, E5 and P): per board the drafts the prototype is built with (each with its register row, and what may not be powered
+when a known-defect correction is missing), the first power-up on current-limited supplies, the rails and their bands, the checks
+before the next board is connected, the firmware and register writes, the hand-offs to the procedures of this folder and to the
+register's bench rows, and the stop conditions. It describes the design with the drafts applied, which is not the committed
+schematic, and is marked PROPOSED like every procedure here.
+
+The page was generated whole by `tools/rules_render.py` (rule TST-001 compares it with the boards' intent files). The procedure is
+written by hand ABOVE the renderer's marker, and the renderer keeps that part unchanged at every render (`_with_bringup_preface`);
+only the rail inventory under the marker is generated, so `--check` and TST-001 still judge that part. A page without the marker
+renders exactly as before. The page's inputs from branches not in this tree's history (Layer 8's records l8gnd and l8r2, Layer 5's
+second round) are copied byte for byte into `inputs/`, each with its branch, commit, source path and sha256 in
+`inputs/SOURCES.txt`; the page quotes the copies.
+
+## 8. The checker
 
 `tp_check.py` (run from the repository root: `python3 v2/docs/test-procedures/tp_check.py`) checks every procedure against its
-sources and prints the index, the coverage of 5d's route table and every TBD by the row that owes it. Its output is committed as
+sources and prints the index, the coverage of 5d's route table and every TBD by the row that owes it. It also checks the bring-up
+page's procedure (the marker and the generated block under it, the PROPOSED mark and the drafts statement, every quote, path and
+TBD, the seven subsections of each board, every register row its tables name) and the inputs' sha256 against `inputs/SOURCES.txt`. Its output is committed as
 `tp_check.out` and is regenerated only through the project's `regen_out.py`, which refuses a failed or non-deterministic run.
 The test `v2/ecad/tools/tests/test_test_procedures.py` holds the same properties (every procedure names its register row and
 the row exists; every pass condition is quoted from its source; every procedure carries the PROPOSED mark; no long dash) and
