@@ -14,6 +14,7 @@ nothing is bought or sent. `RESULT.md` holds the outcome.
 | `RESULT.md` | The merges and their resolutions, each re-pin (file, old sha, new sha), the check and test lines with every failure's cause and owner, the box re-takes owed, the proposed LAYER-STATUS rows for Layers 5, 6, 7, 8 and 12 |
 | `apply_set28b.py` | The driver: the steps after the merges in dependency order (held sheets, the rebind, the registry, the trace and Layer 3 R2 pages, the L4 pins, the freeze, the later outputs, the identity blocks, the checks); each step idempotent, a reader's refusal reported and the chain continued |
 | `apply_set28b_repins.py` | `--stage pins`: L4-E8 (lcsc_fill), L4-E11 (contract, PANEL.md, registry, L4-E5's output, L4-E9's page, and its need() texts for FW-C08, FW-A14 and PANEL.md's cold hold in Layer 5's wording), L4-E12 (lcsc_fill, L4-E8's output), L4-E9 (contract, interfaces, registry, L4-E5's, L4-E7's, L4-E8's and L4-E11's outputs, lcsc_fill, L4-E7's page at `d562e75a`), each regenerated through regen_out when it changed; `--stage later`: every output of Layers 5 to 9 whose printed pins no longer bind, regenerated. Every sha read from the tree at run time |
+| `apply_set28b_rebind.py` | L5R3-F01: CFL-001, 005, 014, 015 and 016 rebound to Layer 5 round 3's PANEL.md and ASSEMBLY.md, seven bindings, each record's ground asserted byte-identical or changed only in PI-button lines (refused otherwise), one evidence entry per record and file |
 | `apply_set28_rebind.py` | Copied from `records/int28/`: CFL-001, 005, 014, 015 and 016 rebound to the tree's PANEL.md with one evidence entry each; on this tree it reads "already applied" (the r2 branches carry int28's rebind and PANEL.md is unchanged since) |
 | `resolve_both_sides.py` | Copied from `records/int28/` and extended: `--ours` keeps ours in a conflict block whose lines are all PINS entries (used for L4-E9's and L4-E11's pins at the l5r2 merge); without it both sides are kept, ours first |
 | `stage_held_sheets.py` | Copied from `records/int28/`, its sha pass corrected (it skipped named paths without a same-line pin): stages the makers' held-back sheets from sibling checkouts, each verified by a record's pin |
@@ -25,4 +26,6 @@ nothing is bought or sent. `RESULT.md` holds the outcome.
 2. `stage_held_sheets.py --write`; `apply_set28b_repins.py --stage pins --write`.
 3. `bash _bin/freeze_l4_chain.sh <worktree>` (never edited).
 4. `apply_set28b_repins.py --stage later --write`.
-5. The checks and the module tests (RESULT.md sections 3 and 4); `apply_set28b.py` end to end on the finished tree as the proof.
+5. After each later merge (Layer 5 round 3, L4-E9 round 6, L4-E7's guard, Layer 5's F-12 round, Layers 6 and 7's rounds, the
+   firmware's round 3): `apply_set28b_rebind.py --write` where PANEL.md or ASSEMBLY.md moved, then steps 2 to 4 again; six freezes.
+6. The checks, `verify_l3am`, `verify_acceptance` and the single module run on the final tip (RESULT.md sections 3 and 4).
