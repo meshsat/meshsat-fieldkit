@@ -2,7 +2,9 @@
 on printed parts, as release-guarded drafts: board B's coolers on a 12 V step-up (E11-40), VBUS20's over-voltage cut-off on board A
 (S-111), PANEL_5V and board D's 3.3 V behind eFuses (L5R2-F03, F05), J_QMX and J_CAM on the JST PH land (L5R2-F04); round 3 (3 October
 2026): item 1 re-decided on record l9pwr's L9P-F02 (the coolers' step-up kept with the modules' 70 % Fan_PWM maximum), the pack path's
-return declared as a rail on boards A and E (record l9stk's finding), the energy chain's board E 2 oz texts corrected by an apply script.
+return declared as a rail on boards A and E (record l9stk's finding), the energy chain's board E 2 oz texts corrected by an apply script;
+round 4 (3 October 2026, the owner's focused check of L9P-F02): the 70 % maximum withdrawn, slots 1 and 3 on slot 2's LM5176 stage
+(apply_gen_sch_a_slotlm.py), the coolers at full speed, every figure of the check held to its stated verdict.
 
 The predicates: the committed .out is what the script prints; each draft checks, applies once, refuses twice and refuses the tree's
 own generator; board A composes in L4-E9's order with l8gnd's and this record's drafts and d8dec31's mainpb last, and every other
@@ -34,7 +36,8 @@ SCRIPT = os.path.join(REC, "l8r2_drafts.py")
 OUT = os.path.join(REC, "l8r2_drafts.out")
 PAGE = os.path.join(REC, "L8R2-KNOWN-DEFECTS.md")
 CHECK = os.path.join(REC, "check_l8r2_netlist.py")
-MINE = {"a": ["d8v3", "vbus20ov", "packrtn"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"], "e": ["packrtn"]}
+MINE = {"a": ["d8v3", "vbus20ov", "packrtn", "slotlm"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"], "e": ["packrtn"]}
+HELD_FAN = {p: os.path.join(ROOT, "v2", "vendor", "fans", "held", "sanyo-denki-san-ace-c1152b001-2510-p%s.pdf" % p) for p in ("0362", "0616", "0623", "0633")}
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
 
@@ -84,7 +87,9 @@ def t_the_committed_output_is_what_the_script_prints():
     t = r.stdout.decode()
     for s in ("board A pairwise intersections: none (DISJOINT)", "board B pairwise intersections: none (DISJOINT)",
               "record l8r2's corrections on the netlists: NOT DRAWN", "fixture A: DRAWN", "fixture B: DRAWN", "(R248, C247)", ": REJECTED",
-              "SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum", "REFUSED (intent: rail +5V_S1 declares a 5.00 A peak",
+              "round 3 SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum", "REFUSED (intent: rail +5V_S1 declares a 5.00 A peak",
+              "SELECTED (SESSION): slots 1 and 3 on the LM5176 stage", "slotlm then L4-E11's charger: REFUSED, as expected",
+              "the charger then slotlm: OK", "in either order give one generator: YES", "A SLOTS DRAWN", "VERDICT: NOT A MARGIN",
               "OK at every prefix", "IDENTICAL", "the corrected texts name those widths: YES", "the same as this script's E_ROUND",
               "equals record l9pwr's printed current in every row: YES"):
         assert s in t, s
@@ -107,8 +112,10 @@ def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
 def t_board_a_composes_in_l4e9s_order_with_mainpb_last_and_every_anchor_still_applies():
     m = _need_inputs()
     pa = [m.draft(r, n, "a") for r, n in m.POWER_A]; l8 = [m.draft(r, n, "a") for r, n in m.L8_A]; mine = _mine("a")
+    late = [m.draft(r, n, "a") for r, n in m.AFTER_CHARGER]; first = [x for x in mine if x not in late]
+    charger = [x for x in pa if x.endswith("_charger.py")]
     with tempfile.TemporaryDirectory() as d:
-        for tag, seq in (("fwd", pa + l8), ("rev", mine + pa + l8[:2])):
+        for tag, seq in (("fwd", pa + l8), ("rev", first + pa + l8[:2] + late)):
             p, res = m.compose(GEN_A, seq, d, tag, mainpb_last=True)
             assert all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + 1, (tag, res)
             assert "(R248, C247)" in res[-1][1], res[-1]
@@ -116,11 +123,17 @@ def t_board_a_composes_in_l4e9s_order_with_mainpb_last_and_every_anchor_still_ap
         r12 = [x for x in pa if x.endswith("_r12.py")]
         for s in pa:
             p = os.path.join(d, "alone_" + os.path.basename(s)); shutil.copy(GEN_A, p)
-            for x in mine + (r12 if s.endswith("_bank.py") else []):
+            for x in first + ([] if s in charger else late) + (r12 if s.endswith("_bank.py") else []):
                 assert _run([x, p, "--write"]).returncode == 0, x
             r = _run([s, p, "--write"]); assert r.returncode == 0, "%s refused after l8r2's drafts: %s" % (s, r.stderr.decode()[-200:])
         _p, res = m.compose(GEN_A, l8[::-1], d, "l8rev")
         assert all(v == "OK" for _s, v in res), res
+        # round 4's order constraint: slotlm rewrites the VBAT entry L4-E11's charger anchors on, so the charger goes first
+        _p, res = m.compose(GEN_A, late + charger, d, "o1"); assert res[-1][1].startswith("REFUSED"), res
+        _p, res = m.compose(GEN_A, charger + late, d, "o2"); assert all(v == "OK" for _s, v in res), res
+        pk = [x for x in mine if x.endswith("_packrtn.py")]
+        p1, r1 = m.compose(GEN_A, pk + late, d, "pk1"); p2, r2 = m.compose(GEN_A, late + pk, d, "pk2")
+        assert all(v == "OK" for _s, v in r1 + r2) and open(p1, "rb").read() == open(p2, "rb").read(), "packrtn and slotlm differ by order"
 
 
 def t_board_b_composes_forward_in_reverse_and_each_alone():
@@ -145,6 +158,9 @@ def t_the_designators_are_disjoint_and_this_records_are_exact():
         assert addA["l8r2/apply_gen_sch_a_d8v3.py"] == {"U44", "R234", "R235", "R236", "R237", "R238", "C242", "C243"}
         assert addA["l8r2/apply_gen_sch_a_vbus20ov.py"] == {"U45", "Q41", "C244", "C245", "C246"} | {"R%d" % k for k in range(239, 248)}
         assert addA["d8dec31/apply_gen_sch_a_mainpb.py"] == {"R248", "C247"} and addA["l8r2/apply_gen_sch_a_packrtn.py"] == set()
+        slot = {"%s%d" % (p, b + k) for b in (500, 530) for p, ks in (("U", (1,)), ("Q", range(1, 5)), ("L", (1,)), ("D", (1, 2)),
+                                                                       ("R", range(1, 13)), ("C", range(1, 20))) for k in ks}
+        assert addA["l8r2/apply_gen_sch_a_slotlm.py"] == slot, sorted(addA["l8r2/apply_gen_sch_a_slotlm.py"] ^ slot)
         pE, addE = m.designators_e(d)
         assert addE["l8r2/apply_gen_sch_e_packrtn.py"] == set() and not m.duplicates(open(pE, encoding="utf-8").read())
         fans = {"%s%d" % (p, 700 + 30 * (s - 1) + k) for s in (1, 2, 3) for p, ks in (("U", (1, 2)), ("L", (1,)), ("Q", (1, 2)), ("R", range(1, 13)), ("C", range(1, 11))) for k in ks}
@@ -202,6 +218,8 @@ def t_the_netlist_check_reads_the_tree_not_drawn_and_the_fixtures_drawn():
     assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL"
     bad = chk.fixture("b").replace(b'"/CFAN2_V") (node (ref "J_FAN2") (pin "1"))', b'"/CFAN2_V")')
     assert chk.judge("b", chk.read_netlist(bad))[0] == "FAIL"
+    bad = chk.fixture("a").replace(b'(node (ref "R535") (pin "2"))', b'')
+    assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL", "slot 3's ISNS shunt off +5V_S3 is not refused"
 
 
 def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
@@ -216,7 +234,8 @@ def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
     page = open(PAGE, encoding="utf-8").read()
     for s in ("E11-40", "S-111", "L5R2-F03", "L5R2-F04", "L5R2-F05", "P1-1", "REJECTED", "SELECTED", "NOT DRAWN", "R248", "DRAFT",
               "L9P-F02", "L9P-F03", "70 %", "7.5638", "apply_gen_sch_a_packrtn.py", "apply_gen_sch_e_packrtn.py", "(L9STK E)",
-              "apply_energy_chain_e1oz.py", "ASM-002"):
+              "apply_energy_chain_e1oz.py", "ASM-002", "1s, L9P-F02 focused check", "apply_gen_sch_a_slotlm.py", "WITHDRAWN",
+              "UNRESOLVED", "CONDITIONAL"):
         assert s in page, s
 
 
@@ -300,21 +319,21 @@ def t_item1_round3_the_bound_holds_every_state_and_the_round2_draft_is_refused()
     assert allt["margin"] < 0 and abs(allt["drafted"] - allt["drawn"] - allt["u901"]) < 0.002, allt
     assert o["fixed"] > 0.5 and o["ipk"] < V["ap_ipk"][0], (o["fixed"], o["ipk"])
     rows = m.r3_slot_loads()
-    assert [m.intent_says(pk, ld).split(" ")[0] for _t, ld, pk in rows] == ["accepted", "REFUSED", "accepted", "accepted"], rows
+    assert [m.intent_says(pk, ld).split(" ")[0] for _t, ld, pk in rows] == ["accepted", "REFUSED", "accepted", "accepted", "accepted"], rows
     assert sum(rows[2][1].values()) <= rows[2][2], "round 3's slot loads over the declared peak"
     assert abs(m.item1()["a_vbat"] - P["r9"]["this"]) < 1e-9 and "eta_slot" not in m.F, "the flat 0.90 is still carried"
 
 
 def t_item1_the_fan_row_still_reads_with_layer_7s_reader():
-    """Record l7pwr's reader parses this draft's slot row with two expressions (l7pwr_fans_th1.py, read_rails); the round 3 row keeps
-    their form, so that reader reads 0.33 A, 1.4 W, 0.85 and 5.0 V and the watts it derives stay consistent (0.33 x 5.0 - 1.4 > 0)."""
+    """Record l7pwr's reader parses this draft's slot row with two expressions (l7pwr_fans_th1.py, read_rails); round 4's row keeps
+    their form, so that reader reads 0.47 A, 2.0 W, 0.85 and 5.0 V (the fan at full speed) and the watts it derives stay consistent."""
     fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_under_test")
     row = fx._NEW_LOAD
     a = re.search(r'"U%d" % \(701 \+ 30 \* \(s - 1\)\): ([\d.]+),\s+# l8r2 \(E11-40\): the cooler fan\'s 12 V step-up, ([\d.]+) W of fan over ([\d.]+)', row)
     b = re.search(r"\(ASSUMPTION\) at ([\d.]+) V", row)
     assert a and b, row
     amps, watts, eta, volts = float(a.group(1)), float(a.group(2)), float(a.group(3)), float(b.group(1))
-    assert abs(watts - _M().V["duty_max"] * _M().V["pfan"]) < 1e-9 and abs(amps - round(watts / eta / volts, 2)) < 1e-9 and amps * volts > watts
+    assert abs(watts - _M().V["pfan"]) < 1e-9 and abs(amps - round(watts / eta / volts, 2)) < 1e-9 and amps * volts > watts
 
 
 def t_item5_the_pack_returns_are_rails_that_intent_itself_accepts():
@@ -371,3 +390,53 @@ def t_item6_the_energy_chain_correction_is_idempotent_follows_the_decision_and_m
         assert _run([FIX, "--chain", bad, "--registry", reg]).returncode == 3
     assert _sha(CHAIN) == before, "the tree's chain was written"
     assert o["a_672_two"] < 25.0 and max(o["dchs_1oz"]) < 10.0 <= min(o["dchs_2oz"]), "the two findings' arithmetic moved"
+
+
+def t_round4_the_focused_check_holds_its_verdicts():
+    """Round 4 (the owner's L9P-F02 questions): round 3's +0.129 A is a HIGH state at the nominal 5.1 V and reads negative at the
+    AP64500's least output with the rail's drop; 0.019 A is a declaration's; the fan's input at 70 % is bracketed around round 3's
+    linear bound (so it bounds nothing); the AP64500 is over 5 A in every unenforced state and over +125 C at C1's air in every HIGH
+    option; the pick at 70 % moves more air than the approved basis's fan; the LM5176 stage holds every state with margin, its hottest
+    FET under +150 C on the sheet's copper; the drafts carry the figures the check derives."""
+    m = _M(); o = m.item1_r4(); V = m.V
+    c1 = {lab.split(" (")[0]: fig for lab, fig, _s, _b in o["c1"]}
+    assert abs(c1["+0.129 A"] - 0.129) < 0.0006 and abs(c1["+0.019 A"] - 0.019) < 0.0006 and c1["the same state at the least voltage"] < 0
+    c2 = o["c2"]
+    assert c2["law"][2] < c2["linear"] < c2["chord"][0], "the linear bound is no longer inside the bracket"
+    assert c2["room_least"] < c2["law"][0] and c2["start_slot_w"] > 8.0
+    over = [i2 > 5.0 for (_st, _p, pce, _f, _w), (_i1, i2, _i3) in zip(o["c3"], o["c3_i"]) if "high" in pce]
+    assert over and all(over), o["c3_i"]
+    assert all(o["lm_limit"] - i3 > 0.5 for _i1, _i2, i3 in o["c3_i"]), o["c3_i"]
+    assert o["ap_pk_start"] > V["ap_ipk"][0]
+    hi = [j for j in o["junction"] if not j[0].startswith("PLAN")]
+    assert all(tj > V["ap_tj"][0] for _t, _v, _i, _e, _l, tj in hi) and o["ap_i125"] < 4.0
+    assert o["fig24"]["air"] < 4.871 and o["fig24_t"][max(o["fig24_t"])] < o["air"]
+    c4 = o["c4"]
+    assert c4["p70_floor"] > c4["rep_pa"] + 10 and c4["q100_needed"] < V["pq100"][1], c4
+    assert o["corr_worst"][0] < o["lm_limit"] - 1.5 and o["corr_worst"][1] < o["lm_limit"]
+    assert o["fet_tj"][1] < V["csd"][3] - 25 and o["fet_tj"][2] > V["csd"][3], o["fet_tj"]
+    assert o["peak_need"] <= V["slot_peak"] < o["peak_need"] + 0.05 and abs(o["entry"] - 2.09) < 0.005
+    assert o["decl4"][2] == "accepted" and o["decl4"][1] == V["slot_peak"] and o["decl4"][4] == V["slot_peak"]
+    sl = open(os.path.join(REC, "apply_gen_sch_a_slotlm.py"), encoding="utf-8").read()
+    for s in ("%.3f A" % o["peak_need"], "%.3f V" % o["v"]["load_lm"], "%.3f A" % o["corr_worst"][1], "7.096 A"):
+        assert s in sl, s
+    fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_r4_under_test")
+    assert "else 5.3, " in fx._NEW_PEAK and "70 %" not in fx._NEW_LOAD and "70 %" not in fx._NEW_FAN.split("ROUND 4")[1]
+    src = o["src"]
+    assert src["c1_air"] == 50.0 and src["h2"][2] == 0.873 and src["sunon"] == (3.7, 0.11) and src["dts"][2] == 41566 and src["pce_pd"] and src["gate"]
+
+
+def t_round4_the_catalogue_figures_read_from_the_held_pages():
+    """The cooler's figures round 4 types (the record's F) are the maker's words on the held catalogue pages (fetched by the record's
+    fetch_held_back.py; skipped where they are not held)."""
+    for p in HELD_FAN.values():
+        need(p, "a held San Ace catalogue page (fetch_held_back.py)")
+    txt = {k: " ".join(subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True).stdout.decode().split()) for k, p in HELD_FAN.items()}
+    m = _M(); (r100, r25) = m.V["fan_rows"]
+    assert re.search(r"100 0\.17 2\.0 13700 0\.38 13\.4 210 0\.84 44 9WPA0412P6G001 12 10\.8 to 13\.2 25 0\.03 0\.36 3000 0\.07 2\.5 9\.8", txt["0362"]), "p.362's rows"
+    assert r100 == (100, 0.17, 2.0, 13700, 0.38, 210.0) and r25 == (25, 0.03, 0.36, 3000, 0.07, 9.8)
+    assert "When control terminal is open, speed is the same as at 100% duty cycle" in txt["0362"]
+    assert "Models without ratings for 0% PWM duty cycle have zero speed at 0%" in txt["0362"]
+    assert "current several times the rated current may flow" in txt["0633"]
+    assert "the coil current is cut off at regular cycles" in txt["0616"]
+    assert "VIH =4.75 to 5.25 V" in txt["0623"] and "VIL= 0 to 0.4 V" in txt["0623"] and "The input signal voltage and the frequency differ with models" in txt["0623"]

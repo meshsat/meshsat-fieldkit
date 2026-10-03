@@ -6,6 +6,10 @@ MESHSAT-1357, 3 October 2026). It PARSES a KiCad netlist (an s-expression reader
                  VIN_RAW_IN; U45 pin 2 (OV) on VCO_OV, pin 13 (SRC) on VIN_RAW, pin 14 (PD) on VCO_GATE, pins 7, 8, 9, 10 on GND, pin 19
                  (ISCP) with pin 17 (CS-); R241 between VBUS20 and VCO_OV, R242 between VCO_OV and GND (item 2, S-111)
            D8V3  U44 pin 4 (IN) on +3V3, pin 5 (OUT) on +3V3_A2D; J_MEZZ1 pin 13 on +3V3_A2D; R234 on U44's ILM (item 3, L5R2-F05)
+           SLOTS for s in 1 and 3 (round 4, L9P-F02): the LM5176 U(501 or 531) pin 1 (EN) on SLOT_ENs, pin 12 (VOSNS) on +5V_Ss; the
+                 stage's VBAT entry Q(501 or 531) pin 5 (drain) on VBAT, pin 4 on Ss_HDRV1, pins 1 to 3 on Ss_SW1; the ISNS shunt
+                 R(505 or 535) between Ss_OUT and +5V_Ss; the CS shunt R(506 or 536) between Ss_CS and GND; the INA226 (U8, U10) pin 10
+                 on Ss_OUT and pin 8 on +5V_Ss; the AP64500 (U4, U6) and its inductor (L3, L5) gone
   board B  FANs  for s in 1 to 3: J_FANs pin 1 on CFANs_V, pin 3 on CFANs_TACH, pin 4 on CFANs_PWM; the boost U(701+30(s-1)) pin 9 on
                  +5V_Ss and pin 6 on CFANs_12V; the eFuse U(702+30(s-1)) pin 4 on CFANs_12V and pin 5 on CFANs_V; the tach stage
                  Q(701+...) gate +3V3_CMs, source FAN_TACHOs, drain CFANs_TACH; the PWM stage Q(702+...) gate +3V3_CMs, source
@@ -101,6 +105,22 @@ def checks_a(nl):
     out["VCO"] = (v, why)
     d8 = [("U44", "4", "+3V3"), ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM")]
     out["D8V3"] = judge_props(nl, d8, ("J_MEZZ1", "13", "+3V3_A2D"))
+    out["SLOTS"] = judge_props(nl, slot_props(), ("U501", "12", "+5V_S1"))
+    if out["SLOTS"][0] == "DRAWN":
+        left = [r for r in ("U4", "U6", "L3", "L5") if r in nl["pins"]]
+        if left:
+            out["SLOTS"] = ("FAIL", ["the AP64500 stage's %s still on the board" % ", ".join(left)])
+    return out
+
+
+def slot_props():
+    """round 4 (L9P-F02): slots 1 and 3 on LM5176 stages, slot 2's (apply_gen_sch_a_slotlm.py)"""
+    out = []
+    for s, b, ina in (("1", 500, "U8"), ("3", 530, "U10")):
+        out += [("U%d" % (b + 1), "1", "SLOT_EN%s" % s), ("U%d" % (b + 1), "12", "+5V_S%s" % s), ("Q%d" % (b + 1), "5", "VBAT"),
+                ("Q%d" % (b + 1), "4", "S%s_HDRV1" % s)] + [("Q%d" % (b + 1), p, "S%s_SW1" % s) for p in "123"] + [
+                ("R%d" % (b + 5), "1", "S%s_OUT" % s), ("R%d" % (b + 5), "2", "+5V_S%s" % s), ("R%d" % (b + 6), "1", "S%s_CS" % s),
+                ("R%d" % (b + 6), "2", "GND"), (ina, "10", "S%s_OUT" % s), (ina, "8", "+5V_S%s" % s)]
     return out
 
 
@@ -162,6 +182,8 @@ def fixture(letter):
                               ("U45", "7", "GND"), ("U45", "8", "GND"), ("U45", "9", "GND"), ("U45", "10", "GND"), ("U45", "17", "VCO_VS"), ("U45", "19", "VCO_VS"),
                               ("R241", "1", "VBUS20"), ("R241", "2", "VCO_OV"), ("R242", "1", "VCO_OV"), ("R242", "2", "GND"), ("U44", "4", "+3V3"),
                               ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM"), ("U44", "7", "U44_ILM")):
+            add(net, ref, pin)
+        for ref, pin, net in slot_props():
             add(net, ref, pin)
     else:
         for s in (1, 2, 3):
