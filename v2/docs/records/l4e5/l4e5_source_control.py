@@ -91,6 +91,25 @@ def sha(rel):
     return hashlib.sha256(open(os.path.join(TOP, rel), "rb").read()).hexdigest()
 
 
+CONTRACT_COMMIT = "2c240414"   # the last commit carrying HW-FW-CONTRACT.md as this record analysed it (set 28: Layer 5 applied apply_fw_a16.py)
+
+
+def contract_bytes():
+    """HW-FW-CONTRACT.md as this record analysed it: the tree's file while it is the pinned one, else the pinned bytes at
+    CONTRACT_COMMIT (L4-E9's FROM_COMMIT mechanism). Layer 5's power pass (set 28, 3 October 2026, records/l5pwr) applied this
+    record's own draft apply_fw_a16.py to the tree (register row R-23), so the pre-draft FW-A16 and FW-E04 rows this record reads
+    "as written" are no longer the tree's; the figures it captures from them are the record's and are read where they were written.
+    The pin is unchanged (set 28, records/int28/apply_set28_repins.py)."""
+    p = os.path.join(TOP, CONTRACT)
+    b = open(p, "rb").read()
+    if hashlib.sha256(b).hexdigest() == PINS[CONTRACT]:
+        return b
+    r = subprocess.run(["git", "show", "%s:%s" % (CONTRACT_COMMIT, CONTRACT)], cwd=TOP, capture_output=True)
+    if r.returncode != 0:
+        refuse(3, "%s is not at %s" % (CONTRACT, CONTRACT_COMMIT))
+    return r.stdout
+
+
 def pg(rel, n, layout=True):
     a = ["pdftotext"] + (["-layout"] if layout else []) + ["-f", str(n), "-l", str(n), os.path.join(TOP, rel), "-"]
     return subprocess.run(a, capture_output=True, text=True, check=True).stdout
@@ -127,7 +146,7 @@ def e96(lo):
 
 def compute():
     for rel, want in PINS.items():
-        if sha(rel) != want:
+        if (hashlib.sha256(contract_bytes()).hexdigest() if rel == CONTRACT else sha(rel)) != want:
             refuse(2, "%s is not the pinned file" % rel)
     R = {}
     # ================================================================== 0: the reproductions
@@ -212,7 +231,7 @@ def compute():
     rtol = float(re.search(r"(\d+)%", val(e, "R10")).group(1)) / 100.0
 
     # HW-FW-CONTRACT.md: FW-A16 and FW-E04 as written
-    ct = open(os.path.join(TOP, CONTRACT), encoding="utf-8").read()
+    ct = contract_bytes().decode("utf-8")
     row16 = need(ct, r"^\| FW-A16 \|.*$", "the FW-A16 row").group(0)
     m = need(row16, r"IIN_HOST at or below ([\d.]+) x ([\d.]+) A x ([\d.]+) x VIN_RAW / ([\d.]+) V \(([\d.]+) A at 9 V, ([\d.]+) A at 12 V, ([\d.]+) A at 24 V\)",
              "FW-A16's rule")

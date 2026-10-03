@@ -7010,9 +7010,29 @@ records:
           parts and nets, and this record's own text names 21 of them (+3V3_DEV, C7, D22, D8, EMCON_HW, R102, RB_IEN,
           RB_SW_IEN, TX_INHIBIT_n, U115, U116, U215, U216, U22, U315). This entry does not re-read the rest of this
           record's argument; rebound to b396d028b41e880d. This entry changes no result.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357, branch fnd/int28: Layer
+          5's power pass, records/l5pwr, applied by apply_l5pwr.py as L4-E11's finding E11-03 asked; the file before at
+          b396d028b41e880d, the page of 89b9ac6b). Of the page's 12 sections (the head and the numbered sections) 1
+          differs, 10. Shore charge inhibit and the pack, and 11 are byte-identical (1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.;
+          11.). In section 10 the text replaced is: 'The bridge asks the controller to assert it when the pack
+          temperature (the pack gauge's own thermistor, read by the sensor controller on E6 and reported over USB) is
+          below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C).' and
+          the text written is: 'Every charge hold (cold, hot, the margin hold, or the operator's 'no charge') is a flag
+          the firmware keeps until its own condition clears it (the cold hold, read from the pack gauge's own thermistor
+          by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C),
+          whatever the pack's state. While the pack can take charge or discharge, the flag sets the charger's
+          CHRG_INHIBIT bit; with both pack FETs open the gauge holds and the bit is left clear, and it is written from
+          the flag the moment a FET closes. No hold uses the CHG_INHIBIT line or SHORE_INHIBIT. The bridge asks the
+          controller to assert SHORE_INHIBIT only for 'inputs off' and the water-on-floor isolation, with a warning
+          first while the pack cannot discharge (L4-E11 7a, rule R-a; HW-FW-CONTRACT.md FW-A19, FW-C08 and FW-A14;
+          restated 3 October 2026, Layer 5's power pass).'. The sentences before and after that span are byte-identical.
+          This reading rests on line 5 (bank 1's home and failover hosts), section 1 and section 2's ribbon table with
+          its pin 15 row; sections 1 and 2 are byte-identical, so the ground it was decided on is unchanged. This entry
+          rebinds the page and re-decides nothing: the result stands as set, bound to the file at 3f380ef79c6bc54a.
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
       - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
     release_effect: ADVISORY
     source:
@@ -10887,8 +10907,28 @@ records:
           parts and nets, and this record's own text names 24 of them (+3V3_EMCON, C7, D22, D8, EMCON_HW, HF_HOLD,
           PA_HOLD, R102, R58, TX_INHIBIT_n, U115, U116, U215, U216, U22). This entry does not re-read the rest of this
           record's argument; rebound to b396d028b41e880d. This entry changes no result.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357, branch fnd/int28: Layer
+          5's power pass, records/l5pwr, applied by apply_l5pwr.py as L4-E11's finding E11-03 asked; the file before at
+          b396d028b41e880d, the page of 89b9ac6b). Of the page's 12 sections (the head and the numbered sections) 1
+          differs, 10. Shore charge inhibit and the pack, and 11 are byte-identical (1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.;
+          11.). In section 10 the text replaced is: 'The bridge asks the controller to assert it when the pack
+          temperature (the pack gauge's own thermistor, read by the sensor controller on E6 and reported over USB) is
+          below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C).' and
+          the text written is: 'Every charge hold (cold, hot, the margin hold, or the operator's 'no charge') is a flag
+          the firmware keeps until its own condition clears it (the cold hold, read from the pack gauge's own thermistor
+          by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C),
+          whatever the pack's state. While the pack can take charge or discharge, the flag sets the charger's
+          CHRG_INHIBIT bit; with both pack FETs open the gauge holds and the bit is left clear, and it is written from
+          the flag the moment a FET closes. No hold uses the CHG_INHIBIT line or SHORE_INHIBIT. The bridge asks the
+          controller to assert SHORE_INHIBIT only for 'inputs off' and the water-on-floor isolation, with a warning
+          first while the pack cannot discharge (L4-E11 7a, rule R-a; HW-FW-CONTRACT.md FW-A19, FW-C08 and FW-A14;
+          restated 3 October 2026, Layer 5's power pass).'. The sentences before and after that span are byte-identical.
+          This reading rests on section 7 (EMCON_HW's pull and the panel-less kit); section 7 is byte-identical, so the
+          ground it was decided on is unchanged. This entry rebinds the page and re-decides nothing: the result stands
+          as set, bound to the file at 3f380ef79c6bc54a.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
     release_effect: ADVISORY
     source:
@@ -15434,10 +15474,33 @@ records:
           only section of this page the s122 verdicts read, is byte-identical, its DC rows unchanged; none of the places
           this record's evidence names in this document is among the changed ones. This entry does not re-read the rest
           of this record's argument; rebound to e8f9b415e39f855b. This entry changes no result.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357, branch fnd/int28: Layer
+          5's power pass, records/l5pwr, applied by apply_l5pwr.py as L4-E11's finding E11-03 asked; the file before at
+          b396d028b41e880d, the page of 89b9ac6b). Of the page's 12 sections (the head and the numbered sections) 1
+          differs, 10. Shore charge inhibit and the pack, and 11 are byte-identical (1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.;
+          11.). In section 10 the text replaced is: 'The bridge asks the controller to assert it when the pack
+          temperature (the pack gauge's own thermistor, read by the sensor controller on E6 and reported over USB) is
+          below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C).' and
+          the text written is: 'Every charge hold (cold, hot, the margin hold, or the operator's 'no charge') is a flag
+          the firmware keeps until its own condition clears it (the cold hold, read from the pack gauge's own thermistor
+          by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C),
+          whatever the pack's state. While the pack can take charge or discharge, the flag sets the charger's
+          CHRG_INHIBIT bit; with both pack FETs open the gauge holds and the bit is left clear, and it is written from
+          the flag the moment a FET closes. No hold uses the CHG_INHIBIT line or SHORE_INHIBIT. The bridge asks the
+          controller to assert SHORE_INHIBIT only for 'inputs off' and the water-on-floor isolation, with a warning
+          first while the pack cannot discharge (L4-E11 7a, rule R-a; HW-FW-CONTRACT.md FW-A19, FW-C08 and FW-A14;
+          restated 3 October 2026, Layer 5's power pass).'. The sentences before and after that span are byte-identical.
+          This reading rests on sections 1, 6 and 7 (the radios' EMCON path, the toggles, the bus table), all
+          byte-identical. Section 10 is in the sentence scope of stream s122, whose check this record cites: the
+          sentences written describe the firmware's hold policy over lines the drawn boards carry (CHG_INHIBIT,
+          SHORE_INHIBIT) and FW-A19's flag, and name L4-E11 7a's rule; whether they describe the circuit the generators
+          carry is that check's question at its next run, not this entry's. This entry rebinds the page and re-decides
+          nothing: the result stands as set, bound to the file at 3f380ef79c6bc54a.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
-      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/V2-SPEC.md@2c722c9b5457bd56"
       - "v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f"
@@ -17703,8 +17766,30 @@ records:
           ones; the changed sentences name 10 parts, nets and part numbers, and this record's own text names 1 of them
           (U6). This entry does not re-read the rest of this record's argument; rebound to 26e98ecfd2e4ec2f. This entry
           changes no result.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357, branch fnd/int28: Layer
+          5's power pass, records/l5pwr, applied by apply_l5pwr.py as L4-E11's finding E11-03 asked; the file before at
+          b396d028b41e880d, the page of 89b9ac6b). Of the page's 12 sections (the head and the numbered sections) 1
+          differs, 10. Shore charge inhibit and the pack, and 11 are byte-identical (1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.;
+          11.). In section 10 the text replaced is: 'The bridge asks the controller to assert it when the pack
+          temperature (the pack gauge's own thermistor, read by the sensor controller on E6 and reported over USB) is
+          below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C).' and
+          the text written is: 'Every charge hold (cold, hot, the margin hold, or the operator's 'no charge') is a flag
+          the firmware keeps until its own condition clears it (the cold hold, read from the pack gauge's own thermistor
+          by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C),
+          whatever the pack's state. While the pack can take charge or discharge, the flag sets the charger's
+          CHRG_INHIBIT bit; with both pack FETs open the gauge holds and the bit is left clear, and it is written from
+          the flag the moment a FET closes. No hold uses the CHG_INHIBIT line or SHORE_INHIBIT. The bridge asks the
+          controller to assert SHORE_INHIBIT only for 'inputs off' and the water-on-floor isolation, with a warning
+          first while the pack cannot discharge (L4-E11 7a, rule R-a; HW-FW-CONTRACT.md FW-A19, FW-C08 and FW-A14;
+          restated 3 October 2026, Layer 5's power pass).'. The sentences before and after that span are byte-identical.
+          This reading rests on section 10's strap, VSYS and bench-question sentences; each of those sentences is
+          byte-identical in the new section 10, and the sentences written name the firmware's charge holds (FW-A19's
+          flag, the charger's CHRG_INHIBIT bit) and when SHORE_INHIBIT is asserted, not the strap, the load node or the
+          hostless charge that this record decided. This entry rebinds the page and re-decides nothing: the result
+          stands as set, bound to the file at 3f380ef79c6bc54a.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
@@ -17979,11 +18064,31 @@ records:
           name 42 parts and nets, and this record's own text names 12 of them (C7, D1, D22, EMCON_HW, J_SMB, R102,
           TX_INHIBIT_n, U22, U32, U35, U37, VIN_RAW). This entry does not re-read the rest of this record's argument;
           rebound to 942d562edd128759. This entry changes no result.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357, branch fnd/int28: Layer
+          5's power pass, records/l5pwr, applied by apply_l5pwr.py as L4-E11's finding E11-03 asked; the file before at
+          b396d028b41e880d, the page of 89b9ac6b). Of the page's 12 sections (the head and the numbered sections) 1
+          differs, 10. Shore charge inhibit and the pack, and 11 are byte-identical (1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.;
+          11.). In section 10 the text replaced is: 'The bridge asks the controller to assert it when the pack
+          temperature (the pack gauge's own thermistor, read by the sensor controller on E6 and reported over USB) is
+          below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C).' and
+          the text written is: 'Every charge hold (cold, hot, the margin hold, or the operator's 'no charge') is a flag
+          the firmware keeps until its own condition clears it (the cold hold, read from the pack gauge's own thermistor
+          by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C),
+          whatever the pack's state. While the pack can take charge or discharge, the flag sets the charger's
+          CHRG_INHIBIT bit; with both pack FETs open the gauge holds and the bit is left clear, and it is written from
+          the flag the moment a FET closes. No hold uses the CHG_INHIBIT line or SHORE_INHIBIT. The bridge asks the
+          controller to assert SHORE_INHIBIT only for 'inputs off' and the water-on-floor isolation, with a warning
+          first while the pack cannot discharge (L4-E11 7a, rule R-a; HW-FW-CONTRACT.md FW-A19, FW-C08 and FW-A14;
+          restated 3 October 2026, Layer 5's power pass).'. The sentences before and after that span are byte-identical.
+          This reading rests on section 10's pack SMBus lead sentences; those sentences are byte-identical in the new
+          section 10 (the change is the charge-hold span alone). This entry rebinds the page and re-decides nothing: the
+          result stands as set, bound to the file at 3f380ef79c6bc54a.
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
       - "v2/docs/ASSEMBLY.md@942d562edd128759"
-      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]

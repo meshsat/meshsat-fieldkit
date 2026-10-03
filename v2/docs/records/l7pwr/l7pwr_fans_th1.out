@@ -1,0 +1,206 @@
+L7PWR (MESHSAT-1357): THE FANS (D-18, E11-35), THE T-H1 MOCK-UP BILL AND THE DOCK LEAD'S PULSE CAPABILITY (E11-38). Prototype design,
+desk arithmetic: nothing bought, built, powered or measured. MAKER a printed figure, MODELED this script's arithmetic, ASSUMPTION a stated
+assumption, INFERRED a reading carried from a sibling document, NOT READ a figure no document prints.
+
+0. INPUTS (sha256/16)
+   sunon_ip    v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf  sha256 902af71be894edda
+   sunon_cat   v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf  sha256 fae7e21365939be5
+   sanyo       v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md  sha256 d47c98af1a1e3f28
+   samesky     v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf  sha256 72dd06bea8f5498b
+   cooler      v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf  sha256 98fd27302cffd3a6
+   precidip    v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf  sha256 638a0debaf507825
+   precidip_x  v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf  sha256 d630c8a92e7f65fc
+   sunon_b6    v2/docs/records/l7pwr/inputs/sunon-gf60151b6-spec-reading-2026-10-03.md  sha256 94e04ac6d2dfabd9
+   ecss        v2/docs/records/l7pwr/inputs/ecss-q-st-30-11c-rev2-wires-annex-c.md  sha256 ad1c72dcb886a105
+   fusing      v2/docs/records/l7pwr/inputs/fusing-current-sources-2026-10-03.md  sha256 e1cc42fbec4a21d4
+   prices      v2/docs/records/l7pwr/inputs/prices-2026-10-03.json  sha256 a9f694e46b881188
+   findchips   v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json  sha256 63fad48957e8a0f3
+   th1         v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md  sha256 61fa23a04f592a9f
+   l4e11       v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md  sha256 db38ca1b3cc25b80
+   l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 0c747d8d6b29ac1e
+   l4e12       v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md  sha256 30cc35d8adbdbc77
+   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 fce14ef53fdafd49
+   gen_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
+   gen_b       v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
+   panel       v2/ecad/tools/panel1450.py  sha256 3bdb88df98260244
+   reqs        v2/ecad/tools/pcb_requirements.yaml  sha256 435d515f6184f7bd
+   margins     v2/docs/CASE-MARGINS.md  sha256 55244f94aace54ca
+   rta         v2/docs/reviews/READY-TO-ACT.md  sha256 bdaf61a4991afb8c
+
+1. THE SITES AND THEIR SUPPLIES (read from the generators and L4-E11)
+   mixers:  board E J_FAN1, J_FAN2: 3 pins (1 CELL_F, 2 FANn_SW, 3 FANn_TACH); the low side chopped by Q9/Q10 (2N7002) from U10's FAN1_PWM/FAN2_PWM (GPIO8, 9), the tach pulled to +3V3_E6 by 10k into GPIO10, 11; SS14 flyback D7/D8; 0.1 A declared each; L4-E11's draft apply_gen_sch_e_aux.py moves pin 1 and the diodes to VSYS_E
+   coolers: board B J_FAN1..3: JST-SH 1.0 4 pins (1 +5V_Sn, 2 GND, 3 FAN_TACHOn, 4 FAN_PWMn) to the module's Fan_Tacho (1.8k pull-up to CM5_3.3V) and Fan_PWM (open drain); 0.1 A declared on the slot's 5.1 V rail; the header code C160390
+   VSYS_E under L4-E11's draft: 9.494 V at U42's least limit at the supplement floor to 17.375 V with the charge held; the start limits 0.3356 A each (both)
+   and 0.5713 A one at a time (the other at 0.1 A), under U42's least limit 1.471 A with U12's 0.8 A (L4-E11 17a); E11-39 staggers the starts with a PWM ramp
+   the slot rails: 5.1 V (ASSEMBLY.md), the cooler fan 0.1 A declared on each
+   REQ-043's acceptance (pcb_requirements.yaml): Each of the five fans is one its maker rates IP68 in the maker's own datasheet, filed under v2/vendor/fans/ with the pick, with a published operating range covering -20 C to the inside-air bar part_temps.py computes from pcb_envelope.yaml; the part is D-18's (a 40 mm IP68 fan that fits the coolers); a fan without that rating is a change of this statement, recorded as such; fans run in the functional check (SC-45).
+   the inside air the fans must cover: REQ-043's -20 C floor; the board air at the margin 62.1 C (L4-E12); the hold's trigger 68.65 C of mixed air
+
+2. THE CANDIDATES, ROW BY ROW (MAKER unless marked)
+   model                    maker        size                                V range (V)          A       W    rpm    CFM     Pa    dBA temp (C)     life (h)             IP       lines
+   9WL0612P4H001            Sanyo Denki  60 x 60 x 25, aluminium frame      12 10.8 to 13.2    0.17    2.04   6150   27.5     97   36.0 -20 to +70   180000 at 60 C       IP68     pulse sensor and PWM (4 wires)
+   9WL0612P4J001            Sanyo Denki  60 x 60 x 25, aluminium frame      12 10.8 to 13.2    0.39    4.68   8650   38.8    182   47.0 -20 to +70   180000 at 60 C       IP68     pulse sensor and PWM
+   GF60151B7-1E00U-AE9      Sunon        60 x 60 x 15, 2-ball               12 4.5 to 13.8 (INF)    0.08    0.96   3900   18.2     32   29.8 -10 to +70 (INF) 70000 at 40 C (INF)  IP68     two lead wires: no tachometer, no PWM
+   CFM-6025BG68-135-253-22  Same Sky     60 x 60 x 25, ball                 12 10.8 to 13.2    0.09    0.86   3500   14.7     37   25.3 -10 to +70   70000 at 40 C        IP68     tachometer and PWM (the -22 suffix); soft start on all models (the start current itself not printed)
+   9WL0624P4H001            Sanyo Denki  60 x 60 x 25, aluminium frame      24 21.6 to 26.4    0.08    1.92   6150   27.5     97   36.0 -20 to +70   180000 at 60 C       IP68     pulse sensor and PWM
+   9WPA0412P6G001           Sanyo Denki  40 x 40 x 20, plastic frame, ribbed     12 10.8 to 13.2    0.17    2.00  13700   13.4    210   44.0 -20 to +70   40000 at 60 C        IP68     pulse sensor and PWM (4 wires)
+   GF40282B3-1000U-SEP      Sunon        40 x 40 x 28, 2-ball               24 NOT READ     NOT READ NOT READ  10500   14.7    182   46.8 NOT READ     NOT READ             IP68     not printed in the brochure
+   9WPA0424P6G001           Sanyo Denki  40 x 40 x 20, plastic frame, ribbed     24 21.6 to 26.4    0.09    2.00  13700   13.4    210   44.0 -20 to +70   40000 at 60 C        IP68     pulse sensor and PWM
+   documents: Sanyo Denki rows from the maker's product-database pages (transcribed, each page's sha256 in the file); Sunon rows from the maker's brochure 239-E and the
+   catalogue 240-A extract (the GF60151 family's range, temperature and life from the GF60151B6 specification for approval as a distributor hosts it, INFERRED for B7);
+   Same Sky rows from the maker's series sheet CFM-60BG68 (09/12/2024, filed; its A and W columns are the row's maxima, typical 0.06 A and 0.72 W). Starting current: not printed by
+   any maker (NOT READ); Same Sky prints a soft start on all models. Pa is MODELED (inch-H2O x 249.089) where a maker prints inch-H2O only. Every maximum operating temperature read
+   is +70 C: 1.35 K over the hold's 68.65 C trigger on the mixed air, so the fans run at their printed limit when the hold acts (L4-E12 keeps the fans running in E5).
+
+   THE JUDGEMENT (the site's supply as drawn, REQ-043's -20 C and IP68, the inside air, the lines the generator draws)
+   model                    site     supply as drawn (V)    range      -20..62.1  hold 68.65 IP68   tach   PWM    life@60   I at the floor behind a 12 V converter, full speed (A, MODELED)
+   9WL0612P4H001            mixer    9.494 to 17.375        NO         yes        yes        yes    yes    yes    yes       0.239
+   9WL0612P4J001            mixer    9.494 to 17.375        NO         yes        yes        yes    yes    yes    yes       0.548
+   9WL0624P4H001            mixer    9.494 to 17.375        NO         yes        yes        yes    yes    yes    yes       0.225
+   9WPA0412P6G001           cooler   5.100 to 5.100         NO         yes        yes        yes    yes    yes    yes       0.436
+   9WPA0424P6G001           cooler   5.100 to 5.100         NO         yes        yes        yes    yes    yes    yes       0.436
+   GF60151B7-1E00U-AE9      mixer    9.494 to 17.375        NO         NO         yes        yes    yes    yes    NO        0.112
+   GF40282B3-1000U-SEP      cooler   5.100 to 5.100         NOT READ   NOT READ   NOT READ   yes    NO     NO     NO        NOT READ
+   CFM-6025BG68-135-253-22  mixer    9.494 to 17.375        NO         NO         yes        yes    yes    yes    NO        0.101
+   No candidate's printed operating range covers VSYS_E's 9.494 to 17.375 V: every 12 V class stops at 13.2 or 13.8 V and every 24 V class starts at 21.6 V: yes
+   No 5 V IP68 40 mm fan exists in the lines read (Sunon's IP68 GF series is 12 and 24 V; Sanyo Denki's 40 mm splash-proof models are 12 and 24 V; Delta's 40 mm IP68 part numbers are
+   served by script and did not reach this host): the cooler fans cannot run from the slot's 5.1 V as drawn. Both sites therefore need a 12.0 V fan feed (section 3).
+
+   SELECTED (authority: SESSION, D-18 settled under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026)
+   mixers (2, board E):  Sanyo Denki 9WL0612P4H001, 60 x 60 x 25, aluminium frame, 12 V (10.8 to 13.2 V), 0.17 A, 2.04 W, 6150 rpm, 27.5 CFM (0.78 m3/min), 97 Pa, 36 dB(A), -20 to +70 C, 180000 h at 60 C (215000 at 40 C), IP68, pulse sensor and PWM (4 wires), 120 g
+      why: the only 60 mm IP68 candidate that prints -20 C (REQ-043's floor) AND a life at 60 C AND a tachometer (FW-E07/V-E07's stalled-fan report) AND a PWM input; the lowest-power
+      model of its family (H), 2.04 W against the plan's 0.72 W per mixer at full speed, the controls' duty deciding the running power. Price indicator: USD 73.69 at 1 (Sager, a US
+      distributor; stock 0); an EU price NOT READ. Alternative: Sunon GF60151B7-1E00U-AE9, 12 V, 4.5 to 13.8 V, 0.96 W, 18.2 CFM, IP68, 2-ball, 47 g, two lead wires: no tachometer, no PWM; it prints -10 C (fails REQ-043's -20 C) and has no
+      tachometer; EUR 39.79 at 1 (RS, stock 73). Same Sky's CFM-6025BG68-135-253-22 (0.72 W typical, 0.86 W maximum, tach and PWM) also prints -10 C.
+   coolers (3, board B): Sanyo Denki 9WPA0412P6G001, 40 x 40 x 20, plastic frame, ribbed, 12 V (10.8 to 13.2 V), 0.17 A, 2.0 W, 13700 rpm, 13.4 CFM (0.38 m3/min), 210 Pa, 44 dB(A), -20 to +70 C, 40000 h at 60 C (70000 at 40 C), IP68, pulse sensor and PWM (4 wires), 47 g
+      why: the only 40 mm IP68 fan with a maker's page reached from this host (12 V class; the maker lists no lower speed under this frame, and the 9WP0412H6001 distributors
+      name answers 404 on the maker's database); it prints -20 C, 40,000 h at 60 C, a pulse sensor and a PWM input for the module's Fan_Tacho and Fan_PWM pins. Its 2.0 W at full
+      speed is 3.5 times the plan's 0.57 W per cooler fan: the module's PWM duty decides the running power. Price indicator: EUR 58.83 at 1 (RS, stock 51). Alternative: Sunon GF40282B3-1000U-SEP,
+      24 V IP68 40 x 40 x 28, 14.7 CFM, 47 dB(A): its range, temperature and life NOT READ (brochure row only), 28 mm thick against the 20 of the pick (section 4), a 24 V feed.
+   Reverse either pick by a fan whose maker prints a range covering the site's supply as drawn, -20 C and a life at or over 60 C; or by the owner changing REQ-043's IP68 statement openly.
+
+3. WHAT THE PICKS CHANGE DOWNSTREAM (MODELED on the makers' full-speed figures; a converter efficiency of 0.90 is an ASSUMPTION)
+   the mixers' feed: a regulated 12.0 V rail on board E from VSYS_E (the fans' printed range is 10.8 to 13.2 V; VSYS_E runs 12.054 to 17.375 V in service, over the range most of the time,
+   and to 9.494 V at the floor); J_FAN1/J_FAN2 become 4-wire (12 V, GND, PWM, TACH): the low-side chopping of Q9/Q10 and the SS14 flybacks D7/D8 are retired, the FETs re-used as
+   open-drain PWM drivers (the fan's PWM input level NOT READ: the maker's manual is behind a form), the tach stays on the 10k pull-up to +3V3_E6 (FINDING for board E's generator owner;
+   rows R-177/E11-33 and the register's R-179). With the fans on a switched low side the tachometer's open-collector return would ride the switched node: a 4-wire fan removes it.
+   the mixers' current on VSYS_E at the floor 9.494 V behind the 12 V buck: 0.239 A each at full speed (the fan's 2.04 W), 0.477 A both; the plan's 1.44 W for both is 0.169 A.
+   against L4-E11 17a: 0.239 A each is under the 0.3356 A both-start limit and under the 0.5713 A one-at-a-time limit (if the start current were the rated current: it is NOT READ, so E11-35's bench row stands);
+   VSYS_E's total with U12's 0.8 A: 1.277 A at full speed, 86.8 % of U42's least limit 1.471 A and 0.277 A OVER the 1.0 A L4-E11 declared (FINDING for R-177 and R-181: declare the fans at their
+   full-speed draw or bound the duty in firmware); at the plan's duty the total is 0.969 A, under 1.0 A.
+   the dock feed's current (E11-35): unchanged in kind (one 813 contact), its declared value moves from 1.0 A to at most 1.277 A at full speed; the contact at 36.5 % of its 3.5 A.
+   the coolers' feed: 12.0 V on board B for J_FAN1..3 (no 12 V rail exists there; the slot rails are 5.1 V): a per-slot step-up from +5V_Sn at 0.436 A each at full speed (keeps 'an empty slot
+   stays off'), or a 12 V feed from board A over the bay harness (board A's VHEAT and +12V_HF are switched for other loads); the header's 5V pin becomes the 12 V pin (FINDING for board B's
+   generator owner, the J_FAN rows and the slot rail budgets of gen_sch_b.py's comments; Layer 5's bay harness rows). The module's Fan_PWM (open drain) and Fan_Tacho (1.8k to 3.3 V) stay.
+   the firmware stagger (E11-39, R-188): kept; the PWM ramp now drives the fan's PWM input, not a chopped supply; a 4-wire fan's own soft start is NOT READ for Sanyo (Same Sky prints one).
+   the heat into the case at full speed: the hold's fans (slot 3's cooler and the two mixers) 6.08 W against the model's 1.950 W (+4.13 W, E5's line +0.413 W/K at 0.100 W/K per W); the profile's
+   five fans 10.08 W against 2.970 W. The controls set the duty (R-150: the picked fans' power at the duty the controls set replaces pwr_budget.py's rows); T-H1 logs the fans' real draw.
+   the airflow the picks would deliver (free air, MAKER): the two mixers 0.0260 m3/s (1.56 m3/min against the representatives' 0.60 to 1.21 m3/min, GF60151B9 to B6), the three cooler fans 0.0190 m3/s;
+   over the case's free air of about 0.0101 m3 (MODELED, the boards not subtracted) the mixers' free-air flow is 2.6 case volumes a second, an upper bound: the delivered flow in the sealed
+   case sits on the fan curve below its 97 Pa maximum and no system curve is held. L4-E12's bound credits this flow at zero; T-H1's reading with these fans replaces the credit.
+   the cooler fan's flow over the module: 0.38 m3/min free air against the representative MF30060V2's 3.7 CFM (0.10 m3/min); L4-E12 takes half the free-air flow through the heatsink (ASSUMPTION there).
+
+4. MOUNTING (the case records; FINDING for v2/cad's owner)
+   the CM5 cooler: Raspberry Pi's Cooler for Compute Module 5 is a PASSIVE heatsink, 56 x 41 x 12.7 mm, four M2.5 x 8 screws from below the carrier (the product brief RP-008184-DS-1,
+   December 2024; list price USD 5): the 'cooler fan' is a fan added over it, not part of it. ASSEMBLY.md's 'coolers clipped on with their fan leads' and panel1450.py's 30 x 30 x 30 envelope
+   describe a fan the maker does not supply.
+   the pick, 40 x 40 x 20, flat over the fins at the cooler's north end: X -92.5 to -52.5 on slot 1 (the cooler's -93 to -52: inside its 41 mm width: yes), Y 48 to 88 (north of the monitor's
+   edge at Y +45.745 by 2.255 mm as panel1450 places the fan envelope, and up to the backer's top strip at Y 88).
+   Z: board B's top 50.60; module and receptacle 5.86; the cooler 12.7; the fan 20: top at 89.16 (on the cooler's own height) or 91.60 (on panel1450's 21.0 mm heatsink envelope); the backer's
+   underside 91.92 (face 106.52, plate 3.0, standoffs 10.0, backer 1.6): clearance 2.76 mm (cooler height) or 0.32 mm (envelope) where the backer's strip reaches; the plate's underside 103.52
+   (14.36 mm) over the open window. The fan's hole pattern (NOT READ: the maker's CAD is behind a form; the 40 mm class standard is 32.0 mm on 4.3 mm holes) and a bracket to the cooler's
+   M2.5 screws or the module's standoffs are to draw; the mixers' sites 'at the stack's ends' (ASSEMBLY.md) are not drawn (CASE-MARGINS section 7's owed positions): both Layer 7 CAD items.
+
+5. THE T-H1 MOCK-UP BILL (prices read 3 October 2026 from the pages inputs/prices-2026-10-03.json and inputs/findchips-fans-heaters-2026-10-03.json name; indicators, never quotes; nothing bought)
+   group          qty item                                                                                                                                     unit cur  status    source and lead
+   case             1 Peli 1450 Protector case, current moulding (T1's identity check on receipt)                                                            168.90 EUR  READ      flight-cases.eu (Guardique), read 3 Oct 2026, excl. VAT (211.13 incl.); Normal in stock
+   case             1 Peli 1450PF Special Application Panel Frame Kit (frame, o-ring, 10 inserts, 4 screws)                                                   29.66 EUR  READ      flight-cases.eu, read 3 Oct 2026, a special price excl. VAT (regular 32.96); stock not shown
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: the face plate blank 377.2 x 263.0 (CASE-MARGINS C1's outline; its ten 4.6 mm holes and R1      28.03 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0992 m2; shipped within 6 working days
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: board B's blank 330 x 200 (B16's outline, panel1450 B_OUTLINE)                                  18.79 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0660 m2; shipped within 6 working days
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: board A's blank 240 x 160 (A_OUTLINE)                                                           11.12 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0384 m2; shipped within 6 working days
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: board E's blank 267 x 68 (E_OUTLINE)                                                             5.49 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0182 m2; shipped within 6 working days
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: board D's blank 100 x 80 (gen_pcb_d.py BOARD_L x BOARD_W)                                        2.66 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0080 m2; shipped within 6 working days
+   plate and blanks   1 3 mm aluminium EN AW-5754, cut to size: board C's U, 344 x 228 outer less the 240 x 176 window (panel1450's strips)                     10.50 EUR  MODELED   metaalshopper.nl, 278.07 EUR/m2 excl. VAT plus 0.44 per piece, read 3 Oct 2026; the piece price is this record's arithmetic over 0.0362 m2; shipped within 6 working days
+   plate and blanks   1 the metal shop's handling charge, once per order                                                                                         9.95 EUR  READ      metaalshopper.nl, read 3 Oct 2026
+   heat             3 Arcol HS50 6R8 J aluminium-housed wirewound resistor, 6.8 ohm 50 W (the draft's heaters; three give 21.2 W each at 12.0 V)               5.04 EUR  READ      RS (stock number 160922, stock 921) through the FindChips reading of 3 Oct 2026; Farnell 4044345 at EUR 3.65 (stock 0); in stock at RS per the reading
+   heat             1 dummy pack block: an aluminium block at the pack's outline (FEA-008's dummy pack; channel 16)                                        NOT READ EUR  NOT READ  no cut-to-size block seller read; a metal shop's quote
+   fans             2 Sanyo Denki 9WL0612P4H001 San Ace 60W IP68 (the picked mixer fan), with its two leads to J_FAN1/J_FAN2                                  73.69 USD  READ (USD) Sager (a US distributor, stock 0) through the FindChips reading of 3 Oct 2026; no EU distributor row was served: an EU price is NOT READ; stock 0 at the one distributor read
+   fans             3 Sanyo Denki 9WPA0412P6G001 San Ace 40W IP68 (the picked cooler fan)                                                                     58.83 EUR  READ      RS (stock number 101593, stock 51) through the FindChips reading of 3 Oct 2026; Farnell 4218284 at 76.83 (stock 0); in stock at RS per the reading
+   fans             3 Raspberry Pi Cooler for Compute Module 5 (the passive heatsink the cooler fans sit on; the fans' mount in the mock-up)                   4.49 EUR  READ      kiwi-electronics.com KW-3425, read 3 Oct 2026, excl. VAT (5.43 incl.); 75 piece(s) in stock; shipped on Monday when ordered now
+   fans             5 fan brackets (the cooler fans over the heatsinks, the mixers at the stack's ends): printed or bent parts, the Layer 7 CAD finding    NOT READ EUR  NOT READ  a part to draw first
+   instruments      2 Pico Technology PicoLog TC-08 thermocouple data logger (8 channels plus CJC); two for the sixteen channels                             349.00 GBP  READ      picotech.com, read 3 Oct 2026, VAT treatment not stated; Currently In Stock
+   instruments     18 Pico SE000 type K thermocouple, exposed tip, PTFE, 1 m (sixteen channels and two spares)                                                10.50 GBP  READ      picotech.com, read 3 Oct 2026, VAT treatment not stated; listed with the TC-08
+   supplies         2 KORAD KA3005P 0 to 30 V, 0 to 5 A programmable supply with USB/RS232 logging (one for the heaters, one for the fans: P is both sup      74.79 EUR  READ      reichelt.com, 89.00 incl. 19 % VAT read 3 Oct 2026 (list 109.00); 74.79 excl. VAT is this record's arithmetic; the page reads 'Available on 10/9/2026' (its own date format)
+   consumables      1 thermal compound, M2.5 and M3 hardware, standoffs, JST SH 1.0 and 24 AWG leads, insulating tape for the junctions                    NOT READ EUR  NOT READ  consumables; no page read
+   room             1 the ambient: still room air, shaded, 0.5 m clear around the case (the draft's configuration); an optional confirming chamber point   NOT READ EUR  NOT READ  a laboratory's service if the owner wants the chamber point
+   TOTAL of the prices read, EUR: 639.76
+   TOTAL of the prices read, GBP: 887.00
+   TOTAL of the prices read, USD: 147.38
+   The three currencies are not converted (no rate was read). EUR figures are excl. VAT where the page states it; the GBP figures' VAT treatment is not stated by the maker's page.
+   Items with no read price: 4 (the dummy pack block, the fan brackets, the consumables, the optional chamber point); plus an EU price for the 60 mm Sanyo Denki fan.
+   Lead times printed: the case 'Normal in stock'; the plate and blanks 'shipped within 6 working days'; the loggers 'Currently In Stock'; the supplies 'Available on 10/9/2026' as printed;
+   the cooler heatsinks 75 in stock; the cooler fans RS stock 51 and the heaters RS stock 921 by the aggregator's reading; the 60 mm fan stock 0 at the one distributor read.
+
+6. THE SPECIMEN, AND THE PASS LINES RESTATED (from T-H1-PROCEDURE-DRAFT.md as revised for L4-E12's section 17)
+   The specimen: an empty current-moulding Peli 1450 with the 1450PF frame and the 3 mm aluminium plate blank in the face's place, on its feet in still room air, shaded; no boards:
+   resistive heaters on 3 mm aluminium blanks at the boards' outlines on the kit's standoffs, set per point to the mode's heat less the fans' MEASURED draw; the five picked fans in their
+   places (three over the cooler heatsinks on board B's blank, two mixers at the stack's ends) on their own logged supply; sixteen type K channels on two TC-08 loggers.
+   What it represents: the sealed case's conductance between the mixed inside air and the ambient, per heat, lid state and fan state, with the frame, plate and fans as built.
+   What transfers to the final kit: that conductance, fully (the case, frame, plate and fans are the kit's own parts); the plate, wall and floor fractions; the hold reference's offset.
+   What does not transfer: the boards' local temperatures, the cells' rise in the pocket, the junctions, the parts' local air (T-H2, THM-001, U-01 keep their own evidence); lid-closed and
+   fans-off states each need their own point; the room-to-+40 C translation is a model (L4-E12 16.4), not a validation.
+   The heaters per point (the draft's table; this record recomputes each setting as sqrt(P_heater x 6.8 ohm)):
+   M2, M6 (K1, K9)    the heat stage on shore with L4-E8's ballasts (E3-A's 2 h at +40 C; E3-O at +5 heat  27.086 W = heaters  25.136 W (model's fans 1.950 W): 1 heater(s) at 13.07 V (recomputed 13.07 V, agrees)
+   M1                 the heat stage on the pack (E3-A's 4 h at +40 C)                               heat  25.536 W = heaters  23.586 W (model's fans 1.950 W): 1 heater(s) at 12.66 V (recomputed 12.66 V, agrees)
+   M4 (K5)            as M2, lid closed (E3-L)                                                       heat  27.086 W = heaters  25.136 W (model's fans 1.950 W): 1 heater(s) at 13.07 V (recomputed 13.07 V, agrees)
+   M3                 as M1, lid closed (E3-L)                                                       heat  25.536 W = heaters  23.586 W (model's fans 1.950 W): 1 heater(s) at 12.66 V (recomputed 12.66 V, agrees)
+   M7 (K10)           E5's hold with the ballasts                                                    heat  21.587 W = heaters  19.637 W (model's fans 1.950 W): 1 heater(s) at 11.56 V (recomputed 11.56 V, agrees)
+   M5 (K6)            the profile PS-IDLE-SPEC on the pack (REQ-014 at +20 C)                        heat  43.413 W = heaters  40.443 W (model's fans 2.970 W): 2 heater(s) at 11.73 V (recomputed 11.73 V, agrees)
+   M8, M9 (K7, K8)    the profile charging on the design day (the balance of the record's 17.5)      heat  52.134 W = heaters  49.164 W (model's fans 2.970 W): 2 heater(s) at 12.93 V (recomputed 12.93 V, agrees)
+   The heaters' places (W, plan; the fans real): board B: 14.972/14.972/12.057/26.234/26.234; board A: 4.284/4.284/3.903/3.464/3.464; the front end and the charger: 1.725/none/1.345/none/6.620; board C and the face: 1.500/1.500/1.500/7.500/7.500; board D and the PA: 1.500/1.500/none/1.500/1.500; board E: 1.155/1.155/0.832/1.155/3.245; the pack: none/0.174/none/0.590/0.600
+   The sixteen channels: 1 to 4 the mixed inside air, mid-height, spread over the stack, away from heaters and fan outlets (the node of G); 5 the hold's reference place today: board B's TMP117 under the coolers; 6 the air by the +70 C parts' places (the RockBLOCK, board D); 7, 8 the plate's inner face (centre, edge); 9 the plate's outer face; 10, 11 a PP wall's inner face (one on the east wall in the pack pocket); 12 a PP wall's outer face; 13 the floor's inner face; 14, 15 the ambient, about 0.5 m from the case, shaded from it (the other node of G); 16 the dummy pack block (FEA-008's)
+   Pass per point: the reading less its expanded uncertainty (k = 2) at or over the line's need; fail under it; inconclusive when the endpoint is not met or a supply, a fan or the ambient drifts.
+   point (lid open, fans on unless named)       governing line as ruled: need, pass at a reading of at least             under CFL-002's C, A or B                                decides
+   M2 at 27.086 W                               the SGP41's Table 4: 2.709 W/K, 3.081 W/K                                the idle cells' H1: 1.642 W/K, 1.767 W/K                 the conductance of the heat stage on shore at +40 C (E3-A's 2 h)
+   M6 (the same point)                          the e-paper unpowered (INFERRED from its operating row): 5.417 W/K, 7.75 the same                                                 E3-O at +55 C; once PDi states a storage range at or over +70 C, the +70 C class: 1.806 W/K, 1.958 W/K
+   M1 at 25.536 W                               the SGP41's Table 4: 2.554 W/K, 2.905 W/K                                the cells' H1: 1.666 W/K, 1.804 W/K                      the heat stage on the pack at +40 C (E3-A's 4 h)
+   M4 at 27.086 W, lid closed                   2.709 W/K, 3.081 W/K                                                     1.642 W/K, 1.767 W/K                                     E3-L on shore
+   M3 at 25.536 W, lid closed                   2.554 W/K, 2.905 W/K                                                     1.666 W/K, 1.804 W/K                                     E3-L on the pack
+   M7 at 21.587 W                               the e-paper unpowered: no conductance at E5's +60 C                      the same                                                 E5 only once PDi states a storage range; then the LimeSDR's +70 C storage row: 2.159 W/K, 2.455 W/K (U-02's line)
+   M5 at 43.413 W                               C1's +50 C: 1.447 W/K, 1.508 W/K                                         the same                                                 the profile unshed at REQ-014's +20 C
+   M8, M9 at 52.134 W                           T4 on the charging cells: 2.025 W/K and 2.525 W/K, 2.123 W/K and 2.677 W the same                                                 a running charge on the design day's cold and warm ends; a charge start (T3, K7 and K8): 1.810 W/K and 2.200 W/K, 1.889 W/K and 2.315 W/K
+   fans off, M2's heat                          none                                                                     none                                                     the failure case: the coupled parts' plate at most 69.82 C on W4's still values; the controls act on the air in any case
+   channel 5 less channel 6 within +-0.899099 K                                                                                                                                   the hold's trigger window exists with the reference where it is; otherwise the reference moves to the mixed air
+   The owner's purchase decision and the test's decision on one page: v2/docs/records/l7pwr/T-H1-MOCKUP-SPEC.md carries sections 5 and 6 together.
+
+7. THE DOCK LEAD'S PULSE AND DUTY CAPABILITY (E11-38's wiring half; the 813 contact is the maker's question, clarification/preci-dip-813.txt)
+   the lead: 60 mm of 24 AWG from board E's J_BLK to the dock block's land (ASSEMBLY.md section 4), copper d = 0.5106 mm (the AWG definition), A = 0.2047 mm2 = 404.0 circular mils = 317.3 square mils;
+   ECSS-Q-ST-30-11C Rev.2 Table C-1: 105 mOhm/m at 20 C, minimum diameter 0.8 mm (the insulated wire).
+   Onderdonk (the note's general form, I = A sqrt(log10(1 + (Tm - Ta)/(234 + Ta)) / (33 t)), A in circular mils, t in s, Tm 1083 C); the form reproduces the note's worked example at 177.8 A
+   (178 A printed, with the note's own '234 - Ta' spelling; this record uses 234 + Ta, the smaller and conservative figure: 26457 against 30675 A at 70 C).
+   the fusing current of the 24 AWG at the short's 4.5 us: 27865 A from 25 C, 26457 A from 70 C, 26018 A from 85 C (the spring's limit); the short's 566 A is 2.14 % of the 70 C figure,
+   its 1.441 A2s is 1/2186 of the wire's 3150 A2s to melt at that time; the adiabatic rise of the copper from the pulse: 0.214 K (ECSS's resistance per metre over copper's 385 J/kgK and 8960 kg/m3).
+   the eFuse's retry duty (cases (3) and (4) of L4-E11 17a): at most 1.802 A for at most 1.5 s then off at least 0.5 s, a duty of at most 0.75: 1.802 A is 53 % of ECSS Annex C's 3.4 A single-wire
+   rating of AWG 24 (a 70 C environment, 150 C wire, radiation alone, in vacuum), the duty's rms 1.561 A is 46 %; Preece's steady fusing current of the bare wire 29.2 A.
+   the continuous draw: 1.0 A declared (29 % of 3.4 A), 1.277 A with the picked mixers at full speed (38 %). The 50 K rule of 6.32.4a cannot be applied: the maker's maximum rating of the fitted wire is not named in ASSEMBLY.md (24 AWG only).
+   So the wiring is not the limiting element of the branch on these published relations; the 813 contact's pulse capability (the piston-to-barrel interface, the gold plating, the spring)
+   is printed nowhere (3.5 A operating, 10 mOhm static; the SMD series alone prints a 7 A peak) and stays E11-38's bench item and the drafted question.
+
+8. PREDICATES (the tests read these)
+   no candidate's printed range covers VSYS_E 9.494 to 17.375 V                                                   yes
+   no 5 V IP68 40 mm fan was read in the makers' lines                                                            yes
+   the picked mixer covers -20 C and prints a life at 60 C                                                        yes
+   the picked cooler fan covers -20 C and prints a life at 60 C                                                   yes
+   the alternatives fail REQ-043's -20 C or print no range                                                        yes
+   no candidate prints a starting current                                                                         yes
+   each picked mixer at full speed behind a 12 V buck draws under L4-E11's both-start limit at the floor          yes
+   both mixers at full speed plus U12 exceed the declared 1.0 A but stay under U42's least limit                  yes
+   the picked fans at full speed add heat over the plan's fan figures                                             yes
+   the 40 x 40 x 20 fan on the cooler clears the backer's underside by under 3 mm (a fit finding)                 yes
+   every T-H1 heater setting is sqrt(P x 6.8) to 0.01 V                                                           yes
+   the bill's EUR total is over 600 and under 700                                                                 yes
+   the bill has items with no read price                                                                          yes
+   the Onderdonk form reproduces the note's worked example (178 A) within 1 A                                     yes
+   the hard short is under 3 percent of the 24 AWG fusing current at 4.5 us and 70 C                              yes
+   the pulse's adiabatic rise in the 24 AWG is under 1 K                                                          yes
+   the retry setting is under the ECSS single-wire rating                                                         yes
