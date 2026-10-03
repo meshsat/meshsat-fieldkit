@@ -1567,7 +1567,12 @@ def t_the_prototype_qualification_route():
     by = {r[0].split(" ")[0]: r for r in rows}
     for eid in ("E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"):
         r = by[eid]
-        assert r[1] == sp[eid]["specimen"] and r[2] == sp[eid]["represents"] and r[3] == sp[eid]["transfers"] and r[5] == sp[eid]["blocks"], eid
+        assert r[1].startswith(sp[eid]["specimen"]) and r[2] == sp[eid]["represents"] and r[3] == sp[eid]["transfers"] + m.BLOCK_RULE % eid and r[5] == sp[eid]["blocks"], eid
+        blk = sp[eid].get("block", "").lower()
+        for fld in ("specimen", "operating point", "mounting", "thermal boundaries", "measurement uncertainty", "permitted extrapolation", "re-test when"):
+            assert fld in blk, (eid, fld)
+        for w in ("copper area", "layout-independent", "layers and vias alone"):
+            assert w not in " ".join(r[1:6]), (eid, w)
     md = open(os.path.join(ROOT, m.PINS["l4e11md"][0]), encoding="utf-8").read()
     t17 = {x[0].replace("Row ", ""): x for x in m.md_table(md.split("### 17d.")[1], "| Row | Specimen |")}
     assert t17["E11-29"][1] == sp["E11-29"]["specimen"], "17d is read from L4-E11's page, not restated"
@@ -1754,6 +1759,42 @@ def t_the_escalation_rule_after_the_recheck():
     assert "+70 C" in dict(m.UNPRICED)["R-185"] and "+60 C" not in dict(m.UNPRICED)["R-185"]
 
 
+def t_the_owners_qualification_route_review_and_l8g_f12():
+    """The owner's review of the qualification route (L4-QR01, L4-QR02) and Layer 8's L8G-F12, held as properties: every 17d row's
+    transfer cell is L4-E11's with a pointer to its block, never a copper-area transfer; R-159 and R-160 carry the blocks' rules (the
+    comparison rule on the final board's thermal boundaries; prototype evidence for the tested lot and envelope); the fit mock-up blocks
+    exactly the adoption of the proposed pack arrangement and the dependent mechanical release, consistently in the register, the route
+    and the page; d8dec31's PB network is in the change list LAST in board A's round, after Layer 8's drafts and before the regeneration,
+    with its FINDING before it; Layer 8's drafts are DRAFTED rows citing l8gnd at its commit by text only."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    assert _pin_held(m, "l4e11md") and m.FROM_COMMIT["l4e11md"] in m.COMMIT_LABEL and "L4-QR01" in m.COMMIT_LABEL[m.FROM_COMMIT["l4e11md"]]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    for w in ("comparison rule", "thermal boundaries", "30 mm", "copied unchanged", "transfer nothing"):
+        assert w in reg["R-159"][5], w
+    for w in ("tested lot", "value by value", "never a production limit"):
+        assert w in reg["R-160"][5], w
+    fit = [r for r in m.cons_qual(F) if r[0].startswith("The fit mock-up")][0]
+    assert fit[5].startswith("the adoption of the PROPOSED pack arrangement") and "mechanical release" in fit[5] and "nothing else" in fit[5] and "baseline" in fit[5]
+    assert fit[5] in reg["R-167"][5] and "L4-QR02" in reg["R-167"][5]
+    saft = [r for r in m.cons_qual(F) if r[0].startswith("The limited sample qualification")][0]
+    assert "R-167" in saft[4]
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "The fit mock-up (R-167)** blocks the adoption of the PROPOSED pack arrangement" in page and "L4-QR02" in page and "L4-QR01" in page
+    ch = m.cons_changes(list(reg.values()))
+    pos = {c[2]: c for c in ch}
+    a_round = [c for c in ch if c[1].startswith("3")]
+    assert a_round[-1][2] == "R-11" and a_round[-2][2] == "R-193", "d8dec31's PB network last in board A's round, then the regeneration"
+    assert pos["R-193"][1] == "3h" and pos["R-194"][0] < pos["R-193"][0] and pos["R-11"][1] == "3i"
+    for rid in ("R-191", "R-192"):
+        assert pos[rid][1] == "3g" and pos["R-10"][0] < pos[rid][0] < pos["R-193"][0] and reg[rid][6] == "DRAFTED", rid
+        assert "226e9143" in reg[rid][3] and "not in this base" in reg[rid][3], rid
+    assert pos["R-195"][1] == "B" and reg["R-195"][6] == "DRAFTED" and "226e9143" in reg["R-195"][3] and "apply_gen_sch_b_gnd002.py" in pos["R-195"][4]
+    assert "apply_gen_sch_a_mainpb.py" in pos["R-193"][4] and "R233" in reg["R-193"][2] and "C241" in reg["R-193"][2] and "R221 and C236" in reg["R-193"][2]
+    assert reg["R-194"][6] == "MISSING DRAFT" and "FINDING" in reg["R-194"][2] and "L8G-F12" in reg["R-194"][3]
+    assert "226e9143" not in m.FROM_COMMIT.values() and "l8gnd" not in " ".join(p for p, _s in m.PINS.values())
+
+
 def t_every_commit_the_record_reads_is_in_this_branchs_history():
     """The coordinator's rule (set 27, after the box could not reproduce the record): a record reads inputs only from its own tree or
     from commits in its own history. Every selected commit the script reads with git is an ancestor of HEAD; the script's only git
@@ -1822,7 +1863,7 @@ def t_the_fan_feed_after_layer7s_d18():
     assert "(h)" in reg["R-184"][2] and "(h)" in reg["R-184"][5] and "U22" in reg["R-184"][5] and "85 C" in reg["R-184"][5] and "566 A extrapolation" in reg["R-184"][5]
     assert "15.9 K" in reg["R-181"][2] and "not a bound" in reg["R-181"][2]
     by_ = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
-    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "capacitors" in by_["E11-38"][1]
+    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C135 to C141" in by_["E11-38"][1]
     assert "(a) to (h)" in by_["E11-38"][4] and "85 C" in by_["E11-38"][4]
     assert "1 %" in beh["the fans"][1] and "U18" not in beh["the fans"][1]
     assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())

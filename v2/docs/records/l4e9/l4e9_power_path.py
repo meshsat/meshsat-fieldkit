@@ -101,8 +101,8 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "e73770727369a0b0a6d073d88d2137d5eea939ac8c5c3040cf0f88ec9b79c30c"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "9812b52424f1ae07bf018e1f082ade64252bc47a6b6c821554a197ed0cb57aeb"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "e898257fdec8c39b309568cdcfb92545cd778d8dc69bc17001a36355cedb942a"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "cbdaac2771ef1f8ec0f049af8b519802721968acdeb0c80ca47963c18a22451d"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "eb4006f2121a3308a4d39d5e61d1c29506e5f4498dd3c7d63fb451b2d3655c90"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
@@ -179,10 +179,11 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens",
                 "787e7b15": "fnd/l4e11, the designator fix (U42's ILIM resistor R228) and E11-32's procurement fact",
                 "af4672f4": "fnd/l4e11, the fans' feed after Layer 7's D-18 (the mixers' regulated 12 V rail U18, the branch re-derived, E11-40 for board B)",
+                "a1d15601": "fnd/l4e11, section 17d after the owner's review L4-QR01 (every specimen row with its lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers; the copper-area transfer and 'layout-independent' withdrawn; TI SPRA953D and Nexperia AN11158 cited)",
                 "b929d8be": "fnd/l4e11, the correction after Astra's recheck of set 27 (the fan rail renumbered U22, R103 to R109, C135 to C141 against every board E draft composed in this record's order; L4-CP01 restated: the 566 A an extrapolation and E11-38 (c)'s target, the start into a short not bounded by printed data, no retry duty claimed; E11-38 (a) to (h); the rail 11.512 to 12.431 V with the 1 percent divider)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
                 "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
-FROM_COMMIT = {"l4e7r": "7b8bbf6e", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "b929d8be", "l4e11md": "b929d8be",
+FROM_COMMIT = {"l4e7r": "7b8bbf6e", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "a1d15601", "l4e11md": "a1d15601",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
                "cl_adi": "7b8bbf6e", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
@@ -1835,6 +1836,19 @@ def cp_inputs(F, T):
     need(one(s17d), r"The evidence builds proceed under their own scope; \*\*only the final design or production release stays held\*\* until the measurements pass", "17d's rule")
     rows = md_table(s17d, "| Row | Specimen |")
     g["spec"] = {r[0].replace("Row ", ""): {"specimen": r[1], "represents": r[2], "transfers": r[3], "blocks": r[4]} for r in rows}
+    # L4-QR01 (the owner's review of 3 October, L4-E11 at a1d15601): every specimen row has its block with the eight fields; the
+    # copper-area-only transfer and "layout-independent" are withdrawn there, and a cell here never restores them
+    if "is **withdrawn**" not in s17d or "layout-independent" not in s17d:
+        refuse(3, "L4-E11 17d's withdrawal of the copper-area transfer (L4-QR01)")
+    for k in g["spec"]:
+        blk = s17d.split("#### Block %s:" % k)
+        if len(blk) != 2:
+            refuse(3, "L4-E11 17d's block %s" % k)
+        body = blk[1].split("\n#### ")[0]
+        for fld in ("Specimen", "Operating point", "Mounting", "Thermal boundaries", "Measurement uncertainty", "Permitted extrapolation", "Re-test when"):
+            if fld.lower() not in body.lower():
+                refuse(3, "L4-E11 17d's block %s lacks %s" % (k, fld))
+        g["spec"][k]["block"] = body
     if sorted(g["spec"]) != ["E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"]:
         refuse(3, "17d's six specimen rows")
     e39 = [x for x in F["e11_items"] if x[0] == "E11-39"]
@@ -5297,6 +5311,7 @@ G_L4E7 = "L4-E7's RELEASE.md (R-92: L4-E7R's check 4)"
 G_L4E8 = "L4-E8's RELEASE.md (R-91: check-l4e8-3.md), and the draft refuses a generator without R12"
 G_L4E9 = "this record's RELEASE.md (R-93, after its check)"
 G_L4E11 = "L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384)"
+G_L8GND = "l8gnd's RELEASE.md (an accepted check of Layer 8's record l8gnd at 226e9143; its drafts arrive with set 28)"
 CHANGE_ORDER = [
     ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
     ("1", "R-24", "pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
@@ -5319,7 +5334,12 @@ CHANGE_ORDER = [
     ("3e", "R-06", GA, "after 3a to 3d", G_L4E9),
     ("3f", "R-09", GA, "with R-07", "a text draft"),
     ("3f", "R-10", "board A, the declarations", "with R-04", "no draft yet"),
-    ("3g", "R-11", "board A, regenerated on the box", "after 3a to 3f", "the gates and the evidence re-taken"),
+    ("3g", "R-191", GA, "after board A's power round (3a to 3f); with R-192 in either order (l8gnd's composition proof, its section 4); before d8dec31's R-193", G_L8GND),
+    ("3g", "R-192", GA, "with R-191 in either order; before d8dec31's R-193", G_L8GND),
+    ("3h", "R-194", "d8dec31's draft, apply_gen_sch_a_mainpb.py (its owner)", "before R-193 is applied: fixed references above every board A draft's (L8G-F12)", "no draft yet"),
+    ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
+     "none: d8dec31's draft carries no release guard"),
+    ("3i", "R-11", "board A, regenerated on the box", "after 3a to 3h", "the gates and the evidence re-taken"),
     ("4a", "R-16", GE, "no later than R-13", "none: d8dec31's draft carries no release guard"),
     ("4a", "R-17", GE, "no later than R-13", G_L4E9),
     ("4b", "R-13", GE, "only in the same release as board A's H3 line (R-03)", "no draft yet"),
@@ -5345,6 +5365,7 @@ CHANGE_ORDER = [
     ("B", "R-107", GB, "board B's round", "no draft yet"),
     ("B", "R-163", GB, "U-02's F3: board B's round", "no draft yet"),
     ("B", "R-166", GB, "U-02's +85 C connectors and HX magnetics, after R-165's picks", "no draft yet"),
+    ("B", "R-195", GB, "board B's round: GND-002 changes 2 and 3; no other draft targets gen_sch_b.py (l8gnd section 4), so its place in board B's round is free", G_L8GND),
     ("B", "R-190", GB, "board B's round: the coolers' regulated 12.0 V feed (E11-40, Layer 7's F-L7-02), per slot from +5V_Sn or from board A over the bay harness", "no draft yet"),
     ("C", "R-145", GC, "board C's round", "no draft yet"),
     ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
@@ -5374,6 +5395,15 @@ CHANGE_ORDER = [
     ("ALT", "R-152", GA, "arrangement (A) only: withdrawn once R-157 is applied (its zone and height Layer 9's)", "no draft yet"),
 ]
 ORDER_CONSTRAINTS = [
+    ("Layer 8's board A drafts after board A's power round (R-10)", "R-10", "R-191"),
+    ("Layer 8's SLOT_EN hold after board A's power round (R-10)", "R-10", "R-192"),
+    ("Layer 8's drafts after U17's move (R-06)", "R-06", "R-191"),
+    ("d8dec31's PB network after Layer 8's GND-002 draft: LAST in board A's round (L8G-F12)", "R-191", "R-193"),
+    ("d8dec31's PB network after Layer 8's SLOT_EN hold (L8G-F12)", "R-192", "R-193"),
+    ("d8dec31's PB network after the bank (R221 to R226)", "R-07", "R-193"),
+    ("d8dec31's PB network after the charger (R228, C236 to C239)", "R-157", "R-193"),
+    ("the fix of d8dec31's references before it is applied", "R-194", "R-193"),
+    ("d8dec31's PB network before board A's regeneration", "R-193", "R-11"),
     ("R-90 before every board A circuit change", "R-90", "R-04"),
     ("R12 (R-01) before R11 (R-04)", "R-01", "R-04"),
     ("R12 (R-01) before the ballasts and Cc2 (R-07)", "R-01", "R-07"),
@@ -5395,7 +5425,7 @@ ORDER_CONSTRAINTS = [
     ("board A regenerated (R-11) after the dock's eFuse (R-181)", "R-181", "R-11"),
     ("board E's VSYS_E feed (R-177) before board E's regeneration (R-22)", "R-177", "R-22"),
 ]
-CHANGE_SCRIPTS = ["l4e4/apply_gen_sch_a_r11.py", "l4e4/apply_gen_sch_a_r138.py", "l4e5/apply_fw_a16.py", "l4e6/apply_gen_sch_a_r12.py", "l4e6/apply_lcsc_fill_r12.py",
+CHANGE_SCRIPTS = ["d8dec31/apply_gen_sch_a_mainpb.py", "l4e4/apply_gen_sch_a_r11.py", "l4e4/apply_gen_sch_a_r138.py", "l4e5/apply_fw_a16.py", "l4e6/apply_gen_sch_a_r12.py", "l4e6/apply_lcsc_fill_r12.py",
                   "l4e7/apply_gen_sch_e_backstop.py", "l4e7/apply_gen_sch_e_hold.py", "l4e7/apply_gen_sch_e_input_limit.py", "l4e7/apply_gen_sch_e_u5_grade.py",
                   "l4e7/apply_gen_sch_e_solar_guard.py",
                   "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
@@ -6355,6 +6385,8 @@ SENDS = [
 L7_PRICE_PROVENANCE = ("copied from fnd/l7pwr at 2087060b, its v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json, sha256 %s, "
                        "until Layer 7 merges in set 28; the source is Layer 7's record L7-FANS-AND-TH1.md at that commit, cited by path and commit only, "
                        "never read with git: that commit is outside this branch's history" % PINS["l7fans"][1][:16])
+BLOCK_RULE = ("; the rule: L4-E11 17d's block %s (lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, "
+              "comparison rule, re-test triggers; L4-QR01)")
 QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the design and production release stays held until the measurements "
              "pass; a row is not closed because it has an owner and a future test. A sample result is evidence for that lot and that sample, "
              "never a production limit; only a maker's printed limit closes a row for every lot. Purchases and outside contact are the owner's: "
@@ -6413,20 +6445,20 @@ def cons_qual(F):
          "U-02's closure (criteria 1 and 5) and the combined route's rows; no board draft is blocked",
          "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
          un("T-H1") + "; " + pr("fan60") + "; " + pr("fan40") + " (the T-H1 mock-up's own bill is Layer 7's T-H1-MOCKUP-SPEC.md at 2087060b, cited, not copied)", sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
-        ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"],
+        ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"] + BLOCK_RULE % "E11-29",
          "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
          sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
          pr("buk", 4) + "; " + un("E11-29, E11-36"), "none"),
-        ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"],
+        ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"] + BLOCK_RULE % "E11-30",
          "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
          % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock"][1]), pl[4], pl[3], fmt(pl[0]), fmt(pl[1]), fmt(pl[2])),
          sp["E11-30"]["blocks"], "an engineer, on a bench (a capacitor-discharge rig)", OWN + "the parts and the rig; Q-NXP-1 to Nexperia",
          pr("buk", 6) + "; " + un("E11-30"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-NXP-1, in parallel (D1)"),
-        ("E11-36 (R-182)", sp["E11-36"]["specimen"], sp["E11-36"]["represents"], sp["E11-36"]["transfers"],
+        ("E11-36 (R-182)", sp["E11-36"]["specimen"], sp["E11-36"]["represents"], sp["E11-36"]["transfers"] + BLOCK_RULE % "E11-36",
          "D-14's RDS(on) allowance: at most %s mOhm at VGS -8.5 V and a 150 C junction; over it R-159 is re-sized before layout" % fmt(F["f02"]["allow"]),
          sp["E11-36"]["blocks"], "an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading)", OWN + "the parts and the coupon",
          pr("buk", 4) + "; " + un("E11-29, E11-36"), "none drafted: Nexperia's maximum at -8.5 V and 150 C would close it for every lot (a draft is owed to L4-E11)"),
-        ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"],
+        ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"] + BLOCK_RULE % "E11-37",
          "D-14's Ciss against TI's 5 nF: the pair (S1) or one FET with a heat path through the case (S2)",
          sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
          pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
@@ -6437,11 +6469,11 @@ def cons_qual(F):
          "U-04: its move from a closure condition to a downstream qualification test once R-157, R-177 and R-178 are applied; the held pack current at most %s mA; D2 against the 2.054 V margin" % fmt(F["f02"]["held"][1]),
          "board A's final release; the charger's firmware rules (R-158) are written to the draft meanwhile", "an engineer, on a bench",
          OWN + "the evaluation hardware; Q-TI-15 and Q-TI-16 to TI", un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-15, Q-TI-16; " + sd("v2/docs/review-packets/battery/REVIEW-REQUEST.md")),
-        ("E11-38 (R-184)", sp["E11-38"]["specimen"], sp["E11-38"]["represents"], sp["E11-38"]["transfers"],
+        ("E11-38 (R-184)", sp["E11-38"]["specimen"] + " (U22's rail as R-177 drafts it: U22, L4, C135 to C141 and R103 to R109)", sp["E11-38"]["represents"], sp["E11-38"]["transfers"] + BLOCK_RULE % "E11-38",
          "D-15 (L4-F03): the dock's VSYS branch through the complete histories (a) to (h) of L4-E11 17a and 18 with pass limits: the hard short against the 566 A test target, the start into a short with its pre-regulation interval and regulated current recorded, one hour of retry and intermittent shorts, the pin excursions, the wiring's and copper's integrity, the contact body at or under 85 C, the fans and U22 on the rail, a stalled fan and a shorted rail; until then %s" % L4F03_STATUS,
          sp["E11-38"]["blocks"], "an engineer, on a bench", OWN + "the parts and the coupon; Q-TI-18 to TI",
          un("E11-38") + "; " + pr("d23") + "; " + pr("c236"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-18"),
-        ("E11-35 (R-179)", sp["E11-35"]["specimen"], sp["E11-35"]["represents"], sp["E11-35"]["transfers"],
+        ("E11-35 (R-179)", sp["E11-35"]["specimen"], sp["E11-35"]["represents"], sp["E11-35"]["transfers"] + BLOCK_RULE % "E11-35",
          "the mixers' start current and PWM level on U22's %s V rail against U42's room (%s A at the floor, %s W at the rail for one fan's start; E11-35, E11-38 f); D-18 settled by Layer 7 (Sanyo Denki %s, %s at %s), the stagger kept (E11-39, R-188)"
          % (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["u42"][2]), fmt(F["cp"]["rail"]["start"][0]), F["cp"]["rail"]["mixer"], F["cp"]["rail"]["l7"], F["cp"]["rail"]["l7c"]),
          sp["E11-35"]["blocks"], "an engineer, on a bench", OWN + "the fans (Layer 7's prices read) and the rail's parts", pr("fan60") + "; " + un("T-H1, E11-35"), "none drafted; the maker's manual M0011876C is behind a form (Layer 7's F-L7-11)"),
@@ -6465,7 +6497,7 @@ def cons_qual(F):
          "one Saft MP 176065 xtd cell of the lot to be fitted (three if the owner prefers a spread), never fitted afterwards, a thermocouple on its surface, soaked to each temperature first",
          "the cell's current at temperature (10 A continuous, 18 A for 60 s, 20 A for 2 s at -20 to +80 C), the charge from 0 C, the storage dwell and recovery (24 h at +71 C and -33 C at 30 %, E5's rest), the lot's capacity at receipt",
          "to the pack as evidence for that lot and sample only; Saft's statement closes the rows for every lot",
-         "U-01's Saft route: adoptable or not (with the fit mock-up R-167 and T-H1); the owner's approval (OW-3) follows the evidence",
+         "U-01's Saft route: adoptable or not (with the fit mock-up R-167, which blocks the same adoption, and T-H1); the owner's approval (OW-3) follows the evidence",
          "U-01's adoption and board P's cell rows under route (II); nothing else",
          "a laboratory (a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger; about two weeks)", OWN + "the cell(s) and the laboratory; Saft's request",
          pr("saft") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt")),
@@ -6477,7 +6509,9 @@ def cons_qual(F):
          "a laboratory (a chamber)", OWN + "the cells and the laboratory; Topwell's request",
          pr("hl") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt") + "; " + sd("v2/docs/records/l4e10/clarification/eaton-scf9550.txt")),
         ("The fit mock-up (R-167)", "a printed mock-up of four MP 176065 xtd cells at the sheet's maximum dimensions in D-06's pocket at the built stack",
-         "the cells' fit along the pocket's axis with at most 1.40 mm of wrap", "fully (a geometry)", "U-01's fit", "nothing", "an engineer (Layer 7)",
+         "the cells' fit along the pocket's axis with at most 1.40 mm of wrap", "fully (a geometry)",
+         "U-01's fit: whether the proposed pack arrangement fits D-06's pocket; adoption needs it with the limited sample qualification and T-H1 (L4-QR02)",
+         "the adoption of the PROPOSED pack arrangement (U-01's Saft route: four MP 176065 xtd cells as 4S1P in D-06's pocket, OW-3) and the mechanical release that depends on it (the pocket, its cradle and the pack's enclosure at Layer 7); nothing else: not A1's baseline work, not an unrelated interface", "an engineer (Layer 7)",
          "none beyond the print", "nothing (a print)", "none"),
         ("The e-paper's storage soak (R-185)",
          "one PDi E2370KS0C1 sample held unpowered at the CLAIMED maximum local part temperature, +70 C at its glass (the proposed replacement storage line), the chamber's setpoint raised by its and the glass thermocouple's stated uncertainty so the glass never sits under +70 C, for E5's 6 h dwell and E3-O's 4 h (each soak separately), mounted behind the window in a 3 mm plate section as in the kit (the T-H1 mock-up's blank serves); its function read back after recovery to +25 C at 1 h and at 24 h (an image written, refreshed and read against the pre-soak image: no missing or stuck segment, no new ghosting); an ambient-only +55 or +60 C soak establishes nothing above the ambient (the recheck)",
