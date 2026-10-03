@@ -110,7 +110,13 @@ draft's designators were the solar drafts'; a disjointness test over every board
 L4-CP01 restated (the 566 A a resistive extrapolation and E11-38 (c)'s test target, the start into a short not bounded by printed data,
 no retry duty claimed, the contact at most case (1)'s 15.9 K at any duty), E11-38 extended to the histories (a) to (h) with the pin
 excursions, the wiring's and copper's integrity and the contact body at or under 85 C (D-15, R-181, R-184, the route rows E11-31 and
-E11-38, the diagram's board E block), the rail 11.512 to 12.431 V with the 1 % divider. Status: known defects addressed in drafts; feasibility conditions remain
+E11-38, the diagram's board E block), the rail 11.512 to 12.431 V with the 1 % divider. Round 4 (c), step 1: L4-E11's
+qualification-route correction (`a1d15601`, the owner's review L4-QR01: 17d's blocks with the lot, operating point, mounting, thermal
+boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers) carried into the route's 17d rows and R-159 and
+R-160; L4-QR02, the fit mock-up R-167 blocks the adoption of the proposed pack arrangement and the dependent mechanical release, nothing
+else; Layer 8's L8G-F12 (`v2/docs/records/l8gnd/` at `226e9143`, cited by path and commit only): Layer 8's board A drafts R-191 and R-192
+after board A's power round, d8dec31's PB network R-193 LAST in board A's round (R233 and C241) with the FINDING R-194 for its owner,
+board B's GND-002 draft R-195 in board B's round; the register at 185 items. Status: known defects addressed in drafts; feasibility conditions remain
 open.
 
 | File | What it is |
