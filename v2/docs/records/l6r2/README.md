@@ -27,6 +27,10 @@ Also on this branch: `v2/ecad/tools/tests/test_l6r2.py` (the predicates); the bl
 `l6pwr/apply_part_identities_block.py` now removes only its own block (it cut to the end of the file, which would have taken this
 record's block with it).
 
+Regenerating `l6r2_passives.out` byte for byte needs the held Uniroyal sheet fetched first
+(`python3 v2/docs/records/w5identc/fetch_held_back.py`): without it the Uniroyal identities print UNREAD instead of DECODED (the
+identity block is the same either way).
+
 Run the tests with `env -C v2/ecad/tools/tests python3 run.py test_l6r2 test_part_identities test_public_hygiene test_l6pwr`; on
 3 October 2026 they read 56 passed, 0 failed, 0 skipped (with the Uniroyal sheet fetched by w5identc's `fetch_held_back.py`;
 without it, the DECODED Uniroyal bindings read UNREAD and test_part_identities skips two).
