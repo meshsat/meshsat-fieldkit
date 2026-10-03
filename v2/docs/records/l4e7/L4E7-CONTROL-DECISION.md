@@ -435,7 +435,7 @@ limit and backstop drafts, L4-E9's hot swap and L4-E11's entry draft, and refuse
   - the gate slew R90 36.5k, R91 10R and C127 10 nF C0G 100 V (C184799), and CBST C128 1 uF;
   - CTMR C129 22 nF C0G (C97929) with RIWRN R92 39.7k 0.1 % (C861872);
   - the VS filter R93 100R and C130 100 nF 100 V;
-  - UVLO R94 59.0k over R95 10.0k, and INP R96 100k over R97 **28.0k** (39k before B6; 30.0k in round 1);
+  - UVLO R94 59.0k over R95 10.0k, and INP R96 100k over R97 **28.0k** (39k before B6; 30.0k in round 1), R97 at 0.1 % 25 ppm/K (YAGEO RT0603BRD0728KL, code owed; round 4, L6P-F04: the draft had written 1 % while this record's divider is taken at 0.1 %);
   - the OV divider R98, R99 and R100 above.
 - **Q13** CSD19532Q5B (C473333) from PV_RTN to GND. Its gate PV_RG comes from PV_F through **R101** 100k and goes to GND through
   **R102** 100k, with **D12** BZT52C12-7-F (C124196) from gate to source.
@@ -463,7 +463,7 @@ drafts: 8 edits, every check yes (B6's parts included), R10 untouched.
 V, at most 100 W.
 - The cut-off rises at 28.55 V at the least and falls back at 27.07 V at the least, both over 25 V with their tolerance and
   drift. Its highest, 31.06 V, is under every rating on the entry, and above it the stage is off, not running.
-- U21 turns on at 9.29 V at the most (INP through R96 over R97 28.0k at V(INP_H)'s 2.0 V; the UVLO by 8.44 V, L4-E11's figure
+- U21 turns on at 9.16 V at the most (INP through R96 over R97 28.0k at 0.1 % at V(INP_H)'s 2.0 V; the UVLO by 8.44 V, L4-E11's figure
   for the same divider) and off at 7.46 V at the least. That is under the stage's own enable (R14 and R15, about 9.5 V), so it
   narrows nothing.
 - The hold: the panel sits at most 0.074 V above PV_P at the regulation's highest current.
@@ -564,10 +564,10 @@ the largest difference from the 0.5 ns value at 20 ns or less: **0.000882 V**.
 
 | Rating, with its margin | Worst | Limit | Holds from |
 |---|---|---|---|
-| PV_F (U21's VS, CS+, CS-, ISCP; the port bank) | 80.58 V | 90 V | 2.02 uH |
+| PV_F (U21's VS, CS+, CS-, ISCP; the port bank) | 80.58 V | 90 V (the exclusion line: 100 V absolute maximum less 10 %); the TPS4811-Q1's RECOMMENDED operating VS row is 80 V (SLUSEE5E 6.2), exceeded at the floor by 0.58 V: OPEN (round 4, L6P-F10) | 2.02 uH (90 V); 3.44 uH (80 V) |
 | PV_F's slew at CS-, CS+ and ISCP | 25.02 V/us | 54 V/us | 1.25 uH |
 | Q12's VDS (and VS, CS+, CS- to SRC) | 71.98 V | 90 V | 1.38 uH |
-| U21's INP (R96 over R97 28.0k) | 17.90 V | 18 V | 3.25 uH |
+| U21's INP (R96 over R97 28.0k, both at 0.1 %; round 4, L6P-F04) | 17.66 V | 18 V | 3.25 uH |
 | U21's EN/UVLO | 11.88 V | 18 V | 0.64 uH |
 | PV_F's least | 7.46 V | -1 V | under 0.30 uH |
 | **U5's CSPIN to CSNIN, positive (+ numerical error)** | **0.2396 V** | **0.240 V** | **3.58 uH (grid); 3.30 uH bisected** |
@@ -612,7 +612,7 @@ loop):
 | Field | Entry |
 |---|---|
 | Affected circuit | board E's solar guard (U21, Q12, the port bank) and U5's input sense (RSENSE1, CSPIN, CSNIN, C13 to C15) |
-| Evidence and failed condition | the selected network holds U5 within +-0.240 V only for a source loop of at least 3.30 uH. At 1.00 uH it reads 0.5287 V, over U5's 0.3 V absolute maximum, because any guard that is closed when a stiff source arrives charges the stage's capacitance at a rate only the loop sets |
+| Evidence and failed condition | the selected network holds U5 within +-0.240 V only for a source loop of at least 3.30 uH. At 1.00 uH it reads 0.5287 V, over U5's 0.3 V absolute maximum, because any guard that is closed when a stiff source arrives charges the stage's capacitance at a rate only the loop sets ; PV_F 80.58 V at the floor exceeds the TPS4811-Q1's recommended operating VS row of 80 V (OPEN, round 4: under the row from 3.44 uH; the 90 V line above it is the exclusion line only) |
 | Decision or measurement needed | either (1) Analog Devices permits a sense-pin filter on CSPIN and CSNIN with a bounded error (then (B) makes the margin independent of the loop); or (2) the kit's rules bound a stiff source's loop at J_SOLAR (the connector and the leads a source can arrive through, at least 3.30 uH, measured); or (3) the input current sense moves off the stage's input capacitance |
 | Pass criterion | U5's differential within +-0.240 V at the IC pins for the declared envelope, captured at layer 9 with the guard on and a 36 V supply stepped on from about 7.5 V and from 25 V |
 | Consequence of failure | U5's sense pins over their absolute maximum; the LT8705A possibly damaged and the solar stage lost (the 100 W bound and the backstop rest on it) |
@@ -730,8 +730,9 @@ here):
   2. a 36 V supply connected cold: Q12 never conducts, D4 carries nothing, PV_F at most 75 V;
   3. at layer 9, the waveforms at the IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and
      from 25 V, through a loop measured first. U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 61 A,
-     within 12 us), D4 carrying nothing, PV_P under 31.80 V. It is a pass only for a loop at or over 3.30 uH until B6-ENG-1
-     is decided;
+     within 12 us), D4 carrying nothing, PV_P under 31.80 V, PV_F under the TPS4811-Q1's recommended operating 80 V row (OPEN
+     at the floor: 80.58 V, under the row from 3.44 uH; round 4, L6P-F10). It is a pass only for a loop at or over 3.30 uH until
+     B6-ENG-1 is decided;
   4. a reversed bench panel's curve: no current, the high side's pins against GND;
   5. Q13's leakage at the hot end, under 32.1 uA;
   6. no short-circuit trip with C126 at 330 pF in operation and under CS116 (R-174).
@@ -994,6 +995,11 @@ The texts are for the owner to send; the session contacts no one, and no answer 
 | The parasitics as voltages at the critical di/dt | RSENSE1's inductance (5 nH, the WSL's printed bound; the chosen part prints none), the Kelvin pair (1 nH, declared), the ceramics' ESL (from the makers' self-resonance) and tap (0.5 nH, declared): the rise +0.2487 V and Q12's turn-off -0.2885 V at the pins at the floor, both inside +-0.3 V; the turn-off stays inside the 0.240 V margin line for an inductance at most 3.0 nH |
 | The 100 W bound and the regulation | the bound unchanged (the backstop does not read RSENSE1); the regulation re-derived: the sense leaves its operating range at the 25 V corner with a 12.0 V bus, the average read 5.7 % low at the regulation's highest current, B6-ENG-2 |
 | The bench criterion and specimen | not selected (result ii); what the bench owes is in B6-ENG-1 and B6-ENG-2: the pins' waveform in operation at 25 V in and the lowest bus, and RSENSE1's inductance measured, on board E's first prototype (the LT8705A demonstration board has another sense arrangement and does not transfer) |
+
+| Item of the Layer 6 author's findings on the drafts (L6-POWER-PARTS.md L6P-F04 and L6P-F10, round 4) | Change |
+|---|---|
+| L6P-F04: R97 drafted at 1 % where the analysis relies on 0.1 % | the draft's R97 is 28.0k 0.1 % 25 ppm/K, YAGEO RT0603BRD0728KL (code owed); the record's INP divider is taken at 0.1 % (TOL_INP) and prints it; a test asserts the draft's tolerance equals the record's; INP reads 17.66 V at the floor against 18 V (holds from 3.25 uH) and U21 turns on at 9.16 V at the most |
+| L6P-F10: PV_F's 80.6 V judged against the absolute maximum less 10 % | the basis stated: the 90 V line is the exclusion line (an absolute rating only excludes); the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- is 80 V (SLUSEE5E 6.2), which the floor's 80.58 V exceeds: OPEN on the guard, under the row from 3.44 uH, carried in R-176 row 3 and B6-ENG-1; no part change made (a larger port bank is the bounded candidate, not tried at the desk) |
 
 | Item of the consolidation review's B6 (`astra-check-l4close-1.md`, set 27) | Change |
 |---|---|

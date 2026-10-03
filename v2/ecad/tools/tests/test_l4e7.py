@@ -817,7 +817,7 @@ def t_the_solar_guard_draft_follows_the_five_drafts_on_a_copy():
                      '{"1": "PV_F", "2": "PV_RTN"}, "C80273")', '"PV_RG", "PV_RTN", "GND", lcsc="C473333")', '"C124196")',
                      '{"switch": "U21", "enable_net": "PV_UVLO"}),', '_intent.rail("PV_RTN"', 'part("D4", "Device", "D_Zener", "SMCJ30A',
                      'c("C131", "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE', 'for _cf in ("C132", "C135", "C136"): c(_cf, "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE',
-                     'c("C126", "330p C0G 100V', 'r("R97", "28.0k 1%', 'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
+                     'c("C126", "330p C0G 100V', 'r("R97", "28.0k 0.1% 25ppm', 'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
                      'c("C134", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE"', 'c("C7%d" % (_ca + 1), "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
                      '"C132", "C133", "C134", "C135", "C136", "D4", '):
             assert out.count(want) == 1, want
@@ -983,6 +983,32 @@ def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
         assert fig in page, fig
     clar = open(os.path.join(REC, "clarification", "analog-devices-lt8705a.txt"), encoding="utf-8").read()
     assert "7. The input current monitor with a pulsed sense voltage" in clar
+
+
+def t_round_4_the_inp_divider_tolerance_and_pv_fs_operating_row():
+    """Round 4 (the Layer 6 author's L6P-F04 and L6P-F10): the draft's R97 carries the tolerance the analysis relies on (0.1 %, a
+    named 0.1 % 25 ppm/K series), the record's INP divider is taken at that tolerance; PV_F is judged against the TPS4811-Q1's
+    recommended operating row as well as the exclusion line, and the exceedance at the floor is an OPEN item carried in R-176
+    and B6-ENG-1 with the loop from which the row holds."""
+    import re
+    R = _R()
+    b6 = R["remedy"]["b6"]
+    draft = open(os.path.join(REC, "apply_gen_sch_e_solar_guard.py"), encoding="utf-8").read()
+    m = re.search(r'r\("R97", "28\.0k ([\d.]+)% 25ppm \(INP: high from ([\d.]+) V,[^"]*YAGEO RT0603BRD0728KL, LCSC code owed\)", "PV_INP", "GND", "R"\)', draft)
+    assert m, "the draft's R97 line"
+    assert abs(float(m.group(1)) / 100.0 - b6["tol_inp"]) < 1e-12 and b6["tol_inp"] == 0.001
+    assert abs(float(m.group(2)) - b6["inp_on"]) < 0.005, (m.group(2), b6["inp_on"])
+    assert b6["vs_rec"] == 80.0 and b6["W"]["vF"] > b6["vs_rec"] and b6["pvf80"] is not None and b6["pvf80"] > b6["LA"]
+    inp_row = [v for v in b6["valsA"] if v[0] == "inp"][0]
+    assert abs(inp_row[1] - b6["W"]["vF"] * b6["kinp"]) < 1e-9 and inp_row[1] < 18.0
+    s_ = _s10(R)
+    for k_ in ("PV_F'S BASIS (round 4, L6P-F10)", "RECOMMENDED operating row for VS, CS+ and CS- is 80 V", "THE INP DIVIDER (round 4, L6P-F04)",
+               "PV_F under the recommended operating 80 V row (OPEN at the floor"):
+        assert k_ in s_, k_
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    for fig in ("%.2f uH" % (1e6 * b6["pvf80"]), "RT0603BRD0728KL", "recommended operating", "%.2f V" % b6["W"]["vF"], "L6P-F04", "L6P-F10",
+                "%.2f V" % inp_row[1]):
+        assert fig in page, fig
 
 
 def t_the_clarification_drafts_follow_the_decision():
