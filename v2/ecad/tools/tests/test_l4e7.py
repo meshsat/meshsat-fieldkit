@@ -234,6 +234,49 @@ def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_num
         assert m.key_of(moved) != data["key"], part
 
 
+def t_an_l4e9_edit_outside_the_pinned_sentence_moves_neither_the_key_nor_the_output():
+    """The lead scan contributes what it establishes, not the scanned files' contents: on a scratch copy of L4-E9's two pages, an
+    edit outside the pinned R-180 sentence leaves the scan, the KEY and the output unchanged; an edit of the sentence changes the
+    scan and the KEY (and compute() refuses on it, as a lead statement nobody has read)."""
+    import json
+    R = _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    pages = ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md")
+    st = m.LEAD_STATEMENTS[0]
+    with tempfile.TemporaryDirectory() as td:
+        for rel in pages:
+            os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
+            shutil.copyfile(os.path.join(ROOT, rel), os.path.join(td, rel))
+        base = m.scan_part(td)
+        assert base["lead_cited"] == data["parts"]["scans"]["lead_cited"] and not base["lead_hits"]
+        # an edit outside the sentence: a new paragraph and a changed table cell elsewhere on each page
+        for rel in pages:
+            p = os.path.join(td, rel)
+            t = open(p, encoding="utf-8").read()
+            assert st not in t.split("\n")[0]
+            open(p, "w", encoding="utf-8").write(t.replace("\n", "\nAn edit elsewhere on the page, not the R-180 sentence.\n", 1) + "\nA closing line added.\n")
+        after = m.scan_part(td)
+        assert after == base
+        parts = json.loads(json.dumps(data["parts"]))
+        assert m.key_of(dict(parts, scans=after)) == data["key"]
+        hits, cited = m.lead_scan(td)
+        Rx = dict(R, lead=dict(R["lead"], cited=cited))
+        assert not hits and "\n".join(m.render(Rx)) + "\n" == committed
+        # an edit of the sentence: the scan and the KEY move (an unread lead statement: compute() refuses)
+        p = os.path.join(td, pages[0])
+        t = open(p, encoding="utf-8").read()
+        flat = " ".join(t.split())
+        assert st in flat
+        t2 = t.replace("6.09 mm apart", "6.10 mm apart", 1)
+        assert t2 != t
+        open(p, "w", encoding="utf-8").write(t2)
+        moved = m.scan_part(td)
+        assert moved != base and pages[0] in moved["lead_hits"] and pages[0] not in moved["lead_cited"]
+        assert m.key_of(dict(parts, scans=moved)) != data["key"]
+
+
 def t_recompute_reproduces_the_committed_output():
     """--recompute equals render(cache): the solver run once more (about 30 to 50 minutes on a loaded host), so it runs only when
     L4E7_RECOMPUTE=1 is set."""
@@ -669,14 +712,11 @@ def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbanc
     ld, d = R["lead"], R["decision"]
     le_, rw, sg = ld["lead"], d["rows"], d["surge"]
     assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
-    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, read at its
-    # digest; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation already takes
-    import hashlib
+    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, carried
+    # verbatim; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation takes
     assert ld["statements"] and all("over 5 m" in st for st in ld["statements"])
-    for rel, (dg, st) in ld["cited"].items():
-        p = os.path.join(ROOT, rel)
-        assert st in ld["statements"] and hashlib.sha256(open(p, "rb").read()).hexdigest() == dg
-        assert st in " ".join(open(p, encoding="utf-8").read().split()), rel
+    for rel, st in ld["cited"].items():
+        assert st in ld["statements"] and st in " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split()), rel
     for rel in ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"):
         t = " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
         assert (rel in ld["cited"]) == any(st in t for st in ld["statements"]), rel
