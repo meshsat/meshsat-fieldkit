@@ -153,7 +153,7 @@ def main(argv):
             hit = _cc.CLAIM.search(note)
             if hit:
                 refuse("the entry for %s carries the claim word %r" % (rid, hit.group(0)))
-            if "—" in note or "–" in note:
+            if "\u2014" in note or "\u2013" in note:
                 refuse("the entry for %s carries a dash" % rid)
             r = out[i:j]
             res0 = re.search(r"(?m)^    evidence_result: (\S+)", r).group(1)
