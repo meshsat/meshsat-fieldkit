@@ -7,7 +7,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
    eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216 v2/ecad/tools/lcsc_fill.py
    8200c1c6e7c2131ab213dcc8f871b8cb3f9977e9d35bcd0541da1b6617393fbf v2/release/revA/order/JLC-CERTIFIED.tsv
-   288c7eaa44d93e29768fcb0b2ca55e636398a0d3d4136e6378f509d815bb8459 v2/ecad/tools/pcb_part_identities.yaml
+   99e7c2196bd44c8f9344f5e8df85df6fd43f7d0d3746ee75e9f20588a32f17a2 v2/ecad/tools/pcb_part_identities.yaml
    b0139eaffacb68018d125aab72bc401042e99dc1e9735f41b89a9cde59c398b2 v2/ecad/tools/lcsc-blocked.txt
    31b82bacb31ca7efaac19627ebc97e1e7c2649c3cf1fa68e8fa513b7b61bca8c v2/ecad/tools/jlc-mismatch.yaml
    cab57e0ed5be2f638e83a2fef8e99193ef20cddd32ac0d26a0c5503db679c2ff v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
