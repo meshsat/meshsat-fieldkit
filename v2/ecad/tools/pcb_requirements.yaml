@@ -7030,9 +7030,20 @@ records:
           This reading rests on line 5 (bank 1's home and failover hosts), section 1 and section 2's ribbon table with
           its pin 15 row; sections 1 and 2 are byte-identical, so the ground it was decided on is unchanged. This entry
           rebinds the page and re-decides nothing: the result stands as set, bound to the file at 3f380ef79c6bc54a.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 3f380ef79c6bc54a, the content of b00a2fc3). Of its sections, sections 1, 4, 5, 8, 9 differ,
+          section 9a is added, and the head, 2, 3, 6, 7, 10, 11 are byte-identical. This reading rests on line 5 (bank
+          1's home and failover hosts), section 1's pin table and section 2's ribbon table with its pin 15 row: the head
+          byte-identical; section 2 byte-identical; section 1 changed only in its PI button lines (SW_PI, the PI button,
+          PI_BTN_n, PIJ2, SPARE1: drafted by record l8r2 at 29ffb518); so the ground it was decided on is unchanged.
+          This entry rebinds the file and re-decides nothing: the result stands as set, bound to the file at
+          9fd2b4e3c6edf86e.
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
+      - "v2/docs/PANEL.md@9fd2b4e3c6edf86e"
       - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
     release_effect: ADVISORY
     source:
@@ -10927,8 +10938,17 @@ records:
           This reading rests on section 7 (EMCON_HW's pull and the panel-less kit); section 7 is byte-identical, so the
           ground it was decided on is unchanged. This entry rebinds the page and re-decides nothing: the result stands
           as set, bound to the file at 3f380ef79c6bc54a.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 3f380ef79c6bc54a, the content of b00a2fc3). Of its sections, sections 1, 4, 5, 8, 9 differ,
+          section 9a is added, and the head, 2, 3, 6, 7, 10, 11 are byte-identical. This reading rests on section 7
+          (EMCON_HW's pull and the panel-less kit): section 7 byte-identical; so the ground it was decided on is
+          unchanged. This entry rebinds the file and re-decides nothing: the result stands as set, bound to the file at
+          9fd2b4e3c6edf86e.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
+      - "v2/docs/PANEL.md@9fd2b4e3c6edf86e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
     release_effect: ADVISORY
     source:
@@ -15497,10 +15517,30 @@ records:
           SHORE_INHIBIT) and FW-A19's flag, and name L4-E11 7a's rule; whether they describe the circuit the generators
           carry is that check's question at its next run, not this entry's. This entry rebinds the page and re-decides
           nothing: the result stands as set, bound to the file at 3f380ef79c6bc54a.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 3f380ef79c6bc54a, the content of b00a2fc3). Of its sections, sections 1, 4, 5, 8, 9 differ,
+          section 9a is added, and the head, 2, 3, 6, 7, 10, 11 are byte-identical. This reading rests on sections 1, 6
+          and 7 (the radios' EMCON path, the toggles, the bus table): section 6 byte-identical; section 7
+          byte-identical; section 1 changed only in its PI button lines (SW_PI, the PI button, PI_BTN_n, PIJ2, SPARE1:
+          drafted by record l8r2 at 29ffb518); so the ground it was decided on is unchanged. This entry rebinds the file
+          and re-decides nothing: the result stands as set, bound to the file at 9fd2b4e3c6edf86e.
+      - >-
+          v2/docs/ASSEMBLY.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 942d562edd128759, the content of 29acd948). Of its sections, section 4 differs, and the head,
+          1, 2, 3, 5, 6, 7, 8, 9, the pictures section are byte-identical. This reading rests on sections 2, 4, 8 and 9
+          (stream s122's scope): section 2 byte-identical; section 8 byte-identical; section 9 byte-identical; section 4
+          changed only in its PI button lines (SW_PI, the PI button, PI_BTN_n, PIJ2, SPARE1: drafted by record l8r2 at
+          29ffb518); so the ground it was decided on is unchanged. This entry rebinds the file and re-decides nothing:
+          the result stands as set, bound to the file at 29dbe3a0c4938274.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
-      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
+      - "v2/docs/PANEL.md@9fd2b4e3c6edf86e"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/V2-SPEC.md@2c722c9b5457bd56"
       - "v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f"
@@ -15512,7 +15552,7 @@ records:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
       - "v2/docs/handover/DEFINITION-STATUS.md@e8f9b415e39f855b"
       - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
-      - "v2/docs/ASSEMBLY.md@942d562edd128759"
+      - "v2/docs/ASSEMBLY.md@29dbe3a0c4938274"
     release_effect: BLOCKER
     source:
       - "v2/docs/PANEL.md section 6"
@@ -17788,8 +17828,17 @@ records:
           flag, the charger's CHRG_INHIBIT bit) and when SHORE_INHIBIT is asserted, not the strap, the load node or the
           hostless charge that this record decided. This entry rebinds the page and re-decides nothing: the result
           stands as set, bound to the file at 3f380ef79c6bc54a.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 3f380ef79c6bc54a, the content of b00a2fc3). Of its sections, sections 1, 4, 5, 8, 9 differ,
+          section 9a is added, and the head, 2, 3, 6, 7, 10, 11 are byte-identical. This reading rests on section 10's
+          strap, VSYS and bench-question sentences: section 10 byte-identical; so the ground it was decided on is
+          unchanged. This entry rebinds the file and re-decides nothing: the result stands as set, bound to the file at
+          9fd2b4e3c6edf86e.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
+      - "v2/docs/PANEL.md@9fd2b4e3c6edf86e"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
@@ -18084,11 +18133,29 @@ records:
           This reading rests on section 10's pack SMBus lead sentences; those sentences are byte-identical in the new
           section 10 (the change is the charge-hold span alone). This entry rebinds the page and re-decides nothing: the
           result stands as set, bound to the file at 3f380ef79c6bc54a.
+      - >-
+          v2/docs/PANEL.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 3f380ef79c6bc54a, the content of b00a2fc3). Of its sections, sections 1, 4, 5, 8, 9 differ,
+          section 9a is added, and the head, 2, 3, 6, 7, 10, 11 are byte-identical. This reading rests on section 10's
+          pack SMBus lead sentences: section 10 byte-identical; so the ground it was decided on is unchanged. This entry
+          rebinds the file and re-decides nothing: the result stands as set, bound to the file at 9fd2b4e3c6edf86e.
+      - >-
+          v2/docs/ASSEMBLY.md re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; Layer 5's round 3
+          (records/l5r2/L5-PANEL-R3.md, fnd/l5r2 at d077fb91, merged into set 28 on branch fnd/int28b; the panel
+          firmware's findings F-01 and F-04 to F-13 adopted, the PI button's texts marked DRAFTED by record l8r2); the
+          file before at 942d562edd128759, the content of 29acd948). Of its sections, section 4 differs, and the head,
+          1, 2, 3, 5, 6, 7, 8, 9, the pictures section are byte-identical. This reading rests on section 4's pack SMBus
+          lead row and section 2's build step 7: section 2 byte-identical; section 4 changed only in its PI button lines
+          (SW_PI, the PI button, PI_BTN_n, PIJ2, SPARE1: drafted by record l8r2 at 29ffb518); so the ground it was
+          decided on is unchanged. This entry rebinds the file and re-decides nothing: the result stands as set, bound
+          to the file at 29dbe3a0c4938274.
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
-      - "v2/docs/ASSEMBLY.md@942d562edd128759"
-      - "v2/docs/PANEL.md@3f380ef79c6bc54a"
+      - "v2/docs/ASSEMBLY.md@29dbe3a0c4938274"
+      - "v2/docs/PANEL.md@9fd2b4e3c6edf86e"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]

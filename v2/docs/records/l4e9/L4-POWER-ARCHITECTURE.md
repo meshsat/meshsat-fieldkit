@@ -1661,6 +1661,20 @@ contact) and L4-F04 (the thermal classes), and kept B4's charging arithmetic, B7
 B1's topology. This line, from set 27's frozen tree `694a8417`, took L4-E11 at `d2a59468` (L4-F02 and L4-F03; out 26a, 26b),
 restated the thermal categories (L4-F04; out 26c) and took L4-E7 at `68bc3bad` (L4-F01; out 26d: NOT CLOSED, B6-ENG-1).
 
+**Round 6** (set 28's integration, 3 October 2026, on `fnd/l4e9r6` from `5a6ad183`): the record read C5's code from one typed key of
+`lcsc_fill.py` and then required `gen_sch_e.py` to carry "YAGEO CC0603KRX7R9BB104, LCSC <code>", which is that generator's note on
+C46 and C59 (E6_DVDD), not a statement about C5; Layer 6 (l6r2 round 3) changed the fill line to a 100 V part and the record refused.
+C5's fitted part is now read the way `lcsc_fill.py` fills it (a code on the part wins, else the first table key that matches the
+value and the land; the code and the part number of that line): C113803, YAGEO CC0603KRX7R0BB104, 100 nF 100 V. The held Yageo CC
+X7R sheet (V.26) is read for that part number (the ordering code, the 0603 capacitance table, the endurance test's product class and
+the temperature characteristic) and covers it; a part it does not cover is INCONCLUSIVE and its envelope is not computed. The timer
+envelope takes only the tolerance, the temperature characteristic and the endurance change, and none of them changes (K, +-10 %;
++-15 %; +-15 % for a general product): 2.035 to 11.871 ms as before. The same reading of R227's capacitors (board A's netlist) shows
+that the earlier sentence named C5's code for both 100 nF parts (C221 carries its own C14663, C197 takes the 100 V part) and took
+the general products' +-15 % after endurance for C81 and C82, YAGEO CC1210KKX7R9BB106, which the sheet's endurance note puts among
+the high capacitance products (+-20 %): R227's stacked energy at a hard connect reads 4.369 mJ (was 4.189 mJ); the nominal 2.879 mJ
+and the +10 % 3.167 mJ are unchanged, and the maximum stays unresolved (R-101). Out 11, its last block.
+
 ### A2. The summary as written in rounds 2 to 5
 
 - **Selected: A1**, D-06's one 4S3P pack inside the case, fed by two sources ORed onto one raw bus (the panel through board E's

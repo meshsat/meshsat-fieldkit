@@ -134,7 +134,11 @@ task list (8g: phase 1 the known design defects, phase 2 the physical uncertaint
 (L4-SH03), verbatim. The set 27 run's board E designators: L4-E11's fan rail capacitors C142 to C148 (`1080e085`)
 carried; L4-E7's compute and render split (`04707e3c`) re-pinned, R-180's pinned sentence kept verbatim; d8dec31's input
 capacitor (R-16) moved last in board E's round with the FINDING R-196 and five order constraints, and the composition tests run the
-board E drafts in the change list's order with no designator written twice (186 items). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+board E drafts in the change list's order with no designator written twice (186 items). Round 6 (set 28's integration,
+`fnd/l4e9r6` from `5a6ad183`): C5's fitted part read the way `lcsc_fill.py` fills it (code and part number of the line that fills
+it: C113803, YAGEO CC0603KRX7R0BB104, 100 V), never from `gen_sch_e.py`'s note on C46 and C59; the held Yageo sheet read for that
+part number and for R227's capacitors (COVERED, out 11's last block); the timer envelope unchanged; R227's stacked energy 4.369 mJ
+(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |

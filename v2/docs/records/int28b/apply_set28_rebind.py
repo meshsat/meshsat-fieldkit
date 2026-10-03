@@ -186,7 +186,7 @@ def main(argv):
         hit = _cc.CLAIM.search(note)
         if hit:
             refuse("the entry for %s carries the claim word %r, which the ENV-002 screen would count on the trace page" % (rid, hit.group(0)))
-        for ch in ("—", "–"):
+        for ch in ("\u2014", "\u2013"):
             if ch in note:
                 refuse("the entry for %s carries a dash" % rid)
         i, j = rec_span(out, rid)

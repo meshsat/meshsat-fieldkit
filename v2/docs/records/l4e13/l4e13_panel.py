@@ -61,11 +61,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "435d515f6184f7bdb707cea7573a6274b9b3b3c825d587a0dc550f44bd67fe07"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9"),
     "env": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
     "replay_py": ("v2/docs/records/l4e/l4e_replay.py", "3de985e2e3e06453d2c9d576311c1f39935149ac1e9b7cff0431a40933bb8734"),
     "replay_out": ("v2/docs/records/l4e/l4e_replay.out", "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d"),
-    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "058b8e76aaa6fdd1e49e9c18270a74880ff10dee22a095bfee2f1df58663aa38"),
+    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "533afd197355ac37f7c277b7db0ce2df9adfd1b7197eb510e24f90413640c3da"),
     "array_calc": ("v2/docs/records/a1solar/array_calc.py", "fdeaf63f525f1d7f4ca54502083369cfd4f322a41207ff0a52582c27038fd1e4"),
     "spr_ds": ("v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
                "da06e5e2d9bca625f54a756105e009950a2352e4764868853cb26921372ff605"),

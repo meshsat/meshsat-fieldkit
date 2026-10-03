@@ -319,9 +319,10 @@ board_to_board:
         with the fans on U22's +12V_FAN (L4-E11 18b at b929d8be, DRAFTED, PROVISIONAL)"}
     FAN1_SW_FAN2_SW: {reset: "off: the gates held low by the RP2040's pad pull-downs (IF-E-FANS default_state; a discrete pull-down
         recommended, HF-F07)", default: "off until the sensor controller boots and its thermal policy runs them", cable_out: "n/a:
-        the fans' own leads at J_FAN1 and J_FAN2", start: "one at a time with a PWM ramp, never both within 1 s and never while U12
-        starts, under U42's least limit 1.471 A (DRAFTED under (B1)); under L4-E11 section 18 (b929d8be, PROVISIONAL) Q9 and Q10 are
-        open-drain drivers of four-wire fans on +12V_FAN, the ramp a PWM-duty ramp, never while U12 or U22 starts", firmware:
+        the fans' own leads at J_FAN1 and J_FAN2", start: "one at a time, each by a PWM-duty ramp into the fan's PWM input, never
+        both within 1 s and never while U12 or U22 starts (E11-39, L4-E11 18c), the dock branch under U42's least limit 1.4713 A
+        with 0.1504 A of room (18b); Q9 and Q10 open-drain drivers of the four-wire fans' PWM inputs on +12V_FAN (L4-E11 section 18
+        at b929d8be; DRAFTED R-177, R-181; PROVISIONAL: the start current NOT READ, E11-35, R-179)", firmware:
         "FW-E07, FW-E11, FW-E10 (full speed in H1 and H2)",
         source: "L4-E11 17a (E11-39); L4-E9 4f"}
     U22_RUN_12V_FAN: {reset: "DRAFTED by L4-E11 section 18 at b929d8be (not in this tree; PROVISIONAL until its release): U22's RUN
@@ -695,34 +696,45 @@ board_to_board:
       pin1_vsys_dock: "SET 27, the selected architecture A1 under D-06 (L4-E11 15a, 16e, 17a; L4-E9 1d IF-06; DRAFTED,
         release-guarded, not applied: R-157 board A, R-177 board E, R-181 the eFuse, R-178 this contract's pins map by L4-E11's
         apply_pcb_interfaces_dock.py, applied together): pin 1 leaves GND for VSYS_DOCK, board A's VSYS (the net VBAT) behind the
-        eFuse U42 TI TPS16630PWPR, to board E's VSYS_E, the feed of board E's auxiliary domain (U12, C31, the mixer fans, D7 and D8),
-        1.0 A declared (U12 0.8 A, the fans 0.1 A each), one Preci-Dip 813 contact at 28.6 percent of its 3.5 A; the pins map above
+        eFuse U42 TI TPS16630PWPR, to board E's VSYS_E, the feed of board E's auxiliary domain (U12, C31 and U22, whose regulated
+        12.0 V rail +12V_FAN feeds the mixer fans; D7 and D8 removed: R-177, DRAFTED),
+        1.3208 A declared (U12 0.8 A, U22's input 0.5208 A at the floor with both fans at full speed; L4-E11 18b, MODELED, DRAFTED
+        R-177), one Preci-Dip 813 contact at 37.7 percent of its 3.5 A; the pins map above
         stays the committed netlists' (pin 1 GND) until the drafts apply, which is what check_contracts.py reads. LEVELS: VSYS
-        9.688 to 17.375 V (L4-E11 15d; MAKER rows of SLUSE65A, INFERRED at the corners); at the supplement floor 9.688 V with 1.0 A
-        the drop is 0.1486 V (U42 53 mOhm, the 813 path 43.4 mOhm, the return's shift), so VSYS_E at least 9.539 V, 11.905 V at
-        VSYS_MIN's start (L4-E11 16e; INFERRED). CURRENT AND PROTECTION: U42's I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm 0.1
+        9.688 to 17.375 V (L4-E11 15d; MAKER rows of SLUSE65A, INFERRED at the corners); at the supplement floor 9.688 V with the
+        declared 1.3208 A (L4-E11 18b) the drop is 0.1795 V (U42 53 mOhm, the 813 path 43.4 mOhm, the return's shift), so VSYS_E
+        9.508 V at the floor and at least 9.494 V at U42's least limit (L4-E11 18b; INFERRED); VSYS_E at VSYS_MIN's start is not
+        restated by 18b (16e's value rests on the branch current 18b replaced). CURRENT AND PROTECTION: U42's I(OL) 1.4713 to 1.8018
+        A at R(ILIM) 11.0 kOhm 0.1
         percent (between TI's printed 9 and 30 kOhm rows, each over TJ -40 to 125 C: INFERRED from MAKER rows, SLVSET9G), a
         regulated steady setting and not an instantaneous ceiling; in a sustained overload the contact at most 1.802 A, 51.5
         percent of 3.5 A; current limiting at most 202 ms, then off 500 to 800 ms and a retry (MODE to GND); a short applied while
-        on at most 566 A for at most 4.5 us (a ceiling, no inductance credited; INFERRED), IN at most 41.1 V with U42 within 20 nH
-        of C236 (a layout requirement), OUT's undershoot against -0.3 V open (Q-TI-18); C238 1 uF at IN, C239 0.1 uF at OUT, D23
+        on: U42 off within 2.2 to 4.5 us under I(SCP) (MAKER rows, from a threshold printed typical only); its peak is NOT BOUNDED
+        by printed data: 566 A for 4.5 us (1.441 A2s) is a resistive extrapolation, not a bound (TI prints RON at 0.6 to 6 A only),
+        and E11-38's test target for the recorded peak, a reading over it revising L4-E11 17a (PROVISIONAL: E11-38, R-184); IN at
+        most 41.1 V by TI's Equation 14 at that extrapolation with U42 within 20 nH of C236 (a layout requirement), OUT's undershoot
+        against -0.3 V open (Q-TI-18); C238 1 uF at IN, C239 0.1 uF at OUT, D23
         B540C-13-F from GND to OUT. DEFAULT AND CABLE-OUT: U42 draws at most 1.7 mA from VSYS; with the stack lifted or pin 1 open
         board E's controller is unpowered, which board A reads on HOT-R1 as the detector lost (a detected state); under (B1) the
         held pack feeds no kit load through this pin (the source carries VSYS_E; the held pack's quantified drain 0.1408 mA, the
-        bench at most 1 mA, E11-31). THE FANS' START RULE (E11-39, FW-E11): against U42's least limit 1.471 A with U12's 0.8 A,
-        both fans together at most 0.3356 A each, one at a time at most 0.5713 A (the other running at 0.1 A), VSYS_E at the least
-        limit at least 9.494 V at the supplement floor, so the fans must start at or under it; firmware starts them one at a time
-        with a PWM ramp, never both within 1 s and never while U12 starts (R-188). STATE: sustained-overload remedy drafted, fault
-        qualification open (L4-F03, E11-38, R-184): PROVISIONAL, invalidated by a limit read outside 1.471 to 1.802 A, a fan or U12
-        current over 1.471 A (E11-35, R-179: no fan is named), or the hard short's qualification failing (E11-38); the ground
+        bench at most 1 mA, E11-31). THE FANS' START RULE (E11-39, FW-E11; L4-E11 18b, which withdraws 17a's per-fan currents on
+        VSYS_E): with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start
+        (PROVISIONAL: the start current NOT READ, E11-35, R-179), and VSYS_E at U42's least limit at least 9.494 V at the supplement
+        floor; firmware starts them one at a time,
+        each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (E11-39, R-188;
+        L4-E11 18c; PROVISIONAL: the start current NOT READ, E11-35, R-179; U42's limit, E11-38). STATE: sustained-overload remedy
+        drafted, fault
+        qualification open (L4-F03, E11-38, R-184): PROVISIONAL, invalidated by a limit read outside 1.471 to 1.802 A, a fan's start
+        read over U42's room at the declared branch (E11-35, R-179: the fans are named by Layer 7's D-18, Sanyo Denki 9WL0612P4H001
+        at 10.8 to 13.2 V, v2/docs/records/l7pwr/L7-FANS-AND-TH1.md; their start current NOT READ), or the hard short's
+        qualification failing (E11-38); the ground
         return keeps seven 813 contacts (2.238 A each at the 32.1 A coincidence, 2.406 A with one open, 79.3 C at the 51 C air;
         L4-E11 15a, INFERRED on w3de's model). ROUND 2 (record l5r2; L4-E11 section 18 at b929d8be, DRAFTED, not in this tree,
         PROVISIONAL until its release): the fans leave VSYS_E for the regulated +12V_FAN rail from U22 (LTC3115EFE-1), so the branch
         is declared 1.3208 A (U12 0.8 A, U22 0.5208 A at the floor with both fans at full speed), 89.8 percent of U42's least
         limit 1.4713 A with 0.1504 A in hand, R228 (renamed from R221 by L4-E11 at 787e7b15) kept at 11.0 kOhm, the contact at
-        37.7 percent of 3.5 A, VSYS_E 9.508 V at the floor; the start rule above (0.5713 A and 0.3356 A on VSYS_E) is superseded
-        by section 18b: with one fan running and U12 on, U42 leaves 0.1504 A of room, 1.21 W at the rail for the other fan's
-        start, the start current NOT READ (E11-35)"
+        37.7 percent of 3.5 A, VSYS_E 9.508 V at the floor; the start rule above is section 18b's (17a's per-fan currents on VSYS_E
+        withdrawn; restated in place for set 28 by record l5pwr, L5-F11)"
       vin_raw: {voltage: "as declared 9 to 36 V (v_work 36 V). Layer 4 (L4-E9 1d IF-06; LH-03): solar 7.378 V (the corrected knee's
                   certain HIZ, L4-E9 R-03, a specification) to 30.15 V (the tracker's raised ceiling, R10 232 k; L4-E5, DRAFTED);
                   vehicle 9 to 36 V at the plug (VIN_RAW 8.148 V at 5.983 A from a 9.00 V plug; INFERRED); at most 41.22 V (the
@@ -1240,9 +1252,13 @@ board_to_board:
         31.06 V and falling at 27.07 V or more (aged), Q13 CSD19532Q5B in the return against a reversed panel (CONDITIONAL on its
         leakage above +25 C, printed at 25 C only), D11 SMCJ40CA at the port, the port bank C131, C132, C135, C136 (Samsung
         CL32B225KCJSNNE), C133 and C134 (CL32B106KBJNNNE), R97 28.0k, C126 330 pF; a stiff 36 V source stepping on with the
-        guard already on: every rating with its margin only from a source loop of at least 3.30 uH (U5 0.2396 V of +-0.240 V, a
-        DESIGN TARGET), NOT under it (at 1.00 uH U5 0.5287 V): PROVISIONAL, NOT CLOSED (B6-ENG-1: R-180, R-186 or R-187; L4-E7's
-        round 3 on B6 is running, and its result re-reads this sentence); the band between 25 V and the cut-off a residual for
+        guard already on: D-10's guard-on case is OPEN since L4-E7's round 5, an absolute-rating violation at a connector fault, not
+        a missed target: round 2's 3.30 uH reference loop is withdrawn as a passing floor and no loop is claimed to pass; at that
+        loop U5's pins, the complete budget, read -0.3021 to +0.2591 V at a fault at the connector, past the -0.3 V absolute
+        maximum, and -0.2884 to +0.2486 V at the lead's far end, against the +-0.240 V design target; at 1.00 uH U5 0.5858 V; the
+        short-circuit trip or the OV path turns Q12 off at most 62.7 A within 11.4 us (MODELED, L4-E7 round 5; L4-E9 4e and 8a D-10;
+        DRAFTED R-173): PROVISIONAL, OPEN (B6-ENG-1, the engineer's stage question: R-180 an input only, R-186 Analog Devices'
+        answer, R-187 does not hold; its wider form B6-ENG-2, R-189, D-16); the band between 25 V and the cut-off a residual for
         layer 8 (R-175)"
       grounding: "GND_V is board E's vehicle return; GND-002's chassis bond is not drawn (ARCHITECTURE.md 6.5); since 3 October
         2026 it is DRAFTED on board A as IF-A-CHASSIS (record l8gnd at 226e9143, R229 the one bond; PROVISIONAL until its
@@ -1271,13 +1287,15 @@ board_to_board:
         VSYS_UVP recovery); the solar backstop acts on SWEN in hardware and reports to no controller (L4-E7R: no flag line)"
       bench: "HW-FW-CONTRACT.md V-E14 (REQ-015: the reversed supply, the OV trip, the start from 9.00 V through the interconnect at
         its resistance ceiling; LH-08), V-E15 (REQ-016: the backstop's SWEN fall inside 3.0468 to 3.7408 A at 25 V; LH-09), V-E16
-        (the solar guard's six rows, R-176; row 3 a pass only for a source loop at or over 3.30 uH until B6-ENG-1 is decided:
-        PROVISIONAL), V-A08 (the source steps: the breaker never trips, VIN_RAW never under 7.24 V; R-135), R-85 (the source-only
+        (the solar guard's six rows, R-176 as L4-E7's round 5 restated them: row 2 PV_F at most 85 V; row 3 Q12 off at most 63 A,
+        within 12 us, and no loop is claimed to pass (round 5), B6-ENG-1 decides: PROVISIONAL, OPEN, B6-ENG-1 and B6-ENG-2), V-A08
+        (the source steps: the breaker never trips, VIN_RAW never under 7.24 V; R-135), R-85 (the source-only
         start at 9.00 V), M2 CS101 on the solar lead (R-122)"
       l4_defects: "L4-E9's defects at this interface (L4-POWER-ARCHITECTURE.md 8a): D-06 resolved in design (the interconnect, L4-E11
         6, CONDITIONAL on the makers' ratings); D-07 and D-09 superseded (the LM5069 replaced, R-123); D-10 (a stiff 36 V source on
-        the solar port) and D-11 (a reversed panel) addressed in drafts by the guard (R-173), D-10's guard-on case NOT CLOSED
-        (B6-ENG-1), D-11 CONDITIONAL on Q13's hot leakage; D-12 (CS116 and CS115 on the panel lead) resolved in the drafted entry,
+        the solar port) and D-11 (a reversed panel) addressed in drafts by the guard (R-173), D-10's guard-on case OPEN (L4-E9 8a:
+        an absolute-rating violation at a connector fault, no loop claimed to pass; PROVISIONAL: B6-ENG-1, B6-ENG-2), D-11
+        CONDITIONAL on Q13's hot leakage; D-12 (CS116 and CS115 on the panel lead) resolved in the drafted entry,
         CS115 CONDITIONAL with the block on (R-174); the band between 25 V and the cut-off the residual R-175"
       findings: [R8E-N01]
       serves: [NEED-05]

@@ -48,12 +48,12 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 REC = "v2/docs/records/l4e11"
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "435d515f6184f7bdb707cea7573a6274b9b3b3c825d587a0dc550f44bd67fe07"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "e5b4d65046f4ace5e0c4bf482105f95466ac967d6bb2ccf839a4686708613dc6"),
-    "panel": ("v2/docs/PANEL.md", "3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6"),
-    "assembly": ("v2/docs/ASSEMBLY.md", "942d562edd128759c52ee976f7255862f7a2ef78b5fd76af0a2e223f328e64cd"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "d683b31a0ec5a9a4f34036c54a708f868cd8abd4d320c280e81db435fc5001d4"),
+    "panel": ("v2/docs/PANEL.md", "9fd2b4e3c6edf86e482256e81f7b924de13d2f010c2124a02bfbd688552ea9cc"),
+    "assembly": ("v2/docs/ASSEMBLY.md", "29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed"),
     "gen_a": ("v2/ecad/tools/gen_sch_a.py", "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b"),
     "gen_e": ("v2/ecad/tools/gen_sch_e.py", "f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186"),
     "gen_p": ("v2/ecad/tools/gen_sch_p.py", "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3"),
@@ -113,7 +113,7 @@ PINS = {
     "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "677e7833de68f90fdc4a69aa187b368ff537ec39515005923d42961dd6f5e7f3"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "a760101cde41633adb8baa9eae198404857637622d6a66708d7feed247539e3c"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",

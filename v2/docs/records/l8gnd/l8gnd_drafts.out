@@ -6,13 +6,13 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 14ea032a7fdd86ac v2/ecad/tools/pcb_rules.yaml
-9ec50ccfae3b70a0 v2/ecad/tools/pcb_interfaces.yaml
+4784a61af0840534 v2/ecad/tools/pcb_interfaces.yaml
 119ca354c7ff83bc v2/docs/GROUNDING-AND-SHIELDS.md
-1c211e467d81b8b7 v2/docs/HW-FW-CONTRACT.md
+d683b31a0ec5a9a4 v2/docs/HW-FW-CONTRACT.md
 c883f948f3221e74 v2/docs/ARCHITECTURE.md
 6cb7b241cb84d729 v2/docs/CONOPS.md
 d84e1e9c22d5bed7 v2/docs/handover/LAYER-STATUS.md
-ac54ae6acd3c5eb1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+a760101cde41633a v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 2a9d80931a0bed4b v2/vendor/cluster/ksz989x-hw-design-checklist.pdf
 d6d6b918dec76c7b v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf
 76b85b47d0bd9f46 v2/vendor/pulse/pulse-h5007nl.pdf
@@ -34,7 +34,7 @@ ef2e4637284a4cbb v2/docs/records/s117/apply_gen_sch_a_s117.py
 6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-ec651fa980401b44 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
 bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
 347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py

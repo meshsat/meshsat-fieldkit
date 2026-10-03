@@ -558,9 +558,13 @@ def t_the_part_a_page_agrees_with_the_output():
     for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "569.8", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
                 "6.346", "6.458", "39.04", "43.92", "39.71", "43.18", "42.4 V",
                 "4.7429", "5.06", "0.777", "0.675", "94.3", "29.14", "2.05", "17.77", "33.77", "2.879", "1.731", "3.025", "623.9", "22.412",
-                "13.131", "11.871", "2.035", "3.814", "3.167", "4.189", "8.976"):
+                "13.131", "11.871", "2.035", "3.814", "3.167", "8.976"):
         assert fig in sec, "the output lacks %s" % fig
         assert fig in page, "the part A page lacks %s" % fig
+    A = m_ = _M()
+    A = m_.partA(_C["F"], _C["D"], m_._C_TEXT)
+    for fig in (m_.fmt(round(A["r227_hi_mj"], 3)), m_.fmt(round(A["r227_tol_mj"], 3))):   # R227's envelope, read per part (round 6)
+        assert fig in sec and fig in page, "R227's envelope %s is not on both" % fig
     for part in ("CSD19532Q5B", "0997010.WXN", "C2903482", "R227"):
         assert part in page and part in sec
     for sha in ("437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e", _M().PINS["csd19532"][1], _M().PINS["ina226"][1]):
@@ -786,7 +790,7 @@ def t_b3_r227_transients_are_bounded_for_every_required_event():
         t = open(p, encoding="utf-8").read()
         assert "R-65 extended" not in t and "R-65's sweep extended" not in t, "%s still promises an R-65 extension" % os.path.basename(p)
     assert "mJ NOMINAL" in _C["text"] and "UNRESOLVED" in _C["text"], "R227's energy labelled nominal, its maximum unresolved"
-    assert A["tr"][0][5] * A["c_hi_f"] > A["tr"][0][5] * (1 + A["c_tol"]) > A["tr"][0][5]
+    assert A["r227_hi_mj"] > A["r227_tol_mj"] > A["tr"][0][5], "R227's stacked envelope above its tolerance alone, above nominal"
 
 
 def t_b4_source_only_operation_is_an_unresolved_choice():
@@ -2092,3 +2096,101 @@ def t_no_dashes_and_no_claim_words_in_the_record():
             t = " ".join(t.split()).replace(" ".join(_M().STATUS.split()), "")
             m = CLAIM.search(re.sub(r"\bGUARANTEED\b", "", t))
             assert not m, "%s carries a claim word: %r" % (os.path.relpath(p, ROOT), m.group(0))
+
+
+def _fill_by_lcsc_fill(lc, value, footprint):
+    """lcsc_fill.py's own loop, written again here from its source (the table literal and `re.match(vre, Comment) and fsub in
+    Footprint`, first match wins), and the comment of the line that carries the matching key."""
+    tree = ast.parse(lc)
+    node = [st.value for st in tree.body if isinstance(st, ast.Assign) and isinstance(st.value, ast.Dict)
+            and any(isinstance(t, ast.Name) and t.id == "MAP" for t in st.targets)][0]
+    table = dict(zip([ast.literal_eval(k) for k in node.keys], [(ast.literal_eval(v), v.lineno) for v in node.values]))
+    lines = lc.split("\n")
+    for (vre, fsub), (code, ln) in table.items():
+        if re.match(vre, value) and fsub in footprint:
+            return code, lines[ln - 1].split("#", 1)[1] if "#" in lines[ln - 1] else ""
+    return None, ""
+
+
+def t_c5s_fitted_part_is_read_from_the_authority_that_fills_it():
+    """Round 6 (set 28's integration): C5's code and part number are what lcsc_fill.py gives C5's value on C5's land, read from
+    the line that fills it, never typed and never taken from gen_sch_e.py's note on another part; the held Yageo sheet covers that
+    part number (its rated-voltage digit read from the ordering code), and a part number it does not cover reads INCONCLUSIVE."""
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    lc = m._C_TEXT["lcsc"]
+    ge = m._C_TEXT["gen_e"]
+    # kisch.py's c(): the default footprint key the record names for a call that passes none
+    kisch = ast.parse(open(os.path.join(TOOLS, "kisch.py"), encoding="utf-8").read())
+    cdef = [n for n in kisch.body if isinstance(n, ast.FunctionDef) and n.name == "c"][0]
+    names = [a.arg for a in cdef.args.args]
+    dflt = dict(zip(names[len(names) - len(cdef.args.defaults):], [ast.literal_eval(d) for d in cdef.args.defaults]))
+    assert dflt["fp"] == m.KISCH_C_DEFAULT_FP and dflt["lcsc"] == ""
+    # the authority: lcsc_fill.py's loop on C5's value and land gives the record's code; the line's comment names its part number
+    code, com = _fill_by_lcsc_fill(lc, A["c5_value"], A["c5_fp"])
+    assert code == A["c5_code"] and not A["c5_own"], "C5's code is not what lcsc_fill.py fills"
+    assert ("YAGEO %s" % A["c5_mpn"]) in com, "C5's part number is not the one the filling line names"
+    assert A["c5_value"].startswith("100n") and "C_0603" in A["c5_fp"]
+    # the part number is never typed: it appears in the script only as a fixture of this round's history sentence, not in a read
+    src = open(SCRIPT, encoding="utf-8").read()
+    body = src.split("def partA(")[1].split("def partA_lines(")[0]
+    assert A["c5_mpn"] not in body and A["c5_code"] not in body and "YAGEO CC" not in body, "partA types a part"
+    # gen_sch_e.py's DVDD note is not an input of C5's reading: without it, the same part
+    ge2 = re.sub(r"YAGEO CC0603\w+, LCSC C\d+", "a 100 nF part", ge)
+    assert ge2 != ge
+    v2, k2, own2, _d2 = m.gen_cap_call(ge2, "C5")
+    assert m.fill_reading(lc, v2, m.gen_fp_table(ge2)[k2], own2, [("gen_sch_e.py", ge2)])["mpn"] == A["c5_mpn"]
+    # the sheet covers the part number: its rated-voltage digit read from the ordering code, the 100 V the fill line's comment states
+    rd = A["c5_ya"]
+    assert rd["verdict"] == "COVERED" and not rd["missing"]
+    vd = re.fullmatch(r"CC\d{4}[A-Z][A-Z]X7R([0-9A-Z])BB\d{3}", A["c5_mpn"]).group(1)
+    assert ("%s = %s V" % (vd, m.fmt(rd["volts"]))) in rd["said"]
+    assert re.search(r"YAGEO %s, [\d.]+ [pnu]F (\d+) V" % A["c5_mpn"], com).group(1) == m.fmt(rd["volts"]), "the sheet's digit and the line's stated voltage differ"
+    assert (A["c_tol"], A["c_temp"], A["c_endur"]) == (rd["tol"], rd["temp"], rd["endur"]) and rd["class"] == "general"
+    # the timer envelope is the three figures only
+    assert abs(A["c_hi_f"] - (1 + rd["tol"]) * (1 + rd["temp"]) * (1 + rd["endur"])) < 1e-12
+    # a part number the sheet does not cover is INCONCLUSIVE, never a substitute
+    ya = m.pdf_text("yageo")
+    for bad in ("CC0603KRX7RYBB104", "CC0603KRX7R0BB105", "GRM188R72A104KA35", None):
+        r = m.yageo_cc_reading(bad, ya)
+        assert r["verdict"] == "INCONCLUSIVE" and r["missing"] and "endur" not in r, bad
+    lc_bad = lc.replace("YAGEO %s" % A["c5_mpn"], "a 100 V part", 1)
+    assert lc_bad != lc and m.fill_reading(lc_bad, A["c5_value"], A["c5_fp"], "", [])["mpn"] is None
+    # no file of the record names C14663 or the 50 V part for C5
+    for p in (OUT, PAGE, REG, os.path.join(REC, "README.md"), os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md")):
+        t = " ".join(open(p, encoding="utf-8").read().split())
+        for s in re.finditer(r"C5 is (C\d+) \((?:YAGEO|Yageo) (CC\w+)", t):
+            assert (s.group(1), s.group(2)) == (A["c5_code"], A["c5_mpn"]), "%s names %s for C5" % (os.path.basename(p), s.group(0))
+        assert not re.search(r"\bC5\b[^.;|]{0,40}\bC14663\b", t), "%s names C14663 for C5" % os.path.basename(p)
+
+
+def t_r227s_capacitors_take_their_own_class():
+    """Round 6: the capacitors behind R227 are read from board A's netlist and filled by lcsc_fill.py's rule; each one's endurance
+    change is its own product class's on the held sheet, and the stacked envelope is the sum of the parts' own envelopes."""
+    m = _M()
+    A = m.partA(_C["F"], _C["D"], m._C_TEXT)
+    parts = A["r227_parts"]
+    assert len(parts) == 4 and abs(sum(p["uf"] for p in parts) - A["poe_c_uf"]) < 1e-9
+    na = m._C_TEXT["net_a"]
+    for p in parts:
+        rd = p["rd"]
+        assert rd["verdict"] == "COVERED"
+        mc = re.search(r'\(comp \(ref "%s"\)\s*\(value "([^"]+)"\)\s*\(footprint "([^"]+)"\)\s*\(fields(.*?)\)\s*\(libsource' % p["ref"], na, re.S)
+        own = re.search(r'\(field \(name "LCSC"\) "([^"]+)"\)', mc.group(3))
+        if own:
+            assert p["code"] == own.group(1), "a part's own code wins"
+        else:
+            assert p["code"] == _fill_by_lcsc_fill(m._C_TEXT["lcsc"], mc.group(1), mc.group(2))[0]
+        pf = rd["pf"]
+        big = pf >= 1e6
+        assert rd["class"] == ("high capacitance" if big else "general"), (p["ref"], rd["class"])
+        assert abs(p["hi"] - (1 + rd["tol"]) * (1 + rd["temp"]) * (1 + rd["endur"])) < 1e-12
+    gen = [p for p in parts if p["rd"]["class"] == "general"]
+    high = [p for p in parts if p["rd"]["class"] == "high capacitance"]
+    assert gen and high and high[0]["rd"]["endur"] > gen[0]["rd"]["endur"], "the sheet's two endurance figures are kept apart"
+    dv = A["tr"][0][3]
+    assert abs(A["r227_hi_mj"] - 0.5 * sum(p["uf"] * p["hi"] for p in parts) * 1e-6 * dv ** 2 * 1e3) < 1e-12
+    sent = _C["text"].split("the capacitors are K parts (each read at the end of this section):")[1].split("lowers an X7R's")[0]
+    for p in parts:
+        assert any(p["ref"] in l and ("%s, YAGEO %s" % (p["code"], p["mpn"])) in l for l in sent.split("\n")), "%s's own part is not named" % p["ref"]
