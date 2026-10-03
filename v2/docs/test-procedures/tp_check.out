@@ -179,14 +179,14 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
   - TP-SOLAR: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
 
 5. The bring-up page and its inputs
-10cfa9d209c44b89 the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
+df3bc1126487559d the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
   PROPOSED mark: present; the drafts statement: present
   boards: A, B, C, D, E, E5, P, each with its seven subsections
   quotes: 14 table, 10 text, each checked against its source
   cross-references: 14 paths from v2/, all present
   register rows named in the drafts and hand-off tables: 77, all exist
   the generated block under the marker starts with the renderer's header: yes
-  TBD: 7
+  TBD: 8
     - owed by R-51: board A's quiescent draw with every switched load off, which no record itemizes
     - owed by R-51: board B's quiescent draw with every enable off
     - owed by R-51: board C's quiescent draw
@@ -194,10 +194,11 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
     - owed by R-13: the ceiling with R10 as drawn
     - owed by R-51: board E's auxiliary domain with the fans off
     - owed by R-45: the insulation test voltage for the 64.5 V conductors, which the records give as a distance only
+    - owed by R-51: the gauge's and the secondary protector's own draw from the stack, which no record in this tree states (the 0.
   input l8gnd-L8-GND002-SLOTEN-226e9143.md: fnd/l8gnd at 226e9143, v2/docs/records/l8gnd/L8-GND002-SLOTEN.md; sha256 1e92b0d8f66c2b6c verified
   input l8r2-L8R2-KNOWN-DEFECTS-a441651a.md: fnd/l8r2 at a441651a, v2/docs/records/l8r2/L8R2-KNOWN-DEFECTS.md; sha256 3a6daaeef3fa3b46 verified
   input l5r2-pcb_interfaces-6902db8f.yaml: fnd/l5r2 at 6902db8f, v2/ecad/tools/pcb_interfaces.yaml; sha256 4784a61af0840534 verified
   input l5r2-HW-FW-CONTRACT-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/HW-FW-CONTRACT.md; sha256 e5b4d65046f4ace5 verified
   input l5r2-L5-INTERFACES-R2-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/records/l5r2/L5-INTERFACES-R2.md; sha256 818e348940ecd87a verified
 
-RESULT: ALL PASS (10 procedures, 108 quotes, 16 TBDs; the bring-up page with 7 TBDs)
+RESULT: ALL PASS (10 procedures, 108 quotes, 16 TBDs; the bring-up page with 8 TBDs)

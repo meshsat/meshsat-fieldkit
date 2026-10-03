@@ -618,7 +618,8 @@ approach (II), after the owner's approval. Open items that the bring-up meets: t
 
 1. **On a cell simulator, never on cells first:** a four-channel cell simulator on J_CELL and the stack leads, each channel at 3.6 V
    (proposal: a mid-charge cell), current-limited; the thermistor inputs on fixed resistors standing for 25 C (proposal). Stage 1;
-   the current is the gauge's own draw (the pack's monitor 0.1398 mA, IF-PE-PACK, measured on the kit side).
+   the expected current is TBD (owed by R-51): the gauge's and the secondary protector's own draw from the stack, which no record in
+   this tree states (the 0.1398 mA of IF-PE-PACK is the kit-side monitor's draw on a held pack, not board P's own).
 2. **The gauge's SMBus** read from a bench host at 100 kHz: the device answers; the image is written (rule R-d: PCHG_COMM 1 and the SUV
    check); the host watchdog HWD set to 10 s by an explicit write (FW-E01).
 3. **The protections on the simulator:** each channel stepped over COV and under CUV (2.50 V a cell); OCC 5 A and OCD1 20 A for 2 s
