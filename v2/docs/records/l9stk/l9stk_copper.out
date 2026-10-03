@@ -1,0 +1,277 @@
+l9stk_copper: the pack path's copper on boards A and E, on its basis (record l9stk, MESHSAT-1357). Desk arithmetic on
+committed files: nothing was built, routed, measured or bought, and no figure below is a measurement.
+
+0. PINS (path  sha256/16)
+   board_a        v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb  sha256 58e26c67987b1daa
+   board_e        v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb  sha256 a462ac2620b9b8d3
+   chain          v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
+   charger_draft  v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 d857a70256d1c77e
+   dc_drop        v2/ecad/tools/dc_drop.py  sha256 0b28f57e0a09a385
+   decisions      v2/ecad/tools/pcb_decisions.yaml  sha256 823a6b32baf41481
+   ecss_70_12c    v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md  sha256 6a8ae167b317221c
+   fusing         v2/docs/records/l7pwr/inputs/fusing-current-sources-2026-10-03.md  sha256 e1cc42fbec4a21d4
+   gauge_image    v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md  sha256 6726f23778f48e10
+   gen_sch_a      v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
+   gen_sch_e      v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
+   l4e11_out      v2/docs/records/l4e11/l4e11_power.out  sha256 302a0e2c0583ffcd
+   l9pwr_out      v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt  sha256 a2fe27d3f2cf1ddf
+   lcsc_fill      v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
+   mini_297       v2/vendor/keystone/littelfuse-297-ficcorp.pdf  sha256 98a7e99bc5bbdf2a
+   pack_protection v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
+   power_thermal  v2/docs/feasibility/POWER-THERMAL.md  sha256 ad3ba27cef9e0f68
+   stackup_write  v2/ecad/tools/stackup_write.py  sha256 b55a3c0f58c805c2
+   stackups       v2/docs/records/l9stk/l9stk_stackups.py  sha256 8fa27c99625de81a
+   track_current  v2/ecad/tools/track_current.py  sha256 fd750e4dc429a790
+   via_current    v2/ecad/tools/via_current.py  sha256 92ed84ac1612fd54
+
+1. THE CURRENTS BY CLASS (each from its pinned source)
+   continuous: the pack's declared 10.0 A (pcb_pack_protection.yaml); the drafted states at the gauge's 10.0 V floor (record l9pwr
+     section 6, Layer 8's copy): the largest sustained PLAN 9.63 A (PS-BUSY), at HIGH 14.97 A (PS-BUSY); with the outlets PLAN 19.20 A (PS-BUSY plus both outlets);
+     above 10.0 A a sustained state is held by the shedding control (rv-pwr 9.3), so 10.0 A is the continuous design current
+   transient: every transmitter keyed, 18.0 A for at most 60 s (PWR-F12, D-11's key-down ended early above 18.0 A); the largest
+     key-down row at PLAN at 10.0 V 21.93 A (PS-ALLTX), held under 18.0 A by D-11's floors; the PA's key-on step 6.4 to 9.6 A at the pack
+     (POWER-THERMAL 7.3); the docking pulse 242.9 A peak with a 33.8 us time constant, once per docking (L4-E11 E11-30), I2t 0.9971 A2s
+   fault, the gauge working (PRIMARY-CONFIGURATION.md, the image): OCD1 20.0 A for 2 s; OCD2 24.0 A for 1 s; AOLD 30.0 A for 0.02 s; ASCD 55.6 A for 244 us
+     so 20.0 A may be held without a trip (OCD1 never trips below it)
+   fault, the gauge failed (the hardware backstop): the 25 A MINI blades in series (board P's F1, board E's F3, board A's F1;
+     Littelfuse 297): 110 % (27.50 A) holds 360000 s at least; 135 % (33.75 A) opens in 0.75 to 600 s; 200 % (50.00 A) opens in 0.15 to 5 s; 350 % (87.50 A) opens in 0.08 to 0.5 s; 600 % (150.00 A) opens in 0.03 to 0.1 s
+     typical I2t 625 A2s, cold 2.36 mOhm; F2 (Eaton SCF9550, board P) 30 A: 100 % for 1 h minimum, 200 % opens within 60 s, breaks 80 A
+     prospective fault 240 to 480 A (pcb_energy_chain.yaml PACK_CELLS)
+   the shore input: _VEH_T 6.15 A (the hot-swap's limit at VCL max) continuous; F1 10 A MINI: 110 % holds 360000 s; 135 % 0.75 to 600 s; 200 % 0.15 to 5 s; 350 % 0.08 to 0.5 s; 600 % 0.03 to 0.1 s
+     (L4-E11 section 6); a stiff source to 900 A, 93 A2s typical melting, the clearing I2t not printed; L4-E11's D-06 selection:
+     board E's copper from J_DCIN to F1 to the clamps at least 20 A continuous (a Layer 9 layout constraint)
+   VIN_RAW: declared 14.10 A (the hot-swap and the tracker at the 9 V floor); the tracker's minimum buck valley limit 13.8 A
+
+2. THE RULED METHOD AND THE CRITERIA
+   rating: track_current.conservative (decision 35: the most conservative of the three Annex D fits at each area), outer copper
+     at track_current.EXTERNAL_FACTOR 2.0, the rise bisected so the rating equals the current; widths by track_current.width_for_current
+     at its 10 K default; the fits' stated data: IPC-2152 to 30 A and 100 K, CNES to 8 A (ECSS-Q-ST-70-12C D.2, D.3)
+   adiabatic: Onderdonk's general form as records/l7pwr/inputs holds it, constants 234 and 33, copper melting 1083 C, from the
+     consolidation's +70 C mixed-air line; a timed event's rise is the smaller of its adiabatic and its steady rise
+   criteria (SESSION): the continuous load, the key-down, every gauge level and the blade's rating within the ruled 10 K (the rise
+     every rating in the energy chain carries); the backstop's window and the hard short at or under 125 C from the air line, the
+     blade's printed operating maximum (Littelfuse 297), the lowest printed limit of a part these bands join (the laminate's is NOT HELD);
+     and every fault's I2t under the copper's own fusing I2t
+
+3. THE SPLIT BETWEEN THE OUTER FACES (derived; copper's resistivity cancels)
+   through-hole at both ends: equal faces sit at one potential along the band, so each carries half and stitching moves nothing
+   a one-face part at one end: the part's face carries (Rb + Rv) / (2 Rb + Rv); at both ends (Rb + 2 Rv) / (2 Rb + 2 Rv), where Rb is
+     one face's band and Rv the transfer field (one barrel over n). Stitching along such a band moves current onto the part's face early
+     (that face sits lower all along), so the transfer barrels belong in a field at the part and nowhere between
+   one barrel of 0.4 mm drill, 18 um plating: 65.08 (board A, 1.5384 mm) and 67.11 (board E, 1.5862 mm) in rho per mm, as much as 34.3 mm
+     of a 14.60 mm 1 oz band
+   with no field (one barrel), the part's face of a 14.60 mm band carries: 0.89 at 5 mm, 0.82 at 10 mm, 0.73 at 20 mm, 0.65 at 40 mm, 0.59 at 80 mm
+   the field each one-face end needs for the part's face to carry at most 0.55 (one end / both ends), and the thermal count:
+     pack, board A          14.60 mm, 1.5384 mm board: 5 mm 30 / 60, 10 mm 15 / 30, 20 mm 8 / 15, 40 mm 4 / 8, 80 mm 2 / 4; thermal 14 (via_current.barrels_for at half the coordination current)
+     pack, board E          14.60 mm, 1.5862 mm board: 5 mm 31 / 62, 10 mm 16 / 31, 20 mm 8 / 16, 40 mm 4 / 8, 80 mm 2 / 4; thermal 14 (via_current.barrels_for at half the coordination current)
+     shore 20 A, board E    9.70 mm, 1.5862 mm board: 5 mm 21 / 42, 10 mm 11 / 21, 20 mm 6 / 11, 40 mm 3 / 6, 80 mm 2 / 3; thermal 12 (via_current.barrels_for at half the coordination current)
+     shore 10 A, board E    3.15 mm, 1.5862 mm board: 5 mm 7 / 14, 10 mm 4 / 7, 20 mm 2 / 4, 40 mm 1 / 2, 80 mm 1 / 1; thermal 6 (via_current.barrels_for at half the coordination current)
+     VIN_RAW, board E       5.12 mm, 1.5862 mm board: 5 mm 11 / 22, 10 mm 6 / 11, 20 mm 3 / 6, 40 mm 2 / 3, 80 mm 1 / 2; thermal 8 (via_current.barrels_for at half the coordination current)
+   on E7's placement CELL_F runs 5.65 mm from F3's pad to P_CP's land: 28 barrels at P_CP; the return 40.60 mm from J_BATT pin 1 to
+     P_CN: 4 barrels at P_CN
+   the inner planes (record l9stk's plane_share: one-dimensional, by cross-section, the internal fit over the plane's whole width),
+   and the plane's heating per square millimetre against the outer bands it relieves, and its current per 0.5 mm raster cell against
+   dc_drop's per-cell bar (the routed-board judge of PI-001):
+     board A, In1 and In4 beside the return, outer 12.26 mm a face; the screen's failing band 19.50 to 28.20 mm
+         20.0 mm: share 0.41, 5.18 A a plane against 5.18 (CNES) OVER; heating 0.43 of the bands'; 0.130 A a cell against 0.395
+         30.0 mm: share 0.52, 6.44 A a plane against 6.46 (CNES) holds; heating 0.43 of the bands'; 0.107 A a cell against 0.395
+         40.0 mm: share 0.59, 7.33 A a plane against 7.56 (CNES) holds; heating 0.43 of the bands'; 0.092 A a cell against 0.395
+         80.0 mm: share 0.74, 9.24 A a plane against 11.04 (CNES) holds; heating 0.43 of the bands'; 0.058 A a cell against 0.395
+        160.0 mm: share 0.85, 10.62 A a plane against 16.12 (CNES) holds; heating 0.43 of the bands'; 0.033 A a cell against 0.395
+     board E, In1 beside the return, outer 14.60 mm a face; the screen's failing band 13.50 to 200.00 mm
+         20.0 mm: share 0.23, 5.73 A a plane against 5.18 (CNES) OVER; heating 0.43 of the bands'; 0.143 A a cell against 0.395
+         40.0 mm: share 0.37, 9.32 A a plane against 7.56 (CNES) OVER; heating 0.43 of the bands'; 0.117 A a cell against 0.395
+         68.0 mm: share 0.50, 12.57 A a plane against 10.10 (CNES) OVER; heating 0.43 of the bands'; 0.092 A a cell against 0.395
+
+4. THE BAND FAMILIES: each class's rise on the governing face, and its final temperature from the +70 C air line
+   A1 6.72 mm a face, two 1 oz faces, even (l9stk's 18 A width): 6.72 mm, governing share 0.50, the face's fusing I2t 4158 A2s
+     continuous load (declared)                                   10.00 A held       load         steady 3.02    adiabatic -       -> 3.02    within 10 K
+     key-down, every transmitter (PWR-F12)                        18.00 A 60s        transient    steady 10.00   adiabatic 1382.68 -> 10.00   within 10 K
+     PA key-on step at the pack                                    9.60 A 60s        transient    steady 2.78    adiabatic 190.93  -> 2.78    within 10 K
+     held under the gauge's OCD1                                  20.00 A held       gauge        steady 12.39   adiabatic -       -> 12.39   OVER 10 K
+     gauge OCD2                                                   24.00 A 1s         gauge        steady 17.97   adiabatic 15.83   -> 15.83   OVER 10 K
+     gauge AOLD                                                   30.00 A 20ms       gauge        steady 28.30   adiabatic 0.48    -> 0.48    within 10 K
+     gauge ASCD                                                   55.60 A 244us      gauge        steady 113.76  adiabatic 0.02    -> 0.02    within 10 K
+     the blade's rating (the chain's check 3)                     25.00 A held       coordination steady 19.52   adiabatic -       -> 19.52   OVER 10 K
+     blade up to 135 % held                                       33.75 A held       backstop     steady 36.60   adiabatic -       -> 36.60   106.6 C, within 125 C
+     blade 135 to 200 %, at most 600 s                            50.00 A 600s       backstop     steady 89.38   adiabatic >9999   -> 89.38   159.4 C, OVER 125 C
+     blade 200 to 350 %, at most 5 s                              87.50 A 5s         backstop     steady -       adiabatic 8573.10 -> 8573.10 8643.1 C, OVER 125 C
+     blade 350 to 600 %, at most 0.5 s                           150.00 A 500ms      backstop     steady -       adiabatic 515.45  -> 515.45  585.4 C, OVER 125 C
+     blade over 600 % to 480 A, at most 0.1 s                    480.00 A 100ms      backstop     steady -       adiabatic 2012.54 -> 2012.54 2082.5 C, OVER 125 C
+     hard short, the blade's typical melting I2t                 480.00 A 2.71ms     short        steady -       adiabatic 17.22   -> 17.22   87.2 C, within 125 C
+     hard short, the gauge's ASCD                                480.00 A 244us      short        steady -       adiabatic 1.51    -> 1.51    71.5 C, within 125 C
+     docking pulse                                               242.90 A tau 33.8us pulse        steady -       adiabatic 0.03    -> 0.03    70.0 C, within 125 C
+   A2 11.95 mm on one 2 oz face (l9stk's 18 A width): 11.95 mm, governing share 1.00, the face's fusing I2t 52609 A2s
+     continuous load (declared)                                   10.00 A held       load         steady 3.04    adiabatic -       -> 3.04    within 10 K
+     key-down, every transmitter (PWR-F12)                        18.00 A 60s        transient    steady 10.00   adiabatic 218.58  -> 10.00   within 10 K
+     PA key-on step at the pack                                    9.60 A 60s        transient    steady 2.82    adiabatic 50.65   -> 2.82    within 10 K
+     held under the gauge's OCD1                                  20.00 A held       gauge        steady 12.38   adiabatic -       -> 12.38   OVER 10 K
+     gauge OCD2                                                   24.00 A 1s         gauge        steady 17.92   adiabatic 4.92    -> 4.92    within 10 K
+     gauge AOLD                                                   30.00 A 20ms       gauge        steady 28.16   adiabatic 0.15    -> 0.15    within 10 K
+     gauge ASCD                                                   55.60 A 244us      gauge        steady 98.35   adiabatic 0.01    -> 0.01    within 10 K
+     the blade's rating (the chain's check 3)                     25.00 A held       coordination steady 19.46   adiabatic -       -> 19.46   OVER 10 K
+     blade up to 135 % held                                       33.75 A held       backstop     steady 35.76   adiabatic -       -> 35.76   105.8 C, within 125 C
+     blade 135 to 200 %, at most 600 s                            50.00 A 600s       backstop     steady 79.31   adiabatic >9999   -> 79.31   149.3 C, OVER 125 C
+     blade 200 to 350 %, at most 5 s                              87.50 A 5s         backstop     steady -       adiabatic 579.44  -> 579.44  649.4 C, OVER 125 C
+     blade 350 to 600 %, at most 0.5 s                           150.00 A 500ms      backstop     steady -       adiabatic 111.94  -> 111.94  181.9 C, OVER 125 C
+     blade over 600 % to 480 A, at most 0.1 s                    480.00 A 100ms      backstop     steady -       adiabatic 273.72  -> 273.72  343.7 C, OVER 125 C
+     hard short, the blade's typical melting I2t                 480.00 A 2.71ms     short        steady -       adiabatic 5.34    -> 5.34    75.3 C, within 125 C
+     hard short, the gauge's ASCD                                480.00 A 244us      short        steady -       adiabatic 0.48    -> 0.48    70.5 C, within 125 C
+     docking pulse                                               242.90 A tau 33.8us pulse        steady -       adiabatic 0.01    -> 0.01    70.0 C, within 125 C
+   B1 12.26 mm a face, two 1 oz faces, even (25 A; through-hole ends): 12.26 mm, governing share 0.50, the face's fusing I2t 13844 A2s
+     continuous load (declared)                                   10.00 A held       load         steady 1.59    adiabatic -       -> 1.59    within 10 K
+     key-down, every transmitter (PWR-F12)                        18.00 A 60s        transient    steady 5.13    adiabatic 204.62  -> 5.13    within 10 K
+     PA key-on step at the pack                                    9.60 A 60s        transient    steady 1.47    adiabatic 47.93   -> 1.47    within 10 K
+     held under the gauge's OCD1                                  20.00 A held       gauge        steady 6.35    adiabatic -       -> 6.35    within 10 K
+     gauge OCD2                                                   24.00 A 1s         gauge        steady 9.20    adiabatic 4.67    -> 4.67    within 10 K
+     gauge AOLD                                                   30.00 A 20ms       gauge        steady 14.48   adiabatic 0.14    -> 0.14    within 10 K
+     gauge ASCD                                                   55.60 A 244us      gauge        steady 50.75   adiabatic 0.01    -> 0.01    within 10 K
+     the blade's rating (the chain's check 3)                     25.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     blade up to 135 % held                                       33.75 A held       backstop     steady 18.40   adiabatic -       -> 18.40   88.4 C, within 125 C
+     blade 135 to 200 %, at most 600 s                            50.00 A 600s       backstop     steady 40.90   adiabatic >9999   -> 40.90   110.9 C, within 125 C
+     blade 200 to 350 %, at most 5 s                              87.50 A 5s         backstop     steady 127.51  adiabatic 533.60  -> 127.51  197.5 C, OVER 125 C
+     blade 350 to 600 %, at most 0.5 s                           150.00 A 500ms      backstop     steady -       adiabatic 105.47  -> 105.47  175.5 C, OVER 125 C
+     blade over 600 % to 480 A, at most 0.1 s                    480.00 A 100ms      backstop     steady -       adiabatic 255.49  -> 255.49  325.5 C, OVER 125 C
+     hard short, the blade's typical melting I2t                 480.00 A 2.71ms     short        steady -       adiabatic 5.07    -> 5.07    75.1 C, within 125 C
+     hard short, the gauge's ASCD                                480.00 A 244us      short        steady -       adiabatic 0.45    -> 0.45    70.5 C, within 125 C
+     docking pulse                                               242.90 A tau 33.8us pulse        steady -       adiabatic 0.01    -> 0.01    70.0 C, within 125 C
+   B2 14.60 mm a face, two 1 oz faces, the part's face at 0.55 (25 A; a one-face part at an end): 14.60 mm, governing share 0.55, the face's fusing I2t 19625 A2s
+     continuous load (declared)                                   10.00 A held       load         steady 1.61    adiabatic -       -> 1.61    within 10 K
+     key-down, every transmitter (PWR-F12)                        18.00 A 60s        transient    steady 5.13    adiabatic 167.70  -> 5.13    within 10 K
+     PA key-on step at the pack                                    9.60 A 60s        transient    steady 1.49    adiabatic 40.46   -> 1.49    within 10 K
+     held under the gauge's OCD1                                  20.00 A held       gauge        steady 6.36    adiabatic -       -> 6.36    within 10 K
+     gauge OCD2                                                   24.00 A 1s         gauge        steady 9.20    adiabatic 3.98    -> 3.98    within 10 K
+     gauge AOLD                                                   30.00 A 20ms       gauge        steady 14.48   adiabatic 0.12    -> 0.12    within 10 K
+     gauge ASCD                                                   55.60 A 244us      gauge        steady 50.69   adiabatic 0.01    -> 0.01    within 10 K
+     the blade's rating (the chain's check 3)                     25.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     blade up to 135 % held                                       33.75 A held       backstop     steady 18.39   adiabatic -       -> 18.39   88.4 C, within 125 C
+     blade 135 to 200 %, at most 600 s                            50.00 A 600s       backstop     steady 40.86   adiabatic >9999   -> 40.86   110.9 C, within 125 C
+     blade 200 to 350 %, at most 5 s                              87.50 A 5s         backstop     steady 127.30  adiabatic 418.07  -> 127.30  197.3 C, OVER 125 C
+     blade 350 to 600 %, at most 0.5 s                           150.00 A 500ms      backstop     steady -       adiabatic 88.00   -> 88.00   158.0 C, OVER 125 C
+     blade over 600 % to 480 A, at most 0.1 s                    480.00 A 100ms      backstop     steady -       adiabatic 207.68  -> 207.68  277.7 C, OVER 125 C
+     hard short, the blade's typical melting I2t                 480.00 A 2.71ms     short        steady -       adiabatic 4.32    -> 4.32    74.3 C, within 125 C
+     hard short, the gauge's ASCD                                480.00 A 244us      short        steady -       adiabatic 0.39    -> 0.39    70.4 C, within 125 C
+     docking pulse                                               242.90 A tau 33.8us pulse        steady -       adiabatic 0.01    -> 0.01    70.0 C, within 125 C
+   B3 7.30 mm a face, two 2 oz faces, the part's face at 0.55 (the 2 oz option): 7.30 mm, governing share 0.55, the face's fusing I2t 19625 A2s
+     continuous load (declared)                                   10.00 A held       load         steady 1.61    adiabatic -       -> 1.61    within 10 K
+     key-down, every transmitter (PWR-F12)                        18.00 A 60s        transient    steady 5.13    adiabatic 167.70  -> 5.13    within 10 K
+     PA key-on step at the pack                                    9.60 A 60s        transient    steady 1.49    adiabatic 40.46   -> 1.49    within 10 K
+     held under the gauge's OCD1                                  20.00 A held       gauge        steady 6.36    adiabatic -       -> 6.36    within 10 K
+     gauge OCD2                                                   24.00 A 1s         gauge        steady 9.20    adiabatic 3.98    -> 3.98    within 10 K
+     gauge AOLD                                                   30.00 A 20ms       gauge        steady 14.48   adiabatic 0.12    -> 0.12    within 10 K
+     gauge ASCD                                                   55.60 A 244us      gauge        steady 50.69   adiabatic 0.01    -> 0.01    within 10 K
+     the blade's rating (the chain's check 3)                     25.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     blade up to 135 % held                                       33.75 A held       backstop     steady 18.39   adiabatic -       -> 18.39   88.4 C, within 125 C
+     blade 135 to 200 %, at most 600 s                            50.00 A 600s       backstop     steady 40.86   adiabatic >9999   -> 40.86   110.9 C, within 125 C
+     blade 200 to 350 %, at most 5 s                              87.50 A 5s         backstop     steady 127.30  adiabatic 418.07  -> 127.30  197.3 C, OVER 125 C
+     blade 350 to 600 %, at most 0.5 s                           150.00 A 500ms      backstop     steady -       adiabatic 88.00   -> 88.00   158.0 C, OVER 125 C
+     blade over 600 % to 480 A, at most 0.1 s                    480.00 A 100ms      backstop     steady -       adiabatic 207.68  -> 207.68  277.7 C, OVER 125 C
+     hard short, the blade's typical melting I2t                 480.00 A 2.71ms     short        steady -       adiabatic 4.32    -> 4.32    74.3 C, within 125 C
+     hard short, the gauge's ASCD                                480.00 A 244us      short        steady -       adiabatic 0.39    -> 0.39    70.4 C, within 125 C
+     docking pulse                                               242.90 A tau 33.8us pulse        steady -       adiabatic 0.01    -> 0.01    70.0 C, within 125 C
+   S1 8.15 mm a face, two 1 oz faces, even (the shore's 20 A, through-hole ends): 8.15 mm, governing share 0.50, the face's fusing I2t 6116 A2s
+     continuous load (_VEH_T)                                      6.15 A held       load         steady 0.94    adiabatic -       -> 0.94    within 10 K
+     the fuse's rating (the chain's check 3)                      10.00 A held       coordination steady 2.44    adiabatic -       -> 2.44    within 10 K
+     L4-E11 D-06: held to the clamps                              20.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     fuse up to 135 % held                                        13.50 A held       backstop     steady 4.49    adiabatic -       -> 4.49    74.5 C, within 125 C
+     fuse 135 to 200 %, at most 600 s                             20.00 A 600s       backstop     steady 10.00   adiabatic >9999   -> 10.00   80.0 C, within 125 C
+     fuse 200 to 350 %, at most 5 s                               35.00 A 5s         backstop     steady 31.24   adiabatic 134.83  -> 31.24   101.2 C, within 125 C
+     fuse 350 to 600 %, at most 0.5 s                             60.00 A 500ms      backstop     steady 98.40   adiabatic 34.63   -> 34.63   104.6 C, within 125 C
+     fuse over 600 % to 900 A, at most 0.1 s                     900.00 A 100ms      backstop     steady -       adiabatic >9999   -> >9999   beyond the fits, OVER 125 C
+     stiff source, the fuse's typical melting I2t                900.00 A 115us      short        steady -       adiabatic 1.70    -> 1.70    71.7 C, within 125 C
+   S2 9.70 mm a face, the part's face at 0.55 (the shore's 20 A, a one-face part at an end): 9.70 mm, governing share 0.55, the face's fusing I2t 8669 A2s
+     continuous load (_VEH_T)                                      6.15 A held       load         steady 0.95    adiabatic -       -> 0.95    within 10 K
+     the fuse's rating (the chain's check 3)                      10.00 A held       coordination steady 2.44    adiabatic -       -> 2.44    within 10 K
+     L4-E11 D-06: held to the clamps                              20.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     fuse up to 135 % held                                        13.50 A held       backstop     steady 4.50    adiabatic -       -> 4.50    74.5 C, within 125 C
+     fuse 135 to 200 %, at most 600 s                             20.00 A 600s       backstop     steady 10.00   adiabatic >9999   -> 10.00   80.0 C, within 125 C
+     fuse 200 to 350 %, at most 5 s                               35.00 A 5s         backstop     steady 31.21   adiabatic 111.86  -> 31.21   101.2 C, within 125 C
+     fuse 350 to 600 %, at most 0.5 s                             60.00 A 500ms      backstop     steady 93.41   adiabatic 29.32   -> 29.32   99.3 C, within 125 C
+     fuse over 600 % to 900 A, at most 0.1 s                     900.00 A 100ms      backstop     steady -       adiabatic >9999   -> >9999   beyond the fits, OVER 125 C
+     stiff source, the fuse's typical melting I2t                900.00 A 115us      short        steady -       adiabatic 1.45    -> 1.45    71.4 C, within 125 C
+   S3 3.15 mm a face, the part's face at 0.55 (F1's 10 A after the hot-swap): 3.15 mm, governing share 0.55, the face's fusing I2t 913 A2s
+     continuous load (_VEH_T)                                      6.15 A held       load         steady 3.31    adiabatic -       -> 3.31    within 10 K
+     the fuse's rating (the chain's check 3)                      10.00 A held       coordination steady 10.00   adiabatic -       -> 10.00   within 10 K
+     fuse up to 135 % held                                        13.50 A held       backstop     steady 19.78   adiabatic -       -> 19.78   89.8 C, within 125 C
+     fuse 135 to 200 %, at most 600 s                             20.00 A 600s       backstop     steady 48.32   adiabatic >9999   -> 48.32   118.3 C, within 125 C
+     fuse 200 to 350 %, at most 5 s                               35.00 A 5s         backstop     steady 172.34  adiabatic 5654.10 -> 172.34  242.3 C, OVER 125 C
+     fuse 350 to 600 %, at most 0.5 s                             60.00 A 500ms      backstop     steady -       adiabatic 424.84  -> 424.84  494.8 C, OVER 125 C
+     fuse over 600 % to 900 A, at most 0.1 s                     900.00 A 100ms      backstop     steady -       adiabatic >9999   -> >9999   beyond the fits, OVER 125 C
+     stiff source, the fuse's typical melting I2t                900.00 A 115us      short        steady -       adiabatic 14.05   -> 14.05   84.0 C, within 125 C
+   V  VIN_RAW 5.12 mm a face, the part's face at 0.55:
+     declared (the hot-swap's 6.15 A and the tracker's 10.33 A at the 9 V floor)   14.10 A held       load         steady 10.00   -> within 10 K
+     the tracker's minimum valley limit, held                     13.80 A held       coordination steady 9.57    -> within 10 K
+     the sum of both sources' limits 19.95 A for at most the hot-swap's fault time: 21.57 K steady (an upper bound on any duration)
+
+5. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED
+   6.72 mm a face (l9stk at 18 A): 12.39 K at the gauge's held 20 A, 19.52 K at the blade's 25 A, the 600 s window top 159.4 C
+   11.95 mm on one 2 oz face (l9stk at 18 A): 19.46 K at the blade's 25 A; 2 oz on one face needs 21.81 mm at 25 A
+   12.26 mm a face (Layer 8 at 25 A): holds where both ends are through-hole (an even split, derived); at a one-face part the
+     part's face carries more than half and needs 14.60 mm at a 0.55 share with the field of section 3
+   23.44 mm a face (l9stk's board E bound at 18 A, every conductor in one section): superseded by section 7
+   2 oz (the reversal): 6.13 mm a face at an even split, 7.30 at 0.55, 21.81 on one face
+
+6. THE SERIES PARTS AND THE LANDS (the bottlenecks)
+   R17 (board A, 5 mOhm, C20108830, 5 W): continuous 10.00 A 0.500 W; key-down 18.00 A 1.620 W; OCD1 held 20.00 A 2.000 W; blade rating 25.00 A 3.125 W; blade 110 % 27.50 A 3.781 W; blade 135 % held 33.75 A 5.695 W; blade 200 %, the 600 s window top 50.00 A 12.500 W
+     its 5 W is reached at 31.62 A, inside the blade's 110 to 200 % window (the gauge failed)
+   Q39 and Q40 (drafted, 21.136 mOhm each at L4-E11's 150 C bound, in parallel): OCD1 held 20.00 A 4.23 W; blade rating 25.00 A 6.61 W; blade 135 % held 33.75 A 12.04 W
+     E11-29's bar covers the gauge's levels (L4-E11 15c); the blade's window is outside it
+   the dock pins (4 in parallel, 9 A each at a 10 C rise): blade rating 6.25 A a pin; blade 135 % held 8.44 A a pin; blade 200 %, the 600 s window top 12.50 A a pin
+   the XT60 (30 A, 60 A instantaneous): blade 110 % held 27.50 A; blade 135 % held 33.75 A; blade 200 %, the 600 s window top 50.00 A
+   R19 (board E, 10 mOhm, C2903468, 3 W): its 3 W at 17.32 A, inside F1's 135 to 200 % window
+   the Keystone 3568 holders (A's F1, E's F3 and F1, P's F1): no current rating printed (L4-E11 section 6, the maker's page)
+   board A F1     Fuseholder_Blade_Mini_Keystone_3568          F.Cu     thru_hole; pads 2.78x2.78 d1.78
+   board A J_CN1  Mill-Max_0858_power_pin                      B.Cu     thru_hole; pads 2x2 d1.3
+   board A J_CP1  Mill-Max_0858_power_pin                      B.Cu     thru_hole; pads 2x2 d1.3
+   board A R17    R_2512_6332Metric                            F.Cu     smd; pads 1.225x3.35
+   board E F1     Fuseholder_Blade_Mini_Keystone_3568          F.Cu     thru_hole; pads 2.78x2.78 d1.78
+   board E F3     Fuseholder_Blade_Mini_Keystone_3568          F.Cu     thru_hole; pads 2.78x2.78 d1.78
+   board E J_BATT AMASS_XT60-M_1x02_P7.20mm_Vertical           F.Cu     thru_hole; pads 6x6 d4.5
+   board E J_DCIN JST_VH_B2P-VH_1x02_P3.96mm_Vertical          F.Cu     thru_hole; pads 2.7x2.7 d1.7
+   board E L2     L_CommonModeChoke_Bourns_SRF1260             F.Cu     smd; pads 4.5x2.15
+   board E P_CN   SolderPad_8x6                                F.Cu     smd; pads 8x6
+   board E P_CP   SolderPad_8x6                                F.Cu     smd; pads 8x6
+   board E Q1     TDSON-8-1                                    F.Cu     smd; pads 0.75x0.5, 0.85x0.5, 1.5x1.5, 4.55x4.41
+   board E Q7     PowerPAK_SO-8_Single                         F.Cu     smd; pads 1.02x0.61, 1.27x0.61, 3.81x3.91
+   board E R19    R_2512_6332Metric                            F.Cu     smd; pads 1.225x3.35
+   one-face hops between two one-face parts (no field can split a few millimetres), copper I2R per millimetre at the larger land:
+     CH_BATQ, R17 to Q39 and Q40 (board A)     25.00 A on 3.35 mm: 0.0917 W a mm against the series part's 3.125 W
+     DC_P, Q1 to R19 (board E)                 20.00 A on 4.41 mm: 0.0446 W a mm against the series part's 4.000 W
+     HS_S, R19 to Q7 (board E)                 10.00 A on 3.81 mm: 0.0129 W a mm against the series part's 1.000 W
+   one barrel of a 14-barrel transfer field (0.0236 mm2, fusing 42.0 A2s from the air line): docking pulse 0.0013 A2s, +0.01 K; blade typical melting 0.7972 A2s, +8.58 K; 600 % row bound at the high fault 29.3878 A2s, +544.26 K
+
+7. BOARD E'S CROSS-SECTION, REDONE AT THE COORDINATION CURRENTS AND THE DERIVED SHARE (1 oz, each face)
+   CELL_F (pack forward)                     14.60 mm
+   the pack return (GND)                     14.60 mm
+   VIN_RAW                                    5.12 mm
+   TRK_OUT (declared 10.33 A)                 3.29 mm
+   the shore chain DC_IN to DC_P              9.70 mm
+   the shore return GND_V                     9.70 mm
+   every one in one section: 57.02 mm a face of the 68 mm strip (a bound the floor plan must avoid); the pack end alone (forward and
+   return): 29.20 mm a face
+
+8. PREDICATES
+   the quoted widths re-derive from decision 35's model: 6.72, 23.91, 11.95, 12.26 and 43.62 mm                           yes
+   the blades on A, E and P are one rating and the chain's check 3 asks the conductor for it                              yes
+   6.72 mm a face is over 10 K at the gauge's held OCD1 current                                                           yes
+   6.72 mm a face is over 10 K at the blade's rating                                                                      yes
+   11.95 mm on one 2 oz face is over 10 K at the blade's rating                                                           yes
+   12.26 mm a face at an even split is at 10 K at the blade's rating                                                      yes
+   the 14.60 class at its governing share is at 10 K at the blade's rating                                                yes
+   on B1, B2 and B3 every load, transient and gauge level is within 10 K                                                  yes
+   on B1, B2 and B3 the blade's 135 % held and its 600 s window top stay within the blade's printed maximum from the air line yes
+   on A1 and A2 the blade's 600 s window top exceeds the blade's printed maximum                                          yes
+   on every pack family the backstop's 5 s interval and faster are over the printed maximum by the tree's bounds          yes
+   every hard short on B1, B2 and B3 is within the printed maximum at the blade's typical I2t and the gauge's ASCD        yes
+   the copper is not the fuse: the 600 % row's bound on B1 and B2 is under the governing face's fusing I2t                yes
+   with one barrel the part's face carries more than the governing share at every tabled length                           yes
+   the transfer field's split count falls with length (one end and both ends)                                             yes
+   the shore's 20 A families hold the fuse's 600 s window top at 10 K                                                     yes
+   R17 reaches its rating inside the blade's 110 to 200 % window                                                          yes
+   R19 reaches its rating inside the shore fuse's 135 to 200 % window                                                     yes
+   the dock pins stay within their 10 C rating up to the blade's 135 % row                                                yes
+   the XT60 is over its rating inside the blade's held band                                                               yes
+   on board A two planes beside 12.26 mm faces are over the screen only in a band narrower than 30 mm                     yes
+   a plane tied in parallel heats per square millimetre at the thickness ratio of the bands it relieves                   yes
+   VIN_RAW's declared current covers the tracker's minimum valley limit                                                   yes
+   every one-face hop's copper dissipates under a tenth of its series part per millimetre                                 yes
