@@ -16,6 +16,7 @@ It prints, deterministically and without touching the tree:
   8. the netlist check (check_l8r2_netlist.py) on the committed netlists (NOT DRAWN) and on fixtures carrying the drafts (DRAWN).
 Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_drafts.py  (l8r2_drafts.out is its output, regenerated with
 _bin/regen_out.py). Nothing here is built or measured: every statement is about generator text, netlists and printed figures."""
+import ast
 import hashlib
 import importlib.util
 import io
@@ -54,7 +55,12 @@ INPUTS = [
     "v2/docs/records/l8r2/inputs/l7pwr-cooler-identity-2087060b.md", "v2/docs/records/l8r2/inputs/l5r2-findings-and-rows-6902db8f.md",
     "v2/docs/records/l8r2/inputs/SOURCES.txt", "v2/docs/records/l8r2/check_l8r2_netlist.py", "v2/docs/records/l8r2/fetch_held_back.py",
     MAINPB, "v2/docs/records/d8dec31/genpatch.py", "v2/docs/records/d8dec31/netread.py", NET_A,
+    "v2/docs/PANEL.md", "v2/ecad/tools/gen_sch_c.py", "v2/vendor/ti/ti-pca9555.pdf", "v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py",
+    "v2/docs/records/l8r2/inputs/fw-panel-F01-42c27369.md", "v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py",
+    "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py",
 ] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_A + L8_A] + ["v2/docs/records/%s/apply_gen_sch_b_%s.py" % rn for rn in L8_B]
+L6_C = ("v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py", "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py")
+PIBTN = "v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py"
 
 # ---------------------------------------------------------------------------------------------------------------- the figures
 # Classes: MAKER (printed in a held sheet), INFERRED (derived from printed figures under a stated assumption), ASSUMPTION (a figure
@@ -215,6 +221,23 @@ def item3():
 
 
 # ---------------------------------------------------------------------------------------------------------------- the drafts
+def item4():
+    """The PI button's input on U1 P1.3 (record l8r2, F-01): R57 10 k to +3V3, C27 100 nF to GND."""
+    r, c, vcc = 10e3, 100e-9, 3.3
+    tau = r * c
+    vih, vil = 0.7 * vcc, 0.3 * vcc            # PCA9555 VIH 0.7 x VCC, VIL 0.3 x VCC (TI SCPS131J 6.3), MAKER
+    return {"tau": tau, "t_release": -tau * math.log(1 - 0.7), "vih": vih, "vil": vil, "i_press": vcc / r}
+
+
+def l6_scratch(d):
+    """Layer 6's board C draft and its helper side by side in a scratch git repository (the helper asks git for its top level)."""
+    sc = os.path.join(d, "l6c"); os.makedirs(sc, exist_ok=True)
+    shutil.copy(os.path.join(ROOT, L6_C[0]), os.path.join(sc, "apply_gen_sch_c_lcsc.py"))
+    shutil.copy(os.path.join(ROOT, L6_C[1]), os.path.join(sc, "l6r2_apply.py"))
+    subprocess.run(["git", "init", "-q", sc], capture_output=True, check=True)
+    return os.path.join(sc, "apply_gen_sch_c_lcsc.py")
+
+
 def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
@@ -254,14 +277,19 @@ def literal_calls(text):
 
 
 def tokens(text):
-    """Every Python string token of the text that is a whole designator ("R221"): read with the tokenizer, so a note that mentions
-    a reference ("R229 at the plate's strap pad") is one string and counts for nothing."""
+    """Designator strings ("R221") where the generator DRAWS or LISTS a part: the first argument of a call, or an element of a list
+    or tuple, read with ast. A note that mentions a reference is prose and counts for nothing, and a dict key (a table that names
+    parts that exist, as Layer 6's LCSC table does) is not an addition."""
     out = set()
-    for tok in tokenize.generate_tokens(io.StringIO(text).readline):
-        if tok.type == tokenize.STRING:
-            m = re.match(r'^[rRbBuU]*("""|\'\'\'|"|\')(.*)\1$', tok.string, re.S)
-            if m and TOKEN.fullmatch(m.group(2)):
-                out.add(m.group(2))
+    for n in ast.walk(ast.parse(text)):
+        cands = []
+        if isinstance(n, ast.Call) and n.args:
+            cands.append(n.args[0])
+        elif isinstance(n, (ast.List, ast.Tuple)):
+            cands.extend(n.elts)
+        for c in cands:
+            if isinstance(c, ast.Constant) and isinstance(c.value, str) and TOKEN.fullmatch(c.value):
+                out.add(c.value)
     return out
 
 
@@ -420,13 +448,31 @@ def main():
         w("  board B's 700 and 900 blocks against every designator the generator builds from a base: %s\n"
           % ("free" if not re.search(r'"[RCQULD]%d" % \(\s*[79]\d\d\b', open(GEN_B, encoding="utf-8").read()) else "TAKEN"))
 
+    w("\n7b. ITEM 4, BOARD C'S PI BUTTON (the panel firmware's F-01): PIJ2_A2 on U1 P1.3 (PI_BTN_n)\n")
+    q = item4()
+    w("  R57 10 k to +3V3 with C27 100 nF to GND: tau %.2f ms; a release reaches VIH (%.2f V, 0.7 x VCC) after %.2f ms; a press pulls under VIL (%.2f V)\n"
+      "    through FB3 and the contact; the pull-up's %.2f mA through the closed contact\n" % (q["tau"] * 1e3, q["vih"], q["t_release"] * 1e3, q["vil"], q["i_press"] * 1e3))
+    with tempfile.TemporaryDirectory() as d:
+        l6 = l6_scratch(d); pi = os.path.join(ROOT, PIBTN); res = {}
+        for tag, seq in (("l6 then pibtn", [l6, pi]), ("pibtn then l6", [pi, l6])):
+            p = os.path.join(d, tag.replace(" ", "_") + ".py"); shutil.copy(os.path.join(TOOLS, "gen_sch_c.py"), p)
+            rcs = [subprocess.run([sys.executable, "-B", x, p, "--write"], capture_output=True).returncode for x in seq]
+            res[tag] = (rcs, open(p, "rb").read())
+            w("  %-16s %s\n" % (tag, "OK" if rcs == [0, 0] else "REFUSED %s" % rcs))
+        w("  the two orders give the same generator: %s\n" % ("YES" if res["l6 then pibtn"][1] == res["pibtn then l6"][1] else "NO"))
+        _p, addC = designators(os.path.join(TOOLS, "gen_sch_c.py"), [l6, pi], d, "c_desig")
+        w("  designators: Layer 6's draft %s; this record's %s; intersection %s\n"
+          % (", ".join(sorted(addC[os.path.relpath(l6, RECS)])) or "none", ", ".join(sorted(addC[os.path.relpath(pi, RECS)])),
+             sorted(addC[os.path.relpath(l6, RECS)] & addC[os.path.relpath(pi, RECS)]) or "none (DISJOINT)"))
+        w("  literal designators drawn twice in the composed board C generator: %s\n" % (duplicates(open(_p, encoding="utf-8").read()) or "none"))
+
     w("\n8. THE NETLIST CHECK (check_l8r2_netlist.py)\n")
     sp = importlib.util.spec_from_file_location("l8r2_check", os.path.join(HERE, "check_l8r2_netlist.py"))
     chk = importlib.util.module_from_spec(sp); sp.loader.exec_module(chk)
     buf = io.StringIO(); chk.run(chk.committed(ROOT), ROOT, buf)
     for l in buf.getvalue().splitlines(): w("  %s\n" % l)
     w("  on fixtures carrying the drafts (built in check_l8r2_netlist.py, not files of the tree):\n")
-    for letter in ("a", "b"):
+    for letter in ("a", "b", "c"):
         v, lines = chk.judge(letter, chk.read_netlist(chk.fixture(letter)))
         for l in lines: w("    %s\n" % l)
         w("    fixture %s: %s\n" % (letter.upper(), v))

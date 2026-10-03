@@ -24,11 +24,12 @@ REC = os.path.join(ROOT, "v2", "docs", "records", "l8r2")
 RECS = os.path.dirname(REC)
 GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
 GEN_B = os.path.join(TOOLS, "gen_sch_b.py")
+GEN_C = os.path.join(TOOLS, "gen_sch_c.py")
 SCRIPT = os.path.join(REC, "l8r2_drafts.py")
 OUT = os.path.join(REC, "l8r2_drafts.out")
 PAGE = os.path.join(REC, "L8R2-KNOWN-DEFECTS.md")
 CHECK = os.path.join(REC, "check_l8r2_netlist.py")
-MINE = {"a": ["d8v3", "vbus20ov"], "b": ["fans12", "panel5v", "ph4"]}
+MINE = {"a": ["d8v3", "vbus20ov"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"]}
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
 
@@ -82,9 +83,9 @@ def t_the_committed_output_is_what_the_script_prints():
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
-    before = {g: _sha(g) for g in (GEN_A, GEN_B)}
+    before = {g: _sha(g) for g in (GEN_A, GEN_B, GEN_C)}
     with tempfile.TemporaryDirectory() as d:
-        for board, gen in (("a", GEN_A), ("b", GEN_B)):
+        for board, gen in (("a", GEN_A), ("b", GEN_B), ("c", GEN_C)):
             for s in _mine(board):
                 tgt = os.path.join(d, os.path.basename(s)); shutil.copy(gen, tgt); pre = _sha(tgt)
                 r = _run([s, tgt]); assert r.returncode == 0 and b"CHECK OK" in r.stdout, r.stderr.decode()[-300:]
@@ -179,11 +180,13 @@ def t_item3_each_conductor_stays_under_its_rating():
 def t_the_netlist_check_reads_the_tree_not_drawn_and_the_fixtures_drawn():
     chk = _mod(CHECK, "l8r2_check_under_test")
     nets = chk.committed(ROOT)
-    for k in ("a", "b"):
+    for k in ("a", "b", "c"):
         need(nets.get(k, os.path.join(ROOT, "missing-%s.net" % k)), "board %s's committed netlist" % k.upper())
     kit, v = chk.run(nets, ROOT, open(os.devnull, "w"))
-    assert kit == "NOT DRAWN" and v == {"a": "NOT DRAWN", "b": "NOT DRAWN"}, v
-    for letter in ("a", "b"):
+    assert kit == "NOT DRAWN" and v == {"a": "NOT DRAWN", "b": "NOT DRAWN", "c": "NOT DRAWN"}, v
+    bad = chk.fixture("c").replace(b'(node (ref "R57") (pin "2"))', b'')
+    assert chk.judge("c", chk.read_netlist(bad))[0] == "FAIL", "a pull-up off +3V3 is not refused"
+    for letter in ("a", "b", "c"):
         assert chk.judge(letter, chk.read_netlist(chk.fixture(letter)))[0] == "DRAWN"
     bad = chk.fixture("a").replace(b'(node (ref "U45") (pin "2"))', b'(node (ref "U45") (pin "99"))')
     assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL"
@@ -215,10 +218,40 @@ def t_no_new_net_of_this_record_names_a_net_any_board_already_has():
         nl = chk.read_netlist(open(p, "rb").read())
         nets |= {n for pins in nl["pins"].values() for n in pins.values()}
     assert "+3V3_D8" in nets, "board D's own +3V3_D8 is not read: the netlists were not parsed"
-    for board in ("a", "b"):
+    for board in ("a", "b", "c"):
         for s in _mine(board):
             m = _mod(s, "nets_" + os.path.basename(s)[:-3])
             clash = sorted(set(getattr(m, "NETS", ())) & nets)
             assert not clash, "%s adds %s, a net a committed netlist already carries" % (os.path.basename(s), clash)
     d8 = _mod(os.path.join(REC, "apply_gen_sch_a_d8v3.py"), "nets_apply_gen_sch_a_d8v3")
     assert "+3V3_A2D" in d8.NETS and "+3V3_D8" not in open(os.path.join(REC, "apply_gen_sch_a_d8v3.py"), encoding="utf-8").read()
+
+
+def t_board_c_the_pi_button_composes_with_layer_6s_draft_in_either_order():
+    """Layer 6's apply_gen_sch_c_lcsc.py (fnd/l6r2 at 7633ae0a, copied in inputs/ with its helper) and this record's PI button
+    draft give the same generator in either order; this record's adds R57 alone and Layer 6's adds no part."""
+    m = _need_inputs()
+    pi = os.path.join(ROOT, m.PIBTN)
+    with tempfile.TemporaryDirectory() as d:
+        l6 = m.l6_scratch(d); outs = []
+        for seq in ([l6, pi], [pi, l6]):
+            p = os.path.join(d, "c_%d.py" % len(outs)); shutil.copy(GEN_C, p)
+            for x in seq:
+                r = _run([x, p, "--write"]); assert r.returncode == 0, (x, r.stdout.decode()[-200:], r.stderr.decode()[-200:])
+            outs.append(open(p, "rb").read())
+        assert outs[0] == outs[1], "the order of the two board C drafts changes the result"
+        _p, add = m.designators(GEN_C, [l6, pi], d, "c_desig")
+        assert add[os.path.relpath(pi, RECS)] == {"R57"} and add[os.path.relpath(l6, RECS)] == set(), add
+
+
+def t_item4_the_pi_button_reaches_u1_p1_3_with_its_pull_up_and_debounce():
+    m = _M(); q = m.item4()
+    assert abs(q["tau"] - 1.0e-3) < 1e-9 and q["t_release"] < 2e-3 and abs(q["i_press"] - 0.33e-3) < 0.01e-3
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "c.py"); shutil.copy(GEN_C, p)
+        assert _run([os.path.join(REC, "apply_gen_sch_c_pibtn.py"), p, "--write"]).returncode == 0
+        t = open(p, encoding="utf-8").read()
+        assert '"16": "PIJ2_A2", "17": "SPARE2"' in t and 'r("R57", "10k", "PIJ2_A2", "+3V3", "R", "C25804")' in t
+        assert '"PIJ2_B2"' not in t and 'c("C27", "100n", "PIJ2_A2", "GND"' in t and '"ZEROIZE_HW", "PIJ2_A2", "SPARE2"' in t
+        assert "R3 on board A" not in t, "the stale note on the PI lead survived"
+

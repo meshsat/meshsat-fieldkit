@@ -12,10 +12,12 @@ MESHSAT-1357, 3 October 2026). It PARSES a KiCad netlist (an s-expression reader
                  FAN_PWMs, drain CFANs_PWM; no pin of +5V_Ss on J_FANs (item 1, E11-40)
            PNL   U901 pin 4 on +5V_DEV, pin 5 on PANEL_5V_EF; F1 between PANEL_5V_EF and PANEL_5V (item 3, L5R2-F03)
            PH4   J_QMX's and J_CAM's land Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical (item 3, L5R2-F04)
+  board C  PIBTN U1 pin 16 (P1.3, PI_BTN_n) on PIJ2_A2; R57 between PIJ2_A2 and +3V3; FB4 pin 2, C27's other pin and J_PIJ2 pin 2 on GND
+                 (item 4, the panel firmware's F-01)
 Each reads DRAWN (every property holds), NOT DRAWN (the correction's new net or part is absent: today's state) or FAIL (present
 and wrong). Nothing has been built or measured: the statements are about netlists.
 
-Usage:  check_l8r2_netlist.py [a=path.net] [b=path.net]      (default: the committed netlists of the tree)
+Usage:  check_l8r2_netlist.py [a=path.net] [b=path.net] [c=path.net]      (default: the committed netlists of the tree)
 Exit 0 when every correction reads DRAWN, 4 otherwise, 2 on a usage error."""
 import glob
 import hashlib
@@ -126,8 +128,20 @@ def checks_b(nl):
     return out
 
 
+def checks_c(nl):
+    P = nl["pins"]
+    props = [("U1", "16", "PIJ2_A2"), ("FB4", "2", "GND"), ("J_PIJ2", "1", "PIJ2_A2"), ("J_PIJ2", "2", "GND")]
+    v, why = judge_props(nl, props, ("U1", "16", "PIJ2_A2"))
+    if v == "DRAWN":
+        if set(P.get("R57", {}).values()) != {"PIJ2_A2", "+3V3"}:
+            v, why = "FAIL", ["R57 on %r, wanted PIJ2_A2 to +3V3" % sorted(P.get("R57", {}).values())]
+        elif set(P.get("C27", {}).values()) != {"PIJ2_A2", "GND"}:
+            v, why = "FAIL", ["C27 on %r, wanted PIJ2_A2 to GND" % sorted(P.get("C27", {}).values())]
+    return {"PIBTN": (v, why)}
+
+
 def judge(letter, nl):
-    res = checks_a(nl) if letter == "a" else checks_b(nl)
+    res = checks_a(nl) if letter == "a" else checks_b(nl) if letter == "b" else checks_c(nl)
     lines = []
     for k, (v, why) in res.items():
         lines.append("%s %-5s %s%s" % (letter.upper(), k, v, (": " + "; ".join(why[:3])) if why else ""))
@@ -162,6 +176,11 @@ def fixture(letter):
                               ("J_QMX", "1", "VBUS_QMX"), ("J_CAM", "1", "+5V_CAM")):
             add(net, ref, pin)
         comps = {"J_QMX": PH4, "J_CAM": PH4}
+    if letter == "c":
+        nets, comps = {}, {}
+        for ref, pin, net in (("U1", "16", "PIJ2_A2"), ("FB4", "2", "GND"), ("J_PIJ2", "1", "PIJ2_A2"), ("J_PIJ2", "2", "GND"),
+                              ("R57", "1", "PIJ2_A2"), ("R57", "2", "+3V3"), ("C27", "1", "PIJ2_A2"), ("C27", "2", "GND")):
+            add(net, ref, pin)
     s = '(export (version "E")\n  (components\n'
     for ref, fp in sorted(comps.items()):
         s += '    (comp (ref "%s") (value "x") (footprint "%s"))\n' % (ref, fp)
@@ -174,7 +193,7 @@ def fixture(letter):
 def committed(repo):
     out = {}
     for p in sorted(glob.glob(os.path.join(repo, "v2", "ecad", "pcb-*", "out", "*.net"))):
-        m = re.match(r"pcb-([ab])-", os.path.basename(os.path.dirname(os.path.dirname(p))))
+        m = re.match(r"pcb-([abc])-", os.path.basename(os.path.dirname(os.path.dirname(p))))
         if m:
             out[m.group(1)] = p
     return out
@@ -198,7 +217,7 @@ def run(paths, repo=REPO, out=sys.stdout):
 def main(argv):
     paths = {}
     for a in argv:
-        if len(a) > 2 and a[0] in "ab" and a[1] == "=":
+        if len(a) > 2 and a[0] in "abc" and a[1] == "=":
             paths[a[0]] = a[2:]
         else:
             sys.stderr.write(__doc__.split("Usage:")[1].split("\n")[0] + "\n")
