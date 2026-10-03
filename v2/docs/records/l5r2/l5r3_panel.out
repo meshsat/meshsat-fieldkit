@@ -3,7 +3,7 @@ powered or measured; a check of text against text.
 
 0. INPUTS (sha256)
    panel     9fd2b4e3c6edf86e482256e81f7b924de13d2f010c2124a02bfbd688552ea9cc  v2/docs/PANEL.md
-   hwfw      d683b31a0ec5a9a4f34036c54a708f868cd8abd4d320c280e81db435fc5001d4  v2/docs/HW-FW-CONTRACT.md
+   hwfw      56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059  v2/docs/HW-FW-CONTRACT.md
    assembly  29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed  v2/docs/ASSEMBLY.md
    fw        83f0196be1c8df50c56715069d59e1cee47c2a7d6a9576c896b52dba6860a290  v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md
    l8r2      f47c81c8f5bdde73acb3e6e4511c052c24dcc0e7ed6abd1065a6c23b1ea6ed4c  v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md

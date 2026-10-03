@@ -9,8 +9,14 @@ property that survives the drafts' application: when the generators and netlists
 1 is its own field until then; the eleven power lines of L4-E9 section 4 have their states; the contract rows added carry their
 tables' cell counts with unique ids, FW-C08 and FW-A14 carry the restated texts and the old FW-A16 rule is gone; PANEL.md section 10
 carries the hold sentence; the page's table equals the script's; the apply scripts refuse a second run on the tree and apply once to
-the base they were written against; no em or en dash in the record. Software predicates on text: they establish no electrical
-property and accept nothing.
+the base they were written against; no em or en dash in the record. Set 28's restatement (finding F-12): every restated row is a
+row of the table, its withdrawn figures are figures it cites, every replacing text is matched once in its source with figures
+parsed from the match, no figure is typed in the restatement's prose or patterns, S27-02b's replacing text is L4-E11's PWM-duty
+ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. L5-F09 and L5-F10
+(apply_l5pwr2_contracts.py) and L5-F11 (apply_l5f11_contracts.py, after it): no withdrawn text of theirs is in the tree's contract
+files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files print them now ("already
+applied"), each script applies once to the files it was written against and is idempotent, and the second refuses before the first.
+Software predicates on text: they establish no electrical property and accept nothing.
 """
 import importlib.util
 import os
@@ -28,6 +34,17 @@ OUT = os.path.join(REC, "l5pwr_contracts.out")
 PAGE = os.path.join(REC, "L5-POWER-CONTRACTS.md")
 APPLY = os.path.join(REC, "apply_l5pwr.py")
 APPLY_CONOPS = os.path.join(REC, "apply_conops_l5pwr.py")
+APPLY2 = os.path.join(REC, "apply_l5pwr2_contracts.py")
+BASE2 = "97dbcc43"         # fnd/l5pwr2 before apply_l5pwr2_contracts.py: the contract files it was written against
+APPLY3 = os.path.join(REC, "apply_l5f11_contracts.py")
+BASE3 = "1c4e0ff2"         # fnd/l5pwr2 after apply_l5pwr2_contracts.py, before apply_l5f11_contracts.py
+# set 28's sweep: wordings Layer 4 withdrew in set 27, none of which the contract files may carry (a property of the files, not of a
+# commit): the guard's pass from a loop, the hard short as a ceiling, R-176's old row 2 and 3 bounds, the 1.0 A branch and its drop,
+# the per-fan start rule's wording, the B6 case NOT CLOSED, the fans unnamed, U22 left out of the start and the domain
+WITHDRAWN = [r"a pass only (from|for) a (source )?loop", r"\(a ceiling, no inductance credited", r"PV_F at most 75 V", r"at most 61 A, within",
+             r"VSYS_E at least 9\.539", r"0\.1486 V", r"1\.0 A declared", r"with a PWM ramp", r"never while U12 starts",
+             r"guard-on case NOT CLOSED", r"no fan is named", r"the other and U12 settled", r"the fans and U12 on VSYS_E",
+             r"the mixer fans, D7 and D8\)", r"at most 0\.5713 A", r"at most 0\.3356 A"]
 YAML = os.path.join(TOOLS, "pcb_interfaces.yaml")
 HWFW = os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md")
 PANEL = os.path.join(ROOT, "v2", "docs", "PANEL.md")
@@ -99,13 +116,13 @@ def t_every_excerpt_is_in_its_target_and_every_figure_in_a_source():
 
 def t_marks_triggers_and_criteria_are_well_formed():
     m = _M()
-    for e in m.T:
+    for e in list(m.T) + _C["R"]["rows"]:   # as written, and as restated at set 28 (F-12)
         assert any(w in e["mark"] for w in MARKS) or e["mark"].startswith("DRAFTED"), (e["id"], e["mark"])
         assert set(e["criteria"]) <= set(m.CRITERIA) and e["criteria"], e["id"]
         if "PROVISIONAL" in e["mark"]:
             assert re.search(r"(R-\d+|E11-\d+|B6-ENG-1|PANEL-ACC|PWR-F\d+|Q-TI-\d+|U-0\d|V-A0\d|T-H1|M2)", e["trigger"]), \
                 "%s is PROVISIONAL but its trigger names no row or measurement: %r" % (e["id"], e["trigger"])
-    prov = [e for e in m.T if "PROVISIONAL" in e["mark"]]
+    prov = [e for e in _C["R"]["rows"] if "PROVISIONAL" in e["mark"]]
     assert len(prov) == len(_C["R"]["prov"]) >= 15
     for c, st in m.CRITERIA_STATE.items():
         assert c in m.CRITERIA and len(st) > 60
@@ -220,8 +237,43 @@ def t_the_pages_table_equals_the_scripts():
     i, j = page.index("<!-- l5pwr-table:begin -->"), page.index("<!-- l5pwr-table:end -->")
     block = [l for l in page[i:j].split("\n")[1:] if l.strip()]
     assert block == m.md_rows(_C["R"]), "the page's table is not the script's"
+    i, j = page.index("<!-- l5pwr-restated:begin -->"), page.index("<!-- l5pwr-restated:end -->")
+    block = [l for l in page[i:j].split("\n")[1:] if l.strip()]
+    assert block == m.md_restated(_C["R"]), "the page's section 4a is not the script's"
     for s in ("PASS 99 of 99", "## 9.", "PROVISIONAL", "check_contracts.py"):
         assert s in page, s
+
+
+def t_the_set28_restatement_parses_its_figures_and_types_none():
+    """F-12: a row whose cited figure set 27's Layer 4 corrections changed is restated beside the table, its figures parsed."""
+    m = _M()
+    R = _C["R"]
+    ids = {e["id"] for e in m.T}
+    assert set(m.RESTATED) <= ids and "S27-02b" in m.RESTATED
+    page = open(PAGE, encoding="utf-8").read()
+    rows = {e["id"]: e for e in R["rows"]}
+    for i, rs in m.RESTATED.items():
+        e = rows[i]
+        r = e["restated"]
+        assert r and rs["withdrawn"] and set(rs["withdrawn"]) <= set(e["figures"]), i
+        assert len(r["cites"]) == len(rs["now"]) and any(c["figures"] for c in r["cites"]), i
+        for c in r["cites"]:
+            assert c["text"] in " ".join(open(os.path.join(ROOT, c["file"]), encoding="utf-8").read().split()), (i, c["text"][:50])
+            assert all(f in c["text"] for f in c["figures"]), i
+        for key, pat in rs["now"]:
+            assert m.figures_in(pat.replace("\\", "")) == [], "%s: a figure is typed in a pattern: %r" % (i, pat[:60])
+        for kind, key, pat in rs["target"]:
+            assert kind in ("restated", "stale") and m.figures_in(pat.replace("\\", "")) == [], (i, pat[:60])
+        for f in ("why", "value", "mark", "trigger", "where"):
+            assert m.figures_in(rs[f]) == [], "%s: a figure is typed in the restatement's %s: %s" % (i, f, m.figures_in(rs[f]))
+        assert r["state"] in ("RESTATED IN PLACE", "SUPERSEDED IN PLACE", "NOT RESTATED"), i
+        if r["state"] == "NOT RESTATED" or any(c["kind"] == "stale" for c in r["tchecks"]):
+            assert r["finding"] and ("| %s |" % r["finding"]) in page, "%s: a withdrawn text still in a target needs its finding" % i
+        assert e["mark"] == rs["mark"] and e["trigger"] == rs["trigger"] and e["was"]["mark"] != "", i
+    b = rows["S27-02b"]["restated"]
+    assert any(c["key"] == "l4e11out" and "PWM-duty ramp into the fan's PWM input" in c["text"] for c in b["cites"])
+    assert "PWM ramp" in b["withdrawn"]
+    assert "1a. RESTATED AT SET 28" in _C["text"] and "4a. THE RESTATEMENT AS MARKDOWN" in _C["text"]
 
 
 def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_base():
@@ -259,6 +311,102 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
         # L4-E11's dock draft still applies to the patched yaml
         r = _run([os.path.join(ROOT, "v2", "docs", "records", "l4e11", "apply_pcb_interfaces_dock.py"), y, "--check"])
         assert r.returncode == 0 and "CHECK OK" in r.stdout, r.stderr[-200:]
+    finally:
+        shutil.rmtree(d)
+
+
+def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent():
+    """No withdrawn text of L5-F09 or L5-F10 in the tree's contract files; the tree carries the restatement as the Layer 4 files
+    print it now; the script applies once to the files at BASE2 and a second run writes nothing."""
+    import collections
+    need(APPLY2, "the contract script")
+    sp = importlib.util.spec_from_file_location("apply_l5pwr2_under_test", APPLY2)
+    a = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(a)
+    E = a.edits(collections.defaultdict(str))
+    assert len(E) == 6
+    tree = {"yaml": open(YAML, encoding="utf-8").read(), "hwfw": open(HWFW, encoding="utf-8").read()}
+    for i, tg, _w, old, _n in E:
+        assert not a.rx(old).search(tree[tg]), "%s: a withdrawn text is still in %s" % (i, tg)
+    r = _run([APPLY2, "--check"])
+    assert r.returncode == 0 and "already applied" in r.stdout, (r.returncode, r.stdout[-200:], r.stderr[-300:])
+    d = tempfile.mkdtemp(prefix="l5pwr2-apply-")
+    try:
+        y = os.path.join(d, "pcb_interfaces.yaml")
+        h = os.path.join(d, "HW-FW-CONTRACT.md")
+        for f, rel in ((y, "v2/ecad/tools/pcb_interfaces.yaml"), (h, "v2/docs/HW-FW-CONTRACT.md")):
+            g = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (BASE2, rel)], capture_output=True)
+            if g.returncode != 0:
+                raise Skip("commit %s is not in this repository" % BASE2)
+            open(f, "wb").write(g.stdout)
+        args = ["--yaml", y, "--hwfw", h]
+        r = _run([APPLY2, "--check"] + args)
+        assert r.returncode == 0 and "CHECK OK, 6 edit(s)" in r.stdout, r.stderr[-300:]
+        r = _run([APPLY2, "--write"] + args)
+        assert r.returncode == 0 and "WRITTEN" in r.stdout, r.stderr[-300:]
+        r = _run([APPLY2, "--write"] + args)
+        assert r.returncode == 0 and "already applied" in r.stdout, r.stderr[-300:]
+        import yaml
+        doc = yaml.safe_load(open(y, encoding="utf-8").read())
+        prot = " ".join(doc["board_to_board"]["contracts"]["IF-EXT-DC"]["protection"].split())
+        assert "D-10's guard-on case is OPEN" in prot and "no loop is claimed to pass" in prot and "PROVISIONAL, OPEN (B6-ENG-1" in prot
+        dock = " ".join(doc["board_to_board"]["contracts"]["IF-AE-DOCK"]["pin1_vsys_dock"].split())
+        assert "is a resistive extrapolation, not a bound" in dock and "never while U12 or U22 starts" in dock
+        # a mixed state is refused: the old text of one edit put back beside the new texts
+        t = open(h, encoding="utf-8").read()
+        open(h, "w", encoding="utf-8").write(t + "\n| x | y | the backstop's trip and the guard's six bench rows; row 3 a pass only from a 3.30 uH loop until B6-ENG-1 |\n")
+        r = _run([APPLY2, "--check"] + args)
+        assert r.returncode == 3 and "not in the state" in r.stderr, r.stderr[-300:]
+    finally:
+        shutil.rmtree(d)
+
+
+def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_idempotent():
+    """L5-F11 and set 28's sweep: no withdrawn wording in the tree's contract files; the second script reads already applied on the
+    tree, applies once to the files at BASE3, writes nothing on a second run, and refuses on the files at BASE2 (ORDER)."""
+    import collections
+    import re as _re
+    need(APPLY3, "the L5-F11 script")
+    sp = importlib.util.spec_from_file_location("apply_l5f11_under_test", APPLY3)
+    a = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(a)
+    E = a.edits(collections.defaultdict(str))
+    assert len(E) == 14
+    tree = {"yaml": open(YAML, encoding="utf-8").read(), "hwfw": open(HWFW, encoding="utf-8").read()}
+    for i, tg, _w, old, _n in E:
+        assert not a.rx(old).search(tree[tg]), "%s: a withdrawn text is still in %s" % (i, tg)
+    for k, t in tree.items():
+        flat = " ".join(t.split())
+        for pat in WITHDRAWN:
+            assert not _re.search(pat, flat), "%s carries a withdrawn wording: %s" % (k, pat)
+    r = _run([APPLY3, "--check"])
+    assert r.returncode == 0 and "already applied" in r.stdout, (r.returncode, r.stdout[-200:], r.stderr[-300:])
+    d = tempfile.mkdtemp(prefix="l5f11-apply-")
+    try:
+        y = os.path.join(d, "pcb_interfaces.yaml")
+        h = os.path.join(d, "HW-FW-CONTRACT.md")
+        args = ["--yaml", y, "--hwfw", h]
+        for base, want in ((BASE2, "ORDER"), (BASE3, "CHECK OK, 14 edit(s)")):
+            for f, rel in ((y, "v2/ecad/tools/pcb_interfaces.yaml"), (h, "v2/docs/HW-FW-CONTRACT.md")):
+                g = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (base, rel)], capture_output=True)
+                if g.returncode != 0:
+                    raise Skip("commit %s is not in this repository" % base)
+                open(f, "wb").write(g.stdout)
+            r = _run([APPLY3, "--check"] + args)
+            assert want in (r.stdout + r.stderr), (base, r.stdout[-200:], r.stderr[-300:])
+        r = _run([APPLY3, "--write"] + args)
+        assert r.returncode == 0 and "WRITTEN" in r.stdout, r.stderr[-300:]
+        r = _run([APPLY3, "--write"] + args)
+        assert r.returncode == 0 and "already applied" in r.stdout, r.stderr[-300:]
+        for f in (y, h):
+            flat = " ".join(open(f, encoding="utf-8").read().split())
+            for pat in WITHDRAWN:
+                assert not _re.search(pat, flat), "%s carries %s after the two scripts" % (os.path.basename(f), pat)
+        import yaml
+        doc = yaml.safe_load(open(y, encoding="utf-8").read())
+        assert "guard-on case OPEN (L4-E9 8a" in " ".join(doc["board_to_board"]["contracts"]["IF-EXT-DC"]["l4_defects"].split())
+        assert "never while U12 or U22 starts" in " ".join(doc["board_to_board"]["power_line_states"]["FAN1_SW_FAN2_SW"]["start"].split())
+        assert "| 2 (L5-PWR, set 28) |" in open(h, encoding="utf-8").read()
     finally:
         shutil.rmtree(d)
 
