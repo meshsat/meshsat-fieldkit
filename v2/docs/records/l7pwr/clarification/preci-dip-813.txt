@@ -1,0 +1,38 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1357, Layer 7 record l7pwr, 3 October 2026.
+To: PRECI-DIP SA, Delemont, Switzerland, technical sales (the catalogue's address sales@precidip.com, +41 32 421 04 00).
+
+Subject: 813-S1-012-10-016101 (813 series spring-loaded connector, 2.54 mm, double row, 12 contacts, initial height 7 mm):
+the current-time capability of one contact
+
+We are designing a prototype field unit in which one contact of an 813-S1-012-10-016101 (your "Spring-Loaded Connectors"
+catalogue, page 34: operating current max. 3.5 A, contact resistance 10 mOhm static at the halfway position, music-wire spring
+gold plated, -55 to +85 C with the music-wire spring, page 31) carries a 9.5 to 17.4 V supply of 1.0 A continuous (up to 1.3 A
+with the fans at full speed) from a carrier board to a docking board. The supply is protected upstream by an electronic fuse
+(Texas Instruments TPS16630) whose printed behaviour sets the fault duties below. The contact may reach 85 C body temperature in
+service (the inside air of a sealed enclosure). Seven further contacts of the same connector carry the return.
+
+Could you tell us, for this contact (brass piston and barrel, gold-plated music-wire spring, 0.25 um gold on the barrel and
+0.5 um on the piston):
+
+1. Its non-repetitive pulse capability. The eFuse's fast trip bounds a hard short applied while the supply is on to at most
+   566 A for at most 4.5 microseconds (at most 1.44 A2s), once per event, through the contact at its halfway position. Is a peak
+   current or an I2t figure for a single pulse of about 5 us available, and what is the failure mode you would expect first (the
+   piston-to-barrel interface, the plating, the spring if it carries current)? Your surface-mount series page prints "Max. 3.5 A /
+   7A peak"; is a peak figure defined for the 813 solder-tail series, and over what duration is "peak" defined?
+
+2. Its repetitive duty capability. After a start into a persistent short the eFuse limits the current to 1.47 to 1.80 A for at
+   most 1.5 s, switches off for 0.5 to 0.8 s and retries, so the contact can see 1.80 A at a duty of at most 0.75 for as long
+   as the short persists (we test one hour at a 70 C ambient). Is this inside the 3.5 A operating rating at 85 C body
+   temperature, and is the 3.5 A rating itself valid up to the music-wire spring's 85 C, or derated with temperature?
+
+3. The contact resistance criterion. Our acceptance after each fault case is a four-wire reading at 1 A within +10 % of the
+   contact's first reading and at most 20 mOhm. Is the catalogue's 10 mOhm a maximum or a typical figure, at what current is it
+   measured, and what change of contact resistance after a current event would you regard as damage?
+
+4. Whether the spring is in the current path at the halfway position, or the piston contacts the barrel wall so that the
+   spring carries no appreciable current.
+
+5. The plating specification of page 178 of the full catalogue, which the SLC catalogue refers to, for the S1 code.
+
+A current-time curve, an I2t figure or a statement of the test you qualify the contacts with would let us close the question
+without a bench test on your parts. Thank you.

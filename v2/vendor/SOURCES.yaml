@@ -4052,3 +4052,76 @@ documents_filed_d8dec31:
     filing_note: "the fitted code C3685740 is gen_sch_a.py's for U34 (line 798); the code's match to the -DSKR suffix and the WSON-10 package is the parts stream's condition 1 check, not done here"
     status: VERIFIED
     matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"
+
+# ADDED 3 OCTOBER 2026 (MESHSAT-1357, Layer 7 record l7pwr: the fans D-18 / E11-35, the T-H1 mock-up bill, the dock lead's
+# pulse capability). Outside `parts:` on purpose: the fans are placed on no schematic as parts (board E's J_FAN1/J_FAN2 and board
+# B's J_FAN1..3 are their headers) and Layer 6 (records/l6pwr) integrates their identity rows; these are the documents the record
+# read, each fetched from the maker's own site unless the role says otherwise, and the fans' identities as the record selected
+# them (authority: SESSION). Nothing here has been bought, built or measured.
+documents_filed_l7pwr:
+  - for_entry: null
+    role: "the IP68 mixer fan selected for board E's J_FAN1 and J_FAN2 (D-18 settled by the session, record l7pwr): Sanyo Denki 9WL0612P4H001, San Ace 60W, 60 x 60 x 25 mm aluminium frame, 12 V, operating 10.8 to 13.2 V, 0.17 A, 2.04 W, 6150 min-1, 27.5 CFM, 97 Pa, 36 dB(A), -20 to +70 C, 180,000 h at 60 C, IP68, pulse sensor and PWM; needs a regulated 12.0 V rail on board E (the record's FINDING for board E's generator owner); alternative Sunon GF60151B7-1E00U-AE9 (prints -10 C, no tachometer)"
+    path: "v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md"
+    doc_id: "Sanyo Denki product-database pages, Splash Proof Fan San Ace 60W and 40W (9WL0612P4H001, P4J001, P4S001, 9WL0624P4H001, 9WPA0412P6G001, 9WPA0424P6G001), transcribed with each page's sha256"
+    revision: "the pages as served on 3 October 2026 (no revision printed)"
+    url: "https://products.sanyodenki.com/en/sanace/dc/splash-proof-fan/9WL0612P4H001/ (and the five sibling pages the file names)"
+    fetched: "2026-10-03T00:12Z to 00:25Z, curl from the runner, HTTP 200; the pages are served by script and the transcription is filed in their place"
+    sha256_of_the_file_read: "the HTML of each page: 9WL0612P4H001 ec42c4a8744d8a2bdda69a36cdf036761cc434b151244daa28f7bff3ab4b2112; the others in the file"
+    filing_note: "the maker's instruction manual (M0011876C) and CAD are behind a download form: the hole pattern, the PWM input levels and the starting current are NOT READ"
+    status: VERIFIED
+    matches_fitted: "the fan is fitted on no schematic; the record selects it for the J_FAN1/J_FAN2 headers of gen_sch_e.py, which the record's FINDING asks to become 4-wire on a 12.0 V rail"
+  - for_entry: null
+    role: "the IP68 cooler fan selected for board B's J_FAN1 to J_FAN3 over the three CM5 coolers (D-18 settled by the session, record l7pwr): Sanyo Denki 9WPA0412P6G001, San Ace 40W, 40 x 40 x 20 mm, 12 V, operating 10.8 to 13.2 V, 0.17 A, 2.0 W, 13700 min-1, 13.4 CFM, 210 Pa, 44 dB(A), -20 to +70 C, 40,000 h at 60 C, IP68, pulse sensor and PWM; no 5 V IP68 40 mm fan exists in the lines read, so the slot header's 5 V pin must become a 12.0 V feed (the record's FINDING for board B's generator owner); alternative Sunon GF40282B3-1000U-SEP (24 V, 28 mm thick, range and life not read)"
+    path: "v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md"
+    doc_id: "as above (the 9WPA0412P6G001 row)"
+    revision: "the page as served on 3 October 2026"
+    url: "https://products.sanyodenki.com/en/sanace/dc/splash-proof-fan/9WPA0412P6G001/"
+    fetched: "2026-10-03T00:15Z, curl from the runner, HTTP 200"
+    sha256_of_the_file_read: "the page's HTML 90a9c2d2fc1f7457401df03661e0addff609df0e5240733d2c1ba38635f2a90a"
+    filing_note: "the 9WP0412H6001 distributors list as a lower-power 40 mm IP68 model answers HTTP 404 on the maker's database and is not a candidate"
+    status: VERIFIED
+    matches_fitted: "the fan is fitted on no schematic; the record selects it for gen_sch_b.py's J_FAN headers (JST-SH 1.0, C160390), whose supply pin the record's FINDING moves to 12 V"
+  - for_entry: null
+    role: "the maker's own table of every IP68 (and IP56, GR487) GF-series fan: the 40 mm IP68 models are 24 V only (GF40282B), the 60 x 60 x 15 models 12 V (GF60151B6 to B9), the 60 x 60 x 25 24 V (GF60252B); read for the candidates and the alternatives of record l7pwr"
+    path: "v2/vendor/fans/sunon-ip56-ip68-gr487-fan-series-239-E-2023-04-07.pdf"
+    doc_id: "Sunon IP56/68 Rating Dustproof & Waterproof Fan Series and GR487 salt-spray series, model tables"
+    revision: "2023/04/07 (239-E)"
+    url: "https://www.sunon.com/eu/MANAGE/Docs/WEBCONT/Files/1242/IP56.68.GR487_(239-E)_new.pdf"
+    fetched: "2026-10-03T00:14Z, curl from the runner, 201,393 bytes, 3 pages"
+    sha256_of_the_file_read: "902af71be894edda5e78d2f3514547dc203fc2e56bdc355d198c84eb82164386"
+    filing_note: "the brochure prints no operating voltage range, temperature or life; the GF60151 family's figures were read from Sunon's GF60151B6 specification for approval as a distributor hosts it (official.cz, sha256 969a976e..., issue 12.06.2017, pages dated 2018.02.23), cited in records/l7pwr/inputs/sunon-gf60151b6-spec-reading-2026-10-03.md and NOT filed because it did not come from the maker's site: operating 4.5 to 13.8 V, -10 to +70 C, 70,000 h at 40 C, two leads"
+    status: VERIFIED
+    matches_fitted: "not a fitted part; the brochure rows name the alternatives GF60151B7-1E00U-AE9 and GF40282B3-1000U-SEP"
+  - for_entry: null
+    role: "Same Sky's IP68 60 x 60 x 25 fan series (READY-TO-ACT 5.2's stand-in mixer CFM-6025BG68, the -22 variant): operating input 10.8 to 13.2 V (12 V models) and 21.6 to 26.4 V (24 V models), starting voltage 7 and 14 V typical, operating temperature -10 to +70 C, life 70,000 h at 40 C, soft start, tachometer on -20 and -22, PWM on -22; read as a candidate of record l7pwr (it fails REQ-043's -20 C)"
+    path: "v2/vendor/fans/samesky-cfm-60bg68-dc-axial-fan-2024-09-12.pdf"
+    doc_id: "Same Sky, SERIES: CFM-60BG68, DESCRIPTION: DC AXIAL FAN"
+    revision: "date 09/12/2024; revision history to 1.01 of 03/07/2024"
+    url: "https://www.sameskydevices.com/product/resource/cfm-60bg68.pdf"
+    fetched: "2026-10-03T00:22Z, curl from the runner, 1,694,102 bytes, 8 pages"
+    sha256_of_the_file_read: "72dd06bea8f5498b49676924d6dab50785bed5b01c2a2e0e0b73549140f4a3dc"
+    filing_note: "the sheet carries no redistribution restriction (a warranty and a critical-component notice only); filed"
+    status: VERIFIED
+    matches_fitted: "not a fitted part; the stand-in named by READY-TO-ACT.md 5.2 for T-H1 until the pick, now replaced by the picked fan"
+  - for_entry: null
+    role: "the CM5 cooler the three cooler fans sit on: Raspberry Pi's Cooler for Compute Module 5 is a PASSIVE heatsink, 56 x 41 x 12.7 mm, four M2.5 x 8 screws from below the carrier, list price USD 5, in production until at least January 2036; ASSEMBLY.md's 'coolers clipped on with their fan leads' and panel1450.py's 30 x 30 fan envelope describe a fan the maker does not supply (record l7pwr section 4, a FINDING for v2/cad's owner)"
+    path: "v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf"
+    doc_id: "Raspberry Pi Cooler for Raspberry Pi Compute Module 5, product brief"
+    revision: "RP-008184-DS-1, published December 2024"
+    url: "https://datasheets.raspberrypi.com/cm5/cooler-product-brief.pdf (served from pip-assets.raspberrypi.com, categories/1211-raspberry-pi-cooler/documents/RP-008184-DS-1-cooler-product-brief.pdf)"
+    fetched: "2026-10-03T00:16Z, curl from the runner, 1,066,268 bytes"
+    sha256_of_the_file_read: "98fd27302cffd3a6de96fc2b1e90deb577a4e675c30d3cab8e5afea37998ca28"
+    filing_note: "the physical drawing's dimensions are 'approximate and for reference purposes only' (the brief's own note); the fins' direction is not readable from the text layer"
+    status: VERIFIED
+    matches_fitted: "ASSEMBLY.md section 1 names 'the CM5 Cooler' on each module; this is that product's brief"
+  - for_entry: dock-spring-connector-precidip-813
+    role: "the whole SLC catalogue of which the entry's two pages are an extract, re-read for the dock contact's pulse question (record l7pwr section 7 and clarification/preci-dip-813.txt): the 813 solder-tail series prints 'OPERATING CURRENT Max. 3.5 A' and '10 mOhm (static measurement, halfway position)' and no pulse or peak figure; the surface-mount SLC series page prints 'Max. 3.5 A / 7A peak' with no duration; the general specifications page prints -55 to +85 C with the music-wire spring"
+    path: "v2/vendor/precidip/precidip-catalog-slc-2018-03-20.pdf"
+    doc_id: "Preci-Dip, Spring-Loaded Connectors catalogue (SLC), 14 pages"
+    revision: "PDF created 20 March 2018; uploaded to the maker's site October 2024 and linked from https://precidip.com/catalogs-brochures/ as the current SLC catalogue"
+    url: "https://precidip.com/wp-content/uploads/2024/10/Catalog-SLC.pdf"
+    fetched: "2026-10-03T00:28Z, curl from the runner, 736,895 bytes"
+    sha256_of_the_file_read: "638a0debaf507825f6925e3dcdaa0eff765761d9202d2e0fbdde4f41923104b4"
+    filing_note: "the entry's 'contact current rating is not on these two pages' is superseded: page 34 of this catalogue (the entry's extract page) prints Max. 3.5 A, as records/w3de read it on 27 September 2026"
+    status: VERIFIED
+    matches_fitted: "yes: the 813-S1-NNN-10-XXX101 ordering row and the height table (XXX 016 = 7 mm) are the fitted code's"
