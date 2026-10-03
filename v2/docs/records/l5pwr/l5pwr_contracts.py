@@ -256,9 +256,30 @@ def sha(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()
 
 
+# THE TARGETS ARE READ AS THIS PASS WROTE THEM (3 October 2026, Layer 5's second round, record l5r2): this record states what the
+# first round wrote, and the second round restated some of those texts in place (FW-E11, the fans' start rule, the SLOT_EN line).
+# A reader of the current tree would refuse the day its subject moves on, which is a rule about history; so the three targets are
+# read at the commit that carries this pass (in this branch's own history), and the Layer 4 sources from the tree as before.
+L5PWR_COMMIT = "1e18a1ca"
+
+
+def committed(rel):
+    import subprocess
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (L5PWR_COMMIT, rel)], capture_output=True)
+    if r.returncode != 0:
+        sys.stderr.write("l5pwr_contracts: %s is not readable at %s (a git checkout holding this branch's history is needed)\n"
+                         % (rel, L5PWR_COMMIT))
+        sys.exit(3)
+    return r.stdout
+
+
 def compute():
     texts, pins, missing = {}, {}, []
-    for key, rel in list(TARGETS.items()) + list(SOURCES.items()):
+    for key, rel in list(TARGETS.items()):
+        raw = committed(rel)
+        texts[key] = flat(raw.decode("utf-8"))
+        pins[key] = ("%s@%s" % (L5PWR_COMMIT, rel), hashlib.sha256(raw).hexdigest())
+    for key, rel in list(SOURCES.items()):
         p = os.path.join(ROOT, rel)
         if not os.path.isfile(p):
             missing.append(rel)
@@ -323,7 +344,7 @@ def render(R):
     p("INFERRED, MODELED, PROVISIONAL (an open condition, its trigger named), RULE (a session rule), TEST (a bench row), NETLIST;")
     p("DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet.")
     p("")
-    p("0. INPUTS (sha256; the targets written and the sources read)")
+    p("0. INPUTS (sha256; the targets as written at %s, read from this branch's history, and the sources read from the tree)" % L5PWR_COMMIT)
     for key in list(TARGETS) + list(SOURCES):
         rel, h = R["pins"][key]
         p("   %-10s %s  %s" % (key, h, rel))
