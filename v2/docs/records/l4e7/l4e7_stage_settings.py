@@ -553,17 +553,19 @@ LEAD_STATEMENTS = ("the selected network holds every rating with its margin only
 _PAUSE = [False]       # the results cache's file recorder is paused while a tree scan runs (the scans enter the KEY by their outcome)
 
 
-def lead_scan():
+def lead_scan(top=None):
     """Every .md and .yaml of v2 (vendor, release, out and this record's folder left out) that states a panel lead's length: the
-    files whose statement is a pinned one (cited: {path: (sha256, statement)}) and the others (hits)."""
+    files whose statement is a pinned one (cited: {path: the pinned statement it carries verbatim}) and the others (hits). What the
+    scan establishes is that, not the files' contents: an edit elsewhere in a cited file changes neither the result nor the KEY."""
+    top = top or TOP
     hits, cited = [], {}
     _PAUSE[0] = True
     try:
-        for root_, dirs_, files_ in os.walk(os.path.join(TOP, "v2")):
+        for root_, dirs_, files_ in os.walk(os.path.join(top, "v2")):
             dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
             for f_ in files_:
                 if f_.endswith((".md", ".yaml")):
-                    rel_ = os.path.relpath(os.path.join(root_, f_), TOP)
+                    rel_ = os.path.relpath(os.path.join(root_, f_), top)
                     t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
                     for m_ in re.finditer(r"(?:solar|panel)\W+(?:lead|cable|extension)", t_, re.I):
                         if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
@@ -571,7 +573,7 @@ def lead_scan():
                             cell_ = " ".join(t_[t_.rfind("|", 0, m_.start()) + 1:(e_ if e_ > 0 else len(t_))].split())
                             known_ = [st_ for st_ in LEAD_STATEMENTS if st_ in cell_]
                             if known_:
-                                cited.setdefault(rel_, (sha(rel_), known_[0]))
+                                cited.setdefault(rel_, known_[0])
                             else:
                                 hits.append(rel_)
     finally:
@@ -3971,7 +3973,9 @@ def render(R):
               "per metre this derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two %.0f mm2 conductors s apart: %.3f uH/m at "
               "the envelope's %.2f uH, %.3f uH/m at round 2's reference loop (%.2f uH, %.2f mm apart) and %.3f uH/m at %.2f uH. The guard "
               "pins that statement: it fires again only when a document states another length or another sentence" % (
-                  "; ".join("%s (read at digest %s): \"%s\"" % (p_, d_[:16], s_) for p_, (d_, s_) in sorted(ld["cited"].items())),
+                  "; ".join("%s each carry, verbatim, the pinned statement (sha256 %s): \"%s\"" % (
+                      " and ".join(sorted(p_ for p_, s2_ in ld["cited"].items() if s2_ == s_)), hashlib.sha256(s_.encode("utf-8")).hexdigest()[:16], s_)
+                      for s_ in sorted(set(ld["cited"].values()))),
                   1e6 * bq_["grid"][0], 1e6 * bq_["grid"][1], le_["m"], le_["mm2"], 1e6 * bq_["grid"][0] / le_["m"], 1e6 * bq_["grid"][0],
                   1e6 * bq_["LA"] / le_["m"], 1e6 * bq_["LA"], 1e3 * bq_["sA"], 1e6 * bq_["grid"][1] / le_["m"], 1e6 * bq_["grid"][1]))
     wrapP("     - ", "       ", "THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC "
@@ -4760,20 +4764,29 @@ def src_part(text):
 def key_parts(files):
     """The KEY's parts: (1) src, src_part() of this script; (2) files, the sha256 of every file under the repository that compute()
     opened or handed to a subprocess on the run that wrote the cache (recorded while it ran; the tree scans excepted); (3) scans,
-    the outcome of the two tree scans compute() makes (lead_scan() with its cited digests, iec_held()), re-run at every check; (4)
+    what the two tree scans compute() makes establish (scan_part(): the files carrying a pinned lead statement verbatim, with the
+    statement's sha256, any other lead statement, and iec_held()), re-run at every check; (4)
     solver, the defaults of the solvers' own parameters (timestep, horizon); (5) python, its major.minor; (6) pdftotext, its version."""
     def dig(rel_):
         try:
             return sha(rel_)
         except OSError:
             return "missing"
-    hits_, cited_ = lead_scan()
     pv_ = subprocess.run(["pdftotext", "-v"], capture_output=True, text=True)
     return dict(src=src_part(open(os.path.abspath(__file__), encoding="utf-8").read()), files={f_: dig(f_) for f_ in sorted(files)},
-                scans=dict(lead_hits=sorted(set(hits_)), lead_cited={k_: list(v_) for k_, v_ in sorted(cited_.items())}, iec61000_4_5=iec_held()),
+                scans=scan_part(),
                 solver={f_.__name__: [[p_.name, repr(p_.default)] for p_ in inspect.signature(f_).parameters.values() if p_.default is not inspect.Parameter.empty]
                         for f_ in (guard_event, guard_event_b, sense_ripple)},
                 python="%d.%d" % sys.version_info[:2], pdftotext=(pv_.stderr or pv_.stdout).strip().splitlines()[0])
+
+
+def scan_part(top=None):
+    """The KEY's scans part: what the two tree scans establish, not the scanned files' contents. For the panel lead: the files that
+    carry a pinned statement verbatim (each with the statement's own sha256), and the files with any other lead statement (any
+    makes compute() refuse). For IEC 61000-4-5: whether a file of v2/vendor names it."""
+    hits_, cited_ = lead_scan(top)
+    return dict(lead_hits=sorted(set(hits_)), lead_cited={k_: hashlib.sha256(v_.encode("utf-8")).hexdigest() for k_, v_ in sorted(cited_.items())},
+                iec61000_4_5=iec_held())
 
 
 def key_of(parts):
