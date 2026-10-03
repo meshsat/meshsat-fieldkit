@@ -7,3 +7,13 @@ l7pwr-cooler-identity-2087060b.md sha256 518a45fa2ecddc6f8d37e3eb0a1beac825153ae
 l5r2-findings-and-rows-6902db8f.md sha256 acd61db263e3cfdafc8f3b72372afc2fe0c3c87e530e439a0bd005aac27c07d1
   from v2/docs/records/l5r2/L5-INTERFACES-R2.md at commit 6902db8f on branch fnd/l5r2 (Layer 5's round 2; the whole file's sha256
   818e348940ecd87ab24da2e1026ab54ceedb8cfa949e0eab575b502a872d44dd): section 9 (findings L5R2-F01 to F08) whole, then the table rows R2-03, R2-04 and R2-27.
+
+fw-panel-F01-42c27369.md sha256 668223530e45e19b75978e59435c3388b0e135914370a83324cc93858bc62111
+  from v2/firmware/panel/README.md at commit 42c27369 on branch fnd/fw-panel (the panel firmware; the whole file's sha256
+  8582354e9c20206e4c698e794621b684aaaf6addf8b56e83d61bf1d2cc2ec3c9): section 5's heading, its table header and the row F-01, then the paragraph of section 2 that states F-01's check.
+
+l6r2-apply_gen_sch_c_lcsc-7633ae0a.py sha256 e4e4cea729995d59189aac98e83a997d714b7e592cc1cb579e70a33311a4880e
+l6r2-l6r2_apply-7633ae0a.py sha256 3861922c585a40195b105b3dbaed5650af6024cf172678f1f453ab2a6863f0d5
+  from v2/docs/records/l6r2/apply_gen_sch_c_lcsc.py and v2/docs/records/l6r2/l6r2_apply.py at commit 7633ae0a on branch fnd/l6r2
+  (Layer 6's board C draft and the helper it imports), whole files byte for byte; this record's proof runs them as
+  apply_gen_sch_c_lcsc.py and l6r2_apply.py side by side in a scratch git repository (the helper asks git for its top level).
