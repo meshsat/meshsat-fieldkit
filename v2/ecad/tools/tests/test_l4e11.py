@@ -638,7 +638,7 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
                      '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
                      '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
-                     '"R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
+                     '"R17", "Q39", "Q40", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -724,7 +724,7 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
         ta, te = open(a, encoding="utf-8").read(), open(e, encoding="utf-8").read()
         assert '"POGO12",\n     {"1": "VSYS_DOCK", "2": "GND"' in ta
         assert '"1": "VBAT", "2": "VBAT", "3": "VBAT"' in ta and '"18": "VSYS_DOCK", "19": "VSYS_DOCK", "20": "VSYS_DOCK"' in ta, "U42 is not between VBAT and VSYS_DOCK"
-        assert 'r("R221", "11k 0.1%", "EF_ILIM", "GND")' in ta and 'loads={"J_DOCK": 1.0}' in ta and 'loads={"U42": 1.0, "U4": 2.0' in ta
+        assert 'r("R228", "11k 0.1%", "EF_ILIM", "GND")' in ta and 'loads={"J_DOCK": 1.0}' in ta and 'loads={"U42": 1.0, "U4": 2.0' in ta
         assert '"POGO_T6",\n     {"1": "VSYS_E", "2": "GND"' in te
         assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
         assert te.count('{"1": "VSYS_E", "2": "FAN%s_SW" % n') == 2 and 'loads={"P_CP": 9.0},' in te
@@ -956,3 +956,33 @@ def t_every_measurement_row_names_its_specimen_and_blocks_only_the_final_release
         rows = [l for l in sec.splitlines() if l.startswith("| Row %s |" % iid)]
         assert len(rows) == 1 and rows[0].count("|") == 6, iid
         assert "release" in rows[0].split("|")[5] or "selection" in rows[0].split("|")[5] or "choice" in rows[0].split("|")[5], iid
+
+
+def t_the_board_a_drafts_add_disjoint_designators():
+    """Every board A draft under records/l4e* applied to a copy of gen_sch_a.py (L4-E8's bank after L4-E6's R12, its stated order);
+    the designators each adds are read from the text it writes, and no two drafts add the same one (L6P-F01)."""
+    _M()
+    import glob
+    pat = re.compile(r"\b([RCDLQU]\d{1,3}|J_[A-Z0-9]+)\b")
+    drafts = sorted(glob.glob(os.path.join(ROOT, "v2", "docs", "records", "l4e*", "apply_gen_sch_a_*.py")))
+    assert os.path.join(REC, "apply_gen_sch_a_charger.py") in drafts and len(drafts) >= 7
+    r12 = [d for d in drafts if d.endswith("apply_gen_sch_a_r12.py")]
+    added = {}
+    for d in drafts:
+        with tempfile.TemporaryDirectory() as td:
+            a = os.path.join(td, "gen_sch_a.py")
+            shutil.copy(GEN_A, a)
+            pre = r12 if d.endswith("apply_gen_sch_a_bank.py") else []
+            for s in pre:
+                assert _run([s, a, "--write"]).returncode == 0, s
+            before = set(pat.findall(open(a, encoding="utf-8").read()))
+            r = _run([d, a, "--write"])
+            assert r.returncode == 0, "%s: %s" % (os.path.relpath(d, ROOT), r.stderr.decode()[-200:])
+            added[os.path.relpath(d, ROOT)] = set(pat.findall(open(a, encoding="utf-8").read())) - before
+    mine = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_charger.py"), ROOT)]
+    assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40"} <= mine and "R221" not in mine
+    names = sorted(added)
+    for i, x in enumerate(names):
+        for y in names[i + 1:]:
+            both = added[x] & added[y]
+            assert not both, "%s and %s both add %s" % (x, y, sorted(both))
