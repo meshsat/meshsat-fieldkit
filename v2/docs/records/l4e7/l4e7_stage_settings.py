@@ -2485,6 +2485,7 @@ def compute():
                tmr_v=g3(t48, r"V\(TMR_OC\) ([\d.]+) ([\d.]+) ([\d.]+) V", "TPS4811 TMR threshold"),
                pin_abs=g3(t48, r"Input Pins OV, EN/UVLO, INP, INP_G, FLT_I , FLT_T to GND \S1 (\d+)", "TPS4811 input pins' maximum")[0])
     T48["cl"] = 47e-9
+    T48["vs_rec"] = g3(t48, r"VS, CS\+, CS. to GND 0 (\d+) Input Pins EN/UVLO, OV to GND 0 15", "TPS4811 6.2 the recommended operating VS")[0]
     lm5, lm6 = flat(pg(LM747, 5)), flat(pg(LM747, 6))
     need(lm5, r"ANODE to GND .65 65 V", "LM74700 6.1 ANODE")
     need(lm5, r"CATHODE to ANODE .5 75 V", "LM74700 6.1 CATHODE to ANODE")
@@ -2597,6 +2598,7 @@ def compute():
     # C135 and C136, four Samsung CL32B225KCJSNNE, R97 28.0k, and C133, C134 and C71 to C74 Samsung CL32B106KBJNNNE; C133 and
     # C134, two 10 uF 50 V ceramics (C13's part text and land), join the bulk on PV_P
     GD = dict(L11, inp_div=(L11["inp_div"][0], 28.0e3), cscp=330e-12)    # B6 round 2: R97 28.0k (INP 10 % under its 20 V)
+    TOL_INP = 0.001        # round 4 (L6P-F04): the INP divider R96 over R97 at 0.1 % in this analysis AND in the draft (YAGEO RT0603BRD07, 0.1 %, 25 ppm/K)
     N_PC = 2
     rq11 = QF["rds"][3] * 1e-3 * QF["rds_norm"]        # VGS from the charge pump, at least 11 V: the 10 V row's maximum, at 150 C
     rq12 = QF["rds"][1] * 1e-3 * QF["rds_norm"]        # VGS at least 6 V in operation (below): the 6 V row's maximum, at 150 C
@@ -2679,7 +2681,11 @@ def compute():
     def dv_hi(div_):
         """A 1 % divider's output fraction at its highest (top at -1 %, bottom at +1 %)."""
         return div_[1] * 1.01 / (div_[0] * 0.99 + div_[1] * 1.01)
-    off116 = dict(v=clamp(D11, 10.0, t_air), en=clamp(D11, 10.0, t_air) * dv_hi(L11["cin_uv"]), inp=clamp(D11, 10.0, t_air) * dv_hi(GD["inp_div"]),
+
+    def dv_hi_t(div_, tol_):
+        """A divider's output fraction at its highest for the tolerance tol_ (round 4: the INP divider at TOL_INP)."""
+        return div_[1] * (1 + tol_) / (div_[0] * (1 - tol_) + div_[1] * (1 + tol_))
+    off116 = dict(v=clamp(D11, 10.0, t_air), en=clamp(D11, 10.0, t_air) * dv_hi(L11["cin_uv"]), inp=clamp(D11, 10.0, t_air) * dv_hi_t(GD["inp_div"], TOL_INP),
                   floor=-clamp(D11, 10.0, t_air) * QF["coss"] / (c_in * 0.9), v115=clamp(D11, A115, t_air),
                   e=clamp(D11, 10.0, t_air) * 10.0 * max(Q116) / (math.pi * 1e6))
     t_gate = T48["t_ov"][1] * 1e-6
@@ -2688,7 +2694,7 @@ def compute():
                rq11=rq11, rq12=rq12, rsn_hi=rsn_hi, r_blk=r_blk, vgs12_min=vgs12_min, i_byp=i_byp, p_byp=p_byp, p_cond=p_cond, e_blk=e_blk, e_day=e_day,
                p_static_blk=p_static_blk, e_cap_blk=e_cap_blk, t_allow_blk=t_allow_blk, i_bank_slew=i_bank_slew, t_slew=t_slew, cs_re=cs_re,
                f36=f36, rev=rev, scp_f=scp_f, scp_lo=scp_lo, ocp_lo=ocp_lo, t_over=t_over, v_tmr=v_tmr, ov_in116=ov_in116, off116=off116,
-               t_gate=t_gate, gate_load=gate_load, ocp11=ocp11, ring_en=D11["vc"] * dv_hi(L11["cin_uv"]), ring_inp=D11["vc"] * dv_hi(GD["inp_div"]), cs101_pk=cs101_pk, c_in=c_in, i_reg_hi=i_reg_hi, i_trip_hi=i_trip_hi,
+               t_gate=t_gate, gate_load=gate_load, ocp11=ocp11, ring_en=D11["vc"] * dv_hi(L11["cin_uv"]), ring_inp=D11["vc"] * dv_hi_t(GD["inp_div"], TOL_INP), cs101_pk=cs101_pk, c_in=c_in, i_reg_hi=i_reg_hi, i_trip_hi=i_trip_hi,
                gap=(v_oc, bandA["rise"][1], bandA["rise"][1] * i_trip_c(bandA["rise"][1], rpb, nb, 1, True, R66)),
                hold_shift=i_reg_hi * r_blk, dv_blk=dv_blk, t_fac=T_FAC, t_resp_typ=c["t_resp_typ"], tau_lo=tau_lo, margin=best["m"], R101=R101, R102=R102,
                ov_codes=(rows_rt[ovs["a"]][0], rows_rt[ovs["b"]][0], rows_rt[ovs["rb"]][0]))
@@ -2729,7 +2735,7 @@ def compute():
     d11_cold = (smcj[40]["vbr"][0] * (1 + aT * (t_cold - 25.0)), rd_(smcj[40]))
     t_f6 = 5 * 10.0 * 1.01 * QF["ciss"]                # INFERRED: a further 5 x R91 x Ciss after PD's 1 V (already under VGS(th)'s least)
     kov = ovs["rb"] * rtf(ovs["rb"], 1, True) / (bandA["rt"][0] + ovs["rb"] * rtf(ovs["rb"], 1, True))
-    inp_on6 = inph[1] * (GD["inp_div"][0] * 1.01 + GD["inp_div"][1] * 0.99) / (GD["inp_div"][1] * 0.99)
+    inp_on6 = inph[1] * (GD["inp_div"][0] * (1 + TOL_INP) + GD["inp_div"][1] * (1 - TOL_INP)) / (GD["inp_div"][1] * (1 - TOL_INP))
     r_lead6 = lead["r"] * (1 + AC_.ALPHA_CU * (t_cold - 20.0)) / (1 + AC_.ALPHA_CU * (AC_.T_LEAD - 20.0))
     # the makers' curves (Samsung's typical characteristic data, held back under v2/vendor/passives/held/ by
     # fetch_maker_curves.py and pinned above): the DC-bias change, the change over
@@ -2814,14 +2820,14 @@ def compute():
         g_["d11"] = d11_hot
         W_["soa13"] = W_["iL"] / (der_q[1] * soa_t(soa_l, 1.0, max(W_["ton"], 1e-6)))
         return W_
-    kinp, ken = dv_hi(GD["inp_div"]), dv_hi(L11["cin_uv"])
+    kinp, ken = dv_hi_t(GD["inp_div"], TOL_INP), dv_hi(L11["cin_uv"])
     # each rating: its value, its limit with the decided margin, the side it must stay on (+1 at or under, -1 at or over);
     # U5's two get the bounded numerical error on top (ERR, set by the timestep study below)
     ERR = [0.0]
     RT6 = (("pvf", "PV_F (U21's VS, CS+, CS-, ISCP; the port bank)", lambda W_: (W_["vF"], 100.0 * (1 - M_OTHER), 1)),
            ("slew", "PV_F's slew at CS-, CS+ and ISCP, V/us", lambda W_: (W_["slew"] / 1e6, slew_abs / 1e6 * (1 - M_OTHER), 1)),
            ("vds", "Q12's VDS (and VS, CS+, CS- to SRC)", lambda W_: (W_["vds"], min(QF["vds"], vsrc_ab[1]) * (1 - M_OTHER), 1)),
-           ("inp", "U21's INP (R96 over R97)", lambda W_: (W_["vF"] * kinp, T48["pin_abs"] * (1 - M_OTHER), 1)),
+           ("inp", "U21's INP (R96 over R97, both at 0.1 %)", lambda W_: (W_["vF"] * kinp, T48["pin_abs"] * (1 - M_OTHER), 1)),
            ("en", "U21's EN/UVLO (R94 over R95)", lambda W_: (W_["vF"] * ken, T48["pin_abs"] * (1 - M_OTHER), 1)),
            ("floor", "PV_F's least (VS, CS+, CS-, ISCP to GND)", lambda W_: (W_["vFmin"], -1.0, -1)),
            ("u5p", "U5's CSPIN to CSNIN, positive (+ numerical error)", lambda W_: (W_["u5"] + ERR[0], U5_LIM, 1)),
@@ -2868,6 +2874,19 @@ def compute():
             lo_, hi_ = (lo_, mid_) if all(ok6(evalR(mid_, g_)).values()) else (mid_, hi_)
         return math.ceil(hi_ * 1e8) / 1e8, ls_, evs_
     LA, lsA, evA = floor_of(GA)
+    # round 4 (L6P-F10): PV_F against the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- (an absolute maximum only excludes):
+    # the least loop from which the selected network keeps PV_F under that row, on the grid and bisected
+    j80_ = len(grid6)
+    while j80_ > 0 and evA[j80_ - 1]["vF"] <= T48["vs_rec"]:
+        j80_ -= 1
+    if 0 < j80_ < len(grid6):
+        lo80_, hi80_ = grid6[j80_ - 1], grid6[j80_]
+        for _ in range(10):
+            mid_ = 0.5 * (lo80_ + hi80_)
+            lo80_, hi80_ = (lo80_, mid_) if evalR(mid_, GA)["vF"] <= T48["vs_rec"] else (mid_, hi80_)
+        pvf80 = math.ceil(hi80_ * 1e8) / 1e8
+    else:
+        pvf80 = None if j80_ == len(grid6) else 0.0
     LD, lsD, evD = floor_of(GD11)
     WA = evalR(LA, GA, soa=True)
     if not all(ok6(WA).values()) or not WA["mono"]:
@@ -2948,6 +2967,7 @@ def compute():
               ramp_w=ramp_w, s_h=s_h6, c_min=c_min6, rates=rates6, i_start=i_start6, wit=wit6, witA=witA, e11=e11_6, e11_cap=e11_cap,
               e11_room=e11_room, t11=t11_6, rsns_v=rsns_v, i_cs=rsns_v / (100.0 * 0.999), ics_abs=ics_abs, cspm=cspm, slew_abs=slew_abs,
               vsrc_ab=vsrc_ab, tsc=tsc6, tsc11=tsc11, tinp=tinp, inph=inph, inp_on=inp_on6, rja=rja_q, tjm=tjm_q, tc=tc_q, der=der_q,
+              tol_inp=TOL_INP, vs_rec=T48["vs_rec"], pvf80=pvf80,
               tau=(L11["riscp"] * 0.99 * GD["cscp"] * 0.95, L11["riscp"] * 1.01 * GD["cscp"] * 1.05), t_f=t_f6, kinp=kinp, ken=ken, kov=kov,
               grid=(grid6[0], grid6[-1], len(grid6)), d11=(d11_hot, d11_cold), N_F=N_F, BAND=BAND, GD=GD, cnr=cnr6, cnr_w=cnr_w,
               bounds={k_: (tfac(k_), esr_d[k_]) for k_ in CER_PARTS},
@@ -3097,7 +3117,8 @@ def compute():
              ok=scp_f < scp_lo and v_tmr < T48["tmr_v"][0] and ov_in116 < bandA["rise"][0] and D4N["v116"] <= lim_draft and b6["d59_116"] < csd_abs),
         dict(id="CS116/115 off", name="CS116 and CS115 with the block off", ok=off116["v"] < QF["vds"] and off116["en"] <= 15.0 and off116["inp"] < T48["pin_abs"] and off116["floor"] > -1.0),
         dict(id="already on", name="a stiff 36 V source with the guard on (B6)",
-             note=" (round 2: every rating with its margin for a source loop of at least %.2f uH, NOT MET below it; no approach within the makers' printed rules removes that floor: the engineer's row B6-ENG-1)" % (1e6 * b6["LA"]),
+             note=" (round 2: every rating with its margin for a source loop of at least %.2f uH, NOT MET below it; no approach within the makers' printed rules removes that floor: the engineer's row B6-ENG-1; round 4: PV_F %.2f V at the floor exceeds the recommended operating VS row of %.0f V by %.2f V, OPEN on the guard, under that row from %s)" % (
+                 1e6 * b6["LA"], b6["W"]["vF"], T48["vs_rec"], b6["W"]["vF"] - T48["vs_rec"], ("%.2f uH" % (1e6 * pvf80)) if pvf80 else "no loop on the grid"),
              ok=False, holds=gate_load < T48["cl"] and all(ok6(b6["W"]).values()) and b6["W"]["mono"] and ramp_ok and b6["W"]["soa12"] < 1.0
              and b6["W"]["soa13"] < 1.0 and e11_6 < e11_room and b6["i_cs"] < ics_abs and bool(b6["fail1"]) and b6["LD"] < b6["LA"]),
         dict(id="window", name="the window kept", ok=bandA["rise"][0] > cs101_pk and bandA["fall"][0] > v_oc and max(L11["uv"][2], inp_on6) < float(shdn_txt)
@@ -3285,7 +3306,7 @@ def compute():
                             rails=all(('_intent.rail("%s"' % n_) in new2 for n_ in ("PV_F", "PV_SNS", "PV_RTN")),
                             u21='"13": "PV_P", "14": "PV_GATE", "15": "PV_PU"' in new2 and '"2": "PV_OVLO"' in new2,
                             b6=all(new2.count(s_) == 1 for s_ in ('c("C131", "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE', 'for _cf in ("C132", "C135", "C136"): c(_cf, "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE',
-                                                                  'c("C126", "330p C0G 100V', 'r("R97", "28.0k 1%', 'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
+                                                                  'c("C126", "330p C0G 100V', 'r("R97", "28.0k 0.1% 25ppm', 'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
                                                                   'c("C134", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE"', 'c("C7%d" % (_ca + 1), "10u 50V X7R 1210 Samsung CL32B106KBJNNNE'))
                             and '"1u 100V 1210 (panel port' not in new2 and 'c("C7%d" % (_ca + 1), "10u 50V", ' not in new2)
     return R
@@ -4020,7 +4041,8 @@ def render(R):
           "TPS48110AQDGXRQ1 (C17556513) with R87 %.1f mOhm (C2985708) from PV_F to PV_SNS, Q12 CSD19532Q5B (C473333) from PV_SNS to "
           "PV_P, RSET R88 100R 0.1 %%, RISCP R89 3.01k with C126 330 pF C0G 100 V, the gate slew R90 36.5k, R91 10R and C127 10 nF "
           "C0G 100 V (C184799), CBST C128 1 uF, CTMR C129 22 nF C0G (C97929) with RIWRN R92 39.7k 0.1 %% (C861872), the VS filter "
-          "R93 100R and C130 100 nF 100 V, UVLO R94 59.0k over R95 10.0k, INP R96 100k over R97 28.0k, the OV divider R98, R99 and "
+          "R93 100R and C130 100 nF 100 V, UVLO R94 59.0k over R95 10.0k, INP R96 100k over R97 28.0k (both at 0.1 percent in this "
+          "record's divider and in the draft, round 4), the OV divider R98, R99 and "
           "R100 above (L4-E11's vehicle-entry values but the OV divider, R97 and C126, the last two from B6, THE GUARD ALREADY ON below); C133 and "
           "C134, two Samsung CL32B106KBJNNNE (10 uF 50 V X7R 1210, code owed), on PV_P beside the bulk, and C71 to C74 (the backstop "
           "draft's) moved to the same part (B6 round 2); Q13 CSD19532Q5B (C473333) from "
@@ -4081,7 +4103,7 @@ def render(R):
              b6["U5_LIM"], 1e6 * b6["LA"], b6["W"]["iQ"], 1e6 * b6["W"]["ton"], b6["W"]["vF"], b6["W"]["slew"] / 1e6, b6["W"]["vP"],
              b6["W"]["vS"], DN["vbr_cold"], b6["W"]["u5"] + b6["ERR"], b6["W"]["u5n"] - b6["ERR"], b6["W"]["soa12"],
              DN["vbr_cold"] - b6["ramp_w"]["vS"], b6["W1u"]["u5"] + b6["ERR"]),
-         "MEETS from %.2f uH; NOT MET under it (the engineer's row B6-ENG-1)" % (1e6 * b6["LA"])),
+         "MEETS from %.2f uH; NOT MET under it (the engineer's row B6-ENG-1); PV_F over the recommended operating VS row (%.0f V) at the floor, OPEN" % (1e6 * b6["LA"], b6["vs_rec"])),
         ("the quiescent and conduction loss in normal operation",
          "the series path at most %.2f mOhm (Q12 %.2f, Q13 %.2f at VGS %.1f V or more, R87 %.2f; the FETs at their 150 C reading); "
          "%.3f W at the regulation's highest %.3f A and %.3f W at the trip's highest %.3f A; %.2f mA around the bank at 25 V (IQ, "
@@ -4185,6 +4207,13 @@ def render(R):
           "at its largest); over them PV_F at most %.2f V and TRK_VS at most %.2f V" % (
               LAu, len(cn_), sum(1 for c_ in cn_ if c_["ok"]), len(cn_), min(c_["u5"] for c_ in cn_), b6["cnr_w"]["u5"],
               max(c_["vF"] for c_ in cn_), max(c_["vS"] for c_ in cn_)))
+    wrapP("       ", "       ", "PV_F'S BASIS (round 4, L6P-F10): the %.0f V absolute maximum less 10 %% is the exclusion line above (the project's "
+          "rule since L4-E12's B2: an absolute rating only excludes); the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- is %.0f V "
+          "(SLUSEE5E 6.2), which the floor's %.2f V exceeds by %.2f V: OPEN on the guard, under that row from %s; carried in R-176 row 3 and "
+          "B6-ENG-1. THE INP DIVIDER (round 4, L6P-F04): R96 over R97 at 0.1 percent in this record and in the draft (YAGEO RT0603BRD0728KL, "
+          "0.1 percent, 25 ppm/K, code owed); INP reads %.4f V at the floor against %.1f V" % (
+              100.0, b6["vs_rec"], b6["W"]["vF"], b6["W"]["vF"] - b6["vs_rec"], ("%.2f uH" % (1e6 * b6["pvf80"])) if b6["pvf80"] else "no loop on the grid",
+              b6["W"]["vF"] * b6["kinp"], [v_ for v_ in b6["valsA"] if v_[0] == "inp"][0][2]))
     wrapP("       ", "       ", "AT %.2f uH it holds, and so at every loop above it on the grid; under it it does not: at 1.00 uH %s (U5 %.4f V), "
           "at %.2f uH U5 %.4f V and PV_F %.1f V. Q12 while it conducts: %.3f of its derated chart (TI's Figure 10, the 10 us line for its "
           "%.2f us; derated %.3f for a case at %.1f C), %.1f A at the turn-off; Q13 in the third quadrant %.1f A, %.3f of its derated "
@@ -4349,13 +4378,14 @@ def render(R):
           "on a ramped supply (%.2f to %.2f V rising, %.2f V or more falling); (2) a %.0f V supply connected cold: Q12 never conducts, D4 "
           "carries nothing, PV_F at most %.0f V; (3) at layer 9, the waveforms at the IC pins: a %.0f V supply stepped onto the port "
           "with the guard on, from about %.1f V and from 25 V, through a loop measured first: U5's CSPIN to CSNIN within +-%.3f V, U21 "
-          "turning Q12 off (at most %.0f A, within %.0f us), D4 carrying nothing, PV_P under %.2f V, a pass only for a loop at or over "
+          "turning Q12 off (at most %.0f A, within %.0f us), D4 carrying nothing, PV_P under %.2f V, PV_F under the recommended operating "
+          "%.0f V row (OPEN at the floor, %.2f V), a pass only for a loop at or over "
           "%.2f uH until B6-ENG-1 is decided; (4) a reversed bench panel's curve (no current; the high side's pins against GND); (5) "
           "Q13's leakage at the hot end, under %.1f uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 "
           "(R-174)" % (
               DN["n"], 1e6 * b6["LA"], b6["be115"], b6["d59_115"], bA["rise"][0], bA["rise"][1], bA["fall"][0], R["lead"]["v_src"],
               b6["cold"]["vF"] + 0.5, R["lead"]["v_src"], L11["uvf"][0] + 0.05, b6["U5_LIM"], b6["W"]["iQ"] + 0.5, 1e6 * b6["W"]["ton"] + 0.5,
-              DN["vbr_cold"], 1e6 * b6["LA"], 1e6 * rm["rev"]["i_be"]))
+              DN["vbr_cold"], b6["vs_rec"], b6["W"]["vF"], 1e6 * b6["LA"], 1e6 * rm["rev"]["i_be"]))
     # ---- sequencing
     # ---- the backstop under CS101 (the closing check's defect and its correction)
     cs, tb = R["cs101"], R["cs101"]["tab"]
