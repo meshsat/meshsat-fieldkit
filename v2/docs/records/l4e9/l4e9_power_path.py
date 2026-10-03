@@ -5257,6 +5257,10 @@ def cons_classes(F, reg):
             else:
                 nxt = ("TEST (external: the supplier's phase 2 on the first prototype or a coupon): the specification is this row's "
                        "acceptance; it settles %s; unaffected work continues" % _head(item))
+        elif state == "CLOSED":   # a review finding kept in the register (the owner's amendment), its closing evidence at hand
+            cls, nxt = SET, "DO: nothing further: CLOSED on the evidence its acceptance names"
+        elif state == "OPEN":     # a review finding whose defined correction is in progress elsewhere
+            cls, nxt = SET, "DO: step %s, OPEN until the evidence its acceptance names lands (a defined correction in progress, no open question)" % order
         else:
             cls, nxt = SET, "DO: step %s (%s), no open question; it continues while the open items are worked" % (order, state)
         out[rid] = (cls, nxt)

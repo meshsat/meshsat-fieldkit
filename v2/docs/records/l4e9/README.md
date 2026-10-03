@@ -138,7 +138,10 @@ board E drafts in the change list's order with no designator written twice (186 
 `fnd/l4e9r6` from `5a6ad183`): C5's fitted part read the way `lcsc_fill.py` fills it (code and part number of the line that fills
 it: C113803, YAGEO CC0603KRX7R0BB104, 100 V), never from `gen_sch_e.py`'s note on C46 and C59; the held Yageo sheet read for that
 part number and for R227's capacitors (COVERED, out 11's last block); the timer envelope unchanged; R227's stacked energy 4.369 mJ
-(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). The release-candidate review (3 October
+2026, `fnd/l4e9rc` from `db1cffb5`): its findings kept in the active register, R-197 (L4-RC01, L4-E7's panel-lead scan, OPEN until
+`fnd/l4e7rc` is integrated and its tests pass) and R-198 (L4-RC02, the replay wording, CLOSED at `db1cffb5` and the packer's
+README): 188 items; no figure and no other row's state changes. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
