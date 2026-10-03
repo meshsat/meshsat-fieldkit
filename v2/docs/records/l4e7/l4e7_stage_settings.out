@@ -651,14 +651,14 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        CS116's flat band, so it is added to the test frequencies as 5.14.2's installation resonance
      - THE LEAD'S LENGTH AS A CITED INPUT (set 27, restated on the input at set 28): the derivation's input is a1solar's
        LEAD_M, 5 m one way (ESTIMATE), in v2/docs/records/a1solar/array_calc.py (sha256 fdeaf63f525f1d7f at the reading, read
-       with ast and equal to the module the replay loads). Every length stated beside a solar or panel lead in v2's documents
-       is compared with it as a number with its unit; one that differed would refuse, naming the file and both values.
-       Consistent citations: v2/docs/records/int28/RESULT.md (5 m); v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md (5 m);
-       v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (5 m). The 5 m is this derivation's own a1solar ESTIMATE carried back by
-       L4-E9's register, inside the envelope the guard-on transient already assumes (0.30 to 10.20 uH over 5 m). The loop
-       inductance per metre this derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two 4 mm2 conductors s
-       apart: 0.060 uH/m at the envelope's 0.30 uH, 0.660 uH/m at round 2's reference loop (3.30 uH, 6.09 mm apart) and 2.040
-       uH/m at 10.20 uH. The guard compares values: it fires again only when a document states another length
+       with ast and equal to the module the replay loads). No stated panel-lead length in v2's documents differs from the
+       input: every run compares each length stated beside a solar or panel lead with it as a number with its unit, and one
+       that differed would refuse, naming the file, its line and both values (the consistent citations go to stderr, never
+       into this output). The 5 m is this derivation's own a1solar ESTIMATE carried back by L4-E9's register, inside the
+       envelope the guard-on transient already assumes (0.30 to 10.20 uH over 5 m). The loop inductance per metre this
+       derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two 4 mm2 conductors s apart: 0.060 uH/m at the
+       envelope's 0.30 uH, 0.660 uH/m at round 2's reference loop (3.30 uH, 6.09 mm apart) and 2.040 uH/m at 10.20 uH. The
+       guard compares values: it fires again only when a document states another length
      - THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC characterisation to
        MIL-STD-461G (11 December 2015) and the 'Ground, Army' row of its Table V (held; transcribed in
        v2/vendor/standards/mil-std-461g-requirement-matrix.md, the same file). That row marks CS116 A (5.14, damped sinusoids
