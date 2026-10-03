@@ -87,7 +87,7 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "8ed10661b417bb1b89c1481acfc31c1d9c55da4392143f2d7e844dcffdbeec2e"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "eeba2a78f0c608ac3a54202287bdc0cb55014f11b594f1d2f7fbe2c0a26b11db"),
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
@@ -155,7 +155,7 @@ PINS = {
     "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "9ed580a8dd2f35c80ca86fbebf0ef6ff1cb5617f48e730a68ecfed16094666d1"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
-    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "cff8230b20197ee01c1856f6b3410fb17ec22b2e49d9b904e7d03efe7f4bfdf9"),
+    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "50f48017e30000d35dc939134faaaaab9acce7c745bc136835b07b02cabd858a"),
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
@@ -183,12 +183,13 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "a1d15601": "fnd/l4e11, section 17d after the owner's review L4-QR01 (every specimen row with its lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers; the copper-area transfer and 'layout-independent' withdrawn; TI SPRA953D and Nexperia AN11158 cited)",
                 "b929d8be": "fnd/l4e11, the correction after Astra's recheck of set 27 (the fan rail renumbered U22, R103 to R109, C135 to C141 against every board E draft composed in this record's order; L4-CP01 restated: the 566 A an extrapolation and E11-38 (c)'s target, the start into a short not bounded by printed data, no retry duty claimed; E11-38 (a) to (h); the rail 11.512 to 12.431 V with the 1 percent divider)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
+                "eb49d179": "fnd/l4e7, its residue after round 5 for the review's B6 and L4-F01 (the output's approaches paragraph and budget sentence restated: no passing loop for (A), the turn-off compared with the absolute maximum in words matching its sign)",
                 "1a73f5b4": "fnd/l4e7, round 5 for the recheck of set 27, the review's B6 and L4-F01 continued (the 3.30 uH passing floor withdrawn, both fault positions, the pins' complete budget in both polarities, the sense model rectified, R96 at 0.1 percent)",
                 "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
-FROM_COMMIT = {"l4e7r": "1a73f5b4", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "73d68c8c", "l4e11md": "73d68c8c",
+FROM_COMMIT = {"l4e7r": "eb49d179", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "73d68c8c", "l4e11md": "73d68c8c",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
-               "cl_adi": "1a73f5b4", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+               "cl_adi": "eb49d179", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
@@ -2042,9 +2043,9 @@ def surge_inputs(F, T):
     m = need(g1, r"THE MARGIN, decided before any value \(SESSION\): U5's CSPIN to CSNIN differential within \+-([\d.]+) V, (\d+) % under its \+-([\d.]+) V absolute maximum", "B6's margin")
     b6["margin"], b6["u5_abs"] = f(m, 1), f(m, 3)
     b6["err"] = f(need(g1, r"the error bound added to U5 is twice the largest difference from the 0\.5 ns value at 20 ns or less, ([\d.]+) V", "B6's numerical error"))
-    m = need(g1, r"its loop from ([\d.]+) to ([\d.]+) uH \((\d+) values, 10 % apart, the floor bisected\)", "B6's envelope")
+    m = need(g1, r"its loop from ([\d.]+) to ([\d.]+) uH \((\d+) values, 10 % apart; round 2 bisected a floor on it, WITHDRAWN in round 5\)", "B6's envelope")
     b6["env"] = (f(m, 1), f(m, 2))
-    b6["l_uh"] = f(need(g1, r"THE SELECTED NETWORK \(A\) AT ([\d.]+) uH \(round 2's reference loop, WITHDRAWN as a passing floor in round 5\), the worst over every start, bulk corner, D11 end and both fault positions", "B6's reference loop (round 5: no longer a floor)"))
+    b6["l_uh"] = f(need(g1, r"THE DRAFTED NETWORK \(A\) AT ([\d.]+) uH \(round 2's reference loop, WITHDRAWN as a passing floor in round 5\), the worst over every start, bulk corner, D11 end and both fault positions", "B6's reference loop (round 5: no longer a floor)"))
     rat = re.findall(r"^\s+- (.+?)\s{2,}(-?[\d.]+) (of|against)\s+(-?[\d.]+), margin\s+(-?[\d.]+); holds from (under )?([\d.]+) uH", ga, re.M)
     if len(rat) != 11:
         refuse(3, "B6's rating rows (rounds 2 to 5)")
@@ -2056,7 +2057,7 @@ def surge_inputs(F, T):
         refuse(3, "B6's binding row against its margin")
     b6["inp_row"] = [r for r in b6["rows"] if r[0].startswith("U21's INP")][0]
     b6["pvf_row"] = [r for r in b6["rows"] if r[0].startswith("PV_F (U21's VS")][0]
-    m = need(md7, r"\| \(A\) \| \*\*Selected\*\*: round 1's guard with parts a maker characterises, bounded bank by bank \| round 2's \*\*([\d.]+) uH\*\* reference loop \(two conductors ([\d.]+) mm apart over (\d+) m\) is WITHDRAWN as a passing floor \(round 5\): (there a fault at the connector reads the pins -[\d.]+ to \+[\d.]+ V with the parasitics, against \+-[\d.]+ V) \| no passing loop is claimed \|", "approach (A) on L4-E7's page (round 5)")
+    m = need(md7, r"\| \(A\) \| \*\*Drafted, no passing loop\*\*: round 1's guard with parts a maker characterises, bounded bank by bank \| round 2's \*\*([\d.]+) uH\*\* reference loop \(two conductors ([\d.]+) mm apart over (\d+) m\) is WITHDRAWN as a passing floor \(round 5\): (there a fault at the connector reads the pins -[\d.]+ to \+[\d.]+ V with the parasitics, against \+-[\d.]+ V) \| no passing loop is claimed \|", "approach (A) on L4-E7's page (round 5)")
     if f(m, 1) != b6["l_uh"]:
         refuse(3, "B6's reference loop differs between L4-E7's output and page")
     b6["mm"], b6["len_m"], b6["a_txt"] = f(m, 2), f(m, 3), m.group(4)
@@ -2079,7 +2080,7 @@ def surge_inputs(F, T):
     m = need(g1, r"THE START: Q12 carries at most ([\d.]+) A into the capacitors behind it at the gate's fastest slew, under U21's overcurrent least ([\d.]+) A", "the start (B6)")
     b6["start"] = (f(m, 1), f(m, 2))
     need(g1, r"\(B\) A pin-level limiter .*?: NOT TAKEN on the LT8705A's printed statements\. 8705af p\.30: \"all four of the current sense pins can draw bias current under normal operating conditions\. As such, do not place resistors in series with any of the CSxIN or CSxOUT pins\"", "approach (B) not taken")
-    m = need(g1, r"\(D\) The TPS48111-Q1, .*?: the floor falls to ([\d.]+) uH .*?: not taken\. At 1\.00 uH \(D\) still reads U5 ([\d.]+) V", "approach (D) not taken")
+    m = need(g1, r"\(D\) The TPS48111-Q1, .*?: the loop where its U5 resistive peak alone meets the line falls to ([\d.]+) uH \([\d.]+ mm; no floor is claimed for it either\).*?: not taken\. At 1\.00 uH \(D\) still reads U5 ([\d.]+) V", "approach (D) not taken")
     b6["d"] = (f(m, 1), f(m, 2))
     need(md7, r"the loop where D's resistive peak alone meets the line falls to %s uH \([\d.]+ mm; no floor claimed for D either\)" % re.escape(m.group(1)), "approach (D) on L4-E7's page: no floor claimed")
     eng = g1.split("THE ENGINEER'S ROW B6-ENG-1 (")[1].split(" ROUND 3, ROUTE 3 (")[0]
@@ -2106,9 +2107,9 @@ def surge_inputs(F, T):
     m = need(r3, r"THE AS-DRAFTED SPLIT AT THE HOLD \(([\d.]+) V in, ([\d.]+) V out, ([\d.]+) A\): RSENSE1's resistive peak ([\d.]+) V", "the as-drafted split at the hold")
     b6["hold"] = (f(m, 1), f(m, 4))
     b6["bus"] = f(need(r3, r"delivering into the bus at ([\d.]+) V", "the bus voltage of the operating model"))
-    m = need(r3, r"The pins read at most \+([\d.]+) V on the rise \(resistive ([\d.]+), numerical ([\d.]+)\) and (-[\d.]+) V at the turn-off, against \+-0\.3 V", "the parasitics' budget")
+    m = need(r3, r"THE PINS, the worst of both fault positions: at most \+([\d.]+) V on the rise \(resistive ([\d.]+), numerical ([\d.]+)\) and (-[\d.]+) V at the turn-off\.", "the parasitics' budget")
     b6["budget"] = (f(m, 1), f(m, 4))
-    m = need(r3, r"BY FAULT POSITION: at the connector \(no lead resistance credited\) the pins read (-[\d.]+) to \+([\d.]+) V, at the lead's far end (-[\d.]+) to \+([\d.]+) V", "the pins by fault position (round 5)")
+    m = need(r3, r"BY FAULT POSITION: at the connector \(no lead resistance credited\) the pins read (-[\d.]+) to \+([\d.]+) V, and the turn-off's -[\d.]+ V is PAST the -0\.3 V absolute maximum; at the lead's far end they read (-[\d.]+) to \+([\d.]+) V", "the pins by fault position (round 5)")
     b6["pins"] = {"conn": (f(m, 1), f(m, 2)), "far": (f(m, 3), f(m, 4))}
     if b6["pins"]["conn"] != (b6["budget"][1], b6["budget"][0]):
         refuse(3, "the worst of both fault positions is not the connector's")
@@ -2116,10 +2117,10 @@ def surge_inputs(F, T):
     if "inside the margin line for an inductance at most" in r3:
         refuse(3, "round 4's inductance bound still stated by L4-E7")
     need(r3, r"B6-ENG-2 \(affected circuit: U5's input sense, RSENSE1, CSPIN, CSNIN, C13 to C15, C71 to C74", "B6-ENG-2 in the output")
-    m = need(g1, r"which the floor's ([\d.]+) V exceeds by ([\d.]+) V: OPEN on the guard, under that row from ([\d.]+) uH", "PV_F's basis (round 4)")
+    m = need(g1, r"which the ([\d.]+) V at round 2's reference loop exceeds by ([\d.]+) V: OPEN on the guard, under that row from ([\d.]+) uH", "PV_F's basis (round 4)")
     b6["pvf80"] = (f(m, 1), f(m, 2), f(m, 3))
     b6["pvf_rec"] = f(need(g1, r"RECOMMENDED operating row for VS, CS\+ and CS- is (\d+) V \(SLUSEE5E 6\.2\)", "PV_F's recommended row"))
-    m = need(g1, r"YAGEO RT0603BRD0728KL, 0\.1 percent, 25 ppm/K, code owed\); INP reads ([\d.]+) V at the floor against ([\d.]+) V", "the INP divider (rounds 4 and 5)")
+    m = need(g1, r"YAGEO RT0603BRD07100KL and RT0603BRD0728KL, 0\.1 percent, 25 ppm/K, codes owed\); INP reads ([\d.]+) V at round 2's reference loop, over its ([\d.]+) V margin line", "the INP divider (rounds 4 and 5)")
     b6["inp"] = (f(m, 1), f(m, 2))
     m = need(md7, r"\*\*([\d.]+) V\*\* \(a fault at the connector; over the 18 V margin line, inside the (\d+) V absolute maximum\)", "INP at a connector fault (round 5)")
     b6["inp_conn"] = (f(m, 1), f(m, 2))
@@ -6550,7 +6551,7 @@ def cons_surge_lines(F):
       % (fmt(b6["cold"][1]), fmt(b6["cold"][2]), fmt(b6["cold_conn"]["near"]), fmt(b6["cold_conn"]["slew_line"]), fmt(b6["cold_conn"]["inp_line"]), fmt(b6["cold_conn"]["slew_abs"]), fmt(b6["cold_conn"]["inp_abs"])))
     p("     end %s V, %s V/us, %s V), Q13's body diode %s A, D11 %s mJ; the start %s A under U21's %s A; the static bound %s W"
       % (fmt(b6["cold_conn"]["far"][0]), fmt(b6["cold_conn"]["far"][1]), fmt(b6["cold_conn"]["far"][2]), fmt(b6["cold"][3]), fmt(b6["cold"][4]), fmt(b6["start"][0]), fmt(b6["start"][1]), fmt(rm["static"][0])))
-    p("     the approaches: (A) SELECTED, its 3.30 uH no longer a floor (%s); (B) a pin-level limiter NOT TAKEN (8705af p.30 forbids series resistors on the" % b6["a_txt"])
+    p("     the approaches: (A) the drafted network, NO PASSING LOOP (round 5; %s); (B) a pin-level limiter NOT TAKEN (8705af p.30 forbids series resistors on the" % b6["a_txt"])
     p("     CSxIN and CSxOUT pins; Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (its resistive peak alone meets the line from %s uH, no floor"
       % fmt(b6["d"][0]))
     p("     claimed; at 1.00 uH U5 still %s V)" % fmt(b6["d"][1]))
@@ -6710,7 +6711,7 @@ def cons_review_lines(F):
       % (fmt(cc["near"]), fmt(b6["cold"][1]), fmt(cc["slew_line"]), fmt(b6["cold"][2])))
     p("     %s V, inside the %s V/us and %s V absolute ratings (the lines hold from %s uH): NOT MET on the margin lines; at the far end %s V, %s V/us, %s V: MEETS"
       % (fmt(cc["inp_line"]), fmt(cc["slew_abs"]), fmt(cc["inp_abs"]), fmt(cc["holds"]), fmt(cc["far"][0]), fmt(cc["far"][1]), fmt(cc["far"][2])))
-    p("   (A) selected; (B) the pin-level limiter not taken (8705af p.30; Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (its resistive")
+    p("   (A) drafted, no passing loop; (B) the pin-level limiter not taken (8705af p.30; Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (its resistive")
     p("     peak alone meets the line from %s uH, no floor claimed; at 1.00 uH U5 still %s V)" % (fmt(b6["d"][0]), fmt(b6["d"][1])))
     p("   D-10 and D-11: the remedy selected and drafted (R-173, 8 edits, R96 %s and R97 28.0k at 0.1 %%, U21 on by %s V at the most); D-12 as L4-E7 gives it;"
       % (b6["r96"], fmt(F["sv"]["rm"]["uvlo"][0])))
