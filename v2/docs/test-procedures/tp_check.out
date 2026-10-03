@@ -112,7 +112,7 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
     - owed by R-189: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
   PROPOSED mark: present
 
-b5826c5e6ed21604 v2/docs/test-procedures/README.md
+2d42063c9ad6678d v2/docs/test-procedures/README.md
   quotes: 0 table, 4 text, each checked against its source
   PROPOSED mark: present
 
@@ -179,7 +179,7 @@ b5826c5e6ed21604 v2/docs/test-procedures/README.md
   - TP-SOLAR: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
 
 5. The bring-up page and its inputs
-bd1812ac351aad1c the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
+10cfa9d209c44b89 the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
   PROPOSED mark: present; the drafts statement: present
   boards: A, B, C, D, E, E5, P, each with its seven subsections
   quotes: 14 table, 10 text, each checked against its source

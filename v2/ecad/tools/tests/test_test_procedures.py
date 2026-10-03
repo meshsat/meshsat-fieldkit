@@ -167,3 +167,85 @@ def t_the_checker_refuses_broken_procedures():
         fails = _broken(mutate)
         assert any((": %s " % code) in f or f.startswith(code) for f in fails), (
             "the checker did not report %s on its broken copy: %s" % (code, "; ".join(fails[:4]) or "no failure"))
+
+
+# The bring-up page (3 October 2026): the supplier's first-prototype procedure written by hand above the renderer's marker in
+# v2/docs/PCB-BRING-UP.md, the generated rail inventory below it, and the inputs copied from branches outside this history.
+BRING = os.path.join(ROOT, "v2", "docs", "PCB-BRING-UP.md")
+
+
+def _RR():
+    if "RR" not in _CACHE:
+        import rules_render as RR  # noqa: E402 (TOOLS is on sys.path)
+        _CACHE["RR"] = RR
+    return _CACHE["RR"]
+
+
+def t_the_bring_up_page_carries_its_procedure_above_the_generated_block():
+    T = _T()
+    out, fails, tbds = T.check_bringup(T.Sources(ROOT))
+    assert not fails, "the bring-up page fails: %s" % "; ".join(fails[:6])
+    assert any(o.startswith("R-") for owners, _ in tbds for o in owners), "no TBD names a register row"
+
+
+def t_the_inputs_are_the_bytes_their_sources_name():
+    T = _T()
+    lines, fails = T.check_inputs(T.Sources(ROOT))
+    assert not fails, "; ".join(fails)
+    assert len(lines) >= 5 and all(ln.endswith("verified") for ln in lines), lines
+
+
+def t_the_renderer_keeps_the_procedure_above_its_marker_and_renders_as_before_without_it():
+    RR, T = _RR(), _T()
+    assert RR.BRINGUP_MARK.startswith(T.BRINGUP_MARK_PREFIX), "the checker's marker is not the renderer's"
+    tmp = tempfile.mkdtemp(prefix="tp-render-")
+    try:
+        p = os.path.join(tmp, "page.md")
+        open(p, "w", encoding="utf-8").write("PROCEDURE\n" + RR.BRINGUP_MARK + "\n\nOLD GENERATED\na hand edit below\n")
+        assert RR._with_bringup_preface("NEW\n", page=p) == "PROCEDURE\n" + RR.BRINGUP_MARK + "\n\nNEW\n"
+        open(p, "w", encoding="utf-8").write("a page with no marker\n")
+        assert RR._with_bringup_preface("NEW\n", page=p) == "NEW\n", "a page without the marker must render as before"
+        assert RR._with_bringup_preface("NEW\n", page=os.path.join(tmp, "absent.md")) == "NEW\n"
+    finally:
+        shutil.rmtree(tmp)
+
+
+def t_the_committed_page_is_what_the_renderer_writes_for_its_generated_block():
+    RR = _RR()
+    page = open(BRING, encoding="utf-8").read()
+    assert page.count(RR.BRINGUP_MARK) == 1, "the marker is missing or repeated"
+    gen = page.split(RR.BRINGUP_MARK, 1)[1].lstrip("\n")
+    assert gen.startswith(RR.HEAD) and "## Board A" in gen, "the block under the marker is not the generated inventory"
+    assert RR._with_bringup_preface(gen) == page, "a render of the same generated block would change the page"
+
+
+def t_the_bring_up_checker_refuses_broken_pages():
+    T = _T()
+    page = open(BRING, encoding="utf-8").read()
+    cases = [
+        ("B1", lambda s: s.replace(T.BRINGUP_MARK_PREFIX, "<!-- no marker here")),
+        ("B2", lambda s: s.replace(T.MARK, "for the supplier")),
+        ("B2", lambda s: s.replace("WITH the drafts applied", "with the drafts")),
+        ("B3", lambda s: s.replace("on held evidence the start ends in VSYS_MIN", "on held evidence the start ends at VSYS_MIN")),
+        ("B4", lambda s: s.replace("## Board A\n", "## Board A\n\nSee `v2/docs/no-such-page.md`.\n", 1)),
+        ("B5", lambda s: s.replace("TBD (owed by R-13)", "TBD (owed by R-9999)")),
+        ("B5", lambda s: s.replace("## Board A\n", "## Board A\n\nA figure is TBD here.\n", 1)),
+        ("B6", lambda s: s.replace("### E54. Before the next board", "### E54. Before")),
+        ("B7", lambda s: s.replace("| R-01 |", "| R-9999 |", 1)),
+    ]
+    for code, mutate in cases:
+        bad = mutate(page)
+        assert bad != page, "the fixture for %s changed nothing" % code
+        src = T.Sources(ROOT)
+        src.text[T.BRINGUP] = bad
+        _, fails, _ = T.check_bringup(src)
+        assert any(f.startswith(code) for f in fails), "the checker did not report %s: %s" % (code, "; ".join(fails[:3]))
+
+
+def t_the_inputs_checker_refuses_a_changed_copy():
+    T = _T()
+    src = T.Sources(ROOT)
+    t = src.read(T.INPUTS)
+    src.text[T.INPUTS] = t.replace("1e92b0d8f66c2b6c", "0e92b0d8f66c2b6c")
+    _, fails = T.check_inputs(src)
+    assert any(f.startswith("C10") for f in fails), fails
