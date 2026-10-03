@@ -5,11 +5,11 @@ MESHSAT-1357, 3 October 2026). It PARSES a KiCad netlist (an s-expression reader
   board A  VCO   J_VR1 to J_VR4 pin 1 on VIN_RAW_IN; Q41 pins 1 to 3 (source) on VIN_RAW, pin 4 (gate) on VCO_GATE, pin 5 (drain) on
                  VIN_RAW_IN; U45 pin 2 (OV) on VCO_OV, pin 13 (SRC) on VIN_RAW, pin 14 (PD) on VCO_GATE, pins 7, 8, 9, 10 on GND, pin 19
                  (ISCP) with pin 17 (CS-); R241 between VBUS20 and VCO_OV, R242 between VCO_OV and GND (item 2, S-111)
-           D8V3  U44 pin 4 (IN) on +3V3, pin 5 (OUT) on +3V3_D8; J_MEZZ1 pin 13 on +3V3_D8; R234 on U44's ILM (item 3, L5R2-F05)
-  board B  FANs  for s in 1 to 3: J_FANs pin 1 on FANs_V, pin 3 on FANs_TACH, pin 4 on FANs_PWM; the boost U(701+30(s-1)) pin 9 on
-                 +5V_Ss and pin 6 on FANs_12V; the eFuse U(702+30(s-1)) pin 4 on FANs_12V and pin 5 on FANs_V; the tach stage
-                 Q(701+...) gate +3V3_CMs, source FAN_TACHOs, drain FANs_TACH; the PWM stage Q(702+...) gate +3V3_CMs, source
-                 FAN_PWMs, drain FANs_PWM; no pin of +5V_Ss on J_FANs (item 1, E11-40)
+           D8V3  U44 pin 4 (IN) on +3V3, pin 5 (OUT) on +3V3_A2D; J_MEZZ1 pin 13 on +3V3_A2D; R234 on U44's ILM (item 3, L5R2-F05)
+  board B  FANs  for s in 1 to 3: J_FANs pin 1 on CFANs_V, pin 3 on CFANs_TACH, pin 4 on CFANs_PWM; the boost U(701+30(s-1)) pin 9 on
+                 +5V_Ss and pin 6 on CFANs_12V; the eFuse U(702+30(s-1)) pin 4 on CFANs_12V and pin 5 on CFANs_V; the tach stage
+                 Q(701+...) gate +3V3_CMs, source FAN_TACHOs, drain CFANs_TACH; the PWM stage Q(702+...) gate +3V3_CMs, source
+                 FAN_PWMs, drain CFANs_PWM; no pin of +5V_Ss on J_FANs (item 1, E11-40)
            PNL   U901 pin 4 on +5V_DEV, pin 5 on PANEL_5V_EF; F1 between PANEL_5V_EF and PANEL_5V (item 3, L5R2-F03)
            PH4   J_QMX's and J_CAM's land Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical (item 3, L5R2-F04)
 Each reads DRAWN (every property holds), NOT DRAWN (the correction's new net or part is absent: today's state) or FAIL (present
@@ -97,8 +97,8 @@ def checks_a(nl):
     if v == "DRAWN" and iscp != csn:
         v, why = "FAIL", ["U45.19 (ISCP) on %r, not with U45.17 (CS-) on %r" % (iscp, csn)]
     out["VCO"] = (v, why)
-    d8 = [("U44", "4", "+3V3"), ("U44", "5", "+3V3_D8"), ("J_MEZZ1", "13", "+3V3_D8"), ("R234", "1", "U44_ILM")]
-    out["D8V3"] = judge_props(nl, d8, ("J_MEZZ1", "13", "+3V3_D8"))
+    d8 = [("U44", "4", "+3V3"), ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM")]
+    out["D8V3"] = judge_props(nl, d8, ("J_MEZZ1", "13", "+3V3_A2D"))
     return out
 
 
@@ -107,12 +107,12 @@ def checks_b(nl):
     fans = []
     for s in (1, 2, 3):
         b = 700 + 30 * (s - 1)
-        fans += [("J_FAN%d" % s, "1", "FAN%d_V" % s), ("J_FAN%d" % s, "3", "FAN%d_TACH" % s), ("J_FAN%d" % s, "4", "FAN%d_PWM" % s),
-                 ("U%d" % (b + 1), "9", "+5V_S%d" % s), ("U%d" % (b + 1), "6", "FAN%d_12V" % s), ("U%d" % (b + 2), "4", "FAN%d_12V" % s),
-                 ("U%d" % (b + 2), "5", "FAN%d_V" % s), ("Q%d" % (b + 1), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 1), "2", "FAN_TACHO%d" % s),
-                 ("Q%d" % (b + 1), "3", "FAN%d_TACH" % s), ("Q%d" % (b + 2), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 2), "2", "FAN_PWM%d" % s),
-                 ("Q%d" % (b + 2), "3", "FAN%d_PWM" % s)]
-    out["FANS"] = judge_props(nl, fans, ("J_FAN1", "1", "FAN1_V"))
+        fans += [("J_FAN%d" % s, "1", "CFAN%d_V" % s), ("J_FAN%d" % s, "3", "CFAN%d_TACH" % s), ("J_FAN%d" % s, "4", "CFAN%d_PWM" % s),
+                 ("U%d" % (b + 1), "9", "+5V_S%d" % s), ("U%d" % (b + 1), "6", "CFAN%d_12V" % s), ("U%d" % (b + 2), "4", "CFAN%d_12V" % s),
+                 ("U%d" % (b + 2), "5", "CFAN%d_V" % s), ("Q%d" % (b + 1), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 1), "2", "FAN_TACHO%d" % s),
+                 ("Q%d" % (b + 1), "3", "CFAN%d_TACH" % s), ("Q%d" % (b + 2), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 2), "2", "FAN_PWM%d" % s),
+                 ("Q%d" % (b + 2), "3", "CFAN%d_PWM" % s)]
+    out["FANS"] = judge_props(nl, fans, ("J_FAN1", "1", "CFAN1_V"))
     pnl = [("U901", "4", "+5V_DEV"), ("U901", "5", "PANEL_5V_EF"), ("F1", "1", "PANEL_5V_EF"), ("F1", "2", "PANEL_5V")]
     out["PNL"] = judge_props(nl, pnl, ("U901", "5", "PANEL_5V_EF"))
     fp = nl["footprint"]
@@ -147,16 +147,16 @@ def fixture(letter):
         for ref, pin, net in (("Q41", "4", "VCO_GATE"), ("Q41", "5", "VIN_RAW_IN"), ("U45", "2", "VCO_OV"), ("U45", "13", "VIN_RAW"), ("U45", "14", "VCO_GATE"),
                               ("U45", "7", "GND"), ("U45", "8", "GND"), ("U45", "9", "GND"), ("U45", "10", "GND"), ("U45", "17", "VCO_VS"), ("U45", "19", "VCO_VS"),
                               ("R241", "1", "VBUS20"), ("R241", "2", "VCO_OV"), ("R242", "1", "VCO_OV"), ("R242", "2", "GND"), ("U44", "4", "+3V3"),
-                              ("U44", "5", "+3V3_D8"), ("J_MEZZ1", "13", "+3V3_D8"), ("R234", "1", "U44_ILM"), ("U44", "7", "U44_ILM")):
+                              ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM"), ("U44", "7", "U44_ILM")):
             add(net, ref, pin)
     else:
         for s in (1, 2, 3):
             b = 700 + 30 * (s - 1)
-            for ref, pin, net in (("J_FAN%d" % s, "1", "FAN%d_V" % s), ("J_FAN%d" % s, "3", "FAN%d_TACH" % s), ("J_FAN%d" % s, "4", "FAN%d_PWM" % s),
-                                  ("U%d" % (b + 1), "9", "+5V_S%d" % s), ("U%d" % (b + 1), "6", "FAN%d_12V" % s), ("U%d" % (b + 2), "4", "FAN%d_12V" % s),
-                                  ("U%d" % (b + 2), "5", "FAN%d_V" % s), ("Q%d" % (b + 1), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 1), "2", "FAN_TACHO%d" % s),
-                                  ("Q%d" % (b + 1), "3", "FAN%d_TACH" % s), ("Q%d" % (b + 2), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 2), "2", "FAN_PWM%d" % s),
-                                  ("Q%d" % (b + 2), "3", "FAN%d_PWM" % s)):
+            for ref, pin, net in (("J_FAN%d" % s, "1", "CFAN%d_V" % s), ("J_FAN%d" % s, "3", "CFAN%d_TACH" % s), ("J_FAN%d" % s, "4", "CFAN%d_PWM" % s),
+                                  ("U%d" % (b + 1), "9", "+5V_S%d" % s), ("U%d" % (b + 1), "6", "CFAN%d_12V" % s), ("U%d" % (b + 2), "4", "CFAN%d_12V" % s),
+                                  ("U%d" % (b + 2), "5", "CFAN%d_V" % s), ("Q%d" % (b + 1), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 1), "2", "FAN_TACHO%d" % s),
+                                  ("Q%d" % (b + 1), "3", "CFAN%d_TACH" % s), ("Q%d" % (b + 2), "1", "+3V3_CM%d" % s), ("Q%d" % (b + 2), "2", "FAN_PWM%d" % s),
+                                  ("Q%d" % (b + 2), "3", "CFAN%d_PWM" % s)):
                 add(net, ref, pin)
         for ref, pin, net in (("U901", "4", "+5V_DEV"), ("U901", "5", "PANEL_5V_EF"), ("F1", "1", "PANEL_5V_EF"), ("F1", "2", "PANEL_5V"),
                               ("J_QMX", "1", "VBUS_QMX"), ("J_CAM", "1", "+5V_CAM")):

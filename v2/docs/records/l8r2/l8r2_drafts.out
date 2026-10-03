@@ -22,7 +22,7 @@ fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
 518a45fa2ecddc6f v2/docs/records/l8r2/inputs/l7pwr-cooler-identity-2087060b.md
 acd61db263e3cfda v2/docs/records/l8r2/inputs/l5r2-findings-and-rows-6902db8f.md
 b0abefa8db146baf v2/docs/records/l8r2/inputs/SOURCES.txt
-2df722be5dc5bbe5 v2/docs/records/l8r2/check_l8r2_netlist.py
+240f17a19c2fa956 v2/docs/records/l8r2/check_l8r2_netlist.py
 292383193915b424 v2/docs/records/l8r2/fetch_held_back.py
 c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
 28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
@@ -37,10 +37,10 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 88908ca2202b33ad v2/docs/records/l4e9/apply_gen_sch_a_u17.py
 352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
 cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
-8c3ddeb357780fb2 v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
+98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
 c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
 74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-9ca230b6df9af01b v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+4f954d457423d8d8 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
 3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
 576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
 3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back by its terms, fetched by fetch_held_back.py)
@@ -219,9 +219,9 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
 8. THE NETLIST CHECK (check_l8r2_netlist.py)
   v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
     A VCO   NOT DRAWN: Q41.5 is on None, not VIN_RAW_IN
-    A D8V3  NOT DRAWN: J_MEZZ1.13 is on '+3V3', not +3V3_D8
+    A D8V3  NOT DRAWN: J_MEZZ1.13 is on '+3V3', not +3V3_A2D
   v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256 3ef9b8c49a01b728
-    B FANS  NOT DRAWN: J_FAN1.1 is on '+5V_S1', not FAN1_V
+    B FANS  NOT DRAWN: J_FAN1.1 is on '+5V_S1', not CFAN1_V
     B PNL   NOT DRAWN: U901.5 is on None, not PANEL_5V_EF
     B PH4   NOT DRAWN: J_CAM on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical; J_QMX on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical
   record l8r2's corrections on the netlists: NOT DRAWN
