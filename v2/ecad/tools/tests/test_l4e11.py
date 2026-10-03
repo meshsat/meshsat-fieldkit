@@ -450,8 +450,8 @@ def t_the_record_carries_the_outputs_numbers():
               "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302",
               "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32",
               "33.12", "126.7", "0.2589", "1.3571", "10.753", "3.785", "0.703", "5.74", "123.3", "1.501", "1.8018", "1.4713", "9.539",
-              "0.1486", "152.8", "51.5", "80.9", "566", "1.441", "41.1", "0.3356", "0.5713", "9.494", "267.2", "37.2", "11.93",
-              "1.3208", "0.5208", "89.8", "0.1504", "9.508", "8.33", "6.89", "12.001", "0.72 W", "97.4", "37.7", "8.54"):
+              "0.1486", "152.8", "51.5", "80.9", "566", "1.441", "41.1", "0.3356", "0.5713", "9.494", "267.2", "37.2",
+              "1.3208", "0.5208", "89.8", "0.1504", "9.508", "8.33", "6.89", "12.001", "0.72 W", "97.4", "37.7", "8.54", "11.512", "12.431"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -732,8 +732,8 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
         assert '"POGO_T6",\n     {"1": "VSYS_E", "2": "GND"' in te
         assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
         assert 'loads={"P_CP": 9.0},' in te and '{"1": "+12V_FAN", "2": "GND", "3": "FAN%s_PWM_OD" % n, "4": "FAN%s_TACH" % n}' in te
-        assert '_intent.rail("VSYS_E", 14.4, 1.32, 1.32, "J_BLK"' in te and 'loads={"U12": 0.8, "U18": 0.52}' in te
-        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4"' in te and 'ic("U18", 21, "LTC3115EFE-1' in te
+        assert '_intent.rail("VSYS_E", 14.4, 1.32, 1.32, "J_BLK"' in te and 'loads={"U12": 0.8, "U22": 0.52}' in te
+        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4"' in te and 'ic("U22", 21, "LTC3115EFE-1' in te
         assert 'part("D%s" % ("7" if n == "1" else "8")' not in te and te.count("FAN%s_SW") == 1, "the chopped supply's flybacks or nodes survive"
         left = set()
         for ln in te.splitlines():
@@ -920,6 +920,8 @@ def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_ceiling
     assert abs(M["i2t_pk"] - M["i_pk"] ** 2 * L["tsoft"]) < 1e-12
     assert M["treg"][1] > L["tcl"][1], "the start into a short does not time out later than the overload timer"
     assert abs(M["duty_start"] - M["treg"][1] / (M["treg"][1] + L["tretry"][0])) < 1e-12 and M["rise_retry"] < M["rise_steady"]
+    out17 = open(OUT, encoding="utf-8").read().split("17a. ")[1].split("17b. ")[0]
+    assert "EXTRAPOLATION, not a bound" in out17 and "TARGET for the recorded peak" in out17 and "no duty is claimed" in out17 and "NOT PRINTED" in out17
     assert M["v_in_pk"] < M["abs_in"], "the input spike at the ceiling passes U42's absolute maximum"
     assert 2 * M["fan_simul"] + K["aux"]["U12"] <= L["ilim"][0] + 1e-12 and M["fan_stag"] > M["fan_simul"] > K["aux"]["J_FAN1"]
     assert M["vsys_e_lim"] < L["vsys_e_min"] and M["vsys_e_lim"] > K["ap_vin"][0]
@@ -1000,6 +1002,8 @@ def t_the_fans_rail_covers_vsys_e_and_the_branch_stays_under_u42s_least_limit():
     N, L, K, H = R["N18"], R["L"], R["K"], R["H"]
     assert N["vin"][0] <= N["vsys_e_at_lim"] and N["vin"][1] >= H["vsys_top"], "the rail's input range does not cover VSYS_E"
     assert m.L7_FAN["v_lo"] < N["vout"][0] and N["vout"][2] < m.L7_FAN["v_hi"], "the rail at FB's limits leaves the fans' printed window"
+    lo = N["vfb"][0] * (1 + m.F18_FB[0] * 0.99 / (m.F18_FB[1] * 1.01))
+    assert abs(N["vout"][0] - lo) < 1e-9 and N["vout"][0] < N["vfb"][0] * (1 + m.F18_FB[0] / m.F18_FB[1]), "the divider's tolerance is not in the window"
     assert N["run_on"][2] < N["vsys_e_at_lim"] and N["run_off"][0] > K["ap_vin"][0], "the RUN divider is not between the floor and U12's start"
     assert N["l_isat"] > N["ilim"][2], "the inductor saturates under the regulator's limit"
     assert abs(N["i_decl"] - (K["aux"]["U12"] + N["p_fans"] / (m.F18_ETA * N["vsys_e_floor"]) + m.F18_IQ_PWM)) < 1e-9
@@ -1009,4 +1013,44 @@ def t_the_fans_rail_covers_vsys_e_and_the_branch_stays_under_u42s_least_limit():
     page = open(PAGE, encoding="utf-8").read()
     assert "| E11-40 | implementation | Layer 8 board B generator owner |" in page
     row = [x for x in m.downstream(R) if x[0] == "E11-38"][0][3]
-    assert "(g) one fan stalled" in row and "U18 never disables" in row
+    assert "(g) one fan stalled" in row and "U22 never disables" in row and "(h) an intermittent short" in row and "regulated current recorded" in row
+
+
+def t_the_board_e_drafts_add_disjoint_designators():
+    """Every board E draft under records/l4e* composed on a copy of gen_sch_e.py in L4-E9's change-list order (q1, u5_grade, hold,
+    input_limit, backstop, f1, hotswap, entry, solar_guard, aux; the timer as the LM5069 alternative after hotswap); the designators each
+    adds are read from the text it writes, in part-call position and as tokens outside comments, and no two drafts add the same one
+    (Astra's recheck of set 27, blocking discrepancy 1: the aux draft once took U18, R59 to R65 and C65 to C71 from the solar drafts)."""
+    _M()
+    recs = os.path.join(ROOT, "v2", "docs", "records")
+    main = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
+            ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux")]
+    alt = [("l4e9", "hotswap"), ("l4e11", "timer")]
+    call = re.compile(r'(?:ic|part|c|r|ph|tp|nfet|q)\("([A-Z][A-Z0-9_]*)"')
+    tok = re.compile(r"\b([RCDLQU]\d{1,3}|J_[A-Z0-9]+|TP\d{1,3})\b(?!-)")
+    strip = lambda s: "\n".join("" if l.lstrip().startswith("#") else l.split("#")[0] for l in s.splitlines())
+    added = {}
+    for seq in (main, alt):
+        with tempfile.TemporaryDirectory() as d:
+            a = os.path.join(d, "gen_sch_e.py")
+            shutil.copy(GEN_E, a)
+            before = open(a, encoding="utf-8").read()
+            c0, t0 = set(call.findall(before)), set(tok.findall(strip(before)))
+            for rec, name in seq:
+                s = os.path.join(recs, rec, "apply_gen_sch_e_%s.py" % name)
+                need(s, "board E's draft %s/%s" % (rec, name))
+                r = _run([s, a, "--write"])
+                assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+                after = open(a, encoding="utf-8").read()
+                c1, t1 = set(call.findall(after)), set(tok.findall(strip(after)))
+                added.setdefault("%s/%s" % (rec, name), set()).update((c1 - c0) | (t1 - t0))
+                c0, t0 = c1, t1
+    mine = added["l4e11/aux"]
+    assert {"U22", "L4", "R103", "R109", "C135", "C141"} <= mine and not ({"U18", "R59", "R65", "C65", "C71"} & mine), sorted(mine)
+    names = sorted(added)
+    for i, x in enumerate(names):
+        for y in names[i + 1:]:
+            if {x, y} == {"l4e11/entry", "l4e11/timer"}:
+                continue        # alternatives that refuse each other, never on one board
+            both = added[x] & added[y]
+            assert not both, "%s and %s both add %s" % (x, y, sorted(both))

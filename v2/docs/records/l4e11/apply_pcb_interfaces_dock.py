@@ -43,7 +43,7 @@ YAML_EDITS = [
      '        BQ25730 and its battery FETs between VSYS and R17, board E\'s always-on domain and fans leave CELL_F for VSYS on pin 1 (E\'s\n'
      '        VSYS_E), so the source carries them while the charge is held and the pack feeds none of them; on CELL_F remain the pack\n'
      '        path, D3, C1 and the pack monitor R42 and R43 (0.14 mA at 16.884 V)"\n'
-     '      aux_feed: "pin 1, one 813 contact: 1.32 A declared (U12 0.8 A, the mixers\' 12.0 V rail U18 0.52 A at the floor with both\n'
+     '      aux_feed: "pin 1, one 813 contact: 1.32 A declared (U12 0.8 A, the mixers\' 12.0 V rail U22 0.52 A at the floor with both\n'
      '        fans at full speed; L4-E11 section 18b), 38 percent of 3.5 A, about 8.5 K by w3de\'s assumed I2 rise; VSYS 9.688 to 17.375 V\n'
      '        (L4-E11 section 15d). Protected on board A by the eFuse U42 (TI TPS16630,\n'
      '        R(ILIM) 11.0k: a sustained overload regulated to 1.47 to 1.80 A, a steady setting and not an instantaneous ceiling;\n'
