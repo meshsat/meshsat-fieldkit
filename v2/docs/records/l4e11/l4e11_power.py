@@ -51,8 +51,8 @@ PINS = {
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "1c211e467d81b8b70546bc4435c65d4bd2dcd0d2fc3606714a746b4d8d0ac1fa"),
-    "panel": ("v2/docs/PANEL.md", "b396d028b41e880d7768cb1062111984b8800ee2333d29fcf4ba6b882b82c2e4"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758"),
+    "panel": ("v2/docs/PANEL.md", "3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6"),
     "assembly": ("v2/docs/ASSEMBLY.md", "942d562edd128759c52ee976f7255862f7a2ef78b5fd76af0a2e223f328e64cd"),
     "gen_a": ("v2/ecad/tools/gen_sch_a.py", "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b"),
     "gen_e": ("v2/ecad/tools/gen_sch_e.py", "f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186"),
@@ -106,7 +106,7 @@ PINS = {
     "smcj": ("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
     "dock_py": ("v2/docs/records/w3de/dock_contacts.py", "acd932cbb9e31f8f0fd4563fc97d7ece21e0ce531e133040afb911da3c513b41"),
     "msmf": ("v2/vendor/power/bourns-mf-msmf-pptc.pdf", "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "fce14ef53fdafd4924d0cdf1d2f3177d2e8c92bd3ba5cc140c6182c98cb3eeaa"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
@@ -402,10 +402,10 @@ def compute():
     need(gp, r'27: "PACK_F", 28: "DSG_G", 29: "GND", 30: "NC", 31: "CHG_G"', "board P's gauge with PCHG not connected")
     need(gp, r'pfet5\("Q2", "CSD17570Q5B 30 V N-FET, discharge switch", "DSG_G", "SW", "PACK_P"', "Q2 the discharge FET")
     need(gp, r'r\("R7", "1k", "PACK_P", "VCC_F"\)', "the gauge's VCC from the pack terminal")
-    R["fwc08"] = need(flat(T["hwfw"]), r"\| FW-C08 \| (.*?) \| (Boot low; assert on the bridge's request when the pack reads below 0 C and clear above 3 C, or when the operator sets \"no charge\") \|", "FW-C08").group(2)
-    R["fwa14"] = need(flat(T["hwfw"]), r"\| FW-A14 \| (CHG_INHIBIT .*?) \| (Held low \(charger enabled\) at power-up; asserted only by firmware) \|", "FW-A14").group(2)
+    R["fwc08"] = need(flat(T["hwfw"]), r"\| FW-C08 \| (.*?) \| (Boot low\. Asserted only on the operator's 'inputs off' and on the water\-on\-floor isolation, never for a temperature or 'no charge' hold \(those are FW\-A19's flag and the charger's CHRG_INHIBIT bit\)\. When the pack cannot discharge \(states S2 and S4: the gauge's XDSG, no pack, or both FETs open\) the bridge first warns that asserting it removes the kit's supply \(L4\-E11 7a, rule R\-a; LH\-10\)) \|", "FW-C08").group(2)
+    R["fwa14"] = need(flat(T["hwfw"]), r"\| FW-A14 \| (CHG_INHIBIT .*?) \| (Held low \(charger enabled\) at power\-up; asserted only by firmware, never as a charge hold \(a hold is the CHRG_INHIBIT bit or ChargeCurrent 0, FW\-A19\), and never while the pack cannot discharge \(S2, S4: HIZ stops the converter and removes the kit's only supply\) \(L4\-E11 7a; LH\-10\)) \|", "FW-A14").group(2)
     R["panel10"] = need(flat(T["panel"]), r"high = the shore and vehicle inputs are held off at the front end, so nothing charges\.", "PANEL.md section 10").group(0)
-    R["panel10_cold"] = need(flat(T["panel"]), r"The bridge asks the controller to assert it when the pack temperature \(.*?\) is below 0 C, when the operator sets \"no charge\", and clears it with hysteresis \(charge again above 3 C\)\.", "PANEL.md's cold hold").group(0)
+    R["panel10_cold"] = need(flat(T["panel"]), r"Every charge hold \(cold, hot, the margin hold, or the operator's 'no charge'\) is a flag the firmware keeps until its own condition clears it \(the cold hold, read from the pack gauge's own thermistor by the sensor controller on E6 and reported over USB, below 0 C and cleared with hysteresis above 3 C\), whatever the pack's state\.", "PANEL.md's cold hold").group(0)
     # the pack (SLUUAQ3A, the pack's own tables)
     P = {}
     P["cuv_p"] = find("sluuaq3a", r"2\.2 Cell Undervoltage Protection.*?Trip Min cell voltage1\.\.4 ≤ CUV:Threshold for CUV:Delay duration SafetyAlert\(\)\[CUV\] = 0 SafetyStatus\(\)\[CUV\] = 1 BatteryStatus\(\)\[FD\] = 1,\[TDA\] = 0 OperationStatus\(\)\[XDSG\] = 1 Condition 1", "2.2 CUV trip", flags=re.S)[0]

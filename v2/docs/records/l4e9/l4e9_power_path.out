@@ -20,8 +20,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    trace     e35e62483b67fbe7  v2/docs/records/l3batt/load_trace.out
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
    envelope  35cf43a2b7098a76  v2/ecad/tools/pcb_envelope.yaml
-   hwfw      1c211e467d81b8b7  v2/docs/HW-FW-CONTRACT.md
-   ifaces    9ec50ccfae3b70a0  v2/ecad/tools/pcb_interfaces.yaml
+   hwfw      7b8cb44aeb554791  v2/docs/HW-FW-CONTRACT.md
+   ifaces    22aeae7530c8f523  v2/ecad/tools/pcb_interfaces.yaml
    lm5176    98191bec36d43771  v2/vendor/ti/lm5176-datasheet.pdf
    lm74700   e16b3a8c0023201f  v2/vendor/ti/ti-lm74700-q1.pdf
    csd19532  353ce937cff0b719  v2/vendor/power/ti-csd19532q5b-n-fet.pdf
@@ -48,7 +48,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     3ac6044c45ed9639  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     70c6408c759fface  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   db38ca1b3cc25b80  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12     1696fd424b48a8ca  v2/docs/records/l4e12/l4e12_thermal.out
