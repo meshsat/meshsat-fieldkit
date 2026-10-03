@@ -154,7 +154,7 @@ The envelope the model was run over, which the bench reproduces (the source, its
 | Ramped supply | a programmable DC supply with a slow ramp | 25 to 32 V (row 1); the thresholds read within 0.05 V (proposal: about a fiftieth of the 2.51 V rising band) |
 | Differential probe at U5's CSPIN and CSNIN | a high-voltage-rated differential probe at the IC pins, at least 200 MHz (L4-E7) | the pins' differential within 0.010 V at the step (proposal: a sixth of the 0.060 V between the 0.240 V target and the 0.3 V maximum); common-mode rejection at least 70 dB to 10 MHz (proposal: the common mode steps by about 28.5 V, from 7.46 V to 36 V, so 70 dB leaves under 0.01 V); two single-ended probes subtracted are not acceptable |
 | Probes at PV_F, PV_P, INP, TRK_VS | passive or differential probes, 200 MHz | PV_F against 80 V and 85 V within 1 V (proposal); INP against 18 V and 20 V within 0.2 V (proposal); PV_P against 31.80 V within 0.2 V (proposal) |
-| Current probes | wide-band current probes on Q12's path and on D4's lead | Q12's turn-off current within 2 % (proposal; its line is being resolved, section 8); D4's current resolved to show "carries nothing" (proposal: a 1 A per division range with a 10 mA noise floor, its zero checked before each run) |
+| Current probes | wide-band current probes on Q12's path and on D4's lead | Q12's turn-off current within 2 % (proposal), against R-176's row 3 (section 8); D4's current resolved to show "carries nothing" (proposal: a 1 A per division range with a 10 mA noise floor, its zero checked before each run) |
 | Oscilloscope | 8 synchronised channels, 12-bit, 1 GS/s or faster (proposal) | PV_F's slew against 54 and 60 V/us; Q12's 12 us turn-off window |
 | Leakage measurement (row 5) | a source-measure unit | Q13's leakage at 25 V against 32.1 uA within 1 uA (proposal) |
 | Bench panel curve | a solar array simulator (an I-V curve-emulating supply) | 25 V open circuit and the panel's curve (R-189: 25 V in at the regulation's highest current and at the trip's) |
@@ -280,10 +280,11 @@ The six rows of R-176 as L4-E7 restates them:
 > absolute ratings (their 10 % margin lines are not held at a connector fault near the envelope's least loop, round 5);
 >
 > 3. at layer 9, the waveforms at the IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and from 25
-> V, through a loop measured first. U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 61 A, within 12 us), D4
-> carrying nothing, PV_P under 31.80 V, PV_F under the TPS4811-Q1's recommended operating 80 V row (OPEN at round 2's loop: 83.47
-> V, under the row from 4.03 uH; round 4, L6P-F10). No loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is
-> outside +-0.240 V and B6-ENG-1 decides;
+> V, through a loop measured first. U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 63 A, within 12 us; the
+> computed 62.7 A within 11.4 us at round 2's loop, rounded up; this list read 61 A until set 28), D4 carrying nothing, PV_P under
+> 31.80 V, PV_F under the TPS4811-Q1's recommended operating 80 V row (OPEN at round 2's loop: 83.47 V, under the row from 4.03
+> uH; round 4, L6P-F10). No loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and
+> B6-ENG-1 decides;
 >
 > 4. a reversed bench panel's curve: no current, the high side's pins against GND;
 >
@@ -301,10 +302,10 @@ The lines, with U taken as README section 3 states, for the corrected network at
   10 % margin lines: PASS (P1-1) when the slew plus U is at most 54 V/us and INP plus U at most 18 V. The drafted network does not hold
   them at a connector fault near 0.30 uH (round 5, quoted in R-176's acceptance).
 - **Row 3:** PASS when U5's differential with U stays inside +-0.240 V (and so inside the +-0.3 V absolute maximum), Q12 turns off
-  within 12 us, D4 carries nothing, PV_P plus U is under 31.80 V, PV_F plus U is under 80 V, and INP plus U is under 18 V (P1-1).
-  **Q12's turn-off current is RECORDED and not yet judged:** R-176's register text and L4-E7's prototype section state "at most
-  63 A", while L4-E7's own revised list (quoted above) states 61 A in its item 3. L4-E7's author is resolving the figure; this folder
-  chooses neither, and the current line's verdict waits for that resolution (no figure is changed here).
+  inside R-176's line (quoted above: "at most 63 A, within 12 us", the current plus its U and the time plus its U each inside it),
+  D4 carries nothing, PV_P plus U is under 31.80 V, PV_F plus U is under 80 V, and INP plus U is under 18 V (P1-1). L4-E7's list
+  read 61 A until set 28; the register, L4-E7's prototype section and its list now agree, so this line is judged (it was RECORDED
+  only while the figure was open).
 - **Row 4:** PASS when no current flows and the high side's pins stay within 1 V of GND (L4-E7's prototype measurements).
 - **Row 5:** PASS when Q13's leakage plus U is under 32.1 uA at the hot end.
 - **Row 6:** PASS when no short-circuit trip occurs in operation and under CS116.

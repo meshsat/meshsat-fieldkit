@@ -666,8 +666,13 @@ service (FW-E01) inside the 10 s host watchdog.
 
 ## The note on R-176's turn-off figure
 
-R-176's register text states "at most 63 A" for Q12's turn-off; L4-E7's own revised list states 61 A. L4-E7's author is resolving it;
-this page and `v2/docs/test-procedures/TP-SOLAR.md` choose neither and keep the note.
+Resolved at set 28: L4-E7's revised list now reads as the register does, and `v2/docs/test-procedures/TP-SOLAR.md` judges row 3 against
+it:
+
+<!-- q src="v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md" -->
+> U21 turning Q12 off (at most 63 A, within 12 us; the computed 62.7 A within 11.4 us at round 2's loop, rounded up; this list
+> read 61 A until set 28),
+<!-- /q -->
 
 ## Appendix A. The rails each board declares (generated below the marker)
 
