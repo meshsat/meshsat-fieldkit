@@ -8,9 +8,12 @@
   1  apply_set28_rebind.py --write          L5-F02: CFL-001, CFL-005, CFL-014, CFL-015, CFL-016 rebound to the merged PANEL.md
   2  rules_lib.py requirements              must read 0 errors
   3  rules_render.py --requirements         REQUIREMENTS-TRACE.md re-rendered (it prints the five entries)
+  3b handover/layer3/render_l3r2.py         the Layer 3 R2 pages re-rendered (REQUIREMENTS-L3-R2.md prints the registry's sha and the
+                                            evidence counts; every registry commit since e5286397 re-rendered it, test_l3r2 holds it)
   4  apply_set28_repins.py --write          L5-F01: L4-E5, L4-E11, L4-E9 re-pinned (reqs included) and regenerated through regen_out.py
   5  l6pwr/apply_part_identities_block.py   the identity block present in pcb_part_identities.yaml (refused as already there is fine)
-  6  the checks: rules_render.py --check, rules_render.py --requirements --check, decisions_render.py --check, part_identities.py check
+  6  the checks: rules_render.py --check, rules_render.py --requirements --check, decisions_render.py --check, part_identities.py check,
+     render_l3r2.py --check
 
 The rebind comes before the re-pins because L4-E9 and L4-E11 pin pcb_requirements.yaml. A step that reports "already applied" (exit 3)
 is accepted and the next runs; any other refusal stops here with the step named. Usage: apply_set28.py [--skip-regen]"""
@@ -22,6 +25,7 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 TOOLS = os.path.join(TOP, "v2", "ecad", "tools")
+L3 = os.path.join(TOP, "v2", "docs", "handover", "layer3")
 L6 = os.path.join(TOP, "v2", "docs", "records", "l6pwr", "apply_part_identities_block.py")
 
 
@@ -48,6 +52,7 @@ def main(argv):
     run("1 rebind (L5-F02)", [os.path.join(HERE, "apply_set28_rebind.py"), "--write"])
     run("2 registry", ["rules_lib.py", "requirements"], cwd=TOOLS, must=" 0 error(s)")
     run("3 requirements trace", ["rules_render.py", "--requirements"], cwd=TOOLS)
+    run("3b Layer 3 R2 pages", ["render_l3r2.py"], cwd=L3)
     run("4 re-pins and regeneration (L5-F01)", [os.path.join(HERE, "apply_set28_repins.py"), "--write"] + (["--no-regen"] if skip else []))
     run("5 identity block", [L6, "--check"])
     bad = []
@@ -66,6 +71,9 @@ def main(argv):
     rc, out = run("6d part_identities check", ["part_identities.py", "check"], cwd=TOOLS, report=True)
     if rc != 0:
         bad.append("6d (the held sheets staged? step 0)")
+    rc, out = run("6e render_l3r2 --check", ["render_l3r2.py", "--check"], cwd=L3, report=True)
+    if rc != 0:
+        bad.append("6e")
     print("apply_set28: %s%s" % ("done" if not bad else "done with failing checks: %s" % ", ".join(bad),
                                  "; PCB-ETA.md stale as in every worker tree (rendered on the box)" if any(x.endswith("PCB-ETA.md") for x in stale) else ""))
     return 1 if bad else 0
