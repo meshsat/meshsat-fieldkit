@@ -98,7 +98,7 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
   TBD: 1
     - owed by R-185: the comparison that decides new ghosting (a visual judgement under the fixed capture, or an optical-density di
   PROPOSED mark: present
-7a35211f84409f32 v2/docs/test-procedures/TP-SOLAR.md
+e6cfe4ffc92acc04 v2/docs/test-procedures/TP-SOLAR.md
   id TP-SOLAR: The solar input guard and the LT8705A's input sense (R-176 rows 1 to 6, R-189, R-174)
   register R-176: exists (OWED, PHYSICAL UNCERTAINTY)
   register R-189: exists (OWED, PHYSICAL UNCERTAINTY)

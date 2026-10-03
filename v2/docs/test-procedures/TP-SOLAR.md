@@ -295,9 +295,10 @@ The lines, with U taken as README section 3 states, for the corrected network at
 
 - **Row 1:** PASS when the rising threshold less U is at least 28.55 V and plus U at most 31.06 V, and the falling threshold less U is
   at least 27.07 V.
-- **Row 2:** PASS when Q12 never conducts, D4 carries nothing, PV_F's peak plus U is at most 85 V, its slew plus U at most 60 V/us
-  and INP plus U at most 20 V (the absolute ratings). The 10 % margin lines (54 V/us and 18 V) are RECORDED: the drafted network does
-  not hold them at a connector fault near 0.30 uH, and the corrected design's acceptance (P1-1, section 1) asks for them.
+- **Row 2:** PASS (R-176) when Q12 never conducts, D4 carries nothing, PV_F's peak plus U is at most 85 V, its slew plus U at most
+  60 V/us and INP plus U at most 20 V (the absolute ratings). For the corrected network, P1-1's acceptance (section 1) also asks for the
+  10 % margin lines: PASS (P1-1) when the slew plus U is at most 54 V/us and INP plus U at most 18 V. The drafted network does not hold
+  them at a connector fault near 0.30 uH (round 5, quoted in R-176's acceptance).
 - **Row 3:** PASS when U5's differential with U stays inside +-0.240 V (and so inside the +-0.3 V absolute maximum), Q12 turns off at
   most 63 A within 12 us, D4 carries nothing, PV_P plus U is under 31.80 V, PV_F plus U is under 80 V, and INP plus U is under 18 V
   (P1-1). R-176's register text states 63 A; L4-E7's own list (quoted above) states 61 A in its item 3, and its prototype section and
