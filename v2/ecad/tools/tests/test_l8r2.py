@@ -1,6 +1,8 @@
 """Layer 8 record l8r2 (MESHSAT-1357, 3 October 2026; v2/docs/records/l8r2/): the known engineering defects corrected at the desk
 on printed parts, as release-guarded drafts: board B's coolers on a 12 V step-up (E11-40), VBUS20's over-voltage cut-off on board A
-(S-111), PANEL_5V and board D's 3.3 V behind eFuses (L5R2-F03, F05), J_QMX and J_CAM on the JST PH land (L5R2-F04).
+(S-111), PANEL_5V and board D's 3.3 V behind eFuses (L5R2-F03, F05), J_QMX and J_CAM on the JST PH land (L5R2-F04); round 3 (3 October
+2026): item 1 re-decided on record l9pwr's L9P-F02 (the coolers' step-up kept with the modules' 70 % Fan_PWM maximum), the pack path's
+return declared as a rail on boards A and E (record l9stk's finding), the energy chain's board E 2 oz texts corrected by an apply script.
 
 The predicates: the committed .out is what the script prints; each draft checks, applies once, refuses twice and refuses the tree's
 own generator; board A composes in L4-E9's order with l8gnd's and this record's drafts and d8dec31's mainpb last, and every other
@@ -25,11 +27,14 @@ RECS = os.path.dirname(REC)
 GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
 GEN_B = os.path.join(TOOLS, "gen_sch_b.py")
 GEN_C = os.path.join(TOOLS, "gen_sch_c.py")
+GEN_E = os.path.join(TOOLS, "gen_sch_e.py")
+CHAIN = os.path.join(TOOLS, "pcb_energy_chain.yaml")
+FIX = os.path.join(REC, "apply_energy_chain_e1oz.py")
 SCRIPT = os.path.join(REC, "l8r2_drafts.py")
 OUT = os.path.join(REC, "l8r2_drafts.out")
 PAGE = os.path.join(REC, "L8R2-KNOWN-DEFECTS.md")
 CHECK = os.path.join(REC, "check_l8r2_netlist.py")
-MINE = {"a": ["d8v3", "vbus20ov"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"]}
+MINE = {"a": ["d8v3", "vbus20ov", "packrtn"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"], "e": ["packrtn"]}
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
 
@@ -78,14 +83,17 @@ def t_the_committed_output_is_what_the_script_prints():
     assert all(_sha(g) == s for g, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
     for s in ("board A pairwise intersections: none (DISJOINT)", "board B pairwise intersections: none (DISJOINT)",
-              "record l8r2's corrections on the netlists: NOT DRAWN", "fixture A: DRAWN", "fixture B: DRAWN", "(R248, C247)", ": REJECTED"):
+              "record l8r2's corrections on the netlists: NOT DRAWN", "fixture A: DRAWN", "fixture B: DRAWN", "(R248, C247)", ": REJECTED",
+              "SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum", "REFUSED (intent: rail +5V_S1 declares a 5.00 A peak",
+              "OK at every prefix", "IDENTICAL", "the corrected texts name those widths: YES", "the same as this script's E_ROUND",
+              "equals record l9pwr's printed current in every row: YES"):
         assert s in t, s
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
-    before = {g: _sha(g) for g in (GEN_A, GEN_B, GEN_C)}
+    before = {g: _sha(g) for g in (GEN_A, GEN_B, GEN_C, GEN_E)}
     with tempfile.TemporaryDirectory() as d:
-        for board, gen in (("a", GEN_A), ("b", GEN_B), ("c", GEN_C)):
+        for board, gen in (("a", GEN_A), ("b", GEN_B), ("c", GEN_C), ("e", GEN_E)):
             for s in _mine(board):
                 tgt = os.path.join(d, os.path.basename(s)); shutil.copy(gen, tgt); pre = _sha(tgt)
                 r = _run([s, tgt]); assert r.returncode == 0 and b"CHECK OK" in r.stdout, r.stderr.decode()[-300:]
@@ -136,7 +144,9 @@ def t_the_designators_are_disjoint_and_this_records_are_exact():
         pB, addB = m.designators(GEN_B, pb, d, "b")
         assert addA["l8r2/apply_gen_sch_a_d8v3.py"] == {"U44", "R234", "R235", "R236", "R237", "R238", "C242", "C243"}
         assert addA["l8r2/apply_gen_sch_a_vbus20ov.py"] == {"U45", "Q41", "C244", "C245", "C246"} | {"R%d" % k for k in range(239, 248)}
-        assert addA["d8dec31/apply_gen_sch_a_mainpb.py"] == {"R248", "C247"}
+        assert addA["d8dec31/apply_gen_sch_a_mainpb.py"] == {"R248", "C247"} and addA["l8r2/apply_gen_sch_a_packrtn.py"] == set()
+        pE, addE = m.designators_e(d)
+        assert addE["l8r2/apply_gen_sch_e_packrtn.py"] == set() and not m.duplicates(open(pE, encoding="utf-8").read())
         fans = {"%s%d" % (p, 700 + 30 * (s - 1) + k) for s in (1, 2, 3) for p, ks in (("U", (1, 2)), ("L", (1,)), ("Q", (1, 2)), ("R", range(1, 13)), ("C", range(1, 11))) for k in ks}
         assert addB["l8r2/apply_gen_sch_b_fans12.py"] == fans
         assert addB["l8r2/apply_gen_sch_b_panel5v.py"] == {"U901", "R901", "R902", "R903", "R904", "R905", "C901", "C902"}
@@ -204,7 +214,9 @@ def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
             mm = CLAIM.search(" ".join(t.split()))
             assert not mm, "%s carries a claim word: %r" % (os.path.relpath(p, ROOT), mm.group(0))
     page = open(PAGE, encoding="utf-8").read()
-    for s in ("E11-40", "S-111", "L5R2-F03", "L5R2-F04", "L5R2-F05", "P1-1", "REJECTED", "SELECTED", "NOT DRAWN", "R248", "DRAFT"):
+    for s in ("E11-40", "S-111", "L5R2-F03", "L5R2-F04", "L5R2-F05", "P1-1", "REJECTED", "SELECTED", "NOT DRAWN", "R248", "DRAFT",
+              "L9P-F02", "L9P-F03", "70 %", "7.5638", "apply_gen_sch_a_packrtn.py", "apply_gen_sch_e_packrtn.py", "(L9STK E)",
+              "apply_energy_chain_e1oz.py", "ASM-002"):
         assert s in page, s
 
 
@@ -218,7 +230,7 @@ def t_no_new_net_of_this_record_names_a_net_any_board_already_has():
         nl = chk.read_netlist(open(p, "rb").read())
         nets |= {n for pins in nl["pins"].values() for n in pins.values()}
     assert "+3V3_D8" in nets, "board D's own +3V3_D8 is not read: the netlists were not parsed"
-    for board in ("a", "b", "c"):
+    for board in ("a", "b", "c", "e"):
         for s in _mine(board):
             m = _mod(s, "nets_" + os.path.basename(s)[:-3])
             clash = sorted(set(getattr(m, "NETS", ())) & nets)
@@ -255,3 +267,107 @@ def t_item4_the_pi_button_reaches_u1_p1_3_with_its_pull_up_and_debounce():
         assert '"PIJ2_B2"' not in t and 'c("C27", "100n", "PIJ2_A2", "GND"' in t and '"ZEROIZE_HW", "PIJ2_A2", "SPARE2"' in t
         assert "R3 on board A" not in t, "the stale note on the PI lead survived"
 
+
+
+def t_board_e_the_pack_return_composes_with_the_change_lists_round_at_every_prefix():
+    """Board E's round in the change list's order (L4-POWER-ARCHITECTURE.md's table, d8dec31's cin last) is the script's E_ROUND, and
+    this record's pack return applies after every prefix of it, before it, and before cin; it adds no designator."""
+    m = _need_inputs()
+    er = [m.draft(r, n, "e") for r, n in m.E_ROUND]; mine = _mine("e")
+    assert m.e_round_page() == [os.path.basename(x) for x in er], "the change list's board E round moved"
+    with tempfile.TemporaryDirectory() as d:
+        for k in range(len(er) + 1):
+            _p, res = m.compose_e(er[:k] + mine, d, "p%d" % k)
+            assert all(v == "OK" for _s, v in res) and len(res) == k + 1, (k, res)
+        p, res = m.compose_e(mine + er, d, "first")
+        assert all(v == "OK" for _s, v in res) and len(res) == len(er) + 1, res
+        compile(open(p, encoding="utf-8").read(), p, "exec")
+
+
+def t_item1_round3_the_bound_holds_every_state_and_the_round2_draft_is_refused():
+    """Record l9pwr's figures parsed (never typed): the drafted coolers reproduce L9P-F02 (-0.010 A at HIGH), the 70 % maximum
+    holds every AP64500 and LM5176 slot converter at HIGH in every state at the step-up's 0.85 and at its low 0.80, the device rail
+    is the same in every option; round 2's slot loads are refused by intent.rail itself and round 3's accepted."""
+    m = _M(); P = m.l9pwr(); o = m.item1_r3(); V = m.V
+    assert len(P["states"]) == 11 and P["r9"]["equal"] == "EQUAL" and P["f02"][0] == "L9P-F02" and P["f03"][0] == "L9P-F03"
+    ap = [r for r in o["rows"] if r["part"].startswith("AP64500")]
+    assert min(r["margin"]["a"] for r in ap) < 0 and abs(min(r["margin"]["a"] for r in ap) + 0.010) < 0.001, "L9P-F02 not reproduced"
+    for r in o["rows"]:
+        assert abs(r["I"]["a"] - r["printed"]) < 0.0006, r
+        assert r["margin"]["cap"] > 0 and r["margin"]["cap_lo"] > 0 and r["margin"]["b"] > r["margin"]["cap"] > r["margin"]["a"], r
+        assert r["margin"]["rel"] > 0, r
+    allt = [x for x in o["dev"] if x["state"] == "PS-ALLTX"][0]
+    assert allt["margin"] < 0 and abs(allt["drafted"] - allt["drawn"] - allt["u901"]) < 0.002, allt
+    assert o["fixed"] > 0.5 and o["ipk"] < V["ap_ipk"][0], (o["fixed"], o["ipk"])
+    rows = m.r3_slot_loads()
+    assert [m.intent_says(pk, ld).split(" ")[0] for _t, ld, pk in rows] == ["accepted", "REFUSED", "accepted", "accepted"], rows
+    assert sum(rows[2][1].values()) <= rows[2][2], "round 3's slot loads over the declared peak"
+    assert abs(m.item1()["a_vbat"] - P["r9"]["this"]) < 1e-9 and "eta_slot" not in m.F, "the flat 0.90 is still carried"
+
+
+def t_item1_the_fan_row_still_reads_with_layer_7s_reader():
+    """Record l7pwr's reader parses this draft's slot row with two expressions (l7pwr_fans_th1.py, read_rails); the round 3 row keeps
+    their form, so that reader reads 0.33 A, 1.4 W, 0.85 and 5.0 V and the watts it derives stay consistent (0.33 x 5.0 - 1.4 > 0)."""
+    fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_under_test")
+    row = fx._NEW_LOAD
+    a = re.search(r'"U%d" % \(701 \+ 30 \* \(s - 1\)\): ([\d.]+),\s+# l8r2 \(E11-40\): the cooler fan\'s 12 V step-up, ([\d.]+) W of fan over ([\d.]+)', row)
+    b = re.search(r"\(ASSUMPTION\) at ([\d.]+) V", row)
+    assert a and b, row
+    amps, watts, eta, volts = float(a.group(1)), float(a.group(2)), float(a.group(3)), float(b.group(1))
+    assert abs(watts - _M().V["duty_max"] * _M().V["pfan"]) < 1e-9 and abs(amps - round(watts / eta / volts, 2)) < 1e-9 and amps * volts > watts
+
+
+def t_item5_the_pack_returns_are_rails_that_intent_itself_accepts():
+    """Each board's draft replaces GND's node by a rail returning the pack path's counted rail at the pack's 18 A with this board's
+    half percent; intent.py evaluates the file's declarations and accepts them; every source and load is on GND on the committed
+    netlist; record l9stk's finding reads as found ("board A none; board E none")."""
+    m = _need_inputs()
+    assert m.l9stk_rows()[1] == "board A none; board E none"
+    with tempfile.TemporaryDirectory() as d:
+        for letter, gen, net, ret in (("a", GEN_A, m.NET_A, "CELL+"), ("e", GEN_E, m.NET_E, "CELL_F")):
+            p = os.path.join(d, letter + ".py"); shutil.copy(gen, p)
+            assert _run([os.path.join(REC, "apply_gen_sch_%s_packrtn.py" % letter), p, "--write"]).returncode == 0
+            t = open(p, encoding="utf-8").read()
+            assert '_intent.node("GND"' not in t
+            got = m.rail_calls(t, (ret, "GND"))
+            assert got[ret][0] == "accepted" and got["GND"][0] == "accepted", got
+            g = got["GND"][1]
+            assert g["returns"] == ret and g["amps_peak"] == 18.0 and g["share"] == 0.005 and g["volts"] == 0.0, g
+            pins = m.netlist_pins(os.path.join(ROOT, net))
+            src = g["source"] if isinstance(g["source"], list) else [g["source"]]
+            for ref in src + list(g["loads"]):
+                assert any(str(n).lstrip("/") == "GND" for n in pins.get(ref, {}).values()), (letter, ref)
+
+
+def t_item6_the_energy_chain_correction_is_idempotent_follows_the_decision_and_moves_no_verdict():
+    """The apply script refuses while the register carries no ruled "(L9STK E)" decision; with one it checks, writes once, and a
+    second run writes nothing; the corrected chain names no 2 oz on board E, names the widths track_current computes, and reads the
+    same in energy_chain.check; a chain whose old text is not there exactly once is refused; the tree's chain is never written."""
+    m = _need_inputs(); o = m.item6()
+    before = _sha(CHAIN)
+    with tempfile.TemporaryDirectory() as d:
+        ch = os.path.join(d, "c.yaml"); shutil.copy(CHAIN, ch)
+        reg = os.path.join(d, "r.yaml"); shutil.copy(os.path.join(TOOLS, "pcb_decisions.yaml"), reg)
+        assert _run([FIX, "--chain", ch]).returncode == 3
+        assert _run([FIX, "--chain", ch, "--registry", reg]).returncode == 3
+        open(reg, "a", encoding="utf-8").write('  - n: 999\n    title: "Board E at 1 oz outer (L9STK E)"\n    status: ruled\n')
+        r = _run([FIX, "--chain", ch, "--registry", reg]); assert r.returncode == 0 and b"CHECK OK" in r.stdout and _sha(ch) == _sha(CHAIN)
+        r = _run([FIX, "--chain", ch, "--registry", reg, "--write"]); assert r.returncode == 0 and b"WRITTEN" in r.stdout
+        once = open(ch, "rb").read()
+        r = _run([FIX, "--chain", ch, "--registry", reg, "--write"]); assert r.returncode == 0 and b"ALREADY CORRECTED" in r.stdout
+        assert open(ch, "rb").read() == once
+        import yaml
+        st = {s["id"]: s for s in yaml.safe_load(once)["stages"]}
+        for sid, wid in (("DOCK_ENTRY", "%.2f mm on each of two 1 oz faces" % o["w25"][0]),
+                         ("SHORE_INPUT", "%.2f mm on each of two 1 oz faces or %.2f mm on one" % o["w10"])):
+            c = st[sid]["conductor"]
+            assert "2 oz" not in str(c) and "1 oz" in c["what"] and wid in c["basis"], (sid, c)
+        sys.path.insert(0, TOOLS)
+        import energy_chain as ec
+        a, b = ec.check(CHAIN, None), ec.check(ch, None)
+        assert all(a.get(k) == b.get(k) for k in ("fails", "stage_fails", "derate_fails")) and a["checked"] == b["checked"]
+        bad = os.path.join(d, "bad.yaml"); open(bad, "w", encoding="utf-8").write(open(CHAIN, encoding="utf-8").read().replace(
+            "rating_a: 10.0, basis: \"gen_pcb_e3.py\"}", "rating_a: 10.0, basis: \"gen_pcb_e3.py \"}"))
+        assert _run([FIX, "--chain", bad, "--registry", reg]).returncode == 3
+    assert _sha(CHAIN) == before, "the tree's chain was written"
+    assert o["a_672_two"] < 25.0 and max(o["dchs_1oz"]) < 10.0 <= min(o["dchs_2oz"]), "the two findings' arithmetic moved"

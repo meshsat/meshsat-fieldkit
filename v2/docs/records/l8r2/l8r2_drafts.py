@@ -13,7 +13,16 @@ It prints, deterministically and without touching the tree:
   6. the composition on board B: l8gnd's GND-002 draft and this record's three in forward and reverse order, and each alone;
   7. the designators each draft adds on boards A and B, pairwise disjoint, and every literal designator in part-call position of the
      composed generators drawn once;
-  8. the netlist check (check_l8r2_netlist.py) on the committed netlists (NOT DRAWN) and on fixtures carrying the drafts (DRAWN).
+  8. the netlist check (check_l8r2_netlist.py) on the committed netlists (NOT DRAWN) and on fixtures carrying the drafts (DRAWN);
+round 3 (branch fnd/l8r3 from set 28's 37bc2f1d, 3 October 2026):
+  2b. item 1 re-decided on record l9pwr's figures, PARSED from its output (inputs/l9pwr_budget-38ef774c.txt): the slot rails and the
+      device rail at HIGH in every state for each option, the slot rail's declared loads through intent.rail's own check, the
+      efficiency round 2 typed, the bound's limit and what stands if it fails open;
+  6b. the composition on board E: the change list's board E round (L4-POWER-ARCHITECTURE.md's table) with the pack return's draft;
+  9. item 5, the pack path's return on boards A and E declared as rails (record l9stk's finding): the drafts' declarations evaluated by
+     intent.py itself, their sources and loads on the committed netlists, the rules that then judge them;
+  10. item 6, the energy chain's board E texts at 1 oz: the widths the declared ratings need (track_current.py), record l9stk's own
+     widths parsed beside them, the apply script's runs, energy_chain.check before and after (identical).
 Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_drafts.py  (l8r2_drafts.out is its output, regenerated with
 _bin/regen_out.py). Nothing here is built or measured: every statement is about generator text, netlists and printed figures."""
 import ast
@@ -35,11 +44,23 @@ TOOLS = os.path.join(ROOT, "v2", "ecad", "tools")
 RECS = os.path.join(ROOT, "v2", "docs", "records")
 GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
 GEN_B = os.path.join(TOOLS, "gen_sch_b.py")
+GEN_E = os.path.join(TOOLS, "gen_sch_e.py")
 NET_A = "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net"
+NET_E = "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net"
+L9PWR = "v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt"
+L9STK = "v2/docs/records/l8r2/inputs/l9stk_stackups-7388a84b.txt"
+L9STK_PAGE = "v2/docs/records/l8r2/inputs/l9stk-L9-STACKUPS-7388a84b.md"
+L4E9_PAGE = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"
+CHAIN = "v2/ecad/tools/pcb_energy_chain.yaml"
+CHAIN_FIX = "v2/docs/records/l8r2/apply_energy_chain_e1oz.py"
 
 POWER_A = [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17")]
-L8_A = [("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov")]
-MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov")]
+L8_A = [("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn")]
+MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn")]
+# board E's round in the change list's order (L4-POWER-ARCHITECTURE.md's table; section 6b prints whether the page still says so)
+E_ROUND = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
+           ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("d8dec31", "cin")]
+MINE_E = [("l8r2", "packrtn")]
 L8_B = [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4")]
 MINE_B = [("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4")]
 MAINPB = "v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py"
@@ -58,7 +79,11 @@ INPUTS = [
     "v2/docs/PANEL.md", "v2/ecad/tools/gen_sch_c.py", "v2/vendor/ti/ti-pca9555.pdf", "v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py",
     "v2/docs/records/l8r2/inputs/fw-panel-F01-42c27369.md", "v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py",
     "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py",
-] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_A + L8_A] + ["v2/docs/records/%s/apply_gen_sch_b_%s.py" % rn for rn in L8_B]
+    L9PWR, L9STK, L9STK_PAGE, "v2/ecad/tools/gen_sch_e.py", NET_E, CHAIN, CHAIN_FIX, "v2/ecad/tools/pcb_decisions.yaml",
+    "v2/ecad/tools/energy_chain.py", "v2/ecad/tools/track_current.py", "v2/ecad/tools/intent.py", "v2/vendor/diodes/diodes-ap64500.pdf",
+    "v2/ecad/tools/gen_pcb_e3.py",
+] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_A + L8_A] + ["v2/docs/records/%s/apply_gen_sch_b_%s.py" % rn for rn in L8_B] \
+  + ["v2/docs/records/%s/apply_gen_sch_e_%s.py" % rn for rn in E_ROUND + MINE_E]
 L6_C = ("v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py", "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py")
 PIBTN = "v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py"
 
@@ -115,7 +140,15 @@ F = {
     "rt_pnl": (42.2e3, "BOUND", "PANEL_5V eFuse OVLO top 42.2 k 1 %"), "rt_d8": (30.1e3, "BOUND", "board D eFuse OVLO top 30.1 k 1 %"),
     "rb_ovlo": (10.0e3, "BOUND", "OVLO bottom 10 k 1 %"), "v5dev": (5.1, "BOUND", "+5V_DEV 5.1 V"), "v3": (3.3, "BOUND", "+3V3 3.3 V"),
     "budget_fan": ((0.36, 0.51, 0.56), "INFERRED", "pwr_budget.py's cooler row per slot, a representative 30 mm 5 V fan (records/rv-pwr)"),
-    "eta_a": (0.89, "ASSUMPTION", "board A's 12 V buck-boost for choice (b)"), "eta_slot": (0.90, "ASSUMPTION", "board A's slot converters"),
+    "eta_a": (0.89, "ASSUMPTION", "board A's 12 V buck-boost for choice (b)"),
+    # round 3 (item 1 re-decided; round 2's "eta_slot", a flat 0.90 for board A's slot converters, is retired: record l9pwr's R9 reads
+    # the three coolers' watts at VBAT on each slot rail's own converter)
+    "duty_max": (0.70, "BOUND", "the modules' Fan_PWM maximum duty for the coolers (round 3, L9P-F02), a firmware rule (section 1's text for HW-FW-CONTRACT)"),
+    "ap_ipk": ((6.8, 8.0, 9.2), "MAKER", "AP64500 HS peak current limit, minimum / typical / maximum (Diodes DS41979, electrical characteristics, Note 8)"),
+    "ap_l": (4.7e-6, "BOUND", "board A's slot inductors L3 and L5, 4.7 uH XAL6060-472ME (gen_sch_a.py, buck5)"),
+    "ap_ltol": (0.20, "ASSUMPTION", "the slot inductor taken 20 % low for the ripple"),
+    "ap_fsw": (500e3, "BOUND", "RT 68 k, 500 kHz (gen_sch_a.py, buck5)"),
+    "vsys_max": (17.375, "INFERRED", "the system node's highest, on shore (L4-E11 15a: VSYS_E 9.494 to 17.375 V)"),
 }
 V = {k: v for k, (v, _c, _w) in F.items()}
 
@@ -172,7 +205,8 @@ def item1():
     o["fan_in"] = o["vout"][0] >= V["vfan"][0] and o["vout"][2] <= V["vfan"][1]
     pin = V["pfan"] / V["eta"]
     o["slot_w"] = pin; o["slot_a"] = pin / V["vin_nom"]; o["slot_a_min"] = pin / V["vin_min"]
-    o["a_vbat"] = 3 * pin / V["eta_slot"]; o["b_vbat"] = 3 * V["pfan"] / V["eta_a"]
+    o["a_vbat"] = l9pwr()["r9"]["this"]; o["a_vbat_r2"] = l9pwr()["r9"]["theirs"][2]   # round 3: record l9pwr's R9, not a flat 0.90
+    o["b_vbat"] = 3 * V["pfan"] / V["eta_a"]
     o["a_minus_b"] = o["a_vbat"] - o["b_vbat"]
     return o
 
@@ -227,6 +261,240 @@ def item4():
     tau = r * c
     vih, vil = 0.7 * vcc, 0.3 * vcc            # PCA9555 VIH 0.7 x VCC, VIL 0.3 x VCC (TI SCPS131J 6.3), MAKER
     return {"tau": tau, "t_release": -tau * math.log(1 - 0.7), "vih": vih, "vil": vil, "i_press": vcc / r}
+
+
+# ---------------------------------------------------------------------------------------------------------------- round 3
+_P = {}
+RAIL_L = re.compile(r"^\s+rail (\S+)\s+(\S+)\s+([\d.]+) V\s+out\s+([\d.]+)\s+([\d.]+)\s+([\d.]+) W\s+([\d.]+)\s+([\d.]+) A\s+eta ([\d.]+)"
+                    r"\s+loss\s+([\d.]+) W\s+(\S+)\s*$")
+LIMIT_L = re.compile(r"^\s+limit (.+?)\s+([\d.]+) A \((\w+)\): judged\s+([\d.]+) /\s+([\d.]+) A, margin at HIGH\s+([+-][\d.]+) A "
+                     r"\(\s*([+-][\d.]+) %\): (.+)$")
+STATE_L = re.compile(r"^   == (PS-[A-Za-z0-9-]+)( \(.*\))? \(pack side ([\d.]+) / ([\d.]+) / ([\d.]+) W\)$")
+
+
+def l9pwr():
+    """Record l9pwr's output (inputs/, at 38ef774c), parsed: section 5's rails and limits per state, R9, U901's RON, L9P-F02's line.
+    Nothing of it is typed in this record; a line that no longer parses stops the script."""
+    if _P:
+        return _P
+    lines = open(os.path.join(ROOT, L9PWR), encoding="utf-8").read().splitlines()
+    s5 = [i for i, l in enumerate(lines) if l.startswith("5. PER STATE, DRAFTED")]
+    s6 = [i for i, l in enumerate(lines) if l.startswith("6. THE PACK CURRENT")]
+    if len(s5) != 1 or len(s6) != 1:
+        raise SystemExit("l8r2_drafts: record l9pwr's output has no single section 5 and 6")
+    states, cur, last = {}, None, None
+    for l in lines[s5[0]:s6[0]]:
+        m = STATE_L.match(l)
+        if m:
+            cur = states.setdefault(m.group(1), {"label": m.group(1) + (m.group(2) or ""), "rails": {}, "drawn": {}})
+            continue
+        m = RAIL_L.match(l)
+        if m and cur is not None:
+            g = m.groups()
+            last = cur["rails"][g[0]] = {"kind": g[1], "v": float(g[2]), "out": (float(g[3]), float(g[4]), float(g[5])),
+                                         "a": (float(g[6]), float(g[7])), "eta": float(g[8]), "status": g[10], "limit": None}
+            continue
+        m = LIMIT_L.match(l)
+        if m and last is not None:
+            g = m.groups()
+            last["limit"] = {"part": g[0], "a": float(g[1]), "kind": g[2], "judged": (float(g[3]), float(g[4])),
+                             "margin": float(g[5]), "pct": float(g[6]), "verdict": g[7]}
+            continue
+        if cur is not None and "DRAWN's margins at HIGH that differ:" in l:
+            for nm, v in re.findall(r"(\w+) ([+-][\d.]+) A", l.split("differ:", 1)[1]):
+                cur["drawn"][nm] = float(v)
+    heads = [l for l in lines[s5[0]:s6[0]] if l.startswith("   == PS-")]
+    if len(heads) != len(states):
+        raise SystemExit("l8r2_drafts: record l9pwr's section 5 has %d state headers, %d parsed" % (len(heads), len(states)))
+    t = "\n".join(lines)
+    m = re.search(r"R9 l8r2 item 1, choice \(a\)[^\n]*\n\s+theirs \(([\d., ]+)\); reproduced \(([\d., ]+)\): (\w+)\n"
+                  r"\s+this record: [^\n]*?: \(([\d.]+),\)", t)
+    r = re.search(r"D5 U901: RON at most ([\d.]+) Ohm", t)
+    f = re.search(r"\n   (L9P-F02)  ([A-Z ]+?)  \((\w+)\)  ([^\n]+)\n\s+figure: ([^\n]+)", t)
+    f3 = re.search(r"\n   (L9P-F03)  ([A-Z ]+?)  \(([^)]+)\)\)?  ([^\n]+)\n\s+figure: ([^\n]+)", t)
+    if not (states and m and r and f and f3):
+        raise SystemExit("l8r2_drafts: record l9pwr's output no longer parses (states %d, R9 %s, D5 %s, F02 %s, F03 %s)"
+                         % (len(states), bool(m), bool(r), bool(f), bool(f3)))
+    _P.update(states=states, r9={"theirs": tuple(float(x) for x in m.group(1).split(",")), "equal": m.group(3),
+                                 "this": float(m.group(4))},
+              ron=float(r.group(1)), f02=(f.group(1), f.group(2), f.group(5)), f03=(f3.group(1), f3.group(2), f3.group(5)))
+    return _P
+
+
+def slot_loads(text):
+    """board B's _SLOT_LOADS and the slots' declared peak, read from a generator's text with ast (never typed)."""
+    tree = ast.parse(text)
+    fn = [n.value for n in tree.body if isinstance(n, ast.Assign) and getattr(n.targets[0], "id", "") == "_SLOT_LOADS"]
+    if len(fn) != 1:
+        raise SystemExit("l8r2_drafts: gen_sch_b.py has no single _SLOT_LOADS")
+    loads = eval(compile(ast.Expression(fn[0]), "_SLOT_LOADS", "eval"), {})
+    peak = {}
+    for n in ast.walk(tree):
+        if (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "rail" and n.args
+                and isinstance(n.args[0], ast.BinOp) and getattr(n.args[0].left, "value", "") == "+5V_S%d"):
+            for s in (1, 2, 3):
+                peak[s] = eval(compile(ast.Expression(n.args[3]), "peak", "eval"), {"_n": s})
+    if sorted(peak) != [1, 2, 3]:
+        raise SystemExit("l8r2_drafts: gen_sch_b.py declares no +5V_S%d rail call")
+    return {s: loads(s) for s in (1, 2, 3)}, peak
+
+
+def fresh_intent():
+    sp = importlib.util.spec_from_file_location("intent_fresh", os.path.join(TOOLS, "intent.py"))
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    return m
+
+
+def intent_says(peak, loads, net="+5V_S1"):
+    """intent.rail's own verdict on a slot rail's declared peak and loads: 'accepted' or its refusal's first sentence."""
+    it = fresh_intent()
+    try:
+        it.rail(net, 5.1, 2.5, peak, "J_5V_S1", loads=loads, converted=False)
+    except SystemExit as e:
+        return "REFUSED (%s)" % str(e).split(". ")[0]
+    return "accepted"
+
+
+def item1_r3():
+    """Round 3: each option's current on the slot converters and the device rail at HIGH, from record l9pwr's rails per state."""
+    P = l9pwr(); D = V["duty_max"]; rows = []
+    for st, d in P["states"].items():
+        R = d["rails"]
+        for n in ("1", "2", "3"):
+            s, f, a = R.get("S" + n), R.get("S%sF" % n), R.get("S%sA" % n)
+            if not s or not f or not s["limit"]:
+                continue
+            v, hi, lim = s["v"], s["out"][2], s["limit"]["a"]
+            full_in = f["out"][2] / f["eta"]                      # the cooler's input on the slot rail at full speed (2.0 W / 0.85)
+            cap_w = D * f["out"][2]                               # the linear bound at the cap
+            I = {"a": hi / v,
+                 "cap": (hi - full_in + cap_w / f["eta"]) / v,
+                 "cap_lo": (hi - full_in + cap_w / V["eta_lo"]) / v,
+                 "cap_law": (hi - full_in + D ** 3 * f["out"][2] / f["eta"]) / v,
+                 "b": (hi - full_in) / v,
+                 "rel": (hi - (a["out"][2] if a else 0.0)) / v}
+            rows.append({"state": st, "slot": n, "part": s["limit"]["part"].split(",")[0], "limit": lim, "I": I,
+                         "printed": s["limit"]["judged"][1], "margin": {k: lim - x for k, x in I.items()}})
+    dev = []
+    for st, d in P["states"].items():
+        R = d["rails"]; s = R.get("DEV")
+        if not s or not s["limit"]:
+            continue
+        drawn = s["limit"]["a"] - d["drawn"]["DEV"] if "DEV" in d["drawn"] else s["limit"]["judged"][1]
+        pnl = R.get("PNL")
+        u901 = (pnl["a"][1] ** 2 * P["ron"] / s["v"]) if pnl else 0.0
+        dev.append({"state": st, "limit": s["limit"]["a"], "drafted": s["limit"]["judged"][1], "margin": s["limit"]["margin"],
+                    "pct": s["limit"]["pct"], "drawn": drawn, "u901": u901})
+    fixed = (D - D ** 3) / (1 - D ** 3)                           # the fan law with a speed-independent share f: f + (1 - f) D^3 = D
+    l = V["ap_l"] * (1 - V["ap_ltol"]); fs = V["ap_fsw"] * (1 - V["fsw_tol"]); vo = V["vin_nom"]
+    ripple = vo * (1 - vo / V["vsys_max"]) / (l * fs)
+    worst = max(r["I"]["a"] for r in rows if r["part"].startswith("AP64500"))
+    return {"rows": rows, "dev": dev, "fixed": fixed, "ripple": ripple, "worst": worst, "ipk": worst + ripple / 2,
+            "vbat_full": P["r9"]["this"], "vbat_cap": P["r9"]["this"] * D}
+
+
+def e_round_page():
+    """board E's scripts in the change list's order, as L4-POWER-ARCHITECTURE.md's change table gives them (the ALT rows left out)."""
+    page = open(os.path.join(ROOT, L4E9_PAGE), encoding="utf-8").read().splitlines()
+    i = [k for k, l in enumerate(page) if l.startswith("| # | Step | Row |")]
+    if len(i) != 1:
+        raise SystemExit("l8r2_drafts: L4-POWER-ARCHITECTURE.md has no single change table")
+    seq = []
+    for l in page[i[0] + 2:]:
+        if not l.startswith("|"):
+            break
+        c = [x.strip() for x in l.strip().strip("|").split("|")]
+        if c[1] == "ALT" or not c[3].startswith("board E, gen_sch_e.py") or not c[4].startswith("apply_gen_sch_e_"):
+            continue
+        for s in [x.strip() for x in c[4].split(",")]:
+            if s not in seq:
+                seq.append(s)
+    return seq
+
+
+def run_e(script, target):
+    """board E's drafts: d8dec31's input capacitor takes board E's netlist and writes by itself; every other one takes --write."""
+    args = [target, os.path.join(ROOT, NET_E)] if script.endswith("_cin.py") else [target, "--write"]
+    r = subprocess.run([sys.executable, "-B", script] + args, capture_output=True)
+    return r.returncode, (r.stderr.decode("utf-8", "replace").strip().splitlines() or [""])[-1]
+
+
+def compose_e(seq, d, tag):
+    p = os.path.join(d, tag + ".py"); shutil.copy(GEN_E, p); res = []
+    for s in seq:
+        rc, msg = run_e(s, p)
+        res.append((os.path.relpath(s, RECS), "OK" if rc == 0 else "REFUSED (%s)" % msg))
+        if rc:
+            break
+    return p, res
+
+
+def rail_calls(text, names):
+    """The _intent.rail calls of a generator's text whose net is one of names, evaluated by a fresh intent.py in the file's order:
+    {net: 'accepted' or the refusal, and the declaration as intent recorded it}."""
+    it = fresh_intent(); out = {}
+    calls = [n for n in ast.parse(text).body if isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
+             and isinstance(n.value.func, ast.Attribute) and n.value.func.attr == "rail" and n.value.args
+             and isinstance(n.value.args[0], ast.Constant) and n.value.args[0].value in names]
+    for c in sorted(calls, key=lambda x: x.lineno):
+        net = c.value.args[0].value
+        try:
+            eval(compile(ast.Expression(c.value), "rail", "eval"), {"_intent": it})
+            out[net] = ("accepted", it._I["rails"][net])
+        except SystemExit as e:
+            out[net] = ("REFUSED (%s)" % str(e).split(". ")[0], None)
+    return out
+
+
+def l9stk_rows():
+    """record l9stk's section 2 (inputs/, at 7388a84b): the width rows per board and its line on the returns, parsed."""
+    t = open(os.path.join(ROOT, L9STK), encoding="utf-8").read()
+    rows, board = {}, None
+    for l in t.splitlines():
+        m = re.match(r"^   board (\w+) \(", l)
+        if m:
+            board = m.group(1); continue
+        m = re.match(r"^     (\S+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(yes|no)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(\d+)$", l)
+        if m and board:
+            rows[(board, m.group(1))] = tuple(float(x) for x in m.group(2, 3, 4, 6, 7, 8, 9))
+    ret = re.search(r"returns declared in the intents: ([^\n]+)", t)
+    if not rows or not ret:
+        raise SystemExit("l8r2_drafts: record l9stk's output no longer parses")
+    return rows, ret.group(1)
+
+
+def amps_for_width(w, oz):
+    """the current a band of width w (mm, outer layer) carries at 10 K by decision 35's model: track_current's inverse, bisected."""
+    sys.path.insert(0, TOOLS)
+    import track_current as tc
+    lo, hi = 0.0, 200.0
+    for _ in range(80):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if tc.width_for_current(mid, oz=oz) <= w else (lo, mid)
+    return lo
+
+
+def dchs_band():
+    """board E's DC_HS band as gen_pcb_e3.py lays it (one B.Cu band: its run along Q7's source pads and its leg up L2 pin 1), the
+    widths read from the generator's own rectangles."""
+    t = open(os.path.join(TOOLS, "gen_pcb_e3.py"), encoding="utf-8").read()
+    run = re.search(r"^\s*_run = \(min\(_qx, _lx\) - ([\d.]+), _qy - ([\d.]+), max\(_qx, _lx\) \+ [\d.]+, _qy \+ ([\d.]+)\)", t, re.M)
+    leg = re.search(r"^\s*_leg = \(_lx - ([\d.]+), min\(_qy, _ly\) - [\d.]+, _lx \+ ([\d.]+),", t, re.M)
+    one = re.search(r'_pc\.union\("DC_HS", "DC_HS band B\.Cu', t)
+    if not (run and leg and one):
+        raise SystemExit("l8r2_drafts: gen_pcb_e3.py's DC_HS band no longer parses")
+    return float(run.group(2)) + float(run.group(3)), float(leg.group(1)) + float(leg.group(2))
+
+
+def item6():
+    """The widths the energy chain's declared ratings need at 1 oz (decision 35's model), and what board E's input band carries."""
+    sys.path.insert(0, TOOLS)
+    import track_current as tc
+    w = lambda a, oz=1.0: tc.width_for_current(a, oz=oz)
+    run, leg = dchs_band()
+    return {"w25": (w(25.0 / 2), w(25.0)), "w18": (w(18.0 / 2), w(18.0)), "w10": (w(10.0 / 2), w(10.0)),
+            "a_672_two": 2 * amps_for_width(6.72, 1.0), "dchs": (run, leg), "dchs_1oz": (amps_for_width(run, 1.0), amps_for_width(leg, 1.0)),
+            "dchs_2oz": (amps_for_width(run, 2.0), amps_for_width(leg, 2.0))}
 
 
 def l6_scratch(d):
@@ -338,6 +606,197 @@ def duplicates(text):
     return sorted(r for r, n in seen.items() if n > 1)
 
 
+def r3_slot_loads():
+    """the slot rail's declared loads on board B: as drawn, as round 2 drafted them (the step-up at full speed) and as round 3 does."""
+    base, peak = slot_loads(open(GEN_B, encoding="utf-8").read())
+    r2 = round(V["pfan"] / V["eta"] / 5.0, 2); s = 1
+    l2 = {(("U%d" % (701 + 30 * (s - 1))) if k == "J_FAN%d" % s else k): (r2 if k == "J_FAN%d" % s else v) for k, v in base[s].items()}
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "b.py"); shutil.copy(GEN_B, p)
+        rc, msg = run(draft("l8r2", "fans12", "b"), p)
+        if rc:
+            raise SystemExit("l8r2_drafts: the coolers' draft refused a copy of gen_sch_b.py: %s" % msg)
+        r3, peak3 = slot_loads(open(p, encoding="utf-8").read())
+    lb = {k: v for k, v in base[s].items() if k != "J_FAN%d" % s}
+    return [("as drawn (J_FAN%d 0.1 A)" % s, base[s], peak[s]),
+            ("round 2 (the step-up at full speed, %.2f A)" % r2, l2, peak[s]),
+            ("round 3 (the step-up at the %.0f %% maximum, %.2f A)" % (100 * V["duty_max"], r3[s]["U701"]), r3[s], peak3[s]),
+            ("(b), the cooler off the slot rail (no fan row)", lb, peak[s])]
+
+
+def item1_r3_print(w):
+    P = l9pwr(); o = item1_r3(); D = V["duty_max"]
+    w("\n2b. ROUND 3: ITEM 1 RE-DECIDED ON RECORD l9pwr'S FIGURES (inputs/l9pwr_budget-38ef774c.txt, its section 5 parsed: %d states; nothing typed)\n"
+      % len(P["states"]))
+    w("  %s (%s): %s\n" % P["f02"])
+    w("  %s (%s): %s\n" % P["f03"])
+    w("  the efficiency: round 2's %.2f W for the three coolers at VBAT took board A's slot converters at a flat 0.90; record l9pwr's R9 (theirs %s, reproduced: %s) reads %.4f W on each slot rail's own converter, the figure item 1 now carries\n"
+      % (P["r9"]["theirs"][2], "(%s)" % ", ".join("%g" % x for x in P["r9"]["theirs"]), P["r9"]["equal"], P["r9"]["this"]))
+    w("  the slot rail's declared loads on board B (gen_sch_b.py's _SLOT_LOADS and its +5V_Sn rail's peak, read with ast), judged by intent.rail itself (loads at most 1.02 times the peak):\n")
+    for tag, loads, peak in r3_slot_loads():
+        w("    %-52s slot 1: %.3f A against %.3f A: %s\n" % (tag, sum(loads.values()), peak, intent_says(peak, loads)))
+    w("  the options at HIGH on each slot's converter, every state (A on its output, the margin to its limit in brackets); record l9pwr's rails:\n")
+    w("    (a) as drafted at full speed; (a) with the %.0f %% Fan_PWM maximum, the linear bound (%.1f W of fan) at the step-up's 0.85, at its low 0.80, and by the fan law (%.3f of full power);\n"
+      "    (b) the cooler off the slot rail (one feed from board A or one per slot alike); released: Fan_PWM released and the card socket's supply off (PCIE_PWR_EN low), the fan at full speed\n"
+      % (100 * D, D * V["pfan"], D ** 3))
+    w("    %-12s %-4s %-24s %-17s %-17s %-17s %-17s %-17s %-17s\n" % ("state", "slot", "converter (limit)", "(a) drafted", "(a) cap", "(a) cap eta 0.80", "(a) cap fan law", "(b)", "released"))
+    same = True
+    for r in o["rows"]:
+        same = same and abs(r["I"]["a"] - r["printed"]) < 0.0006
+        w("    %-12s %-4s %-24s %s\n" % (r["state"], r["slot"], "%s (%.3f A)" % (r["part"], r["limit"]),
+                                       " ".join("%-17s" % ("%.3f (%+.3f)" % (r["I"][k], r["margin"][k])) for k in ("a", "cap", "cap_lo", "cap_law", "b", "rel"))))
+    w("    (a) drafted, from the rail's watts, equals record l9pwr's printed current in every row: %s\n" % ("YES" if same else "NO"))
+    for fam in ("AP64500", "LM5176"):
+        rs = [r for r in o["rows"] if r["part"].startswith(fam)]
+        least = {k: min(rs, key=lambda r: r["margin"][k]) for k in ("a", "cap", "cap_lo", "cap_law", "b", "rel")}
+        w("  the least margin at HIGH over every state, %s (%s): %s\n" % (fam, ", ".join(sorted({r["part"] for r in rs})), "; ".join(
+            "%s %+.3f A (%+.1f %%, %s)" % ({"a": "(a) drafted", "cap": "(a) cap", "cap_lo": "(a) cap eta 0.80", "cap_law": "(a) cap fan law", "b": "(b)", "rel": "released"}[k],
+                                         least[k]["margin"][k], 100 * least[k]["margin"][k] / least[k]["limit"], least[k]["state"]) for k in least)))
+    w("  the device rail (%s): no option feeds a cooler from +5V_DEV, so every option leaves it as record l9pwr prints it:\n" % P["f03"][0])
+    for d in o["dev"]:
+        w("    %-12s LM5176 U7 %.3f A DRAFTED against %.3f A, margin %+.3f A (%+.1f %%); DRAWN %.3f A; U901's RON loss (record l8r2 item 3) %.3f A of the difference\n"
+          % (d["state"], d["drafted"], d["limit"], d["margin"], d["pct"], d["drawn"], d["u901"]))
+    pnl = max(st["rails"]["PNL"]["a"][1] for st in P["states"].values() if "PNL" in st["rails"])
+    w("    U901's RON (at most %.4f Ohm, record l9pwr's D5) at the panel's %.3f A at HIGH: %.3f W on +5V_DEV, %.3f A at 5.1 V\n"
+      % (P["ron"], pnl, pnl ** 2 * P["ron"], pnl ** 2 * P["ron"] / 5.1))
+    w("  the linear bound fails only if more than %.1f %% of the fan's full-speed input does not fall with its speed (the fan law with a fixed share f: f + (1 - f) x %.3f > %.2f)\n"
+      % (100 * o["fixed"], D ** 3, D))
+    w("  if the bound fails open (Fan_PWM uncapped with the card on): %.3f A on slots 1 and 3, the AP64500's inductor peak %.3f A (ripple %.3f A at VSYS's %.3f V, L %.0f %% low, fsw %.0f %% low) under its least HS peak current limit %.1f A by %.3f A: no limit acts\n"
+      % (o["worst"], o["ipk"], o["ripple"], V["vsys_max"], 100 * V["ap_ltol"], 100 * V["fsw_tol"], V["ap_ipk"][0], V["ap_ipk"][0] - o["ipk"]))
+    w("  the coolers at VBAT: %.4f W at full speed (R9); at the %.0f %% maximum at most %.2f W (the linear bound, the slot converters' efficiency taken flat over the change): %.2f W less at HIGH, a figure for L9P-F01's owner\n"
+      % (o["vbat_full"], 100 * D, o["vbat_cap"], o["vbat_full"] - o["vbat_cap"]))
+    w("  SELECTED (SESSION): (a) with the modules' %.0f %% Fan_PWM maximum; (b) as one 12 V feed would make one converter common to the three modules' coolers, a shared element ASM-002 does not name\n" % (100 * D))
+
+
+def compose_e_print(w, d):
+    er = [draft(r, n, "e") for r, n in E_ROUND]; mine = [draft(r, n, "e") for r, n in MINE_E]
+    w("\n6b. COMPOSITION ON BOARD E (scratch copies of gen_sch_e.py; the change list's board E round, d8dec31's cin last, and this record's pack return)\n")
+    page = e_round_page()
+    w("  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: %s: %s\n"
+      % (", ".join(page), "the same as this script's E_ROUND" if page == [os.path.basename(x) for x in er] else "DIFFERENT from this script's E_ROUND"))
+    for tag, seq in (("the round, then this record's packrtn", er + mine), ("this record's packrtn first, then the round", mine + er),
+                     ("the round with this record's packrtn before cin", er[:-1] + mine + er[-1:])):
+        _p, res = compose_e(seq, d, "e_" + tag.split()[-1])
+        bad = [(s, v) for s, v in res if v != "OK"]
+        w("  %-50s %s\n" % (tag + ":", "OK at every step (%d drafts)" % len(res) if not bad and len(res) == len(seq) else bad))
+    bad = []
+    for k in range(len(er) + 1):
+        _p, res = compose_e(er[:k] + mine, d, "e_prefix_%d" % k)
+        if any(v != "OK" for _s, v in res) or len(res) != k + 1:
+            bad.append((k, res[-1]))
+    w("  this record's packrtn after every prefix of the round (0 to %d drafts; the round's drafts depend on one another, so none is applied alone): %s\n"
+      % (len(er), "OK at every prefix" if not bad else bad))
+
+
+def designators_e(d):
+    er = [draft(r, n, "e") for r, n in E_ROUND]; mine = [draft(r, n, "e") for r, n in MINE_E]
+    p = os.path.join(d, "e_desig.py"); shutil.copy(GEN_E, p)
+    before = open(p, encoding="utf-8").read(); out = {}
+    for s in er + mine:
+        rc = run_e(s, p)[0]
+        after = open(p, encoding="utf-8").read()
+        out[os.path.relpath(s, RECS)] = added(before, after, s) if rc == 0 else None
+        before = after
+    return p, out
+
+
+def netlist_pins(path):
+    sp = importlib.util.spec_from_file_location("l8r2_check_r3", os.path.join(HERE, "check_l8r2_netlist.py"))
+    chk = importlib.util.module_from_spec(sp); sp.loader.exec_module(chk)
+    return chk.read_netlist(open(path, "rb").read())["pins"]
+
+
+def item5_print(w):
+    rows, ret = l9stk_rows()
+    w("\n9. ITEM 5, THE PACK PATH'S RETURN ON BOARDS A AND E (record l9stk's finding, its output: \"returns declared in the intents: %s\")\n" % ret)
+    for key in (("A", "CELL+"), ("E", "CELL_F")):
+        r = rows[key]
+        w("  record l9stk's widths, board %s %s at %.2f A (governing): one 1 oz face %.2f mm, each of two %.2f mm; one 2 oz face %.2f mm, each of two %.2f mm\n"
+          % (key[0], key[1], r[2], r[3], r[4], r[5], r[6]))
+    with tempfile.TemporaryDirectory() as d:
+        for letter, gen, fwd, net, names in (("A", GEN_A, [draft(r, n, "a") for r, n in POWER_A + L8_A], NET_A, ("CELL+", "GND")),
+                                             ("E", GEN_E, [draft(r, n, "e") for r, n in E_ROUND + MINE_E], NET_E, ("CELL_F", "GND"))):
+            p = os.path.join(d, letter + ".py"); shutil.copy(gen, p)
+            rc, msg = (run if letter == "A" else run_e)(draft("l8r2", "packrtn", letter.lower()), p)
+            if rc:
+                raise SystemExit("l8r2_drafts: the pack return's draft refused board %s's generator: %s" % (letter, msg))
+            got = rail_calls(open(p, encoding="utf-8").read(), names)
+            g = got["GND"][1] or {}
+            src = g.get("source"); src = list(src) if isinstance(src, (list, tuple)) else [src]
+            w("  board %s, the draft alone: GND a rail, sources %s, loads %s (%.2f A), %.1f / %.1f A, returns %s, share %.1f %%; intent.py on the file's %s and GND declarations: %s\n"
+              % (letter, ", ".join(src), ", ".join("%s %g" % kv for kv in g.get("loads", {}).items()), sum(g.get("loads", {}).values()),
+                 g.get("amps_typ", 0), g.get("amps_peak", 0), g.get("returns"), 100 * g.get("share", 0), names[0],
+                 "; ".join("%s %s" % (k, v[0]) for k, v in got.items())))
+            pins = netlist_pins(os.path.join(ROOT, net))
+            on = []
+            for ref in src + list(g.get("loads", {})):
+                gp = sorted((pn for pn, n in pins.get(ref, {}).items() if str(n).lstrip("/") == "GND"), key=lambda x: (len(x), x))
+                on.append("%s %s" % (ref, ",".join(gp) if gp else "NONE"))
+            w("    on the committed netlist (%s), each source and load's pins on GND: %s: %s\n"
+              % (os.path.basename(net), "; ".join(on), "YES" if all(not x.endswith("NONE") for x in on) else "NO"))
+            if letter == "A":
+                _q, res = compose(GEN_A, fwd, d, "A_fwd")
+            else:
+                _q, res = compose_e(fwd, d, "E_fwd")
+            got2 = rail_calls(open(_q, encoding="utf-8").read(), names)
+            w("    after the whole round (%d drafts, this one last): %s\n" % (len(res), "; ".join("%s %s" % (k, v[0]) for k, v in got2.items())))
+    w("  the bar each return is judged against (dc_drop, PI-002): its share, 0.5 %%, of the rail it returns, %.1f mV of 14.4 V; the rules that then judge it: PI-001 (conductor capacity at the declared 18 A), PI-002 (the drop), PI-003 (the barrels), PWR-001 (the rail on the netlist), THM-001 (its watts not counted twice)\n"
+      % (0.005 * 14.4 * 1e3))
+
+
+def item6_print(w):
+    o = item6(); rows, _ret = l9stk_rows()
+    text = open(os.path.join(ROOT, CHAIN), encoding="utf-8").read()
+    w("\n10. ITEM 6, THE ENERGY CHAIN'S BOARD E TEXTS AT 1 OZ (record l9stk's second finding; %s)\n" % CHAIN)
+    def oz_lines(tx):
+        sid, board, out = None, None, []
+        for i, l in enumerate(tx.splitlines(), 1):
+            m = re.match(r"^ - id: (\S+)", l)
+            if m:
+                sid = m.group(1)
+            m = re.match(r"^   board: (.+)$", l)
+            if m:
+                board = m.group(1).strip('"')
+            if "2 oz" in l:
+                out.append("%d (%s, board %s)" % (i, sid, board))
+        return out
+    w("  lines naming 2 oz: %s\n" % "; ".join(oz_lines(text)))
+    sp = importlib.util.spec_from_file_location("chain_fix", os.path.join(ROOT, CHAIN_FIX))
+    fx = importlib.util.module_from_spec(sp); sp.loader.exec_module(fx)
+    w("  the correction rewrites %s; board P's and E5's 2 oz (owner ruling 7) stay\n" % ", ".join(s for s, *_r in fx.EDITS))
+    w("  widths at 10 K, decision 35's model (track_current.width_for_current), each of two 1 oz faces (one face): 25 A %.2f mm (%.2f); 18 A %.2f mm (%.2f), record l9stk's %.2f (%.2f): %s; 10 A %.2f mm (%.2f)\n"
+      % (o["w25"][0], o["w25"][1], o["w18"][0], o["w18"][1], rows[("E", "CELL_F")][4], rows[("E", "CELL_F")][3],
+         "EQUAL" if abs(o["w18"][0] - rows[("E", "CELL_F")][4]) < 0.006 and abs(o["w18"][1] - rows[("E", "CELL_F")][3]) < 0.006 else "DIFFERENT",
+         o["w10"][0], o["w10"][1]))
+    named = ("%.2f mm on each of two 1 oz faces" % o["w25"][0] in fx._DOCK_BASIS
+             and "%.2f mm on each of two 1 oz faces or %.2f mm on one" % (o["w10"][0], o["w10"][1]) in fx._SHORE_BASIS)
+    w("  the corrected texts name those widths: %s\n" % ("YES" if named else "NO"))
+    with tempfile.TemporaryDirectory() as d:
+        ch = os.path.join(d, "chain.yaml"); shutil.copy(os.path.join(ROOT, CHAIN), ch)
+        reg = os.path.join(d, "decisions.yaml")
+        shutil.copy(os.path.join(TOOLS, "pcb_decisions.yaml"), reg)
+        go = lambda *a: subprocess.run([sys.executable, "-B", os.path.join(ROOT, CHAIN_FIX)] + list(a), capture_output=True)
+        r0 = go("--chain", ch)
+        open(reg, "a", encoding="utf-8").write('  - n: 999\n    title: "Board E\'s stackup: four layers at 1 oz outer and 0.5 oz inner (L9STK E)"\n    status: ruled\n')
+        r1 = go("--chain", ch, "--registry", reg); r2 = go("--chain", ch, "--registry", reg, "--write"); r3 = go("--chain", ch, "--registry", reg, "--write")
+        last = lambda r: (r.stdout.decode().strip().splitlines() or r.stderr.decode().strip().splitlines() or [""])[-1].split(": ", 1)[-1]
+        w("  the apply script: on the tree's register (exit %d) %s\n" % (r0.returncode, last(r0)))
+        w("    on a copy of the register carrying a ruled \"(L9STK E)\" decision: --check exit %d (%s); --write exit %d (%s); again exit %d (%s)\n"
+          % (r1.returncode, last(r1), r2.returncode, last(r2), r3.returncode, last(r3)))
+        sys.path.insert(0, TOOLS)
+        import energy_chain as ec
+        a, b = ec.check(os.path.join(ROOT, CHAIN), None), ec.check(ch, None)
+        keys = ("fails", "stage_fails", "derate_fails")
+        w("  energy_chain.check on the tree's chain and on the corrected copy (%d and %d checks): %s; %s\n"
+          % (a["checked"], b["checked"], ", ".join("%s %d / %d" % (k, len(a.get(k) or []), len(b.get(k) or [])) for k in keys),
+             "IDENTICAL" if all(a.get(k) == b.get(k) for k in keys) and a["checked"] == b["checked"] else "DIFFERENT"))
+        w("  lines naming 2 oz after the correction: %s\n" % "; ".join(oz_lines(open(ch, encoding="utf-8").read())))
+    w("  what the copper must carry for the chain's coordination (the blade at or below its conductor's rating): DOCK_ENTRY's 25 A needs %.2f mm on each of two 1 oz faces; record l9stk's band of %.2f mm on each of two carries %.2f A: FINDING\n"
+      % (o["w25"][0], rows[("E", "CELL_F")][4], o["a_672_two"]))
+    w("  board E's input band as gen_pcb_e3.py lays it (DC_HS, one B.Cu band: run %.1f mm, leg %.1f mm): %.2f and %.2f A at 1 oz (%.2f and %.2f at 2 oz), under SHORE_INPUT's F1 10 A at 1 oz: FINDING\n"
+      % (o["dchs"] + o["dchs_1oz"] + o["dchs_2oz"]))
+
+
 def main():
     w = sys.stdout.write
     w("l8r2_drafts: the Layer 8 record l8r2 (round 2): the known engineering defects a desk design corrects (MESHSAT-1357)\n")
@@ -370,10 +829,11 @@ def main():
       % (o["efuse"][:3] + (o["efuse"][3], o["ovlo"][0], o["ovlo"][1], o["ovlo_margin"]) + V["ovp"]))
     w("  power, the fan row: pwr_budget.py's cooler row %.2f / %.2f / %.2f W per slot (a representative 30 mm 5 V fan, not the pick); the pick prints %.1f W at full speed\n"
       % (V["budget_fan"] + (V["pfan"],)))
-    w("  choice (a), a step-up per slot (SELECTED): %.3f W on +5V_Sn per slot at full speed, %.3f A at 5.1 V (%.3f A at 4.9 V), +%.3f W of conversion per slot; the three %.2f W at VBAT behind the slot converters\n"
-      % (o["slot_w"], o["slot_a"], o["slot_a_min"], o["slot_w"] - V["pfan"], o["a_vbat"]))
-    w("  choice (b), one 12 V feed from board A over the bay harness: the three %.2f W at VBAT; (b) is %.2f W lower at full speed, %.2f W at the budget's 0.56 W a fan\n"
-      % (o["b_vbat"], o["a_minus_b"], o["a_minus_b"] * 0.56 / V["pfan"]))
+    w("  choice (a), a step-up per slot (SELECTED): %.3f W on +5V_Sn per slot at full speed, %.3f A at 5.1 V (%.3f A at 4.9 V), +%.3f W of conversion per slot; the three %.2f W at VBAT behind the slot converters (record l9pwr's R9 on each slot rail's own converter; round 2 printed %.2f W on a flat 0.90)\n"
+      % (o["slot_w"], o["slot_a"], o["slot_a_min"], o["slot_w"] - V["pfan"], o["a_vbat"], o["a_vbat_r2"]))
+    w("  choice (b), one 12 V feed from board A over the bay harness: the three %.2f W at VBAT (board A's converter at %.2f, an ASSUMPTION); (b) is %.2f W lower at full speed, %.2f W at the budget's 0.56 W a fan\n"
+      % (o["b_vbat"], V["eta_a"], o["a_minus_b"], o["a_minus_b"] * 0.56 / V["pfan"]))
+    item1_r3_print(w)
 
     t = item2()
     w("\n3. ITEM 2, VBUS20 AGAINST U2's SINGLE FAULTS (S-111, R-48)\n")
@@ -407,12 +867,12 @@ def main():
         pa = [draft(r, n, "a") for r, n in POWER_A]; l8a = [draft(r, n, "a") for r, n in L8_A]; mya = [draft(r, n, "a") for r, n in MINE_A]
         w("\n5. COMPOSITION ON BOARD A (scratch copies of gen_sch_a.py; OK = applied and the result parses)\n")
         _p, res = compose(GEN_A, pa + l8a, d, "a_fwd", mainpb_last=True)
-        w("  L4-E9's power order, l8gnd's two, this record's two, then d8dec31's mainpb:\n")
+        w("  L4-E9's power order, l8gnd's two, this record's three, then d8dec31's mainpb:\n")
         for s, v in res: w("    %-42s %s\n" % (s, v))
         _p, res = compose(GEN_A, mya + pa + l8a[:2], d, "a_rev", mainpb_last=True)
-        w("  this record's two first, then the power order, l8gnd's two and mainpb (every anchor of theirs still applies after these):\n")
+        w("  this record's three first, then the power order, l8gnd's two and mainpb (every anchor of theirs still applies after these):\n")
         for s, v in res: w("    %-42s %s\n" % (s, v))
-        w("  each power draft alone after this record's two (the bank after r12, which it requires):\n")
+        w("  each power draft alone after this record's three (the bank after r12, which it requires):\n")
         r12 = [x for x in pa if x.endswith("_r12.py")]
         for s in pa:
             p = os.path.join(d, "alone_" + os.path.basename(s)); shutil.copy(GEN_A, p)
@@ -420,7 +880,7 @@ def main():
             rc, msg = run(s, p)
             w("    %-42s %s\n" % (os.path.relpath(s, RECS), "OK" if ok and rc == 0 else "REFUSED (%s)" % msg))
         _p, res = compose(GEN_A, l8a[::-1], d, "a_l8rev")
-        w("  the four Layer 8 drafts of board A in reverse order: %s\n" % ("OK" if all(v == "OK" for _s, v in res) else res))
+        w("  the five Layer 8 drafts of board A in reverse order: %s\n" % ("OK" if all(v == "OK" for _s, v in res) else res))
         pb = [draft(r, n, "b") for r, n in L8_B]
         w("\n6. COMPOSITION ON BOARD B (no power draft targets gen_sch_b.py)\n")
         for tag, seq in (("forward", pb), ("reverse", pb[::-1])):
@@ -429,6 +889,8 @@ def main():
         for s in pb:
             _p, res = compose(GEN_B, [s], d, "b_alone_" + os.path.basename(s)[:-3])
             w("  alone %-30s %s\n" % (os.path.relpath(s, RECS), res[0][1]))
+
+        compose_e_print(w, d)
 
         w("\n7. DESIGNATORS\n")
         pA, addA = designators(GEN_A, pa + l8a, d, "a_desig", mainpb_last=True)
@@ -447,6 +909,10 @@ def main():
         w("  literal designators drawn twice in the composed board B generator: %s\n" % (duplicates(tb) or "none"))
         w("  board B's 700 and 900 blocks against every designator the generator builds from a base: %s\n"
           % ("free" if not re.search(r'"[RCQULD]%d" % \(\s*[79]\d\d\b', open(GEN_B, encoding="utf-8").read()) else "TAKEN"))
+        pE, addE = designators_e(d)
+        w("  board E, what this record's pack return adds after the change list's round: %s (the round's own designators are held by test_l4e9)\n"
+          % (", ".join(sorted(addE["l8r2/apply_gen_sch_e_packrtn.py"])) or "none"))
+        w("  literal designators drawn twice in the composed board E generator: %s\n" % (duplicates(open(pE, encoding="utf-8").read()) or "none"))
 
     w("\n7b. ITEM 4, BOARD C'S PI BUTTON (the panel firmware's F-01): PIJ2_A2 on U1 P1.3 (PI_BTN_n)\n")
     q = item4()
@@ -476,6 +942,8 @@ def main():
         v, lines = chk.judge(letter, chk.read_netlist(chk.fixture(letter)))
         for l in lines: w("    %s\n" % l)
         w("    fixture %s: %s\n" % (letter.upper(), v))
+    item5_print(w)
+    item6_print(w)
     w("\nEND\n")
     return 0
 
