@@ -37,7 +37,7 @@ REG = "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"
 ARCH = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"
 E11 = "v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md"
 MARK = "PROPOSED, for the supplier to review and agree before execution"
-LONG_DASHES = ("—", "–")
+LONG_DASHES = (chr(0x2014), chr(0x2013))
 KEYS = ("id", "title", "register", "e11", "route5d")
 COLS_5D = ("Specimen", "What transfers to the final board", "Authorisation", "What to buy")
 Q_RX = re.compile(r"<!-- q (.*?) -->\n(.*?)\n<!-- /q -->", re.S)
@@ -154,17 +154,12 @@ def listed(v, sep=","):
     return [x.strip() for x in v.split(sep) if x.strip() and x.strip() != "none"]
 
 
-def check_procedure(src, rel, text):
-    """(report lines, failures, facts) for one procedure."""
-    fails, lines = [], []
-    m = meta(text)
-    if m is None or any(k not in m for k in KEYS):
-        return [], ["%s: C1 the metadata block is missing or lacks one of %s" % (rel, ", ".join(KEYS))], None
-    regs, e11s, routes = listed(m["register"]), listed(m["e11"]), listed(m["route5d"], ";;")
-    if not regs:
-        fails.append("%s: C1 no register row named" % rel)
-    reg_rows, e11_rows, route_rows = set(src.first_cells(REG, "Acceptance")), set(src.first_cells(E11, "Acceptance")), set(src.route_rows())
+def verify_quotes(src, rel, text):
+    """C3 on one file: (the set of table quotes, table count, text count, failures)."""
+    fails = []
     quotes = [(dict(ATTR_RX.findall(a)), unquote(b)) for a, b in Q_RX.findall(text)]
+    if text.count("<!-- q ") != len(quotes):
+        fails.append("%s: C3 %d quote marker(s) without a well-formed block" % (rel, text.count("<!-- q ") - len(quotes)))
     tq = {(q.get("src"), q.get("row"), q.get("col")) for q, _ in quotes if "row" in q}
     n_table = n_text = 0
     for q, body in quotes:
@@ -185,6 +180,21 @@ def check_procedure(src, rel, text):
                 fails.append("%s: C3 a text quote is not found verbatim in %s: %r" % (rel, s, body[:90]))
             else:
                 n_text += 1
+    return tq, n_table, n_text, fails
+
+
+def check_procedure(src, rel, text):
+    """(report lines, failures, facts) for one procedure."""
+    fails, lines = [], []
+    m = meta(text)
+    if m is None or any(k not in m for k in KEYS):
+        return [], ["%s: C1 the metadata block is missing or lacks one of %s" % (rel, ", ".join(KEYS))], None
+    regs, e11s, routes = listed(m["register"]), listed(m["e11"]), listed(m["route5d"], ";;")
+    if not regs:
+        fails.append("%s: C1 no register row named" % rel)
+    reg_rows, e11_rows, route_rows = set(src.first_cells(REG, "Acceptance")), set(src.first_cells(E11, "Acceptance")), set(src.route_rows())
+    tq, n_table, n_text, qf = verify_quotes(src, rel, text)
+    fails += qf
     for r in regs:
         if r not in reg_rows:
             fails.append("%s: C2 register row %s does not exist" % (rel, r))
@@ -208,8 +218,9 @@ def check_procedure(src, rel, text):
     tbds = []
     for mm in TBD_RX.finditer(text):
         owners = listed(mm.group(1))
-        end = text.find("\n", mm.end())
-        tbds.append((owners, norm(text[mm.end():end if end > 0 else len(text)]).lstrip(": ")))
+        tail = text[mm.end():mm.end() + 400]
+        cut = min([i for i in (tail.find(". "), tail.find(".\n"), tail.find("\n\n")) if i >= 0] or [len(tail)])
+        tbds.append((owners, norm(tail[:cut]).lstrip(": ")))
         for o in owners:
             ok = (o in reg_rows) if o.startswith("R-") else (o in e11_rows) if o.startswith("E11-") else False
             if not ok:
@@ -278,6 +289,15 @@ def check(root=ROOT, folder=FOLDER):
         readme = open(readme_p, encoding="utf-8").read()
         out.append("")
         out.append("%s %s/README.md" % (hashlib.sha256(readme.encode("utf-8")).hexdigest()[:16], shown))
+        _, a, b, qf = verify_quotes(src, "%s/README.md" % shown, readme)
+        fails += qf
+        out.append("  quotes: %d table, %d text, each checked against its source" % (a, b))
+        out.append("  PROPOSED mark: %s" % ("present" if MARK in norm(readme) else "MISSING"))
+        if MARK not in norm(readme):
+            fails.append("%s/README.md: C7 the PROPOSED mark is missing" % shown)
+        for p in sorted(set(PATH_RX.findall(readme))):
+            if not os.path.exists(os.path.join(root, p.rstrip(".,;:"))):
+                fails.append("%s/README.md: C5 the path %s is not in the tree" % (shown, p))
     for name, fa in facts:
         if name not in readme:
             fails.append("C9 the README does not name %s" % name)
