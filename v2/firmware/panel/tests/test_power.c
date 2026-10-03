@@ -486,3 +486,58 @@ void t_boot_main_tap(void)
     fx_run(x, 400);
     CHECK(x->out.pi_kill);                          /* no module ran: the kit goes off */
 }
+
+void t_hot_boot_held_slot(void)
+{
+    /* FW-C14 with the SLOT_EN hold: a slot found held up at boot, the line at 5 Hz: H1's shutdown of that slot */
+    bool held[3] = { false, true, false }, drive[3];
+    fx_t F, *x = &F;
+    fx_new(x);
+    x->hot_sim = HOT_SIM_5HZ;
+    panel_init(&x->p, &x->ops, x->now, false, held, drive);
+    CHECK(drive[1]);
+    bool t[3] = { false, true, false };
+    unsigned asserted = 0;
+    for (int i = 0; i < 4000; i++) {
+        fx_run_hb(x, 1, t);
+        asserted += x->out.pi_shdn_assert;
+        CHECK(!x->out.slot_en[0] && !x->out.slot_en[2]);   /* nothing raised */
+    }
+    CHECK(x->p.hot.state == HOT_H1 && asserted >= 199);    /* the clean-shutdown request */
+    CHECK(x->out.slot_en[1]);                               /* still running: kept until it stops */
+    fx_run_hb(x, 3200, NONE);
+    CHECK(!x->out.slot_en[1]);
+}
+
+void t_no_raise_while_zeroize_armed(void)
+{
+    fx_t F, *x = &F;
+    fx_new(x);
+    fx_init(x, false, NULL);
+    for (int i = 0; i < 10000 && !x->out.slot_en[0]; i++) {
+        fx_tick(x);
+        x->now++;
+    }
+    CHECK(x->out.slot_en[0] && !x->out.slot_en[1]);         /* slot 1 up, slot 2 waiting its turn */
+    x->in.zeroize_sw = false;                                /* the ZEROIZE toggle closed */
+    for (int i = 0; i < 4900; i++) {
+        fx_run(x, 1);
+        CHECK(!x->out.slot_en[1] && !x->out.slot_en[2]);
+    }
+    x->in.zeroize_sw = true;                                 /* aborted: the slots rise again */
+    fx_run(x, 3000);
+    CHECK(x->out.slot_en[1] && x->out.slot_en[2]);
+}
+
+void t_switch_closed_at_power_up(void)
+{
+    /* SOS closed at power-up: SOS mode 2 s after the controller starts, never sooner */
+    fx_t F, *x = &F;
+    fx_new(x);
+    x->in.sos_sw = false;
+    fx_init(x, false, NULL);
+    ms_t t0 = x->now;
+    while (!x->p.sos_armed && x->now < t0 + 20000)
+        fx_run(x, 1);
+    CHECK(x->p.sos_armed && x->now - t0 >= 2000);
+}
