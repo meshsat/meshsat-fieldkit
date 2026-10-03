@@ -7,17 +7,17 @@ DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carrie
    yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  v2/ecad/tools/pcb_interfaces.yaml
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  v2/docs/PANEL.md
-   l4e9md     5b818bceafdf1dfd8ba18738fe21ab0e839fe2c7f06ca11fb3a0ea1a842acfb4  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    cb25ecbb1f2109245a86d1a1f24dcebf2afe70342c29df4c7a6d0b9cf061bd29  v2/docs/records/l4e9/l4e9_power_path.out
-   reg        af4b17762723c20a6bf4dd0d8554319ffd8920fae2125495f2f5fd32ac963995  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   l4e9md     fce14ef53fdafd4924d0cdf1d2f3177d2e8c92bd3ba5cc140c6182c98cb3eeaa  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   l4e9out    41530bb0ba320fb92c890bf257a4859047aff71fbe3865fc27a27a08ff53738c  v2/docs/records/l4e9/l4e9_power_path.out
+   reg        75184896b0e0e4f4463b80ddb076311c2c19d12d81220fcc6cb64913ba722034  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       ebba684d01f219235aedf3ba20ccbae7f9c36a1c97443f18ed8997dee88dbeb9  v2/docs/records/l4e9/LAYER5-HANDOVER.md
-   l4e11md    188ac85879346be5f896e6f8212abf853f4751cc25ec6a6ee4b495ee3b705cbd  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   l4e11out   e287cbffb247de4ab96a9cde4e046fb891f22b7d8425146efd08dee766ea84ef  v2/docs/records/l4e11/l4e11_power.out
+   l4e11md    db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   l4e11out   648e262f7033bc4b32763c4a612fbd5ffca4b02d8fd1dc0eec78c87c809c1979  v2/docs/records/l4e11/l4e11_power.out
    l4e11entry 418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12md    30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    l4e13md    1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e4md     8673066ddef038e483202b6d906960f2a83fcc84c5a0a7f299308f71f6706b74  v2/docs/records/l4e4/L4E4-CURRENT-LIMITS.md
-   l4e7md     887ae50ff42ef569caeab5f33b9c1c205db9fede3b2da46f8c46453cbee9772f  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
+   l4e7md     3a734c3920eb71bec9465f82c8b586b49e9559a118a833babc275a628e472cb9  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
 
 1. THE TABLE (46 entries, 259 figures; every excerpt found in its target, every figure printed by a cited source)
    LH-01a | IF-EXT-DC | levels (DC) | target v2/ecad/tools/pcb_interfaces.yaml

@@ -12,7 +12,8 @@ tree at the time named.
   `regen_out.py` (L4-E5's output byte-identical; L4-E11's and L4-E9's regenerated); one consequential re-pin in L4-E7 (its pin of
   L4-E5's script), its output byte-identical.
 - L5-F02: the five registry readings bound to PANEL.md are rebound with one evidence entry each; `rules_lib.py requirements` reads 0
-  errors; REQUIREMENTS-TRACE.md re-rendered (five entries, five bindings, nothing else); the decisions page current.
+  errors; REQUIREMENTS-TRACE.md re-rendered (five entries, five bindings, nothing else); the Layer 3 R2 pages re-rendered (the
+  registry's sha and five evidence counts); the decisions page current.
 - Layer 6's identity block is in the merged yaml; `part_identities.py check` reads 0 problems on this host once the held sheets are
   staged (section 3).
 - PCB-ETA.md reads stale in this worktree as it did at the base: a worker-tree condition (the ETA page renders from gitignored
@@ -71,9 +72,11 @@ verified, 0 missing; the one without a same-line pin (the ZA sheet) present at i
 | | `reqs` | `b624ac495650a359` | `435d515f6184f7bd` | |
 | | `l4e5`, `l4e7r` | unchanged | unchanged | guards: re-pinned only if those outputs change |
 | `records/l4e9/l4e9_power_path.out` | | `09bbb34345d80597` | `b760cb3af1444b36` after step 2, `41530bb0ba320fb9` after the rebind | the diff: the pins' lines in section 0 only |
+| `records/l5pwr/l5pwr_contracts.out` | (prints l4e9out, l4e11out) | printed `cb25ecbb1f210924` and `e287cbffb247de4a` (the outputs at its base `2c240414`) | `918577e4164a0084` | the reader prints the shas of what it read and binds through regen_out; test_l5pwr's "output reproduced" failed from the merge onwards (my base `f08e1342` already carried other L4 outputs) and after the regenerations; regenerated last (section 4) |
+| `records/l7pwr/l7pwr_fans_th1.out` | (prints reqs) | printed `b624ac495650a359` | `cd1f8842af426285` | the same: the registry's sha after the rebind; regenerated last |
 
-Order of every run: L4-E5, L4-E7, L4-E11, L4-E9, each through `_bin/regen_out.py` (two runs, byte-identical, every printed pin the
-tree's). The L4-E9 pins that are NOT re-pinned here and belong to the freeze: none went stale by this preparation (L4-E10's, L4-E12's
+Order of every run: L4-E5, L4-E7, L4-E11, L4-E9, then Layer 5's and Layer 7's outputs, each through `_bin/regen_out.py` (two runs,
+byte-identical, every printed pin the tree's). The L4-E9 pins that are NOT re-pinned here and belong to the freeze: none went stale by this preparation (L4-E10's, L4-E12's
 and L4-E13's outputs are unchanged on this branch); they go stale when the coordinator re-pins `reqs` in those three readers and
 regenerates them (section 6).
 
@@ -105,13 +108,65 @@ pin the tree's, the committed file replaced atomically or left as it was.
 | `rules_render.py --requirements --check` | current | REFUSED (the registry does not validate) | **REQUIREMENTS-TRACE.md is current** (re-rendered: 4659 lines; the diff is five entries, five bindings, five separators) |
 | `rules_render.py --check` | 7 documents, 1 out of date (PCB-ETA.md) | 6 documents, 1 out of date, 1 refused | **7 document(s), 1 out of date: PCB-ETA.md**, the same as at the base (F-1); CURRENT-EVIDENCE.md not rendered here (no audit in a worker tree) |
 | `decisions_render.py --check` | current (exit 0) | current | **current (exit 0)** |
+| `handover/layer3/render_l3r2.py --check` | 3 pages, 0 out of date | 3 pages, 0 out of date (the pages print the registry's sha, unchanged by the merges) | after the rebind: REQUIREMENTS-L3-R2.md out of date (test_l3r2 found it); re-rendered: **3 page(s), 0 out of date**; the diff: the header's registry sha `b624ac495650a359` to `435d515f6184f7bd` and the five records' evidence counts (26 to 27, 49 to 50, 24 to 25, 32 to 33, 95 to 96), nothing else; the commit `step 3b`. Every registry commit since `e5286397` re-rendered this page with the trace, so this is the recipe, not a reopening of Layer 3 (the acceptance binds the normative digest, which an evidence entry does not move) |
 | `part_identities.py check` | boards c, 175 rows, 87 selections, READ 18, UNREAD 16, DECODED 10, 16 problems (exit 1): the 16 held-back sheets not on this host | | **boards c, 175 rows, 87 selections, 0 rows uncovered, RESOLVED bindings READ 21, DECODED 23, 0 problems (exit 0)**: the held sheets staged by 2a, the Layer 6 block outside `selections:` as designed |
 | `l6pwr/apply_part_identities_block.py --check` | | | "already carries drafted_identities_l4_power: a second application is refused" (exit 3, the designed answer after the merge) |
 
 ## 4. The module tests
 
-PENDING at this checkpoint: the 26 module files of the brief are running in the background on the shared host (started 04:43 CEST); the line
-and every failure's disposition are filled in by the final commit.
+### 4a. The full run of the brief's 26 files
+
+`env -C v2/ecad/tools/tests python3 run.py test_requirements test_l3r2 test_l3r4 test_l3r5 test_l3am test_l3_reaccept test_public_hygiene
+test_l4e4_provisional test_l4e4 test_l4e5 test_l4e6 test_r11dep test_l4e7 test_l4e8 test_l4e9 test_l4e10 test_l4e11 test_l4e12 test_l4e13
+test_l4close test_l4e_svg_readers test_l5pwr test_l6pwr test_l7pwr test_interfaces test_part_identities`, in the background with no timeout,
+04:43 to 07:34 CEST (2 h 51 min on the shared host at load 13 to 15, beside the coordinator's freeze regenerations), on the tree at
+`d34d030e` (before step 3b's re-render, the test restatement and the Layer 5/7 regeneration below):
+
+**`tests: 403 passed, 105 failed, 1 skipped`**
+
+| File | PASS | FAIL | SKIP | The failures, in one line |
+|---|---|---|---|---|
+| test_interfaces | 10 | | | |
+| test_l3am | 8 | | | |
+| test_l3r2 | 26 | 1 | | `t_l3r2_check_refuses_a_hand_edited_copy`: REQUIREMENTS-L3-R2.md stale (it prints the registry's sha) |
+| test_l3r4 | 15 | | | |
+| test_l3r5 | 21 | | | |
+| test_l3_reaccept | 3 | | | |
+| test_l4close | 14 | | | |
+| test_l4e10 | 2 | 20 | | every predicate that runs the reader: `l4e10_cell_thermal.py refused (exit 2)` |
+| test_l4e11 | 50 | 1 | | `t_the_charge_holds_are_a_state_table...`: "FW-C08 as written no longer asserts SHORE_INHIBIT on the cold hold" |
+| test_l4e12 | 2 | 24 | | every predicate that runs the reader: `l4e12_thermal.py refused (exit 2)` |
+| test_l4e13 | 1 | 18 | | every predicate that runs the reader: `l4e13_panel.py refused (exit 2)` |
+| test_l4e4 | 12 | | | |
+| test_l4e4_provisional | 2 | | | |
+| test_l4e5 | 17 | | | (L4-E5's mechanism, D-1, holds: the output reproduced, the draft applies once to the base) |
+| test_l4e6 | 13 | | | |
+| test_l4e7 | 4 | 39 | | every predicate that runs the reader: `l4e7_stage_settings.py refused (exit 3)` |
+| test_l4e8 | 19 | | | |
+| test_l4e9 | 53 | | | (the re-pinned reader; its output reproduced) |
+| test_l4e_svg_readers | 2 | | | |
+| test_l5pwr | 11 | 1 | | `t_output_reproduced_byte_for_byte`: the output printed the shas of L4-E9's and L4-E11's pages and outputs at its base `2c240414` |
+| test_l6pwr | 10 | | | |
+| test_l7pwr | 10 | 1 | | `t_output_reproduced_byte_for_byte`: the output printed the registry's sha before the rebind |
+| test_part_identities | 27 | | | |
+| test_public_hygiene | 4 | | | |
+| test_r11dep | 2 | | | |
+| test_requirements | 65 | | 1 | `t_no_real_record_reads_pass_on_evidence_that_does_not_count` SKIP: out/rule-audit is not in a worker tree |
+
+### 4b. Every failure, its cause and its disposition
+
+| Cause | Failures | Disposition |
+|---|---|---|
+| REQUIREMENTS-L3-R2.md stale after the rebind (the Layer 3 R2 pages print the registry's sha and the records' evidence counts; every registry commit since `e5286397` re-rendered them with the trace) | test_l3r2, 1 | FIXED here: `render_l3r2.py` re-rendered (step 3b, `0d9d0b3d`; the driver's step 3b and check 6e); re-run in 4c |
+| A predicate pinned the pre-E11-03 wording of FW-C08 ("below 0 C" in the quoted cell) and failed on the day Layer 5 restated the row: a rule about history | test_l4e11, 1 | FIXED here: restated as a property (D-7): the quoted "as written" text IS the contract's FW-C08 behaviour cell read from the tree, and the cell is in one of the two states the record knows (the cold hold on SHORE_INHIBIT, U4-F1 open; or never for a temperature hold, U4-F1 resolved by E11-03); re-run in 4c |
+| The Layer 5 and 7 readers print the shas of what they read (L4-E9's and L4-E11's pages and outputs; the registry) and bind their outputs through regen_out; L4-E9's and L4-E11's outputs were regenerated and the registry rebound, and the pages at my base already differed from their base `2c240414` | test_l5pwr 1, test_l7pwr 1 | FIXED here: both regenerated through regen_out (`l5pwr_contracts.out` `918577e4164a0084`, `l7pwr_fans_th1.out` `cd1f8842af426285`; the diff of each is its section 0's shas, no figure); the re-pin script's last stage; re-run in 4c |
+| L4-E10, L4-E12 and L4-E13 pin `pcb_requirements.yaml` at `b624ac495650a359` and refuse after the rebind (`435d515f6184f7bd`); L4-E10 also pins L4-E9's page at `0978b101` and L4-E13 L4-E7's output at `b0d0953e`, both stale since `f08e1342` (F-4) | test_l4e10 20, test_l4e12 24, test_l4e13 18 | NOT fixed here, by the brief (the three named readers only): the coordinator's freeze with the reqs re-pin (section 6 item 2); every one of the 62 is the reader's refusal, not a predicate of the record |
+| L4-E7's reader refuses (exit 3) on its own panel-lead guard, fired by L4-E9's register row R-180 since `2c240414` (F-7) | test_l4e7, 39 | NOT fixed here: L4-E7's author (the guard greps prose and reads its own figure quoted back); the freeze's stability pass meets it too |
+| `out/rule-audit` is gitignored and not in a worker tree | test_requirements, 1 SKIP | the box (the suite's own condition) |
+
+### 4c. The re-run of the four fixed files
+
+RERUN
 
 ## 5. The box re-takes owed (the coordinator's)
 
@@ -120,13 +175,13 @@ and every failure's disposition are filled in by the final commit.
 | `interfaces.py` on every board (A, B, C, D, E, P, E5) | `pcb_interfaces.yaml` is a CONFIG_INPUT of `interfaces.py` and moved `9ec50ccfae3b70a0` to `22aeae7530c8f523` (Layer 5's power contracts); the seven tracked readings `v2/ecad/pcb-*/routed/interfaces_*.verdict.json` pin the old sha | the box, `retake_schematic_phase.py` as after H2 (L5-F02's second half) |
 | the identity readings (stream w5identc, `records/w5identc/readings/check-board-c-b874b744.json` pins `pcb_part_identities.yaml` at `1f4c513cf50bccfb`) | the yaml carries Layer 6's block (outside `selections:`; `part_identities.py check` reads the same selections, so the re-take is expected to repeat the reading with the new file sha) | the box with the held sheets |
 | `rules_status.py` (the readiness audit, CURRENT-EVIDENCE.md, the per-board status pages, PCB-ETA.md) | `pcb_requirements.yaml` changed (five evidence entries and bindings; the registry's digest moves), `pcb_interfaces.yaml` changed | the box suite's two passes, then the renderers on the box |
-| L4-E10, L4-E12, L4-E13 regenerated | their `reqs` pin (`b624ac495650a359`) is stale after the rebind; L4-E10 and L4-E11 also pinned L4-E9's page (L4-E10's still does) and L4-E13 L4-E7's output (both pre-existing at `f08e1342`) | desk, the freeze helper plus the reqs re-pin (section 6) |
+| L4-E10, L4-E12, L4-E13 regenerated | each refuses (exit 2) on `v2/ecad/tools/pcb_requirements.yaml is not the pinned file` after the rebind (read on this tree, 3 October 07:35), their `reqs` pin `b624ac495650a359` against `435d515f6184f7bd`; L4-E10 and L4-E11 also pinned L4-E9's page (L4-E10's still does) and L4-E13 L4-E7's output (both pre-existing at `f08e1342`) | desk, the freeze helper plus the reqs re-pin (section 6) |
 
 ## 6. What remains for the coordinator
 
 1. **The re-base onto set 27's final commit** (L4-E11's fan-feed round `af4672f4` merged, the pin-chain freeze). Then
    `python3 v2/docs/records/int28/apply_set28.py`: it stages the held sheets, re-runs the rebind (the five rows at set 27 are still
-   bound to `b396d028`), checks the registry, re-renders the trace page, re-runs the re-pins with every sha read from the tree (L4-E11's
+   bound to `b396d028`), checks the registry, re-renders the trace page and the Layer 3 R2 pages, re-runs the re-pins with every sha read from the tree (L4-E11's
    `arch` pin will already be the freeze's; L4-E5's mechanism is in place), checks the identity block and the renderers. If the re-base
    replays the merges, `resolve_both_sides.py` resolves the same two files the same way.
 2. **The freeze** (`_bin/freeze_l4_chain.sh`) after the re-base, with one addition it does not make: re-pin `pcb_requirements.yaml`
@@ -197,6 +252,7 @@ Not moved by set 28: 7.1 to 7.4, 7.6, 7.7, 7.11 to 7.17.
 | D-3 | L4-E11's `arch` pin re-pinned to L4-E9's current page | stale since `f08e1342` (F-4); without it L4-E11 cannot regenerate on this branch, and the brief asks for its regeneration; it is the same re-pin `freeze_l4_chain.sh` makes for L4-E11, so the freeze finds it already made | the freeze helper, which makes the same change |
 | D-4 | The two "## 8." headings kept as merged; the renumber prepared, not run (F-2) | the brief: no content of either side dropped or rewritten; the renumber touches Layer 7's page, README and test | the integrator running the prepared script |
 | D-5 | The held sheets staged from sibling checkouts by their pinned sha; one (Panasonic's ZA) fetched by L4-E7's own `fetch_held_back.py` from the address its catalogue reading records, sha matching | the readers refuse without them; a local verified copy is the same bytes the fetch checks; a maker's public document fetched by the record's script is not an outside contact | removing the ignored `held/` folders |
+| D-7 | test_l4e11's predicate on FW-C08 restated as a property (the quoted cell is the contract's, read from the tree, and in one of the two states the record knows) | it pinned the pre-E11-03 wording and failed on the day Layer 5 restated the row: a rule that fails when its subject is fixed is a rule about history; the brief: restate it as a property | a Layer 4 round that re-reads L4-E11 on the restated contract may tighten it to the resolved state alone |
 | D-6 | The reqs pins of L4-E9 and L4-E11 re-pinned after the rebind (the brief's step order 2 then 3 kept in the commits; the re-pin run repeated after the rebind) | both readers pin `pcb_requirements.yaml`, which the rebind changes; `apply_set28.py` runs the rebind first | none needed |
 
 ## 10. Not claimed

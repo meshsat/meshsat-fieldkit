@@ -21,6 +21,9 @@ What it does, per reader:
           merged files (the behaviour cell of each row, the section 10 sentence that carries "below 0 C" and "above 3 C"); the
           section 10 sentence "high = the shore ... nothing charges." is unchanged and its need() is kept after a check.
   L4-E9   PINS hwfw, ifaces, reqs, l4e5, l4e11 and l4e7r re-pinned to the tree (l4e5, l4e7 and l4e11 after their regeneration).
+  L5, L7  records/l5pwr/l5pwr_contracts.out and records/l7pwr/l7pwr_fans_th1.out regenerated last: their readers print the shas of
+          L4-E9's and L4-E11's outputs and of the registry in their section 0 (no pin refusal, a printed binding), so the test
+          "output reproduced byte for byte" of each fails until they are regenerated after the L4 outputs and the rebind.
   L4-E7   One consequential re-pin outside the three named readers: l4e7_stage_settings.py pins L4-E5's SCRIPT (L4E5_PY; it re-runs
           it as its reproduction 0b), which the L4-E5 mechanism above changes; its output prints no pin and stays byte-identical, which
           its regeneration proves. Nothing else of L4-E7 is touched.
@@ -51,7 +54,11 @@ L4E5_PY, L4E5_OUT = "v2/docs/records/l4e5/l4e5_source_control.py", "v2/docs/reco
 L4E11_PY, L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.py", "v2/docs/records/l4e11/l4e11_power.out"
 L4E9_PY, L4E9_OUT = "v2/docs/records/l4e9/l4e9_power_path.py", "v2/docs/records/l4e9/l4e9_power_path.out"
 L4E7_PY, L4E7_OUT = "v2/docs/records/l4e7/l4e7_stage_settings.py", "v2/docs/records/l4e7/l4e7_stage_settings.out"
-L4E9_MD = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"   # L4-E11 pins L4-E9's page; stale since the consolidation round 3 (f08e1342), the freeze helper's L4-E11 step
+L4E9_MD = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"
+# The Layer 5 and 7 readers print the shas of what they read (L4-E9's and L4-E11's outputs; the registry) in their section 0 and
+# bind their outputs through regen_out, so they are regenerated last; Layer 6's reads none of the files this set changes
+LATER = (("v2/docs/records/l5pwr/l5pwr_contracts.py", "v2/docs/records/l5pwr/l5pwr_contracts.out"),
+         ("v2/docs/records/l7pwr/l7pwr_fans_th1.py", "v2/docs/records/l7pwr/l7pwr_fans_th1.out"))   # L4-E11 pins L4-E9's page; stale since the consolidation round 3 (f08e1342), the freeze helper's L4-E11 step
 HWFW, PANEL = "v2/docs/HW-FW-CONTRACT.md", "v2/docs/PANEL.md"
 IFACES, REQS = "v2/ecad/tools/pcb_interfaces.yaml", "v2/ecad/tools/pcb_requirements.yaml"
 CONTRACT_COMMIT = "2c240414"      # the last commit carrying HW-FW-CONTRACT.md as L4-E5 analysed it (before apply_fw_a16.py)
@@ -289,7 +296,7 @@ def main(argv):
               "need() text is the merged files'; nothing written (regen_out.py re-proves the outputs by hand if wanted)")
         return 3
     if mode == "--check":
-        print("apply_set28_repins: --check, nothing written; --write would make these changes and regenerate the four outputs:")
+        print("apply_set28_repins: --check, nothing written; --write would make these changes and regenerate the outputs (L4-E5, L4-E7, L4-E11, L4-E9, then Layer 5's and 7's):")
         show("l4e5_source_control.py", c5); show("l4e7_stage_settings.py", c7); show("l4e11_power.py", c11); show("l4e9_power_path.py", c9)
         return 0
     # L4-E5
@@ -311,6 +318,10 @@ def main(argv):
     if c9:
         write(L4E9_PY, s9, n9, "l4e9_power_path.py"); show("l4e9_power_path.py", c9)
     regen(L4E9_PY, L4E9_OUT, do_regen)
+    # the Layer 5 and 7 outputs (they print the shas of L4-E9's and L4-E11's outputs and of the registry)
+    for py, out in LATER:
+        if os.path.isfile(os.path.join(TOP, py)):
+            regen(py, out, do_regen)
     print("apply_set28_repins: done; stale after this and NOT touched here (the coordinator's freeze): the pins of %s in "
           "l4e10_cell_thermal.py, l4e12_thermal.py and l4e13_panel.py once apply_set28_rebind.py has run, and L4-E9's pins of their "
           "outputs once those are regenerated" % REQS)

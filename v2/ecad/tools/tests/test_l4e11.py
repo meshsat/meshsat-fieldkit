@@ -137,7 +137,16 @@ def t_the_charger_rows_are_the_makers_and_chrg_ok_names_no_battery():
 
 def t_the_charge_holds_are_a_state_table_that_keeps_the_source_carrying_the_kit():
     R = _R()
-    assert "below 0 C" in R["fwc08"], "FW-C08 as written no longer asserts SHORE_INHIBIT on the cold hold"
+    # FW-C08 "as written" is the contract's own behaviour cell, read from the tree, never typed. Before set 28 it asserted SHORE_INHIBIT on
+    # the cold hold (the record's finding U4-F1 and E11-03, which asked Layer 5 to restate it); Layer 5's power pass (records/l5pwr,
+    # 3 October 2026) restated it, so the cell now says never for a temperature hold. The first version of this predicate pinned the
+    # old wording and failed on the day the restatement landed: a rule about history. The property is that the record quotes the
+    # contract's cell and that the cell is in one of the two states the record knows.
+    hw = " ".join(open(os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md"), encoding="utf-8").read().split())
+    cell = re.search(r"\| FW-C08 \| (.*?) \| (.*?) \| ", hw).group(2)
+    assert R["fwc08"] == cell, "FW-C08 as written is not the contract's FW-C08 behaviour cell"
+    assert ("below 0 C" in cell) or ("never for a temperature" in cell), \
+        "FW-C08 neither asserts the cold hold on SHORE_INHIBIT (U4-F1 open) nor says never for a temperature hold (U4-F1 resolved by E11-03)"
     out = open(OUT, encoding="utf-8").read()
     for s in ("S1 charge on, discharge on", "S2 charge on, discharge off", "S3 charge off, discharge on", "S4 charge off, discharge off"):
         assert s in out, "the state table lacks %r" % s
