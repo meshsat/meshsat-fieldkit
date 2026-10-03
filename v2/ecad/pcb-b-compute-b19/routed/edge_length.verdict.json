@@ -24,7 +24,7 @@
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "a6e2421096c1473f",
+   "rules_lib.py": "a4ca98fd49f57f69",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_read.py": "65184b960e6f0c6e",
@@ -32,7 +32,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "06b578216dd3aac6",
+  "sha16": "7ac2c5111ce45105",
   "unresolved": []
  },
  "counts": {
@@ -366,12 +366,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "4f4fd31d15df",
-  "tools_tree_sha": "fd71d03702e5de42"
+  "git_head": "051ceee083ba",
+  "tools_tree_sha": "83d07328db6ff4f4"
  },
- "ts": "2026-09-29T15:16:32Z",
+ "ts": "2026-10-03T19:00:20Z",
  "verdict": "INCONCLUSIVE",
- "version": "4f4fd31d15df",
+ "version": "051ceee083ba",
  "writer": {
   "file": "edge_length.py",
   "sha16": "ed37e9f2b70ef365"
