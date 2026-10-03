@@ -606,11 +606,12 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    # the only open material defect is D-16 (L4-E7's B6-ENG-2), demonstrated and handed to the engineer with a register row; D-10 and
-    # D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
-    opn = [d for d in m.DEFECTS if d["state"].startswith("OPEN")]
-    assert [d["id"] for d in opn] == ["D-16"] and "B6-ENG-2" in opn[0]["state"] and "R-189" in opn[0]["resolution"]
-    assert all(d["state"].startswith("ADDRESSED IN DRAFTS") for d in m.DEFECTS if d["id"] in ("D-10", "D-11"))
+    # the open material defects: D-10's guard-on case (L4-E7's round 5: an absolute-rating violation at a connector fault) and D-16
+    # (B6-ENG-2), each handed to the engineer with a register row; D-11 addressed in drafts since L4-E7's remedies (check 5)
+    opn = {d["id"]: d for d in m.DEFECTS if d["state"].startswith("OPEN")}
+    assert sorted(opn) == ["D-10", "D-16"] and "B6-ENG-2" in opn["D-16"]["state"] and "R-189" in opn["D-16"]["resolution"]
+    assert "ABSOLUTE-RATING VIOLATION" in opn["D-10"]["state"] and "B6-ENG-1" in opn["D-10"]["state"] and "R-176" in opn["D-10"]["resolution"]
+    assert [d for d in m.DEFECTS if d["id"] == "D-11"][0]["state"].startswith("ADDRESSED IN DRAFTS")
     st = {d["id"]: d["state"] for d in m.DEFECTS}
     assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
 
@@ -781,7 +782,8 @@ def t_e11_19_the_selected_entry_is_rejudged_and_no_defect_is_open():
     starts = [c for c in sel if "of the chart" == c.unit]
     assert len(starts) == 3 and all(c.met and c.b == 1.0 for c in starts)
     assert _C["st"]["IF-05"][1] == "CONDITIONAL" and _C["st"]["IF-11"][1] == "CONDITIONAL"
-    assert not [k for k, v in _C["st"].items() if v[1] == "NOT MET"], "no interface row reads NOT MET (D-10 and D-11 addressed in drafts)"
+    opn_rows = {r_ for d in m.DEFECTS if d["state"].startswith("OPEN") for r_ in d["rows"]}
+    assert all(k in opn_rows for k, v in _C["st"].items() if v[1] == "NOT MET"), "an interface row reads NOT MET only where an OPEN defect names it"
     drawn = [c for c in rows["IF-01"]["checks"] if c.scope == "drawn" and c.met is False]
     assert any("D-10" in c.src for c in drawn) and any("D-11" in c.src for c in drawn), "the faults stay visible as drawn"
     sec = _C["text"].split("12. THE UPDATE ROUND")[1]
@@ -969,7 +971,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
     assert "arrangement (A) with its dependency round stands" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
     assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
-    assert "only when a measurement demonstrates the conflict" in u2["evidence"][2]
+    assert "only on a DEMONSTRATED CONFLICT" in u2["evidence"][2] and "every admitted arrangement" in u2["evidence"][2]   # the rule corrected after the recheck
     bad = copy.deepcopy(m.CHOICES)
     for c in bad:
         if c["id"] == "U-02":
@@ -1312,19 +1314,24 @@ def t_consolidation_the_panel_lead_surge():
     assert abs(rm["rise"][0] - F["cs101_pv"] - rm["marg"][0]) < 0.006 and abs(rm["s30"][3] - rm["rise"][1] - rm["marg"][1]) < 0.006
     assert max(rm["d1d2"]) < sv["lim"] and rm["static"] == (93.5957, 93.5521) and rm["static"][0] <= 100.0
     assert rm["cs101"][0] < rm["cs101"][2] and rm["chkb"][0] > rm["chkb"][1] and rm["resid"] == 116.5 and rm["loss"][0] == 0.217
-    # IF-01: no longer NOT MET; the faults as drawn stay visible; the guard's checks MEET
+    # IF-01: NOT MET only on D-10's guard-on case and the cold connection's margin lines (L4-E7's round 5), each target kept apart from
+    # its absolute rating; every other selected check meets or is conditional; the faults as drawn stay visible
     st1 = st["IF-01"]
-    assert st1[1] == "CONDITIONAL"
+    assert st1[1] == "NOT MET"
     rows = {r["id"]: r for r in _C["R"]}
     sel = [c for c in rows["IF-01"]["checks"] if c.scope == "selected"]
-    assert all(c.met for c in sel if c.met is not None) and any("D-10" in c.what for c in sel) and any("D-11" in c.what and c.cls == "CONDITIONAL" for c in sel)
-    # the defects: D-10 and D-11 addressed in drafts, D-11 conditional; D-12 with the SMCJ30A
+    b6w = {c.what for c in m.b6_checks(F)}
+    bad = [c for c in sel if c.met is False]
+    assert bad and all(c.what in b6w for c in bad) and any("D-10" in c.what for c in sel) and any("D-11" in c.what and c.cls == "CONDITIONAL" for c in sel)
+    absol = [c for c in m.b6_checks(F) if "ABSOLUTE" in c.what or "absolute rating" in c.what or "absolute maximum" in c.what.split(":")[-1]]
+    assert any(c.met is False for c in absol) and any(c.met for c in absol), "one absolute rating violated, the others held, kept apart"
+    # the defects: D-10 OPEN for its guard-on case, the remedy drafted; D-11 addressed in drafts and conditional; D-12 with the SMCJ30A
     de = {d["id"]: d for d in m.DEFECTS}
-    assert de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied)") and "R-173" in de["D-10"]["resolution"]
+    assert de["D-10"]["state"].startswith("OPEN for the source arriving with the guard already on") and "R-173" in de["D-10"]["resolution"]
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
     assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
-    assert g2["verdict"] != "PASS" and "one material defect is open, D-16" in g2["constraint"] and "R-175" in g2["constraint"]
+    assert g2["verdict"] != "PASS" and "two material defects are open" in g2["constraint"] and "D-16" in g2["constraint"] and "R-175" in g2["constraint"]
     # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     r156, r173, r174, r175, r176 = (reg[x] for x in ("R-156", "R-173", "R-174", "R-175", "R-176"))
@@ -1351,7 +1358,8 @@ def t_consolidation_the_panel_lead_surge():
     # the verdicts and the remedies as L4-E7 compared them; the selection L4-E7's
     verdicts, remedies, sel = m.cons_surge(F)
     v = {x[0]: x for x in verdicts}
-    assert v["D4"][3].startswith("MEETS with the guard") and v["D5"][3].startswith("MEETS with Q13") and v["D4"][4] == "NOT MET" and "R-175" in v["the residual band"][5]
+    assert v["D4"][3].startswith("with the guard the block never turns on") and rm["d4v"] in v["D4"][3] and rm["d4v"].startswith("NOT MET (round 5")
+    assert v["D5"][3].startswith("MEETS with Q13") and v["D4"][4] == "NOT MET" and "R-175" in v["the residual band"][5]
     assert [r[0] for r in remedies] == ["(1)", "(2)", "(3)", "TVS only"] and remedies[2][4].startswith("SELECTED by L4-E7")
     assert "selected and drafted, not applied" in sel and "R-175" in sel and "93.5957" in sel
     page = open(PAGE, encoding="utf-8").read()
@@ -1369,11 +1377,12 @@ def t_consolidation_the_panel_lead_surge():
     parts = {p_[0]: p_ for p_ in m.cons_parts(F)}
     assert "U21, Q12 (board E)" in parts and "Q13 (board E)" in parts and "D4 (board E)" in parts
     exd = {d[0]: d for d in m.cons_exit_defects(F)}
-    assert exd["D-10"][2].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL" in exd["D-11"][2] and "residual" in exd
+    assert exd["D-10"][2].startswith("OPEN for the guard-on case") and "CONDITIONAL" in exd["D-11"][2] and "residual" in exd
     assert m.md_table(page, "| Defect | Its fault |") == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in m.cons_exit_table(F, D, st)["| Defect | Its fault |"][2:]]
     assert "addressed in drafts" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "0 NOT MET" in short and "**Status: %s.**" % m.STATUS in short
+    n_nm = sum(1 for v_ in st.values() if v_[1] == "NOT MET")
+    assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "%d NOT MET" % n_nm in short and "**Status: %s.**" % m.STATUS in short
     led = m.cons_ledger(F)   # the review's E6 cited; the four rows not claimed closed (the ledger file is the coordinator's)
     assert "L4-E7R:1.6 and L4-E7R:2.4 needing B6's condition" in led and "REGRESSED" in led and "does not claim those four rows closed" in led
 
@@ -1420,7 +1429,8 @@ def t_fix_round_the_layer4_review_integrated():
     assert ch["R-157"][0] < ch["R-177"][0] < ch["R-22"][0] and ch["R-178"][1] == "3a"
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
-    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
+    opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    assert opn_ == ["D-10", "D-16"] and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
@@ -1457,56 +1467,74 @@ def t_fix_round_the_layer4_review_integrated():
 
 
 def t_b6_the_solar_guard_already_on():
-    """B6 and the external review's L4-F01 (L4-E7's round 2): held as properties, never as round 1's values. The margin is chosen
-    before any value and the numerical error added to U5's reading; every rating at the floor sits inside its own margin and the
-    floor is where the binding rating first holds; under it the case is NOT MET, so D-10's guard-on case reads NOT CLOSED wherever
-    it is stated, never CONDITIONAL on a lead's inductance; the engineer's row has its six fields, the page carries it as printed,
-    and its three routes are register rows; R-176's rows are L4-E7's, row 3 naming the floor; D-12's text is L4-E7's."""
+    """B6 and the external review's L4-F01 (L4-E7's rounds 2 to 5), held as properties, never as one round's values. The margin is chosen
+    before any value and the numerical error added; since round 5 the 3.30 uH loop is a reference loop and no passing floor: there the
+    binding U5 row and the complete pin budget lie outside the margin at both fault positions, the connector's turn-off past U5's
+    absolute maximum, so D-10's guard-on case reads OPEN wherever it is stated, a missed target and a violated rating kept apart (both
+    NOT MET, neither a pass); the engineer's row has its six fields and the page carries it as printed; R-176's rows are L4-E7's, row 3
+    claiming no passing loop; D-12's text is L4-E7's; no current text states a passing floor."""
     m = _M()
     F, D, st = _C["F"], _C["D"], _C["st"]
     rm = F["sv"]["rm"]
     b6 = rm["b6"]
     assert _pin_held(m, "l4e7r") and _pin_held(m, "l4e7md") and _pin_held(m, "e7guard")
     assert 0 < b6["margin"] < b6["u5_abs"] and 0 < b6["err"] < b6["u5_abs"] - b6["margin"]
-    assert b6["env"][0] < b6["l_uh"] < b6["env"][1], "the floor lies inside the declared envelope"
-    assert all(mg >= 0 for n_, w, lim, mg, h in b6["rows"]), "every rating inside its margin at the floor"
+    assert b6["env"][0] < b6["l_uh"] < b6["env"][1], "the reference loop lies inside the declared envelope"
     u5 = [r for r in b6["rows"] if r[0] == b6["bind"]][0]
-    assert u5[2] == b6["margin"] and u5[1] <= b6["margin"] and b6["at1"] > b6["u5_abs"] and b6["at03"][0] > b6["at1"], "under the floor U5 passes its absolute maximum"
-    assert b6["d"][0] < b6["l_uh"] and b6["d"][1] > b6["margin"], "(D) lowers the floor and still fails at 1.00 uH"
+    conn, far = b6["pins"]["conn"], b6["pins"]["far"]
+    assert u5[2] == b6["margin"] and u5[1] > b6["margin"] and b6["u5pos"][0] == u5[1] and b6["u5pos"][1] < b6["u5pos"][0]
+    assert conn[0] < -b6["u5_abs"] < -b6["margin"], "the connector's turn-off past U5's absolute maximum"
+    assert conn[1] > b6["margin"] and far[1] > b6["margin"] and far[0] < -b6["margin"] and far[0] > -b6["u5_abs"], "both positions miss the target in both polarities"
+    assert (conn[1], conn[0]) == b6["budget"] and "OUT" in b6["lscan"] and b6["corner"] < 16
+    assert b6["at1"] > b6["u5_abs"] and b6["at03"][0] > b6["at1"] and b6["d"][1] > b6["margin"]
+    assert b6["inp_row"][2] < b6["inp_row"][1] <= b6["inp_conn"][1], "INP over its margin line, inside its absolute maximum"
+    assert b6["pvf_rec"] < b6["pvf_row"][1] <= b6["pvf_row"][2], "PV_F over the recommended row, under the exclusion line"
+    cc = b6["cold_conn"]
+    assert cc["slew_line"] < b6["cold"][1] <= cc["slew_abs"] and cc["inp_line"] < b6["cold"][2] <= cc["inp_abs"] and cc["far"][1] <= cc["slew_line"]
     assert [k for k, _ in b6["eng"]] == ["affected circuit", "evidence and failed condition", "decision or measurement needed", "pass criterion",
                                          "consequence of failure", "work blocked"] and all(v for _, v in b6["eng"])
     want = ("CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 (the cable's "
             "recorded loop current under 15.68 A, or U5's differential measured under 0.3 V).")
     assert b6["d12"] == want
-    floor = "%.2f uH" % b6["l_uh"]
-    assert len(b6["r176"]) == 6 and "a pass only for a loop at or over %s until B6-ENG-1 is decided" % floor in b6["r176"][2]
+    assert len(b6["r176"]) == 6 and "no loop is claimed to pass (round 5)" in b6["r176"][2] and not any("a pass only for a loop" in r_ for r_ in b6["r176"])
     de = {d["id"]: d for d in m.DEFECTS}
-    assert want in de["D-12"]["options"] and de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS") and "NOT CLOSED" in de["D-10"]["state"]
-    assert floor in de["D-10"]["state"] and "B6-ENG-1" in de["D-10"]["state"] and "CONDITIONAL on the panel lead" not in de["D-10"]["state"]
+    assert want in de["D-12"]["options"] and de["D-10"]["state"].startswith("OPEN") and "ABSOLUTE-RATING VIOLATION" in de["D-10"]["state"]
+    assert "WITHDRAWN as a passing floor" in de["D-10"]["state"] and "B6-ENG-1" in de["D-10"]["state"] and "CONDITIONAL on the panel lead" not in de["D-10"]["state"]
     for rid in ("R-173", "R-176", "R-180", "R-186", "R-187"):
         assert rid in de["D-10"]["resolution"] or rid in de["D-10"]["options"], rid
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    for part in ("CL32B225KCJSNNE", "CL32B106KBJNNNE", "R97 28.0k", "C126 330 pF", "8 edits"):
+    for part in ("CL32B225KCJSNNE", "CL32B106KBJNNNE", "R96 100k", "R97 28.0k", "C126 330 pF", "8 edits"):
         assert part in reg["R-173"][2], part
     for i, row in enumerate(b6["r176"], 1):
         assert "(%d) %s" % (i, row) in reg["R-176"][2], i
-    assert reg["R-180"][4] == "Layer 7 mechanical" and floor in reg["R-180"][2] and "route (2)" in reg["R-180"][2]
-    assert reg["R-186"][1] == "EVIDENCE" and "route (1)" in reg["R-186"][2] and reg["R-187"][1] == "IMPLEMENTATION" and "route (3)" in reg["R-187"][2]
+    assert reg["R-180"][4] == "Layer 7 mechanical" and "route (2)" in reg["R-180"][2] and "WITHDRAWN as a passing floor" in reg["R-180"][2]
+    assert reg["R-186"][1] == "EVIDENCE" and "route (1)" in reg["R-186"][2] and "holds at every loop" not in reg["R-186"][5]
+    assert reg["R-187"][1] == "IMPLEMENTATION" and "route (3)" in reg["R-187"][2]
+    assert "no damage" not in reg["R-189"][5].replace("'no damage' and '5.7 % low' withdrawn", "")
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
     assert ch["R-180"][1] == "8" and ch["R-187"][1] == "B6-ENG-1" and ch["R-173"][1] == "4e"
     rows = {r["id"]: r for r in _C["R"]}
-    b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
-    assert b6c.cls == "CONDITIONAL" and b6c.met and b6c.a == u5[1] and b6c.b == b6["margin"] and "B6-ENG-1" in b6c.what
+    b6c = [c for c in rows["IF-01"]["checks"] if c.what in {x.what for x in m.b6_checks(F)}]
+    absc = [c for c in b6c if "ABSOLUTE MAXIMUM -" in c.what][0]
+    assert absc.met is False and absc.a == conn[0] and absc.b == -b6["u5_abs"] and "absolute-rating violation" in absc.what
+    tgt = [c for c in b6c if "DESIGN TARGET" in c.what][0]
+    assert tgt.met is False and tgt.a == conn[1] and tgt.b == b6["margin"]
     exd = {d[0]: d for d in m.cons_exit_defects(F)}
-    assert "NOT CLOSED" in exd["D-10"][2] and exd["D-12"][2].endswith(want)
+    assert exd["D-10"][2].startswith("OPEN") and exd["D-12"][2].endswith(want)
     beh = " ".join(" ".join(r) for r in m.cons_behaviour(F, D, st)["4e"])
-    assert "already on" in beh and want in beh and "NOT CLOSED" in beh
+    assert "already on" in beh and want in beh and "OPEN" in beh
     page = open(PAGE, encoding="utf-8").read()
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert want in short and "NOT CLOSED" in short and "B6-ENG-1" in short
+    assert want in short and "OPEN" in short and "B6-ENG-1" in short and "WITHDRAWN as a passing floor" in short
     assert page.split("<!-- gen:b6eng:begin -->")[1].split("<!-- gen:b6eng:end -->")[0].strip() == m.cons_b6eng(F)
-    cur = page.split("## 7. Standalone analyses")[0] + page.split("### 8a.")[1].split("### 8b.")[0]
-    assert "2.47 uH" not in cur.replace("from a 2.47 uH lead", ""), "round 1's condition is not stated as current"
+    cur = page.split("## Appendix A.")[0]
+    cur = cur.replace(cur.split("## 11. ")[1].split("## 12. ")[0], "")     # the register's history paragraphs keep their rounds' words
+    for w in ("only from a 3.30 uH", "only from 3.30 uH", "the floor the engineer", "the floor stays", "a pass only for a loop", "budgeted by L4-E7", "0.000882"):
+        assert w not in cur, w
+    cur2 = page.split("## 7. Standalone analyses")[0] + page.split("### 8a.")[1].split("### 8b.")[0]
+    assert "2.47 uH" not in cur2.replace("from a 2.47 uH\nlead", "").replace("from a 2.47 uH lead", ""), "round 1's condition is not stated as current"
+    for w in ("The floor:", "the floor stays", "budgeted by L4-E7"):
+        assert w not in _C["text"], w
     assert "26d L4-F01" in _C["text"] and "PENDING L4-E7's round" not in _C["text"] and "25m B6" in _C["text"]
 
 
@@ -1526,7 +1554,9 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
     assert not [c for c in fx["cls"] if c.get("cat") == m.CAT_CONFLICT], "no demonstrated conflict while nothing is measured"
     assert all(c["cls"] in ("i", "ii", "over") for c in fx["cls"])
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
-    assert "only when a measurement demonstrates a conflict" in ow["OW-1"]["what"] and "NOT a forced owner question" in ow["OW-10"]["what"]
+    assert "only on a DEMONSTRATED CONFLICT" in ow["OW-1"]["what"] and "NOT a forced owner question" in ow["OW-10"]["what"]
+    for o_ in (ow["OW-1"]["what"], ow["OW-10"]["what"]):
+        assert "every admitted arrangement" in o_ or "every arrangement the design admits" in o_, "the owner's item still turns on one measurement"
     assert m.CONDITION_U02.startswith("(ii) a closure condition decided by T-H1 plus the storage evidence")
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
     assert "only on a DEMONSTRATED CONFLICT" in u2["overturns"]
@@ -1565,7 +1595,12 @@ def t_the_prototype_qualification_route():
     by = {r[0].split(" ")[0]: r for r in rows}
     for eid in ("E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"):
         r = by[eid]
-        assert r[1] == sp[eid]["specimen"] and r[2] == sp[eid]["represents"] and r[3] == sp[eid]["transfers"] and r[5] == sp[eid]["blocks"], eid
+        assert r[1].startswith(sp[eid]["specimen"]) and r[2] == sp[eid]["represents"] and r[3] == sp[eid]["transfers"] + m.BLOCK_RULE % eid and r[5] == sp[eid]["blocks"], eid
+        blk = sp[eid].get("block", "").lower()
+        for fld in ("specimen", "operating point", "mounting", "thermal boundaries", "measurement uncertainty", "permitted extrapolation", "re-test when"):
+            assert fld in blk, (eid, fld)
+        for w in ("copper area", "layout-independent", "layers and vias alone"):
+            assert w not in " ".join(r[1:6]), (eid, w)
     md = open(os.path.join(ROOT, m.PINS["l4e11md"][0]), encoding="utf-8").read()
     t17 = {x[0].replace("Row ", ""): x for x in m.md_table(md.split("### 17d.")[1], "| Row | Specimen |")}
     assert t17["E11-29"][1] == sp["E11-29"]["specimen"], "17d is read from L4-E11's page, not restated"
@@ -1576,13 +1611,10 @@ def t_the_prototype_qualification_route():
     buy, total, unp, send = m.cons_qual_lists(F)
     tot = {}
     for k, pr in m.PRICES.items():
-        if pr.get("commit"):
-            # a price read by another record and cited at its commit (Layer 7's fans): the figure is checked in that commit's file
-            r_ = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
-            assert r_.returncode == 0, (k, pr["src"], pr["commit"])
-            d = json.loads(r_.stdout.decode("utf-8"))
-        else:
-            d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        assert "commit" not in pr, "%s: a price read with git outside this tree" % k
+        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        if pr.get("pin"):
+            assert m.PINS[pr["pin"]][0] == pr["src"] and _pin_held(m, pr["pin"]), k
         kind, key = pr["key"]
         if kind == "price_usd":
             assert abs(float(d["price_usd"][key]) - pr["unit"]) < 1e-9, k
@@ -1653,15 +1685,21 @@ def t_the_decisions_are_kept_apart():
     assert m.L4F03_STATUS in exd["D-15"][2] and m.L4F03_STATUS in short
     g2 = [g for g in m.GATE if g["n"] == 2][0]
     assert m.L4F03_STATUS in g2["constraint"]
-    assert "budgeted" in m.RESERVE_NOTE and "3.0 nH" in m.RESERVE_NOTE and "3.0 nH" in de["D-10"]["options"]
+    assert m.RESERVE_NOTE.startswith("a DESIGN TARGET") and "ABSOLUTE MAXIMUM" in m.RESERVE_NOTE and "3.0 nH bound is withdrawn" in m.RESERVE_NOTE
+    assert "budgeted" not in m.RESERVE_NOTE and "3.0 nH bound withdrawn" in de["D-10"]["options"]
     rows = {r["id"]: r for r in _C["R"]}
-    b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
-    assert m.RESERVE_NOTE in b6c.what and m.RESERVE_NOTE in exd["D-10"][2]
+    tgt = [c for c in rows["IF-01"]["checks"] if "DESIGN TARGET" in c.what and "already on" not in c.what][0]
+    assert m.RESERVE_NOTE in tgt.src and tgt.met is False and m.RESERVE_NOTE in exd["D-10"][2]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    assert "3.0 nH" in reg["R-176"][5] and "80.58 V" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+    b6 = F["sv"]["rm"]["b6"]
+    assert "no loop is claimed to pass" in reg["R-176"][5] and m.fmt(b6["pvf80"][0]) in reg["R-176"][5] and "3.0 nH bound withdrawn" in reg["R-176"][5]
+    assert m.L4F03_STATUS in reg["R-184"][2]
     # L4-E7's round 3: D-16 is a demonstrated defect handed to the engineer, its figures L4-E7's, its row and bench in the register
     b6 = F["sv"]["rm"]["b6"]
-    assert b6["sense"][0] > 0.1 and b6["fig1"] < b6["sense"][0] and b6["r3_peaks"][0] <= b6["r3_peaks"][1] and 0 < b6["lsense"] < 5
+    assert b6["sense"][0] > 0.1 and b6["fig1"] < b6["sense"][0] and b6["r3_peaks"][0] <= b6["r3_peaks"][1]
+    scan = re.findall(r"([\d.]+) nH (-[\d.]+) to \+([\d.]+) V (OUT|IN)", b6["lscan"])
+    assert len(scan) >= 5 and all(s_[3] == "OUT" for s_ in scan), "round 5: no inductance tried brings both polarities inside"
+    assert b6["mon"][0] > 0 > b6["mon"][1] and b6["sens10"] < -b6["u5_abs"], "the monitor rectified (the limit below its setting) and the 10 ns stress named"
     assert b6["budget"][0] > 0.24 and b6["budget"][1] < -0.24 and b6["pvf80"][0] > 80.0 and b6["pvf80"][2] > b6["l_uh"]
     assert [k for k, _ in b6["eng2"]][0] == "Affected circuit" and len(b6["eng2"]) == 8
     assert de["D-16"]["state"].startswith("OPEN") and "B6-ENG-2" in de["D-16"]["state"] and de["D-16"]["rows"] == ["IF-01", "IF-02"]
@@ -1684,7 +1722,8 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert g["allow"] < g["rds_max"][0] and g["z_ev"][0][2] > g["z_ev"][1][2] > g["z_ev"][2][2] and g["svc"][0] < 150.0
     assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
     de = {d["id"]: d for d in m.DEFECTS}
-    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
+    opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    assert opn_ == ["D-10", "D-16"] and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     s14 = de["D-14"]["state"]
     assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
@@ -1717,6 +1756,125 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert "26a L4-F02" in sec and "26b L4-F03" in sec and "26d L4-F01" in sec
 
 
+def t_the_escalation_rule_after_the_recheck():
+    """Astra's targeted recheck (astra-check-l4close-2, blocking discrepancy 6): a DEMONSTRATED CONFLICT needs the measured failure of
+    every arrangement the design admits or a bound that none can meet the limit; one arrangement's failed local test is that
+    arrangement's shortfall. Held as properties: the rule is one text, L4-E12's (read back from its output), stated on both pages and
+    both outputs; no current text defines a conflict by one measured arrangement; OW-1, OW-10, U-02 and the behaviour row turn on the
+    corrected rule; the e-paper soak (R-185, the route row) sits at the claimed +70 C local temperature for the required durations with
+    its uncertainty and recovery criteria and the specimen behind the window, never an ambient-only soak."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    assert _pin_held(m, "l4e12") and _pin_held(m, "l4e12md")
+    e12 = " ".join(open(os.path.join(ROOT, m.PINS["l4e12"][0]), encoding="utf-8").read().split())
+    e12md = " ".join(open(os.path.join(ROOT, m.PINS["l4e12md"][0]), encoding="utf-8").read().split())
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    out = " ".join(_C["text"].split())
+    for f_ in (e12, e12md, page, out):
+        assert m.CONFLICT_RULE in f_
+        for old in ("a line enters it only on a measured local temperature over a mandatory limit with the route fitted",
+                    "only when a measurement demonstrates", "only if a measurement demonstrates", "only if the conflict is demonstrated",
+                    "DEMONSTRATED CONFLICT (a measured local temperature over a mandatory limit with the route fitted"):
+            assert old not in f_.split("## Appendix A.")[0], old
+    assert "every arrangement the design admits" in m.CONFLICT_RULE and "relocated" in m.CONFLICT_RULE and "a bound" in m.CONFLICT_RULE and "not an incompatibility" in m.CONFLICT_RULE
+    u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
+    assert "every admitted arrangement" in u2["overturns"] and "every admitted arrangement" in u2["fallback"]
+    th1_rows, _note = m.cons_th1(F)
+    route_row = [r for r in th1_rows if r[0].startswith("the route, only under a class (ii) line")][0]
+    assert "every admitted arrangement" in route_row[3] and "measured shortfall of that arrangement" in route_row[3]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    r185 = reg["R-185"]
+    for w in ("+70 C at its glass", "6 h", "4 h", "behind the window", "uncertainty", "recovery", "1 h and at 24 h", "ambient-only"):
+        assert w in r185[2], w
+    assert "+70 C" in r185[5] and "every admitted arrangement" in r185[5] and "for that lot only" in r185[5]
+    assert "at E3-O's +55 C and E5's +60 C for the modes' durations" not in r185[2]
+    row = [r for r in m.cons_qual(F) if r[0].startswith("The e-paper's storage soak")][0]
+    for w in ("+70 C at its glass", "6 h", "4 h", "behind the window", "uncertainty", "1 h and at 24 h"):
+        assert w in row[1], w
+    assert "+70 C" in dict(m.UNPRICED)["R-185"] and "+60 C" not in dict(m.UNPRICED)["R-185"]
+
+
+def t_the_owners_qualification_route_review_and_l8g_f12():
+    """The owner's review of the qualification route (L4-QR01, L4-QR02) and Layer 8's L8G-F12, held as properties: every 17d row's
+    transfer cell is L4-E11's with a pointer to its block, never a copper-area transfer; R-159 and R-160 carry the blocks' rules (the
+    comparison rule on the final board's thermal boundaries; prototype evidence for the tested lot and envelope); the fit mock-up blocks
+    exactly the adoption of the proposed pack arrangement and the dependent mechanical release, consistently in the register, the route
+    and the page; d8dec31's PB network is in the change list LAST in board A's round, after Layer 8's drafts and before the regeneration,
+    with its FINDING before it; Layer 8's drafts are DRAFTED rows citing l8gnd at its commit by text only."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    assert _pin_held(m, "l4e11md") and m.FROM_COMMIT["l4e11md"] in m.COMMIT_LABEL and "L4-QR01" in m.COMMIT_LABEL[m.FROM_COMMIT["l4e11md"]]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    for w in ("comparison rule", "thermal boundaries", "30 mm", "copied unchanged", "transfer nothing"):
+        assert w in reg["R-159"][5], w
+    for w in ("tested lot", "value by value", "never a production limit"):
+        assert w in reg["R-160"][5], w
+    fit = [r for r in m.cons_qual(F) if r[0].startswith("The fit mock-up")][0]
+    assert fit[5].startswith("the adoption of the PROPOSED pack arrangement") and "mechanical release" in fit[5] and "nothing else" in fit[5] and "baseline" in fit[5]
+    assert fit[5] in reg["R-167"][5] and "L4-QR02" in reg["R-167"][5]
+    saft = [r for r in m.cons_qual(F) if r[0].startswith("The limited sample qualification")][0]
+    assert "R-167" in saft[4]
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "The fit mock-up (R-167)** blocks the adoption of the PROPOSED pack arrangement" in page and "L4-QR02" in page and "L4-QR01" in page
+    ch = m.cons_changes(list(reg.values()))
+    pos = {c[2]: c for c in ch}
+    a_round = [c for c in ch if c[1].startswith("3")]
+    assert a_round[-1][2] == "R-11" and a_round[-2][2] == "R-193", "d8dec31's PB network last in board A's round, then the regeneration"
+    assert pos["R-193"][1] == "3h" and pos["R-194"][0] < pos["R-193"][0] and pos["R-11"][1] == "3i"
+    for rid in ("R-191", "R-192"):
+        assert pos[rid][1] == "3g" and pos["R-10"][0] < pos[rid][0] < pos["R-193"][0] and reg[rid][6] == "DRAFTED", rid
+        assert "226e9143" in reg[rid][3] and "not in this base" in reg[rid][3], rid
+    assert pos["R-195"][1] == "B" and reg["R-195"][6] == "DRAFTED" and "226e9143" in reg["R-195"][3] and "apply_gen_sch_b_gnd002.py" in pos["R-195"][4]
+    assert "apply_gen_sch_a_mainpb.py" in pos["R-193"][4] and "R233" in reg["R-193"][2] and "C241" in reg["R-193"][2] and "R221 and C236" in reg["R-193"][2]
+    assert reg["R-194"][6] == "MISSING DRAFT" and "FINDING" in reg["R-194"][2] and "L8G-F12" in reg["R-194"][3]
+    assert "226e9143" not in m.FROM_COMMIT.values() and "l8gnd" not in " ".join(p for p, _s in m.PINS.values())
+
+
+def t_the_collaborators_recheck_is_cited_not_accepted():
+    """The collaborator's targeted recheck (astra-check-l4close-2) is cited by path and commit as NOT YET, its six blocking discrepancies
+    each with a state after the corrections; no state reads accepted or closed except as 'NOT CLOSED'; B6's state names the
+    absolute-rating violation; the status line says exactly which defects are addressed in drafts, which drafts were corrected after the
+    recheck and which items are open; the three decisions and the handoff are unchanged."""
+    m = _M()
+    F = _C["F"]
+    assert len(m.CHECK2) == 6 and [c[0] for c in m.CHECK2] == ["1", "2", "3", "4", "5", "6"]
+    assert "650b5694" in m.CHECK2_REF and "not in this base" in m.CHECK2_REF and "650b5694" not in m.FROM_COMMIT.values()
+    for n, what, cls, state, where in m.CHECK2:
+        assert state.split(" ")[0] in ("CORRECTED", "NOT", "OPEN"), (n, state)
+        assert not re.search(r"\b(ACCEPTED|PASS|CLOSED)\b", state.replace("NOT CLOSED", "")), (n, state)
+    b6s = m.CHECK2[1][3]
+    assert b6s.startswith("NOT CLOSED") and "ABSOLUTE-RATING VIOLATION" in b6s and "withdrawn" in b6s
+    page = open(PAGE, encoding="utf-8").read()
+    blk = page.split("<!-- gen:check2:begin -->")[1].split("<!-- gen:check2:end -->")[0].strip()
+    assert blk == "\n".join(m.cons_check2(F)) and "NOT YET" in blk and "none is restated as accepted" in blk
+    assert "28. THE COLLABORATOR'S TARGETED RECHECK (astra-check-l4close-2: NOT YET)" in _C["text"]
+    dec = m.cons_decisions(F)
+    cov = [l_ for l_ in dec if l_.startswith("**What the status covers, exactly**")][0]
+    opn = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    adr = [d["id"] for d in m.DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
+    assert all(x in cov.split("**Open:**")[1] for x in opn) and all(x in cov.split("**Drafts corrected")[0] for x in adr)
+    for c in ("b929d8be", "1a73f5b4", "20188e03"):
+        assert c in cov, c
+    assert dec[-1] == "**Status: %s.**" % m.STATUS and [v for _w, v, _y in m.DECISIONS] == ["CONDITIONAL", "BLOCKED", "BLOCKED", "READY TO START, PROVISIONAL"]
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    assert "astra-check-l4close-2" in short and "NOT YET" in short
+
+
+def t_every_commit_the_record_reads_is_in_this_branchs_history():
+    """The coordinator's rule (set 27, after the box could not reproduce the record): a record reads inputs only from its own tree or
+    from commits in its own history. Every selected commit the script reads with git is an ancestor of HEAD; the script's only git
+    reads of a file go through FROM_COMMIT or L4E8_COMMIT; no price source names a commit."""
+    m = _M()
+    refs = set(m.FROM_COMMIT.values()) | {m.L4E8_COMMIT}
+    for ref in sorted(refs):
+        assert subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", ref, "HEAD"], capture_output=True).returncode == 0, "%s is not in this branch's history" % ref
+    src = open(SCRIPT, encoding="utf-8").read()
+    shows = re.findall(r'"git", "show", "%s:%s" % \((\w+)', src)
+    assert shows and set(shows) <= {"FROM_COMMIT", "L4E8_COMMIT"}, shows
+    assert not any("commit" in pr for pr in m.PRICES.values())
+    assert m.PINS["l7fans"][0].startswith("v2/docs/records/l4e9/inputs/") and _pin_held(m, "l7fans")
+
+
 def t_the_fan_feed_after_layer7s_d18():
     """L4-E11's fan-feed round (its section 18, after Layer 7's D-18), carried as properties: L4-E11's files are pinned at a labelled
     commit; the mixers' rail is a regulated output inside the fans' printed window, enabled under VSYS_E's floor and disabled over
@@ -1745,7 +1903,7 @@ def t_the_fan_feed_after_layer7s_d18():
     # the diagram, the behaviour row, the T-H1 note
     N, E, C, NP = m.cons_diagram(F, st)
     blk = {n[0]: " ".join(n[4]) for n in N}
-    assert "U18" in blk["CTL_SENS"] and "VSYS_E" in blk["CTL_SENS"]
+    assert "U22" in blk["CTL_SENS"] and "VSYS_E" in blk["CTL_SENS"] and "U18" not in blk["CTL_SENS"]
     beh = {r[0]: r for r in m.cons_behaviour(F, D, st)["4f"]}
     fans = beh["the fans"][1]
     assert rail["mixer"] in fans and "rail hiccup" in fans and "NOT READ" in fans and "E11-40" in fans and "17.375 V: their maximum supply voltage owed" not in fans
@@ -1756,27 +1914,41 @@ def t_the_fan_feed_after_layer7s_d18():
     r190 = reg["R-190"]
     assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
     assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
-    assert "U18" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
+    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C135" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
     assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
-    assert ch["R-190"][1] == "B" and "U18" in ch["R-177"][5] and "U18" in ch["R-188"][5]
+    assert ch["R-190"][1] == "B" and "U22" in ch["R-177"][5] and "U22" in ch["R-188"][5]
+    # the recheck's correction (L4-E11 at b929d8be): the 566 A a test target, the start into a short unbounded, no retry duty, the rail's range
+    # with its 1 % divider, E11-38 to (h), the stubs naming U22 and its capacitors
+    de = {d["id"]: d for d in m.DEFECTS}
+    for w in ("for at most 1.5 s", "duty of at most 0.75", "at most 566 A"):
+        assert w not in de["D-15"]["options"] and w not in de["D-15"]["resolution"], w
+    assert "EXTRAPOLATION" in de["D-15"]["options"] and "test target" in de["D-15"]["options"] and "NOT PRINTED" in de["D-15"]["options"]
+    assert "(a) to (h)" in de["D-15"]["resolution"] and "85 C" in de["D-15"]["resolution"]
+    assert "(h)" in reg["R-184"][2] and "(h)" in reg["R-184"][5] and "U22" in reg["R-184"][5] and "85 C" in reg["R-184"][5] and "566 A extrapolation" in reg["R-184"][5]
+    assert "15.9 K" in reg["R-181"][2] and "not a bound" in reg["R-181"][2]
+    by_ = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
+    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C135 to C141" in by_["E11-38"][1]
+    assert "(a) to (h)" in by_["E11-38"][4] and "85 C" in by_["E11-38"][4]
+    assert "1 %" in beh["the fans"][1] and "U18" not in beh["the fans"][1]
     assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())
     # the route's row and the purchase list: Layer 7's prices read from its file at the cited commit
     by = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
     e35 = by["E11-35"]
     assert rail["mixer"] in e35[4] and rail["l7c"] in e35[4] and "73.69" in e35[8] and "NOT READ" in e35[8] and "nothing to buy until D-18" not in e35[8]
+    import json
     for k, mpn in (("fan60", rail["mixer"]), ("fan40", rail["cooler"])):
         pr = m.PRICES[k]
-        assert pr["commit"] == rail["l7c"] and mpn in pr["what"]
-        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
-        assert r.returncode == 0
-        import json
-        d = json.loads(r.stdout.decode("utf-8"))
+        assert "commit" not in pr and pr["pin"] == "l7fans" and pr["src"] == m.PINS["l7fans"][0] and mpn in pr["what"]
+        assert pr["src"].startswith("v2/docs/records/l4e9/inputs/") and _pin_held(m, "l7fans") and "l7fans" not in m.FROM_COMMIT
+        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
         _kind, (kmpn, dist, qty) = pr["key"]
         br = [b for row in d["parts"][kmpn] if row["distributor"] == dist for b in row["price_breaks"] if b[0] == qty]
         assert len(br) == 1 and br[0][1] == pr["cur"] and abs(br[0][2] - pr["unit"]) < 1e-9
     buy, total, unp, send = m.cons_qual_lists(F)
     assert any(rail["mixer"] in b and rail["l7c"] in b for b in buy) and any(rail["cooler"] in b and rail["l7c"] in b for b in buy)
+    assert rail["l7c"] in m.L7_PRICE_PROVENANCE and m.PINS["l7fans"][1][:16] in m.L7_PRICE_PROVENANCE and "set 28" in m.L7_PRICE_PROVENANCE
+    assert m.L7_PRICE_PROVENANCE in "\n".join(m.cons_qual_block(F)) and m.L7_PRICE_PROVENANCE in _C["text"]
     assert any("LTC3115EFE-1" in u and "NOT READ" in u for u in unp) and "USD" in total and "EUR" in total
     # the handoff's omitted dependencies and the page
     assert "fan-feed" not in m.HANDOFF_OMITTED and "l7pwr" in m.HANDOFF_OMITTED and rail["l7c"] in m.HANDOFF_OMITTED
