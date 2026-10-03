@@ -51,7 +51,7 @@ PINS = {
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "435d515f6184f7bdb707cea7573a6274b9b3b3c825d587a0dc550f44bd67fe07"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "e5b4d65046f4ace5e0c4bf482105f95466ac967d6bb2ccf839a4686708613dc6"),
     "panel": ("v2/docs/PANEL.md", "3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6"),
     "assembly": ("v2/docs/ASSEMBLY.md", "942d562edd128759c52ee976f7255862f7a2ef78b5fd76af0a2e223f328e64cd"),
     "gen_a": ("v2/ecad/tools/gen_sch_a.py", "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b"),

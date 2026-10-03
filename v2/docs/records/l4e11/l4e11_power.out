@@ -3,11 +3,11 @@ MESHSAT-1357, 2 October 2026. Prototype design, desk arithmetic: nothing is boug
 CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESSION.
 
 0. INPUTS (sha256/16)
-   reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
+   reqs      435d515f6184f7bd  v2/ecad/tools/pcb_requirements.yaml
    rules     14ea032a7fdd86ac  v2/ecad/tools/pcb_rules.yaml
    testplan  42a3dff33442c860  v2/docs/TEST-PLAN.md
-   hwfw      1c211e467d81b8b7  v2/docs/HW-FW-CONTRACT.md
-   panel     b396d028b41e880d  v2/docs/PANEL.md
+   hwfw      e5b4d65046f4ace5  v2/docs/HW-FW-CONTRACT.md
+   panel     3f380ef79c6bc54a  v2/docs/PANEL.md
    assembly  942d562edd128759  v2/docs/ASSEMBLY.md
    gen_a     6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
@@ -145,8 +145,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    board A and E as generated: the strap R26 13.3k over R27 40.2k, 75.1 % of VDDA, so U3 never sees "battery removal"; R17 between VBAT
      (VSYS, every load) and CELL_FUSED (the pack); CHG_INHIBIT pulls ILIM_HIZ low through Q6 (HIZ); SHORE_INHIBIT pulls the hot
      swap's UVLO low through Q8 (the input off); board P's gauge PCHG pin not connected; R7 1 k from PACK_P to its VCC (NETLIST)
-     FW-C08 as written: "Boot low; assert on the bridge's request when the pack reads below 0 C and clear above 3 C, or when the operator sets "no charge"" (RECORD, HW-FW-CONTRACT)
-     FW-A14 as written: "Held low (charger enabled) at power-up; asserted only by firmware" (RECORD); PANEL.md 10: "high = the shore and vehicle inputs are held off at the front end, so nothing charges." (RECORD)
+     FW-C08 as written: "Boot low. Asserted only on the operator's 'inputs off' and on the water-on-floor isolation, never for a temperature or 'no charge' hold (those are FW-A19's flag and the charger's CHRG_INHIBIT bit). When the pack cannot discharge (states S2 and S4: the gauge's XDSG, no pack, or both FETs open) the bridge first warns that asserting it removes the kit's supply (L4-E11 7a, rule R-a; LH-10)" (RECORD, HW-FW-CONTRACT)
+     FW-A14 as written: "Held low (charger enabled) at power-up; asserted only by firmware, never as a charge hold (a hold is the CHRG_INHIBIT bit or ChargeCurrent 0, FW-A19), and never while the pack cannot discharge (S2, S4: HIZ stops the converter and removes the kit's only supply) (L4-E11 7a; LH-10)" (RECORD); PANEL.md 10: "high = the shore and vehicle inputs are held off at the front end, so nothing charges." (RECORD)
    the pack (SLUUAQ3A and this tree's image):
      a CUV trip sets OperationStatus()[XDSG] only (2.2, p.15): the discharge FET opens, the charge FET stays (MAKER)
      XDSG also on UTD, XCHG on UTC (4.12, p.40); the image's UTD -9 C and UTC 1 C (pcb_pack_protection.yaml): below -9 C both FETs are open (MAKER, RECORD)
