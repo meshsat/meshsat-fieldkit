@@ -11,7 +11,7 @@ record's prose or figures changes: pins and L4-E11's need() texts only. Every re
     L4-E5   l4e5_source_control.py reads the contract where it analysed it (2c240414, the mechanism of the superseded int28
             preparation, carried by the merge); nothing to re-pin (debt a); regenerated only if its output no longer binds.
     L4-E7   l4e7_stage_settings.py's pin of L4-E5's script (the int28 mechanism's one consequence); regenerated only if changed.
-    L4-E11  l4e11_power.py: hwfw, panel, reqs, l4e5 and arch re-pinned (debt a); its need() texts for FW-C08, FW-A14 and PANEL.md's
+    L4-E11  l4e11_power.py: hwfw, panel, assembly (Layer 5's round 3, L5R3-F01), reqs, l4e5 and arch re-pinned (debt a); its need() texts for FW-C08, FW-A14 and PANEL.md's
             cold-hold sentence quoted from the merged files (E11-03, Layer 5's wording); regenerated.
     L4-E12  l4e12_thermal.py: LCSC_FILL and L4E8_OUT re-pinned (debt b); NOT regenerated here: the freeze re-pins its registry and
             L4-E10 pins and regenerates it.
@@ -48,7 +48,7 @@ L4E9_PY, L4E9_OUT = REC + "/l4e9/l4e9_power_path.py", REC + "/l4e9/l4e9_power_pa
 L4E9_MD = REC + "/l4e9/L4-POWER-ARCHITECTURE.md"
 L4E11_PY, L4E11_OUT = REC + "/l4e11/l4e11_power.py", REC + "/l4e11/l4e11_power.out"
 L4E12_PY = REC + "/l4e12/l4e12_thermal.py"
-HWFW, PANEL = "v2/docs/HW-FW-CONTRACT.md", "v2/docs/PANEL.md"
+HWFW, PANEL, ASSEMBLY = "v2/docs/HW-FW-CONTRACT.md", "v2/docs/PANEL.md", "v2/docs/ASSEMBLY.md"
 IFACES, REQS, LCSC = "v2/ecad/tools/pcb_interfaces.yaml", "v2/ecad/tools/pcb_requirements.yaml", "v2/ecad/tools/lcsc_fill.py"
 CONTRACT_COMMIT = "2c240414"      # L4-E5's mechanism: the last commit carrying the contract as L4-E5 analysed it
 LATER_GLOBS = (REC + "/l5*/*.out", REC + "/l6*/*.out", REC + "/l7*/*.out", REC + "/l8*/*.out", "v2/docs/test-procedures/*.out")
@@ -207,7 +207,7 @@ def plan_l4e5():
 def plan_l4e11():
     src = text(L4E11_PY)
     new, changes = src, []
-    for key, rel in (("hwfw", HWFW), ("panel", PANEL), ("reqs", REQS), ("l4e5", L4E5_OUT), ("arch", L4E9_MD)):
+    for key, rel in (("hwfw", HWFW), ("panel", PANEL), ("assembly", ASSEMBLY), ("reqs", REQS), ("l4e5", L4E5_OUT), ("arch", L4E9_MD)):
         new, ch = repin(new, key, rel, "l4e11_power.py")
         if ch:
             changes.append(ch)
