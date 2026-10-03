@@ -34,7 +34,7 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin 44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
    pin 0d4d60f03260f004cd7af9d738e41bbdb5f5a1d4818fa33775328d0d264d41ec v2/docs/review-packets/battery/THERMAL-COORDINATION.md
    pin 35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
-   pin 07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9 v2/ecad/tools/pcb_requirements.yaml
+   pin f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31 v2/ecad/tools/pcb_requirements.yaml
    pin 3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e v2/vendor/battery/eaton-scf9550-elx1135.pdf
    pin 5c0e331bc0051078cc373f87ed904a2fffaeb26dc1bffd0d79e54c524667fe7f v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf
    pin b135f906d383a964ac7d4585d66acc762145aa739c20d7bfc60269d32d7857e9 v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf

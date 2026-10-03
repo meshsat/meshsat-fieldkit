@@ -3,7 +3,7 @@ REQ-016'S WINDOW, BY ITS MAKER'S DOCUMENT OR BY A CONTROLLED UNIT (PANEL-ACC), W
 design, desk arithmetic: nothing bought, built, powered or measured; no physical unit is accepted.
 
 0. INPUTS AND REPRODUCTIONS
-   reqs       v2/ecad/tools/pcb_requirements.yaml  sha256 07fec30d43271245
+   reqs       v2/ecad/tools/pcb_requirements.yaml  sha256 f7cc6ac3cfd5ad08
    env        v2/ecad/tools/pcb_envelope.yaml  sha256 35cf43a2b7098a76
    replay_py  v2/docs/records/l4e/l4e_replay.py  sha256 3de985e2e3e06453
    replay_out v2/docs/records/l4e/l4e_replay.out  sha256 59c6eeab16da98f8

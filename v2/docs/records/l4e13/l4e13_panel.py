@@ -61,7 +61,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
     "env": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
     "replay_py": ("v2/docs/records/l4e/l4e_replay.py", "3de985e2e3e06453d2c9d576311c1f39935149ac1e9b7cff0431a40933bb8734"),
     "replay_out": ("v2/docs/records/l4e/l4e_replay.out", "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d"),

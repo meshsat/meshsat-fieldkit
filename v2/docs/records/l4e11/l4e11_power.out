@@ -3,7 +3,7 @@ MESHSAT-1357, 2 October 2026. Prototype design, desk arithmetic: nothing is boug
 CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESSION.
 
 0. INPUTS (sha256/16)
-   reqs      07fec30d43271245  v2/ecad/tools/pcb_requirements.yaml
+   reqs      f7cc6ac3cfd5ad08  v2/ecad/tools/pcb_requirements.yaml
    rules     14ea032a7fdd86ac  v2/ecad/tools/pcb_rules.yaml
    testplan  42a3dff33442c860  v2/docs/TEST-PLAN.md
    hwfw      56ece4e160267333  v2/docs/HW-FW-CONTRACT.md

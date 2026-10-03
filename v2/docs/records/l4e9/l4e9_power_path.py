@@ -93,9 +93,9 @@ PINS = {
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "cf38401a9e921a1cf140e29160adec30b2d965b805822b58020ea386cdc18416"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "7e23852551510fd528becd7359e18ea5037a593001d9792a52b82fdbb67ab875"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
     "yageo": ("v2/vendor/passives/yageo-cc-series.pdf", "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"),
     "lcsc": ("v2/ecad/tools/lcsc_fill.py", "eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216"),
@@ -103,10 +103,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "302a0e2c0583ffcd333d3236d1ada569db0a1a2b9f79c8130613bd223949f882"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "d4b3fad0c5e09616075b4f4890425836e69e8ec6ba9be67f80842702761b408e"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "d88aabc2671fbfd0ffbc82576d615a5a5ac42a11f211272cd69e4e3256edac04"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "9179d5860c65c5d494347346eba4f0d4f03d83e3ad46765acc0f0ba2a6dbd6dc"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -123,7 +123,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "cd0fe8b8b1895aa326cde653eace43b781e0f516aef17ff03a651db816a6b511"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "a79bfce6425a515378136c8a2497d21376dbe95935321c66c225c982a3d8e21b"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),

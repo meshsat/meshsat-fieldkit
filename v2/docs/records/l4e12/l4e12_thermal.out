@@ -1608,7 +1608,7 @@ Pinned inputs (sha256):
    5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec v2/docs/records/hc2/pwr_red2.py
    e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218 v2/docs/records/l3batt/load_trace.out
    59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d v2/docs/records/l4e/l4e_replay.out
-   cf38401a9e921a1cf140e29160adec30b2d965b805822b58020ea386cdc18416 v2/docs/records/l4e10/l4e10_cell_thermal.out
+   7e23852551510fd528becd7359e18ea5037a593001d9792a52b82fdbb67ab875 v2/docs/records/l4e10/l4e10_cell_thermal.out
    c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333 v2/docs/records/l4e8/ripple_dense.out
    5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
    58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out
@@ -1627,7 +1627,7 @@ Pinned inputs (sha256):
    f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186 v2/ecad/tools/gen_sch_e.py
    eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216 v2/ecad/tools/lcsc_fill.py
    35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
-   07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9 v2/ecad/tools/pcb_requirements.yaml
+   f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31 v2/ecad/tools/pcb_requirements.yaml
    8200c1c6e7c2131ab213dcc8f871b8cb3f9977e9d35bcd0541da1b6617393fbf v2/release/revA/order/JLC-CERTIFIED.tsv
    fce73ae028a985b3265ce3dbc17ab5b7bea1ae31b7ea84c6698c7694083e2478 v2/vendor/bosch/bosch-bme688.pdf
    bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf
