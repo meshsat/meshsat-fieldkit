@@ -111,7 +111,9 @@ The picked fans are the kit's own, so the test reads the conductance with the re
 credits their flow at zero): the two mixers 1.56 m3/min free air together (the model's representatives 0.60 to 1.21 m3/min), the
 three cooler fans 0.38 m3/min each. Their drawn power is logged per fan where measurable (the procedure's record, section 7);
 at full speed the hold's three fans draw 6.08 W against the model's 1.950 W, so the heaters' setting must follow the measured
-draw, as the procedure already requires. The fans' maximum operating temperature is +70 C, 1.35 K over the hold's 68.65 C
+draw, as the procedure already requires. In the kit the fans' converters (U22 on board E, the step-up per cooler on board B) add 0.72
+and 0.35 W at full speed (record l7pwr section 11, round 2): the bench supply feeds the fans at 12.0 V without them, so those losses
+are board heat the heaters carry when a mode's heat is restated on the picked fans. The fans' maximum operating temperature is +70 C, 1.35 K over the hold's 68.65 C
 trigger on the mixed air: a point near the hold's line runs them at their printed limit.
 
 ## 5. The decision this page serves

@@ -25,3 +25,5 @@ base) integrates the fans' identity rows.
 | `v2/docs/parts/PROCUREMENT.md` section 8 | The picks and the T-H1 set with their dated readings, for Layer 6 |
 
 The predicates are held by `v2/ecad/tools/tests/test_l7pwr.py`: `env -C v2/ecad/tools/tests python3 run.py test_l7pwr test_public_hygiene`.
+
+**Round 2 (3 October 2026, set 28 finding F-14; branch `fnd/l7pwr2` from `5515ecc0`):** the script read VSYS_E's loads as L4-E11 first drafted them and refused once L4-E11 section 18 rewrote the auxiliary domain (U22 and +12V_FAN). It now parses the draft with `ast`, reads L4-E11's section 18 figures and record l8r2's cooler step-up row, and restates the budget (`L7-FANS-AND-TH1.md` section 11, the output's section 8 lists every figure that moved against round 1's output at `2087060b`). D-18's settlement and the T-H1 bill hold.
