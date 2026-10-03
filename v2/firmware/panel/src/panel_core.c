@@ -70,6 +70,8 @@ static void ev_push(panel_t *p, uint8_t type, uint8_t value, ms_t at)
         p->ev_head = (uint8_t)((p->ev_head + 1) % PANEL_EVENTS);  /* the oldest is dropped */
 }
 
+void panel_ev_report(panel_t *p, uint8_t type, uint8_t value, ms_t at) { ev_push(p, type, value, at); }
+
 bool panel_ev_pop(panel_t *p, panel_ev_t *ev)
 {
     if (!p->ev_count)
@@ -157,6 +159,7 @@ uint32_t panel_light_filter(uint8_t mode, uint32_t leds)
 
 void panel_hot_sample(panel_hot_t *h, bool level, ms_t now)
 {
+    h->last_sample = now;
     if (!h->have_sample) {
         h->have_sample = true;
         h->level = level;
@@ -178,6 +181,10 @@ uint8_t panel_hot_classify(panel_hot_t *h, ms_t now)
 {
     if (!h->have_sample)
         return h->line = HOT_LINE_UNKNOWN;
+    if (after(now, h->last_sample + PANEL_HOTR1_HELD_MS))
+        return h->line = HOT_LINE_HELD_HIGH;        /* no read for 3 s: the detector lost, never a stale level (S-17) */
+    if (after(now, h->last_sample + PANEL_EXP_POLL_MS + 500u))
+        return h->line;                             /* reads late: no new verdict on old evidence */
     bool recent = h->n_edges && !after(now, h->last_edge + PANEL_HOTR1_HELD_MS);
     if (!recent) {
         if (!after(now, h->first_sample + PANEL_HOTR1_HELD_MS) && !h->n_edges)
@@ -426,7 +433,7 @@ static void controls_pi(panel_t *p, ms_t now)
 static void shutdown_step(panel_t *p, ms_t now, const panel_in_t *in)
 {
     if (p->shdn == SHDN_IDLE && !p->kill) {
-        if (!in->pi_shdn_req) {
+        if (!in->pi_shdn_req && after(now, p->own_pull_until)) {
             if (!p->main_low) {
                 p->main_low = true;
                 p->main_low_at = now;
@@ -498,8 +505,9 @@ static void slots_policy(panel_t *p, ms_t now)
             want[i] = false;                                 /* a shutdown raises nothing; PI_KILL removes power */
         if (reduced && i == 0)
             want[i] = false;                                 /* the reduced mode: slots 2 and 3 */
-        if (p->hot.state == HOT_H1 && p->hot.shdn_done)
-            want[i] = false;
+        if (p->hot.state == HOT_H1 && after(now, p->hot.stop_at + PANEL_SHDN_PULSE_MS) &&
+            (!p->slot[i].alive || p->hot.shdn_done))
+            want[i] = false;                         /* FW-C13: each slot once it has stopped, all at 60 s */
         if (p->heat_stage_only && i != HEAT_STAGE_SLOT)
             want[i] = false;
         if (p->hot.state == HOT_H2)
@@ -621,6 +629,8 @@ static void hot_step(panel_t *p, ms_t now, const panel_in_t *in)
     panel_hot_t *h = &p->hot;
     uint8_t prev = h->line;
     uint8_t line = panel_hot_classify(h, now);
+    if (line == HOT_LINE_UNKNOWN && p->boot == BOOT_RUN)
+        line = h->line = HOT_LINE_HELD_HIGH;         /* never read since the start-up decision (S-17) */
     if (line != prev)
         ev_push(p, EV_HOT_LINE, line, now);
     bool tmp_h1 = false, tmp_h2 = false, tmp_rel = false;
@@ -1034,7 +1044,8 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     else
         p->br.alive = false;
 
-    if (p->exp_init_done && (!in->exp_int || after(now, p->exp_polled_at + PANEL_EXP_POLL_MS) ||
+    if (p->exp_init_done && ((!in->exp_int && after(now, p->exp_polled_at + PANEL_EXP_INT_MIN_MS)) ||
+                             after(now, p->exp_polled_at + PANEL_EXP_POLL_MS) ||
                              (p->boot == BOOT_HOTR1 && after(now, p->exp_polled_at + 50u))))
         panel_exp_service(p, now);
 
@@ -1060,8 +1071,8 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     }
     if (p->boot >= BOOT_HOTR1)
         hot_step(p, now, in);
-    if (p->boot == BOOT_RUN || p->kill)
-        shutdown_step(p, now, in);
+    if (p->boot >= BOOT_EXPANDERS || p->kill)
+        shutdown_step(p, now, in);                   /* a MAIN tap counts from the end of the ZEROIZE read */
     margin_step(p, now);
     power_controls_step(p, now);
     p->reduced_mode_flag = p->pack_fallback || p->c1_reduced || p->hot.line == HOT_LINE_HELD_HIGH;
@@ -1072,6 +1083,8 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     /* outputs: the lines this controller drives (FW-C01: PI_KILL low until a kill; PI_SHDN_REQ only pulled low) */
     out->pi_kill = p->kill;
     out->pi_shdn_assert = p->shdn == SHDN_PULSE || p->hot_pulse;
+    if (out->pi_shdn_assert)
+        p->own_pull_until = now + PANEL_OWN_PULL_GUARD_MS;
     for (unsigned i = 0; i < 3; i++)
         out->slot_en[i] = p->slot[i].en;
     out->hdmi_sel1 = p->hdmi_slot == 1;
@@ -1088,8 +1101,11 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     out->backlight_off = p->light == LIGHT_BLACKOUT;
     out->backlight_pct = p->light == LIGHT_DAY ? 100 : p->light == LIGHT_NIGHT ? 20 : p->light == LIGHT_NVG ? 5 : 0;
     out->led_stat = p->boot != BOOT_RUN || phase_on(now - p->t0, 500u);
-    if (p->exp_init_done)
-        panel_exp_write_leds(p, out->leds);
+    if (p->exp_init_done && (!p->led_failed || after(now, p->led_fail_at + PANEL_LED_RETRY_MS))) {
+        p->led_failed = panel_exp_write_leds(p, out->leds) != 0;
+        if (p->led_failed)
+            p->led_fail_at = now;
+    }
     epd_step(p, now, in, out);
 
     /* forced-off loads and charge holds */

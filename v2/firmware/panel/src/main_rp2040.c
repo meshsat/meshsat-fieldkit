@@ -18,10 +18,32 @@
 
 void hal_init_rest(void);
 
+static panel_t P;
+
+/* FW-K04: after a failed transfer, a held SDA is released by nine SCL pulses and a STOP, and the event is logged */
+static void bb_scl(void *c, bool l) { (void)c; hal_i2c_bitbang_scl(l); }
+static bool bb_sda(void *c) { (void)c; return hal_i2c_bitbang_sda_read(); }
+static void bb_stop(void *c) { (void)c; hal_i2c_bitbang_stop(); }
+static void bb_delay(void *c, unsigned us) { (void)c; hal_delay_us(us); }
+static const panel_bitbang_t BB = { 0, bb_scl, bb_sda, bb_stop, bb_delay };
+
+static int recover_if_held(int r)
+{
+    if (r == 0)
+        return 0;
+    hal_i2c_bitbang_begin();
+    if (!hal_i2c_bitbang_sda_read()) {
+        int pulses = panel_bus_recover(&BB);
+        panel_ev_report(&P, EV_I2C_RECOVERED, (uint8_t)(pulses < 0 ? 0xFF : pulses), hal_now_ms());
+    }
+    hal_i2c_bitbang_end();
+    return r;
+}
+
 static int bus_write(void *ctx, uint8_t addr, const uint8_t *buf, unsigned len)
 {
     (void)ctx;
-    return hal_i2c_write(addr, buf, len, hal_now_ms() + HAL_I2C_OP_TIMEOUT_MS);
+    return recover_if_held(hal_i2c_write(addr, buf, len, hal_now_ms() + HAL_I2C_OP_TIMEOUT_MS));
 }
 
 static int bus_read(void *ctx, uint8_t addr, uint8_t reg, uint8_t *buf, unsigned len)
@@ -29,8 +51,8 @@ static int bus_read(void *ctx, uint8_t addr, uint8_t reg, uint8_t *buf, unsigned
     (void)ctx;
     ms_t d = hal_now_ms() + HAL_I2C_OP_TIMEOUT_MS;
     if (hal_i2c_write(addr, &reg, 1, d) != 0)
-        return -1;
-    return hal_i2c_read(addr, buf, len, d);
+        return recover_if_held(-1);
+    return recover_if_held(hal_i2c_read(addr, buf, len, d));
 }
 
 static ms_t z_now(void *ctx) { (void)ctx; return hal_now_ms(); }
@@ -68,8 +90,6 @@ static const panel_ops_t OPS = {
              8192u },
     .epd = { 0, epd_send },
 };
-
-static panel_t P;
 
 int main(void)
 {
