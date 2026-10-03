@@ -25,11 +25,13 @@ TOOLS = os.path.join(TOP, "v2", "ecad", "tools")
 L6 = os.path.join(TOP, "v2", "docs", "records", "l6pwr", "apply_part_identities_block.py")
 
 
-def run(label, args, cwd=TOP, ok_already=("already applied", "already carries", "already bound", "already identical"), must=None):
+def run(label, args, cwd=TOP, ok_already=("already applied", "already carries", "already bound", "already identical"), must=None, report=False):
     print("== %s" % label)
     r = subprocess.run([sys.executable, "-B"] + args, cwd=cwd, capture_output=True, text=True)
     out = (r.stdout + r.stderr).strip()
     print("\n".join("   " + l for l in out.splitlines()[-12:]))
+    if report:
+        return (r.returncode, out)       # a check: reported, judged by main()
     if r.returncode == 0:
         if must and must not in out:
             print("apply_set28: STOPPED at %s: %r not in its output" % (label, must)); sys.exit(1)
@@ -48,13 +50,25 @@ def main(argv):
     run("3 requirements trace", ["rules_render.py", "--requirements"], cwd=TOOLS)
     run("4 re-pins and regeneration (L5-F01)", [os.path.join(HERE, "apply_set28_repins.py"), "--write"] + (["--no-regen"] if skip else []))
     run("5 identity block", [L6, "--check"])
-    run("6a rules_render --check", ["rules_render.py", "--check"], cwd=TOOLS, ok_already=())
-    run("6b requirements trace --check", ["rules_render.py", "--requirements", "--check"], cwd=TOOLS, ok_already=())
-    run("6c decisions_render --check", ["decisions_render.py", "--check"], cwd=TOOLS, ok_already=())
-    r = subprocess.run([sys.executable, "-B", "part_identities.py", "check"], cwd=TOOLS, capture_output=True, text=True)
-    print("== 6d part_identities check (exit %d)\n   %s" % (r.returncode, (r.stdout.strip().splitlines() or [""])[-1]))
-    print("apply_set28: done")
-    return 0
+    bad = []
+    rc, out = run("6a rules_render --check", ["rules_render.py", "--check"], cwd=TOOLS, report=True)
+    stale = [l.split()[1] for l in out.splitlines() if l.endswith("differs from what the registry renders")]
+    # PCB-ETA.md renders from gitignored journals a worker tree does not hold (rules_render.py's own requirements_main docstring):
+    # stale in every worker tree, rendered on the box at promotion; any OTHER stale page, or a refusal, is a failure here
+    if [x for x in stale if not x.endswith("PCB-ETA.md")] or "refused" in out:
+        bad.append("6a")
+    rc, out = run("6b requirements trace --check", ["rules_render.py", "--requirements", "--check"], cwd=TOOLS, report=True)
+    if rc != 0:
+        bad.append("6b")
+    rc, out = run("6c decisions_render --check", ["decisions_render.py", "--check"], cwd=TOOLS, report=True)
+    if rc != 0:
+        bad.append("6c")
+    rc, out = run("6d part_identities check", ["part_identities.py", "check"], cwd=TOOLS, report=True)
+    if rc != 0:
+        bad.append("6d (the held sheets staged? step 0)")
+    print("apply_set28: %s%s" % ("done" if not bad else "done with failing checks: %s" % ", ".join(bad),
+                                 "; PCB-ETA.md stale as in every worker tree (rendered on the box)" if any(x.endswith("PCB-ETA.md") for x in stale) else ""))
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":
