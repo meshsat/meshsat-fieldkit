@@ -17,6 +17,11 @@ undeclared on boards A and E, and the energy chain still naming board E 2 oz. Ro
 the coolers keep their step-up, and the modules hold Fan_PWM at no more than 70 %). It drafts the return's declarations (section 3e)
 and the chain's correction (section 3f). Both Layer 9 outputs are read from copies in `inputs/` and never merged.
 
+**Round 4 (3 October 2026, the owner's focused check of L9P-F02, section 1s).** Round 3's 70 % Fan_PWM maximum is WITHDRAWN: its
++0.129 A held only at the nominal 5.1 V, the fan runs at full speed whenever its PWM lead is not driven (the maker), and the
+AP64500 on slots 1 and 3 is over its junction limit at HIGH with any cooler option. Slots 1 and 3 move to slot 2's LM5176 stage
+(`apply_gen_sch_a_slotlm.py`), and the coolers keep their step-up at full speed.
+
 Figures carry a class: **MAKER** (printed in a held sheet), **INFERRED** (derived from printed figures under a stated assumption),
 **ASSUMPTION** (no held document gives it), **BOUND** (a limit this record states and holds the design to). Every figure is in
 `l8r2_drafts.out`; this page quotes it.
@@ -30,10 +35,11 @@ Figures carry a class: **MAKER** (printed in a held sheet), **INFERRED** (derive
 | `apply_gen_sch_b_ph4.py` | DRAFT, board B, item 3 (L5R2-F04): J_QMX and J_CAM on the JST PH 1x4 land |
 | `apply_gen_sch_c_pibtn.py` | DRAFT, board C, item 4 (the panel firmware's F-01): the PI button on U1 P1.3 with its pull-up and debounce |
 | `apply_gen_sch_a_packrtn.py`, `apply_gen_sch_e_packrtn.py` | DRAFT, boards A and E, item 5 (round 3, record l9stk's finding): GND declared as a rail returning the pack path, in each generator's intent table |
+| `apply_gen_sch_a_slotlm.py` | DRAFT, board A, round 4 (L9P-F02): slots 1 and 3 on slot 2's LM5176 stage, the AP64500s U4 and U6 retired |
 | `apply_energy_chain_e1oz.py` | a text correction for the integrator, item 6 (round 3): `pcb_energy_chain.yaml`'s board E conductors at 1 oz, after l9stk's decision is in the register |
 | `check_l8r2_netlist.py` | what the regenerated netlists must show, parsed; NOT DRAWN on the committed netlists today |
 | `l8r2_drafts.py`, `l8r2_drafts.out` | every figure with its class, the composition on boards A and B (and E, round 3), the designator census, the netlist check; round 3: record l9pwr's figures parsed for item 1 (section 2b), the pack returns (section 9), the energy chain's texts (section 10) |
-| `fetch_held_back.py` | TI's TPS4811-Q1 sheet (SLUSEE5E), held back by its terms, fetched from ti.com and checked by sha256 |
+| `fetch_held_back.py` | TI's TPS4811-Q1 sheet (SLUSEE5E) and four pages of Sanyo Denki's San Ace catalogue C1152B001 '25.10 (round 4), held back by their terms, fetched from the makers and checked by sha256 |
 | `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`); round 3: record l9pwr's output (`fnd/l9pwr` at `38ef774c`) and record l9stk's output and page (`fnd/l9stk` at `7388a84b`); copied byte for byte, `inputs/SOURCES.txt` |
 | `v2/ecad/tools/tests/test_l8r2.py` | the predicates (section 7) |
 
@@ -56,8 +62,9 @@ M0011876C is behind a form).
 | Difference | | (b) is 0.82 W lower at full speed, 0.23 W at the budget's 0.56 W a fan |
 
 **SELECTED (SESSION): (a).** It needs no new interface, no harness and no board A change, and it keeps each fan with its own slot.
-The 0.82 W that (b) would save at full speed is under the controls' duty in practice (R-150). **Round 3 keeps (a) with the modules'
-70 % Fan_PWM maximum, on record l9pwr's figures (section 1r).** Reverse by (b) if the bay harness gains a 12 V
+The 0.82 W that (b) would save at full speed is under the controls' duty in practice (R-150). **Round 3 kept (a) with the modules'
+70 % Fan_PWM maximum, on record l9pwr's figures (section 1r); round 4 withdraws the maximum and moves slots 1 and 3 to slot 2's
+LM5176 stage on board A, so the step-up stays and the fan runs at full speed in every state (section 1s).** Reverse by (b) if the bay harness gains a 12 V
 pair for another reason.
 
 **The circuit drawn, per slot s** (designators in board B's unused 700 block, `700 + 30 (s - 1) + k`, registered in `SLOT_EXTRA[s]`
@@ -101,6 +108,9 @@ cooler's 12 V (11.51 to 12.43 V) behind a 0.448 to 0.538 A eFuse; pins 3 and 4 t
 stages to the module's Fan_Tacho and Fan_PWM; a cable out leaves the fan dark and the module's pins at their own pull-ups."
 
 ## 1r. Round 3: item 1 re-decided on record l9pwr's figures (L9P-F02, L9P-F03)
+
+**SUPERSEDED by section 1s (round 4): the 70 % Fan_PWM maximum is WITHDRAWN; slots 1 and 3 move to the LM5176 stage.** The text
+below is round 3's record, kept as it was decided.
 
 Round 3, branch `fnd/l8r3` from set 28's `37bc2f1d`, 3 October 2026, the record's only author since the round 2 author's context ran
 out. Record l9pwr's output is copied byte for byte from `fnd/l9pwr` at `38ef774c` (`inputs/l9pwr_budget-38ef774c.txt`) and its
@@ -193,6 +203,127 @@ of L9P-F01's all-transmit basis, which is L4-E9's (F3-04).
 - slot 1's +5V_S1 current (INA226 0x40) with the module stressed, the card at its maximum, the NVMe writing and the fan at the
   maximum: at most 5.0 A;
 - the fan at full speed with Fan_PWM released and PCIE_PWR_EN low at boot.
+
+## 1s, L9P-F02 focused check (round 4: the owner's five questions, 3 October 2026)
+
+Round 4, the same branch and author, 3 October 2026 (from 23:04 CEST). Every figure below is printed by `l8r2_drafts.py` in
+`l8r2_drafts.out` section 2c ("2c.N" is its question N); record l9pwr's rails are parsed from `inputs/`, never typed. The cooler's
+figures come from the maker's own San Ace general catalogue C1152B001 '25.10, pages 362, 616, 623 and 633, served one page at a
+time by the catalogue viewer the product page links (publish.sanyodenki.com); no redistribution grant was readable (the maker's
+conditions of use page answered HTTP 403), so the four pages are held back: `fetch_held_back.py` fetches them into
+`v2/vendor/fans/held/` and checks each by sha256, and `test_l8r2` reads the rows off them. The product page itself was re-read
+(sha256 `90a9c2d2fc1f7457`, unchanged since Layer 7's transcription). The AP64500 sheet at the URL the owner gave
+(diodes.com/datasheet/download/AP64500.pdf) is byte for byte the held `v2/vendor/diodes/diodes-ap64500.pdf` (DS41979 Rev 5-2,
+sha256 `d3bcdc7dd4ca44cb`); the TPS61089 sheet is the held SLVSD38C. The fan's manual M0011876C is still behind a form: NOT READ.
+
+**The compact table.** Classes as in this page's head: MAKER, INFERRED (a reading off a maker's graph, or arithmetic on maker
+figures under a stated assumption), ASSUMPTION, BOUND; UNRESOLVED where no held document prints the figure.
+
+| # | Figure | State | Boundary | Source | Verdict |
+|---|---|---|---|---|---|
+| 1a | round 3's **+0.129 A**: 4.871 A against 5 A | PS-BUSY and PS-ALLTX at HIGH (every load at its maximum at once) | slot side, AP64500 U4's output: CM5 8.0 W, card 9.1 W, NVMe and switch 3.99 W, switch core 0.676 W through board B's bucks on their curves, the fan 1.4 W (70 % of 2.0 W, the linear bound) over the step-up's 0.85; 24.844 W over the nominal 5.1 V | 2c.1, "+0.129 A (round 3's margin)" | a HIGH state at the nominal voltage only |
+| 1b | the declared **4.981 A**: +0.019 A against 5.0 A | none: a declaration intent.rail judges | slot side, board B's `_SLOT_LOADS` rows on +5V_S1 (CM5 1.6, U103 2.2, U104 0.7, U105 0.15, U116 0.001 A) plus the fan's row 0.33 A (1.4 W / 0.85 / 5.0 V), against the rail's declared peak (refused over 5.10 A) | 2c.1, "+0.019 A" | the declaration's distance from the source's rating; its rows are not the HIGH (U103 2.2 A against 1.959 A, U104 0.7 A against 0.865 A), so neither sum bounds the other |
+| 1c | 1a at the least voltage: **5.118 A, -0.118 A** | PS-BUSY at HIGH | the same 24.844 W over 4.854 V: VFB 0.792 V on the 1 % divider gives 4.953 V, less the rail's 2 % drop budget; every load sits behind a converter and draws its power | 2c.1, "the same state at the least voltage" | **NOT A MARGIN** |
+| 2a | the fan at 70 %, 12 V, free air: **NOT PRINTED** | 70 % duty | the maker's rows (MAKER, p.362): 100 %: 0.17 A, 2.0 W, 13700 min-1; 25 %: 0.03 A, 0.36 W, 3000 min-1; the speed at 70 % read off the maker's duty to speed example, 10,400 +-400 min-1 (INFERRED) | 2c.2 | UNRESOLVED; bracketed 0.99 to 1.15 W (the fan law through both rows) and 1.43 to 1.56 W (the chord in speed, the upper bound while the input is convex in speed): the linear bound's 1.40 W lies inside, so it bounds nothing |
+| 2b | the supply: **up to 1.73 W at 70 %, 2.22 W at 100 %** | 12.43 V, the step-up's highest | the step-up's 11.51 to 12.43 V sits inside the fan's 10.8 to 13.2 V (MAKER); the maker prints the input at 12 V only; x1.111 by the fan laws (INFERRED) | 2c.2 | UNRESOLVED at the maker |
+| 2c | the operating point: **not printed** | against the cooler's pressure | the maker's ratings are "at free air" (catalogue, How to Read Specifications) | 2c.2 | UNRESOLVED |
+| 2d | the boost's loss: **0.21 / 0.27 / 0.39 W** | 1.56 W out | TI Figure 7-2 read at 0.1 A, 12 V out, about 0.88 typical (INFERRED); the draft's 0.85 (ASSUMPTION); TI's design 0.80 | 2c.2 | carried at 0.85, 0.80 for the inductor |
+| 2e | the start: **not printed**; bounded at 6.69 W on 12 V, **8.36 W on the slot rail** | any start: power-up, a duty from 0 % (this fan stops at 0 %), a locked-rotor retry | "current several times the rated current may flow" (p.633); a locked rotor "the coil current is cut off at regular cycles ... restarts automatically" (p.616); bound: the eFuse U7x2's highest limit 0.538 A at 12.43 V, the step-up at 0.80 | 2c.2 | UNRESOLVED, bounded |
+| 2f | the slot's other loads: **23.197 W**; the fan input the AP64500's 5 A leaves: 1.96 W at 5.1 V, **0.91 W at 4.854 V** | PS-BUSY at HIGH | slot side | 2c.2 | the 70 % maximum fails at the least voltage under even the most favourable model (0.99 W) |
+| 3 | **5.010 A at 5.1 V, 5.264 A at 4.854 V** (fan 100 %, card on); **6.501 A** with a start, inductor peak 7.566 A over the 6.8 A limit | boot, reset or watchdog restart, a fan driver absent or unbound, an open PWM lead, a start with the card on (2c.3's seven rows) | Fan_PWM is an open collector, unpowered at the module's shutdown (CM5 datasheet 2.11, MAKER); R7x12 pulls the fan's lead to +5V_Sn; open terminal = 100 % (p.362, MAKER); PCIE_PWR_EN held low by R{s}06 100 k only while the module's 3.3 V is off; the bootloader's PCIe handling and the reset state of the pin are not stated (taken as the worse); the stock CM5 tree's fan node is disabled, its levels reach 250/255, at 24.06 kHz | 2c.3 | full speed is the default in every state the firmware does not drive; the 70 % maximum is enforced in none of boot with the card on, reset, a driver fault or an open lead; the AP64500 is over 5 A in each, and a start drives it into its cycle limit and hiccup (DS41979 7): the slot drops |
+| 4a | cooling at 70 %: **at least 42.6 Pa at every flow up to 3.7 CFM**, against the basis fan's 27.4 Pa at most; free air 0.277 to 0.300 m3/min | 70 % duty | the approved basis (record l4e12 2h, parsed): the representative 30 mm fan's 3.7 CFM free air at 50 % through the heatsink, 0.873 l/s, +5.64 K over the mixed air at the CM5's 4.5 W; that fan's 0.11 inch H2O (Sunon, MAKER); the pick's 100 % curve under the fan laws at the speed's least reading, inside its 80 Pa plateau (INFERRED) | 2c.4 | **HOLDS**: the pick's curve lies over the basis fan's at every flow, so it moves more air through any heatsink (the maker's 50 % curve reads about 30 Pa at 3.7 CFM: about half duty meets it). The SoC at 8 W: no held document gives the cooler's thermal resistance, UNRESOLVED (T-H2) |
+| 4b | the AP64500's junction: **166.5 / 161.9 / 151.1 C** at HIGH (full speed, the 70 % maximum, (b) without a cooler), **137.0 C** at PLAN in PS-BUSY, at 14.4 V in; +125 C holds only to 3.731 A | C1's +50 C inside air (CONOPS 4 as record l4e12 quotes it: the normal mode's ceiling), VIN 14.4 and 17.375 V | record l4e12's method: the converter's loss at its point (rv-pwr's curves on the maker's Figures 4 and 5) times theta-JA 45 C/W (MAKER, four-layer 2 oz, the minimum pad); the maker's Figure 24 read (typical, 12 V in): 4.679 A at 50 C; 5.010 A to 44.8 C, 4.871 A to 47.0 C, 4.548 A to 52.0 C | 2c.4 | **NOT ADEQUATELY RATED** in any option at HIGH: every row over +125 C, the full-speed and 70 % rows past the +160 C shutdown; (b) is 2 K inside the typical curve at 12 V in only |
+
+**5. The decision (SESSION, under the owner's standing rule of 26 September 2026): slots 1 and 3 move to slot 2's LM5176 stage
+(F-PR-04's own pattern), the coolers keep their 12 V step-up at full speed, and round 3's 70 % Fan_PWM maximum is WITHDRAWN.**
+- Not the maximum: rows 1c, 2f and 3. It is a firmware rule that the hardware's own defaults defeat, and it holds only at the
+  nominal voltage.
+- Not (b) per slot alone: it takes the fan off the rail (4.548 A at HIGH, 4.779 A at the least voltage), but the AP64500 stays over
+  +125 C by row 4b's method and at the edge of its typical curve, and it costs three converters, a third lead pin and new Layer 5
+  and Layer 7 texts.
+- The LM5176 stage is the part this board already certifies five times (C442493, every land in the library): no board B change
+  beyond the declared peak, no harness, no new interface. Its average loop limits at 7.096 A at its least (43 mV over the 6 mOhm
+  ISNS shunt at +1 %, parsed from record l9pwr).
+- Approved service is not reduced: the module's fan control may run the cooler to 100 % whenever the SoC asks; the airflow basis
+  holds from about half duty.
+- No requirement changes; nothing is bought (generator text only). The test of 21 September 2026 leaves it the session's.
+- Reverse by (b) per slot together with a converter above the AP64500 on slots 1 and 3, if the LM5176 stage fails its bench row
+  (C4-1) or its area on board A (C4-6).
+
+**The margins in every state** (2c.5; slot 1 and 3 at HIGH on the LM5176 stage; the stage's least output 4.928 V, 4.829 V at the
+load with the 2 % drop; "start" adds the cooler's start through its eFuse's highest limit):
+
+| State | A at 5.1 V | at 4.829 V | with a start | margin to 7.096 A, steady / start |
+|---|---|---|---|---|
+| PS-IDLE, PS-IDLE-SPEC, PS-RED-b (slot 3, the higher) | 3.294 | 3.478 | 4.722 | +3.618 / +2.374 A |
+| PS-TYP (slot 3) | 4.324 | 4.566 | 5.810 | +2.530 / +1.286 A |
+| PS-BUSY, PS-ALLTX (slots 1 and 3) | 5.010 | 5.290 | 6.534 | **+1.806 (25.4 %) / +0.562 A** |
+| PS-EMCON (slots 1 and 3) | 2.365 | 2.497 | 3.741 | +4.599 / +3.355 A |
+| PS-RED, PS-RED2, PS-SURV-R (slot 3 alone) | 1.825 | 1.928 | 3.171 | +5.168 / +3.925 A |
+| row 3's states: module off; boot, reset, driver fault, open lead (card on); the last duty held; a start with the card on | 3.225; 5.010; 4.871; 6.188 | 3.406; 5.290; 5.144; 6.534 | | +3.690; +1.806; +1.952; +0.562 A |
+
+- The stage's hottest part, its buck-side high FET (CSD19532Q5B), at 5.290 A and 17.375 V in: conduction 0.094 W, the edges
+  0.293 W (18.0 and 9.5 ns from the LM5176's drivers and the FET's gate charge), Coss 0.516 W, the body diode's recovery 0.312 W:
+  **1.215 W, 110.7 C at C1's 50 C air on the sheet's 1 inch2 of 2 oz copper (RthJA 50 C/W at most) against +150 C**; 201.9 C on
+  the minimum pad. +125 C holds to 61.7 C/W: CONDITIONAL on board A's copper (C4-1). The low FET 0.336 W, the boost-side high FET
+  0.319 W. The AP64500 by the same kind of arithmetic: 166.5 C in one package.
+- The declared peak, both ends of the lead: 5.290 A needed, **5.3 A** declared (as slot 2 declares 5.63 A); VBAT's entry per stage
+  2.086 A, declared **2.09 A** (the S-98 method of Q28's 2.22 A). Board B with round 4's draft: slot 1's declared loads 5.121 A
+  against 5.3 A, accepted by intent.rail.
+- The cost: at PLAN, VBAT side, +0.373 W in the profile (PS-IDLE-SPEC), +0.730 W in PS-TYP, +0.872 W in PS-BUSY, +0.822 W in
+  PS-ALLTX (the stages' declared 0.90, NOT PLOTTED by the maker, against the AP64500's curve point). The same watts are heat in the
+  case. FW-A15's bench reading of the stage settles the figure (F4-05).
+
+**The drafts as changed** (2c, sections 5 to 8 of the output):
+- `apply_gen_sch_a_slotlm.py` (new, board A): the two buck5 calls become slot 2's lm5176 call for S1 and S3 with their SLOT_EN
+  pull-downs (R30, R38 kept) and INA226 monitors (U8, U10 kept, now across the 6 mOhm ISNS shunts R505, R535); VBAT's U4 and U6
+  become Q501 and Q531 at 2.09 A; the slot rails' shunts, switches (U501, U531) and peak (5.3 A); SECTIONS. Designators in the free
+  500 block (500 + k on slot 1, 530 + k on slot 3: U, Q 1 to 4, L, D 1 and 2, R 1 to 12, C 1 to 19); retired U4, U6, L3, L5, C28 to
+  C33, C40 to C45, C112, C114, R28, R29, R31, R36, R37, R39, R45, R47, R129, R131. It follows L4-E11's charger (its anchor names
+  VBAT's "U4": 2.0), which L4-E9's order already gives; mainpb stays at R248 and C247.
+- `apply_gen_sch_b_fans12.py`: the fan's row back to 0.47 A (2.0 W over 0.85 at 5.0 V, the form Layer 7's reader parses), slots 1
+  and 3 declared at 5.3 A, round 3's text withdrawn; designators unchanged.
+- `apply_gen_sch_a_packrtn.py`: where slotlm is applied first, slots 1 and 3's ground ends are their CS shunts R506 and R536;
+  either order gives one generator.
+- `check_l8r2_netlist.py`: SLOTS, what the regenerated board A netlist must show (NOT DRAWN today, DRAWN on its fixture, FAIL with
+  slot 3's ISNS shunt off +5V_S3).
+
+**What remains CONDITIONAL, each with its specimen and acceptance:**
+- **C4-1, the stage on board A's copper.** Specimen: board A's slot 1 and slot 3 stages as placed and routed (the box's thermal
+  pass), then one built stage on FW-A15's bench. Acceptance: at 50 C ambient, 17.4 V in, 5.3 A out for 30 minutes, the buck-side
+  high FET's case at most 120 C, and the stage's efficiency at least 0.90 at 5.3 A (the figure the budget uses). On failure: more
+  copper under the FETs, or the reversal above.
+- **C4-2, the loop and bulk ripple of slots 1 and 3.** Slot 2's design is copied; board B's remote capacitance on slots 1 and 3
+  (the WiFi card's socket) differs from slot 2's. Acceptance: the stage's loop and bulk scripts re-run on the slot's remote
+  capacitance with phase margin at least 50 degrees, gain margin at least 10 dB on the narrow band and positive on the widened band
+  (slot 2's 9.4 dB), bulk ripple at most 1.8 A rms per EEHZK1E151XP.
+- **C4-3, the fan (R-190, E11-35).** Specimen: three 9WPA0412P6G001 on the fitted CM5 cooler, fed at 11.5 and 12.43 V through
+  the drafted eFuse. Acceptance: at 100 % the input at most 0.30 A (under the eFuse's least limit 0.448 A); the start completes
+  (tach at the rated speed +-10 % within 5 s) at -20, +25 and +70 C without the eFuse's fault latching; the input logged at 25, 50,
+  70 and 100 % duty for the case heat (L4-E12, L7). The supply's margin no longer depends on these figures.
+- **C4-4, the maker's answer (drafted, not sent; the owner's to send).** To Sanyo Denki, for 9WPA0412P6G001: the PWM input's levels
+  and frequency range (the catalogue prints an example, VIH 4.75 to 5.25 V, VIL 0 to 0.4 V, 25 kHz, "differ with models"), the
+  starting current and its duration, the input at 70 % duty and against a static pressure, the pulse output's ratings.
+- **C4-5, the SoC at 8 W (T-H2).** The airflow basis holds; the module's temperature against the cooler is not computed by any
+  record. T-H1 and T-H2 log the coolers' speed with the readings.
+- **C4-6, the area.** Two more LM5176 stages in board A's slot columns (16 mm pitch; slot 2's and the device rail's stages already
+  stand in theirs): `gen_pcb_a3.py`'s slot column template for slots 1 and 3 (the box).
+
+**Rows owed to others (texts; not edits of their files):**
+- Layer 5, HW-FW-CONTRACT: round 3's proposed FW row (the 70 % maximum and its PCIE_PWR_EN order) is WITHDRAWN before entry. New
+  FW row: "Each compute module drives its cooler's Fan_PWM at 25 kHz (a 40000 ns period; the stock CM5 tree's 41566 ns is 24.06 kHz
+  against the maker's printed 25 kHz) with a duty set by the SoC's temperature up to 100 %, never 0 % while the slot runs (this fan
+  stops at 0 % and each restart is a start, catalogue p.362); a tach reading under the commanded speed is reported as a stalled
+  fan or an open lead (V-E07)."
+- Layer 5, IF-BAY-FANS or IF-B internal's slot-cooler rows: "J_FANs pin 4 is the fan's PWM input; open, the fan runs at full
+  speed (the maker)"; the "no more than 70 %" text of section 1r is not entered.
+- Layer 5, IF-AB (the slot leads): +5V_S1 and +5V_S3 declared 5.3 A at both ends (was 5.0 A, the AP64500's rating), as +5V_S2's
+  5.63 A; the stages' loop least 7.096 A.
+- The module's monitor software and the panel firmware, wherever the INA226 at 0x40 and 0x44 is read: the shunt is 6 mOhm (was
+  5 mOhm), so the calibration and the current LSB change, as F-PR-04 noted for slot 2's U9.
+- Layer 6: the two stages' rows (2 x LM5176PWPR C442493, 8 x CSD19532Q5B C473333, 2 x XAL1010-682ME, 2 x 6 mOhm WSL2512 C843882,
+  6 x EEHZK1E151XP C542453, 4 x BAT46W C83152 and the passives as slot 2's); retired 2 x AP64500SP-13, 2 x XAL6060-472ME and their
+  passives.
 
 ## 2. Item 2: VBUS20 against U2's single faults (S-111, R-48; supplier task P1-3)
 
@@ -487,6 +618,10 @@ lines naming 2 oz are board P's and E5's.
 - Each power draft alone after this record's three: OK. The five Layer 8 drafts in reverse order: OK.
 - mainpb, which takes the next free R and C at apply time, now takes **R248 and C247**, not the R233 and C241 L4-E9's 3h states
   (F2-02).
+- Round 4: slotlm composes in that order after packrtn and before mainpb (mainpb still at R248 and C247: slotlm's designators are
+  list elements of its lm5176 calls, which next_free does not read, in a block it never reaches). It must follow L4-E11's charger,
+  whose anchor names VBAT's `"U4": 2.0`: slotlm then the charger is REFUSED, the charger then slotlm is OK (an order constraint,
+  F4-02). packrtn and slotlm in either order give one generator. The six Layer 8 drafts apply in reverse order.
 
 **Board B.** No power draft targets `gen_sch_b.py`. l8gnd's GND-002 draft (R-195) and this record's three apply forward, in reverse
 and each alone: OK.
@@ -503,6 +638,8 @@ each draft's own declared ADDS (the coolers' are computed per slot).
   declaration). Board E, this record: packrtn none.
 - Board A, the other drafts: charger C236 to C239, D23, Q39, Q40, R228, U42; bank R221 to R226; u17 R227; l8gnd H1, R229, C240,
   R230 to R232, U43; mainpb C247, R248.
+- Board A, round 4: slotlm U501, U531, Q501 to Q504, Q531 to Q534, L501, L531, D501, D502, D531, D532, R501 to R512, R531 to R542,
+  C501 to C519, C531 to C549 (its U8, U10, R30 and R38 are kept parts, now drawn as literal calls).
 - Board B: fans12 U701, U702, U731, U732, U761, U762, L701, L731, L761, Q701, Q702, Q731, Q732, Q761, Q762, R701 to R712, R731 to
   R742, R761 to R772, C701 to C710, C731 to C740, C761 to C770; panel5v U901, R901 to R905, C901, C902.
 - **Pairwise intersections: none on either board.** No literal designator is drawn twice in either composed generator.
@@ -513,7 +650,7 @@ each draft's own declared ADDS (the coolers' are computed per slot).
 
 | id | finding | owner |
 |---|---|---|
-| F2-01 | Board B's slot rails. Round 3: the fan row is 0.33 A at the modules' 70 % maximum (it was 0.1 A as drawn, 0.47 A in round 2, whose 5.121 A on slots 1 and 3 intent.rail refuses against their 5.0 A peak); the declared loads are 4.981 A, under the peak. Still owed: `+5V_Sn`'s typical declarations (2.5 A on slots 1 and 3, 4.2 A on slot 2) re-derived with it; `pwr_budget.py`'s cooler row (0.36 to 0.56 W, a representative fan) to the pick at the controls' duty (R-150) | board B's owner, Layer 4 |
+| F2-01 | Board B's slot rails. Round 4: the fan row is 0.47 A at full speed and slots 1 and 3 are declared at 5.3 A (5.121 A of loads, accepted; section 1s). Round 3: the fan row is 0.33 A at the modules' 70 % maximum (it was 0.1 A as drawn, 0.47 A in round 2, whose 5.121 A on slots 1 and 3 intent.rail refuses against their 5.0 A peak); the declared loads are 4.981 A, under the peak. Still owed: `+5V_Sn`'s typical declarations (2.5 A on slots 1 and 3, 4.2 A on slot 2) re-derived with it; `pwr_budget.py`'s cooler row (0.36 to 0.56 W, a representative fan) to the pick at the controls' duty (R-150) | board B's owner, Layer 4 |
 | F2-02 | d8dec31's mainpb moves to R248 and C247 once this record's drafts are in board A's round; L4-E9's step 3h text (R233, C241) and R-193 to be restated, or mainpb given fixed references above every draft's (R-194) | L4-E9's change-list owner |
 | F2-03 | IF-AE-DOCK: board A's J_VR1..4 on VIN_RAW_IN, the alias of board E's VIN_RAW; `check_contracts.py`'s alias table and `block_contract.py`'s check 5 (E5's T_VR targets judged against board A's J_VR net name) read the new name; VIN_RAW_IN carries the cross-board share | Layer 5, the tools' owner |
 | F2-04 | Q41's SOA (CSD19532Q5B, SLPS414B) under board E's breaker retries with Q2 shorted (at most 7.136 A for 0.49 ms, or 13.87 A filtered, at VDS up to 41.22 V, every 0.5 s) and in its slewed turn-on into VIN_RAW's 32 uF; and the drop it adds in VIN_RAW (at most 4.6 mOhm at 5.983 A, 28 mV) to L4-E11's 9 V-plug arithmetic (VIN_RAW 8.148 V) | Layer 9, L4-E11's owner |
@@ -521,20 +658,31 @@ each draft's own declared ADDS (the coolers' are computed per slot).
 | F2-06 | Board B's U23 and U24 (and every `efuse()` call on board B) carry OVLO 100 k over 10 k on a 5 V input: the pin at 0.46 V, under SLVSET8A's 0.5 V recommended minimum | board B's owner |
 | F2-07 | The DGX-19 land (`meshsat:TI_DGX0019A_VSSOP-19_3x5.1mm_P0.5mm`) is owed for board A's U45 as for board E's U6 (E11-01); the TPS61089's KiCad land `Texas_VQFN-RNR0011A-11` to be read by `check_land` on the box | the box, the integrator |
 | F2-08 | `lcsc_fill.py` rows owed for 127k, 88.7k, 23.7k, 1.87k, 604R, 42.2k, 33.2k, 3.83k and the 0.1 % 200k and 10.0k; the XAL6060-472ME carries no code on either board | Layer 6, the BOM re-take |
-| F2-09 | The fan's PWM input level, pulse output and starting current: the maker's manual M0011876C (a request) or the bench (Layer 5's L5R2-F07) | Layer 6, Layer 9 |
+| F2-09 | Round 4 read the maker's catalogue (C1152B001 pp.362, 616, 623, 633: the open terminal is full speed, a PWM input example, "several times the rated current" at a start, no figure); still owed: the model's PWM input level, pulse output and starting current: the maker's manual M0011876C (a request) or the bench (Layer 5's L5R2-F07) | Layer 6, Layer 9 |
 | F2-10 | L4-E9's supplier list 8g: P1-2 and P1-3 become "drafted (record l8r2), supplier review of the draft and its bench rows" rather than design-correction tasks; P1-1 stays the supplier's | the Layer 4 coordinator |
 | F2-12 | Record l8gnd's `l8gnd_drafts.out` on this merged line pins two inputs that moved after `226e9143` (L4-POWER-ARCHITECTURE.md, now `dcd4f972d9e3cfc0`, and L4-E11's charger draft, now `d857a70256d1c77e`): its committed-output predicate fails on those two pin lines alone, while its composition and designator predicates pass against the new charger draft; regenerate it with `_bin/regen_out.py` at the merge | the integrator (or l8gnd's author) |
 | F2-11 | `HW-FW-CONTRACT.md` and CONOPS: the coolers' PWM released at boot gives full speed (INFERRED), the module's fan control owns the duty; a VBUS20 cut is logged as a front-end fault | Layer 5, the firmware owner |
-| F3-01 | Record l9pwr's reader of `l8r2_drafts.out` takes `eta_slot` (retired in round 3: the flat 0.90 its own R9 corrected) and the choice (a) line, which now reads the three coolers at 7.56 W (its R9) where it read 7.84 W; its HIGH for the coolers becomes the 70 % maximum's 1.4 W a fan (the linear bound), which moves L9P-F02's figure to 4.871 A (+0.129 A) and the fans' share of L9P-F01 | record l9pwr's author (its parse and its R9 and section 10 lines) |
-| F3-02 | `HW-FW-CONTRACT.md`: a FW row for the coolers' Fan_PWM maximum (70 %) and its order (PCIE_PWR_EN only after the fan control runs with it); IF-BAY-FANS or IF-B internal's slot-cooler rows name the maximum (section 1r's texts) | Layer 5 |
-| F3-03 | Record l7pwr's reader of this draft's slot row (`read_rails`) now reads 0.33 A, 1.4 W, 0.85 and 5.0 V, the fan at the maximum, and derives the step-up's loss there (0.25 W); its hold figure adds that loss to the cooler at full speed (2.0 W) and reads 7.05 W where it read 7.15 W, two states mixed: at full speed the loss is 0.353 W (released, the card off), at the maximum the fan is 1.4 W and the loss 0.247 W. Its committed output and page (7.15 W) move with this draft's pin (test_l7pwr reads 2 failures on this branch, the re-pin and the restatement being its author's). The hold's fan duty (F-L7-05) is a setting at or under the maximum; the airflow at the maximum (about 70 % of 13.4 CFM, INFERRED) against L4-E12's 3.7 CFM representative | record l7pwr's author, the integrator |
-| F3-04 | L9P-F01 (D-11's all-transmit basis takes the fans at HIGH): the coolers at the maximum draw at most 5.29 W at VBAT against 7.5638 W at full speed (2.27 W less, the linear bound), a figure for the floor's re-derivation or FW-A05's key-down cap | L4-E9 (C05, FW-A05) |
+| F3-01 | (Round 4: superseded by F4-03 to F4-05, the 70 % maximum withdrawn.) Record l9pwr's reader of `l8r2_drafts.out` takes `eta_slot` (retired in round 3: the flat 0.90 its own R9 corrected) and the choice (a) line, which now reads the three coolers at 7.56 W (its R9) where it read 7.84 W; its HIGH for the coolers becomes the 70 % maximum's 1.4 W a fan (the linear bound), which moves L9P-F02's figure to 4.871 A (+0.129 A) and the fans' share of L9P-F01 | record l9pwr's author (its parse and its R9 and section 10 lines) |
+| F3-02 | (Round 4: superseded by F4-03 to F4-05, the 70 % maximum withdrawn.) `HW-FW-CONTRACT.md`: a FW row for the coolers' Fan_PWM maximum (70 %) and its order (PCIE_PWR_EN only after the fan control runs with it); IF-BAY-FANS or IF-B internal's slot-cooler rows name the maximum (section 1r's texts) | Layer 5 |
+| F3-03 | (Round 4: superseded by F4-03 to F4-05, the 70 % maximum withdrawn.) Record l7pwr's reader of this draft's slot row (`read_rails`) now reads 0.33 A, 1.4 W, 0.85 and 5.0 V, the fan at the maximum, and derives the step-up's loss there (0.25 W); its hold figure adds that loss to the cooler at full speed (2.0 W) and reads 7.05 W where it read 7.15 W, two states mixed: at full speed the loss is 0.353 W (released, the card off), at the maximum the fan is 1.4 W and the loss 0.247 W. Its committed output and page (7.15 W) move with this draft's pin (test_l7pwr reads 2 failures on this branch, the re-pin and the restatement being its author's). The hold's fan duty (F-L7-05) is a setting at or under the maximum; the airflow at the maximum (about 70 % of 13.4 CFM, INFERRED) against L4-E12's 3.7 CFM representative | record l7pwr's author, the integrator |
+| F3-04 | (Round 4: superseded by F4-03 to F4-05, the 70 % maximum withdrawn.) L9P-F01 (D-11's all-transmit basis takes the fans at HIGH): the coolers at the maximum draw at most 5.29 W at VBAT against 7.5638 W at full speed (2.27 W less, the linear bound), a figure for the floor's re-derivation or FW-A05's key-down cap | L4-E9 (C05, FW-A05) |
 | F3-05 | L9P-F03: item 1 leaves the device rail as drawn in every option; 0.027 A of its drafted 7.181 A in PS-ALLTX is this record's item 3 (U901's RON at the panel's 0.980 A, 0.138 W); the rest is the drawn design's (I-03) | board A's generator owner (I-03), the TEST-PLAN power rows |
 | F3-06 | The energy chain's coordination (energy_chain.py check 3) holds DOCK_ENTRY's and BOARD_A_NODE's 25 A conductors at 1 oz only on bands of at least 12.26 mm on each of two faces; record l9stk's decided minimum (6.72 mm on each of two, sized at the path's 18 A) carries 18.00 A by the same model. Either the band rule rises to 12.26 mm a face where the chain claims 25 A, or the chain's ratings are restated as measured and the coordination answered | record l9stk's author (its decisions A and E, `layout-constraints/A.md` and `E.md`), the energy chain's writer |
 | F3-07 | Board E's DC_HS band (gen_pcb_e3.py: one B.Cu band, run 5.5 mm, leg 4.5 mm) carries 8.07 and 7.13 A at 1 oz, under SHORE_INPUT's F1 10 A (11.78 and 10.56 A at 2 oz, over it): at 1 oz the band needs its F.Cu twin of at least 2.76 mm, or 8.15 mm on one face | board E's PCB generator owner (gen_pcb_e3.py), record l9stk's author |
 | F3-08 | The order for the integrator: `apply_energy_chain_e1oz.py` after l9stk's `apply_decisions_l9stk.py` (it refuses before); the two packrtn drafts at any point of their boards' rounds (section 4), released with this record's other drafts | the integrator |
 | F3-09 | The box re-takes once the packrtn drafts are applied: PWR-001 on boards A and E (GND's sources and loads), PI-001, PI-002 and PI-003 on GND (on board A a whole-board solve of In1, In4 and the pours), THM-001 (GND excluded as a return) | the box |
 | F3-10 | L4-E9's change list: the two packrtn drafts (board A after 3g's l8gnd drafts and before mainpb; board E anywhere in its round) and R-190's row at 0.33 A with the 70 % maximum | L4-E9's change-list owner |
+
+| F4-01 | The AP64500 on slots 1 and 3 is over +125 C at C1's 50 C inside air at HIGH with every cooler option and at PLAN in PS-BUSY (record l4e12's method: 166.5, 161.9, 151.1 and 137.0 C at 14.4 V in; Figure 24's typical curve ends at 44.8, 47.0 and 52.0 C); designed out by `apply_gen_sch_a_slotlm.py` (section 1s) | board A's generator owner (I-03), released with this record |
+| F4-02 | The order constraint: slotlm after L4-E11's charger (3a), whose anchor names VBAT's "U4": 2.0; with this record's other board A drafts before mainpb; released with fans12 (board B's half of the 5.3 A peak) | L4-E9's change-list owner, the integrator |
+| F4-03 | Record l9pwr: L9P-F02 is answered by slotlm (slots 1 and 3's limit becomes the LM5176 loop's 7.096 A at least, their efficiency the declared 0.90 as its M1 takes slot 2); its D4 model of the coolers at full speed stands; round 3's 70 % maximum, which F3-01 asked it to take, is withdrawn | record l9pwr's author |
+| F4-04 | Record l7pwr: its reader of this draft's slot row reads 0.47 A, 2.0 W, 0.85 and 5.0 V again (round 2's figures), so its hold figure returns to the fans at full speed; its committed output moves with this draft's pin (test_l7pwr: 1 failure on this branch, the byte-for-byte output; the re-pin is its author's) | record l7pwr's author, the integrator |
+| F4-05 | The energy and heat of the two stages at the declared 0.90 against the AP64500's curve point: +0.373 W at VBAT in the profile, +0.872 W in PS-BUSY, +0.822 W in PS-ALLTX (PLAN), heat in the case; FW-A15's bench reading of the LM5176 at 5.1 V settles it | L4-E9 (endurance), L4-E10, L4-E12 (the case heat) |
+| F4-06 | The same FET arithmetic on the device rail's LM5176 stage at its drafted 7.181 A (PS-ALLTX): the buck-side high FET 1.510 W, 125.5 C at 50 C air on 1 inch2 of 2 oz copper, against +150 C | board A's generator owner (I-03, THM-001) |
+| F4-07 | `gen_pcb_a3.py` places U4, U6, L3, L5 and the AP64500 stages' passives by name (the slot columns, SLOT, SLOT_CAPS, R1S and R3S): slots 1 and 3 take slot 2's column template; the stages' loop and bulk ripple re-run (C4-2); the regenerated netlist read by `check_l8r2_netlist.py` SLOTS | the box, board A's PCB generator owner |
+| F4-08 | Record l8gnd's hotr1 draft names "U4, U5 and U6's enables" in a comment; with slotlm they are U501, U5 and U531 (its keeper's arithmetic already covers the LM5176's enable thresholds); prose, owed at release | this record's author (l8gnd), at release |
+| F4-09 | The fan's PWM frequency: the stock CM5 tree drives 41566 ns (24.06 kHz) against the maker's printed 25 kHz; the catalogue warns that a frequency outside the specified range alters the duty to speed characteristic | Layer 5 (the FW row of section 1s), the module's software |
+| F4-10 | The maker's questions for 9WPA0412P6G001 (C4-4), drafted, not sent | the owner (an outside contact) |
 
 **For the record (not this record's item):** R-176's Q12 figure is resolved to 63 A by L4-E7 at `d562e75a`, which is not in this branch's history and is cited by commit only.
 
@@ -547,7 +695,9 @@ each draft's own declared ADDS (the coolers' are computed per slot).
 | the gate re-takes | the box | PWR-001, CMP-001, the decoupling declarations (the boost's power loop, a class R entry owed), RET-001 (CFANs_* and VCO_* need signal classes), SCH-002, INT-001 (the aliases of F2-03), the energy chain's B_PANEL_5V stage with U901 ahead of F1 |
 | the bench rows | Layer 9 | sections 1 to 3; round 3: the fan's input at 70 % and 100 % duty, slot 1's current with every load at its maximum and the fan at the maximum, full speed released at boot (section 1r) |
 | the round 3 drafts' release | the integrator | `apply_gen_sch_a_packrtn.py` and `apply_gen_sch_e_packrtn.py` with this record's other drafts (RELEASE.md); `apply_energy_chain_e1oz.py` after l9stk's decisions (F3-08) |
-| the Fan_PWM maximum | Layer 5 | the FW row and the interface text of section 1r (F3-02) |
+| the Fan_PWM maximum | Layer 5 | WITHDRAWN in round 4: section 1s's FW and interface rows replace section 1r's (F3-02) |
+| round 4's slot stages | the integrator, the box | release slotlm after the charger with fans12 (F4-02); regenerate and place board A (F4-07); C4-1, C4-2 and C4-6 |
+| round 4's bench and maker items | Layer 9, the owner | C4-1 (the stage at 5.3 A, 50 C), C4-3 (the fan, R-190), C4-4 (the maker's answer, the owner sends it), C4-5 (T-H2) |
 | the return's copper and the chain's widths | the box, record l9stk's author, board E's PCB generator owner | F3-06, F3-07, F3-09 |
 
 ## 7. The tests (`v2/ecad/tools/tests/test_l8r2.py`)
@@ -581,3 +731,9 @@ each draft's own declared ADDS (the coolers' are computed per slot).
 - Round 3, item 6: the chain's correction refuses without l9stk's decision, checks, writes once and then does nothing; the corrected
   stages name 1 oz and the computed widths; energy_chain.check reads the same; a chain without the old text once is refused; the
   tree's chain is never written; the two findings' arithmetic holds.
+- Round 4: round 3's margin reads +0.129 A at 5.1 V and negative at the least voltage, the declaration +0.019 A; the linear bound
+  lies inside the fan's bracket; every state with the card on and the firmware not driving is over 5 A on the AP64500 and within
+  the LM5176 loop with more than 0.5 A; every HIGH option is over +125 C at C1's air; the pick at 70 % holds more than 10 Pa over
+  the basis fan's maximum; the stage's FET under +150 C on the sheet's copper; the drafts quote the figures the check derives; the
+  catalogue rows and sentences read off the held pages (skipped where not held); slotlm's designators are exactly the 500 block;
+  the order constraint and packrtn's order independence hold; SLOTS fails with slot 3's shunt off its rail.
