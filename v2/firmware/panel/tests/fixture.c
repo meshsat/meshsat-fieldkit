@@ -165,6 +165,38 @@ static int fl_erase(void *ctx)
     return 0;
 }
 
+static int sl_read(void *ctx, uint32_t off, uint8_t *buf, unsigned len)
+{
+    fx_t *f = ctx;
+    if (off + len > sizeof f->sflash)
+        return -1;
+    memcpy(buf, f->sflash + off, len);
+    return 0;
+}
+
+static int sl_prog(void *ctx, uint32_t off, const uint8_t *buf, unsigned len)
+{
+    fx_t *f = ctx;
+    f->sflash_writes++;
+    if (off + len > sizeof f->sflash)
+        return -1;
+    if (f->sflash_fail_program) {
+        f->sflash_fail_program--;
+        f->sflash[off] = 'S';                /* a torn record */
+        return -1;
+    }
+    for (unsigned i = 0; i < len; i++)
+        f->sflash[off + i] &= buf[i];
+    return 0;
+}
+
+static int sl_erase(void *ctx)
+{
+    fx_t *f = ctx;
+    memset(f->sflash, 0xFF, sizeof f->sflash);
+    return 0;
+}
+
 static void epd_send(void *ctx, uint8_t page, bool full)
 {
     fx_t *f = ctx;
@@ -220,6 +252,12 @@ void fx_new(fx_t *f)
     f->ops.zer.flash_size = sizeof f->flash;
     f->ops.epd.ctx = f;
     f->ops.epd.send = epd_send;
+    memset(f->sflash, 0xFF, sizeof f->sflash);
+    f->ops.slots.ctx = f;
+    f->ops.slots.read = sl_read;
+    f->ops.slots.program = sl_prog;
+    f->ops.slots.erase = sl_erase;
+    f->ops.slots.size = sizeof f->sflash;
 
     /* idle inputs: every switch released or open, EMCON released, the rail present, no bridge */
     f->in.test_sw = f->in.sos_sw = f->in.zeroize_sw = true;
@@ -236,7 +274,18 @@ void fx_init(fx_t *f, bool zer_closed, const bool held[3])
     static const bool none[3] = { false, false, false };
     bool drive[3];
     f->in.zeroize_sw = !zer_closed;
-    panel_init(&f->p, &f->ops, f->now, zer_closed, held ? held : none, drive);
+    panel_init(&f->p, &f->ops, f->now, zer_closed, held ? held : none, true, drive);
+}
+
+void fx_reset(fx_t *f, const bool held[3], bool por)
+{
+    bool drive[3];
+    memset(&f->out, 0, sizeof f->out);
+    panel_init(&f->p, &f->ops, f->now, !f->in.zeroize_sw, held, por, drive);
+    for (int i = 0; i < 10000 && f->p.boot != BOOT_RUN; i++) {
+        fx_tick(f);
+        f->now++;
+    }
 }
 
 static void hot_line(fx_t *f)

@@ -49,7 +49,7 @@ void t_boot_slot_adopt(void)
     bool held[3] = { true, false, true }, drive[3];
     fx_t F, *x = &F;
     fx_new(x);
-    panel_init(&x->p, &x->ops, x->now, false, held, drive);
+    panel_init(&x->p, &x->ops, x->now, false, held, true, drive);
     CHECK(drive[0] && !drive[1] && drive[2]);       /* FW-C02: driven at the level read */
     fx_tick(x);
     CHECK(x->out.slot_en[0] && !x->out.slot_en[1] && x->out.slot_en[2]);   /* no glitch on a running slot */
@@ -58,7 +58,7 @@ void t_boot_slot_adopt(void)
     fx_new(y);
     fx_init(y, false, NULL);
     panel_zj_append(&y->p, ZJ_PENDING);
-    panel_init(&y->p, &y->ops, y->now, false, held, drive);
+    panel_init(&y->p, &y->ops, y->now, false, held, true, drive);
     CHECK(!drive[0] && !drive[1] && !drive[2]);
 }
 
@@ -504,7 +504,7 @@ void t_hot_boot_held_slot(void)
     fx_t F, *x = &F;
     fx_new(x);
     x->hot_sim = HOT_SIM_5HZ;
-    panel_init(&x->p, &x->ops, x->now, false, held, drive);
+    panel_init(&x->p, &x->ops, x->now, false, held, true, drive);
     CHECK(drive[1]);
     bool t[3] = { false, true, false };
     unsigned asserted = 0;
@@ -685,4 +685,162 @@ void t_pi_button_on_u1_p13_when_wired(void)
     x->regs[HAL_I2C_C_U1][1] |= (uint8_t)(1u << HAL_EXP_C_PI_BTN_N_BIT);
     fx_run(x, 1500);
     CHECK(x->p.shdn != SHDN_IDLE);                  /* a short press: the clean shutdown */
+}
+
+/* ---- FW-C05, the one slot-fault rule (F-14, record l5r4) ---- */
+
+static bool ev_seen(fx_t *x, uint8_t type, uint8_t value)
+{
+    panel_ev_t e;
+    bool seen = false;
+    while (panel_ev_pop(&x->p, &e))
+        seen |= e.type == type && e.value == value;
+    return seen;
+}
+
+static ms_t run_until_slot_low(fx_t *x, unsigned slot, ms_t limit, const bool t[3])
+{
+    ms_t t0 = x->now;
+    while (x->out.slot_en[slot] && x->now - t0 < limit)
+        fx_run_hb(x, 1, t);
+    return x->now - t0;
+}
+
+void t_slot_lost_while_running_cycled_once(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, ALL);
+    panel_ev_t e;
+    while (panel_ev_pop(&x->p, &e)) {
+    }
+    bool t[3] = { true, false, true };              /* slot 2's bridge stops; its rail stays up */
+    x->in.hb[1] = !x->in.hb[1];
+    fx_run_hb(x, 1, t);
+    ms_t last_edge = x->p.slot[1].hb_edge;
+    fx_run_hb(x, 3100, t);
+    CHECK(!x->p.slot[1].alive && x->p.slot[1].fault);     /* lost at 3 s, shown at once */
+    CHECK(ev_seen(x, EV_SLOT_FAULT, 1));
+    CHECK(x->p.amb_active & 8u);                           /* MASTER CAUT */
+    CHECK(x->out.slot_en[1]);                              /* not yet acted on */
+    ms_t dt = run_until_slot_low(x, 1, 70000, t);
+    CHECK(x->now - last_edge >= 60000 && x->now - last_edge <= 60100);   /* 60 s from the last edge */
+    (void)dt;
+    CHECK(x->p.slot[1].state == SLOT_CYCLING && x->p.slot[1].cycled);
+    CHECK(ev_seen(x, EV_SLOT_CYCLE, 1));
+    ms_t off_at = x->now;
+    while (!x->out.slot_en[1] && x->now - off_at < 10000)
+        fx_run_hb(x, 1, t);
+    CHECK(x->now - off_at >= 4999 && x->now - off_at <= 5002);   /* rail off 5 s */
+    fx_run_hb(x, 4000, ALL);                               /* it comes back */
+    CHECK(x->p.slot[1].state == SLOT_RUNNING && !x->p.slot[1].fault);
+    CHECK(x->p.slot[1].cycled);                            /* coming back never re-arms the retry */
+}
+
+void t_slot_lost_again_after_cycle_left_off(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, ALL);
+    bool t[3] = { true, false, true };
+    run_until_slot_low(x, 1, 70000, t);                    /* lost, cycled */
+    fx_run_hb(x, 5100, t);
+    fx_run_hb(x, 20000, ALL);                              /* back and running */
+    CHECK(x->p.slot[1].state == SLOT_RUNNING);
+    panel_ev_t e;
+    while (panel_ev_pop(&x->p, &e)) {
+    }
+    x->in.hb[1] = !x->in.hb[1];
+    fx_run_hb(x, 1, t);
+    ms_t last_edge = x->p.slot[1].hb_edge;
+    run_until_slot_low(x, 1, 70000, t);                    /* lost again */
+    CHECK(x->now - last_edge >= 60000 && x->now - last_edge <= 60100);
+    CHECK(x->p.slot[1].state == SLOT_FAULT_OFF);           /* no second cycle: off until the operator acts */
+    CHECK(ev_seen(x, EV_SLOT_OFF, 1));
+    fx_run_hb(x, 180000, ALL);
+    CHECK(!x->out.slot_en[1] && x->out.slot_en[0] && x->out.slot_en[2]);   /* the other slots keep running */
+    panel_slot_operator_retry(&x->p, 1, x->now);           /* the touch UI's or the bridge's retry */
+    fx_run_hb(x, 4000, ALL);
+    CHECK(x->out.slot_en[1] && !x->p.slot[1].cycled);      /* raised, its retry re-armed */
+}
+
+void t_slot_not_supervised_while_stopping(void)
+{
+    /* a hot stop asks every module to stop: their heartbeats stop and nothing is cycled or shown lost */
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, ALL);
+    panel_ev_t e;
+    while (panel_ev_pop(&x->p, &e)) {
+    }
+    x->hot_sim = HOT_SIM_5HZ;
+    fx_run_hb(x, 1500, ALL);
+    CHECK(x->p.hot.state == HOT_H1);
+    fx_run_hb(x, 70000, NONE);
+    bool fault = false;
+    while (panel_ev_pop(&x->p, &e))
+        fault |= e.type == EV_SLOT_FAULT || e.type == EV_SLOT_CYCLE || e.type == EV_SLOT_OFF;
+    CHECK(!fault && !x->p.slot[0].cycled && !x->p.slot[1].cycled && !x->p.slot[2].cycled);
+}
+
+void t_slot_off_kept_across_controller_reset(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, ALL);
+    bool t[3] = { true, false, true };
+    run_until_slot_low(x, 1, 70000, t);                    /* slot 2 cycled */
+    fx_run_hb(x, 5100, t);
+    run_until_slot_low(x, 1, 70000, t);                    /* flat after its cycle: left off */
+    CHECK(x->p.slot[1].state == SLOT_FAULT_OFF);
+    bool u[3] = { false, true, true };                     /* slot 3 lost and cycled once, then back */
+    run_until_slot_low(x, 2, 70000, (bool[3]){ true, false, false });
+    fx_run_hb(x, 5100, (bool[3]){ true, false, false });
+    fx_run_hb(x, 10000, (bool[3]){ true, false, true });
+    CHECK(x->p.slot[2].state == SLOT_RUNNING && x->p.slot[2].cycled);
+    (void)u;
+    /* a watchdog, RUN or SWD reset: the keeper holds slots 1 and 3 high, slot 2 reads low */
+    bool held[3] = { true, false, true };
+    fx_reset(x, held, false);
+    fx_run_hb(x, 30000, ALL);
+    CHECK(x->p.slot[1].state == SLOT_FAULT_OFF && !x->out.slot_en[1]);   /* left off stays off */
+    CHECK(x->out.slot_en[0] && x->out.slot_en[2]);
+    CHECK(x->p.slot[2].cycled);                            /* a slot read high keeps its spent retry */
+}
+
+void t_slot_record_cleared_by_power_on(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, ALL);
+    bool t[3] = { true, false, true };
+    run_until_slot_low(x, 1, 70000, t);
+    fx_run_hb(x, 5100, t);
+    run_until_slot_low(x, 1, 70000, t);
+    CHECK(x->p.slot[1].state == SLOT_FAULT_OFF);
+    bool low[3] = { false, false, false };                 /* MAIN restart or the panel's supply lost: a power-on reset */
+    fx_reset(x, low, true);
+    fx_run_hb(x, 6000, ALL);
+    CHECK(x->out.slot_en[0] && x->out.slot_en[1] && x->out.slot_en[2]);
+    CHECK(!x->p.slot[1].cycled);
+    uint8_t st[3];
+    panel_slot_store_load(&x->p, st);
+    CHECK(st[0] == 0 && st[1] == 0 && st[2] == 0);         /* the record cleared */
+}
+
+void t_slot_store_torn_keeps_previous(void)
+{
+    fx_t F, *x = &F;
+    fx_new(x);
+    fx_init(x, false, NULL);
+    uint8_t a[3] = { SLOTREC_CYCLED, SLOTREC_CYCLED | SLOTREC_OFF, 0 }, b[3] = { 0, 0, SLOTREC_OFF }, st[3];
+    CHECK(panel_slot_store_save(&x->p, a) == 0);
+    x->sflash_fail_program = 1;                            /* a power loss during the next write */
+    panel_slot_store_save(&x->p, b);
+    CHECK(panel_slot_store_load(&x->p, st) == 0);
+    CHECK(memcmp(st, a, 3) == 0);                          /* the previous state stands */
+    CHECK(panel_zj_scan(&x->p) == ZJ_NONE);                /* and no wipe is read pending from it */
+    for (int i = 0; i < 40; i++)                           /* past the region's end: erased and rewritten */
+        CHECK(panel_slot_store_save(&x->p, (i & 1) ? a : b) == 0);
+    CHECK(panel_slot_store_load(&x->p, st) == 0 && memcmp(st, a, 3) == 0);
 }

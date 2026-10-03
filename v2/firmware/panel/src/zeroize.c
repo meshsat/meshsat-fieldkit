@@ -14,7 +14,7 @@
 #define ZJ_TIMED_COMMANDS 6u        /* ZER s.3.4 step 3: at most 6 GenKey commands in the timed phase */
 #define ZJ_UNTIMED_DEADLINE 0xFFFFFFFFu
 
-static uint32_t crc32_bytes(const uint8_t *b, unsigned n)
+uint32_t panel_crc32(const uint8_t *b, unsigned n)
 {
     uint32_t c = 0xFFFFFFFFu;
     for (unsigned i = 0; i < n; i++) {
@@ -50,7 +50,7 @@ uint8_t panel_zj_scan(panel_t *p)
             break;
         uint32_t crc = (uint32_t)rec[12] | (uint32_t)rec[13] << 8 | (uint32_t)rec[14] << 16 | (uint32_t)rec[15] << 24;
         bool ok = rec[0] == 'Z' && rec[1] == 'J' && (uint8_t)(rec[2] ^ rec[3]) == 0xFF &&
-                  (rec[2] == ZJ_PENDING || rec[2] == ZJ_DONE) && crc == crc32_bytes(rec, 12);
+                  (rec[2] == ZJ_PENDING || rec[2] == ZJ_DONE) && crc == panel_crc32(rec, 12);
         if (!ok) {
             state = ZJ_PENDING;                  /* torn */
             continue;
@@ -79,7 +79,7 @@ int panel_zj_append(panel_t *p, uint8_t state)
     rec[5] = (uint8_t)(seq >> 8);
     rec[6] = (uint8_t)(seq >> 16);
     rec[7] = (uint8_t)(seq >> 24);
-    uint32_t crc = crc32_bytes(rec, 12);
+    uint32_t crc = panel_crc32(rec, 12);
     rec[12] = (uint8_t)crc;
     rec[13] = (uint8_t)(crc >> 8);
     rec[14] = (uint8_t)(crc >> 16);
