@@ -14,8 +14,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
     # met it because board A has not been re-cut since. The five LM5176 stages' ISNS filter would have
     # inherited it today. Same part, same land, same code as the plain value above.
     (r"^100R 1%", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",
- (r"^100n", "C_0603"): "C14663", (r"^22p", "C_0603"): "C1653", (r"^4\.7u$", "C_0603"): "C19666", (r"^4\.7n", "C_0603"): "C53987", (r"^1u$", "C_0603"): "C15849",
- (r"^10u$", "C_0805"): "C15850",
+ (r"^100n", "C_0603"): "C113803",  # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603KRX7R0BB104, 100 nF 100 V X7R, for C14663 (50 V): the line fills E C5 and B C29 to C32, which need 100 V (rule V-1 on +54V_POE and the timer); one code meets every row it fills
+ (r"^22p", "C_0603"): "C1653", (r"^4\.7u$", "C_0603"): "C19666", (r"^4\.7n", "C_0603"): "C53987", (r"^1u$", "C_0603"): "C559769",   # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603KRX7R9BB105, 1 uF 50 V X7R 10 %, for C15849 (CL10A105KB8NNNC, X5R: rule C-D3 makes an unstated class 2 X7R; the line fills up to 25 V)
+ (r"^10u$", "C_0805"): "C326595",   # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0805KKX7R7BB106, 10 uF 16 V X7R 10 %, for C15850 (CL21A106KAYNNNE, X5R; rule C-D3)
  # BOARD B'S LANDS, 13 September 2026 (MESHSAT-862). B lays its logic decoupling on 0402 and its bulk on
  # 0805, and this table had a rule for neither, which is most of what its BOM's 44 uncoded lines were: not
  # missing parts, missing rules. Every code below was read back from JLCPCB's API with its model, package
@@ -34,7 +35,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  # (YAGEO CC general purpose NP0, product specification V.21, 14 March 2025; stock 160,278 the same minute). Board D
  # pins it in its generator (C44, C45, C69, C72); this line fills any other blank "1n NP0" 0402 the same way.
  (r"^1n NP0", "C_0402"): "C113780",       # CC0402JRNPO9BN102, NP0 50 V
- (r"^22u 6\.3V", "C_0805"): "C6119902",   # CGA0805X5R226M6R3MT
+ (r"^22u 6\.3V", "C_0805"): "C53133025",   # Layer 6 record l6r2 round 3, 3 October 2026: CCTC TCC0805X7R226M100FT, 22 uF 10 V X7R 20 %, for C6119902 (CGA0805X5R226M6R3MT, X5R; rule C-D3)
  (r"^1n 2kV", "C_1812"): "C36077",        # 1812B102K202NT, 2 kV: the Bob Smith termination
  (r"^100n 100V", "C_0805"): "C106243",    # YAGEO CC0805KKX7R0BB104, 100 V
  # the 0603 resistor values B uses and this table had not met
@@ -65,7 +66,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^4\.7u$", "C_0805"): "C354262",       # CC0805KKX7R8BB475, X7R 25 V, 581 k in stock (the 0603 4.7u already here is C19666)
  (r"^SS2040FL", "D_SOD-123F"): "C268712",
  (r"^27R$", "R_0603"): "C25190",           # 0603WAF270JT5E, 218 k in stock: the RP2040 USB series pair
- (r"^0\.47R 1%$", "R_0603"): "C23411",      # 0603WAF470LT5E, 470 mOhm 1 percent, 125 k in stock: the LED rail sense
+ (r"^0\.47R 1%$", "R_0603"): "C414503",     # Layer 6 record l6r2 round 3, 3 October 2026: UNI-ROYAL CS03W5F470LT5E, 470 mOhm 1 % current sense, for C23411 (0603WAF470LT5E, 800 ppm/K: rule R-S1 asks a shunt at most 200 ppm/K)
  (r"^TLV75533PDBV", "SOT-23-5"): "C404027", # TLV75533PDBVR, TI's own order code, 57 k in stock: the panel 3.3 V LDO
  # SS2040FL, 40 V 2 A Schottky, 10 k in stock: the e-paper pump diodes
  (r"^180R?$", "R_0603"): "C22828",        # the shipped C BOM carried C25270, an 0805, on these eleven 0603 lands
@@ -107,14 +108,15 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^0\.1R 1% 1206$", "R_1206"): "C2903496",
  (r"^10R 2W 2512$", "R_2512"): "C414890",
  (r"^100p$", "C_0603"): "C14858",
- (r"^1n$", "C_0603"): "C1588",
+ (r"^1n$", "C_0603"): "C113793",   # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603JRNPO0BN102, 1 nF 100 V C0G 5 %, for C1588 (CL10B102KB8NNNC, X7R 10 %: rule C-D2 makes 1 nF on 0603 C0G; the line fills up to 100 V)
  (r"^3\.3n$", "C_0603"): "C1613",
  (r"^10n$", "C_0603"): "C57112",
  (r"^27p$", "C_0603"): "C107045",    # NP0, 50 V, 5%: correct on the 18 pF load crystal
+ (r"^15p NP0", "C_0603"): "C107037",   # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603JRNPO9BN150, 15 pF 50 V NP0 5 %, board A C27 (the charger's CH_COMP2, S-117), which no line filled: a blank generic line refuses the finish
  (r"^33p$", "C_0603"): "C1663",       # Samsung CL10C330JB8NNNC, C0G, 50 V, 5%, a Basic part: the 20 pF load crystal on B12
- (r"^47n$", "C_0603"): "C1622",
+ (r"^47n$", "C_0603"): "C576852",  # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603KRX7R0BB473, 47 nF 100 V X7R, for C1622 (50 V): the line fills A C77, which needs 100 V
  (r"^470n 25V$", "C_0603"): "C1623",
- (r"^2\.2u$", "C_0603"): "C57895",
+ (r"^2\.2u$", "C_0603"): "C513691",  # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603KRX7R6BB225, 2.2 uF 10 V X7R, for C57895 (CL10A225KA8NNNC, X5R; rule C-D3)
  # 12 September 2026 (A24): filled from JLCPCB's own catalogue, each the highest-stock part of its value in the land
  # the board draws, read on that date. A rating ABOVE the one asked for is taken where the exact rating is scarce:
  # never worse electrically, and it is what the stock says can actually be bought.
@@ -211,6 +213,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^1M \(", "R_0603"): "C22935",           # UNI-ROYAL 0603WAF1004T5E, 1%, BASIC, stock 7,776,096
  (r"^698k", "R_0603"): "C5126055",          # FOJAN FRC0603F6983TS, 1%, stock 97,399
  (r"^10mOhm 1% 2512", "R_2512"): "C2903468",  # HoJLR2512-3W-10mR-1%, 3 W, stock 128,367 (ISNS, RAC)
+ (r"^27 1% 2010$", "R_2010"): "C421874",   # Layer 6 record l6r2 round 3, 3 October 2026: UNI-ROYAL 201007F270JT4E, 27 Ohm 1 % 3/4 W 2010, board D R54 and R56 (the certified table gave C2960829, a 5 % part, on lines that state 1 %)
+ (r"^600R 2A ferrite", "L_0805"): "C21519",   # Layer 6 record l6r2 round 3, 3 October 2026: TDK MPZ2012S601AT000, 600 Ohm at 100 MHz, 2 A 0805, board D FB1 (the certified table gave C1017, a 500 mA part, on a line that states 2 A)
+ (r"^5mOhm 1% 2512 \(RSR", "R_2512"): "C20108830",   # Layer 6 record l6r2 round 3, 3 October 2026: ROHM GMR100HJAAFD5L00, 5 mOhm 1 % 5 W, board A R17 (rule R-P: twice its I^2 R at the 18 A peak, 5 W); before the line below, which keeps the CS and slot shunts on the 3 W part
  (r"^5mOhm 1% 2512", "R_2512"): "C500739",    # LR2512D-3W-5mR-1%, 3 W, stock 15,156 (CS, RSR, the slot shunts)
  (r"^2mOhm 1% 2512", "R_2512"): "C2903471",   # HoJLR2512-3W-2mR-1%, 3 W, stock 13,329
  (r"^20mOhm 1% 2512", "R_2512"): "C500741",   # LR2512D-3W-20mR-1%, 3 W, stock 9,217
@@ -219,6 +224,16 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^750R 1%", "R_0603"): "C23241",        # UNI-ROYAL 0603WAF7500T5E, 1%, stock 604,141 (eFuse ILM, 1.2 A)
  (r"^909R 1%", "R_0603"): "C203878",       # BOURNS CR0603-FX-9090ELF, 1%, stock 24,090 (eFuse ILM, 1.0 A)
  (r"^453R 1%", "R_0603"): "C48136",        # UNI-ROYAL 0603WAF4530T5E, 1%, stock 2,604 (eFuse ILM, 2.0 A)
+}
+# RULE C-D3b ON THIS TABLE (Layer 6 record l6r2 round 3, 3 October 2026, MESHSAT-1357). The identity tool makes an unstated class 2 dielectric X7R (rule C-D3)
+# and takes X5R only "where no X7R part is made or stocked at the value, land and rating", recording the hot-spot question OPEN on
+# the selection (rule C-D3b, v2/ecad/tools/pcb_part_identities.yaml). Two lines of the MAP fill X5R parts under that rule: no X7R
+# line of JLCPCB's catalogue read on 3 October 2026 meets the value, the 1206 land and the rating with stock
+# (v2/docs/records/l6r2/l6r2_passives.out). This dict is DATA for tests/test_lcsc_fill_requirements.py, which accepts X5R on
+# these lines only; nothing in this script reads it. Remove a line when an X7R part is stocked.
+CD3B_X5R = {
+ (r"^47u 25V$", "C_1206"): "board A C1, C2 (the VBAT bulk): Murata GRM31CR61E476ME44L X5R; no 47 uF 25 V X7R 1206 stocked",
+ (r"^100u 10V$", "C_1206"): "board B (14 rows): HRE CGA1206X5R107M100NT X5R; no 100 uF 10 V X7R 1206 stocked",
 }
 # A BOARD THAT PLACES NO PART HAS NO BILL OF MATERIALS, AND THAT IS A DECLARED ZERO (17 September 2026, the
 # door `derate.py` already has for the same board). Board E5 is the dock block: copper, plated targets, wire
