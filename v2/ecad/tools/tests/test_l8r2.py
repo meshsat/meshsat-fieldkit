@@ -187,7 +187,7 @@ def t_the_netlist_check_reads_the_tree_not_drawn_and_the_fixtures_drawn():
         assert chk.judge(letter, chk.read_netlist(chk.fixture(letter)))[0] == "DRAWN"
     bad = chk.fixture("a").replace(b'(node (ref "U45") (pin "2"))', b'(node (ref "U45") (pin "99"))')
     assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL"
-    bad = chk.fixture("b").replace(b'"/FAN2_V") (node (ref "J_FAN2") (pin "1"))', b'"/FAN2_V")')
+    bad = chk.fixture("b").replace(b'"/CFAN2_V") (node (ref "J_FAN2") (pin "1"))', b'"/CFAN2_V")')
     assert chk.judge("b", chk.read_netlist(bad))[0] == "FAIL"
 
 
@@ -203,3 +203,22 @@ def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
     page = open(PAGE, encoding="utf-8").read()
     for s in ("E11-40", "S-111", "L5R2-F03", "L5R2-F04", "L5R2-F05", "P1-1", "REJECTED", "SELECTED", "NOT DRAWN", "R248", "DRAFT"):
         assert s in page, s
+
+
+def t_no_new_net_of_this_record_names_a_net_any_board_already_has():
+    """Every net this record's drafts add is new on EVERY board, not only on its own (the bring-up author's finding of 3 October
+    2026: board A's branch was first named +3V3_D8, board D's own rail's name, so one name crossed the harness for two rails)."""
+    chk = _mod(CHECK, "l8r2_check_under_test")
+    import glob
+    nets = set()
+    for p in glob.glob(os.path.join(ROOT, "v2", "ecad", "pcb-*", "out", "*.net")):
+        nl = chk.read_netlist(open(p, "rb").read())
+        nets |= {n for pins in nl["pins"].values() for n in pins.values()}
+    assert "+3V3_D8" in nets, "board D's own +3V3_D8 is not read: the netlists were not parsed"
+    for board in ("a", "b"):
+        for s in _mine(board):
+            m = _mod(s, "nets_" + os.path.basename(s)[:-3])
+            clash = sorted(set(getattr(m, "NETS", ())) & nets)
+            assert not clash, "%s adds %s, a net a committed netlist already carries" % (os.path.basename(s), clash)
+    d8 = _mod(os.path.join(REC, "apply_gen_sch_a_d8v3.py"), "nets_apply_gen_sch_a_d8v3")
+    assert "+3V3_A2D" in d8.NETS and "+3V3_D8" not in open(os.path.join(REC, "apply_gen_sch_a_d8v3.py"), encoding="utf-8").read()
