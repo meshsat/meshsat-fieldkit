@@ -21,13 +21,20 @@ fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
 353ce937cff0b719 v2/vendor/power/ti-csd19532q5b-n-fet.pdf
 518a45fa2ecddc6f v2/docs/records/l8r2/inputs/l7pwr-cooler-identity-2087060b.md
 acd61db263e3cfda v2/docs/records/l8r2/inputs/l5r2-findings-and-rows-6902db8f.md
-b0abefa8db146baf v2/docs/records/l8r2/inputs/SOURCES.txt
-240f17a19c2fa956 v2/docs/records/l8r2/check_l8r2_netlist.py
+fea4e8c8f3247c56 v2/docs/records/l8r2/inputs/SOURCES.txt
+f35d7ed49845d4a2 v2/docs/records/l8r2/check_l8r2_netlist.py
 292383193915b424 v2/docs/records/l8r2/fetch_held_back.py
 c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
 28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
 2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
 6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+b396d028b41e880d v2/docs/PANEL.md
+55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
+9b5cc24c3c9e286a v2/vendor/ti/ti-pca9555.pdf
+528fee9c7a3ebd46 v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py
+668223530e45e19b v2/docs/records/l8r2/inputs/fw-panel-F01-42c27369.md
+e4e4cea729995d59 v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py
+3861922c585a4019 v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
 d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
@@ -216,6 +223,15 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
   literal designators drawn twice in the composed board B generator: none
   board B's 700 and 900 blocks against every designator the generator builds from a base: free
 
+7b. ITEM 4, BOARD C'S PI BUTTON (the panel firmware's F-01): PIJ2_A2 on U1 P1.3 (PI_BTN_n)
+  R57 10 k to +3V3 with C27 100 nF to GND: tau 1.00 ms; a release reaches VIH (2.31 V, 0.7 x VCC) after 1.20 ms; a press pulls under VIL (0.99 V)
+    through FB3 and the contact; the pull-up's 0.33 mA through the closed contact
+  l6 then pibtn    OK
+  pibtn then l6    OK
+  the two orders give the same generator: YES
+  designators: Layer 6's draft none; this record's R57; intersection none (DISJOINT)
+  literal designators drawn twice in the composed board C generator: none
+
 8. THE NETLIST CHECK (check_l8r2_netlist.py)
   v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
     A VCO   NOT DRAWN: Q41.5 is on None, not VIN_RAW_IN
@@ -224,6 +240,8 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     B FANS  NOT DRAWN: J_FAN1.1 is on '+5V_S1', not CFAN1_V
     B PNL   NOT DRAWN: U901.5 is on None, not PANEL_5V_EF
     B PH4   NOT DRAWN: J_CAM on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical; J_QMX on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical
+  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256 c9f7394594201045
+    C PIBTN NOT DRAWN: U1.16 is on 'SPARE1', not PIJ2_A2
   record l8r2's corrections on the netlists: NOT DRAWN
   on fixtures carrying the drafts (built in check_l8r2_netlist.py, not files of the tree):
     A VCO   DRAWN
@@ -233,5 +251,7 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     B PNL   DRAWN
     B PH4   DRAWN
     fixture B: DRAWN
+    C PIBTN DRAWN
+    fixture C: DRAWN
 
 END

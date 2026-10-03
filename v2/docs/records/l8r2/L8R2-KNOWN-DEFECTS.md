@@ -22,6 +22,7 @@ Figures carry a class: **MAKER** (printed in a held sheet), **INFERRED** (derive
 | `apply_gen_sch_b_panel5v.py` | DRAFT, board B, item 3 (L5R2-F03): PANEL_5V behind an eFuse ahead of F1 |
 | `apply_gen_sch_a_d8v3.py` | DRAFT, board A, item 3 (L5R2-F05): board D's 3.3 V behind an eFuse |
 | `apply_gen_sch_b_ph4.py` | DRAFT, board B, item 3 (L5R2-F04): J_QMX and J_CAM on the JST PH 1x4 land |
+| `apply_gen_sch_c_pibtn.py` | DRAFT, board C, item 4 (the panel firmware's F-01): the PI button on U1 P1.3 with its pull-up and debounce |
 | `check_l8r2_netlist.py` | what the regenerated netlists must show, parsed; NOT DRAWN on the committed netlists today |
 | `l8r2_drafts.py`, `l8r2_drafts.out` | every figure with its class, the composition on boards A and B, the designator census, the netlist check |
 | `fetch_held_back.py` | TI's TPS4811-Q1 sheet (SLUSEE5E), held back by its terms, fetched from ti.com and checked by sha256 |
@@ -216,6 +217,63 @@ and J_QMX and J_CAM take it with LCSC C131334. The pins and nets are unchanged.
 
 **Acceptance.** J_QMX's and J_CAM's land is the JST PH (PH4: NOT DRAWN today). The contracts already say PH 1x4: no text changes.
 
+## 3d. Item 4: board C's PI button reaches no controller pin (the panel firmware's F-01)
+
+**The defect as found** (fnd/fw-panel at `42c27369`, `v2/firmware/panel/README.md` finding F-01, copied in
+`inputs/fw-panel-F01-42c27369.md`). SW_PI's contacts (PIJ2_A, PIJ2_B) pass FB3 and FB4 to J_PIJ2's two lands (PIJ2_A2, PIJ2_B2) and
+U11's clamps only: no RP2040 GPIO, no expander input, neither line on GND, no other board with a mating lead. All 30 GPIOs are used;
+the expanders' port 1 spares are free.
+
+**The decision: route it to the controller (SESSION), on the evidence.**
+- PANEL.md section 5: "The PI button: short press = `PI_SHDN_REQ` (clean shutdown of every module), hold 8 s = `PI_KILL`. The MAIN PWR
+  button is hardware to A22's power controller and the controller only sees its effect". HW-FW-CONTRACT FW-C03 says the same.
+  Only the controller can tell a short press from an 8 s hold.
+- ASSEMBLY.md's leads table (line 127): "PI button | SW_PI's contacts | C7 `J_PIJ2` lands (the panel controller reads it; nothing
+  leaves the backer)". **ASSEMBLY.md is right.**
+- The generator's own note (line 333: "PIJ2_A2 is the same part's open-drain INT output, held at +3V3 by R3 on board A") is the stale
+  statement. No board carries that lead. Were it built, a press would pull PI_SHDN_REQ, which the controller reads as a MAIN tap
+  (PANEL.md section 3, GPIO 18, and FW-A10: "it reads the pin as an input to see MAIN taps"), so the 8 s hold could not be told apart
+  from MAIN. The LTC2954 path stays what PANEL.md says: MAIN alone, hardware to A22.
+- The J_PIJ2 lands are kept (the switch's lead lands); only the stale note is corrected.
+
+**The circuit drawn (`apply_gen_sch_c_pibtn.py`).**
+- **The input:** PIJ2_A2 goes to U1 (PCA9555, 0x22) P1.3, pin 16, until now SPARE1. That is the inputs port, beside LIGHT_DAY_n and
+  LIGHT_NIGHT_n. The bit is named **PI_BTN_n** (low = pressed).
+- **The pull-up:** R57, 10 k (C25804) to +3V3.
+- **The return:** PIJ2_B2 is tied to this board's GND (FB4 pin 2, C27, J_PIJ2 pin 2, U11's second channel), so a press pulls
+  PIJ2_A2 low through FB3.
+- **The debounce:** C27, the 100 nF already across the pair, now runs from PIJ2_A2 to GND. With R57 it gives **tau 1.00 ms**.
+  - A release reaches VIH (2.31 V, 0.7 VCC, TI SCPS131J 6.3) after 1.20 ms.
+  - A press pulls under VIL (0.99 V) through the contact, which carries 0.33 mA.
+  - The board's other inputs use 10 k with 10 nF; the longer tau here suits a lead that passes the antenna feeds.
+- **The interrupt:** the expander raises EXP_INT on the change (SCPS131J 8.4.1), the controller's GPIO24, which FW-C14 already
+  services.
+- **Kept and moved:** SPARE1's test point moves to PIJ2_A2, so the button keeps test access, and U11's clamp stays on the A line.
+
+**The proof** (`l8r2_drafts.out` section 7b). Layer 6's `apply_gen_sch_c_lcsc.py`, the only other board C draft (fnd/l6r2 at
+`7633ae0a`, copied in `inputs/` with the helper `l6r2_apply.py` it imports, run in a scratch git repository because the helper asks
+git for its top level), and this draft give **the same generator in either order**. Layer 6's draft anchors on the layout's import
+line and keys codes by designator and value, and touches none of these lines. Designators: this draft adds **R57**, Layer 6's adds
+none; no literal designator is drawn twice.
+
+**The acceptance.** The regenerated board C netlist shows U1 pin 16 on PIJ2_A2, R57 between PIJ2_A2 and +3V3, and C27, FB4 pin 2 and
+J_PIJ2 pin 2 on GND (`check_l8r2_netlist.py` PIBTN: NOT DRAWN today, U1.16 on SPARE1). Bench (V-C03): a short press raises
+PI_SHDN_REQ for at least 200 ms and the 8 s hold raises PI_KILL; U1 P1.3 reads 0 with the button held and 1 released, through EXP_INT.
+
+**Texts for their owners (not edits).**
+- **PANEL.md section 4, U1's port 1 row 3:** "PI_BTN_n: the PI button, low = pressed (PIJ2_A2; R57 10 k to +3V3, C27 100 nF to GND,
+  tau 1.0 ms); raises EXP_INT on a change". The SPARE1 test point becomes the button's.
+- **PANEL.md section 1, the switches row:** "`SW_PI` (16 mm, lead pads `PIJ2_A/B`, read by U1 P1.3)".
+- **PANEL.md section 5:** add after the PI button's sentence "(read on U1 P1.3, PI_BTN_n, at every EXP_INT and the once-a-second
+  poll)".
+- **The firmware's hal.h:** the expander bit `U1 P1.3 = PI_BTN_n`, active low; `HAL_PI_BUTTON_WIRED` becomes 1 once the draft is
+  released and board C regenerated.
+- **The firmware's check:** "the PI button reaches no controller pin" is F-01's evidence and fails, as designed, on the regenerated
+  netlist; replace it with the bit check against U1 pin 16.
+- **ASSEMBLY.md line 127:** "(the panel controller reads it on U1 P1.3; nothing leaves the backer)". The row is already right in
+  substance.
+- **HW-FW-CONTRACT FW-C03:** "`C:J_PIJ2`" becomes "`C:U1` P1.3 (PI_BTN_n)".
+
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7)
 
 **Board A.**
@@ -284,4 +342,7 @@ each draft's own declared ADDS (the coolers' are computed per slot).
   bus after the cut under U3's absolute 32 V and Q7's 30 V.
 - Item 3's figures: each PANEL_5V conductor under 1 A with the limit over board C's peak; board D's branch inside its window.
 - The netlist check: NOT DRAWN on the committed netlists, DRAWN on fixtures, FAIL on a mutated fixture.
+- Board C: the PI button draft and Layer 6's give the same generator in either order; this one adds R57 alone; the button reaches
+  U1 P1.3 with R57 and C27, and the stale note is gone.
+- Every net the drafts add is new on every board.
 - The page carries no em or en dash and no claim word.

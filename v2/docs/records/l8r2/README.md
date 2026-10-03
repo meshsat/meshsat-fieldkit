@@ -12,9 +12,10 @@ repository's own generator until a `RELEASE.md` beside it names an accepted chec
 | `apply_gen_sch_b_panel5v.py` | DRAFT, board B: PANEL_5V behind a TPS259631 (1.375 to 1.614 A) ahead of F1 |
 | `apply_gen_sch_a_d8v3.py` | DRAFT, board A: board D's 3.3 V behind a TPS259631 (0.224 to 0.269 A) |
 | `apply_gen_sch_b_ph4.py` | DRAFT, board B: J_QMX and J_CAM on the JST PH 1x4 land |
+| `apply_gen_sch_c_pibtn.py` | DRAFT, board C: the PI button on U1 P1.3 (PI_BTN_n) with R57 10 k and C27 as its debounce (the panel firmware's F-01) |
 | `check_l8r2_netlist.py` | what the regenerated netlists must show, parsed; NOT DRAWN on the committed netlists |
 | `l8r2_drafts.py`, `l8r2_drafts.out` | the figures with their classes, the composition on boards A and B, the designators, the netlist check; inputs pinned by sha256; regenerated with `_bin/regen_out.py` |
 | `fetch_held_back.py` | TI's TPS4811-Q1 sheet (SLUSEE5E) into `v2/vendor/ti/held/`, checked by sha256 (held back by TI's terms) |
-| `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), byte for byte, `inputs/SOURCES.txt` |
+| `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), the panel firmware's F-01 (`fnd/fw-panel` at `42c27369`), Layer 6's board C draft with its helper (`fnd/l6r2` at `7633ae0a`), byte for byte, `inputs/SOURCES.txt` |
 
 Tests: `v2/ecad/tools/tests/test_l8r2.py` (`python3 run.py test_l8r2 test_public_hygiene` from the tests folder).
