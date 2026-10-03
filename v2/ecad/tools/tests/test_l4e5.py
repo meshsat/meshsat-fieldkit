@@ -166,6 +166,23 @@ def _sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
+BASE_UNAPPLIED = "2c240414"   # fnd/l4e9 before Layer 5's power pass applied this draft to the tree (3 October 2026)
+
+
+def _unapplied_contract():
+    """The contract as it stood before the draft was applied to the tree.
+
+    Layer 5's power pass (set 27, v2/docs/records/l5pwr/) applied this draft to the tree's HW-FW-CONTRACT.md on 3 October 2026, as
+    L4-E9's register row R-23 assigns to Layer 5. A fixture that copied the tree's file then refuses "already applied" and fails
+    on the day the draft reaches its target, which is a rule about history (a rule that fails when its subject is fixed). The
+    property is that the draft applies cleanly ONCE to the text it was written against and refuses a second time, so that text
+    is read from git at the last commit that carried it unapplied."""
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/HW-FW-CONTRACT.md" % BASE_UNAPPLIED], capture_output=True)
+    if r.returncode != 0:
+        raise Skip("commit %s is not in this repository (the unapplied contract is read from it)" % BASE_UNAPPLIED)
+    return r.stdout
+
+
 def t_apply_script_checks_applies_once_and_refuses_a_second():
     need(CONTRACT, "the hardware and firmware contract")
     need(APPLY, "the draft apply script")
@@ -173,7 +190,8 @@ def t_apply_script_checks_applies_once_and_refuses_a_second():
     d = tempfile.mkdtemp(prefix="l4e5-apply-")
     try:
         cp = os.path.join(d, "HW-FW-CONTRACT.md")
-        shutil.copyfile(CONTRACT, cp)
+        with open(cp, "wb") as fh:
+            fh.write(_unapplied_contract())
         orig = _sha(cp)
 
         def run(*a):
