@@ -225,3 +225,28 @@ records their URLs: `wifi/asiarf-AW7915-AED-datasheet.pdf` (AsiaRF's 260505 one-
 per-part data sheets and the Glenair sheets (both makers answered HTTP 403) and the Xenarc manual and drawing (served
 through a script); the Internet Archive was offline at 03:57Z, so their currency stays unconfirmed. The sources.txt and vendor-status.txt lines for these files are drafts
 (`drafts/hc6/vendor-lines.patch`), because both files are shared.
+
+## 8. Layer 7's fan picks and the T-H1 mock-up set (record l7pwr, 3 October 2026)
+
+Added by the Layer 7 author of MESHSAT-1357 (`v2/docs/records/l7pwr/`, its `l7pwr_fans_th1.out`). Prototype design: nothing
+bought, no cart, no login; every figure is a public page's reading at the time named, an indicator and never a quote. The
+readings are filed in `v2/docs/records/l7pwr/inputs/prices-2026-10-03.json` (makers' and sellers' own pages) and
+`inputs/findchips-fans-heaters-2026-10-03.json` (FindChips rows, the same aggregator section 1 used; a broker row is not a
+supported source, HC6-SC-12). Layer 6 (records/l6pwr) integrates the fans' identity rows; the picks are the session's (D-18
+settled under the owner's standing rule of 26 September 2026).
+
+| Item | Pick (authority: SESSION) | Why, in one line | Price read (3 October 2026) | Availability read | Alternative |
+|---|---|---|---|---|---|
+| the two mixer fans, board E `J_FAN1`/`J_FAN2` | Sanyo Denki 9WL0612P4H001 (60 x 60 x 25, IP68, 12 V, 2.04 W, 27.5 CFM, -20 to +70 C, 180,000 h at 60 C, pulse sensor and PWM) | the only 60 mm IP68 candidate printing REQ-043's -20 C, a life at 60 C, a tachometer and a PWM input; the lowest-power model of its family | USD 73.69 at 1 (Sager, a US distributor, through FindChips); no EU distributor row served: an EU price NOT READ | stock 0 at the one distributor read | Sunon GF60151B7-1E00U-AE9 (12 V, 4.5 to 13.8 V, 0.96 W, 18.2 CFM, IP68, 2 leads): EUR 39.79 at 1 (RS 2884467, stock 73); prints -10 C, no tachometer |
+| the three cooler fans, board B `J_FAN1..3` | Sanyo Denki 9WPA0412P6G001 (40 x 40 x 20, IP68, 12 V, 2.0 W, 13.4 CFM, -20 to +70 C, 40,000 h at 60 C, pulse sensor and PWM) | the only 40 mm IP68 fan whose maker's page this host reached; no 5 V IP68 40 mm fan exists in the lines read (Sunon's are 24 V, Sanyo Denki's 12 and 24 V, Delta's part numbers served by script) | EUR 58.83 at 1 (RS 101593, through FindChips); Farnell 4218284 EUR 76.83 at 1 | RS stock 51; Farnell stock 0 | Sunon GF40282B3-1000U-SEP (40 x 40 x 28, 24 V, 14.7 CFM, IP68): USD 16.40 at 1 (Sager, stock 0); its range, temperature and life not read |
+| the fans' mounts in the mock-up (and the kit's coolers) | Raspberry Pi Cooler for Compute Module 5, a passive heatsink 56 x 41 x 12.7 | the maker's cooler carries no fan; the fan sits over it | EUR 4.49 excl. VAT (5.43 incl.), kiwi-electronics.com KW-3425 | 75 in stock | none needed |
+| T-H1's case and frame | Peli 1450, Peli 1450PF | the ruled case and the frame the plate sits on | EUR 168.90 and 29.66 excl. VAT (flight-cases.eu; the frame a special price, regular 32.96) | "Normal in stock"; the frame's stock not shown | none: the case is ruled |
+| T-H1's plate blank and dummy boards | 3 mm EN AW-5754 cut to size (metaalshopper.nl) | the plate at CASE-MARGINS C1's 377.2 x 263.0; blanks at the boards' outlines | EUR 278.07/m2 excl. VAT plus 0.44 per piece and 9.95 handling: 28.03 for the plate, 48.56 for the five blanks (MODELED from the per-m2 price) | shipped within 6 working days | JLCCNC by quote (READY-TO-ACT 5.2 [W27]) |
+| T-H1's heaters | Arcol HS50 6R8 J, three | the draft's 6.8 ohm 50 W heaters (21.2 W each at 12.0 V) | EUR 5.04 at 1 (RS 160922, through FindChips); Farnell 4044345 EUR 3.65 (stock 0); Rapid GBP 2.00 (VAT mode not resolved) | RS stock 921 | HS50 6R8 F (1 %), the same body |
+| T-H1's loggers and thermocouples | two PicoLog TC-08, eighteen SE000 type K PTFE 1 m | sixteen channels plus two spares | GBP 349 each and GBP 10.50 each (picotech.com; VAT treatment not stated) | "Currently In Stock" | SE001 fiberglass 1 m at the same price |
+| T-H1's supplies | two KORAD KA3005P (0 to 30 V, 0 to 5 A, USB/RS232 logging) | the heaters' and the fans' own channels, both logged for P | EUR 89.00 incl. 19 % VAT each (reichelt.com; list 109.00; 74.79 excl. VAT by arithmetic) | "Available on 10/9/2026" as printed | the owner's own bench supply if one logs V and I |
+
+The bill's totals of the prices read (no conversion, no rate read): EUR 639.76 excl. VAT, GBP 887.00, USD 147.38; with no
+read price: the dummy pack block, the fan brackets (a Layer 7 CAD item), the consumables and an optional chamber point.
+The fans' prices and stocks are the aggregator's rows at 00:27 UTC and are true only then; the makers' documents are listed
+in `v2/vendor/SOURCES.yaml` under `documents_filed_l7pwr` and in `v2/vendor/sources.txt`.
