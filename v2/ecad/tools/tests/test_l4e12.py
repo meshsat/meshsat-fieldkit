@@ -560,8 +560,10 @@ def t_the_outside_capacity_and_the_three_classes():
     """The addendum to the fix round (the record's 17.9, the .out's 12e): every line against the MODELLED outside capacity with a zero
     inside resistance, bare and with the combined route; a line is over the model only where no coefficient end in the held ranges
     carries it, and then it is put in a named category by its own property (the review of the provisional fixes, L4-F04): a MISSING
-    STORAGE QUALIFICATION when its limit is an operating row INFERRED to cover the part unpowered, a DEMONSTRATED CONFLICT only on a
-    measured local temperature over the limit with the route fitted, else a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT."""
+    STORAGE QUALIFICATION when its limit is an operating row INFERRED to cover the part unpowered, a DEMONSTRATED CONFLICT only when
+    every admitted arrangement has a measured local temperature over the limit or a bound says none can meet it (the recheck's
+    discrepancy 6: one arrangement's failure is a MEASURED SHORTFALL OF ONE ARRANGEMENT), else a MODELLED SHORTFALL OF THE ANALYSED
+    ARRANGEMENT; the rule and the soak specification (the claimed +70 C at the glass, the required durations) are on the page and the .out."""
     import math
     R = _R()
     m = _CACHE["M"]
@@ -592,14 +594,32 @@ def t_the_outside_capacity_and_the_three_classes():
     over = sorted(set((e["mode"], e["line"]["short"], e["cat_over"]) for e in cp["lines"] if e["cls"] == "over"))
     assert over == [("M3", "the SGP41's Table 4", m.CAT_MODEL), ("M4", "the SGP41's Table 4", m.CAT_MODEL),
                     ("M6", "the EPAPER's +60 C", m.CAT_STORE), ("M7", "the EPAPER's +60 C", m.CAT_STORE)]
-    # no conflict is demonstrated while nothing is measured; a measured local temperature over the limit with the route fitted
-    # makes one, and neither a reading under the limit nor one without the route does
-    assert m.MEASURED_LOCAL == () and cp["conflict"] == []
+    # no conflict is demonstrated while nothing is measured; one arrangement's measured failure is that arrangement's shortfall; the
+    # measured failure of every admitted arrangement, or a bound that none can meet the limit, makes a conflict; a reading under the
+    # limit changes nothing; an arrangement the design does not admit is refused
+    assert m.MEASURED_LOCAL == () and m.NO_ARRANGEMENT_BOUND == () and cp["conflict"] == []
+    assert len(m.ADMITTED_ARRANGEMENTS) == 2 and "relocated" in m.ADMITTED_ARRANGEMENTS[1]
     e3 = [e for e in cp["lines"] if e["mode"] == "M3" and e["cls"] == "over"][0]
-    lim = e3["line"]["t"]
-    assert m.over_category(e3, [("M3", e3["line"]["short"], lim + 1.0, True)]) == m.CAT_CONFLICT
-    assert m.over_category(e3, [("M3", e3["line"]["short"], lim - 1.0, True)]) == m.CAT_MODEL
-    assert m.over_category(e3, [("M3", e3["line"]["short"], lim + 1.0, False)]) == m.CAT_MODEL
+    lim, sh = e3["line"]["t"], e3["line"]["short"]
+    A0, A1 = m.ADMITTED_ARRANGEMENTS
+    assert m.over_category(e3, [("M3", sh, lim + 1.0, A0)]) == m.CAT_MEASURED
+    assert m.over_category(e3, [("M3", sh, lim + 1.0, A1)]) == m.CAT_MEASURED
+    assert m.over_category(e3, [("M3", sh, lim + 1.0, A0), ("M3", sh, lim - 1.0, A1)]) == m.CAT_MEASURED
+    assert m.over_category(e3, [("M3", sh, lim + 1.0, A0), ("M3", sh, lim + 1.0, A1)]) == m.CAT_CONFLICT
+    assert m.over_category(e3, [], [("M3", sh)]) == m.CAT_CONFLICT
+    assert m.over_category(e3, [("M3", sh, lim - 1.0, A0)]) == m.CAT_MODEL
+    assert m.over_category(e3, [("M4", sh, lim + 1.0, A0), ("M4", sh, lim + 1.0, A1)]) == m.CAT_MODEL, "another mode's readings"
+    try:
+        m.over_category(e3, [("M3", sh, lim + 1.0, "the route fitted")])
+        raise AssertionError("an arrangement the design does not admit was accepted")
+    except ValueError:
+        pass
+    for f_ in (open(PAGE, encoding="utf-8").read(), open(OUT, encoding="utf-8").read()):
+        flat = " ".join(f_.split())
+        assert m.CONFLICT_RULE in flat and m.SOAK_SPEC in flat, "the rule or the soak specification is not stated as the script holds it"
+        assert "a line enters it only on a measured local temperature over a mandatory limit with the route fitted" not in flat
+        assert "only if a measurement demonstrates the conflict" not in flat and "only when a measurement demonstrates the conflict" not in flat
+        assert "only if the conflict is demonstrated" not in flat and "at the mode's temperature, its function read back" not in flat
     assert all(e["cls"] == "i" for e in cp["lines"] if "hot stop H1" in e["line"]["short"])
     assert all(a_ < b_ < 40.0 for a_, b_ in cp["ceil_sgp"].values()), "the SGP41's closed-lid ceilings lie under +40 C at both ends"
     assert cp["epaper"]["M7"]["need"] is None and cp["epaper"]["M6"]["need"] < cp["epaper"]["M6"]["need_hi"] < 5.417

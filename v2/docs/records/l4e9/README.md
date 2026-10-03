@@ -98,7 +98,13 @@ round (`af4672f4`, its section 18; output section 26f) after Layer 7's D-18 (`v2
 LTC3115-1 as TA04 with L4 Coilcraft XAL6060-103ME; a fan fault a rail hiccup, not a U12 reset), the branch declared 1.3208 A
 (89.8 % of U42's least limit, R228 kept), E11-39 a PWM-duty ramp, E11-40 a finding for board B's owner (R-190, the coolers on
 +5V_Sn), the purchase list with Layer 7's fan prices read from its FindChips file at that commit, the handoff's omitted
-dependencies without the fan-feed round; the register at 180 items. Status: known defects addressed in drafts; feasibility conditions remain
+dependencies without the fan-feed round; the register at 180 items. Round 4 (a) (3 October 2026, after Astra's targeted recheck
+`records/l4close/checks/astra-check-l4close-2.md`, NOT YET, its blocking discrepancy 6): the escalation rule of L4-F04 corrected in
+L4-E12's 17.9 and here (a DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits, the
+analysed one and the route with the local sensor relocated, or a bound that none can meet the limit; one arrangement's failed local
+test is that arrangement's shortfall and the next arrangement is tried), OW-1 and OW-10 reworded, U-02's texts and the behaviour row
+with them; the e-paper soak (R-185 and the route row) set to the claimed +70 C at the glass for E5's 6 h and E3-O's 4 h behind the
+window with its uncertainty and recovery criteria (an ambient-only +55 or +60 C soak establishes nothing above the ambient). Status: known defects addressed in drafts; feasibility conditions remain
 open.
 
 | File | What it is |
