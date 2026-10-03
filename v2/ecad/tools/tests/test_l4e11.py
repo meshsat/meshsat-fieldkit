@@ -39,7 +39,10 @@ I2t conversion; the dock's VSYS branch sits behind an eFuse whose printed limit 
 PTC fail on their printed rows, and the feed's drop clears U12; the record states each item's status. The second review (L4-CP01 to
 L4-CP03) adds: U42's fault envelope rests only on printed limits and states its inferred ceiling; the fans' start fits U42's least limit;
 the docking waveform's qualification exceeds the waveform; the charger draft writes none of the withdrawn statements; each measurement
-row names its specimen and blocks only the final release. Nothing here writes into the tree:
+row names its specimen and blocks only the final release. The fans' feed round (section 18) adds: the mixers' rail covers VSYS_E's
+range and holds the fans' printed window, its RUN divider sits between the floor and U12's start, the inductor's saturation sits over the
+regulator's limit, the branch's declared current with the rail's input at the floor stays under U42's least limit, the board E draft writes
+the rail and the four-wire fans and no flyback, and board B's feed is read as not covering the coolers. Nothing here writes into the tree:
 drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -426,7 +429,7 @@ def t_every_downstream_item_has_one_owner_and_an_acceptance():
     R = _R()
     m = _M()
     owners = {"Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
-              "Layer 8 board E generator owner", "Layer 9 pre-layout analysis", "prototype bench", "firmware owner", "CONOPS owner"}
+              "Layer 8 board E generator owner", "Layer 8 board B generator owner", "Layer 9 pre-layout analysis", "prototype bench", "firmware owner", "CONOPS owner"}
     items = m.downstream(R)
     assert [x[0] for x in items] == ["E11-%02d" % k for k in range(1, len(items) + 1)]
     page = open(PAGE, encoding="utf-8").read()
@@ -447,7 +450,8 @@ def t_the_record_carries_the_outputs_numbers():
               "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302",
               "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32",
               "33.12", "126.7", "0.2589", "1.3571", "10.753", "3.785", "0.703", "5.74", "123.3", "1.501", "1.8018", "1.4713", "9.539",
-              "0.1486", "152.8", "51.5", "80.9", "566", "1.441", "41.1", "0.3356", "0.5713", "9.494", "267.2", "37.2", "11.93"):
+              "0.1486", "152.8", "51.5", "80.9", "566", "1.441", "41.1", "0.3356", "0.5713", "9.494", "267.2", "37.2", "11.93",
+              "1.3208", "0.5208", "89.8", "0.1504", "9.508", "8.33", "6.89", "12.001", "0.72 W", "97.4", "37.7", "8.54"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -638,7 +642,7 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
                      '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
                      '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
-                     '"R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
+                     '"R17", "Q39", "Q40", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.32, "U4": 2.0'):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -724,11 +728,13 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
         ta, te = open(a, encoding="utf-8").read(), open(e, encoding="utf-8").read()
         assert '"POGO12",\n     {"1": "VSYS_DOCK", "2": "GND"' in ta
         assert '"1": "VBAT", "2": "VBAT", "3": "VBAT"' in ta and '"18": "VSYS_DOCK", "19": "VSYS_DOCK", "20": "VSYS_DOCK"' in ta, "U42 is not between VBAT and VSYS_DOCK"
-        assert 'r("R221", "11k 0.1%", "EF_ILIM", "GND")' in ta and 'loads={"J_DOCK": 1.0}' in ta and 'loads={"U42": 1.0, "U4": 2.0' in ta
+        assert 'r("R228", "11k 0.1%", "EF_ILIM", "GND")' in ta and 'loads={"J_DOCK": 1.32}' in ta and 'loads={"U42": 1.32, "U4": 2.0' in ta
         assert '"POGO_T6",\n     {"1": "VSYS_E", "2": "GND"' in te
         assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
-        assert te.count('{"1": "VSYS_E", "2": "FAN%s_SW" % n') == 2 and 'loads={"P_CP": 9.0},' in te
-        assert '_intent.rail("VSYS_E", 14.4, 1.0, 1.0, "J_BLK"' in te and 'loads={"U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1}' in te
+        assert 'loads={"P_CP": 9.0},' in te and '{"1": "+12V_FAN", "2": "GND", "3": "FAN%s_PWM_OD" % n, "4": "FAN%s_TACH" % n}' in te
+        assert '_intent.rail("VSYS_E", 14.4, 1.32, 1.32, "J_BLK"' in te and 'loads={"U12": 0.8, "U18": 0.52}' in te
+        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4"' in te and 'ic("U18", 21, "LTC3115EFE-1' in te
+        assert 'part("D%s" % ("7" if n == "1" else "8")' not in te and te.count("FAN%s_SW") == 1, "the chopped supply's flybacks or nodes survive"
         left = set()
         for ln in te.splitlines():
             for st in re.split(r"\);\s*", ln):
@@ -750,7 +756,7 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
                 elif isinstance(o, list):
                     stack.extend(o)
         assert dock["pins"][1] == "VSYS_DOCK" and ["VSYS_DOCK", "VSYS_E", "A's VSYS through its eFuse U42 to E's auxiliary domain on pin 1 (L4-E11)"] in dock["aliases"]
-        assert "2.238 A, 2.406 A" in dock["aux_feed"] and "%s to %s V" % ("9.688", "17.375") in dock["aux_feed"]
+        assert "2.238 A, 2.406 A" in dock["aux_feed"] and "%s to %s V" % ("9.688", "17.375") in dock["aux_feed"] and "1.32 A declared" in dock["aux_feed"]
         assert '({"VSYS_DOCK", "VSYS_E"},' in open(c, encoding="utf-8").read()
     for tree in (os.path.join(TOOLS, "pcb_interfaces.yaml"), os.path.join(TOOLS, "check_contracts.py")):
         r = _run([os.path.join(REC, "apply_pcb_interfaces_dock.py"), tree, "--write"])
@@ -921,7 +927,7 @@ def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_ceiling
     assert "NOT an instantaneous ceiling" in out and "0.0091" not in out.split("16e. ")[1], "the typical 45 A still bounds a pulse"
     assert "STATUS: sustained-overload remedy drafted; fault qualification open" in out
     row = [x for x in m.downstream(R) if x[0] == "E11-38"][0][3]
-    for case in ("(b) an operating overload", "(c) a 10 mOhm short applied", "(d) a start into that short", "(e) one hour of retry", "(f) both fans"):
+    for case in ("(b) an operating overload", "(c) a 10 mOhm short applied", "(d) a start into that short", "(e) one hour of retry", "(f) with the fans"):
         assert case in row, case
 
 
@@ -956,3 +962,51 @@ def t_every_measurement_row_names_its_specimen_and_blocks_only_the_final_release
         rows = [l for l in sec.splitlines() if l.startswith("| Row %s |" % iid)]
         assert len(rows) == 1 and rows[0].count("|") == 6, iid
         assert "release" in rows[0].split("|")[5] or "selection" in rows[0].split("|")[5] or "choice" in rows[0].split("|")[5], iid
+
+
+def t_the_board_a_drafts_add_disjoint_designators():
+    """Every board A draft under records/l4e* applied to a copy of gen_sch_a.py (L4-E8's bank after L4-E6's R12, its stated order);
+    the designators each adds are read from the text it writes, and no two drafts add the same one (L6P-F01)."""
+    _M()
+    import glob
+    pat = re.compile(r"\b([RCDLQU]\d{1,3}|J_[A-Z0-9]+)\b")
+    drafts = sorted(glob.glob(os.path.join(ROOT, "v2", "docs", "records", "l4e*", "apply_gen_sch_a_*.py")))
+    assert os.path.join(REC, "apply_gen_sch_a_charger.py") in drafts and len(drafts) >= 7
+    r12 = [d for d in drafts if d.endswith("apply_gen_sch_a_r12.py")]
+    added = {}
+    for d in drafts:
+        with tempfile.TemporaryDirectory() as td:
+            a = os.path.join(td, "gen_sch_a.py")
+            shutil.copy(GEN_A, a)
+            pre = r12 if d.endswith("apply_gen_sch_a_bank.py") else []
+            for s in pre:
+                assert _run([s, a, "--write"]).returncode == 0, s
+            before = set(pat.findall(open(a, encoding="utf-8").read()))
+            r = _run([d, a, "--write"])
+            assert r.returncode == 0, "%s: %s" % (os.path.relpath(d, ROOT), r.stderr.decode()[-200:])
+            added[os.path.relpath(d, ROOT)] = set(pat.findall(open(a, encoding="utf-8").read())) - before
+    mine = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_charger.py"), ROOT)]
+    assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40"} <= mine and "R221" not in mine
+    names = sorted(added)
+    for i, x in enumerate(names):
+        for y in names[i + 1:]:
+            both = added[x] & added[y]
+            assert not both, "%s and %s both add %s" % (x, y, sorted(both))
+
+
+def t_the_fans_rail_covers_vsys_e_and_the_branch_stays_under_u42s_least_limit():
+    R = _R()
+    m = _M()
+    N, L, K, H = R["N18"], R["L"], R["K"], R["H"]
+    assert N["vin"][0] <= N["vsys_e_at_lim"] and N["vin"][1] >= H["vsys_top"], "the rail's input range does not cover VSYS_E"
+    assert m.L7_FAN["v_lo"] < N["vout"][0] and N["vout"][2] < m.L7_FAN["v_hi"], "the rail at FB's limits leaves the fans' printed window"
+    assert N["run_on"][2] < N["vsys_e_at_lim"] and N["run_off"][0] > K["ap_vin"][0], "the RUN divider is not between the floor and U12's start"
+    assert N["l_isat"] > N["ilim"][2], "the inductor saturates under the regulator's limit"
+    assert abs(N["i_decl"] - (K["aux"]["U12"] + N["p_fans"] / (m.F18_ETA * N["vsys_e_floor"]) + m.F18_IQ_PWM)) < 1e-9
+    assert N["i_decl"] < L["ilim"][0] and N["i_decl"] > 1.0, "the branch's declared current is not between the old 1.0 A and U42's least limit"
+    assert N["t63_vin"][1] < H["vsys_top"], "TPS63070's range would cover VSYS_E"
+    assert N["b_slot_v"] < m.L7_FAN["v_lo"] and not N["b_has_12v"], "board B's slot rail covers the coolers, or a +12V net exists"
+    page = open(PAGE, encoding="utf-8").read()
+    assert "| E11-40 | implementation | Layer 8 board B generator owner |" in page
+    row = [x for x in m.downstream(R) if x[0] == "E11-38"][0][3]
+    assert "(g) one fan stalled" in row and "U18 never disables" in row
