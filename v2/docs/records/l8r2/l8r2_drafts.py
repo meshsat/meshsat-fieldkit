@@ -815,7 +815,9 @@ def item1_r4():
     duty = V["duty_max"]; cap_w = duty * s1f["out"][2] / s1f["eta"]
     lo_ap, nom_ap = vout_least(V["vfb_ap"], V["fb_div"]); lo_lm, nom_lm = vout_least(V["vref_lm"], V["fb_div"])
     vl_ap, vl_lm = lo_ap * (1 - V["drop"]), lo_lm * (1 - V["drop"])
-    o["v"] = {"nominal_ap": nom_ap, "least_ap": lo_ap, "load_ap": vl_ap, "least_lm": lo_lm, "load_lm": vl_lm}
+    rt, rb, tol = V["fb_div"]; hi_ratio = 1 + rt * (1 + tol) / (rb * (1 - tol))
+    o["v"] = {"nominal_ap": nom_ap, "least_ap": lo_ap, "load_ap": vl_ap, "least_lm": lo_lm, "load_lm": vl_lm,
+              "most_ap": V["vfb_ap"][2] * hi_ratio, "most_lm": V["vref_lm"][2] * hi_ratio}
     base, peak = slot_loads(open(GEN_B, encoding="utf-8").read())
     r3 = round(duty * V["pfan"] / V["eta"] / 5.0, 2)
     decl3 = sum(v for k, v in base[1].items() if k != "J_FAN1") + r3
@@ -975,6 +977,8 @@ def item1_r4_print(w):
     w("    the module's own words (CM5 datasheet 2.11 and the pin table): '%s' '%s' '%s'\n" % (s["cm5_oc"], s["cm5_shut"], s["cm5_pe"]))
     w("    the stock CM5 tree (linux bcm2712-rpi-cm5.dtsi, held): the fan node %s; cooling levels %s of 255; period %d ns, %.2f kHz against the maker's 25 kHz\n"
       % (s["dts"][0], " ".join(str(x) for x in s["dts"][1]), s["dts"][2], 1e6 / s["dts"][2]))
+    w("    the fan's PWM lead pulled by R7x12 to +5V_Sn: at most %.3f V on the AP64500 stage, %.3f V on the LM5176 stage (the reference's highest on the divider's highest ratio), against the catalogue example's VIH %.2f to %.2f V and its open terminal's %.2f V at most; the model's own level is the maker's question (C4-4)\n"
+      % ((v["most_ap"], v["most_lm"]) + V["pwm_in"][0] + (V["pwm_in"][4],)))
     w("    board B (gen_sch_b.py, read): R{s}06 100 k holds PCIE_PWR_EN{s} low (%s); the card's supply enable U{s}16 = EMCON_HW AND PCIE_PWR_EN{s} (%s)\n"
       % ("READ" if s["pce_pd"] else "NOT READ", "READ" if s["gate"] else "NOT READ"))
     w("    VERDICT: round 2's full speed is the default in every state the firmware does not drive; the 70 % maximum is enforced in none of boot (card on), reset, a driver fault or an open lead, and the AP64500 is over 5 A in each\n")

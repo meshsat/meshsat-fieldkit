@@ -295,6 +295,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
     the start on the AP64500: its inductor's peak 7.566 A over its least HS peak limit 6.8 A: the cycle limit acts, and 512 cycles at the limit enter hiccup (DS41979 7): the slot drops
     the module's own words (CM5 datasheet 2.11 and the pin table): 'Fan_PWM : An open-collector output pin designed to drive a variety of PWM-controlled fans.' 'During CM5 shutdown, power to the Fan_PWM signal is also stopped.' 'PCIE_PWR_EN 3.3 V signal: active high, used to signal that a PCIe device can be powered down when low'
     the stock CM5 tree (linux bcm2712-rpi-cm5.dtsi, held): the fan node disabled; cooling levels 0 75 125 175 250 of 255; period 41566 ns, 24.06 kHz against the maker's 25 kHz
+    the fan's PWM lead pulled by R7x12 to +5V_Sn: at most 5.226 V on the AP64500 stage, 5.252 V on the LM5176 stage (the reference's highest on the divider's highest ratio), against the catalogue example's VIH 4.75 to 5.25 V and its open terminal's 5.25 V at most; the model's own level is the maker's question (C4-4)
     board B (gen_sch_b.py, read): R{s}06 100 k holds PCIE_PWR_EN{s} low (READ); the card's supply enable U{s}16 = EMCON_HW AND PCIE_PWR_EN{s} (READ)
     VERDICT: round 2's full speed is the default in every state the firmware does not drive; the 70 % maximum is enforced in none of boot (card on), reset, a driver fault or an open lead, and the AP64500 is over 5 A in each
   4. COOLING AND THE CONVERTER'S OWN THERMAL CAPABILITY
