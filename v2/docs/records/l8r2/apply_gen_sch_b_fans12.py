@@ -7,16 +7,16 @@ Layer 7 selected (Sanyo Denki 9WPA0412P6G001, record l7pwr at 2087060b: 12 V, op
 sensor and PWM; the PWM input level, the pulse output's type and the starting current NOT READ) needs 10.8 to 13.2 V.
 
 What it draws, per slot s (designators in the 700 block, 700 + 30 (s - 1) + k, registered in SLOT_EXTRA[s] as _cx() does):
-  U7x1  TPS61089 boost (TI SLVSD38C) from +5V_Sn to FANs_12V at 11.52 to 12.42 V (R7x3 88.7k over R7x4 10k on VREF 1.188 to
+  U7x1  TPS61089 boost (TI SLVSD38C) from +5V_Sn to FANs_12V at 11.51 to 12.43 V (R7x3 88.7k over R7x4 10k on VREF 1.188 to
         1.236 V); 498 kHz (R7x1 301k, Equation 3); peak current limit 7.3 to 8.9 A (R7x2 127k, the printed row); L7x1 4.7 uH
-        XAL6060-472ME (Isat 11 A, board A's own part); COMP R7x5 15.8k with C7x8 47 nF (Equations 17 and 18), C6 open (Equation
-        19 under 10 pF); VCC C7x2 4.7 uF ("more than 1.0 uF"); BOOT C7x1 100 nF; input C7x3 10 uF 25 V 1210 and C7x4 100 nF at VIN;
+        XAL6060-472ME (Isat 11 A, board A's own part); COMP R7x5 23.7k with C7x8 47 nF (Equations 17 and 18 at an effective 33 uF,
+        an ASSUMPTION; 10 kHz crossover, 5 to 15 kHz over 66 to 22 uF), C6 open (Equation 19 under 10 pF); VCC C7x2 4.7 uF ("more than 1.0 uF"); BOOT C7x1 100 nF; input C7x3 10 uF 25 V 1210 and C7x4 100 nF at VIN;
         output C7x5 to C7x7 3 x 22 uF 25 V 1210 (TI: "three 22-uF ceramic output capacitors work for most applications"); EN on
         +5V_Sn (EN absolute maximum 7 V), so an empty or unpowered slot's fan is dark, as the slot rail is.
-  U7x2  TPS259631 eFuse (board B's efuse() helper, TI SLVSET8A) from FANs_12V to FANs_V: current limit 0.449 to 0.538 A
+  U7x2  TPS259631 eFuse (board B's efuse() helper, TI SLVSET8A) from FANs_12V to FANs_V: current limit 0.448 to 0.538 A
         (R7x6 1.87k by Equation 7, the tolerance interpolated between the printed 909 Ohm and 3.83 k rows: INFERRED), so a shorted
         fan lead takes 0.54 A at most and the boost's inductor and body diode never carry the slot rail's limit; OVLO 100k over
-        10k cuts the fan at 12.64 to 13.66 V (VOVLO(R) 1.17 to 1.22 V, 1 % parts) against the boost's own OVP 12.7 to 13.6 V; EN
+        10k cuts the fan at 12.64 to 13.67 V (VOVLO(R) 1.17 to 1.22 V, 1 % parts) against the boost's own OVP 12.7 to 13.6 V; EN
         pulled to +5V_Sn through R7x10 100k (SLVSET8A note 2: under 6 V, 100 k or more); FLT pulled to +3V3_DEV (R7x7).
   Q7x1  the tach stage, board B's level() helper: a 2N7002 with its gate on the module's +3V3_CMs, source on FAN_TACHOs (R7x11 10k
         to +3V3_CMs, beside the module's own pull-up), drain on the fan's pulse lead FANs_TACH: whatever the fan's pulse output
@@ -67,13 +67,13 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
     _fQ = lambda k: "Q%d" % (_fb + k); _fR = lambda k: "R%d" % (_fb + k); _fC = lambda k: "C%d" % (_fb + k)
     f12, fv, fsw = "FAN%d_12V" % s, "FAN%d_V" % s, "FAN%d_SW" % s
     # U7x1 TPS61089 (TI SLVSD38C): 1 FSW, 2 VCC, 3 FB, 4 COMP, 5 GND, 6 VOUT, 7 EN, 8 ILIM, 9 VIN, 10 BOOT, 11 SW (Table 6-1).
-    ic(_fU(1), 11, "TPS61089 boost 12.0 V: S%d's cooler fan (11.52 to 12.42 V, 498 kHz, ILIM 7.3 to 8.9 A)" % s, "QFN11",
+    ic(_fU(1), 11, "TPS61089 boost 12.0 V: S%d's cooler fan (11.51 to 12.43 V, 498 kHz, ILIM 7.3 to 8.9 A)" % s, "QFN11",
        {"1": "FAN%d_FSW" % s, "2": "FAN%d_VCC" % s, "3": "FAN%d_FB" % s, "4": "FAN%d_COMP" % s, "5": "GND", "6": f12, "7": n5,
         "8": "FAN%d_ILIM" % s, "9": n5, "10": "FAN%d_BOOT" % s, "11": fsw}, "C165129")
     part(_fL(1), "Device", "L", "4.7uH XAL6060-472ME (Isat 11 A)", "L6060", {"1": n5, "2": fsw})
     r(_fR(1), "301k 1% (FSW: 498 kHz)", "FAN%d_FSW" % s, fsw, "R", "C2933194"); r(_fR(2), "127k 1% (ILIM 7.3 to 8.9 A)", "FAN%d_ILIM" % s, "GND")
     r(_fR(3), "88.7k 1%", f12, "FAN%d_FB" % s); r(_fR(4), "10k 1%", "FAN%d_FB" % s, "GND")   # 1.212 V x (1 + 88.7 / 10) = 11.96 V
-    r(_fR(5), "15.8k 1%", "FAN%d_COMP" % s, "FAN%d_COMPC" % s); c(_fC(8), "47n", "FAN%d_COMPC" % s, "GND", "C", "C1622")
+    r(_fR(5), "23.7k 1%", "FAN%d_COMP" % s, "FAN%d_COMPC" % s); c(_fC(8), "47n", "FAN%d_COMPC" % s, "GND", "C", "C1622")
     c(_fC(1), "100n", "FAN%d_BOOT" % s, fsw); c(_fC(2), "4.7u", "FAN%d_VCC" % s, "GND", "C10u", "C354262")   # CC0805KKX7R8BB475, X7R 25 V 0805
     c(_fC(3), "10u 25V 1210", n5, "GND", "C1210", "C2918497"); c(_fC(4), "100n", n5, "GND")
     for _k in (5, 6, 7): c(_fC(_k), "22u 25V 1210", f12, "GND", "C1210", "C2918511")
@@ -81,8 +81,8 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
                    "recommended as close as possible to the VIN pin'")
     _intent.bypass(_fC(2), _fU(1), "2", "FAN%d_VCC" % s, cls="L", basis="TI SLVSD38C (TPS61089) Table 6-1 and 9.2.2.6: VCC 'Output of the "
                    "internal regulator. A ceramic capacitor of more than 1.0 uF is required'", value_floor="1u")
-    # U7x2 TPS259631 eFuse (board B's helper): the fan lead's short is limited at 0.449 to 0.538 A (R 1.87k, Equation 7; the
-    # tolerance interpolated between SLVSET8A's printed rows, INFERRED); its OVLO (100k / 10k) cuts the fan at 12.64 to 13.66 V.
+    # U7x2 TPS259631 eFuse (board B's helper): the fan lead's short is limited at 0.448 to 0.538 A (R 1.87k, Equation 7; the
+    # tolerance interpolated between SLVSET8A's printed rows, INFERRED); its OVLO (100k / 10k) cuts the fan at 12.64 to 13.67 V.
     efuse(_fU(2), f12, fv, "FAN%d_EN" % s, "FAN%d_FLT" % s, [_fC(9), _fR(6), _fR(7), _fR(8), _fR(9), _fC(10)], "1.87k 1% (ILM: 0.49 A)")
     r(_fR(10), "100k", "FAN%d_EN" % s, n5)   # SLVSET8A note 2: EN pulled to a supply under 6 V through 100 k or more
     # The control lines cross a 2N7002 stage each, so the module's pins never see the fan's own levels (NOT READ).
@@ -94,19 +94,19 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
         SLOT_EXTRA[s].add(_ref)
     _intent.rail(f12, 12.0, 0.17, 0.54, _fU(1), loads={_fU(2): 0.17}, converted=True, efficiency=0.85, fed_from=n5, switch=_fU(1),
                  source_ic="U%d is a TPS61089 boost: its VOUT pin is the power path (the synchronous rectifier is internal)" % (_fb + 1),
-                 v_work=12.42, note="S%d's cooler fan rail: 11.52 to 12.42 V regulated (VREF 1.188 to 1.236 V, 1 %% divider); "
+                 v_work=12.43, note="S%d's cooler fan rail: 11.51 to 12.43 V regulated (VREF 1.188 to 1.236 V, 1 %% divider); "
                  "0.17 A the fan's rated current, 0.54 A the eFuse's highest limit; efficiency 0.85 an ASSUMPTION" % s)
-    _intent.rail(fv, 12.0, 0.17, 0.54, _fU(2), loads={"J_FAN%d" % s: 0.17}, series_of=f12, converted=False, v_work=12.42,
+    _intent.rail(fv, 12.0, 0.17, 0.54, _fU(2), loads={"J_FAN%d" % s: 0.17}, series_of=f12, converted=False, v_work=12.43,
                  source_ic="U%d is a TPS2596 eFuse: its OUT pin IS the power path" % (_fb + 2),
-                 note="S%d's cooler fan supply behind the eFuse U%d (0.449 to 0.538 A, OVLO 12.64 to 13.66 V), out at J_FAN%d pin 1" % (s, _fb + 2, s))
+                 note="S%d's cooler fan supply behind the eFuse U%d (0.448 to 0.538 A, OVLO 12.64 to 13.67 V), out at J_FAN%d pin 1" % (s, _fb + 2, s))
     _intent.node(fsw, 13.6, "S%d's cooler boost switching node: it swings to FAN%d_12V, at most the TPS61089's OVP 13.6 V (SLVSD38C)" % (s, s), v_min=-1.0)
     _intent.node("FAN%d_BOOT" % s, 13.6 + 7.0, "the TPS61089's bootstrap riding on %s (BOOT absolute maximum SW + 7 V, SLVSD38C 7.1)" % fsw,
                  rides_on=fsw, bias_v=7.0)
     _intent.node("FAN%d_VCC" % s, 7.0, "the TPS61089's internal regulator output (VCC, absolute maximum 7 V, SLVSD38C 7.1)")
     _intent.node("FAN%d_FSW" % s, 13.6, "the TPS61089's FSW pin, joined to %s through 301 k" % fsw)
-    _intent.node("FAN%d_TACH" % s, 13.66, "the fan's pulse lead at J_FAN%d pin 3, the tach stage's drain: its level NOT READ, bounded by the fan's "
-                 "supply (the eFuse's OVLO maximum 13.66 V)" % s)
-    _intent.node("FAN%d_PWM" % s, 13.66, "the fan's PWM lead at J_FAN%d pin 4, the PWM stage's drain, pulled to +5V_S%d by 10 k; the fan's own "
+    _intent.node("FAN%d_TACH" % s, 13.67, "the fan's pulse lead at J_FAN%d pin 3, the tach stage's drain: its level NOT READ, bounded by the fan's "
+                 "supply (the eFuse's OVLO maximum 13.67 V)" % s)
+    _intent.node("FAN%d_PWM" % s, 13.67, "the fan's PWM lead at J_FAN%d pin 4, the PWM stage's drain, pulled to +5V_S%d by 10 k; the fan's own "
                  "pull-up NOT READ, bounded by its supply" % (s, s))'''
 
 EDITS = [(_OLD_FP, _NEW_FP), (_OLD_LOAD, _NEW_LOAD), (_OLD_FAN, _NEW_FAN)]
