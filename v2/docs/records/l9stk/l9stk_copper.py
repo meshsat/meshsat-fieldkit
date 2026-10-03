@@ -600,8 +600,11 @@ def compute():
     ]
     F = {}
     for key, lab, w, oz, k, lumped, s, ev, lim in fam:
-        F[key] = dict(label=lab, w=w, oz=oz, k=k, lumped=lumped, s=s, lim=lim, rows=judge(ev, w, oz, k, lumped, s, I, lim),
-                      fusing=fusing_i2t(w * t_out(oz), I))
+        lp = min(R["limits_pinned"]["pack A"], R["limits_pinned"]["pack E"]) if ev is pe else R["limits_pinned"]["shore E"]
+        rows_ = judge(ev, w, oz, k, lumped, s, I, lim)
+        for x in rows_:
+            x["ok_pin"] = x["ok"] if x["cls"] in ("load", "transient", "gauge", "coordination") else (x["T"] is not None and x["T"] <= lp + 1e-6)
+        F[key] = dict(label=lab, w=w, oz=oz, k=k, lumped=lumped, s=s, lim=lim, lim_pin=lp, rows=rows_, fusing=fusing_i2t(w * t_out(oz), I))
     R["fam"] = F
     vin = [("14.10 A declared", I["vin_raw"], None, "load"), ("the tracker's minimum valley limit, held", I["trk_valley"], None, "coordination")]
     R["vin"] = dict(w=W["vin_pair_1k"], rows=judge(vin, W["vin_pair_1k"], OZ1, ks, True, S_MAX, I, lim_shore),
@@ -1048,11 +1051,13 @@ def render(R):
     P("4. THE BAND FAMILIES: each class on the governing conductor, final temperature from %.2f C, verdict against 10 K or the limit" % I["t0"])
     for key in ("A1", "C1", "C2", "D1", "D2", "D3", "H1", "H2"):
         f = F[key]
-        P("   %s %s: limit %g C, the governing face's fusing I2t %.0f A2s" % (key, f["label"], f["lim"], f["fusing"]))
+        P("   %s %s: limit %g C as fitted, %g C with the blade's plating pinned; the governing face's fusing I2t %.0f A2s" % (
+            key, f["label"], f["lim"], f["lim_pin"], f["fusing"]))
         for x in f["rows"]:
             P("     %-74s %7.2f A %-10s steady %-7s adiabatic %-7s -> %-7s %s" % (
                 x["lab"], x["a"], dur_s(x["dur"], x["cls"], I), f2(x["st"]), f2(x["ad"]), f2(x["r"]),
-                ("within" if x["ok"] else "OVER") + (" 10 K" if x["cls"] in ("load", "transient", "gauge", "coordination") else " (%s C)" % f2(x["T"]))))
+                (("within" if x["ok"] else "OVER") + " 10 K") if x["cls"] in ("load", "transient", "gauge", "coordination") else
+                "%s C: %s as fitted, %s pinned" % (f2(x["T"]), "within" if x["ok"] else "OVER", "within" if x["ok_pin"] else "OVER")))
     v = R["vin"]
     P("   V  VIN_RAW %.2f mm a face, 1 oz, with its adjacent return:" % v["w"])
     for x in v["rows"]:
