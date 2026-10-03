@@ -1,0 +1,61 @@
+# l9stk: one stackup decision per board, with its measurement and its cost (Layer 9 item 9.12, MESHSAT-1357)
+
+3 October 2026, the Layer 9 author of item 9.12, worktree `l9stk` on branch `fnd/l9stk` from set 28's tip `37bc2f1d`.
+Prototype design and desk work: no V2 board has been fabricated, ordered, assembled or powered; nothing was routed, no
+quote was requested, nothing was bought. This record writes one stackup decision per board (A, B, C, D, E, P, E5) as the
+design input the supplier's layout phase receives: the layer count with the measurement that forced it (or a bound derived
+by a stated method, or the words NO MEASUREMENT HELD), the cost it adds from dated public price readings (or NOT READ),
+the stackup itself (layer roles, copper weights, the fabricator's row, the impedance targets with their geometry from the
+repository's 2D field solves) and the decision with its authority. No registry, generator, `stackup_write.STACKS`, board
+file, constraint sheet or `LAYER-STATUS.md` is edited; the decisions reach `pcb_decisions.yaml` through the apply script,
+run by the integrator.
+
+| File | What it is |
+|---|---|
+| `L9-STACKUPS.md` | The page: the rule and the labels, the seven decisions in one table, one section per board (measurement, copper, stackup, impedance, decision), the price readings and the per-board cost table, the owner decisions, the findings for other authors, how to re-run |
+| `l9stk_stackups.py` | The calculation, from the repository root: `python3 v2/docs/records/l9stk/l9stk_stackups.py` (stdlib plus `track_current.py` and `via_current.py`; no KiCad, no network). It pins 22 inputs by sha256 and computes the outlines from the committed board files, the band widths at 1 oz and 2 oz under decision 35's model, the bounds on board E's cross-section, on the pack return on the inner planes of A and E and on board P's inner planes' share, the 2 oz floors and the 0.4 mm pitch gaps, the impedance geometry from `stack_solves.out`, the price figures and deltas at their printed conditions, and the predicates the test reads |
+| `l9stk_stackups.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_stackups.py v2/docs/records/l9stk/l9stk_stackups.out` |
+| `apply_decisions_l9stk.py` | The seven decisions as data and the script that appends them to `v2/ecad/tools/pcb_decisions.yaml` (numbered one above the register's highest when it runs; the marks `(L9STK A)` to `(L9STK E5)`); it screens every text, refuses a second run, checks nothing else moved and re-parses the file. `--check` writes nothing; `--registry PATH` works on a copy. The integrator runs it once, then `python3 v2/ecad/tools/decisions_render.py` |
+| `inputs/price-readings-2026-10-03.json` | The public pages read on 3 October 2026 (JLCPCB and NextPCB), each with its URL, read time, the page's own date where printed and the sha256/16 of the page as fetched; the sentence carrying each figure kept verbatim, never the page; what was not read |
+
+The predicates are held by `v2/ecad/tools/tests/test_l9stk.py`: `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_public_hygiene`.
+
+## The decisions in short
+
+| Board | Stackup | Measurement | Cost at five boards, real outline | Authority |
+|---|---|---|---|---|
+| A | 6 layers, JLC06161H-3313, 1 oz outer, 0.5 oz inner; pack path and return as two-face bands | MEASURED: four layers 345 unrouted, six 0 and 0; DERIVED BOUND: 23.91 mm one face or 6.72 mm each of two at 1 oz | NOT READ | SESSION |
+| B | 8 layers, JLC08161H-2116, S G S G P S G S, 1 oz / 0.5 oz; USB 0.148 / 0.127 mm, DIFF100 0.112 / 0.127 mm | MEASURED: 93 opens without two inner signal layers, 416 open on six, six cannot hold one width per class; NO MEASUREMENT HELD of a route at eight | NOT READ; the eight-layer price to the owner before any order (decision 43) | SESSION, conditional on decision 43's route |
+| C | 6 layers, JLC06161H-3313, In1 and In4 GND, 1 oz / 0.5 oz, no controlled pair | MEASURED (decision 27) | NOT READ; before payment (decision 27) | count OWNER (27); copper SESSION |
+| D | 4 layers, JLC04161H-7628, In1 GND, In2 a plane; RF 50 ohm at 0.332 mm | MEASURED: In2 as a plane routes 0 and 0; DERIVED BOUND: two layers cannot give a plane beside both routing faces; NO MEASUREMENT HELD of a two-layer route | NOT READ | SESSION |
+| E | 4 layers, JLC04161H-7628, 1 oz / 0.5 oz; high-current bands on both faces | MEASURED: the routing half and the tracker maker's plane; DERIVED BOUND: 78.72 mm on one face exceeds the 68 mm strip, 23.44 mm a face on two | NOT READ | SESSION |
+| P | 4 layers, JLC04162H-7628, 2 oz outer, 0.5 oz inner with In1 and In2 at least 16 mm wide beside the pack return | MEASURED (decision 28); DERIVED BOUND: a plane is over its rating only when necked to 2.80 to 15.45 mm | NOT READ | count and 2 oz OWNER (28, ruling 7); inner SESSION |
+| E5 | 2 layers, 2L-2oz, Dk 4.5 | DERIVED BOUND: a plated board needs two layers; NO MEASUREMENT HELD (no routing) | NOT READ | count and 2 oz OWNER (ruling 7); Dk and widths SESSION |
+
+**No new owner decision**: where two options stand (A's and E's copper weight, P's inner weight) the one taken spends
+nothing. The owner gates that stand: decision 43's eight-layer price for board B and decision 27's six-layer price for
+board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz inner if a reversal fires
+(`L9-STACKUPS.md` section 11). Every price at a board's real outline is NOT READ and left to the supplier's quotation
+(EQ-14).
+
+## Proposed LAYER-STATUS row (for the integrator; `LAYER-STATUS.md` is not edited here)
+
+| Item | Criterion | Status | Evidence |
+|---|---|---|---|
+| 9.12 | stackup decided per board with measurement and cost | PARTLY | one decision per board in `v2/docs/records/l9stk/` with its measurement, derived bound or NO MEASUREMENT HELD (A 6L 1 oz with two-face bands; B 8L as the design input, conditional on decision 43's route; C 6L by decision 27; D 4L; E 4L 1 oz with two-face bands; P 4L 2 oz, 0.5 oz inner with 16 mm planes; E5 2L 2 oz), appended by `apply_decisions_l9stk.py`; the cost half NOT READ at any real outline (the public readings of 3 October 2026 print start prices and rates only), EQ-14 open for the supplier's quotation |
+
+The row in that page's long table (line 1713) would read the same way: "no" becomes "partly: decided per board with
+measurement or bound (records/l9stk); no price at any real outline; B conditional on decision 43's route".
+
+## What other authors own (from `L9-STACKUPS.md` section 12)
+
+- Boards A and E declare no return of the pack path on their intents; the return needs the pack path's bands (the board
+  A and board E streams).
+- `pcb_energy_chain.yaml` DOCK_ENTRY's "board E's 2 oz power bands" against board E at 1 oz (the energy chain's writer).
+- The 2 oz multilayer floor: 0.15 mm in the tree's transcription and `layout-constraints/P.md`, 0.16 mm in JLCPCB's copper
+  weight guide of 9 September 2026 (the transcription's owner, the constraint sheets' writer).
+- Board P's U1 (RSM0032A) leaves exactly the 0.20 mm 2 oz solder-mask bridge (board P stream, the supplier).
+- `STACKUP-DECISIONS.md` and `layout-constraints/A.md`, `B.md`, `E.md`, `P.md` section 1 still read UNDECIDED where this
+  record decides (the integrator, after the apply).
+- The quotation request's price lines per board (the supplier handover's author).
+- STK-003 and IMP-003, drafted by hc9, are still not in the registry (the registry writer).
