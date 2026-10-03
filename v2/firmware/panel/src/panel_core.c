@@ -43,6 +43,7 @@ const char *const panel_page_text[PAGE_COUNT] = {
     [PAGE_HOT_SHUTDOWN] = "HOT SHUTDOWN: RESTART WITH MAIN WHEN COOL",
     [PAGE_MARGIN_HOLD] = "MARGIN HOLD: COOLING",
     [PAGE_SOS_QUEUED_MARGIN] = "SOS QUEUED: MARGIN HOLD, COOLING",
+    [PAGE_EMCON] = "EMCON ON: EVERY SEND QUEUED",
 };
 
 /* red and amber conditions of P s.9 */
@@ -874,6 +875,8 @@ static uint8_t page_select(panel_t *p, ms_t now)
         return PAGE_ZEROIZE_ABORTED;
     if (p->sos_cancelled && !after(now, p->sos_cancel_at + PANEL_EPD_MIN_INTERVAL_MS))
         return PAGE_SOS_CANCELLED;
+    if (p->emcon_on)
+        return PAGE_EMCON;                                   /* FW-C07, P s.9: show EMCON on the e-paper */
     if (p->margin_hold)
         return PAGE_MARGIN_HOLD;
     if (p->zer.se_absent)
@@ -1104,4 +1107,7 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     out->charge_hold_margin = p->margin_hold;
     out->rb_ien_request = p->rb_ien && !(off & (1u << LOAD_ROCKBLOCK));
     out->reduced_mode = p->reduced_mode_flag;
+    out->loads_on = (uint16_t)(p->br.loads_wanted & ~off);
+    if (p->exp_init_done && p->boot >= BOOT_HOTR1)
+        panel_exp_write_kit(p, out->loads_on, out->rb_ien_request);
 }

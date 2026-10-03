@@ -22,7 +22,7 @@
     T(t_sos_indications,             "PANEL.md s.9 SOS indications: armed, queued, sent, no host; FW-C10") \
     T(t_sos_emcon_queue,             "FW-C10, V-C10: SOS under EMCON queues and tells; released, it sends") \
     T(t_pi_button_logic,             "PANEL.md s.5, FW-C03: PI short press = PI_SHDN_REQ, held 8 s = PI_KILL (finding F-01)") \
-    T(t_emcon_edges,                 "FW-C07: every EMCON edge reported, MASTER CAUT steady; PANEL.md corrections (17) RB_SW_IEN") \
+    T(t_emcon_edges,                 "FW-C07: every EMCON edge reported, MASTER CAUT steady, EMCON on the e-paper; PANEL.md corrections (17) RB_SW_IEN") \
     T(t_never_drives_hardware_lines, "PANEL.md s.6, FW-C07, FW-A10: the hardware lines are never driven; GPIO21 never an output") \
     T(t_zeroize_abort_inside_5s,     "PANEL.md s.9, FW-C04: ZEROIZE flipped back inside 5 s aborts") \
     T(t_zeroize_commit_sequence,     "FW-C04, ZEROIZE.md 3.4 steps 0 to 8, PANEL.md s.9 ZEROIZE indications") \

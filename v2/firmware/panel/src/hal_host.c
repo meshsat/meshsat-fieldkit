@@ -27,10 +27,24 @@ void hal_gpio_put(enum hal_gpio g, bool level)
     levels[g] = level;
 }
 
-void hal_slot_en_adopt(bool held[3])
+void hal_slot_en_read(bool held[3])
 {
     for (int i = 0; i < 3; i++)
         held[i] = levels[HAL_GPIO_SLOT_EN1 + i];
+}
+
+void hal_slot_en_drive_initial(const bool level[3])
+{
+    for (int i = 0; i < 3; i++)
+        levels[HAL_GPIO_SLOT_EN1 + i] = level[i];
+}
+
+int hal_reboot_to_bootsel(void)
+{
+    for (int i = 0; i < 3; i++)
+        if (levels[HAL_GPIO_SLOT_EN1 + i])
+            return -1;
+    return 0;
 }
 
 void hal_pi_shdn_req_assert(bool assert) { levels[HAL_GPIO_PI_SHDN_REQ] = !assert; }

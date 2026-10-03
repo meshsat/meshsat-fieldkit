@@ -90,7 +90,7 @@ enum panel_page {
     PAGE_SOS_ARMED, PAGE_SOS_SENT, PAGE_SOS_QUEUED_EMCON, PAGE_SOS_QUEUED_NO_BEARER, PAGE_SOS_NO_HOST,
     PAGE_SOS_CANCELLED,
     PAGE_ZEROIZE_ABORTED, PAGE_ZEROIZED, PAGE_ZEROIZE_INCOMPLETE, PAGE_SE_ABSENT,
-    PAGE_HOT_STOP, PAGE_HOT_SHUTDOWN, PAGE_MARGIN_HOLD, PAGE_SOS_QUEUED_MARGIN,
+    PAGE_HOT_STOP, PAGE_HOT_SHUTDOWN, PAGE_MARGIN_HOLD, PAGE_SOS_QUEUED_MARGIN, PAGE_EMCON,
     PAGE_COUNT
 };
 extern const char *const panel_page_text[PAGE_COUNT];
@@ -140,6 +140,7 @@ typedef struct {
     bool     kill_cmd;            /* P s.11: the kill command */
     int8_t   soc_pct;             /* the pack's state of charge, -1 unknown */
     bool     modules_dropped_keys; /* ZER s.3.4 step 6: every running module confirmed */
+    uint16_t loads_wanted;        /* 1 << panel_load: what the bridge's policy wants on (FW-A06, A07, A13) */
     panel_reading_t cell_max;     /* the hottest cell (FW-C09 C1) */
     panel_reading_t inside_air;   /* inside air (FW-C09 C1) */
     panel_reading_t margin_ref;   /* FW-C15's reference (mixed air near the +70 C parts) */
@@ -178,6 +179,7 @@ typedef struct {
     bool     led_stat;           /* GPIO25, the board's status LED: 1 Hz while the core runs */
     bool     epd_power;          /* EPD_PWR_n low */
     uint16_t loads_off;          /* 1 << panel_load: loads the core forces off */
+    uint16_t loads_on;           /* the bridge's wanted loads less the forced ones, as written to A:U27, A:U28, B:U6 */
     bool     charge_hold_hot;    /* FW-C13: the CHRG_INHIBIT bit's flag (FW-A19) */
     bool     charge_hold_margin; /* FW-C15: the same bit's flag */
     bool     rb_ien_request;     /* B:U6 RB_SW_IEN (FW-B13 via P corrections (17)) */
@@ -371,6 +373,8 @@ typedef struct {
     bool     exp_init_done;
     bool     leds_ramped;             /* P s.4: the first lit set after boot enabled one by one */
     bool     rb_need_fresh;           /* RB_STATUS not yet read since the EMCON release */
+    uint8_t  kit_out[3][2];           /* A:U27, A:U28, B:U6 output registers last written */
+    bool     kit_out_valid;
     uint8_t  hot_r1_level;            /* last read of A:U27 P1.5 */
     bool     rb_status;               /* B:U7 RB_STATUS */
     bool     light_day_n, light_night_n, panel_id;
@@ -439,6 +443,7 @@ uint8_t panel_zer_boot(panel_t *p, bool toggle_closed, bool *slots_may_power); /
 int  panel_exp_boot(panel_t *p);
 int  panel_exp_write_leds(panel_t *p, uint32_t leds);
 int  panel_exp_service(panel_t *p, ms_t now);
+int  panel_exp_write_kit(panel_t *p, uint16_t loads_on, bool rb_ien);
 
 /* the kit bus recovery (FW-K04), through a bit-bang interface */
 typedef struct {
