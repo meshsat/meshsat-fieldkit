@@ -1,0 +1,75 @@
+{
+ "what": "Samsung Electro-Mechanics MLCC specification pages (GET https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=<part>), the properties each page prints",
+ "read_by": "MESHSAT-1357 Layer 6 record l6pwr",
+ "pages": [
+  {
+   "part": "CL32B225KCJSNNE",
+   "page_part": "CL32B225KCJSNN",
+   "url": "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL32B225KCJSNN",
+   "read_utc": "2026-10-02T23:20:37Z",
+   "properties": {
+    "capacitance": "2.2uF",
+    "tolerance": "±10%",
+    "rated_vdc": "100.0Vdc",
+    "tcc": "X7R",
+    "size": "1210(unit:inch), 3225(unit:mm)",
+    "length": "3.20±0.30mm",
+    "width": "2.50±0.20mm",
+    "thickness": "2.50±0.20mm"
+   },
+   "page_created": "2026/10/03 08:20:37",
+   "prints_a_temperature_range": false,
+   "terms": [
+    "Any data in this sheet are subject to change, modify or discontinue without notice. The data sheets include the typical data for design reference only.",
+    "Copyright. SAMSUNG ELECTRO-MECHANICS All rights reserved. (Version 5.0)"
+   ],
+   "note": "the page's bytes carry its creation time and change at every request; held back from the tree by its 'All rights reserved' line under the owner's rule of 27 September 2026; this excerpt is the reading"
+  },
+  {
+   "part": "CL32B106KBJNNNE",
+   "page_part": "CL32B106KBJNNN",
+   "url": "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL32B106KBJNNN",
+   "read_utc": "2026-10-02T23:20:39Z",
+   "properties": {
+    "capacitance": "10.0uF",
+    "tolerance": "±10%",
+    "rated_vdc": "50.0Vdc",
+    "tcc": "X7R",
+    "size": "1210(unit:inch), 3225(unit:mm)",
+    "length": "3.20±0.30mm",
+    "width": "2.50±0.20mm",
+    "thickness": "2.50±0.20mm"
+   },
+   "page_created": "2026/10/03 08:20:40",
+   "prints_a_temperature_range": false,
+   "terms": [
+    "Any data in this sheet are subject to change, modify or discontinue without notice. The data sheets include the typical data for design reference only.",
+    "Copyright. SAMSUNG ELECTRO-MECHANICS All rights reserved. (Version 5.0)"
+   ],
+   "note": "the page's bytes carry its creation time and change at every request; held back from the tree by its 'All rights reserved' line under the owner's rule of 27 September 2026; this excerpt is the reading"
+  },
+  {
+   "part": "CL31B106KBHNNNE",
+   "page_part": "CL31B106KBHNNN",
+   "url": "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL31B106KBHNNN",
+   "read_utc": "2026-10-02T23:20:41Z",
+   "properties": {
+    "capacitance": "10.0uF",
+    "tolerance": "±10%",
+    "rated_vdc": "50.0Vdc",
+    "tcc": "X7R",
+    "size": "1206(unit:inch), 3216(unit:mm)",
+    "length": "3.20±0.20mm",
+    "width": "1.60±0.20mm",
+    "thickness": "1.60±0.20mm"
+   },
+   "page_created": "2026/10/03 08:20:42",
+   "prints_a_temperature_range": false,
+   "terms": [
+    "Any data in this sheet are subject to change, modify or discontinue without notice. The data sheets include the typical data for design reference only.",
+    "Copyright. SAMSUNG ELECTRO-MECHANICS All rights reserved. (Version 5.0)"
+   ],
+   "note": "the page's bytes carry its creation time and change at every request; held back from the tree by its 'All rights reserved' line under the owner's rule of 27 September 2026; this excerpt is the reading"
+  }
+ ]
+}
