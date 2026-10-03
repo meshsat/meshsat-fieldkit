@@ -1119,8 +1119,9 @@ def render(R):
             P("     limiting: %s at %.2f of its rating%s" % (r["limit_comp"], r["limit_frac"], " (OVER)" if r["limit_frac"] > 1.0 + 1e-9 else ""))
         for d in r["disp"]:
             P("     disposition: %s" % d)
-    P("   W4DP-F2 stays open; its closure: a firmware-independent element that opens the discharge path at or below the cells' %.0f A at" % I["cells_a"])
-    P("     3P with board P's FETs welded, and before Q39/Q40 pass 150 C (%.2f A held from +%g C; %.2f A from %.2f C)" % (R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"]))
+    P("   W4DP-F2 stays open; its closure is a current-and-time criterion for every series part with board P's FETs welded and no firmware,")
+    P("     not one current: Q39/Q40 pass 150 C held at %.2f A from +%g C and %.2f A from %.2f C (derived on E11-29's target), under the" % (R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"]))
+    P("     cells' %.0f A; the selected element and its table are l9stk_protection.py's (the page's section 15)" % I["cells_a"])
     P("")
     P("10. PREDICATES")
     for k, val in R["pred"].items():

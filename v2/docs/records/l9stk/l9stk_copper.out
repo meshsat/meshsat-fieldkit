@@ -471,8 +471,9 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (b) R19 over its 3 W from 17.32 A: a shunt whose rating covers 20 A held (L4-E11)
      disposition: (c) F1's total clearing I2t at 900 A and 58 V DC (E11-16, L4-E11): acceptance at most 12451 A2s on the governing 1 oz face to 105 C
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
-   W4DP-F2 stays open; its closure: a firmware-independent element that opens the discharge path at or below the cells' 24 A at
-     3P with board P's FETs welded, and before Q39/Q40 pass 150 C (21.38 A held from +70 C; 20.53 A from 76.25 C)
+   W4DP-F2 stays open; its closure is a current-and-time criterion for every series part with board P's FETs welded and no firmware,
+     not one current: Q39/Q40 pass 150 C held at 21.38 A from +70 C and 20.53 A from 76.25 C (derived on E11-29's target), under the
+     cells' 24 A; the selected element and its table are l9stk_protection.py's (the page's section 15)
 
 10. PREDICATES
    each face rated alone reproduces the candidate's widths: 6.72, 11.95, 12.26 and 14.60 mm                                 yes
