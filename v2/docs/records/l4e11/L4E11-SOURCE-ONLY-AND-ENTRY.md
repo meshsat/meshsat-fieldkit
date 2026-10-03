@@ -1441,14 +1441,135 @@ E11-29 asked a built board for junction temperatures under "pre-layout analysis"
 measurement row below names its specimen. The evidence builds proceed under their own scope; **only the final design or production
 release stays held** until the measurements pass. Purchases stay the owner's; nothing is bought.
 
+**What a specimen's result is, and what it is not (the owner's review of 3 October, L4-QR01).** A junction-to-ambient figure belongs to the
+board and its environment, not to the device: TI's "Semiconductor and IC Package Thermal Metrics" (SPRA953D, revised March 2024, the
+revision TI serves for SPRA953C; held) states in 1.2 (p.3) that "RθJA is not a constant" and in 1.8 (p.5) that it "is a system-level
+parameter that depends strongly on system parameters". A maker's limiting value holds under its stated conditions only: Nexperia's AN11158
+(Rev. 7.0, 18 February 2025; held), 2.4 (p.4): operation outside the stated conditions carries no assurance from the maker. So **a coupon's thermal result
+transfers only where the final board's thermal boundaries are shown no worse by a named rule, and a sample's pulse result is prototype
+evidence for that lot and those conditions, never a production limit or an extension of the maker's guarantee.** Each row's block below
+records its specimen, lot, operating point, mounting, thermal boundaries, measurement uncertainty, permitted extrapolation, the rule for
+any final-board comparison and what requires a re-test. The first version's wording that the docking pulse capability is
+"layout-independent", and that E11-29's result transfers on copper area, layers, weight and vias alone, is **withdrawn**.
+
 | Row | Specimen | Represents | Transfers | Blocks only |
 |---|---|---|---|---|
-| Row E11-29 | a power-stage coupon of board A's battery-switch region (Q39 and Q40 on the drafted LFPAK56 lands, R17, the VBAT and CH_BATQ copper, the intended stack-up, copper weight and via field), or the controlled first prototype of board A | the pair's self and mutual junction-to-air impedance at +70 C mixed air (or referred to it) at 244 us, 20 ms, 1 s, 60 s and steady | to the final board when its copper area, layer count, copper weight and via field around the pair are at least the coupon's; otherwise re-measured on the final board | board A's final release (the copper is sized to the 33.12 K/W target before layout; the first prototype is built to it) |
-| Row E11-30 | six BUK6Y10-30PX samples, one per coupon on a heated mounting base, and a capacitor-discharge rig set to 267.2 A and 37.2 us | the device under the whole hot docking waveform, one FET carrying all of it | the device's pulse capability, layout-independent at the stated mounting-base temperature; the waveform itself (peak, time constant) is confirmed on the first prototype's pack loop | board A's final release; the first prototype docks under the bench's procedure |
-| Row E11-36 | BUK6Y10-30PX samples on a Kelvin coupon in an oven at 150 C, pulsed | RDS(on) at VGS -8.5 V and a 150 C junction | a device property for the lot read; only Nexperia's maximum holds for every lot | the sizing's confirmation and board A's final release |
-| Row E11-37 | TI's BQ25730 evaluation hardware (whether TI offers one, and its price, not read) with its battery FET replaced by the pair and VSYS's capacitance set as drafted (C236, C23 to C25), or the controlled first prototype of board A | BATDRV with the pair's gate load: supplement entry, the 30 mV ideal-diode regulation, LDO mode at VSYS_MIN, at -20, 25 and 70 C | when the gate load and VSYS's capacitance match the draft; otherwise the first prototype | the choice between (S1) and (S2) for the final design |
-| Row E11-38 | a coupon carrying U42 with R228, C237, C238, C239 and D23 as drafted, VSYS's local capacitance, one Preci-Dip 813 contact with 60 mm of 24 AWG and a board E stub with C31, U22's 12.0 V rail with its capacitors and the four-wire fan headers; or the controlled first prototype of boards A and E | the dock's VSYS branch through the whole fault envelope of 17a | U42's limits and timings (device properties); the peaks and pin spikes only where the coupon's IN-side (at most 20 nH) and output-loop inductances are the final layout's; otherwise re-tested on the first prototype | board A's and board E's final release |
-| Row E11-35 | the fans Layer 7 selected (Sanyo Denki 9WL0612P4H001) on a 12.0 V bench channel and on E11-38's coupon behind U22 | the fans' starting current and PWM input level against U22's capability and U42's room (section 18b) | fully (a property of the fan); the rail's behaviour with them transfers when U22's network matches the draft | the fans' acceptance for board E's final release |
+| Row E11-29 | a power-stage coupon of board A's battery-switch region, or the controlled first prototype of board A | the pair's self and mutual junction-to-air impedance in its thermal environment | the steady figures only by the comparison rule of its block; the transients only from a region copied unchanged or from the first prototype | board A's final release |
+| Row E11-30 | six BUK6Y10-30PX samples on single-device coupons on a heated mounting base, and a capacitor-discharge rig | the device under the whole hot docking waveform, one FET carrying all of it | to the build only for the tested lot and inside the tested envelope; prototype evidence, not a production limit | board A's final release |
+| Row E11-36 | BUK6Y10-30PX samples on a Kelvin coupon in an oven | RDS(on) at VGS -8.5 V and a 150 C junction | to the lot read, at a drive at least 8.5 V and a junction at most 150 C; only Nexperia's maximum holds for every lot | the sizing's confirmation and board A's final release |
+| Row E11-37 | TI's BQ25730 evaluation hardware (whether TI offers one, and its price, not read) modified as drafted, or the controlled first prototype of board A | BATDRV with the pair's gate load | only when the gate loop, the pair and VSYS's capacitance are the draft's | the choice between (S1) and (S2) for the final design |
+| Row E11-38 | a coupon of the dock's VSYS branch (U42 and its network, VSYS's local capacitance, one 813 in a dock block, 60 mm of 24 AWG, a board E stub with C31, U22's rail and the fan headers), or the first prototypes of boards A and E | the branch through the fault envelope of 17a | U42's limits and timings as device properties of the lot; peaks, pin spikes and contact temperatures only where the block's comparison rule holds | board A's and board E's final release |
+| Row E11-35 | the fans Layer 7 selected (Sanyo Denki 9WL0612P4H001) on a 12.0 V bench channel and on E11-38's coupon behind U22 | the fans' starting current and PWM input level | the start current as a property of the fan's lot within the tested voltage and temperature; the installed running current only from the first prototype | the fans' acceptance for board E's final release |
+
+#### Block E11-29: the pair's installed thermal path
+
+- **Specimen:** a coupon of board A's battery-switch region (Q39 and Q40 on the drafted LFPAK56 lands, R17, the VBAT and CH_BATQ copper,
+  the intended stack-up, copper weight and via field), or the controlled first prototype of board A.
+- **Lot:** the two FETs' reel and date code and the coupon's fabricator, stack-up and copper weight, recorded. Each unit's own
+  junction-to-mounting-base impedance is a unit property: read on a cold plate before mounting (the transient dual-interface method), so
+  the board's part can be separated from the unit's; for other units the printed maximum Rth(j-mb) 1.4 K/W less the coupon units' reading is
+  added.
+- **Operating point:** each FET heated through its body diode at the 20 A held allowance's 2.1136 W per FET, both together and each alone,
+  junction read by VSD at a small sense current against a K-factor calibrated in an oven; readings at 244 us, 20 ms, 1 s, 60 s and steady.
+- **Mounting:** the coupon fixed to a plate section as board A is fixed to the case, in its installed orientation.
+- **Thermal boundaries:** **device spacing** (Q39 to Q40 centre to centre as drafted); **copper connectivity** (the pour's connection to the
+  VBAT and CH_BATQ planes, the via count to each inner plane, the planes' extent); **neighbouring sources** (U3, L2, R17 and every part
+  within 30 mm that dissipates in service, carried on the coupon as resistive dummies at their declared heat and positions); **airflow**
+  (still air, or the mixers' flow where they reach the region, as installed); **enclosure coupling** (the plate section and its attachment;
+  the air at +70 C in a chamber, or the rise referred to it).
+- **Measurement uncertainty:** the K-factor within 2 %, the heating power within 1 %, the air within 1 K, stated as an expanded uncertainty
+  on Zself + Zmut; a reading passes when it plus its uncertainty is under the limits of E11-29.
+- **Permitted extrapolation and the comparison rule:** the steady figures transfer to the final board only when each boundary is no worse
+  by this rule: the pair's spacing is at least the coupon's; the pour inside the region is the coupon's or a superset joined only to the same
+  nets and planes with at least the via count, and joined to no additional heat source; every neighbouring source within 30 mm dissipates
+  no more and sits no closer; airflow is at least the coupon's; the attachment to the plate is the coupon's or more conductive. *Why this
+  rule (INFERRED, a property of linear conduction):* the steady conduction network's conductance matrix is an M-matrix; adding conductance to
+  the ambient node raises its diagonal, and an M-matrix's inverse does not increase entrywise when the matrix increases entrywise, so no
+  node's steady rise grows for the same or smaller sources; conductance added between the pair and another source is excluded because it can
+  raise the pair. Convection and radiation enter linearised at the operating point. The rule does **not** cover the transients: the 244 us,
+  20 ms and 1 s figures transfer only from a region copied unchanged (the same copper, vias and parts within 30 mm) or are re-read on the
+  first prototype.
+- **Re-test when:** any boundary fails the rule; a different FET part or lot without a unit reading; the region's layout differs at all
+  (for the transients); the plate attachment, the fan or its position changes.
+
+#### Block E11-30: the whole hot docking waveform
+
+- **Specimen:** six BUK6Y10-30PX, one per coupon, each on a heated block.
+- **Lot:** the six from one reel and date code, recorded; the result is **prototype evidence for that lot and those conditions, not a
+  production limit**, and it does not extend Nexperia's limiting values (AN11158 2.4): the build's parts are taken from the tested lot, or
+  the test is repeated on the build's lot.
+- **Operating point (the waveform):** 267.2 A peak, time constant 37.2 us (1.1 x the docking waveform's 242.9 A and 33.8 us), 2000 pulses
+  10 s apart (a lifetime allowance of 1000 docking events, twice), the whole pulse in one body diode.
+- **Mounting:** each part soldered to a coupon whose mounting-base pad sits on a block held at 75 C.
+- **Thermal boundaries:** the mounting base at **75 C** (over the +70 C mixed air at docking, when no current flows before the pulse);
+  **device spacing** none (a single device, as the record takes the whole pulse in one FET); **copper connectivity** the pad and the block;
+  **neighbouring sources**, **airflow** and **enclosure coupling** enter only through the mounting base's starting temperature, which the
+  block sets: within the pulse's few hundred microseconds the heat stays inside the package (16d, Fig. 4's reading), a reading the test itself
+  does not establish for longer pulses.
+- **Measurement uncertainty:** the peak current within 2 % (a calibrated shunt or probe), the time constant within 5 %, the block within 2 K;
+  the envelope is set so that the waveform less its uncertainty still covers 242.9 A and 33.8 us.
+- **Permitted extrapolation:** none outside the tested envelope and lot: a docking event in the kit is covered only when its peak, time
+  constant and starting mounting-base temperature are each at most the tested values and the count stays under 2000.
+- **Comparison with the final board:** the first prototype's docking waveform is measured (peak, time constant, the FET's mounting-base
+  temperature at the event) and compared value by value with the tested envelope; no equivalence is assumed from the layout.
+- **Re-test when:** another lot or part; the prototype's measured peak, time constant or mounting-base temperature exceeds the tested ones;
+  the pack loop or VSYS's capacitance changes; the expected count of docking events passes 2000.
+
+#### Block E11-36: RDS(on) at BATDRV's least drive
+
+- **Specimen and lot:** ten BUK6Y10-30PX from the build's lot (reel and date code recorded) on a Kelvin coupon.
+- **Operating point:** VGS -8.5 V measured at the gate, ID -9 A in pulses short enough that the self-heating stays under 1 K (Fig. 4's
+  Zth at the pulse width times the pulse's power), junction 150 C set by an oven after a soak to within 1 K.
+- **Mounting and thermal boundaries:** the junction is set by the oven, so device spacing, copper connectivity, neighbouring sources,
+  airflow and enclosure coupling are **not** what this row measures; they are named so that no one reads the result as an installed figure.
+- **Measurement uncertainty:** the Kelvin voltage within 0.5 %, the current within 1 %, the oven within 1 K: RDS(on) within about 2 %.
+- **Permitted extrapolation:** to a drive of at least 8.5 V and a junction of at most 150 C for the lot read (more drive and a cooler junction
+  do not raise RDS(on) in Nexperia's typical Figures 8 and 10: INFERRED); to other lots as a limit, never.
+- **Re-test when:** another lot or part; BATDRV's printed least drive falls; the junction limit rises over 150 C.
+
+#### Block E11-37: BATDRV with the pair
+
+- **Specimen and lot:** TI's BQ25730 evaluation hardware modified as drafted, or the controlled first prototype of board A; the BQ25730's and
+  the pair's lots recorded.
+- **Operating point:** supplement entry on a source removed under 0 to 10 A; the ideal diode's 30 mV regulation; LDO mode at VSYS_MIN with
+  the precharge's 0.33616 A; at -20, 25 and 70 C ambient.
+- **Mounting and thermal boundaries:** the gate loop from BATDRV to Q39's and Q40's gates (its length and any series element) and VSYS's
+  capacitance as drafted; the junctions recorded; **device spacing**, **copper connectivity**, **neighbouring sources** (the charger's
+  converter running as in service), **airflow** and **enclosure coupling** (a chamber's still air) recorded, because the gate's capacitance
+  and the threshold move with temperature.
+- **Measurement uncertainty:** probes with at least 100 MHz bandwidth and short ground loops; VSYS within 1 %.
+- **Permitted extrapolation:** to the final board only when the gate loop, the pair and VSYS's capacitance are the draft's.
+- **Re-test when:** the gate network, the FET part or lot, VSYS's capacitance or the charger's settings (EN_LDO, VSYS_MIN) change.
+
+#### Block E11-38: the dock's VSYS branch through the fault envelope
+
+- **Specimen and lot:** the branch coupon (U42 with R228, C237, C238, C239 and D23 on their drafted copper, VSYS's local capacitance within
+  20 nH, one Preci-Dip 813 in a dock block with its neighbours, 60 mm of 24 AWG, a board E stub with C31, U22's rail and the fan headers), or
+  the first prototypes of boards A and E; U42's, the contacts' and the wire's lots recorded (the wire's maker is Layer 7's F-L7-08).
+- **Operating points:** the cases (a) to (h) of E11-38.
+- **Mounting:** the 813 in a dock block as installed, its neighbours populated; the wire routed as in the case.
+- **Thermal boundaries:** **device spacing** (the 813's neighbours in the block); **copper connectivity** (U42's pad and planes, the contact
+  lands); **neighbouring sources** (the dock's other contacts at their declared currents, the ground return's 2.406 A in one 813 with one
+  open, during (e) and (h)); **airflow** (the dock region's still air); **enclosure coupling** (a 70 C chamber).
+- **Measurement uncertainty:** current within 2 % at 50 MHz or more for (c), the 813 body's thermocouple within 1.5 K, the four-wire
+  resistance within 1 %.
+- **Permitted extrapolation:** U42's limits and timings as device properties of the lot; the peaks, the pin spikes and the contact's
+  temperatures only where the IN-side inductance (at most 20 nH, measured), the output loop, the block and the neighbours' currents are the
+  final's, compared value by value; otherwise re-read on the first prototypes.
+- **Re-test when:** U42's network or lot, the dock block or contact part, the wire, VSYS's capacitance or its placement, or the
+  neighbouring contacts' currents change.
+
+#### Block E11-35: the fans' start
+
+- **Specimen and lot:** two 9WL0612P4H001 (Layer 7's selection), date code recorded.
+- **Operating point:** the PWM duty from 0 to 100 % in one step and by the firmware's ramp, at 12.0 V and at the rail's 11.512 and 12.431 V,
+  at -20, 25 and 70 C ambient.
+- **Mounting and thermal boundaries:** the fan on its mounting as under the plate; **device spacing** and **neighbouring sources** do not
+  set a fan's start current, **airflow** and back pressure set its running current, **enclosure coupling** sets its temperature: recorded.
+- **Measurement uncertainty:** current within 2 % at 10 kHz bandwidth or more for the start surge.
+- **Permitted extrapolation:** the start current within the tested voltage and temperature for the lot; the installed running current only
+  from the first prototype.
+- **Re-test when:** another fan part or lot; a temperature outside -20 to 70 C; the rail's window or the PWM ramp changes.
 
 ### 17e. The Layer 6 author's findings on this record's board A draft (L6P-F01, L6P-F05; 3 October 2026)
 

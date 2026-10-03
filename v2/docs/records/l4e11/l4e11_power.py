@@ -110,6 +110,8 @@ PINS = {
     "tps55340": ("v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf", "e579aa4fcb549eab29e889f7f6dcbd0fd88cac2647082c65f102e411c3f666ca"),
     "tps63070": ("v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf", "a88ef66f3493156ff6e7da0849de0e0e1068647f2553d08c1844d4a90c5c65ef"),
     "xal60": ("v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf", "236888dabe560055e7eb40e24b8bf938db132b66a0e9f1a3c512fb3b04361681"),
+    "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
+    "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
     "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
 }
@@ -322,7 +324,7 @@ def compute():
     for k in ("bq25731", "sluuaq3a", "csd17570", "cell", "lm5069", "csd19532", "d38999", "vh", "xt60", "keystone", "lapp",
               "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683", "bq25798", "lm74700", "tps4811", "csd19536", "tps1663",
               "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch", "msmf",
-              "ltc3115", "tps55340", "tps63070", "xal60", "gen_b"):
+              "ltc3115", "tps55340", "tps63070", "xal60", "gen_b", "spra953", "an11158"):
         read(k)
     L9 = git_text("l4e9")
     R["inputs"] = [(k, PINS[k][0], sha_file(os.path.join(TOP, PINS[k][0]))) for k in PINS]
@@ -2955,6 +2957,11 @@ def fix17_round(R, T):
     Q0 = H["Q"]
     M["dock_q"] = (Q0["i_dock"] * F17_DOCK_MARGIN, Q0["tau"] * F17_DOCK_MARGIN)
     M["dock_q_t80"] = M["dock_q"][1] * math.log(M["dock_q"][0] / L["is_dc"])
+    # L4-QR01 (the owner's review of 3 October): what a specimen's result is (TI SPRA953D 1.2 and 1.8; Nexperia AN11158 2.4)
+    M["spra_rev"] = need(text_pdf("spra953"), r"(SPRA953D) \u2013 DECEMBER 2003 \u2013 REVISED MARCH 2024", "SPRA953's revision").group(1)
+    M["spra_p"] = (find("spra953", r"RθJA is not a constant", "SPRA953 1.2")[0], find("spra953", r"is a system-level\s+parameter that depends strongly on system parameters", "SPRA953 1.8", layout=True)[0])
+    M["an_p"] = find("an11158", r"Operation outside of these conditions is not \w+, so it is recommended that these values", "AN11158 2.4", layout=True)[0]
+    need(text_pdf("an11158"), r"Rev\. 7\.0 \u2014 18 February 2025", "AN11158's revision")
     # CP03: the claims the charger draft must no longer write
     M["withdrawn"] = ("bounded at 21.1", "34.4 C/W", "split between their body diodes")
     return M
@@ -3020,6 +3027,14 @@ def render_fix17(R, p):
     p("     (D3) board P bounds the inrush (a slower discharge-FET turn-on or a precharge path): changes the pack's protection path, whose ASCD")
     p("       turn-off and normal charging must be re-shown; board P's owner, a draft for board P's generator (INFERRED)")
     p("     SELECTED (SESSION): (D2), with (D1) asked in parallel; (D3) only if (D2) fails, as E11-30 states; STATUS: CONDITIONAL on E11-30 (SESSION)")
+    p("   17d. L4-QR01 (the owner's review of 3 October): a junction-to-air figure belongs to the board and its environment (TI %s 1.2, p.%d: \"RθJA"
+      % (M["spra_rev"], M["spra_p"][0]))
+    p("     is not a constant\"; 1.8, p.%d: \"a system-level parameter\"), and a maker's limiting value holds under its stated conditions only (Nexperia"
+      % M["spra_p"][1])
+    p("     AN11158 Rev. 7.0 2.4, p.%d: operation outside the stated conditions carries no assurance from the maker): each specimen's transfer rule is the record's 17d"
+      % M["an_p"])
+    p("     block (thermal boundaries, uncertainty, permitted extrapolation, the comparison rule, the re-test triggers); the six-sample pulse test is")
+    p("     prototype evidence for its lot and conditions, not a production limit (MAKER, RECORD)")
     p("   17c. L4-CP03: apply_gen_sch_a_charger.py's text now writes the allowance, the 33.12 K/W self-plus-mutual target and no sharing credited;")
     p("     the three withdrawn statements are absent from the text it writes (tested) (RECORD)")
     p("")

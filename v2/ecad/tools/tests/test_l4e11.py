@@ -1054,3 +1054,28 @@ def t_the_board_e_drafts_add_disjoint_designators():
                 continue        # alternatives that refuse each other, never on one board
             both = added[x] & added[y]
             assert not both, "%s and %s both add %s" % (x, y, sorted(both))
+
+
+def t_every_specimen_block_names_its_thermal_boundaries_and_its_re_test_trigger():
+    """L4-QR01 (the owner's review of 3 October): every measurement row's block in 17d records its specimen, lot, operating point,
+    mounting, thermal boundaries, uncertainty, permitted extrapolation and re-test triggers; E11-29's names the five boundaries and a
+    comparison rule; the pulse test stays prototype evidence; no current text calls a result layout-independent."""
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page[page.index("### 17d. "):page.index("### 17e. ")]
+    blocks = re.split(r"\n#### Block ", sec)[1:]
+    ids = [b.split(":", 1)[0] for b in blocks]
+    assert sorted(ids) == sorted(["E11-29", "E11-30", "E11-36", "E11-37", "E11-38", "E11-35"]), ids
+    for b in blocks:
+        bid = b.split(":", 1)[0]
+        assert "**Thermal boundaries:**" in b or "thermal boundaries:**" in b, "%s names no thermal boundaries" % bid
+        assert "**Re-test when:**" in b, "%s names no re-test trigger" % bid
+        assert "uncertainty:**" in b and "extrapolation" in b, "%s lacks its uncertainty or its extrapolation" % bid
+    b29 = [b for b in blocks if b.startswith("E11-29")][0]
+    for w in ("device spacing", "copper connectivity", "neighbouring sources", "airflow", "enclosure coupling", "the comparison rule", "M-matrix"):
+        assert w in b29, "E11-29's block omits %r" % w
+    b30 = [b for b in blocks if b.startswith("E11-30")][0]
+    assert "not a\n  production limit" in b30 or "not a production limit" in b30
+    current = sec.replace('"layout-independent", and that E11-29', "")
+    assert "layout-independent" not in current and "layout-independent" not in page.replace('"layout-independent", and that E11-29', "")
+    out = open(OUT, encoding="utf-8").read()
+    assert "17d. L4-QR01" in out and "not a production limit" in out
