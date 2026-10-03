@@ -19,6 +19,9 @@ no line filled board A's C27, which refuses the finish. The table was corrected 
   * the judge has teeth: a copy of lcsc_fill.py whose 100n line is put back to a 50 V part is caught on a 100 V fixture row.
 A row whose requirement is open (no bound on its nets) is counted, not judged: it is a requirement gap, not a fill.
 
+Round 5 (finding F3) runs the first property again under record l6r2's drafted intent declarations (l6r2_intent.overlay, the
+nets a desk could bound), so the rows they close are judged too: lcsc_fill's fills on them must meet the derived requirements.
+
 Round 4 (finding F7) extends it to the codes the generators' CALLS write, which lcsc_fill never touches: for every fitted generic row
 of every board whose generator call carries a code, the code as record l6r2's LCSC draft of that board leaves it (an entry with a
 third field replaces exactly that written code on that value) meets every deciding requirement on the reading; the only codes that
@@ -222,3 +225,26 @@ def t_the_written_code_judge_has_teeth():
     d["cls"], _ = m.classify(d)
     assert not m.check(d, idx["C15849"])[0] and _any_line_meets(m, d, idx, 5), "an X5R code where an X7R line is read must be a miss"
     assert m.check(d, idx["C559769"])[0], "the corrected code must meet"
+
+
+def t_under_the_drafted_declarations_lcsc_fills_only_codes_that_meet_on_the_rows_they_close():
+    m, idx = _M()
+    sys.path.insert(0, REC)
+    import l6r2_intent
+    cd3b = _parse(FILL, "CD3B_X5R")
+    plain = over = 0
+    bad = []
+    for b in m.ORDER:
+        rows, _ = PI.rows(boards=[b])
+        filled, rejected = run_fill(FILL, rows)
+        plain += judge(rows, filled, rejected, cd3b, m, idx)[1]
+    with l6r2_intent.overlay(PI, REPO) as D:
+        assert D, "the record drafts no declaration"
+        for b in m.ORDER:
+            rows, _ = PI.rows(boards=[b])
+            filled, rejected = run_fill(FILL, rows)
+            mis, n, _o = judge(rows, filled, rejected, cd3b, m, idx)
+            over += n
+            bad += ["%s %s [%s] %s: %s" % (b.upper(), x[0], x[1][:40], x[2], x[3]) for x in mis]
+    assert over > plain, "the declarations close no row lcsc_fill fills (%d judged either way)" % over
+    assert not bad, "under the drafted declarations lcsc_fill.py fills %d code(s) that miss:\n  %s" % (len(bad), "\n  ".join(bad[:40]))

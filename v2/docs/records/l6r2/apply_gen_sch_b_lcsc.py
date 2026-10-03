@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """apply_gen_sch_b_lcsc.py: DRAFT for board B's generator owner (Layer 6 record l6r2, MESHSAT-1357, 3 October 2026). NOT APPLIED.
 
-It writes the LCSC field of board B's generic parts into v2/ecad/tools/gen_sch_b.py: 832 designators, each keyed by the value
+It writes the LCSC field of board B's generic parts into v2/ecad/tools/gen_sch_b.py: 841 designators, each keyed by the value
 the code was selected for; 1 of them correct a code the generator's call writes (the entry's third field is the code
 replaced, finding F7) (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
 `l6r2_passives.py --write-drafts`; test_l6r2.py holds this file equal to the render and proves its composition with every other
@@ -149,6 +149,8 @@ ENTRIES = {
     'C158': ('100n', 'C113803'),
     'C159': ('100n', 'C60474'),
     'C160': ('100n', 'C60474'),
+    'C161': ('100n', 'C60474'),
+    'C162': ('100n', 'C60474'),
     'C163': ('1u', 'C559769'),
     'C164': ('18p', 'C106202'),
     'C165': ('18p', 'C106202'),
@@ -418,6 +420,12 @@ ENTRIES = {
     'C481': ('10n', 'C57112'),
     'C482': ('10n', 'C57112'),
     'C483': ('10n', 'C57112'),
+    'C500': ('22p', 'C106203'),
+    'C501': ('22p', 'C106203'),
+    'C502': ('22p', 'C106203'),
+    'C503': ('22p', 'C106203'),
+    'C504': ('22p', 'C106203'),
+    'C505': ('22p', 'C106203'),
     'C506': ('4.7n', 'C53987'),
     'C507': ('4.7n', 'C53987'),
     'C508': ('100n', 'C113803'),
@@ -545,6 +553,7 @@ ENTRIES = {
     'R10': ('75', 'C4275'),
     'R11': ('10k', 'C25804'),
     'R12': ('0.25R 1% 2512', 'C459675'),
+    'R13': ('0R 2512 (POE_P link)', 'C25469'),
     'R15': ('10k', 'C25804'),
     'R16': ('10k', 'C25804'),
     'R17': ('2.2k', 'C4190'),

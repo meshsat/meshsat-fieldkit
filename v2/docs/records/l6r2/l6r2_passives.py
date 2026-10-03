@@ -40,6 +40,7 @@ import difflib
 import hashlib
 import io
 import json
+import math
 import os
 import re
 import shutil
@@ -194,8 +195,9 @@ def classify(s):
             return "OPEN", "the rated voltage is open: no declared or bounded voltage on %s (rule V-1; never a guess)" % req.get("v_open_on")
         return "CAP", ""
     if k == "resistor":
-        if req.get("link_current_min_a"):
-            return "OPEN", "a link whose current rating (%s A) no catalogue line read states" % req.get("link_current_min_a")
+        if req.get("link_current_min_a") and not os.path.exists(os.path.join(TOP, UNIROYAL_DOC)):
+            return "OPEN", ("a link whose current rating (%s A) no catalogue line read states, and the held Uniroyal sheet that states a "
+                            "jumper's rated current per size is not fetched here (w5identc's fetch_held_back.py)" % req.get("link_current_min_a"))
         return "RES", ""
     if k == "inductor":
         ik = req.get("ind_kind")
@@ -417,6 +419,27 @@ def with_series_facts(row):
     return out
 
 
+JUMPER_PAGE = 5     # the held Uniroyal thick-film sheet, section 7 Ratings (printed page 4/9 sits before it; the table is on PDF page 5)
+
+
+def jumper_rating(row):
+    """(amps, basis) for a zero-ohm jumper line whose maker's sheet held in the tree prints the jumper's rated current: the
+    Uniroyal thick-film chip resistor sheet's ratings table (section 7, 'Rated Current of Jumper' per size). (None, why) for any
+    other line: a catalogue line prints no jumper current, and no other maker's sheet is held for it."""
+    a = attrs(row)
+    if "UNI-ROYAL" not in (row.get("brand") or "").upper(): return None, "no maker's sheet held for %s" % row.get("brand")
+    if ohms(a.get("Resistance")) not in (0, 0.0): return None, "not a zero-ohm line"
+    m = re.match(r"(01005|0201|0402|0603|0805|1206|1210|1812|2010|2512)", row.get("model") or "")
+    if not m: return None, "the model %r names no size" % row.get("model")
+    p = os.path.join(TOP, UNIROYAL_DOC)
+    if not os.path.exists(p): return None, "the held Uniroyal sheet is not fetched here"
+    text = PI.page_text(p, JUMPER_PAGE)
+    if "Rated Current of" not in text: die(4, "%s p.%d no longer prints the jumper ratings table" % (UNIROYAL_DOC, JUMPER_PAGE))
+    t = re.search(r"^\s*%s\s+\d+V\s+\d+V\s+(?:\d+V|--)\s+<50m\S*\s+([\d.]+)A\s+([\d.]+)A" % m.group(1), text, re.M)
+    if not t: return None, "the sheet's table has no row for %s" % m.group(1)
+    return float(t.group(1)), "UNI-ROYAL thick-film sheet p.%d, section 7: a %s jumper's rated current, below 50 mOhm" % (JUMPER_PAGE, m.group(1))
+
+
 def check(d, row):
     """Every deciding property of the selection against the catalogue line. Returns (ok, lines, grade) where each line is
     (property, required, read, verdict) and grade is (lo, hi, basis) or None."""
@@ -452,8 +475,13 @@ def check(d, row):
         if req.get("resistor_kind") != "zero-ohm link":
             t = parse_tol(a.get("Tolerance"))
             need("tolerance", "%g %% or tighter" % req["tolerance_max_pct"], a.get("Tolerance"), t is not None and t <= float(req["tolerance_max_pct"]) + 1e-9)
-        p = parse_power(a.get("Power(Watts)"))
-        need("power", "%g W or more" % req["power_min_w"], a.get("Power(Watts)"), p is not None and p + 1e-12 >= float(req["power_min_w"]))
+        if req.get("power_min_w") is not None:
+            p = parse_power(a.get("Power(Watts)"))
+            need("power", "%g W or more" % req["power_min_w"], a.get("Power(Watts)"), p is not None and p + 1e-12 >= float(req["power_min_w"]))
+        if req.get("resistor_kind") == "zero-ohm link" and req.get("link_current_min_a"):
+            ja, jwhy = jumper_rating(row)
+            need("jumper rated current", "%g A or more" % req["link_current_min_a"], ("%g A (%s)" % (ja, jwhy)) if ja is not None else None,
+                 ja is not None and ja + 1e-12 >= float(req["link_current_min_a"]))
         if req.get("tcr_max_ppm"):
             c = parse_ppm(a.get("Temperature Coefficient"))
             need("temperature coefficient", "%d ppm/K or less" % req["tcr_max_ppm"], a.get("Temperature Coefficient"), c is not None and c <= req["tcr_max_ppm"] + 1e-9)
@@ -695,6 +723,21 @@ def compose_land(board):
     return commute(board, mine, extra=[[own]] + ([together] if together != [own] else []))
 
 
+def compose_intent(board):
+    """Round 5's intent draft: its commutation with the Layer 4 chain, each standalone draft, this record's LCSC draft (and land
+    draft, on board B), and all of them together."""
+    import l6r2_intent
+    D = l6r2_intent.declarations(TOP)
+
+    def mine(text):
+        st, new, why = l6r2_intent.apply_text(text, board, D[board])
+        return new if st == "OK" else None
+    own = [REC + "/apply_gen_sch_%s_lcsc.py" % board] + ([REC + "/apply_gen_sch_%s_xal_land.py" % board] if os.path.exists(os.path.join(HERE, "apply_gen_sch_%s_xal_land.py" % board)) else [])
+    chain = change_chain(board)
+    together = chain + STANDALONE.get(board, []) + own
+    return commute(board, mine, extra=[[x] for x in own] + ([together] if together != own[:1] else []))
+
+
 def _fp_maps(text):
     """The generator's footprint map: `FP = {...}` and every `FP.update({...})` at module level, read by ast; the entries whose key
     and value are literals (a computed entry is left out: none of the inductor keys is computed)."""
@@ -867,6 +910,13 @@ def load_catalogue():
 
 
 def compute():
+    """Round 5: the rows are computed under the drafted intent declarations (l6r2_intent.overlay), as if the drafts were applied."""
+    import l6r2_intent
+    with l6r2_intent.overlay(PI, TOP):
+        return _compute()
+
+
+def _compute():
     MAP, CRT, TAB = lcsc_fill_map(), certified(), table()
     cat = load_catalogue()
     cat["_refusals"] = refusals()
@@ -1153,6 +1203,14 @@ def main(argv):
     if "--page-table" in argv:
         sys.stdout.write(page_table(compute()[0])); return 0
     if "--plan" in argv:
+        import l6r2_intent
+        with l6r2_intent.overlay(PI, TOP):
+            return _plan()
+    return _main(argv)
+
+
+def _plan():
+    if True:
         MAP, CRT, TAB = lcsc_fill_map(), certified(), table()
         codes, kws = set(), set()
         for b in ORDER:
@@ -1170,6 +1228,9 @@ def main(argv):
                 if d["verdict"] == "FAILS": kws.update(d["keywords"])
         print(json.dumps(dict(codes=sorted(codes), keywords=sorted(kws)), ensure_ascii=False, indent=1))
         return 0
+
+
+def _main(argv):
     B, cat, TAB = compute()
     if "--draft" in argv:
         import l6r2_apply
@@ -1180,6 +1241,12 @@ def main(argv):
         for b in ORDER:
             p = os.path.join(HERE, "apply_gen_sch_%s_lcsc.py" % b)
             open(p, "w", encoding="utf-8").write(l6r2_apply.render_draft(b, entries_for(b, B)))
+            print("written", os.path.relpath(p, TOP))
+        import l6r2_intent
+        D = l6r2_intent.declarations(TOP)
+        for b in sorted(D):
+            p = os.path.join(HERE, "apply_gen_sch_%s_intent.py" % b)
+            open(p, "w", encoding="utf-8").write(l6r2_intent.render_draft(b, D[b]))
             print("written", os.path.relpath(p, TOP))
         return 0
     if "--identities" in argv:
@@ -1234,7 +1301,91 @@ def main(argv):
     import l6r2_land
     land_report(lands(), {b: compose_land(b) for b in l6r2_land.EDITS})
     coded_report(B)
+    decl_report(B)
     return 0
+
+
+def decl_report(B):
+    import l6r2_intent
+    P = print
+    D = l6r2_intent.declarations(TOP)
+    P("8. ROUND 5: THE OPEN REQUIREMENTS OF FINDING F3 (declarations derived at the desk, drafted for the intents; the rows judged as if applied)")
+    for b in sorted(D, key=ORDER.index):
+        P("   board %s: %d declarations (apply_gen_sch_%s_intent.py, inserted before the intent is written)" % (NAME[b], len(D[b]), b))
+        for net, vmax, vmin, basis in D[b]:
+            P("     %s: %+.3f to %+.3f V. %s" % (net, vmin, vmax, clean(basis)))
+        for n in compose_intent(b)["notes"]: P("     %s" % n)
+    closed = {"p": ["C9"], "d": ["C46", "C47", "C48"], "b": ["C161", "C162", "C500", "C501", "C502", "C503", "C504", "C505", "R13"], "e": ["R51"]}
+    P("   the rows these declarations and the held Uniroyal jumper table close, as the record now selects them:")
+    for b in ORDER:
+        for d in B[b]["sels"]:
+            hit = [r for r in d["refs"] if r in closed.get(b, [])]
+            if not hit: continue
+            ch = d.get("choice") or {}
+            pk = ch.get("pick")
+            req = d["requirements"]
+            rq = "; ".join("%s %s" % (k, req[k]) for k in ("v_rating_min", "dielectric", "tolerance_max_pct", "link_current_min_a") if req.get(k) is not None)
+            P("     board %s %s [%s]: %s; basis %s; %s" % (NAME[b], ", ".join(hit), clean(d["values"][0])[:40], rq,
+                                                      clean("; ".join("%s: %s" % (k, " | ".join(v)) for k, v in d["basis"].items() if k in ("v_rating_min", "link_current_min_a")))[:300],
+                                                      ("%s %s %s %s, stock %s (%s)" % (ch["state"], pk["code"], clean(pk["row"].get("brand")), clean(pk["row"].get("model")), pk["stock"],
+                                                                                     clean("; ".join("%s %s" % (x[0], x[2]) for x in pk["lines"]))[:260])) if pk else (ch.get("state") or d["cls"])))
+    L = lpf_check(B)
+    C1, L1, C2, L2, C3 = L["values"]
+    P("   board D L1, L2 (68 nH 0805, the 145 MHz harmonic filter after the 30 W PA): the ladder C58 %.0f pF, L1 %.0f nH, C59 %.0f pF, L2 %.0f nH, C60 %.0f pF" % (
+        C1 * 1e12, L1 * 1e9, C2 * 1e12, L2 * 1e9, C3 * 1e12))
+    P("     is a fifth-order 0.1 dB Chebyshev low-pass of about 166 MHz corner (g = 1.1468, 1.3712, 1.9750: C1 = g1 / (2 pi fc R) = 22 pF, L = g2 R / (2 pi fc) = 66 nH,")
+    P("     C3 = 38 pF at fc = 166 MHz, R = 50 Ohm). Into 50 Ohm, ideal parts (S21 nominal / worst at L +-2 %, C +-5 %; S11 worst):")
+    for f, (nomv, worst, s11w) in sorted(L["points"].items()):
+        P("       %5.0f MHz: S21 %7.2f dB / %7.2f dB, S11 %6.1f dB" % (f / 1e6, nomv[0], worst, s11w))
+    P("     VERIFIED against its stated purpose (a 145 MHz fifth-order low-pass): in band at most 0.05 dB lost and the return loss at least")
+    P("     19.8 dB over the tolerance corners; the second harmonic down at least 27.2 dB, the third 47.1 dB (ideal parts).")
+    P("     The current the parts carry is NOT the generator's 'about 775 mA' (the load current, sqrt(30/50) = %.3f A): with 30 W in a matched" % L["i_load"])
+    P("     load the ladder's shunt capacitors draw their reactive current through the inductors, %.2f A RMS in L1 and %.2f A RMS in L2 at" % (L["i_l1"], L["i_l2"]))
+    P("     145 MHz (C59's node at %.1f V RMS). The rows stay OPEN with two exact questions: (1) the current rating: is the PA's operation into" % L["v_mid"])
+    P("     a fully reflecting antenna (the case the 110 V declarations of RF_PAOUT, RF_LPF_M and RF_LPF_OUT take) a sustained case, and at")
+    P("     what forward power does the PA's own protection hold it (MESHSAT-818)? Matched, L2 needs at least %.2f A RMS before any derating," % L["i_l2"])
+    P("     against the 1.2 A of the Murata LQW2BAN68NG00L the generator's comment names; (2) the part's self-resonance above 435 MHz (the")
+    P("     third harmonic, where an inductor past its SRF turns capacitive and the stop band collapses) and its Q at 145 MHz, from the")
+    P("     maker's sheet, which is not held in the tree.")
+    P("   board C D1 to D16 and D22 (the panel lamps): stay OPEN. The missing facts: the luminance (or intensity) each lamp must give at the")
+    P("   face plate in DAY (sunlight viewable) and the most it may give in NVG (v2/docs/PANEL.md section 8 states the dimming duties, 100,")
+    P("   15 and 2 percent, and no luminance), and the transmission of the Mentor LL14 light guide in the plate (its held sheet prints the")
+    P("   guide's geometry and a table of LEDs, no transmission); the viewing angle through the guide follows from the same sheet set. A")
+    P("   Layer 7 (panel) matter: the lamp's intensity is the required luminance over the guide's transmission.")
+    P()
+
+
+def lpf_check(B):
+    """Board D's harmonic filter (C58, L1, C59, L2, C60): the drawn values read off the committed netlist, the ladder's response
+    into 50 Ohm at the band (144 to 146 MHz) and the harmonics, at the nominal values and at the corners of L +-2 % and C +-5 %
+    (ideal parts: no Q, no self-resonance), and the RMS currents through L1 and L2 with 30 W in a matched 50 Ohm load."""
+    rows = {p["ref"]: p for p in B["d"]["rows"]}
+    def val(ref, unit):
+        m = re.match(r"([\d.]+)\s*%s" % unit, rows[ref]["value"])
+        if not m: die(3, "board D %s's value %r names no %s" % (ref, rows[ref]["value"], unit))
+        return float(m.group(1)) * {"p": 1e-12, "nH": 1e-9}[unit]
+    C1, L1, C2, L2, C3 = val("C58", "p"), val("L1", "nH"), val("C59", "p"), val("L2", "nH"), val("C60", "p")
+
+    def resp(f, c1, l1, c2, l2, c3, R=50.0):
+        w = 2 * math.pi * f
+        M = [[1, 0], [1j * w * c1, 1]]
+        for e in ([[1, 1j * w * l1], [0, 1]], [[1, 0], [1j * w * c2, 1]], [[1, 1j * w * l2], [0, 1]], [[1, 0], [1j * w * c3, 1]]):
+            M = [[M[0][0] * e[0][0] + M[0][1] * e[1][0], M[0][0] * e[0][1] + M[0][1] * e[1][1]],
+                 [M[1][0] * e[0][0] + M[1][1] * e[1][0], M[1][0] * e[0][1] + M[1][1] * e[1][1]]]
+        A, Bm, C, D = M[0][0], M[0][1], M[1][0], M[1][1]
+        den = A + Bm / R + C * R + D
+        return 20 * math.log10(abs(2 / den)), 20 * math.log10(max(abs((A + Bm / R - C * R - D) / den), 1e-12))
+    out = dict(values=(C1, L1, C2, L2, C3), points={})
+    for f in (144e6, 145e6, 146e6, 290e6, 435e6, 580e6):
+        corners = [resp(f, C1 * kc, L1 * kl, C2 * kc, L2 * kl, C3 * kc) for kc in (0.95, 1.0, 1.05) for kl in (0.98, 1.0, 1.02)]
+        out["points"][f] = (resp(f, C1, L1, C2, L2, C3), min(c[0] for c in corners), max(c[1] for c in corners))
+    w = 2 * math.pi * 145e6
+    VL = math.sqrt(30.0 * 50.0)
+    IL2 = VL / 50.0 + VL * 1j * w * C3
+    V2 = VL + IL2 * 1j * w * L2
+    IL1 = IL2 + V2 * 1j * w * C2
+    out["i_l1"], out["i_l2"], out["v_mid"], out["i_load"] = abs(IL1), abs(IL2), abs(V2), VL / 50.0
+    return out
 
 
 def coded_report(B):

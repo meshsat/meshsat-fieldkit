@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """apply_gen_sch_e_lcsc.py: DRAFT for board E's generator owner (Layer 6 record l6r2, MESHSAT-1357, 3 October 2026). NOT APPLIED.
 
-It writes the LCSC field of board E's generic parts into v2/ecad/tools/gen_sch_e.py: 90 designators, each keyed by the value
+It writes the LCSC field of board E's generic parts into v2/ecad/tools/gen_sch_e.py: 91 designators, each keyed by the value
 the code was selected for; 4 of them correct a code the generator's call writes (the entry's third field is the code
 replaced, finding F7) (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
 `l6r2_passives.py --write-drafts`; test_l6r2.py holds this file equal to the render and proves its composition with every other
@@ -106,6 +106,7 @@ ENTRIES = {
     'R48': ('22R (pulse input series)', 'C23345'),
     'R49': ('10k', 'C25804'),
     'R50': ('10k', 'C25804'),
+    'R51': ('0R (CSB high: I2C mode; its own net keeps the pin joiner off the diagonal)', 'C21189'),
 }
 
 

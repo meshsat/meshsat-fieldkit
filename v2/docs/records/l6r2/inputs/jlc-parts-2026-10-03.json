@@ -204,6 +204,56 @@
 "sort": "Multilayer Ceramic Capacitors MLCC - SMD/SMT / Capacitors",
 "stock": 1997102
 },
+"C106203": {
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C106203",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0044,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0033,
+"to": 2999
+},
+{
+"from": 3000,
+"price": 0.0028,
+"to": 9999
+},
+{
+"from": 10000,
+"price": 0.0025,
+"to": 49999
+},
+{
+"from": 50000,
+"price": 0.0023,
+"to": 99999
+},
+{
+"from": 100000,
+"price": 0.0022,
+"to": -1
+}
+],
+"read_utc": "2026-10-03T15:56:24Z",
+"sort": "Multilayer Ceramic Capacitors MLCC - SMD/SMT / Capacitors",
+"stock": 3044125
+},
 "C106243": {
 "attributes": {
 "Capacitance": "100nF",
@@ -5554,6 +5604,59 @@
 "read_utc": "2026-10-03T13:41:58Z",
 "sort": "Chip Resistor - Surface Mount / Resistors",
 "stock": 10086
+},
+"C25469": {
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±800ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C25469",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% ±800ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "25121WJ0000T4E",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0272,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0222,
+"to": 599
+},
+{
+"from": 600,
+"price": 0.0194,
+"to": 3999
+},
+{
+"from": 4000,
+"price": 0.0159,
+"to": 7999
+},
+{
+"from": 8000,
+"price": 0.0145,
+"to": 19999
+},
+{
+"from": 20000,
+"price": 0.0137,
+"to": -1
+}
+],
+"read_utc": "2026-10-03T15:56:25Z",
+"sort": "Chip Resistor - Surface Mount / Resistors",
+"stock": 256909
 },
 "C25803": {
 "attributes": {
@@ -14415,6 +14518,633 @@
 }
 ],
 "total": 2722
+},
+"0402 22pF 35V C0G": {
+"read_utc": "2026-10-03T15:56:25Z",
+"rows": [],
+"total": 0
+},
+"0402 22pF C0G": {
+"read_utc": "2026-10-03T15:56:26Z",
+"rows": [
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C106203",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0044,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0033,
+"to": 2999
+}
+],
+"stock": 3044125
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±1%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C277482",
+"describe": "22pF 50V NP0 ±1% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402FRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0103,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.008,
+"to": 1499
+}
+],
+"stock": 304066
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±1%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C295968",
+"describe": "22pF 50V NP0 ±1% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220F500CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0048,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0038,
+"to": 2999
+}
+],
+"stock": 5886
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±10%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C295969",
+"describe": "22pF 50V NP0 ±10% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220K500CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0054,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0042,
+"to": 1499
+}
+],
+"stock": 16
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C327788",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "MG15N220J500CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0112,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0089,
+"to": 1499
+}
+],
+"stock": 637
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C338129",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220J500CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0043,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0035,
+"to": 2999
+}
+],
+"stock": 137125
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±2%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C384802",
+"describe": "22pF 50V NP0 ±2% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220G500CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0034,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0026,
+"to": 2999
+}
+],
+"stock": 6282
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "Johanson Dielectrics",
+"code": "C431657",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "500R07N220JV4T",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0235,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0187,
+"to": 599
+}
+],
+"stock": 13
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "100V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C525496",
+"describe": "100V 22pF NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220J101CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0037,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0029,
+"to": 2999
+}
+],
+"stock": 31
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "25V"
+},
+"brand": "YAGEO",
+"code": "C541361",
+"describe": "22pF 25V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JRNPO8BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0035,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.003,
+"to": 2999
+}
+],
+"stock": 20701
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±2%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C541412",
+"describe": "22pF 50V NP0 ±2% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402GRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.007,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0056,
+"to": 2999
+}
+],
+"stock": 99478
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "100V"
+},
+"brand": "YAGEO",
+"code": "C576701",
+"describe": "100V 22pF NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JRNPO0BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0051,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0041,
+"to": 2999
+}
+],
+"stock": 247966
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C726125",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "AC0402JRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0058,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0048,
+"to": 2999
+}
+],
+"stock": 27633
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "25V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C908480",
+"describe": "22pF 25V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220J250CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.002,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 2999
+}
+],
+"stock": 24
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±10%",
+"Voltage Rating": "25V"
+},
+"brand": "YAGEO",
+"code": "C1852900",
+"describe": "22pF 25V NP0 ±10% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402KRNPO8BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0028,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0022,
+"to": 2999
+}
+],
+"stock": 2794
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C1853436",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JPNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0044,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0038,
+"to": 2999
+}
+],
+"stock": 149422
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "Wurth Elektronik",
+"code": "C2168716",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "885012005057",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0204,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0162,
+"to": 1499
+}
+],
+"stock": 14
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "16V"
+},
+"brand": "YAGEO",
+"code": "C2175872",
+"describe": "16V 22pF NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CC0402JRNPO7BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0042,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0033,
+"to": 2999
+}
+],
+"stock": 14067
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±1%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C2191676",
+"describe": "22pF 50V NP0 ±1% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "AC0402FRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0173,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.014,
+"to": 1499
+}
+],
+"stock": 39000
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±2%",
+"Voltage Rating": "50V"
+},
+"brand": "YAGEO",
+"code": "C2206419",
+"describe": "22pF 50V NP0 ±2% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "CQ0402GRNPO9BN220",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.021,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0162,
+"to": 599
+}
+],
+"stock": 7542
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±5%",
+"Voltage Rating": "50V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C2991490",
+"describe": "22pF 50V NP0 ±5% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220J500CT-C",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0017,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0014,
+"to": 2999
+}
+],
+"stock": 18
+},
+{
+"attributes": {
+"Capacitance": "22pF",
+"Temperature Coefficient": "NP0",
+"Tolerance": "±1%",
+"Voltage Rating": "100V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C3846574",
+"describe": "100V 22pF NP0 ±1% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+"lib": "expand",
+"model": "0402N220F101CT",
+"package": "0402",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0106,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0084,
+"to": 1499
+}
+],
+"stock": 51
+}
+],
+"total": 736
 },
 "0402 27pF C0G": {
 "read_utc": "2026-10-03T13:42:34Z",
@@ -88605,6 +89335,4736 @@
 }
 ],
 "total": 865
+},
+"0Ω 0603": {
+"read_utc": "2026-10-03T15:56:27Z",
+"rows": [
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±800ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C15402",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% ±800ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "0603WAJ0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0015,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0012,
+"to": 4999
+}
+],
+"stock": 2058346
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C21189",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "base",
+"model": "0603WAF0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0023,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0018,
+"to": 4999
+}
+],
+"stock": 23710326
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C95177",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC0603JR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0024,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0019,
+"to": 4999
+}
+],
+"stock": 3692585
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C100044",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC0603FR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0034,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0025,
+"to": 4999
+}
+],
+"stock": 8609793
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+125℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "LIZ Elec",
+"code": "C100699",
+"describe": "-55℃~+125℃ 0Ω 100mW 50V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603FA0000G",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0127,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0101,
+"to": 1499
+}
+],
+"stock": 8529
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+125℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "LIZ Elec",
+"code": "C101250",
+"describe": "-55℃~+125℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603JA0000G",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0067,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0065,
+"to": 1499
+}
+],
+"stock": 3351
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "RALEC",
+"code": "C103195",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RTT030000FTP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0027,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0021,
+"to": 4999
+}
+],
+"stock": 55556
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "RALEC",
+"code": "C103196",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RTT03000JTP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0018,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0014,
+"to": 4999
+}
+],
+"stock": 9
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C115304",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RS-03000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0021,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0016,
+"to": 4999
+}
+],
+"stock": 402299
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C116699",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AC0603FR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0075,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0063,
+"to": 4999
+}
+],
+"stock": 535042
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "150V"
+},
+"brand": "PANASONIC",
+"code": "C122704",
+"describe": "-55℃~+155℃ 0Ω 100mW 150V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ERJ3GEY0R00V",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0061,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0049,
+"to": 4999
+}
+],
+"stock": 301834
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "-",
+"Resistance": "0Ω",
+"Tolerance": "-",
+"Type": "Thick Film Resistor"
+},
+"brand": "KOA Speer Elec",
+"code": "C130238",
+"describe": "-55℃~+155℃ 0Ω Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RK73Z1JTTD",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0069,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0057,
+"to": 4999
+}
+],
+"stock": 120743
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C136582",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RS-03000FT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0024,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0018,
+"to": 4999
+}
+],
+"stock": 983943
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C141796",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AC0603JR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0048,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0039,
+"to": 4999
+}
+],
+"stock": 45319
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C144114",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AF0603JR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.009,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.007,
+"to": 1499
+}
+],
+"stock": 42118
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-200ppm/℃~+400ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C163836",
+"describe": "-200ppm/℃~+400ppm/℃ -55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WR06X0000FTL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0029,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0023,
+"to": 4999
+}
+],
+"stock": 1933
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Ever Ohms Tech",
+"code": "C176152",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "QR0603J0R00P05Z",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0038,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0029,
+"to": 4999
+}
+],
+"stock": 4200
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "HKR(Hong Kong Resistors)",
+"code": "C177335",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCT030RLF",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0018,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 4999
+}
+],
+"stock": 70519
+},
+{
+"attributes": {
+"Operating Temperature": "-",
+"Power(Watts)": "500mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "-"
+},
+"brand": "Keystone",
+"code": "C238134",
+"describe": "0Ω 500mW 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "5110",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.4796,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.3902,
+"to": 29
+}
+],
+"stock": 21
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "250mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor"
+},
+"brand": "ROHM Semicon",
+"code": "C253507",
+"describe": "-55℃~+155℃ 0Ω 250mW Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "PMR03EZPJ000",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1355,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.1054,
+"to": 149
+}
+],
+"stock": 20933
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "TyoHM",
+"code": "C269680",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±400ppm/℃ ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMC060305%N",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0029,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0022,
+"to": 4999
+}
+],
+"stock": 4217
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "TyoHM",
+"code": "C269698",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±1% ±400ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMC060301%N",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0041,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0032,
+"to": 4999
+}
+],
+"stock": 10002
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Viking Tech",
+"code": "C304185",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR-03FL7----0R",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.002,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0016,
+"to": 4999
+}
+],
+"stock": 95157
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "125mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-200ppm/℃~+400ppm/℃",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C327824",
+"describe": "-200ppm/℃~+400ppm/℃ -55℃~+155℃ 0Ω 125mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "MR06X000PTL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.002,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0014,
+"to": 4999
+}
+],
+"stock": 1761
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "250mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "-"
+},
+"brand": "SEI(Stackpole Elec)",
+"code": "C346500",
+"describe": "-55℃~+155℃ 0Ω 250mW 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "HCJ0603ZT0R00",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.102,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0802,
+"to": 149
+}
+],
+"stock": 143
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C347050",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ACD03000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0018,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0014,
+"to": 4999
+}
+],
+"stock": 1
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "Ever Ohms Tech",
+"code": "C429617",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603J0R00P05Z",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0016,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0012,
+"to": 4999
+}
+],
+"stock": 538
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-200ppm/℃~+400ppm/℃",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C431718",
+"describe": "-200ppm/℃~+400ppm/℃ -55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SR06X000PTL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0073,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0059,
+"to": 4999
+}
+],
+"stock": 5321
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Viking Tech",
+"code": "C465460",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR-03JA7----0R",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0027,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0021,
+"to": 4999
+}
+],
+"stock": 158
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "200mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C473609",
+"describe": "-55℃~+155℃ 0Ω 200mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "HP03W5J0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0019,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 4999
+}
+],
+"stock": 9018
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "ROHM Semicon",
+"code": "C510292",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SFR03EZPJ000",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0085,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0065,
+"to": 1499
+}
+],
+"stock": 5814
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "BOURNS",
+"code": "C512908",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603-J/-000ELF",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.005,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.004,
+"to": 4999
+}
+],
+"stock": 87580
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Type": "Thick Film Resistor"
+},
+"brand": "PANASONIC",
+"code": "C713447",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ERJS030R00V",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.016,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0126,
+"to": 1499
+}
+],
+"stock": 8855
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C844512",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EBC",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0113,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.009,
+"to": 1499
+}
+],
+"stock": 58645
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C844718",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EAC",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.006,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0049,
+"to": 4999
+}
+],
+"stock": 20679
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "333mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C844719",
+"describe": "-55℃~+155℃ 0Ω 333mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EAHP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0311,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0241,
+"to": 1499
+}
+],
+"stock": 314528
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C844721",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount",
+"lib": "expand",
+"model": "CRCW06030000ZSTA",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0347,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0267,
+"to": 599
+}
+],
+"stock": 20786
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "100V"
+},
+"brand": "Vishay Intertech",
+"code": "C844915",
+"describe": "-55℃~+155℃ 0Ω 100V 100mW Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EA",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0029,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0023,
+"to": 4999
+}
+],
+"stock": 54727
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "YAGEO",
+"code": "C859113",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC0603JR-070RP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0054,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0043,
+"to": 4999
+}
+],
+"stock": 2213
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor"
+},
+"brand": "Ever Ohms Tech",
+"code": "C881308",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603F0R00P05Z",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0019,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 4999
+}
+],
+"stock": 15043
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "TA-I Tech",
+"code": "C912087",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMS06FT0",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0031,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0023,
+"to": 1499
+}
+],
+"stock": 4030
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "TA-I Tech",
+"code": "C912473",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMS06JT0",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.002,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0015,
+"to": 1499
+}
+],
+"stock": 30025
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C1512169",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC0603JR-130RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0023,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0019,
+"to": 2999
+}
+],
+"stock": 24310
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+125℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thin Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C1711998",
+"describe": "-55℃~+125℃ 0Ω 100mW 75V Thin Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "MCT0603HZ0000ZP500",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.4894,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.3902,
+"to": 29
+}
+],
+"stock": 64
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "PANASONIC",
+"code": "C1858694",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±200ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ERJ-U030R00V",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0379,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0301,
+"to": 599
+}
+],
+"stock": 4
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "BOURNS",
+"code": "C1870266",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603AJ/-000ELF",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0113,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0088,
+"to": 1499
+}
+],
+"stock": 11430
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "YAGEO",
+"code": "C1882598",
+"describe": "-55℃~+155℃ 0Ω 100mW 200V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AA0603JR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0111,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0088,
+"to": 1499
+}
+],
+"stock": 10422
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "TE Connectivity",
+"code": "C2074258",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRG0603ZR",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0079,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0064,
+"to": 4999
+}
+],
+"stock": 37846
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C2077227",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCG06030000Z0EA",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0326,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0241,
+"to": 599
+}
+],
+"stock": 1391
+},
+{
+"attributes": {
+"Operating Temperature": "-",
+"Power(Watts)": "500mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "-",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "Keystone",
+"code": "C2083833",
+"describe": "0Ω 500mW 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "5111",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.5333,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.5203,
+"to": 29
+}
+],
+"stock": 9
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "100V"
+},
+"brand": "Vishay Intertech",
+"code": "C2085587",
+"describe": "-55℃~+155℃ 0Ω 100V 100mW Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EC",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0035,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0027,
+"to": 2999
+}
+],
+"stock": 16756
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "BOURNS",
+"code": "C2092070",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603AJ/-000EAS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0138,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0107,
+"to": 1499
+}
+],
+"stock": 5037
+},
+{
+"attributes": {
+"Operating Temperature": "-65℃~+170℃",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±3900ppm/℃"
+},
+"brand": "Vishay Intertech",
+"code": "C2094709",
+"describe": "-65℃~+170℃ 0Ω ±3900ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WSL060300000ZEA9",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.7511,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.6194,
+"to": 29
+}
+],
+"stock": 3976
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "250mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C2094997",
+"describe": "-55℃~+155℃ 0Ω 250mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCS06030000Z0EC",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.04,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0321,
+"to": 299
+}
+],
+"stock": 20104
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "YAGEO",
+"code": "C2124342",
+"describe": "-55℃~+155℃ 0Ω 100mW 50V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AR0603JR-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0569,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0456,
+"to": 299
+}
+],
+"stock": 247
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "250mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C2126552",
+"describe": "-55℃~+155℃ 0Ω 250mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCS06030000Z0EA",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0361,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0287,
+"to": 599
+}
+],
+"stock": 12271
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "-",
+"Type": "Thick Film Resistor"
+},
+"brand": "YAGEO",
+"code": "C2129186",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "PT0603-R-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0157,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0124,
+"to": 1499
+}
+],
+"stock": 4591
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "SEI(Stackpole Elec)",
+"code": "C2441282",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMCF0603ZT0R00",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0043,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0033,
+"to": 4999
+}
+],
+"stock": 11681
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "-",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±0.5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "KOA Speer Elec",
+"code": "C2596815",
+"describe": "-55℃~+155℃ 0Ω 75V Thick Film Resistor ±0.5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RK73Z1JRTTD",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0487,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0387,
+"to": 299
+}
+],
+"stock": 13
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "125mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thin Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C2654002",
+"describe": "-55℃~+155℃ 0Ω 125mW 75V Thin Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "MCT06030Z0000ZP500",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0465,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0373,
+"to": 299
+}
+],
+"stock": 28477
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C2758737",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "NQ03WAF0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0045,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0036,
+"to": 4999
+}
+],
+"stock": 18176
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C2765615",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CQ03WAF0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0028,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0023,
+"to": 4999
+}
+],
+"stock": 116
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C2765626",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±200ppm/℃ ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CQ03WAJ0000T5E",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0023,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0018,
+"to": 4999
+}
+],
+"stock": 33295
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C2906974",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRC0603F0000TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0025,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0021,
+"to": 4999
+}
+],
+"stock": 1311589
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C2907080",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRC0603P000 TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0019,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 4999
+}
+],
+"stock": 5715200
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-200ppm/℃~+400ppm/℃",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C2909476",
+"describe": "-200ppm/℃~+400ppm/℃ -55℃~+155℃ 0Ω 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WR06X000 PTL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0022,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0017,
+"to": 4999
+}
+],
+"stock": 60170
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "VO",
+"code": "C3016185",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SCR0603F0R",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0011,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0008,
+"to": 4999
+}
+],
+"stock": 2474
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "VO",
+"code": "C3017805",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SCR0603J0R",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0009,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0007,
+"to": 4999
+}
+],
+"stock": 1073
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±300ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor"
+},
+"brand": "Sunway",
+"code": "C3152120",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±1% ±300ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SC0603F0000I2BNRH",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0018,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0014,
+"to": 4999
+}
+],
+"stock": 22565
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±300ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "Sunway",
+"code": "C3152151",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±300ppm/℃ ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SC0603J0000I2BNRH",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0016,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0012,
+"to": 4999
+}
+],
+"stock": 32627
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "330mW",
+"Resistance": "0Ω",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C3934710",
+"describe": "-55℃~+155℃ 0Ω 330mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW06030000Z0EDHP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0714,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0556,
+"to": 149
+}
+],
+"stock": 10194
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "-",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "YAGEO",
+"code": "C3980353",
+"describe": "-55℃~+155℃ 0Ω 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AC0603JR-130RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0039,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0032,
+"to": 2999
+}
+],
+"stock": 19866
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "62.5mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Venkel",
+"code": "C4070323",
+"describe": "-55℃~+155℃ 0Ω 62.5mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603-16W-000T",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0024,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0018,
+"to": 4999
+}
+],
+"stock": 2291
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "500mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±150ppm/℃",
+"Type": "Metal Film Resistor"
+},
+"brand": "YAGEO",
+"code": "C4081402",
+"describe": "-55℃~+155℃ 0Ω 500mW Metal Film Resistor ±150ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "PA0603-R-070RL",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1542,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.1286,
+"to": 149
+}
+],
+"stock": 150
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "125mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thin Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C4085635",
+"describe": "-55℃~+155℃ 0Ω 125mW 75V Thin Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "MCT0603MZ0000ZP500",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0976,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0769,
+"to": 149
+}
+],
+"stock": 14174
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Venkel",
+"code": "C4116087",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR0603-10W-000T",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0024,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0019,
+"to": 4999
+}
+],
+"stock": 8752
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+175℃",
+"Power(Watts)": "125mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "PANASONIC",
+"code": "C4117710",
+"describe": "-55℃~+175℃ 0Ω 125mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ERJ-H3G0R00V",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.049,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0383,
+"to": 299
+}
+],
+"stock": 4333
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "125mW",
+"Resistance": "0Ω",
+"Type": "Thin Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C4287324",
+"describe": "-55℃~+155℃ 0Ω 125mW 75V Thin Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "MCT06030Z0000ZPW00",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1943,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.1533,
+"to": 149
+}
+],
+"stock": 811
+},
+{
+"attributes": {
+"Operating Temperature": "-",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±100ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C4354894",
+"describe": "0Ω 100mW Thick Film Resistor ±100ppm/℃ ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ABD03000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.004,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0032,
+"to": 4999
+}
+],
+"stock": 1495
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C5119997",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RHS-03000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0043,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0034,
+"to": 4999
+}
+],
+"stock": 5797
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "RALEC",
+"code": "C5139500",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RAT03000JTP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0041,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0031,
+"to": 4999
+}
+],
+"stock": 4
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Vishay Intertech",
+"code": "C5158082",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCA06030000ZSEA",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0267,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0217,
+"to": 599
+}
+],
+"stock": 18
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "VO",
+"code": "C5913184",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FCR0603J0R",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0026,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.002,
+"to": 4999
+}
+],
+"stock": 3
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+170℃",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±50ppm/℃",
+"Tolerance": "±5%"
+},
+"brand": "TA-I Tech",
+"code": "C7463368",
+"describe": "-55℃~+170℃ 0Ω ±5% ±50ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RLM06JTAR000L",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.055,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0539,
+"to": 149
+}
+],
+"stock": 2
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "200mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C7468354",
+"describe": "0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRP0603F0000TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0035,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0027,
+"to": 4999
+}
+],
+"stock": 1266
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "FOJAN",
+"code": "C7468418",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRQ0603P000 TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0028,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0022,
+"to": 4999
+}
+],
+"stock": 69639
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±100ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C7468558",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% ±100ppm/℃ 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRQ0603F0000TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0036,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.003,
+"to": 4999
+}
+],
+"stock": 5618
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "HKR(Hong Kong Resistors)",
+"code": "C22356631",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCA030RLF",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0014,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0012,
+"to": 4999
+}
+],
+"stock": 5382677
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Guangdong Hottech",
+"code": "C23868202",
+"describe": "0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RI0603L0000FT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0025,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0019,
+"to": 2999
+}
+],
+"stock": 14200
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+70℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "CHANGLONG",
+"code": "C48996848",
+"describe": "-55℃~+70℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CL0603JN0RP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0022,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0016,
+"to": 4999
+}
+],
+"stock": 22240
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C49190524",
+"describe": "-55℃~+155℃ 0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "ADD03000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0034,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0026,
+"to": 4999
+}
+],
+"stock": 15
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "GiantOhm",
+"code": "C49652988",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "GR0603F0RT5G00",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0014,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0011,
+"to": 4999
+}
+],
+"stock": 174
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "GiantOhm",
+"code": "C49653270",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "GR0603J0RT5G00",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0013,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.001,
+"to": 4999
+}
+],
+"stock": 74
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "CHANGLONG",
+"code": "C51035939",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CL0603FN0RP",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0025,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0019,
+"to": 4999
+}
+],
+"stock": 4946
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C51048217",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±1% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRR0603F0000TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0023,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0017,
+"to": 4999
+}
+],
+"stock": 70499
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "FOJAN",
+"code": "C51048218",
+"describe": "-55℃~+155℃ 0Ω 100mW 75V Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRR0603P000 TS",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0023,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0018,
+"to": 4999
+}
+],
+"stock": 36467
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±800ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "SAE",
+"code": "C53224183",
+"describe": "0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "1RC0603F0000",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0021,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0016,
+"to": 4999
+}
+],
+"stock": 28285
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "75V"
+},
+"brand": "Guangdong Hottech",
+"code": "C53425172",
+"describe": "0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RI0603L000JT",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.002,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0015,
+"to": 4999
+}
+],
+"stock": 14596
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Resistance": "0Ω",
+"Tolerance": "±5%"
+},
+"brand": "Milliohm",
+"code": "C54563310",
+"describe": "0603 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HoPWR0603-0R-5%",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0252,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.02,
+"to": 599
+}
+],
+"stock": 4578
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "100mW",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "50V"
+},
+"brand": "HWA CHN",
+"code": "C54920957",
+"describe": "0Ω 100mW Thick Film Resistor ±5% 0603 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "HRC0603J000 ENTN",
+"package": "0603",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0011,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0008,
+"to": 4999
+}
+],
+"stock": 2374401
+}
+],
+"total": 1340
+},
+"0Ω 2512": {
+"read_utc": "2026-10-03T15:56:28Z",
+"rows": [
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±800ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C25469",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% ±800ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "25121WJ0000T4E",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0272,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0222,
+"to": 599
+}
+],
+"stock": 256909
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+125℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "LIZ Elec",
+"code": "C102531",
+"describe": "-55℃~+125℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR2512J10000G",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0028,
+"to": 999
+},
+{
+"from": 1000,
+"price": 0.0021,
+"to": 3999
+}
+],
+"stock": 1
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "RALEC",
+"code": "C105062",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RTT25000JTE",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0318,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0256,
+"to": 599
+}
+],
+"stock": 406
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "YAGEO",
+"code": "C144428",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±200ppm/℃ ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "AC2512JK-070RL",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0847,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0695,
+"to": 299
+}
+],
+"stock": 1315
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "250V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C168600",
+"describe": "-55℃~+155℃ 0Ω 1W 250V Thick Film Resistor ±200ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WR25X000PTL",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.034,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0274,
+"to": 599
+}
+],
+"stock": 6
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "Ever Ohms Tech",
+"code": "C175214",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR2512F0R00E04Z",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0386,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0304,
+"to": 599
+}
+],
+"stock": 12
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "Ever Ohms Tech",
+"code": "C175404",
+"describe": "-55℃~+155℃ 0Ω 200V 2W Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRH2512J0R00E04Z",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0404,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0319,
+"to": 299
+}
+],
+"stock": 2045
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "YAGEO",
+"code": "C189505",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC2512JK-070RL",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0607,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0508,
+"to": 299
+}
+],
+"stock": 3102
+},
+{
+"attributes": {
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "TyoHM",
+"code": "C269343",
+"describe": "0Ω 1W 200V Thick Film Resistor ±400ppm/℃ ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMC251205%N",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.053,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0422,
+"to": 299
+}
+],
+"stock": 3
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±800ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "UNI-ROYAL(Uniroyal Elec)",
+"code": "C270957",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% ±800ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "25121WF0000T4E",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0318,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0254,
+"to": 599
+}
+],
+"stock": 59960
+},
+{
+"attributes": {
+"Mounting Type": "SMD",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Alloy Resistor",
+"Voltage Rating": "-"
+},
+"brand": "RALEC",
+"code": "C304385",
+"describe": "0Ω 2W Alloy Resistor SMD ±5% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "LR2512-22R000J4",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0901,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0713,
+"to": 149
+}
+],
+"stock": 4
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C304644",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC-12000JT",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0383,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0298,
+"to": 599
+}
+],
+"stock": 7595
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1.5W",
+"Resistance": "0Ω",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "500V"
+},
+"brand": "Vishay Intertech",
+"code": "C313993",
+"describe": "-55℃~+155℃ 0Ω 1.5W Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW25120000Z0EGHP",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.7397,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.5999,
+"to": 29
+}
+],
+"stock": 340
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "RALEC",
+"code": "C333496",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RTT250000FTE",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0465,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0373,
+"to": 299
+}
+],
+"stock": 3852
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "250V"
+},
+"brand": "Walsin Tech Corp",
+"code": "C335028",
+"describe": "-55℃~+155℃ 0Ω 1W 250V Thick Film Resistor ±1% ±200ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WR25X0000FTL",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.037,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0298,
+"to": 599
+}
+],
+"stock": 26
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Metal Foil Resistor"
+},
+"brand": "SEI(Stackpole Elec)",
+"code": "C346503",
+"describe": "-55℃~+155℃ 0Ω 2W Metal Foil Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "HCJ2512ZT0R00",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.2616,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.2078,
+"to": 149
+}
+],
+"stock": 4002
+},
+{
+"attributes": {
+"Current Rating": "100A",
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Type": "Alloy Resistor"
+},
+"brand": "Milliohm",
+"code": "C556650",
+"describe": "0Ω 100A 2W Alloy Resistor SMD 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HoT2512D-2W-0R",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0662,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0556,
+"to": 299
+}
+],
+"stock": 4969
+},
+{
+"attributes": {
+"Current Rating": "70A",
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±25ppm/℃",
+"Tolerance": "-",
+"Type": "-",
+"Voltage Rating": "-"
+},
+"brand": "Milliohm",
+"code": "C556651",
+"describe": "0Ω 3W 70A SMD ±25ppm/℃ 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HoT2512D-3W-0R",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0714,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0597,
+"to": 299
+}
+],
+"stock": 24209
+},
+{
+"attributes": {
+"Operating Temperature": "-65℃~+170℃",
+"Power(Watts)": "-",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±3900ppm/℃",
+"Tolerance": "-",
+"Type": "-"
+},
+"brand": "Vishay Intertech",
+"code": "C844489",
+"describe": "-65℃~+170℃ 0Ω ±3900ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "WSL251200000ZEA9",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 1.785,
+"to": 9
+},
+{
+"from": 10,
+"price": 1.5168,
+"to": 29
+}
+],
+"stock": 11
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "500V"
+},
+"brand": "Vishay Intertech",
+"code": "C844883",
+"describe": "-55℃~+155℃ 0Ω 1W 500V Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRCW25120000Z0EG",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1447,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.1174,
+"to": 149
+}
+],
+"stock": 5802
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "YAGEO",
+"code": "C877676",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC2512FK-070RL",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0797,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.063,
+"to": 149
+}
+],
+"stock": 328
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FH (Guangdong Fenghua Advanced Tech)",
+"code": "C1322436",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC12000FT",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0342,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0265,
+"to": 599
+}
+],
+"stock": 390
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "BOURNS",
+"code": "C2074834",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR2512-J/-000ELF",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0516,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0415,
+"to": 299
+}
+],
+"stock": 1087
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "250V"
+},
+"brand": "TE Connectivity",
+"code": "C2094610",
+"describe": "-55℃~+155℃ 0Ω 250V 3W Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "3522ZR",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.7592,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.6129,
+"to": 29
+}
+],
+"stock": 2162
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+170℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "-",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "Ohmite",
+"code": "C2482350",
+"describe": "-55℃~+170℃ 0Ω 2W 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "JR2512X100E",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 1.1721,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.9819,
+"to": 29
+}
+],
+"stock": 60
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "VO",
+"code": "C2889851",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "2512 ±5% 0Ω",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0389,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0313,
+"to": 599
+}
+],
+"stock": 1598
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FOJAN",
+"code": "C2907567",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRC2512P000 TS",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0265,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0218,
+"to": 599
+}
+],
+"stock": 198820
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FOJAN",
+"code": "C2934043",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRC2512F0000TS",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0355,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0296,
+"to": 599
+}
+],
+"stock": 45723
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "VO",
+"code": "C3017432",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SCR2512F0R",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0353,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0283,
+"to": 599
+}
+],
+"stock": 5
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+125℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "-"
+},
+"brand": "LIZ Elec",
+"code": "C3037487",
+"describe": "-55℃~+125℃ 0Ω 1W Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CR2512F10000G",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0389,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0309,
+"to": 599
+}
+],
+"stock": 27
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "SEI(Stackpole Elec)",
+"code": "C4103112",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RMCF2512ZT0R00",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0493,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0394,
+"to": 299
+}
+],
+"stock": 5303
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "-",
+"Tolerance": "-",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "Vishay Intertech",
+"code": "C4241462",
+"describe": "-55℃~+155℃ 0Ω 200V 2W Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCA12250000Z0EGLS",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.4601,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.4487,
+"to": 29
+}
+],
+"stock": 6
+},
+{
+"attributes": {
+"Mounting Type": "SMD",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Current Sense Resistor"
+},
+"brand": "NCT",
+"code": "C5121213",
+"describe": "0Ω 2W Current Sense Resistor SMD ±1% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "LRAN25EFER000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0739,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0594,
+"to": 299
+}
+],
+"stock": 17
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Current Sense Resistor"
+},
+"brand": "NCT",
+"code": "C5121214",
+"describe": "0Ω 2W Current Sense Resistor Surface Mount ±5% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "LRAM25EJER000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0275,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0218,
+"to": 599
+}
+],
+"stock": 5763
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FOJAN",
+"code": "C5204052",
+"describe": "-55℃~+155℃ 0Ω 200V 2W Thick Film Resistor ±1% ±200ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRP2512F0000TS",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0475,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0392,
+"to": 299
+}
+],
+"stock": 118900
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor"
+},
+"brand": "Sunway",
+"code": "C5356245",
+"describe": "-55℃~+155℃ 0Ω 1W Thick Film Resistor ±1% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "SC2512F0000I1WNKH",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.027,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.021,
+"to": 599
+}
+],
+"stock": 69
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Resistance": "0Ω",
+"Tolerance": "-",
+"Type": "-"
+},
+"brand": "ROHM Semicon",
+"code": "C6148296",
+"describe": "-55℃~+155℃ 0Ω 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "PMR100HZPJ000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1298,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.127,
+"to": 149
+}
+],
+"stock": 150
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "YAGEO",
+"code": "C6263578",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RC2512JK-070RP",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1854,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.1485,
+"to": 149
+}
+],
+"stock": 2807
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+170℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±3800ppm/℃",
+"Tolerance": "±5%",
+"Type": "-"
+},
+"brand": "BOURNS",
+"code": "C6538168",
+"describe": "-55℃~+170℃ 0Ω 2W ±3800ppm/℃ ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CRF2512-J/-000ELF",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 1.0632,
+"to": 9
+},
+{
+"from": 10,
+"price": 0.873,
+"to": 29
+}
+],
+"stock": 183
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+170℃",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±50ppm/℃",
+"Tolerance": "±5%"
+},
+"brand": "TA-I Tech",
+"code": "C7421599",
+"describe": "-55℃~+170℃ 0Ω ±5% ±50ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RLM25JEER000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0425,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0415,
+"to": 149
+}
+],
+"stock": 3
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±200ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "FOJAN",
+"code": "C7468130",
+"describe": "0Ω 2W Thick Film Resistor ±200ppm/℃ 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "FRP2512P000 TS",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0457,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0374,
+"to": 599
+}
+],
+"stock": 797
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Current Sense Resistor"
+},
+"brand": "Milliohm",
+"code": "C18724151",
+"describe": "0Ω 3W Current Sense Resistor SMD ±1% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HoCGX2512-3W-0R-1%",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0828,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0672,
+"to": 299
+}
+],
+"stock": 5869
+},
+{
+"attributes": {
+"Current Rating": "100A",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Type": "Alloy Resistor"
+},
+"brand": "Milliohm",
+"code": "C22450697",
+"describe": "0Ω 100A 3W Alloy Resistor 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HoSCG2512-3-0-4",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0584,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0461,
+"to": 299
+}
+],
+"stock": 3835
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Current Sense Resistor"
+},
+"brand": "Shenzhen Yezhan Elec.",
+"code": "C22468033",
+"describe": "0Ω Current Sense Resistor Surface Mount ±5% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "B2512-0J",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.067,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.053,
+"to": 299
+}
+],
+"stock": 1145
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+70℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±100ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "CHANGLONG",
+"code": "C46635544",
+"describe": "-55℃~+70℃ 0Ω 1W 200V Thick Film Resistor ±100ppm/℃ ±5% 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CL2512JN0RB",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0256,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0199,
+"to": 599
+}
+],
+"stock": 1469
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Alloy Resistor、Current Sense Resistor"
+},
+"brand": "jieerrui",
+"code": "C46961764",
+"describe": "0Ω 3W Alloy Resistor、Current Sense Resistor SMD ±1% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "RE2512F3R000L",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0818,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0656,
+"to": 149
+}
+],
+"stock": 54037
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±50ppm/℃",
+"Tolerance": "±1%",
+"Type": "Current Sense Resistor"
+},
+"brand": "jieerrui",
+"code": "C49164931",
+"describe": "0Ω 3W Current Sense Resistor SMD ±1% ±50ppm/℃ 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "JER2512F3R000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0795,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0633,
+"to": 149
+}
+],
+"stock": 56925
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "HKR(Hong Kong Resistors)",
+"code": "C49247102",
+"describe": "-55℃~+155℃ 0Ω 1W 200V Thick Film Resistor 2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RCT250RLF",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0347,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0296,
+"to": 599
+}
+],
+"stock": 4676
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Alloy Resistor"
+},
+"brand": "NCT",
+"code": "C50314682",
+"describe": "0Ω 2W Alloy Resistor SMD ±5% 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "LRAC25EJER000",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0261,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0204,
+"to": 599
+}
+],
+"stock": 2910
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "2W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±350ppm/℃",
+"Tolerance": "±1%",
+"Type": "Alloy Resistor"
+},
+"brand": "RVR",
+"code": "C52016024",
+"describe": "0Ω 2W Alloy Resistor SMD ±1% ±350ppm/℃ 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HIDD25LR000F",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0417,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0335,
+"to": 299
+}
+],
+"stock": 3293
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±350ppm/℃",
+"Tolerance": "±1%",
+"Type": "Alloy Resistor"
+},
+"brand": "RVR",
+"code": "C52016025",
+"describe": "0Ω 3W Alloy Resistor SMD ±1% ±350ppm/℃ 2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "HIDD25NR000F",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.042,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0337,
+"to": 299
+}
+],
+"stock": 4058
+},
+{
+"attributes": {
+"Mounting Type": "SMD",
+"Power(Watts)": "3W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±50ppm/℃",
+"Tolerance": "±1%",
+"Type": "Alloy Resistor"
+},
+"brand": "FOJAN",
+"code": "C54815137",
+"describe": "2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "FPM253WFR000TM",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0595,
+"to": 99
+},
+{
+"from": 100,
+"price": 0.0487,
+"to": 299
+}
+],
+"stock": 7934
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±1%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "CHANGLONG",
+"code": "C54863956",
+"describe": "2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "CL2512FN0RB",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0329,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0259,
+"to": 599
+}
+],
+"stock": 4002
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Temperature Coefficient": "±400ppm/℃",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "HWA CHN",
+"code": "C55115141",
+"describe": "2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "HRC2512J000 LNTN",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0179,
+"to": 499
+},
+{
+"from": 500,
+"price": 0.0145,
+"to": 1499
+}
+],
+"stock": 46102
+},
+{
+"attributes": {
+"Operating Temperature": "-55℃~+155℃",
+"Power(Watts)": "1W",
+"Resistance": "0Ω",
+"Tolerance": "±5%",
+"Type": "Thick Film Resistor",
+"Voltage-Supply(Max)": "200V"
+},
+"brand": "Guangdong Hottech",
+"code": "C55585999",
+"describe": "2512 Chip Resistor - Surface Mount ROHS",
+"lib": "expand",
+"model": "RI2512L000JT",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.0309,
+"to": 199
+},
+{
+"from": 200,
+"price": 0.0246,
+"to": 599
+}
+],
+"stock": 4000
+},
+{
+"attributes": {
+"Mounting Type": "Surface Mount",
+"Power(Watts)": "3W",
+"Resistance": "0Ω"
+},
+"brand": "RESI",
+"code": "C55806985",
+"describe": "2512 Current Sense Resistors / Shunt Resistors ROHS",
+"lib": "expand",
+"model": "PEWM2512-L000-9",
+"package": "2512",
+"preferred": false,
+"prices": [
+{
+"from": 1,
+"price": 0.1143,
+"to": 49
+},
+{
+"from": 50,
+"price": 0.0917,
+"to": 149
+}
+],
+"stock": 4000
+}
+],
+"total": 1340
 },
 "1.43kΩ 0603": {
 "read_utc": "2026-10-03T13:43:09Z",
@@ -244408,6 +249868,21 @@
 ],
 "read_utc": "2026-10-03T14:44:54Z",
 "reduced": "per keyword, the lines whose package is the keyword's package and whose stock is not zero (316 kept; 442 of other packages and 442 with no stock dropped: neither can be selected), each line's first two price tiers, the category path dropped (the description carries it); a code's line is kept whole"
+},
+{
+"codes": [
+"C106203",
+"C25469"
+],
+"finished_utc": "2026-10-03T15:56:28Z",
+"keywords": [
+"0402 22pF 35V C0G",
+"0402 22pF C0G",
+"0Ω 0603",
+"0Ω 2512"
+],
+"read_utc": "2026-10-03T15:56:24Z",
+"reduced": "per keyword, the lines whose package is the keyword's package and whose stock is not zero (178 kept; 11 of other packages and 111 with no stock dropped: neither can be selected), each line's first two price tiers, the category path dropped (the description carries it); a code's line is kept whole"
 }
 ],
 "what": "JLCPCB public parts search (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList), no login, no cart: the codes the design carries on the uncoded generic rows and the selector's keywords; per line the model, brand, package, stock, library, preferred flag, attributes, description and price tiers (USD)"

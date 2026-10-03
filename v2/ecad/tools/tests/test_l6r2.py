@@ -22,7 +22,13 @@ Properties, pinned on fixtures and on the committed record, never on today's cou
     pads and outlines are identical, the pads are the maker's one recommended land of the series, the footprint's series makes
     no part of that inductance, and the named footprint's model height is the maker's maximum for the named part; each land draft
     maps its rows to the named part's footprint, refuses the repository's generator until released and a second application,
-    and commutes with every other pending draft of its generator, this record's LCSC draft included.
+    and commutes with every other pending draft of its generator, this record's LCSC draft included;
+  * round 5, the open requirements of finding F3: every declaration is a valid intent.node, every figure that rests on a declared
+    rail equals the derivation from the committed intent file, the overlay makes each declared net read DECLARED at exactly its
+    figures and leaves the committed intent untouched; under the overlay no capacitor on a declared net is OPEN and each such row
+    is SELECTED with a code that meets its requirement; each intent draft is the record's render, refuses the repository's
+    generator until released and a second application, and commutes with every other pending draft; a jumper's rated current is
+    read off the held Uniroyal table for UNI-ROYAL zero-ohm lines only; the harmonic filter's desk check reads the drawn values.
 Run: env -C v2/ecad/tools/tests python3 run.py test_l6r2"""
 import base64
 import importlib.util
@@ -349,3 +355,99 @@ def t_each_land_draft_commutes_with_every_other_pending_draft_and_the_records_lc
         res = m.compose_land(b)
         assert res["ok"], "board %s: %s" % (b, res["notes"])
         assert any("apply_gen_sch_%s_lcsc.py" % b in n for n in res["notes"]), "board %s: the record's own LCSC draft was not composed" % b
+
+
+
+def _I():
+    import l6r2_intent
+    return l6r2_intent
+
+
+def t_every_declaration_is_a_valid_intent_node_and_its_rail_figures_follow_the_committed_intent():
+    import intent as INT
+    I = _I()
+    D = I.declarations(REPO)
+    assert set(D) == {"p", "d", "b"}, sorted(D)
+    for b, decl in D.items():
+        for net, vmax, vmin, basis in decl:
+            INT.node(net, vmax, basis, v_min=vmin)          # raises on a declaration intent.py refuses
+            assert vmin <= 0 <= vmax and basis.strip() and "round 5" in basis, (b, net)
+    d = {n: (a, c) for n, a, c, _ in D["d"]}
+    assert abs(d["MICAMP_AC"][0] - round(I._hi(REPO, "d", "+5V_D8") / 2, 3)) < 1e-9, "MICAMP_AC is not half of +5V_D8's declared maximum"
+    assert d["PCM_R_AC"][0] == I._hi(REPO, "d", "PCM_VCCR") and d["MIC_SUM"][0] == max(d["MICAMP_AC"][0], d["PCM_R_AC"][0])
+    bb = {n: (a, c) for n, a, c, _ in D["b"]}
+    assert bb["LIME_SSTX_P"][0] == I._hi(REPO, "b", "+5V_LIME")
+    v, v2 = I.rf_peak(24.5)
+    assert abs(v - 5.308) < 0.01 and abs(bb["WA_ANT"][0] - round(v2, 2)) < 1e-9
+    assert abs(bb["SWA_IN"][0] - round(I._hi(REPO, "b", "+3V3_DEV") + round(v2, 2), 2)) < 1e-9
+
+
+def t_the_overlay_declares_exactly_the_drafted_figures_and_leaves_the_committed_intent_alone():
+    I = _I()
+    D = I.declarations(REPO)
+    phases = {x[0]: x for x in PI.BOARDS}
+    with I.overlay(PI, REPO):
+        for b, decl in D.items():
+            B = PI.Board(*phases[b])
+            for net, vmax, vmin, _basis in decl:
+                assert B.bound(net) == (vmax, vmin, "DECLARED"), (b, net, B.bound(net))
+    for b in D:
+        B = PI.Board(*phases[b])
+        assert all(net not in B.nodes for net, *_ in D[b]), "the overlay leaked into the committed intent of board %s" % b
+
+
+def t_under_the_overlay_no_capacitor_on_a_declared_net_is_open_and_each_is_selected_with_a_meeting_code():
+    m, I = _M(), _I()
+    D = I.declarations(REPO)
+    B = _B()
+    for b, decl in D.items():
+        nets = {n for n, *_ in decl}
+        on = {p["ref"]: set((p.get("nets_key") or ":").split(":", 1)[1].split("+")) for p in B[b]["rows"]}
+        for d in B[b]["sels"]:
+            if d["kind"] != "capacitor": continue
+            refs = [r for r in d["refs"] if on.get(r) and on[r] & nets]
+            if not refs: continue
+            assert d["cls"] != "OPEN", "board %s %s is still OPEN under the declarations: %s" % (b, refs, d["why"])
+            ch = d.get("choice") or {}
+            assert ch.get("state") in ("SELECTED", "LOW_STOCK") and ch["pick"]["lines"] and all(x[3] == "MEETS" for x in ch["pick"]["lines"]), (b, refs, ch.get("state"))
+
+
+def t_each_intent_draft_is_the_render_refuses_until_released_and_commutes():
+    import l6r2_apply
+    m, I = _M(), _I()
+    D = I.declarations(REPO)
+    for b in D:
+        p = os.path.join(REC, "apply_gen_sch_%s_intent.py" % b)
+        assert open(p, encoding="utf-8").read() == I.render_draft(b, D[b]), "board %s's intent draft is not the record's render" % b
+        gen = os.path.join(REPO, m.GEN[b])
+        if not l6r2_apply.released():
+            before = open(gen, "rb").read()
+            r = subprocess.run([sys.executable, "-B", p, gen, "--write"], capture_output=True, text=True)
+            assert r.returncode == 3 and "REFUSED" in r.stdout and open(gen, "rb").read() == before, r.stdout
+        with tempfile.TemporaryDirectory() as td:
+            g = os.path.join(td, "gen.py")
+            open(g, "w", encoding="utf-8").write(open(gen, encoding="utf-8").read())
+            assert subprocess.run([sys.executable, "-B", p, g, "--write"], capture_output=True, text=True).returncode == 0
+            assert subprocess.run([sys.executable, "-B", p, g, "--write"], capture_output=True, text=True).returncode == 3, "a second application"
+        res = m.compose_intent(b)
+        assert res["ok"] and res["notes"], "board %s: %s" % (b, res["notes"])
+    assert I.apply_text("x = 1\n", "p", D["p"])[0] == "REFUSED", "a generator without the anchor"
+
+
+def t_a_jumpers_rated_current_is_read_off_the_held_table_for_uniroyal_zero_ohm_lines_only():
+    m = _M()
+    if not os.path.exists(os.path.join(REPO, m.UNIROYAL_DOC)): raise Skip("the held Uniroyal sheet is not fetched here")
+    row = lambda brand, model, res: dict(brand=brand, model=model, attributes={"Resistance": res})
+    assert m.jumper_rating(row("UNI-ROYAL(Uniroyal Elec)", "0603WAF0000T5E", "0Ω"))[0] == 1.0
+    assert m.jumper_rating(row("UNI-ROYAL(Uniroyal Elec)", "25121WJ0000T4E", "0Ω"))[0] == 2.0
+    assert m.jumper_rating(row("YAGEO", "RC0603JR-070RL", "0Ω"))[0] is None, "a maker whose sheet is not held"
+    assert m.jumper_rating(row("UNI-ROYAL(Uniroyal Elec)", "0603WAF1002T5E", "10kΩ"))[0] is None, "not a jumper"
+
+
+def t_the_harmonic_filters_desk_check_reads_the_drawn_values():
+    m = _M()
+    L = m.lpf_check(_B())
+    assert len(L["values"]) == 5 and all(v > 0 for v in L["values"])
+    nom145 = L["points"][145e6]
+    assert nom145[1] > -0.1 and L["points"][290e6][0][0] < -20 and L["points"][435e6][0][0] < L["points"][290e6][0][0]
+    assert L["i_l2"] > L["i_load"] and L["i_l1"] > L["i_load"], "the ladder's reactive current must show in the inductors"
