@@ -555,6 +555,15 @@ def compute():
     R["ask"] = [(lab, a, tc.width_for_current(a / 2.0, oz=OZ1), tc.width_for_current(a, oz=OZ1)) for lab, a in (
         ("the continuous load", I["cont"]), ("the transient (PWR-F12)", I["kd_a"]), ("the gauge's held OCD1", I["gauge"][0][1]),
         ("the blades' rating (the coordination current)", blade), ("the blades' %g %% non-fuse current" % I["mini_rows"][0][0], nf))]
+    # unequal faces between through-hole ends: a face wider than the minimum takes a larger share (by width, one copper) and
+    # still runs no hotter than the equal pair, because the rating grows slower than the width (scanned to three times)
+    wmin = W["coord_even"]
+    worst = 0.0
+    for k in range(0, 41):
+        wf = wmin * (1.0 + k * 0.05)
+        i_f = blade * wf / (wf + wmin)
+        worst = max(worst, rise_steady(i_f, wf, OZ1)[0])
+    R["unequal_worst"] = worst
     R["nonfuse_rise"] = {k: rise_steady(nf * s_, W[w_], OZ1)[0] for k, w_, s_ in (("B1", "coord_even", 0.5), ("B2", "coord_smax", S_MAX))}
     # the band families
     limit = I["mini_max_c"]
@@ -683,6 +692,7 @@ def compute():
             all(I["air_c"] + row(k, s)[7] <= limit for k in ("B1", "B2", "B3") for s in ("hard short, the blade", "hard short, the gauge")),
         "the copper is not the fuse: the 600 % row's bound on B1 and B2 is under the governing face's fusing I2t":
             all((I["pf_high"] ** 2 * I["mini_rows"][-1][2]) * F[k]["s"] ** 2 < F[k]["fusing"] for k in ("B1", "B2")),
+        "between through-hole ends a face wider than the minimum runs no hotter than the equal pair": R["unequal_worst"] <= 10.0 + 1e-6,
         "with one barrel the part's face carries more than the governing share at every tabled length": all(v > S_MAX for v in R["no_field"].values()),
         "the transfer field's split count falls with length (one end and both ends)":
             all(x[3][i][1] >= x[3][i + 1][1] and x[3][i][2] >= x[3][i + 1][2] for x in T for i in range(len(LENGTHS) - 1)),
@@ -775,6 +785,8 @@ def render(R):
     P("   one barrel of %.1f mm drill, %.0f um plating: %.2f (board A, %.4f mm) and %.2f (board E, %.4f mm) in rho per mm, as much as %.1f mm" % (
         vc_drill(), vc.PLATING_UM, R["r_barrel"][0], R["h"][0], R["r_barrel"][1], R["h"][1], R["barrel_mm_eq"]))
     P("     of a %.2f mm 1 oz band" % W["coord_smax"])
+    P("   unequal faces between through-hole ends, each at least %.2f mm: a wider face (to three times the minimum) takes more of the" % W["coord_even"])
+    P("     current by width and reads at most %.2f K at the blades' %g A, the rating growing slower than the width" % (R["unequal_worst"], I["blade_a"]))
     P("   with no field (one barrel), the part's face of a %.2f mm band carries: %s" % (W["coord_smax"], ", ".join("%.2f at %.0f mm" % (v, L) for L, v in sorted(R["no_field"].items()))))
     P("   the field each one-face end needs for the part's face to carry at most %.2f (one end / both ends), and the thermal count:" % S_MAX)
     for name, w, h, rows in R["transfer"]:

@@ -368,7 +368,9 @@ fault's I2t under the copper's own fusing I2t (the copper is not the fuse).
 ### 14.4 The split between the two faces (out 3)
 
 - **Through-hole at both ends** (the dock pins to F1 on A; the XT60 to F3 on E; J_DCIN to F1): equal faces sit at one
-  potential all along, so each carries half, and stitching along the band moves nothing.
+  potential all along, so each carries half, and stitching along the band moves nothing. The widths are minimums: a face
+  laid wider than its minimum takes more of the current by width and still reads at most 10.00 K at 25 A (scanned to three
+  times the minimum), because the rating grows slower than the width.
 - **A one-face part at one end**: the part's face carries (Rb + Rv) / (2 Rb + Rv), where Rb is one face's band and Rv the
   transfer field; at both ends (Rb + 2 Rv) / (2 Rb + 2 Rv). One 0.4 mm barrel at 18 um is worth 34.3 mm of a 14.60 mm band, so
   with one barrel the part's face carries 0.89 of a 5 mm band and still 0.59 of an 80 mm one. **Stitching along such a band
