@@ -1797,7 +1797,7 @@ def t_the_fan_feed_after_layer7s_d18():
     # the diagram, the behaviour row, the T-H1 note
     N, E, C, NP = m.cons_diagram(F, st)
     blk = {n[0]: " ".join(n[4]) for n in N}
-    assert "U18" in blk["CTL_SENS"] and "VSYS_E" in blk["CTL_SENS"]
+    assert "U22" in blk["CTL_SENS"] and "VSYS_E" in blk["CTL_SENS"] and "U18" not in blk["CTL_SENS"]
     beh = {r[0]: r for r in m.cons_behaviour(F, D, st)["4f"]}
     fans = beh["the fans"][1]
     assert rail["mixer"] in fans and "rail hiccup" in fans and "NOT READ" in fans and "E11-40" in fans and "17.375 V: their maximum supply voltage owed" not in fans
@@ -1808,10 +1808,23 @@ def t_the_fan_feed_after_layer7s_d18():
     r190 = reg["R-190"]
     assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
     assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
-    assert "U18" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
+    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C135" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
     assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
-    assert ch["R-190"][1] == "B" and "U18" in ch["R-177"][5] and "U18" in ch["R-188"][5]
+    assert ch["R-190"][1] == "B" and "U22" in ch["R-177"][5] and "U22" in ch["R-188"][5]
+    # the recheck's correction (L4-E11 at b929d8be): the 566 A a test target, the start into a short unbounded, no retry duty, the rail's range
+    # with its 1 % divider, E11-38 to (h), the stubs naming U22 and its capacitors
+    de = {d["id"]: d for d in m.DEFECTS}
+    for w in ("for at most 1.5 s", "duty of at most 0.75", "at most 566 A"):
+        assert w not in de["D-15"]["options"] and w not in de["D-15"]["resolution"], w
+    assert "EXTRAPOLATION" in de["D-15"]["options"] and "test target" in de["D-15"]["options"] and "NOT PRINTED" in de["D-15"]["options"]
+    assert "(a) to (h)" in de["D-15"]["resolution"] and "85 C" in de["D-15"]["resolution"]
+    assert "(h)" in reg["R-184"][2] and "(h)" in reg["R-184"][5] and "U22" in reg["R-184"][5] and "85 C" in reg["R-184"][5] and "566 A extrapolation" in reg["R-184"][5]
+    assert "15.9 K" in reg["R-181"][2] and "not a bound" in reg["R-181"][2]
+    by_ = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
+    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "capacitors" in by_["E11-38"][1]
+    assert "(a) to (h)" in by_["E11-38"][4] and "85 C" in by_["E11-38"][4]
+    assert "1 %" in beh["the fans"][1] and "U18" not in beh["the fans"][1]
     assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())
     # the route's row and the purchase list: Layer 7's prices read from its file at the cited commit
     by = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
