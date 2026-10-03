@@ -114,8 +114,8 @@ rows below are the ones a reviewer should start with; each names its record.
 | P5 | Source-only start and held states on the BQ25730 (U-04) | The first start with no usable pack is not bounded by printed figures; the held pack current through the body diodes is unprinted (E11-31; TI questions Q-TI-15, 16, 17, 18 drafted) | bench E11-31 on the first board A; TI's answers | VSYS at or over 12.054 V with no pack; the held pack current at or under 1 mA; the start succeeds at every corner | board A's charger release |
 | P6 | Heat rejection of the sealed case (U-02) | A conservative bound of 0.566 to 0.673 W/K lid open (fans' airflow credited at zero) against lines of 1.447 W/K (the profile at +20 C) up to 2.025 to 2.525 W/K (charging while running); the SGP41's lid-closed line is a modelled shortfall of the analysed arrangement; the e-paper's unpowered storage at +70 C is unqualified (`records/l4e12/`) | T-H1 on an empty-case mock-up with the frame, plate, fans and dummy heaters (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`, the bill in Layer 7's record); the e-paper soak at +70 C on the glass | per point, G_measured - U_G >= G_required, with U_G the expanded (k = 2) uncertainty in W/K (the procedure's section 6 prints each mode's need and the reading that passes once U_G is taken off: M2 as ruled needs 2.709 W/K and passes at a reading of at least 3.081 W/K); example: a 2.0 W/K need, a 1.9 W/K reading and a 0.1 W/K uncertainty give a lower bound of 1.8 W/K, a FAIL; the soaked sample functional | the thermal design; the test plan's E3 and E5 rows |
 | P7 | The cell (U-01) | The ruled 35E's printed limits do not cover the +71 C and -33 C storage rows; a Saft MP 176065 xtd route is a PROPOSAL (temperature windows supported, current at temperature, storage recovery and fit awaited) (`records/l4e10/`) | Saft's answers or a one-cell qualification; the fit mock-up (R-167, which blocks only the proposal's adoption) | as the record states; the owner's approval for any cell change | the pack, board P |
-| P8 | Board B's fans | Board B's fan headers carry 5.1 V; the selected 12 V fans need 10.8 to 13.2 V (E11-40, R-190: a draft is owed) | a 12 V feed on board B (a per-slot step-up or a feed from board A) | the coolers' window met | board B |
-| P10 | Board A's VBUS20 against the 20 V bus converter's single faults (S-111) | A Q2 short or an FB open puts VIN_RAW on VBUS20, past U3's 32 V, with no clamp and no exemption claimed (register R-48, a KNOWN DEFECT) | an SMCJ22A-class clamp on VBUS20 or an independent over-voltage trip, selected and drafted (supplier task P1-3; a desk draft is being attempted) | U3's input under its absolute maximum through each single fault | board A |
+| P8 | Board B's fans | Board B's fan headers carry 5.1 V; the selected 12 V fans need 10.8 to 13.2 V (E11-40, R-190: a draft is owed) | a 12 V feed on board B: DRAFTED as a per-slot step-up (TPS61089 with a TPS259631 per slot; record l8r2, in the package's `branches/`, integrating in the next set); the supplier reviews the draft | the coolers' window met | board B |
+| P10 | Board A's VBUS20 against the 20 V bus converter's single faults (S-111) | A Q2 short or an FB open puts VIN_RAW on VBUS20, past U3's 32 V, with no clamp and no exemption claimed (register R-48, a KNOWN DEFECT) | DRAFTED: a series cut-off at board A's VIN_RAW entry (CSD19532Q5B under a TPS48110-Q1, its over-voltage window on VBUS20 24.25 to 25.31 V; the SMCJ22A rejected because its breakdown sits inside the 9 to 36 V service range); record l8r2 in the package's `branches/`; the supplier reviews the draft (task P1-3) | U3's input under its absolute maximum through each single fault | board A |
 | P9 | Endurance (an objective, not a defect) | Battery-only 2.52 h on energy alone at 42.8 W (the case sheds the profile at 2.01 to 2.51 h on the thermal bound); solar-assisted, the 48 and 72 h horizons carry 8.0 W steady | none within the fixed constraints today: any change of the profile, the storage or the objective is the owner's decision; a supplier may propose architecture options | the owner's | the claim made for the kit |
 
 **Every open item, classified.** `records/l4e9/L4-POWER-ARCHITECTURE.md` section 8f gives each open register item and design
@@ -157,13 +157,13 @@ Three levels, and what each needs:
    <module>` runs the tests (Python 3.11, PyYAML, numpy, poppler's `pdftotext` for some readers). The schematics regenerate from
    their generators with KiCad 9.0.9 in a full checkout (`v2/docs/handover/REGENERATE.md` describes the September handover
    formats; the generator command per board is unchanged).
-3. **How to get that checkout.** The repository is public (`https://github.com/meshsat/meshsat-fieldkit`). **This provisional
-   package's commit is not yet published**: it sits on the integration line that is being promoted. Until it is promoted, the
-   recipient can review (level 1) but cannot re-compute (level 2) this exact revision; replay is PENDING for the recipient. On
-   promotion the package is re-issued from the published commit, and `git clone`, `git checkout <commit>`, the fetch scripts
-   and the commands above reproduce it. The project verified the replay itself in a full checkout at the integration line with
-   the makers' documents fetched (the Layer 4 modules' "the committed output is what the script prints" tests pass there); that
-   is the project's own check, not the recipient's.
+3. **How to get that checkout.** The repository is public (`https://github.com/meshsat/meshsat-fieldkit`). The package's
+   `SOURCE.txt` names its commit; from a RELEASE-CANDIDATE package that commit is on the public main branch: `git clone`,
+   `git checkout <commit>`, the records' fetch scripts, then the commands above reproduce it. Work carried in the package's
+   `branches/` folders is NOT on that commit (it integrates in the next set): it can be read, and re-computed only once it is
+   published. The project's own replay of the commit ran in a full checkout with the makers' documents fetched (the release
+   suite on that exact commit: every module's "the committed output is what the script prints" test passed); that is the
+   project's check, not the recipient's.
 
 ## 8. What we ask a supplier to quote for
 
