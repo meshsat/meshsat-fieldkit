@@ -1,0 +1,101 @@
+L7R2 (MESHSAT-1357): THE LAYER 7 ITEMS OTHER LAYERS ASSIGNED, ROUND 2. Prototype design, desk arithmetic: nothing bought, built or measured.
+MAKER a printed figure (inputs/makers-drawings-r2-2026-10-03.md), MODELED this script's arithmetic, INFERRED a reading not printed as such,
+ASSUMPTION a stated assumption, NOT READ a figure no held document prints.
+
+0. INPUTS (sha256/16)
+   drawings    v2/docs/records/l7r2/inputs/makers-drawings-r2-2026-10-03.md  sha256 781060d538dfcb82
+   prices      v2/docs/records/l7r2/inputs/findchips-r2-2026-10-03.json  sha256 adbe5721b301ce03
+   l5r2_tbd    v2/docs/records/l7r2/inputs/l5r2-tbd-layer7-rows-6902db8f.md  sha256 51a5220cc2eebc20
+   l8gnd       v2/docs/records/l7r2/inputs/l8gnd-h1-f01-f07-226e9143.md  sha256 5d7a0257c803cf46
+   l8gnd_land  v2/docs/records/l7r2/inputs/l8gnd-ChassisLug_M4_CHASSIS-226e9143.kicad_mod  sha256 2f5e65f850ae66fb
+   l8r2_fan    v2/docs/records/l7r2/inputs/l8r2-cooler-header-a441651a.md  sha256 1c77d5072dd1cb13
+   panel       v2/ecad/tools/panel1450.py  sha256 3bdb88df98260244
+   frame_seat  v2/vendor/peli/frame_seat.py  sha256 b653dc655fcc47c9
+   gen_a3      v2/ecad/tools/gen_pcb_a3.py  sha256 70068b0ab12bdfc9
+   gen_a       v2/ecad/tools/gen_pcb_a.py  sha256 2101683401aa426d
+   gen_b3      v2/ecad/tools/gen_pcb_b3.py  sha256 c9b9215862ab363a
+   gen_e3      v2/ecad/tools/gen_pcb_e3.py  sha256 3a8eb81d3f58e0a5
+   gen_sch_e   v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
+   margins     v2/docs/CASE-MARGINS.md  sha256 55244f94aace54ca
+   assembly    v2/docs/ASSEMBLY.md  sha256 942d562edd128759
+   px0833      v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf  sha256 b0fb46464e073ab9
+   amph_iii    v2/vendor/d38999/amphenol-d38999-iii-federal.pdf  sha256 13a19268ba5939d9
+   cutouts     v2/vendor/d38999/glenair-series-iii-iv-panel-cutouts.pdf  sha256 4acc4442db4bc194
+   cooler      v2/vendor/cm5/rpi-cm5-cooler-product-brief-2024-12.pdf  sha256 98fd27302cffd3a6
+   wurth_hdr   v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf  sha256 dbaa4765e57457ac
+
+1. THE SEALED RJ45 AND ITS SHIELD PATH (record l8gnd F01; IF-EXT-ETH)
+   the need: a coupler whose body or backshell carries the patch cable's shield to the connector plate (GND-002 point 3), rated for the PoE feed
+   (+54V_POE, the PSE range to 57 V), inside the plate's item A envelope (MIL-DTL-38999 shell 15 class: flange 31.29 square, mated 32.51, wall hole 29)
+   the shell 15 class as laid out (panel1450 CONN_ITEMS), this script's pair method (frame_seat.py's floats, two machined places a pair):
+      mated D / F: 1.85 nominal, 1.11 at the worst
+      mated A / C: 1.85 nominal, 1.12 at the worst
+      mated C / B: 1.91 nominal, 1.13 at the worst
+   candidate 1, Bulgin PX0833 with the PX0888 backshell: the PX0888 (SS 304) carries the coupler's shield to the panel (MAKER, Bulgin's page);
+      the PX0833 is rated 42 V maximum (MAKER, its sheet) against the PoE feed's 57 V: NOT ELIGIBLE; its 38.1 coupling ring at A's place: worst pair -1.67 (A / C)
+   candidate 2, Glenair 233-330 (aluminium shell, external dimensions as D38999/20 /24 /26 by the maker, shell 17 or 19 only): flange 33.60 square max, mated shell 17 plug 35.7
+      (Amphenol's D38999/26 table), M3 holes 3.45 max (float 0.288), 16.51 behind the flange, rear thread 1.1875 in (30.16); a wall hole of 32.0 (ASSUMPTION) and the plate cut-out 30.96
+      (Glenair's rear-mount A dia, INFERRED: the rear thread passes the plate); its voltage rating and its jacks' shield-to-shell bond NOT READ
+      at A's place: worst pair -0.52 (A / C mated), gasket band 2.30 (A) against 3.0, M14e 2.80 nominal, 1.73 at the worst: DOES NOT FIT
+      the best re-laid low row (A, C and B moved on a 0.25 mm grid, the high row and the screws kept): A at (-28.50, 36.60), C at (5.50, 34.00), B at (35.00, 36.60):
+      worst pair -0.07 (A / D face), gasket band 2.30 (A), M14e at the worst 1.73: the least spare over the three rows -1.07 mm
+   candidate 3, Amphenol LTW RCP-5SPFFH-SCM7001 (middle size, screw thread, 13/16-28 UNS nut, front fasten): operating voltage 44 to 57 V (MAKER);
+      'Plastic, Shielded' (MAKER): its shield's bond to the panel NOT READ; panel thickness 3.00 max without the cap against the plate's 5.0 (a 3.0 spot
+      face from the plate's back would be needed); its drawing is behind the maker's download form (NOT READ)
+   prices read (FindChips, 3 Oct 2026 14:48 UTC; indicators): PX0833 ('9667725', '680', [1, 'EUR', 78.22]); PX0888 ('BLGPX0888', 'Europe  - 0 in Stock', [50, 'EUR', 2.8082]); RCP-5SPFFH-SCM7001 ('2708703', '556', [1, 'EUR', 6.77]); 233-330 no row served (NOT READ)
+
+2. THE BONDING STRAP, ITS LUGS AND THE STUD (record l8gnd F07; IF-A-CHASSIS)
+   H1's land (l8gnd's ChassisLug_M4_CHASSIS): ring 12.0, drill 4.3; JST R5.5-4 (M4): d2 4.3, B 9.5, L 19.8, T 1.0, wire 2.63 to 6.64 mm2: fits with 2.5 of ring to spare
+   the stud F: JST R5.5-6 (M6): d2 6.4, B 12.0 (the inside washer class 12): the inside stack (washer, lug, washer, thin Nyloc, INFERRED ISO classes) 10.2 against
+   CASE-MARGINS' 'within 12 of the wall' 12.0; the grip (plate 5.0, gasket 2.0, wall 5.34) 12.34; the outside (serrated washer, nut, serrated washer, three lugs,
+   washer, knurled nut) 18.5; the stud's length 43.0 (MODELED): an M6 A4 threaded stud of 45 (the next DIN 976-1 length, INFERRED)
+   the strap's route (MODELED; free band Y 100 to 108 at the wall, Z 30 over board A's top under B16 at 49.00, board A's top 17.70):
+      to H1 as drafted (beside J_DOCK on the back-wall side, l8gnd F08: about (-76, -50.5)): legs 4.1 + 34.5 + 110.6 + 154.5 + 12.3, 363 mm with 15 percent (ASSUMPTION)
+      to an H1 at board A's north edge under the stud (about (34.6, 72.5)): legs 4.1 + 34.5 + 0.0 + 31.5 + 12.3, 95 mm
+   prices (indicators): R5.5-4 ('6048373', '12400', [1, 'EUR', 0.1687]); R5.5-6 ('R5.56-JST-0', '498', [431, 'USD', 0.106])
+
+3. THE RIGHT-ANGLE SMA PLUG (M17g, M17x; IF-AE-RF)
+   Radiall R125.172.001 (crimp, RG 316): reach (mating axis to the ferrule's end) 15.2; ferrule 3.275 (crimp hexagon 3.25); cable axis 3.3 below the plug's
+   inner end; the inner end 13.4 beyond the reference plane; 250 Veff (MAKER, the drawing read off its dimension lines)
+   M17g (MAIN's cable onto its place, Z 50.535): at 30 degrees the class's 16.0 lands at 49.33, this plug at 49.73 (-0.81, below its place); MAIN turned 26.5
+   degrees lands at 50.90 (0.37 above); the steepest turn landing at or above the place 27.6 degrees
+   M17x by CASE-MARGINS' own relation (worst -0.38 + the axis offset, less half the ferrule's excess over 2.58): 6.84 nominal, 2.57 at the worst: MET
+   the inner upper place beside MAIN's ferrule needs 2.58 or less: 3.275 does not: IRIDIUM to the back bundle (CASE-MARGINS' lever), so no passing cable needs it
+   M18 (the plug's inner end to the RockBLOCK's box): the class took 10.0 beyond the jack's end; this plug 13.4 beyond its reference plane (the jack's end, INFERRED):
+      4.23 nominal, -0.04 at the worst against 1.0: a FINDING at the 5G MAIN site: a plug 12.36 or less beyond its reference plane meets it at the worst
+   price (indicator): ('R125172001', '0', [1, 'USD', 14.68])
+
+4. THE FANS: TERMINATIONS, THE COOLER FAN'S FIT AND ITS BRACKET, THE LEADS
+   board B's J_FAN (l8r2's draft keeps JST-SH BM04B-SRSS-TB): SH takes AWG 32 to 28 at -25 to +85 C (MAKER); board E's J_FAN key PH4 is a 2.54 mm unkeyed pin header
+   JST PH (B4B-PH-K-S, PHR-4, SPH-002T-P0.5S): AWG 30 to 24, -40 to +105 C, 2 A, 100 V (MAKER); the fans' lead gauge and length NOT READ (Sanyo's manual)
+   prices (indicators): B4B-PH-K-S ('9492437', '241512', [100, 'EUR', 0.364]); PHR-4 ('3616204', '130576', [100, 'EUR', 0.066]); SPH-002T-P0.5S ('1671245', '4771133', [1, 'EUR', 0.0523])
+   the cooler fan on its bracket over each cooler: board B's top 50.60 + the module stack 5.86 + the cooler 12.7 + the bracket's frame 1.0 + the fan 20: top 90.16
+   its plan: Y 46.745 to 86.745 (1.0 north of the Xenarc body's edge, 1.255 south of the backer's top strip at Y 88.0), X at the cooler's centre
+      slot 1: X -92.5 to -52.5, over it the PA's underside at Z 93.62, the plate's underside at Z 103.52: clearance 3.46; its lead to J_FAN1 at (-97.5, 45.0): 97 mm (MODELED, with a 40 service loop)
+      slot 2: X -22.5 to 17.5, over it the PA's underside at Z 93.62, the e-paper module at Z 100.52, the plate's underside at Z 103.52: clearance 3.46; its lead to J_FAN2 at (-27.5, 45.0): 97 mm (MODELED, with a 40 service loop)
+      slot 3: X 47.5 to 87.5, over it the plate's underside at Z 103.52: clearance 13.36; its lead to J_FAN3 at (92.5, 44.0): 97 mm (MODELED, with a 40 service loop)
+   the mixers' headers on board E: J_FAN1 (-138.0, -49.3), J_FAN2 (-132.0, -49.3) on the dock strip; the mixers' sites 'at the stack's ends' are not drawn (NOT READ)
+
+5. J_AB2, THE MAIN LEAD AND W4-F17
+   W4-F17: board A's J_AB2 at (95, -11) inside D's rectangle (0.0, -40.0, 100.0, 40.0): yes; the header 9.1 tall from A's top 17.70 reaches 26.80, D's underside 23.70: 3.10 into D (before the socket)
+   the J_AB2 ribbon from A (95, -11) to B (126, -70): plan 66.6, rise 31.30, two folds 15 each (ASSUMPTION): 128 mm, conditional on W4-F17's move
+   the MAIN lead from C7's land (-62.0, -108.0) under the backer to A's J_MAINSW (98, 75): legs 74.2 + 30.0 + 52.0 + 153.0 + 108.0, with 15 percent 480 mm (MODELED route, section 5 of the page)
+
+6. PREDICATES
+   the shell 15 class reproduces CASE-MARGINS' M14j/M14k tightest worst within 0.02 (1.11 to 1.13)                          yes
+   the PX0833 is rated under the PoE feed's 57 V                                                                            yes
+   the Glenair 233-330 shell 17 at A's place fails the plate                                                                yes
+   no re-laid low row fits the 233-330 shell 17 (the least spare under 0)                                                   yes
+   the LTW receptacle prints the PoE range                                                                                  yes
+   the M4 lug fits H1's 12.0 ring with 1.0 to spare or more                                                                 yes
+   the strap at the drafted H1 site is over 250 mm, the alternative under 100 mm                                            yes
+   the Radiall plug's cable axis meets M17x's 1.38                                                                          yes
+   the Radiall plug at 30 degrees lands MAIN's cable below its place                                                        yes
+   MAIN turned 26.5 degrees lands at or above its place                                                                     yes
+   the Radiall plug's crimp ferrule exceeds 2.58                                                                            yes
+   the Radiall plug's inner end lies beyond the class's 10.0 and M18 fails at the worst                                     yes
+   the stud's inside stack keeps within the 12 of the wall                                                                  yes
+   JST PH covers -40 C and AWG 24, SH stops at AWG 28 and -25 C                                                             yes
+   every cooler fan clears what hangs above it by 2.0 or more on the cooler's own height                                    yes
+   the cooler fan sits between the Xenarc and the top strip with under 1.5 on a side                                        yes
+   J_AB2 on board A stands inside D's rectangle and into D's underside                                                      yes
