@@ -1535,8 +1535,10 @@ review and quotation, power-design closure and fabrication release BLOCKED; `rec
 as received, cited), its two findings kept in the active register under the owner's amendment, beside the earlier reviews'
 (L4-SH01 to L4-SH03, L4-QR01, L4-CP01 to L4-CP03): R-197, L4-RC01, L4-E7's panel-lead scan, where an approved sentence exempted a
 second statement in the same table cell (set 28's numeric guard compares every stated length with a1solar's LEAD_M; the same-cell
-regression and the archived-review list are on `fnd/l4e7rc`), OPEN until `fnd/l4e7rc` is integrated and its tests pass, the
-integrator's hook in its acceptance; R-198, L4-RC02, the replay wording (the tested and the packaged commit, the cached render apart
+regression and the archived-review list on `fnd/l4e7rc`, integrated at `c4e4f7d7`), OPEN until `test_l4e7` passes there (L4-E7's
+results cache does not hold at `c4e4f7d7`: its KEY records an earlier L4-E11 output; to be regenerated with L4-E7's output), the
+integrator's hook in its acceptance; the row states no panel-lead length (L4-E7's guard reads this register; the probe's exact
+text is in the archived review); R-198, L4-RC02, the replay wording (the tested and the packaged commit, the cached render apart
 from a fresh solver run), CLOSED at the entry page's `db1cffb5` and the packer's README, verified when the package is built from the
 suite-checked commit: 188 items.
 

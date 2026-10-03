@@ -141,7 +141,9 @@ part number and for R227's capacitors (COVERED, out 11's last block); the timer 
 (was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). The release-candidate review (3 October
 2026, `fnd/l4e9rc` from `db1cffb5`): its findings kept in the active register, R-197 (L4-RC01, L4-E7's panel-lead scan, OPEN until
 `fnd/l4e7rc` is integrated and its tests pass) and R-198 (L4-RC02, the replay wording, CLOSED at `db1cffb5` and the packer's
-README): 188 items; no figure and no other row's state changes. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+README): 188 items; no figure and no other row's state changes. R-197 reworded on `fnd/l4e9rc2` (from `c4e4f7d7`): the
+probe described without a length (L4-E7's guard reads the register; the exact text in the archived review), and OPEN until
+`test_l4e7` passes at the guard round's integration `c4e4f7d7`, where L4-E7's results cache does not hold. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
