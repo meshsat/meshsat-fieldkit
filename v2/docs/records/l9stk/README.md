@@ -16,6 +16,9 @@ run by the integrator.
 | `l9stk_stackups.py` | The calculation, from the repository root: `python3 v2/docs/records/l9stk/l9stk_stackups.py` (stdlib plus `track_current.py` and `via_current.py`; no KiCad, no network). It pins 22 inputs by sha256 and computes the outlines from the committed board files, the band widths at 1 oz and 2 oz under decision 35's model, the bounds on board E's cross-section, on the pack return on the inner planes of A and E and on board P's inner planes' share, the 2 oz floors and the 0.4 mm pitch gaps, the impedance geometry from `stack_solves.out`, the price figures and deltas at their printed conditions, and the predicates the test reads |
 | `l9stk_stackups.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_stackups.py v2/docs/records/l9stk/l9stk_stackups.out` |
 | `apply_decisions_l9stk.py` | The seven decisions as data and the script that appends them to `v2/ecad/tools/pcb_decisions.yaml` (numbered one above the register's highest when it runs; the marks `(L9STK A)` to `(L9STK E5)`); it screens every text, refuses a second run, checks nothing else moved and re-parses the file. `--check` writes nothing; `--registry PATH` works on a copy. The integrator runs it once, then `python3 v2/ecad/tools/decisions_render.py` |
+| `l9stk_copper.py` | The copper question (4 October 2026, page section 14), from the repository root: `python3 v2/docs/records/l9stk/l9stk_copper.py` (PyYAML, pdftotext and the tool modules; no KiCad, no network). It pins 21 inputs by sha256 and prints the pack path's and the shore input's currents by class (continuous, transient with its duration, fault until its protection clears), each class's rise on each band family by decision 35's model with Onderdonk's adiabatic bound, the split between the outer faces from resistance and transfer barrels, one row per conductor on boards A and E, the widths quoted in the conflict judged, the bottlenecks, board E's cross-section and the predicates the test reads |
+| `l9stk_copper.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_copper.py v2/docs/records/l9stk/l9stk_copper.out` |
+| `apply_energy_chain_l9stk.py` | The energy chain's DOCK_ENTRY, SHORE_INPUT and BOARD_A_NODE conductor texts at the derived widths, for the integrator: it refuses until the register carries `(L9STK A)` and `(L9STK E)`, accepts the tree's texts or record l8r2's corrected ones, and is a no-op on a second run; it REPLACES record l8r2's `apply_energy_chain_e1oz.py`. `--check` (the default) writes nothing; `--chain` and `--registry` take copies |
 | `inputs/price-readings-2026-10-03.json` | The public pages read on 3 October 2026 (JLCPCB and NextPCB), each with its URL, read time, the page's own date where printed and the sha256/16 of the page as fetched; the sentence carrying each figure kept verbatim, never the page; what was not read |
 
 The predicates are held by `v2/ecad/tools/tests/test_l9stk.py`: `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_public_hygiene`.
@@ -24,11 +27,11 @@ The predicates are held by `v2/ecad/tools/tests/test_l9stk.py`: `env -C v2/ecad/
 
 | Board | Stackup | Measurement | Cost at five boards, real outline | Authority |
 |---|---|---|---|---|
-| A | 6 layers, JLC06161H-3313, 1 oz outer, 0.5 oz inner; pack path and return as two-face bands | MEASURED: four layers 345 unrouted, six 0 and 0; DERIVED BOUND: 23.91 mm one face or 6.72 mm each of two at 1 oz | NOT READ | SESSION |
+| A | 6 layers, JLC06161H-3313, 1 oz outer, 0.5 oz inner; pack path and return as two-face bands at the blades' 25 A: 12.26 mm a face between through-hole ends, 14.60 mm with a transfer field at R17 and the battery FET pair | MEASURED: four layers 345 unrouted, six 0 and 0; DERIVED BOUND (section 14): the coordination current is the 25 A blades' rating, the faces' split derived | NOT READ | SESSION |
 | B | 8 layers, JLC08161H-2116, S G S G P S G S, 1 oz / 0.5 oz; USB 0.148 / 0.127 mm, DIFF100 0.112 / 0.127 mm | MEASURED: 93 opens without two inner signal layers, 416 open on six, six cannot hold one width per class; NO MEASUREMENT HELD of a route at eight | NOT READ; the eight-layer price to the owner before any order (decision 43) | SESSION, conditional on decision 43's route |
 | C | 6 layers, JLC06161H-3313, In1 and In4 GND, 1 oz / 0.5 oz, no controlled pair | MEASURED (decision 27) | NOT READ; before payment (decision 27) | count OWNER (27); copper SESSION |
 | D | 4 layers, JLC04161H-7628, In1 GND, In2 a plane; RF 50 ohm at 0.332 mm | MEASURED: In2 as a plane routes 0 and 0; DERIVED BOUND: two layers cannot give a plane beside both routing faces; NO MEASUREMENT HELD of a two-layer route | NOT READ | SESSION |
-| E | 4 layers, JLC04161H-7628, 1 oz / 0.5 oz; high-current bands on both faces | MEASURED: the routing half and the tracker maker's plane; DERIVED BOUND: 78.72 mm on one face exceeds the 68 mm strip, 23.44 mm a face on two | NOT READ | SESSION |
+| E | 4 layers, JLC04161H-7628, 1 oz / 0.5 oz; bands on both faces at their coordination currents: CELL+ 12.26 mm a face, CELL_F and the return 14.60 mm with fields at P_CP and P_CN, the shore input 8.15 and 9.70 mm at L4-E11's 20 A, VIN_RAW 5.12 mm | MEASURED: the routing half and the tracker maker's plane; DERIVED BOUND (section 14): 57.02 mm a face if every conductor crossed one section of the 68 mm strip, 29.20 mm at the pack end | NOT READ | SESSION |
 | P | 4 layers, JLC04162H-7628, 2 oz outer, 0.5 oz inner with In1 and In2 at least 16 mm wide beside the pack return | MEASURED (decision 28); DERIVED BOUND: a plane is over its rating only when necked to 2.80 to 15.45 mm | NOT READ | count and 2 oz OWNER (28, ruling 7); inner SESSION |
 | E5 | 2 layers, 2L-2oz, Dk 4.5 | DERIVED BOUND: a plated board needs two layers; NO MEASUREMENT HELD (no routing) | NOT READ | count and 2 oz OWNER (ruling 7); Dk and widths SESSION |
 
@@ -47,7 +50,13 @@ board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz i
 The row in that page's long table (line 1713) would read the same way: "no" becomes "partly: decided per board with
 measurement or bound (records/l9stk); no price at any real outline; B conditional on decision 43's route".
 
-## What other authors own (from `L9-STACKUPS.md` section 12)
+## What other authors own (from `L9-STACKUPS.md` sections 12 and 14.11)
+
+- L9C-F1 to L9C-F9 (section 14.11): the energy chain's texts through `apply_energy_chain_l9stk.py` instead of record l8r2's
+  draft; BOARD_A_CONVERTERS' 25 A claim for the branches; the series parts in the blade's held band with the gauge failed
+  (R17, the XT60, the dock pins, Q39 and Q40, the 3568 holder's missing rating) beside W4DP-F2; R19 in F1's 600 s window;
+  P_CP and P_CN as plated-through lands; the pack return as GND with l8r2's drafts; TRK_OUT and the solar input outside the
+  energy chain; the plane screen's limit; the laminate's maximum and the 2 oz price in the supplier's quotation.
 
 - Boards A and E declare no return of the pack path on their intents; the return needs the pack path's bands (the board
   A and board E streams).

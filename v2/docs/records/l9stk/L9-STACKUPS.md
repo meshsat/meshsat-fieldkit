@@ -6,7 +6,9 @@ and nothing here was routed.** Every number on this page is either a measurement
 record), a bound derived by a stated method in `l9stk_stackups.py` (its output `l9stk_stackups.out`, cited by section),
 or a dated public price reading (`inputs/price-readings-2026-10-03.json`). The decisions are written as
 `apply_decisions_l9stk.py`, which the integrator runs once; nothing on this page edits `pcb_decisions.yaml`,
-`stackup_write.STACKS`, a generator or a board file.
+`stackup_write.STACKS`, a generator or a board file. **Section 14 (4 October 2026) answers the copper question on boards A
+and E**: the pack path sized at the blades' 25 A with the faces' split derived, from `l9stk_copper.py` and its output; it
+supersedes the 18 A widths of sections 3 and 7, and its energy chain texts are `apply_energy_chain_l9stk.py`.
 
 **What this page is for.** The supplier does the layout (`v2/docs/handover/supplier/SUPPLIER-HANDOVER.md` section 8,
 phase 3), so each decision below is the stackup design input that supplier receives: layer count, layer roles, copper
@@ -59,7 +61,9 @@ face, 3.36 mm on each of two 2 oz faces**, and 195.80 mm on a 0.5 oz inner layer
 14.1 A needs 15.29 / 4.43 mm at 1 oz and 7.64 / 2.22 mm at 2 oz; every transition of the pack path takes 21 barrels of
 0.4 mm whatever the weight (`l9stk_stackups.out` section 2). The pack path's return (GND) is declared on neither board A's
 nor board E's intent; on board A's In1 and In4 alone it would need 55.05 mm of each plane at 0.5 oz, inside the board's
-160 mm. Neither the per-face share on a routed board nor the 60 s transient PWR-F12 names is held.
+160 mm. Neither the per-face share on a routed board nor the 60 s transient PWR-F12 names is held. **Superseded as the band
+width by section 14:** 18 A is the transient demand, not the coordination current; the energy chain asks the copper for the
+25 A blades' rating, and 6.72 mm a face reads 12.39 K at the gauge's held 20 A and 19.52 K at 25 A.
 
 **What 2 oz would cost besides money (DERIVED, section 3 of the output).** The fabricator's 2 oz track and space floor
 reads 0.15 mm on its capability page (transcribed 25 September 2026) and **0.16 mm** on its copper weight guide (last
@@ -76,9 +80,10 @@ the table; In3 carries the VIN_RAW dive under the VBAT trunk as a crossing only.
 on F.Cu at **0.155 mm**. No controlled pair on In2 or In3.
 
 **The decision (SESSION, under the 26 September rule).** 1 oz outer, 0.5 oz inner, the pack path and its return as
-generator-laid bands of at least 6.72 mm on each outer face tied at both ends by at least 21 barrels of 0.4 mm. Two
-options stand (1 oz shared by two faces, 2 oz); the one taken spends nothing, keeps the class table, U3's bridges and the
-solved USB geometry. **Reversal:** dc_drop on the routed board reads a face over its width's rating, or the transient
+generator-laid bands on both outer faces at the blades' 25 A with the faces' split derived (section 14.5): 12.26 mm a face
+from the dock pins to F1, 14.60 mm a face for CELL_FUSED and the VBAT trunk with a transfer field at R17 and at the battery
+FET pair. Two options stand (1 oz shared by two faces, 2 oz); the one taken spends nothing, keeps the class table, U3's
+bridges and the solved USB geometry. **Reversal:** dc_drop on the routed board reads a face over its width's rating, or the transient
 analysis or the supplier's floor plan refuses the two-face bands; then JLCPCB's six-layer 2 oz row is transcribed and
 solved under its own decision and its price goes to the owner (section 11).
 
@@ -169,15 +174,16 @@ a layout duty.
 
 **The stackup.** JLC04161H-7628 as board D's row; F.Cu signals and bands; In1 solid GND with no tracks; In2 the power pours
 (CELL_F, PV_P, TRK_OUT, VIN_RAW) and a GND fill, cut back from under the tracker's switch nodes; B.Cu signals and bands.
-On each outer face: the pack path and its return 6.72 mm, VIN_RAW 4.43, TRK_OUT 2.89, the inlet chain 1.41, the solar input
-1.27 mm, with 21, 16, 12, 7 and 7 barrels of 0.4 mm at each transition. No impedance target; no RF line.
+On each outer face, by section 14.5 (which supersedes the 18 A figures above): CELL+ 12.26 mm; CELL_F and the return 14.60 mm
+with a transfer field at P_CP and P_CN; the shore input 8.15 mm (DC_IN) and 9.70 mm (DC_F, GND_V) at L4-E11's 20 A, 3.15 mm
+behind R19; VIN_RAW 5.12 mm. No impedance target; no RF line.
 
 **The decision (SESSION, under the 26 September rule).** 1 oz outer, 0.5 oz inner, the high-current conductors shared by
 both faces. Two options stand (1 oz two-face, 2 oz on JLC04162H-7628); the one taken spends nothing and keeps the 0.09 mm
 floor the routing half needs and U10's bridges (U10, the RP2040's 0.4 mm QFN-56, leaves a 0.200 mm gap, the 2 oz bridge
-exactly). **Reversal:** dc_drop on the routed strip reads a face over its rating or the floor plan refuses the two-face
-bands; then 2 oz, its price to the owner. The energy chain's "board E's 2 oz power bands" (`pcb_energy_chain.yaml`
-DOCK_ENTRY) contradicts this; section 12.
+exactly). **Reversal:** dc_drop on the routed strip reads a face over its rating at its coordination current or the floor
+plan refuses the two-face bands; then 2 oz, its price to the owner. The energy chain's "board E's 2 oz power bands"
+(`pcb_energy_chain.yaml` DOCK_ENTRY) contradicts this; section 12, and `apply_energy_chain_l9stk.py` (section 14.9).
 
 ## 8. Board P
 
@@ -272,7 +278,7 @@ surcharge NOT READ).
 | Finding | Owner |
 |---|---|
 | The pack path's return (GND between the pack lead and the dock block, and on A to its loads) is declared as a return on neither board A's nor board E's intent, so no rule judges its copper; it needs the pack path's bands (6.72 mm a face at 1 oz). Board P declares PACK_N; A and E should declare theirs the same way | board A and board E streams (the intents' generators) |
-| `pcb_energy_chain.yaml` DOCK_ENTRY says "board E's 2 oz power bands"; board E is 1 oz by this decision | the energy chain's writer |
+| `pcb_energy_chain.yaml` DOCK_ENTRY says "board E's 2 oz power bands"; board E is 1 oz by this decision. Drafted: `apply_energy_chain_l9stk.py` (section 14.9, L9C-F1), which replaces record l8r2's draft | the energy chain's writer; the integrator |
 | The 2 oz multilayer track and space floor: the tree's transcription and `layout-constraints/P.md` say 0.15 mm, JLCPCB's copper weight guide (updated 9 September 2026) says 0.16 mm; take 0.16 | the fabricator transcription's owner; the constraint sheets' writer |
 | U1 on board P (and U3 on A, U10 on E if they ever go to 2 oz) leaves a 0.200 mm copper gap at 0.4 mm pitch, the 2 oz bridge exactly | board P stream; the supplier |
 | `STACKUP-DECISIONS.md` rows for A (copper), B and P (inner weight) say UNDECIDED; `layout-constraints/A.md`, `B.md`, `E.md` and `P.md` section 1 follow them; `boards/a.json` and `boards/c.json` `_copper_layers_why` are stale (named there already) | the integrator, after the apply |
@@ -287,4 +293,215 @@ surcharge NOT READ).
   then `python3 v2/ecad/tools/decisions_render.py`.
 - The atlc solves this page reads are `v2/docs/layout-constraints/calc/stack_solves.out` (27 September 2026, rented box);
   the runner has no atlc and none was run for this record.
+- `python3 v2/docs/records/l9stk/l9stk_copper.py` from the repository root (PyYAML, pdftotext and the tool modules, under two
+  seconds, no KiCad); its committed output `l9stk_copper.out` is regenerated only through `_bin/regen_out.py`.
+- `python3 v2/docs/records/l9stk/apply_energy_chain_l9stk.py --check` (it refuses until the register carries this record's
+  board A and board E decisions); the integrator runs it with `--write` after `apply_decisions_l9stk.py`, instead of record
+  l8r2's `apply_energy_chain_e1oz.py`.
 - `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_public_hygiene`.
+
+## 14. The pack path's copper on its basis (the copper question, 4 October 2026)
+
+**The question** (the owner's, through the coordinator): resolve the copper of the pack path on boards A and E on its actual
+basis, keeping apart the continuous load, the transient demand and the fault current until its protection clears; verify the
+18 A against 25 A coordination, the temperature rise, the copper weight, the bottlenecks and the sharing between faces before
+any quoted width is adopted. **The conflict:** this record's sections 3 and 7 sized the pack path at PWR-F12's 18 A (6.72 mm
+on each of two 1 oz faces); Layer 8's round 3 (`fnd/l8r3` at `854a2bf5`, merged here for its drafts; `L8R2-KNOWN-DEFECTS.md`
+section 3f, findings F3-06 and F3-07) found that the energy chain's 25 A coordination needs 12.26 mm a face and that board E's
+DC_HS band as `gen_pcb_e3.py` lays it carries 8.07 / 7.13 A at 1 oz, under F1's 10 A.
+
+Every figure in this section is printed by `l9stk_copper.py` into `l9stk_copper.out` ("out N" is its section) from inputs
+pinned by sha256 in out 0; `test_l9stk.py` recomputes the arithmetic from the ruled method and holds this page to the output.
+DERIVED BOUND unless labelled otherwise; nothing here was built, routed or measured.
+
+### 14.1 In short
+
+- **The continuous design current is 10 A** (the pack's declared continuous current; the drafted states' largest sustained
+  PLAN at the gauge's 10.0 V floor is 9.63 A, PS-BUSY, and above 10 A a sustained state is held by the shedding control).
+  **The transient demand is 18 A for at most 60 s** (PWR-F12, every transmitter keyed, ended early above 18 A), judged as if
+  steady because no transient thermal credit is held. **The protection coordination current is the 25 A blades' rating**:
+  `energy_chain.py` check 3 asks every conductor of the stage for it, at the 10 K every rating in the chain carries, and the
+  gauge's OCD1 holds 20 A with no trip at all. On the shore input it is **L4-E11's 20 A to the clamps** (its D-06 selection,
+  a Layer 9 layout constraint), and F1's 10 A behind R19.
+- **6.72 mm a face and 11.95 mm on one 2 oz face do not hold**: sized at 18 A, they read 12.39 and 12.38 K at the gauge's
+  held 20 A and 19.52 and 19.46 K at the blades' 25 A, and with the gauge failed 6.72 mm reaches 159.4 C at the blade's 600 s
+  window top, over the blade's printed 125 C (out 4, out 6).
+- **12.26 mm a face holds only where both ends of the band are through-hole**: equal faces then share evenly (derived, not
+  assumed). Where a one-face part ends the band (R17 and the battery FET pair on A, the 12 AWG lands P_CP and P_CN on E) that
+  part's face carries more: **14.60 mm a face with a transfer field at the part**, sized so the part's face carries at most 0.55
+  (out 3).
+- **The copper decision:** 1 oz outer and 0.5 oz inner are kept on both boards (a SESSION decision, nothing spent); every
+  width is in 14.5; no inner layer is counted as a conductor. **No new OWNER DECISION.** What no width settles: with the gauge
+  failed (board P's FETs welded), the blade's intervals shorter than 600 s, from 50 A up, take every band in this record over the
+  blade's 125 C by the tree's copper-only bounds; that is W4DP-F2's open residual, not a copper choice (14.9).
+
+### 14.2 The currents by class (out 1)
+
+| Class | Current | Duration | Source |
+|---|---|---|---|
+| continuous | 10.0 A declared; 9.63 A PS-BUSY PLAN at 10.0 V; 14.97 A at HIGH and 19.20 A with both outlets, each held under 10 A by the shedding and outlet controls | held | `pcb_pack_protection.yaml`; record l9pwr section 6 (Layer 8's copy) |
+| transient | 18.0 A, every transmitter; the key-down rows reach 21.93 A at PLAN at 10.0 V and D-11's floors hold them under 18 A | at most 60 s | PWR-F12 (POWER-THERMAL.md) |
+| transient | the PA's key-on step 6.4 to 9.6 A at the pack | inside the key-down | POWER-THERMAL.md 7.3 |
+| transient | the docking pulse 242.9 A peak, I2t 0.9971 A2s | time constant 33.8 us, once per docking | L4-E11 E11-30 |
+| fault, the gauge working | OCD1 20 A (held below it); OCD2 24 A; AOLD 30 A; ASCD 55.6 A | 2 s; 1 s; 20 ms; 244 us | the image, PRIMARY-CONFIGURATION.md |
+| fault, the gauge failed | the 25 A MINI blades read monotone: up to 135 % (33.75 A) held; to 200 % (50 A) at most 600 s; to 350 % (87.5 A) at most 5 s; to 600 % (150 A) at most 0.5 s; to the prospective 480 A at most 0.1 s; typical I2t 625 A2s | as listed | Littelfuse 297 (the holder takes the MINI); F2 (Eaton SCF9550, 30 A) opens later at every current both tables state |
+| shore, continuous | 6.15 A (_VEH_T, the hot-swap's limit at VCL max) | held | `gen_sch_e.py` |
+| shore, fault | F1 10 A: up to 13.5 A held; to 20 A at most 600 s; to 35 A at most 5 s; to 60 A at most 0.5 s; a stiff source to 900 A at most 0.1 s, typical melting 93 A2s | as listed | L4-E11 section 6 |
+| VIN_RAW | 14.10 A declared; the tracker's minimum valley limit 13.8 A held; with the hot-swap 19.95 A until its fault time | held | `gen_sch_e.py` |
+
+### 14.3 The method and the criteria (out 2)
+
+The rating is decision 35's model, `track_current.conservative` (the most conservative of the three ECSS-Q-ST-70-12C Annex D
+fits at each area), outer copper at `EXTERNAL_FACTOR`; a width is `track_current.width_for_current` at its 10 K default; a
+rise is the rise at which that model rates the conductor at the current. A timed event's rise is the smaller of its steady
+rise and its adiabatic rise (Onderdonk's relation as `records/l7pwr/inputs` holds it, from the consolidation's +70 C mixed-air
+line), because a constant current never takes copper past its steady rise and copper with no cooling bounds it from the other
+side. **The criteria (SESSION):** the continuous load, the transient, every gauge level and the coordination current within the
+ruled 10 K; the backstop's intervals and the hard short at or under 125 C from the air line, the blade's printed operating
+maximum and the lowest printed limit of a part these bands join (the laminate's maximum is NOT HELD in this tree); and every
+fault's I2t under the copper's own fusing I2t (the copper is not the fuse).
+
+### 14.4 The split between the two faces (out 3)
+
+- **Through-hole at both ends** (the dock pins to F1 on A; the XT60 to F3 on E; J_DCIN to F1): equal faces sit at one
+  potential all along, so each carries half, and stitching along the band moves nothing.
+- **A one-face part at one end**: the part's face carries (Rb + Rv) / (2 Rb + Rv), where Rb is one face's band and Rv the
+  transfer field; at both ends (Rb + 2 Rv) / (2 Rb + 2 Rv). One 0.4 mm barrel at 18 um is worth 34.3 mm of a 14.60 mm band, so
+  with one barrel the part's face carries 0.89 of a 5 mm band and still 0.59 of an 80 mm one. **Stitching along such a band
+  moves current onto the part's face early** (that face sits lower all along), so the transfer barrels sit in a field at the part
+  and nowhere else along the band.
+- **The field** for the part's face to carry at most 0.55 (SESSION: a tenth of imbalance, which costs 19 % of width over an even
+  split) is at least 14 barrels of 0.4 mm (the thermal count at half the 25 A) or the split count at the band's length, whichever
+  is more: one end 30, 15, 8, 4 and 2 at 5, 10, 20, 40 and 80 mm on board A (31, 16, 8, 4, 2 on E). On E7's placement CELL_F runs
+  5.65 mm from F3's pad to P_CP's land, so 28 barrels at P_CP; the return runs 40.60 mm to P_CN, so the thermal 14.
+- **One-face hops between two one-face parts** (R17 to the pair on A; Q1 to R19 and R19 to Q7 on E) cannot be split: a few
+  millimetres of one-face copper at least as wide as the larger land, whose I2R per millimetre (0.0917 W at 25 A on 3.35 mm) is
+  under a tenth of the series part's own (R17 3.125 W); the part's thermal design governs there, and dc_drop's mesh on the routed
+  board reads it.
+- **The inner planes take a share and are not counted.** On board A, In1 and In4 beside 12.26 mm faces are over record l9stk's
+  `plane_share` screen only when necked to 19.50 to 28.20 mm beside the return, so they stay at least 30 mm wide there. On board E
+  the screen fails a single plane at every width over 13.50 mm, which is the screen's limit and not the plane's: it applies the
+  internal fit to a plane's whole width, outside CNES's 8 A data, while a plane tied in parallel heats per square millimetre at
+  0.43 of the bands it relieves (the thickness ratio, the current density being the same) and reads 0.092 A a 0.5 mm cell
+  against dc_drop's per-cell bar of 0.395 A. The bands are sized to carry the whole current alone.
+
+### 14.5 The conductors (out 5)
+
+| Board | Conductor | Ends | Protection | Continuous / transient | Coordination | 1 oz, each face | Transfer field |
+|---|---|---|---|---|---|---|---|
+| A | CELL+, J_CP1 to J_CP4 to F1 | TH / TH | E's F3 (upstream), the gauge | 10 A / 18 A 60 s | 25 A | 12.26 mm | none |
+| A | CELL_FUSED, F1 to R17 | TH / 1F | A's F1, the gauge | 10 A / 18 A 60 s | 25 A | 14.60 mm | at R17: 14 or the split count |
+| A | CH_BATQ (drafted), R17 to Q39 and Q40 | 1F / 1F | A's F1, the gauge | 10 A / 18 A 60 s | 25 A | a one-face hop, at least 3.35 mm | none possible |
+| A | VBAT trunk, the pair (R17 as drawn) to the first branch | 1F / loads | A's F1, the gauge | 10 A / 18 A 60 s | 25 A | 14.60 mm | at the pair: 14 or the split count |
+| A | GND, J_CN1 to J_CN4 to the returns and planes | TH / planes | the loop's blades, the gauge | 10 A / 18 A 60 s | 25 A | 12.26 mm | none; In1 and In4 at least 30 mm beside it |
+| A | VIN_RAW, J_VR1 to J_VR4 to the front end | TH / 1F | the sources' limits | 14.10 A | 14.10 A | 5.12 mm | at the front end: 8 or the split count |
+| E | CELL+, J_BATT pin 2 to F3 | TH / TH | P's F1 (upstream), the gauge | 10 A / 18 A 60 s | 25 A | 12.26 mm | none |
+| E | CELL_F, F3 to P_CP | TH / 1F | E's F3, the gauge | 10 A / 18 A 60 s | 25 A | 14.60 mm | 28 at P_CP (E7: 5.65 mm), or a plated-through land |
+| E | GND, J_BATT pin 1 to P_CN | TH / 1F | the loop's blades, the gauge | 10 A / 18 A 60 s | 25 A | 14.60 mm | 14 at P_CN (E7: 40.60 mm) |
+| E | DC_IN, J_DCIN pin 1 to F1 | TH / TH | the source's own; F1 behind it | 6.15 A | 20 A (L4-E11) | 8.15 mm | none |
+| E | DC_F, F1 to Q1 and D10 | TH / 1F | E's F1 | 6.15 A | 20 A | 9.70 mm | 12 at Q1 and D10 (E7: 12.72 mm) |
+| E | DC_P, Q1 to R19 and D1 | 1F / 1F | E's F1 | 6.15 A | 20 A | a one-face hop, at least 4.41 mm | none possible |
+| E | HS_S, R19 to Q7 | 1F / 1F | E's F1 | 6.15 A | 10 A | a one-face hop, at least 3.81 mm | none possible |
+| E | DC_HS, Q7 to L2 | 1F / 1F | the hot-swap; F1 with Q7 shorted | 6.15 A | 10 A | 3.15 mm, or 8.15 mm on one face | 6 at each end (E7: 55.38 mm) |
+| E | GND_V, J_DCIN pin 2 to the clamps and L2 | TH / 1F | E's F1 (the clamp-fault loop) | 6.15 A | 20 A | 9.70 mm | at the clamps: 12 or the split count |
+| E | VIN_RAW, L2 and Q2 to P_VR | 1F / 1F | the sources' limits | 14.10 A | 14.10 A | 5.12 mm | 8 or the split count at each end |
+
+TH: through-hole (both faces); 1F: one face. Where E7's placement gives no length, the supplier's floor plan does, and the
+field is read off out 3 at that length.
+
+### 14.6 Each class on the decided bands (out 4; rise on the governing face, final temperature from +70 C)
+
+| Event | 12.26 mm even (B1) | 14.60 mm at 0.55 (B2) | 6.72 mm even (A1, for comparison) |
+|---|---|---|---|
+| 10 A held | 1.59 K | 1.61 K | 3.02 K |
+| 18 A for 60 s | 5.13 K | 5.13 K | 10.00 K |
+| 20 A held (OCD1) | 6.35 K | 6.36 K | **12.39 K** |
+| 24 A for 1 s (OCD2) | 4.67 K | 3.98 K | **15.83 K** |
+| 25 A held (the blades' rating) | 10.00 K | 10.00 K | **19.52 K** |
+| 33.75 A held (135 %, gauge failed) | 88.4 C | 88.4 C | 106.6 C |
+| 50 A for 600 s (200 %, gauge failed) | 110.9 C | 110.9 C | **159.4 C** |
+| 87.5 A for 5 s; 150 A for 0.5 s; 480 A for 0.1 s | **197.5, 175.5, 325.5 C** | **197.3, 158.0, 277.7 C** | over |
+| hard short at the blade's typical I2t; at the gauge's ASCD | 75.1 C; 70.5 C | 74.3 C; 70.4 C | 87.2 C; 71.5 C |
+| docking pulse | 70.0 C | 70.0 C | 70.0 C |
+
+The 2 oz option at 7.30 mm a face (B3) reads as B2 at every row. The shore bands (S1 8.15 mm even, S2 9.70 mm at 0.55) hold
+20 A at 10 K and every interval to 60 A for 0.5 s within 125 C (at most 104.6 C); only the stiff source's 900 A for the 0.1 s the
+600 % row allows is unbounded, which F1's clearing I2t decides (E11-16; at its typical 93 A2s the bands reach 71.7 and 71.4 C).
+DC_HS at 3.15 mm (S3) reads 10.00 K at F1's 10 A and, with Q7 shorted, 89.8 C held at 13.5 A and 118.3 C at 20 A for 600 s.
+VIN_RAW at 5.12 mm reads 10.00 K at 14.10 A and 9.57 K at the tracker's 13.8 A; both sources together, 19.95 A, read at most
+21.57 K for the hot-swap's fault time. The copper is never the fuse: the loosest hard-short bound (480 A for 0.1 s, 23,040 A2s)
+puts 5,760 A2s on the governing face of B1 against its fusing I2t of 13,844 A2s.
+
+### 14.7 The widths quoted, judged (out 6)
+
+| Width | Basis it was sized on | Holds? | Why |
+|---|---|---|---|
+| 6.72 mm on each of two 1 oz faces (this record, sections 3 and 7) | 18 A at 10 K, an even split assumed | **no** | over 10 K at the gauge's held 20 A (12.39 K) and at the blades' 25 A (19.52 K); 159.4 C at the blade's 600 s window top |
+| 11.95 mm on one 2 oz face (this record) | 18 A at 10 K | **no** | 19.46 K at 25 A; one 2 oz face needs 21.81 mm at 25 A |
+| 12.26 mm on each of two 1 oz faces (Layer 8, F3-06) | 25 A at 10 K, an even split assumed | **yes, between two through-hole ends only** | the split is derived even there; at a one-face part the part's face needs 14.60 mm with a field |
+| 23.44 mm a face (this record's board E bound) | every conductor at 18 A in one section | **superseded** | redone at the coordination currents: 57.02 mm a face of the 68 mm strip if every listed conductor crossed one section (a bound the floor plan avoids), 29.20 mm a face at the pack end alone |
+| 2.76 mm a face for SHORE_INPUT (Layer 8's draft) | F1's 10 A, even | **no** for DC_IN to the clamps | L4-E11's D-06 asks 20 A there: 8.15 mm (through-hole ends) and 9.70 mm (with a field); behind R19 F1's 10 A at a 0.55 share: 3.15 mm |
+
+### 14.8 The bottlenecks (out 7)
+
+- **R17** (board A, 5 mOhm, 5 W, C20108830): 1.62 W at 18 A, 2.0 W at 20 A, 3.125 W at 25 A; its 5 W is reached at 31.62 A,
+  inside the blade's held band with the gauge failed (5.695 W at 33.75 A held).
+- **Q39 and Q40** (drafted, 21.136 mOhm each at L4-E11's 150 C bound): 4.23 W at 20 A, 6.61 W at 25 A, 12.04 W at 33.75 A;
+  E11-29's bar covers the gauge's levels, not the blade's band.
+- **The dock pins** (four Mill-Max, 9 A each at a 10 C rise): 6.25 A a pin at 25 A, 8.44 A at 33.75 A, 12.50 A at the 600 s
+  window top (over 9 A).
+- **The XT60** (30 A): over its rating from 30 A, inside the blade's held band (33.75 A).
+- **R19** (board E, 10 mOhm, 3 W): its 3 W at 17.32 A, inside F1's 600 s window (13.5 to 20 A).
+- **The Keystone 3568 holders** (A's F1, E's F3 and F1, P's F1): no current rating printed (L4-E11 section 6).
+- **The lands**: every pack and shore pad through-hole except R17, the pair, P_CP, P_CN, Q1, R19, Q7 and L2 (out 7 lists each
+  land); a one-face land takes its transfer field (14.4) or, for P_CP and P_CN, a plated-through land.
+- **The transfer barrels**: one barrel of a 14-barrel field takes 0.0013 A2s of the docking pulse (+0.01 K) and 0.7972 A2s at the
+  blade's typical melting (+8.58 K), and stays under its own fusing I2t (42.0 A2s) even at the 600 % bound (29.39 A2s).
+
+### 14.9 The copper decision per board (SESSION, under the owner's standing rule of 26 September 2026)
+
+**Board A: 1 oz outer, 0.5 oz inner; the pack path and its return on both outer faces at the blades' 25 A**, widths as 14.5
+(12.26 mm a face between through-hole ends, 14.60 mm a face with a field at R17 and at the pair, the R17 to pair hop one face at
+least 3.35 mm), In1 and In4 at least 30 mm wide beside the return, VIN_RAW 5.12 mm a face. **Margins:** 10.00 K at the
+coordination current against the 10 K criterion (sized at it, no excess), 5.13 K at the 18 A transient, 6.36 K at the gauge's
+held 20 A; with the gauge failed 14.1 K under the blade's 125 C at the 600 s window top (110.9 C).
+
+**Board E: 1 oz outer, 0.5 oz inner; the pack path, its return, the shore input and VIN_RAW on both outer faces at their
+coordination currents**, widths and fields as 14.5. **Margins:** as board A on the pack path; on the shore input 10.00 K at
+L4-E11's 20 A and at most 104.6 C (20.4 K under 125 C) through F1's 0.5 s interval; DC_HS 10.00 K at F1's 10 A.
+
+**Two options stand, and the one taken spends nothing:** 1 oz at 12.26 to 14.60 mm a face, or 2 oz at 6.13 to 7.30 mm a face
+(the same margins, out 4's B3). The reasons of sections 3 and 7 for 1 oz stand (the class table, U3's and U10's solder-mask
+bridges, the solved USB geometry); the board area the wider bands take is the floor plan's to show. **Reversal:** dc_drop on
+the routed board reads a face over its rating at the coordination current, or the supplier's floor plan cannot lay the bands and
+their fields; then 2 oz under its own decision and its price to the owner. Both are written into `apply_decisions_l9stk.py`'s
+board A and board E entries, and `apply_energy_chain_l9stk.py` carries the widths into the energy chain's DOCK_ENTRY,
+SHORE_INPUT and BOARD_A_NODE texts; it replaces record l8r2's `apply_energy_chain_e1oz.py` (run this one instead; if l8r2's
+was already run, this one replaces its texts in turn).
+
+### 14.10 What no width settles, and the owner
+
+- **The backstop's intervals shorter than 600 s with the gauge failed** (board P's FETs welded, a fault from 50 A up): every
+  band this record weighs, at either copper weight, reads over the blade's 125 C by the tree's copper-only bounds (out 4: 197.5 C
+  at 87.5 A for 5 s on B1). A width that would hold them is out of proportion (the steady bound is past the fits at 43.75 A a
+  face), so this is not a copper choice: it is **W4DP-F2's open residual** (no element that acts without firmware between the
+  cells' 24 A and the blade), whose options are already with the battery reviewer and the owner (a fixed hardware over-current
+  protector, or the owner accepting the residual). NO MEASUREMENT HELD: a coupon reading (a band specimen at 87.5 A behind a 25 A
+  MINI until it opens) or a transient model crediting the laminate.
+- **The laminate's maximum temperature** is NOT HELD; 125 C (the blade's) is the lowest printed limit used.
+- **The blades' total clearing I2t** at the prospective fault is not printed (625 A2s and 93 A2s are typical melting figures).
+- **No new OWNER DECISION.** The 2 oz option stays the reversal of sections 3, 7 and 11, the owner's only if it fires.
+
+### 14.11 Findings for other authors
+
+| Finding | Owner |
+|---|---|
+| L9C-F1: the energy chain's conductor texts: DOCK_ENTRY and SHORE_INPUT name 2 oz, BOARD_A_NODE names an In2 plane board A does not have; `apply_energy_chain_l9stk.py` writes the derived widths and replaces record l8r2's `apply_energy_chain_e1oz.py` (whose 12.26 and 2.76 mm assume an even split and leave out L4-E11's 20 A) | the integrator; the energy chain's writer |
+| L9C-F2: the chain's BOARD_A_CONVERTERS row claims board A's own copper into each converter at 25 A; a branch is sized at its own load, so the claim holds for the VBAT trunk only, and a branch fault under OCD1's 20 A is cleared by nothing | the energy chain's writer; board A's generator owner |
+| L9C-F3: series parts the chain does not list sit in the blade's held band with the gauge failed: R17 reaches its 5 W at 31.62 A, the XT60 its 30 A, the dock pins pass 9 A at the 600 s window top, Q39 and Q40 dissipate 12.04 W at 33.75 A; the Keystone 3568 prints no current rating | the battery stream (W4DP-F2), Layer 6 (the holder and R17), L4-E11 (E11-29) |
+| L9C-F4: R19 (3 W) reaches its rating at 17.32 A, inside F1's 600 s window, in the loop of a fault behind it | L4-E11 (D-06's withstand list) |
+| L9C-F5: P_CP and P_CN are one-face SMD lands for the 12 AWG wires; a plated-through land would give both faces the current (an even split, 12.26 mm a face) where the drawn land needs a 28 barrel field on E7 | board E's PCB generator owner |
+| L9C-F6: the pack return on A and E is GND (record l8r2's packrtn drafts declare it a rail returning CELL+ and CELL_F); the return bands are sized as the forward ones, and the planes are not counted | the integrator (with l8r2's drafts) |
+| L9C-F7: TRK_OUT and the solar input have no stage in the energy chain; their coordination currents (the tracker's limit is a minimum threshold, the panel's short-circuit current) are not declared, so this record carries TRK_OUT at its declared 10.33 A in the cross-section bound only | the energy chain's writer; L4-E7's owner |
+| L9C-F8: `plane_share`'s screen (this record's own, section 8) cannot discriminate a single wide plane at these currents; it served board P's two planes and is not used to size any band here | this record |
+| L9C-F9: the supplier's quotation should state the laminate's maximum operating temperature and the 2 oz price beside the 1 oz rows; the floor plan keeps the pack end and the shore chain of board E in separate sections of the strip | the supplier handover's author |
