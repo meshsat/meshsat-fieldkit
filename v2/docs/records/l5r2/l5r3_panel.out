@@ -1,0 +1,159 @@
+L5-R3: THE PANEL'S CONTRACT AGAINST ITS FIRMWARE, READ BACK (MESHSAT-1357, 3 October 2026). Prototype design: nothing built,
+powered or measured; a check of text against text.
+
+0. INPUTS (sha256)
+   panel     9fd2b4e3c6edf86e482256e81f7b924de13d2f010c2124a02bfbd688552ea9cc  v2/docs/PANEL.md
+   hwfw      d683b31a0ec5a9a4f34036c54a708f868cd8abd4d320c280e81db435fc5001d4  v2/docs/HW-FW-CONTRACT.md
+   assembly  29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed  v2/docs/ASSEMBLY.md
+   fw        83f0196be1c8df50c56715069d59e1cee47c2a7d6a9576c896b52dba6860a290  v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md
+   l8r2      f47c81c8f5bdde73acb3e6e4511c052c24dcc0e7ed6abd1065a6c23b1ea6ed4c  v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md
+   genb      3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8  v2/ecad/tools/gen_sch_b.py
+   gend      54f17c8187d3bd195b2df6447a46c6bcaeb09209fe69bb3f61a7670a47585bbd  v2/ecad/tools/gen_sch_d.py
+   conops    6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281  v2/docs/CONOPS.md
+
+1. THE RESOLUTIONS AND THE PI TEXTS (16; every excerpt in its target, every figure in a cited source)
+   R3-F04 | F-04 the expander order | target v2/docs/PANEL.md
+      text: On boot the firmware writes the output registers to 0 first (every LED bit is still an input at power-up, so nothing lights)
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; the firmware's F-04 and S-10; PANEL.md section 5 and FW-A08 (the one rule)
+      figures: F-04, S-10
+      mark: RULE (SESSION, decided on the contract's own rows); trigger: none; criteria: 5.7, 5.13
+   R3-F05 | F-05 NVG against the TX lamp's floor | target v2/docs/PANEL.md
+      text: The TX lamp follows the panel's duty in every position (DAY 100 %, NIGHT 15 %, NVG 2 %)
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md, v2/docs/CONOPS.md; CONOPS section 4's NVG row (behaviour) and section 7a's NVIS target; the shared LED_RAIL (PANEL.md section 1)
+      figures: panel at 2 % duty, backlight 5 %, red and amber indicators only, MIL-STD-3009, Type I, Class B NVIS, F-05
+      mark: RULE (SESSION; CONOPS decides the behaviour); trigger: an owner ruling that the TX lamp outranks the NVG target (a CONOPS change); criteria: 5.11, 5.13
+   R3-F06 | F-06 the lamp test's chirp | target v2/docs/PANEL.md
+      text: a double chirp (F-06: this sentence said a chirp
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; PANEL.md's sounder patterns (the specific statement); the firmware's F-06 and S-15
+      figures: double chirp, F-06
+      mark: RULE (SESSION); trigger: none; criteria: 5.13
+   R3-F07 | F-07 the slot fault's indicator | target v2/docs/PANEL.md
+      text: two compute modules lost; decided 3 October 2026, F-07
+      decided by: v2/docs/CONOPS.md, v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; CONOPS section 4e's fault table
+      figures: | a compute module lost |, MASTER CAUT; the e-paper names the slot, | two modules lost |, MASTER WARN; SOS set in that state
+      mark: RULE (SESSION; CONOPS decides the behaviour); trigger: none; criteria: 5.13
+   R3-F08 | F-08 the e-paper's pacing | target v2/docs/PANEL.md
+      text: a change of page refreshes at once and the idle page's content at most once a minute
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; the firmware's F-08 and S-16
+      figures: F-08, a change of page refreshes at once
+      mark: RULE (SESSION); the panel's least interval TBD (Layer 6); trigger: PDi's statement of a least refresh interval (Layer 6); criteria: 5.11
+   R3-F09 | F-09 the operator's retry | target v2/docs/PANEL.md
+      text: then leaves it off until the operator acts: from the touch UI, by a retry command over the bridge protocol
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; the firmware's F-09 and S-04
+      figures: F-09, panel_slot_operator_retry
+      mark: RULE (SESSION); the protocol owed (MESHSAT-837); trigger: the bridge protocol's definition (MESHSAT-837, the firmware's F-02); criteria: 5.8, 5.11
+   R3-F10 | F-10 the boot-time 5 Hz rule | target v2/docs/HW-FW-CONTRACT.md
+      text: at 5 Hz, enter H1 with the stop dated at the start-up and raise no slot until the line is back at 1 Hz and 30 minutes have passed
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; FW-C13's exit (H1 left only at 1 Hz and after 30 minutes); the firmware's F-10 and S-18
+      figures: F-10, S-18
+      mark: RULE (SESSION, the stricter of the two rows); trigger: none; criteria: 5.6, 5.11
+   R3-F11 | F-11 board D's boot levels | target v2/docs/HW-FW-CONTRACT.md
+      text: X_SA_PD 1 (the exciter on and receiving, `gen_sch_d.py`: 'PD from the expander (default on)'), X_AMP_EN 1
+      decided by: v2/ecad/tools/gen_sch_d.py, v2/docs/CONOPS.md, v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; gen_sch_d.py's SA868 and codec-mute notes and its level stages; CONOPS's EMCON row
+      figures: PD from the expander (default on), So the default is a defined "mute off", the VHF path keeps listening, F-11
+      mark: NETLIST (the generator's designed power-up levels); RULE (SESSION); trigger: a change of board D's level stages or the SA868's PD polarity; criteria: 5.7, 5.11
+   R3-F12 | F-12 the margin hold's SOS text | target v2/docs/PANEL.md
+      text: "SOS QUEUED: MARGIN HOLD, COOLING"
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; the firmware's F-12 and S-12
+      figures: SOS QUEUED: MARGIN HOLD, COOLING
+      mark: RULE (SESSION; the firmware's text adopted); trigger: none; criteria: 5.11
+   R3-F12h | F-12 in FW-C15 | target v2/docs/HW-FW-CONTRACT.md
+      text: the e-paper showing "SOS QUEUED: MARGIN HOLD, COOLING" (F-12
+      decided by: v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; the firmware's F-12
+      figures: SOS QUEUED: MARGIN HOLD, COOLING
+      mark: RULE (SESSION); trigger: none; criteria: 5.11
+   R3-F13 | F-13 the HDMI select encoding | target v2/docs/PANEL.md
+      text: slot 1 = both selects low; slot 2 = `HDMI_SEL1` high, `HDMI_SEL2` low; slot 3 = `HDMI_SEL2` high
+      decided by: v2/ecad/tools/gen_sch_b.py, v2/docs/records/l5r2/inputs/fw-panel-sections-5-6-42c27369.md; gen_sch_b.py lines 1336 to 1348 (U3, U4, U519, U520) with TI SCDS343F Table 1
+      figures: ts3("U3", "HDMI1", "HDMI2", "HDMIM", "HDMI_SEL1", "HDMI_EN1"), ts3("U4", "HDMIM", "HDMI3", "HDMIO", "HDMI_SEL2", "HDMI_EN2"), H H L: All A channels are enabled, H H H: All B channels are enabled
+      mark: NETLIST (the generator); trigger: a change of board B's display switches; criteria: 5.8, 5.13
+   R3-PI1 | PI: PANEL.md section 1 | target v2/docs/PANEL.md
+      text: DRAFTED by record l8r2 at `29ffb518`
+      decided by: v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 1
+      figures: read by U1 P1.3
+      mark: DRAFTED; PROVISIONAL; trigger: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated; criteria: 5.7, 5.13
+   R3-PI4 | PI: PANEL.md section 4 | target v2/docs/PANEL.md
+      text: PI_BTN_n, the PI button, low = pressed (PIJ2_A2; R57 10 k to +3V3, C27 100 nF to GND, tau 1.0 ms); raises EXP_INT on a change
+      decided by: v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 4
+      figures: PI_BTN_n: the PI button, low = pressed (PIJ2_A2; R57 10 k to +3V3, C27 100 nF to GND,, tau 1.0 ms
+      mark: DRAFTED; PROVISIONAL; trigger: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated; criteria: 5.7
+   R3-PI5 | PI: PANEL.md section 5 | target v2/docs/PANEL.md
+      text: (read on U1 P1.3, PI_BTN_n, at every EXP_INT and the once-a-second poll
+      decided by: v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 5
+      figures: (read on U1 P1.3, PI_BTN_n, at every EXP_INT and the once-a-second poll)
+      mark: DRAFTED; PROVISIONAL; trigger: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated; criteria: 5.11
+   R3-PIA | PI: ASSEMBLY.md line 127 | target v2/docs/ASSEMBLY.md
+      text: (the panel controller reads it on U1 P1.3; nothing leaves the backer
+      decided by: v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md; l8r2 3d's text for ASSEMBLY.md
+      figures: (the panel controller reads it on U1 P1.3; nothing leaves the backer)
+      mark: DRAFTED; PROVISIONAL; trigger: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated; criteria: 5.13
+   R3-PIC | PI: FW-C03 | target v2/docs/HW-FW-CONTRACT.md
+      text: DRAFTED: `C:U1` P1.3 (PI_BTN_n)
+      decided by: v2/docs/records/l5r2/inputs/l8r2-section-3d-29ffb518.md; l8r2 3d's text for FW-C03
+      figures: "`C:U1` P1.3 (PI_BTN_n)"
+      mark: DRAFTED; PROVISIONAL; trigger: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated; criteria: 5.11
+
+2. THE FIRMWARE'S SESSION CHOICES, ACCOUNTED FOR (36)
+   S-01: PANEL.md 9a
+   S-02: PANEL.md 9a
+   S-03: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-04: PANEL.md 9a
+   S-05: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-06: PANEL.md 9a
+   S-07: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-08: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-09: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-10: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-11: PANEL.md 9a; HW-FW-CONTRACT.md 3.8; not adopted (PANEL.md 9a)
+   S-12: PANEL.md 9a
+   S-13: PANEL.md 9a
+   S-14: PANEL.md 9a
+   S-15: PANEL.md 9a
+   S-16: PANEL.md 9a
+   S-17: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-18: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-19: PANEL.md 9a; not adopted (PANEL.md 9a)
+   S-20: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-21: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-22: PANEL.md 9a
+   S-23: PANEL.md 9a
+   S-24: PANEL.md 9a
+   S-25: PANEL.md 9a
+   S-26: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-27: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-28: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-29: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-30: PANEL.md 9a; not adopted (PANEL.md 9a)
+   S-31: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-32: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-33: PANEL.md 9a
+   S-34: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-35: PANEL.md 9a; HW-FW-CONTRACT.md 3.8
+   S-36: PANEL.md 9a; HW-FW-CONTRACT.md 3.8; not adopted (PANEL.md 9a)
+
+3. THE PROVISIONAL ENTRIES (5)
+   R3-PI1: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated
+   R3-PI4: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated
+   R3-PI5: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated
+   R3-PIA: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated
+   R3-PIC: l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated
+
+4. THE TABLE AS MARKDOWN (L5-PANEL-R3.md carries these lines)
+   | id | finding or text | target | text written (excerpt, verbatim) | decided by (file; where) | mark | invalidation trigger | criterion (5.x) |
+   |---|---|---|---|---|---|---|---|
+   | R3-F04 | F-04 the expander order | PANEL.md | On boot the firmware writes the output registers to 0 first (every LED bit is still an input at power-up, so nothing lights) | fw-panel-sections-5-6-42c27369.md; the firmware's F-04 and S-10; PANEL.md section 5 and FW-A08 (the one rule) | RULE (SESSION, decided on the contract's own rows) | none | 5.7, 5.13 |
+   | R3-F05 | F-05 NVG against the TX lamp's floor | PANEL.md | The TX lamp follows the panel's duty in every position (DAY 100 %, NIGHT 15 %, NVG 2 %) | fw-panel-sections-5-6-42c27369.md; CONOPS.md; CONOPS section 4's NVG row (behaviour) and section 7a's NVIS target; the shared LED_RAIL (PANEL.md section 1) | RULE (SESSION; CONOPS decides the behaviour) | an owner ruling that the TX lamp outranks the NVG target (a CONOPS change) | 5.11, 5.13 |
+   | R3-F06 | F-06 the lamp test's chirp | PANEL.md | a double chirp (F-06: this sentence said a chirp | fw-panel-sections-5-6-42c27369.md; PANEL.md's sounder patterns (the specific statement); the firmware's F-06 and S-15 | RULE (SESSION) | none | 5.13 |
+   | R3-F07 | F-07 the slot fault's indicator | PANEL.md | two compute modules lost; decided 3 October 2026, F-07 | CONOPS.md; fw-panel-sections-5-6-42c27369.md; CONOPS section 4e's fault table | RULE (SESSION; CONOPS decides the behaviour) | none | 5.13 |
+   | R3-F08 | F-08 the e-paper's pacing | PANEL.md | a change of page refreshes at once and the idle page's content at most once a minute | fw-panel-sections-5-6-42c27369.md; the firmware's F-08 and S-16 | RULE (SESSION); the panel's least interval TBD (Layer 6) | PDi's statement of a least refresh interval (Layer 6) | 5.11 |
+   | R3-F09 | F-09 the operator's retry | PANEL.md | then leaves it off until the operator acts: from the touch UI, by a retry command over the bridge protocol | fw-panel-sections-5-6-42c27369.md; the firmware's F-09 and S-04 | RULE (SESSION); the protocol owed (MESHSAT-837) | the bridge protocol's definition (MESHSAT-837, the firmware's F-02) | 5.8, 5.11 |
+   | R3-F10 | F-10 the boot-time 5 Hz rule | HW-FW-CONTRACT.md | at 5 Hz, enter H1 with the stop dated at the start-up and raise no slot until the line is back at 1 Hz and 30 minutes have passed | fw-panel-sections-5-6-42c27369.md; FW-C13's exit (H1 left only at 1 Hz and after 30 minutes); the firmware's F-10 and S-18 | RULE (SESSION, the stricter of the two rows) | none | 5.6, 5.11 |
+   | R3-F11 | F-11 board D's boot levels | HW-FW-CONTRACT.md | X_SA_PD 1 (the exciter on and receiving, `gen_sch_d.py`: 'PD from the expander (default on)'), X_AMP_EN 1 | gen_sch_d.py; CONOPS.md; fw-panel-sections-5-6-42c27369.md; gen_sch_d.py's SA868 and codec-mute notes and its level stages; CONOPS's EMCON row | NETLIST (the generator's designed power-up levels); RULE (SESSION) | a change of board D's level stages or the SA868's PD polarity | 5.7, 5.11 |
+   | R3-F12 | F-12 the margin hold's SOS text | PANEL.md | "SOS QUEUED: MARGIN HOLD, COOLING" | fw-panel-sections-5-6-42c27369.md; the firmware's F-12 and S-12 | RULE (SESSION; the firmware's text adopted) | none | 5.11 |
+   | R3-F12h | F-12 in FW-C15 | HW-FW-CONTRACT.md | the e-paper showing "SOS QUEUED: MARGIN HOLD, COOLING" (F-12 | fw-panel-sections-5-6-42c27369.md; the firmware's F-12 | RULE (SESSION) | none | 5.11 |
+   | R3-F13 | F-13 the HDMI select encoding | PANEL.md | slot 1 = both selects low; slot 2 = `HDMI_SEL1` high, `HDMI_SEL2` low; slot 3 = `HDMI_SEL2` high | gen_sch_b.py; fw-panel-sections-5-6-42c27369.md; gen_sch_b.py lines 1336 to 1348 (U3, U4, U519, U520) with TI SCDS343F Table 1 | NETLIST (the generator) | a change of board B's display switches | 5.8, 5.13 |
+   | R3-PI1 | PI: PANEL.md section 1 | PANEL.md | DRAFTED by record l8r2 at `29ffb518` | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 1 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.7, 5.13 |
+   | R3-PI4 | PI: PANEL.md section 4 | PANEL.md | PI_BTN_n, the PI button, low = pressed (PIJ2_A2; R57 10 k to +3V3, C27 100 nF to GND, tau 1.0 ms); raises EXP_INT on a change | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 4 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.7 |
+   | R3-PI5 | PI: PANEL.md section 5 | PANEL.md | (read on U1 P1.3, PI_BTN_n, at every EXP_INT and the once-a-second poll | l8r2-section-3d-29ffb518.md; l8r2 3d's text for section 5 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.11 |
+   | R3-PIA | PI: ASSEMBLY.md line 127 | ASSEMBLY.md | (the panel controller reads it on U1 P1.3; nothing leaves the backer | l8r2-section-3d-29ffb518.md; l8r2 3d's text for ASSEMBLY.md | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.13 |
+   | R3-PIC | PI: FW-C03 | HW-FW-CONTRACT.md | DRAFTED: `C:U1` P1.3 (PI_BTN_n) | l8r2-section-3d-29ffb518.md; l8r2 3d's text for FW-C03 | DRAFTED; PROVISIONAL | l8r2's apply_gen_sch_c_pibtn.py released and board C regenerated | 5.11 |
