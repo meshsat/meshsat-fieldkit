@@ -157,34 +157,47 @@ def t_each_decision_is_the_sessions_on_the_computed_stack():
                 "board %s's decision does not name the owner's ruling it builds on" % d["board"]
 
 
-def t_the_apply_script_parses_appends_seven_and_refuses_a_second_run():
+def _marked(decisions):
+    """The entries whose TITLE ends with one of this record's marks (a text field may name another mark, as A's and E's name
+    the open decision)."""
+    return [x for x in decisions if re.search(r"\(L9STK (A|B|C|D|E|P|E5|CU)\)$", str(x.get("title", "")).strip())]
+
+
+def t_the_apply_script_checks_by_default_appends_eight_and_refuses_a_second_run():
     ast.parse(open(APPLY, encoding="utf-8").read())
     A, D = _decisions()
     import yaml
     real = yaml.safe_load(open(REGISTER, encoding="utf-8").read())["decisions"]
-    applied = [x for x in real if "(L9STK " in str(x.get("title", ""))]
+    applied = _marked(real)
     tmp = tempfile.mkdtemp(prefix="l9stk-")
     try:
         copy = os.path.join(tmp, "pcb_decisions.yaml")
         shutil.copyfile(REGISTER, copy)
-        r1 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy], capture_output=True, text=True)
+        before = open(copy, encoding="utf-8").read()
+        r0 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy], capture_output=True, text=True)
+        assert open(copy, encoding="utf-8").read() == before, "a run without --write wrote the register"
+        r1 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy, "--write"], capture_output=True, text=True)
         if applied:
-            assert len(applied) == 7, "the register carries %d of the seven marks" % len(applied)
+            assert len(applied) == 8, "the register carries %d of the eight marks" % len(applied)
             assert r1.returncode == 2 and "second run" in r1.stdout, "a run on an applied register was not refused"
             return
+        assert r0.returncode == 0 and "CHECK ONLY" in r0.stdout, r0.stdout + r0.stderr
         assert r1.returncode == 0, r1.stdout + r1.stderr
         after = yaml.safe_load(open(copy, encoding="utf-8").read())["decisions"]
         assert after[:len(real)] == real, "an existing decision moved"
         new = after[len(real):]
-        assert len(new) == 7 and [e["n"] for e in new] == list(range(max(int(x["n"]) for x in real) + 1,
-                                                                     max(int(x["n"]) for x in real) + 8))
-        for e, d in zip(new, D):
+        n0 = max(int(x["n"]) for x in real) + 1
+        assert len(new) == 8 and [e["n"] for e in new] == list(range(n0, n0 + 8))
+        for e, d in zip(new[:7], D):
             assert e["authority"] == "SESSION" and e["status"] == "ruled" and e["blocks"] == {}
-            assert e["measurement"] == d["measurement"] and d["mark"] in e["title"]
+            assert e["measurement"] == d["measurement"] and str(e["title"]).endswith(d["mark"])
             assert str(e.get("ruled_on")) == "2026-10-03"
-        r2 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy], capture_output=True, text=True)
+        cu = new[7]
+        assert cu["status"] == "open" and cu["authority"] == "OWNER" and str(cu["title"]).endswith("(L9STK CU)")
+        assert cu["ask"] and cu["holds_nothing_today"] and cu["blocks"] == {}
+        r2 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy, "--write"], capture_output=True, text=True)
         assert r2.returncode == 2 and "second run" in r2.stdout, "a second run was not refused"
-        assert open(copy, encoding="utf-8").read().count("(L9STK ") == 7
+        assert len(_marked(yaml.safe_load(open(copy, encoding="utf-8").read())["decisions"])) == 8
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -250,12 +263,16 @@ def t_the_readme_proposes_the_layer_status_row():
 
 
 # ------------------------------------------------------------------------------------------------ the copper question
-# (4 October 2026, the page's section 14): l9stk_copper.py's output, its arithmetic recomputed from the ruled method
-# (decision 35's track_current), the split checked on a resistor ladder solved here, the energy chain draft on copies.
+# (revised 4 October 2026 after the check COPPER: NOT CONFIRMED, the page's section 14): l9stk_copper.py's output, its
+# arithmetic re-solved here from the ruled method (decision 35's track_current) with a band's faces and its adjacent return as
+# one conductor, the split checked on a resistor ladder solved here, the coordination table's rows and dispositions, the
+# drafts on copies.
 COPPER = os.path.join(REC, "l9stk_copper.py")
 COPPER_OUT = os.path.join(REC, "l9stk_copper.out")
 CHAIN_DRAFT = os.path.join(REC, "apply_energy_chain_l9stk.py")
+PLATING_DRAFT = os.path.join(REC, "apply_blade_plating_l9stk.py")
 CHAIN = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_energy_chain.yaml")
+SOURCES = os.path.join(ROOT, "v2", "vendor", "SOURCES.yaml")
 L8R2_DRAFT = os.path.join(ROOT, "v2", "docs", "records", "l8r2", "apply_energy_chain_e1oz.py")
 
 
@@ -263,7 +280,7 @@ def _CU():
     if "CU" not in _C:
         need(COPPER, "the l9stk copper record")
         if shutil.which("pdftotext") is None:
-            raise Skip("pdftotext (poppler) reads the blade's time-current table")
+            raise Skip("pdftotext (poppler) reads the makers' sheets")
         m = _load(COPPER, "l9stk_copper_under_test")
         for rel in m.PINS.values():
             need(os.path.join(ROOT, rel), "a pinned input of the l9stk copper record")
@@ -291,97 +308,116 @@ def t_copper_every_input_is_pinned_and_present():
 def t_copper_every_predicate_holds():
     _CU()
     P = _C["CR"]["pred"]
-    assert len(P) >= 20, "the copper script states fewer predicates than the record relies on"
+    assert len(P) >= 18, "the copper script states fewer predicates than the record relies on"
     bad = [k for k, v in P.items() if not v]
     assert not bad, "false: %s" % "; ".join(bad)
-    for must in ("6.72 mm a face is over 10 K at the blade's rating",
-                 "12.26 mm a face at an even split is at 10 K at the blade's rating",
-                 "on every pack family the backstop's 5 s interval and faster are over the printed maximum by the tree's bounds",
-                 "the copper is not the fuse: the 600 % row's bound on B1 and B2 is under the governing face's fusing I2t"):
+    for must in ("the candidate's two 12.26 mm faces as one conductor read 18.9 K at 25 A and 12.0 K at 20 A",
+                 "two 1 oz faces as one conductor need 21.81 mm each at 25 A",
+                 "board E's pack end at 1 oz with its return adjacent exceeds the strip; at 2 oz it fits",
+                 "every coordination row carries a disposition, and every row over a printed rating a design correction or a gap"):
         assert must in P, "the predicate %r is gone" % must
 
 
-def _ruled_rise(tc, amps_face, width, t_mm):
-    """The rise at which decision 35's model rates an outer conductor at amps_face, solved here by its own bisection."""
-    lo, hi = 1e-4, 200.0
+def _rise(tc, amps, width, t_mm, internal=False):
+    """The rise at which decision 35's model rates one conductor (width x t_mm) at amps, by its own bisection here."""
+    f = 1.0 if internal else tc.EXTERNAL_FACTOR
+    lo, hi = 1e-4, 300.0
     for _ in range(100):
         mid = (lo + hi) / 2.0
-        if tc.conservative(width * t_mm, mid)[0] * tc.EXTERNAL_FACTOR < amps_face:
+        if tc.conservative(width * t_mm, mid)[0] * f < amps:
             lo = mid
         else:
             hi = mid
     return hi
 
 
-def t_copper_arithmetic_against_the_ruled_method():
+def t_copper_the_stacked_faces_and_the_adjacent_return_on_the_ruled_method():
+    """The checker's figures and the record's widths, re-solved here: two faces as one conductor of their combined section,
+    a band and its return as one conductor of twice the width carrying twice the current (an even split)."""
     m = _CU()
     import track_current as tc
     R, I, W = _C["CR"], _C["CR"]["in"], _C["CR"]["w"]
     t1 = 0.035
-    blade, wst, shore = I["blade_a"], I["shore_withstand_a"], I["shore_fuse_a"]
-    s = m.S_MAX
-    # the widths are track_current.width_for_current at its default rise, and that default is decision 35's 10 K
     assert tc.width_for_current.__defaults__[1] == 10.0
-    for key, amps in (("coord_even", blade / 2), ("coord_smax", blade * s), ("svc_even", I["kd_a"] / 2), ("sh20_even", wst / 2),
-                      ("sh20_smax", wst * s), ("sh10_smax", shore * s), ("vin_smax", I["vin_raw"] * s)):
-        a = W[key] * t1
-        assert abs(tc.conservative(a, 10.0)[0] * tc.EXTERNAL_FACTOR - amps) < 1e-6, "%s does not carry %.3f A at 10 K" % (key, amps)
-    # each rise in the families is the ruled model's own: re-solved here for the held rows
-    for fk, fam in R["fam"].items():
-        for lab, a, dur, cls, i2t, st, ad, r, src in fam["rows"]:
-            if dur is None and cls != "pulse" and st is not None:
-                face = a * (fam["s"] if fam["faces"] == 2 else 1.0)
-                mine = _ruled_rise(tc, face, fam["w"], t1 * fam["oz"])
-                assert abs(mine - st) < 1e-3, "%s %s: %.4f K against the record's %.4f K" % (fk, lab, mine, st)
-    # the page's headline readings
-    rows = {(fk, r[0]): r for fk, f in R["fam"].items() for r in f["rows"]}
-    assert round(rows[("A1", "held under the gauge's OCD1")][7], 2) == 12.39
-    assert round(rows[("A1", "the blade's rating (the chain's check 3)")][7], 2) == 19.52
-    assert round(I["air_c"] + rows[("B1", "blade 135 to 200 %, at most 600 s")][7], 1) == 110.9
-    # Onderdonk, forward and back: the adiabatic rise of an I2t, put back through the fusing form, returns the current
-    for fk in ("B1", "B2", "S2"):
+    blade = I["blade_a"]
+    # the candidate's 12.26 mm as one conductor: 0.858 mm2 at 25 A, 20 A, and 50 A from the +70 C line
+    assert abs(2 * W["cand_even"] * t1 - 0.858) < 1e-3
+    assert round(_rise(tc, 25.0, W["cand_even"], 2 * t1), 1) == 18.9
+    assert round(_rise(tc, 20.0, W["cand_even"], 2 * t1), 1) == 12.0
+    assert round(I["air_c"] + _rise(tc, 50.0, W["cand_even"], 2 * t1), 1) == 147.1
+    # the widths: two faces alone, and the pair (each band half of the conductor carrying twice the current)
+    assert abs(W["alone_1"] - tc.width_for_current(blade, oz=2.0)) < 1e-9 and round(W["alone_1"], 2) == 21.81
+    assert abs(W["pair_1"] - tc.width_for_current(2 * blade, oz=2.0) / 2.0) < 1e-9
+    assert abs(W["pair_2"] - tc.width_for_current(2 * blade, oz=4.0) / 2.0) < 1e-9
+    k2 = 2 * (m.S_MAX ** 2 + (1 - m.S_MAX) ** 2)
+    assert abs(W["pair_1k"] - tc.width_for_current(2 * blade * math.sqrt(k2), oz=2.0) / 2.0) < 1e-9
+    # the decided pair is at 10 K at 25 A, re-solved as a conductor of twice the width and twice the face copper
+    assert abs(_rise(tc, 2 * blade * math.sqrt(k2), 2 * W["pair_1k"], 2 * t1) - 10.0) < 1e-3
+    assert abs(_rise(tc, 2 * blade * math.sqrt(k2), 2 * W["pair_2k"], 4 * t1) - 10.0) < 1e-3
+    # every held row of the decided families is the ruled model's own
+    for fk in ("D1", "D2", "H1"):
         f = R["fam"][fk]
-        c = m.cmil(f["w"] * t1 * f["oz"])
-        for i_face, tt in ((40.0, 0.5), (100.0, 0.05)):
-            dT = m.rise_adiabatic(i_face * i_face * tt, f["w"], f["oz"], I)
-            back = c * math.sqrt(math.log10(1.0 + dT / (I["k234"] + I["air_c"])) / (tt * I["k33"]))
-            assert abs(back - i_face) < 1e-6 * i_face
-    # the backstop read monotone from the blade's rows: held to the first timed row, then each interval's top for the row below's maximum
-    env = m.envelope(blade, I["mini_rows"], I["pf_high"])
-    timed = [(p, b) for p, a, b in I["mini_rows"] if b is not None]
-    assert env[0][1] == blade * timed[0][0] / 100.0 and env[0][2] is None
-    for (lab, a, d), (p0, t0), (p1, _t) in zip(env[1:], timed, timed[1:]):
-        assert abs(a - blade * p1 / 100.0) < 1e-9 and d == t0
-    # the docking pulse's I2t is the exponential's, peak squared times the time constant over two
-    assert abs(I["dock_pk"] ** 2 * I["dock_tau"] / 2.0 - 0.9971) < 5e-4
+        for x in f["rows"]:
+            if x["dur"] is None and x["cls"] != "pulse" and x["st"] is not None:
+                mine = _rise(tc, x["a"] * math.sqrt(2 * 2 * f["k"] ** 2), 2 * f["w"], 2 * t1 * f["oz"])
+                assert abs(mine - x["st"]) < 1e-3, "%s %s: %.4f against %.4f" % (fk, x["lab"], mine, x["st"])
+    # Onderdonk forward and back, from the worst inside air
+    c = m.cmil(W["pair_1k"] * t1)
+    for i_face, tt in ((40.0, 0.5), (100.0, 0.05)):
+        dT = m.rise_adiabatic(i_face * i_face * tt, W["pair_1k"] * t1, I)
+        back = c * math.sqrt(math.log10(1.0 + dT / (I["k234"] + I["t0"])) / (tt * I["k33"]))
+        assert abs(back - i_face) < 1e-6 * i_face
+    # the cross-sections
+    assert abs(R["e_pack_end"]["1 oz"] - 2 * W["pair_1k"]) < 1e-9 and R["e_pack_end"]["1 oz"] > R["strip"]
 
 
-def _ladder(n, rb, rv_end, rv_mid=None, both=False):
-    """Two faces of n series segments (rb in all) tied at node 0 (through-hole); the sink on face F at the far end; face B
-    joins F through rv_end at the far end (and at the near end too when both), and through rv_mid at every inner node when
-    given. Solved by nodal analysis here; returns face F's share of the current at the far end's last segment."""
+def t_copper_the_limits_and_the_barrels():
+    m = _CU()
+    import via_current as vc
+    import track_current as tc
+    R, I = _C["CR"], _C["CR"]["in"]
+    # the lowest printed limit of the parts each band joins, from the worst inside air the tree holds
+    assert I["t0"] == max(I["air_c"], I["air_e3o"], I["air_e5"]) and I["t0"] > I["air_c"]
+    assert R["limits"]["pack E"][0] == min(I["mini_sn_max_c"], I["holder_max_c"], I["xt60_max_c"])
+    assert R["limits_pinned"]["pack E"] == min(I["mini_max_c"], I["holder_max_c"], I["xt60_max_c"])
+    assert R["limits"]["shore E"][0] == min(I["mini_sn_max_c"], I["holder_max_c"], I["vh_max_c"])
+    # the two annulus conventions, both counts
+    t = vc.PLATING_UM / 1000.0
+    d = m.drill()
+    assert abs(R["barrel"]["outward"]["area"] - math.pi * (d + t) * t) < 1e-12
+    assert abs(R["barrel"]["inward"]["area"] - math.pi * (d - t) * t) < 1e-12
+    assert R["thermal_barrels"]["pack"]["outward"] == vc.barrels_for(I["blade_a"] / 2.0, d)
+    amp_in = tc.conservative(math.pi * (d - t) * t, 10.0)[0]
+    assert R["thermal_barrels"]["pack"]["inward"] == int(math.ceil(I["blade_a"] / 2.0 / amp_in - 1e-12))
+    # the dock contacts' acceptance: no pin over its rating at the blade's current
+    r = R["pin_ratio_need"]
+    assert abs(I["blade_a"] / (1 + (I["pins"] - 1) * r) - I["pin_a"]) < 1e-9
+    # the pair's 150 C current from E11-29's target
+    i150 = 2 * math.sqrt((I["pair_limit"] - I["air_c"]) / (I["pair_rth"] * I["pair_mohm_each"] / 1000.0))
+    assert abs(i150 - R["pair_i150"]["70"]) < 1e-9 and round(i150, 1) == 21.4
+
+
+def _ladder(n, rb, rv_end, rv_mid=None):
+    """Two faces of n series segments tied at node 0 (through-hole); the sink on face F at the far end; face B joins F through
+    rv_end there and through rv_mid at every inner node when given. Nodal analysis solved here; returns face F's current in its
+    last segment, for 1 A in."""
     r = rb / n
-    # nodes: F1..Fn (Fn is the sink, held at 0 V), B1..Bn, and with both-ends a near face-F entry; node 0 is the source
-    N = 2 * n + 1      # 0 source, 1..n F, n+1..2n B
+    N = 2 * n + 1
     G = [[0.0] * N for _ in range(N)]
 
     def link(a, b, res):
         g = 1.0 / res
         G[a][a] += g; G[b][b] += g; G[a][b] -= g; G[b][a] -= g
-    F = lambda k: k                      # k in 1..n
+    F = lambda k: k
     B = lambda k: n + k
     link(0, F(1), r)
-    if both:
-        link(0, B(1), r + rv_end)        # the near end on face F too: B reached through a field
-    else:
-        link(0, B(1), r)
+    link(0, B(1), r)
     for k in range(1, n):
         link(F(k), F(k + 1), r)
         link(B(k), B(k + 1), r)
         if rv_mid:
             link(F(k), B(k), rv_mid)
     link(B(n), F(n), rv_end)
-    # inject 1 A at node 0, ground F(n): solve the reduced system
     keep = [i for i in range(N) if i != F(n)]
     A = [[G[i][j] for j in keep] for i in keep]
     bvec = [1.0 if i == 0 else 0.0 for i in keep]
@@ -399,79 +435,100 @@ def _ladder(n, rb, rv_end, rv_mid=None, both=False):
         v[c] = (bvec[c] - sum(A[c][y] * v[y] for y in range(c + 1, m))) / A[c][c]
     V = {keep[i]: v[i] for i in range(m)}
     V[F(n)] = 0.0
-    i_f_last = (V[F(n - 1)] - V[F(n)]) / r      # face F's current in its last segment, before the field joins
-    return i_f_last
+    return (V[F(n - 1)] - V[F(n)]) / r
 
 
 def t_copper_the_split_on_a_solved_ladder():
-    """The record's closed forms against a resistor ladder solved here: one end through-hole gives (Rb + Rv) / (2 Rb + Rv), and
-    stitching along the band raises the part's face share (the page's 'moves current onto the part's face early')."""
     m = _CU()
     W = _C["CR"]["w"]
     h = _C["CR"]["h"][1]
-    rb = m.r_band(10.0, W["coord_smax"], 1.0)
+    rb = m.r_band(10.0, W["pair_1k"], 1.0)
     rv = m.r_barrel(h) / 15
-    want = m.share_one_end(10.0, W["coord_smax"], 1.0, 15, h)
+    want = m.share_one_end(10.0, W["pair_1k"], 1.0, 15, h)
     got = _ladder(20, rb, rv)
     assert abs(got - want) < 1e-9, "the one-end share %.6f against the ladder's %.6f" % (want, got)
-    stitched = _ladder(20, rb, rv, rv_mid=m.r_barrel(h))
-    assert stitched > want + 0.01, "stitching along the band did not raise the part's face share"
-    # the split count holds the part's face at the governing share at every tabled length
-    for name, w, hh, rows in _C["CR"]["transfer"]:
+    assert _ladder(20, rb, rv, rv_mid=m.r_barrel(h)) > want + 0.01, "stitching along the band did not raise the part's face share"
+    for name, w, hh, oz, rows in _C["CR"]["transfer"]:
         for L, n1, n2 in rows:
-            assert m.share_one_end(L, w, 1.0, n1, hh) <= m.S_MAX + 1e-12
-            assert m.share_both_ends(L, w, 1.0, n2, hh) <= m.S_MAX + 1e-12
+            assert m.share_one_end(L, w, oz, n1, hh) <= m.S_MAX + 1e-12
+            assert m.share_both_ends(L, w, oz, n2, hh) <= m.S_MAX + 1e-12
             if n1 > 1:
-                assert m.share_one_end(L, w, 1.0, n1 - 1, hh) > m.S_MAX, "%s at %g mm: one barrel fewer still holds" % (name, L)
+                assert m.share_one_end(L, w, oz, n1 - 1, hh) > m.S_MAX, "%s at %g mm: one barrel fewer still holds" % (name, L)
+
+
+def t_copper_the_coordination_table_has_the_owners_rows():
+    _CU()
+    R, I = _C["CR"], _C["CR"]["in"]
+    C = R["coord"]
+    cases = [r["case"] for r in C]
+    for must in ("10 A continuous", "18 A for 60 s", "the 25 A case, the gauge working", "the 25 A case, the gauge failed",
+                 "sustained overloads", "board P's FETs failed short, blade 135 to 200", "board P's FETs failed short, blade over 600",
+                 "the shore input, Q7 shorted"):
+        assert any(c.startswith(must) for c in cases), "no row %r" % must
+    names = " ".join(n for r in C for n, _t, _f in r["comps"])
+    for comp in ("copper", "barrel field", "R17", "R19", "XT60", "dock contacts", "Q39/Q40", "3568 holder"):
+        assert comp in names, "no row reads %s" % comp
+    for r in C:
+        assert r["device"] and r["clearing"] and r["disp"], r["case"]
+        assert all(d[:3] in ("(a)", "(b)", "(c)") for d in r["disp"]), r["case"]
+        if r["dur"] is None and not r["case"].startswith(("10 A", "the 25 A case, the gauge working")):
+            assert "none" in r["clearing"], "%s claims a clearing time no row prints" % r["case"]
+    gf = [r for r in C if r["case"].startswith("the 25 A case, the gauge failed")][0]
+    assert gf["limit_comp"].startswith("Q39/Q40") and gf["limit_frac"] > 1.0
+    assert any("W4DP-F2" in d for d in gf["disp"])
+    # a row over a printed rating never rests on a coupon alone
+    for r in C:
+        if r["limit_frac"] == r["limit_frac"] and r["limit_frac"] > 1.0:
+            assert any(d.startswith("(b)") for d in r["disp"]), "%s is over a rating with no design correction" % r["case"]
 
 
 def t_copper_the_page_carries_the_outputs_figures():
     _CU()
-    R, W = _C["CR"], _C["CR"]["w"]
+    R, W, I = _C["CR"], _C["CR"]["w"], _C["CR"]["in"]
     need(PAGE, "the page")
     page = open(PAGE, encoding="utf-8").read()
     sec = page[page.index("## 14. The pack path's copper on its basis"):]
-    rows = {(fk, r[0]): r for fk, f in R["fam"].items() for r in f["rows"]}
-    want = ["%.2f mm" % W[k] for k in ("coord_even", "coord_smax", "sh20_even", "sh20_smax", "sh10_smax", "vin_smax", "coord_smax_2oz")]
-    want += ["%.2f K" % rows[("A1", "held under the gauge's OCD1")][7], "%.2f K" % rows[("A1", "the blade's rating (the chain's check 3)")][7],
-             "%.1f C" % (R["in"]["air_c"] + rows[("A1", "blade 135 to 200 %, at most 600 s")][7]),
-             "%.1f C" % (R["in"]["air_c"] + rows[("B1", "blade 135 to 200 %, at most 600 s")][7]),
-             "%.1f C" % (R["in"]["air_c"] + rows[("B1", "blade 200 to 350 %, at most 5 s")][7]),
-             "%.2f mm a face of the 68 mm strip" % R["e_cross"]["sum"], "%.2f mm a face at the pack end" % R["e_cross"]["pack_end"],
-             "%d at P_CP" % max(R["e7_cellf_n"], R["thermal_barrels"]["pack"]), "%.2f mm" % R["e7_cellf_len"],
-             "%.2f A" % R["r17_limit_a"], "%.2f A" % R["r19_limit_a"], "%.1f mm of a 14.60 mm band" % R["barrel_mm_eq"],
-             "19.50 to 28.20 mm", "0.9971 A2s", "854a2bf5", "OWNER DECISION", "%.2f K" % R["nonfuse_rise"]["B1"]]
-    want += ["%.2f / %.2f" % (two, one) for _lab, _a, two, one in R["ask"]]
+    fam = {(fk, x["lab"]): x for fk, f in R["fam"].items() for x in f["rows"]}
+    want = ["%.2f" % W[k] for k in ("pair_1", "pair_1k", "pair_2", "pair_2k", "alone_1", "sh_pair_1", "sh_pair_1k", "sh_pair_2k", "vin_pair_1k")]
+    want += ["%.2f" % x for _l, _a, w1, w2, w3 in R["ask"] for x in (w1, w2, w3)]
+    want += ["%.2f mm" % R["e_pack_end"]["1 oz"], "%.2f mm" % R["e_pack_end"]["2 oz"], "%.2f mm" % R["e_shore"]["1 oz"],
+             "%.2f C" % fam[("D1", "gauge failed: blade 135 to 200 %, at most 600 s")]["T"],
+             "%.2f C" % fam[("D1", "gauge failed: blade 200 to 350 %, at most 5 s")]["T"],
+             "%.2f A" % R["r17_limit_a"], "%.2f A" % R["r19_limit_a"], "%.2f A held" % R["pair_i150"]["70"],
+             "%.2f A from %.2f C" % (R["pair_i150"]["t0"], I["t0"]), "%.3f of the highest" % R["pin_ratio_need"],
+             "0297025.%s" % I["mini_ag_order"], "0297025.%s" % I["mini_sn_order"], "%g C" % I["xt60_max_c"],
+             "%d (through the blade's 600 s point)" % R["field_pack_600"], "(L9STK CU)", "COPPER: NOT CONFIRMED", "W4DP-F2",
+             "{:,}".format(int(round(R["i2t_allow_pack"]))) + " A2s", "{:,}".format(int(round(R["i2t_allow_shore"]))) + " A2s",
+             "%.4f" % (R["ks"] ** 2), "%.2f C" % I["t0"]]
     for s in want:
         assert s in sec, "section 14 does not carry %r" % s
-    for f in ("L9C-F%d" % k for k in range(1, 10)):
+    for f in ("L9C-F%d" % k for k in range(1, 16)):
         assert f in sec, "section 14 does not file %s" % f
 
 
 def _reg_with_decisions(tmp):
-    """A copy of the register with this record's seven decisions appended (the apply script on a copy)."""
     reg = os.path.join(tmp, "pcb_decisions.yaml")
     shutil.copyfile(REGISTER, reg)
     import yaml
-    have = [x for x in yaml.safe_load(open(reg, encoding="utf-8"))["decisions"] if "(L9STK " in str(x.get("title", ""))]
-    if not have:
-        r = subprocess.run([sys.executable, "-B", APPLY, "--registry", reg], capture_output=True, text=True)
+    if not _marked(yaml.safe_load(open(reg, encoding="utf-8"))["decisions"]):
+        r = subprocess.run([sys.executable, "-B", APPLY, "--registry", reg, "--write"], capture_output=True, text=True)
         assert r.returncode == 0, r.stdout + r.stderr
     return reg
 
 
 def t_the_energy_chain_draft_follows_the_decisions_and_replaces_l8r2s():
-    _CU()
+    m = _CU()
     _A()
     need(CHAIN_DRAFT, "the energy chain draft")
     ast.parse(open(CHAIN_DRAFT, encoding="utf-8").read())
     W = _C["CR"]["w"]
+    import track_current as tc
     tmp = tempfile.mkdtemp(prefix="l9stk-chain-")
     try:
         import yaml
         bare = os.path.join(tmp, "bare.yaml")
         shutil.copyfile(REGISTER, bare)
-        if not [x for x in yaml.safe_load(open(bare, encoding="utf-8"))["decisions"] if "(L9STK " in str(x.get("title", ""))]:
+        if not _marked(yaml.safe_load(open(bare, encoding="utf-8"))["decisions"]):
             c0 = os.path.join(tmp, "c0.yaml")
             shutil.copyfile(CHAIN, c0)
             r0 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c0, "--registry", bare], capture_output=True, text=True)
@@ -485,18 +542,25 @@ def t_the_energy_chain_draft_follows_the_decisions_and_replaces_l8r2s():
         r2 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c1, "--registry", reg, "--write"], capture_output=True, text=True)
         assert r2.returncode == 0 and "ALREADY CORRECTED" in r2.stdout, "a second run was not a no-op"
         st = {s["id"]: s for s in yaml.safe_load(open(c1, encoding="utf-8"))["stages"]}
-        for sid, keys in (("DOCK_ENTRY", ("coord_even", "coord_smax")), ("BOARD_A_NODE", ("coord_even", "coord_smax")),
-                          ("SHORE_INPUT", ("sh20_even", "sh20_smax", "sh10_smax"))):
-            for k in keys:
-                assert "%.2f mm" % W[k] in st[sid]["conductor"]["what"], "%s does not carry %.2f mm" % (sid, W[k])
-            assert "2 oz" not in str(st[sid]["conductor"])
+        sh2 = tc.width_for_current(2 * 20.0, oz=4.0) / 2.0
+        for sid, ws in (("DOCK_ENTRY", (W["pair_1"], W["pair_1k"], W["pair_2"], W["pair_2k"])),
+                        ("BOARD_A_NODE", (W["pair_1"], W["pair_1k"], W["pair_2"], W["pair_2k"])),
+                        ("SHORE_INPUT", (W["sh_pair_1"], W["sh_pair_1k"], sh2, W["sh_pair_2k"]))):
+            for w in ws:
+                assert "%.2f mm" % w in st[sid]["conductor"]["what"] or ("%.2f" % w) in st[sid]["conductor"]["what"], \
+                    "%s does not carry %.2f" % (sid, w)
+            assert "(L9STK CU)" in st[sid]["conductor"]["what"]
+        for sid, s in st.items():
+            pr = s.get("protection") or {}
+            if sid in ("PACK_CELLS", "PACK_LEAD", "DOCK_ENTRY", "DOCK_BLOCK", "BOARD_A_NODE", "BOARD_A_CONVERTERS"):
+                assert "287-atof" not in str(pr.get("basis")) and "littelfuse-297" in str(pr.get("basis")), sid
+                assert float(pr.get("i2t_a2s")) == 625.0, sid
         orig = {s["id"]: s for s in yaml.safe_load(open(CHAIN, encoding="utf-8"))["stages"]}
         for sid in orig:
-            if sid not in ("DOCK_ENTRY", "BOARD_A_NODE", "SHORE_INPUT"):
+            if sid not in ("DOCK_ENTRY", "BOARD_A_NODE", "SHORE_INPUT", "PACK_CELLS", "PACK_LEAD", "DOCK_BLOCK", "BOARD_A_CONVERTERS"):
                 assert st[sid] == orig[sid], "%s moved" % sid
-            else:
-                assert st[sid]["conductor"]["rating_a"] == orig[sid]["conductor"]["rating_a"]
-        # after record l8r2's draft has run, this one still applies, to the same bytes
+            assert st[sid].get("conductor", {}).get("rating_a") == orig[sid].get("conductor", {}).get("rating_a")
+            assert (st[sid].get("protection") or {}).get("rating_a") == (orig[sid].get("protection") or {}).get("rating_a")
         if os.path.isfile(L8R2_DRAFT):
             c2 = os.path.join(tmp, "c2.yaml")
             shutil.copyfile(CHAIN, c2)
@@ -504,7 +568,6 @@ def t_the_energy_chain_draft_follows_the_decisions_and_replaces_l8r2s():
             r3 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c2, "--registry", reg, "--write"], capture_output=True, text=True)
             assert r3.returncode == 0, r3.stdout + r3.stderr
             assert open(c1, encoding="utf-8").read() == open(c2, encoding="utf-8").read()
-        # the chain's own gate reads the corrected copy as it reads the tree's
         import energy_chain
         a, b = energy_chain.check(), energy_chain.check(c1)
         for k in ("stages", "checked", "fails", "stage_fails", "derate_fails"):
@@ -513,23 +576,56 @@ def t_the_energy_chain_draft_follows_the_decisions_and_replaces_l8r2s():
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-def t_boards_a_and_e_decide_at_the_coordination_current():
+def t_the_plating_draft_pins_the_silver_blade_once():
+    m = _CU()
+    I = _C["CR"]["in"]
+    need(PLATING_DRAFT, "the plating draft")
+    tmp = tempfile.mkdtemp(prefix="l9stk-plating-")
+    try:
+        import yaml
+        src = os.path.join(tmp, "SOURCES.yaml")
+        shutil.copyfile(SOURCES, src)
+        before = open(src, encoding="utf-8").read()
+        r0 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src], capture_output=True, text=True)
+        assert open(src, encoding="utf-8").read() == before, "a run without --write wrote the file"
+        if I["blade_pinned"]:
+            assert "ALREADY PINNED" in r0.stdout
+            return
+        r1 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src, "--write"], capture_output=True, text=True)
+        assert r1.returncode == 0 and "WRITTEN" in r1.stdout, r1.stdout + r1.stderr
+        r2 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src, "--write"], capture_output=True, text=True)
+        assert r2.returncode == 0 and "ALREADY PINNED" in r2.stdout
+        a = yaml.safe_load(before)["parts"]
+        b = yaml.safe_load(open(src, encoding="utf-8").read())["parts"]
+        for x, y in zip(a, b):
+            if x.get("id") == "pack-blade-fuse-holder":
+                assert ("0297025." + I["mini_ag_order"]) in y["fitted_mpn"] and y["fitted_mpn"] != x["fitted_mpn"]
+                x = dict(x, fitted_mpn=y["fitted_mpn"])
+            assert x == y, "entry %s moved" % x.get("id")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def t_boards_a_and_e_leave_the_copper_weight_to_the_owner():
     _CU()
     A, D = _decisions()
     W = _C["CR"]["w"]
     by = {d["board"]: d for d in D}
     for b in ("a", "e"):
         d = by[b]
-        assert "1 oz outer" in d["title"], "board %s's title must keep '1 oz outer' (record l8r2's guard reads it)" % b
-        for k in ("coord_even", "coord_smax"):
-            assert "%.2f mm" % W[k] in d["outcome"], "board %s's outcome does not carry %.2f mm" % (b, W[k])
+        assert "1 oz outer" in d["title"] and "open decision" in d["title"], "board %s's title" % b
+        assert "(L9STK CU)" in d["outcome"] and "(L9STK CU)" in d["authority_why"]
+        for k in ("pair_1", "pair_1k", "pair_2", "pair_2k"):
+            assert "%.2f" % W[k] in d["outcome"], "board %s's outcome does not carry %.2f mm" % (b, W[k])
         assert "l9stk_copper.out" in d["measurement"] and "l9stk_copper.py" in d["reversed_by"]
-        assert "6.72 mm wide on each" not in d["outcome"], "board %s still lays the 18 A width" % b
-    assert "%.2f mm" % W["sh20_even"] in by["e"]["outcome"] and "%.2f mm" % W["vin_smax"] in by["e"]["outcome"]
+        for old in ("6.72 mm wide on each", "12.26 mm a face", "14.60 mm a face"):
+            assert old not in d["outcome"], "board %s still lays %s" % (b, old)
+    assert "%.2f" % W["sh_pair_1k"] in by["e"]["outcome"] and "%.2f" % W["vin_pair_1k"] in by["e"]["outcome"]
+    assert A.OPEN["mark"] == "(L9STK CU)" and "(3)" in A.OPEN["recommendation"]
 
 
 def t_the_readme_names_the_copper_files():
     need(README, "the README")
     t = open(README, encoding="utf-8").read()
-    for f in ("l9stk_copper.py", "l9stk_copper.out", "apply_energy_chain_l9stk.py"):
+    for f in ("l9stk_copper.py", "l9stk_copper.out", "apply_energy_chain_l9stk.py", "apply_blade_plating_l9stk.py", "(L9STK CU)"):
         assert f in t, "the README does not name %s" % f

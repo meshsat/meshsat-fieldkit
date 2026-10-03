@@ -86,7 +86,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      shore, board E, 1 oz   26.02 mm, 1.5862 mm board: 5 mm 55 / 110, 10 mm 28 / 55, 20 mm 14 / 28, 40 mm 7 / 14, 80 mm 4 / 7
 
 4. THE BAND FAMILIES: each class on the governing conductor, final temperature from 76.25 C, verdict against 10 K or the limit
-   A1 6.72 mm a face, 1 oz (l9stk at 18 A), with its adjacent return: limit 105 C, the governing face's fusing I2t 4101 A2s
+   A1 6.72 mm a face, 1 oz (l9stk at 18 A), with its adjacent return: limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 4101 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 10.87   adiabatic -       -> 10.87   OVER 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 35.77   adiabatic 1411.11 -> 35.77   OVER 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 44.28   adiabatic -       -> 44.28   OVER 10 K
@@ -94,15 +94,15 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 100.68  adiabatic 0.49    -> 0.49    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady -       adiabatic 0.02    -> 0.02    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 69.59   adiabatic -       -> 69.59   OVER 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 127.80  adiabatic -       -> 127.80  OVER (204.05 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 283.35  adiabatic >9999   -> 283.35  OVER (359.60 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 8749.36 -> 8749.36 OVER (8825.61 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 526.04  -> 526.04  OVER (602.29 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 2053.92 -> 2053.92 OVER (2130.17 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 17.57   -> 17.57   within (93.82 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 1.54    -> 1.54    within (77.79 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.03    -> 0.03    within (76.28 C)
-   C1 12.26 mm a face, 1 oz (f76564eb), its two faces as one conductor, return apart: limit 105 C, the governing face's fusing I2t 13652 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 127.80  adiabatic -       -> 127.80  204.05 C: OVER as fitted, OVER pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 283.35  adiabatic >9999   -> 283.35  359.60 C: OVER as fitted, OVER pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 8749.36 -> 8749.36 8825.61 C: OVER as fitted, OVER pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 526.04  -> 526.04  602.29 C: OVER as fitted, OVER pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 2053.92 -> 2053.92 2130.17 C: OVER as fitted, OVER pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 17.57   -> 17.57   93.82 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 1.54    -> 1.54    77.79 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.03    -> 0.03    76.28 C: within as fitted, within pinned
+   C1 12.26 mm a face, 1 oz (f76564eb), its two faces as one conductor, return apart: limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 13652 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 2.96    adiabatic -       -> 2.96    within 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 9.72    adiabatic 208.83  -> 9.72    within 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 12.03   adiabatic -       -> 12.03   OVER 10 K
@@ -110,15 +110,15 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 27.37   adiabatic 0.15    -> 0.15    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 95.58   adiabatic 0.01    -> 0.01    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 18.92   adiabatic -       -> 18.92   OVER 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 34.75   adiabatic -       -> 34.75   OVER (111.00 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 77.08   adiabatic >9999   -> 77.08   OVER (153.33 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 239.57  adiabatic 544.57  -> 239.57  OVER (315.82 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  OVER (183.89 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  OVER (336.99 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    within (76.71 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    within (76.26 C)
-   C2 12.26 mm a face, 1 oz (f76564eb), with its adjacent return: limit 105 C, the governing face's fusing I2t 13652 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 34.75   adiabatic -       -> 34.75   111.00 C: OVER as fitted, within pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 77.08   adiabatic >9999   -> 77.08   153.33 C: OVER as fitted, OVER pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 239.57  adiabatic 544.57  -> 239.57  315.82 C: OVER as fitted, OVER pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  183.89 C: OVER as fitted, OVER pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  336.99 C: OVER as fitted, OVER pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    81.43 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    76.71 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    76.26 C: within as fitted, within pinned
+   C2 12.26 mm a face, 1 oz (f76564eb), with its adjacent return: limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 13652 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 5.59    adiabatic -       -> 5.59    within 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 18.36   adiabatic 208.83  -> 18.36   OVER 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 22.72   adiabatic -       -> 22.72   OVER 10 K
@@ -126,15 +126,15 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 51.56   adiabatic 0.15    -> 0.15    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 179.42  adiabatic 0.01    -> 0.01    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 35.66   adiabatic -       -> 35.66   OVER 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 65.42   adiabatic -       -> 65.42   OVER (141.67 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 144.77  adiabatic >9999   -> 144.77  OVER (221.02 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 544.57  -> 544.57  OVER (620.82 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  OVER (183.89 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  OVER (336.99 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    within (76.71 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    within (76.26 C)
-   D1 39.14 mm a face, 1 oz, with its adjacent return (this revision): limit 105 C, the governing face's fusing I2t 139084 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 65.42   adiabatic -       -> 65.42   141.67 C: OVER as fitted, OVER pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 144.77  adiabatic >9999   -> 144.77  221.02 C: OVER as fitted, OVER pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 544.57  -> 544.57  620.82 C: OVER as fitted, OVER pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  183.89 C: OVER as fitted, OVER pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  336.99 C: OVER as fitted, OVER pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    81.43 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    76.71 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    76.26 C: within as fitted, within pinned
+   D1 39.14 mm a face, 1 oz, with its adjacent return (this revision): limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 139084 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 1.89    adiabatic -       -> 1.89    within 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 5.22    adiabatic 19.56   -> 5.22    within 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 6.38    adiabatic -       -> 6.38    within 10 K
@@ -142,15 +142,15 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.43   adiabatic 0.02    -> 0.02    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 49.97   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   OVER (116.60 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   OVER (115.94 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   within (87.42 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   within (99.56 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    within (76.30 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
-   D2 19.57 mm a face, 2 oz, with its adjacent return (this revision): limit 105 C, the governing face's fusing I2t 139084 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   94.55 C: within as fitted, within pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   116.60 C: OVER as fitted, within pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   115.94 C: OVER as fitted, within pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   87.42 C: within as fitted, within pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   99.56 C: within as fitted, within pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    76.86 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    76.30 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    76.25 C: within as fitted, within pinned
+   D2 19.57 mm a face, 2 oz, with its adjacent return (this revision): limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 139084 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 1.89    adiabatic -       -> 1.89    within 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 5.22    adiabatic 19.56   -> 5.22    within 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 6.38    adiabatic -       -> 6.38    within 10 K
@@ -158,15 +158,15 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.43   adiabatic 0.02    -> 0.02    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 49.97   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   OVER (116.60 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   OVER (115.94 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   within (87.42 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   within (99.56 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    within (76.30 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
-   D3 22.01 mm a face, 1 oz, return laid apart (no credit held for apart): limit 105 C, the governing face's fusing I2t 43973 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   94.55 C: within as fitted, within pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   116.60 C: OVER as fitted, within pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   115.94 C: OVER as fitted, within pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   87.42 C: within as fitted, within pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   99.56 C: within as fitted, within pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    76.86 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    76.30 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    76.25 C: within as fitted, within pinned
+   D3 22.01 mm a face, 1 oz, return laid apart (no credit held for apart): limit 105 C as fitted, 120 C with the blade's plating pinned; the governing face's fusing I2t 43973 A2s
      10 A continuous (declared)                                                   10.00 A held       steady 1.74    adiabatic -       -> 1.74    within 10 K
      18 A for 60 s (PWR-F12, judged steady)                                       18.00 A 60s        steady 5.15    adiabatic 66.18   -> 5.15    within 10 K
      held just under the gauge's OCD1                                             20.00 A held       steady 6.37    adiabatic -       -> 6.37    within 10 K
@@ -174,34 +174,34 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.46   adiabatic 0.06    -> 0.06    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 50.35   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.35   adiabatic -       -> 18.35   within (94.60 C)
-     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.62   adiabatic >9999   -> 40.62   OVER (116.87 C)
-     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 125.96  adiabatic 143.75  -> 125.96  OVER (202.21 C)
-     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 36.73   -> 36.73   OVER (112.98 C)
-     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 79.90   -> 79.90   OVER (156.15 C)
-     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 1.93    -> 1.93    within (78.18 C)
-     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.17    -> 0.17    within (76.42 C)
-     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
-   H1 26.02 mm a face, 1 oz, the shore input with its adjacent return (DC_HS included): limit 105 C, the governing face's fusing I2t 61442 A2s
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.35   adiabatic -       -> 18.35   94.60 C: within as fitted, within pinned
+     gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.62   adiabatic >9999   -> 40.62   116.87 C: OVER as fitted, within pinned
+     gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 125.96  adiabatic 143.75  -> 125.96  202.21 C: OVER as fitted, OVER pinned
+     gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 36.73   -> 36.73   112.98 C: OVER as fitted, within pinned
+     gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 79.90   -> 79.90   156.15 C: OVER as fitted, OVER pinned
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 1.93    -> 1.93    78.18 C: within as fitted, within pinned
+     hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.17    -> 0.17    76.42 C: within as fitted, within pinned
+     docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    76.25 C: within as fitted, within pinned
+   H1 26.02 mm a face, 1 oz, the shore input with its adjacent return (DC_HS included): limit 105 C as fitted, 105 C with the blade's plating pinned; the governing face's fusing I2t 61442 A2s
      6.15 A continuous (_VEH_T)                                                    6.15 A held       steady 1.16    adiabatic -       -> 1.16    within 10 K
      10 A held (F1's rating, the chain's check 3)                                 10.00 A held       steady 2.72    adiabatic -       -> 2.72    within 10 K
      20 A held (L4-E11's D-06 withstand)                                          20.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
-     Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   within (86.25 C)
-     Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   within (90.08 C)
-     Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    within (80.25 C)
-     Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  OVER (318.21 C)
-     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
-   H2 13.01 mm a face, 2 oz, the shore input with its adjacent return: limit 105 C, the governing face's fusing I2t 61442 A2s
+     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    80.85 C: within as fitted, within pinned
+     Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   86.25 C: within as fitted, within pinned
+     Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   90.08 C: within as fitted, within pinned
+     Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    80.25 C: within as fitted, within pinned
+     Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  318.21 C: OVER as fitted, OVER pinned
+     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    76.46 C: within as fitted, within pinned
+   H2 13.01 mm a face, 2 oz, the shore input with its adjacent return: limit 105 C as fitted, 105 C with the blade's plating pinned; the governing face's fusing I2t 61442 A2s
      6.15 A continuous (_VEH_T)                                                    6.15 A held       steady 1.16    adiabatic -       -> 1.16    within 10 K
      10 A held (F1's rating, the chain's check 3)                                 10.00 A held       steady 2.72    adiabatic -       -> 2.72    within 10 K
      20 A held (L4-E11's D-06 withstand)                                          20.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
-     Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   within (86.25 C)
-     Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   within (90.08 C)
-     Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    within (80.25 C)
-     Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  OVER (318.21 C)
-     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
+     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    80.85 C: within as fitted, within pinned
+     Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   86.25 C: within as fitted, within pinned
+     Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   90.08 C: within as fitted, within pinned
+     Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    80.25 C: within as fitted, within pinned
+     Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  318.21 C: OVER as fitted, OVER pinned
+     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    76.46 C: within as fitted, within pinned
    V  VIN_RAW 13.72 mm a face, 1 oz, with its adjacent return:
      14.10 A declared                                                             14.10 A held       steady 10.00   -> within 10 K
      the tracker's minimum valley limit, held                                     13.80 A held       steady 9.57    -> within 10 K
