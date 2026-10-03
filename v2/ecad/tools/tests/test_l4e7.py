@@ -277,6 +277,27 @@ def t_an_l4e9_edit_outside_the_pinned_sentence_moves_neither_the_key_nor_the_out
         assert m.key_of(dict(parts, scans=moved)) != data["key"]
 
 
+def t_r176_row_3_carries_the_computed_turn_off_everywhere_it_is_supplied():
+    """R-176 row 3's Q12 turn-off figure (the step test's bound) is the computed one, rounded up: the worst over every start, bulk
+    corner, D11 end and both fault positions at round 2's loop (b6's W). The output's register paragraph and every current R-176
+    row on the page carry that figure; the round-1 history row of the checks table keeps its own."""
+    import re
+    R = _R()
+    b6 = R["remedy"]["b6"]
+    amps, us = "%.0f" % (b6["W"]["iQ"] + 0.5), "%.0f" % (1e6 * b6["W"]["ton"] + 0.5)
+    assert b6["W"]["iQ"] <= int(amps) < b6["W"]["iQ"] + 1 and 1e6 * b6["W"]["ton"] <= int(us) < 1e6 * b6["W"]["ton"] + 1
+    out = " ".join(open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read().split())
+    raw = open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read()
+    page = " ".join(ln for ln in raw.splitlines() if not ln.startswith("| R-176's zero-current acceptance |"))
+    page = " ".join(page.split())
+    found = []
+    for text, where in ((out, "out"), (page, "page")):
+        for m_ in re.finditer(r"(?:U21 turning Q12 off \(at most|Q12 off at most) (\d+) A,? within (\d+) us", text):
+            found.append((where, m_.group(1), m_.group(2)))
+    assert ("out", amps, us) in found and ("page", amps, us) in found and len([f for f in found if f[0] == "page"]) >= 2
+    assert all((a_, u_) == (amps, us) for _w, a_, u_ in found), found
+
+
 def t_recompute_reproduces_the_committed_output():
     """--recompute equals render(cache): the solver run once more (about 30 to 50 minutes on a loaded host), so it runs only when
     L4E7_RECOMPUTE=1 is set."""
