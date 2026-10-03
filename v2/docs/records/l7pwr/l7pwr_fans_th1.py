@@ -17,6 +17,7 @@ arithmetic MODELED, a stated assumption ASSUMPTION, a figure no document prints 
 every maker row is read from the pinned document (pdftotext), never typed. No generator, registry, interface or other record is
 edited: what another layer must change is a FINDING with its row. Output: `python3 v2/docs/records/l7pwr/l7pwr_fans_th1.py`
 from the repository root (the integrator regenerates the committed .out with _bin/regen_out.py)."""
+import ast
 import hashlib
 import json
 import math
@@ -44,6 +45,8 @@ PINS = {
     "th1": "v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md",
     "l4e11": "v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md",
     "l4e11_aux": "v2/docs/records/l4e11/apply_gen_sch_e_aux.py",
+    "l4e11_out": "v2/docs/records/l4e11/l4e11_power.out",
+    "l8r2_fans": "v2/docs/records/l8r2/apply_gen_sch_b_fans12.py",
     "l4e12": "v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md",
     "l4e9": "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md",
     "gen_e": "v2/ecad/tools/gen_sch_e.py",
@@ -56,8 +59,9 @@ PINS = {
 
 # ---------------------------------------------------------------- constants with their status
 R_HEATER_OHM = 6.8            # READY-TO-ACT 5.2: aluminium-housed wirewound resistors, 50 W class, 6.8 ohm (the T-H1 draft's heaters)
-BUCK_EFF = 0.90               # ASSUMPTION: the efficiency of a 12.0 V step-down for the mixers (board A's VHEAT buck is a TPS62933; its
-                              # curve is not read here); the 5-to-12 V step-up for the coolers is given the same figure
+# (round 2, set 28 F-14) the converters' efficiency is no longer typed here: the mixers' U22 and the coolers' step-up are drafted
+# (L4-E11 section 18, record l8r2) and their efficiency, input voltage and loads are READ from those drafts in read_rails()
+ROUND1 = "2087060b"            # the round-1 commit of this record, in this branch's history: its output is parsed for the figures that moved
 PLAN_MIXER_W = 1.44           # L4-E12 13.3: pwr_budget.py's "two mixer fans" plan figure (W, both), tier R
 PLAN_COOLER_W = (0.57, 0.56, 0.55)   # L4-E12 13.3: the three cooler fans in the profile (W), tier R
 HOLD_FANS_W = 1.950           # T-H1 draft section 1: the heat stage's and the hold's fans (slot 3's cooler and the two mixers), model
@@ -129,13 +133,12 @@ def read_sites(R):
     need(ge, r'"11": "FAN1_PWM", "12": "FAN2_PWM", "13": "FAN1_TACH", "14": "FAN2_TACH"', "U10's fan pins")
     need(ge, r'"SS14 flyback across fan %s" % n, "SMB", \{"1": "CELL_F", "2": "FAN%s_SW" % n\}', "board E's flyback diodes")
     need(ge, r'loads=\{"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1\}', "CELL_F's declared fan loads")
-    need(aux, r'J_FAN1 and J_FAN2 pin 1 and the flyback diodes D7 and D8 on VSYS_E', "L4-E11's draft moving the fans to VSYS_E")
-    need(aux, r'loads=\{"U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1\}', "VSYS_E's drafted loads")
+    read_rails(R, aux)
     mb = need(gb, r'part\("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d \(JST-SH 1.0\): 5V GND TACHO PWM" % s, "SH4", \{"1": n5, "2": "GND", "3": "FAN_TACHO%d" % s, "4": "FAN_PWM%d" % s, "MP": "NC"\}, "(C\d+)"\)', "board B's cooler header")
     need(gb, r'"J_FAN%d" % s: 0.1,\s+# the slot\'s IP68 cooler fan', "board B's declared cooler fan current")
     need(gb, r'n5 = "\+5V_S%d" % s', "the slot rail's net")
     R["sites"] = {
-        "mixers": "board E J_FAN1, J_FAN2: 3 pins (1 CELL_F, 2 FANn_SW, 3 FANn_TACH); the low side chopped by Q9/Q10 (2N7002) from U10's FAN1_PWM/FAN2_PWM (GPIO8, 9), the tach pulled to +3V3_E6 by 10k into GPIO10, 11; SS14 flyback D7/D8; 0.1 A declared each; L4-E11's draft apply_gen_sch_e_aux.py moves pin 1 and the diodes to VSYS_E",
+        "mixers": "board E J_FAN1, J_FAN2 as generated: 3 pins (1 CELL_F, 2 FANn_SW, 3 FANn_TACH); the low side chopped by Q9/Q10 (2N7002) from U10's FAN1_PWM/FAN2_PWM (GPIO8, 9), the tach pulled to +3V3_E6 by 10k into GPIO10, 11; SS14 flyback D7/D8; 0.1 A declared each. As DRAFTED (L4-E11 section 18, apply_gen_sch_e_aux.py): %s" % R["rails"]["fan_hdr"],
         "coolers": "board B J_FAN1..3: JST-SH 1.0 4 pins (1 +5V_Sn, 2 GND, 3 FAN_TACHOn, 4 FAN_PWMn) to the module's Fan_Tacho (1.8k pull-up to CM5_3.3V) and Fan_PWM (open drain); 0.1 A declared on the slot's 5.1 V rail; the header code %s" % mb.group(1),
     }
     l4 = text_of(PINS["l4e11"])
@@ -215,6 +218,94 @@ def read_candidates(R):
     need(pd_, r"-55 \.\.\. \+125 .C \(-55 .. \+85 .C with music wire spring\)", "Preci-Dip's temperature line")
 
 
+def _rail_calls(code):
+    """Every _intent.rail(...) call in a piece of generator text, parsed: {name: (positional args, keyword args)}."""
+    out = {}
+    for c in ast.walk(ast.parse(code)):
+        if isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute) and c.func.attr == "rail":
+            args = [ast.literal_eval(a) for a in c.args]
+            kw = {}
+            for k in c.keywords:
+                try:
+                    kw[k.arg] = ast.literal_eval(k.value)
+                except ValueError:
+                    pass
+            out[args[0]] = (args, kw)
+    return out
+
+
+def _module_strings(src):
+    """The module-level string constants of a draft script, by name (ast; adjacent literals join at parse time)."""
+    out = {}
+    for n in ast.parse(src).body:
+        if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
+            try:
+                v = ast.literal_eval(n.value)
+            except ValueError:
+                continue
+            if isinstance(v, str):
+                out[n.targets[0].id] = v
+    return out
+
+
+def read_rails(R, aux):
+    """VSYS_E's and +12V_FAN's drafted declarations (L4-E11 section 18), the drafted mixer header, L4-E11's figures of 18a and 18b, and
+    board B's drafted cooler feed (record l8r2): parsed, never typed."""
+    strs = _module_strings(aux)
+    if "_VSYS_E" not in strs or "_FAN_NEW" not in strs:
+        refuse("apply_gen_sch_e_aux.py carries no _VSYS_E or _FAN_NEW")
+    rails = _rail_calls(strs["_VSYS_E"])
+    if "VSYS_E" not in rails or "+12V_FAN" not in rails:
+        refuse("VSYS_E's drafted loads not parsed")
+    va, vk = rails["VSYS_E"]; fa, fk = rails["+12V_FAN"]
+    hdr = need(strs["_FAN_NEW"], r'ph\("J_FAN%s" % n, 4, [^{]*\{"1": "\+12V_FAN", "2": "GND", "3": "FAN%s_PWM_OD" % n, "4": "FAN%s_TACH" % n\}\)', "the drafted four-pin mixer header")
+    o = text_of(PINS["l4e11_out"])
+    u22 = need(o, r"U22's input ([\d.]+) A \(([\d.]+) W over ([\d.]+) at ([\d.]+) V, plus (\d+) mA quiescent\), with U12's ([\d.]+) A: ([\d.]+) A DECLARED", "L4-E11 18b's U22 input")
+    plan = need(o, r"at the plan's duty ([\d.]+) A", "L4-E11 18b's plan duty")
+    least = need(o, r"against U42's least limit ([\d.]+) A: ([\d.]+) %, ([\d.]+) A in hand", "L4-E11 18b's room")
+    contact = need(o, r"the contact at ([\d.]+) % of 3\.5 A", "L4-E11 18b's contact share")
+    loss = need(o, r"heat into the case: ([\d.]+) W at full speed \(([\d.]+) W of fans at ([\d.]+)\), ([\d.]+) W at the plan's ([\d.]+) W", "L4-E11 18a's U22 loss")
+    vout = need(o, r"the output ([\d.]+) V \(([\d.]+) to ([\d.]+) V at FB's limits", "L4-E11 18a's U22 output")
+    start = need(o, r"leaves ([\d.]+) W at the rail for the other fan's start, ([\d.]+) times its\s+running power", "L4-E11 18b's start room")
+    b = text_of(PINS["l8r2_fans"])
+    bstr = _module_strings(b)
+    bl = need(bstr.get("_NEW_LOAD", ""), r'"U%d" % \(701 \+ 30 \* \(s - 1\)\): ([\d.]+),\s+# l8r2 \(E11-40\): the cooler fan\'s 12 V step-up, ([\d.]+) W of fan over ([\d.]+)', "l8r2's slot load row")
+    bv = need(bstr.get("_NEW_LOAD", ""), r"\(ASSUMPTION\) at ([\d.]+) V", "l8r2's input voltage of the row")
+    bo = need(b, r"from \+5V_Sn to C?FANs_12V at ([\d.]+) to ([\d.]+) V", "l8r2's boost output")
+    R["rails"] = dict(
+        vsys_e=dict(declared=va[2], loads=vk["loads"], v_work=vk.get("v_work")), fan=dict(v=fa[1], declared=fa[2], loads=fk["loads"], eta=fk["efficiency"], fed=fk["fed_from"]),
+        fan_hdr="J_FAN1, J_FAN2 four pins (1 +12V_FAN, 2 GND, 3 FANn_PWM_OD, 4 FANn_TACH), +12V_FAN %.1f V from U22 on %s, its loads %s, declared %.2f A, efficiency %.2f (an ASSUMPTION of the draft); VSYS_E's loads %s, declared %.2f A"
+                % (fa[1], fk["fed_from"], fk["loads"], fa[2], fk["efficiency"], vk["loads"], va[2]),
+        u22_in=float(u22.group(1)), u22_fan_w=float(u22.group(2)), u22_eta=float(u22.group(3)), v_floor=float(u22.group(4)), u22_q=float(u22.group(5)) / 1000.0,
+        u12=float(u22.group(6)), declared=float(u22.group(7)), plan_total=float(plan.group(1)), least=float(least.group(1)), least_pct=float(least.group(2)),
+        room=float(least.group(3)), contact_pct=float(contact.group(1)), u22_loss=float(loss.group(1)), u22_loss_plan=float(loss.group(4)),
+        u22_vout=(float(vout.group(2)), float(vout.group(3))), start_w=float(start.group(1)), start_x=float(start.group(2)),
+        b_in_a=float(bl.group(1)), b_fan_w=float(bl.group(2)), b_eta=float(bl.group(3)), b_vin=float(bv.group(1)), b_vout=(float(bo.group(1)), float(bo.group(2))))
+
+
+def round1():
+    """The round-1 output of this record (commit ROUND1, in this branch's history), parsed for the figures this round restates."""
+    import subprocess
+    r = subprocess.run(["git", "-C", TOP, "show", "%s:v2/docs/records/l7pwr/l7pwr_fans_th1.out" % ROUND1], capture_output=True, text=True)
+    if r.returncode:
+        refuse("the round-1 output at %s is not in this branch's history" % ROUND1)
+    t = " ".join(r.stdout.split())
+    g = lambda pat, what: float(need(t, pat, "round 1's " + what).group(1))
+    return {
+        "a mixer's input current on VSYS_E at the floor, full speed (A)": g(r"behind the 12 V buck: ([\d.]+) A each at full speed", "mixer current"),
+        "both mixers' input current at the floor, full speed (A)": g(r"A each at full speed \(the fan's [\d.]+ W\), ([\d.]+) A both", "both mixers"),
+        "VSYS_E's total with U12 at full speed (A)": g(r"VSYS_E's total with U12's [\d.]+ A: ([\d.]+) A at full speed", "VSYS_E total"),
+        "that total against U42's least limit (%)": g(r"A at full speed, ([\d.]+) % of U42's least limit", "percent"),
+        "VSYS_E's total at the plan's duty (A)": g(r"at the plan's duty the total is ([\d.]+) A", "plan total"),
+        "the dock contact's share of its 3.5 A (%)": g(r"the contact at ([\d.]+) % of its 3\.5 A", "contact share"),
+        "the hold's fans' heat into the case at full speed (W)": g(r"the hold's fans \(slot 3's cooler and the two mixers\) ([\d.]+) W", "hold heat"),
+        "E5's line shift at full speed (W/K)": g(r"E5's line \+([\d.]+) W/K at 0\.100 W/K per W", "line shift"),
+        "the profile's five fans' heat at full speed (W)": g(r"the profile's five fans ([\d.]+) W", "profile heat"),
+        "a cooler fan's slot current at full speed (A)": g(r"a per-slot step-up from \+5V_Sn at ([\d.]+) A each", "slot current"),
+        "the dock lead's continuous draw against ECSS's 3.4 A (%)": g(r"A with the picked mixers at full speed \(([\d.]+) %\)", "lead share"),
+    }
+
+
 def judge(R):
     """Each candidate against the site's supply, REQ-043, the air and the lines the generators draw."""
     J = {}
@@ -229,25 +320,35 @@ def judge(R):
         hold = None if c["thi"] is None else (c["thi"] >= T_HOLD)
         J[k] = dict(site=site, supply=(lo, hi), range_ok=rng, temp_ok=temp, hold_ok=hold, ip68=(c["ip"] == "IP68"), tach=("tach" in c["io_note"] or "pulse" in c["io_note"]),
                     pwm=("PWM" in c["io_note"]), life_at_60=c["life60"] is not None, start_read=c["start_a"] is not None,
-                    # the fan at 12.0 V behind a step-down (mixers) or step-up (coolers) from the site's supply, at full speed (MODELED, BUCK_EFF an ASSUMPTION)
-                    i_at_floor=None if c["w"] is None else c["w"] / (BUCK_EFF * lo))
+                    # the fan at 12.0 V behind the drafted converter from the site's supply, at full speed (MODELED; the efficiency the draft's)
+                    i_at_floor=None if c["w"] is None else (c["w"] / (R["rails"]["u22_eta"] * R["rails"]["v_floor"]) if site == "mixer"
+                                                             else c["w"] / (R["rails"]["b_eta"] * R["rails"]["b_vin"])))
     R["judge"] = J
     # none covers the supply directly
     R["no_direct_fan"] = all(v["range_ok"] is not True for v in J.values())
     R["sel"] = {"mixer": "9WL0612P4H001", "cooler": "9WPA0412P6G001"}
     R["alt"] = {"mixer": "GF60151B7-1E00U-AE9", "cooler": "GF40282B3-1000U-SEP"}
     m = R["cands"][R["sel"]["mixer"]]; c = R["cands"][R["sel"]["cooler"]]
-    i_each = m["w"] / (BUCK_EFF * VSYS_E_FLOOR)
-    i_both = 2 * i_each
-    i_plan = PLAN_MIXER_W / (BUCK_EFF * VSYS_E_FLOOR)
+    rl = R["rails"]; eta, v, q = rl["u22_eta"], rl["v_floor"], rl["u22_q"]
+    i_each = m["w"] / (eta * v)                                   # one mixer's share of U22's input at the floor (MODELED, the draft's efficiency)
+    i_both = 2 * i_each + q                                       # U22's input, both mixers at full speed, with its quiescent current
+    i_plan = PLAN_MIXER_W / (eta * v) + q
+    start_w = (rl["least"] - rl["u12"] - i_each - q) * v * eta   # the power a starting fan may draw at the rail with the other running and U12 on
+    b_loss = rl["b_in_a"] * rl["b_vin"] - rl["b_fan_w"]           # l8r2's cooler step-up: its row's input power less the fan's
+    hold_full = c["w"] + b_loss + 2 * m["w"] + rl["u22_loss"]     # slot 3's cooler and the two mixers, each converter's loss counted (inside the case)
+    prof_full = 3 * (c["w"] + b_loss) + 2 * m["w"] + rl["u22_loss"]
     R["down"] = dict(
         mixer_w_each=m["w"], mixer_w_both=2 * m["w"], i_mixer_each_full=i_each, i_mixer_both_full=i_both,
-        vsys_e_total_full=U12_A + i_both, vsys_e_total_plan=U12_A + i_plan, i_mixers_plan=i_plan,
-        pct_of_least=100.0 * (U12_A + i_both) / I_OL_MIN, over_declared=U12_A + i_both - 1.0,
-        each_under_both_limit=i_each <= START_BOTH, each_under_one_limit=i_each <= START_ONE,
-        cooler_w_each=c["w"], cooler_i_slot_full=c["w"] / (BUCK_EFF * SLOT_5V), cooler_i_12v=c["a"],
-        heat_hold_full=c["w"] + 2 * m["w"], heat_hold_plan=HOLD_FANS_W, heat_prof_full=3 * c["w"] + 2 * m["w"], heat_prof_plan=PROFILE_FANS_W,
-        line_shift_hold=LINE_PER_W * (c["w"] + 2 * m["w"] - HOLD_FANS_W),
+        vsys_e_total_full=rl["u12"] + i_both, vsys_e_total_plan=rl["u12"] + i_plan, i_mixers_plan=i_plan,
+        pct_of_least=100.0 * (rl["u12"] + i_both) / rl["least"], room=rl["least"] - (rl["u12"] + i_both),
+        start_w=start_w, start_x=start_w / m["w"],
+        draft_sum=sum(rl["vsys_e"]["loads"].values()), fan_rail_sum=sum(rl["fan"]["loads"].values()),
+        rails_cover=(R["cands"][R["sel"]["mixer"]]["vlo"] <= rl["u22_vout"][0] and R["cands"][R["sel"]["mixer"]]["vhi"] >= rl["u22_vout"][1]
+                     and c["vlo"] <= rl["b_vout"][0] and c["vhi"] >= rl["b_vout"][1]),
+        cooler_w_each=c["w"], cooler_i_slot_full=rl["b_in_a"], cooler_i_12v=c["a"], b_loss=b_loss, u22_loss=rl["u22_loss"],
+        heat_hold_full=hold_full, heat_hold_plan=HOLD_FANS_W, heat_prof_full=prof_full, heat_prof_plan=PROFILE_FANS_W,
+        heat_hold_fans_only=c["w"] + 2 * m["w"],
+        line_shift_hold=LINE_PER_W * (hold_full - HOLD_FANS_W),
         flow_mixers_m3s=2 * m["m3min"] / 60.0, flow_coolers_m3s=3 * c["m3min"] / 60.0, case_m3=CASE_FREE_M3,
         changes_per_s=2 * m["m3min"] / 60.0 / CASE_FREE_M3,
         rep_mixers_m3min=(2 * R["cands"]["GF60151B7-1E00U-AE9"]["m3min"]),
@@ -405,11 +506,11 @@ def dock(R):
     retry_rms = RETRY_A * math.sqrt(RETRY_DUTY)
     R["dock"] = dict(d_mm=d_mm, a_mm2=a_mm2, cmil=cmil, sqmil=sqmil, fus=fus, fus_minus=fus_minus, example=ex, i2t_cap_70=i2t_cap_70, pulse_pct_70=100.0 * SHORT_A / fus[70.0], i2t_ratio=i2t_cap_70 / SHORT_I2T,
                      rise_k=rise, preece=preece, ecss_isw=ecss_isw, retry_pct=100.0 * RETRY_A / ecss_isw, retry_rms=retry_rms, retry_rms_pct=100.0 * retry_rms / ecss_isw,
-                     cont_pct=100.0 * 1.0 / ecss_isw, cont_full_pct=100.0 * R["down"]["vsys_e_total_full"] / ecss_isw, fifty_k_rule="the maker's maximum rating of the fitted wire is not named in ASSEMBLY.md (24 AWG only)")
+                     cont_pct=100.0 * R["rails"]["declared"] / ecss_isw, cont_declared=R["rails"]["declared"], cont_full_pct=100.0 * R["down"]["vsys_e_total_full"] / ecss_isw, fifty_k_rule="the maker's maximum rating of the fitted wire is not named in ASSEMBLY.md (24 AWG only)")
 
 
 def compute():
-    R = {"pins": {k: sha_of(v) for k, v in PINS.items()}}
+    R = {"pins": {k: sha_of(v) for k, v in PINS.items()}, "round1": round1()}
     read_sites(R)
     read_candidates(R)
     judge(R)
@@ -426,8 +527,11 @@ def compute():
         "the picked cooler fan covers -20 C and prints a life at 60 C": J["9WPA0412P6G001"]["temp_ok"] is True and J["9WPA0412P6G001"]["life_at_60"],
         "the alternatives fail REQ-043's -20 C or print no range": J["GF60151B7-1E00U-AE9"]["temp_ok"] is False and J["GF40282B3-1000U-SEP"]["temp_ok"] is None,
         "no candidate prints a starting current": not any(v["start_read"] for v in J.values()),
-        "each picked mixer at full speed behind a 12 V buck draws under L4-E11's both-start limit at the floor": D["each_under_both_limit"],
-        "both mixers at full speed plus U12 exceed the declared 1.0 A but stay under U42's least limit": D["vsys_e_total_full"] > 1.0 and D["vsys_e_total_full"] < I_OL_MIN,
+        "VSYS_E's drafted loads are U12 and U22, and +12V_FAN's the two mixers at the fan's printed current": set(R["rails"]["vsys_e"]["loads"]) == {"U12", "U22"} and set(R["rails"]["fan"]["loads"]) == {"J_FAN1", "J_FAN2"} and all(abs(v - R["cands"][R["sel"]["mixer"]]["a"]) < 1e-9 for v in R["rails"]["fan"]["loads"].values()),
+        "U22's input recomputed from the parsed draft and L4-E11's floor equals L4-E11's printed input within 0.0005 A": abs(D["i_mixer_both_full"] - R["rails"]["u22_in"]) < 0.0005,
+        "VSYS_E at full speed equals L4-E11's declared current within 0.0005 A and the draft's declaration within 0.005 A, under U42's least limit": abs(D["vsys_e_total_full"] - R["rails"]["declared"]) < 0.0005 and abs(D["vsys_e_total_full"] - R["rails"]["vsys_e"]["declared"]) < 0.005 and D["vsys_e_total_full"] < R["rails"]["least"],
+        "the start room recomputed matches L4-E11's multiple of the running power within 0.05": abs(D["start_x"] - R["rails"]["start_x"]) < 0.05,
+        "the drafted 12 V rails sit inside the picked fans' printed 10.8 to 13.2 V (D-18 holds)": D["rails_cover"],
         "the picked fans at full speed add heat over the plan's fan figures": D["heat_hold_full"] > D["heat_hold_plan"] and D["heat_prof_full"] > D["heat_prof_plan"],
         "the 40 x 40 x 20 fan on the cooler clears the backer's underside by under 3 mm (a fit finding)": 0.0 < M["clear_backer_cooler"] < 3.0,
         "every T-H1 heater setting is sqrt(P x 6.8) to 0.01 V": all(r["agree"] for r in R["th1"]["rows"]),
@@ -456,7 +560,7 @@ def render(R):
     P("1. THE SITES AND THEIR SUPPLIES (read from the generators and L4-E11)")
     P("   mixers:  " + R["sites"]["mixers"])
     P("   coolers: " + R["sites"]["coolers"])
-    P("   VSYS_E under L4-E11's draft: %.3f V at U42's least limit at the supplement floor to %.3f V with the charge held; the start limits %.4f A each (both)" % (VSYS_E_FLOOR, VSYS_E_TOP, START_BOTH))
+    P("   VSYS_E under L4-E11's draft: %.3f V at U42's least limit at the supplement floor to %.3f V with the charge held; 17a's start limits %.4f A each (both)" % (VSYS_E_FLOOR, VSYS_E_TOP, START_BOTH))
     P("   and %.4f A one at a time (the other at 0.1 A), under U42's least limit %.3f A with U12's %.1f A (L4-E11 17a); E11-39 staggers the starts with a PWM ramp" % (START_ONE, I_OL_MIN, U12_A))
     P("   the slot rails: %.1f V (ASSEMBLY.md), the cooler fan 0.1 A declared on each" % SLOT_5V)
     P("   REQ-043's acceptance (pcb_requirements.yaml): " + R["req043"])
@@ -505,22 +609,31 @@ def render(R):
     P("      24 V IP68 40 x 40 x 28, %.1f CFM, %.0f dB(A): its range, temperature and life NOT READ (brochure row only), 28 mm thick against the 20 of the pick (section 4), a 24 V feed." % (ac["cfm"], ac["dba"]))
     P("   Reverse either pick by a fan whose maker prints a range covering the site's supply as drawn, -20 C and a life at or over 60 C; or by the owner changing REQ-043's IP68 statement openly.")
     P("")
-    P("3. WHAT THE PICKS CHANGE DOWNSTREAM (MODELED on the makers' full-speed figures; a converter efficiency of %.2f is an ASSUMPTION)" % BUCK_EFF)
-    P("   the mixers' feed: a regulated 12.0 V rail on board E from VSYS_E (the fans' printed range is 10.8 to 13.2 V; VSYS_E runs 12.054 to %.3f V in service, over the range most of the time," % VSYS_E_TOP)
-    P("   and to %.3f V at the floor); J_FAN1/J_FAN2 become 4-wire (12 V, GND, PWM, TACH): the low-side chopping of Q9/Q10 and the SS14 flybacks D7/D8 are retired, the FETs re-used as" % VSYS_E_FLOOR)
-    P("   open-drain PWM drivers (the fan's PWM input level NOT READ: the maker's manual is behind a form), the tach stays on the 10k pull-up to +3V3_E6 (FINDING for board E's generator owner;")
-    P("   rows R-177/E11-33 and the register's R-179). With the fans on a switched low side the tachometer's open-collector return would ride the switched node: a 4-wire fan removes it.")
-    P("   the mixers' current on VSYS_E at the floor %.3f V behind the 12 V buck: %.3f A each at full speed (the fan's %.2f W), %.3f A both; the plan's %.2f W for both is %.3f A." % (VSYS_E_FLOOR, D["i_mixer_each_full"], D["mixer_w_each"], D["i_mixer_both_full"], PLAN_MIXER_W, D["i_mixers_plan"]))
-    P("   against L4-E11 17a: %.3f A each is %s the %.4f A both-start limit and %s the %.4f A one-at-a-time limit (if the start current were the rated current: it is NOT READ, so E11-35's bench row stands);" % (D["i_mixer_each_full"], "under" if D["each_under_both_limit"] else "OVER", START_BOTH, "under" if D["each_under_one_limit"] else "OVER", START_ONE))
-    P("   VSYS_E's total with U12's %.1f A: %.3f A at full speed, %.1f %% of U42's least limit %.3f A and %.3f A OVER the 1.0 A L4-E11 declared (FINDING for R-177 and R-181: declare the fans at their" % (U12_A, D["vsys_e_total_full"], D["pct_of_least"], I_OL_MIN, D["over_declared"]))
-    P("   full-speed draw or bound the duty in firmware); at the plan's duty the total is %.3f A, under 1.0 A." % D["vsys_e_total_plan"])
-    P("   the dock feed's current (E11-35): unchanged in kind (one 813 contact), its declared value moves from 1.0 A to at most %.3f A at full speed; the contact at %.1f %% of its 3.5 A." % (D["vsys_e_total_full"], 100.0 * D["vsys_e_total_full"] / 3.5))
-    P("   the coolers' feed: 12.0 V on board B for J_FAN1..3 (no 12 V rail exists there; the slot rails are %.1f V): a per-slot step-up from +5V_Sn at %.3f A each at full speed (keeps 'an empty slot" % (SLOT_5V, D["cooler_i_slot_full"]))
-    P("   stays off'), or a 12 V feed from board A over the bay harness (board A's VHEAT and +12V_HF are switched for other loads); the header's 5V pin becomes the 12 V pin (FINDING for board B's")
-    P("   generator owner, the J_FAN rows and the slot rail budgets of gen_sch_b.py's comments; Layer 5's bay harness rows). The module's Fan_PWM (open drain) and Fan_Tacho (1.8k to 3.3 V) stay.")
+    rl = R["rails"]
+    P("3. WHAT THE PICKS CHANGE DOWNSTREAM (round 2, set 28 F-14: restated on the DRAFTED rails, read from L4-E11 section 18 and record l8r2, never typed)")
+    P("   the mixers' feed as drafted (apply_gen_sch_e_aux.py, parsed): " + rl["fan_hdr"])
+    P("   U22's output %.3f to %.3f V (L4-E11 18a) and the coolers' step-up %.2f to %.2f V (record l8r2) inside the picked fans' printed 10.8 to 13.2 V: %s"
+      % (rl["u22_vout"][0], rl["u22_vout"][1], rl["b_vout"][0], rl["b_vout"][1], "yes" if D["rails_cover"] else "NO"))
+    P("   the draft's VSYS_E declaration %.2f A against its loads' sum %.2f A; +12V_FAN's %.2f A against its loads' sum %.2f A (the fan's printed %.2f A each at 12 V)"
+      % (rl["vsys_e"]["declared"], D["draft_sum"], rl["fan"]["declared"], D["fan_rail_sum"], R["cands"][R["sel"]["mixer"]]["a"]))
+    P("   the mixers on VSYS_E at the floor %.3f V (L4-E11 18b, VSYS_E with the branch's drop) through U22 at the draft's efficiency %.2f (an ASSUMPTION of L4-E11):"
+      % (rl["v_floor"], rl["u22_eta"]))
+    P("   %.4f A per mixer at full speed (the fan's %.2f W), U22's input %.4f A with both and its %.0f mA quiescent (L4-E11 prints %.4f A); the plan's %.2f W for both: %.4f A"
+      % (D["i_mixer_each_full"], D["mixer_w_each"], D["i_mixer_both_full"], rl["u22_q"] * 1000, rl["u22_in"], PLAN_MIXER_W, D["i_mixers_plan"]))
+    P("   VSYS_E's total with U12's %.1f A: %.4f A at full speed (L4-E11 declares %.4f A on IF-AE-DOCK), %.1f %% of U42's least limit %.4f A, %.4f A in hand (L4-E11: %.4f);"
+      % (rl["u12"], D["vsys_e_total_full"], rl["declared"], D["pct_of_least"], rl["least"], D["room"], rl["room"]))
+    P("   at the plan's duty %.4f A (L4-E11: %.4f A). The round-1 FINDING (1.277 A over a 1.0 A declaration) is CLOSED by the draft's 1.32 A declaration." % (D["vsys_e_total_plan"], rl["plan_total"]))
+    P("   the fans' start (E11-35, the start current NOT READ): with the other mixer and U12 running, U42's least limit leaves %.2f W at the rail for the starting fan, %.2f times its"
+      % (D["start_w"], D["start_x"]))
+    P("   running power (L4-E11 18b: %.1f times): the stagger E11-39 stays; the 17a per-fan figures (0.3356 / 0.5713 A on VSYS_E directly) are superseded by the rail" % rl["start_x"])
+    P("   the dock feed's current (E11-35): one 813 contact at %.4f A declared, %.1f %% of its 3.5 A (L4-E11: %.1f %%)." % (D["vsys_e_total_full"], 100.0 * D["vsys_e_total_full"] / 3.5, rl["contact_pct"]))
+    P("   the coolers' feed as drafted by record l8r2: a per-slot step-up from +5V_Sn (the slot rails are %.1f V) declared %.2f A at %.1f V (%.1f W of fan over %.2f), so %.2f W lost in it per running fan;" % (SLOT_5V, rl["b_in_a"], rl["b_vin"], rl["b_fan_w"], rl["b_eta"], D["b_loss"]))
+    P("   an empty slot's fan stays dark with its slot; the module's Fan_PWM and Fan_Tacho reach the fan through l8r2's level stages; the header stays JST SH in l8r2's draft (record l7r2 F-R2-08: JST PH).")
     P("   the firmware stagger (E11-39, R-188): kept; the PWM ramp now drives the fan's PWM input, not a chopped supply; a 4-wire fan's own soft start is NOT READ for Sanyo (Same Sky prints one).")
-    P("   the heat into the case at full speed: the hold's fans (slot 3's cooler and the two mixers) %.2f W against the model's %.3f W (+%.2f W, E5's line +%.3f W/K at 0.100 W/K per W); the profile's" % (D["heat_hold_full"], D["heat_hold_plan"], D["heat_hold_full"] - D["heat_hold_plan"], D["line_shift_hold"]))
-    P("   five fans %.2f W against %.3f W. The controls set the duty (R-150: the picked fans' power at the duty the controls set replaces pwr_budget.py's rows); T-H1 logs the fans' real draw." % (D["heat_prof_full"], D["heat_prof_plan"]))
+    P("   the heat into the case at full speed, every converter's loss counted: the hold's fans (slot 3's cooler and its step-up, the two mixers and U22) %.2f W (the fans alone %.2f W," % (D["heat_hold_full"], D["heat_hold_fans_only"]))
+    P("   U22's loss %.2f W from L4-E11 18a, the step-up's %.2f W) against the model's %.3f W (+%.2f W, E5's line +%.3f W/K at 0.100 W/K per W); the profile's five fans and their converters %.2f W"
+      % (D["u22_loss"], D["b_loss"], D["heat_hold_plan"], D["heat_hold_full"] - D["heat_hold_plan"], D["line_shift_hold"], D["heat_prof_full"]))
+    P("   against %.3f W. The controls set the duty (R-150); T-H1 logs the fans' real draw from a 12.0 V bench supply, so the converters' losses are board heat its heaters carry." % D["heat_prof_plan"])
     P("   the airflow the picks would deliver (free air, MAKER): the two mixers %.4f m3/s (%.2f m3/min against the representatives' %.2f to %.2f m3/min, GF60151B9 to B6), the three cooler fans %.4f m3/s;" % (D["flow_mixers_m3s"], 2 * sm["m3min"], 2 * R["rep"]["mixers_cfm"][0] * 0.3048 ** 3, 2 * R["rep"]["mixers_cfm"][1] * 0.3048 ** 3, D["flow_coolers_m3s"]))
     P("   over the case's free air of about %.4f m3 (MODELED, the boards not subtracted) the mixers' free-air flow is %.1f case volumes a second, an upper bound: the delivered flow in the sealed" % (CASE_FREE_M3, D["changes_per_s"]))
     P("   case sits on the fan curve below its %.0f Pa maximum and no system curve is held. L4-E12's bound credits this flow at zero; T-H1's reading with these fans replaces the credit." % sm["pa"])
@@ -576,11 +689,31 @@ def render(R):
     P("   its %.3f A2s is 1/%.0f of the wire's %.0f A2s to melt at that time; the adiabatic rise of the copper from the pulse: %.3f K (ECSS's resistance per metre over copper's %.0f J/kgK and %.0f kg/m3)." % (SHORT_I2T, K["i2t_ratio"], K["i2t_cap_70"], K["rise_k"], CU_C_J_KGK, CU_DENS))
     P("   the eFuse's retry duty (cases (3) and (4) of L4-E11 17a): at most %.3f A for at most 1.5 s then off at least 0.5 s, a duty of at most %.2f: %.3f A is %.0f %% of ECSS Annex C's %.1f A single-wire" % (RETRY_A, RETRY_DUTY, RETRY_A, K["retry_pct"], K["ecss_isw"]))
     P("   rating of AWG 24 (a 70 C environment, 150 C wire, radiation alone, in vacuum), the duty's rms %.3f A is %.0f %%; Preece's steady fusing current of the bare wire %.1f A." % (K["retry_rms"], K["retry_rms_pct"], K["preece"]))
-    P("   the continuous draw: 1.0 A declared (%.0f %% of 3.4 A), %.3f A with the picked mixers at full speed (%.0f %%). The 50 K rule of 6.32.4a cannot be applied: %s." % (K["cont_pct"], D["vsys_e_total_full"], K["cont_full_pct"], K["fifty_k_rule"]))
+    P("   the continuous draw: %.4f A declared by L4-E11 18b (%.0f %% of 3.4 A), %.4f A recomputed here with the picked mixers at full speed (%.0f %%). The 50 K rule of 6.32.4a cannot be applied: %s." % (K["cont_declared"], K["cont_pct"], D["vsys_e_total_full"], K["cont_full_pct"], K["fifty_k_rule"]))
     P("   So the wiring is not the limiting element of the branch on these published relations; the 813 contact's pulse capability (the piston-to-barrel interface, the gold plating, the spring)")
     P("   is printed nowhere (3.5 A operating, 10 mOhm static; the SMD series alone prints a 7 A peak) and stays E11-38's bench item and the drafted question.")
     P("")
-    P("8. PREDICATES (the tests read these)")
+    P("8. ROUND 2 (set 28 F-14): THE FIGURES THAT MOVED, round 1 (this record's output at %s, parsed) against this round" % ROUND1)
+    new = {"a mixer's input current on VSYS_E at the floor, full speed (A)": D["i_mixer_each_full"],
+           "both mixers' input current at the floor, full speed (A)": D["i_mixer_both_full"],
+           "VSYS_E's total with U12 at full speed (A)": D["vsys_e_total_full"],
+           "that total against U42's least limit (%)": D["pct_of_least"],
+           "VSYS_E's total at the plan's duty (A)": D["vsys_e_total_plan"],
+           "the dock contact's share of its 3.5 A (%)": 100.0 * D["vsys_e_total_full"] / 3.5,
+           "the hold's fans' heat into the case at full speed (W)": D["heat_hold_full"],
+           "E5's line shift at full speed (W/K)": D["line_shift_hold"],
+           "the profile's five fans' heat at full speed (W)": D["heat_prof_full"],
+           "a cooler fan's slot current at full speed (A)": D["cooler_i_slot_full"],
+           "the dock lead's continuous draw against ECSS's 3.4 A (%)": K["cont_full_pct"]}
+    old = R["round1"]
+    for k in old:
+        P("   %-72s %9.4f -> %9.4f  %s" % (k, old[k], new[k], "MOVED" if abs(old[k] - new[k]) > 0.0005 * max(1.0, abs(old[k])) else "unchanged"))
+    P("   why: round 1 took a 0.90 converter (typed) at VSYS_E's 9.494 V and declared nothing for the converters' losses; L4-E11 section 18 drafts U22 at 0.85 (its")
+    P("   ASSUMPTION) on VSYS_E at 9.508 V with 16 mA quiescent, record l8r2 the coolers' step-up at 0.85 from 5.0 V: both read here, and the converters' losses counted as heat")
+    P("   unchanged: the fan picks and every maker row (section 2), D-18's settlement (the drafted rails inside the fans' printed range: %s), the mounting (section 4)," % ("yes" if D["rails_cover"] else "NO"))
+    P("   the T-H1 bill and its totals (section 5: no item rests on VSYS_E's loads), the heater settings and pass lines (section 6) and the dock lead's pulse (section 7)")
+    P("")
+    P("9. PREDICATES (the tests read these)")
     for k, v in R["pred"].items():
         P("   %-110s %s" % (k, "yes" if v else "NO"))
     return "\n".join(out) + "\n"

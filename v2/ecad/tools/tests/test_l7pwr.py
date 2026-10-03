@@ -90,11 +90,26 @@ def t_no_candidate_covers_the_supply_and_the_picks_cover_the_cold_end():
 
 
 def t_the_downstream_currents_and_heat():
-    assert _pred("each picked mixer at full speed behind a 12 V buck draws under L4-E11's both-start limit at the floor")
-    assert _pred("both mixers at full speed plus U12 exceed the declared 1.0 A but stay under U42's least limit")
+    """Round 2 (set 28 F-14): the budget rests on the DRAFTED rails, parsed from L4-E11 section 18 and record l8r2; it must reproduce
+    L4-E11's own figures, not a typed converter efficiency."""
+    assert _pred("VSYS_E's drafted loads are U12 and U22, and +12V_FAN's the two mixers at the fan's printed current")
+    assert _pred("U22's input recomputed from the parsed draft and L4-E11's floor equals L4-E11's printed input within 0.0005 A")
+    assert _pred("VSYS_E at full speed equals L4-E11's declared current within 0.0005 A and the draft's declaration within 0.005 A, under U42's least limit")
+    assert _pred("the start room recomputed matches L4-E11's multiple of the running power within 0.05")
+    assert _pred("the drafted 12 V rails sit inside the picked fans' printed 10.8 to 13.2 V (D-18 holds)")
     assert _pred("the picked fans at full speed add heat over the plan's fan figures")
+    m = _M()
+    assert not hasattr(m, "BUCK_EFF"), "a typed converter efficiency is back: the drafts' own figures are the input"
     D = _C["R"]["down"]
-    assert abs(D["vsys_e_total_full"] - 1.277) < 0.002 and abs(D["heat_hold_full"] - 6.08) < 0.005
+    assert D["heat_hold_full"] > D["heat_hold_fans_only"], "the converters' losses must be counted in the heat"
+
+
+def t_round_two_names_the_figures_that_moved():
+    _M()
+    t = _C["text"]
+    assert "8. ROUND 2 (set 28 F-14): THE FIGURES THAT MOVED" in t
+    old = _C["R"]["round1"]
+    assert len(old) >= 10 and all(isinstance(v, float) for v in old.values()), "round 1's figures are parsed from its output"
 
 
 def t_the_fit_is_a_finding_not_a_pass():
@@ -126,7 +141,7 @@ def t_the_pages_carry_the_outputs_figures():
     _M()
     R = _C["R"]
     page = open(PAGE, encoding="utf-8").read(); spec = open(SPEC, encoding="utf-8").read()
-    for s in ("9WL0612P4H001", "9WPA0412P6G001", "%.3f A" % R["down"]["vsys_e_total_full"], "%.2f" % R["bill"]["totals"]["EUR"], "%.0f" % R["dock"]["fus"][70.0],
+    for s in ("9WL0612P4H001", "9WPA0412P6G001", "%.4f A" % R["down"]["vsys_e_total_full"], "%.2f W" % R["down"]["heat_hold_full"], "%.2f" % R["bill"]["totals"]["EUR"], "%.0f" % R["dock"]["fus"][70.0],
               "%.3f K" % R["dock"]["rise_k"], "%.2f mm" % R["mount"]["clear_backer_cooler"], "GF60151B7-1E00U-AE9", "GF40282B3-1000U-SEP"):
         assert s in page, "the page does not carry %r" % s
     for s in ("%.2f" % R["bill"]["totals"]["EUR"], "%.2f" % R["bill"]["totals"]["GBP"], "%.2f" % R["bill"]["totals"]["USD"], "9WL0612P4H001", "9WPA0412P6G001", "13.07 V", "2.455 W/K"):
