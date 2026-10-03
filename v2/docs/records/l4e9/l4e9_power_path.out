@@ -38,7 +38,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    dec31     094817023210d1b0  v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
-   l4e7r     eeba2a78f0c608ac  v2/docs/records/l4e7/l4e7_stage_settings.out
+   l4e7r     058b8e76aaa6fdd1  v2/docs/records/l4e7/l4e7_stage_settings.out
    l7fans    63fad48957e8a0f3  v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json
    l4e10     0eb554285580b8f2  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
