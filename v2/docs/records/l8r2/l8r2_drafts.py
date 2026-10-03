@@ -35,6 +35,10 @@ round 5 (4 October 2026, the collaborator's check astra-check-l9pf02-1, B1 to B3
       bound at the step-up's 12.43 V top over its 0.80, every slot load at HIGH, board B's slot bucks at 500 kHz by
       apply_gen_sch_b_rt500.py) with the margins in every state, the start and a degraded fan; the declarations of both boards at
       5.63 A; the FET's sensitivity to the recovery charge; section 6 composes Layer 6's board B drafts with this record's.
+round 6 (4 October 2026, the collaborator's recheck astra-check-l9pf02-2): the AP64500's Figure 24 reading a CONDITIONAL screen, no
+      longer a bound; F5-03 corrected by apply_gen_sch_a_fb01.py (the 5.1 V stages' dividers at 0.1 %: 5.0019 to 5.1744 V); the
+      slot leads declared at 6.6 A on both boards over the bounded start-up and fault envelope (the cooler branch's 1.80 A start
+      bound, a 100 us average); the loop's least from VSNS unrounded; the junction screen over C4-1's whole steady matrix.
 Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_drafts.py  (l8r2_drafts.out is its output, regenerated with
 _bin/regen_out.py). Nothing here is built or measured: every statement is about generator text, netlists and printed figures."""
 import ast
@@ -67,8 +71,8 @@ CHAIN = "v2/ecad/tools/pcb_energy_chain.yaml"
 CHAIN_FIX = "v2/docs/records/l8r2/apply_energy_chain_e1oz.py"
 
 POWER_A = [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17")]
-L8_A = [("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm")]
-MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm")]
+L8_A = [("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm"), ("l8r2", "fb01")]
+MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm"), ("l8r2", "fb01")]
 # round 4: slotlm rewrites VBAT's "U4": 2.0, which L4-E11's charger names in its anchor, so it follows the charger (L4-E9's order)
 AFTER_CHARGER = [("l8r2", "slotlm")]
 # board E's round in the change list's order (L4-POWER-ARCHITECTURE.md's table; section 6b prints whether the page still says so)
@@ -110,6 +114,7 @@ INPUTS = [
     "v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py",
     "v2/docs/records/l6r2/apply_gen_sch_b_intent.py", "v2/docs/records/l6r2/l6r2_apply.py", "v2/docs/records/l6r2/l6r2_land.py",
     "v2/docs/records/l6r2/l6r2_intent.py", "v2/docs/records/l8r2/checks/astra-check-l9pf02-1.md",
+    "v2/docs/records/l8r2/checks/astra-check-l9pf02-2.md",
 ] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_A + L8_A] + ["v2/docs/records/%s/apply_gen_sch_b_%s.py" % rn for rn in L8_B] \
   + ["v2/docs/records/%s/apply_gen_sch_e_%s.py" % rn for rn in E_ROUND + MINE_E]
 L6_C = ("v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py", "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py")
@@ -205,7 +210,15 @@ F = {
     "v_plat": (4.5, "ASSUMPTION", "the CSD19532Q5B's Miller plateau taken at 4.5 V (VGS(th) 2.6 V typical; the gate charge curve not read)"),
     "qrr_prop": (True, "ASSUMPTION", "the body diode's Qrr taken in proportion to its forward current from the sheet's 17 A row"),
     "eta_lm": (0.90, "ASSUMPTION", "the LM5176 5.1 V stages' declared efficiency, NOT PLOTTED by the maker (rv-pwr's rule; record l9pwr's M1)"),
-    "slot_peak": (5.63, "BOUND", "the three slot leads' declared peak, both ends (round 5: slot 2's; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)"),
+    "slot_peak": (6.6, "BOUND", "the three slot leads' declared peak, both ends: the bounded start-up and fault envelope (round 6; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)"),
+    # round 6 (the collaborator's recheck: B2 the start-up envelope, B3 the matrix's thermal acceptance, F5-03 corrected)
+    "start_bound": (1.80, "BOUND", "the cooler branch's bounded start on +5V_Sn: a 100 us moving average at most 1.80 A, over the steady 0.712 A for at most 1.0 s a start (C4-3 holds the chain to it)"),
+    "fb_tol01": (0.001, "BOUND", "the LM5176 5.1 V stages' divider at 0.1 % (apply_gen_sch_a_fb01.py)"),
+    "ibias_fb": (25e-9, "MAKER", "LM5176 IBIAS(FB) at most 25 nA in regulation (SNVSAI1D electrical characteristics)"),
+    "vsns": ((0.043, 0.050, 0.057), "MAKER", "LM5176 VSNS, the average current loop's target (SNVSAI1D)"),
+    "isns_r": ((0.006, 0.01), "BOUND", "the ISNS shunt 6 mOhm 1 % (WSL2512, gen_sch_a.py)"),
+    "tlim": (87e-6, "MAKER", "TPS2596 current limit response time 87 us typical (SLVSET8A 7.6)"),
+    "matrix": ((3.0, 4.1), "BOUND", "C4-1's lower steady points (A), with the steady envelope and the declared peak"),
     # round 5 (the collaborator's check: B1 the AP64500's drawn frequency, B2 the envelope)
     "fan_env": (2.75, "BOUND", "the cooler's steady input at the step-up's 12.43 V top, any duty: the maker's 2.0 W at 12 V x 1.111 by the fan laws, with room for -20 C air and the cooler's pressure; C4-3 holds the chain to it"),
     "ap_rt": (68e3, "BOUND", "board A's and B's drawn AP64500 RT, 68 k (gen_sch_a.py buck5, gen_sch_b.py buck33; O-20)"),
@@ -833,10 +846,16 @@ def item1_r4():
              "switch core buck U105 (0.676 W)": s1c["out"][2] / s1c["eta"]}
     o["parts"] = parts; o["other"] = other; o["fan_full_w"] = fan_full
     duty = V["duty_max"]; cap_w = duty * s1f["out"][2] / s1f["eta"]
-    lo_ap, nom_ap = vout_least(V["vfb_ap"], V["fb_div"]); lo_lm, nom_lm = vout_least(V["vref_lm"], V["fb_div"])
+    lo_ap, nom_ap = vout_least(V["vfb_ap"], V["fb_div"]); lo_lm1, nom_lm = vout_least(V["vref_lm"], V["fb_div"])
+    # round 6 (F5-03 corrected by apply_gen_sch_a_fb01.py): the LM5176 stages' divider at 0.1 %, IBIAS(FB) through the top resistor
+    rt6, rb6, _t6 = V["fb_div"]; t01 = V["fb_tol01"]; bias_v = V["ibias_fb"] * rt6
+    lo_lm = V["vref_lm"][0] * (1 + rt6 * (1 - t01) / (rb6 * (1 + t01))) - bias_v
+    hi_lm = V["vref_lm"][2] * (1 + rt6 * (1 + t01) / (rb6 * (1 - t01))) + bias_v
     vl_ap, vl_lm = lo_ap * (1 - V["drop"]), lo_lm * (1 - V["drop"])
+    vl_lm1 = lo_lm1 * (1 - V["drop"])
     rt, rb, tol = V["fb_div"]; hi_ratio = 1 + rt * (1 + tol) / (rb * (1 - tol))
-    o["v"] = {"nominal_ap": nom_ap, "least_ap": lo_ap, "load_ap": vl_ap, "least_lm": lo_lm, "load_lm": vl_lm,
+    o["v"] = {"nominal_ap": nom_ap, "least_ap": lo_ap, "load_ap": vl_ap, "least_lm": lo_lm, "load_lm": vl_lm, "hi_lm": hi_lm,
+              "least_lm1": lo_lm1, "load_lm1": vl_lm1, "bias_v": bias_v,
               "most_ap": V["vfb_ap"][2] * hi_ratio, "most_lm": V["vref_lm"][2] * hi_ratio}
     base, peak = slot_loads(open(GEN_B, encoding="utf-8").read())
     r3 = round(duty * V["pfan"] / V["eta"] / 5.0, 2)
@@ -936,13 +955,14 @@ def item1_r4():
                                                                          ("(b) no cooler on the slot rail", other))]
     # the correction: slots 1 and 3 on the LM5176 stage; the loop's least from record l9pwr's slot 2 line
     lm = [r for r in o3["rows"] if r["part"].startswith("LM5176")][0]["limit"]
-    o["lm_limit"] = lm
+    o["lm_limit_printed"] = lm
+    o["lm_limit"] = V["vsns"][0] / (V["isns_r"][0] * (1 + V["isns_r"][1]))   # round 6: from the maker's VSNS and the shunt, unrounded
     corr = []
     for r in o3["rows"]:
         if r["slot"] not in ("1", "3"):
             continue
         base_w = r["I"]["a"] * 5.1 - fan_full
-        corr.append((r["state"], r["slot"], (base_w + env_branch) / 5.1, (base_w + env_branch) / vl_lm, (base_w + start_slot) / vl_lm,
+        corr.append((r["state"], r["slot"], (base_w + env_branch) / 5.1, (base_w + env_branch) / vl_lm, base_w / vl_lm + V["start_bound"],
                      (base_w + degr_slot) / vl_lm))
     o["corr"] = corr
     worst = max(c[3] for c in corr); worst_start = max(c[4] for c in corr); worst_degr = max(c[5] for c in corr)
@@ -964,12 +984,19 @@ def item1_r4():
     pdv, _t2, _e2 = qh1(dev["drafted"], V["vsys_max"], vo, V["csd"][1])
     o["dev_fet"] = (dev["drafted"], pdv, air + pdv * V["csd"][1])
     # the declared slot peak and VBAT entry of the correction (round 5: the envelope)
-    o["peak_need"] = env_w / vl_lm
+    o["peak_need"] = max(c[4] for c in corr)
+    o["start_calc"] = start_slot / vl_lm   # the eFuse-limited calculation's branch current, inside the bounded bound
+    st2 = P["states"]["PS-BUSY"]["rails"]["S2"]
+    o["slot2_start"] = (st2["out"][2] - P["states"]["PS-BUSY"]["rails"]["S2F"]["out"][2] / P["states"]["PS-BUSY"]["rails"]["S2F"]["eta"]) / vl_lm + V["start_bound"]
+    # B3: the junction screen over C4-1's whole steady matrix at the highest VIN, scaled and unscaled recovery; the RthJA each needs
+    pts = list(V["matrix"]) + [env_w / vl_lm, V["slot_peak"]]
+    o["matrix_fet"] = [(i,) + tuple(qh1(i, V["vsys_max"], hi_lm, V["csd"][1], prop=pr)[0] for pr in (True, False)) for i in pts]
+    o["matrix_rth"] = [(i, (125.0 - src["c1_air"]) / pu) for i, _ps, pu in o["matrix_fet"]]
     o["entry"] = V["slot_peak"] * 5.1 / (V["eta_lm"] * 14.4)
     # the LM5176 stage's output window against the CM5's 5 V input, at the drawn 1 % divider and with 0.1 % parts
     lo1, _n1 = vout_least(V["vref_lm"], (V["fb_div"][0], V["fb_div"][1], 0.001))
     rt_, rb_, _t3 = V["fb_div"]
-    o["lm_window"] = {"lo": lo_lm, "hi": o["v"]["most_lm"], "lo01": lo1,
+    o["lm_window"] = {"lo": lo_lm1, "hi": o["v"]["most_lm"], "lo01": lo1,
                       "hi01": V["vref_lm"][2] * (1 + rt_ * 1.001 / (rb_ * 0.999)), "cm5": V["cm5_vin"]}
     # the energy the two stages cost at PLAN (VBAT side), every state, at the declared 0.90 against the AP64500's curve point
     energy = []
@@ -1050,30 +1077,36 @@ def item1_r4_print(w):
     w("      (i) a 500 kHz SCREEN by record l4e12's method (the converter's loss at its point x theta-JA %.0f C/W at C1's %.0f C), not a temperature of the drawn stage:\n" % (V["ap_theta"][0], o["air"]))
     for tag, vin, i, eta, loss, tj in o["junction"]:
         w("        %-30s VIN %6.3f V: %.3f A, eta %.4f, loss %.3f W, screen %.1f C (%s)\n" % (tag, vin, i, eta, loss, tj, "over +125 C" if tj > V["ap_tj"][0] else "within +125 C"))
-    w("      (ii) the maker's typical Figure 24 (500 kHz, VIN 12 V, read) at each option's current at the least load voltage %.3f V: %s\n"
-      % (v["load_ap"], "; ".join("%s %.3f A: %s" % (tg, i, "over the 5 A rating at any air" if tl is None else "the curve ends at %.1f C" % tl) for tg, i, tl in o["fig24_least"])))
-    w("      at the drawn frequency the IC's loss is at least its 500 kHz loss less %.4f W (the conduction term the smaller ripple takes off, typical RDS(on) x %.1f, VIN 12 V; every switching, gate and Coss loss grows with frequency), so for VIN 12 V and above each limit of (ii) is an upper bound on the drawn stage's allowed air\n"
-      % (b1["delta"], V["rds_hot_ap"]))
-    w("    VERDICT: at C1's %.0f C every option's current at the least load voltage is past the maker's typical derating at 500 kHz, and the drawn stage runs at %.0f kHz with more loss: NOT ADEQUATELY RATED (typical figures, a direction argument; no exact junction claimed)\n" % (o["air"], b1["fsw"] / 1e3))
-    w("  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum; board B's slot bucks at 500 kHz (apply_gen_sch_b_rt500.py, round 5)\n")
-    w("    per state, the ENVELOPE (B2): A at 5.1 V / at the stage's least %.3f V; with a cooler start through its eFuse's highest limit; with a degraded fan held under its eFuse's least limit; margin to the loop's least %.3f A:\n" % (v["load_lm"], o["lm_limit"]))
+    w("      (ii) a CONDITIONAL thermal screen (round 6, the recheck's B1): the maker's typical Figure 24 (500 kHz, VIN 12 V, read +- 2 C) at each option's current at the least load voltage %.3f V: %s\n"
+      % (v["load_ap"], "; ".join("%s %.3f A: %s" % (tg, i, "over the 5 A rating at any air (the rating, not the curve)" if tl is None else "the typical curve ends at %.1f +- 2 C" % tl) for tg, i, tl in o["fig24_least"])))
+    w("      no loss comparison at the drawn %.0f kHz covering VIN, inductance and the source is held, so the 500 kHz curve is NOT claimed as a bound on the drawn stage: the retired part needs no characterisation\n" % (b1["fsw"] / 1e3))
+    w("    VERDICT: the fan-fed options exceed the AP64500's 5 A rating at the least load voltage (MAKER); the no-fan option (b) reads past the typical curve at C1's %.0f C in this screen only (CONDITIONAL): NOT ADEQUATELY RATED with the cooler on the rail; (b) rejected on its interfaces, its thermal screen CONDITIONAL\n" % o["air"])
+    w("  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the 5.1 V stages' dividers at 0.1 % (apply_gen_sch_a_fb01.py, round 6), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum; board B's slot bucks at 500 kHz (apply_gen_sch_b_rt500.py, round 5)\n")
+    w("    the output window (F5-03): %.3f to %.3f V with the 1 %% divider (round 5); with both resistors at 0.1 %% and IBIAS(FB) %.0f nA through %.1f k (%.2f mV) %.4f to %.4f V, inside the CM5's %.2f to %.2f V with %.1f mV to its top before the load's transient (C4-1 measures it); the least load voltage with the 2 %% drop %.4f V (round 5: %.4f V)\n"
+      % (o["lm_window"]["lo"], o["lm_window"]["hi"], V["ibias_fb"] * 1e9, V["fb_div"][0] / 1e3, v["bias_v"] * 1e3, v["least_lm"], v["hi_lm"],
+         V["cm5_vin"][0], V["cm5_vin"][1], 1e3 * (V["cm5_vin"][1] - v["hi_lm"]), v["load_lm"], v["load_lm1"]))
+    w("    the loop's least: VSNS %.0f mV over %.0f mOhm at +%.0f %%: %.6f A (record l9pwr prints %.3f A)\n"
+      % (V["vsns"][0] * 1e3, V["isns_r"][0] * 1e3, 100 * V["isns_r"][1], o["lm_limit"], o["lm_limit_printed"]))
+    w("    per state (B2): the steady ENVELOPE at 5.1 V / at the least %.4f V; the BOUNDED START (the cooler branch at its %.2f A bound, a 100 us average); a degraded cooler held under its eFuse's least limit; margin to %.4f A:\n"
+      % (v["load_lm"], V["start_bound"], o["lm_limit"]))
     for st, sl, a1, a2, a3, a4 in o["corr"]:
-        w("      %-12s slot %s  %.3f / %.3f A  start %.3f A  degraded %.3f A  %+.3f / %+.3f / %+.3f A\n" % (st, sl, a1, a2, a3, a4, o["lm_limit"] - a2, o["lm_limit"] - a3, o["lm_limit"] - a4))
+        w("      %-12s slot %s  %.4f / %.4f A  start %.4f A  degraded %.4f A  %+.4f / %+.4f / %+.4f A\n" % (st, sl, a1, a2, a3, a4, o["lm_limit"] - a2, o["lm_limit"] - a3, o["lm_limit"] - a4))
     cw = o["corr_worst"]
-    w("    least margin at the envelope: %+.3f A (%.1f %%); with a start %+.3f A (the eFuse and efficiency start bounds are ASSUMPTIONS, CONDITIONAL); with a degraded fan %+.3f A (a fault the stage carries, over the declaration)\n"
-      % (o["lm_limit"] - cw[0], 100 * (o["lm_limit"] - cw[0]) / o["lm_limit"], o["lm_limit"] - cw[1], o["lm_limit"] - cw[2]))
+    w("    least margin: %+.4f A at the steady envelope (%.1f %%); %+.4f A at the bounded start; %+.4f A with a degraded cooler; %+.4f A at the declared %.1f A\n"
+      % (o["lm_limit"] - cw[0], 100 * (o["lm_limit"] - cw[0]) / o["lm_limit"], o["lm_limit"] - cw[1], o["lm_limit"] - cw[2], o["lm_limit"] - V["slot_peak"], V["slot_peak"]))
+    w("    the eFuse-limited start calculation (an ASSUMPTION, 0.538 A at 12.43 V over 0.80) gives %.4f A of branch current at %.4f V, inside the %.2f A bound; the eFuse's own response is %.0f us typical (tLIM), the bound's 100 us average spans it\n"
+      % (o["start_calc"], v["load_lm"], V["start_bound"], V["tlim"] * 1e6))
+    w("    slot 2 (its own HIGH, the cooler's bounded start): %.4f A, inside the same %.1f A; its S-98 coincidence (5.63 A) inside it; I-03's all-peak bound stays I-03's\n" % (o["slot2_start"], V["slot_peak"]))
     for vin, (p, terms, (tr, tf), pl1, ph2) in sorted(o["fets"].items(), reverse=True):
-        w("    the stage's buck-side high FET at %.3f A, VIN %.3f V: %s; %.3f W (edges %.1f / %.1f ns); the low FET %.3f W; the boost-side high FET %.3f W\n"
+        w("    the stage's buck-side high FET at %.4f A, VIN %.3f V: %s; %.3f W (edges %.1f / %.1f ns); the low FET %.3f W; the boost-side high FET %.3f W\n"
           % (cw[0], vin, ", ".join("%s %.3f" % kv for kv in terms.items()), p, tr * 1e9, tf * 1e9, pl1, ph2))
-    w("      its junction at %.0f C air: %.1f C on 1 inch2 of 2 oz copper (RthJA %.0f C/W at most), %.1f C on the minimum pad (%.0f C/W); at the declared %.2f A %.3f W, %.1f C; with the sheet's Qrr unscaled (the sensitivity) %.3f W, %.1f C; the acceptance +125 C (the sheet's +%.0f C is an absolute maximum) holds to %.1f C/W, or %.1f C/W unscaled: CONDITIONAL (C4-1, C4-6)\n"
-      % (o["air"], o["fet_tj"][1], V["csd"][1], o["fet_tj"][2], V["csd"][2], V["slot_peak"], o["fet_dec"][0], o["fet_dec"][1], o["fet_rr"][0], o["fet_rr"][1], V["csd"][3], o["fet_rth_for_125"], o["fet_rth_for_125_rr"]))
+    w("    B3, the junction SCREEN over C4-1's steady matrix (VIN %.3f V, the output at its highest %.4f V; estimates on typical charges and an assumed hot RDS(on), not bounds): %s\n"
+      % (V["vsys_max"], v["hi_lm"], "; ".join("%.4f A: %.3f W scaled, %.3f W unscaled Qrr, RthJA for +125 C at %.0f C %.2f C/W" % (i, ps, pu, o["air"], rth) for (i, ps, pu), (_i, rth) in zip(o["matrix_fet"], o["matrix_rth"]))))
+    w("      the binding acceptance is C4-1's measured bound: each FET's case plus the stage's MEASURED loss (input less output power, at least any one FET's) times RthJC 0.8 C/W at most +125 C at every steady point; the sheet's +%.0f C is an absolute maximum\n" % V["csd"][3])
     w("    the same arithmetic on the device rail's stage at %.3f A (PS-ALLTX, DRAFTED): %.3f W, %.1f C on 1 inch2 (a finding for board A's owner)\n" % o["dev_fet"])
-    lw = o["lm_window"]
-    w("    the stage's output window: %.3f to %.3f V on the drawn 1 %% divider, against the CM5's %.2f to %.2f V input; %.3f to %.3f V with 0.1 %% parts (a finding: slot 2 and the device rail draw the same divider)\n"
-      % (lw["lo"], lw["hi"], lw["cm5"][0], lw["cm5"][1], lw["lo01"], lw["hi01"]))
-    w("    the declared peak (B2): the envelope needs %.3f A; %.2f A declared at both ends on all three slots (slot 2's); VBAT's entry %.3f A, declared %.2f A\n" % (o["peak_need"], V["slot_peak"], o["entry"], round(o["entry"], 2)))
+    w("    the declared peak (B2): the bounded start-up and fault envelope needs %.4f A; %.1f A declared at both ends on all three slots; VBAT's entries %.3f A, declared %.2f A\n" % (o["peak_need"], V["slot_peak"], o["entry"], round(o["entry"], 2)))
     d4 = o["decl4"]
-    w("    board B with round 5's draft: slot 1's declared loads %.3f A (the fan row %.2f A) against %.2f A: %s; slot 2 %.2f A, slot 3 %.2f A\n" % (d4[0], o["fan_row"], d4[1], d4[2], d4[3], d4[4]))
+    w("    board B with round 6's draft: slot 1's declared loads %.3f A (the fan row %.2f A) against %.2f A: %s; slot 2 %.2f A, slot 3 %.2f A\n" % (d4[0], o["fan_row"], d4[1], d4[2], d4[3], d4[4]))
     w("    the energy at PLAN, VBAT side (the stages' declared %.2f against the AP64500's curve point, slots 1 and 3): %s\n"
       % (V["eta_lm"], "; ".join("%s %+.3f W" % e2 for e2 in o["energy"])))
     w("    SELECTED (SESSION): slots 1 and 3 on the LM5176 stage, the coolers at full speed on their step-up; round 3's 70 % Fan_PWM maximum WITHDRAWN\n")
