@@ -81,7 +81,7 @@ _BATQ = ('\n# L4-E11 (the U-04 question for the consolidation): CH_BATQ, the cop
          '_intent.rail("VSYS_DOCK", 14.4, 1.32, 1.32, "U42", always_on=True, v_work=17.4, converted=False, fed_from="VBAT",\n'
          '             always_on_why="VSYS through the eFuse U42, which opens only on its own overload, short or thermal fault and retries; nothing switches it",\n'
          '             loads={"J_DOCK": 1.32},\n'
-         '             note="L4-E11 (L4-F03, section 18): U42\'s output to J_DOCK pin 1, board E\'s VSYS_E (U12 0.8 A and the mixers\' 12 V rail U18 0.52 A at the floor); limited to 1.47 to 1.80 A")')
+         '             note="L4-E11 (L4-F03, section 18): U42\'s output to J_DOCK pin 1, board E\'s VSYS_E (U12 0.8 A and the mixers\' 12 V rail U22 0.52 A at the floor); limited to 1.47 to 1.80 A")')
 EDITS = [
     ("# --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET, so the system sits on VSYS and the pack on the far side of RSR, SLUSE66A Figure 10-1): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,",
      "# --- charger BQ25730 (SLUSE65A, held back; QFN-32 RSN; an NVDC charger: the system on VSYS, the battery FETs Q39 and Q40 and RSR between it and the pack, SLUSE65A Figure 9-1; L4-E11): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,"),

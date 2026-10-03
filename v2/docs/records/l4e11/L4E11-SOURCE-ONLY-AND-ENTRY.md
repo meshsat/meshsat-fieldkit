@@ -86,7 +86,7 @@ contact without branch protection).
   fault qualification open* (E11-38); the docking waveform accepted as a whole by a defined pulse qualification (selected, E11-30); the
   charger draft's text corrected; each measurement row names its specimen, and only the final release waits on it.
 - **The fans' feed (section 18):** Layer 7's fans print 10.8 to 13.2 V, which VSYS_E does not cover, so the mixers take a regulated 12.0 V
-  rail on board E (U18, an ADI LTC3115-1 as its TA04, selected over a TPS55340 SEPIC and the TPS63070, which fails the range; drafted in
+  rail on board E (U22, an ADI LTC3115-1 as its TA04, selected over a TPS55340 SEPIC and the TPS63070, which fails the range; drafted in
   `apply_gen_sch_e_aux.py`); the branch is declared at 1.3208 A, 89.8 % of U42's least limit, so R228 stays; board B's cooler feed is a
   finding for its owner (E11-40).
 - **D-06** stays resolved in design with the corrected envelope and floor; **D-09** keeps its reproduced margin (4.927 to 14.653
@@ -636,13 +636,13 @@ An owner and an acceptance close the assignment, not the item.
 | E11-30 | evidence | Layer 6 components | the WHOLE hot docking waveform accepted (sections 16d and 17b): 242.9 A peak, time constant 33.8 us, from a +70 C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: 6 parts, each 2000 pulses 10 s apart at 267.2 A peak and 37.2 us (x1.1), mounting base 75 C, every part passing VSD at 80 A pulsed within +5 % of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 % and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown) |
 | E11-31 | test | prototype bench | the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least 12.054 V; CHRG_INHIBIT 1 with SRN over 12.546 V, VSRN plus 150 mV within 2 percent, under 12.054 V at least 12.054 V, between at least 11.96 V; the held pack current at most 1 mA with board E on VSYS_E; the start from cold at VBUS20 19.15 and 20.96 V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and 62.1 C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more |
 | E11-32 | evidence | Layer 6 components | the BQ25730RSNR's supply for the build quantity (five boards) from an authorised source, filed: LCSC read stock 0 on 2 October 2026 (the Layer 6 author's L6P-F05: a procurement fact for the owner's list, not a reselection; TI and its distributors are the next sources to read), and the two battery FETs' (BUK6Y10-30PX, LCSC stock 67) |
-| E11-33 | implementation | Layer 8 board E generator owner | `apply_gen_sch_e_aux.py` applied with E11-27 (sections 15a and 18): J_BLK pin 1 on VSYS_E; U12's VIN and EN and C31 on VSYS_E; the mixers' 12.0 V rail +12V_FAN from VSYS_E: U18 LTC3115EFE-1 as ADI's TA04 (L4 XAL6060-103ME 10 uH, C65 10 uF in, C66 22 uF out, C67 4.7 uF PVCC, C68 and C69 100 nF bootstraps, R61 1M and R62 90.9k FB, R63 40.2k and C70 820 pF on VC, R64 10k and C71 33 pF feed-forward, R65 35.7k RT, R59 1.5M and R60 255k RUN, PWM/SYNC to VCC); J_FAN1 and J_FAN2 four pins (12 V, GND, PWM, TACH) with Q9 and Q10 as open-drain PWM drivers and D7 and D8 removed; VSYS_E declared (source J_BLK, 1.32 A: U12 0.8, U18 0.52 at the floor, always on); +12V_FAN declared (source L4, 0.34 A: two fans at 0.17); CELL_F's loads the pack path alone; E6_SW and E6_BST re-declared to VSYS's 17.375 V; the FE and XAL6060 lands checked against ADI's FE20 and Coilcraft's drawings; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E |
+| E11-33 | implementation | Layer 8 board E generator owner | `apply_gen_sch_e_aux.py` applied with E11-27 (sections 15a and 18): J_BLK pin 1 on VSYS_E; U12's VIN and EN and C31 on VSYS_E; the mixers' 12.0 V rail +12V_FAN from VSYS_E: U22 LTC3115EFE-1 as ADI's TA04 (L4 XAL6060-103ME 10 uH, C135 10 uF in, C136 22 uF out, C137 4.7 uF PVCC, C138 and C139 100 nF bootstraps, R105 1M and R106 90.9k FB, R107 40.2k and C140 820 pF on VC, R108 10k and C141 33 pF feed-forward, R109 35.7k RT, R103 1.5M and R104 255k RUN, PWM/SYNC to VCC); J_FAN1 and J_FAN2 four pins (12 V, GND, PWM, TACH) with Q9 and Q10 as open-drain PWM drivers and D7 and D8 removed; VSYS_E declared (source J_BLK, 1.32 A: U12 0.8, U22 0.52 at the floor, always on); +12V_FAN declared (source L4, 0.34 A: two fans at 0.17); CELL_F's loads the pack path alone; E6_SW and E6_BST re-declared to VSYS's 17.375 V; the FE and XAL6060 lands checked against ADI's FE20 and Coilcraft's drawings; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E |
 | E11-34 | interface | Layer 4 coordinator | `apply_pcb_interfaces_dock.py` applied (IF-AE-DOCK: pin 1 VSYS_DOCK and VSYS_E behind U42's eFuse, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (9.688 to 17.375 V) |
-| E11-35 | evidence | Layer 6 components | the mixers 9WL0612P4H001 (Layer 7's v2/docs/records/l7pwr/L7-FANS-AND-TH1.md at 2087060b, 2e): their starting current, PWM input level and hole pattern from the maker's manual M0011876C or the bench (Layer 7's F-L7-11); against the rail: the start on a 12.0 V bench channel recorded, and against U42's room 0.1504 A at the floor (section 18b: 1.21 W at the rail, 1.6 times one fan's running power); the supply range 10.8 to 13.2 V is met by the rail's 11.725 to 12.205 V (section 18a), no longer by VSYS_E |
+| E11-35 | evidence | Layer 6 components | the mixers 9WL0612P4H001 (Layer 7's v2/docs/records/l7pwr/L7-FANS-AND-TH1.md at 2087060b, 2e): their starting current, PWM input level and hole pattern from the maker's manual M0011876C or the bench (Layer 7's F-L7-11); against the rail: the start on a 12.0 V bench channel recorded, and against U42's room 0.1504 A at the floor (section 18b: 1.21 W at the rail, 1.6 times one fan's running power); the supply range 10.8 to 13.2 V is met by the rail's 11.512 to 12.431 V (section 18a), no longer by VSYS_E |
 | E11-36 | evidence | Layer 6 components | the battery FETs' RDS(on) at VGS -8.5 V and a 150 C junction at most 21.136 mOhm (the allowance of section 16a): Nexperia's maximum at that point filed, or a pulsed Kelvin reading on parts from the build lot in an oven at 150 C (a sample, not a production limit: only the maker's maximum closes it for every part); a reading over it reverses the allowance and E11-29 is re-sized before layout |
 | E11-37 | evidence | Layer 6 components | TI's statement of what the BATFET's 5 nF bounds (Ciss at which VDS, or a gate charge; Q-TI-17, drafted in `clarification/TI-QUESTIONS.md`, not sent), or the bench's BATDRV behaviour with the pair at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation and LDO mode at VSYS_MIN within its printed band; on a negative answer the engineer chooses between the pair and one FET with a heat path through the case (section 16c) |
-| E11-38 | test | prototype bench | the dock's VSYS branch, the whole fault envelope (sections 16e, 17a and 18), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between 1.471 and 1.802 A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under 1.802 A within 1 ms, off within 202 ms, retry after 500 to 800 ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 at most 566 A and over 3.6 A for at most 4.5 us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most 1.802 A after the first 100 us, off within 1.5 s; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 % of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's insulation and D23 (VF at 5 A within +5 %) unchanged; (f) with the fans 9WL0612P4H001 on the 12.0 V rail (section 18): U12, U18 and both fans started one at a time by the PWM-duty ramp, and both fans' duty stepped 0 to 100 percent together, at VSYS 9.688 V: U42 never limits (FLT high), VSYS_E at least 9.494 V, U18 never disables (the rail never under 10.8 V), the branch's current at full speed recorded against the declared 1.3208 A; (g) one fan stalled and the 12 V rail shorted at the header, each at 70 C: U18 limits or disables and recovers, VSYS_E never under U12's 3.8 V, the controller keeps running, U42's retry seen or not and recorded |
-| E11-39 | firmware | firmware owner | board E's mixer fans (four-wire, on the 12.0 V rail) started one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U18 starts (sections 17a and 18c; Layer 7's F-L7-05): U18's 9 ms soft start covers the rail's rise only, and the fans' start current is NOT READ, so the ramp is what keeps the start near the running current under U42's least limit 1.471 A |
+| E11-38 | test | prototype bench | the dock's VSYS branch, the whole fault envelope (sections 16e, 17a and 18), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between 1.471 and 1.802 A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under 1.802 A within 1 ms, off within 202 ms, retry after 500 to 800 ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 recorded against the 566 A extrapolation (a target: a reading over it revises 17a) and over 3.6 A for at most 4.5 us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most 1.802 A after the first 100 us, the time to thermal regulation and the regulated current recorded, off within 1.5 s of regulation's start, the total on-time recorded; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; (h) an intermittent short applied and removed at 10 Hz, 1 Hz and 0.1 Hz for ten minutes each at 70 C, and removed once during limiting and once during the retry's off-time: the recovery of VSYS_E and U22's rail recorded, the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 % of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's body at or under the rating its maker states (F-L7-08; 85 C until one is named) and its insulation unmarked, board A's and board E's copper at the contact lands and under U42 unmarked and at or under 85 C, D23 (VF at 5 A within +5 %) unchanged; (f) with the fans 9WL0612P4H001 on the 12.0 V rail (section 18): U12, U22 and both fans started one at a time by the PWM-duty ramp, and both fans' duty stepped 0 to 100 percent together, at VSYS 9.688 V: U42 never limits (FLT high), VSYS_E at least 9.494 V, U22 never disables (the rail never under 10.8 V), the branch's current at full speed recorded against the declared 1.3208 A; (g) one fan stalled and the 12 V rail shorted at the header, each at 70 C: U22 limits or disables and recovers, VSYS_E never under U12's 3.8 V, the controller keeps running, U42's retry seen or not and recorded |
+| E11-39 | firmware | firmware owner | board E's mixer fans (four-wire, on the 12.0 V rail) started one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (sections 17a and 18c; Layer 7's F-L7-05): U22's 9 ms soft start covers the rail's rise only, and the fans' start current is NOT READ, so the ramp is what keeps the start near the running current under U42's least limit 1.471 A |
 | E11-40 | implementation | Layer 8 board B generator owner | a FINDING, not a draft (section 18d; Layer 7's F-L7-02): board B's J_FAN1 to J_FAN3 carry +5V_Sn (5.1 V) on pin 1 and declare the fan at 0.1 A, and no 12 V net exists on the board; the coolers 9WPA0412P6G001 print 10.8 to 13.2 V: a regulated 12.0 V feed per slot (a step-up from +5V_Sn, Layer 7's 0.436 A each at full speed, keeping an empty slot off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V, the slot budget's fan row 2.0 W at 12 V, the module's Fan_PWM and Fan_Tacho kept |
 
 ## 9. What stays conditional, and the decisions this record takes
@@ -1043,7 +1043,7 @@ second supply contact would leave six, 84.1 C with one open at 51 C. A lost pin 
 reads on HOT-R1 as the detector lost (IF-AE-DOCK `hot_r1`): a detected state.
 
 **VSYS_E's range:** the supplement floor 9.688 V to 17.375 V (15d). The AP63205 takes 3.8 to 32 V (Diodes DS41326 p.1). *The fans
-directly on VSYS_E are withdrawn by section 18:* Layer 7's fans print 10.8 to 13.2 V, so the mixers run on a regulated 12.0 V rail (U18)
+directly on VSYS_E are withdrawn by section 18:* Layer 7's fans print 10.8 to 13.2 V, so the mixers run on a regulated 12.0 V rail (U22)
 from VSYS_E, and the branch is declared at 1.3208 A (18b).
 
 **No unintended pack discharge with the charge inhibited.** With an adequate source the battery FETs are off with no charging or
@@ -1206,9 +1206,9 @@ arithmetic (50.043663 W; 52.133663 W with the ballasts) are untouched.
 | L4-F02 objection 3, Ciss against TI's 5 nF | **OPEN** (E11-37) | 4.72 nF typical for the pair at -15 V (Table 7), about 5.74 nF near 0 V (Fig. 12, typical, p.8); no maximum printed; TI p.92 |
 | L4-F02 objection 4, the docking pulse | **CONDITIONAL** (E11-30; its acceptance rewritten by 17b: the whole hot waveform, by a pulse qualification) | ISM 320 A for 10 us at Tmb 25 C (Table 5 p.3) against the 242.9 A peak, one FET; TJ 123.3 C from +70 C on the printed VSD (1.2 V at 80 A, p.6) carried up by concavity; VF hot and ISM hot not printed |
 | The 18 A for 60 s service from the hot state | **CONDITIONAL** on E11-29 and E11-36 | TJ 126.7 C from 87.5 C at 10 A held, +70 C air, no board capacity credited |
-| L4-F03, the dock's VSYS branch | **sustained-overload remedy drafted; fault qualification open** (17a, E11-38) | TI TPS16630 (SLVSET9G pp.8 to 10, 20, 26) at R(ILIM) 11.0 kOhm: 1.4713 to 1.8018 A; the 813 at 51.5 % of 3.5 A |
+| L4-F03, the dock's VSYS branch | **sustained-overload remedy drafted; fault qualification open** (17a, E11-38; the 566 A is an extrapolation and a test target, the start into a short is not bounded by printed data) | TI TPS16630 (SLVSET9G pp.8 to 10, 20, 26) at R(ILIM) 11.0 kOhm: 1.4713 to 1.8018 A; the 813 at 51.5 % of 3.5 A |
 | The held-pack drain wording | **CORRECTED** (15a and the text drafted for L4-E9 below) | 0.1408 mA is the quantified subset; the 1 mA bench acceptance kept |
-| the fans' feed (section 18, after Layer 7's D-18) | **SELECTED and DRAFTED** (U18); the declared current 1.3208 A, R228 kept; board B **OPEN** (E11-40) | the fans print 10.8 to 13.2 V; VSYS_E runs 9.494 to 17.375 V |
+| the fans' feed (section 18, after Layer 7's D-18) | **SELECTED and DRAFTED** (U22); the declared current 1.3208 A, R228 kept; board B **OPEN** (E11-40) | the fans print 10.8 to 13.2 V; VSYS_E runs 9.494 to 17.375 V |
 | check_contracts.py, the interface draft's second target | **CONFIRMED** in the tree | `v2/ecad/tools/check_contracts.py`; the alias edit applies to it (the tests apply it to a copy) |
 
 ### 16a. Objection 1: RDS(on) at BATDRV's least drive
@@ -1296,8 +1296,8 @@ FET (the sheet prints VSD's maximum and no minimum, so the split cannot be bound
 up by VF's concavity in i (3.643 V at the peak, INFERRED); superposed on Fig. 4 as scaled: **a rise of 53.3 K, TJ 123.3 C**, 16.68 mJ,
 885 W at the peak. The bound is reached at once because Fig. 4 is held at its first read point (12 us, 0.0602 K/W, 4.3 % of its steady
 value) below that width, a bound and not a waveform; within 12 us the heat is still inside the package, so the board below cannot add to
-it. Between ISM's 10 us and the continuous IS the sheet prints no rating but the junction limit, so the waveform past 10 us is judged on
-TJ alone, at 25 C as hot. **What the sheet does not print:** VF above 80 A or at a hot junction (TJ stays under 150 C while
+it. *[Historical, overridden by 17b: this round judged the waveform past ISM's 10 us on the junction temperature alone; a temperature does
+not extend a printed pulse rating, so 17b accepts the whole hot waveform by a qualification instead.]* **What the sheet does not print:** VF above 80 A or at a hot junction (TJ stays under 150 C while
 VF is at most 1.501 times that bound), and ISM at a mounting base over 25 C (the 242.9 A peak is 75.9 % of 320 A at 25 C). **CONDITIONAL**
 on E11-30: both from Nexperia or a pulse test on parts. The constraint that would remove both, a slower turn-on of board P's discharge
 FET, interacts with the pack's ASCD turn-off and belongs to board P's owner; it is named in E11-30, not drafted here.
@@ -1381,10 +1381,13 @@ fast-trip threshold (2 x I(OL)) and I(SCP) (45 A) are **T** only (p.8). Section 
 | Case | What TI prints (p.) | The bound here | What the bench must still settle (E11-38) |
 |---|---|---|---|
 | (1) operating overload, I(OL) < I < I(FASTTRIP) | held at the setting once its loop settles (8.3.4.1); limiting at most 202 ms (**G**, 129 to 202, p.10), then off 500 to 800 ms (**G**, p.10) and a retry (Table 8-1, p.26) | the contact at most 1.802 A once settled (**I**), 15.9 K by w3de's assumed rise; a duty of at most 0.288 | the settling's peak (no loop bandwidth printed) |
-| (2) a short applied while on | turn-off 2.2 to 4.5 us for I(FASTTRIP) < I < I(SCP) (**G** times, from a **T** threshold, p.10); about 1 us over I(SCP) (**T**); then a slow turn-back-on into case (1) (8.3.4.2, p.21) | at most **566 A** (VSYS's 17.375 V over RON's printed least 19 mOhm, p.9, and the path's 11.7 mOhm with the contact at 0; no inductance or source impedance credited, so this is a ceiling the real loop stays under), for at most 4.5 us: **1.441 A2s** (**I**: it assumes the 4.5 us row also holds above I(SCP), which TI's text supports, "the higher the overcurrent, the faster the turn OFF time", p.21) | the 813's pulse capability (Preci-Dip prints 3.5 A operating only); the 24 AWG and board copper; D23 |
+| (2) a short applied while on | turn-off 2.2 to 4.5 us for I(FASTTRIP) < I < I(SCP) (**G** times, from a **T** threshold, p.10); about 1 us over I(SCP) (**T**); then a slow turn-back-on into case (1) (8.3.4.2, p.21) | a resistive **extrapolation, not a bound** (**I**): **566 A** would flow if VSYS's 17.375 V stood over RON's printed least 19 mOhm and the path's 11.7 mOhm with the contact at 0 and no inductance; TI prints RON at 0.6 to 6 A only (p.9), so the FET's resistance at hundreds of amperes, its saturation and the loop's inductance are not printed. 566 A for 4.5 us (1.441 A2s) is **E11-38's test target** for the recorded peak; a reading over it revises this row | the actual peak and its width; the 813's pulse capability (Preci-Dip prints 3.5 A operating only); the 24 AWG and board copper; D23 |
 | the pins in case (2) | Equation 14 (p.30): Vspike = VIN + I x sqrt(LIN / CIN); a Schottky at OUT for the negative spike (9.4.1, 9.5.1, p.31); IN, OUT -0.3 to 67 V (6.1, p.7) | IN at most **41.1 V** at the 566 A ceiling with U42 within 20 nH of C236 (90.7 uF effective at its stacked worst, ESR 27 mOhm printed); the 20 nH is a layout requirement (SESSION) | OUT's undershoot: a clamp at hundreds of amperes cannot be shown to hold -0.3 V (Q-TI-18) |
-| (3) a start into a pre-existing short | "the current begins to limit at I(OL)", then thermal regulation at 136 to 154 C (**G**) for 1.1 to 1.5 s (**G**, p.10), then off (8.3.4.2.1, p.22) | at most the setting for at most 1.5 s, then off at least 500 ms | the current at 17.4 V across U42 (the setting's row is printed at 1 V) |
-| (4) repeated retry into a persistent short | each cycle is case (3) | a duty of at most 0.75; the contact's average heating at most 11.93 K, under case (1)'s 15.9 K | an intermittent short re-applied faster than the retry: not bounded by the device's timers |
+| (3) a start into a pre-existing short | "the current begins to limit at I(OL)" until the junction reaches T(J_REG) 136 to 154 C (**G**); then a lower, regulated current for the **timeout** t(Treg_timeout) 1.1 to 1.5 s (**G**, p.10), which starts when regulation begins; then off (8.3.4.2.1, p.22) | at most the setting until regulation; the time to reach regulation (VIN x I(OL) into the package from the air) and the regulated current are **not printed**, so the total on-time and the energy into the contact are **not bounded by printed data** (the first version's "at most 1.5 s" is withdrawn) | the current at 17.4 V across U42 (the setting's row is printed at 1 V), the pre-regulation interval, the regulated current and the total on-time: E11-38 (d) |
+| (4) repeated retry into a persistent short | each cycle is case (3), off at least 500 ms (**G**) between | the cycle's on-time is not bounded (3), so **no duty is claimed** (the first version's 0.75 from the timeout alone is withdrawn); what holds: after the first microseconds the current never exceeds the setting, so at any duty the contact's heating is at most case (1)'s 15.9 K by w3de's rise (**I**) | an intermittent short applied and removed faster than the retry, and the recovery between: not bounded by the device's timers, E11-38 (h) |
+
+**The hotter interval.** The current U42 regulates while its junction sits at T(J_REG) is not printed (under the setting; how far is unknown):
+E11-38 (d) records it.
 
 **Source impedance and local capacitance.** In both source-only and battery operation the first microseconds of a short come from VSYS's
 local capacitance (C236 and C23 to C25), not from the source; the ceiling above credits neither the source's impedance nor the capacitors'
@@ -1393,15 +1396,17 @@ most 53 mOhm. **Added to the draft** (TI's recommendations): C238 1 uF at IN (9.
 and D23 B540C-13-F (C72264, Diodes DS13012, held) from GND to OUT (9.4.1, 9.5.1).
 
 **The fans' start** (as first written, with the fans directly on VSYS_E; superseded by section 18, which puts them on a regulated 12.0 V
-rail behind U18 and re-derives the branch at 1.3208 A). Against U42's least limit 1.471 A with U12's 0.8 A: both fans together at most
+rail behind U22 and re-derives the branch at 1.3208 A). Against U42's least limit 1.471 A with U12's 0.8 A: both fans together at most
 **0.3356 A each**; one at a time at most **0.5713 A** (the other running at 0.1 A). VSYS_E at the least limit is at least **9.494 V** at
 the supplement floor. **E11-39** (firmware): the fans start one at a time, each with a PWM ramp (restated in 18c).
 
-**STATUS: sustained-overload remedy drafted; fault qualification open (E11-38).** E11-38 now covers the whole envelope with pass limits:
-the limit at 1 V and 17 V; the overload settling and its timers; the hard short's peak (at most 566 A, over 3.6 A for at most 4.5 us),
-IN at most 60 V, OUT against -0.3 V; the start into a short; one hour of retry at 70 C with the 813's body at most 85 C; and after every
-case the 813's resistance within +10 % of its first reading and at most 20 mOhm, the plunger free, the insulation and D23 unchanged; the
-fans' start with no limiting.
+**STATUS: sustained-overload remedy drafted; fault qualification open (E11-38).** E11-38 now covers the complete relevant histories with
+pass limits: the limit at 1 V and 17 V; the overload settling and its timers; the hard short's peak recorded against the 566 A target, over
+3.6 A for at most 4.5 us, IN at most 60 V, OUT against -0.3 V; the start into a short with its pre-regulation interval, regulated current
+and total on-time recorded; one hour of retry at 70 C; intermittent shorts at 10, 1 and 0.1 Hz and removals during limiting and during the
+off-time (h); and after every case the 813's resistance within +10 % of its first reading and at most 20 mOhm with its body at or under
+85 C, the plunger free, the 24 AWG's body at or under its maker's rating (85 C until one is named, F-L7-08) with its insulation unmarked,
+the copper at the contact lands and under U42 unmarked and at or under 85 C, D23 unchanged; the fans' start with no limiting.
 
 ### 17b. L4-CP02: the whole hot docking waveform
 
@@ -1442,8 +1447,8 @@ release stays held** until the measurements pass. Purchases stay the owner's; no
 | Row E11-30 | six BUK6Y10-30PX samples, one per coupon on a heated mounting base, and a capacitor-discharge rig set to 267.2 A and 37.2 us | the device under the whole hot docking waveform, one FET carrying all of it | the device's pulse capability, layout-independent at the stated mounting-base temperature; the waveform itself (peak, time constant) is confirmed on the first prototype's pack loop | board A's final release; the first prototype docks under the bench's procedure |
 | Row E11-36 | BUK6Y10-30PX samples on a Kelvin coupon in an oven at 150 C, pulsed | RDS(on) at VGS -8.5 V and a 150 C junction | a device property for the lot read; only Nexperia's maximum holds for every lot | the sizing's confirmation and board A's final release |
 | Row E11-37 | TI's BQ25730 evaluation hardware (whether TI offers one, and its price, not read) with its battery FET replaced by the pair and VSYS's capacitance set as drafted (C236, C23 to C25), or the controlled first prototype of board A | BATDRV with the pair's gate load: supplement entry, the 30 mV ideal-diode regulation, LDO mode at VSYS_MIN, at -20, 25 and 70 C | when the gate load and VSYS's capacitance match the draft; otherwise the first prototype | the choice between (S1) and (S2) for the final design |
-| Row E11-38 | a coupon carrying U42 with R228, C237, C238, C239 and D23 as drafted, VSYS's local capacitance, one Preci-Dip 813 contact with 60 mm of 24 AWG and a board E stub with C31 and the fans' connectors; or the controlled first prototype of boards A and E | the dock's VSYS branch through the whole fault envelope of 17a | U42's limits and timings (device properties); the peaks and pin spikes only where the coupon's IN-side (at most 20 nH) and output-loop inductances are the final layout's; otherwise re-tested on the first prototype | board A's and board E's final release |
-| Row E11-35 | the fans Layer 7 selected (Sanyo Denki 9WL0612P4H001) on a 12.0 V bench channel and on E11-38's coupon behind U18 | the fans' starting current and PWM input level against U18's capability and U42's room (section 18b) | fully (a property of the fan); the rail's behaviour with them transfers when U18's network matches the draft | the fans' acceptance for board E's final release |
+| Row E11-38 | a coupon carrying U42 with R228, C237, C238, C239 and D23 as drafted, VSYS's local capacitance, one Preci-Dip 813 contact with 60 mm of 24 AWG and a board E stub with C31, U22's 12.0 V rail with its capacitors and the four-wire fan headers; or the controlled first prototype of boards A and E | the dock's VSYS branch through the whole fault envelope of 17a | U42's limits and timings (device properties); the peaks and pin spikes only where the coupon's IN-side (at most 20 nH) and output-loop inductances are the final layout's; otherwise re-tested on the first prototype | board A's and board E's final release |
+| Row E11-35 | the fans Layer 7 selected (Sanyo Denki 9WL0612P4H001) on a 12.0 V bench channel and on E11-38's coupon behind U22 | the fans' starting current and PWM input level against U22's capability and U42's room (section 18b) | fully (a property of the fan); the rail's behaviour with them transfers when U22's network matches the draft | the fans' acceptance for board E's final release |
 
 ### 17e. The Layer 6 author's findings on this record's board A draft (L6P-F01, L6P-F05; 3 October 2026)
 
@@ -1480,43 +1485,43 @@ this host):
 | (V2) TI TPS55340 (SLVSBD4E) as a SEPIC | 2.9 to 32 V | switch 5.25 to 7.75 A | RthJA 43.3 C/W | a coupled inductor and a coupling capacitor | efficiency printed for a boost only; the SEPIC's NOT PRINTED |
 | (V3) TI TPS63070 (SLVSC58B) | 2 to 16 V | input 3.05 to 4.15 A | thetaJA 63 C/W | | **fails** VSYS_E's 17.375 V |
 
-**SELECTED (SESSION): (V1)**, U18 LTC3115EFE-1 as ADI's TA04, with L4 Coilcraft XAL6060-103ME (10 uH, DCR 29.82 mOhm, Isat 5.0 A over the
+**SELECTED (SESSION): (V1)**, U22 LTC3115EFE-1 as ADI's TA04, with L4 Coilcraft XAL6060-103ME (10 uH, DCR 29.82 mOhm, Isat 5.0 A over the
 3.7 A limit, Irms 7.0 A; Coilcraft 887-1, held), PWM/SYNC to VCC (fixed 1 MHz). *Why:* the only one of the three whose printed input range
 covers VSYS_E and whose current limit is of the fans' order; one inductor and the maker's own 12 V network. The output is **12.001 V
-(11.725 to 12.205 V at FB's limits)**, inside the fans' 10.8 to 13.2 V. *Reverse:* a fan whose maker prints a range covering VSYS_E.
+(11.512 to 12.431 V at FB's limits with the drafted 1 % divider)**, inside the fans' 10.8 to 13.2 V by 0.71 V below and 0.77 V above. *Reverse:* a fan whose maker prints a range covering VSYS_E.
 
-**Its RUN divider** (R59 1.5M / R60 255k): enabled at **8.33 V** (7.98 to 8.67 V at the comparator's limits), disabled at **6.89 V** (6.55 to
-7.23 V), so under the floor and over U12's 3.8 V start. This is what breaks the interaction 17a could not: a fan fault that drives U18 to its
-2.4 A limit against U42's limit lets VSYS_E fall only to U18's disable, where U18 stops and VSYS_E recovers; the controller stays up and
+**Its RUN divider** (R103 1.5M / R104 255k): enabled at **8.33 V** (7.98 to 8.67 V at the comparator's limits), disabled at **6.89 V** (6.55 to
+7.23 V), so under the floor and over U12's 3.8 V start. This is what breaks the interaction 17a could not: a fan fault that drives U22 to its
+2.4 A limit against U42's limit lets VSYS_E fall only to U22's disable, where U22 stops and VSYS_E recovers; the controller stays up and
 the fault appears as a rail hiccup, not a controller reset (INFERRED; the same model reproduces TA04's own 10.6 / 8.7 V within 0.15 V).
 
 **Heat into the case** (MODELED; the efficiency 0.85 is an ASSUMPTION, read 5 points under TA04b's typical curves): **0.72 W** at full
-speed (4.08 W of fans), 0.254 W at the plan's 1.44 W; TJ 97.4 C at +70 C air on thetaJA 38. **Its protection:** U18's own current limit and
+speed (4.08 W of fans), 0.254 W at the plan's 1.44 W; TJ 97.4 C at +70 C air on thetaJA 38. **Its protection:** U22's own current limit and
 soft start, behind U42, the branch's limiter; no fuse of its own.
 
-**The draft** (`apply_gen_sch_e_aux.py`, rewritten; the generator's own text is unchanged where the edits do not reach): U18 and its network
-(C65 to C71, R59 to R65, L4) on the FE and XAL6060 lands; J_FAN1 and J_FAN2 four pins (12 V, GND, PWM, TACH); Q9 and Q10 kept as open-drain
+**The draft** (`apply_gen_sch_e_aux.py`, rewritten; the generator's own text is unchanged where the edits do not reach): U22 and its network
+(C135 to C141, R103 to R109, L4) on the FE and XAL6060 lands; J_FAN1 and J_FAN2 four pins (12 V, GND, PWM, TACH); Q9 and Q10 kept as open-drain
 drivers of the fans' PWM inputs (the fan's PWM level NOT READ, Layer 7); D7 and D8 and the FANn_SW nodes removed (the old node loop is
 emptied, its text left for board E's owner to delete); +12V_FAN declared (source L4, 0.34 A, converted at 0.85). The land key HTSSOP20EP
 is the 4.4 x 6.5 mm 0.65 mm pitch exposed-pad land board A's draft uses for TI's PWP; the parts stream checks it against ADI's FE20 drawing.
 
 ### 18b. The branch's declared current and U42's setting, re-derived
 
-At the floor with both fans at full speed U18's input is **0.5208 A** (4.08 W over 0.85 at 9.508 V, plus 16 mA of PWM-mode quiescent
+At the floor with both fans at full speed U22's input is **0.5208 A** (4.08 W over 0.85 at 9.508 V, plus 16 mA of PWM-mode quiescent
 current), and with U12's 0.8 A the branch is **1.3208 A, declared on IF-AE-DOCK pin 1** (was 1.0 A; Layer 7's 1.277 A at 0.90); at the
 plan's duty 0.9942 A. Against **U42's least limit 1.4713 A: 89.8 %, 0.1504 A in hand: not exceeded, so R228 stays 11.0 kOhm** (I(OL)
 1.4713 to 1.8018 A). The contact at 37.7 % of 3.5 A, 8.54 K by w3de's rise; the sustained-overload figures of 16e and the retry duty of
-17a are unchanged. **The drop** at the floor with 1.3208 A is 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V; U18 holds 12.0 V from
+17a are unchanged. **The drop** at the floor with 1.3208 A is 0.1795 V, VSYS_E 9.508 V; at U42's least limit 9.494 V; U22 holds 12.0 V from
 2.7 V up, so VSYS_E's floor no longer reaches the fans.
 
 **The fans' start** (NOT READ, Layer 7): with one fan running and U12 on, U42's 0.1504 A of room leaves 1.21 W at the rail for the other
-fan's start, 1.6 times its running power, before U42 limits; U18 itself delivers about 1.2 A at the floor. The fan, not the rail, is the
+fan's start, 1.6 times its running power, before U42 limits; U22 itself delivers about 1.2 A at the floor. The fan, not the rail, is the
 unknown (E11-35, E11-38 f).
 
 ### 18c. The stagger (E11-39) restated
 
-U18's 9 ms soft start covers the rail's own rise only; a fan's start surge comes when its PWM duty rises. **The stagger stays**: one fan
-at a time, each by a PWM-duty ramp into the fan's PWM input (Layer 7's F-L7-05), never while U12 or U18 starts.
+U22's 9 ms soft start covers the rail's own rise only; a fan's start surge comes when its PWM duty rises. **The stagger stays**: one fan
+at a time, each by a PWM-duty ramp into the fan's PWM input (Layer 7's F-L7-05), never while U12 or U22 starts.
 
 ### 18d. Board B's cooler fans: a finding, not a draft
 
@@ -1526,7 +1531,7 @@ it; no +12V net is declared on the board. **The feed does not cover the coolers'
 full speed, keeping an empty slot off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V, the slot
 budget's fan row 2.0 W at 12 V, the module's Fan_PWM and Fan_Tacho kept.
 
-**Status, section 18:** the mixers' feed SELECTED and DRAFTED (U18, applied with E11-33); the declared current 1.3208 A and U42's setting
+**Status, section 18:** the mixers' feed SELECTED and DRAFTED (U22, applied with E11-33); the declared current 1.3208 A and U42's setting
 kept; board B OPEN as E11-40; the fans' start current and PWM level stay Layer 7's and E11-35's.
 
 
