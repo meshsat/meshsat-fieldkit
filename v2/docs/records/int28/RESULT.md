@@ -166,7 +166,18 @@ test_l4close test_l4e_svg_readers test_l5pwr test_l6pwr test_l7pwr test_interfac
 
 ### 4c. The re-run of the four fixed files
 
-RERUN
+`env -C v2/ecad/tools/tests python3 run.py test_l3r2 test_l4e11 test_l5pwr test_l7pwr`, 07:36 to 07:43 CEST, on the tree at `d929231b`
+(step 3b's re-render, D-7's restatement, the Layer 5/7 regeneration): **`tests: 101 passed, 0 failed, 0 skipped`** (test_l3r2 27,
+test_l4e11 51, test_l5pwr 12, test_l7pwr 11). So of the full run's 105 failures, 4 are fixed on this branch and 101 are the readers'
+refusals of L4-E10, L4-E12, L4-E13 (reqs, the freeze's) and L4-E7 (its guard, F-7); the one SKIP is the worker tree's.
+
+### 4d. The driver's proof
+
+`python3 v2/docs/records/int28/apply_set28.py` on the finished tree (07:43 to 07:44 CEST, exit 0): held sheets present and verified;
+rebind REFUSED as already applied; `rules_lib: 145 requirement record(s), 0 error(s), 0 warning(s)`; the trace and the Layer 3 R2 pages
+re-rendered byte-identical (the tree unchanged after the run); re-pins "already applied"; the identity block already carried;
+`rules_render --check` 7 documents, 1 out of date (PCB-ETA.md, F-1); the trace current; the decisions page current; `part_identities
+check` 0 problems; `render_l3r2 --check` 3 pages, 0 out of date; `apply_set28: done; PCB-ETA.md stale as in every worker tree`.
 
 ## 5. The box re-takes owed (the coordinator's)
 
