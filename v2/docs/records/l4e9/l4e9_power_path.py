@@ -104,8 +104,8 @@ PINS = {
     "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3311675aa42c3224398bf7e71618f63b7dc4930ec1aabb3c72e28c5e56af3d5a"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f6a78325f8a1c2e7378cf531c5b1b4a5b6d4e6d09ee3ec071a7a1e37c56f9ab6"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
-    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "eb4006f2121a3308a4d39d5e61d1c29506e5f4498dd3c7d63fb451b2d3655c90"),
+    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
     "cl_eaton": ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "9dffb95e8b4874fc0d08824b39d6174372a64e0cbda066241900d6ffdcdc5cb2"),
@@ -218,6 +218,11 @@ CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"
 CAT_STORE = "MISSING STORAGE QUALIFICATION"
 CAT_CONFLICT = "DEMONSTRATED CONFLICT"
 CATEGORIES = (CAT_MODEL, CAT_STORE, CAT_CONFLICT)
+# The escalation rule, corrected after Astra's targeted recheck (astra-check-l4close-2, blocking discrepancy 6): L4-E12's 17.9 and this record
+# had defined a DEMONSTRATED CONFLICT as one measured arrangement over a mandatory limit, which demonstrates that arrangement's failure, not an
+# incompatibility between requirements. The text below is L4-E12's CONFLICT_RULE verbatim (read back from its output, out 12e).
+CONFLICT_RULE = ("a DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits (the analysed arrangement AND the heat-rejection route with the local sensor relocated, each with the part's local temperature measured over its mandatory limit), or a bound showing that no arrangement the design admits can meet the limit; one arrangement's measured failure demonstrates the failure of that arrangement, not an incompatibility between requirements, so until then a failed local test stays a modelled or measured shortfall of that arrangement and the next arrangement is tried")
+CONFLICT_SHORT = "every admitted arrangement failed its measurement, or a bound"
 # The second external review (of the 22:30 checkpoint): L4-F03's status until L4-E11's CP01 says otherwise, and the solar guard's
 # +-0.240 V margin read as a design target unless L4-E7's uncertainty budget supports its reserve
 L4F03_STATUS = "sustained-overload remedy drafted; fault qualification open"
@@ -1635,13 +1640,14 @@ def fixround_inputs(F, T):
     for pat in (r"MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: \(1\) E3-L at \+40 C with the lid closed as ruled \(M3 on the pack, M4 on shore\)",
                 r"a closed-lid conduction path from the plate to the lid's inner face inside the seal, the combined route R-170 to R-172 carried to the closed lid",
                 r"the SGP41's local air measured at its port, apart from the mixed-air screen",
-                r"The options that change a requirement or a ruling stay the owner's and go to him only when a measurement demonstrates the conflict: CFL-002's C, A or B",
+                r"The options that change a requirement or a ruling stay the owner's and go to him only on a DEMONSTRATED CONFLICT \(every admitted arrangement failed its measurement, or a bound\): CFL-002's C, A or B",
                 r"a closed-lid ceiling on REQ-042's VOC channel \(a requirement change", r"D-02b's closed-lid test at \+40 C restated \(a ruling change\)",
                 r"MISSING STORAGE QUALIFICATION: \(2\) E3-O at \+55 C \(M6\) and \(3\) E5's \+60 C dwell \(M7\)",
                 r"PDi's storage statement \(the request is drafted in clarification/pervasive-displays-e2370ks0c1\.txt; sending it is the owner's\)",
-                r"a storage soak of a sample at the mode's temperature with its function read back after it \(evidence for that lot\)",
-                r"Options that stay the owner's, only if the conflict is demonstrated: an e-paper with a held range at or over \+70 C \(CHO-001\)",
-                r"DEMONSTRATED CONFLICT: none at present; a line enters it only on a measured local temperature over a mandatory limit with the route fitted",
+                r"a storage soak of a sample at the CLAIMED maximum local part temperature, \+70 C at its glass \(the proposed replacement storage line; an ambient-only \+55 or \+60 C soak establishes nothing above the ambient\)",
+                r"for the required durations \(E5's 6 h dwell and E3-O's 4 h, each soak separately\), the sample unpowered behind the window in a 3 mm plate section as in the kit, its function read back after recovery to \+25 C at 1 h and at 24 h",
+                r"Options that stay the owner's, only on a DEMONSTRATED CONFLICT: an e-paper with a held range at or over \+70 C \(CHO-001\)",
+                r"DEMONSTRATED CONFLICT: none at present; " + re.escape(CONFLICT_RULE),
                 r"Charging \(M8, M9\) lies under the modelled capacity \(class \(i\)\)"):
         need(s12e, pat, "12e's categories and their resolutions")
     # L4-E11's section 15
@@ -3485,13 +3491,14 @@ GATE = [
                    "it); thermal feasibility per required mode is U-02's (L4-E12's fix round: each mode's governing local limit, T-H1 "
                    "deciding every class (i) and (ii) line; four lines over the modelled capacity, none shown impossible: E3-L lid closed "
                    "as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's row a MISSING STORAGE "
-                   "QUALIFICATION, no DEMONSTRATED CONFLICT, so no requirement question goes to the owner, OW-10 held for a measured "
-                   "conflict); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
+                   "QUALIFICATION, no DEMONSTRATED CONFLICT, so no requirement question goes to the owner, OW-10 held for one: every "
+                   "admitted arrangement failed its measurement, or a bound); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
                    "windows, not yet adoptable: current at temperature and the storage dwell AWAITING, L4-E10 10g); PS-ALLTX's chain at "
                    "18 A for 60 s (PWR-F12) is an open obligation",
      "overturn": "possibly, on named evidence only: U-01 on Saft's answer or the sample qualification and on the HL18650V's signed "
-                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a DEMONSTRATED CONFLICT (a "
-                 "measured local temperature over a mandatory limit with the route fitted; none at present: its four lines over the "
+                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a DEMONSTRATED CONFLICT (the "
+                 "measured failure of every admitted arrangement, the analysed one and the route with the local sensor relocated, or a bound "
+                 "that none can meet the limit; one arrangement's failed test is that arrangement's shortfall; none at present: its four lines over the "
                  "modelled capacity are a modelled shortfall and a missing storage qualification, engineering and evidence tasks) and "
                  "on a class (i) or (ii) point read short with the route "
                  "also short, U-04 on the board as drawn on TI's D1 or D3 (none once (B1) is applied); the rest, the panel unit included, "
@@ -3542,7 +3549,7 @@ GATE = [
                    "owner and an acceptance criterion do not close them. U-03 "
                    "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
                    "unit, not the topology or the source class",
-     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (a DEMONSTRATED CONFLICT on a measured local temperature, and any line read short "
+     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (a DEMONSTRATED CONFLICT, every admitted arrangement failed its measurement or a bound, and any line read short "
                  "with the route also short: CFL-002, REQ-042's coverage, D-02b, the sealed case's thermal design or the device set, the "
                  "owner's), U-04 (on the board as drawn only, TI's D1 or D3: the charger's power path); U-03 no "
                  "longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06)"},
@@ -3651,8 +3658,9 @@ CHOICES = [
                   "send PDi's storage request (OW-4) and authorise T-H1's bench (OW-8); CFL-002 (OW-1) and the requirement or ruling "
                   "options for the four lines (OW-10: CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model an "
                   "ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore; D-02b's closed-lid test restated; a different "
-                  "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only when a measurement "
-                  "demonstrates the conflict"),
+                  "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only on a DEMONSTRATED CONFLICT "
+                  "(every admitted arrangement failed its measurement, or a bound; one arrangement's failed local test is that arrangement's "
+                  "shortfall and the next arrangement is tried)"),
      "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
                  "components for the fans' start and PWM level (R-142, R-150, E11-35; D-18 settled by Layer 7); Layer 7 mechanical for the combined route "
                  "(R-170 to R-172) and a closed-lid conduction path; the prototype bench for an e-paper storage soak; the makers "
@@ -3662,13 +3670,15 @@ CHOICES = [
                  "conduction path from the plate to the lid's inner face inside the seal (the combined route carried to the closed lid; "
                  "Layer 7, not modelled, it closes nothing yet) and reads the SGP41's local air at its port; for the MISSING STORAGE "
                  "QUALIFICATION (M6, M7) PDi's storage statement or a storage soak of a sample with its function read back, and at M6 "
-                 "the e-paper's window temperature measured (the plate fraction decides); only a DEMONSTRATED CONFLICT (a measured local "
-                 "temperature over a mandatory limit with the route fitted) goes to the owner (CFL-002, a requirement or ruling change, "
+                 "the e-paper's window temperature measured (the plate fraction decides); only a DEMONSTRATED CONFLICT (the measured failure "
+                 "of every admitted arrangement, the analysed one and the route with the local sensor relocated, or a bound that none can meet "
+                 "the limit) goes to the owner (CFL-002, a requirement or ruling change, "
                  "CHO-001, a recorded deviation). Charging lies under the modelled capacity (class (i)): charging "
                  "only in the heat stage (31.133 W into the case) needs 1.209 and 1.508 W/K, class (i), at the cost of the profile while "
                  "charging (an owner's duty-cycle choice, not taken)",
-     "overturns": "the sealed case's thermal design, only on a DEMONSTRATED CONFLICT: a measured local temperature over a mandatory limit "
-                  "with the route fitted (none at present) would set the rulings (no vent, the Peli 1450, the device set) against that "
+     "overturns": "the sealed case's thermal design, only on a DEMONSTRATED CONFLICT: the measured failure of every admitted arrangement "
+                  "(the analysed one and the route with the local sensor relocated), or a bound that none can meet the limit (none at present; "
+                  "one arrangement's failure is its own) would set the rulings (no vent, the Peli 1450, the device set) against that "
                   "mode's requirement, and which gives way is then the owner's (CFL-002, REQ-042's coverage, D-02b, CHO-001, TEST-PLAN), "
                   "never the power path's topology; a modelled shortfall or a missing storage qualification is an engineering or evidence "
                   "task, not a conflict; a class (i) or (ii) line read short with the route also short is judged the same way",
@@ -3967,7 +3977,8 @@ OWNER_ITEMS = [
                            "the governing line at REQ-024's +40 C (L4-E12 12a): with no option taken, the SGP41's Table 4 +50 C, 2.554 W/K on the "
                            "pack and 2.709 W/K on shore, over the modelled capacity with the lid closed (a MODELLED SHORTFALL OF THE ANALYSED "
                            "ARRANGEMENT, M3 and M4); under C, A or B the cells' hot stop H1, 1.666 and 1.642 W/K; held in reserve, not a forced "
-                           "question: the options stay the owner's and the request goes to him only when a measurement demonstrates a conflict",
+                           "question: the options stay the owner's and the request goes to him only on a DEMONSTRATED CONFLICT (every admitted "
+                           "arrangement failed its measurement, or a bound; one arrangement's failed local test is that arrangement's shortfall)",
      "docs": [("l4e12md", "L4-E12's page, section 8")]},
     {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), "
                            "ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse "
@@ -4020,8 +4031,10 @@ OWNER_ITEMS = [
                             "ARRANGEMENT and M6 and M7 (E3-O and E5, the unpowered e-paper) a MISSING STORAGE QUALIFICATION: engineering and "
                             "evidence tasks (a closed-lid conduction path at Layer 7, the SGP41's local air at its port, PDi's storage "
                             "statement sent under OW-4 or a storage soak, the e-paper's window temperature), not his. The request reaches "
-                            "him only on a DEMONSTRATED CONFLICT (a measured local temperature over a mandatory limit with the route fitted; "
-                            "none at present); his options then, none lowering a requirement silently: (1) E3-L: CFL-002's C, A or B (OW-1), "
+                            "him only on a DEMONSTRATED CONFLICT (the measured failure of every arrangement the design admits, the "
+                            "analysed one and the route with the local sensor relocated, each with the part's local temperature over its limit, or a "
+                            "bound that none can meet it; one arrangement's failed local test is a measured shortfall of that arrangement and the "
+                            "next arrangement is tried; none at present); his options then, none lowering a requirement silently: (1) E3-L: CFL-002's C, A or B (OW-1), "
                             "a closed-lid ceiling on REQ-042's VOC channel (on the model an ambient of +31.3 to +38.8 C on the pack, +30.2 to "
                             "+38.2 C on shore), or D-02b's closed-lid test at +40 C restated; (2) E3-O: an e-paper with a held range at or "
                             "over +70 C (CHO-001), or E3-O with the e-paper's state recorded as a deviation (TEST-PLAN); (3) E5: a different "
@@ -5695,7 +5708,7 @@ def cons_th1(F):
                      "L4-E12 12d, 12a"))
     rows += [
         ("the route, only under a class (ii) line", "the same point with the combined route fitted (R-170 to R-172; lid open only)", "the point's own line",
-         "the route's effect at that heat; still short with the part's local temperature over its limit, a DEMONSTRATED CONFLICT (OW-10)", "L4-E12 12e, 15"),
+         "the route's effect at that heat; still short with the part's local temperature over its limit: a measured shortfall of that arrangement, the next admitted arrangement (the local sensor relocated) tried; a DEMONSTRATED CONFLICT (OW-10) only when every admitted arrangement has failed or a bound shows none can meet the limit", "L4-E12 12e, 15"),
         ("the fans-off case", "at M2's heat, the fans stopped", "no pass line (the failure case)", "what a stopped fan costs (L4-E12 8e)", "L4-E12 12d"),
         ("the transient point (12c)", "the empty case soaked at room temperature; the heaters stepped to %s W, then, once the mixed air has risen %d K, to %s W, logged to the run's end"
          % (fmt(fx["trans"][0]), int(fx["trans"][1]), fmt(fx["trans"][2])), "the time to C1 and the air after it",
@@ -5792,7 +5805,7 @@ def cons_exit(F):
             sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1], sh["M7"][1], fmt(fx["bal_b"][1]), fmt(fx["c1"][0]), fmt(fx["c1"][1])),
          "under a class (i) or (ii) line, the combined route (R-170 to R-172, passive); for the modelled shortfall, a closed-lid conduction path at Layer 7 (not modelled, closing nothing yet) and the SGP41's local air at its port; for the missing storage qualification, PDi's statement or a storage soak, and the e-paper's window temperature (a plate fraction of %s needs %s W/K, %s needs %s W/K); only on a demonstrated conflict the owner's options (CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model +%s to +%s C on the pack and +%s to +%s C on shore; D-02b restated; CHO-001; a recorded deviation)"
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
-         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until a measured local temperature demonstrates a conflict (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
+         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until every admitted arrangement has failed its measurement or a bound shows none can meet the limit, a DEMONSTRATED CONFLICT (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
          "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U18's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
          % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
@@ -5846,14 +5859,13 @@ def cons_deciding(F):
         "whole %s W; the unpowered e-paper is judged on its operating row read to cover storage (INFERRED); what resolves it is "
         "evidence: PDi's storage statement (the +70 C class, class (i); at E5 %s W/K, class (i)) or a storage soak of a sample with its "
         "function read back, and at E3-O the e-paper's window temperature measured (a plate fraction of %s needs %s W/K, %s needs %s "
-        "W/K). **A DEMONSTRATED CONFLICT: none at present**; only a measured local temperature over a mandatory limit with the route "
-        "fitted makes one, and only then does a requirement or ruling option go to the owner (OW-10: CFL-002's C, A or B, a closed-lid "
+        "W/K). **A DEMONSTRATED CONFLICT: none at present**; %s, and only then does a requirement or ruling option go to the owner (OW-10: CFL-002's C, A or B, a closed-lid "
         "ceiling on REQ-042's VOC channel, on the model +%s to +%s C ambient on the pack and +%s to +%s C on shore, or D-02b restated; "
         "CHO-001 or a recorded deviation). **Its executable resolution path:** T-H1 (OW-8 authorises it; the bench runs 12d's points, "
         "R-104, 5c, with the SGP41's port and the e-paper's window as local channels) and the storage evidence (PDi's statement, OW-4, "
         "or the soak)."
         % ("%.3f" % rc["capk1"][0], "%.3f" % rc["cap"][0], "%.3f" % fx["capfix"][1], sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1],
-           sh["M7"][1], M["M7"]["stated"][1], *[fmt(x) for x in fx["plate"]], *[fmt(x) for x in fx["voc_ceil"]]),
+           sh["M7"][1], M["M7"]["stated"][1], *[fmt(x) for x in fx["plate"]], CONFLICT_RULE, *[fmt(x) for x in fx["voc_ceil"]]),
     ]
 
 
@@ -6203,7 +6215,7 @@ def cons_review_lines(F):
     p("   %s: M6 and M7, the unpowered e-paper judged on its +60 C operating row read to cover storage (INFERRED), M6 short by %s W/K,"
       % (CAT_STORE, sh["M6"]["short"][0]))
     p("     M7 the whole %s W on that row; an evidence task: PDi's storage statement (OW-4) or a storage soak of a sample with its function read back" % sh["M7"]["short"][1])
-    p("   %s: none at present; only a measured local temperature over a mandatory limit with the route fitted makes one" % CAT_CONFLICT)
+    p("   %s: none at present; %s (the rule corrected after the recheck's blocking discrepancy 6, in L4-E12 17.9 and here)" % (CAT_CONFLICT, CONFLICT_RULE))
     p("   OW-10 is no longer a forced owner question: CFL-002's options (OW-1) and the requirement or ruling options stay the owner's, sent to him only on a")
     p("     demonstrated conflict; U-02 stays a closure condition decided by T-H1 plus the storage evidence; local part temperatures kept apart from the")
     p("     mixed-air screens; every figure as L4-E12 prints it, none changed by the classification")
@@ -6315,7 +6327,7 @@ UNPRICED = [
     ("E11-31, E11-37", "TI's BQ25730 evaluation hardware, whether TI offers one; BQ25730RSNR (LCSC C5219071, 2.8553 USD at 1 but stock 0 on 2 October 2026: an authorised source, its price not read)"),
     ("the guard bench", "TPS48110AQDGXRQ1 (U21; LCSC C17556513, stock 326 on 2 October 2026, price not filed), CSD19532Q5B (Q12, Q13; LCSC C473333), the Samsung CL32B225KCJSNNE and CL32B106KBJNNNE and the SMCJ30A (codes owed); the controlled first prototype of board E"),
     ("the cell qualification, the lot soak", "a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger (a laboratory's service)"),
-    ("R-185", "E2370KS0C1, Pervasive Displays, one sample; an oven or chamber to +60 C"),
+    ("R-185", "E2370KS0C1, Pervasive Displays, one sample; a chamber to at least +70 C with a thermocouple on the glass; a 3 mm plate section with the window cut (the T-H1 mock-up's blank serves)"),
 ]
 SENDS = [
     ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "Texas Instruments: Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum), Q-TI-17 (the 5 nF), Q-TI-18 (U42's OUT undershoot, I(OL) at 17 V); Nexperia: Q-NXP-1 (the docking waveform)", "OW-7", "E11-31, E11-37, E11-38, E11-30"),
@@ -6455,9 +6467,9 @@ def cons_qual(F):
          "the cells' fit along the pocket's axis with at most 1.40 mm of wrap", "fully (a geometry)", "U-01's fit", "nothing", "an engineer (Layer 7)",
          "none beyond the print", "nothing (a print)", "none"),
         ("The e-paper's storage soak (R-185)",
-         "one PDi E2370KS0C1 sample held unpowered at E3-O's +55 C and E5's +60 C for the modes' durations in an oven or chamber, its function read back after each soak (an image written, refreshed and read)",
-         "the unpowered part's survival of the modes' temperatures, for that lot", "to the kit as evidence for that lot only; PDi's storage statement governs once filed",
-         "U-02's MISSING STORAGE QUALIFICATION (M6, M7): the e-paper's line replaced by the +70 C class once a storage limit at or over it is shown",
+         "one PDi E2370KS0C1 sample held unpowered at the CLAIMED maximum local part temperature, +70 C at its glass (the proposed replacement storage line), the chamber's setpoint raised by its and the glass thermocouple's stated uncertainty so the glass never sits under +70 C, for E5's 6 h dwell and E3-O's 4 h (each soak separately), mounted behind the window in a 3 mm plate section as in the kit (the T-H1 mock-up's blank serves); its function read back after recovery to +25 C at 1 h and at 24 h (an image written, refreshed and read against the pre-soak image: no missing or stuck segment, no new ghosting); an ambient-only +55 or +60 C soak establishes nothing above the ambient (the recheck)",
+         "the unpowered part's survival of the claimed local temperature for the required durations, for that lot; the glass trace, its uncertainty and the durations filed with the result", "to the kit as evidence for that lot only; PDi's storage statement governs once filed",
+         "U-02's MISSING STORAGE QUALIFICATION (M6, M7): the e-paper's line replaced by the +70 C class once a storage limit at or over it is shown; a failed soak bounds the part's storage limit below +70 C and the line stays a missing storage qualification against that bound (a conflict only by the corrected rule)",
          "M6's and M7's lines; nothing of the boards", "an engineer with an oven, or a laboratory", OWN + "the sample; PDi's request",
          un("R-185"), sd("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt")),
         ("The documentary alternatives (the makers' statements)", "none: a maker's written statement",

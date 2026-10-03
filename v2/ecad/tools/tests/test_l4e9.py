@@ -969,7 +969,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
     assert "arrangement (A) with its dependency round stands" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
     assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
-    assert "only when a measurement demonstrates the conflict" in u2["evidence"][2]
+    assert "only on a DEMONSTRATED CONFLICT" in u2["evidence"][2] and "every admitted arrangement" in u2["evidence"][2]   # the rule corrected after the recheck
     bad = copy.deepcopy(m.CHOICES)
     for c in bad:
         if c["id"] == "U-02":
@@ -1526,7 +1526,9 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
     assert not [c for c in fx["cls"] if c.get("cat") == m.CAT_CONFLICT], "no demonstrated conflict while nothing is measured"
     assert all(c["cls"] in ("i", "ii", "over") for c in fx["cls"])
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
-    assert "only when a measurement demonstrates a conflict" in ow["OW-1"]["what"] and "NOT a forced owner question" in ow["OW-10"]["what"]
+    assert "only on a DEMONSTRATED CONFLICT" in ow["OW-1"]["what"] and "NOT a forced owner question" in ow["OW-10"]["what"]
+    for o_ in (ow["OW-1"]["what"], ow["OW-10"]["what"]):
+        assert "every admitted arrangement" in o_ or "every arrangement the design admits" in o_, "the owner's item still turns on one measurement"
     assert m.CONDITION_U02.startswith("(ii) a closure condition decided by T-H1 plus the storage evidence")
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
     assert "only on a DEMONSTRATED CONFLICT" in u2["overturns"]
@@ -1712,6 +1714,44 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert len(g["f16"]) == 4 and len(g["g16"]) == 5
     sec = _C["text"].split("26. THE REVIEW OF THE PROVISIONAL FIXES")[1]
     assert "26a L4-F02" in sec and "26b L4-F03" in sec and "26d L4-F01" in sec
+
+
+def t_the_escalation_rule_after_the_recheck():
+    """Astra's targeted recheck (astra-check-l4close-2, blocking discrepancy 6): a DEMONSTRATED CONFLICT needs the measured failure of
+    every arrangement the design admits or a bound that none can meet the limit; one arrangement's failed local test is that
+    arrangement's shortfall. Held as properties: the rule is one text, L4-E12's (read back from its output), stated on both pages and
+    both outputs; no current text defines a conflict by one measured arrangement; OW-1, OW-10, U-02 and the behaviour row turn on the
+    corrected rule; the e-paper soak (R-185, the route row) sits at the claimed +70 C local temperature for the required durations with
+    its uncertainty and recovery criteria and the specimen behind the window, never an ambient-only soak."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    assert _pin_held(m, "l4e12") and _pin_held(m, "l4e12md")
+    e12 = " ".join(open(os.path.join(ROOT, m.PINS["l4e12"][0]), encoding="utf-8").read().split())
+    e12md = " ".join(open(os.path.join(ROOT, m.PINS["l4e12md"][0]), encoding="utf-8").read().split())
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    out = " ".join(_C["text"].split())
+    for f_ in (e12, e12md, page, out):
+        assert m.CONFLICT_RULE in f_
+        for old in ("a line enters it only on a measured local temperature over a mandatory limit with the route fitted",
+                    "only when a measurement demonstrates", "only if a measurement demonstrates", "only if the conflict is demonstrated",
+                    "DEMONSTRATED CONFLICT (a measured local temperature over a mandatory limit with the route fitted"):
+            assert old not in f_.split("## Appendix A.")[0], old
+    assert "every arrangement the design admits" in m.CONFLICT_RULE and "relocated" in m.CONFLICT_RULE and "a bound" in m.CONFLICT_RULE and "not an incompatibility" in m.CONFLICT_RULE
+    u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
+    assert "every admitted arrangement" in u2["overturns"] and "every admitted arrangement" in u2["fallback"]
+    th1_rows, _note = m.cons_th1(F)
+    route_row = [r for r in th1_rows if r[0].startswith("the route, only under a class (ii) line")][0]
+    assert "every admitted arrangement" in route_row[3] and "measured shortfall of that arrangement" in route_row[3]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    r185 = reg["R-185"]
+    for w in ("+70 C at its glass", "6 h", "4 h", "behind the window", "uncertainty", "recovery", "1 h and at 24 h", "ambient-only"):
+        assert w in r185[2], w
+    assert "+70 C" in r185[5] and "every admitted arrangement" in r185[5] and "for that lot only" in r185[5]
+    assert "at E3-O's +55 C and E5's +60 C for the modes' durations" not in r185[2]
+    row = [r for r in m.cons_qual(F) if r[0].startswith("The e-paper's storage soak")][0]
+    for w in ("+70 C at its glass", "6 h", "4 h", "behind the window", "uncertainty", "1 h and at 24 h"):
+        assert w in row[1], w
+    assert "+70 C" in dict(m.UNPRICED)["R-185"] and "+60 C" not in dict(m.UNPRICED)["R-185"]
 
 
 def t_every_commit_the_record_reads_is_in_this_branchs_history():
