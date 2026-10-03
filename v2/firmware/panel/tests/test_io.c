@@ -21,10 +21,10 @@ void t_lighting_modes(void)
     CHECK(panel_light_mode(true, false, false, &fault) == LIGHT_NIGHT);
     CHECK(panel_light_mode(true, false, true, &fault) == LIGHT_NVG);
     CHECK(panel_light_mode(true, true, false, &fault) == LIGHT_BLACKOUT);
-    CHECK(panel_light_duty(LIGHT_DAY, false) == 1000);
-    CHECK(panel_light_duty(LIGHT_NIGHT, false) == 150);
-    CHECK(panel_light_duty(LIGHT_NVG, false) == 20);
-    CHECK(panel_light_duty(LIGHT_BLACKOUT, false) == 0);
+    CHECK(panel_light_duty(LIGHT_DAY) == 1000);
+    CHECK(panel_light_duty(LIGHT_NIGHT) == 150);
+    CHECK(panel_light_duty(LIGHT_NVG) == 20);
+    CHECK(panel_light_duty(LIGHT_BLACKOUT) == 0);
     /* NVG: red and amber indicators only */
     uint32_t f = panel_light_filter(LIGHT_NVG, PANEL_LED_ALL);
     CHECK(f & LED_BIT(LED_MWARN));
@@ -55,21 +55,32 @@ void t_lighting_modes(void)
     CHECK(!(x->out.leds & LED_BIT(LED_SAT)));
 }
 
-void t_tx_floor(void)
+void t_tx_lamp_follows_duty(void)
 {
-    CHECK(panel_light_duty(LIGHT_NVG, true) == 100);
-    CHECK(panel_light_duty(LIGHT_NIGHT, true) == 150);
-    CHECK(panel_light_duty(LIGHT_BLACKOUT, true) == 0);
+    /* F-05 (decided 3 October 2026): no floor; the TX lamp follows the one dimmer, keyed or not, dark in BLACKOUT */
     fx_t F, *x = &F;
     fx_boot(x);
     x->regs[HAL_I2C_C_U1][1] = (uint8_t)~(1u << HAL_EXP_C_LIGHT_NIGHT_N_BIT);
     x->in.br.alive = true;
     x->in.br.nvg = true;
+    x->in.br.red = RED_PACK_UV;                   /* a red LED lit beside the keyed TX lamp */
     fx_run(x, 1500);
     CHECK(x->out.pwm_permille == 20);
-    x->in.tr_aprs = true;                         /* D8 keyed: the TX lamp is lit in hardware */
-    fx_run(x, 5);
-    CHECK(x->out.pwm_permille == 100);
+    x->in.tr_aprs = true;                         /* D8 keyed: the TX lamp lit in hardware */
+    for (int i = 0; i < 2000; i++) {
+        fx_run(x, 1);
+        CHECK(x->out.pwm_permille == 20);         /* NVG's 2 % holds through the key-down */
+    }
+    x->in.br.nvg = false;
+    fx_run(x, 10);
+    CHECK(x->out.pwm_permille == 150);
+    x->regs[HAL_I2C_C_U1][1] = (uint8_t)~(1u << HAL_EXP_C_LIGHT_DAY_N_BIT);
+    fx_run(x, 1200);
+    CHECK(x->out.pwm_permille == 1000);
+    x->regs[HAL_I2C_C_U1][1] |= 3u;               /* BLACKOUT, still keyed */
+    x->in.rail_mv = 0;
+    fx_run(x, 1200);
+    CHECK(x->out.pwm_permille == 0);
 }
 
 void t_rail_sense(void)
@@ -277,6 +288,24 @@ void t_sounder_patterns(void)
         on += x->out.sounder;
     }
     CHECK(on >= 48 && on <= 52);
+    /* the lamp test's double chirp: 50 ms on, 100 ms off, 50 ms on (F-06, S-15) */
+    x->in.test_sw = false;
+    unsigned seg[8] = { 0 }, nseg = 0;
+    bool last = false;
+    unsigned run = 0;
+    for (int i = 0; i < 2600; i++) {
+        fx_run(x, 1);
+        if (x->out.sounder != last && run && nseg < 8) {
+            seg[nseg++] = run;
+            run = 0;
+        }
+        if (x->out.sounder || nseg)
+            run++;
+        last = x->out.sounder;
+    }
+    x->in.test_sw = true;
+    fx_run(x, 3500);
+    CHECK(nseg >= 3 && seg[0] == 50 && seg[1] == 100 && seg[2] == 50);
     /* SOS pattern 1 s on 1 s off while armed and unsent */
     x->in.sos_sw = false;
     fx_run(x, 2100);

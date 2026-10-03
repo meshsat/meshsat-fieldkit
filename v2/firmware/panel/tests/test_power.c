@@ -85,6 +85,9 @@ void t_exp_outputs_before_config(void)
     CHECK(x->wr[fx_find_write(x, HAL_I2C_A_U28, PCA9555_OUT0, 0)].val == 0);
     CHECK(x->wr[fx_find_write(x, HAL_I2C_B_U6, PCA9555_OUT0, 0)].val == 0);
     CHECK(x->wr[fx_find_write(x, HAL_I2C_B_U6, PCA9555_OUT1, 0)].val == 0);
+    /* board D's U16 at the generator's power-up levels (FW-D01, F-11): X_SA_PD 1, X_AMP_EN 1, X_MMUTE 0, those three outputs */
+    CHECK(x->wr[fx_find_write(x, HAL_I2C_D_U16, PCA9555_OUT0, 0)].val == 0x60);
+    CHECK(x->wr[fx_find_write(x, HAL_I2C_D_U16, PCA9555_CFG0, 0)].val == 0x1F);
     /* with no bridge every switched load stays off; RB_SW_IEN follows the request rule (RB_STATUS low, no EMCON) */
     CHECK(x->regs[HAL_I2C_A_U27][2] == (1u << HAL_EXP_A_DEV_EN_BIT) && x->regs[HAL_I2C_A_U28][2] == 0);
     CHECK(x->regs[HAL_I2C_B_U6][2] == 0 && x->regs[HAL_I2C_B_U6][3] == (1u << HAL_EXP_B_RB_SW_IEN_BIT));
@@ -145,6 +148,13 @@ void t_hdmi_select(void)
     x->in.br.display_slot = 2;
     fx_run_hb(x, 10, t);
     CHECK(x->out.hdmi_sel2);
+    bool s1, s2;                                    /* the encoding (F-13) */
+    panel_hdmi_encode(0, &s1, &s2);
+    CHECK(!s1 && !s2);
+    panel_hdmi_encode(1, &s1, &s2);
+    CHECK(s1 && !s2);
+    panel_hdmi_encode(2, &s1, &s2);
+    CHECK(!s1 && s2);
     /* the bridge names slot 1, which is dark: never a dark slot */
     x->in.br.display_slot = 0;
     fx_run_hb(x, 10, t);
@@ -601,4 +611,78 @@ void t_se_absent_retried(void)
     CHECK(!x->p.zer.se_absent);
     fx_run(x, 10);
     CHECK(!(x->p.red_active & 16u));
+}
+
+void t_modules_lost_caut_then_warn(void)
+{
+    /* F-07 (CONOPS 4e): one compute module lost is MASTER CAUT, two lost is MASTER WARN */
+    fx_t F, *x = &F;
+    fx_boot(x);
+    bool t[3] = { true, false, true };              /* slot 2 never answers */
+    fx_run_hb(x, 66000, t);
+    CHECK(panel_modules_lost(&x->p) == 1);
+    CHECK((x->p.amb_active & 8u) && !(x->p.red_active & 32u));
+    bool u[3] = { true, false, false };             /* slot 3's bridge stops while its rail stays up */
+    fx_run_hb(x, 3500, u);
+    CHECK(panel_modules_lost(&x->p) == 2);
+    CHECK(x->p.red_active & 32u);
+    unsigned warn = 0;
+    for (int i = 0; i < 1000; i++) {
+        fx_run_hb(x, 1, u);
+        warn += (x->out.leds >> LED_MWARN) & 1u;
+    }
+    CHECK(warn > 300 && warn < 700);                /* unacknowledged: flashing */
+    /* a deliberate stop loses nothing: a clean shutdown in progress */
+    x->main_low = true;
+    fx_run_hb(x, 40, u);
+    x->main_low = false;
+    fx_run_hb(x, 10, u);
+    CHECK(panel_modules_lost(&x->p) == 0);
+}
+
+void t_after_h1_restore_5k_below(void)
+{
+    /* S-19 not adopted: after H1 the heat stage's module rises first (FW-C13); C1's restore 5 K below (FW-C09) then
+     * releases the others */
+    fx_t F, *x = &F;
+    fx_boot(x);
+    x->in.br.alive = true;
+    x->hot_sim = HOT_SIM_5HZ;
+    fx_run(x, 2000);
+    CHECK(x->p.hot.state == HOT_H1);
+    x->hot_sim = HOT_SIM_1HZ;
+    for (int i = 0; i < 1810; i++)
+        fx_run(x, 1000);
+    CHECK(x->p.hot.state == HOT_NONE && x->p.heat_stage_only);
+    bool hs[3] = { false, true, false };
+    fx_run_hb(x, 3000, hs);
+    CHECK(!x->out.slot_en[0] && x->out.slot_en[1] && !x->out.slot_en[2]);   /* the heat stage's module first */
+    x->in.br.cell_max.valid = true;                 /* the cells 6 K under C1's +55 C, the air 6 K under +50 C */
+    x->in.br.cell_max.mc = 49000;
+    x->in.br.cell_max.seq = 1;
+    x->in.br.inside_air.valid = true;
+    x->in.br.inside_air.mc = 44000;
+    x->in.br.inside_air.seq = 1;
+    fx_run_hb(x, 3000, hs);
+    CHECK(!x->p.heat_stage_only);
+    CHECK(x->out.slot_en[0] && x->out.slot_en[1] && x->out.slot_en[2]);
+}
+
+void t_pi_button_on_u1_p13_when_wired(void)
+{
+    /* the drafted input (PANEL.md s.4 row 3, record l8r2, PROVISIONAL): PI_BTN_n on U1 P1.3, low = pressed. As generated
+     * the pin is a floating spare, so with the wiring flag off a low there is never a press */
+    fx_t F, *x = &F;
+    fx_boot(x);
+    x->regs[HAL_I2C_C_U1][1] &= (uint8_t)~(1u << HAL_EXP_C_PI_BTN_N_BIT);
+    fx_run(x, 2500);
+    CHECK(x->p.shdn == SHDN_IDLE);
+    x->regs[HAL_I2C_C_U1][1] |= (uint8_t)(1u << HAL_EXP_C_PI_BTN_N_BIT);
+    fx_run(x, 1500);
+    x->p.pi_btn_wired = true;                       /* board C regenerated with l8r2's draft */
+    x->regs[HAL_I2C_C_U1][1] &= (uint8_t)~(1u << HAL_EXP_C_PI_BTN_N_BIT);
+    fx_run(x, 1500);                                /* read at the once-a-second poll */
+    x->regs[HAL_I2C_C_U1][1] |= (uint8_t)(1u << HAL_EXP_C_PI_BTN_N_BIT);
+    fx_run(x, 1500);
+    CHECK(x->p.shdn != SHDN_IDLE);                  /* a short press: the clean shutdown */
 }
