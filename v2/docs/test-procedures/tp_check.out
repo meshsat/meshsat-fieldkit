@@ -33,7 +33,7 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
   TBD: 1
     - owed by R-160: whether a fall beyond the measurement's uncertainty counts as a failure; until stated, any such fall is report
   PROPOSED mark: present
-bd929d102027a7bd v2/docs/test-procedures/TP-E11-31.md
+77dbcbbee7459ce4 v2/docs/test-procedures/TP-E11-31.md
   id TP-E11-31: Source-only start and the held states on the BQ25730 (U-04)
   register R-161: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-31: exists
@@ -78,7 +78,7 @@ c733fe43e2ada630 v2/docs/test-procedures/TP-E11-37.md
     - owed by R-183: the band within which the regulated drop counts as "regulation", and until it is stated the drop is RECORDED
     - owed by R-183: the criterion that makes a waveform an oscillation (a periodic component's amplitude at BATDRV or VSYS, and ho
   PROPOSED mark: present
-30e826199463b14a v2/docs/test-procedures/TP-E11-38.md
+c502c2831387de6f v2/docs/test-procedures/TP-E11-38.md
   id TP-E11-38: The eFuse U42 and the dock's VSYS branch through the fault envelope, cases (a) to (h)
   register R-184: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-38: exists
@@ -98,7 +98,7 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
   TBD: 1
     - owed by R-185: the comparison that decides new ghosting (a visual judgement under the fixed capture, or an optical-density di
   PROPOSED mark: present
-338130d714f22fcf v2/docs/test-procedures/TP-SOLAR.md
+d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   id TP-SOLAR: The solar input guard and the LT8705A's input sense (R-176 rows 1 to 6, R-189, R-174)
   register R-176: exists (OWED, PHYSICAL UNCERTAINTY)
   register R-189: exists (OWED, PHYSICAL UNCERTAINTY)
@@ -179,10 +179,10 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
   - TP-SOLAR: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
 
 5. The bring-up page and its inputs
-df3bc1126487559d the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
+52ddda1b56af798b the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
   PROPOSED mark: present; the drafts statement: present
   boards: A, B, C, D, E, E5, P, each with its seven subsections
-  quotes: 14 table, 10 text, each checked against its source
+  quotes: 14 table, 11 text, each checked against its source
   cross-references: 14 paths from v2/, all present
   register rows named in the drafts and hand-off tables: 77, all exist
   the generated block under the marker starts with the renderer's header: yes
