@@ -2,7 +2,7 @@
 
 MESHSAT-1357, Layer 12. **Prototype firmware for an unbuilt kit: no board C exists, nothing here has run on hardware,
 and the target build has not been compiled** (this host has no arm toolchain and no pico-sdk). What has run: the
-portable core and its 47 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
+portable core and its 49 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
 -pedantic -Wshadow -Wconversion`, all passing, and the Python checks of `v2/ecad/tools/tests/test_fw_panel.py` that bind
 the code to the netlists and the contract pages.
 
@@ -72,7 +72,7 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
 
 ## 2. Statement to test
 
-Every host test, from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
+Every host test (49), from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
 names each).
 
 | Test | Statement |
@@ -121,6 +121,8 @@ names each).
 | t_hot_stop_h2 | FW-C13: H2 |
 | t_hot_tmp117_fallback | FW-C13, FW-C14: the line held high |
 | t_hot_boot_read | FW-C14: the start-up read |
+| t_hotr1_bus_lost | FW-C14: a bus that stops answering is the detector lost, never a stale held low |
+| t_boot_main_tap | FW-C03, FW-A12: a MAIN tap during the boot |
 | t_margin_hold | FW-C15 |
 | t_power_fallback | FW-C09 in part |
 | t_bus_recover | FW-K04, V-K02 |
@@ -224,6 +226,10 @@ choice. Each is reversed by changing the named constant or line.
 | S-26 | the pack fallback only after the readings were seen once | a bridge not yet booted is not a lost sensor controller | `power_controls_step` |
 | S-27 | with no bridge every switched load stays off | the loads' policy is the bridge's | `panel_exp_write_kit` |
 | S-28 | the EXP_INT service reads every input expander and writes the command byte to each | FW-C14 names U27; harmless on the others | `panel_exp_service` |
+| S-29 | this controller's own pull on PI_SHDN_REQ, and 5 ms after it, is never read as a MAIN tap | the line is one wired-OR net | `PANEL_OWN_PULL_GUARD_MS` |
+| S-30 | an EXP_INT held low is serviced at most every 5 ms; a failed LED write retried after 100 ms | a dead target must not stall the loop at 10 ms a transfer | `PANEL_EXP_INT_MIN_MS`, `PANEL_LED_RETRY_MS` |
+| S-31 | with every slot dark the display selection stays where it was | no live slot to choose; board B's enables pass no picture from a dark slot | `display_select` |
+| S-32 | HOT-R1 decided only on reads at most 1.5 s old; 1.5 to 3 s without a read keeps the last verdict; over 3 s is the detector lost | a dead bus must not age a stale low into H2 and kill the kit | `panel_hot_classify` |
 
 ## 7. What needs the hardware
 

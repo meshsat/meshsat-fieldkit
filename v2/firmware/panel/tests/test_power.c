@@ -159,17 +159,17 @@ void t_shutdown_main_tap(void)
     fx_t F, *x = &F;
     fx_boot(x);
     fx_run_hb(x, 4000, ALL);
-    x->in.pi_shdn_req = false;                      /* INT low under 32 ms: no tap */
+    x->main_low = true;                      /* INT low under 32 ms: no tap */
     fx_run_hb(x, 20, ALL);
-    x->in.pi_shdn_req = true;
+    x->main_low = false;
     fx_run_hb(x, 20, ALL);
     CHECK(x->p.shdn == SHDN_IDLE);
-    x->in.pi_shdn_req = false;                      /* a MAIN tap */
+    x->main_low = true;                      /* a MAIN tap */
     unsigned low = 0;
     for (int i = 0; i < 400; i++) {
         if (i == 40) {
             CHECK(x->p.shdn == SHDN_PULSE);
-            x->in.pi_shdn_req = true;
+            x->main_low = false;
         }
         fx_run_hb(x, 1, ALL);
         low += x->out.pi_shdn_assert;
@@ -241,8 +241,17 @@ void t_hotr1_decode(void)
     memset(&h, 0, sizeof h);
     for (ms_t t = 0; t < 3000; t += 10)
         panel_hot_sample(&h, (t / 1000u) & 1u, t);
+    for (ms_t t = 3000; t <= 5100; t += 10)
+        panel_hot_sample(&h, false, t);             /* the reads go on, the line stays low */
     CHECK(panel_hot_classify(&h, 4900) == HOT_LINE_1HZ);
     CHECK(panel_hot_classify(&h, 5100) == HOT_LINE_HELD_LOW);
+    /* the same with the reads stopping: no verdict on old evidence, then the detector lost */
+    memset(&h, 0, sizeof h);
+    for (ms_t t = 0; t < 3000; t += 10)
+        panel_hot_sample(&h, (t / 1000u) & 1u, t);
+    CHECK(panel_hot_classify(&h, 2995) == HOT_LINE_1HZ);
+    CHECK(panel_hot_classify(&h, 5100) == HOT_LINE_1HZ);
+    CHECK(panel_hot_classify(&h, 6000) == HOT_LINE_HELD_HIGH);
     /* in the core: every EXP_INT serviced by reading U27, then a command byte other than 00h; polled once a second */
     fx_t F, *x = &F;
     fx_boot(x);
@@ -274,6 +283,10 @@ void t_hot_stop_h1(void)
     CHECK(x->regs[HAL_I2C_A_U27][2] == (1u << HAL_EXP_A_DEV_EN_BIT));   /* every enable off on A:U27, +3V3_DEV kept */
     CHECK(x->p.red_active & 4u);
     CHECK(x->out.slot_en[0]);                       /* modules still running: not yet dropped */
+    CHECK(x->p.shdn == SHDN_IDLE && !x->out.pi_kill);   /* its own pull on PI_SHDN_REQ is not a MAIN tap */
+    bool two[3] = { true, false, true };
+    fx_run_hb(x, 3200, two);                        /* slot 2's module stops first */
+    CHECK(x->out.slot_en[0] && !x->out.slot_en[1] && x->out.slot_en[2]);   /* each once it has stopped */
     fx_run_hb(x, 3500, NONE);                       /* they stop */
     CHECK(!x->out.slot_en[0] && !x->out.slot_en[1] && !x->out.slot_en[2]);
     CHECK(x->epd_pages[x->n_epd - 1] == PAGE_HOT_STOP);
@@ -442,4 +455,34 @@ void t_bus_recover(void)
     bb_t s = { 99, 0, false, 0 };                   /* a target that never lets go: nine pulses, then a failure */
     bb.ctx = &s;
     CHECK(panel_bus_recover(&bb) == -1 && s.pulses == 9 && s.stopped);
+}
+
+void t_hotr1_bus_lost(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    x->hot_sim = HOT_SIM_LOW;                       /* the last level read is low ... */
+    fx_run(x, 1200);
+    x->bus_fail = true;                             /* ... then the kit bus stops answering */
+    fx_run(x, 6000);
+    CHECK(x->p.hot.line == HOT_LINE_HELD_HIGH);     /* the detector lost, never a stale "held low" */
+    CHECK(x->p.hot.state != HOT_H2 && !x->out.pi_kill);
+    CHECK(x->out.reduced_mode && (x->out.loads_off & (1u << LOAD_USBC)));
+}
+
+void t_boot_main_tap(void)
+{
+    fx_t F, *x = &F;
+    fx_new(x);
+    fx_init(x, false, NULL);
+    for (int i = 0; i < 100; i++) {                 /* into the boot, before any slot */
+        fx_tick(x);
+        x->now++;
+    }
+    CHECK(x->p.boot != BOOT_RUN);
+    x->main_low = true;
+    fx_run(x, 40);
+    x->main_low = false;
+    fx_run(x, 400);
+    CHECK(x->out.pi_kill);                          /* no module ran: the kit goes off */
 }

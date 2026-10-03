@@ -36,6 +36,7 @@ typedef struct fx {
     unsigned n_reads[128];
     bool     bus_fail;
     int      hot_sim;
+    bool     main_low;                /* the LTC2954's INT held low by a MAIN press (PI_SHDN_REQ is wired-OR) */
     unsigned cmd_byte_writes_u27;    /* pointer-only writes after a read of U27 */
 
     /* secure element */

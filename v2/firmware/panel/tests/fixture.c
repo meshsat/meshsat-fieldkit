@@ -239,6 +239,8 @@ static void hot_line(fx_t *f)
 void fx_tick(fx_t *f)
 {
     hot_line(f);
+    /* PI_SHDN_REQ is one open-drain net: low while MAIN's INT or this controller pulls it (R3 up on board A) */
+    f->in.pi_shdn_req = !(f->main_low || f->out.pi_shdn_assert);
     f->in.epd_busy = f->now < f->busy_until;
     panel_tick(&f->p, f->now, &f->in, &f->out);
 }

@@ -41,6 +41,9 @@
 #define PANEL_PI_KILL_PRESS_MS      8000u   /* P s.5, FW-C03: PI held 8 s = PI_KILL */
 #define PANEL_HOTR1_WINDOW_MS       2000u   /* FW-C14 decode window (SESSION S-07) */
 #define PANEL_HOTR1_HELD_MS         3000u   /* FW-C14: held when no edge comes for 3 s */
+#define PANEL_OWN_PULL_GUARD_MS     5u      /* SESSION S-29: the line's rise through R3 after this controller lets go */
+#define PANEL_EXP_INT_MIN_MS        5u      /* SESSION S-30: an EXP_INT held low is serviced at most every 5 ms */
+#define PANEL_LED_RETRY_MS          100u    /* SESSION S-30: a failed LED write is retried after 100 ms */
 #define PANEL_HOT_RELEASE_MS        1800000u /* FW-C13: 30 minutes since the stop */
 #define PANEL_HOT_SHDN_WAIT_MS      60000u  /* FW-C13: drop SLOT_EN once stopped or 60 s */
 #define PANEL_EXP_POLL_MS           1000u   /* FW-C14: poll the port at least once a second */
@@ -259,6 +262,7 @@ typedef struct {
     ms_t     edges[12];          /* the latest edges, newest at [0] */
     uint8_t  n_edges;
     ms_t     first_sample;
+    ms_t     last_sample;            /* a read that succeeded */
     uint8_t  line;               /* enum hot_line */
     uint8_t  state;              /* enum hot_state */
     ms_t     stop_at;            /* H1 entered */
@@ -341,6 +345,7 @@ typedef struct {
     ms_t     shdn_at;
     ms_t     main_low_at;
     bool     main_low;
+    ms_t     own_pull_until;          /* this controller's own pull on PI_SHDN_REQ, never read as a MAIN tap */
     bool     kill;
     ms_t     kill_at;
 
@@ -375,6 +380,8 @@ typedef struct {
     bool     rb_need_fresh;           /* RB_STATUS not yet read since the EMCON release */
     uint8_t  kit_out[3][2];           /* A:U27, A:U28, B:U6 output registers last written */
     bool     kit_out_valid;
+    ms_t     led_fail_at;
+    bool     led_failed;
     uint8_t  hot_r1_level;            /* last read of A:U27 P1.5 */
     bool     rb_status;               /* B:U7 RB_STATUS */
     bool     light_day_n, light_night_n, panel_id;
@@ -457,5 +464,6 @@ int panel_bus_recover(const panel_bitbang_t *bb);
 
 /* events */
 bool panel_ev_pop(panel_t *p, panel_ev_t *ev);
+void panel_ev_report(panel_t *p, uint8_t type, uint8_t value, ms_t at);  /* e.g. EV_I2C_RECOVERED from the target loop */
 
 #endif
