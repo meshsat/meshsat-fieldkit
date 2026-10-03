@@ -617,9 +617,11 @@ def r3_slot_loads():
         if rc:
             raise SystemExit("l8r2_drafts: the coolers' draft refused a copy of gen_sch_b.py: %s" % msg)
         r3, peak3 = slot_loads(open(p, encoding="utf-8").read())
+    lb = {k: v for k, v in base[s].items() if k != "J_FAN%d" % s}
     return [("as drawn (J_FAN%d 0.1 A)" % s, base[s], peak[s]),
             ("round 2 (the step-up at full speed, %.2f A)" % r2, l2, peak[s]),
-            ("round 3 (the step-up at the %.0f %% maximum, %.2f A)" % (100 * V["duty_max"], r3[s]["U701"]), r3[s], peak3[s])]
+            ("round 3 (the step-up at the %.0f %% maximum, %.2f A)" % (100 * V["duty_max"], r3[s]["U701"]), r3[s], peak3[s]),
+            ("(b), the cooler off the slot rail (no fan row)", lb, peak[s])]
 
 
 def item1_r3_print(w):
@@ -654,6 +656,9 @@ def item1_r3_print(w):
     for d in o["dev"]:
         w("    %-12s LM5176 U7 %.3f A DRAFTED against %.3f A, margin %+.3f A (%+.1f %%); DRAWN %.3f A; U901's RON loss (record l8r2 item 3) %.3f A of the difference\n"
           % (d["state"], d["drafted"], d["limit"], d["margin"], d["pct"], d["drawn"], d["u901"]))
+    pnl = max(st["rails"]["PNL"]["a"][1] for st in P["states"].values() if "PNL" in st["rails"])
+    w("    U901's RON (at most %.4f Ohm, record l9pwr's D5) at the panel's %.3f A at HIGH: %.3f W on +5V_DEV, %.3f A at 5.1 V\n"
+      % (P["ron"], pnl, pnl ** 2 * P["ron"], pnl ** 2 * P["ron"] / 5.1))
     w("  the linear bound fails only if more than %.1f %% of the fan's full-speed input does not fall with its speed (the fan law with a fixed share f: f + (1 - f) x %.3f > %.2f)\n"
       % (100 * o["fixed"], D ** 3, D))
     w("  if the bound fails open (Fan_PWM uncapped with the card on): %.3f A on slots 1 and 3, the AP64500's inductor peak %.3f A (ripple %.3f A at VSYS's %.3f V, L %.0f %% low, fsw %.0f %% low) under its least HS peak current limit %.1f A by %.3f A: no limit acts\n"
@@ -782,8 +787,8 @@ def item6_print(w):
         import energy_chain as ec
         a, b = ec.check(os.path.join(ROOT, CHAIN), None), ec.check(ch, None)
         keys = ("fails", "stage_fails", "derate_fails")
-        w("  energy_chain.check on the tree's chain and on the corrected copy: %s; %s\n"
-          % (", ".join("%s %d / %d" % (k, len(a.get(k) or []), len(b.get(k) or [])) for k in keys),
+        w("  energy_chain.check on the tree's chain and on the corrected copy (%d and %d checks): %s; %s\n"
+          % (a["checked"], b["checked"], ", ".join("%s %d / %d" % (k, len(a.get(k) or []), len(b.get(k) or [])) for k in keys),
              "IDENTICAL" if all(a.get(k) == b.get(k) for k in keys) and a["checked"] == b["checked"] else "DIFFERENT"))
         w("  lines naming 2 oz after the correction: %s\n" % "; ".join(oz_lines(open(ch, encoding="utf-8").read())))
     w("  what the copper must carry for the chain's coordination (the blade at or below its conductor's rating): DOCK_ENTRY's 25 A needs %.2f mm on each of two 1 oz faces; record l9stk's band of %.2f mm on each of two carries %.2f A: FINDING\n"
