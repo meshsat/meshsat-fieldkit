@@ -87,7 +87,7 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "eeba2a78f0c608ac3a54202287bdc0cb55014f11b594f1d2f7fbe2c0a26b11db"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "058b8e76aaa6fdd1e49e9c18270a74880ff10dee22a095bfee2f1df58663aa38"),
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
@@ -184,13 +184,14 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "a1d15601": "fnd/l4e11, section 17d after the owner's review L4-QR01 (every specimen row with its lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers; the copper-area transfer and 'layout-independent' withdrawn; TI SPRA953D and Nexperia AN11158 cited)",
                 "b929d8be": "fnd/l4e11, the correction after Astra's recheck of set 27 (the fan rail renumbered U22, R103 to R109, C135 to C141 against every board E draft composed in this record's order; L4-CP01 restated: the 566 A an extrapolation and E11-38 (c)'s target, the start into a short not bounded by printed data, no retry duty claimed; E11-38 (a) to (h); the rail 11.512 to 12.431 V with the 1 percent divider)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
+                "04707e3c": "fnd/l4e7, the compute and render split with its keyed results cache, the lead scan keyed on the pinned R-180 sentence's presence and sha256 (on top of its residue after round 5 for the review's B6 and L4-F01)",
                 "eb49d179": "fnd/l4e7, its residue after round 5 for the review's B6 and L4-F01 (the output's approaches paragraph and budget sentence restated: no passing loop for (A), the turn-off compared with the absolute maximum in words matching its sign)",
                 "1a73f5b4": "fnd/l4e7, round 5 for the recheck of set 27, the review's B6 and L4-F01 continued (the 3.30 uH passing floor withdrawn, both fault positions, the pins' complete budget in both polarities, the sense model rectified, R96 at 0.1 percent)",
                 "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
-FROM_COMMIT = {"l4e7r": "eb49d179", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "1080e085", "l4e11md": "1080e085",
+FROM_COMMIT = {"l4e7r": "04707e3c", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "1080e085", "l4e11md": "1080e085",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
-               "cl_adi": "eb49d179", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+               "cl_adi": "04707e3c", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
