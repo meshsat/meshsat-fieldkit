@@ -201,3 +201,21 @@ your services, please say so and name a partner if you have one; we will not ass
   pack integration as of 26 September 2026, before the BQ25730 selection; it is not evidence for the current integration.
 - Anything not committed on the named commit, including work running on branches when the package was cut (the package's
   README names those branches and their tips).
+
+## 10. Changes since the release-candidate package (the delta)
+
+The release-candidate review of 3 October 2026 (`v2/docs/records/l4close/REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md`)
+read the package cut from `761677ca` READY for an initial supplier engineering review and quotation, with power-design
+closure and fabrication release BLOCKED. Its two findings, and the two later findings it asked to see, stand as follows. A
+known circuit defect stays OPEN until it is corrected and verified; an unsuccessful design-out attempt does not turn a defect
+into a measurement gap.
+
+| Finding | What it is | State at this package | Where |
+|---|---|---|---|
+| L4-RC01 | L4-E7's sentence-keyed panel-lead scan let an approved sentence exempt a second, unreviewed statement in the same table cell | The scan is replaced by a numeric guard: every panel-lead length stated in the design documents is compared with the derivation's input (a1solar's 5 m) and a differing one refuses. Preserved review texts are skipped only when named with their sha256 in `v2/docs/records/ARCHIVED-REVIEWS.yaml`; any other file is scanned whatever its name. The reviewer's same-cell counterexample is a regression test. The register row's state is the integration's (R-197) | `v2/docs/records/l4e7/`, `v2/ecad/tools/tests/test_l4e7.py`, register R-197 |
+| L4-RC02 | The replay wording did not identify the tested revision and the execution mode | Section 7 item 4 above and the package's README name the commit the gated release suite ran on and the packaged commit, list any file changed between them, and keep L4-E7's cached render apart from a fresh solver run. CLOSED | register R-198 |
+| L9P-F01 | Layer 9's power budget: D-11's all-transmit basis needs a 15.99 V rest voltage on the drafted design, 0.49 V over its 15.5 V floor (the battery FET pair adds 0.190 V, the fans and their converters at full speed 0.458 V) | A demonstrated analysis defect, OPEN. A correction is drafted on a branch that is not part of this package's commit (L4-E9's round 7): the floor rises to 16.1 V rest from the release that applies those drafts (+0.114 V), the all-transmit window shrinks from 1.384 V to 0.784 V of rest voltage, and the firmware contract owes the matching FW-A05 sentence. Not reviewed, not integrated | the next integration set |
+| L9P-F02 | Layer 9's power budget: the drafted per-slot cooler step-ups take slots 1 and 3's AP64500 to 5.010 A against its 5 A at the highest bound | A defect in a draft, OPEN. A correction is drafted on a branch that is not part of this package's commit (Layer 8's round 3): the per-slot step-up stays with each cooler fan's PWM capped at 70 % by a firmware rule (+0.129 A at the worst state), a 12 V feed per slot as the fallback; the firmware contract owes the cap's row. Not reviewed, not integrated | the next integration set |
+
+The two later rounds also expose findings for the next set (the stackup record's copper widths at 1 oz against the 25 A
+coordination, the device rail's 7.181 A against 7.096 A as before); they are carried in those rounds' records and are open.
