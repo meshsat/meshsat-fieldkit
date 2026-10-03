@@ -648,7 +648,7 @@ fit mock-up R-167 blocks that adoption and the dependent mechanical release only
 
 | Layer | Owners | Register rows | By kind | By state |
 |---|---|---|---|---|
-| 4 (release records) | Layer 4 coordinator | 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7 | CLOSED 1; DRAFTED 2; OPEN 1; OWED 8; APPLIED 0 |
+| 4 (release records) | Layer 4 coordinator | 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7 | CLOSED 2; DRAFTED 2; OPEN 0; OWED 8; APPLIED 0 |
 | 5 | Layer 5 interfaces, CONOPS owner | 5: R-23, R-24, R-125, R-133, R-138 | IMPLEMENTATION 5 | DRAFTED 5; APPLIED 0 |
 | 5 (firmware, by the contract) | firmware owner | 11: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154, R-158, R-164, R-188 | IMPLEMENTATION 11 | DRAFTED 1; OWED 10; APPLIED 0 |
 | 6 | Layer 6 components | 28: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150, R-160, R-162, R-165, R-168, R-179, R-182, R-183, R-186 | EVIDENCE 27; TEST 1 | OWED 28; APPLIED 0 |
@@ -1452,7 +1452,7 @@ Layer 4 coordinator 12, Layer 5 interfaces 4, Layer 6 components 28, Layer 7 mec
 Layer 8 board B generator owner 5, Layer 8 board C generator owner 1, Layer 8 board E generator owner 27, Layer 8 board P
 generator owner 1, Layer 9 pre-layout analysis 24, prototype bench 42, firmware owner 11, TEST-PLAN owner 3, CONOPS owner 1. By
 kind: 75 implementation changes (34 drafted, 24 missing a draft, 17 owed as work, none PENDING), 14 layout constraints, 46
-tests, 46 pieces of evidence (none PENDING since L4-E7's surge round landed), 7 release records (two of them review findings kept in the register: R-197 OPEN, R-198 CLOSED). They are category (a): 188 items, each
+tests, 46 pieces of evidence (none PENDING since L4-E7's surge round landed), 7 release records (two of them review findings kept in the register: R-197 and R-198 CLOSED). They are category (a): 188 items, each
 with one owner and an acceptance that
 close the assignment, not the item, and none of them stands in for U-01, U-02 or U-04. U-03 is now among them: PANEL-ACC is
 R-35 (Layer 6 component selection; the purchase and the measurement the owner's, OW-6), with R-52 (the unit's trace rerun),

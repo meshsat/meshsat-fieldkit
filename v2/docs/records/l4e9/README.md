@@ -143,7 +143,8 @@ part number and for R227's capacitors (COVERED, out 11's last block); the timer 
 `fnd/l4e7rc` is integrated and its tests pass) and R-198 (L4-RC02, the replay wording, CLOSED at `db1cffb5` and the packer's
 README): 188 items; no figure and no other row's state changes. R-197 reworded on `fnd/l4e9rc2` (from `c4e4f7d7`): the
 probe described without a length (L4-E7's guard reads the register; the exact text in the archived review), and OPEN until
-`test_l4e7` passes at the guard round's integration `c4e4f7d7`, where L4-E7's results cache does not hold. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+`test_l4e7` passes at the guard round's integration `c4e4f7d7`, where L4-E7's results cache did not hold; CLOSED at set 28's
+integration on `test_l4e7` passing on the frozen line `f67ea9cf` ("tests: 54 passed, 0 failed, 1 skipped"). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
