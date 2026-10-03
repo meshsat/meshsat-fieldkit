@@ -2989,7 +2989,7 @@ def render_fix17(R, p):
       % (fmt(M["i_pk"], 1), fmt(L["tsoft"] * 1e6, 1), fmt(M["i2t_pk"], 3)))
     p("       TARGET for the recorded peak, and a reading over it revises the figure; the 813 prints no pulse rating, so the contact, the 24 AWG and the")
     p("       clamp are left to the bench's qualification (E11-38), not bounded (MAKER, INFERRED)")
-    p("     the pins: IN at most %s V by TI's Equation 14 at that bound with U42 within %s nH of C236 (%s uF effective, ESR %s mOhm printed) against"
+    p("     the pins: IN at most %s V by TI's Equation 14 at that extrapolation with U42 within %s nH of C236 (%s uF effective, ESR %s mOhm printed) against"
       % (fmt(M["v_in_pk"], 1), fmt(F17_L_IN * 1e9, 0), fmt(M["c_in"] * 1e6, 1), fmt(M["esr_in"] * 1e3, 0)))
     p("       the absolute %s V (I; the 20 nH a layout requirement, SESSION); OUT's negative spike through the output loop's inductance clamped by a"
       % fmt(M["abs_in"], 0))
