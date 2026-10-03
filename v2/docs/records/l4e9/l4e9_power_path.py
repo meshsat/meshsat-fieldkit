@@ -4703,7 +4703,7 @@ def main():
     for ln in cons_review_lines(F):
         p(ln)
     p("")
-    for ln in cons_qual_lines(F) + cons_check2_lines(F):
+    for ln in cons_qual_lines(F) + cons_check2_lines(F) + cons_class_lines(F, md_table(open(os.path.join(HERE, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read(), "| ID | Kind |")):
         p(ln)
     p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
@@ -4713,7 +4713,10 @@ def main():
 # ======================================================================================================== THE CONSOLIDATION
 # The owner's instruction of 2 October 2026 (11:25 and his corrections of 12:00): one connected, implementable design. Every
 # table below is built from figures this script read above; the page's tables are these, and test_l4e9.py holds them equal.
-STATUS = "known defects addressed in drafts; feasibility conditions remain open"
+# The status, the owner's review of the supplier handover (L4-SH03, 3 October 2026; v2/docs/records/l4close/REVIEW-SUPPLIER-HANDOVER-AS-RECEIVED.md
+# on fnd/int27 at d48becdc, cited), verbatim: the earlier phrase overstated closure, because D-10's guard-on case, D-16 and E11-40 are design
+# defects that need a supported circuit correction or a supply change, not bench evidence
+STATUS = "Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked."
 SVG_NAME = "L4-POWER-DIAGRAM.svg"
 # The second external review (of the 22:30 checkpoint, 2 October 2026) separates the decisions this page states: "conditional candidate" and
 # "closure gate blocked" describe different decisions, and an unresolved material protection or feasibility condition is sufficient to keep a
@@ -4794,6 +4797,257 @@ def cons_check2_lines(F):
     return L
 
 
+# ---------------------------------------------------------------------------------------- the open items by class (round 5)
+# The owner's amendment of 3 October 2026, section 4 (v2/docs/handover/OWNER-INSTRUCTION-2026-10-03-SUPPLIER.md, filed on fnd/int27 at
+# 69fa4e8c, not in this base; cited by path and commit only): every remaining item in one class, with the next action of its kind.
+AMEND_REF = ("v2/docs/handover/OWNER-INSTRUCTION-2026-10-03-SUPPLIER.md, section 4, filed on fnd/int27 at 69fa4e8c (not in this base; cited "
+             "by path and commit only)")
+KED, PHY, UDC, SET = "KNOWN ENGINEERING DEFECT", "PHYSICAL UNCERTAINTY", "UNCERTAIN DESIGN CHOICE", "SETTLED WORK"
+CLASSES = (KED, PHY, UDC, SET)
+VERB = {KED: ("FIX", "ASSIGN"), PHY: ("TEST", "ASK OR TEST"), UDC: ("COMPARE",), SET: ("DO",)}
+# the known engineering defects: a demonstrated failure of the drafted design with no working correction drafted (a defect whose
+# correction is fully defined and only owes its draft file is SETTLED WORK); each assigned to the supplier's phase 1 as a task
+KED_ROWS = {"R-173": "P1-1", "R-20": "P1-1", "R-180": "P1-1", "R-186": "P1-1", "R-187": "P1-1", "R-190": "P1-2", "R-48": "P1-3"}
+# the uncertain design choices: the rows that carry a choice a supported alternative could remove
+UDC_ROWS = {"R-157": "UDC-1, UDC-3", "R-162": "UDC-3", "R-152": "UDC-3", "R-105": "UDC-2", "R-106": "UDC-2", "R-154": "UDC-2"}
+# physical uncertainties outside the default rule (a layout or analysis row that rests on an unmeasured or unprinted fact)
+PHY_EXTRA = {"R-159", "R-134", "R-127", "R-47", "R-49"}
+# Layer 6 evidence rows that are part picks on settled criteria, not unprinted facts
+SET_EXTRA = {"R-30", "R-141", "R-165"}
+# the coordinator's named physical uncertainties, each with its executable specification in 5d (checked complete)
+PHY_NAMED = ("R-159", "R-160", "R-179", "R-182", "R-183", "R-184", "R-104", "R-185", "R-161", "R-189")
+
+
+def cons_p1_tasks(F):
+    """The supplier's phase 1 (design review and correction): the known engineering defects, each a specific design-correction task."""
+    b6 = F["sv"]["rm"]["b6"]
+    return [
+        ("P1-1", "the solar input stage's guard and current-sense arrangement (D-10's guard-on case, B6-ENG-1; D-16, B6-ENG-2): where the "
+                 "stage's input current is sensed and with what, with RSENSE1's inductance and the source's loop and resistance bounded; the "
+                 "drafted guard (R-173) and sense (R-20) the starting point; the earlier routes R-180, R-186 and R-187 inputs, none a passing "
+                 "route; the port bank's part (CL32B225KCJSNNE) and TRK_VIN's ceramics re-picked with it (Layer 6's L6P-F05: LCSC 0, JLCPCB "
+                 "assembly stock only)",
+         "R-173, R-20, R-180, R-186, R-187 (acceptance R-176, R-189)",
+         "a stiff %s V source arriving with the guard on over the declared %s to %s uH, at both fault positions (the connector with no "
+         "lead resistance credited, the lead's far end): U5's CSPIN to CSNIN inside its +-%s V absolute maximum and the +-%s V design "
+         "target, INP inside its %s V margin line, PV_F under the TPS4811-Q1's recommended %s V row, the cold connection's slew and INP "
+         "inside their margin lines (R-176 rows 2 and 3); in operation at the 25 V corner the sense pins within +-100 mV or the regulated "
+         "input current within check (a)'s error budget (R-189); the 100 W backstop bound kept (R-21, R-98)"
+         % (fmt(F["sv"]["src"][1]), "%.2f" % b6["env"][0], "%.2f" % b6["env"][1], fmt(b6["u5_abs"]), "%.3f" % b6["margin"],
+            fmt(b6["inp_row"][2]), fmt(b6["pvf_rec"]))),
+        ("P1-2", "board B's coolers' 12 V feed (E11-40): J_FAN1 to J_FAN3 on the slot rail +5V_Sn, no 12 V net on board B; a per-slot "
+                 "step-up from +5V_Sn or a 12 V feed from board A over the bay harness, the choice with it",
+         "R-190", "each cooler's pin 1 inside the fans' %s to %s V at its current, the slot's budget or the harness re-derived, board B's "
+                  "suite with the new parts (R-190)" % (fmt(F["cp"]["rail"]["win"][0]), fmt(F["cp"]["rail"]["win"][1]))),
+        ("P1-3", "VBUS20 against U2's single faults (S-111: Q2 short or FB open puts VIN_RAW on VBUS20, past U3's 32 V; no clamp, no "
+                 "exemption claimed): an SMCJ22A on VBUS20 or an independent over-voltage trip, selected and drafted",
+         "R-48", "U3's input under its absolute maximum with Q2 shorted at VIN_RAW's highest steady input, or the decision recorded with "
+                 "s120 section 11's figures (R-48)"),
+    ]
+
+
+def cons_comparisons(F):
+    """The uncertain design choices: one bounded comparison each, the current choice with its qualification against the supported alternative
+    that would remove its dependency, on effort, availability, interfaces and service; the selection or the owner's decision. The
+    inputs are the records' own comparisons, carried and not repeated where their inputs did not change."""
+    md = " ".join(_C_TEXT["l4e11md"].split())
+    m = need(md, r"\| \(S2\) one BUK6Y10-30P \| about ([\d.]+) nF near 0 V, (\d+) % \(typical\) \| junction to air at most ([\d.]+) K/W for 20 A held", "L4-E11 16c's (S2)")
+    s2 = (m.group(1), m.group(2), m.group(3))
+    need(md, r"\| \(S3\) a part whose sheet prints both \| none found among the parts read \(16a\)", "L4-E11 16c's (S3)")
+    m = need(md, r"the BQ25730 has LCSC stock (\d+) \(the BQ25731 (\d+)\): E11-32", "the BQ25730's stock (L4-E11 13)")
+    stock = (m.group(1), m.group(2))
+    buk = need(md, r"the two battery FETs' \(BUK6Y10-30PX, LCSC stock (\d+)\)", "the pair's stock (E11-32)").group(1)
+    g = F["f02"]
+    sf, hl = PRICES["saft"], PRICES["hl"]
+    return [
+        {"id": "UDC-1", "what": "the battery switch (D-14; R-157's pair, its evidence R-159, R-160, R-182, R-183)",
+         "current": "(S1) the pair Q39 and Q40, two BUK6Y10-30P, with its qualification: the installed (Zself + Zmut) at most %s K/W (E11-29), the whole hot "
+                    "docking pulse (E11-30), RDS(on) at -8.5 V and 150 C at most %s mOhm (E11-36), BATDRV with the pair's Ciss (E11-37; "
+                    "4.72 nF typical at -15 V, about 5.74 nF near 0 V, against TI's below 5 nF)" % (fmt(g["z_steady"]), fmt(g["allow"])),
+         "alternative": "(S2) one BUK6Y10-30P: Ciss about %s nF near 0 V, %s %% of TI's figure (typical), but a junction to air of at most %s "
+                        "K/W for 20 A held, a heat path through the case, and still no printed hot RDS(on) or Ciss maximum; (S3) a P-FET whose "
+                        "sheet prints both hot RDS(on) at -8.5 V and Ciss maxima: none found among the parts read (L4-E11 16a, 16c): no "
+                        "supported alternative removes the dependency" % s2,
+         "effort": "(S1) the four 5d experiments (a coupon, six samples, ten Kelvin samples, the evaluation hardware or the first prototype); "
+                   "(S2) the same less Ciss's margin, plus a heat path through the case (Layer 7) and its own qualification; (S3) a part search "
+                   "first (the supplier's phase 1), then its qualification",
+         "availability": "BUK6Y10-30PX LCSC stock %s on 2 October 2026 against 10 for five kits (E11-32); no (S3) part named" % buk,
+         "interfaces": "(S1) board A's pour only, the service kept (10 A continuous, 18 A for 60 s from the hot state); (S2) a new thermal "
+                       "interface board A to the case, the service kept at a hotter junction; (S3) unknown until a part is named",
+         "selection": "SELECTED (SESSION; L4-E11 16c, its inputs unchanged, carried and not repeated): (S1), its qualification R-159, R-160, R-182 "
+                      "and R-183. Reason: the only arrangement whose heat a board pour carries, and no supported alternative removes the "
+                      "dependency. Reversed by: a negative Ciss answer or bench (R-183), then the engineer's (S2); the (S3) search is "
+                      "offered to the supplier's phase 1",
+         "owner": ""},
+        {"id": "UDC-2", "what": "the cell, U-01 (D-06's pack; R-103, R-167 to R-169; route (II)'s R-105, R-106, R-154)",
+         "current": "the ruled 35E, its storage rows tested by a soak: NOT SUPPORTED, because its own published evidence excludes it "
+                    "for LO-01d to LO-01g (E3-O's cells at 61.26 to 72.42 C over its +60 C, E5's idle pack at 74.73 C, +71 C and -33 C "
+                    "storage), and a sample never overrides a maker's printed limit",
+         "alternative": "the Saft MP 176065 xtd as 4S1P: the temperature windows supported on published evidence; the current at temperature, "
+                        "the storage dwell and recovery (R-168) and the fit (R-167) awaited; 53.5 to 55.1 Wh usable, 1.25 to 1.29 h battery-only "
+                        "against the 35E's 2.52 h; or the HL18650V as 4S3P once its signed specification or a lot soak confirms its rows (R-103)",
+         "effort": "Saft: the mock-up (hours, no purchase), Saft's statement or the limited sample qualification (one cell, a chamber, about "
+                   "two weeks), the lot's capacity at receipt; HL18650V: Topwell's signed specification or a lot soak of ten (4 and 12 days); "
+                   "either: L4-E10's margins re-run on the chosen cell and board P's cell rows",
+         "availability": "Saft %s %s a cell (%s; four for the pack); HL18650V %s %s at the 10-piece tier (%s)"
+                         % (sf["cur"], fmt(sf["unit"]), sf["note"], hl["cur"], fmt(hl["unit"]), hl["note"]),
+         "interfaces": "D-06's pack energy and the battery-only service change with the cell (Saft about 82 Wh nominal against the ruled "
+                       "pack's 145 Wh); board P's cell rows and the gauge image (route (II)'s R-105, R-106, R-154)",
+         "selection": "",
+         "owner": "OWNER DECISION, the smallest genuine one (money, then adoption): authorise the Saft evidence route (OW-9: Saft's request "
+                  "sent, the limited sample qualification at %s %s a cell and a laboratory, the mock-up at no purchase); the adoption of a "
+                  "cell (OW-3) follows its evidence. No session selection: a cell change changes D-06's ruled pack energy and the "
+                  "service, which is the owner's" % (sf["cur"], fmt(sf["unit"]))},
+        {"id": "UDC-3", "what": "the charger, U-04's (B1) (R-157, its supply R-162; the alternative R-152)",
+         "current": "(B1) TI's BQ25730 with the pair, its qualification E11-31 (the three modes, the start, the held pack current) with its "
+                    "supply from an authorised source (E11-32): its sheet bounds VSYS in all three modes (D1, D3, D4 removed, D7 bounded "
+                    "inside 0 to 85 C; L4-E11 12, 13)",
+         "alternative": "(A) the drawn BQ25731 with E11-24's hold-up bank on VSYS (R-152): it removes the BQ25730's supply dependency, and "
+                        "leaves D1 and D3 to TI's answers (R-114) and D2 on an assumed 1 ms",
+         "effort": "(B1) drafted (R-157, R-181), its bench E11-31 and the supply's reading; (A) a missing draft (R-152), TI's answers and "
+                   "the bank's parts",
+         "availability": "BQ25730RSNR LCSC stock %s on 2 October 2026 against 5 (Layer 6's L6P-F05 reads the same); the drawn BQ25731 %s"
+                         % stock,
+         "interfaces": "(B1) board E on VSYS_E over the dock behind U42 (R-177, R-178, R-181); (A) the drawn interface, the bank's zone and "
+                       "height Layer 9's; the service the same in both",
+         "selection": "SELECTED (SESSION; L4-E11 14, its inputs unchanged: the stock reading was in its comparison, carried and not "
+                      "repeated): (B1) stays, the BQ25730's supply a procurement task (TI and its distributors; the supplier's sourcing). "
+                      "Reason: its sheet alone bounds VSYS in all three modes, and the stock was weighed when it was selected. "
+                      "Reversed by: no authorised source for five BQ25730RSNR at the build's procurement, then (A) with its dependency round "
+                      "(R-152, R-114)",
+         "owner": ""},
+    ]
+
+
+def _head(s, n=90):
+    s = s.split(": ")[0] if ": " in s[:n] else s
+    return s if len(s) <= n else s[:n].rsplit(" ", 1)[0]
+
+
+def cons_classes(F, reg):
+    """Every register row's class and next action (one each). The route rows of 5d are the physical uncertainties' specifications."""
+    route = {}
+    for r in cons_qual(F):
+        for rid in re.findall(r"R-\d+", r[0]):
+            route.setdefault(rid, r)
+    p1 = {t_[0]: t_ for t_ in cons_p1_tasks(F)}
+    out = {}
+    for r in reg:
+        rid, kind, item, frm, owner, acc, state, order = r[:8]
+        if rid in KED_ROWS:
+            tk = p1[KED_ROWS[rid]]
+            cls, nxt = KED, "ASSIGN to the supplier's phase 1, task %s: %s; acceptance: %s" % (tk[0], _head(tk[1], 110), _head(tk[3], 160))
+        elif rid in UDC_ROWS:
+            cls, nxt = UDC, "COMPARE: %s (8f) decides whether and how it applies; the selection or the owner's decision is stated there" % UDC_ROWS[rid]
+        elif rid in PHY_EXTRA or (rid not in SET_EXTRA and (kind == "TEST" or (kind == "EVIDENCE" and owner == "Layer 6 components")
+                                                            or (kind == "EVIDENCE" and owner == "Layer 7 mechanical"))):
+            cls = PHY
+            if rid in route:
+                q = route[rid]
+                dec = q[4].split(":")[0] if ":" in q[4][:80] else _head(q[4].split(";")[0], 120)
+                nxt = ("TEST (external: the supplier's phase 2; %s): the specification is 5d's row '%s', complete in its ten cells; it settles "
+                       "%s; unaffected work continues (the change list's other steps)" % (q[6], q[0], dec))
+            elif kind == "EVIDENCE":
+                nxt = ("ASK OR TEST (external: the maker's statement, sent by the owner, or the supplier's phase 2 measurement): the "
+                       "specification is this row's acceptance; it settles %s; unaffected work continues" % _head(item))
+            else:
+                nxt = ("TEST (external: the supplier's phase 2 on the first prototype or a coupon): the specification is this row's "
+                       "acceptance; it settles %s; unaffected work continues" % _head(item))
+        else:
+            cls, nxt = SET, "DO: step %s (%s), no open question; it continues while the open items are worked" % (order, state)
+        out[rid] = (cls, nxt)
+    return out
+
+
+D_CLASS = {"D-01": SET, "D-02": SET, "D-03": SET, "D-04": SET, "D-05": SET, "D-06": PHY, "D-07": SET, "D-08": SET, "D-09": SET,
+           "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": KED}
+D_NEXT = {"D-06": "TEST: E11-10 to E11-16, its evidence items (R-113, R-115, R-118, R-134)",
+          "D-10": "ASSIGN to the supplier's phase 1, task P1-1 (the guard-on case; acceptance R-176 rows 2 and 3)",
+          "D-11": "TEST: Q13's leakage at the hot end (R-176 row 5)",
+          "D-13": "TEST: E11-31, the held pack current and the start (R-161)",
+          "D-14": "COMPARE: UDC-1 (8f): (S1) selected, its qualification R-159, R-160, R-182, R-183",
+          "D-15": "TEST: E11-38, the fault envelope's histories (R-184)",
+          "D-16": "ASSIGN to the supplier's phase 1, task P1-1 (the sense arrangement; acceptance R-189)"}
+U_CLASS = {"U-01": (UDC, "COMPARE: UDC-2 (8f): an OWNER DECISION, the Saft evidence route (OW-9), then the adoption (OW-3)"),
+           "U-02": (PHY, "TEST: T-H1's points (R-104, R-151) and the e-paper's storage soak (R-185), the supplier's phase 2"),
+           "U-03": (PHY, "TEST: PANEL-ACC's unit measured (R-35, R-149; the purchase the owner's, OW-6)"),
+           "U-04": (PHY, "TEST: E11-31 on the BQ25730 build (R-161); its charger's supply is UDC-3's (8f)")}
+
+
+def cons_class_block(F, reg):
+    cl = cons_classes(F, reg)
+    cnt = {c: sum(1 for v in cl.values() if v[0] == c) for c in CLASSES}
+    dcnt = {c: sum(1 for d in DEFECTS if D_CLASS[d["id"]] == c) for c in CLASSES}
+    ucnt = {c: sum(1 for u in U_CLASS.values() if u[0] == c) for c in CLASSES}
+    L = ["**The open items by class** (the owner's amendment of 3 October 2026, %s). Every register row has one class and the next action "
+         "of its kind in `DOWNSTREAM-REGISTER.md` (its Class and Next action columns); every defect row and every architecture-level choice "
+         "below has one too. A future test never erases a known defect; a physical uncertainty is settled by its executable specification, "
+         "executed outside (the supplier's phase 2) while the unaffected work continues; an uncertain design choice gets one bounded "
+         "comparison and a selection within the existing authority, or the smallest genuine owner decision." % AMEND_REF, "",
+         "| Class | Register rows | Defect rows | Choices (U) | The next action of its kind |", "|---|---|---|---|---|"]
+    kinds = {KED: "fix it, or ASSIGN a specific design-correction task to the supplier's phase 1 (8g)",
+             PHY: "TEST or ASK: its executable specification (5d's row where it is one), the decision it settles, external execution (the supplier's phase 2), the unaffected work continuing",
+             UDC: "COMPARE once (the table below), then SELECT within the existing authority or present the smallest genuine owner decision",
+             SET: "DO it in its step: no open question (implementation, layout, release and record work on a settled basis)"}
+    for c in CLASSES:
+        L.append("| %s | %d | %d | %d | %s |" % (c, cnt[c], dcnt[c], ucnt[c], kinds[c]))
+    L += ["", "| Item | State | Class | Next action |", "|---|---|---|---|"]
+    for d in DEFECTS:
+        c = D_CLASS[d["id"]]
+        L.append("| %s | %s | %s | %s |" % (d["id"], d["state"].split(":")[0].split(" (")[0], c,
+                                           D_NEXT.get(d["id"], "DO: its implementation rows (resolved or superseded in design)")))
+    for uid in ("U-01", "U-02", "U-03", "U-04"):
+        c = [x for x in CHOICES if x["id"] == uid][0]
+        L.append("| %s | %s | %s | %s |" % (uid, c["class"], U_CLASS[uid][0], U_CLASS[uid][1]))
+    L += ["", "**The comparisons** (the uncertain design choices; the records' own comparisons carried where their inputs did not change):", "",
+          "| Choice | The current choice and its qualification | The supported alternative | Total effort | Availability | Interfaces and service | Selection, or the owner's decision |",
+          "|---|---|---|---|---|---|---|"]
+    for c in cons_comparisons(F):
+        L.append("| %s: %s | %s | %s | %s | %s | %s | %s |" % (c["id"], c["what"], c["current"], c["alternative"], c["effort"], c["availability"],
+                                                            c["interfaces"], c["selection"] or c["owner"]))
+    return L
+
+
+def cons_supplier_block(F, reg):
+    cl = cons_classes(F, reg)
+    rows = {r[0]: r for r in reg}
+    L = ["**The supplier package's task list** (the owner's amendment of 3 October 2026, sections 3 and 4; the supplier entry page cites this "
+         "block). Nothing here is sent or bought; the request is the owner's to send.", "",
+         "**Phase 1, design review and correction: the known engineering defects, each a specific design-correction task**", "",
+         "| Task | What to redesign | Register rows | Acceptance |", "|---|---|---|---|"]
+    for tk in cons_p1_tasks(F):
+        L.append("| %s | %s | %s | %s |" % tk)
+    L += ["", "**Phase 2, prototype qualification: the physical uncertainties**", "",
+          "- The decision-critical experiments, each specified in full by 5d's route table (specimen, what it represents and transfers, "
+          "the decision, what it blocks, the performer, the authorisation, what to buy and what to send): %s."
+          % "; ".join(r[0] for r in cons_qual(F)[:-1])]
+    rt = set(rid for r in cons_qual(F) for rid in re.findall(r"R-\d+", r[0]))
+    bench = [rid for rid, v in cl.items() if v[0] == PHY and rid not in rt and rows[rid][1] == "TEST"]
+    ask = [rid for rid, v in cl.items() if v[0] == PHY and rid not in rt and rows[rid][1] != "TEST"]
+    L.append("- The first prototype's verification rows, each specified by its register acceptance (%d): %s." % (len(bench), ", ".join(bench)))
+    L.append("- The makers' statements or, in their place, a measurement (%d; the owner sends the drafted requests): %s." % (len(ask), ", ".join(ask)))
+    L += ["", "**The uncertain design choices:** %s." % "; ".join("%s %s" % (c["id"], (c["selection"] or c["owner"]).split(":")[0].split(" (")[0])
+                                                          for c in cons_comparisons(F)),
+          "", "**Unaffected work that continues** (SETTLED WORK, %d register rows): the change list's steps in order (section 3), the "
+          "release records, the layout constraints and the records' re-issues." % sum(1 for v in cl.values() if v[0] == SET)]
+    return L
+
+
+def cons_class_lines(F, reg):
+    cl = cons_classes(F, reg)
+    L = ["29. THE OPEN ITEMS BY CLASS AND THE SUPPLIER'S TASKS (the owner's amendment of 3 October 2026, %s)" % AMEND_REF]
+    for c in CLASSES:
+        ids = [rid for rid, v in cl.items() if v[0] == c]
+        L.append("   %s: %d register rows: %s" % (c, len(ids), ", ".join(ids)))
+    L.append("   the defect rows: %s" % "; ".join("%s %s" % (d["id"], D_CLASS[d["id"]]) for d in DEFECTS))
+    L.append("   the choices: %s" % "; ".join("%s %s" % (u, U_CLASS[u][0]) for u in ("U-01", "U-02", "U-03", "U-04")))
+    for c in cons_comparisons(F):
+        L.append("   %s %s: %s" % (c["id"], c["what"], c["selection"] or c["owner"]))
+    for tk in cons_p1_tasks(F):
+        L.append("   phase 1, %s: %s (%s); acceptance: %s" % tk)
+    return L
+
+
 def cons_decisions(F):
     """The decisions this page states, kept apart (the second review): one line each, the status phrase last."""
     L = ["**The decisions, kept apart** (the second external review, of the 22:30 checkpoint): \"conditional candidate\" and \"closure gate "
@@ -4803,16 +5057,19 @@ def cons_decisions(F):
         L.append("- **%s: %s.** %s." % (what[0].upper() + what[1:], verdict, why))
     adr = [d["id"] for d in DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
     opn = [d["id"] for d in DEFECTS if d["state"].startswith("OPEN")]
-    L.append("**What the status covers, exactly** (the collaborator's recheck objected that \"known defects addressed in drafts\" stood while the "
-             "drafts carried defects): **addressed in drafts, none applied:** %s, and D-10's over-voltage cut-off and cold connection (the cold "
-             "connection's margin lines not held at a connector fault, inside the absolute ratings); D-14 CONDITIONAL with Ciss OPEN, D-15 %s. "
+    L.append("**What stands where, exactly** (the collaborator's recheck and the owner's review of the supplier handover, L4-SH03, found the "
+             "earlier status phrase overstating closure while the drafts carried defects): **known design defects, open** (KNOWN ENGINEERING "
+             "DEFECT, 8f; each a design-correction task for the supplier's phase 1, 8g): D-10's source arriving with the guard already on, D-16 "
+             "and E11-40 (board B's coolers' feed, R-190), and VBUS20 against U2's single faults (R-48); **defects with a drafted correction, "
+             "not implemented, no qualification done:** %s, and D-10's over-voltage cut-off and cold connection (the cold connection's margin lines not "
+             "held at a connector fault, inside the absolute ratings); D-14 CONDITIONAL with Ciss OPEN, D-15 %s. "
              "**Drafts corrected after the recheck:** L4-E11's board E fan rail (the designators U22, R103 to R109 and C135 to C141) and its "
              "L4-CP01 texts at b929d8be; L4-E7's guard (R96 at 0.1 %%, the passing-floor claim withdrawn) and its sense model at 1a73f5b4; "
              "L4-E12's and this record's escalation rule and storage soak at 20188e03. **Open:** %s (D-10's source arriving with the guard "
              "already on, an absolute-rating violation at a connector fault; D-16, the drafted sense out of its operating range), the "
              "architecture-level choices U-01, U-02 and U-04, and every qualification row of 5d, none performed (8e: the recheck's six items)."
              % (", ".join(adr), L4F03_STATUS, ", ".join(opn)))
-    L.append("**Status: %s.**" % STATUS)
+    L.append("**Status:** %s" % STATUS)
     return L
 
 
@@ -4931,7 +5188,7 @@ def cons_svg(N, E, C, NOPOWER, st):
            '<path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>',
            '<text x="20" y="24" font-size="15" font-weight="bold" fill="#111827">L4-E9: the connected power design (A1 under D-06). '
            'Solid lines carry power, each labelled with its interface row; blue tags C01 to C13 are the controls (the page\'s table).</text>',
-           '<text x="20" y="42" font-size="12" fill="#b91c1c">Status: %s.</text>' % _esc(STATUS)]
+           '<text x="20" y="42" font-size="12" fill="#b91c1c">Status: %s</text>' % _esc(STATUS)]
     ctl = {}
     for cid, a, b, _w, _k in C:
         ctl.setdefault(b, []).append(cid)
@@ -7058,7 +7315,7 @@ def cons_in_short(F, D, st, reg):
         "storage soak), none re-reviewed (8e). Each has its exact missing fact and the smallest experiment or "
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
         "OPEN DOWNSTREAM, %d STILL OPEN; the review's E6 found L4-E12:2.1 and 1.2 regressed and L4-E7R:1.6 and 2.4 needing B6's "
-        "condition, and this record does not claim them closed. **Status: %s.**"
+        "condition, and this record does not claim them closed. **Status:** %s"
         % ((len(cons_qual(F)) - 1, cons_qual_lists(F)[1], len(cons_qual_lists(F)[2]), len(SENDS), M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2], L4F03_STATUS) + F["rc"]["ledger"] + (STATUS,)),
     ]
 
