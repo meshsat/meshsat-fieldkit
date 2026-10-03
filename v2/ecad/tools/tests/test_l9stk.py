@@ -629,3 +629,223 @@ def t_the_readme_names_the_copper_files():
     t = open(README, encoding="utf-8").read()
     for f in ("l9stk_copper.py", "l9stk_copper.out", "apply_energy_chain_l9stk.py", "apply_blade_plating_l9stk.py", "(L9STK CU)"):
         assert f in t, "the README does not name %s" % f
+
+
+# ------------------------------------------------------------------------------------------------ the protection (section 15)
+PROT = os.path.join(REC, "l9stk_protection.py")
+PROT_OUT = os.path.join(REC, "l9stk_protection.out")
+FETCH = os.path.join(REC, "fetch_held_back.py")
+HELD = os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-slva673a.pdf")
+READINGS = os.path.join(REC, "inputs", "csd18510q5b-figure-readings-2026-10-04.json")
+# the LM5069's printed limits (SNVS452G, electrical characteristics), typed here so a misread in the script shows
+LM = dict(vcl=(48.5e-3, 55e-3, 61.5e-3), vcb=(80e-3, 130e-3), tcb=1.2e-6, vtmrh=(3.76, 4.16), itmr=(51e-6, 120e-6),
+          isink=(1.25e-6, 3.75e-6), restart=(1.187, 1.313), vtmrl=0.3, igate=(10e-6, 22e-6), cb_sink=45e-3, off_sink=1.75e-3,
+          vgate=12.6, pwrlim=(19.0, 25.0, 31.0), kpwr=1.30e5, vpwr=1.18e-3, vsns=5e-3)
+FET = dict(rds=0.96e-3, qg=153e-9, rthja=50.0, rthjc=0.8, tj=150.0, idm=400.0, vds=40.0)
+
+
+def _PR():
+    if "PR" not in _C:
+        need(PROT, "the l9stk protection record")
+        need(HELD, "TI's SLVA673A, held back (python3 v2/docs/records/l9stk/fetch_held_back.py fetches it)")
+        if shutil.which("pdftotext") is None:
+            raise Skip("pdftotext (poppler) reads the makers' sheets")
+        m = _load(PROT, "l9stk_protection_under_test")
+        for rel in m.PINS.values():
+            need(os.path.join(ROOT, rel), "a pinned input of the l9stk protection record")
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l9stk_protection.py refused (exit %s)" % e.code)
+        _C.update(PR=m, PRR=R, ptext=m.render(R))
+    return _C["PR"]
+
+
+def t_protection_output_reproduced_byte_for_byte():
+    _PR()
+    need(PROT_OUT, "the committed protection output")
+    assert _C["ptext"] == open(PROT_OUT, encoding="utf-8").read(), "l9stk_protection.out is not what the script prints"
+
+
+def t_protection_every_input_is_pinned_and_present():
+    m = _PR()
+    t = _C["ptext"]
+    for k, rel in m.PINS.items():
+        got = hashlib.sha256(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()[:16]
+        assert "%s  sha256 %s" % (rel, got) in t, "the output does not pin %s at %s" % (rel, got)
+    assert "pins %d inputs by sha256" % len(m.PINS) in open(README, encoding="utf-8").read()
+
+
+def t_protection_every_predicate_holds():
+    _PR()
+    pr = _C["PRR"]["pred"]
+    assert len(pr) >= 20
+    bad = [k for k, v in pr.items() if not v]
+    assert not bad, "predicates that do not hold: %s" % bad
+    assert all(("   %s" % k) in _C["ptext"] for k in pr)
+
+
+def _close(a, b, rel=1e-9):
+    if isinstance(a, (tuple, list)):
+        return len(a) == len(b) and all(_close(x, y, rel) for x, y in zip(a, b))
+    return abs(a - b) <= rel * max(abs(a), abs(b), 1e-300)
+
+
+def t_protection_the_script_read_the_sheets_as_printed():
+    _PR()
+    I = _C["PRR"]["in"]
+    pairs = [(I["vcl"], LM["vcl"]), ((I["vcb"][0], I["vcb"][2]), LM["vcb"]), (I["tcb_max"], LM["tcb"]), (I["vtmrh"], LM["vtmrh"]),
+             (I["itmr"], LM["itmr"]), (I["isink"], LM["isink"]), (I["vtmrl_restart"], LM["restart"]), (I["vtmrl_end"], LM["vtmrl"]),
+             (I["igate"], LM["igate"]), (I["isink_cb_min"], LM["cb_sink"]), (I["isink_off_min"], LM["off_sink"]), (I["vgate"][1], LM["vgate"]),
+             (I["pwrlim"], LM["pwrlim"]), (I["kpwr"], LM["kpwr"]), (I["vpwr_off"], LM["vpwr"]), (I["vsns_min"], LM["vsns"])]
+    pairs += [(I["fet_" + k], FET[k]) for k in ("rds", "qg", "rthja", "rthjc", "idm", "tj", "vds")]
+    pairs += [((I["tvs"]["vr"], I["tvs"]["vc"], I["tvs"]["ipp"]), (18.0, 29.2, 51.4))]
+    for i, (a, b) in enumerate(pairs):
+        assert _close(a, b), "reading %d: the script read %r, the sheet prints %r" % (i, a, b)
+
+
+def t_protection_the_breaker_resolved_from_the_printed_limits():
+    m = _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    rs = 1.0 / (1.0 / 4e-3 + 1.0 / 7.5e-3)
+    u = 0.01 + 50e-6 * 100.0
+    assert abs(B["rs"] - rs) < 1e-12 and abs(B["u"] - u) < 1e-12
+    icl_max, icl_min = LM["vcl"][2] / (rs * (1 - u)), LM["vcl"][0] / (rs * (1 + u))
+    assert abs(B["icl_max"] - icl_max) < 1e-9 and abs(B["icl_min"] - icl_min) < 1e-9
+    assert round(icl_max, 2) == 23.93 and round(icl_min, 2) == 18.32 and icl_max <= 24.0 < icl_max + 0.1 and icl_min > 18.0
+    assert round(LM["vcb"][1] / (rs * (1 - u)), 2) == round(B["icb_max"], 2) == 50.59
+    # equation 9 at the 5 mV floor, the next E96 value up
+    vmax = 16.8
+    exact = LM["kpwr"] * rs * (LM["vsns"] * vmax / rs - LM["vpwr"] * vmax / rs)
+    e96 = sorted(round(10 ** (k / 96.0), 2) * 1000 for k in range(96))
+    assert _close(B["rpwr"], min(v for v in e96 if v >= exact)) and _close(B["rpwr"], 8450.0)
+    plim = B["rpwr"] / (LM["kpwr"] * rs) + LM["vpwr"] * vmax / rs
+    assert abs(B["plim_nom"] - plim) < 1e-9 and abs(B["plim_max"] - plim * 31 / 25) < 1e-9
+    # the timer, the gate charge, the clearing time
+    assert _close(B["ct"], 10e-9)
+    tf_max = 10e-9 * 1.1 * LM["vtmrh"][1] / LM["itmr"][0]
+    q = 2 * FET["qg"] * LM["vgate"] / 10.0 + 22e-9 * 1.1 * LM["vgate"]
+    assert _close(B["tf_max"], tf_max) and _close(B["q_off"], q)
+    assert _close(B["clear_max"], tf_max + q / LM["off_sink"]) and round(B["clear_max"] * 1e3, 3) == 1.292
+    assert _close(B["t_off_cb"], LM["tcb"] + q / LM["cb_sink"])
+    # the dv/dt start: 489 uF + 104 uF, the gate's largest current, the capacitor's least
+    assert _close(B["cdv"], 22e-9) and _close(B["cout"], 593e-6)
+    inrush = LM["igate"][1] * 593e-6 / (22e-9 * 0.9)
+    assert _close(B["inrush_max"], inrush) and inrush * vmax < B["plim_min"]
+    # the retry's duty, independent of the capacitor
+    on = (LM["vtmrh"][1] - LM["vtmrl"]) / LM["itmr"][0]
+    dv = LM["vtmrh"][0] - LM["restart"][1]
+    off = 7 * (dv / LM["isink"][1] + dv / LM["itmr"][1]) + (LM["vtmrh"][0] - LM["vtmrl"]) / LM["isink"][1]
+    assert _close(B["duty_max"], on / (on + off)) and 0.005 < B["duty_max"] < 0.02
+
+
+def t_protection_the_soa_by_slva673a():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    rd = json.load(open(READINGS, encoding="utf-8"))
+    ax = rd["axes"]
+
+    def amps(seg, v):
+        (xa, ya), (xb, yb) = rd["soa_segments"][seg]
+        x = ax["x_px"]["1"] + (ax["x_px"]["10"] - ax["x_px"]["1"]) * math.log10(v)
+        y = ya + (yb - ya) * (x - xa) / (xb - xa)
+        return 10 ** ((ax["y_px"]["1"] - y) / ((ax["y_px"]["1"] - ax["y_px"]["100"]) / 2.0))
+    soa = {k: amps(k, 16.8) * 16.8 for k in ("DC", "10 ms", "1 ms", "100 us", "10 us")}
+    for k in soa:
+        assert abs(B["soa"][k] - soa[k]) < 1e-9
+    # equation 6 between 1 and 10 ms; equation 4 with both losses through one pad; equation 5
+    t = B["clear_max"]
+    mexp = math.log(soa["1 ms"] / soa["10 ms"]) / math.log(1e-3 / 1e-2)
+    p_t = soa["1 ms"] * (t / 1e-3) ** mexp
+    p_each = (B["icl_max"] / 2) ** 2 * FET["rds"] * rd["rdson_normalized_at_150c_vgs10"]
+    tc = max(R["t0"] + FET["rthja"] * 2 * p_each, R["t0"] + FET["rthja"] * B["plim_max"] * B["duty_max"])
+    der = (FET["tj"] - tc) / (FET["tj"] - 25.0)
+    assert abs(B["tc"] - tc) < 1e-9 and abs(B["fault_soa"] - p_t * der) < 1e-9
+    assert B["plim_max"] / (p_t * der) <= 1 / 1.5 and round(B["fault_ratio"], 2) == 0.57
+    # the start: SLVA673A 3.2.2.7's equivalent pulse, the DC line past 10 ms
+    teq = 16.8 * 22e-9 * 1.1 / LM["igate"][0] / 2.0
+    assert teq > 10e-3 and abs(B["start_soa"] - soa["DC"] * der) < 1e-9
+    assert B["start_p"] / (soa["DC"] * der) <= 1 / 1.5
+    # the pulsed rating against the breaker and the docking peak (SLVA673A 3.1.2.2)
+    assert FET["idm"] > B["icb_max"] and FET["idm"] > R["cu"]["dock_pk"]
+
+
+def t_protection_the_pair_its_uncertainty_and_the_exposure():
+    _PR()
+    R, P = _C["PRR"], _C["PRR"]["pair"]
+    C = R["cu"]
+    each = C["pair_mohm_each"] / 1000.0
+    for f, a70, at0 in P["spread"]:
+        assert abs(a70 - 2 * math.sqrt((150 - 70) / (33.12 * f * each))) < 1e-9
+        assert abs(at0 - 2 * math.sqrt((150 - 76.25) / (33.12 * f * each))) < 1e-9
+    assert (round(P["i150_air"], 2), round(P["i150_t0"], 2)) == (21.38, 20.53)
+    tj = {a: 76.25 + 33.12 * (a / 2) ** 2 * each for a in (22.0, 23.0)}
+    assert round(tj[22.0], 1) == 161.0 and round(tj[23.0], 1) == 168.8
+    need_rth = (150 - 76.25) / ((R["B"]["icl_max"] / 2) ** 2 * each)
+    assert abs(R["rth_need"] - need_rth) < 1e-9 and round(need_rth, 2) == 24.37 < 33.12
+
+
+def t_protection_the_table_has_the_owners_columns_and_cases():
+    _PR()
+    T = _C["PRR"]["table"]
+    for must in ("10 A continuous", "18 A for 60 s", "an overload under the unit's limit, held", "an overload over the unit's limit",
+                 "a hot short, board P's FETs welded", "a start into a short", "a start", "docking a live pack",
+                 "a persistent fault, retrying", "the shore input, Q7 shorted"):
+        assert any(r["case"] == must or r["case"].startswith(must + " ") for r in T), "no row %r" % must
+    for r in T:
+        for k in ("case", "cur", "trip", "clear", "limiting", "margin", "status"):
+            assert r[k], "%s has no %s" % (r["case"], k)
+        assert any(w in r["status"] for w in ("printed", "derived", "MISSING", "DESIGN DEFECT")), r["case"]
+        if "OVER" in r["margin"]:
+            assert "DESIGN DEFECT" in r["status"], "%s is over a limit with no design defect named" % r["case"]
+    rows = [l for l in _C["ptext"].splitlines() if l.startswith("   ") and l.count(" | ") == 6]
+    assert len(rows) == len(T)
+
+
+def t_protection_the_defects_and_the_evidence_have_owners():
+    _PR()
+    R = _C["PRR"]
+    assert [d[0] for d in R["defects"]] == ["DD-1", "DD-2", "DD-3", "DD-4"] and all(d[2] for d in R["defects"])
+    assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and len(R["missing"]) == 8
+    assert all(i[2] for i in R["interfaces"]) and [q[2] for q in R["questions"]] == ["drafted, not sent"]
+
+
+def t_protection_the_page_carries_the_outputs_figures():
+    _PR()
+    need(PAGE, "the page")
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    B, P = _C["PRR"]["B"], _C["PRR"]["pair"]
+    for fig in ("%.2f" % B["icl_min"], "%.2f" % B["icl_max"], "%.2f" % B["icl_typ"], "%.2f" % B["icb_max"], "%.4f" % (B["rs"] * 1e3),
+                "%.2f" % B["plim_nom"], "%.2f" % B["plim_min"], "%.2f" % B["plim_max"], "%.3f" % (B["tf_max"] * 1e3),
+                "%.3f" % (B["clear_max"] * 1e3), "%.3f" % B["inrush_max"], "%.1f" % (B["start_max"] * 1e3), "%.2f" % B["fault_ratio"],
+                "%.2f" % B["start_ratio"], "%.2f" % _C["PRR"]["rth_need"], "%.2f" % P["i150_air"], "%.2f" % P["i150_t0"],
+                "%.2f" % B["alt_icl_min"], "%.2f" % B["alt_blade"], "%.1f" % B["sense_abs_a"], "%.2f" % (B["t_pl_charge"] * 1e3)):
+        assert fig in s15, "section 15 does not carry %s" % fig
+    for k in ("DD-1", "DD-2", "DD-3", "DD-4", "IF-1", "IF-2", "IF-3", "IF-4", "Q-TI-L9S-1") + tuple("E-%d" % i for i in range(1, 9)):
+        assert k in s15, "section 15 does not name %s" % k
+    for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19"):
+        assert f in t
+    assert "at or below the\ncells' 24 A" not in t and "current-and-time" in t
+
+
+def t_the_readme_names_the_protection_files():
+    need(README, "the README")
+    t = open(README, encoding="utf-8").read()
+    for f in ("l9stk_protection.py", "l9stk_protection.out", "fetch_held_back.py", "csd18510q5b-figure-readings-2026-10-04.json", "SLVA673A"):
+        assert f in t, "the README does not name %s" % f
+
+
+def t_the_held_back_document_is_ignored_and_its_fetch_pins_the_same_bytes():
+    need(FETCH, "the fetch script")
+    tree = ast.parse(open(FETCH, encoding="utf-8").read())
+    docs = [n for n in tree.body if isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "DOCS" for t in n.targets)]
+    assert len(docs) == 1
+    (rel, url, want), = [tuple(e.value for e in el.elts) for el in docs[0].value.elts]
+    assert rel == "v2/vendor/ti/held/ti-slva673a.pdf" and url.startswith("https://www.ti.com/") and len(want) == 64
+    need(PROT_OUT, "the committed protection output")
+    assert "%s  sha256 %s" % (rel, want[:16]) in open(PROT_OUT, encoding="utf-8").read()
+    if shutil.which("git") and os.path.exists(os.path.join(ROOT, ".git")):
+        r = subprocess.run(["git", "-C", ROOT, "check-ignore", "-q", rel], capture_output=True)
+        assert r.returncode == 0, "%s is not ignored: it must never be committed" % rel

@@ -47,6 +47,9 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    power limit: RPWR 8450 ohm (equation 9 at VSNS 5 mV and 16.8 V, the next E96 value up): 32.52 W nominal, VSNS 5.05 mV
      its spread: 24.71 to 40.32 W with the table's 19/25/31 mV read as a ratio (the table prints it at 25 mV only); read as an offset, 71.16 W
      without the power limit the FET would see 402.1 W (VIN x the largest limit): the limit is relied on (E-2, Q-TI-L9S-1)
+   not taken: a limit whose largest is the pair's 20.53 A leaves its least at 15.71 A, under the 18 A service (it weakens the service);
+     a blade opening under it within a bounded time is at most 15.21 A (its 135 % row), and the service is 118 % of that, between the
+     110 % row that holds and the 135 % row that opens: no carrying of the service is assured
    fault timer: 10 nF (+-10 %): 0.282 to 0.897 ms (VTMRH 3.76 to 4.16 V, 51 to 120 uA)
    gate: 690 nC to remove (2 x 153 nC at 10 V scaled to 12.6 V, and the dv/dt capacitor's swing); breaker release 16.5 us (tCB 1.2 us, 45 mA);
      after the timer 395 us (1.75 mA): clearing 1.292 ms at most from the limit's onset (tCL 45 us typical, no maximum printed)
@@ -60,6 +63,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
      SOA at 16.8 V and 25 C (Figure 10 read at 300 dpi, +-10 %): DC 50 W; 10 ms 96 W; 1 ms 206 W; 100 us 1692 W; 10 us 4101 W
      the fault pulse: 40.32 W for 1.292 ms against 71.1 W derated: 0.57 (TI asks 0.67 at most); 1.00 with the offset reading
      the start: 11.1 W for 20.3 ms against 19.0 W derated (the DC line: no extrapolation past 10 ms): 0.58
+     with Figure 10 read 10 % high (the SOA 10 % lower): 0.63 and 0.65
      the 10 us line at 16.8 V: 244.1 A; IDM 400 A against the breaker's 50.59 A (SLVA673A 3.1.2.2) and the docking peak 242.9 A
    input clamp: SMCJ18A on VIN (VR 18 V, VBR 20 V least, VC 29.2 V at 51.4 A), the part on board A's VBAT; VIN to SENSE's 0.3 V maximum is passed
      above 116.8 A, which a hot short and the docking reach before the gate is low (Q-TI-L9S-1, E-3)
@@ -130,6 +134,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    a start never reaches the power limit or the current limit                                               yes
    the fault pulse is inside the derated SOA with TI's 1.5x margin                                          yes
    the start is inside the derated SOA with TI's 1.5x margin                                                yes
+   both stay within TI's margin with the figure's reading uncertainty taken against them                    yes
    the breaker FETs hold the largest held current under 125 C                                               yes
    the FET's pulsed rating exceeds the breaker's threshold and the docking peak                             yes
    the gate's 12.6 V is inside the FET's VGS rating                                                         yes
@@ -137,5 +142,6 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    the controller runs over the pack's range                                                                yes
    the clamp is a part the kit already uses                                                                 yes
    a live docking's power-limited charge outlasts the longest timer (it ends in a retry and a dv/dt start)  yes
+   a limit at the pair's 150 C current would fall under the service; a blade under it would not carry the service assuredly yes
    Q39/Q40 need a stronger path than E11-29's target at the breaker's largest limit (DD-2 stands)           yes
    without the power limit the fault pulse would pass the SOA (the limit is relied on)                      yes
