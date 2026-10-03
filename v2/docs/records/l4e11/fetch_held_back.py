@@ -13,7 +13,9 @@ February 2021, revised January 2024, 111 pages) and AOS's AONS21357 (Rev 2.1, No
 adds Vishay's SQJ403EP (document 67109, S15-2089 Rev. A, 31 August 2015) and Nexperia's BUK6Y10-30P (product data sheet of 17
 April 2020, the selected battery FETs Q39 and Q40). The fix round for the review of the provisional fixes (2 October 2026) adds two
 sheets read in the search for a P-channel part printing RDS(on) at a low gate drive hot (section 16a): Vishay's SQJ407EP (document
-62806, S22-0224 Rev. B, 7 March 2022) and Nexperia's PXP9R1-30QL (product data sheet of 5 January 2021). All thirteen carry their makers' copyright and no grant to redistribute, so they
+62806, S22-0224 Rev. B, 7 March 2022) and Nexperia's PXP9R1-30QL (product data sheet of 5 January 2021). The fans' feed round (3 October 2026, section 18) adds the mixers' 12 V rail
+candidates: ADI's LTC3115-1 (Rev. E; analog.com refuses this host, so the archive's copy of the maker's file), TI's TPS55340
+(SLVSBD4E) and TPS63070 (SLVSC58B). All sixteen carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
@@ -57,6 +59,13 @@ DOCS = [
      "1c1038b032b5bf378878473ba170cdbbd640ce1597fbb9c23be20adeaea663e8"),
     ("v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf", "https://assets.nexperia.com/documents/data-sheet/PXP9R1-30QL.pdf",
      "88a7b67bfcec9ba7dbf4619be60cfaa883f61b7c9a93a19affc3a5278d91513f"),
+    ("v2/vendor/power/held/adi-ltc3115-1-rev-e.pdf",
+     "http://web.archive.org/web/2026id_/https://www.analog.com/media/en/technical-documentation/data-sheets/LTC3115-1.pdf",
+     "bbcd4991d9b86c100cf8da775a358740b3c524325d18251d56ec6e40a2014a03"),
+    ("v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf", "https://www.ti.com/lit/ds/symlink/tps55340.pdf",
+     "e579aa4fcb549eab29e889f7f6dcbd0fd88cac2647082c65f102e411c3f666ca"),
+    ("v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf", "https://www.ti.com/lit/ds/symlink/tps63070.pdf",
+     "a88ef66f3493156ff6e7da0849de0e0e1068647f2553d08c1844d4a90c5c65ef"),
 ]
 
 
