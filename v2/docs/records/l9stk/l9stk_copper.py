@@ -7,7 +7,7 @@ Desk arithmetic on committed files. Nothing here was built, routed, measured or 
 by sha256 in section 0, and prints:
 
   1. the currents each conductor carries, by class: the continuous load, the transient demand with its duration, and the
-     fault current with the time its protection takes to clear it, where a guaranteed time exists at all;
+     fault current with the time its protection takes to clear it, where an assured time exists at all;
   2. the method: decision 35's model (track_current.conservative, outer copper at the external factor) applied to the two
      outer faces of a band AS ONE CONDUCTOR of their combined section (they share one footprint and its cooling), and to a
      band and its adjacent return AS ONE CONDUCTOR of their combined section carrying their combined dissipation; an uneven
@@ -17,7 +17,7 @@ by sha256 in section 0, and prints:
   3. the split between the faces (resistance and transfer barrels) and the barrels' two annulus conventions;
   4. the widths per conductor at 1 oz and 2 oz, each class on them with every failing row, and the widths quoted judged;
   5. the series parts and lands; board E's cross-section; the owner's coordination table, one row per case with its
-     protective device, its guaranteed clearing time or "none guaranteed", every component's reading and the limiting one;
+     protective device, its assured clearing time or "none assured", every component's reading and the limiting one;
   6. the predicates test_l9stk.py holds.
 
 Run from the repository root: python3 v2/docs/records/l9stk/l9stk_copper.py
@@ -414,12 +414,12 @@ def n_for(L, w, oz, h, s, both):
 # ------------------------------------------------------------------------------------------------ 4. the events
 def envelope(rating_a, rows, high_a):
     """A blade read monotone (a larger current clears no later than a smaller one, as L4-E11 section 6 reads its fuse): up to
-    the first row with a maximum time no opening is guaranteed; each later interval may last as long as the maximum of the
+    the first row with a maximum time no opening is assured; each later interval may last as long as the maximum of the
     row below it, its top current being the next row's; above the last row, to the prospective high end."""
     out = []
     timed = [(p, b) for p, a, b in rows if b is not None]
     first = timed[0][0]
-    out.append(("up to %g %%, no opening guaranteed" % first, rating_a * first / 100.0, None))
+    out.append(("up to %g %%, no opening assured" % first, rating_a * first / 100.0, None))
     for (p0, t0), (p1, _t1) in zip(timed, timed[1:]):
         out.append(("%g to %g %%, at most %g s" % (p0, p1, t0), rating_a * p1 / 100.0, t0))
     out.append(("over %g %% to %g A, at most %g s" % (timed[-1][0], high_a, timed[-1][1]), high_a, timed[-1][1]))
@@ -436,7 +436,7 @@ def events_pack(I):
     ev.append(("25 A held (the blades' rating, the chain's check 3)", b, None, "coordination"))
     for lab, a, s in envelope(b, I["mini_rows"], I["pf_high"]):
         ev.append(("gauge failed: blade " + lab, a, s, "backstop"))
-    ev.append(("hard short at the blade's nominal melting I2t (not a clearing guarantee)", I["pf_high"], I["mini_25"]["i2t"] / I["pf_high"] ** 2, "nominal"))
+    ev.append(("hard short at the blade's nominal melting I2t (not a clearing figure)", I["pf_high"], I["mini_25"]["i2t"] / I["pf_high"] ** 2, "nominal"))
     ev.append(("hard short cleared by the gauge's ASCD", I["pf_high"], I["gauge"][-1][2], "short"))
     ev.append(("docking pulse", I["dock_pk"], None, "pulse"))
     return ev
@@ -449,7 +449,7 @@ def events_shore(I):
           ("20 A held (L4-E11's D-06 withstand)", I["shore_withstand_a"], None, "coordination")]
     for lab, a, s in envelope(f, I["shore_rows"], I["shore_stiff_a"]):
         ev.append(("Q7 shorted: fuse " + lab, a, s, "backstop"))
-    ev.append(("stiff source at the fuse's nominal melting I2t (not a clearing guarantee)", I["shore_stiff_a"], I["shore_i2t_typ"] / I["shore_stiff_a"] ** 2, "nominal"))
+    ev.append(("stiff source at the fuse's nominal melting I2t (not a clearing figure)", I["shore_stiff_a"], I["shore_i2t_typ"] / I["shore_stiff_a"] ** 2, "nominal"))
     return ev
 
 
@@ -585,7 +585,7 @@ def compute():
     nf = blade * I["mini_rows"][0][0] / 100.0
     R["ask"] = [(lab, a, w_alone(a, OZ1), w_pair(a, OZ1), w_pair(a, OZ2)) for lab, a in (
         ("the continuous load", I["cont"]), ("the transient (PWR-F12)", I["kd_a"]), ("held just under the gauge's OCD1", I["gauge"][0][1]),
-        ("the blades' rating (the coordination current)", blade), ("the blades' %g %% current, no opening guaranteed" % I["mini_rows"][0][0], nf))]
+        ("the blades' rating (the coordination current)", blade), ("the blades' %g %% current, no opening assured" % I["mini_rows"][0][0], nf))]
     # the band families
     pe, se = events_pack(I), events_shore(I)
     fam = [
@@ -610,16 +610,26 @@ def compute():
     # the split and the barrels
     R["barrel"] = {c: dict(area=annulus(c), amps=barrel_amps(c)) for c in ("outward", "inward")}
     R["thermal_barrels"] = {k: {c: barrels(a / 2.0, c) for c in ("outward", "inward")} for k, a in (("pack", blade), ("shore", wst), ("vin", I["vin_raw"]))}
-    def field_for(a_top, lim):
+    def field_for(rows_, lim):
+        """The least inward-annulus barrels that keep one barrel within the band's limit at every (current, time) given:
+        steady at a second and longer, adiabatic below."""
         n = 1
         while True:
-            r = barrel_rise(0.5 * a_top / n, "inward")
-            if r is not None and I["t0"] + r <= lim:
+            ok = True
+            for a_, d_ in rows_:
+                per = 0.5 * a_ / n
+                r = barrel_rise(per, "inward") if (d_ is None or d_ >= 1.0) else rise_adiabatic(per * per * d_, annulus("inward"), I)
+                if r is None or I["t0"] + r > lim:
+                    ok = False
+                    break
+            if ok:
                 return n
             n += 1
-    R["field_pack_600"] = field_for(blade * I["mini_rows"][2][0] / 100.0, min(R["limits_pinned"]["pack A"], R["limits_pinned"]["pack E"]))
+    penv = envelope(blade, I["mini_rows"], I["pf_high"])
+    senv = envelope(I["shore_fuse_a"], I["shore_rows"], I["shore_stiff_a"])
+    R["field_pack_600"] = field_for([(a_, d_) for _l, a_, d_ in penv if d_ is None or d_ >= 60.0], min(R["limits_pinned"]["pack A"], R["limits_pinned"]["pack E"]))
     R["field_pack"] = max(R["thermal_barrels"]["pack"]["inward"], R["field_pack_600"])
-    R["field_shore_600"] = field_for(I["shore_fuse_a"] * I["shore_rows"][2][0] / 100.0, R["limits"]["shore E"][0])
+    R["field_shore_600"] = field_for([(a_, d_) for _l, a_, d_ in senv if d_ is None or d_ >= 0.5], R["limits"]["shore E"][0])
     R["field_shore"] = max(R["thermal_barrels"]["shore"]["inward"], R["field_shore_600"])
     if R["thermal_barrels"]["pack"]["outward"] != vc.barrels_for(blade / 2.0, drill()):
         refuse("the outward count disagrees with via_current.barrels_for")
@@ -760,9 +770,10 @@ def coordination(R, I, W, F, pair_tj):
                     "TJ %s C held from %.2f C air (%s C from %g C)" % (f2(tj), I["t0"], f2(pair_tj(a, I["air_c"])), I["air_c"]), (tj - I["t0"]) / (I["pair_limit"] - I["t0"]))
         if gauge_on:
             return ("Q39/Q40", "L4-E11 15c: the gauge's levels at 150 C or under at E11-29's bar (CONDITIONAL on E11-29)", None)
-        z = min([zz for ww, zz in I["pair_zjmb"] if ww <= dur] or [I["pair_zjmb"][-1][1]])
+        under = [(ww, zz) for ww, zz in I["pair_zjmb"] if ww <= dur]
+        z = max(under)[1] if under else min(I["pair_zjmb"])[1]
         tj = I["t0"] + (a / 2.0) ** 2 * I["pair_mohm_each"] / 1000.0 * z
-        return ("Q39/Q40 (INFERRED: the device's own Zth(j-mb) %g K/W, no board credit)" % z, "TJ about %s C for %s" % (f2(tj), dur_s(dur, "", I)),
+        return ("Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) %g K/W, no board credit)" % z, "TJ about %s C for %s" % (f2(tj), dur_s(dur, "", I)),
                 (tj - I["t0"]) / (I["pair_limit"] - I["t0"]))
 
     def pack_comps(a, dur, cls, gauge_on):
@@ -790,29 +801,36 @@ def coordination(R, I, W, F, pair_tj):
         return c
 
     def limiting(c):
+        """The component furthest over a printed rating; else one above its continuous rating with no short-time rating held;
+        else the largest fraction."""
         held = [(f, n) for n, _t, f in c if f is not None]
         f, n = max(held)
+        if f > 1.0 + 1e-9:
+            return n, f
+        unrated = [n2 for n2, t2, f2_ in c if f2_ is None and "no short-time rating held" in t2]
+        if unrated:
+            return unrated[0] + " (above its continuous rating, no short-time rating held)", float("nan")
         return n, f
 
     # R1, R2, R3
     rows.append(dict(case="10 A continuous", a=I["cont"], dur=None, basis="the pack's declared continuous current; the drafted states at 10.0 V reach %.2f A at PLAN, held under 10 A by the shedding control" % R["sustained_plan_base"][1],
                      device="none needed: a load", clearing="not a fault", comps=pack_comps(I["cont"], None, "load", True)))
     rows.append(dict(case="18 A for 60 s", a=I["kd_a"], dur=I["kd_s"], basis="PWR-F12 / D-11: every transmitter keyed, ended early above 18 A (judged steady: no transient credit)",
-                     device="the key-down limit K1 (firmware); no hardware element acts at 18 A", clearing="none guaranteed by hardware (60 s by firmware)",
+                     device="the key-down limit K1 (firmware); no hardware element acts at 18 A", clearing="none assured by hardware (60 s by firmware)",
                      comps=pack_comps(I["kd_a"], None, "transient", True)))
     rows.append(dict(case="the 25 A case, the gauge working", a=blade, dur=I["gauge"][1][2], basis="the blades' rating, which the chain's check 3 asks the copper for; a fault drawing it",
-                     device="the gauge's OCD2 (%g A, %g s), firmware-configured" % (I["gauge"][1][1], I["gauge"][1][2]), clearing="%g s (the image's setting, not a hardware guarantee)" % I["gauge"][1][2],
+                     device="the gauge's OCD2 (%g A, %g s), firmware-configured" % (I["gauge"][1][1], I["gauge"][1][2]), clearing="%g s (the image's setting, not a hardware assurance)" % I["gauge"][1][2],
                      comps=pack_comps(blade, I["gauge"][1][2], "coordination", True)))
     rows.append(dict(case="the 25 A case, the gauge failed", a=blade, dur=None, basis="the same current with board P's FETs welded: the blade does not open (110 %% holds %g s at least); the rating is not a clamp" % I["mini_rows"][0][1],
-                     device="none", clearing="none guaranteed", comps=pack_comps(blade, None, "coordination", False)))
+                     device="none", clearing="none assured", comps=pack_comps(blade, None, "coordination", False)))
     top = blade * I["mini_rows"][1][0] / 100.0
-    rows.append(dict(case="sustained overloads %g to %g A, no fuse opening guaranteed" % (I["gauge"][0][1], top), a=top, dur=None,
+    rows.append(dict(case="sustained overloads %g to %g A, no fuse opening assured" % (I["gauge"][0][1], top), a=top, dur=None,
                      basis="the gauge holds just under %g A with no trip; with it failed, no blade row opens below %g %%" % (I["gauge"][0][1], I["mini_rows"][1][0]),
-                     device="the gauge's OCD1/OCD2 when it works (firmware-configured); none when it has failed", clearing="none guaranteed",
+                     device="the gauge's OCD1/OCD2 when it works (firmware-configured); none when it has failed", clearing="none assured",
                      comps=pack_comps(top, None, "backstop", False)))
     for lab, a, dur in env[1:]:
         rows.append(dict(case="board P's FETs failed short, blade %s" % lab, a=a, dur=dur, basis="a fault behind the welded FETs, read on the blade's monotone envelope",
-                         device="the 25 A MINI blades (F2's element opens later at every current both tables state)", clearing="at most %g s (the row's maximum; the nominal melting I2t %g A2s is no clearing guarantee)" % (dur, I["mini_25"]["i2t"]),
+                         device="the 25 A MINI blades (F2's element opens later at every current both tables state)", clearing="at most %g s (the row's maximum; the nominal melting I2t %g A2s is no clearing assurance)" % (dur, I["mini_25"]["i2t"]),
                          comps=pack_comps(a, dur, "backstop", False)))
     # the shore input with Q7 shorted
     for lab, a, dur in senv:
@@ -829,8 +847,8 @@ def coordination(R, I, W, F, pair_tj):
         c.append(rated("R19 (%s, %g W; derating NOT HELD)" % (I["r19"]["mpn"], I["r19"]["w"]), a * a * I["r19"]["mohm"] / 1000.0, I["r19"]["w"], "W", dur))
         c.append(rated("J_DCIN, JST VH (%g A with AWG 16; the drawn lead AWG 18 prints none; %g C)" % (I["vh_a"], I["vh_max_c"]), a, I["vh_a"], "A", dur))
         c.append(("Keystone 3568 holder", "no current rating printed (NOT HELD)", None))
-        rows.append(dict(case="the shore input, Q7 shorted, fuse %s" % lab, a=a, dur=dur, basis="F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost",
-                         device="F1, %g A MINI" % shore, clearing="none guaranteed" if dur is None else "at most %g s (the row's maximum)" % dur, comps=c))
+        rows.append(dict(case="the shore input, Q7 shorted, fuse %s" % lab, a=a, dur=dur, basis="F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope",
+                         device="F1, %g A MINI" % shore, clearing="none assured" if dur is None else "at most %g s (the row's maximum)" % dur, comps=c))
     for r in rows:
         r["limit_comp"], r["limit_frac"] = limiting(r["comps"])
         r["not_held"] = [n for n, _t, f in r["comps"] if f is None]
@@ -863,7 +881,20 @@ def disposition(r, R, I):
                 "no firmware-independent element opens in this band (the battery stream with L4-E11)" % (
                     R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"], I["r17"]["w"], R["r17_limit_a"], I["xt60_a"]), holder]
     if c.startswith("board P's FETs failed short"):
-        out = ["(b) W4DP-F2: every series part is over its printed rating for the row's time (a coupon does not stand in for it)"]
+        cu = [x for x in r["comps"] if x[0].startswith("copper, 1 oz")][0]
+        out = []
+        if r["dur"] is not None and r["dur"] >= 60.0:
+            out.append("(b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and Q39/Q40 are over their printed "
+                       "ratings for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)")
+        else:
+            out.append("(b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the "
+                       "dock contacts carry currents above their continuous ratings with no short-time rating held (the battery "
+                       "stream with L4-E11; a coupon does not stand in for it)")
+        if cu[2] is not None and cu[2] <= 1.0:
+            out.append("(a) the copper bands at either weight, with the blade's plating pinned")
+        if R["blade_c"]["fitted"] < R["lim_pack_pin"] and cu[2] is not None and I["t0"] + cu[2] * (R["lim_pack_pin"] - I["t0"]) > R["blade_c"]["fitted"]:
+            out.append("(b) the blade's plating pinned to silver, 0297025.%s (Layer 6; apply_blade_plating_l9stk.py): as fitted the tin "
+                       "part's %g C is passed" % (I["mini_ag_order"], R["blade_c"]["fitted"]))
         if r["dur"] is not None and r["dur"] <= 0.1:
             out.append("(c) the blade's total clearing I2t at %g A and 16.8 V (not printed; %g A2s is nominal melting): specimen, the fitted lot "
                        "in the 3568 holder on a band coupon; acceptance, at most %.0f A2s (the governing 1 oz face to %g C from %.2f C); supplier "
@@ -898,7 +929,7 @@ def predicates(R, I, W, F):
     def row(k, start):
         return [x for x in F[k]["rows"] if x["lab"].startswith(start)][0]
     C = R["coord"]
-    over = [r for r in C if r["limit_frac"] > 1.0 + 1e-9]
+    over = [r for r in C if r["limit_frac"] != r["limit_frac"] or r["limit_frac"] > 1.0 + 1e-9]
     return {
         "each face rated alone reproduces the candidate's widths: 6.72, 11.95, 12.26 and 14.60 mm":
             [round(W[k], 2) for k in ("svc_even", "svc_one_2oz", "cand_even", "cand_smax")] == [6.72, 11.95, 12.26, 14.60],
@@ -1007,8 +1038,9 @@ def render(R):
     P("     drill and the plating lies inside, pi (d - t) t; the field takes the inward count until the fabricator states which)")
     P("   the field at each one-face end: the inward count at 10 K (pack %d, shore %d) or the count that holds the blade's 600 s point within" % (
         R["thermal_barrels"]["pack"]["inward"], R["thermal_barrels"]["shore"]["inward"]))
-    P("     the band's limit (pack %d, shore %d), whichever is more: pack %d, shore %d; and the split count below where it is more" % (
-        R["field_pack_600"], R["field_shore_600"], R["field_pack"], R["field_shore"]))
+    P("     the band's limit (pack: every interval to the blade's 600 s point, %d; shore: every interval to F1's 0.5 s one, %d), whichever" % (
+        R["field_pack_600"], R["field_shore_600"]))
+    P("     is more: pack %d, shore %d; and the split count below where it is more" % (R["field_pack"], R["field_shore"]))
     P("   the split count each one-face end needs for the part's face to carry at most %.2f (one end / both ends):" % S_MAX)
     for name, w, hh, oz, rows in R["transfer"]:
         P("     %-22s %.2f mm, %.4f mm board: %s" % (name, w, hh, ", ".join("%.0f mm %d / %d" % (Lx, a, b) for Lx, a, b in rows)))
@@ -1073,10 +1105,13 @@ def render(R):
     for r in R["coord"]:
         P("   %s: %.2f A, %s" % (r["case"], r["a"], dur_s(r["dur"], "", I)))
         P("     basis: %s" % r["basis"])
-        P("     protective device: %s; guaranteed maximum clearing: %s" % (r["device"], r["clearing"]))
+        P("     protective device: %s; assured maximum clearing: %s" % (r["device"], r["clearing"]))
         for n, t, f in r["comps"]:
             P("       %-62s %s%s" % (n, t, "" if f is None else "  [%.2f]" % f))
-        P("     limiting: %s at %.2f of its rating%s" % (r["limit_comp"], r["limit_frac"], " (OVER)" if r["limit_frac"] > 1.0 + 1e-9 else ""))
+        if r["limit_frac"] != r["limit_frac"]:
+            P("     limiting: %s" % r["limit_comp"])
+        else:
+            P("     limiting: %s at %.2f of its rating%s" % (r["limit_comp"], r["limit_frac"], " (OVER)" if r["limit_frac"] > 1.0 + 1e-9 else ""))
         for d in r["disp"]:
             P("     disposition: %s" % d)
     P("   W4DP-F2 stays open; its closure: a firmware-independent element that opens the discharge path at or below the cells' %.0f A at" % I["cells_a"])

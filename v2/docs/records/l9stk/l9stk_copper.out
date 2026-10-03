@@ -37,10 +37,10 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      time constant, I2t 0.9971 A2s, once per docking (L4-E11 E11-30)
    fault, the gauge working (the image): OCD1 20.0 A, 2 s; OCD2 24.0 A, 1 s; AOLD 30.0 A, 0.02 s; ASCD 55.6 A, 244 us
      so 20.0 A may be held with no trip; every level is firmware-configured (W4DP-F2)
-   fault, board P's FETs failed short: the 25 A MINI blades read monotone (Littelfuse 297): up to 135 %, no opening guaranteed; 135 to 200 %, at most 600 s; 200 to 350 %, at most 5 s; 350 to 600 %, at most 0.5 s; over 600 % to 480 A, at most 0.1 s
+   fault, board P's FETs failed short: the 25 A MINI blades read monotone (Littelfuse 297): up to 135 %, no opening assured; 135 to 200 %, at most 600 s; 200 to 350 %, at most 5 s; 350 to 600 %, at most 0.5 s; over 600 % to 480 A, at most 0.1 s
      nominal melting I2t 625 A2s (no clearing I2t printed); F2 (Eaton SCF9550, 30 A) 100 % for 1 h minimum, 200 % within 60 s
      the cells' continuous rating at 3P: 24 A (pcb_pack_protection.yaml); prospective fault 240 to 480 A
-   the shore input: 6.15 A continuous; F1 10 A MINI read monotone: up to 135 %, no opening guaranteed; 135 to 200 %, at most 600 s; 200 to 350 %, at most 5 s; 350 to 600 %, at most 0.5 s; over 600 % to 900 A, at most 0.1 s
+   the shore input: 6.15 A continuous; F1 10 A MINI read monotone: up to 135 %, no opening assured; 135 to 200 %, at most 600 s; 200 to 350 %, at most 5 s; 350 to 600 %, at most 0.5 s; over 600 % to 900 A, at most 0.1 s
      (L4-E11 section 6); its D-06 selection: board E's copper from J_DCIN to F1 to the clamps at least 20 A continuous
    VIN_RAW: declared 14.10 A; the tracker's minimum valley limit 13.8 A; with the hot-swap 19.95 A until its fault time
    the inside air: the consolidation's +70 C line (with the hold); L4-E12's E3-O 71.25 C and E5's dwell 76.25 C (steady, without the
@@ -77,7 +77,8 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      (outward: the 0.4 mm is the finished hole and the plating lies outside it, via_current's pi (d + t) t; inward: the 0.4 mm is the
      drill and the plating lies inside, pi (d - t) t; the field takes the inward count until the fabricator states which)
    the field at each one-face end: the inward count at 10 K (pack 15, shore 12) or the count that holds the blade's 600 s point within
-     the band's limit (pack 16, shore 8), whichever is more: pack 16, shore 12; and the split count below where it is more
+     the band's limit (pack: every interval to the blade's 600 s point, 16; shore: every interval to F1's 0.5 s one, 15), whichever
+     is more: pack 16, shore 15; and the split count below where it is more
    the split count each one-face end needs for the part's face to carry at most 0.55 (one end / both ends):
      pack, board A, 1 oz    39.14 mm, 1.5384 mm board: 5 mm 81 / 161, 10 mm 41 / 81, 20 mm 21 / 41, 40 mm 11 / 21, 80 mm 6 / 11
      pack, board E, 1 oz    39.14 mm, 1.5862 mm board: 5 mm 83 / 166, 10 mm 42 / 83, 20 mm 21 / 42, 40 mm 11 / 21, 80 mm 6 / 11
@@ -93,12 +94,12 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 100.68  adiabatic 0.49    -> 0.49    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady -       adiabatic 0.02    -> 0.02    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 69.59   adiabatic -       -> 69.59   OVER 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 127.80  adiabatic -       -> 127.80  OVER (204.05 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 127.80  adiabatic -       -> 127.80  OVER (204.05 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 283.35  adiabatic >9999   -> 283.35  OVER (359.60 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 8749.36 -> 8749.36 OVER (8825.61 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 526.04  -> 526.04  OVER (602.29 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 2053.92 -> 2053.92 OVER (2130.17 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 17.57   -> 17.57   within (93.82 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 17.57   -> 17.57   within (93.82 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 1.54    -> 1.54    within (77.79 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.03    -> 0.03    within (76.28 C)
    C1 12.26 mm a face, 1 oz (f76564eb), its two faces as one conductor, return apart: limit 105 C, the governing face's fusing I2t 13652 A2s
@@ -109,12 +110,12 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 27.37   adiabatic 0.15    -> 0.15    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 95.58   adiabatic 0.01    -> 0.01    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 18.92   adiabatic -       -> 18.92   OVER 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 34.75   adiabatic -       -> 34.75   OVER (111.00 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 34.75   adiabatic -       -> 34.75   OVER (111.00 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 77.08   adiabatic >9999   -> 77.08   OVER (153.33 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 239.57  adiabatic 544.57  -> 239.57  OVER (315.82 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  OVER (183.89 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  OVER (336.99 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    within (76.71 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    within (76.26 C)
    C2 12.26 mm a face, 1 oz (f76564eb), with its adjacent return: limit 105 C, the governing face's fusing I2t 13652 A2s
@@ -125,12 +126,12 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 51.56   adiabatic 0.15    -> 0.15    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 179.42  adiabatic 0.01    -> 0.01    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 35.66   adiabatic -       -> 35.66   OVER 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 65.42   adiabatic -       -> 65.42   OVER (141.67 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 65.42   adiabatic -       -> 65.42   OVER (141.67 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 144.77  adiabatic >9999   -> 144.77  OVER (221.02 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady -       adiabatic 544.57  -> 544.57  OVER (620.82 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 107.64  -> 107.64  OVER (183.89 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 260.74  -> 260.74  OVER (336.99 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 5.18    -> 5.18    within (81.43 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.46    -> 0.46    within (76.71 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.01    -> 0.01    within (76.26 C)
    D1 39.14 mm a face, 1 oz, with its adjacent return (this revision): limit 105 C, the governing face's fusing I2t 139084 A2s
@@ -141,12 +142,12 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.43   adiabatic 0.02    -> 0.02    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 49.97   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   OVER (116.60 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   OVER (115.94 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   within (87.42 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   within (99.56 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    within (76.30 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
    D2 19.57 mm a face, 2 oz, with its adjacent return (this revision): limit 105 C, the governing face's fusing I2t 139084 A2s
@@ -157,12 +158,12 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.43   adiabatic 0.02    -> 0.02    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 49.97   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.30   adiabatic -       -> 18.30   within (94.55 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.35   adiabatic >9999   -> 40.35   OVER (116.60 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 124.45  adiabatic 39.69   -> 39.69   OVER (115.94 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 11.17   -> 11.17   within (87.42 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 23.31   -> 23.31   within (99.56 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 0.61    -> 0.61    within (76.86 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.05    -> 0.05    within (76.30 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
    D3 22.01 mm a face, 1 oz, return laid apart (no credit held for apart): limit 105 C, the governing face's fusing I2t 43973 A2s
@@ -173,34 +174,34 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      gauge AOLD                                                                   30.00 A 20ms       steady 14.46   adiabatic 0.06    -> 0.06    within 10 K
      gauge ASCD                                                                   55.60 A 244us      steady 50.35   adiabatic 0.00    -> 0.00    within 10 K
      25 A held (the blades' rating, the chain's check 3)                          25.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     gauge failed: blade up to 135 %, no opening guaranteed                       33.75 A held       steady 18.35   adiabatic -       -> 18.35   within (94.60 C)
+     gauge failed: blade up to 135 %, no opening assured                          33.75 A held       steady 18.35   adiabatic -       -> 18.35   within (94.60 C)
      gauge failed: blade 135 to 200 %, at most 600 s                              50.00 A 600s       steady 40.62   adiabatic >9999   -> 40.62   OVER (116.87 C)
      gauge failed: blade 200 to 350 %, at most 5 s                                87.50 A 5s         steady 125.96  adiabatic 143.75  -> 125.96  OVER (202.21 C)
      gauge failed: blade 350 to 600 %, at most 0.5 s                             150.00 A 500ms      steady -       adiabatic 36.73   -> 36.73   OVER (112.98 C)
      gauge failed: blade over 600 % to 480 A, at most 0.1 s                      480.00 A 100ms      steady -       adiabatic 79.90   -> 79.90   OVER (156.15 C)
-     hard short at the blade's nominal melting I2t (not a clearing guarantee)    480.00 A 2.71ms     steady -       adiabatic 1.93    -> 1.93    within (78.18 C)
+     hard short at the blade's nominal melting I2t (not a clearing figure)       480.00 A 2.71ms     steady -       adiabatic 1.93    -> 1.93    within (78.18 C)
      hard short cleared by the gauge's ASCD                                      480.00 A 244us      steady -       adiabatic 0.17    -> 0.17    within (76.42 C)
      docking pulse                                                               242.90 A tau 33.8us steady -       adiabatic 0.00    -> 0.00    within (76.25 C)
    H1 26.02 mm a face, 1 oz, the shore input with its adjacent return (DC_HS included): limit 105 C, the governing face's fusing I2t 61442 A2s
      6.15 A continuous (_VEH_T)                                                    6.15 A held       steady 1.16    adiabatic -       -> 1.16    within 10 K
      10 A held (F1's rating, the chain's check 3)                                 10.00 A held       steady 2.72    adiabatic -       -> 2.72    within 10 K
      20 A held (L4-E11's D-06 withstand)                                          20.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     Q7 shorted: fuse up to 135 %, no opening guaranteed                          13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
+     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
      Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   within (86.25 C)
      Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   within (90.08 C)
      Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    within (80.25 C)
      Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  OVER (318.21 C)
-     stiff source at the fuse's nominal melting I2t (not a clearing guarantee)   900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
+     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
    H2 13.01 mm a face, 2 oz, the shore input with its adjacent return: limit 105 C, the governing face's fusing I2t 61442 A2s
      6.15 A continuous (_VEH_T)                                                    6.15 A held       steady 1.16    adiabatic -       -> 1.16    within 10 K
      10 A held (F1's rating, the chain's check 3)                                 10.00 A held       steady 2.72    adiabatic -       -> 2.72    within 10 K
      20 A held (L4-E11's D-06 withstand)                                          20.00 A held       steady 10.00   adiabatic -       -> 10.00   within 10 K
-     Q7 shorted: fuse up to 135 %, no opening guaranteed                          13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
+     Q7 shorted: fuse up to 135 %, no opening assured                             13.50 A held       steady 4.60    adiabatic -       -> 4.60    within (80.85 C)
      Q7 shorted: fuse 135 to 200 %, at most 600 s                                 20.00 A 600s       steady 10.00   adiabatic 1402.18 -> 10.00   within (86.25 C)
      Q7 shorted: fuse 200 to 350 %, at most 5 s                                   35.00 A 5s         steady 30.90   adiabatic 13.83   -> 13.83   within (90.08 C)
      Q7 shorted: fuse 350 to 600 %, at most 0.5 s                                 60.00 A 500ms      steady 91.57   adiabatic 4.00    -> 4.00    within (80.25 C)
      Q7 shorted: fuse over 600 % to 900 A, at most 0.1 s                         900.00 A 100ms      steady -       adiabatic 241.96  -> 241.96  OVER (318.21 C)
-     stiff source at the fuse's nominal melting I2t (not a clearing guarantee)   900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
+     stiff source at the fuse's nominal melting I2t (not a clearing figure)      900.00 A 115us      steady -       adiabatic 0.21    -> 0.21    within (76.46 C)
    V  VIN_RAW 13.72 mm a face, 1 oz, with its adjacent return:
      14.10 A declared                                                             14.10 A held       steady 10.00   -> within 10 K
      the tracker's minimum valley limit, held                                     13.80 A held       steady 9.57    -> within 10 K
@@ -232,7 +233,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
    E HS_S                   R19 to Q7 [1F / 1F]; E's F1; coordination 20.00 A, k 1.005
        a one-face hop between two one-face parts: at least the larger land, as short as the parts allow; a one-face hop at the parts' lands
    E DC_HS                  Q7 to L2 [1F / 1F]; the hot-swap; F1 with Q7 shorted; coordination 20.00 A, k 1.005
-       1 oz 26.02 mm, 2 oz 13.01 mm (apart, 1 oz, no credit: 14.63 mm); field: E7: 12 at each end (55.38 mm, split 10); limit 105 C (the blade (MINI, 10 A; the 297's figures, the 997's not held)), 105 C pinned
+       1 oz 26.02 mm, 2 oz 13.01 mm (apart, 1 oz, no credit: 14.63 mm); field: E7: 15 at each end (55.38 mm, split 10); limit 105 C (the blade (MINI, 10 A; the 297's figures, the 997's not held)), 105 C pinned
    E GND_V (shore return)   J_DCIN pin 2 to the clamps, L2 pin 3 [TH / 1F]; E's F1 (the clamp-fault loop); coordination 20.00 A, k 1.005
        1 oz 26.02 mm, 2 oz 13.01 mm (apart, 1 oz, no credit: 14.63 mm); field: at the clamps, out 3's count; limit 105 C (the blade (MINI, 10 A; the 297's figures, the 997's not held)), 105 C pinned
    E VIN_RAW                L2 and the tracker's Q2 to P_VR [1F / 1F]; the sources' limits; coordination 14.10 A, k 1.005
@@ -244,7 +245,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      the transient (PWR-F12)                               18.00 A   11.95 /  21.26 /  10.63 mm
      held just under the gauge's OCD1                      20.00 A   14.50 /  25.78 /  12.89 mm
      the blades' rating (the coordination current)         25.00 A   21.81 /  38.79 /  19.39 mm
-     the blades' 110 % current, no opening guaranteed      27.50 A   25.97 /  46.18 /  23.09 mm
+     the blades' 110 % current, no opening assured         27.50 A   25.97 /  46.18 /  23.09 mm
    6.72 mm a face (l9stk at 18 A, each face alone): with its return 35.77 K at 18 A, 69.59 K at 25 A
    12.26 mm a face (f76564eb, each face alone at 12.5 A): as one conductor 18.92 K at 25 A, 12.03 K at the gauge's held 20 A, 147.1 C at the
      blade's 600 s point from the +70 C line (153.33 C from 76.25 C); with its return adjacent 35.66 K at 25 A
@@ -269,7 +270,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
 9. THE COORDINATION TABLE (the owner's rows; the limiting component is the largest fraction of a printed rating or limit)
    10 A continuous: 10.00 A, held
      basis: the pack's declared continuous current; the drafted states at 10.0 V reach 9.63 A at PLAN, held under 10 A by the shedding control
-     protective device: none needed: a load; guaranteed maximum clearing: not a fault
+     protective device: none needed: a load; assured maximum clearing: not a fault
        copper, 1 oz (39.14 mm a face)                                 1.89 K (steady) against 10 K  [0.19]
        copper, 2 oz (19.57 mm a face)                                 1.89 K (steady) against 10 K  [0.19]
        barrel field, 16 of 0.4 mm (inward annulus)                    0.31 A a barrel, 1.05 K  [0.10]
@@ -285,7 +286,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (c) R17's maker sheet and its derating at the band's temperature (Layer 6)
    18 A for 60 s: 18.00 A, 60s
      basis: PWR-F12 / D-11: every transmitter keyed, ended early above 18 A (judged steady: no transient credit)
-     protective device: the key-down limit K1 (firmware); no hardware element acts at 18 A; guaranteed maximum clearing: none guaranteed by hardware (60 s by firmware)
+     protective device: the key-down limit K1 (firmware); no hardware element acts at 18 A; assured maximum clearing: none assured by hardware (60 s by firmware)
        copper, 1 oz (39.14 mm a face)                                 5.22 K (steady) against 10 K  [0.52]
        copper, 2 oz (19.57 mm a face)                                 5.22 K (steady) against 10 K  [0.52]
        barrel field, 16 of 0.4 mm (inward annulus)                    0.56 A a barrel, 3.99 K  [0.40]
@@ -302,7 +303,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (c) R17's maker sheet and its derating at the band's temperature (Layer 6)
    the 25 A case, the gauge working: 25.00 A, 1s
      basis: the blades' rating, which the chain's check 3 asks the copper for; a fault drawing it
-     protective device: the gauge's OCD2 (24 A, 1 s), firmware-configured; guaranteed maximum clearing: 1 s (the image's setting, not a hardware guarantee)
+     protective device: the gauge's OCD2 (24 A, 1 s), firmware-configured; assured maximum clearing: 1 s (the image's setting, not a hardware assurance)
        copper, 1 oz (39.14 mm a face)                                 0.61 K (before clearance, adiabatic) against 10 K  [0.06]
        copper, 2 oz (19.57 mm a face)                                 0.61 K (before clearance, adiabatic) against 10 K  [0.06]
        barrel field, 16 of 0.4 mm (inward annulus)                    0.78 A a barrel, 8.41 K  [0.84]
@@ -317,7 +318,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the 25 A case, the gauge failed: 25.00 A, held
      basis: the same current with board P's FETs welded: the blade does not open (110 % holds 360000 s at least); the rating is not a clamp
-     protective device: none; guaranteed maximum clearing: none guaranteed
+     protective device: none; assured maximum clearing: none assured
        copper, 1 oz (39.14 mm a face)                                 10.00 K (steady) against 10 K  [1.00]
        copper, 2 oz (19.57 mm a face)                                 10.00 K (steady) against 10 K  [1.00]
        barrel field, 16 of 0.4 mm (inward annulus)                    0.78 A a barrel, 8.41 K  [0.84]
@@ -332,9 +333,9 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (c) the dock contacts' split: specimen, the four-pin set of the fitted lot (and E5's targets); acceptance, the lowest pin resistance at least 0.593 of the highest so no pin passes 9 A at 25 A; supplier task, each pin's contact resistance at mid-stroke
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
      disposition: (c) R17's maker sheet and its derating at the band's temperature (Layer 6)
-   sustained overloads 20 to 33.75 A, no fuse opening guaranteed: 33.75 A, held
+   sustained overloads 20 to 33.75 A, no fuse opening assured: 33.75 A, held
      basis: the gauge holds just under 20 A with no trip; with it failed, no blade row opens below 135 %
-     protective device: the gauge's OCD1/OCD2 when it works (firmware-configured); none when it has failed; guaranteed maximum clearing: none guaranteed
+     protective device: the gauge's OCD1/OCD2 when it works (firmware-configured); none when it has failed; assured maximum clearing: none assured
        copper, 1 oz (39.14 mm a face)                                 94.55 C (steady) against 120 C (plating pinned; 105 C as fitted)  [0.42]
        copper, 2 oz (19.57 mm a face)                                 94.55 C (steady) against 120 C (plating pinned; 105 C as fitted)  [0.42]
        barrel field, 16 of 0.4 mm (inward annulus)                    1.05 A a barrel, 16.64 K  [0.38]
@@ -348,7 +349,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    board P's FETs failed short, blade 135 to 200 %, at most 600 s: 50.00 A, 600s
      basis: a fault behind the welded FETs, read on the blade's monotone envelope
-     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); guaranteed maximum clearing: at most 600 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing guarantee)
+     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); assured maximum clearing: at most 600 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing assurance)
        copper, 1 oz (39.14 mm a face)                                 116.60 C (steady (reached before clearance)) against 120 C (plating pinned; 105 C as fitted)  [0.92]
        copper, 2 oz (19.57 mm a face)                                 116.60 C (steady (reached before clearance)) against 120 C (plating pinned; 105 C as fitted)  [0.92]
        barrel field, 16 of 0.4 mm (inward annulus)                    1.56 A a barrel, 40.68 K  [0.93]
@@ -358,53 +359,59 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 513.77 C held from 76.25 C air (507.52 C from 70 C)  [5.93]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 5.93 of its rating (OVER)
-     disposition: (b) W4DP-F2: every series part is over its printed rating for the row's time (a coupon does not stand in for it)
+     disposition: (b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and Q39/Q40 are over their printed ratings for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)
+     disposition: (a) the copper bands at either weight, with the blade's plating pinned
+     disposition: (b) the blade's plating pinned to silver, 0297025.WXNV (Layer 6; apply_blade_plating_l9stk.py): as fitted the tin part's 105 C is passed
    board P's FETs failed short, blade 200 to 350 %, at most 5 s: 87.50 A, 5s
      basis: a fault behind the welded FETs, read on the blade's monotone envelope
-     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); guaranteed maximum clearing: at most 5 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing guarantee)
+     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); assured maximum clearing: at most 5 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing assurance)
        copper, 1 oz (39.14 mm a face)                                 115.94 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.91]
        copper, 2 oz (19.57 mm a face)                                 115.94 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.91]
        barrel field, 16 of 0.4 mm (inward annulus)                    2.73 A a barrel, 145.20 K  [3.32]
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            38.281 W for 5s: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    87.500 A for 5s: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            21.875 A a pin for 5s: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED: the device's own Zth(j-mb) 0.2589 K/W, no board credit) TJ about 86.72 C for 5s  [0.14]
+       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.4 K/W, no board credit) TJ about 132.89 C for 5s  [0.77]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: barrel field, 16 of 0.4 mm (inward annulus) at 3.32 of its rating (OVER)
-     disposition: (b) W4DP-F2: every series part is over its printed rating for the row's time (a coupon does not stand in for it)
+     disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
+     disposition: (a) the copper bands at either weight, with the blade's plating pinned
+     disposition: (b) the blade's plating pinned to silver, 0297025.WXNV (Layer 6; apply_blade_plating_l9stk.py): as fitted the tin part's 105 C is passed
    board P's FETs failed short, blade 350 to 600 %, at most 0.5 s: 150.00 A, 500ms
      basis: a fault behind the welded FETs, read on the blade's monotone envelope
-     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); guaranteed maximum clearing: at most 0.5 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing guarantee)
+     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); assured maximum clearing: at most 0.5 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing assurance)
        copper, 1 oz (39.14 mm a face)                                 87.42 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.26]
        copper, 2 oz (19.57 mm a face)                                 87.42 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.26]
        barrel field, 16 of 0.4 mm (inward annulus)                    4.69 A a barrel, 180.88 K  [4.13]
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            112.500 W for 500ms: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    150.000 A for 500ms: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            37.500 A a pin for 500ms: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED: the device's own Zth(j-mb) 0.2589 K/W, no board credit) TJ about 107.03 C for 500ms  [0.42]
+       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 237.60 C for 500ms  [2.19]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: barrel field, 16 of 0.4 mm (inward annulus) at 4.13 of its rating (OVER)
-     disposition: (b) W4DP-F2: every series part is over its printed rating for the row's time (a coupon does not stand in for it)
+     disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
+     disposition: (a) the copper bands at either weight, with the blade's plating pinned
    board P's FETs failed short, blade over 600 % to 480 A, at most 0.1 s: 480.00 A, 100ms
      basis: a fault behind the welded FETs, read on the blade's monotone envelope
-     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); guaranteed maximum clearing: at most 0.1 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing guarantee)
+     protective device: the 25 A MINI blades (F2's element opens later at every current both tables state); assured maximum clearing: at most 0.1 s (the row's maximum; the nominal melting I2t 625 A2s is no clearing assurance)
        copper, 1 oz (39.14 mm a face)                                 99.56 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.53]
        copper, 2 oz (19.57 mm a face)                                 99.56 C (before clearance, adiabatic) against 120 C (plating pinned; 105 C as fitted)  [0.53]
        barrel field, 16 of 0.4 mm (inward annulus)                    15.00 A a barrel, 484.55 K  [11.08]
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            1152.000 W for 100ms: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    480.000 A for 100ms: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            120.000 A a pin for 100ms: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED: the device's own Zth(j-mb) 0.2589 K/W, no board credit) TJ about 391.44 C for 100ms  [4.27]
+       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 1728.43 C for 100ms  [22.40]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: barrel field, 16 of 0.4 mm (inward annulus) at 11.08 of its rating (OVER)
-     disposition: (b) W4DP-F2: every series part is over its printed rating for the row's time (a coupon does not stand in for it)
+     limiting: Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) at 22.40 of its rating (OVER)
+     disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
+     disposition: (a) the copper bands at either weight, with the blade's plating pinned
      disposition: (c) the blade's total clearing I2t at 480 A and 16.8 V (not printed; 625 A2s is nominal melting): specimen, the fitted lot in the 3568 holder on a band coupon; acceptance, at most 41953 A2s (the governing 1 oz face to 120 C from 76.25 C); supplier task, Littelfuse's clearing data or a short-circuit test
-   the shore input, Q7 shorted, fuse up to 135 %, no opening guaranteed: 13.50 A, held
-     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost
-     protective device: F1, 10 A MINI; guaranteed maximum clearing: none guaranteed
+   the shore input, Q7 shorted, fuse up to 135 %, no opening assured: 13.50 A, held
+     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope
+     protective device: F1, 10 A MINI; assured maximum clearing: none assured
        copper, 1 oz (26.02 mm a face)                                 80.85 C (steady) against 105 C (J_DCIN's VH as drawn)  [0.16]
        copper, 2 oz (13.01 mm a face)                                 80.85 C (steady) against 105 C (J_DCIN's VH as drawn)  [0.16]
-       barrel field, 12 of 0.4 mm (inward annulus)                    0.56 A a barrel, 3.99 K  [0.14]
+       barrel field, 15 of 0.4 mm (inward annulus)                    0.45 A a barrel, 2.40 K  [0.08]
        R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD)             1.823 W  [0.61]
        J_DCIN, JST VH (10 A with AWG 16; the drawn lead AWG 18 prints none; 105 C) 13.500 A  [1.35]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
@@ -412,11 +419,11 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (b) J_DCIN over the VH's 10 A: L4-E11's D-06 30 A class connector (L4-E11, Layer 7)
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the shore input, Q7 shorted, fuse 135 to 200 %, at most 600 s: 20.00 A, 600s
-     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost
-     protective device: F1, 10 A MINI; guaranteed maximum clearing: at most 600 s (the row's maximum)
+     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope
+     protective device: F1, 10 A MINI; assured maximum clearing: at most 600 s (the row's maximum)
        copper, 1 oz (26.02 mm a face)                                 86.25 C (steady (reached before clearance)) against 105 C (J_DCIN's VH as drawn)  [0.35]
        copper, 2 oz (13.01 mm a face)                                 86.25 C (steady (reached before clearance)) against 105 C (J_DCIN's VH as drawn)  [0.35]
-       barrel field, 12 of 0.4 mm (inward annulus)                    0.83 A a barrel, 9.74 K  [0.34]
+       barrel field, 15 of 0.4 mm (inward annulus)                    0.67 A a barrel, 5.87 K  [0.20]
        R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD)             4.000 W  [1.33]
        J_DCIN, JST VH (10 A with AWG 16; the drawn lead AWG 18 prints none; 105 C) 20.000 A  [2.00]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
@@ -425,41 +432,41 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (b) R19 over its 3 W from 17.32 A: a shunt whose rating covers 20 A held (L4-E11)
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the shore input, Q7 shorted, fuse 200 to 350 %, at most 5 s: 35.00 A, 5s
-     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost
-     protective device: F1, 10 A MINI; guaranteed maximum clearing: at most 5 s (the row's maximum)
+     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope
+     protective device: F1, 10 A MINI; assured maximum clearing: at most 5 s (the row's maximum)
        copper, 1 oz (26.02 mm a face)                                 90.08 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [0.48]
        copper, 2 oz (13.01 mm a face)                                 90.08 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [0.48]
-       barrel field, 12 of 0.4 mm (inward annulus)                    1.46 A a barrel, 34.77 K  [1.21]
+       barrel field, 15 of 0.4 mm (inward annulus)                    1.17 A a barrel, 20.94 K  [0.73]
        R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD)             12.250 W for 5s: over the continuous rating, no short-time rating held
        J_DCIN, JST VH (10 A with AWG 16; the drawn lead AWG 18 prints none; 105 C) 35.000 A for 5s: over the continuous rating, no short-time rating held
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: barrel field, 12 of 0.4 mm (inward annulus) at 1.21 of its rating (OVER)
+     limiting: R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD) (above its continuous rating, no short-time rating held)
      disposition: (b) J_DCIN over the VH's 10 A: L4-E11's D-06 30 A class connector (L4-E11, Layer 7)
      disposition: (b) R19 over its 3 W from 17.32 A: a shunt whose rating covers 20 A held (L4-E11)
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the shore input, Q7 shorted, fuse 350 to 600 %, at most 0.5 s: 60.00 A, 500ms
-     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost
-     protective device: F1, 10 A MINI; guaranteed maximum clearing: at most 0.5 s (the row's maximum)
+     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope
+     protective device: F1, 10 A MINI; assured maximum clearing: at most 0.5 s (the row's maximum)
        copper, 1 oz (26.02 mm a face)                                 80.25 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [0.14]
        copper, 2 oz (13.01 mm a face)                                 80.25 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [0.14]
-       barrel field, 12 of 0.4 mm (inward annulus)                    2.50 A a barrel, 43.30 K  [1.51]
+       barrel field, 15 of 0.4 mm (inward annulus)                    2.00 A a barrel, 27.06 K  [0.94]
        R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD)             36.000 W for 500ms: over the continuous rating, no short-time rating held
        J_DCIN, JST VH (10 A with AWG 16; the drawn lead AWG 18 prints none; 105 C) 60.000 A for 500ms: over the continuous rating, no short-time rating held
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: barrel field, 12 of 0.4 mm (inward annulus) at 1.51 of its rating (OVER)
+     limiting: R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD) (above its continuous rating, no short-time rating held)
      disposition: (b) J_DCIN over the VH's 10 A: L4-E11's D-06 30 A class connector (L4-E11, Layer 7)
      disposition: (b) R19 over its 3 W from 17.32 A: a shunt whose rating covers 20 A held (L4-E11)
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the shore input, Q7 shorted, fuse over 600 % to 900 A, at most 0.1 s: 900.00 A, 100ms
-     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost
-     protective device: F1, 10 A MINI; guaranteed maximum clearing: at most 0.1 s (the row's maximum)
+     basis: F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope
+     protective device: F1, 10 A MINI; assured maximum clearing: at most 0.1 s (the row's maximum)
        copper, 1 oz (26.02 mm a face)                                 318.21 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [8.42]
        copper, 2 oz (13.01 mm a face)                                 318.21 C (before clearance, adiabatic) against 105 C (J_DCIN's VH as drawn)  [8.42]
-       barrel field, 12 of 0.4 mm (inward annulus)                    37.50 A a barrel, >9999 K  [3848.33]
+       barrel field, 15 of 0.4 mm (inward annulus)                    30.00 A a barrel, >9999 K  [454.00]
        R19 (HoJLR2512-3W-10mR-1%, 3 W; derating NOT HELD)             8100.000 W for 100ms: over the continuous rating, no short-time rating held
        J_DCIN, JST VH (10 A with AWG 16; the drawn lead AWG 18 prints none; 105 C) 900.000 A for 100ms: over the continuous rating, no short-time rating held
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: barrel field, 12 of 0.4 mm (inward annulus) at 3848.33 of its rating (OVER)
+     limiting: barrel field, 15 of 0.4 mm (inward annulus) at 454.00 of its rating (OVER)
      disposition: (b) J_DCIN over the VH's 10 A: L4-E11's D-06 30 A class connector (L4-E11, Layer 7)
      disposition: (b) R19 over its 3 W from 17.32 A: a shunt whose rating covers 20 A held (L4-E11)
      disposition: (c) F1's total clearing I2t at 900 A and 58 V DC (E11-16, L4-E11): acceptance at most 12451 A2s on the governing 1 oz face to 105 C
