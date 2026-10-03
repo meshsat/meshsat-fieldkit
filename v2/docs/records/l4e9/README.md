@@ -104,7 +104,13 @@ L4-E12's 17.9 and here (a DEMONSTRATED CONFLICT needs the measured failure of ev
 analysed one and the route with the local sensor relocated, or a bound that none can meet the limit; one arrangement's failed local
 test is that arrangement's shortfall and the next arrangement is tried), OW-1 and OW-10 reworded, U-02's texts and the behaviour row
 with them; the e-paper soak (R-185 and the route row) set to the claimed +70 C at the glass for E5's 6 h and E3-O's 4 h behind the
-window with its uncertainty and recovery criteria (an ambient-only +55 or +60 C soak establishes nothing above the ambient). Status: known defects addressed in drafts; feasibility conditions remain
+window with its uncertainty and recovery criteria (an ambient-only +55 or +60 C soak establishes nothing above the ambient). Round 4 (b),
+L4-E11's correction tip (`b929d8be`) merged and carried: the fan rail's parts renumbered U22, R103 to R109 and C135 to C141 (the first
+draft's designators were the solar drafts'; a disjointness test over every board E draft in this record's order now in test_l4e11),
+L4-CP01 restated (the 566 A a resistive extrapolation and E11-38 (c)'s test target, the start into a short not bounded by printed data,
+no retry duty claimed, the contact at most case (1)'s 15.9 K at any duty), E11-38 extended to the histories (a) to (h) with the pin
+excursions, the wiring's and copper's integrity and the contact body at or under 85 C (D-15, R-181, R-184, the route rows E11-31 and
+E11-38, the diagram's board E block), the rail 11.512 to 12.431 V with the 1 % divider. Status: known defects addressed in drafts; feasibility conditions remain
 open.
 
 | File | What it is |
