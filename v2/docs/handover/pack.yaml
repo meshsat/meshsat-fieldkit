@@ -53,6 +53,7 @@ groups:
   EV: "verification results, reviews and records, with the pages that classify them"
   T:  "tools: generators, checks and their tests"
   HIST: "history: superseded or process records, kept only to trace a ruling; never an authority"
+  L12: "layer 12, firmware: the panel controller's firmware against PANEL.md and the hardware and firmware contract"
 
 rules:
   # ---------------------------------------------------------------- snapshots never contain snapshots
@@ -232,6 +233,15 @@ rules:
   # ---------------------------------------------------------------- history: kept to trace a ruling, never an authority
   - {action: include, group: HIST, glob: ["v2/docs/MESHSAT-709-geometry-appendix.md", "v2/docs/OWNER-DECISIONS-2026-09-11.md", "v2/docs/RED-TEAM-*.md", "v2/docs/research-*.md", "v2/docs/respin-*.md", "v2/docs/routeflow-methodology.md", "v2/docs/ROUTEFLOW-PHASES.md", "v2/docs/PAIR-*.md", "v2/docs/CONTROL-PLANE.md", "v2/docs/AGENTIC-SYSTEM.md"],
      role: "history: the design record (every ruling, every audit round) and superseded research and process records; trace a ruling here, never take it as the current state"}
+
+  # ---------------------------------------------------------------- verification procedures and firmware (set 28, 3 October 2026)
+  # The supplier-executable test procedures of the prototype qualification route (record l9tp) and the panel controller's
+  # firmware (Layer 12, record fw-panel) entered in set 28 with no rule here; test_handover_pack refused the 42 files.
+  # Session choice of the integrator under the owner's standing rule of 26 September 2026; reversed by deleting the two rules.
+  - {action: include, group: EV, glob: "v2/docs/test-procedures/**",
+     role: "supplier-executable test procedures for the prototype qualification experiments (specimen, set-up, steps, acceptance with uncertainty), the copied inputs they quote and tp_check.py with its output"}
+  - {action: include, group: L12, glob: "v2/firmware/panel/**",
+     role: "the panel controller's firmware (board C U3, RP2040): portable core, hardware layer, pico-sdk port and host tests; the target build is owed (no arm toolchain was used)"}
 
   # ---------------------------------------------------------------- the tools: generators, checks, tests
   - {action: include, group: T, glob: "v2/ecad/tools/**",
