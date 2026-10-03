@@ -1,0 +1,8 @@
+# Inputs of v2/docs/PCB-BRING-UP.md's procedure (MESHSAT-1357, 3 October 2026), copied byte for byte from commits that are not in
+# this branch's history (the provenance rule of 3 October 2026): each file is read here, its source is cited as text only.
+# Columns: file | source branch | source commit | source path | sha256 of the copy (equal to the blob at that commit)
+l8gnd-L8-GND002-SLOTEN-226e9143.md | fnd/l8gnd | 226e9143 | v2/docs/records/l8gnd/L8-GND002-SLOTEN.md | 1e92b0d8f66c2b6c89bf8f9f5ed09616e249294f00c5f393ffc0bc0c8d7a163c
+l8r2-L8R2-KNOWN-DEFECTS-a441651a.md | fnd/l8r2 | a441651a | v2/docs/records/l8r2/L8R2-KNOWN-DEFECTS.md | 3a6daaeef3fa3b46fe3a0fd67349c6f4f6fadf0d87afd660e69b3c482d5087cc
+l5r2-pcb_interfaces-6902db8f.yaml | fnd/l5r2 | 6902db8f | v2/ecad/tools/pcb_interfaces.yaml | 4784a61af08405343a774ca4951fc6ea4ef9be1ad5cc68787cd29a15c0641a22
+l5r2-HW-FW-CONTRACT-6902db8f.md | fnd/l5r2 | 6902db8f | v2/docs/HW-FW-CONTRACT.md | e5b4d65046f4ace5e0c4bf482105f95466ac967d6bb2ccf839a4686708613dc6
+l5r2-L5-INTERFACES-R2-6902db8f.md | fnd/l5r2 | 6902db8f | v2/docs/records/l5r2/L5-INTERFACES-R2.md | 818e348940ecd87ab24da2e1026ab54ceedb8cfa949e0eab575b502a872d44dd
