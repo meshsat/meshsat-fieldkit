@@ -234,48 +234,92 @@ def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_num
         assert m.key_of(moved) != data["key"], part
 
 
-def t_an_l4e9_edit_outside_the_pinned_sentence_moves_neither_the_key_nor_the_output():
-    """The lead scan contributes what it establishes, not the scanned files' contents: on a scratch copy of L4-E9's two pages, an
-    edit outside the pinned R-180 sentence leaves the scan, the KEY and the output unchanged; an edit of the sentence changes the
-    scan and the KEY (and compute() refuses on it, as a lead statement nobody has read)."""
-    import json
+def _git_status():
+    return subprocess.run(["git", "status", "--porcelain", "--untracked-files=all"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+
+
+def _lead_tree(td, m):
+    """A scratch tree holding the guard's input (a1solar's array_calc.py) and every document of the real tree that states a panel
+    lead length today; nothing is written into the repository."""
+    for rel in [m.A1_CALC] + sorted({p_ for p_, _l, _v in m.lead_scan()[0]}):
+        os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
+        shutil.copyfile(os.path.join(ROOT, rel), os.path.join(td, rel))
+
+
+def t_a_new_document_citing_the_input_moves_neither_the_key_nor_the_output():
+    """The coordinator's amendment (set 28): a consistent citation changes no computed figure, so it enters neither the results
+    cache's KEY nor the output. On a scratch tree (the input and today's citing documents copied, nothing written into the
+    repository, whose git status must not change during the test): a new document stating "panel lead ... 5 m" passes the guard as
+    a run does it (the citation on stderr), the KEY's scan term and the KEY are unchanged, and the output rendered from the cache is
+    the committed one byte for byte; one stating 12 m refuses with exit 3, naming the file, its line and both values."""
+    import contextlib, io, json
     R = _R()
     m = _CACHE["M"]
+    before = _git_status()
     committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
     data = json.load(open(m.CACHE, encoding="utf-8"))
-    pages = ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md")
-    st = m.LEAD_STATEMENTS[0]
+    assert set(data["parts"]["scans"]) == {"lead_input", "iec61000_4_5"} and data["parts"]["scans"]["lead_input"] == m.lead_input()
     with tempfile.TemporaryDirectory() as td:
-        for rel in pages:
-            os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
-            shutil.copyfile(os.path.join(ROOT, rel), os.path.join(td, rel))
-        base = m.scan_part(td)
-        assert base["lead_cited"] == data["parts"]["scans"]["lead_cited"] and not base["lead_hits"]
-        # an edit outside the sentence: a new paragraph and a changed table cell elsewhere on each page
-        for rel in pages:
-            p = os.path.join(td, rel)
-            t = open(p, encoding="utf-8").read()
-            assert st not in t.split("\n")[0]
-            open(p, "w", encoding="utf-8").write(t.replace("\n", "\nAn edit elsewhere on the page, not the R-180 sentence.\n", 1) + "\nA closing line added.\n")
-        after = m.scan_part(td)
-        assert after == base
+        _lead_tree(td, m)
+        assert m.scan_part(td) == data["parts"]["scans"]
+        fx = os.path.join(td, "v2", "docs", "new-record.md")
+        open(fx, "w", encoding="utf-8").write("# A new record\n\nThe panel lead runs 5 m from the array to the case.\n")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            ok = m.lead_guard(td, report=True)
+        assert ("v2/docs/new-record.md", 3, 5.0) in ok and "v2/docs/new-record.md line 3: 5 m" in err.getvalue()
         parts = json.loads(json.dumps(data["parts"]))
-        assert m.key_of(dict(parts, scans=after)) == data["key"]
-        hits, cited = m.lead_scan(td)
-        Rx = dict(R, lead=dict(R["lead"], cited=cited))
-        assert not hits and "\n".join(m.render(Rx)) + "\n" == committed
-        # an edit of the sentence: the scan and the KEY move (an unread lead statement: compute() refuses)
-        p = os.path.join(td, pages[0])
-        t = open(p, encoding="utf-8").read()
-        flat = " ".join(t.split())
-        assert st in flat
-        t2 = t.replace("6.09 mm apart", "6.10 mm apart", 1)
-        assert t2 != t
-        open(p, "w", encoding="utf-8").write(t2)
-        moved = m.scan_part(td)
-        assert moved != base and pages[0] in moved["lead_hits"] and pages[0] not in moved["lead_cited"]
-        assert m.key_of(dict(parts, scans=moved)) != data["key"]
+        assert m.scan_part(td) == data["parts"]["scans"] and m.key_of(dict(parts, scans=m.scan_part(td))) == data["key"]
+        Rc = m.load_cache()
+        assert Rc is not None and "\n".join(m.render(Rc)) + "\n" == committed
+        open(fx, "w", encoding="utf-8").write("# A new record\n\nThe panel lead is 12 m long.\n")
+        err = io.StringIO()
+        try:
+            with contextlib.redirect_stderr(err):
+                m.lead_guard(td, report=True)
+            raise AssertionError("the guard did not refuse 12 m")
+        except SystemExit as e:
+            msg = err.getvalue()
+            assert e.code == 3 and "v2/docs/new-record.md line 3: 12 m" in msg and "LEAD_M = 5 m" in msg, msg
+    assert _git_status() == before, "the repository's git status changed during the test"
 
+def t_the_lead_guard_compares_the_stated_length_with_the_input():
+    """The coordinator's fixtures (set 28): a document stating "panel lead ... 5 m" passes and is cited; one stating "panel lead ...
+    12 m" refuses with exit 3, naming the file and both values; the set 28 preparation's RESULT.md line (F-7) as it stands passes."""
+    import contextlib, io
+    _R()
+    m = _CACHE["M"]
+    assert m.lead_input() == 5.0
+    before = _git_status()
+    with tempfile.TemporaryDirectory() as td:
+        os.makedirs(os.path.dirname(os.path.join(td, m.A1_CALC)))
+        shutil.copyfile(os.path.join(ROOT, m.A1_CALC), os.path.join(td, m.A1_CALC))
+        d = os.path.join(td, "v2", "docs", "fixtures")
+        os.makedirs(d)
+        open(os.path.join(d, "a.md"), "w", encoding="utf-8").write("# A\n\nThe panel lead runs 5 m from the array to the case.\n")
+        assert m.lead_guard(td) == [("v2/docs/fixtures/a.md", 3, 5.0)]
+        res = os.path.join(ROOT, "v2", "docs", "records", "int28", "RESULT.md")
+        if os.path.exists(res):
+            line = [ln for ln in open(res, encoding="utf-8").read().splitlines() if ln.startswith("| F-7 |")]
+            assert line, "the F-7 line of int28's RESULT.md"
+            open(os.path.join(d, "f7.md"), "w", encoding="utf-8").write(line[0] + "\n")
+            assert ("v2/docs/fixtures/f7.md", 1, 5.0) in m.lead_guard(td)
+        open(os.path.join(d, "b.md"), "w", encoding="utf-8").write("# B\n\nThe panel lead is 12 m long.\n")
+        err = io.StringIO()
+        try:
+            with contextlib.redirect_stderr(err):
+                m.lead_guard(td)
+            raise AssertionError("the guard did not refuse 12 m")
+        except SystemExit as e:
+            msg = err.getvalue()
+            assert e.code == 3 and "v2/docs/fixtures/b.md line 3: 12 m" in msg and "LEAD_M = 5 m" in msg, msg
+        ok, bad = m.lead_scan(td)
+        assert ("v2/docs/fixtures/b.md", 3, 12.0) in bad and ("v2/docs/fixtures/a.md", 3, 5.0) in ok
+        # a millimetre figure beside the phrase is not a length in metres
+        open(os.path.join(d, "b.md"), "w", encoding="utf-8").write("# B\n\nThe panel lead's conductors sit 6.09 mm apart.\n")
+        ok2, bad2 = m.lead_scan(td)
+        assert not bad2 and not any(p_ == "v2/docs/fixtures/b.md" for p_, _l, _v in ok2)
+    assert _git_status() == before, "the repository's git status changed during the test"
 
 def t_r176_row_3_carries_the_computed_turn_off_everywhere_it_is_supplied():
     """R-176 row 3's Q12 turn-off figure (the step test's bound) is the computed one, rounded up: the worst over every start, bulk
@@ -733,18 +777,20 @@ def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbanc
     ld, d = R["lead"], R["decision"]
     le_, rw, sg = ld["lead"], d["rows"], d["surge"]
     assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
-    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, carried
-    # verbatim; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation takes
-    assert ld["statements"] and all("over 5 m" in st for st in ld["statements"])
-    for rel, st in ld["cited"].items():
-        assert st in ld["statements"] and st in " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split()), rel
-    for rel in ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"):
-        t = " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
-        assert (rel in ld["cited"]) == any(st in t for st in ld["statements"]), rel
-    if ld["cited"]:
+    # set 28: the guard compares the lengths stated beside a panel lead with the derivation's input (a1solar's LEAD_M, read with ast);
+    # every cited file states that value, and the live scan finds nothing that differs
+    mm = _CACHE["M"]
+    assert ld["input"]["metres"] == le_["m"] == mm.lead_input() and ld["input"]["path"] == mm.A1_CALC and "cited" not in ld
+    ok_, bad_ = mm.lead_scan()
+    assert not bad_ and all(v_ == le_["m"] for _p, _l, v_ in ok_)
+    out_ = " ".join(open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read().split())
+    lead_par = out_[out_.index("THE LEAD'S LENGTH AS A CITED INPUT"):out_.index("THE BASIS (SESSION")]
+    assert "No stated panel-lead length in v2's documents differs from the input" in lead_par and ld["input"]["path"] in lead_par
+    assert not any(p_ in lead_par for p_, _l, _v in ok_), "a citation entered the output"
+    if ld["input"]:
         s10 = _s10(R)
         b6 = R["remedy"]["b6"]
-        assert "THE LEAD'S LENGTH AS A CITED INPUT (set 27)" in s10 and "%.3f uH/m at round 2's reference loop" % (1e6 * b6["LA"] / le_["m"]) in s10
+        assert "THE LEAD'S LENGTH AS A CITED INPUT (set 27, restated on the input at set 28)" in s10 and "%.3f uH/m at round 2's reference loop" % (1e6 * b6["LA"] / le_["m"]) in s10
     assert [ld["tv"][k] for k in ("CS101", "CS114", "CS115", "CS116", "CS117")] == ["A", "A", "A", "A", "S"]
     assert "CS115" not in open(os.path.join(ROOT, "v2", "docs", "TEST-PLAN.md"), encoding="utf-8").read()
     # Figure CS116-2 as drawn, at the six frequencies and the lead's quarter wave
