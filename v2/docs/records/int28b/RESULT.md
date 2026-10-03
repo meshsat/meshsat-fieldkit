@@ -15,9 +15,10 @@ wording, only.
 - lcsc_fill.py's correction (Layer 6 round 2) re-pinned in L4-E8, L4-E9 and L4-E12. L4-E9 then refused on board E C5 (the table fills
   C113803 where `gen_sch_e.py:713` names C14663); L4-E9's round 6 (`fnd/l4e9r6`) reads C5 through the table's own rule: it regenerates on the merged tree and reads "already identical" in the freeze's stability pass.
 - The chain frozen with `_bin/freeze_l4_chain.sh` three times (after the first re-pins, after round 3, after L4-E9's round 6).
-- OWED: L4-E7, whose reader refuses on its panel-lead guard, fired by my superseded `records/int28/RESULT.md` row F-7 (section 6,
-  F-11; with its author on `fnd/l4e7g`); l5pwr, l6pwr and l7pwr, whose readers refuse on content of set 27's Layer 4 records they were
-  not written against (F-12 to F-14); the module run and the final freeze, held for `fnd/l4e7g` by the coordinator.
+- L4-E7's reader refused on its lead guard, fired by my superseded `records/int28/RESULT.md` row F-7 (F-11); its author's
+  `fnd/l4e7g` compares each stated length with a1solar's as a number, and L4-E7 regenerates (merged `835d031b`, freeze `dd70029a`).
+- l5pwr, l6pwr and l7pwr refused on content of set 27's Layer 4 records they were not written against (F-12 to F-14); their authors'
+  rounds `fnd/l5pwr2` (merged `92a5c7d8`), `fnd/l6pwr2` and `fnd/l7pwr2` (NAMED_OWED).
 - PCB-BRING-UP.md reads current under the merged renderer (no render needed); PCB-ETA.md stale is the worker-tree condition.
 
 ## 1. The merges and their resolutions
@@ -35,6 +36,8 @@ wording, only.
 | 9 | `fnd/l8r2` 29ffb518 (its item 4, board C's PI button) | `1fea761a` | none |
 | 10 | `fnd/l5r2` d077fb91 (Layer 5 round 3) | `de45a5b4` | none |
 | 11 | `fnd/l4e9r6` 08658fcb (L4-E9 round 6) | `a234b33a` | none |
+| 12 | `fnd/l4e7g` e6961b05 (L4-E7's lead guard) | `835d031b` | none |
+| 13 | `fnd/l5pwr2` d33ea1c4 (Layer 5's F-12 round, L5-F09 to F11) | `92a5c7d8` | none |
 
 Every merge: `git merge --no-ff --no-commit`, the staged diff through `pre-commit-check.sh --msg` (PASSED each time), then the commit as
 the owner. The shared append-only files (SOURCES.yaml, sources.txt, vendor-status.txt, PROCUREMENT.md) merged without conflict (the
@@ -115,9 +118,9 @@ TESTS
 
 | ID | Finding | Owner, next action |
 |---|---|---|
-| F-10 | Board E C5: `lcsc_fill.py`'s corrected table fills 100 nF 0603 with C113803 (YAGEO CC0603KRX7R0BB104, 100 V) where `gen_sch_e.py:713`'s comment still names C14663 (the 50 V CC0603KRX7R9BB104). L4-E9 refused on it until round 6 read C5 through the table's own rule | Layer 8: the generator's comment at line 713 (no generator edited here) |
+| F-10 | Board E C5: `lcsc_fill.py`'s corrected table fills 100 nF 0603 with C113803 (YAGEO CC0603KRX7R0BB104, 100 V). L4-E9's reader need()ed `gen_sch_e.py` to name that code beside the 50 V MPN and refused; round 6 (`fnd/l4e9r6`) reads C5 through the table's own matching rule. **Corrected routing (the coordinator, 3 October 2026):** `gen_sch_e.py:713`'s comment is about C46 and C59, which carry C14663 explicitly in their own calls; C5's call carries no code and takes the table's fill, so the generator is consistent and no generator change is owed | closed by L4-E9 round 6; no Layer 8 action |
 | F-11 | L4-E7's reader refuses (exit 3) on its prose guard ("a document now states the panel's lead length"), fired by my superseded `records/int28/RESULT.md` row F-7, which quoted R-180's figures; the r2 branches brought that file in. Not edited here, by the coordinator's instruction | L4-E7's author on `fnd/l4e7g`; then the final freeze and the module run |
-| F-12 | `l5pwr_contracts.py` refuses: "S27-02b: figures not printed by l4e11out, reg: ['PWM ramp']" (its table cites a figure set 27's L4-E11 output and register no longer print) | Layer 5's author (record l5pwr) |
+| F-12 | `l5pwr_contracts.py` refused: "S27-02b: figures not printed by l4e11out, reg: ['PWM ramp']" (its table cited a figure set 27's L4-E11 output and register no longer print). **Corrected by its author:** the reader also refused S27-B6, which the first refusal hid (a reader stops at its first failing row); `fnd/l5pwr2` (d33ea1c4) restates six rows (S27-B6, S27-01, S27-02a, S27-02b, S27-03, SEQ-08) and closes L5-F09, L5-F10 and L5-F11 in the contract and the interfaces | merged (`92a5c7d8`), regenerated in section 2's round E |
 | F-13 | `l6pwr_parts.py` refuses: "the INP line is not in l4e7_stage_settings.out" (set 27's L4-E7 rounds 3 to 5 restated the line) | Layer 6's author (record l6pwr) |
 | F-14 | `l7pwr_fans_th1.py` refuses: "VSYS_E's drafted loads not parsed" (set 27's L4-E11 section 18 rewrote `apply_gen_sch_e_aux.py`'s fan rail) | Layer 7's author (record l7pwr) |
 | F-15 | The three r2 branches were cut from the superseded `fnd/int28` (`a1f696de`), so set 28 carries `records/int28/` and int28's re-pins in its history; this record supersedes it | none: noted |
@@ -155,7 +158,7 @@ Not moved by set 28: 5.1, 5.3 (MET, the same reading), 5.8, 5.14, 5.15.
 | 6.3 | selection rationale recorded | PARTLY | one sentence per power part (`records/l6pwr`); rule I-1's order for every generic selection (`records/l6r2`); the fans row by row (`records/l7pwr`) |
 | 6.4 | compatibility findings; mismatches stay mismatches | PARTLY | the three Coilcraft rows of F4 proven on the maker's land, their footprint keys drafted, release-guarded (`records/l6r2` round 3); the standing wrong models as at H2 |
 | 6.6 | procurement constraints and alternatives | PARTLY | dated stock and price per selection, the five-kit need, an alternative per selection (`PROCUREMENT.md` section 8 Layer 6's and Layer 7's sections, `records/l6pwr`, `records/l6r2`); two stock pools read |
-| 6.7 | regenerated outputs preserve part decisions | PARTLY | `lcsc_fill.py`'s table corrected (eleven lines to the l6r2 selections, two X5R lines kept under rule C-D3b, held by `test_lcsc_fill_requirements.py`), so the next regeneration fills those codes; the generators' typed codes the certification refuses corrected through LCSC drafts (24 rows, `records/l6r2` round 4, release-guarded); a generator comment that names a replaced code (board E C5, `gen_sch_e.py:713`, C14663 where the table now fills C113803) is Layer 8's |
+| 6.7 | regenerated outputs preserve part decisions | PARTLY | `lcsc_fill.py`'s table corrected (eleven lines to the l6r2 selections, two X5R lines kept under rule C-D3b, held by `test_lcsc_fill_requirements.py`), so the next regeneration fills those codes; the generators' typed codes the certification refuses corrected through LCSC drafts (24 rows, `records/l6r2` round 4, release-guarded) (board E C5 now fills C113803; the generator's C14663 at line 713 belongs to C46 and C59, which carry it explicitly) |
 | 6.8 | a current, versioned BOM with identity per board | PARTLY | NOT MOVED: the parts are on no committed BOM until a board is regenerated with its drafts |
 
 Not moved by set 28: 6.5, 6.9, 6.10, 6.11.

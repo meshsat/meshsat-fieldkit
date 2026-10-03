@@ -6,7 +6,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    reqs      07fec30d43271245  v2/ecad/tools/pcb_requirements.yaml
    rules     14ea032a7fdd86ac  v2/ecad/tools/pcb_rules.yaml
    testplan  42a3dff33442c860  v2/docs/TEST-PLAN.md
-   hwfw      d683b31a0ec5a9a4  v2/docs/HW-FW-CONTRACT.md
+   hwfw      56ece4e160267333  v2/docs/HW-FW-CONTRACT.md
    panel     9fd2b4e3c6edf86e  v2/docs/PANEL.md
    assembly  29dbe3a0c4938274  v2/docs/ASSEMBLY.md
    gen_a     6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
