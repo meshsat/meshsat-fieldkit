@@ -27,7 +27,8 @@ What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
           (OVP off; auto-retry), R228 11.0k 0.1 % on ILIM (I(OL) = 18 / R(ILIM): 1.47 to 1.80 A, a steady setting), C237 22 nF on
           dVdT, C238 1 uF at IN, C239 0.1 uF at OUT, D23 B540C-13-F (C72264) from GND to OUT, the land key SMC; SHDN, IMON,
           FLT and PGOOD open as TI allows; the land key HTSSOP20 (KiCad's HTSSOP-20-1EP, checked against TI's PWP0020 drawing
-          by the parts stream); VBAT's declared loads gain U42's 1.0 A; VSYS_DOCK declared (source U42, J_DOCK's 1.0 A).
+          by the parts stream); VBAT's declared loads gain U42's 1.32 A (section 18b: U12 0.8 A and the mixers' 12 V rail's input
+          0.52 A at the floor); VSYS_DOCK declared (source U42, J_DOCK's 1.32 A).
   intent  CH_BATQ declared a segment of the pack path (source R17, loads Q39 and Q40, 10 A typical, 18 A peak); VBAT's source
           becomes Q39 (the pair), fed from CH_BATQ; the charger's sheet group names Q39, Q40 and C236.
 The designators Q39, Q40, C236 to C239, R228, D23 and U42 are free in gen_sch_a.py as pinned by l4e11_power.py; if another draft takes them first, renumber.
@@ -77,10 +78,10 @@ _BATQ = ('\n# L4-E11 (the U-04 question for the consolidation): CH_BATQ, the cop
          '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17", v_work=16.8, converted=False, series_of="CELL+", loads={"Q39": 5.0, "Q40": 5.0},\n'
          '             note="L4-E11: the node between the battery FETs Q39 and Q40 (drains) and the RSR shunt R17, SRP through R149; the "\n'
          '                  "pack\'s charge and discharge current, 10.0 A typical and 18.0 A peak, counted once as a segment of CELL+")\n'
-         '_intent.rail("VSYS_DOCK", 14.4, 1.0, 1.0, "U42", always_on=True, v_work=17.4, converted=False, fed_from="VBAT",\n'
+         '_intent.rail("VSYS_DOCK", 14.4, 1.32, 1.32, "U42", always_on=True, v_work=17.4, converted=False, fed_from="VBAT",\n'
          '             always_on_why="VSYS through the eFuse U42, which opens only on its own overload, short or thermal fault and retries; nothing switches it",\n'
-         '             loads={"J_DOCK": 1.0},\n'
-         '             note="L4-E11 (L4-F03): U42\'s output to J_DOCK pin 1, board E\'s VSYS_E; limited to 1.47 to 1.80 A")')
+         '             loads={"J_DOCK": 1.32},\n'
+         '             note="L4-E11 (L4-F03, section 18): U42\'s output to J_DOCK pin 1, board E\'s VSYS_E (U12 0.8 A and the mixers\' 12 V rail U18 0.52 A at the floor); limited to 1.47 to 1.80 A")')
 EDITS = [
     ("# --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET, so the system sits on VSYS and the pack on the far side of RSR, SLUSE66A Figure 10-1): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,",
      "# --- charger BQ25730 (SLUSE65A, held back; QFN-32 RSN; an NVDC charger: the system on VSYS, the battery FETs Q39 and Q40 and RSR between it and the pack, SLUSE65A Figure 9-1; L4-E11): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,"),
@@ -103,7 +104,7 @@ EDITS = [
      '("CHARGER BQ25730: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), BATTERY FETS Q39 AND Q40 AND RSR TO THE PACK, THE DOCK VSYS EFUSE U42, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "Q39", "Q40", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "C16",'),
     ('_intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",',
      '_intent.rail("VBAT", 14.4, 10.0, 18.0, "Q39", always_on=True, v_work=16.8, converted=False, fed_from="CH_BATQ",'),
-    ('loads={"U4": 2.0, "Q28": 2.22,', 'loads={"U42": 1.0, "U4": 2.0, "Q28": 2.22,'),
+    ('loads={"U4": 2.0, "Q28": 2.22,', 'loads={"U42": 1.32, "U4": 2.0, "Q28": 2.22,'),
     ('"10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+")',
      '"10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+")' + _BATQ),
     ('spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT,',
