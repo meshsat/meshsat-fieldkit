@@ -37,7 +37,7 @@ the thermal basis is the device's own Zth(j-mb) with the two FETs' coupling insi
 history from the hot state fit it; Ciss is not shown under TI's 5 nF near 0 V; the docking pulse is taken whole in one FET with no
 I2t conversion; the dock's VSYS branch sits behind an eFuse whose printed limit keeps the contact inside its rating, the fuse and the
 PTC fail on their printed rows, and the feed's drop clears U12; the record states each item's status. The second review (L4-CP01 to
-L4-CP03) adds: U42's fault envelope rests only on printed limits and states its inferred ceiling; the fans' start fits U42's least limit;
+L4-CP03) adds: U42's fault envelope rests only on printed limits and states its inferred extrapolation; the fans' start fits U42's least limit;
 the docking waveform's qualification exceeds the waveform; the charger draft writes none of the withdrawn statements; each measurement
 row names its specimen and blocks only the final release. The fans' feed round (section 18) adds: the mixers' rail covers VSYS_E's
 range and holds the fans' printed window, its RUN divider sits between the floor and U12's start, the inductor's saturation sits over the
@@ -912,7 +912,7 @@ def t_the_record_states_each_review_items_status():
     assert sec.count("| Affected circuit or function |") == 1
 
 
-def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_ceiling():
+def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_extrapolation():
     R = _R()
     m = _M()
     L, M, K, H = R["L"], R["M"], R["K"], R["H"]
@@ -922,7 +922,7 @@ def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_ceiling
     assert abs(M["duty_start"] - M["treg"][1] / (M["treg"][1] + L["tretry"][0])) < 1e-12 and M["rise_retry"] < M["rise_steady"]
     out17 = open(OUT, encoding="utf-8").read().split("17a. ")[1].split("17b. ")[0]
     assert "EXTRAPOLATION, not a bound" in out17 and "TARGET for the recorded peak" in out17 and "no duty is claimed" in out17 and "NOT PRINTED" in out17
-    assert M["v_in_pk"] < M["abs_in"], "the input spike at the ceiling passes U42's absolute maximum"
+    assert M["v_in_pk"] < M["abs_in"], "the input spike at the extrapolation passes U42's absolute maximum"
     assert 2 * M["fan_simul"] + K["aux"]["U12"] <= L["ilim"][0] + 1e-12 and M["fan_stag"] > M["fan_simul"] > K["aux"]["J_FAN1"]
     assert M["vsys_e_lim"] < L["vsys_e_min"] and M["vsys_e_lim"] > K["ap_vin"][0]
     out = open(OUT, encoding="utf-8").read()
@@ -1079,3 +1079,24 @@ def t_every_specimen_block_names_its_thermal_boundaries_and_its_re_test_trigger(
     assert "layout-independent" not in current and "layout-independent" not in page.replace('"layout-independent", and that E11-29', "")
     out = open(OUT, encoding="utf-8").read()
     assert "17d. L4-QR01" in out and "not a production limit" in out
+
+
+WITHDRAWN_PHRASES = ("up to 1.5 s", "at most 1.5 s", "duty at most 0.75", "duty of at most 0.75", "layout-independent")
+
+
+def t_the_withdrawn_fault_and_transfer_phrases_appear_only_in_withdrawal_sentences():
+    """The coordinator's residue check of a1d15601: the 566 A as a ceiling, the start into a short as lasting up to (or at most) 1.5 s,
+    a retry duty of 0.75 and a layout-independent pulse result were withdrawn in 17a and 17d; in the record, the README, the printed
+    output and the drafts' text each may appear only in a sentence that says it is withdrawn (or historical)."""
+    files = [PAGE, OUT, os.path.join(REC, "README.md")] + [os.path.join(REC, f) for f in sorted(os.listdir(REC)) if f.startswith("apply_")]
+    bad = []
+    for p in files:
+        flat = " ".join(open(p, encoding="utf-8").read().replace("\\n", " ").split())
+        for sent in re.split(r"(?<=[.;:!?])\s+(?=[*A-Z(])", flat):
+            low = sent.lower()
+            hit = [w for w in WITHDRAWN_PHRASES if w in low]
+            if any("566" in cl and "ceiling" in cl.lower() for cl in re.split(r"[.;]\s+", sent)):
+                hit.append("566 A as a ceiling")
+            if hit and "withdrawn" not in low and "historical" not in low:
+                bad.append("%s: %s: %s" % (os.path.basename(p), hit, sent[:120]))
+    assert not bad, bad[:4]
