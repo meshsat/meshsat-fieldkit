@@ -48,7 +48,7 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 REC = "v2/docs/records/l4e11"
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "435d515f6184f7bdb707cea7573a6274b9b3b3c825d587a0dc550f44bd67fe07"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
     "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758"),

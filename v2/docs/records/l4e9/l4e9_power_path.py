@@ -90,7 +90,7 @@ PINS = {
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "acfa35d8bd3a9a071676490ffb351e088c950337e020c7904d420c8a2c4b8dd4"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0eb554285580b8f20f05440f2810300cf5c65e9b8b2ea93830474f0d83df2283"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "435d515f6184f7bdb707cea7573a6274b9b3b3c825d587a0dc550f44bd67fe07"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
     "yageo": ("v2/vendor/passives/yageo-cc-series.pdf", "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"),
     "lcsc": ("v2/ecad/tools/lcsc_fill.py", "6888362e4a3295d0e1d595f65c03d5c13353d4785d7821c86e91f470a1cf6410"),
@@ -98,7 +98,7 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "70c6408c759ffacea2deb2c4ee6746af817e146fdabce3a172619db6eeec788a"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "648e262f7033bc4b32763c4a612fbd5ffca4b02d8fd1dc0eec78c87c809c1979"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
