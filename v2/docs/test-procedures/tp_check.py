@@ -45,7 +45,7 @@ ATTR_RX = re.compile(r'(\w+)="([^"]*)"')
 META_RX = re.compile(r"<!-- tp\n(.*?)\n-->", re.S)
 INDEX_RX = re.compile(r"<!-- tp-index\n(.*?)\n-->", re.S)
 PATH_RX = re.compile(r"`(v2/[^`\s]+)`")
-TBD_RX = re.compile(r"TBD \(owed by ([^)]*)\)")
+TBD_RX = re.compile(r"TBD\s+\(owed\s+by\s+([^)]*)\)")
 
 
 def norm(s):
