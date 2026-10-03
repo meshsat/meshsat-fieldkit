@@ -55,9 +55,12 @@ typedef struct fx {
     bool     told;
     ms_t     told_at;
 
-    /* flash */
+    /* flash: the wipe journal, and the slot-fault store beside it */
     uint8_t  flash[4096];
     int      flash_fail_program;
+    uint8_t  sflash[256];
+    int      sflash_fail_program;
+    unsigned sflash_writes;
 
     /* e-paper */
     ms_t     busy_until;
@@ -69,6 +72,8 @@ typedef struct fx {
 
 void fx_new(fx_t *f);
 void fx_init(fx_t *f, bool zer_closed, const bool held[3]);
+/* a controller reset: the flash and the slot store survive; held: the SLOT_EN levels the keeper holds; por: HAD_POR */
+void fx_reset(fx_t *f, const bool held[3], bool por);
 void fx_tick(fx_t *f);                       /* one tick at f->now */
 void fx_run(fx_t *f, ms_t ms);               /* ticks every millisecond */
 void fx_boot(fx_t *f);                       /* fx_new + fx_init + run until BOOT_RUN with a 1 Hz HOT-R1 */

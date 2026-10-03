@@ -204,7 +204,7 @@ void t_zeroize_boot_table(void)
     fx_new(a);
     bool held[3] = { true, true, true };
     bool drive[3];
-    panel_init(&a->p, &a->ops, a->now, true, held, drive);
+    panel_init(&a->p, &a->ops, a->now, true, held, true, drive);
     CHECK(!drive[0] && !drive[1] && !drive[2]);     /* FW-C02: the toggle drives every SLOT_EN low first */
     a->in.zeroize_sw = false;
     for (int i = 0; i < 6000 && a->p.boot != BOOT_RUN; i++) {

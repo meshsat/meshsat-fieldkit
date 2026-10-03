@@ -83,12 +83,16 @@ static int fl_read(void *ctx, uint32_t off, uint8_t *buf, unsigned len) { (void)
 static int fl_prog(void *ctx, uint32_t off, const uint8_t *buf, unsigned len) { (void)ctx; return hal_journal_program(off, buf, len); }
 static int fl_erase(void *ctx) { (void)ctx; return hal_journal_erase(); }
 static void epd_send(void *ctx, uint8_t page, bool full) { (void)ctx; (void)page; (void)full; /* owed */ }
+static int ss_read(void *ctx, uint32_t off, uint8_t *buf, unsigned len) { (void)ctx; return hal_slotstore_read(off, buf, len); }
+static int ss_prog(void *ctx, uint32_t off, const uint8_t *buf, unsigned len) { (void)ctx; return hal_slotstore_program(off, buf, len); }
+static int ss_erase(void *ctx) { (void)ctx; return hal_slotstore_erase(); }
 
 static const panel_ops_t OPS = {
     .bus = { 0, bus_write, bus_read },
     .zer = { 0, z_now, se_create, se_public, se_recorded, arm_cut, tell_modules, feed, fl_read, fl_prog, fl_erase,
              8192u },
     .epd = { 0, epd_send },
+    .slots = { 0, ss_read, ss_prog, ss_erase, 4096u },
 };
 
 int main(void)
@@ -97,7 +101,7 @@ int main(void)
     bool zer_closed = !hal_gpio_get(HAL_GPIO_ZEROIZE_SW);    /* step 3: the level, at the first instruction */
     bool held[3], drive[3];
     hal_slot_en_read(held);                                  /* FW-C02 */
-    panel_init(&P, &OPS, hal_now_ms(), zer_closed, held, drive);
+    panel_init(&P, &OPS, hal_now_ms(), zer_closed, held, hal_reset_was_power_on(), drive);   /* FW-C05 (F-15) */
     hal_slot_en_drive_initial(drive);
     panel_ev_report(&P, EV_BOOT, (uint8_t)hal_reset_reason(), hal_now_ms());   /* FW-C02: the boot reason logged */
     hal_init_rest();

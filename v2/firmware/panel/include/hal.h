@@ -186,6 +186,11 @@ void     hal_delay_us(unsigned us);
 void     hal_watchdog_start(ms_t period_ms);  /* FW-C02 scope rule; see hal_rp2040.c */
 void     hal_watchdog_feed(void);
 int      hal_reset_reason(void);
+bool     hal_reset_was_power_on(void);    /* HAD_POR set and the watchdog's REASON zero (F-15) */
+/* the slot-fault store (FW-C05): one 4 KiB sector beside the wipe journal's two */
+int      hal_slotstore_read(uint32_t off, uint8_t *buf, unsigned len);
+int      hal_slotstore_program(uint32_t off, const uint8_t *buf, unsigned len);
+int      hal_slotstore_erase(void);
 
 /* ZEROIZE.md 3.4 step 0: a timer alarm whose RAM-resident, highest-priority handler drives SLOT_EN1..3 low. */
 void     hal_arm_slot_cut_alarm(ms_t at_ms);

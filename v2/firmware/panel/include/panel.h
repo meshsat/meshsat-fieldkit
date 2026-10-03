@@ -230,11 +230,24 @@ typedef struct {
     void (*send)(void *ctx, uint8_t page, bool full);
 } panel_epd_ops_t;
 
+/* FW-C05 (F-14, record l5r4): the slot-fault state kept beside the wipe-pending record, in its own flash region: a torn
+ * record here must never read as a pending wipe, which invariant I3 would make of it inside the wipe journal */
+typedef struct {
+    void *ctx;
+    int  (*read)(void *ctx, uint32_t off, uint8_t *buf, unsigned len);
+    int  (*program)(void *ctx, uint32_t off, const uint8_t *buf, unsigned len);
+    int  (*erase)(void *ctx);
+    uint32_t size;
+} panel_store_ops_t;
+
 typedef struct {
     panel_bus_t      bus;
     panel_zer_ops_t  zer;
     panel_epd_ops_t  epd;
+    panel_store_ops_t slots;
 } panel_ops_t;
+
+enum { SLOTREC_CYCLED = 1, SLOTREC_OFF = 2 };   /* per slot: the retry spent, left off until the operator acts */
 
 /* ---------------------------------------------------------------- module states */
 typedef struct { bool stable, raw; ms_t since; bool rose, fell; } panel_deb_t;
@@ -290,6 +303,7 @@ typedef struct {
     bool    alive;               /* FW-C05 */
     bool    fault;               /* P s.5 slot fault */
     bool    wanted;              /* policy: this slot may run */
+    bool    lost_reported;       /* the 3 s loss of a running slot reported (F-14) */
 } panel_slot_t;
 
 enum boot_phase { BOOT_ZEROIZE = 0, BOOT_EXPANDERS, BOOT_CHARGER, BOOT_HOTR1, BOOT_SLOTS, BOOT_RUN };
@@ -300,7 +314,8 @@ enum shdn_state { SHDN_IDLE = 0, SHDN_PULSE, SHDN_WAIT_HB, SHDN_KILL };
 enum panel_ev_type {
     EV_BOOT = 0x40,                  /* the reset reason (FW-C02), reported by the target loop */
     EV_TEST = 1, EV_SOS, EV_ZEROIZE, EV_EMCON, EV_LIGHT_DAY, EV_LIGHT_NIGHT, EV_PI, EV_TR_APRS, EV_HB1, EV_HB2,
-    EV_HB3, EV_RAIL, EV_SHORE_INHIBIT, EV_SLOT_FAULT, EV_HOT_LINE, EV_I2C_RECOVERED, EV_WIPE_RESULT
+    EV_HB3, EV_RAIL, EV_SHORE_INHIBIT, EV_SLOT_FAULT, EV_HOT_LINE, EV_I2C_RECOVERED, EV_WIPE_RESULT,
+    EV_SLOT_CYCLE, EV_SLOT_OFF                  /* FW-C05: the one retry spent, the slot left off (value: the slot) */
 };
 typedef struct { uint8_t type; uint8_t value; ms_t at; } panel_ev_t;
 
@@ -425,6 +440,9 @@ typedef struct {
     bool     c1_reduced;             /* FW-C09 C1's first stage */
     bool     zer_page_hold;          /* the ZEROIZED page after a boot wipe */
     bool     pi_btn_wired;           /* the PI button on U1 P1.3 (record l8r2's draft, released with board C) */
+    uint32_t slot_store_off, slot_store_seq;
+    uint8_t  slot_rec_saved[3];       /* the slot-fault state last written (FW-C05) */
+    bool     slot_rec_dirty;
     bool     pi_btn_pressed;
 
     /* events for the bridge (P s.11) */
@@ -438,11 +456,19 @@ typedef struct {
  * read as inputs, return in drive[] the level each SLOT_EN is driven at from now on (all low when the toggle is closed
  * or the journal holds PENDING). */
 void panel_init(panel_t *p, const panel_ops_t *ops, ms_t now, bool zeroize_raw_closed, const bool held_slot_en[3],
-                bool drive_slot_en[3]);
+                bool power_on_reset, bool drive_slot_en[3]);
+/* power_on_reset: CHIP_RESET HAD_POR set AND the watchdog's REASON zero (finding F-15): HAD_POR alone stays set across a
+ * watchdog reset that follows a power-on, since CHIP_RESET records the last CHIP-LEVEL reset (RP2040 datasheet 2.12.7) */
 void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out);
 
-/* the operator's action that lets a faulted slot try again (P s.5 "until the operator acts"; SESSION S-04) */
+/* the operator's act (the touch UI, the bridge's retry; P s.5, FW-C05): re-arms the slot's one retry and raises a slot
+ * left off. A MAIN restart is the third act: a power-on reset clears every slot's state */
 void panel_slot_operator_retry(panel_t *p, unsigned slot, ms_t now);
+
+/* the slot-fault store (slotstore.c): 0 when a record was read, 1 when empty */
+int  panel_slot_store_load(panel_t *p, uint8_t st[3]);
+int  panel_slot_store_save(panel_t *p, const uint8_t st[3]);
+uint32_t panel_crc32(const uint8_t *b, unsigned n);
 
 /* debounce */
 void panel_deb_init(panel_deb_t *d, bool level, ms_t now);

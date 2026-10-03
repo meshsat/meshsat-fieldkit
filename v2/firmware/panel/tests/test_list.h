@@ -36,7 +36,13 @@
     T(t_boot_slot_adopt,             "FW-C02: SLOT_EN held levels read and adopted at boot; a wipe due drives them low first") \
     T(t_exp_outputs_before_config,   "FW-A08, FW-C01 step 4, PANEL.md s.5: outputs before configuration, DEV_EN kept 1") \
     T(t_hb_lost_3s,                  "FW-C05: a slot alive while its line toggles, lost after 3 s without an edge") \
-    T(t_slot_fault_cycle,            "PANEL.md s.5: flat 60 s = slot fault, power-cycled once (5 s off), then off until the operator acts") \
+    T(t_slot_fault_cycle,            "PANEL.md s.5, FW-C05: lost at start-up: flat 60 s after the rail, cycled once (5 s off), then off until the operator acts") \
+    T(t_slot_lost_while_running_cycled_once, "FW-C05 (F-14): lost while running: shown at 3 s, cycled 60 s after its last edge, the retry kept spent") \
+    T(t_slot_lost_again_after_cycle_left_off, "FW-C05 (F-14): lost again after a successful cycle: left off; the operator's retry re-arms") \
+    T(t_slot_not_supervised_while_stopping, "FW-C05 (F-14): no supervision while the controller asks a stop (the hot stop)") \
+    T(t_slot_off_kept_across_controller_reset, "FW-C05, FW-C02 (F-14): a slot left off stays off across a watchdog, RUN or SWD reset") \
+    T(t_slot_record_cleared_by_power_on, "FW-C05 (F-14): a power-on reset clears every slot's state, all raised again") \
+    T(t_slot_store_torn_keeps_previous, "FW-C05 (F-14, S-37): a torn slot record leaves the previous state and never a pending wipe") \
     T(t_hdmi_select,                 "FW-C06, PANEL.md s.5: follow the bridge, else the lowest live slot, never a dark slot") \
     T(t_shutdown_main_tap,           "FW-C03, FW-A10, FW-A12: MAIN tap, PI_SHDN_REQ low 200 ms, wait for the heartbeats, PI_KILL") \
     T(t_shore_inhibit,               "PANEL.md s.10, FW-C08: SHORE_INHIBIT boot low, only inputs off or water isolation, warning first") \
