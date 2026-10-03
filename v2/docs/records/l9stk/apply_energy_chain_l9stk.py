@@ -14,7 +14,7 @@ read the same numbers):
       decision (L9STK CU); BOARD_A_NODE no longer names an In2 plane board A does not have;
   the 25 A blade's citation in PACK_CELLS, PACK_LEAD, DOCK_ENTRY, DOCK_BLOCK, BOARD_A_NODE and BOARD_A_CONVERTERS: the Keystone
       3568 takes the Littelfuse MINI 297 or 997, so the regular ATOF sheet and its 1000 A2s give way to the MINI 297 sheet, its
-      625 A2s (a nominal melting figure, no clearing guarantee) and PACK_CELLS' cold resistance 2.36 mOhm and note.
+      625 A2s (a nominal melting figure, no clearing assurance) and PACK_CELLS' cold resistance 2.36 mOhm and note.
 
 What a run checks: the decision register carries record l9stk's board A and board E decisions, each ruled at 1 oz outer as the
 design input (titles carrying "(L9STK A)" and "(L9STK E)"), so the correction follows the decisions; for each edit exactly one
@@ -131,7 +131,7 @@ BLADES = [
 _NOTE_OLD = ('   note: "at the high end of the fault range the melting time from I2t is 1000/480^2 = 4.3 ms, and at the low\n'
              '     end 17 ms; the interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V"\n')
 _NOTE_TEXT = ("at the high end of the fault range the nominal melting time from the MINI's 625 A2s is 625/480^2 = 2.7 ms, and at "
-              "the low end 10.9 ms; a nominal melting I2t is no clearing guarantee (no clearing I2t is printed); the interrupting "
+              "the low end 10.9 ms; a nominal melting I2t is no clearing assurance (no clearing I2t is printed); the interrupting "
               "rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V")
 _NOTE_NEW = '   note: "%s"\n' % _NOTE_TEXT
 
