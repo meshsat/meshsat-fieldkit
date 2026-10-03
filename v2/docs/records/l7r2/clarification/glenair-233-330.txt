@@ -1,0 +1,17 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1357, Layer 7 record l7r2, 3 October 2026.
+To: Glenair, Inc., technical sales (www.glenair.com).
+
+Subject: 233-330 RJ45 feed-through: voltage rating, the jacks' shield bond, and a shell 15 option
+
+We are designing a prototype field unit whose sealed wall Ethernet port carries Power over Ethernet out (the PSE range up to 57 V DC on
+the pairs). Your 233-330 sheet (SuperSeal catalogue pages B-22 and B-23, Rev. 01.14.22) gives the mechanical data. Could you tell us:
+
+1. The rated working voltage and current of the 233-330's RJ45 jacks, pair to pair and pair to shell, for PoE (IEEE 802.3at/bt) service.
+2. Whether each RJ45 jack's shield is electrically joined to the aluminium shell, so that a shielded patch cord's shield reaches the
+   panel through the wall-mount flange (we bond the flange to a chemically conversion-coated aluminium panel), and the resistance of
+   that path if you state one.
+3. Whether a 233-330 or an equivalent RJ45 feed-through exists in shell size 15 (our panel room is the D38999/20 shell 15 wall-mount
+   envelope: flange 31.29 mm square, the mated plug 32.5 mm), and its part number.
+4. The recommended panel cut-out for the D0 wall-mount version in shell 17, given its rear 1.1875-.1P thread (front panel mount).
+
+Thank you.

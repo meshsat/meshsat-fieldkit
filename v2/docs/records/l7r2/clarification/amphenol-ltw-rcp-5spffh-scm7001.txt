@@ -1,0 +1,16 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1357, Layer 7 record l7r2, 3 October 2026.
+To: Amphenol LTW Technology, technical support (amphenolltw.com).
+
+Subject: RCP-5SPFFH-SCM7001: drawing, shield-to-panel bond and panel thickness
+
+Your product page for RCP-5SPFFH-SCM7001 gives an operating voltage of 44 to 57 V, IP67, "Plastic, Shielded", a 13/16-28 UNS nut, front
+fastening and a panel thickness of 3.00 mm without the cap. Could you send or tell us:
+
+1. The 2D drawing (the flange, the panel cut-out, the depth behind the panel and the nut's size across corners).
+2. How the RJ45 jack's shield is carried to the panel: is there a metal part (nut, washer, shield spring) that contacts the panel, or an
+   earth lead, and what is its resistance?
+3. Whether the receptacle can be used in a 5.0 mm aluminium panel (with a local spot face to 3.0 mm on the panel's back, or a longer
+   thread variant).
+4. The rated current and voltage between a pair and the shield for PoE service.
+
+Thank you.

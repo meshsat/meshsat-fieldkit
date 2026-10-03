@@ -1,0 +1,14 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1357, Layer 7 record l7r2, 3 October 2026.
+To: SANYO DENKI, San Ace technical support (products.sanyodenki.com).
+
+Subject: 9WL0612P4H001 and 9WPA0412P6G001: lead wires and the PWM input
+
+Your product pages give each fan's electrical and environmental ratings; the instruction manual M0011876C is behind a download form. Could
+you tell us, for both models:
+
+1. The lead wires: the conductor size (AWG), the insulation's diameter and rating, the length as supplied, and the colour code.
+2. The PWM input: its voltage levels, its input impedance and frequency range, and the fan's speed with the PWM lead open.
+3. The pulse sensor output: open collector or open drain, its maximum voltage and sink current.
+4. The starting current at 12 V and at 10.8 V.
+
+Thank you.
