@@ -3,7 +3,7 @@
 #define TEST_LIST(T) \
     T(t_debounce_30ms,               "PANEL.md s.3: debounce 30 ms on every switch input") \
     T(t_lighting_modes,              "PANEL.md s.8: DAY 100 %, NIGHT 15 %, NVG 2 % red and amber only, BLACKOUT 0, backlight 100/20/5/0") \
-    T(t_tx_floor,                    "PANEL.md s.8: the TX lamp never dimmed below 10 % duty (finding F-05)") \
+    T(t_tx_lamp_follows_duty,        "PANEL.md s.8 (F-05): the TX lamp follows the panel's duty, NVG 2 % keyed, dark in BLACKOUT") \
     T(t_rail_sense,                  "PANEL.md s.3 GPIO26: the rail present above 1.25 V; s.8 BLACKOUT with RAIL_SENSE low") \
     T(t_led_drive_rule,              "PANEL.md s.4: LED on = output driving 0, off = input, never a 1") \
     T(t_led_boot_one_by_one,         "PANEL.md s.4: after boot the outputs are enabled one by one") \
@@ -12,7 +12,7 @@
     T(t_msg_cleared_by_ack,          "PANEL.md s.9: MSG for an unread message, cleared by ACK") \
     T(t_battery_bar,                 "PANEL.md s.9: BAT1..5 for 5 s after a short TEST press, the lowest flashing below 10 %") \
     T(t_pi_ring_heartbeat,           "PANEL.md s.9: the PI ring a 0.5 Hz heartbeat while any slot's bridge runs") \
-    T(t_sounder_patterns,            "PANEL.md s.9: sounder chirp 50 ms, SOS 1 s on 1 s off, all muted in BLACKOUT") \
+    T(t_sounder_patterns,            "PANEL.md s.9: chirp 50 ms, double chirp 50/100/50 ms (F-06), SOS 1 s on 1 s off, muted in BLACKOUT") \
     T(t_epd_refresh_rules,           "PANEL.md s.9: e-paper refresh at most once a minute, full once an hour; power down between refreshes (finding F-08)") \
     T(t_epd_busy_polled,             "PANEL.md s.9: BUSY polled before every command") \
     T(t_test_short_press_ack,        "PANEL.md s.9: TEST short press = acknowledge, sounder muted, battery bar 5 s") \
@@ -55,4 +55,7 @@
     T(t_switch_closed_at_power_up,   "PANEL.md s.9, FW-C10: a maintained SOS closed at power-up counts its 2 s from boot") \
     T(t_margin_hold,                 "FW-C15: the margin hold's trigger, actions, SOS queued and restore") \
     T(t_power_fallback,              "FW-C09 (in part): the 10 s pack-reading fallback and C1's first stage") \
+    T(t_modules_lost_caut_then_warn, "PANEL.md s.9 (F-07), CONOPS 4e: one module lost MASTER CAUT, two lost MASTER WARN") \
+    T(t_after_h1_restore_5k_below,   "FW-C13, FW-C09 (S-19 declined): the heat stage's module first, then C1's restore 5 K below") \
+    T(t_pi_button_on_u1_p13_when_wired, "PANEL.md s.4 and s.5, FW-C03 (DRAFTED, l8r2): PI_BTN_n on U1 P1.3, read only when wired") \
     T(t_bus_recover,                 "FW-K04, V-K02: nine SCL pulses and a STOP on a held bus")
