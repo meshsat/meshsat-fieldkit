@@ -1,0 +1,4 @@
+l5pwr-power_line_states-slot_en-hot_r1-1e18a1ca.txt sha256 b7e33d0bbed808a629d6ecde2fa8c50b598cf9418d93c0d5339021c9d88122ed
+  lines 69 to 73 and 91 to 93, byte for byte, of v2/docs/records/l5pwr/apply_l5pwr.py at commit 1e18a1ca on branch fnd/l5pwr
+  (Layer 5's power pass for set 27; the whole file's sha256 68d94ed466d20ea6335e78099c9d225888bcdf7c324cafc20bd9f582560dc8d7), the drafted rows SLOT_EN1..3 and HOT_R1 of
+  pcb_interfaces.yaml board_to_board.power_line_states; copied 3 October 2026 so that this record reads its input from its own tree
