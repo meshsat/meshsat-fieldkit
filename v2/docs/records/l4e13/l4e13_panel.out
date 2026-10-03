@@ -7,7 +7,7 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
    env        v2/ecad/tools/pcb_envelope.yaml  sha256 35cf43a2b7098a76
    replay_py  v2/docs/records/l4e/l4e_replay.py  sha256 3de985e2e3e06453
    replay_out v2/docs/records/l4e/l4e_replay.out  sha256 59c6eeab16da98f8
-   l4e7_out   v2/docs/records/l4e7/l4e7_stage_settings.out  sha256 acfa35d8bd3a9a07
+   l4e7_out   v2/docs/records/l4e7/l4e7_stage_settings.out  sha256 8d5e8191e5938a76
    array_calc v2/docs/records/a1solar/array_calc.py  sha256 fdeaf63f525f1d7f
    spr_ds     v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf  sha256 da06e5e2d9bca625
    spr_guide  v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf  sha256 b8ebdfb7019a399a

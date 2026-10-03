@@ -65,7 +65,7 @@ PINS = {
     "env": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
     "replay_py": ("v2/docs/records/l4e/l4e_replay.py", "3de985e2e3e06453d2c9d576311c1f39935149ac1e9b7cff0431a40933bb8734"),
     "replay_out": ("v2/docs/records/l4e/l4e_replay.out", "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d"),
-    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "acfa35d8bd3a9a071676490ffb351e088c950337e020c7904d420c8a2c4b8dd4"),
+    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "8d5e8191e5938a7682349bcca2fc366642ee8704637ed98e2879312ace4215e3"),
     "array_calc": ("v2/docs/records/a1solar/array_calc.py", "fdeaf63f525f1d7f4ca54502083369cfd4f322a41207ff0a52582c27038fd1e4"),
     "spr_ds": ("v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
                "da06e5e2d9bca625f54a756105e009950a2352e4764868853cb26921372ff605"),
