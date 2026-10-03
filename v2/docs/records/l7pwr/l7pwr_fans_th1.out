@@ -18,7 +18,7 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    th1         v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md  sha256 61fa23a04f592a9f
    l4e11       v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md  sha256 f4c127dd3f236d6f
    l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 715eb965d4527d35
-   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 9a057f925a41d896
+   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 302a0e2c0583ffcd
    l8r2_fans   v2/docs/records/l8r2/apply_gen_sch_b_fans12.py  sha256 4f954d457423d8d8
    l4e12       v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md  sha256 b0e303a557e38898
    l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 a760101cde41633a
