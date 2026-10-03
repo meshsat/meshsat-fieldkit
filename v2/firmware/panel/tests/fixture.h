@@ -38,6 +38,7 @@ typedef struct fx {
     int      hot_sim;
     bool     main_low;                /* the LTC2954's INT held low by a MAIN press (PI_SHDN_REQ is wired-OR) */
     unsigned cmd_byte_writes_u27;    /* pointer-only writes after a read of U27 */
+    uint16_t r16[128][8];            /* the TMP117 (MSB first) and the VEML7700 (LSB first) */
 
     /* secure element */
     uint8_t  key[2][64];

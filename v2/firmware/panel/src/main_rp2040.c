@@ -99,7 +99,7 @@ int main(void)
     hal_slot_en_read(held);                                  /* FW-C02 */
     panel_init(&P, &OPS, hal_now_ms(), zer_closed, held, drive);
     hal_slot_en_drive_initial(drive);
-    (void)hal_reset_reason();                                /* logged and reported once the protocol exists */
+    panel_ev_report(&P, EV_BOOT, (uint8_t)hal_reset_reason(), hal_now_ms());   /* FW-C02: the boot reason logged */
     hal_init_rest();
     hal_watchdog_start(PANEL_WATCHDOG_MS);
 

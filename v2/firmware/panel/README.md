@@ -2,7 +2,7 @@
 
 MESHSAT-1357, Layer 12. **Prototype firmware for an unbuilt kit: no board C exists, nothing here has run on hardware,
 and the target build has not been compiled** (this host has no arm toolchain and no pico-sdk). What has run: the
-portable core and its 52 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
+portable core and its 55 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
 -pedantic -Wshadow -Wconversion`, all passing, and the Python checks of `v2/ecad/tools/tests/test_fw_panel.py` that bind
 the code to the netlists and the contract pages.
 
@@ -19,6 +19,7 @@ expander bits of boards A, B and D's netlists.
 | `src/zeroize.c` | the wipe journal and the crypto-erase sequence (ZER 3.4) and the boot table (ZER 3.5) over injected operations |
 | `src/expander.c` | the seven PCA9555: the boot writes (outputs before configuration), the LED drive rule, the EXP_INT service, the switched loads' bits |
 | `src/bus_recover.c` | the kit bus recovery (FW-K04) |
+| `src/sensors.c` | board B's TMP117 (FW-C13's fallback) and board C's VEML7700 (P s.8), read off the kit bus |
 | `src/hal_host.c` | the host stub of hal.h |
 | `src/hal_rp2040.c`, `src/main_rp2040.c` | the pico-sdk implementation and main loop (NOT BUILT) |
 | `CMakeLists.txt` | the target build (pico-sdk 2.3.1), NOT RUN |
@@ -72,7 +73,7 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
 
 ## 2. Statement to test
 
-Every host test (52), from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
+Every host test (55), from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
 names each).
 
 | Test | Statement |
@@ -126,6 +127,9 @@ names each).
 | t_hot_boot_held_slot | FW-C14: a slot held up at boot, the line at 5 Hz |
 | t_no_raise_while_zeroize_armed | FW-C04, D-03: nothing newly raised while ZEROIZE is armed or wiping |
 | t_switch_closed_at_power_up | P s.9, FW-C10: SOS closed at power-up |
+| t_tmp117_read | FW-C13, FW-C14: board B's TMP117 read off the bus, once a conversion |
+| t_veml7700_read | P s.8: the VEML7700 reading for the bridge |
+| t_se_absent_retried | FW-C04, ZER 3.5: the absent SE retried |
 | t_margin_hold | FW-C15 |
 | t_power_fallback | FW-C09 in part |
 | t_bus_recover | FW-K04, V-K02 |
@@ -171,7 +175,8 @@ other two statuses are cited by none.
   reads the SHORE and CHARGING bits as inputs a driver would fill.
 - **The secure element**: CryptoAuthLib is not vendored; on the target every SE call fails, so the boot takes "the SE
   does not answer" and a commit ends INCOMPLETE with the slots held off (fail secure).
-- **The VEML7700 and the TMP117 reads**, the USB device, the kit bus segment buffer of FW-K05 (OWED in the contract).
+- **The USB device**, and the kit bus segment buffer of FW-K05 (OWED in the contract). The VEML7700's lux per count at
+  the chosen setting is INFERRED by scaling (sensors.c); Vishay's application note is not held.
 - **The pico-sdk build**: never compiled; the SDK names were read from pico-sdk 2.3.1 (section 6).
 
 ## 5. Findings
@@ -233,6 +238,8 @@ choice. Each is reversed by changing the named constant or line.
 | S-30 | an EXP_INT held low is serviced at most every 5 ms; a failed LED write retried after 100 ms | a dead target must not stall the loop at 10 ms a transfer | `PANEL_EXP_INT_MIN_MS`, `PANEL_LED_RETRY_MS` |
 | S-31 | with every slot dark the display selection stays where it was | no live slot to choose; board B's enables pass no picture from a dark slot | `display_select` |
 | S-33 | a TEST, SOS or PI switch already closed at power-up counts its hold from the controller's start (an SOS toggle left closed arms SOS 2 s after boot) | the toggles are maintained; a hold cannot be shorter than stated | `sample_switches` |
+| S-35 | an absent secure element is retried every 60 s (two GenKey-public reads, about 0.26 s of the loop); its answer clears the warning | ZER 3.5 says it is retried and states no period | `PANEL_SE_PROBE_MS` |
+| S-36 | the TMP117 polled every 250 ms and counted once per Data_Ready (its reset setting converts each second); the VEML7700 at gain x1/8 and 100 ms (to about 35 klx), polled each second | "two readings in a row" are two conversions; daylight without saturation at NIGHT's cost of 0.54 lx steps | `PANEL_TMP117_POLL_MS`, `sensors.c` |
 | S-34 | no slot is newly raised while ZEROIZE is armed (the 5 s) or wiping; a running slot is left to step 6 | fail secure: D-03 cuts the slots | `zeroize_blocks_raise` |
 | S-32 | HOT-R1 decided only on reads at most 1.5 s old; 1.5 to 3 s without a read keeps the last verdict; over 3 s is the detector lost | a dead bus must not age a stale low into H2 and kill the kit | `panel_hot_classify` |
 

@@ -248,6 +248,7 @@ uint8_t panel_zer_boot(panel_t *p, bool toggle_closed, bool *slots_may_power)
         uint8_t pub[64], rec[64];
         if (z->genkey_public(z->ctx, s, pub, ZJ_UNTIMED_DEADLINE) != 0) {
             p->zer.se_absent = true;
+            p->se_probe_at = z->now_ms(z->ctx);
             return p->zer.last_result = ZER_SE_ABSENT;
         }
         if (!z->recorded_pub(z->ctx, s, rec) || memcmp(pub, rec, 64) != 0)

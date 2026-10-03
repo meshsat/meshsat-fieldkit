@@ -630,9 +630,11 @@ static bool fresh_two(uint32_t seq, uint32_t *seen, bool cond, uint8_t *count)
     return *count >= 2;
 }
 
-static void hot_step(panel_t *p, ms_t now, const panel_in_t *in)
+static void hot_step(panel_t *p, ms_t now, const panel_in_t *in_)
 {
     panel_hot_t *h = &p->hot;
+    struct { panel_reading_t tmp117; } in_s, *in = &in_s;
+    in_s.tmp117 = in_->tmp117.valid ? in_->tmp117 : p->tmp117;   /* a reading given, else the core's own (sensors.c) */
     uint8_t prev = h->line;
     uint8_t line = panel_hot_classify(h, now);
     if (line == HOT_LINE_UNKNOWN && p->boot == BOOT_RUN)
@@ -1059,6 +1061,19 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     sample_switches(p, now, in);
     if (p->boot != BOOT_RUN)
         boot_step(p, now);
+    if (p->exp_init_done && after(now, p->tmp117_polled_at + PANEL_TMP117_POLL_MS))
+        panel_tmp117_poll(p, now);
+    if (p->exp_init_done && after(now, p->veml_polled_at + PANEL_VEML_POLL_MS))
+        panel_veml_poll(p, now);
+    if (p->zer.se_absent && p->boot == BOOT_RUN && after(now, p->se_probe_at + PANEL_SE_PROBE_MS)) {
+        p->se_probe_at = now;                                /* ZER 3.5: the SE retried; it answers, the warning goes */
+        uint8_t pub[64];
+        bool ok = true;
+        for (uint8_t s = 0; s < 2 && ok; s++)
+            ok = p->ops->zer.genkey_public(p->ops->zer.ctx, s, pub, 0xFFFFFFFFu) == 0;
+        if (ok)
+            p->zer.se_absent = false;
+    }
 
     /* lighting */
     bool fault;
@@ -1130,6 +1145,8 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     out->charge_hold_margin = p->margin_hold;
     out->rb_ien_request = p->rb_ien && !(off & (1u << LOAD_ROCKBLOCK));
     out->reduced_mode = p->reduced_mode_flag;
+    out->light_valid = p->light_valid;
+    out->light_mlux = p->light_mlux;
     out->loads_on = (uint16_t)(p->br.loads_wanted & ~off);
     if (p->exp_init_done && p->boot >= BOOT_HOTR1)
         panel_exp_write_kit(p, out->loads_on, out->rb_ien_request);

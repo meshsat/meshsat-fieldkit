@@ -190,6 +190,8 @@ typedef struct {
     bool     backlight_off;      /* P s.8 BLACKOUT, for the bridge */
     uint8_t  backlight_pct;      /* P s.8: 100, 20, 5, 0 for the bridge */
     bool     shore_refused;      /* a SHORE_INHIBIT request refused (FW-C08) */
+    bool     light_valid;        /* P s.8: the VEML7700 reading for the bridge */
+    uint32_t light_mlux;
 } panel_out_t;
 
 /* ---------------------------------------------------------------- injected operations */
@@ -292,6 +294,7 @@ enum shdn_state { SHDN_IDLE = 0, SHDN_PULSE, SHDN_WAIT_HB, SHDN_KILL };
 
 #define PANEL_EVENTS 32
 enum panel_ev_type {
+    EV_BOOT = 0x40,                  /* the reset reason (FW-C02), reported by the target loop */
     EV_TEST = 1, EV_SOS, EV_ZEROIZE, EV_EMCON, EV_LIGHT_DAY, EV_LIGHT_NIGHT, EV_PI, EV_TR_APRS, EV_HB1, EV_HB2,
     EV_HB3, EV_RAIL, EV_SHORE_INHIBIT, EV_SLOT_FAULT, EV_HOT_LINE, EV_I2C_RECOVERED, EV_WIPE_RESULT
 };
@@ -382,6 +385,15 @@ typedef struct {
     bool     kit_out_valid;
     ms_t     led_fail_at;
     bool     led_failed;
+
+    /* the kit-bus sensors (sensors.c) and the absent secure element's retry */
+    panel_reading_t tmp117;
+    ms_t     tmp117_polled_at, tmp117_ok_at;
+    bool     veml_ready, light_valid;
+    uint16_t light_counts;
+    uint32_t light_mlux;
+    ms_t     veml_polled_at;
+    ms_t     se_probe_at;
     uint8_t  hot_r1_level;            /* last read of A:U27 P1.5 */
     bool     rb_status;               /* B:U7 RB_STATUS */
     bool     light_day_n, light_night_n, panel_id;
@@ -451,6 +463,14 @@ int  panel_exp_boot(panel_t *p);
 int  panel_exp_write_leds(panel_t *p, uint32_t leds);
 int  panel_exp_service(panel_t *p, ms_t now);
 int  panel_exp_write_kit(panel_t *p, uint16_t loads_on, bool rb_ien);
+
+/* the kit-bus sensors (sensors.c) */
+int  panel_tmp117_poll(panel_t *p, ms_t now);
+int  panel_veml_init(panel_t *p);
+int  panel_veml_poll(panel_t *p, ms_t now);
+#define PANEL_TMP117_POLL_MS 250u   /* SESSION S-36: four looks a conversion cycle (1 s at the TMP117's reset setting) */
+#define PANEL_VEML_POLL_MS   1000u
+#define PANEL_SE_PROBE_MS    60000u /* SESSION S-35: ZER 3.5 "the SE is retried" with no period stated */
 
 /* the kit bus recovery (FW-K04), through a bit-bang interface */
 typedef struct {
