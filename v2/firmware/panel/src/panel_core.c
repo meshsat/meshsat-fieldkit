@@ -357,6 +357,7 @@ static void controls_zeroize(panel_t *p, ms_t now)
         } else if (after(now, p->zer.closed_at + PANEL_ZEROIZE_HOLD_MS)) {
             p->zer.hold_end = now;                           /* the 5 s commit */
             p->zer.aborted_shown = false;
+            p->zer.slots_cut = false;
             panel_zer_wipe_timed(p, now);
             p->zer.mode = ZM_WIPING_WAIT;
         }
@@ -390,8 +391,13 @@ static void controls_zeroize(panel_t *p, ms_t now)
 
 static bool zeroize_holds_slots(const panel_t *p)
 {
-    return p->zer.mode == ZM_WIPING_WAIT ? p->zer.slots_cut
-         : p->zer.mode == ZM_COMPLETE || p->zer.mode == ZM_INCOMPLETE;
+    return p->zer.mode == ZM_COMPLETE || p->zer.mode == ZM_INCOMPLETE;
+}
+
+/* while a wipe is armed or running no slot is newly raised (SESSION S-34: fail secure; D-03 cuts them) */
+static bool zeroize_blocks_raise(const panel_t *p)
+{
+    return p->zer.mode == ZM_ARMING || p->zer.mode == ZM_WIPING_WAIT;
 }
 
 /* the PI button (P s.5, FW-C03): short press = clean shutdown, held 8 s = PI_KILL. Not wired: finding F-01. */
@@ -499,15 +505,15 @@ static void slots_policy(panel_t *p, ms_t now)
     bool shutting = p->kill || p->shdn != SHDN_IDLE;
     bool reduced = p->reduced_mode_flag;
     for (unsigned i = 0; i < 3; i++) {
-        if (zeroize_holds_slots(p))
+        if (zeroize_holds_slots(p) || (zeroize_blocks_raise(p) && !p->slot[i].en))
             want[i] = false;
         if (shutting && !p->slot[i].en)
             want[i] = false;                                 /* a shutdown raises nothing; PI_KILL removes power */
         if (reduced && i == 0)
             want[i] = false;                                 /* the reduced mode: slots 2 and 3 */
-        if (p->hot.state == HOT_H1 && after(now, p->hot.stop_at + PANEL_SHDN_PULSE_MS) &&
-            (!p->slot[i].alive || p->hot.shdn_done))
-            want[i] = false;                         /* FW-C13: each slot once it has stopped, all at 60 s */
+        if (p->hot.state == HOT_H1 && (!p->slot[i].en || (after(now, p->hot.stop_at + PANEL_SHDN_PULSE_MS) &&
+                                                          (!p->slot[i].alive || p->hot.shdn_done))))
+            want[i] = false;                         /* FW-C13: nothing raised; each slot dropped once it has stopped */
         if (p->heat_stage_only && i != HEAT_STAGE_SLOT)
             want[i] = false;
         if (p->hot.state == HOT_H2)
@@ -964,6 +970,7 @@ static void sample_switches(panel_t *p, ms_t now, const panel_in_t *in)
         panel_deb_init(&p->sw_day, p->light_day_n, now);
         panel_deb_init(&p->sw_night, p->light_night_n, now);
         p->rb_ien = false;
+        p->test_down_at = p->sos_closed_at = p->pi_down_at = now;   /* a switch closed at power-up counts from boot (S-33) */
         return;
     }
     panel_deb_update(&p->sw_test, in->test_sw, now);

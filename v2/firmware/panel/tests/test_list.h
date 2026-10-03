@@ -47,6 +47,9 @@
     T(t_hot_boot_read,               "FW-C14: HOT-R1 read at start-up before any slot is raised") \
     T(t_hotr1_bus_lost,              "FW-C14: no read for 3 s is the detector lost (held high), never a stale held low") \
     T(t_boot_main_tap,               "FW-C03, FW-A12: a MAIN tap during the boot shuts the kit down") \
+    T(t_hot_boot_held_slot,          "FW-C14: a slot found held up at boot with the line at 5 Hz gets H1's shutdown") \
+    T(t_no_raise_while_zeroize_armed, "FW-C04, D-03: no slot newly raised while ZEROIZE is armed or wiping") \
+    T(t_switch_closed_at_power_up,   "PANEL.md s.9, FW-C10: a maintained SOS closed at power-up counts its 2 s from boot") \
     T(t_margin_hold,                 "FW-C15: the margin hold's trigger, actions, SOS queued and restore") \
     T(t_power_fallback,              "FW-C09 (in part): the 10 s pack-reading fallback and C1's first stage") \
     T(t_bus_recover,                 "FW-K04, V-K02: nine SCL pulses and a STOP on a held bus")
