@@ -98,7 +98,34 @@ round (`af4672f4`, its section 18; output section 26f) after Layer 7's D-18 (`v2
 LTC3115-1 as TA04 with L4 Coilcraft XAL6060-103ME; a fan fault a rail hiccup, not a U12 reset), the branch declared 1.3208 A
 (89.8 % of U42's least limit, R228 kept), E11-39 a PWM-duty ramp, E11-40 a finding for board B's owner (R-190, the coolers on
 +5V_Sn), the purchase list with Layer 7's fan prices read from its FindChips file at that commit, the handoff's omitted
-dependencies without the fan-feed round; the register at 180 items. Status: known defects addressed in drafts; feasibility conditions remain
+dependencies without the fan-feed round; the register at 180 items. Round 4 (a) (3 October 2026, after Astra's targeted recheck
+`records/l4close/checks/astra-check-l4close-2.md`, NOT YET, its blocking discrepancy 6): the escalation rule of L4-F04 corrected in
+L4-E12's 17.9 and here (a DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits, the
+analysed one and the route with the local sensor relocated, or a bound that none can meet the limit; one arrangement's failed local
+test is that arrangement's shortfall and the next arrangement is tried), OW-1 and OW-10 reworded, U-02's texts and the behaviour row
+with them; the e-paper soak (R-185 and the route row) set to the claimed +70 C at the glass for E5's 6 h and E3-O's 4 h behind the
+window with its uncertainty and recovery criteria (an ambient-only +55 or +60 C soak establishes nothing above the ambient). Round 4 (b),
+L4-E11's correction tip (`b929d8be`) merged and carried: the fan rail's parts renumbered U22, R103 to R109 and C135 to C141 (the first
+draft's designators were the solar drafts'; a disjointness test over every board E draft in this record's order now in test_l4e11),
+L4-CP01 restated (the 566 A a resistive extrapolation and E11-38 (c)'s test target, the start into a short not bounded by printed data,
+no retry duty claimed, the contact at most case (1)'s 15.9 K at any duty), E11-38 extended to the histories (a) to (h) with the pin
+excursions, the wiring's and copper's integrity and the contact body at or under 85 C (D-15, R-181, R-184, the route rows E11-31 and
+E11-38, the diagram's board E block), the rail 11.512 to 12.431 V with the 1 % divider. Round 4 (c), step 1: L4-E11's
+qualification-route correction (`a1d15601`, the owner's review L4-QR01: 17d's blocks with the lot, operating point, mounting, thermal
+boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers) carried into the route's 17d rows and R-159 and
+R-160; L4-QR02, the fit mock-up R-167 blocks the adoption of the proposed pack arrangement and the dependent mechanical release, nothing
+else; Layer 8's L8G-F12 (`v2/docs/records/l8gnd/` at `226e9143`, cited by path and commit only): Layer 8's board A drafts R-191 and R-192
+after board A's power round, d8dec31's PB network R-193 LAST in board A's round (R233 and C241) with the FINDING R-194 for its owner,
+board B's GND-002 draft R-195 in board B's round; the register at 185 items. Round 4 (c), step 2: L4-E7's round 5 (`1a73f5b4`,
+after the collaborator's targeted recheck) merged and carried: round 2's 3.30 uH loop WITHDRAWN as a passing floor everywhere it
+stood (D-10, R-176 row 3, B6-ENG-1, the approaches, the verdicts), both fault positions evaluated; at that reference loop a fault at
+the connector, no lead resistance credited, reads U5's pins -0.3021 V, past the -0.3 V absolute maximum, so D-10's guard-on case is
+OPEN (an absolute-rating violation, kept apart from the missed +-0.240 V design target; IF-01 reads NOT MET on it); INP 18.29 V over
+its 18 V line, PV_F 83.47 V over the recommended 80 V row; D4's cold connection over its margin lines at a connector fault, inside
+the absolute ratings; the sense model rectified (D-16: the monitor's average +7.9 %, the limit below its setting, MODELED; 'no
+damage' withdrawn); R96 at 0.1 %; L4-E7's files re-pinned. The exit, In short and the new section 8e (out 28): the collaborator's
+recheck astra-check-l4close-2 (at `650b5694` on `fnd/int27`, cited) NOT YET, its six items with their states after the corrections,
+none restated as accepted, and the status line's exact coverage (addressed in drafts, corrected after the recheck, open). Status: known defects addressed in drafts; feasibility conditions remain
 open.
 
 | File | What it is |
@@ -121,7 +148,7 @@ open.
 | `checks/check-l4e9-5.md` | Claude's (the coordinator's) closing check of update round 3 at `fc0f23ef`: the output reproduced, the gate rows, U-03's row, the register (139 rows) and R-29 against the JST VH catalogue read; U-03 a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC), the gate NOT CLOSED on U-01, U-02 and U-04; not a model review and not an Astra check |
 | `checks/check-l4e9-6.md` | Claude's (the coordinator's) check of update round 4 at `2661c1ef`: the output reproduced, L4-E13 re-pinned after its update on L4-E7R, the changed lines' figures located, the two energy bases (336.6 Wh accepted stage, 350.0 Wh the replay's first round) kept apart; the gate unchanged, NOT CLOSED on U-01, U-02 and U-04; not a model review and not an Astra check |
 | `fetch_held_back.py` | Fetches the Littelfuse 0997 sheet the record read but did not file (held back by its terms, the owner's rule of 27 September 2026) into the ignored `v2/vendor/power/held/` and checks its sha256. Never run by a test; the tests skip when the sheet is absent |
-| `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
+| `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com); since round 3 (c) also `l7pwr-findchips-fans-heaters-2026-10-03.json`, Layer 7's FindChips reading of the fans copied byte for byte from `fnd/l7pwr` at `2087060b` (sha256 `63fad48957e8a0f3`), because that commit is outside this branch's history and a record reads only its own tree and its own history; it goes once Layer 7 merges in set 28 |
 | `README.md` | This list |
 
 **PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
@@ -132,4 +159,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 54 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 58 tests.

@@ -16,13 +16,17 @@ findings ledger's item 1), and the solar-fault remedies (the owner's amendment o
 cut-off for a 36 V source on the port and a return switch for a reversed panel, drafted), with the guard already on bounded
 after the consolidation review's B6 and, in round 2, the external review's L4-F01: the margin decided first (U5 within
 +-0.240 V, the timestep's error added), Samsung parts whose DC-bias curves bound every ceramic bank on its own, the envelope
-from a 0.30 uH source loop; every rating holds from a 3.30 uH loop and NOT under it, no approach within the makers' printed
-rules removes that floor, and the engineer's row B6-ENG-1 carries it. Round 3 (the one design-convergence attempt) worked
+from a 0.30 uH source loop; round 2's 3.30 uH loop, WITHDRAWN as a passing floor in round 5 (the recheck: a connector fault
+credits no lead resistance, and the pins' complete budget with RSENSE1's inductance is outside +-0.240 V in both polarities),
+is kept only as the reference loop; no approach within the makers' printed rules removes the dependency, and the engineer's
+row B6-ENG-1 carries the complete stage question. Round 3 (the one design-convergence attempt) worked
 B6-ENG-1's route 3, the sense moved off the stage's input capacitance, to the circuit: no split of the input ceramics holds
 both the guard-on transient and the sense's printed operating range in operation, result (ii); it found the as-drafted sense
 outside that operating range at the 25 V corner (B6-ENG-2) and RSENSE1's unprinted inductance a condition of B6's floor.
 Round 4 answered the Layer 6 author's two findings on the drafts: R97 at 0.1 % (L6P-F04) and PV_F's basis stated against the
 TPS4811-Q1's recommended operating 80 V row, exceeded at the floor and OPEN (L6P-F10).
+Round 5 answered the collaborator's recheck: the floor claim withdrawn, the sense model corrected (no monitor current for a
+negative differential; the average reads high, not low), the "no damage" consequence withdrawn, R96 at 0.1 %.
 
 | File | What it is |
 |---|---|

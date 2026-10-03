@@ -1486,7 +1486,11 @@ Some of 17.2's lines are high, so each line needs a class:
     the mixed-air screen, may change it.
   - **MISSING STORAGE QUALIFICATION:** an unpowered part judged on an operating row read to cover storage (INFERRED). An
     evidence task: the maker's storage statement, or a storage soak of a sample with its function read back.
-  - **DEMONSTRATED CONFLICT:** a measured local temperature over a mandatory limit with the route fitted. Only this category
+  - **DEMONSTRATED CONFLICT:** a DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits (the analysed
+    arrangement AND the heat-rejection route with the local sensor relocated, each with the part's local temperature measured
+    over its mandatory limit), or a bound showing that no arrangement the design admits can meet the limit; one arrangement's measured
+    failure demonstrates the failure of that arrangement, not an incompatibility between requirements, so until then a failed
+    local test stays a modelled or measured shortfall of that arrangement and the next arrangement is tried. Only this category
     justifies asking the owner to change a requirement or a ruling. None at present: nothing is built or measured.
 
 **The capacity.** It is computed with the inside resistance at zero:
@@ -1535,7 +1539,8 @@ So E3-O's 1.806 W/K and K1 lie under it even on the conservative ends (14.4 and 
 the conservative ends, the bare reading may fall short; the same point is then repeated with the route fitted (`T-H1-PROCEDURE-DRAFT.md` section 6).
 
 **The four lines over the modelled capacity, by category** (none lowers a requirement silently; an option that changes a
-requirement or a ruling stays the owner's and goes to him only when a measurement demonstrates the conflict).
+requirement or a ruling stays the owner's and goes to him only on a DEMONSTRATED CONFLICT: every admitted arrangement failed its
+measurement, or a bound; the recheck's blocking discrepancy 6).
 
 **MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: (1) E3-L at +40 C, lid closed, as ruled (M3 on the pack, M4 on shore).** The
 SGP41's Table 4 +50 C sensing row, judged on the bay's mixed air, lies over the analysed closed case's modelled capacity (a model
@@ -1545,9 +1550,9 @@ figure on the coefficient ends above, not a physical bound).
 |---|---|---|
 | a closed-lid conduction path, plate to the lid's inner face inside the seal (the combined route R-170 to R-172 carried to the closed lid) | not modelled here, so it closes nothing yet; it changes the analysed arrangement | the session's to develop (Layer 7) |
 | the SGP41's local air measured at its port, apart from the mixed-air screen | the sensor's own temperature, not the mixed air, against Table 4's +50 C | the session's (a T-H1 channel) |
-| CFL-002's C, A or B | the line moves to the cells' hot stop H1 (1.666 and 1.642 W/K), under the closed capacity's optimistic end and over its conservative one: T-H1's lid-closed point decides | the owner's, only if a measurement demonstrates the conflict |
-| a closed-lid ceiling on REQ-042's VOC channel | on the model the bay air holds Table 4's +50 C lid closed only to an ambient of +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore (conservative to optimistic) | the owner's (a requirement change), only if a measurement demonstrates the conflict |
-| D-02b's closed-lid test at +40 C restated | E3-L's +40 C level with the VOC channel's state named | the owner's (a ruling change), only if a measurement demonstrates the conflict |
+| CFL-002's C, A or B | the line moves to the cells' hot stop H1 (1.666 and 1.642 W/K), under the closed capacity's optimistic end and over its conservative one: T-H1's lid-closed point decides | the owner's, only on a DEMONSTRATED CONFLICT |
+| a closed-lid ceiling on REQ-042's VOC channel | on the model the bay air holds Table 4's +50 C lid closed only to an ambient of +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore (conservative to optimistic) | the owner's (a requirement change), only on a DEMONSTRATED CONFLICT |
+| D-02b's closed-lid test at +40 C restated | E3-L's +40 C level with the VOC channel's state named | the owner's (a ruling change), only on a DEMONSTRATED CONFLICT |
 
 **MISSING STORAGE QUALIFICATION: (2) E3-O at +55 C (M6) and (3) E5's +60 C dwell (M7).** The unpowered e-paper is judged on its
 +60 C operating row read to cover it (INFERRED); no storage row is held, so the shortfall is against an inferred limit, not a
@@ -1557,13 +1562,18 @@ and no plate fraction carries it.
 | Option | Effect | Authority |
 |---|---|---|
 | PDi's storage statement | with a range at or over +70 C M6's line becomes the +70 C class, 1.806 W/K, class (i), and M7's the LimeSDR's +70 C storage row, 2.159 W/K, class (i) at the optimistic ends | the request is the session's (drafted, `clarification/pervasive-displays-e2370ks0c1.txt`); sending it is the owner's |
-| a storage soak of a sample at the mode's temperature, its function read back after it | evidence for that lot, not a maker's range | the session's (a bench item) |
+| a storage soak of a sample at the CLAIMED maximum local part temperature, +70 C at its glass (the proposed replacement storage line; an ambient-only +55 or +60 C soak establishes nothing above the ambient), the setpoint raised by the chamber's and the glass thermocouple's stated uncertainty so the glass never sits under +70 C, for the required durations (E5's 6 h dwell and E3-O's 4 h, each soak separately), the sample unpowered behind the window in a 3 mm plate section as in the kit, its function read back after recovery to +25 C at 1 h and at 24 h (an image written, refreshed and read against the pre-soak image: no missing or stuck segment, no new ghosting), with the glass temperature trace, its uncertainty and the durations filed | evidence for that lot, not a maker's range; an ambient-only +55 or +60 C soak cannot establish the +70 C replacement line (the recheck) | the session's (a bench item; L4-E9's R-185) |
 | the e-paper's own temperature at its window in the plate, measured (M6) | a local temperature apart from the mixed air: at the bound's plate fraction 0.362 it needs 1.963 W/K, at W4's high 0.725 it needs 3.926 W/K, both under the route's optimistic capacity: the measured fraction decides | the session's (a T-H1 channel at the window) |
-| an e-paper with a held range at or over +70 C | the line becomes the +70 C class | the owner's (CHO-001), only if a measurement demonstrates the conflict |
-| E3-O or E5 run with the e-paper's state recorded as a deviation | the margin's acceptance restated for that part | the owner's (TEST-PLAN), only if a measurement demonstrates the conflict |
+| an e-paper with a held range at or over +70 C | the line becomes the +70 C class | the owner's (CHO-001), only on a DEMONSTRATED CONFLICT |
+| E3-O or E5 run with the e-paper's state recorded as a deviation | the margin's acceptance restated for that part | the owner's (TEST-PLAN), only on a DEMONSTRATED CONFLICT |
 
-**DEMONSTRATED CONFLICT: none at present.** A line enters it only on a measured local temperature over a mandatory limit with the
-route fitted; no part of this kit is built or measured.
+**DEMONSTRATED CONFLICT: none at present.** A DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits (the analysed arrangement AND
+the heat-rejection route with the local sensor relocated, each with the part's local temperature measured over its mandatory
+limit), or a bound showing that no arrangement the design admits can meet the limit; one arrangement's measured failure demonstrates the
+failure of that arrangement, not an incompatibility between requirements, so until then a failed local test stays a modelled or
+measured shortfall of that arrangement and the next arrangement is tried. No part of this kit is built or measured. The first
+version of this rule (one measured arrangement over a mandatory limit with the route fitted) confused that arrangement's failure
+with a requirement conflict and is withdrawn (the recheck astra-check-l4close-2, blocking discrepancy 6).
 
 **Charging lies under the modelled capacity (class (i)).** For scale only: charging solely in the heat stage would put 31.133 W into the case and need 1.209
 and 1.508 W/K at T4's line, class (i) at both ends. That would cost the profile's service while charging, against the 48 to
@@ -1573,5 +1583,5 @@ and 1.508 W/K at T4's line, class (i) at both ends. That would cost the profile'
 |---|---|---|
 | The capacity taken with the inside resistance at zero, the plate isothermal and still air | the coordinator's definition; still air is the conservative environment | a measured outside film |
 | The class read at the optimistic ends, the conservative-end class printed beside it | a line is put over the model only where no coefficient end in the held ranges carries it on the analysed paths | none needed |
-| A line over the modelled capacity is put in a named category by its property (MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, MISSING STORAGE QUALIFICATION, DEMONSTRATED CONFLICT), never called a line no reading can pass | the review of the provisional fixes (L4-F04): the capacity is a model figure on chosen coefficients and paths, an INFERRED storage reading is not a demonstrated limit, and only a measured local temperature demonstrates a conflict | a measured local temperature over a mandatory limit with the route fitted (then DEMONSTRATED CONFLICT, the owner's) |
+| A line over the modelled capacity is put in a named category by its property (MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, MISSING STORAGE QUALIFICATION, DEMONSTRATED CONFLICT), never called a line no reading can pass | the review of the provisional fixes (L4-F04): the capacity is a model figure on chosen coefficients and paths, an INFERRED storage reading is not a demonstrated limit, and one arrangement's measured failure is that arrangement's, not a conflict between requirements (corrected after the recheck) | the measured failure of every admitted arrangement, or a bound that none can meet the limit (then DEMONSTRATED CONFLICT, the owner's) |
 | The route not credited with the lid closed | its fins and skin act on the open lid | a closed-lid route, modelled |

@@ -2029,18 +2029,36 @@ def outside_cap(amb, rise, cfg, geo, lid_state, k_fin=1.0, a_free=0.0, skin=None
 # over it is never by itself proof that no measurement can pass it.
 CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"   # a held local limit over the analysed arrangement's modelled capacity
 CAT_STORE = "MISSING STORAGE QUALIFICATION"                    # an unpowered part judged on an operating row read to cover storage
-CAT_CONFLICT = "DEMONSTRATED CONFLICT"                          # a measured local temperature over a mandatory limit with the route fitted
-MEASURED_LOCAL = ()   # the measured local temperatures held: (mode, line, temperature in C, route fitted); none, nothing is built or measured
+CAT_CONFLICT = "DEMONSTRATED CONFLICT"                          # every admitted arrangement's measured failure, or a bound (the rule below)
+CAT_MEASURED = "MEASURED SHORTFALL OF ONE ARRANGEMENT"           # one admitted arrangement's local test failed: that arrangement's, the next is tried
+# The arrangements the design admits for a line over the modelled capacity: the analysed arrangement, and the combined
+# heat-rejection route (R-170 to R-172) with the part's local sensor relocated to its own position (the SGP41 at its port, the e-paper
+# at its window). A DEMONSTRATED CONFLICT needs every one of them measured over the limit, or a bound that none can meet it (the
+# recheck astra-check-l4close-2, blocking discrepancy 6: the first version, one measured arrangement over a mandatory limit with the
+# route fitted, confused that arrangement's failure with a requirement conflict and is withdrawn).
+ADMITTED_ARRANGEMENTS = ("the analysed arrangement", "the heat-rejection route with the local sensor relocated")
+CONFLICT_RULE = ("a DEMONSTRATED CONFLICT needs the measured failure of every arrangement the design admits (the analysed arrangement AND the heat-rejection route with the local sensor relocated, each with the part's local temperature measured over its mandatory limit), or a bound showing that no arrangement the design admits can meet the limit; one arrangement's measured failure demonstrates the failure of that arrangement, not an incompatibility between requirements, so until then a failed local test stays a modelled or measured shortfall of that arrangement and the next arrangement is tried")
+SOAK_SPEC = ("a storage soak of a sample at the CLAIMED maximum local part temperature, +70 C at its glass (the proposed replacement storage line; an ambient-only +55 or +60 C soak establishes nothing above the ambient), the setpoint raised by the chamber's and the glass thermocouple's stated uncertainty so the glass never sits under +70 C, for the required durations (E5's 6 h dwell and E3-O's 4 h, each soak separately), the sample unpowered behind the window in a 3 mm plate section as in the kit, its function read back after recovery to +25 C at 1 h and at 24 h (an image written, refreshed and read against the pre-soak image: no missing or stuck segment, no new ghosting), with the glass temperature trace, its uncertainty and the durations filed")
+MEASURED_LOCAL = ()         # the measured local temperatures held: (mode, line, temperature in C, arrangement); none, nothing is built or measured
+NO_ARRANGEMENT_BOUND = ()   # (mode, line) pairs with a bound showing no arrangement the design admits can meet the limit; none is held
 
 
-def over_category(e, measured=()):
-    """The category of a line over the modelled capacity, decided by its property: a DEMONSTRATED CONFLICT only on a measured local
-    temperature over a mandatory limit with the route fitted (measured: (mode, line, local temperature, route fitted) tuples; none
-    is held); else a MISSING STORAGE QUALIFICATION when the limit is an operating row INFERRED to cover the part unpowered; else a
-    MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT."""
-    for mode, short, t_meas, route_fitted in measured:
-        if mode == e["mode"] and short == e["line"]["short"] and route_fitted and t_meas > e["line"]["t"]:
-            return CAT_CONFLICT
+def over_category(e, measured=(), bounds=()):
+    """The category of a line over the modelled capacity, decided by its property (CONFLICT_RULE): a DEMONSTRATED CONFLICT only when
+    every admitted arrangement has a measured local temperature over the limit (measured: (mode, line, local temperature, arrangement)
+    tuples) or the line carries a bound that no arrangement the design admits can meet it (bounds: (mode, line) pairs); one arrangement's
+    measured failure is a MEASURED SHORTFALL OF ONE ARRANGEMENT; else a MISSING STORAGE QUALIFICATION when the limit is an operating
+    row INFERRED to cover the part unpowered; else a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT."""
+    failed = set()
+    for mode, short, t_meas, arrangement in measured:
+        if mode == e["mode"] and short == e["line"]["short"] and t_meas > e["line"]["t"]:
+            if arrangement not in ADMITTED_ARRANGEMENTS:
+                raise ValueError("an arrangement the design does not admit: %r" % (arrangement,))
+            failed.add(arrangement)
+    if (e["mode"], e["line"]["short"]) in bounds or set(ADMITTED_ARRANGEMENTS) <= failed:
+        return CAT_CONFLICT
+    if failed:
+        return CAT_MEASURED
     return CAT_STORE if "INFERRED to cover it unpowered" in e["line"]["cat"] else CAT_MODEL
 
 
@@ -2096,7 +2114,7 @@ def caps(C, R):
         e["short_g"] = need - e["route"][1] if e["cls"] == "over" else 0.0
         e["short_w"] = e["Q"] - e["route"][1] * rise if e["cls"] == "over" else 0.0
     for e in lines:
-        e["cat_over"] = over_category(e, MEASURED_LOCAL) if e["cls"] == "over" else None
+        e["cat_over"] = over_category(e, MEASURED_LOCAL, NO_ARRANGEMENT_BOUND) if e["cls"] == "over" else None
     # the options' figures: charging only in a shed state (the heat stage charging on the design day, its balance plus the ballasts)
     q_hs_chg = T["chg_hs"]["heat"] + T["qb"]
     t4l = {m_: [x for x in md[m_]["by"]["C"]["lines"] if x["short"] == "T4 on the charging cells"][0] for m_ in ("M8", "M9")}
@@ -2687,10 +2705,10 @@ def compute():
         and abs(br["rev"][1][1] - 2.151) < 5e-3 and not any(r_["hot_stop"] for r_ in br["runs"]) and abs(br["t_energy"] - br["h_energy"]) < 5e-3)
     cp = R["cap"]
     over = sorted(set((e["mode"], e["line"]["short"], e["cat_over"]) for e in cp["lines"] if e["cls"] == "over"))
-    p["P26 the addendum (categories after L4-F04): every line classed against the MODELLED outside capacity with a zero inside resistance (bare and with the route); over it even with the route: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, the e-paper at E3-O and E5 a MISSING STORAGE QUALIFICATION, no DEMONSTRATED CONFLICT (no measured local temperature held)"] = (
+    p["P26 the addendum (categories after L4-F04): every line classed against the MODELLED outside capacity with a zero inside resistance (bare and with the route); over it even with the route: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, the e-paper at E3-O and E5 a MISSING STORAGE QUALIFICATION, no DEMONSTRATED CONFLICT (no measured failure of every admitted arrangement and no bound held)"] = (
         over == [("M3", "the SGP41's Table 4", CAT_MODEL), ("M4", "the SGP41's Table 4", CAT_MODEL), ("M6", "the EPAPER's +60 C", CAT_STORE),
                  ("M7", "the EPAPER's +60 C", CAT_STORE)]
-        and not cp["conflict"] and not MEASURED_LOCAL
+        and not cp["conflict"] and not MEASURED_LOCAL and not NO_ARRANGEMENT_BOUND
         and all(e["route"][0] >= e["bare"][0] - 1e-9 and e["route"][1] >= e["bare"][1] - 1e-9 for e in cp["lines"])
         and cp["check9"][0] > R["cb"]["cap"]["E3-O"] and cp["check9"][2] > R["cb"]["cap"]["E5"]
         and all(e["short_g"] > 0 for e in cp["lines"] if e["cls"] == "over"))
@@ -3700,14 +3718,13 @@ def render(R):
          "measurement can pass it (the review of the provisional fixes, L4-F04); it is put in one of three named categories: %s (a held "
          "local limit over the analysed arrangement's modelled capacity, judged on the mixed air: an engineering task, which a different "
          "heat path or the part's local temperature measured apart from the mixed-air screen may change); %s (an unpowered part judged on "
-         "an operating row read to cover storage, INFERRED: an evidence task); %s (a measured local temperature over a mandatory limit "
-         "with the route fitted; the only category that justifies asking the owner to change a requirement or a ruling; none at "
-         "present, no local temperature being measured). Each class is read at the optimistic ends; the class at the conservative "
+         "an operating row read to cover storage, INFERRED: an evidence task); %s (%s; the only category that justifies asking the owner "
+         "to change a requirement or a ruling; none at present, nothing being built or measured). Each class is read at the optimistic ends; the class at the conservative "
          "ends is printed beside it." % (
              K_FIN[0], K_FIN[1], R["hr"]["a_free"], cp["fin_add"][0], cp["fin_add"][1], cp["skin"][1], cp["skin"][0],
              R["cb"]["cons"]["eps_plate"], R["cb"]["cons"]["eps_shell"], R["cb"]["cons"]["k_pp"], R["cb"]["cons"]["f_open"],
              R["cb"]["opt"]["eps_plate"], R["cb"]["opt"]["eps_shell"], R["cb"]["opt"]["k_pp"], R["cb"]["opt"]["f_open"],
-             R["cb"]["cap"]["E5"], R["cb"]["cap"]["E3-O"], cp["check9"][2], cp["check9"][0], CAT_MODEL, CAT_STORE, CAT_CONFLICT), first="")
+             R["cb"]["cap"]["E5"], R["cb"]["cap"]["E3-O"], cp["check9"][2], cp["check9"][0], CAT_MODEL, CAT_STORE, CAT_CONFLICT, CONFLICT_RULE), first="")
 
     def cls_at(e, i):
         need = e["line"]["g"]
@@ -3738,8 +3755,8 @@ def render(R):
          "physical bound). What could change it (the session's, engineering and evidence): a closed-lid conduction path from the plate to "
          "the lid's inner face inside the seal, the combined route R-170 to R-172 carried to the closed lid (developed at Layer 7; not "
          "modelled here, so it closes nothing yet), and the SGP41's local air measured at its port, apart from the mixed-air screen (a "
-         "T-H1 channel). The options that change a requirement or a ruling stay the owner's and go to him only when a measurement "
-         "demonstrates the conflict: CFL-002's C, A or B, which move the line to the cells' hot stop H1, %.3f and %.3f W/K, under the "
+         "T-H1 channel). The options that change a requirement or a ruling stay the owner's and go to him only on a DEMONSTRATED CONFLICT "
+         "(every admitted arrangement failed its measurement, or a bound): CFL-002's C, A or B, which move the line to the cells' hot stop H1, %.3f and %.3f W/K, under the "
          "closed capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on "
          "REQ-042's VOC channel (a requirement change: the bay air holds Table 4's +50 C lid closed only to an ambient of +%.1f to +%.1f C "
          "on the pack and +%.1f to +%.1f C on shore, conservative to optimistic, on the model); D-02b's closed-lid test at +40 C restated "
@@ -3748,19 +3765,17 @@ def render(R):
          "demonstrated one, and at E5 the ambient equals that row, so no modelled capacity carries it. What resolves it (evidence): PDi's "
          "storage statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's), with "
          "a range at or over +70 C M6's line becomes the +70 C class, %.3f W/K, class (i), and M7's the LimeSDR's +70 C storage row, "
-         "%.3f W/K, class (i) at the optimistic ends; or a storage soak of a sample at the mode's temperature with its function read back "
-         "after it (evidence for that lot); at M6 also the e-paper's own temperature at its window in the plate, a local temperature apart "
+         "%.3f W/K, class (i) at the optimistic ends; or %s (evidence for that lot); at M6 also the e-paper's own temperature at its window in the plate, a local temperature apart "
          "from the mixed air (a T-H1 channel): at the bound's plate fraction %.3f it needs %.3f W/K and at W4's high fraction %.3f it needs "
-         "%.3f W/K, both under the route's optimistic capacity, so the measured fraction decides. Options that stay the owner's, only if "
-         "the conflict is demonstrated: an e-paper with a held range at or over +70 C (CHO-001); the mode run with the e-paper's state "
-         "recorded as a deviation (TEST-PLAN's owner). %s: none at present; a line enters it only on a measured local temperature over a "
-         "mandatory limit with the route fitted. Charging (M8, M9) lies under the modelled capacity (class (i)); for scale, charging only "
+         "%.3f W/K, both under the route's optimistic capacity, so the measured fraction decides. Options that stay the owner's, only on a "
+         "DEMONSTRATED CONFLICT: an e-paper with a held range at or over +70 C (CHO-001); the mode run with the e-paper's state "
+         "recorded as a deviation (TEST-PLAN's owner). %s: none at present; %s. Charging (M8, M9) lies under the modelled capacity (class (i)); for scale, charging only "
          "in the heat stage (%.3f W into the case) would need %.3f and %.3f W/K at T4's line, class (i) at both ends, at the cost of the "
          "profile while charging (the 48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the charge: "
          "an owner's choice of duty cycle, not taken)." % (
              CAT_MODEL, md_cap("M3", R, "C"), md_cap("M4", R, "C"), cp["ceil_sgp"]["M3"][0], cp["ceil_sgp"]["M3"][1], cp["ceil_sgp"]["M4"][0],
-             cp["ceil_sgp"]["M4"][1], CAT_STORE, md_cap("M6", R, "C", stated=True), md_cap("M7", R, "C", stated=True), ep_["M6"]["f"],
-             ep_["M6"]["need"], ep_["M6"]["f_hi"], ep_["M6"]["need_hi"], CAT_CONFLICT, cp["q_hs_chg"], sh_[0]["need"], sh_[1]["need"]), first="   ")
+             cp["ceil_sgp"]["M4"][1], CAT_STORE, md_cap("M6", R, "C", stated=True), md_cap("M7", R, "C", stated=True), SOAK_SPEC, ep_["M6"]["f"],
+             ep_["M6"]["need"], ep_["M6"]["f_hi"], ep_["M6"]["need_hi"], CAT_CONFLICT, CONFLICT_RULE, cp["q_hs_chg"], sh_[0]["need"], sh_[1]["need"]), first="   ")
     w("")
     w("13 Predicates")
     for k, v in R["pred"].items():
