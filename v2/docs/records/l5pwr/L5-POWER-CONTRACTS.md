@@ -230,6 +230,15 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
    the withdrawn texts still in them are findings L5-F09 and L5-F10. The figures that no longer stand are checked at the record's
    base `2c240414` and the replacing texts are matched in the tree, so a later Layer 4 change refuses again rather than passing
    silently. *Reverse:* delete the RESTATED entries; the reader then refuses as it did on set 28's line.
+9. **L5-F09 and L5-F10 closed in the contracts for set 28 (the coordinator's instruction of 3 October 2026: set 28 must not publish
+   withdrawn claims in the contracts; this record's author made the author of those six texts).** `apply_l5pwr2_contracts.py` is the
+   integrator's script: idempotent (every old text once and no new text: it applies; every old text gone and every new text
+   present: already applied, nothing written; anything else refused), each old text a pattern with its figures as placeholders
+   matched exactly once, each new text built from L4-E9's 4e row and 8a D-10, R-176 and L4-E11 17a and E11-39 with every figure
+   parsed from those files, the YAML re-parsed, the table rows' cell counts kept and L4-E11's dock draft still applying. V-E16's
+   rows 2 and 3 are R-176's rows 2 and 3 verbatim from the register. Each restated text is PROVISIONAL with its trigger (B6-ENG-1 and
+   B6-ENG-2 for the guard, E11-38 and E11-35 for the dock branch). The texts outside the six (L5-F11) are left to an assignment.
+   *Reverse:* revert the commit that applied it; the old texts are the patterns the script asserts.
 
 ## 9. Findings for other layers and the integrator
 
@@ -243,8 +252,9 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
 | L5-F06 | Layer 8 (board C or A) | The SLOT_EN hold across a panel reset is still in no generator (FW-C02 OWED): criterion 5.6's item named at H2 stays open after this pass | the hold drawn |
 | L5-F07 | the CONOPS owner | CONOPS section 4 carries neither the margin hold as a mode nor the source-only statement | `apply_conops_l5pwr.py --write`, then the rebinds |
 | L5-F08 | the integrator (E5) | IF-AE-DOCK's E5 end has no `part`, `src` or ref because the block has no schematic; hc5's field checker reports it as information | a `what` end is the honest form; no action unless the checker's rule changes |
-| L5-F09 | Layer 5's contract owner (the round after l5r2), the integrator | At set 28 (`5515ecc0`) the solar guard's texts this pass wrote still carry L4-E7's round 2 reading, which its round 5 withdrew: `pcb_interfaces.yaml` IF-EXT-DC `protection` (line 1243: every rating with its margin only from round 2's reference loop, with round 2's U5 figures) and `bench` (line 1274: row 3 a pass only from that loop); `HW-FW-CONTRACT.md` V-E16 (line 313: row 2's PV_F bound, row 3's turn-off current and its pass) and section 4.1's R-173 row (line 261). Section 4a quotes each and the texts that replaced them | restate them to L4-E9's 4e row, 8a D-10 and R-176 as round 5 has them (D-10's guard-on case OPEN, no loop claimed to pass, R-176's row 2 and row 3 bounds) by an apply script the integrator runs; then re-pin L4-E9, L4-E11 and L4-E5 to the contracts and re-take `interfaces.py` (CONFIG_INPUTS) |
-| L5-F10 | the same | At set 28 `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still calls the hard short's figure "a ceiling" (line 706; L4-E11 17a now: a resistive extrapolation and E11-38's test target, not a bound) and still words the stagger "with a PWM ramp, ... never while U12 starts" (line 714; L4-E11 18c and FW-E11 at `HW-FW-CONTRACT.md` line 187: a PWM-duty ramp into the fan's PWM input, never while U12 or U22 starts); record l5r2's round 2 sentence (line 723) supersedes the start rule's figures only | the same apply script restates both sentences |
+| L5-F09 | Layer 5's contract owner (the round after l5r2), the integrator | At set 28 (`5515ecc0`) the solar guard's texts this pass wrote still carry L4-E7's round 2 reading, which its round 5 withdrew: `pcb_interfaces.yaml` IF-EXT-DC `protection` (line 1243: every rating with its margin only from round 2's reference loop, with round 2's U5 figures) and `bench` (line 1274: row 3 a pass only from that loop); `HW-FW-CONTRACT.md` V-E16 (line 313: row 2's PV_F bound, row 3's turn-off current and its pass) and section 4.1's R-173 row (line 261). Section 4a quotes each and the texts that replaced them | DONE for set 28 by `apply_l5pwr2_contracts.py` (decision 9; the integrator's script, applied on `fnd/l5pwr2`): the four texts restated to the Layer 4 text with every figure parsed from L4-E9's page, the register and L4-E11's output, PROVISIONAL with B6-ENG-1 and B6-ENG-2; owed: L4-E9's pins of `hwfw` and `ifaces` and L4-E11's of `hwfw` (their outputs change in those pin lines only), and the `interfaces.py` re-take (CONFIG_INPUTS) |
+| L5-F10 | the same | At set 28 `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still calls the hard short's figure "a ceiling" (line 706; L4-E11 17a now: a resistive extrapolation and E11-38's test target, not a bound) and still words the stagger "with a PWM ramp, ... never while U12 starts" (line 714; L4-E11 18c and FW-E11 at `HW-FW-CONTRACT.md` line 187: a PWM-duty ramp into the fan's PWM input, never while U12 or U22 starts); record l5r2's round 2 sentence (line 723) supersedes the start rule's figures only | DONE for set 28 by `apply_l5pwr2_contracts.py` (decision 9; the integrator's script, applied on `fnd/l5pwr2`): both sentences restated to the Layer 4 text with every figure parsed from L4-E9's page, the register and L4-E11's output, PROVISIONAL with E11-38 (and E11-35 for the stagger); owed: L4-E9's pins of `hwfw` and `ifaces` and L4-E11's of `hwfw` (their outputs change in those pin lines only), and the `interfaces.py` re-take (CONFIG_INPUTS) |
+| L5-F11 | Layer 5's contract owner, the coordinator | Outside the rows of L5-F09 and L5-F10, `pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock` still carries set 27's first fan basis: the feed "(U12, C31, the mixer fans, D7 and D8)" and "1.0 A declared (U12 0.8 A, the fans 0.1 A each), ... 28.6 percent" (lines 698 and 699 after the apply; R-177 removes D7 and D8, L4-E11 18b declares the branch afresh), the drop and VSYS_E at the floor (line 702) and the start rule's currents on VSYS_E (line 716), each superseded in place by record l5r2's round 2 sentence (line 728), and the STATE's "(E11-35, R-179: no fan is named)" (line 722; Layer 7's D-18 names them), which nothing supersedes; `FAN1_SW_FAN2_SW.start` (line 322) opens with the PWM ramp and U12 alone before its own section 18 sentence; IF-EXT-DC `l4_defects` (line 1289) says D-10's guard-on case NOT CLOSED where L4-E9 8a says OPEN | assign them to Layer 5's contract author; the same method (an apply script, figures parsed from L4-E11 18 and R-177) |
 
 ## 10. What this record does not claim
 
@@ -252,8 +262,9 @@ Section 3 of `l5pwr_contracts.out` lists them by id; the groups:
   open row. Software tests establish this record's own behaviour only.
 - The criteria table of section 6 is Layer 5's reading; `LAYER-STATUS.md` is the integrator's page.
 - The contracts do not close U-01, U-02, U-04 or B6; they carry Layer 4's conditions into the interfaces with their triggers.
-- Set 28's restatement (section 4a) edits no target and no Layer 4 record; it reads them. Its contract values are Layer 4's
-  readings carried, not a new derivation.
+- Set 28's restatement (section 4a) edits no target and no Layer 4 record; it reads them. `apply_l5pwr2_contracts.py` edits six
+  texts of the two contract files (L5-F09, L5-F10) and nothing else. The contract values are Layer 4's readings carried, not a new
+  derivation.
 
 ## 11. Reproduce
 
