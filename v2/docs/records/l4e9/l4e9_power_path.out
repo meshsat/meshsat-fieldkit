@@ -13,15 +13,15 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e4      f68bf6951a6361ca  v2/docs/records/l4e4/l4e4_limits.out
    l4e5      f9c98ec5c43ada0e  v2/docs/records/l4e5/l4e5_source_control.out
    l4e6      4f7cefb270f326d1  v2/docs/records/l4e6/l4e6_fault_handling.out
-   l4e8      3b751989b8b70345  v2/docs/records/l4e8/ripple_dense.out
+   l4e8      c6181037bede1fec  v2/docs/records/l4e8/ripple_dense.out
    replay    59c6eeab16da98f8  v2/docs/records/l4e/l4e_replay.out
    s120      35c3e2e30fc637e0  v2/docs/records/s120/vbus20_bound.out
    budget    58e40cf604804cc9  v2/docs/records/rv-pwr/pwr_budget.out
    trace     e35e62483b67fbe7  v2/docs/records/l3batt/load_trace.out
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
    envelope  35cf43a2b7098a76  v2/ecad/tools/pcb_envelope.yaml
-   hwfw      1c211e467d81b8b7  v2/docs/HW-FW-CONTRACT.md
-   ifaces    9ec50ccfae3b70a0  v2/ecad/tools/pcb_interfaces.yaml
+   hwfw      e5b4d65046f4ace5  v2/docs/HW-FW-CONTRACT.md
+   ifaces    4784a61af0840534  v2/ecad/tools/pcb_interfaces.yaml
    lm5176    98191bec36d43771  v2/vendor/ti/lm5176-datasheet.pdf
    lm74700   e16b3a8c0023201f  v2/vendor/ti/ti-lm74700-q1.pdf
    csd19532  353ce937cff0b719  v2/vendor/power/ti-csd19532q5b-n-fet.pdf
@@ -42,14 +42,14 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l7fans    63fad48957e8a0f3  v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json
    l4e10     62c3f34c6d9613d2  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
-   reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
+   reqs      435d515f6184f7bd  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
    yageo     61a606825ab314ea  v2/vendor/passives/yageo-cc-series.pdf
-   lcsc      6888362e4a3295d0  v2/ecad/tools/lcsc_fill.py
+   lcsc      eb1f5e9f5e1ca9ae  v2/ecad/tools/lcsc_fill.py
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     486e27ee0330a828  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     5effffae6a81589d  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   f4c127dd3f236d6f  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12     aaf63b8d2ff5dd9a  v2/docs/records/l4e12/l4e12_thermal.out
@@ -88,7 +88,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e10chk6 2bd4287f3736da75  v2/docs/records/l4e10/checks/check-l4e10-6.md
    ledger    9ed580a8dd2f35c8  v2/docs/records/l4close/FINDINGS-LEDGER.md
    verify    fd2dc6b2c1e723be  v2/docs/records/l4close/verify_risks.out
-   l4e7md    50f48017e30000d3  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
+   l4e7md    241d0cc5b010b05d  v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
    e7guard   eda720a68db60cd3  v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
    l4e7chk5  eec75531f82ced65  v2/docs/records/l4e7/checks/check-l4e7r-5.md
    e11aux    715eb965d4527d35  v2/docs/records/l4e11/apply_gen_sch_e_aux.py
@@ -413,7 +413,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: POE_VIN (U17's IN- and VBUS) at a hard connect of VBAT, ringing at its undamped bound, inside the pins' 40 V: 33.77 <= 40 V; INFERRED (part A, B3 (20.2 uF behind R227))
        - MEETS: the differential across R227 at that step inside the INA226's +-40 V: 16.884 <= 40 V; MAKER (SBOS547C 6.1 note 2; part A, B3)
        - MEETS: R227's RMS dissipation in steady buck operation (a PoE fault) inside its rating: 0.58 <= 3 W; INFERRED (part A, B3 (VCS(BUCK), fSW(1), L10 at -20 %))
-       - OPEN: R227's pulse energy at a hard connect (2.879 mJ nominal, 4.189 mJ with the printed rows stacked; the maximum unresolved) inside the maker's pulse rating: (a pulse rating and a capacitance envelope); CONDITIONAL (Milliohm prints none; R-101, R-117)
+       - OPEN: R227's pulse energy at a hard connect (2.879 mJ nominal, 4.369 mJ with the printed rows stacked; the maximum unresolved) inside the maker's pulse rating: (a pulse rating and a capacitance envelope); CONDITIONAL (Milliohm prints none; R-101, R-117)
        - OPEN: the hard output short's self-consistent peak with L10's L(I) at temperature, R227's pulse and RMS stress and U17's pins there: (the inductor's L(I)); CONDITIONAL (part A, B3: 17.77 A at a constant 12 uH against Isat 15.5 A; the L10 assignment R-120 and R-121)
    IF-14  VBAT to the PA rail (+13V8_PA, J_PA) with the PA keyed  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the RA30H1317M1 PA, 13.8 V
@@ -724,8 +724,9 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        a bounded investigation (R-118: the peak and the turn-off measured at a hot short from a stiff 43.18 V source through the kit's cable; the 10 us
        line derated as below allows 30.7 A at 43.18 V for pulses of 10 us or less). THE POWER LIMIT: 22.018 W nominal, at R24 +1 % and R19 -1 %
        22.412 W, times TI's margin 1.3: 29.14 W, 0.675 A at 43.18 V, for the fault time, then off after tFAULT (12 us typical) and the 2 mA pulldown, and a
-       retry at 0.5 % duty. The fault time: L4-E5's 3.13 / 4.71 / 8.16 ms take C5 at its nominal 100 nF; C5 is C14663 (Yageo CC0603KRX7R9BB104, K: +-10 %;
-       X7R: +-15 % over temperature and +-15 % after endurance, the Yageo sheet V.26), so +10 % alone gives 8.976 ms and the printed rows stacked
+       retry at 0.5 % duty. The fault time: L4-E5's 3.13 / 4.71 / 8.16 ms take C5 at its nominal 100 nF; C5 is C113803 (YAGEO CC0603KRX7R0BB104, K: +-10 %;
+       X7R: +-15 % over temperature and +-15 % after endurance (a general product), the Yageo sheet V.26; the part is read at the end of this
+       section), so +10 % alone gives 8.976 ms and the printed rows stacked
        give 2.035 to 11.871 ms (INFERRED; DC bias only lowers it). Figure 10 read from the sheet's vector drawing at 43.18 V (lines 100us, 10ms, 10us, 1ms, DC): 10 ms 1.879 A,
        1 ms 5.055 A, 10 us 69 A at TC 25 C; Equations 15 to 18 (m = 0.43) give 2.05 A at L4-E5's 8.16 ms and 1.745 A at the envelope's 11.871 ms (TI's power
        law carried 18.7 % past the 10 ms line); Q7's case at most 94.3 C (the hottest inside air the record holds, 76.25 C, plus its own 0.361 W at
@@ -799,8 +800,12 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - D1's rated pulse on VBAT (a capability scenario, D-16): step 12.316 V, differential at most 12.316 V (40 V absolute: MEETS), POE_VIN at most 41.52 V (pins 40 V: past it in the undamped limit; outside every requirement), R227 1.532 mJ nominal
        the differential above 81.92 mV only saturates the ADC's sample; damage needs 40 V across the inputs or a pin outside -0.3 to 40 V, which
        no required event reaches. R227's pulse energy at the hard connect is 2.879 mJ NOMINAL (0.5 C dV2 at the nominal 20.2 uF, all taken by R227);
-       the capacitors are K parts (C596319, Yageo CC1210KKX7R9BB106, and C14663 for the 100 nF ones): +10 % alone gives 3.167 mJ, and the printed rows stacked (K,
-       +-15 % over temperature, +-15 % after endurance; DC bias only lowers an X7R's capacitance) 4.189 mJ. The MAXIMUM stays UNRESOLVED until a
+       the capacitors are K parts (each read at the end of this section):
+         C81 and C82: C596319, YAGEO CC1210KKX7R9BB106, a high capacitance product, +-20 % after endurance
+         C221: C14663, YAGEO CC0603KRX7R9BB104, a general product, +-15 % after endurance
+         C197: C113803, YAGEO CC0603KRX7R0BB104, a general product, +-15 % after endurance
+       +10 % alone gives 3.167 mJ, and the printed rows stacked (K, +-15 % over temperature, endurance by each part's class; DC bias only
+       lowers an X7R's capacitance) 4.369 mJ. The MAXIMUM stays UNRESOLVED until a
        supported capacitance envelope (tolerance, temperature and bias at the step's voltage) and the step's real shape and duration meet
        Milliohm's pulse rating, which the HoJLR2512 sheet does not print (R-101, R-117); in service VBAT rises through the pack's precharge
        contact and the charger's soft start, far slower than the loop's ringing; the capability pulse's 10 us rise likewise
@@ -815,6 +820,43 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      for the firmware (FW-A09): the readings are the PoE stage's INPUT current and POE_VIN (VBUS pin 8 is on POE_VIN; VBAT is POE_VIN plus the
        shunt's drop); full scale 16.384 A, Current_LSB 0.5 mA, CAL 2048; a full-scale sample is a saturated transient, not a current reading
        (0.00512 over Current_LSB x R); the PoE output power is inferred as the input power times the stage's efficiency (0.88, undocumented)
+   THE FITTED CAPACITORS (round 6, set 28's integration): each read the way lcsc_fill.py fills it (a code on the part wins, else the first
+     MAP key whose value pattern matches the value and whose footprint text is in the land; the part number from that line's comment) and
+     read on the held Yageo CC X7R sheet (V.26) for its own part number; a part the sheet does not cover is INCONCLUSIVE and its envelope is
+     not computed (no substitute figure)
+     C5, board E, gen_sch_e.py's c() call: value '100n (TIMER)', footprint key C (c()'s default) = Capacitor_SMD:C_0603_1608Metric, no LCSC field
+       filled by lcsc_fill.py line 17, key (^100n, C_0603): C113803, YAGEO CC0603KRX7R0BB104; the sheet: COVERED
+       - 0603 (1608)
+       - K = +-10%
+       - R = Paper/PE taping reel; Reel 7 inch
+       - 0 = 100 V
+       - 104 = 100 nF (2 significant digits+number of zeros)
+       - Table 3 (sizes from 0603) lists 100 nF at 100 V (DA)
+       - the endurance test's note puts 100 nF at 100V in the 0603 column of the 200% x Rated voltage row (100pF to 100nF), the general products (Applied 2.0 x Ur): endurance dC/C X7R +-15 % (<General Purpose series> +-15 %, <High Capacitance series> +-20 %)
+       - the temperature characteristic +-15 %, one figure for the series (its row has no rated-voltage split)
+       C5's timer envelope takes the tolerance, the temperature characteristic and the endurance change only (no DC bias figure)
+     C81, board A's netlist, behind R227: 10 uF (lcsc_fill.py line 130, key (^10u 50V X7R 1210$, C_1210)); C596319, YAGEO CC1210KKX7R9BB106; the sheet: COVERED, a high capacitance product, +-20 % after endurance
+     C82, board A's netlist, behind R227: 10 uF (lcsc_fill.py line 130, key (^10u 50V X7R 1210$, C_1210)); C596319, YAGEO CC1210KKX7R9BB106; the sheet: COVERED, a high capacitance product, +-20 % after endurance
+     C221, board A's netlist, behind R227: 100 nF (its own LCSC field; the part number from gen_sch_e.py); C14663, YAGEO CC0603KRX7R9BB104; the sheet: COVERED, a general product, +-15 % after endurance
+     C197, board A's netlist, behind R227: 100 nF (lcsc_fill.py line 17, key (^100n, C_0603)); C113803, YAGEO CC0603KRX7R0BB104; the sheet: COVERED, a general product, +-15 % after endurance
+     CC1210KKX7R9BB106 on the sheet:
+       - 1210 (3225)
+       - K = +-10%
+       - K = Blister taping reel; Reel 7 inch
+       - 9 = 50 V
+       - 106 = 10 uF (2 significant digits+number of zeros)
+       - Table 6 (sizes from 1210) lists 10 uF at 50 V (GD)
+       - the endurance test's note puts 10 uF at 50V in the 1210 column of the 150% x Rated voltage row (2.2uF to 10uF), the high capacitance products (Applied 1.5 x Ur): endurance dC/C X7R +-20 % (<General Purpose series> +-15 %, <High Capacitance series> +-20 %)
+       - the temperature characteristic +-15 %, one figure for the series (its row has no rated-voltage split)
+     CC0603KRX7R9BB104 on the sheet:
+       - 0603 (1608)
+       - K = +-10%
+       - R = Paper/PE taping reel; Reel 7 inch
+       - 9 = 50 V
+       - 104 = 100 nF (2 significant digits+number of zeros)
+       - Table 3 (sizes from 0603) lists 100 nF at 50 V (DA)
+       - the endurance test's note puts 100 nF at 50V in the 0603 column of the 200% x Rated voltage row (100pF to 330nF), the general products (Applied 2.0 x Ur): endurance dC/C X7R +-15 % (<General Purpose series> +-15 %, <High Capacitance series> +-20 %)
+       - the temperature characteristic +-15 %, one figure for the series (its row has no rated-voltage split)
 
 12. THE UPDATE ROUND (2 October 2026): E11-19, THE SELECTED ENTRY, AND THE ACCEPTED RESULTS OF L4-E10, L4-E11 AND L4-E12
    the inputs: L4-E10 (79b2f568, closing check 573c8b8f: FEA-008 not closed, approach (II) CONDITIONAL); L4-E11 (3298d1f1, closing check
