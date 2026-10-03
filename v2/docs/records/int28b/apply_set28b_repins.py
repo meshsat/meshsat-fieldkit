@@ -256,11 +256,11 @@ def c5_report():
     lc = text(LCSC)
     m = re.search(r'\(r"\^100n", "C_0603"\): "(C\d+)"', lc)
     ge = text("v2/ecad/tools/gen_sch_e.py")
-    want = "YAGEO CC0603KRX7R9BB104, LCSC %s" % (m.group(1) if m else "?")
     named = re.findall(r"YAGEO CC0603KRX7R\dBB104, LCSC (C\d+)", ge)
     line = [i + 1 for i, l in enumerate(ge.split("\n")) if "CC0603KRX7R" in l and "BB104, LCSC" in l]
-    print("C5      lcsc_fill.py fills 100n 0603 with %s; L4-E9 needs gen_sch_e.py to say %r; the generator says LCSC %s at line(s) %s: %s"
-          % (m.group(1) if m else "?", want, ", ".join(named) or "nothing", line, "it names it" if want in ge else "IT DOES NOT: L4-E9 refuses"))
+    print("C5      lcsc_fill.py fills 100n 0603 with %s; gen_sch_e.py's comment names LCSC %s at line(s) %s (facts only: L4-E9's own reader "
+          "decides, and its regeneration below shows whether it refuses; before its round 6 it need()ed the comment to name the fill's code)"
+          % (m.group(1) if m else "?", ", ".join(named) or "nothing", line))
 
 
 # ------------------------------------------------------------------------------------------------------------------ stages
