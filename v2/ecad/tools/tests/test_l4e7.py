@@ -612,6 +612,21 @@ def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbanc
     ld, d = R["lead"], R["decision"]
     le_, rw, sg = ld["lead"], d["rows"], d["surge"]
     assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
+    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, read at its
+    # digest; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation already takes
+    import hashlib
+    assert ld["statements"] and all("over 5 m" in st for st in ld["statements"])
+    for rel, (dg, st) in ld["cited"].items():
+        p = os.path.join(ROOT, rel)
+        assert st in ld["statements"] and hashlib.sha256(open(p, "rb").read()).hexdigest() == dg
+        assert st in " ".join(open(p, encoding="utf-8").read().split()), rel
+    for rel in ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"):
+        t = " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
+        assert (rel in ld["cited"]) == any(st in t for st in ld["statements"]), rel
+    if ld["cited"]:
+        s10 = _s10(R)
+        b6 = R["remedy"]["b6"]
+        assert "THE LEAD'S LENGTH AS A CITED INPUT (set 27)" in s10 and "%.3f uH/m at the selected network's floor" % (1e6 * b6["LA"] / le_["m"]) in s10
     assert [ld["tv"][k] for k in ("CS101", "CS114", "CS115", "CS116", "CS117")] == ["A", "A", "A", "A", "S"]
     assert "CS115" not in open(os.path.join(ROOT, "v2", "docs", "TEST-PLAN.md"), encoding="utf-8").read()
     # Figure CS116-2 as drawn, at the six frequencies and the lead's quarter wave
