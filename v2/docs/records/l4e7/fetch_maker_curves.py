@@ -10,8 +10,9 @@ calls its contents "the typical data for design reference only". The record refu
 An excerpt samsung-<part>-2026-10-02.json carries the part, the page's URL, the bias of its bias-TCC curve (dsBiasVdc)
 and the series the page serves as its chart data, each sorted (the page can serve a series' points out of order): the
 DC-bias change (graphType DCBias; its first two points are the chart's maximum and minimum annotations and are dropped),
-the temperature change at 0 V and under bias (graphType TCC, graphSubType TCC and BiasTCC) and the ESR against frequency
-(graphType |Z|_R, graphSubType R). The page itself is dynamic (it carries its creation time), so the pin is on the
+the temperature change at 0 V and under bias (graphType TCC, graphSubType TCC and BiasTCC), the ESR against frequency
+(graphType |Z|_R, graphSubType R) and, since round 3, the impedance against frequency (graphSubType |Z|: its minimum is the
+part's self-resonance, from which the record derives the equivalent series inductance). The page itself is dynamic (it carries its creation time), so the pin is on the
 excerpt as this script writes it, not on the page.
 
 Usage:  fetch_maker_curves.py [--root DIR]   (default: this repository's root; exit 0 when every excerpt equals its pin,
@@ -29,12 +30,12 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 HELD = "v2/vendor/passives/held/samsung-%s-2026-10-02.json"
 URL = "https://product.samsungsem.com/mlcc/%s.do"
 PARTS = (
-    ("CL31B106KBHNNN", "30f54366a810c7861c67ab7d87f6fa8200ecc53ed15d4fbeee38d98fef89531f"),
-    ("CL32B106KBJNNN", "d7b01e5e140bac76ee1417d7c0e3e0d719873b9331e824dab23acacf675b71da"),
-    ("CL32B225KCJSNN", "07f61b770da06e2d7d98011c53a9e90b5968f850d98db410b736dbcb2055b60f"),
+    ("CL31B106KBHNNN", "adccf37d9343f7e285c5ce0d6fa075fcf6a7799faf8e667838c1fbb7a06cbfaa"),
+    ("CL32B106KBJNNN", "074ea4b6607c221b64f416f54f9eeaae70e154364b1b85e4cf0338aa4333fafd"),
+    ("CL32B225KCJSNN", "f483cb318d868fc58e047a10e24a0d54959da353f102fb164c30395388fda0aa"),
 )
 METHOD = ("the page's embedded chart data (graphType DCBias, TCC with graphSubType TCC and BiasTCC, |Z|_R with graphSubType "
-          "R): x/y pairs as served, each series sorted; the maker's typical characteristic data")
+          "R and |Z|): x/y pairs as served, each series sorted; the maker's typical characteristic data")
 
 
 def series(html):
@@ -56,7 +57,8 @@ def excerpt(pn, html):
         raise ValueError("%s: the page names %d bias voltages for its bias-TCC curve" % (pn, len(vdc)))
     d = dict(part=pn + "E", maker="Samsung Electro-Mechanics", url=URL % pn, read="2026-10-02", method=METHOD,
              dc_bias_V_percent=sorted(s["DCBias"][2:]), tcc_degC_percent=sorted(s["TCC:TCC"]),
-             bias_tcc_degC_percent=sorted(s["TCC:BiasTCC"]), bias_tcc_vdc=vdc[0], esr_MHz_ohm=sorted(s["|Z|_R:R"]))
+             bias_tcc_degC_percent=sorted(s["TCC:BiasTCC"]), bias_tcc_vdc=vdc[0], esr_MHz_ohm=sorted(s["|Z|_R:R"]),
+             z_MHz_ohm=sorted(s["|Z|_R:|Z|"]))
     return (json.dumps(d, indent=1, ensure_ascii=False) + "\n").encode("utf-8")
 
 
