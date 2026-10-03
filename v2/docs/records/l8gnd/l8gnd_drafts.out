@@ -22,9 +22,16 @@ d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
 98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
 352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
 74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-d52ec85d5560e4bf v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
+cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
 fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
 2f5e65f850ae66fb v2/docs/records/l8gnd/footprints/ChassisLug_M4_CHASSIS.kicad_mod
+b7e33d0bbed808a6 v2/docs/records/l8gnd/inputs/l5pwr-power_line_states-slot_en-hot_r1-1e18a1ca.txt
+c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
+28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
+2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
+ef2e4637284a4cbb v2/docs/records/s117/apply_gen_sch_a_s117.py
+6ca62ed2b400a68a v2/docs/records/s117/apply_gen_sch_a_fets_s117.py
+6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
 ec651fa980401b44 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
@@ -55,7 +62,7 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
   rpd_min          50000      MAKER    RP2040 pad pull-down RPD 50 to 80 kOhm (RP2040 datasheet Table 625); the reset state of every pad, PDE 0x1 (2.19.6.3)
   rpd_max          80000      MAKER    the same row's maximum
   rpull            100000     MAKER    R30, R34, R38, 100 k to GND (gen_sch_a.py)
-  ien_bound        2e-05      INFERRED the enable inputs' current at the held level: AP64500 IEN 5.5 uA typical at VEN 1.5 V and 1 to 2 uA at 1 V (Diodes DS41979), no figure at 2.6 V; bounded at 20 uA
+  ien_bound        2e-05      INFERRED the enable pins' current, SOURCED by both parts (AP64500: an internal 1.5 uA pull-up source, IEN 1 to 2 uA at 1 V and 5.5 uA typical at 1.5 V, Diodes DS41979 Rev 5-2; LM5176: IEN(STBY) 1 to 3 uA at 1.1 V, the hysteresis current 2.15 to 4.25 uA at 1.5 V, TI SNVSAI1D); no figure at the held levels; bounded at 20 uA and taken in the direction that is worse for each level
   vih              2          MAKER    VIH 2.0 V: SN74LVC08A at 2.7 to 3.6 V (SCAS283W) and the RP2040 at IOVDD 3.3 V (Table 625)
   vil              0.8        MAKER    VIL 0.8 V: the same two rows
   ap_ven_h_max     1.25       MAKER    AP64500 VEN_H at most 1.25 V (DS41979)
@@ -66,10 +73,10 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
   rp_vol_max       0.5        MAKER    RP2040 VOL at most 0.5 V at IOVDD 3.3 V, IOL 2, 4, 8 or 12 mA (Table 625)
   rp_drive_ma      4          MAKER    the pad's default drive, DRIVE reset 0x1 = 4 mA (RP2040 datasheet 2.19.6.3)
   v33_nom          3.3        MAKER    the panel's IOVDD and board A's +3V3 nominal
-  with rpd_min: pad pull-down in parallel with the 100 k = 33.33 k; held HIGH 2.547 V (divider 2.629 V less the enable current's drop); held LOW 0.175 V
-  with rpd_max: pad pull-down in parallel with the 100 k = 44.44 k; held HIGH 2.628 V (divider 2.713 V less the enable current's drop); held LOW 0.181 V
-  held HIGH margin over VIH 2.0 V: 0.547 V; over the enables' highest ON threshold (1.29 V): 1.257 V
-  held LOW margin under VIL 0.8 V: 0.625 V; under the enables' lowest OFF threshold (0.55 V): 0.375 V
+  with rpd_min: pad pull-down in parallel with the 100 k = 33.33 k, the line's resistance 4.12 k; held HIGH 2.547 V (divider 2.629 V less 20 uA's drop); held LOW 0.258 V (divider 0.175 V plus 20 uA's rise)
+  with rpd_max: pad pull-down in parallel with the 100 k = 44.44 k, the line's resistance 4.25 k; held HIGH 2.628 V (divider 2.713 V less 20 uA's drop); held LOW 0.266 V (divider 0.181 V plus 20 uA's rise)
+  worst held HIGH 2.547 V: margin over VIH 2.0 V 0.547 V; over the enables' highest ON threshold (1.29 V) 1.257 V
+  worst held LOW 0.266 V: margin under VIL 0.8 V 0.534 V; under the enables' lowest OFF threshold (0.55 V) 0.284 V
   the panel overriding the keeper: 0.70 mA to drive against a held output, 0.66 mA to sink a held high, both under the pad's 4 mA default drive: OK
   the panel's drive seen by the gate and the enables: high at least 2.62 V (margin 0.62 V over VIH), low at most 0.5 V (margin 0.30 V under VIL)
 
@@ -84,7 +91,7 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
     l4e9/apply_gen_sch_a_u17.py              OK
     l8gnd/apply_gen_sch_a_gnd002.py          OK
     l8gnd/apply_gen_sch_a_hotr1.py           OK
-  this record's two first, then L4-E9's order (every anchor of theirs survives this record's edits):
+  this record's two first, then L4-E9's order (every anchor of theirs still applies after this record's edits):
     l8gnd/apply_gen_sch_a_gnd002.py          OK
     l8gnd/apply_gen_sch_a_hotr1.py           OK
     l4e6/apply_gen_sch_a_r12.py              OK
@@ -106,6 +113,12 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
   this record's two in either order:
     _a_gnd002 then _a_hotr1                  OK
     _a_hotr1 then _a_gnd002                  OK
+  the tree's other board A drafts:
+    s117/apply_gen_sch_a_s117.py and _fets_s117.py: already in the generator (it names R219, R220, C233, C234, C235 and the CSD17577Q5A); they edit the tree's
+      own file only and are part of this record's base
+    L4-E9's order, this record's two, then d8dec31/apply_gen_sch_a_mainpb.py: OK (apply_gen_sch_a_mainpb (R233, C241): mainpb_last.py, 10 line(s) added)
+    L4-E9's order, mainpb, then this record's two: mainpb OK (apply_gen_sch_a_mainpb (R229, C240): mainpb_before_mine.py, 10 line(s) added); apply_gen_sch_a_gnd002.py REFUSED (apply_gen_sch_a_gnd002: designator R229 is already in use in the target; refusing); apply_gen_sch_a_hotr1.py REFUSED (apply_gen_sch_a_hotr1: designator C240 is already in use in the target; refusing)
+    so mainpb, whose references are the next free ones at apply time, composes LAST (finding L8G-F12)
 
 5. DESIGNATORS ADDED PER BOARD A DRAFT (part-call position and tokens outside comments; H pads included)
   l4e6/apply_gen_sch_a_r12.py              none
@@ -117,6 +130,7 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
   l4e9/apply_gen_sch_a_u17.py              R227
   l8gnd/apply_gen_sch_a_gnd002.py          H1, R229
   l8gnd/apply_gen_sch_a_hotr1.py           C240, R230, R231, R232, U43
+  d8dec31/apply_gen_sch_a_mainpb.py        C241, R233
   pairwise intersections: none (DISJOINT)
 
 6. BOARD B (a scratch copy of gen_sch_b.py)

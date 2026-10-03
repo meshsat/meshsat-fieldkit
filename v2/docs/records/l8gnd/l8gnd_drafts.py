@@ -9,8 +9,9 @@ It prints, deterministically and without touching the tree:
   3. the keeper's arithmetic from printed figures, each with its class;
   4. the composition on board A: L4-E9's change-list order (r12, guard, charger, r11, bank, r138, u17) with this record's two
      drafts last applies step by step; this record's drafts first and then every power draft in that order applies too (every
-     anchor of theirs survives this record's edits); each power draft alone after this record's two; this record's two in either
-     order;
+     anchor of theirs still applies after this record's edits); each power draft alone after this record's two; this record's two
+     in either order; the tree's other board A drafts: s117's two are already in the generator, and d8dec31's mainpb, which takes
+     the next free R and C at apply time, composes last and takes no designator of any other draft when it is last;
   5. the designators each board A draft adds, and that no two drafts add the same one (L6P-F01's method, H pads included);
   6. board B: this record's draft alone, and the nets C33 and J_ETH's shield sit on before and after;
   7. the netlist check (check_gnd002_netlist.py) on the committed netlists, which read NOT DRAWN on A and B today, and on two
@@ -52,7 +53,14 @@ INPUTS = [
     "v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py", "v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py",
     "v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py", "v2/docs/records/l8gnd/check_gnd002_netlist.py",
     "v2/docs/records/l8gnd/footprints/ChassisLug_M4_CHASSIS.kicad_mod",
+    "v2/docs/records/l8gnd/inputs/l5pwr-power_line_states-slot_en-hot_r1-1e18a1ca.txt",
+    "v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py", "v2/docs/records/d8dec31/genpatch.py", "v2/docs/records/d8dec31/netread.py",
+    "v2/docs/records/s117/apply_gen_sch_a_s117.py", "v2/docs/records/s117/apply_gen_sch_a_fets_s117.py",
+    "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
 ] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_ORDER]
+MAINPB = "v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py"
+NET_A = "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net"
+S117_REFS = ("R219", "R220", "C233", "C234", "C235")   # apply_gen_sch_a_s117.py NEW_REFS; its FET draft adds no designator
 
 # The keeper's figures (apply_gen_sch_a_hotr1.py). Classes: MAKER (printed in a held sheet), INFERRED (derived from a printed
 # figure under a stated assumption), BOUND (a limit this record states and the design is held to).
@@ -64,7 +72,7 @@ KEEPER = {
     "rpd_min": (50e3, "MAKER", "RP2040 pad pull-down RPD 50 to 80 kOhm (RP2040 datasheet Table 625); the reset state of every pad, PDE 0x1 (2.19.6.3)"),
     "rpd_max": (80e3, "MAKER", "the same row's maximum"),
     "rpull": (100e3, "MAKER", "R30, R34, R38, 100 k to GND (gen_sch_a.py)"),
-    "ien_bound": (20e-6, "INFERRED", "the enable inputs' current at the held level: AP64500 IEN 5.5 uA typical at VEN 1.5 V and 1 to 2 uA at 1 V (Diodes DS41979), no figure at 2.6 V; bounded at 20 uA"),
+    "ien_bound": (20e-6, "INFERRED", "the enable pins' current, SOURCED by both parts (AP64500: an internal 1.5 uA pull-up source, IEN 1 to 2 uA at 1 V and 5.5 uA typical at 1.5 V, Diodes DS41979 Rev 5-2; LM5176: IEN(STBY) 1 to 3 uA at 1.1 V, the hysteresis current 2.15 to 4.25 uA at 1.5 V, TI SNVSAI1D); no figure at the held levels; bounded at 20 uA and taken in the direction that is worse for each level"),
     "vih": (2.0, "MAKER", "VIH 2.0 V: SN74LVC08A at 2.7 to 3.6 V (SCAS283W) and the RP2040 at IOVDD 3.3 V (Table 625)"),
     "vil": (0.8, "MAKER", "VIL 0.8 V: the same two rows"),
     "ap_ven_h_max": (1.25, "MAKER", "AP64500 VEN_H at most 1.25 V (DS41979)"),
@@ -84,17 +92,22 @@ def keeper():
     out = {}
     for tag, rpd in (("rpd_min", k["rpd_min"]), ("rpd_max", k["rpd_max"])):
         rdown = par(rpd, k["rpull"])
+        rth = par(k["rk"], rdown)              # the line's Thevenin resistance seen by the enable pin
         voh = k["v33_min"] - k["voh_drop"]
         v_high_div = voh * rdown / (k["rk"] + rdown)
-        v_high = v_high_div - k["ien_bound"] * par(k["rk"], rdown)
-        v_low = k["vol"] * rdown / (k["rk"] + rdown)
-        out[tag] = dict(rdown=rdown, v_high_div=v_high_div, v_high=v_high, v_low=v_low)
+        v_high = v_high_div - k["ien_bound"] * rth          # the current taken as a sink: worse for the high
+        v_low_div = k["vol"] * rdown / (k["rk"] + rdown)
+        v_low = v_low_div + k["ien_bound"] * rth            # the current as the parts source it: worse for the low
+        out[tag] = dict(rdown=rdown, rth=rth, v_high_div=v_high_div, v_high=v_high, v_low_div=v_low_div, v_low=v_low)
+    hi = min(out["rpd_min"]["v_high"], out["rpd_max"]["v_high"])
+    lo = max(out["rpd_min"]["v_low"], out["rpd_max"]["v_low"])
+    out["worst_high"], out["worst_low"] = hi, lo
     out["i_override_ma"] = 1e3 * k["v33_nom"] / k["rk"]
     out["i_sink_held_high_ma"] = 1e3 * (k["v33_nom"] - k["voh_drop"]) / k["rk"]
-    out["margin_high_vih"] = out["rpd_min"]["v_high"] - k["vih"]
-    out["margin_high_en"] = out["rpd_min"]["v_high"] - max(k["ap_ven_h_max"], k["lm_ven_op_max"])
-    out["margin_low_vil"] = k["vil"] - out["rpd_min"]["v_low"]
-    out["margin_low_en"] = min(k["ap_ven_l_min"], k["lm_ven_stby_min"]) - out["rpd_min"]["v_low"]
+    out["margin_high_vih"] = hi - k["vih"]
+    out["margin_high_en"] = hi - max(k["ap_ven_h_max"], k["lm_ven_op_max"])
+    out["margin_low_vil"] = k["vil"] - lo
+    out["margin_low_en"] = min(k["ap_ven_l_min"], k["lm_ven_stby_min"]) - lo
     out["panel_drive_high_margin"] = k["rp_voh_min"] - k["vih"]
     out["panel_drive_low_margin"] = k["vil"] - k["rp_vol_max"]
     out["drive_ok"] = out["i_override_ma"] < k["rp_drive_ma"] and out["i_sink_held_high_ma"] < k["rp_drive_ma"]
@@ -234,10 +247,10 @@ def main():
     K = keeper()
     for tag in ("rpd_min", "rpd_max"):
         d = K[tag]
-        w("  with %s: pad pull-down in parallel with the 100 k = %.2f k; held HIGH %.3f V (divider %.3f V less the enable current's drop); held LOW %.3f V\n"
-          % (tag, d["rdown"] / 1e3, d["v_high"], d["v_high_div"], d["v_low"]))
-    w("  held HIGH margin over VIH 2.0 V: %.3f V; over the enables' highest ON threshold (1.29 V): %.3f V\n" % (K["margin_high_vih"], K["margin_high_en"]))
-    w("  held LOW margin under VIL 0.8 V: %.3f V; under the enables' lowest OFF threshold (0.55 V): %.3f V\n" % (K["margin_low_vil"], K["margin_low_en"]))
+        w("  with %s: pad pull-down in parallel with the 100 k = %.2f k, the line's resistance %.2f k; held HIGH %.3f V (divider %.3f V less 20 uA's drop); held LOW %.3f V (divider %.3f V plus 20 uA's rise)\n"
+          % (tag, d["rdown"] / 1e3, d["rth"] / 1e3, d["v_high"], d["v_high_div"], d["v_low"], d["v_low_div"]))
+    w("  worst held HIGH %.3f V: margin over VIH 2.0 V %.3f V; over the enables' highest ON threshold (1.29 V) %.3f V\n" % (K["worst_high"], K["margin_high_vih"], K["margin_high_en"]))
+    w("  worst held LOW %.3f V: margin under VIL 0.8 V %.3f V; under the enables' lowest OFF threshold (0.55 V) %.3f V\n" % (K["worst_low"], K["margin_low_vil"], K["margin_low_en"]))
     w("  the panel overriding the keeper: %.2f mA to drive against a held output, %.2f mA to sink a held high, both under the pad's 4 mA default drive: %s\n"
       % (K["i_override_ma"], K["i_sink_held_high_ma"], "OK" if K["drive_ok"] else "NOT OK"))
     w("  the panel's drive seen by the gate and the enables: high at least 2.62 V (margin %.2f V over VIH), low at most 0.5 V (margin %.2f V under VIL)\n"
@@ -260,7 +273,7 @@ def main():
         w("  L4-E9's order then this record's two:\n")
         for s, v in r1: w("    %-40s %s\n" % (s, v))
         p2, r2 = seq("mine_then_theirs", mine + theirs)
-        w("  this record's two first, then L4-E9's order (every anchor of theirs survives this record's edits):\n")
+        w("  this record's two first, then L4-E9's order (every anchor of theirs still applies after this record's edits):\n")
         for s, v in r2: w("    %-40s %s\n" % (s, v))
         same_parts = sorted(calls(open(p1, encoding="utf-8").read())) == sorted(calls(open(p2, encoding="utf-8").read()))
         w("  the two results carry the same part calls: %s\n" % ("YES" if same_parts else "NO"))
@@ -282,18 +295,39 @@ def main():
             p = fresh("order_" + "_".join(os.path.basename(x)[13:-3] for x in order))
             rs = [run(s, p)[0] for s in order]
             w("    %-40s %s\n" % (" then ".join(os.path.basename(x)[13:-3] for x in order), "OK" if all(r == 0 for r in rs) else "REFUSED"))
+        w("  the tree's other board A drafts:\n")
+        base_calls = calls(gen_a)
+        w("    s117/apply_gen_sch_a_s117.py and _fets_s117.py: already in the generator (it names %s and the CSD17577Q5A); they edit the tree's\n"
+          "      own file only and are part of this record's base\n" % ", ".join(r for r in S117_REFS if r in base_calls))
+        mp, net_a = os.path.join(ROOT, MAINPB), os.path.join(ROOT, NET_A)
+        def mainpb(p):
+            r = subprocess.run([sys.executable, "-B", mp, p, net_a], capture_output=True)
+            out_ = r.stdout.decode("utf-8", "replace").strip().splitlines()
+            return r.returncode, (out_[-1] if out_ else r.stderr.decode("utf-8", "replace").strip().splitlines()[-1:] or [""])
+        p = fresh("mainpb_last")
+        ok = all(run(s, p)[0] == 0 for s in theirs + mine)
+        rc, msg = mainpb(p)
+        w("    L4-E9's order, this record's two, then d8dec31/apply_gen_sch_a_mainpb.py: %s (%s)\n" % ("OK" if ok and rc == 0 else "REFUSED", msg if isinstance(msg, str) else msg[0]))
+        p = fresh("mainpb_before_mine")
+        ok = all(run(s, p)[0] == 0 for s in theirs)
+        rc, msg = mainpb(p)
+        rs = [(os.path.basename(s), run(s, p)) for s in mine]
+        w("    L4-E9's order, mainpb, then this record's two: mainpb %s (%s); %s\n"
+          % ("OK" if ok and rc == 0 else "REFUSED", msg if isinstance(msg, str) else msg[0],
+             "; ".join("%s %s" % (n, "OK" if r[0] == 0 else "REFUSED (%s)" % r[1][0]) for n, r in rs)))
+        w("    so mainpb, whose references are the next free ones at apply time, composes LAST (finding L8G-F12)\n")
 
         w("\n5. DESIGNATORS ADDED PER BOARD A DRAFT (part-call position and tokens outside comments; H pads included)\n")
         added = {}
         p = fresh("desig")
         before = open(p, encoding="utf-8").read()
-        for s in theirs + mine:
-            rc, err = run(s, p)
+        for s in theirs + mine + [mp]:
+            rc = (mainpb(p)[0] if s == mp else run(s, p)[0])
             after = open(p, encoding="utf-8").read()
             new_calls = set(added_calls(before, after)) | set(multiline_calls(after)) - set(multiline_calls(before))
             added[os.path.relpath(s, RECS)] = (set(new_calls) | added_tokens(before, after)) if rc == 0 else set()
             before = after
-        for s in theirs + mine:
+        for s in theirs + mine + [mp]:
             k = os.path.relpath(s, RECS)
             w("  %-40s %s\n" % (k, ", ".join(sorted(added[k])) or "none"))
         clash = []
