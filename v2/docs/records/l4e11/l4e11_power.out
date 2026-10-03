@@ -68,7 +68,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    spra953   8ab81b5a351132ae  v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf
    an11158   9e3211549d0bcd77  v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf
    gen_b     3698cc04d8eaf75b  v2/ecad/tools/gen_sch_b.py
-   arch      083462bf4e982dc2  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   arch      677e7833de68f90f  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
    l4e9_hotswap ed22896891676446  3c09b3da:v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py (L4-E9's commit, read with git show)
    filed     f0ff5212ae6220af  v2/docs/records/l4e11/inputs/lcsc-C907944-2026-10-02.json
