@@ -18,6 +18,8 @@ no generator is edited.
 | `apply_conops_l5pwr.py` | DRAFT for the CONOPS owner, not applied by Layer 5 (CONOPS.md is not in its brief): the margin hold as a mode (LH-11, R-138) and the source-only statement (R-133) at the end of CONOPS 4c; the owner who applies it rebinds the registry's and L4-E12's readings of CONOPS.md afterwards |
 | `../../../ecad/tools/tests/test_l5pwr.py` | The test: the output reproduced, every excerpt in its target and every figure in a source, the marks and triggers well formed, the pins map equal to the committed netlists', the drafted pin 1 its own field, the eleven power lines present, the new rows with their tables' cell counts and unique ids, PANEL.md's sentence, the page's table equal to the script's, the apply scripts refusing a second run and applying once to the base, no dash in the record |
 
+**Since Layer 5's second round (record `../l5r2/`, 3 October 2026)** the reader reads the three targets as this pass committed them (`L5PWR_COMMIT = 1e18a1ca`, in this branch's own history) and the Layer 4 sources from the tree: the second round restated some of this pass's texts in place (FW-E11, the fans' start rule, the SLOT_EN line), and a reader of the current tree would refuse the day its subject moved on. `test_l5pwr.py` compares the apply script's result with that commit's files for the same reason.
+
 ## Run order (what was run, in this order, on 3 October 2026)
 
 1. `python3 v2/docs/records/l4e5/apply_fw_a16.py v2/docs/HW-FW-CONTRACT.md --write` (L4-E5's draft: FW-A16 restated, FW-A18, V-A06 to V-A10, FW-E04, FW-C01's step 5; its application is register row R-23's, assigned to Layer 5).

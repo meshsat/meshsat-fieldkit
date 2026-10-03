@@ -3,10 +3,10 @@ measured; this is a check of the contracts' text against the Layer 4 records' te
 INFERRED, MODELED, PROVISIONAL (an open condition, its trigger named), RULE (a session rule), TEST (a bench row), NETLIST;
 DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet.
 
-0. INPUTS (sha256; the targets written and the sources read)
-   yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  v2/ecad/tools/pcb_interfaces.yaml
-   hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  v2/docs/HW-FW-CONTRACT.md
-   panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  v2/docs/PANEL.md
+0. INPUTS (sha256; the targets as written at 1e18a1ca, read from this branch's history, and the sources read from the tree)
+   yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  1e18a1ca@v2/ecad/tools/pcb_interfaces.yaml
+   hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
+   panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
    l4e9md     fce14ef53fdafd4924d0cdf1d2f3177d2e8c92bd3ba5cc140c6182c98cb3eeaa  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    l4e9out    41530bb0ba320fb92c890bf257a4859047aff71fbe3865fc27a27a08ff53738c  v2/docs/records/l4e9/l4e9_power_path.out
    reg        75184896b0e0e4f4463b80ddb076311c2c19d12d81220fcc6cb64913ba722034  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md

@@ -146,13 +146,14 @@ def t_the_dock_pins_map_is_the_committed_netlists_and_the_drafted_pin_one_is_its
 def t_the_power_lines_of_l4e9_section_4_have_their_states():
     d = _yaml()
     pls = d["board_to_board"]["power_line_states"]
-    assert list(pls) == LINES, list(pls)
+    assert all(ln in pls for ln in LINES), [ln for ln in LINES if ln not in pls]   # a later round may add lines (record l5r2 added one)
     for ln, v in pls.items():
         for k in ("default", "firmware", "source"):
             assert v.get(k), (ln, k)
         assert "reset" in v or "threshold" in v, ln
         assert "cable_out" in v or ln in ("U34_restart_guard", "SWEN"), ln
-    assert "OWED" in pls["SLOT_EN1..3"]["hold"] and "FW-C02" in pls["SLOT_EN1..3"]["hold"]
+    hold = pls["SLOT_EN1..3"]["hold"]   # its state moves with the circuit: OWED at this pass, DRAFTED once a record draws it (l8gnd)
+    assert ("OWED" in hold or "DRAFTED" in hold or "DRAWN" in hold) and "FW-C02" in hold
     assert "DRAFTED" in pls["VSYS_DOCK"]["reset"] and "FW-E11" in pls["VSYS_DOCK"]["firmware"]
     assert "never a charge hold" in " ".join(pls["SHORE_INHIBIT"]["assert"].split())
 
@@ -248,9 +249,13 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
             assert r.returncode == 0, (f, r.stderr[-300:])
             r = _run([APPLY, f, "--check"])
             assert r.returncode == 3 and "already applied" in r.stderr
-        # the base files patched read as the tree's files: the script is the whole change
-        for f, tree in ((y, YAML), (h, HWFW), (p, PANEL)):
-            assert open(f, "rb").read() == open(tree, "rb").read(), "%s patched from the base differs from the tree" % os.path.basename(tree)
+        # the base files patched read as the files this pass committed (L5PWR_COMMIT, in this branch's history): the script is the
+        # whole change. Not the tree's files: a later round (record l5r2) edits them in place, and a rule that fails when its subject
+        # moves on is a rule about history.
+        for f, rel in ((y, "v2/ecad/tools/pcb_interfaces.yaml"), (h, "v2/docs/HW-FW-CONTRACT.md"), (p, "v2/docs/PANEL.md")):
+            r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (_M().L5PWR_COMMIT, rel)], capture_output=True)
+            assert r.returncode == 0, "%s is not readable at the pass's commit" % rel
+            assert open(f, "rb").read() == r.stdout, "%s patched from the base differs from the pass's commit" % os.path.basename(rel)
         # L4-E11's dock draft still applies to the patched yaml
         r = _run([os.path.join(ROOT, "v2", "docs", "records", "l4e11", "apply_pcb_interfaces_dock.py"), y, "--check"])
         assert r.returncode == 0 and "CHECK OK" in r.stdout, r.stderr[-200:]
