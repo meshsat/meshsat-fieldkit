@@ -123,7 +123,7 @@ REPLAY = "v2/docs/records/l4e/l4e_replay.out"
 RTA = "v2/docs/reviews/READY-TO-ACT.md"
 PINS = {
     L4E8_OUT: "c6181037bede1fec6b183bcb1d8eab66e0023bc23ae5e5374be4d22eedaf4333",
-    L4E10_OUT: "7e23852551510fd528becd7359e18ea5037a593001d9792a52b82fdbb67ab875",
+    L4E10_OUT: "3f7feebd72461bfda24997729bac1ce0e4d2adc27d2bdc66c17a6c9881e98cab",
     M507: "aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80",
     TRACE: "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218",
     REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",

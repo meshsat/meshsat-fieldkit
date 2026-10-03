@@ -40,7 +40,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
    l4e7r     533afd197355ac37  v2/docs/records/l4e7/l4e7_stage_settings.out
    l7fans    63fad48957e8a0f3  v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json
-   l4e10     7e23852551510fd5  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     3f7feebd72461bfd  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      f7cc6ac3cfd5ad08  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -49,10 +49,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     d4b3fad0c5e09616  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     94def9a37805b5eb  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   f4c127dd3f236d6f  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     9179d5860c65c5d4  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     bb54a1c30c842279  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   b0e303a557e38898  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
