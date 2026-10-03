@@ -222,7 +222,7 @@ DECISIONS = [
     dict(
         board="e", mark="(L9STK E)",
         title=("Board E's stackup: four layers on JLC04161H-7628 at 1 oz outer and 0.5 oz inner, the pack path, its return, "
-               "the shore input and VIN_RAW as generator-laid bands shared by both outer faces at their coordination currents"),
+               "the shore input and VIN_RAW as bands on both outer faces at their coordination currents"),
         measurement_kind=("MEASURED (the count and the power half refuted); DERIVED BOUND (the copper weight, the coordination "
                           "currents, the faces' split and the return); NO MEASUREMENT HELD (the routed share, the backstop's "
                           "intervals under 600 s, the laminate's limit)"),
