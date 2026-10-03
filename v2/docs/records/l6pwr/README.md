@@ -40,5 +40,6 @@ as before).
    change that would bind six identities DECODED.
 6. **Documents owed** (SOURCES.yaml's owed list): the ZK sheet's URL, Samsung's MLCC catalogue (the temperature range), Milliohm's HoLLR2512
    sheet (C2985708), Nexperia's packing legend (the PX suffix).
-7. **The guard's rows are PROVISIONAL** (U21, Q12, Q13, D4, D11, the Samsung ceramics, R97, R87): L4-E7's round 3 on the solar guard may
-   change the capacitor set; when it lands, the affected rows are re-read against its draft and the output regenerated.
+7. **The guard's rows are PROVISIONAL** (U21, Q12, Q13, D4, D11, the Samsung ceramics, R97, R87) while the guard is a release-guarded
+   draft with its source loop open (B6-ENG-1). They were re-read at set 28 (finding F-13, `fnd/l6pwr2`): the reader parses every L4-E7
+   figure from `l4e7_stage_settings.out` and the guard draft, and refuses if a part it calls the guard's is no longer named there.

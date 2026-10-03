@@ -279,15 +279,15 @@ PARTS = [
          land="DGX-19, to be added to meshsat.pretty from TI's DGX0019A drawing (E11-01)", draft="l4e7_guard (U21), l4e11_entry (U6)",
          selected_by="L4-E11 3c (the entry, E11-01, R-123); L4-E7's solar-fault remedies, check 5 (the guard, R-173)",
          grade=dict(kind="automotive (AEC-Q100 grade 1, -40 to +125 C ambient, p.1)", op=(-40, 125, "tps4811", 8, "TJ = -40"), stg=(-55, 150, "tps4811", 7, "Storage temperature, Tstg")),
-         ratings=["V(VS) operating 3.5 to 80 V (p.8), absolute 100 V (p.7): the entry's OVLO maximum 43.18 V (54 percent); the guard's VS 36 V with a stiff source connected cold (45 percent) and PV_F at most 80.6 V at the modelled step with the guard on (L4-E7 round 2), over the 80 V operating row, 10 percent under the 100 V absolute maximum (FINDING L6P-F10)",
+         ratings=["V(VS) operating 3.5 to 80 V (p.8), absolute 100 V (p.7): the entry's OVLO maximum 43.18 V (54 percent); the guard's VS 36 V with a stiff source connected cold (45 percent); PV_F at most <<PVF_REF>> V at the modelled step with the guard on at round 2's <<LOOP>> uH reference loop and <<PVF_RING>> V at the cold connection's ring over the envelope (L4-E7's output, parsed), <<PVF_RING_ABS>> V under the 100 V absolute maximum and over the 80 V recommended operating row by <<PVF_OVER_REC>> V, which L4-E7 carries OPEN on the guard (FINDING L6P-F10)",
                   "the entry: OCP 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm with R19 4.5 mOhm (6.36 to 7.14 A), the short-circuit trip 10.36 to 13.87 A on the filtered sense, CTMR 22 nF (0.247 to 0.49 ms), auto-retry 512 ms (p.4)",
-                  "the guard: OV rising 28.55 to 31.06 V, falling 27.07 V or more; INP high from 9.29 V through R96 100k over R97 28.0k; INP's absolute maximum -1 to 20 V (p.7), the record's line 18 V (10 percent under)"],
+                  "the guard: OV rising <<OV_RISE>> to <<OV_HIGH>> V, falling <<OV_FALL>> V or more; INP high from <<INP_ON>> V through R96 100k over R97 28.0k (both at <<INP_TOL>> percent); INP at most <<INP_REF>> V at the reference loop and <<INP_RING>> V at the cold connection's ring, <<INP_RING_ABS>> V under its 20 V absolute maximum (p.7) and over L4-E7's 18 V line (10 percent under) by up to <<INP_OVER>> V (FINDING L6P-F04)"],
          doc=("tps4811", 44, "PRINTED"), cites=[("tps4811", 8, "Operating input voltage 3.5 80"), ("tps4811", 7, "20"), ("tps4811", 4, "Auto-retry")],
          codes=["C17556513"], need_per_kit=2,
          alternative="TPS48111AQDGXRQ1 (the same DGX land; p.4): no overvoltage protection and latch-off, so the guard loses its OV cut-off (its whole function) and the entry latches after a fault until a re-plug",
          obligations=["E11-01 (R-123) the entry draft and the DGX-19 land", "E11-17 (R-118) the trip thresholds and the start at 43 V", "E11-20 the hard short's loop inductance", "R-153 (D9) the overcurrent delay's spread", "R-173 the guard draft, R-176 its seven bench rows, R-174 CS116 and CS115"],
          rationale="L4-E11 3c selected the TPS4811-Q1 because it starts from a 9.00 V plug, meets the 100 V class and 43.18 V OVLO and trips the breaker inside 0.247 ms where the LM5069 cannot; L4-E7 reused it as the panel port's over-voltage cut-off in TI's own topology.",
-         provisional="the guard's instance (U21): L4-E7's round 3 on the solar guard is running and may change the guard's capacitor set; the entry's instance (U6) is not under that trigger",
+         provisional="the guard's instance (U21): re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1); the entry's instance (U6) is not under that trigger",
          identity=("RESOLVED", None, None, None)),
     dict(id="L6P-14", board="E", refs=["Q7"], maker="Texas Instruments", mpn="CSD19536KTT", package="D2PAK (TO-263) KTT, 3 pins",
          land="the D2PAK land checked against TI's KTT drawing (E11-01)", draft="l4e11_entry", selected_by="L4-E11 3c, the entry's pass FET (E11-01, R-123)",
@@ -304,8 +304,8 @@ PARTS = [
          package="VSON-CLIP 8 (DNK), 5 x 6 mm (SON-8 5x6)", land="the PPAK / SON 5x6 land Q7 carries today (R-17)", draft="l4e7_guard (Q12, Q13), l4e9 apply_gen_sch_e_q1.py (Q1)",
          selected_by="L4-E9 part A section 1 (Q1, R-17); L4-E7's remedies, check 5 (Q12, Q13; R-173)",
          grade=dict(kind="industrial", op=(-55, 150, "csd19532", 1, "Operating Junction"), stg=None),
-         ratings=["VDS 100 V (p.1): Q1 holds 66.15 V reversed (66 percent, L4-E9); Q12 holds 36 V connected cold and at most 80.6 V at the step (81 percent, L4-E7); Q13 holds 25 V reversed",
-                  "RDS(on) at most 4.9 mOhm at VGS 10 V and 17 A (p.3); ID 140 A, IDM 400 A (p.1); Q12 turns off at most 60.3 A within 11.4 us (L4-E7); the series path 25.23 mOhm at the FETs' 150 C reading",
+         ratings=["VDS 100 V (p.1): Q1 holds 66.15 V reversed (66 percent, L4-E9); Q12 holds 36 V connected cold and at most <<Q12_VDS>> V across it at the step (<<Q12_VDS_PCT>> percent, L4-E7's table; PV_F <<PVF_REF>> V); Q13 holds 25 V reversed",
+                  "RDS(on) at most 4.9 mOhm at VGS 10 V and 17 A (p.3); ID 140 A, IDM 400 A (p.1); Q12 turns off at most <<Q12_OFF_A>> A within <<Q12_OFF_US>> us at the reference loop (L4-E7); the series path 25.23 mOhm at the FETs' 150 C reading",
                   "Q13's leakage: 1 uA printed at 80 V and 25 C against 32.1 uA (the dividers' conductance); D-11 CONDITIONAL on the leakage above +25 C (L4-E7)",
                   "Q1: avalanche 83.6 mJ in the capability scenario against EAS 274 mJ; 100.5 V against 100 V, NOT MET by 0.5 V outside every requirement (L4-E9, DECISION-31)"],
          doc=("csd19532", 1, "PRINTED"), cites=[("csd19532", 3, "4.9"), ("csd19532", 1, "400")],
@@ -313,57 +313,57 @@ PARTS = [
          alternative="NOT READ: TI's Q5B family (VSON-CLIP 5 x 6) shares the land; no other 100 V member was read, and Q13's hot leakage and Q1's avalanche figures are this part's",
          obligations=["R-17 (Q1) the draft and the reverse check", "R-173 the guard draft", "R-176 rows 1 to 7 (the cut-off's rise and fall, the 36 V source cold, Q12's waveforms, Q13's hot leakage)", "R-112 Q1's threshold against TI's 2.5 V recommendation"],
          rationale="L4-E9 chose the 100 V CSD19532Q5B for Q1 because a reversed 36 V input puts 66.15 V across it (over the drawn 60 V part), and L4-E7 reused the same part for the guard's pass and return switches.",
-         provisional="Q12 and Q13 belong to the guard: L4-E7's round 3 may change the guard's capacitor set (the FETs are not named as changing)",
+         provisional="Q12 and Q13 belong to the guard: re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
          identity=("RESOLVED", None, None, None)),
     dict(id="L6P-16", board="E", refs=["D4"], maker="Littelfuse", mpn="SMCJ30A", package="DO-214AB (SMC)", land="TVS (the drawn D4 land)", draft="l4e7_guard",
          selected_by="L4-E7's remedies, check 5: D4 from the SMCJ28A to the SMCJ30A (R-173); its LCSC code 'owed' in the draft",
          grade=dict(kind="industrial", op=(-65, 150, "smcj", 1, "Operating Temperature Range"), stg=(-65, 175, "smcj", 1, "Storage Temperature Range")),
-         ratings=["VR 30.0 V, VBR 33.30 to 36.80 V at 1 mA, VC 48.4 V at 31.0 A (p.2) over CS101's 27.82 V input peak and the cut-off's band (28.55 to 31.06 V); the clamp under the 50 V bulk; at CS116's current it reads 41.91 V (L4-E7)",
+         ratings=["VR 30.0 V, VBR 33.30 to 36.80 V at 1 mA, VC 48.4 V at 31.0 A (p.2) over CS101's <<CS101_PEAK>> V input peak and the cut-off's band (<<OV_RISE>> to <<OV_HIGH>> V); the clamp under the 50 V bulk; at CS116's current it reads <<D4_CS116>> V (L4-E7)",
                   "a stiff 36 V source connected cold: the block never turns on and D4 carries nothing (L4-E7 D4 row); the breakdown falls about 0.1 percent/K cold (typical)"],
          doc=("smcj", 2, "PRINTED"), cites=[("smcj", 2, "33.30 36.80"), ("smcj", 1, "-65 to 150")],
          codes=["C224048", "C224047", "C135160"], need_per_kit=1,
          alternative="Diodes Incorporated SMCJ30A-13-F (C135160, SMC, -55 to +150 C): the same row by the series' naming, another maker, so a substitution under condition 1 until its sheet is read",
          obligations=["R-173 the guard draft (the code the draft owes: C224048 reads SMCJ30A, Littelfuse, this reading)", "R-174 CS116 and CS115 on the lead: D4's clamp at each disturbance", "R-176 row 2 (a 36 V supply cold: D4 carries nothing)"],
          rationale="L4-E7 raised D4 to the SMCJ30A as the least held Littelfuse row that leaves the cut-off's aged band room above CS101's peak.",
-         provisional="the guard: L4-E7's round 3 may change the guard's capacitor set", identity=("RESOLVED", None, None, None)),
+         provisional="the guard: re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)", identity=("RESOLVED", None, None, None)),
     dict(id="L6P-17", board="E", refs=["D11"], maker="Littelfuse", mpn="SMCJ40CA", package="DO-214AB (SMC)", land="TVS", draft="l4e7_guard",
          selected_by="L4-E7's remedies, check 5: the port's clamp when the cut-off is off (R-173); the entry's D10 part",
          grade=dict(kind="industrial", op=(-65, 150, "smcj", 1, "Operating Temperature Range"), stg=(-65, 175, "smcj", 1, "Storage Temperature Range")),
-         ratings=["bidirectional, VR 40.0 V, VBR 44.40 to 49.10 V, VC 64.5 V at 23.3 A (p.2): clamps the port at 57.53 V at 10 A hot (54.23 V at 5 A), at most 3.7 mJ a pulse, under Q12's 100 V and U21's VS (L4-E7 CS116 off row)"],
+         ratings=["bidirectional, VR 40.0 V, VBR 44.40 to 49.10 V, VC 64.5 V at 23.3 A (p.2): clamps the port at <<D11_10A>> V at 10 A hot (<<D11_5A>> V at 5 A), at most <<D11_CS116_MJ>> mJ a pulse, under Q12's 100 V and U21's VS (L4-E7 CS116 off row); at most <<D11_RING_MJ>> mJ at the cold connection's ring and <<D11_STEP_MJ>> mJ against <<D11_LIM_MJ>> mJ at the step (L4-E7)"],
          doc=("smcj", 2, "PRINTED"), cites=[("smcj", 2, "44.40 49.10")],
          codes=["C80273"], need_per_kit=1,
          alternative="SMCJ40A (unidirectional, the same row and land): a reversed panel's ring would then be clamped at one diode drop instead of VC; not equivalent for D-11",
          obligations=["R-173", "R-176", "R-174"], rationale="L4-E7 placed the bidirectional clamp across the port for the cut-off's off state (night, after a cut) and a reversed panel's ring.",
-         provisional="the guard: L4-E7's round 3 may change the guard's capacitor set", identity=("RESOLVED", None, None, None)),
+         provisional="the guard: re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)", identity=("RESOLVED", None, None, None)),
     dict(id="L6P-18", board="E", refs=["C131", "C132", "C135", "C136"], maker="Samsung Electro-Mechanics", mpn="CL32B225KCJSNNE", package="1210 (3.2 x 2.5 x 2.5 mm)", land="C1210",
          draft="l4e7_guard", selected_by="L4-E7 round 2 for the review's B6 and L4-F01 (the port bank; R-173, R-176 row 3)", grade=None,
-         ratings=["2.2 uF +-10 percent, 100 V, X7R (the maker's page) against PV_F at most 80.6 V at the step: 81 percent; the bound on the maker's curves: 3.98 uF at 36 V for the four, 1.68 uF at 75 V (L4-E7's fetch_maker_curves.py, held back)"],
+         ratings=["2.2 uF +-10 percent, 100 V, X7R (the maker's page) against PV_F at most <<PVF_REF>> V at the step (<<PVF_REF_PCT>> percent) and <<PVF_RING>> V at the cold connection's ring (<<PVF_RING_PCT>> percent); the bound on the maker's curves: 3.98 uF at 36 V for the four, 1.68 uF at 75 V (L4-E7's fetch_maker_curves.py, held back)"],
          doc=None, cites=[], codes=["C55151"], need_per_kit=4,
          alternative="another maker's 2.2 uF 100 V X7R 1210 fits the land, but the record's bound rests on Samsung's own DC-bias, bias-TCC and ESR curves, so a substitute is bounded again before it is a substitute",
          obligations=["R-173 the guard draft (the code the draft owes: C55151 reads CL32B225KCJSNNE, this reading)", "R-176 row 3 (the waveforms at the IC pins with the port bank)", "R-180, R-186, R-187 (B6-ENG-1: the source loop at least 3.30 uH)"],
          rationale="L4-E7's B6 round 2 chose the parts whose maker publishes the DC-bias curves the bound needs, four 2.2 uF 100 V on PV_F holding the high side while Q13 is off.",
-         provisional="L4-E7's round 3 on the solar guard is running and may change this capacitor set",
+         provisional="re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
          identity=("UNRESOLVED", "PART_NUMBER_INFERRED", "Samsung's specification page prints CL32B225KCJSNN (the part number less its last character, the packaging code E the catalogue's model carries) and no temperature range; the page is date-stamped and not filed (the excerpt in inputs/ is the reading)",
                    "Samsung's part-number legend (the catalogue's packaging code) read and filed, or the catalogue reading accepted as the identity; the grade needs Samsung's MLCC catalogue (X7R: -55 to +125 C as the EIA class), NOT READ here")),
     dict(id="L6P-19", board="E", refs=["C133", "C134", "C71", "C72", "C73", "C74"], maker="Samsung Electro-Mechanics", mpn="CL32B106KBJNNNE", package="1210 (3.2 x 2.5 x 2.5 mm)", land="C1210",
          draft="l4e7_guard (edits the backstop draft's C71 to C74)", selected_by="L4-E7 round 2 (B6): C133 and C134 on PV_P beside the bulk, C71 to C74 on TRK_VS (R-173, R-21)", grade=None,
-         ratings=["10 uF +-10 percent, 50 V, X7R (the maker's page) against PV_P at most 30 V: 60 percent; the bound on the maker's curves: 12.88 uF at 7.46 V, 5.07 uF at 30 V for the two on PV_P (L4-E7)"],
+         ratings=["10 uF +-10 percent, 50 V, X7R (the maker's page) against PV_P at most <<PVP>> V (<<PVP_PCT>> percent) and TRK_VS at most <<TRKVS>> V (<<TRKVS_PCT>> percent, L4-E7's table); the bound on the maker's curves: 12.88 uF at 7.46 V, 5.07 uF at 30 V for the two on PV_P (L4-E7)"],
          doc=None, cites=[], codes=["C138687"], need_per_kit=6,
          alternative="as C131: another maker's 10 uF 50 V X7R 1210 fits the land and is bounded again on its own curves",
          obligations=["R-173, R-21 the drafts (the code the drafts owe: C138687 reads CL32B106KBJNNNE, this reading)", "R-176 row 3", "R-36 the MLCC ripple rating (board A's 10 uF 50 V 1210 rows, the same class)"],
-         rationale="as C131: the part whose DC-bias curve the record bounds.", provisional="L4-E7's round 3 may change this capacitor set",
+         rationale="as C131: the part whose DC-bias curve the record bounds.", provisional="re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
          identity=("UNRESOLVED", "PART_NUMBER_INFERRED", "as CL32B225KCJSNNE: the page prints CL32B106KBJNNN and no temperature range", "as CL32B225KCJSNNE")),
     dict(id="L6P-20", board="E", refs=["C13", "C14"], maker="Samsung Electro-Mechanics", mpn="CL31B106KBHNNNE", package="1206 (3.2 x 1.6 x 1.6 mm)", land="C1206 (drawn)",
          draft="gen_sch_e.py (drawn on TRK_VIN; L4-E7 bounds it)", selected_by="the drawn part; L4-E7 round 2 bounds its curve (TRK_VIN)", grade=None,
-         ratings=["10 uF +-10 percent, 50 V, X7R (the maker's page) against TRK_VIN at most 30 V: 60 percent; 23.51 uF at 7.46 V and 9.54 uF at 30 V for the bank with C15 and C64 (L4-E7)"],
+         ratings=["10 uF +-10 percent, 50 V, X7R (the maker's page) against TRK_VIN, fed from TRK_VS through R59 (RSENSE1) and so at most TRK_VS's <<TRKVS>> V (INFERRED: a node behind a series resistor; L4-E7's table): <<TRKVS_PCT>> percent; 23.51 uF at 7.46 V and 9.54 uF at 30 V for the bank with C15 and C64 (L4-E7)"],
          doc=None, cites=[], codes=["C89632"], need_per_kit=2,
          alternative="as C131", obligations=["R-176 row 3", "R-36"], rationale="the drawn part, kept; listed because L4-E7's bound rests on its curve.",
-         provisional="L4-E7's round 3 may change the guard's capacitor set",
+         provisional="the drawn part on TRK_VIN, bounded by L4-E7 (re-read at set 28, F-13: the bound read from its current output); the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
          identity=("UNRESOLVED", "PART_NUMBER_INFERRED", "as CL32B225KCJSNNE: the page prints CL31B106KBHNNN and no temperature range", "as CL32B225KCJSNNE")),
     dict(id="L6P-21", board="E", refs=["R60", "R61", "R62", "R63", "R64"], maker="Vishay Dale", mpn="WSL2512R0700FEA", package="2512 (6.35 x 3.18 mm), 1.0 W at 70 C",
          land="RS2512", draft="l4e7_backstop", selected_by="L4-E7R, the 100 W backstop's sense bank (R-21, R-98)",
          grade=dict(kind="industrial", op=(-65, 170, "wsl", 2, "Operating temperature range"), stg=None),
-         ratings=["70 mOhm +-1 percent (F), five in parallel 14 mOhm; P70 1.0 W each (p.1) against at most 0.039 W each at the trip's highest 3.741 A (0.196 W in all, COMPUTED: 3.741 squared x 0.014 / 5)",
+         ratings=["70 mOhm +-1 percent (F), five in parallel 14 mOhm; P70 1.0 W each (p.1) against at most <<RS_EACH_W>> W each at the trip's highest <<TRIP_A>> A (<<RS_ALL_W>> W in all, COMPUTED: <<TRIP_A>> squared x 0.014, shared by five)",
                   "TCR +-75 ppm/K for 7 to 500 mOhm (p.2), the record's 75 ppm/K from -55 to +155 C; the warranted rows L4-E7's bound rests on"],
          doc=("wsl", 1, "DECODE_NOTE"), cites=[("wsl", 1, "WSL25124L000FEA"), ("wsl", 2, "-65 to +170"), ("wsl", 1, "1.0 (1)")],
          codes=["C2076144", "C844695"], need_per_kit=5,
@@ -403,15 +403,15 @@ PARTS = [
          alternative="TPS3808G33DBVT (the same part on a small reel, JLCPCB C702174); TPS3808G30DBVR (board B's part, C189211, VIT 2.79 V): the off-time's supply threshold moves",
          obligations=["R-21", "R-70"], rationale="L4-E7R chose the TPS3808G33 for a fixed, printed minimum off-time (180 ms) holding SWEN low after a trip.",
          provisional=None, identity=("RESOLVED", None, None, None)),
-    dict(id="L6P-25", board="E", refs=["R97"], maker="not named", mpn="none (28.0k, the draft prints 1 percent; the Layer 6 brief names 0.1 percent)", package="0603 or as mapped", land="the draft's default",
+    dict(id="L6P-25", board="E", refs=["R97"], maker="<<R97_MAKER>>", mpn="<<R97_MPN>> (28.0k <<INP_TOL>> percent 25 ppm/K, the guard draft's value text; R96 100k is <<R96_MPN>>)", package="0603", land="the draft's default (R_0603)",
          draft="l4e7_guard", selected_by="L4-E7 round 2 (B6): INP's bottom resistor 28.0k (39k before B6; 30.0k in round 1) (R-173)", grade=None,
-         ratings=["INP high from 9.29 V (R96 100k over R97 28.0k at V(INP_H) 2.0 V); INP at most 17.9046 V against the record's 18.0 V line (10 percent under the 20 V absolute maximum) at the modelled peak (l4e7_stage_settings.out section 10): FINDING L6P-F04 on the tolerance"],
+         ratings=["INP high from <<INP_ON>> V (R96 100k over R97 28.0k at V(INP_H) 2.0 V); INP at most <<INP_REF>> V with both at <<INP_TOL>> percent at round 2's <<LOOP>> uH reference loop, over L4-E7's 18.0 V line by <<INP_REF_OVER>> V and <<INP_REF_ABS>> V under the 20 V absolute maximum (L4-E7 holds the line from <<INP_HOLDS>>); <<INP_RING>> V at the cold connection's ring (l4e7_stage_settings.out, parsed): FINDING L6P-F04"],
          doc=None, cites=[], codes=[], need_per_kit=1,
          alternative="none (no part named)", obligations=["R-173 the guard draft", "R-176 row 3"],
-         rationale="L4-E7's B6 set R97 so U21 turns on by 9.29 V and INP stays 10 percent under its 20 V to 81 V on PV_F.",
-         provisional="L4-E7's round 3 may change the guard set",
-         identity=("UNRESOLVED", "CHOICE_OWED", "the draft names a value and tolerance (28.0k 1%) and no part number or code; the brief's 0.1 percent and the draft's 1 percent disagree (L6P-F04)",
-                   "L4-E7 states the tolerance its 18 V line needs (L6P-F04's arithmetic) and the board E generator owner names the part or lets the value map choose it")),
+         rationale="L4-E7's B6 set R97 so U21 turns on by <<INP_ON>> V and INP stays 10 percent under its 20 V to 81 V on PV_F; its <<INP_ROUNDS>> put both divider resistors at <<INP_TOL>> percent and named the YAGEO RT parts.",
+         provisional="re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
+         identity=("UNRESOLVED", "DOCUMENT_OWED", "the draft names YAGEO <<R97_MPN>> (28.0k, <<INP_TOL>> percent, 25 ppm/K) with its LCSC code owed; YAGEO's RT series specification is not held in the tree, so no page binds the part number",
+                   "file YAGEO's RT series specification (the ordering code table) and read the LCSC code for <<R97_MPN>> (and <<R96_MPN>> for R96)")),
     dict(id="L6P-26", board="E", refs=["R19 (entry)", "R87 (guard)"], maker="Shenzhen Milliohm Electronics", mpn="HoLLR2512-3W-4.5mR-1% (the catalogue's model for C2985708; the drafts say '4.5mOhm 1% 2512 3W 50ppm')",
          package="2512, 3 W", land="RS2512", draft="l4e11_entry (R19), l4e7_guard (R87)", selected_by="L4-E11 3c (R19, the breaker's sense: 30.6 mV at 6.8 A; E11-01); L4-E7's remedies (R87; R-173)", grade=None,
          ratings=["4.5 mOhm +-1 percent: the breaker at 6.36 to 7.14 A with RSET 100 Ohm; at 7.14 A 0.23 W against 3 W (COMPUTED); the 50 ppm/K the drafts state is not read in any held sheet"],
@@ -419,7 +419,7 @@ PARTS = [
          alternative="HoJLR2512 at 4.5 mOhm if Milliohm makes it (the held HoJLR sheet's range 0.5 to 500 mOhm covers it; no catalogue reading of such a code is filed): the held sheet would then apply",
          obligations=["E11-01 (R-123), R-173 the drafts", "E11-17 the trip thresholds on a slow ramp"],
          rationale="L4-E11 3c sized R19 for a 30.6 mV sense at the panel's and the entry's current; the part is the catalogue's 4.5 mOhm 3 W 2512.",
-         provisional="R87 belongs to the guard (L4-E7's round 3)",
+         provisional="R87 belongs to the guard: re-read at set 28 (F-13): L4-E7's guard draft on this tree still names this part; the guard stays a release-guarded draft, its source loop open (B6-ENG-1)",
          identity=("UNRESOLVED", "DOCUMENT_OWED", "the code C2985708 resolves to Milliohm's HoLLR2512 series (LCSC: HoLLR2512-3W-4.5mR-1%), not the HoJLR2512 series whose sheet the tree holds; no HoLLR sheet is held, so the 3 W, 1 percent and 50 ppm/K the drafts state are the catalogue's words",
                    "fetch Milliohm's HoLLR2512 sheet from LCSC's datasheet link for C2985708 and read its power, tolerance and TCR rows; or the drafts name a HoJLR2512 4.5 mOhm code")),
     dict(id="L6P-27", board="P (pack build)", refs=["the 12 cells, 4S3P (D-06)"], maker="Samsung SDI", mpn="INR18650-35E", package="18650 cylindrical cell, at most 18.55 mm diameter x 65.25 mm (p.3)",
@@ -557,11 +557,108 @@ def reserved_refs(apply_rel, name="RB_REFS"):
 
 
 def inp_line_from_out(rel):
-    """The INP reading L4-E7's stage settings printed: 'U21's INP (R96 over R97)  17.9046 of  18.0000' (RECORD, pinned)."""
+    """The INP row of L4-E7's rating table (RECORD, pinned), as set 27 prints it: 'U21's INP (R96 over R97, both at 0.1 %)  18.2878 of
+    18.0000, margin -0.2878; holds from 3.58 uH'. Returns (value, line, tolerance in percent or None, margin, holds-from text)."""
     for line in open(os.path.join(TOP, rel), encoding="utf-8"):
-        m = re.search(r"U21's INP \(R96 over R97\)\s+([0-9.]+) of\s+([0-9.]+)", line)
-        if m: return float(m.group(1)), float(m.group(2))
+        m = re.search(r"U21's INP \(R96 over R97(?:, both at ([0-9.]+) %)?\)\s+(-?[0-9.]+) of\s+(-?[0-9.]+), margin\s+(-?[0-9.]+); holds from (.+?)\s*$", line)
+        if m: return float(m.group(2)), float(m.group(3)), (float(m.group(1)) if m.group(1) else None), float(m.group(4)), m.group(5)
     die(3, "the INP line is not in %s" % rel)
+
+
+def _need(rx, text, what, flags=0):
+    m = re.search(rx, text, flags)
+    if not m: die(3, "%s is not in %s" % (what, L4["l4e7_out"]))
+    return m
+
+
+def l4e7_figures():
+    """Every L4-E7 figure this record states, PARSED from L4-E7's own output and guard draft (never re-typed): the rating table at
+    round 2's reference loop, the guard's thresholds, the step's turn-off, the cold connection's ring, and the divider parts the draft
+    names. Returns a dict of the figures and of the placeholders they fill in PARTS."""
+    raw = open(os.path.join(TOP, L4["l4e7_out"]), encoding="utf-8").read()
+    t = " ".join(raw.split())
+    F = {}
+    loop = _need(r"THE DRAFTED NETWORK \(A\) AT ([0-9.]+) uH", raw, "the rating table's reference loop")
+    F["loop"] = float(loop.group(1))
+    rows = {}
+    for m in re.finditer(r"^\s+- (.+?)\s{2,}(-?[0-9.]+) (?:of|against)\s+(-?[0-9.]+), margin\s+(-?[0-9.]+); holds from (.+?)\s*$", raw[loop.start():], re.M):
+        if m.group(1) not in rows: rows[m.group(1)] = (float(m.group(2)), float(m.group(3)), float(m.group(4)), m.group(5))
+    F["rows"] = rows
+    def row(prefix):
+        k = [x for x in rows if x.startswith(prefix)]
+        if len(k) != 1: die(3, "the rating table has %d rows starting %r" % (len(k), prefix))
+        return rows[k[0]]
+    F["pvf"], F["q12_vds"], F["pvp"], F["trkvs"] = row("PV_F (U21's VS"), row("Q12's VDS"), row("PV_P (bulk"), row("TRK_VS (C71")
+    F["inp"] = inp_line_from_out(L4["l4e7_out"])
+    F["inp_on"] = float(_need(r"U21 turns on at ([0-9.]+) V at the most", t, "U21's turn-on").group(1))
+    ov = _need(r"The cut-off rises at ([0-9.]+) V at the least and falls back at ([0-9.]+) V at the least, .*? its highest, ([0-9.]+) V", t, "the guard's OV band")
+    F["ov"] = tuple(float(ov.group(i)) for i in (1, 2, 3))
+    st = _need(r"a reference loop only: Q12 turns off at most ([0-9.]+) A within ([0-9.]+) us, PV_F at most ([0-9.]+) V", t, "the step's turn-off")
+    F["q12_off"] = (float(st.group(1)), float(st.group(2)))
+    ring = _need(r"The connection's ring .*?PV_F at most ([0-9.]+) V, its slew ([0-9.]+) V/us of ([0-9.]+), INP ([0-9.]+) V", t, "the cold connection's ring")
+    F["ring"] = dict(pvf=float(ring.group(1)), slew=float(ring.group(2)), inp=float(ring.group(4)))
+    basis = _need(r"RECOMMENDED operating row for VS, CS\+ and CS- is ([0-9.]+) V \(SLUSEE5E ([0-9.]+)\), which the ([0-9.]+) V at round 2's reference loop exceeds by ([0-9.]+) V: (OPEN on the guard)", t, "PV_F's basis")
+    F["pvf_basis"] = dict(row=float(basis.group(1)), section=basis.group(2), value=float(basis.group(3)), over=float(basis.group(4)), state=basis.group(5))
+    F["cs101"] = float(_need(r"under CS101 the input reaches ([0-9.]+) V at most", t, "CS101's input peak").group(1))
+    F["d4_cs116"] = float(_need(r"D4 \(SMCJ30A\) at the disturbance's current ([0-9.]+) V", t, "D4 at CS116's current").group(1))
+    d11 = _need(r"D11 clamps the port: at 10 A at the hot end ([0-9.]+) V \(5 A, ([0-9.]+) V\).*?D11 takes at most ([0-9.]+) mJ", t, "D11's CS116 row")
+    F["d11"] = dict(v10=float(d11.group(1)), v5=float(d11.group(2)), cs116=float(d11.group(3)),
+                    ring=float(_need(r"The connection's ring .*?D11 at most ([0-9.]+) mJ", t, "D11 at the ring").group(1)))
+    d11s = _need(r"D11 ([0-9.]+) A and ([0-9.]+) mJ against ([0-9.]+) mJ", t, "D11 at the step")
+    F["d11"].update(step=float(d11s.group(2)), lim=float(d11s.group(3)))
+    F["trip"] = float(_need(r"the trip's highest,? ([0-9.]+) A", t, "the trip's highest current").group(1))
+    F["basis_round"] = _need(r"PV_F'S BASIS \(round ([0-9]+), L6P-F10\)", t, "PV_F's basis round").group(1)
+    F["inp_rounds"] = _need(r"THE INP DIVIDER \((rounds? [0-9]+(?: and [0-9]+)?), L6P-F04\)", t, "the INP divider's rounds").group(1)
+    g = open(os.path.join(TOP, L4["l4e7_guard"]), encoding="utf-8").read()
+    for ref in ("R96", "R97"):
+        m = re.search(r'r\("%s", "([^"]*)"' % ref, g)
+        if not m: die(3, "the guard draft carries no %s call" % ref)
+        mm = re.search(r"(YAGEO) (RT\w+)", m.group(1)); tol = re.search(r"\b([0-9.]+)%", m.group(1))
+        F[ref] = dict(value=m.group(1), maker=mm.group(1) if mm else "not named", mpn=mm.group(2) if mm else "none", tol=float(tol.group(1)) if tol else None)
+    v, line, tol, margin, holds = F["inp"]
+    ph = {"LOOP": "%.2f" % F["loop"], "PVF_REF": "%.2f" % F["pvf"][0], "PVF_RING": "%.1f" % F["ring"]["pvf"],
+          "PVF_RING_ABS": "%.1f" % (100.0 - F["ring"]["pvf"]), "PVF_OVER_REC": "%.2f" % F["pvf_basis"]["over"],
+          "PVF_REF_PCT": "%.0f" % F["pvf"][0], "PVF_RING_PCT": "%.0f" % F["ring"]["pvf"],
+          "OV_RISE": "%.2f" % F["ov"][0], "OV_FALL": "%.2f" % F["ov"][1], "OV_HIGH": "%.2f" % F["ov"][2],
+          "INP_ON": "%.2f" % F["inp_on"], "INP_TOL": "%g" % tol if tol is not None else "an unstated", "INP_REF": "%.4f" % v,
+          "INP_RING": "%.2f" % F["ring"]["inp"], "INP_RING_ABS": "%.2f" % (20.0 - F["ring"]["inp"]),
+          "INP_OVER": "%.2f" % (max(v, F["ring"]["inp"]) - line), "INP_REF_OVER": "%.4f" % (v - line), "INP_REF_ABS": "%.4f" % (20.0 - v), "INP_HOLDS": holds,
+          "Q12_VDS": "%.2f" % F["q12_vds"][0], "Q12_VDS_PCT": "%.0f" % F["q12_vds"][0], "Q12_OFF_A": "%.1f" % F["q12_off"][0], "Q12_OFF_US": "%.1f" % F["q12_off"][1],
+          "PVP": "%.2f" % F["pvp"][0], "PVP_PCT": "%.0f" % (F["pvp"][0] / 50.0 * 100), "TRKVS": "%.2f" % F["trkvs"][0], "TRKVS_PCT": "%.0f" % (F["trkvs"][0] / 50.0 * 100),
+          "R97_MAKER": F["R97"]["maker"], "R97_MPN": F["R97"]["mpn"], "R96_MPN": F["R96"]["mpn"], "INP_ROUNDS": F["inp_rounds"],
+          "CS101_PEAK": "%.2f" % F["cs101"], "D4_CS116": "%.2f" % F["d4_cs116"], "D11_10A": "%.2f" % F["d11"]["v10"], "D11_5A": "%.2f" % F["d11"]["v5"],
+          "D11_CS116_MJ": "%.1f" % F["d11"]["cs116"], "D11_RING_MJ": "%.1f" % F["d11"]["ring"], "D11_STEP_MJ": "%.1f" % F["d11"]["step"], "D11_LIM_MJ": "%.0f" % F["d11"]["lim"],
+          "TRIP_A": "%.3f" % F["trip"], "RS_ALL_W": "%.3f" % (F["trip"] ** 2 * 0.014), "RS_EACH_W": "%.3f" % (F["trip"] ** 2 * 0.014 / 5)}
+    F["placeholders"] = ph
+    return F
+
+
+_FILLED = []
+
+
+def fill_parts():
+    """Fill the PARTS fields that state an L4-E7 figure from l4e7_figures() (once). A placeholder left unfilled refuses (exit 3)."""
+    if _FILLED: return _FILLED[0]
+    F = l4e7_figures()
+    def sub(x):
+        if isinstance(x, str):
+            for k, v in F["placeholders"].items(): x = x.replace("<<%s>>" % k, str(v))
+            if "<<" in x: die(3, "an L4-E7 figure is not filled: %s" % x[x.index("<<"):x.index("<<") + 40])
+            return x
+        if isinstance(x, (list, tuple)): return type(x)(sub(y) for y in x)
+        return x
+    for p in PARTS:
+        for k in list(p):
+            p[k] = sub(p[k])
+    texts = {k: open(os.path.join(TOP, L4[k]), encoding="utf-8").read() for k in ("l4e7_guard", "l4e7_backstop")}
+    for p in PARTS:
+        for k, txt in texts.items():
+            if k not in (p.get("draft") or "") or "re-read at set 28" not in (p.get("provisional") or ""): continue
+            names = [p["mpn"].split(" (")[0]] + list(p.get("codes") or [])
+            if not any(n and n in txt for n in names):
+                die(3, "%s: %s no longer names %s (re-read the selection)" % (p["id"], L4[k], " or ".join(n for n in names if n)))
+    _FILLED.append(F)
+    return F
 
 
 # ---------------------------------------------------------------------------------------------------- the findings (computed or read)
@@ -591,17 +688,22 @@ def findings(rows, jrows, sam):
     F.append(("L6P-F03", "IDENTITY (rule D-2): six selections rest on sheets that print a numbering scheme and not the part number: %s. Each is PART_NUMBER_INFERRED in the identity block; "
               "the next action is a DECODED scheme in part_identities.SCHEMES for Milliohm's HoJLR, Vishay's WSL and Diodes' B5xxC-13-F patterns (a tool change, Layer 6 tools), which would bind them "
               "DECODED as the Yageo and Uniroyal resistors are. AFFECTS: R-04, R-01, R-06, R-07, R-21, R-157 (no circuit change)." % ("; ".join(dec) or "none"), bool(dec)))
-    # F04 R97's tolerance against L4-E7's own INP line (COMPUTED from the pinned stage-settings output)
-    vinp, line = inp_line_from_out(L4["l4e7_out"])
+    # F04 the INP divider's tolerance and L4-E7's own INP reading (PARSED from its output and its guard draft)
+    FG = fill_parts()
+    vinp, line, tol, imargin, iholds = FG["inp"]
     r96, r97 = 100.0, 28.0
     nom = r97 / (r96 + r97)
     def ratio(t): return (r97 * (1 + t)) / (r96 * (1 - t) + r97 * (1 + t))
-    worst1 = vinp * ratio(0.01) / nom; worst01 = vinp * ratio(0.001) / nom
-    F.append(("L6P-F04", "TOLERANCE, board E R97: the guard draft prints 'R97 28.0k 1%%' and the Layer 6 brief names 28.0k 0.1 percent. L4-E7's stage settings read INP at %.4f V against its own %.4f V line "
-              "(10 percent under the TPS4811-Q1's 20 V absolute maximum on INP, SLUSEE5E p.7) at the modelled peak. COMPUTED: with R96 100k and R97 28.0k both at 1 percent (R96 low, R97 high) the "
-              "divider's ratio rises by %.2f percent and INP reads %.3f V, over the 18 V line by %.3f V and under the 20 V absolute maximum by %.3f V; at 0.1 percent it reads %.3f V and the line holds. "
-              "AFFECTS: R-173 (the guard draft's R96 and R97 tolerance) and R-176 row 3; L4-E7 states which tolerance its line assumes and the draft carries it (a Layer 4 edit this record does not make)."
-              % (vinp, line, (ratio(0.01) / nom - 1) * 100, worst1, worst1 - line, 20.0 - worst1, worst01), worst1 > line))
+    t_rec = (tol or 0.0) / 100.0
+    v_nom = vinp * nom / ratio(t_rec); v_1pc = v_nom * ratio(0.01) / nom
+    agree = tol is not None and FG["R96"]["tol"] == tol and FG["R97"]["tol"] == tol
+    F.append(("L6P-F04", "TOLERANCE, board E R96 and R97: L4-E7's %s put both divider resistors at %s percent in its record and in the guard draft (%s: R96 '%s', %s; R97 '%s', %s); "
+              "its rating table reads INP at %.4f V against its %.4f V line (10 percent under the TPS4811-Q1's 20 V absolute maximum on INP, SLUSEE5E p.7), margin %.4f V, at round 2's %.2f uH "
+              "reference loop (the line holds from %s), and %.2f V at the cold connection's ring. COMPUTED from that reading: the divider at nominal gives %.4f V, and at 1 percent (the draft's "
+              "tolerance before %s) %.4f V. The tolerance question is answered (the draft and the record agree: %s); INP over its own margin line, inside the absolute maximum by %.2f V at "
+              "worst, is L4-E7's open item on the guard (R-176 row 3, B6-ENG-1), not this record's. AFFECTS: R-173 (the guard draft's R96 and R97 now name YAGEO %s and %s, codes owed)."
+              % (FG["inp_rounds"], tol, L4["l4e7_guard"], FG["R96"]["value"].split(" (")[0], FG["R96"]["mpn"], FG["R97"]["value"].split(" (")[0], FG["R97"]["mpn"], vinp, line, imargin, FG["loop"], iholds, FG["ring"]["inp"], v_nom, "round " + re.findall(r"[0-9]+", FG["inp_rounds"])[0], v_1pc,
+                 "yes" if agree else "NO", 20.0 - max(vinp, FG["ring"]["inp"]), FG["R96"]["mpn"], FG["R97"]["mpn"]), not agree))
     # F05 catalogue: stock below the five-kit need, codes the drafts do not carry, and the two stock pools
     short = []
     for p in PARTS:
@@ -622,20 +724,21 @@ def findings(rows, jrows, sam):
     # F08 Samsung's pages print no temperature range
     nt = [p["part"] for p in sam["pages"] if not p.get("prints_a_temperature_range")]
     F.append(("L6P-F08", "GRADE NOT READ, board E's Samsung ceramics (%s): the maker's specification pages print capacitance, tolerance, rated Vdc, TCC and dimensions and no temperature range; X7R's "
-              "-55 to +125 C is the EIA class, not a reading. AFFECTS: R-173 (the guard's capacitor set; L4-E7's round 3 may change it); next action: Samsung's MLCC catalogue filed." % ", ".join(nt), bool(nt)))
+              "-55 to +125 C is the EIA class, not a reading. AFFECTS: R-173 (the guard's capacitor set; re-read at set 28: L4-E7's guard draft still names them); next action: Samsung's MLCC catalogue filed." % ", ".join(nt), bool(nt)))
     # F09 R19 / R87's code resolves to another Milliohm series than the held sheet
     m = (rows.get("C2985708") or {}).get("model") or "NOT READ"
     hollr_held = any("hollr" in f.lower() for f in os.listdir(os.path.join(TOP, "v2", "vendor", "passives")))
     F.append(("L6P-F09", "DOCUMENT OWED, board E R19 and R87: the code C2985708 resolves to %s, Milliohm's HoLLR2512 series; the tree holds the HoJLR2512 series sheet only (%s), so the "
               "'3W 50ppm' the drafts state is the catalogue's description. AFFECTS: E11-01 (R-123) and R-173; next action: the HoLLR2512 sheet fetched from LCSC's link for C2985708 and read."
               % (m, "a HoLLR sheet is held" if hollr_held else "no HoLLR sheet held"), not hollr_held))
-    # F10 the guard's VS excursion against the 80 V operating row
-    cd = open(os.path.join(TOP, L4["l4e7_cd"]), encoding="utf-8").read()
-    has = "PV_F at most 80.6 V" in cd
-    F.append(("L6P-F10", "RATING BASIS, board E U21 and Q12: L4-E7's round 2 bounds PV_F at most 80.6 V at the modelled step with the guard on (%s) and judges every rating 'with its margin' against the "
-              "parts' absolute maxima less 10 percent (U21's VS 100 V, SLUSEE5E p.7); the TPS4811-Q1's recommended operating V(VS) is 3.5 to 80 V (p.8), which the 80.6 V excursion exceeds for the event's "
-              "11.4 us. Whether an 11 us excursion is judged on the recommended row or the absolute maximum is L4-E7's to state. AFFECTS: R-173, R-176 row 3; no change is made here."
-              % ("the phrase is in L4E7-CONTROL-DECISION.md" if has else "the phrase is NOT in L4E7-CONTROL-DECISION.md: re-read"), has))
+    # F10 the guard's VS excursion against the 80 V operating row, as L4-E7's output now states its basis (PARSED)
+    FG = fill_parts()
+    b = FG["pvf_basis"]
+    F.append(("L6P-F10", "RATING BASIS, board E U21 and Q12: L4-E7's output (round %s, answering this finding) states the basis: the 100 V absolute maximum less 10 percent is an exclusion "
+              "line only (the project's rule since L4-E12's B2), and the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- is %.0f V (SLUSEE5E %s), which PV_F's %.2f V at round 2's "
+              "%.2f uH reference loop exceeds by %.2f V: %s. PV_F reads %.2f V of the 90 V line (margin %.2f V) in the rating table and %.1f V at the cold connection's ring over the envelope. "
+              "The question of basis is answered; the excursion over the recommended row is L4-E7's open item (R-176 row 3, B6-ENG-1). AFFECTS: R-173, R-176 row 3; no change is made here."
+              % (FG["basis_round"], b["row"], b["section"], b["value"], FG["loop"], b["over"], b["state"], FG["pvf"][0], FG["pvf"][2], FG["ring"]["pvf"]), False))
     # F11 the ruled cell's own rows against the envelope (information: L4-E10's result and the envelope's carve-out, nothing new)
     v = verdict(-10, 60)
     F.append(("L6P-F11", "GRADE %s at the cell's own rows, the pack's INR18650-35E: discharge -10 to 60 C and charge 0 to 45 C at the cell surface (Ver. 1.1 p.3) against the envelope's -20 C "
@@ -646,6 +749,7 @@ def findings(rows, jrows, sam):
 
 # ---------------------------------------------------------------------------------------------------- the identity block (for pcb_part_identities.yaml)
 def identity_block():
+    fill_parts()
     rowsc, jrows, _, _ = catalogue()
     out = []
     for p in PARTS:
@@ -685,6 +789,7 @@ def main(argv):
                          "# build_table.py does not carry this block: re-apply it with v2/docs/records/l6pwr/apply_part_identities_block.py after a regeneration.\n")
         sys.stdout.write(yaml.safe_dump(json.loads(json.dumps(identity_block())), sort_keys=False, allow_unicode=False, width=140))
         return 0
+    fill_parts()
     P = print
     P("L6: THE COMPONENT IDENTITIES OF THE PARTS LAYER 4 SELECTED FOR THE POWER DESIGN (l6pwr_parts.py, MESHSAT-1357, 3 October 2026).")
     P("PROTOTYPE DESIGN: nothing bought, built, powered or measured. The parts are Layer 4's selections in release-guarded drafts on no committed")
