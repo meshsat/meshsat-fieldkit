@@ -375,7 +375,7 @@ def render(R):
     P("      the PX0833 is rated %.0f V maximum (MAKER, its sheet) against the PoE feed's 57 V: NOT ELIGIBLE; its %.1f coupling ring at A's place: worst pair %.2f (%s / %s)"
       % (D["px_v"], D["px_ring"], pl["px"]["face_mated"][0][0], pl["px"]["face_mated"][0][2], pl["px"]["face_mated"][0][3]))
     a = pl["at_place"]
-    P("   candidate 2, Glenair 233-330 (aluminium shell, D38999/20 /24 /26 compliant, shell 17 or 19 only): flange %.2f square max, mated shell 17 plug %.1f" % (D["g_b_max"], D["q17"]))
+    P("   candidate 2, Glenair 233-330 (aluminium shell, external dimensions as D38999/20 /24 /26 by the maker, shell 17 or 19 only): flange %.2f square max, mated shell 17 plug %.1f" % (D["g_b_max"], D["q17"]))
     P("      (Amphenol's D38999/26 table), M3 holes %.2f max (float %.3f), %.2f behind the flange, rear thread %.4f in (%.2f); a wall hole of %.1f (ASSUMPTION) and the plate cut-out %.2f"
       % (D["g_holes"], pl["g_float"], D["g_rear"], D["g_thread_in"], D["g_thread_in"] * 25.4, HOLE_SAW, D["cut_a17"]))
     P("      (Glenair's rear-mount A dia, INFERRED: the rear thread passes the plate); its voltage rating and its jacks' shield-to-shell bond NOT READ")

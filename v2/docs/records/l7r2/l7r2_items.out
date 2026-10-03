@@ -33,7 +33,7 @@ ASSUMPTION a stated assumption, NOT READ a figure no held document prints.
       mated C / B: 1.91 nominal, 1.13 at the worst
    candidate 1, Bulgin PX0833 with the PX0888 backshell: the PX0888 (SS 304) carries the coupler's shield to the panel (MAKER, Bulgin's page);
       the PX0833 is rated 42 V maximum (MAKER, its sheet) against the PoE feed's 57 V: NOT ELIGIBLE; its 38.1 coupling ring at A's place: worst pair -1.67 (A / C)
-   candidate 2, Glenair 233-330 (aluminium shell, D38999/20 /24 /26 compliant, shell 17 or 19 only): flange 33.60 square max, mated shell 17 plug 35.7
+   candidate 2, Glenair 233-330 (aluminium shell, external dimensions as D38999/20 /24 /26 by the maker, shell 17 or 19 only): flange 33.60 square max, mated shell 17 plug 35.7
       (Amphenol's D38999/26 table), M3 holes 3.45 max (float 0.288), 16.51 behind the flange, rear thread 1.1875 in (30.16); a wall hole of 32.0 (ASSUMPTION) and the plate cut-out 30.96
       (Glenair's rear-mount A dia, INFERRED: the rear thread passes the plate); its voltage rating and its jacks' shield-to-shell bond NOT READ
       at A's place: worst pair -0.52 (A / C mated), gasket band 2.30 (A) against 3.0, M14e 2.80 nominal, 1.73 at the worst: DOES NOT FIT
