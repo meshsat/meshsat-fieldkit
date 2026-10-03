@@ -322,7 +322,11 @@ DERIVED BOUND unless labelled otherwise; nothing here was built, routed or measu
   steady because no transient thermal credit is held. **The protection coordination current is the 25 A blades' rating**:
   `energy_chain.py` check 3 asks every conductor of the stage for it, at the 10 K every rating in the chain carries, and the
   gauge's OCD1 holds 20 A with no trip at all. On the shore input it is **L4-E11's 20 A to the clamps** (its D-06 selection,
-  a Layer 9 layout constraint), and F1's 10 A behind R19.
+  a Layer 9 layout constraint), and F1's 10 A behind R19. **The width each asks at 10 K** (two 1 oz faces at an even split /
+  one face, out 6): the continuous 10 A 2.76 / 8.15 mm; the 18 A transient 6.72 / 23.91 mm; the gauge's held 20 A 8.15 / 28.99
+  mm; the blades' 25 A 12.26 / 43.62 mm; their 110 % non-fuse current, 27.5 A, 14.60 / 51.93 mm. The coordination is judged at
+  the rating, as the chain's check 3 asks; the non-fuse current, held only with the gauge failed, then reads 12.14 K, a backstop
+  state judged against the blade's 125 C.
 - **6.72 mm a face and 11.95 mm on one 2 oz face do not hold**: sized at 18 A, they read 12.39 and 12.38 K at the gauge's
   held 20 A and 19.52 and 19.46 K at the blades' 25 A, and with the gauge failed 6.72 mm reaches 159.4 C at the blade's 600 s
   window top, over the blade's printed 125 C (out 4, out 6).
