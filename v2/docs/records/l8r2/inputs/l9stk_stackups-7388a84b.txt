@@ -1,0 +1,184 @@
+# l9stk_stackups.out: Layer 9 item 9.12, the numbers behind one stackup decision per board (record l9stk)
+# desk arithmetic on committed files and dated public readings; nothing built, routed, bought or quoted
+
+0. PINS (path  sha256/16)
+   v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb  sha256 58e26c67987b1daa  (board_a)
+   v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb  sha256 2e64b5bf2d9cd3bc  (board_b)
+   v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb  sha256 2a273803757c68fb  (board_c)
+   v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb  sha256 929bf82d2bf6eed4  (board_d)
+   v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb  sha256 a462ac2620b9b8d3  (board_e)
+   v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb  sha256 686b29a734c55b9a  (board_e5)
+   v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb  sha256 d79865e7b1aceb95  (board_p)
+   v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md  sha256 123b9bf63df2c803  (fab_caps)
+   v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md  sha256 5fa7c9abfcc519da  (fab_stackups)
+   v2/ecad/meshsat.pretty/Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm.kicad_mod  sha256 fd01a6538a531602  (fp_rsm0032a)
+   v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json  sha256 b75d0e156142af59  (intent_a)
+   v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json  sha256 6e46bc5651e17d8d  (intent_b)
+   v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json  sha256 6db304b8ce504a09  (intent_c)
+   v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json  sha256 19fa94a2bce5dd52  (intent_d)
+   v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json  sha256 4b328380172ff2c7  (intent_e)
+   v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json  sha256 657f4c42db51e4da  (intent_p)
+   v2/ecad/tools/pcb_interfaces.yaml  sha256 393305bed4edfd26  (interfaces)
+   v2/docs/records/l9stk/inputs/price-readings-2026-10-03.json  sha256 421d4a4feca5ef17  (prices)
+   v2/docs/layout-constraints/calc/stack_solves.out  sha256 47c68e2571a51228  (stack_solves)
+   v2/ecad/tools/stackup_write.py  sha256 b55a3c0f58c805c2  (stackup_write)
+   v2/ecad/tools/track_current.py  sha256 fd750e4dc429a790  (track_current)
+   v2/ecad/tools/via_current.py  sha256 92ed84ac1612fd54  (via_current)
+
+1. OUTLINES (the Edge.Cuts bounding box of each committed board file), AREA, AND THE FABRICATOR'S PRINTED SIZE CLASSES
+   quantity per order: 5 (the owner's rule); special price class: within 102 x 102 mm (JLC-5); large board fee: one board over 650 cm2 (JLC-5)
+   board               outline mm       copper layers in the file  area cm2  order m2  in 102x102 class  over 650 cm2  stack decided or ruled
+   A power and I/O      240.00 x 160.00  6                             384.00    0.1920  no                no            JLC06161H-3313 (6 layers; count MEASURED (345 open at four); the row is the board file's)
+   B compute            330.00 x 200.00  6                             660.00    0.3300  no                yes           JLC08161H-2116 (8 layers; the design input this record takes, conditional on decision 43's route)
+   C panel backer       344.00 x 228.00  4                             784.32    0.3922  no                yes           JLC06161H-3313 (6 layers; owner decision 27)
+   D APRS               100.00 x  80.00  4                              80.00    0.0400  yes               no            JLC04161H-7628 (4 layers; the board file's row, kept)
+   E dock strip         267.00 x  68.00  4                             181.56    0.0908  no                no            JLC04161H-7628 (4 layers; the board file's row, kept)
+   P pack BMS            70.00 x  44.00  2                              30.80    0.0154  yes               no            JLC04162H-7628 (4 layers; owner decision 28 and ruling 7 (2 oz outer); inner weight this record's)
+   E5 dock block         43.00 x  26.00  2                              11.18    0.0056  yes               no            2L-2oz (2 layers; owner ruling 7)
+
+2. COPPER (decision 35's model, track_current.width_for_current at 10 K; the pack path at PWR-F12's 18 A, the rest at their typical current)
+   barrels: via_current.barrels_for at the larger of the governing and the peak current, 0.4 mm drill, 18 um plating (the same at either copper weight)
+   board A (A power and I/O):
+     rail          typ A   peak A  governing A  pack path  1 oz one face  1 oz each of two  2 oz one face  2 oz each of two  barrels 0.4 mm
+     CELL+          10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     CELL_FUSED     10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     VBAT           10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     VIN_RAW        14.10   14.10        14.10  no                 15.29              4.43           7.64              2.22  16
+     CH_ACN          6.00    8.00         6.00  no                  3.55              1.37           1.78              0.68  9
+     FE_OUT          6.00    8.00         6.00  no                  3.55              1.37           1.78              0.68  9
+     VBUS20          6.00    8.00         6.00  no                  3.55              1.37           1.78              0.68  9
+     +13V8_PA        5.00    6.00         5.00  no                  2.76              1.06           1.38              0.53  7
+     PA_OUT          5.00    6.00         5.00  no                  2.76              1.06           1.38              0.53  7
+   board E (E dock strip):
+     rail          typ A   peak A  governing A  pack path  1 oz one face  1 oz each of two  2 oz one face  2 oz each of two  barrels 0.4 mm
+     CELL+          10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     CELL_F         10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     VIN_RAW        14.10   14.10        14.10  no                 15.29              4.43           7.64              2.22  16
+     TRK_OUT        10.33   10.33        10.33  no                  8.65              2.89           4.32              1.44  12
+     DC_F            6.15    6.15         6.15  no                  3.67              1.41           1.84              0.71  7
+     DC_HS           6.15    6.15         6.15  no                  3.67              1.41           1.84              0.71  7
+     DC_IN           6.15    6.15         6.15  no                  3.67              1.41           1.84              0.71  7
+     DC_P            6.15    6.15         6.15  no                  3.67              1.41           1.84              0.71  7
+     HS_S            6.15    6.15         6.15  no                  3.67              1.41           1.84              0.71  7
+     PV_IN           5.68    6.25         5.68  no                  3.29              1.27           1.65              0.63  7
+     PV_P            5.68    6.25         5.68  no                  3.29              1.27           1.65              0.63  7
+   board P (P pack BMS):
+     rail          typ A   peak A  governing A  pack path  1 oz one face  1 oz each of two  2 oz one face  2 oz each of two  barrels 0.4 mm
+     CELL4          10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     FUSED          10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     PACK_N         10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     PACK_P         10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     SCP_OUT        10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     SW             10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+   board E5 (E5 dock block):
+     rail          typ A   peak A  governing A  pack path  1 oz one face  1 oz each of two  2 oz one face  2 oz each of two  barrels 0.4 mm
+     CELL+          10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+     CELL_N         10.00   18.00        18.00  yes                23.91              6.72          11.95              3.36  21
+   BOUND, board E's cross-section demand (INFERRED: every listed conductor side by side across one section of the strip,
+   which the floor plan may avoid; the pack path's return counted at the pack path's own 18 A although E's intent declares no return):
+     conductors: CELL_F, VIN_RAW, TRK_OUT, DC_IN, PV_P and the pack return; strip 68.00 mm wide
+     1 oz: 78.72 mm of band on one face; 23.44 mm on each face when two faces share (34 percent of the strip)
+     2 oz: 39.36 mm of band on one face; 11.72 mm on each face when two faces share (17 percent of the strip)
+   BOUND, the pack path's return on the inner GND planes ALONE (width each plane needs, internal fits, 10 K):
+     board A, In1 and In4 sharing 18 A: 55.05 mm each at 0.5 oz, 23.91 mm each at 1 oz; the board's short side 160.00 mm
+     board E, In1 alone at 18 A: 195.80 mm at 0.5 oz, 85.03 mm at 1 oz; the strip 68.00 mm
+     returns declared in the intents: board A none; board E none
+   BOUND, board P's pack return between R10 and the cell block: the share In1 and In2 (GND) take beside the outer 2 oz bands
+   (plane_share: one-dimensional parallel conductors tied at both ends, by cross-section; no crowding at the via fields)
+     outer bands: 3.36 mm on each of two 2 oz faces, or 11.95 mm on one
+     inner     plane mm  outer faces  outer mm  planes' share  per plane A  plane rating A (model)  holds
+     0.5 oz        40.0            2      3.36           0.72         6.49             7.56 (CNES)  yes
+     0.5 oz        40.0            1     11.95           0.59         5.33             7.56 (CNES)  yes
+     0.5 oz        30.0            2      3.36           0.66         5.94             6.46 (CNES)  yes
+     0.5 oz        30.0            1     11.95           0.52         4.69             6.46 (CNES)  yes
+     0.5 oz        20.0            2      3.36           0.56         5.07             5.18 (CNES)  yes
+     0.5 oz        20.0            1     11.95           0.42         3.79             5.18 (CNES)  yes
+     1 oz          40.0            2      3.36           0.86         7.71            11.92 (CNES)  yes
+     1 oz          40.0            1     11.95           0.77         6.93            11.92 (CNES)  yes
+     1 oz          30.0            2      3.36           0.82         7.35            10.19 (CNES)  yes
+     1 oz          30.0            1     11.95           0.72         6.44            10.19 (CNES)  yes
+     1 oz          20.0            2      3.36           0.75         6.74             8.16 (CNES)  yes
+     1 oz          20.0            1     11.95           0.63         5.63             8.16 (CNES)  yes
+     0.5 oz inner, outer bands at their two-face minimum: a plane is over its rating only when necked to 2.80 to 15.45 mm beside the run (scanned 0.05 to 200 mm in 0.05 mm steps)
+     1 oz inner, outer bands at their two-face minimum: a plane is over its rating only when necked to 1.25 to 6.70 mm beside the run (scanned 0.05 to 200 mm in 0.05 mm steps)
+     at the board's own short side less 1 mm a side (42.0 mm), 0.5 oz: share 0.73, 6.58 A per plane against 7.76 A; the planes' share needs 15 barrels of 0.4 mm at each end
+   board B, each 5 V domain on In4 at 0.5 oz (typical current, internal fits): +5V_DEV 3.80 A 11.36 mm; +5V_S1 2.50 A 6.36 mm; +5V_S2 4.20 A 13.64 mm; +5V_S3 2.50 A 6.36 mm
+   board C's largest rail: +5V at 0.60 A typical, 0.15 mm on one 1 oz face
+   board D's largest rail: +5V_D8 at 1.00 A typical, 0.30 mm on one 1 oz face
+
+3. FABRICATOR FLOORS AT 2 OZ AND THE 0.4 MM PITCH PARTS
+   minimum track and space, multilayer: 1 oz 0.09 mm (capability transcription of 16 September 2026); 2 oz 0.15 mm (stackup transcription of 25 September 2026) against 0.16 mm (JLC-6, the copper weight guide, last updated 9 September 2026, read 3 October 2026): the stricter is 0.16 mm
+   solder-mask bridge at 2 oz: 0.20 mm (stackup transcription of 25 September 2026)
+   board A U3: pitch 0.400 mm, pad 0.200 mm across the pitch, copper gap 0.200 mm: a bridge at 2 oz needs the whole gap (no mask expansion at all)
+   board E U10: pitch 0.400 mm, pad 0.200 mm across the pitch, copper gap 0.200 mm: a bridge at 2 oz needs the whole gap (no mask expansion at all)
+   board P U1 (RSM0032A): pitch 0.400 mm, pad 0.200 mm across the pitch, copper gap 0.200 mm: a bridge at 2 oz needs the whole gap (no mask expansion at all)
+
+4. IMPEDANCE ON THE DECIDED STACKS (atlc 4.6.1 solves in stack_solves.out, masked outer layers, interpolated between solved widths)
+   board A on JLC06161H-3313:
+     USB2_CM5 ribbon pairs (USB_D8, USB_E6, USB_WALL), F.Cu and B.Cu                    target  90 ohm: w 0.130 mm at gap 0.127 mm reads 90.0 ohm (6L-out)
+     RF drops J_RF to J_BM, 50 ohm single-ended, F.Cu                                   target  50 ohm: w 0.155 mm single-ended (se-6L)
+   board B on JLC08161H-2116:
+     class USB: PCIE_CM5, USB3_CM5, USB2_CM5 (90) and PCIE_M2_MODULE (85), outer        target  90 ohm: w 0.148 mm at gap 0.127 mm reads 89.9 ohm (8L-out)
+     class USB, inner (In2, In5)                                                        target  90 ohm: w 0.148 mm at gap 0.127 mm reads 90.1 ohm (8L-in)
+     class DIFF100: ETHERNET_CM5, HDMI_CM5, outer                                       target 100 ohm: w 0.112 mm at gap 0.127 mm reads 98.8 ohm (8L-out)
+     class DIFF100, inner (In2, In5)                                                    target 100 ohm: w 0.112 mm at gap 0.127 mm reads 100.1 ohm (8L-in)
+     RF 50 ohm single-ended, outer only                                                 target  50 ohm: w 0.181 mm single-ended (se-8L)
+   board D on JLC04161H-7628:
+     the RF path RF_PAOUT to J_ANT, 50 ohm single-ended, F.Cu over In1                  target  50 ohm: w 0.332 mm single-ended (se-4L)
+   boards C, E, P and E5: no impedance target declared (pcb_interfaces.yaml: USB_FULL_SPEED on C and E, SMBUS_GAUGE on P, no interface on E5)
+   board B on six layers as built, for the comparison: outer 90 ohm at w 0.130 and 100 ohm at w 0.098 (gap 0.127); In2 90 ohm at w 0.208, 100 ohm at w 0.144, 85 ohm not reached in the solved widths; option A2's In2 90 ohm at w 0.121
+   board A's USB class 0.127 / 0.13 mm on 1 oz reads 91.1 ohm; at the 2 oz floor 0.16 / 0.16 the 1 oz solve reads 86.9 ohm (the 2 oz copper and JLCPCB's six-layer 2 oz row are NOT SOLVED)
+
+5. PRICES (inputs/price-readings-2026-10-03.json: public pages read 3 October 2026, excerpts only; no login, no quote form, no request)
+   readings: JLC-1, JLC-2, JLC-3, JLC-4, JLC-5, JLC-6, JLC-7, JLC-8, NXP-1
+   figures as printed (USD):
+     JLC-1  JLCPCB   start price                                    layers 4; size_mm [100, 100]; usd 7.0
+     JLC-1  JLCPCB   start price                                    layers 6; size_mm [100, 100]; usd 35.0
+     JLC-2  JLCPCB   start price                                    layers 6; size_mm [50, 50]; qty 5; usd 2.0
+     JLC-2  JLCPCB   start price                                    layers 6; size_mm [100, 100]; qty 5; usd 35.1
+     JLC-3  JLCPCB   small batch rate                               layers 4; usd_per_m2 65.67; usd_per_design 20.52
+     JLC-3  JLCPCB   special price within 10 cm                     layers 8; size_mm [100, 100]; qty 5; usd 82.09
+     JLC-3  JLCPCB   small batch rate                               layers 8; usd_per_m2 116.3; usd_per_design 82.09
+     JLC-4  JLCPCB   small batch board charge                       layers 4; usd_per_m2 70.6
+     JLC-4  JLCPCB   worked example, board charge                   layers 4; size_mm [100, 100]; qty 100; usd 70.6
+     JLC-4  JLCPCB   worked example, total                          layers 4; size_mm [100, 100]; qty 100; usd 106.3
+     JLC-5  JLCPCB   special price class                            max_size_mm [102, 102]
+     JLC-5  JLCPCB   large board fee threshold                      area_cm2 650.0
+     JLC-5  JLCPCB   fine line surcharge, 4 to 8 layers             fraction 0.2
+     JLC-6  JLCPCB   minimum track and space at 2 oz, any layer count mm 0.16
+     JLC-7  JLCPCB   2 oz surcharge                                 
+     JLC-8  JLCPCB   start price                                    layers 6; size_mm [50, 50]; qty 5; usd 2.0
+     NXP-1  NextPCB  start price                                    layers 2; size_mm [100, 100]; usd 5.0
+     NXP-1  NextPCB  start price                                    layers 4; usd 30.0
+     NXP-1  NextPCB  start price                                    layers 6; usd 60.0
+     NXP-1  NextPCB  no price: Custom                               layers 8
+   deltas at the printed conditions only (start prices; not a price at any board's outline):
+     JLC-1: 4 layers 7.00, 6 layers 35.00, delta 28.00
+     NXP-1: 2 layers 5.00, 4 layers 30.00, delta 25.00
+     NXP-1: 4 layers 30.00, 6 layers 60.00, delta 30.00
+   NOT READ:
+     - a price at any of the seven boards' real outlines (no public table prints one; the fabricators' instant quote forms were not used, by the task's rule: no quote request)
+     - any six-layer per-area rate (JLCPCB prints a 4-layer and an 8-layer rate, NextPCB a start price only)
+     - the 2 oz outer surcharge and the 1 oz or 2 oz inner surcharge at either fabricator (JLC-7 says a surcharge applies and prints no amount)
+     - the amount of JLCPCB's large board fee per 50 square centimetres (JLC-5 prints the threshold only)
+     - Seeed (the alternative supplier named in the supplier handover): not read
+
+6. PREDICATES
+   [TRUE] B and C exceed the fabricator's 650 cm2 large board threshold; D, P and E5 sit in its 102 x 102 mm class
+   [TRUE] an inner 0.5 oz layer cannot be the pack path on any board (over 150 mm)
+   [TRUE] at 1 oz inner the model's failing band ends below 7 mm
+   [TRUE] board E's listed conductors at 1 oz shared by two faces take under half the strip
+   [TRUE] board E's listed conductors side by side at 1 oz on one face exceed the strip
+   [TRUE] board P's 0.5 oz inner planes hold at every width over 16 mm beside the return (the model's failing band ends below it)
+   [TRUE] board P's 0.5 oz inner planes hold their parallel share at the board's own width
+   [TRUE] every board has an outline from its board file and a stack
+   [TRUE] every price reading carries a URL, a read time and an excerpt
+   [TRUE] neither A's nor E's intent declares a return of the pack path
+   [TRUE] no price reading prints a figure at any board's outline
+   [TRUE] on eight layers one width per class meets its target within 2 ohm on outer and inner layers
+   [TRUE] on six layers as built In2 cannot reach 85 ohm at a 0.127 mm gap and needs 0.208 mm for 90
+   [TRUE] the 0.4 mm pitch parts on A, E and P leave a copper gap no wider than the 2 oz solder-mask bridge
+   [TRUE] the 90 ohm class on eight layers also meets the M.2 module's 85 ohm within 10 percent
+   [TRUE] the fabricator's two pages disagree on the 2 oz track floor and the stricter is 0.16 mm
+   [TRUE] the pack path needs 23.91 mm on one 1 oz face and 11.95 mm on one 2 oz face
+   [TRUE] the pack return on board E's In1 alone needs more than the strip at 0.5 oz and at 1 oz

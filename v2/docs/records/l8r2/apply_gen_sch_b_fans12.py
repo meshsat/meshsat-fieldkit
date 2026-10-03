@@ -25,8 +25,14 @@ What it draws, per slot s (designators in the 700 block, 700 + 30 (s - 1) + k, r
         fan's PWM lead CFANs_PWM with R7x12 10k to +5V_Sn. Non-inverting; the module's Fan_PWM released (at boot, in reset) leaves
         CFANs_PWM high, the four-wire convention's full speed (INFERRED, the maker's level NOT READ).
   J_FANs  pin 1 CFANs_V (12 V), 2 GND, 3 CFANs_TACH, 4 CFANs_PWM; the JST-SH land and code unchanged.
-The slot rail's load row for the fan moves from J_FANs 0.1 A to the boost U7x1 at 0.47 A (2.0 W of fan over 0.85, an
-ASSUMPTION, at 5.0 V; 0.49 A at 4.9 V). The rails CFANs_12V and CFANs_V and the nodes CFANs_SW, CFANs_BOOT, CFANs_VCC, CFANs_FSW,
+ROUND 3 (record l9pwr's L9P-F02, 3 October 2026): at full speed the step-up takes 0.47 A of the slot rail (2.0 W of fan over 0.85,
+an ASSUMPTION, at 5.0 V), which put slots 1 and 3 at 5.010 A at HIGH against their AP64500's 5 A and the slot rail's declared loads
+at 5.121 A against its declared 5.0 A peak, over intent.rail's 2 % allowance, so the generator would have refused itself. The
+modules drive the coolers' Fan_PWM at no more than 70 % duty (a firmware rule, the record's section 1 text for HW-FW-CONTRACT), so
+the fan takes at most 1.4 W (the linear bound: a fan's input rises at least as fast as its duty, the fan laws) and the slot rail's
+load row for the fan moves from J_FANs 0.1 A to the boost U7x1 at 0.33 A (1.4 W over 0.85 at 5.0 V; the slot's declared loads
+4.981 A). Full speed (0.47 A) comes only with Fan_PWM released, when the module's PCIE_PWR_EN is low and the card socket's supply
+is off by hardware (S{s}A_EN = EMCON_HW AND PCIE_PWR_EN{s}). The rails CFANs_12V and CFANs_V and the nodes CFANs_SW, CFANs_BOOT, CFANs_VCC, CFANs_FSW,
 CFANs_TACH and CFANs_PWM are declared to the intent; the VIN and VCC capacitors are declared with their class and TI's clause.
 
 What it changes in v2/ecad/tools/gen_sch_b.py, and nothing else: the footprint table gains QFN11 beside SH4; the fan's row in
@@ -52,8 +58,9 @@ _NEW_FP = ('"SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical
            '"QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11",   # l8r2: the coolers\' TPS61089 (the land board A drew at A17, b8cef471)')
 
 _OLD_LOAD = '    "J_FAN%d" % s: 0.1,              # the slot\'s IP68 cooler fan\n'
-_NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.47,   # l8r2 (E11-40): the cooler fan\'s 12 V step-up, 2.0 W of fan over 0.85 '
-             '(ASSUMPTION) at 5.0 V\n')
+_NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.33,   # l8r2 (E11-40): the cooler fan\'s 12 V step-up, 1.4 W of fan over 0.85 '
+             '(ASSUMPTION) at 5.0 V, at the modules\' 70 % Fan_PWM maximum (round 3, L9P-F02; 0.47 A at full speed only with '
+             'Fan_PWM released, the card socket\'s supply then off)\n')
 
 _OLD_FAN = ('    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, '
             '"SH4", {"1": n5, "2": "GND", "3": "FAN_TACHO%d" % s, "4": "FAN_PWM%d" % s, "MP": "NC"}, "C160390"); '
@@ -63,6 +70,10 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
     # The selected Sanyo Denki 9WPA0412P6G001 (record l7pwr at 2087060b) prints 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W, a pulse
     # sensor and a PWM input; this rail is 5.1 V. A per-slot step-up keeps the fan with its slot (dark with an empty slot),
     # needs no harness, no contract and no board A change; selected over one 12 V feed from board A (the record, section 1).
+    # ROUND 3 (record l9pwr's L9P-F02): the module drives Fan_PWM at no more than 70 % duty, which holds this slot's declared
+    # loads under its 5.0 A and slots 1 and 3 under their AP64500's 5 A at HIGH; full speed only with Fan_PWM released, when
+    # the card socket's supply is off (S{s}A_EN = EMCON_HW AND PCIE_PWR_EN{s}). One 12 V feed from board A would make one converter
+    # common to the three modules' coolers, a shared element ASM-002 does not name (the record, section 1).
     _fb = 700 + 30 * (s - 1); _fU = lambda k: "U%d" % (_fb + k); _fL = lambda k: "L%d" % (_fb + k)
     _fQ = lambda k: "Q%d" % (_fb + k); _fR = lambda k: "R%d" % (_fb + k); _fC = lambda k: "C%d" % (_fb + k)
     f12, fv, fsw = "CFAN%d_12V" % s, "CFAN%d_V" % s, "CFAN%d_SW" % s
@@ -85,7 +96,8 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
     # tolerance interpolated between SLVSET8A's printed rows, INFERRED); its OVLO (100k / 10k) cuts the fan at 12.64 to 13.67 V.
     efuse(_fU(2), f12, fv, "CFAN%d_EN" % s, "CFAN%d_FLT" % s, [_fC(9), _fR(6), _fR(7), _fR(8), _fR(9), _fC(10)], "1.87k 1% (ILM: 0.49 A)")
     r(_fR(10), "100k", "CFAN%d_EN" % s, n5)   # SLVSET8A note 2: EN pulled to a supply under 6 V through 100 k or more
-    # The control lines cross a 2N7002 stage each, so the module's pins never see the fan's own levels (NOT READ).
+    # The control lines cross a 2N7002 stage each, so the module's pins never see the fan's own levels (NOT READ). The PWM stage
+    # is non-inverting: the module's duty, at most 70 % (round 3), reaches the fan as it is; released, the fan runs full.
     level(_fQ(1), _fR(11), "CFAN%d_TACH" % s, "FAN_TACHO%d" % s, cm33)
     nfet(_fQ(2), cm33, "FAN_PWM%d" % s, "CFAN%d_PWM" % s); r(_fR(12), "10k", "CFAN%d_PWM" % s, n5)
     part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d, Sanyo Denki 9WPA0412P6G001 (JST-SH 1.0): 12V GND TACH PWM" % s,
@@ -95,7 +107,8 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
     _intent.rail(f12, 12.0, 0.17, 0.54, _fU(1), loads={_fU(2): 0.17}, converted=True, efficiency=0.85, fed_from=n5, switch=_fU(1),
                  source_ic="U%d is a TPS61089 boost: its VOUT pin is the power path (the synchronous rectifier is internal)" % (_fb + 1),
                  v_work=12.43, note="S%d's cooler fan rail: 11.51 to 12.43 V regulated (VREF 1.188 to 1.236 V, 1 %% divider); "
-                 "0.17 A the fan's rated current, 0.54 A the eFuse's highest limit; efficiency 0.85 an ASSUMPTION" % s)
+                 "0.17 A the fan's rated current at full speed (Fan_PWM released), at most 0.117 A at the modules' 70 %% Fan_PWM "
+                 "maximum (the linear bound, round 3); 0.54 A the eFuse's highest limit; efficiency 0.85 an ASSUMPTION" % s)
     _intent.rail(fv, 12.0, 0.17, 0.54, _fU(2), loads={"J_FAN%d" % s: 0.17}, series_of=f12, converted=False, v_work=12.43,
                  source_ic="U%d is a TPS2596 eFuse: its OUT pin IS the power path" % (_fb + 2),
                  note="S%d's cooler fan supply behind the eFuse U%d (0.448 to 0.538 A, OVLO 12.64 to 13.67 V), out at J_FAN%d pin 1" % (s, _fb + 2, s))
