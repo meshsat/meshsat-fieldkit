@@ -32,7 +32,7 @@ coordinator's freeze (RESULT.md names them).
 Usage, from anywhere:  apply_set28_repins.py [--check | --write] [--no-regen]
   --check (default) prints every pin and text that --write would change, writes nothing, regenerates nothing.
   --write patches the readers and regenerates the four outputs (L4-E5, L4-E7, L4-E11, L4-E9) through regen_out.py (REGEN_OUT in the environment, else
-          <worktrees>/_bin/regen_out.py beside this worktree, else the runner's path); --no-regen patches only.
+          <worktrees>/_bin/regen_out.py beside this worktree); --no-regen patches only.
 Refuses (exit 3): "already applied" when no pin, mechanism or text differs from the tree; a row or sentence not found once in the
 merged files; a pattern that does not match the merged text exactly once; a patched file that does not parse; regen_out refusing.
 Every write asserts the new text differs and re-parses the file (ast). Exit 0 written (or checked)."""
@@ -46,7 +46,6 @@ import sys
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
-RUNNER_REGEN = "/home/claude-runner/worktrees/meshsat-fieldkit/_bin/regen_out.py"
 
 L4E5_PY, L4E5_OUT = "v2/docs/records/l4e5/l4e5_source_control.py", "v2/docs/records/l4e5/l4e5_source_control.out"
 L4E11_PY, L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.py", "v2/docs/records/l4e11/l4e11_power.out"
@@ -107,10 +106,10 @@ def flat(t):
 
 
 def regen_path():
-    for p in (os.environ.get("REGEN_OUT"), os.path.join(os.path.dirname(TOP), "_bin", "regen_out.py"), RUNNER_REGEN):
+    for p in (os.environ.get("REGEN_OUT"), os.path.join(os.path.dirname(TOP), "_bin", "regen_out.py")):
         if p and os.path.isfile(p):
             return p
-    refuse("regen_out.py not found (set REGEN_OUT)")
+    refuse("regen_out.py not found: set REGEN_OUT to its path (it lives in <worktrees>/_bin beside the worktrees)")
 
 
 def lit(pat):
