@@ -626,7 +626,7 @@ def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbanc
     if ld["cited"]:
         s10 = _s10(R)
         b6 = R["remedy"]["b6"]
-        assert "THE LEAD'S LENGTH AS A CITED INPUT (set 27)" in s10 and "%.3f uH/m at the selected network's floor" % (1e6 * b6["LA"] / le_["m"]) in s10
+        assert "THE LEAD'S LENGTH AS A CITED INPUT (set 27)" in s10 and "%.3f uH/m at round 2's reference loop" % (1e6 * b6["LA"] / le_["m"]) in s10
     assert [ld["tv"][k] for k in ("CS101", "CS114", "CS115", "CS116", "CS117")] == ["A", "A", "A", "A", "S"]
     assert "CS115" not in open(os.path.join(ROOT, "v2", "docs", "TEST-PLAN.md"), encoding="utf-8").read()
     # Figure CS116-2 as drawn, at the six frequencies and the lead's quarter wave
@@ -769,13 +769,13 @@ def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
     assert min(rm["ov28"]["aged"]["m"]) < 0 < min(rm["ov28"]["new"]["m"]), "the SMCJ28A band: fits new, fails aged"
     assert abs(d4n["v116"] - (36.8 * (1 + 0.001 * (rws["t_air"] - 25.0)) + (48.4 - 36.8) / 31.0 * 10.0)) < 1e-9 and d4n["v116"] <= 50.0
     # each fault and disturbance
-    assert [(v["id"], v["ok"]) for v in rm["verd"]] == [("D4", True), ("D5", True), ("CS116/115 on", True), ("CS116/115 off", True),
+    assert [(v["id"], v["ok"]) for v in rm["verd"]] == [("D4", False), ("D5", True), ("CS116/115 on", True), ("CS116/115 off", True),
                                                         ("already on", False), ("window", True)]
     vd = {v["id"]: v.get("note", "") for v in rm["verd"]}
     assert "CONDITIONAL on Q13's leakage" in vd["D5"] and "CS115 CONDITIONAL on R-174" in vd["CS116/115 on"]
-    assert "every rating with its margin for a source loop of at least %.2f uH" % (1e6 * rm["b6"]["LA"]) in vd["already on"] and "B6-ENG-1" in vd["already on"]
-    assert rm["verd"][4]["holds"]
-    assert vd["D4"] == vd["CS116/115 off"] == vd["window"] == ""
+    assert "round 2's %.2f uH is WITHDRAWN as a passing floor" % (1e6 * rm["b6"]["LA"]) in vd["already on"] and "B6-ENG-1" in vd["already on"]
+    assert rm["verd"][4]["holds"] is False and rm["verd"][4]["budget_stated"] and "no loop is claimed to pass" in rm["verd"][4]["note"]
+    assert vd["CS116/115 off"] == vd["window"] == "" and "round 5" in vd["D4"] and "no lead resistance credited" in vd["D4"]
     assert rm["f36"]["st_min"] > 0.04 and rm["f36"]["cut_hi"] < lead["v_src"] and rm["f36"]["ring"] < rm["QF"]["vds"]
     assert rm["rev"]["vds"] < rm["QF"]["vds"] and rm["rev"]["i_be"] > 10 * rm["rev"]["idss"]
     assert rm["scp_f"] < rm["scp_lo"] and rm["v_tmr"] < T4["tmr_v"][0] and rm["ov_in116"] < bA["rise"][0]
@@ -889,13 +889,21 @@ def t_the_guard_already_on_is_bounded_in_the_loaded_network():
     assert ce["F_lo"][1] < ce["F_lo"][0] < 4 * 2.2e-6 and ce["S_lo"][1] < ce["S_lo"][0] < 4 * 10e-6 and ce["C_hi"][1] < ce["C_hi"][0] <= (20e-6 + 4.8e-6) * 1.1 + 1e-12
     # the selected network: every rating with its margin at its floor, U5 binding, failing under it
     W = b6["W"]
-    for id_, v, lim, s in b6["valsA"]:
-        assert (lim - v) * s >= -1e-12, (id_, v, lim)
-    assert b6["bindA"] == ["u5p"] and 1.0e-6 < b6["LD"] < b6["LA"] < 7.0e-6 and abs(W["u5"] + b6["ERR"] - 0.240) < 0.002
+    # round 5: at round 2's reference loop the only resistive rating outside its line is U5's positive peak, and only for a fault at
+    # the connector (no lead resistance credited); the far-end case is round 2's figure; no passing floor is claimed
+    fails = [id_ for id_, v, lim, s in b6["valsA"] if (lim - v) * s < -1e-12]
+    # every rating outside its line at the reference loop is one whose least loop on the grid lies above it (a property, round 5)
+    assert "u5p" in fails and all(isinstance(b6["lsA"][f], float) and b6["lsA"][f] > b6["LA"] for f in fails)
+    assert b6["LA"] == 3.3e-6 == b6["L_REF"] and set(b6["r_cases"]) == {0.0, b6["r_lead"]}
+    assert abs(b6["u5_case"][b6["r_lead"]] + b6["ERR"] - 0.240) < 0.002 and b6["u5_case"][0.0] + b6["ERR"] > b6["U5_LIM"] and W["u5"] == b6["u5_case"][0.0]
+    assert "u5p" in b6["bindA"] and set(b6["bindA"]) <= set(fails) and 1.0e-6 < b6["LD"] < b6["LA"]
     assert "u5p" in b6["fail1"] and b6["W1u"]["u5"] > 0.3 and W["mono"] and W["i4"] == 0.0 and W["soa12"] < 1.0 and W["soa13"] < 1.0
     # the corner search: the four banks independent, every combination of their bounds at the floor holds, the selected corner the worst
     cn = b6["cnr"]
-    assert len(cn) == 16 and len({c["c"] for c in cn}) == 16 and all(c["ok"] and not c["fails"] for c in cn)
+    # round 5: with the connector case some combinations fail; every failure is U5's positive peak or INP (PV_F and TRK_VS stay under
+    # their lines over all sixteen), and the selected corner is still the worst on U5
+    assert len(cn) == 16 and len({c["c"] for c in cn}) == 16 and any(c["ok"] for c in cn) and not all(c["ok"] for c in cn)
+    assert all(set(c["fails"]) <= {"u5p", "inp"} for c in cn) and max(c["vF"] for c in cn) < 90.0 and max(c["vS"] for c in cn) < rm["D4N"]["vbr_cold"]
     assert b6["cnr_w"]["c"] == ("lo", "lo", "lo", "hi") and abs(b6["cnr_w"]["u5"] - W["u5"]) < 1e-12
     assert min(c["u5"] for c in cn) < W["u5"]
     r_c = (4e-6 / math.pi) ** 0.5
@@ -906,7 +914,13 @@ def t_the_guard_already_on_is_bounded_in_the_loaded_network():
     assert abs(b6["lim_err"] - 10.0 * b6["ibias_sum"] / (rm["i_reg_hi"] * b6["G6"]["r59"])) < 1e-12 and 0.005 < b6["lim_err"] < 0.01
     assert b6["ibias_sum"] == 31e-6 and b6["tsc11"][1] == 1.6 and b6["tsc"][1] == 5.0 and b6["tinp"] == 1.0
     assert b6["ramp_ok"] and all(r_["i4"] == 0.0 for r_ in b6["ramp"]) and b6["ramp_w"]["vS"] < rm["D4N"]["vbr_cold"]
-    assert b6["cold_ok"] and b6["i_start"] < rm["ocp_lo"] and b6["e11"] < b6["e11_room"] and b6["i_cs"] < b6["ics_abs"]
+    # round 5: the cold ring at a connector fault (no lead resistance credited) is inside the absolute ratings but outside the 10 %
+    # margin lines near the envelope's floor; with the lead's resistance credited (round 2's case) it holds the margins
+    cc = b6["cold_c"]
+    assert not b6["cold_ok"] and b6["cold_abs_ok"] and b6["cold_r"]["ok"] and not cc["ok"]
+    assert not (cc["vF"] <= 90.0 and cc["slew"] <= 0.9 * b6["slew_abs"] and cc["vF"] * b6["kinp"] <= 18.0) and cc["vF"] <= 100.0 and cc["slew"] <= b6["slew_abs"]
+    assert b6["cold_from"] is not None and 0.30e-6 < b6["cold_from"] < 10.2e-6 and "round 5" in rm["verd"][0]["note"]
+    assert b6["i_start"] < rm["ocp_lo"] and b6["e11"] < b6["e11_room"] and b6["i_cs"] < b6["ics_abs"]
     assert abs(b6["d59_116"] - 0.2123) < 0.0005 and abs(b6["be115"] - 15.680) < 0.002
     s = _s10(R)
     for k_ in ("THE GUARD ALREADY ON, ROUND 2", "THE MARGIN, decided before any value", "THE REVIEW'S WITNESSES", "THE PARTS AND THEIR BOUNDS",
@@ -961,7 +975,7 @@ def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
     assert any(r["holds_u5"] for r in rows[1:6]) and not any(r["holds_tr"] for r in rows) and not any(r["holds_op"] for r in rows)
     for r in rows:
         t3 = r["tr"][0.30e-6]
-        assert r["op_peak"] > r["r_peak_reg"] > 0 and r["op_trough"] < 0 and 0 <= r["low_reg"] < 0.8 and t3["fails"] and not t3["ok"]
+        assert r["op_peak"] > r["r_peak_reg"] > 0 and r["op_trough"] < 0 and abs(r["err_reg"]) < 0.8 and t3["fails"] and not t3["ok"]
         assert t3["pins_hi"] >= t3["u5"] + b6["ERR"] - 1e-4 and t3["pins_lo"] <= t3["u5n"] - b6["ERR"] + 1e-4 and t3["di_up"] > 0 > t3["di_dn"]
         assert r["holds_u5"] == ("u5p" not in t3["fails"] and "u5n" not in t3["fails"] and t3["pins_hi"] <= b6["csd_abs"] and t3["pins_lo"] >= -b6["csd_abs"])
         assert r["holds_tr"] == (t3["ok"] and r["holds_u5"])
@@ -982,9 +996,14 @@ def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
     assert b6["W"]["u5"] + b6["ERR"] - 1e-4 < pa["hi"] and pa["lo"] < b6["W"]["u5n"]
     sc = r3["l59_scan"]
     assert [l for l, _h, _l, _o in sc] == [0.5e-9, 1e-9, 1.5e-9, 2e-9, 3e-9, 5e-9] and all(sc[i][2] >= sc[i + 1][2] for i in range(len(sc) - 1))
-    assert all(ok == (lo >= -b6["U5_LIM"]) for _l, _h, lo, ok in sc) and abs(sc[-1][1] - pa["hi"]) < 1e-9 and abs(sc[-1][2] - pa["lo"]) < 1e-9
-    assert r3["l59_ok"] == max([l for l, _h, _l, ok in sc if ok], default=None) and r3["l59_ok"] is not None and r3["l59_ok"] < 5e-9
-    assert pa["hi"] - b6["U5_LIM"] < 0.01 and pa["hi"] < b6["csd_abs"] and pa["lo"] > -b6["csd_abs"]
+    assert abs(sc[-1][1] - pa["hi"]) < 1e-9 and abs(sc[-1][2] - pa["lo"]) < 1e-9      # the scan's 5 nH is the budget's own evaluation
+    assert all(ok == (lo >= -b6["U5_LIM"] and hi <= b6["U5_LIM"]) for _l, hi, lo, ok in sc) and r3["l59_ok"] == max([l for l, _h, _l, ok in sc if ok], default=None)
+    # the complete budget at round 2's loop is outside the margin line in both polarities, the connector case the worse on the rise
+    p0, pr = r3["parA0"], r3["parAr"]
+    # the combined budget takes each term's worst over both positions, so it bounds each position's own budget from outside
+    assert pa["hi"] > b6["U5_LIM"] and pa["lo"] < -b6["U5_LIM"] and p0["hi"] >= pr["hi"] - 1e-12
+    assert max(p0["hi"], pr["hi"]) - 1e-12 <= pa["hi"] < max(p0["hi"], pr["hi"]) + 5e-4 and min(p0["lo"], pr["lo"]) - 5e-4 < pa["lo"] <= min(p0["lo"], pr["lo"]) + 1e-12
+    assert p0["u5"] > pr["u5"] and pa["hi"] < b6["csd_abs"]
     assert r3["op_hold"]["r_peak"] < r3["V_OP"][1] and r3["op_l59"][5e-9]["trough"] < r3["op_l59"][1e-9]["trough"] < 0
     s = _s10(R)
     for k_ in ("ROUND 3, ROUTE 3", "THE SPLITS", "THE FLOORS of the splits", "THE PARASITICS' BUDGET", "THE VERDICT ON ROUTE 3 (SESSION): route 3 does NOT hold",
@@ -993,7 +1012,8 @@ def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
     page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
     rA = rows[0]
     for fig in ("### Round 3: the sense moved off the stage's input capacitance (route 3), result (ii)", "B6-ENG-2",
-                "%.4f V" % rA["r_peak_reg"], "%.4f V" % rows[6]["r_peak_reg"], "%.1f %%" % (100 * rA["low_reg"]), "%+.4f V" % pa["lo"], "%+.4f V" % pa["hi"],
+                "%.4f V" % rA["r_peak_reg"], "%.4f V" % rows[6]["r_peak_reg"], "%+.1f %%" % (100 * rA["err_reg"]), "%+.4f V" % pa["lo"], "%+.4f V" % pa["hi"],
+                "%+.4f to %+.4f V" % (p0["lo"], p0["hi"]), "%+.4f to %+.4f V" % (pr["lo"], pr["hi"]),
                 "%.4f V" % (rows[1]["tr"][0.30e-6]["u5"] + b6["ERR"]), "%.1f A/us" % (1e-6 * abs(pa["dn"])), "%.2f A/us" % (1e-6 * pa["up"])):
         assert fig in page, fig
     clar = open(os.path.join(REC, "clarification", "analog-devices-lt8705a.txt"), encoding="utf-8").read()
@@ -1011,14 +1031,17 @@ def t_round_4_the_inp_divider_tolerance_and_pv_fs_operating_row():
     draft = open(os.path.join(REC, "apply_gen_sch_e_solar_guard.py"), encoding="utf-8").read()
     m = re.search(r'r\("R97", "28\.0k ([\d.]+)% 25ppm \(INP: high from ([\d.]+) V,[^"]*YAGEO RT0603BRD0728KL, LCSC code owed\)", "PV_INP", "GND", "R"\)', draft)
     assert m, "the draft's R97 line"
-    assert abs(float(m.group(1)) / 100.0 - b6["tol_inp"]) < 1e-12 and b6["tol_inp"] == 0.001
+    m96 = re.search(r'r\("R96", "100k ([\d.]+)% 25ppm \(INP top; YAGEO RT0603BRD07100KL, LCSC code owed\)", "PV_F", "PV_INP", "R"\)', draft)
+    assert m96, "the draft's R96 line"
+    assert abs(float(m.group(1)) / 100.0 - b6["tol_inp"]) < 1e-12 and abs(float(m96.group(1)) / 100.0 - b6["tol_inp"]) < 1e-12 and b6["tol_inp"] == 0.001
     assert abs(float(m.group(2)) - b6["inp_on"]) < 0.005, (m.group(2), b6["inp_on"])
     assert b6["vs_rec"] == 80.0 and b6["W"]["vF"] > b6["vs_rec"] and b6["pvf80"] is not None and b6["pvf80"] > b6["LA"]
     inp_row = [v for v in b6["valsA"] if v[0] == "inp"][0]
-    assert abs(inp_row[1] - b6["W"]["vF"] * b6["kinp"]) < 1e-9 and inp_row[1] < 18.0
+    assert abs(inp_row[1] - b6["W"]["vF"] * b6["kinp"]) < 1e-9 and inp_row[1] <= 20.0
+    assert (inp_row[1] > inp_row[2]) == any(v[0] == "inp" and (v[2] - v[1]) * v[3] < -1e-12 for v in b6["valsA"])
     s_ = _s10(R)
     for k_ in ("PV_F'S BASIS (round 4, L6P-F10)", "RECOMMENDED operating row for VS, CS+ and CS- is 80 V", "THE INP DIVIDER (round 4, L6P-F04)",
-               "PV_F under the recommended operating 80 V row (OPEN at the floor"):
+               "PV_F under the recommended operating 80 V row (OPEN at round 2's loop"):
         assert k_ in s_, k_
     page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
     for fig in ("%.2f uH" % (1e6 * b6["pvf80"]), "RT0603BRD0728KL", "recommended operating", "%.2f V" % b6["W"]["vF"], "L6P-F04", "L6P-F10",
