@@ -65,6 +65,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    tps55340  e579aa4fcb549eab  v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf
    tps63070  a88ef66f3493156f  v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf
    xal60     236888dabe560055  v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf
+   spra953   8ab81b5a351132ae  v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf
+   an11158   9e3211549d0bcd77  v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf
    gen_b     3698cc04d8eaf75b  v2/ecad/tools/gen_sch_b.py
    arch      0978b101bb4fc572  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
@@ -1003,6 +1005,11 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      (D3) board P bounds the inrush (a slower discharge-FET turn-on or a precharge path): changes the pack's protection path, whose ASCD
        turn-off and normal charging must be re-shown; board P's owner, a draft for board P's generator (INFERRED)
      SELECTED (SESSION): (D2), with (D1) asked in parallel; (D3) only if (D2) fails, as E11-30 states; STATUS: CONDITIONAL on E11-30 (SESSION)
+   17d. L4-QR01 (the owner's review of 3 October): a junction-to-air figure belongs to the board and its environment (TI SPRA953D 1.2, p.3: "RθJA
+     is not a constant"; 1.8, p.5: "a system-level parameter"), and a maker's limiting value holds under its stated conditions only (Nexperia
+     AN11158 Rev. 7.0 2.4, p.4: operation outside the stated conditions carries no assurance from the maker): each specimen's transfer rule is the record's 17d
+     block (thermal boundaries, uncertainty, permitted extrapolation, the comparison rule, the re-test triggers); the six-sample pulse test is
+     prototype evidence for its lot and conditions, not a production limit (MAKER, RECORD)
    17c. L4-CP03: apply_gen_sch_a_charger.py's text now writes the allowance, the 33.12 K/W self-plus-mutual target and no sharing credited;
      the three withdrawn statements are absent from the text it writes (tested) (RECORD)
 
