@@ -60,6 +60,8 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      (that face sits lower all along), so the transfer barrels belong in a field at the part and nowhere between
    one barrel of 0.4 mm drill, 18 um plating: 65.08 (board A, 1.5384 mm) and 67.11 (board E, 1.5862 mm) in rho per mm, as much as 34.3 mm
      of a 14.60 mm 1 oz band
+   unequal faces between through-hole ends, each at least 12.26 mm: a wider face (to three times the minimum) takes more of the
+     current by width and reads at most 10.00 K at the blades' 25 A, the rating growing slower than the width
    with no field (one barrel), the part's face of a 14.60 mm band carries: 0.89 at 5 mm, 0.82 at 10 mm, 0.73 at 20 mm, 0.65 at 40 mm, 0.59 at 80 mm
    the field each one-face end needs for the part's face to carry at most 0.55 (one end / both ends), and the thermal count:
      pack, board A          14.60 mm, 1.5384 mm board: 5 mm 30 / 60, 10 mm 15 / 30, 20 mm 8 / 15, 40 mm 4 / 8, 80 mm 2 / 4; thermal 14 (via_current.barrels_for at half the coordination current)
@@ -339,6 +341,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
    on every pack family the backstop's 5 s interval and faster are over the printed maximum by the tree's bounds          yes
    every hard short on B1, B2 and B3 is within the printed maximum at the blade's typical I2t and the gauge's ASCD        yes
    the copper is not the fuse: the 600 % row's bound on B1 and B2 is under the governing face's fusing I2t                yes
+   between through-hole ends a face wider than the minimum runs no hotter than the equal pair                             yes
    with one barrel the part's face carries more than the governing share at every tabled length                           yes
    the transfer field's split count falls with length (one end and both ends)                                             yes
    the shore's 20 A families hold the fuse's 600 s window top at 10 K                                                     yes
