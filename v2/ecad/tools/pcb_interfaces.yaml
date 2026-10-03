@@ -237,6 +237,17 @@ boards:
 # lines are the corrected design; the committed board files (A32, B21, C24, D12, E17, P4) predate it and carry the older netlists. Finding IDs
 # are defined in v2/docs/ARCHITECTURE.md sections 13 and 14; a contract that lists one is NOT met by the design until it
 # closes. Pin maps are given from the FIRST end named; `aliases` lists nets that are one conductor under two names.
+# ======================================================================================================================
+# LAYER 5'S POWER PASS (MESHSAT-1357, set 27, 3 October 2026; v2/docs/records/l5pwr/). Layer 4's power results (L4-E9's
+# LAYER5-HANDOVER.md LH-01 to LH-11 and the set 27 rows) are written into IF-EXT-DC, IF-AE-DOCK, IF-PE-PACK, IF-EXT-USB,
+# IF-AB-POWER, IF-E-FANS and IF-A-HEAT. MARKS in those texts: MAKER (a maker's printed row), INFERRED (arithmetic on printed or
+# verified figures), MODELED (a record's model), PROVISIONAL (resting on an open condition, its invalidation trigger named
+# beside it); DRAFTED (R-nn) marks a figure true of a release-guarded Layer 4 draft that no generator carries yet, so the drawn
+# board is stated first where it differs. The `pins` maps stay the committed netlists' (what check_contracts.py reads); the
+# drafted assignment of IF-AE-DOCK pin 1 (VSYS_DOCK) is its own field, pin1_vsys_dock, until L4-E11's
+# apply_pcb_interfaces_dock.py applies together with the generator drafts. Every figure's Layer 4 source row, mark and trigger:
+# v2/docs/records/l5pwr/L5-POWER-CONTRACTS.md, checked by l5pwr_contracts.py. This edit dates every interfaces.py reading
+# (CONFIG_INPUTS), so a re-take of interfaces.py on every board follows it, as after H2.
 board_to_board:
   schema: 1
   read_at: {commit: ef144760, date: "2026-09-27", phases: {a: A32, b: B21, c: C24, d: D12, e: E17, e5: E5, p: P4},
@@ -259,6 +270,51 @@ board_to_board:
     section 7, appendix 32.367) apply to these contracts where named; which of their engineering is in a generator is
     v2/docs/ARCHITECTURE.md section 1.3"
   power_up_reference: "v2/docs/ARCHITECTURE.md section 4.3 (the power-up sequence as generated at eadbe571)"
+  # THE POWER LINES' STATES (Layer 5's power pass, set 27, 3 October 2026; criteria 5.6 and 5.7): for each line L4-E9 section 4
+  # defines (4a source changes, 4c startup, 4e faults, 4f the fans), its reset, default and cable-out state and the firmware row
+  # that drives it. Marks and sources as the header above; DRAFTED lines are release-guarded Layer 4 drafts no generator carries.
+  power_line_states:
+    SLOT_EN1..3: {reset: "LOW (A R30, R34, R38 100 k to GND; the RP2040's pads reset as inputs)", default: "every slot OFF until the
+        panel's boot order raises them one at a time after ZEROIZE_SW is read (FW-C01 step 6)", cable_out: "LOW: every slot off
+        (IF-BC-PANEL, IF-AB-RIBBON)", hold: "OWED: a panel reset or update drops every module (FW-C02; ARCHITECTURE.md 4.3;
+        IF-BC-PANEL slot_power_semantics); in no generator, Layer 8's (board C or A); criterion 5.6 stays open on it", firmware:
+        "FW-C01, FW-C02, FW-C13 (H1 drops them), FW-C04 (the wipe cuts them at 3.0 s)", source: "L4-E9 4c (the cold start)"}
+    SHORE_INHIBIT: {reset: "LOW (A R118, E R26 100 k)", default: "LOW: the inputs run", cable_out: "LOW on A and E", assert: "only
+        the operator's 'inputs off' and the water-on-floor isolation; never a charge hold; a warning first while the pack cannot
+        discharge (S2, S4)", firmware: "FW-C08, FW-E03", source: "L4-E11 7a (rule R-a); IF-EXT-DC sequencing"}
+    CHG_INHIBIT: {reset: "LOW (A R21 4.7 k): the charger enabled", default: "LOW", cable_out: "n/a: a board A line (U27 to Q6), it
+        crosses no connector", assert: "never as a charge hold, never in S2 or S4 (HIZ stops the converter)", firmware: "FW-A14",
+        source: "L4-E11 7a"}
+    CHRG_INHIBIT_bit_and_ChargeCurrent: {reset: "as drawn ChargeCurrent 256 mA at POR and after the 175 s watchdog (TI's E2E answer);
+        under (B1) 0 A until written (DRAFTED R-157)", default: "the bit follows the hold's flag (as drawn in S1 to S3 and not in
+        S4; under (B1) in every state); ChargeCurrent at most 3.0 A, under 14.0 V of SRN only 0x0000 or 0x0200 (as drawn), 0x0080
+        under VSYS_MIN (B1)", cable_out: "n/a: registers over the kit bus", firmware: "FW-A19, FW-A20, FW-A23", source: "L4-E11
+        section 4 and 15a; L4-E9 4c"}
+    EN_OOA: {reset: "1b at POR (SLUSE65A; (B1) only, DRAFTED R-157)", default: "written 0 at boot before any other setting; the
+        printed VSYS accuracy holds only after that write", cable_out: "n/a: a register", firmware: "FW-A23", source: "L4-E11 15a
+        (E11-31); L4-E9 4c"}
+    DCIN_PGD: {reset: "HIGH (E R25 10 k to +3V3_E6)", default: "as drawn power good from the LM5069; on the selected entry the fault
+        flag, low on an overcurrent, a short circuit or an overtemperature, with a retry every 0.5 s (DRAFTED R-123)", cable_out:
+        "HIGH: no fault and no input, read by E's controller alone", firmware: "FW-E13", source: "L4-E11 7a"}
+    HOT_R1: {reset: "HIGH on A (R216 10 k): the detector lost", default: "1 Hz once E's controller reads the gauge; 5 Hz H1, held
+        low H2", cable_out: "HIGH on A: FW-C14's fallback on board B's TMP117", firmware: "FW-C14, FW-E10", source: "SC-70
+        (IF-AE-DOCK hot_r1)"}
+    VSYS_DOCK: {reset: "DRAFTED (R-157, R-177, R-181): U42's dVdT ramp 3.99 to 8.75 ms once VSYS is present (C237 22 nF); MODE to
+        GND, auto-retry after 500 to 800 ms", default: "on whenever VSYS is, from the source or the pack; at most 1.802 A", cable_out:
+        "open at E: board E's auxiliary domain dark, HOT-R1 held high on A (the detector lost)", firmware: "FW-E11 (the fans' start
+        under its limit), FW-C14", source: "L4-E11 16e, 17a; IF-AE-DOCK pin1_vsys_dock"}
+    FAN1_SW_FAN2_SW: {reset: "off: the gates held low by the RP2040's pad pull-downs (IF-E-FANS default_state; a discrete pull-down
+        recommended, HF-F07)", default: "off until the sensor controller boots and its thermal policy runs them", cable_out: "n/a:
+        the fans' own leads at J_FAN1 and J_FAN2", start: "one at a time with a PWM ramp, never both within 1 s and never while U12
+        starts, under U42's least limit 1.471 A (DRAFTED under (B1))", firmware: "FW-E07, FW-E11, FW-E10 (full speed in H1 and H2)",
+        source: "L4-E11 17a (E11-39); L4-E9 4f"}
+    U34_restart_guard: {threshold: "falls at 6.754 to 7.139 V of VIN_RAW (R14 76.8k, DRAFTED R-124); as drawn at up to 8.309 V",
+        default: "cycles the front end when VIN_RAW falls into the knee's HIZ", cable_out: "n/a: board A", firmware: "none
+        (hardware)", source: "L4-E9 1d IF-07 and 4a"}
+    SWEN: {reset: "off below 2.662 V on TRK_LDO33 (L4-E7R, DRAFTED R-19 to R-21)", default: "the stage's own UVLO and soft start at
+        dawn; off at dusk under the hold", backstop: "trips at 3.0468 to 3.7408 A at 25 V inside 1.087 ms after the filter, restarts
+        through the soft start; no flag line to any controller", cable_out: "n/a: board E", firmware: "none (hardware; V-E15)",
+        source: "L4-E7R; L4-E9 4a and 4e"}
   contracts:
 
     IF-BC-PANEL:
@@ -368,8 +424,8 @@ board_to_board:
       title: "A to B rail leads: J_5V_S1..3, J_5V_DEV, J_54V (JST-VH pairs, 16 and 18 AWG, 150 mm)"
       kind: board_to_board
       ends:
-        - {board: a, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_a.py:1051-1052, 1149"}
-        - {board: b, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_b.py:551, 1119, 1210"}
+        - {board: a, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], part: "JST-VH B2P-VH 1x2 standard header each", src: "v2/ecad/tools/gen_sch_a.py:1051-1052, 1149"}
+        - {board: b, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], part: "JST-VH B2P-VH 1x2 standard header each", src: "v2/ecad/tools/gen_sch_b.py:551, 1119, 1210"}
       cable: {src: "v2/docs/ASSEMBLY.md section 4, slot rails, device rail and PoE feed rows"}
       pins_each: "1 = the rail, 2 = GND, on both ends"
       converters: "A: +5V_S1 and +5V_S3 on AP64500 (U4, U6); +5V_S2 and +5V_DEV on LM5176 stages with a 7.2 to 9.5 A average
@@ -401,11 +457,36 @@ board_to_board:
              8.171220 A, is above that minimum and stays open under S-99 (board B's reconciliation of its children, bench
              PT-4). Enable DEV_EN, ON by design since 458b2873 (R42)"}
         - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:152, gen_sch_b.py:271)",
-           enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)"}
+           enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)",
+           monitor: "the PoE monitor U17 senses the stage's INPUT on R227, 5 mOhm from VBAT to POE_VIN (HF-F02 resolved by L4-E9
+             R-06, apply_gen_sch_a_u17.py, DRAFTED, not applied), not the 54 V rail: U16's VIN and BIAS on POE_VIN; U17 IN+ on VBAT,
+             IN- and VBUS on POE_VIN, its pins at most 20.135 V (the pack-open bound) against the INA226's 36 V; full scale 81.92 mV
+             over 5 mOhm is 16.384 A (Current_LSB 0.5 mA, CAL 2048); 3.682 A at a 10.0 V stack for 0.6 A at 54 V over 0.88, 14.33 A
+             at the stage's fault bound (72.38 mV); a full-scale sample is a saturated transient (a VBAT step or a hard output
+             short), not a current reading; the output power inferred as the input power times the stage's efficiency (0.88,
+             undocumented), its alert limit from the stage's input, not its output; accuracy 1.731 percent plus 3.025 mA over the
+             IC's -20 to 76.25 C (1.475 percent plus 2 mA at 25 C) (L4-E9 1d IF-13 and part A; MAKER rows of SBOS547C, INFERRED;
+             FW-A09 restated); as drawn U17 sits on the 54 V rail over its 40 V absolute maximum (HF-F02 open on the drawn board);
+             R227's pulse rating and capacitance envelope PROVISIONAL (R-101)"}
       contact_rating: "JST VH catalogue held (v2/vendor/connectors/jst-vh-catalogue.pdf, page 1): 10 A per contact when
         using AWG 16 with the standard header, which the four 5 V leads are; 7 A is stated for AWG 18 with the shrouded
         header only, so the fitted B2P-VH standard header with AWG 18 on J_54V carries no stated rating (INCONCLUSIVE;
         v2/docs/records/cx1/ANALYSIS.md)"
+      harness: "JST-VH pairs, 16 AWG on the four 5 V leads and 18 AWG on J_54V, 150 mm (cable; ASSEMBLY.md section 4)"
+      levels: "+5V_S1, +5V_S2, +5V_S3 and +5V_DEV 5 V rails from board A's converters (converters); +54V_POE 54 V from U16"
+      current: "per rail as currents states: the two ends aligned INTERIM since S-98, the PS-ALLTX mode current INCONCLUSIVE at both
+        ends (the bench decides it at J_5V_S2 and J_5V_DEV); +54V_POE 0.3 A typical, 0.6 A peak, its input monitored on R227 under
+        R-06's draft (currents.monitor)"
+      default_state: "the slot rails OFF (SLOT_EN1..3 low at A's pull-downs); +5V_DEV ON by design since 458b2873 (R42); +54V_POE OFF
+        (POE_EN low at power-up, R114)"
+      sequencing: "DEV_EN with board A's +3V3 (FW-C01), then the charger, then SLOT_EN1..3 one at a time (FW-C01 step 6); POE_EN only
+        after the panel has configured U5 and set POE_SW_EN (FW-B14, FW-A06), and dropped while the PA keys (OUTLET_OK)"
+      mating: "VH latches at both ends on crimped leads; mated with the kit off (hot_plug)"
+      judged_by: "check_contracts.py section 3 (each rail leaves A and enters B on its same-named VH pair)"
+      tbd: ["the J_54V contact rating with AWG 18 on the standard header (contact_rating, INCONCLUSIVE); effect: the PoE lead's contact
+            margin is unstated",
+            "the PS-ALLTX mode current of +5V_S2 and +5V_DEV (I-03, S-98, S-99); effect: the leads' peak basis is INTERIM until the
+            bench"]
       hot_plug: "not hot-pluggable (the session's choice SC-HF-04 of 27 September 2026 under the owner's standing rule, v2/docs/HW-FW-CONTRACT.md section 8): crimped leads, mate with the kit off"
       back_power: "the always-on fabric on +5V_DEV and +3V3_DEV applies voltage to the pins of an unpowered module
         (FAILOVER-FABRIC.md FAB-02; remedy: each bank's and each display switch's enable qualified by the selected slot's
@@ -444,9 +525,9 @@ board_to_board:
       title: "A to E through the dock block E5: A J_DOCK (12 Preci-Dip 813 spring pins) on E5 targets, E5 lands to E J_BLK (12 x 24 AWG); pack power pins A J_CP1..4, J_CN1..4, J_PRE1 on E5 targets, E5 holes to E P_CP and P_CN (12 AWG); VIN_RAW power pins A J_VR1..4 and J_VN1..4 on E5 targets, E5 holes to E P_VR and P_VN (12 AWG, EQ-16)"
       kind: board_to_board
       ends:
-        - {board: a, refs: [J_DOCK, J_CP1-4, J_CN1-4, J_PRE1, J_VR1-4, J_VN1-4], src: "v2/ecad/tools/gen_sch_a.py:216-219 (J_CP1-4, J_CN1-4, J_PRE1), 235-237 (J_VR1-4, J_VN1-4), 265-266 (J_DOCK) at the set 5 integration (fnd/r8int5)"}
+        - {board: a, refs: [J_DOCK, J_CP1-4, J_CN1-4, J_PRE1, J_VR1-4, J_VN1-4], part: "J_DOCK twelve Preci-Dip 813 spring pins (3.5 A operating maximum each); J_CP1-4, J_CN1-4, J_VR1-4, J_VN1-4 and J_PRE1 Mill-Max 0858-class power spring pins (9 A each)", src: "v2/ecad/tools/gen_sch_a.py:216-219 (J_CP1-4, J_CN1-4, J_PRE1), 235-237 (J_VR1-4, J_VN1-4), 265-266 (J_DOCK) at the set 5 integration (fnd/r8int5)"}
         - {board: e5, what: "no schematic; targets and lands generated from board A's file by position (gen_pcb_e5.py)"}
-        - {board: e, refs: [J_BLK, P_CP, P_CN, P_VR, P_VN], src: "v2/ecad/tools/gen_sch_e.py:242-243 (P_CP, P_CN), 660-663 (J_BLK, P_VR, P_VN) at the set 5 integration (fnd/r8int5)"}
+        - {board: e, refs: [J_BLK, P_CP, P_CN, P_VR, P_VN], part: "J_BLK 2x6 lands for the block's twelve 24 AWG leads; P_CP, P_CN, P_VR and P_VN 12 AWG lands", src: "v2/ecad/tools/gen_sch_e.py:242-243 (P_CP, P_CN), 660-663 (J_BLK, P_VR, P_VN) at the set 5 integration (fnd/r8int5)"}
       aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E's pack positive after its F3 blade"]]
       map_identity: {status: VERIFIED, judged_by: "check_contracts.py sections 4 and 5 (the dock signal and power contacts); block_contract.py (needs pcbnew) for E5"}
       pins: {1: GND, 2: GND, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,
@@ -461,7 +542,43 @@ board_to_board:
         board back-powers the other; a slow logic level (LOW_SPEED_OR_DC in both board tables) and a declared safety
         line on both (SCH-004: A listens, safe high by R216; E is its source). Firmware: v2/docs/HW-FW-CONTRACT.md
         FW-C13, FW-C14 and FW-E10; the path read by v2/docs/records/w4ae/hot_r1_trace.py"
-      vin_raw: {voltage: "9 to 36 V (v_work 36 V)",
+      pin1_vsys_dock: "SET 27, the selected architecture A1 under D-06 (L4-E11 15a, 16e, 17a; L4-E9 1d IF-06; DRAFTED,
+        release-guarded, not applied: R-157 board A, R-177 board E, R-181 the eFuse, R-178 this contract's pins map by L4-E11's
+        apply_pcb_interfaces_dock.py, applied together): pin 1 leaves GND for VSYS_DOCK, board A's VSYS (the net VBAT) behind the
+        eFuse U42 TI TPS16630PWPR, to board E's VSYS_E, the feed of board E's auxiliary domain (U12, C31, the mixer fans, D7 and D8),
+        1.0 A declared (U12 0.8 A, the fans 0.1 A each), one Preci-Dip 813 contact at 28.6 percent of its 3.5 A; the pins map above
+        stays the committed netlists' (pin 1 GND) until the drafts apply, which is what check_contracts.py reads. LEVELS: VSYS
+        9.688 to 17.375 V (L4-E11 15d; MAKER rows of SLUSE65A, INFERRED at the corners); at the supplement floor 9.688 V with 1.0 A
+        the drop is 0.1486 V (U42 53 mOhm, the 813 path 43.4 mOhm, the return's shift), so VSYS_E at least 9.539 V, 11.905 V at
+        VSYS_MIN's start (L4-E11 16e; INFERRED). CURRENT AND PROTECTION: U42's I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm 0.1
+        percent (between TI's printed 9 and 30 kOhm rows, each over TJ -40 to 125 C: INFERRED from MAKER rows, SLVSET9G), a
+        regulated steady setting and not an instantaneous ceiling; in a sustained overload the contact at most 1.802 A, 51.5
+        percent of 3.5 A; current limiting at most 202 ms, then off 500 to 800 ms and a retry (MODE to GND); a short applied while
+        on at most 566 A for at most 4.5 us (a ceiling, no inductance credited; INFERRED), IN at most 41.1 V with U42 within 20 nH
+        of C236 (a layout requirement), OUT's undershoot against -0.3 V open (Q-TI-18); C238 1 uF at IN, C239 0.1 uF at OUT, D23
+        B540C-13-F from GND to OUT. DEFAULT AND CABLE-OUT: U42 draws at most 1.7 mA from VSYS; with the stack lifted or pin 1 open
+        board E's controller is unpowered, which board A reads on HOT-R1 as the detector lost (a detected state); under (B1) the
+        held pack feeds no kit load through this pin (the source carries VSYS_E; the held pack's quantified drain 0.1408 mA, the
+        bench at most 1 mA, E11-31). THE FANS' START RULE (E11-39, FW-E11): against U42's least limit 1.471 A with U12's 0.8 A,
+        both fans together at most 0.3356 A each, one at a time at most 0.5713 A (the other running at 0.1 A), VSYS_E at the least
+        limit at least 9.494 V at the supplement floor, so the fans must start at or under it; firmware starts them one at a time
+        with a PWM ramp, never both within 1 s and never while U12 starts (R-188). STATE: sustained-overload remedy drafted, fault
+        qualification open (L4-F03, E11-38, R-184): PROVISIONAL, invalidated by a limit read outside 1.471 to 1.802 A, a fan or U12
+        current over 1.471 A (E11-35, R-179: no fan is named), or the hard short's qualification failing (E11-38); the ground
+        return keeps seven 813 contacts (2.238 A each at the 32.1 A coincidence, 2.406 A with one open, 79.3 C at the 51 C air;
+        L4-E11 15a, INFERRED on w3de's model)"
+      vin_raw: {voltage: "as declared 9 to 36 V (v_work 36 V). Layer 4 (L4-E9 1d IF-06; LH-03): solar 7.378 V (the corrected knee's
+                  certain HIZ, L4-E9 R-03, a specification) to 30.15 V (the tracker's raised ceiling, R10 232 k; L4-E5, DRAFTED);
+                  vehicle 9 to 36 V at the plug (VIN_RAW 8.148 V at 5.983 A from a 9.00 V plug; INFERRED); at most 41.22 V (the
+                  selected entry's OV maximum, MAKER; 43.18 V the basis the checks keep); the clamps' 64.5 V at their rated pulse
+                  is the recorded residual A-N1 (no surge level ruled, D-16)",
+                in_service: "at most 5.983 A (a 9.00 V plug) or 4.22 A (the tracker at the window), INFERRED; the front end's fault
+                  current at most 11.65 A at R11 8 mOhm and R12 12 mOhm (13.315 A at 7 mOhm), inside the declared 14.10 A and the
+                  four 9 A pins (3.88 A each with one open) (L4-E9 1d IF-06 and IF-07; MODELED; R11 and R12 DRAFTED R-04, R-01)",
+                properties: ["the tracker back-feeds board E's DC_P through Q7's body diode whenever it holds VIN_RAW; the vehicle's
+                  ideal diode U3 with Q1 blocks it at DC_F (L4-E9 1d IF-04; INFERRED; Q1 the CSD19532Q5B, DRAFTED R-17)",
+                  "U34's restart guard falls at 6.754 to 7.139 V (R14 76.8k, L4-E9 R-124, DRAFTED), at least 0.1 V under the knee's
+                  certain HIZ 7.378 V; as drawn it falls at up to 8.309 V, over the 9.00 V plug's 8.148 V (IF-07)"],
                 a_declares: "14.10 A typical and peak since R8E-N01 (EQ-16, set 5, fnd/r8int5, 27 September 2026): board
                   E's figure, this board's own front end at its ISNS limit drawing from a 9.0 V bus (R4A-N12), with J_VR1 to
                   J_VR4 as its source (gen_sch_a.py:69-70 at the set 5 integration). Until then 12.31 A, the sum of E's two
@@ -490,7 +607,11 @@ board_to_board:
       pack_pins: {rating: "9 A per pin: 'Rated Current (Free air): Continuous 9 amps @ 10 C temperature rise', 'Contact Resistance: 20 mOhm max' (v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf, VERIFIED; the series statement, the 0858 being on the held product page)",
                   load: "CELL+ 10.0 A typical, 18.0 A peak (gen_sch_a.py:24; gen_sch_e.py:52): 4.5 A per pin with four sharing,
                     6.0 A with one open; every PA key-down makes up to 18 A a service current for its 60 s (PWR-F12)",
-                  precharge: "J_PRE1 mates first, through R1 10R 2 W to CELL+ (gen_sch_a.py:210)"}
+                  precharge: "J_PRE1 mates first, through R1 10R 2 W to CELL+ (gen_sch_a.py:210)",
+                  charge: "at most 3.0 A (FW-A02; REQ-075 3.06 A), under the gauge's OCC 5 A (L4-E9 1d IF-10; LH-04)",
+                  service: "10.0 A continuous and 18.0 A peak kept; PS-ALLTX's 18 A at an 11.48 V stack and OCD1's 20 A below
+                    10.42 V (pwr_budget.out D-11 line; MODELED); the chain's short-time rating PWR-F12 open (FEA-004): PROVISIONAL
+                    until PWR-F12 closes"}
       charge_share: "BAT-F06, taken by the session under the owner's standing rule (ARCHITECTURE.md section 4.4): board E's
         always-on domain and fans sit on CELL_F, the pack side of A's charge shunt R17, so they share the charger's host-free
         256 mA; stated, and the host sets ChargeCurrent to cover them; the VSYS-side feed through this contract is not taken"
@@ -515,6 +636,41 @@ board_to_board:
         one open, which reads 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin; a bench measurement
         of the dock's contact resistances and of an 813 ground contact's temperature at the declared currents is owed
         to TEST-PLAN.md"
+      levels: "VIN_RAW and the pack pins as vin_raw and pack_pins state; the signal contacts at board A's +3V3 logic (SHORE_INHIBIT,
+        HOT-R1) and the USB_E6 pair at USB full speed; pin 1 VSYS_DOCK 9.688 to 17.375 V under (B1) (pin1_vsys_dock, DRAFTED)"
+      current: "VIN_RAW 14.10 A declared on four 9 A pins (vin_raw: in service at most 5.983 A, the fault at most 11.65 A); the pack
+        pins 10.0 A continuous and 18.0 A peak on four 9 A pins, the charge at most 3.0 A (pack_pins); pin 1 at most 1.802 A behind
+        U42 under (B1) (pin1_vsys_dock); the 813 signal contacts at logic currents; the ground return shared as ground_return states"
+      harness: "none: a blind-mate dock; board A's spring pins land on the E5 block's plated targets, and the block's lands carry 24
+        AWG (J_BLK) and 12 AWG (P_CP, P_CN, P_VR, P_VN) leads to board E (ASSEMBLY.md section 4)"
+      mating: "blind-mate on the E5 block's targets at the stack's seating (ASSEMBLY.md section 1); the D-14 procedure for every
+        stack lift (hot_plug); the alignment is judged by nothing (IF-AE-RF's gap note)"
+      judged_by: "check_contracts.py sections 4 (the 2x6 contact map, SHORE_INHIBIT's reach), 5 and 5a (the pack and VIN_RAW power
+        pins and lands); block_contract.py (needs pcbnew) for E5; the alias VSYS_DOCK and VSYS_E arrives with L4-E11's draft"
+      tbd: ["the fans' part and so their start current behind U42 (E11-35, R-179); effect: pin1_vsys_dock's fans' start rule is a
+            bound, not a part's figure",
+            "the 813 contact's pulse capability and its resistance after E11-38's hard-short cases; effect: the dock's VSYS branch's
+            fault qualification (L4-F03) stays open"]
+      sequencing: "VIN_RAW over the dock: the entry's start (IF-EXT-DC sequencing) and U34's release above 7.139 V on board A; the
+        pack pins: J_PRE1 mates first through R1 10 R; under (B1) the pack's connection pulse is 242.9 A peak, time constant 33.8
+        us, into VBAT's capacitors through the battery FETs' body diodes, the whole pulse in one FET (TJ 123.3 C from the +70 C
+        air on the stated VF bound; MODELED, PROVISIONAL on E11-30's pulse qualification); pin 1 (VSYS_DOCK, DRAFTED): U42's dVdT
+        ramp 3.99 to 8.75 ms at C237 22 nF, 24.3 mA into C31's 10 uF, then board E's U12 up, the fans after it one at a time
+        (FW-E11); pin 12 HOT-R1 as hot_r1 above; SHORE_INHIBIT on pin 8 reaches E's Q8 and U10 (check_contracts.py section 4)"
+      default_state: "VIN_RAW absent until a source is present and the entry starts; pins 1 to 7 and 11 GND as committed; pin 8
+        SHORE_INHIBIT LOW (A R118, E R26: the inputs run); pins 9 and 10 the USB pair idle; pin 12 HOT-R1 held high by A R216 until
+        E's controller drives it (the lost-detector state); the CELL+ pins live whenever a pack is fitted (the pack's FETs on with
+        the battery alone; under (B1) SLUSE65A p.27)"
+      cable_out_states: {SHORE_INHIBIT: "LOW on A (R118): the inputs run", HOT_R1: "HIGH on A (R216): the detector lost, FW-C14's
+          fallback on board B's TMP117", VSYS_DOCK: "DRAFTED: open at E; board E's auxiliary domain unpowered, its controller dark,
+          read as HOT-R1 lost; U42 unloaded", VIN_RAW: "board A unfed; the pack carries VBAT", CELL_PINS: "the pack unreachable
+          from A: the kit dark unless a source feeds VIN_RAW"}
+      firmware: "FW-C14 (HOT-R1's four states read on A), FW-E10 (its driver), FW-C08 (SHORE_INHIBIT), FW-E11 (the fans' start
+        stagger under U42's limit, DRAFTED), FW-A19 to FW-A23 (the charge holds, ChargeCurrent and (B1)'s registers on the charger
+        whose VSYS this pin carries)"
+      bench: "R-184 (E11-38: the dock's VSYS branch through the whole fault envelope), R-179 (E11-35: the fans' supply range and
+        start), R-161 (E11-31: the three modes, the held pack current at most 1 mA), the dock's contact resistances and an 813
+        ground contact's temperature (ground_return above); V-E11"
       not_judged: ["clamp orientation and value against the board (A03, A04)", "contact current measured at temperature (the desk bound is in margin and ground_return)", "the declared currents of the two ends", "E5's layout of the eight VIN_RAW targets and two 12 AWG holes (layer 7, A's and E5's owners)"]
       findings: [R4A-N13, R4A-N12, R8E-N01, EQ-16, W3DE-DOCK-R1, A04-D2, W3-F09, BAT-F06, PWR-F12]
       serves: [NEED-05, NEED-13, NEED-14]
@@ -523,13 +679,19 @@ board_to_board:
       title: "pack P to dock strip E: power lead (12 AWG, 350 mm, XT60) and SMBus lead (JST-XH 1x4 both ends)"
       kind: board_to_board
       ends:
-        - {board: p, refs: [W_P, W_N, J_SMB], src: "v2/ecad/tools/gen_sch_p.py:347-348, 514"}
-        - {board: e, refs: [J_BATT, J_SMB], src: "v2/ecad/tools/gen_sch_e.py:231, 264-265"}
+        - {board: p, refs: [W_P, W_N, J_SMB], part: "W_P and W_N 12 AWG solder lands; J_SMB JST-XH B4B-XH-A 1x4", src: "v2/ecad/tools/gen_sch_p.py:347-348, 514"}
+        - {board: e, refs: [J_BATT, J_SMB], part: "J_BATT Amass XT60 (C98733); J_SMB JST-XH B4B-XH-A(LF)(SN) 1x4 (C144395)", src: "v2/ecad/tools/gen_sch_e.py:231, 264-265"}
       power: {map: "W_P = PACK_P to E J_BATT pin 2 (CELL+); W_N = PACK_N to J_BATT pin 1 (GND)", status: VERIFIED,
               judged_by: "check_contracts.py section 15b (the pack leads)", typ_a: 10.0, peak_a: 18.0,
               connector: "Amass XT60 (C98733): 30 A rated, 60 A instantaneous (v2/vendor/battery/amass-xt60-spec-tme.pdf, VERIFIED)",
               chain: "the pack's own path is F1 25 A blade, F2 Eaton SCF9550-30-05 chemical fuse, Q1 and Q2 (gen_sch_p.py:246,
-                :288); the chain's short-time rating at 18 A and F2 near +60 C are PWR-F12, open"}
+                :288); the chain's short-time rating at 18 A and F2 near +60 C are PWR-F12, open",
+              charge: "at most 3.0 A (FW-A02; REQ-075 3.06 A), under the gauge's OCC 5 A (L4-E9 1d IF-10; LH-04); under (B1)
+                R-b' precharges a pack under VSYS_MIN at ChargeCurrent 0x0080, at most 0.33616 A with R17's 1 percent, through one
+                FET of the pair in LDO mode, no charge under 5.7 V on SRN (L4-E11 15c; MAKER rows, DRAFTED R-157)",
+              service: "10.0 A typical and 18.0 A peak kept; PS-ALLTX's 18 A at an 11.48 V stack and OCD1's 20 A below 10.42 V
+                (pwr_budget.out D-11 line; MODELED); the chain's short-time rating at 18 A and F2 near +60 C PWR-F12, open
+                (FEA-004): PROVISIONAL until it closes"}
       smbus:
         status: "MATES, VERIFIED: one family at both ends since faf8c981 (S-05, adjudication A07)"
         p_end: {part: "JST-XH B4B-XH-A 1x4, 2.50 mm", pins: {1: SMBC, 2: SMBD, 3: PACK_N, 4: PRES_J}, src: "gen_sch_p.py:514",
@@ -553,6 +715,41 @@ board_to_board:
         placement by hand, closed by the pack's hold-down design and check T4 at the build)"
       hot_plug: "the XT60 is the pack's service disconnect (ASSEMBLY.md section 7); unplugged with the kit off, and before any
         stack lift by the D-14 procedure"
+      levels: "the pack 10.0 to 16.884 V as drawn (4S, 2.5 to 4.2 V a cell), 9.688 to 17.375 V under (B1) at VBAT; the SMBus at the
+        gauge's 100 kHz on +3V3_E6 logic (SMBUS_GAUGE); PRES pulled low by P's R14"
+      current: "the power lead 10.0 A typical and 18.0 A peak (power), the charge at most 3.0 A (power.charge); the SMBus lead signal
+        only"
+      harness: "power: 12 AWG, 350 mm, XT60 at E (ASSEMBLY.md section 4); SMBus: a straight XH-to-XH four-way lead, pin for pin
+        (smbus.lead)"
+      mating: "the XT60 keyed; the XH latches at both ends (smbus); both leads mated with the kit off (hot_plug)"
+      judged_by: "check_contracts.py sections 15b (the pack leads' polarity at the XT60) and 15c (J_SMB at both ends, one family, each
+        pin's role, the return and the clamps on W_N)"
+      tbd: ["the chain's short-time rating at 18 A and F2 near +60 C (PWR-F12, FEA-004); effect: the 18 A service's margin on the
+            pack's own path is unstated",
+            "the pack's connection pulse in one body diode under (B1), VF and ISM hot (E11-30); effect: the pair's qualification
+            before board A's final release"]
+      sequencing: "pack connected: the gauge's FETs close onto VBAT; as drawn board E's always-on comes up on CELL_F, under (B1) on
+        VSYS_E over the dock's pin 1 (L4-E11 15a, DRAFTED R-177); the inrush into VBAT's capacitors 242.9 A peak, time constant
+        33.8 us (over ASCD's 55.6 A for 61.5 us against its 183 us delay; under (B1) the whole pulse in one body diode of the pair,
+        TJ 123.3 C from +70 C: MODELED, PROVISIONAL on E11-30); pack disconnected or both FETs open with a source: (B1) the BQ25730
+        regulates VSYS at VSYS_MIN (at least 12.054 V with adequate input, MAKER p.10), as drawn U3 holds VBAT at ChargeVoltage
+        (CONDITIONAL on TI's D1); the charge held (the hold's flag, FW-A19): (B1) Q39 and Q40 off, VSYS piecewise (SRN under
+        12.054 V: at least 12.054 V; SRN over 12.546 V: VSRN + 150 mV within 2 percent; between: at least 11.96 V), the pack feeds
+        no kit load (its monitor 0.1398 mA; the held current at most 1 mA on the bench, E11-31); a dead pack (at or under CUV 2.50
+        V a cell): as drawn U3 charges through the open discharge FET's body diode at its clamp (384 mA typical, no maximum
+        printed), ChargeCurrent 256 mA at POR, (B1) R-b' as above; a cold pack: UTC holds the charge FET, the mat warms the block
+        first (FW-A13), under U-01's (II) the kit's hold moves to -7 C (PROVISIONAL on U-01); the graceful stop at 3.00 V a cell
+        under load, the gauge's CUV at 2.50 V (2.75 V under U-01's (II)) (L4-E9 4a, 4c, 4d)"
+      default_state: "the gauge's FETs on with the battery alone, so the pack feeds VBAT whenever it is fitted; the lead's XT60 is
+        the service disconnect; with the XT60 out board E's always-on domain is dark as drawn (CELL_F) and fed from the source
+        under (B1) (VSYS_E); PRES reads high with the SMBus lead out (FW-E02)"
+      firmware: "FW-A19 (R-a: every charge hold a flag, the state table S1 to S4, the CHRG_INHIBIT bit follows the flag, the
+        CHG_INHIBIT line and SHORE_INHIBIT never a hold), FW-A20 (R-b and R-b': ChargeCurrent's two settings under 14.0 V, XDSG or
+        PRECHARGE), FW-A22 (R-d: PCHG_COMM 1 and the SUV check in the image), FW-A23 ((B1)'s registers: EN_OOA 0 at boot,
+        ChargeCurrent 0 A at POR and after the watchdog), FW-E01 (the gauge's poll inside its 10 s host watchdog), FW-P01 (the
+        image)"
+      bench: "R-161 (E11-31: pack absent, inhibited, the held current, from cold), R-85 (the dead-pack and no-pack start at 9.00 V),
+        E11-30 (the docking pulse on six BUK6Y10-30PX samples at 267.2 A and 37.2 us), V-A11"
       findings: [PWR-F12, FB-BAT]
       serves: [NEED-05, NEED-13]
 
@@ -647,6 +844,18 @@ board_to_board:
     IF-EXT-USB:
       title: "external USB: the sealed Glenair 233-370 data port and the USB-C power outlet"
       kind: external
+      ends:
+        - {board: a, ref: J_USBC_OUT, part: "TBD: a header carrying VBUS, CC1, CC2 and ground with a VBUS rating of at least 4.58 A
+           (L4-E9 R-30), effect: the outlet's contact margin is unstated", src: "v2/ecad/tools/gen_sch_a.py:1100-1103"}
+        - {board: a, ref: J_USBW, part: "JST-PH 1x4: VBUS_WALL, D-, D+, GND", src: "v2/ecad/tools/gen_sch_a.py:1613-1618"}
+        - {case: "the USB-C outlet's receptacle on the connector plate, Bulgin PXP4043/C (5 A per contact, as L4-E4 reads it), and the
+           Glenair 233-370 USB 2.0 type A feed-through (owner ruling D-12)"}
+      harness: "the outlet's lead from J_USBC_OUT to the Bulgin receptacle and J_USBW's lead to the Glenair feed-through, inside the
+        case (ASSEMBLY.md section 4, the wall USB host row); TBD: the outlet lead's construction and gauge at 3 A, effect: its drop
+        and its rating are unstated"
+      mating: "the Bulgin receptacle and the Glenair coupler are the sealed plate parts; the inside PH housing latches; TBD:
+        J_USBC_OUT's housing (R-30), effect: the outlet lead does not mate until the header is named"
+      hot_plug: "yes, by design (USB-C and USB type A)"
       decision: "owner ruling D-12, in A's netlist since 458b2873: the wall data path (USB_WALL, bank 3 hub port 3) leaves on
         A's J_USBW to the Glenair 233-370 feed-through (USB 2.0 type A at front and rear), which is the console and
         key-fill port, behind the eFuse U32 (gen_sch_a.py:1293-1309); the USB-C outlet is power only, its header carrying
@@ -655,6 +864,31 @@ board_to_board:
         and PD_CC2 at the connector (gen_sch_a.py:1114)"
       stale_text: "none: ASSEMBLY.md section 4's wall USB host row names A22 J_USBW since 9a151c78 (it named a B16 J_USBX until then)"
       judged_by: "check_contracts.py section 10 (the wall pair reaches A's J_USBW)"
+      levels: "the USB-C outlet (J_USBC_OUT, power only): PD contracts 5, 9 and 15 V at 3.0 A each from U19's straps (TI SLVSDG8B
+        Tables 2 and 5, Equation 2; MAKER) plus the non-PD 5 V; VBAT 10.0 to 16.884 V into U19 (9.688 to 17.375 V under (B1)); the
+        Glenair data port: VBUS_WALL 5 V from +5V_DEV behind U32 (0.9142 A nominal limit)"
+      current: "the outlet: 3 A on each contract; with PS-TYP's 45 W at the outlet 112.3 W plan, 7.8 A at 14.4 V from VBAT (L4-E9
+        1d IF-12; MODELED). The trip (L4-E4, DRAFTED R-02, apply_gen_sch_a_r138.py, not applied): R138 5 mOhm (HoJLR2512-3W-5mR-1
+        percent, C2903482): U18's trip at 3.793 to 4.576 A (VI(TRIP) 19.2 to 22.6 mV, MAKER, with 1 percent and 50 ppm/K over 45
+        K), above every 3 A contract and under the Bulgin PXP4043/C receptacle's 5 A; as drawn R138 10 mOhm trips at 1.897 to 2.288
+        A, under the 3 A contracts (INFERRED), so the drawn outlet cannot deliver its PDOs until R-02 applies; U19's own average
+        limit 4.212 to 5.810 A (R81 10 mOhm, INFERRED) overlaps the trip window, so L4-E4's bench (a) isolates U18's trip from
+        U19's; J_USBC_OUT: TBD, a header with a part number and a VBUS rating of at least 4.58 A, effect: the outlet's contact
+        margin is unstated (L4-E9 R-30)"
+      protection: "U18's OCP (the trip above) and OVP; OUTLET_OK (A U30 NAND) drops the outlet while the PA keys (FW-A05, FW-A06);
+        the wall port's eFuse U32 and its USBX_FLT (FW-A07); C2 sheds the outlets at 9.0 A for 10 s or a +50 C cell, USB-C first
+        (FW-C09)"
+      sequencing: "PD_EN = PD_SW_EN AND OUTLET_OK: the outlet powers only after the panel writes PD_SW_EN (U28 IO1_0) and only while
+        the PA is not keyed; after a trip the PD contract is renegotiated (L4-E9 4e); the Glenair port's VBUS on USBX_EN when the
+        port is in use (FW-A07)"
+      default_state: "off at power-up: PD_SW_EN held low by A R143 (pull-down) and USBX_EN by R190 4.7 k; cable out: the outlet's CC
+        lines idle, no contract, no VBUS"
+      firmware: "FW-A05 and FW-A06 (the software holds and OUTLET_OK), FW-A07 (the wall port's VBUS and USBX_FLT), FW-C09 (C2's
+        shedding order)"
+      bench: "L4-E4's outlet procedure: (a) U18's trip isolated from U19's limit, (b) the 3 A row demonstrated at VI(TRIP) 19.2 to
+        22.6 mV (L4E4-CURRENT-LIMITS.md); FW-A15 item 8 (the profile changes 15 to 5 V and 9 to 5 V); V-A03"
+      tbd: ["J_USBC_OUT's part number and a VBUS contact rating of at least 4.58 A (R-30); effect: the outlet's contact margin is
+            unstated"]
       findings: []
       serves: [NEED-05, NEED-10, NEED-14]
     # ==================================================================================================================
@@ -682,30 +916,130 @@ board_to_board:
         - {cable: "Glenair D38999/26FC4SN plug with M85049/38S13N strain relief; Lapp OLFLEX ROBUST 210 4 x 1.0 or Alpha Wire 25064, 2 m (ASSEMBLY.md section 4, external cables)"}
       pins: {A: "DC positive", B: "DC return", C: "solar positive", D: "solar return"}
       harness: "inside: 18 AWG, 500 mm, VH crimp at E, tied along the back, west and front walls (ASSEMBLY.md section 4)"
-      levels: "DC: 9 to 36 V in service (a vehicle or a shore supply; board E's LM5069 U6 starts at 9 V (R21 38.3 k) and stops above
-        40 V (R23 6.65 k)); no vehicle surge claim: the entry is recorded as not qualified and is not for 24 V military
-        vehicle buses (owner ruling D-16); solar: a 36-cell 12 V class panel, about 22 V open circuit, 100 W (J_SOLAR's value
-        text)"
+      levels: "DC, as drawn: 9 to 36 V in service (a vehicle or a shore supply; board E's LM5069 U6 starts at 9 V (R21 38.3 k) and
+        stops above 40 V (R23 6.65 k)); as drawn the LM5069 cannot start from a 9.00 V plug (L4-E11 3a, finding U4-F2). DC, the
+        selected entry (DRAFTED, L4-E11 3c, R-123, apply_gen_sch_e_entry.py, not applied): REQ-015's 9 V taken at the kit's plug
+        (L4-E11 3h, SESSION); per source at VBAT at the plug, the losses hot: 9 V 29.09 to 42.52 W, 12 V 32.22 to 47.72 W, 24 V
+        69.97 to 90.81 W, 36 V 84.55 to 99.64 W (INFERRED, U3 0.9733); so at a 9.00 V plug the kit runs PS-IDLE-SPEC (42.8 W) with
+        the pack supplementing and charges only while it draws under 29.09 W; with no usable pack the shedding sequence of L4-E11
+        3g applies (P1 at most 20.51 W, the mat on measured headroom; FW-A21); REQ-015 at 9.00 V at the plug a CONDITIONAL
+        CANDIDATE (PROVISIONAL: E11-06 measures P1, the front end's efficiency at least 0.88021 and the pin inside its band, E11-09
+        draws the knee, E11-23 the warm-up time); no vehicle surge claim: the entry is recorded as not qualified and is not for
+        24 V military vehicle buses (owner ruling D-16); the clamps' 64.5 V at their rated pulse the recorded residual A-N1.
+        Solar: REQ-016's window, at most 25 V open circuit at -20 C; as drawn J_SOLAR's value text names a 36-cell 12 V class
+        panel, about 22 V open circuit, 100 W; the panel is accepted downstream by PANEL-ACC (L4-E13: one identified SunPower
+        SPR-E-Flex-100 measured, Vm20 + U_V at most 25.000 V at -20 C and 1000 W/m2, Voc25 20.315 to 22.156 V for its curve shape;
+        no unit accepted yet: PROVISIONAL until PANEL-ACC's measurement, R-35); the panel held at 17.593 V nominal (16.970 to
+        18.221 V with EA3 typical, 16.420 to 18.813 V conditioned; L4-E7R, MODELED); the regulation at RIMON_IN 31.6k, 2.5485 A
+        nominal and 2.9318 A at its highest on the hold's corners (44.84 W and 53.42 W in); the backstop on SWEN trips at 3.0468
+        to 3.7408 A at 25 V; the stage's input at the 25 V corner at most 93.5521 W, CONDITIONAL on G_CM and U18's VIN+ bias
+        (break-evens 168.8 percent and 22.0 mA; PROVISIONAL until the makers' answers, R-101), the regulation's own corner
+        73.3436 W (L4-E7R, accepted)"
       current:
-        dc: "the LM5069 U6 limits at 4.85 to 6.15 A (R19 10 mOhm, VCL 48.5 to 61.5 mV, as read for HW-FW-CONTRACT.md FW-A16);
-          behind the 10 A blade F1 at DC_IN since round 8 (E netlist 53a98a71)"
-        solar: "the panel's short-circuit current, about 6 A for 100 W at 18 V (INFERRED); behind the 10 A blade F2 at PV_IN"
-        contacts: "MIL-DTL-38999 size 16 contacts (M39029/56-352). TBD: their rating read into this record from the held
-          Glenair and Amphenol sheets (v2/vendor/d38999/), effect: none at 6.15 A unless the sheets rate size 16 below it"
-        vh: "JST-VH, 10 A per the generator's value text. TBD: the VH catalogue (not held), effect: the lead's contact margin is unproven"
-      sequencing: "hot-pluggable by design: the LM5069 controls inrush and the tracker's LT8705A starts on its own UVLO; with
-        SHORE_INHIBIT high (panel GPIO20, FW-C08) board E's Q8 pulls HS_UVLO low and holds the hot-swap off"
-      default_state: "inputs run (SHORE_INHIBIT held low by A R118 and E R26, 100 k each)"
-      protection: "board E: the 10 A blades F1 and F2, SMCJ40CA D10 at the entry and SMCJ40A D1 after the ideal diode Q1, the
-        LM5069's OV at 40 V (faf8c981); the solar input through the LT8705A tracker (IF-AE-DOCK carries the ORed bus up to A)"
+        dc: "as drawn: the LM5069 U6 limits at 4.85 to 6.15 A (R19 10 mOhm, VCL 48.5 to 61.5 mV, as read for HW-FW-CONTRACT.md
+          FW-A16); behind the 10 A blade F1 at DC_IN since round 8 (E netlist 53a98a71). The selected entry (DRAFTED, R-123): in
+          service at most 5.983 A from a 9.00 V plug (VIN_RAW 8.148 V), 6.4 percent under the breaker's lowest 6.364 A while the
+          front end's efficiency there is at least 0.88021 (L4-E11 E11-06; INFERRED, PROVISIONAL on E11-06's measurement); the
+          breaker 6.364 / 6.8 / 7.136 A after 0.247 / 0.37 / 0.49 ms, the short circuit 10.36 / 12.04 / 13.87 A on a filtered
+          sense, retry 0.5 s (MAKER, SLUSEE5E); a stiff source's fault at most 900 A (the interconnect's specified floor; 569.8 A
+          with the drawn cable; INFERRED); the start 0.382 to 1.219 A for at most 2.5 ms (MODELED)"
+        solar: "in operation at most 3.987 A (PANEL-ACC A-3(a), INFERRED), the conservative bound over L4-E7R's regulation
+          (RIMON_IN 31.6k, 2.5485 A nominal, at most 2.9337 A at 25 V) and its backstop, which turns the stage off at its trip (at
+          most 3.7408 A at 25 V; MODELED); in a sustained input fault the panel's Isc at +70 C with U_I and SunPower's 1.25,
+          8.1817 A (A-3(b): the maker's factor on the measured unit), under F2's 10 A and J_SOLAR's VH 10 A with the lead at AWG 16
+          on the standard header (L4-E9 R-29); behind the 10 A blade F2 at PV_IN; the drawn value text's 'about 6 A for 100 W at
+          18 V' is superseded by these"
+        contacts: "as drawn MIL-DTL-38999 size 16 contacts (M39029/56-352); under D-06 the DC pair moves to size 12 contacts
+          (insert 17-6, or 13-26 with the solar pair on rated contacts elsewhere; R-129, MISSING DRAFT), the insert's installed
+          continuous rating of 20 A at the case's air to be filed (PROVISIONAL: R-129's filing); TBD until then: the fitted
+          contacts' rating read into this record from the held Glenair and Amphenol sheets (v2/vendor/d38999/), effect: the
+          installed 20 A of D-06 is unproven, and none at the drawn 6.15 A unless the sheets rate size 16 below it"
+        vh: "JST-VH: the held catalogue (v2/vendor/connectors/jst-vh-catalogue.pdf, page 1) prints 10 A per contact with AWG 16
+          on the standard header and 7 A for AWG 18 with the shrouded header only (MAKER); J_SOLAR's margin at A-3(b)'s 8.1817 A
+          holds with the lead at AWG 16 (R-29: Layer 7 names the gauge); J_DCIN leaves VH for a 20 A class under D-06 (R-131,
+          MISSING DRAFT): the selected interconnect carries at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s
+          and F1's clearing I2t at 900 A (L4-E11 6; PROVISIONAL on the makers' installed and short-time ratings, R-113, R-115,
+          R-129 to R-132)"
+      sequencing: "hot-pluggable by design. As drawn: the LM5069 controls inrush and the tracker's LT8705A starts on its own UVLO.
+        The selected entry (DRAFTED, R-123; L4-E9 4a): plug in: the entry's UVLO on at 7.87 / 8.14 / 8.44 V of DC_P (MAKER), then
+        its slewed start, 0.382 to 1.219 A for at most 2.5 ms (MODELED), U3 in HIZ under the knee (certain below VIN_RAW 7.378 V,
+        R-03, a specification), the H3 line from the first cycle, U34 releases the front end above 7.139 V (R-124, DRAFTED); plug
+        out: the LM74700-Q1 U3 with Q1 blocks, the pack carries VBAT with no break (under (B1) through the battery FETs Q39 and
+        Q40, DRAFTED R-157), U3 on board A resets IIN_HOST to 3.25 A once and firmware rewrites 4.70 A (FW-A16), U34's guard stops
+        the front end at 6.754 to 7.139 V, the bank bleeds in 0.455 to 1.494 s (MODELED); panel at dawn: U5's own UVLO and soft
+        start, SWEN off while TRK_LDO33 is under 2.662 V (MAKER), the hold 17.593 V, then the regulation; panel at dusk: the panel
+        falls under the hold, U4 with Q2 blocks VIN_RAW from TRK_OUT, with no other source VIN_RAW falls into the knee's HIZ; both
+        sources together are OR-connected onto VIN_RAW into ONE charger input limit (U3's IIN_HOST), the tracker's ceiling above
+        24 V so the panel carries the bus first (at most 4.194 A at a 24 V vehicle, 65.9 percent of the breaker's lowest; L4-E9
+        4b, MODELED). SHORE_INHIBIT high (panel GPIO20, FW-C08) holds the entry off (board E's Q8 pulls the entry's UVLO pin low:
+        as drawn the LM5069's HS_UVLO, on the selected entry the TPS48110-Q1's EN/UVLO on the same net, DRAFTED R-123): asserted
+        only for the operator's 'inputs off' and the water-on-floor isolation, never as a charge hold, with a warning first while
+        the pack cannot discharge (L4-E11 7a; FW-C08 restated). DCIN_PGD (E U6 pin 8 to E U10 pin 15, R25 10 k to +3V3_E6) is the
+        entry's fault flag on the selected entry (U6's FLT_I and FLT_T, open drain, low on an overcurrent, a short circuit or an
+        overtemperature; FW-E13, DRAFTED), no longer a power-good line"
+      default_state: "inputs run (SHORE_INHIBIT held low by A R118 and E R26, 100 k each): its reset, boot and cable-out state is
+        LOW on both boards, so a dark or absent panel never holds the inputs off; the charger before any host write: as drawn
+        ChargeCurrent 256 mA at POR (TI's E2E answer) and after the 175 s watchdog, under (B1) 0 A until firmware writes it
+        (SLUSE65A, MAKER; DRAFTED R-157); the solar stage: SWEN off by default below 2.662 V on TRK_LDO33 (L4-E7R, DRAFTED R-19 to
+        R-21); DCIN_PGD pulled high by E R25 10 k to +3V3_E6 (no fault) with the lead out or the entry unpowered"
+      protection: "as drawn, board E: the 10 A blades F1 and F2, SMCJ40CA D10 at the entry and SMCJ40A D1 after the ideal diode Q1,
+        the LM5069's OV at 40 V (faf8c981); the solar input through the LT8705A tracker (IF-AE-DOCK carries the ORed bus up to A).
+        The selected entry (DRAFTED, L4-E11 3c, R-123; L4-E9 part A, R-17, R-18): a TPS48110-Q1 breaker (U6) with a CSD19536KTT
+        (Q7), R19 4.5 mOhm and L2 SRF1260-1R0Y: UVLO on at 7.87 / 8.14 / 8.44 V and off at 7.46 / 7.66 / 7.95 V of DC_P; OV off
+        above 39.6 / 40.36 / 41.22 V, clear of CS101's 38.83 V at 36 V and under D10's 44.4 V; overcurrent 6.364 / 6.8 / 7.136 A
+        after 0.247 / 0.37 / 0.49 ms and a short circuit at 10.36 / 12.04 / 13.87 A on a filtered sense, retry 0.5 s (MAKER rows,
+        SLUSEE5E); every start inside Q7's derated chart (MODELED); a hard short in service bounded only with the loop's inductance
+        at least 2.08 uH (PROVISIONAL: OPEN, R-134); Q1 the CSD19532Q5B (100 V: a reversed 36 V input stands off up to 66.15 V
+        across it while the tracker back-feeds DC_P through Q7's body diode; INFERRED; DRAFTED R-17); E-F1's 1 uF input capacitor
+        at U3's ANODE; F1 the Littelfuse 0997010.WXN (MINI, 58 V DC, 1000 A at 58 V DC; MAKER) in a holder rated at least 20 A
+        (R-132, MISSING DRAFT), against 43.18 V and at most 900 A (the interconnect's specified floor); the interconnect at least
+        20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s and F1's clearing I2t at 900 A (D-06 resolved in design,
+        L4-E11 6; PROVISIONAL on R-113, R-115, R-129 to R-132). Solar (L4-E7R and L4-E7's remedies; DRAFTED R-12, R-19 to R-21,
+        R-98, R-173, not applied): the 50 V bulk on PV_P ahead of the sense bank; D4 the SMCJ30A (from the SMCJ28A) and C71 to C74
+        on TRK_VS; the INB filter, five 100 nF C0G across R66 8.45k (3.960 to 4.496 ms); SWEN off by default below 2.662 V on
+        TRK_LDO33; a response inside 1.087 ms after the filter's 0.4205 J held charge, for 10 J in any 0.1 s (the 0.1 s
+        interpretation is layer 8's); under CS101 the filtered ripple at most 0.0585 A against a 0.1130 A margin, CONDITIONAL on
+        the loop's typical rows (break-even 2.51 times), the bulk's temperature and the bank's pulse capability, M2 verifies it
+        (R-122; PROVISIONAL); the solar guard: U21 TPS48110-Q1 with Q12 CSD19532Q5B as an over-voltage cut-off rising at 28.55 to
+        31.06 V and falling at 27.07 V or more (aged), Q13 CSD19532Q5B in the return against a reversed panel (CONDITIONAL on its
+        leakage above +25 C, printed at 25 C only), D11 SMCJ40CA at the port, the port bank C131, C132, C135, C136 (Samsung
+        CL32B225KCJSNNE), C133 and C134 (CL32B106KBJNNNE), R97 28.0k, C126 330 pF; a stiff 36 V source stepping on with the
+        guard already on: every rating with its margin only from a source loop of at least 3.30 uH (U5 0.2396 V of +-0.240 V, a
+        DESIGN TARGET), NOT under it (at 1.00 uH U5 0.5287 V): PROVISIONAL, NOT CLOSED (B6-ENG-1: R-180, R-186 or R-187; L4-E7's
+        round 3 on B6 is running, and its result re-reads this sentence); the band between 25 V and the cut-off a residual for
+        layer 8 (R-175)"
       grounding: "GND_V is board E's vehicle return; GND-002's chassis bond is not drawn (ARCHITECTURE.md 6.5)"
       mating: "the plug locks by its bayonet, key N, with the receptacle's gasket on the plate (ASSEMBLY.md section 4); the
         inside VH housings latch"
       hot_plug: "yes, by design (vehicle use); the solar pair likewise"
       judged_by: "none (no tool names J_DCIN, J_SOLAR or the receptacle)"
-      tbd: ["the receptacle MPN (CASE-MARGINS.md section 6); effect: plate cut-out and seal not final",
-            "the JST-VH rating document; effect: the inside lead's contact margin unproven",
-            "the size 16 contact rating read into this record; effect: none at 6.15 A unless it is below it"]
+      tbd: ["the receptacle MPN (CASE-MARGINS.md section 6), and under D-06 the DC pair on size 12 contacts (insert 17-6, or 13-26;
+            R-129, MISSING DRAFT); effect: plate cut-out and seal not final, and the pins map A to D above is the drawn one",
+            "the interconnect's makers' installed and short-time ratings and F1's total clearing I2t at 900 A and 58 V DC (L4-E9
+            R-113, R-115, R-129 to R-132); the loop read four-wire at 58.51 to 64.21 mOhm on every assembly (R-130); effect: D-06's
+            resolution rests on them",
+            "A-3(c), a COMPONENT_LIMITATION: in a double contingency (an input fault present and F2 holding) J_SOLAR and PV_IN carry
+            13.82 A at the design level 2111.4 W/m2, over JST VH's printed 10 A with no short-time overload; effect: their rating or
+            a bench row is owed before the panel is accepted (L4-E9 R-148)",
+            "the size 16 contact rating as drawn, read into this record; effect: none at 6.15 A unless the sheets rate size 16 below
+            it; superseded by R-129's size 12 contacts once drafted",
+            "J_SOLAR pin 2 becomes PV_RTN through Q13 under the solar guard (R-173, drafted, not applied); effect: the pins map and
+            the end's part text read the drawn board until then"]
+      firmware: "HW-FW-CONTRACT.md FW-C08 (SHORE_INHIBIT: boot low, asserted only for 'inputs off' and the water-on-floor isolation,
+        a warning first in S2 and S4), FW-E03 (its read-back), FW-E13 (DCIN_PGD as the entry's fault flag, DRAFTED), FW-A16 (IIN_HOST
+        4.70 A constant on a board with the H3 network, the 9 V figure no longer a VIN_RAW rule), FW-A18 (OWED: the H3 line on
+        ILIM_HIZ), FW-A21 (R-c: the shedding sequence at a 9.00 V plug with no usable pack, the mat on measured headroom, the
+        VSYS_UVP recovery); the solar backstop acts on SWEN in hardware and reports to no controller (L4-E7R: no flag line)"
+      bench: "HW-FW-CONTRACT.md V-E14 (REQ-015: the reversed supply, the OV trip, the start from 9.00 V through the interconnect at
+        its resistance ceiling; LH-08), V-E15 (REQ-016: the backstop's SWEN fall inside 3.0468 to 3.7408 A at 25 V; LH-09), V-E16
+        (the solar guard's six rows, R-176; row 3 a pass only for a source loop at or over 3.30 uH until B6-ENG-1 is decided:
+        PROVISIONAL), V-A08 (the source steps: the breaker never trips, VIN_RAW never under 7.24 V; R-135), R-85 (the source-only
+        start at 9.00 V), M2 CS101 on the solar lead (R-122)"
+      l4_defects: "L4-E9's defects at this interface (L4-POWER-ARCHITECTURE.md 8a): D-06 resolved in design (the interconnect, L4-E11
+        6, CONDITIONAL on the makers' ratings); D-07 and D-09 superseded (the LM5069 replaced, R-123); D-10 (a stiff 36 V source on
+        the solar port) and D-11 (a reversed panel) addressed in drafts by the guard (R-173), D-10's guard-on case NOT CLOSED
+        (B6-ENG-1), D-11 CONDITIONAL on Q13's hot leakage; D-12 (CS116 and CS115 on the panel lead) resolved in the drafted entry,
+        CS115 CONDITIONAL with the block on (R-174); the band between 25 V and the cut-off the residual R-175"
       findings: [R8E-N01]
       serves: [NEED-05]
 
@@ -1011,8 +1345,15 @@ board_to_board:
         sensor controller); tachometer: open collector into GPIO with 10 k to +3V3_E6"
       current: "TBD: the fans' draw, with the part; effect: Q9 and Q10 (2N7002) are rated a few hundred milliamps, so a fan
         above that needs a larger switch (INFERRED), and the pack's always-on budget (BAT-F06)"
-      power: "the pack node is 12 to 16.8 V and the fans are declared 12 V class: rating against 16.8 V TBD (HF-F05)"
-      sequencing: "the sensor controller switches the fans after it boots, on its own thermal policy (FW-E rows)"
+      power: "as drawn the pack node CELL_F, 12 to 16.884 V; under (B1) VSYS_E, 9.539 to 17.375 V (L4-E11 15a, 16e; DRAFTED R-177):
+        the fans are declared 12 V class, their maximum supply voltage against 17.375 V and their least operating voltage against
+        9.539 V TBD (HF-F05, E11-35, R-179), effect: the fans' selection and board E's final release"
+      sequencing: "the sensor controller switches the fans after it boots, on its own thermal policy (FW-E07, FW-E10); under (B1)
+        (DRAFTED R-177, R-181) the fans sit on VSYS_E behind U42's 1.471 to 1.802 A limit: they start one at a time, each with a
+        PWM ramp, never both within 1 s and never while U12 starts (FW-E11, E11-39, R-188); one fan's start at most 0.5713 A beside
+        U12 and the other fan running, both together at most 0.3356 A each, under U42's least limit 1.471 A; VSYS_E at the least
+        limit at least 9.494 V at the supplement floor, so the fans must start at or under it (L4-E11 17a; INFERRED; PROVISIONAL
+        until a fan is named, E11-35, R-179)"
       default_state: "off: no gate pull-down is drawn on Q9 or Q10, so the gate is held low at reset only by the RP2040's pad
         pull-down, which resets enabled (PADS_BANK0 GPIOn PDE reset 0x1, RP2040 datasheet section 2.19, Table 341; VERIFIED);
         a discrete pull-down is recommended to board E's author (HW-FW-CONTRACT.md section 9)"
@@ -1020,7 +1361,8 @@ board_to_board:
       hot_plug: "no"
       judged_by: "none"
       tbd: ["the fan part; effect: current, switch rating and connector",
-            "the fan rating at 16.8 V (HF-F05); effect: the fans' life on the pack node",
+            "the fan rating at 16.8 V as drawn and at 17.375 V under (B1), and its start at or under 0.5713 A and 9.539 V behind
+            U42 (HF-F05, E11-35, R-179); effect: the fans' life on the pack node and their start behind U42",
             "the housing (HF-F04); effect: the lead does not mate as written"]
       findings: [HF-F04, HF-F05]
       serves: [NEED-06, NEED-07]
@@ -1035,7 +1377,10 @@ board_to_board:
       levels: "12.0 V regulated by U33 (TPS62933) from the pack node behind U22"
       current: "0.63 A at 12.0 V against the XH's 3 A (JST XH catalogue, AWG 22, v2/vendor/connectors/jst-xh-catalogue.pdf) and U22's 1.0 A limit"
       power: "7.5 W, 0.63 A at 12.0 V"
-      sequencing: "HEAT_EN written by the panel; off during every PA key-down (K4, FW-A13)"
+      sequencing: "HEAT_EN written by the panel; off during every PA key-down (K4, FW-A13); with no usable pack at a 9.00 V plug the
+        mat runs on measured headroom (R-c, FW-A21): on only while the source's measured headroom over the load is at least its
+        8.58 W, else cycled, so control is kept whenever P1 alone (at most 20.51 W) is carried (L4-E11 3g; MODELED, PROVISIONAL on
+        E11-06)"
       default_state: "off (HEAT_EN held low by R112)"
       mating: "XH latch at A; the mat's leads crimped into the XH housing"
       hot_plug: "no"
