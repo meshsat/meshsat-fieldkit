@@ -58,4 +58,4 @@ measurement or bound (records/l9stk); no price at any real outline; B conditiona
 - `STACKUP-DECISIONS.md` and `layout-constraints/A.md`, `B.md`, `E.md`, `P.md` section 1 still read UNDECIDED where this
   record decides (the integrator, after the apply).
 - The quotation request's price lines per board (the supplier handover's author).
-- STK-003 and IMP-003, drafted by hc9, are still not in the registry (the registry writer).
+- STK-003 and IMP-003, named in `STACKUP-DECISIONS.md` section 7, are not in `pcb_rules.yaml` (the registry writer).
