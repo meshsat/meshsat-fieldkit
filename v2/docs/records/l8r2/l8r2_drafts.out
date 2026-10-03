@@ -176,6 +176,7 @@ eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
     as drawn (J_FAN1 0.1 A)                              slot 1: 4.751 A against 5.000 A: accepted
     round 2 (the step-up at full speed, 0.47 A)          slot 1: 5.121 A against 5.000 A: REFUSED (intent: rail +5V_S1 declares a 5.00 A peak and its loads sum to 5.12 A)
     round 3 (the step-up at the 70 % maximum, 0.33 A)    slot 1: 4.981 A against 5.000 A: accepted
+    (b), the cooler off the slot rail (no fan row)       slot 1: 4.651 A against 5.000 A: accepted
   the options at HIGH on each slot's converter, every state (A on its output, the margin to its limit in brackets); record l9pwr's rails:
     (a) as drafted at full speed; (a) with the 70 % Fan_PWM maximum, the linear bound (1.4 W of fan) at the step-up's 0.85, at its low 0.80, and by the fan law (0.343 of full power);
     (b) the cooler off the slot rail (one feed from board A or one per slot alike); released: Fan_PWM released and the card socket's supply off (PCIE_PWR_EN low), the fan at full speed
@@ -221,6 +222,7 @@ eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
     PS-RED2      LM5176 U7 5.397 A DRAFTED against 7.096 A, margin +1.699 A (+23.9 %); DRAWN 5.370 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
     PS-SURV      LM5176 U7 4.759 A DRAFTED against 7.096 A, margin +2.336 A (+32.9 %); DRAWN 4.733 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
     PS-SURV-R    LM5176 U7 5.397 A DRAFTED against 7.096 A, margin +1.699 A (+23.9 %); DRAWN 5.370 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    U901's RON (at most 0.1434 Ohm, record l9pwr's D5) at the panel's 0.980 A at HIGH: 0.138 W on +5V_DEV, 0.027 A at 5.1 V
   the linear bound fails only if more than 54.3 % of the fan's full-speed input does not fall with its speed (the fan law with a fixed share f: f + (1 - f) x 0.343 > 0.70)
   if the bound fails open (Fan_PWM uncapped with the card on): 5.010 A on slots 1 and 3, the AP64500's inductor peak 6.075 A (ripple 2.129 A at VSYS's 17.375 V, L 20 % low, fsw 10 % low) under its least HS peak current limit 6.8 A by 0.725 A: no limit acts
   the coolers at VBAT: 7.5638 W at full speed (R9); at the 70 % maximum at most 5.29 W (the linear bound, the slot converters' efficiency taken flat over the change): 2.27 W less at HIGH, a figure for L9P-F01's owner
@@ -373,7 +375,7 @@ eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
   the corrected texts name those widths: YES
   the apply script: on the tree's register (exit 3) the register v2/ecad/tools/pcb_decisions.yaml carries 0 decisions marked (L9STK E), not one: l9stk's board E decision is not integrated, and this correction follows it; refusing
     on a copy of the register carrying a ruled "(L9STK E)" decision: --check exit 0 (CHECK OK, 2 edit(s), nothing written); --write exit 0 (WRITTEN, 2 edit(s)); again exit 0 (ALREADY CORRECTED, nothing to write (DOCK_ENTRY, SHORE_INPUT))
-  energy_chain.check on the tree's chain and on the corrected copy: fails 0 / 0, stage_fails 0 / 0, derate_fails 0 / 0; IDENTICAL
+  energy_chain.check on the tree's chain and on the corrected copy (98 and 98 checks): fails 0 / 0, stage_fails 0 / 0, derate_fails 0 / 0; IDENTICAL
   lines naming 2 oz after the correction: 50 (PACK_CELLS, board P); 51 (PACK_CELLS, board P); 71 (PACK_FETS, board P); 128 (DOCK_BLOCK, board E5 to A)
   what the copper must carry for the chain's coordination (the blade at or below its conductor's rating): DOCK_ENTRY's 25 A needs 12.26 mm on each of two 1 oz faces; record l9stk's band of 6.72 mm on each of two carries 18.00 A: FINDING
   board E's input band as gen_pcb_e3.py lays it (DC_HS, one B.Cu band: run 5.5 mm, leg 4.5 mm): 8.07 and 7.13 A at 1 oz (11.78 and 10.56 at 2 oz), under SHORE_INPUT's F1 10 A at 1 oz: FINDING

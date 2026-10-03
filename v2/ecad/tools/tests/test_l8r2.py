@@ -300,7 +300,7 @@ def t_item1_round3_the_bound_holds_every_state_and_the_round2_draft_is_refused()
     assert allt["margin"] < 0 and abs(allt["drafted"] - allt["drawn"] - allt["u901"]) < 0.002, allt
     assert o["fixed"] > 0.5 and o["ipk"] < V["ap_ipk"][0], (o["fixed"], o["ipk"])
     rows = m.r3_slot_loads()
-    assert [m.intent_says(pk, ld).split(" ")[0] for _t, ld, pk in rows] == ["accepted", "REFUSED", "accepted"], rows
+    assert [m.intent_says(pk, ld).split(" ")[0] for _t, ld, pk in rows] == ["accepted", "REFUSED", "accepted", "accepted"], rows
     assert sum(rows[2][1].values()) <= rows[2][2], "round 3's slot loads over the declared peak"
     assert abs(m.item1()["a_vbat"] - P["r9"]["this"]) < 1e-9 and "eta_slot" not in m.F, "the flat 0.90 is still carried"
 
