@@ -1576,13 +1576,10 @@ def t_the_prototype_qualification_route():
     buy, total, unp, send = m.cons_qual_lists(F)
     tot = {}
     for k, pr in m.PRICES.items():
-        if pr.get("commit"):
-            # a price read by another record and cited at its commit (Layer 7's fans): the figure is checked in that commit's file
-            r_ = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
-            assert r_.returncode == 0, (k, pr["src"], pr["commit"])
-            d = json.loads(r_.stdout.decode("utf-8"))
-        else:
-            d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        assert "commit" not in pr, "%s: a price read with git outside this tree" % k
+        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        if pr.get("pin"):
+            assert m.PINS[pr["pin"]][0] == pr["src"] and _pin_held(m, pr["pin"]), k
         kind, key = pr["key"]
         if kind == "price_usd":
             assert abs(float(d["price_usd"][key]) - pr["unit"]) < 1e-9, k
@@ -1717,6 +1714,21 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert "26a L4-F02" in sec and "26b L4-F03" in sec and "26d L4-F01" in sec
 
 
+def t_every_commit_the_record_reads_is_in_this_branchs_history():
+    """The coordinator's rule (set 27, after the box could not reproduce the record): a record reads inputs only from its own tree or
+    from commits in its own history. Every selected commit the script reads with git is an ancestor of HEAD; the script's only git
+    reads of a file go through FROM_COMMIT or L4E8_COMMIT; no price source names a commit."""
+    m = _M()
+    refs = set(m.FROM_COMMIT.values()) | {m.L4E8_COMMIT}
+    for ref in sorted(refs):
+        assert subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", ref, "HEAD"], capture_output=True).returncode == 0, "%s is not in this branch's history" % ref
+    src = open(SCRIPT, encoding="utf-8").read()
+    shows = re.findall(r'"git", "show", "%s:%s" % \((\w+)', src)
+    assert shows and set(shows) <= {"FROM_COMMIT", "L4E8_COMMIT"}, shows
+    assert not any("commit" in pr for pr in m.PRICES.values())
+    assert m.PINS["l7fans"][0].startswith("v2/docs/records/l4e9/inputs/") and _pin_held(m, "l7fans")
+
+
 def t_the_fan_feed_after_layer7s_d18():
     """L4-E11's fan-feed round (its section 18, after Layer 7's D-18), carried as properties: L4-E11's files are pinned at a labelled
     commit; the mixers' rail is a regulated output inside the fans' printed window, enabled under VSYS_E's floor and disabled over
@@ -1765,18 +1777,19 @@ def t_the_fan_feed_after_layer7s_d18():
     by = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
     e35 = by["E11-35"]
     assert rail["mixer"] in e35[4] and rail["l7c"] in e35[4] and "73.69" in e35[8] and "NOT READ" in e35[8] and "nothing to buy until D-18" not in e35[8]
+    import json
     for k, mpn in (("fan60", rail["mixer"]), ("fan40", rail["cooler"])):
         pr = m.PRICES[k]
-        assert pr["commit"] == rail["l7c"] and mpn in pr["what"]
-        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
-        assert r.returncode == 0
-        import json
-        d = json.loads(r.stdout.decode("utf-8"))
+        assert "commit" not in pr and pr["pin"] == "l7fans" and pr["src"] == m.PINS["l7fans"][0] and mpn in pr["what"]
+        assert pr["src"].startswith("v2/docs/records/l4e9/inputs/") and _pin_held(m, "l7fans") and "l7fans" not in m.FROM_COMMIT
+        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
         _kind, (kmpn, dist, qty) = pr["key"]
         br = [b for row in d["parts"][kmpn] if row["distributor"] == dist for b in row["price_breaks"] if b[0] == qty]
         assert len(br) == 1 and br[0][1] == pr["cur"] and abs(br[0][2] - pr["unit"]) < 1e-9
     buy, total, unp, send = m.cons_qual_lists(F)
     assert any(rail["mixer"] in b and rail["l7c"] in b for b in buy) and any(rail["cooler"] in b and rail["l7c"] in b for b in buy)
+    assert rail["l7c"] in m.L7_PRICE_PROVENANCE and m.PINS["l7fans"][1][:16] in m.L7_PRICE_PROVENANCE and "set 28" in m.L7_PRICE_PROVENANCE
+    assert m.L7_PRICE_PROVENANCE in "\n".join(m.cons_qual_block(F)) and m.L7_PRICE_PROVENANCE in _C["text"]
     assert any("LTC3115EFE-1" in u and "NOT READ" in u for u in unp) and "USD" in total and "EUR" in total
     # the handoff's omitted dependencies and the page
     assert "fan-feed" not in m.HANDOFF_OMITTED and "l7pwr" in m.HANDOFF_OMITTED and rail["l7c"] in m.HANDOFF_OMITTED

@@ -88,6 +88,9 @@ PINS = {
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "8d5e8191e5938a7682349bcca2fc366642ee8704637ed98e2879312ace4215e3"),
+    # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
+    # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
+    "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0eb554285580b8f20f05440f2810300cf5c65e9b8b2ea93830474f0d83df2283"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
@@ -6257,8 +6260,8 @@ def cons_review_lines(F):
       % (cp["pulse"][4], cp["pulse"][3], fmt(cp["pulse"][0]), fmt(cp["pulse"][1]), fmt(cp["pulse"][2])))
     p("     writes the withdrawn claims (tested). 17d's specimens enter the qualification route (section 27) as written")
     fan = cp["rail"]
-    p("26f THE FANS' FEED AFTER LAYER 7'S D-18 (L4-E11's section 18 at af4672f4; Layer 7's %s at %s, cited, not in this base): the mixers %s and the"
-      % (fan["l7"], fan["l7c"], fan["mixer"]))
+    p("26f THE FANS' FEED AFTER LAYER 7'S D-18 (L4-E11's section 18 at af4672f4; Layer 7's %s at %s, cited, not in this base; its price file copied into inputs/, sha256 %s): the mixers %s and the"
+      % (fan["l7"], fan["l7c"], PINS["l7fans"][1][:16], fan["mixer"]))
     p("     coolers %s, 12 V, %s to %s V printed, %s A each, IP68, -20 to +70 C; 15a's fans directly on VSYS_E withdrawn; the mixers' regulated %s V rail on board E,"
       % (fan["cooler"], fmt(fan["win"][0]), fmt(fan["win"][1]), fmt(fan["i"]), fmt(fan["vout"][0])))
     p("     U18 LTC3115EFE-1 as ADI's TA04 with L4 XAL6060-103ME (input 2.7 to 40 V over VSYS_E's %s to %s V; output %s to %s V), RUN enabled at %s V and disabled at"
@@ -6294,10 +6297,10 @@ PRICES = {
              "cur": "NZD", "unit": 238.72, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-02.json", "key": ("verbatim", "$ 238.72"),
              "note": "SIMPOWER's listing archived 16 January 2025, a price indicator and not a quote"},
     "fan60": {"what": "the mixers 9WL0612P4H001 (board E's J_FAN1 and J_FAN2; D-18 settled by Layer 7)", "maker": "Sanyo Denki", "qty": 2, "cur": "USD", "unit": 73.69,
-              "src": "v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json", "commit": "2087060b", "key": ("findchips", ("9WL0612P4H001", "Sager", 1)),
+              "src": "v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "pin": "l7fans", "key": ("findchips", ("9WL0612P4H001", "Sager", 1)),
               "note": "Sager at 1, stock 0, FindChips 3 October 2026 00:27 UTC, no EU row; Layer 7's reading, cited at its commit"},
     "fan40": {"what": "the coolers 9WPA0412P6G001 (board B's J_FAN1 to J_FAN3; their 12 V feed is E11-40's finding)", "maker": "Sanyo Denki", "qty": 3, "cur": "EUR", "unit": 58.83,
-              "src": "v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json", "commit": "2087060b", "key": ("findchips", ("9WPA0412P6G001", "RS", 1)),
+              "src": "v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "pin": "l7fans", "key": ("findchips", ("9WPA0412P6G001", "RS", 1)),
               "note": "RS 101593 at 1, stock 51 (Farnell 4218284 EUR 76.83, stock 0), FindChips 3 October 2026 00:27 UTC; Layer 7's reading, cited at its commit"},
     "hl": {"what": "HL18650V, a lot soak of ten (route (II) only)", "maker": "Yichun Topwell Power (the listing is a marketplace seller's, not Topwell's)",
            "qty": 10, "cur": "USD", "unit": 3.50, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-01.json", "key": ("verbatim", "US$3.50"),
@@ -6324,6 +6327,9 @@ SENDS = [
     ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "Sensirion: the SGP41's storage and operation outside Table 4", "OW-4", "T-H1's screens"),
     ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "Analog Devices: the LT8705A's IMON_IN limits and question 6, a sense-pin filter on CSPIN and CSNIN", "OW-4", "R-186, R-33"),
 ]
+L7_PRICE_PROVENANCE = ("copied from fnd/l7pwr at 2087060b, its v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json, sha256 %s, "
+                       "until Layer 7 merges in set 28; the source is Layer 7's record L7-FANS-AND-TH1.md at that commit, cited by path and commit only, "
+                       "never read with git: that commit is outside this branch's history" % PINS["l7fans"][1][:16])
 QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the design and production release stays held until the measurements "
              "pass; a row is not closed because it has an owner and a future test. A sample result is evidence for that lot and that sample, "
              "never a production limit; only a maker's printed limit closes a row for every lot. Purchases and outside contact are the owner's: "
@@ -6333,23 +6339,20 @@ QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the 
 def _price_check():
     import json
     for k, pr in PRICES.items():
-        if pr.get("commit"):
-            r = subprocess.run(["git", "show", "%s:%s" % (pr["commit"], pr["src"])], cwd=TOP, capture_output=True)
-            if r.returncode != 0:
-                refuse(3, "the price source %s is not at %s" % (pr["src"], pr["commit"]))
-            d = json.loads(r.stdout.decode("utf-8"))
-        else:
-            path = os.path.join(TOP, pr["src"])
-            if not os.path.exists(path):
-                refuse(3, "the price source %s is missing" % pr["src"])
-            d = json.load(open(path, encoding="utf-8"))
+        path = os.path.join(TOP, pr["src"])
+        if not os.path.exists(path):
+            refuse(3, "the price source %s is missing" % pr["src"])
+        if pr.get("pin"):
+            if PINS[pr["pin"]][0] != pr["src"] or hashlib.sha256(open(path, "rb").read()).hexdigest() != PINS[pr["pin"]][1]:
+                refuse(3, "the price source %s is not the pinned copy %s" % (pr["src"], PINS[pr["pin"]][1][:16]))
+        d = json.load(open(path, encoding="utf-8"))
         kind, key = pr["key"]
         if kind == "findchips":
             mpn, dist, qty = key
             rows = [r for r in d.get("parts", {}).get(mpn, []) if r.get("distributor") == dist]
             br = [b for r in rows for b in r.get("price_breaks", []) if b[0] == qty]
             if len(br) != 1 or br[0][1] != pr["cur"] or abs(float(br[0][2]) - pr["unit"]) > 1e-9:
-                refuse(3, "%s at %s does not carry %s at %s, %d: %s %s" % (pr["src"], pr["commit"], mpn, dist, qty, pr["cur"], pr["unit"]))
+                refuse(3, "%s does not carry %s at %s, %d: %s %s" % (pr["src"], mpn, dist, qty, pr["cur"], pr["unit"]))
         elif kind == "price_usd":
             if abs(float(d["price_usd"][key]) - pr["unit"]) > 1e-9:
                 refuse(3, "%s: the filed price at the %s tier is not %s" % (pr["src"], key, pr["unit"]))
@@ -6478,7 +6481,7 @@ def cons_qual_lists(F):
         line = pr["qty"] * pr["unit"]
         tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + line
         buy.append("%s, %s: %d at %s %s (%s) = %s %s; %s%s" % (pr["what"], pr["maker"], pr["qty"], fmt(pr["unit"]), pr["cur"], pr["note"], "%.2f" % line, pr["cur"], pr["src"],
-                                                            " at %s" % pr["commit"] if pr.get("commit") else ""))
+                                                            " (%s)" % L7_PRICE_PROVENANCE if pr.get("pin") == "l7fans" else ""))
     total = "; ".join("%s %.2f" % (c, tot[c]) for c in sorted(tot))
     return buy, total, [("%s: %s" % x) for x in UNPRICED], ["%s: %s (%s; for %s)" % (rel, what, ow, rows) for rel, what, ow, rows in SENDS]
 
@@ -6486,7 +6489,8 @@ def cons_qual_lists(F):
 def cons_qual_block(F):
     buy, total, unp, send = cons_qual_lists(F)
     L = [QUAL_RULE, "",
-         "**The purchase list** (the owner's, in one sitting; the prices read and filed in this tree, each an indicator at the tier named, none a quote; nothing is bought):"]
+         "**The purchase list** (the owner's, in one sitting; the prices read and filed in this tree, each an indicator at the tier named, none a quote; nothing is bought; "
+         "the fans' prices are Layer 7's reading in `inputs/l7pwr-findchips-fans-heaters-2026-10-03.json`, %s):" % L7_PRICE_PROVENANCE]
     L += ["- %s" % b for b in buy]
     L.append("- **Total of the prices read: %s.** Items with no price read (%d), each owed a quote before the owner buys:" % (total, len(unp)))
     L += ["  - %s" % u for u in unp]
@@ -6506,7 +6510,7 @@ def cons_qual_lines(F):
         L.append("   %s" % r[0])
         for lab, x in zip(("specimen", "represents", "transfers", "decides", "blocks only", "performer", "authorisation", "what to buy", "what to send"), r[1:]):
             L.append("      %s: %s" % (lab, x))
-    L.append("   the purchase list (the prices read in this tree, checked against their files; total %s; %d items with no price read):" % (total, len(unp)))
+    L.append("   the purchase list (the prices read in this tree, checked against their files; total %s; %d items with no price read; the fans' prices from inputs/l7pwr-findchips-fans-heaters-2026-10-03.json, %s):" % (total, len(unp), L7_PRICE_PROVENANCE))
     for b in buy:
         L.append("     - %s" % b)
     for u in unp:
