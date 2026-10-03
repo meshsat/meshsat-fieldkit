@@ -35,6 +35,19 @@ c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
 668223530e45e19b v2/docs/records/l8r2/inputs/fw-panel-F01-42c27369.md
 e4e4cea729995d59 v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py
 3861922c585a4019 v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py
+a2fe27d3f2cf1ddf v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt
+5af6b7c043df43f3 v2/docs/records/l8r2/inputs/l9stk_stackups-7388a84b.txt
+4affe7feaf7cf37a v2/docs/records/l8r2/inputs/l9stk-L9-STACKUPS-7388a84b.md
+f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
+2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+a09ca0293afd1f7c v2/ecad/tools/pcb_energy_chain.yaml
+796ff817aecd4bba v2/docs/records/l8r2/apply_energy_chain_e1oz.py
+823a6b32baf41481 v2/ecad/tools/pcb_decisions.yaml
+2eb665d0e50ee781 v2/ecad/tools/energy_chain.py
+fd750e4dc429a790 v2/ecad/tools/track_current.py
+0071fe553548eb5d v2/ecad/tools/intent.py
+d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
+3a8eb81d3f58e0a5 v2/ecad/tools/gen_pcb_e3.py
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
 d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
@@ -46,10 +59,23 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
 98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
 c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
+67d9b81bc951ac2e v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
 74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
 248ffd956403819f v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
 3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
 576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
+d587db1f0cbda88e v2/docs/records/l4e9/apply_gen_sch_e_q1.py
+a6a60bac82c40000 v2/docs/records/l4e7/apply_gen_sch_e_u5_grade.py
+d58b41eb3e3238e7 v2/docs/records/l4e7/apply_gen_sch_e_hold.py
+cec278427751b16b v2/docs/records/l4e7/apply_gen_sch_e_input_limit.py
+261cb597dc70dc85 v2/docs/records/l4e7/apply_gen_sch_e_backstop.py
+b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
+ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
+418ea548a833b49f v2/docs/records/l4e11/apply_gen_sch_e_entry.py
+eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
+715eb965d4527d35 v2/docs/records/l4e11/apply_gen_sch_e_aux.py
+78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
+858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
 3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back by its terms, fetched by fetch_held_back.py)
 
    the figures and their classes
@@ -122,7 +148,12 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
    v3           3.3                                BOUND      +3V3 3.3 V
    budget_fan   (0.36, 0.51, 0.56)                 INFERRED   pwr_budget.py's cooler row per slot, a representative 30 mm 5 V fan (records/rv-pwr)
    eta_a        0.89                               ASSUMPTION board A's 12 V buck-boost for choice (b)
-   eta_slot     0.9                                ASSUMPTION board A's slot converters
+   duty_max     0.7                                BOUND      the modules' Fan_PWM maximum duty for the coolers (round 3, L9P-F02), a firmware rule (section 1's text for HW-FW-CONTRACT)
+   ap_ipk       (6.8, 8.0, 9.2)                    MAKER      AP64500 HS peak current limit, minimum / typical / maximum (Diodes DS41979, electrical characteristics, Note 8)
+   ap_l         4.7e-06                            BOUND      board A's slot inductors L3 and L5, 4.7 uH XAL6060-472ME (gen_sch_a.py, buck5)
+   ap_ltol      0.2                                ASSUMPTION the slot inductor taken 20 % low for the ripple
+   ap_fsw       500000                             BOUND      RT 68 k, 500 kHz (gen_sch_a.py, buck5)
+   vsys_max     17.375                             INFERRED   the system node's highest, on shore (L4-E11 15a: VSYS_E 9.494 to 17.375 V)
 
 2. ITEM 1, BOARD B'S COOLERS (E11-40, R-190): a per-slot TPS61089 step-up to 12 V behind an eFuse
   output 11.508 / 11.962 / 12.430 V (VREF and the 1 % divider, FB leakage), inside the fan's 10.8 to 13.2 V: YES
@@ -134,8 +165,66 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
   the crossover with R5 23.7 k against the effective output capacitance: 22 uF 15.0 kHz, 33 uF 10.0 kHz, 66 uF 5.0 kHz
   eFuse ILM 1.87 k: 0.448 / 0.494 / 0.538 A, INFERRED (the wider neighbouring row's tolerance); OVLO 100 k over 10 k cuts at 12.64 to 13.67 V, 0.21 V over the rail's highest; the boost's own OVP 12.7 to 13.6 V
   power, the fan row: pwr_budget.py's cooler row 0.36 / 0.51 / 0.56 W per slot (a representative 30 mm 5 V fan, not the pick); the pick prints 2.0 W at full speed
-  choice (a), a step-up per slot (SELECTED): 2.353 W on +5V_Sn per slot at full speed, 0.461 A at 5.1 V (0.480 A at 4.9 V), +0.353 W of conversion per slot; the three 7.84 W at VBAT behind the slot converters
-  choice (b), one 12 V feed from board A over the bay harness: the three 6.74 W at VBAT; (b) is 1.10 W lower at full speed, 0.31 W at the budget's 0.56 W a fan
+  choice (a), a step-up per slot (SELECTED): 2.353 W on +5V_Sn per slot at full speed, 0.461 A at 5.1 V (0.480 A at 4.9 V), +0.353 W of conversion per slot; the three 7.56 W at VBAT behind the slot converters (record l9pwr's R9 on each slot rail's own converter; round 2 printed 7.84 W on a flat 0.90)
+  choice (b), one 12 V feed from board A over the bay harness: the three 6.74 W at VBAT (board A's converter at 0.89, an ASSUMPTION); (b) is 0.82 W lower at full speed, 0.23 W at the budget's 0.56 W a fan
+
+2b. ROUND 3: ITEM 1 RE-DECIDED ON RECORD l9pwr'S FIGURES (inputs/l9pwr_budget-38ef774c.txt, its section 5 parsed: 11 states; nothing typed)
+  L9P-F02 (ASSUMPTION TO BOUND): PS-ALLTX, PS-BUSY at HIGH: 5.010 A against the AP64500's 5 A (DS41979 p.1), 0.010 A over; at PLAN at most 4.666 A; DRAWN at most 4.658 A at HIGH (the representative 5 V fan); the step-up takes 0.461 A of the slot rail at full speed
+  L9P-F03 (ASSUMPTION TO BOUND): 7.181 A DRAFTED, 7.154 A DRAWN, against the loop's least 7.0957 A (VSNS 43 mV over 6 mOhm at +1 %); PLAN 5.269 A
+  the efficiency: round 2's 7.84 W for the three coolers at VBAT took board A's slot converters at a flat 0.90; record l9pwr's R9 (theirs (2.353, 0.461, 7.84), reproduced: EQUAL) reads 7.5638 W on each slot rail's own converter, the figure item 1 now carries
+  the slot rail's declared loads on board B (gen_sch_b.py's _SLOT_LOADS and its +5V_Sn rail's peak, read with ast), judged by intent.rail itself (loads at most 1.02 times the peak):
+    as drawn (J_FAN1 0.1 A)                              slot 1: 4.751 A against 5.000 A: accepted
+    round 2 (the step-up at full speed, 0.47 A)          slot 1: 5.121 A against 5.000 A: REFUSED (intent: rail +5V_S1 declares a 5.00 A peak and its loads sum to 5.12 A)
+    round 3 (the step-up at the 70 % maximum, 0.33 A)    slot 1: 4.981 A against 5.000 A: accepted
+  the options at HIGH on each slot's converter, every state (A on its output, the margin to its limit in brackets); record l9pwr's rails:
+    (a) as drafted at full speed; (a) with the 70 % Fan_PWM maximum, the linear bound (1.4 W of fan) at the step-up's 0.85, at its low 0.80, and by the fan law (0.343 of full power);
+    (b) the cooler off the slot rail (one feed from board A or one per slot alike); released: Fan_PWM released and the card socket's supply off (PCIE_PWR_EN low), the fan at full speed
+    state        slot converter (limit)        (a) drafted       (a) cap           (a) cap eta 0.80  (a) cap fan law   (b)               released         
+    PS-IDLE      1    AP64500 U4 (5.000 A)     3.054 (+1.946)    2.916 (+2.084)    2.936 (+2.064)    2.751 (+2.249)    2.593 (+2.407)    1.485 (+3.515)   
+    PS-IDLE      2    LM5176 U5 (7.096 A)      1.388 (+5.708)    1.250 (+5.846)    1.270 (+5.826)    1.085 (+6.011)    0.927 (+6.169)    1.345 (+5.751)   
+    PS-IDLE      3    AP64500 U6 (5.000 A)     3.294 (+1.706)    3.155 (+1.845)    3.176 (+1.824)    2.991 (+2.009)    2.832 (+2.168)    1.509 (+3.491)   
+    PS-IDLE-SPEC 1    AP64500 U4 (5.000 A)     3.054 (+1.946)    2.916 (+2.084)    2.936 (+2.064)    2.751 (+2.249)    2.593 (+2.407)    1.485 (+3.515)   
+    PS-IDLE-SPEC 2    LM5176 U5 (7.096 A)      1.388 (+5.708)    1.250 (+5.846)    1.270 (+5.826)    1.085 (+6.011)    0.927 (+6.169)    1.345 (+5.751)   
+    PS-IDLE-SPEC 3    AP64500 U6 (5.000 A)     3.294 (+1.706)    3.155 (+1.845)    3.176 (+1.824)    2.991 (+2.009)    2.832 (+2.168)    1.509 (+3.491)   
+    PS-TYP       1    AP64500 U4 (5.000 A)     4.084 (+0.916)    3.945 (+1.055)    3.966 (+1.034)    3.781 (+1.219)    3.622 (+1.378)    2.515 (+2.485)   
+    PS-TYP       2    LM5176 U5 (7.096 A)      3.569 (+3.527)    3.431 (+3.665)    3.451 (+3.645)    3.266 (+3.830)    3.108 (+3.988)    2.473 (+4.623)   
+    PS-TYP       3    AP64500 U6 (5.000 A)     4.324 (+0.676)    4.185 (+0.815)    4.205 (+0.795)    4.020 (+0.980)    3.862 (+1.138)    2.539 (+2.461)   
+    PS-BUSY      1    AP64500 U4 (5.000 A)     5.010 (-0.010)    4.871 (+0.129)    4.892 (+0.108)    4.707 (+0.293)    4.548 (+0.452)    3.225 (+1.775)   
+    PS-BUSY      2    LM5176 U5 (7.096 A)      4.255 (+2.841)    4.117 (+2.979)    4.137 (+2.959)    3.952 (+3.144)    3.794 (+3.302)    3.159 (+3.937)   
+    PS-BUSY      3    AP64500 U6 (5.000 A)     5.010 (-0.010)    4.871 (+0.129)    4.892 (+0.108)    4.707 (+0.293)    4.548 (+0.452)    3.225 (+1.775)   
+    PS-RED       3    AP64500 U6 (5.000 A)     1.825 (+3.175)    1.687 (+3.313)    1.707 (+3.293)    1.522 (+3.478)    1.364 (+3.636)    1.825 (+3.175)   
+    PS-RED-b     1    AP64500 U4 (5.000 A)     3.054 (+1.946)    2.916 (+2.084)    2.936 (+2.064)    2.751 (+2.249)    2.593 (+2.407)    1.485 (+3.515)   
+    PS-RED-b     2    LM5176 U5 (7.096 A)      1.388 (+5.708)    1.250 (+5.846)    1.270 (+5.826)    1.085 (+6.011)    0.927 (+6.169)    1.345 (+5.751)   
+    PS-RED-b     3    AP64500 U6 (5.000 A)     3.294 (+1.706)    3.155 (+1.845)    3.176 (+1.824)    2.991 (+2.009)    2.832 (+2.168)    1.509 (+3.491)   
+    PS-EMCON     1    AP64500 U4 (5.000 A)     2.365 (+2.635)    2.226 (+2.774)    2.247 (+2.753)    2.062 (+2.938)    1.904 (+3.096)    2.365 (+2.635)   
+    PS-EMCON     2    LM5176 U5 (7.096 A)      2.369 (+4.727)    2.231 (+4.865)    2.251 (+4.845)    2.066 (+5.030)    1.908 (+5.188)    2.366 (+4.730)   
+    PS-EMCON     3    AP64500 U6 (5.000 A)     2.365 (+2.635)    2.226 (+2.774)    2.247 (+2.753)    2.062 (+2.938)    1.904 (+3.096)    2.365 (+2.635)   
+    PS-ALLTX     1    AP64500 U4 (5.000 A)     5.010 (-0.010)    4.871 (+0.129)    4.892 (+0.108)    4.707 (+0.293)    4.548 (+0.452)    3.225 (+1.775)   
+    PS-ALLTX     2    LM5176 U5 (7.096 A)      4.255 (+2.841)    4.117 (+2.979)    4.137 (+2.959)    3.952 (+3.144)    3.794 (+3.302)    3.159 (+3.937)   
+    PS-ALLTX     3    AP64500 U6 (5.000 A)     5.010 (-0.010)    4.871 (+0.129)    4.892 (+0.108)    4.707 (+0.293)    4.548 (+0.452)    3.225 (+1.775)   
+    PS-RED2      2    LM5176 U5 (7.096 A)      1.878 (+5.218)    1.740 (+5.356)    1.760 (+5.336)    1.575 (+5.521)    1.417 (+5.679)    1.835 (+5.261)   
+    PS-RED2      3    AP64500 U6 (5.000 A)     1.825 (+3.175)    1.687 (+3.313)    1.707 (+3.293)    1.522 (+3.478)    1.364 (+3.636)    1.825 (+3.175)   
+    PS-SURV      2    LM5176 U5 (7.096 A)      1.878 (+5.218)    1.740 (+5.356)    1.760 (+5.336)    1.575 (+5.521)    1.417 (+5.679)    1.835 (+5.261)   
+    PS-SURV-R    3    AP64500 U6 (5.000 A)     1.825 (+3.175)    1.687 (+3.313)    1.707 (+3.293)    1.522 (+3.478)    1.364 (+3.636)    1.825 (+3.175)   
+    (a) drafted, from the rail's watts, equals record l9pwr's printed current in every row: YES
+  the least margin at HIGH over every state, AP64500 (AP64500 U4, AP64500 U6): (a) drafted -0.010 A (-0.2 %, PS-BUSY); (a) cap +0.129 A (+2.6 %, PS-BUSY); (a) cap eta 0.80 +0.108 A (+2.2 %, PS-BUSY); (a) cap fan law +0.293 A (+5.9 %, PS-BUSY); (b) +0.452 A (+9.0 %, PS-BUSY); released +1.775 A (+35.5 %, PS-BUSY)
+  the least margin at HIGH over every state, LM5176 (LM5176 U5): (a) drafted +2.841 A (+40.0 %, PS-BUSY); (a) cap +2.979 A (+42.0 %, PS-BUSY); (a) cap eta 0.80 +2.959 A (+41.7 %, PS-BUSY); (a) cap fan law +3.144 A (+44.3 %, PS-BUSY); (b) +3.302 A (+46.5 %, PS-BUSY); released +3.937 A (+55.5 %, PS-BUSY)
+  the device rail (L9P-F03): no option feeds a cooler from +5V_DEV, so every option leaves it as record l9pwr prints it:
+    PS-IDLE      LM5176 U7 4.773 A DRAFTED against 7.096 A, margin +2.323 A (+32.7 %); DRAWN 4.746 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-IDLE-SPEC LM5176 U7 4.773 A DRAFTED against 7.096 A, margin +2.323 A (+32.7 %); DRAWN 4.746 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-TYP       LM5176 U7 7.032 A DRAFTED against 7.096 A, margin +0.064 A (+0.9 %); DRAWN 7.005 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-BUSY      LM5176 U7 7.032 A DRAFTED against 7.096 A, margin +0.064 A (+0.9 %); DRAWN 7.005 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-RED       LM5176 U7 5.397 A DRAFTED against 7.096 A, margin +1.699 A (+23.9 %); DRAWN 5.370 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-RED-b     LM5176 U7 4.773 A DRAFTED against 7.096 A, margin +2.323 A (+32.7 %); DRAWN 4.746 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-EMCON     LM5176 U7 5.227 A DRAFTED against 7.096 A, margin +1.869 A (+26.3 %); DRAWN 5.200 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-ALLTX     LM5176 U7 7.181 A DRAFTED against 7.096 A, margin -0.086 A (-1.2 %); DRAWN 7.155 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-RED2      LM5176 U7 5.397 A DRAFTED against 7.096 A, margin +1.699 A (+23.9 %); DRAWN 5.370 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-SURV      LM5176 U7 4.759 A DRAFTED against 7.096 A, margin +2.336 A (+32.9 %); DRAWN 4.733 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+    PS-SURV-R    LM5176 U7 5.397 A DRAFTED against 7.096 A, margin +1.699 A (+23.9 %); DRAWN 5.370 A; U901's RON loss (record l8r2 item 3) 0.027 A of the difference
+  the linear bound fails only if more than 54.3 % of the fan's full-speed input does not fall with its speed (the fan law with a fixed share f: f + (1 - f) x 0.343 > 0.70)
+  if the bound fails open (Fan_PWM uncapped with the card on): 5.010 A on slots 1 and 3, the AP64500's inductor peak 6.075 A (ripple 2.129 A at VSYS's 17.375 V, L 20 % low, fsw 10 % low) under its least HS peak current limit 6.8 A by 0.725 A: no limit acts
+  the coolers at VBAT: 7.5638 W at full speed (R9); at the 70 % maximum at most 5.29 W (the linear bound, the slot converters' efficiency taken flat over the change): 2.27 W less at HIGH, a figure for L9P-F01's owner
+  SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum; (b) as one 12 V feed would make one converter common to the three modules' coolers, a shared element ASM-002 does not name
 
 3. ITEM 2, VBUS20 AGAINST U2's SINGLE FAULTS (S-111, R-48)
   the SMCJ22A: standoff 22.0 V over the regulated band's 20.96 V; breakdown 24.40 to 26.90 V, inside REQ-015's 9 to 36 V in service: YES
@@ -156,7 +245,7 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical with C131334 (B4B-PH-K-S), the part boards A (J_USBW) and D (J_USB3) carry
 
 5. COMPOSITION ON BOARD A (scratch copies of gen_sch_a.py; OK = applied and the result parses)
-  L4-E9's power order, l8gnd's two, this record's two, then d8dec31's mainpb:
+  L4-E9's power order, l8gnd's two, this record's three, then d8dec31's mainpb:
     l4e6/apply_gen_sch_a_r12.py                OK
     l4e11/apply_gen_sch_a_guard.py             OK
     l4e11/apply_gen_sch_a_charger.py           OK
@@ -168,10 +257,12 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     l8gnd/apply_gen_sch_a_hotr1.py             OK
     l8r2/apply_gen_sch_a_d8v3.py               OK
     l8r2/apply_gen_sch_a_vbus20ov.py           OK
+    l8r2/apply_gen_sch_a_packrtn.py            OK
     d8dec31/apply_gen_sch_a_mainpb.py          OK (apply_gen_sch_a_mainpb (R248, C247): a_fwd.py, 10 line(s) added)
-  this record's two first, then the power order, l8gnd's two and mainpb (every anchor of theirs still applies after these):
+  this record's three first, then the power order, l8gnd's two and mainpb (every anchor of theirs still applies after these):
     l8r2/apply_gen_sch_a_d8v3.py               OK
     l8r2/apply_gen_sch_a_vbus20ov.py           OK
+    l8r2/apply_gen_sch_a_packrtn.py            OK
     l4e6/apply_gen_sch_a_r12.py                OK
     l4e11/apply_gen_sch_a_guard.py             OK
     l4e11/apply_gen_sch_a_charger.py           OK
@@ -182,7 +273,7 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     l8gnd/apply_gen_sch_a_gnd002.py            OK
     l8gnd/apply_gen_sch_a_hotr1.py             OK
     d8dec31/apply_gen_sch_a_mainpb.py          OK (apply_gen_sch_a_mainpb (R248, C247): a_rev.py, 10 line(s) added)
-  each power draft alone after this record's two (the bank after r12, which it requires):
+  each power draft alone after this record's three (the bank after r12, which it requires):
     l4e6/apply_gen_sch_a_r12.py                OK
     l4e11/apply_gen_sch_a_guard.py             OK
     l4e11/apply_gen_sch_a_charger.py           OK
@@ -190,7 +281,7 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     l4e8/apply_gen_sch_a_bank.py               OK
     l4e4/apply_gen_sch_a_r138.py               OK
     l4e9/apply_gen_sch_a_u17.py                OK
-  the four Layer 8 drafts of board A in reverse order: OK
+  the five Layer 8 drafts of board A in reverse order: OK
 
 6. COMPOSITION ON BOARD B (no power draft targets gen_sch_b.py)
   forward: _b_gnd002 OK; _b_fans12 OK; _b_panel5v OK; _b_ph4 OK
@@ -199,6 +290,13 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
   alone l8r2/apply_gen_sch_b_fans12.py OK
   alone l8r2/apply_gen_sch_b_panel5v.py OK
   alone l8r2/apply_gen_sch_b_ph4.py    OK
+
+6b. COMPOSITION ON BOARD E (scratch copies of gen_sch_e.py; the change list's board E round, d8dec31's cin last, and this record's pack return)
+  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_cin.py: the same as this script's E_ROUND
+  the round, then this record's packrtn:             OK at every step (12 drafts)
+  this record's packrtn first, then the round:       OK at every step (12 drafts)
+  the round with this record's packrtn before cin:   OK at every step (12 drafts)
+  this record's packrtn after every prefix of the round (0 to 11 drafts; the round's drafts depend on one another, so none is applied alone): OK at every prefix
 
 7. DESIGNATORS
   A l4e6/apply_gen_sch_a_r12.py                none
@@ -212,6 +310,7 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
   A l8gnd/apply_gen_sch_a_hotr1.py             C240, R230, R231, R232, U43
   A l8r2/apply_gen_sch_a_d8v3.py               C242, C243, R234, R235, R236, R237, R238, U44
   A l8r2/apply_gen_sch_a_vbus20ov.py           C244, C245, C246, Q41, R239, R240, R241, R242, R243, R244, R245, R246, R247, U45
+  A l8r2/apply_gen_sch_a_packrtn.py            none
   A d8dec31/apply_gen_sch_a_mainpb.py          C247, R248
   B l8gnd/apply_gen_sch_b_gnd002.py            none
   B l8r2/apply_gen_sch_b_fans12.py             C701, C702, C703, C704, C705, C706, C707, C708, C709, C710, C731, C732, C733, C734, C735, C736, C737, C738, C739, C740, C761, C762, C763, C764, C765, C766, C767, C768, C769, C770, L701, L731, L761, Q701, Q702, Q731, Q732, Q761, Q762, R701, R702, R703, R704, R705, R706, R707, R708, R709, R710, R711, R712, R731, R732, R733, R734, R735, R736, R737, R738, R739, R740, R741, R742, R761, R762, R763, R764, R765, R766, R767, R768, R769, R770, R771, R772, U701, U702, U731, U732, U761, U762
@@ -222,6 +321,8 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
   literal designators drawn twice in the composed board A generator: none
   literal designators drawn twice in the composed board B generator: none
   board B's 700 and 900 blocks against every designator the generator builds from a base: free
+  board E, what this record's pack return adds after the change list's round: none (the round's own designators are held by test_l4e9)
+  literal designators drawn twice in the composed board E generator: none
 
 7b. ITEM 4, BOARD C'S PI BUTTON (the panel firmware's F-01): PIJ2_A2 on U1 P1.3 (PI_BTN_n)
   R57 10 k to +3V3 with C27 100 nF to GND: tau 1.00 ms; a release reaches VIH (2.31 V, 0.7 x VCC) after 1.20 ms; a press pulls under VIL (0.99 V)
@@ -253,5 +354,28 @@ c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
     fixture B: DRAWN
     C PIBTN DRAWN
     fixture C: DRAWN
+
+9. ITEM 5, THE PACK PATH'S RETURN ON BOARDS A AND E (record l9stk's finding, its output: "returns declared in the intents: board A none; board E none")
+  record l9stk's widths, board A CELL+ at 18.00 A (governing): one 1 oz face 23.91 mm, each of two 6.72 mm; one 2 oz face 11.95 mm, each of two 3.36 mm
+  record l9stk's widths, board E CELL_F at 18.00 A (governing): one 1 oz face 23.91 mm, each of two 6.72 mm; one 2 oz face 11.95 mm, each of two 3.36 mm
+  board A, the draft alone: GND a rail, sources J_CN1, J_CN2, J_CN3, J_CN4, loads U4 2, R170 2.22, U6 2, R177 1.61, U41 0.4, R56 1.5, R122 0.3, U12 0.2, U22 0.65, U21 0.69 (11.57 A), 10.0 / 18.0 A, returns CELL+, share 0.5 %; intent.py on the file's CELL+ and GND declarations: CELL+ accepted; GND accepted
+    on the committed netlist (pcb-a-power.net), each source and load's pins on GND: J_CN1 1; J_CN2 1; J_CN3 1; J_CN4 1; U4 7,9; R170 2; U6 7,9; R177 2; U41 4; R56 2; R122 2; U12 4; U22 1,9; U21 1,9: YES
+    after the whole round (12 drafts, this one last): CELL+ accepted; GND accepted
+  board E, the draft alone: GND a rail, sources J_BATT, loads P_CN 10 (10.00 A), 10.0 / 18.0 A, returns CELL_F, share 0.5 %; intent.py on the file's CELL_F and GND declarations: CELL_F accepted; GND accepted
+    on the committed netlist (pcb-e1-dock.net), each source and load's pins on GND: J_BATT 1; P_CN 1: YES
+    after the whole round (12 drafts, this one last): CELL_F accepted; GND accepted
+  the bar each return is judged against (dc_drop, PI-002): its share, 0.5 %, of the rail it returns, 72.0 mV of 14.4 V; the rules that then judge it: PI-001 (conductor capacity at the declared 18 A), PI-002 (the drop), PI-003 (the barrels), PWR-001 (the rail on the netlist), THM-001 (its watts not counted twice)
+
+10. ITEM 6, THE ENERGY CHAIN'S BOARD E TEXTS AT 1 OZ (record l9stk's second finding; v2/ecad/tools/pcb_energy_chain.yaml)
+  lines naming 2 oz: 50 (PACK_CELLS, board P); 51 (PACK_CELLS, board P); 71 (PACK_FETS, board P); 108 (DOCK_ENTRY, board E); 109 (DOCK_ENTRY, board E); 128 (DOCK_BLOCK, board E5 to A); 201 (SHORE_INPUT, board E)
+  the correction rewrites DOCK_ENTRY, SHORE_INPUT; board P's and E5's 2 oz (owner ruling 7) stay
+  widths at 10 K, decision 35's model (track_current.width_for_current), each of two 1 oz faces (one face): 25 A 12.26 mm (43.62); 18 A 6.72 mm (23.91), record l9stk's 6.72 (23.91): EQUAL; 10 A 2.76 mm (8.15)
+  the corrected texts name those widths: YES
+  the apply script: on the tree's register (exit 3) the register v2/ecad/tools/pcb_decisions.yaml carries 0 decisions marked (L9STK E), not one: l9stk's board E decision is not integrated, and this correction follows it; refusing
+    on a copy of the register carrying a ruled "(L9STK E)" decision: --check exit 0 (CHECK OK, 2 edit(s), nothing written); --write exit 0 (WRITTEN, 2 edit(s)); again exit 0 (ALREADY CORRECTED, nothing to write (DOCK_ENTRY, SHORE_INPUT))
+  energy_chain.check on the tree's chain and on the corrected copy: fails 0 / 0, stage_fails 0 / 0, derate_fails 0 / 0; IDENTICAL
+  lines naming 2 oz after the correction: 50 (PACK_CELLS, board P); 51 (PACK_CELLS, board P); 71 (PACK_FETS, board P); 128 (DOCK_BLOCK, board E5 to A)
+  what the copper must carry for the chain's coordination (the blade at or below its conductor's rating): DOCK_ENTRY's 25 A needs 12.26 mm on each of two 1 oz faces; record l9stk's band of 6.72 mm on each of two carries 18.00 A: FINDING
+  board E's input band as gen_pcb_e3.py lays it (DC_HS, one B.Cu band: run 5.5 mm, leg 4.5 mm): 8.07 and 7.13 A at 1 oz (11.78 and 10.56 at 2 oz), under SHORE_INPUT's F1 10 A at 1 oz: FINDING
 
 END
