@@ -7,40 +7,34 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**143 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **30 distinct readings**, and **0 of those are claimed by an open owner decision**.
+**149 open pair(s)** over 7 board(s). **32 are measured failures** (a tool looked and the board failed), which are **29 distinct readings**, and **0 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
 | `DECISION_UNCLAIMED` | 7 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
-| `MISSING_INPUT` | 17 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 39 | the tool looked and the board failed |
+| `MISSING_INPUT` | 13 | an input the reading declared absent |
+| `MEASURED_FAILURE` | 32 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 57 | not judged, for the reason the reading gives |
-
-A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
-written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
-things to fix.
-
-* `OUT-001`: one set-level reading, counted on 7 board(s)
+| `NOT_JUDGED` | 74 | not judged, for the reason the reading gives |
 
 ## By board
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 26 | 12 | 1 | 1 | 4 | 7 |
-| B | 39 | 4 | 1 | 1 | 5 | 25 |
-| C | 16 | 4 | 1 | 0 | 0 | 10 |
-| D | 17 | 2 | 1 | 1 | 4 | 8 |
-| E | 20 | 6 | 1 | 0 | 4 | 8 |
-| E5 | 8 | 4 | 1 | 0 | 0 | 3 |
-| P | 17 | 7 | 1 | 0 | 0 | 7 |
+| A | 26 | 11 | 1 | 1 | 4 | 8 |
+| B | 39 | 3 | 1 | 1 | 1 | 30 |
+| C | 18 | 3 | 1 | 0 | 0 | 13 |
+| D | 17 | 1 | 1 | 1 | 4 | 9 |
+| E | 20 | 5 | 1 | 0 | 4 | 9 |
+| E5 | 10 | 3 | 1 | 0 | 0 | 6 |
+| P | 19 | 6 | 1 | 0 | 0 | 10 |
 
 ## Readings owed
 
-Of the 118 open pairs with a reading beside them, **103 are decided by a reading taken under a tool that has
+Of the 117 open pairs with a reading beside them, **96 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -51,14 +45,13 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `CMP-002` | A, B, C, D, E, E5, P |
 | `DEC-001` | A, B, C, D, E, P |
 | `DFA-001` | A, B, C, D, E, P |
-| `DFM-001` | A, B, D, E |
-| `DOC-001` | A, B, D, E |
+| `DFM-001` | A, B, C, D, E, E5, P |
+| `DOC-001` | A, B, C, D, E, E5, P |
 | `DOC-002` | A, B, D, E |
 | `EMC-001` | B |
 | `GND-001` | B |
 | `ISO-001` | A, B, E |
 | `MEC-001` | A |
-| `OUT-001` | A, B, C, D, E, E5, P |
 | `PAIR-001` | B |
 | `PI-001` | A, B, E, P |
 | `PI-002` | A, B |
@@ -75,7 +68,6 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `RTE-002` | B |
 | `SCH-002` | A, B |
 | `SCH-003` | B |
-| `SI-001` | A, B, C, D, E, P |
 | `STK-001` | B, E5, P |
 | `SUP-001` | A, B, C, D, E, E5, P |
 | `VIA-001` | B |
@@ -131,7 +123,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `THM-001` | E | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | P | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 
-## MISSING_INPUT (17): an input the reading declared absent
+## MISSING_INPUT (13): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -139,21 +131,17 @@ What closes these is a re-cut and a route, not a drawing.
 | `SUP-001` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `DFM-001` | A | INCONCLUSIVE | the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a board this set is not building |
 | `DOC-002` | A | INCONCLUSIVE | board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not building |
-| `CMP-002` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
-| `SUP-001` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
-| `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
-| `DOC-001` | B | INCONCLUSIVE | a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is judged against itself |
 | `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
 | `CMP-002` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
 | `SUP-001` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
 | `DOC-002` | D | INCONCLUSIVE | board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not building |
-| `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
-| `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
-| `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
+| `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E11, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
+| `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E11, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
+| `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E11, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (39): the tool looked and the board failed
+## MEASURED_FAILURE (32): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -168,34 +156,27 @@ What closes these is a re-cut and a route, not a drawing.
 | `ISO-001` | A | FAIL | spacing FAIL: {'below_limit': 5, 'closest_mm': 0.1287, 'hv_nets': 6, 'pairs_measured': 10124} |
 | `PLC-001` | A | FAIL | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
 | `MEC-001` | A | FAIL | check_pcb_a FAIL: {'fail': 1, 'footprints': 400, 'intent_items_reported': 266, 'pass': 586, 'route_items_reported': 0} |
-| `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | `PLC-001` | B | FAIL | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
-| `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `RET-001` | C | FAIL | intent_return_path FAIL: {'fail': 15, 'pass': 112} |
 | `RET-002` | C | FAIL | intent_return_path FAIL: {'fail': 15, 'pass': 112} |
 | `RET-004` | C | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 61, 'judged': 85, 'lacking': 11, 'reached_beyond_the_sc |
-| `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_layer_change': 0, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
-| `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-001` | E | FAIL | dc_density FAIL: {'met': 6, 'missed': 7, 'undeclared': 0} |
 | `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_layer_change': 1, 'no_via': 3, 'over': 8, 'over_barrels': 31, 'rails': 11} |
 | `RET-004` | E | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 80, 'judged': 59, 'lacking': 2, 'reached_beyond_the_scr |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `ISO-001` | E | FAIL | spacing FAIL: {'below_limit': 92, 'closest_mm': 0.1287, 'hv_nets': 8, 'pairs_measured': 10759} |
-| `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-003` | E5 | FAIL | check_contracts_e5 FAIL: {'fail': 10, 'pass': 28} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `INT-001` | E5 | FAIL | check_contracts_e5 FAIL: {'fail': 10, 'pass': 28} |
-| `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `STK-001` | P | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `RET-001` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
 | `RET-002` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
 | `RTE-001` | P | FAIL | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | `BAT-001` | P | FAIL | pack_protection FAIL: {'checks': 63, 'devices': 13, 'fail': 3, 'functions': 14, 'limits': 14, 'software_only': 9} |
-| `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
 ## VENDOR_WAIT (2): a fabricator or a standards body, and nobody here
 
@@ -216,7 +197,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (57): not judged, for the reason the reading gives
+## NOT_JUDGED (74): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -224,8 +205,11 @@ What closes these is a re-cut and a route, not a drawing.
 | `SI-001` | A | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-002` | A | INCONCLUSIVE | inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
 | `REL-001` | A | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
-| `DOC-001` | A | INCONCLUSIVE | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `DOC-001` | A | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | A | INCONCLUSIVE | no final_gate verdict for this board |
 | `SCH-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `CMP-002` | B | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `SUP-001` | B | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
 | `DEC-001` | B | INCONCLUSIVE | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | `PI-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PI-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
@@ -246,7 +230,10 @@ What closes these is a re-cut and a route, not a drawing.
 | `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `DFM-001` | B | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
 | `REL-001` | B | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
+| `DOC-001` | B | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | B | INCONCLUSIVE | no final_gate verdict for this board |
 | `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
@@ -254,27 +241,38 @@ What closes these is a re-cut and a route, not a drawing.
 | `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `TRN-001` | C | INCONCLUSIVE | port_protect_c INCONCLUSIVE: every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity, 39 connector pin(s) are covered by no entr |
+| `DFM-001` | C | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
 | `REL-001` | C | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
+| `DOC-001` | C | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | C | INCONCLUSIVE | no final_gate verdict for this board |
 | `SCH-002` | D | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `DEC-001` | D | INCONCLUSIVE | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | `RET-003` | D | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | D | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-002` | D | INCONCLUSIVE | inhibit_chain_d INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
 | `REL-001` | D | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
-| `DOC-001` | D | INCONCLUSIVE | final_gate_d INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `DOC-001` | D | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | D | INCONCLUSIVE | no final_gate verdict for this board |
 | `SCH-002` | E | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `DEC-001` | E | INCONCLUSIVE | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `REL-001` | E | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
-| `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `DOC-001` | E | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | E | INCONCLUSIVE | no final_gate verdict for this board |
 | `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| `DFM-001` | E5 | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
 | `REL-001` | E5 | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
+| `DOC-001` | E5 | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | E5 | INCONCLUSIVE | no final_gate verdict for this board |
 | `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `DEC-001` | P | INCONCLUSIVE | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
+| `DFM-001` | P | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
 | `REL-001` | P | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
+| `DOC-001` | P | INCONCLUSIVE | taken under rule set 4a03222f910fe5f5, current is a9b1e7f7412f9c0c |
+| `OUT-001` | P | INCONCLUSIVE | no final_gate verdict for this board |
 

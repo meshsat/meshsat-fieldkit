@@ -3,7 +3,7 @@
 
 # MeshSat field kit V2: requirements, second issue of layer 3 (L3-R2)
 
-MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `07fec30d43271245`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
+MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `6e9458783e8cf887`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
 
 ## 1. How to read this document
 
@@ -1163,7 +1163,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-08; no ruling or choice; files: v2/docs/MESHSAT-709-geometry-appendix.md:2825; v2/docs/PANEL.md section 6; v2/docs/feasibility/EMCON.md sections 4.1 and 4.2
 - **Judged or settled by:** rules RF-002, SCH-004 (coverage FULL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (60 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (61 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-92 (layer 8), S-93 (layer 8)
 
 #### CON-021 (constraint, DEFINED, BLOCKER)
@@ -1566,7 +1566,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-13; D-15 (owner, 2026-09-26); D-09 (owner, 2026-09-26); SC-12 (session, 2026-09-26); files: v2/docs/TEST-PLAN.md:58-94; v2/docs/TEST-PLAN.md:58-104 (section 5 with rows 10 to 14 as stream w4dp added them, not at sources_read_at); v2/ecad/tools/pcb_pack_protection.yaml:17-40; v2/ecad/tools/pcb_pack_protection.yaml:17-67 (the table as stream w4dp wrote it, 27 September 2026, not at sources_read_at); v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md; v2/ecad/tools/gen_sch_p.py:355-430
 - **Judged or settled by:** rules BAT-001 (coverage FULL); decisions 40
 - **TEST-PLAN:** section 5 row 1; section 5 row 2; section 5 row 3; section 5 row 4; section 5 row 5; section 5 row 6; section 5 row 7; section 5 row 8; section 5 row 9; section 5 row 10; section 5 row 11; section 5 row 12; section 5 row 13; section 5 row 14; section 6 row E3-P; section 6 row E4-P; section 7 row P10; section 7 row P11; section 7 row P12
-- **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (35 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (36 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-85 (layer 8), L-03 (layer EXTERNAL)
 - **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
 
