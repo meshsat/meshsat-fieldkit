@@ -87,7 +87,7 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "eeba2a78f0c608ac3a54202287bdc0cb55014f11b594f1d2f7fbe2c0a26b11db"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "058b8e76aaa6fdd1e49e9c18270a74880ff10dee22a095bfee2f1df58663aa38"),
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
@@ -101,8 +101,8 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "7b3dabf6cf9a3bf99eb0f07dce79932d283fdef3e6ba608b50d5daf07f96bb48"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "10a76aef5230b178f8f8640e0e4f2665190a3289e9b20c9fe0fb5db5691b06b5"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "95f9dac057cd2043cd1d59aadfd85b954f642ac0c2c7993e9aa3063b4e6e6110"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "eb4006f2121a3308a4d39d5e61d1c29506e5f4498dd3c7d63fb451b2d3655c90"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
@@ -159,7 +159,7 @@ PINS = {
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
-    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "350f572ffa3db3716c6f6bab6f857984e67bedd99a62627fe8408994345b0fb9"),
+    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "715eb965d4527d35dede5829435b590971e4f4760a82f743821611f64fcec3ba"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
@@ -179,17 +179,19 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens",
                 "787e7b15": "fnd/l4e11, the designator fix (U42's ILIM resistor R228) and E11-32's procurement fact",
                 "af4672f4": "fnd/l4e11, the fans' feed after Layer 7's D-18 (the mixers' regulated 12 V rail U18, the branch re-derived, E11-40 for board B)",
+                "1080e085": "fnd/l4e11, the fan rail's capacitors renumbered C142 to C148 after L4-E7's round 2 port bank took C131 to C136 (every board E draft composed in this record's change-list order; the disjointness test also reads duplicate part calls); on top of the residue fix and section 17d after the owner's review L4-QR01",
                 "73d68c8c": "fnd/l4e11, the residue after the coordinator's check of a1d15601 (the opening summary, 17a's pin and source lines and the charger draft's comment restated to 17a's terms: the 566 A an extrapolation and a test target, the start into a short not bounded by printed data, its 1.1 to 1.5 s a timeout; on top of section 17d after the owner's review L4-QR01)",
                 "a1d15601": "fnd/l4e11, section 17d after the owner's review L4-QR01 (every specimen row with its lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers; the copper-area transfer and 'layout-independent' withdrawn; TI SPRA953D and Nexperia AN11158 cited)",
                 "b929d8be": "fnd/l4e11, the correction after Astra's recheck of set 27 (the fan rail renumbered U22, R103 to R109, C135 to C141 against every board E draft composed in this record's order; L4-CP01 restated: the 566 A an extrapolation and E11-38 (c)'s target, the start into a short not bounded by printed data, no retry duty claimed; E11-38 (a) to (h); the rail 11.512 to 12.431 V with the 1 percent divider)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
+                "04707e3c": "fnd/l4e7, the compute and render split with its keyed results cache, the lead scan keyed on the pinned R-180 sentence's presence and sha256 (on top of its residue after round 5 for the review's B6 and L4-F01)",
                 "eb49d179": "fnd/l4e7, its residue after round 5 for the review's B6 and L4-F01 (the output's approaches paragraph and budget sentence restated: no passing loop for (A), the turn-off compared with the absolute maximum in words matching its sign)",
                 "1a73f5b4": "fnd/l4e7, round 5 for the recheck of set 27, the review's B6 and L4-F01 continued (the 3.30 uH passing floor withdrawn, both fault positions, the pins' complete budget in both polarities, the sense model rectified, R96 at 0.1 percent)",
                 "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
-FROM_COMMIT = {"l4e7r": "eb49d179", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "73d68c8c", "l4e11md": "73d68c8c",
+FROM_COMMIT = {"l4e7r": "04707e3c", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "1080e085", "l4e11md": "1080e085",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
-               "cl_adi": "eb49d179", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+               "cl_adi": "04707e3c", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
@@ -1897,7 +1899,7 @@ def cp_inputs(F, T):
     e40 = [x for x in F["e11_items"] if x[0] == "E11-40"]
     if not e40 or e40[0][2].strip() != "Layer 8 board B generator owner":
         refuse(3, "E11-40 for board B's owner")
-    for w in ("LTC3115EFE-1", "XAL6060-103ME", "U22", "R103", "R109", "C135", "C141"):
+    for w in ("LTC3115EFE-1", "XAL6060-103ME", "U22", "R103", "R109", "C142", "C148"):
         if w not in T["e11aux"]:
             refuse(4, "the rewritten aux draft does not carry %s (the recheck's renumbering)" % w)
     if fan["decl"] >= fan["u42"][0] or fan["vout"][1] < fan["win"][0] or fan["vout"][2] > fan["win"][1]:
@@ -4748,7 +4750,7 @@ CHECK2_REF = ("v2/docs/records/l4close/checks/astra-check-l4close-2.md, filed on
               "commit only), on set 27's candidate b138fec0")
 CHECK2 = [
     ("1", "B1 and the connected board E drafts", "IMPLEMENTATION_DEFECT: the composed board E drafts duplicated U18, R59 to R65 and C65 to C71",
-     "CORRECTED IN DRAFTS, not re-reviewed: L4-E11 at b929d8be renumbered the fan rail U22, R103 to R109 and C135 to C141 against every board E draft "
+     "CORRECTED IN DRAFTS, not re-reviewed: L4-E11 at b929d8be renumbered the fan rail U22 and R103 to R109, and at 1080e085 its capacitors C142 to C148 (C135 and C136 had collided with L4-E7's port bank), against every board E draft "
      "composed in this record's order, a disjointness test in test_l4e11; B1's topology unchanged; nothing applied", "R-177 to R-179, R-188; section 3"),
     ("2", "B6 and L4-F01, the solar guard already on", "MODELLING_ASSUMPTION: the passing floor; the complete pin budget outside +-0.240 V; a connector fault credits no lead resistance",
      "NOT CLOSED: the passing floor withdrawn by L4-E7's round 5 at 1a73f5b4, both fault positions evaluated; B6 moves from a margin question to an "
@@ -5064,8 +5066,8 @@ def cons_decisions(F):
              "and E11-40 (board B's coolers' feed, R-190), and VBUS20 against U2's single faults (R-48); **defects with a drafted correction, "
              "not implemented, no qualification done:** %s, and D-10's over-voltage cut-off and cold connection (the cold connection's margin lines not "
              "held at a connector fault, inside the absolute ratings); D-14 CONDITIONAL with Ciss OPEN, D-15 %s. "
-             "**Drafts corrected after the recheck:** L4-E11's board E fan rail (the designators U22, R103 to R109 and C135 to C141) and its "
-             "L4-CP01 texts at b929d8be; L4-E7's guard (R96 at 0.1 %%, the passing-floor claim withdrawn) and its sense model at 1a73f5b4; "
+             "**Drafts corrected after the recheck:** L4-E11's board E fan rail (the designators U22, R103 to R109 and C142 to C148, at b929d8be "
+             "and 1080e085) and its L4-CP01 texts at b929d8be; L4-E7's guard (R96 at 0.1 %%, the passing-floor claim withdrawn) and its sense model at 1a73f5b4; "
              "L4-E12's and this record's escalation rule and storage soak at 20188e03. **Open:** %s (D-10's source arriving with the guard "
              "already on, an absolute-rating violation at a connector fault; D-16, the drafted sense out of its operating range), the "
              "architecture-level choices U-01, U-02 and U-04, and every qualification row of 5d, none performed (8e: the recheck's six items)."
@@ -5747,7 +5749,6 @@ CHANGE_ORDER = [
     ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
      "none: d8dec31's draft carries no release guard"),
     ("3i", "R-11", "board A, regenerated on the box", "after 3a to 3h", "the gates and the evidence re-taken"),
-    ("4a", "R-16", GE, "no later than R-13", "none: d8dec31's draft carries no release guard"),
     ("4a", "R-17", GE, "no later than R-13", G_L4E9),
     ("4b", "R-13", GE, "only in the same release as board A's H3 line (R-03)", "no draft yet"),
     ("4b", "R-14", GE, "with R-13", "no draft yet"),
@@ -5767,8 +5768,11 @@ CHANGE_ORDER = [
     ("4e", "R-116", "board E, lcsc_fill.py", "with R-123", "no draft yet"),
     ("4e", "R-173", GE, "AFTER L4-E7's three drafts (R-19, R-20, R-21), L4-E9's hot swap (R-94) and L4-E11's entry draft (R-123): it uses their texts and the DGX19 land, and refuses a generator without them",
      G_L4E7 + " and its check 5 at 573fd5b8"),
-    ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12 and C31 off CELL_F; the aux draft rewritten by L4-E11 18: U22 LTC3115-1 and its TA04 network (R103 to R109, C135 to C141, L4) on +12V_FAN, four-wire fan headers, Q9 and Q10 as PWM drivers, D7 and D8 removed; the designators renumbered after the recheck (U18, R59 to R65 and C65 to C71 were the solar drafts'), a disjointness test over every board E draft composed in this list's order in test_l4e11", G_L4E11 + " and its fan-feed round at af4672f4, corrected at b929d8be"),
-    ("4f", "R-22", "board E, regenerated on the box", "after 4a to 4e", "the gates and the evidence re-taken"),
+    ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12 and C31 off CELL_F; the aux draft rewritten by L4-E11 18: U22 LTC3115-1 and its TA04 network (R103 to R109, C142 to C148, L4) on +12V_FAN, four-wire fan headers, Q9 and Q10 as PWM drivers, D7 and D8 removed; the designators renumbered after the recheck (U18, R59 to R65 and C65 to C71 were the solar drafts'), a disjointness test over every board E draft composed in this list's order in test_l4e11", G_L4E11 + " and its fan-feed round at af4672f4, corrected at b929d8be"),
+    ("4f", "R-196", "d8dec31's draft, apply_gen_sch_e_cin.py (its owner)", "before R-16 is applied: a fixed reference above every board E draft's (L4-E11 17e)", "no draft yet"),
+    ("4f", "R-16", GE, "LAST in board E's round, after 4a to 4e, in the same release as R-13: the draft takes the next free capacitor at apply time, and earlier it took C65 before L4-E7's input-limit draft (R-20) writes its own (L4-E11 17e; the set 27 run)",
+     "none: d8dec31's draft carries no release guard"),
+    ("4g", "R-22", "board E, regenerated on the box", "after 4a to 4f", "the gates and the evidence re-taken"),
     ("B", "R-107", GB, "board B's round", "no draft yet"),
     ("B", "R-163", GB, "U-02's F3: board B's round", "no draft yet"),
     ("B", "R-166", GB, "U-02's +85 C connectors and HX magnetics, after R-165's picks", "no draft yet"),
@@ -5815,7 +5819,12 @@ ORDER_CONSTRAINTS = [
     ("R12 (R-01) before R11 (R-04)", "R-01", "R-04"),
     ("R12 (R-01) before the ballasts and Cc2 (R-07)", "R-01", "R-07"),
     ("the H3 line (R-03) with R12, before R11", "R-03", "R-04"),
-    ("Q1 and E-F1's capacitor (R-17, R-16) no later than R10 (R-13)", "R-17", "R-13"),
+    ("Q1 (R-17) no later than R10 (R-13)", "R-17", "R-13"),
+    ("d8dec31's input capacitor (R-16) after L4-E7's input-limit draft (R-20), which writes C65 (L4-E11 17e)", "R-20", "R-16"),
+    ("d8dec31's input capacitor after the solar guard's fixed designators (R-173)", "R-173", "R-16"),
+    ("d8dec31's input capacitor after the fan rail's fixed designators (R-177): LAST in board E's round", "R-177", "R-16"),
+    ("the fix of d8dec31's board E reference before it is applied", "R-196", "R-16"),
+    ("d8dec31's input capacitor before board E's regeneration", "R-16", "R-22"),
     ("the hot-swap settings (R-94) before the selected entry's draft (R-123)", "R-94", "R-123"),
     ("F1 (R-18) before the hot-swap settings (R-94)", "R-18", "R-94"),
     ("L4-E7's hold and input limit (R-19, R-20) before its backstop (R-21)", "R-20", "R-21"),
@@ -6762,7 +6771,7 @@ def cons_review_lines(F):
       % (fan["l7"], fan["l7c"], PINS["l7fans"][1][:16], fan["mixer"]))
     p("     coolers %s, 12 V, %s to %s V printed, %s A each, IP68, -20 to +70 C; 15a's fans directly on VSYS_E withdrawn; the mixers' regulated %s V rail on board E,"
       % (fan["cooler"], fmt(fan["win"][0]), fmt(fan["win"][1]), fmt(fan["i"]), fmt(fan["vout"][0])))
-    p("     U22 LTC3115EFE-1 (U18, R59 to R65 and C65 to C71 before the recheck: the solar drafts' designators; now R103 to R109 and C135 to C141, a disjointness test in L4-E11) as ADI's TA04 with L4 XAL6060-103ME (input 2.7 to 40 V over VSYS_E's %s to %s V; output %s to %s V with the 1 %% divider), RUN enabled at %s V and disabled at"
+    p("     U22 LTC3115EFE-1 (U18, R59 to R65 and C65 to C71 before the recheck: the solar drafts' designators; now R103 to R109 and C142 to C148, the capacitors renumbered again at 1080e085 after L4-E7's port bank, a disjointness test in L4-E11) as ADI's TA04 with L4 XAL6060-103ME (input 2.7 to 40 V over VSYS_E's %s to %s V; output %s to %s V with the 1 %% divider), RUN enabled at %s V and disabled at"
       % (fmt(fan["drop"][2]), fmt(fx["vsys_rng"][1]), fmt(fan["vout"][1]), fmt(fan["vout"][2]), fmt(fan["run"][0])))
     p("     %s V so a fan fault ends as a rail hiccup and not a U12 reset; %s W into the case at full speed (%s W of fans), %s W at the plan's %s W; TJ %s C at +70 C"
       % (fmt(fan["run"][1]), fmt(fan["heat"][0]), fmt(fan["heat"][1]), fmt(fan["heat"][3]), fmt(fan["heat"][4]), fmt(fan["heat"][5])))
@@ -6906,13 +6915,13 @@ def cons_qual(F):
          sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
          pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
         ("E11-31 (R-161)",
-         "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, U22's 12.0 V rail with its capacitors C135 to C141 and the four-wire fan headers) and the pack or a pack simulator",
+         "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, U22's 12.0 V rail with its capacitors C142 to C148 and the four-wire fan headers) and the pack or a pack simulator",
          "the charger's three modes under (B1): the pack absent, the charge inhibited with the pack present, the held pack current, the start from cold at -20, 25 and 62.1 C, D2's step response",
          "the charger's register behaviour and VSYS's modes (device properties) fully; the start's first window and D2's recovery only where VSYS's capacitance and the always-on loads are the draft's; otherwise re-read on the first prototype",
          "U-04: its move from a closure condition to a downstream qualification test once R-157, R-177 and R-178 are applied; the held pack current at most %s mA; D2 against the 2.054 V margin" % fmt(F["f02"]["held"][1]),
          "board A's final release; the charger's firmware rules (R-158) are written to the draft meanwhile", "an engineer, on a bench",
          OWN + "the evaluation hardware; Q-TI-15 and Q-TI-16 to TI", un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-15, Q-TI-16; " + sd("v2/docs/review-packets/battery/REVIEW-REQUEST.md")),
-        ("E11-38 (R-184)", sp["E11-38"]["specimen"] + " (U22's rail as R-177 drafts it: U22, L4, C135 to C141 and R103 to R109)", sp["E11-38"]["represents"], sp["E11-38"]["transfers"] + BLOCK_RULE % "E11-38",
+        ("E11-38 (R-184)", sp["E11-38"]["specimen"] + " (U22's rail as R-177 drafts it: U22, L4, C142 to C148 and R103 to R109)", sp["E11-38"]["represents"], sp["E11-38"]["transfers"] + BLOCK_RULE % "E11-38",
          "D-15 (L4-F03): the dock's VSYS branch through the complete histories (a) to (h) of L4-E11 17a and 18 with pass limits: the hard short against the 566 A test target, the start into a short with its pre-regulation interval and regulated current recorded, one hour of retry and intermittent shorts, the pin excursions, the wiring's and copper's integrity, the contact body at or under 85 C, the fans and U22 on the rail, a stalled fan and a shorted rail; until then %s" % L4F03_STATUS,
          sp["E11-38"]["blocks"], "an engineer, on a bench", OWN + "the parts and the coupon; Q-TI-18 to TI",
          un("E11-38") + "; " + pr("d23") + "; " + pr("c236"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-18"),

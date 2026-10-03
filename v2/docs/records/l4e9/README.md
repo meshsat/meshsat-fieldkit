@@ -131,7 +131,10 @@ row given one Class and the Next action of its kind (KNOWN ENGINEERING DEFECT, P
 WORK), the defect rows and the choices too (the page's 8f, output section 29), the three comparisons (the battery switch and the charger
 selected within the session's authority, carried from L4-E11; the cell an owner decision, OW-9 then OW-3) and the supplier package's
 task list (8g: phase 1 the known design defects, phase 2 the physical uncertainties); the status replaced by the owner's review's text
-(L4-SH03), verbatim. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+(L4-SH03), verbatim. The set 27 run's board E designators: L4-E11's fan rail capacitors C142 to C148 (`1080e085`)
+carried; L4-E7's compute and render split (`04707e3c`) re-pinned, R-180's pinned sentence kept verbatim; d8dec31's input
+capacitor (R-16) moved last in board E's round with the FINDING R-196 and five order constraints, and the composition tests run the
+board E drafts in the change list's order with no designator written twice (186 items). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
@@ -165,4 +168,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 59 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 60 tests.

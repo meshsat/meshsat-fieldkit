@@ -68,7 +68,7 @@ def _R():
         m = importlib.util.module_from_spec(sp)
         sp.loader.exec_module(m)
         try:
-            _CACHE["R"] = m.compute()
+            _CACHE["R"] = m.results()      # from the results cache when its KEY holds for this tree, else computed (nothing written)
         except SystemExit as e:
             raise AssertionError("l4e7_stage_settings.py refused (exit %s)" % e.code)
         _CACHE["M"] = m
@@ -191,6 +191,106 @@ def t_margin_costs_nothing_on_the_design_day():
     a2 = [v for (lab, ak), v in R["runs"].items() if ak == "A2" and lab.startswith("NEW nominal")][0]
     was = R["old_runs"][("CORRECTED, WE; O-2 nominal", "A2")]
     assert all(abs(a2[2][k] - was[1][k]) < 0.05 for k in range(2)), "the kept nominal hold does not give the replay's A2 figures"
+
+
+def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_numbers():
+    """The owner's review (Execution efficiency): compute() is the solver, render() the presentation. The committed cache's KEY holds
+    for this tree and rendering it prints the committed output byte for byte; the cache file is the encoding of what it renders; a
+    rendering string leaves the KEY's source part unchanged while a numerical constant or a solver function's body changes it; a
+    cache whose KEY differs is never rendered from."""
+    import json
+    _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    assert set(data) == {"key", "parts", "R"} and set(data["parts"]) == {"src", "files", "scans", "solver", "python", "pdftotext"}
+    assert data["key"] == m.key_of(data["parts"]) == m.key_of(m.key_parts(data["parts"]["files"])), "the committed cache's KEY does not hold for this tree"
+    Rc = m.load_cache()
+    assert Rc is not None and "\n".join(m.render(Rc)) + "\n" == committed, "the committed output is not render(cache)"
+    dump = lambda x: json.dumps(x, sort_keys=True, separators=(",", ":"))
+    assert dump(m._enc(m._dec(data["R"]))) == dump(data["R"])
+    # the files part: every pinned input compute() reads is in it, and nothing outside the repository
+    assert all(rel in data["parts"]["files"] for rel in m.PINS) and not any(f.startswith(("/", "..")) for f in data["parts"]["files"])
+    assert "render" not in data["parts"]["src"] and {"compute", "guard_event_b", "sense_ripple", "CerBank", "PINS", "lead_scan"} <= set(data["parts"]["src"])
+    # the source part on synthetic edits of this script's text
+    text = open(SCRIPT, encoding="utf-8").read()
+    base = m.src_part(text)
+    assert base == data["parts"]["src"]
+    a = 'wrapP("       ", "       ", "THE THREE APPROACHES (at most three'
+    assert text.count(a) == 1 and m.src_part(text.replace(a, a.replace("THREE APPROACHES", "3 APPROACHES"))) == base
+    c = "EA2_FLOOR_DIV = 2.0"
+    assert text.count(c) == 1 and m.src_part(text.replace(c, "EA2_FLOOR_DIV = 2.5")) != base
+    b = 'l59 = g.get("l59", 0.0)'
+    assert text.count(b) == 1 and m.src_part(text.replace(b, 'l59 = g.get("l59", 1e-12)')) != base
+    # a cache whose KEY differs is never rendered from, and the KEY moves with every part
+    with tempfile.TemporaryDirectory() as td:
+        bad = dict(data, key="0" * 64)
+        p = os.path.join(td, "stale.results.json")
+        open(p, "w", encoding="utf-8").write(json.dumps(bad))
+        assert m.load_cache(p) is None
+    for part in ("src", "files", "scans", "solver", "python", "pdftotext"):
+        moved = json.loads(json.dumps(data["parts"]))
+        moved[part] = {"changed": True}
+        assert m.key_of(moved) != data["key"], part
+
+
+def t_an_l4e9_edit_outside_the_pinned_sentence_moves_neither_the_key_nor_the_output():
+    """The lead scan contributes what it establishes, not the scanned files' contents: on a scratch copy of L4-E9's two pages, an
+    edit outside the pinned R-180 sentence leaves the scan, the KEY and the output unchanged; an edit of the sentence changes the
+    scan and the KEY (and compute() refuses on it, as a lead statement nobody has read)."""
+    import json
+    R = _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    pages = ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md")
+    st = m.LEAD_STATEMENTS[0]
+    with tempfile.TemporaryDirectory() as td:
+        for rel in pages:
+            os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
+            shutil.copyfile(os.path.join(ROOT, rel), os.path.join(td, rel))
+        base = m.scan_part(td)
+        assert base["lead_cited"] == data["parts"]["scans"]["lead_cited"] and not base["lead_hits"]
+        # an edit outside the sentence: a new paragraph and a changed table cell elsewhere on each page
+        for rel in pages:
+            p = os.path.join(td, rel)
+            t = open(p, encoding="utf-8").read()
+            assert st not in t.split("\n")[0]
+            open(p, "w", encoding="utf-8").write(t.replace("\n", "\nAn edit elsewhere on the page, not the R-180 sentence.\n", 1) + "\nA closing line added.\n")
+        after = m.scan_part(td)
+        assert after == base
+        parts = json.loads(json.dumps(data["parts"]))
+        assert m.key_of(dict(parts, scans=after)) == data["key"]
+        hits, cited = m.lead_scan(td)
+        Rx = dict(R, lead=dict(R["lead"], cited=cited))
+        assert not hits and "\n".join(m.render(Rx)) + "\n" == committed
+        # an edit of the sentence: the scan and the KEY move (an unread lead statement: compute() refuses)
+        p = os.path.join(td, pages[0])
+        t = open(p, encoding="utf-8").read()
+        flat = " ".join(t.split())
+        assert st in flat
+        t2 = t.replace("6.09 mm apart", "6.10 mm apart", 1)
+        assert t2 != t
+        open(p, "w", encoding="utf-8").write(t2)
+        moved = m.scan_part(td)
+        assert moved != base and pages[0] in moved["lead_hits"] and pages[0] not in moved["lead_cited"]
+        assert m.key_of(dict(parts, scans=moved)) != data["key"]
+
+
+def t_recompute_reproduces_the_committed_output():
+    """--recompute equals render(cache): the solver run once more (about 30 to 50 minutes on a loaded host), so it runs only when
+    L4E7_RECOMPUTE=1 is set."""
+    if os.environ.get("L4E7_RECOMPUTE") != "1":
+        raise Skip("the solver's own re-run: set L4E7_RECOMPUTE=1")
+    import json
+    _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    R2, files = m.run_recorded()
+    assert "\n".join(m.render(m._dec(json.loads(json.dumps(m._enc(R2)))))) + "\n" == committed
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    dump = lambda x: json.dumps(x, sort_keys=True, separators=(",", ":"))
+    assert dump(m._enc(R2)) == dump(data["R"]) and sorted(files) == sorted(data["parts"]["files"])
 
 
 def t_committed_out_is_what_the_script_prints():
@@ -612,14 +712,11 @@ def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbanc
     ld, d = R["lead"], R["decision"]
     le_, rw, sg = ld["lead"], d["rows"], d["surge"]
     assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
-    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, read at its
-    # digest; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation already takes
-    import hashlib
+    # set 27: a document that states the lead's length is a cited input only when its statement is the pinned one, carried
+    # verbatim; every cited file carries the statement now, and a statement that is pinned names the 5 m this derivation takes
     assert ld["statements"] and all("over 5 m" in st for st in ld["statements"])
-    for rel, (dg, st) in ld["cited"].items():
-        p = os.path.join(ROOT, rel)
-        assert st in ld["statements"] and hashlib.sha256(open(p, "rb").read()).hexdigest() == dg
-        assert st in " ".join(open(p, encoding="utf-8").read().split()), rel
+    for rel, st in ld["cited"].items():
+        assert st in ld["statements"] and st in " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split()), rel
     for rel in ("v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md", "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"):
         t = " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
         assert (rel in ld["cited"]) == any(st in t for st in ld["statements"]), rel
