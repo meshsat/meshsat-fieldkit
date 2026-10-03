@@ -116,7 +116,16 @@ boundaries, uncertainty, permitted extrapolation, comparison rule and re-test tr
 R-160; L4-QR02, the fit mock-up R-167 blocks the adoption of the proposed pack arrangement and the dependent mechanical release, nothing
 else; Layer 8's L8G-F12 (`v2/docs/records/l8gnd/` at `226e9143`, cited by path and commit only): Layer 8's board A drafts R-191 and R-192
 after board A's power round, d8dec31's PB network R-193 LAST in board A's round (R233 and C241) with the FINDING R-194 for its owner,
-board B's GND-002 draft R-195 in board B's round; the register at 185 items. Status: known defects addressed in drafts; feasibility conditions remain
+board B's GND-002 draft R-195 in board B's round; the register at 185 items. Round 4 (c), step 2: L4-E7's round 5 (`1a73f5b4`,
+after the collaborator's targeted recheck) merged and carried: round 2's 3.30 uH loop WITHDRAWN as a passing floor everywhere it
+stood (D-10, R-176 row 3, B6-ENG-1, the approaches, the verdicts), both fault positions evaluated; at that reference loop a fault at
+the connector, no lead resistance credited, reads U5's pins -0.3021 V, past the -0.3 V absolute maximum, so D-10's guard-on case is
+OPEN (an absolute-rating violation, kept apart from the missed +-0.240 V design target; IF-01 reads NOT MET on it); INP 18.29 V over
+its 18 V line, PV_F 83.47 V over the recommended 80 V row; D4's cold connection over its margin lines at a connector fault, inside
+the absolute ratings; the sense model rectified (D-16: the monitor's average +7.9 %, the limit below its setting, MODELED; 'no
+damage' withdrawn); R96 at 0.1 %; L4-E7's files re-pinned. The exit, In short and the new section 8e (out 28): the collaborator's
+recheck astra-check-l4close-2 (at `650b5694` on `fnd/int27`, cited) NOT YET, its six items with their states after the corrections,
+none restated as accepted, and the status line's exact coverage (addressed in drafts, corrected after the recheck, open). Status: known defects addressed in drafts; feasibility conditions remain
 open.
 
 | File | What it is |
@@ -150,4 +159,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 54 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 58 tests.
