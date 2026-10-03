@@ -159,11 +159,19 @@ Three levels, and what each needs:
    formats; the generator command per board is unchanged).
 3. **How to get that checkout.** The repository is public (`https://github.com/meshsat/meshsat-fieldkit`). The package's
    `SOURCE.txt` names its commit; from a RELEASE-CANDIDATE package that commit is on the public main branch: `git clone`,
-   `git checkout <commit>`, the records' fetch scripts, then the commands above reproduce it. Work carried in the package's
-   `branches/` folders is NOT on that commit (it integrates in the next set): it can be read, and re-computed only once it is
-   published. The project's own replay of the commit ran in a full checkout with the makers' documents fetched (the release
-   suite on that exact commit: every module's "the committed output is what the script prints" test passed); that is the
-   project's check, not the recipient's.
+   `git checkout <commit>`, the records' fetch scripts, then the commands above. Work carried in the package's `branches/`
+   folders is NOT on that commit (it integrates in the next set): it can be read, is not covered by the release suite's results,
+   and can be re-computed only once it is published.
+4. **What the project tested, at which commit and how** (corrected after the release-candidate review of 3 October 2026,
+   finding L4-RC02). The package's `README.md`, section "What was tested, and how", names the commit the gated release suite
+   ran on and the packaged commit. When they are the same commit it says so; when they differ it lists every file changed
+   between them and the checks that cover those changes. The suite runs every record's script afresh and compares its output
+   byte for byte, with one exception: L4-E7's solver is not re-run in the suite. The suite validates L4-E7's committed results
+   cache (a KEY over its source, the files it read, its document scans, the solver and the tool versions) against the tree and
+   renders the committed output from it; a fresh solver run is the opt-in test `t_recompute_reproduces_the_committed_output`
+   (`L4E7_RECOMPUTE=1`), and the cache is written by a full recompute on the integration line. All of this is the project's own
+   check. A recipient's numerical replay has not been verified by anyone outside the project; the release-candidate review
+   states it as unverified.
 
 ## 8. What we ask a supplier to quote for
 
