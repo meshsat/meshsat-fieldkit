@@ -62,6 +62,10 @@ enum hal_gpio { HAL_PIN_LIST(HAL_ENUM_GPIO) HAL_GPIO_COUNT_ = 30 };
  * logic (PANEL.md section 5) on an input the HAL cannot yet supply; HAL_PI_BUTTON_WIRED stays 0 until board C routes
  * the lead to a pin (an expander spare such as U1 P1.3 SPARE1 with PIJ2_B2 on GND is one way). */
 #define HAL_PI_BUTTON_WIRED 0
+/* DRAFTED (PANEL.md s.4 row 3, record l8r2 3d, PROVISIONAL until board C is regenerated): PI_BTN_n on U1 P1.3, low =
+ * pressed. Kept out of HAL_EXP_BIT_LIST, which test_fw_panel checks against the netlist as generated (SPARE1 there). The
+ * core reads it only when HAL_PI_BUTTON_WIRED is 1: a spare input left floating must never read as a press. */
+#define HAL_EXP_C_PI_BTN_N_BIT 3
 
 /* ---- I2C addresses (PANEL.md section 7) ---- */
 #define HAL_I2C_VEML7700   0x10

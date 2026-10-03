@@ -54,6 +54,9 @@
 #define PANEL_ZER_DEADLINE_MS       1500u   /* ZER s.3.4 step 3 (b): the deadline D */
 #define PANEL_H2_PAGE_WAIT_MS       30000u  /* SESSION S-08: H2 drives PI_KILL once its page is shown or after 30 s */
 #define PANEL_FLASH_WARN_HALF_MS    125u    /* P s.9: MASTER WARN 3 to 5 Hz: 4 Hz (SESSION S-02) */
+#define PANEL_CHIRP_MS              50u     /* P s.9: chirp 50 ms (acknowledge) */
+#define PANEL_DCHIRP_ON_MS          50u     /* P s.9 (F-06, S-15): double chirp 50 ms on, 100 ms off, 50 ms on */
+#define PANEL_DCHIRP_OFF_MS         100u
 #define PANEL_FLASH_1HZ_HALF_MS     500u    /* P s.9: SOS ACTIVE 1 Hz */
 #define PANEL_FLASH_4HZ_HALF_MS     125u    /* P s.9: SOS ACTIVE 4 Hz, no host */
 #define PANEL_FLASH_PIRING_HALF_MS  1000u   /* P s.9: PI ring 0.5 Hz heartbeat */
@@ -71,7 +74,8 @@
 #define PANEL_DUTY_DAY       1000u
 #define PANEL_DUTY_NIGHT     150u
 #define PANEL_DUTY_NVG       20u            /* the lowest PWM step the firmware allows */
-#define PANEL_DUTY_TX_FLOOR  100u           /* the TX lamp is never dimmed below 10 % duty */
+/* F-05 (round 3, PANEL.md s.8): no TX lamp floor. The TX lamp D3 shares LED_RAIL behind Q1 and follows the panel's duty
+ * in every position (NVG 2 %), dark in BLACKOUT. The 10 % floor of the first contract was withdrawn on 3 October 2026. */
 
 /* ---------------------------------------------------------------- the seventeen controller-lit indicators */
 enum panel_led {
@@ -413,13 +417,15 @@ typedef struct {
     /* flags the tick derives */
     bool     switches_ready;
     bool     reduced_mode_flag;      /* slots 2 and 3 only */
-    bool     heat_stage_only;        /* after H1: the heat stage's one module (SESSION S-19) */
+    bool     heat_stage_only;        /* after H1: the heat stage's module first, until C1's restore 5 K below (S-19 declined) */
     bool     hot_block_slots;        /* FW-C14 at boot: 5 Hz, raise no slot */
     bool     hot_pulse;              /* FW-C13 H1: the clean-shutdown request on PI_SHDN_REQ */
     ms_t     hot_pulse_at;
     bool     pack_fallback;          /* FW-C09 round 8: the pack readings stopped 10 s */
     bool     c1_reduced;             /* FW-C09 C1's first stage */
     bool     zer_page_hold;          /* the ZEROIZED page after a boot wipe */
+    bool     pi_btn_wired;           /* the PI button on U1 P1.3 (record l8r2's draft, released with board C) */
+    bool     pi_btn_pressed;
 
     /* events for the bridge (P s.11) */
     panel_ev_t ev[PANEL_EVENTS];
@@ -444,7 +450,9 @@ bool panel_deb_update(panel_deb_t *d, bool raw, ms_t now);
 
 /* lighting */
 uint8_t  panel_light_mode(bool day_n, bool night_n, bool bridge_nvg, bool *fault);
-uint16_t panel_light_duty(uint8_t mode, bool tx_lamp_lit);
+uint16_t panel_light_duty(uint8_t mode);   /* the one dimmer; the TX lamp follows it (F-05) */
+void     panel_hdmi_encode(uint8_t slot, bool *sel1, bool *sel2);   /* F-13 */
+unsigned panel_modules_lost(const panel_t *p);                       /* F-07 */
 uint32_t panel_light_filter(uint8_t mode, uint32_t leds);
 
 /* HOT-R1 decoding (FW-C14) */

@@ -4,7 +4,10 @@
 Prototype firmware for an unbuilt board. These tests build and run its host unit tests, and bind the firmware to the
 tree: every FW-C row of HW-FW-CONTRACT.md is cited by a host test or listed in the firmware README as not the
 firmware's or owed; every pin and expander bit hal.h names matches the committed netlists; the e-paper's quoted
-messages and the timing constants match the contract pages; the target build keeps FW-C01's two rules.
+messages and the timing constants match the contract pages; the target build keeps FW-C01's two rules; and every value
+Layer 5's round 3 decided (record l5r2 `L5-PANEL-R3.md`, findings F-04 to F-13) is read from the contract's own words and
+compared with what the core does, measured by the host program `tests/contract_probe.c`, so a contract row the code
+contradicts fails by name (L5R3-F02; F-05 and F-11 first).
 
 Each check PARSES what it reads: the netlists as S-expressions, gen_sch_c.py's RP2040 pin table with `ast`, hal.h's
 two X-macro lists and test_list.h's T() list as C structures, the contract's and README's markdown tables by row.
@@ -284,14 +287,13 @@ CONSTANTS = [  # (panel.h name, value, page, words that must stand in the page)
     ("PANEL_HOT_TMP117_REL_MC", 45000, "HW-FW-CONTRACT.md", "+45.0 C or less"),
     ("PANEL_MARGIN_TRIGGER_MC", 68650, "HW-FW-CONTRACT.md", "at or over 68.65 C"),
     ("PANEL_MARGIN_RESTORE_DK_MC", 5000, "HW-FW-CONTRACT.md", "5 K under the trigger after 30 minutes"),
-    ("PANEL_EPD_MIN_INTERVAL_MS", 60000, "PANEL.md", "refresh at most once a minute"),
+    ("PANEL_EPD_MIN_INTERVAL_MS", 60000, "PANEL.md", "the idle page's content at most once a minute"),
     ("PANEL_EPD_FULL_INTERVAL_MS", 3600000, "PANEL.md", "full refresh once an hour"),
     ("PANEL_ZER_DEADLINE_MS", 1500, "feasibility/ZEROIZE.md", "A deadline D = 1.5 s after the end of the hold"),
     ("PANEL_ZER_KILL_AFTER_MS", 3000, "feasibility/ZEROIZE.md", "arms a hardware timer alarm 3.0 s after the end of the hold"),
     ("PANEL_DUTY_DAY", 1000, "PANEL.md", "duty 100 %"),
     ("PANEL_DUTY_NIGHT", 150, "PANEL.md", "duty 15 %"),
     ("PANEL_DUTY_NVG", 20, "PANEL.md", "duty 2 %"),
-    ("PANEL_DUTY_TX_FLOOR", 100, "PANEL.md", "never dimmed below 10 % duty"),
 ]
 
 
@@ -325,3 +327,157 @@ def t_target_build_keeps_fw_c01_and_fw_c02():
     assert re.search(r"hw_clear_bits\s*\(\s*&resets_hw->wdsel\s*,[^;]*RESETS_WDSEL_IO_BANK0_BITS[^;]*"
                      r"RESETS_WDSEL_PADS_BANK0_BITS", hal), "FW-C02: the watchdog's RESETS scope"
     assert re.search(r"hw_clear_bits\s*\(\s*&psm_hw->wdsel\s*,[^;]*PSM_WDSEL_SIO_BITS", hal), "FW-C02: the PSM scope"
+
+
+# ---------------------------------------------------------------- the contract's decided values against the running core
+# Record l5r2 round 3 (L5-PANEL-R3.md) decided F-04 to F-13. Each case below reads the decided value from the contract's
+# own sentence and compares it with what tests/contract_probe.c measures on the core. A sentence that no longer parses
+# is a contract change: re-read the decision before touching the code.
+
+_PROBE = {}
+
+
+def probe():
+    if _PROBE:
+        return _PROBE
+    gcc = shutil.which("gcc") or shutil.which("cc")
+    make = shutil.which("make")
+    if not gcc or not make:
+        raise Skip("no C compiler or make on this host: the contract probe of v2/firmware/panel cannot run here")
+    with tempfile.TemporaryDirectory(prefix="fw_panel_probe_") as tmp:
+        r = subprocess.run([make, "-s", "-C", FW, "probe", "BUILD=" + tmp, "CC=" + gcc], capture_output=True,
+                           text=True, timeout=300)
+    assert r.returncode == 0, "the contract probe failed to build or run:\n" + (r.stdout + r.stderr)[-3000:]
+    for line in r.stdout.splitlines():
+        if "=" in line:
+            k, v = line.split("=", 1)
+            _PROBE[k.strip()] = v.strip()
+    return _PROBE
+
+
+def _page(name):
+    return " ".join(open(need(os.path.join(DOCS, name), name), encoding="utf-8").read().split())
+
+
+def _section(text, start, end):
+    i = text.index(start)
+    return text[i:text.index(end, i)]
+
+
+def _contract_row(row_id):
+    path = os.path.join(DOCS, "HW-FW-CONTRACT.md")
+    rows = [r for r in md_table_rows(path, re.escape(row_id))]
+    assert len(rows) == 1, "%s: %d rows in HW-FW-CONTRACT.md" % (row_id, len(rows))
+    return " ".join(" | ".join(rows[0]).split())
+
+
+def _hal_bits():
+    return {name: (int(addr, 16), int(port), int(bit)) for name, addr, port, bit, _ in xmacro("hal.h", "HAL_EXP_BIT_LIST")}
+
+
+def t_contract_f05_tx_lamp_follows_duty():
+    """PANEL.md section 8 (F-05): the TX lamp follows the panel's duty in every position; dark in BLACKOUT. No floor."""
+    s8 = _section(_page("PANEL.md"), "## 8. Lighting", "## 9.")
+    m = re.search(r"The TX lamp follows the panel's duty in every position \(DAY (\d+) %, NIGHT (\d+) %, NVG (\d+) %\); "
+                  r"in BLACKOUT it is dark", s8)
+    assert m, "PANEL.md section 8's TX lamp sentence moved: re-read F-05 before changing panel_light_duty"
+    want = {"DAY": int(m.group(1)) * 10, "NIGHT": int(m.group(2)) * 10, "NVG": int(m.group(3)) * 10, "BLACKOUT": 0}
+    got = probe()
+    for mode, permille in want.items():
+        keyed = int(got["f05_duty_%s_keyed" % mode])
+        idle = int(got["f05_duty_%s_idle" % mode])
+        assert keyed == permille and idle == permille, (
+            "F-05: in %s with D8 keyed PANEL.md section 8 gives the panel %d per mille, the core drives %d (idle %d): "
+            "the TX lamp follows the duty, no floor" % (mode, permille, keyed, idle))
+
+
+def t_contract_f11_board_d_boot_levels():
+    """FW-D01 (F-11): board D's U16 at the generator's power-up levels, written before its configuration."""
+    row = _contract_row("FW-D01")
+    levels = {}
+    for net in ("X_SA_PD", "X_AMP_EN", "X_MMUTE"):
+        m = re.search(r"\b%s ([01]) \(" % net, row)
+        assert m, "FW-D01 no longer states %s's boot level: re-read F-11 before changing EXP_BOOT" % net
+        levels[net] = int(m.group(1))
+    bits = _hal_bits()
+    names = {"X_SA_PD": "D_SA_PD", "X_AMP_EN": "D_AMP_EN", "X_MMUTE": "D_MMUTE"}
+    out0 = sum(levels[n] << bits[names[n]][2] for n in levels)
+    outputs = sum(1 << bits[names[n]][2] for n in levels)
+    got = probe()
+    assert int(got["f11_d_u16_out0"]) == out0, "F-11: FW-D01 gives D:U16 output port 0 = 0x%02X, the core writes 0x%02X" % (
+        out0, int(got["f11_d_u16_out0"]))
+    assert int(got["f11_d_u16_cfg0"]) == (0xFF & ~outputs), "F-11: D:U16 configuration 0x%02X, FW-D01's three outputs give 0x%02X" % (
+        int(got["f11_d_u16_cfg0"]), 0xFF & ~outputs)
+    assert got["f11_d_u16_out_before_cfg"] == "1", "F-11, FW-D01: outputs before configuration"
+
+
+def t_contract_f04_outputs_before_every_configuration():
+    s4 = _section(_page("PANEL.md"), "## 4.", "## 5.")
+    assert "every configuration write is preceded by an output write" in s4, "PANEL.md section 4 moved: re-read F-04"
+    assert probe()["f04_every_cfg_after_out"] == "1", "F-04: a configuration write with no output write before it"
+
+
+def t_contract_f06_double_chirp():
+    s9 = _section(_page("PANEL.md"), "## 9.", "## 9a.")
+    m = re.search(r"double chirp, (\d+) ms on, (\d+) ms off, (\d+) ms on \(lamp test", s9)
+    assert m, "PANEL.md section 9's sounder patterns moved: re-read F-06"
+    want = [int(m.group(i)) for i in (1, 2, 3)]
+    got = [int(v) for v in probe()["f06_double_chirp"].split(",")]
+    assert got == want, "F-06: the lamp test sounds %s ms, PANEL.md section 9 gives %s" % (got, want)
+
+
+def t_contract_f07_one_lost_caut_two_lost_warn():
+    s9 = _section(_page("PANEL.md"), "## 9.", "## 9a.")
+    warn = _section(s9, "MASTER WARN flashes (3 to 5 Hz) for any unacknowledged red condition (", ";")
+    caut = _section(s9, "MASTER CAUT for an unacknowledged amber one (", ")")
+    warn_items = [x.strip() for x in warn.split("(", 1)[1].split(",")]
+    caut_items = [x.strip() for x in caut.split("(", 1)[1].split(",")]
+    got = probe()
+    want_one_caut = "a slot fault" in caut_items
+    want_one_warn = "a slot fault" in warn_items
+    want_two_warn = "two compute modules lost" in warn_items
+    assert want_one_caut and want_two_warn, "PANEL.md section 9's lists moved: re-read F-07 (%s; %s)" % (warn_items, caut_items)
+    assert (got["f07_one_lost_caut"] == "1") == want_one_caut, "F-07: one module lost and MASTER CAUT disagree"
+    assert (got["f07_one_lost_warn"] == "1") == want_one_warn, "F-07: one module lost raises MASTER WARN against section 9"
+    assert (got["f07_two_lost_warn"] == "1") == want_two_warn, "F-07: two modules lost must raise MASTER WARN"
+
+
+def t_contract_f08_page_change_at_once():
+    s9 = _section(_page("PANEL.md"), "## 9.", "## 9a.")
+    assert "a change of page refreshes at once and the idle page's content at most once a minute" in s9, (
+        "PANEL.md section 9's e-paper pacing moved: re-read F-08")
+    got = probe()
+    assert int(got["f08_page_change_delay_ms"]) <= 100, "F-08: a change of page waited %s ms" % got["f08_page_change_delay_ms"]
+    assert int(got["f08_idle_interval_ms"]) >= 60000, "F-08: the idle page refreshed after %s ms, under a minute" % (
+        got["f08_idle_interval_ms"])
+
+
+def t_contract_f10_boot_5hz_dated_at_start():
+    row = _contract_row("FW-C14")
+    m = re.search(r"at 5 Hz, enter H1 with the stop dated at the start-up and raise no slot until the line is back at "
+                  r"1 Hz and (\d+) minutes have passed", row)
+    assert m, "FW-C14's start-up rule moved: re-read F-10"
+    floor_ms = int(m.group(1)) * 60000
+    got = int(probe()["f10_first_slot_after_boot_ms"])
+    assert got >= floor_ms, "F-10: a slot rose %d ms after a 5 Hz start-up, FW-C14 says not before %d" % (got, floor_ms)
+
+
+def t_contract_f12_margin_sos_text():
+    s9 = _section(_page("PANEL.md"), "## 9.", "## 9a.")
+    m = re.search(r"Queued under the margin hold.*?\"([A-Z][A-Z :,]+)\"", s9)
+    assert m, "PANEL.md section 9's margin hold sentence moved: re-read F-12"
+    assert m.group(1) in _contract_row("FW-C15"), "PANEL.md and FW-C15 give different margin hold texts"
+    assert probe()["f12_margin_sos_text"] == m.group(1), "F-12: the core shows %r, the contract %r" % (
+        probe()["f12_margin_sos_text"], m.group(1))
+
+
+def t_contract_f13_hdmi_encoding():
+    s5 = _section(_page("PANEL.md"), "## 5.", "## 6.")
+    assert re.search(r"slot 1 = both selects low; slot 2 = `HDMI_SEL1` high, `HDMI_SEL2` low; slot 3 = `HDMI_SEL2` high", s5), (
+        "PANEL.md section 5's encoding moved: re-read F-13")
+    assert "the controller drives `HDMI_SEL1` low" in s5, "PANEL.md section 5 no longer drives HDMI_SEL1 low for slot 3"
+    want = {1: (0, 0), 2: (1, 0), 3: (0, 1)}
+    got = probe()
+    for slot, (a, b) in want.items():
+        g = (int(got["f13_slot%d_sel1" % slot]), int(got["f13_slot%d_sel2" % slot]))
+        assert g == (a, b), "F-13: slot %d encodes as %s, PANEL.md section 5 gives %s" % (slot, g, (a, b))
