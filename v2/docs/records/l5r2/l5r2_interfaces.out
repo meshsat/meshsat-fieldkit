@@ -4,7 +4,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
 
 0. INPUTS (sha256)
    yaml       4784a61af08405343a774ca4951fc6ea4ef9be1ad5cc68787cd29a15c0641a22  v2/ecad/tools/pcb_interfaces.yaml
-   hwfw       e5b4d65046f4ace5e0c4bf482105f95466ac967d6bb2ccf839a4686708613dc6  v2/docs/HW-FW-CONTRACT.md
+   hwfw       d683b31a0ec5a9a4f34036c54a708f868cd8abd4d320c280e81db435fc5001d4  v2/docs/HW-FW-CONTRACT.md
    base_yaml  22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  a1f696de@v2/ecad/tools/pcb_interfaces.yaml
    base_hwfw  7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  a1f696de@v2/docs/HW-FW-CONTRACT.md
    e18        0f3a1f39367c449c4ee6bdf7fc3a6212ea4981d51295381714f70a6be62698b3  v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md
@@ -12,7 +12,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
    l7pwr      d4d432207ae347ef6af9d6da6c07e8be3d0237fa2bcbad8da70df96ab35e02a6  v2/docs/records/l7pwr/L7-FANS-AND-TH1.md
    sanyo      d47c98af1a1e3f285250120f28027a7264e7016e6182b9ccb21d9b4ad13e3611  v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md
    l4e11md    db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   assembly   942d562edd128759c52ee976f7255862f7a2ef78b5fd76af0a2e223f328e64cd  v2/docs/ASSEMBLY.md
+   assembly   29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed  v2/docs/ASSEMBLY.md
    proc       6308d0b7335e294f714209f8e961e5ab15c2a4551d3d7119351e6229923346ed  v2/docs/parts/PROCUREMENT.md
    net_a      6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    net_b      3ef9b8c49a01b72834dece18a69e8637305d97bbf7342d765d28be596f0464d6  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net

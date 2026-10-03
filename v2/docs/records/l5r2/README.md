@@ -15,7 +15,11 @@ or L8 record and no generator, and changes no requirement.
 | `l5r2_interfaces.out` | Its output, regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l5r2/l5r2_interfaces.py v2/docs/records/l5r2/l5r2_interfaces.out` |
 | `inputs/l4e11-section-18-b929d8be.md` | L4-E11 section 18 (the fans' feed), copied verbatim from `fnd/l4e11` at `b929d8be` (not in this branch), with the file's sha256 at that commit and the body's own |
 | `inputs/l8gnd-sections-2-3-226e9143.md` | Record l8gnd's sections 2 (GND-002) and 3 (the SLOT_EN hold), copied verbatim from `fnd/l8gnd` at `226e9143`, likewise |
-| `../../../ecad/tools/tests/test_l5r2.py` | The test |
+| `L5-PANEL-R3.md` | Round 3 (3 October 2026): the panel firmware's findings F-04 to F-13 resolved in PANEL.md and HW-FW-CONTRACT.md, its 36 session choices accounted for (33 adopted with credit, two in part; three declined), record l8r2's PI button texts applied as PROVISIONAL |
+| `apply_l5r3.py` | Round 3's patch script (PANEL.md, HW-FW-CONTRACT.md, ASSEMBLY.md), run once; on the tree it refuses "already applied" |
+| `l5r3_panel.py`, `l5r3_panel.out` | Round 3's reader and its output (the resolutions and PI texts against their sources, the session choices' coverage) |
+| `inputs/fw-panel-sections-5-6-42c27369.md`, `inputs/l8r2-section-3d-29ffb518.md` | Round 3's copied inputs: the panel firmware README's sections 5 and 6 at `42c27369`, record l8r2's section 3d at `29ffb518`, each verbatim with its sha256 |
+| `../../../ecad/tools/tests/test_l5r2.py` | The test (round 3's predicates named `t_r3_`) |
 
 Run order on 3 October 2026: `apply_l5r2.py <target> --write` for the two targets; `../l5pwr/l5pwr_contracts.py` made to read its
 targets at `1e18a1ca` and its output regenerated; `regen_out.py` for this record's output; `env -C v2/ecad/tools/tests python3 run.py

@@ -157,7 +157,9 @@ def t_every_entry_resting_on_a_foreign_commit_says_provisional():
 def t_the_copied_inputs_name_their_source_and_hash_to_their_declaration():
     import hashlib
     names = sorted(f for f in os.listdir(os.path.join(REC, "inputs")) if f.endswith(".md"))
-    assert names == ["l4e11-section-18-b929d8be.md", "l8gnd-sections-2-3-226e9143.md"], names
+    for need_ in ("l4e11-section-18-b929d8be.md", "l8gnd-sections-2-3-226e9143.md", "fw-panel-sections-5-6-42c27369.md",
+                  "l8r2-section-3d-29ffb518.md"):
+        assert need_ in names, need_
     for n in names:
         t = open(os.path.join(REC, "inputs", n), encoding="utf-8").read()
         head = t.split("<!-- BODY BEGIN -->")[0]
@@ -250,3 +252,79 @@ def t_no_dashes_in_the_record():
     for p in files:
         t = open(p, encoding="utf-8").read()
         assert chr(0x2014) not in t and chr(0x2013) not in t, "%s carries an em or en dash" % os.path.relpath(p, ROOT)
+
+
+# ------------------------------------------------------------------------------------------------ round 3 (the panel's contract)
+R3SCRIPT = os.path.join(REC, "l5r3_panel.py")
+R3OUT = os.path.join(REC, "l5r3_panel.out")
+R3PAGE = os.path.join(REC, "L5-PANEL-R3.md")
+R3APPLY = os.path.join(REC, "apply_l5r3.py")
+PANEL = os.path.join(ROOT, "v2", "docs", "PANEL.md")
+ASSEMBLY = os.path.join(ROOT, "v2", "docs", "ASSEMBLY.md")
+
+
+def _R3():
+    if "R3" not in _C:
+        sp = importlib.util.spec_from_file_location("l5r3_panel_under_test", need(R3SCRIPT, "the round 3 reader"))
+        m = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(m)
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l5r3_panel.py refused (exit %s)" % e.code)
+        _C.update(R3=m, R3R=R, R3text=m.render(R))
+    return _C["R3"]
+
+
+def t_r3_output_reproduced_and_every_finding_resolved():
+    m = _R3()
+    assert _C["R3text"] == open(R3OUT, encoding="utf-8").read(), "l5r3_panel.out is not what the reader prints"
+    assert {f for e in m.T for f in m.FINDINGS if e["finding"].startswith(f + " ")} == set(m.FINDINGS)
+    assert len(_C["R3R"]["cover"]) == 36 and all(_C["R3R"]["cover"].values())
+
+
+def t_r3_the_panel_page_states_one_value_where_it_stated_two():
+    t = " ".join(open(PANEL, encoding="utf-8").read().split())
+    assert "never dimmed below 10 % duty" not in t, "the TX lamp's floor contradicting NVG's 2 % is back"
+    assert "first writes the configuration registers so every LED bit is an input" not in t
+    assert "for 3 s, a chirp, the battery bar" not in t and "a double chirp" in t
+    warn = t.split("MASTER WARN flashes (3 to 5 Hz) for any unacknowledged red condition (")[1].split(";")[0]   # the list, not its note
+    assert "slot fault" not in warn and "two compute modules lost" in warn
+    assert "refresh at most once a minute," not in t and "a change of page refreshes at once" in t
+    assert "SOS QUEUED: MARGIN HOLD, COOLING" in t and "slot 3 = `HDMI_SEL2` high" in t
+    assert "until the operator acts." not in t
+
+
+def t_r3_the_contract_rows_carry_the_decisions_and_their_tables_hold():
+    t = open(HWFW, encoding="utf-8").read()
+    rows = {}
+    for l in t.split("\n"):
+        c = _cells(l)
+        if c and re.match(r"^(FW|V)-[A-Z]\d\d$", c[0]):
+            assert c[0] not in rows, "row %s occurs twice" % c[0]
+            rows[c[0]] = " ".join(" | ".join(c).split())
+    assert "30 minutes have passed" in rows["FW-C14"] and "X_SA_PD 1" in rows["FW-D01"] and "X_MMUTE 0" in rows["FW-D01"]
+    assert "SOS QUEUED: MARGIN HOLD, COOLING" in rows["FW-C15"] and "PI_BTN_n" in rows["FW-C03"]
+    assert "### 3.8 Values adopted from the panel firmware" in t and "| 2 (L5-R3) |" in t
+
+
+def t_r3_the_pi_texts_are_drafted_and_provisional_with_their_trigger():
+    trig = "PROVISIONAL until l8r2's apply_gen_sch_c_pibtn.py is released and board C regenerated"
+    for path, n in ((PANEL, 3), (ASSEMBLY, 1), (HWFW, 1)):
+        t = " ".join(open(path, encoding="utf-8").read().split())
+        assert t.count(trig) >= n, (os.path.basename(path), t.count(trig))
+        assert "PI_BTN_n" in t or "U1 P1.3" in t
+
+
+def t_r3_the_apply_script_refuses_a_second_run():
+    for path in (PANEL, HWFW, ASSEMBLY):
+        r = subprocess.run([sys.executable, "-B", need(R3APPLY, "the round 3 patch"), path, "--check"], capture_output=True, text=True)
+        assert r.returncode == 3 and "already applied" in r.stderr, (path, r.stderr[-200:])
+
+
+def t_r3_the_pages_table_is_the_readers():
+    m = _R3()
+    page = open(R3PAGE, encoding="utf-8").read()
+    i, j = page.index("<!-- l5r3-table:begin -->"), page.index("<!-- l5r3-table:end -->")
+    block = [l for l in page[i:j].split("\n")[1:] if l.strip()]
+    assert block == m.md_rows(_C["R3R"]), "the round 3 page's table is not the reader's"

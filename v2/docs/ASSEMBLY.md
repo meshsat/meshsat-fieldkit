@@ -124,7 +124,7 @@ So, INFERRED from the committed board heights, the pocket is expected to hold ab
 | Block signal wires | E6 `J_BLK` (twelve lands) | dock block wire lands, underside | 24 AWG, 60 mm each, named on the block's legend | soldered both ends |
 | Block power pair | E6 `P_CP` and `P_CN` | dock block wire holes | 12 AWG silicone, 60 mm | soldered both ends |
 | MAIN button | C7 `J_MAINSW` (two solder lands on the underside, beaded) | A22 `J_MAINSW` (XH2.5) | 24 AWG twisted | XH2.5 at the A22 end; unplugs there |
-| PI button | SW_PI's contacts | C7 `J_PIJ2` lands (the panel controller reads it; nothing leaves the backer) | 24 AWG | soldered, beaded |
+| PI button | SW_PI's contacts | C7 `J_PIJ2` lands (the panel controller reads it on U1 P1.3; nothing leaves the backer; DRAFTED by record l8r2 at `29ffb518`, PROVISIONAL until l8r2's apply_gen_sch_c_pibtn.py is released and board C regenerated; as generated no controller pin reads it, the panel firmware's F-01) | 24 AWG | soldered, beaded |
 | Panel ribbon | B16 `J_PANEL` | C7 `J_PANEL` (SMD box header on the underside) | 26-way 1.27 ribbon, 350 mm | IDC 2x13 both ends |
 | A to B ribbon | A22 `J_AB1` (top) | B16 `J_AB1` (underside, the same case XY) | 26-way 1.27 ribbon, 80 mm, folded once | IDC 2x13 both ends |
 | Mezzanine harness (USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V) | A22 `J_MEZZ1` | D8 `J_HARN1` | 16-way ribbon, 60 mm | IDC 2x8 |
