@@ -979,7 +979,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
        amperes, so the FET's resistance there, its saturation and the loop's inductance are not printed: 566 A for 4.5 us (1.441 A2s) is E11-38's TEST
        TARGET for the recorded peak, and a reading over it revises the figure; the 813 prints no pulse rating, so the contact, the 24 AWG and the
        clamp are left to the bench's qualification (E11-38), not bounded (MAKER, INFERRED)
-     the pins: IN at most 41.1 V by TI's Equation 14 at that bound with U42 within 20 nH of C236 (90.7 uF effective, ESR 27 mOhm printed) against
+     the pins: IN at most 41.1 V by TI's Equation 14 at that extrapolation with U42 within 20 nH of C236 (90.7 uF effective, ESR 27 mOhm printed) against
        the absolute 67 V (I; the 20 nH a layout requirement, SESSION); OUT's negative spike through the output loop's inductance clamped by a
        Schottky D23 at OUT (TI 9.4.1, 9.5.1); OUT's -0.3 V absolute minimum is not shown under a clamp at hundreds of amperes: left to the bench (E11-38,
        Q-TI-18) (MAKER, INFERRED)

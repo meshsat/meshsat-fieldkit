@@ -125,8 +125,14 @@ its 18 V line, PV_F 83.47 V over the recommended 80 V row; D4's cold connection 
 the absolute ratings; the sense model rectified (D-16: the monitor's average +7.9 %, the limit below its setting, MODELED; 'no
 damage' withdrawn); R96 at 0.1 %; L4-E7's files re-pinned. The exit, In short and the new section 8e (out 28): the collaborator's
 recheck astra-check-l4close-2 (at `650b5694` on `fnd/int27`, cited) NOT YET, its six items with their states after the corrections,
-none restated as accepted, and the status line's exact coverage (addressed in drafts, corrected after the recheck, open). Status: known defects addressed in drafts; feasibility conditions remain
-open.
+none restated as accepted, and the status line's exact coverage (addressed in drafts, corrected after the recheck, open). Round 5
+(3 October 2026, the owner's amendment of 3 October, section 4): L4-E11's residue merged (`73d68c8c`) and re-pinned; every register
+row given one Class and the Next action of its kind (KNOWN ENGINEERING DEFECT, PHYSICAL UNCERTAINTY, UNCERTAIN DESIGN CHOICE, SETTLED
+WORK), the defect rows and the choices too (the page's 8f, output section 29), the three comparisons (the battery switch and the charger
+selected within the session's authority, carried from L4-E11; the cell an owner decision, OW-9 then OW-3) and the supplier package's
+task list (8g: phase 1 the known design defects, phase 2 the physical uncertainties); the status replaced by the owner's review's text
+(L4-SH03), verbatim. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
 |---|---|
@@ -159,4 +165,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 58 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 59 tests.

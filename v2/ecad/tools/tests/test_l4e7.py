@@ -887,7 +887,7 @@ def t_the_guard_already_on_is_bounded_in_the_loaded_network():
         assert pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN") and 0.9 < tf[0] <= 1.0 <= tf[1] < 1.1 and 0.001 < esr < 0.02
     ce = b6["ceff"]
     assert ce["F_lo"][1] < ce["F_lo"][0] < 4 * 2.2e-6 and ce["S_lo"][1] < ce["S_lo"][0] < 4 * 10e-6 and ce["C_hi"][1] < ce["C_hi"][0] <= (20e-6 + 4.8e-6) * 1.1 + 1e-12
-    # the selected network: every rating with its margin at its floor, U5 binding, failing under it
+    # the drafted network at round 2's reference loop (no passing floor claimed, round 5), U5 binding, failing under it
     W = b6["W"]
     # round 5: at round 2's reference loop the only resistive rating outside its line is U5's positive peak, and only for a fault at
     # the connector (no lead resistance credited); the far-end case is round 2's figure; no passing floor is claimed
@@ -989,7 +989,7 @@ def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
     assert all(r["r_peak_reg"] > r3["V_OP"][1] for r in rows[:6]) and rows[6]["r_peak_reg"] < r3["V_OP"][1]
     assert "u5p" in rows[6]["tr"][3.3e-6]["fails"] and r3["floors"][rows[6]["lab"]]["u5p"] is None
     assert all(f in r3["floors"] for f in (rows[1]["lab"], rows[2]["lab"], rows[6]["lab"]))
-    # the parasitics' budget at the selected network's floor: the rise stays inside round 2's margin line, Q12's turn-off at 5 nH does not;
+    # the parasitics' budget at round 2's reference loop (round 5): the rise is over the margin line and Q12's turn-off past it;
     # the inductance scan is monotone and names the largest inductance the margin holds for
     pa = r3["parA"]
     assert pa["up"] > 0 > pa["dn"] and abs(pa["dn"]) > pa["up"] and abs(pa["l_up"] - r3["L59"] * pa["up"]) < 1e-12 and abs(pa["l_dn"] - r3["L59"] * pa["dn"]) < 1e-12
@@ -1040,13 +1040,58 @@ def t_round_4_the_inp_divider_tolerance_and_pv_fs_operating_row():
     assert abs(inp_row[1] - b6["W"]["vF"] * b6["kinp"]) < 1e-9 and inp_row[1] <= 20.0
     assert (inp_row[1] > inp_row[2]) == any(v[0] == "inp" and (v[2] - v[1]) * v[3] < -1e-12 for v in b6["valsA"])
     s_ = _s10(R)
-    for k_ in ("PV_F'S BASIS (round 4, L6P-F10)", "RECOMMENDED operating row for VS, CS+ and CS- is 80 V", "THE INP DIVIDER (round 4, L6P-F04)",
+    for k_ in ("PV_F'S BASIS (round 4, L6P-F10)", "RECOMMENDED operating row for VS, CS+ and CS- is 80 V", "THE INP DIVIDER (rounds 4 and 5, L6P-F04)",
                "PV_F under the recommended operating 80 V row (OPEN at round 2's loop"):
         assert k_ in s_, k_
     page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
     for fig in ("%.2f uH" % (1e6 * b6["pvf80"]), "RT0603BRD0728KL", "recommended operating", "%.2f V" % b6["W"]["vF"], "L6P-F04", "L6P-F10",
                 "%.2f V" % inp_row[1]):
         assert fig in page, fig
+
+
+def t_round_5_the_output_and_the_page_agree_on_the_floor_and_the_turn_off():
+    """Round 5's residues (the consolidation reading 1a73f5b4): the output's approaches paragraph says what the page's table says,
+    (A) a reference loop only with no passing loop, never SELECTED with the floor standing; the budget sentence compares each
+    turn-off figure with the absolute maximum and the margin line in words that match its sign, at both fault positions; no
+    stale floor wording survives in the output or in the page's budget and approaches."""
+    import re
+    R = _R()
+    b6 = R["remedy"]["b6"]
+    r3 = b6["r3"]
+    out = " ".join(open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read().split())
+    raw_page = open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read()
+    page = " ".join(raw_page.split())
+    # (A): the output's approaches paragraph and the page's row
+    i = out.find("THE THREE APPROACHES"); j = out.find("(B) A pin-level limiter", i)
+    a_out = out[i:j]
+    assert 0 < i < j and "SELECTED" not in a_out and "floor stays" not in a_out and "WITHDRAWN" in a_out and "NO PASSING LOOP" in a_out
+    assert "%+.4f to %+.4f V" % (r3["parA0"]["lo"], r3["parA0"]["hi"]) in a_out
+    row = [ln for ln in raw_page.splitlines() if ln.startswith("| (A) |")]
+    assert len(row) == 1
+    cells = [c.strip() for c in row[0].strip("|").split("|")]
+    assert "Selected" not in cells[1] and "WITHDRAWN" in cells[2] and "no passing loop" in cells[3].lower()
+    # the turn-off against the absolute maximum and the margin line, in words matching the sign, both fault positions
+    m0 = re.search(r"at the connector \(no lead resistance credited\) the pins read ([+-][\d.]+) to ([+-][\d.]+) V, and the turn-off's ([+-][\d.]+) V is (PAST|inside) the -([\d.]+) V absolute maximum", out)
+    mr = re.search(r"at the lead's far end they read ([+-][\d.]+) to ([+-][\d.]+) V, and the turn-off's ([+-][\d.]+) V is (PAST|inside) the absolute maximum and (past|inside) the -([\d.]+) V margin line", out)
+    assert m0 and mr
+    lim, line = float(m0.group(5)), float(mr.group(6))
+    assert lim == b6["csd_abs"] and line == b6["U5_LIM"]
+    t0, tr = float(m0.group(3)), float(mr.group(3))
+    assert abs(t0 - r3["parA0"]["lo"]) < 5e-5 and abs(tr - r3["parAr"]["lo"]) < 5e-5
+    assert (m0.group(4) == "PAST") == (t0 < -lim) and (mr.group(4) == "PAST") == (tr < -lim) and (mr.group(5) == "past") == (tr < -line)
+    mp = re.search(r"Against the ([\d.]+) V margin line the rise is (over|under) it by ([\d.]+) V .*? and the turn-off (is past|stays inside) it by ([\d.]+) V", out)
+    assert mp and (mp.group(2) == "over") == (r3["parA"]["hi"] > b6["U5_LIM"]) and (mp.group(4) == "is past") == (r3["parA"]["lo"] < -b6["U5_LIM"])
+    # the page's budget bullets say the same, with the sign
+    assert ("turn-off's %+.4f V is **PAST the -0.3 V absolute maximum**" % r3["parA0"]["lo"] in page) == (r3["parA0"]["lo"] < -b6["csd_abs"])
+    assert "turn-off's %+.4f V is inside the absolute maximum but past the -0.240 V margin line" % r3["parAr"]["lo"] in page
+    # no stale floor wording in the output; none in the page's budget and approaches either
+    for phrase in ("the floor stays", "(A) SELECTED", "holds from 3.30", "a pass only for a loop", "every rating with its margin for a loop of at least",
+                   "every rating with its margin for a source loop of at least", "the floor bisected", "at the floor against", "the floor's",
+                   "the turn-off at 5 nH does NOT", "the turn-off at 5 nH stays"):
+        assert phrase not in out, phrase
+    k = raw_page.find("**The parasitics' budget** at round 2's reference loop"); e = raw_page.find("So RSENSE1's inductance", k)
+    budget_page = raw_page[k:e]
+    assert 0 < k < e and "does NOT;" not in budget_page and max(len(ln) for ln in raw_page.splitlines()) < 2000
 
 
 def t_the_clarification_drafts_follow_the_decision():

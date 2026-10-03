@@ -4167,14 +4167,14 @@ def render(R):
              rm["off116"]["v"], rm["off116"]["v115"], QF["vds"], rm["off116"]["en"], rm["off116"]["inp"], 1e3 * rm["off116"]["e"],
              abs(rm["off116"]["floor"]), 1e12 * QF["coss"]), "MEETS"),
         ("a stiff %.0f V source arriving with the block on (B6: a step from every state the guard is on in, and ramps)" % R["lead"]["v_src"],
-         "MODELED in THE GUARD ALREADY ON, ROUND 2 below, every ceramic bank its maker's curves bounded on its own: every rating with its "
-         "margin (U5 within +-%.3f V, the timestep's error added) for a source loop of at least %.2f uH: Q12 turns off at most %.1f A "
-         "within %.1f us, PV_F at most %.1f V (slew %.1f V/us), PV_P %.2f V, TRK_VS %.2f V (D4's least breakdown at the cold end %.2f V: "
-         "D4 carries no current), U5 %.4f V and %.4f V, Q12 at %.3f of its derated chart; a rising source cut with D4's room at least "
-         "%.3f V at any rate. Under that loop U5 passes the margin and then the absolute maximum (at 1.00 uH %.4f V), and no approach "
-         "within the makers' printed rules removes the floor" % (
-             b6["U5_LIM"], 1e6 * b6["LA"], b6["W"]["iQ"], 1e6 * b6["W"]["ton"], b6["W"]["vF"], b6["W"]["slew"] / 1e6, b6["W"]["vP"],
-             b6["W"]["vS"], DN["vbr_cold"], b6["W"]["u5"] + b6["ERR"], b6["W"]["u5n"] - b6["ERR"], b6["W"]["soa12"],
+         "MODELED in THE GUARD ALREADY ON (rounds 2 to 5) below, every ceramic bank its maker's curves bounded on its own, both fault "
+         "positions: no loop is claimed to pass. At round 2's %.2f uH, a reference loop only: Q12 turns off at most %.1f A within %.1f us, "
+         "PV_F at most %.1f V (slew %.1f V/us), PV_P %.2f V, TRK_VS %.2f V (D4's least breakdown at the cold end %.2f V: D4 carries no "
+         "current), U5 %.4f V and %.4f V against +-%.3f V (the timestep's error added), Q12 at %.3f of its derated chart; a rising source "
+         "cut with D4's room at least %.3f V at any rate. At 1.00 uH U5 reads %.4f V, over the absolute maximum, and no approach within "
+         "the makers' printed rules removes the dependency on the source's loop" % (
+             1e6 * b6["LA"], b6["W"]["iQ"], 1e6 * b6["W"]["ton"], b6["W"]["vF"], b6["W"]["slew"] / 1e6, b6["W"]["vP"],
+             b6["W"]["vS"], DN["vbr_cold"], b6["W"]["u5"] + b6["ERR"], b6["W"]["u5n"] - b6["ERR"], b6["U5_LIM"], b6["W"]["soa12"],
              DN["vbr_cold"] - b6["ramp_w"]["vS"], b6["W1u"]["u5"] + b6["ERR"]),
          "NOT MET: no passing loop is claimed (round 5); at round 2's %.2f uH a fault at the connector reads U5 %.4f V resistive and the pins %+.4f to %+.4f V with RSENSE1's 5 nH and the Kelvin pair, against +-0.240 V; the complete stage question is the engineer's (B6-ENG-1 with B6-ENG-2's stage-level note); PV_F over the recommended operating VS row (%.0f V) there, OPEN" % (
              1e6 * b6["LA"], b6["u5_case"][0.0], b6["r3"]["parA0"]["lo"], b6["r3"]["parA0"]["hi"], b6["vs_rec"])),
@@ -4259,15 +4259,16 @@ def render(R):
     cv_ = b6["conv"]
     wrapP("       ", "       ", "THE ENVELOPE AND THE MODEL (MODELED, guard_event_b: the round-1 network's nodes, parts and U21's latest commands, "
           "every ceramic bank its curves at its own voltage, the chord capacitance iterated in each step): a stiff %.0f V source with "
-          "no source impedance credited, its loop from %.2f to %.2f uH (%d values, 10 %% apart, the floor bisected), whether the fault "
-          "sits at the connector (the loop is the source's own) or at the lead's far end (the lead's added), the lead's resistance at the "
-          "cold end (%.4f Ohm; %.4f Ohm at a1solar's %.0f C); the starts %s; the bulk %s; D11 at both ends. THE TIMESTEP: the worst case "
-          "near the floor (%.2f V, %.4f A) from 40 ns down to 0.5 ns, %s; the error bound added to U5 is twice the largest difference "
+          "no source impedance credited, its loop from %.2f to %.2f uH (%d values, 10 %% apart; round 2 bisected a floor on it, WITHDRAWN "
+          "in round 5), whether the fault sits at the connector (the loop is the source's own and no lead resistance is credited) or at "
+          "the lead's far end (the lead and its resistance added), the lead's resistance at the cold end for the far end only (%.4f Ohm; "
+          "%.4f Ohm at a1solar's %.0f C); the starts %s; the bulk %s; D11 at both ends. THE TIMESTEP: the worst case near round 2's "
+          "reference loop (%.2f V, %.4f A) from 40 ns down to 0.5 ns, %s; the error bound added to U5 is twice the largest difference "
           "from the 0.5 ns value at 20 ns or less, %.6f V" % (
               R["lead"]["v_src"], 1e6 * b6["grid"][0], 1e6 * b6["grid"][1], b6["grid"][2], b6["r_lead"], R["lead"]["lead"]["r"], b6["t_lead"],
               "; ".join(b6["st"]), "; ".join(b6["bk"]), b6["conv_case"][0], b6["conv_case"][1],
               ", ".join("%g ns %.6f V" % (1e9 * dt_, u_) for dt_, u_ in cv_), b6["ERR"]))
-    P("       THE SELECTED NETWORK (A) AT %.2f uH (round 2's reference loop, WITHDRAWN as a passing floor in round 5), the worst over every start, bulk" % LAu)
+    P("       THE DRAFTED NETWORK (A) AT %.2f uH (round 2's reference loop, WITHDRAWN as a passing floor in round 5), the worst over every start, bulk" % LAu)
     P("       corner, D11 end and both fault positions (at the connector with no lead resistance credited; at the lead's far end), each resistive")
     P("       rating against its limit with its margin (and the least loop on the grid each holds from, a property of that rating alone):")
     for id_, v_, l_, s_ in b6["valsA"]:
@@ -4285,11 +4286,13 @@ def render(R):
               max(c_["vF"] for c_ in cn_), max(c_["vS"] for c_ in cn_)))
     wrapP("       ", "       ", "PV_F'S BASIS (round 4, L6P-F10): the %.0f V absolute maximum less 10 %% is the exclusion line above (the project's "
           "rule since L4-E12's B2: an absolute rating only excludes); the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- is %.0f V "
-          "(SLUSEE5E 6.2), which the floor's %.2f V exceeds by %.2f V: OPEN on the guard, under that row from %s; carried in R-176 row 3 and "
-          "B6-ENG-1. THE INP DIVIDER (round 4, L6P-F04): R96 over R97 at 0.1 percent in this record and in the draft (YAGEO RT0603BRD0728KL, "
-          "0.1 percent, 25 ppm/K, code owed); INP reads %.4f V at the floor against %.1f V" % (
+          "(SLUSEE5E 6.2), which the %.2f V at round 2's reference loop exceeds by %.2f V: OPEN on the guard, under that row from %s; carried "
+          "in R-176 row 3 and B6-ENG-1. THE INP DIVIDER (rounds 4 and 5, L6P-F04): R96 over R97 at 0.1 percent in this record and in the "
+          "draft (YAGEO RT0603BRD07100KL and RT0603BRD0728KL, 0.1 percent, 25 ppm/K, codes owed); INP reads %.4f V at round 2's reference "
+          "loop, %s its %.1f V margin line (inside the %.0f V absolute maximum)" % (
               100.0, b6["vs_rec"], b6["W"]["vF"], b6["W"]["vF"] - b6["vs_rec"], ("%.2f uH" % (1e6 * b6["pvf80"])) if b6["pvf80"] else "no loop on the grid",
-              b6["W"]["vF"] * b6["kinp"], [v_ for v_ in b6["valsA"] if v_[0] == "inp"][0][2]))
+              b6["W"]["vF"] * b6["kinp"], "over" if b6["W"]["vF"] * b6["kinp"] > [v_ for v_ in b6["valsA"] if v_[0] == "inp"][0][2] else "under",
+              [v_ for v_ in b6["valsA"] if v_[0] == "inp"][0][2], T4["pin_abs"]))
     wrapP("       ", "       ", "AT %.2f uH U5's resistive peak alone, with the numerical error, reads %.4f V at a fault at the connector and %.4f V at the "
           "lead's far end against the %.3f V line: the far-end case is round 2's figure, the connector case is over the line, and the complete "
           "budget with RSENSE1's inductance is in THE PARASITICS' BUDGET below (round 5). Under it: at 1.00 uH %s (U5 %.4f V), "
@@ -4316,9 +4319,11 @@ def render(R):
               1e6 * b6["grid"][0], b6["slew_abs"] / 1e6, T4["pin_abs"], ("%.2f uH" % (1e6 * b6["cold_from"])) if b6["cold_from"] else "nowhere on the grid",
               b6["cold_r"]["vF"], b6["cold_r"]["slew"] / 1e6, b6["cold_r"]["vF"] * b6["kinp"], b6["cold"]["iL"],
               1e3 * b6["cold"]["e11"], b6["i_start"], rm["ocp_lo"]))
-    wrapP("       ", "       ", "THE THREE APPROACHES (at most three, the review's and the coordinator's): (A) SELECTED, the round-1 guard with "
-          "parts a maker characterises, bounded bank by bank: every rating with its margin for a loop of at least %.2f uH (two conductors "
-          "%.2f mm apart over 5 m); the floor stays. (B) A pin-level limiter (series resistors into CSPIN and CSNIN with a clamp or "
+    wrapP("       ", "       ", "THE THREE APPROACHES (at most three, the review's and the coordinator's): (A) the round-1 guard with parts a "
+          "maker characterises, bounded bank by bank, the network drafted: NO PASSING LOOP (round 5). Round 2's %.2f uH (two conductors "
+          "%.2f mm apart over 5 m) is a reference loop only, WITHDRAWN as a passing floor: there a fault at the connector reads the pins "
+          "%+.4f to %+.4f V against +-%.3f V; no approach passes, and the complete stage question is the engineer's (B6-ENG-1). "
+          "(B) A pin-level limiter (series resistors into CSPIN and CSNIN with a clamp or "
           "capacitor across the pins), which would bound the pins' differential whatever the loop: NOT TAKEN on the LT8705A's printed "
           "statements. 8705af p.30: \"all four of the current sense pins can draw bias current under normal operating conditions. As "
           "such, do not place resistors in series with any of the CSxIN or CSxOUT pins\", and CSNIN also feeds the boost capacitor "
@@ -4326,10 +4331,12 @@ def render(R):
           "pins' bias, %.0f uA, with no maximum and no split (10 Ohm a pin on that sum alone is %.2f %% of the sense at the regulation's "
           "highest current, and the boost block's draw has no bound); the RC filter p.34 shows is for CSP and CSN only, 10 Ohm at most, "
           "under 30 ns. The question is drafted for Analog Devices (clarification/analog-devices-lt8705a.txt). (D) The TPS48111-Q1, its "
-          "short-circuit propagation %.2f us at most against the TPS48110-Q1's %.0f us: the floor falls to %.2f uH (%.2f mm), but its "
+          "short-circuit propagation %.2f us at most against the TPS48110-Q1's %.0f us: the loop where its U5 resistive peak alone meets "
+          "the line falls to %.2f uH (%.2f mm; no floor is claimed for it either), but its "
           "pin 2 is INP_G, so it has no OV input and the cut-off would move to INP (%.0f us) through a reference whose response no held "
           "sheet prints: not taken. At 1.00 uH (D) still reads U5 %.4f V" % (
-              LAu, 1e3 * b6["sA"], 1e6 * b6["ibias_sum"], 100 * b6["lim_err"], b6["tsc11"][1], b6["tsc"][1], LDu, 1e3 * b6["sD"],
+              LAu, 1e3 * b6["sA"], b6["r3"]["parA0"]["lo"], b6["r3"]["parA0"]["hi"], b6["U5_LIM"], 1e6 * b6["ibias_sum"], 100 * b6["lim_err"],
+              b6["tsc11"][1], b6["tsc"][1], LDu, 1e3 * b6["sD"],
               b6["tinp"], b6["WD1"]["u5"] + b6["ERR"]))
     pq_, pq0_, pqr_ = b6["r3"]["parA"], b6["r3"]["parA0"], b6["r3"]["parAr"]
     wrapP("       ", "       ", "THE ENGINEER'S ROW B6-ENG-1 (restated in round 5 after the recheck: no approach within the makers' printed rules holds "
@@ -4406,16 +4413,21 @@ def render(R):
           "RSENSE1's inductance at the WSL's printed bound %.0f nH and the Kelvin pair's loop %.0f nH (the layout obligation: the pair from the "
           "pad centres, together, over the ground return): RSENSE1's current rises at most %.2f A/us during the charging (RSENSE1's "
           "inductance %+.4f V, the pair %+.4f V) and falls at most %.1f A/us when Q12 turns off within its %.0f ns gate fall (%+.4f V and "
-          "%+.4f V). The pins read at most %+.4f V on the rise (resistive %.4f, numerical %.6f) and %+.4f V at the turn-off, against +-%.1f V: "
-          "the rise %s round 2's %.3f V margin line (by %+.4f V; the rise's inductive and Kelvin terms are %.4f V at 5 nH), the turn-off at 5 nH %s. "
-          "BY FAULT POSITION: at the connector (no lead resistance credited) the pins read %+.4f to %+.4f V, at the lead's far end %+.4f to %+.4f V. "
+          "%+.4f V). THE PINS, the worst of both fault positions: at most %+.4f V on the rise (resistive %.4f, numerical %.6f) and %+.4f V "
+          "at the turn-off. Against the %.3f V margin line the rise is %s it by %.4f V (its inductive and Kelvin terms %.4f V at 5 nH) and the "
+          "turn-off %s it by %.4f V. BY FAULT POSITION: at the connector (no lead resistance credited) the pins read %+.4f to %+.4f V, and "
+          "the turn-off's %+.4f V is %s the -%.1f V absolute maximum; at the lead's far end they read %+.4f to %+.4f V, and the turn-off's "
+          "%+.4f V is %s the absolute maximum and %s the -%.3f V margin line. "
           "Over RSENSE1's inductance at this loop (%s; OUT: a polarity outside the line) %s. The ceramics' ESL and tap (%.2f nH a part at most, %.1f nH tap) move "
           "the node, not the pin difference, and are in the operating model above. So RSENSE1's inductance, printed by no maker for the "
           "chosen part, is part of the stage question handed to the engineer" % (
               LAu, 1e9 * r3["L59"], 1e9 * r3["L_KEL"], 1e-6 * pa_["up"], pa_["l_up"], pa_["k_up"], 1e-6 * abs(pa_["dn"]), 1e9 * r3["t_f"], pa_["l_dn"], pa_["k_dn"],
-              pa_["hi"], b6["W"]["u5"], b6["ERR"], pa_["lo"], b6["csd_abs"], "stays inside" if pa_["hi"] <= b6["U5_LIM"] else "EXCEEDS", b6["U5_LIM"],
-              pa_["hi"] - b6["U5_LIM"], pa_["hi"] - b6["W"]["u5"] - b6["ERR"], "stays inside it" if pa_["lo"] >= -b6["U5_LIM"] else "does NOT",
-              r3["parA0"]["lo"], r3["parA0"]["hi"], r3["parAr"]["lo"], r3["parAr"]["hi"],
+              pa_["hi"], b6["W"]["u5"], b6["ERR"], pa_["lo"], b6["U5_LIM"], "over" if pa_["hi"] > b6["U5_LIM"] else "under",
+              abs(pa_["hi"] - b6["U5_LIM"]), pa_["hi"] - b6["W"]["u5"] - b6["ERR"], "is past" if pa_["lo"] < -b6["U5_LIM"] else "stays inside",
+              abs(pa_["lo"] + b6["U5_LIM"]),
+              r3["parA0"]["lo"], r3["parA0"]["hi"], r3["parA0"]["lo"], "PAST" if r3["parA0"]["lo"] < -b6["csd_abs"] else "inside", b6["csd_abs"],
+              r3["parAr"]["lo"], r3["parAr"]["hi"], r3["parAr"]["lo"], "PAST" if r3["parAr"]["lo"] < -b6["csd_abs"] else "inside",
+              "past" if r3["parAr"]["lo"] < -b6["U5_LIM"] else "inside", b6["U5_LIM"],
               "; ".join("%.1f nH %+.3f to %+.3f V%s" % (1e9 * l_, lo_, hi_, "" if ok_ else " OUT") for l_, hi_, lo_, ok_ in r3["l59_scan"]),
               ("both polarities stay inside the line up to %.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "no inductance tried brings both polarities inside the line at this loop (information, not a search for a passing value)",
               1e9 * max(r3["esl"].values()), 1e9 * r3["L_TAP"]))
@@ -4443,7 +4455,7 @@ def render(R):
           "share is measured or the sense arrangement changes: the engineer's row B6-ENG-2 (affected circuit: U5's input sense, RSENSE1, "
           "CSPIN, CSNIN, C13 to C15, C71 to C74; evidence: this model, the sheet's p.5 and p.31; decision or measurement needed: the pins' "
           "waveform in operation at 25 V in and the lowest bus, or Analog Devices' statement of what the amplifier reads above 100 mV, or "
-          "enough low-derating capacitance behind RSENSE1 (which raises B6's floor); pass criterion: the pins within +-%.0f mV at every "
+          "enough low-derating capacitance behind RSENSE1 (which worsens B6's guard-on transient); pass criterion: the pins within +-%.0f mV at every "
           "operating point, or the regulated input current measured within the error budget at the 25 V corner; consequence of failure: "
           "the input limit regulating off its setting at high input and a low bus (this model: below it), and a possible stress on the sense "
           "pins at the switching edges (the sensitivity at 10 ns edges reaches %+.4f V at the pins, beyond the -0.3 V absolute maximum); "
@@ -4469,7 +4481,7 @@ def render(R):
           "parts, U21's DGX-19 land, the regeneration and its gates, and R-176's bench rows, REVISED: (1) the cut-off's rise and fall "
           "on a ramped supply (%.2f to %.2f V rising, %.2f V or more falling); (2) a %.0f V supply connected cold: Q12 never conducts, D4 "
           "carries nothing, PV_F at most %.0f V, its slew and INP inside their absolute ratings (their 10 %% margin lines are not held at a "
-          "connector fault near the envelope's floor, round 5); (3) at layer 9, the waveforms at the IC pins: a %.0f V supply stepped onto the port "
+          "connector fault near the envelope's least loop, round 5); (3) at layer 9, the waveforms at the IC pins: a %.0f V supply stepped onto the port "
           "with the guard on, from about %.1f V and from 25 V, through a loop measured first: U5's CSPIN to CSNIN within +-%.3f V, U21 "
           "turning Q12 off (at most %.0f A, within %.0f us), D4 carrying nothing, PV_P under %.2f V, PV_F under the recommended operating "
           "%.0f V row (OPEN at round 2's loop, %.2f V); no loop is claimed to pass (round 5): at "

@@ -201,8 +201,8 @@ def t_every_downstream_item_has_an_owner_and_an_acceptance():
     ids = [r[0] for r in rows]
     assert len(ids) == len(set(ids)), "register ids repeat"
     for r in rows:
-        assert len(r) == 8, "%s does not have eight columns" % r[0]
-        rid, kind, item, frm, owner, acc, state, order = r
+        assert len(r) == 10, "%s does not have ten columns" % r[0]
+        rid, kind, item, frm, owner, acc, state, order, cls, nxt = r
         assert re.fullmatch(r"R-\d{2,3}", rid), rid
         assert kind in ("IMPLEMENTATION", "LAYOUT", "TEST", "EVIDENCE", "RELEASE"), "%s kind %s" % (rid, kind)
         assert owner in m.OWNERS, "%s's owner %r is not a named layer and role" % (rid, owner)
@@ -1136,7 +1136,7 @@ def t_consolidation_the_handover_the_exit_and_the_status():
     for e in ex:
         assert e[1] in (m.QUALIFICATION, m.CONDITION, m.CONDITION_U02, m.QUALIFICATION_ONCE, m.SUPPORTED) and all(x.strip() for x in e[2:]), e[0]
     assert m.OWNER_DEFINITION in page.replace("\n", " ").replace("  ", " ") or m.OWNER_DEFINITION[:80] in page.replace("\n", " ")
-    assert "**Status: %s.**" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
+    assert "**Status:** %s" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
     if any(e[1] in (m.CONDITION, m.CONDITION_U02) for e in ex):
         assert "power closure is not reached" in page and "NOT reached" in _C["text"]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0].strip().split("\n")
@@ -1177,7 +1177,7 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
     assert {"2.416", "2.462", "1.22", "0.566", "0000h"} <= named
     page = open(PAGE, encoding="utf-8").read()
-    assert "T-H1 decides" in page and "(B1)" in page and "**Status: %s.**" % m.STATUS in page
+    assert "T-H1 decides" in page and "(B1)" in page and "**Status:** %s" % m.STATUS in page
 
 
 def t_consolidation_the_cell_route_and_normal_operation():
@@ -1293,7 +1293,12 @@ def t_consolidation_the_amendment_of_14_20():
     # the reconciliation names the figures that differ
     named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
     assert {"1.508", "1.509", "1.8102", "2.1997", "50.044", "52.134", "0.941", "0.98", "1.504", "1.856", "1.810", "2.455", "144.72", "81.76"} <= named
-    assert m.STATUS == "known defects addressed in drafts; feasibility conditions remain open" and "**Status: %s.**" % m.STATUS in short
+    # the status is the owner's review's text (L4-SH03), verbatim; the earlier phrase, which overstated closure, stands nowhere current
+    assert m.STATUS == ("Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are drafts, "
+                        "not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.")
+    assert "**Status:** %s" % m.STATUS in short
+    for f_ in (page.split("## Appendix A.")[0], open(REG, encoding="utf-8").read(), _C["text"], open(os.path.join(REC, "README.md"), encoding="utf-8").read()):
+        assert "known defects addressed in drafts" not in f_.lower(), "the earlier status phrase"
 
 
 def t_consolidation_the_panel_lead_surge():
@@ -1382,7 +1387,7 @@ def t_consolidation_the_panel_lead_surge():
     assert "addressed in drafts" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     n_nm = sum(1 for v_ in st.values() if v_[1] == "NOT MET")
-    assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "%d NOT MET" % n_nm in short and "**Status: %s.**" % m.STATUS in short
+    assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "%d NOT MET" % n_nm in short and "**Status:** %s" % m.STATUS in short
     led = m.cons_ledger(F)   # the review's E6 cited; the four rows not claimed closed (the ledger file is the coordinator's)
     assert "L4-E7R:1.6 and L4-E7R:2.4 needing B6's condition" in led and "REGRESSED" in led and "does not claim those four rows closed" in led
 
@@ -1667,7 +1672,7 @@ def t_the_decisions_are_kept_apart():
     assert gate_blocked == (v["the power-design closure gate"] == "BLOCKED"), "the gate's decision follows the gate"
     assert m.HANDOFF_OMITTED in dict((w, y) for w, _x, y in m.DECISIONS)["the engineer handoff"]
     lines = m.cons_decisions(F)
-    assert lines[0].startswith("**The decisions, kept apart**") and lines[-1] == "**Status: %s.**" % m.STATUS
+    assert lines[0].startswith("**The decisions, kept apart**") and lines[-1] == "**Status:** %s" % m.STATUS
     page = open(PAGE, encoding="utf-8").read()
     assert page.split("<!-- gen:decisions:begin -->")[1].split("<!-- gen:decisions:end -->")[0].strip() == "\n".join(lines)
     assert page.index("<!-- gen:decisions:begin -->") < page.index("## 7. Standalone analyses")
@@ -1849,15 +1854,69 @@ def t_the_collaborators_recheck_is_cited_not_accepted():
     assert blk == "\n".join(m.cons_check2(F)) and "NOT YET" in blk and "none is restated as accepted" in blk
     assert "28. THE COLLABORATOR'S TARGETED RECHECK (astra-check-l4close-2: NOT YET)" in _C["text"]
     dec = m.cons_decisions(F)
-    cov = [l_ for l_ in dec if l_.startswith("**What the status covers, exactly**")][0]
+    cov = [l_ for l_ in dec if l_.startswith("**What stands where, exactly**")][0]
+    kd = cov.split("**known design defects, open**")[1].split("**defects with a drafted correction")[0]
+    assert "D-10" in kd and "D-16" in kd and "E11-40" in kd and "addressed in drafts" not in cov.split("**Open:**")[0].lower()
     opn = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
     adr = [d["id"] for d in m.DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
-    assert all(x in cov.split("**Open:**")[1] for x in opn) and all(x in cov.split("**Drafts corrected")[0] for x in adr)
+    assert all(x in cov.split("**Open:**")[1] for x in opn) and all(x in cov.split("**Drafts corrected")[0].split("**defects with a drafted correction")[1] for x in adr)
     for c in ("b929d8be", "1a73f5b4", "20188e03"):
         assert c in cov, c
-    assert dec[-1] == "**Status: %s.**" % m.STATUS and [v for _w, v, _y in m.DECISIONS] == ["CONDITIONAL", "BLOCKED", "BLOCKED", "READY TO START, PROVISIONAL"]
+    assert dec[-1] == "**Status:** %s" % m.STATUS and [v for _w, v, _y in m.DECISIONS] == ["CONDITIONAL", "BLOCKED", "BLOCKED", "READY TO START, PROVISIONAL"]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     assert "astra-check-l4close-2" in short and "NOT YET" in short
+
+
+def t_the_open_items_are_classified():
+    """The owner's amendment of 3 October 2026, section 4: every register row, every defect row and every architecture-level choice has
+    exactly one class and a next action of that class's kind; the register's columns are the script's; the coordinator's named items sit
+    in their classes (the known design defects D-10's guard-on case, D-16 and E11-40; the physical uncertainties with a complete 5d
+    specification); every uncertain design choice has its comparison with a selection or an owner decision, never both and never
+    neither; every known defect maps to a phase 1 task and every physical uncertainty to phase 2; the page's blocks are the script's."""
+    m = _M()
+    F = _C["F"]
+    reg = _md_rows(REG, "| ID | Kind |")
+    cl = m.cons_classes(F, reg)
+    assert set(cl) == {r[0] for r in reg}
+    for r in reg:
+        c, n = cl[r[0]]
+        assert c in m.CLASSES and n.startswith(m.VERB[c]), (r[0], c, n[:40])
+        assert (r[8], r[9]) == (c, n), "%s: the register's class or next action is not the script's" % r[0]
+    for d in m.DEFECTS:
+        c = m.D_CLASS[d["id"]]
+        n = m.D_NEXT.get(d["id"], "DO: its implementation rows (resolved or superseded in design)")
+        assert c in m.CLASSES and n.startswith(m.VERB[c]), d["id"]
+        if d["state"].startswith("OPEN"):
+            assert c == m.KED, "an open defect is a known engineering defect: %s" % d["id"]
+    for u, (c, n) in m.U_CLASS.items():
+        assert c in m.CLASSES and n.startswith(m.VERB[c]), u
+    assert m.D_CLASS["D-10"] == m.KED and m.D_CLASS["D-16"] == m.KED and cl["R-190"][0] == m.KED and "E11-40" in [r for r in reg if r[0] == "R-190"][0][3]
+    route = {rid: q for q in m.cons_qual(F) for rid in re.findall(r"R-\d+", q[0])}
+    for rid in m.PHY_NAMED:
+        assert cl[rid][0] == m.PHY and rid in route and all(x.strip() for x in route[rid]) and len(route[rid]) == 10, rid
+        assert "5d's row" in cl[rid][1], rid
+    comps = {c["id"]: c for c in m.cons_comparisons(F)}
+    for rid, ids in m.UDC_ROWS.items():
+        assert cl[rid][0] == m.UDC and all(i.strip() in comps for i in ids.split(",")), rid
+    for c in comps.values():
+        assert bool(c["selection"]) != bool(c["owner"]), c["id"]
+        assert all(c[k].strip() for k in ("current", "alternative", "effort", "availability", "interfaces")), c["id"]
+        if c["selection"]:
+            assert c["selection"].startswith("SELECTED (SESSION") and "Reason:" in c["selection"] and "Reversed by:" in c["selection"], c["id"]
+        else:
+            assert c["owner"].startswith("OWNER DECISION") and ("money" in c["owner"] or "adoption" in c["owner"]), c["id"]
+    assert m.U_CLASS["U-01"][0] == m.UDC and comps["UDC-2"]["owner"]
+    p1 = {tk[0]: tk for tk in m.cons_p1_tasks(F)}
+    for rid, tk in m.KED_ROWS.items():
+        assert tk in p1 and rid in p1[tk][2] and cl[rid][1].startswith("ASSIGN") and tk in cl[rid][1], rid
+    page = open(PAGE, encoding="utf-8").read()
+    for name, fn in (("classes", m.cons_class_block), ("supplier", m.cons_supplier_block)):
+        assert page.split("<!-- gen:%s:begin -->" % name)[1].split("<!-- gen:%s:end -->" % name)[0].strip() == "\n".join(fn(F, reg)), name
+    sup = page.split("<!-- gen:supplier:begin -->")[1].split("<!-- gen:supplier:end -->")[0]
+    for rid, (c, _n) in cl.items():
+        if c == m.PHY:
+            assert rid in sup, "%s is in no phase 2 list" % rid
+    assert "29. THE OPEN ITEMS BY CLASS" in _C["text"]
 
 
 def t_every_commit_the_record_reads_is_in_this_branchs_history():
@@ -1976,5 +2035,7 @@ def t_no_dashes_and_no_claim_words_in_the_record():
         if p != os.path.abspath(__file__):
             # L4-E10's battery comparison's class label GUARANTEED (a maker's printed limit; the owner's amendment of 2 October 2026),
             # carried verbatim as the budget's cell row, is a label, not a claim: only the exact uppercase word is admitted
+            # the owner's review's status text (L4-SH03), carried verbatim, says "not an implemented or qualified circuit": a denial, not a claim
+            t = " ".join(t.split()).replace(" ".join(_M().STATUS.split()), "")
             m = CLAIM.search(re.sub(r"\bGUARANTEED\b", "", t))
             assert not m, "%s carries a claim word: %r" % (os.path.relpath(p, ROOT), m.group(0))
