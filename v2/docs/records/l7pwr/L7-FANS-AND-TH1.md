@@ -20,10 +20,11 @@ record, no generator, no CAD, not `pcb_interfaces.yaml` or `HW-FW-CONTRACT.md`: 
   24 V class starts at 21.6 V), and **no 5 V IP68 40 mm fan exists** in the lines read: both sites need a **regulated 12.0 V fan
   feed** (board E from VSYS_E; board B a per-slot step-up or a 12 V from board A), FINDINGS for the Layer 8 generator owners,
   with the J_FAN headers 4-wire (12 V, GND, PWM, TACH) in place of board E's low-side chopping.
-- **Downstream:** the mixers at full speed draw 0.239 A each on VSYS_E at the floor (under L4-E11's 0.3356 A both-start limit if
-  the start current were the rated current: no maker prints one, E11-35's bench row stands); VSYS_E's total 1.277 A at full speed,
-  86.8 % of U42's least limit and 0.277 A over the 1.0 A L4-E11 declared (R-177, R-181); the hold's three fans 6.08 W against the
-  model's 1.950 W at full speed (+0.413 W/K on E5's line if run flat out; the controls' duty decides, R-150; T-H1 logs it).
+- **Downstream (round 2, set 28 F-14; section 11):** restated on the DRAFTED rails, parsed from L4-E11 section 18 and record l8r2:
+  the mixers on U22's +12V_FAN draw 0.2524 A each from VSYS_E at the floor (9.508 V, U22 at the draft's 0.85), U22 0.5208 A with
+  both and its quiescent; VSYS_E's total **1.3208 A** at full speed, as L4-E11 declares on the dock, 89.8 % of U42's least limit; the
+  hold's fans with their converters' losses **7.15 W** against the model's 1.950 W (+0.520 W/K on E5's line if run flat out; the
+  controls' duty decides, R-150; T-H1 logs the fans' own draw). D-18's settlement and the T-H1 bill hold.
 - **The CM5 cooler is a passive heatsink** (Raspberry Pi's product brief, 56 x 41 x 12.7 mm, USD 5): the "cooler fan" is a fan
   added over it; the pick fits inside the cooler's 41 mm width at Y 48 to 88 and clears the backer's underside by 2.76 mm on the
   cooler's own height (0.32 mm on panel1450's 21.0 mm envelope): a Layer 7 CAD finding, with the brackets and the mixers' sites.
@@ -99,15 +100,15 @@ for the B7.
 
 ### 2c. The judgement [2]
 
-| Model | Site, supply as drawn | Range covers it | -20 to 62.1 C | 68.65 C | IP68 | Tach | PWM | Life at 60 C | I on the supply at the floor behind a 12 V converter, full speed (A, MODELED) |
+| Model | Site, supply as drawn | Range covers it | -20 to 62.1 C | 68.65 C | IP68 | Tach | PWM | Life at 60 C | I on the supply at the floor behind the drafted 12 V converter, full speed (A, MODELED; round 2: the drafts' 0.85 at 9.508 V and 5.0 V) |
 |---|---|---|---|---|---|---|---|---|---|
-| 9WL0612P4H001 | mixer, 9.494 to 17.375 V | NO | yes | yes | yes | yes | yes | yes | 0.239 |
-| 9WL0612P4J001 | mixer | NO | yes | yes | yes | yes | yes | yes | 0.548 |
-| 9WL0624P4H001 | mixer | NO | yes | yes | yes | yes | yes | yes | 0.225 |
-| GF60151B7-1E00U-AE9 | mixer | NO | NO (-10 C) | yes | yes | NO | NO | NO (40 C) | 0.112 |
-| CFM-6025BG68-135-253-22 | mixer | NO | NO (-10 C) | yes | yes | yes | yes | NO (40 C) | 0.101 |
-| 9WPA0412P6G001 | cooler, 5.1 V | NO | yes | yes | yes | yes | yes | yes | 0.436 (a step-up from +5V_Sn) |
-| 9WPA0424P6G001 | cooler, 5.1 V | NO | yes | yes | yes | yes | yes | yes | 0.436 |
+| 9WL0612P4H001 | mixer, 9.494 to 17.375 V | NO | yes | yes | yes | yes | yes | yes | 0.252 |
+| 9WL0612P4J001 | mixer | NO | yes | yes | yes | yes | yes | yes | 0.579 |
+| 9WL0624P4H001 | mixer | NO | yes | yes | yes | yes | yes | yes | 0.238 |
+| GF60151B7-1E00U-AE9 | mixer | NO | NO (-10 C) | yes | yes | NO | NO | NO (40 C) | 0.119 |
+| CFM-6025BG68-135-253-22 | mixer | NO | NO (-10 C) | yes | yes | yes | yes | NO (40 C) | 0.106 |
+| 9WPA0412P6G001 | cooler, 5.1 V | NO | yes | yes | yes | yes | yes | yes | 0.471 (a step-up from +5V_Sn) |
+| 9WPA0424P6G001 | cooler, 5.1 V | NO | yes | yes | yes | yes | yes | yes | 0.471 |
 | GF40282B3-1000U-SEP | cooler, 5.1 V | NOT READ | NOT READ | NOT READ | yes | NO | NO | NO | NOT READ |
 
 Two findings decide the shape of the pick before any candidate:
@@ -154,17 +155,17 @@ Filed with the pick under `v2/vendor/fans/` as REQ-043 asks (the transcription; 
 
 ### 2f. What the picks change downstream [3]
 
-MODELED on the makers' full-speed figures; a converter efficiency of 0.90 is an ASSUMPTION (board A's VHEAT buck is a
-TPS62933; its curve is not read here).
+MODELED on the makers' full-speed figures. **Round 2 (set 28 F-14):** the rows below are restated on the drafted rails, read
+from the drafts and L4-E11's output (round 1 had typed a 0.90 converter at 9.494 V); section 11 lists every figure that moved.
 
 | Item | Change | For |
 |---|---|---|
 | the mixers' feed | a regulated **12.0 V rail on board E from VSYS_E** (the fans' range 10.8 to 13.2 V; VSYS_E 9.494 to 17.375 V); `J_FAN1`/`J_FAN2` become **4-wire** (12 V, GND, PWM, TACH): the low-side chopping of Q9/Q10 and the SS14 flybacks D7/D8 are retired, the FETs re-used as open-drain PWM drivers (the fan's PWM input level NOT READ), the tach stays on its 10k pull-up. With the fans on a switched low side as drawn, the tachometer's open-collector return would ride the switched node: the 4-wire fan removes that | Layer 8, board E's generator owner (F-L7-01); R-177/E11-33; the register's R-179 |
-| the mixers' current on VSYS_E at the floor 9.494 V behind the buck | 0.239 A each at full speed (the fan's 2.04 W), 0.477 A both; the plan's 1.44 W for both is 0.169 A. Against L4-E11 17a: 0.239 A each is under the 0.3356 A both-start limit and the 0.5713 A one-at-a-time limit, if the start current were the rated current: it is NOT READ, so E11-35's bench row stands | E11-35 / R-179 (the bench) |
-| the dock feed's current (E11-35) and U42's setting | VSYS_E's total with U12's 0.8 A: **1.277 A at full speed**, 86.8 % of U42's least limit 1.471 A and **0.277 A over the 1.0 A L4-E11 declared**; at the plan's duty 0.969 A. One 813 contact at 36.5 % of its 3.5 A. Declare the fans at their full-speed draw or bound the duty in firmware before U42's setting is judged | L4-E11's rows R-177 and R-181 (F-L7-04); the firmware (R-188) |
-| the coolers' feed | **12.0 V on board B for `J_FAN1..3`** (no 12 V rail exists there; the slot rails are 5.1 V): a per-slot step-up from +5V_Sn at 0.436 A each at full speed (keeps "an empty slot stays off"), or a 12 V feed from board A over the bay harness (board A's VHEAT and +12V_HF are switched for other loads); the header's 5V pin becomes the 12 V pin; the module's Fan_PWM and Fan_Tacho stay | Layer 8, board B's generator owner (F-L7-02); Layer 5's bay harness rows if from board A |
+| the mixers' current on VSYS_E at the floor behind U22 | as drafted (L4-E11 section 18): U22 LTC3115-1 from VSYS_E to +12V_FAN at 11.512 to 12.431 V, its loads J_FAN1 and J_FAN2 at 0.17 A each, efficiency 0.85 (L4-E11's ASSUMPTION); at the floor 9.508 V **0.2524 A per mixer** at full speed (the fan's 2.04 W), **U22's input 0.5208 A** with both and its 16 mA quiescent, as L4-E11 prints; the plan's 1.44 W for both: 0.1942 A. The start: with the other mixer and U12 running, U42's least limit leaves 3.26 W at the rail, 1.60 times a fan's running power (L4-E11: 1.6); the start current is NOT READ, so E11-35's bench row stands; 17a's per-fan limits on VSYS_E are superseded by the rail | E11-35 / R-179 (the bench) |
+| the dock feed's current (E11-35) and U42's setting | VSYS_E's drafted loads U12 0.8 A and U22 0.52 A, declared 1.32 A (parsed from the draft): **1.3208 A at full speed**, equal to L4-E11's declaration on IF-AE-DOCK, 89.8 % of U42's least limit 1.4713 A, 0.1505 A in hand; at the plan's duty 0.9942 A; one 813 contact at 37.7 % of 3.5 A. Round 1's finding (1.277 A over a 1.0 A declaration) is closed by the draft | L4-E11's rows R-177 and R-181 (F-L7-04, closed in draft) |
+| the coolers' feed | as drafted by record l8r2 (`apply_gen_sch_b_fans12.py`): a per-slot TPS61089 step-up from +5V_Sn to 11.51 to 12.43 V behind a TPS259631 eFuse, the slot's load row 0.47 A at 5.0 V (2.0 W of fan over 0.85), so 0.35 W lost per running fan; the header stays JST SH in that draft (record l7r2 F-R2-08 asks JST PH) | Layer 8 board B (F-L7-02, drafted) |
 | the firmware stagger (E11-39, R-188) | kept: the PWM ramp now drives the fan's PWM input, not a chopped supply; a 4-wire fan's own soft start is NOT READ for Sanyo Denki (Same Sky prints one) | the firmware owner (F-L7-05) |
-| the heat into the case | at full speed the hold's fans (slot 3's cooler and the two mixers) **6.08 W against the model's 1.950 W** (+4.13 W; E5's line +0.413 W/K at L4-E12's 0.100 W/K per W); the profile's five fans 10.08 W against 2.970 W. The controls set the duty (R-150: the picked fans' power at the duty the controls set replaces pwr_budget.py's rows); T-H1 logs the real draw | L4-E12 / the Layer 4 coordinator (F-L7-06); R-150 |
+| the heat into the case | at full speed, every converter's loss counted: the hold's fans **7.15 W** (slot 3's cooler 2.0 and its step-up's 0.35, the two mixers 4.08 and U22's 0.72 from L4-E11 18a) against the model's 1.950 W (+5.20 W; E5's line +0.520 W/K at L4-E12's 0.100 W/K per W); the profile's five fans with their converters 11.85 W against 2.970 W. The controls set the duty (R-150); T-H1 runs the fans from a 12.0 V bench supply, so the converters' losses are board heat its heaters carry | L4-E12 / the Layer 4 coordinator (F-L7-06); R-150 |
 | the airflow the picks deliver (free air, MAKER) | the two mixers 1.56 m3/min together (the representatives GF60151B9 to B6: 0.60 to 1.21 m3/min), the three cooler fans 0.38 m3/min each; over the case's free air of about 0.0101 m3 (MODELED, the boards not subtracted) the mixers' free-air flow is 2.6 case volumes a second, an upper bound (the delivered flow sits on the fan curve under its 97 Pa maximum; no system curve is held). L4-E12's bound credits the flow at zero; T-H1's reading with these fans replaces the credit | T-H1 (R-104); L4-E12 |
 | the layout footprint | board E: the 12 V rail's parts (a TPS62933-class buck, its inductor and capacitors) and two 4-pin headers in place of the 3-pin `J_FAN` with Q9/Q10, D7/D8 and R44 to R47 re-purposed; board B: three step-ups (or a 12 V entry) beside `J_FAN1..3` | Layer 8 (the generators), Layer 10 (the layout) |
 
@@ -224,7 +225,7 @@ copper's 385 J/kgK and 8960 kg/m3, textbook constants). Onderdonk's relation is 
 **The retry duty (cases (3) and (4)):** at most 1.802 A for at most 1.5 s, then off at least 0.5 s, a duty of at most 0.75:
 1.802 A is **53 %** of ECSS Annex C's **3.4 A** single-wire rating of AWG 24 (a 70 C environment, a 150 C wire, radiation alone, in
 vacuum: the conservative side of the kit's sealed air), the duty's rms 1.561 A is 46 %; Preece's steady fusing current of the
-bare wire 29.2 A. **The continuous draw:** 1.0 A declared (29 %), 1.277 A with the picked mixers at full speed (38 %). The 50 K
+bare wire 29.2 A. **The continuous draw (round 2):** 1.3208 A declared by L4-E11 18b and recomputed here (39 %). The 50 K
 rule of ECSS 6.32.4a (the wire's surface 50 C under the maker's maximum rating) cannot be applied: the harness wire's maker and
 rating are not named in ASSEMBLY.md (24 AWG only), a Layer 7 harness item (F-L7-08).
 
@@ -241,12 +242,12 @@ the resistance criterion and whether 10 mOhm is a maximum, the spring's share of
 
 | Id | For | Finding |
 |---|---|---|
-| F-L7-01 | Layer 8, board E's generator owner (R-177/E11-33, R-179) | the mixers need a regulated 12.0 V rail from VSYS_E (a TPS62933-class buck as board A's VHEAT, or equivalent) and 4-wire `J_FAN1`/`J_FAN2` (12 V, GND, PWM, TACH); Q9/Q10 as open-drain PWM drivers (the fan's PWM input level NOT READ), D7/D8 retired, the tach pull-up kept; VSYS_E's declared loads become U12 0.8 A plus the fans at their full-speed draw (0.239 A each at the floor) or a firmware-bound duty |
-| F-L7-02 | Layer 8, board B's generator owner (the `J_FAN1..3` rows; the slot rail comments) and Layer 5 (the bay harness) | the cooler fans need 12.0 V: a per-slot step-up from +5V_Sn (0.436 A each at full speed; an empty slot stays off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V; the slot budget's 0.1 A fan row becomes 2.0 W at 12 V per slot at full speed |
+| F-L7-01 | Layer 8, board E's generator owner (R-177/E11-33, R-179) | DRAFTED by L4-E11 section 18 (U22 LTC3115-1, +12V_FAN, four-pin headers; set 28 integrates it): the mixers need a regulated 12.0 V rail from VSYS_E (a TPS62933-class buck as board A's VHEAT, or equivalent) and 4-wire `J_FAN1`/`J_FAN2` (12 V, GND, PWM, TACH); Q9/Q10 as open-drain PWM drivers (the fan's PWM input level NOT READ), D7/D8 retired, the tach pull-up kept; VSYS_E's declared loads become U12 0.8 A plus the fans at their full-speed draw (0.239 A each at the floor) or a firmware-bound duty |
+| F-L7-02 | Layer 8, board B's generator owner (the `J_FAN1..3` rows; the slot rail comments) and Layer 5 (the bay harness) | DRAFTED by record l8r2 (a per-slot TPS61089 step-up and eFuse): the cooler fans need 12.0 V: a per-slot step-up from +5V_Sn (0.436 A each at full speed; an empty slot stays off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V; the slot budget's 0.1 A fan row becomes 2.0 W at 12 V per slot at full speed |
 | F-L7-03 | Layer 7 CAD (v2/cad's owner; panel1450.py B16_TALL; CASE-MARGINS section 7; ASSEMBLY.md) | the CM5 cooler is passive (its brief filed); the fan envelope 40 x 40 x 20 at Y 48 to 88 replaces 30 x 30 x 30 at Y 48 to 78; the Z clearance to the backer 2.76 mm (0.32 mm on the 21.0 envelope) to resolve against STRIP_T and what hangs under the plate; a bracket to the cooler's M2.5 screws or the standoffs; the mixers' sites at the stack's ends (60 x 60 x 25); ASSEMBLY.md's "clipped on with their fan leads" to restate |
-| F-L7-04 | L4-E11 (R-177, R-181) and the Layer 4 coordinator | VSYS_E's total 1.277 A at full speed exceeds the declared 1.0 A by 0.277 A (86.8 % of U42's least limit 1.471 A); the eFuse's setting and the "fans' start with no limiting" row of E11-38 are to be judged at the fans' real draw; the dock feed's declared value moves to 1.277 A (36.5 % of the 813's 3.5 A) |
+| F-L7-04 | L4-E11 (R-177, R-181) and the Layer 4 coordinator | CLOSED in draft (round 2): VSYS_E is declared 1.32 A (U12 0.8 + U22 0.52), 1.3208 A at full speed; as first written: VSYS_E's total 1.277 A at full speed exceeds the declared 1.0 A by 0.277 A (86.8 % of U42's least limit 1.471 A); the eFuse's setting and the "fans' start with no limiting" row of E11-38 are to be judged at the fans' real draw; the dock feed's declared value moves to 1.277 A (36.5 % of the 813's 3.5 A) |
 | F-L7-05 | the firmware owner (R-188, FW-E07) | the stagger and ramp drive a PWM input, not a chopped supply; the tachometer report (V-E07's 5 s) now has a pulse sensor on every fan; the fans' maximum +70 C is 1.35 K over the hold's trigger: the hold's fan duty is a setting to write |
-| F-L7-06 | L4-E12 / the Layer 4 coordinator (R-150, R-142) | the picked fans' full-speed power (6.08 W in the hold, 10.08 W in the profile) against the model's 1.950 and 2.970 W: the line moves 0.100 W/K per W unless the controls' duty holds the plan's figures; the fans' flow (1.56 m3/min free air for the mixers) replaces the bound's zero credit only through T-H1's reading; R-142's "operating range reaching the mixed air at the line (70.0 C in E5) with margin" is met with 0 K of margin at +70 C and 1.35 K at the hold's trigger |
+| F-L7-06 | L4-E12 / the Layer 4 coordinator (R-150, R-142) | round 2: with the converters' losses 7.15 W in the hold, 11.85 W in the profile; as first written: the picked fans' full-speed power (6.08 W in the hold, 10.08 W in the profile) against the model's 1.950 and 2.970 W: the line moves 0.100 W/K per W unless the controls' duty holds the plan's figures; the fans' flow (1.56 m3/min free air for the mixers) replaces the bound's zero credit only through T-H1's reading; R-142's "operating range reaching the mixed air at the line (70.0 C in E5) with margin" is met with 0 K of margin at +70 C and 1.35 K at the hold's trigger |
 | F-L7-07 | L4-E12's owner (T-H1-PROCEDURE-DRAFT.md section 1), the TEST-PLAN owner (R-151) | the stand-in Same Sky fans become the picked Sanyo Denki fans on a 12.0 V bench channel; `T-H1-MOCKUP-SPEC.md` is the bill and specimen page to cite; L4-E9 5d's T-H1 row "price not read" now reads EUR 639.76, GBP 887.00, USD 147.38 with four items to quote |
 | F-L7-08 | Layer 7 harness (ASSEMBLY.md section 4) | the dock's twelve 24 AWG signal wires have no maker or temperature rating named; ECSS 6.32.4a's 50 K rule and the insulation's rating at 85 C body temperature wait on it |
 | F-L7-09 | the integrator (`pcb_requirements.yaml` session choices; `OWNER-DECISIONS-OPEN.md`; CONOPS section 7's D-18 row) | D-18 settled by the session: proposed text "D-18, the IP68 fans: the session takes Sanyo Denki 9WL0612P4H001 (mixers) and 9WPA0412P6G001 (coolers), both IP68, -20 to +70 C, with pulse sensor and PWM; no fan of any maker read covers VSYS_E's or the slot rail's voltage as drawn, so both sites take a regulated 12.0 V feed (Layer 8); authority SESSION under the standing rule of 26 September 2026, record l7pwr; reversed by a fan printing a covering range, -20 C and a life at or over 60 C, or by an open change of REQ-043" |
@@ -277,7 +278,7 @@ the resistance criterion and whether 10 mOhm is a maximum, the spring's share of
 
 ## 8. Assumptions
 
-- A 12 V converter's efficiency 0.90 (both the step-down on board E and the step-up on board B).
+- A 12 V converter's efficiency 0.90 (both the step-down on board E and the step-up on board B): round 1 only; round 2 reads the drafts' own 0.85 (L4-E11's and record l8r2's ASSUMPTION).
 - Copper's specific heat 385 J/kgK and density 8960 kg/m3 (the adiabatic rise); the melting point 1083 C (the fusing note's).
 - The case's free air about 0.0101 m3 (the base's 375 x 261 at Z 15.3 to the plate's underside at 103.52, the boards not subtracted).
 - The fans' hole patterns at the 40 mm and 60 mm classes' standard (32.0 and 50.0 mm on 4.3 mm holes), NOT READ from the maker.
@@ -296,3 +297,39 @@ under `v2/vendor/fans/`, `v2/vendor/cm5/` and `v2/vendor/precidip/` with their `
 Nothing here is built, bought, powered or measured. The fans are selected on their makers' printed rows; their starting current,
 PWM input level and hole patterns are not read; the case's conductance with them is T-H1's reading, not this record's. The
 software test establishes this record's own arithmetic and text, not any property of a fan, a case or a contact.
+
+## 11. Round 2: the budget on the drafted rails (set 28 finding F-14, 3 October 2026)
+
+Set 28's integration found this record refusing: it had grepped `apply_gen_sch_e_aux.py` for VSYS_E's loads as L4-E11 first drafted
+them (`U12 0.8, J_FAN1 0.1, J_FAN2 0.1`), and L4-E11 section 18 then rewrote the auxiliary domain: the mixers moved onto **+12V_FAN**,
+a U22 LTC3115-1 buck-boost from VSYS_E (four-pin headers, VSYS_E's loads `U12 0.8, U22 0.52`, declared 1.32 A; +12V_FAN's loads the
+two mixers at 0.17 A, efficiency 0.85), with section 18b declaring 1.3208 A on the dock. This round (branch `fnd/l7pwr2` from set 28's
+`5515ecc0`) **parses** the draft with Python's `ast` (the module's string constants, then every `_intent.rail` call in them), reads
+L4-E11's printed figures of 18a and 18b from `l4e11_power.out`, reads record l8r2's cooler step-up row from its draft, and restates
+every figure that rested on them. The round-1 figures are parsed from this record's output at `2087060b` (in this branch's history).
+
+| Figure | Round 1 | Round 2 | Why |
+|---|---|---|---|
+| a mixer's input current on VSYS_E at the floor, full speed | 0.239 A | **0.2524 A** | the draft's 0.85 at 9.508 V for round 1's typed 0.90 at 9.494 V |
+| both mixers (U22's input) | 0.477 A | **0.5208 A** | the same, and U22's 16 mA quiescent; equal to L4-E11's printed figure |
+| VSYS_E's total with U12 at full speed | 1.277 A | **1.3208 A** | equal to L4-E11's declaration; the draft declares 1.32 A |
+| against U42's least limit | 86.8 % | **89.8 %** | 0.1505 A in hand (L4-E11: 0.1504) |
+| VSYS_E at the plan's duty | 0.969 A | **0.9942 A** | as L4-E11 |
+| the dock contact's share of 3.5 A | 36.5 % | **37.7 %** | as L4-E11 |
+| the hold's fans' heat at full speed | 6.08 W | **7.15 W** | U22's 0.72 W (L4-E11 18a) and the cooler step-up's 0.35 W (record l8r2) counted |
+| E5's line shift at full speed | +0.413 W/K | **+0.520 W/K** | from the heat |
+| the profile's five fans' heat | 10.08 W | **11.85 W** | the converters' losses |
+| a cooler fan's slot current | 0.436 A | **0.47 A** | record l8r2's row (0.85 at 5.0 V) |
+| the dock lead's continuous draw against ECSS's 3.4 A | 38 % | **39 %** | the declared 1.3208 A |
+
+**Unchanged:** the fan picks and every maker row; the mounting and the fit finding; the T-H1 bill (EUR 639.76, GBP 887.00, USD
+147.38, four items to quote: no item rests on VSYS_E's loads), its heater settings and pass lines; the dock lead's pulse figures.
+
+**D-18 holds.** The drafted rails sit inside the picked fans' printed 10.8 to 13.2 V: U22's output 11.512 to 12.431 V (L4-E11 18a) and
+the coolers' step-up 11.51 to 12.43 V (record l8r2); the draft's +12V_FAN loads are the picked mixer's printed 0.17 A each. Round 1's
+F-L7-01 and F-L7-02 are drafted by those records and F-L7-04 is closed in draft. **The T-H1 bill holds**; what the rails add for the
+test is a note: T-H1 runs the fans from a 12.0 V bench supply, so U22's and the step-ups' losses (0.72 and 0.35 W at full speed) are
+board heat that the heaters carry when a mode's heat is restated on the picked fans (R-150, F-L7-06).
+
+Not claimed: the converters' efficiency is the drafts' ASSUMPTION (0.85), not a maker's curve at these points; nothing is measured.
+
