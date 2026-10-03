@@ -1973,7 +1973,7 @@ def t_the_fan_feed_after_layer7s_d18():
     r190 = reg["R-190"]
     assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
     assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
-    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C135" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
+    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C142" in reg["R-177"][2] and "C141" not in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
     assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
     assert ch["R-190"][1] == "B" and "U22" in ch["R-177"][5] and "U22" in ch["R-188"][5]
@@ -1987,7 +1987,7 @@ def t_the_fan_feed_after_layer7s_d18():
     assert "(h)" in reg["R-184"][2] and "(h)" in reg["R-184"][5] and "U22" in reg["R-184"][5] and "85 C" in reg["R-184"][5] and "566 A extrapolation" in reg["R-184"][5]
     assert "15.9 K" in reg["R-181"][2] and "not a bound" in reg["R-181"][2]
     by_ = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
-    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C135 to C141" in by_["E11-38"][1]
+    assert "U22" in by_["E11-31"][1] and "C142 to C148" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C142 to C148" in by_["E11-38"][1]
     assert "(a) to (h)" in by_["E11-38"][4] and "85 C" in by_["E11-38"][4]
     assert "1 %" in beh["the fans"][1] and "U18" not in beh["the fans"][1]
     assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())
