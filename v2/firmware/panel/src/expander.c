@@ -150,3 +150,36 @@ int panel_exp_service(panel_t *p, ms_t now)
     p->exp_polled_at = now;
     return r;
 }
+
+/* The switched loads' software enables (FW-A06, A07, A13; FW-C13 and FW-C15's actors): A:U27 port 0, A:U28 ports 0 and
+ * 1, B:U6 ports 0 and 1. DEV_EN stays 1. Written only on a change; the output registers only (the configuration was
+ * set at boot). */
+int panel_exp_write_kit(panel_t *p, uint16_t on, bool rb_ien)
+{
+#define ON(l) ((on >> (l)) & 1u)
+    uint8_t a27 = (uint8_t)((1u << HAL_EXP_A_DEV_EN_BIT) | ON(LOAD_MONITOR) << HAL_EXP_A_MON_EN_BIT |
+                            ON(LOAD_HEATER) << HAL_EXP_A_HEAT_EN_BIT | ON(LOAD_BOARD_D) << HAL_EXP_A_D8_EN_BIT |
+                            ON(LOAD_POE) << HAL_EXP_A_POE_SW_EN_BIT | ON(LOAD_PA) << HAL_EXP_A_PA_SW_EN_BIT |
+                            ON(LOAD_HF) << HAL_EXP_A_HF_SW_EN_BIT);
+    uint8_t a28_0 = (uint8_t)(ON(LOAD_WALL_VBUS) << HAL_EXP_A_USBX_EN_BIT);
+    uint8_t a28_1 = (uint8_t)(ON(LOAD_USBC) << HAL_EXP_A_PD_SW_EN_BIT);
+    uint8_t b6_0 = (uint8_t)(ON(LOAD_ROCKBLOCK) << HAL_EXP_B_RB_SW_EN_BIT | ON(LOAD_LORA) << HAL_EXP_B_LORA_ON_BIT |
+                             ON(LOAD_ZIGBEE) << HAL_EXP_B_ZB_ON_BIT);
+    uint8_t b6_1 = (uint8_t)((rb_ien ? 1u : 0u) << HAL_EXP_B_RB_SW_IEN_BIT);
+#undef ON
+    const uint8_t want[3][2] = { { a27, 0x00 }, { a28_0, a28_1 }, { b6_0, b6_1 } };
+    const uint8_t addr[3] = { HAL_I2C_A_U27, HAL_I2C_A_U28, HAL_I2C_B_U6 };
+    int r = 0;
+    for (int i = 0; i < 3; i++) {
+        if (p->kit_out_valid && p->kit_out[i][0] == want[i][0] && p->kit_out[i][1] == want[i][1])
+            continue;
+        if (wr3(p, addr[i], PCA9555_OUT0, want[i][0], want[i][1]) == 0) {
+            p->kit_out[i][0] = want[i][0];
+            p->kit_out[i][1] = want[i][1];
+        } else {
+            r = -1;
+        }
+    }
+    p->kit_out_valid = r == 0;
+    return r;
+}

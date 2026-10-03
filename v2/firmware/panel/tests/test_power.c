@@ -81,7 +81,13 @@ void t_exp_outputs_before_config(void)
     for (unsigned i = 0; i < x->n_wr; i++)
         if (x->wr[i].addr == HAL_I2C_A_U27 && x->wr[i].reg == PCA9555_OUT0)
             CHECK(x->wr[i].val & (1u << HAL_EXP_A_DEV_EN_BIT));
-    CHECK(x->regs[HAL_I2C_A_U28][2] == 0 && x->regs[HAL_I2C_B_U6][2] == 0 && x->regs[HAL_I2C_B_U6][3] == 0);
+    /* the boot values: every board B request and board A U28 enable 0 */
+    CHECK(x->wr[fx_find_write(x, HAL_I2C_A_U28, PCA9555_OUT0, 0)].val == 0);
+    CHECK(x->wr[fx_find_write(x, HAL_I2C_B_U6, PCA9555_OUT0, 0)].val == 0);
+    CHECK(x->wr[fx_find_write(x, HAL_I2C_B_U6, PCA9555_OUT1, 0)].val == 0);
+    /* with no bridge every switched load stays off; RB_SW_IEN follows the request rule (RB_STATUS low, no EMCON) */
+    CHECK(x->regs[HAL_I2C_A_U27][2] == (1u << HAL_EXP_A_DEV_EN_BIT) && x->regs[HAL_I2C_A_U28][2] == 0);
+    CHECK(x->regs[HAL_I2C_B_U6][2] == 0 && x->regs[HAL_I2C_B_U6][3] == (1u << HAL_EXP_B_RB_SW_IEN_BIT));
 }
 
 void t_hb_lost_3s(void)
@@ -251,7 +257,10 @@ void t_hot_stop_h1(void)
 {
     fx_t F, *x = &F;
     fx_boot(x);
+    x->in.br.alive = true;
+    x->in.br.loads_wanted = (uint16_t)((1u << LOAD_COUNT) - 1u);    /* the bridge wants every load on */
     fx_run_hb(x, 4000, ALL);
+    CHECK(x->regs[HAL_I2C_A_U27][2] == 0xFE && x->regs[HAL_I2C_A_U28][2] == 1 && x->regs[HAL_I2C_A_U28][3] == 1);
     x->hot_sim = HOT_SIM_5HZ;
     fx_run_hb(x, 1500, ALL);
     CHECK(x->p.hot.state == HOT_H1);
@@ -262,6 +271,7 @@ void t_hot_stop_h1(void)
     CHECK(x->out.loads_off & (1u << LOAD_HEATER) && x->out.loads_off & (1u << LOAD_BOARD_D));
     CHECK(x->out.loads_off & (1u << LOAD_WALL_VBUS));
     CHECK(x->out.charge_hold_hot && !x->out.shore_inhibit);
+    CHECK(x->regs[HAL_I2C_A_U27][2] == (1u << HAL_EXP_A_DEV_EN_BIT));   /* every enable off on A:U27, +3V3_DEV kept */
     CHECK(x->p.red_active & 4u);
     CHECK(x->out.slot_en[0]);                       /* modules still running: not yet dropped */
     fx_run_hb(x, 3500, NONE);                       /* they stop */
@@ -356,6 +366,7 @@ void t_margin_hold(void)
     fx_t F, *x = &F;
     fx_boot(x);
     x->in.br.alive = true;
+    x->in.br.loads_wanted = (uint16_t)((1u << LOAD_COUNT) - 1u);
     x->in.br.margin_ref.valid = true;
     x->in.br.margin_ref.mc = 68650;
     x->in.br.margin_ref.seq = 1;
@@ -369,6 +380,8 @@ void t_margin_hold(void)
     CHECK(x->out.loads_off & (1u << LOAD_ROCKBLOCK) && x->out.loads_off & (1u << LOAD_LORA));
     CHECK(x->out.loads_off & (1u << LOAD_ZIGBEE) && x->out.loads_off & (1u << LOAD_GEIGER));
     CHECK(!x->out.rb_ien_request);
+    CHECK((x->regs[HAL_I2C_B_U6][2] & 0x1Cu) == 0);  /* RB_SW_EN, LORA_ON, ZB_ON off on B:U6 */
+    CHECK(!(x->regs[HAL_I2C_A_U27][2] & (1u << HAL_EXP_A_PA_SW_EN_BIT)) && !(x->regs[HAL_I2C_A_U27][2] & (1u << HAL_EXP_A_D8_EN_BIT)));
     CHECK(x->p.amb_active & 16u);                   /* MASTER CAUT */
     fx_run(x, 1000);
     CHECK(x->epd_pages[x->n_epd - 1] == PAGE_MARGIN_HOLD);

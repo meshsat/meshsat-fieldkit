@@ -204,6 +204,7 @@ void t_emcon_edges(void)
         on += (x->out.leds >> LED_MCAUT) & 1u;
     }
     CHECK(on == 1000);
+    CHECK(x->epd_pages[x->n_epd - 1] == PAGE_EMCON);  /* EMCON shown on the e-paper */
     /* the RockBLOCK request: low on EMCON, raised after a release only once RB_STATUS reads low */
     CHECK(!x->out.rb_ien_request);
     x->regs[HAL_I2C_B_U7][0] |= (uint8_t)(1u << HAL_EXP_B_RB_STATUS_BIT);

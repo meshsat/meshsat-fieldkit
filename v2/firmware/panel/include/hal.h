@@ -161,7 +161,9 @@ enum hal_exp_bits { HAL_EXP_BIT_LIST(HAL_ENUM_EXP) HAL_EXP_DUMMY_ = 0 };
 void     hal_init_pins_first(void);           /* FW-C01 steps 1 and 2 only: PI_KILL low push-pull, PI_SHDN_REQ released */
 bool     hal_gpio_get(enum hal_gpio g);       /* the pin's level, any function */
 void     hal_gpio_put(enum hal_gpio g, bool level);   /* OUT pins only; refuses EMCON_RD_R and PI_SHDN_REQ */
-void     hal_slot_en_adopt(bool held[3]);     /* FW-C02: read GPIO13..15 as inputs, then drive each at the level read */
+void     hal_slot_en_read(bool held[3]);      /* FW-C02: GPIO13..15 read as inputs, before they are made outputs */
+void     hal_slot_en_drive_initial(const bool level[3]); /* then each driven at the level panel_init() returns */
+int      hal_reboot_to_bootsel(void);         /* FW-C01/C02: refused while a slot runs; activity mask GPIO25 only */
 void     hal_pi_shdn_req_assert(bool assert); /* FW-A10: value 0 always, output enable on to assert */
 void     hal_pwm_set_permille(enum hal_gpio g, uint16_t permille);
 uint16_t hal_rail_sense_mv(void);
