@@ -1510,18 +1510,29 @@ def compute():
                         (r"\| M3 \| CS114, bulk cable injection on the antenna and power cables, 10 kHz to 200 MHz \| laboratory \|", "M3"),
                         (r"\| M7 \| Electrostatic discharge to every touchable surface and every exposed conductor, at decision 34's ruled level, IEC 61000-4-2 level 4: 8 kV contact and 15 kV air", "M7")):
         need(tp_, pat_, "TEST-PLAN.md row " + what_)
-    # the panel lead's length: the records give a1solar's 5 m (array_calc.py, ESTIMATE; the panel lead's derivation below reads it);
-    # no other document of v2/docs or the registries states a panel lead's length (this record's own folder left out), and one
-    # that did would have to be read against it
-    lead_hits = []
+    # the panel lead's length: the records give a1solar's 5 m (array_calc.py, ESTIMATE; the panel lead's derivation below reads it).
+    # A document of v2/docs or the registries that states a panel lead's length (this record's own folder left out) is read against
+    # it: a statement this record has read and pinned (LEAD_STATEMENTS; set 27: L4-E9's register row R-180, which carries this
+    # record's own "two conductors 6.09 mm apart over 5 m" back) is a CITED INPUT, recorded with the file and its digest at the
+    # reading; any other statement refuses until the derivation is read again
+    LEAD_STATEMENTS = ("the selected network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no "
+                       "document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead",)
+    lead_hits, lead_cited = [], {}
     for root_, dirs_, files_ in os.walk(os.path.join(TOP, "v2")):
         dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
         for f_ in files_:
             if f_.endswith((".md", ".yaml")):
+                rel_ = os.path.relpath(os.path.join(root_, f_), TOP)
                 t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
                 for m_ in re.finditer(r"(?:solar|panel)\W+(?:lead|cable|extension)", t_, re.I):
                     if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
-                        lead_hits.append(os.path.relpath(os.path.join(root_, f_), TOP))
+                        e_ = t_.find("|", m_.end())
+                        cell_ = " ".join(t_[t_.rfind("|", 0, m_.start()) + 1:(e_ if e_ > 0 else len(t_))].split())
+                        known_ = [st_ for st_ in LEAD_STATEMENTS if st_ in cell_]
+                        if known_:
+                            lead_cited.setdefault(rel_, (sha(rel_), known_[0]))
+                        else:
+                            lead_hits.append(rel_)
     if lead_hits:
         refuse(3, "a document now states the panel lead's length (%s); the derivation below must be read against it" % ", ".join(sorted(set(lead_hits))))
     M461 = "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf"
@@ -2451,7 +2462,7 @@ def compute():
     ]
     if [v_["ok"] for v_ in verd] != [True, True, True, False, False] or r36["vc116_h"] <= lim_draft or r36["vc116_25"] > lim_draft:
         refuse(4, "the panel lead's verdicts are not the ones the record states: %s" % [(v_["id"], v_["ok"]) for v_ in verd])
-    R["lead"] = dict(lead=lead, tv=tv, f116=f116, q116=Q116, r116=r116, r115=r115, v_src=v_src, aT=aT, pd4=pd4, tjmax=tjmax, rja=rja, p_ok=p_ok,
+    R["lead"] = dict(cited=lead_cited, statements=LEAD_STATEMENTS, lead=lead, tv=tv, f116=f116, q116=Q116, r116=r116, r115=r115, v_src=v_src, aT=aT, pd4=pd4, tjmax=tjmax, rja=rja, p_ok=p_ok,
                      vbr_cold=vbr_cold, lim_drawn=lim_drawn, lim_draft=lim_draft, src=src, r36=r36, p_src36=p_src36, rev=rev, g13=g13,
                      peak_v=peak_v, peak_vp=peak_vp, v116=v116, verd=verd, m_trip=best["m"], tau_lo=best["tau"][0],
                      smcj=sorted(smcj), i_op=i_op, v_oc=v_oc, n_runs=sum(1 for r_ in r116 if r_["lumped"]) * len(Q116) * 2 * 8 + len(runs115),
@@ -3876,6 +3887,16 @@ def render(R):
           "stray capacitance, while the high side lead against its return, through the entry, is the path that loads D4. The lead's "
           "quarter wave is %.1f MHz in free space (half wave %.1f MHz), lower on soil: inside CS116's flat band, so it is added to the "
           "test frequencies as 5.14.2's installation resonance" % (le_["m"], le_["mm2"], le_["r"], le_["f_q"] / 1e6, le_["f_h"] / 1e6))
+    if ld.get("cited"):
+        bq_ = R["remedy"]["b6"]
+        wrapP("     - ", "       ", "THE LEAD'S LENGTH AS A CITED INPUT (set 27): %s. The 5 m is this derivation's own a1solar ESTIMATE carried back "
+              "by L4-E9's register, inside the envelope the guard-on transient already assumes (%.2f to %.2f uH over %.0f m). The loop inductance "
+              "per metre this derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two %.0f mm2 conductors s apart: %.3f uH/m at "
+              "the envelope's %.2f uH, %.3f uH/m at the selected network's floor (%.2f uH, %.2f mm apart) and %.3f uH/m at %.2f uH. The guard "
+              "pins that statement: it fires again only when a document states another length or another sentence" % (
+                  "; ".join("%s (read at digest %s): \"%s\"" % (p_, d_[:16], s_) for p_, (d_, s_) in sorted(ld["cited"].items())),
+                  1e6 * bq_["grid"][0], 1e6 * bq_["grid"][1], le_["m"], le_["mm2"], 1e6 * bq_["grid"][0] / le_["m"], 1e6 * bq_["grid"][0],
+                  1e6 * bq_["LA"] / le_["m"], 1e6 * bq_["LA"], 1e3 * bq_["sA"], 1e6 * bq_["grid"][1] / le_["m"], 1e6 * bq_["grid"][1]))
     wrapP("     - ", "       ", "THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC "
           "characterisation to MIL-STD-461G (11 December 2015) and the 'Ground, Army' row of its Table V (held; transcribed in "
           "v2/vendor/standards/mil-std-461g-requirement-matrix.md, the same file). That row marks CS116 %s (5.14, damped sinusoids from 10 "
