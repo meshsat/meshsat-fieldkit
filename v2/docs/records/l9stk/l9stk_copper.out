@@ -203,16 +203,83 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      the tracker's minimum valley limit, held                     13.80 A held       coordination steady 9.57    -> within 10 K
      the sum of both sources' limits 19.95 A for at most the hot-swap's fault time: 21.57 K steady (an upper bound on any duration)
 
-5. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED
+5. THE CONDUCTORS (TH through-hole, 1F one face; widths are each outer face at 1 oz; the family's rows in section 4)
+   A CELL+                    J_CP1 to J_CP4 to F1 [TH / TH]
+       protection: E's F3 25 A (upstream) and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B1; 12.26 mm a face; field: none needed (both ends through-hole)
+   A CELL_FUSED               F1 to R17 [TH / 1F]
+       protection: A's F1 25 A and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B2; 14.60 mm a face; field: max(14, the split count of section 3 at its length) at R17
+   A CH_BATQ (drafted)        R17 to Q39, Q40 [1F / 1F]
+       protection: A's F1 and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; a one-face hop; 3.35 mm a face; field: a one-face hop at least as wide as R17's land, as short as the two parts allow
+   A VBAT trunk               Q39, Q40 (R17 as drawn) to the node's first branch [1F / the loads]
+       protection: A's F1 and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B2; 14.60 mm a face; field: max(14, the split count of section 3 at its length) at the pair
+   A GND (the pack return)    J_CN1 to J_CN4 to the loads' returns, In1 and In4 [TH / planes]
+       protection: the loop's blades and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B1; 12.26 mm a face; field: none at the pins; In1 and In4 not necked to 30 mm beside the band
+   A VIN_RAW                  J_VR1 to J_VR4 to the front end [TH / 1F]
+       protection: the sources' limits (hot-swap, tracker); continuous 14.10 A; transient -
+       fault: the tracker's 13.8 A minimum valley, the hot-swap's 6.15 A until its fault time
+       coordination 14.10 A; family V; 5.12 mm a face; field: max(8, the split count of section 3 at its length) at the front end
+   E CELL+                    J_BATT pin 2 to F3 [TH / TH]
+       protection: P's F1 25 A (upstream) and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B1; 12.26 mm a face; field: none needed (both ends through-hole)
+   E CELL_F                   F3 to P_CP [TH / 1F]
+       protection: E's F3 25 A and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B2; 14.60 mm a face; field: 28 at each one-face end (E7: 5.65 mm, split 28, thermal 14) at P_CP
+   E GND (the pack return)    J_BATT pin 1 to P_CN [TH / 1F]
+       protection: the loop's blades and the gauge; continuous 10.00 A; transient 18 A 60 s
+       fault: gauge OCD1 20 A held, OCD2 24 A 1 s, AOLD 30 A 20 ms, ASCD 55.6 A 244 us; gauge failed: the blades (33.75 A held to 135 %, 50 A for 600 s)
+       coordination 25.00 A; family B2; 14.60 mm a face; field: 14 at each one-face end (E7: 40.60 mm, split 4, thermal 14) at P_CN
+   E DC_IN                    J_DCIN pin 1 to F1 [TH / TH]
+       protection: the source's own; F1 for a fault behind it; continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 20.00 A; family S1; 8.15 mm a face; field: none needed (both ends through-hole)
+   E DC_F                     F1 to Q1, D10 [TH / 1F]
+       protection: E's F1 10 A; continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 20.00 A; family S2; 9.70 mm a face; field: 12 at each one-face end (E7: 12.72 mm, split 9, thermal 12) at Q1 and D10
+   E DC_P                     Q1 to R19, D1 [1F / 1F]
+       protection: E's F1; continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 20.00 A; a one-face hop; 4.41 mm a face; field: a one-face hop at least as wide as Q1's drain land, as short as the parts allow
+   E HS_S                     R19 to Q7 [1F / 1F]
+       protection: E's F1; continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 10.00 A; a one-face hop; 3.81 mm a face; field: a one-face hop at least as wide as Q7's source land, as short as the parts allow
+   E DC_HS                    Q7 to L2 [1F / 1F]
+       protection: the hot-swap; E's F1 with Q7 shorted; continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 10.00 A; family S3; 3.15 mm a face; field: 6 at each one-face end (E7: 55.38 mm, split 2, thermal 6), or 8.15 mm on one face
+   E GND_V (the shore return) J_DCIN pin 2 to D10, D1, C2, L2 pin 3 [TH / 1F]
+       protection: E's F1 (the clamp-fault loop); continuous 6.15 A; transient -
+       fault: F1 10 A: 13.5 A held, 20 A for 600 s, 35 A for 5 s; the hot-swap limits a fault behind Q7 to 6.15 A
+       coordination 20.00 A; family S2; 9.70 mm a face; field: max(12, the split count of section 3 at its length) at the clamps
+   E VIN_RAW                  L2 and the tracker's Q2 to P_VR to the block [1F / 1F]
+       protection: the sources' limits; continuous 14.10 A; transient -
+       fault: the tracker's 13.8 A minimum valley, the hot-swap's 6.15 A until its fault time
+       coordination 14.10 A; family V; 5.12 mm a face; field: max(8, the split count of section 3 at its length) at each end
+
+6. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED
    6.72 mm a face (l9stk at 18 A): 12.39 K at the gauge's held 20 A, 19.52 K at the blade's 25 A, the 600 s window top 159.4 C
    11.95 mm on one 2 oz face (l9stk at 18 A): 19.46 K at the blade's 25 A; 2 oz on one face needs 21.81 mm at 25 A
    12.26 mm a face (Layer 8 at 25 A): holds where both ends are through-hole (an even split, derived); at a one-face part the
      part's face carries more than half and needs 14.60 mm at a 0.55 share with the field of section 3
-   23.44 mm a face (l9stk's board E bound at 18 A, every conductor in one section): superseded by section 7
+   23.44 mm a face (l9stk's board E bound at 18 A, every conductor in one section): superseded by section 8
    2 oz (the reversal): 6.13 mm a face at an even split, 7.30 at 0.55, 21.81 on one face
 
-6. THE SERIES PARTS AND THE LANDS (the bottlenecks)
-   R17 (board A, 5 mOhm, C20108830, 5 W): continuous 10.00 A 0.500 W; key-down 18.00 A 1.620 W; OCD1 held 20.00 A 2.000 W; blade rating 25.00 A 3.125 W; blade 110 % 27.50 A 3.781 W; blade 135 % held 33.75 A 5.695 W; blade 200 %, the 600 s window top 50.00 A 12.500 W
+7. THE SERIES PARTS AND THE LANDS (the bottlenecks)
+   R17 (board A, 5 mOhm, C20108830, 5 W): continuous 10.00 A 0.500 W; key-down 18.00 A 1.620 W; OCD1 held 20.00 A 2.000 W; blade rating 25.00 A 3.125 W
+     blade 110 % 27.50 A 3.781 W; blade 135 % held 33.75 A 5.695 W; blade 200 %, the 600 s window top 50.00 A 12.500 W
      its 5 W is reached at 31.62 A, inside the blade's 110 to 200 % window (the gauge failed)
    Q39 and Q40 (drafted, 21.136 mOhm each at L4-E11's 150 C bound, in parallel): OCD1 held 20.00 A 4.23 W; blade rating 25.00 A 6.61 W; blade 135 % held 33.75 A 12.04 W
      E11-29's bar covers the gauge's levels (L4-E11 15c); the blade's window is outside it
@@ -240,7 +307,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      HS_S, R19 to Q7 (board E)                 10.00 A on 3.81 mm: 0.0129 W a mm against the series part's 1.000 W
    one barrel of a 14-barrel transfer field (0.0236 mm2, fusing 42.0 A2s from the air line): docking pulse 0.0013 A2s, +0.01 K; blade typical melting 0.7972 A2s, +8.58 K; 600 % row bound at the high fault 29.3878 A2s, +544.26 K
 
-7. BOARD E'S CROSS-SECTION, REDONE AT THE COORDINATION CURRENTS AND THE DERIVED SHARE (1 oz, each face)
+8. BOARD E'S CROSS-SECTION, REDONE AT THE COORDINATION CURRENTS AND THE DERIVED SHARE (1 oz, each face)
    CELL_F (pack forward)                     14.60 mm
    the pack return (GND)                     14.60 mm
    VIN_RAW                                    5.12 mm
@@ -250,7 +317,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
    every one in one section: 57.02 mm a face of the 68 mm strip (a bound the floor plan must avoid); the pack end alone (forward and
    return): 29.20 mm a face
 
-8. PREDICATES
+9. PREDICATES
    the quoted widths re-derive from decision 35's model: 6.72, 23.91, 11.95, 12.26 and 43.62 mm                           yes
    the blades on A, E and P are one rating and the chain's check 3 asks the conductor for it                              yes
    6.72 mm a face is over 10 K at the gauge's held OCD1 current                                                           yes
