@@ -364,9 +364,61 @@ def t_q1_draft_checks_applies_once_refuses_the_tree_and_composes():
         assert _q1(y, "--write").returncode == 0
         assert subprocess.run([sys.executable, "-B", cin, y, NET_E], capture_output=True).returncode == 0, "the input capacitor after Q1"
         assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "the two orders differ"
+        z = os.path.join(td, "z.py")
+        shutil.copy(GEN_E, z)
+        assert _q1(z, "--write").returncode == 0
         for p in l4e7:
-            r = subprocess.run([sys.executable, "-B", p, y, "--write"], capture_output=True, text=True)
+            r = subprocess.run([sys.executable, "-B", p, z, "--write"], capture_output=True, text=True)
             assert r.returncode == 0, "%s does not compose: %s" % (os.path.basename(p), r.stderr)
+        assert subprocess.run([sys.executable, "-B", cin, z, NET_E], capture_output=True).returncode == 0, "the input capacitor after L4-E7's drafts (the change list's order)"
+        assert not _dup_refs(open(z, encoding="utf-8").read()), "a designator written twice: %s" % _dup_refs(open(z, encoding="utf-8").read())
+
+
+def _dup_refs(text):
+    """Designators written twice as literal part calls outside comments (the composition defect of the set 27 run: C65)."""
+    lit = re.compile(r'(?<![A-Za-z_.])(?:ic|part|c|r|ph|tp|nfet|q|ideal_diode)\(\s*"([A-Z][A-Z0-9_]*)"')
+    seen = {}
+    for ln in text.splitlines():
+        ln = "" if ln.lstrip().startswith("#") else ln.split("#")[0]
+        for ref in lit.findall(ln):
+            seen[ref] = seen.get(ref, 0) + 1
+    return sorted(k for k, v in seen.items() if v > 1)
+
+
+def t_board_e_drafts_compose_in_the_change_list_order_with_no_duplicate():
+    """Every board E draft of the change list, composed on a copy of gen_sch_e.py in the list's order (the alternatives left out), applies
+    and writes no designator twice; d8dec31's input capacitor, which takes the next free capacitor at apply time, stands last in board E's
+    round with its FINDING before it (L4-E11 17e, the set 27 run); in the former order, first, it takes C65 and L4-E7's input-limit draft
+    writes C65 again (a fixture: the duplicate is found)."""
+    m = _M()
+    reg = _md_rows(REG, "| ID | Kind |")
+    ch = m.cons_changes(reg)
+    recs = os.path.join(ROOT, "v2", "docs", "records")
+    seq = []
+    for c in ch:
+        if not c[3].startswith("board E, gen_sch_e.py") or c[1] in ("ALT",) or not c[4].startswith("apply_gen_sch_e_"):
+            continue
+        for s in [x.strip() for x in c[4].split(",")]:
+            hit = glob.glob(os.path.join(recs, "*", s))
+            assert len(hit) == 1, s
+            if hit[0] not in seq:
+                seq.append(hit[0])
+    names = [os.path.basename(x) for x in seq]
+    assert names[-1] == "apply_gen_sch_e_cin.py" and names.index("apply_gen_sch_e_input_limit.py") < names.index("apply_gen_sch_e_cin.py")
+    pos = {c[2]: c[0] for c in ch}
+    assert pos["R-196"] < pos["R-16"] < pos["R-22"] and pos["R-20"] < pos["R-16"] and pos["R-173"] < pos["R-16"] and pos["R-177"] < pos["R-16"]
+
+    def compose(order, path):
+        shutil.copy(GEN_E, path)
+        for s in order:
+            r = _run(s, path, NET_E) if s.endswith("apply_gen_sch_e_cin.py") else _run(s, path, "--write")
+            assert r.returncode == 0, "%s refused: %s" % (os.path.basename(s), r.stderr[-200:])
+        return open(path, encoding="utf-8").read()
+    with tempfile.TemporaryDirectory() as td:
+        final = compose(seq, os.path.join(td, "e.py"))
+        assert not _dup_refs(final), "a designator written twice in the change list's order: %s" % _dup_refs(final)
+        early = [seq[-1]] + seq[:-1]
+        assert "C65" in _dup_refs(compose(early, os.path.join(td, "f.py"))), "the fixture: the capacitor first takes C65 twice"
 
 
 def _run(script, *args):
@@ -460,16 +512,17 @@ def t_f1_draft_names_the_58_v_part_and_composes():
         x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
         shutil.copy(GEN_E, x)
         shutil.copy(GEN_E, y)
-        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
         for p in [Q1] + e7r + [F1]:
             r = _run(p, x, "--write")
             assert r.returncode == 0, "%s: %s" % (os.path.basename(p), r.stderr)
+        # d8dec31's capacitor stands last in board E's whole round (t_board_e_drafts_compose_in_the_change_list_order_with_no_duplicate):
+        # on this subset its next-free reading misses the backstop's loop-made C70 and the draft refuses by its own check (R-196)
         assert _run(F1, y, "--write").returncode == 0
-        assert subprocess.run([sys.executable, "-B", cin, y, NET_E], capture_output=True).returncode == 0
         for p in [Q1] + e7r:
             r = _run(p, y, "--write")
             assert r.returncode == 0, "%s after F1: %s" % (os.path.basename(p), r.stderr)
         assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "F1 first and F1 last differ"
+        assert not _dup_refs(open(x, encoding="utf-8").read()), "a designator written twice: %s" % _dup_refs(open(x, encoding="utf-8").read())
 
 
 def t_part_a_conditions_hold_on_the_read_figures():
@@ -651,16 +704,15 @@ def t_the_hotswap_draft_applies_once_refuses_the_tree_and_composes():
         x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
         shutil.copy(GEN_E, x)
         shutil.copy(GEN_E, y)
-        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
         for p in [Q1, F1] + e7r + [HS]:
             r = _run(p, x, "--write")
             assert r.returncode == 0, "%s: %s" % (os.path.basename(p), r.stderr)
         assert _run(HS, y, "--write").returncode == 0
-        assert subprocess.run([sys.executable, "-B", cin, y, NET_E], capture_output=True).returncode == 0
         for p in [Q1, F1] + e7r:
             r = _run(p, y, "--write")
             assert r.returncode == 0, "%s after the hot-swap draft: %s" % (os.path.basename(p), r.stderr)
         assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "the hot-swap draft first and last differ"
+        assert not _dup_refs(open(x, encoding="utf-8").read()), "a designator written twice: %s" % _dup_refs(open(x, encoding="utf-8").read())
 
 
 def t_b1_the_power_limit_and_the_complete_pulse_at_one_voltage_and_temperature():
@@ -928,13 +980,14 @@ def t_the_entry_draft_applies_on_the_hotswap_draft_and_not_before_it():
         shutil.copy(GEN_E, x)
         shutil.copy(GEN_E, y)
         assert _run(entry, y, "--write").returncode == 3, "the entry draft must refuse a generator without the hot-swap draft"
-        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
         for p in [Q1, F1] + list(got.values()) + [HS, entry]:
             r = _run(p, x, "--write")
             assert r.returncode == 0, "%s in the release order: %s" % (os.path.basename(p), r.stderr)
         assert _run(timer, x, "--write").returncode == 3, "the LM5069's timer draft must refuse the selected entry"
+        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0, "the input capacitor last (the change list's order)"
         after = open(x, encoding="utf-8").read()
         assert "TPS48110AQDGXRQ1" in after and "CSD19536KTT" in after and "LM5069MM-2 hot-swap controller" not in after
+        assert not _dup_refs(after), "a designator written twice: %s" % _dup_refs(after)
 
 
 def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
@@ -1973,7 +2026,7 @@ def t_the_fan_feed_after_layer7s_d18():
     r190 = reg["R-190"]
     assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
     assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
-    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C135" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
+    assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C142" in reg["R-177"][2] and "C141" not in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
     assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
     assert ch["R-190"][1] == "B" and "U22" in ch["R-177"][5] and "U22" in ch["R-188"][5]
@@ -1987,7 +2040,7 @@ def t_the_fan_feed_after_layer7s_d18():
     assert "(h)" in reg["R-184"][2] and "(h)" in reg["R-184"][5] and "U22" in reg["R-184"][5] and "85 C" in reg["R-184"][5] and "566 A extrapolation" in reg["R-184"][5]
     assert "15.9 K" in reg["R-181"][2] and "not a bound" in reg["R-181"][2]
     by_ = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
-    assert "U22" in by_["E11-31"][1] and "C135 to C141" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C135 to C141" in by_["E11-38"][1]
+    assert "U22" in by_["E11-31"][1] and "C142 to C148" in by_["E11-31"][1] and "U22" in by_["E11-38"][1] and "C142 to C148" in by_["E11-38"][1]
     assert "(a) to (h)" in by_["E11-38"][4] and "85 C" in by_["E11-38"][4]
     assert "1 %" in beh["the fans"][1] and "U18" not in beh["the fans"][1]
     assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())
