@@ -270,6 +270,14 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        coordination 14.10 A; family V; 5.12 mm a face; field: max(8, the split count of section 3 at its length) at each end
 
 6. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED
+   the width each current asks at 10 K (two 1 oz faces at an even split / one 1 oz face):
+     the continuous load                                 10.00 A    2.76 mm a face /   8.15 mm
+     the transient (PWR-F12)                             18.00 A    6.72 mm a face /  23.91 mm
+     the gauge's held OCD1                               20.00 A    8.15 mm a face /  28.99 mm
+     the blades' rating (the coordination current)       25.00 A   12.26 mm a face /  43.62 mm
+     the blades' 110 % non-fuse current                  27.50 A   14.60 mm a face /  51.93 mm
+   the coordination current is the blades' rating (energy_chain.py check 3); their non-fuse current, held with the gauge failed,
+     reads 12.14 K on B1 and 12.14 K on B2, a backstop state judged against the blade's 125 C (section 4's 135 % held row covers it)
    6.72 mm a face (l9stk at 18 A): 12.39 K at the gauge's held 20 A, 19.52 K at the blade's 25 A, the 600 s window top 159.4 C
    11.95 mm on one 2 oz face (l9stk at 18 A): 19.46 K at the blade's 25 A; 2 oz on one face needs 21.81 mm at 25 A
    12.26 mm a face (Layer 8 at 25 A): holds where both ends are through-hole (an even split, derived); at a one-face part the

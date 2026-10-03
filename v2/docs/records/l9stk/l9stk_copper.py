@@ -550,6 +550,12 @@ def compute():
     W["vin_smax"] = tc.width_for_current(I["vin_raw"] * S_MAX, oz=OZ1)
     W["trk_smax"] = tc.width_for_current(I["trk"] * S_MAX, oz=OZ1)
     R["w"] = W
+    # the width each current class asks at 10 K: two 1 oz faces at an even split, and one face
+    nf = blade * I["mini_rows"][0][0] / 100.0
+    R["ask"] = [(lab, a, tc.width_for_current(a / 2.0, oz=OZ1), tc.width_for_current(a, oz=OZ1)) for lab, a in (
+        ("the continuous load", I["cont"]), ("the transient (PWR-F12)", I["kd_a"]), ("the gauge's held OCD1", I["gauge"][0][1]),
+        ("the blades' rating (the coordination current)", blade), ("the blades' %g %% non-fuse current" % I["mini_rows"][0][0], nf))]
+    R["nonfuse_rise"] = {k: rise_steady(nf * s_, W[w_], OZ1)[0] for k, w_, s_ in (("B1", "coord_even", 0.5), ("B2", "coord_smax", S_MAX))}
     # the band families
     limit = I["mini_max_c"]
     pe = events_pack(I)
@@ -809,6 +815,12 @@ def render(R):
         P("       coordination %.2f A; %s; %.2f mm a face; field: %s" % (coord, ("family " + fam) if fam != "hop" else "a one-face hop", w, fld))
     P("")
     P("6. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED")
+    P("   the width each current asks at 10 K (two 1 oz faces at an even split / one 1 oz face):")
+    for lab, a, two, one in R["ask"]:
+        P("     %-50s %6.2f A  %6.2f mm a face / %6.2f mm" % (lab, a, two, one))
+    P("   the coordination current is the blades' rating (energy_chain.py check 3); their non-fuse current, held with the gauge failed,")
+    P("     reads %.2f K on B1 and %.2f K on B2, a backstop state judged against the blade's %g C (section 4's 135 %% held row covers it)" % (
+        R["nonfuse_rise"]["B1"], R["nonfuse_rise"]["B2"], I["mini_max_c"]))
     P("   6.72 mm a face (l9stk at %.0f A): %.2f K at the gauge's held %.0f A, %.2f K at the blade's %.0f A, the 600 s window top %.1f C" % (
         I["kd_a"], [r for r in F["A1"]["rows"] if r[0].startswith("held under")][0][7], I["gauge"][0][1], [r for r in F["A1"]["rows"] if r[3] == "coordination"][0][7], I["blade_a"],
         I["air_c"] + [r for r in F["A1"]["rows"] if r[0].startswith("blade 135 to 200")][0][7]))

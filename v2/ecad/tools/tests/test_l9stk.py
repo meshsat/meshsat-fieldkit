@@ -440,7 +440,8 @@ def t_copper_the_page_carries_the_outputs_figures():
              "%.2f mm a face of the 68 mm strip" % R["e_cross"]["sum"], "%.2f mm a face at the pack end" % R["e_cross"]["pack_end"],
              "%d at P_CP" % max(R["e7_cellf_n"], R["thermal_barrels"]["pack"]), "%.2f mm" % R["e7_cellf_len"],
              "%.2f A" % R["r17_limit_a"], "%.2f A" % R["r19_limit_a"], "%.1f mm of a 14.60 mm band" % R["barrel_mm_eq"],
-             "19.50 to 28.20 mm", "0.9971 A2s", "854a2bf5", "OWNER DECISION"]
+             "19.50 to 28.20 mm", "0.9971 A2s", "854a2bf5", "OWNER DECISION", "%.2f K" % R["nonfuse_rise"]["B1"]]
+    want += ["%.2f / %.2f" % (two, one) for _lab, _a, two, one in R["ask"]]
     for s in want:
         assert s in sec, "section 14 does not carry %r" % s
     for f in ("L9C-F%d" % k for k in range(1, 10)):
