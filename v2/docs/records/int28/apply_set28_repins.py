@@ -2,8 +2,8 @@
 """apply_set28_repins.py: L5-F01 (MESHSAT-1357, set 28, 3 October 2026). Layer 5's power pass (records/l5pwr) wrote into
 v2/docs/HW-FW-CONTRACT.md, v2/docs/PANEL.md section 10 and v2/ecad/tools/pcb_interfaces.yaml, and three Layer 4 readers pin those
 files by sha256 and refuse: l4e5_source_control.py (the contract), l4e11_power.py (the contract and PANEL.md) and l4e9_power_path.py
-(the contract and the interfaces). This script brings the three readers to the merged tree and regenerates their outputs, in the order
-L4-E5, L4-E11, L4-E9 (L4-E11 pins the L4-E5 output; L4-E9 pins both), every regeneration through _bin/regen_out.py. Nothing of any
+(the contract and the interfaces). This script brings the three readers to the merged tree and regenerates the outputs, in the order
+L4-E5, L4-E7, L4-E11, L4-E9 (L4-E11 pins the L4-E5 output; L4-E9 pins both), every regeneration through _bin/regen_out.py. Nothing of any
 record's prose or figures changes: pins, one reading mechanism and need() texts only. Every sha it writes is READ from the tree at run
 time, never typed, so the coordinator re-runs it after re-basing the branch onto set 27's final commit.
 
@@ -31,7 +31,7 @@ coordinator's freeze (RESULT.md names them).
 
 Usage, from anywhere:  apply_set28_repins.py [--check | --write] [--no-regen]
   --check (default) prints every pin and text that --write would change, writes nothing, regenerates nothing.
-  --write patches the three readers and regenerates the three outputs through regen_out.py (REGEN_OUT in the environment, else
+  --write patches the readers and regenerates the four outputs (L4-E5, L4-E7, L4-E11, L4-E9) through regen_out.py (REGEN_OUT in the environment, else
           <worktrees>/_bin/regen_out.py beside this worktree, else the runner's path); --no-regen patches only.
 Refuses (exit 3): "already applied" when no pin, mechanism or text differs from the tree; a row or sentence not found once in the
 merged files; a pattern that does not match the merged text exactly once; a patched file that does not parse; regen_out refusing.
@@ -290,7 +290,7 @@ def main(argv):
               "need() text is the merged files'; nothing written (regen_out.py re-proves the outputs by hand if wanted)")
         return 3
     if mode == "--check":
-        print("apply_set28_repins: --check, nothing written; --write would make these changes and regenerate the three outputs:")
+        print("apply_set28_repins: --check, nothing written; --write would make these changes and regenerate the four outputs:")
         show("l4e5_source_control.py", c5); show("l4e7_stage_settings.py", c7); show("l4e11_power.py", c11); show("l4e9_power_path.py", c9)
         return 0
     # L4-E5
@@ -301,7 +301,7 @@ def main(argv):
     s7, n7, c7 = plan_l4e7()
     if c7:
         write(L4E7_PY, s7, n7, "l4e7_stage_settings.py"); show("l4e7_stage_settings.py", c7)
-        regen(L4E7_PY, L4E7_OUT, do_regen)
+    regen(L4E7_PY, L4E7_OUT, do_regen)
     # L4-E11 (its l4e5 pin read after L4-E5's regeneration)
     s11, n11, c11 = plan_l4e11()
     if c11:
