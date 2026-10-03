@@ -919,6 +919,72 @@ def t_the_external_reviews_witnesses_reproduce_on_the_record_function():
     assert abs(got[0] - 0.299128) < 2e-5 and abs(got[1] - 0.299598) < 2e-5 and abs(got[2] - 0.300218) < 2e-5 and abs(got[3] - 0.304662) < 2e-5
 
 
+def t_route_3_the_sense_moved_off_the_input_capacitance_does_not_hold():
+    """B6 round 3 (the coordinator's one design-convergence attempt): the periodic model of the sense in operation reproduces its
+    two limits; every split of the input ceramics is judged on the transient at 0.30 uH with the parasitics added and on the
+    sense's printed operating range at the 25 V corner; none holds both, so route 3 is result (ii) and B6-ENG-1 stands; the
+    as-drafted split leaves the operating range at that corner (the new finding B6-ENG-2); the parasitics' budget at the
+    selected network's floor stays inside round 2's margin; the page and the clarification carry it."""
+    R = _R()
+    m = _CACHE["M"]
+    b6 = R["remedy"]["b6"]
+    r3 = b6["r3"]
+    assert abs(r3["V_OP"][0] + 0.1) < 1e-12 and abs(r3["V_OP"][1] - 0.1) < 1e-12 and r3["F_LO"] == 170e3 and abs(r3["L1_LO"] - 8e-6) < 1e-12 and r3["T_RF"] == 20e-9 and r3["L59"] == 5e-9
+    assert r3["xrow"][:2] == ("6.80", "9.00") and r3["V_OUTS"][0] == 12.0 and abs(r3["V_OUTS"][1] - 15.0875) < 1e-3
+    for pn, esl in r3["esl"].items():
+        assert 0.5e-9 < esl < 1.5e-9 and 1.0 < r3["srf"][pn] < 5.0, (pn, esl)
+    # the periodic model's limits, re-run here: a huge bank behind reads the flat average, none behind reads M1's peak
+    vf1 = m.sense_ripple((2e-5, 0.002, 0.8e-9), (1.0, 1e-4, 0.0), r3["i_reg_hi"], 25.0, 12.0, r3["F_LO"], r3["L1_LO"], r3["T_RF"], b6["G6"]["r59"], r3["L59"], b6["G6"]["rb"], r3["bulk_op"], periods=8)
+    vf2 = m.sense_ripple((1.0, 1e-4, 0.0), (1e-9, 1e-4, 0.0), r3["i_reg_hi"], 25.0, 12.0, r3["F_LO"], r3["L1_LO"], r3["T_RF"], b6["G6"]["r59"], 0.0, b6["G6"]["rb"], r3["bulk_op"], periods=8)
+    assert vf1["peak"] - vf1["trough"] < 0.003 and abs(vf2["r_peak"] - vf2["i_p"] * b6["G6"]["r59"]) < 1e-5     # the 1 F test capacitors drift slowly
+    assert abs(vf2["i_p"] - (r3["i_reg_hi"] / 0.48 + 0.5 * 13.0 * 0.48 / (r3["F_LO"] * r3["L1_LO"]))) < 1e-6
+    # the splits: seven, the as-drafted first and the sheet's Figure 1 last; none holds both duties; every route-3 split that
+    # holds the transient at 0.30 uH leaves the operating range, and the operating range is left by the as-drafted split too
+    rows = r3["rows"]
+    assert len(rows) == 7 and rows[0]["lab"].startswith("A, as drafted") and rows[6]["lab"].startswith("Figure 1") and rows[6]["cu"] is None
+    assert not r3["holds"] and not any(r["holds"] for r in rows)
+    assert any(r["holds_u5"] for r in rows[1:6]) and not any(r["holds_tr"] for r in rows) and not any(r["holds_op"] for r in rows)
+    for r in rows:
+        t3 = r["tr"][0.30e-6]
+        assert r["op_peak"] > r["r_peak_reg"] > 0 and r["op_trough"] < 0 and 0 <= r["low_reg"] < 0.8 and t3["fails"] and not t3["ok"]
+        assert t3["pins_hi"] >= t3["u5"] + b6["ERR"] - 1e-4 and t3["pins_lo"] <= t3["u5n"] - b6["ERR"] + 1e-4 and t3["di_up"] > 0 > t3["di_dn"]
+        assert r["holds_u5"] == ("u5p" not in t3["fails"] and "u5n" not in t3["fails"] and t3["pins_hi"] <= b6["csd_abs"] and t3["pins_lo"] >= -b6["csd_abs"])
+        assert r["holds_tr"] == (t3["ok"] and r["holds_u5"])
+    assert all(r["r_peak_reg"] > r3["V_OP"][1] for r in rows[:6])
+    for r in (rows[0], rows[6]):
+        assert r["tr"][0.30e-6]["vF"] > 100.0 * (1 - b6["M_OTHER"]) and "pvf" in r["tr"][0.30e-6]["fails"]
+    # the property the record prints: every split with ceramics ahead of RSENSE1 (rows 0 to 5) reads over 0.1 V at the regulation's
+    # current; the sheet's Figure 1 arrangement (row 6) alone reads under it, and it fails U5's transient at every loop on the grid:
+    # the only arrangement inside the operating range does not hold the fault (B6-ENG-2)
+    assert abs(rows[0]["tr"][3.3e-6]["u5"] - b6["W"]["u5"]) < 1e-5
+    assert all(r["r_peak_reg"] > r3["V_OP"][1] for r in rows[:6]) and rows[6]["r_peak_reg"] < r3["V_OP"][1]
+    assert "u5p" in rows[6]["tr"][3.3e-6]["fails"] and r3["floors"][rows[6]["lab"]]["u5p"] is None
+    assert all(f in r3["floors"] for f in (rows[1]["lab"], rows[2]["lab"], rows[6]["lab"]))
+    # the parasitics' budget at the selected network's floor: the rise stays inside round 2's margin line, Q12's turn-off at 5 nH does not;
+    # the inductance scan is monotone and names the largest inductance the margin holds for
+    pa = r3["parA"]
+    assert pa["up"] > 0 > pa["dn"] and abs(pa["dn"]) > pa["up"] and abs(pa["l_up"] - r3["L59"] * pa["up"]) < 1e-12 and abs(pa["l_dn"] - r3["L59"] * pa["dn"]) < 1e-12
+    assert b6["W"]["u5"] + b6["ERR"] - 1e-4 < pa["hi"] and pa["lo"] < b6["W"]["u5n"]
+    sc = r3["l59_scan"]
+    assert [l for l, _h, _l, _o in sc] == [0.5e-9, 1e-9, 1.5e-9, 2e-9, 3e-9, 5e-9] and all(sc[i][2] >= sc[i + 1][2] for i in range(len(sc) - 1))
+    assert all(ok == (lo >= -b6["U5_LIM"]) for _l, _h, lo, ok in sc) and abs(sc[-1][1] - pa["hi"]) < 1e-9 and abs(sc[-1][2] - pa["lo"]) < 1e-9
+    assert r3["l59_ok"] == max([l for l, _h, _l, ok in sc if ok], default=None) and r3["l59_ok"] is not None and r3["l59_ok"] < 5e-9
+    assert pa["hi"] - b6["U5_LIM"] < 0.01 and pa["hi"] < b6["csd_abs"] and pa["lo"] > -b6["csd_abs"]
+    assert r3["op_hold"]["r_peak"] < r3["V_OP"][1] and r3["op_l59"][5e-9]["trough"] < r3["op_l59"][1e-9]["trough"] < 0
+    s = _s10(R)
+    for k_ in ("ROUND 3, ROUTE 3", "THE SPLITS", "THE FLOORS of the splits", "THE PARASITICS' BUDGET", "THE VERDICT ON ROUTE 3 (SESSION): route 3 does NOT hold",
+               "A NEW FINDING, independent of B6", "B6-ENG-2", "Discontinuous input current is highest in the buck region"):
+        assert k_ in s, k_
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    rA = rows[0]
+    for fig in ("### Round 3: the sense moved off the stage's input capacitance (route 3), result (ii)", "B6-ENG-2",
+                "%.4f V" % rA["r_peak_reg"], "%.4f V" % rows[6]["r_peak_reg"], "%.1f %%" % (100 * rA["low_reg"]), "%+.4f V" % pa["lo"], "%+.4f V" % pa["hi"],
+                "%.4f V" % (rows[1]["tr"][0.30e-6]["u5"] + b6["ERR"]), "%.1f A/us" % (1e-6 * abs(pa["dn"])), "%.2f A/us" % (1e-6 * pa["up"])):
+        assert fig in page, fig
+    clar = open(os.path.join(REC, "clarification", "analog-devices-lt8705a.txt"), encoding="utf-8").read()
+    assert "7. The input current monitor with a pulsed sense voltage" in clar
+
+
 def t_the_clarification_drafts_follow_the_decision():
     R = _R()
     assert R["decision"]["clar"] == ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina169.txt", "vishay-wsl2512.txt"]

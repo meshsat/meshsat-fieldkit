@@ -21,8 +21,8 @@ Section 0 proves, before any result (exit 4 otherwise):
 
 Run from the repository root:  python3 v2/docs/records/l4e7/l4e7_stage_settings.py > v2/docs/records/l4e7/l4e7_stage_settings.out
 Needs pdftotext and pdftocairo (poppler), PyYAML and the held documents (fetch_held_back.py beside this file, the Samsung
-excerpts by fetch_maker_curves.py beside it, and the ones the imported records name). About seven minutes, most of it
-section 0 and the guard's transients (B6).
+excerpts by fetch_maker_curves.py beside it, and the ones the imported records name). About nine minutes, most of it
+section 0 and the guard's transients (B6, rounds 2 and 3).
 Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction or a predicate failed."""
 import hashlib
 import importlib.util
@@ -95,9 +95,11 @@ CIMON = ("C65", "100n", "C14663")   # SESSION: CIMON_IN at the maker's 0.1 uF lo
 CER_PARTS = ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN")   # Samsung, the ceramics B6 round 2 bounds by their curves
 SAMH = "v2/vendor/passives/held/samsung-%s-2026-10-02.json"           # their excerpts, held back (fetch_maker_curves.py)
 PINS.update({SAMH % pn_: sha_ for pn_, sha_ in (
-    ("CL31B106KBHNNN", "30f54366a810c7861c67ab7d87f6fa8200ecc53ed15d4fbeee38d98fef89531f"),
-    ("CL32B106KBJNNN", "d7b01e5e140bac76ee1417d7c0e3e0d719873b9331e824dab23acacf675b71da"),
-    ("CL32B225KCJSNN", "07f61b770da06e2d7d98011c53a9e90b5968f850d98db410b736dbcb2055b60f"))})
+    ("CL31B106KBHNNN", "adccf37d9343f7e285c5ce0d6fa075fcf6a7799faf8e667838c1fbb7a06cbfaa"),
+    ("CL32B106KBJNNN", "074ea4b6607c221b64f416f54f9eeaae70e154364b1b85e4cf0338aa4333fafd"),
+    ("CL32B225KCJSNN", "f483cb318d868fc58e047a10e24a0d54959da353f102fb164c30395388fda0aa"))})
+XAL = "v2/vendor/power/coilcraft-xal1510.pdf"                           # L1's sheet (B6 round 3: the inductor ripple the sense sees)
+PINS[XAL] = "ccbf7fa97649e098de283ce9c9505201b149443fa34ed771b1e71aa6a8987892"
 
 
 def refuse(code, msg):
@@ -391,11 +393,14 @@ def guard_event_b(g, v0, i0, L, bulk, cold=False, ramp=None, dt=20e-9, t_end=60e
     vB, vA, vPc = vP, vS, vP
     y, t_go, why, s11, s4, t_ovc, t_scc = io, None, None, 0, 0, None, None
     pk = dict(vF=vF, vFmin=vF, vP=vP, vS=vS, vC=vC, i4=0.0, e4=0.0, i11=0.0, e11=0.0, iQ=0.0, iL=abs(iL), vds=vF - vP, vdsmin=vF - vP,
-              slew=0.0, u5=vS - vC, u5n=vS - vC, u18=vP - vS, u18n=vP - vS, di_go=None, i_go=None, t11=None)
+              slew=0.0, u5=vS - vC, u5n=vS - vC, u18=vP - vS, u18n=vP - vS, di_go=None, i_go=None, t11=None, di59=0.0,
+              di59_up=0.0, di59_dn=0.0, u5L=vS - vC, u5Ln=vS - vC)
     samp = []
     gl_ = (dt / L) / (1.0 + rl * dt / L)
     gB, g59, gbk = 1.0 / (esr_b + dt / cb), 1.0 / r59, 1.0 / rb
     il_prev = iL
+    i59_prev = (vS - vC) / r59
+    l59 = g.get("l59", 0.0)                            # RSENSE1's own inductance (round 3): the pins read R i + L di/dt
     for kk in range(int(round(t_end / dt))):
         t = (kk + 1) * dt
         e_t = E if ramp is None else min(E, v0 + ramp * t)
@@ -464,8 +469,74 @@ def guard_event_b(g, v0, i0, L, bulk, cold=False, ramp=None, dt=20e-9, t_end=60e
         pk["vds"], pk["vdsmin"] = max(pk["vds"], vF - vP), min(pk["vdsmin"], vF - vP)
         pk["u5"], pk["u5n"] = max(pk["u5"], vS - vC), min(pk["u5n"], vS - vC)
         pk["u18"], pk["u18n"] = max(pk["u18"], vP - vS), min(pk["u18n"], vP - vS)
+        di59_ = ((vS - vC) / r59 - i59_prev) / dt
+        pk["di59"] = max(pk["di59"], abs(di59_))
+        pk["di59_up"], pk["di59_dn"] = max(pk["di59_up"], di59_), min(pk["di59_dn"], di59_)
+        pk["u5L"], pk["u5Ln"] = max(pk["u5L"], vS - vC + l59 * di59_), min(pk["u5Ln"], vS - vC + l59 * di59_)
+        i59_prev = (vS - vC) / r59
     pk.update(why=why, t_go=t_go, t_on=len(samp) * dt, samp=samp)
     return pk
+
+
+def sense_ripple(cu, cd, i_in, vin, vout, f, L, t_rf, r59, l59, rb, bulk, dt=1e-9, periods=25, vlim=0.1):
+    """MODELED, B6 round 3: what U5's sense pins see in operation at the buck region's corner. M1 draws the inductor current from
+    the node behind RSENSE1 while it is on (a trapezoid: the valley to the peak over the on-time, edges of t_rf), nothing while
+    it is off; the input current i_in is the period's average. The network at the switching timescale: the bulk (esr, C) and
+    the source (a current source: the lead's inductance isolates it at these frequencies) on PV_P, the bank rb to TRK_VS, the
+    ceramics ahead of RSENSE1 cu = (C, ESR, ESL) there, RSENSE1 r59 with its inductance l59 to TRK_VIN, the ceramics behind it
+    cd = (C, ESR, ESL). cu None: nothing ahead of RSENSE1 but the bank (the sheet's Figure 1). Backward Euler; the last period
+    after `periods` is read: the pins' peak and trough (the node difference across RSENSE1 and its inductance), the resistive
+    part's peak, the period's average and the average of the waveform clipped at vlim (what an amplifier limited to vlim reads)."""
+    T = 1.0 / f
+    D = vout / vin
+    il_avg = i_in / D
+    dI = (vin - vout) * D * T / L
+    i_v, i_p = il_avg - dI / 2.0, il_avg + dI / 2.0
+    ton = D * T
+
+    def i_m1(t):
+        t = t % T
+        if t < t_rf:
+            return i_v * t / t_rf
+        if t < ton:
+            return i_v + (i_p - i_v) * (t - t_rf) / (ton - t_rf)
+        if t < ton + t_rf:
+            return i_p * (1.0 - (t - ton) / t_rf)
+        return 0.0
+    Cd, rd_, ld = cd
+    Cu, ru, lu = (1.0, 1e12, 0.0) if cu is None else cu
+    esr_b, cb = bulk
+    vb = vu = vd = vin
+    iu = idn = i59 = 0.0
+    n = int(round(T / dt))
+    out = []
+    for k in range(n * periods):
+        t = (k + 1) * dt
+        im = i_m1(t)
+        zb, eb = dt / cb + esr_b, vb
+        zu, eu = dt / Cu + ru + lu / dt, vu - (lu / dt) * iu
+        zd, ed = dt / Cd + rd_ + ld / dt, vd - (ld / dt) * idn
+        z59, e59 = r59 + l59 / dt, -(l59 / dt) * i59
+        # KCL at PV_P, TRK_VS, TRK_VIN (the unknowns vP, vA, vC), solved by elimination
+        a11, a12, b1 = 1.0 / zb + 1.0 / rb, -1.0 / rb, i_in + eb / zb
+        a21, a22, a23, b2 = 1.0 / rb, -1.0 / rb - 1.0 / zu - 1.0 / z59, 1.0 / z59, -eu / zu - e59 / z59
+        a32, a33, b3 = 1.0 / z59, -1.0 / z59 - 1.0 / zd, im + e59 / z59 - ed / zd
+        m_ = a21 / a11
+        a22p, b2p = a22 - m_ * a12, b2 - m_ * b1
+        m2_ = a32 / a22p
+        vC = (b3 - m2_ * b2p) / (a33 - m2_ * a23)
+        vA = (b2p - a23 * vC) / a22p
+        vP = (b1 - a12 * vA) / a11
+        ib, iu, idn, i59 = (vP - eb) / zb, (vA - eu) / zu, (vC - ed) / zd, (vA - vC - e59) / z59
+        vb += ib * dt / cb
+        vu += iu * dt / Cu
+        vd += idn * dt / Cd
+        if k >= n * (periods - 1):
+            out.append((vA - vC, r59 * i59))
+    vp = [o[0] for o in out]
+    avg = sum(vp) / len(vp)
+    return dict(peak=max(vp), trough=min(vp), avg=avg, avg_clip=sum(min(v_, vlim) for v_ in vp) / len(vp), r_peak=max(o[1] for o in out),
+                i_v=i_v, i_p=i_p, il_avg=il_avg, dI=dI, D=D)
 
 
 def compute():
@@ -2668,7 +2739,7 @@ def compute():
     for pn_, d_ in SAM.items():
         if d_["part"] != pn_ + "E" or len(d_["dc_bias_V_percent"]) < 50:
             refuse(3, "the filed Samsung reading of %s is not the one read" % pn_)
-        for k_ in ("dc_bias_V_percent", "tcc_degC_percent", "bias_tcc_degC_percent", "esr_MHz_ohm"):
+        for k_ in ("dc_bias_V_percent", "tcc_degC_percent", "bias_tcc_degC_percent", "esr_MHz_ohm", "z_MHz_ohm"):
             if d_[k_] != sorted(d_[k_]):                # the fetch sorts each series (the page can serve them out of order)
                 refuse(3, "the held Samsung excerpt of %s is not sorted" % pn_)
     BAND = 0.15
@@ -2714,7 +2785,8 @@ def compute():
 
     def evalR(L_, g_, cold=False, starts_=None, soa=False, ramp=None, dt=20e-9):
         W_ = dict(vF=-1e9, vFmin=1e9, vP=-1e9, vS=-1e9, i4=0.0, e4=0.0, i11=0.0, e11=0.0, t11=0.0, iQ=0.0, iL=0.0, vds=-1e9, vdsmin=1e9,
-                  slew=0.0, u5=-1e9, u5n=1e9, u18=-1e9, u18n=1e9, soa12=0.0, soa13=0.0, mono=True, ton=0.0, why=set(), n=0, arg=None)
+                  slew=0.0, u5=-1e9, u5n=1e9, u18=-1e9, u18n=1e9, soa12=0.0, soa13=0.0, mono=True, ton=0.0, why=set(), n=0, arg=None, di59=0.0,
+                  di59_up=0.0, di59_dn=0.0, u5L=-1e9, u5Ln=1e9)
         for _lab, v0_, i0_ in (starts_ or st6):
             for _bl, bk_ in (bk6[:1] if cold else bk6):
                 for d11_ in ((d11_hot, d11_cold) if ramp is None else (d11_hot,)):
@@ -2726,9 +2798,9 @@ def compute():
                     W_["n"] += 1
                     if r_["u5"] > W_["u5"]:
                         W_["arg"] = (v0_, i0_, bk_, d11_)
-                    for kk_ in ("vF", "vP", "vS", "i4", "e4", "i11", "e11", "iQ", "iL", "vds", "slew", "u5", "u18"):
+                    for kk_ in ("vF", "vP", "vS", "i4", "e4", "i11", "e11", "iQ", "iL", "vds", "slew", "u5", "u18", "di59", "di59_up", "u5L"):
                         W_[kk_] = max(W_[kk_], r_[kk_])
-                    for kk_ in ("vFmin", "vdsmin", "u5n", "u18n"):
+                    for kk_ in ("vFmin", "vdsmin", "u5n", "u18n", "di59_dn", "u5Ln"):
                         W_[kk_] = min(W_[kk_], r_[kk_])
                     if r_["t11"]:
                         W_["t11"] = max(W_["t11"], r_["t11"][1] - r_["t11"][0])
@@ -2885,6 +2957,138 @@ def compute():
               valsA=[(id_,) + f_(WA) for id_, _t, f_ in RT6], vals1=[(id_,) + f_(W1u) for id_, _t, f_ in RT6],
               WD1=evD[grid6.index(min(grid6, key=lambda x_: abs(x_ - 1.0e-6)))], ibias_sum=ibias_sum, lim_err=lim_err,
               be115=csd_abs / r59_hi - i_op, d59_115=(i_op + A115) * r59_hi, d59_116=(i_op + 10.0) * r59_hi)
+    # ================================================================== B6 ROUND 3: route 3, the sense moved off the stage's input capacitance
+    # The coordinator's one design-convergence attempt (2 October 2026, evening). What RSENSE1 carries is the current into whatever
+    # sits behind it: a stiff source arriving with the guard on charges that capacitance at a rate the loop sets (B6), and in
+    # operation M1 draws its pulsed current from it (8705af p.27). The sheet asks for the input ceramics at the MOSFETs (p.36) and
+    # for the sense differential inside its +-100 mV operating range (p.5, the full-range row; p.31). So the capacitance behind
+    # RSENSE1 is bounded from above by the transient and from below by the operating range, and route 3 asks whether any split
+    # of the input ceramics satisfies both. The printed statements the question rests on:
+    r3_ec = RP.ec_row(pages, 5, "CSPIN, CSNIN Differential Operating Voltage Range", None)
+    for pg_, pat_, what_ in ((31, r"should be kept below 100mV due to the limited amount of current that can be driven out of IMON_IN", "p.31 the 100 mV"),
+                             (31, r"the input current often has ripple and discontinuities depending on the LT8705A.s region of operation", "p.31 ripple and discontinuities"),
+                             (36, r"Connect the input capacitors, CIN, and output capacitors, COUT, closely to the power MOSFETs\. These capacitors carry the MOSFET AC current in the boost and buck regions", "p.36 CIN at the MOSFETs"),
+                             (27, r"Discontinuous input current is highest in the buck region due to the M1 switch toggling on and off", "p.27 the buck region's input current"),
+                             (27, r"A ceramic capacitor, of at least 1.F, should also be placed from VIN to GND as close to the LT8705A pins as possible", "p.27 the VIN bypass"),
+                             (26, r"Typical values are 20ns to 40ns depending on the MOSFET capacitance and VIN voltage", "p.26 tRF1"),
+                             (36, r"Route current sense traces \(CSP/CSN, CSPIN/CSNIN, CSPOUT/CSNOUT\) together with minimum PC trace spacing", "p.36 the sense traces"),
+                             (36, r"Ensure accurate current sensing with Kelvin connections at the RSENSE resistors", "p.36 Kelvin")):
+        need(raw[pg_], pat_, "8705af " + what_)
+    xal_ = pg(XAL, 1, True)
+    need(xal_, r"Part number1\s+\u00b120% \(\u00b5H\)", "XAL1510 p.1 the inductance tolerance header")
+    xrow_ = need(xal_, r"XAL1510-103ME_\s+10\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)", "XAL1510 p.1 the 10 uH row").groups()
+    gen_txt_ = open(os.path.join(TOP, GEN_E), encoding="utf-8").read()
+    need(gen_txt_, r'_intent\.rail\("VIN_RAW", 12\.0, _VIN_T, _VIN_P', "board E's declared VIN_RAW 12.0 V")
+    need(gen_txt_, r'part\("L1", "Device", "L", "10uH Coilcraft XAL1510-103MED \(Isat 26 A', "board E's L1")
+    V_OP = (r3_ec["min"] * 1e-3, r3_ec["max"] * 1e-3)        # the sense differential's operating range, V
+    L1_LO = 10e-6 * 0.80                                      # L1 at the XAL1510's -20 %
+    F_LO = float(fosc[0]) * 1e3                               # the oscillator's least at RT 215k
+    T_RF = 20e-9                                              # p.26: tRF1 typically 20 to 40 ns; the least typical taken, no minimum is printed
+    L59_H = 5e-9      # RSENSE1's own inductance: Vishay's WSL prints 0.5 to 5 nH (held sheet p.1); the Milliohm HoJLR2512 prints none, ASSUMPTION at that bound
+    L_TAP = 0.5e-9    # layout obligation (declared): each Kelvin tap at its pad and the ceramics at the pad, at most 0.5 nH between a tap and the plates
+    L_KEL = 1.0e-9    # layout obligation (declared): the CSPIN/CSNIN pair routed together (p.36), its loop at most 1 nH
+    V_OUTS = (12.0, v_out)                                    # the bus the stage delivers into: VIN_RAW's declared 12.0 V, and the drawn 15.1 V setpoint
+    C_NOM3 = {"CL31B106KBHNNN": 10e-6, "CL32B106KBJNNN": 10e-6, "CL32B225KCJSNN": 2.2e-6}
+    esl_d = {pn_: 1.0 / ((2 * math.pi * min(SAM[pn_]["z_MHz_ohm"], key=lambda p_: p_[1])[0] * 1e6) ** 2 * C_NOM3[pn_]) for pn_ in CER_PARTS}
+    srf_d = {pn_: min(SAM[pn_]["z_MHz_ohm"], key=lambda p_: p_[1])[0] for pn_ in CER_PARTS}
+    esl_max = max(esl_d.values())
+
+    def op_bank(parts_, v_, side_):
+        """(C, ESR, ESL) of a bank at the switching frequency: the parts' capacitance at v_ on the side the question needs (the
+        record's bounds), the maker's typical ESR at F_LO (ESR_CER for a part with no curve), the ESL from each part's
+        self-resonance (the largest held for a part with no curve), the tap inductance added."""
+        c_ = CerBank([part(n_, cn_, pn_, side_) for n_, cn_, pn_ in parts_]).C(v_)
+        g_ = sum(n_ / (interp(SAM[pn_]["esr_MHz_ohm"], F_LO / 1e6) if pn_ else ESR_CER) for n_, cn_, pn_ in parts_)
+        gl_ = sum(n_ / (esl_d[pn_] if pn_ else esl_max) for n_, cn_, pn_ in parts_)
+        return (c_, 1.0 / g_, 1.0 / gl_ + L_TAP)
+    UP_A = [(N_CA, 10e-6, "CL32B106KBJNNN")]
+    DOWN_A = [(2, 10e-6, "CL31B106KBHNNN"), (1, 4.7e-6, None), (1, 0.1e-6, None)]
+    UP_3 = UP_A + [(2, 10e-6, "CL31B106KBHNNN"), (1, 4.7e-6, None)]
+    C64_ = [(1, 0.1e-6, None)]
+    splits = (("A, as drafted: C71 to C74 ahead, C13 to C15 and C64 behind", UP_A, DOWN_A),
+              ("route 3: everything ahead, C64 alone behind", UP_3, C64_),
+              ("route 3: one CL32B225KCJSNNE (2.2 uF) and C64 behind", UP_3, [(1, 2.2e-6, "CL32B225KCJSNN")] + C64_),
+              ("route 3: two CL32B225KCJSNNE and C64 behind", UP_3, [(2, 2.2e-6, "CL32B225KCJSNN")] + C64_),
+              ("route 3: one CL32B106KBJNNNE (10 uF) and C64 behind", UP_3, [(1, 10e-6, "CL32B106KBJNNN")] + C64_),
+              ("route 3: two CL32B106KBJNNNE and C64 behind", UP_3, [(2, 10e-6, "CL32B106KBJNNN")] + C64_),
+              ("Figure 1: nothing ahead but the bank, everything behind", None, UP_3 + C64_))
+    bulk_op = bulks["new_20"]                                 # the bulk new, at 20 C: the most it can take of the pulse ahead of RSENSE1
+    r3rows = []
+    for lab_, up_, dn_ in splits:
+        g3_ = dict(GA, bS=CerBank([part(n_, cn_, pn_, "lo") for n_, cn_, pn_ in (up_ or [(1, 1e-12, None)])]),
+                   bC=CerBank([part(n_, cn_, pn_, "hi") for n_, cn_, pn_ in dn_]), esrS=ESR_CER / (sum(n_ for n_, _c, _p in up_) if up_ else 1), l59=L59_H)
+        tr_ = {}
+        for L_ in (0.30e-6, 1.0e-6, 3.3e-6):
+            W3_ = evalR(L_, g3_)
+            ok3_ = ok6(W3_)
+            tr_[L_] = dict(u5=W3_["u5"], u5n=W3_["u5n"], vF=W3_["vF"], vS=W3_["vS"], i4=W3_["i4"], iQ=W3_["iQ"], di59=W3_["di59"], vds=W3_["vds"], slew=W3_["slew"],
+                           inp=W3_["vF"] * kinp, di_up=W3_["di59_up"], di_dn=W3_["di59_dn"],
+                           pins_hi=W3_["u5L"] + ERR[0] + L_KEL * W3_["di59_up"], pins_lo=W3_["u5Ln"] - ERR[0] + L_KEL * W3_["di59_dn"],
+                           ok=all(ok3_.values()) and W3_["mono"], fails=sorted(id_ for id_, v_ in ok3_.items() if not v_))
+        cu_ = None if up_ is None else op_bank(up_, v_oc, "hi")
+        cd_ = op_bank(dn_, v_oc, "lo")
+        op_ = {}
+        for vo_ in V_OUTS:
+            for ii_ in (i_reg_hi, i_op):
+                op_[(vo_, ii_)] = sense_ripple(cu_, cd_, ii_, v_oc, vo_, F_LO, L1_LO, T_RF, r59_hi, L59_H, rb_lo, bulk_op)
+        r3rows.append(dict(lab=lab_, up=up_, dn=dn_, cu=cu_, cd=cd_, tr=tr_, op=op_,
+                           op_peak=max(o_["peak"] for o_ in op_.values()), op_trough=min(o_["trough"] for o_ in op_.values()),
+                           r_peak_reg=max(o_["r_peak"] for (vo_, ii_), o_ in op_.items() if ii_ == i_reg_hi),
+                           r_peak_trip=max(o_["r_peak"] for (vo_, ii_), o_ in op_.items() if ii_ == i_op),
+                           low_reg=max(1.0 - o_["avg_clip"] / o_["avg"] for (vo_, ii_), o_ in op_.items() if ii_ == i_reg_hi),
+                           low_trip=max(1.0 - o_["avg_clip"] / o_["avg"] for (vo_, ii_), o_ in op_.items() if ii_ == i_op)))
+    # the hold's own operating point (17.6 V in, the drawn setpoint out), for the as-drafted split: where the sense is smooth enough
+    op_hold = sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, lo_h, v_out, F_LO, L1_LO, T_RF, r59_hi, L59_H, rb_lo, bulk_op)
+    op_edge = sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, v_oc, 12.0, F_LO, L1_LO, 10e-9, r59_hi, L59_H, rb_lo, bulk_op, dt=0.5e-9)
+    op_noesl = sense_ripple((r3rows[0]["cu"][0], r3rows[0]["cu"][1], 0.0), (r3rows[0]["cd"][0], r3rows[0]["cd"][1], 0.0), i_reg_hi, v_oc, 12.0, F_LO, L1_LO, T_RF, r59_hi, 0.0, rb_lo, bulk_op)
+    # the verification of the periodic model: a huge bank behind reads the average; a huge bank ahead and none behind reads M1
+    vf1_ = sense_ripple(r3rows[0]["cu"], (1.0, 1e-4, 0.0), i_reg_hi, v_oc, 12.0, F_LO, L1_LO, T_RF, r59_hi, L59_H, rb_lo, bulk_op, periods=8)
+    vf2_ = sense_ripple((1.0, 1e-4, 0.0), (1e-9, 1e-4, 0.0), i_reg_hi, v_oc, 12.0, F_LO, L1_LO, T_RF, r59_hi, 0.0, rb_lo, bulk_op, periods=8)
+    if not (abs(vf1_["peak"] - vf1_["trough"]) < 0.002 and abs(vf2_["r_peak"] - vf2_["i_p"] * r59_hi) < 1e-6):
+        refuse(4, "B6 round 3: the periodic model fails its limits: %s %s" % (vf1_, vf2_))
+    # the floors of the splits that hold U5 at 0.30 uH, over the whole grid (no refusal: a rating that never holds reads None)
+
+    def floor_r3(g_):
+        evs_ = [evalR(L_, g_) for L_ in grid6]
+        oks_ = [ok6(e_) for e_ in evs_]
+        ls_ = {}
+        for id_, _t, _f in RT6:
+            j_ = len(grid6)
+            while j_ > 0 and oks_[j_ - 1][id_]:
+                j_ -= 1
+            ls_[id_] = None if j_ == len(grid6) else (grid6[j_] if j_ > 0 else 0.0)
+        return ls_
+    r3_floors = {}
+    for row_ in (r3rows[1], r3rows[2], r3rows[6]):
+        g3_ = dict(GA, bS=CerBank([part(n_, cn_, pn_, "lo") for n_, cn_, pn_ in (row_["up"] or [(1, 1e-12, None)])]),
+                   bC=CerBank([part(n_, cn_, pn_, "hi") for n_, cn_, pn_ in row_["dn"]]), esrS=ESR_CER / (sum(n_ for n_, _c, _p in row_["up"]) if row_["up"] else 1))
+        r3_floors[row_["lab"]] = floor_r3(g3_)
+    # route 3's verdict (SESSION): it holds only if, at 0.30 uH, every rating holds with its margin, U5 with the numerical error and
+    # the parasitics' budget added, AND the sense stays inside its printed operating range in operation at the 25 V corner
+    V_OP_M = V_OP[1] * (1 - M_OTHER)
+    for row_ in r3rows:
+        t3_ = row_["tr"][0.30e-6]
+        row_["holds_u5"] = ("u5p" not in t3_["fails"] and "u5n" not in t3_["fails"] and t3_["pins_hi"] <= csd_abs and t3_["pins_lo"] >= -csd_abs)   # U5 alone, with RSENSE1's inductance and the Kelvin pickup
+        row_["holds_tr"] = t3_["ok"] and row_["holds_u5"]                                  # every rating with its margin
+        row_["holds_op"] = row_["r_peak_reg"] <= V_OP_M and row_["op_peak"] <= V_OP_M and -row_["op_trough"] <= V_OP_M
+        row_["holds"] = row_["holds_tr"] and row_["holds_op"]
+    # the selected network at its floor with RSENSE1's inductance: the pins read R i + L di/dt, the rise adding to the positive peak and
+    # Q12's turn-off (the current collapsing within the gate's fall) swinging it negative; the largest inductance the margin holds for
+    W_LA = evalR(LA, dict(GA, l59=L59_H))
+    parA = dict(up=W_LA["di59_up"], dn=W_LA["di59_dn"], hi=W_LA["u5L"] + ERR[0] + L_KEL * W_LA["di59_up"], lo=W_LA["u5Ln"] - ERR[0] + L_KEL * W_LA["di59_dn"],
+                l_up=L59_H * W_LA["di59_up"], l_dn=L59_H * W_LA["di59_dn"], k_up=L_KEL * W_LA["di59_up"], k_dn=L_KEL * W_LA["di59_dn"])
+    l59_scan = []
+    for l_ in (0.5e-9, 1e-9, 1.5e-9, 2e-9, 3e-9, 5e-9):
+        Wl_ = evalR(LA, dict(GA, l59=l_))
+        hi_, lo_ = Wl_["u5L"] + ERR[0] + L_KEL * Wl_["di59_up"], Wl_["u5Ln"] - ERR[0] + L_KEL * Wl_["di59_dn"]
+        l59_scan.append((l_, hi_, lo_, lo_ >= -U5_LIM))         # ok: the turn-off's excursion inside the margin line (the side the inductance governs)
+    l59_ok = max([l_ for l_, _h, _l, ok_ in l59_scan if ok_], default=None)
+    op_l59 = {l_: sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, v_oc, 12.0, F_LO, L1_LO, T_RF, r59_hi, l_, rb_lo, bulk_op) for l_ in (1e-9, 2e-9, 5e-9)}
+    b6["r3"] = dict(l59_scan=l59_scan, l59_ok=l59_ok, op_l59=op_l59, W_LA=dict((k_, W_LA[k_]) for k_ in ("u5", "u5n", "u5L", "u5Ln", "di59_up", "di59_dn")),
+                    V_OP=V_OP, L1_LO=L1_LO, xrow=xrow_, F_LO=F_LO, T_RF=T_RF, L59=L59_H, L_TAP=L_TAP, L_KEL=L_KEL, esl=esl_d, srf=srf_d, V_OUTS=V_OUTS,
+                    rows=r3rows, floors=r3_floors, op_hold=op_hold, op_edge=op_edge, op_noesl=op_noesl, vf=(vf1_, vf2_), parA=parA, di59A=WA["di59"],
+                    i_reg_hi=i_reg_hi, i_op=i_op, bulk_op=bulk_op, holds=any(r_["holds"] for r_ in r3rows), V_OP_M=V_OP_M, v_oc=v_oc, lo_h=lo_h, t_f=t_f6,
+                    edge_spike=(esl_max + L_TAP) * (r3rows[0]["op"][(12.0, i_reg_hi)]["i_v"] / T_RF))
     verd2 = [
         dict(id="D4", name="a stiff 36 V source, connected cold", ok=st_min > 1e-3 and f36["cut_hi"] < v_src and f36["d4_room"] > 0 and v_src < D11["vr"]
              and cold_ok and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"]),
@@ -4028,6 +4232,108 @@ def render(R):
           "LT8705A possibly damaged and the solar stage lost (the 100 W bound and the backstop rest on it); work blocked: D-10's "
           "closure and R-176's step row; board E's other drafts are not blocked" % (
               b6["U5_LIM"], LAu, b6["W1u"]["u5"] + b6["ERR"], b6["csd_abs"], LAu, b6["U5_LIM"]))
+    r3 = b6["r3"]
+    wrapP("       ", "       ", "ROUND 3, ROUTE 3 (the coordinator's one design-convergence attempt, 2 October 2026: B6-ENG-1's third route, the input "
+          "current sense moved off the stage's input capacitance, worked to the circuit). What RSENSE1 carries is the current into whatever "
+          "sits behind it: the guard-on transient charges that capacitance at a rate the loop sets (B6), and in operation M1 draws its "
+          "pulsed current from it (8705af p.27: \"Discontinuous input current is highest in the buck region due to the M1 switch toggling "
+          "on and off\"). The sheet places the input ceramics at the MOSFETs (p.36: \"These capacitors carry the MOSFET AC current in the "
+          "boost and buck regions\"), asks for at least 1 uF at the VIN pin (p.27), routes the sense pair together with Kelvin taps "
+          "(p.36), and rates the sense differential's OPERATING range at %.0f to %.0f mV (p.5, the full-range row; p.31: it \"should be "
+          "kept below 100mV due to the limited amount of current that can be driven out of IMON_IN\", and the input current \"often has "
+          "ripple and discontinuities\" that CIMON_IN averages). So the capacitance behind RSENSE1 is bounded from above by the transient "
+          "and from below by the operating range, and route 3 is the question whether any split of the input ceramics satisfies both. "
+          "THE OPERATING MODEL (MODELED, sense_ripple): the buck region's corner, %.0f V in (REQ-016's open circuit) delivering into the "
+          "bus at %.1f V (VIN_RAW's declared nominal) and at the drawn %.1f V setpoint, the input current at the regulation's highest "
+          "%.4f A and at the trip's %.4f A, the oscillator at its least %.0f kHz, L1 at the XAL1510's -20 %% (%.1f uH; its row 10 uH, "
+          "%s uH typical and %s uH at the saturation current), M1's edges %.0f ns (p.26: 20 to 40 ns typical, no minimum printed), "
+          "RSENSE1 at its highest with %.0f nH (Vishay's WSL prints 0.5 to 5 nH; the Milliohm part prints none: ASSUMPTION at that bound), "
+          "each ceramic's ESR the maker's typical at that frequency and its ESL from its self-resonance (%s), the taps %.1f nH each "
+          "(a layout obligation, declared), the bulk new at 20 C ahead of the bank; the pins read the node difference across RSENSE1 and "
+          "its inductance over the last of %d periods. Its limits: a huge bank behind reads the flat average (%.4f to %.4f V), a huge "
+          "bank ahead and none behind reads M1's peak (%.4f V = %.2f A x RSENSE1)" % (
+              1e3 * r3["V_OP"][0], 1e3 * r3["V_OP"][1], r3["v_oc"], r3["V_OUTS"][0], r3["V_OUTS"][1],
+              r3["i_reg_hi"], r3["i_op"], r3["F_LO"] / 1e3, 1e6 * r3["L1_LO"], r3["xrow"][0], r3["xrow"][1], 1e9 * r3["T_RF"], 1e9 * r3["L59"],
+              ", ".join("%s %.2f nH at %.2f MHz" % (k_, 1e9 * v_, r3["srf"][k_]) for k_, v_ in sorted(r3["esl"].items())), 1e9 * r3["L_TAP"], 25,
+              r3["vf"][0]["trough"], r3["vf"][0]["peak"], r3["vf"][1]["r_peak"], r3["vf"][1]["i_p"]))
+    P("       THE SPLITS (the ceramics ahead of RSENSE1 at their largest and behind it at their least for the operating range, the reverse for the")
+    P("       transient; U5 resistive with the numerical error, then the pins with RSENSE1's 5 nH and the Kelvin pickup, from the rise to Q12's turn-off;")
+    P("       the operating figures at the 25 V corner over both bus voltages):")
+    for row_ in r3["rows"]:
+        t3_, t1_, t33_ = row_["tr"][0.30e-6], row_["tr"][1.0e-6], row_["tr"][3.3e-6]
+        P("         - %s" % row_["lab"])
+        P("           ahead %6.2f uF, behind %6.2f uF at 25 V; transient U5 %.4f V at 0.30 uH (the pins %+.3f to %+.3f V)%s, %.4f V at 1.00 uH (%+.3f to %+.3f)%s, %.4f V at 3.30 uH (%+.3f to %+.3f)%s" % (
+            1e6 * (row_["cu"][0] if row_["cu"] else 0.0), 1e6 * row_["cd"][0],
+            t3_["u5"] + b6["ERR"], t3_["pins_lo"], t3_["pins_hi"], (" (fails: %s)" % ", ".join(t3_["fails"])) if t3_["fails"] else " (every rating holds)",
+            t1_["u5"] + b6["ERR"], t1_["pins_lo"], t1_["pins_hi"], (" (fails: %s)" % ", ".join(t1_["fails"])) if t1_["fails"] else "",
+            t33_["u5"] + b6["ERR"], t33_["pins_lo"], t33_["pins_hi"], (" (fails: %s)" % ", ".join(t33_["fails"])) if t33_["fails"] else ""))
+        P("           at 0.30 uH: PV_F %.1f V, TRK_VS %.2f V, D4 %.1f A, Q12 off at %.1f A; in operation: RSENSE1's resistive peak %.4f V at the regulation's "
+          "highest, %.4f V at the trip's; the pins %.4f to %+.4f V; the average read %.1f %% low at the regulation's current, %.1f %% at the trip's: %s" % (
+              t3_["vF"], t3_["vS"], t3_["i4"], t3_["iQ"], row_["r_peak_reg"], row_["r_peak_trip"], row_["op_trough"], row_["op_peak"],
+              100 * row_["low_reg"], 100 * row_["low_trip"],
+              "HOLDS both" if row_["holds"] else ("holds the transient, NOT the operating range" if row_["holds_tr"] else (
+                  ("holds U5's transient but not the port's ratings, NOT the operating range" if row_["holds_u5"] else "holds NEITHER") if not row_["holds_op"] else "holds the operating range, NOT the transient"))))
+    fl_ = r3["floors"]
+    wrapP("       ", "       ", "THE FLOORS of the splits that hold U5 at 0.30 uH, rating by rating over the grid (the least loop each holds from; none: it "
+          "holds nowhere on the grid): %s" % "; ".join("%s: %s" % (lab_, ", ".join("%s %s" % (id_, ("%.2f uH" % (1e6 * v_)) if v_ else ("under %.2f uH" % (1e6 * b6["grid"][0]) if v_ == 0.0 else "none")) for id_, v_ in ls_.items() if v_ != 0.0)) for lab_, ls_ in fl_.items()))
+    oh_ = r3["op_hold"]
+    wrapP("       ", "       ", "THE AS-DRAFTED SPLIT AT THE HOLD (%.2f V in, %.1f V out, %.4f A): RSENSE1's resistive peak %.4f V, the pins %.4f to %+.4f V, the "
+          "average read %.1f %% low: inside the operating range there. SENSITIVITIES at the 25 V corner, 12.0 V out, the regulation's current: M1's "
+          "edges at 10 ns, the pins %.4f to %+.4f V; every inductance zero, %.4f to %+.4f V (the resistive share alone, %.4f V peak). The edge's "
+          "inductive step at the pins, INFERRED as the ceramics' ESL and tap times the valley current over the edge: %.3f V" % (
+              r3["lo_h"], r3["V_OUTS"][1], r3["i_reg_hi"], oh_["r_peak"], oh_["trough"], oh_["peak"],
+              100 * (1 - oh_["avg_clip"] / oh_["avg"]), r3["op_edge"]["trough"], r3["op_edge"]["peak"], r3["op_noesl"]["trough"], r3["op_noesl"]["peak"],
+              r3["op_noesl"]["r_peak"], r3["edge_spike"]))
+    pa_ = r3["parA"]
+    wrapP("       ", "       ", "THE PARASITICS' BUDGET at the selected network's floor (%.2f uH), linear worst case, the pins reading R i + L di/dt with "
+          "RSENSE1's inductance at the WSL's printed bound %.0f nH and the Kelvin pair's loop %.0f nH (the layout obligation: the pair from the "
+          "pad centres, together, over the ground return): RSENSE1's current rises at most %.2f A/us during the charging (RSENSE1's "
+          "inductance %+.4f V, the pair %+.4f V) and falls at most %.1f A/us when Q12 turns off within its %.0f ns gate fall (%+.4f V and "
+          "%+.4f V). The pins read at most %+.4f V on the rise (resistive %.4f, numerical %.6f) and %+.4f V at the turn-off, against +-%.1f V: "
+          "the rise %s round 2's %.3f V margin line (by %+.4f V: the floor was bisected on the resistive value, and the rise's inductive "
+          "and Kelvin terms, %.4f V at 5 nH, sit inside the 0.060 V between the line and the rating), the turn-off at 5 nH %s. Over RSENSE1's "
+          "inductance at the floor (%s; OUT: the turn-off outside the line), the turn-off stays inside the margin line for an inductance at "
+          "most %s. The ceramics' ESL and tap (%.2f nH a part at most, %.1f nH tap) move "
+          "the node, not the pin difference, and are in the operating model above. So RSENSE1's inductance, printed by no maker for the "
+          "chosen part, is a condition of B6's floor as much as the loop is" % (
+              LAu, 1e9 * r3["L59"], 1e9 * r3["L_KEL"], 1e-6 * pa_["up"], pa_["l_up"], pa_["k_up"], 1e-6 * abs(pa_["dn"]), 1e9 * r3["t_f"], pa_["l_dn"], pa_["k_dn"],
+              pa_["hi"], b6["W"]["u5"], b6["ERR"], pa_["lo"], b6["csd_abs"], "stays inside" if pa_["hi"] <= b6["U5_LIM"] else "EXCEEDS", b6["U5_LIM"],
+              pa_["hi"] - b6["U5_LIM"], pa_["hi"] - b6["W"]["u5"] - b6["ERR"], "stays inside it" if pa_["lo"] >= -b6["U5_LIM"] else "does NOT",
+              "; ".join("%.1f nH %+.3f to %+.3f V%s" % (1e9 * l_, lo_, hi_, "" if ok_ else " OUT") for l_, hi_, lo_, ok_ in r3["l59_scan"]),
+              ("%.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "none of the values tried", 1e9 * max(r3["esl"].values()), 1e9 * r3["L_TAP"]))
+    wrapP("       ", "       ", "IN OPERATION the same inductance sets the pins' swing at M1's edges for the as-drafted split (25 V in, 12.0 V out, the "
+          "regulation's current): %s" % "; ".join("%.0f nH: %+.4f to %+.4f V" % (1e9 * l_, o_["trough"], o_["peak"]) for l_, o_ in sorted(r3["op_l59"].items())))
+    rA_ = r3["rows"][0]
+    wrapP("       ", "       ", "THE VERDICT ON ROUTE 3 (SESSION): %s. No split of the input ceramics holds both: the splits that hold U5's transient at "
+          "0.30 uH leave at most a few microfarads behind RSENSE1, so in operation M1's pulses flow through it and the sense differential "
+          "leaves its +-%.0f mV operating range at the 25 V corner (resistive peaks %.4f to %.4f V at the regulation's highest current); the "
+          "splits that keep more behind it bring the transient back. The port's own ratings keep their floors whatever the split (at 0.30 uH "
+          "PV_F reads %.1f V against %.0f V, Q12's VDS and INP with it), and that floor is the SOURCE loop's (the panel lead and whatever a "
+          "stiff source arrives through), not one the kit's harness from J_SOLAR to the stage controls. B6-ENG-1 stands as written, with one "
+          "item added to its decision from this round's budget: RSENSE1's inductance, which no maker prints for the chosen part, must be "
+          "bounded (a part whose maker prints at most %s, or the fitted part measured) for the turn-off's excursion at the pins to stay "
+          "inside the margin at the floor. No further desk round on B6 without new evidence. A NEW FINDING, independent of B6: THE "
+          "AS-DRAFTED SPLIT'S SENSE IN OPERATION. At "
+          "the 25 V corner the sheet's CIN placement cannot be met with these parts: at 25 V bias the 50 V X7R ceramics hold %.1f uF of their "
+          "%.1f uF nominal behind RSENSE1 and %.1f uF of %.1f uF ahead, and even with everything behind (the sheet's Figure 1) the resistive "
+          "peak is %.4f V at the regulation's current. For the as-drafted split the pins read %.4f to %+.4f V in operation and the "
+          "amplifier, limited to %.0f mV, reads the average %.1f %% low at the regulation's highest current (%.1f %% at the trip's), so the "
+          "input limit regulates above its setting there; the 100 W bound rests on the backstop (U18, U19, the bank), which does not read "
+          "RSENSE1 and is unaffected; the regulation of L4-E7R is NOT MET at that corner on the sheet's operating range until the pulse "
+          "share is measured or the sense arrangement changes: the engineer's row B6-ENG-2 (affected circuit: U5's input sense, RSENSE1, "
+          "CSPIN, CSNIN, C13 to C15, C71 to C74; evidence: this model, the sheet's p.5 and p.31; decision or measurement needed: the pins' "
+          "waveform in operation at 25 V in and the lowest bus, or Analog Devices' statement of what the amplifier reads above 100 mV, or "
+          "enough low-derating capacitance behind RSENSE1 (which raises B6's floor); pass criterion: the pins within +-%.0f mV at every "
+          "operating point, or the regulated input current measured within the error budget at the 25 V corner; consequence of failure: "
+          "the input limit regulating up to the backstop's trip at high input and a low bus, repeated trips, no damage; work blocked: the "
+          "regulation's acceptance row at layer 9, not the drafts)" % (
+              "route 3 HOLDS over the whole envelope" if r3["holds"] else "route 3 does NOT hold over the whole envelope, result (ii)",
+              1e3 * r3["V_OP"][1], min(r_["r_peak_reg"] for r_ in r3["rows"][1:6]), max(r_["r_peak_reg"] for r_ in r3["rows"][1:6]),
+              r3["rows"][1]["tr"][0.30e-6]["vF"], 100.0 * (1 - b6["M_OTHER"]),
+              ("%.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "an inductance under 0.5 nH",
+              1e6 * rA_["cd"][0], 24.8, 1e6 * rA_["cu"][0], 40.0,
+              r3["rows"][6]["r_peak_reg"], rA_["op_trough"], rA_["op_peak"], 1e3 * r3["V_OP"][1], 100 * rA_["low_reg"], 100 * rA_["low_trip"],
+              1e3 * r3["V_OP"][1]))
     P("     THE VERDICTS, with the remedies:")
     for v_ in rm["verd"]:
         P("       %-14s %-44s %s" % (v_["id"], v_["name"], ("MEETS" if v_["ok"] else "NOT MET") + v_.get("note", "")))
