@@ -87,8 +87,8 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "acfa35d8bd3a9a071676490ffb351e088c950337e020c7904d420c8a2c4b8dd4"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "b8c4edbcef738875b43e31fa3bdae34fe78afb67cc19c2b615cdbc205baefefb"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "8d5e8191e5938a7682349bcca2fc366642ee8704637ed98e2879312ace4215e3"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0eb554285580b8f20f05440f2810300cf5c65e9b8b2ea93830474f0d83df2283"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -98,10 +98,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "40858834159ee72757c77ee606d3833d0caa3e5c203ac88985207a77b48cb64d"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3311675aa42c3224398bf7e71618f63b7dc4930ec1aabb3c72e28c5e56af3d5a"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f6a78325f8a1c2e7378cf531c5b1b4a5b6d4e6d09ee3ec071a7a1e37c56f9ab6"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "2d36b67d24a5b76ddc8355e0e4e44d0be827d6bf3eb6570b36f7c937f638246a"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -118,7 +118,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "cb18fafaace695ed4bcc103c4ebfc994b26510c11d829e50aabc2c1ca75223dc"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "7d2f15547dd6a4abec7449657004d5039913e8dc329b1d5886cf4f26ed2b925b"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
@@ -176,11 +176,12 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens",
                 "787e7b15": "fnd/l4e11, the designator fix (U42's ILIM resistor R228) and E11-32's procurement fact",
                 "af4672f4": "fnd/l4e11, the fans' feed after Layer 7's D-18 (the mixers' regulated 12 V rail U18, the branch re-derived, E11-40 for board B)",
-                "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)"}
-FROM_COMMIT = {"l4e7r": "f73b07ea", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "af4672f4", "l4e11md": "af4672f4",
+                "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
+                "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
+FROM_COMMIT = {"l4e7r": "7b8bbf6e", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "af4672f4", "l4e11md": "af4672f4",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
-               "cl_adi": "f73b07ea", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+               "cl_adi": "7b8bbf6e", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
