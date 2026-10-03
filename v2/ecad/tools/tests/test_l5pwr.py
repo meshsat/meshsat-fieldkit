@@ -12,8 +12,10 @@ carries the hold sentence; the page's table equals the script's; the apply scrip
 the base they were written against; no em or en dash in the record. Set 28's restatement (finding F-12): every restated row is a
 row of the table, its withdrawn figures are figures it cites, every replacing text is matched once in its source with figures
 parsed from the match, no figure is typed in the restatement's prose or patterns, S27-02b's replacing text is L4-E11's PWM-duty
-ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. Software predicates on
-text: they establish no electrical property and accept nothing.
+ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. L5-F09 and L5-F10
+(apply_l5pwr2_contracts.py): no withdrawn text of theirs is in the tree's contract files, the tree carries the restatement as the
+Layer 4 files print it now ("already applied"), and the script applies once to the files it was written against and is idempotent.
+Software predicates on text: they establish no electrical property and accept nothing.
 """
 import importlib.util
 import os
@@ -31,6 +33,8 @@ OUT = os.path.join(REC, "l5pwr_contracts.out")
 PAGE = os.path.join(REC, "L5-POWER-CONTRACTS.md")
 APPLY = os.path.join(REC, "apply_l5pwr.py")
 APPLY_CONOPS = os.path.join(REC, "apply_conops_l5pwr.py")
+APPLY2 = os.path.join(REC, "apply_l5pwr2_contracts.py")
+BASE2 = "97dbcc43"         # fnd/l5pwr2 before apply_l5pwr2_contracts.py: the contract files it was written against
 YAML = os.path.join(TOOLS, "pcb_interfaces.yaml")
 HWFW = os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md")
 PANEL = os.path.join(ROOT, "v2", "docs", "PANEL.md")
@@ -297,6 +301,52 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
         # L4-E11's dock draft still applies to the patched yaml
         r = _run([os.path.join(ROOT, "v2", "docs", "records", "l4e11", "apply_pcb_interfaces_dock.py"), y, "--check"])
         assert r.returncode == 0 and "CHECK OK" in r.stdout, r.stderr[-200:]
+    finally:
+        shutil.rmtree(d)
+
+
+def t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_and_idempotent():
+    """No withdrawn text of L5-F09 or L5-F10 in the tree's contract files; the tree carries the restatement as the Layer 4 files
+    print it now; the script applies once to the files at BASE2 and a second run writes nothing."""
+    import collections
+    need(APPLY2, "the contract script")
+    sp = importlib.util.spec_from_file_location("apply_l5pwr2_under_test", APPLY2)
+    a = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(a)
+    E = a.edits(collections.defaultdict(str))
+    assert len(E) == 6
+    tree = {"yaml": open(YAML, encoding="utf-8").read(), "hwfw": open(HWFW, encoding="utf-8").read()}
+    for i, tg, _w, old, _n in E:
+        assert not a.rx(old).search(tree[tg]), "%s: a withdrawn text is still in %s" % (i, tg)
+    r = _run([APPLY2, "--check"])
+    assert r.returncode == 0 and "already applied" in r.stdout, (r.returncode, r.stdout[-200:], r.stderr[-300:])
+    d = tempfile.mkdtemp(prefix="l5pwr2-apply-")
+    try:
+        y = os.path.join(d, "pcb_interfaces.yaml")
+        h = os.path.join(d, "HW-FW-CONTRACT.md")
+        for f, rel in ((y, "v2/ecad/tools/pcb_interfaces.yaml"), (h, "v2/docs/HW-FW-CONTRACT.md")):
+            g = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (BASE2, rel)], capture_output=True)
+            if g.returncode != 0:
+                raise Skip("commit %s is not in this repository" % BASE2)
+            open(f, "wb").write(g.stdout)
+        args = ["--yaml", y, "--hwfw", h]
+        r = _run([APPLY2, "--check"] + args)
+        assert r.returncode == 0 and "CHECK OK, 6 edit(s)" in r.stdout, r.stderr[-300:]
+        r = _run([APPLY2, "--write"] + args)
+        assert r.returncode == 0 and "WRITTEN" in r.stdout, r.stderr[-300:]
+        r = _run([APPLY2, "--write"] + args)
+        assert r.returncode == 0 and "already applied" in r.stdout, r.stderr[-300:]
+        import yaml
+        doc = yaml.safe_load(open(y, encoding="utf-8").read())
+        prot = " ".join(doc["board_to_board"]["contracts"]["IF-EXT-DC"]["protection"].split())
+        assert "D-10's guard-on case is OPEN" in prot and "no loop is claimed to pass" in prot and "PROVISIONAL, OPEN (B6-ENG-1" in prot
+        dock = " ".join(doc["board_to_board"]["contracts"]["IF-AE-DOCK"]["pin1_vsys_dock"].split())
+        assert "is a resistive extrapolation, not a bound" in dock and "never while U12 or U22 starts" in dock
+        # a mixed state is refused: the old text of one edit put back beside the new texts
+        t = open(h, encoding="utf-8").read()
+        open(h, "w", encoding="utf-8").write(t + "\n| x | y | the backstop's trip and the guard's six bench rows; row 3 a pass only from a 3.30 uH loop until B6-ENG-1 |\n")
+        r = _run([APPLY2, "--check"] + args)
+        assert r.returncode == 3 and "not in the state" in r.stderr, r.stderr[-300:]
     finally:
         shutil.rmtree(d)
 
