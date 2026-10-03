@@ -6,8 +6,10 @@ agree: the same hold-off, one cycle, the same rail-off time, left off until the 
 while running as well as at start-up, citing CONOPS as its source; HW-FW-CONTRACT.md's FW-C05 states the same rule and FW-C02 keeps a
 slot left off across a controller reset; REQ-062's start-up case is one case of the rule; the round's apply script reads already
 applied on the tree, applies once to the files it was written against and is idempotent; the rebind script for the integrator checks
-or reads already applied; no em or en dash in the record. Software predicates on text: they establish no electrical property and
-accept nothing.
+or reads already applied; the follow-up F-15 and S-37: the held RP2040 datasheet says what the power-on reading rests on (a watchdog
+reset is not a chip-level reset, CHIP_RESET names the last chip-level one, REASON is zero only for a hardware reset), and PANEL.md,
+FW-C05, FW-C02 and V-C05 read a power-on as HAD_POR set and REASON zero, with the slot record beside the wipe journal; no em or en dash
+in the record. Software predicates on text: they establish no electrical property and accept nothing.
 """
 import os
 import re
@@ -99,10 +101,36 @@ def t_fw_c05_states_the_same_rule_and_fw_c02_keeps_a_slot_left_off():
     off = re.search(r"power-cycle it once \(SLOT_EN low (\d+) s\), its one retry", c05)
     assert hold and off and hold.group(1) == hold5 and off.group(1) == off5, (hold and hold.group(1), off and off.group(1), hold5, off5)
     for s in ("declare it lost after 3 s without an edge", "leave it off until the operator acts", "each act re-arming the retry",
-              "CHIP_RESET HAD_POR", "`CONOPS.md` section 4e governs", "F-14"):
+              "read as CHIP_RESET HAD_POR set and the watchdog's REASON zero", "never inside its journal (S-37",
+              "`CONOPS.md` section 4e governs", "F-14, F-15, S-37"):
         assert s in c05, s
-    assert "a slot left off stays off across the reset, F-14" in c02
-    assert "60 s after its last edge" in v05 and "stays off across a panel watchdog reset and a RUN reset" in v05
+    assert "a slot left off stays off across a watchdog, RUN or SWD reset, F-14" in c02 and "HAD_POR set and REASON zero" in c02
+    assert "60 s after its last edge" in v05 and "stays off across a panel watchdog reset taken after a power-on" in v05
+    assert "HAD_POR still 1, the watchdog's REASON not zero" in v05
+    assert "cleared only by a power-on reset (CHIP_RESET HAD_POR)" not in c05, "F-15: HAD_POR alone is not a power-on"
+
+
+def t_the_power_on_reading_rests_on_the_held_datasheet():
+    """F-15: the sentences the power-on reading rests on, read from the held RP2040 datasheet page by page (PDF pages, one each)."""
+    pdf = os.path.join(ROOT, "v2", "vendor", "rp2040", "rpi-rp2040-datasheet.pdf")
+    need(pdf, "the held RP2040 datasheet")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    want = {164: "This happens at initial power-on, during a power supply brown-out event or when the chip\u2019s RUN pin is taken low",
+            169: "The source of the most recent chip-level reset can be determined by reading the state of the HAD_POR, HAD_RUN and "
+                 "HAD_PSM_RESTART fields in the CHIP_RESET register",
+            160: "HAD_POR: Last reset was from the power-on reset or brown-out detection",
+            545: "The watchdog is a countdown timer that can restart parts of the chip if it reaches zero",
+            549: "Logs the reason for the last reset. Both bits are zero for the case of a hardware reset."}
+    for page, sentence in want.items():
+        r = subprocess.run(["pdftotext", "-f", str(page), "-l", str(page), pdf, "-"], capture_output=True)
+        assert r.returncode == 0, page
+        assert sentence in _flat(r.stdout.decode("utf-8", "replace")), "the datasheet's page %d no longer says %r" % (page, sentence[:60])
+    s5 = _panel5()
+    for s in ("the controller reads one as `CHIP_RESET`'s `HAD_POR` set and the watchdog's `REASON` zero",
+              "a watchdog reset is not one (2.12.1, 4.7.1)", "never inside its journal (the panel firmware's S-37"):
+        assert s in s5, s
+    assert "(`HAD_POR`, RP2040 datasheet 2.12.7, a power-on or a brown-out)" not in s5, "F-15: HAD_POR alone is not a power-on"
 
 
 def t_req_062_is_one_case_of_the_rule():

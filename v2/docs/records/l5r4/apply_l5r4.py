@@ -3,7 +3,9 @@
 L5-R4-SLOT-FAULTS.md; authority SESSION, Layer 5's author of the panel contract). It writes one slot-fault rule for a compute module
 lost at start-up and one lost while running into v2/docs/PANEL.md section 5 and v2/docs/HW-FW-CONTRACT.md (FW-C05 carries the rule,
 FW-C02 keeps a slot left off across a controller reset, V-C05 tests both cases, a change-record row). `CONOPS.md` section 4e (the row
-"a compute module lost"), section 3's M5 and section 4's Startup row are the source and are not edited.
+"a compute module lost"), section 3's M5 and section 4's Startup row are the source and are not edited. Its follow-up, the panel
+firmware's F-15 and S-37 (fnd/fw-r4 at 8d396dfd): a power-on reset read as CHIP_RESET's HAD_POR set and the watchdog's REASON zero
+(RP2040 datasheet 2.12.1, 2.12.7, 4.7.1, Table 548), and the slot record beside the wipe journal, never inside it.
 
 Usage:  apply_l5r4.py [--check | --write] [--panel PATH] [--hwfw PATH]     (default --check; default targets: the tree's)
 IDEMPOTENT: every old text present once and no new text yet: --check prints CHECK OK, --write applies; every old text gone and every
@@ -42,10 +44,16 @@ PANEL_NEW = (
     "it off until the operator acts: from the touch UI, by a retry command over the bridge protocol (owed with MESHSAT-837; the panel "
     "firmware's F-02 and S-04), or by restarting the kit with MAIN, after which every slot is raised again (decided 3 October 2026, "
     "F-09, record l5r2, `L5-PANEL-R3.md`: the sentence named no control); each of the three re-arms the slot's retry. A controller "
-    "reset (watchdog, RUN or SWD) is not an operator act: the controller keeps each slot's spent retry and left-off state where it "
-    "keeps the wipe-pending record and after the reset raises only the slots that state allows (FW-C02); a power-on reset of the "
-    "controller (`HAD_POR`, RP2040 datasheet 2.12.7, a power-on or a brown-out), which a MAIN restart or a loss of the panel's "
-    "supply causes, clears it with every slot. A module that restarts on its own (its software, or a restart the bridge commands) "
+    "reset (watchdog, RUN or SWD) is not an operator act: the controller keeps each slot's spent retry and left-off state beside the "
+    "wipe-pending record, in the same flash but never inside its journal (the panel firmware's S-37: `feasibility/ZEROIZE.md`'s "
+    "invariant I3 reads a torn journal entry as a pending wipe, so a slot record torn there by a power loss would start a "
+    "crypto-erase), and after the reset raises only the slots that state allows (FW-C02). Only a power-on reset of the controller "
+    "clears it, with every slot, and the controller reads one as `CHIP_RESET`'s `HAD_POR` set and the watchdog's `REASON` zero "
+    "(decided 3 October 2026, finding F-15 of the panel firmware, record l5r4: RP2040 datasheet 2.12.7, `CHIP_RESET` gives the "
+    "source of the most recent chip-level reset, and a watchdog reset is not one (2.12.1, 4.7.1), so `HAD_POR` alone still reads 1 "
+    "after a power-on followed by a watchdog reset; Table 548, `REASON`: both bits are zero for a hardware reset); a MAIN restart, "
+    "a loss of the panel's supply and a brown-out are such resets. A module that restarts on its own (its software, or a restart "
+    "the bridge commands) "
     "is not told apart: it is cycled if it shows no edge for 60 s; a bridge message that suspends the supervision for a planned "
     "restart is owed with MESHSAT-837." % R4)
 
@@ -60,27 +68,32 @@ HWFW_EDITS = [
      "lost (3 s without an edge after an edge, or flat 60 s after its rail came up); at 60 s without an edge, counted from the later "
      "of its rail coming up and its last edge, power-cycle it once (SLOT_EN low 5 s), its one retry; at the next such 60 s drop "
      "SLOT_EN and leave it off until the operator acts (the touch UI, the bridge's retry command, MAIN), each act re-arming the "
-     "retry; keep the spent retry and the left-off state with the wipe-pending record across a watchdog, RUN or SWD reset, cleared "
-     "only by a power-on reset (CHIP_RESET HAD_POR) | section 2; `CONOPS.md` section 3 (M5), section 4 (Startup) and section 4e; "
-     "REQ-062; F-14 | V-C05 | DRAWN; the slot-fault rule FIRMWARE (F-14) |" % R4),
+     "retry; keep the spent retry and the left-off state beside the wipe-pending record, in the same flash but never inside its "
+     "journal (S-37: `feasibility/ZEROIZE.md`'s invariant I3 reads a torn journal entry as PENDING), across a watchdog, RUN or SWD "
+     "reset; clear them only on a power-on reset, read as CHIP_RESET HAD_POR set and the watchdog's REASON zero (F-15: RP2040 "
+     "datasheet 2.12.7, CHIP_RESET gives the most recent chip-level reset, which a watchdog reset is not, 2.12.1 and 4.7.1; Table "
+     "548, REASON: both bits zero for a hardware reset) | section 2; `CONOPS.md` section 3 (M5), section 4 (Startup) and section "
+     "4e; REQ-062; F-14, F-15, S-37 | V-C05 | DRAWN; the slot-fault rule FIRMWARE (F-14) |" % R4),
     ("FW-C02",
      "then FW-C01's order applies to every slot read low.",
-     "then FW-C01's order applies to every slot read low that FW-C05's slot-fault state allows (a slot left off stays off across the "
-     "reset, F-14)."),
+     "then FW-C01's order applies to every slot read low that FW-C05's slot-fault state allows (a slot left off stays off across a "
+     "watchdog, RUN or SWD reset, F-14; only a power-on reset as FW-C05 reads it, HAD_POR set and REASON zero, clears it, F-15)."),
     ("V-C05",
      "| V-C05 | FW-C05, B01 | stop the bridge on one slot: its line stops toggling, the panel declares it lost within 3 s and moves the "
      "display |",
      "| V-C05 | FW-C05, B01 | stop the bridge on one slot: its line stops toggling, the panel declares it lost within 3 s and moves the "
      "display; F-14's rule: with the bridge stopped on a running slot the panel cycles it once (SLOT_EN low 5 s) 60 s after its last "
      "edge; with the bridge kept stopped the slot is left off 60 s after its rail came back, and stays off across a panel watchdog "
-     "reset and a RUN reset; a slot held flat from its start is cycled 60 s after its rail came up and left off the same way; the "
+     "reset taken after a power-on (CHIP_RESET's HAD_POR still 1, the watchdog's REASON not zero: F-15) and across a RUN reset, and "
+     "a power-on clears it; a slot held flat from its start is cycled 60 s after its rail came up and left off the same way; the "
      "touch UI's retry, the bridge's retry and MAIN each raise it again with its retry re-armed |"),
 ]
 LOG_AFTER = "| 2 (L5-PWR, set 28) |"
 LOG_ROW = ("| 2 (L5-R4) | 3 October 2026 | By Layer 5's round 4 (MESHSAT-1357, `records/l5r4/`): the panel firmware's finding F-14 "
            "decided: FW-C05 carries one slot-fault rule for a slot lost at start-up and one lost while running (`PANEL.md` section 5 "
            "states it, `CONOPS.md` section 4e is its source), FW-C02 keeps a slot left off across a controller reset, V-C05 tests both "
-           "cases |")
+           "cases; the follow-up F-15: a power-on reset read as HAD_POR set and the watchdog's REASON zero, and the slot record beside "
+           "the wipe journal, never inside it (S-37) |")
 KEEP = {PANEL: ["stays flat for 60 s", "rail off 5 s",
                 "then leaves it off until the operator acts: from the touch UI, by a retry command over the bridge protocol"],
         HWFW: ["declare it lost after 3 s without an edge"]}

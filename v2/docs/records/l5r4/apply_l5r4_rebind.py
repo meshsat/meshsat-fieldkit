@@ -3,7 +3,9 @@
 3 October 2026; record l5r4; the pattern of records/int28b/apply_set28b_rebind.py). The INTEGRATOR's script: it edits
 v2/ecad/tools/pcb_requirements.yaml (the integrator's file) and nothing else.
 
-apply_l5r4.py changes PANEL.md's section 5 only (the slot-fault rule, finding F-14). Five readings are bound to PANEL.md's content by
+apply_l5r4.py changes PANEL.md's section 5 only (the slot-fault rule, finding F-14, and its follow-up F-15 and S-37). The script
+reads the bound file from the binding and the new one from the tree at run time, so it rebinds from set 28's file or, if it has
+already run on round 4's first file, from that one. Five readings are bound to PANEL.md's content by
 sha256/16 (CFL-001, CFL-005, CFL-014, CFL-015, CFL-016), so `rules_lib.py requirements` reads an error for each binding until they are
 rebound. None of them rests on section 5:
   CFL-001  the head (line 5, bank 1's home and failover hosts), section 1's pin table and section 2's ribbon table
@@ -28,7 +30,9 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 P = "v2/ecad/tools/pcb_requirements.yaml"
 PANEL = "v2/docs/PANEL.md"
 ROUND = ("Layer 5's round 4 (records/l5r4/L5-R4-SLOT-FAULTS.md, branch fnd/l5r4 from set 28's 92a5c7d8; the panel firmware's finding "
-         "F-14 decided: section 5's slot-fault rule now covers a module lost at start-up and one lost while running)")
+         "F-14 decided: section 5's slot-fault rule now covers a module lost at start-up and one lost while running; with its "
+         "follow-up F-15 and S-37: a power-on reset read as HAD_POR set and the watchdog's REASON zero, the slot record beside the "
+         "wipe journal)")
 ONLY = "5"   # the one section apply_l5r4.py changes
 GROUND = {
     "CFL-001": (("head", "1", "2"), "line 5 (bank 1's home and failover hosts), section 1's pin table and section 2's ribbon table"),
