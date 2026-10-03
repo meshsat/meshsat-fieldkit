@@ -40,7 +40,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
    l4e7r     533afd197355ac37  v2/docs/records/l4e7/l4e7_stage_settings.out
    l7fans    63fad48957e8a0f3  v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json
-   l4e10     3f7feebd72461bfd  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     93ed5eaf0fa81163  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      f7cc6ac3cfd5ad08  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -49,10 +49,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     94def9a37805b5eb  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     3cc8ab673ba49c8a  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   f4c127dd3f236d6f  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     bb54a1c30c842279  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     241131c17cf5e1f2  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   b0e303a557e38898  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
@@ -1496,7 +1496,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    the bank: Panasonic EEHZK1V331P with HoJLR2512 45 mOhm, VBUS20's six cans and their ballasts; document EEHZK1V331P (ripple_dense.out); DRAFTED (R-07)
    the cells: Samsung INR18650-35E, 4S3P, D-06's ruled cell; document INR18650-35E (pcb_pack_protection.yaml); as ruled (144.72 Wh nominal, 107.9 Wh, 2.52 h energy only); the Saft MP 176065 xtd 4S1P a PROPOSAL compared in 2b' (81.76 Wh nominal, 53.5 to 58.8 Wh, 1.25 to 1.37 h energy only, MODELLED): supported for the temperature windows, not yet adoptable (current at temperature and the storage dwell AWAITING, L4-E10 10g), the owner's approval required; the HL18650V a PROPOSAL (U-01)
    the alternative only: LM5069, the drawn hot swap, kept only as the alternative; document SNVS452G (ti-lm5069.pdf); superseded by R-123
-   layer 4 (release records) (Layer 4 coordinator): 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198; by kind EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7; by state CLOSED 1; DRAFTED 2; OPEN 1; OWED 8; APPLIED 0
+   layer 4 (release records) (Layer 4 coordinator): 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198; by kind EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7; by state CLOSED 2; DRAFTED 2; OWED 8; APPLIED 0
    layer 5 (Layer 5 interfaces, CONOPS owner): 5: R-23, R-24, R-125, R-133, R-138; by kind IMPLEMENTATION 5; by state DRAFTED 5; APPLIED 0
    layer 5 (firmware, by the contract) (firmware owner): 11: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154, R-158, R-164, R-188; by kind IMPLEMENTATION 11; by state DRAFTED 1; OWED 10; APPLIED 0
    layer 6 (Layer 6 components): 28: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150, R-160, R-162, R-165, R-168, R-179, R-182, R-183, R-186; by kind EVIDENCE 27; TEST 1; by state OWED 28; APPLIED 0
