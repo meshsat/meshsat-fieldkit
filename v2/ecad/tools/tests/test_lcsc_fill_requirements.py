@@ -4,8 +4,8 @@
 lcsc_fill.py fills a blank BOM line at finish from its MAP, then from the certified table. On 3 October 2026 the codes it would
 have filled failed the requirement the identity tool derives from the netlist and the intent on 170 rows of the six boards
 (X5R where rule C-D3 makes an unstated class 2 X7R, an X7R 10 % part on C0G rows, 50 V parts on 100 V rows, a 3 W shunt where
-rule R-P asks 5 W, a 5 % part on 1 % lines, a 500 mA ferrite on a 2 A line, an 800 ppm/K shunt where rule R-S1 asks 200). The
-table was corrected the same day (record l6r2, round 3). These are properties, never a list of those rows:
+rule R-P asks 5 W, a 5 % part on 1 % lines, a 500 mA ferrite on a 2 A line, an 800 ppm/K shunt where rule R-S1 asks 200), and
+no line filled board A's C27, which refuses the finish. The table was corrected the same day (record l6r2, round 3). These are properties, never a list of those rows:
 
   * for every fitted row of every board's committed netlist that carries no code, the code lcsc_fill.py ITSELF writes (the real
     script, run on a BOM built from the netlist in a scratch directory) meets every deciding requirement of the row's class
@@ -13,6 +13,7 @@ table was corrected the same day (record l6r2, round 3). These are properties, n
     reading), judged by l6r2_passives.check on part_identities' requirements; the one exception is an X5R fill on a line
     lcsc_fill.py declares under rule C-D3b (CD3B_X5R), which must then meet every other requirement;
   * every code lcsc_fill fills on such a row has a catalogue line in the reading (a fill nobody read is a miss);
+  * lcsc_fill leaves no such generic row blank (a blank generic line refuses the board's finish: a missing table line is a miss);
   * lcsc_fill rejects none of the codes it filled itself;
   * a C-D3b declaration names a line of the MAP whose code is X5R on the reading (a declaration that covers nothing is stale);
   * the judge has teeth: a copy of lcsc_fill.py whose 100n line is put back to a 50 V part is caught on a 100 V fixture row.
@@ -91,12 +92,15 @@ def judge(rows, filled, rejected, cd3b, m, idx):
     for r in rows:
         if r["generator_lcsc"]: continue
         code = filled.get(r["ref"])
-        if not code: continue
         d = dict(kind=r["kind"], prefix=r["prefix"], requirements=dict(r["requirements"]), values=[r["value"]], lands=[r["land"]], refs=[r["ref"]])
         d["cls"], _why = m.classify(d)
-        if d["cls"] == "OPEN": opened += 1; continue
+        if d["cls"] == "OPEN":
+            if code: opened += 1
+            continue
         if d["cls"] not in GENERIC: continue
         judged += 1
+        if not code:
+            misses.append((r["ref"], r["value"], "", "lcsc_fill leaves a generic line blank (no table line fills it)")); continue
         if r["ref"] in rejected:
             misses.append((r["ref"], r["value"], code, "lcsc_fill rejects the code it filled")); continue
         row = idx.get(code)

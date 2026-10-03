@@ -5,9 +5,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
 
 0. THE PINS (sha256 of every input)
    35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
-   6888362e4a3295d0e1d595f65c03d5c13353d4785d7821c86e91f470a1cf6410 v2/ecad/tools/lcsc_fill.py
+   eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216 v2/ecad/tools/lcsc_fill.py
    8200c1c6e7c2131ab213dcc8f871b8cb3f9977e9d35bcd0541da1b6617393fbf v2/release/revA/order/JLC-CERTIFIED.tsv
-   5efe8db4e8ee63cdbcf0dc068d156c553992e37ff7496847c80a414ee8b593de v2/ecad/tools/pcb_part_identities.yaml
+   2a89f632bc06b090ba641f5666e134b9b992bc08f552c14f270cec30fbf9d92e v2/ecad/tools/pcb_part_identities.yaml
    b0139eaffacb68018d125aab72bc401042e99dc1e9735f41b89a9cde59c398b2 v2/ecad/tools/lcsc-blocked.txt
    31b82bacb31ca7efaac19627ebc97e1e7c2649c3cf1fa68e8fa513b7b61bca8c v2/ecad/tools/jlc-mismatch.yaml
    e9ee157ab5d8a2bb54caafa0580321f299d6acceb829a0a04bc6b22be694cdf4 v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
@@ -15,6 +15,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    4508de910354e72d193e86c2f4a54ab87c383515464ca705e7468f3a57b775c1 v2/docs/records/l4e9/l4e9_power_path.py
    75184896b0e0e4f4463b80ddb076311c2c19d12d81220fcc6cb64913ba722034 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648 v2/vendor/passives/yageo-cc-series.pdf
+   f8cd1e49d3ae1d2b573eed34fd8d4f6a156d0d919cd0b2c1e576f8996f2b408a v2/docs/records/l6r2/inputs/kicad-xal-footprints-9.0.9.json
+   b26cf975bd56a807173b05665bddd49ed49323400330eb8f6fa63e24ff6d7d15 v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf
+   236888dabe560055e7eb40e24b8bf938db132b66a0e9f1a3c512fb3b04361681 v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf
    6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b v2/ecad/tools/gen_sch_a.py
    f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186 v2/ecad/tools/gen_sch_e.py
    740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3 v2/ecad/tools/gen_sch_p.py
@@ -59,7 +62,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-b103da8cf9 CAP        C4 rows 1 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 25.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 16.80 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
         SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 5; USD 0.0595 at 1, 0.0595 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -67,9 +70,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-4a4af5601b CAP        C10,C101,C137,C144,C16,C160+20 rows 26 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 25.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 13.80 V across it (DECLARED) at the 20 percent margin | derived: 16.80 V across it (DECLARED) at the 20 percent margin | derived: 20.00 V across it (DECLARED) at the 20 percent margin | stated; tolerance_max_pct: rule C-T2: class 
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 130; USD 0.0123 at 1, 0.0123 at 130; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 130; USD 0.0114 at 1, 0.0114 at 130; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-1b1b5c12e8 CAP        C11,C12,C176,C177,C83,C84+1 rows 7 [10u 100V X7R 1210]: C_1210_3225Metric
@@ -91,9 +94,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-9ad32441cf CAP        C19 rows 1 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 6.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
-        SELECTED: C106248 YAGEO CC0603KRX7R7BB105 0603 (expand), stock 922240 against a need of 5; USD 0.0156 at 1, 0.0156 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
+        SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 5; USD 0.0595 at 1, 0.0595 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76708 TDK CGA3E1X7R1E105KT0Y0E, stock 61865, expand
      S-74654618a2 CAP        C26 rows 1 [4.7n]: C_0603_1608Metric
@@ -107,6 +110,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-88334c937c CAP        C27 rows 1 [15p NP0]: C_0603_1608Metric
         requirement: value 15pF; package 0603; dielectric C0G; v_rating_min 35.0; tolerance_max_pct 5.0
         basis: dielectric: stated; v_rating_min: derived: 26.00 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
+        the design's code: C107037 from lcsc_fill.py MAP (^15p NP0 on C_0603)
         SELECTED: C107037 YAGEO CC0603JRNPO9BN150 0603 (expand), stock 5757665 against a need of 5; USD 0.0032 at 1, 0.0032 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (15pF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN150 (YAGEO)
@@ -114,7 +118,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-6eea0a8102 CAP        C77 rows 1 [47n]: C_0603_1608Metric
         requirement: value 47nF; package 0603; dielectric X7R; v_rating_min 100.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 61.60 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C1622 from lcsc_fill.py MAP (^47n$ on C_0603)
+        the design's code: C576852 from lcsc_fill.py MAP (^47n$ on C_0603)
         SELECTED: C576852 YAGEO CC0603KRX7R0BB473 0603 (expand), stock 233125 against a need of 5; USD 0.01 at 1, 0.01 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (47nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -154,9 +158,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-45ad5deffe CAP        C103,C104,C106,C107,C153,C155+3 rows 9 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.20 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 4.10 V across it (DECLARED) at the 20 percent margin | derived: 5.00 V across it (DECLARED) at the 20 
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 45; USD 0.0123 at 1, 0.0123 at 45; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 45; USD 0.0114 at 1, 0.0114 at 45; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-793a0403d3 CAP        C108,C109,C110,C111,C116,C117+36 rows 42 [10u 50V X7R 1210]: C_1210_3225Metric
@@ -194,39 +198,39 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-074f76d88e CAP        C122 rows 1 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 35.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 27.00 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-748febfdb7 CAP        C123,C124,C125,C126,C127,C138+1 rows 7 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 6.3; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 1.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
-        SELECTED: C106246 YAGEO CC0603JRNPO9BN102 0603 (expand), stock 1949201 against a need of 35; USD 0.0053 at 1, 0.0053 at 35; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
+        SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 35; USD 0.02 at 1, 0.02 at 35; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
+        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
         alternative: C384777 Walsin Tech Corp 0603N102F500CT, stock 40643, expand
      S-8e9688dfbb CAP        C128 rows 1 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 50.0; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 37.00 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
-        SELECTED: C106246 YAGEO CC0603JRNPO9BN102 0603 (expand), stock 1949201 against a need of 5; USD 0.0053 at 1, 0.0053 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
+        SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 5; USD 0.02 at 1, 0.02 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
+        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
         alternative: C384777 Walsin Tech Corp 0603N102F500CT, stock 40643, expand
      S-db42f4ad37 CAP        C129,C130,C132,C139,C146 rows 5 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 35.0; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 23.00 V across it (BOUND) at the 20 percent margin | derived: 23.60 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
-        SELECTED: C106246 YAGEO CC0603JRNPO9BN102 0603 (expand), stock 1949201 against a need of 25; USD 0.0053 at 1, 0.0053 at 25; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
+        SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 25; USD 0.02 at 1, 0.02 at 25; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
+        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
         alternative: C384777 Walsin Tech Corp 0603N102F500CT, stock 40643, expand
      S-b6c212b374 CAP        C131 rows 1 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 100.0; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 62.60 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
         SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 5; USD 0.02 at 1, 0.02 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
@@ -234,11 +238,11 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-591082ff32 CAP        C135,C142,C59,C70,C88 rows 5 [47n]: C_0603_1608Metric
         requirement: value 47nF; package 0603; dielectric X7R; v_rating_min 35.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 22.00 V across it (BOUND) at the 20 percent margin | derived: 22.60 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C1622 from lcsc_fill.py MAP (^47n$ on C_0603)
-        SELECTED: C1622 Samsung Electro-Mechanics CL10B473KB8NNNC 0603 (base), stock 826770 against a need of 25; USD 0.0073 at 1, 0.0073 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (47nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CL10B473KB8NNNC (Samsung Electro-Mechanics)
-        alternative: C107093 YAGEO CC0603KRX7R9BB473, stock 1586909, expand
+        the design's code: C576852 from lcsc_fill.py MAP (^47n$ on C_0603)
+        SELECTED: C576852 YAGEO CC0603KRX7R0BB473 0603 (expand), stock 233125 against a need of 25; USD 0.01 at 1, 0.01 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (47nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
+        alternative: C76712 TDK CGA3E2X7R1H473KT0Y0N, stock 59372, expand
      S-8c7fc15e64 CAP        C136,C143,C60,C71,C78,C8+1 rows 7 [4.7u]: C_0805_2012Metric
         requirement: value 4.7uF; package 0805; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 7.60 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
@@ -258,17 +262,17 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-66af112614 CAP        C157,C227,C28,C40,C52 rows 5 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 5.50 V across it (DECLARED) at the 20 percent margin | derived: 6.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 25; USD 0.0123 at 1, 0.0123 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 25; USD 0.0114 at 1, 0.0114 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-96c375be5f CAP        C196 rows 1 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 16.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 12.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-e3ac376f3f CAP        C231,C232,C31,C32,C33,C43+4 rows 10 [22u 10V X7R 1210]: C_1210_3225Metric
@@ -332,7 +336,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-7f22238c20 RES        R17 rows 1 [5mOhm 1% 2512 (RSR, charge current sense)]: R_2512_6332Metric
         requirement: value 5mOhm; package 2512; tolerance_max_pct 1.0; power_min_w 5.0; tcr_max_ppm 200; resistor_kind current sense
         basis: tolerance_max_pct: stated; power_min_w: derived: 1.62 W (I^2 R at the declared 18.00 A), rule R-P twice
-        the design's code: C500739 from lcsc_fill.py MAP (^5mOhm 1% 2512 on R_2512)
+        the design's code: C20108830 from lcsc_fill.py MAP (^5mOhm 1% 2512 \(RSR on R_2512)
         SELECTED: C20108830 ROHM Semicon GMR100HJAAFD5L00 2512 (expand), stock 412 against a need of 5; USD 1.8793 at 1, 1.8793 at 5; grade NOT READ (no range read  to  C)
         checks: package MEETS (2512); resistance MEETS (5mOhm); tolerance MEETS (+-1%); power MEETS (7W); temperature coefficient MEETS (0ppm/C~+50ppm/C)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes GMR100HJAAFD5L00 (ROHM Semicon)
@@ -711,7 +715,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-5cf18f994d CAP        C5 rows 1 [100n (TIMER)]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 100.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 53.30 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
         SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -754,10 +758,10 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-8e9688dfbb CAP        C16 rows 1 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 50.0; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 32.35 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
-        SELECTED: C106246 YAGEO CC0603JRNPO9BN102 0603 (expand), stock 1949201 against a need of 5; USD 0.0053 at 1, 0.0053 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
+        SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 5; USD 0.02 at 1, 0.02 at 5; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
+        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
         alternative: C384777 Walsin Tech Corp 0603N102F500CT, stock 40643, expand
      S-fe35982ca0 CAP        C17,C18 rows 2 [470n 25V]: C_0603_1608Metric
         requirement: value 470nF; package 0603; dielectric X7R; v_rating_min 25.0; tolerance_max_pct 10.0
@@ -779,9 +783,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-5eeee312c8 CAP        C20,C34,C35,C45,C47 rows 5 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.34 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 3.35 V across it (DECLARED) at the 20 percent margin | derived: 5.00 V across it (DECLARED) at the 20 
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
-        SELECTED: C106248 YAGEO CC0603KRX7R7BB105 0603 (expand), stock 922240 against a need of 25; USD 0.0156 at 1, 0.0156 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
+        SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 25; USD 0.0595 at 1, 0.0595 at 25; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76708 TDK CGA3E1X7R1E105KT0Y0E, stock 61865, expand
      S-c737d3112b CAP        C21 rows 1 [4.7n]: C_0603_1608Metric
@@ -803,9 +807,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-fcd6c2d411 CAP        C23 rows 1 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 50.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 31.35 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-1013a89988 CAP        C26,C27 rows 2 [10u 25V]: C_1206_3216Metric
@@ -819,9 +823,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-66af112614 CAP        C30 rows 1 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 6.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
         a pending draft names C30: the draft's value key decides at the regeneration
@@ -845,9 +849,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-45ad5deffe CAP        C38,C39,C40,C41,C42,C43+5 rows 11 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 3.30 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 55; USD 0.0123 at 1, 0.0123 at 55; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 55; USD 0.0114 at 1, 0.0114 at 55; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-28767274a3 RES        R8 rows 1 [102k 1% (RFBIN1: panel point 17.6 V)]: R_0603_1608Metric
@@ -1069,7 +1073,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-1eeab1750b SPECIAL    L2 rows 1 [Bourns SRF1260-1R5Y dual-winding choke, common-mode connecti]: L_CommonModeChoke_Bourns_SRF1260
         names Bourns SRF1260-1R5Y (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue)
      S-592fe7158c SPECIAL    L3 rows 1 [4.7uH XAL4030-472ME]: L_Coilcraft_XAL4020-XXX
-        names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its land is drawn for the XAL4020 (the two makers' land patterns are to be compared before layout)
+        names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its footprint is drawn for the XAL4020; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height differs: this record's round 3 land draft moves the row to the XAL4030 footprint (section 6)
      S-042a9cafd7 SPECIAL    Q8 rows 1 [2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, ]: SOT-23
         names the part number 2N7002; no LCSC code in the netlist
      S-14ca1f1480 SPECIAL    Q9 rows 1 [2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)]: SOT-23
@@ -1109,9 +1113,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-fcd6c2d411 CAP        C11 rows 1 [100n 50V]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 50.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: stated; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-863d2fac9b CAP        C12 rows 1 [100n 50V]: C_1206_3216Metric
@@ -1125,33 +1129,33 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-4a4af5601b CAP        C13,C14,C18,C5,C6,C7+1 rows 7 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 25.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 14.40 V across it (BOUND) at the 20 percent margin | derived: 16.80 V across it (BOUND) at the 20 percent margin | derived: 16.80 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, 
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 35; USD 0.0123 at 1, 0.0123 at 35; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 35; USD 0.0114 at 1, 0.0114 at 35; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-45ad5deffe CAP        C15,C2 rows 2 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 4.38 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 10; USD 0.0123 at 1, 0.0123 at 10; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 10; USD 0.0114 at 1, 0.0114 at 10; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-96c375be5f CAP        C16,C17,C3,C4 rows 4 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 16.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 13.12 V across it (BOUND) at the 20 percent margin | derived: 8.75 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 20; USD 0.0123 at 1, 0.0123 at 20; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 20; USD 0.0114 at 1, 0.0114 at 20; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-66af112614 CAP        C19 rows 1 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 7.70 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 5; USD 0.0123 at 1, 0.0123 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 5; USD 0.0114 at 1, 0.0114 at 5; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-d7aa8a0726 RES        R1,R2,R20,R21,R3,R4+3 rows 9 [100R]: R_0603_1608Metric
@@ -1253,17 +1257,17 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-45ad5deffe CAP        C11,C15,C16,C39,C4,C49+13 rows 19 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 3.33 V across it (DECLARED) at the 20 percent margin | derived: 3.54 V across it (DECLARED) at the 20 percent margin | derived: 3.60 V across it (DECLARED) at the 20 
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 95; USD 0.0123 at 1, 0.0123 at 95; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 95; USD 0.0114 at 1, 0.0114 at 95; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-5eeee312c8 CAP        C12,C18,C19,C20,C21,C22+13 rows 19 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.90 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 3.54 V across it (BOUND) at the 20 percent margin | derived: 3.60 V across it (DECLARED) at the 20 per
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
-        SELECTED: C106248 YAGEO CC0603KRX7R7BB105 0603 (expand), stock 922240 against a need of 95; USD 0.0156 at 1, 0.0156 at 95; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
+        SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 95; USD 0.0595 at 1, 0.0595 at 95; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76708 TDK CGA3E1X7R1E105KT0Y0E, stock 61865, expand
      S-0da867e4c4 CAP        C13,C14,C26,C27 rows 4 [27p NP0]: C_0402_1005Metric
@@ -1277,7 +1281,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-6d1de2f8e8 CAP        C17,C24,C25,C3,C33,C40+1 rows 7 [10u]: C_0805_2012Metric
         requirement: value 10uF; package 0805; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 20.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 3.54 V across it (DECLARED) at the 20 percent margin | derived: 5.23 V across it (BOUND) at the 20 percent margin | derived: 5.23 V across it (DECLARED) at the 20 per
-        the design's code: C15850 from lcsc_fill.py MAP (^10u$ on C_0805)
+        the design's code: C326595 from lcsc_fill.py MAP (^10u$ on C_0805)
         SELECTED: C326595 YAGEO CC0805KKX7R7BB106 0805 (expand), stock 265735 against a need of 35; USD 0.1295 at 1, 0.1295 at 35; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0805); capacitance MEETS (10uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -1389,7 +1393,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-7d7bcd4c98 RES        R54,R56 rows 2 [27 1% 2010]: R_2010_5025Metric
         requirement: value 27Ohm; package 2010; tolerance_max_pct 1.0; power_min_w 0.5; resistor_kind general
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
-        the design's code: C2960829 from the certified table JLC-CERTIFIED.tsv
+        the design's code: C421874 from lcsc_fill.py MAP (^27 1% 2010$ on R_2010)
         SELECTED: C421874 UNI-ROYAL(Uniroyal Elec) 201007F270JT4E 2010 (expand), stock 1915 against a need of 10; USD 0.0204 at 1, 0.0204 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
         checks: package MEETS (2010); resistance MEETS (27Ohm); tolerance MEETS (+-1%); power MEETS (750mW)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes 201007F270JT4E (UNI-ROYAL(Uniroyal Elec))
@@ -1404,7 +1408,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         alternative: C407043 UNI-ROYAL(Uniroyal Elec) 201007F360JT4E, stock 11, expand
      S-48a9a0877e FERRITE    FB1 rows 1 [600R 2A ferrite (the exciter's 1 A transmit pulses)]: L_0805_2012Metric
         requirement: value 600R 2A ferrite; current_min_a 2.0
-        the design's code: C1017 from the certified table JLC-CERTIFIED.tsv
+        the design's code: C21519 from lcsc_fill.py MAP (^600R 2A ferrite on L_0805)
         SELECTED: C21519 TDK MPZ2012S601AT000 0805 (expand), stock 154640 against a need of 5; USD 0.0274 at 1, 0.0274 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 125.0 C)
         checks: package MEETS (0805); impedance at 100 MHz MEETS (600Ohm@100MHz); current rating MEETS (2A)
         identity: DOCUMENT_OWED: not a capacitor or resistor family
@@ -1452,17 +1456,17 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-45ad5deffe CAP        C10,C11,C12,C13,C15,C25+5 rows 11 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.30 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 55; USD 0.0123 at 1, 0.0123 at 55; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 55; USD 0.0114 at 1, 0.0114 at 55; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-5eeee312c8 CAP        C14,C16,C3,C4 rows 4 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.30 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 5.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 u
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
-        SELECTED: C106248 YAGEO CC0603KRX7R7BB105 0603 (expand), stock 922240 against a need of 20; USD 0.0156 at 1, 0.0156 at 20; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
+        SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 20; USD 0.0595 at 1, 0.0595 at 20; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76708 TDK CGA3E1X7R1E105KT0Y0E, stock 61865, expand
      S-5ae2e5c268 CAP        C28 rows 1 [4.7u]: C_0805_2012Metric
@@ -1564,7 +1568,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-8fcb029420 RES        R43 rows 1 [0.47R 1%]: R_0603_1608Metric
         requirement: value 470mOhm; package 0603; tolerance_max_pct 1.0; power_min_w 0.1; tcr_max_ppm 200; resistor_kind current sense
         basis: tolerance_max_pct: stated; power_min_w: the package's standard rating; UNDERIVED: no current declared on its nets
-        the design's code: C23411 from lcsc_fill.py MAP (^0\.47R 1%$ on R_0603)
+        the design's code: C414503 from lcsc_fill.py MAP (^0\.47R 1%$ on R_0603)
         SELECTED: C414503 UNI-ROYAL(Uniroyal Elec) CS03W5F470LT5E 0603 (expand), stock 5024 against a need of 5; USD 0.0264 at 1, 0.0264 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
         checks: package MEETS (0603); resistance MEETS (470mOhm); tolerance MEETS (+-1%); power MEETS (200mW); temperature coefficient MEETS (+-200ppm/C)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CS03W5F470LT5E (UNI-ROYAL(Uniroyal Elec))
@@ -1661,9 +1665,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-66af112614 CAP        C10,C111,C118,C128,C133,C211+8 rows 14 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 10.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 5.50 V across it (DECLARED) at the 20 percent margin | derived: 6.00 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 70; USD 0.0123 at 1, 0.0123 at 70; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 70; USD 0.0114 at 1, 0.0114 at 70; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-46730e2d9f CAP        C11,C129,C134,C229,C234,C329+1 rows 7 [10n]: C_0603_1608Metric
@@ -1677,9 +1681,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-5eeee312c8 CAP        C12,C13,C163,C193,C263,C293+8 rows 14 [1u]: C_0603_1608Metric
         requirement: value 1uF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 2.50 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (BOUND) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 percent margin | derived: 5.00 V across it (DECLARED) at the 20 per
-        the design's code: C15849 from lcsc_fill.py MAP (^1u$ on C_0603)
-        SELECTED: C106248 YAGEO CC0603KRX7R7BB105 0603 (expand), stock 922240 against a need of 70; USD 0.0156 at 1, 0.0156 at 70; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C559769 from lcsc_fill.py MAP (^1u$ on C_0603)
+        SELECTED: C559769 YAGEO CC0603KRX7R9BB105 0603 (expand), stock 826072 against a need of 70; USD 0.0595 at 1, 0.0595 at 70; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1uF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76708 TDK CGA3E1X7R1E105KT0Y0E, stock 61865, expand
      S-7b20ca2de1 CAP        C14,C15,C164,C165,C264,C265+8 rows 14 [18p]: C_0402_1005Metric
@@ -1693,7 +1697,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-5cf18f994d CAP        C29,C30,C31,C32 rows 4 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 100.0; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 57.00 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
         SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 20; USD 0.0114 at 1, 0.0114 at 20; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -1725,10 +1729,10 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-748febfdb7 CAP        C45,C52 rows 2 [1n]: C_0603_1608Metric
         requirement: value 1nF; package 0603; dielectric C0G; v_rating_min 6.3; tolerance_max_pct 5.0
         basis: dielectric: rule C-D2: 1 nF and below on a signal-size land (0805 and smaller), unstated; v_rating_min: derived: 3.30 V across it (BOUND) at the 20 percent margin | derived: 5.00 V across it (BOUND) at the 20 percent margin; tolerance_max_pct: rule C-T1: class 1, unstated
-        the design's code: C1588 from lcsc_fill.py MAP (^1n$ on C_0603)
-        SELECTED: C106246 YAGEO CC0603JRNPO9BN102 0603 (expand), stock 1949201 against a need of 10; USD 0.0053 at 1, 0.0053 at 10; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (50V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
-        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)
+        the design's code: C113793 from lcsc_fill.py MAP (^1n$ on C_0603)
+        SELECTED: C113793 YAGEO CC0603JRNPO0BN102 0603 (expand), stock 100133 against a need of 10; USD 0.02 at 1, 0.02 at 10; grade INSIDE (the dielectric class code C0G (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (1nF); rated voltage MEETS (100V); dielectric MEETS (NP0); tolerance MEETS (+-5%); construction MEETS (multilayer ceramic)
+        identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)
         alternative: C384777 Walsin Tech Corp 0603N102F500CT, stock 40643, expand
      S-0a358a2812 CAP        C74 rows 1 [33p]: C_0402_1005Metric
         requirement: value 33pF; package 0402; dielectric C0G; v_rating_min 6.3; tolerance_max_pct 5.0
@@ -1741,7 +1745,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-6d1de2f8e8 CAP        C105,C106,C107,C108,C109,C125+36 rows 42 [10u]: C_0805_2012Metric
         requirement: value 10uF; package 0805; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 20.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.00 V across it (DECLARED) at the 20 percent margin | derived: 1.10 V across it (DECLARED) at the 20 percent margin | derived: 3.30 V across it (BOUND) at the 20 percent margin | derived: 3.30 V across it (DECLARED) at the 20 per
-        the design's code: C15850 from lcsc_fill.py MAP (^10u$ on C_0805)
+        the design's code: C326595 from lcsc_fill.py MAP (^10u$ on C_0805)
         SELECTED: C326595 YAGEO CC0805KKX7R7BB106 0805 (expand), stock 265735 against a need of 210; USD 0.1295 at 1, 0.1104 at 210; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0805); capacitance MEETS (10uF); rated voltage MEETS (16V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -1749,9 +1753,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-45ad5deffe CAP        C110,C135,C136,C137,C138,C139+253 rows 259 [100n]: C_0603_1608Metric
         requirement: value 100nF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.00 V across it (DECLARED) at the 20 percent margin | derived: 1.10 V across it (DECLARED) at the 20 percent margin | derived: 1.20 V across it (DECLARED) at the 20 percent margin | derived: 2.50 V across it (DECLARED) at the 20 
-        the design's code: C14663 from lcsc_fill.py MAP (^100n on C_0603)
-        SELECTED: C14663 YAGEO CC0603KRX7R9BB104 0603 (base), stock 58118460 against a need of 1295; USD 0.0123 at 1, 0.0088 at 1295; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
-        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (50V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
+        the design's code: C113803 from lcsc_fill.py MAP (^100n on C_0603)
+        SELECTED: C113803 YAGEO CC0603KRX7R0BB104 0603 (expand), stock 1777463 against a need of 1295; USD 0.0114 at 1, 0.0087 at 1295; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
+        checks: package MEETS (0603); capacitance MEETS (100nF); rated voltage MEETS (100V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
         alternative: C76711 TDK CGA3E2X7R1H104KT0Y0N, stock 515455, expand
      S-e3ac376f3f CAP        C112,C113,C114,C115,C116,C119+24 rows 30 [22u 10V X7R 1210]: C_1210_3225Metric
@@ -1773,7 +1777,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-fe4e511d9c CAP        C126,C127,C131,C132,C149,C157+21 rows 27 [22u 6.3V]: C_0805_2012Metric
         requirement: value 22uF; package 0805; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 20.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: stated; tolerance_max_pct: rule C-T2: class 2 at 10 uF and above, unstated
-        the design's code: C6119902 from lcsc_fill.py MAP (^22u 6\.3V on C_0805)
+        the design's code: C53133025 from lcsc_fill.py MAP (^22u 6\.3V on C_0805)
         SELECTED: C53133025 CCTC TCC0805X7R226M100FT 0805 (expand), stock 11781 against a need of 135; USD 0.1104 at 1, 0.087 at 135; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0805); capacitance MEETS (22uF); rated voltage MEETS (10V); dielectric MEETS (X7R); tolerance MEETS (+-20%); construction MEETS (multilayer ceramic)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes TCC0805X7R226M100FT (CCTC)
@@ -1813,7 +1817,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-59e91f17ac CAP        C407,C408,C427,C428,C447,C448 rows 6 [2.2u]: C_0603_1608Metric
         requirement: value 2.2uF; package 0603; dielectric X7R; v_rating_min 6.3; tolerance_max_pct 10.0
         basis: dielectric: rule C-D3: class 2 (above 1 nF, or a 1206 or larger land), unstated; X7R, X8R or C0G accepted; X5R only where stated or by rule C-D3b; v_rating_min: derived: 1.40 V across it (DECLARED) at the 20 percent margin; tolerance_max_pct: rule C-T2: class 2 below 10 uF, unstated
-        the design's code: C57895 from lcsc_fill.py MAP (^2\.2u$ on C_0603)
+        the design's code: C513691 from lcsc_fill.py MAP (^2\.2u$ on C_0603)
         SELECTED: C513691 YAGEO CC0603KRX7R6BB225 0603 (expand), stock 390279 against a need of 30; USD 0.0441 at 1, 0.0441 at 30; grade INSIDE (the dielectric class code X7R (its range is the code) -55 to 125 C)
         checks: package MEETS (0603); capacitance MEETS (2.2uF); rated voltage MEETS (10V); dielectric MEETS (X7R); tolerance MEETS (+-10%); construction MEETS (multilayer ceramic)
         identity: DECODED on v2/vendor/passives/yageo-cc-series.pdf p.2 (page 2 decodes it: value, package, tolerance, voltage, dielectric, construction)
@@ -2144,9 +2148,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-da2bea45e6 SPECIAL    J_ZBDBG2 rows 1 [CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET]: PinHeader_1x05_P2.54mm_Vertical
         names the part number CC2652P; no LCSC code in the netlist
      S-592fe7158c SPECIAL    L1 rows 1 [4.7uH XAL4030-472ME]: L_Coilcraft_XAL4020-XXX
-        names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its land is drawn for the XAL4020 (the two makers' land patterns are to be compared before layout)
+        names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its footprint is drawn for the XAL4020; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height differs: this record's round 3 land draft moves the row to the XAL4030 footprint (section 6)
      S-1ec3b6882c SPECIAL    L101,L102,L201,L202,L301,L302 rows 6 [3.3uH XAL6030-332ME]: L_Coilcraft_XAL6060-XXX
-        names Coilcraft XAL6030-332ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL6030 and its land is drawn for the XAL6060 (the two makers' land patterns are to be compared before layout)
+        names Coilcraft XAL6030-332ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL6030 and its footprint is drawn for the XAL6060; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height differs: this record's round 3 land draft moves the row to the XAL6030 footprint (section 6)
      S-e7f17179d5 SPECIAL    L103,L104,L2,L203,L204,L303+1 rows 7 [2.2uH XAL4020-222ME]: L_Coilcraft_XAL4020-XXX
         names Coilcraft XAL4020-222ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue)
      S-3100f99459 SPECIAL    Q101,Q201,Q301 rows 3 [BC857: LED_nPWR must be buffered (datasheet Table 4)]: SOT-23
@@ -2174,7 +2178,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-4c80e3dc5b SPECIAL    Y101,Y201,Y301 rows 3 [24 MHz 3225]: Crystal_SMD_3225-4Pin_3.2x2.5mm
         names no part by number (what it connects to, a class or a function); no identity
 
-3. FINDINGS (per board; each with its line). First, the set: 116 codes selected; the five-kit need of every board that takes a code,
+3. FINDINGS (per board; each with its line). First, the set: 112 codes selected; the five-kit need of every board that takes a code,
    summed, against its stock; the ten narrowest margins (a code short of the set's need is a finding under board A's heading):
      C20108830   GMR100HJAAFD5L00           need     5, stock       412, margin       407
      C60344      0603WAF6651T5E             need     5, stock      1255, margin      1250
@@ -2186,18 +2190,9 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      C440151     GCM32ER70J476KE19L         need    15, stock      4972, margin      4957
      C414503     CS03W5F470LT5E             need     5, stock      5024, margin      5019
      C151256     SMBJ18A                    need     5, stock      6292, margin      6287
-   BOARD A: 50 findings (GRADE NOT READ 4; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 34; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 9; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
+   BOARD A: 41 findings (GRADE NOT READ 4; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 34; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN: C1, C2 [47u 25V]: C403725 GRM31CR61E476ME44L; rule C-D3b: no X7R line read meets the value, land and rating with stock; an X5R part is taken and the hot-spot question is OPEN
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C1, C2 [47u 25V]: C403725 GRM31CR61E476ME44L (lcsc_fill.py MAP (^47u 25V$ on C_1206)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C4 [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C19 [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C77 [47n]: C1622 CL10B473KB8NNNC (lcsc_fill.py MAP (^47n$ on C_0603)): rated voltage FAILS, read 50V
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C123, C124, C125, C126, C127, C138, C145 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): dielectric FAILS, read X7R; tolerance FAILS, read +-10%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C128 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): dielectric FAILS, read X7R; tolerance FAILS, read +-10%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C129, C130, C132, C139, C146 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): dielectric FAILS, read X7R; tolerance FAILS, read +-10%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C131 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): rated voltage FAILS, read 50V; dielectric FAILS, read X7R; tolerance FAILS, read +-10%
      GRADE NOT READ: R12, R122, R127, R170, R177, R56 [5mOhm 1% 2512 (CS)]: C500739 LR2512D-3W-5mR-1%: None
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: R17 [5mOhm 1% 2512 (RSR, charge current sense)]: C500739 LR2512D-3W-5mR-1% (lcsc_fill.py MAP (^5mOhm 1% 2512 on R_2512)): power FAILS, read 3W
      GRADE NOT READ: R17 [5mOhm 1% 2512 (RSR, charge current sense)]: C20108830 GMR100HJAAFD5L00: None
      GRADE NOT READ: R31, R39 [5mOhm 1% 2512 (shunt)]: C500739 LR2512D-3W-5mR-1%: None
      GRADE NOT READ: R71 [20mOhm 1% 2512 (ISNS)]: C500741 LR2512D-3W-20mR-1%: None
@@ -2245,10 +2240,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
        (R103,R104,R111+), S-50018f6fcc (R110,R117,R142+), S-a6b3121bb8 (R115,R46,R52+), S-a44109c662 (R116,R118,R119+), S-05a6306966 (R129,R131), S-477807fcf6 (R139), S-33cc84bc82 (R140),
        S-f9685d1305 (R141), S-5763db5a29 (R146,R147,R148+)
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 24 selections, 90 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
-   BOARD E: 22 findings (OPEN REQUIREMENT 1; SPECIAL PART WITHOUT A CODE 16; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 3; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C5 [100n (TIMER)]: C14663 CC0603KRX7R9BB104 (lcsc_fill.py MAP (^100n on C_0603)): rated voltage FAILS, read 50V
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C16 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): dielectric FAILS, read X7R; tolerance FAILS, read +-10%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C20, C34, C35, C45, C47 [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
+   BOARD E: 19 findings (OPEN REQUIREMENT 1; SPECIAL PART WITHOUT A CODE 16; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      OPEN REQUIREMENT: R51 [0R (CSB high: I2C mode; its own net keeps the pin joiner off the diago]: a link whose current rating (0.6 A) no catalogue line read states
      SPECIAL PART WITHOUT A CODE: F1 [10 A mini blade (Keystone 3568 holder): vehicle input]: names Keystone 3568; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: F2 [10 A mini blade (Keystone 3568 holder): panel input]: names Keystone 3568; no LCSC code in the netlist
@@ -2260,7 +2252,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      SPECIAL PART WITHOUT A CODE: J_LTG [AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SC]: names the part number AS3935 (a CLASS: the value says so); no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: J_POD [outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND]: names no part by number (what it connects to, a class or a function); no identity
      SPECIAL PART WITHOUT A CODE: L2 [Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each w]: names Bourns SRF1260-1R5Y (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue)
-     SPECIAL PART WITHOUT A CODE: L3 [4.7uH XAL4030-472ME]: names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its land is drawn for the XAL4020 (the two makers' land patterns are to be compared before layout)
+     SPECIAL PART WITHOUT A CODE: L3 [4.7uH XAL4030-472ME]: names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its footprint is drawn for the XAL4020; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height
      SPECIAL PART WITHOUT A CODE: Q8 [2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)]: names the part number 2N7002; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: Q9 [2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)]: names the part number 2N7002; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: Q10 [2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)]: names the part number 2N7002; no LCSC code in the netlist
@@ -2288,11 +2280,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
        S-d7aa8a0726 (R1,R2,R20+), S-e6b3bd533e (R10), S-50018f6fcc (R14,R15), S-9f4d337c01 (R16,R18,R30), S-12ede1356a (R17,R19), S-0baee211d0 (R22,R24,R25+), S-a44109c662 (R28),
        S-33cc84bc82 (R32)
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 5 selections, 15 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
-   BOARD D: 19 findings (OPEN REQUIREMENT 5; SPECIAL PART WITHOUT A CODE 8; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 4; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C12, C18, C19, C20, C21, C22, C23, C28 (+11) [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C17, C24, C25, C3, C33, C40, C9 [10u]: C15850 CL21A106KAYNNNE (lcsc_fill.py MAP (^10u$ on C_0805)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: R54, R56 [27 1% 2010]: C2960829 FRC2010J270 TS (the certified table JLC-CERTIFIED.tsv): tolerance FAILS, read +-5%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: FB1 [600R 2A ferrite (the exciter's 1 A transmit pulses)]: C1017 GZ2012D601TF (the certified table JLC-CERTIFIED.tsv): current rating FAILS, read 500mA
+   BOARD D: 15 findings (OPEN REQUIREMENT 5; SPECIAL PART WITHOUT A CODE 8; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      OPEN REQUIREMENT: C46 [1u]: the rated voltage is open: no declared or bounded voltage on d:MICAMP_AC+MICAMP_OUT (rule V-1; never a guess)
      OPEN REQUIREMENT: C47 [1u]: the rated voltage is open: no declared or bounded voltage on d:PCM_R_AC+PCM_VOUTR (rule V-1; never a guess)
      OPEN REQUIREMENT: C48 [1u]: the rated voltage is open: no declared or bounded voltage on d:MIC_IN+MIC_SUM (rule V-1; never a guess)
@@ -2312,9 +2300,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
        S-54224e96e5 (C43), S-753ae929e3 (C58,C60), S-a77efb52ad (C59), S-099e530a08 (R1,R43,R44+), S-a44109c662 (R2,R3,R53), S-50018f6fcc (R10,R31,R32+), S-0baee211d0 (R11,R29,R30+),
        S-94b1cac23f (R12,R13,R16+), S-2c22a7de64 (R14,R15,R18+), S-4217d7e5e6 (R26,R27), S-eaaed6ecb3 (R28,R8), S-668d252f79 (R34,R40,R41), S-f7ecdc459a (R42)
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 6 selections, 51 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
-   BOARD C: 36 findings (OPEN REQUIREMENT 17; SPECIAL PART WITHOUT A CODE 15; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 2; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C14, C16, C3, C4 [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: R43 [0.47R 1%]: C23411 0603WAF470LT5E (lcsc_fill.py MAP (^0\.47R 1%$ on R_0603)): temperature coefficient FAILS, read +-800ppm/C
+   BOARD C: 34 findings (OPEN REQUIREMENT 17; SPECIAL PART WITHOUT A CODE 15; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      OPEN REQUIREMENT: D1 [3 mm MWARN red, sunlight viewable]: a panel lamp whose intensity and viewing angle through its light guide are not stated (w5identc: CHOICE_OWED)
      OPEN REQUIREMENT: D2 [3 mm MCAUT amber, sunlight viewable]: a panel lamp whose intensity and viewing angle through its light guide are not stated (w5identc: CHOICE_OWED)
      OPEN REQUIREMENT: D3 [3 mm TX red (RF hazard), sunlight viewable]: a panel lamp whose intensity and viewing angle through its light guide are not stated (w5identc: CHOICE_OWED)
@@ -2352,15 +2338,8 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
        needs another: S-8b1dfb7d63 (C5,C6), S-45ad5deffe (C10,C11,C12+), S-5eeee312c8 (C14,C16,C3+), S-5ae2e5c268 (C28), S-9121e77997 (C30), S-a9d5694441 (C32), S-69d0f41966 (C33),
        S-12603c7856 (C34), S-c3afdba8a6 (C35), S-bd25452813 (C36), S-9ae5738976 (C37), S-0baee211d0 (R1,R5,R6), S-b3916fa625 (R2,R3,R53+), S-50018f6fcc (R4,R42), S-099e530a08 (R7,R8)
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 4 selections, 18 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
-   BOARD B: 57 findings (GRADE NOT READ 1; OPEN REQUIREMENT 9; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 37; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 7; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
+   BOARD B: 50 findings (GRADE NOT READ 1; OPEN REQUIREMENT 9; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 37; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN: C1, C101, C102, C103, C104, C2, C201, C202 (+6) [100u 10V]: C6119961 CGA1206X5R107M100NT; rule C-D3b: no X7R line read meets the value, land and rating with stock; an X5R part is taken and the hot-spot question is OPEN
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C1, C101, C102, C103, C104, C2, C201, C202 (+6) [100u 10V]: C6119961 CGA1206X5R107M100NT (lcsc_fill.py MAP (^100u 10V$ on C_1206)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C12, C13, C163, C193, C263, C293, C363, C393 (+6) [1u]: C15849 CL10A105KB8NNNC (lcsc_fill.py MAP (^1u$ on C_0603)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C29, C30, C31, C32 [100n]: C14663 CC0603KRX7R9BB104 (lcsc_fill.py MAP (^100n on C_0603)): rated voltage FAILS, read 50V
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C45, C52 [1n]: C1588 CL10B102KB8NNNC (lcsc_fill.py MAP (^1n$ on C_0603)): dielectric FAILS, read X7R; tolerance FAILS, read +-10%
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C105, C106, C107, C108, C109, C125, C130, C147 (+34) [10u]: C15850 CL21A106KAYNNNE (lcsc_fill.py MAP (^10u$ on C_0805)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C126, C127, C131, C132, C149, C157, C226, C227 (+19) [22u 6.3V]: C6119902 CGA0805X5R226M6R3MT (lcsc_fill.py MAP (^22u 6\.3V on C_0805)): dielectric FAILS, read X5R
-     THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C407, C408, C427, C428, C447, C448 [2.2u]: C57895 CL10A225KA8NNNC (lcsc_fill.py MAP (^2\.2u$ on C_0603)): dielectric FAILS, read X5R
      GRADE NOT READ: R12 [0.25R 1% 2512]: C459675 RLP25FEER250: None
      OPEN REQUIREMENT: C161 [100n]: the rated voltage is open: no declared or bounded voltage on b:HUB1_D1TX_P+LIME_SSTX_P (rule V-1; never a guess)
      OPEN REQUIREMENT: C162 [100n]: the rated voltage is open: no declared or bounded voltage on b:HUB1_D1TX_N+LIME_SSTX_N (rule V-1; never a guess)
@@ -2393,8 +2372,8 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      SPECIAL PART WITHOUT A CODE: J_SPI3 [SPI0 breakout of S3 (2x5): 3V3 GND MISO MOSI SCLK CE0 CE1 IO23 IO24 IO]: names no part by number (what it connects to, a class or a function); no identity
      SPECIAL PART WITHOUT A CODE: J_ZBDBG1 [CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET]: names the part number CC2652P; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: J_ZBDBG2 [CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET]: names the part number CC2652P; no LCSC code in the netlist
-     SPECIAL PART WITHOUT A CODE: L1 [4.7uH XAL4030-472ME]: names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its land is drawn for the XAL4020 (the two makers' land patterns are to be compared before layout)
-     SPECIAL PART WITHOUT A CODE: L101, L102, L201, L202, L301, L302 [3.3uH XAL6030-332ME]: names Coilcraft XAL6030-332ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL6030 and its land is drawn for the XAL6060 (the two makers' land patterns are to be compared before layout)
+     SPECIAL PART WITHOUT A CODE: L1 [4.7uH XAL4030-472ME]: names Coilcraft XAL4030-472ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL4030 and its footprint is drawn for the XAL4020; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height
+     SPECIAL PART WITHOUT A CODE: L101, L102, L201, L202, L301, L302 [3.3uH XAL6030-332ME]: names Coilcraft XAL6030-332ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue); LAND: the part is an XAL6030 and its footprint is drawn for the XAL6060; Coilcraft draws one land for the series and the two KiCad footprints' copper is identical, the body height
      SPECIAL PART WITHOUT A CODE: L103, L104, L2, L203, L204, L303, L304 [2.2uH XAL4020-222ME]: names Coilcraft XAL4020-222ME (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue)
      SPECIAL PART WITHOUT A CODE: Q101, Q201, Q301 [BC857: LED_nPWR must be buffered (datasheet Table 4)]: names the part number BC857; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: U13 [Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_1]: names Ebyte E72-2G4M20S1E; no LCSC code in the netlist
@@ -2421,17 +2400,17 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
 
 4. THE DRAFTS: apply_gen_sch_X_lcsc.py per board, composition against every other pending draft of that generator
    board A: 318 designators keyed by (designator, committed value); chain apply_gen_sch_a_r12.py, apply_gen_sch_a_guard.py, apply_gen_sch_a_charger.py, apply_gen_sch_a_r11.py, apply_gen_sch_a_bank.py, apply_gen_sch_a_r138.py, apply_gen_sch_a_u17.py; standalone apply_gen_sch_a_mainpb.py
-     apply_gen_sch_a_r12.py then apply_gen_sch_a_guard.py then apply_gen_sch_a_charger.py then apply_gen_sch_a_r11.py then apply_gen_sch_a_bank.py then apply_gen_sch_a_r138.py then apply_gen_sch_a_u17.py: commutes with this draft (identical text either order, sha256 1756f621b1f79b90)
-     apply_gen_sch_a_mainpb.py: commutes with this draft (identical text either order, sha256 4ca52d1492ea3c03)
+     apply_gen_sch_a_r12.py then apply_gen_sch_a_guard.py then apply_gen_sch_a_charger.py then apply_gen_sch_a_r11.py then apply_gen_sch_a_bank.py then apply_gen_sch_a_r138.py then apply_gen_sch_a_u17.py: commutes with this draft (identical text either order, sha256 41a08060c4ddaff9)
+     apply_gen_sch_a_mainpb.py: commutes with this draft (identical text either order, sha256 30d53a7dee974719)
      designators the pending drafts' changed lines name (their value key decides at the regeneration): R138, R139, R149, R16, R17
    board E: 86 designators keyed by (designator, committed value); chain apply_gen_sch_e_cin.py, apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py; standalone apply_gen_sch_e_pod.py
-     apply_gen_sch_e_cin.py then apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py: commutes with this draft (identical text either order, sha256 96b9c35f77ed2451)
-     apply_gen_sch_e_pod.py: commutes with this draft (identical text either order, sha256 0db1a7910500aade)
+     apply_gen_sch_e_cin.py then apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py: commutes with this draft (identical text either order, sha256 48efeaa321302bed)
+     apply_gen_sch_e_pod.py: commutes with this draft (identical text either order, sha256 24f07430351cb582)
      designators the pending drafts' changed lines name (their value key decides at the regeneration): C13, C14, C15, C30, C31, C32, C33, C5, C63, R14, R15, R16, R17, R19, R20, R21, R22, R23, R24, R25, R8, R9
    board P: 43 designators keyed by (designator, committed value); chain none; standalone none
      no other pending draft names this generator: this draft applies to the bare generator (ast parses)
    board D: 122 designators keyed by (designator, committed value); chain none; standalone apply_gen_sch_d_ptt.py
-     apply_gen_sch_d_ptt.py: commutes with this draft (identical text either order, sha256 ca4783b25759e81c)
+     apply_gen_sch_d_ptt.py: commutes with this draft (identical text either order, sha256 68a78592f4f3d3dd)
    board C: 40 designators keyed by (designator, committed value); chain none; standalone none
      no other pending draft names this generator: this draft applies to the bare generator (ast parses)
    board B: 831 designators keyed by (designator, committed value); chain none; standalone none
@@ -2444,7 +2423,59 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    board D: 122 of 137 uncoded fitted rows SELECTED (every requirement met, stock for five kits), 0 LOW_STOCK (selected, the stock a finding), 15 still open (NOT_A_PART 2; OPEN 5; SPECIAL 8)
    board C: 40 of 83 uncoded fitted rows SELECTED (every requirement met, stock for five kits), 0 LOW_STOCK (selected, the stock a finding), 43 still open (NOT_A_PART 4; OPEN 17; SPECIAL 22)
    board B: 831 of 894 uncoded fitted rows SELECTED (every requirement met, stock for five kits), 0 LOW_STOCK (selected, the stock a finding), 63 still open (OPEN 9; SPECIAL 54)
-   identity block drafted_identities_l6r2_passives: 222 rows; RESOLVED/DECODED 131; UNRESOLVED/DOCUMENT_OWED 91
+   identity block drafted_identities_l6r2_passives: 222 rows; RESOLVED/DECODED 132; UNRESOLVED/DOCUMENT_OWED 90
    6.1 moves for the generic rows of the six boards from OPEN to PARTLY: each selected row carries a maker, an MPN, a package, a code and a
    grade; the identity is DECODED on the maker's own ordering table where it is a YAGEO CC X7R or UNI-ROYAL part, else the catalogue's
    line (DOCUMENT_OWED). The specials and the open requirements stay findings. Nothing is applied: the drafts are release-guarded.
+
+6. ROUND 3: THE COILCRAFT LANDS (criterion 6.4; a part drawn on the footprint of another body)
+   KiCad's footprints: v2/docs/records/l6r2/inputs/kicad-xal-footprints-9.0.9.json (library 9.0.9, read 2026-10-03T14:23:42Z; pads, courtyard, fab and silk extents and the model path per file)
+   Coilcraft XAL40xx (v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf): one recommended land for the series, page 4 prints 0,98 / 3,4 / 2,37 mm (pad width, length, centres): printed
+   Coilcraft XAL60xx (v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf): one recommended land for the series, page 4 prints 1,43 / 5,50 / 4,04 mm (pad width, length, centres): printed
+   board E L3 [4.7uH XAL4030-472ME] on L_Coilcraft_XAL4020-XXX:
+     the value names XAL4030-472ME, 4.7 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL4020 has no part at 4.7 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 0.98 x 3.40 mm at 2.37 mm equal the sheet's land; the model heights 2.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 1.0 mm lower than the part; the footprint's series makes no 4.7 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_e_xal_land.py moves it to L_Coilcraft_XAL4030-XXX
+   board B L1 [4.7uH XAL4030-472ME] on L_Coilcraft_XAL4020-XXX:
+     the value names XAL4030-472ME, 4.7 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL4020 has no part at 4.7 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 0.98 x 3.40 mm at 2.37 mm equal the sheet's land; the model heights 2.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 1.0 mm lower than the part; the footprint's series makes no 4.7 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL4030-XXX
+   board B L101 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   board B L102 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   board B L201 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   board B L202 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   board B L301 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   board B L302 [3.3uH XAL6030-332ME] on L_Coilcraft_XAL6060-XXX:
+     the value names XAL6030-332ME, 3.3 uH, 3.1 mm high at most (the sheet's dash table); the footprint's series XAL6060 has no part at 3.3 uH
+     KiCad: the two footprints' pads identical, outlines identical; the pads 1.43 x 5.50 mm at 4.04 mm equal the sheet's land; the model heights 6.1 (drawn) and 3.1 mm (named)
+     the copper is right and the drawn body is 3.0 mm higher than the part; the footprint's series makes no 3.3 uH part, so the value names the part and the FOOTPRINT KEY is the defect; drafted: apply_gen_sch_b_xal_land.py moves it to L_Coilcraft_XAL6030-XXX
+   apply_gen_sch_b_xal_land.py on the committed generator: OK, 4 edit(s): the FP map gains the XAL4030 and XAL6030 footprints; buck33's docstring names the part its inductor is; buck33's inductor (L101, L102, L201, L202, L301, L302) on the XAL6030 footprint; L1 on the XAL4030 footprint; keys added L4030, L6030 (L4030 -> Inductor_SMD:L_Coilcraft_XAL4030-XXX; L6030 -> Inductor_SMD:L_Coilcraft_XAL6030-XXX)
+     keys whose footprint changed: none; the drafted generator's sha256 09f4397f6881610c
+     apply_gen_sch_b_lcsc.py: commutes with this draft (identical text either order, sha256 a77ef89f7bf597ac)
+   apply_gen_sch_e_xal_land.py on the committed generator: OK, 2 edit(s): the FP map gains the XAL4030 footprint; L3 on the XAL4030 footprint; keys added L4030 (L4030 -> Inductor_SMD:L_Coilcraft_XAL4030-XXX)
+     keys whose footprint changed: none; the drafted generator's sha256 ee6b0b9a6f1cf7d9
+     apply_gen_sch_e_cin.py then apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py: commutes with this draft (identical text either order, sha256 c0fc352126e15ff2)
+     apply_gen_sch_e_pod.py: commutes with this draft (identical text either order, sha256 b8ce68eedc01b746)
+     apply_gen_sch_e_lcsc.py: commutes with this draft (identical text either order, sha256 5c6e79f1235c1634)
+     apply_gen_sch_e_cin.py then apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_pod.py then apply_gen_sch_e_lcsc.py: commutes with this draft (identical text either order, sha256 003408739090b32a)
+   8 rows on the six boards draw an XAL part on another series' footprint; 8 are moved by the two drafts; the rest: none
+   Downstream (not done here): the regenerated boards B and E carry the new footprint names; v2/cad/zstack.py's reading takes the 3D
+   model's height at the next z-stack run (zstack-models.json holds no XAL6030 model yet: the box reads it), which lowers board B's six
+   buck33 inductors from 6.1 to 3.1 mm (CASE-FIT-UNCERTAINTIES.md section 4 item 1 counted them at 6.10 under 6.0 envelopes) and
+   raises B L1 and E L3 from 2.1 to 3.1 mm.
+

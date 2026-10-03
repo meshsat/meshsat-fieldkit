@@ -112,6 +112,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^3\.3n$", "C_0603"): "C1613",
  (r"^10n$", "C_0603"): "C57112",
  (r"^27p$", "C_0603"): "C107045",    # NP0, 50 V, 5%: correct on the 18 pF load crystal
+ (r"^15p NP0", "C_0603"): "C107037",   # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603JRNPO9BN150, 15 pF 50 V NP0 5 %, board A C27 (the charger's CH_COMP2, S-117), which no line filled: a blank generic line refuses the finish
  (r"^33p$", "C_0603"): "C1663",       # Samsung CL10C330JB8NNNC, C0G, 50 V, 5%, a Basic part: the 20 pF load crystal on B12
  (r"^47n$", "C_0603"): "C576852",  # Layer 6 record l6r2 round 3, 3 October 2026: YAGEO CC0603KRX7R0BB473, 47 nF 100 V X7R, for C1622 (50 V): the line fills A C77, which needs 100 V
  (r"^470n 25V$", "C_0603"): "C1623",

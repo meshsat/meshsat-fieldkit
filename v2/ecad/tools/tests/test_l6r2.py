@@ -16,7 +16,13 @@ Properties, pinned on fixtures and on the committed record, never on today's cou
   * the identity block in pcb_part_identities.yaml is the record's render, outside `selections`; every DECODED binding in it passes
     rule D-2 where its document is on this host;
   * the copied supplier BOM reader is the file of its recorded commit; the record carries no em or en dash and no private path;
-  * the designator detector reads the changed lines' string tokens, never the prose around them.
+  * the designator detector reads the changed lines' string tokens, never the prose around them;
+  * round 3, the Coilcraft lands (criterion 6.4): every fitted row of the six boards whose value names an XAL part of one series
+    and whose footprint is drawn for another is moved by a land draft, and only those rows; for each, the two KiCad footprints'
+    pads and outlines are identical, the pads are the maker's one recommended land of the series, the footprint's series makes
+    no part of that inductance, and the named footprint's model height is the maker's maximum for the named part; each land draft
+    maps its rows to the named part's footprint, refuses the repository's generator until released and a second application,
+    and commutes with every other pending draft of its generator, this record's LCSC draft included.
 Run: env -C v2/ecad/tools/tests python3 run.py test_l6r2"""
 import base64
 import importlib.util
@@ -259,3 +265,72 @@ def t_the_sets_need_sums_the_boards_that_share_a_code():
     assert agg == [("C9", "X", 15, 12)], agg
     F = m.findings(fake, {b: dict(ok=True, notes=[]) for b in m.ORDER})
     assert any(f[1].startswith("STOCK UNDER THE SET'S") and f[2] == "C9" for f in F), "a set short of stock is not a finding"
+
+
+def _L():
+    if "L" not in _CACHE:
+        _CACHE["L"] = _M().lands()
+    return _CACHE["L"]
+
+
+def t_each_land_draft_moves_exactly_the_rows_drawn_on_another_series_body_and_the_evidence_holds():
+    import l6r2_land
+    L = _L()
+    found = {(r["board"], r["ref"]) for r in L["rows"]}
+    drafted = {(b, ref) for b, rows in l6r2_land.ROWS.items() for ref in rows}
+    assert found == drafted, "the land drafts move %s; the netlists draw on another series' body %s" % (sorted(drafted), sorted(found))
+    for r in L["rows"]:
+        tag = "%s %s" % (r["board"].upper(), r["ref"])
+        assert r["pads_eq"] and r["outline_eq"], "%s: the two footprints' copper or outlines differ: a land change, not a key change" % tag
+        assert r["land_eq_sheet"] and r["land_printed"], "%s: the footprint's pads are not the maker's recommended land %s" % (tag, r["pad_fig"])
+        assert not r["same_inductance_in_fp_series"], "%s: the footprint's series makes %s: the value, not the key, may be wrong" % (tag, r["same_inductance_in_fp_series"])
+        assert r["h_named"] is not None and abs(r["h_named"] - r["h_named_model"]) < 1e-9, \
+            "%s: the named footprint's model is %.2f mm, the maker's maximum %s mm" % (tag, r["h_named_model"], r["h_named"])
+        assert r["drafted"][1] == "L_Coilcraft_%s-XXX" % r["named"].split("-")[0] and r["drafted"][2] == r["named"] + "ME", tag
+
+
+def t_each_land_draft_maps_its_rows_to_the_named_parts_footprint_and_nothing_else_moves():
+    import l6r2_land
+    m = _M()
+    for b, d in _L()["drafts"].items():
+        assert d["state"] == "OK", "board %s: %s" % (b, d["why"])
+        assert not d["keys_changed"], "board %s: the draft changes the footprint of keys %s" % (b, d["keys_changed"])
+        targets = {v[1] for v in l6r2_land.ROWS[b].values()}
+        assert {d["fp"][k].split(":", 1)[1] for k in d["keys_added"]} == targets, (b, d["keys_added"])
+        g0 = open(os.path.join(REPO, m.GEN[b]), encoding="utf-8").read()
+        new = l6r2_land.apply_text(g0, b)[1]
+        for what, old, rep in l6r2_land.EDITS[b]:
+            if old.startswith("part("):
+                key = rep.rstrip(",").rsplit(",", 1)[1].strip().strip('"')
+                assert d["fp"][key].split(":", 1)[1] in targets and new.count(rep) == 1 and new.count(old) == 0, what
+
+
+def t_the_land_drafts_refuse_the_repository_generators_until_released_and_a_second_application():
+    import l6r2_apply
+    m = _M()
+    for b in ("b", "e"):
+        script = os.path.join(REC, "apply_gen_sch_%s_xal_land.py" % b)
+        gen = os.path.join(REPO, m.GEN[b])
+        if not l6r2_apply.released():
+            before = open(gen, "rb").read()
+            r = subprocess.run([sys.executable, "-B", script, gen, "--write"], capture_output=True, text=True)
+            assert r.returncode == 3 and "REFUSED" in r.stdout, r.stdout
+            assert open(gen, "rb").read() == before
+        with tempfile.TemporaryDirectory() as td:
+            g = os.path.join(td, "gen.py")
+            open(g, "w", encoding="utf-8").write(open(gen, encoding="utf-8").read())
+            r = subprocess.run([sys.executable, "-B", script, g, "--write"], capture_output=True, text=True)
+            assert r.returncode == 0, r.stdout + r.stderr
+            r2 = subprocess.run([sys.executable, "-B", script, g, "--write"], capture_output=True, text=True)
+            assert r2.returncode == 3, "a second application was not refused"
+    import l6r2_land
+    assert l6r2_land.apply_text("x = 1\n", "e")[0] == "REFUSED", "a generator without the old texts was not refused"
+
+
+def t_each_land_draft_commutes_with_every_other_pending_draft_and_the_records_lcsc_draft():
+    import l6r2_land
+    m = _M()
+    for b in l6r2_land.EDITS:
+        res = m.compose_land(b)
+        assert res["ok"], "board %s: %s" % (b, res["notes"])
+        assert any("apply_gen_sch_%s_lcsc.py" % b in n for n in res["notes"]), "board %s: the record's own LCSC draft was not composed" % b

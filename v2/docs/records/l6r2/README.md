@@ -7,7 +7,8 @@ ferrite beads, small diodes of a generic type, 0603 indicator LEDs) get an exact
 public reading of JLCPCB's parts library, checked property by property; ICs, modules, transistors, named inductors, connectors and
 mechanical parts are not re-selected and are listed as findings; a requirement the generator and the intent leave open is a
 finding with its line, never a guess. Based on `fnd/int28` at `a1f696de`. No generator, Layer 4 record, `pcb_interfaces.yaml` or
-`HW-FW-CONTRACT.md` is edited.
+`HW-FW-CONTRACT.md` is edited. Round 3 (the same day, from `6fe27332`) corrected `v2/ecad/tools/lcsc_fill.py`'s table with a property
+test (finding F1) and drafted the footprint keys of three Coilcraft rows (finding F4); the page's section 8.
 
 | File | What it is |
 |---|---|
@@ -19,11 +20,16 @@ finding with its line, never a guess. Based on `fnd/int28` at `a1f696de`. No gen
 | `inputs/jlc-parts-2026-10-03.json` | The catalogue reading (codes and keyword searches with model, brand, package, stock, library, preferred flag, attributes, description and price tiers) |
 | `l6r2_apply.py` | The six drafts' shared logic: the table inserted once before `import schlayout, time as _time`, keyed by designator and the committed value; the release guard; refusals |
 | `apply_gen_sch_{a,e,p,d,c,b}_lcsc.py` | The six DRAFTS, one per board, each carrying its board's table (rendered by `--write-drafts`); release-guarded by `RELEASE.md`; NOT applied |
+| `l6r2_land.py` | Round 3: the two LAND drafts' edits (per board, old and new text), the rows they move and the shared logic; the release guard is `l6r2_apply.released` |
+| `apply_gen_sch_{b,e}_xal_land.py` | Round 3's two DRAFTS (Layer 8, criterion 6.4): board B's L1 and buck33's inductor and board E's L3 onto the footprint of the part their value names; release-guarded; NOT applied |
+| `read_kicad_footprints.py` | Round 3: takes the reading `inputs/kicad-xal-footprints-9.0.9.json`, KiCad's four Coilcraft XAL footprints at the library's 9.0.9 tag (URL, sha256, description, pads, outlines, model path; the files are not filed) |
+| `inputs/kicad-xal-footprints-9.0.9.json` | That reading |
 | `RELEASE.md` | The drafts' release record: `released: no` |
 | `apply_part_identities_block.py` | Puts the block `drafted_identities_l6r2_passives` into `v2/ecad/tools/pcb_part_identities.yaml` outside `selections:` (applied on this branch), or removes this block only |
 | `README.md` | This list |
 
-Also on this branch: `v2/ecad/tools/tests/test_l6r2.py` (the predicates); the block in `pcb_part_identities.yaml`; round 1's
+Also on this branch: `v2/ecad/tools/tests/test_l6r2.py` (the predicates); round 3's `v2/ecad/tools/lcsc_fill.py` lines and
+`v2/ecad/tools/tests/test_lcsc_fill_requirements.py` (the property test over the six boards); the block in `pcb_part_identities.yaml`; round 1's
 `l6pwr/apply_part_identities_block.py` now removes only its own block (it cut to the end of the file, which would have taken this
 record's block with it).
 
@@ -31,6 +37,6 @@ Regenerating `l6r2_passives.out` byte for byte needs the held Uniroyal sheet fet
 (`python3 v2/docs/records/w5identc/fetch_held_back.py`): without it the Uniroyal identities print UNREAD instead of DECODED (the
 identity block is the same either way).
 
-Run the tests with `env -C v2/ecad/tools/tests python3 run.py test_l6r2 test_part_identities test_public_hygiene test_l6pwr`; on
-3 October 2026 they read 56 passed, 0 failed, 0 skipped (with the Uniroyal sheet fetched by w5identc's `fetch_held_back.py`;
-without it, the DECODED Uniroyal bindings read UNREAD and test_part_identities skips two).
+Run the tests with `env -C v2/ecad/tools/tests python3 run.py test_l6r2 test_lcsc_fill_requirements test_part_identities
+test_public_hygiene test_l6pwr`; the result of each round is in its commit's report (with the Uniroyal sheet fetched by w5identc's
+`fetch_held_back.py`; without it, the DECODED Uniroyal bindings read UNREAD and test_part_identities skips two).

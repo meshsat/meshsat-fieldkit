@@ -5483,7 +5483,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -5509,9 +5509,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -5520,8 +5520,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -5626,7 +5626,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R7BB105
+      mpn: CC0603KRX7R9BB105
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -5652,9 +5652,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '7'
-        row: 7 = 16 V
-        means: 16 V
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
       - field: process
         code: BB
       - field: value
@@ -5663,8 +5663,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C106248
-      read: 'JLCPCB parts library: CC0603KRX7R7BB105, YAGEO, 0603, stock 922240, expand library'
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826072, expand library'
     grade:
       range_c:
       - -55
@@ -5985,7 +5985,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -6011,9 +6011,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -6022,8 +6022,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -6275,7 +6275,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -6301,9 +6301,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -6312,8 +6312,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -6346,16 +6346,16 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603JRNPO9BN102
+      mpn: CC0603JRNPO0BN102
       status: UNRESOLVED
       reason_class: DOCUMENT_OWED
       reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)'
-      next_action: file the maker's sheet that prints CC0603JRNPO9BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0603JRNPO0BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
     rule_c_d3b: null
     order_code:
-      code: C106246
-      read: 'JLCPCB parts library: CC0603JRNPO9BN102, YAGEO, 0603, stock 1949201, expand library'
+      code: C113793
+      read: 'JLCPCB parts library: CC0603JRNPO0BN102, YAGEO, 0603, stock 100133, expand library'
     grade:
       range_c:
       - -55
@@ -6382,16 +6382,16 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603JRNPO9BN102
+      mpn: CC0603JRNPO0BN102
       status: UNRESOLVED
       reason_class: DOCUMENT_OWED
       reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)'
-      next_action: file the maker's sheet that prints CC0603JRNPO9BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0603JRNPO0BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
     rule_c_d3b: null
     order_code:
-      code: C106246
-      read: 'JLCPCB parts library: CC0603JRNPO9BN102, YAGEO, 0603, stock 1949201, expand library'
+      code: C113793
+      read: 'JLCPCB parts library: CC0603JRNPO0BN102, YAGEO, 0603, stock 100133, expand library'
     grade:
       range_c:
       - -55
@@ -6422,16 +6422,16 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603JRNPO9BN102
+      mpn: CC0603JRNPO0BN102
       status: UNRESOLVED
       reason_class: DOCUMENT_OWED
       reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)'
-      next_action: file the maker's sheet that prints CC0603JRNPO9BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0603JRNPO0BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
     rule_c_d3b: null
     order_code:
-      code: C106246
-      read: 'JLCPCB parts library: CC0603JRNPO9BN102, YAGEO, 0603, stock 1949201, expand library'
+      code: C113793
+      read: 'JLCPCB parts library: CC0603JRNPO0BN102, YAGEO, 0603, stock 100133, expand library'
     grade:
       range_c:
       - -55
@@ -6497,17 +6497,46 @@ drafted_identities_l6r2_passives:
       tolerance_max_pct: 10.0
     state: SELECTED
     identity:
-      maker: Samsung Electro-Mechanics
-      mpn: CL10B473KB8NNNC
-      status: UNRESOLVED
-      reason_class: DOCUMENT_OWED
-      reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CL10B473KB8NNNC (Samsung Electro-Mechanics)'
-      next_action: file the maker's sheet that prints CL10B473KB8NNNC (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+      maker: YAGEO
+      mpn: CC0603KRX7R0BB473
+      status: RESOLVED
+      datasheet:
+        path: v2/vendor/passives/yageo-cc-series.pdf
+        sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+        page: 2
+        binding: DECODED
+        scheme: yageo-cc-x7r-v26-p2
+        publisher: YAGEO
+      fields:
+      - field: series
+        code: CC
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: "K = \xB1 10%"
+        means: "\xB1 10%"
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+      - field: voltage
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
+      - field: process
+        code: BB
+      - field: value
+        code: '473'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C1622
-      read: 'JLCPCB parts library: CL10B473KB8NNNC, Samsung Electro-Mechanics, 0603, stock 826770, base library'
+      code: C576852
+      read: 'JLCPCB parts library: CC0603KRX7R0BB473, YAGEO, 0603, stock 233125, expand library'
     grade:
       range_c:
       - -55
@@ -6515,9 +6544,9 @@ drafted_identities_l6r2_passives:
       basis: the dielectric class code X7R (its range is the code)
       verdict: INSIDE
     alternative:
-      code: C107093
-      mpn: CC0603KRX7R9BB473
-      maker: YAGEO
+      code: C76712
+      mpn: CGA3E2X7R1H473KT0Y0N
+      maker: TDK
   - id: L6R2-S-8c7fc15e64
     board: A
     refs:
@@ -6650,7 +6679,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -6676,9 +6705,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -6687,8 +6716,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -6715,7 +6744,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -6741,9 +6770,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -6752,8 +6781,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -9511,16 +9540,16 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603JRNPO9BN102
+      mpn: CC0603JRNPO0BN102
       status: UNRESOLVED
       reason_class: DOCUMENT_OWED
       reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)'
-      next_action: file the maker's sheet that prints CC0603JRNPO9BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0603JRNPO0BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
     rule_c_d3b: null
     order_code:
-      code: C106246
-      read: 'JLCPCB parts library: CC0603JRNPO9BN102, YAGEO, 0603, stock 1949201, expand library'
+      code: C113793
+      read: 'JLCPCB parts library: CC0603JRNPO0BN102, YAGEO, 0603, stock 100133, expand library'
     grade:
       range_c:
       - -55
@@ -9654,7 +9683,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R7BB105
+      mpn: CC0603KRX7R9BB105
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -9680,9 +9709,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '7'
-        row: 7 = 16 V
-        means: 16 V
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
       - field: process
         code: BB
       - field: value
@@ -9691,8 +9720,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C106248
-      read: 'JLCPCB parts library: CC0603KRX7R7BB105, YAGEO, 0603, stock 922240, expand library'
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826072, expand library'
     grade:
       range_c:
       - -55
@@ -9791,7 +9820,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -9817,9 +9846,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -9828,8 +9857,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -9893,7 +9922,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -9919,9 +9948,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -9930,8 +9959,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -10042,7 +10071,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -10068,9 +10097,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -10079,8 +10108,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -11582,7 +11611,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -11608,9 +11637,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -11619,8 +11648,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -11689,7 +11718,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -11715,9 +11744,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -11726,8 +11755,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -11755,7 +11784,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -11781,9 +11810,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -11792,8 +11821,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -11823,7 +11852,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -11849,9 +11878,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -11860,8 +11889,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -11888,7 +11917,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -11914,9 +11943,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -11925,8 +11954,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -12616,7 +12645,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -12642,9 +12671,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -12653,8 +12682,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -12699,7 +12728,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R7BB105
+      mpn: CC0603KRX7R9BB105
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -12725,9 +12754,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '7'
-        row: 7 = 16 V
-        means: 16 V
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
       - field: process
         code: BB
       - field: value
@@ -12736,8 +12765,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C106248
-      read: 'JLCPCB parts library: CC0603KRX7R7BB105, YAGEO, 0603, stock 922240, expand library'
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826072, expand library'
     grade:
       range_c:
       - -55
@@ -13887,7 +13916,75 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
+      status: RESOLVED
+      datasheet:
+        path: v2/vendor/passives/yageo-cc-series.pdf
+        sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+        page: 2
+        binding: DECODED
+        scheme: yageo-cc-x7r-v26-p2
+        publisher: YAGEO
+      fields:
+      - field: series
+        code: CC
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: "K = \xB1 10%"
+        means: "\xB1 10%"
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+      - field: voltage
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
+      - field: process
+        code: BB
+      - field: value
+        code: '104'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+    rule_c_d3b: null
+    order_code:
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
+    grade:
+      range_c:
+      - -55
+      - 125
+      basis: the dielectric class code X7R (its range is the code)
+      verdict: INSIDE
+    alternative:
+      code: C76711
+      mpn: CGA3E2X7R1H104KT0Y0N
+      maker: TDK
+  - id: L6R2-S-5eeee312c8
+    board: C
+    refs:
+    - C14
+    - C16
+    - C3
+    - C4
+    kind: capacitor
+    key: capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10
+    requirements:
+      value: 1uF
+      package: '0603'
+      construction: MLCC
+      dielectric: X7R
+      v_rating_min: 6.3
+      tolerance_max_pct: 10.0
+    state: SELECTED
+    identity:
+      maker: YAGEO
+      mpn: CC0603KRX7R9BB105
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -13919,81 +14016,13 @@ drafted_identities_l6r2_passives:
       - field: process
         code: BB
       - field: value
-        code: '104'
-        rule: pf_2sig
-        row: 2 significant digits+number of zeros
-    rule_c_d3b: null
-    order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
-    grade:
-      range_c:
-      - -55
-      - 125
-      basis: the dielectric class code X7R (its range is the code)
-      verdict: INSIDE
-    alternative:
-      code: C76711
-      mpn: CGA3E2X7R1H104KT0Y0N
-      maker: TDK
-  - id: L6R2-S-5eeee312c8
-    board: C
-    refs:
-    - C14
-    - C16
-    - C3
-    - C4
-    kind: capacitor
-    key: capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10
-    requirements:
-      value: 1uF
-      package: '0603'
-      construction: MLCC
-      dielectric: X7R
-      v_rating_min: 6.3
-      tolerance_max_pct: 10.0
-    state: SELECTED
-    identity:
-      maker: YAGEO
-      mpn: CC0603KRX7R7BB105
-      status: RESOLVED
-      datasheet:
-        path: v2/vendor/passives/yageo-cc-series.pdf
-        sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
-        page: 2
-        binding: DECODED
-        scheme: yageo-cc-x7r-v26-p2
-        publisher: YAGEO
-      fields:
-      - field: series
-        code: CC
-      - field: size
-        code: '0603'
-        row: 0603 (1608)
-      - field: tolerance
-        code: K
-        row: "K = \xB1 10%"
-        means: "\xB1 10%"
-      - field: packaging
-        code: R
-        row: R = Paper/PE taping reel; Reel 7 inch
-        means: Paper/PE taping reel
-      - field: dielectric
-        code: X7R
-      - field: voltage
-        code: '7'
-        row: 7 = 16 V
-        means: 16 V
-      - field: process
-        code: BB
-      - field: value
         code: '105'
         rule: pf_2sig
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C106248
-      read: 'JLCPCB parts library: CC0603KRX7R7BB105, YAGEO, 0603, stock 922240, expand library'
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826072, expand library'
     grade:
       range_c:
       - -55
@@ -14963,7 +14992,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -14989,9 +15018,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -15000,8 +15029,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55
@@ -15083,7 +15112,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R7BB105
+      mpn: CC0603KRX7R9BB105
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -15109,9 +15138,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '7'
-        row: 7 = 16 V
-        means: 16 V
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
       - field: process
         code: BB
       - field: value
@@ -15120,8 +15149,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C106248
-      read: 'JLCPCB parts library: CC0603KRX7R7BB105, YAGEO, 0603, stock 922240, expand library'
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826072, expand library'
     grade:
       range_c:
       - -55
@@ -15411,16 +15440,16 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603JRNPO9BN102
+      mpn: CC0603JRNPO0BN102
       status: UNRESOLVED
       reason_class: DOCUMENT_OWED
       reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
-        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO9BN102 (YAGEO)'
-      next_action: file the maker's sheet that prints CC0603JRNPO9BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0603JRNPO0BN102 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0603JRNPO0BN102 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
     rule_c_d3b: null
     order_code:
-      code: C106246
-      read: 'JLCPCB parts library: CC0603JRNPO9BN102, YAGEO, 0603, stock 1949201, expand library'
+      code: C113793
+      read: 'JLCPCB parts library: CC0603JRNPO0BN102, YAGEO, 0603, stock 100133, expand library'
     grade:
       range_c:
       - -55
@@ -15847,7 +15876,7 @@ drafted_identities_l6r2_passives:
     state: SELECTED
     identity:
       maker: YAGEO
-      mpn: CC0603KRX7R9BB104
+      mpn: CC0603KRX7R0BB104
       status: RESOLVED
       datasheet:
         path: v2/vendor/passives/yageo-cc-series.pdf
@@ -15873,9 +15902,9 @@ drafted_identities_l6r2_passives:
       - field: dielectric
         code: X7R
       - field: voltage
-        code: '9'
-        row: 9 = 50 V
-        means: 50 V
+        code: '0'
+        row: 0 = 100 V
+        means: 100 V
       - field: process
         code: BB
       - field: value
@@ -15884,8 +15913,8 @@ drafted_identities_l6r2_passives:
         row: 2 significant digits+number of zeros
     rule_c_d3b: null
     order_code:
-      code: C14663
-      read: 'JLCPCB parts library: CC0603KRX7R9BB104, YAGEO, 0603, stock 58118460, base library'
+      code: C113803
+      read: 'JLCPCB parts library: CC0603KRX7R0BB104, YAGEO, 0603, stock 1777463, expand library'
     grade:
       range_c:
       - -55

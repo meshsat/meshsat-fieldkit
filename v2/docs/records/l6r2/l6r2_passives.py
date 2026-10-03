@@ -87,6 +87,12 @@ CLASS_RANGE = {"X7R": (-55, 125), "X7S": (-55, 125), "X8R": (-55, 150), "X5R": (
 # the pending drafts of each generator, in the order they apply: Layer 4's change list (L4-E9's cons_changes), then the drafts
 # of the review of decision 31 (d8dec31) that the change list does not name; s117's two are already applied (both refuse)
 D8 = "v2/docs/records/d8dec31"
+# round 3 (criterion 6.4, the Coilcraft lands): KiCad 9.0.9's four XAL footprints read by read_kicad_footprints.py, and Coilcraft's
+# two series sheets (in git); SERIES_LAND is each sheet's one recommended land as its page 4 prints it (pad width, pad length,
+# pad centres, mm), checked against the page text and against the KiCad pads
+KICAD_XAL = REC + "/inputs/kicad-xal-footprints-9.0.9.json"
+XAL_DOC = {"XAL40": "v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf", "XAL60": "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf"}
+SERIES_LAND = {"XAL40": ("0,98", "3,4", "2,37"), "XAL60": ("1,43", "5,50", "4,04")}
 STANDALONE = {"a": [D8 + "/apply_gen_sch_a_mainpb.py"], "e": [D8 + "/apply_gen_sch_e_pod.py"], "d": [D8 + "/apply_gen_sch_d_ptt.py"]}
 D8_STYLE = (D8 + "/",)    # these take <generator> <netlist> and write unless --check
 
@@ -198,7 +204,9 @@ def classify(s):
             why = "names %s (a Layer 4 or earlier selection; Coilcraft parts are hand-fit, not in JLCPCB's catalogue)" % req.get("named_part")
             pm = re.search(r"XAL(\d{4})", str(req.get("named_part"))); lm = re.search(r"XAL(\d{4})", land)
             if pm and lm and pm.group(1) != lm.group(1):
-                why += "; LAND: the part is an XAL%s and its land is drawn for the XAL%s (the two makers' land patterns are to be compared before layout)" % (pm.group(1), lm.group(1))
+                why += ("; LAND: the part is an XAL%s and its footprint is drawn for the XAL%s; Coilcraft draws one land for the series and the two"
+                        " KiCad footprints' copper is identical, the body height differs: this record's round 3 land draft moves the row to the"
+                        " XAL%s footprint (section 6)" % (pm.group(1), lm.group(1), pm.group(1)))
             return "SPECIAL", why
         return "OPEN", "a %s whose deciding properties beyond the inductance (tolerance, Q, self-resonance, current) the value does not state: %r" % (ik, val)
     if pre in ("D", "LED") and land.startswith("LED_0603"):
@@ -541,7 +549,8 @@ def choose(d, cat):
         res2 = choose(d2, cat)
         if res2.get("pick") and res2["state"] in ("SELECTED", "LOW_STOCK"):
             res2["c_d3b"] = "rule C-D3b: no X7R line read meets the value, land and rating with stock; an X5R part is taken and the hot-spot question is OPEN"
-            res2["design_judged"] = res["design_judged"]
+            # the design's code is judged on the requirement rule C-D3b leaves (round 3: lcsc_fill.py declares these lines in
+            # CD3B_X5R, and its property test judges them the same way); the X5R itself stays a finding (the hot-spot question)
             return res2
         res["pick"] = None; res["alt"] = None; res["state"] = "NO_MATCH"
         near = sorted(judged, key=lambda j: (sum(1 for x in j["lines"] if x[3] != "MEETS"), -(j["stock"])))
@@ -665,6 +674,129 @@ def run_draft(rel, target, net):
 def compose(board, entries):
     """Commutation: the chain (and each standalone draft) then this draft gives the same text as this draft then the chain."""
     import l6r2_apply
+
+    def mine(text):
+        st, new, why = l6r2_apply.apply_text(text, board, entries)
+        return new if st == "OK" else None
+    return commute(board, mine)
+
+
+def compose_land(board):
+    """The round 3 land draft's commutation: with the Layer 4 chain, each standalone draft, this record's own LCSC draft of the
+    board, and all of them applied together (chain, standalone, LCSC) in either order against the land draft."""
+    import l6r2_land
+
+    def mine(text):
+        st, new, why = l6r2_land.apply_text(text, board)
+        return new if st == "OK" else None
+    own = REC + "/apply_gen_sch_%s_lcsc.py" % board
+    chain = change_chain(board)
+    together = chain + STANDALONE.get(board, []) + [own]
+    return commute(board, mine, extra=[[own]] + ([together] if together != [own] else []))
+
+
+def _fp_maps(text):
+    """The generator's footprint map: `FP = {...}` and every `FP.update({...})` at module level, read by ast; the entries whose key
+    and value are literals (a computed entry is left out: none of the inductor keys is computed)."""
+    fp = {}
+
+    def take(d):
+        for k, v in zip(d.keys, d.values):
+            try:
+                fp[ast.literal_eval(k)] = ast.literal_eval(v)
+            except ValueError:
+                continue
+    for n in ast.parse(text).body:
+        if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "FP" for t in n.targets) and isinstance(n.value, ast.Dict):
+            take(n.value)
+        elif (isinstance(n, ast.Expr) and isinstance(n.value, ast.Call) and isinstance(n.value.func, ast.Attribute) and n.value.func.attr == "update"
+              and isinstance(n.value.func.value, ast.Name) and n.value.func.value.id == "FP" and n.value.args and isinstance(n.value.args[0], ast.Dict)):
+            take(n.value.args[0])
+    return fp
+
+
+def lands():
+    """Round 3, criterion 6.4 for the named Coilcraft inductors: every fitted row of the six committed netlists whose value names
+    an XAL part of one series and whose footprint is drawn for another, with the maker's evidence and the KiCad library's, and
+    what the land drafts do to the generator's footprint map. Exit 3 if an input does not read as recorded."""
+    import l6r2_land
+    kd = json.load(open(os.path.join(TOP, KICAD_XAL), encoding="utf-8"))["footprints"]
+    sheet = {}
+    for fam, rel in XAL_DOC.items():
+        p1, p4 = PI.page_text(os.path.join(TOP, rel), 1), PI.page_text(os.path.join(TOP, rel), 4)
+        parts = {"%s-%s" % (m.group(1), m.group(2)): float(m.group(3)) for m in re.finditer(r"(XAL\d{4})-(\d{3})ME_\s+([\d.]+)", p1)}
+        height = {m.group(1): float(m.group(2) + "." + m.group(3)) for m in re.finditer(r"-(\d{3})\s+0\.\d{3} / (\d)[,.](\d)", p4)}
+        if not parts or not height: die(3, "%s: the part table or the height table does not read" % rel)
+        land_printed = all(x in p4 for x in SERIES_LAND[fam]) and "Recommended" in p4 and "Land Pattern" in p4
+        sheet[fam] = dict(parts=parts, height=height, land_printed=land_printed, doc=rel)
+    rows = []
+    for b in ORDER:
+        rs, _ = PI.rows(boards=[b])
+        for r in rs:
+            m = re.search(r"\b(XAL\d{4})-(\d{3})ME\b", r["value"]); lm = re.search(r"L_Coilcraft_(XAL\d{4})-XXX", r["land"])
+            if not (m and lm) or m.group(1) == lm.group(1): continue
+            fam = m.group(1)[:5]
+            sh = sheet.get(fam)
+            if sh is None: die(3, "no Coilcraft sheet held for %s" % m.group(0))
+            named, fpser = "%s-%s" % (m.group(1), m.group(2)), lm.group(1)
+            uh = sh["parts"].get(named)
+            same_l = sorted(k for k, v in sh["parts"].items() if k.startswith(fpser + "-") and v == uh)
+            f_old, f_new = kd.get("L_Coilcraft_%s-XXX" % fpser), kd.get("L_Coilcraft_%s-XXX" % m.group(1))
+            if not (f_old and f_new): die(3, "the KiCad reading lacks %s or %s" % (fpser, m.group(1)))
+            hx = lambda f: float(re.search(r"x([\d.]+)mm", f["descr"]).group(1))
+            pads_eq = [(p["at"], p["size"]) for p in f_old["pads"]] == [(p["at"], p["size"]) for p in f_new["pads"]]
+            pd = f_new["pads"]
+            pad_fig = (pd[0]["size"][0], pd[0]["size"][1], round(abs(pd[1]["at"][0] - pd[0]["at"][0]), 3))
+            land_eq_sheet = tuple(float(x.replace(",", ".")) for x in SERIES_LAND[fam]) == pad_fig
+            rows.append(dict(board=b, ref=r["ref"], value=r["value"], land=r["land"], named=named, uh=uh, fp_series=fpser, same_inductance_in_fp_series=same_l,
+                             h_named=sh["height"].get(m.group(2)), h_fp_model=hx(f_old), h_named_model=hx(f_new), pads_eq=pads_eq,
+                             outline_eq=f_old["outline"] == f_new["outline"], pad_fig=pad_fig, land_eq_sheet=land_eq_sheet, land_printed=sh["land_printed"],
+                             doc=sh["doc"], drafted=l6r2_land.ROWS.get(b, {}).get(r["ref"])))
+    drafts = {}
+    for b in l6r2_land.EDITS:
+        g0 = open(os.path.join(TOP, GEN[b]), encoding="utf-8").read()
+        st, new, why = l6r2_land.apply_text(g0, b)
+        fp0, fp1 = _fp_maps(g0), (_fp_maps(new) if new else {})
+        drafts[b] = dict(state=st, why=why, keys_added=sorted(set(fp1) - set(fp0)), keys_changed=sorted(k for k in fp0 if fp1.get(k) != fp0[k]),
+                         fp=fp1, sha=hashlib.sha256(new.encode()).hexdigest()[:16] if new else None)
+    return dict(rows=rows, sheet=sheet, kicad=kd, drafts=drafts)
+
+
+def land_report(L, comp_land):
+    import l6r2_land
+    P = print
+    P("6. ROUND 3: THE COILCRAFT LANDS (criterion 6.4; a part drawn on the footprint of another body)")
+    P("   KiCad's footprints: %s (library 9.0.9, read %s; pads, courtyard, fab and silk extents and the model path per file)" % (KICAD_XAL, json.load(open(os.path.join(TOP, KICAD_XAL)))["read_utc"]))
+    for fam, sh in sorted(L["sheet"].items()):
+        P("   Coilcraft %sxx (%s): one recommended land for the series, page 4 prints %s mm (pad width, length, centres): %s" % (
+            fam, sh["doc"], " / ".join(SERIES_LAND[fam]), "printed" if sh["land_printed"] else "NOT FOUND on the page"))
+    for r in L["rows"]:
+        P("   board %s %s [%s] on %s:" % (NAME[r["board"]], r["ref"], r["value"], r["land"]))
+        P("     the value names %sME, %s uH, %s mm high at most (the sheet's dash table); the footprint's series %s has %s at %s uH" % (
+            r["named"], r["uh"], r["h_named"], r["fp_series"], ", ".join(r["same_inductance_in_fp_series"]) or "no part", r["uh"]))
+        P("     KiCad: the two footprints' pads %s, outlines %s; the pads %.2f x %.2f mm at %.2f mm %s the sheet's land; the model heights %.1f (drawn) and %.1f mm (named)" % (
+            "identical" if r["pads_eq"] else "DIFFER", "identical" if r["outline_eq"] else "DIFFER", r["pad_fig"][0], r["pad_fig"][1], r["pad_fig"][2],
+            "equal" if r["land_eq_sheet"] else "DIFFER FROM", r["h_fp_model"], r["h_named_model"]))
+        verdict = ("the copper is right and the drawn body is %.1f mm %s than the part; the footprint's series makes no %s uH part, so the value"
+                   " names the part and the FOOTPRINT KEY is the defect" % (abs(r["h_named"] - r["h_fp_model"]), "lower" if r["h_fp_model"] < r["h_named"] else "higher", r["uh"])) \
+            if (r["pads_eq"] and r["outline_eq"] and r["land_eq_sheet"] and not r["same_inductance_in_fp_series"]) else "NOT DECIDED: the evidence above does not settle it"
+        P("     %s; %s" % (verdict, ("drafted: apply_gen_sch_%s_xal_land.py moves it to %s" % (r["board"], r["drafted"][1])) if r["drafted"] else "NO DRAFT (a finding)"))
+    for b, d in sorted(L["drafts"].items()):
+        P("   apply_gen_sch_%s_xal_land.py on the committed generator: %s, %s; keys added %s (%s)" % (
+            b, d["state"], d["why"], ", ".join(d["keys_added"]) or "none", "; ".join("%s -> %s" % (k, d["fp"][k]) for k in d["keys_added"])))
+        P("     keys whose footprint changed: %s; the drafted generator's sha256 %s" % (", ".join(d["keys_changed"]) or "none", d["sha"]))
+        for n in comp_land[b]["notes"]: P("     %s" % n)
+    moved = sorted((r["board"], r["ref"]) for r in L["rows"] if r["drafted"])
+    P("   %d rows on the six boards draw an XAL part on another series' footprint; %d are moved by the two drafts; the rest: %s" % (
+        len(L["rows"]), len(moved), ", ".join("%s %s" % (NAME[r["board"]], r["ref"]) for r in L["rows"] if not r["drafted"]) or "none"))
+    P("   Downstream (not done here): the regenerated boards B and E carry the new footprint names; v2/cad/zstack.py's reading takes the 3D")
+    P("   model's height at the next z-stack run (zstack-models.json holds no XAL6030 model yet: the box reads it), which lowers board B's six")
+    P("   buck33 inductors from 6.1 to 3.1 mm (CASE-FIT-UNCERTAINTIES.md section 4 item 1 counted them at 6.10 under 6.0 envelopes) and")
+    P("   raises B L1 and E L3 from 2.1 to 3.1 mm.")
+    P()
+
+
+def commute(board, mine, extra=()):
     gen0 = open(os.path.join(TOP, GEN[board]), encoding="utf-8").read()
     chain = change_chain(board)
     res = dict(chain=chain, standalone=STANDALONE.get(board, []), ok=True, notes=[])
@@ -679,11 +811,7 @@ def compose(board, entries):
                 if rc != 0: return None, "%s refused: %s" % (rel, last[0][:160])
             return open(p, encoding="utf-8").read(), None
 
-        def mine(text):
-            st, new, why = l6r2_apply.apply_text(text, board, entries)
-            return new if st == "OK" else None
-
-        for drafts in ([chain] if chain else []) + [[s] for s in res["standalone"]]:
+        for drafts in ([chain] if chain else []) + [[s] for s in res["standalone"]] + [list(x) for x in extra]:
             a, err = apply_list(gen0, drafts)
             if a is None: res["ok"] = False; res["notes"].append("the other drafts alone: %s" % err); continue
             am = mine(a)
@@ -697,7 +825,7 @@ def compose(board, entries):
             res["ok"] = res["ok"] and same
             if drafts is chain:
                 res["touched"] = touched_refs(gen0, a)
-        if not chain and not res["standalone"]:
+        if not chain and not res["standalone"] and not extra:
             b0 = mine(gen0); res["ok"] = b0 is not None
             if b0 is not None: ast.parse(b0)
             res["notes"].append("no other pending draft names this generator: this draft applies to the bare generator (ast parses)" if b0 else "REFUSED on the bare generator")
@@ -852,7 +980,7 @@ def report(B, cat, TAB, comp, bomc):
     P("parts library, read %s (inputs/). A stock figure or a price is true at its time only. Nothing reselected: specials are findings." % cat.get("read_utc"))
     P()
     P("0. THE PINS (sha256 of every input)")
-    pins = [ENVELOPE, LCSC_FILL, CERT, TABLE, BLOCKED, MISMATCH, CATALOGUE, BOM_TOOL, L4E9, REGISTER, YAGEO_DOC] + [GEN[b] for b in ORDER] + [NET[b] for b in ORDER] + [INTENT[b] for b in ORDER]
+    pins = [ENVELOPE, LCSC_FILL, CERT, TABLE, BLOCKED, MISMATCH, CATALOGUE, BOM_TOOL, L4E9, REGISTER, YAGEO_DOC, KICAD_XAL, XAL_DOC["XAL40"], XAL_DOC["XAL60"]] + [GEN[b] for b in ORDER] + [NET[b] for b in ORDER] + [INTENT[b] for b in ORDER]
     for rel in pins:
         P("   %s %s" % (sha256(rel), rel))
     if sha256(BOM_TOOL) != BOM_TOOL_FROM["sha256"]: die(2, "inputs/bom_from_netlist.py is not the file copied from %s" % BOM_TOOL_FROM["commit"])
@@ -1007,6 +1135,9 @@ def main(argv):
     print("   6.1 moves for the generic rows of the six boards from OPEN to PARTLY: each selected row carries a maker, an MPN, a package, a code and a")
     print("   grade; the identity is DECODED on the maker's own ordering table where it is a YAGEO CC X7R or UNI-ROYAL part, else the catalogue's")
     print("   line (DOCUMENT_OWED). The specials and the open requirements stay findings. Nothing is applied: the drafts are release-guarded.")
+    print()
+    import l6r2_land
+    land_report(lands(), {b: compose_land(b) for b in l6r2_land.EDITS})
     return 0
 
 
