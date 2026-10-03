@@ -111,7 +111,7 @@ PINS = {
     "tps63070": ("v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf", "a88ef66f3493156ff6e7da0849de0e0e1068647f2553d08c1844d4a90c5c65ef"),
     "xal60": ("v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf", "236888dabe560055e7eb40e24b8bf938db132b66a0e9f1a3c512fb3b04361681"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "083462bf4e982dc221185aacc22595e59c2b5a09cce4e9a9702969e819fbc3f5"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
