@@ -10,7 +10,9 @@ or a dated public price reading (`inputs/price-readings-2026-10-03.json`). The d
 answers the copper question on boards A and E** as a candidate copper-sizing result, not completed fault-protection
 verification: the pack path sized at the blades' 25 A with a band's faces and its adjacent return rated as one conductor, the
 coordination table and the open owner decision (L9STK CU) on the outer copper weight, from `l9stk_copper.py` and its output; it
-supersedes the copper widths of sections 3 and 7.
+supersedes the copper widths of sections 3 and 7. **Section 15 (4 October 2026, the owner's correction) designs W4DP-F2's
+firmware-independent element** on a current-and-time criterion: an LM5069-2 breaker on board P, drafted, with Q39/Q40's installed
+path strengthened, from `l9stk_protection.py` and its output.
 
 **What this page is for.** The supplier does the layout (`v2/docs/handover/supplier/SUPPLIER-HANDOVER.md` section 8,
 phase 3), so each decision below is the stackup design input that supplier receives: layer count, layer roles, copper
@@ -304,7 +306,12 @@ surcharge NOT READ).
 - `python3 v2/docs/records/l9stk/apply_energy_chain_l9stk.py --check` (it refuses until the register carries this record's
   board A and board E decisions); the integrator runs it with `--write` after `apply_decisions_l9stk.py`, instead of record
   l8r2's `apply_energy_chain_e1oz.py`.
-- `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_public_hygiene`.
+- `python3 v2/docs/records/l9stk/fetch_held_back.py` once (it fetches TI's SLVA673A into the ignored `v2/vendor/ti/held/` and
+  checks its sha256), then `python3 v2/docs/records/l9stk/l9stk_protection.py` from the repository root (PyYAML, pdftotext and
+  the copper script); its committed output `l9stk_protection.out` is regenerated only through `_bin/regen_out.py`, after
+  `l9stk_copper.out`, whose sha256 it pins.
+- `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_energy_chain test_public_hygiene` (the protection tests skip,
+  named, where SLVA673A is not held).
 
 ## 14. The pack path's copper on its basis (the copper question, revised 4 October 2026)
 
@@ -347,11 +354,12 @@ round 3 (`fnd/l8r3` at `854a2bf5`, merged here for its drafts) raised the confli
   - 14.60, 23.44 and 2.76 mm rest on the same single-face basis.
 - **The copper decision: 1 oz is not shown to be layable at these widths.** On board E the pack band and its return need
   78.29 mm a face, more than the 68 mm strip. Board A needs a 78.29 mm corridor its floor plan has not shown.
-  - The outer weight is the **OWNER DECISION (L9STK CU)**: 2 oz, or 1 oz with a layout change (14.9).
+  - The outer weight is the **OWNER DECISION (L9STK CU)**: 2 oz, or 1 oz with a layout change (14.7).
   - At 2 oz the band and its return take 39.14 mm a face.
 - **The protection.** Parts, not copper, limit every overload row beyond the 25 A case.
   - Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A.
-  - These rows need **W4DP-F2's** firmware-independent element (14.7).
+  - These rows need **W4DP-F2's** firmware-independent element: section 15 designs it (an LM5069-2 breaker on board P,
+    drafted) and asks Q39/Q40's installed path at 24.37 K/W.
 
 ### 14.2 The currents by class (out 1)
 
@@ -497,9 +505,10 @@ covers any shorter time; above it, a time under 60 s needs a short-time rating n
 
 **A coupon never stands in for a known rating violation:** those rows carry (b).
 
-**W4DP-F2 stays open.** Its closure criterion is a firmware-independent element that opens the discharge path at or below the
-cells' 24 A at 3P even with board P's FETs welded. It must also open before Q39/Q40 pass 150 C: 21.38 A held from the +70 C air
-on E11-29's 33.12 K/W, or 20.53 A from 76.25 C.
+**W4DP-F2 stays open.** Its closure is a current-and-time criterion for every series part with board P's FETs welded and no
+firmware (section 15.1), not one current: Q39/Q40 pass 150 C at 21.38 A held from the +70 C air and 20.53 A from 76.25 C
+(derived on E11-29's 33.12 K/W target), under the cells' 24 A, so a trip allowed at 24 A leaves them at 161.0 C at 22 A and
+168.8 C at 23 A from 76.25 C. Section 15 selects the element and the strengthening.
 
 ### 14.7 The copper decision, and the OWNER DECISION
 
@@ -541,7 +550,7 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 |---|---|
 | L9C-F1: the energy chain's conductor texts and the 25 A blade's ATOF citation; `apply_energy_chain_l9stk.py` replaces record l8r2's draft | the integrator; the energy chain's writer |
 | L9C-F2: BOARD_A_CONVERTERS claims board A's own copper into each converter at 25 A; a branch is sized at its load, and a branch fault under OCD1's 20 A is cleared by nothing | the energy chain's writer; board A's generator owner |
-| L9C-F3: W4DP-F2 stays open with the closure criterion of 14.6; Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A, the dock contacts 9 A a pin above 36 A | W4DP-F2's owner (the battery stream) with L4-E11 |
+| L9C-F3: W4DP-F2 stays open with section 15's current-and-time criterion (not one current); Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A, the dock contacts 9 A a pin above 36 A | W4DP-F2's owner (the battery stream) with L4-E11 |
 | L9C-F4: R19 (3 W) passes its rating at 17.32 A inside F1's 600 s interval; a shunt whose rating covers 20 A held | L4-E11 |
 | L9C-F5: J_DCIN's JST VH prints 10 A (AWG 16) and 105 C under L4-E11's 20 A; D-06's 30 A class connector | L4-E11, Layer 7 |
 | L9C-F6: the Keystone 3568 prints no current rating; a MINI 297/997 holder whose maker prints at least the coordination current | Layer 6/7 |
@@ -554,3 +563,174 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 | L9C-F13: the blades' total clearing I2t (25 A at 16.8 V, and F1's at 58 V, E11-16) | the battery stream; L4-E11 |
 | L9C-F14: TRK_OUT and the solar input have no stage in the energy chain; VIN_RAW's return path on board E is not declared | the energy chain's writer; L4-E7's owner |
 | L9C-F15: the supplier's quotation states the laminate's maximum operating temperature and the 2 oz price beside the 1 oz rows | the supplier handover's author |
+| L9C-F16: W4DP-F2's element drawn into board P: the LM5069-2 breaker of 15.4 (DD-1), its layout (IF-2) and its energy chain stage (IF-3) | board P's generator; W4DP-F2's owner; the integrator |
+| L9C-F17: E11-29 retargeted to (Zself + Zmut) at most 24.37 K/W from 76.25 C, so Q39/Q40 hold the breaker's largest limit (DD-2, E-1) | L4-E11 |
+| L9C-F18: board A's loads on VSYS held off during the breaker's start, at most 40.7 ms, or tied to its PGD (IF-1) | L4-E11; board A's generator |
+| L9C-F19: the power limit's accuracy at 5.05 mV and VIN to SENSE in a hot short: Q-TI-L9S-1 (drafted, not sent) and the supplier's E-2 and E-3 | the battery stream; the supplier handover's author |
+
+## 15. The pack path's protection: W4DP-F2's element (the owner's correction, 4 October 2026)
+
+**Status.** A drafted protection design: desk arithmetic, not drawn into board P's generator, nothing built, bought or
+measured. Every figure is printed by `l9stk_protection.py` into `l9stk_protection.out` ("prot N" is its section) from inputs
+pinned by sha256. The calculation basis is TI's application report SLVA673A, "Robust Hot Swap Design" (equations 4 to 7, its
+2.4 on parallel FETs, its 3.1.2.2, 3.1.2.5 and 3.2.2.7 checks), applied to the LM5069's sheet (SNVS452G). SLVA673A carries
+no grant to redistribute: it is held back in the ignored `v2/vendor/ti/held/`, and `fetch_held_back.py` fetches it and checks
+its sha256 (`ea1604c5...`). The CSD18510Q5B's safe operating area is read from its Figure 10 at 300 dpi
+(`inputs/csd18510q5b-figure-readings-2026-10-04.json`, plus or minus 10 %).
+
+### 15.1 The criterion (the owner's, replacing "at or below 24 A")
+
+The element is judged on current AND time for every series part, not on one current:
+- the service is never interrupted: 10 A held and 18 A for 60 s;
+- every series part stays within its limits across the credible overload range, including any current under the trip held
+  indefinitely;
+- with board P's FETs welded and no firmware;
+- with the tolerances, the detection and turn-off delays, the initial temperature (L4-E12's 76.25 C plus each part's own
+  heating) and the retry's heating;
+- the element itself within its voltage, current, thermal and SOA limits.
+
+### 15.2 Board P's existing protection with its FETs welded (prot 1)
+
+None meets it. The gauge's OCD1/OCD2, the AFE's AOLD/ASCD and the PTC act through the welded Q1/Q2. The second level U2 has no
+current input. F2's heater is fired by U2 or the gauge's FUSE output (firmware). F2's element assures no opening under 60 A,
+the blades none under 33.75 A, both above the limiting part's 150 C current below. So a minimal addition is designed.
+
+### 15.3 The limiting part and its uncertainty (prot 2)
+
+Q39/Q40, board A's battery FETs (L4-E11). Their 150 C current is **derived, not a rating**: RDS(on) at L4-E11's 150 C bound
+(21.136 mOhm each), the installed path at E11-29's **target** of 33.12 K/W (not a measurement); with both FETs at the bound the
+even split gives each the largest loss.
+
+| Installed path | From +70 C | From 76.25 C |
+|---|---|---|
+| 20 % lower (26.50 K/W) | 23.90 A | 22.95 A |
+| as targeted (33.12 K/W) | **21.38 A** | **20.53 A** |
+| 20 % higher (39.74 K/W) | 19.52 A | 18.74 A |
+
+**The 22 to 23 A exposure is confirmed.** A trip allowed at the cells' 24 A leaves 22 A held at TJ 154.7 C (+70 C) or 161.0 C
+(76.25 C), 23 A at 162.6 or 168.8 C, 24 A at 170.8 or 177.1 C. A single current is not a protection criterion.
+
+### 15.4 The selected correction: coordinate AND strengthen (prot 3)
+
+**(1) An LM5069-2 circuit breaker on board P**, from Q2's source to PACK_P. It acts on current alone, set by resistors and
+capacitors; no firmware, and Q1/Q2 are not in its path. The controller is the part board E's U6 already uses (LCSC C111822),
+the FETs the part board A's PA stage already uses (C2876544), the clamp the part on board A's VBAT: no new part family.
+
+| Item | Value | From |
+|---|---|---|
+| Sense RS | 4 mOhm and 7.5 mOhm in parallel, 2.6087 mOhm, 1 % and at most 50 ppm/K: plus or minus 1.5 % over 100 K | its window 2.6015 to 2.6546 mOhm |
+| Current limit | 18.32 least, 21.08 typical, **23.93 A largest** (VCL 48.5 to 61.5 mV, TJ -40 to 125 C) | at most the cells' 24 A; above the 18 A service; typical 17 % over it (TI asks 10 %) |
+| Breaker | 30.21 to 50.59 A (VCB 80 to 130 mV), release 16.5 us after it (tCB 1.2 us, 690 nC at 45 mA) | the sheet's least sink current |
+| Power limit | RPWR 8.45 kOhm (equation 9 at the 5 mV floor, next E96 up): 32.52 W, VSNS 5.05 mV; 24.71 to 40.32 W with the table's spread read as a ratio | the table prints the spread at 25 mV only (E-2, Q-TI-L9S-1) |
+| Fault timer | 10 nF, 0.282 to 0.897 ms; the gate off 395 us later (1.75 mA): **clearing at most 1.292 ms** from the limit's onset | VTMRH, ITIMER at their limits |
+| dv/dt start | 22 nF into 593 uF (VSYS 489, CELL_FUSED 104): **inrush at most 0.659 A**, 40.7 ms at most; 11.1 W, under the power limit's least 24.7 W, so the timer never runs | SLVA673A 2.2.2, 3.2.2.7 |
+| Retry (-2) | duty at most 1.33 % (0.5 % typical), dwell at most 0.222 s, 0.53 W average in a persistent fault | the timer's currents at their limits |
+| FETs | 2 x CSD18510Q5B, 40 V, VGS 20 V against the gate's 12.6 V, IDM 400 A | each on its own 1 in2 2 oz pad (IF-2) |
+| FETs held at 23.93 A | 0.247 W each, case 101.0 C with both losses through one pad, junction 101.2 C (TI asks under 125 C) | equation 4, RDS(on) x1.8 at 150 C |
+| FET SOA at 16.8 V | case 103.0 C retrying, derating 0.376 (equation 5); the fault pulse 40.32 W for 1.292 ms against 71.1 W: **0.57**; the start 11.1 W for 20.3 ms against 19.0 W (DC line): **0.58**; TI asks at most 0.67; with the figure's 10 % against them 0.63 and 0.65 | equations 5 to 7 |
+| Input clamp | SMCJ18A on VIN: VR 18 V over the pack's 16.8 V, VC 29.2 V at 51.4 A, under the FETs' 40 V and over the breaker's 50.59 A | the sheet's 9.2.1.2.7 |
+| Controller | VIN 9 to 80 V recommended, on from 9 V at most; the pack 10.6 to 16.8 V; UVLO to VIN, OVLO to ground | |
+
+**(2) Strengthen Q39/Q40's installed path to at most 24.37 K/W from 76.25 C** (26.43 K/W from +70 C), so the breaker's largest
+held current keeps them under 150 C. This retargets E11-29 (33.12 K/W today), L4-E11's, with (L9STK CU)'s copper as their
+spreader. Until it closes, the held row is a DESIGN DEFECT (DD-2).
+
+**(3) Coordinate with the firmware.** The gauge's OCD1/OCD2 stay the first level while Q1/Q2 work. A unit whose actual limit is
+under OCD1's 20 A acts first, in 1.29 ms (IF-4); no setting changes.
+
+**Not taken (prot 3).**
+- A breaker limited to the pair's 20.53 A: its least limit would be 15.71 A, under the 18 A service, so the service would be
+  weakened.
+- A blade that opens under the pair's 150 C current: it would be at most 15.21 A, and the 18 A service at 118 % of it lies
+  between the row that holds (110 %) and the row that opens (135 %), so carrying the service is not assured.
+
+**What the design relies on.** The power limit. Without it the FET would see 402.1 W (VIN times the largest limit), over its
+SOA. With the table's spread read as an offset instead of a ratio, the fault pulse reaches 1.00 of the derated SOA. The power
+limit's accuracy at 5.05 mV is therefore evidence owed (E-2) and a maker question (Q-TI-L9S-1).
+
+### 15.5 Every series part held at 23.93 A from 76.25 C (prot 4)
+
+| Part | Reading | Fraction | Status |
+|---|---|---|---|
+| the cells, 3P of 8 A | 7.98 A a cell at an even split | 1.00 | printed; the parallel split NOT HELD (E-5) |
+| **Q39/Q40** | **TJ 176.5 C at 33.12 K/W** | **1.36** | **DESIGN DEFECT DD-2**: held at 24.37 K/W or less |
+| Q1/Q2 on board P (CSD17570Q5B) | 0.711 W each; TJ 111.8 C on its own pad, 147.4 C with both losses through one pad | 0.96 | derived; the x1.8 is the CSD18510Q5B's (ASSUMPTION, E-8) |
+| the breaker's FETs | TJ 101.2 C | 0.51 of TI's 125 C | derived (IF-2) |
+| R17 (5 W) | 2.86 W | 0.57 | derating NOT HELD (E-6) |
+| R10 on board P (2 W) | 1.15 W | 0.57 | derating NOT HELD (E-6) |
+| the breaker's sense | 0.97 W in 4 mOhm, 0.52 W in 7.5 mOhm | | a requirement on Layer 6's parts: 2 W each at the band's temperature |
+| the XT60 (30 A) | 23.93 A | 0.80 | printed |
+| the dock contacts | 5.98 A a pin at an even split | 0.66 | the split NOT HELD (E-4) |
+| the 25 A blades | 95.7 % of rating | 0.87 of the 110 % hold | the rerating at 76.25 C NOT HELD (E-7) |
+| F2's element (30 A) | 79.8 % | 0.80 | printed |
+| the copper, 2 oz family | 9.16 K | 0.92 of 10 K | section 14 |
+| the barrel field | 0.75 A a barrel, 7.62 K | 0.76 | section 14 |
+| the 3568 holder | no current rating | | DESIGN DEFECT DD-4 |
+
+### 15.6 The protection table (prot 5)
+
+| Case | Current, duration | Largest actual trip threshold | Longest clearing time | Limiting component | Margin | Evidence |
+|---|---|---|---|---|---|---|
+| 10 A continuous | 10.0 A held | none reached (18.32 A least) | not a fault | the XT60, 0.33 of 30 A | 0.67 | printed |
+| 18 A for 60 s | 18.0 A, 60 s | none reached (18.32 A least; 21.08 A typical) | not a fault; firmware ends it | Q39/Q40, TJ 133.0 C | 17.0 K | derived (E11-29 a target) |
+| an overload under the unit's limit, held | 18.00 to 23.93 A, indefinitely | 23.93 A (VCL 61.5 mV, RS -1.5 %) | none: held by design | Q39/Q40, TJ 176.5 C at 33.12 K/W | **OVER 26.5 K**; 0 at 24.37 K/W | **DESIGN DEFECT DD-2** (L4-E11) |
+| an overload over the unit's limit | limited to 23.93 A at most, then off | 23.93 A | 1.29 ms from the onset (timer 0.897, gate 0.395); regulated after tCL (45 us typical, no maximum) | the breaker FET, 40.3 W for 1.29 ms against 71.1 W | 0.57 (TI at most 0.67) | derived: the power limit's spread at 5 mV not printed |
+| a hot short, board P's FETs welded | 240 to 480 A prospective | 50.59 A (VCB 130 mV) | 16.5 us to the release, then as above: 1.31 ms | the breaker FET's peak before the gate is low (the loop's inductance NOT HELD); IDM 400 A | 0.13 of IDM at the breaker (TI's rule); the peak not computable | **MISSING** (E-3, Q-TI-L9S-1) |
+| a start into a short | 2.40 A at most | the power limit | 1.29 ms | the breaker FET, as above | 0.57 | derived |
+| a start (the gauge's FET on, a retry, assembly) | 0.659 A at most for 40.7 ms | none: 11.1 W under 24.7 W | not a fault | the breaker FET, 11.1 W for 20.3 ms against 19.0 W | 0.58 | derived; IF-1 |
+| docking a live pack | E11-30's 242.9 A peak, cut by the breaker | 50.59 A | 16.5 us to the release; the 2.10 ms charge outlasts the timer: off, 0.22 s dwell, then a start | the breaker FET: 242.9 A against IDM 400 A; the 10 us line 244.1 A at 16.8 V | 0.61 of IDM; 0.99 of the 10 us line | derived; **MISSING** (E-3) |
+| a persistent fault, retrying | the power limit at 1.33 % duty at most | as above | each try as above | the breaker FET, 0.53 W average, case 103.0 C | inside the derating above | derived |
+| the shore input, Q7 shorted | F1's envelope (not through board P) | F1, 10 A MINI | section 14.6 | J_DCIN, R19 | **OVER** | **DESIGN DEFECT DD-3** (L4-E11) |
+
+**The supported operating envelope** (once DD-1 is drawn and DD-2 closed):
+- 10 A held and 18 A for 60 s from 76.25 C, with no trip on any unit;
+- any current to 18.32 A held on every unit;
+- between 18.32 and 23.93 A, a unit holds or clears by its own threshold;
+- above 23.93 A, every unit clears within 1.29 ms of its limit's onset;
+- no firmware and no working FET of board P in that path.
+
+### 15.7 Design defects, interfaces and the evidence owed (prot 6)
+
+**Design defects** (unresolved; a coupon never stands in for their correction):
+
+| Defect | Owner |
+|---|---|
+| DD-1 W4DP-F2: no firmware-independent element with board P's FETs welded; the breaker of 15.4 is drafted here, not drawn | board P's generator, with W4DP-F2's owner (the battery stream) |
+| DD-2 Q39/Q40 pass 150 C held over 21.38 A (+70 C) or 20.53 A (76.25 C) at E11-29's 33.12 K/W; the breaker's 23.93 A asks 24.37 K/W | L4-E11 (E11-29), with (L9STK CU)'s copper |
+| DD-3 R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6) | L4-E11 |
+| DD-4 the Keystone 3568 holder prints no current rating | Layer 6/7 |
+
+**Interface demands:**
+- **IF-1** board A's loads on VSYS stay off until the breaker's start ends (at most 40.7 ms) or follow its PGD; L4-E11 with
+  board A's generator.
+- **IF-2** each breaker FET on its own pad of at least 1 in2 of 2 oz copper; the controller beside RS; VIN's bypass at RS (the
+  sheet's 11.1); board P's generator.
+- **IF-3** the energy chain gets a stage for the breaker between PACK_FETS and PACK_LEAD (its limit 23.93 A); the integrator.
+- **IF-4** the gauge's levels stay the first level; no setting changes; the firmware owner.
+
+**Missing physical evidence** (specimen; acceptance; supplier task):
+
+| Item | Specimen | Acceptance | Task |
+|---|---|---|---|
+| E-1 Q39/Q40's installed path (E11-29 retargeted) | L4-E11 section 17's coupon, the pack band carrying its current | (Zself + Zmut) at most 24.37 K/W steady from 76.25 C | the body diode's VSD method |
+| E-2 the power limit at its design point | six LM5069-2 on the board P specimen | the shorted-output current at 16.8 V within 1.47 to 2.40 A at -40, 25 and 125 C | the supplier's bench |
+| E-3 the hot short and the live docking | board P with Q1/Q2 bypassed, the 12 AWG lead, boards E and A as built, a charged block | 10 shorts and 100 dockings at a 75 C base: the gate low within 16.5 us of VCB; peak current and VIN to SENSE recorded; VCL read back within 48.5 to 61.5 mV; each FET's RDS(on) within +5 % | the supplier's fault bench |
+| E-4 the dock contacts' split | the fitted lot's four-pin set | the lowest pin at least 0.553 of the highest | each pin at mid-stroke |
+| E-5 the cells' parallel split | each series group of the built block | no cell over 8 A at 23.93 A | the pack builder |
+| E-6 R17, R10 and the breaker's sense derated | the makers' sheets | each at its 15.5 reading at the band's temperature | Layer 6 |
+| E-7 the blades' rerating | Littelfuse 297's rerating curve | 23.93 A held at 76.25 C | Layer 6 |
+| E-8 Q1/Q2's installed path and RDS(on) at temperature | board P's first specimen; the CSD17570Q5B's Figure 8 | TJ under 150 C at 23.93 A from 76.25 C | board P's generator; Layer 6 |
+
+**Maker question, drafted, not sent:** Q-TI-L9S-1 to TI on the LM5069. What is the power limit's accuracy at VSNS 5.05 mV (the
+table prints it at 25 mV)? And what holds for VIN to SENSE above its 0.3 V maximum, which this sense passes above 116.8 A in
+the microseconds before the gate is low in a hot short?
+
+### 15.8 What the recheck covers, and the next deliverable
+
+The changed protection design and its affected interfaces only:
+- `l9stk_protection.py` and its output;
+- the closure text of W4DP-F2 in `l9stk_copper.py` (out 9) and in 14.6;
+- the findings L9C-F3 and L9C-F16 to L9C-F19.
+
+The copper sizing of section 14 is unchanged. **Next deliverable:** board P's generator draft of the breaker (DD-1, IF-2, IF-3),
+by its owner, with L4-E11's E11-29 retargeted (DD-2) and IF-1; then the supplier's E-2 and E-3 on the first board P specimen.

@@ -288,6 +288,11 @@ def compute():
              icl_min=vclmin / (rs * (1 + u)), icl_typ=vcltyp / rs, icl_max=vclmax / (rs * (1 - u)),
              icb_min=I["vcb"][0] / (rs * (1 + u)), icb_max=I["vcb"][2] / (rs * (1 - u)))
     B["share"] = [(x, rs / (x * 1e-3)) for x in RS_PARTS_MOHM]
+    # the alternatives not taken: a limit set at the pair's 150 C current, and a blade small enough to open under it
+    B["alt_icl_max"] = P["i150_t0"]
+    B["alt_icl_min"] = P["i150_t0"] * (vclmin / vclmax) * (1 - u) / (1 + u)
+    B["alt_blade"] = P["i150_t0"] / (C["mini_rows"][1][0] / 100.0)
+    B["alt_blade_pct"] = 100.0 * service / B["alt_blade"]
     B["rs_w"] = [(x, (B["icl_max"] * sh) ** 2 * x * 1e-3) for x, sh in B["share"]]
     plim_floor = I["vsns_min"] * vmax / rs
     B["rpwr"] = e96_up(I["kpwr"] * rs * (plim_floor - I["vpwr_off"] * vmax / rs))
@@ -344,6 +349,8 @@ def compute():
     B["cl_ratio"] = B["cl_bound_w"] / B["fault_soa"]
     B["start_soa"] = soa_power(soa, B["start_teq"]) * B["derate"]
     B["start_ratio"] = B["start_p"] / B["start_soa"]
+    k_read = 1.0 - rd["uncertainty_pct"] / 100.0
+    B["fault_ratio_low"], B["start_ratio_low"] = B["fault_ratio"] / k_read, B["start_ratio"] / k_read
     B["sense_abs_a"] = I["vin_sense_abs"] / (rs * (1 - u))
     R["B"] = B
     # 4. every series part held at the breaker's largest actual limit
@@ -459,6 +466,7 @@ def compute():
     pr["a start never reaches the power limit or the current limit"] = B["start_p"] < B["plim_min"] and B["inrush_max"] < B["icl_min"]
     pr["the fault pulse is inside the derated SOA with TI's 1.5x margin"] = B["fault_ratio"] <= 1 / TI_MARGIN
     pr["the start is inside the derated SOA with TI's 1.5x margin"] = B["start_ratio"] <= 1 / TI_MARGIN
+    pr["both stay within TI's margin with the figure's reading uncertainty taken against them"] = max(B["fault_ratio_low"], B["start_ratio_low"]) <= 1 / TI_MARGIN
     pr["the breaker FETs hold the largest held current under 125 C"] = B["tj_held"] < TI_STEADY_C
     pr["the FET's pulsed rating exceeds the breaker's threshold and the docking peak"] = I["fet_idm"] > max(B["icb_max"], C["dock_pk"])
     pr["the gate's 12.6 V is inside the FET's VGS rating"] = I["vgate"][1] < I["fet_vgs"]
@@ -467,6 +475,8 @@ def compute():
     pr["the controller runs over the pack's range"] = I["vin_roc"][0] <= I["vmin"] and I["poren_max"] <= I["vmin"] and vmax <= I["vin_roc"][1]
     pr["the clamp is a part the kit already uses"] = I["tvs_on_a"]
     pr["a live docking's power-limited charge outlasts the longest timer (it ends in a retry and a dv/dt start)"] = B["t_pl_charge"] > B["tf_max"]
+    pr["a limit at the pair's 150 C current would fall under the service; a blade under it would not carry the service assuredly"] = (
+        B["alt_icl_min"] < service and B["alt_blade_pct"] > C["mini_rows"][0][0])
     pr["Q39/Q40 need a stronger path than E11-29's target at the breaker's largest limit (DD-2 stands)"] = R["rth_need"] < rth
     pr["without the power limit the fault pulse would pass the SOA (the limit is relied on)"] = B["cl_ratio"] > 1.0
     R["pred"] = pr
@@ -514,6 +524,10 @@ def render(R):
     w("     its spread: %.2f to %.2f W with the table's %g/%g/%g mV read as a ratio (the table prints it at 25 mV only); read as an offset, %.2f W" % (
         B["plim_min"], B["plim_max"], I["pwrlim"][0], I["pwrlim"][1], I["pwrlim"][2], B["plim_abs_max"]))
     w("     without the power limit the FET would see %.1f W (VIN x the largest limit): the limit is relied on (E-2, Q-TI-L9S-1)" % B["cl_bound_w"])
+    w("   not taken: a limit whose largest is the pair's %.2f A leaves its least at %.2f A, under the %g A service (it weakens the service);" % (
+        B["alt_icl_max"], B["alt_icl_min"], R["service"]))
+    w("     a blade opening under it within a bounded time is at most %.2f A (its 135 %% row), and the service is %.0f %% of that, between the" % (B["alt_blade"], B["alt_blade_pct"]))
+    w("     110 % row that holds and the 135 % row that opens: no carrying of the service is assured")
     w("   fault timer: %.0f nF (+-%g %%): %.3f to %.3f ms (VTMRH %g to %g V, %g to %g uA)" % (B["ct"] * 1e9, 100 * CAP_TOL, B["tf_min"] * 1e3, B["tf_max"] * 1e3,
         I["vtmrh"][0], I["vtmrh"][1], I["itmr"][0] * 1e6, I["itmr"][1] * 1e6))
     w("   gate: %.0f nC to remove (%d x %g nC at 10 V scaled to %g V, and the dv/dt capacitor's swing); breaker release %.1f us (tCB %g us, %g mA);" % (
@@ -535,6 +549,7 @@ def render(R):
     w("     the fault pulse: %.2f W for %.3f ms against %.1f W derated: %.2f (TI asks %.2f at most); %.2f with the offset reading" % (
         B["plim_max"], B["clear_max"] * 1e3, B["fault_soa"], B["fault_ratio"], 1 / TI_MARGIN, B["fault_ratio_abs"]))
     w("     the start: %.1f W for %.1f ms against %.1f W derated (the DC line: no extrapolation past 10 ms): %.2f" % (B["start_p"], B["start_teq"] * 1e3, B["start_soa"], B["start_ratio"]))
+    w("     with Figure 10 read %g %% high (the SOA %g %% lower): %.2f and %.2f" % (I["rd"]["uncertainty_pct"], I["rd"]["uncertainty_pct"], B["fault_ratio_low"], B["start_ratio_low"]))
     w("     the 10 us line at %.1f V: %.1f A; IDM %g A against the breaker's %.2f A (SLVA673A 3.1.2.2) and the docking peak %.1f A" % (R["vmax"], B["i10us"], I["fet_idm"], B["icb_max"], C["dock_pk"]))
     w("   input clamp: %s on VIN (VR %g V, VBR %g V least, VC %g V at %g A), the part on board A's VBAT; VIN to SENSE's %g V maximum is passed" % (
         TVS, I["tvs"]["vr"], I["tvs"]["vbr_min"], I["tvs"]["vc"], I["tvs"]["ipp"], I["vin_sense_abs"]))

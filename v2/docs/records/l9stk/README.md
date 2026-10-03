@@ -20,9 +20,13 @@ run by the integrator.
 | `l9stk_copper.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_copper.py v2/docs/records/l9stk/l9stk_copper.out` |
 | `apply_energy_chain_l9stk.py` | The energy chain's DOCK_ENTRY, SHORE_INPUT and BOARD_A_NODE conductor texts at the revised widths and the 25 A blade's citation (MINI 297 for ATOF 287, six stages), for the integrator: it refuses until the register carries `(L9STK A)` and `(L9STK E)`, accepts the tree's texts or record l8r2's, and is a no-op on a second run; it REPLACES record l8r2's `apply_energy_chain_e1oz.py`. `--check` (the default) writes nothing |
 | `apply_blade_plating_l9stk.py` | Pins the 25 A MINI blade's silver terminals (0297025.WXNV) in `v2/vendor/SOURCES.yaml`, for Layer 6; `--check` is the default |
+| `l9stk_protection.py` | The pack path's protection (page section 15, the owner's correction of 4 October 2026), from the repository root: `python3 v2/docs/records/l9stk/l9stk_protection.py` (PyYAML, pdftotext and the copper script; no KiCad, no network). It pins 14 inputs by sha256 and prints board P's existing protection with its FETs welded, Q39/Q40's 150 C current with its uncertainty, the selected LM5069-2 breaker on board P (sense window, power limit, fault timer, dv/dt start, retry, the CSD18510Q5B's SOA derated by SLVA673A equations 4 to 7, the clamp), every series part at the breaker's largest limit, the owner's protection table, the design defects with owners, the interface demands, the missing evidence with specimen, acceptance and task, and the predicates the test reads |
+| `l9stk_protection.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_protection.py v2/docs/records/l9stk/l9stk_protection.out`, after `l9stk_copper.out` |
+| `fetch_held_back.py` | Fetches TI's SLVA673A (the owner's named calculation basis, no grant to redistribute) into the ignored `v2/vendor/ti/held/` and checks its sha256; never run by a test |
+| `inputs/csd18510q5b-figure-readings-2026-10-04.json` | The CSD18510Q5B's Figure 10 (SOA) and Figure 8 (RDS(on) against temperature) read at 300 dpi: the segments' pixel ends, the axes, the reading uncertainty and the sheet's sha256/16 |
 | `inputs/price-readings-2026-10-03.json` | The public pages read on 3 October 2026 (JLCPCB and NextPCB), each with its URL, read time, the page's own date where printed and the sha256/16 of the page as fetched; the sentence carrying each figure kept verbatim, never the page; what was not read |
 
-The predicates are held by `v2/ecad/tools/tests/test_l9stk.py`: `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_public_hygiene`.
+The predicates are held by `v2/ecad/tools/tests/test_l9stk.py`: `env -C v2/ecad/tools/tests python3 run.py test_l9stk test_energy_chain test_public_hygiene` (the protection tests skip, named, where SLVA673A is not held).
 
 ## The decisions in short
 
@@ -44,6 +48,14 @@ board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz i
 (`L9-STACKUPS.md` section 11). Every price at a board's real outline is NOT READ and left to the supplier's quotation
 (EQ-14).
 
+**W4DP-F2's element, designed (section 15; drafted, not drawn):** an LM5069-2 circuit breaker on board P from Q2's source to
+PACK_P, with two CSD18510Q5B and a 2.6087 mOhm sense (4 and 7.5 mOhm in parallel): its actual limit 18.32 to 23.93 A, so the
+10 A and the 18 A for 60 s never trip it and the cells' 24 A is never passed; above a unit's limit it clears within 1.29 ms
+with no firmware and with Q1/Q2 welded; a 0.659 A dv/dt start; the FET's SOA at 0.57 and 0.58 of the derated curve (TI asks
+0.67). Selected with it: Q39/Q40's installed path strengthened to 24.37 K/W (E11-29 retargeted, L4-E11), because a current
+held under the breaker's limit is held indefinitely. Open: DD-1 to DD-4 with their owners, IF-1 to IF-4, the evidence E-1 to
+E-8 and the maker question Q-TI-L9S-1.
+
 ## Proposed LAYER-STATUS row (for the integrator; `LAYER-STATUS.md` is not edited here)
 
 | Item | Criterion | Status | Evidence |
@@ -53,9 +65,12 @@ board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz i
 The row in that page's long table (line 1713) would read the same way: "no" becomes "partly: decided per board with
 measurement or bound (records/l9stk); no price at any real outline; B conditional on decision 43's route".
 
-## What other authors own (from `L9-STACKUPS.md` sections 12 and 14.11)
+## What other authors own (from `L9-STACKUPS.md` sections 12, 14.9 and 15.7)
 
-- L9C-F1 to L9C-F9 (section 14.11): the energy chain's texts through `apply_energy_chain_l9stk.py` instead of record l8r2's
+- L9C-F16 to L9C-F19 (section 14.9, from section 15): the breaker drawn into board P with its layout and its energy chain
+  stage; E11-29 retargeted to 24.37 K/W; board A's loads held off during the breaker's start; the power limit's accuracy and
+  the hot short (Q-TI-L9S-1, the supplier's E-2 and E-3).
+- L9C-F1 to L9C-F15 (section 14.9): the energy chain's texts through `apply_energy_chain_l9stk.py` instead of record l8r2's
   draft; BOARD_A_CONVERTERS' 25 A claim for the branches; the series parts in the blade's held band with the gauge failed
   (R17, the XT60, the dock pins, Q39 and Q40, the 3568 holder's missing rating) beside W4DP-F2; R19 in F1's 600 s window;
   P_CP and P_CN as plated-through lands; the pack return as GND with l8r2's drafts; TRK_OUT and the solar input outside the
