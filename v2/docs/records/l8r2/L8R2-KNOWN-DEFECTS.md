@@ -278,8 +278,10 @@ loads with the rail's 2 % drop rises from 4.8295 to **4.9019 V**, and every curr
 and PS-ALLTX before the cooler, board B's bucks at 500 kHz) plus the cooler's branch:
 - the steady envelope: the fan's 2.75 W bound at the step-up's 12.43 V top over the step-up's worst 0.80 (ASSUMPTION), 3.4375 W;
   26.635 W over 4.9019 V: **5.4336 A**;
-- the bounded start: the cooler branch's input on +5V_Sn as a 100 us moving average at most **1.80 A**, and over the steady
-  0.712 A for at most 1.0 s a start (BOUND, held by C4-3's waveform limits; the eFuse-limited calculation, 0.538 A at 12.43 V over
+- the bounded start: the cooler branch's input on +5V_Sn as a 100 us moving average at most **1.80 A**, and over the branch's
+  steady current as measured on the specimen, plus its tolerance, for at most 1.0 s a start (BOUND, held by C4-3's waveform limits;
+  the desk expects that steady current at 0.7013 A at 4.9019 V and 0.6643 A at 5.1744 V, 2.75 W over 0.80, an expected value and
+  not the threshold; the eFuse-limited calculation, 0.538 A at 12.43 V over
   0.80, gives 1.7056 A inside it, and the eFuse's own response is 87 us typical, spanned by the 100 us average): 23.197 W over
   4.9019 V plus 1.80 A, **6.5323 A**;
 - a degraded cooler held steady just under its eFuse's least limit (0.448 A at 12.43 V over 0.80, a fault): **6.1525 A**;
@@ -368,8 +370,11 @@ at +1 %, **7.095710 A**, unrounded):
   the CM5's receptacle, the eFuse's FLT, the tach. Events: steady at 25, 50, 70 and 100 % duty and released; cold start of the slot
   rail; a warm module reset with the card on; PWM release; the PWM lead opened; the rotor locked for 30 s and released; a duty step
   0 to 100 %. Acceptance, the WAVEFORM (R6): the branch's steady input at most 3.44 W at every point; in every event its 100 us
-  moving average at most **1.80 A** at every instant, and over 0.712 A for at most **1.0 s** per start (locked-rotor retries counted,
-  each a start); the slot rail's 100 us moving average at most 6.6 A throughout; the instantaneous peak recorded (the step-up's own
+  moving average at most **1.80 A** at every instant; and the time it spends above I_SS plus its tolerance at most **1.0 s** per
+  start (locked-rotor retries counted, each a start), where I_SS is the branch's steady current measured on that specimen at the
+  event's own supply voltage, duty and temperature (the mean of the 100 us moving average over the last 10 s of a 60 s hold after
+  the start settles) and the tolerance is 10 % of I_SS or 0.05 A, the larger (closing check, MINOR; the desk's 0.7013 A at 4.9019 V
+  and 100 % duty is the expected I_SS, not the threshold); the slot rail's 100 us moving average at most 6.6 A throughout; the instantaneous peak recorded (the step-up's own
   switch limit, 7.3 to 8.9 A, bounds it, MAKER); +5V_Sn at the receptacle at least 4.75 V throughout; the start completes (the tach
   within 10 % of the commanded speed in 5 s) without the eFuse's FLT latching. Failure: a steady input over 3.44 W restates the
   steady envelope and the fan row, or rejects the fan; a waveform over 1.80 A or 1.0 s restates the start bound and both boards' 6.6 A
@@ -444,10 +449,17 @@ pass. The only owner item remains sending C4-4's drafted question.
 | Item | The recheck's finding | The answer (round 6) | Where | Status |
 |---|---|---|---|---|
 | B1 | the 500 kHz Figure 24 is not an upper bound on the drawn 1.47 MHz stage (the 5.3 mW ripple term varies to 11.1 mW over VIN and L, and the comparison would need the added switching loss bounded); the 48.4 C reading carries +-2 C | the strict upper-bound claim is REMOVED and round 5's ripple-term argument withdrawn. What stands: the fan-fed options exceed the AP64500's 5 A rating at the least load voltage (5.487 and 5.118 A, MAKER); option (b)'s 4.779 A reads 48.4 +- 2 C on the typical curve, a CONDITIONAL screen; (b) is rejected on its interfaces. The retired part is not characterised | 1s row 4b; 2c.4 | ANSWERED |
-| B2 | the 5.63 A declaration is below the model's 6.534 A start and 6.245 A degraded case, which the conductor checks read through the declared peak; a 10 ms average does not bound the peak (12 W for 5 ms passes it) | the bounded start-up envelope is a BOUND with a waveform: the cooler branch at most 1.80 A as a 100 us moving average and over the steady 0.712 A for at most 1.0 s a start; at the corrected least load voltage 4.9019 V the slot needs 6.5323 A (start), 6.1525 A (degraded), 5.4336 A (steady), slot 2 5.7473 A. Both boards declare **6.6 A** on the three slot leads; VBAT's entries and GND's returns 2.60 A. C4-3 accepts the waveform (1 MS/s; 1.80 A at every instant of the 100 us average, at most 1.0 s over 0.712 A, the slot at most 6.6 A) and records the instantaneous peak, bounded by the step-up's switch limit | 1s "the envelopes", the declarations table, C4-3; slotlm, fans12, packrtn | CORRECTED |
+| B2 | the 5.63 A declaration is below the model's 6.534 A start and 6.245 A degraded case, which the conductor checks read through the declared peak; a 10 ms average does not bound the peak (12 W for 5 ms passes it) | the bounded start-up envelope is a BOUND with a waveform: the cooler branch at most 1.80 A as a 100 us moving average and over its measured steady current plus a stated tolerance for at most 1.0 s a start (restated after the closing check, below); at the corrected least load voltage 4.9019 V the slot needs 6.5323 A (start), 6.1525 A (degraded), 5.4336 A (steady), slot 2 5.7473 A. Both boards declare **6.6 A** on the three slot leads; VBAT's entries and GND's returns 2.60 A. C4-3 accepts the waveform (1 MS/s; 1.80 A at every instant of the 100 us average, at most 1.0 s over the measured steady current plus its tolerance, the slot at most 6.6 A) and records the instantaneous peak, bounded by the step-up's switch limit | 1s "the envelopes", the declarations table, C4-3; slotlm, fans12, packrtn | CORRECTED |
 | B3 | C4-1's case limit covered 5.63 A only and C4-6's 38.9 C/W the envelope; the unscaled-Qrr estimate was called a bound; 6.3 A needs 37.48 C/W | C4-1 accepts at EVERY steady point of its matrix (3.0, 4.1, 5.4336, 6.6 A at 9.7, 14.4, 17.4 V) a junction inferred from the measured case plus the stage's MEASURED loss (input less output power, at least any one FET's) times RthJC 0.8 C/W, at most +125 C. C4-6's desk screen is taken at the matrix's highest steady point, 6.6 A at 17.375 V with the sheet's Qrr unscaled: at most **36.89 C/W**; it is named a screen on typical charges, not a bound | 1s C4-1, C4-6; 2c.5 | CORRECTED |
 | F5-03 | recording the 5.252 V defect does not correct it | CORRECTED by `apply_gen_sch_a_fb01.py`: both divider resistors of slot 2's, the device rail's and slots 1 and 3's stages at 0.1 % through a helper keyword (`rfb_tol`, default 1 %), the values unchanged: **5.0019 to 5.1744 V** with IBIAS(FB), inside the CM5's 4.75 to 5.25 V; the least load voltage 4.9019 V carries every corner above; `check_l8r2_netlist.py` FB01 reads the eight values on the regenerated netlist | 1s "the voltage window"; 2c.5; F6-01 | CORRECTED (drafted) |
 | Minor | +0.562 A came from rounded intermediates; 7.096 A is the window's minimum | the loop's least is computed from VSNS 43 mV over 6 mOhm at +1 %, 7.095710 A, and every margin is printed to four places | 2c.5 | CORRECTED |
+
+**The coordinator's closing check (after the collaborator's two runs): L9P-F02 CLOSED AS CONDITIONAL**, with one MINOR item done
+here on 4 October 2026 (01:07 CEST): C4-3's duration criterion named "above the steady 0.712 A", the branch's steady current at
+round 5's least voltage (4.829 V). It now names the steady current I_SS MEASURED on the specimen at the event's own voltage, duty and
+temperature, plus a tolerance of 10 % of I_SS or 0.05 A (the larger), for at most 1.0 s per start; the desk figure, 2.75 W over 0.80
+at 4.9019 V, 0.7013 A (0.6643 A at 5.1744 V), is the expected value, not the threshold. The physical claims stay CONDITIONAL on
+C4-1 to C4-6.
 
 ## 2. Item 2: VBUS20 against U2's single faults (S-111, R-48; supplier task P1-3)
 

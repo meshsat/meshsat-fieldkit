@@ -199,7 +199,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
    qrr_prop     True                               ASSUMPTION the body diode's Qrr taken in proportion to its forward current from the sheet's 17 A row
    eta_lm       0.9                                ASSUMPTION the LM5176 5.1 V stages' declared efficiency, NOT PLOTTED by the maker (rv-pwr's rule; record l9pwr's M1)
    slot_peak    6.6                                BOUND      the three slot leads' declared peak, both ends: the bounded start-up and fault envelope (round 6; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)
-   start_bound  1.8                                BOUND      the cooler branch's bounded start on +5V_Sn: a 100 us moving average at most 1.80 A, over the steady 0.712 A for at most 1.0 s a start (C4-3 holds the chain to it)
+   start_bound  1.8                                BOUND      the cooler branch's bounded start on +5V_Sn: a 100 us moving average at most 1.80 A, over the steady current measured on the specimen plus 10 % of it or 0.05 A (the larger) for at most 1.0 s a start (C4-3 holds the chain to it)
    fb_tol01     0.001                              BOUND      the LM5176 5.1 V stages' divider at 0.1 % (apply_gen_sch_a_fb01.py)
    ibias_fb     2.5e-08                            MAKER      LM5176 IBIAS(FB) at most 25 nA in regulation (SNVSAI1D electrical characteristics)
    vsns         (0.043, 0.05, 0.057)               MAKER      LM5176 VSNS, the average current loop's target (SNVSAI1D)
@@ -365,6 +365,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
       PS-RED2      slot 3  2.0380 / 2.1203 A  start 3.2191 A  degraded 2.8393 A  +4.9754 / +3.8766 / +4.2564 A
       PS-SURV-R    slot 3  2.0380 / 2.1203 A  start 3.2191 A  degraded 2.8393 A  +4.9754 / +3.8766 / +4.2564 A
     least margin: +1.6622 A at the steady envelope (23.4 %); +0.5634 A at the bounded start; +0.9432 A with a degraded cooler; +0.4957 A at the declared 6.6 A
+    the steady branch the desk expects (2.75 W over 0.80): 0.7013 A at 4.9019 V, 0.6643 A at 5.1744 V; C4-3's duration criterion is taken on the steady current MEASURED on the specimen plus 10 % of it or 0.05 A (the larger), at most 1.0 s a start: these figures are expected values, not the threshold
     the eFuse-limited start calculation (an ASSUMPTION, 0.538 A at 12.43 V over 0.80) gives 1.7056 A of branch current at 4.9019 V, inside the 1.80 A bound; the eFuse's own response is 87 us typical (tLIM), the bound's 100 us average spans it
     slot 2 (its own HIGH, the cooler's bounded start): 5.7473 A, inside the same 6.6 A; its S-98 coincidence (5.63 A) inside it; I-03's all-peak bound stays I-03's
     the stage's buck-side high FET at 5.4336 A, VIN 17.375 V: conduction 0.099, edges 0.301, coss 0.516, recovery 0.321; 1.236 W (edges 18.0 / 9.5 ns); the low FET 0.351 W; the boost-side high FET 0.337 W
