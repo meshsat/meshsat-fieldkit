@@ -546,19 +546,31 @@ def sense_ripple(cu, cd, i_in, vin, vout, f, L, t_rf, r59, l59, rb, bulk, dt=1e-
                 i_v=i_v, i_p=i_p, il_avg=il_avg, dI=dI, D=D)
 
 
-# the panel lead's length (round 5 of set 27): a statement this record has read and pinned is a CITED INPUT (its file and digest at
-# the reading are printed); any other statement of a panel lead's length in v2's documents refuses until the derivation is read again
-LEAD_STATEMENTS = ("the selected network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no "
-                   "document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead",)
+# the panel lead's length (set 28, restated on the derivation's input): the derivation reads it from a1solar's array_calc.py (LEAD_M,
+# ESTIMATE, through the module the replay loads and pins). A stated length elsewhere in v2's documents is parsed as a number with its
+# unit and compared with that input: equal, it is a consistent citation (recorded, never refused); different, compute() refuses
+A1_CALC = "v2/docs/records/a1solar/array_calc.py"
+LEAD_PHRASE = re.compile(r"(?:solar|panel)\W+(?:lead|cable|extension)", re.I)
+LEAD_LENGTH = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)\s?(?:m|metres?|meters?)\b")
 _PAUSE = [False]       # the results cache's file recorder is paused while a tree scan runs (the scans enter the KEY by their outcome)
 
 
-def lead_scan(top=None):
-    """Every .md and .yaml of v2 (vendor, release, out and this record's folder left out) that states a panel lead's length: the
-    files whose statement is a pinned one (cited: {path: the pinned statement it carries verbatim}) and the others (hits). What the
-    scan establishes is that, not the files' contents: an edit elsewhere in a cited file changes neither the result nor the KEY."""
+def lead_input(top=None):
+    """The derivation's input: LEAD_M, in metres, bound in a1solar's array_calc.py, read with ast (not grepped)."""
+    tree_ = ast.parse(open(os.path.join(top or TOP, A1_CALC), encoding="utf-8").read())
+    for node_ in tree_.body:
+        if isinstance(node_, ast.Assign) and any(isinstance(t_, ast.Name) and t_.id == "LEAD_M" for t_ in node_.targets):
+            return float(ast.literal_eval(node_.value))
+    refuse(3, "%s binds no LEAD_M; the panel lead's derivation has no input" % A1_CALC)
+
+
+def lead_scan(top=None, length=None):
+    """Every .md and .yaml of v2 (vendor, release, out and this record's folder left out): each length in metres stated within the
+    window around a solar or panel lead, cable or extension (120 characters before, 160 after), parsed as a number and compared with
+    the derivation's input (lead_input(), or length). Returns (consistent, differing), each a sorted list of (path, line, metres)."""
     top = top or TOP
-    hits, cited = [], {}
+    length = lead_input() if length is None else length
+    seen, ok, bad = set(), set(), set()
     _PAUSE[0] = True
     try:
         for root_, dirs_, files_ in os.walk(os.path.join(top, "v2")):
@@ -567,18 +579,27 @@ def lead_scan(top=None):
                 if f_.endswith((".md", ".yaml")):
                     rel_ = os.path.relpath(os.path.join(root_, f_), top)
                     t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
-                    for m_ in re.finditer(r"(?:solar|panel)\W+(?:lead|cable|extension)", t_, re.I):
-                        if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
-                            e_ = t_.find("|", m_.end())
-                            cell_ = " ".join(t_[t_.rfind("|", 0, m_.start()) + 1:(e_ if e_ > 0 else len(t_))].split())
-                            known_ = [st_ for st_ in LEAD_STATEMENTS if st_ in cell_]
-                            if known_:
-                                cited.setdefault(rel_, known_[0])
-                            else:
-                                hits.append(rel_)
+                    for m_ in LEAD_PHRASE.finditer(t_):
+                        for v_ in LEAD_LENGTH.finditer(t_, max(0, m_.start() - 120), m_.end() + 160):
+                            if (rel_, v_.start()) in seen:
+                                continue
+                            seen.add((rel_, v_.start()))
+                            val_ = float(v_.group(1))
+                            (ok if abs(val_ - length) < 1e-9 else bad).add((rel_, t_.count("\n", 0, v_.start()) + 1, val_))
     finally:
         _PAUSE[0] = False
-    return hits, cited
+    return sorted(ok), sorted(bad)
+
+
+def lead_guard(top=None):
+    """lead_scan() as compute() uses it: refuses (exit 3) on a stated length that differs from the input, naming the file, its line
+    and both values; else returns the consistent citations."""
+    length_ = lead_input()
+    ok_, bad_ = lead_scan(top, length_)
+    if bad_:
+        refuse(3, "a document states a panel lead length that differs from the derivation's input (%s LEAD_M = %g m): %s" % (
+            A1_CALC, length_, "; ".join("%s line %d: %g m" % b_ for b_ in bad_)))
+    return ok_
 
 
 def iec_held():
@@ -1559,12 +1580,14 @@ def compute():
         need(tp_, pat_, "TEST-PLAN.md row " + what_)
     # the panel lead's length: the records give a1solar's 5 m (array_calc.py, ESTIMATE; the panel lead's derivation below reads it).
     # A document of v2/docs or the registries that states a panel lead's length (this record's own folder left out) is read against
-    # it: a statement this record has read and pinned (LEAD_STATEMENTS; set 27: L4-E9's register row R-180, which carries this
-    # record's own "two conductors 6.09 mm apart over 5 m" back) is a CITED INPUT, recorded with the file and its digest at the
-    # reading; any other statement refuses until the derivation is read again (lead_scan above)
-    lead_hits, lead_cited = lead_scan()
-    if lead_hits:
-        refuse(3, "a document now states the panel lead's length (%s); the derivation below must be read against it" % ", ".join(sorted(set(lead_hits))))
+    # it as a number with its unit (lead_guard above): a statement equal to the input is a consistent citation, recorded by file and
+    # value; one that differs refuses, naming the file and both values
+    lead_ok = lead_guard()
+    lead_hits = []
+    lead_cited = {}
+    for p_, _l, v_ in lead_ok:
+        lead_cited.setdefault(p_, set()).add(v_)
+    lead_cited = {p_: sorted(v_) for p_, v_ in sorted(lead_cited.items())}
     M461 = "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf"
     if sha(M461) != "491f015e386136b58af90e86066533ca073d31210913a766cb236cf05a876bb8":
         refuse(2, "%s is not the pinned file (fetch it: v2/docs/records/l4e7/fetch_held_back.py)" % M461)
@@ -2492,7 +2515,7 @@ def compute():
     ]
     if [v_["ok"] for v_ in verd] != [True, True, True, False, False] or r36["vc116_h"] <= lim_draft or r36["vc116_25"] > lim_draft:
         refuse(4, "the panel lead's verdicts are not the ones the record states: %s" % [(v_["id"], v_["ok"]) for v_ in verd])
-    R["lead"] = dict(cited=lead_cited, statements=LEAD_STATEMENTS, lead=lead, tv=tv, f116=f116, q116=Q116, r116=r116, r115=r115, v_src=v_src, aT=aT, pd4=pd4, tjmax=tjmax, rja=rja, p_ok=p_ok,
+    R["lead"] = dict(cited=lead_cited, input=dict(path=A1_CALC, metres=lead_input(), sha=sha(A1_CALC)), lead=lead, tv=tv, f116=f116, q116=Q116, r116=r116, r115=r115, v_src=v_src, aT=aT, pd4=pd4, tjmax=tjmax, rja=rja, p_ok=p_ok,
                      vbr_cold=vbr_cold, lim_drawn=lim_drawn, lim_draft=lim_draft, src=src, r36=r36, p_src36=p_src36, rev=rev, g13=g13,
                      peak_v=peak_v, peak_vp=peak_vp, v116=v116, verd=verd, m_trip=best["m"], tau_lo=best["tau"][0],
                      smcj=sorted(smcj), i_op=i_op, v_oc=v_oc, n_runs=sum(1 for r_ in r116 if r_["lumped"]) * len(Q116) * 2 * 8 + len(runs115),
@@ -3968,14 +3991,17 @@ def render(R):
           "test frequencies as 5.14.2's installation resonance" % (le_["m"], le_["mm2"], le_["r"], le_["f_q"] / 1e6, le_["f_h"] / 1e6))
     if ld.get("cited"):
         bq_ = R["remedy"]["b6"]
-        wrapP("     - ", "       ", "THE LEAD'S LENGTH AS A CITED INPUT (set 27): %s. The 5 m is this derivation's own a1solar ESTIMATE carried back "
+        wrapP("     - ", "       ", "THE LEAD'S LENGTH AS A CITED INPUT (set 27, restated on the input at set 28): the derivation's input is "
+              "a1solar's LEAD_M, %g m one way (ESTIMATE), in %s (sha256 %s at the reading, read with ast and equal to the module the "
+              "replay loads). Every length stated beside a solar or panel lead in v2's documents is compared with it as a number with its "
+              "unit; one that differed would refuse, naming the file and both values. Consistent citations: %s. The 5 m is this "
+              "derivation's own a1solar ESTIMATE carried back "
               "by L4-E9's register, inside the envelope the guard-on transient already assumes (%.2f to %.2f uH over %.0f m). The loop inductance "
               "per metre this derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two %.0f mm2 conductors s apart: %.3f uH/m at "
               "the envelope's %.2f uH, %.3f uH/m at round 2's reference loop (%.2f uH, %.2f mm apart) and %.3f uH/m at %.2f uH. The guard "
-              "pins that statement: it fires again only when a document states another length or another sentence" % (
-                  "; ".join("%s each carry, verbatim, the pinned statement (sha256 %s): \"%s\"" % (
-                      " and ".join(sorted(p_ for p_, s2_ in ld["cited"].items() if s2_ == s_)), hashlib.sha256(s_.encode("utf-8")).hexdigest()[:16], s_)
-                      for s_ in sorted(set(ld["cited"].values()))),
+              "compares values: it fires again only when a document states another length" % (
+                  ld["input"]["metres"], ld["input"]["path"], ld["input"]["sha"][:16],
+                  "; ".join("%s (%s)" % (p_, ", ".join("%g m" % v_ for v_ in vs_)) for p_, vs_ in sorted(ld["cited"].items())),
                   1e6 * bq_["grid"][0], 1e6 * bq_["grid"][1], le_["m"], le_["mm2"], 1e6 * bq_["grid"][0] / le_["m"], 1e6 * bq_["grid"][0],
                   1e6 * bq_["LA"] / le_["m"], 1e6 * bq_["LA"], 1e3 * bq_["sA"], 1e6 * bq_["grid"][1] / le_["m"], 1e6 * bq_["grid"][1]))
     wrapP("     - ", "       ", "THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC "
@@ -4764,8 +4790,8 @@ def src_part(text):
 def key_parts(files):
     """The KEY's parts: (1) src, src_part() of this script; (2) files, the sha256 of every file under the repository that compute()
     opened or handed to a subprocess on the run that wrote the cache (recorded while it ran; the tree scans excepted); (3) scans,
-    what the two tree scans compute() makes establish (scan_part(): the files carrying a pinned lead statement verbatim, with the
-    statement's sha256, any other lead statement, and iec_held()), re-run at every check; (4)
+    what the two tree scans compute() makes establish (scan_part(): the derivation's input, the lead lengths found and their values per
+    file, consistent or differing, and iec_held()), re-run at every check; (4)
     solver, the defaults of the solvers' own parameters (timestep, horizon); (5) python, its major.minor; (6) pdftotext, its version."""
     def dig(rel_):
         try:
@@ -4781,11 +4807,17 @@ def key_parts(files):
 
 
 def scan_part(top=None):
-    """The KEY's scans part: what the two tree scans establish, not the scanned files' contents. For the panel lead: the files that
-    carry a pinned statement verbatim (each with the statement's own sha256), and the files with any other lead statement (any
-    makes compute() refuse). For IEC 61000-4-5: whether a file of v2/vendor names it."""
-    hits_, cited_ = lead_scan(top)
-    return dict(lead_hits=sorted(set(hits_)), lead_cited={k_: hashlib.sha256(v_.encode("utf-8")).hexdigest() for k_, v_ in sorted(cited_.items())},
+    """The KEY's scans part: what the two tree scans establish, not the scanned files' contents. For the panel lead: the derivation's
+    input (metres), the lengths found beside a solar or panel lead per file that equal it, and those that differ (any makes compute()
+    refuse); values only, no digests and no line numbers, so an edit elsewhere in a citing file moves neither the KEY nor the output.
+    For IEC 61000-4-5: whether a file of v2/vendor names it."""
+    length_ = lead_input()
+    ok_, bad_ = lead_scan(top, length_)
+    vals_ = {}
+    for p_, _l, v_ in ok_:
+        vals_.setdefault(p_, set()).add(v_)
+    return dict(lead_input=length_, lead_consistent={p_: sorted(v_) for p_, v_ in sorted(vals_.items())},
+                lead_differing=sorted({(p_, v_) for p_, _l, v_ in bad_}),
                 iec61000_4_5=iec_held())
 
 
