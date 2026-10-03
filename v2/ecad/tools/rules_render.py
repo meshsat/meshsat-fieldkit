@@ -365,7 +365,29 @@ def bringup_doc(reg, cov):
     if not n_boards:
         raise MissingInput("PCB-BRING-UP.md is generated from each board's out/<stem>-intent.json and this tree "
                            "has none: the page would be six empty sections and would replace the procedure")
-    return "\n".join(L) + "\n"
+    return _with_bringup_preface("\n".join(L) + "\n")
+
+
+# THE BRING-UP PROCEDURE ABOVE THE GENERATED RAILS (MESHSAT-1357, 3 October 2026). The supplier's first-prototype bring-up
+# is written by hand (per board: the drafts the prototype carries, the supplies and their limits, the cross-board checks,
+# the firmware writes, the hand-offs to v2/docs/test-procedures/ and the stop conditions) and checked by
+# v2/docs/test-procedures/tp_check.py. It sits above BRINGUP_MARK on the committed page and is carried through every
+# render unchanged; only the rail inventory below the marker is generated, so --check and TST-001 still compare that part
+# with the intent files. A page without the marker renders exactly as before.
+BRINGUP_PAGE = os.path.join(DOCS, "PCB-BRING-UP.md")
+BRINGUP_MARK = ("<!-- rules_render: the generated rail inventory begins on the next line. Everything above this marker is "
+                "the hand-written bring-up procedure (v2/docs/test-procedures/README.md), kept unchanged by every render. -->")
+
+
+def _with_bringup_preface(body, page=None):
+    """The generated body under the committed page's hand-written procedure, when the page carries BRINGUP_MARK."""
+    try:
+        old = open(page or BRINGUP_PAGE, encoding="utf-8").read()
+    except OSError:
+        return body
+    if BRINGUP_MARK not in old:
+        return body
+    return old[:old.index(BRINGUP_MARK)] + BRINGUP_MARK + "\n\n" + body
 
 
 # Documents that are a pure function of the registry and the coverage map, with no board evidence in them.
