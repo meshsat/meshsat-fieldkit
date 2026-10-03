@@ -5,6 +5,12 @@ by `l6pwr_parts.py` (`l6pwr_parts.out`, "out N" below); this page is the short f
 L4-E11) in release-guarded drafts on no committed netlist; this record records and sources them and **reselects nothing**. A
 mismatch is a FINDING with the Layer 4 row it affects (section 3), never a change.
 
+**Re-read at set 28 (finding F-13, 3 October 2026, on `fnd/l6pwr2` from set 28's `5515ecc0`).** The record was written on
+`fnd/l4e9` at `2c240414`; L4-E7's rounds 3 to 5 in set 27 restated its output, so the reader now PARSES every L4-E7 figure the
+record states (the rating table at round 2's reference loop, the guard's thresholds, the step's turn-off, the cold connection's
+ring, D4's and D11's rows, the trip's current, the divider parts the guard draft names) from `l4e7_stage_settings.out` and the guard
+draft, and refuses if a part it calls the guard's is no longer named there. Nothing is reselected; the guard's parts are the same.
+
 **Basis labels.** MAKER (the document, its revision and page, read here from the file), RECORD (a Layer 4 record's figure, its page
 pinned in out 0), CATALOGUE (a dated public reading in `inputs/`, true at its time only), COMPUTED (arithmetic shown in the output).
 
@@ -48,12 +54,12 @@ R-xxx of L4-E9's register).
 | L6P-22 | E U18 | TI INA169NA/3K (SOT-23-5) | industrial; specified -40 to 85 C INSIDE | SBOS181F Feb 2017, held; `dbb74b6cdc543135` | C44322, 61868, 1.138 (1) | INA139NA/3K (40 V, same land) | R-21, R-33, R-101, R-70 | RESOLVED (p.21) |
 | L6P-23 | E U19 | TI TPS3701DDCR (SOT-23-THIN-6) | industrial; TJ -40 to 125 C INSIDE | SBVS240C Feb 2019, held; `27c94a6c3a243bf5` | C132788, 26813, 0.6932 (1) | TPS3700DDCR (18 V) | R-21, R-70 | RESOLVED (p.21) |
 | L6P-24 | E U20 | TI TPS3808G33DBVR (SOT-23-6) | industrial; TJ -40 to 125 C INSIDE | SBVS050N Aug 2026, in tree; `74d889c0f68af880` | C43698, 36030, 0.4435 (1) | TPS3808G33DBVT (same part, small reel) | R-21, R-70 | RESOLVED (p.22) |
-| L6P-25 | E R97 | value only: 28.0k, the draft 1 %, the brief 0.1 % | NOT READ | none | none | none | R-173, R-176 | CHOICE_OWED; **tolerance F04**; PROVISIONAL |
+| L6P-25 | E R97 | YAGEO RT0603BRD0728KL, 28.0k 0.1 % 25 ppm/K (the guard draft since L4-E7's rounds 4 and 5; R96 is RT0603BRD07100KL) | NOT READ | YAGEO's RT specification not held | code owed | none | R-173, R-176 | DOCUMENT_OWED; F04 answered; PROVISIONAL |
 | L6P-26 | E R19 (entry), R87 (guard) | Milliohm HoLLR2512-3W-4.5mR-1% (the code's model) | NOT READ (no HoLLR sheet held, F09) | none held | C2985708, 4225 | a HoJLR2512 4.5 mOhm code, if one exists | E11-01, E11-17; R-123, R-173 | DOCUMENT_OWED |
 | L6P-27 | P, the 12 cells 4S3P (D-06) | Samsung SDI INR18650-35E (18650) | cell rows: discharge -10 to 60 C, charge 0 to 45 C: OUTSIDE at the cell's own rows, carried by the envelope's heater-mat carve-out (F11); storage 3 months -20 to 45 C, the margins outside every printed row (L4-E10, U-01) | Ver. 1.1 (distributor's copy), in tree; `5ec577b952b9dc51` | owner-side; USD 8.25 a cell (indicator) | INR18650-30Q (30Q6), compared by L4-E10, not adopted; a cell change is the owner's | R-47, R-103, R-109, R-110; U-01 | RESOLVED (p.3) |
 | L6P-28 | P, PROPOSAL only: 4 cells 4S1P | Saft MP 176065 xtd (prismatic 18.65 x 60.5 x 68.7 mm) | industrial; charge -30 to 85, discharge -40 to 85, storage -40 to 85 C: INSIDE including the margins | Doc. 31109-2-0625 June 2025, held; `8ca0a3e09997a4a3` | owner-side; NZ$ 238.72 a cell (listing archived 2025-01-16) | none (it is the alternative) | R-167, R-168, R-169; U-01 the owner's | RESOLVED (p.1) |
 
-**Count:** 28 selections; RESOLVED 14; UNRESOLVED 14 (PART_NUMBER_INFERRED 10, CHOICE_OWED 2, DOCUMENT_OWED 2); grades read at the
+**Count:** 28 selections; RESOLVED 14; UNRESOLVED 14 (PART_NUMBER_INFERRED 10, CHOICE_OWED 1, DOCUMENT_OWED 3); grades read at the
 source for 21, NOT READ for 7 (out 2, the identity count line).
 
 **Ratings and derating (out 2, "rating used" lines, one example per class).** The charger: VBUS 19.15 to 20.96 V against the
@@ -63,23 +69,26 @@ point bounds (E11-36); the junction limit 150 C, 25 K under the 175 C rating. Th
 printed 9 and 30 kOhm rows. The Milliohm resistors: 3 W at 70 C derated linearly to zero at 170 C (R227 1.037 W at the stage's fault
 bound, 3 W at 62.1 C). The ZK cans: ripple 2800 mA rms at 100 kHz and 125 C against each can's bound 2.4096 A (86 percent at R11 8 mOhm)
 or 2.7661 A (98.8 percent at 7 mOhm); the rated rise not printed (L4-E8 B4). The guard: V(VS) 3.5 to 80 V against the entry's 43.18 V
-and the guard's 36 V cold, 80.6 V at the modelled step (F10); INP's 20 V absolute maximum with L4-E7's 18 V line. The cells: 8,000 mA
+and the guard's 36 V cold; PV_F 83.47 V at the modelled step (round 2's 3.30 uH reference loop) and 84.6 V at the cold connection's ring,
+15.4 V under the 100 V absolute maximum and over the 80 V recommended row, which L4-E7 carries OPEN on the guard (F10). INP: 18.2878 V
+at the reference loop and 18.54 V at the ring with both divider resistors at 0.1 %, 1.46 V under the 20 V absolute maximum and over
+L4-E7's own 18 V line (F04). Q12: 74.84 V across it at the step (75 percent of 100 V), turning off at most 62.7 A within 11.4 us. The cells: 8,000 mA
 continuous against 3.33 A a cell at 10 A held and 6 A at 18 A for 60 s; the charger's 3.0 A against 2,000 mA max charge (1.0 A a cell).
 
 ## 3. Findings (out 4; each with the Layer 4 row it affects; nothing applied)
 
 | Id | Finding | Affects |
 |---|---|---|
-| L6P-F01 | **Designator collision, board A:** L4-E8's bank draft reserves R221 to R226 for the ballasts and L4-E11's charger draft adds R221 for U42's ILIM resistor; read by parsing both drafts, the common designator is R221; whichever applies second refuses or renumbers | R-07; R-157 / R-181 (E11-27) |
+| L6P-F01 | **Designator collision, board A:** L4-E8's bank draft reserves R221 to R226 for the ballasts and L4-E11's charger draft added R221 for U42's ILIM resistor. **Does not stand on set 28's tree:** read by parsing both drafts there, they share no designator | R-07; R-157 / R-181 (E11-27) |
 | L6P-F02 | **Identity, Q39 and Q40:** the fitted code resolves to BUK6Y10-30PX; Nexperia's sheet prints BUK6Y10-30P only (its ordering table names the type without a suffix); the X is INFERRED to be a packing code | E11-27, E11-32 (R-157, R-162) |
 | L6P-F03 | **Identity (rule D-2):** six selections rest on sheets that print a numbering scheme, not the part number (B540C-13-F; the four HoJLR2512 values; WSL2512R0700FEA): PART_NUMBER_INFERRED; a DECODED scheme in `part_identities.SCHEMES` would bind them | R-04, R-01, R-06, R-07, R-21, R-157 (tools, no circuit change) |
-| L6P-F04 | **Tolerance, R97:** the draft prints 1 percent, the brief 0.1 percent; at 1 percent (R96 low, R97 high) the INP divider's ratio rises 1.57 percent and INP reads 18.186 V at the modelled peak, over L4-E7's own 18 V line by 0.186 V and 1.81 V under the 20 V absolute maximum; at 0.1 percent it reads 17.933 V and the line holds (COMPUTED from the pinned stage-settings output) | R-173, R-176 row 3 |
+| L6P-F04 | **Tolerance, R96 and R97: answered.** L4-E7's rounds 4 and 5 put both divider resistors at 0.1 percent in its record and its guard draft (YAGEO RT0603BRD07100KL and RT0603BRD0728KL, codes owed). Its own reading at that tolerance: INP 18.2878 V against its 18 V line (margin -0.2878 V) at round 2's 3.30 uH reference loop, the line held from 3.58 uH, and 18.54 V at the cold connection's ring; 1.46 V under the 20 V absolute maximum at worst. COMPUTED from the reading: 18.2593 V at nominal, 18.5462 V at 1 percent. INP over its own margin line is L4-E7's open item on the guard (B6-ENG-1), not this record's | R-173, R-176 row 3 |
 | L6P-F05 | **Availability:** BQ25730RSNR LCSC 0 against a need of 5; CL32B225KCJSNNE LCSC 0 (JLCPCB 4654) against 20; CL31B106KBHNNNE LCSC 0 (JLCPCB 109264) against 10; two stock pools | E11-32 (R-162); R-173; PROCUREMENT.md section 8 |
 | L6P-F06 | **Codes the drafts owe:** TPS16630PWPR C1849461; Littelfuse SMCJ30A C224048; CL32B225KCJSNNE C55151; CL32B106KBJNNNE C138687 (readings, not selections; the generator edit is Layer 8's) | E11-27 / R-181; R-173; R-21 |
 | L6P-F07 | **Grade AT_LIMIT, U3:** the recommended operating junction temperature is -20 to 125 C (the electrical table -40 to +125 C); the envelope's floor is -20 C; the drawn BQ25731 prints the same row. Information for the cold-start bench row | none new (E11-23 / R-137) |
 | L6P-F08 | **Grade NOT READ, the Samsung ceramics:** the maker's pages print no temperature range; X7R's -55 to +125 C is the EIA class, not a reading | R-173 |
 | L6P-F09 | **Document owed, R19 and R87:** the code C2985708 resolves to Milliohm's HoLLR2512 series; the tree holds the HoJLR2512 sheet only, so the drafts' "3W 50ppm" is the catalogue's description | E11-01 (R-123), R-173 |
-| L6P-F10 | **Rating basis, U21 and Q12:** the guard's modelled PV_F excursion 80.6 V exceeds the TPS4811-Q1's recommended operating V(VS) 80 V while L4-E7 judges against the 100 V absolute maximum less 10 percent; L4-E7 states which row an 11 us excursion is judged on | R-173, R-176 row 3 |
+| L6P-F10 | **Rating basis, U21 and Q12: answered.** L4-E7's output (round 4) states the basis: the 100 V absolute maximum less 10 percent is an exclusion line only; the TPS4811-Q1's recommended operating row for VS, CS+ and CS- is 80 V (SLUSEE5E 6.2), which PV_F's 83.47 V at the reference loop exceeds by 3.47 V: OPEN on the guard, L4-E7's (B6-ENG-1) | R-173, R-176 row 3 |
 | L6P-F11 | **Grade OUTSIDE at the cell's own rows, the INR18650-35E:** discharge -10 to 60 C, charge 0 to 45 C against the -20 C floor, carried by the envelope's heater-mat carve-out; the margins unsuitable on published evidence (L4-E10). Information only | none new (R-47, R-103, U-01) |
 
 ## 4. The Layer 6 criteria moved for these parts (out 5)
@@ -98,5 +107,6 @@ continuous against 3.33 A a cell at 10 A held and 6 A at 18 A for 60 s; the char
   (F06) or the tools' (F03).
 - Bought nothing, contacted nobody: Nexperia's packing legend (F02), Samsung's catalogue (F08), Milliohm's HoLLR sheet (F09) and the
   clarification drafts of L4-E7, L4-E10 and L4-E11 stay as drafts for the owner.
-- The guard's rows (U21, Q12, Q13, D4, D11, the Samsung ceramics, R97, R87) are PROVISIONAL on L4-E7's round 3; when it lands they are
-  re-read against its draft and the output regenerated.
+- The guard's rows (U21, Q12, Q13, D4, D11, the Samsung ceramics, R97, R87) were re-read at set 28 against L4-E7's current output and
+  guard draft (F-13): the parts are the same, the figures are parsed, and every selection still holds on its rating (section 2). They stay
+  PROVISIONAL while the guard is a release-guarded draft with its source loop open (B6-ENG-1).

@@ -15,7 +15,10 @@ Properties, pinned on fixtures and on the committed record, never on today's cou
     collision, on a fixture that shares none it finds nothing, and it never reads a designator out of prose;
   * the grade verdict is the envelope's: strictly inside is INSIDE, an end met exactly is AT_LIMIT, a range that misses an end is OUTSIDE;
   * the catalogue readings the record cites are in the tree with the fields the record prints (code, model, brand, package, stock,
-    price ladder, read time), and no reading is newer than the record's output (the output is derived from them).
+    price ladder, read time), and no reading is newer than the record's output (the output is derived from them);
+  * set 28 (F-13): every L4-E7 figure the record states is PARSED from L4-E7's output and guard draft (no placeholder is left, the INP
+    figure is the rating table's own), the INP reader reads both the earlier and the set 27 row layouts on fixtures and refuses a file
+    without the row.
 Run: env -C v2/ecad/tools/tests python3 run.py test_l6pwr"""
 import importlib.util
 import json
@@ -197,3 +200,34 @@ def t_every_part_names_what_the_brief_asks():
         if p["doc"]: assert p["doc"][0] in m.DOCS and p["doc"][2] in ("PRINTED", "DECODE_NOTE"), p["id"]
     ids = [p["id"] for p in m.PARTS]
     assert len(ids) == len(set(ids))
+
+
+def t_every_l4e7_figure_is_parsed_from_l4e7s_output():
+    m = _load("l6pwr_parts.py")
+    F = m.fill_parts()
+    for p in m.PARTS:
+        for k, v in p.items():
+            assert "<<" not in json.dumps(v), (p["id"], k)
+    v, line, tol, margin, holds = F["inp"]
+    assert F["placeholders"]["INP_REF"] == "%.4f" % v and abs((line - v) - margin) < 1e-3, (v, line, margin)
+    assert F["R97"]["mpn"] != "none" and F["R97"]["tol"] == tol, F["R97"]
+
+
+def t_the_inp_reader_reads_both_row_layouts_and_refuses_a_file_without_the_row():
+    m = _load("l6pwr_parts.py")
+    rows = {"old": "         - U21's INP (R96 over R97)                            17.9046 of  18.0000, margin  0.0954; holds from 3.25 uH\n",
+            "new": "         - U21's INP (R96 over R97, both at 0.1 %)             18.2878 of  18.0000, margin -0.2878; holds from 3.58 uH\n"}
+    with tempfile.TemporaryDirectory() as td:
+        got = {}
+        for k, line in rows.items():
+            p = os.path.join(td, k + ".out"); open(p, "w", encoding="utf-8").write("x\n" + line)
+            got[k] = m.inp_line_from_out(p)
+        assert got["old"][:3] == (17.9046, 18.0, None) and got["new"][:3] == (18.2878, 18.0, 0.1), got
+        assert got["new"][3] == -0.2878 and got["new"][4] == "3.58 uH", got
+        p = os.path.join(td, "none.out"); open(p, "w", encoding="utf-8").write("nothing\n")
+        try:
+            m.inp_line_from_out(p)
+        except SystemExit as e:
+            assert e.code == 3
+        else:
+            raise AssertionError("a file without the INP row was read")
