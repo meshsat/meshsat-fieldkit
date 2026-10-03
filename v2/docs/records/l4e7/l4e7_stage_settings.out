@@ -649,6 +649,17 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        the lead closes only through stray capacitance, while the high side lead against its return, through the entry, is the
        path that loads D4. The lead's quarter wave is 15.0 MHz in free space (half wave 30.0 MHz), lower on soil: inside
        CS116's flat band, so it is added to the test frequencies as 5.14.2's installation resonance
+     - THE LEAD'S LENGTH AS A CITED INPUT (set 27): v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md (read at digest
+       640af5776829a2d0): "the selected network holds every rating with its margin only from that loop (two conductors 6.09
+       mm apart over 5 m); no document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not
+       the kit's panel lead"; v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (read at digest 083462bf4e982dc2): "the selected
+       network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no document
+       gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead". The 5 m is
+       this derivation's own a1solar ESTIMATE carried back by L4-E9's register, inside the envelope the guard-on transient
+       already assumes (0.30 to 10.20 uH over 5 m). The loop inductance per metre this derivation uses for that length is
+       (mu0 / pi) acosh(s / 2r) for two 4 mm2 conductors s apart: 0.060 uH/m at the envelope's 0.30 uH, 0.660 uH/m at the
+       selected network's floor (3.30 uH, 6.09 mm apart) and 2.040 uH/m at 10.20 uH. The guard pins that statement: it fires
+       again only when a document states another length or another sentence
      - THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC characterisation to
        MIL-STD-461G (11 December 2015) and the 'Ground, Army' row of its Table V (held; transcribed in
        v2/vendor/standards/mil-std-461g-requirement-matrix.md, the same file). That row marks CS116 A (5.14, damped sinusoids
