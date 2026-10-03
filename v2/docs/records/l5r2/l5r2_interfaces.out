@@ -3,8 +3,8 @@ a check of the contracts' text against their sources' text. Marks: MAKER, NETLIS
 NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISIONAL: resting on an open condition, its trigger named.
 
 0. INPUTS (sha256)
-   yaml       d084f866d7aff0b07f0bfb888a2bc3abd956c66e33074cdc73b22eeab3219b26  v2/ecad/tools/pcb_interfaces.yaml
-   hwfw       16e7977efe8e5d36a88cbf043d78ae9eb6c94ad8393a3c2e17a877d1f15100d7  v2/docs/HW-FW-CONTRACT.md
+   yaml       393305bed4edfd26588164da96871f17ce70492688e5648729545a3cc5987023  v2/ecad/tools/pcb_interfaces.yaml
+   hwfw       56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059  v2/docs/HW-FW-CONTRACT.md
    base_yaml  22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  a1f696de@v2/ecad/tools/pcb_interfaces.yaml
    base_hwfw  7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  a1f696de@v2/docs/HW-FW-CONTRACT.md
    e18        0f3a1f39367c449c4ee6bdf7fc3a6212ea4981d51295381714f70a6be62698b3  v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md
@@ -23,7 +23,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
    genb       3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8  v2/ecad/tools/gen_sch_b.py
    gend       54f17c8187d3bd195b2df6447a46c6bcaeb09209fe69bb3f61a7670a47585bbd  v2/ecad/tools/gen_sch_d.py
    qmx        ea72e0782d8ef82286f6ca8f32d8ee4f8faa489253b31e50b89663585b9c7bbf  v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt
-   ifaces     d084f866d7aff0b07f0bfb888a2bc3abd956c66e33074cdc73b22eeab3219b26  v2/ecad/tools/pcb_interfaces.yaml
+   ifaces     393305bed4edfd26588164da96871f17ce70492688e5648729545a3cc5987023  v2/ecad/tools/pcb_interfaces.yaml
    hdr2x13    38509e478ba394d0c87d25b3d16442d8f77d0eb3ccb90357a5a4639010fcc248  v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf
    sock2x13   6f7254b5bcf6f837ddd0540a002071371b19e2586fca48979b00ebf3f2dff623  v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf
    cab26      fdee657377aed9acce6d325d6dc53828fe7236be132a2f6c3b74641dc67ded8a  v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
