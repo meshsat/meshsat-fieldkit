@@ -9,8 +9,8 @@ The defect (L5R2-F05): board A's +3V3 (U12, a 3 A TPS62933 buck) reaches board D
 The correction: a TPS259631 eFuse U44 (board A's efuse() helper, TI SLVSET8A; the part board A fits as U21, U22, U23, U32, U39)
 between +3V3 and a new net +3V3_D8 on J_MEZZ1 pin 13: its limit is the printed 3.83 k row, 0.224 to 0.269 A (R234 3.83 k), 2.2
 times board D's declared 0.10 A peak (gen_sch_d.py's +3V3) and a quarter of the conductor's 1 A; on-resistance at most 143.4 mOhm
-under 4 V (SLVSET8A 7.5), 14 mV at the 0.10 A peak. OVLO 30.1k over 10k (the pin at 0.82 V on 3.3 V, inside 0.5 to 2 V; cut at
-4.69 to 4.99 V); EN to +3V3 through R238 100 k (note 2); FLT to +3V3 (the helper's 10 k). The +3V3 rail's load row for J_MEZZ1
+under 4 V (SLVSET8A 7.5), 14 mV at the 0.10 A peak. OVLO 30.1k over 10k (the pin at 0.81 to 0.86 V on 3.3 V, inside 0.5 to 2 V; cut at
+4.62 to 4.97 V); EN to +3V3 through R238 100 k (note 2); FLT to +3V3 (the helper's 10 k). The +3V3 rail's load row for J_MEZZ1
 moves to U44 and +3V3_D8 is declared; the harness contract IF-AD-HARNESS gains the alias +3V3_D8 / +3V3 on pin 13 (a Layer 5 text).
 
 Usage:  apply_gen_sch_a_d8v3.py TARGET [--check | --write]     (default --check: nothing is written)
@@ -29,7 +29,7 @@ _ROW = ' "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "
 _NEW_ROW = (_ROW.replace('"13": "+3V3"', '"13": "+3V3_D8"') +
             '# L5R2-F05, drafted by Layer 8 record l8r2 (MESHSAT-1357, 3 October 2026): board D\'s 3.3 V leaves on ONE harness conductor (1 A)\n'
             '# and U12 limits at amperes; U44 limits the branch at 0.224 to 0.269 A (R234 3.83 k, SLVSET8A\'s printed row), 2.2 times board\n'
-            '# D\'s 0.10 A peak. OVLO 30.1k over 10k (0.82 V on the pin at 3.3 V); EN through R238 100 k (SLVSET8A note 2).\n'
+            '# D\'s 0.10 A peak. OVLO 30.1k over 10k (0.81 to 0.86 V on the pin at 3.3 V; cut at 4.62 to 4.97 V); EN through R238 100 k (SLVSET8A note 2).\n'
             'efuse("U44", "+3V3", "+3V3_D8", "D8V3_EN", "D8V3_FLT", ["C242", "R234", "R235", "R236", "R237", "C243"], "3.83k 1% (ILM: 0.247 A)", ovlo_top="30.1k 1%", ovlo_lcsc="C23000")\n'
             'r("R238", "100k", "D8V3_EN", "+3V3", lcsc="C25803")\n'
             '_intent.rail("+3V3_D8", 3.3, 0.06, 0.10, "U44", loads={"J_MEZZ1": 0.10}, series_of="+3V3", converted=False, budget=0.03,\n'

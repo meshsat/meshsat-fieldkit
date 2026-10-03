@@ -9,13 +9,13 @@ time-to-trip) puts up to 1.1 A on each conductor, over the cable's and the socke
 the limiter is on board B, `gen_sch_b.py`'s F1 between +5V_DEV and PANEL_5V, so the correction is on board B.)
 
 The correction: a TPS259631 eFuse U901 (the part board B fits as U23 and U24, TI SLVSET8A) from +5V_DEV ahead of F1, so the
-panel's current is limited to 1.375 to 1.613 A (R901 604 Ohm by Equation 7, 1.506 A nominal; the tolerance interpolated between
+panel's current is limited to 1.375 to 1.614 A (R901 604 Ohm by Equation 7, 1.506 A nominal; the tolerance interpolated between
 the printed 909 Ohm row, 0.949 to 1.051 A, and the 453 Ohm row, 1.83 to 2.147 A: INFERRED), at most 0.81 A on each of the two
 conductors with an equal split and 0.88 A with a 20 percent resistance mismatch (INFERRED), under the 1 A, and over board C's
 1.0 A declared peak (gen_sch_c.py's +5V rail). The current limit responds in 87 us typical, the short circuit in 5 us (SLVSET8A
-7.6). F1 stays as the backstop (its 2.2 A trip now coordinated behind the eFuse's 1.613 A), so the energy chain and the placement
-keep their F1; its pin 1 moves to the eFuse's output PANEL_5V_EF. The OVLO divider is 42.2k over 10k (the pin at 0.98 V on 5.1 V,
-inside SLVSET8A's 0.5 to 2 V; cut at 6.11 to 6.50 V), not the helper's 100k over 10k, which leaves the pin at 0.46 V on a 5 V
+7.6). F1 stays as the backstop (its 2.2 A trip now coordinated behind the eFuse's 1.614 A), so the energy chain and the placement
+keep their F1; its pin 1 moves to the eFuse's output PANEL_5V_EF. The OVLO divider is 42.2k over 10k (the pin at 0.96 to 0.99 V on 5.1 V,
+inside SLVSET8A's 0.5 to 2 V; cut at 6.01 to 6.47 V), not the helper's 100k over 10k, which leaves the pin at 0.46 V on a 5 V
 input (the U23 and U24 finding of board A's comment). EN to +5V_DEV through R905 100 k (note 2); FLT to +3V3_DEV through R902.
 
 Usage:  apply_gen_sch_b_panel5v.py TARGET [--check | --write]     (default --check: nothing is written)
@@ -32,8 +32,8 @@ ADDS = ("U901", "R901", "R902", "R903", "R904", "R905", "C901", "C902")
 NETS = ("PANEL_5V_EF", "PANEL_EF_EN", "PANEL_EF_FLT")
 _EF = ('# L5R2-F03, drafted by Layer 8 record l8r2 (MESHSAT-1357, 3 October 2026): the panel ribbon carries PANEL_5V on two conductors\n'
        '# of 1 A each (Wurth WR-CAB 63912615521CAB, WR-BHD 61202623021); F1 alone let a fault reach 2.2 A, 1.1 A a conductor. U901 limits\n'
-       '# it to 1.375 to 1.613 A (R901 604 R, TPS2596 Equation 7; tolerance interpolated between SLVSET8A\'s printed rows: INFERRED), at\n'
-       '# most 0.81 A a conductor, over board C\'s 1.0 A peak; F1 stays behind it as the backstop. OVLO 42.2k over 10k (0.98 V on the pin).\n'
+       '# it to 1.375 to 1.614 A (R901 604 R, TPS2596 Equation 7; tolerance interpolated between SLVSET8A\'s printed rows: INFERRED), at\n'
+       '# most 0.81 A a conductor, over board C\'s 1.0 A peak; F1 stays behind it as the backstop. OVLO 42.2k over 10k (0.96 to 0.99 V on the pin, cut at 6.01 to 6.47 V).\n'
        'ic("U901", 9, "TPS259631DDAR eFuse +5V_DEV -> PANEL_5V_EF (ILM 1.506 A): the panel ribbon\'s two conductors under 1 A each", "DDA8", '
        '{"1": "GND", "2": "U901_DVDT", "3": "PANEL_EF_EN", "4": "+5V_DEV", "5": "PANEL_5V_EF", "6": "PANEL_EF_FLT", "7": "U901_ILM", "8": "U901_OVLO", "9": "GND"}, "C2155778")\n'
        'c("C901", "10n", "U901_DVDT", "GND"); r("R901", "604R 1% (ILM: 1.506 A)", "U901_ILM", "GND"); r("R902", "10k", "PANEL_EF_FLT", "+3V3_DEV")\n'
@@ -41,7 +41,7 @@ _EF = ('# L5R2-F03, drafted by Layer 8 record l8r2 (MESHSAT-1357, 3 October 2026
        'r("R905", "100k", "PANEL_EF_EN", "+5V_DEV")   # SLVSET8A note 2: EN pulled to a supply under 6 V through 100 k or more\n'
        '_intent.rail("PANEL_5V_EF", 5.0, 0.60, 1.0, "U901", loads={"F1": 0.60}, series_of="+5V_DEV", converted=False,\n'
        '             source_ic="U901 is a TPS2596 eFuse: its OUT pin IS the power path",\n'
-       '             note="the panel feed between the eFuse U901 (1.375 to 1.613 A) and the backstop polyfuse F1 (L5R2-F03, record l8r2)")\n')
+       '             note="the panel feed between the eFuse U901 (1.375 to 1.614 A) and the backstop polyfuse F1 (L5R2-F03, record l8r2)")\n')
 EDITS = [
     ('"F1": 0.60,            # polyfuse -> PANEL_5V, board C\'s own 5 V rail (its intent declares 0.6 A)',
      '"U901": 0.60,          # eFuse U901 then the polyfuse F1 -> PANEL_5V, board C\'s own 5 V rail (its intent declares 0.6 A; L5R2-F03)'),

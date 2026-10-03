@@ -1,0 +1,237 @@
+l8r2_drafts: the Layer 8 record l8r2 (round 2): the known engineering defects a desk design corrects (MESHSAT-1357)
+prototype design; nothing built, powered or measured; nothing applied to the tree
+
+1. INPUTS, pinned by sha256
+6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
+54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
+6888362e4a3295d0 v2/ecad/tools/lcsc_fill.py
+dcd4f972d9e3cfc0 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+5ff0cf542b98a586 v2/docs/records/s120/README.md
+469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
+942d562edd128759 v2/docs/ASSEMBLY.md
+9ec50ccfae3b70a0 v2/ecad/tools/pcb_interfaces.yaml
+863eda98cbb08535 v2/vendor/power/ti-tps61089-boost.pdf
+66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
+6e610db955ed8763 v2/vendor/power/littelfuse-smcj-series-tvs.pdf
+447624f4f2f7d37c v2/vendor/connectors/jst-ph-catalogue.pdf
+fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
+6f7254b5bcf6f837 v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf
+353ce937cff0b719 v2/vendor/power/ti-csd19532q5b-n-fet.pdf
+518a45fa2ecddc6f v2/docs/records/l8r2/inputs/l7pwr-cooler-identity-2087060b.md
+acd61db263e3cfda v2/docs/records/l8r2/inputs/l5r2-findings-and-rows-6902db8f.md
+b0abefa8db146baf v2/docs/records/l8r2/inputs/SOURCES.txt
+2df722be5dc5bbe5 v2/docs/records/l8r2/check_l8r2_netlist.py
+292383193915b424 v2/docs/records/l8r2/fetch_held_back.py
+c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
+28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
+2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
+6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
+af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
+d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
+0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
+347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
+88908ca2202b33ad v2/docs/records/l4e9/apply_gen_sch_a_u17.py
+352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
+cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
+8c3ddeb357780fb2 v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
+c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
+74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
+9ca230b6df9af01b v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
+576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
+3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back by its terms, fetched by fetch_held_back.py)
+
+   the figures and their classes
+   vref         (1.188, 1.212, 1.236)              MAKER      TPS61089 VREF, PWM mode (SLVSD38C 7.5)
+   ifb          1e-07                              MAKER      TPS61089 FB leakage at most 100 nA (SLVSD38C 7.5)
+   r1           88700                              BOUND      FB top 88.7 k 1 %
+   r2           10000                              BOUND      FB bottom 10 k 1 %
+   rtol         0.01                               BOUND      1 % resistors
+   rfreq        301000                             BOUND      FSW resistor 301 k
+   cfreq        2.4e-11                            MAKER      Equation 3: CFREQ 24 pF
+   tdel         8.6e-08                            MAKER      Equation 3: tDELAY 86 ns
+   vin_nom      5.1                                BOUND      the slot rail +5V_Sn, 5.1 V nominal (gen_sch_b.py)
+   vin_min      4.9                                BOUND      the slot rail at its low end at board B, 4.9 V
+   eta_lo       0.8                                ASSUMPTION TI's advice (9.2.2.5): a low efficiency for the inductor's worst case
+   eta          0.85                               ASSUMPTION the step-up's efficiency at 0.17 A for the budget
+   ifan         0.17                               MAKER      9WPA0412P6G001 rated current 0.17 A (Sanyo Denki's page, inputs/)
+   pfan         2                                  MAKER      9WPA0412P6G001 rated input 2.0 W (Sanyo Denki's page, inputs/)
+   vfan         (10.8, 13.2)                       MAKER      9WPA0412P6G001 operating range (Sanyo Denki's page, inputs/)
+   l            4.7e-06                            MAKER      XAL6060-472ME 4.7 uH, Isat 11 A (board A's own part)
+   ltol         0.3                                MAKER      TI's -30 % for the worst case (9.2.2.5)
+   isat         11                                 MAKER      XAL6060-472ME Isat 11 A
+   ilim         (7.3, 8.1, 8.9)                    MAKER      TPS61089 ILIM at RILIM 127 k (SLVSD38C 7.5)
+   fsw_tol      0.1                                ASSUMPTION fsw -10 % for the ripple (the sheet prints only typical rows)
+   co_eff       3.3e-05                            ASSUMPTION 3 x 22 uF 25 V X7R 1210 at 12 V, 50 % under DC bias (no curve held)
+   rsense       0.08                               MAKER      Equation 11: Rsense 0.08 Ohm
+   gea          0.00019                            MAKER      GEA 190 uS (SLVSD38C 7.5)
+   resr         0.005                              ASSUMPTION the ceramic output bank's ESR 5 mOhm
+   fc           10000                              BOUND      the chosen crossover 10 kHz
+   r5           23700                              BOUND      COMP resistor 23.7 k (E96)
+   c5           4.7e-08                            BOUND      COMP capacitor 47 nF
+   ovp          (12.7, 13.6)                       MAKER      TPS61089 output OVP 12.7 to 13.6 V (SLVSD38C 7.5)
+   ilim_rows    ((909.0, 0.949, 1.005, 1.051), (453.0, 1.83, 2.004, 2.147), (3830.0, 0.224, 0.247, 0.269)) MAKER      TPS2596 ILIM rows (SLVSET8A 7.5)
+   vovlo_r      (1.17, 1.22)                       MAKER      VOVLO(R) 1.17 to 1.22 V (SLVSET8A 7.5)
+   vovlo_f      (1.08, 1.13)                       MAKER      VOVLO(F) 1.08 to 1.13 V
+   ron_lo       0.1434                             MAKER      RON at VIN under 4 V, -40 to 125 C, at most 143.4 mOhm (SLVSET8A 7.5)
+   rilm_fan     1870                               BOUND      the coolers' eFuse ILM 1.87 k
+   rilm_pnl     604                                BOUND      PANEL_5V's eFuse ILM 604 Ohm
+   rilm_d8      3830                               BOUND      board D's 3.3 V eFuse ILM 3.83 k (the printed row)
+   smcj22a      (22.0, 24.4, 26.9, 35.5, 42.3, 6.5) MAKER      SMCJ22A VRWM 22.0, VBR 24.40 to 26.90 at 1 mA, VC 35.5 at IPP 42.3 A; PD 6.5 W on an infinite heat sink at TL 50 C (Littelfuse SMCJ, 11/20/15)
+   brk_oc       (6.364, 7.136)                     INFERRED   board E's entry breaker trip 6.364 to 7.136 A (L4-E11 3c)
+   vin_service  (9.0, 36.0)                        MAKER      REQ-015's vehicle input 9 to 36 V in service
+   ovr          (1.16, 1.2)                        MAKER      TPS48110 V(OVR) 1.16 to 1.20 V (SLUSEE5E 6.5)
+   ovf          (1.1, 1.13)                        MAKER      V(OVF) 1.10 to 1.13 V
+   iov          3e-07                              MAKER      I(OV) at most 300 nA
+   uvlor        (1.16, 1.2)                        MAKER      V(UVLOR) 1.16 to 1.20 V
+   rt_ov        200000                             BOUND      OV top 200 k 0.1 %
+   rb_ov        10000                              BOUND      OV bottom 10.0 k 0.1 %
+   tol_ov       0.001                              BOUND      0.1 % resistors
+   rt_en        33200                              BOUND      EN top 33.2 k 1 %
+   rb_en        10000                              BOUND      EN bottom 10.0 k 1 %
+   bus_bound    23.4                               INFERRED   VBUS20's in-service bound (records/s120 section 4)
+   u3_abs       32                                 MAKER      U3's VBUS, ACP, ACN absolute 32 V (SLUSE66A p.8)
+   u3_rec       26                                 MAKER      U3's recommended 26 V and ACOV's 26.0 V minimum
+   q7_abs       30                                 MAKER      Q7's VDS 30 V (SLPS526); Q8's VSD 1.0 V (SLPS516) while the charger switches
+   c_bank       0.0012672                          INFERRED   the six EEHZK1V331P at -20 %, 1.267 mF, ceramics not counted (records/s120 section 4)
+   c_vin        3.2e-05                            INFERRED   board A's VIN_RAW 20 to 32 uF (the restart guard's comment, gen_sch_a.py)
+   vin_ov       41.22                              INFERRED   board E's entry OV maximum 41.22 V (L4-E11 3c)
+   uv_fall      8.08                               INFERRED   U34's UV fall 8.08 V nominal
+   e_l1_first   0.01257                            INFERRED   L1's first-on-time energy, s120's MODEL term (records/s120 section 4)
+   i_brk_sc     13.87                              INFERRED   board E's short-circuit trip at most 13.87 A (L4-E11 3c)
+   i_cond       1                                  MAKER      Wurth WR-CAB 63912615521CAB and WR-BHD 61202623021: 1 A per conductor and contact at most (inputs/ R2-03)
+   f1           (1.1, 2.2)                         MAKER      MF-MSMF110-2 hold 1.10 A, trip 2.20 A at 23 C (inputs/ R2-04)
+   c_peak       1                                  BOUND      board C's +5V declared peak 1.0 A (gen_sch_c.py)
+   d_peak       0.1                                BOUND      board D's +3V3 declared peak 0.10 A (gen_sch_d.py)
+   mismatch     0.2                                ASSUMPTION a 20 % resistance mismatch between the two PANEL_5V conductors
+   rt_pnl       42200                              BOUND      PANEL_5V eFuse OVLO top 42.2 k 1 %
+   rt_d8        30100                              BOUND      board D eFuse OVLO top 30.1 k 1 %
+   rb_ovlo      10000                              BOUND      OVLO bottom 10 k 1 %
+   v5dev        5.1                                BOUND      +5V_DEV 5.1 V
+   v3           3.3                                BOUND      +3V3 3.3 V
+   budget_fan   (0.36, 0.51, 0.56)                 INFERRED   pwr_budget.py's cooler row per slot, a representative 30 mm 5 V fan (records/rv-pwr)
+   eta_a        0.89                               ASSUMPTION board A's 12 V buck-boost for choice (b)
+   eta_slot     0.9                                ASSUMPTION board A's slot converters
+
+2. ITEM 1, BOARD B'S COOLERS (E11-40, R-190): a per-slot TPS61089 step-up to 12 V behind an eFuse
+  output 11.508 / 11.962 / 12.430 V (VREF and the 1 % divider, FB leakage), inside the fan's 10.8 to 13.2 V: YES
+  fsw 498.1 kHz at 5.1 V in (Equation 3); duty 0.6376 at efficiency 0.85; RO 70.4 Ohm at the rated 0.17 A
+  inductor at the rated current: DC 0.539 A, ripple 2.013 A, peak 1.545 A (4.9 V in, the highest output, L -30 %, fsw -10 %, efficiency 0.80)
+  inductor at the eFuse's highest limit 0.538 A: DC 1.706 A, ripple 2.013 A, peak 2.713 A; ILIM 7.3 to 8.9 A over both, Isat 11.0 A over ILIM's 8.9 A maximum
+  RHP zero 313 kHz; the crossover limit min(fsw/10, fRHPZ/5) 49.8 kHz; the chosen 10 kHz under it
+  COMP: Equation 17 gives R5 23.8 k at CO 33 uF effective (ASSUMPTION), drawn 23.7 k; Equation 18 C5 49.0 nF, drawn 47 nF; Equation 19 C6 7.0 pF, under 10 pF: open
+  the crossover with R5 23.7 k against the effective output capacitance: 22 uF 15.0 kHz, 33 uF 10.0 kHz, 66 uF 5.0 kHz
+  eFuse ILM 1.87 k: 0.448 / 0.494 / 0.538 A, INFERRED (the wider neighbouring row's tolerance); OVLO 100 k over 10 k cuts at 12.64 to 13.67 V, 0.21 V over the rail's highest; the boost's own OVP 12.7 to 13.6 V
+  power, the fan row: pwr_budget.py's cooler row 0.36 / 0.51 / 0.56 W per slot (a representative 30 mm 5 V fan, not the pick); the pick prints 2.0 W at full speed
+  choice (a), a step-up per slot (SELECTED): 2.353 W on +5V_Sn per slot at full speed, 0.461 A at 5.1 V (0.480 A at 4.9 V), +0.353 W of conversion per slot; the three 7.84 W at VBAT behind the slot converters
+  choice (b), one 12 V feed from board A over the bay harness: the three 6.74 W at VBAT; (b) is 1.10 W lower at full speed, 0.31 W at the budget's 0.56 W a fan
+
+3. ITEM 2, VBUS20 AGAINST U2's SINGLE FAULTS (S-111, R-48)
+  the SMCJ22A: standoff 22.0 V over the regulated band's 20.96 V; breakdown 24.40 to 26.90 V, inside REQ-015's 9 to 36 V in service: YES
+  a source holding the bus under the entry breaker's 6.364 A: the clamp at 28.19 V carries 179.4 W, 28 times its 6.5 W on an infinite heat sink; at 1 A, 27.1 W: REJECTED
+  the cut-off: OV trip 24.25 to 25.31 V of VBUS20 (V(OVR), the 0.1 % divider, I(OV)), 0.85 V over the in-service bound 23.40 V, 0.69 V under U3's recommended 26.0 V
+  release 23.00 to 23.84 V; EN on at 4.93 to 5.26 V of VIN_RAW_IN, under U34's 8.08 V UV
+  after the cut, a shorted Q2: VIN_RAW's 32 uF from 41.22 V into the bank (1.267 mF) with L1 at 13.87 A: at most 25.85 V
+  after the cut, an open FB: U2 pumping VIN_RAW's 32 uF down to 8.08 V and L1's 12.57 mJ into the bank: at most 26.49 V
+  margins: 5.51 V under U3's absolute 32.0 V; 2.51 V under Q7's 30.0 V with Q8's 1.0 V; at most 0.49 V over U3's recommended 26.0 V, for the event
+
+4. ITEM 3, LAYER 5'S ROUND 2 FINDINGS
+  L5R2-F03, PANEL_5V: as drawn F1 lets up to 1.10 A a conductor (its 2.20 A trip over two); with U901 (ILM 604 Ohm) 1.375 / 1.506 / 1.614 A, INFERRED (the wider neighbouring row's tolerance);
+    a conductor 0.807 A (equal split) or 0.880 A (20 % mismatch), under the 1.0 A; the lowest limit 1.375 A over board C's 1.0 A peak
+    its OVLO 42.2 k over 10 k: the pin at 0.961 to 0.993 V on 5.1 V (0.5 to 2 V recommended); cut at 6.01 to 6.47 V
+  L5R2-F05, board D's 3.3 V: U44 (ILM 3.83 k) 0.224 / 0.247 / 0.269 A, printed row; 2.2 times board D's 0.10 A peak, 27 % of the conductor's 1 A at most; drop 14.3 mV at the peak
+    its OVLO 30.1 k over 10 k: the pin at 0.811 to 0.860 V on 3.3 V (+3 %); cut at 4.62 to 4.97 V
+  L5R2-F04, J_QMX and J_CAM: PH1x4 is a 2.54 mm pin header in board B's table; ASSEMBLY.md and IF-LID-HF say JST PH 1x4; corrected to PH4,
+    Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical with C131334 (B4B-PH-K-S), the part boards A (J_USBW) and D (J_USB3) carry
+
+5. COMPOSITION ON BOARD A (scratch copies of gen_sch_a.py; OK = applied and the result parses)
+  L4-E9's power order, l8gnd's two, this record's two, then d8dec31's mainpb:
+    l4e6/apply_gen_sch_a_r12.py                OK
+    l4e11/apply_gen_sch_a_guard.py             OK
+    l4e11/apply_gen_sch_a_charger.py           OK
+    l4e4/apply_gen_sch_a_r11.py                OK
+    l4e8/apply_gen_sch_a_bank.py               OK
+    l4e4/apply_gen_sch_a_r138.py               OK
+    l4e9/apply_gen_sch_a_u17.py                OK
+    l8gnd/apply_gen_sch_a_gnd002.py            OK
+    l8gnd/apply_gen_sch_a_hotr1.py             OK
+    l8r2/apply_gen_sch_a_d8v3.py               OK
+    l8r2/apply_gen_sch_a_vbus20ov.py           OK
+    d8dec31/apply_gen_sch_a_mainpb.py          OK (apply_gen_sch_a_mainpb (R248, C247): a_fwd.py, 10 line(s) added)
+  this record's two first, then the power order, l8gnd's two and mainpb (every anchor of theirs still applies after these):
+    l8r2/apply_gen_sch_a_d8v3.py               OK
+    l8r2/apply_gen_sch_a_vbus20ov.py           OK
+    l4e6/apply_gen_sch_a_r12.py                OK
+    l4e11/apply_gen_sch_a_guard.py             OK
+    l4e11/apply_gen_sch_a_charger.py           OK
+    l4e4/apply_gen_sch_a_r11.py                OK
+    l4e8/apply_gen_sch_a_bank.py               OK
+    l4e4/apply_gen_sch_a_r138.py               OK
+    l4e9/apply_gen_sch_a_u17.py                OK
+    l8gnd/apply_gen_sch_a_gnd002.py            OK
+    l8gnd/apply_gen_sch_a_hotr1.py             OK
+    d8dec31/apply_gen_sch_a_mainpb.py          OK (apply_gen_sch_a_mainpb (R248, C247): a_rev.py, 10 line(s) added)
+  each power draft alone after this record's two (the bank after r12, which it requires):
+    l4e6/apply_gen_sch_a_r12.py                OK
+    l4e11/apply_gen_sch_a_guard.py             OK
+    l4e11/apply_gen_sch_a_charger.py           OK
+    l4e4/apply_gen_sch_a_r11.py                OK
+    l4e8/apply_gen_sch_a_bank.py               OK
+    l4e4/apply_gen_sch_a_r138.py               OK
+    l4e9/apply_gen_sch_a_u17.py                OK
+  the four Layer 8 drafts of board A in reverse order: OK
+
+6. COMPOSITION ON BOARD B (no power draft targets gen_sch_b.py)
+  forward: _b_gnd002 OK; _b_fans12 OK; _b_panel5v OK; _b_ph4 OK
+  reverse: _b_ph4 OK; _b_panel5v OK; _b_fans12 OK; _b_gnd002 OK
+  alone l8gnd/apply_gen_sch_b_gnd002.py OK
+  alone l8r2/apply_gen_sch_b_fans12.py OK
+  alone l8r2/apply_gen_sch_b_panel5v.py OK
+  alone l8r2/apply_gen_sch_b_ph4.py    OK
+
+7. DESIGNATORS
+  A l4e6/apply_gen_sch_a_r12.py                none
+  A l4e11/apply_gen_sch_a_guard.py             none
+  A l4e11/apply_gen_sch_a_charger.py           C236, C237, C238, C239, D23, Q39, Q40, R228, U42
+  A l4e4/apply_gen_sch_a_r11.py                none
+  A l4e8/apply_gen_sch_a_bank.py               R221, R222, R223, R224, R225, R226
+  A l4e4/apply_gen_sch_a_r138.py               none
+  A l4e9/apply_gen_sch_a_u17.py                R227
+  A l8gnd/apply_gen_sch_a_gnd002.py            H1, R229
+  A l8gnd/apply_gen_sch_a_hotr1.py             C240, R230, R231, R232, U43
+  A l8r2/apply_gen_sch_a_d8v3.py               C242, C243, R234, R235, R236, R237, R238, U44
+  A l8r2/apply_gen_sch_a_vbus20ov.py           C244, C245, C246, Q41, R239, R240, R241, R242, R243, R244, R245, R246, R247, U45
+  A d8dec31/apply_gen_sch_a_mainpb.py          C247, R248
+  B l8gnd/apply_gen_sch_b_gnd002.py            none
+  B l8r2/apply_gen_sch_b_fans12.py             C701, C702, C703, C704, C705, C706, C707, C708, C709, C710, C731, C732, C733, C734, C735, C736, C737, C738, C739, C740, C761, C762, C763, C764, C765, C766, C767, C768, C769, C770, L701, L731, L761, Q701, Q702, Q731, Q732, Q761, Q762, R701, R702, R703, R704, R705, R706, R707, R708, R709, R710, R711, R712, R731, R732, R733, R734, R735, R736, R737, R738, R739, R740, R741, R742, R761, R762, R763, R764, R765, R766, R767, R768, R769, R770, R771, R772, U701, U702, U731, U732, U761, U762
+  B l8r2/apply_gen_sch_b_panel5v.py            C901, C902, R901, R902, R903, R904, R905, U901
+  B l8r2/apply_gen_sch_b_ph4.py                none
+  board A pairwise intersections: none (DISJOINT)
+  board B pairwise intersections: none (DISJOINT)
+  literal designators drawn twice in the composed board A generator: none
+  literal designators drawn twice in the composed board B generator: none
+  board B's 700 and 900 blocks against every designator the generator builds from a base: free
+
+8. THE NETLIST CHECK (check_l8r2_netlist.py)
+  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
+    A VCO   NOT DRAWN: Q41.5 is on None, not VIN_RAW_IN
+    A D8V3  NOT DRAWN: J_MEZZ1.13 is on '+3V3', not +3V3_D8
+  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256 3ef9b8c49a01b728
+    B FANS  NOT DRAWN: J_FAN1.1 is on '+5V_S1', not FAN1_V
+    B PNL   NOT DRAWN: U901.5 is on None, not PANEL_5V_EF
+    B PH4   NOT DRAWN: J_CAM on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical; J_QMX on Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical
+  record l8r2's corrections on the netlists: NOT DRAWN
+  on fixtures carrying the drafts (built in check_l8r2_netlist.py, not files of the tree):
+    A VCO   DRAWN
+    A D8V3  DRAWN
+    fixture A: DRAWN
+    B FANS  DRAWN
+    B PNL   DRAWN
+    B PH4   DRAWN
+    fixture B: DRAWN
+
+END
