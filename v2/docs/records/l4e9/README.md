@@ -87,8 +87,19 @@ drafted; fault qualification open"; the guard's 0.240 V margin a design target. 
 its evidence specimens; output section 26e): R-160, R-179, R-181 and R-184 rewritten, R-188 new; the register at 178 items. The
 prototype qualification route (the page's 5d, output section 27, the review's next milestone): one table over every measurement row
 that decides a Layer 4 condition, with what to buy (the prices read in this tree, checked against their files) and what to send; the
-purchase and send lists for the owner; desk work on those items stops there. Status: known defects addressed in drafts; feasibility
-conditions remain open.
+purchase and send lists for the owner; desk work on those items stops there. Round 3 (3 October 2026): L4-E11's designator fix
+(`787e7b15`: U42's ILIM resistor R228) and L4-E7's rounds 3 and 4 (`f73b07ea`): route 3 worked to the circuit does not hold (result
+(ii)), the 0.240 V reserve budgeted (holds only with RSENSE1 at or under 3.0 nH), B6-ENG-1 keeps the floor with that condition and
+PV_F over the recommended 80 V OPEN, and a NEW DEMONSTRATED DEFECT D-16 (B6-ENG-2: the drafted sense out of its +-100 mV operating
+range at the 25 V corner) goes to the engineer with the sense arrangement itself, R-189; R97 at 0.1 %, U21 on by 9.16 V, the INP
+divider's corrected arithmetic; the register at 179 items. Round 3 (c), the last merge before the freeze: L4-E11's fan-feed
+round (`af4672f4`, its section 18; output section 26f) after Layer 7's D-18 (`v2/docs/records/l7pwr/L7-FANS-AND-TH1.md` at
+`2087060b`, cited, not in this base): the mixers Sanyo Denki 9WL0612P4H001 on a regulated 12.0 V rail on board E (U18 ADI
+LTC3115-1 as TA04 with L4 Coilcraft XAL6060-103ME; a fan fault a rail hiccup, not a U12 reset), the branch declared 1.3208 A
+(89.8 % of U42's least limit, R228 kept), E11-39 a PWM-duty ramp, E11-40 a finding for board B's owner (R-190, the coolers on
++5V_Sn), the purchase list with Layer 7's fan prices read from its FindChips file at that commit, the handoff's omitted
+dependencies without the fan-feed round; the register at 180 items. Status: known defects addressed in drafts; feasibility conditions remain
+open.
 
 | File | What it is |
 |---|---|
@@ -121,4 +132,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 53 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 54 tests.

@@ -606,8 +606,10 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    # no material defect is open: D-10 and D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == [], "no material defect is open"
+    # the only open material defect is D-16 (L4-E7's B6-ENG-2), demonstrated and handed to the engineer with a register row; D-10 and
+    # D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
+    opn = [d for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    assert [d["id"] for d in opn] == ["D-16"] and "B6-ENG-2" in opn[0]["state"] and "R-189" in opn[0]["resolution"]
     assert all(d["state"].startswith("ADDRESSED IN DRAFTS") for d in m.DEFECTS if d["id"] in ("D-10", "D-11"))
     st = {d["id"]: d["state"] for d in m.DEFECTS}
     assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
@@ -1322,7 +1324,7 @@ def t_consolidation_the_panel_lead_surge():
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
     assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
-    assert g2["verdict"] != "PASS" and "no material defect is open" in g2["constraint"] and "R-175" in g2["constraint"]
+    assert g2["verdict"] != "PASS" and "one material defect is open, D-16" in g2["constraint"] and "R-175" in g2["constraint"]
     # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     r156, r173, r174, r175, r176 = (reg[x] for x in ("R-156", "R-173", "R-174", "R-175", "R-176"))
@@ -1418,7 +1420,7 @@ def t_fix_round_the_layer4_review_integrated():
     assert ch["R-157"][0] < ch["R-177"][0] < ch["R-22"][0] and ch["R-178"][1] == "3a"
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
-    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
     # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
@@ -1557,7 +1559,7 @@ def t_the_prototype_qualification_route():
             assert rid in reg, rid
             named.add(rid)
             assert reg[rid][1] in ("TEST", "EVIDENCE", "LAYOUT") or rid == "R-151", (rid, reg[rid][1])
-    for rid in ("R-104", "R-159", "R-160", "R-161", "R-168", "R-176", "R-179", "R-182", "R-183", "R-184", "R-185"):
+    for rid in ("R-104", "R-159", "R-160", "R-161", "R-168", "R-176", "R-179", "R-182", "R-183", "R-184", "R-185", "R-189"):
         assert rid in named, rid
     sp = F["cp"]["spec"]
     by = {r[0].split(" ")[0]: r for r in rows}
@@ -1574,10 +1576,20 @@ def t_the_prototype_qualification_route():
     buy, total, unp, send = m.cons_qual_lists(F)
     tot = {}
     for k, pr in m.PRICES.items():
-        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        if pr.get("commit"):
+            # a price read by another record and cited at its commit (Layer 7's fans): the figure is checked in that commit's file
+            r_ = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
+            assert r_.returncode == 0, (k, pr["src"], pr["commit"])
+            d = json.loads(r_.stdout.decode("utf-8"))
+        else:
+            d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
         kind, key = pr["key"]
         if kind == "price_usd":
             assert abs(float(d["price_usd"][key]) - pr["unit"]) < 1e-9, k
+        elif kind == "findchips":
+            mpn, dist, qty = key
+            br = [b for row in d["parts"][mpn] if row["distributor"] == dist for b in row["price_breaks"] if b[0] == qty]
+            assert len(br) == 1 and br[0][1] == pr["cur"] and abs(float(br[0][2]) - pr["unit"]) < 1e-9, k
         else:
             assert key in json.dumps(d), k
         tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + pr["qty"] * pr["unit"]
@@ -1601,6 +1613,10 @@ def t_the_prototype_qualification_route():
     low = (page + txt).lower()
     for mm in re.finditer(r"\b(is|was|has been) (bought|sent)\b", low):
         assert "nothing" in low[max(0, mm.start() - 40):mm.start()], low[max(0, mm.start() - 60):mm.end()]
+
+
+def fmt_(x):
+    return _M().fmt(x)
 
 
 def t_the_decisions_are_kept_apart():
@@ -1637,12 +1653,23 @@ def t_the_decisions_are_kept_apart():
     assert m.L4F03_STATUS in exd["D-15"][2] and m.L4F03_STATUS in short
     g2 = [g for g in m.GATE if g["n"] == 2][0]
     assert m.L4F03_STATUS in g2["constraint"]
-    assert "DESIGN TARGET" in m.RESERVE_NOTE and "DESIGN TARGET" in de["D-10"]["options"]
+    assert "budgeted" in m.RESERVE_NOTE and "3.0 nH" in m.RESERVE_NOTE and "3.0 nH" in de["D-10"]["options"]
     rows = {r["id"]: r for r in _C["R"]}
     b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
     assert m.RESERVE_NOTE in b6c.what and m.RESERVE_NOTE in exd["D-10"][2]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    assert "DESIGN TARGET" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+    assert "3.0 nH" in reg["R-176"][5] and "80.58 V" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+    # L4-E7's round 3: D-16 is a demonstrated defect handed to the engineer, its figures L4-E7's, its row and bench in the register
+    b6 = F["sv"]["rm"]["b6"]
+    assert b6["sense"][0] > 0.1 and b6["fig1"] < b6["sense"][0] and b6["r3_peaks"][0] <= b6["r3_peaks"][1] and 0 < b6["lsense"] < 5
+    assert b6["budget"][0] > 0.24 and b6["budget"][1] < -0.24 and b6["pvf80"][0] > 80.0 and b6["pvf80"][2] > b6["l_uh"]
+    assert [k for k, _ in b6["eng2"]][0] == "Affected circuit" and len(b6["eng2"]) == 8
+    assert de["D-16"]["state"].startswith("OPEN") and "B6-ENG-2" in de["D-16"]["state"] and de["D-16"]["rows"] == ["IF-01", "IF-02"]
+    assert fmt_(b6["sense"][0]) in de["D-16"]["constraint"] and fmt_(b6["fig1"]) in de["D-16"]["options"]
+    assert reg["R-189"][1] == "TEST" and "B6-ENG-2" in reg["R-189"][2] and "result (ii)" in reg["R-187"][2] and "R228" in reg["R-181"][2]
+    page = open(PAGE, encoding="utf-8").read()
+    assert "| Field | Entry (B6-ENG-2) |" in page.split("<!-- gen:b6eng:begin -->")[1].split("<!-- gen:b6eng:end -->")[0]
+    assert "R221 11.0k 0.1 % on ILIM," not in page and "R228" in page
 
 
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
@@ -1657,13 +1684,13 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert g["allow"] < g["rds_max"][0] and g["z_ev"][0][2] > g["z_ev"][1][2] > g["z_ev"][2][2] and g["svc"][0] < 150.0
     assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
     de = {d["id"]: d for d in m.DEFECTS}
-    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    assert [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")] == ["D-16"]
     s14 = de["D-14"]["state"]
     assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     owner_of = {i: o.strip() for i, _k, o in F["e11_items"]}
-    for item in ("E11-35", "E11-36", "E11-37", "E11-38", "E11-39"):
+    for item in ("E11-35", "E11-36", "E11-37", "E11-38", "E11-39", "E11-40"):
         rows = [r for r in reg.values() if re.search(r"\b%s\b" % item, r[3])]
         assert rows and all(r[4] == owner_of[item] for r in rows), item
     r181 = reg["R-181"]
@@ -1688,6 +1715,81 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert len(g["f16"]) == 4 and len(g["g16"]) == 5
     sec = _C["text"].split("26. THE REVIEW OF THE PROVISIONAL FIXES")[1]
     assert "26a L4-F02" in sec and "26b L4-F03" in sec and "26d L4-F01" in sec
+
+
+def t_the_fan_feed_after_layer7s_d18():
+    """L4-E11's fan-feed round (its section 18, after Layer 7's D-18), carried as properties: L4-E11's files are pinned at a labelled
+    commit; the mixers' rail is a regulated output inside the fans' printed window, enabled under VSYS_E's floor and disabled over
+    U12's start (a fan fault a rail hiccup, not a controller reset); the branch's declared current is the sum L4-E11 prints and sits
+    under U42's least limit (so R228 is kept) and under the contact; the interface row carries that current and not 15a's; the diagram's
+    sensor block names the rail; the behaviour row, the T-H1 note, the change list and the route carry it; E11-40 is a register row
+    for board B's owner with a missing draft at step B and no draft of this record; Layer 7's fan prices are read from its FindChips
+    file at the cited commit and equal the purchase list's figures; the handoff's omitted dependencies no longer name the fan-feed round
+    and do name Layer 7's record; nothing says the fans' start was read."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    assert _pin_held(m, "l4e11") and _pin_held(m, "l4e11md") and _pin_held(m, "e11aux")
+    rail = F["cp"]["rail"]
+    assert rail["win"][0] <= rail["vout"][1] <= rail["vout"][0] <= rail["vout"][2] <= rail["win"][1]
+    assert rail["run"][0] < rail["drop"][2] and rail["run"][1] > 3.8 and rail["run"][1] < rail["run"][0]
+    assert abs(rail["decl"] - (0.8 + (rail["decl"] - 0.8))) < 1e-9 and rail["decl"] < rail["u42"][0] <= F["f02"]["ef"][1] + 1e-9
+    assert abs(rail["u42"][0] - rail["decl"] - rail["u42"][2]) < 1e-3 and abs(100.0 * rail["decl"] / rail["u42"][0] - rail["u42"][1]) < 0.1
+    assert rail["decl"] < F["fx"]["c813"] and abs(100.0 * rail["decl"] / F["fx"]["c813"] - rail["contact"][0]) < 0.1
+    assert rail["drop"][1] > rail["drop"][2] and rail["heat"][0] < rail["heat"][1] and rail["heat"][3] < rail["heat"][0]
+    # the interface row IF-06 carries the declared current, not 15a's 1 A, against the contact and against U42's least limit
+    r6 = [r for r in _C["R"] if r["id"] == "IF-06"][0]
+    decl = [c for c in r6["checks"] if c.a == rail["decl"]]
+    assert len(decl) == 2 and {c.b for c in decl} == {F["fx"]["c813"], rail["u42"][0]} and all(c.met is True for c in decl)
+    assert not any(c.a == F["fx"]["aux_a"] and c.b == F["fx"]["c813"] for c in r6["checks"])
+    assert fmt_(rail["decl"]) + " A declared" in r6["v"] and "1 A declared" not in r6["v"]
+    # the diagram, the behaviour row, the T-H1 note
+    N, E, C, NP = m.cons_diagram(F, st)
+    blk = {n[0]: " ".join(n[4]) for n in N}
+    assert "U18" in blk["CTL_SENS"] and "VSYS_E" in blk["CTL_SENS"]
+    beh = {r[0]: r for r in m.cons_behaviour(F, D, st)["4f"]}
+    fans = beh["the fans"][1]
+    assert rail["mixer"] in fans and "rail hiccup" in fans and "NOT READ" in fans and "E11-40" in fans and "17.375 V: their maximum supply voltage owed" not in fans
+    _rows, note = m.cons_th1(F)
+    assert "R-150" in note and fmt_(rail["heat"][1]) in note and fmt_(rail["heat"][0]) in note and rail["cooler"] in note
+    # the register and the change list
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    r190 = reg["R-190"]
+    assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
+    assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
+    assert "U18" in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
+    assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
+    ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
+    assert ch["R-190"][1] == "B" and "U18" in ch["R-177"][5] and "U18" in ch["R-188"][5]
+    assert not any(f.startswith("apply_") and "fan" in f for f in os.listdir(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) if "e11-40" in f.lower())
+    # the route's row and the purchase list: Layer 7's prices read from its file at the cited commit
+    by = {r[0].split(" ")[0]: r for r in m.cons_qual(F)}
+    e35 = by["E11-35"]
+    assert rail["mixer"] in e35[4] and rail["l7c"] in e35[4] and "73.69" in e35[8] and "NOT READ" in e35[8] and "nothing to buy until D-18" not in e35[8]
+    for k, mpn in (("fan60", rail["mixer"]), ("fan40", rail["cooler"])):
+        pr = m.PRICES[k]
+        assert pr["commit"] == rail["l7c"] and mpn in pr["what"]
+        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (pr["commit"], pr["src"])], capture_output=True)
+        assert r.returncode == 0
+        import json
+        d = json.loads(r.stdout.decode("utf-8"))
+        _kind, (kmpn, dist, qty) = pr["key"]
+        br = [b for row in d["parts"][kmpn] if row["distributor"] == dist for b in row["price_breaks"] if b[0] == qty]
+        assert len(br) == 1 and br[0][1] == pr["cur"] and abs(br[0][2] - pr["unit"]) < 1e-9
+    buy, total, unp, send = m.cons_qual_lists(F)
+    assert any(rail["mixer"] in b and rail["l7c"] in b for b in buy) and any(rail["cooler"] in b and rail["l7c"] in b for b in buy)
+    assert any("LTC3115EFE-1" in u and "NOT READ" in u for u in unp) and "USD" in total and "EUR" in total
+    # the handoff's omitted dependencies and the page
+    assert "fan-feed" not in m.HANDOFF_OMITTED and "l7pwr" in m.HANDOFF_OMITTED and rail["l7c"] in m.HANDOFF_OMITTED
+    page = open(PAGE, encoding="utf-8").read()
+    cur = page.split("## 11. ")[0] + page.split("## 12. ")[1].split("## Appendix A.")[0]   # the register's history paragraph and the appendices keep their rounds' words
+    assert "nothing to buy until D-18" not in cur and "the fans' rating" not in cur and "fans' range" not in cur and "stand-ins until D-18" not in cur
+    short = page.split("## In short")[1].split("## 1. ")[0]
+    assert fmt_(rail["decl"]) in short and "E11-40" in short and "R-190" in short
+    a8 = page.split("### 8a.")[1].split("### 8b.")[0]
+    assert "fan-feed round" in a8 and rail["l7"] in a8 and rail["l7c"] in a8 and "rail hiccup" in a8 and "R-190" in a8
+    assert "26f THE FANS' FEED" in _C["text"] and rail["l7c"] in _C["text"].split("26f THE FANS' FEED")[1].split("\n")[0]
+    for f_ in (cur, open(REG, encoding="utf-8").read(), _C["text"]):
+        assert not re.search(r"start(ing)? current[^.;|]{0,60}\bread\b(?! from the maker)", f_.replace("NOT READ", "NOTREAD")), "a start current said read"
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
