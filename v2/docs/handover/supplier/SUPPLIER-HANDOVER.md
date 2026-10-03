@@ -96,9 +96,13 @@ package asks you to quote for (section 8); "owner" means a decision or purchase 
 
 ## 5. The decision-critical power questions
 
-The status phrase for the power design is **"known defects addressed in drafts; feasibility conditions remain open"**: the
-architecture candidate is CONDITIONAL, the power-design closure gate is BLOCKED (an unresolved material protection or
-feasibility condition keeps it blocked; no requirement conflict is needed for that), and fabrication release is BLOCKED. The
+**Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are drafts, not an
+implemented or qualified circuit. Power-design closure and fabrication release are blocked.** Rows P1, P2 and P8 are design
+DEFECTS of the drafted circuit that need a supported circuit correction (P1 and P2) or an actual supply change with its
+consequences verified (P8); they are not missing bench evidence for an otherwise finished design. Rows P3 to P7 are qualification
+gaps or design choices resting on unprinted or unmeasured facts. Row P9 is an objective shortfall. The collaborator's targeted
+recheck of this candidate read NOT YET (`records/l4close/checks/astra-check-l4close-2.md`); later corrections rest on the
+coordinator's checks, which are labelled as such and are not an independent review. The
 rows below are the ones a reviewer should start with; each names its record.
 
 | # | Circuit or function | Evidence and the failed or uncertain condition | Proposed correction or experiment | Acceptance criterion | Affects |
@@ -108,7 +112,7 @@ rows below are the ones a reviewer should start with; each names its record.
 | P3 | Board A's battery switch Q39/Q40 (two Nexperia BUK6Y10-30P under the TI BQ25730's BATDRV) | RDS(on) at the -8.5 V drive and hot is not printed (21.136 mOhm is an allowance); the installed transient coupling; Ciss is printed typical only, 4.72 nF for the pair at -15 V, about 5.74 nF near 0 V, against TI's "below 5 nF" (OPEN); the 242.9 A, 33.8 us docking inrush taken in one FET (`records/l4e11/` sections 16, 17b, 17d) | the specimens of section 6 (E11-29, E11-30, E11-36, E11-37); or one FET with a heat path through the case; or a precharge or slew limit on board P | RDS(on) at most 21.136 mOhm at -8.5 V and 150 C; self-plus-mutual impedance at most 33.12 / 10.753 / 3.785 / 0.703 K/W; BATDRV regulates without oscillation; the six-sample pulse test passes | board A |
 | P4 | The auxiliary feed to board E over one dock contact (TI TPS16630 eFuse U42, R228 11.0k) | Sustained overload is bounded (limit 1.471 to 1.802 A, at most 51.5 % of the contact's 3.5 A); the fault envelope is not: the 566 A short peak is an extrapolation, the start into a short has no printed total duration, intermittent shorts are open (`records/l4e11/` 17a, E11-38) | bench E11-38 cases (a) to (h) | the limit inside 1.471 to 1.802 A; the contact at or under 85 C and its resistance within +10 %; the IN pin at most 60 V | boards A and E |
 | P5 | Source-only start and held states on the BQ25730 (U-04) | The first start with no usable pack is not bounded by printed figures; the held pack current through the body diodes is unprinted (E11-31; TI questions Q-TI-15, 16, 17, 18 drafted) | bench E11-31 on the first board A; TI's answers | VSYS at or over 12.054 V with no pack; the held pack current at or under 1 mA; the start succeeds at every corner | board A's charger release |
-| P6 | Heat rejection of the sealed case (U-02) | A conservative bound of 0.566 to 0.673 W/K lid open (fans' airflow credited at zero) against lines of 1.447 W/K (the profile at +20 C) up to 2.025 to 2.525 W/K (charging while running); the SGP41's lid-closed line is a modelled shortfall of the analysed arrangement; the e-paper's unpowered storage at +70 C is unqualified (`records/l4e12/`) | T-H1 on an empty-case mock-up with the frame, plate, fans and dummy heaters (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`, the bill in Layer 7's record); the e-paper soak at +70 C on the glass | each mode's reading at or over its line less its uncertainty; the soaked sample functional | the thermal design; the test plan's E3 and E5 rows |
+| P6 | Heat rejection of the sealed case (U-02) | A conservative bound of 0.566 to 0.673 W/K lid open (fans' airflow credited at zero) against lines of 1.447 W/K (the profile at +20 C) up to 2.025 to 2.525 W/K (charging while running); the SGP41's lid-closed line is a modelled shortfall of the analysed arrangement; the e-paper's unpowered storage at +70 C is unqualified (`records/l4e12/`) | T-H1 on an empty-case mock-up with the frame, plate, fans and dummy heaters (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`, the bill in Layer 7's record); the e-paper soak at +70 C on the glass | per point, G_measured - U_G >= G_required, with U_G the expanded (k = 2) uncertainty in W/K (the procedure's section 6 prints each mode's need and the reading that passes once U_G is taken off: M2 as ruled needs 2.709 W/K and passes at a reading of at least 3.081 W/K); example: a 2.0 W/K need, a 1.9 W/K reading and a 0.1 W/K uncertainty give a lower bound of 1.8 W/K, a FAIL; the soaked sample functional | the thermal design; the test plan's E3 and E5 rows |
 | P7 | The cell (U-01) | The ruled 35E's printed limits do not cover the +71 C and -33 C storage rows; a Saft MP 176065 xtd route is a PROPOSAL (temperature windows supported, current at temperature, storage recovery and fit awaited) (`records/l4e10/`) | Saft's answers or a one-cell qualification; the fit mock-up (R-167, which blocks only the proposal's adoption) | as the record states; the owner's approval for any cell change | the pack, board P |
 | P8 | Board B's fans | Board B's fan headers carry 5.1 V; the selected 12 V fans need 10.8 to 13.2 V (E11-40, R-190: a draft is owed) | a 12 V feed on board B (a per-slot step-up or a feed from board A) | the coolers' window met | board B |
 | P9 | Endurance (an objective, not a defect) | Battery-only 2.52 h on energy alone at 42.8 W (the case sheds the profile at 2.01 to 2.51 h on the thermal bound); solar-assisted, the 48 and 72 h horizons carry 8.0 W steady | none within the fixed constraints today: any change of the profile, the storage or the objective is the owner's decision; a supplier may propose architecture options | the owner's | the claim made for the kit |
@@ -131,12 +135,28 @@ copper area alone).
 
 ## 7. How to check the claims
 
-Each record's figures come from its own script: `python3 v2/docs/records/<record>/<script>.py` prints the record's output
-byte for byte (Python 3.11, PyYAML, numpy; some readers use poppler's `pdftotext`). The makers' sheets several scripts read are
-NOT redistributed (their terms forbid it): each record's `fetch_held_back.py` lists them by URL and sha256 and fetches them into
-an ignored `held/` folder. The tests are `v2/ecad/tools/tests/run.py <module>`. The schematics regenerate per
-`v2/docs/handover/REGENERATE.md` (KiCad 9.0.9). The package's `bom/` files are produced by `bom_from_netlist.py` from the
-committed netlists.
+Three levels, and what each needs:
+
+1. **Directly from the ZIP (no tools beyond a text reader, a spreadsheet and KiCad 9):** every record's page and its committed
+   output (`<record>/<script>.out`, the figures the page quotes), the register, the interface contracts, the schematics and
+   netlists (open in KiCad 9.0.9), the BOMs, the mechanical sources and the case drawings, the test procedures. A reviewer can
+   check every claim against the printed output and the cited maker document from here.
+2. **Re-computing a record's figures needs a full git checkout at the exact commit, not this ZIP.** The records' scripts locate
+   the repository with `git rev-parse --show-toplevel` and several read earlier committed versions of their inputs with
+   `git show <commit>:<path>` (for example `v2/docs/records/l4e9/l4e9_power_path.py`); they refuse when a pinned input differs.
+   They also read makers' documents that are not redistributed: each record's `fetch_held_back.py` (or `fetch_*.py`) fetches them
+   from the makers' sites into ignored `held/` folders and checks their sha256 (`SOURCES-HELD-BACK.md` lists them). Then
+   `python3 v2/docs/records/<record>/<script>.py` prints the output byte for byte and `python3 v2/ecad/tools/tests/run.py
+   <module>` runs the tests (Python 3.11, PyYAML, numpy, poppler's `pdftotext` for some readers). The schematics regenerate from
+   their generators with KiCad 9.0.9 in a full checkout (`v2/docs/handover/REGENERATE.md` describes the September handover
+   formats; the generator command per board is unchanged).
+3. **How to get that checkout.** The repository is public (`https://github.com/meshsat/meshsat-fieldkit`). **This provisional
+   package's commit is not yet published**: it sits on the integration line that is being promoted. Until it is promoted, the
+   recipient can review (level 1) but cannot re-compute (level 2) this exact revision; replay is PENDING for the recipient. On
+   promotion the package is re-issued from the published commit, and `git clone`, `git checkout <commit>`, the fetch scripts
+   and the commands above reproduce it. The project verified the replay itself in a full checkout at the integration line with
+   the makers' documents fetched (the Layer 4 modules' "the committed output is what the script prints" tests pass there); that
+   is the project's own check, not the recipient's.
 
 ## 8. What we ask a supplier to quote for
 
@@ -145,7 +165,13 @@ committed netlists.
 2. **Prototype qualification:** select suitable evaluation hardware, test coupons or first prototypes; build the fixtures; run
    the agreed tests (section 6); return measurements with their conditions, uncertainty and pass or fail.
 3. **Design completion and manufacturing release:** finish the contracted schematic, mechanical, layout and manufacturing work;
-   return the revised sources and a release recommendation that states any remaining qualification.
+   verify the final revision and repeat the affected qualification tests where design changes invalidate earlier evidence (a
+   coupon's result does not qualify a changed production layout); return the revised sources and a release recommendation that
+   states any remaining qualification.
+
+Phases 1 and 2 include the circuit, layout and fixture work needed to build suitable test specimens. The experiments of
+section 6 are PROPOSED procedures for the supplier to review and agree before execution, not instructions to run unchanged.
+Estimates for phases 2 and 3 may be indicative and conditional on phase 1's findings, with the assumptions stated.
 
 We ask for electrical design and qualification work beyond ordinary fabrication and assembly checks. Where a task is outside
 your services, please say so and name a partner if you have one; we will not assume it is included.
