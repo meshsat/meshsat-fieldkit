@@ -541,3 +541,64 @@ void t_switch_closed_at_power_up(void)
         fx_run(x, 1);
     CHECK(x->p.sos_armed && x->now - t0 >= 2000);
 }
+
+static void tmp117_convert(fx_t *x, int32_t mc)
+{
+    x->r16[HAL_I2C_TMP117][0] = (uint16_t)(int16_t)(mc * 16 / 125);
+    x->r16[HAL_I2C_TMP117][1] |= (uint16_t)(1u << 13);   /* Data_Ready */
+}
+
+void t_tmp117_read(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run(x, 1000);
+    CHECK(!x->p.tmp117.valid);                      /* 8000h until the first conversion */
+    tmp117_convert(x, 55000);
+    fx_run(x, 300);
+    CHECK(x->p.tmp117.valid && x->p.tmp117.mc == 55000 && x->p.tmp117.seq == 1);
+    fx_run(x, 2000);
+    CHECK(x->p.tmp117.seq == 1);                    /* one conversion read many times counts once */
+    tmp117_convert(x, -12500);
+    fx_run(x, 300);
+    CHECK(x->p.tmp117.mc == -12500 && x->p.tmp117.seq == 2);
+    /* in use: HOT-R1 held high and two conversions at +55.0 C, read off the bus: H1 */
+    fx_t G, *y = &G;
+    fx_boot(y);
+    y->hot_sim = HOT_SIM_HIGH;
+    fx_run(y, 4000);
+    tmp117_convert(y, 55000);
+    fx_run(y, 1000);
+    CHECK(y->p.hot.state == HOT_NONE);
+    tmp117_convert(y, 55100);
+    fx_run(y, 1000);
+    CHECK(y->p.hot.state == HOT_H1);
+}
+
+void t_veml7700_read(void)
+{
+    fx_t F, *x = &F;
+    fx_boot(x);
+    CHECK(x->r16[HAL_I2C_VEML7700][0] == 0x1000);   /* gain x1/8, 100 ms, powered on */
+    x->r16[HAL_I2C_VEML7700][4] = 1000;
+    fx_run(x, 1100);
+    CHECK(x->out.light_valid && x->out.light_mlux == 537600);
+}
+
+void t_se_absent_retried(void)
+{
+    fx_t F, *x = &F;
+    fx_new(x);
+    x->se_dead = true;
+    fx_init(x, false, NULL);
+    for (int i = 0; i < 6000 && x->p.boot != BOOT_RUN; i++) {
+        fx_tick(x);
+        x->now++;
+    }
+    CHECK(x->p.zer.se_absent && (x->p.red_active & 16u));
+    x->se_dead = false;                             /* it answers again */
+    fx_run(x, 61000);
+    CHECK(!x->p.zer.se_absent);
+    fx_run(x, 10);
+    CHECK(!(x->p.red_active & 16u));
+}

@@ -22,6 +22,11 @@ static int bus_write(void *ctx, uint8_t addr, const uint8_t *buf, unsigned len)
     uint8_t reg = buf[0];
     if (len == 1 && addr == HAL_I2C_A_U27 && reg != 0)
         f->cmd_byte_writes_u27++;
+    if (addr == HAL_I2C_VEML7700 || addr == HAL_I2C_TMP117) {
+        if (len == 3 && reg < 8)
+            f->r16[addr][reg] = addr == HAL_I2C_VEML7700 ? (uint16_t)(buf[1] | buf[2] << 8) : (uint16_t)(buf[1] << 8 | buf[2]);
+        return 0;
+    }
     for (unsigned i = 1; i < len; i++) {
         uint8_t r = (uint8_t)((reg & ~1u) | ((reg + (i - 1)) & 1u));
         if (r >= 2 && r < 8)
@@ -43,6 +48,19 @@ static int bus_read(void *ctx, uint8_t addr, uint8_t reg, uint8_t *buf, unsigned
     if (f->bus_fail || !f->present[addr])
         return -1;
     f->n_reads[addr]++;
+    if (addr == HAL_I2C_VEML7700 || addr == HAL_I2C_TMP117) {
+        uint16_t v = f->r16[addr][reg & 7u];
+        if (addr == HAL_I2C_TMP117) {
+            buf[0] = (uint8_t)(v >> 8);
+            buf[1] = (uint8_t)v;
+            if (reg <= 1)
+                f->r16[addr][1] &= (uint16_t)~(1u << 13);   /* a read clears Data_Ready */
+        } else {
+            buf[0] = (uint8_t)v;
+            buf[1] = (uint8_t)(v >> 8);
+        }
+        return 0;
+    }
     for (unsigned i = 0; i < len; i++)
         buf[i] = f->regs[addr][(reg & ~1u) | ((reg + i) & 1u)];
     return 0;
@@ -177,6 +195,9 @@ void fx_new(fx_t *f)
     /* board B U7: RB_STATUS low */
     f->regs[HAL_I2C_B_U7][0] = (uint8_t)~(1u << HAL_EXP_B_RB_STATUS_BIT);
     memset(f->flash, 0xFF, sizeof f->flash);
+    f->r16[HAL_I2C_TMP117][0] = 0x8000;      /* -256 C until the first conversion */
+    f->r16[HAL_I2C_TMP117][1] = 0x0220;
+    f->r16[HAL_I2C_VEML7700][0] = 0x0001;    /* shut down at power-up */
     memset(f->key[0], 0x11, 64);
     memset(f->key[1], 0x22, 64);
     memcpy(f->rec, f->key, sizeof f->key);

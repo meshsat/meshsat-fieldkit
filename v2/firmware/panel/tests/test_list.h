@@ -49,6 +49,9 @@
     T(t_boot_main_tap,               "FW-C03, FW-A12: a MAIN tap during the boot shuts the kit down") \
     T(t_hot_boot_held_slot,          "FW-C14: a slot found held up at boot with the line at 5 Hz gets H1's shutdown") \
     T(t_no_raise_while_zeroize_armed, "FW-C04, D-03: no slot newly raised while ZEROIZE is armed or wiping") \
+    T(t_tmp117_read,                 "FW-C13, FW-C14: board B's TMP117 read once a conversion, 7.8125 mC a step, 8000h not a reading") \
+    T(t_veml7700_read,               "PANEL.md s.8: the VEML7700 reading for the bridge (gain x1/8, 100 ms)") \
+    T(t_se_absent_retried,           "FW-C04, ZEROIZE.md 3.5: normal boot without the SE, the SE retried, the warning cleared") \
     T(t_switch_closed_at_power_up,   "PANEL.md s.9, FW-C10: a maintained SOS closed at power-up counts its 2 s from boot") \
     T(t_margin_hold,                 "FW-C15: the margin hold's trigger, actions, SOS queued and restore") \
     T(t_power_fallback,              "FW-C09 (in part): the 10 s pack-reading fallback and C1's first stage") \

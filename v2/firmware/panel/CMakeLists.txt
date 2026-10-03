@@ -14,6 +14,7 @@ add_executable(meshsat_panel
     src/zeroize.c
     src/expander.c
     src/bus_recover.c
+    src/sensors.c
 )
 target_include_directories(meshsat_panel PRIVATE include)
 
