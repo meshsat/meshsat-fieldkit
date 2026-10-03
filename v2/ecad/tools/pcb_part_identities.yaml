@@ -4973,8 +4973,8 @@ drafted_identities_l4_power:
       code: C17556513
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:32Z: TPS48110AQDGXRQ1, TI, VSSOP-19, stock 326'
-    provisional: 'the guard''s instance (U21): L4-E7''s round 3 on the solar guard is running and may change the guard''s capacitor set; the entry''s
-      instance (U6) is not under that trigger'
+    provisional: 'the guard''s instance (U21): re-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays
+      a release-guarded draft, its source loop open (B6-ENG-1); the entry''s instance (U6) is not under that trigger'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-14
     board: E
@@ -5024,7 +5024,8 @@ drafted_identities_l4_power:
       code: C473333
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:32Z: CSD19532Q5B, TI, SON-8(5x6), stock 2522'
-    provisional: 'Q12 and Q13 belong to the guard: L4-E7''s round 3 may change the guard''s capacitor set (the FETs are not named as changing)'
+    provisional: 'Q12 and Q13 belong to the guard: re-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard
+      stays a release-guarded draft, its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-16
     board: E
@@ -5047,7 +5048,8 @@ drafted_identities_l4_power:
       code: C224048
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:32Z: SMCJ30A, Littelfuse, DO-214AB, stock 15670'
-    provisional: 'the guard: L4-E7''s round 3 may change the guard''s capacitor set'
+    provisional: 'the guard: re-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays a release-guarded
+      draft, its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-17
     board: E
@@ -5070,7 +5072,8 @@ drafted_identities_l4_power:
       code: C80273
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:32Z: SMCJ40CA, Littelfuse, DO-214AB, stock 4925'
-    provisional: 'the guard: L4-E7''s round 3 may change the guard''s capacitor set'
+    provisional: 'the guard: re-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays a release-guarded
+      draft, its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-18
     board: E
@@ -5094,7 +5097,8 @@ drafted_identities_l4_power:
       code: C55151
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:33Z: CL32B225KCJSNNE, Samsung Electro-Mechanics, 1210, stock 0'
-    provisional: L4-E7's round 3 on the solar guard is running and may change this capacitor set
+    provisional: 're-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays a release-guarded draft,
+      its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-19
     board: E
@@ -5118,7 +5122,8 @@ drafted_identities_l4_power:
       code: C138687
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:33Z: CL32B106KBJNNNE, Samsung Electro-Mechanics, 1210, stock 16710'
-    provisional: L4-E7's round 3 may change this capacitor set
+    provisional: 're-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays a release-guarded draft,
+      its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-20
     board: E
@@ -5138,7 +5143,8 @@ drafted_identities_l4_power:
       code: C89632
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:33Z: CL31B106KBHNNNE, Samsung Electro-Mechanics, 1206, stock 0'
-    provisional: L4-E7's round 3 may change the guard's capacitor set
+    provisional: 'the drawn part on TRK_VIN, bounded by L4-E7 (re-read at set 28, F-13: the bound read from its current output); the guard stays
+      a release-guarded draft, its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-21
     board: E
@@ -5253,15 +5259,16 @@ drafted_identities_l4_power:
     selected_by: 'L4-E7 round 2 (B6): INP''s bottom resistor 28.0k (39k before B6; 30.0k in round 1) (R-173)'
     identity:
       status: UNRESOLVED
-      maker: not named
-      mpn: none
-      reason_class: CHOICE_OWED
-      reason: the draft names a value and tolerance (28.0k 1%) and no part number or code; the brief's 0.1 percent and the draft's 1 percent disagree
-        (L6P-F04)
-      next_action: L4-E7 states the tolerance its 18 V line needs (L6P-F04's arithmetic) and the board E generator owner names the part or lets
-        the value map choose it
+      maker: YAGEO
+      mpn: RT0603BRD0728KL
+      reason_class: DOCUMENT_OWED
+      reason: the draft names YAGEO RT0603BRD0728KL (28.0k, 0.1 percent, 25 ppm/K) with its LCSC code owed; YAGEO's RT series specification is
+        not held in the tree, so no page binds the part number
+      next_action: file YAGEO's RT series specification (the ordering code table) and read the LCSC code for RT0603BRD0728KL (and RT0603BRD07100KL
+        for R96)
     order_code: {}
-    provisional: L4-E7's round 3 may change the guard set
+    provisional: 're-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays a release-guarded draft,
+      its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-26
     board: E
@@ -5283,7 +5290,8 @@ drafted_identities_l4_power:
       code: C2985708
       route: the Layer 4 draft's LCSC field, or this record's catalogue reading where the draft carries none
       read: 'LCSC 2026-10-02T23:20:34Z: HoLLR2512-3W-4.5mR-1%, Milliohm, 2512, stock 4225'
-    provisional: R87 belongs to the guard (L4-E7's round 3)
+    provisional: 'R87 belongs to the guard: re-read at set 28 (F-13): L4-E7''s guard draft on this tree still names this part; the guard stays
+      a release-guarded draft, its source loop open (B6-ENG-1)'
     record: v2/docs/records/l6pwr/L6-POWER-PARTS.md
   - id: L6P-27
     board: P (pack build)
