@@ -12,7 +12,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    31b82bacb31ca7efaac19627ebc97e1e7c2649c3cf1fa68e8fa513b7b61bca8c v2/ecad/tools/jlc-mismatch.yaml
    cab57e0ed5be2f638e83a2fef8e99193ef20cddd32ac0d26a0c5503db679c2ff v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
    687c4acafacd96d22fa89dd6cd4786280f7aeb3548c3537ece3d5389ab906cc1 v2/docs/records/l6r2/inputs/bom_from_netlist.py
-   9bb9851433421739b2f1b92e6f413133f1ad8ee27b3d3e1e11245b64be98bff1 v2/docs/records/l4e9/l4e9_power_path.py
+   8de807232877cd41b07df130795ba86dcbaf62857342a26077d9f1511b4f6226 v2/docs/records/l4e9/l4e9_power_path.py
    24418b62e0062d8c1ab1a83f1513d8bc48782da9934732bcc752567a9df04403 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648 v2/vendor/passives/yageo-cc-series.pdf
    f8cd1e49d3ae1d2b573eed34fd8d4f6a156d0d919cd0b2c1e576f8996f2b408a v2/docs/records/l6r2/inputs/kicad-xal-footprints-9.0.9.json

@@ -11,7 +11,7 @@ a760101cde41633a v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
 29dbe3a0c4938274 v2/docs/ASSEMBLY.md
-4784a61af0840534 v2/ecad/tools/pcb_interfaces.yaml
+393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
 863eda98cbb08535 v2/vendor/power/ti-tps61089-boost.pdf
 66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
 6e610db955ed8763 v2/vendor/power/littelfuse-smcj-series-tvs.pdf
