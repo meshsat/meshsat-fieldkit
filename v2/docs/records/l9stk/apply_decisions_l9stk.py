@@ -40,6 +40,7 @@ RULING_BASIS = ("the owner's ruling of 21 September 2026 makes an engineering de
                 "rule of 26 September 2026 has the session take the recommended one and record it, never one that spends "
                 "money, orders, or changes what the kit is claimed to be")
 OUT = "v2/docs/records/l9stk/l9stk_stackups.out"
+CU = "v2/docs/records/l9stk/l9stk_copper.out"
 PAGE = "v2/docs/records/l9stk/L9-STACKUPS.md"
 HOLDS = ("it releases no rule-board pair: STK-002 on this board still needs the fabricator's price at the real outline "
          "and quantity five (EQ-14, the supplier's quotation), and STK-001 a board file on the named stack; the "
@@ -49,18 +50,26 @@ DECISIONS = [
     dict(
         board="a", mark="(L9STK A)",
         title=("Board A's stackup: six layers on JLC06161H-3313 at 1 oz outer and 0.5 oz inner, the pack path and its "
-               "return as generator-laid bands shared by both outer faces"),
-        measurement_kind="MEASURED (the count); DERIVED BOUND (the copper weight); NO MEASUREMENT HELD (the per-face share and the 60 s transient)",
+               "return as generator-laid bands shared by both outer faces at the 25 A blades' rating, the faces' split derived"),
+        measurement_kind=("MEASURED (the count); DERIVED BOUND (the copper weight, the coordination current and the faces' split); "
+                          "NO MEASUREMENT HELD (the routed share, the backstop's intervals under 600 s, the laminate's limit)"),
         measurement=(
             "MEASURED: the four-layer arm of 12 September 2026 (the same tools, router and settings as the six-layer A24, "
             "18 passes) ended 0 hard and 345 unrouted with its autoroute completed in 51 minutes, against 0 and 0 at six "
-            "(v2/docs/LAYER-DECISIONS-2026-09-11.md). DERIVED BOUND (" + OUT + " section 2): at PWR-F12's 18 A the pack path "
-            "needs 23.91 mm on one 1 oz face, 6.72 mm on each of two 1 oz faces, 11.95 mm on one 2 oz face, and 195.80 mm "
-            "on a 0.5 oz inner layer; the pack return on In1 and In4 alone needs 55.05 mm of each at 0.5 oz, inside the "
-            "board's 160 mm. NO MEASUREMENT HELD of the per-face share on a routed board or of the 60 s transient PWR-F12 "
-            "names."),
+            "(v2/docs/LAYER-DECISIONS-2026-09-11.md). DERIVED BOUND (" + CU + " sections 1 to 7): the pack path's "
+            "continuous design current is the pack's declared 10 A, its transient 18 A for at most 60 s (PWR-F12), the gauge "
+            "holds 20 A with no trip (OCD1), and the energy chain's check 3 asks the copper for the 25 A blades' rating; at "
+            "25 A and 10 K (decision 35's model) a 1 oz band needs 12.26 mm on each of two faces where both ends are "
+            "through-hole (equal faces share evenly, derived) and 14.60 mm on each where a one-face part ends it (R17, the "
+            "battery FET pair: the part's face carries at most 0.55 with a transfer field at the part), 43.62 mm on one face, "
+            "7.30 mm a face at 2 oz; the earlier 6.72 mm a face (" + OUT + " section 2, sized at 18 A) reads 12.39 K at the "
+            "gauge's held 20 A, 19.52 K at 25 A and 159.4 C at the blade's 600 s window top from the +70 C air line, where "
+            "12.26 mm reads 110.9 C under the blade's printed 125 C. NO MEASUREMENT HELD of the share on a routed board, of "
+            "the laminate's limit, or of any bound under 125 C for the backstop's intervals shorter than 600 s (with the gauge "
+            "failed), which the tree's copper-only bounds exceed on every width."),
         authority_why=(
-            RULING_BASIS + ". Two options stand after the bound: 1 oz with the bands shared by both faces, and 2 oz. The "
+            RULING_BASIS + ". Two options stand after the bound: 1 oz with the bands shared by both faces at 12.26 to 14.60 mm "
+            "a face, and 2 oz at 6.13 to 7.30 mm a face. The "
             "one taken spends nothing (1 oz is the fabricator's base copper, JLC-7 of the record's price readings) and "
             "keeps the board's class table buildable; 2 oz would spend a surcharge no public page prints, move every 0.127 "
             "mm clearance to the stricter 2 oz floor of 0.16 mm (JLC-6), put U3's 0.4 mm pitch pads at the 0.20 mm 2 oz "
@@ -70,25 +79,30 @@ DECISIONS = [
             "BANDS; 3313 PREPREG 0.0994 MM DK 4.1; IN1 0.0152 MM SOLID GND, NO TRACKS; CORE 0.55 MM DK 4.6; IN2 SIGNALS "
             "AND POURS; 2116 PREPREG 0.1088 MM DK 4.16; IN3 SIGNALS AND POURS (THE VIN_RAW DIVE UNDER THE VBAT TRUNK, A "
             "CROSSING ONLY); CORE 0.55 MM; IN4 0.0152 MM SOLID GND, NO TRACKS; 3313 PREPREG 0.0994 MM; B.CU 0.035 MM "
-            "SIGNALS, BANDS AND THE UNDERSIDE THROUGH-HOLE PARTS. The pack path (CELL+, CELL_FUSED, VBAT) and its return "
-            "run as generator-laid bands at least 6.72 mm wide on each of the two outer faces, tied at both ends of every "
-            "transition by at least 21 barrels of 0.4 mm drill, or 23.91 mm on a face that carries it alone; VIN_RAW at "
-            "14.1 A 4.43 mm on each of two faces or 15.29 mm on one; no inner layer is a conductor of the pack path. "
+            "SIGNALS, BANDS AND THE UNDERSIDE THROUGH-HOLE PARTS. The pack path and its return run as generator-laid bands "
+            "on both outer faces sized at the 25 A blades' rating at 10 K: CELL+ from the dock pins to F1, and the return at "
+            "the pins, at least 12.26 mm a face (both ends through-hole); CELL_FUSED and the VBAT trunk at least 14.60 mm a "
+            "face with a transfer field at R17 and at the battery FET pair of at least 14 barrels of 0.4 mm drill or the "
+            "split count of l9stk_copper.out section 3 at the band's length, whichever is more, and no stitching between "
+            "the faces elsewhere along those bands; the one-face hop from R17 to the pair at least R17's 3.35 mm land and "
+            "as short as the two parts allow; In1 and In4 not necked under 30 mm beside the return; VIN_RAW at 14.1 A 5.12 "
+            "mm a face with a field at its one-face end; no inner layer is counted as a conductor of the pack path. "
             "Controlled impedance: the USB2_CM5 ribbon pairs at 90 ohm on F.Cu and B.Cu only, 0.130 mm wide at a 0.127 mm "
             "gap (atlc 90.0 ohm; the class 0.127 / 0.13 mm reads 91.1); the RF drops 50 ohm single-ended on F.Cu at "
             "0.155 mm; no controlled pair on In2 or In3. Floors: 0.09 / 0.09 mm track and space (1 oz multilayer)."),
         reversed_by=(
             "reopen this decision and take JLCPCB's six-layer 2 oz outer stackup if dc_drop on the routed board reads a "
-            "face of the pack path or its return over its width's rating, or the 60 s transient analysis or the supplier's "
-            "floor plan refuses the two-face bands; that row is not in stackup_write.STACKS, so it is transcribed under its "
-            "own decision, its USB geometry solved with layout-constraints/calc/stack_solves.py, the record re-run with "
-            "python3 v2/docs/records/l9stk/l9stk_stackups.py, and its price goes to the owner before any order"),
+            "face of the pack path or its return over its width's rating at the blades' 25 A, or the supplier's floor plan "
+            "cannot lay the two-face bands and their transfer fields; that row is not in stackup_write.STACKS, so it is "
+            "transcribed under its own decision, its USB geometry solved with layout-constraints/calc/stack_solves.py, the "
+            "record re-run with python3 v2/docs/records/l9stk/l9stk_stackups.py and python3 "
+            "v2/docs/records/l9stk/l9stk_copper.py, and its price goes to the owner before any order"),
         ask="1 oz outer with the pack path and its return shared by both outer faces, or 2 oz outer",
         recommendation=(
-            "1 oz, shared by both faces: it spends nothing, keeps the class table and U3's solder-mask bridges, and the "
-            "two-face bands take 6.72 mm each on a 160 mm board"),
+            "1 oz, shared by both faces at the derived widths: it spends nothing, keeps the class table and U3's solder-mask "
+            "bridges, and the two-face bands take 12.26 to 14.60 mm a face on a 160 mm board"),
         evidence=(
-            "v2/docs/LAYER-DECISIONS-2026-09-11.md (the four-layer arm); " + OUT + " sections 2 to 4; " + PAGE + " section 3; "
+            "v2/docs/LAYER-DECISIONS-2026-09-11.md (the four-layer arm); " + OUT + " sections 2 to 4; " + CU + "; " + PAGE + " sections 3 and 14; "
             "v2/docs/STACKUP-DECISIONS.md section 3.1; v2/docs/layout-constraints/A.md sections 1 to 3; "
             "v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md (the 2 oz rows); the record's price readings JLC-6 and JLC-7"),
     ),
@@ -207,20 +221,26 @@ DECISIONS = [
     ),
     dict(
         board="e", mark="(L9STK E)",
-        title=("Board E's stackup: four layers on JLC04161H-7628 at 1 oz outer and 0.5 oz inner, the pack path, its return "
-               "and VIN_RAW as generator-laid bands shared by both outer faces"),
-        measurement_kind="MEASURED (the count and the power half refuted); DERIVED BOUND (the copper weight and the return); NO MEASUREMENT HELD (the per-face share)",
+        title=("Board E's stackup: four layers on JLC04161H-7628 at 1 oz outer and 0.5 oz inner, the pack path, its return, "
+               "the shore input and VIN_RAW as generator-laid bands shared by both outer faces at their coordination currents"),
+        measurement_kind=("MEASURED (the count and the power half refuted); DERIVED BOUND (the copper weight, the coordination "
+                          "currents, the faces' split and the return); NO MEASUREMENT HELD (the routed share, the backstop's "
+                          "intervals under 600 s, the laminate's limit)"),
         measurement=(
             "MEASURED (v2/docs/LAYER-DECISIONS-2026-09-11.md): the routing half, a 267 mm strip whose open nets were "
             "end-to-end (USB_E6_P 196 mm, GEIGER_IN 214 mm) on two routing layers, and the LT8705A maker's checklist (a "
             "ground plane layer with no traces next to the FET layer, which In1 is, 0.2104 mm under F.Cu); the power half "
-            "of the old argument refuted (In2's 5,500 mm2 of pour worth 13 and 28 mV on E7). DERIVED BOUND (" + OUT + " "
-            "section 2): the pack path needs 23.91 mm on one 1 oz face or 6.72 mm on each of two; with VIN_RAW, TRK_OUT, the "
-            "inlet chain, the solar input and the pack return side by side the bands take 78.72 mm on one 1 oz face, more "
-            "than the 68 mm strip, and 23.44 mm on each of two faces (34 percent); the pack return on In1 alone would need "
-            "195.80 mm at 0.5 oz and 85.03 mm at 1 oz, so it rides the outer bands at either inner weight. NO MEASUREMENT "
-            "HELD of the per-face share on a routed board (on E7 B.Cu carried 97 percent of CELL_F once In2 was emptied, "
-            "so an equal share is a layout duty, not a default)."),
+            "of the old argument refuted (In2's 5,500 mm2 of pour worth 13 and 28 mV on E7). DERIVED BOUND (" + CU + " "
+            "sections 1 to 8): at the 25 A blades' rating and 10 K (decision 35's model, the energy chain's check 3) CELL+ "
+            "needs 12.26 mm on each of two 1 oz faces between the through-hole XT60 and F3, and CELL_F and the return 14.60 mm "
+            "on each, their one-face lands P_CP and P_CN taking a transfer field (28 barrels of 0.4 mm at P_CP on E7's 5.65 mm, "
+            "14 at P_CN); the shore input at L4-E11's 20 A to the clamps 8.15 mm a face between through-hole ends and 9.70 "
+            "mm with a field, at F1's 10 A behind R19 3.15 mm with a field; VIN_RAW 5.12 mm; every listed conductor side by "
+            "side would take 57.02 mm a face of the 68 mm strip and the pack end alone 29.20 mm; the earlier 6.72 mm a face "
+            "(" + OUT + " section 2, at 18 A) reads 19.52 K at 25 A. In1 beside the return heats at 0.43 of the bands per "
+            "square millimetre and reads 0.092 A a 0.5 mm cell against dc_drop's 0.395 A. NO MEASUREMENT HELD of the share "
+            "on a routed board (on E7 B.Cu carried 97 percent of CELL_F once In2 was emptied), of the laminate's limit, or of "
+            "any bound under 125 C for the backstop's intervals shorter than 600 s."),
         authority_why=(
             RULING_BASIS + ". Two options stand after the bound: 1 oz with the bands shared by both faces, and 2 oz "
             "(JLC04162H-7628, the row recorded for board P). The one taken spends nothing and keeps U10's 0.4 mm pitch "
@@ -230,25 +250,32 @@ DECISIONS = [
             "BOARD E IS FOUR LAYERS ON JLCPCB'S JLC04161H-7628, 1.6 MM: F.CU 0.035 MM SIGNALS AND BANDS; 7628 0.2104 MM DK "
             "4.4; IN1 0.0152 MM SOLID GND WITH NO TRACKS (the tracker maker's plane); CORE 1.065 MM DK 4.6; IN2 0.0152 MM "
             "POWER POURS (CELL_F, PV_P, TRK_OUT, VIN_RAW) AND A GND FILL, cut back from under the tracker's switch nodes; "
-            "7628 0.2104 MM; B.CU 0.035 MM SIGNALS AND BANDS. The pack path (CELL+, CELL_F) and its return at least 6.72 mm "
-            "on each outer face, VIN_RAW 4.43 mm, TRK_OUT 2.89 mm, the inlet chain 1.41 mm and the solar input 1.27 mm on "
-            "each, tied at both ends of every transition by the record's barrel counts (21, 16, 12, 7 and 7 of 0.4 mm); "
-            "In2's pours count only for the share dc_drop solves on them. No impedance target (USB at full speed); no RF "
-            "line. Floors: 0.09 / 0.09 mm. The energy chain's 'board E's 2 oz power bands' (pcb_energy_chain.yaml "
-            "DOCK_ENTRY) contradicts this and is its writer's to correct."),
+            "7628 0.2104 MM; B.CU 0.035 MM SIGNALS AND BANDS. Bands on both outer faces at each conductor's coordination "
+            "current at 10 K: CELL+ from J_BATT to F3 at least 12.26 mm a face; CELL_F from F3 to P_CP and the return from "
+            "J_BATT to P_CN at least 14.60 mm a face, each one-face land with a transfer field of at least 14 barrels of 0.4 "
+            "mm or the split count of l9stk_copper.out section 3 at the band's length, whichever is more (28 on E7's "
+            "placement at P_CP), or the land made plated-through; the shore input DC_IN at least 8.15 mm a face, DC_F and the "
+            "return GND_V 9.70 mm with a field at the clamps and Q1, the hops Q1 to R19 and R19 to Q7 one-face at least as "
+            "wide as the parts' lands, DC_HS 3.15 mm a face with a field at each end or 8.15 mm on one face; VIN_RAW 5.12 mm "
+            "a face with fields at its one-face ends; no stitching between the faces along a band except its transfer "
+            "fields; the pack end and the shore chain kept in separate sections of the strip; In2's pours count only for "
+            "the share dc_drop solves on them. No impedance target (USB at full speed); no RF line. Floors: 0.09 / 0.09 mm. "
+            "The energy chain's texts follow through apply_energy_chain_l9stk.py, which replaces record l8r2's draft."),
         reversed_by=(
             "reopen this decision and take JLC04162H-7628 (2 oz outer) if dc_drop on the routed strip reads a face of the "
-            "pack path, its return or VIN_RAW over its width's rating, or the supplier's floor plan cannot lay the two-face "
-            "bands; check U10's footprint against the 0.20 mm 2 oz bridge first, re-run python3 "
-            "v2/docs/records/l9stk/l9stk_stackups.py, and the 2 oz price goes to the owner before any order"),
+            "pack path, its return, the shore input or VIN_RAW over its width's rating at its coordination current, or the "
+            "supplier's floor plan cannot lay the two-face bands and their transfer fields; check U10's footprint against "
+            "the 0.20 mm 2 oz bridge first, re-run python3 v2/docs/records/l9stk/l9stk_stackups.py and python3 "
+            "v2/docs/records/l9stk/l9stk_copper.py, and the 2 oz price goes to the owner before any order"),
         ask="1 oz outer with the high-current bands shared by both faces, or 2 oz outer",
         recommendation=(
-            "1 oz, shared by both faces: it spends nothing and keeps the routing floor and U10's bridges; the two-face bands "
-            "take about a third of the strip where every conductor crosses one section, under half"),
+            "1 oz, shared by both faces at the derived widths: it spends nothing and keeps the routing floor and U10's "
+            "bridges; the pack end takes 29.20 mm a face of the 68 mm strip, and the floor plan keeps the pack end and the "
+            "shore chain in separate sections"),
         evidence=(
             "v2/docs/LAYER-DECISIONS-2026-09-11.md (the routing half, the E experiment); v2/docs/STACKUP-DECISIONS.md "
-            "section 3.5 and section 6 item 5; v2/vendor/power/lt8705a.pdf p.35; " + OUT + " sections 2 and 3; " + PAGE +
-            " section 7; v2/docs/layout-constraints/E.md sections 1 to 3; the record's price readings JLC-6 and JLC-7"),
+            "section 3.5 and section 6 item 5; v2/vendor/power/lt8705a.pdf p.35; " + OUT + " sections 2 and 3; " + CU + "; " + PAGE +
+            " sections 7 and 14; v2/docs/layout-constraints/E.md sections 1 to 3; the record's price readings JLC-6 and JLC-7"),
     ),
     dict(
         board="p", mark="(L9STK P)",

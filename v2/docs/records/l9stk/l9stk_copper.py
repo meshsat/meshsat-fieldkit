@@ -440,11 +440,73 @@ def footprints(path, refs):
     return out
 
 
-def ends(fp, ref, net):
-    ps = [p for p in fp[ref]["pads"] if p["net"] == net]
-    if not ps:
-        refuse("%s has no pad on %s" % (ref, net))
-    return "through-hole" if all(p["kind"] == "thru_hole" for p in ps) else "one face (%s)" % fp[ref]["layer"]
+def kind(fp, ref):
+    """through-hole when every pad of the part is plated through, else one face (the part's layer)."""
+    return "TH" if all(p["kind"] == "thru_hole" for p in fp[ref]["pads"]) else "1F"
+
+
+def length_between(fp, a, b):
+    """The gap between two parts' nearest pad edges along x on the pinned board (E7's placement; the layout sets the real one)."""
+    ax = [(p["x"] - p["w"] / 2.0, p["x"] + p["w"] / 2.0) for p in fp[a]["pads"]]
+    bx = [(p["x"] - p["w"] / 2.0, p["x"] + p["w"] / 2.0) for p in fp[b]["pads"]]
+    lo, hi = (ax, bx) if min(x[0] for x in ax) < min(x[0] for x in bx) else (bx, ax)
+    return round(min(x[0] for x in hi) - max(x[1] for x in lo), 2)
+
+
+def conductors(R, I, W, fa, fe, h_e):
+    """One row per conductor of the pack path and the shore input on A and E: (board, net, from, to, end kinds, protection,
+    continuous, transient, fault and clearing, coordination A, family, width a face, the transfer field)."""
+    blade, shore, wst = I["blade_a"], I["shore_fuse_a"], I["shore_withstand_a"]
+    pk_fault = "gauge OCD1 %g A held, OCD2 %g A 1 s, AOLD %g A 20 ms, ASCD %g A 244 us; gauge failed: the blades (%g A held to %g %%, %g A for 600 s)" % (
+        I["gauge"][0][1], I["gauge"][1][1], I["gauge"][2][1], I["gauge"][3][1], blade * 1.35, 135, blade * 2.0)
+    sh_fault = "F1 %g A: %g A held, %g A for 600 s, %g A for 5 s; the hot-swap limits a fault behind Q7 to %g A" % (
+        shore, shore * 1.35, shore * 2.0, shore * 3.5, I["veh"])
+    rows = []
+
+    def field(L, w, both):
+        if L is None:
+            return "max(%d, the split count of section 3 at its length)" % R["thermal_barrels"]["pack" if w == W["coord_smax"] else ("sh20" if w == W["sh20_smax"] else ("sh10" if w == W["sh10_smax"] else "vin"))]
+        key = "pack" if w == W["coord_smax"] else ("sh20" if w == W["sh20_smax"] else ("sh10" if w == W["sh10_smax"] else "vin"))
+        n = n_for(L, w, OZ1, h_e, S_MAX, both)
+        return "%d at each one-face end (E7: %.2f mm, split %d, thermal %d)" % (max(n, R["thermal_barrels"][key]), L, n, R["thermal_barrels"][key])
+    pin_kind = kind(fa, "J_CP1")
+    rows += [
+        ("A", "CELL+", "J_CP1 to J_CP4", "F1", "%s / %s" % (pin_kind, kind(fa, "F1")), "E's F3 %g A (upstream) and the gauge" % blade,
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B1", W["coord_even"], "none needed (both ends through-hole)"),
+        ("A", "CELL_FUSED", "F1", "R17", "%s / %s" % (kind(fa, "F1"), kind(fa, "R17")), "A's F1 %g A and the gauge" % blade,
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B2", W["coord_smax"], field(None, W["coord_smax"], False) + " at R17"),
+        ("A", "CH_BATQ (drafted)", "R17", "Q39, Q40", "1F / 1F", "A's F1 and the gauge", I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]),
+         pk_fault, blade, "hop", R["hops"][0][2], "a one-face hop at least as wide as R17's land, as short as the two parts allow"),
+        ("A", "VBAT trunk", "Q39, Q40 (R17 as drawn)", "the node's first branch", "1F / the loads", "A's F1 and the gauge", I["cont"],
+         "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B2", W["coord_smax"], field(None, W["coord_smax"], False) + " at the pair"),
+        ("A", "GND (the pack return)", "J_CN1 to J_CN4", "the loads' returns, In1 and In4", "%s / planes" % kind(fa, "J_CN1"), "the loop's blades and the gauge",
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B1", W["coord_even"], "none at the pins; In1 and In4 not necked to 30 mm beside the band"),
+        ("A", "VIN_RAW", "J_VR1 to J_VR4", "the front end", "%s / 1F" % pin_kind, "the sources' limits (hot-swap, tracker)", I["vin_raw"], "-",
+         "the tracker's %g A minimum valley, the hot-swap's %g A until its fault time" % (I["trk_valley"], I["veh"]), I["vin_raw"], "V", W["vin_smax"],
+         field(None, W["vin_smax"], False) + " at the front end"),
+        ("E", "CELL+", "J_BATT pin 2", "F3", "%s / %s" % (kind(fe, "J_BATT"), kind(fe, "F3")), "P's F1 %g A (upstream) and the gauge" % blade,
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B1", W["coord_even"], "none needed (both ends through-hole)"),
+        ("E", "CELL_F", "F3", "P_CP", "%s / %s" % (kind(fe, "F3"), kind(fe, "P_CP")), "E's F3 %g A and the gauge" % blade,
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B2", W["coord_smax"], field(length_between(fe, "F3", "P_CP"), W["coord_smax"], False) + " at P_CP"),
+        ("E", "GND (the pack return)", "J_BATT pin 1", "P_CN", "%s / %s" % (kind(fe, "J_BATT"), kind(fe, "P_CN")), "the loop's blades and the gauge",
+         I["cont"], "%g A %g s" % (I["kd_a"], I["kd_s"]), pk_fault, blade, "B2", W["coord_smax"], field(R["e7_ret_len"], W["coord_smax"], False) + " at P_CN"),
+        ("E", "DC_IN", "J_DCIN pin 1", "F1", "%s / %s" % (kind(fe, "J_DCIN"), kind(fe, "F1")), "the source's own; F1 for a fault behind it",
+         I["veh"], "-", sh_fault, wst, "S1", W["sh20_even"], "none needed (both ends through-hole)"),
+        ("E", "DC_F", "F1", "Q1, D10", "%s / %s" % (kind(fe, "F1"), kind(fe, "Q1")), "E's F1 %g A" % shore, I["veh"], "-", sh_fault, wst, "S2", W["sh20_smax"],
+         field(length_between(fe, "F1", "Q1"), W["sh20_smax"], False) + " at Q1 and D10"),
+        ("E", "DC_P", "Q1", "R19, D1", "%s / %s" % (kind(fe, "Q1"), kind(fe, "R19")), "E's F1", I["veh"], "-", sh_fault, wst, "hop", R["hops"][1][2],
+         "a one-face hop at least as wide as Q1's drain land, as short as the parts allow"),
+        ("E", "HS_S", "R19", "Q7", "%s / %s" % (kind(fe, "R19"), kind(fe, "Q7")), "E's F1", I["veh"], "-", sh_fault, shore, "hop", R["hops"][2][2],
+         "a one-face hop at least as wide as Q7's source land, as short as the parts allow"),
+        ("E", "DC_HS", "Q7", "L2", "%s / %s" % (kind(fe, "Q7"), kind(fe, "L2")), "the hot-swap; E's F1 with Q7 shorted", I["veh"], "-", sh_fault, shore, "S3",
+         W["sh10_smax"], field(length_between(fe, "Q7", "L2"), W["sh10_smax"], True) + ", or %.2f mm on one face" % W["sh10_one"]),
+        ("E", "GND_V (the shore return)", "J_DCIN pin 2", "D10, D1, C2, L2 pin 3", "%s / 1F" % kind(fe, "J_DCIN"), "E's F1 (the clamp-fault loop)", I["veh"], "-",
+         sh_fault, wst, "S2", W["sh20_smax"], field(None, W["sh20_smax"], False) + " at the clamps"),
+        ("E", "VIN_RAW", "L2 and the tracker's Q2", "P_VR to the block", "1F / 1F", "the sources' limits", I["vin_raw"], "-",
+         "the tracker's %g A minimum valley, the hot-swap's %g A until its fault time" % (I["trk_valley"], I["veh"]), I["vin_raw"], "V", W["vin_smax"],
+         field(None, W["vin_smax"], True) + " at each end"),
+    ]
+    return rows
 
 
 # ------------------------------------------------------------------------------------------------ compute
@@ -589,6 +651,7 @@ def compute():
         x = I["k33"] * per / (bc * bc)
         br.append((lab, i2t, per, (I["k234"] + I["air_c"]) * (10 ** x - 1.0), per <= bfuse))
     R["barrel_faults"] = dict(n=nb, area=bar_area, fuse=bfuse, rows=br)
+    R["conductors"] = conductors(R, I, W, fa, fe, h_e)
     # the predicates
     def row(k, start):
         return [r for r in F[k]["rows"] if r[0].startswith(start)][0]
@@ -738,7 +801,14 @@ def render(R):
         P("     %-58s %7.2f A %-10s %-12s steady %-7s -> %s" % (lab, a, "held", cls, f2(st), verdict(cls, r, I, I["mini_max_c"])))
     P("     the sum of both sources' limits %.2f A for at most the hot-swap's fault time: %.2f K steady (an upper bound on any duration)" % (v["sum_a"], v["sum_rise"]))
     P("")
-    P("5. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED")
+    P("5. THE CONDUCTORS (TH through-hole, 1F one face; widths are each outer face at 1 oz; the family's rows in section 4)")
+    for b, net, fr, to, ek, prot, cont, trans, fault, coord, fam, w, fld in R["conductors"]:
+        P("   %s %-24s %s to %s [%s]" % (b, net, fr, to, ek))
+        P("       protection: %s; continuous %.2f A; transient %s" % (prot, cont, trans))
+        P("       fault: %s" % fault)
+        P("       coordination %.2f A; %s; %.2f mm a face; field: %s" % (coord, ("family " + fam) if fam != "hop" else "a one-face hop", w, fld))
+    P("")
+    P("6. THE WIDTHS QUOTED IN THE CONFLICT, JUDGED")
     P("   6.72 mm a face (l9stk at %.0f A): %.2f K at the gauge's held %.0f A, %.2f K at the blade's %.0f A, the 600 s window top %.1f C" % (
         I["kd_a"], [r for r in F["A1"]["rows"] if r[0].startswith("held under")][0][7], I["gauge"][0][1], [r for r in F["A1"]["rows"] if r[3] == "coordination"][0][7], I["blade_a"],
         I["air_c"] + [r for r in F["A1"]["rows"] if r[0].startswith("blade 135 to 200")][0][7]))
@@ -746,11 +816,12 @@ def render(R):
         I["kd_a"], [r for r in F["A2"]["rows"] if r[3] == "coordination"][0][7], I["blade_a"], W["coord_one_2oz"], I["blade_a"]))
     P("   12.26 mm a face (Layer 8 at %.0f A): holds where both ends are through-hole (an even split, derived); at a one-face part the" % I["blade_a"])
     P("     part's face carries more than half and needs %.2f mm at a %.2f share with the field of section 3" % (W["coord_smax"], S_MAX))
-    P("   23.44 mm a face (l9stk's board E bound at %.0f A, every conductor in one section): superseded by section 7" % I["kd_a"])
+    P("   23.44 mm a face (l9stk's board E bound at %.0f A, every conductor in one section): superseded by section 8" % I["kd_a"])
     P("   2 oz (the reversal): %.2f mm a face at an even split, %.2f at %.2f, %.2f on one face" % (W["coord_even_2oz"], W["coord_smax_2oz"], S_MAX, W["coord_one_2oz"]))
     P("")
-    P("6. THE SERIES PARTS AND THE LANDS (the bottlenecks)")
-    P("   R17 (board A, %g mOhm, %s, %g W): " % (I["r17"]["mohm"], I["r17"]["code"], I["r17"]["w"]) + "; ".join("%s %.2f A %.3f W" % (l, a, p) for l, a, p in R["r17_at"]))
+    P("7. THE SERIES PARTS AND THE LANDS (the bottlenecks)")
+    P("   R17 (board A, %g mOhm, %s, %g W): " % (I["r17"]["mohm"], I["r17"]["code"], I["r17"]["w"]) + "; ".join("%s %.2f A %.3f W" % (l, a, p) for l, a, p in R["r17_at"][:4]))
+    P("     " + "; ".join("%s %.2f A %.3f W" % (l, a, p) for l, a, p in R["r17_at"][4:]))
     P("     its %g W is reached at %.2f A, inside the blade's 110 to 200 %% window (the gauge failed)" % (I["r17"]["w"], R["r17_limit_a"]))
     P("   Q39 and Q40 (drafted, %g mOhm each at L4-E11's 150 C bound, in parallel): " % I["pair_mohm_each"] + "; ".join("%s %.2f A %.2f W" % (l, a, p) for l, a, p in R["pair_at"]))
     P("     E11-29's bar covers the gauge's levels (L4-E11 15c); the blade's window is outside it")
@@ -770,13 +841,13 @@ def render(R):
     P("   one barrel of a %d-barrel transfer field (%.4f mm2, fusing %.1f A2s from the air line): " % (bf["n"], bf["area"], bf["fuse"]) + "; ".join(
         "%s %.4f A2s, +%.2f K" % (lab, per, dt) for lab, i2t, per, dt, ok in bf["rows"]))
     P("")
-    P("7. BOARD E'S CROSS-SECTION, REDONE AT THE COORDINATION CURRENTS AND THE DERIVED SHARE (1 oz, each face)")
+    P("8. BOARD E'S CROSS-SECTION, REDONE AT THE COORDINATION CURRENTS AND THE DERIVED SHARE (1 oz, each face)")
     for n, w in R["e_cross"]["rows"]:
         P("   %-40s %6.2f mm" % (n, w))
     P("   every one in one section: %.2f mm a face of the %.0f mm strip (a bound the floor plan must avoid); the pack end alone (forward and" % (R["e_cross"]["sum"], R["e_cross"]["strip"]))
     P("   return): %.2f mm a face" % R["e_cross"]["pack_end"])
     P("")
-    P("8. PREDICATES")
+    P("9. PREDICATES")
     for k, val in R["pred"].items():
         P("   %-118s %s" % (k, "yes" if val else "NO"))
     return "\n".join(L) + "\n"
