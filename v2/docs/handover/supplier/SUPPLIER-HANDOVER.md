@@ -99,8 +99,8 @@ package asks you to quote for (section 8); "owner" means a decision or purchase 
 **Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are drafts, not an
 implemented or qualified circuit. Power-design closure and fabrication release are blocked.** Rows P1, P2 and P8 are design
 DEFECTS of the drafted circuit that need a supported circuit correction (P1 and P2) or an actual supply change with its
-consequences verified (P8); they are not missing bench evidence for an otherwise finished design. Rows P3 to P7 are qualification
-gaps or design choices resting on unprinted or unmeasured facts. Row P9 is an objective shortfall. The collaborator's targeted
+consequences verified (P8); they are not missing bench evidence for an otherwise finished design. Row P10 is a design defect too.
+Rows P3 to P7 are qualification gaps or design choices resting on unprinted or unmeasured facts. Row P9 is an objective shortfall. The collaborator's targeted
 recheck of this candidate read NOT YET (`records/l4close/checks/astra-check-l4close-2.md`); later corrections rest on the
 coordinator's checks, which are labelled as such and are not an independent review. The
 rows below are the ones a reviewer should start with; each names its record.
@@ -115,7 +115,14 @@ rows below are the ones a reviewer should start with; each names its record.
 | P6 | Heat rejection of the sealed case (U-02) | A conservative bound of 0.566 to 0.673 W/K lid open (fans' airflow credited at zero) against lines of 1.447 W/K (the profile at +20 C) up to 2.025 to 2.525 W/K (charging while running); the SGP41's lid-closed line is a modelled shortfall of the analysed arrangement; the e-paper's unpowered storage at +70 C is unqualified (`records/l4e12/`) | T-H1 on an empty-case mock-up with the frame, plate, fans and dummy heaters (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`, the bill in Layer 7's record); the e-paper soak at +70 C on the glass | per point, G_measured - U_G >= G_required, with U_G the expanded (k = 2) uncertainty in W/K (the procedure's section 6 prints each mode's need and the reading that passes once U_G is taken off: M2 as ruled needs 2.709 W/K and passes at a reading of at least 3.081 W/K); example: a 2.0 W/K need, a 1.9 W/K reading and a 0.1 W/K uncertainty give a lower bound of 1.8 W/K, a FAIL; the soaked sample functional | the thermal design; the test plan's E3 and E5 rows |
 | P7 | The cell (U-01) | The ruled 35E's printed limits do not cover the +71 C and -33 C storage rows; a Saft MP 176065 xtd route is a PROPOSAL (temperature windows supported, current at temperature, storage recovery and fit awaited) (`records/l4e10/`) | Saft's answers or a one-cell qualification; the fit mock-up (R-167, which blocks only the proposal's adoption) | as the record states; the owner's approval for any cell change | the pack, board P |
 | P8 | Board B's fans | Board B's fan headers carry 5.1 V; the selected 12 V fans need 10.8 to 13.2 V (E11-40, R-190: a draft is owed) | a 12 V feed on board B (a per-slot step-up or a feed from board A) | the coolers' window met | board B |
+| P10 | Board A's VBUS20 against the 20 V bus converter's single faults (S-111) | A Q2 short or an FB open puts VIN_RAW on VBUS20, past U3's 32 V, with no clamp and no exemption claimed (register R-48, a KNOWN DEFECT) | an SMCJ22A-class clamp on VBUS20 or an independent over-voltage trip, selected and drafted (supplier task P1-3; a desk draft is being attempted) | U3's input under its absolute maximum through each single fault | board A |
 | P9 | Endurance (an objective, not a defect) | Battery-only 2.52 h on energy alone at 42.8 W (the case sheds the profile at 2.01 to 2.51 h on the thermal bound); solar-assisted, the 48 and 72 h horizons carry 8.0 W steady | none within the fixed constraints today: any change of the profile, the storage or the objective is the owner's decision; a supplier may propose architecture options | the owner's | the claim made for the kit |
+
+**Every open item, classified.** `records/l4e9/L4-POWER-ARCHITECTURE.md` section 8f gives each open register item and design
+row exactly one class (KNOWN ENGINEERING DEFECT, PHYSICAL UNCERTAINTY, UNCERTAIN DESIGN CHOICE with its one bounded comparison,
+or SETTLED WORK) and its next action; section 8g is the task list this package asks you to quote for: phase 1 the design
+corrections P1-1 (the solar input's guard and sense: P1, P2), P1-2 (board B's 12 V fan feed: P8) and P1-3 (VBUS20: P10); phase 2
+the experiments, the first prototype's verification rows and the makers' statements to obtain or replace by measurement.
 
 Where a row cites a measurement, the measurement is evidence for its specimen, lot and conditions only, and it transfers to
 the final kit only under the rule its specimen row states (section 6).
