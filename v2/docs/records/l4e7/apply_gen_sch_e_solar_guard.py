@@ -21,7 +21,7 @@ forward (DECISION-31's note E-N1). The selected remedies, one for each fault, bo
   - B6's other changes: C133 and C134 on PV_P beside the bulk and C71 to C74 on TRK_VS (the backstop draft's, edited here), all
     Samsung CL32B106KBJNNNE (10 uF 50 V X7R 1210), the parts whose DC-bias curves the record bounds; U21's CSCP C126 330 pF (1 nF
     in L4-E11's network: the short-circuit trip's filter shorter, CS116's filtered sense still under the trip's least); INP's
-    bottom resistor R97 28.0k at 0.1 % (39k there: INP 10 % under its 20 V for PV_F up to 81 V; INP high from 9.16 V, under the stage's
+    bottom resistor R97 28.0k at 0.1 % with R96 100k at 0.1 % (both YAGEO RT0603BRD07, round 5; 39k there: INP 10 % under its 20 V for PV_F up to 81 V; INP high from 9.16 V, under the stage's
     own enable). The LCSC codes of the Samsung parts are owed (no catalogue reading of them is filed). B6 is NOT CLOSED: these
     parts hold U5's margin only for a source loop over the floor the record prints (the engineer's row B6-ENG-1).
 What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: J_SOLAR's pin 2; F2's pin 2 and the new parts after it; PV_P's
@@ -68,7 +68,7 @@ BLOCK = (
     'c("C129", "22n C0G 5% 50V 1206 (CTMR)", "PV_TMR", "GND", "C10u50", lcsc="C97929"); r("R92", "39.7k 0.1% (RIWRN)", "PV_IWRN", "GND", lcsc="C861872")\n'
     'r("R93", "100R 1% (VS filter, SLUSEE5E 9.5)", "PV_F", "PV_VS"); c("C130", "100n 100V", "PV_VS", "GND", "C0805")\n'
     'r("R94", "59.0k 1%", "PV_F", "PV_UVLO"); r("R95", "10.0k 1% (UVLO: on by 8.44 V, under the stage\'s own enable)", "PV_UVLO", "GND")\n'
-    'r("R96", "100k 1%", "PV_F", "PV_INP"); r("R97", "28.0k 0.1% 25ppm (INP: high from 9.16 V, 10 % under 20 V to 81 V on PV_F; YAGEO RT0603BRD0728KL, LCSC code owed)", "PV_INP", "GND", "R")\n'
+    'r("R96", "100k 0.1% 25ppm (INP top; YAGEO RT0603BRD07100KL, LCSC code owed)", "PV_F", "PV_INP", "R"); r("R97", "28.0k 0.1% 25ppm (INP: high from 9.16 V, 10 % under 20 V to 81 V on PV_F; YAGEO RT0603BRD0728KL, LCSC code owed)", "PV_INP", "GND", "R")\n'
     + ('r("R98", "%s 0.1%% 25ppm (OV top)", "PV_F", "PV_OVM", "R", "%s"); r("R99", "%s 0.1%% 25ppm (OV top)", "PV_OVM", "PV_OVLO", "R", "%s"); '
        'r("R100", "%s 0.1%% 25ppm (OV bottom: off above 28.55 to 31.06 V, L4-E7)", "PV_OVLO", "GND", "R", "%s")\n'
        % (OV_TOP_A[0], OV_TOP_A[1], OV_TOP_B[0], OV_TOP_B[1], OV_BOT[0], OV_BOT[1])) +

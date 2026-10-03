@@ -535,7 +535,7 @@ def sense_ripple(cu, cd, i_in, vin, vout, f, L, t_rf, r59, l59, rb, bulk, dt=1e-
             out.append((vA - vC, r59 * i59))
     vp = [o[0] for o in out]
     avg = sum(vp) / len(vp)
-    return dict(peak=max(vp), trough=min(vp), avg=avg, avg_clip=sum(min(v_, vlim) for v_ in vp) / len(vp), r_peak=max(o[1] for o in out),
+    return dict(peak=max(vp), trough=min(vp), avg=avg, avg_clip=sum(min(max(v_, 0.0), vlim) for v_ in vp) / len(vp), r_peak=max(o[1] for o in out),
                 i_v=i_v, i_p=i_p, il_avg=il_avg, dI=dI, D=D)
 
 
@@ -2748,6 +2748,8 @@ def compute():
     kov = ovs["rb"] * rtf(ovs["rb"], 1, True) / (bandA["rt"][0] + ovs["rb"] * rtf(ovs["rb"], 1, True))
     inp_on6 = inph[1] * (GD["inp_div"][0] * (1 + TOL_INP) + GD["inp_div"][1] * (1 - TOL_INP)) / (GD["inp_div"][1] * (1 - TOL_INP))
     r_lead6 = lead["r"] * (1 + AC_.ALPHA_CU * (t_cold - 20.0)) / (1 + AC_.ALPHA_CU * (AC_.T_LEAD - 20.0))
+    R_CASES = (0.0, r_lead6)   # round 5 (the recheck's B6 / L4-F01): a fault AT THE CONNECTOR has no lead in series and no source resistance is
+    #                            bounded, so it credits none; a fault at the lead's far end credits the lead's resistance at the cold end
     # the makers' curves (Samsung's typical characteristic data, held back under v2/vendor/passives/held/ by
     # fetch_maker_curves.py and pinned above): the DC-bias change, the change over
     # temperature under bias, the ESR. Bounds per bank, each on its own: the part's K tolerance (+-10 %, its code), the typical
@@ -2800,21 +2802,24 @@ def compute():
     def soa_r(samp_, t_on_, der_):
         return max((iq_ / (der_ * soa_t(soa_l, max(vd_, 0.1), max(t_on_, 1e-6))) for vd_, iq_ in samp_), default=0.0)
 
-    def evalR(L_, g_, cold=False, starts_=None, soa=False, ramp=None, dt=20e-9):
+    def evalR(L_, g_, cold=False, starts_=None, soa=False, ramp=None, dt=20e-9, cases=None):
         W_ = dict(vF=-1e9, vFmin=1e9, vP=-1e9, vS=-1e9, i4=0.0, e4=0.0, i11=0.0, e11=0.0, t11=0.0, iQ=0.0, iL=0.0, vds=-1e9, vdsmin=1e9,
                   slew=0.0, u5=-1e9, u5n=1e9, u18=-1e9, u18n=1e9, soa12=0.0, soa13=0.0, mono=True, ton=0.0, why=set(), n=0, arg=None, di59=0.0,
-                  di59_up=0.0, di59_dn=0.0, u5L=-1e9, u5Ln=1e9)
-        for _lab, v0_, i0_ in (starts_ or st6):
+                  di59_up=0.0, di59_dn=0.0, u5L=-1e9, u5Ln=1e9, u5_case={})
+        rl0_ = g_["r_lead"]
+        for (_lab, v0_, i0_), rl_ in itertools.product((starts_ or st6), (R_CASES if cases is None else cases)):
             for _bl, bk_ in (bk6[:1] if cold else bk6):
                 for d11_ in ((d11_hot, d11_cold) if ramp is None else (d11_hot,)):
                     g_["d11"] = d11_
+                    g_["r_lead"] = rl_
                     if ramp is None:
                         r_ = guard_event_b(g_, v0_, i0_, L_, bk_, cold=cold, dt=dt)
                     else:
                         r_ = guard_event_b(g_, v0_, i0_, L_, bk_, ramp=ramp, dt=(dt if ramp >= 1e6 else 5 * dt), t_end=(v_src - v0_) / ramp + 40e-6)
                     W_["n"] += 1
+                    W_["u5_case"][rl_] = max(W_["u5_case"].get(rl_, -1e9), r_["u5"])
                     if r_["u5"] > W_["u5"]:
-                        W_["arg"] = (v0_, i0_, bk_, d11_)
+                        W_["arg"] = (v0_, i0_, bk_, d11_, rl_)
                     for kk_ in ("vF", "vP", "vS", "i4", "e4", "i11", "e11", "iQ", "iL", "vds", "slew", "u5", "u18", "di59", "di59_up", "u5L"):
                         W_[kk_] = max(W_[kk_], r_[kk_])
                     for kk_ in ("vFmin", "vdsmin", "u5n", "u18n", "di59_dn", "u5Ln"):
@@ -2828,7 +2833,7 @@ def compute():
                             W_["mono"] = False
                         if soa:
                             W_["soa12"] = max(W_["soa12"], soa_r(r_["samp"], r_["t_on"], der_q[0]))
-        g_["d11"] = d11_hot
+        g_["d11"], g_["r_lead"] = d11_hot, rl0_
         W_["soa13"] = W_["iL"] / (der_q[1] * soa_t(soa_l, 1.0, max(W_["ton"], 1e-6)))
         return W_
     kinp, ken = dv_hi_t(GD["inp_div"], TOL_INP), dv_hi(L11["cin_uv"])
@@ -2859,10 +2864,10 @@ def compute():
     grid6 = [0.30e-6 * 1.1 ** j_ for j_ in range(38)]
     # the timestep's error: the selected network's worst case near its floor, from 40 ns down to 0.5 ns
     Wc_ = evalR(3.3e-6, GA)
-    v0c_, i0c_, bkc_, d11c_ = Wc_["arg"]
-    GA["d11"] = d11c_
+    v0c_, i0c_, bkc_, d11c_, rlc_ = Wc_["arg"]
+    GA["d11"], GA["r_lead"] = d11c_, rlc_
     conv6 = [(dt_, guard_event_b(GA, v0c_, i0c_, 3.3e-6, bkc_, dt=dt_)["u5"]) for dt_ in (40e-9, 20e-9, 10e-9, 5e-9, 2e-9, 1e-9, 0.5e-9)]
-    GA["d11"] = d11_hot
+    GA["d11"], GA["r_lead"] = d11_hot, r_lead6
     u20_, ufin_ = conv6[1][1], conv6[-1][1]
     ERR[0] = 2.0 * max(abs(u_ - ufin_) for dt_, u_ in conv6 if dt_ <= 20e-9)
     if ERR[0] > 0.005 or abs(conv6[-2][1] - ufin_) > 0.25 * ERR[0]:
@@ -2884,7 +2889,24 @@ def compute():
             mid_ = 0.5 * (lo_ + hi_)
             lo_, hi_ = (lo_, mid_) if all(ok6(evalR(mid_, g_)).values()) else (mid_, hi_)
         return math.ceil(hi_ * 1e8) / 1e8, ls_, evs_
-    LA, lsA, evA = floor_of(GA)
+
+    def floor_list(g_):
+        """The least loop on the grid from which each resistive rating holds (a property of that rating alone; None: everywhere on
+        the grid, "never": nowhere on it). No composite floor is bisected or claimed (round 5)."""
+        evs_ = [evalR(L_, g_) for L_ in grid6]
+        ls_ = {}
+        for id_, _t, _f in RT6:
+            j_ = len(grid6)
+            while j_ > 0 and ok6(evs_[j_ - 1])[id_]:
+                j_ -= 1
+            ls_[id_] = "never" if j_ == len(grid6) else (grid6[j_] if j_ > 0 else None)
+        return ls_, evs_
+    # round 5 (the recheck's B6 / L4-F01): round 2's 3.30 uH is kept as the REFERENCE loop and WITHDRAWN as a passing floor. A fault at
+    # the connector credits no lead resistance (R_CASES), and the pins' complete budget there (THE PARASITICS' BUDGET) is outside
+    # +-0.240 V in both polarities; no loop is claimed to pass, and no search for one is made
+    L_REF = 3.30e-6
+    lsA, evA = floor_list(GA)
+    LA = L_REF
     # round 4 (L6P-F10): PV_F against the TPS4811-Q1's RECOMMENDED operating row for VS, CS+ and CS- (an absolute maximum only excludes):
     # the least loop from which the selected network keeps PV_F under that row, on the grid and bisected
     j80_ = len(grid6)
@@ -2900,8 +2922,7 @@ def compute():
         pvf80 = None if j80_ == len(grid6) else 0.0
     LD, lsD, evD = floor_of(GD11)
     WA = evalR(LA, GA, soa=True)
-    if not all(ok6(WA).values()) or not WA["mono"]:
-        refuse(4, "B6: the selected network does not hold at its own least inductance %.2f uH" % (1e6 * LA))
+    okA6 = ok6(WA)
     # the corner search: no correlation between the four banks is supported, so each is bounded on its own and every one of the
     # sixteen combinations of their bounds is run at the floor over every start, bulk corner and D11 end. C15 and C64 carry no
     # maker curve: +10 % on their bank's upper side, a quarter of nominal on its lower (ASSUMPTION). The selected corner (the
@@ -2919,9 +2940,9 @@ def compute():
                          fails=sorted(id_ for id_, v_ in okq_.items() if not v_)))
     cnr_w = max(cnr6, key=lambda c_: c_["u5"])
     cnr_sel = [c_ for c_ in cnr6 if c_["c"] == ("lo", "lo", "lo", "hi")][0]
-    if cnr_w["c"] != ("lo", "lo", "lo", "hi") or abs(cnr_sel["u5"] - WA["u5"]) > 1e-12 or not all(c_["ok"] for c_ in cnr6):
+    if cnr_w["c"] != ("lo", "lo", "lo", "hi") or abs(cnr_sel["u5"] - WA["u5"]) > 1e-12:
         refuse(4, "B6: the corner search does not confirm the selected corner at %.2f uH: %s" % (1e6 * LA, [(c_["c"], c_["fails"]) for c_ in cnr6 if not c_["ok"]] or cnr_w["c"]))
-    bindA = [id_ for id_, v_ in lsA.items() if v_ == max(x_ for x_ in lsA.values() if x_ is not None)]
+    bindA = [id_ for id_, v_ in lsA.items() if isinstance(v_, float) and v_ == max((x_ for x_ in lsA.values() if isinstance(x_, float)), default=0.0)]
     W1u = evA[grid6.index(min(grid6, key=lambda x_: abs(x_ - 1.0e-6)))]
     W03 = evA[0]
     fail1 = [id_ for id_, v_ in ok6(W1u).items() if not v_]
@@ -2936,7 +2957,24 @@ def compute():
                     vFmin=min(c_["vFmin"] for c_ in Wc6), t11=max(c_["t11"] for c_ in Wc6))
     cold_ok = (cold_max["vF"] <= 100.0 * (1 - M_OTHER) and cold_max["slew"] <= slew_abs * (1 - M_OTHER) and cold_max["vF"] * kinp <= T48["pin_abs"] * (1 - M_OTHER)
                and cold_max["vFmin"] >= -1.0)
-    # ramps at the selected network's floor (the OV path's 4 us against D4's room, the short-circuit trip for every faster ramp)
+    # round 5: the two fault positions apart (a connector fault credits no lead resistance), the absolute ratings, and the least loop
+    # on the grid from which a connector fault holds the cold ring's margin lines
+    cold_st6 = (("discharged", 0.0, 0.0), ("REQ-016's open circuit", v_oc, 0.0))
+
+    def cold_stat(evs_):
+        d_ = dict(vF=max(c_["vF"] for c_ in evs_), slew=max(c_["slew"] for c_ in evs_), iL=max(c_["iL"] for c_ in evs_), e11=max(c_["e11"] for c_ in evs_),
+                  vFmin=min(c_["vFmin"] for c_ in evs_))
+        d_["ok"] = (d_["vF"] <= 100.0 * (1 - M_OTHER) and d_["slew"] <= slew_abs * (1 - M_OTHER) and d_["vF"] * kinp <= T48["pin_abs"] * (1 - M_OTHER) and d_["vFmin"] >= -1.0)
+        return d_
+    cold_c = cold_stat([evalR(L_, dict(GA, bF=c_bank_), cold=True, starts_=cold_st6, cases=(0.0,)) for c_bank_ in (bF_lo, bF_hi) for L_ in grid6])
+    cold_r = cold_stat([evalR(L_, dict(GA, bF=c_bank_), cold=True, starts_=cold_st6, cases=(r_lead6,)) for c_bank_ in (bF_lo, bF_hi) for L_ in grid6])
+    cold_abs_ok = cold_max["vF"] <= 100.0 and cold_max["slew"] <= slew_abs and cold_max["vF"] * kinp <= T48["pin_abs"] and cold_max["vFmin"] >= -1.0
+    jc_ = len(grid6)
+    while jc_ > 0 and all(c_[jc_ - 1]["vF"] <= 100.0 * (1 - M_OTHER) and c_[jc_ - 1]["slew"] <= slew_abs * (1 - M_OTHER)
+                          and c_[jc_ - 1]["vF"] * kinp <= T48["pin_abs"] * (1 - M_OTHER) and c_[jc_ - 1]["vFmin"] >= -1.0 for c_ in cold6):
+        jc_ -= 1
+    cold_from = None if jc_ == len(grid6) else (grid6[jc_] if jc_ > 0 else 0.0)
+    # ramps at round 2's reference loop (the OV path's 4 us against D4's room, the short-circuit trip for every faster ramp)
     c_min6 = bulks["cold_aged"][1] + bP_lo.C(v_oc) + bS_lo.C(v_oc) + bC_hi.C(v_oc)      # near the least (it only centres the dense band)
     s_h6 = scp3[2] / c_min6
     rates6 = tuple(sorted({0.01e6, 0.05e6, 0.1e6, 0.3e6, 1e6, 3e6, 10e6} | {round(s_h6 * (0.7 + 0.01 * j_), -2) for j_ in range(41)}))
@@ -2975,6 +3013,8 @@ def compute():
     b6 = dict(G6=dict(GA), G1=dict(G1), bulk_cold=bulks["cold_aged"], uvf_lo=L11["uvf"][0], U5_LIM=U5_LIM, M_OTHER=M_OTHER, ERR=ERR[0], conv=conv6,
               conv_case=(v0c_, i0c_), LA=LA, LD=LD, lsA=lsA, lsD=lsD, bindA=bindA, W=WA, W25=W25, W1u=W1u, W03=W03, fail1=fail1,
               sA=sp(LA), sD=sp(LD), s1=sp(1.0e-6), r_lead=r_lead6, t_lead=AC_.T_LEAD, cold=cold_max, cold_ok=cold_ok, ramp=ramp6, ramp_ok=ramp_ok,
+              cold_c=cold_c, cold_r=cold_r, cold_abs_ok=cold_abs_ok, cold_from=cold_from,
+              L_REF=L_REF, okA=okA6, u5_case=dict(WA["u5_case"]), r_cases=R_CASES,
               ramp_w=ramp_w, s_h=s_h6, c_min=c_min6, rates=rates6, i_start=i_start6, wit=wit6, witA=witA, e11=e11_6, e11_cap=e11_cap,
               e11_room=e11_room, t11=t11_6, rsns_v=rsns_v, i_cs=rsns_v / (100.0 * 0.999), ics_abs=ics_abs, cspm=cspm, slew_abs=slew_abs,
               vsrc_ab=vsrc_ab, tsc=tsc6, tsc11=tsc11, tinp=tinp, inph=inph, inp_on=inp_on6, rja=rja_q, tjm=tjm_q, tc=tc_q, der=der_q,
@@ -3066,8 +3106,8 @@ def compute():
                            op_peak=max(o_["peak"] for o_ in op_.values()), op_trough=min(o_["trough"] for o_ in op_.values()),
                            r_peak_reg=max(o_["r_peak"] for (vo_, ii_), o_ in op_.items() if ii_ == i_reg_hi),
                            r_peak_trip=max(o_["r_peak"] for (vo_, ii_), o_ in op_.items() if ii_ == i_op),
-                           low_reg=max(1.0 - o_["avg_clip"] / o_["avg"] for (vo_, ii_), o_ in op_.items() if ii_ == i_reg_hi),
-                           low_trip=max(1.0 - o_["avg_clip"] / o_["avg"] for (vo_, ii_), o_ in op_.items() if ii_ == i_op)))
+                           err_reg=max((o_["avg_clip"] / o_["avg"] - 1.0 for (vo_, ii_), o_ in op_.items() if ii_ == i_reg_hi), key=abs),
+                           err_trip=max((o_["avg_clip"] / o_["avg"] - 1.0 for (vo_, ii_), o_ in op_.items() if ii_ == i_op), key=abs)))
     # the hold's own operating point (17.6 V in, the drawn setpoint out), for the as-drafted split: where the sense is smooth enough
     op_hold = sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, lo_h, v_out, F_LO, L1_LO, T_RF, r59_hi, L59_H, rb_lo, bulk_op)
     op_edge = sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, v_oc, 12.0, F_LO, L1_LO, 10e-9, r59_hi, L59_H, rb_lo, bulk_op, dt=0.5e-9)
@@ -3105,39 +3145,48 @@ def compute():
         row_["holds"] = row_["holds_tr"] and row_["holds_op"]
     # the selected network at its floor with RSENSE1's inductance: the pins read R i + L di/dt, the rise adding to the positive peak and
     # Q12's turn-off (the current collapsing within the gate's fall) swinging it negative; the largest inductance the margin holds for
+    def budget_(W__):
+        return dict(up=W__["di59_up"], dn=W__["di59_dn"], hi=W__["u5L"] + ERR[0] + L_KEL * W__["di59_up"], lo=W__["u5Ln"] - ERR[0] + L_KEL * W__["di59_dn"],
+                    l_up=L59_H * W__["di59_up"], l_dn=L59_H * W__["di59_dn"], k_up=L_KEL * W__["di59_up"], k_dn=L_KEL * W__["di59_dn"], u5=W__["u5"])
     W_LA = evalR(LA, dict(GA, l59=L59_H))
-    parA = dict(up=W_LA["di59_up"], dn=W_LA["di59_dn"], hi=W_LA["u5L"] + ERR[0] + L_KEL * W_LA["di59_up"], lo=W_LA["u5Ln"] - ERR[0] + L_KEL * W_LA["di59_dn"],
-                l_up=L59_H * W_LA["di59_up"], l_dn=L59_H * W_LA["di59_dn"], k_up=L_KEL * W_LA["di59_up"], k_dn=L_KEL * W_LA["di59_dn"])
+    parA = budget_(W_LA)                                             # the worst over both fault positions
+    parA0 = budget_(evalR(LA, dict(GA, l59=L59_H), cases=(0.0,)))     # a fault at the connector: no lead resistance credited
+    parAr = budget_(evalR(LA, dict(GA, l59=L59_H), cases=(r_lead6,)))  # at the lead's far end
     l59_scan = []
     for l_ in (0.5e-9, 1e-9, 1.5e-9, 2e-9, 3e-9, 5e-9):
         Wl_ = evalR(LA, dict(GA, l59=l_))
         hi_, lo_ = Wl_["u5L"] + ERR[0] + L_KEL * Wl_["di59_up"], Wl_["u5Ln"] - ERR[0] + L_KEL * Wl_["di59_dn"]
-        l59_scan.append((l_, hi_, lo_, lo_ >= -U5_LIM))         # ok: the turn-off's excursion inside the margin line (the side the inductance governs)
+        l59_scan.append((l_, hi_, lo_, hi_ <= U5_LIM and lo_ >= -U5_LIM))   # ok: both polarities inside the margin line (information, no bound claimed)
     l59_ok = max([l_ for l_, _h, _l, ok_ in l59_scan if ok_], default=None)
     op_l59 = {l_: sense_ripple(r3rows[0]["cu"], r3rows[0]["cd"], i_reg_hi, v_oc, 12.0, F_LO, L1_LO, T_RF, r59_hi, l_, rb_lo, bulk_op) for l_ in (1e-9, 2e-9, 5e-9)}
     b6["r3"] = dict(l59_scan=l59_scan, l59_ok=l59_ok, op_l59=op_l59, W_LA=dict((k_, W_LA[k_]) for k_ in ("u5", "u5n", "u5L", "u5Ln", "di59_up", "di59_dn")),
+                    parA0=parA0, parAr=parAr,
                     V_OP=V_OP, L1_LO=L1_LO, xrow=xrow_, F_LO=F_LO, T_RF=T_RF, L59=L59_H, L_TAP=L_TAP, L_KEL=L_KEL, esl=esl_d, srf=srf_d, V_OUTS=V_OUTS,
                     rows=r3rows, floors=r3_floors, op_hold=op_hold, op_edge=op_edge, op_noesl=op_noesl, vf=(vf1_, vf2_), parA=parA, di59A=WA["di59"],
                     i_reg_hi=i_reg_hi, i_op=i_op, bulk_op=bulk_op, holds=any(r_["holds"] for r_ in r3rows), V_OP_M=V_OP_M, v_oc=v_oc, lo_h=lo_h, t_f=t_f6,
                     edge_spike=(esl_max + L_TAP) * (r3rows[0]["op"][(12.0, i_reg_hi)]["i_v"] / T_RF))
     verd2 = [
         dict(id="D4", name="a stiff 36 V source, connected cold", ok=st_min > 1e-3 and f36["cut_hi"] < v_src and f36["d4_room"] > 0 and v_src < D11["vr"]
-             and cold_ok and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"]),
+             and cold_ok and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"],
+             note="" if cold_ok else " (round 5: at a connector fault, no lead resistance credited, the ring near %.2f uH takes PV_F's slew to %.1f V/us against the 54 V/us margin line and INP to %.2f V against 18 V, inside the %.0f V/us and %.0f V absolute ratings; the margin lines hold from %s; with the lead's resistance credited, round 2's case, %.1f V, %.1f V/us and %.2f V)" % (
+                 1e6 * grid6[0], cold_c["slew"] / 1e6, cold_c["vF"] * kinp, slew_abs / 1e6, T48["pin_abs"], ("%.2f uH" % (1e6 * cold_from)) if cold_from else "nowhere on the grid",
+                 cold_r["vF"], cold_r["slew"] / 1e6, cold_r["vF"] * kinp)),
         dict(id="D5", name="a reversed panel", note=" (CONDITIONAL on Q13's leakage above 25 C)", ok=rev["vds"] < QF["vds"] and rev["i_be"] > rev["idss"] and rev["ring"] < QF["vds"]),
         dict(id="CS116/115 on", name="CS116 and CS115 with the block on", note=" (CS115 CONDITIONAL on R-174: its loop current under %.2f A, or U5's differential measured under %.1f V)" % (b6["be115"], csd_abs),
              ok=scp_f < scp_lo and v_tmr < T48["tmr_v"][0] and ov_in116 < bandA["rise"][0] and D4N["v116"] <= lim_draft and b6["d59_116"] < csd_abs),
         dict(id="CS116/115 off", name="CS116 and CS115 with the block off", ok=off116["v"] < QF["vds"] and off116["en"] <= 15.0 and off116["inp"] < T48["pin_abs"] and off116["floor"] > -1.0),
         dict(id="already on", name="a stiff 36 V source with the guard on (B6)",
-             note=" (round 2: every rating with its margin for a source loop of at least %.2f uH, NOT MET below it; no approach within the makers' printed rules removes that floor: the engineer's row B6-ENG-1; round 4: PV_F %.2f V at the floor exceeds the recommended operating VS row of %.0f V by %.2f V, OPEN on the guard, under that row from %s)" % (
-                 1e6 * b6["LA"], b6["W"]["vF"], T48["vs_rec"], b6["W"]["vF"] - T48["vs_rec"], ("%.2f uH" % (1e6 * pvf80)) if pvf80 else "no loop on the grid"),
-             ok=False, holds=gate_load < T48["cl"] and all(ok6(b6["W"]).values()) and b6["W"]["mono"] and ramp_ok and b6["W"]["soa12"] < 1.0
-             and b6["W"]["soa13"] < 1.0 and e11_6 < e11_room and b6["i_cs"] < ics_abs and bool(b6["fail1"]) and b6["LD"] < b6["LA"]),
+             note=" (round 5: round 2's %.2f uH is WITHDRAWN as a passing floor; there a fault at the connector, no lead resistance credited, reads U5 %.4f V resistive and, with RSENSE1's 5 nH and the Kelvin pair, the pins %+.4f to %+.4f V against +-%.3f V; no loop is claimed to pass; the complete stage question is the engineer's, B6-ENG-1 with B6-ENG-2's stage-level note; round 4: PV_F %.2f V there exceeds the recommended operating VS row of %.0f V by %.2f V, OPEN on the guard, under that row from %s)" % (
+                 1e6 * b6["LA"], b6["u5_case"][0.0], b6["r3"]["parA0"]["lo"], b6["r3"]["parA0"]["hi"], U5_LIM, b6["W"]["vF"], T48["vs_rec"], b6["W"]["vF"] - T48["vs_rec"], ("%.2f uH" % (1e6 * pvf80)) if pvf80 else "no loop on the grid"),
+             ok=False, holds=False, budget_stated=gate_load < T48["cl"] and b6["W"]["mono"] and ramp_ok and b6["W"]["soa12"] < 1.0
+             and b6["W"]["soa13"] < 1.0 and e11_6 < e11_room and b6["i_cs"] < ics_abs and bool(b6["fail1"]) and b6["LD"] < b6["LA"]
+             and b6["r3"]["parA0"]["hi"] > U5_LIM and b6["r3"]["parA0"]["lo"] < -U5_LIM),
         dict(id="window", name="the window kept", ok=bandA["rise"][0] > cs101_pk and bandA["fall"][0] > v_oc and max(L11["uv"][2], inp_on6) < float(shdn_txt)
              and i_start6 < ocp_lo
              and p_static_blk < p_win and t_allow_blk >= T_FAC * c["t_resp_typ"] and i_bank_slew < c["i_lo_aged"]
              and max(cs_re[k_]["worst"][2] for k_ in ("least", "most")) < best["m"]),
     ]
-    if [v_["ok"] for v_ in verd2] != [True, True, True, True, False, True] or not verd2[4]["holds"] or min(ov28["aged"]["m"]) >= 0 or d4n != 30:
+    if [v_["ok"] for v_ in verd2] != [False, True, True, True, False, True] or not verd2[4]["budget_stated"] or not (cold_abs_ok and cold_r["ok"]) or min(ov28["aged"]["m"]) >= 0 or d4n != 30:
         refuse(4, "the remedy's verdicts are not the ones the record states: %s, SMCJ28A aged %.3f, D4 SMCJ%dA" % (
             [(v_["id"], v_["ok"]) for v_ in verd2], min(ov28["aged"]["m"]), d4n))
     rem["verd"] = verd2
@@ -3892,7 +3941,7 @@ def render(R):
         wrapP("     - ", "       ", "THE LEAD'S LENGTH AS A CITED INPUT (set 27): %s. The 5 m is this derivation's own a1solar ESTIMATE carried back "
               "by L4-E9's register, inside the envelope the guard-on transient already assumes (%.2f to %.2f uH over %.0f m). The loop inductance "
               "per metre this derivation uses for that length is (mu0 / pi) acosh(s / 2r) for two %.0f mm2 conductors s apart: %.3f uH/m at "
-              "the envelope's %.2f uH, %.3f uH/m at the selected network's floor (%.2f uH, %.2f mm apart) and %.3f uH/m at %.2f uH. The guard "
+              "the envelope's %.2f uH, %.3f uH/m at round 2's reference loop (%.2f uH, %.2f mm apart) and %.3f uH/m at %.2f uH. The guard "
               "pins that statement: it fires again only when a document states another length or another sentence" % (
                   "; ".join("%s (read at digest %s): \"%s\"" % (p_, d_[:16], s_) for p_, (d_, s_) in sorted(ld["cited"].items())),
                   1e6 * bq_["grid"][0], 1e6 * bq_["grid"][1], le_["m"], le_["mm2"], 1e6 * bq_["grid"][0] / le_["m"], 1e6 * bq_["grid"][0],
@@ -4085,12 +4134,15 @@ def render(R):
          "the block never turns on: the gate cannot rise before BST charges, at least %.1f ms (1 uF -10 %% to %.1f V at %.0f uA), while "
          "the OV pin follows the input at once; the cut-off's highest %.2f V is %.2f V under the source; Q12 holds %.0f V of %.0f V; "
          "U21's VS %.0f V of 80 V, EN/UVLO %.2f V of 15 V, INP %.2f V of %.0f V; D11 at %.0f V under its %.0f V standoff. The "
-         "connection's ring (MODELED, THE GUARD ALREADY ON below, any source loop from %.2f uH): PV_F at most %.1f V, its slew %.1f V/us of %.0f, INP "
+         "connection's ring (MODELED, THE GUARD ALREADY ON below, any source loop from %.2f uH, the worst of both fault positions): PV_F at most %.1f V, its slew %.1f V/us of %.0f, INP "
          "%.2f V and EN/UVLO %.2f V of %.0f V, D11 at most %.1f mJ; Q13's body diode carries the ring, at most %.1f A; D4 and the bulk "
          "see nothing" % (
              1e3 * rm["f36"]["st_min"], T4["bst_uv"][0], T4["bst_i"][2], rm["f36"]["cut_hi"], R["lead"]["v_src"] - rm["f36"]["cut_hi"],
              rm["f36"]["vds"], QF["vds"], rm["f36"]["vs"], rm["f36"]["en"], rm["f36"]["inp"], T4["pin_abs"], R["lead"]["v_src"], D11["vr"],
-             1e6 * b6["grid"][0], wc_[0], wc_[1], b6["slew_abs"] / 1e6, wc_[0] * b6["kinp"], wc_[0] * b6["ken"], T4["pin_abs"], 1e3 * wc_[3], wc_[2]), "MEETS"),
+             1e6 * b6["grid"][0], wc_[0], wc_[1], b6["slew_abs"] / 1e6, wc_[0] * b6["kinp"], wc_[0] * b6["ken"], T4["pin_abs"], 1e3 * wc_[3], wc_[2]),
+         "MEETS" if rm["verd"][0]["ok"] else "MEETS the absolute ratings; NOT MET on the 10 %% margin lines at a connector fault near %.2f uH (round 5: PV_F's slew %.1f V/us against 54, INP %.2f V against 18; the margins hold from %s; with the lead's resistance credited, round 2's case, %.1f V/us and %.2f V)" % (
+             1e6 * b6["grid"][0], b6["cold_c"]["slew"] / 1e6, b6["cold_c"]["vF"] * b6["kinp"], ("%.2f uH" % (1e6 * b6["cold_from"])) if b6["cold_from"] else "nowhere on the grid",
+             b6["cold_r"]["slew"] / 1e6, b6["cold_r"]["vF"] * b6["kinp"])),
         ("D5, a reversed panel (%.3f A short circuit with tolerance, %.0f V open circuit)" % (R["lead"]["rev"]["i"], rm["rev"]["v"]),
          "Q13 off (its gate at or under its source), its body diode reverse biased: no current; it holds %.0f V of %.0f V, and a "
          "reversed connection's ring at most D11's %.1f V; the high side's pins stay within 1 V of GND while Q13 leaks under %.1f uA "
@@ -4124,7 +4176,8 @@ def render(R):
              b6["U5_LIM"], 1e6 * b6["LA"], b6["W"]["iQ"], 1e6 * b6["W"]["ton"], b6["W"]["vF"], b6["W"]["slew"] / 1e6, b6["W"]["vP"],
              b6["W"]["vS"], DN["vbr_cold"], b6["W"]["u5"] + b6["ERR"], b6["W"]["u5n"] - b6["ERR"], b6["W"]["soa12"],
              DN["vbr_cold"] - b6["ramp_w"]["vS"], b6["W1u"]["u5"] + b6["ERR"]),
-         "MEETS from %.2f uH; NOT MET under it (the engineer's row B6-ENG-1); PV_F over the recommended operating VS row (%.0f V) at the floor, OPEN" % (1e6 * b6["LA"], b6["vs_rec"])),
+         "NOT MET: no passing loop is claimed (round 5); at round 2's %.2f uH a fault at the connector reads U5 %.4f V resistive and the pins %+.4f to %+.4f V with RSENSE1's 5 nH and the Kelvin pair, against +-0.240 V; the complete stage question is the engineer's (B6-ENG-1 with B6-ENG-2's stage-level note); PV_F over the recommended operating VS row (%.0f V) there, OPEN" % (
+             1e6 * b6["LA"], b6["u5_case"][0.0], b6["r3"]["parA0"]["lo"], b6["r3"]["parA0"]["hi"], b6["vs_rec"])),
         ("the quiescent and conduction loss in normal operation",
          "the series path at most %.2f mOhm (Q12 %.2f, Q13 %.2f at VGS %.1f V or more, R87 %.2f; the FETs at their 150 C reading); "
          "%.3f W at the regulation's highest %.3f A and %.3f W at the trip's highest %.3f A; %.2f mA around the bank at 25 V (IQ, "
@@ -4214,12 +4267,14 @@ def render(R):
               R["lead"]["v_src"], 1e6 * b6["grid"][0], 1e6 * b6["grid"][1], b6["grid"][2], b6["r_lead"], R["lead"]["lead"]["r"], b6["t_lead"],
               "; ".join(b6["st"]), "; ".join(b6["bk"]), b6["conv_case"][0], b6["conv_case"][1],
               ", ".join("%g ns %.6f V" % (1e9 * dt_, u_) for dt_, u_ in cv_), b6["ERR"]))
-    P("       THE SELECTED NETWORK (A) AT %.2f uH, the worst over every start and corner, against each limit with its margin (and the least loop each holds from):" % LAu)
+    P("       THE SELECTED NETWORK (A) AT %.2f uH (round 2's reference loop, WITHDRAWN as a passing floor in round 5), the worst over every start, bulk" % LAu)
+    P("       corner, D11 end and both fault positions (at the connector with no lead resistance credited; at the lead's far end), each resistive")
+    P("       rating against its limit with its margin (and the least loop on the grid each holds from, a property of that rating alone):")
     for id_, v_, l_, s_ in b6["valsA"]:
         ls_ = b6["lsA"][id_]
         P("         - %-50s %s, margin %7.4f; holds from %s" % (
             rtn_[id_], ("none" if id_ == "d4" and v_ == 0.0 else "%8.4f %s %8.4f" % (v_, "of" if s_ > 0 else "against", l_)),
-            (l_ - v_) * s_, ("%.2f uH" % (1e6 * ls_)) if ls_ else "under %.2f uH" % (1e6 * b6["grid"][0])))
+            (l_ - v_) * s_, ("%.2f uH" % (1e6 * ls_)) if isinstance(ls_, float) else ("nowhere on the grid" if ls_ == "never" else "under %.2f uH" % (1e6 * b6["grid"][0]))))
     cn_ = b6["cnr"]
     wrapP("       ", "       ", "THE CORNER SEARCH at %.2f uH (the four banks independent, no correlation supported: every one of the %d "
           "combinations of their bounds over every start, bulk corner and D11 end; C15 and C64, no curve held, at +10 %% on their bank's "
@@ -4235,24 +4290,31 @@ def render(R):
           "0.1 percent, 25 ppm/K, code owed); INP reads %.4f V at the floor against %.1f V" % (
               100.0, b6["vs_rec"], b6["W"]["vF"], b6["W"]["vF"] - b6["vs_rec"], ("%.2f uH" % (1e6 * b6["pvf80"])) if b6["pvf80"] else "no loop on the grid",
               b6["W"]["vF"] * b6["kinp"], [v_ for v_ in b6["valsA"] if v_[0] == "inp"][0][2]))
-    wrapP("       ", "       ", "AT %.2f uH it holds, and so at every loop above it on the grid; under it it does not: at 1.00 uH %s (U5 %.4f V), "
+    wrapP("       ", "       ", "AT %.2f uH U5's resistive peak alone, with the numerical error, reads %.4f V at a fault at the connector and %.4f V at the "
+          "lead's far end against the %.3f V line: the far-end case is round 2's figure, the connector case is over the line, and the complete "
+          "budget with RSENSE1's inductance is in THE PARASITICS' BUDGET below (round 5). Under it: at 1.00 uH %s (U5 %.4f V), "
           "at %.2f uH U5 %.4f V and PV_F %.1f V. Q12 while it conducts: %.3f of its derated chart (TI's Figure 10, the 10 us line for its "
           "%.2f us; derated %.3f for a case at %.1f C), %.1f A at the turn-off; Q13 in the third quadrant %.1f A, %.3f of its derated "
           "chart (channel and body diode together, the channel's row taken, INFERRED); D11 %.1f A and %.1f mJ against %.0f mJ; R87's "
           "%.3f V reaches CS+ through RSET, %.2f mA against %.0f mA for 1 ms; U18 %.3f V. THE REVIEWED CASE (from 25 V): Q12 off at "
           "%.1f A, TRK_VS %.2f V, %.3f V under D4" % (
-              LAu, ", ".join(rtn_[i_] for i_ in b6["fail1"]), b6["W1u"]["u5"] + b6["ERR"], 1e6 * b6["grid"][0], b6["W03"]["u5"] + b6["ERR"],
+              LAu, b6["u5_case"][0.0] + b6["ERR"], b6["u5_case"][b6["r_lead"]] + b6["ERR"], b6["U5_LIM"],
+              ", ".join(rtn_[i_] for i_ in b6["fail1"]), b6["W1u"]["u5"] + b6["ERR"], 1e6 * b6["grid"][0], b6["W03"]["u5"] + b6["ERR"],
               b6["W03"]["vF"], W6_["soa12"], 1e6 * W6_["ton"], b6["der"][0], b6["tc"][0], W6_["iQ"], W6_["iL"], W6_["soa13"], W6_["i11"],
               1e3 * b6["e11"], 1e3 * b6["e11_room"], b6["rsns_v"], 1e3 * b6["i_cs"], 1e3 * b6["ics_abs"], W6_["u18"], b6["W25"]["iQ"],
               b6["W25"]["vS"], DN["vbr_cold"] - b6["W25"]["vS"]))
     rw_ = b6["ramp_w"]
     wrapP("       ", "       ", "RAMPS at %.2f uH (%d rates, 0.01 to 10 V/us, densest around %.3f V/us): the closest TRK_VS comes to D4 is %.3f V at "
           "%.3f V/us (cut by %s), %.3f V under it; D4 never conducts; U5 at most %.4f V. THE COLD CONNECTION over the whole grid (the port "
-          "bank at its least and largest, from a discharged port and from 25 V): PV_F at most %.1f V, its slew %.1f V/us, INP %.2f V; "
-          "Q13's body diode at most %.1f A; D11 at most %.1f mJ. THE START: Q12 carries at most %.3f A into the capacitors behind it at "
+          "bank at its least and largest, from a discharged port and from 25 V, both fault positions): PV_F at most %.1f V, its slew %.1f V/us, INP %.2f V "
+          "(round 5: a connector fault, no lead resistance credited, near %.2f uH takes the slew over its 54 V/us margin line and INP over 18 V while "
+          "inside the %.0f V/us and %.0f V absolute ratings; the margin lines hold from %s; with the lead's resistance credited, round 2's case, "
+          "%.1f V, %.1f V/us and %.2f V); Q13's body diode at most %.1f A; D11 at most %.1f mJ. THE START: Q12 carries at most %.3f A into the capacitors behind it at "
           "the gate's fastest slew, under U21's overcurrent least %.3f A" % (
               LAu, len(b6["rates"]), b6["s_h"] / 1e6, rw_["vS"], rw_["rate"] / 1e6, " and ".join(rw_["why"]), DN["vbr_cold"] - rw_["vS"],
-              max(r_["u5"] for r_ in b6["ramp"]), b6["cold"]["vF"], b6["cold"]["slew"] / 1e6, b6["cold"]["vF"] * b6["kinp"], b6["cold"]["iL"],
+              max(r_["u5"] for r_ in b6["ramp"]), b6["cold"]["vF"], b6["cold"]["slew"] / 1e6, b6["cold"]["vF"] * b6["kinp"],
+              1e6 * b6["grid"][0], b6["slew_abs"] / 1e6, T4["pin_abs"], ("%.2f uH" % (1e6 * b6["cold_from"])) if b6["cold_from"] else "nowhere on the grid",
+              b6["cold_r"]["vF"], b6["cold_r"]["slew"] / 1e6, b6["cold_r"]["vF"] * b6["kinp"], b6["cold"]["iL"],
               1e3 * b6["cold"]["e11"], b6["i_start"], rm["ocp_lo"]))
     wrapP("       ", "       ", "THE THREE APPROACHES (at most three, the review's and the coordinator's): (A) SELECTED, the round-1 guard with "
           "parts a maker characterises, bounded bank by bank: every rating with its margin for a loop of at least %.2f uH (two conductors "
@@ -4269,19 +4331,23 @@ def render(R):
           "sheet prints: not taken. At 1.00 uH (D) still reads U5 %.4f V" % (
               LAu, 1e3 * b6["sA"], 1e6 * b6["ibias_sum"], 100 * b6["lim_err"], b6["tsc11"][1], b6["tsc"][1], LDu, 1e3 * b6["sD"],
               b6["tinp"], b6["WD1"]["u5"] + b6["ERR"]))
-    wrapP("       ", "       ", "THE ENGINEER'S ROW B6-ENG-1 (no approach within the makers' printed rules holds the margin independent of the "
-          "source's loop): affected circuit: board E's solar guard (U21, Q12, the port bank) and U5's input sense (RSENSE1, CSPIN, "
-          "CSNIN, C13 to C15); evidence and failed condition: the selected network holds U5 within +-%.3f V only for a source loop of "
-          "at least %.2f uH; at 1.00 uH it reads %.4f V, over U5's %.1f V absolute maximum, because any guard that is closed when a "
-          "stiff source arrives charges the stage's capacitance at a rate only the loop sets; decision or measurement needed: either "
-          "Analog Devices permits a sense-pin filter on CSPIN and CSNIN with a bounded error (then B makes the margin independent of the "
-          "loop), or the kit's rules bound a stiff source's loop at J_SOLAR (the connector and the leads a source can arrive through, "
-          "at least %.2f uH, measured), or the input current sense moves off the stage's input capacitance; pass criterion: U5's "
-          "differential within +-%.3f V at the IC pins for the declared envelope, captured at layer 9 with the guard on and a 36 V "
-          "supply stepped on from about 7.5 V and from 25 V; consequence of failure: U5's sense pins over their absolute maximum, the "
-          "LT8705A possibly damaged and the solar stage lost (the 100 W bound and the backstop rest on it); work blocked: D-10's "
-          "closure and R-176's step row; board E's other drafts are not blocked" % (
-              b6["U5_LIM"], LAu, b6["W1u"]["u5"] + b6["ERR"], b6["csd_abs"], LAu, b6["U5_LIM"]))
+    pq_, pq0_, pqr_ = b6["r3"]["parA"], b6["r3"]["parA0"], b6["r3"]["parAr"]
+    wrapP("       ", "       ", "THE ENGINEER'S ROW B6-ENG-1 (restated in round 5 after the recheck: no approach within the makers' printed rules holds "
+          "the margin independent of the source's loop, and no passing loop is claimed): affected circuit: board E's solar guard (U21, Q12, "
+          "the port bank) and U5's input sense (RSENSE1, CSPIN, CSNIN, C13 to C15); evidence and failed condition: at round 2's %.2f uH "
+          "the pins' complete budget (the resistive peak, RSENSE1's inductance at 5 nH, the Kelvin pair's 1 nH, the numerical error) reads "
+          "%+.4f to %+.4f V at a fault at the connector (no lead resistance credited) and %+.4f to %+.4f V at the lead's far end, against "
+          "+-%.3f V: outside the line in both polarities, inside the +-%.1f V absolute maximum only in the positive one; at 1.00 uH U5's "
+          "resistive peak alone reads %.4f V, over the absolute maximum, because any guard that is closed when a stiff source arrives "
+          "charges the stage's capacitance at a rate only the loop sets; the source's own resistance is not bounded by any document; "
+          "decision or measurement needed: the stage's current-sense arrangement itself (where the input current is sensed and with what, "
+          "B6-ENG-2's stage-level note), with RSENSE1's inductance (unprinted for the chosen part) and the source's loop and resistance "
+          "bounded by the kit's rules and measured before any step is applied; a sense-pin filter only if Analog Devices permits it with a "
+          "bounded error; pass criterion: U5's differential within +-%.3f V at the IC pins for the declared envelope, both fault positions, "
+          "captured at layer 9 with the guard on and a 36 V supply stepped on from about 7.5 V and from 25 V; consequence of failure: U5's "
+          "sense pins over their absolute maximum, the LT8705A possibly damaged and the solar stage lost (the 100 W bound and the backstop "
+          "rest on it); work blocked: D-10's closure and R-176's step row; board E's other drafts are not blocked" % (
+              LAu, pq0_["lo"], pq0_["hi"], pqr_["lo"], pqr_["hi"], b6["U5_LIM"], b6["csd_abs"], b6["W1u"]["u5"] + b6["ERR"], b6["U5_LIM"]))
     r3 = b6["r3"]
     wrapP("       ", "       ", "ROUND 3, ROUTE 3 (the coordinator's one design-convergence attempt, 2 October 2026: B6-ENG-1's third route, the input "
           "current sense moved off the stage's input capacitance, worked to the circuit). What RSENSE1 carries is the current into whatever "
@@ -4318,9 +4384,9 @@ def render(R):
             t1_["u5"] + b6["ERR"], t1_["pins_lo"], t1_["pins_hi"], (" (fails: %s)" % ", ".join(t1_["fails"])) if t1_["fails"] else "",
             t33_["u5"] + b6["ERR"], t33_["pins_lo"], t33_["pins_hi"], (" (fails: %s)" % ", ".join(t33_["fails"])) if t33_["fails"] else ""))
         P("           at 0.30 uH: PV_F %.1f V, TRK_VS %.2f V, D4 %.1f A, Q12 off at %.1f A; in operation: RSENSE1's resistive peak %.4f V at the regulation's "
-          "highest, %.4f V at the trip's; the pins %.4f to %+.4f V; the average read %.1f %% low at the regulation's current, %.1f %% at the trip's: %s" % (
+          "highest, %.4f V at the trip's; the pins %.4f to %+.4f V; the monitor's average %+.1f %% at the regulation's current, %+.1f %% at the trip's (positive: high): %s" % (
               t3_["vF"], t3_["vS"], t3_["i4"], t3_["iQ"], row_["r_peak_reg"], row_["r_peak_trip"], row_["op_trough"], row_["op_peak"],
-              100 * row_["low_reg"], 100 * row_["low_trip"],
+              100 * row_["err_reg"], 100 * row_["err_trip"],
               "HOLDS both" if row_["holds"] else ("holds the transient, NOT the operating range" if row_["holds_tr"] else (
                   ("holds U5's transient but not the port's ratings, NOT the operating range" if row_["holds_u5"] else "holds NEITHER") if not row_["holds_op"] else "holds the operating range, NOT the transient"))))
     fl_ = r3["floors"]
@@ -4328,29 +4394,31 @@ def render(R):
           "holds nowhere on the grid): %s" % "; ".join("%s: %s" % (lab_, ", ".join("%s %s" % (id_, ("%.2f uH" % (1e6 * v_)) if v_ else ("under %.2f uH" % (1e6 * b6["grid"][0]) if v_ == 0.0 else "none")) for id_, v_ in ls_.items() if v_ != 0.0)) for lab_, ls_ in fl_.items()))
     oh_ = r3["op_hold"]
     wrapP("       ", "       ", "THE AS-DRAFTED SPLIT AT THE HOLD (%.2f V in, %.1f V out, %.4f A): RSENSE1's resistive peak %.4f V, the pins %.4f to %+.4f V, the "
-          "average read %.1f %% low: inside the operating range there. SENSITIVITIES at the 25 V corner, 12.0 V out, the regulation's current: M1's "
+          "monitor's average %+.1f %%: inside the operating range there. SENSITIVITIES at the 25 V corner, 12.0 V out, the regulation's current: M1's "
           "edges at 10 ns, the pins %.4f to %+.4f V; every inductance zero, %.4f to %+.4f V (the resistive share alone, %.4f V peak). The edge's "
           "inductive step at the pins, INFERRED as the ceramics' ESL and tap times the valley current over the edge: %.3f V" % (
               r3["lo_h"], r3["V_OUTS"][1], r3["i_reg_hi"], oh_["r_peak"], oh_["trough"], oh_["peak"],
-              100 * (1 - oh_["avg_clip"] / oh_["avg"]), r3["op_edge"]["trough"], r3["op_edge"]["peak"], r3["op_noesl"]["trough"], r3["op_noesl"]["peak"],
+              100 * (oh_["avg_clip"] / oh_["avg"] - 1.0), r3["op_edge"]["trough"], r3["op_edge"]["peak"], r3["op_noesl"]["trough"], r3["op_noesl"]["peak"],
               r3["op_noesl"]["r_peak"], r3["edge_spike"]))
     pa_ = r3["parA"]
-    wrapP("       ", "       ", "THE PARASITICS' BUDGET at the selected network's floor (%.2f uH), linear worst case, the pins reading R i + L di/dt with "
+    wrapP("       ", "       ", "THE PARASITICS' BUDGET at round 2's reference loop (%.2f uH, WITHDRAWN as a passing floor in round 5), the worst over "
+          "both fault positions, linear worst case, the pins reading R i + L di/dt with "
           "RSENSE1's inductance at the WSL's printed bound %.0f nH and the Kelvin pair's loop %.0f nH (the layout obligation: the pair from the "
           "pad centres, together, over the ground return): RSENSE1's current rises at most %.2f A/us during the charging (RSENSE1's "
           "inductance %+.4f V, the pair %+.4f V) and falls at most %.1f A/us when Q12 turns off within its %.0f ns gate fall (%+.4f V and "
           "%+.4f V). The pins read at most %+.4f V on the rise (resistive %.4f, numerical %.6f) and %+.4f V at the turn-off, against +-%.1f V: "
-          "the rise %s round 2's %.3f V margin line (by %+.4f V: the floor was bisected on the resistive value, and the rise's inductive "
-          "and Kelvin terms, %.4f V at 5 nH, sit inside the 0.060 V between the line and the rating), the turn-off at 5 nH %s. Over RSENSE1's "
-          "inductance at the floor (%s; OUT: the turn-off outside the line), the turn-off stays inside the margin line for an inductance at "
-          "most %s. The ceramics' ESL and tap (%.2f nH a part at most, %.1f nH tap) move "
+          "the rise %s round 2's %.3f V margin line (by %+.4f V; the rise's inductive and Kelvin terms are %.4f V at 5 nH), the turn-off at 5 nH %s. "
+          "BY FAULT POSITION: at the connector (no lead resistance credited) the pins read %+.4f to %+.4f V, at the lead's far end %+.4f to %+.4f V. "
+          "Over RSENSE1's inductance at this loop (%s; OUT: a polarity outside the line) %s. The ceramics' ESL and tap (%.2f nH a part at most, %.1f nH tap) move "
           "the node, not the pin difference, and are in the operating model above. So RSENSE1's inductance, printed by no maker for the "
-          "chosen part, is a condition of B6's floor as much as the loop is" % (
+          "chosen part, is part of the stage question handed to the engineer" % (
               LAu, 1e9 * r3["L59"], 1e9 * r3["L_KEL"], 1e-6 * pa_["up"], pa_["l_up"], pa_["k_up"], 1e-6 * abs(pa_["dn"]), 1e9 * r3["t_f"], pa_["l_dn"], pa_["k_dn"],
               pa_["hi"], b6["W"]["u5"], b6["ERR"], pa_["lo"], b6["csd_abs"], "stays inside" if pa_["hi"] <= b6["U5_LIM"] else "EXCEEDS", b6["U5_LIM"],
               pa_["hi"] - b6["U5_LIM"], pa_["hi"] - b6["W"]["u5"] - b6["ERR"], "stays inside it" if pa_["lo"] >= -b6["U5_LIM"] else "does NOT",
+              r3["parA0"]["lo"], r3["parA0"]["hi"], r3["parAr"]["lo"], r3["parAr"]["hi"],
               "; ".join("%.1f nH %+.3f to %+.3f V%s" % (1e9 * l_, lo_, hi_, "" if ok_ else " OUT") for l_, hi_, lo_, ok_ in r3["l59_scan"]),
-              ("%.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "none of the values tried", 1e9 * max(r3["esl"].values()), 1e9 * r3["L_TAP"]))
+              ("both polarities stay inside the line up to %.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "no inductance tried brings both polarities inside the line at this loop (information, not a search for a passing value)",
+              1e9 * max(r3["esl"].values()), 1e9 * r3["L_TAP"]))
     wrapP("       ", "       ", "IN OPERATION the same inductance sets the pins' swing at M1's edges for the as-drafted split (25 V in, 12.0 V out, the "
           "regulation's current): %s" % "; ".join("%.0f nH: %+.4f to %+.4f V" % (1e9 * l_, o_["trough"], o_["peak"]) for l_, o_ in sorted(r3["op_l59"].items())))
     rA_ = r3["rows"][0]
@@ -4359,52 +4427,56 @@ def render(R):
           "leaves its +-%.0f mV operating range at the 25 V corner (resistive peaks %.4f to %.4f V at the regulation's highest current); the "
           "splits that keep more behind it bring the transient back. The port's own ratings keep their floors whatever the split (at 0.30 uH "
           "PV_F reads %.1f V against %.0f V, Q12's VDS and INP with it), and that floor is the SOURCE loop's (the panel lead and whatever a "
-          "stiff source arrives through), not one the kit's harness from J_SOLAR to the stage controls. B6-ENG-1 stands as written, with one "
-          "item added to its decision from this round's budget: RSENSE1's inductance, which no maker prints for the chosen part, must be "
-          "bounded (a part whose maker prints at most %s, or the fitted part measured) for the turn-off's excursion at the pins to stay "
-          "inside the margin at the floor. No further desk round on B6 without new evidence. A NEW FINDING, independent of B6: THE "
+          "stiff source arrives through), not one the kit's harness from J_SOLAR to the stage controls. B6-ENG-1 is restated in round 5 (the "
+          "recheck): no passing loop is claimed; the pins' complete budget at round 2's 3.30 uH, both polarities and both fault positions, "
+          "is handed to the engineer with the stage question, RSENSE1's inductance (unprinted for the chosen part; 5 nH taken) inside it. "
+          "No further desk round on B6 without new evidence. A NEW FINDING, independent of B6: THE "
           "AS-DRAFTED SPLIT'S SENSE IN OPERATION. At "
           "the 25 V corner the sheet's CIN placement cannot be met with these parts: at 25 V bias the 50 V X7R ceramics hold %.1f uF of their "
           "%.1f uF nominal behind RSENSE1 and %.1f uF of %.1f uF ahead, and even with everything behind (the sheet's Figure 1) the resistive "
-          "peak is %.4f V at the regulation's current. For the as-drafted split the pins read %.4f to %+.4f V in operation and the "
-          "amplifier, limited to %.0f mV, reads the average %.1f %% low at the regulation's highest current (%.1f %% at the trip's), so the "
-          "input limit regulates above its setting there; the 100 W bound rests on the backstop (U18, U19, the bank), which does not read "
+          "peak is %.4f V at the regulation's current. For the as-drafted split the pins read %.4f to %+.4f V in operation and the monitor, "
+          "limited to %.0f mV and producing no current for a negative differential (8705af p.31), reads the average %+.1f %% at the "
+          "regulation's highest current (%+.1f %% at the trip's; positive: HIGH, the limit then regulating BELOW its setting; MODELED: both "
+          "the direction and the size rest on this model of the amplifier, clipped at 100 uA above 100 mV, which the sheet does not print, "
+          "clarification item 7); the 100 W bound rests on the backstop (U18, U19, the bank), which does not read "
           "RSENSE1 and is unaffected; the regulation of L4-E7R is NOT MET at that corner on the sheet's operating range until the pulse "
           "share is measured or the sense arrangement changes: the engineer's row B6-ENG-2 (affected circuit: U5's input sense, RSENSE1, "
           "CSPIN, CSNIN, C13 to C15, C71 to C74; evidence: this model, the sheet's p.5 and p.31; decision or measurement needed: the pins' "
           "waveform in operation at 25 V in and the lowest bus, or Analog Devices' statement of what the amplifier reads above 100 mV, or "
           "enough low-derating capacitance behind RSENSE1 (which raises B6's floor); pass criterion: the pins within +-%.0f mV at every "
           "operating point, or the regulated input current measured within the error budget at the 25 V corner; consequence of failure: "
-          "the input limit regulating up to the backstop's trip at high input and a low bus, repeated trips, no damage; work blocked: the "
-          "regulation's acceptance row at layer 9, not the drafts)" % (
+          "the input limit regulating off its setting at high input and a low bus (this model: below it), and a possible stress on the sense "
+          "pins at the switching edges (the sensitivity at 10 ns edges reaches %+.4f V at the pins, beyond the -0.3 V absolute maximum); "
+          "work blocked: the regulation's acceptance row at layer 9, not the drafts)" % (
               "route 3 HOLDS over the whole envelope" if r3["holds"] else "route 3 does NOT hold over the whole envelope, result (ii)",
               1e3 * r3["V_OP"][1], min(r_["r_peak_reg"] for r_ in r3["rows"][1:6]), max(r_["r_peak_reg"] for r_ in r3["rows"][1:6]),
               r3["rows"][1]["tr"][0.30e-6]["vF"], 100.0 * (1 - b6["M_OTHER"]),
-              ("%.1f nH" % (1e9 * r3["l59_ok"])) if r3["l59_ok"] else "an inductance under 0.5 nH",
               1e6 * rA_["cd"][0], 24.8, 1e6 * rA_["cu"][0], 40.0,
-              r3["rows"][6]["r_peak_reg"], rA_["op_trough"], rA_["op_peak"], 1e3 * r3["V_OP"][1], 100 * rA_["low_reg"], 100 * rA_["low_trip"],
-              1e3 * r3["V_OP"][1]))
+              r3["rows"][6]["r_peak_reg"], rA_["op_trough"], rA_["op_peak"], 1e3 * r3["V_OP"][1], 100 * rA_["err_reg"], 100 * rA_["err_trip"],
+              1e3 * r3["V_OP"][1], r3["op_edge"]["trough"]))
     P("     THE VERDICTS, with the remedies:")
     for v_ in rm["verd"]:
         P("       %-14s %-44s %s" % (v_["id"], v_["name"], ("MEETS" if v_["ok"] else "NOT MET") + v_.get("note", "")))
     wrapP("     ", "     ", "FOR L4-E9'S REGISTER (its D-10, D-11, D-12, R-173, R-174 and R-176): D-10 and D-11 have a selected remedy, "
           "drafted (not applied): the cut-off U21 with Q12 and the return switch Q13, D11, the port bank C131, C132, C135 and C136 "
           "(Samsung CL32B225KCJSNNE), C133 and C134 on PV_P and C71 to C74 on TRK_VS (Samsung CL32B106KBJNNNE), D4 to SMCJ%dA, R97 "
-          "28.0k and C126 330 pF. D-10's source arriving with the guard on is NOT CLOSED (B6 round 2): the selected network holds every "
-          "rating with its margin for a source loop of at least %.2f uH and no approach within the makers' printed rules removes that "
-          "floor; the engineer's row B6-ENG-1 carries it. D-12: CS116 MEETS with the block on and off; CS115 MEETS with the block off "
+          "28.0k and C126 330 pF. D-10's source arriving with the guard on is NOT CLOSED (B6; round 5): no passing loop is claimed; at "
+          "round 2's %.2f uH a fault at the connector, no lead resistance credited, reads the pins %+.4f to %+.4f V with RSENSE1's inductance "
+          "against +-0.240 V, and the complete stage question is the engineer's (B6-ENG-1, with B6-ENG-2's stage-level note). D-12: CS116 "
+          "MEETS with the block on and off; CS115 MEETS with the block off "
           "and, with it on, is CONDITIONAL on R-174 (the cable's recorded loop current under %.2f A, or U5's differential measured "
           "under 0.3 V; U5 reads %.4f V at CS115's 5 A calibration level). Owed with it: the LCSC codes of D4 and of the Samsung "
           "parts, U21's DGX-19 land, the regeneration and its gates, and R-176's bench rows, REVISED: (1) the cut-off's rise and fall "
           "on a ramped supply (%.2f to %.2f V rising, %.2f V or more falling); (2) a %.0f V supply connected cold: Q12 never conducts, D4 "
-          "carries nothing, PV_F at most %.0f V; (3) at layer 9, the waveforms at the IC pins: a %.0f V supply stepped onto the port "
+          "carries nothing, PV_F at most %.0f V, its slew and INP inside their absolute ratings (their 10 %% margin lines are not held at a "
+          "connector fault near the envelope's floor, round 5); (3) at layer 9, the waveforms at the IC pins: a %.0f V supply stepped onto the port "
           "with the guard on, from about %.1f V and from 25 V, through a loop measured first: U5's CSPIN to CSNIN within +-%.3f V, U21 "
           "turning Q12 off (at most %.0f A, within %.0f us), D4 carrying nothing, PV_P under %.2f V, PV_F under the recommended operating "
-          "%.0f V row (OPEN at the floor, %.2f V), a pass only for a loop at or over "
-          "%.2f uH until B6-ENG-1 is decided; (4) a reversed bench panel's curve (no current; the high side's pins against GND); (5) "
+          "%.0f V row (OPEN at round 2's loop, %.2f V); no loop is claimed to pass (round 5): at "
+          "%.2f uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides; (4) a reversed bench panel's curve (no current; the high side's pins against GND); (5) "
           "Q13's leakage at the hot end, under %.1f uA; (6) no short-circuit trip with C126 at 330 pF in operation and under CS116 "
           "(R-174)" % (
-              DN["n"], 1e6 * b6["LA"], b6["be115"], b6["d59_115"], bA["rise"][0], bA["rise"][1], bA["fall"][0], R["lead"]["v_src"],
+              DN["n"], 1e6 * b6["LA"], b6["r3"]["parA0"]["lo"], b6["r3"]["parA0"]["hi"], b6["be115"], b6["d59_115"], bA["rise"][0], bA["rise"][1], bA["fall"][0], R["lead"]["v_src"],
               b6["cold"]["vF"] + 0.5, R["lead"]["v_src"], L11["uvf"][0] + 0.05, b6["U5_LIM"], b6["W"]["iQ"] + 0.5, 1e6 * b6["W"]["ton"] + 0.5,
               DN["vbr_cold"], b6["vs_rec"], b6["W"]["vF"], 1e6 * b6["LA"], 1e6 * rm["rev"]["i_be"]))
     # ---- sequencing
