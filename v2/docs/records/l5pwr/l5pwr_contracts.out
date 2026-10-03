@@ -9,7 +9,7 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
    l4e9md     a760101cde41633adb8baa9eae198404857637622d6a66708d7feed247539e3c  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    e8ff8187c832858462e20b57df0374e90aeee3568152a3a5e55ef48d72972a83  v2/docs/records/l4e9/l4e9_power_path.out
+   l4e9out    d330267e6c17ec10d6b0fac8406977d0f8bf005854a7be76473fad8ee8a55152  v2/docs/records/l4e9/l4e9_power_path.out
    reg        24418b62e0062d8c1ab1a83f1513d8bc48782da9934732bcc752567a9df04403  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       ebba684d01f219235aedf3ba20ccbae7f9c36a1c97443f18ed8997dee88dbeb9  v2/docs/records/l4e9/LAYER5-HANDOVER.md
    l4e11md    f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
