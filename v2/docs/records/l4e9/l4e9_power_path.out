@@ -39,7 +39,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
    l4e7r     8d5e8191e5938a76  v2/docs/records/l4e7/l4e7_stage_settings.out
-   l4e10     0eb554285580b8f2  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     b8c4edbcef738875  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -48,10 +48,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
    l4e10md   0be7bf53a380b58d  v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   l4e11     3311675aa42c3224  v2/docs/records/l4e11/l4e11_power.out
+   l4e11     40858834159ee727  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   f6a78325f8a1c2e7  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     1696fd424b48a8ca  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     2d36b67d24a5b76d  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   30cc35d8adbdbc77  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
@@ -65,7 +65,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    cl_gc     738245875bec70c5  v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt
    cl_nicerf 92324668c17d4f6c  v2/docs/records/l4e12/clarification/nicerf-sa868.txt
    cl_bulgin c7accd3dd6dc1d89  v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt
-   l4e13     7d2f15547dd6a4ab  v2/docs/records/l4e13/l4e13_panel.out
+   l4e13     5b61b508aa113dda  v2/docs/records/l4e13/l4e13_panel.out
    l4e13md   1c7f11716db4c2f2  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e13chk  88539c7aeaf2f99d  v2/docs/records/l4e13/checks/check-l4e13-3.md
    l4e13chk4 5a08480af4695e61  v2/docs/records/l4e13/checks/check-l4e13-4.md
