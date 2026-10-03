@@ -101,8 +101,8 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "e898257fdec8c39b309568cdcfb92545cd778d8dc69bc17001a36355cedb942a"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "cbdaac2771ef1f8ec0f049af8b519802721968acdeb0c80ca47963c18a22451d"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "7b3dabf6cf9a3bf99eb0f07dce79932d283fdef3e6ba608b50d5daf07f96bb48"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "10a76aef5230b178f8f8640e0e4f2665190a3289e9b20c9fe0fb5db5691b06b5"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "eb4006f2121a3308a4d39d5e61d1c29506e5f4498dd3c7d63fb451b2d3655c90"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
@@ -141,7 +141,7 @@ PINS = {
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "ec651fa980401b441b1fc0b31cc6ffb7a0c878b45db906eac0ad6b20a766980c"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "d857a70256d1c77e3a3d34bee0bf43df5e052f7fcfe769d832c118c71e21942e"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -179,12 +179,13 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens",
                 "787e7b15": "fnd/l4e11, the designator fix (U42's ILIM resistor R228) and E11-32's procurement fact",
                 "af4672f4": "fnd/l4e11, the fans' feed after Layer 7's D-18 (the mixers' regulated 12 V rail U18, the branch re-derived, E11-40 for board B)",
+                "73d68c8c": "fnd/l4e11, the residue after the coordinator's check of a1d15601 (the opening summary, 17a's pin and source lines and the charger draft's comment restated to 17a's terms: the 566 A an extrapolation and a test target, the start into a short not bounded by printed data, its 1.1 to 1.5 s a timeout; on top of section 17d after the owner's review L4-QR01)",
                 "a1d15601": "fnd/l4e11, section 17d after the owner's review L4-QR01 (every specimen row with its lot, operating point, mounting, thermal boundaries, uncertainty, permitted extrapolation, comparison rule and re-test triggers; the copper-area transfer and 'layout-independent' withdrawn; TI SPRA953D and Nexperia AN11158 cited)",
                 "b929d8be": "fnd/l4e11, the correction after Astra's recheck of set 27 (the fan rail renumbered U22, R103 to R109, C135 to C141 against every board E draft composed in this record's order; L4-CP01 restated: the 566 A an extrapolation and E11-38 (c)'s target, the start into a short not bounded by printed data, no retry duty claimed; E11-38 (a) to (h); the rail 11.512 to 12.431 V with the 1 percent divider)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)",
                 "1a73f5b4": "fnd/l4e7, round 5 for the recheck of set 27, the review's B6 and L4-F01 continued (the 3.30 uH passing floor withdrawn, both fault positions, the pins' complete budget in both polarities, the sense model rectified, R96 at 0.1 percent)",
                 "7b8bbf6e": "fnd/l4e7, the lead-length guard of the review's B6 and L4-F01 derivation (set 27: R-180's sentence read from this record's page and register as a cited input, the loop inductance per metre printed; no figure changes)"}
-FROM_COMMIT = {"l4e7r": "1a73f5b4", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "a1d15601", "l4e11md": "a1d15601",
+FROM_COMMIT = {"l4e7r": "1a73f5b4", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "73d68c8c", "l4e11md": "73d68c8c",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
                "cl_adi": "1a73f5b4", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
@@ -1820,7 +1821,7 @@ def cp_inputs(F, T):
     need(a, r"so no duty is claimed \(the 0\.75 of the first version, from the timeout alone, is WITHDRAWN\)", "17a: the retry's duty withdrawn")
     g["heat_k"] = f(need(a, r"at any duty the contact's heating is at most case \(1\)'s ([\d.]+) K by w3de's rise", "17a: the contact's heating at any duty"))
     need(a, r"the hotter interval: the current U42 regulates while at T\(J_REG\) is NOT PRINTED \(under the setting, how far unknown\): E11-38's \(d\)", "17a's hotter interval")
-    m = need(a, r"IN at most ([\d.]+) V by TI's Equation 14 at that bound with U42 within (\d+) nH of C236", "17a's IN spike")
+    m = need(a, r"IN at most ([\d.]+) V by TI's Equation 14 at that extrapolation with U42 within (\d+) nH of C236", "17a's IN spike")
     g["in_v"], g["nh"] = f(m, 1), f(m, 2)
     m = need(a, r"both together at most ([\d.]+) A each, one at a time at most ([\d.]+) A .*?; VSYS_E at that current at least ([\d.]+) V at the supplement floor", "17a's fan start")
     g["fan"] = (f(m, 1), f(m, 2), f(m, 3))
