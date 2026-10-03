@@ -106,6 +106,11 @@ PINS = {
     "smcj": ("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
     "dock_py": ("v2/docs/records/w3de/dock_contacts.py", "acd932cbb9e31f8f0fd4563fc97d7ece21e0ce531e133040afb911da3c513b41"),
     "msmf": ("v2/vendor/power/bourns-mf-msmf-pptc.pdf", "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed"),
+    "ltc3115": ("v2/vendor/power/held/adi-ltc3115-1-rev-e.pdf", "bbcd4991d9b86c100cf8da775a358740b3c524325d18251d56ec6e40a2014a03"),
+    "tps55340": ("v2/vendor/ti/held/ti-tps55340-slvsbd4e.pdf", "e579aa4fcb549eab29e889f7f6dcbd0fd88cac2647082c65f102e411c3f666ca"),
+    "tps63070": ("v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf", "a88ef66f3493156ff6e7da0849de0e0e1068647f2553d08c1844d4a90c5c65ef"),
+    "xal60": ("v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf", "236888dabe560055e7eb40e24b8bf938db132b66a0e9f1a3c512fb3b04361681"),
+    "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
     "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
@@ -316,7 +321,8 @@ def compute():
                               "net_e", "packprot", "primcfg", "chain", "l4e5", "budget", "red2", "ecss")}
     for k in ("bq25731", "sluuaq3a", "csd17570", "cell", "lm5069", "csd19532", "d38999", "vh", "xt60", "keystone", "lapp",
               "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683", "bq25798", "lm74700", "tps4811", "csd19536", "tps1663",
-              "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch", "msmf"):
+              "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch", "msmf",
+              "ltc3115", "tps55340", "tps63070", "xal60", "gen_b"):
         read(k)
     L9 = git_text("l4e9")
     R["inputs"] = [(k, PINS[k][0], sha_file(os.path.join(TOP, PINS[k][0]))) for k in PINS]
@@ -819,6 +825,7 @@ def compute():
     R["K"] = fix_round(R, T)
     R["L"] = fix16_round(R, T)
     R["M"] = fix17_round(R, T)
+    R["N18"] = fix18_round(R, T)
     return R
 
 
@@ -3007,6 +3014,158 @@ def render_fix17(R, p):
     p("     the three withdrawn statements are absent from the text it writes (tested) (RECORD)")
     p("")
 
+# ============================================================================================ the fans' feed (Layer 7's F-L7-01, F-L7-02, F-L7-04)
+# Layer 7's record (fnd/l7pwr 2087060b, v2/docs/records/l7pwr/L7-FANS-AND-TH1.md sections 2d, 2e, 2f and 5; not in this tree, cited,
+# not pinned): the mixers Sanyo Denki 9WL0612P4H001 (two, board E J_FAN1 and J_FAN2) and the coolers 9WPA0412P6G001 (three, board B),
+# both 12 V with a printed operating range of 10.8 to 13.2 V, 0.17 A each at 12 V, pulse sensor and PWM input, IP68, -20 to +70 C;
+# no fan read prints a range covering VSYS_E's 9.494 to 17.375 V. RECORD (Layer 7), MAKER through it.
+L7_FAN = dict(mpn_mixer="9WL0612P4H001", mpn_cooler="9WPA0412P6G001", v=12.0, v_lo=10.8, v_hi=13.2, i=0.17, n_mixer=2, n_cooler=3,
+              rec="v2/docs/records/l7pwr/L7-FANS-AND-TH1.md", commit="2087060b")
+F18_ETA = 0.85          # ASSUMPTION (SESSION): the fan rail's efficiency at the floor, read 5 points under the LTC3115-1's typical TA04b curves
+F18_IQ_PWM = 0.016      # A, the LTC3115-1's PWM-mode no-load input current at VOUT 12 V near 9 V in (Figure G11, typical, read)
+F18_RUN = (1.5e6, 255e3)   # ohm, SESSION: the RUN divider (TA04's 255k kept; R1 1.5M for an enable under the floor)
+F18_FB = (1.0e6, 90.9e3)   # ohm, TA04's divider: 12.0 V from the 1.000 V reference
+F18_PLAN_W = 1.44       # W, the plan's power for both mixers (Layer 7 2f, from pwr_budget.py's rows)
+
+
+def fix18_round(R, T):
+    """Layer 7 settled D-18 on 12 V IP68 fans whose printed range no supply in the kit covers as drawn: the mixers get a regulated 12.0 V
+    rail on board E from VSYS_E (this record's B1 topology kept), the branch's declared current and U42's setting are re-derived with the
+    rail's input at the floor, and board B's cooler feed is answered as a finding for its owner."""
+    H, K, L, M = R["H"], R["K"], R["L"], R["M"]
+    N = {}
+    lt = "\n".join(pdf_pages("ltc3115", True))
+    m = need(lt, r"Input Operating Voltage\s+l\s+([\d.]+)\s+(\d+)", "the LTC3115-1's input range")
+    N["vin"] = (f(m, 1), f(m, 2))
+    m = need(lt, r"Inductor Current Limit\s+\(Note 3\)\s+l\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "the inductor current limit")
+    N["ilim"] = (f(m, 1), f(m, 2), f(m, 3))
+    N["tss"] = f(need(lt, r"Soft-Start Duration\s+(\d+)\s+ms", "the soft-start")) * 1e-3
+    m = need(lt, r"Feedback Voltage\s+l\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "the feedback voltage")
+    N["vfb"] = (f(m, 1) * 1e-3, f(m, 2) * 1e-3, f(m, 3) * 1e-3)
+    m = need(lt, r"RUN Pin Comparator Threshold\s+VRUN Rising\s+l\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "the RUN threshold")
+    N["vrun"] = (f(m, 1), f(m, 2), f(m, 3))
+    N["run_ihys"] = f(need(lt, r"RUN Pin Hysteresis Current\s+(\d+)\s+nA", "the RUN hysteresis current")) * 1e-9
+    N["run_vhys"] = f(need(lt, r"RUN Pin Hysteresis Voltage\s+(\d+)\s+mV", "the RUN hysteresis voltage")) * 1e-3
+    m = need(lt, r"TJMAX = (\d+)°C, θJA = (\d+)°C/W, θJC = (\d+)°C/W", "the FE package's thermal line")
+    N["fe"] = (f(m, 1), f(m, 2), f(m, 3))
+    need(lt, r"Industrial 12V 1MHz Regulator with Custom Input Undervoltage Lockout Thresholds", "TA04")
+    need(lt, r"LTC3115EFE-1#PBF\s+LTC3115EFE-1#TRPBF\s+LTC3115FE-1\s+20-Lead Plastic TSSOP\s+\u201340°C to 125°C", "the E-grade FE part")
+    N["rev"] = need(lt, r"(Rev\. E)", "the revision").group(1)
+    tp = "\n".join(pdf_pages("tps55340", True))
+    m = need(tp, r"VIN\s+Input voltage range\s+([\d.]+)\s+(\d+)\s+V", "the TPS55340's input range")
+    N["t55_vin"] = (f(m, 1), f(m, 2))
+    m = need(tp, r"ILIM\s+N-channel MOSFET current limit\s+D = Dmax\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "the TPS55340's current limit")
+    N["t55_ilim"] = (f(m, 1), f(m, 3))
+    N["t55_rja"] = f(need(tp, r"RθJA\s+Junction-to-ambient thermal resistance\s+([\d.]+)\s+([\d.]+)", "the TPS55340's RthJA"))
+    need(tp, r"A design example of SEPIC converter is provided in the next section\.", "the SEPIC section")
+    t6 = "\n".join(pdf_pages("tps63070", True))
+    m = need(t6, r"VIN\s+Input voltage range\s+once started; Vout ≥ 3\.0 V\s+([\d.]+)\s+(\d+)\s+V", "the TPS63070's input range")
+    N["t63_vin"] = (f(m, 1), f(m, 2))
+    m = need(t6, r"IIN,max\s+Average, positive input current limit\s+(\d+)\s+(\d+)\s+(\d+)\s+mA", "the TPS63070's input current limit")
+    N["t63_iin"] = (f(m, 1) * 1e-3, f(m, 3) * 1e-3)
+    cc = flat(text_pdf("xal60"))
+    m = need(cc, r"XAL6060-103ME_ 10 ([\d.]+) ([\d.]+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+)", "the XAL6060-103 row")
+    N["l_dcr"], N["l_isat"], N["l_irms"] = f(m, 2) * 1e-3, f(m, 5), f(m, 6)
+    # the fans' power and the rail's input at the floor, iterated with the feed's drop (the drop of 16e at the new current)
+    N["p_fans"] = L7_FAN["n_mixer"] * L7_FAN["v"] * L7_FAN["i"]
+    i_g = K["ret"][3][2]
+    v = K["vsys_sup"]
+    for _ in range(8):
+        N["i_reg"] = N["p_fans"] / (F18_ETA * v) + F18_IQ_PWM
+        N["i_decl"] = K["aux"]["U12"] + N["i_reg"]
+        N["drop"] = N["i_decl"] * (L["ron"][2] + L["r813"] * F16_SPREAD) + i_g * L["r813"]
+        v = K["vsys_sup"] - N["drop"]
+    N["vsys_e_floor"] = v
+    N["vsys_e_at_lim"] = K["vsys_sup"] - (L["ilim"][0] * (L["ron"][2] + L["r813"] * F16_SPREAD) + i_g * L["r813"])
+    N["share_lim"] = N["i_decl"] / L["ilim"][0]
+    N["room"] = L["ilim"][0] - N["i_decl"]
+    N["i_plan"] = K["aux"]["U12"] + F18_PLAN_W / (F18_ETA * N["vsys_e_floor"]) + F18_IQ_PWM
+    sp = importlib.util.spec_from_file_location("dock_contacts_pinned18", read("dock_py"))
+    dc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(dc)
+    N["c813_share"] = N["i_decl"] / dc.PD_MAX
+    N["c813_rise"] = dc.rise_813(N["i_decl"])
+    # the rail: the divider, the RUN thresholds, the loss and the junction
+    r1, r2 = F18_RUN
+    rp = r1 * r2 / (r1 + r2)
+    N["run_on"] = tuple(vt * (1 + r1 / r2) for vt in N["vrun"])
+    N["run_off"] = tuple((vt - N["run_vhys"] - N["run_ihys"] * rp) * (1 + r1 / r2) for vt in N["vrun"])
+    N["vout"] = tuple(vf * (1 + F18_FB[0] / F18_FB[1]) for vf in N["vfb"])
+    N["loss_full"] = N["p_fans"] / F18_ETA - N["p_fans"]
+    N["loss_plan"] = F18_PLAN_W / F18_ETA - F18_PLAN_W
+    N["tj_full"] = K["air"]["route"] + N["loss_full"] * N["fe"][1]
+    # the one-fan start against the regulator's capability and U42's room (the start current is NOT READ: Layer 7)
+    N["start_room_w"] = N["room"] * N["vsys_e_at_lim"] * F18_ETA        # the power one fan may add at its start before U42 limits
+    N["start_mult"] = (N["start_room_w"] + L7_FAN["v"] * L7_FAN["i"]) / (L7_FAN["v"] * L7_FAN["i"])
+    # board B: the cooler headers' pin 1 net and the slot rail as drawn (NETLIST)
+    gb = text("gen_b")
+    need(gb, r'part\("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d \(JST-SH 1\.0\): 5V GND TACHO PWM" % s, "SH4", \{"1": n5,', "board B's fan header on n5")
+    need(gb, r'n5 = "\+5V_S%d" % s;', "n5 is the slot rail")
+    m = need(gb, r'_intent\.rail\("\+5V_S%d" % _n, ([\d.]+), ', "the slot rail's voltage")
+    N["b_slot_v"] = f(m)
+    N["b_fan_a"] = f(need(gb, r'"J_FAN%d" % s: ([\d.]+),\s+# the slot\'s IP68 cooler fan', "the slot's fan row"))
+    N["b_has_12v"] = bool(re.search(r'"\+12V[A-Z0-9_]*"', gb))         # a +12V net declared on board B
+    return N
+
+
+def render_fix18(R, p):
+    K, L, N = R["K"], R["L"], R["N18"]
+    p("18. THE FANS' FEED AFTER LAYER 7'S SELECTION (F-L7-01, F-L7-02, F-L7-04; the B1 topology kept)")
+    p("   the facts (RECORD: Layer 7's %s at %s, sections 2d, 2e, 2f and 5): the mixers %s (two, board E) and the coolers %s (three, board B),"
+      % (L7_FAN["rec"], L7_FAN["commit"], L7_FAN["mpn_mixer"], L7_FAN["mpn_cooler"]))
+    p("     12 V, printed range %s to %s V, %s A each at 12 V, four wires (12 V, GND, pulse sensor, PWM), IP68, -20 to +70 C; no fan read prints a"
+      % (fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1), fmt(L7_FAN["i"], 2)))
+    p("     range covering VSYS_E's %s to %s V, so 15a's fans directly on VSYS_E is WITHDRAWN (MAKER through Layer 7)" % (fmt(N["vsys_e_at_lim"], 3), fmt(R["H"]["vsys_top"], 3)))
+    p("   18a. THE MIXERS' 12.0 V RAIL ON BOARD E, THREE CANDIDATES (a buck cannot hold 12.0 V from the %s V floor; a boost cannot from %s V: a buck-boost)"
+      % (fmt(K["vsys_sup"], 3), fmt(R["H"]["vsys_top"], 3)))
+    p("     (V1) ADI LTC3115-1 (%s, held): monolithic four-switch buck-boost, input %s to %s V, inductor current limit %s / %s / %s A, internal soft start"
+      % (N["rev"], fmt(N["vin"][0], 1), fmt(N["vin"][1], 0), fmt(N["ilim"][0], 1), fmt(N["ilim"][1], 1), fmt(N["ilim"][2], 1)))
+    p("       %s ms, FB %s / %s / %s V, RUN comparator %s / %s / %s V rising with %s mV and %s nA of hysteresis; FE (TSSOP-20 EP) thetaJA %s C/W, TJ %s C (E grade"
+      % (fmt(N["tss"] * 1e3, 0), fmt(N["vfb"][0], 3), fmt(N["vfb"][1], 3), fmt(N["vfb"][2], 3), fmt(N["vrun"][0], 2), fmt(N["vrun"][1], 2), fmt(N["vrun"][2], 2),
+         fmt(N["run_vhys"] * 1e3, 0), fmt(N["run_ihys"] * 1e9, 0), fmt(N["fe"][1], 0), fmt(N["fe"][0], 0)))
+    p("       -40 to 125 C); TA04 is a 12 V 1 MHz application (L 10 uH, CIN 10 uF, CO 22 uF, FB 1M / 90.9k, VC 40.2k and 820 pF, FF 10k and 33 pF, RT 35.7k);")
+    p("       TA04b's efficiency at 0.34 A reads about 93 percent at 10.6 and 12 V in (typical, read); maximum load at 12 V out near 9.5 V in about 1.2 A (G12, 22 uH")
+    p("       500 kHz, typical, read); price NOT READ (LCSC's search refused this host) (MAKER, read)")
+    p("     (V2) TI TPS55340 (SLVSBD4E, held) as a SEPIC: input %s to %s V, switch limit %s to %s A, RthJA %s C/W; a coupled inductor and a coupling capacitor;"
+      % (fmt(N["t55_vin"][0], 1), fmt(N["t55_vin"][1], 0), fmt(N["t55_ilim"][0], 2), fmt(N["t55_ilim"][1], 2), fmt(N["t55_rja"], 1)))
+    p("       its efficiency is printed for a boost only: the SEPIC's is NOT PRINTED; a limit three times (V1)'s (MAKER)")
+    p("     (V3) TI TPS63070 (SLVSC58B, held): input %s to %s V, under VSYS_E's %s V: FAILS the range (MAKER)" % (fmt(N["t63_vin"][0], 1), fmt(N["t63_vin"][1], 0), fmt(R["H"]["vsys_top"], 3)))
+    p("     SELECTED (SESSION): (V1), U18 LTC3115EFE-1 on board E as TA04 with L4 Coilcraft XAL6060-103ME (10 uH, DCR %s mOhm, Isat %s A over the %s A limit,"
+      % (fmt(N["l_dcr"] * 1e3, 2), fmt(N["l_isat"], 1), fmt(N["ilim"][2], 1)))
+    p("       Irms %s A; Coilcraft 887-1, held), PWM/SYNC to VCC (fixed 1 MHz); the output %s V (%s to %s V at FB's limits) inside the fans' %s to %s V (MAKER, INFERRED)"
+      % (fmt(N["l_irms"], 1), fmt(N["vout"][1], 3), fmt(N["vout"][0], 3), fmt(N["vout"][2], 3), fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1)))
+    p("     its RUN divider R59 %s M / R60 %s k: enabled at %s V (%s to %s), disabled at %s V (%s to %s): under the floor and over U12's %s V start, so a"
+      % (fmt(F18_RUN[0] / 1e6, 1), fmt(F18_RUN[1] / 1e3, 0), fmt(N["run_on"][1], 2), fmt(N["run_on"][0], 2), fmt(N["run_on"][2], 2),
+         fmt(N["run_off"][1], 2), fmt(N["run_off"][0], 2), fmt(N["run_off"][2], 2), fmt(K["ap_vin"][0], 1)))
+    p("       fan fault that drives U18 to its %s A limit against U42's limit lets VSYS_E fall only to U18's disable, where U18 stops and VSYS_E recovers:"
+      % fmt(N["ilim"][0], 1))
+    p("       the controller stays up and the fault appears as a rail hiccup, not a controller reset (INFERRED; the model of TA04's own 10.6 / 8.7 V within 0.15 V)")
+    p("     heat into the case: %s W at full speed (%s W of fans at %s), %s W at the plan's %s W; TJ %s C at +%s C air on thetaJA %s (MODELED, ASSUMPTION eta)"
+      % (fmt(N["loss_full"], 3), fmt(N["p_fans"], 2), fmt(F18_ETA, 2), fmt(N["loss_plan"], 3), fmt(F18_PLAN_W, 2), fmt(N["tj_full"], 1), fmt(K["air"]["route"], 0), fmt(N["fe"][1], 0)))
+    p("     its protection: U18's own current limit and soft start, behind U42 (the branch's limiter); no fuse of its own (SESSION)")
+    p("   18b. THE BRANCH'S DECLARED CURRENT AND U42'S SETTING, RE-DERIVED")
+    p("     at the floor, both fans at full speed: U18's input %s A (%s W over %s at %s V, plus %s mA quiescent), with U12's %s A: %s A DECLARED on IF-AE-DOCK"
+      % (fmt(N["i_reg"], 4), fmt(N["p_fans"], 2), fmt(F18_ETA, 2), fmt(N["vsys_e_floor"], 3), fmt(F18_IQ_PWM * 1e3, 0), fmt(K["aux"]["U12"], 1), fmt(N["i_decl"], 4)))
+    p("       pin 1 (was 1.0 A; Layer 7's 1.277 A at eta 0.90); at the plan's duty %s A (MODELED, ASSUMPTION)" % fmt(N["i_plan"], 4))
+    p("     against U42's least limit %s A: %s %%, %s A in hand: NOT EXCEEDED, so R228 stays %s kOhm (I(OL) %s to %s A); the contact at %s %% of 3.5 A, %s K"
+      % (fmt(L["ilim"][0], 4), fmt(100 * N["share_lim"], 1), fmt(N["room"], 4), fmt(F16_RILIM_K, 1), fmt(L["ilim"][0], 4), fmt(L["ilim"][1], 4), fmt(100 * N["c813_share"], 1), fmt(N["c813_rise"], 2)))
+    p("       by w3de's rise; the sustained-overload figures of 16e and the retry duty of 17a are unchanged (INFERRED, ASSUMPTION w3de)")
+    p("     the drop at the floor with %s A: %s V, VSYS_E %s V; at U42's least limit %s V; U18 holds 12.0 V from %s V up, so VSYS_E's floor no longer"
+      % (fmt(N["i_decl"], 4), fmt(N["drop"], 4), fmt(N["vsys_e_floor"], 3), fmt(N["vsys_e_at_lim"], 3), fmt(N["vin"][0], 1)))
+    p("       reaches the fans (INFERRED)")
+    p("     the fans' start (NOT READ, Layer 7): with one fan running and U12 on, U42's room %s A leaves %s W at the rail for the other fan's start, %s times its"
+      % (fmt(N["room"], 4), fmt(N["start_room_w"], 2), fmt(N["start_mult"], 2)))
+    p("       running power, before U42 limits; U18 delivers about 1.2 A at the floor (G12): the fan, not the rail, is the unknown (E11-35, E11-38 f) (INFERRED)")
+    p("   18c. THE STAGGER (E11-39) RESTATED: U18's %s ms soft start covers the rail's own rise only; a fan's start surge comes when its PWM duty rises, so the"
+      % fmt(N["tss"] * 1e3, 0))
+    p("     stagger stays: one fan at a time, each by a PWM-duty ramp into the fan's PWM input (Layer 7's F-L7-05), never while U12 starts (SESSION)")
+    p("   18d. BOARD B'S COOLER FANS (NETLIST): J_FAN1 to J_FAN3's pin 1 is the slot rail +5V_Sn at %s V, the fan declared %s A on it; no 12 V net exists on"
+      % (fmt(N["b_slot_v"], 1), fmt(N["b_fan_a"], 1)))
+    p("     board B (%s): the feed does NOT cover the coolers' %s to %s V and needs the same regulated 12.0 V: a FINDING for board B's owner (E11-40), not a"
+      % ("no +12V net is declared" if not N["b_has_12v"] else "a +12V net IS declared: re-read", fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1)))
+    p("     draft of this record: a per-slot step-up from +5V_Sn (Layer 7's 0.436 A each at full speed) or a 12 V feed from board A over the bay harness (RECORD)")
+    p("")
+
 # ============================================================================================ the output
 def render(R):
     out = []
@@ -3489,6 +3648,7 @@ def render(R):
     render_fix(R, p)
     render_fix16(R, p)
     render_fix17(R, p)
+    render_fix18(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),")
     p("apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its two")
     p("battery FETs and the dock's VSYS contact, 14 and 15), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the")
@@ -3534,13 +3694,14 @@ def downstream(R):
     ("E11-30", "EVIDENCE", "Layer 6 components", "the WHOLE hot docking waveform accepted (sections 16d and 17b): %s A peak, time constant %s us, from a +%s C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: %d parts, each %d pulses %s s apart at %s A peak and %s us (x%s), mounting base %s C, every part passing VSD at 80 A pulsed within +5 %% of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 %% and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown)" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), F17_DOCK_N[1], F17_DOCK_N[0], fmt(F17_DOCK_N[2], 0), fmt(R["M"]["dock_q"][0], 1), fmt(R["M"]["dock_q"][1] * 1e6, 1), fmt(F17_DOCK_MARGIN, 1), fmt(F17_TMB, 0))),
     ("E11-31", "TEST", "prototype bench", "the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least %s V; CHRG_INHIBIT 1 with SRN over %s V, VSRN plus 150 mV within 2 percent, under %s V at least %s V, between at least %s V; the held pack current at most %s mA with board E on VSYS_E; the start from cold at VBUS20 %s and %s V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and %s C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, %s V of margin), the outlets held by R-c where a step uses more" % (fmt(R["H"]["floor"], 3), fmt(R["K"]["hi_v"], 3), fmt(R["K"]["lo_v"], 3), fmt(R["H"]["floor"], 3), fmt(R["K"]["inh_floor"], 3), fmt(FIX_HELD_ACC * 1e3, 1), fmt(R["E"]["vb_low"], 2), fmt(R["E"]["vb_top"], 2), fmt(R["F"]["air_hot"], 1), fmt(R["H"]["margin_floor"], 3))),
     ("E11-32", "EVIDENCE", "Layer 6 components", "the BQ25730RSNR's supply for the build quantity (five boards) from an authorised source, filed: LCSC read stock %d on 2 October 2026 (the Layer 6 author's L6P-F05: a procurement fact for the owner's list, not a reselection; TI and its distributors are the next sources to read), and the two battery FETs' (BUK6Y10-30PX, LCSC stock %d)" % (R["H"]["cat"]["BQ25730RSNR"][1], R["K"]["cat"]["BUK6Y10-30PX"][1])),
-    ("E11-33", "IMPLEMENTATION", "Layer 8 board E generator owner", "apply_gen_sch_e_aux.py applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, %s A: U12 %s, the fans %s each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's %s V; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E" % (fmt(R["K"]["aux_a"], 2), fmt(R["K"]["aux"]["U12"], 2), fmt(R["K"]["aux"]["J_FAN1"], 2), fmt(R["H"]["vsys_top"], 3))),
+    ("E11-33", "IMPLEMENTATION", "Layer 8 board E generator owner", "apply_gen_sch_e_aux.py applied with E11-27 (sections 15a and 18): J_BLK pin 1 on VSYS_E; U12's VIN and EN and C31 on VSYS_E; the mixers' 12.0 V rail +12V_FAN from VSYS_E: U18 LTC3115EFE-1 as ADI's TA04 (L4 XAL6060-103ME 10 uH, C65 10 uF in, C66 22 uF out, C67 4.7 uF PVCC, C68 and C69 100 nF bootstraps, R61 1M and R62 90.9k FB, R63 40.2k and C70 820 pF on VC, R64 10k and C71 33 pF feed-forward, R65 35.7k RT, R59 1.5M and R60 255k RUN, PWM/SYNC to VCC); J_FAN1 and J_FAN2 four pins (12 V, GND, PWM, TACH) with Q9 and Q10 as open-drain PWM drivers and D7 and D8 removed; VSYS_E declared (source J_BLK, %s A: U12 %s, U18 %s at the floor, always on); +12V_FAN declared (source L4, %s A: two fans at %s); CELL_F's loads the pack path alone; E6_SW and E6_BST re-declared to VSYS's %s V; the FE and XAL6060 lands checked against ADI's FE20 and Coilcraft's drawings; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E" % (fmt(R["N18"]["i_decl"], 2), fmt(R["K"]["aux"]["U12"], 2), fmt(R["N18"]["i_reg"], 2), fmt(2 * L7_FAN["i"], 2), fmt(L7_FAN["i"], 2), fmt(R["H"]["vsys_top"], 3))),
     ("E11-34", "INTERFACE", "Layer 4 coordinator", "apply_pcb_interfaces_dock.py applied (IF-AE-DOCK: pin 1 VSYS_DOCK and VSYS_E behind U42's eFuse, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (%s to %s V)" % (fmt(R["K"]["vsys_sup"], 3), fmt(R["H"]["vsys_top"], 3))),
-    ("E11-35", "EVIDENCE", "Layer 6 components", "the mixer fans' supply range from their maker: at least %s V at the top (VSYS_E's top; CELL_F reached %s V) and running at %s V or less at the bottom (VSYS_E's least with 1.0 A, section 16e), and their starting current, with U12's 0.8 A, under U42's least limit %s A; or a fan of that range named" % (fmt(R["H"]["vsys_top"], 3), fmt(R["cv_max"], 3), fmt(R["L"]["vsys_e_min"], 3), fmt(R["L"]["ilim"][0], 3))),
+    ("E11-35", "EVIDENCE", "Layer 6 components", "the mixers %s (Layer 7's %s at %s, 2e): their starting current, PWM input level and hole pattern from the maker's manual M0011876C or the bench (Layer 7's F-L7-11); against the rail: the start on a 12.0 V bench channel recorded, and against U42's room %s A at the floor (section 18b: %s W at the rail, %s times one fan's running power); the supply range %s to %s V is met by the rail's %s to %s V (section 18a), no longer by VSYS_E" % (L7_FAN["mpn_mixer"], L7_FAN["rec"], L7_FAN["commit"], fmt(R["N18"]["room"], 4), fmt(R["N18"]["start_room_w"], 2), fmt(R["N18"]["start_mult"], 2), fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1), fmt(R["N18"]["vout"][0], 3), fmt(R["N18"]["vout"][2], 3))),
     ("E11-36", "EVIDENCE", "Layer 6 components", "the battery FETs' RDS(on) at VGS -8.5 V and a 150 C junction at most %s mOhm (the allowance of section 16a): Nexperia's maximum at that point filed, or a pulsed Kelvin reading on parts from the build lot in an oven at 150 C (a sample, not a production limit: only the maker's maximum closes it for every part); a reading over it reverses the allowance and E11-29 is re-sized before layout" % fmt(F16_RA * 1e3, 3)),
     ("E11-37", "EVIDENCE", "Layer 6 components", "TI's statement of what the BATFET's 5 nF bounds (Ciss at which VDS, or a gate charge; Q-TI-17, drafted in clarification/TI-QUESTIONS.md, not sent), or the bench's BATDRV behaviour with the pair at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation and LDO mode at VSYS_MIN within its printed band; on a negative answer the engineer chooses between the pair and one FET with a heat path through the case (section 16c)"),
-    ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch, the whole fault envelope (sections 16e and 17a), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between %s and %s A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under %s A within 1 ms, off within %s ms, retry after %s to %s ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 at most %s A and over %s A for at most %s us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most %s A after the first 100 us, off within %s s; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 %% of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's insulation and D23 (VF at 5 A within +5 %%) unchanged; (f) both fans and U12 started together and one at a time at VSYS 9.688 V: no limiting (FLT high), VSYS_E at least %s V" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["tcl"][1] * 1e3, 0), fmt(R["L"]["tretry"][0] * 1e3, 0), fmt(R["L"]["tretry"][1] * 1e3, 0), fmt(R["M"]["i_pk"], 0), fmt(R["M"]["fast_typ"], 1), fmt(R["L"]["tsoft"] * 1e6, 1), fmt(R["L"]["ilim"][1], 3), fmt(R["M"]["treg"][1], 1), fmt(R["M"]["vsys_e_lim"], 3))),
-    ("E11-39", "FIRMWARE", "firmware owner", "board E's mixer fans started one at a time, each with a PWM ramp, never both within 1 s and never while U12 starts (section 17a: one fan's start at most %s A beside U12 and the other fan running, under U42's least limit %s A)" % (fmt(R["M"]["fan_stag"], 4), fmt(R["L"]["ilim"][0], 3))),
+    ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch, the whole fault envelope (sections 16e, 17a and 18), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between %s and %s A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under %s A within 1 ms, off within %s ms, retry after %s to %s ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 at most %s A and over %s A for at most %s us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most %s A after the first 100 us, off within %s s; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 %% of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's insulation and D23 (VF at 5 A within +5 %%) unchanged; (f) with the fans %s on the 12.0 V rail (section 18): U12, U18 and both fans started one at a time by the PWM-duty ramp, and both fans' duty stepped 0 to 100 percent together, at VSYS 9.688 V: U42 never limits (FLT high), VSYS_E at least %s V, U18 never disables (the rail never under %s V), the branch's current at full speed recorded against the declared %s A; (g) one fan stalled and the 12 V rail shorted at the header, each at 70 C: U18 limits or disables and recovers, VSYS_E never under U12's 3.8 V, the controller keeps running, U42's retry seen or not and recorded" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["tcl"][1] * 1e3, 0), fmt(R["L"]["tretry"][0] * 1e3, 0), fmt(R["L"]["tretry"][1] * 1e3, 0), fmt(R["M"]["i_pk"], 0), fmt(R["M"]["fast_typ"], 1), fmt(R["L"]["tsoft"] * 1e6, 1), fmt(R["L"]["ilim"][1], 3), fmt(R["M"]["treg"][1], 1), L7_FAN["mpn_mixer"], fmt(R["N18"]["vsys_e_at_lim"], 3), fmt(L7_FAN["v_lo"], 1), fmt(R["N18"]["i_decl"], 4))),
+    ("E11-39", "FIRMWARE", "firmware owner", "board E's mixer fans (four-wire, on the 12.0 V rail) started one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U18 starts (sections 17a and 18c; Layer 7's F-L7-05): U18's %s ms soft start covers the rail's rise only, and the fans' start current is NOT READ, so the ramp is what keeps the start near the running current under U42's least limit %s A" % (fmt(R["N18"]["tss"] * 1e3, 0), fmt(R["L"]["ilim"][0], 3))),
+    ("E11-40", "IMPLEMENTATION", "Layer 8 board B generator owner", "a FINDING, not a draft (section 18d; Layer 7's F-L7-02): board B's J_FAN1 to J_FAN3 carry +5V_Sn (%s V) on pin 1 and declare the fan at %s A, and no 12 V net exists on the board; the coolers %s print %s to %s V: a regulated 12.0 V feed per slot (a step-up from +5V_Sn, Layer 7's 0.436 A each at full speed, keeping an empty slot off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V, the slot budget's fan row 2.0 W at 12 V, the module's Fan_PWM and Fan_Tacho kept" % (fmt(R["N18"]["b_slot_v"], 1), fmt(R["N18"]["b_fan_a"], 1), L7_FAN["mpn_cooler"], fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1))),
 ]
 
 
