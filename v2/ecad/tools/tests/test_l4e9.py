@@ -941,7 +941,7 @@ def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     assert "8.1817 A" in reg["R-29"][5]
     assert len(reg) >= 139
     ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
-    assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and len(ho) == 11, "J_SOLAR's rating amends LH-02, no new row"
+    assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and sum("13.82 A" in r_[2] for r_ in ho.values()) == 1, "J_SOLAR's rating amends LH-02, no new row"
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
     assert "SunPower SPR-E-Flex-100" in ow["OW-6"]["what"] and ow["OW-6"]["docs"][0][0] == "l4e13md"
     sec = _C["text"].split("13. UPDATE ROUND 3")[1]
@@ -2194,3 +2194,57 @@ def t_r227s_capacitors_take_their_own_class():
     sent = _C["text"].split("the capacitors are K parts (each read at the end of this section):")[1].split("lowers an X7R's")[0]
     for p in parts:
         assert any(p["ref"] in l and ("%s, YAGEO %s" % (p["code"], p["mpn"])) in l for l in sent.split("\n")), "%s's own part is not named" % p["ref"]
+
+
+def t_decision_d11s_all_transmit_floor_is_reproduced_and_re_derived_on_the_drafts():
+    """Round 7 (Layer 9's L9P-F01): decision D-11's all-transmit basis is reproduced from Layer 9's watts (its output copied into this
+    record's inputs, never read with git), rv-pwr's main pack path and L4-E11's pair; the drafted need is exactly the drawn need plus the
+    pair and the other drafts; the floor is the least on its own step with the stated margin over the drafted need, and every check that
+    judges the floor reads the floor's own basis, never rv-pwr's PS-ALLTX PLAN line; the correction reaches the register, the handover
+    and the page; the modes are restated beside rv-pwr's."""
+    m = _M()
+    F = _C["F"]
+    L9 = F["l9"]
+    I, S_, P_, rc = L9["i"], L9["series"], L9["parallel"], max(L9["rcell"])
+    rel, _sha = m.PINS["l9pwr"]
+    assert rel.startswith("v2/docs/records/l4e9/inputs/") and "l9pwr" not in m.FROM_COMMIT, "Layer 9's output is read from this tree, not from git"
+    assert I == F["pp_peak"] and S_ * P_ == 12
+    rest = lambda w, r: w / I + I * r + I * S_ * rc / P_
+    df = L9["trees"]["DRAFTED"]["rows"]["alltx"]
+    assert abs(L9["drafted"] - rest(df["w"], L9["r_main"] + F["fx"]["rds"] / 2000.0)) < 1e-12
+    assert abs(L9["drafted"] - (L9["drawn"] + I * L9["pair_r"] + L9["others_w"] / I)) < 1e-9, "drawn plus the pair plus the other drafts"
+    assert abs(L9["drafted"] - df["rest"][2]) <= 0.002 and abs(L9["drawn"] - L9["trees"]["DRAWN"]["rows"]["alltx"]["rest"][2]) <= 0.002
+    # the defect as found: the drafted need over the present floor, the drawn one under it, and each draft alone over it
+    assert L9["drafted"] > F["d11_floor"] > L9["drawn"] and L9["pair_only"] > F["d11_floor"] and L9["others_only"] > F["d11_floor"]
+    # the correction: the least floor on the step with the margin, and no lower step would do
+    fl = L9["floor_new"]
+    assert fl - L9["drafted"] >= m.D11_MARGIN_MIN - 1e-9 and (fl - m.D11_STEP) - L9["drafted"] < m.D11_MARGIN_MIN
+    assert abs(L9["rcov_new"] - (fl - L9["stack_df"]) * P_ / (I * S_)) < 1e-12 and L9["rcov_new"] > rc
+    # IF-10 judges the floor's own basis on both trees, the drafted one against the re-derived floor, and nothing reads the PLAN line
+    rows = {r["id"]: r for r in _C["R"]}
+    ch = rows["IF-10"]["checks"]
+    drawn = [c for c in ch if c.scope == "drawn" and "all-transmit basis" in c.what]
+    sel = [c for c in ch if c.scope == "selected" and "re-derived" in c.what]
+    assert len(drawn) == 1 and drawn[0].b == F["d11_floor"] and drawn[0].met
+    assert len(sel) == 1 and sel[0].b == fl and sel[0].met and abs(sel[0].a - round(L9["drafted"], 3)) < 1e-9
+    assert not any(c.a == F["alltx_rest_need"] for c in ch), "a check still reads rv-pwr's PS-ALLTX PLAN line"
+    # the defect row, the register, the handover and the change list carry it
+    d17 = [d for d in m.DEFECTS if d["id"] == "D-17"][0]
+    assert d17["state"].startswith("RESOLVED") and d17["rows"] == ["IF-10"] and "R-28" in d17["resolution"] and m.D_CLASS["D-17"] == m.SET
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert m.fmt(fl) + " V" in reg["R-28"][2] and "R-157" in reg["R-28"][2] and "L9P-F01" in reg["R-28"][2]
+    ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
+    lh = [r for r in ho.values() if "FW-A05" in r[1] and "all-transmit floor" in r[1]]
+    assert len(lh) == 1 and ("the all-transmit floor %s V rest" % m.fmt(fl)) in lh[0][2] and lh[0][3] == "IF-10" and lh[0][4] == "DRAFTED"
+    assert "11.48 V stack" not in ho["LH-04"][2].split("round 7 corrected")[0], "LH-04's pointer still reads the PLAN line"
+    contract = open(os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md"), encoding="utf-8").read()
+    assert "SoC floors %s V and %s V rest" % (m.fmt(F["d11_floor"]), m.fmt(F["pa_floor"])) in contract, "the change's anchor text is FW-A05's"
+    # the modes restated beside rv-pwr's, where this record quotes them
+    mo = L9["modes"]
+    assert mo["theirs"] == (F["idle"][1], F["alltx"][1], F["alltx"][2], F["pa113"][0]) and L9["r1_equal"] == "EQUAL"
+    page = open(PAGE, encoding="utf-8").read()
+    d1 = page.split("### 1d.")[1].split("| Row | Interface |")[0]
+    for x in mo["drawn"] + mo["drafted"]:
+        assert m.fmt(x) in d1 and m.fmt(x) in _C["text"].split("4. THE INTERFACE ROWS")[0], "the modes in 1d and out 3: %s" % m.fmt(x)
+    assert "Modes: PS-IDLE-SPEC (%s W at the pack terminals), PS-ALLTX (%s W plan, %s W high)" % tuple(m.fmt(x) if x != 272.0 else "272.0" for x in mo["theirs"][:3]) in " ".join(page.split())
+    assert "30. ROUND 7" in _C["text"] and "DRAFTED: %s" % " / ".join(m.fmt(x) for x in mo["drafted"]) in _C["text"]

@@ -138,7 +138,11 @@ board E drafts in the change list's order with no designator written twice (186 
 `fnd/l4e9r6` from `5a6ad183`): C5's fitted part read the way `lcsc_fill.py` fills it (code and part number of the line that fills
 it: C113803, YAGEO CC0603KRX7R0BB104, 100 V), never from `gen_sch_e.py`'s note on C46 and C59; the held Yageo sheet read for that
 part number and for R227's capacitors (COVERED, out 11's last block); the timer envelope unchanged; R227's stacked energy 4.369 mJ
-(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). Round 7 (`fnd/l4e9r7` from `37bc2f1d`; Layer 9's
+L9P-F01 at `38ef774c`, its output copied into `inputs/`): decision D-11's all-transmit basis needs 15.986 V rest on the drafted design,
+over its 15.5 V floor (the pair 0.1902 V, the fans at full speed and their converters 0.4583 V over the drawn 15.338 V); reproduced
+(out 30) and corrected by the floor re-derived at 16.1 V with the drafts (D-17, R-28, LH-12 for FW-A05's text); IF-10 now checks the
+floor's own basis; the modes restated beside rv-pwr's (44.205, 209.007 / 287.912, 165.76 W DRAFTED). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
