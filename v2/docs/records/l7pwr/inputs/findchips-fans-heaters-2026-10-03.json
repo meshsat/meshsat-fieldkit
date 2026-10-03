@@ -1,0 +1,1029 @@
+{
+ "what": "FindChips (Supplyframe's public aggregator page, https://www.findchips.com/search/<part>), no login; kept fields only: distributor, stock as shown, the distributor's part number, its order code and its price ladder (quantity, currency, unit price). An indicator at the tier named, never a quote; a broker row is not a supported source (PROCUREMENT.md HC6-SC-12). Rows are kept as the page served them; authorised distributors are named in the record.",
+ "read_utc": "2026-10-03T00:27Z",
+ "read_by": "Layer 7 author l7pwr (MESHSAT-1357), the fans and the T-H1 set",
+ "parts": {
+  "9WL0612P4H001": [
+   {
+    "distributor": "Sager",
+    "stock": "0",
+    "mpn": "9WL0612P4H001",
+    "sku": "000000000005002295",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      73.69
+     ],
+     [
+      10,
+      "USD",
+      68.57
+     ],
+     [
+      25,
+      "USD",
+      66.72
+     ],
+     [
+      50,
+      "USD",
+      63.29
+     ],
+     [
+      100,
+      "USD",
+      61.71
+     ],
+     [
+      250,
+      "USD",
+      60.95
+     ]
+    ]
+   }
+  ],
+  "9WPA0412P6G001": [
+   {
+    "distributor": "Farnell",
+    "stock": "0",
+    "mpn": "9WPA0412P6G001",
+    "sku": "4218284",
+    "price_breaks": [
+     [
+      1,
+      "EUR",
+      76.83
+     ],
+     [
+      5,
+      "EUR",
+      64.36
+     ],
+     [
+      10,
+      "EUR",
+      55.38
+     ],
+     [
+      20,
+      "EUR",
+      54.27
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "51",
+    "mpn": "9WPA0412P6G001",
+    "sku": "101593",
+    "price_breaks": [
+     [
+      1,
+      "EUR",
+      58.83
+     ]
+    ]
+   },
+   {
+    "distributor": "Sager",
+    "stock": "326",
+    "mpn": "9WPA0412P6G001",
+    "sku": "000000000006385132",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      42.99
+     ],
+     [
+      10,
+      "USD",
+      40.0
+     ],
+     [
+      25,
+      "USD",
+      38.92
+     ],
+     [
+      50,
+      "USD",
+      36.92
+     ],
+     [
+      100,
+      "USD",
+      36.0
+     ],
+     [
+      250,
+      "USD",
+      35.56
+     ]
+    ]
+   },
+   {
+    "distributor": "IBS Electronics",
+    "stock": "117",
+    "mpn": "9WPA0412P6G001",
+    "sku": "9WPA0412P6G001",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      86.8701
+     ],
+     [
+      5,
+      "USD",
+      68.4837
+     ],
+     [
+      10,
+      "USD",
+      57.9792
+     ],
+     [
+      25,
+      "USD",
+      53.9184
+     ],
+     [
+      70,
+      "USD",
+      51.8034
+     ],
+     [
+      140,
+      "USD",
+      49.8576
+     ],
+     [
+      280,
+      "USD",
+      48.8001
+     ]
+    ]
+   },
+   {
+    "distributor": "MacroQuest Electronics",
+    "stock": "20 Stock，5682 Available",
+    "mpn": "9WPA0412P6G001",
+    "sku": "",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      42.66
+     ],
+     [
+      50,
+      "USD",
+      36.88
+     ],
+     [
+      100,
+      "USD",
+      35.36
+     ]
+    ]
+   }
+  ],
+  "CFM-6025BG68-135-253-22": [
+   {
+    "distributor": "Farnell",
+    "stock": "0",
+    "mpn": "CFM-6025BG68-135-253-22",
+    "sku": "4895390",
+    "price_breaks": [
+     [
+      176,
+      "EUR",
+      13.37
+     ]
+    ]
+   }
+  ],
+  "GF40282B3-1000U-SEP": [
+   {
+    "distributor": "Avnet Americas",
+    "stock": "0",
+    "mpn": "GF40282B3-1000U-SEP",
+    "sku": "GF40282B3-1000U-SEP",
+    "price_breaks": []
+   },
+   {
+    "distributor": "Sager",
+    "stock": "0",
+    "mpn": "GF40282B3-1000U-SEP",
+    "sku": "000000000007239969",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      16.4
+     ],
+     [
+      10,
+      "USD",
+      15.94
+     ],
+     [
+      25,
+      "USD",
+      15.51
+     ],
+     [
+      60,
+      "USD",
+      15.11
+     ],
+     [
+      150,
+      "USD",
+      14.72
+     ],
+     [
+      300,
+      "USD",
+      14.35
+     ]
+    ]
+   },
+   {
+    "distributor": "TME",
+    "stock": "0",
+    "mpn": "GF40282B3-1000U-SEP",
+    "sku": "GF40282B3-SEP",
+    "price_breaks": [
+     [
+      200,
+      "USD",
+      11.62
+     ]
+    ]
+   }
+  ],
+  "GF60151B7-1E00U-AE9": [
+   {
+    "distributor": "Avnet Americas",
+    "stock": "0",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "GF60151B7-1E00U-AE9",
+    "price_breaks": [
+     [
+      10000,
+      "USD",
+      12.416
+     ],
+     [
+      1000,
+      "USD",
+      13.5128
+     ],
+     [
+      500,
+      "USD",
+      15.2632
+     ],
+     [
+      200,
+      "USD",
+      16.3784
+     ],
+     [
+      30,
+      "USD",
+      19.5714
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "73",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "2884467",
+    "price_breaks": [
+     [
+      1,
+      "EUR",
+      39.79
+     ]
+    ]
+   },
+   {
+    "distributor": "Sager",
+    "stock": "0",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "000000000005714741",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      19.57
+     ],
+     [
+      10,
+      "USD",
+      19.03
+     ],
+     [
+      25,
+      "USD",
+      18.51
+     ],
+     [
+      60,
+      "USD",
+      18.03
+     ],
+     [
+      150,
+      "USD",
+      17.56
+     ],
+     [
+      300,
+      "USD",
+      17.13
+     ]
+    ]
+   },
+   {
+    "distributor": "TME",
+    "stock": "0",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "GF60151B7-AE9",
+    "price_breaks": [
+     [
+      200,
+      "USD",
+      12.67
+     ]
+    ]
+   },
+   {
+    "distributor": "IBS Electronics",
+    "stock": "2",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "GF60151B7-1E00U-AE9",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      63.8166
+     ],
+     [
+      5,
+      "USD",
+      59.9532
+     ],
+     [
+      10,
+      "USD",
+      57.3588
+     ],
+     [
+      30,
+      "USD",
+      55.7514
+     ],
+     [
+      60,
+      "USD",
+      53.5236
+     ],
+     [
+      120,
+      "USD",
+      51.4932
+     ],
+     [
+      270,
+      "USD",
+      44.4432
+     ]
+    ]
+   },
+   {
+    "distributor": "NAC",
+    "stock": "0",
+    "mpn": "GF60151B7-1E00U-AE9",
+    "sku": "SNN000000000645",
+    "price_breaks": [
+     [
+      500,
+      "USD",
+      17.85
+     ],
+     [
+      200,
+      "USD",
+      18.65
+     ],
+     [
+      30,
+      "USD",
+      21.08
+     ]
+    ]
+   }
+  ],
+  "GF60151B9-1E00U-AE9": [
+   {
+    "distributor": "Avnet Americas",
+    "stock": "0",
+    "mpn": "GF60151B9-1E00U-AE9",
+    "sku": "GF60151B9-1E00U-AE9",
+    "price_breaks": [
+     [
+      10000,
+      "USD",
+      15.8207
+     ],
+     [
+      1000,
+      "USD",
+      15.9023
+     ],
+     [
+      500,
+      "USD",
+      15.9838
+     ],
+     [
+      200,
+      "USD",
+      16.3784
+     ],
+     [
+      30,
+      "USD",
+      19.5714
+     ]
+    ]
+   },
+   {
+    "distributor": "Sager",
+    "stock": "0",
+    "mpn": "GF60151B9-1E00U-AE9",
+    "sku": "000000000005714745",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      19.57
+     ],
+     [
+      10,
+      "USD",
+      19.03
+     ],
+     [
+      25,
+      "USD",
+      18.51
+     ],
+     [
+      60,
+      "USD",
+      18.03
+     ],
+     [
+      150,
+      "USD",
+      17.56
+     ],
+     [
+      300,
+      "USD",
+      17.13
+     ]
+    ]
+   },
+   {
+    "distributor": "IBS Electronics",
+    "stock": "75",
+    "mpn": "GF60151B9-1E00U-AE9",
+    "sku": "GF60151B9-1E00U-AE9",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      30.9777
+     ],
+     [
+      5,
+      "USD",
+      29.1588
+     ],
+     [
+      10,
+      "USD",
+      28.3833
+     ],
+     [
+      30,
+      "USD",
+      27.1284
+     ],
+     [
+      60,
+      "USD",
+      26.3529
+     ],
+     [
+      120,
+      "USD",
+      25.5633
+     ],
+     [
+      270,
+      "USD",
+      21.9255
+     ]
+    ]
+   },
+   {
+    "distributor": "NAC",
+    "stock": "0",
+    "mpn": "GF60151B9-1E00U-AE9",
+    "sku": "SNN000000000648",
+    "price_breaks": [
+     [
+      500,
+      "USD",
+      17.85
+     ],
+     [
+      200,
+      "USD",
+      18.65
+     ],
+     [
+      30,
+      "USD",
+      21.08
+     ]
+    ]
+   }
+  ],
+  "HS50 6R8 J": [
+   {
+    "distributor": "Avnet Americas",
+    "stock": "0",
+    "mpn": "THS506R8J",
+    "sku": "2-1879071-3",
+    "price_breaks": [
+     [
+      20000,
+      "USD",
+      2.5287
+     ],
+     [
+      10000,
+      "USD",
+      2.5935
+     ],
+     [
+      4000,
+      "USD",
+      2.8883
+     ],
+     [
+      2000,
+      "USD",
+      3.1409
+     ],
+     [
+      200,
+      "USD",
+      3.4433
+     ]
+    ]
+   },
+   {
+    "distributor": "Farnell",
+    "stock": "370",
+    "mpn": "THS506R8J",
+    "sku": "1259474",
+    "price_breaks": [
+     [
+      1,
+      "EUR",
+      8.52
+     ],
+     [
+      5,
+      "EUR",
+      7.9
+     ],
+     [
+      10,
+      "EUR",
+      5.29
+     ],
+     [
+      25,
+      "EUR",
+      4.97
+     ],
+     [
+      50,
+      "EUR",
+      4.56
+     ],
+     [
+      200,
+      "EUR",
+      3.48
+     ]
+    ]
+   },
+   {
+    "distributor": "Farnell",
+    "stock": "0",
+    "mpn": "HS50 6R8 J",
+    "sku": "4044345",
+    "price_breaks": [
+     [
+      1,
+      "EUR",
+      3.65
+     ],
+     [
+      3,
+      "EUR",
+      3.48
+     ],
+     [
+      5,
+      "EUR",
+      3.31
+     ],
+     [
+      10,
+      "EUR",
+      2.92
+     ]
+    ]
+   },
+   {
+    "distributor": "TE Connectivity",
+    "stock": "7001",
+    "mpn": "THS506R8J",
+    "sku": "",
+    "price_breaks": [
+     [
+      100,
+      "USD",
+      7.8
+     ],
+     [
+      50,
+      "USD",
+      8.17
+     ],
+     [
+      25,
+      "USD",
+      8.54
+     ],
+     [
+      10,
+      "USD",
+      8.91
+     ],
+     [
+      1,
+      "USD",
+      9.28
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "921",
+    "mpn": "HS50 6R8 J",
+    "sku": "160922",
+    "price_breaks": [
+     [
+      100,
+      "EUR",
+      3.63
+     ],
+     [
+      50,
+      "EUR",
+      3.94
+     ],
+     [
+      25,
+      "EUR",
+      4.34
+     ],
+     [
+      10,
+      "EUR",
+      4.74
+     ],
+     [
+      1,
+      "EUR",
+      5.04
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "589",
+    "mpn": "HS50 6R8 J",
+    "sku": "160922P",
+    "price_breaks": [
+     [
+      100,
+      "EUR",
+      3.63
+     ],
+     [
+      50,
+      "EUR",
+      3.94
+     ],
+     [
+      25,
+      "EUR",
+      4.34
+     ],
+     [
+      10,
+      "EUR",
+      4.74
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "100",
+    "mpn": "HS50 6R8 J",
+    "sku": "1664196",
+    "price_breaks": [
+     [
+      200,
+      "EUR",
+      2.545
+     ],
+     [
+      100,
+      "EUR",
+      2.697
+     ],
+     [
+      60,
+      "EUR",
+      2.909
+     ],
+     [
+      20,
+      "EUR",
+      3.03
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "27",
+    "mpn": "THS506R8J",
+    "sku": "1614751",
+    "price_breaks": [
+     [
+      200,
+      "EUR",
+      2.822
+     ],
+     [
+      100,
+      "EUR",
+      2.939
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "270",
+    "mpn": "THS506R8J",
+    "sku": "7547373",
+    "price_breaks": [
+     [
+      100,
+      "EUR",
+      3.37
+     ],
+     [
+      50,
+      "EUR",
+      3.72
+     ],
+     [
+      25,
+      "EUR",
+      4.14
+     ],
+     [
+      10,
+      "EUR",
+      4.54
+     ],
+     [
+      1,
+      "EUR",
+      4.88
+     ]
+    ]
+   },
+   {
+    "distributor": "RS",
+    "stock": "27",
+    "mpn": "THS506R8J",
+    "sku": "7547373P",
+    "price_breaks": [
+     [
+      100,
+      "EUR",
+      3.37
+     ],
+     [
+      50,
+      "EUR",
+      3.72
+     ],
+     [
+      25,
+      "EUR",
+      4.14
+     ],
+     [
+      10,
+      "EUR",
+      4.54
+     ]
+    ]
+   },
+   {
+    "distributor": "TME",
+    "stock": "1",
+    "mpn": "HS50 6R8 J",
+    "sku": "HS50-6R8J",
+    "price_breaks": [
+     [
+      520,
+      "USD",
+      2.63
+     ],
+     [
+      200,
+      "USD",
+      2.79
+     ],
+     [
+      100,
+      "USD",
+      2.92
+     ],
+     [
+      80,
+      "USD",
+      2.96
+     ],
+     [
+      40,
+      "USD",
+      3.11
+     ],
+     [
+      20,
+      "USD",
+      3.27
+     ],
+     [
+      10,
+      "USD",
+      3.43
+     ],
+     [
+      5,
+      "USD",
+      3.62
+     ],
+     [
+      3,
+      "USD",
+      3.74
+     ],
+     [
+      1,
+      "USD",
+      4.01
+     ]
+    ]
+   },
+   {
+    "distributor": "Richardson RFPD",
+    "stock": "0",
+    "mpn": "HS50 6R8 J",
+    "sku": "HS50 6R8 J",
+    "price_breaks": [
+     [
+      1,
+      "USD",
+      2.82
+     ],
+     [
+      600,
+      "USD",
+      2.62
+     ],
+     [
+      24009,
+      "USD",
+      2.54
+     ]
+    ]
+   },
+   {
+    "distributor": "Avnet Abacus",
+    "stock": "&lt;span style=white-space:nowrap;&gt;&lt;b&gt;Abacus&lt;/b&gt; - 0&lt;/span&gt;",
+    "mpn": "THS506R8J",
+    "sku": "2-1879071-3",
+    "price_breaks": []
+   },
+   {
+    "distributor": "IBS Electronics",
+    "stock": "600",
+    "mpn": "THS506R8J",
+    "sku": "THS506R8J",
+    "price_breaks": [
+     [
+      10,
+      "USD",
+      5.8515
+     ],
+     [
+      50,
+      "USD",
+      5.358
+     ],
+     [
+      100,
+      "USD",
+      5.1465
+     ],
+     [
+      300,
+      "USD",
+      4.8222
+     ],
+     [
+      500,
+      "USD",
+      4.6671
+     ],
+     [
+      1000,
+      "USD",
+      4.4556
+     ],
+     [
+      2500,
+      "USD",
+      4.0326
+     ],
+     [
+      5000,
+      "USD",
+      3.666
+     ]
+    ]
+   },
+   {
+    "distributor": "New Advantage Corporation",
+    "stock": "375",
+    "mpn": "HS50 6R8 J",
+    "sku": "XSJMZ0000006058",
+    "price_breaks": [
+     [
+      375,
+      "USD",
+      7.96
+     ],
+     [
+      100,
+      "USD",
+      8.75
+     ]
+    ]
+   }
+  ]
+ }
+}
