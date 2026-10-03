@@ -17,7 +17,7 @@ ASSUMPTION a stated assumption, NOT READ a figure no held document prints.
    gen_e3      v2/ecad/tools/gen_pcb_e3.py  sha256 3a8eb81d3f58e0a5
    gen_sch_e   v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    margins     v2/docs/CASE-MARGINS.md  sha256 55244f94aace54ca
-   assembly    v2/docs/ASSEMBLY.md  sha256 942d562edd128759
+   assembly    v2/docs/ASSEMBLY.md  sha256 29dbe3a0c4938274
    px0833      v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf  sha256 b0fb46464e073ab9
    amph_iii    v2/vendor/d38999/amphenol-d38999-iii-federal.pdf  sha256 13a19268ba5939d9
    cutouts     v2/vendor/d38999/glenair-series-iii-iv-panel-cutouts.pdf  sha256 4acc4442db4bc194

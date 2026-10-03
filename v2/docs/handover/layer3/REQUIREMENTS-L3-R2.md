@@ -3,7 +3,7 @@
 
 # MeshSat field kit V2: requirements, second issue of layer 3 (L3-R2)
 
-MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `435d515f6184f7bd`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
+MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `07fec30d43271245`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
 
 ## 1. How to read this document
 
@@ -309,7 +309,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-03; no ruling or choice; files: v2/docs/ARCH-PCB-B-IOHA.md section 4; v2/docs/ARCH-PCB-B-IOHA.md section 15; v2/ecad/tools/gen_sch_b.py:936
 - **Judged or settled by:** rules DOC-002 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (27 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (28 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 - **Resolved by:** Commit 4ec785d8: ARCH-PCB-B-IOHA section 15 is marked corrected on 26 September 2026 and its failover column follows f = s % 3 + 1, as section 4 does.
 
@@ -648,7 +648,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-05; no ruling or choice; files: v2/docs/PANEL.md section 10; v2/docs/CONOPS.md section 4 (Charging row); v2/docs/OPERATING-ENVELOPE.md section 3; v2/ecad/tools/gen_sch_a.py:839-845; v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md; v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)
 - **Judged or settled by:** rules DOC-002, PWR-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (50 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (51 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 - **Resolved by:** The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): PANEL.md section 10, CONOPS.md section 4's Charging row and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated since 458b2873, and the hostless behaviour as the battery review packet's charger state sequence sets it out; the bench confirmation of that sequence is the PROTOTYPE half, not judged yet.
 
@@ -1150,7 +1150,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-08; no ruling or choice; files: v2/docs/PANEL.md section 7; v2/ecad/tools/gen_sch_a.py:1253; v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)
 - **Judged or settled by:** rules DOC-002, SCH-004 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (25 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (26 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 - **Resolved by:** Commit 4ec785d8: PANEL.md's corrections note (1) and section 7 say R102 pulls EMCON_HW LOW, the slot enables are pulled low, and a kit without its panel neither computes nor transmits and does not usefully charge.
 
@@ -1516,7 +1516,7 @@ Prototype 1 core need: yes.
 - **Sources:** need NEED-13; no ruling or choice; files: v2/ecad/tools/gen_sch_e.py:264; v2/docs/ASSEMBLY.md section 4; v2/docs/PANEL.md section 10
 - **Judged or settled by:** rules SCH-003, INT-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (33 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (35 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 - **Resolved by:** Commit 93138ac1 (check_contracts.py carries the J_SMB contract, S-05) and the round 7b integration commit that rewrote ASSEMBLY.md section 4 and build step 7 and PANEL.md section 10 to describe the lead as generated.
 
@@ -1749,7 +1749,7 @@ Prototype 1 core need: no.
 - **Sources:** need NEED-15; no ruling or choice; files: v2/docs/PANEL.md section 6; v2/docs/CONOPS.md section 4b; v2/docs/V2-SPEC.md:76 (as read at eadbe571); v2/docs/OPERATING-ENVELOPE.md section 4; v2/docs/TEST-PLAN.md:46 (as read at eadbe571); v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)
 - **Judged or settled by:** rules DOC-002 (coverage PARTIAL); decisions 28, 40
 - **TEST-PLAN:** not named by id
-- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (96 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (98 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 - **Resolved by:** The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): every document and outcome named in the statement describes the circuit as generated, the envelope is re-pinned (ENV-001), and TEST-PLAN.md:46 measures EMCON with a receiver outside the kit.
 
