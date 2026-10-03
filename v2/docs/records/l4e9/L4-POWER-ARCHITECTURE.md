@@ -648,7 +648,7 @@ fit mock-up R-167 blocks that adoption and the dependent mechanical release only
 
 | Layer | Owners | Register rows | By kind | By state |
 |---|---|---|---|---|
-| 4 (release records) | Layer 4 coordinator | 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7 | CLOSED 2; DRAFTED 2; OPEN 0; OWED 8; APPLIED 0 |
+| 4 (release records) | Layer 4 coordinator | 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7 | CLOSED 2; DRAFTED 2; OWED 8; APPLIED 0 |
 | 5 | Layer 5 interfaces, CONOPS owner | 5: R-23, R-24, R-125, R-133, R-138 | IMPLEMENTATION 5 | DRAFTED 5; APPLIED 0 |
 | 5 (firmware, by the contract) | firmware owner | 11: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154, R-158, R-164, R-188 | IMPLEMENTATION 11 | DRAFTED 1; OWED 10; APPLIED 0 |
 | 6 | Layer 6 components | 28: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150, R-160, R-162, R-165, R-168, R-179, R-182, R-183, R-186 | EVIDENCE 27; TEST 1 | OWED 28; APPLIED 0 |
