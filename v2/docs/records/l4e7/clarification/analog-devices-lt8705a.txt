@@ -54,6 +54,18 @@ production test covers, for each:
    monitor and limit? (c) Is the -0.3 V to 0.3 V rating an internal clamp's limit, and what current can the pins carry
    beyond it for 10 us without damage?
 
+7. The input current monitor with a pulsed sense voltage (added 3 October 2026, task L4-E7, B6 round 3). Page 5 rates
+   the CSPIN to CSNIN differential operating range at -100 mV to 100 mV and page 31 asks that it be kept below 100 mV
+   because of the current IMON_IN can drive, while noting that the input current often has ripple and discontinuities that
+   CIMON_IN averages. In our buck-region corner (25 V in, a 12 V bus, 2.9 A average input current, 15 mOhm RSENSE1) the
+   switch M1 draws its pulsed current partly through RSENSE1, so the differential is a pulse train with peaks above 100 mV
+   and an average near 45 mV. (a) What does the A7 amplifier deliver into IMON_IN while the instantaneous differential is
+   above 100 mV: does its output current limit at 100 uA, at a guaranteed higher value, or is the behaviour undefined?
+   (b) Over what bandwidth is the A7 gain of 1 mA/V held, so that we can state the error of the averaged IMON_IN voltage
+   for a pulse train at 170 to 235 kHz with 20 ns edges? (c) Is the -0.3 V to 0.3 V absolute maximum a DC rating, and what
+   amplitude and duration of a switching-edge spike (tens of nanoseconds) do the pins tolerate without damage or without
+   disturbing the boost capacitor charge control?
+
 For each item we ask for a limit Analog Devices warrants, and the conditions under which it applies. Characterization
 over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee;
 typical curves are not sufficient for our purpose. Thank you.
