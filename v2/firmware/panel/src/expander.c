@@ -26,8 +26,9 @@ typedef struct {
 /* The boot values. Board C: every LED bit an input (dark). Board A U27: port 0 all outputs at 0 except DEV_EN (P0.7)
  * at 1, port 1 inputs; U28: USBX_EN (P0.0) and PD_SW_EN (P1.0) outputs at 0, the rest inputs. Board B U6: sixteen
  * active-high requests, each held low by a pull-down at power-up (gen_sch_b.py R60 to R62 and the 100 k on the
- * others): outputs at 0. Board B U7: inputs only, not configured. Board D U16: X_SA_PD, X_AMP_EN, X_MMUTE (P0.5 to
- * P0.7) outputs at 0 (SESSION S-11: off), the rest inputs (FW-D01). */
+ * others): outputs at 0. Board B U7: inputs only, not configured. Board D U16: FW-D01 (decided 3 October 2026, F-11): the
+ * generator's power-up levels, so the change of direction moves no line: X_SA_PD 1 (the SA868 on and receiving),
+ * X_AMP_EN 1, X_MMUTE 0 (P0.5 to P0.7 outputs), the rest inputs. The first firmware's S-11 (all 0) is not adopted. */
 static const exp_boot_t EXP_BOOT[] = {
     { HAL_I2C_C_U1,  0x00, 0x00, 0xFF, 0xFF, true },
     { HAL_I2C_C_U2,  0x00, 0x00, 0xFF, 0xFF, true },
@@ -35,7 +36,8 @@ static const exp_boot_t EXP_BOOT[] = {
     { HAL_I2C_A_U28, 0x00, 0x00, (uint8_t)~(1u << HAL_EXP_A_USBX_EN_BIT), (uint8_t)~(1u << HAL_EXP_A_PD_SW_EN_BIT), true },
     { HAL_I2C_B_U6,  0x00, 0x00, 0x00, 0x00, true },
     { HAL_I2C_B_U7,  0x00, 0x00, 0xFF, 0xFF, false },
-    { HAL_I2C_D_U16, 0x00, 0x00, 0x1F, 0xFF, true },
+    { HAL_I2C_D_U16, (1u << HAL_EXP_D_SA_PD_BIT) | (1u << HAL_EXP_D_AMP_EN_BIT), 0x00,
+      (uint8_t)~((1u << HAL_EXP_D_SA_PD_BIT) | (1u << HAL_EXP_D_AMP_EN_BIT) | (1u << HAL_EXP_D_MMUTE_BIT)), 0xFF, true },
 };
 
 /* the expanders that carry inputs and raise EXP_INT */
@@ -132,6 +134,8 @@ int panel_exp_service(panel_t *p, ms_t now)
                 p->light_day_n = (in[1] >> HAL_EXP_C_LIGHT_DAY_N_BIT) & 1u;
                 p->light_night_n = (in[1] >> HAL_EXP_C_LIGHT_NIGHT_N_BIT) & 1u;
                 p->panel_id = (in[1] >> HAL_EXP_C_PANEL_ID_BIT) & 1u;
+                if (p->pi_btn_wired)                     /* PANEL.md s.4 row 3, DRAFTED: PI_BTN_n, low = pressed */
+                    p->pi_btn_pressed = !((in[1] >> HAL_EXP_C_PI_BTN_N_BIT) & 1u);
             } else {
                 r = -1;
             }

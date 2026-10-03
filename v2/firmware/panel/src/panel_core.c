@@ -47,7 +47,7 @@ const char *const panel_page_text[PAGE_COUNT] = {
 };
 
 /* red and amber conditions of P s.9 */
-enum { RC_SOS = 1, RC_ZEROIZE = 2, RC_THERMAL = 4, RC_PACK_UV = 8, RC_SE_ABSENT = 16 };
+enum { RC_SOS = 1, RC_ZEROIZE = 2, RC_THERMAL = 4, RC_PACK_UV = 8, RC_SE_ABSENT = 16, RC_MODULES_LOST = 32 };
 enum { AC_BEARER_LOST = 1, AC_SHORE_LOST = 2, AC_DISK_FULL = 4, AC_SLOT_FAULT = 8, AC_MARGIN = 16 };
 
 #define HEAT_STAGE_SLOT 1u      /* FW-C09/C13: the heat stage's one module, slot 2 as board B is generated (index 1) */
@@ -125,20 +125,24 @@ uint8_t panel_light_mode(bool day_n, bool night_n, bool bridge_nvg, bool *fault)
     return LIGHT_BLACKOUT;
 }
 
-/* One dimmer for the whole panel. The TX lamp is never dimmed below 10 %: while it is lit the duty is raised to
- * 10 % (finding F-05: in NVG this lifts the red and amber LEDs to 10 % too). BLACKOUT is 0, TX lamp included. */
-uint16_t panel_light_duty(uint8_t mode, bool tx_lamp_lit)
+/* One dimmer for the whole panel (P s.8). The TX lamp follows it in every position, keyed or not, and is dark in
+ * BLACKOUT (F-05, decided 3 October 2026: the 10 % floor is withdrawn, CONOPS section 4's NVG row decides). */
+uint16_t panel_light_duty(uint8_t mode)
 {
-    uint16_t d;
     switch (mode) {
-    case LIGHT_DAY: d = PANEL_DUTY_DAY; break;
-    case LIGHT_NIGHT: d = PANEL_DUTY_NIGHT; break;
-    case LIGHT_NVG: d = PANEL_DUTY_NVG; break;
+    case LIGHT_DAY: return PANEL_DUTY_DAY;
+    case LIGHT_NIGHT: return PANEL_DUTY_NIGHT;
+    case LIGHT_NVG: return PANEL_DUTY_NVG;
     default: return 0;
     }
-    if (tx_lamp_lit && d < PANEL_DUTY_TX_FLOOR)
-        d = PANEL_DUTY_TX_FLOOR;
-    return d;
+}
+
+/* F-13 (PANEL.md s.5): slot 1 both selects low; slot 2 HDMI_SEL1 high, HDMI_SEL2 low; slot 3 HDMI_SEL2 high with
+ * HDMI_SEL1 driven low (board B's U3 and U4 cascade, gen_sch_b.py 1336 to 1348). */
+void panel_hdmi_encode(uint8_t slot, bool *sel1, bool *sel2)
+{
+    *sel1 = slot == 1;
+    *sel2 = slot == 2;
 }
 
 /* NVG: red and amber indicators only. BLACKOUT: nothing. */
@@ -223,6 +227,7 @@ void panel_init(panel_t *p, const panel_ops_t *ops, ms_t now, bool zeroize_raw_c
     p->br.soc_pct = -1;
     p->rb_status = true;           /* not yet read low: RB_SW_IEN stays down (P corrections (17)) */
     p->light_day_n = p->light_night_n = true;
+    p->pi_btn_wired = HAL_PI_BUTTON_WIRED;
     panel_deb_init(&p->sw_zer, !zeroize_raw_closed, now);
     /* FW-C01 step 3 and FW-C02: the toggle or a wipe-pending record drives every SLOT_EN low first (D-03) */
     bool pending = panel_zj_scan(p) == ZJ_PENDING;
@@ -724,7 +729,27 @@ static void power_controls_step(panel_t *p, ms_t now)
             p->c1_reduced = true;
         else if (cool)
             p->c1_reduced = false;
+        /* S-19 not adopted (PANEL.md s.9a): after H1 the heat stage's module rises first (FW-C13); once it runs, C1's
+         * restore 5 K below (FW-C09) releases the others */
+        if (cool && p->heat_stage_only && p->slot[HEAT_STAGE_SLOT].state == SLOT_RUNNING)
+            p->heat_stage_only = false;
     }
+}
+
+/* F-07 (CONOPS section 4e, PANEL.md s.9): a compute module lost is a slot that should run and does not: faulted (P s.5)
+ * or running with its heartbeat lost (FW-C05). A deliberate stop (a shutdown, a hot stop, a ZEROIZE) loses nothing.
+ * One lost is MASTER CAUT; two lost is MASTER WARN. */
+unsigned panel_modules_lost(const panel_t *p)
+{
+    if (p->kill || p->shdn != SHDN_IDLE || p->hot.state != HOT_NONE || p->zer.mode != ZM_ARMED_IDLE)
+        return 0;
+    unsigned n = 0;
+    for (unsigned i = 0; i < 3; i++) {
+        const panel_slot_t *s = &p->slot[i];
+        if (s->fault || (s->wanted && s->state == SLOT_RUNNING && !s->alive))
+            n++;
+    }
+    return n;
 }
 
 /* ------------------------------------------------------------------------------------------------ indicators */
@@ -750,9 +775,11 @@ static uint32_t indicators(panel_t *p, ms_t now, const panel_in_t *in)
         amb |= AC_SHORE_LOST;
     if (p->br.amber & AMBER_DISK_FULL)
         amb |= AC_DISK_FULL;
-    for (unsigned i = 0; i < 3; i++)
-        if (p->slot[i].fault)
-            amb |= AC_SLOT_FAULT;                            /* P s.5 names MASTER CAUT (finding F-07) */
+    unsigned lost = panel_modules_lost(p);
+    if (lost >= 1)
+        amb |= AC_SLOT_FAULT;                                /* one module lost: MASTER CAUT (F-07) */
+    if (lost >= 2)
+        red |= RC_MODULES_LOST;                              /* two lost: MASTER WARN (F-07) */
     if (p->margin_hold)
         amb |= AC_MARGIN;
     p->red_active = red;
@@ -835,12 +862,12 @@ static bool sound_level(panel_t *p, ms_t now)
     ms_t t = now - p->sound_at;
     switch (p->sound) {
     case SND_CHIRP:
-        if (t < 50)
+        if (t < PANEL_CHIRP_MS)
             return true;
         break;
-    case SND_DOUBLE_CHIRP:
-        if (t < 200)
-            return t < 50 || t >= 150;                       /* SESSION S-15: 50 on, 100 off, 50 on */
+    case SND_DOUBLE_CHIRP:                                   /* F-06, S-15: 50 on, 100 off, 50 on */
+        if (t < 2u * PANEL_DCHIRP_ON_MS + PANEL_DCHIRP_OFF_MS)
+            return t < PANEL_DCHIRP_ON_MS || t >= PANEL_DCHIRP_ON_MS + PANEL_DCHIRP_OFF_MS;
         break;
     case SND_ZER_COMPLETE:
         if (t < 3000)
@@ -968,7 +995,7 @@ static void sample_switches(panel_t *p, ms_t now, const panel_in_t *in)
         panel_deb_init(&p->sw_test, in->test_sw, now);
         panel_deb_init(&p->sw_sos, in->sos_sw, now);
         panel_deb_init(&p->sw_emcon, in->emcon_rd, now);
-        panel_deb_init(&p->sw_pi, in->pi_button, now);
+        panel_deb_init(&p->sw_pi, in->pi_button || p->pi_btn_pressed, now);
         panel_deb_init(&p->sw_day, p->light_day_n, now);
         panel_deb_init(&p->sw_night, p->light_night_n, now);
         p->rb_ien = false;
@@ -979,7 +1006,7 @@ static void sample_switches(panel_t *p, ms_t now, const panel_in_t *in)
     panel_deb_update(&p->sw_sos, in->sos_sw, now);
     panel_deb_update(&p->sw_zer, in->zeroize_sw, now);
     panel_deb_update(&p->sw_emcon, in->emcon_rd, now);
-    panel_deb_update(&p->sw_pi, in->pi_button, now);
+    panel_deb_update(&p->sw_pi, in->pi_button || p->pi_btn_pressed, now);
     if (panel_deb_update(&p->sw_day, p->light_day_n, now))
         ev_push(p, EV_LIGHT_DAY, p->sw_day.stable, now);
     if (panel_deb_update(&p->sw_night, p->light_night_n, now))
@@ -1109,14 +1136,12 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
         p->own_pull_until = now + PANEL_OWN_PULL_GUARD_MS;
     for (unsigned i = 0; i < 3; i++)
         out->slot_en[i] = p->slot[i].en;
-    out->hdmi_sel1 = p->hdmi_slot == 1;
-    out->hdmi_sel2 = p->hdmi_slot == 2;
+    panel_hdmi_encode(p->hdmi_slot, &out->hdmi_sel1, &out->hdmi_sel2);
     out->shore_inhibit = p->shore_inhibit;
 
     uint32_t leds = indicators(p, now, in);
     out->leds = panel_light_filter(p->light, leds);
-    bool tx_lamp = in->tr_aprs || (out->leds & LED_BIT(LED_TXTEST));
-    out->pwm_permille = panel_light_duty(p->light, tx_lamp);
+    out->pwm_permille = panel_light_duty(p->light);          /* TR_APRS keyed or not (F-05) */
     out->sounder = p->light != LIGHT_BLACKOUT && sound_level(p, now);
     if (p->light == LIGHT_BLACKOUT)
         out->sounder = false;
