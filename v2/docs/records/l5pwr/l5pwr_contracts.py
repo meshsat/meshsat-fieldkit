@@ -8,9 +8,17 @@ the figure is true of a release-guarded draft no generator carries), its invalid
 moves. It REFUSES (exit 3) when an excerpt is not in its target or a cited figure is not printed by a cited source, so the table
 cannot drift from the files. Every file read is pinned by sha256 in section 0; regen_out.py binds the output to them. Run from the
 repository root or anywhere: `python3 v2/docs/records/l5pwr/l5pwr_contracts.py` (a second at most; stdlib only). Nothing here is
-measured: it is a check of text against text."""
+measured: it is a check of text against text.
+
+Set 28 (finding F-12, 3 October 2026): set 27's corrections of L4-E7 (round 5) and L4-E11 (section 18) changed what six rows' cited
+figures mean, and two of those figures are no longer printed. Those rows are restated in RESTATED (section 1a of the output), never
+edited in the table: the figures that no longer stand are checked as printed by the row's sources at L4_BASE, the text that replaced
+them is matched once in the tree's sources with its figures parsed from the match, and the targets are read as set 28 carries them
+(SET28_COMMIT) to say whether record l5r2 restated them in place or a withdrawn text is still there (a finding)."""
 import hashlib
 import os
+import re
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -247,6 +255,124 @@ row("SEQ-10", "FW-C08 hardware fact", "the entry's UVLO pin under SHORE_INHIBIT"
     "E's Q8 pulls the entry's UVLO pin low when it is high (as drawn the LM5069's HS_UVLO; on the selected entry the TPS48110-Q1's EN/UVLO on the same net, DRAFTED R-123)",
     ["l4e11entry"], "the entry draft's pin map and part list (Q8 kept)", ["HS_UVLO", "Q8", "DCIN_PGD"], "NETLIST (the draft's text); DRAFTED R-123", "R-123 applied", ["5.7"])
 
+# SET 28'S RESTATEMENT (finding F-12 of set 28's RESULT.md, 3 October 2026; authority SESSION under the owner's standing rule of 26
+# September 2026). The table above is the pass as written at L5PWR_COMMIT against the Layer 4 records at L4_BASE (fnd/l4e9 before the
+# pass). Set 27 then corrected two of those records: L4-E7's round 5 (carried by L4-E9 at 1ba24ca6) withdrew the solar guard's
+# reference loop as a passing floor, and L4-E11's section 18 (carried at 92c08cdf and 22cb4c16) moved the mixer fans off VSYS_E onto
+# U22's regulated rail and called the hard short's figure an extrapolation and a test target. A row whose cited figure no longer
+# stands is restated here, not edited above: the text written stays what the targets carried at L5PWR_COMMIT. Each entry gives the
+# figures that no longer stand (each checked as printed by the row's sources at L4_BASE), why, the Layer 4 text that replaced them
+# (a pattern with no typed number, matched exactly once in the tree's source; the figures it carries are parsed from the match, never
+# typed here), the contract value that changes, the restated mark, trigger and where, and the targets as set 28 carries them
+# (SET28_COMMIT): restated in place by record l5r2, or the withdrawn text still there (a finding of section 9 of the page).
+L4_BASE = "2c240414"
+SET28_COMMIT = "5515ecc0"
+RESTATED = {}
+
+
+def restate(i, withdrawn, why, now, value, mark, trigger, where, target=(), finding=None):
+    RESTATED[i] = dict(withdrawn=withdrawn, why=why, now=now, value=value, mark=mark, trigger=trigger, where=where,
+                       target=list(target), finding=finding)
+
+
+restate("S27-B6", ["0.2396", "0.5287", "60.3", "3.30 uH"],
+        "L4-E7's round 5 withdrew round 2's reference loop as a passing floor: at that loop a fault at the connector puts U5's pins past "
+        "their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass",
+        [("l4e9md", r"OPEN for the guard-on case: an absolute-rating violation at a connector fault \(round 2's \d+\.\d+ uH WITHDRAWN as a passing floor"),
+         ("l4e9md", r"at round 2's \d+\.\d+ uH reference loop, no loop claimed to pass \(L4-E7's round \d+\)"),
+         ("l4e9md", r"U5's pins, the complete budget, -\d+\.\d+ to \+\d+\.\d+ V at a fault at the connector \(past the -\d+\.\d+ V ABSOLUTE MAXIMUM\)"),
+         ("l4e9md", r"inside \d+ V; at \d+\.\d+ uH U5 \d+\.\d+ V"),
+         ("l4e9md", r"turns Q12 off: at most \d+\.\d+ A within \d+\.\d+ us")],
+        "CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; it is OPEN (an absolute-rating "
+        "violation at a connector fault, no loop claimed to pass), with U5's pins at the reference loop and at the low loop and the "
+        "turn-off current as parsed above; the stage question is the engineer's B6-ENG-1",
+        "MODELED (L4-E7 round 5); DRAFTED R-173; OPEN (D-10's guard-on case, an absolute-rating violation at a connector fault), PROVISIONAL",
+        "B6-ENG-1, the engineer's stage question (R-180 an input only; R-186 Analog Devices' answer; R-187 does not hold, result (ii)); "
+        "its wider form B6-ENG-2 (R-189, D-16)",
+        "1d row IF-01, 4e (the guard-on row), 8a D-10", finding="L5-F09")
+restate("S27-03", ["75 V", "61 A", "3.30 uH"],
+        "L4-E7's round 5 restated R-176: row 2's bound on PV_F and row 3's turn-off current changed, and row 3's pass from the reference "
+        "loop was withdrawn (no loop is claimed to pass)",
+        [("reg", r"PV_F at most \d+ V, its slew and INP inside their absolute ratings"),
+         ("reg", r"U21 turning Q12 off \(at most \d+ A, within \d+ us\)"),
+         ("reg", r"no loop is claimed to pass \(round \d+\): at \d+\.\d+ uH the pins' complete budget is outside \+-\d+\.\d+ V and B6-ENG-1 decides")],
+        "CHANGES in V-E16's rows 2 and 3, not in the excerpt (rows 5 and 6 stand): the parsed bounds replace those the pass wrote for "
+        "rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1 is decided",
+        "TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 OPEN (no loop claimed to pass), PROVISIONAL",
+        "row 3: B6-ENG-1 decides the stage (R-180 an input only, R-186, R-187 not holding; B6-ENG-2, R-189); rows 2 and 3 filed against "
+        "R-176's bounds at both fault positions",
+        "R-176 (rows 2 and 3 as L4-E7's round 5 restated them)",
+        [("stale", "hwfw", r"D4 carries nothing, PV_F at most \d+ V;"),
+         ("stale", "hwfw", r"U21 turning Q12 off \(at most \d+ A, within \d+ us\)"),
+         ("stale", "hwfw", r"a pass only for a loop at or over \d+\.\d+ uH until B6-ENG-1 is decided"),
+         ("stale", "hwfw", r"row 3 a pass only from a \d+\.\d+ uH loop until B6-ENG-1"),
+         ("stale", "yaml", r"row 3 a pass only for a source loop at or over \d+\.\d+ uH until B6-ENG-1 is decided")], finding="L5-F09")
+restate("S27-01", ["0.1486", "9.539", "11.905", "28.6"],
+        "L4-E11 section 18 put the mixer fans on U22's regulated rail and declared the dock branch afresh (18b), so the drop, VSYS_E at "
+        "the floor and the contact's share are re-derived (18b restates the floor, not VSYS_MIN's start); and L4-E11 17a, after the "
+        "recheck, calls the hard short's figure a resistive extrapolation and E11-38's test target, not a bound",
+        [("l4e11out", r"with U12's \d+\.\d+ A: \d+\.\d+ A DECLARED on IF-AE-DOCK pin 1 \(was \d+\.\d+ A"),
+         ("l4e11out", r"the drop at the floor with \d+\.\d+ A: \d+\.\d+ V, VSYS_E \d+\.\d+ V; at U42's least limit \d+\.\d+ V"),
+         ("l4e11out", r"the contact at \d+\.\d+ % of \d+\.\d+ A"),
+         ("l4e11out", r"A resistive EXTRAPOLATION, not a bound \(I\): \d+ A would flow"),
+         ("l4e11out", r"\d+ A for \d+\.\d+ us \(\d+\.\d+ A2s\) is E11-38's TEST TARGET for the recorded peak")],
+        "CHANGES: the branch current, the drop, VSYS_E at the floor and the contact's share are 18b's, parsed above; the excerpt, U42's "
+        "band at R(ILIM), stands (the resistor renamed R228); the hard short's figure keeps its number but is a test target, no longer "
+        "a ceiling",
+        "INFERRED from MAKER rows (SLVSET9G), the branch current MODELED (L4-E11 18b); DRAFTED R-157, R-177, R-178, R-181; PROVISIONAL "
+        "(L4-F03: remedy drafted, qualification open)",
+        "E11-38 (R-184): U42's limit read outside its band, the hard short's recorded peak over its test target (it revises L4-E11 17a), "
+        "the 813's resistance after the cases; E11-35 (R-179): a fan's measured start over U42's room at the declared branch",
+        "16e, 17a, 18b; out 16e, 17a, 18b",
+        [("restated", "yaml", r"so the branch is declared \d+\.\d+ A \(U12 \d+\.\d+ A, U22 \d+\.\d+ A at the floor with both fans at full speed\)"),
+         ("restated", "yaml", r"the contact at \d+\.\d+ percent of \d+\.\d+ A, VSYS_E \d+\.\d+ V at the floor"),
+         ("stale", "yaml", r"a short applied while on at most \d+ A for at most \d+\.\d+ us \(a ceiling, no inductance credited; INFERRED\)")],
+        finding="L5-F10")
+restate("S27-02a", ["0.3356", "0.5713", "0.1 A"],
+        "L4-E11 section 18 withdrew the fans directly on VSYS_E; on U22's regulated rail the start rule in amperes on VSYS_E is "
+        "superseded (R-179) by the room U42 leaves at the declared branch (18b)",
+        [("l4e11out", r"no fan read prints a range covering VSYS_E's \d+\.\d+ to \d+\.\d+ V, so 15a's fans directly on VSYS_E is WITHDRAWN"),
+         ("reg", r"the supply range question of 15a to 17a \(\d+\.\d+ V at the top, \d+\.\d+ V at the bottom, \d+\.\d+ and \d+\.\d+ A on VSYS_E\) is superseded by the rail"),
+         ("l4e11out", r"with one fan running and U12 on, U42's room \d+\.\d+ A leaves \d+\.\d+ W at the rail for the other fan's start")],
+        "CHANGES: the rule is no longer the both-together and one-at-a-time currents on VSYS_E; it is U42's room at the declared branch, "
+        "as power at U22's rail for one fan's start, the start current NOT READ (E11-35); VSYS_E at U42's least limit stands",
+        "INFERRED (L4-E11 18b); DRAFTED R-177, R-181; PROVISIONAL (the start current NOT READ)",
+        "E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)",
+        "18, 18b; out 18, 18b; R-179",
+        [("restated", "yaml", r"the start rule above \(\d+\.\d+ A and \d+\.\d+ A on VSYS_E\) is superseded by section 18b: with one fan running and U12 on, U42 leaves \d+\.\d+ A of room, \d+\.\d+ W at the rail for the other fan's start"),
+         ("stale", "yaml", r"firmware starts them one at a time with a PWM ramp, never both within \d+ s and never while U12 starts \(R-188\)")],
+        finding="L5-F10")
+restate("S27-02b", ["PWM ramp", "0.5713"],
+        "L4-E11 18c restated the stagger for the fans on U22's rail (E11-39, R-188): the ramp is a PWM-duty ramp into the fan's PWM input, "
+        "U22's start joins U12's, and the room is U42's at the declared branch (18b), the per-fan start current on VSYS_E superseded (R-179)",
+        [("l4e11out", r"each by a PWM-duty ramp into the fan's PWM input, never both within \d+ s and never while U12 or U22 starts"),
+         ("reg", r"U42's room \d+\.\d+ A at the floor"),
+         ("reg", r"the current through J_DOCK pin 1 under \d+\.\d+ A at every start")],
+        "CHANGES the rule's wording, not its intent: a PWM ramp becomes a PWM-duty ramp into the fan's PWM input, and never while U12 "
+        "starts becomes never while U12 or U22 starts; the trigger's per-fan start current gives way to U42's room",
+        "RULE (L4-E11 17a and 18c, SESSION); DRAFTED R-177, R-181; PROVISIONAL",
+        "E11-35 (R-179): the named fans' start current read over U42's room at the rail; U42's limit read outside its band (E11-38, R-184)",
+        "out 18c (E11-39 restated); R-188",
+        [("restated", "hwfw", r"Start the mixer fans one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within \d+ s and never while U12 or U22 starts \(E11-39, R-188; L4-E11 18c\)")])
+restate("SEQ-08", ["17.375", "9.539"],
+        "L4-E11 section 18: no named fan's printed range covers VSYS_E, so the fans directly on VSYS_E are withdrawn; they run on U22's "
+        "regulated rail, whose band sits inside the named fans' range (18a)",
+        [("l4e11out", r"no fan read prints a range covering VSYS_E's \d+\.\d+ to \d+\.\d+ V, so 15a's fans directly on VSYS_E is WITHDRAWN"),
+         ("l4e11out", r"the output \d+\.\d+ V \(\d+\.\d+ to \d+\.\d+ V at FB's limits with the \d+ % divider\) inside the fans' \d+\.\d+ to \d+\.\d+ V")],
+        "CHANGES: the fans' supply is U22's +12V_FAN, not VSYS_E; the supply range TBD is closed by the rail (DRAFTED); the start "
+        "current and the PWM input level stay NOT READ (R-179, F-L7-11)",
+        "INFERRED (L4-E11 18a); DRAFTED R-177; PROVISIONAL (the start current and the PWM input level NOT READ)",
+        "E11-35 (R-179): the named fans' start current and PWM input level read; R-177's release (U22 and the four-wire headers drawn)",
+        "18, 18a; out 18, 18a",
+        [("restated", "yaml", r"\+12V_FAN \d+\.\d+ V \(\d+\.\d+ to \d+\.\d+ V at FB's limits\) from U22 on VSYS_E, inside the fans' \d+\.\d+ to \d+\.\d+ V")])
+
+# A parsed figure: a signed decimal, or an integer with its unit (a section number, a round or an id is not a figure).
+FIG = re.compile(r"(?<![\w.+-])(?:\+-|[-+])?\d+(?:\.\d+)?(?: (?:uH|nH|mV|V|mA|A2s|A|W|us|ms|s|%|kOhm|mOhm))?(?![\w.])")
+
+
+def figures_in(s):
+    return [f for f in FIG.findall(s) if "." in f or " " in f]
+
 
 def flat(s):
     return " ".join(s.split())
@@ -256,6 +382,20 @@ def sha(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()
 
 
+def rx(p):
+    """A pattern whose literal spaces match any whitespace, so a match may cross a wrapped line."""
+    return re.compile(p.replace(" ", r"\s+"))
+
+
+def words(s):
+    """An excerpt as a pattern: its words in order, any whitespace between."""
+    return re.compile(r"\s+".join(re.escape(w) for w in s.split()))
+
+
+def line_of(text, pos):
+    return text.count("\n", 0, pos) + 1
+
+
 # THE TARGETS ARE READ AS THIS PASS WROTE THEM (3 October 2026, Layer 5's second round, record l5r2): this record states what the
 # first round wrote, and the second round restated some of those texts in place (FW-E11, the fans' start rule, the SLOT_EN line).
 # A reader of the current tree would refuse the day its subject moves on, which is a rule about history; so the three targets are
@@ -263,34 +403,57 @@ def sha(path):
 L5PWR_COMMIT = "1e18a1ca"
 
 
-def committed(rel):
-    import subprocess
-    r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (L5PWR_COMMIT, rel)], capture_output=True)
+def at_commit(commit, rel):
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
     if r.returncode != 0:
         sys.stderr.write("l5pwr_contracts: %s is not readable at %s (a git checkout holding this branch's history is needed)\n"
-                         % (rel, L5PWR_COMMIT))
+                         % (rel, commit))
         sys.exit(3)
     return r.stdout
 
 
+def committed(rel):
+    return at_commit(L5PWR_COMMIT, rel)
+
+
 def compute():
-    texts, pins, missing = {}, {}, []
+    texts, pins, missing, raw = {}, {}, [], {}
     for key, rel in list(TARGETS.items()):
-        raw = committed(rel)
-        texts[key] = flat(raw.decode("utf-8"))
-        pins[key] = ("%s@%s" % (L5PWR_COMMIT, rel), hashlib.sha256(raw).hexdigest())
+        b = committed(rel)
+        texts[key] = flat(b.decode("utf-8"))
+        pins[key] = ("%s@%s" % (L5PWR_COMMIT, rel), hashlib.sha256(b).hexdigest())
     for key, rel in list(SOURCES.items()):
         p = os.path.join(ROOT, rel)
         if not os.path.isfile(p):
             missing.append(rel)
             continue
-        texts[key] = flat(open(p, encoding="utf-8").read())
+        raw[key] = open(p, encoding="utf-8").read()
+        texts[key] = flat(raw[key])
         pins[key] = (rel, sha(p))
     if missing:
         sys.stderr.write("l5pwr_contracts: missing %s\n" % ", ".join(missing))
         sys.exit(3)
+    # set 28's restatement reads the row sources it cites at L4_BASE and the targets at SET28_COMMIT, both from this branch's history
+    base, s28, s28raw, pins2 = {}, {}, {}, {}
+    for e in T:
+        if e["id"] in RESTATED:
+            for s in e["sources"]:
+                if s not in base and s in SOURCES:
+                    b = at_commit(L4_BASE, SOURCES[s])
+                    base[s] = flat(b.decode("utf-8"))
+                    pins2["%s@base" % s] = ("%s@%s" % (L4_BASE, SOURCES[s]), hashlib.sha256(b).hexdigest())
+    for key, rel in list(TARGETS.items()):
+        if key != "panel":
+            b = at_commit(SET28_COMMIT, rel)
+            s28raw[key] = b.decode("utf-8")
+            s28[key] = flat(s28raw[key])
+            pins2["%s@set28" % key] = ("%s@%s" % (SET28_COMMIT, rel), hashlib.sha256(b).hexdigest())
     bad, results = [], []
     seen = set()
+    ids = [e["id"] for e in T]
+    for i in RESTATED:
+        if i not in ids:
+            bad.append("%s: restated but not a row of the table" % i)
     for e in T:
         if e["id"] in seen:
             bad.append("%s: duplicate id" % e["id"])
@@ -305,34 +468,105 @@ def compute():
         for s in e["sources"]:
             if s not in SOURCES:
                 bad.append("%s: unknown source %s" % (e["id"], s))
-        lost = [f for f in e["figures"] if flat(f) not in src_text]
+        rs = RESTATED.get(e["id"])
+        gone = rs["withdrawn"] if rs else []
+        for f in gone:
+            if f not in e["figures"]:
+                bad.append("%s: %r is restated as withdrawn but is not a figure the row cites" % (e["id"], f))
+        lost = [f for f in e["figures"] if f not in gone and flat(f) not in src_text]
         if lost:
             bad.append("%s: figures not printed by %s: %s" % (e["id"], ", ".join(e["sources"]), lost))
+        res = None
+        if rs:
+            base_text = " ".join(base[s] for s in e["sources"] if s in base)
+            unprinted = [f for f in gone if flat(f) not in base_text]
+            if unprinted:
+                bad.append("%s: withdrawn figures not printed by %s at %s: %s" % (e["id"], ", ".join(e["sources"]), L4_BASE, unprinted))
+            cites = []
+            for key, pat in rs["now"]:
+                ms = list(rx(pat).finditer(raw.get(key, "")))
+                if len(ms) != 1:
+                    bad.append("%s: the replacing text is matched %d times (not once) in %s: %r" % (e["id"], len(ms), SOURCES.get(key, key), pat[:60]))
+                    continue
+                txt = flat(ms[0].group(0))
+                cites.append(dict(key=key, file=SOURCES[key], line=line_of(raw[key], ms[0].start()), text=txt, figures=figures_in(txt)))
+            tg = e["target"]
+            tchecks = []
+            if tg in s28:
+                m0 = words(e["text"]).search(s28raw[tg])
+                written_at_28 = (TARGETS[tg], line_of(s28raw[tg], m0.start())) if m0 else None
+            else:
+                written_at_28 = None
+            for kind, key, pat in rs["target"]:
+                ms = list(rx(pat).finditer(s28raw.get(key, "")))
+                if not ms:
+                    bad.append("%s: the %s text is not in %s at %s: %r" % (e["id"], kind, TARGETS.get(key, key), SET28_COMMIT, pat[:60]))
+                    continue
+                tchecks.append(dict(kind=kind, file=TARGETS[key], line=line_of(s28raw[key], ms[0].start()), text=flat(ms[0].group(0)),
+                                    count=len(ms)))
+            restated = any(c["kind"] == "restated" for c in tchecks)
+            state = ("RESTATED IN PLACE" if restated and not written_at_28 else "SUPERSEDED IN PLACE" if restated else "NOT RESTATED")
+            stale = [c for c in tchecks if c["kind"] == "stale"]
+            if (state == "NOT RESTATED" or stale) and not rs["finding"]:
+                bad.append("%s: a withdrawn text is still in a target at %s and no finding names it" % (e["id"], SET28_COMMIT))
+            if not cites or not any(c["figures"] for c in cites):
+                bad.append("%s: restated with no parsed figure" % e["id"])
+            res = dict(rs, cites=cites, written_at_28=written_at_28, tchecks=tchecks, state=state)
+        eff = dict(e)
+        if res:
+            eff.update(mark=res["mark"], trigger=res["trigger"], where_now=res["where"])
         for c in e["criteria"]:
             if c not in CRITERIA:
                 bad.append("%s: criterion %s is not a Layer 5 criterion this pass moves" % (e["id"], c))
-        if "PROVISIONAL" in e["mark"] and not e["trigger"].strip():
+        if "PROVISIONAL" in eff["mark"] and not eff["trigger"].strip():
             bad.append("%s: PROVISIONAL with no trigger" % e["id"])
-        if chr(0x2014) in e["text"] + e["trigger"] + e["mark"] or chr(0x2013) in e["text"] + e["trigger"] + e["mark"]:
-            bad.append("%s: a dash character" % e["id"])
-        results.append(dict(e, ok_text=ok_text, lost=lost))
+        for s in (e["text"], e["trigger"], e["mark"], eff["trigger"], eff["mark"]) + ((res["why"], res["value"], res["where"]) if res else ()):
+            if chr(0x2014) in s or chr(0x2013) in s:
+                bad.append("%s: a dash character" % e["id"])
+                break
+        results.append(dict(eff, ok_text=ok_text, lost=lost, restated=res, was=dict(mark=e["mark"], trigger=e["trigger"], where=e["where"])))
     if bad:
         for b in bad:
             sys.stderr.write("l5pwr_contracts: %s\n" % b)
         sys.exit(3)
     by_crit = {c: [e["id"] for e in T if c in e["criteria"]] for c in CRITERIA}
-    prov = [(e["id"], e["contract"], e["trigger"]) for e in T if "PROVISIONAL" in e["mark"]]
+    prov = [(e["id"], e["contract"], e["trigger"], bool(e["restated"])) for e in results if "PROVISIONAL" in e["mark"]]
     nfig = sum(len(e["figures"]) for e in T)
-    return dict(pins=pins, rows=results, by_crit=by_crit, prov=prov, nfig=nfig)
+    ngone = sum(len(r["withdrawn"]) for r in RESTATED.values())
+    return dict(pins=pins, pins2=pins2, rows=results, by_crit=by_crit, prov=prov, nfig=nfig, ngone=ngone)
 
 
 def md_rows(R):
     out = ["| id | contract | field | text written (excerpt, verbatim in the target) | L4 source row (file; where) | mark | invalidation trigger | criterion (5.x) it moves |",
            "|---|---|---|---|---|---|---|---|"]
     for e in R["rows"]:
-        src = "; ".join(os.path.basename({**TARGETS, **SOURCES}[s]) for s in e["sources"]) + "; " + e["where"]
+        r = e["restated"]
+        keys = list(e["sources"]) + ([k for k, _p in r["now"] if k not in e["sources"]] if r else [])
+        files = "; ".join(dict.fromkeys(os.path.basename({**TARGETS, **SOURCES}[s]) for s in keys))
+        src = files + "; " + (r["where"] + " (restated at set 28, F-12, section 4a; as written: " + e["was"]["where"] + ")" if r else e["where"])
         out.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (e["id"], e["contract"], e["field"], e["text"].replace("|", "/"), src,
                                                                 e["mark"], e["trigger"], ", ".join(e["criteria"])))
+    return out
+
+
+def md_restated(R):
+    out = ["| id | cited at `%s`, no longer standing | why (set 27's Layer 4 change) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`%s`) |" % (L4_BASE, SET28_COMMIT),
+           "|---|---|---|---|---|---|"]
+    for e in R["rows"]:
+        r = e["restated"]
+        if not r:
+            continue
+        now = "; ".join('%s: "%s"' % (os.path.basename(c["file"]), c["text"]) for c in r["cites"])
+        tg = [r["state"] + (" (record l5r2)" if r["state"] != "NOT RESTATED" else "")]
+        if r["written_at_28"]:
+            tg.append("the text written still at %s:%d" % (os.path.basename(r["written_at_28"][0]), r["written_at_28"][1]))
+        for c in r["tchecks"]:
+            tg.append('%s %s:%d: "%s"' % ("restated" if c["kind"] == "restated" else "withdrawn text still at", os.path.basename(c["file"]),
+                                        c["line"], c["text"]))
+        if r["finding"]:
+            tg.append("finding %s" % r["finding"])
+        out.append("| %s | %s | %s | %s | %s | %s |" % (e["id"], ", ".join(r["withdrawn"]), r["why"], now.replace("|", "/"), r["value"],
+                                                        "; ".join(tg).replace("|", "/")))
     return out
 
 
@@ -342,38 +576,76 @@ def render(R):
     p("L5-PWR: LAYER 5'S POWER PASS, READ BACK (MESHSAT-1357, set 27, 3 October 2026). Prototype design: nothing built, powered or")
     p("measured; this is a check of the contracts' text against the Layer 4 records' text. Marks: MAKER (a maker's printed row),")
     p("INFERRED, MODELED, PROVISIONAL (an open condition, its trigger named), RULE (a session rule), TEST (a bench row), NETLIST;")
-    p("DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet.")
+    p("DRAFTED (R-nn): true of a release-guarded Layer 4 draft that no generator carries yet. Restated at set 28 (finding F-12):")
+    p("the rows whose cited figures set 27's Layer 4 corrections changed, against the tree's Layer 4 records (section 1a).")
     p("")
     p("0. INPUTS (sha256; the targets as written at %s, read from this branch's history, and the sources read from the tree)" % L5PWR_COMMIT)
     for key in list(TARGETS) + list(SOURCES):
         rel, h = R["pins"][key]
         p("   %-10s %s  %s" % (key, h, rel))
+    p("   read at a commit for set 28's restatement (F-12): the restated rows' sources as this pass read them (%s) and the targets as" % L4_BASE)
+    p("   set 28 carries them (%s), both from this branch's history" % SET28_COMMIT)
+    for key in sorted(R["pins2"]):
+        rel, h = R["pins2"][key]
+        p("   %-13s %s  %s" % (key, h, rel))
     p("")
-    p("1. THE TABLE (%d entries, %d figures; every excerpt found in its target, every figure printed by a cited source)" % (len(R["rows"]), R["nfig"]))
+    p("1. THE TABLE AS WRITTEN (%d entries, %d figures; every excerpt found in its target, every figure printed by a cited source but"
+      % (len(R["rows"]), R["nfig"]))
+    p("   the %d that no longer stand, which section 1a restates and checks as printed by their sources at %s)" % (R["ngone"], L4_BASE))
     for e in R["rows"]:
         p("   %s | %s | %s | target %s" % (e["id"], e["contract"], e["field"], TARGETS[e["target"]]))
         p("      text: %s" % e["text"])
-        p("      source: %s; %s" % (", ".join(SOURCES[s] for s in e["sources"]), e["where"]))
+        p("      source: %s; %s" % (", ".join(SOURCES[s] for s in e["sources"]), e["was"]["where"]))
         p("      figures: %s" % (", ".join(e["figures"]) if e["figures"] else "none (a rule or a state, not a figure)"))
-        p("      mark: %s" % e["mark"])
-        p("      trigger: %s" % e["trigger"])
+        p("      mark: %s" % e["was"]["mark"])
+        p("      trigger: %s" % e["was"]["trigger"])
         p("      criteria: %s" % ", ".join(e["criteria"]))
+        if e["restated"]:
+            p("      RESTATED AT SET 28 (F-12): section 1a")
+    p("")
+    rows = [e for e in R["rows"] if e["restated"]]
+    p("1a. RESTATED AT SET 28 (finding F-12; authority SESSION): %d rows whose cited figures set 27's Layer 4 corrections changed" % len(rows))
+    for e in rows:
+        r = e["restated"]
+        p("   %s | %s | %s" % (e["id"], e["contract"], e["field"]))
+        p("      no longer standing (printed by %s at %s): %s" % (", ".join(e["sources"]), L4_BASE, ", ".join(r["withdrawn"])))
+        p("      why: %s" % r["why"])
+        p("      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):")
+        for c in r["cites"]:
+            p('         %s:%d: "%s"' % (c["file"], c["line"], c["text"]))
+        p("      figures in the replacing text (parsed): %s" % ", ".join(dict.fromkeys(f for c in r["cites"] for f in c["figures"])))
+        p("      contract value: %s" % r["value"])
+        p("      mark now: %s" % r["mark"])
+        p("      trigger now: %s" % r["trigger"])
+        p("      where now: %s" % r["where"])
+        p("      the target at %s: %s%s" % (SET28_COMMIT, r["state"], " (record l5r2)" if r["state"] != "NOT RESTATED" else ""))
+        if r["written_at_28"]:
+            p("         %s:%d: the text written" % r["written_at_28"])
+        for c in r["tchecks"]:
+            p('         %s:%d: %s: "%s"' % (c["file"], c["line"], "restated" if c["kind"] == "restated" else "withdrawn text still there", c["text"]))
+        if r["finding"]:
+            p("      finding: %s (L5-POWER-CONTRACTS.md section 9)" % r["finding"])
     p("")
     p("2. THE LAYER 5 CRITERIA THIS PASS MOVES (Layer 5's reading; the handover page's status is the integrator's to set)")
     for c in sorted(CRITERIA, key=lambda x: float(x)):
         p("   %s %s: %d entries (%s)" % (c, CRITERIA[c], len(R["by_crit"][c]), ", ".join(R["by_crit"][c])))
         p("      %s" % CRITERIA_STATE[c])
     p("")
-    p("3. THE PROVISIONAL ENTRIES AND THEIR INVALIDATION TRIGGERS (%d)" % len(R["prov"]))
-    for i, c, t in R["prov"]:
-        p("   %s (%s): %s" % (i, c, t))
+    p("3. THE PROVISIONAL ENTRIES AND THEIR INVALIDATION TRIGGERS (%d; a restated row's trigger as restated at set 28)" % len(R["prov"]))
+    for i, c, t, rs in R["prov"]:
+        p("   %s (%s)%s: %s" % (i, c, " [restated, F-12]" if rs else "", t))
     p("")
-    p("4. THE TABLE AS MARKDOWN (L5-POWER-CONTRACTS.md carries these lines)")
+    p("4. THE TABLE AS MARKDOWN (L5-POWER-CONTRACTS.md carries these lines; a restated row's mark and trigger as restated)")
     for ln in md_rows(R):
         p("   " + ln)
     p("")
-    p("5. RESULT: every excerpt is in its target and every figure is printed by a cited Layer 4 source. check_contracts.py is a")
-    p("   netlist reader and reads none of these files: its reading is unchanged by this pass (L5-POWER-CONTRACTS.md section 5).")
+    p("4a. THE RESTATEMENT AS MARKDOWN (L5-POWER-CONTRACTS.md section 4a carries these lines)")
+    for ln in md_restated(R):
+        p("   " + ln)
+    p("")
+    p("5. RESULT: every excerpt is in its target and every figure is printed by a cited Layer 4 source, but the figures restated at")
+    p("   set 28, which their sources printed at %s; every replacing text is matched once in the tree's Layer 4 records. check_contracts.py" % L4_BASE)
+    p("   is a netlist reader and reads none of these files: its reading is unchanged by this pass (L5-POWER-CONTRACTS.md section 5).")
     return "\n".join(L) + "\n"
 
 

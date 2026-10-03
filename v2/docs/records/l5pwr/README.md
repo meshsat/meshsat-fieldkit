@@ -16,9 +16,21 @@ no generator is edited.
 | `l5pwr_contracts.out` | Its output, committed; section 4 is the page's table, byte for byte |
 | `apply_l5pwr.py` | The patch script that wrote the three targets, run once on the tree by the Layer 5 author (who owns them) and kept as the exact statement of the change: `apply_l5pwr.py <target> --check` on the tree now refuses "already applied"; on the files as committed at `2c240414` (the contract after `../l4e5/apply_fw_a16.py`) it checks OK. It asserts after patching that every anchor of `../l4e11/apply_pcb_interfaces_dock.py` still occurs once, so that draft applies unchanged when the generator drafts apply |
 | `apply_conops_l5pwr.py` | DRAFT for the CONOPS owner, not applied by Layer 5 (CONOPS.md is not in its brief): the margin hold as a mode (LH-11, R-138) and the source-only statement (R-133) at the end of CONOPS 4c; the owner who applies it rebinds the registry's and L4-E12's readings of CONOPS.md afterwards |
+| `apply_l5pwr2_contracts.py` | Set 28 (decision 9 of the page): the integrator's script that restates the six contract texts of findings L5-F09 and L5-F10 (`pcb_interfaces.yaml` IF-AE-DOCK `pin1_vsys_dock`'s hard short and fan stagger, IF-EXT-DC's guard `protection` and `bench`; `HW-FW-CONTRACT.md` section 4.1's R-173 row and V-E16's rows 2 and 3) to the Layer 4 text that replaced them, every figure parsed from L4-E9's page, the register and L4-E11's output; idempotent (`--check` on the tree reads "already applied"); applied on `fnd/l5pwr2` |
+| `apply_l5f11_contracts.py` | Set 28 (decision 10 of the page): the integrator's script after `apply_l5pwr2_contracts.py` (it refuses before it): finding L5-F11 and the sweep's rows restated the same way (IF-AE-DOCK `pin1_vsys_dock` to L4-E11 18b and R-177, `FAN1_SW_FAN2_SW.start` to E11-39, IF-EXT-DC `l4_defects` to L4-E9 8a, FW-E11's verification and V-E11 to R-188, section 4.1's R-177 row, HF-F05 answered, a change-record row); idempotent; applied on `fnd/l5pwr2` |
 | `../../../ecad/tools/tests/test_l5pwr.py` | The test: the output reproduced, every excerpt in its target and every figure in a source, the marks and triggers well formed, the pins map equal to the committed netlists', the drafted pin 1 its own field, the eleven power lines present, the new rows with their tables' cell counts and unique ids, PANEL.md's sentence, the page's table equal to the script's, the apply scripts refusing a second run and applying once to the base, no dash in the record |
 
 **Since Layer 5's second round (record `../l5r2/`, 3 October 2026)** the reader reads the three targets as this pass committed them (`L5PWR_COMMIT = 1e18a1ca`, in this branch's own history) and the Layer 4 sources from the tree: the second round restated some of this pass's texts in place (FW-E11, the fans' start rule, the SLOT_EN line), and a reader of the current tree would refuse the day its subject moved on. `test_l5pwr.py` compares the apply script's result with that commit's files for the same reason.
+
+**Since set 28 (finding F-12 of `../int28b/RESULT.md`, 3 October 2026)** the reader restates six rows whose cited figures set 27's
+Layer 4 corrections changed (L4-E7's round 5: the solar guard's reference loop withdrawn as a passing floor; L4-E11's section 18:
+the mixer fans on U22's regulated rail, the hard short's figure a test target): S27-B6, S27-01, S27-02a, S27-02b, S27-03 and
+SEQ-08. The table keeps the text written; `RESTATED` in the script names the figures that no longer stand (checked as printed by
+the row's sources at `L4_BASE = 2c240414`, the pass's base, in this branch's history), the Layer 4 text that replaced them (a
+pattern with no typed number, matched once in the tree's source; its figures parsed from the match), the restated mark, trigger
+and where, the contract value that changes, and the targets as set 28 carries them (`SET28_COMMIT = 5515ecc0`, read from this
+branch's history): restated in place by record l5r2 or a withdrawn text still there (findings L5-F09 and L5-F10 of the page).
+Output section 1a and the page's section 4a carry it. No target and no Layer 4 record is edited.
 
 ## Run order (what was run, in this order, on 3 October 2026)
 
