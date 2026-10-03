@@ -93,7 +93,7 @@ PINS = {
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "93ed5eaf0fa8116379963b952e9f26455b564f521790297c24005a743598ff68"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8bb83aacbd4c0fc752339669835b34907a91f2f396095ef23066baeb2a738e9c"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -103,10 +103,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3cc8ab673ba49c8a3e68b99d71a7b78fe950640b3469ae43fc7c776c68c324b0"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "0f70d9eeb473cf4d7508dc47b6b1ac9e51627f8bd4e31805a0f8f9898f198b31"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "241131c17cf5e1f204243cfd2e079ced51b2f48d69c26ee1ed50f2b810ac8456"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "2979856fdac67e50ce633cc7ff84daab93b5de7d4b819f132c127fa97101966b"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
