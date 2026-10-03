@@ -136,12 +136,14 @@ def main(argv):
             if gone:
                 refuse("%s: %s lost section(s) %s" % (rid, f, gone))
             same_all = [k for k in sn if k in so and so[k] == sn[k]]
+            name = lambda k: "the head" if k == "head" else ("the pictures section" if not k[:1].isdigit() else k)
+            diff_txt = (("section %s differs" % differ[0]) if len(differ) == 1 else ("sections %s differ" % ", ".join(differ))) if differ else "no section differs"
             note = ("%s re-read at the set 28 integration of 3 October 2026 (MESHSAT-1357; %s; the file before at %s, the content of "
-                    "%s). Of its sections (the head and the numbered sections) %s differ%s and %s are byte-identical. This reading "
+                    "%s). Of its sections, %s%s, and %s are byte-identical. This reading "
                     "rests on %s: %s; so the ground it was decided on is unchanged. This entry rebinds the file and re-decides "
                     "nothing: the result stands as set, bound to the file at %s."
-                    % (f, ROUND, old16, ocommit, ", ".join(differ) or "none", ("; added: %s" % ", ".join(added)) if added else "",
-                       ", ".join(same_all), rests,
+                    % (f, ROUND, old16, ocommit, diff_txt, (", section %s is added" % ", ".join(added)) if added else "",
+                       ", ".join(name(k) for k in same_all), rests,
                        "; ".join(["%s byte-identical" % ("the head" if s == "head" else "section " + s) for s in same]
                                  + ["section %s changed only in its PI button lines (SW_PI, the PI button, PI_BTN_n, PIJ2, SPARE1: "
                                     "drafted by record l8r2 at 29ffb518)" % s for s in pi_secs]),

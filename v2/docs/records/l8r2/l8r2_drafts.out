@@ -6,12 +6,12 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
-6888362e4a3295d0 v2/ecad/tools/lcsc_fill.py
-dcd4f972d9e3cfc0 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+eb1f5e9f5e1ca9ae v2/ecad/tools/lcsc_fill.py
+677e7833de68f90f v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-942d562edd128759 v2/docs/ASSEMBLY.md
-9ec50ccfae3b70a0 v2/ecad/tools/pcb_interfaces.yaml
+29dbe3a0c4938274 v2/docs/ASSEMBLY.md
+4784a61af0840534 v2/ecad/tools/pcb_interfaces.yaml
 863eda98cbb08535 v2/vendor/power/ti-tps61089-boost.pdf
 66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
 6e610db955ed8763 v2/vendor/power/littelfuse-smcj-series-tvs.pdf
@@ -28,7 +28,7 @@ c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
 28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
 2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
 6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-b396d028b41e880d v2/docs/PANEL.md
+9fd2b4e3c6edf86e v2/docs/PANEL.md
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 9b5cc24c3c9e286a v2/vendor/ti/ti-pca9555.pdf
 528fee9c7a3ebd46 v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py
