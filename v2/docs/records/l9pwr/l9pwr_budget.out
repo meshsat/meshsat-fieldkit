@@ -1,0 +1,1615 @@
+L9PWR (MESHSAT-1357): LAYER 9 ITEM 9.1, THE POWER BUDGET ON THE CURRENT DESIGN, WITH MARGINS AND SENSITIVITIES. Prototype design,
+desk arithmetic: nothing built, powered or measured; no figure is a measurement. RV is record rv-pwr's model as committed (the boards as
+generated at 1f614233); DRAWN the generators in this tree; DRAFTED is DRAWN plus the release-guarded drafts of Layers 4 and 8 that move a
+power figure, none applied. Tiers as rv-pwr's: S a primary document gives PLAN; R a document bounds the load and PLAN sits inside it by a
+stated duty; D a generator declares it; T a placeholder. LOW, PLAN and HIGH are rv-pwr's three values per load; HIGH puts every load at
+its maximum at once (an upper bound, not a scenario). Watts at the pack side are rv-pwr's battery W (VBAT plus the pack path's I2R at 14.4 V).
+
+0. INPUTS (sha256/16)
+   rvpwr      v2/docs/records/rv-pwr/pwr_budget.py  sha256 469d0820b046ef6f
+   rvpwr_out  v2/docs/records/rv-pwr/pwr_budget.out  sha256 58e40cf604804cc9
+   hc2        v2/docs/records/hc2/pwr_red2.py  sha256 5790bc7e444bebc4
+   gen_a      v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
+   gen_b      v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
+   gen_e      v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
+   pack       v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
+   l4e9       v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 a760101cde41633a
+   l4e11_out  v2/docs/records/l4e11/l4e11_power.out  sha256 302a0e2c0583ffcd
+   l4e11_aux  v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 715eb965d4527d35
+   l4e11_chg  v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 d857a70256d1c77e
+   l4e12_out  v2/docs/records/l4e12/l4e12_thermal.out  sha256 d88aabc2671fbfd0
+   review     v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md  sha256 1f8508302012673f
+   l7_out     v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 66503e07c6c43e63
+   l8r2_out   v2/docs/records/l8r2/l8r2_drafts.out  sha256 b1e9cc72dee0463c
+   l8r2_fans  v2/docs/records/l8r2/apply_gen_sch_b_fans12.py  sha256 4f954d457423d8d8
+   l8r2_pnl   v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py  sha256 3d2750a188913fef
+   l8gnd_out  v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 1957f75ba38e314d
+   ap64500    v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
+   ap632      v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
+   tps62933   v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
+   ap2112     v2/vendor/diodes/diodes-ap2112-ldo.pdf  sha256 ef8d376f2ec356e2
+   tlv755     v2/vendor/power/ti-tlv755p-ldo.pdf  sha256 7eb7bc6935bf6c1d
+   lm5176     v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
+   reqs       v2/ecad/tools/pcb_requirements.yaml  sha256 6e9458783e8cf887
+   rules      v2/ecad/tools/pcb_rules.yaml  sha256 14ea032a7fdd86ac
+
+1. WHAT DIFFERS FROM RV-PWR'S MODEL, AND HOW THIS BUDGET TAKES IT (applied in this order; section 4 prints each step's effect)
+   R0  RV       rv-pwr as committed: the boards as generated at 1f614233 (R_DIST 22.5 mOhm, AP64500 curves on every 5.1 V rail, board D on +5V_DEV, the representative fans)
+   M1  ON MAIN  slot 2 and the device rail are LM5176 stages since 458b2873 (F-PR-04): their 5.1 V output is NOT PLOTTED, so the generator's declared efficiency replaces rv-pwr's AP64500 curve (rv-pwr's own rule for an unplotted point)
+   M2  ON MAIN  slot 2's card buck is set to 3.456 V (O-17, gen_sch_b.py): the 5G module's watts unchanged, its buck's output current lower
+   M3  ON MAIN  board D's 5 V comes from its own TPS62933 U41 on VBAT since S-99 (gen_sch_a.py +5V_D8IN), no longer through +5V_DEV
+   M4  ON MAIN  EMCON removes both WiFi link cards' supplies since 458b2873 (record hc2's EMCON_MAIN)
+   M5  ON MAIN  board A's 5 mOhm RSR shunt R17 is in the pack's discharge path since 458b2873 (S-04); the heater mat is regulated to 12.0 V by U33 since 458b2873 (F-PR-06, the cold overlay only)
+   D1  DRAFTED  L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied)
+   D2  DRAFTED  L4-E11 15a: board E's auxiliary domain (U12, the controller, the mixers) on VSYS_E over the dock's pin 1 behind the eFuse U42 (apply_gen_sch_e_aux.py, not applied)
+   D3  DRAFTED  L4-E11 18a with Layer 7's D-18: the two mixers are Sanyo Denki 9WL0612P4H001 on U22's 12.0 V rail (LTC3115-1, 0.85 assumed, 16 mA quiescent) (apply_gen_sch_e_aux.py, not applied)
+   D4  DRAFTED  l8r2 item 1 with Layer 7's D-18: the three coolers are Sanyo Denki 9WPA0412P6G001 on a per-slot TPS61089 step-up from +5V_Sn (0.85 assumed) (apply_gen_sch_b_fans12.py, not applied)
+   D5  DRAFTED  l8r2 item 3: PANEL_5V behind the eFuse U901 (TPS259631), its RON in series with the panel (apply_gen_sch_b_panel5v.py, not applied)
+   the figures each step reads (parsed from the pinned files):
+     M1 LM5176 stages: S2 U5, DEV U7 (gen_sch_a.py lm5176 calls); declared efficiency 0.90 and 0.90; ISNS 6 and 6 mOhm at +1 %; VSNS 43 / 50 / 57 mV (SNVSAI1D)
+     M2 +3V3_S2A at 3.456 V (gen_sch_b.py)
+     M3 +5V_D8IN: 5.0 V from U41 at the declared 0.90 (gen_sch_a.py); board D's row keeps rv-pwr's figures (D)
+     M4 EMCON's overrides from record hc2 (pwr_red2.py, EMCON_MAIN): WiFi link card 1 (live), WiFi link card 2 (standby)
+     M5 R17 5.0 mOhm (rv-pwr's R_R17); VHEAT 12.0 V from U33 at 0.90, the mat 7.50 W at 12 V (rv-pwr's R_HEAT, the mat's sheet)
+     D1 BUK6Y10-30P: 10 mOhm at -10 V and 25 C printed, gate factor 1.4091 at 8.5 V, 21.136 mOhm per FET at the 150 C bound (L4-E11 15c): the pair 10.568 mOhm
+     D2 VSYS_E: the draft declares 1.32 A (apply_gen_sch_e_aux.py); L4-E11 18b: 0.1795 V at 1.3208 A, so 0.1359 Ohm in the branch; U42's least limit 1.4713 A
+     D3 the mixer 9WL0612P4H001 (Layer 7): 12 V, 10.8 to 13.2 V, 0.17 A, 2.04 W each at full speed; U22 out 12.001 V (11.512 to 12.431), the draft's efficiency 0.85, 16 mA quiescent; G12 about 1.2 A at 12 V out near 9.5 V in
+     D4 the cooler 9WPA0412P6G001 (Layer 7): 12 V, 10.8 to 13.2 V, 0.17 A, 2.0 W at full speed; the step-up's efficiency 0.85 (low 0.80), its eFuse 0.448 / 0.494 / 0.538 A (l8r2); the draft's 12 V rail 12.0 V, 0.17 A typical, 0.54 A peak
+     D5 U901: RON at most 0.1434 Ohm, limit 1.375 / 1.506 / 1.614 A (l8r2)
+   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S);
+     LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same
+     PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would
+     replace an unset duty by its maximum and hide the duty's effect inside the headline instead of showing it as a sensitivity
+   the pack path (ohms): RV 0.0225 (rv-pwr's R_DIST 0.0225); DRAWN 0.0275 (rv-pwr's R_DIST 0.0225, board A's R17, 5 mOhm 0.0050); DRAFTED 0.0381 (rv-pwr's R_DIST 0.0225, board A's R17, 5 mOhm 0.0050, Q39 and Q40, BUK6Y10-30P in parallel at L4-E11's 150 C bound 21.136 mOhm each 0.0106)
+   NOT MODELLED, each with its reason:
+     l8gnd (GND-002 and the HOT-R1 SLOT_EN hold): ground bonding and a logic hold: no load and no converter; nothing for the budget
+     l8r2 item 2 (the VBUS20 over-voltage cut-off) and item 4 (J_QMX and J_CAM on the JST PH land): the charge path's protection and a connector land: no battery-side load
+     l8r2's board D 3.3 V eFuse (apply_gen_sch_a_d8v3.py): a TPS259631 in series with board D's 0.06 A logic: under a milliwatt
+     L4-E4, L4-E5, L4-E6, L4-E7, L4-E8, L4-E13 (the front end's limits, the source control, the fault handling, the solar stage, the VBUS20 bank, the panel): the source and charge path, not the battery-side loads; L4-E8's ballasts enter the charging balance (section 8, B4) as L4-E12 counts them
+     L4-E9's U17 on R227 (the PoE stage's sense): 5 mOhm in the PoE stage's input, which is off in every state; 1.8 mW at the outlet's 0.6 A, under the model's rounding
+     L4-E10 (the cell and its thermal design) and L4-E12 (the electronics' thermal): the pack model and the heat: this record's pack-side watts are their input, not the other way round
+     the rails' INA226 shunts (5 and 6 mOhm on the slot, device, PA and HF rails): not in rv-pwr's tree; their I2R is bounded in section 5 per state from the rails' own currents
+     the BQ25730's own quiescent draw on battery: no figure read in this record; a charger's battery-only quiescent is milliwatts against the states' tens of watts
+     the USB-C outlet's tablet budget (an 18 W cap, a proposal) and source-only operation: an outlet overlay and a source-side question (L4-E11 section 3); the system-node demand per state is printed for it in section 3
+
+2. THE MODEL CHECK: this script's evaluator on rv-pwr's own tree against rv-pwr's functions (state_full), every state and scenario and record
+   hc2's three states: largest difference 2.8e-14 W (within 1e-9 W)
+   rv-pwr's committed output (pwr_budget.out, its first table at 0.1 W) against this evaluator rounded the same way: equal on all eight states
+
+3. PACK-SIDE TOTALS PER STATE (W): LOW / PLAN / HIGH for RV, DRAWN and DRAFTED; at VBAT (the system node, PLAN); the pack current at 14.4 V
+   (PLAN, DRAFTED); DRAFTED's PLAN by tier S / R / D / T at the pack side, and the share of it on DRAFTED rows
+   state                        RV                        DRAWN                     DRAFTED                       VBAT   I14.4 tiers S / R / D / T, drafted
+   PS-IDLE                        30.94 /  39.73 /  81.67   31.21 /  40.21 /  81.91   31.81 /  41.09 /  90.75    40.78   2.854  17.0 / 12.3 /  6.5 /  5.3, 5.62
+   PS-IDLE-SPEC                   33.07 /  42.82 /  82.77   33.34 /  43.30 /  83.01   33.96 /  44.20 /  91.87    43.85   3.070  17.0 / 12.3 /  6.5 /  8.4, 5.63
+   PS-TYP                         46.94 /  62.96 / 120.58   47.74 /  63.84 / 121.37   48.46 /  64.91 / 130.91    64.13   4.507  22.5 / 22.1 /  8.5 / 11.9, 7.37
+   PS-BUSY                        54.64 /  92.01 / 134.40   55.72 /  93.09 / 135.18   56.49 /  94.42 / 145.00    92.78   6.557  19.8 / 27.5 / 35.2 / 11.9, 7.41
+   PS-RED (slot 3 alone)          12.66 /  22.21 /  45.86   12.82 /  22.61 /  45.94   13.24 /  23.24 /  50.26    23.14   1.614  10.9 /  6.1 /  6.2 /  0.0, 4.28
+   PS-RED-b                       26.91 /  35.70 /  71.50   27.18 /  36.16 /  71.70   27.77 /  37.04 /  80.43    36.78   2.572  17.0 / 12.3 /  6.5 /  1.3, 5.62
+   PS-EMCON                       37.33 /  53.06 / 103.27   37.85 /  47.78 /  81.04   38.52 /  48.75 /  89.79    48.31   3.385  21.3 / 12.0 /  8.2 /  7.2, 7.35
+   PS-ALLTX                      168.93 / 203.82 / 272.03  170.87 / 205.65 / 274.29  173.20 / 209.01 / 287.91   200.99  14.514  62.3 /100.6 / 41.9 /  4.2, 9.99
+   PS-RED2 (slots 2 and 3)        17.62 /  31.38 /  55.56   17.86 /  31.98 /  55.80   18.36 /  32.74 /  62.23    32.55   2.274  11.0 /  6.5 /  6.2 /  0.0, 4.96
+   PS-SURV (slot 2 alone)         12.45 /  21.73 /  42.00   12.66 /  22.29 /  42.26   13.08 /  22.92 /  46.66    22.83   1.592   4.1 /  5.1 /  5.8 /  0.0, 4.29
+   PS-SURV-R (the heat stage)     12.78 /  23.27 /  46.94   12.94 /  23.68 /  47.03   13.36 /  24.31 /  51.36    24.21   1.689  10.9 /  6.1 /  6.2 /  0.0, 4.28
+
+4. THE WATERFALL: each step of section 1 applied in turn, the pack side at PLAN and (second block) at HIGH, W; the delta of each step
+   PLAN        IDLE  IDLESPEC       TYP      BUSY       RED      REDB     EMCON     ALLTX      RED2      SURV     SURVR
+   R0  RV          39.735    42.824    62.958    92.009    22.205    35.702    53.055   203.821    31.381    21.735    23.272
+   M1  ON MAIN     40.166    43.255    63.730    92.866    22.601    36.132    53.702   204.577    31.959    22.276    23.668
+       delta       +0.431    +0.432    +0.772    +0.857    +0.396    +0.431    +0.647    +0.755    +0.577    +0.542    +0.396
+   M2  ON MAIN     40.166    43.255    63.736    92.874    22.601    36.133    53.702   204.584    31.959    22.276    23.668
+       delta       +0.000    +0.000    +0.006    +0.008    +0.000    +0.000    +0.000    +0.008    +0.000    +0.000    +0.000
+   M3  ON MAIN     40.166    43.255    63.736    92.874    22.601    36.133    53.702   204.584    31.959    22.276    23.668
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000
+   M4  ON MAIN     40.166    43.255    63.736    92.874    22.601    36.133    47.723   204.584    31.959    22.276    23.668
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    -5.979    +0.000    +0.000    +0.000    +0.000
+   M5  ON MAIN     40.205    43.301    63.835    93.087    22.613    36.164    47.779   205.652    31.984    22.288    23.681
+       delta       +0.039    +0.046    +0.100    +0.213    +0.012    +0.032    +0.056    +1.067    +0.025    +0.012    +0.014
+   D1  DRAFTED     40.289    43.398    64.048    93.544    22.640    36.232    47.897   207.984    32.036    22.314    23.710
+       delta       +0.084    +0.097    +0.213    +0.457    +0.026    +0.068    +0.118    +2.333    +0.053    +0.026    +0.029
+   D2  DRAFTED     40.290    43.399    64.049    93.545    22.641    36.233    47.898   207.985    32.037    22.315    23.711
+       delta       +0.001    +0.001    +0.001    +0.001    +0.001    +0.001    +0.001    +0.001    +0.001    +0.001    +0.001
+   D3  DRAFTED     40.787    43.897    64.551    94.052    23.135    36.729    48.396   208.516    32.533    22.809    24.205
+       delta       +0.497    +0.498    +0.502    +0.507    +0.494    +0.497    +0.499    +0.530    +0.496    +0.494    +0.494
+   D4  DRAFTED     41.081    44.191    64.850    94.363    23.230    37.023    48.691   208.841    32.730    22.909    24.301
+       delta       +0.294    +0.294    +0.299    +0.311    +0.096    +0.293    +0.294    +0.326    +0.197    +0.101    +0.096
+   D5  DRAFTED     41.095    44.205    64.906    94.420    23.244    37.037    48.747   209.007    32.744    22.923    24.315
+       delta       +0.014    +0.014    +0.056    +0.057    +0.014    +0.014    +0.056    +0.166    +0.014    +0.014    +0.014
+   DRAFTED against RV    +1.360    +1.381    +1.948    +2.411    +1.039    +1.335    -4.308    +5.186    +1.363    +1.189    +1.043
+   HIGH        IDLE  IDLESPEC       TYP      BUSY       RED      REDB     EMCON     ALLTX      RED2      SURV     SURVR
+   R0  RV          81.669    82.765   120.576   134.403    45.856    71.500   103.267   272.026    55.565    42.000    46.944
+   M1  ON MAIN     81.741    82.838   120.995   134.717    45.891    71.572   103.580   272.355    55.729    42.214    46.979
+       delta       +0.072    +0.072    +0.419    +0.314    +0.035    +0.072    +0.313    +0.328    +0.164    +0.214    +0.035
+   M2  ON MAIN     81.741    82.838   121.003   134.724    45.891    71.572   103.580   272.363    55.729    42.214    46.979
+       delta       +0.000    +0.000    +0.008    +0.008    +0.000    +0.000    +0.000    +0.008    +0.000    +0.000    +0.000
+   M3  ON MAIN     81.741    82.838   121.003   134.724    45.891    71.572   103.580   272.363    55.729    42.214    46.979
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000
+   M4  ON MAIN     81.741    82.838   121.003   134.724    45.891    71.572    80.879   272.363    55.729    42.214    46.979
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000   -22.700    +0.000    +0.000    +0.000    +0.000
+   M5  ON MAIN     81.906    83.007   121.367   135.178    45.943    71.698    81.041   274.291    55.805    42.258    47.033
+       delta       +0.165    +0.169    +0.365    +0.454    +0.051    +0.126    +0.161    +1.929    +0.076    +0.043    +0.054
+   D1  DRAFTED     82.259    83.369   122.153   136.158    46.052    71.967    81.386   278.559    55.967    42.350    47.147
+       delta       +0.353    +0.362    +0.786    +0.980    +0.109    +0.269    +0.345    +4.267    +0.162    +0.092    +0.115
+   D2  DRAFTED     82.261    83.371   122.156   136.161    46.054    71.970    81.388   278.561    55.969    42.353    47.150
+       delta       +0.002    +0.002    +0.002    +0.002    +0.002    +0.002    +0.002    +0.003    +0.002    +0.002    +0.002
+   D3  DRAFTED     84.419    85.530   124.347   138.364    48.183    74.119    83.545   280.893    58.106    44.478    49.279
+       delta       +2.158    +2.159    +2.191    +2.203    +2.129    +2.150    +2.157    +2.331    +2.137    +2.126    +2.130
+   D4  DRAFTED     90.594    91.707   130.751   144.834    50.108    80.270    89.632   287.741    62.075    46.504    51.205
+       delta       +6.175    +6.177    +6.405    +6.470    +1.925    +6.150    +6.086    +6.849    +3.970    +2.026    +1.925
+   D5  DRAFTED     90.752    91.866   130.912   144.996    50.264    80.427    89.790   287.912    62.232    46.660    51.361
+       delta       +0.158    +0.158    +0.161    +0.162    +0.156    +0.158    +0.158    +0.171    +0.157    +0.156    +0.156
+   DRAFTED against RV    +9.083    +9.101   +10.336   +10.593    +4.407    +8.927   -13.477   +15.886    +6.667    +4.660    +4.417
+
+5. PER STATE, DRAFTED: every load (LOW / PLAN / HIGH at its pins, its battery-side share at PLAN, tier, status), every rail (output W
+   LOW / PLAN / HIGH, output A PLAN / HIGH, efficiency and loss at PLAN), and each converter against its limit (the current judged at PLAN /
+   HIGH, the limit, the margin at HIGH; an input-side limit is judged at VBAT's 9.688 V floor with every load at HIGH). DRAWN's margins follow
+   where its converters differ. Status: RV rv-pwr's row unchanged, MAIN a change on main since 1f614233, DRAFTED a draft not applied.
+   == PS-IDLE (pack side 31.815 / 41.095 / 90.752 W)
+     load CM5 slot 1                                   S1         2.000   2.000   2.000  pack   2.175  S RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.652  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.449  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.345  S RV
+     load NVMe slot 1                                  S1B        0.900   0.900   1.050  pack   1.139  S RV
+     load CM5 slot 2                                   S2         2.000   2.000   2.000  pack   2.239  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.672  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.463  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.356  S RV
+     load NVMe slot 2                                  S2B        0.900   0.900   1.050  pack   1.173  S RV
+     load CM5 slot 3                                   S3         2.000   2.000   2.000  pack   2.208  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.662  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.456  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.351  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.157  S RV
+     load WiFi link card 1 (live)                      S1A        4.000   4.000   8.000  pack   4.811  R RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.306  T RV
+     load 5G RM520N-GL                                 S2A        0.222   0.222   0.222  pack   0.304  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.070   0.070  pack   0.078  S RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.693  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.336  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.672  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.448  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.336  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.324  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.912  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.753   0.981  pack   0.924  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.285   2.568  pack   0.375  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.244  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.401  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.595  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.573  D RV
+     load Xenarc 709GNK                                MON        4.000   4.000  10.000  pack   4.030  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.835  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.331  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.943  R DRAFTED
+     rail VBAT     root    14.400 V  out  31.629  40.785  89.240 W   2.832  5.312 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out   8.626   8.803  15.575 W   1.726  3.054 A  eta 0.927  loss  0.698 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  1.726 /  3.054 A, margin at HIGH  +1.946 A ( +38.9 %): within
+     rail S2       fixed    5.100 V  out   4.473   4.650   7.080 W   0.912  1.388 A  eta 0.900  loss  0.517 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  0.912 /  1.388 A, margin at HIGH  +5.707 A ( +80.4 %): within
+     rail S3       curve    5.100 V  out   4.202   5.561  16.798 W   1.090  3.294 A  eta 0.913  loss  0.532 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.090 /  3.294 A, margin at HIGH  +1.706 A ( +34.1 %): within
+     rail DEV      fixed    5.100 V  out   5.289  10.533  24.343 W   2.065  4.773 A  eta 0.900  loss  1.170 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.065 /  4.773 A, margin at HIGH  +2.323 A ( +32.7 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail MON      pass    14.400 V  out   4.000   4.000  10.000 W   0.278  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  0.413 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.781   4.009 W   1.146  1.215 A  eta 0.913  loss  0.361 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.146 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.285   2.568 W   0.259  2.335 A  eta 0.850  loss  0.050 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.086 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.830   0.830   3.030 W   0.163  0.594 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   4.000   4.000   8.000 W   1.212  2.424 A  eta 0.904  loss  0.424 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  1.212 /  2.424 A, margin at HIGH  +2.576 A ( +51.5 %): within
+     rail S1B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   0.222   0.222   0.222 W   0.064  0.064 A  eta 0.819  loss  0.049 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.064 /  0.064 A, margin at HIGH  +4.936 A ( +98.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +2.298 A, S2 +6.059 A, S3 +2.058 A, DEV +2.350 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.249 W in all
+   == PS-IDLE-SPEC (pack side 33.957 / 44.205 / 91.866 W)
+     load CM5 slot 1                                   S1         2.000   2.000   2.000  pack   2.176  S RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.653  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.450  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.346  S RV
+     load NVMe slot 1                                  S1B        0.900   0.900   1.050  pack   1.140  S RV
+     load CM5 slot 2                                   S2         2.000   2.000   2.000  pack   2.240  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.672  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.463  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.356  S RV
+     load NVMe slot 2                                  S2B        0.900   0.900   1.050  pack   1.174  S RV
+     load CM5 slot 3                                   S3         2.000   2.000   2.000  pack   2.209  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.663  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.457  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.351  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.158  S RV
+     load WiFi link card 1 (live)                      S1A        4.000   4.000   8.000  pack   4.814  R RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.306  T RV
+     load 5G RM520N-GL                                 S2A        0.222   0.222   0.222  pack   0.304  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.070   0.070  pack   0.078  S RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.694  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.336  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.672  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.448  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.337  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.324  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.914  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.753   0.981  pack   0.924  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.285   2.568  pack   0.376  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.245  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.401  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.595  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.573  D RV
+     load VHF PA 30 W                                  PA         0.100   0.900   0.900  pack   1.070  T RV
+     load Xenarc 709GNK                                MON        6.000   6.000  10.000  pack   6.049  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.836  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.331  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.944  R DRAFTED
+     rail VBAT     root    14.400 V  out  33.745  43.846  90.316 W   3.045  5.376 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out   8.626   8.803  15.575 W   1.726  3.054 A  eta 0.927  loss  0.698 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  1.726 /  3.054 A, margin at HIGH  +1.946 A ( +38.9 %): within
+     rail S2       fixed    5.100 V  out   4.473   4.650   7.080 W   0.912  1.388 A  eta 0.900  loss  0.517 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  0.912 /  1.388 A, margin at HIGH  +5.707 A ( +80.4 %): within
+     rail S3       curve    5.100 V  out   4.202   5.561  16.798 W   1.090  3.294 A  eta 0.913  loss  0.532 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.090 /  3.294 A, margin at HIGH  +1.706 A ( +34.1 %): within
+     rail DEV      fixed    5.100 V  out   5.289  10.533  24.343 W   2.065  4.773 A  eta 0.900  loss  1.170 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.065 /  4.773 A, margin at HIGH  +2.323 A ( +32.7 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail PA       curve   13.800 V  out   0.100   0.900   0.900 W   0.065  0.065 A  eta 0.848  loss  0.161 W  RV
+          limit LM5176 U13, average loop on 6 mOhm            7.096 A (out): judged  0.065 /  0.065 A, margin at HIGH  +7.030 A ( +99.1 %): within
+     rail MON      pass    14.400 V  out   6.000   6.000  10.000 W   0.417  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  0.619 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.781   4.009 W   1.146  1.215 A  eta 0.913  loss  0.361 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.146 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.285   2.568 W   0.259  2.335 A  eta 0.850  loss  0.050 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.086 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.830   0.830   3.030 W   0.163  0.594 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   4.000   4.000   8.000 W   1.212  2.424 A  eta 0.904  loss  0.424 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  1.212 /  2.424 A, margin at HIGH  +2.576 A ( +51.5 %): within
+     rail S1B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   0.222   0.222   0.222 W   0.064  0.064 A  eta 0.819  loss  0.049 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.064 /  0.064 A, margin at HIGH  +4.936 A ( +98.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +2.298 A, S2 +6.059 A, S3 +2.058 A, DEV +2.350 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.249 W in all
+   == PS-TYP (pack side 48.458 / 64.906 / 130.912 W)
+     load CM5 slot 1                                   S1         4.500   4.500   4.500  pack   4.904  S RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.654  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.444  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.346  S RV
+     load NVMe slot 1                                  S1B        0.900   1.200   3.600  pack   1.500  R RV
+     load CM5 slot 2                                   S2         4.500   4.500   4.500  pack   5.060  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.675  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.458  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.357  S RV
+     load NVMe slot 2                                  S2B        0.900   1.200   3.600  pack   1.548  R RV
+     load CM5 slot 3                                   S3         4.500   4.500   4.500  pack   4.923  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.656  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.446  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.348  S RV
+     load NVMe slot 3                                  S3B        0.900   1.200   3.600  pack   1.506  R RV
+     load WiFi link card 1 (live)                      S1A        4.000   6.000   8.000  pack   7.162  R RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.294  T RV
+     load 5G RM520N-GL                                 S2A        0.222   1.500   5.590  pack   1.946  R RV
+     load LimeSDR Mini 2.4                             DEVP       3.000   3.000   4.500  pack   3.374  T RV
+     load RockBLOCK 9704                               DEVP       0.060   0.100   1.400  pack   0.112  R RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.300   3.250  pack   0.337  R RV
+     load camera (part TBD)                            DEVP       0.000   1.000   2.500  pack   1.125  T RV
+     load panel board C                                PNL        3.000   3.000   5.000  pack   3.429  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.337  D RV
+     load board D (SA868 and logic)                    D8IN       0.800   0.800   0.800  pack   0.900  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.450  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.342  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.325  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.921  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.783   0.981  pack   0.965  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.625   2.568  pack   0.827  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.254  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.403  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.602  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.575  D RV
+     load QMX HF                                       HF         0.960   0.960   0.960  pack   1.146  S RV
+     load Xenarc 709GNK                                MON        6.000   6.000  10.000  pack   6.072  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.839  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.332  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.952  R DRAFTED
+     rail VBAT     root    14.400 V  out  48.027  64.133 127.766 W   4.454  7.605 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out  11.126  13.774  20.827 W   2.701  4.084 A  eta 0.929  loss  1.056 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  2.701 /  4.084 A, margin at HIGH  +0.916 A ( +18.3 %): within
+     rail S2       fixed    5.100 V  out   6.973   8.933  18.202 W   1.751  3.569 A  eta 0.900  loss  0.993 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  1.751 /  3.569 A, margin at HIGH  +3.527 A ( +49.7 %): within
+     rail S3       curve    5.100 V  out   6.702   8.384  22.050 W   1.644  4.324 A  eta 0.925  loss  0.679 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.644 /  4.324 A, margin at HIGH  +0.676 A ( +13.5 %): within
+     rail DEV      fixed    5.100 V  out   9.826  16.775  35.863 W   3.289  7.032 A  eta 0.900  loss  1.864 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  3.289 /  7.032 A, margin at HIGH  +0.064 A (  +0.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail HF       curve   12.000 V  out   0.960   0.960   0.960 W   0.080  0.080 A  eta 0.848  loss  0.172 W  RV
+          limit LM5176 U15, average loop on 10 mOhm           4.257 A (out): judged  0.080 /  0.080 A, margin at HIGH  +4.177 A ( +98.1 %): within
+     rail MON      pass    14.400 V  out   6.000   6.000  10.000 W   0.417  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  0.619 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.811   4.009 W   1.155  1.215 A  eta 0.912  loss  0.366 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.155 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.625   2.568 W   0.568  2.335 A  eta 0.850  loss  0.110 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.189 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   3.830   5.100  14.550 W   1.000  2.853 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   4.000   6.000   8.000 W   1.818  2.424 A  eta 0.913  loss  0.572 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  1.818 /  2.424 A, margin at HIGH  +2.576 A ( +51.5 %): within
+     rail S1B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   0.222   1.500   5.590 W   0.434  1.617 A  eta 0.867  loss  0.231 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.434 /  1.617 A, margin at HIGH  +3.383 A ( +67.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.800   0.800   0.800 W   0.160  0.160 A  eta 0.900  loss  0.089 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.160 /  0.160 A, margin at HIGH  +2.840 A ( +94.7 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   3.000   3.000   5.000 W   0.588  0.980 A  eta 0.984  loss  0.050 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.588 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +1.268 A, S2 +3.878 A, S3 +1.028 A, DEV +0.091 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.550 W in all
+   == PS-BUSY (pack side 56.485 / 94.420 / 144.996 W)
+     load CM5 slot 1                                   S1         4.500   8.000   8.000  pack   8.891  D RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.667  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.441  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.353  S RV
+     load NVMe slot 1                                  S1B        2.600   2.600   3.600  pack   3.230  R RV
+     load CM5 slot 2                                   S2         4.500   8.000   8.000  pack   9.046  D RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.678  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.449  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.359  S RV
+     load NVMe slot 2                                  S2B        2.600   2.600   3.600  pack   3.286  R RV
+     load CM5 slot 3                                   S3         4.500   8.000   8.000  pack   8.764  D RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.657  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.435  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.348  S RV
+     load NVMe slot 3                                  S3B        2.600   2.600   3.600  pack   3.183  R RV
+     load WiFi link card 1 (live)                      S1A        4.000   8.000   9.100  pack   9.743  R RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.295  T RV
+     load 5G RM520N-GL                                 S2A        1.500   5.590   5.590  pack   6.943  S RV
+     load LimeSDR Mini 2.4                             DEVP       3.000   3.000   4.500  pack   3.392  T RV
+     load RockBLOCK 9704                               DEVP       0.100   1.400   1.400  pack   1.583  S RV
+     load LoRa E22-900M30S                             DEVP       0.300   3.250   3.250  pack   3.675  S RV
+     load camera (part TBD)                            DEVP       0.000   1.000   2.500  pack   1.131  T RV
+     load panel board C                                PNL        3.000   3.000   5.000  pack   3.448  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.339  D RV
+     load board D (SA868 and logic)                    D8IN       0.800   0.800   0.800  pack   0.905  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.452  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.350  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.327  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.932  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.783   0.981  pack   0.970  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.625   2.568  pack   0.831  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.266  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.405  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.611  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.578  D RV
+     load QMX HF                                       HF         0.960   0.960   0.960  pack   1.152  S RV
+     load Xenarc 709GNK                                MON        6.000   6.000  10.000  pack   6.106  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.844  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.334  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.962  R DRAFTED
+     rail VBAT     root    14.400 V  out  55.899  92.784 141.136 W   6.443  8.401 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out  12.968  20.986  25.550 W   4.115  5.010 A  eta 0.916  loss  1.934 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  4.115 /  5.010 A, margin at HIGH  -0.010 A (  -0.2 %): OVER at HIGH
+     rail S2       fixed    5.100 V  out  10.275  18.360  21.702 W   3.600  4.255 A  eta 0.900  loss  2.040 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  3.600 /  4.255 A, margin at HIGH  +2.841 A ( +40.0 %): within
+     rail S3       curve    5.100 V  out   8.544  13.403  25.550 W   2.628  5.010 A  eta 0.929  loss  1.025 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  2.628 /  5.010 A, margin at HIGH  -0.010 A (  -0.2 %): OVER at HIGH
+     rail DEV      fixed    5.100 V  out  10.096  21.025  35.863 W   4.122  7.032 A  eta 0.900  loss  2.336 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  4.122 /  7.032 A, margin at HIGH  +0.064 A (  +0.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail HF       curve   12.000 V  out   0.960   0.960   0.960 W   0.080  0.080 A  eta 0.848  loss  0.172 W  RV
+          limit LM5176 U15, average loop on 10 mOhm           4.257 A (out): judged  0.080 /  0.080 A, margin at HIGH  +4.177 A ( +98.1 %): within
+     rail MON      pass    14.400 V  out   6.000   6.000  10.000 W   0.417  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  0.619 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.811   4.009 W   1.155  1.215 A  eta 0.912  loss  0.366 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.155 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.625   2.568 W   0.568  2.335 A  eta 0.850  loss  0.110 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.189 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   4.100   9.350  14.550 W   1.833  2.853 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   4.000   8.000   9.100 W   2.424  2.758 A  eta 0.913  loss  0.766 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  2.424 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S1B      curve    3.300 V  out   2.955   2.955   3.990 W   0.895  1.209 A  eta 0.895  loss  0.348 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.895 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   1.500   5.590   5.590 W   1.617  1.617 A  eta 0.910  loss  0.550 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  1.617 /  1.617 A, margin at HIGH  +3.383 A ( +67.7 %): within
+     rail S2B      curve    3.300 V  out   2.955   2.955   3.990 W   0.895  1.209 A  eta 0.895  loss  0.348 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.895 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   2.955   2.955   3.990 W   0.895  1.209 A  eta 0.895  loss  0.348 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.895 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.800   0.800   0.800 W   0.160  0.160 A  eta 0.900  loss  0.089 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.160 /  0.160 A, margin at HIGH  +2.840 A ( +94.7 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   3.000   3.000   5.000 W   0.588  0.980 A  eta 0.984  loss  0.050 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.588 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +0.342 A, S2 +3.192 A, S3 +0.342 A, DEV +0.091 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.656 W in all
+   == PS-RED (slot 3 alone) (pack side 13.244 / 23.244 / 50.264 W)
+     load CM5 slot 3                                   S3         2.000   4.500   4.500  pack   4.917  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.656  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.452  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.347  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.145  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.300   3.250  pack   0.335  R RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.688  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.100   0.100   2.500  pack   0.112  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.670  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.446  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.326  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.322  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.906  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.510   0.981  pack   0.621  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.221   2.568  pack   0.290  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.237  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.058  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.398  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.583  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.571  D RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.833  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.330  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.937  R DRAFTED
+     rail VBAT     root    14.400 V  out  13.212  23.145  49.800 W   1.607  2.964 A  eta 1.000  loss  0.000 W  RV
+     rail S3       curve    5.100 V  out   4.202   6.879   9.309 W   1.349  1.825 A  eta 0.919  loss  0.606 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.349 /  1.825 A, margin at HIGH  +3.175 A ( +63.5 %): within
+     rail DEV      fixed    5.100 V  out   5.089  10.206  27.523 W   2.001  5.397 A  eta 0.900  loss  1.134 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.001 /  5.397 A, margin at HIGH  +1.699 A ( +23.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.538   4.009 W   1.072  1.215 A  eta 0.916  loss  0.323 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.072 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.221   2.568 W   0.201  2.335 A  eta 0.850  loss  0.039 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.067 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.630   0.860   6.210 W   0.169  1.218 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S3 +3.526 A, DEV +1.726 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.191 W in all
+   == PS-RED-b (pack side 27.770 / 37.037 / 80.427 W)
+     load CM5 slot 1                                   S1         2.000   2.000   2.000  pack   2.173  S RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.652  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.449  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.345  S RV
+     load NVMe slot 1                                  S1B        0.900   0.900   1.050  pack   1.139  S RV
+     load CM5 slot 2                                   S2         2.000   2.000   2.000  pack   2.237  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.671  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.462  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.355  S RV
+     load NVMe slot 2                                  S2B        0.900   0.900   1.050  pack   1.172  S RV
+     load CM5 slot 3                                   S3         2.000   2.000   2.000  pack   2.206  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.662  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.456  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.350  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.156  S RV
+     load WiFi link card 1 (live)                      S1A        4.000   4.000   8.000  pack   4.807  R RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.305  T RV
+     load 5G RM520N-GL                                 S2A        0.222   0.222   0.222  pack   0.303  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.070   0.070  pack   0.078  S RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.692  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.336  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.671  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.447  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.335  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.324  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.911  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.753   0.981  pack   0.923  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.285   2.568  pack   0.375  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.242  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.401  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.593  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.572  D RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.835  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.331  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.942  R DRAFTED
+     rail VBAT     root    14.400 V  out  27.629  36.785  79.240 W   2.554  4.717 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out   8.626   8.803  15.575 W   1.726  3.054 A  eta 0.927  loss  0.698 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  1.726 /  3.054 A, margin at HIGH  +1.946 A ( +38.9 %): within
+     rail S2       fixed    5.100 V  out   4.473   4.650   7.080 W   0.912  1.388 A  eta 0.900  loss  0.517 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  0.912 /  1.388 A, margin at HIGH  +5.707 A ( +80.4 %): within
+     rail S3       curve    5.100 V  out   4.202   5.561  16.798 W   1.090  3.294 A  eta 0.913  loss  0.532 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.090 /  3.294 A, margin at HIGH  +1.706 A ( +34.1 %): within
+     rail DEV      fixed    5.100 V  out   5.289  10.533  24.343 W   2.065  4.773 A  eta 0.900  loss  1.170 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.065 /  4.773 A, margin at HIGH  +2.323 A ( +32.7 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.781   4.009 W   1.146  1.215 A  eta 0.913  loss  0.361 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.146 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.285   2.568 W   0.259  2.335 A  eta 0.850  loss  0.050 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.086 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.830   0.830   3.030 W   0.163  0.594 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   4.000   4.000   8.000 W   1.212  2.424 A  eta 0.904  loss  0.424 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  1.212 /  2.424 A, margin at HIGH  +2.576 A ( +51.5 %): within
+     rail S1B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   0.222   0.222   0.222 W   0.064  0.064 A  eta 0.819  loss  0.049 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.064 /  0.064 A, margin at HIGH  +4.936 A ( +98.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +2.298 A, S2 +6.059 A, S3 +2.058 A, DEV +2.350 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.249 W in all
+   == PS-EMCON (pack side 38.522 / 48.747 / 89.790 W)
+     load CM5 slot 1                                   S1         4.500   4.500   4.500  pack   4.933  S RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.658  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.355   0.390  pack   0.447  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.270   0.676  pack   0.348  S RV
+     load NVMe slot 1                                  S1B        0.900   1.200   3.600  pack   1.509  R RV
+     load CM5 slot 2                                   S2         4.500   4.500   4.500  pack   5.045  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.673  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.457  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.356  S RV
+     load NVMe slot 2                                  S2B        0.900   1.200   3.600  pack   1.544  R RV
+     load CM5 slot 3                                   S3         4.500   4.500   4.500  pack   4.933  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.658  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.447  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.348  S RV
+     load NVMe slot 3                                  S3B        0.900   1.200   3.600  pack   1.509  R RV
+     load 5G RM520N-GL                                 S2A        0.017   0.017   0.017  pack   0.024  S RV
+     load camera (part TBD)                            DEVP       0.000   1.000   2.500  pack   1.121  T RV
+     load panel board C                                PNL        3.000   3.000   5.000  pack   3.419  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.336  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.673  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.448  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.337  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.324  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.915  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.753   0.981  pack   0.924  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.285   2.568  pack   0.376  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.247  R RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.401  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.596  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.573  D RV
+     load Xenarc 709GNK                                MON        6.000   6.000  10.000  pack   6.054  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.837  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.331  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.946  R DRAFTED
+     rail VBAT     root    14.400 V  out  38.249  48.311  88.310 W   3.355  5.257 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out   6.702   7.202  12.061 W   1.412  2.365 A  eta 0.920  loss  0.622 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  1.412 /  2.365 A, margin at HIGH  +2.635 A ( +52.7 %): within
+     rail S2       fixed    5.100 V  out   6.724   7.223  12.083 W   1.416  2.369 A  eta 0.900  loss  0.803 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  1.416 /  2.369 A, margin at HIGH  +4.727 A ( +66.6 %): within
+     rail S3       curve    5.100 V  out   6.702   7.202  12.061 W   1.412  2.365 A  eta 0.920  loss  0.622 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.412 /  2.365 A, margin at HIGH  +2.635 A ( +52.7 %): within
+     rail DEV      fixed    5.100 V  out   6.645  12.884  26.657 W   2.526  5.227 A  eta 0.900  loss  1.432 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.526 /  5.227 A, margin at HIGH  +1.869 A ( +26.3 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail MON      pass    14.400 V  out   6.000   6.000  10.000 W   0.417  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  0.619 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.015   3.733   3.961 W   1.131  1.200 A  eta 0.913  loss  0.354 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.131 /  1.200 A, margin at HIGH  +0.800 A ( +40.0 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.285   2.568 W   0.259  2.335 A  eta 0.850  loss  0.050 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.086 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.700   1.700   5.400 W   0.333  1.059 A  eta 1.000  loss  0.000 W  RV
+     rail S1B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   0.017   0.017   0.017 W   0.005  0.005 A  eta 0.800  loss  0.004 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.005 /  0.005 A, margin at HIGH  +4.995 A ( +99.9 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.555   3.990 W   0.471  1.209 A  eta 0.872  loss  0.229 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.471 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   3.000   3.000   5.000 W   0.588  0.980 A  eta 0.984  loss  0.050 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.588 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +2.987 A, S2 +5.078 A, S3 +2.987 A, DEV +1.896 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.254 W in all
+   == PS-ALLTX (pack side 173.195 / 209.007 / 287.912 W)
+     load CM5 slot 1                                   S1         4.500   8.000   8.000  pack   9.135  D RV
+     load cooler fan slot 1                            S1F        0.360   0.510   2.000  pack   0.685  R DRAFTED
+     load PCIe switch 3.3 V slot 1                     S1B        0.355   0.390   0.390  pack   0.493  S RV
+     load PCIe switch 1.0 V slot 1                     S1C        0.270   0.676   0.676  pack   0.908  S RV
+     load NVMe slot 1                                  S1B        2.600   3.600   3.600  pack   4.547  S RV
+     load CM5 slot 2                                   S2         4.500   8.000   8.000  pack   9.244  D RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.693  R DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.390   0.390  pack   0.498  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.676   0.676  pack   0.919  S RV
+     load NVMe slot 2                                  S2B        2.600   3.600   3.600  pack   4.601  S RV
+     load CM5 slot 3                                   S3         4.500   8.000   8.000  pack   8.963  D RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.672  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.390   0.390  pack   0.483  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.676   0.676  pack   0.891  S RV
+     load NVMe slot 3                                  S3B        2.600   3.600   3.600  pack   4.461  S RV
+     load WiFi link card 1 (live)                      S1A        9.100   9.100   9.100  pack  11.406  S RV
+     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.325  T RV
+     load 5G RM520N-GL                                 S2A        5.590   5.590   5.590  pack   7.095  S RV
+     load LimeSDR Mini 2.4                             DEVP       4.500   4.500   4.500  pack   5.200  S RV
+     load RockBLOCK 9704                               DEVP       1.400   1.400   1.400  pack   1.618  S RV
+     load LoRa E22-900M30S                             DEVP       3.250   3.250   3.250  pack   3.755  S RV
+     load camera (part TBD)                            DEVP       1.000   2.500   2.500  pack   2.889  T RV
+     load panel board C                                PNL        5.000   5.000   5.000  pack   5.936  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.347  D RV
+     load board D (SA868 and logic)                    D8IN       3.000   3.300   3.300  pack   3.813  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.462  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.392  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.337  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.974  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.783   0.981  pack   1.001  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.625   2.568  pack   0.850  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.316  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.700   0.700   0.700  pack   0.895  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.418  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.662  D RV
+     load board A logic                                A3V3       0.500   1.000   1.000  pack   1.182  D RV
+     load VHF PA 30 W                                  PA        75.000  75.000 113.000  pack  79.350  R RV
+     load QMX HF                                       HF         8.400  12.000  13.200  pack  12.985  R RV
+     load Xenarc 709GNK                                MON       10.000  10.000  10.000  pack  10.399  S RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.862  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.341  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   2.005  R DRAFTED
+     rail VBAT     root    14.400 V  out 167.688 200.988 272.695 W  13.957 16.232 A  eta 1.000  loss  0.000 W  RV
+     rail S1       curve    5.100 V  out  18.532  23.797  25.550 W   4.666  5.010 A  eta 0.911  loss  2.333 W  RV
+          limit AP64500 U4                                    5.000 A (out): judged  4.666 /  5.010 A, margin at HIGH  -0.010 A (  -0.2 %): OVER at HIGH
+     rail S2       fixed    5.100 V  out  14.684  19.949  21.702 W   3.911  4.255 A  eta 0.900  loss  2.217 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  3.911 /  4.255 A, margin at HIGH  +2.841 A ( +40.0 %): within
+     rail S3       curve    5.100 V  out   8.544  14.991  25.550 W   2.939  5.010 A  eta 0.928  loss  1.160 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  2.939 /  5.010 A, margin at HIGH  -0.010 A (  -0.2 %): OVER at HIGH
+     rail DEV      fixed    5.100 V  out  19.628  26.873  36.625 W   5.269  7.181 A  eta 0.900  loss  2.986 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  5.269 /  7.181 A, margin at HIGH  -0.086 A (  -1.2 %): OVER at HIGH
+     rail A3V3     fixed    3.300 V  out   0.500   1.000   1.000 W   0.303  0.303 A  eta 0.880  loss  0.136 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.303 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail PA       curve   13.800 V  out  75.000  75.000 113.000 W   5.435  8.188 A  eta 0.983  loss  1.306 W  RV
+          limit LM5176 U13, average loop on 6 mOhm            7.096 A (out): judged  5.435 /  8.188 A, margin at HIGH  -1.093 A ( -15.4 %): OVER at HIGH
+     rail HF       curve   12.000 V  out   8.400  12.000  13.200 W   1.000  1.100 A  eta 0.961  loss  0.487 W  RV
+          limit LM5176 U15, average loop on 10 mOhm           4.257 A (out): judged  1.000 /  1.100 A, margin at HIGH  +3.157 A ( +74.2 %): within
+     rail MON      pass    14.400 V  out  10.000  10.000  10.000 W   0.694  0.595 A  eta 1.000  loss  0.000 W  RV
+          limit TPS259631 U21                                 1.200 A (in_floor): judged  1.032 /  1.032 A, margin at HIGH  +0.168 A ( +14.0 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.715   4.463   4.661 W   1.352  1.412 A  eta 0.904  loss  0.475 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.352 /  1.412 A, margin at HIGH  +0.588 A ( +29.4 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.625   2.568 W   0.568  2.335 A  eta 0.850  loss  0.110 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.189 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out  10.850  12.350  14.550 W   2.422  2.853 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.700   0.700   0.700 W   0.212  0.212 A  eta 1.000  loss  0.000 W  RV
+     rail S1A      curve    3.300 V  out   9.100   9.100   9.100 W   2.758  2.758 A  eta 0.911  loss  0.889 W  RV
+          limit AP64500 U103                                  5.000 A (out): judged  2.758 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S1B      curve    3.300 V  out   2.955   3.990   3.990 W   1.209  1.209 A  eta 0.904  loss  0.423 W  RV
+          limit AP64500 U104                                  5.000 A (out): judged  1.209 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S1C      fixed    1.000 V  out   0.270   0.676   0.676 W   0.676  0.676 A  eta 0.850  loss  0.119 W  RV
+          limit TPS62933 U105                                 3.000 A (out): judged  0.676 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S2A      curve    3.456 V  out   5.590   5.590   5.590 W   1.617  1.617 A  eta 0.910  loss  0.550 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  1.617 /  1.617 A, margin at HIGH  +3.383 A ( +67.7 %): within
+     rail S2B      curve    3.300 V  out   2.955   3.990   3.990 W   1.209  1.209 A  eta 0.904  loss  0.423 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  1.209 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.676   0.676 W   0.676  0.676 A  eta 0.850  loss  0.119 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.676 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  RV
+          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
+     rail S3B      curve    3.300 V  out   2.955   3.990   3.990 W   1.209  1.209 A  eta 0.904  loss  0.423 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  1.209 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.676   0.676 W   0.676  0.676 A  eta 0.850  loss  0.119 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.676 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   3.000   3.300   3.300 W   0.660  0.660 A  eta 0.900  loss  0.367 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.660 /  0.660 A, margin at HIGH  +2.340 A ( +78.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S1F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   5.000   5.000   5.000 W   0.980  0.980 A  eta 0.973  loss  0.138 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.980 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S1 +0.342 A, S2 +3.192 A, S3 +0.342 A, DEV -0.059 A
+     the rails' INA226 shunts at HIGH (not in the tree): 1.083 W in all
+   == PS-RED2 (slots 2 and 3) (pack side 18.360 / 32.744 / 62.232 W)
+     load CM5 slot 2                                   S2         2.000   4.500   4.500  pack   5.030  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.671  X DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.462  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.355  S RV
+     load NVMe slot 2                                  S2B        0.900   0.900   1.050  pack   1.171  S RV
+     load CM5 slot 3                                   S3         2.000   4.500   4.500  pack   4.926  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.657  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.452  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.348  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.147  S RV
+     load 5G RM520N-GL                                 S2A        0.222   0.222   0.222  pack   0.303  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.300   3.250  pack   0.335  R RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.691  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.100   0.100   2.500  pack   0.112  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.671  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.447  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.334  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.323  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.910  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.753   0.981  pack   0.922  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.285   2.568  pack   0.375  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.240  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.059  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.400  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.592  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.572  D RV
+     load VHF PA 30 W                                  PA         0.100   0.900   0.900  pack   1.068  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.834  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.330  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.940  R DRAFTED
+     rail VBAT     root    14.400 V  out  18.298  32.547  61.521 W   2.260  3.662 A  eta 1.000  loss  0.000 W  RV
+     rail S2       fixed    5.100 V  out   4.473   7.150   9.580 W   1.402  1.878 A  eta 0.900  loss  0.794 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  1.402 /  1.878 A, margin at HIGH  +5.217 A ( +73.5 %): within
+     rail S3       curve    5.100 V  out   4.202   6.879   9.309 W   1.349  1.825 A  eta 0.919  loss  0.606 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.349 /  1.825 A, margin at HIGH  +3.175 A ( +63.5 %): within
+     rail DEV      fixed    5.100 V  out   5.089  10.563  27.523 W   2.071  5.397 A  eta 0.900  loss  1.174 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.071 /  5.397 A, margin at HIGH  +1.699 A ( +23.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail PA       curve   13.800 V  out   0.100   0.900   0.900 W   0.065  0.065 A  eta 0.848  loss  0.161 W  RV
+          limit LM5176 U13, average loop on 6 mOhm            7.096 A (out): judged  0.065 /  0.065 A, margin at HIGH  +7.030 A ( +99.1 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.781   4.009 W   1.146  1.215 A  eta 0.913  loss  0.361 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.146 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.285   2.568 W   0.259  2.335 A  eta 0.850  loss  0.050 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.086 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.630   0.860   6.210 W   0.169  1.218 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S2A      curve    3.456 V  out   0.222   0.222   0.222 W   0.064  0.064 A  eta 0.819  loss  0.049 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.064 /  0.064 A, margin at HIGH  +4.936 A ( +98.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S2 +5.569 A, S3 +3.526 A, DEV +1.726 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.213 W in all
+   == PS-SURV (slot 2 alone) (pack side 13.083 / 22.923 / 46.660 W)
+     load CM5 slot 2                                   S2         2.000   4.500   4.500  pack   5.021  S RV
+     load cooler fan slot 2                            S2F        0.360   0.510   2.000  pack   0.669  X DRAFTED
+     load PCIe switch 3.3 V slot 2                     S2B        0.355   0.355   0.390  pack   0.461  S RV
+     load PCIe switch 1.0 V slot 2                     S2C        0.270   0.270   0.676  pack   0.354  S RV
+     load NVMe slot 2                                  S2B        0.900   0.900   1.050  pack   1.169  S RV
+     load 5G RM520N-GL                                 S2A        0.222   0.222   0.222  pack   0.302  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.688  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.100   0.100   2.500  pack   0.112  D RV
+     load board D (SA868 and logic)                    D8IN       0.200   0.200   0.200  pack   0.223  T MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.446  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.326  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.321  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.906  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.510   0.981  pack   0.621  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.221   2.568  pack   0.290  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.236  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.058  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.398  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.583  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.571  D RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.833  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.330  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.937  R DRAFTED
+     rail VBAT     root    14.400 V  out  13.051  22.827  46.260 W   1.585  2.754 A  eta 1.000  loss  0.000 W  RV
+     rail S2       fixed    5.100 V  out   4.473   7.150   9.580 W   1.402  1.878 A  eta 0.900  loss  0.794 W  MAIN
+          limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  1.402 /  1.878 A, margin at HIGH  +5.217 A ( +73.5 %): within
+     rail DEV      fixed    5.100 V  out   5.019   9.906  24.273 W   1.942  4.759 A  eta 0.900  loss  1.101 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  1.942 /  4.759 A, margin at HIGH  +2.336 A ( +32.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.538   4.009 W   1.072  1.215 A  eta 0.916  loss  0.323 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.072 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.221   2.568 W   0.201  2.335 A  eta 0.850  loss  0.039 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.067 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.560   0.560   2.960 W   0.110  0.580 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S2A      curve    3.456 V  out   0.222   0.222   0.222 W   0.064  0.064 A  eta 0.819  loss  0.049 W  MAIN
+          limit AP64500 U203                                  5.000 A (out): judged  0.064 /  0.064 A, margin at HIGH  +4.936 A ( +98.7 %): within
+     rail S2B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U204                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S2C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U205                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.200   0.200   0.200 W   0.040  0.040 A  eta 0.900  loss  0.022 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.040 /  0.040 A, margin at HIGH  +2.960 A ( +98.7 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S2F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S2 +5.569 A, DEV +2.363 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.157 W in all
+   == PS-SURV-R (the heat stage) (pack side 13.361 / 24.315 / 51.361 W)
+     load CM5 slot 3                                   S3         2.000   4.500   4.500  pack   4.918  S RV
+     load cooler fan slot 3                            S3F        0.360   0.510   2.000  pack   0.656  R DRAFTED
+     load PCIe switch 3.3 V slot 3                     S3B        0.355   0.355   0.390  pack   0.452  S RV
+     load PCIe switch 1.0 V slot 3                     S3C        0.270   0.270   0.676  pack   0.347  S RV
+     load NVMe slot 3                                  S3B        0.900   0.900   1.050  pack   1.145  S RV
+     load RockBLOCK 9704                               DEVP       0.060   0.060   0.060  pack   0.067  S RV
+     load LoRa E22-900M30S                             DEVP       0.070   0.300   3.250  pack   0.335  R RV
+     load panel board C                                PNL        1.500   1.500   5.000  pack   1.688  D DRAFTED
+     load QMX USB and HDMI 5 V                         DEVP       0.100   0.100   2.500  pack   0.112  D RV
+     load board D (SA868 and logic)                    D8IN       0.600   0.600   0.600  pack   0.670  D MAIN
+     load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.446  D RV
+     load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.326  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.322  S RV
+     load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.907  S RV
+     load three TUSB8041 hubs VDD33                    D3V3       0.023   0.510   0.981  pack   0.621  R RV
+     load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.221   2.568  pack   0.290  R RV
+     load three STM32H743 supervisors and their parts  IOC        0.921   1.297   4.554  pack   2.237  R RV
+     load E72 x2 (Zigbee, Thread)                      ZB         0.048   0.048   0.048  pack   0.058  S RV
+     load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.398  S RV
+     load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.583  D RV
+     load board A logic                                A3V3       0.500   0.500   1.000  pack   0.571  D RV
+     load VHF PA 30 W                                  PA         0.100   0.900   0.900  pack   1.066  T RV
+     load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.833  D RV
+     load Geiger module                                E5V        0.100   0.300   0.500  pack   0.330  D RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   1.937  R DRAFTED
+     rail VBAT     root    14.400 V  out  13.328  24.206  50.876 W   1.681  3.028 A  eta 1.000  loss  0.000 W  RV
+     rail S3       curve    5.100 V  out   4.202   6.879   9.309 W   1.349  1.825 A  eta 0.919  loss  0.606 W  RV
+          limit AP64500 U6                                    5.000 A (out): judged  1.349 /  1.825 A, margin at HIGH  +3.175 A ( +63.5 %): within
+     rail DEV      fixed    5.100 V  out   5.089  10.206  27.523 W   2.001  5.397 A  eta 0.900  loss  1.134 W  MAIN
+          limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  2.001 /  5.397 A, margin at HIGH  +1.699 A ( +23.9 %): within
+     rail A3V3     fixed    3.300 V  out   0.500   0.500   1.000 W   0.152  0.303 A  eta 0.880  loss  0.068 W  RV
+          limit TPS62933 U12                                  3.000 A (out): judged  0.152 /  0.303 A, margin at HIGH  +2.697 A ( +89.9 %): within
+     rail PA       curve   13.800 V  out   0.100   0.900   0.900 W   0.065  0.065 A  eta 0.848  loss  0.161 W  RV
+          limit LM5176 U13, average loop on 6 mOhm            7.096 A (out): judged  0.065 /  0.065 A, margin at HIGH  +7.030 A ( +99.1 %): within
+     rail E5V      curve    5.000 V  out   0.555   1.058   2.015 W   0.212  0.403 A  eta 0.916  loss  0.098 W  DRAFTED
+          limit AP63205 U12                                   2.000 A (out): judged  0.212 /  0.403 A, margin at HIGH  +1.597 A ( +79.8 %): within
+     rail E3V3     ldo      3.300 V  out   0.300   0.500   1.000 W   0.152  0.303 A  eta 0.660  loss  0.258 W  RV
+          limit TLV75533                                      0.500 A (out): judged  0.152 /  0.303 A, margin at HIGH  +0.197 A ( +39.4 %): within
+     rail D3V3     curve    3.300 V  out   1.063   3.538   4.009 W   1.072  1.215 A  eta 0.916  loss  0.323 W  RV
+          limit AP63203 U25                                   2.000 A (out): judged  1.072 /  1.215 A, margin at HIGH  +0.785 A ( +39.3 %): within
+     rail KSZ2V5   ldo      2.500 V  out   0.050   0.825   0.825 W   0.330  0.330 A  eta 0.758  loss  0.264 W  RV
+          limit AP2112K U27                                   0.600 A (out): judged  0.330 /  0.330 A, margin at HIGH  +0.270 A ( +45.0 %): within
+     rail KSZ1V2   fixed    1.200 V  out   0.216   1.452   1.452 W   1.210  1.210 A  eta 0.850  loss  0.256 W  RV
+          limit TPS62933 U26                                  3.000 A (out): judged  1.210 /  1.210 A, margin at HIGH  +1.790 A ( +59.7 %): within
+     rail HUB1V1   fixed    1.100 V  out   0.093   0.221   2.568 W   0.201  2.335 A  eta 0.850  loss  0.039 W  RV
+          limit TPS62933 U106/U206/U306 (each of three)       3.000 A (out): judged  0.067 /  0.778 A, margin at HIGH  +2.222 A ( +74.1 %): within
+     rail IOC      ldo      3.300 V  out   0.921   1.297   4.554 W   0.393  1.380 A  eta 0.647  loss  0.707 W  RV
+          limit AP2112K U40/U50/U60 (each of three)           0.600 A (out): judged  0.131 /  0.460 A, margin at HIGH  +0.140 A ( +23.3 %): within
+     rail DEVP     pass     5.100 V  out   0.630   0.860   6.210 W   0.169  1.218 A  eta 1.000  loss  0.000 W  RV
+     rail ZB       pass     3.300 V  out   0.048   0.048   0.048 W   0.015  0.015 A  eta 1.000  loss  0.000 W  RV
+     rail S3B      curve    3.300 V  out   1.255   1.255   1.440 W   0.380  0.436 A  eta 0.859  loss  0.206 W  RV
+          limit AP64500 U304                                  5.000 A (out): judged  0.380 /  0.436 A, margin at HIGH  +4.564 A ( +91.3 %): within
+     rail S3C      fixed    1.000 V  out   0.270   0.270   0.676 W   0.270  0.676 A  eta 0.850  loss  0.048 W  RV
+          limit TPS62933 U305                                 3.000 A (out): judged  0.270 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
+     rail D8IN     fixed    5.000 V  out   0.600   0.600   0.600 W   0.120  0.120 A  eta 0.900  loss  0.067 W  MAIN
+          limit TPS62933 U41                                  3.000 A (out): judged  0.120 /  0.120 A, margin at HIGH  +2.880 A ( +96.0 %): within
+     rail VSYSE    series  14.400 V  out   1.712   3.080   7.262 W   0.214  0.432 A  eta 0.998  loss  0.006 W  DRAFTED
+          limit U42 TPS16630 (drafted)                        1.471 A (in_floor): judged  0.319 /  0.740 A, margin at HIGH  +0.731 A ( +49.7 %): within
+     rail FAN12    fixedq  12.001 V  out   0.780   1.440   4.080 W   0.120  0.340 A  eta 0.850  loss  0.485 W  DRAFTED
+          limit LTC3115-1 U22 (drafted)                       1.200 A (out): judged  0.120 /  0.340 A, margin at HIGH  +0.860 A ( +71.7 %): within
+     rail S3F      fixed   12.000 V  out   0.360   0.510   2.000 W   0.043  0.167 A  eta 0.850  loss  0.090 W  DRAFTED
+          limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.167 A, margin at HIGH  +0.281 A ( +62.8 %): within
+     rail PNL      series   5.100 V  out   1.500   1.500   5.000 W   0.294  0.980 A  eta 0.992  loss  0.012 W  DRAFTED
+          limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.294 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
+     DRAWN's margins at HIGH that differ: S3 +3.526 A, DEV +1.726 A
+     the rails' INA226 shunts at HIGH (not in the tree): 0.191 W in all
+
+6. THE PACK CURRENT (A) at the stack voltages 16.8 / 14.4 / 12.0 / 10.0 V (the last the gauge's CUV, 2.50 V a cell x 4), PLAN and HIGH, RV / DRAWN / DRAFTED;
+   against the declared continuous 10 A (sustained rows) or the peak 18 A (key-down rows, which D-11's floors govern, section 7); the stack
+   voltage below which the row passes the limit (DRAFTED, PLAN / HIGH)
+   PS-IDLE                                            sustained
+      RV       PLAN   2.36   2.76   3.32   3.99   HIGH   4.85   5.67   6.83   8.25
+      DRAWN    PLAN   2.39   2.79   3.36   4.04   HIGH   4.86   5.69   6.86   8.29
+      DRAFTED  PLAN   2.44   2.85   3.44   4.14   HIGH   5.38   6.30   7.62   9.25
+      over 10 A below 4.46 V (PLAN) / 9.30 V (HIGH): within to 10.0 V
+   PS-IDLE-SPEC                                       sustained
+      RV       PLAN   2.55   2.97   3.58   4.30   HIGH   4.91   5.75   6.93   8.36
+      DRAWN    PLAN   2.57   3.01   3.62   4.36   HIGH   4.93   5.76   6.95   8.40
+      DRAFTED  PLAN   2.63   3.07   3.70   4.46   HIGH   5.44   6.38   7.72   9.37
+      over 10 A below 4.77 V (PLAN) / 9.41 V (HIGH): within to 10.0 V
+   PS-TYP                                             sustained
+      RV       PLAN   3.74   4.37   5.26   6.34   HIGH   7.15   8.37  10.11  12.24
+      DRAWN    PLAN   3.79   4.43   5.34   6.44   HIGH   7.19   8.43  10.19  12.36
+      DRAFTED  PLAN   3.85   4.51   5.44   6.58   HIGH   7.74   9.09  11.03  13.47
+      over 10 A below 6.79 V (PLAN) / 13.16 V (HIGH): HIGH over at 10.0 V
+   PS-BUSY                                            sustained
+      RV       PLAN   5.46   6.39   7.70   9.30   HIGH   7.97   9.33  11.28  13.66
+      DRAWN    PLAN   5.52   6.46   7.80   9.44   HIGH   8.01   9.39  11.36  13.80
+      DRAFTED  PLAN   5.59   6.56   7.93   9.63   HIGH   8.57  10.07  12.24  14.97
+      over 10 A below 9.66 V (PLAN) / 14.49 V (HIGH): HIGH over at 10.0 V
+   PS-RED (slot 3 alone)                              sustained
+      RV       PLAN   1.32   1.54   1.85   2.23   HIGH   2.73   3.18   3.83   4.61
+      DRAWN    PLAN   1.34   1.57   1.89   2.27   HIGH   2.73   3.19   3.84   4.63
+      DRAFTED  PLAN   1.38   1.61   1.94   2.34   HIGH   2.98   3.49   4.21   5.08
+      over 10 A below 2.70 V (PLAN) / 5.36 V (HIGH): within to 10.0 V
+   PS-RED-b                                           sustained
+      RV       PLAN   2.12   2.48   2.98   3.59   HIGH   4.25   4.97   5.98   7.21
+      DRAWN    PLAN   2.15   2.51   3.02   3.64   HIGH   4.26   4.98   6.00   7.25
+      DRAFTED  PLAN   2.20   2.57   3.10   3.73   HIGH   4.77   5.59   6.75   8.18
+      over 10 A below 4.06 V (PLAN) / 8.30 V (HIGH): within to 10.0 V
+   PS-EMCON                                           sustained
+      RV       PLAN   3.15   3.68   4.43   5.34   HIGH   6.13   7.17   8.65  10.46
+      DRAWN    PLAN   2.84   3.32   3.99   4.81   HIGH   4.81   5.63   6.79   8.20
+      DRAFTED  PLAN   2.89   3.39   4.08   4.92   HIGH   5.32   6.24   7.54   9.15
+      over 10 A below 5.21 V (PLAN) / 9.21 V (HIGH): within to 10.0 V
+   PS-ALLTX                                           key-down 
+      RV       PLAN  12.06  14.15  17.16  20.92   HIGH  16.06  18.89  22.99  28.19
+      DRAWN    PLAN  12.15  14.28  17.36  21.25   HIGH  16.16  19.05  23.27  28.70
+      DRAFTED  PLAN  12.31  14.51  17.75  21.93   HIGH  16.88  19.99  24.65  30.91
+      over 18 A below 11.85 V (PLAN) / 15.83 V (HIGH): PLAN over at 10.0 V
+   PS-RED2 (slots 2 and 3)                            sustained
+      RV       PLAN   1.87   2.18   2.62   3.15   HIGH   3.30   3.86   4.64   5.59
+      DRAWN    PLAN   1.90   2.22   2.67   3.21   HIGH   3.32   3.88   4.67   5.63
+      DRAFTED  PLAN   1.95   2.27   2.74   3.30   HIGH   3.69   4.32   5.21   6.30
+      over 10 A below 3.64 V (PLAN) / 6.53 V (HIGH): within to 10.0 V
+   PS-SURV (slot 2 alone)                             sustained
+      RV       PLAN   1.29   1.51   1.81   2.18   HIGH   2.50   2.92   3.51   4.22
+      DRAWN    PLAN   1.33   1.55   1.86   2.24   HIGH   2.51   2.93   3.53   4.25
+      DRAFTED  PLAN   1.36   1.59   1.91   2.30   HIGH   2.77   3.24   3.90   4.71
+      over 10 A below 2.66 V (PLAN) / 5.01 V (HIGH): within to 10.0 V
+   PS-SURV-R (the heat stage)                         sustained
+      RV       PLAN   1.38   1.62   1.94   2.33   HIGH   2.79   3.26   3.92   4.72
+      DRAWN    PLAN   1.41   1.64   1.98   2.38   HIGH   2.79   3.27   3.93   4.74
+      DRAFTED  PLAN   1.45   1.69   2.03   2.44   HIGH   3.05   3.57   4.30   5.19
+      over 10 A below 2.80 V (PLAN) / 5.47 V (HIGH): within to 10.0 V
+   PS-TYP plus PoE                                    sustained
+      RV       PLAN   5.96   6.98   8.41  10.17   HIGH   9.39  11.01  13.32  16.17
+      DRAWN    PLAN   6.02   7.05   8.51  10.30   HIGH   9.45  11.08  13.43  16.36
+      DRAFTED  PLAN   6.09   7.15   8.65  10.52   HIGH  10.02  11.80  14.37  17.64
+      over 10 A below 10.48 V (PLAN) / 16.84 V (HIGH): PLAN over at 10.0 V
+   PS-TYP plus USB-C                                  sustained
+      RV       PLAN   6.66   7.80   9.41  11.38   HIGH  10.10  11.84  14.33  17.42
+      DRAWN    PLAN   6.72   7.87   9.51  11.53   HIGH  10.16  11.92  14.46  17.64
+      DRAFTED  PLAN   6.80   7.98   9.67  11.78   HIGH  10.75  12.66  15.44  18.99
+      over 10 A below 11.63 V (PLAN) / 18.00 V (HIGH): PLAN over at 10.0 V
+   PS-TYP plus both outlets                           sustained
+      RV       PLAN   8.90  10.43  12.61  15.30   HIGH  12.36  14.51  17.60  21.46
+      DRAWN    PLAN   8.97  10.52  12.75  15.51   HIGH  12.43  14.62  17.78  21.76
+      DRAFTED  PLAN   9.08  10.67  12.98  15.90   HIGH  13.06  15.42  18.88  23.38
+      over 10 A below 15.31 V (PLAN) / 21.68 V (HIGH): PLAN over at 10.0 V
+   PS-BUSY plus both outlets                          sustained
+      RV       PLAN  10.65  12.49  15.12  18.39   HIGH  13.19  15.49  18.80  22.95
+      DRAWN    PLAN  10.73  12.61  15.30  18.67   HIGH  13.26  15.60  18.99  23.29
+      DRAFTED  PLAN  10.86  12.79  15.60  19.20   HIGH  13.91  16.43  20.15  25.02
+      over 10 A below 18.18 V (PLAN) / 23.01 V (HIGH): PLAN over at 10.0 V
+   PA keyed alone over PS-IDLE-SPEC, PA at 75 W       key-down 
+      RV       PLAN   7.26   8.50  10.26  12.43   HIGH  12.05  14.15  17.15  20.91
+      DRAWN    PLAN   7.31   8.56  10.35  12.56   HIGH  12.10  14.23  17.29  21.16
+      DRAFTED  PLAN   7.39   8.68  10.53  12.84   HIGH  12.72  15.00  18.36  22.71
+      over 18 A below 7.47 V (PLAN) / 12.21 V (HIGH): HIGH over at 10.0 V
+   PA keyed alone over PS-IDLE-SPEC, PA at 113 W      key-down 
+      RV       PLAN   9.61  11.27  13.63  16.56   HIGH  12.05  14.15  17.15  20.91
+      DRAWN    PLAN   9.67  11.35  13.76  16.77   HIGH  12.10  14.23  17.29  21.16
+      DRAFTED  PLAN   9.78  11.51  14.02  17.20   HIGH  12.72  15.00  18.36  22.71
+      over 18 A below 9.61 V (PLAN) / 12.21 V (HIGH): HIGH over at 10.0 V
+   PA keyed alone over PS-TYP, PA at 75 W             key-down 
+      RV       PLAN   8.53   9.99  12.08  14.65   HIGH  14.39  16.91  20.54  25.12
+      DRAWN    PLAN   8.60  10.08  12.21  14.84   HIGH  14.48  17.04  20.78  25.54
+      DRAFTED  PLAN   8.70  10.22  12.42  15.20   HIGH  15.15  17.92  22.02  27.45
+      over 18 A below 8.64 V (PLAN) / 14.34 V (HIGH): HIGH over at 10.0 V
+   PA keyed alone over PS-TYP, PA at 113 W            key-down 
+      RV       PLAN  10.89  12.78  15.47  18.83   HIGH  14.39  16.91  20.54  25.12
+      DRAWN    PLAN  10.97  12.89  15.64  19.10   HIGH  14.48  17.04  20.78  25.54
+      DRAFTED  PLAN  11.10  13.08  15.96  19.65   HIGH  15.15  17.92  22.02  27.45
+      over 18 A below 10.79 V (PLAN) / 14.34 V (HIGH): PLAN over at 10.0 V
+   PS-TYP plus the heater (cold overlay)              sustained
+      RV       PLAN   4.39   5.13   6.18   7.46   HIGH   8.04   9.42  11.38  13.80
+      DRAWN    PLAN   4.29   5.02   6.05   7.31   HIGH   7.70   9.03  10.92  13.26
+      DRAFTED  PLAN   4.36   5.10   6.16   7.46   HIGH   8.26   9.70  11.78  14.40
+      over 10 A below 7.63 V (PLAN) / 13.99 V (HIGH): HIGH over at 10.0 V
+   PS-RED plus the heater (cold overlay)              sustained
+      RV       PLAN   1.97   2.30   2.76   3.32   HIGH   3.61   4.22   5.08   6.12
+      DRAWN    PLAN   1.84   2.15   2.59   3.11   HIGH   3.23   3.78   4.55   5.48
+      DRAFTED  PLAN   1.88   2.20   2.65   3.19   HIGH   3.49   4.08   4.92   5.95
+      over 10 A below 3.53 V (PLAN) / 6.19 V (HIGH): within to 10.0 V
+
+7. D-11's FLOORS ON RV-PWR'S METHOD (section 7.2 there): the stack voltage at 18 A, the rest voltage at the cell resistances 0.035 / 0.050 / 0.060 Ohm, the
+   margin under the floor at the highest, and the largest cell resistance the floor covers. RV is rv-pwr's main pack path (R17 added, its
+   record main_pack_path_R17); the heater row adds the regulated mat as rv-pwr does (rv-pwr: 7.5 W at its declared 0.88; DRAWN and DRAFTED: U33's 0.90)
+   RV (pack path 0.0275 Ohm)
+      all-transmit basis: non-transmit typical, standby card off, high   VBAT  240.83 W  stack 13.874 V  rest 14.714 / 15.074 / 15.314 V  floor 15.5 V  margin +0.186 V  R_cell covered 0.0677
+      the same with the heater on                                        VBAT  249.35 W  stack 14.348 V  rest 15.188 / 15.548 / 15.788 V  floor 15.5 V  margin -0.288 V  R_cell covered 0.0480
+      PA alone over PS-TYP, PA at 113 W, the rest at plan                VBAT  180.29 W  stack 10.511 V  rest 11.351 / 11.711 / 11.951 V  floor 12.4 V  margin +0.449 V  R_cell covered 0.0787
+   DRAWN (pack path 0.0275 Ohm)
+      all-transmit basis: non-transmit typical, standby card off, high   VBAT  241.25 W  stack 13.898 V  rest 14.738 / 15.098 / 15.338 V  floor 15.5 V  margin +0.162 V  R_cell covered 0.0668
+      the same with the heater on                                        VBAT  249.58 W  stack 14.361 V  rest 15.201 / 15.561 / 15.801 V  floor 15.5 V  margin -0.301 V  R_cell covered 0.0475
+      PA alone over PS-TYP, PA at 113 W, the rest at plan                VBAT  181.00 W  stack 10.551 V  rest 11.391 / 11.751 / 11.991 V  floor 12.4 V  margin +0.409 V  R_cell covered 0.0771
+   DRAFTED (pack path 0.0381 Ohm)
+      all-transmit basis: non-transmit typical, standby card off, high   VBAT  249.50 W  stack 14.546 V  rest 15.386 / 15.746 / 15.986 V  floor 15.5 V  margin -0.486 V  R_cell covered 0.0397
+      the same with the heater on                                        VBAT  257.83 W  stack 15.009 V  rest 15.849 / 16.209 / 16.449 V  floor 15.5 V  margin -0.949 V  R_cell covered 0.0205
+      PA alone over PS-TYP, PA at 113 W, the rest at plan                VBAT  181.84 W  stack 10.788 V  rest 11.628 / 11.988 / 12.228 V  floor 12.4 V  margin +0.172 V  R_cell covered 0.0672
+
+8. THE RECONCILIATION WITH LAYER 4 (each line: their figure, this script's reproduction from their inputs, EQUAL or not, the current
+   design's figure, and the difference explained)
+   R1 L4-E9's modes (1d): PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W over PS-IDLE-SPEC (W at the pack)
+      theirs (42.8, 203.8, 272.0, 162.3); reproduced (42.8, 203.8, 272.0, 162.3): EQUAL
+      DRAWN: (43.301, 205.652, 274.291, 163.465)
+      DRAFTED: (44.205, 209.007, 287.912, 165.76)
+      why: rv-pwr's figures, which L4-E9 quotes at 0.1 W; the current design moves them by the steps of section 4
+   R1b the review's and L4-E12's profile (PS-IDLE-SPEC at the pack, W)
+      theirs (42.82355, 42.824); reproduced (42.82355, 42.824): EQUAL
+      DRAWN: (43.30085,)
+      DRAFTED: (44.20479,)
+      why: the same figure at five and three places
+   R2 B4: the charging heat with the profile running (W): input, stored, heat; the source path and the charge path
+      theirs (95.943663, 45.9, 50.043663, 3.17382, 3.44629); reproduced (95.943663, 45.9, 50.043663, 3.17382, 3.44629): EQUAL
+      DRAWN: (96.4563, 45.9, 50.5563, 3.2092, 3.4463, 52.6463)
+      DRAFTED: (97.4273, 45.9, 51.5273, 3.2762, 3.4463, 53.6173)
+      with L4-E8's 2.09 W of ballasts: the review's 52.133663, reproduced 52.133663; L4-E12's 52.134, reproduced 52.134
+      why: the profile moves by dP and the heat by dP / 0.931: dP itself plus the source path's 0.0741 per watt (section 4 gives dP step by step); on shore the profile is fed through the charger to VSYS and does not cross the pack path, so the pack-side figure the balance carries overstates it by the pack path's I2R (DRAFTED: 0.3587 W), the conservative side
+   R3 B7: case heat (W), hours to C1's +50 C from +20 C at 0.6711 W/K and 8 kJ/K, the air unshed at 2.52 h (C)
+      theirs (43.413, 2.06349, 54.467); reproduced (43.413, 2.06349, 54.467): EQUAL
+      DRAWN: (43.904, 2.03164, 54.857, 2.492, 54.596)
+      DRAFTED: (44.833, 1.97401, 55.595, 2.441, 54.84)
+      unrounded: case heat 43.41314 W, C1 at 2.06348 h
+      why: the case heat is the profile plus the cells' own I2R (rv-pwr's pack_i2r), 43.41314 W unrounded, which the review rounds to 43.413 W; on the unrounded heat C1 comes at 2.06348 h, 0.00001 h earlier, the rounding and nothing else; with the current profile C1 comes earlier still; the last two figures are the energy-only run on L4-E10's 107.9 Wh at the new profile and the unshed air at its end, consequences for item 9.2 and L4-E12, not this item's figures
+   R4 L4-E11 18b: VSYS_E at the floor with both mixers at full speed, at the plan's duty, and against U42's least limit (A, %)
+      theirs (1.3208, 0.9942, 89.8); reproduced (1.3208, 0.9942, 89.8): EQUAL
+      IDLESPEC: (0.2139, 0.4323, 0.7402)
+      TYP: (0.2139, 0.4323, 0.7402)
+      SURVR: (0.2139, 0.4323, 0.7402)
+      U12: declared 0.8 A; its input in PS-IDLE-SPEC here 0.0802 A at 14.4 V
+      why: L4-E11's figure is a declaration: U12 at its declared 0.8 A (its input at PS-IDLE-SPEC's board E loads is 0.0802 A at 14.4 V here), the fans at full speed at the floor's 9.508 V; this record's per state figures are the branch at 14.4 V (PLAN), 16.8 V (HIGH) and VBAT's 9.688 V floor with every load at HIGH
+   R5 L4-E11 15c: the pair's loss on battery at PS-IDLE-SPEC and PS-TYP (A, W)
+      theirs (2.972, 0.0934, 4.375, 0.2023); reproduced (2.972, 0.0934, 4.375, 0.2023): EQUAL
+      IDLESPEC: (3.0698, 0.0996)
+      TYP: (4.5074, 0.2147)
+      why: L4-E11 divides the profile's rounded 42.8 W and 63.0 W by 14.4 V; this record solves the pack current at 14.4 V with the whole pack path (R_DIST, R17, the pair) and the current design's profile
+   R6 L4-E12 8c: the fans' battery-side watts in the profile and in the heat stage (W)
+      theirs (3.128, 2.0); reproduced (3.128, 2.0): EQUAL
+      DRAWN: (3.134, 2.001)
+      DRAFTED: (3.932, 2.593)
+      why: at PLAN the fans keep rv-pwr's duty figures; the drafted step-ups and U22 (0.85 each, U22's 16 mA) add their loss
+   R7 L4-E12 2a and 12c: the heat stage PS-SURV-R at the pack (W)
+      theirs (23.272,); reproduced (23.272,): EQUAL
+      DRAWN: (23.681,)
+      DRAFTED: (24.315,)
+      why: record hc2's state on rv-pwr's model; section 4 moves it
+   R8 Layer 7 section 3: the five fans and their converters at full speed against the plan's fan figures (W)
+      theirs (11.85, 2.97); reproduced (11.85, 2.97): EQUAL
+      this record, the converters' losses unrounded: (11.8588,)
+      U22's quiescent at 14.4 V, in neither figure: (0.2304,)
+      why: Layer 7 rounds each step-up's loss to 0.35 W (0.3529 W at 0.85), 0.0088 W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure
+   R9 l8r2 item 1, choice (a): per slot on +5V_Sn, its current at 5.1 V, the three at VBAT (W, A, W)
+      theirs (2.353, 0.461, 7.84); reproduced (2.353, 0.461, 7.84): EQUAL
+      this record: the three at full speed against the three off, PS-IDLE-SPEC, VBAT: (7.5638,)
+      why: l8r2 takes the slot converters at a flat 0.90; this record uses the slot rails' own converters (S1 and S3 on the AP64500 curve at their operating point, S2 at the declared 0.90)
+   R10 rv-pwr's D-11 all-transmit basis on main's pack path with R17: VBAT W, the stack at 18 A, the rest voltage at R_cell high, the margin under 15.5 V
+      theirs (240.83, 13.87, 15.31, 0.19); reproduced (240.83, 13.87, 15.31, 0.19): EQUAL
+      DRAWN: (241.25, 13.9, 15.34, 0.16)
+      DRAFTED: (249.5, 14.55, 15.99, -0.49)
+      why: section 7: the drafted pair adds its resistance at 18 A, the fans at full speed (HIGH) their power
+   line by line for the profile (PS-IDLE-SPEC, PLAN, pack side): the steps of section 4, each with its delta: M1 +0.4316 W; M2 +0.0000 W; M3 +0.0000 W; M4 +0.0000 W; M5 +0.0456 W; D1 +0.0971 W; D2 +0.0009 W; D3 +0.4978 W; D4 +0.2941 W; D5 +0.0140 W
+
+9. SENSITIVITIES (DRAFTED): for each state's headline (the pack side at PLAN, VIN 14.4 V), the five loads or assumptions that move it most, each
+   moved alone over its LOW to HIGH (a load at its pins; an assumption over its stated range), the others at PLAN; the swing is W(HIGH) - W(LOW)
+   == PS-IDLE, headline 41.095 W (33 candidates)
+      load       WiFi link card 2 (standby)                         39.835 to   50.636 W, swing  +10.801 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       three STM32H743 supervisors and their parts        40.439 to   46.779 W, swing   +6.341 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       Xenarc 709GNK                                      41.095 to   47.194 W, swing   +6.099 W  RV: 4.000 to 10.000 W at the pins (T)
+      load       WiFi link card 1 (live)                            41.095 to   45.817 W, swing   +4.722 W  RV: 4.000 to 8.000 W at the pins (R)
+      load       panel board C                                      41.095 to   45.188 W, swing   +4.093 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.424 W; the pack voltage +0.212 W; U22's efficiency (L4-E11) +0.149 W; the cooler step-ups' efficiency (l8r2) +0.122 W; the pack path's resistance +0.041 W
+   == PS-IDLE-SPEC, headline 44.205 W (34 candidates)
+      load       WiFi link card 2 (standby)                         42.944 to   53.757 W, swing  +10.813 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       three STM32H743 supervisors and their parts        43.548 to   49.896 W, swing   +6.348 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       WiFi link card 1 (live)                            44.205 to   48.932 W, swing   +4.728 W  RV: 4.000 to 8.000 W at the pins (R)
+      load       panel board C                                      44.205 to   48.303 W, swing   +4.098 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       Xenarc 709GNK                                      44.205 to   48.274 W, swing   +4.069 W  RV: 6.000 to 10.000 W at the pins (T)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.424 W; the pack voltage +0.208 W; U22's efficiency (L4-E11) +0.149 W; the cooler step-ups' efficiency (l8r2) +0.123 W; the pack path's resistance +0.048 W
+   == PS-TYP, headline 64.906 W (38 candidates)
+      load       WiFi link card 2 (standby)                         63.637 to   74.709 W, swing  +11.073 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       5G RM520N-GL                                       63.245 to   69.930 W, swing   +6.685 W  RV: 0.222 to 5.590 W at the pins (R)
+      load       three STM32H743 supervisors and their parts        64.244 to   70.642 W, swing   +6.397 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       WiFi link card 1 (live)                            62.521 to   67.373 W, swing   +4.853 W  RV: 4.000 to 8.000 W at the pins (R)
+      load       Xenarc 709GNK                                      64.906 to   69.007 W, swing   +4.101 W  RV: 6.000 to 10.000 W at the pins (T)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.800 W; U22's efficiency (L4-E11) +0.150 W; the cooler step-ups' efficiency (l8r2) +0.125 W; the pack path's resistance +0.104 W; the pack voltage +0.014 W
+   == PS-BUSY, headline 94.420 W (41 candidates)
+      load       WiFi link card 2 (standby)                         93.092 to  104.682 W, swing  +11.590 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       WiFi link card 1 (live)                            89.328 to   95.865 W, swing   +6.537 W  RV: 4.000 to 9.100 W at the pins (R)
+      load       three STM32H743 supervisors and their parts        93.751 to  100.221 W, swing   +6.469 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       5G RM520N-GL                                       89.350 to   94.420 W, swing   +5.070 W  RV: 1.500 to 5.590 W at the pins (S)
+      load       Xenarc 709GNK                                      94.420 to   98.567 W, swing   +4.147 W  RV: 6.000 to 10.000 W at the pins (T)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.890 W; the pack voltage -0.448 W; the pack path's resistance +0.223 W; U22's efficiency (L4-E11) +0.152 W; the cooler step-ups' efficiency (l8r2) +0.130 W
+   == PS-RED (slot 3 alone), headline 23.244 W (24 candidates)
+      load       three STM32H743 supervisors and their parts        22.593 to   28.891 W, swing   +6.299 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       panel board C                                      23.244 to   27.310 W, swing   +4.066 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       two mixer fans                                     22.458 to   26.398 W, swing   +3.939 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      load       LoRa E22-900M30S                                   22.986 to   26.552 W, swing   +3.566 W  RV: 0.070 to 3.250 W at the pins (R)
+      load       three TUSB8041 hubs VDD 1.1 V                      23.075 to   26.340 W, swing   +3.265 W  RV: 0.093 to 2.568 W at the pins (R)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.381 W; the pack voltage +0.194 W; U22's efficiency (L4-E11) +0.148 W; the cooler step-ups' efficiency (l8r2) +0.040 W; the pack path's resistance +0.013 W
+   == PS-RED-b, headline 37.037 W (32 candidates)
+      load       WiFi link card 2 (standby)                         35.779 to   46.563 W, swing  +10.784 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       three STM32H743 supervisors and their parts        36.382 to   42.713 W, swing   +6.331 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       WiFi link card 1 (live)                            37.037 to   41.751 W, swing   +4.715 W  RV: 4.000 to 8.000 W at the pins (R)
+      load       panel board C                                      37.037 to   41.123 W, swing   +4.087 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       two mixer fans                                     36.247 to   40.206 W, swing   +3.960 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.423 W; the pack voltage +0.253 W; U22's efficiency (L4-E11) +0.148 W; the cooler step-ups' efficiency (l8r2) +0.122 W; the pack path's resistance +0.034 W
+   == PS-EMCON, headline 48.747 W (32 candidates)
+      load       three STM32H743 supervisors and their parts        48.089 to   54.448 W, swing   +6.359 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       Xenarc 709GNK                                      48.747 to   52.823 W, swing   +4.076 W  RV: 6.000 to 10.000 W at the pins (T)
+      load       two mixer fans                                     47.954 to   51.931 W, swing   +3.977 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      load       NVMe slot 2                                        48.381 to   51.680 W, swing   +3.299 W  RV: 0.900 to 3.600 W at the pins (R)
+      load       three TUSB8041 hubs VDD 1.1 V                      48.491 to   51.787 W, swing   +3.296 W  RV: 0.093 to 2.568 W at the pins (R)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.641 W; U22's efficiency (L4-E11) +0.149 W; the pack voltage +0.124 W; the cooler step-ups' efficiency (l8r2) +0.123 W; the pack path's resistance +0.058 W
+   == PS-ALLTX, headline 209.007 W (37 candidates)
+      load       VHF PA 30 W                                       209.007 to  251.197 W, swing  +42.190 W  RV: 75.000 to 113.000 W at the pins (R)
+      load       WiFi link card 2 (standby)                        207.617 to  219.839 W, swing  +12.222 W  RV: 0.000 to 9.100 W at the pins (T)
+      load       three STM32H743 supervisors and their parts       208.308 to  215.072 W, swing   +6.765 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       QMX HF                                            205.120 to  210.323 W, swing   +5.204 W  RV: 8.400 to 13.200 W at the pins (R)
+      assumption the pack voltage                                  212.168 to  207.526 W, swing   -4.641 W  12.0 to 16.8 V: the curves' input and the pack path's I2R
+      every assumption: the pack voltage -4.641 W; the pack path's resistance +1.133 W; S2 and DEV, the LM5176 5.1 V stages' efficiency +0.746 W; U22's efficiency (L4-E11) +0.158 W; the cooler step-ups' efficiency (l8r2) +0.136 W
+   == PS-RED2 (slots 2 and 3), headline 32.744 W (30 candidates)
+      load       three STM32H743 supervisors and their parts        32.090 to   38.411 W, swing   +6.321 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       panel board C                                      32.744 to   36.824 W, swing   +4.080 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       two mixer fans                                     31.955 to   35.909 W, swing   +3.953 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      load       LoRa E22-900M30S                                   32.485 to   36.064 W, swing   +3.578 W  RV: 0.070 to 3.250 W at the pins (R)
+      load       three TUSB8041 hubs VDD 1.1 V                      32.490 to   35.766 W, swing   +3.276 W  RV: 0.093 to 2.568 W at the pins (R)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.569 W; the pack voltage +0.156 W; U22's efficiency (L4-E11) +0.148 W; the cooler step-ups' efficiency (l8r2) +0.082 W; the pack path's resistance +0.026 W
+   == PS-SURV (slot 2 alone), headline 22.923 W (23 candidates)
+      load       three STM32H743 supervisors and their parts        22.272 to   28.570 W, swing   +6.298 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       panel board C                                      22.923 to   26.989 W, swing   +4.066 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       two mixer fans                                     22.138 to   26.076 W, swing   +3.939 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      load       three TUSB8041 hubs VDD 1.1 V                      22.755 to   26.019 W, swing   +3.265 W  RV: 0.093 to 2.568 W at the pins (R)
+      load       CM5 slot 2                                         20.123 to   22.923 W, swing   +2.800 W  RV: 2.000 to 4.500 W at the pins (S)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.535 W; U22's efficiency (L4-E11) +0.148 W; the cooler step-ups' efficiency (l8r2) +0.042 W; the pack voltage +0.039 W; the pack path's resistance +0.013 W
+   == PS-SURV-R (the heat stage), headline 24.315 W (25 candidates)
+      load       three STM32H743 supervisors and their parts        23.663 to   29.964 W, swing   +6.301 W  RV: 0.921 to 4.554 W at the pins (R)
+      load       panel board C                                      24.315 to   28.382 W, swing   +4.068 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
+      load       two mixer fans                                     23.529 to   27.469 W, swing   +3.941 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      load       LoRa E22-900M30S                                   24.057 to   27.624 W, swing   +3.567 W  RV: 0.070 to 3.250 W at the pins (R)
+      load       three TUSB8041 hubs VDD 1.1 V                      24.146 to   27.412 W, swing   +3.266 W  RV: 0.093 to 2.568 W at the pins (R)
+      every assumption: S2 and DEV, the LM5176 5.1 V stages' efficiency +0.381 W; the pack voltage +0.218 W; U22's efficiency (L4-E11) +0.148 W; the cooler step-ups' efficiency (l8r2) +0.040 W; the pack path's resistance +0.014 W
+   the headline against the pack's voltage (loads at PLAN; the curves' input and the pack path's I2R at that voltage), W at 12.0 / 13.2 / 14.4 / 15.6 / 16.8 V:
+      PS-IDLE                        41.018   41.047   41.095   41.157   41.230
+      PS-IDLE-SPEC                   44.135   44.158   44.205   44.268   44.343
+      PS-TYP                         64.971   64.914   64.906   64.933   64.986
+      PS-BUSY                        94.799   94.556   94.420   94.359   94.351
+      PS-RED (slot 3 alone)          23.157   23.197   23.244   23.296   23.351
+      PS-RED-b                       36.934   36.977   37.037   37.108   37.187
+      PS-EMCON                       48.726   48.723   48.747   48.791   48.850
+      PS-ALLTX                      212.168  210.288  209.007  208.127  207.526
+      PS-RED2 (slots 2 and 3)        32.685   32.708   32.744   32.789   32.841
+      PS-SURV (slot 2 alone)         22.913   22.915   22.923   22.936   22.952
+      PS-SURV-R (the heat stage)     24.217   24.262   24.315   24.373   24.435
+   the converters' efficiency at their PLAN current over the pack's 12.0 to 16.8 V (pack-fed curves), the 5.1 V-fed ones at rv-pwr's VIN 12 V
+   curve (NOT PLOTTED at their input), and each declared figure's weight: W at the pack per point of efficiency below the declared figure
+   == PS-IDLE-SPEC
+      S1      AP64500_5V        1.726 A  0.9357 0.9311 0.9265 0.9219 0.9173  pack-fed
+      S2      declared 0.90     0.912 A  0.0590  W at the pack per point below the declared figure
+      S3      AP64500_5V        1.090 A  0.9225 0.9176 0.9126 0.9077 0.9027  pack-fed
+      DEV     declared 0.90     2.065 A  0.1337  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.152 A  0.0066  W at the pack per point below the declared figure
+      PA      LM5176_12V        0.065 A  0.8600 0.8540 0.8480 0.8420 0.8360  pack-fed
+      E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
+      D3V3    AP632_3V3         1.146 A  0.9127  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      KSZ1V2  declared 0.85     1.210 A  0.0230  W at the pack per point below the declared figure
+      HUB1V1  declared 0.85     0.259 A  0.0045  W at the pack per point below the declared figure
+      S1A     AP64500_3V3       1.212 A  0.9042  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1B     AP64500_3V3       0.380 A  0.8589  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1C     declared 0.85     0.270 A  0.0040  W at the pack per point below the declared figure
+      S2A     AP64500_3V3       0.064 A  0.8189  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2B     AP64500_3V3       0.380 A  0.8589  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2C     declared 0.85     0.270 A  0.0043  W at the pack per point below the declared figure
+      S3A     AP64500_3V3       0.303 A  0.8456  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3B     AP64500_3V3       0.380 A  0.8589  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3C     declared 0.85     0.270 A  0.0041  W at the pack per point below the declared figure
+      D8IN    declared 0.90     0.120 A  0.0076  W at the pack per point below the declared figure
+      FAN12   declared 0.85     0.120 A  0.0206  W at the pack per point below the declared figure
+      S1F     declared 0.85     0.043 A  0.0076  W at the pack per point below the declared figure
+      S2F     declared 0.85     0.043 A  0.0081  W at the pack per point below the declared figure
+      S3F     declared 0.85     0.043 A  0.0077  W at the pack per point below the declared figure
+   == PS-TYP
+      S1      AP64500_5V        2.701 A  0.9363 0.9325 0.9288 0.9250 0.9213  pack-fed
+      S2      declared 0.90     1.751 A  0.1142  W at the pack per point below the declared figure
+      S3      AP64500_5V        1.644 A  0.9343 0.9297 0.9251 0.9204 0.9158  pack-fed
+      DEV     declared 0.90     3.289 A  0.2145  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.152 A  0.0067  W at the pack per point below the declared figure
+      HF      LM5176_12V        0.080 A  0.8600 0.8540 0.8480 0.8420 0.8360  pack-fed
+      E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
+      D3V3    AP632_3V3         1.155 A  0.9123  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      KSZ1V2  declared 0.85     1.210 A  0.0231  W at the pack per point below the declared figure
+      HUB1V1  declared 0.85     0.568 A  0.0100  W at the pack per point below the declared figure
+      S1A     AP64500_3V3       1.818 A  0.9129  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1B     AP64500_3V3       0.471 A  0.8715  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1C     declared 0.85     0.270 A  0.0042  W at the pack per point below the declared figure
+      S2A     AP64500_3V3       0.434 A  0.8667  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2B     AP64500_3V3       0.471 A  0.8715  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2C     declared 0.85     0.270 A  0.0043  W at the pack per point below the declared figure
+      S3A     AP64500_3V3       0.303 A  0.8456  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3B     AP64500_3V3       0.471 A  0.8715  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3C     declared 0.85     0.270 A  0.0041  W at the pack per point below the declared figure
+      D8IN    declared 0.90     0.160 A  0.0102  W at the pack per point below the declared figure
+      FAN12   declared 0.85     0.120 A  0.0207  W at the pack per point below the declared figure
+      S1F     declared 0.85     0.043 A  0.0079  W at the pack per point below the declared figure
+      S2F     declared 0.85     0.043 A  0.0081  W at the pack per point below the declared figure
+      S3F     declared 0.85     0.043 A  0.0077  W at the pack per point below the declared figure
+   == PS-BUSY
+      S1      AP64500_5V        4.115 A  0.9226 0.9191 0.9156 0.9121 0.9086  pack-fed
+      S2      declared 0.90     3.600 A  0.2375  W at the pack per point below the declared figure
+      S3      AP64500_5V        2.628 A  0.9366 0.9328 0.9290 0.9252 0.9213  pack-fed
+      DEV     declared 0.90     4.122 A  0.2719  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.152 A  0.0068  W at the pack per point below the declared figure
+      HF      LM5176_12V        0.080 A  0.8600 0.8540 0.8480 0.8420 0.8360  pack-fed
+      E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
+      D3V3    AP632_3V3         1.155 A  0.9123  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      KSZ1V2  declared 0.85     1.210 A  0.0234  W at the pack per point below the declared figure
+      HUB1V1  declared 0.85     0.568 A  0.0101  W at the pack per point below the declared figure
+      S1A     AP64500_3V3       2.424 A  0.9126  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1B     AP64500_3V3       0.895 A  0.8947  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1C     declared 0.85     0.270 A  0.0045  W at the pack per point below the declared figure
+      S2A     AP64500_3V3       1.617 A  0.9104  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2B     AP64500_3V3       0.895 A  0.8947  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2C     declared 0.85     0.270 A  0.0044  W at the pack per point below the declared figure
+      S3A     AP64500_3V3       0.303 A  0.8456  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3B     AP64500_3V3       0.895 A  0.8947  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3C     declared 0.85     0.270 A  0.0043  W at the pack per point below the declared figure
+      D8IN    declared 0.90     0.160 A  0.0103  W at the pack per point below the declared figure
+      FAN12   declared 0.85     0.120 A  0.0210  W at the pack per point below the declared figure
+      S1F     declared 0.85     0.043 A  0.0084  W at the pack per point below the declared figure
+      S2F     declared 0.85     0.043 A  0.0082  W at the pack per point below the declared figure
+      S3F     declared 0.85     0.043 A  0.0080  W at the pack per point below the declared figure
+   == PS-ALLTX
+      S1      AP64500_5V        4.666 A  0.9177 0.9142 0.9107 0.9072 0.9037  pack-fed
+      S2      declared 0.90     3.911 A  0.2698  W at the pack per point below the declared figure
+      S3      AP64500_5V        2.939 A  0.9353 0.9317 0.9282 0.9246 0.9211  pack-fed
+      DEV     declared 0.90     5.269 A  0.3634  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.303 A  0.0141  W at the pack per point below the declared figure
+      PA      LM5176_12V        5.435 A  0.9859 0.9844 0.9829 0.9814 0.9799  pack-fed
+      HF      LM5176_12V        1.000 A  0.9700 0.9655 0.9610 0.9565 0.9520  pack-fed
+      E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
+      D3V3    AP632_3V3         1.352 A  0.9039  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      KSZ1V2  declared 0.85     1.210 A  0.0245  W at the pack per point below the declared figure
+      HUB1V1  declared 0.85     0.568 A  0.0105  W at the pack per point below the declared figure
+      S1A     AP64500_3V3       2.758 A  0.9110  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1B     AP64500_3V3       1.209 A  0.9041  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S1C     declared 0.85     0.676 A  0.0117  W at the pack per point below the declared figure
+      S2A     AP64500_3V3       1.617 A  0.9104  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2B     AP64500_3V3       1.209 A  0.9041  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S2C     declared 0.85     0.676 A  0.0114  W at the pack per point below the declared figure
+      S3A     AP64500_3V3       0.303 A  0.8456  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3B     AP64500_3V3       1.209 A  0.9041  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3C     declared 0.85     0.676 A  0.0111  W at the pack per point below the declared figure
+      D8IN    declared 0.90     0.660 A  0.0446  W at the pack per point below the declared figure
+      FAN12   declared 0.85     0.120 A  0.0219  W at the pack per point below the declared figure
+      S1F     declared 0.85     0.043 A  0.0089  W at the pack per point below the declared figure
+      S2F     declared 0.85     0.043 A  0.0086  W at the pack per point below the declared figure
+      S3F     declared 0.85     0.043 A  0.0084  W at the pack per point below the declared figure
+   == PS-SURV-R (the heat stage)
+      S3      AP64500_5V        1.349 A  0.9286 0.9238 0.9191 0.9143 0.9095  pack-fed
+      DEV     declared 0.90     2.001 A  0.1286  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.152 A  0.0066  W at the pack per point below the declared figure
+      PA      LM5176_12V        0.065 A  0.8600 0.8540 0.8480 0.8420 0.8360  pack-fed
+      E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
+      D3V3    AP632_3V3         1.072 A  0.9163  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      KSZ1V2  declared 0.85     1.210 A  0.0228  W at the pack per point below the declared figure
+      HUB1V1  declared 0.85     0.201 A  0.0035  W at the pack per point below the declared figure
+      S3B     AP64500_3V3       0.380 A  0.8589  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
+      S3C     declared 0.85     0.270 A  0.0040  W at the pack per point below the declared figure
+      D8IN    declared 0.90     0.120 A  0.0076  W at the pack per point below the declared figure
+      FAN12   declared 0.85     0.120 A  0.0204  W at the pack per point below the declared figure
+      S3F     declared 0.85     0.043 A  0.0076  W at the pack per point below the declared figure
+
+10. MARGIN FINDINGS (the rules: CMP-001's acceptance, 'For every part on a net whose nominal voltage exceeds 80 percent of the part's rating, and for every part in a current path above 1 A, a recorded comparison of the applied stress against the datasheet maximum, citing the datasheet page.'; the pack's declared continuous 10 A and peak 18 A, pcb_pack_protection.yaml;
+    D-11: 'Set from the gauge's 20 A over-current trip with 10 percent margin and the cells' 60 C discharge window.' A limit acting by design is reported, not hidden.) Classes per the owner's instruction of 2 October 2026: a demonstrated
+    defect is corrected by its owner; an assumption is bounded with evidence or designed out; a physical question gets a specimen, a
+    measurement, an acceptance and the consequence of failure. The class and the owner are this record's reading (SESSION).
+   L9P-F01  DEMONSTRATED ANALYSIS DEFECT  (new)  D-11's all-transmit floor on the drafted design
+      figure: the basis (all transmitters keyed, non-transmit loads typical, the standby card off, every other load at HIGH) needs a pack rest voltage of 15.99 V at the worst cell resistance, 0.49 V over the 15.5 V floor; DRAWN 15.34 V (0.16 V under it), rv-pwr on main 15.31 V; the drafted pair adds 0.190 V at 18 A (10.568 mOhm at L4-E11's 150 C bound) and the drafted fans and converters at HIGH 0.458 V (8.25 W more at VBAT); the floor covers a cell resistance of at most 0.0397 Ohm, under rv-pwr's PLAN 0.050 Ohm
+      rule:   D-11's floor, set from the gauge's 20 A over-current trip with 10 percent margin (18 A) and the cells' 60 C window (pcb_requirements.yaml, D-11)
+      why:    the floor's own arithmetic, re-run on the drafts' own figures, does not hold: the drafts were written after the floor and none re-derived it; a desk result on maker figures and L4-E11's bound, not an assumption a measurement would settle
+      action: correct the threshold set: re-derive the floor on the drafted pack path and loads (at least 15.99 V rest, 3.997 V a cell, plus the stated margin), or cap the fans' duty during a key-down in FW-A05 and take the basis at that duty; either is a firmware threshold and its contract text
+      owner:  L4-E9 (C05: the key-down rules K1 to K5 and C4, FW-A05, the floors 15.5 and 12.4 V), with L4-E11 (the pair) and the fans' feeds (L4-E11 18a, l8r2 item 1); the contract text FW-A05 is Layer 5's
+   L9P-F02  ASSUMPTION TO BOUND  (new)  slots 1 and 3's AP64500 at HIGH with the drafted cooler step-ups
+      figure: PS-ALLTX, PS-BUSY at HIGH: 5.010 A against the AP64500's 5 A (DS41979 p.1), 0.010 A over; at PLAN at most 4.666 A; DRAWN at most 4.658 A at HIGH (the representative 5 V fan); the step-up takes 0.461 A of the slot rail at full speed
+      rule:   CMP-001: the applied stress against the datasheet maximum for every part in a current path above 1 A
+      why:    HIGH stacks every maximum at once: the CM5 at board B's declared 1.6 A (Raspberry Pi publishes no maximum), the WiFi card at AsiaRF's 9.1 W, the NVMe at its maximum and the cooler at full speed; no document puts them together
+      action: bound it or design it out: l8r2's own alternative (b), one 12 V fan feed from board A over the bay harness, takes the cooler off the slot rail; or the module's Fan_PWM duty limited while the slot's INA226 reads above a set current; else a bench reading of the slot's peak with the module and card loaded (TEST-PLAN power rows)
+      owner:  l8r2 (item 1, choice (a) against (b)), with board A's generator owner for the slot rails (I-03)
+   L9P-F03  ASSUMPTION TO BOUND  (carried (I-03))  the device rail's LM5176 average loop in PS-ALLTX at HIGH
+      figure: 7.181 A DRAFTED, 7.154 A DRAWN, against the loop's least 7.0957 A (VSNS 43 mV over 6 mOhm at +1 %); PLAN 5.269 A
+      rule:   CMP-001; the generator's own I-03 comparison (gen_sch_a.py: the conditional P-tier fails the loop minimum)
+      why:    the PS-ALLTX currents of the device rail's loads are INCONCLUSIVE on held documents (cx1, I-03); HIGH takes each at its contract or maximum
+      action: I-03's bench reading of the device rail in PS-ALLTX, or the rail split W2 F-PR-04 named; the loop limits rather than damages (the rail droops)
+      owner:  board A's generator owner under I-03, with the TEST-PLAN power rows
+   L9P-F04  PHYSICAL QUESTION  (carried (rv-pwr; F-PR-01))  the PA rail's LM5176 average loop at the PA's 113 W bound
+      figure: 8.188 A at HIGH (W2 F-PR-02's 113 W, INFERRED) against the loop's least 7.0957 A; PLAN 5.435 A (75 W)
+      rule:   CMP-001; F-PR-01 (gen_sch_a.py) sets the loop above the 6.0 A declared peak so that the 8.2 A bound meets it and the rail droops
+      why:    the drain current at 13.8 V is the RA30H1317M1's, which its sheet states at 12.5 V only; rv-pwr carries it as a bench item
+      action: specimen: one RA30H1317M1 on a heat sink at 13.8 V with the design's VGG (board D, 4.30 to 4.68 V) into 50 Ohm at 144 to 146 MHz; measure the drain current at 30 W out; accept at most 7.10 A; on failure the rail limits and the PA gives less than 30 W (no damage), and the choice is a lower output setting or a 5 mOhm ISNS shunt within the JST-VH lead's 10 A
+      owner:  the TEST-PLAN power rows (the bench), with board A's F-PR-01 and POWER-THERMAL section 7.2's record
+   L9P-F05  ASSUMPTION TO BOUND  (carried (rv-pwr 7.1), moved)  sustained states over the pack's continuous current at HIGH at the gauge's under-voltage
+      figure: PS-TYP 13.47 A at HIGH (rv-pwr 12.24), PLAN 6.58 A; PS-BUSY 14.97 A at HIGH (rv-pwr 13.66), PLAN 9.63 A; PS-TYP plus the heater (cold overlay) 14.40 A at HIGH (rv-pwr 13.80), PLAN 7.46 A, against 10 A at 10.0 V (the stack at 2.50 V a cell)
+      rule:   the pack's declared continuous current (pcb_pack_protection.yaml, declared_continuous_a) at every stack voltage down to CUV
+      why:    HIGH stacks maxima; PS-BUSY's PLAN stays under (its margin at 10.0 V 0.37 A, rv-pwr's 0.70 A)
+      action: bounded by the control rv-pwr 9.3 took (the current trigger of the module shedding, read on the gauge's pack current); the trigger's setting is re-read on the drafted figures
+      owner:  L4-E9 (C02 and C06: the shedding and the gauge's relay), POWER-THERMAL section 9.3's control
+   L9P-F06  ASSUMPTION TO BOUND  (carried (rv-pwr 7.1), moved)  the outlets over PS-TYP and PS-BUSY at PLAN
+      figure: PS-TYP plus PoE 10.52 A at PLAN (rv-pwr 10.17); PS-TYP plus USB-C 11.78 A at PLAN (rv-pwr 11.38); PS-TYP plus both outlets 15.90 A at PLAN (rv-pwr 15.30); PS-BUSY plus both outlets 19.20 A at PLAN (rv-pwr 18.39) at 10.0 V, against 10 A
+      rule:   the pack's declared continuous current, as L9P-F05
+      why:    the outlets' contracts (PoE 32.4 W, USB-C 45 W) are what their stages may deliver; rv-pwr 7.1 found these rows over and took an outlet budget
+      action: bounded by rv-pwr 9.3's outlet budget (and the tablet's 18 W cap, a proposal); its numbers re-read on the drafted figures
+      owner:  L4-E9 (C03, C04 and the tablet budget)
+   within their rules (no finding): every other converter in every state; U42 on VSYS_E, U22, the coolers' eFuses and U901 (DRAFTED);
+   D-11's PA-alone floor on every tree; the heater rows of section 7 are over the floor on every tree, which is why the rule holds the heater
+   off during any key-down (rv-pwr 7.2), so they are not a finding
+
+11. PREDICATES
+   D-11's PA-alone floor holds on every tree                                                                              yes
+   D-11's all-transmit floor holds on RV and DRAWN and fails on DRAFTED                                                   yes
+   DRAFTED's PLAN is above DRAWN's in every state                                                                         yes
+   DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered                             yes
+   every drafted node and row is labelled DRAFTED                                                                         yes
+   every margin finding has a class among the instruction's three and an owner                                            yes
+   no converter is over its limit at PLAN in any state, DRAWN or DRAFTED                                                  yes
+   reconciliation R10: Layer 4's figure reproduced from its own inputs                                                    yes
+   reconciliation R1: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R1b: Layer 4's figure reproduced from its own inputs                                                    yes
+   reconciliation R2: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R3: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R4: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R5: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R6: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R7: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R8: Layer 4's figure reproduced from its own inputs                                                     yes
+   reconciliation R9: Layer 4's figure reproduced from its own inputs                                                     yes
+   rv-pwr's committed headline table equals this evaluator at 0.1 W                                                       yes
+   the findings are L9P-F01 to L9P-F06                                                                                    yes
+   the waterfall's last step is DRAFTED and its first RV, on every state                                                  yes
+   this evaluator reproduces rv-pwr on its own tree within 1e-9 W                                                         yes
+
+END. Desk arithmetic on the files pinned in section 0; nothing is measured, nothing is applied, and a software test of this script
+establishes the arithmetic only.
