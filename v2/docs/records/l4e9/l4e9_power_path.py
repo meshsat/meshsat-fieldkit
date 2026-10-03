@@ -39,11 +39,13 @@ Needs pdftotext and PyYAML. A few seconds. Exit 2: a pinned file is not the pinn
 import ast
 import glob
 import hashlib
+import io
 import math
 import os
 import re
 import subprocess
 import sys
+import tokenize
 
 import yaml
 
@@ -433,6 +435,225 @@ def cap_uf(v):
     if not m:
         return None
     return float(m.group(1)) * {"p": 1e-6, "n": 1e-3, "u": 1.0}[m.group(2)]
+
+
+
+# ---------------------------------------------------- a fitted capacitor read from the authority that fills it (round 6)
+# Round 6 (set 28's integration, 3 October 2026): this record read C5's code from one typed key of lcsc_fill.py and then
+# required gen_sch_e.py to carry "YAGEO CC0603KRX7R9BB104, LCSC <code>", a sentence that is gen_sch_e.py's note on C46 and C59
+# (E6_DVDD), not a statement about C5; Layer 6 (l6r2 round 3) moved the fill line to a 100 V part and the record refused.
+# From here a capacitor's part is read the way lcsc_fill.py fills it: the part's own LCSC field wins, else the first MAP key
+# whose value pattern re.match-es the value and whose footprint text is in the footprint; the part number is the YAGEO part
+# number in the comment of the line that carries that key (read only when the line carries one key). The held Yageo sheet is
+# then read for that part number: the ordering code (size, tolerance, packing, rated voltage, capacitance), the capacitance
+# range table of its size, and the endurance test's product class (general or high capacitance), whose figure differs.
+KISCH_C_DEFAULT_FP = "C"   # kisch.py: def c(ref, val, a, b, fp="C", lcsc="", bypass=None); kisch.py is not an input here, test_l4e9 reads its default
+
+
+def gen_cap_call(text, ref):
+    """The one c() call that draws ref in a schematic generator, by its syntax tree: (value, footprint key, LCSC code)."""
+    hits = [n for n in ast.walk(ast.parse(text)) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "c"
+            and n.args and isinstance(n.args[0], ast.Constant) and n.args[0].value == ref]
+    if len(hits) != 1:
+        refuse(3, "%d c() calls draw %s" % (len(hits), ref))
+    n = hits[0]
+    kw = {k.arg: k.value for k in n.keywords}
+    arg = lambda i, name, dflt: n.args[i] if len(n.args) > i else kw.get(name, ast.Constant(dflt))
+    out = []
+    for i, name, dflt in ((1, "val", None), (4, "fp", KISCH_C_DEFAULT_FP), (5, "lcsc", "")):
+        a = arg(i, name, dflt)
+        if not isinstance(a, ast.Constant) or not isinstance(a.value, str):
+            refuse(3, "%s's c() argument %s is not a literal" % (ref, name))
+        out.append(a.value)
+    out.append("fp" not in kw and len(n.args) <= 4)
+    return tuple(out)
+
+
+def gen_fp_table(text):
+    """A generator's footprint table FP (key -> library footprint), a module-level literal."""
+    for st in ast.parse(text).body:
+        if isinstance(st, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "FP" for t in st.targets):
+            return ast.literal_eval(st.value)
+    refuse(3, "the generator's FP table not found")
+
+
+def fill_table(lc):
+    """lcsc_fill.py's MAP in the order lcsc_fill.py applies it (a dict literal: a repeated key keeps its first place and takes its
+    last code), each key with the source line of its code, the number of keys on that line and the line's comment."""
+    tree = ast.parse(lc)
+    node = [st.value for st in tree.body if isinstance(st, ast.Assign) and isinstance(st.value, ast.Dict)
+            and any(isinstance(t, ast.Name) and t.id == "MAP" for t in st.targets)]
+    if len(node) != 1:
+        refuse(3, "lcsc_fill.py's MAP literal not found once")
+    for n in ast.walk(tree):    # the table is read as written: refuse a later change to it
+        if isinstance(n, (ast.Assign, ast.AugAssign)) and any(isinstance(t, ast.Subscript) and isinstance(t.value, ast.Name) and t.value.id == "MAP"
+                                                               for t in (n.targets if isinstance(n, ast.Assign) else [n.target])):
+            refuse(3, "lcsc_fill.py assigns into MAP after its literal")
+        if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and isinstance(n.func.value, ast.Name) and n.func.value.id == "MAP" \
+                and n.func.attr in ("update", "setdefault", "pop", "__setitem__"):
+            refuse(3, "lcsc_fill.py changes MAP after its literal")
+    comments = {t.start[0]: t.string[1:].strip() for t in tokenize.generate_tokens(io.StringIO(lc).readline) if t.type == tokenize.COMMENT}
+    per_line, table = {}, {}
+    for k, v in zip(node[0].keys, node[0].values):
+        per_line[v.lineno] = per_line.get(v.lineno, 0) + 1
+        table[ast.literal_eval(k)] = (ast.literal_eval(v), v.lineno)
+    return [(key, code, ln, per_line[ln], comments.get(ln, "")) for key, (code, ln) in table.items()]
+
+
+def fill_reading(lc, value, footprint, own_code, texts):
+    """The LCSC code and part number lcsc_fill.py gives a part (its loop: a code on the part wins, else the first MAP key that
+    matches). A part's own code takes its part number from a pinned text that pairs the two ("YAGEO <part>, LCSC <code>")."""
+    if own_code:
+        for name, t in texts:
+            mm = re.search(r"\bYAGEO (CC[0-9A-Z]+), LCSC %s\b" % re.escape(own_code), t)
+            if mm:
+                return {"code": own_code, "mpn": mm.group(1), "by": "its own LCSC field; the part number from %s" % name}
+        return {"code": own_code, "mpn": None, "by": "its own LCSC field; no pinned text names its part number"}
+    for (vre, fsub), code, ln, n, com in fill_table(lc):
+        if re.match(vre, value) and fsub in footprint:
+            mm = re.search(r"\bYAGEO (CC[0-9A-Z]+)\b", com) if n == 1 else None
+            return {"code": code, "mpn": mm.group(1) if mm else None, "line": ln,
+                    "by": "lcsc_fill.py line %d, key (%s, %s)%s" % (ln, vre, fsub, "" if mm else ", whose line names no single YAGEO part number")}
+    return None
+
+
+def _pf(num, unit):
+    return float(num) * {"pF": 1.0, "nF": 1e3, "µF": 1e6}[unit]
+
+
+def pf_txt(pf):
+    """A capacitance in pF as the record prints it (pF, nF or uF)."""
+    for div, unit in ((1e6, "uF"), (1e3, "nF"), (1.0, "pF")):
+        if pf >= div:
+            return "%s %s" % (fmt(round(pf / div, 3)), unit)
+    return "%s pF" % fmt(pf)
+
+
+def asc(s):
+    """A sheet's text as this record prints it (ASCII): +- for the plus-minus sign, u for micro, dC/C, <=."""
+    for a, b in (("± ", "+-"), ("±", "+-"), ("µ", "u"), ("∆", "d"), ("Δ", "d"), ("≤", "<=")):
+        s = s.replace(a, b)
+    return s
+
+
+def _nearest(cols, x):
+    return min(cols, key=lambda c: abs(c[0] - x))[1]
+
+
+def _centres(line, pat):
+    return [(mm.start() + len(mm.group(0)) / 2.0, mm) for mm in re.finditer(pat, line)]
+
+
+def yageo_cc_reading(mpn, ya):
+    """What the held Yageo CC X7R sheet says about one part number. COVERED when every item reads; else INCONCLUSIVE, naming what
+    did not read (never a substitute figure). Cells of the layout tables are placed under the column whose centre is nearest."""
+    R = {"mpn": mpn, "missing": [], "said": []}
+    miss, said = R["missing"].append, R["said"].append
+    m = re.fullmatch(r"CC(\d{4})([A-Z])([A-Z])X7R([0-9A-Z])BB(\d)(\d)(\d)", mpn or "")
+    if not re.search(r"CC\s+XXXX X X\s+X7R X BB XXX", ya):
+        miss("the ordering code's form")
+    if not m:
+        miss("an X7R CC global part number")
+        R["verdict"] = "INCONCLUSIVE"
+        return R
+    size, tol, pack, vd, d1, d2, mult = m.groups()
+    R["size"], R["pf"] = size, (int(d1) * 10 + int(d2)) * 10.0 ** int(mult)
+    span = lambda a, b: ya[ya.find(a): ya.find(b)] if 0 <= ya.find(a) < ya.find(b) else ""
+    s1, s2 = span("(1) SIZE", "(2) TOLERANCE"), span("(2) TOLERANCE", "(3) PACKING STYLE")
+    s3, s4 = span("(3) PACKING STYLE", "(4) RATED VOLTAGE"), span("(4) RATED VOLTAGE", "(5) CAPACITANCE VALUE")
+    s5 = span("(5) CAPACITANCE VALUE", "NOTE")
+    mm = re.search(r"(?<!\d)%s \((\d{4})\)" % size, s1)
+    (said if mm else miss)(mm.group(0) if mm else "the size %s" % size)
+    mm = re.search(r"(?<![A-Za-z])%s = ± (\d+(?:\.\d+)?)%%" % tol, s2)
+    if mm:
+        R["tol"] = float(mm.group(1)) / 100.0
+        said(asc(mm.group(0)))
+    else:
+        miss("the tolerance letter %s" % tol)
+    mm = re.search(r"(?<![A-Za-z])%s = ([^\n]*?reel; Reel \d+ inch)" % pack, s3)
+    (said if mm else miss)(mm.group(0) if mm else "the packing letter %s" % pack)
+    mm = re.search(r"(?<![\w.])%s = (\d+(?:\.\d+)?) V" % re.escape(vd), s4)
+    if mm:
+        R["volts"] = float(mm.group(1))
+        said(mm.group(0))
+    else:
+        miss("the rated-voltage digit %s" % vd)
+    if "2 significant digits+number of zeros" in s5:
+        said("%s%s%s = %s (2 significant digits+number of zeros)" % (d1, d2, mult, pf_txt(R["pf"])))
+    else:
+        miss("the capacitance code's rule")
+    if "volts" not in R:
+        R["verdict"] = "INCONCLUSIVE"
+        return R
+    # the capacitance range table of the size (one size per table; a two-size table is not read)
+    mt = re.search(r"Table (\d+) Sizes? (?:from )?%s\b(?! to)" % size, ya)
+    listed = None
+    if mt:
+        tb = ya[mt.end(): ya.find("NOTE", mt.end())]
+        hl = next((l for l in tb.split("\n") if "6.3 V" in l), None)
+        if hl:
+            vcols = [(c, float(x.group(1))) for c, x in _centres(hl, r"(\d+(?:\.\d+)?) ?V\b")]
+            for l in tb.split("\n"):
+                rr = re.match(r"\s*(\d+(?:\.\d+)?) (pF|nF|µF)\b", l)
+                if rr and abs(_pf(rr.group(1), rr.group(2)) - R["pf"]) < 1e-6 * R["pf"]:
+                    codes = [(c, x.group(0)) for c, x in _centres(l[rr.end():], r"\b[A-Z][A-Z0-9]\b")]
+                    hit = [cd for c, cd in codes if _nearest(vcols, c + rr.end()) == R["volts"]]
+                    listed = (mt.group(1), rr.group(1) + " " + rr.group(2), hit[0]) if len(hit) == 1 else None
+    if listed:
+        said(asc("Table %s (sizes from %s) lists %s at %s V (%s)" % (listed[0], size, listed[1], fmt(R["volts"]), listed[2])))
+    else:
+        miss("%s at %s V in the %s capacitance range table" % (pf_txt(R["pf"]), fmt(R["volts"]), size))
+    # the endurance test: its product class, from the note table of test voltages, and the class's change of capacitance
+    hdr = re.search(r"^X7R\s+0201\s+0402.*Test voltage\s*$", ya, re.M)
+    me = re.search(r"Endurance\s+IEC 60384-", ya)
+    gp = hc = None
+    if hdr and me and me.start() < hdr.start():
+        eb = ya[me.start(): hdr.start()]
+        gp = re.search(r"<General Purpose series>.*?X7R: ± (\d+(?:\.\d+)?)%", eb, re.S)
+        hc = re.search(r"<High Capacitance series>.*?X7R: ± (\d+(?:\.\d+)?)%", eb, re.S)
+        fg = re.search(r"Applied (\d+\.\d+) x Ur for general products", eb)
+        fh = re.search(r"Applied (\d+\.\d+) x Ur for high cap\. Products", eb)
+    cls = None
+    if hdr and gp and hc and fg and fh:
+        kind = {round(float(fg.group(1)) * 100): "general", round(float(fh.group(1)) * 100): "high capacitance"}
+        scols = [(c, x.group(1)) for c, x in _centres(hdr.group(0), r"\b(0201|0402|0603|0805|1206|1210|1812|2220)\b")]
+        lines = ya[hdr.end():].split("\n")[1:30]
+        lab = lambda l: re.match(r"(≤?)(\d+(?:\.\d+)?)V\b", l)
+        for j, l in enumerate(lines):
+            pc = re.search(r"(\d+)% x Rated voltage\s*$", l)
+            if not pc:
+                continue
+            own = lab(l)
+            lb = own or (lab(lines[j - 1]) if j else None) or (lab(lines[j + 1]) if j + 1 < len(lines) else None)
+            if not lb or float(lb.group(2)) != R["volts"]:
+                continue
+            for c, x in _centres(l, r"(\d+(?:\.\d+)?)(pF|nF|µF)(?: to (\d+(?:\.\d+)?)(pF|nF|µF))?"):
+                lo = _pf(x.group(1), x.group(2))
+                hi = _pf(x.group(3), x.group(4)) if x.group(3) else lo
+                if _nearest(scols, c) == size and lo * (1 - 1e-9) <= R["pf"] <= hi * (1 + 1e-9):
+                    if cls is not None:
+                        cls = "two"
+                    else:
+                        cls = (kind.get(int(pc.group(1))), x.group(0), pc.group(1))
+    if cls and cls != "two" and cls[0]:
+        R["class"] = cls[0]
+        R["endur"] = float((gp if cls[0] == "general" else hc).group(1)) / 100.0
+        said(asc("the endurance test's note puts %s at %sV in the %s column of the %s%% x Rated voltage row (%s), the %s products "
+                 "(Applied %s x Ur): endurance dC/C X7R +-%s %% (<General Purpose series> +-%s %%, <High Capacitance series> +-%s %%)"
+                 % (pf_txt(R["pf"]), fmt(R["volts"]), size, cls[2], cls[1], cls[0], (fg if cls[0] == "general" else fh).group(1),
+                    fmt(R["endur"] * 100), gp.group(1), hc.group(1))))
+    else:
+        miss("the endurance test's product class for %s at %s V in %s" % (pf_txt(R["pf"]), fmt(R["volts"]), size))
+    mt2 = re.search(r"Maximum capacitance change as a function of temperature\s*\n\s*\(temperature characteristic/coefficient\):\s+± (\d+)%"
+                    r"\s*\n\s*Operating temperature range", ya)
+    if mt2:
+        R["temp"] = float(mt2.group(1)) / 100.0
+        said("the temperature characteristic +-%s %%, one figure for the series (its row has no rated-voltage split)" % mt2.group(1))
+    else:
+        miss("the temperature characteristic as one figure")
+    R["verdict"] = "COVERED" if not R["missing"] else "INCONCLUSIVE"
+    return R
+
 
 
 # ------------------------------------------------------------------------------------------------------- the checks
@@ -2499,14 +2720,26 @@ def partA(F, D, T):
     A["soa_36_line"] = soa_at(lines["10ms"], 36.0)
     # final round (the recheck's B1): the breaker's threshold at R19's corner, and the timer's component envelope
     A["cb_thr"] = A["vcb_max"] * 1e-3 / (A["rs"] * (1 - rs_tol))
+    # round 6 (set 28): C5's fitted part read from the authority that fills it (lcsc_fill.py by its own rule, the code and the part
+    # number of the line that fills it) and the held Yageo sheet read for that part number; never a typed code or part number
     ya = pdf_text("yageo")
-    need(ya, r"K = ± 10%", "Yageo K tolerance")
-    A["c_tol"] = 0.10
-    A["c_temp"] = f(need(ya, r"Maximum capacitance change as a function of temperature\s*\n\s*\(temperature characteristic/coefficient\):\s+± (\d+)%", "X7R temperature characteristic")) / 100.0
-    A["c_endur"] = f(need(ya, r"Endurance\s+IEC 60384-.*?X7R: ± (\d+)%", "X7R endurance change", re.S)) / 100.0
     lc = _C_TEXT["lcsc"]
-    A["c5_code"] = need(lc, r'\(r"\^100n", "C_0603"\): "(C\d+)"', "C5's fill mapping").group(1)
-    need(T["gen_e"], r"YAGEO CC0603KRX7R9BB104, LCSC %s" % A["c5_code"], "C5's part")
+    c5v, c5k, c5own, c5dflt = gen_cap_call(T["gen_e"], "C5")
+    fpE = gen_fp_table(T["gen_e"])
+    if c5k not in fpE:
+        refuse(3, "C5's footprint key %s is not in gen_sch_e.py's FP" % c5k)
+    A["c5_value"], A["c5_fpkey"], A["c5_fp"], A["c5_fpdflt"], A["c5_own"] = c5v, c5k, fpE[c5k], c5dflt, c5own
+    fr = fill_reading(lc, c5v, fpE[c5k], c5own, [("gen_sch_e.py", T["gen_e"])])
+    if not fr or not fr["mpn"]:
+        refuse(3, "C5's fitted part: INCONCLUSIVE (%s); the timer envelope is not computed" % (fr["by"] if fr else "no lcsc_fill.py line fills it"))
+    A["c5_code"], A["c5_mpn"], A["c5_by"] = fr["code"], fr["mpn"], fr["by"]
+    A["c5_ya"] = yageo_cc_reading(A["c5_mpn"], ya)
+    if A["c5_ya"]["verdict"] != "COVERED":
+        refuse(3, "C5's part %s on the held Yageo sheet: INCONCLUSIVE (not read: %s); the timer envelope is not computed"
+               % (A["c5_mpn"], "; ".join(A["c5_ya"]["missing"])))
+    if cap_uf(c5v) is None or abs(cap_uf(c5v) * 1e6 - A["c5_ya"]["pf"]) > 1e-6 * A["c5_ya"]["pf"]:
+        refuse(3, "C5's value %s is not its part number's capacitance" % c5v)
+    A["c_tol"], A["c_temp"], A["c_endur"] = A["c5_ya"]["tol"], A["c5_ya"]["temp"], A["c5_ya"]["endur"]
     hi_f = (1 + A["c_tol"]) * (1 + A["c_temp"]) * (1 + A["c_endur"])
     lo_f = (1 - A["c_tol"]) * (1 - A["c_temp"]) * (1 - A["c_endur"])
     A["c_hi_f"], A["c_lo_f"] = hi_f, lo_f
@@ -2578,8 +2811,32 @@ def partA(F, D, T):
     vc = need(poe_call, r'vin_cap=\("C\d+", "(\d+)n"', "U16's VIN capacitor")
     bc = need(gA, r'c\(bias_cap, "(\d+)n", bias or vout', "the BIAS capacitor")
     A["poe_c_uf"] = 2 * float(cin) + float(vc.group(1)) * 1e-3 + float(bc.group(1)) * 1e-3
-    m = need(_C_TEXT["lcsc"], r'\(r"\^10u 50V X7R 1210\$", "C_1210"\): "(C\d+)",\s+# YAGEO (CC1210KKX7R9BB106)', "the 10 uF fill mapping")
-    A["c10_code"], A["c10_part"] = m.group(1), m.group(2)
+    # round 6 (set 28): each capacitor behind R227 read from board A's netlist (value, land, its own LCSC field) and filled by
+    # lcsc_fill.py's own rule; its part number read on the held Yageo sheet, its envelope by its own product class
+    u16 = [n for n in ast.walk(ast.parse(gA)) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "lm5176"
+           and len(n.args) > 10 and isinstance(n.args[1], ast.Constant) and n.args[1].value == "U16"]
+    if len(u16) != 1:
+        refuse(3, "U16's lm5176() call not found once")
+    kw16 = {k.arg: k.value for k in u16[0].keywords}
+    order = [s.strip() for s in need(gA, r'"""one stage with prefix p: refs = \(([^)]*)\)', "the helper's refs order").group(1).split(",")]
+    refs16 = ast.literal_eval(u16[0].args[10])
+    A["r227_refs"] = [refs16[order.index("Cin1")], refs16[order.index("Cin2")], ast.literal_eval(kw16["vin_cap"])[0], ast.literal_eval(kw16["bias_cap"])]
+    A["r227_parts"] = []
+    for ref in A["r227_refs"]:
+        mc = need(T["net_a"], r'\(comp \(ref "%s"\)\s*\(value "([^"]+)"\)\s*\(footprint "([^"]+)"\)\s*\(fields(.*?)\)\s*\(libsource' % ref,
+                  ref + " in board A's netlist", re.S)
+        own = re.search(r'\(field \(name "LCSC"\) "([^"]+)"\)', mc.group(3))
+        fr = fill_reading(_C_TEXT["lcsc"], mc.group(1), mc.group(2), own.group(1) if own else "", [("gen_sch_e.py", T["gen_e"]), ("gen_sch_a.py", gA)])
+        if not fr or not fr["mpn"]:
+            refuse(3, "%s's fitted part: INCONCLUSIVE (%s); R227's envelope is not computed" % (ref, fr["by"] if fr else "no lcsc_fill.py line fills it"))
+        rd = yageo_cc_reading(fr["mpn"], ya)
+        if rd["verdict"] != "COVERED":
+            refuse(3, "%s's part %s on the held Yageo sheet: INCONCLUSIVE (not read: %s); R227's envelope is not computed" % (ref, fr["mpn"], "; ".join(rd["missing"])))
+        uf = cap_uf(mc.group(1))
+        if uf is None or abs(uf * 1e6 - rd["pf"]) > 1e-6 * rd["pf"]:
+            refuse(3, "%s's value %s is not its part number's capacitance" % (ref, mc.group(1)))
+        A["r227_parts"].append({"ref": ref, "uf": uf, "code": fr["code"], "mpn": fr["mpn"], "by": fr["by"], "rd": rd,
+                                "tol": rd["tol"], "hi": (1 + rd["tol"]) * (1 + rd["temp"]) * (1 + rd["endur"])})
     vb_hi, vb_reg, vpk = round(D["pack_open"]["v_end"], 3), F["chg_v_max"], F["SMCJ18A"]["vc"]
     A["tr_steps"] = [("a hard connect, 0 to the regulated maximum", 0.0, vb_reg, True),
                      ("the pack opening mid-charge, regulated maximum to the pack-open bound", vb_reg, vb_hi, True),
@@ -2588,6 +2845,13 @@ def partA(F, D, T):
     for nm, v0, v1, req in A["tr_steps"]:
         dv = v1 - v0
         A["tr"].append((nm, v0, v1, dv, v0 + 2 * dv, 0.5 * A["poe_c_uf"] * 1e-6 * dv ** 2 * 1e3, req))
+    if len({(p_["tol"], p_["rd"]["temp"]) for p_ in A["r227_parts"]}) != 1:
+        refuse(3, "the capacitors behind R227 differ in tolerance or temperature characteristic; the sentence names one of each")
+    if abs(sum(p_["uf"] for p_ in A["r227_parts"]) - A["poe_c_uf"]) > 1e-9:
+        refuse(3, "board A's netlist and the helper disagree on the capacitance behind R227")
+    dv0 = A["tr"][0][3]
+    A["r227_tol_mj"] = 0.5 * sum(p_["uf"] * (1 + p_["tol"]) for p_ in A["r227_parts"]) * 1e-6 * dv0 ** 2 * 1e3
+    A["r227_hi_mj"] = 0.5 * sum(p_["uf"] * p_["hi"] for p_ in A["r227_parts"]) * 1e-6 * dv0 ** 2 * 1e3
     A["ina_diff_abs"] = f(need(ina, r"Differential \(VIN\+ . VIN-\)\(2\)\s+.40\s+(\d+)", "INA226 differential absolute"))
     # the buck fault: steady buck operation and one full on-time in a hard short
     fsw = need(pdf_text("lm5176"), r"fSW\(1\)\s+Switching frequency 1\s+RT = (\d+) k[\u2126\u03a9]\s+(\d+)\s+(\d+)\s+(\d+)", "LM5176 fSW(1)")
@@ -2684,10 +2948,11 @@ def partA_lines(F, D, A):
       % (fmt(round(A["cb_10us_hot"], 1)), fmt(round(vmax, 2)), fmt(round(A["plim_new_nom"], 3)), fmt(R24_TOL * 100)))
     p("       %s W, times TI's margin %s: %s W, %s A at %s V, for the fault time, then off after tFAULT (%s us typical) and the 2 mA pulldown, and a"
       % (fmt(round(A["plim_new_hi"], 3)), fmt(TI_SOA_MARGIN), fmt(round(A["pulse_w"], 2)), fmt(round(A["pulse_a"], 3)), fmt(round(vmax, 2)), fmt(A["tfault_us"])))
-    p("       retry at %s %% duty. The fault time: L4-E5's %s / %s / %s ms take C5 at its nominal 100 nF; C5 is %s (Yageo CC0603KRX7R9BB104, K: +-%s %%;"
-      % (fmt(A["restart_duty"] * 100), *[fmt(x) for x in F["timer_ms"]], A["c5_code"], fmt(A["c_tol"] * 100)))
-    p("       X7R: +-%s %% over temperature and +-%s %% after endurance, the Yageo sheet V.26), so +%s %% alone gives %s ms and the printed rows stacked"
-      % (fmt(A["c_temp"] * 100), fmt(A["c_endur"] * 100), fmt(A["c_tol"] * 100), fmt(round(A["tflt_k_only"], 3))))
+    p("       retry at %s %% duty. The fault time: L4-E5's %s / %s / %s ms take C5 at its nominal 100 nF; C5 is %s (YAGEO %s, K: +-%s %%;"
+      % (fmt(A["restart_duty"] * 100), *[fmt(x) for x in F["timer_ms"]], A["c5_code"], A["c5_mpn"], fmt(A["c_tol"] * 100)))
+    p("       X7R: +-%s %% over temperature and +-%s %% after endurance (a %s product), the Yageo sheet V.26; the part is read at the end of this"
+      % (fmt(A["c_temp"] * 100), fmt(A["c_endur"] * 100), A["c5_ya"]["class"]))
+    p("       section), so +%s %% alone gives %s ms and the printed rows stacked" % (fmt(A["c_tol"] * 100), fmt(round(A["tflt_k_only"], 3))))
     p("       give %s to %s ms (INFERRED; DC bias only lowers it). Figure 10 read from the sheet's vector drawing at %s V (lines %s): 10 ms %s A,"
       % (fmt(round(A["tflt_env"][0], 3)), fmt(round(A["tflt_env"][1], 3)), fmt(round(vmax, 2)), ", ".join(A["soa_labels"]), fmt(round(A["soa_10ms"], 3))))
     p("       1 ms %s A, 10 us %s A at TC 25 C; Equations 15 to 18 (m = %s) give %s A at L4-E5's %s ms and %s A at the envelope's %s ms (TI's power"
@@ -2809,10 +3074,15 @@ def partA_lines(F, D, A):
       % (fmt(F["ina_fs_mv"]), fmt(A["ina_diff_abs"]), fmt(F["ina_abs"])))
     p("       no required event reaches. R227's pulse energy at the hard connect is %s mJ NOMINAL (0.5 C dV2 at the nominal %s uF, all taken by R227);"
       % (fmt(round(A["tr"][0][5], 3)), fmt(round(A["poe_c_uf"], 2))))
-    p("       the capacitors are K parts (%s, Yageo %s, and %s for the 100 nF ones): +%s %% alone gives %s mJ, and the printed rows stacked (K,"
-      % (A["c10_code"], A["c10_part"], A["c5_code"], fmt(A["c_tol"] * 100), fmt(round(A["tr"][0][5] * (1 + A["c_tol"]), 3))))
-    p("       +-%s %% over temperature, +-%s %% after endurance; DC bias only lowers an X7R's capacitance) %s mJ. The MAXIMUM stays UNRESOLVED until a"
-      % (fmt(A["c_temp"] * 100), fmt(A["c_endur"] * 100), fmt(round(A["tr"][0][5] * A["c_hi_f"], 3))))
+    grp = {}
+    for p_ in A["r227_parts"]:
+        grp.setdefault((p_["code"], p_["mpn"], p_["rd"]["class"], p_["rd"]["endur"]), []).append(p_["ref"])
+    p("       the capacitors are K parts (each read at the end of this section):")
+    for (cd, mp, cl, en), rs in grp.items():
+        p("         %s: %s, YAGEO %s, a %s product, +-%s %% after endurance" % (" and ".join(rs), cd, mp, cl, fmt(en * 100)))
+    p("       +%s %% alone gives %s mJ, and the printed rows stacked (K, +-%s %% over temperature, endurance by each part's class; DC bias only"
+      % (fmt(A["r227_parts"][0]["tol"] * 100), fmt(round(A["r227_tol_mj"], 3)), fmt(A["r227_parts"][0]["rd"]["temp"] * 100)))
+    p("       lowers an X7R's capacitance) %s mJ. The MAXIMUM stays UNRESOLVED until a" % fmt(round(A["r227_hi_mj"], 3)))
     p("       supported capacitance envelope (tolerance, temperature and bias at the step's voltage) and the step's real shape and duration meet")
     p("       Milliohm's pulse rating, which the HoJLR2512 sheet does not print (R-101, R-117); in service VBAT rises through the pack's precharge")
     p("       contact and the charger's soft start, far slower than the loop's ringing; the capability pulse's 10 us rise likewise")
@@ -2832,6 +3102,37 @@ def partA_lines(F, D, A):
     p("       shunt's drop); full scale %s A, Current_LSB %s mA, CAL %s; a full-scale sample is a saturated transient, not a current reading"
       % (fmt(round(A["u17_fs_a"], 3)), fmt(round(A["u17_lsb"] * 1e3, 3)), fmt(round(A["u17_cal"], 1))))
     p("       (0.00512 over Current_LSB x R); the PoE output power is inferred as the input power times the stage's efficiency (0.88, undocumented)")
+    L.extend(fitted_parts_lines(A))
+    return L
+
+
+def fitted_parts_lines(A):
+    """Round 6 (set 28's integration): the capacitors whose envelope part A takes, each read the way lcsc_fill.py fills it and each
+    read on the held Yageo sheet for its own part number."""
+    L = []
+    p = L.append
+    p("   THE FITTED CAPACITORS (round 6, set 28's integration): each read the way lcsc_fill.py fills it (a code on the part wins, else the first")
+    p("     MAP key whose value pattern matches the value and whose footprint text is in the land; the part number from that line's comment) and")
+    p("     read on the held Yageo CC X7R sheet (V.26) for its own part number; a part the sheet does not cover is INCONCLUSIVE and its envelope is")
+    p("     not computed (no substitute figure)")
+    p("     C5, board E, gen_sch_e.py's c() call: value '%s', footprint key %s (%s) = %s, %s"
+      % (A["c5_value"], A["c5_fpkey"], "c()'s default" if A["c5_fpdflt"] else "named in the call", A["c5_fp"],
+         "its own LCSC field %s" % A["c5_own"] if A["c5_own"] else "no LCSC field"))
+    p("       filled by %s: %s, YAGEO %s; the sheet: %s" % (A["c5_by"], A["c5_code"], A["c5_mpn"], A["c5_ya"]["verdict"]))
+    for s in A["c5_ya"]["said"]:
+        p("       - %s" % s)
+    p("       C5's timer envelope takes the tolerance, the temperature characteristic and the endurance change only (no DC bias figure)")
+    for p_ in A["r227_parts"]:
+        p("     %s, board A's netlist, behind R227: %s (%s); %s, YAGEO %s; the sheet: %s, a %s product, +-%s %% after endurance"
+          % (p_["ref"], pf_txt(p_["uf"] * 1e6), p_["by"], p_["code"], p_["mpn"], p_["rd"]["verdict"], p_["rd"]["class"], fmt(p_["rd"]["endur"] * 100)))
+    seen = set()
+    for p_ in A["r227_parts"]:
+        if p_["mpn"] in seen or p_["mpn"] == A["c5_mpn"]:
+            continue
+        seen.add(p_["mpn"])
+        p("     %s on the sheet:" % p_["mpn"])
+        for s in p_["rd"]["said"]:
+            p("       - %s" % s)
     return L
 
 
@@ -3552,7 +3853,7 @@ def rows(F, D, A, E):
             Chk("POE_VIN (U17's IN- and VBUS) at a hard connect of VBAT, ringing at its undamped bound, inside the pins' 40 V", round(A["tr"][0][4], 2), "<=", F["ina_abs"], "V", "INFERRED", "part A, B3 (20.2 uF behind R227)"),
             Chk("the differential across R227 at that step inside the INA226's +-40 V", round(A["tr"][0][3], 3), "<=", A["ina_diff_abs"], "V", "MAKER", "SBOS547C 6.1 note 2; part A, B3"),
             Chk("R227's RMS dissipation in steady buck operation (a PoE fault) inside its rating", round(A["buck_p"], 3), "<=", round(A["hojlr_avail"], 2), "W", "INFERRED", "part A, B3 (VCS(BUCK), fSW(1), L10 at -20 %)"),
-            Chk("R227's pulse energy at a hard connect (%s mJ nominal, %s mJ with the printed rows stacked; the maximum unresolved) inside the maker's pulse rating" % (fmt(round(A["tr"][0][5], 3)), fmt(round(A["tr"][0][5] * A["c_hi_f"], 3))), None, "<=", None, "a pulse rating and a capacitance envelope", "CONDITIONAL", "Milliohm prints none; R-101, R-117"),
+            Chk("R227's pulse energy at a hard connect (%s mJ nominal, %s mJ with the printed rows stacked; the maximum unresolved) inside the maker's pulse rating" % (fmt(round(A["tr"][0][5], 3)), fmt(round(A["r227_hi_mj"], 3))), None, "<=", None, "a pulse rating and a capacitance envelope", "CONDITIONAL", "Milliohm prints none; R-101, R-117"),
             Chk("the hard output short's self-consistent peak with L10's L(I) at temperature, R227's pulse and RMS stress and U17's pins there", None, "<=", None, "the inductor's L(I)", "CONDITIONAL", "part A, B3: %s A at a constant %s uH against Isat %s A; the L10 assignment R-120 and R-121" % (fmt(round(A["short_peak"], 2)), fmt(round(A["l10_min"] * 1e6, 1)), fmt(A["l10_isat"]))),
         ]})
     pa = F["pa"]
