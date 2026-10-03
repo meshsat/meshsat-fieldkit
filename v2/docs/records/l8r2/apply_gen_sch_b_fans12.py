@@ -32,14 +32,16 @@ and 3 under their AP64500's 5 A only at the nominal 5.1 V and only while the mod
 Slots 1 and 3 move to slot 2's LM5176 stage on board A (apply_gen_sch_a_slotlm.py, released with this draft), so the slot rail
 carries the fan at full speed in every state. ROUND 5 (the collaborator's check B2, 4 October 2026): the load row is the boost
 U7x1 at the envelope, 0.69 A (the fan's 2.75 W bound at the step-up's 12.43 V top over the step-up's 0.80, both verified by the
-record's C4-3 on this chain, at 5.0 V; the slot's declared loads 5.341 A), and the three slots declare one peak, 5.63 A, at both
-ends of the lead (the slot's envelope at the stage's least output less the rail's 2 % drop is 5.515 A). The rails
+record's C4-3 on this chain, at 5.0 V; the slot's declared loads 5.341 A). ROUND 6 (the collaborator's recheck B2): the three slots
+declare one peak, 6.6 A, at both ends of the lead, the bounded start-up and fault envelope: every load at HIGH with the cooler
+branch at its bounded start (1.80 A on +5V_Sn as a 100 us moving average, C4-3's waveform limit) at the stage's least output
+with record l8r2's 0.1 % divider less the rail's 2 % drop (4.902 V) is 6.532 A on slots 1 and 3 and 5.747 A on slot 2. The rails
 CFANs_12V and CFANs_V and the nodes CFANs_SW, CFANs_BOOT, CFANs_VCC, CFANs_FSW, CFANs_TACH and CFANs_PWM are declared to the
 intent; the VIN and VCC capacitors are declared with their class and TI's clause.
 
 What it changes in v2/ecad/tools/gen_sch_b.py, and nothing else: the footprint table gains QFN11 beside SH4; the fan's row in
 _SLOT_LOADS; the J_FAN line of the slot loop becomes the block above (R51 kept on FAN_PWMs); round 4: the slot rails' declared
-peak on slots 1 and 3, 5.0 A (the AP64500's rating) to 5.63 A, slot 2's (round 5). No other draft targets gen_sch_b.py
+peak on the three slots, 6.6 A (round 6; slots 1 and 3 were 5.0 A, the AP64500's rating, slot 2 5.63 A). No other draft targets gen_sch_b.py
 but record l8gnd's GND-002 draft (R-195) and this record's F03 and F04 drafts and round 5's RT draft, whose anchors are
 elsewhere (l8r2_drafts.out).
 
@@ -68,10 +70,11 @@ _NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.69,   # l8r2 (E11-40): the coo
 
 _OLD_PEAK = ('    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63 if _n == 2 else 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
              'budget=0.02, share=0.015, converted=False,\n')
-_NEW_PEAK = ('    # record l8r2 rounds 4 and 5 (L9P-F02): slots 1 and 3 on board A\'s LM5176 stages (apply_gen_sch_a_slotlm.py); the three slot\n'
-             '    # leads declare one peak, 5.63 A, at both ends: slots 1 and 3\'s envelope (every load at HIGH, the cooler at its 2.75 W bound\n'
-             '    # over 0.80) at the stage\'s least output less the 2 % drop is 5.515 A; slot 2\'s coincidence is its own 5.63 A (S-98)\n'
-             '    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
+_NEW_PEAK = ('    # record l8r2 rounds 4 to 6 (L9P-F02): slots 1 and 3 on board A\'s LM5176 stages (apply_gen_sch_a_slotlm.py); the three slot\n'
+             '    # leads declare one peak, 6.6 A, at both ends, the bounded start-up and fault envelope: every load at HIGH with the\n'
+             '    # cooler branch at its 1.80 A start (100 us average, C4-3) at the 0.1 % divider\'s least output less the 2 % drop, 6.532 A\n'
+             '    # (slot 2: 5.747 A; its S-98 coincidence 5.63 A inside it); steady 5.434 A; a degraded cooler 6.153 A\n'
+             '    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 6.6, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
              'budget=0.02, share=0.015, converted=False,\n')
 
 _OLD_FAN = ('    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, '

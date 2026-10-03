@@ -33,18 +33,21 @@ C45, C112, C114, R28, R29, R31, R36, R37, R39, R45, R47, R129, R131 and the nets
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   1. the two buck5() calls become the two stages (the lm5176() helper as slot 2 calls it), each followed by its SLOT_EN pull-down
      and its INA226, as slot 2's R34 and U9 follow its stage;
-  2. VBAT's loads: "U4": 2.0 and "U6": 2.0 become the stages' entries Q501 and Q531 at 2.22 A each (the S-98 method of Q28's
-     2.22 A: the declared peak x 5.1 V over 0.90 x 14.4 V, 5.63 x 5.1 / 12.96 = 2.216);
-  3. the slot rails' declaration: the shunts R505 and R535, the switches U501 and U531, the peak 5.63 A on slots 1 and 3 at both
+  2. VBAT's loads: "U4": 2.0 and "U6": 2.0 become the stages' entries Q501 and Q531, and slot 2's Q28 follows its new peak, at
+     2.60 A each (the S-98 method of Q28's 2.22 A: the declared peak x 5.1 V over 0.90 x 14.4 V, 6.6 x 5.1 / 12.96 = 2.597);
+  3. the slot rails' declaration: the shunts R505 and R535, the switches U501 and U531, the peak 6.6 A on all three slots at both
      ends of the lead (board B's half is apply_gen_sch_b_fans12.py), and the note;
   4. the two slot sections of SECTIONS name the stages' parts;
   5. where record l8r2's pack return (apply_gen_sch_a_packrtn.py) is already applied, GND's loads "U4": 2.0 and "U6": 2.0 become
-     the stages' CS shunts R506 and R536 at 2.22 A, through which such a stage's input current returns (the draft's own rule for
+     the stages' CS shunts R506 and R536 at 2.60 A, and slot 2's R170 at its 2.60 A, through which such a stage's input current returns (the draft's own rule for
      R170, R177, R56, R122); packrtn applied after this draft writes the same text (both orders give one generator).
-The peak, 5.63 A (round 5, the collaborator's B2; slot 2's figure, so the three identical leads declare one): the slot's envelope,
-every load at HIGH (record l9pwr's 23.197 W before the cooler on S1 in PS-BUSY and PS-ALLTX) with the cooler at its 2.75 W bound
-at the step-up's 12.43 V top over the step-up's 0.80 (3.4375 W), at the stage's least output (VREF 0.788 V on the 1 % divider,
-4.928 V) less the rail's whole 2 % drop budget (4.829 V): 5.515 A.
+The peak, 6.6 A on all three slot leads (round 6, the collaborator's recheck B2): the slot's bounded start-up and fault envelope,
+every load at HIGH (record l9pwr's 23.197 W before the cooler on S1 in PS-BUSY and PS-ALLTX) with the cooler branch at its
+bounded start, 1.80 A on +5V_Sn as a 100 us moving average (record l8r2's C4-3 holds the chain to it), at the stage's least
+output with apply_gen_sch_a_fb01.py's 0.1 % divider (VREF 0.788 V, IBIAS(FB) 25 nA: 5.002 V) less the rail's whole 2 % drop
+(4.902 V): 6.532 A; the steady envelope (the cooler at its 2.75 W bound over 0.80) is 5.434 A, and a degraded cooler held under
+its eFuse's least limit 6.153 A. Slot 2's own envelope with the cooler's start is 5.747 A, inside the same 6.6 A; its S-98
+coincidence (5.63 A) and I-03's all-peak bound stay I-03's.
 
 Order: after L4-E11's charger draft, whose anchor names VBAT's "U4": 2.0 (L4-E9's order already has it: 3a, then 3g, then this
 record's drafts, then d8dec31's mainpb); release with apply_gen_sch_b_fans12.py (board B's half of the slot rails' peak).
@@ -65,11 +68,12 @@ RETIRED = ("U4", "U6", "L3", "L5", "C28", "C29", "C30", "C31", "C32", "C33", "C4
            "C114", "R28", "R29", "R31", "R36", "R37", "R39", "R45", "R47", "R129", "R131")
 NETS = tuple("S%s_%s" % (s, t) for s in ("1", "3") for t in ("SW1", "SW2", "HDRV1", "HDRV2", "LDRV1", "LDRV2", "BOOT1", "BOOT2", "VCC",
                                                            "CS", "CSF", "CSGF", "ISNS_P", "ISNS_N", "MODE", "SLOPE", "SS", "PGOOD"))
-PEAK = 5.63
-ENTRY = 2.22
+PEAK = 6.6
+ENTRY = 2.60
+KW01 = ' rfb_val="10k 0.1%", rfb_tol="0.1%",'   # apply_gen_sch_a_fb01.py's keywords, where its helper is present
 
 
-def stage(s):
+def stage(s, fb01=False):
     b = BASE[s]; R = lambda k: '"R%d"' % (b + k); C = lambda k: '"C%d"' % (b + k); Q = lambda k: '"Q%d"' % (b + k)
     ina, a1, addr, en, pd = {"1": ("U8", "GND", "0x40", "SLOT_EN1", "R30"), "3": ("U10", "+3V3", "0x44", "SLOT_EN3", "R38")}[s]
     refs = ", ".join([Q(1), Q(2), Q(3), Q(4), R(1), R(2), R(3), C(1), R(4), C(2), C(3), C(4), C(5), C(6), C(7), R(5), R(6), R(7),
@@ -78,14 +82,14 @@ def stage(s):
         'lm5176("S%s", "U%d", "VBAT", "+5V_S%s", "%s", "53.6k", "L%d", "6.8uH XAL1010-682ME (Isat 21.8 A)", '
         '"CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",\n'
         '       [%s],\n'
-        '       cs_filter=(%s, %s, %s), isns_filter=(%s, %s, %s), isns="6m", isns_lcsc="C843882",\n'
+        '       cs_filter=(%s, %s, %s), isns_filter=(%s, %s, %s), isns="6m", isns_lcsc="C843882",%s\n'
         '       cout="22u 25V 1210", cout_lcsc="C2918511", cslope=("470p", "C27694"), boot_diodes=("D%d", "D%d"), en_div=False,\n'
         '       bias="VBAT", comp=(("2.2k", "C4190"), ("100n", "C14663"), ("1n", "C1588")), bulk=(%s, %s, %s), bulk_part="E151", bias_cap=%s,\n'
         '       vin_cap=(%s, "100n", "C14663"))   # record l8r2 round 4 (L9P-F02): slot 2\'s stage (F-PR-04) for slot %s; its loop and bulk ripple re-run for this slot\'s remote capacitance is owed (the record, section 1s)\n'
         'r("%s", "100k", "%s", "GND")   # a slot with no controller line stays off (as the AP64500 stage had it; kept by record l8r2 round 4)\n'
         'ic("%s", 10, "INA226 rail monitor +5V_S%s", "VSSOP10", {"1": "%s", "2": "GND", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", '
         '"7": "GND", "8": "+5V_S%s", "9": "+5V_S%s", "10": "S%s_OUT"}, "C49851")   # %s, across the 6 mOhm ISNS shunt R%d (was the AP64500\'s 5 mOhm R%s: a calibration change, a firmware item)\n'
-        % (s, b + 1, s, en, b + 1, refs, R(9), R(10), C(13), R(11), R(12), C(14), b + 1, b + 2, C(15), C(16), C(17), C(18), C(19), s,
+        % (s, b + 1, s, en, b + 1, refs, R(9), R(10), C(13), R(11), R(12), C(14), KW01 if fb01 else "", b + 1, b + 2, C(15), C(16), C(17), C(18), C(19), s,
            pd, en, ina, s, a1, s, s, s, addr, b + 5, {"1": "31", "3": "39"}[s]))
 
 
@@ -110,11 +114,12 @@ _NEW_S = ('# L9P-F02, RECORD l8r2 ROUNDS 4 AND 5 (MESHSAT-1357, 3 and 4 October 
           '# voltage (4.779 A) are past the maker\'s typical derating at the normal mode\'s +50 C inside air (Figure 24 at 500 kHz), and the\n'
           '# 68 k RT sets 1.47 MHz (DS41979 Eq. 7), where the switching loss is higher still. The bigger converter is this board\'s own\n'
           '# LM5176 stage, slot 2\'s parts and values: its average loop limits at 7.096 A at least (43 mV over 6 mOhm at +1 %), over the\n'
-          '# slot\'s 5.515 A envelope at its own least output (4.829 V at the load) and its 6.534 A with the cooler starting through its\n'
-          '# eFuse\'s highest limit (an assumed bound, CONDITIONAL). Designators in the free 500 block.\n'
-          + stage("1") + stage("3"))
+          '# slot\'s 5.434 A steady envelope and 6.532 A bounded start (round 6) at its least load voltage with the 0.1 % divider\n'
+          '# (4.902 V), CONDITIONAL on record l8r2\'s C4-1 and C4-3. Designators in the free 500 block.\n')
+_NEW_S01 = _NEW_S + stage("1", True) + stage("3", True)
+_NEW_S = _NEW_S + stage("1") + stage("3")
 _OLD_VBAT = '"U4": 2.0, "Q28": 2.22, "U6": 2.0,'
-_NEW_VBAT = '"Q%d": %.2f, "Q28": 2.22, "Q%d": %.2f,' % (BASE["1"] + 1, ENTRY, BASE["3"] + 1, ENTRY)
+_NEW_VBAT = '"Q%d": %.2f, "Q28": %.2f, "Q%d": %.2f,' % (BASE["1"] + 1, ENTRY, ENTRY, BASE["3"] + 1, ENTRY)
 _OLD_SH = 'for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):\n'
 _NEW_SH = 'for _n, _sh in (("1", "R%d"), ("2", "R35"), ("3", "R%d")):   # record l8r2 round 4: slots 1 and 3 on LM5176 stages, their ISNS shunts\n' % (
     BASE["1"] + 5, BASE["3"] + 5)
@@ -122,14 +127,14 @@ _OLD_RAIL = ('    _intent.rail("+5V_S%s" % _n, 5.1, 4.2 if _n == "2" else 2.5, 5
              '5.63 if _n == "2" else 5.0}, budget=0.02, share=0.005, fed_from="VBAT",\n'
              '                 switch={"1": "U4", "2": "U5", "3": "U6"}[_n], efficiency=0.90,\n')
 _NEW_RAIL = ('    _intent.rail("+5V_S%%s" %% _n, 5.1, 4.2 if _n == "2" else 2.5, %.2f, _sh, loads={"J_5V_S%%s" %% _n: %.2f}, budget=0.02, '
-             'share=0.005, fed_from="VBAT",   # record l8r2 round 5: one peak on the three identical slot leads\n'
+             'share=0.005, fed_from="VBAT",   # record l8r2 round 6: one peak on the three identical slot leads, the start envelope\n'
              '                 switch={"1": "U%d", "2": "U5", "3": "U%d"}[_n], efficiency=0.90,\n' % (PEAK, PEAK, BASE["1"] + 1, BASE["3"] + 1))
 _OLD_NOTE = ('                       "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500\'s rating (DS41979 p.1); the rail "\n'
              '                       "net starts at the INA226 shunt. This board\'s share of the 2 percent is 0.5 point, measured 0.07"))\n')
 _NEW_NOTE = ('                       "one CM5 slot with its cooler fan on its 12 V step-up (record l8r2, E11-40); an LM5176 stage since record l8r2 "\n'
-             '                       "round 4 (L9P-F02, slot 2\'s F-PR-04 stage): %.2f A peak, slot 2\'s, over the slot\'s envelope (every load at "\n'
-             '                       "HIGH, the cooler at its 2.75 W bound over 0.80) at the stage\'s least output less the 2 percent drop, 5.515 A "\n'
-             '                       "(round 5), declared at both ends of the lead; the loop\'s least "\n'
+             '                       "round 4 (L9P-F02, slot 2\'s F-PR-04 stage): %.2f A peak over the slot\'s bounded start (every load at HIGH, "\n'
+             '                       "the cooler branch at its 1.80 A start) at the stage\'s least output less the 2 percent drop, 6.532 A (round 6; "\n'
+             '                       "steady 5.434 A), declared at both ends of the lead; the loop\'s least "\n'
              '                       "7.096 A (VSNS 43 mV over the 6 mOhm ISNS shunt at +1 percent). The rail net starts at the INA226 shunt. "\n'
              '                       "This board\'s share of the 2 percent is 0.5 point, measured 0.07 on the AP64500 stage\'s copper (owed again)"))\n' % PEAK)
 _OLD_SEC1 = ('            ("SLOT RAIL S1: AP64500 5.1 V + INA226 0x40", ["U4", "L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", '
@@ -138,10 +143,20 @@ _OLD_SEC3 = ('            ("SLOT RAIL S3: AP64500 5.1 V + INA226 0x44", ["U6", "
              '"R38", "R39", "R47", "R131", "C114", "U10", "J_5V_S3"]),\n')
 # record l8r2's pack return, when applied first: the ground ends of the two slot stages are their CS shunts
 _OLD_GND = '"U4": 2.0, "R170": 2.22, "U6": 2.0,'
-_NEW_GND = '"R%d": %.2f, "R170": 2.22, "R%d": %.2f,' % (BASE["1"] + 6, ENTRY, BASE["3"] + 6, ENTRY)
+_NEW_GND = '"R%d": %s, "R170": %s, "R%d": %s,' % (BASE["1"] + 6, ENTRY, ENTRY, BASE["3"] + 6, ENTRY)   # packrtn's own number form
+# slot 2's note gains the round 6 peak beside S-98's coincidence
+_OLD_N2 = '"board\'s share of the 2 percent is 0.5 point, measured 0.07" if _n == "2" else\n'
+_NEW_N2 = ('"board\'s share of the 2 percent is 0.5 point, measured 0.07. Record l8r2 round 6: the three slot leads declare 6.6 A, the "\n'
+           '                       "cooler\'s bounded start on each slot\'s HIGH (5.747 A on this slot) inside it; S-98\'s 5.63 A coincidence "\n'
+           '                       "stands within it, and I-03\'s all-peak bound stays I-03\'s" if _n == "2" else\n')
 
 EDITS = [(_OLD_S1 + _OLD_S3, _NEW_S), (_OLD_VBAT, _NEW_VBAT), (_OLD_SH, _NEW_SH), (_OLD_RAIL, _NEW_RAIL), (_OLD_NOTE, _NEW_NOTE),
-         (_OLD_SEC1, section("1")), (_OLD_SEC3, section("3"))]
+         (_OLD_SEC1, section("1")), (_OLD_SEC3, section("3")), (_OLD_N2, _NEW_N2)]
+
+
+def edits_for(text):
+    """the edits for this target: where apply_gen_sch_a_fb01.py's helper is present, the stages carry its 0.1 % keywords"""
+    return [(_OLD_S1 + _OLD_S3, _NEW_S01)] + EDITS[1:] if 'rfb_val="10k 1%", rfb_tol="1%",' in text else EDITS
 OPTIONAL = [(_OLD_GND, _NEW_GND)]   # applied when present (the pack return drafted first), never required
 
 
@@ -164,7 +179,7 @@ def patched(text):
     if "def lm5176(" not in text:
         refuse("the target has no lm5176() helper")
     new = text
-    for old, rep in EDITS:
+    for old, rep in edits_for(text):
         if rep == old:
             refuse("an edit's new text equals its old text")
         if new.count(rep) != 0:
@@ -230,7 +245,7 @@ def main(argv):
         return 0
     open(target, "w", encoding="utf-8").write(new)
     back = open(target, encoding="utf-8").read()
-    if back != new or any(back.count(rep) != 1 for _o, rep in EDITS):
+    if back != new or any(back.count(rep) != 1 for _o, rep in edits_for(text)):
         refuse("the written file does not read back as the patched text")
     ast.parse(back)
     print("%s: WRITTEN, %d edit(s)" % (NAME, len(EDITS)))

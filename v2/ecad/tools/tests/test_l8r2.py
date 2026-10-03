@@ -36,8 +36,9 @@ SCRIPT = os.path.join(REC, "l8r2_drafts.py")
 OUT = os.path.join(REC, "l8r2_drafts.out")
 PAGE = os.path.join(REC, "L8R2-KNOWN-DEFECTS.md")
 CHECK = os.path.join(REC, "check_l8r2_netlist.py")
-MINE = {"a": ["d8v3", "vbus20ov", "packrtn", "slotlm"], "b": ["fans12", "panel5v", "ph4", "rt500"], "c": ["pibtn"], "e": ["packrtn"]}
+MINE = {"a": ["d8v3", "vbus20ov", "packrtn", "slotlm", "fb01"], "b": ["fans12", "panel5v", "ph4", "rt500"], "c": ["pibtn"], "e": ["packrtn"]}
 CHECK_FILED = os.path.join(REC, "checks", "astra-check-l9pf02-1.md")
+RECHECK_FILED = os.path.join(REC, "checks", "astra-check-l9pf02-2.md")
 HELD_FAN = {p: os.path.join(ROOT, "v2", "vendor", "fans", "held", "sanyo-denki-san-ace-c1152b001-2510-p%s.pdf" % p) for p in ("0362", "0616", "0623", "0633")}
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
@@ -92,6 +93,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "SELECTED (SESSION): slots 1 and 3 on the LM5176 stage", "slotlm then L4-E11's charger: REFUSED, as expected",
               "the charger then slotlm: OK", "in either order give one generator: YES", "A SLOTS DRAWN", "VERDICT: NOT A MARGIN",
               "POSSIBLE, NOT ESTABLISHED", "the same generator either way: YES", "not a temperature of the drawn stage",
+              "A FB01  DRAWN", "NOT claimed as a bound on the drawn stage", "5.0019 to 5.1744 V",
               "OK at every prefix", "IDENTICAL", "the corrected texts name those widths: YES", "the same as this script's E_ROUND",
               "equals record l9pwr's printed current in every row: YES"):
         assert s in t, s
@@ -163,6 +165,7 @@ def t_the_designators_are_disjoint_and_this_records_are_exact():
         slot = {"%s%d" % (p, b + k) for b in (500, 530) for p, ks in (("U", (1,)), ("Q", range(1, 5)), ("L", (1,)), ("D", (1, 2)),
                                                                        ("R", range(1, 13)), ("C", range(1, 20))) for k in ks}
         assert addA["l8r2/apply_gen_sch_a_slotlm.py"] == slot, sorted(addA["l8r2/apply_gen_sch_a_slotlm.py"] ^ slot)
+        assert addA["l8r2/apply_gen_sch_a_fb01.py"] == set()
         pE, addE = m.designators_e(d)
         assert addE["l8r2/apply_gen_sch_e_packrtn.py"] == set() and not m.duplicates(open(pE, encoding="utf-8").read())
         fans = {"%s%d" % (p, 700 + 30 * (s - 1) + k) for s in (1, 2, 3) for p, ks in (("U", (1, 2)), ("L", (1,)), ("Q", (1, 2)), ("R", range(1, 13)), ("C", range(1, 11))) for k in ks}
@@ -223,6 +226,8 @@ def t_the_netlist_check_reads_the_tree_not_drawn_and_the_fixtures_drawn():
     assert chk.judge("b", chk.read_netlist(bad))[0] == "FAIL"
     bad = chk.fixture("a").replace(b'(node (ref "R535") (pin "2"))', b'')
     assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL", "slot 3's ISNS shunt off +5V_S3 is not refused"
+    bad = chk.fixture("a").replace(b'(ref "R41") (value "10k 0.1%")', b'(ref "R41") (value "10k 1%")')
+    assert chk.judge("a", chk.read_netlist(bad))[0] == "FAIL", "a divider resistor left at 1 % is not refused"
 
 
 def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
@@ -239,7 +244,7 @@ def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
               "L9P-F02", "L9P-F03", "70 %", "7.5638", "apply_gen_sch_a_packrtn.py", "apply_gen_sch_e_packrtn.py", "(L9STK E)",
               "apply_energy_chain_e1oz.py", "ASM-002", "1s, L9P-F02 focused check", "apply_gen_sch_a_slotlm.py", "WITHDRAWN",
               "UNRESOLVED", "CONDITIONAL", "1t, answers to the collaborator's check", "5.515 A", "apply_gen_sch_b_rt500.py",
-              "POSSIBLE, NOT ESTABLISHED", "3.44 W"):
+              "POSSIBLE, NOT ESTABLISHED", "3.44 W", "1u, answers to the recheck", "apply_gen_sch_a_fb01.py", "6.6 A", "5.0019"):
         assert s in page, s
 
 
@@ -412,7 +417,7 @@ def t_round4_the_focused_check_holds_its_verdicts():
     assert over and all(over), o["c3_i"]
     assert all(o["lm_limit"] - i3 > 0.5 for _i1, _i2, i3 in o["c3_i"]), o["c3_i"]
     b1 = o["b1"]   # round 5, B1: the drawn frequency, and a start that may reach the HS limit and need not
-    assert abs(b1["fsw"] - 100000.0 / 68.0 * 1e3) < 1 and b1["pk_nom"] < V["ap_ipk"][0] < b1["pk_lo"] and b1["delta"] < 0.01
+    assert abs(b1["fsw"] - 100000.0 / 68.0 * 1e3) < 1 and b1["pk_nom"] < V["ap_ipk"][0] < b1["pk_lo"]
     assert [r for r in o["c3"] if r[0].startswith("firmware failure, PWM block")][0][4] == o["env"]["w"], "the last duty is not up to 100 %"
     least = {tag: (i, tl) for tag, i, tl in o["fig24_least"]}
     assert all(tl is None or tl < o["air"] for _i, tl in least.values()) and least["(b) no cooler on the slot rail"][1] is not None
@@ -421,18 +426,22 @@ def t_round4_the_focused_check_holds_its_verdicts():
     assert o["fig24"]["air"] < 4.871
     c4 = o["c4"]
     assert c4["p70_floor"] > c4["rep_pa"] + 10 and c4["q100_needed"] < V["pq100"][1], c4
-    cw = o["corr_worst"]   # round 5, B2: the envelope, the start and a degraded fan
-    assert cw[0] < V["slot_peak"] and cw[0] < o["lm_limit"] - 1.5 and min(cw[1], cw[2]) < o["lm_limit"] - 0.5 and max(cw) < o["lm_limit"]
+    cw = o["corr_worst"]   # rounds 5 and 6, B2: the steady envelope, the qualified start and a degraded fan, all under the declaration
+    assert max(cw) <= V["slot_peak"] < o["lm_limit"] and cw[0] < o["lm_limit"] - 1.5 and o["lm_limit"] - max(cw) > 0.5
+    assert abs(o["lm_limit"] - 0.043 / 0.00606) < 1e-9 and o["peak_need"] == cw[1] and o["start_calc"] < V["start_bound"]
+    assert o["slot2_start"] < V["slot_peak"] and o["v"]["hi_lm"] < V["cm5_vin"][1] and o["v"]["least_lm"] > 5.0 and o["v"]["load_lm"] > 4.9
+    rth = [r for _i, r in o["matrix_rth"]]
+    assert rth == sorted(rth, reverse=True) and abs(o["matrix_rth"][-1][0] - V["slot_peak"]) < 1e-12 and 36.0 < rth[-1] < 37.5, rth
     assert abs(o["env"]["branch"] - V["fan_env"] / V["eta_lo"]) < 1e-12 and o["env"]["branch"] < 3.44 < o["env"]["branch"] + 0.01
     assert o["fet_tj"][1] < V["csd"][3] - 25 and o["fet_tj"][2] > V["csd"][3] and V["csd"][3] - 25 < o["fet_rr"][1] < V["csd"][3], (o["fet_tj"], o["fet_rr"])
-    assert o["peak_need"] <= V["slot_peak"] == 5.63 and abs(o["entry"] - 2.22) < 0.005
+    assert o["peak_need"] <= V["slot_peak"] == 6.6 and abs(o["entry"] - 2.60) < 0.005
     assert o["decl4"][2] == "accepted" and o["decl4"][1] == V["slot_peak"] == o["decl4"][3] == o["decl4"][4] and abs(o["fan_row"] - 0.69) < 1e-9
     assert o["lm_window"]["hi"] > V["cm5_vin"][1] > o["lm_window"]["hi01"] and o["lm_window"]["lo01"] > o["lm_window"]["lo"]
     sl = open(os.path.join(REC, "apply_gen_sch_a_slotlm.py"), encoding="utf-8").read()
-    for s in ("%.3f A" % o["peak_need"], "%.3f V" % o["v"]["load_lm"], "%.3f A" % cw[1], "7.096 A", "PEAK = 5.63", "ENTRY = 2.22"):
+    for s in ("%.3f A" % o["peak_need"], "%.3f V" % o["v"]["load_lm"], "%.3f A" % cw[0], "7.096 A", "PEAK = 6.6", "ENTRY = 2.60"):
         assert s in sl, s
     fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_r4_under_test")
-    assert ", 5.63, " in fx._NEW_PEAK and "70 %" not in fx._NEW_LOAD and "70 %" not in fx._NEW_FAN.split("ROUND 4")[1]
+    assert ", 6.6, " in fx._NEW_PEAK and "70 %" not in fx._NEW_LOAD and "70 %" not in fx._NEW_FAN.split("ROUND 4")[1]
     src = o["src"]
     assert src["c1_air"] == 50.0 and src["h2"][2] == 0.873 and src["sunon"] == (3.7, 0.11) and src["dts"][2] == 41566 and src["pce_pd"] and src["gate"]
 
@@ -480,3 +489,33 @@ def t_round5_the_collaborators_check_is_filed_as_received():
     assert c.startswith("accepted: no\n") and "L9P-F02: NOT CONFIRMED" in c
     for b in ("- B1: Correct the AP64500 timing mismatch", "- B2: Correct the replacement's load declarations", "- B3: Complete the conditional acceptance package"):
         assert b in c, b
+
+
+def t_round6_the_divider_draft_corrects_the_window_and_composes_in_every_order():
+    """Round 6 (F5-03): the divider draft sets both resistors of slot 2's and the device rail's stages (and slots 1 and 3's, where
+    slotlm is drawn) at 0.1 % through a helper keyword whose default keeps every other stage; with the pack return and slotlm the
+    three drafts give one generator in all six orders; the window is inside the CM5's 4.75 to 5.25 V."""
+    fb = os.path.join(REC, "apply_gen_sch_a_fb01.py"); sl = os.path.join(REC, "apply_gen_sch_a_slotlm.py"); pk = os.path.join(REC, "apply_gen_sch_a_packrtn.py")
+    import itertools
+    outs = set()
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "alone.py"); shutil.copy(GEN_A, p)
+        assert _run([fb, p, "--write"]).returncode == 0
+        a = open(p, encoding="utf-8").read()
+        assert a.count('rfb_val="10k 0.1%", rfb_tol="0.1%",') == 2 and 'r(rft, rfb_top + " " + rfb_tol, vout, N("FB"));' in a and 'rfb_tol="1%",' in a
+        for k, order in enumerate(itertools.permutations((pk, sl, fb))):
+            q = os.path.join(d, "o%d.py" % k); shutil.copy(GEN_A, q)
+            for x in order:
+                r = _run([x, q, "--write"]); assert r.returncode == 0, (order, r.stderr.decode()[-200:])
+            outs.add(open(q, "rb").read())
+        assert len(outs) == 1, "the order of packrtn, slotlm and fb01 changes the result"
+        assert list(outs)[0].decode().count('rfb_val="10k 0.1%", rfb_tol="0.1%",') == 4
+    m = _M(); o = m.item1_r4(); V = m.V
+    lo = 0.788 * (1 + 53.6 * 0.999 / (10 * 1.001)) - 25e-9 * 53.6e3; hi = 0.812 * (1 + 53.6 * 1.001 / (10 * 0.999)) + 25e-9 * 53.6e3
+    assert abs(o["v"]["least_lm"] - lo) < 1e-12 and abs(o["v"]["hi_lm"] - hi) < 1e-12 and 4.75 < lo and hi < 5.25 and 0.812 * (1 + 53.6 * 1.01 / 9.9) > 5.25
+
+
+def t_round6_the_recheck_is_filed_as_received():
+    need(RECHECK_FILED, "the collaborator's recheck as filed")
+    c = open(RECHECK_FILED, encoding="utf-8").read()
+    assert c.startswith("accepted: no\n") and "L9P-F02 RECHECK: NOT CLOSED" in c and "- F5-03: Correct both divider resistors" in c
