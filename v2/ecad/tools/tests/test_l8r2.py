@@ -519,3 +519,15 @@ def t_round6_the_recheck_is_filed_as_received():
     need(RECHECK_FILED, "the collaborator's recheck as filed")
     c = open(RECHECK_FILED, encoding="utf-8").read()
     assert c.startswith("accepted: no\n") and "L9P-F02 RECHECK: NOT CLOSED" in c and "- F5-03: Correct both divider resistors" in c
+
+
+def t_closing_check_c4_3_names_the_measured_steady_current():
+    """The coordinator's closing check (MINOR): C4-3's duration criterion is taken on the steady current measured on the specimen plus
+    a stated tolerance; the desk's 0.7013 A at 4.9019 V is printed as the expected value; no threshold names round 5's 0.712 A."""
+    page = open(PAGE, encoding="utf-8").read()
+    c43 = page[page.index("- **C4-3, the actual cooler chain"):page.index("- **C4-4, the maker's answer")]
+    assert "I_SS" in c43 and "10 % of I_SS or 0.05 A, the larger" in c43 and "not the threshold" in c43 and "0.712" not in c43
+    m = _M(); o = m.item1_r4(); V = m.V
+    assert abs(V["fan_env"] / V["eta_lo"] / o["v"]["load_lm"] - 0.7013) < 5e-5
+    out = open(OUT, encoding="utf-8").read()
+    assert "0.7013 A at 4.9019 V" in out and "expected values, not the threshold" in out

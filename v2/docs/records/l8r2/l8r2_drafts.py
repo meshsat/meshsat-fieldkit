@@ -212,7 +212,7 @@ F = {
     "eta_lm": (0.90, "ASSUMPTION", "the LM5176 5.1 V stages' declared efficiency, NOT PLOTTED by the maker (rv-pwr's rule; record l9pwr's M1)"),
     "slot_peak": (6.6, "BOUND", "the three slot leads' declared peak, both ends: the bounded start-up and fault envelope (round 6; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)"),
     # round 6 (the collaborator's recheck: B2 the start-up envelope, B3 the matrix's thermal acceptance, F5-03 corrected)
-    "start_bound": (1.80, "BOUND", "the cooler branch's bounded start on +5V_Sn: a 100 us moving average at most 1.80 A, over the steady 0.712 A for at most 1.0 s a start (C4-3 holds the chain to it)"),
+    "start_bound": (1.80, "BOUND", "the cooler branch's bounded start on +5V_Sn: a 100 us moving average at most 1.80 A, over the steady current measured on the specimen plus 10 % of it or 0.05 A (the larger) for at most 1.0 s a start (C4-3 holds the chain to it)"),
     "fb_tol01": (0.001, "BOUND", "the LM5176 5.1 V stages' divider at 0.1 % (apply_gen_sch_a_fb01.py)"),
     "ibias_fb": (25e-9, "MAKER", "LM5176 IBIAS(FB) at most 25 nA in regulation (SNVSAI1D electrical characteristics)"),
     "vsns": ((0.043, 0.050, 0.057), "MAKER", "LM5176 VSNS, the average current loop's target (SNVSAI1D)"),
@@ -1094,6 +1094,8 @@ def item1_r4_print(w):
     cw = o["corr_worst"]
     w("    least margin: %+.4f A at the steady envelope (%.1f %%); %+.4f A at the bounded start; %+.4f A with a degraded cooler; %+.4f A at the declared %.1f A\n"
       % (o["lm_limit"] - cw[0], 100 * (o["lm_limit"] - cw[0]) / o["lm_limit"], o["lm_limit"] - cw[1], o["lm_limit"] - cw[2], o["lm_limit"] - V["slot_peak"], V["slot_peak"]))
+    w("    the steady branch the desk expects (2.75 W over %.2f): %.4f A at %.4f V, %.4f A at %.4f V; C4-3's duration criterion is taken on the steady current MEASURED on the specimen plus 10 %% of it or 0.05 A (the larger), at most 1.0 s a start: these figures are expected values, not the threshold\n"
+      % (V["eta_lo"], V["fan_env"] / V["eta_lo"] / v["load_lm"], v["load_lm"], V["fan_env"] / V["eta_lo"] / v["hi_lm"], v["hi_lm"]))
     w("    the eFuse-limited start calculation (an ASSUMPTION, 0.538 A at 12.43 V over 0.80) gives %.4f A of branch current at %.4f V, inside the %.2f A bound; the eFuse's own response is %.0f us typical (tLIM), the bound's 100 us average spans it\n"
       % (o["start_calc"], v["load_lm"], V["start_bound"], V["tlim"] * 1e6))
     w("    slot 2 (its own HIGH, the cooler's bounded start): %.4f A, inside the same %.1f A; its S-98 coincidence (5.63 A) inside it; I-03's all-peak bound stays I-03's\n" % (o["slot2_start"], V["slot_peak"]))
