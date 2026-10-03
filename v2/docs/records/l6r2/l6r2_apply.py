@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """l6r2_apply.py: the shared logic of the six DRAFT apply scripts of record l6r2 (MESHSAT-1357, 3 October 2026).
 
-Each board's draft (apply_gen_sch_X_lcsc.py) carries its own table, designator -> (the committed value, the selected LCSC code),
-rendered by l6r2_passives.py, and inserts it into gen_sch_X.py once, before the line `import schlayout, time as _time` (every
-generator places its parts there, so the table is read after every part call and before any symbol is written). The inserted
-block sets a part's LCSC field only when the part carries none AND its value is the value the code was selected for; a part
-whose value another draft has changed keeps no code from the table, and the generator prints those designators. Designators
-are never changed. Why a table and not a keyword on each call (SESSION): many calls are made in loops and in helper functions
+Each board's draft (apply_gen_sch_X_lcsc.py) carries its own table, designator -> (the committed value, the selected LCSC code)
+or, since round 4, (the committed value, the selected code, the code it replaces), rendered by l6r2_passives.py, and inserts it
+into gen_sch_X.py once, before the line `import schlayout, time as _time` (every generator places its parts there, so the table
+is read after every part call and before any symbol is written). The inserted block sets a part's LCSC field only when its value
+is the value the code was selected for AND the part carries no code, or carries exactly the code the entry replaces (round 4: a
+code the generator's call writes that fails a requirement, finding F7); a part whose value or code another draft has changed keeps
+what it has, and the generator prints those designators. Designators are never changed. Why a table and not a keyword on each call (SESSION): many calls are made in loops and in helper functions
 whose values are parameters (the converter blocks), and a keyword on each call would need those calls restructured; the
 value-keyed table is order-independent against the other drafts. Reverse: remove the block.
 
@@ -40,18 +41,19 @@ def block(board, entries):
     lines = [MARK + ", 3 October 2026): the LCSC order codes of board %s's generic parts (resistors, capacitors," % board.upper(),
              "# ferrites, small diodes, indicator LEDs) selected in v2/docs/records/l6r2/L6R2-PASSIVES.md (rule I-1; every requirement checked",
              "# against JLCPCB's parts library there). Keyed by designator AND the value each code was selected for: a part whose value another",
-             "# draft has changed keeps no code from this table and is printed below; a part that already carries a code keeps its own.",
+             "# draft has changed keeps no code from this table and is printed below; a part that already carries a code keeps its own,",
+             "# unless the entry names that very code as the one it replaces (a third field: a code written in a call that fails a requirement).",
              "_L6R2_LCSC = {"]
-    for ref, (val, code) in entries.items():
-        lines.append("    %r: (%r, %r)," % (ref, val, code))
+    for ref, e in entries.items():
+        lines.append("    %r: %r," % (ref, tuple(e)))
     lines += ["}",
               "for _p6 in P:",
               "    _e6 = _L6R2_LCSC.get(_p6[\"ref\"])",
-              "    if _e6 and not _p6.get(\"lcsc\") and _p6.get(\"value\") == _e6[0]:",
+              "    if _e6 and _p6.get(\"value\") == _e6[0] and (_p6.get(\"lcsc\") or \"\") in (\"\",) + tuple(_e6[2:]):",
               "        _p6[\"lcsc\"] = _e6[1]",
-              "_s6 = sorted(_k for _k, _e in _L6R2_LCSC.items() if not any(_q[\"ref\"] == _k and _q.get(\"value\") == _e[0] for _q in P))",
+              "_s6 = sorted(_k for _k, _e in _L6R2_LCSC.items() if not any(_q[\"ref\"] == _k and _q.get(\"value\") == _e[0] and _q.get(\"lcsc\") == _e[1] for _q in P))",
               "if _s6:",
-              "    print(\"l6r2: %d LCSC entries not applied (the part's value moved, or the part is gone): %s\" % (len(_s6), \", \".join(_s6)))",
+              "    print(\"l6r2: %d LCSC entries not applied (the part's value or code moved, or the part is gone): %s\" % (len(_s6), \", \".join(_s6)))",
               ""]
     return "\n".join(lines)
 
@@ -80,7 +82,12 @@ def render_draft(board, entries):
             '"""apply_gen_sch_%s_lcsc.py: DRAFT for board %s\'s generator owner (Layer 6 record l6r2, MESHSAT-1357, 3 October 2026). NOT APPLIED.' % (board, board.upper()),
             "",
             "It writes the LCSC field of board %s's generic parts into v2/ecad/tools/gen_sch_%s.py: %d designators, each keyed by the value" % (board.upper(), board, len(entries)),
-            "the code was selected for (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by",
+            "the code was selected for (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by"]
+    n3 = sum(1 for e in entries.values() if len(e) > 2)
+    if n3:
+        body[-1] = "the code was selected for; %d of them correct a code the generator's call writes (the entry's third field is the code" % n3
+        body.append("replaced, finding F7) (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by")
+    body += [
             "`l6r2_passives.py --write-drafts`; test_l6r2.py holds this file equal to the render and proves its composition with every other",
             "pending draft of the generator.",
             "Usage:  apply_gen_sch_%s_lcsc.py TARGET [--check | --write]     (default --check: nothing is written)" % board,
@@ -93,8 +100,8 @@ def render_draft(board, entries):
             "",
             "BOARD = %r" % board,
             "ENTRIES = {"]
-    for ref, (val, code) in entries.items():
-        body.append("    %r: (%r, %r)," % (ref, val, code))
+    for ref, e in entries.items():
+        body.append("    %r: %r," % (ref, tuple(e)))
     body += ["}", "", "", "if __name__ == \"__main__\":", "    sys.exit(l6r2_apply.main(BOARD, ENTRIES, sys.argv[1:]))", ""]
     return "\n".join(body)
 

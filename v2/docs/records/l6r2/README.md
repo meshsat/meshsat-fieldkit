@@ -8,7 +8,11 @@ public reading of JLCPCB's parts library, checked property by property; ICs, mod
 mechanical parts are not re-selected and are listed as findings; a requirement the generator and the intent leave open is a
 finding with its line, never a guess. Based on `fnd/int28` at `a1f696de`. No generator, Layer 4 record, `pcb_interfaces.yaml` or
 `HW-FW-CONTRACT.md` is edited. Round 3 (the same day, from `6fe27332`) corrected `v2/ecad/tools/lcsc_fill.py`'s table with a property
-test (finding F1) and drafted the footprint keys of three Coilcraft rows (finding F4); the page's section 8.
+test (finding F1) and drafted the footprint keys of three Coilcraft rows (finding F4); the page's section 8. Round 4 (from
+`b257a730`) corrected the failing codes written in the generators' calls through the LCSC drafts' entries with a third field (the
+code replaced) and extended the property test to every written code (finding F7); the page's section 8.3. The reading
+`inputs/jlc-parts-2026-10-03.json` carries the round 4 supplement (the written codes and their keywords, `read_catalogue.py
+--missing`, recorded in its `supplements` field).
 
 | File | What it is |
 |---|---|

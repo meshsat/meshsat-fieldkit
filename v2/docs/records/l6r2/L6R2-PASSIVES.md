@@ -4,7 +4,8 @@ Prototype design: nothing is bought, built, powered or measured. Every figure he
 (`l6r2_passives.out`, "out N" below), which reads only this tree and the dated catalogue reading in `inputs/`; this page is the
 short form. Based on `fnd/int28` at `a1f696de`. Round 3, the same day on `fnd/l6r2` from `6fe27332`: `lcsc_fill.py`'s table
 corrected to this record's selections with a property test (F1), and the three Coilcraft rows drawn on another body's footprint
-drafted onto their own (F4); section 8.
+drafted onto their own (F4); section 8. Round 4, from `b257a730`: the codes written in the generators' calls corrected in the LCSC
+drafts and the property test extended to them (F7); section 8.3.
 
 ## 1. What was asked, and the denominator (out 1)
 
@@ -47,12 +48,12 @@ both phrases off the page before it uses them.
 <!-- page-table:begin -->
 | Board | Uncoded fitted rows | SELECTED rows (selections) | Open: OPEN requirement | Open: SPECIAL (not re-selected) | NOT_A_PART | NO_MATCH | Rows whose finish-time code (lcsc_fill.py) fails a requirement | Designators in the draft |
 |---|---|---|---|---|---|---|---|---|
-| A | 382 | 318 (71) | 0 | 64 | 0 | 0 | 0 | 318 |
-| E | 111 | 86 (43) | 1 | 16 | 8 | 0 | 0 | 86 |
+| A | 382 | 318 (71) | 0 | 64 | 0 | 0 | 0 | 331 |
+| E | 111 | 86 (43) | 1 | 16 | 8 | 0 | 0 | 90 |
 | P | 50 | 43 (15) | 1 | 6 | 0 | 0 | 0 | 43 |
-| D | 137 | 122 (22) | 5 | 8 | 2 | 0 | 0 | 122 |
-| C | 83 | 40 (17) | 17 | 22 | 4 | 0 | 0 | 40 |
-| B | 894 | 831 (54) | 9 | 54 | 0 | 0 | 0 | 831 |
+| D | 137 | 122 (22) | 5 | 8 | 2 | 0 | 0 | 126 |
+| C | 83 | 40 (17) | 17 | 22 | 4 | 0 | 0 | 42 |
+| B | 894 | 831 (54) | 9 | 54 | 0 | 0 | 0 | 832 |
 <!-- page-table:end -->
 
 **1440 of the 1657 uncoded fitted rows are SELECTED**: every deciding requirement met on the catalogue line, stock for five kits
@@ -64,7 +65,7 @@ maker's own ordering table and **90 are DOCUMENT_OWED** (the catalogue's identit
 Since round 3 the code `lcsc_fill.py` fills on each of these lines meets every requirement, so rule I-1 takes it first: the drafts
 and the finish step write the same code on every row. One consequence: every 100 nF 0603 row now takes YAGEO CC0603KRX7R0BB104
 (100 V), the one code that meets the 100 V rows the line also fills, where round 2 kept the 50 V CC0603KRX7R9BB104 on the rows
-that allowed it (and the 1 uF, 1 nF and 47 nF 0603 lines likewise; out 2). The table's last column reads 0 on every board.
+that allowed it (and the 1 uF, 1 nF and 47 nF 0603 lines likewise; out 2). The column of finish-time failures reads 0 on every board; the drafts' designators include round 4's corrections (section 8.3).
 
 ## 4. Findings (out 3)
 
@@ -116,11 +117,10 @@ LR2512D, ROHM GMR100, RALEC LR2512, TA-I RLP25); their makers' sheets are owed.
 part meets (out 3 lists them per board); the generator owner states a tolerance where the circuit needs another. The voltage of 65
 capacitor selections is derived from the intent (rule V-1), as allowed; each basis line is in out 2.
 
-**F7. The same failing codes written into the generators (17 rows, round 3; outside this record's uncoded rows):** board A C75
-(C14663, 50 V where V-1 asks more), C208 and C209 (C15849, X5R), C69, C134, C141, C191 (C1588, X7R 10 % where C-D2 asks C0G);
-board C C1 and C2 (C15850, X5R); board D C61, C64, C65, C71 (C15849); board E C56, C57, C58 (C15849) and C53 (C1588). These carry
-an explicit code in their generator call, so `lcsc_fill.py` never fills them; the generator owner restates each code (Layer 8),
-or states the dielectric or rating the circuit needs where it is not the rule's default. Not drafted here.
+**F7. Failing codes written into the generators' calls (corrected in round 4, section 8.3):** round 3 found 17 rows carrying the
+same failing codes as `lcsc_fill.py`'s old table, written explicitly in their generator calls, which lcsc_fill never fills. Round 4
+judged every code a generator call writes on a generic row (370 rows) and found 26 that fail: the 17, seven more, and two with no
+meeting line in the reading. 24 are corrected in the boards' LCSC drafts; two stay findings (section 8.3).
 
 ## 5. The drafts (out 4)
 
@@ -155,6 +155,7 @@ alone and all applied together (out 6).
    (after or before the Layer 4 drafts: the order does not matter) and regenerates the board on the box.
 2. F1: done in round 3 (section 8.1). What follows from it is listed there: three Layer 4 records that pin `lcsc_fill.py` re-pin
    it, the deliverables take the new codes when each board is finished again, the sweep re-takes the "order codes" verdicts.
+   F7: done in round 4 (section 8.3) but for board B C529 and C530, whose tolerance no catalogue line read prints in percent.
 3. F3: the board owners declare the open nets' voltages in the intents, state the links' currents, verify board D's LPF and state
    the panel lamps' intensity; the selections then follow on the same rules.
 4. F5 and the 91 DOCUMENT_OWED identities: file the makers' sheets (Samsung CL, FH, Samwha, CCTC, PSA, Milliohm LR2512, ROHM) or add
@@ -247,3 +248,57 @@ Downstream, not done here: when boards B and E are regenerated with the drafts, 
 `zstack-models.json` holds no XAL6030 model yet; the box reads it). Board B's six buck33 inductors drop from 6.1 to 3.1 mm, which
 removes the item `CASE-FIT-UNCERTAINTIES.md` section 4 counts ("six XAL6060 inductors of 6.10 sat under 6.0 envelopes"), and B L1
 and E L3 rise from 2.1 to 3.1 mm.
+
+### 8.3 Round 4: the codes the generators' calls write (F7, out 7)
+
+Every fitted generic row whose generator call writes a code is judged by the same checks on the same dated reading (supplemented on
+3 October 2026 with the 76 written codes it lacked and 14 keywords). A failing code gets a correction by this record's preference:
+its round 2 selection for the same line (value and land) on the same board, then on another board, then the code `lcsc_fill.py`
+fills on that line, then a line of the keyword searches; every requirement met, stock for five kits, never a refused code. The
+corrections are entries in the boards' LCSC drafts with a third field, the code they replace: the block changes a part's code only
+where its value is the committed one AND it carries exactly that code (a part whose value or code another draft has moved keeps
+what it has, and the generator prints it). Nothing is reselected that a Layer 4 record selected: no Layer 4 record names any of the
+replaced codes as its own choice.
+
+| Board, rows | Value | Written (fails) | Corrected to | Source |
+|---|---|---|---|---|
+| A C75 | 100 nF 0603 | C14663 YAGEO CC0603KRX7R9BB104, 50 V (100 V needed) | C113803 YAGEO CC0603KRX7R0BB104, 100 V | round 2, same line |
+| A C208, C209 | 1 uF 0603 | C15849 Samsung CL10A105KB8NNNC, X5R | C559769 YAGEO CC0603KRX7R9BB105, X7R | round 2, same line |
+| A C69, C134, C141, C191 | 1 nF 0603 | C1588 Samsung CL10B102KB8NNNC, X7R 10 % | C113793 YAGEO CC0603JRNPO0BN102, C0G 5 % 100 V | round 2, same line |
+| C C1, C2 | 10 uF 0805 | C15850 Samsung CL21A106KAYNNNE, X5R | C326595 YAGEO CC0805KKX7R7BB106, X7R | round 2, same line (board D) |
+| D C61, C64, C65, C71 | 1 uF 0603 | C15849, X5R | C559769, X7R | round 2, same line |
+| E C56, C57, C58 | 1 uF 0603 | C15849, X5R | C559769, X7R | round 2, same line |
+| E C53 | 1 nF 0603 | C1588, X7R 10 % | C113793, C0G 5 % | round 2, same line |
+| A C5, C86 (found by the extended test) | 220 nF 0603 | C160828 Samsung CL10B224KO8NNNC, 16 V (50 V and 35 V needed) | C344195 CCTC TCC0603X7R224K500CT, 50 V X7R 10 % | round 2, same line |
+| A C7 (found) | 4.7 uF 0805 | C354262 YAGEO CC0805KKX7R8BB475, 25 V (50 V needed) | C694229 TDK CGA4J1X7R1H475KT0Y0N, 50 V X7R | keyword search |
+| A C76 (found) | 470 pF 0603 | C27694 Samsung CL10C471JB8NNNC, 50 V (100 V needed) | C326973 YAGEO CC0603JRNPO0BN471, 100 V C0G | keyword search |
+| A C150 (found) | 560 pF 0603 | C43962 FH 0603CG561J500NT, 50 V (100 V needed) | C513644 YAGEO CC0603JRNPO0BN561, 100 V C0G | keyword search |
+| A C152 (found) | 680 nF 0603 | C107067 YAGEO CC0603KRX7R7BB684, 16 V (25 V needed) | C2838708 YAGEO CC0603KRX7R8BB684, 25 V | keyword search |
+| B C35 (found) | 10 uF 100 V 1210 | C576517 Murata GRM32EC72A106KE05L, X7S | C49296968 TDK C3225X7R2A106KT000E, X7R 100 V | keyword search |
+| B C529, C530 | 9.1 pF and 4.7 pF 50 V C0G 0402 | C526972, C325453 YAGEO CC0402BRNPO9BN9R1 and 4R7 | none: FINDING | no line read prints the tolerance in percent (rule C-T asks 5 % of a C0G); the generator's code stands, the owner states the tolerance in pF |
+| C C31 | 4.7 uF 25 V 0603 | C90057 Murata GRM188R61E475KE11D, X5R | kept | rule C-D3b: no X7R line read meets the value, land and rating with stock; the hot-spot question OPEN |
+
+The rated voltages asked are the identity tool's (rule V-1 on the intent or the nets' bound at the 20 percent margin); where a
+generator comment states a lower working voltage than the bound (A C152: "PDT is rated 2.7 V"), the owner can declare it in the
+intent and the requirement follows, but a higher-rated part of the same value, dielectric and tolerance is never worse. One
+correction sits inside a Layer 4 record's subject: A C5 is the front-end stage's Cc1 (220 nF), which L4-E8 keeps as drawn ("Rc1 15k
+and Cc1 220n stay"); its value, X7R class and 10 % tolerance are unchanged, only the rating (16 V to 50 V) and the maker, and
+L4-E8's draft on the same call (`apply_gen_sch_a_bank.py`) still applies and commutes.
+
+**Composition:** each corrected board's LCSC draft (A, B, C, D, E) commutes with every pending draft of its generator (A: L4-E9's
+seven and d8dec31's mainpb; E: the eleven and d8dec31's pod; D: d8dec31's ptt), and with this record's XAL land drafts on B and E,
+alone and all together (out 4 and 6). Of the corrected designators only A C5 sits on a line a pending draft changes (L4-E8's, above,
+which keeps its value and code, so the entry still applies after it).
+
+**The extended property test** (`t_every_code_a_generator_call_writes_meets_the_requirements_as_the_drafts_leave_it`): for every
+fitted generic row whose call writes a code, the code as this record's draft leaves it meets every requirement on the reading; a
+code may stay failing only where NO line of the whole reading meets the requirement with stock (checked against the reading, not
+taken from the record). **Result: 370 written codes judged (A 101, E 28, P 6, D 41, C 66, B 128), 0 misses**; 9 rows with an OPEN
+requirement counted, not judged; three kept by the rule (C C31 under C-D3b, B C529 and C530 with no meeting line). On the committed
+generators without the drafts the same judge reads 24 misses (A 13, E 4, D 4, C 2, B 1).
+
+**For set 28's merge (not done here):** `l4e9/l4e9_power_path.py`, `l4e8/ripple_dense.py` and `l4e12/l4e12_thermal.py` pin
+`lcsc_fill.py`'s old sha256 `6888362e`; the integrator re-pins them at the merge. L4-E9's reading of board E C5's fill mapping
+(the `^100n` 0603 line) now gives **C113803, YAGEO CC0603KRX7R0BB104, 100 V** (it was C14663, CC0603KRX7R9BB104, 50 V): the same
+YAGEO X7R K series on the same sheet, so its tolerance, temperature and endurance figures are the same rows; the comment in
+`gen_sch_e.py` (line 713) that L4-E9 requires to name C5's part still names C14663 and is the generator owner's to restate.

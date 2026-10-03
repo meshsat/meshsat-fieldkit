@@ -884,11 +884,17 @@ def compute():
                     ds, st, why = bind(pk["row"].get("model"), pk["row"].get("brand"), d, TAB) if d["cls"] in ("CAP", "RES") else (None, "NONE", "not a capacitor or resistor family")
                     d["binding"] = (ds, st, why)
         boards[b] = dict(sels=sels, rows=rs, meta=meta)
+    picks = [(b, tuple(d["values"]), tuple(d["lands"]), d["choice"]["pick"]["code"]) for b in ORDER for d in boards[b]["sels"]
+             if (d.get("choice") or {}).get("pick") and d["choice"].get("state") in ("SELECTED", "LOW_STOCK")]
+    for b in ORDER:
+        boards[b]["coded"] = coded_board(b, boards[b]["rows"], MAP, CRT, cat, picks)
     return boards, cat, TAB
 
 
 def entries_for(board, B):
-    """The draft's table: designator -> (the committed value, the selected code), for every SELECTED or LOW_STOCK pick."""
+    """The draft's table: designator -> (the committed value, the selected code), for every SELECTED or LOW_STOCK pick; and since
+    round 4, designator -> (the committed value, the corrected code, the code the generator's call writes) for every written code
+    that fails a requirement and has a correction (finding F7)."""
     out = {}
     rows = {p["ref"]: p for p in B[board]["rows"]}
     for d in B[board]["sels"]:
@@ -896,7 +902,88 @@ def entries_for(board, B):
         if ch.get("pick") and ch.get("state") in ("SELECTED", "LOW_STOCK"):
             for r in d["refs"]:
                 out[r] = (rows[r]["value"], ch["pick"]["code"])
+    for d in B[board].get("coded", []):
+        if d.get("fix"):
+            for r in d["refs"]:
+                out[r] = (rows[r]["value"], d["fix"]["code"], d["written"])
     return dict(sorted(out.items(), key=lambda kv: _nat(kv[0])))
+
+
+# ------------------------------------------------------------------------------------------------ round 4: the written codes (F7)
+GENERIC_CLS = ("CAP", "RES", "FERRITE", "SEMI", "LED")
+
+
+def cat_index(cat):
+    idx = dict(cat["codes"])
+    for srch in cat["searches"].values():
+        for r in srch["rows"]: idx.setdefault(r["code"], r)
+    return idx
+
+
+def coded_board(letter, rs, MAP, CRT, cat, picks):
+    """The fitted rows whose GENERATOR CALL writes a code, grouped by the code written and the identity tool's key, classified
+    like the uncoded rows; each generic group's code judged on the reading by the same check (rule C-D3b applied as for the
+    uncoded rows: an X5R code stands where no X7R line read meets). A code that fails gets a correction, by preference this
+    record's selection for the same line (same value and land) on the same board, then on another board, then the code
+    lcsc_fill.py fills on that line, then a line of the keyword searches; each candidate judged on every requirement, stock for
+    five kits, never a refused code. Specials and OPEN rows keep their written code (not this record's to judge)."""
+    idx = cat_index(cat)
+    REF = cat.get("_refusals")
+    by_code = collections.defaultdict(list)
+    for p in rs:
+        if p["generator_lcsc"]: by_code[p["generator_lcsc"]].append(p)
+    out = []
+    for code in sorted(by_code):
+        for key, sel in PI.selections(by_code[code]).items():
+            d = dict(sid=PI.selection_id(key), board=letter, key=key, kind=sel["kind"], prefix=sel["prefix"],
+                     refs=sorted((r.split(":", 1)[1] for r in sel["rows"]), key=_nat), values=sorted(sel["values"]), lands=sorted(sel["lands"]),
+                     requirements=dict(sel["requirements"]), basis={k: sorted(v) for k, v in sel["basis"].items()}, written=code)
+            d["cls"], d["why"] = classify(d)
+            if d["cls"] == "RES" and (d["requirements"].get("power_min_w") is None
+                                      or (d["requirements"].get("resistor_kind") != "zero-ohm link" and d["requirements"].get("tolerance_max_pct") is None)):
+                d["cls"], d["why"] = "OPEN", "the identity tool derives no power rating or tolerance for this land: the requirement is open"
+            if d["cls"] not in GENERIC_CLS and d["cls"] != "OPEN": continue
+            out.append(d)
+            if d["cls"] == "OPEN":
+                d["verdict"] = "OPEN"; continue
+            d["keywords"] = keywords(d)
+            row = idx.get(code)
+            if row is None:
+                d["verdict"] = "UNREAD"; continue
+            ok, lines, _g = check(d, row)
+            d["lines"] = lines
+            if ok:
+                d["verdict"] = "MEETS"; continue
+            need = len(d["refs"]) * KITS
+            cands = []
+            for (pb, vals, lands, pc) in picks:
+                if vals == tuple(d["values"]) and lands == tuple(d["lands"]):
+                    cands.append((0 if pb == letter else 1, pc, "this record's selection for the same line on board %s" % NAME[pb]))
+            for v in d["values"]:
+                for l in d["lands"]:
+                    c, how = design_code(v, l, MAP, CRT, {}, None)
+                    if c: cands.append((2, c, how))
+            for kw in d["keywords"]:
+                for r in cat["searches"].get(kw, {}).get("rows", []):
+                    cands.append((3, r["code"], "the keyword search %r" % kw))
+            judged, seen = [], set()
+            for src, c, how in sorted(cands, key=lambda x: x[0]):
+                if c in seen or c == code or c not in idx: continue
+                seen.add(c)
+                r = idx[c]
+                okc, lc, gc = check(d, r)
+                if REF and refused(c, d["values"][0], d["lands"][0], REF): okc = False
+                if okc and (r.get("stock") or 0) >= need:
+                    judged.append(dict(code=c, row=r, src=src, how=how, lines=lc, grade=gc, stock=r.get("stock") or 0))
+            judged.sort(key=lambda j: (j["src"], j["row"].get("lib") != "base", not j["row"].get("preferred"), not maker_tier(j["row"].get("brand")), -j["stock"], j["code"]))
+            if judged:
+                d["verdict"] = "FAILS"; d["fix"] = judged[0]; continue
+            if d["cls"] == "CAP" and d["requirements"].get("dielectric") == "X7R":
+                d2 = dict(d); d2["requirements"] = dict(d["requirements"], dielectric="X5R")
+                if check(d2, row)[0]:
+                    d["verdict"] = "MEETS_C_D3B"; continue
+            d["verdict"] = "FAILS"; d["fix"] = None
+    return out
 
 
 def bom_tool_counts():
@@ -1073,6 +1160,14 @@ def main(argv):
             for d in sels:
                 if d["cls"] in ("CAP", "RES", "FERRITE", "SEMI", "LED"):
                     codes.update(c for c, _ in d["design_codes"]); kws.update(d["keywords"])
+        # round 4: every code a generator call writes on a generic row, and the keywords of a group whose written code fails on
+        # the reading (run --missing twice: the second asks the keywords of the codes the first read)
+        cat = load_catalogue(); cat["_refusals"] = refusals()
+        for b in ORDER:
+            for d in coded_board(b, PI.rows(boards=[b])[0], MAP, CRT, cat, []):
+                if d["verdict"] == "OPEN": continue
+                codes.add(d["written"])
+                if d["verdict"] == "FAILS": kws.update(d["keywords"])
         print(json.dumps(dict(codes=sorted(codes), keywords=sorted(kws)), ensure_ascii=False, indent=1))
         return 0
     B, cat, TAB = compute()
@@ -1138,7 +1233,44 @@ def main(argv):
     print()
     import l6r2_land
     land_report(lands(), {b: compose_land(b) for b in l6r2_land.EDITS})
+    coded_report(B)
     return 0
+
+
+def coded_report(B):
+    P = print
+    P("7. ROUND 4: THE CODES THE GENERATORS' CALLS WRITE (finding F7; the same checks, the same dated reading with its supplements)")
+    tot = collections.Counter()
+    for b in ORDER:
+        rc = collections.Counter()
+        for d in B[b]["coded"]: rc[d["verdict"]] += len(d["refs"])
+        tot.update(rc)
+        P("   board %s: %d generic rows carry a code in their generator call; %s" % (NAME[b], sum(rc.values()), "; ".join("%s %d" % kv for kv in sorted(rc.items()))))
+        for d in B[b]["coded"]:
+            if d["verdict"] not in ("FAILS", "MEETS_C_D3B", "UNREAD"): continue
+            bad = "; ".join("%s %s, read %s" % (x[0], x[3], x[2]) for x in d.get("lines", []) if x[3] != "MEETS")
+            f = d.get("fix")
+            if d["verdict"] == "MEETS_C_D3B":
+                P("     %s [%s] %s %s: X5R; no X7R line read meets the value, land and rating with stock: rule C-D3b keeps it, the hot-spot question OPEN" % (
+                    ", ".join(d["refs"]), clean(d["values"][0]), d["written"], clean(cat_row(d["written"]))))
+            elif f:
+                P("     %s [%s] %s %s: %s -> %s %s %s %s, stock %s (%s; every requirement met: %s)" % (
+                    ", ".join(d["refs"]), clean(d["values"][0]), d["written"], clean(cat_row(d["written"])), bad, f["code"], clean(f["row"].get("brand")),
+                    clean(f["row"].get("model")), f["row"].get("lib"), f["stock"], clean(f["how"]), clean("; ".join("%s %s" % (x[0], x[2]) for x in f["lines"]))))
+            else:
+                P("     %s [%s] %s %s: %s; NO line read meets the requirement: a FINDING, the generator's code stands" % (
+                    ", ".join(d["refs"]), clean(d["values"][0]), d["written"], clean(cat_row(d["written"])), bad or d["verdict"]))
+    P("   all six: %s; the corrections are entries with a third field (the code they replace) in the boards' LCSC drafts" % "; ".join("%s %d rows" % kv for kv in sorted(tot.items())))
+    P()
+
+
+_CAT_IDX = {}
+
+
+def cat_row(code):
+    if not _CAT_IDX: _CAT_IDX.update(cat_index(load_catalogue()))
+    r = _CAT_IDX.get(code) or {}
+    return "%s %s" % (r.get("brand") or "", r.get("model") or "")
 
 
 def identity_block(B):

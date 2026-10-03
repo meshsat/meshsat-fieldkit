@@ -18,6 +18,13 @@ no line filled board A's C27, which refuses the finish. The table was corrected 
   * a C-D3b declaration names a line of the MAP whose code is X5R on the reading (a declaration that covers nothing is stale);
   * the judge has teeth: a copy of lcsc_fill.py whose 100n line is put back to a 50 V part is caught on a 100 V fixture row.
 A row whose requirement is open (no bound on its nets) is counted, not judged: it is a requirement gap, not a fill.
+
+Round 4 (finding F7) extends it to the codes the generators' CALLS write, which lcsc_fill never touches: for every fitted generic row
+of every board whose generator call carries a code, the code as record l6r2's LCSC draft of that board leaves it (an entry with a
+third field replaces exactly that written code on that value) meets every deciding requirement on the reading; the only codes that
+may stay failing are those where NO catalogue line of the reading meets the requirement with stock for five kits (then an X5R part
+stands under rule C-D3b, or the row is the record's finding), and that is checked against the whole reading, not taken from the
+record. A written code with no catalogue line read is a miss.
 Run: env -C v2/ecad/tools/tests python3 run.py test_lcsc_fill_requirements"""
 import ast
 import csv
@@ -159,3 +166,59 @@ def t_the_judge_catches_a_line_put_back_to_a_part_that_misses():
     mis_good, n_good, _ = judge([row], f_good, r_good, {}, m, idx)
     assert n_bad == 1 and mis_bad and "rated voltage FAILS" in mis_bad[0][3], "a 50 V fill on a 100 V row was not caught: %s" % mis_bad
     assert n_good == 1 and not mis_good, "the corrected line misses the fixture row: %s" % mis_good
+
+
+def _entries(board):
+    p = os.path.join(REC, "apply_gen_sch_%s_lcsc.py" % board)
+    return _parse(p, "ENTRIES") if os.path.exists(p) else {}
+
+
+def _any_line_meets(m, d, idx, need):
+    return any(m.check(d, r)[0] and (r.get("stock") or 0) >= need for r in idx.values())
+
+
+def t_every_code_a_generator_call_writes_meets_the_requirements_as_the_drafts_leave_it():
+    m, idx = _M()
+    judged, opened, kept, bad = 0, 0, [], []
+    for b in m.ORDER:
+        rows, _ = PI.rows(boards=[b])
+        ent = _entries(b)
+        for r in rows:
+            w = r["generator_lcsc"]
+            if not w: continue
+            d = dict(kind=r["kind"], prefix=r["prefix"], requirements=dict(r["requirements"]), values=[r["value"]], lands=[r["land"]], refs=[r["ref"]])
+            d["cls"], _why = m.classify(d)
+            rq = d["requirements"]
+            if d["cls"] == "RES" and (rq.get("power_min_w") is None or (rq.get("resistor_kind") != "zero-ohm link" and rq.get("tolerance_max_pct") is None)):
+                d["cls"] = "OPEN"
+            if d["cls"] == "OPEN": opened += 1; continue
+            if d["cls"] not in GENERIC: continue
+            judged += 1
+            e = ent.get(r["ref"])
+            code = e[1] if (e and len(e) > 2 and e[0] == r["value"] and e[2] == w) else w
+            row = idx.get(code)
+            tag = "%s %s [%s] %s" % (b.upper(), r["ref"], r["value"][:30], code)
+            if row is None:
+                bad.append(tag + ": no catalogue line read for the code"); continue
+            ok, lines, _g = m.check(d, row)
+            if ok: continue
+            need = 5
+            if d["cls"] == "CAP" and rq.get("dielectric") == "X7R":
+                d2 = dict(d); d2["requirements"] = dict(rq, dielectric="X5R")
+                if m.check(d2, row)[0] and not _any_line_meets(m, d, idx, need):
+                    kept.append(tag + " (C-D3b)"); continue
+            if not _any_line_meets(m, d, idx, need):
+                kept.append(tag + " (no line read meets)"); continue
+            bad.append(tag + ": " + "; ".join("%s %s (read %s)" % (x[0], x[3], x[2]) for x in lines if x[3] != "MEETS"))
+    assert judged > 300, "only %d written codes judged: the judge does not see the boards" % judged
+    assert not bad, "%d written code(s) miss the requirements as the drafts leave them, and a line read meets:\n  %s" % (len(bad), "\n  ".join(bad[:40]))
+
+
+def t_the_written_code_judge_has_teeth():
+    m, idx = _M()
+    if "C15849" not in idx or "C559769" not in idx: raise Skip("the reading lacks the fixture's codes")
+    d = dict(kind="capacitor", prefix="C", requirements=dict(value="1uF", package="0603", construction="MLCC", dielectric="X7R", v_rating_min=25.0, tolerance_max_pct=10.0),
+             values=["1u"], lands=["C_0603_1608Metric"], refs=["C900"])
+    d["cls"], _ = m.classify(d)
+    assert not m.check(d, idx["C15849"])[0] and _any_line_meets(m, d, idx, 5), "an X5R code where an X7R line is read must be a miss"
+    assert m.check(d, idx["C559769"])[0], "the corrected code must meet"

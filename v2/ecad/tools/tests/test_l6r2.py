@@ -9,7 +9,7 @@ Properties, pinned on fixtures and on the committed record, never on today's cou
     part under the five-kit need is never SELECTED while another line meets everything with stock;
   * the grade verdict is the envelope's (-20 to +62.1 C board air);
   * the draft's block sets a code only where the part has none AND its value is the value the code was selected for, and names the
-    rest; a second application, a missing anchor and a name already in use are refused; the repository's own generator is refused
+    rest; an entry that names the code it replaces (round 4) changes only that code on that value; a second application, a missing anchor and a name already in use are refused; the repository's own generator is refused
     while RELEASE.md does not read released with an accepted check;
   * each board's draft is the record's render, and it COMMUTES with every other pending draft of its generator (identical text in
     either order, and the result parses);
@@ -165,6 +165,21 @@ def t_the_block_sets_a_code_only_where_none_is_and_the_value_is_the_selected_one
     assert A.apply_text(new, "a", entries)[0] == "REFUSED", "a second application"
     assert A.apply_text("P = []\n", "a", entries)[0] == "REFUSED", "no anchor"
     assert A.apply_text("_p6 = 1\n" + A.ANCHOR, "a", entries)[0] == "REFUSED", "a name in use"
+
+
+def t_an_entry_that_names_the_code_it_replaces_changes_only_that_code_on_that_value():
+    A = _A()
+    entries = {"C1": ("1u", "C559769", "C15849"), "C2": ("1u", "C559769", "C15849"), "C3": ("1u", "C559769", "C15849"), "C4": ("1n", "C113793")}
+    text = ("P = [dict(ref='C1', value='1u', lcsc='C15849'), dict(ref='C2', value='1u', lcsc='C9'), dict(ref='C3', value='2.2u', lcsc='C15849'),"
+            " dict(ref='C4', value='1n', lcsc='C1588')]\n" + A.ANCHOR)
+    st, new, why = A.apply_text(text, "a", entries)
+    assert st == "OK", why
+    out = []
+    ns = {"print": lambda *a: out.append(" ".join(str(x) for x in a))}
+    exec(new.replace(A.ANCHOR, ""), ns)
+    got = {p["ref"]: p["lcsc"] for p in ns["P"]}
+    assert got == {"C1": "C559769", "C2": "C9", "C3": "C15849", "C4": "C1588"}, got
+    assert out and all(r in out[0] for r in ("C2", "C3", "C4")) and "C1," not in out[0] + ",", "the entries not applied are not printed: %s" % out
 
 
 def t_the_drafts_refuse_the_repositorys_own_generator_until_released():
