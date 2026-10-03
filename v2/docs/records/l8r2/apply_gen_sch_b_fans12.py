@@ -30,16 +30,18 @@ not driven (Sanyo Denki's San Ace catalogue C1152B001 p.362: "When control termi
 cycle"; the module's Fan_PWM is unpowered at its shutdown, CM5 datasheet 2.11), so round 3's 70 % Fan_PWM maximum held slots 1
 and 3 under their AP64500's 5 A only at the nominal 5.1 V and only while the module's firmware drove the line. It is WITHDRAWN.
 Slots 1 and 3 move to slot 2's LM5176 stage on board A (apply_gen_sch_a_slotlm.py, released with this draft), so the slot rail
-carries the fan at full speed in every state: the load row is the boost U7x1 at 0.47 A (2.0 W of fan over 0.85, an ASSUMPTION,
-at 5.0 V; the slot's declared loads 5.121 A), and slots 1 and 3 declare a 5.3 A peak at both ends of the lead (the slot at HIGH
-with the fan at full speed at the stage's least output less the rail's 2 % drop, 5.290 A), as slot 2 declares 5.63 A. The rails
+carries the fan at full speed in every state. ROUND 5 (the collaborator's check B2, 4 October 2026): the load row is the boost
+U7x1 at the envelope, 0.69 A (the fan's 2.75 W bound at the step-up's 12.43 V top over the step-up's 0.80, both verified by the
+record's C4-3 on this chain, at 5.0 V; the slot's declared loads 5.341 A), and the three slots declare one peak, 5.63 A, at both
+ends of the lead (the slot's envelope at the stage's least output less the rail's 2 % drop is 5.515 A). The rails
 CFANs_12V and CFANs_V and the nodes CFANs_SW, CFANs_BOOT, CFANs_VCC, CFANs_FSW, CFANs_TACH and CFANs_PWM are declared to the
 intent; the VIN and VCC capacitors are declared with their class and TI's clause.
 
 What it changes in v2/ecad/tools/gen_sch_b.py, and nothing else: the footprint table gains QFN11 beside SH4; the fan's row in
 _SLOT_LOADS; the J_FAN line of the slot loop becomes the block above (R51 kept on FAN_PWMs); round 4: the slot rails' declared
-peak on slots 1 and 3, 5.0 A (the AP64500's rating) to 5.3 A. No other draft targets gen_sch_b.py
-but record l8gnd's GND-002 draft (R-195) and this record's F03 and F04 drafts, whose anchors are elsewhere (l8r2_drafts.out).
+peak on slots 1 and 3, 5.0 A (the AP64500's rating) to 5.63 A, slot 2's (round 5). No other draft targets gen_sch_b.py
+but record l8gnd's GND-002 draft (R-195) and this record's F03 and F04 drafts and round 5's RT draft, whose anchors are
+elsewhere (l8r2_drafts.out).
 
 Usage:  apply_gen_sch_b_fans12.py TARGET [--check | --write]     (default --check: nothing is written)
 Exit 0: checked (or written); 3: refused (the target is not the expected text, the change is already applied, a designator or
@@ -60,15 +62,16 @@ _NEW_FP = ('"SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical
            '"QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11",   # l8r2: the coolers\' TPS61089 (the land board A drew at A17, b8cef471)')
 
 _OLD_LOAD = '    "J_FAN%d" % s: 0.1,              # the slot\'s IP68 cooler fan\n'
-_NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.47,   # l8r2 (E11-40): the cooler fan\'s 12 V step-up, 2.0 W of fan over 0.85 '
-             '(ASSUMPTION) at 5.0 V, at full speed in every state (round 4, L9P-F02: no Fan_PWM maximum; slots 1 and 3 on board '
-             'A\'s LM5176 stages, apply_gen_sch_a_slotlm.py)\n')
+_NEW_LOAD = ('    "U%d" % (701 + 30 * (s - 1)): 0.69,   # l8r2 (E11-40): the cooler fan\'s 12 V step-up, 2.75 W of fan over 0.80 '
+             '(ASSUMPTION) at 5.0 V, the envelope: the fan\'s bound at the step-up\'s 12.43 V top over its worst efficiency, any duty '
+             '(rounds 4 and 5, L9P-F02: no Fan_PWM maximum; slots 1 and 3 on board A\'s LM5176 stages, apply_gen_sch_a_slotlm.py)\n')
 
 _OLD_PEAK = ('    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63 if _n == 2 else 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
              'budget=0.02, share=0.015, converted=False,\n')
-_NEW_PEAK = ('    # record l8r2 round 4 (L9P-F02): slots 1 and 3 on board A\'s LM5176 stages (apply_gen_sch_a_slotlm.py), declared 5.3 A at both\n'
-             '    # ends of the lead: the slot at HIGH with the cooler at full speed at the stage\'s least output less the 2 % drop, 5.290 A\n'
-             '    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63 if _n == 2 else 5.3, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
+_NEW_PEAK = ('    # record l8r2 rounds 4 and 5 (L9P-F02): slots 1 and 3 on board A\'s LM5176 stages (apply_gen_sch_a_slotlm.py); the three slot\n'
+             '    # leads declare one peak, 5.63 A, at both ends: slots 1 and 3\'s envelope (every load at HIGH, the cooler at its 2.75 W bound\n'
+             '    # over 0.80) at the stage\'s least output less the 2 % drop is 5.515 A; slot 2\'s coincidence is its own 5.63 A (S-98)\n'
+             '    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), '
              'budget=0.02, share=0.015, converted=False,\n')
 
 _OLD_FAN = ('    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, '
@@ -113,13 +116,13 @@ _NEW_FAN = '''    # E11-40 (R-190, Layer 7's F-L7-02), drafted by Layer 8 record
          "SH4", {"1": fv, "2": "GND", "3": "CFAN%d_TACH" % s, "4": "CFAN%d_PWM" % s, "MP": "NC"}, "C160390"); r(R(51), "10k", "FAN_PWM%d" % s, cm33)
     for _ref in [_fU(1), _fU(2), _fL(1), _fQ(1), _fQ(2)] + [_fR(k) for k in range(1, 13)] + [_fC(k) for k in range(1, 11)]:
         SLOT_EXTRA[s].add(_ref)
-    _intent.rail(f12, 12.0, 0.17, 0.54, _fU(1), loads={_fU(2): 0.17}, converted=True, efficiency=0.85, fed_from=n5, switch=_fU(1),
+    _intent.rail(f12, 12.0, 0.22, 0.54, _fU(1), loads={_fU(2): 0.22}, converted=True, efficiency=0.85, fed_from=n5, switch=_fU(1),
                  source_ic="U%d is a TPS61089 boost: its VOUT pin is the power path (the synchronous rectifier is internal)" % (_fb + 1),
                  v_work=12.43, note="S%d's cooler fan rail: 11.51 to 12.43 V regulated (VREF 1.188 to 1.236 V, 1 %% divider); "
-                 "0.17 A the fan's rated current at full speed (12 V, free air; the maker's catalogue C1152B001 p.362), the "
-                 "state the fan takes whenever its PWM lead is not driven; 0.54 A the eFuse's highest limit; efficiency 0.85 an "
-                 "ASSUMPTION" % s)
-    _intent.rail(fv, 12.0, 0.17, 0.54, _fU(2), loads={"J_FAN%d" % s: 0.17}, series_of=f12, converted=False, v_work=12.43,
+                 "0.22 A the envelope, the fan's 2.75 W bound at 12.43 V (record l8r2 round 5, verified by its C4-3), over the "
+                 "maker's 0.17 A at 12 V and free air (catalogue C1152B001 p.362), at full speed, the state the fan takes whenever its "
+                 "PWM lead is not driven; 0.54 A the eFuse's highest limit; efficiency 0.85 typical, 0.80 the envelope's (ASSUMPTIONS)" % s)
+    _intent.rail(fv, 12.0, 0.22, 0.54, _fU(2), loads={"J_FAN%d" % s: 0.22}, series_of=f12, converted=False, v_work=12.43,
                  source_ic="U%d is a TPS2596 eFuse: its OUT pin IS the power path" % (_fb + 2),
                  note="S%d's cooler fan supply behind the eFuse U%d (0.448 to 0.538 A, OVLO 12.64 to 13.67 V), out at J_FAN%d pin 1" % (s, _fb + 2, s))
     _intent.node(fsw, 13.6, "S%d's cooler boost switching node: it swings to CFAN%d_12V, at most the TPS61089's OVP 13.6 V (SLVSD38C)" % (s, s), v_min=-1.0)

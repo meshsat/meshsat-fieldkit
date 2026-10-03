@@ -55,6 +55,13 @@ bd97a9e446861123 v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi
 fae7e21365939be5 v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
 98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
 d47c98af1a1e3f28 v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md
+8016267ff0da3889 v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py
+a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
+6b9d1d051c21e052 v2/docs/records/l6r2/apply_gen_sch_b_intent.py
+3861922c585a4019 v2/docs/records/l6r2/l6r2_apply.py
+0365bbd0a8ccc368 v2/docs/records/l6r2/l6r2_land.py
+eef9321261f5dfb1 v2/docs/records/l6r2/l6r2_intent.py
+1ef7cfd8a4d09ad9 v2/docs/records/l8r2/checks/astra-check-l9pf02-1.md
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
 d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
@@ -66,12 +73,13 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
 98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
 c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
-df438c2320cae3b8 v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
-099fdfe21fade126 v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py
+df6856d24da57817 v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
+784fd7ae2405ddf1 v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py
 74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-313f31e743ec52b3 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+ec0021ad61258c32 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
 3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
 576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
+c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
 d587db1f0cbda88e v2/docs/records/l4e9/apply_gen_sch_e_q1.py
 a6a60bac82c40000 v2/docs/records/l4e7/apply_gen_sch_e_u5_grade.py
 d58b41eb3e3238e7 v2/docs/records/l4e7/apply_gen_sch_e_hold.py
@@ -188,7 +196,15 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
    v_plat       4.5                                ASSUMPTION the CSD19532Q5B's Miller plateau taken at 4.5 V (VGS(th) 2.6 V typical; the gate charge curve not read)
    qrr_prop     True                               ASSUMPTION the body diode's Qrr taken in proportion to its forward current from the sheet's 17 A row
    eta_lm       0.9                                ASSUMPTION the LM5176 5.1 V stages' declared efficiency, NOT PLOTTED by the maker (rv-pwr's rule; record l9pwr's M1)
-   slot_peak    5.3                                BOUND      slots 1 and 3's declared peak on LM5176 stages, both ends of the lead (apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)
+   slot_peak    5.63                               BOUND      the three slot leads' declared peak, both ends (round 5: slot 2's; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)
+   fan_env      2.75                               BOUND      the cooler's steady input at the step-up's 12.43 V top, any duty: the maker's 2.0 W at 12 V x 1.111 by the fan laws, with room for -20 C air and the cooler's pressure; C4-3 holds the chain to it
+   ap_rt        68000                              BOUND      board A's and B's drawn AP64500 RT, 68 k (gen_sch_a.py buck5, gen_sch_b.py buck33; O-20)
+   ap_eq7       100000                             MAKER      DS41979 Eq. 7: RT[kOhm] = 100000 / fsw[kHz] (p.14); 450 to 550 kHz at 200 k (p.6)
+   rt_tol       0.1                                INFERRED   the oscillator's spread taken as the printed 200 k row's 10 % at 68 k, where no row is printed
+   fss          0.06                               MAKER      AP64500 frequency spread spectrum +-6 % in resistor timing (p.1, p.14)
+   ap_rds       (0.045, 0.02)                      MAKER      AP64500 high and low side RDS(on) 45 and 20 mOhm, typical only (p.6, Note 8)
+   rds_hot_ap   1.5                                ASSUMPTION the AP64500's RDS(on) taken 1.5 times its typical when hot (Figure 9 not read)
+   cm5_vin      (4.75, 5.25)                       MAKER      CM5 5 V input 4.75 to 5.25 V (CM5 datasheet, pin table: 'main power input')
 
 2. ITEM 1, BOARD B'S COOLERS (E11-40, R-190): a per-slot TPS61089 step-up to 12 V behind an eFuse
   output 11.508 / 11.962 / 12.430 V (VREF and the 1 % divider, FB leakage), inside the fan's 10.8 to 13.2 V: YES
@@ -211,7 +227,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
     as drawn (J_FAN1 0.1 A)                              slot 1: 4.751 A against 5.000 A: accepted
     round 2 (the step-up at full speed, 0.47 A)          slot 1: 5.121 A against 5.000 A: REFUSED (intent: rail +5V_S1 declares a 5.00 A peak and its loads sum to 5.12 A)
     round 3 (the step-up at the 70 % maximum, 0.33 A)    slot 1: 4.981 A against 5.000 A: accepted
-    round 4's draft (full speed 0.47 A, LM5176 slot)     slot 1: 5.121 A against 5.300 A: accepted
+    round 4's draft (full speed 0.69 A, LM5176 slot)     slot 1: 5.341 A against 5.630 A: accepted
     (b), the cooler off the slot rail (no fan row)       slot 1: 4.651 A against 5.000 A: accepted
   the options at HIGH on each slot's converter, every state (A on its output, the margin to its limit in brackets); record l9pwr's rails:
     (a) as drafted at full speed; (a) with the 70 % Fan_PWM maximum, the linear bound (1.4 W of fan) at the step-up's 0.85, at its low 0.80, and by the fan law (0.343 of full power);
@@ -264,7 +280,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
   the coolers at VBAT: 7.5638 W at full speed (R9); at the 70 % maximum at most 5.29 W (the linear bound, the slot converters' efficiency taken flat over the change): 2.27 W less at HIGH, a figure for L9P-F01's owner
   round 3 SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum; (b) as one 12 V feed would make one converter common to the three modules' coolers, a shared element ASM-002 does not name; WITHDRAWN by round 4 (2c)
 
-2c. ROUND 4: L9P-F02'S FOCUSED CHECK (the owner's questions 1 to 5; record l9pwr's rails parsed; the cooler's rows from Sanyo Denki's San Ace catalogue C1152B001 '25.10, held back)
+2c. ROUND 4, CORRECTED IN ROUND 5: L9P-F02'S FOCUSED CHECK (the owner's questions 1 to 5 and the collaborator's B1 to B3; record l9pwr's rails parsed; the cooler's rows from Sanyo Denki's San Ace catalogue C1152B001 '25.10, held back)
   1. THE TWO MARGINS: what each figure is
     +0.129 A (round 3's margin)            +0.129 A; state: PS-BUSY and PS-ALLTX at HIGH (every load at its maximum at once);
       boundary: the AP64500 U4's output (slot side): the CM5 8.0 W, the card 9.1 W, the NVMe and switch 3.99 W and the switch core 0.676 W through board B's bucks at their curve, the fan at 1.4 W (70 % of 2.0 W, the linear bound) over the step-up's 0.85; 24.844 W / 5.1 V = 4.871 A against 5 A
@@ -281,66 +297,70 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
     the input at 70 % (12 V, free air): NOT PRINTED, UNRESOLVED. Bracketed (INFERRED): the fan law through both printed rows (a fixed share plus the cube of the speed) 0.99 to 1.15 W; the chord in speed between them, the upper bound while the input is convex in speed, 1.43 to 1.56 W; round 3's linear bound 1.40 W lies INSIDE the bracket, so it bounds nothing
     the supply: the step-up's 11.51 to 12.43 V inside the fan's 10.8 to 13.2 V; the maker prints the input at 12 V only; at 12.43 V the fan laws (speed with voltage) give x1.111: up to 1.73 W at 70 %, 2.22 W at 100 % (INFERRED)
     against the cooler's own pressure (not free air): the maker prints no input at a static pressure: UNRESOLVED
-    the start: 'When voltage is applied or fluctuates ... current several times the rated current may flow' (p.633), no figure: UNRESOLVED; a locked rotor 'the coil current is cut off at regular cycles ... the fan restarts automatically' (p.616); bounded by the eFuse's highest limit 6.688 W on the 12 V side, 8.36 W on the slot rail at the step-up's 0.80
-    the step-up's loss at the bracket's top: 0.21 W at 0.88, 0.27 W at 0.85, 0.39 W at 0.80
+    the start: 'When voltage is applied or fluctuates ... current several times the rated current may flow' (p.633), no figure: UNRESOLVED; a locked rotor 'the coil current is cut off at regular cycles ... the fan restarts automatically' (p.616); a current-limited power at the eFuse's inferred highest limit, 6.688 W on the 12 V side, 8.36 W on the slot rail at the step-up's assumed 0.80: a CONDITIONAL calculation, not an instantaneous bound (the limit's response time and the step-up's own start are finite, SLVSET8A pp.6 to 7, SLVSD38C 8.3.3)
+    the step-up's loss at the bracket's top: 0.21 W at 0.88, 0.27 W at 0.85, 0.39 W at 0.80 (TI's Figure 7-2 is typical at 3.6 V in, not the slot's 4.829 to 5.252 V; no held source makes 0.80 a minimum: an ASSUMPTION the envelope takes and C4-3 measures)
     the slot's other loads at HIGH (PS-BUSY): 23.197 W; the fan input the AP64500's 5 A leaves at 0.85: 1.96 W at 5.1 V, 0.91 W at its least 4.854 V, under even the fan law's least at 70 % (0.99 W)
-  3. THE STATES (the slot at HIGH; A at 5.1 V / at the AP64500's least 4.854 V / at the LM5176 stage's least 4.829 V)
-    module off, slot rail on:                                      Fan_PWM released: unpowered at the module's shutdown (CM5 2.11); R7x12 10 k to +5V_Sn; PCIE_PWR_EN low: R{s}06 100 k holds it, the module's 3.3 V off; the fan 100 %: 3.225 / 3.389 / 3.406 A; AP64500 (5 A) +1.611 A; LM5176 (7.096 A) +3.690 A
-    boot (bootloader, kernel before its fan driver):               Fan_PWM not stated by the maker; the stock CM5 tree leaves the fan node disabled: taken released; PCIE_PWR_EN R{s}06 holds it low until software raises it; the bootloader's PCIe probe NOT STATED: taken high; the fan 100 %: 5.010 / 5.264 / 5.290 A; AP64500 (5 A) -0.264 A OVER; LM5176 (7.096 A) +1.806 A
-    reset or a watchdog restart:                                   Fan_PWM the module's reset state, not stated: taken released; PCIE_PWR_EN a warm restart keeps the module's 3.3 V; low only if the module lets go (NOT STATED): taken high; the fan 100 %: 5.010 / 5.264 / 5.290 A; AP64500 (5 A) -0.264 A OVER; LM5176 (7.096 A) +1.806 A
-    firmware failure, PWM block running:                           Fan_PWM held at its last duty; PCIE_PWR_EN high (the card on); the fan the last duty, at most the maximum: 4.871 / 5.118 / 5.144 A; AP64500 (5 A) -0.118 A OVER; LM5176 (7.096 A) +1.952 A
-    firmware failure, fan driver absent or unbound:                Fan_PWM released (the stock levels reach 250/255); PCIE_PWR_EN high (the card on); the fan 98 to 100 %: 5.010 / 5.264 / 5.290 A; AP64500 (5 A) -0.264 A OVER; LM5176 (7.096 A) +1.806 A
-    PWM lead open (J_FANs pin 4, a broken brown lead):             Fan_PWM the fan's terminal open; PCIE_PWR_EN high (the card on); the fan 100 % (maker: open = 100 %): 5.010 / 5.264 / 5.290 A; AP64500 (5 A) -0.264 A OVER; LM5176 (7.096 A) +1.806 A
-    a start with the card on (0 % stops this fan; a locked-rotor retry): Fan_PWM any; PCIE_PWR_EN high (the card on); the fan start: up to the eFuse's 0.538 A at 12.43 V: 6.188 / 6.501 / 6.534 A; AP64500 (5 A) -1.501 A OVER; LM5176 (7.096 A) +0.562 A
-    the start on the AP64500: its inductor's peak 7.566 A over its least HS peak limit 6.8 A: the cycle limit acts, and 512 cycles at the limit enter hiccup (DS41979 7): the slot drops
+  3. THE STATES (round 5: every full-speed state at the ENVELOPE, the fan's 2.75 W bound at 12.43 V over 0.80, 3.4375 W on the slot rail; the slot at HIGH; A at 5.1 V / at the AP64500's least 4.854 V / at the LM5176 stage's least 4.829 V)
+    module off, slot rail on:                                      Fan_PWM released: unpowered at the module's shutdown (CM5 2.11); R7x12 10 k to +5V_Sn; PCIE_PWR_EN low: R{s}06 100 k holds it, the module's 3.3 V off; the fan 100 %: 3.438 / 3.612 / 3.631 A; AP64500 (5 A) +1.388 A; LM5176 (7.096 A) +3.465 A
+    boot (bootloader, kernel before its fan driver):               Fan_PWM not stated by the maker; the stock CM5 tree leaves the fan node disabled: taken released; PCIE_PWR_EN R{s}06 holds it low until software raises it; the bootloader's PCIe probe NOT STATED: taken high; the fan 100 %: 5.222 / 5.487 / 5.515 A; AP64500 (5 A) -0.487 A OVER; LM5176 (7.096 A) +1.581 A
+    reset or a watchdog restart:                                   Fan_PWM the module's reset state, not stated: taken released; PCIE_PWR_EN a warm restart keeps the module's 3.3 V; low only if the module lets go (NOT STATED): taken high; the fan 100 %: 5.222 / 5.487 / 5.515 A; AP64500 (5 A) -0.487 A OVER; LM5176 (7.096 A) +1.581 A
+    firmware failure, PWM block running:                           Fan_PWM held at its last duty, up to 100 % (no maximum since round 4); PCIE_PWR_EN high (the card on); the fan the last duty, up to 100 %: 5.222 / 5.487 / 5.515 A; AP64500 (5 A) -0.487 A OVER; LM5176 (7.096 A) +1.581 A
+    firmware failure, fan driver absent or unbound:                Fan_PWM released (the stock levels reach 250/255); PCIE_PWR_EN high (the card on); the fan 98 to 100 %: 5.222 / 5.487 / 5.515 A; AP64500 (5 A) -0.487 A OVER; LM5176 (7.096 A) +1.581 A
+    PWM lead open (J_FANs pin 4, a broken brown lead):             Fan_PWM the fan's terminal open; PCIE_PWR_EN high (the card on); the fan 100 % (maker: open = 100 %): 5.222 / 5.487 / 5.515 A; AP64500 (5 A) -0.487 A OVER; LM5176 (7.096 A) +1.581 A
+    a start with the card on (0 % stops this fan; a locked-rotor retry): Fan_PWM any; PCIE_PWR_EN high (the card on); the fan start: up to the eFuse's 0.538 A at 12.43 V (an assumed bound): 6.188 / 6.501 / 6.534 A; AP64500 (5 A) -1.501 A OVER; LM5176 (7.096 A) +0.562 A
+    a degraded fan held steady under the eFuse's least limit (a fault, no trip): Fan_PWM any; PCIE_PWR_EN high (the card on); the fan 0.448 A at 12.43 V: 5.914 / 6.213 / 6.245 A; AP64500 (5 A) -1.213 A OVER; LM5176 (7.096 A) +0.851 A
+    the AP64500 at its DRAWN frequency (B1): RT 68 k on DS41979 Eq. 7 sets 1470.6 kHz, not the 500 kHz of the maker's curves; its ripple at 17.375 V in 0.521 A (nominal L and frequency), 0.770 A (L 20 % low, the oscillator 10 % and the spread spectrum 6 % low)
+    a start with the card on (the eFuse-limited bound, an ASSUMPTION): 6.501 A; the inductor's peak 6.762 A nominal, 6.886 A at the low corner, against the HS peak limit's 6.8 to 9.2 A: the limit MAY act at the low corner and need not; hiccup needs it for 512 consecutive cycles (0.348 ms at the drawn frequency), and the start's size and duration are not printed: POSSIBLE, NOT ESTABLISHED, UNRESOLVED
     the module's own words (CM5 datasheet 2.11 and the pin table): 'Fan_PWM : An open-collector output pin designed to drive a variety of PWM-controlled fans.' 'During CM5 shutdown, power to the Fan_PWM signal is also stopped.' 'PCIE_PWR_EN 3.3 V signal: active high, used to signal that a PCIe device can be powered down when low'
     the stock CM5 tree (linux bcm2712-rpi-cm5.dtsi, held): the fan node disabled; cooling levels 0 75 125 175 250 of 255; period 41566 ns, 24.06 kHz against the maker's 25 kHz
     the fan's PWM lead pulled by R7x12 to +5V_Sn: at most 5.226 V on the AP64500 stage, 5.252 V on the LM5176 stage (the reference's highest on the divider's highest ratio), against the catalogue example's VIH 4.75 to 5.25 V and its open terminal's 5.25 V at most; the model's own level is the maker's question (C4-4)
     board B (gen_sch_b.py, read): R{s}06 100 k holds PCIE_PWR_EN{s} low (READ); the card's supply enable U{s}16 = EMCON_HW AND PCIE_PWR_EN{s} (READ)
-    VERDICT: round 2's full speed is the default in every state the firmware does not drive; the 70 % maximum is enforced in none of boot (card on), reset, a driver fault or an open lead, and the AP64500 is over 5 A in each
+    VERDICT: full speed is the default in every state the firmware does not drive; with the card on the AP64500 is over 5 A at the envelope in each (and its HS limit may act in a start); the 70 % maximum, withdrawn, held in none of them
   4. COOLING AND THE CONVERTER'S OWN THERMAL CAPABILITY
     the approved basis (record l4e12 2h, parsed): the representative fan's 3.7 CFM free air at 50 % through the heatsink, 0.873 l/s, the CM5's 4.5 W and the fan's 0.51 W lift the exhaust 5.64 K; that fan (Sunon MF30060V2) 3.7 CFM and 0.11 inch H2O (27.4 Pa) at most
     the pick at 70 % (the fan laws on p.362's 100 % curve at the speed's least reading): at least 42.6 Pa at every flow up to the representative's 0.105 m3/min (the 100 % curve read at 0.144 m3/min, inside its 80 Pa plateau to 0.22); free air 0.277 to 0.300 m3/min; shut-off 112 to 131 Pa
-    VERDICT: the pick's curve at 70 % lies over the representative's at every flow, so through any heatsink it moves more air: the approved airflow HOLDS at 70 % (the maker's 50 % curve reads about 30 Pa at 3.7 CFM, against 27.4 Pa: about half duty meets it)
-    the SoC at 8 W against the cooler (the module throttles to keep it under 85 C, CM5 4.4): no held document gives the cooler's thermal resistance against airflow: UNRESOLVED (T-H2)
-    the AP64500's junction, record l4e12's method (the converter's loss at its point, rv-pwr's curves on the maker's Figures 4 and 5, x theta-JA 45 C/W, at C1's 50 C inside air, the normal mode's ceiling):
-      (a) full speed                 VIN 14.400 V: 5.010 A, eta 0.9080, loss 2.589 W, TJ 166.5 C: OVER +125 C and past the +160 C shutdown
-      (a) full speed                 VIN 17.375 V: 5.010 A, eta 0.8993, loss 2.860 W, TJ 178.7 C: OVER +125 C and past the +160 C shutdown
-      (a) 70 % maximum               VIN 14.400 V: 4.871 A, eta 0.9090, loss 2.487 W, TJ 161.9 C: OVER +125 C and past the +160 C shutdown
-      (a) 70 % maximum               VIN 17.375 V: 4.871 A, eta 0.9003, loss 2.750 W, TJ 173.7 C: OVER +125 C and past the +160 C shutdown
-      (b) no cooler on the slot rail VIN 14.400 V: 4.548 A, eta 0.9117, loss 2.247 W, TJ 151.1 C: OVER +125 C
-      (b) no cooler on the slot rail VIN 17.375 V: 4.548 A, eta 0.9030, loss 2.491 W, TJ 162.1 C: OVER +125 C and past the +160 C shutdown
-      PLAN, PS-BUSY as drafted       VIN 14.400 V: 4.115 A, eta 0.9156, loss 1.934 W, TJ 137.0 C: OVER +125 C
-      PLAN, PS-BUSY as drafted       VIN 17.375 V: 4.115 A, eta 0.9070, loss 2.153 W, TJ 146.9 C: OVER +125 C
-      it holds +125 C at 50 C air up to 3.731 A out at 14.4 V
-    the maker's Figure 24 (typical, VIN 12 V, read): 4.679 A at 50 C; 5.010 A up to 44.8 C; 4.871 A up to 47.0 C; 4.548 A up to 52.0 C
-    VERDICT: by this method the AP64500 is over +125 C on slots 1 and 3 at HIGH with every cooler option, and at PLAN in PS-BUSY; by the maker's typical Figure 24 at 12 V in, the cooler's options at HIGH end at 44.8 and 47.0 C, under C1's 50 C, and (b) at 52.0 C, 2 K above it, typical and with no curve above 12 V in: not adequately rated, whatever the 5 A headline says
-  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum
-    per state at HIGH: A at 5.1 V / at the stage's least 4.829 V / the same with a cooler start through its eFuse; margin to the loop's least 7.096 A:
-      PS-IDLE      slot 1  3.054 / 3.225 / 4.469 A  +3.871 / +2.627 A
-      PS-IDLE      slot 3  3.294 / 3.478 / 4.722 A  +3.618 / +2.374 A
-      PS-IDLE-SPEC slot 1  3.054 / 3.225 / 4.469 A  +3.871 / +2.627 A
-      PS-IDLE-SPEC slot 3  3.294 / 3.478 / 4.722 A  +3.618 / +2.374 A
-      PS-TYP       slot 1  4.084 / 4.312 / 5.556 A  +2.784 / +1.540 A
-      PS-TYP       slot 3  4.324 / 4.566 / 5.810 A  +2.530 / +1.286 A
-      PS-BUSY      slot 1  5.010 / 5.290 / 6.534 A  +1.806 / +0.562 A
-      PS-BUSY      slot 3  5.010 / 5.290 / 6.534 A  +1.806 / +0.562 A
-      PS-RED       slot 3  1.825 / 1.928 / 3.171 A  +5.168 / +3.925 A
-      PS-RED-b     slot 1  3.054 / 3.225 / 4.469 A  +3.871 / +2.627 A
-      PS-RED-b     slot 3  3.294 / 3.478 / 4.722 A  +3.618 / +2.374 A
-      PS-EMCON     slot 1  2.365 / 2.497 / 3.741 A  +4.599 / +3.355 A
-      PS-EMCON     slot 3  2.365 / 2.497 / 3.741 A  +4.599 / +3.355 A
-      PS-ALLTX     slot 1  5.010 / 5.290 / 6.534 A  +1.806 / +0.562 A
-      PS-ALLTX     slot 3  5.010 / 5.290 / 6.534 A  +1.806 / +0.562 A
-      PS-RED2      slot 3  1.825 / 1.928 / 3.171 A  +5.168 / +3.925 A
-      PS-SURV-R    slot 3  1.825 / 1.928 / 3.171 A  +5.168 / +3.925 A
-    least margin: +1.806 A steady (25.4 %), +0.562 A with a start
-    the stage's buck-side high FET at 5.290 A, VIN 17.375 V: conduction 0.094, edges 0.293, coss 0.516, recovery 0.312; 1.215 W (edges 18.0 / 9.5 ns); the low FET 0.336 W; the boost-side high FET 0.319 W
-    the stage's buck-side high FET at 5.290 A, VIN 9.688 V: conduction 0.168, edges 0.163, coss 0.288, recovery 0.174; 0.793 W (edges 18.0 / 9.5 ns); the low FET 0.262 W; the boost-side high FET 0.319 W
-      its junction at 50 C air: 110.7 C on 1 inch2 of 2 oz copper (RthJA 50 C/W at most), 201.9 C on the minimum pad (125 C/W), against +150 C; +125 C holds to 61.7 C/W
+    VERDICT: under the fan laws and an unchanged air path the pick's curve at 70 % lies over the representative's at every flow, so it moves more air through the same heatsink: the approved airflow HOLDS at 70 % (at 50 % the maker's curve reads about 30 +- 5 Pa at 3.7 CFM against 27.4 Pa: inside the reading's resolution, not claimed)
+    the SoC at 8 W against the cooler (the module throttles to keep it under 85 C, CM5 4.4): no held document gives the cooler's thermal resistance against airflow: UNRESOLVED (C4-5)
+    the AP64500's junction (B1): no Diodes curve is printed at the drawn 1471 kHz (Figures 2, 4, 5 and 24 are 500 kHz with 200 k), so no junction of the drawn stage is computed. Two statements stand:
+      (i) a 500 kHz SCREEN by record l4e12's method (the converter's loss at its point x theta-JA 45 C/W at C1's 50 C), not a temperature of the drawn stage:
+        (a) full speed                 VIN 14.400 V: 5.010 A, eta 0.9080, loss 2.589 W, screen 166.5 C (over +125 C)
+        (a) full speed                 VIN 17.375 V: 5.010 A, eta 0.8993, loss 2.860 W, screen 178.7 C (over +125 C)
+        (a) 70 % maximum               VIN 14.400 V: 4.871 A, eta 0.9090, loss 2.487 W, screen 161.9 C (over +125 C)
+        (a) 70 % maximum               VIN 17.375 V: 4.871 A, eta 0.9003, loss 2.750 W, screen 173.7 C (over +125 C)
+        (b) no cooler on the slot rail VIN 14.400 V: 4.548 A, eta 0.9117, loss 2.247 W, screen 151.1 C (over +125 C)
+        (b) no cooler on the slot rail VIN 17.375 V: 4.548 A, eta 0.9030, loss 2.491 W, screen 162.1 C (over +125 C)
+        PLAN, PS-BUSY as drafted       VIN 14.400 V: 4.115 A, eta 0.9156, loss 1.934 W, screen 137.0 C (over +125 C)
+        PLAN, PS-BUSY as drafted       VIN 17.375 V: 4.115 A, eta 0.9070, loss 2.153 W, screen 146.9 C (over +125 C)
+      (ii) the maker's typical Figure 24 (500 kHz, VIN 12 V, read) at each option's current at the least load voltage 4.854 V: (a) the envelope, full speed 5.487 A: over the 5 A rating at any air; (a) 70 % maximum 5.118 A: over the 5 A rating at any air; (b) no cooler on the slot rail 4.779 A: the curve ends at 48.4 C
+      at the drawn frequency the IC's loss is at least its 500 kHz loss less 0.0053 W (the conduction term the smaller ripple takes off, typical RDS(on) x 1.5, VIN 12 V; every switching, gate and Coss loss grows with frequency), so for VIN 12 V and above each limit of (ii) is an upper bound on the drawn stage's allowed air
+    VERDICT: at C1's 50 C every option's current at the least load voltage is past the maker's typical derating at 500 kHz, and the drawn stage runs at 1471 kHz with more loss: NOT ADEQUATELY RATED (typical figures, a direction argument; no exact junction claimed)
+  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum; board B's slot bucks at 500 kHz (apply_gen_sch_b_rt500.py, round 5)
+    per state, the ENVELOPE (B2): A at 5.1 V / at the stage's least 4.829 V; with a cooler start through its eFuse's highest limit; with a degraded fan held under its eFuse's least limit; margin to the loop's least 7.096 A:
+      PS-IDLE      slot 1  3.267 / 3.450 A  start 4.469 A  degraded 4.179 A  +3.646 / +2.627 / +2.917 A
+      PS-IDLE      slot 3  3.506 / 3.703 A  start 4.722 A  degraded 4.433 A  +3.393 / +2.374 / +2.663 A
+      PS-IDLE-SPEC slot 1  3.267 / 3.450 A  start 4.469 A  degraded 4.179 A  +3.646 / +2.627 / +2.917 A
+      PS-IDLE-SPEC slot 3  3.506 / 3.703 A  start 4.722 A  degraded 4.433 A  +3.393 / +2.374 / +2.663 A
+      PS-TYP       slot 1  4.296 / 4.537 A  start 5.556 A  degraded 5.267 A  +2.559 / +1.540 / +1.829 A
+      PS-TYP       slot 3  4.536 / 4.790 A  start 5.810 A  degraded 5.520 A  +2.306 / +1.286 / +1.576 A
+      PS-BUSY      slot 1  5.222 / 5.515 A  start 6.534 A  degraded 6.245 A  +1.581 / +0.562 / +0.851 A
+      PS-BUSY      slot 3  5.222 / 5.515 A  start 6.534 A  degraded 6.245 A  +1.581 / +0.562 / +0.851 A
+      PS-RED       slot 3  2.038 / 2.152 A  start 3.171 A  degraded 2.882 A  +4.944 / +3.925 / +4.214 A
+      PS-RED-b     slot 1  3.267 / 3.450 A  start 4.469 A  degraded 4.179 A  +3.646 / +2.627 / +2.917 A
+      PS-RED-b     slot 3  3.506 / 3.703 A  start 4.722 A  degraded 4.433 A  +3.393 / +2.374 / +2.663 A
+      PS-EMCON     slot 1  2.578 / 2.722 A  start 3.741 A  degraded 3.452 A  +4.374 / +3.355 / +3.644 A
+      PS-EMCON     slot 3  2.578 / 2.722 A  start 3.741 A  degraded 3.452 A  +4.374 / +3.355 / +3.644 A
+      PS-ALLTX     slot 1  5.222 / 5.515 A  start 6.534 A  degraded 6.245 A  +1.581 / +0.562 / +0.851 A
+      PS-ALLTX     slot 3  5.222 / 5.515 A  start 6.534 A  degraded 6.245 A  +1.581 / +0.562 / +0.851 A
+      PS-RED2      slot 3  2.038 / 2.152 A  start 3.171 A  degraded 2.882 A  +4.944 / +3.925 / +4.214 A
+      PS-SURV-R    slot 3  2.038 / 2.152 A  start 3.171 A  degraded 2.882 A  +4.944 / +3.925 / +4.214 A
+    least margin at the envelope: +1.581 A (22.3 %); with a start +0.562 A (the eFuse and efficiency start bounds are ASSUMPTIONS, CONDITIONAL); with a degraded fan +0.851 A (a fault the stage carries, over the declaration)
+    the stage's buck-side high FET at 5.515 A, VIN 17.375 V: conduction 0.102, edges 0.305, coss 0.516, recovery 0.326; 1.249 W (edges 18.0 / 9.5 ns); the low FET 0.360 W; the boost-side high FET 0.347 W
+    the stage's buck-side high FET at 5.515 A, VIN 9.688 V: conduction 0.183, edges 0.170, coss 0.288, recovery 0.182; 0.822 W (edges 18.0 / 9.5 ns); the low FET 0.279 W; the boost-side high FET 0.347 W
+      its junction at 50 C air: 112.4 C on 1 inch2 of 2 oz copper (RthJA 50 C/W at most), 206.1 C on the minimum pad (125 C/W); at the declared 5.63 A 1.266 W, 113.3 C; with the sheet's Qrr unscaled (the sensitivity) 1.927 W, 146.3 C; the acceptance +125 C (the sheet's +150 C is an absolute maximum) holds to 60.1 C/W, or 38.9 C/W unscaled: CONDITIONAL (C4-1, C4-6)
     the same arithmetic on the device rail's stage at 7.181 A (PS-ALLTX, DRAFTED): 1.510 W, 125.5 C on 1 inch2 (a finding for board A's owner)
-    the declared peak: 5.290 A needed, 5.3 A declared at both ends; VBAT's entry 2.086 A, declared 2.09 A
-    board B with round 4's draft: slot 1's declared loads 5.121 A against 5.30 A: accepted; slot 2 5.63 A, slot 3 5.30 A
+    the stage's output window: 4.928 to 5.252 V on the drawn 1 % divider, against the CM5's 4.75 to 5.25 V input; 5.003 to 5.173 V with 0.1 % parts (a finding: slot 2 and the device rail draw the same divider)
+    the declared peak (B2): the envelope needs 5.515 A; 5.63 A declared at both ends on all three slots (slot 2's); VBAT's entry 2.216 A, declared 2.22 A
+    board B with round 5's draft: slot 1's declared loads 5.341 A (the fan row 0.69 A) against 5.63 A: accepted; slot 2 5.63 A, slot 3 5.63 A
     the energy at PLAN, VBAT side (the stages' declared 0.90 against the AP64500's curve point, slots 1 and 3): PS-IDLE +0.373 W; PS-IDLE-SPEC +0.373 W; PS-TYP +0.730 W; PS-BUSY +0.872 W; PS-RED +0.158 W; PS-RED-b +0.373 W; PS-EMCON +0.348 W; PS-ALLTX +0.822 W; PS-RED2 +0.158 W; PS-SURV +0.000 W; PS-SURV-R +0.158 W
     SELECTED (SESSION): slots 1 and 3 on the LM5176 stage, the coolers at full speed on their step-up; round 3's 70 % Fan_PWM maximum WITHDRAWN
 
@@ -406,12 +426,14 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
   the six Layer 8 drafts of board A in reverse order: OK
 
 6. COMPOSITION ON BOARD B (no power draft targets gen_sch_b.py)
-  forward: _b_gnd002 OK; _b_fans12 OK; _b_panel5v OK; _b_ph4 OK
-  reverse: _b_ph4 OK; _b_panel5v OK; _b_fans12 OK; _b_gnd002 OK
+  forward: _b_gnd002 OK; _b_fans12 OK; _b_panel5v OK; _b_ph4 OK; _b_rt500 OK
+  reverse: _b_rt500 OK; _b_ph4 OK; _b_panel5v OK; _b_fans12 OK; _b_gnd002 OK
   alone l8gnd/apply_gen_sch_b_gnd002.py OK
   alone l8r2/apply_gen_sch_b_fans12.py OK
   alone l8r2/apply_gen_sch_b_panel5v.py OK
   alone l8r2/apply_gen_sch_b_ph4.py    OK
+  alone l8r2/apply_gen_sch_b_rt500.py  OK
+  with Layer 6's board B drafts (l6r2: xal_land, lcsc, intent) after this record's and before them: OK; OK; the same generator either way: YES
 
 6b. COMPOSITION ON BOARD E (scratch copies of gen_sch_e.py; the change list's board E round, d8dec31's cin last, and this record's pack return)
   the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_cin.py: the same as this script's E_ROUND
@@ -439,6 +461,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
   B l8r2/apply_gen_sch_b_fans12.py             C701, C702, C703, C704, C705, C706, C707, C708, C709, C710, C731, C732, C733, C734, C735, C736, C737, C738, C739, C740, C761, C762, C763, C764, C765, C766, C767, C768, C769, C770, L701, L731, L761, Q701, Q702, Q731, Q732, Q761, Q762, R701, R702, R703, R704, R705, R706, R707, R708, R709, R710, R711, R712, R731, R732, R733, R734, R735, R736, R737, R738, R739, R740, R741, R742, R761, R762, R763, R764, R765, R766, R767, R768, R769, R770, R771, R772, U701, U702, U731, U732, U761, U762
   B l8r2/apply_gen_sch_b_panel5v.py            C901, C902, R901, R902, R903, R904, R905, U901
   B l8r2/apply_gen_sch_b_ph4.py                none
+  B l8r2/apply_gen_sch_b_rt500.py              none
   board A pairwise intersections: none (DISJOINT)
   board B pairwise intersections: none (DISJOINT)
   literal designators drawn twice in the composed board A generator: none

@@ -5,12 +5,13 @@ scratch copies).
 
 The defect (record l9pwr's L9P-F02 and this record's section 1s): slots 1 and 3 run on board A's AP64500 U4 and U6, a 5 A buck
 in one SO-8EP package (Diodes DS41979 Rev 5-2: theta-JA 45 C/W on a four-layer 2 oz board, recommended junction at most +125 C,
-thermal shutdown +160 C). With the coolers' 12 V step-up on the slot rail (apply_gen_sch_b_fans12.py) the slot reads 5.010 A at
-HIGH at 5.1 V and 5.264 A at the stage's least output with the rail's whole drop budget; round 3's 70 % Fan_PWM maximum held
-it under 5 A only at the nominal voltage, only while the module's firmware drives the line, and not with the PWM lead open (the
-fan's maker: "When control terminal is open, speed is the same as at 100% duty cycle"). Without any cooler the slot's other
-loads at HIGH put the AP64500's junction over its +125 C by the method record l4e12 uses (the converter's loss at its operating
-point times theta-JA, at the normal mode's +50 C inside air), and past the maker's own derating curve (Figure 24).
+thermal shutdown +160 C). With the coolers' 12 V step-up on the slot rail (apply_gen_sch_b_fans12.py) the slot's envelope (every
+load at HIGH, the cooler at its 2.75 W bound at the step-up's 12.43 V top over the step-up's 0.80, round 5) is 5.223 A at 5.1 V
+and 5.487 A at the AP64500's least output with the rail's whole drop budget, over its 5 A; round 3's 70 % Fan_PWM maximum held
+the slot under 5 A only at the nominal voltage, only while the module's firmware drives the line, and not with the PWM lead open
+(the fan's maker: "When control terminal is open, speed is the same as at 100% duty cycle"). Without any cooler the slot's other
+loads at HIGH and the least voltage, 4.779 A, are past the maker's typical derating at C1's +50 C inside air (Figure 24 at 500
+kHz ends at 48.4 C); the drawn 68 k RT sets 1.47 MHz (DS41979 Eq. 7), where the switching loss is higher still.
 
 The correction: slots 1 and 3 take the stage slot 2 and the device rail carry since F-PR-04 (26 September 2026): an LM5176
 four-switch stage with four CSD19532Q5B, an XAL1010-682ME, a 6 mOhm WSL2512 ISNS shunt (its average current loop limits at 43
@@ -32,16 +33,18 @@ C45, C112, C114, R28, R29, R31, R36, R37, R39, R45, R47, R129, R131 and the nets
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   1. the two buck5() calls become the two stages (the lm5176() helper as slot 2 calls it), each followed by its SLOT_EN pull-down
      and its INA226, as slot 2's R34 and U9 follow its stage;
-  2. VBAT's loads: "U4": 2.0 and "U6": 2.0 become the stages' entries Q501 and Q531 at 2.09 A each (the S-98 method of Q28's
-     2.22 A: the declared peak x 5.1 V over 0.90 x 14.4 V, 5.3 x 5.1 / 12.96 = 2.086);
-  3. the slot rails' declaration: the shunts R505 and R535, the switches U501 and U531, the peak 5.3 A on slots 1 and 3 at both
+  2. VBAT's loads: "U4": 2.0 and "U6": 2.0 become the stages' entries Q501 and Q531 at 2.22 A each (the S-98 method of Q28's
+     2.22 A: the declared peak x 5.1 V over 0.90 x 14.4 V, 5.63 x 5.1 / 12.96 = 2.216);
+  3. the slot rails' declaration: the shunts R505 and R535, the switches U501 and U531, the peak 5.63 A on slots 1 and 3 at both
      ends of the lead (board B's half is apply_gen_sch_b_fans12.py), and the note;
   4. the two slot sections of SECTIONS name the stages' parts;
   5. where record l8r2's pack return (apply_gen_sch_a_packrtn.py) is already applied, GND's loads "U4": 2.0 and "U6": 2.0 become
-     the stages' CS shunts R506 and R536 at 2.09 A, through which such a stage's input current returns (the draft's own rule for
+     the stages' CS shunts R506 and R536 at 2.22 A, through which such a stage's input current returns (the draft's own rule for
      R170, R177, R56, R122); packrtn applied after this draft writes the same text (both orders give one generator).
-The peak, 5.3 A: the slot at HIGH with the cooler at full speed (record l9pwr's 25.550 W on S1 in PS-BUSY and PS-ALLTX) at the
-stage's least output (VREF 0.788 V on the 1 % divider, 4.928 V) less the rail's whole 2 % drop budget (4.829 V): 5.290 A.
+The peak, 5.63 A (round 5, the collaborator's B2; slot 2's figure, so the three identical leads declare one): the slot's envelope,
+every load at HIGH (record l9pwr's 23.197 W before the cooler on S1 in PS-BUSY and PS-ALLTX) with the cooler at its 2.75 W bound
+at the step-up's 12.43 V top over the step-up's 0.80 (3.4375 W), at the stage's least output (VREF 0.788 V on the 1 % divider,
+4.928 V) less the rail's whole 2 % drop budget (4.829 V): 5.515 A.
 
 Order: after L4-E11's charger draft, whose anchor names VBAT's "U4": 2.0 (L4-E9's order already has it: 3a, then 3g, then this
 record's drafts, then d8dec31's mainpb); release with apply_gen_sch_b_fans12.py (board B's half of the slot rails' peak).
@@ -62,8 +65,8 @@ RETIRED = ("U4", "U6", "L3", "L5", "C28", "C29", "C30", "C31", "C32", "C33", "C4
            "C114", "R28", "R29", "R31", "R36", "R37", "R39", "R45", "R47", "R129", "R131")
 NETS = tuple("S%s_%s" % (s, t) for s in ("1", "3") for t in ("SW1", "SW2", "HDRV1", "HDRV2", "LDRV1", "LDRV2", "BOOT1", "BOOT2", "VCC",
                                                            "CS", "CSF", "CSGF", "ISNS_P", "ISNS_N", "MODE", "SLOPE", "SS", "PGOOD"))
-PEAK = 5.3
-ENTRY = 2.09
+PEAK = 5.63
+ENTRY = 2.22
 
 
 def stage(s):
@@ -99,15 +102,16 @@ _OLD_S1 = ('buck5("1", "U4", "SLOT_EN1", "+5V_S1", ["L3", "C28", "C29", "C30", "
            '"R129", "C112"], "U8", "GND", "GND")        # 0x40\n')
 _OLD_S3 = ('buck5("3", "U6", "SLOT_EN3", "+5V_S3", ["L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", '
            '"R131", "C114"], "U10", "+3V3", "GND")      # 0x44\n')
-_NEW_S = ('# L9P-F02, RECORD l8r2 ROUND 4 (MESHSAT-1357, 3 October 2026; v2/docs/records/l8r2/ section 1s): SLOTS 1 AND 3 LEAVE THE\n'
-          '# AP64500 AS SLOT 2 DID UNDER F-PR-04. With the coolers\' 12 V step-up on the slot rail (board B, E11-40) a slot reads 5.010 A at\n'
-          '# HIGH at 5.1 V and 5.264 A at the AP64500\'s least output with the rail\'s 2 % drop; a duty maximum on Fan_PWM held it under 5 A\n'
-          '# only at the nominal voltage and only while the firmware drives the line (the fan runs at full speed with its PWM lead open,\n'
-          '# San Ace catalogue C1152B001 p.362). Without the cooler the slot\'s other loads at HIGH already put the AP64500\'s junction over\n'
-          '# its +125 C at the normal mode\'s +50 C inside air (its loss times theta-JA 45 C/W, the method of record l4e12) and past the\n'
-          '# maker\'s Figure 24. The bigger converter is this board\'s own LM5176 stage, slot 2\'s parts and values: its average loop\n'
-          '# limits at 7.096 A at least (43 mV over 6 mOhm at +1 %), over the slot\'s 5.290 A at HIGH at its own least output (4.829 V at\n'
-          '# the load) and its 6.534 A with the cooler starting through its eFuse\'s highest limit. Designators in the free 500 block.\n'
+_NEW_S = ('# L9P-F02, RECORD l8r2 ROUNDS 4 AND 5 (MESHSAT-1357, 3 and 4 October 2026; v2/docs/records/l8r2/ section 1s): SLOTS 1 AND 3\n'
+          '# LEAVE THE AP64500 AS SLOT 2 DID UNDER F-PR-04. With the coolers\' 12 V step-up on the slot rail (board B, E11-40) a slot\'s\n'
+          '# envelope reads 5.223 A at HIGH at 5.1 V and 5.487 A at the AP64500\'s least output with the rail\'s 2 % drop; a duty maximum\n'
+          '# on Fan_PWM held 5 A only at the nominal voltage and only while the firmware drives the line (the fan runs at full speed with\n'
+          '# its PWM lead open, San Ace catalogue C1152B001 p.362). Without the cooler the slot\'s other loads at HIGH and the least\n'
+          '# voltage (4.779 A) are past the maker\'s typical derating at the normal mode\'s +50 C inside air (Figure 24 at 500 kHz), and the\n'
+          '# 68 k RT sets 1.47 MHz (DS41979 Eq. 7), where the switching loss is higher still. The bigger converter is this board\'s own\n'
+          '# LM5176 stage, slot 2\'s parts and values: its average loop limits at 7.096 A at least (43 mV over 6 mOhm at +1 %), over the\n'
+          '# slot\'s 5.515 A envelope at its own least output (4.829 V at the load) and its 6.534 A with the cooler starting through its\n'
+          '# eFuse\'s highest limit (an assumed bound, CONDITIONAL). Designators in the free 500 block.\n'
           + stage("1") + stage("3"))
 _OLD_VBAT = '"U4": 2.0, "Q28": 2.22, "U6": 2.0,'
 _NEW_VBAT = '"Q%d": %.2f, "Q28": 2.22, "Q%d": %.2f,' % (BASE["1"] + 1, ENTRY, BASE["3"] + 1, ENTRY)
@@ -117,14 +121,15 @@ _NEW_SH = 'for _n, _sh in (("1", "R%d"), ("2", "R35"), ("3", "R%d")):   # record
 _OLD_RAIL = ('    _intent.rail("+5V_S%s" % _n, 5.1, 4.2 if _n == "2" else 2.5, 5.63 if _n == "2" else 5.0, _sh, loads={"J_5V_S%s" % _n: '
              '5.63 if _n == "2" else 5.0}, budget=0.02, share=0.005, fed_from="VBAT",\n'
              '                 switch={"1": "U4", "2": "U5", "3": "U6"}[_n], efficiency=0.90,\n')
-_NEW_RAIL = ('    _intent.rail("+5V_S%%s" %% _n, 5.1, 4.2 if _n == "2" else 2.5, 5.63 if _n == "2" else %.1f, _sh, loads={"J_5V_S%%s" %% _n: '
-             '5.63 if _n == "2" else %.1f}, budget=0.02, share=0.005, fed_from="VBAT",\n'
+_NEW_RAIL = ('    _intent.rail("+5V_S%%s" %% _n, 5.1, 4.2 if _n == "2" else 2.5, %.2f, _sh, loads={"J_5V_S%%s" %% _n: %.2f}, budget=0.02, '
+             'share=0.005, fed_from="VBAT",   # record l8r2 round 5: one peak on the three identical slot leads\n'
              '                 switch={"1": "U%d", "2": "U5", "3": "U%d"}[_n], efficiency=0.90,\n' % (PEAK, PEAK, BASE["1"] + 1, BASE["3"] + 1))
 _OLD_NOTE = ('                       "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500\'s rating (DS41979 p.1); the rail "\n'
              '                       "net starts at the INA226 shunt. This board\'s share of the 2 percent is 0.5 point, measured 0.07"))\n')
 _NEW_NOTE = ('                       "one CM5 slot with its cooler fan on its 12 V step-up (record l8r2, E11-40); an LM5176 stage since record l8r2 "\n'
-             '                       "round 4 (L9P-F02, slot 2\'s F-PR-04 stage): %.1f A peak, the slot at HIGH with the cooler at full speed at the "\n'
-             '                       "stage\'s least output less the 2 percent drop (5.290 A), declared at both ends of the lead; the loop\'s least "\n'
+             '                       "round 4 (L9P-F02, slot 2\'s F-PR-04 stage): %.2f A peak, slot 2\'s, over the slot\'s envelope (every load at "\n'
+             '                       "HIGH, the cooler at its 2.75 W bound over 0.80) at the stage\'s least output less the 2 percent drop, 5.515 A "\n'
+             '                       "(round 5), declared at both ends of the lead; the loop\'s least "\n'
              '                       "7.096 A (VSNS 43 mV over the 6 mOhm ISNS shunt at +1 percent). The rail net starts at the INA226 shunt. "\n'
              '                       "This board\'s share of the 2 percent is 0.5 point, measured 0.07 on the AP64500 stage\'s copper (owed again)"))\n' % PEAK)
 _OLD_SEC1 = ('            ("SLOT RAIL S1: AP64500 5.1 V + INA226 0x40", ["U4", "L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", '
