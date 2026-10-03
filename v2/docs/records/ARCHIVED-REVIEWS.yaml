@@ -1,0 +1,26 @@
+# Archived reviews (MESHSAT-1357): external review texts filed in this tree exactly as received, each by path and the sha256 of the
+# bytes filed. Why verbatim: a review is the reviewer's own record of what was read and found, kept byte for byte so every finding
+# traces to its words; it may quote a probe or a figure it disputes and is never a design authority. Its actionable findings are
+# carried by the active findings ledger, never by this file.
+# Read by L4-E7's panel lead guard (records/l4e7/l4e7_stage_settings.py, archived()) at every run: a file listed here is left unread
+# only while its sha256 equals the one listed. A listed file whose content changed is read like any document; an unlisted file is
+# read whatever its name. The designation enters neither the results cache's files nor its KEY.
+reviews:
+  - path: v2/docs/records/l4close/REVIEW-DECISION-CHECKPOINT-2230-AS-RECEIVED.md
+    sha256: "d7a1e6a095859021fa255a5070c812ab0ef47f3424eb577c5b0777272bbe1c9d"
+    why: the external review of the 22:30 Layer 4 decision checkpoint (2 October 2026), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md
+    sha256: "1f8508302012673f606a309a0a480a492f3f6ea9a46e934c1a7f52b3bcb21b3a"
+    why: the external review of Layer 4's provisional power fixes (2 October 2026), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-QUALIFICATION-ROUTE-AS-RECEIVED.md
+    sha256: "637e5194e38a704f1b61bae6ed0010ca64a4bb5f61e5a2ed55b7f620b2d771bf"
+    why: the external review of the qualification route and its continuation prompt (3 October 2026), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-SUPPLIER-HANDOVER-AS-RECEIVED.md
+    sha256: "a1ea3f6356bac797079b5c3a2a673b240088633693a11ed664f01a984ed13ecd"
+    why: the external review of the supplier handover (3 October 2026), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-SUPPLIER-HANDOVER-FOLLOWUP-AS-RECEIVED.md
+    sha256: "b0c9bf23e591af2ff5607ae1fa762cb51b8978479f43328ad7b995766323bbe1"
+    why: the focused follow-up review of the supplier handover at d48becdc (3 October 2026), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md
+    sha256: "3496b279246fb6695713b7e7f6dcfbb188d0adf8eecb6d9a5b0d3612f21b4244"
+    why: the external review of the supplier handover release candidate 761677ca (3 October 2026, findings L4-RC01 and L4-RC02), the reviewer's words kept as received, its probe quoted
