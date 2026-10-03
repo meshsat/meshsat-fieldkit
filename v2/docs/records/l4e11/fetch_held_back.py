@@ -15,7 +15,8 @@ April 2020, the selected battery FETs Q39 and Q40). The fix round for the review
 sheets read in the search for a P-channel part printing RDS(on) at a low gate drive hot (section 16a): Vishay's SQJ407EP (document
 62806, S22-0224 Rev. B, 7 March 2022) and Nexperia's PXP9R1-30QL (product data sheet of 5 January 2021). The fans' feed round (3 October 2026, section 18) adds the mixers' 12 V rail
 candidates: ADI's LTC3115-1 (Rev. E; analog.com refuses this host, so the archive's copy of the maker's file), TI's TPS55340
-(SLVSBD4E) and TPS63070 (SLVSC58B). All sixteen carry their makers' copyright and no grant to redistribute, so they
+(SLVSBD4E) and TPS63070 (SLVSC58B). The specimens' round (3 October 2026, section 17d) adds TI's "Semiconductor and IC Package
+Thermal Metrics" (TI serves SPRA953D, revised March 2024, at the SPRA953C address) and Nexperia's AN11158 (Rev. 7.0). All eighteen carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
@@ -66,6 +67,10 @@ DOCS = [
      "e579aa4fcb549eab29e889f7f6dcbd0fd88cac2647082c65f102e411c3f666ca"),
     ("v2/vendor/ti/held/ti-tps63070-slvsc58b.pdf", "https://www.ti.com/lit/ds/symlink/tps63070.pdf",
      "a88ef66f3493156ff6e7da0849de0e0e1068647f2553d08c1844d4a90c5c65ef"),
+    ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "https://www.ti.com/lit/an/spra953c/spra953c.pdf",
+     "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
+    ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "https://assets.nexperia.com/documents/application-note/AN11158.pdf",
+     "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
 ]
 
 
