@@ -1,0 +1,49 @@
+# l6r2: exact parts for the generic rows of the six boards (Layer 6 criterion 6.1, MESHSAT-1357)
+
+Prototype design: nothing is bought, built, powered or measured. The rows are the committed netlists' fitted parts without an
+LCSC field (the identity tool's reader, `part_identities.rows`), board by board in the order A, E, P, D, C, B. Each distinct
+selection (the identity tool's key and requirements) is classified; the GENERIC ones (multilayer ceramic capacitors, resistors,
+ferrite beads, small diodes of a generic type, 0603 indicator LEDs) get an exact part (maker, MPN, LCSC code) from a dated
+public reading of JLCPCB's parts library, checked property by property; ICs, modules, transistors, named inductors, connectors and
+mechanical parts are not re-selected and are listed as findings; a requirement the generator and the intent leave open is a
+finding with its line, never a guess. Based on `fnd/int28` at `a1f696de`. No generator, Layer 4 record, `pcb_interfaces.yaml` or
+`HW-FW-CONTRACT.md` is edited. Round 3 (the same day, from `6fe27332`) corrected `v2/ecad/tools/lcsc_fill.py`'s table with a property
+test (finding F1) and drafted the footprint keys of three Coilcraft rows (finding F4); the page's section 8. Round 4 (from
+`b257a730`) corrected the failing codes written in the generators' calls through the LCSC drafts' entries with a third field (the
+code replaced) and extended the property test to every written code (finding F7); the page's section 8.3. The reading
+`inputs/jlc-parts-2026-10-03.json` carries the round 4 supplement (the written codes and their keywords, `read_catalogue.py
+--missing`, recorded in its `supplements` field). Round 5 (from `f8328b5b`) derived the open voltages of finding F3 at the desk,
+drafted them for the intents of boards P, D and B, and judges the record's rows under them; the page's section 8.4.
+
+| File | What it is |
+|---|---|
+| `L6R2-PASSIVES.md` | The page: the method and its rules, per board the lines covered and open, the findings, the drafts and their composition, the criterion |
+| `l6r2_passives.py` | The selector and its printer, run from the repository root: `python3 v2/docs/records/l6r2/l6r2_passives.py > v2/docs/records/l6r2/l6r2_passives.out` (regenerate only through `_bin/regen_out.py`). It reads only this tree: the netlists and intents through the identity tool, `lcsc_fill.py`'s MAP (by parsing), the certified table, the identity table, the catalogue reading in `inputs/`; it runs the copied BOM reader on the six netlists; it proves each draft's composition with the pending drafts of its generator on scratch copies. `--plan`, `--identities`, `--draft X`, `--write-drafts` |
+| `l6r2_passives.out` | Its output, committed |
+| `read_catalogue.py` | Takes the reading `inputs/jlc-parts-2026-10-03.json`: JLCPCB's public parts search for every code the design carries on an uncoded generic row and every keyword the selector builds (no login, no cart) |
+| `inputs/bom_from_netlist.py` | A copy of `v2/docs/handover/supplier/bom_from_netlist.py` at `e2a8df59` on `fnd/int27` (the supplier package's per-board BOM reader), sha256 `687c4acafacd96d22fa89dd6cd4786280f7aeb3548c3537ece3d5389ab906cc1`; the script refuses a copy with another sha256 |
+| `inputs/jlc-parts-2026-10-03.json` | The catalogue reading (codes and keyword searches with model, brand, package, stock, library, preferred flag, attributes, description and price tiers) |
+| `l6r2_apply.py` | The six drafts' shared logic: the table inserted once before `import schlayout, time as _time`, keyed by designator and the committed value; the release guard; refusals |
+| `apply_gen_sch_{a,e,p,d,c,b}_lcsc.py` | The six DRAFTS, one per board, each carrying its board's table (rendered by `--write-drafts`); release-guarded by `RELEASE.md`; NOT applied |
+| `l6r2_land.py` | Round 3: the two LAND drafts' edits (per board, old and new text), the rows they move and the shared logic; the release guard is `l6r2_apply.released` |
+| `apply_gen_sch_{b,e}_xal_land.py` | Round 3's two DRAFTS (Layer 8, criterion 6.4): board B's L1 and buck33's inductor and board E's L3 onto the footprint of the part their value names; release-guarded; NOT applied |
+| `read_kicad_footprints.py` | Round 3: takes the reading `inputs/kicad-xal-footprints-9.0.9.json`, KiCad's four Coilcraft XAL footprints at the library's 9.0.9 tag (URL, sha256, description, pads, outlines, model path; the files are not filed) |
+| `inputs/kicad-xal-footprints-9.0.9.json` | That reading |
+| `l6r2_intent.py` | Round 5: the voltage declarations derived for the nets of finding F3 (each with its basis and operating case, the rail figures read from the committed intents), the overlay under which the record judges its rows, and the intent drafts' logic |
+| `apply_gen_sch_{p,d,b}_intent.py` | Round 5's three DRAFTS: the boards' `intent.node` declarations inserted once before the intent is written; release-guarded; NOT applied |
+| `RELEASE.md` | The drafts' release record: `released: no` |
+| `apply_part_identities_block.py` | Puts the block `drafted_identities_l6r2_passives` into `v2/ecad/tools/pcb_part_identities.yaml` outside `selections:` (applied on this branch), or removes this block only |
+| `README.md` | This list |
+
+Also on this branch: `v2/ecad/tools/tests/test_l6r2.py` (the predicates); round 3's `v2/ecad/tools/lcsc_fill.py` lines and
+`v2/ecad/tools/tests/test_lcsc_fill_requirements.py` (the property test over the six boards); the block in `pcb_part_identities.yaml`; round 1's
+`l6pwr/apply_part_identities_block.py` now removes only its own block (it cut to the end of the file, which would have taken this
+record's block with it).
+
+Regenerating `l6r2_passives.out` byte for byte needs the held Uniroyal sheet fetched first
+(`python3 v2/docs/records/w5identc/fetch_held_back.py`): without it the Uniroyal identities print UNREAD instead of DECODED (the
+identity block is the same either way).
+
+Run the tests with `env -C v2/ecad/tools/tests python3 run.py test_l6r2 test_lcsc_fill_requirements test_part_identities
+test_public_hygiene test_l6pwr`; the result of each round is in its commit's report (with the Uniroyal sheet fetched by w5identc's
+`fetch_held_back.py`; without it, the DECODED Uniroyal bindings read UNREAD and test_part_identities skips two).

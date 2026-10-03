@@ -1,0 +1,219 @@
+{
+ "footprints": {
+  "L_Coilcraft_XAL4020-XXX": {
+   "bytes": 1927,
+   "descr": "Inductor, Coilcraft, XAL4020-XXX, 4.3x4.3x2.1mm, (https://www.coilcraft.com/getmedia/6adcb47d-8b55-416c-976e-1e22e0d2848c/xal4000.pdf), generated with kicad-footprint-generator gen_inductor.py",
+   "model": "${KICAD9_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Coilcraft_XAL4020-XXX.step",
+   "outline": {
+    "F.CrtYd": [
+     -2.4,
+     -2.4,
+     2.4,
+     2.4
+    ],
+    "F.Fab": [
+     -2.15,
+     -2.15,
+     2.15,
+     2.15
+    ],
+    "F.SilkS": [
+     -2.26,
+     -2.26,
+     2.26,
+     2.26
+    ]
+   },
+   "pads": [
+    {
+     "at": [
+      -1.185,
+      0.0
+     ],
+     "number": "1",
+     "shape": "roundrect",
+     "size": [
+      0.98,
+      3.4
+     ]
+    },
+    {
+     "at": [
+      1.185,
+      0.0
+     ],
+     "number": "2",
+     "shape": "roundrect",
+     "size": [
+      0.98,
+      3.4
+     ]
+    }
+   ],
+   "sha256": "9b8f28b14473fc1dbb28fa0040c2c4c9888bd9272bf01726fc9d12262242edff",
+   "url": "https://gitlab.com/kicad/libraries/kicad-footprints/-/raw/9.0.9/Inductor_SMD.pretty/L_Coilcraft_XAL4020-XXX.kicad_mod"
+  },
+  "L_Coilcraft_XAL4030-XXX": {
+   "bytes": 1927,
+   "descr": "Inductor, Coilcraft, XAL4030-XXX, 4.3x4.3x3.1mm, (https://www.coilcraft.com/getmedia/6adcb47d-8b55-416c-976e-1e22e0d2848c/xal4000.pdf), generated with kicad-footprint-generator gen_inductor.py",
+   "model": "${KICAD9_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Coilcraft_XAL4030-XXX.step",
+   "outline": {
+    "F.CrtYd": [
+     -2.4,
+     -2.4,
+     2.4,
+     2.4
+    ],
+    "F.Fab": [
+     -2.15,
+     -2.15,
+     2.15,
+     2.15
+    ],
+    "F.SilkS": [
+     -2.26,
+     -2.26,
+     2.26,
+     2.26
+    ]
+   },
+   "pads": [
+    {
+     "at": [
+      -1.185,
+      0.0
+     ],
+     "number": "1",
+     "shape": "roundrect",
+     "size": [
+      0.98,
+      3.4
+     ]
+    },
+    {
+     "at": [
+      1.185,
+      0.0
+     ],
+     "number": "2",
+     "shape": "roundrect",
+     "size": [
+      0.98,
+      3.4
+     ]
+    }
+   ],
+   "sha256": "6c4d9c2f1014e4869780eaec129feb157a39d262819124b88edefa7c1e05af8d",
+   "url": "https://gitlab.com/kicad/libraries/kicad-footprints/-/raw/9.0.9/Inductor_SMD.pretty/L_Coilcraft_XAL4030-XXX.kicad_mod"
+  },
+  "L_Coilcraft_XAL6030-XXX": {
+   "bytes": 1941,
+   "descr": "Inductor, Coilcraft, XAL6030-XXX, 6.56x6.76x3.1mm, (https://www.coilcraft.com/getmedia/ea51f14b-7f32-4dc6-8dfe-d4b70549040f/xal60xx.pdf), generated with kicad-footprint-generator gen_inductor.py",
+   "model": "${KICAD9_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Coilcraft_XAL6030-XXX.step",
+   "outline": {
+    "F.CrtYd": [
+     -3.53,
+     -3.63,
+     3.53,
+     3.63
+    ],
+    "F.Fab": [
+     -3.28,
+     -3.38,
+     3.28,
+     3.38
+    ],
+    "F.SilkS": [
+     -3.39,
+     -3.49,
+     3.39,
+     3.49
+    ]
+   },
+   "pads": [
+    {
+     "at": [
+      -2.02,
+      0.0
+     ],
+     "number": "1",
+     "shape": "roundrect",
+     "size": [
+      1.43,
+      5.5
+     ]
+    },
+    {
+     "at": [
+      2.02,
+      0.0
+     ],
+     "number": "2",
+     "shape": "roundrect",
+     "size": [
+      1.43,
+      5.5
+     ]
+    }
+   ],
+   "sha256": "ce639f58aa992b17e0455d785046fafd16bfcee9c1c1df38bc3baf61c7426afd",
+   "url": "https://gitlab.com/kicad/libraries/kicad-footprints/-/raw/9.0.9/Inductor_SMD.pretty/L_Coilcraft_XAL6030-XXX.kicad_mod"
+  },
+  "L_Coilcraft_XAL6060-XXX": {
+   "bytes": 1941,
+   "descr": "Inductor, Coilcraft, XAL6060-XXX, 6.56x6.76x6.1mm, (https://www.coilcraft.com/getmedia/ea51f14b-7f32-4dc6-8dfe-d4b70549040f/xal60xx.pdf), generated with kicad-footprint-generator gen_inductor.py",
+   "model": "${KICAD9_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Coilcraft_XAL6060-XXX.step",
+   "outline": {
+    "F.CrtYd": [
+     -3.53,
+     -3.63,
+     3.53,
+     3.63
+    ],
+    "F.Fab": [
+     -3.28,
+     -3.38,
+     3.28,
+     3.38
+    ],
+    "F.SilkS": [
+     -3.39,
+     -3.49,
+     3.39,
+     3.49
+    ]
+   },
+   "pads": [
+    {
+     "at": [
+      -2.02,
+      0.0
+     ],
+     "number": "1",
+     "shape": "roundrect",
+     "size": [
+      1.43,
+      5.5
+     ]
+    },
+    {
+     "at": [
+      2.02,
+      0.0
+     ],
+     "number": "2",
+     "shape": "roundrect",
+     "size": [
+      1.43,
+      5.5
+     ]
+    }
+   ],
+   "sha256": "28976e17f70978eb85388acc7456649ba8329970342bedd123fecf2b007c3cf8",
+   "url": "https://gitlab.com/kicad/libraries/kicad-footprints/-/raw/9.0.9/Inductor_SMD.pretty/L_Coilcraft_XAL6060-XXX.kicad_mod"
+  }
+ },
+ "read_by": "MESHSAT-1357 Layer 6 record l6r2 round 3",
+ "read_utc": "2026-10-03T14:23:42Z",
+ "what": "KiCad footprint library 9.0.9, Inductor_SMD.pretty, the four Coilcraft XAL footprints: description, pads and 3D model parsed from each file (the files themselves not filed)"
+}
