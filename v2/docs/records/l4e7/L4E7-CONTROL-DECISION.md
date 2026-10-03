@@ -739,8 +739,9 @@ here):
   2. a 36 V supply connected cold: Q12 never conducts, D4 carries nothing, PV_F at most 85 V, its slew and INP inside their
      absolute ratings (their 10 % margin lines are not held at a connector fault near the envelope's least loop, round 5);
   3. at layer 9, the waveforms at the IC pins: a 36 V supply stepped onto the port with the guard on, from about 7.5 V and
-     from 25 V, through a loop measured first. U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 61 A,
-     within 12 us), D4 carrying nothing, PV_P under 31.80 V, PV_F under the TPS4811-Q1's recommended operating 80 V row (OPEN
+     from 25 V, through a loop measured first. U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off (at most 63 A,
+     within 12 us; the computed 62.7 A within 11.4 us at round 2's loop, rounded up; this list read 61 A until set 28),
+     D4 carrying nothing, PV_P under 31.80 V, PV_F under the TPS4811-Q1's recommended operating 80 V row (OPEN
      at round 2's loop: 83.47 V, under the row from 4.03 uH; round 4, L6P-F10). No loop is claimed to pass (round 5): at 3.30 uH
      the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides;
   4. a reversed bench panel's curve: no current, the high side's pins against GND;
