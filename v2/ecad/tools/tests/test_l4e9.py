@@ -207,7 +207,11 @@ def t_every_downstream_item_has_an_owner_and_an_acceptance():
         assert kind in ("IMPLEMENTATION", "LAYOUT", "TEST", "EVIDENCE", "RELEASE"), "%s kind %s" % (rid, kind)
         assert owner in m.OWNERS, "%s's owner %r is not a named layer and role" % (rid, owner)
         assert acc.strip() and item.strip() and frm.strip() and order.strip(), "%s lacks an item, a source, an acceptance or an order" % rid
-        assert state in ("DRAFTED", "MISSING DRAFT", "PENDING", "OWED"), "%s state %s" % (rid, state)
+        if state in ("OPEN", "CLOSED"):
+            # a review finding kept in the active register (the owner's amendment): it names the finding and what closes it
+            assert "review finding" in item and re.search(r"\bL4-[A-Z]{2}\d{2}\b", item) and "CLOSE" in acc.upper(), "%s: an OPEN or CLOSED row that is not a review finding" % rid
+        else:
+            assert state in ("DRAFTED", "MISSING DRAFT", "PENDING", "OWED"), "%s state %s" % (rid, state)
     kinds = {r[1] for r in rows}
     assert {"IMPLEMENTATION", "LAYOUT", "TEST"} <= kinds
 
@@ -2194,3 +2198,21 @@ def t_r227s_capacitors_take_their_own_class():
     sent = _C["text"].split("the capacitors are K parts (each read at the end of this section):")[1].split("lowers an X7R's")[0]
     for p in parts:
         assert any(p["ref"] in l and ("%s, YAGEO %s" % (p["code"], p["mpn"])) in l for l in sent.split("\n")), "%s's own part is not named" % p["ref"]
+
+
+def t_the_release_candidate_reviews_findings_are_in_the_active_register():
+    """The release-candidate review of the supplier package (3 October 2026): its two findings stay in the active register under the
+    owner's amendment, each with its owner and the evidence that closes it; L4-RC01 stays OPEN until L4-E7's fnd/l4e7rc is integrated and
+    its tests pass, with the integrator's hook; L4-RC02 is CLOSED at the entry page's commit; the page's register summary carries both."""
+    m = _M()
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    rc = {re.search(r"\bL4-RC\d\d\b", r[2]).group(0): r for r in reg.values() if re.search(r"\bL4-RC\d\d\b", r[2])}
+    assert sorted(rc) == ["L4-RC01", "L4-RC02"]
+    r1, r2 = rc["L4-RC01"], rc["L4-RC02"]
+    assert r1[6] == "OPEN" and "fnd/l4e7rc" in r1[5] and "tests pass" in r1[5] and "integrator's hook" in r1[5] and "set this row's State to CLOSED" in r1[5]
+    assert r2[6] == "CLOSED" and "db1cffb5" in r2[5] and "README" in r2[5] and "suite-checked commit" in r2[5]
+    for r in (r1, r2):
+        assert r[4] == "Layer 4 coordinator" and "REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md" in r[3] and r[8] == m.SET and r[9].startswith("DO")
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("## 11. ")[1].split("## 12. ")[0]
+    assert "L4-RC01" in sec and "L4-RC02" in sec and r1[0] in sec and r2[0] in sec
