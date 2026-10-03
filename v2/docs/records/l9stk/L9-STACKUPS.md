@@ -49,7 +49,9 @@ layers in those files are the boards as built (A 6, B 6, C 4, D 4, E 4, P 2, E5 
 **The measurement (MEASURED).** The four-layer arm of 12 September 2026, the same tools, router and settings as the
 six-layer A24, ended 0 hard and **345 unrouted** with its autoroute completed in 51 minutes; six layers closed 0 and 0
 (`v2/docs/LAYER-DECISIONS-2026-09-11.md`, "THE ROUTE IS RUN AND THE ANSWER IS NO"). Six is the smallest count a
-measurement does not refuse.
+measurement does not refuse. The arm ran on A24's circuit; the changes recorded since (`layout-constraints/A.md`: the
+hot stop line HOT-R1, the EMCON gates behind their own eFuse U39, VIN_RAW onto four dock power pins) add nets and remove
+no stage, so they cannot make four layers easier (INFERRED).
 
 **The copper weight (DERIVED BOUND, NO MEASUREMENT HELD of the share).** At PWR-F12's 18 A for 60 s the pack path
 (CELL+, CELL_FUSED, VBAT) needs **23.91 mm on one 1 oz face, 6.72 mm on each of two 1 oz faces, 11.95 mm on one 2 oz
@@ -62,8 +64,8 @@ nor board E's intent; on board A's In1 and In4 alone it would need 55.05 mm of e
 **What 2 oz would cost besides money (DERIVED, section 3 of the output).** The fabricator's 2 oz track and space floor
 reads 0.15 mm on its capability page (transcribed 25 September 2026) and **0.16 mm** on its copper weight guide (last
 updated 9 September 2026, read 3 October 2026); the stricter governs. Board A's class table is 0.127 mm, its USB class
-0.127 / 0.13 mm. U3, the BQ25731 charger's 0.4 mm pitch QFN-32, leaves a 0.200 mm copper gap between pads, exactly the 0.20 mm 2 oz
-solder-mask bridge, so its bridges would survive only with no mask expansion at all. And no six-layer 2 oz row is
+0.127 / 0.13 mm. U3, the BQ25731 charger's 0.4 mm pitch QFN-32, leaves a 0.200 mm copper gap between pads, exactly
+the 0.20 mm 2 oz solder-mask bridge, so its bridges would survive only with no mask expansion at all. And no six-layer 2 oz row is
 transcribed or solved: at 0.16 / 0.16 mm the 1 oz solve reads 86.9 ohm for the USB pair, the 2 oz copper unsolved.
 
 **The stackup.** JLC06161H-3313, 1.6 mm: F.Cu 0.035, 3313 prepreg 0.0994 (Dk 4.1), In1 0.0152 GND, core 0.55 (Dk 4.6),
@@ -87,8 +89,11 @@ three receptacles' 0.4 mm escape needs two inner signal layers. B21 on six layer
 (decision 43's evidence). The region trial Q-B-ESC-1 (26 September 2026, EXPERIMENTAL, INCONCLUSIVE by its own table,
 `v2/docs/B-FEASIBILITY.md` 7.8) read **33 open** with four routing layers when its cap cut it and **18 open** with six
 routing layers on eight, 38 against 18 at matched routing time; its residue sits at the switch's and hub's unescaped
-pad rows, a band two more layers did not clear and which that page reads as bounded by placement. **NO MEASUREMENT
-HELD** of a whole-board route at eight.
+pad rows, a band two more layers did not clear and which that page reads as bounded by placement. Every one of these
+ran on the pre-correction B21; the corrected netlist AC couples and source terminates the switch's clock outputs and
+seats 18 parts beside U301 in a pocket that had 0.0 mm of room (`layout-constraints/B.md` section 3), so the demand has
+grown since (INFERRED). **NO MEASUREMENT HELD** of a
+whole-board route at eight.
 
 **The controlled pairs (MEASURED, atlc, `l9stk_stackups.out` section 4).** On six layers as built the outer layers need
 0.130 mm for 90 ohm at a 0.127 mm gap, In2 needs 0.208 mm for 90 ohm and never reaches 85 in the solved widths, and
@@ -272,7 +277,7 @@ surcharge NOT READ).
 | U1 on board P (and U3 on A, U10 on E if they ever go to 2 oz) leaves a 0.200 mm copper gap at 0.4 mm pitch, the 2 oz bridge exactly | board P stream; the supplier |
 | `STACKUP-DECISIONS.md` rows for A (copper), B and P (inner weight) say UNDECIDED; `layout-constraints/A.md`, `B.md`, `E.md` and `P.md` section 1 follow them; `boards/a.json` and `boards/c.json` `_copper_layers_why` are stale (named there already) | the integrator, after the apply |
 | The supplier's quotation should carry, per board at its real outline and five boards: A six layers at 1 oz and at 2 oz outer; B six and eight layers (the large board fee shown); C four and six layers (the fee shown); D two and four layers; E four layers at 1 oz and 2 oz; P four layers 2 oz with 0.5 oz and 1 oz inner; E5 two layers 2 oz | the supplier handover's author (`QUOTATION-REQUEST-DRAFT.md`) |
-| STK-003 (a layout-entry check that the stackup is decided) and IMP-003 (pre-layout impedance feasibility), drafted by hc9, are still not in the registry | the registry writer |
+| STK-003 (a layout-entry check that the stackup is decided) and IMP-003 (pre-layout impedance feasibility), named in `STACKUP-DECISIONS.md` section 7, are not in `pcb_rules.yaml` | the registry writer |
 
 ## 13. How to re-run
 
