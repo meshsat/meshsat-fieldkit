@@ -24,13 +24,15 @@
 #include "hardware/structs/timer.h"
 #include "hardware/structs/vreg_and_chip_reset.h"
 #include "hardware/sync.h"
+#include "hardware/timer.h"
 #include "hardware/watchdog.h"
 #include "pico/bootrom.h"
 #include "pico/time.h"
 
 #define KIT_I2C i2c0
 #define SLOT_MASK ((1u << HAL_GPIO_SLOT_EN1) | (1u << HAL_GPIO_SLOT_EN2) | (1u << HAL_GPIO_SLOT_EN3))
-#define CUT_ALARM 3u                         /* timer alarm 3, TIMER_IRQ_3 */
+#define CUT_ALARM 1u                         /* timer alarm 1, TIMER_IRQ_1: alarm 3 is the SDK's default alarm pool
+                                              (PICO_TIME_DEFAULT_ALARM_POOL_HARDWARE_ALARM_NUM, pico/time.h, default 3) */
 
 /* The journal: the top two 4 KiB sectors of U4 (W25Q16JV, 2 MiB). */
 #define JOURNAL_SIZE (2u * FLASH_SECTOR_SIZE)
@@ -279,10 +281,15 @@ static void __not_in_flash_func(slot_cut_isr)(void)
 
 void hal_arm_slot_cut_alarm(ms_t at_ms)
 {
-    irq_set_exclusive_handler(TIMER_IRQ_3, slot_cut_isr);
-    irq_set_priority(TIMER_IRQ_3, PICO_HIGHEST_IRQ_PRIORITY);
+    static bool claimed;
+    if (!claimed) {
+        hardware_alarm_claim(CUT_ALARM);     /* panics if anything else holds it */
+        irq_set_exclusive_handler(TIMER_IRQ_1, slot_cut_isr);
+        irq_set_priority(TIMER_IRQ_1, PICO_HIGHEST_IRQ_PRIORITY);
+        claimed = true;
+    }
     hw_set_bits(&timer_hw->inte, 1u << CUT_ALARM);
-    irq_set_enabled(TIMER_IRQ_3, true);
+    irq_set_enabled(TIMER_IRQ_1, true);
     timer_hw->alarm[CUT_ALARM] = (uint32_t)((uint64_t)at_ms * 1000u);
 }
 

@@ -60,7 +60,7 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
   loss.
 - **FW-C04, ZER 3.4 and 3.5**: the step-0 alarm, the PENDING record, C0 and C1 before any retry, the verifications
   against the created key and the recorded one, at most 6 GenKey commands before the deadline D, DONE, the modules told
-  at 1.5 s at the latest, the slots cut on their confirmation or at 3.0 s, step 7's ten creates per slot, the journal's
+  once the timed phase ends (by D plus the last operation's unwind; ZER gives 1.504 s), the slots cut on their confirmation or at 3.0 s, step 7's ten creates per slot, the journal's
   torn record reading PENDING (I3), and the five rows of the boot table.
 - **FW-C13, FW-C14**: HOT-R1's four states decoded from A:U27 P1.5 at every EXP_INT and a poll every second (with a
   command byte other than 00h after each read); H1's actions and release, H2's page then PI_KILL, the TMP117 fallback
@@ -69,7 +69,9 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
   B:U6, the SOS queued and told, and the restore 5 K under after 30 minutes; H1 overrides it.
 - **FW-C09 in part**: the round-8 fallback (the pack readings stopped 10 s: the reduced mode, both outlets off) and
   C1's first stage (+50 C inside air or +55 C on a cell, restore 5 K below).
-- **FW-K04**: nine SCL pulses and a STOP on a held bus.
+- **FW-K04**: nine SCL pulses and a STOP on a held bus, run by the target loop after a failed transfer and reported.
+- **The kit-bus sensors**: board B's TMP117 (FW-C13's fallback) once a conversion, and board C's VEML7700 for the
+  bridge (P s.8), both from the makers' sheets held in `v2/vendor/` (`src/sensors.c`'s header).
 
 ## 2. Statement to test
 
@@ -152,7 +154,7 @@ other two statuses are cited by none.
 | FW-C01 | PARTLY | steps 1 to 4 and 6 (`panel_init`, `boot_step`, `panel_exp_boot`); the E5 fix off and the BOOTSEL mask in `CMakeLists.txt` and `hal_reboot_to_bootsel` | step 5, the charger's registers (FW-A01 to A03, A16 to A18): no charger driver here |
 | FW-C02 | PARTLY | the held levels read and adopted, all low first with a wipe due; the watchdog with SIO, IO_BANK0 and PADS_BANK0 out of its scope and the SDK's early resets overridden (F-03); no ROM bootloader while a slot runs; the reset reason read | the boot reason reported (protocol, F-02); every hardware behaviour (V-C02) |
 | FW-C03 | IMPLEMENTED | the MAIN tap, the PI short press and 8 s hold, the bridge's commands | the PI button's input is not wired on board C (F-01) |
-| FW-C04 | PARTLY | the level-sensitive trigger, the abort, ZER 3.4's sequence and bounds, the journal, the boot table, the re-arm | the ATECC608B command layer (CryptoAuthLib and the bounded six-function HAL), P_A0 and P_B0 at enrolment, the modules told over the protocol (F-02); Z-EXP-A to C |
+| FW-C04 | PARTLY | the level-sensitive trigger, the abort, ZER 3.4's sequence and bounds, the journal, the boot table, the re-arm, an absent SE retried every 60 s, no slot newly raised while armed or wiping | the ATECC608B command layer (CryptoAuthLib and the bounded six-function HAL), P_A0 and P_B0 at enrolment, the modules told over the protocol (F-02); Z-EXP-A to C |
 | FW-C05 | IMPLEMENTED | inputs without pad pulls, alive while toggling, lost after 3 s, the display re-elected | |
 | FW-C06 | IMPLEMENTED | follow the bridge, else the lowest live slot, never a dark slot | |
 | FW-C07 | IMPLEMENTED | GPIO21 an input only, every EMCON edge reported, MASTER CAUT steady, EMCON on the e-paper (its own page, and in the SOS pages) | the software holds themselves (queue, AT+CFUN, rfkill) are the bridge's |
@@ -161,7 +163,7 @@ other two statuses are cited by none.
 | FW-C10 | IMPLEMENTED | the 2 s hold, the indications, queued under EMCON, the cancel | the sending is the bridge's |
 | FW-C11 | NOT THE FIRMWARE'S | no controller pin reaches U5's EN (on +5V): the firmware has no means to switch its 3.3 V (`t_panel_3v3_cannot_be_switched_by_firmware`) | |
 | FW-C12 | OWED | nothing: the wire format (MESHSAT-837) is defined nowhere (F-02); `panel_bridge_t` is only the decoded content the core reads, and the switch edges are queued as events | the wire format, the USB composite device (CDC and HID), the codec, V-C12 |
-| FW-C13 | PARTLY | H1 and H2, the clean-shutdown request, the loads off on A:U27 and A:U28, the slots dropped, the release and the heat stage's one module, the TMP117 fallback | the CHRG_INHIBIT bit's write (FW-A19's charger driver; the core raises the flag); the hottest reading on the e-paper (the rendering, section 4) |
+| FW-C13 | PARTLY | H1 and H2, the clean-shutdown request, the loads off on A:U27 and A:U28, each slot dropped once it has stopped, the release and the heat stage's one module, the TMP117 fallback on board B's TMP117 read off the bus once a conversion | the CHRG_INHIBIT bit's write (FW-A19's charger driver; the core raises the flag); the hottest reading on the e-paper (the rendering, section 4) |
 | FW-C14 | IMPLEMENTED | the four states, the start-up read, the slot found held up, the EXP_INT service with the command byte, the 1 s poll | |
 | FW-C15 | PARTLY | the trigger, the actions on A:U27 and B:U6, the SOS queued and told, MASTER CAUT, the page, the restore, H1's precedence | the Geiger off (the sensor controller, over the protocol), the module idled (the bridge), the CHRG_INHIBIT write, the reference's offset (T-H1) |
 
@@ -275,6 +277,7 @@ e7052da8894a7f12, `rp2040/hardware_regs/include/hardware/regs/psm.h` 99db9c7f820
 bc261dcd8268c225, `.../regs/vreg_and_chip_reset.h` 002454b252fece95, `.../regs/intctrl.h` 76d1205144a953c7,
 `rp2040/hardware_structs/include/hardware/structs/timer.h` 9325fe9694d9d6c8, `rp2_common/hardware_irq/include/hardware/irq.h`
 85fabc3046de2b00, `rp2_common/hardware_resets/include/hardware/resets.h` 3688d3a282705b79,
-`rp2_common/pico_bootrom/include/pico/bootrom.h` df34abac2ede9284, `rp2_common/hardware_i2c/include/hardware/i2c.h`
+`rp2_common/pico_bootrom/include/pico/bootrom.h` df34abac2ede9284, `common/pico_time/include/pico/time.h`
+5cb0f594effa694e, `rp2_common/hardware_timer/include/hardware/timer.h` 5498220e5310d49e, `rp2_common/hardware_i2c/include/hardware/i2c.h`
 ba330ff219f3844a, `rp2_common/hardware_flash/include/hardware/flash.h` 34bcc266f4535e6c, `rp2_common/tinyusb/CMakeLists.txt`
 293d51840416b722.
