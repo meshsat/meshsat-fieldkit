@@ -3,7 +3,10 @@
 Prototype design: nothing here has been built, powered or measured. The panel firmware's finding F-14 decided: one slot-fault rule
 for a compute module lost at start-up and one lost while running, written into `v2/docs/PANEL.md` section 5 and
 `v2/docs/HW-FW-CONTRACT.md` (FW-C05, FW-C02, V-C05, the change record) with `CONOPS.md` section 4e as its source. Branch `fnd/l5r4`
-from set 28's `92a5c7d8`; Layer 5's author of the panel contract.
+from set 28's `92a5c7d8`; Layer 5's author of the panel contract. The same day's follow-up (the panel firmware's F-15 and S-37, from
+`fnd/fw-r4` at `8d396dfd`): a power-on reset is read as `CHIP_RESET`'s `HAD_POR` set and the watchdog's `REASON` zero (RP2040 datasheet
+2.12.1, 2.12.7, 4.7.1, Table 548), and the slot record sits beside the wipe journal, never inside it; `apply_l5r4.py` carries the
+final texts.
 
 | File | What it is |
 |---|---|

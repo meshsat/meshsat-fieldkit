@@ -25,7 +25,7 @@ never cycled. The firmware followed PANEL.md and waited on the decision.
 | The requirement | REQ-062 (parent NEED-03, source `PANEL.md` section 5) | statement: the start-up case (flat 60 s after the rail came up, power-cycled once with the rail off 5 s, then left off until the operator acts); acceptance: "a slot with its heartbeat forced flat is flagged ..., cycled once and left off; the other slots keep running", with no start-up condition |
 | What the cycle must not disturb | REQ-004 and SC-25 (NEED-03) | the moved bank back in service within 30 s of the loss, the bridge within 60 s: both on the survivors, decided by the supervisors' vote on the heartbeat, not by the lost slot's rail |
 | What a controller reset does to the slots | FW-C02 and record l8gnd section 3d (`records/l5r2/inputs/l8gnd-sections-2-3-226e9143.md`), the keeper `U43` with `R230` to `R232` (DRAFTED) | `SLOT_EN` is held at its last driven level across a watchdog, RUN, SWD or ROM-bootloader reset, not across a loss of the panel's supply; after a reset FW-C02 adopts the held level, then FW-C01's order raised every slot read low, a slot left off included |
-| What survives which reset in the RP2040 | RP2040 datasheet (`v2/vendor/rp2040/rpi-rp2040-datasheet.pdf`) 2.12.7 and 4.7.4 | `CHIP_RESET`'s `HAD_POR` marks a power-on or brown-out reset, `HAD_RUN` a RUN reset; the watchdog's scratch registers survive a soft reset but are cleared by RUN or by cycling the digital supply, so the slot state is kept where the wipe-pending record is (FW-C01 step 3, the flash) |
+| What survives which reset in the RP2040, and how a power-on is told apart | RP2040 datasheet (`v2/vendor/rp2040/rpi-rp2040-datasheet.pdf`, sha256 `be56fbb75ba0ae9e...`) 2.12.1, 2.12.7, Table 191, 4.7.1, Table 548 and 4.7.4 | a chip-level reset "happens at initial power-on, during a power supply brown-out event or when the chip's RUN pin is taken low" (or by the Rescue DP; 2.12.1), and `CHIP_RESET` gives "the source of the most recent chip-level reset" (2.12.7; `HAD_POR`, bit 8 of Table 191, "Last reset was from the power-on reset or brown-out detection"); the watchdog "can restart parts of the chip" through the power-on state machine and the reset controller (4.7.1), not the chip-level reset, so after a power-on followed by a watchdog reset `HAD_POR` still reads 1; the watchdog's `REASON` register "Logs the reason for the last reset. Both bits are zero for the case of a hardware reset." (Table 548, bits `FORCE` and `TIMER`); so a power-on is `HAD_POR` set and `REASON` zero (the panel firmware's F-15, 3 October 2026). The scratch registers survive a soft reset but are cleared by RUN or by cycling the digital supply (4.7.4), so the slot state is kept in the flash, beside the wipe-pending record (FW-C01 step 3) and never inside its journal (the firmware's S-37: `feasibility/ZEROIZE.md`'s invariant I3 reads a torn journal entry as PENDING) |
 
 CONOPS governs: section 4e, M5 and the Startup row all give one cycle, a 60 s flat window and the operator; M5 applies it to a
 module that stops during a mission. PANEL.md section 5 had narrowed it to start-up. REQ-062's statement names the start-up case and
@@ -35,30 +35,35 @@ its acceptance does not restrict the forced flat heartbeat to start-up: the rule
 ## 3. The rule, as written in PANEL.md section 5 (and in FW-C05)
 
 > **Slot faults, one rule for a module lost at start-up and one lost while running** (decided 3 October 2026, finding F-14 of the
-> panel firmware, record l5r4, SESSION; the source is `CONOPS.md` section 4e's row "a compute module lost", with section 3's M5 and
-> section 4's Startup row: the slot is cycled once and then left off until the operator acts). A slot is supervised while its
+> panel firmware, record l5r4, SESSION; the source is `CONOPS.md` section 4e's row "a compute module lost", with section 3's M5
+> and section 4's Startup row: the slot is cycled once and then left off until the operator acts). A slot is supervised while its
 > `SLOT_EN` is high and the controller has asked nothing of it: no shutdown on `PI_SHDN_REQ`, no hot stop (FW-C13), no shed to the
-> reduced mode or the heat stage (FW-C09), no ZEROIZE (section 6). It is lost when its heartbeat has had no edge for 3 s after an edge
-> (FW-C05), or when it stays flat for 60 s after its rail came up; either way it is shown as a slot fault (MASTER CAUT, the e-paper
-> names the slot). When a supervised slot's heartbeat has had no edge for 60 s, counted from its rail coming up or from its last edge,
-> whichever is later, the controller acts on its rail: the first time it power-cycles the slot once (rail off 5 s), which spends the
-> slot's one retry; the next time, whether the slot stayed flat after its cycle or came back and was lost later, it drops `SLOT_EN`
-> and then leaves it off until the operator acts: from the touch UI, by a retry command over the bridge protocol (owed with
-> MESHSAT-837; the panel firmware's F-02 and S-04), or by restarting the kit with MAIN, after which every slot is raised again
-> (decided 3 October 2026, F-09, record l5r2, `L5-PANEL-R3.md`: the sentence named no control); each of the three re-arms the slot's
-> retry. A controller reset (watchdog, RUN or SWD) is not an operator act: the controller keeps each slot's spent retry and left-off
-> state where it keeps the wipe-pending record and after the reset raises only the slots that state allows (FW-C02); a power-on
-> reset of the controller (`HAD_POR`, RP2040 datasheet 2.12.7, a power-on or a brown-out), which a MAIN restart or a loss of the
-> panel's supply causes, clears it with every slot. A module that restarts on its own (its software, or a restart the bridge
-> commands) is not told apart: it is cycled if it shows no edge for 60 s; a bridge message that suspends the supervision for a
-> planned restart is owed with MESHSAT-837.
+> reduced mode or the heat stage (FW-C09), no ZEROIZE (section 6). It is lost when its heartbeat has had no edge for 3 s after an
+> edge (FW-C05), or when it stays flat for 60 s after its rail came up; either way it is shown as a slot fault (MASTER CAUT, the
+> e-paper names the slot). When a supervised slot's heartbeat has had no edge for 60 s, counted from its rail coming up or from
+> its last edge, whichever is later, the controller acts on its rail: the first time it power-cycles the slot once (rail off 5 s),
+> which spends the slot's one retry; the next time, whether the slot stayed flat after its cycle or came back and was lost later,
+> it drops `SLOT_EN` and then leaves it off until the operator acts: from the touch UI, by a retry command over the bridge
+> protocol (owed with MESHSAT-837; the panel firmware's F-02 and S-04), or by restarting the kit with MAIN, after which every slot
+> is raised again (decided 3 October 2026, F-09, record l5r2, `L5-PANEL-R3.md`: the sentence named no control); each of the three
+> re-arms the slot's retry. A controller reset (watchdog, RUN or SWD) is not an operator act: the controller keeps each slot's
+> spent retry and left-off state beside the wipe-pending record, in the same flash but never inside its journal (the panel
+> firmware's S-37: `feasibility/ZEROIZE.md`'s invariant I3 reads a torn journal entry as a pending wipe, so a slot record torn
+> there by a power loss would start a crypto-erase), and after the reset raises only the slots that state allows (FW-C02). Only a
+> power-on reset of the controller clears it, with every slot, and the controller reads one as `CHIP_RESET`'s `HAD_POR` set and
+> the watchdog's `REASON` zero (decided 3 October 2026, finding F-15 of the panel firmware, record l5r4: RP2040 datasheet 2.12.7,
+> `CHIP_RESET` gives the source of the most recent chip-level reset, and a watchdog reset is not one (2.12.1, 4.7.1), so `HAD_POR`
+> alone still reads 1 after a power-on followed by a watchdog reset; Table 548, `REASON`: both bits are zero for a hardware
+> reset); a MAIN restart, a loss of the panel's supply and a brown-out are such resets. A module that restarts on its own (its
+> software, or a restart the bridge commands) is not told apart: it is cycled if it shows no edge for 60 s; a bridge message that
+> suspends the supervision for a planned restart is owed with MESHSAT-837.
 
 In short: **how many cycles:** one per slot, its retry; **the hold-off:** 60 s without a heartbeat edge, counted from the later of the
 rail coming up and the last edge, the same in both cases; **what ends retries:** the retry is spent by the cycle and re-armed only by
 an operator act (the touch UI, the bridge's retry command, MAIN); a second loss leaves the slot off; a controller reset neither
-re-arms nor clears it, a power-on reset clears it.
+re-arms nor clears it; a power-on reset clears it, read as `CHIP_RESET`'s `HAD_POR` set and the watchdog's `REASON` zero (F-15).
 
-## 4. The decision (authority: SESSION, under the owner's standing rule of 26 September 2026; finding F-14)
+## 4. The decision (authority: SESSION, under the owner's standing rule of 26 September 2026; findings F-14 and F-15)
 
 - **Why one rule.** CONOPS M5 gives the cycle to a module that stops during a mission; the hardware gives the panel one way to act on
   a slot, its rail; a hung module is the case a power cycle recovers, whether it hung at boot or after hours. Leaving the running case
@@ -73,7 +78,13 @@ re-arms nor clears it, a power-on reset clears it.
   FW-C01's order would raise a slot left off, which is an automatic retry by another path.
 - **Rejected:** a re-armed retry after a stable run (for example 30 minutes, as the hot stop's restore), because it would give more
   than CONOPS's "cycled once" and REQ-062 states once; it is the change to bring if the owner wants unattended repeated recovery.
-- *Reverse:* revert this round's commit; `apply_l5r4.py`'s old texts are the round 3 sentences it asserts.
+- **The follow-up of the same day (the panel firmware's F-15 and S-37, `fnd/fw-r4` at `8d396dfd`).** The first text read a power-on
+  as `HAD_POR` alone; the held datasheet bears the firmware out (section 2's last row): a watchdog reset is not a chip-level reset,
+  so `HAD_POR` stays 1 after a power-on followed by a watchdog reset, and on `HAD_POR` alone an ordinary watchdog reset would clear a
+  slot left off. The power-on is now `HAD_POR` set and `REASON` zero in PANEL.md section 5, FW-C05, FW-C02 and V-C05. The slot record's
+  place (beside the wipe journal, never inside it) is a contract fact because it bounds ZEROIZE: inside the journal, I3 would read a
+  slot record torn by a power loss as a pending wipe and crypto-erase the keys; FW-C05 carries it.
+- *Reverse:* revert this round's commits; `apply_l5r4.py`'s old texts are the round 3 sentences it asserts.
 
 ## 5. What changed
 
@@ -93,7 +104,9 @@ touch UI, by a retry command over the bridge protocol"), section 5's HDMI encodi
 
 Five readings are bound to PANEL.md's content (CFL-001, CFL-005, CFL-014, CFL-015, CFL-016); none rests on section 5.
 `apply_l5r4_rebind.py` rebinds them, refusing if any section other than 5 differs or if a section a reading rests on differs;
-`--check` on this branch rebinds all five from `9fd2b4e3c6edf86e` with every evidence_result unchanged. It is run by the integrator.
+`--check` on this branch rebinds all five from `9fd2b4e3c6edf86e` with every evidence_result unchanged (after the F-15 follow-up the
+same; if the integrator has already rebound them to round 4's first file, the same script moves them on, since only section 5 differs).
+It is run by the integrator.
 REQ-062 is not edited (layer 3 accepted; its statement is the start-up case of the rule and its acceptance is met by it).
 
 ## 7. What the panel firmware must change (for its author, the next round)
@@ -105,9 +118,11 @@ REQ-062 is not edited (layer 3 accepted; its statement is the start-up case of t
    not only the 60 s start-up timeout.
 3. `cycled` is re-armed only by `panel_slot_operator_retry` (the touch UI and the bridge's retry) and by a power-on reset; it is never
    cleared when a cycled slot comes back.
-4. `cycled` and `SLOT_FAULT_OFF` per slot are written beside the wipe-pending record and read at boot: after a watchdog, RUN or SWD
-   reset (`HAD_POR` clear) a slot recorded off stays `SLOT_FAULT_OFF` when FW-C02 reads its line low, and a slot read high keeps its
-   spent retry; after a power-on reset the record is cleared.
+4. `cycled` and `SLOT_FAULT_OFF` per slot are written beside the wipe-pending record, never inside its journal (S-37), and read at
+   boot: after any reset that is not a power-on (a watchdog, RUN or SWD reset: `CHIP_RESET`'s `HAD_POR` clear, or the watchdog's
+   `REASON` not zero) a slot recorded off stays `SLOT_FAULT_OFF` when FW-C02 reads its line low, and a slot read high keeps its spent
+   retry; after a power-on reset (`HAD_POR` set and `REASON` zero, F-15) the record is cleared. Round 4 of the firmware (`8d396dfd`)
+   already reads it so.
 5. The constants stay (`PANEL_SLOT_FLAT_MS` 60000, `PANEL_SLOT_CYCLE_OFF_MS` 5000, `PANEL_HB_LOST_MS` 3000); a host test per case
    (lost at start-up, lost while running, lost again after a successful cycle, a controller reset with a slot left off, a power-on
    reset) cites FW-C05; the README's F-14 is closed against this record.
@@ -117,7 +132,9 @@ REQ-062 is not edited (layer 3 accepted; its statement is the start-up case of t
 `test_l5r4.py`: CONOPS (4e, M5, Startup) and PANEL.md section 5 agree (the same hold-off parsed from each, one cycle, the rail-off
 time, the operator), PANEL.md covers the running case and cites CONOPS; FW-C05 states the same figures and FW-C02 keeps a slot left
 off; REQ-062's case is in the rule; `apply_l5r4.py` reads already applied on the tree, applies once to the files at `92a5c7d8`, is
-idempotent and refuses a mixed state; the rebind script checks or reads already applied; no dash in the record.
+idempotent and refuses a mixed state; the rebind script checks or reads already applied; the reset reading rests on the held
+datasheet (its 2.12.1, 2.12.7 and Table 548 sentences read from the PDF), and PANEL.md, FW-C05, FW-C02 and V-C05 read a power-on as
+`HAD_POR` set and `REASON` zero, with the slot record beside the journal; no dash in the record.
 
 ## 9. What this record does not claim
 
