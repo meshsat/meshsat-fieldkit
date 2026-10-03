@@ -98,8 +98,8 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3ac6044c45ed9639883ee44bd8daa21ce27f96026cabfcb12d0871e249f79d2c"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "db38ca1b3cc25b80b33d92b0a9e1ccafc6fc6e682e8550c77da1ed726d3c1ac7"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3311675aa42c3224398bf7e71618f63b7dc4930ec1aabb3c72e28c5e56af3d5a"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f6a78325f8a1c2e7378cf531c5b1b4a5b6d4e6d09ee3ec071a7a1e37c56f9ab6"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
@@ -138,7 +138,7 @@ PINS = {
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "4a2f4567b64e4aba7a8b540db3599a2f330a4120a580a242227a4a733645a49e"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "93f95224b90af32811854f2604a54b0702a903ae6a2b0cab9e43534589524c73"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -156,8 +156,8 @@ PINS = {
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "4afbfb5a7d1418bdd6d1da64bef1f5bec9a6ef5857b405fd01d62547b1c37175"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
-    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "0c747d8d6b29ac1e61a2076d3f79388263d02a5cd48c4031573966f82c8ab1e5"),
-    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "422452e5c9af125ebbf73198a72dba3b5ca6963b8db35c0416d4581e95f7d507"),
+    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "a920ccead7cb0aeba1ae56020982b2f463779017ee52611d0e24f5f3058d3e55"),
+    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "b567ab98d709246aab80649ff4ed5e3bddae8ec37e77e369ff6abb3234c8512c"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
@@ -175,8 +175,9 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "68bc3bad": "fnd/l4e7, round 2 for the review of the provisional fixes (L4-F01)",
                 "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens",
                 "787e7b15": "fnd/l4e11, the designator fix (U42's ILIM resistor R228) and E11-32's procurement fact",
+                "af4672f4": "fnd/l4e11, the fans' feed after Layer 7's D-18 (the mixers' regulated 12 V rail U18, the branch re-derived, E11-40 for board B)",
                 "f73b07ea": "fnd/l4e7, rounds 3 and 4 for the review's B6 and L4-F01 (route 3 result (ii), B6-ENG-2, R97 0.1 percent, the INP divider, PV_F's basis)"}
-FROM_COMMIT = {"l4e7r": "f73b07ea", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "787e7b15", "l4e11md": "787e7b15",
+FROM_COMMIT = {"l4e7r": "f73b07ea", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "af4672f4", "l4e11md": "af4672f4",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
                "cl_adi": "f73b07ea", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
@@ -1822,6 +1823,47 @@ def cp_inputs(F, T):
     if not e39 or e39[0][1] != "FIRMWARE":
         refuse(3, "E11-39, the fans' staggered start")
     need(T["cl_tiq"], r"\*\*Q-TI-18 \(E11-38, TPS16630\)\.\*\*", "Q-TI-18")
+    # section 18: the fans' feed after Layer 7's D-18 (the record cites Layer 7's page at a commit not in this base; it is cited, not copied)
+    if t.count("\n18. THE FANS' FEED AFTER LAYER 7'S SELECTION") != 1:
+        refuse(3, "L4-E11's section 18")
+    s18 = one(t.split("\n18. THE FANS' FEED AFTER LAYER 7'S SELECTION")[1].split("\nEND.")[0])
+    fan = {}
+    m = need(s18, r"Layer 7's (v2/docs/records/l7pwr/L7-FANS-AND-TH1\.md) at ([0-9a-f]{8}), sections 2d, 2e, 2f and 5\): the mixers (9WL0612P4H001) \(two, board E\) and the coolers (9WPA0412P6G001) \(three, board B\), 12 V, printed range ([\d.]+) to ([\d.]+) V, ([\d.]+) A each at 12 V", "the fans Layer 7 selected")
+    fan["l7"], fan["l7c"], fan["mixer"], fan["cooler"], fan["win"], fan["i"] = m.group(1), m.group(2), m.group(3), m.group(4), (f(m, 5), f(m, 6)), f(m, 7)
+    need(s18, r"15a's fans directly on VSYS_E is WITHDRAWN", "15a's fans withdrawn")
+    need(s18, r"SELECTED \(SESSION\): \(V1\), U18 LTC3115EFE-1 on board E as TA04 with L4 Coilcraft XAL6060-103ME \(10 uH", "U18 selected")
+    need(s18, r"\(V1\) ADI LTC3115-1 \(Rev\. E, held\): monolithic four-switch buck-boost, input 2\.7 to 40 V", "U18's input range")
+    m = need(s18, r"the output ([\d.]+) V \(([\d.]+) to ([\d.]+) V at FB's limits\) inside the fans' 10\.8 to 13\.2 V", "the rail's output")
+    fan["vout"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(s18, r"enabled at ([\d.]+) V \(([\d.]+) to ([\d.]+)\), disabled at ([\d.]+) V", "U18's RUN divider")
+    fan["run"] = (f(m, 1), f(m, 4))
+    need(s18, r"the fault appears as a rail hiccup, not a controller reset", "the fault's form")
+    m = need(s18, r"heat into the case: ([\d.]+) W at full speed \(([\d.]+) W of fans at ([\d.]+)\), ([\d.]+) W at the plan's ([\d.]+) W; TJ ([\d.]+) C at \+70 C air", "U18's heat")
+    fan["heat"] = tuple(f(m, i) for i in range(1, 7))
+    m = need(s18, r"U18's input ([\d.]+) A .*? with U12's 0\.8 A: ([\d.]+) A DECLARED on IF-AE-DOCK pin 1 \(was 1\.0 A; Layer 7's ([\d.]+) A at eta 0\.90\); at the plan's duty ([\d.]+) A", "the branch's declared current")
+    fan["decl"], fan["plan_a"] = f(m, 2), f(m, 4)
+    m = need(s18, r"against U42's least limit ([\d.]+) A: ([\d.]+) %, ([\d.]+) A in hand: NOT EXCEEDED, so R228 stays 11 kOhm", "U42's setting kept")
+    fan["u42"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(s18, r"the contact at ([\d.]+) % of 3\.5 A, ([\d.]+) K", "the contact at the declared current")
+    fan["contact"] = (f(m, 1), f(m, 2))
+    m = need(s18, r"the drop at the floor with 1\.3208 A: ([\d.]+) V, VSYS_E ([\d.]+) V; at U42's least limit ([\d.]+) V", "the drop at the floor")
+    fan["drop"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(s18, r"leaves ([\d.]+) W at the rail for the other fan's start, ([\d.]+) times its running power", "one fan's start")
+    fan["start"] = (f(m, 1), f(m, 2))
+    need(s18, r"the stagger stays: one fan at a time, each by a PWM-duty ramp into the fan's PWM input", "the stagger")
+    m = need(s18, r"J_FAN1 to J_FAN3's pin 1 is the slot rail \+5V_Sn at ([\d.]+) V", "board B's fan feed")
+    fan["b5v"] = f(m, 1)
+    fan["b_step"] = f(need(s18, r"a per-slot step-up from \+5V_Sn \(Layer 7's ([\d.]+) A each at full speed\)", "board B's step-up current"))
+    need(s18, r"a FINDING for board B's owner \(E11-40\)", "E11-40")
+    e40 = [x for x in F["e11_items"] if x[0] == "E11-40"]
+    if not e40 or e40[0][2].strip() != "Layer 8 board B generator owner":
+        refuse(3, "E11-40 for board B's owner")
+    for w in ("LTC3115EFE-1", "XAL6060-103ME"):
+        if w not in T["e11aux"]:
+            refuse(4, "the rewritten aux draft does not carry %s" % w)
+    if fan["decl"] >= fan["u42"][0] or fan["vout"][1] < fan["win"][0] or fan["vout"][2] > fan["win"][1]:
+        refuse(3, "L4-E11 18's rail or branch figures disagree with their own limits")
+    g["rail"] = fan
     need(T["cl_tiq"], r"\*\*Q-NXP-1 \(E11-30, BUK6Y10-30P\)\.\*\*", "Q-NXP-1")
     return g
 
@@ -3253,7 +3295,7 @@ def rows(F, D, A, E):
         "a": "VIN_RAW (board E)", "b": "VIN_RAW (board A, U2's input)",
         "v": "solar: the corrected knee (HIZ certain below %s V, a flat %s A from %s V to %s V, L4-E11 E11-09; L4-E5's drawn-line figures %s / %s / %s V) to the ceiling %s V; vehicle 9 to %s V at the plug (VIN_RAW %s V at %s A from 9.00 V); at most %s V (the selected OV maximum; %s V the basis); under (B1) the dock's pin 1 carries VBAT (VSYS) to board E's VSYS_E, %s to %s V, %s A declared on one 813 contact (L4-E11 15a, E11-34) | U2 VIN %s V absolute"
              % (fmt(F["knee_hiz"]), fmt(F["knee"][0]), fmt(F["knee"][1]), fmt(F["knee"][2]), fmt(F["hiz_below"]), fmt(F["hiz_out_above"]), fmt(F["pin_reg_from"]), fmt(F["trk_ceiling"][2]), fmt(D["vrev"]), fmt(F["e_svc"][0]), fmt(F["e_svc"][1]),
-                fmt(F["e_ov_off"][2]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["fx"]["vsys_rng"][0]), fmt(F["fx"]["vsys_rng"][1]), fmt(F["fx"]["aux_a"]), fmt(F["u2_vin_abs"])),
+                fmt(F["e_ov_off"][2]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["fx"]["vsys_rng"][0]), fmt(F["fx"]["vsys_rng"][1]), fmt(F["cp"]["rail"]["decl"]), fmt(F["u2_vin_abs"])),
         "i": "in service at most %s A from a 9.00 V plug (L4-E11 3e; %s A at VIN_RAW 9 V under L4-E5's line); at the window %s A from the tracker; the front end's fault current at most %s A (R11 8 mOhm, R12 12 mOhm; %s A at 7 mOhm) | declared %s A; four Mill-Max pins at %s A each"
              % (fmt(F["e_svc"][1]), fmt(F["h3"][9.0][1]), fmt(round(D["trk_i_settle"], 2)), fmt(round(D["vin_fault"], 3)), fmt(round(D["vin_fault_7"], 3)), fmt(F["vin_raw_a"]["typ"]), fmt(F["millmax_a"])),
         "loss": "the dock's contacts and 12 AWG wires (IF-AE-DOCK)", "therm": "about 6 K rise of the pins at 14.10 A (IF-AE-DOCK, INFERRED)",
@@ -3263,7 +3305,10 @@ def rows(F, D, A, E):
             Chk("the in-service maximum from a 9.00 V plug inside the declared VIN_RAW current", F["e_svc"][1], "<=", F["vin_raw_a"]["typ"], "A", "INFERRED", "L4-E11 3e"),
             Chk("the front end's fault current at the onset of its average limit inside the declared VIN_RAW current", D["vin_fault"], "<=", F["vin_raw_a"]["typ"], "A", "INFERRED", "l4e6 out 5 (R11 band, 20.887 V, 0.93, %s V)" % fmt(F["avg_from"])),
             Chk("one Mill-Max pin with one of four open at that fault current", D["vin_fault"] / 3.0, "<=", F["millmax_a"], "A", "INFERRED", "Mill-Max p.28 (the 0850 to 0853 sibling figure)"),
-            Chk("under (B1) the dock's pin 1, VBAT (VSYS) to board E's VSYS_E: its declared current on one 813 contact", F["fx"]["aux_a"], "<=", F["fx"]["c813"], "A", "INFERRED", "L4-E11 15a (E11-34, R-178)"),
+            Chk("under (B1) the dock's pin 1, VBAT (VSYS) to board E's VSYS_E: its declared current on one 813 contact (U12's 0.8 A and U18's %s A at the floor, both fans at full speed; L4-E11 18b)" % fmt(F["cp"]["rail"]["decl"] - 0.8),
+                F["cp"]["rail"]["decl"], "<=", F["fx"]["c813"], "A", "INFERRED", "L4-E11 18b (E11-34, R-178); 15a's 1.0 A withdrawn"),
+            Chk("the same declared current under U42's least limit, so R228 stays 11.0 kOhm (%s %% used, %s A in hand)" % (fmt(F["cp"]["rail"]["u42"][1]), fmt(F["cp"]["rail"]["u42"][2])),
+                F["cp"]["rail"]["decl"], "<=", F["cp"]["rail"]["u42"][0], "A", "INFERRED", "L4-E11 18b (E11-27, E11-34; R-181)"),
             Chk("under (B1) the ground return on seven 813 contacts with one open at the 32.1 A coincidence, per contact", F["fx"]["gnd7"][0], "<=", F["fx"]["c813"], "A", "INFERRED", "L4-E11 15a: %s C at the 51 C air on w3de's ASSUMPTIONS" % fmt(F["fx"]["gnd7"][2])),
             Chk("the clamp D2 at its rated pulse against U2's 60 V (no surge level is ruled, D-16; at the ruled discharge the bus's capacitance holds it to 0.11 V)", sm40["vc"], "<=", F["u2_vin_abs"], "V", "MAKER", "DECISION-31 A-N1, S-111: a recorded residual outside the requirements", scope="drawn"),
         ]})
@@ -3358,7 +3403,7 @@ def rows(F, D, A, E):
         "settled": "pwr_budget.out, load_trace.out, POWER-THERMAL, L4-E12 at a86be47b (accepted, check db41c95d)", "checks": [
             Chk("the profile's %s W with no document measured or bounded by a maker" % fmt(F["undoc_w"]), None, "<=", None, "a measurement", "ASSUMPTION", "load_trace.out; replay out 13"),
             Chk("E5's mixed inside air under the hold at M7's maker-stated line (%s W/K lid open with the fans) under the +%s C parts, a screen at the mixed air (their local air, the cooler's exhaust included, is the line: T-H2)" % (fmt(F["gc"]), fmt(F["parts_hot"])),
-                F["e5_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4c, 4d (MODELED): T-H1 at or over the line, the hold's reference within +-%s K, the fans' rating, the parts out of the exhaust; unresolved choice U-02" % "%s" % F["hold_ref"]),
+                F["e5_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4c, 4d (MODELED): T-H1 at or over the line, the hold's reference within +-%s K, the picked fans' draw at the duty the controls set (R-150; D-18 settled by Layer 7), the parts out of the exhaust; unresolved choice U-02" % "%s" % F["hold_ref"]),
             Chk("E3-O's mixed inside air with every radio on at that line under the +%s C parts (a screen)" % fmt(F["parts_hot"]), F["e3o_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4d (MODELED; E3-O alone needs %s W/K); unresolved choice U-02" % fmt(F["g_e3o"])),
             Chk("the required modes' governing local limits (L4-E12 12a, 12e): T-H1's points decide every class (i) and (ii) line; four lines lie over the modelled capacity, none shown impossible: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's operating row read to cover it unpowered a MISSING STORAGE QUALIFICATION; no DEMONSTRATED CONFLICT", None, "<=", None, "a thermal decision", "CONDITIONAL", "L4-E12 out 12a, 12e; unresolved choice U-02; OW-10 only on a demonstrated conflict"),
             Chk("the inside air at LO-01a's floor (%s W/K) with no hold, E5's +60 C dwell, under the +%s C parts" % (fmt(F["th1"]), fmt(F["parts_hot"])),
@@ -3589,7 +3634,7 @@ CHOICES = [
      "evidence": ("Sensirion's statement of the SGP41's short-term storage duration (its survival unpowered above the 54.0 C reading, a "
                   "screen; drafted); PDi's storage statement for the E2370KS0C1 (drafted, clarification/pervasive-displays-e2370ks0c1.txt), "
                   "which moves M6 and M7 to the +70 C class; D-18's picked fans: their power, operating range (REQ-043) and, under (B1), "
-                  "their supply to 17.375 V (R-142, R-150, E11-35)",
+                  "their feed the regulated 12.0 V rail U18 on board E (R-177; the picked Sanyo Denki 9WL0612P4H001, Layer 7's D-18; R-142, R-150, E11-35)",
                   "T-H1's points (12d; R-104, R-151; T-H1-PROCEDURE-DRAFT.md as revised), each at its mode's heat with the heaters set to it "
                   "less the fans' measured draw: M2 and M6 at 27.086 W lid open, M1 at 25.536 W lid open, M4 and M3 lid closed, M7 at "
                   "21.587 W, M5 at 43.413 W, M8 and M9 at 52.134 W, each read against its governing line as ruled and under C; then the "
@@ -3605,7 +3650,7 @@ CHOICES = [
                   "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only when a measurement "
                   "demonstrates the conflict"),
      "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
-                 "components for D-18's pick and the fans' rating (R-142, R-150, E11-35); Layer 7 mechanical for the combined route "
+                 "components for the fans' start and PWM level (R-142, R-150, E11-35; D-18 settled by Layer 7); Layer 7 mechanical for the combined route "
                  "(R-170 to R-172) and a closed-lid conduction path; the prototype bench for an e-paper storage soak; the makers "
                  "(Sensirion, PDi), through the owner",
      "fallback": "under a class (i) or (ii) line's point, the combined route inside the rulings (R-170 to R-172, passive: no power, no "
@@ -3677,8 +3722,8 @@ CHOICES = [
                    "VSYS_E at least 9.539 V at 1.0 A, the hard short's peak open (E11-38); the precharge at most 0.33616 A, "
                    "no charge under 5.7 V on SRN; 0.0934 W in the pair at PS-IDLE-SPEC (0.218 % of the pack's output); L2 at 14.55 A peak "
                    "against Isat 25.4 A; 98 of the 107 row blocks identical, so L4-E4 to L4-E8 carry over; still open: D2 against the "
-                   "2.054 V margin, D6, D8, D9, D10, the BQ25730's supply (LCSC stock 0), the fans' range, 17.375 V at the top and "
-                   "running at 9.539 V (E11-35), and "
+                   "2.054 V margin, D6, D8, D9, D10, the BQ25730's supply (LCSC stock 0), the mixer fans' start current and PWM level on "
+                   "U18's regulated 12.0 V rail (E11-35, NOT READ, Layer 7), and "
                    "REQ-015 at 9.00 V at the plug, a CONDITIONAL CANDIDATE (P1 at most 20.51 W, the shed warm-up 28.12 W carried with 0.98 "
                    "W in hand; the source's least 29.09 W at VBAT does not sustain the 42.8 W profile without the pack or shedding; at the "
                    "load's hi corner P1 (35.24 W) exceeds the source's least); on the board as drawn the BQ25731 leaves D1 and D3 "
@@ -3686,7 +3731,7 @@ CHOICES = [
      "evidence": ("TI's SLUSE65A (held) bounds the three modes; Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum) and Q-TI-17 (what TI's "
                   "5 nF bounds, E11-37) to TI, drafted in clarification/TI-QUESTIONS.md (Q-AOS-1 withdrawn); Nexperia's RDS(on) maximum at "
                   "-8.5 V and 150 C (E11-36), VF above 80 A and hot and ISM at a hot mounting base (E11-30); TI's TPS16630 sheet (held) "
-                  "bounds U42's limit; the BQ25730's supply from an authorised source (R-162); the fans' supply range (E11-35)",
+                  "bounds U42's limit; the BQ25730's supply from an authorised source (R-162); the fans' start and PWM level (E11-35)",
                   "the three modes, the held pack current, the start from cold and D2 on one BQ25730 build (E11-31, R-161), every step's "
                   "minimum over the converters' floor; Zself and Zmut at 244 us, 20 ms, 1 s, 60 s and steady on the built board by the "
                   "body diode's VSD (E11-29, R-159); a pulsed Kelvin RDS(on) at -8.5 V and 150 C on parts from the lot (E11-36, R-182); "
@@ -3826,14 +3871,15 @@ DEFECTS = [
                    "inhibited and a source present the battery FET is off (SLUSE65A p.38) and they still discharged the pack; with the pack "
                    "absent or isolated nothing fed them; the 502.3 ms start leaned on a 0.5 A input ceiling as a delivered current",
      "options": "SELECTED (L4-E11 15a): VSYS alone over the dock, J_DOCK pin 1 from GND to VBAT and board E's J_BLK pin 1 to VSYS_E, U12, C31, "
-                "the fans and D7, D8 on VSYS_E (1 A on one 813 contact, the ground return on seven, 79.3 C at the 51 C air with one open); "
+                "the fans and D7, D8 on VSYS_E (since L4-E11 18 the fans on U18's regulated 12.0 V rail from VSYS_E, D7 and D8 removed; the branch declared "
+                "1.3208 A on one 813 contact, 37.7 % of 3.5 A, 89.8 % of U42's least limit; the ground return on seven, 79.3 C at the 51 C air with one open); "
                 "a diode or ideal-diode OR with CELL_F not taken (it takes the pack whenever VSYS sits under it, which the +-2 % row allows); "
                 "the held pack's drains: 0.1408 mA is the quantified subset (the monitor and D3 at 25 C), hot clamp leakage and body-diode "
                 "current are not bounded by a printed figure, the bench acceptance at most 1 mA stands (L4-E11 16e); the start bounded to "
                 "VSYS_MIN or a latch within 3.062 s; since L4-F03 the dock's pin 1 is VSYS_DOCK behind the eFuse U42 (D-15)",
      "resolution": "R-177 (apply_gen_sch_e_aux.py, E11-33) and R-178 (apply_pcb_interfaces_dock.py, E11-34), not applied; the bench rows of "
-                   "E11-31 (R-161: the held pack current at most 1 mA, the start from cold); the fans' range, 17.375 V at the top and "
-                   "running at 9.539 V (R-179, E11-35)",
+                   "E11-31 (R-161: the held pack current at most 1 mA, the start from cold); the mixers on U18's regulated 12.0 V rail (R-177, "
+                   "E11-33; L4-E11 18), their start and PWM level (R-179, E11-35)",
      "rows": ["IF-06", "IF-09", "IF-11"]},
     {"id": "D-14", "title": "(B1)'s battery FET bounded at a drive and temperature corner the sheets do not print, and a fallback that lowered the 18 A for 60 s service (the review's B2)",
      "state": "ADDRESSED IN DRAFTS (L4-E11's fix rounds, drafted, not applied), CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (Ciss) OPEN",
@@ -3894,12 +3940,14 @@ DEFECTS = [
                 "most 566 A for at most 4.5 us (1.441 A2s, INFERRED: VSYS over RON's printed least and the path, no inductance credited; "
                 "the typical 45 A threshold and the 0.0091125 A2s built on it withdrawn), IN at most 41.1 V with U42 within 20 nH of C236 (a "
                 "layout requirement), OUT's negative spike clamped by D23; a start into a pre-existing short limited at the setting for at "
-                "most 1.5 s then off; repeated retry at a duty of at most 0.75; the fans' start at most 0.3356 A each together or 0.5713 A one "
-                "at a time (E11-39), VSYS_E at least 9.494 V; C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C-13-F added to the draft "
-                "(L4-E11 17a); VSYS_E at least 9.539 V at 1.0 A from the 9.688 V floor",
+                "most 1.5 s then off; repeated retry at a duty of at most 0.75; C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C-13-F added to "
+                "the draft (L4-E11 17a); since L4-E11 18 the mixers sit on U18's regulated 12.0 V rail and the branch is declared 1.3208 A (U12 "
+                "0.8 A and U18's 0.5208 A at the floor), 89.8 % of U42's least limit 1.4713 A with 0.1504 A in hand, so R228 stays 11.0 kOhm; "
+                "the drop at the floor 0.1795 V, VSYS_E 9.508 V; one fan's start has 1.21 W at the rail before U42 limits, the stagger kept "
+                "(E11-39); 17a's fan-start figures on VSYS_E (0.3356 and 0.5713 A, 9.494 V) are superseded",
      "resolution": "R-181 (apply_gen_sch_a_charger.py, with R-157; C238, C239, D23; U42 within 20 nH of C236), not applied; E11-38 (R-184: the "
-                   "whole fault envelope of L4-E11 17a, (a) to (f), with pass limits); E11-35 (R-179: the fans' range and their start under U42's "
-                   "least limit); E11-39 (R-188: the fans started one at a time with a PWM ramp)",
+                   "whole fault envelope of L4-E11 17a and 18, (a) to (f), with pass limits); E11-35 (R-179: the fans' start on U18's rail under U42's "
+                   "room); E11-39 (R-188: the fans started one at a time with a PWM-duty ramp)",
      "rows": ["IF-06", "IF-11"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
@@ -3953,7 +4001,7 @@ OWNER_ITEMS = [
                            "M7, M5, M8 and M9, the fans-off case and the transient point), the combined route's kit (R-170 to R-172) only if a "
                            "point reads under its line; "
                            "its purchase (a current-moulding Peli 1450 with the 1450PF frame, a 3 mm plate "
-                           "blank, the heaters, the fans as stand-ins until D-18, a second PicoLog TC-08) and who runs it; a chamber run at +60 C "
+                           "blank, the heaters, the picked fans (Layer 7's D-18, Sanyo Denki) or stand-ins at their draw, a second PicoLog TC-08) and who runs it; a chamber run at +60 C "
                            "only if wanted, at a laboratory, his spend; the procedure is drafted and the session cannot run it (R-104, R-151); "
                            "an action, not a question",
      "docs": [("th1proc", "T-H1's procedure, drafted")]},
@@ -4543,7 +4591,7 @@ SVG_NAME = "L4-POWER-DIAGRAM.svg"
 # The second external review (of the 22:30 checkpoint, 2 October 2026) separates the decisions this page states: "conditional candidate" and
 # "closure gate blocked" describe different decisions, and an unresolved material protection or feasibility condition is sufficient to keep a
 # release gate blocked; no mandatory-requirement contradiction is needed. Each decision below names what decides it.
-HANDOFF_OMITTED = ("L4-E11's fan-feed round (a regulated 12 V feed for board E's two mixer fans, U42's setting re-derived), its tip not yet taken here; the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
+HANDOFF_OMITTED = ("Layer 7's fan record (v2/docs/records/l7pwr at 2087060b), cited through L4-E11 and not in this base; the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
                    "data under v2/vendor/passives/held/, Saft's MP 176065 xtd sheet), fetched by each record's fetch script, never published; the "
                    "generators, netlists and configuration files of the repository that the drafts apply to; the findings ledger "
                    "(records/l4close/, the coordinator's file); no board of this set has a layout")
@@ -4625,7 +4673,7 @@ def cons_diagram(F, st):
         ("PA", 6, 600, "PA and HF rails", ["U13 %s V; key-down at most 60 s" % fmt(F["pa"]["volts"]), "U15 %s V to the QMX" % fmt(F["hf"]["volts"]),
                                            "outlets off while the PA keys"]),
         ("CTL_PANEL", 1, 690, "Panel controller C:U3 RP2040", ["the kit I2C: the charger,", "the expanders, the INA226s", "and the key-down rules"]),
-        ("CTL_SENS", 3, 690, "Sensor controller E:U10 RP2040", ["the gauge's SMBus, the mixer", "fans, VIN_MON; on VSYS_E (B1)"]),
+        ("CTL_SENS", 3, 690, "Sensor controller E:U10 RP2040", ["the gauge's SMBus, VIN_MON;", "on VSYS_E (B1); the mixers on", "U18's %s V rail (drafted)" % fmt(F["cp"]["rail"]["vout"][0])]),
         ("CTL_HW", 5, 690, "Hardware, no firmware", ["comparators, the gauge, the", "breaker, the knee, OUTLET_OK"]),
     ]
     E = [
@@ -4999,7 +5047,7 @@ def cons_heat_modes(F):
             cl.append(t)
         rem = md["remaining"].split("; the parts' local air in the built kit")[0]
         rows.append((k, md["what"], md["q"], "lid %s, %+.1f C" % (md["lid"], md["amb"]), ruled, cab, stated, "; ".join(cl),
-                     rem + "; the parts' local air (T-H2), the junctions (THM-001), the 33 lines an absolute rating alone clears, the fans' rating (D-18)"))
+                     rem + "; the parts' local air (T-H2), the junctions (THM-001), the 33 lines an absolute rating alone clears, the picked fans' draw at the duty the controls set (R-150; D-18 settled by Layer 7, their start current NOT READ)"))
     return rows
 
 
@@ -5262,11 +5310,12 @@ CHANGE_ORDER = [
     ("4e", "R-116", "board E, lcsc_fill.py", "with R-123", "no draft yet"),
     ("4e", "R-173", GE, "AFTER L4-E7's three drafts (R-19, R-20, R-21), L4-E9's hot swap (R-94) and L4-E11's entry draft (R-123): it uses their texts and the DGX19 land, and refuses a generator without them",
      G_L4E7 + " and its check 5 at 573fd5b8"),
-    ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12, C31 and the fans off CELL_F", G_L4E11),
+    ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12 and C31 off CELL_F; the aux draft rewritten by L4-E11 18: U18 LTC3115-1 and its TA04 network with L4 on +12V_FAN, four-wire fan headers, Q9 and Q10 as PWM drivers, D7 and D8 removed", G_L4E11 + " and its fan-feed round at af4672f4"),
     ("4f", "R-22", "board E, regenerated on the box", "after 4a to 4e", "the gates and the evidence re-taken"),
     ("B", "R-107", GB, "board B's round", "no draft yet"),
     ("B", "R-163", GB, "U-02's F3: board B's round", "no draft yet"),
     ("B", "R-166", GB, "U-02's +85 C connectors and HX magnetics, after R-165's picks", "no draft yet"),
+    ("B", "R-190", GB, "board B's round: the coolers' regulated 12.0 V feed (E11-40, Layer 7's F-L7-02), per slot from +5V_Sn or from board A over the bay harness", "no draft yet"),
     ("C", "R-145", GC, "board C's round", "no draft yet"),
     ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
     ("5", "R-26", "firmware", "with R-23", "firmware"),
@@ -5276,7 +5325,7 @@ CHANGE_ORDER = [
     ("5", "R-139", "firmware", "with R-138", "firmware"),
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
     ("5", "R-164", "firmware", "with R-163 (F3's switches)", "firmware"),
-    ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time with a PWM ramp, never while U12 starts (E11-39)", "firmware"),
+    ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time by a PWM-duty ramp into the fan's PWM input, never while U12 or U18 starts (E11-39)", "firmware"),
     ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
     ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
     ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
@@ -5519,7 +5568,8 @@ def cons_behaviour(F, D, st):
          "off at %.1f C on the TMP117, used at or under %.1f C; the lag assumed 61 s (R-139, restated)" % (F["sgp_off"], F["sgp_on"]), "L4-E12 6, 12a"),
         ("the pack heater", "the mat on U22/U33 at 12.0 V; UTC holds the charge FET until the block warms", "warm before charge below %s C at the cell; %s Wh to T1 from -20 C (the HL18650V class)" % (fmt(bh["heat_below"]), r5["warm"][0][3]),
          "FW-A13, L4-E10 14b"),
-        ("the fans", "two mixers on board E from the inside climate (under (B1) on VSYS_E, up to %s V: their maximum supply voltage owed, E11-35); each running slot's cooler; a stalled fan reported" % fmt(F["fx"]["vsys_rng"][1]), "the hold's 2 fans %.3f W; a stall reported within %s s; with the fans stopped E5's air %s to %s C" % (cb["fans_e5"], fmt(bh["fan_rep"]), r5["stop"][0], r5["stop"][1]),
+        ("the fans", "two mixers (Sanyo Denki %s, Layer 7's D-18) on board E from the inside climate, on U18's regulated %s V rail from VSYS_E (%s to %s V inside their %s to %s V; a fan fault drives U18 to its limit and VSYS_E falls only to U18's %s V disable: a rail hiccup, not a controller reset; L4-E11 18, drafted), their start current and PWM level NOT READ (E11-35); each running slot's cooler (board B's feed at %s V a finding, E11-40); a stalled fan reported"
+         % (F["cp"]["rail"]["mixer"], fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["vout"][1]), fmt(F["cp"]["rail"]["vout"][2]), fmt(F["cp"]["rail"]["win"][0]), fmt(F["cp"]["rail"]["win"][1]), fmt(F["cp"]["rail"]["run"][1]), fmt(F["cp"]["rail"]["b5v"])), "the hold's 2 fans %.3f W; a stall reported within %s s; with the fans stopped E5's air %s to %s C" % (cb["fans_e5"], fmt(bh["fan_rep"]), r5["stop"][0], r5["stop"][1]),
          "FW-E07, V-E07, L4-E12 8b"),
         ("the PA's key-down", "the K rules and OUTLET_OK", "at most %s s a key-down, %s s apart; gates at +%s C cells, +%s C air, +%s C flange" % tuple(fmt(x) for x in bh["key"]), "FW-A05, D-11 (PROVISIONAL)"),
     ]
@@ -5647,14 +5697,22 @@ def cons_th1(F):
          % (fmt(fx["trans"][0]), int(fx["trans"][1]), fmt(fx["trans"][2])), "the time to C1 and the air after it",
          "the battery-only run's shed point on the bench (the empty case's thermal mass under the kit's: the conservative side); then the built kit's run (Layer 9)", "L4-E12 12c"),
         ("open after the points", "none on this bench", "none",
-         "the four lines over the modelled capacity: M3 and M4 a modelled shortfall (the SGP41's local air at its port, a closed-lid path), M6 and M7 a missing storage qualification (PDi's statement or a storage soak); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the fans' rating (D-18), full sun (D-02e)", "L4-E12 12a, 12e"),
+         "the four lines over the modelled capacity: M3 and M4 a modelled shortfall (the SGP41's local air at its port, a closed-lid path), M6 and M7 a missing storage qualification (PDi's statement or a storage soak); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the picked fans' draw at the duty the controls set (R-150; D-18 settled by Layer 7), full sun (D-02e)", "L4-E12 12a, 12e"),
     ]
     note = ("**T-H1 at Layer 9 (the bench, R-104): the points of L4-E12 12d, one per mode's heat and lid state** (the fix round; "
             "the order K1, K5, K10, K6, K7 and K8 of section 11 superseded). Each point runs at its mode's heat with the heaters set to it "
             "less the fans' measured draw (P = the heaters + the fans), and its reading is judged against the mode's governing line as "
             "ruled and under CFL-002's C (2c). It is a dummy-load, mixed-air measurement: it establishes the conductance between the mixed "
             "air and the ambient for its own configuration and closes no mode's function. Lid-closed and fans-off states have their own "
-            "points. Authorising the bench is the owner's (OW-8); accepting a result goes through the coordinator's check.")
+            "points. Authorising the bench is the owner's (OW-8); accepting a result goes through the coordinator's check. **The fans in these "
+            "points** are the model's representative rows at the duty the controls set (%s W at the heat stage, %s W at the profile; pwr_budget "
+            "tier R, L4-E12 R-150); Layer 7's picks (Sanyo Denki %s and %s, five at %s A and 12 V) draw %s W at full speed plus %s W of "
+            "conversion in U18 at an assumed 0.85 (%s W at the plan's %s W), so a point run at full speed carries up to %s W more than the lines "
+            "assume; R-150 replaces the representative rows with the picked fans' figures at the duty the controls set, and board B's coolers "
+            "have no 12 V feed yet (E11-40, R-190)."
+            % (fmt(H["M2"][2]), fmt(H["M5"][2]), F["cp"]["rail"]["mixer"], F["cp"]["rail"]["cooler"], fmt(F["cp"]["rail"]["i"]), fmt(F["cp"]["rail"]["heat"][1]),
+               fmt(F["cp"]["rail"]["heat"][0]), fmt(F["cp"]["rail"]["heat"][3]), fmt(F["cp"]["rail"]["heat"][4]),
+               fmt(round(F["cp"]["rail"]["heat"][1] + F["cp"]["rail"]["heat"][0] - H["M2"][2], 3))))
     return rows, note
 
 
@@ -5732,8 +5790,8 @@ def cons_exit(F):
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
          "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until a measured local temperature demonstrates a conflict (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
-         "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the fans' range to %s V and running at %s V (E11-35); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
-         % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(fx["vsys_rng"][1]), fmt(F["f02"]["vsyse"]))),
+         "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U18's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
+         % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
          "apply R-157 with R-181, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), Zself and Zmut at the five widths on the built board (R-159), Nexperia's maximum or a Kelvin reading at -8.5 V and 150 C (R-182), TI's answer or the bench's BATDRV behaviour with the pair (R-183), VF and ISM hot or a pulse test (R-160), the branch's limit and shorts (R-184); Q-TI-15 to Q-TI-17 sent (OW-7; Q-AOS-1 withdrawn)",
          "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm every protection event from the held 20 A at TJ 150 C or under for (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
          % (b1["vsys_min"], b1["inhib"][0], b1["inhib"][1], fmt(fx["pw"][2]), fmt(fx["pw"][1]), fmt(fx["pw"][0]), fmt(fx["pw"][3]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1]),
@@ -6051,7 +6109,7 @@ def cons_exit_defects(F):
         ("D-13", "(B1)'s draft left board E's auxiliary domain on the pack's side of the battery FET (the review's B1)",
          "ADDRESSED IN DRAFTS: board E on VSYS_E over the dock's pin 1 (L4-E11 15a; R-177, R-178), not applied; the held pack's drains: %s; the start bounded to VSYS_MIN or a latch within %s s"
          % (held_txt(F), fmt(fx["latch_s"])),
-         "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the fans' range to %s V and running at %s V (R-179)" % (fmt(F["f02"]["held"][1]), fmt(fx["vsys_rng"][1]), fmt(F["f02"]["vsyse"])),
+         "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the mixers' start on U18's %s V rail (R-179; VSYS_E %s to %s V no longer reaches them)" % (fmt(F["f02"]["held"][1]), fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["drop"][2]), fmt(fx["vsys_rng"][1])),
          "nothing of the topology: a feed inside (B1)"),
         ("D-14", "(B1)'s battery FET bounded at an unprinted corner and a fallback lowering 18 A for 60 s (the review's B2)",
          "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, every protection event from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C, the docking pulse whole in one FET at TJ %s C"
@@ -6197,6 +6255,22 @@ def cons_review_lines(F):
     p("     SELECTED (D2): %d parts, %d pulses each at %s A and %s us, the mounting base %s C, Q-NXP-1 asked in parallel (R-160). CP03: the charger draft no longer"
       % (cp["pulse"][4], cp["pulse"][3], fmt(cp["pulse"][0]), fmt(cp["pulse"][1]), fmt(cp["pulse"][2])))
     p("     writes the withdrawn claims (tested). 17d's specimens enter the qualification route (section 27) as written")
+    fan = cp["rail"]
+    p("26f THE FANS' FEED AFTER LAYER 7'S D-18 (L4-E11's section 18 at af4672f4; Layer 7's %s at %s, cited, not in this base): the mixers %s and the"
+      % (fan["l7"], fan["l7c"], fan["mixer"]))
+    p("     coolers %s, 12 V, %s to %s V printed, %s A each, IP68, -20 to +70 C; 15a's fans directly on VSYS_E withdrawn; the mixers' regulated %s V rail on board E,"
+      % (fan["cooler"], fmt(fan["win"][0]), fmt(fan["win"][1]), fmt(fan["i"]), fmt(fan["vout"][0])))
+    p("     U18 LTC3115EFE-1 as ADI's TA04 with L4 XAL6060-103ME (input 2.7 to 40 V over VSYS_E's %s to %s V; output %s to %s V), RUN enabled at %s V and disabled at"
+      % (fmt(fan["drop"][2]), fmt(fx["vsys_rng"][1]), fmt(fan["vout"][1]), fmt(fan["vout"][2]), fmt(fan["run"][0])))
+    p("     %s V so a fan fault ends as a rail hiccup and not a U12 reset; %s W into the case at full speed (%s W of fans), %s W at the plan's %s W; TJ %s C at +70 C"
+      % (fmt(fan["run"][1]), fmt(fan["heat"][0]), fmt(fan["heat"][1]), fmt(fan["heat"][3]), fmt(fan["heat"][4]), fmt(fan["heat"][5])))
+    p("     (prices of U18 and L4 NOT READ); the branch declared %s A on IF-AE-DOCK pin 1 (%s %% of U42's least limit %s A, %s A in hand: R228 stays 11.0 kOhm;"
+      % (fmt(fan["decl"]), fmt(fan["u42"][1]), fmt(fan["u42"][0]), fmt(fan["u42"][2])))
+    p("     the contact %s %% of 3.5 A; the drop %s V, VSYS_E %s V at the floor); E11-39 kept as a PWM-duty ramp, never while U12 or U18 starts; E11-40 a FINDING"
+      % (fmt(fan["contact"][0]), fmt(fan["drop"][0]), fmt(fan["drop"][1])))
+    p("     for board B's owner (J_FAN1 to J_FAN3 on +5V_Sn at %s V, no +12V net: the coolers' window not met; a per-slot step-up at %s A each or a 12 V feed from"
+      % (fmt(fan["b5v"]), fmt(fan["b_step"])))
+    p("     board A; R-190). The thermal lines' fan duty: the model's representative rows (R-150) against %s W at full speed plus %s W of conversion" % (fmt(fan["heat"][1]), fmt(fan["heat"][0])))
     p("   status: %s" % STATUS)
     return L
 
@@ -6218,13 +6292,19 @@ PRICES = {
     "saft": {"what": "MP 176065 xtd, one cell for the limited sample qualification (three if the owner prefers a spread)", "maker": "Saft", "qty": 1,
              "cur": "NZD", "unit": 238.72, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-02.json", "key": ("verbatim", "$ 238.72"),
              "note": "SIMPOWER's listing archived 16 January 2025, a price indicator and not a quote"},
+    "fan60": {"what": "the mixers 9WL0612P4H001 (board E's J_FAN1 and J_FAN2; D-18 settled by Layer 7)", "maker": "Sanyo Denki", "qty": 2, "cur": "USD", "unit": 73.69,
+              "src": "v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json", "commit": "2087060b", "key": ("findchips", ("9WL0612P4H001", "Sager", 1)),
+              "note": "Sager at 1, stock 0, FindChips 3 October 2026 00:27 UTC, no EU row; Layer 7's reading, cited at its commit"},
+    "fan40": {"what": "the coolers 9WPA0412P6G001 (board B's J_FAN1 to J_FAN3; their 12 V feed is E11-40's finding)", "maker": "Sanyo Denki", "qty": 3, "cur": "EUR", "unit": 58.83,
+              "src": "v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json", "commit": "2087060b", "key": ("findchips", ("9WPA0412P6G001", "RS", 1)),
+              "note": "RS 101593 at 1, stock 51 (Farnell 4218284 EUR 76.83, stock 0), FindChips 3 October 2026 00:27 UTC; Layer 7's reading, cited at its commit"},
     "hl": {"what": "HL18650V, a lot soak of ten (route (II) only)", "maker": "Yichun Topwell Power (the listing is a marketplace seller's, not Topwell's)",
            "qty": 10, "cur": "USD", "unit": 3.50, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-01.json", "key": ("verbatim", "US$3.50"),
            "note": "the 10 to 4,999 pieces tier"},
 }
 UNPRICED = [
     ("T-H1", "a current-moulding Peli 1450, the 1450PF frame, a 3 mm aluminium plate blank, resistive heaters to 52.134 W, sixteen thermocouple channels and a logger"),
-    ("T-H1, E11-35", "the fans: nothing to buy until D-18 names them"),
+    ("T-H1, E11-35", "U18 LTC3115EFE-1 (Analog Devices): price NOT READ (LCSC's search refused L4-E11's host); L4 XAL6060-103ME (Coilcraft): no price read; the mixers' EU price not read"),
     ("E11-38", "TPS16630PWPR (U42); one Preci-Dip 813 contact and 24 AWG; the coupon's fabrication"),
     ("E11-29, E11-36", "the power-stage and Kelvin coupons' fabrication; an oven to 150 C"),
     ("E11-30", "a capacitor-discharge rig and a heated mounting base"),
@@ -6252,12 +6332,24 @@ QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the 
 def _price_check():
     import json
     for k, pr in PRICES.items():
-        path = os.path.join(TOP, pr["src"])
-        if not os.path.exists(path):
-            refuse(3, "the price source %s is missing" % pr["src"])
-        d = json.load(open(path, encoding="utf-8"))
+        if pr.get("commit"):
+            r = subprocess.run(["git", "show", "%s:%s" % (pr["commit"], pr["src"])], cwd=TOP, capture_output=True)
+            if r.returncode != 0:
+                refuse(3, "the price source %s is not at %s" % (pr["src"], pr["commit"]))
+            d = json.loads(r.stdout.decode("utf-8"))
+        else:
+            path = os.path.join(TOP, pr["src"])
+            if not os.path.exists(path):
+                refuse(3, "the price source %s is missing" % pr["src"])
+            d = json.load(open(path, encoding="utf-8"))
         kind, key = pr["key"]
-        if kind == "price_usd":
+        if kind == "findchips":
+            mpn, dist, qty = key
+            rows = [r for r in d.get("parts", {}).get(mpn, []) if r.get("distributor") == dist]
+            br = [b for r in rows for b in r.get("price_breaks", []) if b[0] == qty]
+            if len(br) != 1 or br[0][1] != pr["cur"] or abs(float(br[0][2]) - pr["unit"]) > 1e-9:
+                refuse(3, "%s at %s does not carry %s at %s, %d: %s %s" % (pr["src"], pr["commit"], mpn, dist, qty, pr["cur"], pr["unit"]))
+        elif kind == "price_usd":
             if abs(float(d["price_usd"][key]) - pr["unit"]) > 1e-9:
                 refuse(3, "%s: the filed price at the %s tier is not %s" % (pr["src"], key, pr["unit"]))
         else:
@@ -6291,7 +6383,7 @@ def cons_qual(F):
          "U-02: each class (i) and (ii) line per mode (as ruled and under CFL-002's C); the four lines over the modelled capacity read, not expected to pass; the combined route R-170 to R-172 at the same point where a line reads short",
          "U-02's closure (criteria 1 and 5) and the combined route's rows; no board draft is blocked",
          "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
-         un("T-H1") + "; " + un("T-H1, E11-35"), sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
+         un("T-H1") + "; " + pr("fan60") + "; " + pr("fan40") + " (the T-H1 mock-up's own bill is Layer 7's T-H1-MOCKUP-SPEC.md at 2087060b, cited, not copied)", sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
         ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"],
          "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
          sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
@@ -6321,8 +6413,9 @@ def cons_qual(F):
          sp["E11-38"]["blocks"], "an engineer, on a bench", OWN + "the parts and the coupon; Q-TI-18 to TI",
          un("E11-38") + "; " + pr("d23") + "; " + pr("c236"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-18"),
         ("E11-35 (R-179)", sp["E11-35"]["specimen"], sp["E11-35"]["represents"], sp["E11-35"]["transfers"],
-         "the fans' selection (D-18) against VSYS_E's %s V floor and U42's %s A least limit; the staggered start (E11-39, R-188)" % (fmt(F["cp"]["fan"][2]), fmt(F["f02"]["ef"][1])),
-         sp["E11-35"]["blocks"], "an engineer, on a bench", OWN + "the fans, once named", un("T-H1, E11-35"), "none"),
+         "the mixers' start current and PWM level on U18's %s V rail against U42's room (%s A at the floor, %s W at the rail for one fan's start; E11-35, E11-38 f); D-18 settled by Layer 7 (Sanyo Denki %s, %s at %s), the stagger kept (E11-39, R-188)"
+         % (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["u42"][2]), fmt(F["cp"]["rail"]["start"][0]), F["cp"]["rail"]["mixer"], F["cp"]["rail"]["l7"], F["cp"]["rail"]["l7c"]),
+         sp["E11-35"]["blocks"], "an engineer, on a bench", OWN + "the fans (Layer 7's prices read) and the rail's parts", pr("fan60") + "; " + un("T-H1, E11-35"), "none drafted; the maker's manual M0011876C is behind a form (Layer 7's F-L7-11)"),
         ("The solar guard's bench (R-176 rows 1 to 6; R-174 at layer 8)",
          "the controlled first prototype of board E with the drafted guard applied (U21, Q12, Q13, D11, the port bank, C133, C134, C71 to C74, D4, the bulk, the sense bank and U5's input), or a coupon of that solar entry on the intended stack-up; a stiff 36 V supply stepped on through a loop measured first, and a ramped supply",
          "the cut-off's thresholds, the cold connection, the reversed panel's leakage, and the guard-on case through the measured loop",
@@ -6379,11 +6472,12 @@ def cons_qual_lists(F):
     """The owner's two lists: the purchases with their total of the prices read (and the items with no price read), and the drafts to send."""
     tot = {}
     buy = []
-    for k in ("buk", "d23", "c236", "hl", "saft"):
+    for k in ("buk", "d23", "c236", "fan60", "fan40", "hl", "saft"):
         pr = PRICES[k]
         line = pr["qty"] * pr["unit"]
         tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + line
-        buy.append("%s, %s: %d at %s %s (%s) = %s %s; %s" % (pr["what"], pr["maker"], pr["qty"], fmt(pr["unit"]), pr["cur"], pr["note"], "%.2f" % line, pr["cur"], pr["src"]))
+        buy.append("%s, %s: %d at %s %s (%s) = %s %s; %s%s" % (pr["what"], pr["maker"], pr["qty"], fmt(pr["unit"]), pr["cur"], pr["note"], "%.2f" % line, pr["cur"], pr["src"],
+                                                            " at %s" % pr["commit"] if pr.get("commit") else ""))
     total = "; ".join("%s %.2f" % (c, tot[c]) for c in sorted(tot))
     return buy, total, [("%s: %s" % x) for x in UNPRICED], ["%s: %s (%s; for %s)" % (rel, what, ow, rows) for rel, what, ow, rows in SENDS]
 
@@ -6649,7 +6743,9 @@ def cons_in_short(F, D, st, reg):
         "from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s kept, D-14 "
         "CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
         "E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
-        "bounded to VSYS_MIN or a latch within %s s). IF-01 carries the "
+        "bounded to VSYS_MIN or a latch within %s s; since L4-E11's fan-feed round the mixers sit on U18's regulated 12.0 V rail from VSYS_E "
+        "and the branch is declared %s A, %s %% of U42's least limit, R228 kept; board B's coolers on a 5.1 V feed are a finding for its owner, "
+        "E11-40, R-190). IF-01 carries the "
         "KNOWN DEFECTS at the solar entry, single faults from L4-E7's panel-lead derivation: D-10, a stiff %s V source on the port, and "
         "D-11, a reversed panel, ADDRESSED IN DRAFTS by L4-E7's selected remedies (the over-voltage cut-off U21 with Q12, the return "
         "switch Q13, and for the guard already on the port bank C131, C132, C135 and C136, C133 and C134, C71 to C74, C126 and R97 28.0k; "
@@ -6660,6 +6756,7 @@ def cons_in_short(F, D, st, reg):
         "D-07 and D-09 superseded (8a); every resolution is a DRAFT or a register row, none applied."
         % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
            fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
+           fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][1]),
            fmt(F["sv"]["src"][1]), RESERVE_NOTE, F["sv"]["rm"]["b6"]["l_uh"], F["sv"]["rm"]["b6"]["d12"]),
         "**Endurance** (apart from feasibility; the approved profile %s W kept): battery-only %s h ENERGY ONLY (%.3f h with (B1)'s pair; "
         "%s with the tablet's window at the start) at room temperature and %s h with the cells at -10 C (energy only); ENERGY AND "
