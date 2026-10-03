@@ -1,0 +1,167 @@
+l8gnd_drafts: the Layer 8 record l8gnd's drafts proved on scratch copies (MESHSAT-1357)
+prototype design; nothing built, powered or measured; nothing applied to the tree
+
+1. INPUTS, pinned by sha256
+6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
+14ea032a7fdd86ac v2/ecad/tools/pcb_rules.yaml
+9ec50ccfae3b70a0 v2/ecad/tools/pcb_interfaces.yaml
+119ca354c7ff83bc v2/docs/GROUNDING-AND-SHIELDS.md
+1c211e467d81b8b7 v2/docs/HW-FW-CONTRACT.md
+c883f948f3221e74 v2/docs/ARCHITECTURE.md
+6cb7b241cb84d729 v2/docs/CONOPS.md
+d84e1e9c22d5bed7 v2/docs/handover/LAYER-STATUS.md
+ac54ae6acd3c5eb1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+2a9d80931a0bed4b v2/vendor/cluster/ksz989x-hw-design-checklist.pdf
+d6d6b918dec76c7b v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf
+76b85b47d0bd9f46 v2/vendor/pulse/pulse-h5007nl.pdf
+be56fbb75ba0ae9e v2/vendor/rp2040/rpi-rp2040-datasheet.pdf
+9cefbf42c72e4aff v2/vendor/ti/ti-sn74lvc08a-quad-and.pdf
+d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
+98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
+352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
+74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
+cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
+fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
+2f5e65f850ae66fb v2/docs/records/l8gnd/footprints/ChassisLug_M4_CHASSIS.kicad_mod
+b7e33d0bbed808a6 v2/docs/records/l8gnd/inputs/l5pwr-power_line_states-slot_en-hot_r1-1e18a1ca.txt
+c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
+28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
+2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
+ef2e4637284a4cbb v2/docs/records/s117/apply_gen_sch_a_s117.py
+6ca62ed2b400a68a v2/docs/records/s117/apply_gen_sch_a_fets_s117.py
+6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
+af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
+ec651fa980401b44 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
+0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
+347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
+88908ca2202b33ad v2/docs/records/l4e9/apply_gen_sch_a_u17.py
+
+2. WHAT EACH DRAFT ADDS (part calls read from the text each draft writes, comments stripped)
+  apply_gen_sch_a_gnd002 on board A: 3 edit(s), adds H1, R229, nets CHASSIS
+    part(H1): LUGM4 | CHASSIS
+    r(R229): CHASSIS | GND | RS2512
+  apply_gen_sch_a_hotr1 on board A: 2 edit(s), adds U43, R230, R231, R232, C240, nets SLOT_EN1_K, SLOT_EN2_K, SLOT_EN3_K
+    c(C240): +3V3 | GND | C14663
+    r(R230): SLOT_EN1_K | SLOT_EN1
+    r(R231): SLOT_EN2_K | SLOT_EN2
+    r(R232): SLOT_EN3_K | SLOT_EN3
+    ic(U43) pins on: +3V3, GND, SLOT_EN1, SLOT_EN1_K, SLOT_EN2, SLOT_EN2_K, SLOT_EN3, SLOT_EN3_K
+  apply_gen_sch_b_gnd002 on board B: 3 edit(s), adds no part, nets CHASSIS
+    C33: BOB | GND | C1812 -> BOB | CHASSIS | C1812
+    J_ETH SH pin: GND -> CHASSIS
+
+3. THE KEEPER'S ARITHMETIC (apply_gen_sch_a_hotr1.py)
+  v33_min          3.2        BOUND    board A's +3V3 at its low end (TPS62933, 3.3 V from 31.6k/10k); the keeper is judged at 3.2 V
+  voh_drop         0.2        MAKER    SN74LVC08A VOH at least VCC - 0.2 V at IOH -100 uA, 2.7 to 3.6 V (TI SCAS283W)
+  vol              0.2        MAKER    SN74LVC08A VOL at most 0.2 V at IOL 100 uA (TI SCAS283W)
+  rk               4700       BOUND    the keeper's feedback resistor R230 to R232, 4.7 k
+  rpd_min          50000      MAKER    RP2040 pad pull-down RPD 50 to 80 kOhm (RP2040 datasheet Table 625); the reset state of every pad, PDE 0x1 (2.19.6.3)
+  rpd_max          80000      MAKER    the same row's maximum
+  rpull            100000     MAKER    R30, R34, R38, 100 k to GND (gen_sch_a.py)
+  ien_bound        2e-05      INFERRED the enable pins' current, SOURCED by both parts (AP64500: an internal 1.5 uA pull-up source, IEN 1 to 2 uA at 1 V and 5.5 uA typical at 1.5 V, Diodes DS41979 Rev 5-2; LM5176: IEN(STBY) 1 to 3 uA at 1.1 V, the hysteresis current 2.15 to 4.25 uA at 1.5 V, TI SNVSAI1D); no figure at the held levels; bounded at 20 uA and taken in the direction that is worse for each level
+  vih              2          MAKER    VIH 2.0 V: SN74LVC08A at 2.7 to 3.6 V (SCAS283W) and the RP2040 at IOVDD 3.3 V (Table 625)
+  vil              0.8        MAKER    VIL 0.8 V: the same two rows
+  ap_ven_h_max     1.25       MAKER    AP64500 VEN_H at most 1.25 V (DS41979)
+  ap_ven_l_min     1.03       MAKER    AP64500 VEN_L at least 1.03 V (DS41979)
+  lm_ven_op_max    1.29       MAKER    LM5176 VEN(OP) rising at most 1.29 V (TI SNVSAI1D)
+  lm_ven_stby_min  0.55       MAKER    LM5176 VEN(STBY) at least 0.55 V (TI SNVSAI1D)
+  rp_voh_min       2.62       MAKER    RP2040 VOH at least 2.62 V at IOVDD 3.3 V, IOH 2, 4, 8 or 12 mA (Table 625)
+  rp_vol_max       0.5        MAKER    RP2040 VOL at most 0.5 V at IOVDD 3.3 V, IOL 2, 4, 8 or 12 mA (Table 625)
+  rp_drive_ma      4          MAKER    the pad's default drive, DRIVE reset 0x1 = 4 mA (RP2040 datasheet 2.19.6.3)
+  v33_nom          3.3        MAKER    the panel's IOVDD and board A's +3V3 nominal
+  with rpd_min: pad pull-down in parallel with the 100 k = 33.33 k, the line's resistance 4.12 k; held HIGH 2.547 V (divider 2.629 V less 20 uA's drop); held LOW 0.258 V (divider 0.175 V plus 20 uA's rise)
+  with rpd_max: pad pull-down in parallel with the 100 k = 44.44 k, the line's resistance 4.25 k; held HIGH 2.628 V (divider 2.713 V less 20 uA's drop); held LOW 0.266 V (divider 0.181 V plus 20 uA's rise)
+  worst held HIGH 2.547 V: margin over VIH 2.0 V 0.547 V; over the enables' highest ON threshold (1.29 V) 1.257 V
+  worst held LOW 0.266 V: margin under VIL 0.8 V 0.534 V; under the enables' lowest OFF threshold (0.55 V) 0.284 V
+  the panel overriding the keeper: 0.70 mA to drive against a held output, 0.66 mA to sink a held high, both under the pad's 4 mA default drive: OK
+  the panel's drive seen by the gate and the enables: high at least 2.62 V (margin 0.62 V over VIH), low at most 0.5 V (margin 0.30 V under VIL)
+
+4. COMPOSITION ON BOARD A (scratch copies of gen_sch_a.py; OK = the draft applied and the result parses)
+  L4-E9's order then this record's two:
+    l4e6/apply_gen_sch_a_r12.py              OK
+    l4e11/apply_gen_sch_a_guard.py           OK
+    l4e11/apply_gen_sch_a_charger.py         OK
+    l4e4/apply_gen_sch_a_r11.py              OK
+    l4e8/apply_gen_sch_a_bank.py             OK
+    l4e4/apply_gen_sch_a_r138.py             OK
+    l4e9/apply_gen_sch_a_u17.py              OK
+    l8gnd/apply_gen_sch_a_gnd002.py          OK
+    l8gnd/apply_gen_sch_a_hotr1.py           OK
+  this record's two first, then L4-E9's order (every anchor of theirs still applies after this record's edits):
+    l8gnd/apply_gen_sch_a_gnd002.py          OK
+    l8gnd/apply_gen_sch_a_hotr1.py           OK
+    l4e6/apply_gen_sch_a_r12.py              OK
+    l4e11/apply_gen_sch_a_guard.py           OK
+    l4e11/apply_gen_sch_a_charger.py         OK
+    l4e4/apply_gen_sch_a_r11.py              OK
+    l4e8/apply_gen_sch_a_bank.py             OK
+    l4e4/apply_gen_sch_a_r138.py             OK
+    l4e9/apply_gen_sch_a_u17.py              OK
+  the two results carry the same part calls: YES
+  each power draft alone after this record's two:
+    l4e6/apply_gen_sch_a_r12.py              OK
+    l4e11/apply_gen_sch_a_guard.py           OK
+    l4e11/apply_gen_sch_a_charger.py         OK
+    l4e4/apply_gen_sch_a_r11.py              OK
+    l4e8/apply_gen_sch_a_bank.py             OK
+    l4e4/apply_gen_sch_a_r138.py             OK
+    l4e9/apply_gen_sch_a_u17.py              OK
+  this record's two in either order:
+    _a_gnd002 then _a_hotr1                  OK
+    _a_hotr1 then _a_gnd002                  OK
+  the tree's other board A drafts:
+    s117/apply_gen_sch_a_s117.py and _fets_s117.py: already in the generator (it names R219, R220, C233, C234, C235 and the CSD17577Q5A); they edit the tree's
+      own file only and are part of this record's base
+    L4-E9's order, this record's two, then d8dec31/apply_gen_sch_a_mainpb.py: OK (apply_gen_sch_a_mainpb (R233, C241): mainpb_last.py, 10 line(s) added)
+    L4-E9's order, mainpb, then this record's two: mainpb OK (apply_gen_sch_a_mainpb (R229, C240): mainpb_before_mine.py, 10 line(s) added); apply_gen_sch_a_gnd002.py REFUSED (apply_gen_sch_a_gnd002: designator R229 is already in use in the target; refusing); apply_gen_sch_a_hotr1.py REFUSED (apply_gen_sch_a_hotr1: designator C240 is already in use in the target; refusing)
+    so mainpb, whose references are the next free ones at apply time, composes LAST (finding L8G-F12)
+
+5. DESIGNATORS ADDED PER BOARD A DRAFT (part-call position and tokens outside comments; H pads included)
+  l4e6/apply_gen_sch_a_r12.py              none
+  l4e11/apply_gen_sch_a_guard.py           none
+  l4e11/apply_gen_sch_a_charger.py         C236, C237, C238, C239, D23, Q39, Q40, R228, U42
+  l4e4/apply_gen_sch_a_r11.py              none
+  l4e8/apply_gen_sch_a_bank.py             R221, R222, R223, R224, R225, R226
+  l4e4/apply_gen_sch_a_r138.py             none
+  l4e9/apply_gen_sch_a_u17.py              R227
+  l8gnd/apply_gen_sch_a_gnd002.py          H1, R229
+  l8gnd/apply_gen_sch_a_hotr1.py           C240, R230, R231, R232, U43
+  d8dec31/apply_gen_sch_a_mainpb.py        C241, R233
+  pairwise intersections: none (DISJOINT)
+
+6. BOARD B (a scratch copy of gen_sch_b.py)
+  apply_gen_sch_b_gnd002.py: OK; no other record drafts board B, so there is no order to keep
+  C33 after: BOB | CHASSIS | C1812; J_ETH SH after: CHASSIS; part calls added: none
+
+7. THE NETLIST CHECK (check_gnd002_netlist.py)
+  on the committed netlists:
+    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
+      A: no net CHASSIS: the plate's strap has nowhere to land and the one bond is not drawn (changes 1 and 4)
+      board A: NOT DRAWN
+    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256 3ef9b8c49a01b728
+      B: no net CHASSIS: C33 returns to GND and J_ETH SH sits on GND (changes 2 and 3 not drawn)
+      board B: NOT DRAWN
+    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256 c9f7394594201045
+      C: H1 to H8 on GND (the face-plate bond as built, point 2); no chassis net
+      board C: HOLDS
+    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256 a2d48972d171aad1
+      D: no chassis, shield or earth net (none expected)
+      board D: HOLDS
+    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256 2ed95a0e8069ebf8
+      E: no chassis, shield or earth net (point 6, the pack's return enters only on the dock block's return pins)
+      board E: HOLDS
+    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256 20c7b0795593d761
+      P: no chassis, shield or earth net (none expected)
+      board P: HOLDS
+    GND-002 on the kit: NOT DRAWN (A NOT DRAWN, B NOT DRAWN, C HOLDS, E HOLDS)
+  on fixture netlists that carry the drafted changes (built inside this script, not files of the tree):
+    A: CHASSIS on H1.1 (meshsat:ChassisLug_M4_CHASSIS) and R229.1; R229 0R 2512 (CHASSIS bond link) to GND is the one bridge; changes 1 and 4 DRAWN
+    fixture A: DRAWN
+    B: CHASSIS on C33.2 (1n 2kV) and J_ETH.SH; no part bridges it to GND; changes 2 and 3 DRAWN
+    fixture B: DRAWN
+
+END
