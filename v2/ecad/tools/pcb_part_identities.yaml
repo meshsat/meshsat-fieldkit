@@ -11437,6 +11437,42 @@ drafted_identities_l6r2_passives:
       code: C107701
       mpn: RC0603FR-0722RL
       maker: YAGEO
+  - id: L6R2-S-95a70c3449
+    board: E
+    refs:
+    - R51
+    kind: resistor
+    key: resistor|value=0Ohm|package=0603|resistor_kind=zero-ohm link|tolerance_max_pct=|power_min_w=|link_current_min_a=0.6
+    requirements:
+      value: 0Ohm
+      package: '0603'
+      resistor_kind: zero-ohm link
+      tolerance_max_pct: null
+      power_min_w: null
+      link_current_min_a: 0.6
+    state: SELECTED
+    identity:
+      maker: UNI-ROYAL(Uniroyal Elec)
+      mpn: 0603WAF0000T5E
+      status: UNRESOLVED
+      reason_class: DOCUMENT_OWED
+      reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
+        in the tree binds it: the selection has deciding properties the scheme cannot decode: link_current_min_a'
+      next_action: file the maker's sheet that prints 0603WAF0000T5E (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+    rule_c_d3b: null
+    order_code:
+      code: C21189
+      read: 'JLCPCB parts library: 0603WAF0000T5E, UNI-ROYAL(Uniroyal Elec), 0603, stock 23712603, base library'
+    grade:
+      range_c:
+      - -55.0
+      - 155.0
+      basis: the catalogue line's operating temperature
+      verdict: INSIDE
+    alternative:
+      code: C15402
+      mpn: 0603WAJ0000T5E
+      maker: UNI-ROYAL(Uniroyal Elec)
   - id: L6R2-S-94254a6c8f
     board: E
     refs:
@@ -11772,6 +11808,7 @@ drafted_identities_l6r2_passives:
     refs:
     - C15
     - C2
+    - C9
     kind: capacitor
     key: capacitor|value=100nF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10
     requirements:
@@ -12923,6 +12960,137 @@ drafted_identities_l6r2_passives:
       code: C106200
       mpn: CC0402JRNPO9BN101
       maker: YAGEO
+  - id: L6R2-S-9ad32441cf
+    board: D
+    refs:
+    - C46
+    kind: capacitor
+    key: capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=10|tolerance_max_pct=10
+    requirements:
+      value: 1uF
+      package: '0603'
+      construction: MLCC
+      dielectric: X7R
+      v_rating_min: 10.0
+      tolerance_max_pct: 10.0
+    state: SELECTED
+    identity:
+      maker: YAGEO
+      mpn: CC0603KRX7R9BB105
+      status: RESOLVED
+      datasheet:
+        path: v2/vendor/passives/yageo-cc-series.pdf
+        sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+        page: 2
+        binding: DECODED
+        scheme: yageo-cc-x7r-v26-p2
+        publisher: YAGEO
+      fields:
+      - field: series
+        code: CC
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: "K = \xB1 10%"
+        means: "\xB1 10%"
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+      - field: voltage
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
+      - field: process
+        code: BB
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+    rule_c_d3b: null
+    order_code:
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826024, expand library'
+    grade:
+      range_c:
+      - -55
+      - 125
+      basis: the dielectric class code X7R (its range is the code)
+      verdict: INSIDE
+    alternative:
+      code: C76708
+      mpn: CGA3E1X7R1E105KT0Y0E
+      maker: TDK
+  - id: L6R2-S-8aa61b634b
+    board: D
+    refs:
+    - C47
+    - C48
+    kind: capacitor
+    key: capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=16|tolerance_max_pct=10
+    requirements:
+      value: 1uF
+      package: '0603'
+      construction: MLCC
+      dielectric: X7R
+      v_rating_min: 16.0
+      tolerance_max_pct: 10.0
+    state: SELECTED
+    identity:
+      maker: YAGEO
+      mpn: CC0603KRX7R9BB105
+      status: RESOLVED
+      datasheet:
+        path: v2/vendor/passives/yageo-cc-series.pdf
+        sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+        page: 2
+        binding: DECODED
+        scheme: yageo-cc-x7r-v26-p2
+        publisher: YAGEO
+      fields:
+      - field: series
+        code: CC
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: "K = \xB1 10%"
+        means: "\xB1 10%"
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+      - field: voltage
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
+      - field: process
+        code: BB
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+    rule_c_d3b: null
+    order_code:
+      code: C559769
+      read: 'JLCPCB parts library: CC0603KRX7R9BB105, YAGEO, 0603, stock 826024, expand library'
+    grade:
+      range_c:
+      - -55
+      - 125
+      basis: the dielectric class code X7R (its range is the code)
+      verdict: INSIDE
+    alternative:
+      code: C76708
+      mpn: CGA3E1X7R1E105KT0Y0E
+      maker: TDK
   - id: L6R2-S-753ae929e3
     board: D
     refs:
@@ -16150,6 +16318,8 @@ drafted_identities_l6r2_passives:
     refs:
     - C159
     - C160
+    - C161
+    - C162
     - C175
     - C176
     - C177
@@ -16495,6 +16665,47 @@ drafted_identities_l6r2_passives:
       code: C100042
       mpn: CC0603KRX7R9BB103
       maker: YAGEO
+  - id: L6R2-S-d67c10e55e
+    board: B
+    refs:
+    - C500
+    - C501
+    - C502
+    - C503
+    - C504
+    - C505
+    kind: capacitor
+    key: capacitor|value=22pF|package=0402|construction=MLCC|dielectric=C0G|v_rating_min=35|tolerance_max_pct=5
+    requirements:
+      value: 22pF
+      package: '0402'
+      construction: MLCC
+      dielectric: C0G
+      v_rating_min: 35.0
+      tolerance_max_pct: 5.0
+    state: SELECTED
+    identity:
+      maker: YAGEO
+      mpn: CC0402JRNPO9BN220
+      status: UNRESOLVED
+      reason_class: DOCUMENT_OWED
+      reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
+        in the tree binds it: no maker''s ordering table in the tree decodes CC0402JRNPO9BN220 (YAGEO)'
+      next_action: file the maker's sheet that prints CC0402JRNPO9BN220 (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+    rule_c_d3b: null
+    order_code:
+      code: C106203
+      read: 'JLCPCB parts library: CC0402JRNPO9BN220, YAGEO, 0402, stock 3044125, expand library'
+    grade:
+      range_c:
+      - -55
+      - 125
+      basis: the dielectric class code C0G (its range is the code)
+      verdict: INSIDE
+    alternative:
+      code: C338129
+      mpn: 0402N220J500CT
+      maker: Walsin Tech Corp
   - id: L6R2-S-d499541fe0
     board: B
     refs:
@@ -17003,6 +17214,42 @@ drafted_identities_l6r2_passives:
     alternative:
       code: C2941080
       mpn: LR122WF250LT4E
+      maker: UNI-ROYAL(Uniroyal Elec)
+  - id: L6R2-S-abe89272fa
+    board: B
+    refs:
+    - R13
+    kind: resistor
+    key: resistor|value=0Ohm|package=2512|resistor_kind=zero-ohm link|tolerance_max_pct=|power_min_w=|link_current_min_a=0.6
+    requirements:
+      value: 0Ohm
+      package: '2512'
+      resistor_kind: zero-ohm link
+      tolerance_max_pct: null
+      power_min_w: null
+      link_current_min_a: 0.6
+    state: SELECTED
+    identity:
+      maker: UNI-ROYAL(Uniroyal Elec)
+      mpn: 25121WJ0000T4E
+      status: UNRESOLVED
+      reason_class: DOCUMENT_OWED
+      reason: 'the identity is JLCPCB''s catalogue line (maker, MPN, package and the attributes checked in l6r2_passives.out); no maker''s document
+        in the tree binds it: no maker''s ordering table in the tree decodes 25121WJ0000T4E (UNI-ROYAL(Uniroyal Elec))'
+      next_action: file the maker's sheet that prints 25121WJ0000T4E (or its ordering table, with a DECODED scheme in part_identities.SCHEMES)
+    rule_c_d3b: null
+    order_code:
+      code: C25469
+      read: 'JLCPCB parts library: 25121WJ0000T4E, UNI-ROYAL(Uniroyal Elec), 2512, stock 256909, expand library'
+    grade:
+      range_c:
+      - -55.0
+      - 155.0
+      basis: the catalogue line's operating temperature
+      verdict: INSIDE
+    alternative:
+      code: C270957
+      mpn: 25121WF0000T4E
       maker: UNI-ROYAL(Uniroyal Elec)
   - id: L6R2-S-099e530a08
     board: B

@@ -12,7 +12,8 @@ test (finding F1) and drafted the footprint keys of three Coilcraft rows (findin
 `b257a730`) corrected the failing codes written in the generators' calls through the LCSC drafts' entries with a third field (the
 code replaced) and extended the property test to every written code (finding F7); the page's section 8.3. The reading
 `inputs/jlc-parts-2026-10-03.json` carries the round 4 supplement (the written codes and their keywords, `read_catalogue.py
---missing`, recorded in its `supplements` field).
+--missing`, recorded in its `supplements` field). Round 5 (from `f8328b5b`) derived the open voltages of finding F3 at the desk,
+drafted them for the intents of boards P, D and B, and judges the record's rows under them; the page's section 8.4.
 
 | File | What it is |
 |---|---|
@@ -28,6 +29,8 @@ code replaced) and extended the property test to every written code (finding F7)
 | `apply_gen_sch_{b,e}_xal_land.py` | Round 3's two DRAFTS (Layer 8, criterion 6.4): board B's L1 and buck33's inductor and board E's L3 onto the footprint of the part their value names; release-guarded; NOT applied |
 | `read_kicad_footprints.py` | Round 3: takes the reading `inputs/kicad-xal-footprints-9.0.9.json`, KiCad's four Coilcraft XAL footprints at the library's 9.0.9 tag (URL, sha256, description, pads, outlines, model path; the files are not filed) |
 | `inputs/kicad-xal-footprints-9.0.9.json` | That reading |
+| `l6r2_intent.py` | Round 5: the voltage declarations derived for the nets of finding F3 (each with its basis and operating case, the rail figures read from the committed intents), the overlay under which the record judges its rows, and the intent drafts' logic |
+| `apply_gen_sch_{p,d,b}_intent.py` | Round 5's three DRAFTS: the boards' `intent.node` declarations inserted once before the intent is written; release-guarded; NOT applied |
 | `RELEASE.md` | The drafts' release record: `released: no` |
 | `apply_part_identities_block.py` | Puts the block `drafted_identities_l6r2_passives` into `v2/ecad/tools/pcb_part_identities.yaml` outside `selections:` (applied on this branch), or removes this block only |
 | `README.md` | This list |

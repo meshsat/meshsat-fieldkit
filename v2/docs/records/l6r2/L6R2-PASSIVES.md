@@ -5,7 +5,9 @@ Prototype design: nothing is bought, built, powered or measured. Every figure he
 short form. Based on `fnd/int28` at `a1f696de`. Round 3, the same day on `fnd/l6r2` from `6fe27332`: `lcsc_fill.py`'s table
 corrected to this record's selections with a property test (F1), and the three Coilcraft rows drawn on another body's footprint
 drafted onto their own (F4); section 8. Round 4, from `b257a730`: the codes written in the generators' calls corrected in the LCSC
-drafts and the property test extended to them (F7); section 8.3.
+drafts and the property test extended to them (F7); section 8.3. Round 5, from `f8328b5b`: the open requirements of F3 derived at
+the desk where the circuit bounds them, drafted as intent declarations, and the rows they close selected; section 8.4. Since round
+5 the record judges its rows as if those declarations were applied (`l6r2_intent.overlay`).
 
 ## 1. What was asked, and the denominator (out 1)
 
@@ -49,18 +51,18 @@ both phrases off the page before it uses them.
 | Board | Uncoded fitted rows | SELECTED rows (selections) | Open: OPEN requirement | Open: SPECIAL (not re-selected) | NOT_A_PART | NO_MATCH | Rows whose finish-time code (lcsc_fill.py) fails a requirement | Designators in the draft |
 |---|---|---|---|---|---|---|---|---|
 | A | 382 | 318 (71) | 0 | 64 | 0 | 0 | 0 | 331 |
-| E | 111 | 86 (43) | 1 | 16 | 8 | 0 | 0 | 90 |
-| P | 50 | 43 (15) | 1 | 6 | 0 | 0 | 0 | 43 |
-| D | 137 | 122 (22) | 5 | 8 | 2 | 0 | 0 | 126 |
+| E | 111 | 87 (44) | 0 | 16 | 8 | 0 | 0 | 91 |
+| P | 50 | 44 (15) | 0 | 6 | 0 | 0 | 0 | 44 |
+| D | 137 | 125 (24) | 2 | 8 | 2 | 0 | 0 | 129 |
 | C | 83 | 40 (17) | 17 | 22 | 4 | 0 | 0 | 42 |
-| B | 894 | 831 (54) | 9 | 54 | 0 | 0 | 0 | 832 |
+| B | 894 | 840 (56) | 0 | 54 | 0 | 0 | 0 | 841 |
 <!-- page-table:end -->
 
-**1440 of the 1657 uncoded fitted rows are SELECTED**: every deciding requirement met on the catalogue line, stock for five kits
+**1454 of the 1657 uncoded fitted rows are SELECTED** (1440 before round 5's declarations): every deciding requirement met on the catalogue line, stock for five kits
 on the board and for the set. No selection is short of stock (the narrowest set margin: ROHM GMR100HJAAFD5L00 for board A's R17,
 412 against 5). Every selection names its maker, MPN, package, LCSC code, price at 1 and at the need, grade with its basis, and an
-alternative from another maker where one meets every requirement (out 2). Of the 222 selections, **132 bind DECODED** on the
-maker's own ordering table and **90 are DOCUMENT_OWED** (the catalogue's identity; the maker's sheet is to be filed).
+alternative from another maker where one meets every requirement (out 2). Of the 227 selections, **134 bind DECODED** on the
+maker's own ordering table and **93 are DOCUMENT_OWED** (the catalogue's identity; the maker's sheet is to be filed).
 
 Since round 3 the code `lcsc_fill.py` fills on each of these lines meets every requirement, so rule I-1 takes it first: the drafts
 and the finish step write the same code on every row. One consequence: every 100 nF 0603 row now takes YAGEO CC0603KRX7R0BB104
@@ -95,7 +97,7 @@ miss on any board (section 8.1). The same codes written explicitly into the gene
 1206: no X7R line read meets the value, land and rating with stock; the design's own X5R parts (Murata GRM31CR61E476ME44L, HRE
 CGA1206X5R107M100NT) are kept and the question whether their hot spot stays under +85 C is recorded OPEN.
 
-**F3. Requirements open, never guessed (33 rows):** board P C9 and board D C46 to C48 and board B C161, C162, C500 to C505 (no
+**F3. Requirements open, never guessed (33 rows; 14 closed in round 5, section 8.4, 19 stay open):** board P C9 and board D C46 to C48 and board B C161, C162, C500 to C505 (no
 declared or bounded voltage on their nets); board E R51 and board B R13 (zero-ohm links whose current rating no catalogue line
 states); board D L1 and L2 (68 nH LPF inductors: tolerance, Q, self-resonance and current unstated, "values to be verified in
 MESHSAT-818"); board C's 17 panel lamps (intensity and viewing angle through the light guides unstated, w5identc's CHOICE_OWED).
@@ -156,8 +158,9 @@ alone and all applied together (out 6).
 2. F1: done in round 3 (section 8.1). What follows from it is listed there: three Layer 4 records that pin `lcsc_fill.py` re-pin
    it, the deliverables take the new codes when each board is finished again, the sweep re-takes the "order codes" verdicts.
    F7: done in round 4 (section 8.3) but for board B C529 and C530, whose tolerance no catalogue line read prints in percent.
-3. F3: the board owners declare the open nets' voltages in the intents, state the links' currents, verify board D's LPF and state
-   the panel lamps' intensity; the selections then follow on the same rules.
+3. F3: round 5 drafted the declarations a desk can derive (section 8.4) and selected the 14 rows they and the held Uniroyal jumper
+   table close; the integrator applies the three intent drafts at set 28. Open: board D L1 and L2 (the PA's mismatch case and the
+   inductor's SRF and Q), board C's 17 lamps (the required luminance and the light guide's transmission).
 4. F5 and the 91 DOCUMENT_OWED identities: file the makers' sheets (Samsung CL, FH, Samwha, CCTC, PSA, Milliohm LR2512, ROHM) or add
    DECODED schemes to `part_identities.SCHEMES` where a maker's ordering table fits the tool's layouts.
 5. F4's land findings: compared and drafted in round 3 (section 8.2); the release, the regeneration of boards B and E, and the
@@ -302,3 +305,46 @@ generators without the drafts the same judge reads 24 misses (A 13, E 4, D 4, C 
 (the `^100n` 0603 line) now gives **C113803, YAGEO CC0603KRX7R0BB104, 100 V** (it was C14663, CC0603KRX7R9BB104, 50 V): the same
 YAGEO X7R K series on the same sheet, so its tolerance, temperature and endurance figures are the same rows; the comment in
 `gen_sch_e.py` (line 713) that L4-E9 requires to name C5's part still names C14663 and is the generator owner's to restate.
+
+### 8.4 Round 5: the open requirements of F3 (out 8)
+
+Each figure below is derived from the circuit (the generator), the board's committed intent (the rails that drive the net, read
+from the intent file when the declarations are built) and the makers' documents in the tree, with its operating case. They are
+drafted as `intent.node` declarations in `apply_gen_sch_{p,d,b}_intent.py` (inserted once before `_intent.write(OUT, PROJECT, P)`,
+release-guarded like the record's other drafts; each commutes with every pending draft of its generator: board D's ptt, and this
+record's LCSC and XAL land drafts). The record now judges its rows under them (`l6r2_intent.overlay`), so the rows they close are
+selected on the same rules.
+
+| Rows | Net, derived figure | Basis and operating case | Part selected |
+|---|---|---|---|
+| P C9 (100 nF) | SRP_F and SRN_F, -0.2 to +0.2 V each; 0.40 V across C9 | the BQ4050's SRP and SRN inputs through R8 and R9 (100 R) from the two ends of the 2 mOhm shunt R10: SLUSC67B 6.3 recommends both within +-0.2 V; 36 mV at the pack's 18 A peak; the short-circuit trips SCD1 and SCC at most 200 mV (6.31). Case: discharge or charge up to the trip | C113803 YAGEO CC0603KRX7R0BB104 (the 100 nF 0603 line; 6.3 V asked) |
+| D C46 (1 uF) | MICAMP_AC, -2.615 to +2.615 V | U8 (TLV9062) sits at VREF, half of +5V_D8's declared 5.23 V, and swings within its supply; the coupled side's DC is ground (R45, R47). Case: full-scale transmit audio. 7.85 V across C46 by rule V-1's node bound | C559769 YAGEO CC0603KRX7R9BB105 (10 V asked) |
+| D C47 (1 uF) | PCM_R_AC, -3.6 to +3.6 V | the PCM2912A's VOUTR swings within PCM_VCCR (declared 3.6 V); the full regulator output is taken, not half (the output's centre is not taken from the sheet). Case: full-scale playback. 8.83 V across C47 | C559769 (16 V asked) |
+| D C48 (1 uF) | MIC_SUM, -3.6 to +3.6 V | the summing node of R45, R46, R47 (10k each, R47 to ground) cannot exceed the larger of its two sources. 8.60 V across C48 against MIC_IN (the SA868's pin, bounded at 5.0 V) | C559769 (16 V asked) |
+| B C161, C162 (100 nF) | LIME_SSTX_P and _N, 0 to +5.0 V | the LimeSDR Mini 2.4 behind J_LIME has no supply but the receptacle's VBUS, +5V_LIME (declared 5.0 V), so its receive pins stay within it (rule V-1's premise for an active part, applied to the module behind the connector; its USB 3.0 controller is an FTDI FT601, whose sheet refused the runner, 403). Case: enumerated at USB 3 speed. 5.0 V across | C60474 YAGEO CC0402KRX7R7BB104 (the board's 100 nF 0402 selection; 6.3 V asked) |
+| B C500 to C505 (22 pF) | W1A/W3A/WA and W1B/W3B/WB card and antenna leads, -10.62 to +10.62 V; the SKY13351 ports SWA/SWB O1, O2, IN, -10.62 to +13.92 V | the AW7915-AED's highest output, 23 dBm +1.5 dB (11b, its datasheet V1.0 p.3) = 24.5 dBm, 5.31 V peak into 50 Ohm and 10.62 V on a fully reflecting lead (the case LORA_ANT declares); the switch's ports, which its sheet requires DC blocked, at most their control voltage (+3V3_DEV, 3.3 V) plus that peak. Case: transmit at full power into any load. 24.54 V across | C106203 YAGEO CC0402JRNPO9BN220, 50 V NP0 (35 V asked) |
+| B R13 (0 R 2512) | POE_P, 0.60 A | already declared: the POE_P rail's peak, its load T1 (the PoE port's 0.60 A). No new declaration | C25469 UNI-ROYAL 25121WJ0000T4E: a 2512 jumper's rated current 2 A (the held Uniroyal sheet's section 7 table) |
+| E R51 (0 R 0603) | IMU_CSB, 0.60 A taken | R51 feeds only U15's CSB input (BMI270); its real current is that pin's leakage. The record keeps the identity tool's conservative 0.60 A (+3V3_E6's declared peak): a tighter figure needs IMU_CSB declared as a rail, which the intent treats as a supply (drop budgets, PWR-001), so it is not drafted | C21189 UNI-ROYAL 0603WAF0000T5E: a 0603 jumper's rated current 1 A (same table) |
+
+The two links were open because no catalogue line prints a jumper's current; the held Uniroyal thick-film sheet does (section 7,
+"Rated Current of Jumper": 0603 1 A, 2512 2 A), and the check now reads it for UNI-ROYAL zero-ohm lines only (`jumper_rating`).
+
+**Board D L1 and L2 stay OPEN, the filter VERIFIED.** The ladder C58 22 pF, L1 68 nH, C59 39 pF, L2 68 nH, C60 22 pF is a
+fifth-order 0.1 dB Chebyshev low-pass with a corner near 166 MHz (g = 1.1468, 1.3712, 1.9750 give 22 pF, 66 nH and 38 pF at 50
+Ohm). With ideal parts into 50 Ohm, at the corners of L +-2 % and C +-5 %: at most 0.05 dB lost from 144 to 146 MHz with at least
+19.8 dB return loss; the second harmonic (290 MHz) down at least 27.2 dB, the third (435 MHz) 47.1 dB. So the values fit the
+stated purpose. The current the inductors carry is not the generator comment's 775 mA (the load current): at 30 W into a matched
+load the shunt capacitors' reactive current flows through them, **1.03 A RMS in L1 and 1.10 A RMS in L2** at 145 MHz, against the
+1.2 A of the Murata LQW2BAN68NG00L the comment names. The exact questions that keep them open: (1) is the PA's operation into a
+fully reflecting antenna (the case the 110 V declarations of the filter nets take) a sustained case, and at what forward power does
+the PA's own protection hold it (MESHSAT-818)? (2) the inductor's self-resonance above 435 MHz and its Q at 145 MHz, from the
+maker's sheet, which is not held.
+
+**Board C's 17 panel lamps stay OPEN** (a Layer 7, panel, matter). The missing facts: the luminance (or intensity) each lamp must
+give at the face plate in DAY ("sunlight viewable") and the most it may give in NVG; PANEL.md section 8 states the dimming duties
+(100, 15 and 2 percent) and no luminance; and the transmission of the Mentor LL14 light guide, whose held sheet prints the guide's
+geometry and a table of LEDs but no transmission. The lamp's intensity is then the required luminance over that transmission.
+
+**For set 28:** the integrator applies `apply_gen_sch_p_intent.py`, `apply_gen_sch_d_intent.py` and `apply_gen_sch_b_intent.py`
+with the record's other drafts of those generators (the order does not matter); the regenerated intents then carry what the record
+already judges under. The property tests run lcsc_fill's choice under the declarations too (1454 rows judged, 0 misses).
