@@ -68,7 +68,7 @@ def _R():
         m = importlib.util.module_from_spec(sp)
         sp.loader.exec_module(m)
         try:
-            _CACHE["R"] = m.compute()
+            _CACHE["R"] = m.results()      # from the results cache when its KEY holds for this tree, else computed (nothing written)
         except SystemExit as e:
             raise AssertionError("l4e7_stage_settings.py refused (exit %s)" % e.code)
         _CACHE["M"] = m
@@ -191,6 +191,63 @@ def t_margin_costs_nothing_on_the_design_day():
     a2 = [v for (lab, ak), v in R["runs"].items() if ak == "A2" and lab.startswith("NEW nominal")][0]
     was = R["old_runs"][("CORRECTED, WE; O-2 nominal", "A2")]
     assert all(abs(a2[2][k] - was[1][k]) < 0.05 for k in range(2)), "the kept nominal hold does not give the replay's A2 figures"
+
+
+def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_numbers():
+    """The owner's review (Execution efficiency): compute() is the solver, render() the presentation. The committed cache's KEY holds
+    for this tree and rendering it prints the committed output byte for byte; the cache file is the encoding of what it renders; a
+    rendering string leaves the KEY's source part unchanged while a numerical constant or a solver function's body changes it; a
+    cache whose KEY differs is never rendered from."""
+    import json
+    _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    assert set(data) == {"key", "parts", "R"} and set(data["parts"]) == {"src", "files", "scans", "solver", "python", "pdftotext"}
+    assert data["key"] == m.key_of(data["parts"]) == m.key_of(m.key_parts(data["parts"]["files"])), "the committed cache's KEY does not hold for this tree"
+    Rc = m.load_cache()
+    assert Rc is not None and "\n".join(m.render(Rc)) + "\n" == committed, "the committed output is not render(cache)"
+    dump = lambda x: json.dumps(x, sort_keys=True, separators=(",", ":"))
+    assert dump(m._enc(m._dec(data["R"]))) == dump(data["R"])
+    # the files part: every pinned input compute() reads is in it, and nothing outside the repository
+    assert all(rel in data["parts"]["files"] for rel in m.PINS) and not any(f.startswith(("/", "..")) for f in data["parts"]["files"])
+    assert "render" not in data["parts"]["src"] and {"compute", "guard_event_b", "sense_ripple", "CerBank", "PINS", "lead_scan"} <= set(data["parts"]["src"])
+    # the source part on synthetic edits of this script's text
+    text = open(SCRIPT, encoding="utf-8").read()
+    base = m.src_part(text)
+    assert base == data["parts"]["src"]
+    a = 'wrapP("       ", "       ", "THE THREE APPROACHES (at most three'
+    assert text.count(a) == 1 and m.src_part(text.replace(a, a.replace("THREE APPROACHES", "3 APPROACHES"))) == base
+    c = "EA2_FLOOR_DIV = 2.0"
+    assert text.count(c) == 1 and m.src_part(text.replace(c, "EA2_FLOOR_DIV = 2.5")) != base
+    b = 'l59 = g.get("l59", 0.0)'
+    assert text.count(b) == 1 and m.src_part(text.replace(b, 'l59 = g.get("l59", 1e-12)')) != base
+    # a cache whose KEY differs is never rendered from, and the KEY moves with every part
+    with tempfile.TemporaryDirectory() as td:
+        bad = dict(data, key="0" * 64)
+        p = os.path.join(td, "stale.results.json")
+        open(p, "w", encoding="utf-8").write(json.dumps(bad))
+        assert m.load_cache(p) is None
+    for part in ("src", "files", "scans", "solver", "python", "pdftotext"):
+        moved = json.loads(json.dumps(data["parts"]))
+        moved[part] = {"changed": True}
+        assert m.key_of(moved) != data["key"], part
+
+
+def t_recompute_reproduces_the_committed_output():
+    """--recompute equals render(cache): the solver run once more (about 30 to 50 minutes on a loaded host), so it runs only when
+    L4E7_RECOMPUTE=1 is set."""
+    if os.environ.get("L4E7_RECOMPUTE") != "1":
+        raise Skip("the solver's own re-run: set L4E7_RECOMPUTE=1")
+    import json
+    _R()
+    m = _CACHE["M"]
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    R2, files = m.run_recorded()
+    assert "\n".join(m.render(m._dec(json.loads(json.dumps(m._enc(R2)))))) + "\n" == committed
+    data = json.load(open(m.CACHE, encoding="utf-8"))
+    dump = lambda x: json.dumps(x, sort_keys=True, separators=(",", ":"))
+    assert dump(m._enc(R2)) == dump(data["R"]) and sorted(files) == sorted(data["parts"]["files"])
 
 
 def t_committed_out_is_what_the_script_prints():

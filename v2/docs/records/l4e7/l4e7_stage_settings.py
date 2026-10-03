@@ -20,12 +20,19 @@ Section 0 proves, before any result (exit 4 otherwise):
      least) are the ones that printed the record. Nothing here compares a git hash with a recorded string.
 
 Run from the repository root:  python3 v2/docs/records/l4e7/l4e7_stage_settings.py > v2/docs/records/l4e7/l4e7_stage_settings.out
+(regenerate the committed output only through the integration's regen_out.py). compute() is the solver, render() the
+presentation: a run renders from l4e7_stage_settings.results.json beside this file when the cache's KEY equals the KEY of the
+present tree (seconds), and otherwise computes, writes the cache (a temporary file, renamed only after the rendering
+succeeded) and renders from what the cache holds; --recompute forces compute(). The KEY is described at key_parts() below.
 Needs pdftotext and pdftocairo (poppler), PyYAML and the held documents (fetch_held_back.py beside this file, the Samsung
-excerpts by fetch_maker_curves.py beside it, and the ones the imported records name). About nine minutes, most of it
-section 0 and the guard's transients (B6, rounds 2 and 3).
+excerpts by fetch_maker_curves.py beside it, and the ones the imported records name). A computing run takes about 30 to 50
+minutes on a loaded host, most of it section 0 and the guard's transients (B6, rounds 2 to 5).
 Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction or a predicate failed."""
+import ast
+import builtins
 import hashlib
 import importlib.util
+import inspect
 import itertools
 import json
 import math
@@ -537,6 +544,44 @@ def sense_ripple(cu, cd, i_in, vin, vout, f, L, t_rf, r59, l59, rb, bulk, dt=1e-
     avg = sum(vp) / len(vp)
     return dict(peak=max(vp), trough=min(vp), avg=avg, avg_clip=sum(min(max(v_, 0.0), vlim) for v_ in vp) / len(vp), r_peak=max(o[1] for o in out),
                 i_v=i_v, i_p=i_p, il_avg=il_avg, dI=dI, D=D)
+
+
+# the panel lead's length (round 5 of set 27): a statement this record has read and pinned is a CITED INPUT (its file and digest at
+# the reading are printed); any other statement of a panel lead's length in v2's documents refuses until the derivation is read again
+LEAD_STATEMENTS = ("the selected network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no "
+                   "document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead",)
+_PAUSE = [False]       # the results cache's file recorder is paused while a tree scan runs (the scans enter the KEY by their outcome)
+
+
+def lead_scan():
+    """Every .md and .yaml of v2 (vendor, release, out and this record's folder left out) that states a panel lead's length: the
+    files whose statement is a pinned one (cited: {path: (sha256, statement)}) and the others (hits)."""
+    hits, cited = [], {}
+    _PAUSE[0] = True
+    try:
+        for root_, dirs_, files_ in os.walk(os.path.join(TOP, "v2")):
+            dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
+            for f_ in files_:
+                if f_.endswith((".md", ".yaml")):
+                    rel_ = os.path.relpath(os.path.join(root_, f_), TOP)
+                    t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
+                    for m_ in re.finditer(r"(?:solar|panel)\W+(?:lead|cable|extension)", t_, re.I):
+                        if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
+                            e_ = t_.find("|", m_.end())
+                            cell_ = " ".join(t_[t_.rfind("|", 0, m_.start()) + 1:(e_ if e_ > 0 else len(t_))].split())
+                            known_ = [st_ for st_ in LEAD_STATEMENTS if st_ in cell_]
+                            if known_:
+                                cited.setdefault(rel_, (sha(rel_), known_[0]))
+                            else:
+                                hits.append(rel_)
+    finally:
+        _PAUSE[0] = False
+    return hits, cited
+
+
+def iec_held():
+    """Whether a file of v2/vendor names IEC 61000-4-5 (the surge basis below declines it while none is held)."""
+    return any("61000-4-5" in f_ or "61000_4_5" in f_ for _r, _d, fs_ in os.walk(os.path.join(TOP, "v2/vendor")) for f_ in fs_)
 
 
 def compute():
@@ -1514,25 +1559,8 @@ def compute():
     # A document of v2/docs or the registries that states a panel lead's length (this record's own folder left out) is read against
     # it: a statement this record has read and pinned (LEAD_STATEMENTS; set 27: L4-E9's register row R-180, which carries this
     # record's own "two conductors 6.09 mm apart over 5 m" back) is a CITED INPUT, recorded with the file and its digest at the
-    # reading; any other statement refuses until the derivation is read again
-    LEAD_STATEMENTS = ("the selected network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no "
-                       "document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead",)
-    lead_hits, lead_cited = [], {}
-    for root_, dirs_, files_ in os.walk(os.path.join(TOP, "v2")):
-        dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
-        for f_ in files_:
-            if f_.endswith((".md", ".yaml")):
-                rel_ = os.path.relpath(os.path.join(root_, f_), TOP)
-                t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
-                for m_ in re.finditer(r"(?:solar|panel)\W+(?:lead|cable|extension)", t_, re.I):
-                    if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
-                        e_ = t_.find("|", m_.end())
-                        cell_ = " ".join(t_[t_.rfind("|", 0, m_.start()) + 1:(e_ if e_ > 0 else len(t_))].split())
-                        known_ = [st_ for st_ in LEAD_STATEMENTS if st_ in cell_]
-                        if known_:
-                            lead_cited.setdefault(rel_, (sha(rel_), known_[0]))
-                        else:
-                            lead_hits.append(rel_)
+    # reading; any other statement refuses until the derivation is read again (lead_scan above)
+    lead_hits, lead_cited = lead_scan()
     if lead_hits:
         refuse(3, "a document now states the panel lead's length (%s); the derivation below must be read against it" % ", ".join(sorted(set(lead_hits))))
     M461 = "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf"
@@ -2306,7 +2334,7 @@ def compute():
     if re.search(r"CS11[5-7]", tp_):
         refuse(3, "TEST-PLAN.md now names CS115, CS116 or CS117; the derivation below must use its row")
     # IEC 61000-4-5 is not held (no file of v2/vendor names it) and the envelope's surge row and CHO-003 decline it for the long leads
-    if any("61000-4-5" in f_ or "61000_4_5" in f_ for _r, _d, fs_ in os.walk(os.path.join(TOP, "v2/vendor")) for f_ in fs_):
+    if iec_held():
         refuse(3, "an IEC 61000-4-5 file is now held under v2/vendor; the basis below must be re-chosen against it")
     need(open(os.path.join(TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read(), r"\| Surge on the conductors that leave the case on a long "
          r"lead \(shore and vehicle DC, PoE\) \| what the fitted part survives.*Asking instead for an IEC 61000-4-5 installation level is a ruling", "OPERATING-ENVELOPE.md the surge row")
@@ -4695,11 +4723,169 @@ def render(R):
     return o
 
 
-def main():
-    R = compute()
-    sys.stdout.write("\n".join(render(R)) + "\n")
+# ===================================================================================== the results cache
+# The owner's review of the supplier handover ("Execution efficiency"): a wording change must not cost the solver. compute()'s
+# results R are kept in CACHE with the KEY of the tree they were computed on; a run renders from the cache when the KEY still holds.
+CACHE = os.path.join(HERE, "l4e7_stage_settings.results.json")
+
+
+def src_part(text):
+    """{name: sha256 of its source} for every top-level function, class and module-level binding compute() reaches: followed with ast
+    from compute() through every name each reached definition mentions (a constant bound at module level, or mutated there as
+    PINS is, enters with every statement that binds or mutates it). render() and what only it reaches do not enter."""
+    tree = ast.parse(text)
+    defs = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names = [node.name]
+        elif isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+            names = [n_.id for t_ in (node.targets if isinstance(node, ast.Assign) else [node.target]) for n_ in ast.walk(t_) if isinstance(n_, ast.Name)]
+        elif (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute)
+              and isinstance(node.value.func.value, ast.Name)):
+            names = [node.value.func.value.id]
+        else:
+            names = []
+        for n_ in names:
+            defs.setdefault(n_, []).append(node)
+    seen, todo = set(), ["compute"]
+    while todo:
+        n_ = todo.pop()
+        if n_ in seen or n_ not in defs:
+            continue
+        seen.add(n_)
+        todo.extend(x_.id for node in defs[n_] for x_ in ast.walk(node) if isinstance(x_, ast.Name) and x_.id in defs and x_.id not in seen)
+    return {n_: hashlib.sha256("\n".join(ast.get_source_segment(text, node) for node in defs[n_]).encode("utf-8")).hexdigest() for n_ in sorted(seen)}
+
+
+def key_parts(files):
+    """The KEY's parts: (1) src, src_part() of this script; (2) files, the sha256 of every file under the repository that compute()
+    opened or handed to a subprocess on the run that wrote the cache (recorded while it ran; the tree scans excepted); (3) scans,
+    the outcome of the two tree scans compute() makes (lead_scan() with its cited digests, iec_held()), re-run at every check; (4)
+    solver, the defaults of the solvers' own parameters (timestep, horizon); (5) python, its major.minor; (6) pdftotext, its version."""
+    def dig(rel_):
+        try:
+            return sha(rel_)
+        except OSError:
+            return "missing"
+    hits_, cited_ = lead_scan()
+    pv_ = subprocess.run(["pdftotext", "-v"], capture_output=True, text=True)
+    return dict(src=src_part(open(os.path.abspath(__file__), encoding="utf-8").read()), files={f_: dig(f_) for f_ in sorted(files)},
+                scans=dict(lead_hits=sorted(set(hits_)), lead_cited={k_: list(v_) for k_, v_ in sorted(cited_.items())}, iec61000_4_5=iec_held()),
+                solver={f_.__name__: [[p_.name, repr(p_.default)] for p_ in inspect.signature(f_).parameters.values() if p_.default is not inspect.Parameter.empty]
+                        for f_ in (guard_event, guard_event_b, sense_ripple)},
+                python="%d.%d" % sys.version_info[:2], pdftotext=(pv_.stderr or pv_.stdout).strip().splitlines()[0])
+
+
+def key_of(parts):
+    return hashlib.sha256(json.dumps(parts, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+class _Stub:
+    """An object compute() keeps that the cache does not carry (its type named); rendering never reads one."""
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "<%s, not cached>" % self.name
+
+
+def _enc(x):
+    """R as JSON that decodes to the same values: dicts as ordered pairs (render reads some in insertion order, and keys may be
+    floats or tuples), tuples and sets tagged, floats as their repr."""
+    if x is None or isinstance(x, (bool, int, float, str)):
+        return x
+    if isinstance(x, list):
+        return [_enc(v_) for v_ in x]
+    if isinstance(x, tuple):
+        return {"t": [_enc(v_) for v_ in x]}
+    if isinstance(x, (set, frozenset)):
+        return {"s": sorted((_enc(v_) for v_ in x), key=lambda e_: json.dumps(e_, sort_keys=True))}
+    if isinstance(x, dict):
+        return {"d": [[_enc(k_), _enc(v_)] for k_, v_ in x.items()]}
+    return {"o": x.name if isinstance(x, _Stub) else type(x).__name__}
+
+
+def _dec(x):
+    if isinstance(x, list):
+        return [_dec(v_) for v_ in x]
+    if isinstance(x, dict):
+        (tag_, v_), = x.items()
+        if tag_ == "t":
+            return tuple(_dec(e_) for e_ in v_)
+        if tag_ == "s":
+            return set(_dec(e_) for e_ in v_)
+        if tag_ == "d":
+            return {_dec(k_): _dec(e_) for k_, e_ in v_}
+        return _Stub(v_)
+    return x
+
+
+def run_recorded():
+    """compute(), recording every file under the repository it opens or hands to a subprocess. Returns (R, the files)."""
+    rec, open0, run0 = set(), builtins.open, subprocess.run
+
+    def note(f_):
+        if _PAUSE[0] or not isinstance(f_, (str, os.PathLike)):
+            return
+        p_ = os.path.abspath(os.fspath(f_))
+        if p_.startswith(TOP + os.sep) and os.path.isfile(p_):
+            rec.add(os.path.relpath(p_, TOP))
+
+    def open1(f_, *a_, **k_):
+        note(f_)
+        return open0(f_, *a_, **k_)
+
+    def run1(args_, *a_, **k_):
+        for x_ in (args_ if isinstance(args_, (list, tuple)) else [args_]):
+            note(x_)
+        return run0(args_, *a_, **k_)
+    builtins.open, subprocess.run = open1, run1
+    try:
+        R = compute()
+    finally:
+        builtins.open, subprocess.run = open0, run0
+    return R, sorted(rec)
+
+
+def load_cache(path=CACHE):
+    """R from a cache file whose KEY equals the present tree's, else None (a cache whose KEY differs is never rendered from)."""
+    try:
+        data = json.load(open(path, encoding="utf-8"))
+        if key_of(key_parts(data["parts"]["files"])) != data["key"]:
+            return None
+        return _dec(data["R"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def results(recompute=False):
+    """R as the cache holds it: from the cache when its KEY holds, else computed (and encoded and decoded, as the cache would hold
+    it); nothing is written."""
+    R = None if recompute else load_cache()
+    return R if R is not None else _dec(json.loads(json.dumps(_enc(run_recorded()[0]))))
+
+
+def main(argv=()):
+    R = None if "--recompute" in argv else load_cache()
+    tmp = None
+    if R is None:
+        R0, files = run_recorded()
+        parts = key_parts(files)
+        tmp = CACHE + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as fh:
+            fh.write(json.dumps(dict(key=key_of(parts), parts=parts, R=_enc(R0)), sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")
+        R = _dec(json.load(open(tmp, encoding="utf-8"))["R"])      # render from what the cache holds, never from memory
+    try:
+        text = "\n".join(render(R)) + "\n"
+    except BaseException:
+        if tmp and os.path.exists(tmp):
+            os.remove(tmp)
+        raise
+    if tmp:
+        os.replace(tmp, CACHE)
+    sys.stdout.write(text)
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

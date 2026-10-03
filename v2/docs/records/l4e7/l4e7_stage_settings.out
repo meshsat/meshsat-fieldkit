@@ -650,9 +650,9 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        path that loads D4. The lead's quarter wave is 15.0 MHz in free space (half wave 30.0 MHz), lower on soil: inside
        CS116's flat band, so it is added to the test frequencies as 5.14.2's installation resonance
      - THE LEAD'S LENGTH AS A CITED INPUT (set 27): v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md (read at digest
-       f0e08c640468e200): "the selected network holds every rating with its margin only from that loop (two conductors 6.09
+       f82260d45526f2e8): "the selected network holds every rating with its margin only from that loop (two conductors 6.09
        mm apart over 5 m); no document gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not
-       the kit's panel lead"; v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (read at digest 7f03bbd736a7ece6): "the selected
+       the kit's panel lead"; v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md (read at digest e5892bf2e7602628): "the selected
        network holds every rating with its margin only from that loop (two conductors 6.09 mm apart over 5 m); no document
        gives a source's loop, and a vehicle or shore lead in the panel's receptacle is not the kit's panel lead". The 5 m is
        this derivation's own a1solar ESTIMATE carried back by L4-E9's register, inside the envelope the guard-on transient
