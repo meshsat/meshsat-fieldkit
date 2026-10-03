@@ -23,7 +23,7 @@ with board P's `returns`:
 A later draft that adds a VBAT load (L4-E11's U42, L4-E9's R227) does not add its return here: the return's copper at the dock
 contacts carries the whole either way, and a load added to VBAT can be added here in the same release.
 Round 4 (L9P-F02): where this record's apply_gen_sch_a_slotlm.py is already applied (VBAT's loads name its stages' entries Q501
-and Q531), slots 1 and 3 are LM5176 stages and their ground ends are their CS shunts R506 and R536 at 2.09 A; slotlm applied
+and Q531), slots 1 and 3 are LM5176 stages and their ground ends are their CS shunts R506 and R536 at 2.22 A; slotlm applied
 after this draft rewrites the same two entries, so either order gives one generator.
 Which rules then judge its copper (pcb_rules.yaml): PI-001 (conductor current capacity, dc_drop's density verdict on the routed
 board at the declared 18 A), PI-002 (the drop from the dock contacts to each stage against 0.5 % of 14.4 V), PI-003 (the barrels
@@ -48,9 +48,9 @@ SOURCES = ("J_CN1", "J_CN2", "J_CN3", "J_CN4")
 LOADS = (("U4", 2.0), ("R170", 2.22), ("U6", 2.0), ("R177", 1.61), ("U41", 0.4), ("R56", 1.5), ("R122", 0.3), ("U12", 0.2),
          ("U22", 0.65), ("U21", 0.69))
 OF_VBAT = {"R170": "Q28", "R177": "Q32", "R56": "Q11", "R122": "U15"}   # the LM5176 stage's CS shunt for the load VBAT names
-# round 4: with slotlm applied first, slots 1 and 3 are LM5176 stages (VBAT names Q501 and Q531 at 2.09 A; their CS shunts R506, R536)
-SLOTLM_VBAT = '"Q501": 2.09, "Q28": 2.22, "Q531": 2.09,'
-LOADS_SLOTLM = tuple(("R506", 2.09) if k == "U4" else ("R536", 2.09) if k == "U6" else (k, v) for k, v in LOADS)
+# round 4: with slotlm applied first, slots 1 and 3 are LM5176 stages (VBAT names Q501 and Q531 at 2.22 A; their CS shunts R506, R536)
+SLOTLM_VBAT = '"Q501": 2.22, "Q28": 2.22, "Q531": 2.22,'
+LOADS_SLOTLM = tuple(("R506", 2.22) if k == "U4" else ("R536", 2.22) if k == "U6" else (k, v) for k, v in LOADS)
 
 _OLD = ('_intent.node("GND", 0.0, "the board\'s reference. It is declared so that a part between a live net and ground "\n'
         '             "is judged against the live net rather than reported as sitting on an undeclared one")\n')

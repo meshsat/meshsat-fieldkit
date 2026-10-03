@@ -36,7 +36,8 @@ SCRIPT = os.path.join(REC, "l8r2_drafts.py")
 OUT = os.path.join(REC, "l8r2_drafts.out")
 PAGE = os.path.join(REC, "L8R2-KNOWN-DEFECTS.md")
 CHECK = os.path.join(REC, "check_l8r2_netlist.py")
-MINE = {"a": ["d8v3", "vbus20ov", "packrtn", "slotlm"], "b": ["fans12", "panel5v", "ph4"], "c": ["pibtn"], "e": ["packrtn"]}
+MINE = {"a": ["d8v3", "vbus20ov", "packrtn", "slotlm"], "b": ["fans12", "panel5v", "ph4", "rt500"], "c": ["pibtn"], "e": ["packrtn"]}
+CHECK_FILED = os.path.join(REC, "checks", "astra-check-l9pf02-1.md")
 HELD_FAN = {p: os.path.join(ROOT, "v2", "vendor", "fans", "held", "sanyo-denki-san-ace-c1152b001-2510-p%s.pdf" % p) for p in ("0362", "0616", "0623", "0633")}
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
@@ -90,6 +91,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "round 3 SELECTED (SESSION): (a) with the modules' 70 % Fan_PWM maximum", "REFUSED (intent: rail +5V_S1 declares a 5.00 A peak",
               "SELECTED (SESSION): slots 1 and 3 on the LM5176 stage", "slotlm then L4-E11's charger: REFUSED, as expected",
               "the charger then slotlm: OK", "in either order give one generator: YES", "A SLOTS DRAWN", "VERDICT: NOT A MARGIN",
+              "POSSIBLE, NOT ESTABLISHED", "the same generator either way: YES", "not a temperature of the drawn stage",
               "OK at every prefix", "IDENTICAL", "the corrected texts name those widths: YES", "the same as this script's E_ROUND",
               "equals record l9pwr's printed current in every row: YES"):
         assert s in t, s
@@ -167,6 +169,7 @@ def t_the_designators_are_disjoint_and_this_records_are_exact():
         assert addB["l8r2/apply_gen_sch_b_fans12.py"] == fans
         assert addB["l8r2/apply_gen_sch_b_panel5v.py"] == {"U901", "R901", "R902", "R903", "R904", "R905", "C901", "C902"}
         assert addB["l8r2/apply_gen_sch_b_ph4.py"] == set() and addB["l8gnd/apply_gen_sch_b_gnd002.py"] == set()
+        assert addB["l8r2/apply_gen_sch_b_rt500.py"] == set()
         for add in (addA, addB):
             names = sorted(add)
             for i, x in enumerate(names):
@@ -235,7 +238,8 @@ def t_the_page_and_the_record_carry_no_dash_and_no_claim_word():
     for s in ("E11-40", "S-111", "L5R2-F03", "L5R2-F04", "L5R2-F05", "P1-1", "REJECTED", "SELECTED", "NOT DRAWN", "R248", "DRAFT",
               "L9P-F02", "L9P-F03", "70 %", "7.5638", "apply_gen_sch_a_packrtn.py", "apply_gen_sch_e_packrtn.py", "(L9STK E)",
               "apply_energy_chain_e1oz.py", "ASM-002", "1s, L9P-F02 focused check", "apply_gen_sch_a_slotlm.py", "WITHDRAWN",
-              "UNRESOLVED", "CONDITIONAL"):
+              "UNRESOLVED", "CONDITIONAL", "1t, answers to the collaborator's check", "5.515 A", "apply_gen_sch_b_rt500.py",
+              "POSSIBLE, NOT ESTABLISHED", "3.44 W"):
         assert s in page, s
 
 
@@ -325,15 +329,15 @@ def t_item1_round3_the_bound_holds_every_state_and_the_round2_draft_is_refused()
 
 
 def t_item1_the_fan_row_still_reads_with_layer_7s_reader():
-    """Record l7pwr's reader parses this draft's slot row with two expressions (l7pwr_fans_th1.py, read_rails); round 4's row keeps
-    their form, so that reader reads 0.47 A, 2.0 W, 0.85 and 5.0 V (the fan at full speed) and the watts it derives stay consistent."""
+    """Record l7pwr's reader parses this draft's slot row with two expressions (l7pwr_fans_th1.py, read_rails); round 5's row keeps
+    their form, so that reader reads 0.69 A, 2.75 W, 0.80 and 5.0 V (the envelope) and the watts it derives stay consistent."""
     fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_under_test")
     row = fx._NEW_LOAD
     a = re.search(r'"U%d" % \(701 \+ 30 \* \(s - 1\)\): ([\d.]+),\s+# l8r2 \(E11-40\): the cooler fan\'s 12 V step-up, ([\d.]+) W of fan over ([\d.]+)', row)
     b = re.search(r"\(ASSUMPTION\) at ([\d.]+) V", row)
     assert a and b, row
     amps, watts, eta, volts = float(a.group(1)), float(a.group(2)), float(a.group(3)), float(b.group(1))
-    assert abs(watts - _M().V["pfan"]) < 1e-9 and abs(amps - round(watts / eta / volts, 2)) < 1e-9 and amps * volts > watts
+    assert abs(watts - _M().V["fan_env"]) < 1e-9 and abs(eta - _M().V["eta_lo"]) < 1e-9 and abs(amps - round(watts / eta / volts, 2)) < 1e-9 and amps * volts > watts
 
 
 def t_item5_the_pack_returns_are_rails_that_intent_itself_accepts():
@@ -407,21 +411,28 @@ def t_round4_the_focused_check_holds_its_verdicts():
     over = [i2 > 5.0 for (_st, _p, pce, _f, _w), (_i1, i2, _i3) in zip(o["c3"], o["c3_i"]) if "high" in pce]
     assert over and all(over), o["c3_i"]
     assert all(o["lm_limit"] - i3 > 0.5 for _i1, _i2, i3 in o["c3_i"]), o["c3_i"]
-    assert o["ap_pk_start"] > V["ap_ipk"][0]
+    b1 = o["b1"]   # round 5, B1: the drawn frequency, and a start that may reach the HS limit and need not
+    assert abs(b1["fsw"] - 100000.0 / 68.0 * 1e3) < 1 and b1["pk_nom"] < V["ap_ipk"][0] < b1["pk_lo"] and b1["delta"] < 0.01
+    assert [r for r in o["c3"] if r[0].startswith("firmware failure, PWM block")][0][4] == o["env"]["w"], "the last duty is not up to 100 %"
+    least = {tag: (i, tl) for tag, i, tl in o["fig24_least"]}
+    assert all(tl is None or tl < o["air"] for _i, tl in least.values()) and least["(b) no cooler on the slot rail"][1] is not None
     hi = [j for j in o["junction"] if not j[0].startswith("PLAN")]
     assert all(tj > V["ap_tj"][0] for _t, _v, _i, _e, _l, tj in hi) and o["ap_i125"] < 4.0
-    assert o["fig24"]["air"] < 4.871 and o["fig24_t"][max(o["fig24_t"])] < o["air"]
+    assert o["fig24"]["air"] < 4.871
     c4 = o["c4"]
     assert c4["p70_floor"] > c4["rep_pa"] + 10 and c4["q100_needed"] < V["pq100"][1], c4
-    assert o["corr_worst"][0] < o["lm_limit"] - 1.5 and o["corr_worst"][1] < o["lm_limit"]
-    assert o["fet_tj"][1] < V["csd"][3] - 25 and o["fet_tj"][2] > V["csd"][3], o["fet_tj"]
-    assert o["peak_need"] <= V["slot_peak"] < o["peak_need"] + 0.05 and abs(o["entry"] - 2.09) < 0.005
-    assert o["decl4"][2] == "accepted" and o["decl4"][1] == V["slot_peak"] and o["decl4"][4] == V["slot_peak"]
+    cw = o["corr_worst"]   # round 5, B2: the envelope, the start and a degraded fan
+    assert cw[0] < V["slot_peak"] and cw[0] < o["lm_limit"] - 1.5 and min(cw[1], cw[2]) < o["lm_limit"] - 0.5 and max(cw) < o["lm_limit"]
+    assert abs(o["env"]["branch"] - V["fan_env"] / V["eta_lo"]) < 1e-12 and o["env"]["branch"] < 3.44 < o["env"]["branch"] + 0.01
+    assert o["fet_tj"][1] < V["csd"][3] - 25 and o["fet_tj"][2] > V["csd"][3] and V["csd"][3] - 25 < o["fet_rr"][1] < V["csd"][3], (o["fet_tj"], o["fet_rr"])
+    assert o["peak_need"] <= V["slot_peak"] == 5.63 and abs(o["entry"] - 2.22) < 0.005
+    assert o["decl4"][2] == "accepted" and o["decl4"][1] == V["slot_peak"] == o["decl4"][3] == o["decl4"][4] and abs(o["fan_row"] - 0.69) < 1e-9
+    assert o["lm_window"]["hi"] > V["cm5_vin"][1] > o["lm_window"]["hi01"] and o["lm_window"]["lo01"] > o["lm_window"]["lo"]
     sl = open(os.path.join(REC, "apply_gen_sch_a_slotlm.py"), encoding="utf-8").read()
-    for s in ("%.3f A" % o["peak_need"], "%.3f V" % o["v"]["load_lm"], "%.3f A" % o["corr_worst"][1], "7.096 A"):
+    for s in ("%.3f A" % o["peak_need"], "%.3f V" % o["v"]["load_lm"], "%.3f A" % cw[1], "7.096 A", "PEAK = 5.63", "ENTRY = 2.22"):
         assert s in sl, s
     fx = _mod(os.path.join(REC, "apply_gen_sch_b_fans12.py"), "fans12_r4_under_test")
-    assert "else 5.3, " in fx._NEW_PEAK and "70 %" not in fx._NEW_LOAD and "70 %" not in fx._NEW_FAN.split("ROUND 4")[1]
+    assert ", 5.63, " in fx._NEW_PEAK and "70 %" not in fx._NEW_LOAD and "70 %" not in fx._NEW_FAN.split("ROUND 4")[1]
     src = o["src"]
     assert src["c1_air"] == 50.0 and src["h2"][2] == 0.873 and src["sunon"] == (3.7, 0.11) and src["dts"][2] == 41566 and src["pce_pd"] and src["gate"]
 
@@ -440,3 +451,32 @@ def t_round4_the_catalogue_figures_read_from_the_held_pages():
     assert "current several times the rated current may flow" in txt["0633"]
     assert "the coil current is cut off at regular cycles" in txt["0616"]
     assert "VIH =4.75 to 5.25 V" in txt["0623"] and "VIL= 0 to 0.4 V" in txt["0623"] and "The input signal voltage and the frequency differ with models" in txt["0623"]
+
+
+def t_round5_the_rt_draft_sets_500_khz_and_composes_with_layer_6():
+    """Round 5 (O-20): the RT draft changes buck33's RT from 68 k to 200 k (DS41979 Eq. 7: 1470.6 kHz to 500 kHz) and its docstring
+    sentence, adds no designator or net, and composes with record l6r2's board B drafts in either order into one generator."""
+    m = _need_inputs()
+    rt = os.path.join(REC, "apply_gen_sch_b_rt500.py")
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "b.py"); shutil.copy(GEN_B, p)
+        assert _run([rt, p, "--write"]).returncode == 0
+        before, after = open(GEN_B, encoding="utf-8").read().splitlines(), open(p, encoding="utf-8").read().splitlines()
+        import difflib
+        changed = [l for l in difflib.unified_diff(before, after, n=0) if l[:1] in "+-" and not l.startswith(("+++", "---"))]
+        assert len([l for l in changed if l.startswith("-")]) == 2, changed
+        t2 = "\n".join(after)
+        assert '"200k 1% (RT: 500 kHz)"' in t2 and '"68k (RT: 500 kHz)"' not in t2
+        l6 = [os.path.join(ROOT, x) for x in m.L6_B]
+        p1, r1 = m.compose(GEN_B, [rt] + l6, d, "x1"); p2, r2 = m.compose(GEN_B, l6 + [rt], d, "x2")
+        assert all(v == "OK" for _s, v in r1 + r2) and open(p1, "rb").read() == open(p2, "rb").read(), (r1, r2)
+    assert abs(100000.0 / 68.0 - 1470.588) < 0.001 and abs(100000.0 / 200.0 - 500.0) < 1e-9
+
+
+def t_round5_the_collaborators_check_is_filed_as_received():
+    """The collaborator's check of round 4 (cx38) is filed under checks/ unchanged: its first line, its verdict, its three blockers."""
+    need(CHECK_FILED, "the collaborator's check as filed")
+    c = open(CHECK_FILED, encoding="utf-8").read()
+    assert c.startswith("accepted: no\n") and "L9P-F02: NOT CONFIRMED" in c
+    for b in ("- B1: Correct the AP64500 timing mismatch", "- B2: Correct the replacement's load declarations", "- B3: Complete the conditional acceptance package"):
+        assert b in c, b

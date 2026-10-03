@@ -30,6 +30,11 @@ round 4 (3 October 2026, the owner's focused check of L9P-F02):
       coolers' airflow at 70 % against the approved thermal basis; the AP64500's junction by record l4e12's method and the maker's
       Figure 24; the correction (slots 1 and 3 on slot 2's LM5176 stage, apply_gen_sch_a_slotlm.py) with its margins in every state,
       its hottest FET's junction, the energy it costs and the composition's order constraint.
+round 5 (4 October 2026, the collaborator's check astra-check-l9pf02-1, B1 to B3): section 2c corrected in place: the AP64500's
+      drawn frequency (68 k on DS41979 Eq. 7, 1.47 MHz) and what stands without a curve there; the slot's ENVELOPE (the fan's 2.75 W
+      bound at the step-up's 12.43 V top over its 0.80, every slot load at HIGH, board B's slot bucks at 500 kHz by
+      apply_gen_sch_b_rt500.py) with the margins in every state, the start and a degraded fan; the declarations of both boards at
+      5.63 A; the FET's sensitivity to the recovery charge; section 6 composes Layer 6's board B drafts with this record's.
 Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_drafts.py  (l8r2_drafts.out is its output, regenerated with
 _bin/regen_out.py). Nothing here is built or measured: every statement is about generator text, netlists and printed figures."""
 import ast
@@ -70,8 +75,10 @@ AFTER_CHARGER = [("l8r2", "slotlm")]
 E_ROUND = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
            ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("d8dec31", "cin")]
 MINE_E = [("l8r2", "packrtn")]
-L8_B = [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4")]
-MINE_B = [("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4")]
+L8_B = [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
+MINE_B = [("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
+# round 5: Layer 6's board B drafts on this branch (record l6r2, merged in set 28), composed with this record's in either order
+L6_B = ["v2/docs/records/l6r2/apply_gen_sch_b_%s.py" % n for n in ("xal_land", "lcsc", "intent")]
 MAINPB = "v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py"
 HELD = [("v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf", "3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f"),
         ("v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0362.pdf", "7e5e2e7b1fe7e92fd0d1a63eb5e365fdca85be56559c7f6ee2353a10c4d072b9"),
@@ -99,6 +106,10 @@ INPUTS = [
     "v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "v2/docs/records/l4e12/l4e12_thermal.out", "v2/vendor/cm5/cm5-datasheet.pdf",
     "v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi", "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
     "v2/vendor/ti/lm5176-datasheet.pdf", "v2/vendor/fans/sanyo-denki-splash-proof-fan-pages-2026-10-03.md",
+    # round 5: Layer 6's board B drafts and their helpers (composition), the collaborator's check as filed
+    "v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py",
+    "v2/docs/records/l6r2/apply_gen_sch_b_intent.py", "v2/docs/records/l6r2/l6r2_apply.py", "v2/docs/records/l6r2/l6r2_land.py",
+    "v2/docs/records/l6r2/l6r2_intent.py", "v2/docs/records/l8r2/checks/astra-check-l9pf02-1.md",
 ] + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in POWER_A + L8_A] + ["v2/docs/records/%s/apply_gen_sch_b_%s.py" % rn for rn in L8_B] \
   + ["v2/docs/records/%s/apply_gen_sch_e_%s.py" % rn for rn in E_ROUND + MINE_E]
 L6_C = ("v2/docs/records/l8r2/inputs/l6r2-apply_gen_sch_c_lcsc-7633ae0a.py", "v2/docs/records/l8r2/inputs/l6r2-l6r2_apply-7633ae0a.py")
@@ -194,7 +205,16 @@ F = {
     "v_plat": (4.5, "ASSUMPTION", "the CSD19532Q5B's Miller plateau taken at 4.5 V (VGS(th) 2.6 V typical; the gate charge curve not read)"),
     "qrr_prop": (True, "ASSUMPTION", "the body diode's Qrr taken in proportion to its forward current from the sheet's 17 A row"),
     "eta_lm": (0.90, "ASSUMPTION", "the LM5176 5.1 V stages' declared efficiency, NOT PLOTTED by the maker (rv-pwr's rule; record l9pwr's M1)"),
-    "slot_peak": (5.3, "BOUND", "slots 1 and 3's declared peak on LM5176 stages, both ends of the lead (apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)"),
+    "slot_peak": (5.63, "BOUND", "the three slot leads' declared peak, both ends (round 5: slot 2's; apply_gen_sch_a_slotlm.py, apply_gen_sch_b_fans12.py)"),
+    # round 5 (the collaborator's check: B1 the AP64500's drawn frequency, B2 the envelope)
+    "fan_env": (2.75, "BOUND", "the cooler's steady input at the step-up's 12.43 V top, any duty: the maker's 2.0 W at 12 V x 1.111 by the fan laws, with room for -20 C air and the cooler's pressure; C4-3 holds the chain to it"),
+    "ap_rt": (68e3, "BOUND", "board A's and B's drawn AP64500 RT, 68 k (gen_sch_a.py buck5, gen_sch_b.py buck33; O-20)"),
+    "ap_eq7": (100000.0, "MAKER", "DS41979 Eq. 7: RT[kOhm] = 100000 / fsw[kHz] (p.14); 450 to 550 kHz at 200 k (p.6)"),
+    "rt_tol": (0.10, "INFERRED", "the oscillator's spread taken as the printed 200 k row's 10 % at 68 k, where no row is printed"),
+    "fss": (0.06, "MAKER", "AP64500 frequency spread spectrum +-6 % in resistor timing (p.1, p.14)"),
+    "ap_rds": ((0.045, 0.020), "MAKER", "AP64500 high and low side RDS(on) 45 and 20 mOhm, typical only (p.6, Note 8)"),
+    "rds_hot_ap": (1.5, "ASSUMPTION", "the AP64500's RDS(on) taken 1.5 times its typical when hot (Figure 9 not read)"),
+    "cm5_vin": ((4.75, 5.25), "MAKER", "CM5 5 V input 4.75 to 5.25 V (CM5 datasheet, pin table: 'main power input')"),
 }
 V = {k: v for k, (v, _c, _w) in F.items()}
 
@@ -782,13 +802,13 @@ def fig24(t):
     return i0 if t <= t0 else max(0.0, i0 + (i1 - i0) * (t - t0) / (t1 - t0))
 
 
-def qh1(i, vin, vo, rth):
+def qh1(i, vin, vo, rth, prop=True):
     """the LM5176 stage's buck-side high FET in buck mode: conduction, the two edges, Coss, the body diode's recovery (MAKER figures,
-    the ASSUMPTIONS of F); every term taken on its high side"""
+    the ASSUMPTIONS of F); every term taken on its high side. prop=False takes the sheet's Qrr unscaled (the sensitivity of round 5)"""
     rds, _r1, _r2, _tj = V["csd"]; qgd, qgs, qth, qoss, qrr, irr, rg, _vsd = V["csd_q"]; rpu, rpd, _dt, vcc = V["lm_drv"]
     f = V["lm_fsw"]; rh = rds * V["rds_hot"]; d = vo / vin; qsw = qgd + (qgs - qth)
     tr = qsw / ((vcc - V["v_plat"]) / (rpu + rg)); tf = qsw / (V["v_plat"] / (rpd + rg))
-    terms = {"conduction": d * i * i * rh, "edges": 0.5 * vin * i * (tr + tf) * f, "coss": qoss * vin * f, "recovery": qrr * i / irr * vin * f}
+    terms = {"conduction": d * i * i * rh, "edges": 0.5 * vin * i * (tr + tf) * f, "coss": qoss * vin * f, "recovery": qrr * (i / irr if prop else 1.0) * vin * f}
     p = sum(terms.values())
     return p, terms, (tr, tf)
 
@@ -848,24 +868,42 @@ def item1_r4():
                "start_w": start_w, "start_slot_w": start_w / V["eta_lo"], "eff_typ": V["tps_eta_typ"],
                "loss": {e: max(chord) * (1 / e - 1) for e in (V["tps_eta_typ"], V["eta"], V["eta_lo"])},
                "room_nom": (5.0 * 5.1 - other) * V["eta"], "room_least": (5.0 * vl_ap - other) * V["eta"]}
-    # question 3: the states, the slot's current at HIGH on the AP64500 as drawn and on the stage of the correction
+    # question 3: the states, the slot's current at HIGH on the AP64500 as drawn and on the stage of the correction. Round 5 (the
+    # collaborator's B2): every state with the fan at full speed takes the ENVELOPE, the fan's bound at the step-up's 12.43 V top
+    # over the step-up's worst efficiency (fan_env over eta_lo), and the last duty after a firmware fault is up to 100 % (no maximum)
+    env_branch = V["fan_env"] / V["eta_lo"]; env_w = other + env_branch
     rel = [r for r in o3["rows"] if r["state"] == "PS-BUSY" and r["slot"] == "1"][0]
-    rel_w = rel["I"]["rel"] * 5.1
+    rel_w = rel["I"]["rel"] * 5.1 - fan_full + env_branch
     start_slot = o["c2"]["start_slot_w"]
-    ripple = o3["ripple"]
+    ef = item1()["efuse"]; vtop = item1()["vout"][2]
+    degr_slot = ef[0] * vtop / V["eta_lo"]
+    o["env"] = {"branch": env_branch, "w": env_w, "degr_slot": degr_slot, "efuse_lo": ef[0], "vtop": vtop}
     def both(wt):
         return wt / 5.1, wt / vl_ap, wt / vl_lm
     o["c3"] = [
         ("module off, slot rail on", "released: unpowered at the module's shutdown (CM5 2.11); R7x12 10 k to +5V_Sn", "low: R{s}06 100 k holds it, the module's 3.3 V off", "100 %", rel_w),
-        ("boot (bootloader, kernel before its fan driver)", "not stated by the maker; the stock CM5 tree leaves the fan node disabled: taken released", "R{s}06 holds it low until software raises it; the bootloader's PCIe probe NOT STATED: taken high", "100 %", s1["out"][2]),
-        ("reset or a watchdog restart", "the module's reset state, not stated: taken released", "a warm restart keeps the module's 3.3 V; low only if the module lets go (NOT STATED): taken high", "100 %", s1["out"][2]),
-        ("firmware failure, PWM block running", "held at its last duty", "high (the card on)", "the last duty, at most the maximum", other + cap_w),
-        ("firmware failure, fan driver absent or unbound", "released (the stock levels reach 250/255)", "high (the card on)", "98 to 100 %", s1["out"][2]),
-        ("PWM lead open (J_FANs pin 4, a broken brown lead)", "the fan's terminal open", "high (the card on)", "100 % (maker: open = 100 %)", s1["out"][2]),
-        ("a start with the card on (0 % stops this fan; a locked-rotor retry)", "any", "high (the card on)", "start: up to the eFuse's 0.538 A at 12.43 V", other + start_slot),
+        ("boot (bootloader, kernel before its fan driver)", "not stated by the maker; the stock CM5 tree leaves the fan node disabled: taken released", "R{s}06 holds it low until software raises it; the bootloader's PCIe probe NOT STATED: taken high", "100 %", env_w),
+        ("reset or a watchdog restart", "the module's reset state, not stated: taken released", "a warm restart keeps the module's 3.3 V; low only if the module lets go (NOT STATED): taken high", "100 %", env_w),
+        ("firmware failure, PWM block running", "held at its last duty, up to 100 % (no maximum since round 4)", "high (the card on)", "the last duty, up to 100 %", env_w),
+        ("firmware failure, fan driver absent or unbound", "released (the stock levels reach 250/255)", "high (the card on)", "98 to 100 %", env_w),
+        ("PWM lead open (J_FANs pin 4, a broken brown lead)", "the fan's terminal open", "high (the card on)", "100 % (maker: open = 100 %)", env_w),
+        ("a start with the card on (0 % stops this fan; a locked-rotor retry)", "any", "high (the card on)", "start: up to the eFuse's 0.538 A at 12.43 V (an assumed bound)", other + start_slot),
+        ("a degraded fan held steady under the eFuse's least limit (a fault, no trip)", "any", "high (the card on)", "0.448 A at 12.43 V", other + degr_slot),
     ]
     o["c3_i"] = [both(row[4]) for row in o["c3"]]
-    o["ap_pk_start"] = other / vl_ap + start_slot / vl_ap + ripple / 2
+    # B1: the AP64500's drawn frequency (68 k on DS41979 Eq. 7), its ripple and the start's peak there; the conduction term the
+    # smaller ripple takes off (the only loss that falls with frequency)
+    fsw_d = V["ap_eq7"] / (V["ap_rt"] / 1e3) * 1e3
+    vo = 5.1
+    def ripple_at(lf, ff, vin):
+        return vo * (1 - vo / vin) / (V["ap_l"] * lf * fsw_d * ff)
+    rip_nom = ripple_at(1.0, 1.0, V["vsys_max"]); rip_lo = ripple_at(1 - V["ap_ltol"], (1 - V["rt_tol"]) * (1 - V["fss"]), V["vsys_max"])
+    st_i = (other + start_slot) / vl_ap
+    rs = V["ap_rds"]; d12 = vo / 12.0; reff = (d12 * rs[0] + (1 - d12) * rs[1]) * V["rds_hot_ap"]
+    r500 = vo * (1 - vo / 12.0) / (V["ap_l"] * 500e3); r1470 = vo * (1 - vo / 12.0) / (V["ap_l"] * fsw_d)
+    o["b1"] = {"fsw": fsw_d, "rip_nom": rip_nom, "rip_lo": rip_lo, "start_i": st_i, "pk_nom": st_i + rip_nom / 2, "pk_lo": st_i + rip_lo / 2,
+               "delta": (r500 ** 2 - r1470 ** 2) / 12 * reff, "cycles_ms": 512 / fsw_d * 1e3}
+    o["ap_pk_start"] = o["b1"]["pk_nom"]
     # question 4: cooling (the basis against the pick at 70 %), the AP64500's junction, the stage's FET
     sun_cfm, sun_in = src["sunon"]; sun_pa = sun_in * 249.089; q_rep = sun_cfm * 0.3048 ** 3
     pmin, qmax = V["pq100"]
@@ -873,7 +911,7 @@ def item1_r4():
     o["c4"] = {"rep_q": q_rep, "rep_pa": sun_pa, "q100_needed": q_rep / r_lo, "p70_floor": r_lo ** 2 * pmin, "q70_free": [V["fan_rows"][0][4] * r for r in (rr[0], rr[2])],
                "p70_shut": [V["fan_rows"][0][5] * r ** 2 for r in (rr[0], rr[2])], "p50": V["pq50"], "flow_basis": src["h2"]}
     air = src["c1_air"]; th = V["ap_theta"][0]; tjr = V["ap_tj"][0]
-    junction = []
+    junction = []   # round 5: a SCREEN at the maker's 500 kHz curves, not a temperature of the drawn 1.47 MHz stage
     for tag, pout in (("(a) full speed", s1["out"][2]), ("(a) 70 % maximum", other + cap_w), ("(b) no cooler on the slot rail", other),
                       ("PLAN, PS-BUSY as drafted", s1["out"][1])):
         i = pout / 5.1
@@ -881,16 +919,21 @@ def item1_r4():
             loss, eta = ap_loss(pout, i, vin)
             junction.append((tag, vin, i, eta, loss, air + loss * th))
     o["junction"] = junction; o["air"] = air
-    # the largest output current at which the AP64500's junction stays at +125 C at C1's air (14.4 V, the same curve)
     lo, hi = 0.5, 5.0
     for _ in range(60):
         mid = (lo + hi) / 2
         if air + ap_loss(mid * 5.1, mid, 14.4)[0] * th <= tjr: lo = mid
         else: hi = mid
     o["ap_i125"] = lo
-    o["fig24"] = {k: fig24(air) for k in ("air",)}
-    o["fig24_t"] = {i: V["ap_fig24"][0][0] + (V["ap_fig24"][1][0] - V["ap_fig24"][0][0]) * (V["ap_fig24"][0][1] - i) / V["ap_fig24"][0][1]
-                    for i in (s1["out"][2] / 5.1, (other + cap_w) / 5.1, other / 5.1)}
+    o["fig24"] = {"air": fig24(air)}
+    def t24(i):
+        (t0, i0), (t1, _i1) = V["ap_fig24"]
+        return None if i > i0 else t0 + (t1 - t0) * (i0 - i) / i0
+    o["fig24_t"] = {i: t24(i) for i in (s1["out"][2] / 5.1, (other + cap_w) / 5.1, other / 5.1)}
+    # B1: the maker's typical Figure 24 against each option's current at the AP64500's least output (the envelope for (a))
+    o["fig24_least"] = [(tag, wt / vl_ap, t24(wt / vl_ap)) for tag, wt in (("(a) the envelope, full speed", env_w),
+                                                                         ("(a) 70 % maximum", other + cap_w),
+                                                                         ("(b) no cooler on the slot rail", other))]
     # the correction: slots 1 and 3 on the LM5176 stage; the loop's least from record l9pwr's slot 2 line
     lm = [r for r in o3["rows"] if r["part"].startswith("LM5176")][0]["limit"]
     o["lm_limit"] = lm
@@ -898,27 +941,36 @@ def item1_r4():
     for r in o3["rows"]:
         if r["slot"] not in ("1", "3"):
             continue
-        hi_w = r["I"]["a"] * 5.1
-        stt = hi_w - fan_full + start_slot if hi_w > fan_full else hi_w
-        corr.append((r["state"], r["slot"], hi_w / 5.1, hi_w / vl_lm, (hi_w - fan_full + start_slot) / vl_lm))
+        base_w = r["I"]["a"] * 5.1 - fan_full
+        corr.append((r["state"], r["slot"], (base_w + env_branch) / 5.1, (base_w + env_branch) / vl_lm, (base_w + start_slot) / vl_lm,
+                     (base_w + degr_slot) / vl_lm))
     o["corr"] = corr
-    worst = max(c[3] for c in corr); worst_start = max(c[4] for c in corr)
-    o["corr_worst"] = (worst, worst_start)
-    vo = 5.1
+    worst = max(c[3] for c in corr); worst_start = max(c[4] for c in corr); worst_degr = max(c[5] for c in corr)
+    o["corr_worst"] = (worst, worst_start, worst_degr)
     fets = {}
     for vin in (V["vsys_max"], 9.688):
         p, terms, edges = qh1(worst, vin, vo, V["csd"][1])
         fets[vin] = (p, terms, edges, ql1(worst, vin, vo), worst ** 2 * V["csd"][0] * V["rds_hot"])
     o["fets"] = fets
     pq, _t, _e = qh1(worst, V["vsys_max"], vo, V["csd"][1])
+    pq_dec, _t, _e = qh1(V["slot_peak"], V["vsys_max"], vo, V["csd"][1])
+    pq_rr, _t, _e = qh1(worst, V["vsys_max"], vo, V["csd"][1], prop=False)
     o["fet_tj"] = {k: air + pq * V["csd"][k] for k in (1, 2)}
+    o["fet_dec"] = (pq_dec, air + pq_dec * V["csd"][1])
+    o["fet_rr"] = (pq_rr, air + pq_rr * V["csd"][1])
     o["fet_rth_for_125"] = (125.0 - air) / pq
+    o["fet_rth_for_125_rr"] = (125.0 - air) / pq_rr
     dev = [d for d in o3["dev"] if d["state"] == "PS-ALLTX"][0]
     pdv, _t2, _e2 = qh1(dev["drafted"], V["vsys_max"], vo, V["csd"][1])
     o["dev_fet"] = (dev["drafted"], pdv, air + pdv * V["csd"][1])
-    # the declared slot peak and VBAT entry of the correction
-    o["peak_need"] = s1["out"][2] / vl_lm
+    # the declared slot peak and VBAT entry of the correction (round 5: the envelope)
+    o["peak_need"] = env_w / vl_lm
     o["entry"] = V["slot_peak"] * 5.1 / (V["eta_lm"] * 14.4)
+    # the LM5176 stage's output window against the CM5's 5 V input, at the drawn 1 % divider and with 0.1 % parts
+    lo1, _n1 = vout_least(V["vref_lm"], (V["fb_div"][0], V["fb_div"][1], 0.001))
+    rt_, rb_, _t3 = V["fb_div"]
+    o["lm_window"] = {"lo": lo_lm, "hi": o["v"]["most_lm"], "lo01": lo1,
+                      "hi01": V["vref_lm"][2] * (1 + rt_ * 1.001 / (rb_ * 0.999)), "cm5": V["cm5_vin"]}
     # the energy the two stages cost at PLAN (VBAT side), every state, at the declared 0.90 against the AP64500's curve point
     energy = []
     for stn, d in P["states"].items():
@@ -929,7 +981,7 @@ def item1_r4():
                 dw += rl["out"][1] * (1 / V["eta_lm"] - 1 / rl["eta"])
         energy.append((stn, dw))
     o["energy"] = energy
-    # board B's declared loads with the fan at full speed against the new peak (round 4's draft applied)
+    # board B's declared loads with round 5's draft applied (the fan row at the envelope, the three slots at 5.63 A)
     with tempfile.TemporaryDirectory() as d:
         pth = os.path.join(d, "b.py"); shutil.copy(GEN_B, pth)
         rc, msg = run(draft("l8r2", "fans12", "b"), pth)
@@ -937,13 +989,14 @@ def item1_r4():
             raise SystemExit("l8r2_drafts: the coolers' draft refused a copy of gen_sch_b.py: %s" % msg)
         b4, peak4 = slot_loads(open(pth, encoding="utf-8").read())
     o["decl4"] = (sum(b4[1].values()), peak4[1], intent_says(peak4[1], b4[1]), peak4[2], peak4[3])
+    o["fan_row"] = b4[1]["U701"]
     return o
 
 
 
 def item1_r4_print(w):
     o = item1_r4(); s = o["src"]; v = o["v"]; c2 = o["c2"]; c4 = o["c4"]; D = V["duty_max"]
-    w("\n2c. ROUND 4: L9P-F02'S FOCUSED CHECK (the owner's questions 1 to 5; record l9pwr's rails parsed; the cooler's rows from Sanyo Denki's San Ace catalogue C1152B001 '25.10, held back)\n")
+    w("\n2c. ROUND 4, CORRECTED IN ROUND 5: L9P-F02'S FOCUSED CHECK (the owner's questions 1 to 5 and the collaborator's B1 to B3; record l9pwr's rails parsed; the cooler's rows from Sanyo Denki's San Ace catalogue C1152B001 '25.10, held back)\n")
     w("  1. THE TWO MARGINS: what each figure is\n")
     for lab, fig, state, bound in o["c1"]:
         w("    %-38s %+.3f A; state: %s;\n      boundary: %s\n" % (lab, fig, state, bound))
@@ -963,17 +1016,21 @@ def item1_r4_print(w):
     w("    the supply: the step-up's 11.51 to 12.43 V inside the fan's 10.8 to 13.2 V; the maker prints the input at 12 V only; at 12.43 V the fan laws (speed with voltage) give x%.3f: up to %.2f W at 70 %%, %.2f W at 100 %% (INFERRED)\n"
       % (c2["kv"], c2["hi_70"], c2["hi_100"]))
     w("    against the cooler's own pressure (not free air): the maker prints no input at a static pressure: UNRESOLVED\n")
-    w("    the start: 'When voltage is applied or fluctuates ... current several times the rated current may flow' (p.633), no figure: UNRESOLVED; a locked rotor 'the coil current is cut off at regular cycles ... the fan restarts automatically' (p.616); bounded by the eFuse's highest limit %.3f W on the 12 V side, %.2f W on the slot rail at the step-up's %.2f\n"
+    w("    the start: 'When voltage is applied or fluctuates ... current several times the rated current may flow' (p.633), no figure: UNRESOLVED; a locked rotor 'the coil current is cut off at regular cycles ... the fan restarts automatically' (p.616); a current-limited power at the eFuse's inferred highest limit, %.3f W on the 12 V side, %.2f W on the slot rail at the step-up's assumed %.2f: a CONDITIONAL calculation, not an instantaneous bound (the limit's response time and the step-up's own start are finite, SLVSET8A pp.6 to 7, SLVSD38C 8.3.3)\n"
       % (c2["start_w"], c2["start_slot_w"], V["eta_lo"]))
-    w("    the step-up's loss at the bracket's top: %s\n" % ", ".join("%.2f W at %.2f" % (l, e) for e, l in sorted(c2["loss"].items(), reverse=True)))
+    w("    the step-up's loss at the bracket's top: %s (TI's Figure 7-2 is typical at 3.6 V in, not the slot's 4.829 to 5.252 V; no held source makes 0.80 a minimum: an ASSUMPTION the envelope takes and C4-3 measures)\n" % ", ".join("%.2f W at %.2f" % (l, e) for e, l in sorted(c2["loss"].items(), reverse=True)))
     w("    the slot's other loads at HIGH (PS-BUSY): %.3f W; the fan input the AP64500's 5 A leaves at %.2f: %.2f W at 5.1 V, %.2f W at its least %.3f V, under even the fan law's least at 70 %% (%.2f W)\n"
       % (o["other"], V["eta"], c2["room_nom"], c2["room_least"], v["load_ap"], c2["law"][0]))
-    w("  3. THE STATES (the slot at HIGH; A at 5.1 V / at the AP64500's least %.3f V / at the LM5176 stage's least %.3f V)\n" % (v["load_ap"], v["load_lm"]))
+    e = o["env"]; b1 = o["b1"]
+    w("  3. THE STATES (round 5: every full-speed state at the ENVELOPE, the fan's %.2f W bound at %.2f V over %.2f, %.4f W on the slot rail; the slot at HIGH; A at 5.1 V / at the AP64500's least %.3f V / at the LM5176 stage's least %.3f V)\n"
+      % (V["fan_env"], e["vtop"], V["eta_lo"], e["branch"], v["load_ap"], v["load_lm"]))
     for (state, pwm, pce, fan, _w), (i1, i2, i3) in zip(o["c3"], o["c3_i"]):
         w("    %-62s Fan_PWM %s; PCIE_PWR_EN %s; the fan %s: %.3f / %.3f / %.3f A; AP64500 (5 A) %s; LM5176 (%.3f A) %+.3f A\n"
           % (state + ":", pwm, pce, fan, i1, i2, i3, "%+.3f A" % (5.0 - i2) + (" OVER" if i2 > 5.0 else ""), o["lm_limit"], o["lm_limit"] - i3))
-    w("    the start on the AP64500: its inductor's peak %.3f A over its least HS peak limit %.1f A: the cycle limit acts, and 512 cycles at the limit enter hiccup (DS41979 7): the slot drops\n"
-      % (o["ap_pk_start"], V["ap_ipk"][0]))
+    w("    the AP64500 at its DRAWN frequency (B1): RT %.0f k on DS41979 Eq. 7 sets %.1f kHz, not the 500 kHz of the maker's curves; its ripple at %.3f V in %.3f A (nominal L and frequency), %.3f A (L 20 %% low, the oscillator %.0f %% and the spread spectrum %.0f %% low)\n"
+      % (V["ap_rt"] / 1e3, b1["fsw"] / 1e3, V["vsys_max"], b1["rip_nom"], b1["rip_lo"], 100 * V["rt_tol"], 100 * V["fss"]))
+    w("    a start with the card on (the eFuse-limited bound, an ASSUMPTION): %.3f A; the inductor's peak %.3f A nominal, %.3f A at the low corner, against the HS peak limit's %.1f to %.1f A: the limit MAY act at the low corner and need not; hiccup needs it for 512 consecutive cycles (%.3f ms at the drawn frequency), and the start's size and duration are not printed: POSSIBLE, NOT ESTABLISHED, UNRESOLVED\n"
+      % (b1["start_i"], b1["pk_nom"], b1["pk_lo"], V["ap_ipk"][0], V["ap_ipk"][2], b1["cycles_ms"]))
     w("    the module's own words (CM5 datasheet 2.11 and the pin table): '%s' '%s' '%s'\n" % (s["cm5_oc"], s["cm5_shut"], s["cm5_pe"]))
     w("    the stock CM5 tree (linux bcm2712-rpi-cm5.dtsi, held): the fan node %s; cooling levels %s of 255; period %d ns, %.2f kHz against the maker's 25 kHz\n"
       % (s["dts"][0], " ".join(str(x) for x in s["dts"][1]), s["dts"][2], 1e6 / s["dts"][2]))
@@ -981,37 +1038,44 @@ def item1_r4_print(w):
       % ((v["most_ap"], v["most_lm"]) + V["pwm_in"][0] + (V["pwm_in"][4],)))
     w("    board B (gen_sch_b.py, read): R{s}06 100 k holds PCIE_PWR_EN{s} low (%s); the card's supply enable U{s}16 = EMCON_HW AND PCIE_PWR_EN{s} (%s)\n"
       % ("READ" if s["pce_pd"] else "NOT READ", "READ" if s["gate"] else "NOT READ"))
-    w("    VERDICT: round 2's full speed is the default in every state the firmware does not drive; the 70 % maximum is enforced in none of boot (card on), reset, a driver fault or an open lead, and the AP64500 is over 5 A in each\n")
+    w("    VERDICT: full speed is the default in every state the firmware does not drive; with the card on the AP64500 is over 5 A at the envelope in each (and its HS limit may act in a start); the 70 % maximum, withdrawn, held in none of them\n")
     w("  4. COOLING AND THE CONVERTER'S OWN THERMAL CAPABILITY\n")
     w("    the approved basis (record l4e12 2h, parsed): the representative fan's %.1f CFM free air at %.0f %% through the heatsink, %.3f l/s, the CM5's %.1f W and the fan's %.2f W lift the exhaust %.2f K; that fan (Sunon MF30060V2) %.1f CFM and %.2f inch H2O (%.1f Pa) at most\n"
       % (s["h2"] + (s["sunon"][0], s["sunon"][1], c4["rep_pa"])))
     w("    the pick at 70 %% (the fan laws on p.362's 100 %% curve at the speed's least reading): at least %.1f Pa at every flow up to the representative's %.3f m3/min (the 100 %% curve read at %.3f m3/min, inside its %.0f Pa plateau to %.2f); free air %.3f to %.3f m3/min; shut-off %.0f to %.0f Pa\n"
       % (c4["p70_floor"], c4["rep_q"], c4["q100_needed"], V["pq100"][0], V["pq100"][1], c4["q70_free"][0], c4["q70_free"][1], c4["p70_shut"][0], c4["p70_shut"][1]))
-    w("    VERDICT: the pick's curve at 70 %% lies over the representative's at every flow, so through any heatsink it moves more air: the approved airflow HOLDS at 70 %% (the maker's 50 %% curve reads about %.0f Pa at 3.7 CFM, against %.1f Pa: about half duty meets it)\n" % (c4["p50"], c4["rep_pa"]))
-    w("    the SoC at 8 W against the cooler (the module throttles to keep it under 85 C, CM5 4.4): no held document gives the cooler's thermal resistance against airflow: UNRESOLVED (T-H2)\n")
-    w("    the AP64500's junction, record l4e12's method (the converter's loss at its point, rv-pwr's curves on the maker's Figures 4 and 5, x theta-JA %.0f C/W, at C1's %.0f C inside air, the normal mode's ceiling):\n" % (V["ap_theta"][0], o["air"]))
+    w("    VERDICT: under the fan laws and an unchanged air path the pick's curve at 70 %% lies over the representative's at every flow, so it moves more air through the same heatsink: the approved airflow HOLDS at 70 %% (at 50 %% the maker's curve reads about %.0f +- 5 Pa at 3.7 CFM against %.1f Pa: inside the reading's resolution, not claimed)\n" % (c4["p50"], c4["rep_pa"]))
+    w("    the SoC at 8 W against the cooler (the module throttles to keep it under 85 C, CM5 4.4): no held document gives the cooler's thermal resistance against airflow: UNRESOLVED (C4-5)\n")
+    w("    the AP64500's junction (B1): no Diodes curve is printed at the drawn %.0f kHz (Figures 2, 4, 5 and 24 are 500 kHz with 200 k), so no junction of the drawn stage is computed. Two statements stand:\n" % (b1["fsw"] / 1e3))
+    w("      (i) a 500 kHz SCREEN by record l4e12's method (the converter's loss at its point x theta-JA %.0f C/W at C1's %.0f C), not a temperature of the drawn stage:\n" % (V["ap_theta"][0], o["air"]))
     for tag, vin, i, eta, loss, tj in o["junction"]:
-        w("      %-30s VIN %6.3f V: %.3f A, eta %.4f, loss %.3f W, TJ %.1f C: %s\n"
-          % (tag, vin, i, eta, loss, tj, "OVER +125 C" + (" and past the +160 C shutdown" if tj >= V["ap_tj"][1] else "") if tj > V["ap_tj"][0] else "within +125 C"))
-    w("      it holds +125 C at %.0f C air up to %.3f A out at 14.4 V\n" % (o["air"], o["ap_i125"]))
-    w("    the maker's Figure 24 (typical, VIN 12 V, read): %.3f A at %.0f C; %s\n" % (o["fig24"]["air"], o["air"], "; ".join("%.3f A up to %.1f C" % kv for kv in sorted(o["fig24_t"].items(), reverse=True))))
-    w("    VERDICT: by this method the AP64500 is over +125 C on slots 1 and 3 at HIGH with every cooler option, and at PLAN in PS-BUSY; by the maker's typical Figure 24 at 12 V in, the cooler's options at HIGH end at 44.8 and 47.0 C, under C1's 50 C, and (b) at 52.0 C, 2 K above it, typical and with no curve above 12 V in: not adequately rated, whatever the 5 A headline says\n")
-    w("  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum\n")
-    w("    per state at HIGH: A at 5.1 V / at the stage's least %.3f V / the same with a cooler start through its eFuse; margin to the loop's least %.3f A:\n" % (v["load_lm"], o["lm_limit"]))
-    for st, sl, a1, a2, a3 in o["corr"]:
-        w("      %-12s slot %s  %.3f / %.3f / %.3f A  %+.3f / %+.3f A\n" % (st, sl, a1, a2, a3, o["lm_limit"] - a2, o["lm_limit"] - a3))
-    w("    least margin: %+.3f A steady (%.1f %%), %+.3f A with a start\n" % (o["lm_limit"] - o["corr_worst"][0], 100 * (o["lm_limit"] - o["corr_worst"][0]) / o["lm_limit"], o["lm_limit"] - o["corr_worst"][1]))
+        w("        %-30s VIN %6.3f V: %.3f A, eta %.4f, loss %.3f W, screen %.1f C (%s)\n" % (tag, vin, i, eta, loss, tj, "over +125 C" if tj > V["ap_tj"][0] else "within +125 C"))
+    w("      (ii) the maker's typical Figure 24 (500 kHz, VIN 12 V, read) at each option's current at the least load voltage %.3f V: %s\n"
+      % (v["load_ap"], "; ".join("%s %.3f A: %s" % (tg, i, "over the 5 A rating at any air" if tl is None else "the curve ends at %.1f C" % tl) for tg, i, tl in o["fig24_least"])))
+    w("      at the drawn frequency the IC's loss is at least its 500 kHz loss less %.4f W (the conduction term the smaller ripple takes off, typical RDS(on) x %.1f, VIN 12 V; every switching, gate and Coss loss grows with frequency), so for VIN 12 V and above each limit of (ii) is an upper bound on the drawn stage's allowed air\n"
+      % (b1["delta"], V["rds_hot_ap"]))
+    w("    VERDICT: at C1's %.0f C every option's current at the least load voltage is past the maker's typical derating at 500 kHz, and the drawn stage runs at %.0f kHz with more loss: NOT ADEQUATELY RATED (typical figures, a direction argument; no exact junction claimed)\n" % (o["air"], b1["fsw"] / 1e3))
+    w("  5. THE CORRECTION: slots 1 and 3 on slot 2's LM5176 stage (apply_gen_sch_a_slotlm.py), the coolers at full speed on their step-up (apply_gen_sch_b_fans12.py), no Fan_PWM maximum; board B's slot bucks at 500 kHz (apply_gen_sch_b_rt500.py, round 5)\n")
+    w("    per state, the ENVELOPE (B2): A at 5.1 V / at the stage's least %.3f V; with a cooler start through its eFuse's highest limit; with a degraded fan held under its eFuse's least limit; margin to the loop's least %.3f A:\n" % (v["load_lm"], o["lm_limit"]))
+    for st, sl, a1, a2, a3, a4 in o["corr"]:
+        w("      %-12s slot %s  %.3f / %.3f A  start %.3f A  degraded %.3f A  %+.3f / %+.3f / %+.3f A\n" % (st, sl, a1, a2, a3, a4, o["lm_limit"] - a2, o["lm_limit"] - a3, o["lm_limit"] - a4))
+    cw = o["corr_worst"]
+    w("    least margin at the envelope: %+.3f A (%.1f %%); with a start %+.3f A (the eFuse and efficiency start bounds are ASSUMPTIONS, CONDITIONAL); with a degraded fan %+.3f A (a fault the stage carries, over the declaration)\n"
+      % (o["lm_limit"] - cw[0], 100 * (o["lm_limit"] - cw[0]) / o["lm_limit"], o["lm_limit"] - cw[1], o["lm_limit"] - cw[2]))
     for vin, (p, terms, (tr, tf), pl1, ph2) in sorted(o["fets"].items(), reverse=True):
         w("    the stage's buck-side high FET at %.3f A, VIN %.3f V: %s; %.3f W (edges %.1f / %.1f ns); the low FET %.3f W; the boost-side high FET %.3f W\n"
-          % (o["corr_worst"][0], vin, ", ".join("%s %.3f" % kv for kv in terms.items()), p, tr * 1e9, tf * 1e9, pl1, ph2))
-    w("      its junction at %.0f C air: %.1f C on 1 inch2 of 2 oz copper (RthJA %.0f C/W at most), %.1f C on the minimum pad (%.0f C/W), against +%.0f C; +125 C holds to %.1f C/W\n"
-      % (o["air"], o["fet_tj"][1], V["csd"][1], o["fet_tj"][2], V["csd"][2], V["csd"][3], o["fet_rth_for_125"]))
+          % (cw[0], vin, ", ".join("%s %.3f" % kv for kv in terms.items()), p, tr * 1e9, tf * 1e9, pl1, ph2))
+    w("      its junction at %.0f C air: %.1f C on 1 inch2 of 2 oz copper (RthJA %.0f C/W at most), %.1f C on the minimum pad (%.0f C/W); at the declared %.2f A %.3f W, %.1f C; with the sheet's Qrr unscaled (the sensitivity) %.3f W, %.1f C; the acceptance +125 C (the sheet's +%.0f C is an absolute maximum) holds to %.1f C/W, or %.1f C/W unscaled: CONDITIONAL (C4-1, C4-6)\n"
+      % (o["air"], o["fet_tj"][1], V["csd"][1], o["fet_tj"][2], V["csd"][2], V["slot_peak"], o["fet_dec"][0], o["fet_dec"][1], o["fet_rr"][0], o["fet_rr"][1], V["csd"][3], o["fet_rth_for_125"], o["fet_rth_for_125_rr"]))
     w("    the same arithmetic on the device rail's stage at %.3f A (PS-ALLTX, DRAFTED): %.3f W, %.1f C on 1 inch2 (a finding for board A's owner)\n" % o["dev_fet"])
-    w("    the declared peak: %.3f A needed, %.1f A declared at both ends; VBAT's entry %.3f A, declared %.2f A\n" % (o["peak_need"], V["slot_peak"], o["entry"], 2.09))
+    lw = o["lm_window"]
+    w("    the stage's output window: %.3f to %.3f V on the drawn 1 %% divider, against the CM5's %.2f to %.2f V input; %.3f to %.3f V with 0.1 %% parts (a finding: slot 2 and the device rail draw the same divider)\n"
+      % (lw["lo"], lw["hi"], lw["cm5"][0], lw["cm5"][1], lw["lo01"], lw["hi01"]))
+    w("    the declared peak (B2): the envelope needs %.3f A; %.2f A declared at both ends on all three slots (slot 2's); VBAT's entry %.3f A, declared %.2f A\n" % (o["peak_need"], V["slot_peak"], o["entry"], round(o["entry"], 2)))
     d4 = o["decl4"]
-    w("    board B with round 4's draft: slot 1's declared loads %.3f A against %.2f A: %s; slot 2 %.2f A, slot 3 %.2f A\n" % d4)
+    w("    board B with round 5's draft: slot 1's declared loads %.3f A (the fan row %.2f A) against %.2f A: %s; slot 2 %.2f A, slot 3 %.2f A\n" % (d4[0], o["fan_row"], d4[1], d4[2], d4[3], d4[4]))
     w("    the energy at PLAN, VBAT side (the stages' declared %.2f against the AP64500's curve point, slots 1 and 3): %s\n"
-      % (V["eta_lm"], "; ".join("%s %+.3f W" % e for e in o["energy"])))
+      % (V["eta_lm"], "; ".join("%s %+.3f W" % e2 for e2 in o["energy"])))
     w("    SELECTED (SESSION): slots 1 and 3 on the LM5176 stage, the coolers at full speed on their step-up; round 3's 70 % Fan_PWM maximum WITHDRAWN\n")
 
 
@@ -1248,6 +1312,11 @@ def main():
         for s in pb:
             _p, res = compose(GEN_B, [s], d, "b_alone_" + os.path.basename(s)[:-3])
             w("  alone %-30s %s\n" % (os.path.relpath(s, RECS), res[0][1]))
+        l6b = [os.path.join(ROOT, x) for x in L6_B]
+        _p1, r1 = compose(GEN_B, pb + l6b, d, "b_l6_after"); _p2, r2 = compose(GEN_B, l6b + pb, d, "b_l6_before")
+        w("  with Layer 6's board B drafts (l6r2: xal_land, lcsc, intent) after this record's and before them: %s; %s; the same generator either way: %s\n"
+          % ("OK" if all(x == "OK" for _s, x in r1) else r1, "OK" if all(x == "OK" for _s, x in r2) else r2,
+             "YES" if open(_p1, "rb").read() == open(_p2, "rb").read() else "NO"))
 
         compose_e_print(w, d)
 
