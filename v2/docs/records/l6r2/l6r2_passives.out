@@ -292,7 +292,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: stated; not checked (no exact voltage across it)
         the design's code: C414890 from lcsc_fill.py MAP (^10R 2W 2512$ on R_2512)
         SELECTED: C414890 UNI-ROYAL(Uniroyal Elec) HP122WF100JT4E 2512 (expand), stock 12039 against a need of 5; USD 0.0669 at 1, 0.0669 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (2512); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (2W)
+        checks: package MEETS (2512); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (2W); working voltage MEETS (300V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes HP122WF100JT4E (UNI-ROYAL(Uniroyal Elec))
         alternative: C876258 YAGEO RC2512FK-7W10RL, stock 22429, expand
      S-0baee211d0 RES        R5 rows 1 [1k]: R_0603_1608Metric
@@ -308,7 +308,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C137765 from lcsc_fill.py MAP (^240k 1% on R_0603)
         SELECTED: C137765 YAGEO RC0603FR-07240KL 0603 (expand), stock 463631 against a need of 5; USD 0.0052 at 1, 0.0052 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (240kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (240kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes RC0603FR-07240KL (YAGEO)
         alternative: C4197 UNI-ROYAL(Uniroyal Elec) 0603WAF2403T5E, stock 213698, expand
      S-23b0417e32 RES        R11,R16 rows 2 [10mOhm 1% 2512 (ISNS)]: R_2512_6332Metric
@@ -342,7 +342,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22812 from lcsc_fill.py MAP (^16\.5k 1% on R_0603)
         SELECTED: C22812 UNI-ROYAL(Uniroyal Elec) 0603WAF1652T5E 0603 (expand), stock 87116 against a need of 5; USD 0.0016 at 1, 0.0016 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (16.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (16.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C844128 Vishay Intertech CRCW060316K5FKEA, stock 43733, expand
      S-8be4113e80 RES        R20 rows 1 [34.8k 1%]: R_0603_1608Metric
@@ -350,7 +350,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2933204 from lcsc_fill.py MAP (^34\.8k 1% on R_0603)
         SELECTED: C2933204 FOJAN FRC0603F3482TS 0603 (expand), stock 235523 against a need of 5; USD 0.0028 at 1, 0.0028 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (34.8kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (34.8kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F3482TS (FOJAN)
         alternative: C2098331 YAGEO AF0603FR-0734K8L, stock 34701, expand
      S-f2237297b2 RES        R25,R27 rows 2 [40.2k 1%]: R_0603_1608Metric
@@ -358,7 +358,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C12447 from lcsc_fill.py MAP (^40\.2k on R_0603)
         SELECTED: C12447 UNI-ROYAL(Uniroyal Elec) 0603WAF4022T5E 0603 (expand, preferred), stock 197095 against a need of 10; USD 0.0023 at 1, 0.0023 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C2076537 BOURNS CR0603-FX-4022ELF, stock 11358, expand
      S-98a241307a RES        R28,R32,R36,R40 rows 4 [53.6k 1%]: R_0603_1608Metric
@@ -366,7 +366,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23074 from lcsc_fill.py MAP (^53\.6k 1% on R_0603)
         SELECTED: C23074 UNI-ROYAL(Uniroyal Elec) 0603WAF5362T5E 0603 (expand), stock 89238 against a need of 20; USD 0.0023 at 1, 0.0023 at 20; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (53.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (53.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C137700 YAGEO RC0603FR-0753K6L, stock 34046, expand
      S-e35f53a898 RES        R31,R39 rows 2 [5mOhm 1% 2512 (shunt)]: R_2512_6332Metric
@@ -382,7 +382,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23231 from lcsc_fill.py MAP (^68k on R_0603)
         SELECTED: C23231 UNI-ROYAL(Uniroyal Elec) 0603WAF6802T5E 0603 (base), stock 1008560 against a need of 10; USD 0.0016 at 1, 0.0016 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (68kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (68kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114633 YAGEO RC0603FR-0768KL, stock 393756, expand
      S-d80feb38d2 RES        R48 rows 1 [31.6k 1%]: R_0603_1608Metric
@@ -390,7 +390,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25967 from lcsc_fill.py MAP (^31\.6k 1% on R_0603)
         SELECTED: C25967 UNI-ROYAL(Uniroyal Elec) 0603WAF3162T5E 0603 (expand), stock 116347 against a need of 5; USD 0.0022 at 1, 0.0022 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (31.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (31.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C403154 PANASONIC ERJ3EKF3162V, stock 6589, expand
      S-38f244813a RES        R50 rows 1 [162k 1%]: R_0603_1608Metric
@@ -398,7 +398,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22815 from lcsc_fill.py MAP (^162k 1% on R_0603)
         SELECTED: C22815 UNI-ROYAL(Uniroyal Elec) 0603WAF1623T5E 0603 (expand), stock 42351 against a need of 5; USD 0.0017 at 1, 0.0017 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (162kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (162kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C165760 YAGEO RC0603FR-07162KL, stock 28355, expand
      S-3154d1cebf RES        R65 rows 1 [10mOhm 1% 2512 (ISNS)]: R_2512_6332Metric
@@ -415,7 +415,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2930125 from lcsc_fill.py MAP (^665k 1% on R_0603)
         SELECTED: C2930125 FOJAN FRC0603F6653TS 0603 (expand), stock 23306 against a need of 5; USD 0.0026 at 1, 0.0026 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (665kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (665kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F6653TS (FOJAN)
         alternative: C23227 UNI-ROYAL(Uniroyal Elec) 0603WAF6653T5E, stock 11060, expand
      S-b5d9aa5572 RES        R71 rows 1 [20mOhm 1% 2512 (ISNS)]: R_2512_6332Metric
@@ -440,7 +440,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2933128 from lcsc_fill.py MAP (^105k on R_0603)
         SELECTED: C2933128 FOJAN FRC0603F1053TS 0603 (expand), stock 331702 against a need of 5; USD 0.0029 at 1, 0.0029 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (105kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (105kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F1053TS (FOJAN)
         alternative: C141685 YAGEO RC0603FR-07105KL, stock 37369, expand
      S-6aa3c39d58 RES        R90 rows 1 [750R 1% (ILM: 1.2 A)]: R_0603_1608Metric
@@ -448,7 +448,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23241 from lcsc_fill.py MAP (^750R 1% on R_0603)
         SELECTED: C23241 UNI-ROYAL(Uniroyal Elec) 0603WAF7500T5E 0603 (expand, preferred), stock 545971 against a need of 5; USD 0.0035 at 1, 0.0035 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (750Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (750Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114635 YAGEO RC0603FR-07750RL, stock 262490, expand
      S-8f923588d1 RES        R94 rows 1 [909R 1% (ILM: 1.0 A)]: R_0603_1608Metric
@@ -456,7 +456,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C203878 from lcsc_fill.py MAP (^909R 1% on R_0603)
         SELECTED: C203878 BOURNS CR0603-FX-9090ELF 0603 (expand), stock 24070 against a need of 5; USD 0.0067 at 1, 0.0067 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (909Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (909Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (50V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes CR0603-FX-9090ELF (BOURNS)
         alternative: C861596 YAGEO RT0603BRD07909RL, stock 9442, expand
      S-8d602e7906 RES        R98 rows 1 [453R 1% (ILM: 2.0 A)]: R_0603_1608Metric
@@ -464,7 +464,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C48136 from lcsc_fill.py MAP (^453R 1% on R_0603)
         SELECTED: C48136 UNI-ROYAL(Uniroyal Elec) 0603WAF4530T5E 0603 (expand), stock 2364 against a need of 5; USD 0.0025 at 1, 0.0025 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (453Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (453Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C227909 YAGEO AC0603FR-07453RL, stock 4989, expand
      S-d499541fe0 RES        R101,R189,R192,R212,R29,R33+9 rows 15 [10k 1%]: R_0603_1608Metric
@@ -472,7 +472,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k 1% on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 75; USD 0.0018 at 1, 0.0018 at 75; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-668d252f79 RES        R103,R104,R111,R112,R113,R114+3 rows 9 [4.7k]: R_0603_1608Metric
@@ -480,7 +480,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23162 from lcsc_fill.py MAP (^4\.7k$ on R_0603)
         SELECTED: C23162 UNI-ROYAL(Uniroyal Elec) 0603WAF4701T5E 0603 (base), stock 22433052 against a need of 45; USD 0.0028 at 1, 0.0028 at 45; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C99782 YAGEO RC0603FR-074K7L, stock 9470900, expand
      S-50018f6fcc RES        R110,R117,R142,R187,R210,R216+8 rows 14 [10k]: R_0603_1608Metric
@@ -496,7 +496,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C12447 from lcsc_fill.py MAP (^40\.2k on R_0603)
         SELECTED: C12447 UNI-ROYAL(Uniroyal Elec) 0603WAF4022T5E 0603 (expand, preferred), stock 197095 against a need of 35; USD 0.0023 at 1, 0.0023 at 35; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C2076537 BOURNS CR0603-FX-4022ELF, stock 11358, expand
      S-a44109c662 RES        R116,R118,R119,R120,R121,R123+18 rows 24 [100k]: R_0603_1608Metric
@@ -512,7 +512,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C31850 from lcsc_fill.py MAP (^22k$ on R_0603)
         SELECTED: C31850 UNI-ROYAL(Uniroyal Elec) 0603WAF2202T5E 0603 (base), stock 3701252 against a need of 10; USD 0.0041 at 1, 0.0041 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114065 YAGEO RC0603FR-0722KL, stock 1242916, expand
      S-848c909473 RES        R136 rows 1 [21.0k 1% (R_FBL2: 9 V when CTL2 is low)]: R_0603_1608Metric
@@ -520,7 +520,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22956 from lcsc_fill.py MAP (^21\.0k 1% on R_0603)
         SELECTED: C22956 UNI-ROYAL(Uniroyal Elec) 0603WAF2102T5E 0603 (expand), stock 43014 against a need of 5; USD 0.0016 at 1, 0.0016 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (21kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (21kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C137769 YAGEO RC0603FR-0721KL, stock 78503, expand
      S-10839454b4 RES        R137 rows 1 [14.0k 1% (R_FBL1: 15 V when CTL1 is low too)]: R_0603_1608Metric
@@ -528,7 +528,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22803 from lcsc_fill.py MAP (^14\.0k 1% on R_0603)
         SELECTED: C22803 UNI-ROYAL(Uniroyal Elec) 0603WAF1402T5E 0603 (expand), stock 14589 against a need of 5; USD 0.0037 at 1, 0.0037 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (14kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (14kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C4120521 KOA Speer Elec RS73F1JTTD1402B, stock 4940, expand
      S-0f86ef5118 RES        R138,R81 rows 2 [10mOhm 1% 2512 (ISNS)]: R_2512_6332Metric
@@ -546,7 +546,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: stated; not checked (no exact voltage across it)
         the design's code: C38957 from lcsc_fill.py MAP (^43R 1W 2512 on R_2512)
         SELECTED: C38957 UNI-ROYAL(Uniroyal Elec) 25121WJ0430T4E 2512 (expand), stock 19557 against a need of 5; USD 0.0322 at 1, 0.0322 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (2512); resistance MEETS (43Ohm); tolerance MEETS (+-5%); power MEETS (1W)
+        checks: package MEETS (2512); resistance MEETS (43Ohm); tolerance MEETS (+-5%); power MEETS (1W); working voltage MEETS (200V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes 25121WJ0430T4E (UNI-ROYAL(Uniroyal Elec))
         alternative: C728200 YAGEO AC2512FK-0743RL, stock 4371, expand
         a pending draft names R139: the draft's value key decides at the regeneration
@@ -555,7 +555,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22935 from lcsc_fill.py MAP (^1M \( on R_0603)
         SELECTED: C22935 UNI-ROYAL(Uniroyal Elec) 0603WAF1004T5E 0603 (base), stock 6601585 against a need of 5; USD 0.0019 at 1, 0.0019 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C107698 YAGEO RC0603JR-071ML, stock 1084150, expand
      S-f9685d1305 RES        R141 rows 1 [698k]: R_0603_1608Metric
@@ -563,7 +563,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C5126055 from lcsc_fill.py MAP (^698k on R_0603)
         SELECTED: C5126055 FOJAN FRC0603F6983TS 0603 (expand), stock 89905 against a need of 5; USD 0.0025 at 1, 0.0025 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (698kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (698kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F6983TS (FOJAN)
         alternative: C23233 UNI-ROYAL(Uniroyal Elec) 0603WAF6983T5E, stock 1827, expand
      S-5763db5a29 RES        R146,R147,R148,R149,R18 rows 5 [10R]: R_0603_1608Metric
@@ -571,7 +571,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22859 from lcsc_fill.py MAP (^10R$ on R_0603)
         SELECTED: C22859 UNI-ROYAL(Uniroyal Elec) 0603WAF100JT5E 0603 (base), stock 8034696 against a need of 25; USD 0.0032 at 1, 0.0032 at 25; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C109318 YAGEO RC0603FR-0710RL, stock 6047711, expand
         a pending draft names R149: the draft's value key decides at the regeneration
@@ -580,7 +580,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; checked: 0.01 W (V^2/R at 1.00 V, a DECLARED net to ground) at twice is inside it | rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22775 from lcsc_fill.py MAP (^100R 1% on R_0603)
         SELECTED: C22775 UNI-ROYAL(Uniroyal Elec) 0603WAF1000T5E 0603 (base), stock 11546520 against a need of 140; USD 0.0031 at 1, 0.0031 at 140; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105588 YAGEO RC0603FR-07100RL, stock 3435420, expand
      S-1f369a294b RES        R191,R60 rows 2 [140k 1%]: R_0603_1608Metric
@@ -588,7 +588,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C185372 from lcsc_fill.py MAP (^140k 1% on R_0603)
         SELECTED: C185372 YAGEO RC0603FR-07140KL 0603 (expand), stock 352274 against a need of 10; USD 0.0061 at 1, 0.0061 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (140kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (140kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes RC0603FR-07140KL (YAGEO)
         alternative: C22875 UNI-ROYAL(Uniroyal Elec) 0603WAF1403T5E, stock 110042, expand
      S-07308bb177 RES        R194,R77 rows 2 [20k 1%]: R_0603_1608Metric
@@ -596,7 +596,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C4184 from lcsc_fill.py MAP (^20k 1% on R_0603)
         SELECTED: C4184 UNI-ROYAL(Uniroyal Elec) 0603WAF2002T5E 0603 (base), stock 8033437 against a need of 10; USD 0.0023 at 1, 0.0023 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105575 YAGEO RC0603FR-0720KL, stock 3558197, expand
      S-a70591fde8 RES        R219 rows 1 [191k 1%]: R_0603_1608Metric
@@ -604,7 +604,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; checked: 5.7e-05 W (V^2/R at 3.30 V, a DECLARED net to ground) at twice is inside it
         the design's code: C22932 from lcsc_fill.py MAP (^191k 1% on R_0603)
         SELECTED: C22932 UNI-ROYAL(Uniroyal Elec) 0603WAF1913T5E 0603 (expand), stock 68630 against a need of 5; USD 0.0014 at 1, 0.0014 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (191kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (191kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C273767 YAGEO RC0603FR-07191KL, stock 29276, expand
      S-c132a37843 SEMI       D3 rows 1 [SMBJ5.0A]: D_SMB
@@ -855,7 +855,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2933126 from lcsc_fill.py MAP (^102k 1% on R_0603)
         SELECTED: C2933126 FOJAN FRC0603F1023TS 0603 (expand), stock 304644 against a need of 5; USD 0.0024 at 1, 0.0024 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (102kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (102kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F1023TS (FOJAN)
         alternative: C861068 YAGEO RT0603BRD07102KL, stock 9902, expand
         a pending draft names R8: the draft's value key decides at the regeneration
@@ -864,7 +864,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23234 from lcsc_fill.py MAP (^7\.50k 1% on R_0603)
         SELECTED: C23234 UNI-ROYAL(Uniroyal Elec) 0603WAF7501T5E 0603 (base), stock 1317336 against a need of 5; USD 0.0018 at 1, 0.0018 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (7.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (7.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114634 YAGEO RC0603FR-077K5L, stock 168306, expand
         a pending draft names R9: the draft's value key decides at the regeneration
@@ -873,7 +873,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22783 from lcsc_fill.py MAP (^115k 1% on R_0603)
         SELECTED: C22783 UNI-ROYAL(Uniroyal Elec) 0603WAF1153T5E 0603 (expand), stock 92658 against a need of 5; USD 0.0022 at 1, 0.0022 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (115kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (115kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C844319 Vishay Intertech CRCW0603115KFKEA, stock 8307, expand
      S-d499541fe0 RES        R11,R41 rows 2 [10.0k 1% (RFBOUT2)]: R_0603_1608Metric
@@ -881,7 +881,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10\.0k 1% on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 10; USD 0.0018 at 1, 0.0018 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-3c19dd71f7 RES        R12 rows 1 [215k 1% (RT: 202 kHz)]: R_0603_1608Metric
@@ -889,7 +889,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C5713280 from lcsc_fill.py MAP (^215k 1% on R_0603)
         SELECTED: C5713280 FOJAN FRC0603F2153TS 0603 (expand), stock 54516 against a need of 5; USD 0.0022 at 1, 0.0022 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (215kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (215kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F2153TS (FOJAN)
         alternative: C22954 UNI-ROYAL(Uniroyal Elec) 0603WAF2153T5E, stock 14452, expand
      S-50018f6fcc RES        R13,R16,R17,R25,R31,R46+3 rows 9 [10k]: R_0603_1608Metric
@@ -897,7 +897,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k$ on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 45; USD 0.0018 at 1, 0.0018 at 45; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
         a pending draft names R16, R17, R25: the draft's value key decides at the regeneration
@@ -906,7 +906,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25803 from lcsc_fill.py MAP (^100k 1% on R_0603)
         SELECTED: C25803 UNI-ROYAL(Uniroyal Elec) 0603WAF1003T5E 0603 (base), stock 22116659 against a need of 25; USD 0.0031 at 1, 0.0031 at 25; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C14675 YAGEO RC0603FR-07100KL, stock 8718571, expand
         a pending draft names R14, R20, R22: the draft's value key decides at the regeneration
@@ -915,7 +915,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22809 from lcsc_fill.py MAP (^15\.0k 1% on R_0603)
         SELECTED: C22809 UNI-ROYAL(Uniroyal Elec) 0603WAF1502T5E 0603 (base), stock 4588986 against a need of 5; USD 0.0029 at 1, 0.0029 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (15kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (15kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C125928 YAGEO AC0603FR-0715KL, stock 578628, expand
         a pending draft names R15: the draft's value key decides at the regeneration
@@ -934,7 +934,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23034 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C23034 UNI-ROYAL(Uniroyal Elec) 0603WAF3832T5E 0603 (expand), stock 34692 against a need of 5; USD 0.0021 at 1, 0.0021 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (38.3kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (38.3kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C137736 YAGEO RC0603FR-0738K3L, stock 4938, expand
         a pending draft names R21: the draft's value key decides at the regeneration
@@ -943,7 +943,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C60344 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C60344 UNI-ROYAL(Uniroyal Elec) 0603WAF6651T5E 0603 (expand), stock 1255 against a need of 5; USD 0.0022 at 1, 0.0022 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (6.65kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (6.65kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C863216 YAGEO RT0603DRE076K65L, stock 4399, expand
         a pending draft names R23: the draft's value key decides at the regeneration
@@ -952,7 +952,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C4184 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C4184 UNI-ROYAL(Uniroyal Elec) 0603WAF2002T5E 0603 (base), stock 8033437 against a need of 5; USD 0.0023 at 1, 0.0023 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105575 YAGEO RC0603FR-0720KL, stock 3558197, expand
         a pending draft names R24: the draft's value key decides at the regeneration
@@ -969,7 +969,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C21190 from lcsc_fill.py MAP (^1k$ on R_0603)
         SELECTED: C21190 UNI-ROYAL(Uniroyal Elec) 0603WAF1001T5E 0603 (base), stock 21617244 against a need of 15; USD 0.0026 at 1, 0.0026 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C22548 YAGEO RC0603FR-071KL, stock 11394899, expand
      S-b3916fa625 RES        R29,R30 rows 2 [27R]: R_0603_1608Metric
@@ -993,7 +993,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; checked: 1.09e-05 W (V^2/R at 3.30 V, a DECLARED net to ground) at twice is inside it | rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22935 from lcsc_fill.py MAP (^1M$ on R_0603)
         SELECTED: C22935 UNI-ROYAL(Uniroyal Elec) 0603WAF1004T5E 0603 (base), stock 6601585 against a need of 10; USD 0.0019 at 1, 0.0019 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C107698 YAGEO RC0603JR-071ML, stock 1084150, expand
      S-5d1945d084 RES        R43 rows 1 [22k 1% (ADC2: 0.18 x pack)]: R_0603_1608Metric
@@ -1001,7 +1001,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C31850 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C31850 UNI-ROYAL(Uniroyal Elec) 0603WAF2202T5E 0603 (base), stock 3701252 against a need of 5; USD 0.0041 at 1, 0.0041 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114065 YAGEO RC0603FR-0722KL, stock 1242916, expand
      S-d7aa8a0726 RES        R44,R45 rows 2 [100R]: R_0603_1608Metric
@@ -1009,7 +1009,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22775 from lcsc_fill.py MAP (^100R$ on R_0603)
         SELECTED: C22775 UNI-ROYAL(Uniroyal Elec) 0603WAF1000T5E 0603 (base), stock 11546520 against a need of 10; USD 0.0031 at 1, 0.0031 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105588 YAGEO RC0603FR-07100RL, stock 3435420, expand
      S-94b1cac23f RES        R48 rows 1 [22R (pulse input series)]: R_0603_1608Metric
@@ -1159,7 +1159,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22775 from lcsc_fill.py MAP (^100R$ on R_0603)
         SELECTED: C22775 UNI-ROYAL(Uniroyal Elec) 0603WAF1000T5E 0603 (base), stock 11546520 against a need of 45; USD 0.0031 at 1, 0.0031 at 45; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105588 YAGEO RC0603FR-07100RL, stock 3435420, expand
      S-e6b3bd533e RES        R10 rows 1 [2m 2512 2W (sense)]: R_2512_6332Metric
@@ -1183,7 +1183,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23186 from lcsc_fill.py MAP (^5\.1k$ on R_0603)
         SELECTED: C23186 UNI-ROYAL(Uniroyal Elec) 0603WAF5101T5E 0603 (base), stock 25263445 against a need of 15; USD 0.0015 at 1, 0.0015 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (5.1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (5.1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105580 YAGEO RC0603FR-075K1L, stock 6292703, expand
      S-12ede1356a RES        R17,R19 rows 2 [10M]: R_0603_1608Metric
@@ -1191,7 +1191,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C7250 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C7250 UNI-ROYAL(Uniroyal Elec) 0603WAF1005T5E 0603 (base), stock 295520 against a need of 10; USD 0.0037 at 1, 0.0037 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10MOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10MOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114606 YAGEO RC0603FR-0710ML, stock 878219, expand
      S-0baee211d0 RES        R22,R24,R25,R26,R27,R6+1 rows 7 [1k]: R_0603_1608Metric
@@ -1207,7 +1207,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25803 from lcsc_fill.py MAP (^100k$ on R_0603)
         SELECTED: C25803 UNI-ROYAL(Uniroyal Elec) 0603WAF1003T5E 0603 (base), stock 22116659 against a need of 5; USD 0.0031 at 1, 0.0031 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C14675 YAGEO RC0603FR-07100KL, stock 8718571, expand
      S-33cc84bc82 RES        R32 rows 1 [1M]: R_0603_1608Metric
@@ -1215,7 +1215,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; checked: 5.78e-05 W (V^2/R at 7.60 V, a DECLARED net to ground) at twice is inside it
         the design's code: C22935 from lcsc_fill.py MAP (^1M$ on R_0603)
         SELECTED: C22935 UNI-ROYAL(Uniroyal Elec) 0603WAF1004T5E 0603 (base), stock 6601585 against a need of 5; USD 0.0019 at 1, 0.0019 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C107698 YAGEO RC0603JR-071ML, stock 1084150, expand
      S-2d0225efec OPEN       C9 rows 1 [100n]: C_0603_1608Metric
@@ -1311,7 +1311,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C4190 from lcsc_fill.py MAP (^2\.2k$ on R_0603)
         SELECTED: C4190 UNI-ROYAL(Uniroyal Elec) 0603WAF2201T5E 0603 (base), stock 7589335 against a need of 20; USD 0.0018 at 1, 0.0018 at 20; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (2.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (2.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114662 YAGEO RC0603FR-072K2L, stock 3034655, expand
      S-a44109c662 RES        R2,R3,R53 rows 3 [100k]: R_0603_1608Metric
@@ -1327,7 +1327,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k$ on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 115; USD 0.0018 at 1, 0.0018 at 115; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-0baee211d0 RES        R11,R29,R30,R4,R49,R50+1 rows 7 [1.0k]: R_0603_1608Metric
@@ -1335,7 +1335,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C21190 from lcsc_fill.py MAP (^1k$ on R_0603)
         SELECTED: C21190 UNI-ROYAL(Uniroyal Elec) 0603WAF1001T5E 0603 (base), stock 21617244 against a need of 35; USD 0.0026 at 1, 0.0026 at 35; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C22548 YAGEO RC0603FR-071KL, stock 11394899, expand
      S-94b1cac23f RES        R12,R13,R16,R17,R20,R21+2 rows 8 [22]: R_0603_1608Metric
@@ -1343,7 +1343,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23345 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C23345 UNI-ROYAL(Uniroyal Elec) 0603WAF220JT5E 0603 (base), stock 9021121 against a need of 40; USD 0.0017 at 1, 0.0017 at 40; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (22Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (22Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C107701 YAGEO RC0603FR-0722RL, stock 366457, expand
      S-2c22a7de64 RES        R14,R15,R18,R19,R22,R23+2 rows 8 [15k]: R_0603_1608Metric
@@ -1351,7 +1351,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22809 from lcsc_fill.py MAP (^15k$ on R_0603)
         SELECTED: C22809 UNI-ROYAL(Uniroyal Elec) 0603WAF1502T5E 0603 (base), stock 4588986 against a need of 40; USD 0.0029 at 1, 0.0029 at 40; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (15kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (15kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C125928 YAGEO AC0603FR-0715KL, stock 578628, expand
      S-4217d7e5e6 RES        R26,R27 rows 2 [33]: R_0603_1608Metric
@@ -1359,7 +1359,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23140 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C23140 UNI-ROYAL(Uniroyal Elec) 0603WAF330JT5E 0603 (base), stock 5625943 against a need of 10; USD 0.0025 at 1, 0.0025 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (33Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (33Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C108661 YAGEO RC0603FR-0733RL, stock 821153, expand
      S-eaaed6ecb3 RES        R28,R8 rows 2 [1.5k]: R_0603_1608Metric
@@ -1367,7 +1367,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22843 from lcsc_fill.py MAP (^1\.5k$ on R_0603)
         SELECTED: C22843 UNI-ROYAL(Uniroyal Elec) 0603WAF1501T5E 0603 (base), stock 4814410 against a need of 10; USD 0.002 at 1, 0.002 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1.5kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114668 YAGEO RC0603FR-071K5L, stock 920862, expand
      S-668d252f79 RES        R34,R40,R41 rows 3 [4.7k]: R_0603_1608Metric
@@ -1375,7 +1375,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23162 from lcsc_fill.py MAP (^4\.7k$ on R_0603)
         SELECTED: C23162 UNI-ROYAL(Uniroyal Elec) 0603WAF4701T5E 0603 (base), stock 22433052 against a need of 15; USD 0.0028 at 1, 0.0028 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C99782 YAGEO RC0603FR-074K7L, stock 9470900, expand
      S-f7ecdc459a RES        R42 rows 1 [220k]: R_0603_1608Metric
@@ -1383,7 +1383,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22961 from the certified table JLC-CERTIFIED.tsv
         SELECTED: C22961 UNI-ROYAL(Uniroyal Elec) 0603WAF2203T5E 0603 (base), stock 1441020 against a need of 5; USD 0.0015 at 1, 0.0015 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (220kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (220kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C123420 YAGEO RC0603FR-07220KL, stock 650523, expand
      S-7d7bcd4c98 RES        R54,R56 rows 2 [27 1% 2010]: R_2010_5025Metric
@@ -1534,7 +1534,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C21190 from lcsc_fill.py MAP (^1k$ on R_0603)
         SELECTED: C21190 UNI-ROYAL(Uniroyal Elec) 0603WAF1001T5E 0603 (base), stock 21617244 against a need of 15; USD 0.0026 at 1, 0.0026 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C22548 YAGEO RC0603FR-071KL, stock 11394899, expand
      S-b3916fa625 RES        R2,R3,R53,R54,R55,R56 rows 6 [27R]: R_0603_1608Metric
@@ -1550,7 +1550,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k$ on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 10; USD 0.0018 at 1, 0.0018 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-099e530a08 RES        R7,R8 rows 2 [2.2k]: R_0603_1608Metric
@@ -1839,7 +1839,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k 1% on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 90; USD 0.0018 at 1, 0.0018 at 90; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-07308bb177 RES        R2 rows 1 [20.0k 1%]: R_0603_1608Metric
@@ -1847,7 +1847,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C4184 from lcsc_fill.py MAP (^20\.0k 1% on R_0603)
         SELECTED: C4184 UNI-ROYAL(Uniroyal Elec) 0603WAF2002T5E 0603 (base), stock 8033437 against a need of 5; USD 0.0023 at 1, 0.0023 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (20kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105575 YAGEO RC0603FR-0720KL, stock 3558197, expand
      S-1d958fa619 RES        R3 rows 1 [6.04k 1% (ISET)]: R_0603_1608Metric
@@ -1855,7 +1855,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25977 from lcsc_fill.py MAP (^6\.04k 1% on R_0603)
         SELECTED: C25977 UNI-ROYAL(Uniroyal Elec) 0603WAF6041T5E 0603 (expand), stock 49951 against a need of 5; USD 0.0012 at 1, 0.0012 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (6.04kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (6.04kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C141680 YAGEO RC0603FR-076K04L, stock 29220, expand
      S-b35e1ff382 RES        R10,R9 rows 2 [75]: R_0603_1608Metric
@@ -1863,7 +1863,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C4275 from lcsc_fill.py MAP (^75$ on R_0603)
         SELECTED: C4275 UNI-ROYAL(Uniroyal Elec) 0603WAF750JT5E 0603 (base), stock 1755640 against a need of 10; USD 0.0033 at 1, 0.0033 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (75Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (75Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C112309 YAGEO RC0603FR-0775RL, stock 842191, expand
      S-50018f6fcc RES        R11,R132,R133,R134,R135,R137+102 rows 108 [10k]: R_0603_1608Metric
@@ -1871,7 +1871,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25804 from lcsc_fill.py MAP (^10k$ on R_0603)
         SELECTED: C25804 UNI-ROYAL(Uniroyal Elec) 0603WAF1002T5E 0603 (base), stock 23012552 against a need of 540; USD 0.0018 at 1, 0.0018 at 540; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C98220 YAGEO RC0603FR-0710KL, stock 12103100, expand
      S-408fdf491c RES        R12 rows 1 [0.25R 1% 2512]: R_2512_6332Metric
@@ -1903,7 +1903,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22859 from lcsc_fill.py MAP (^10R$ on R_0603)
         SELECTED: C22859 UNI-ROYAL(Uniroyal Elec) 0603WAF100JT5E 0603 (base), stock 8034696 against a need of 5; USD 0.0032 at 1, 0.0032 at 5; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C109318 YAGEO RC0603FR-0710RL, stock 6047711, expand
      S-214fcd1cff RES        R36,R43 rows 2 [301R 1% (ILM: 3.0 A)]: R_0603_1608Metric
@@ -1911,7 +1911,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25192 from lcsc_fill.py MAP (^301R 1% on R_0603)
         SELECTED: C25192 UNI-ROYAL(Uniroyal Elec) 0603WAF3010T5E 0603 (expand), stock 10086 against a need of 10; USD 0.0022 at 1, 0.0022 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (301Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (301Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C482847 YAGEO RC0603FR-07301RL, stock 6302, expand
      S-9cc4aeacc8 RES        R38,R45 rows 2 [100k 1%]: R_0603_1608Metric
@@ -1919,7 +1919,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25803 from lcsc_fill.py MAP (^100k 1% on R_0603)
         SELECTED: C25803 UNI-ROYAL(Uniroyal Elec) 0603WAF1003T5E 0603 (base), stock 22116659 against a need of 10; USD 0.0031 at 1, 0.0031 at 10; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C14675 YAGEO RC0603FR-07100KL, stock 8718571, expand
      S-e0138c1cf9 RES        R58 rows 1 [4.7k 1%]: R_0603_1608Metric
@@ -1935,7 +1935,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C21190 from lcsc_fill.py MAP (^1k \(strap on R_0603)
         SELECTED: C21190 UNI-ROYAL(Uniroyal Elec) 0603WAF1001T5E 0603 (base), stock 21617244 against a need of 215; USD 0.0026 at 1, 0.0026 at 215; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C22548 YAGEO RC0603FR-071KL, stock 11394899, expand
      S-d80feb38d2 RES        R102,R107,R207,R302,R307 rows 5 [31.6k 1%]: R_0603_1608Metric
@@ -1943,7 +1943,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25967 from lcsc_fill.py MAP (^31\.6k 1% on R_0603)
         SELECTED: C25967 UNI-ROYAL(Uniroyal Elec) 0603WAF3162T5E 0603 (expand), stock 116347 against a need of 25; USD 0.0022 at 1, 0.0022 at 25; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (31.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (31.6kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C403154 PANASONIC ERJ3EKF3162V, stock 6589, expand
      S-eecd47eb73 RES        R104,R109,R204,R209,R304,R309 rows 6 [68k (RT: 500 kHz)]: R_0603_1608Metric
@@ -1951,7 +1951,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23231 from lcsc_fill.py MAP (^68k on R_0603)
         SELECTED: C23231 UNI-ROYAL(Uniroyal Elec) 0603WAF6802T5E 0603 (base), stock 1008560 against a need of 30; USD 0.0016 at 1, 0.0016 at 30; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (68kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (68kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114633 YAGEO RC0603FR-0768KL, stock 393756, expand
      S-05a6306966 RES        R105,R110,R20,R210,R305,R310 rows 6 [22k]: R_0603_1608Metric
@@ -1959,7 +1959,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C31850 from lcsc_fill.py MAP (^22k$ on R_0603)
         SELECTED: C31850 UNI-ROYAL(Uniroyal Elec) 0603WAF2202T5E 0603 (base), stock 3701252 against a need of 30; USD 0.0041 at 1, 0.0041 at 30; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (22kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C114065 YAGEO RC0603FR-0722KL, stock 1242916, expand
      S-a44109c662 RES        R106,R111,R112,R160,R161,R192+20 rows 26 [100k]: R_0603_1608Metric
@@ -1967,7 +1967,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C25803 from lcsc_fill.py MAP (^100k$ on R_0603)
         SELECTED: C25803 UNI-ROYAL(Uniroyal Elec) 0603WAF1003T5E 0603 (base), stock 22116659 against a need of 130; USD 0.0031 at 1, 0.0031 at 130; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (100kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C14675 YAGEO RC0603FR-07100KL, stock 8718571, expand
      S-f2237297b2 RES        R114,R214,R314 rows 3 [40.2k 1%]: R_0603_1608Metric
@@ -1975,7 +1975,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C12447 from lcsc_fill.py MAP (^40\.2k on R_0603)
         SELECTED: C12447 UNI-ROYAL(Uniroyal Elec) 0603WAF4022T5E 0603 (expand, preferred), stock 197095 against a need of 15; USD 0.0023 at 1, 0.0023 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (40.2kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C2076537 BOURNS CR0603-FX-4022ELF, stock 11358, expand
      S-3d366ab141 RES        R116,R216,R316 rows 3 [26.7k 1%]: R_0603_1608Metric
@@ -1983,7 +1983,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22923 from lcsc_fill.py MAP (^26\.7k 1% on R_0603)
         SELECTED: C22923 UNI-ROYAL(Uniroyal Elec) 0603WAF2672T5E 0603 (expand), stock 18910 against a need of 15; USD 0.0024 at 1, 0.0024 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (26.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (26.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C728587 YAGEO RT0603BRD0726K7L, stock 13079, expand
      S-1fac31715f RES        R117,R217,R317 rows 3 [475 1% (IREF)]: R_0603_1608Metric
@@ -1991,7 +1991,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C137716 from lcsc_fill.py MAP (^475 1% on R_0603)
         SELECTED: C137716 YAGEO RC0603FR-07475RL 0603 (expand), stock 157566 against a need of 15; USD 0.0046 at 1, 0.0046 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (475Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (475Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes RC0603FR-07475RL (YAGEO)
         alternative: C23181 UNI-ROYAL(Uniroyal Elec) 0603WAF4750T5E, stock 20265, expand
      S-33275a3c79 RES        R118,R218,R318 rows 3 [1.43k 1% (REXT)]: R_0603_1608Metric
@@ -1999,7 +1999,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C217848 from lcsc_fill.py MAP (^1\.43k 1% on R_0603)
         SELECTED: C217848 Viking Tech ARG03FTC1431 0603 (expand), stock 19855 against a need of 15; USD 0.008 at 1, 0.008 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1.43kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1.43kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes ARG03FTC1431 (Viking Tech)
         alternative: C402985 PANASONIC ERJ3EKF1431V, stock 14119, expand
      S-9f4d337c01 RES        R119,R120,R121,R123,R125,R126+21 rows 27 [5.1k]: R_0603_1608Metric
@@ -2007,7 +2007,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23186 from lcsc_fill.py MAP (^5\.1k$ on R_0603)
         SELECTED: C23186 UNI-ROYAL(Uniroyal Elec) 0603WAF5101T5E 0603 (base), stock 25263445 against a need of 135; USD 0.0015 at 1, 0.0015 at 135; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (5.1kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (5.1kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105580 YAGEO RC0603FR-075K1L, stock 6292703, expand
      S-c62c375c58 RES        R122,R124,R128,R222,R224,R228+3 rows 9 [330]: R_0603_1608Metric
@@ -2015,7 +2015,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23138 from lcsc_fill.py MAP (^330$ on R_0603)
         SELECTED: C23138 UNI-ROYAL(Uniroyal Elec) 0603WAF3300T5E 0603 (base), stock 3271167 against a need of 45; USD 0.0026 at 1, 0.0026 at 45; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (330Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (330Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C105881 YAGEO RC0603FR-07330RL, stock 719295, expand
      S-668d252f79 RES        R127,R227,R327,R48,R50,R51+6 rows 12 [4.7k]: R_0603_1608Metric
@@ -2023,7 +2023,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23162 from lcsc_fill.py MAP (^4\.7k$ on R_0603)
         SELECTED: C23162 UNI-ROYAL(Uniroyal Elec) 0603WAF4701T5E 0603 (base), stock 22433052 against a need of 60; USD 0.0028 at 1, 0.0028 at 60; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (4.7kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C99782 YAGEO RC0603FR-074K7L, stock 9470900, expand
      S-a9b2692ac3 RES        R142,R242,R342 rows 3 [9.53k 1%]: R_0603_1608Metric
@@ -2031,7 +2031,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C23127 from lcsc_fill.py MAP (^9\.53k 1% on R_0603)
         SELECTED: C23127 UNI-ROYAL(Uniroyal Elec) 0603WAF9531T5E 0603 (expand), stock 136071 against a need of 15; USD 0.0017 at 1, 0.0017 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (9.53kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (9.53kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C705800 YAGEO RT0603BRD079K53L, stock 14742, expand
      S-b4c70ca2aa RES        R143,R243,R343 rows 3 [90.9k 1%]: R_0603_1608Metric
@@ -2039,7 +2039,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2930136 from lcsc_fill.py MAP (^90\.9k 1% on R_0603)
         SELECTED: C2930136 FOJAN FRC0603F9092TS 0603 (expand), stock 436999 against a need of 15; USD 0.0028 at 1, 0.0028 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (90.9kOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (90.9kOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F9092TS (FOJAN)
         alternative: C23129 UNI-ROYAL(Uniroyal Elec) 0603WAF9092T5E, stock 64436, expand
      S-33cc84bc82 RES        R147,R247,R347 rows 3 [1M]: R_0603_1608Metric
@@ -2047,7 +2047,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C22935 from lcsc_fill.py MAP (^1M$ on R_0603)
         SELECTED: C22935 UNI-ROYAL(Uniroyal Elec) 0603WAF1004T5E 0603 (base), stock 6601585 against a need of 15; USD 0.0019 at 1, 0.0019 at 15; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (1MOhm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C107698 YAGEO RC0603JR-071ML, stock 1084150, expand
      S-d7aa8a0726 RES        R194,R294,R394 rows 3 [100R]: R_0603_1608Metric
@@ -2071,7 +2071,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
         the design's code: C2933247 from lcsc_fill.py MAP (^60R4 1% on R_0603)
         SELECTED: C2933247 FOJAN FRC0603F60R4TS 0603 (expand), stock 84428 against a need of 40; USD 0.0023 at 1, 0.0023 at 40; grade INSIDE (the catalogue line's operating temperature -55.0 to 155.0 C)
-        checks: package MEETS (0603); resistance MEETS (60.4Ohm); tolerance MEETS (+-1%); power MEETS (100mW)
+        checks: package MEETS (0603); resistance MEETS (60.4Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes FRC0603F60R4TS (FOJAN)
         alternative: C245987 YAGEO RC0603FR-0760R4L, stock 243057, expand
      S-c132a37843 SEMI       D1 rows 1 [SMBJ5.0A]: D_SMB
@@ -2174,7 +2174,18 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      S-4c80e3dc5b SPECIAL    Y101,Y201,Y301 rows 3 [24 MHz 3225]: Crystal_SMD_3225-4Pin_3.2x2.5mm
         names no part by number (what it connects to, a class or a function); no identity
 
-3. FINDINGS (per board; each with its line)
+3. FINDINGS (per board; each with its line). First, the set: 116 codes selected; the five-kit need of every board that takes a code,
+   summed, against its stock; the ten narrowest margins (a code short of the set's need is a finding under board A's heading):
+     C20108830   GMR100HJAAFD5L00           need     5, stock       412, margin       407
+     C60344      0603WAF6651T5E             need     5, stock      1255, margin      1250
+     C326958     CC1206JRNPOBBN390          need     5, stock      1280, margin      1275
+     C36077      1812B102K202NT             need     5, stock      1390, margin      1385
+     C421874     201007F270JT4E             need    10, stock      1915, margin      1905
+     C48136      0603WAF4530T5E             need     5, stock      2364, margin      2359
+     C3037266    CR2010F236R0G              need     5, stock      3620, margin      3615
+     C440151     GCM32ER70J476KE19L         need    15, stock      4972, margin      4957
+     C414503     CS03W5F470LT5E             need     5, stock      5024, margin      5019
+     C151256     SMBJ18A                    need     5, stock      6292, margin      6287
    BOARD A: 50 findings (GRADE NOT READ 4; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 34; THE DESIGN'S OWN CODE FAILS A REQUIREMENT 9; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN: C1, C2 [47u 25V]: C403725 GRM31CR61E476ME44L; rule C-D3b: no X7R line read meets the value, land and rating with stock; an X5R part is taken and the hot-spot question is OPEN
      THE DESIGN'S OWN CODE FAILS A REQUIREMENT: C1, C2 [47u 25V]: C403725 GRM31CR61E476ME44L (lcsc_fill.py MAP (^47u 25V$ on C_1206)): dielectric FAILS, read X5R

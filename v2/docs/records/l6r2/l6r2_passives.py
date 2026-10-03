@@ -355,7 +355,10 @@ def _num(rx, s, scale=None):
 
 def parse_tol(s): return _num(r"±\s*([\d.]+)\s*%", s)
 def parse_volt(s): return _num(r"([\d.]+)\s*(kV|V)\b", s, {"kV": 1000.0, "V": 1.0})
-def parse_ppm(s): return _num(r"±?\s*([\d.]+)\s*ppm", s)
+def parse_ppm(s):
+    """The largest magnitude a temperature coefficient states (+-100ppm/C, or a band 25ppm/C~+50ppm/C)."""
+    v = [abs(float(x)) for x in re.findall(r"([+-]?[\d.]+)\s*ppm", str(s or ""))]
+    return max(v) if v else None
 
 
 def parse_power(s):
@@ -446,6 +449,9 @@ def check(d, row):
         if req.get("tcr_max_ppm"):
             c = parse_ppm(a.get("Temperature Coefficient"))
             need("temperature coefficient", "%d ppm/K or less" % req["tcr_max_ppm"], a.get("Temperature Coefficient"), c is not None and c <= req["tcr_max_ppm"] + 1e-9)
+        vw, vmax = req.get("v_working_bound"), parse_volt(a.get("Voltage-Supply(Max)"))
+        if vw is not None and vmax is not None:
+            need("working voltage", "%g V or more (the bound of its nets)" % vw, a.get("Voltage-Supply(Max)"), vmax + 1e-9 >= float(vw))
         tr = parse_temp(a.get("Operating Temperature"))
         if tr: grade = (tr[0], tr[1], "the catalogue line's operating temperature")
     elif cls == "FERRITE":
@@ -777,8 +783,24 @@ def bom_tool_counts():
     return out
 
 
+def aggregate_need(B):
+    """Per selected code, the five-kit need summed over every board that takes it, against the stock read: a code that covers each
+    board's own need can still fall short of the set's."""
+    need, stock, model = collections.Counter(), {}, {}
+    for b in ORDER:
+        for d in B[b]["sels"]:
+            ch = d.get("choice") or {}
+            if ch.get("pick") and ch.get("state") in ("SELECTED", "LOW_STOCK"):
+                c = ch["pick"]["code"]
+                need[c] += len(d["refs"]) * KITS; stock[c] = ch["pick"]["stock"]; model[c] = ch["pick"]["row"].get("model")
+    return [(c, model[c], need[c], stock[c]) for c in sorted(need, key=lambda c: (stock[c] - need[c], c))]
+
+
 def findings(B, comp):
     F = []
+    for c, mdl, n, st in aggregate_need(B):
+        if st < n:
+            F.append(("a", "STOCK UNDER THE SET'S FIVE-KIT NEED (all boards summed)", c, mdl, "need %d against stock %d" % (n, st)))
     for b in ORDER:
         for d in B[b]["sels"]:
             ch = d.get("choice")
@@ -897,15 +919,18 @@ def report(B, cat, TAB, comp, bomc):
 
 def page_table(B):
     """The page's per-board table (L6R2-PASSIVES.md carries it verbatim; test_l6r2 holds the two equal)."""
-    L = ["| Board | Uncoded fitted rows | SELECTED rows (selections) | Open: OPEN requirement | Open: SPECIAL (not re-selected) | NOT_A_PART | NO_MATCH | Designators in the draft |",
-         "|---|---|---|---|---|---|---|---|"]
+    L = ["| Board | Uncoded fitted rows | SELECTED rows (selections) | Open: OPEN requirement | Open: SPECIAL (not re-selected) | NOT_A_PART | NO_MATCH | "
+         "Rows whose finish-time code (lcsc_fill.py) fails a requirement | Designators in the draft |",
+         "|---|---|---|---|---|---|---|---|---|"]
     for b in ORDER:
         rc, c = collections.Counter(), collections.Counter()
+        bad = 0
         for d in B[b]["sels"]:
             st = (d.get("choice") or {}).get("state") or d["cls"]
             rc[st] += len(d["refs"]); c[st] += 1
-        L.append("| %s | %d | %d (%d) | %d | %d | %d | %d | %d |" % (NAME[b], sum(rc.values()), rc["SELECTED"] + rc["LOW_STOCK"], c["SELECTED"] + c["LOW_STOCK"],
-                                                           rc["OPEN"], rc["SPECIAL"], rc["NOT_A_PART"], rc["NO_MATCH"], len(entries_for(b, B))))
+            if any(not j["ok"] for j in (d.get("choice") or {}).get("design_judged", [])): bad += len(d["refs"])
+        L.append("| %s | %d | %d (%d) | %d | %d | %d | %d | %d | %d |" % (NAME[b], sum(rc.values()), rc["SELECTED"] + rc["LOW_STOCK"], c["SELECTED"] + c["LOW_STOCK"],
+                                                                rc["OPEN"], rc["SPECIAL"], rc["NOT_A_PART"], rc["NO_MATCH"], bad, len(entries_for(b, B))))
     return "\n".join(L) + "\n"
 
 
@@ -943,7 +968,11 @@ def main(argv):
     comp = {b: compose(b, entries_for(b, B)) for b in ORDER}
     bomc = bom_tool_counts()
     cov = report(B, cat, TAB, comp, bomc)
-    print("3. FINDINGS (per board; each with its line)")
+    agg = aggregate_need(B)
+    print("3. FINDINGS (per board; each with its line). First, the set: %d codes selected; the five-kit need of every board that takes a code," % len(agg))
+    print("   summed, against its stock; the ten narrowest margins (a code short of the set's need is a finding under board A's heading):")
+    for c, mdl, n, st in agg[:10]:
+        print("     %-11s %-26s need %5d, stock %9d, margin %9d" % (c, clean(mdl), n, st, st - n))
     F = findings(B, comp)
     for b in ORDER:
         fb = [f for f in F if f[0] == b]
