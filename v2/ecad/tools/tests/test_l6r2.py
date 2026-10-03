@@ -239,3 +239,23 @@ def t_the_designator_detector_reads_string_tokens_not_prose():
     old = 'x = 1\n# R5 in a comment\n'
     new = 'x = 1\n# R6 in a comment\nr("R7", "10k", "A", "B", lcsc="C25804"); c("C9", "1n", "A", "B", lcsc="C1588")\n'
     assert m.touched_refs(old, new) == {"R7", "C9"}, m.touched_refs(old, new)
+
+
+def t_the_pages_table_is_the_records_render():
+    m = _M()
+    page = open(os.path.join(REC, "L6R2-PASSIVES.md"), encoding="utf-8").read()
+    a, b = page.index("<!-- page-table:begin -->\n") + len("<!-- page-table:begin -->\n"), page.index("<!-- page-table:end -->")
+    assert page[a:b] == m.page_table(_B()), "the page's coverage table is not the script's render"
+
+
+def t_the_sets_need_sums_the_boards_that_share_a_code():
+    m = _M()
+    fake = {b: dict(sels=[], rows=[]) for b in m.ORDER}
+    pick = dict(code="C9", stock=12, row=dict(model="X"), grade=(-55, 155, "fixture"))
+    sel = lambda refs: dict(refs=refs, cls="RES", kind="resistor", values=["10k"], basis={}, choice=dict(state="SELECTED", pick=pick, need=5 * len(refs)))
+    fake["a"]["sels"] = [sel(["R1", "R2"])]
+    fake["b"]["sels"] = [sel(["R7"])]
+    agg = m.aggregate_need(fake)
+    assert agg == [("C9", "X", 15, 12)], agg
+    F = m.findings(fake, {b: dict(ok=True, notes=[]) for b in m.ORDER})
+    assert any(f[1].startswith("STOCK UNDER THE SET'S") and f[2] == "C9" for f in F), "a set short of stock is not a finding"
