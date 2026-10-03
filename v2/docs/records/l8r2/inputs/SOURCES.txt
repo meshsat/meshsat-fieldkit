@@ -1,0 +1,9 @@
+Inputs copied into this record so that it reads them from its own tree (the rule of 3 October 2026); byte for byte, lines only.
+
+l7pwr-cooler-identity-2087060b.md sha256 518a45fa2ecddc6f8d37e3eb0a1beac825153ae2f2b4e807b1bf02f8b7f9fbdc
+  from v2/docs/records/l7pwr/L7-FANS-AND-TH1.md at commit 2087060b on branch fnd/l7pwr (Layer 7's fans record; the whole file's sha256
+  d4d432207ae347ef6af9d6da6c07e8be3d0237fa2bcbad8da70df96ab35e02a6): section 2b's table header and the 9WPA0412P6G001 row, then section 2e (the identity rows) whole.
+
+l5r2-findings-and-rows-6902db8f.md sha256 acd61db263e3cfdafc8f3b72372afc2fe0c3c87e530e439a0bd005aac27c07d1
+  from v2/docs/records/l5r2/L5-INTERFACES-R2.md at commit 6902db8f on branch fnd/l5r2 (Layer 5's round 2; the whole file's sha256
+  818e348940ecd87ab24da2e1026ab54ceedb8cfa949e0eab575b502a872d44dd): section 9 (findings L5R2-F01 to F08) whole, then the table rows R2-03, R2-04 and R2-27.
