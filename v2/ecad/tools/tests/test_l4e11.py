@@ -1017,19 +1017,23 @@ def t_the_fans_rail_covers_vsys_e_and_the_branch_stays_under_u42s_least_limit():
 
 
 def t_the_board_e_drafts_add_disjoint_designators():
-    """Every board E draft under records/l4e* composed on a copy of gen_sch_e.py in L4-E9's change-list order (q1, u5_grade, hold,
-    input_limit, backstop, f1, hotswap, entry, solar_guard, aux; the timer as the LM5069 alternative after hotswap); the designators each
-    adds are read from the text it writes, in part-call position and as tokens outside comments, and no two drafts add the same one
-    (Astra's recheck of set 27, blocking discrepancy 1: the aux draft once took U18, R59 to R65 and C65 to C71 from the solar drafts)."""
+    """Every board E draft the tree carries, composed on a copy of gen_sch_e.py in L4-E9's change-list order (d8dec31's cin, q1, u5_grade,
+    hold, input_limit, backstop, f1, hotswap, entry, solar_guard, aux; the timer only as the LM5069 alternative after hotswap): the designators
+    each adds are read from the text it writes, as new names (in part-call position and as tokens outside comments, which catches a loop
+    such as the solar guard's `for _cf in (...)`) and as duplicate literal part calls (which catches a draft that writes a name another draft
+    already took). No designator this record's drafts add may meet another draft's (Astra's recheck of set 27, blocking discrepancy 1; the
+    set 27 run's C135 and C136). Collisions between other records' drafts are theirs: the record's 17e names the one known (C65)."""
     _M()
     recs = os.path.join(ROOT, "v2", "docs", "records")
-    main = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
-            ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux")]
+    net = os.path.join(ROOT, "v2", "ecad", "pcb-e1-dock-e7", "out", "pcb-e1-dock.net")
+    main = [("d8dec31", "cin"), ("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"),
+            ("l4e9", "f1"), ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux")]
     alt = [("l4e9", "hotswap"), ("l4e11", "timer")]
     call = re.compile(r'(?:ic|part|c|r|ph|tp|nfet|q)\("([A-Z][A-Z0-9_]*)"')
+    lit = re.compile(r'(?<![A-Za-z_.])(?:ic|part|c|r|ph|tp|nfet)\(\s*"([A-Z][A-Z0-9_]*)"')
     tok = re.compile(r"\b([RCDLQU]\d{1,3}|J_[A-Z0-9]+|TP\d{1,3})\b(?!-)")
     strip = lambda s: "\n".join("" if l.lstrip().startswith("#") else l.split("#")[0] for l in s.splitlines())
-    added = {}
+    added, dup_mine = {}, []
     for seq in (main, alt):
         with tempfile.TemporaryDirectory() as d:
             a = os.path.join(d, "gen_sch_e.py")
@@ -1039,22 +1043,28 @@ def t_the_board_e_drafts_add_disjoint_designators():
             for rec, name in seq:
                 s = os.path.join(recs, rec, "apply_gen_sch_e_%s.py" % name)
                 need(s, "board E's draft %s/%s" % (rec, name))
-                r = _run([s, a, "--write"])
+                r = _run([s, a, net] if rec == "d8dec31" else [s, a, "--write"])
                 assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
                 after = open(a, encoding="utf-8").read()
                 c1, t1 = set(call.findall(after)), set(tok.findall(strip(after)))
                 added.setdefault("%s/%s" % (rec, name), set()).update((c1 - c0) | (t1 - t0))
                 c0, t0 = c1, t1
+            final = open(a, encoding="utf-8").read()
+            seen = {}
+            for ln in strip(final).splitlines():
+                for ref in lit.findall(ln):
+                    seen[ref] = seen.get(ref, 0) + 1
+            mine_all = added.get("l4e11/aux", set()) | added.get("l4e11/entry", set()) | added.get("l4e11/timer", set())
+            dup_mine += [ref for ref, k in seen.items() if k > 1 and ref in mine_all]
     mine = added["l4e11/aux"]
-    assert {"U22", "L4", "R103", "R109", "C135", "C141"} <= mine and not ({"U18", "R59", "R65", "C65", "C71"} & mine), sorted(mine)
-    names = sorted(added)
-    for i, x in enumerate(names):
-        for y in names[i + 1:]:
-            if {x, y} == {"l4e11/entry", "l4e11/timer"}:
-                continue        # alternatives that refuse each other, never on one board
+    assert {"U22", "L4", "R103", "R109", "C142", "C148"} <= mine and not ({"C135", "C136", "C141"} & mine), sorted(mine)
+    assert not dup_mine, "this record's designators written twice: %s" % sorted(set(dup_mine))
+    for x in sorted(k for k in added if k.startswith("l4e11/")):
+        for y in sorted(added):
+            if y == x or {x, y} == {"l4e11/entry", "l4e11/timer"}:
+                continue        # the entry and the timer are alternatives that refuse each other, never on one board
             both = added[x] & added[y]
             assert not both, "%s and %s both add %s" % (x, y, sorted(both))
-
 
 def t_every_specimen_block_names_its_thermal_boundaries_and_its_re_test_trigger():
     """L4-QR01 (the owner's review of 3 October): every measurement row's block in 17d records its specimen, lot, operating point,
