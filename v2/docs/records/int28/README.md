@@ -10,7 +10,7 @@ what remains for the coordinator who promotes set 28 after set 27. The owner's i
 | File | What it is |
 |---|---|
 | `RESULT.md` | The result: the merge order and the two conflicts with their resolution, each re-pin (file, old sha, new sha), the check lines, the module test line with every failure named and dispositioned, the box re-takes owed, the proposed LAYER-STATUS rows for Layers 5, 6 and 7, and what remains for the coordinator |
-| `apply_set28.py` | The driver: the steps after the merges in their dependency order (held sheets, rebind, registry, trace page, re-pins and regeneration, identity block, the checks), each step idempotent; a step reporting "already applied" is accepted |
+| `apply_set28.py` | The driver: the steps after the merges in their dependency order (held sheets, rebind, registry, trace page, the Layer 3 R2 pages, re-pins and regeneration, identity block, the checks), each step idempotent; a step reporting "already applied" is accepted; the checks are reported and judged at the end (PCB-ETA.md stale is the worker-tree condition, accepted) |
 | `resolve_both_sides.py` | The merge-conflict resolver used for `v2/vendor/sources.txt` and `v2/docs/parts/PROCUREMENT.md`: both sides kept, ours (Layer 6) first, no line dropped or changed; refuses a file without markers |
 | `stage_held_sheets.py` | Stages the makers' held-back sheets (gitignored `held/` folders) from sibling checkouts on this host, each verified by the sha256 a record pins; nothing fetched. A fresh worktree holds none and every Layer 4 reader that pins one refuses without it |
 | `apply_set28_rebind.py` | L5-F02: CFL-001, CFL-005, CFL-014, CFL-015 and CFL-016 rebound from PANEL.md's old content to the merged page, one evidence entry each (what differs, what each rests on, re-deciding nothing); the pattern of `records/retake6/apply_rebind_current_evidence.py` |
@@ -25,9 +25,11 @@ what remains for the coordinator who promotes set 28 after set 27. The owner's i
    L4-E7's three held Samsung readings by their sha; Panasonic's ZA sheet has no verified copy on this host).
 3. `apply_set28_repins.py --write` (L4-E5's mechanism, L4-E11's pins and texts, L4-E9's pins; three regenerations).
 4. `apply_set28_rebind.py --write`; `env -C v2/ecad/tools python3 rules_lib.py requirements`; `rules_render.py --requirements`;
-   `apply_set28_repins.py --write` again (the reqs pins of L4-E9 and L4-E11, their regeneration).
+   `apply_set28_repins.py --write` again (the reqs pins of L4-E9 and L4-E11, their regeneration); `env -C v2/docs/handover/layer3
+   python3 render_l3r2.py` (the R2 pages print the registry's sha; test_l3r2 found them stale).
 5. `records/l6pwr/apply_part_identities_block.py --check` (the block is in the merged yaml); `part_identities.py check`.
-6. The renderers' `--check`; the module tests of the brief in the background (`RESULT.md` section 5).
+6. The renderers' `--check`; the module tests of the brief in the background (`RESULT.md` section 4); `apply_set28.py` once more,
+   end to end, as the proof of the driver.
 
 On a re-run (the branch re-based onto set 27's final commit): `apply_set28.py` runs steps 2 to 5 in dependency order; the merges and the
 resolution are the coordinator's with `resolve_both_sides.py` ready.
