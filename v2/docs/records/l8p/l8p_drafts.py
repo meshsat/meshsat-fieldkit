@@ -11,12 +11,15 @@ It prints, deterministically and without touching the tree:
   3. C-1c's budget: the restart inhibit's window from the record, the NTC's figures from Murata's sheet, the OPA187's offset over
      temperature, bias and offset currents and supply rejection read from TI's held sheet (never typed), the bridge resistors,
      the NTC's own heating and the hysteresis computed for the drawn values, and the remainder left for the pad's gradient;
+  3b. B-R2's detector (round 3, route R1): why no existing element tells board A a latched breaker passing a charge, the charge
+     threshold and the reverse threshold with every tolerance, the delays, the protector's own limits, what board A must read
+     (L4-E11's DD-7 interface) and E-14 as it now reads, from task L4-E11's copies (fnd/l4e11r9 at e60a94a8) and the makers' sheets;
   4. each draft on a scratch copy: checked, applied once, refused twice, and refused on the tree's own generator (NOT RELEASED);
   5. the composition of each board in L4-E9's change-list order with this record's draft in its place, first and last;
   6. the designators each draft adds, pairwise disjoint, and every literal part call drawn once in the composed generators;
   7. the regeneration on the runner (gen_netlist.py: the generator's own part table, no KiCad): the unpatched generators
      reproduce the committed KiCad netlists pin for pin; the netlist check (check_l8p_netlist.py) on the committed netlists
-     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN), and on three
+     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN), and on five
      mutated netlists (FAIL);
   8. the declarations the patched board P generator writes into its intent for the new nets;
   9. the findings for other authors and their state.
@@ -61,23 +64,45 @@ ORDER = {
 # where this record's draft goes in the forward order: after the board's circuit drafts, before the last-taker and the tables
 SLOT = {"p": 0, "e": 10, "a": 11}
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
-               "constants": "inputs/l9stk_protection-constants-0d72880b.txt"}
+               "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-e60a94a8.md",
+               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md"}
 SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444ee345bd87eb9af3146f005c507f14961f3ac80",
                "inputs/l9stk_protection-0d72880b.out.txt": "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac",
                "inputs/l9stk_protection-constants-0d72880b.txt": "ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e",
-               "inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py": "dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544"}
+               "inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py": "dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544",
+               "inputs/l4e11-section19h-e60a94a8.md": "270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486",
+               "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146"}
 # L8P-F01 is closed by L4-E7's backstop draft on fnd/l4e7r6 at 914a2f5a (not on main): board E's composition uses that draft,
 # copied byte for byte into inputs/, in place of main's
 REPLACED = {("l4e7", "backstop", "e"): os.path.join(HERE, "inputs", "l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py")}
 OPA187 = os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-opa187-sbos807e.pdf")
 NTC_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "murata-nxrt15xh103fa1b.pdf")
 D4148_SHEET = os.path.join(ROOT, "v2", "vendor", "power", "st-semtech-1n4148w-c81598.pdf")
+LM5069_SHEET = os.path.join(ROOT, "v2", "vendor", "ti", "ti-lm5069.pdf")
+CSD_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "ti-csd18510q5b.pdf")
+N7002_SHEET = os.path.join(ROOT, "v2", "vendor", "power", "jscj-2n7002-c8545.pdf")
+BZT_SHEET = os.path.join(ROOT, "v2", "vendor", "diodes", "diodes-bzt52c-ds18004.pdf")
 # C-1c as drawn (apply_gen_sch_p_breaker.py): the bridge, the reference, the hysteresis, and the bounds the budget applies
 R_BRIDGE, R_REF_T, R_REF_B, R_HYST = 150e3, 147e3, 1.62e3, 15e6
 R_TOL, R_TCR, HYST_TOL = 0.001, 25e-6, 0.01     # the bridge and reference parts: 0.1 %, at most 25 ppm/K; the hysteresis part 1 %
 T_RES = (25.0, 101.0)                           # the resistors anywhere between 25 C and the held 101.0 C case (l9stk 15.4)
 V_CLAMP = 29.2                                  # BRK_VIN's clamp (l9stk 15.4, the clamps row), the supply span for PSRR
 CHECKER_GRADIENT = 0.9                          # the pad-to-NTC gradient the checker asked the split to leave room for, K
+# B-R2's detector as drawn (apply_gen_sch_p_breaker.py, round 3, route R1)
+R118, R119, R129, R120, C109 = 1.15e6, 200.0, 47e3, 200.0, 470e-9
+R121, R122, R123, R124, C110 = 332e3, 33.2e3, 328e3, 33.2e3, 1e-9
+TOL_REF, TCR_REF = 0.001, 25e-6                 # R118 and R119, as C-1c's bridge
+TOL_DIV, TCR_DIV = 0.0005, 10e-6                # R121 to R124
+TOL_FEED, TCR_FEED = 0.01, 100e-6               # R129, a 1 % part; its 100 ppm/K ASSUMED
+R10_TOL, R10_TCR = 0.01, 75e-6                  # board P's R10, the gauge's sense: no tolerance or TCR is printed in the generator; ASSUMED, owed to Layer 6
+R106_TOL = 0.01                                 # R106 10 kOhm, ASSUMED 1 %
+STRETCH_MIN = 1.0                               # the least time board A holds its inhibit after the return rises (the interface), s
+OUT_POWERED, RET_LOW, RET_HIGH = 2.0, 1.0, 2.5  # the interface's levels: DOCK_EN_OUT read as powered, DOCK_EN_RET read low and high, V
+# readings of TI's plotted typical curves (no figure has a text layer), INFERRED: E-14b measures them on the specimen
+CSD_RDS_150 = 1.8                               # CSD18510Q5B Figure 8: normalized RDS(on) at VGS 10 V and 150 C
+CSD_VSD = {25: (0.575, 0.632), 125: (0.368, 0.432)}   # Figure 9: typical VSD at 0.1 A and at 1 A, by case temperature
+CSD_ZTH_10MS = 0.54                             # Figure 1: the single pulse's normalized ZthJC at 10 ms
+N7002_HOT = 2.0                                 # the 2N7002's RDS(on) taken as twice its 25 C maximum when hot (a bound, no figure read)
 SESSION = [
     ("designators", "the free 100 block on board P (U101, U102, Q101 to Q106, D101, D102, RT101, R101 to R117, C101 to C106, TP101 to TP106); RT1 on board A, which carries no RT designator"),
     ("net names", "BRK_VIN (Q2's source, the breaker's input), BRK_SNS, BRK_GATE, BRK_TMR, BRK_PWR, BRK_UVLO, BRK_G2, BRK_H, BRK_HD, BRK_PGD, BRK_CMID, INH_NTC, INH_REF, INH_OUT, INH_G; DOCK_EN_OUT and DOCK_EN_RET on all three boards"),
@@ -89,6 +114,7 @@ SESSION = [
     ("PGD gating", "U101's PGD on BRK_PGD at half BRK_VIN (R116, R117 1 MOhm); Q106 holds Q105's gate low while PGD is high; Q105 pulls UVLO; R114 and R115 halve U102's output for Q105's gate"),
     ("test points", "TP101 BRK_VIN, TP102 BRK_UVLO, TP103 DOCK_EN_OUT, TP104 DOCK_EN_RET (E-12); TP105 INH_NTC, TP106 INH_OUT (E-12b)"),
     ("lands", "the VSSOP-10, SMC, SOD-123, SOT-23-5 and 2512 lands the kit already uses; the 7-circuit XH header of the same row; RT1 on board P's 0402; RT101's 10 mm leads on the project's LeadLands_1x02"),
+    ("B-R2 detector", "round 3, route R1: U103 and U104 (OPA187, U102's part), U103 on R10's cell side through R120 200 ohm and C109 470 nF against R118 1.15 MOhm over R119 200 ohm from REV_VZ (BRK_VIN through R129 47 kOhm under D103, the BZT52C12 board A's D25 uses); U104 on PACK_P over R121 332 kOhm and R122 33.2 kOhm against BRK_SNS over R123 328 kOhm and R124 33.2 kOhm (0.05 %, 10 ppm/K), C110 1 nF; Q107 and Q108 2N7002 in series on DOCK_EN_RET, their gates at half of each output (R125 to R128); C107, C108; TP107, TP108 (E-12c)"),
 ]
 
 
@@ -200,7 +226,150 @@ def budget(page):
     W["window_ok"] = abs(W["trip"] - W["half"] - W["allow"]) <= 0.02 and abs(W["trip"] + W["half"] - W["block"]) <= 0.02 \
         and abs(W["half"] - W["ntc_k"] - W["rest"]) <= 0.02
     W["lockout"] = W["allow"] - W["air"]
+    W["iq_max"] = float(need(op, r"IO = 0 mA, TA = \u201340\u00b0C to \+125\u00b0C\s+([0-9.]+)\s+%sA" % U, "its quiescent current over temperature").group(1)) * 1e-6
     return W
+
+
+def rev_budget(page, l4, pre, W):
+    """B-R2's detector (route R1, round 3): the figures read from record l9stk's and task L4-E11's copies and from the makers'
+    sheets; the three readings of plotted typical curves are marked; the thresholds, their tolerances, the delays and the limits
+    computed for the drawn values."""
+    N = r"([0-9.]+)"
+    R = {}
+    # record l9stk (0d72880b), section 15
+    R["i_lim"] = float(need(page, r"\*\*%s\s+A\s+largest\*\*" % N, "l9stk: the breaker's largest limit").group(1))
+    need(page, r"\*\*0\.110\s+to\s+0\.907\s+s\s+after\s+the\s+enable\s+mates\*\*", "l9stk: the hold")
+    R["hold"] = 0.907
+    R["start"] = float(need(page, r"\*\*inrush\s+at\s+most\s+0\.659\s+A\*\*\s+for\s+at\s+most\s+%s\s+ms" % N, "l9stk: the start").group(1)) * 1e-3
+    R["t_timer"] = float(need(page, r"The\s+timer\s+falls\s+under\s+its\s+0\.3\s+V\s+re-enable\s+threshold\s+in\s+%s\s+ms\s+at\s+most" % N,
+                              "l9stk: the timer's re-enable").group(1)) * 1e-3
+    R["rja"] = float(need(page, r"installed\s+RthJA\s+of\s+\*\*%s\s+C/W\s+per\s+FET\*\*" % N, "l9stk: IF-2's RthJA").group(1))
+    # task L4-E11 (e60a94a8), sections 19h and 15c
+    R["i_por"] = float(need(l4, r"ChargeCurrent\s+at\s+POR\s+\(TI's\s+E2E\s+answer,\s+D4\),\s+%s\s+A" % N, "L4-E11: the power-on charge").group(1))
+    m = need(l4, r"R-b's\s+largest\s+actual\s+current,\s+%s\s+A\s+\|\s+[0-9.]+\s+W\s+\|\s+%s\s+C" % (N, N), "L4-E11: R-b's largest")
+    R["i_rb"], R["tj_rb"] = float(m.group(1)), float(m.group(2))
+    R["alive"] = float(need(l4, r"the\s+inhibit\s+sets\s+only\s+when\s+CELL\+\s+falls\s+under\s+%s\s+V" % N, "L4-E11: the inhibit's CELL+ threshold").group(1))
+    m = need(l4, r"under\s+%s\s+A\s+\(the\s+latched\s+FET's\s+body\s+diode\s+at\s+150\s+C\s+held\s+from\s+%s\s+C\s+at\s+VSD\s+%s\s+V\s+and\s+%s\s+C/W\)" % (N, N, N, N),
+             "L4-E11: the latched FET's safe level")
+    R["i_safe"], R["air"], R["vsd_b"], R["rja_l4"] = (float(m.group(k)) for k in (1, 2, 3, 4))
+    R["p_fe"] = float(need(l4, r"the\s+front\s+end's\s+%s\s+W" % N, "L4-E11: the front end's power").group(1))
+    m = need(l4, r"\*\*%s\s+V\*\*\s+at\s+the\s+breaker's\s+least-limit\s+fault\s+of\s+%s\s+ohm" % (N, N), "L4-E11: the reach's resistive case")
+    R["v_fault"], R["r_fault"] = float(m.group(1)), float(m.group(2))
+    R["reach"] = float(need(l4, r"faults\s+under\s+\*\*%s\s+mOhm\*\*" % N, "L4-E11: the inhibit's reach").group(1))
+    need(l4, r"The\s+breaker's\s+PGD\s+reads\s+high\s+in\s+that\s+state\s+too", "L4-E11: PGD high in reverse")
+    need(l4, r"\*\*B-R2\s+stays\s+OPEN\s+for\s+that\s+case\*\*", "L4-E11: B-R2 open")
+    m = need(l4, r"DOCK_EN_OUT\s+is\s+at\s+least\s+%s\s+V\s+\(the\s+pack's\s+%s\s+V,\s+RT1\s+at\s+its\s+cold\s+least\s+%s\s+kOhm" % (N, N, N),
+             "L4-E11: the inhibit's loop sense")
+    R["out_l4"], R["v_pack_min"], R["rt1_min"] = float(m.group(1)), float(m.group(2)), float(m.group(3)) * 1e3
+    need(l4, r"\|\s+R109,\s+R144\s+\|\s+1M\s+each,\s+DOCK_EN_OUT\s+to\s+SYS_INH_G\s+to\s+ground", "L4-E11: Q47's gate at half of DOCK_EN_OUT")
+    R["i_ldo"] = float(need(pre, r"\*\*%s\s+A\*\*\s+at\s+most,\s+all\s+of\s+it\s+in\s+one\s+FET" % N, "L4-E11 15c: the LDO-mode precharge").group(1))
+    R["srn_floor"] = float(need(pre, r"no\s+charge\s+under\s+\*\*%s\s+V\*\*\s+on\s+SRN" % N, "L4-E11 15c: R-b''s floor").group(1))
+    # board P's sense R10, read from the tree's generator
+    g = open(GEN["p"], encoding="utf-8").read()
+    m = need(g, r'r\("R10",\s+"(\d+)m 2512 2W \(sense\)",\s+"GND",\s+"PACK_N"', "board P's R10")
+    R["r10"] = float(m.group(1)) * 1e-3
+    # TI LM5069 (SNVS452G)
+    lm = pdftext(LM5069_SHEET)
+    m = need(lm, r"Normal operation, GATE-OUT = 5 V\s+%s\s+%s\s+%s\s+µA" % (N, N, N), "LM5069: IGATE")
+    R["igate"] = (float(m.group(1)), float(m.group(3)))
+    m = need(lm, r"UVLO < 2\.5 V\s+%s\s+%s\s+%s\s+mA" % (N, N, N), "LM5069: the gate's 2 mA sink")
+    R["isink"] = (float(m.group(1)), float(m.group(3)))
+    m = need(lm, r"POREN\s+VIN increasing\s+%s\s+%s\s+V" % (N, N), "LM5069: POREN")
+    R["poren"] = (float(m.group(1)), float(m.group(2)))
+    R["porit"] = float(need(lm, r"PORIT\s+VIN increasing\s+%s\s+%s\s+V" % (N, N), "LM5069: PORIT").group(1))
+    need(lm, r"When the external MOSFET VDS decreases below 1\.25 V,", "LM5069: PGD on VDS alone")
+    need(lm, r"The gate-to-source voltage is limited by an internal 12-V Zener diode", "LM5069: the internal gate clamp")
+    need(lm, r"momentarily pulling the UVLO pin below\s+2\.5 V", "LM5069: the -1's reset by UVLO")
+    need(lm, r"The voltage at the TIMER pin must be\s+<0\.3 V for the restart procedure to be effective", "LM5069: the timer's condition")
+    # TI CSD18510Q5B (SLPS632)
+    cs = pdftext(CSD_SHEET)
+    R["rds_max"] = float(need(cs, r"VGS = 10 V, ID = 32 A\s+0\.79\s+%s" % N, "CSD18510Q5B: RDS(on)").group(1)) * 1e-3
+    R["vsd_max"] = float(need(cs, r"ISD = 32 A, VGS = 0 V\s+0\.8\s+%s" % N, "CSD18510Q5B: VSD").group(1))
+    R["rjc"] = float(need(cs, r"Junction-to-case thermal resistance \(1\)\s+%s" % N, "CSD18510Q5B: RthJC").group(1))
+    for f in ("Figure 1. Transient Thermal Impedance", "Figure 8. Normalized On-State Resistance vs Temperature", "Figure 9. Typical Diode Forward Voltage"):
+        need(cs, re.escape(f), "CSD18510Q5B: %s" % f)
+    # JSCJ 2N7002 (C8545)
+    nj = pdftext(N7002_SHEET)
+    R["n_rds"] = float(need(nj, r"VGS=5 V, ID=50mA\s+1\.1\s+%s" % N, "2N7002: RDS(on) at 5 V").group(1))
+    m = need(nj, r"Vth\(GS\)\s+VDS=VGS, ID=250 µA\s+%s\s+%s\s+%s" % (N, N, N), "2N7002: the threshold")
+    R["n_vth"] = (float(m.group(1)), float(m.group(3)))
+    R["n_vgs"] = float(need(nj, r"Gate-Source Voltage\s+VGS\s+±(\d+)", "2N7002: VGS").group(1))
+    # Diodes BZT52C (DS18004)
+    bz = pdftext(BZT_SHEET)
+    m = need(bz, r"BZT52C12\s+WH\s+12\s+%s\s+%s\s+5\s+25\s+150\s+1\.0\s+%s\s+%s\s+%s\s+%s" % (N, N, N, N, N, N), "BZT52C12's row")
+    R["vz"], R["ir"], R["vr"], R["tcz_min"], R["tcz"] = (float(m.group(1)), float(m.group(2))), float(m.group(3)) * 1e-6, float(m.group(4)), \
+        float(m.group(5)) * 1e-3, float(m.group(6)) * 1e-3
+    # the arithmetic: the charge threshold (U103)
+    t_hi = W["case_held"]
+    e_ref = 2 * (TOL_REF + TCR_REF * (t_hi - 25.0))
+    e_feed = TOL_FEED + TCR_FEED * (t_hi - 25.0)
+    e_r10 = R10_TOL + R10_TCR * (t_hi - 25.0)
+    rdiv = R118 + R119
+    ratio = rdiv / (rdiv + R129)
+    k = R119 / rdiv
+    e_ratio = R129 / (rdiv + R129) * (e_feed + TOL_REF + TCR_REF * (t_hi - 25.0))
+    v_op = W["vos"] + W["drift"] * (W["tj_max_spec"] - 25.0) + W["ios"] * max(R120, R119) + W["ib"] * abs(R120 - R119) + W["psrr"] * (V_CLAMP - W["vmin"])
+    vz_hot = R["vz"][1] + R["tcz"] * (t_hi - 25.0)
+    vz_low = R["vr"] - R["ir"] * 10 * R129          # the zener under 0.1 uA at 8.0 V (ten times that hot): the node at least this
+    R.update(ratio=ratio, k=k, c=k / R["r10"], v_op=v_op, e_ref=e_ref, e_ratio=e_ratio, e_r10=e_r10, vz_hot=vz_hot, vz_low=vz_low)
+
+    def i_min(v):
+        node = min(v * ratio * (1 - e_ratio), vz_low)
+        return (k * node * (1 - e_ref) - v_op) / (R["r10"] * (1 + e_r10))
+
+    def i_max(v):
+        node = min(v * ratio * (1 + e_ratio), vz_hot)
+        return (k * node * (1 + e_ref) + v_op) / (R["r10"] * (1 - e_r10))
+    R["v_floor"] = R["srn_floor"] - R["vsd_max"]
+    R["v_run"] = R["porit"]
+    R["table_i"] = [(v, i_min(v), i_max(v)) for v in (R["v_floor"], R["v_run"], R["v_pack_min"], 13.7, W["vmax"], V_CLAMP)]
+    R["i_th_min"] = min(x[1] for x in R["table_i"])
+    R["i_th_max"] = max(x[2] for x in R["table_i"])
+    R["tj_at_max"] = R["air"] + R["i_th_max"] * R["vsd_b"] * R["rja_l4"]
+    R["m_lo"] = R["i_th_min"] / R["i_ldo"]
+    R["m_hi"] = R["i_safe"] / R["i_th_max"]
+    # the reverse threshold (U104)
+    r1, r2 = R122 / (R121 + R122), R124 / (R123 + R124)
+    eps = r2 / r1 - 1.0
+    e_div = TOL_DIV + TCR_DIV * (t_hi - 25.0)
+    er = (1 - r1) * 2 * e_div + (1 - r2) * 2 * e_div
+    rs1, rs2 = R121 * R122 / (R121 + R122), R123 * R124 / (R123 + R124)
+    v_op2 = W["vos"] + W["drift"] * (W["tj_max_spec"] - 25.0) + W["ios"] * max(rs1, rs2) + W["ib"] * abs(rs1 - rs2) + W["psrr"] * (V_CLAMP - W["vmin"])
+    R.update(eps=eps, er=er, v_op2=v_op2, rs=(rs1, rs2))
+    R["table_v"] = [(v, eps * v - (v * er + v_op2 / r1), eps * v + (v * er + v_op2 / r1)) for v in (R["v_run"], R["v_pack_min"], W["vmax"])]
+    R["vt_min"] = min(x[1] for x in R["table_v"])
+    R["vt_max"] = max(x[2] for x in R["table_v"])
+    R["v_chan"] = R["i_lim"] * R["rds_max"] * CSD_RDS_150 / 2.0
+    # the body diodes at the threshold's least current, split between the two FETs, from TI's typical Figure 9 (read)
+    i_fet = min(i_min(v) for v in (R["v_run"], R["v_pack_min"], W["vmax"])) / 2.0
+
+    def vsd_typ(t, i):
+        lo, hi = CSD_VSD[t]
+        return lo + (hi - lo) * math.log10(i / 0.1)
+    slope = (vsd_typ(125, i_fet) - vsd_typ(25, i_fet)) / 100.0
+    R["i_fet"] = i_fet
+    R["vsd_125"] = vsd_typ(125, i_fet)
+    R["vsd_150"] = vsd_typ(125, i_fet) + slope * 25.0
+    R["vsd_case"] = vsd_typ(25, i_fet) + slope * (t_hi - 25.0)
+    # the pull on the return, and what board A then reads on the loop's outgoing conductor
+    i_loop = V_CLAMP / (10e3 * (1 - R106_TOL) + R["rt1_min"])
+    R["v_ret"] = 2 * R["n_rds"] * N7002_HOT * i_loop
+    R["gate_run"] = R["v_run"] / 2.0
+    R["out_run"] = R["v_run"] * R["rt1_min"] / (10e3 * (1 + R106_TOL) + R["rt1_min"])
+    R["out_pack"] = R["v_pack_min"] * R["rt1_min"] / (10e3 * (1 + R106_TOL) + R["rt1_min"])
+    # the delays and the burst
+    R["tau_i"], R["tau_v"] = R120 * C109, C110 * (rs1 + rs2)
+    t_amp = 10 * (5.0 / 0.2e6 + 8e-6)                                # the OPA187's printed typical slew and recovery, taken ten times slower
+    R["t_d"] = max(R["tau_i"], R["tau_v"]) * math.log(1.1 / 0.1) + t_amp
+    R["t_restart"] = R["hold"] + R["start"]
+    R["i_chg_fe"] = R["p_fe"] / R["v_pack_min"]
+    R["dT_burst"] = R["i_lim"] * R["vsd_max"] * CSD_ZTH_10MS * R["rjc"]
+    # what the detector draws from BRK_VIN
+    R["i_standby"] = 2 * W["iq_max"] + (W["vmax"] - R["vz"][0]) / R129 + R["vz"][1] / rdiv + W["vmax"] / (R123 + R124)
+    R["ok"] = (R["m_lo"] > 1.0 and R["m_hi"] > 1.0 and R["vt_min"] > R["v_chan"] and R["vt_max"] < R["vsd_150"]
+               and R["gate_run"] > R["n_vth"][1] and V_CLAMP / 2.0 < R["n_vgs"] and R["t_restart"] < STRETCH_MIN
+               and R["tj_at_max"] < 150.0 and R["v_floor"] >= W["vs"][0] and R["out_run"] >= OUT_POWERED + 0.5)
+    return R
 
 
 def rel(p):
@@ -356,7 +525,7 @@ def main():
     inputs += others + [NET["p"], NET["e"], NET["a"]]
     inputs += [os.path.join(HERE, f) for f in sorted(SOURCES_SHA)] + [os.path.join(HERE, "inputs", "SOURCES.txt")]
     inputs += [os.path.join(CHK.PRETTY, l + ".kicad_mod") for l in sorted(set(CHK.LANDS.values()) | {"LeadLands_1x02"})]
-    inputs += [os.path.join(ROOT, "v2", "vendor", "ti", "ti-lm5069.pdf"), NTC_SHEET, D4148_SHEET, OPA187, os.path.join(HERE, "fetch_held_back.py")]
+    inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, os.path.join(HERE, "fetch_held_back.py")]
     inputs += [MINE["p"], MINE["e"], MINE["a"], os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
     w("1. INPUTS, pinned by sha256\n")
     for p in inputs:
@@ -366,7 +535,7 @@ def main():
     for f, full in sorted(SOURCES_SHA.items()):
         if sha(os.path.join(HERE, f), 64) != full:
             refuse("the copy %s is not the file SOURCES.txt pins" % f)
-    w("   record l9stk's and L4-E7's copies equal the sha256 SOURCES.txt pins: yes\n\n")
+    w("   record l9stk's, L4-E7's and L4-E11's copies equal the sha256 SOURCES.txt pins: yes\n\n")
     # 2. the values
     texts = {k: open(os.path.join(HERE, v), encoding="utf-8").read() for k, v in INPUT_FILES.items()}
     w("2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices\n")
@@ -423,6 +592,85 @@ def main():
     w("   E-10 gains: VDS under 1.62 V during current-limit excursions (PGD stays high, so the inhibit stays gated)\n\n")
     if not (B["closes"] and B["window_ok"]):
         refuse("C-1c's split does not close or the window is inconsistent")
+    # 3b. B-R2's detector
+    R = rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
+    w("3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c at e60a94a8, the makers' sheets\n")
+    w("   the open case (L4-E11 19h): a latch while a source holds VSYS keeps CELL+ tied to it, %.1f V into the %.3f ohm fault, so the\n" % (R["v_fault"], R["r_fault"]))
+    w("     inhibit (CELL+ under %.2f V) sets only for faults under %.0f mOhm; the latched FET at %.4f A (R-b's largest) is held at %.1f C, %.3f A is its\n" % (
+        R["alive"], R["reach"], R["i_rb"], R["tj_rb"], R["i_safe"]))
+    w("     safe level (150 C held from %.2f C at VSD %.0f V and %.1f C/W); a charge over it rested on the firmware\n" % (R["air"], R["vsd_b"], R["rja_l4"]))
+    w("   NO EXISTING ELEMENT TELLS BOARD A (read from the sheets and the drafts):\n")
+    w("     PGD switches on VDS alone (SNVS452G pin 8: active when VDS decreases below 1.25 V); a reverse charge makes VDS negative, so PGD reads good\n")
+    w("     the -1 has no fault pin: its latch holds GATE low on the %.2f to %.1f mA sink until UVLO or VIN cycles (8.4.3); its GATE to OUT clamp is an\n" % R["isink"])
+    w("       internal 12 V zener (8.4.2), and a divider on GATE draws from the %.0f to %.0f uA charge pump that sets l9stk's %.1f ms start (IF-1)\n" % (R["igate"][0], R["igate"][1], R["start"] * 1e3))
+    w("     the enable loop's two conductors: board A reads DOCK_EN_OUT and DOCK_EN_RET only, both ratiometric to BRK_VIN through RT1; their ratio is\n")
+    for rt in (R["rt1_min"], 47e3, 338e3):
+        w("       RT1 %5.0f kOhm: RET/OUT %.4f with R106 in the loop and %.4f with R106 bypassed (a change of the loop's source scales both alike)\n" % (
+            rt / 1e3, (22e3 / (10e3 + rt + 22e3)) / ((rt + 22e3) / (10e3 + rt + 22e3)), 22e3 / (rt + 22e3)))
+    w("       a changed return resistor is confounded with RT1's own %.0f kOhm to 338 kOhm span, a raised return enables the breaker undocked (Q103 on\n" % (R["rt1_min"] / 1e3))
+    w("       with no dock), and only the return held LOW is distinct: Q103 then reads the loop open, Q104 pulls UVLO, the -1 resets\n")
+    w("     C-1c's NTC reads the pad, too slow and gated by PGD (high in reverse); the gauge's charge FET Q1 could block a charge, but the owner's\n")
+    w("       criterion takes Q1 and Q2 welded\n")
+    w("   ROUTE R1 SELECTED: board P detects the charge itself and holds the loop's return low, which J_DOCK pin 3 already carries to board A;\n")
+    w("     a reset is harmless exactly then: a charge flows backwards only while the source holds CELL+ above the cells, and board A's inhibit holds\n")
+    w("     the battery FETs off through the restart, so the dv/dt start meets CELL_FUSED alone and no forward current\n")
+    w("   U103, THE CHARGE INTO THE CELLS on R10 (%.0f mOhm, read from gen_sch_p.py): %.4g A per volt of REV_VZ; REV_VZ is BRK_VIN x %.5f under\n" % (
+        R["r10"] * 1e3, R["c"], R["ratio"]))
+    w("     D103 (BZT52C12: %.1f to %.1f V at 5 mA, %.1f to %.1f mV/K, under %.1f uA at %.1f V; %.2f V at most at the held %.1f C case)\n" % (
+        R["vz"][0], R["vz"][1], R["tcz_min"] * 1e3, R["tcz"] * 1e3, R["ir"] * 1e6, R["vr"], R["vz_hot"], B["case_held"]))
+    w("     REV_VZ at least %.2f V wherever BRK_VIN puts it over that (the zener's knee under 1 mA is not printed: its leakage at %.1f V, ten times hot, through R129)\n" % (
+        R["vz_low"], R["vr"]))
+    w("     tolerances: R118 and R119 %.2f %% together, R129's share %.3f %%, R10 %.2f %% (its %.0f %% and %.0f ppm/K ASSUMED, owed to Layer 6), U103 %.1f uV\n" % (
+        R["e_ref"] * 100, R["e_ratio"] * 100, R["e_r10"] * 100, R10_TOL * 100, R10_TCR * 1e6, R["v_op"] * 1e6))
+    w("       (VOS, drift to 125 C, IOS through 200 ohm each side, PSRR over %.1f to %.1f V)\n" % (B["vmin"], V_CLAMP))
+    for v, lo, hi in R["table_i"]:
+        w("     BRK_VIN %5.2f V: the threshold %.3f to %.3f A\n" % (v, lo, hi))
+    w("     least %.3f A against the LDO-mode precharge's %.5f A at most (L4-E11 15c), x%.3f; most %.3f A against the latched FET's %.3f A, x%.3f;\n" % (
+        R["i_th_min"], R["i_ldo"], R["m_lo"], R["i_th_max"], R["i_safe"], R["m_hi"]))
+    w("     the power-on charge %.3f A and R-b's %.4f A pass a running breaker untouched; a charge the detector lets pass holds the FET at %.1f C at most\n" % (
+        R["i_por"], R["i_rb"], R["tj_at_max"]))
+    w("     the floor: SRN %.1f V (R-b', L4-E11 15c) less VSD %.1f V: BRK_VIN %.2f V, over the OPA187's least supply %.1f V\n" % (
+        R["srn_floor"], R["vsd_max"], R["v_floor"], B["vs"][0]))
+    w("   U104, THE BODY DIODES CONDUCTING: PACK_P x %.6f against BRK_SNS x %.6f: high when PACK_P exceeds BRK_SNS by %.4f of it;\n" % (
+        R122 / (R121 + R122), R124 / (R123 + R124), R["eps"]))
+    w("     tolerances: R121 to R124 at %.2f %% and %.0f ppm/K, %.3f %% of BRK_SNS in all; U104 %.0f uV (IOS through %.1f kOhm), %.1f mV referred\n" % (
+        TOL_DIV * 100, TCR_DIV * 1e6, R["er"] * 100, R["v_op2"] * 1e6, R["rs"][0] / 1e3, R["v_op2"] * (R121 + R122) / R122 * 1e3))
+    for v, lo, hi in R["table_v"]:
+        w("     BRK_VIN %5.2f V: the reverse threshold %.4f to %.4f V\n" % (v, lo, hi))
+    w("     a running breaker at the pack path's %.2f A charge: %.1f mV (RDS(on) %.2f mOhm at most, x%.1f at 150 C, Figure 8 read, two in parallel)\n" % (
+        R["i_lim"], R["v_chan"] * 1e3, R["rds_max"] * 1e3, CSD_RDS_150))
+    w("       under the least threshold %.4f V: U104 never reads a running breaker (the charger's own bound is under it: %.0f W over %.1f V, %.1f A)\n" % (
+        R["vt_min"], R["p_fe"], R["v_pack_min"], R["i_chg_fe"]))
+    w("     the body diodes at the threshold's least current, %.3f A a FET: %.3f V at 125 C and %.3f V at 150 C (Figure 9, typical, read), %.3f V at the\n" % (
+        R["i_fet"], R["vsd_125"], R["vsd_150"], R["vsd_case"]))
+    w("       held %.1f C case; over the most threshold %.4f V: a charge over U103's threshold always crosses U104's (INFERRED from a typical figure; E-14b)\n" % (
+        B["case_held"], R["vt_max"]))
+    w("   THE PULL: Q107 and Q108 in series, gates at half of each output: %.1f V at BRK_VIN %.1f V (PORIT, under which the -1 runs nothing) against the\n" % (
+        R["gate_run"], R["v_run"]))
+    w("     2N7002's %.1f V threshold at most, %.1f V at the %.1f V clamp against its %.0f V; DOCK_EN_RET held at %.3f V at most (2 x %.0f ohm x %.0f, %.2f mA)\n" % (
+        R["n_vth"][1], V_CLAMP / 2.0, V_CLAMP, R["n_vgs"], R["v_ret"], R["n_rds"], N7002_HOT, V_CLAMP / (10e3 * (1 - R106_TOL) + R["rt1_min"]) * 1e3))
+    w("   WHAT BOARD A READS (the interface owed to L4-E11's DD-7 draft): with the return held, DOCK_EN_OUT falls to %.2f V at BRK_VIN %.1f V and %.2f V at\n" % (
+        R["out_run"], R["v_run"], R["out_pack"]))
+    w("     %.1f V (RT1 at %.0f kOhm, R106 +1 %%); Q47's gate at half of it (R109, R144) reads %.2f and %.2f V, under the 2N7002's %.1f V: L8P-F04\n" % (
+        R["v_pack_min"], R["rt1_min"] / 1e3, R["out_run"] / 2, R["out_pack"] / 2, R["n_vth"][1]))
+    w("     the inhibit sets while DOCK_EN_RET is under %.1f V and DOCK_EN_OUT at %.1f V or over, within 1 ms, and holds at least %.1f s after the return\n" % (
+        RET_LOW, OUT_POWERED, STRETCH_MIN))
+    w("       rises over %.1f V; the breaker restarts within %.4f s (the hold %.3f s and the start %.1f ms); the timer re-enables %.1f ms after a latch\n" % (
+        RET_HIGH, R["t_restart"], R["hold"], R["start"] * 1e3, R["t_timer"] * 1e3))
+    w("   THE DELAYS: U103's filter %.0f us, U104's %.0f us, each to a 10 %% overdrive x%.2f, the OPA187's typical slew and recovery taken ten times\n" % (
+        R["tau_i"] * 1e6, R["tau_v"] * 1e6, math.log(1.1 / 0.1)))
+    w("     slower: %.2f ms at most to the pull; a charge over the threshold for %.0f ms at the pack path's %.2f A and VSD %.1f V in one FET raises its\n" % (
+        R["t_d"] * 1e3, 10, R["i_lim"], R["vsd_max"]))
+    w("     junction %.1f K over the case (Figure 1, single pulse, %.2f x %.1f C/W at 10 ms, read)\n" % (R["dT_burst"], CSD_ZTH_10MS, R["rjc"]))
+    w("   THE PROTECTOR'S OWN LIMITS: U103 and U104 on BRK_VIN, %.1f to %.0f V (%.0f V absolute) against %.2f to %.1f V; their inputs within (V-) - 0.1 V\n" % (
+        B["vs"][0], B["vs"][1], B["vs_abs"], R["v_floor"], V_CLAMP))
+    w("     to (V+) - 2 V; it draws %.2f mA from BRK_VIN at %.1f V (two %.0f uA amplifiers, the reference's feed, the dividers): a standby load for\n" % (
+        R["i_standby"] * 1e3, B["vmax"], B["iq_max"] * 1e6))
+    w("     the battery stream\n")
+    w("   B-R2 BY THE CRITERION: %s\n" % ("MEETS ON PAPER (drafted; nothing measured)" if R["ok"] else "DOES NOT CLOSE"))
+    w("\n")
+    if not R["ok"]:
+        refuse("B-R2's detector does not close")
     with tempfile.TemporaryDirectory(prefix="l8p_") as d:
         # 4. each draft alone
         w("4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)\n")
@@ -553,6 +801,12 @@ def main():
         m3 = mutate(alone["p"][0], d, "mut_p2", [(("Q106", "1"), ("Q105", "1"))])
         buf = io.StringIO(); CHK.run({"p": m3}, ROOT, buf, label=lambda x: "mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD)")
         w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        m4 = mutate(alone["p"][0], d, "mut_p3", [(("U104", "3"), ("U104", "4"))])
+        buf = io.StringIO(); CHK.run({"p": m4}, ROOT, buf, label=lambda x: "mutated board P (U104's inputs exchanged: the detector reads a forward drop)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        m5 = mutate(alone["p"][0], d, "mut_p4", [(("R120", "1"), ("R119", "2"))])
+        buf = io.StringIO(); CHK.run({"p": m5}, ROOT, buf, label=lambda x: "mutated board P (R120 on PACK_N and R119 on GND: U103 no longer reads R10)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
         w("\n")
         # 8. intent
         w("8. THE INTENT THE PATCHED BOARD P GENERATOR WRITES FOR THE NEW NETS\n")
@@ -562,19 +816,24 @@ def main():
             w("   rail %-8s source %s, loads %s, switch %s on %s%s%s\n" % (n, r.get("source"), json.dumps(r.get("loads"), sort_keys=True), r.get("switch", "-"),
                                                                       r.get("enable_net", "-"), ", series of %s" % r["series_of"] if r.get("series_of") else "",
                                                                       ", fed from %s" % r["fed_from"] if r.get("fed_from") else ""))
-        for n in ("BRK_GATE", "BRK_UVLO", "BRK_H", "BRK_HD", "BRK_G2", "BRK_PGD", "BRK_CMID", "INH_NTC", "INH_REF", "INH_OUT", "INH_G", "DOCK_EN_OUT", "DOCK_EN_RET"):
+        for n in ("BRK_GATE", "BRK_UVLO", "BRK_H", "BRK_HD", "BRK_G2", "BRK_PGD", "BRK_CMID", "INH_NTC", "INH_REF", "INH_OUT", "INH_G", "DOCK_EN_OUT", "DOCK_EN_RET",
+                  "REV_VZ", "REV_IREF", "REV_ISNS", "REV_IOUT", "REV_IG", "REV_VP", "REV_VN", "REV_VOUT", "REV_VG", "REV_MID"):
             r = it["nodes"].get(n) or {}
-            w("   node %-11s v_max %s V%s\n" % (n, r.get("v_max"), ", rides on %s by %s V" % (r["rides_on"], r["bias_v"]) if r.get("rides_on") else ""))
+            w("   node %-11s v_max %s V%s%s\n" % (n, r.get("v_max"), ", v_min %s V" % r["v_min"] if r.get("v_min") else "",
+                                             ", rides on %s by %s V" % (r["rides_on"], r["bias_v"]) if r.get("rides_on") else ""))
         cl = it.get("clamps", {}).get("D101") or {}
         w("   clamp D101: %s, protected %s, return %s\n" % (cl.get("direction"), cl.get("protected"), cl.get("return")))
-        bp = [b_ for b_ in it.get("bypass", []) if b_.get("cap") == "C106"]
-        w("   decoupling C106: %s\n" % ("class %s at %s.%s on %s" % (bp[0].get("class"), bp[0].get("part"), bp[0].get("pin"), bp[0].get("net")) if bp else "ABSENT"))
-    w("\n9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads)\n")
+        for cap in ("C106", "C107", "C108"):
+            bp = [b_ for b_ in it.get("bypass", []) if b_.get("cap") == cap]
+            w("   decoupling %s: %s\n" % (cap, "class %s at %s.%s on %s" % (bp[0].get("class"), bp[0].get("part"), bp[0].get("pin"), bp[0].get("net")) if bp else "ABSENT"))
+    w("\n9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)\n")
     w("   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a\n")
     w("     (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it\n")
     for b in "ea":
         for fid, why, _o, _r in STANDINS[b]:
             w("   %s board %s: %s\n" % (fid, b.upper(), why))
+    w("   L8P-F04 board A: L4-E11's DD-7 draft reads the loop powered at half of DOCK_EN_OUT (Q47 through R109 and R144); with the return held low\n")
+    w("     (board P's detector, or board A's own Q44) DOCK_EN_OUT falls to %.2f V at BRK_VIN %.1f V: the interface of section 3b is owed (open)\n" % (R["out_run"], R["v_run"]))
     w("\nl8p_drafts: done\n")
     return 0
 

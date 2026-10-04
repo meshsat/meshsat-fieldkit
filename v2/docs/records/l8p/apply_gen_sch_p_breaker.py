@@ -28,18 +28,19 @@ The correction drawn here, every value from record l9stk by its section (the rec
   B-R2 (route R1, record l8p round 3; L4-E11 19h): THE REVERSE-CHARGE DETECTOR. While the breaker is off (latched, holding or
                 guard-tripped) a source on board A can push a charge backwards through Q101's and Q102's body diodes, and
                 nothing on board A could tell that from a running breaker (PGD reads good with VDS negative). U103 (OPA187)
-                reads the charge into the cells on the gauge's own sense R10 (its cell side through R120 against R118 1.5
-                MOhm over R119 200 ohm from BRK_VIN: 0.672 to 1.164 A over the pack's 10.6 to 16.8 V); U104 (OPA187) reads the
-                body diodes conducting (PACK_P over R121 and R122 against BRK_SNS over R123 and R124: PACK_P above BRK_SNS by
-                0.053 to 0.277 V); both high turn Q107 and Q108 on in series and hold the loop's return DOCK_EN_RET low, which
-                the existing contact J_DOCK pin 3 carries to board A (its charge inhibit sets, L4-E11's to draw) and which
-                resets the -1 as an undocking does; the restart then has no forward current. C107 and C108 their bypass, C109
-                and C110 their filters, R125 to R128 halve their outputs for the 2N7002 gates, TP107 and TP108 (E-12c).
+                reads the charge into the cells on the gauge's own sense R10 (its cell side through R120 against R118 1.15
+                MOhm over R119 200 ohm from BRK_VIN through R129 under D103's BZT52C12: 0.368 A at least, 1.213 A at most);
+                U104 (OPA187) reads the body diodes conducting (PACK_P over R121 and R122 against BRK_SNS over R123 and R124:
+                PACK_P above BRK_SNS by 0.044 to 0.268 V); both high turn Q107 and Q108 on in series and hold the loop's
+                return DOCK_EN_RET low, which the existing contact J_DOCK pin 3 carries to board A (its charge inhibit sets,
+                L4-E11's to draw) and which resets the -1 as an undocking does; the restart then has no forward current. C107
+                and C108 the bypass, C109 and C110 the filters, R125 to R128 halve the outputs for the 2N7002 gates, TP107 and
+                TP108 (E-12c).
 SESSION choices (under the owner's standing rule of 26 September 2026; L8P-BREAKER.md section 3): the designators (the free
 100 block), the net names, J_SMB's pin assignment, the input bypass C104 and C105 in series, the four E-12 test points; in round 2
 the comparator part (OPA187, its held sheet read for its offset over temperature), the reference values 147k and 1.62k, the
 hysteresis resistor, the PGD gating pair Q105 and Q106 with R114 to R117, C106, TP105 and TP106 (E-12b), the NTC's lead lands;
-in round 3 the reverse-charge detector (B-R2, route R1): U103, U104, Q107, Q108, R118 to R128, C107 to C110, TP107, TP108.
+in round 3 the reverse-charge detector (B-R2, route R1): U103, U104, Q107, Q108, D103, R118 to R129, C107 to C110, TP107, TP108.
 
 What it changes in v2/ecad/tools/gen_sch_p.py, and nothing else:
   1. PACK_P's declaration: the breaker's output (loads Q101 and Q102, switch U101 on BRK_UVLO); BRK_VIN and BRK_SNS declared as
@@ -70,10 +71,10 @@ ADDS = ("U101", "U102", "Q101", "Q102", "Q103", "Q104", "Q105", "Q106", "D101", 
         "R105", "R106", "R107", "R108", "R109", "R110", "R111", "R112", "R113", "R114", "R115", "R116", "R117", "C101", "C102",
         "C103", "C104", "C105", "C106", "TP101", "TP102", "TP103", "TP104", "TP105", "TP106",
         "U103", "U104", "Q107", "Q108", "R118", "R119", "R120", "R121", "R122", "R123", "R124", "R125", "R126", "R127", "R128",
-        "C107", "C108", "C109", "C110", "TP107", "TP108")
+        "C107", "C108", "C109", "C110", "TP107", "TP108", "R129", "D103")
 NETS = ("BRK_VIN", "BRK_SNS", "BRK_GATE", "BRK_TMR", "BRK_PWR", "BRK_UVLO", "BRK_G2", "BRK_H", "BRK_HD", "BRK_PGD", "BRK_CMID",
         "INH_NTC", "INH_REF", "INH_OUT", "INH_G", "DOCK_EN_OUT", "DOCK_EN_RET", "REV_ISNS", "REV_IREF", "REV_IOUT", "REV_IG",
-        "REV_VP", "REV_VN", "REV_VOUT", "REV_VG", "REV_MID")
+        "REV_VP", "REV_VN", "REV_VOUT", "REV_VG", "REV_MID", "REV_VZ")
 
 _OLD_RAIL = (
     '_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R", v_work=16.8, converted=False,   # the GAUGE\'s own pin; R18, 5.1k, sits between it and the FET gate DSG_G\n'
@@ -229,33 +230,37 @@ _BREAKER = (
     '# then reads nothing (PGD is high on VDS alone, and VDS is negative: SNVS452G pin 8), and board A sees CELL+ alive, so its\n'
     '# hardware inhibit (L4-E11\'s Q47 to Q49) never sets: the charge rested on the firmware. THE TWO CONDITIONS, BOTH HELD HERE:\n'
     '# U103 (OPA187) reads the charge INTO THE CELLS on the gauge\'s own sense R10 (2 mOhm, cell side GND, pack side PACK_N): its\n'
-    '# +IN on GND through R120 1 kOhm and C109 100 nF (0.1 ms), its -IN on R118 1.5 MOhm over R119 200 ohm from BRK_VIN, so the\n'
-    '# threshold is 0.0667 A per volt of BRK_VIN, 0.672 to 1.164 A over the pack\'s 10.6 to 16.8 V with every tolerance: above the\n'
-    '# charger\'s LDO-mode precharge (256 mA +30 %) and its power-on 256 mA, under the latched FET\'s 1.405 A (L4-E11 E-14), so a\n'
-    '# charge it lets pass holds the FET at 137.4 C at most. It reads the cells\' current whatever Q1 and Q2 do (welded or not) and\n'
-    '# reads nothing while the gauge sleeps, so a dead pack\'s wake through the body diodes (mA, the gauge off) never trips it.\n'
-    '# U104 (OPA187) reads the BODY DIODES CONDUCTING: PACK_P over R121 1 MOhm and R122 100 kOhm on +IN against BRK_SNS over R123\n'
-    '# 988 kOhm and R124 100 kOhm on -IN, high when PACK_P exceeds BRK_SNS by 1.103 % of it (0.053 to 0.277 V with every\n'
-    '# tolerance; R121 to R124 0.05 % and at most 10 ppm/K), C110 1 nF across its inputs. A running breaker passing any charge\n'
-    '# up to the pack path\'s 23.93 A shows at most 20.7 mV there (two CSD18510Q5B channels hot), its body diodes at the\n'
-    '# threshold\'s least current at least 0.35 V (TI\'s typical figure, 150 C): U104 never reads a running breaker. BOTH HIGH:\n'
-    '# Q107 and Q108 (2N7002, in series, gates through R125 to R128 at half of each output) hold DOCK_EN_RET under 0.05 V. That\n'
-    '# is the loop\'s return held low, as an undocking holds it: the existing contact J_DOCK pin 3 carries it to board A, whose\n'
-    '# inhibit sets on it (L4-E11 extends DD-7: DOCK_EN_RET under 1.0 V with DOCK_EN_OUT at 3.5 V or over sets the inhibit within\n'
-    '# 1 ms and holds it at least 1.0 s after the return rises over 2.5 V), and Q103 and Q104 reset the -1 (UVLO pulled). The\n'
-    '# charge stops, U103 releases, the hold (0.110 to 0.907 s) and the dv/dt start (40.7 ms) restart the breaker with board A\'s\n'
-    '# battery FETs held off, so the start meets no forward current. The detector never acts on a running breaker: discharging,\n'
-    '# U103 reads a negative drop; charging through the channel, U104 reads under its threshold. Its own failures and E-12c: the\n'
-    '# record page, section 12. Nothing here is built or measured.\n'
+    '# +IN on GND through R120 200 ohm and C109 470 nF (94 us), its -IN on R118 1.15 MOhm over R119 200 ohm from REV_VZ, which is\n'
+    '# BRK_VIN through R129 47 kOhm held under D103\'s BZT52C12: 0.0869 A per volt of REV_VZ, so 0.368 A at least at the LDO-mode\n'
+    '# precharge\'s floor (BRK_VIN 4.7 V), 0.661 to 0.922 A at the pack\'s 10.6 V, 1.213 A at most anywhere (the zener at 13.46 V hot),\n'
+    '# with every tolerance: above the charger\'s LDO-mode precharge (0.336 A at most, L4-E11 section 15) and its power-on 256 mA,\n'
+    '# under the latched FET\'s 1.405 A (L4-E11 E-14), so a charge it lets pass holds the FET at 139.9 C at most. It reads the\n'
+    '# cells\' current whatever Q1 and Q2 do (welded or not) and reads nothing while the gauge sleeps, so a dead pack\'s wake through\n'
+    '# the body diodes (mA, the gauge off) never trips it. U104 (OPA187) reads the BODY DIODES CONDUCTING: PACK_P over R121 332 kOhm\n'
+    '# and R122 33.2 kOhm on +IN against BRK_SNS over R123 328 kOhm and R124 33.2 kOhm on -IN, high when PACK_P exceeds BRK_SNS by\n'
+    '# 1.107 % of it (0.044 to 0.268 V over BRK_VIN 7.6 to 16.8 V with every tolerance; R121 to R124 0.05 % and at most 10 ppm/K),\n'
+    '# C110 1 nF across its inputs. A running breaker passing any charge up to the pack path\'s 23.93 A shows at most 20.7 mV there\n'
+    '# (two CSD18510Q5B channels hot); its body diodes at the threshold\'s least current about 0.35 V (TI\'s typical figure, 150 C):\n'
+    '# U104 never reads a running breaker. BOTH HIGH: Q107 and Q108 (2N7002, in series, gates through R125 to R128 at half of each\n'
+    '# output) hold DOCK_EN_RET under 0.05 V. That is the loop\'s return held low, as an undocking holds it: the existing contact\n'
+    '# J_DOCK pin 3 carries it to board A, whose inhibit sets on it (L4-E11 extends DD-7: DOCK_EN_RET under 1.0 V with DOCK_EN_OUT at\n'
+    '# 2.0 V or over sets the inhibit within 1 ms and holds it at least 1.0 s after the return rises over 2.5 V), and Q103 and Q104\n'
+    '# reset the -1 (UVLO pulled). The charge stops, U103 releases, the hold (0.110 to 0.907 s) and the dv/dt start (40.7 ms)\n'
+    '# restart the breaker with board A\'s battery FETs held off, so the start meets no forward current. The detector never acts on a\n'
+    '# running breaker: discharging, U103 reads a negative drop; charging through the channel, U104 reads under its threshold. It\n'
+    '# pulls from BRK_VIN 7.6 V (the -1\'s PORIT; the 2N7002 gates at half of it); under that the -1 cannot run or stay latched.\n'
+    '# Its own failures and E-12c: the record page, section 12. Nothing here is built or measured.\n'
     'ic("U103", 5, "OPA187IDBVR zero-drift amplifier as the reverse-charge detector\'s current comparator (record l8p, B-R2): 1 OUT, 2 V-, 3 +IN, 4 -IN, 5 V+",\n'
     '   "Package_TO_SOT_SMD:SOT-23-5", {"1": "REV_IOUT", "2": "PACK_N", "3": "REV_ISNS", "4": "REV_IREF", "5": "BRK_VIN"})   # U102\'s part; its order code: Layer 6, owed\n'
-    'r("R118", "1.5M 0.1% 25ppm (the charge threshold\'s reference)", "BRK_VIN", "REV_IREF"); r("R119", "200R 0.1% 25ppm (the charge threshold\'s reference)", "REV_IREF", "PACK_N")\n'
-    'r("R120", "1k (Kelvin from R10\'s cell-side pad)", "GND", "REV_ISNS"); c("C109", "100n 50V X7R (the charge sense\'s filter)", "REV_ISNS", "PACK_N")\n'
+    'r("R129", "47k 1% (the reference\'s feed)", "BRK_VIN", "REV_VZ")\n'
+    'part("D103", "Device", "D_Zener", "BZT52C12-7-F zener, the charge threshold\'s ceiling (11.4 to 12.7 V at 5 mA, DS18004)", "SOD123", {"1": "REV_VZ", "2": "PACK_N"}, "C124196")\n'
+    'r("R118", "1.15M 0.1% 25ppm (the charge threshold\'s reference)", "REV_VZ", "REV_IREF"); r("R119", "200R 0.1% 25ppm (the charge threshold\'s reference)", "REV_IREF", "PACK_N")\n'
+    'r("R120", "200R (Kelvin from R10\'s cell-side pad)", "GND", "REV_ISNS"); c("C109", "470n 25V X7R (the charge sense\'s filter)", "REV_ISNS", "PACK_N")\n'
     'c("C107", "100n 50V X7R (U103\'s supply bypass)", "BRK_VIN", "PACK_N")\n'
     'ic("U104", 5, "OPA187IDBVR zero-drift amplifier as the reverse-charge detector\'s body-diode comparator (record l8p, B-R2): 1 OUT, 2 V-, 3 +IN, 4 -IN, 5 V+",\n'
     '   "Package_TO_SOT_SMD:SOT-23-5", {"1": "REV_VOUT", "2": "PACK_N", "3": "REV_VP", "4": "REV_VN", "5": "BRK_VIN"})   # U102\'s part; its order code: Layer 6, owed\n'
-    'r("R121", "1M 0.05% 10ppm (PACK_P\'s divider)", "PACK_P", "REV_VP"); r("R122", "100k 0.05% 10ppm (PACK_P\'s divider)", "REV_VP", "PACK_N")\n'
-    'r("R123", "988k 0.05% 10ppm (BRK_SNS\'s divider)", "BRK_SNS", "REV_VN"); r("R124", "100k 0.05% 10ppm (BRK_SNS\'s divider)", "REV_VN", "PACK_N")\n'
+    'r("R121", "332k 0.05% 10ppm (PACK_P\'s divider)", "PACK_P", "REV_VP"); r("R122", "33.2k 0.05% 10ppm (PACK_P\'s divider)", "REV_VP", "PACK_N")\n'
+    'r("R123", "328k 0.05% 10ppm (BRK_SNS\'s divider)", "BRK_SNS", "REV_VN"); r("R124", "33.2k 0.05% 10ppm (BRK_SNS\'s divider)", "REV_VN", "PACK_N")\n'
     'c("C110", "1n 50V C0G (across U104\'s inputs)", "REV_VP", "REV_VN"); c("C108", "100n 50V X7R (U104\'s supply bypass)", "BRK_VIN", "PACK_N")\n'
     '_intent.bypass("C107", "U103", "5", "BRK_VIN", cls="D", basis="TI OPA187 SBOS807E, revised May 2020 (v2/vendor/ti/held/ti-opa187-sbos807e.pdf, "\n'
     '               "fetched by record l8p): 10.1 Layout Guidelines \\"Low-ESR, 0.1-uF ceramic bypass capacitors must be connected between each "\n'
@@ -271,10 +276,12 @@ _BREAKER = (
     '    part("TP%d" % _i8, "Connector", "TestPoint", _n8, "TP", {"1": _n8})   # E-12c: each comparator\'s state\n'
     '_intent.node("REV_ISNS", 0.11, "R10\'s cell side through R120 1 kOhm: the cells\' charge current times 2 mOhm, at most the breaker\'s "\n'
     '             "largest 50.59 A discharge (0.101 V under PACK_N) and its 23.93 A (0.048 V) either way (record l9stk 15.4)", v_min=-0.11)\n'
-    '_intent.node("REV_IREF", 0.004, "the charge threshold\'s reference, BRK_VIN through R118 1.5 MOhm over R119 200 ohm: 1.333e-4 of it, "\n'
-    '             "3.9 mV at the input clamp\'s 29.2 V")\n'
+    '_intent.node("REV_VZ", 13.5, "the reference\'s feed, BRK_VIN through R129 47 kOhm under D103 (BZT52C12: 12.7 V at most at 5 mA, "\n'
+    '             "plus 10 mV/K to the held 101.0 C, 13.46 V; 0.34 mA at the input clamp\'s 29.2 V)", v_work=12.7)\n'
+    '_intent.node("REV_IREF", 0.003, "the charge threshold\'s reference, REV_VZ through R118 1.15 MOhm over R119 200 ohm: 1.739e-4 of it, "\n'
+    '             "2.34 mV at the zener\'s 13.46 V")\n'
     '_intent.node("REV_VP", 3.0, "PACK_P over R121 and R122 (1/11): 2.95 V at D1\'s 32.4 V clamp (SMBJ20A), 1.53 V at the pack\'s 16.8 V")\n'
-    '_intent.node("REV_VN", 2.7, "BRK_SNS over R123 and R124 (1/10.88): 2.68 V at the input clamp\'s 29.2 V")\n'
+    '_intent.node("REV_VN", 2.7, "BRK_SNS over R123 and R124 (1/11.04): 2.65 V at the input clamp\'s 29.2 V")\n'
     '_intent.node("REV_IOUT", 29.2, "U103\'s output, rail to rail from PACK_N to BRK_VIN: at most the clamp\'s 29.2 V", v_work=16.8)\n'
     '_intent.node("REV_VOUT", 29.2, "U104\'s output, rail to rail from PACK_N to BRK_VIN: at most the clamp\'s 29.2 V", v_work=16.8)\n'
     '_intent.node("REV_IG", 14.6, "Q107\'s gate, half of U103\'s output through R125 and R126: at most half the clamp\'s 29.2 V, under the "\n'
@@ -312,7 +319,7 @@ _SEC = ('SECTIONS.append(("PACK BREAKER LM5069-1 (W4DP-F2), ITS FETS, SENSE PAIR
         '                 ["U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "C104", "C105", "D101", "R106", "R107", "Q103", "R108", "R109",\n'
         '                  "Q104", "R104", "C103", "R105", "D102", "RT101", "R110", "R111", "R112", "R113", "U102", "C106", "R114", "R115", "Q105",\n'
         '                  "R116", "R117", "Q106", "TP101", "TP102", "TP103", "TP104", "TP105", "TP106",\n'
-        '                  "U103", "R118", "R119", "R120", "C109", "C107", "U104", "R121", "R122", "R123", "R124", "C110", "C108",\n'
+        '                  "U103", "R129", "D103", "R118", "R119", "R120", "C109", "C107", "U104", "R121", "R122", "R123", "R124", "C110", "C108",\n'
         '                  "R125", "R126", "R127", "R128", "Q107", "Q108", "TP107", "TP108"]))\n')
 
 EDITS = [
