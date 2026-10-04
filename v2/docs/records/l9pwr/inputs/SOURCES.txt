@@ -1,0 +1,33 @@
+Inputs copied into record l9pwr so that it reads them from its own tree (round 2, 4 October 2026). Each was read with git show
+from its author's branch, not merged; renamed .txt so that no tool runs a copied draft or reads a copied output's pin lines as
+this record's own. The commit is named in each file's name; the script pins each copy by sha256 and the test compares each copy
+with git show of its source where the commit is present.
+
+l8r2-apply_gen_sch_a_slotlm-89924e40.txt sha256 fc487ab269d2f7585edc10ec6efd4a1c280f633d1da3e0888580249bba245f03
+  from v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py at commit 89924e40 on branch fnd/l8r3 (Layer 8 round 4 to 6: slots 1 and 3
+  on board A's LM5176 stage), the whole file byte for byte.
+
+l8r2-apply_gen_sch_b_fans12-89924e40.txt sha256 cb03ff040b0ef78490fa6ef74f64df1bcaaf54461e6ffd85a3ef3eea5a3b8e6b
+  from v2/docs/records/l8r2/apply_gen_sch_b_fans12.py at commit 89924e40 on branch fnd/l8r3 (board B's coolers on a per-slot
+  step-up, the fan row at the envelope 0.69 A, the slot leads at 6.6 A), the whole file byte for byte.
+
+l8r2-apply_gen_sch_b_rt500-89924e40.txt sha256 c81cd7ffa60561fec87c4f30480bc42a86d47c5dd37619887c0851e71a0dce29
+  from v2/docs/records/l8r2/apply_gen_sch_b_rt500.py at commit 89924e40 on branch fnd/l8r3 (board B's six slot bucks at RT 200 k),
+  the whole file byte for byte.
+
+l8r2-apply_gen_sch_a_fb01-89924e40.txt sha256 ea95bd293e44676ae782fd81880d9cfa301816d4771dde5c92882db51c4b8257
+  from v2/docs/records/l8r2/apply_gen_sch_a_fb01.py at commit 89924e40 on branch fnd/l8r3 (the LM5176 5.1 V stages' dividers at
+  0.1 %), the whole file byte for byte.
+
+l8r2-l8r2_drafts-89924e40.txt sha256 7b0ff84375825913272a5818586ffae30e84c20857e8a779cf97ae270d8ac7c1
+  from v2/docs/records/l8r2/l8r2_drafts.out at commit 89924e40 on branch fnd/l8r3 (record l8r2's output after round 6 and the
+  closing check), the whole file byte for byte. This record parses its figures table, its sections 2 and 2c, and its item 3 line.
+
+l9stk-l9stk_protection-2c8b29fb.txt sha256 ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
+  from v2/docs/records/l9stk/l9stk_protection.out at commit 2c8b29fb on branch fnd/l9stk (Layer 9 item 9.12, section 15: board P's
+  breaker and the third battery FET), the whole file byte for byte.
+
+l4e9-l4e9_power_path-section30-3737df82.txt sha256 76c17d1cc02c0fd2f62f4a0f7f9fb53030ac8595804218779469019947279bc1
+  from v2/docs/records/l4e9/l4e9_power_path.out at commit 3737df82 on branch fnd/l4e9r7 (L4-E9 round 7; the whole file's sha256
+  f4797a143492ac7bfe916526064bf06f5ca4a11524a4a70b8bf22a7b38d633ad, 2164 lines): its lines 2127 to 2163, section 30 whole (D-17,
+  the all-transmit floor re-derived at 16.1 V), without the file's closing END line.

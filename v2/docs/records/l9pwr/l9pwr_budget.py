@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """l9pwr_budget.py: Layer 9 item 9.1, the power budget brought to the current design with margins and sensitivities
-(MESHSAT-1357, 3 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing in this kit has been built, powered or
-measured, and no figure printed here is a measurement.
+(MESHSAT-1357, 3 October 2026; round 2, 4 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing in this kit has been
+built, powered or measured, and no figure printed here is a measurement.
+
+Round 2 (4 October 2026, branch fnd/l9pwr2 from main 64cd25ee): the DRAFTED tree follows record l8r2 to its round 6 on
+fnd/l8r3 at 89924e40 (slots 1 and 3 on board A's LM5176 stage, the coolers at full speed with no duty maximum and their row
+at the envelope, board B's slot bucks at RT 200 k, the 5.1 V stages' dividers at 0.1 %) and record l9stk's section 15 on
+fnd/l9stk at 2c8b29fb (board P's breaker C-1 and the third battery FET), each read from a copy in inputs/ that its git
+show made, pinned by sha256 (inputs/SOURCES.txt). The round 1 DRAFTED tree is rebuilt beside it so that every figure
+another record took from round 1 (L4-E9 round 7, record l8r2) is reproduced from the same evaluator.
 
 What it does. It imports record rv-pwr's model (v2/docs/records/rv-pwr/pwr_budget.py) UNCHANGED, pinned by sha256, and
 rebuilds that model's load tree three times:
@@ -47,9 +54,15 @@ PINS = {
     "l4e12_out": "v2/docs/records/l4e12/l4e12_thermal.out",
     "review": "v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md",
     "l7_out": "v2/docs/records/l7pwr/l7pwr_fans_th1.out",
-    "l8r2_out": "v2/docs/records/l8r2/l8r2_drafts.out",
-    "l8r2_fans": "v2/docs/records/l8r2/apply_gen_sch_b_fans12.py",
+    "l8r2_out": "v2/docs/records/l9pwr/inputs/l8r2-l8r2_drafts-89924e40.txt",
+    "l8r2_fans": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_fans12-89924e40.txt",
     "l8r2_pnl": "v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py",
+    "l8r2_slotlm": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt",
+    "l8r2_rt500": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_rt500-89924e40.txt",
+    "l8r2_fb01": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt",
+    "l9stk_prot": "v2/docs/records/l9pwr/inputs/l9stk-l9stk_protection-2c8b29fb.txt",
+    "l4e9r7": "v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt",
+    "sources": "v2/docs/records/l9pwr/inputs/SOURCES.txt",
     "l8gnd_out": "v2/docs/records/l8gnd/l8gnd_drafts.out",
     "ap64500": "v2/vendor/diodes/diodes-ap64500.pdf",
     "ap632": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
@@ -57,9 +70,29 @@ PINS = {
     "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
     "tlv755": "v2/vendor/power/ti-tlv755p-ldo.pdf",
     "lm5176": "v2/vendor/ti/lm5176-datasheet.pdf",
+    "tps2596": "v2/vendor/power/tps2596.pdf",
     "reqs": "v2/ecad/tools/pcb_requirements.yaml",
     "rules": "v2/ecad/tools/pcb_rules.yaml",
 }
+
+# the copies in inputs/: key -> (branch, commit, the source path, the source's lines or None for the whole file)
+ORIGIN = {
+    "l8r2_out": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/l8r2_drafts.out", None),
+    "l8r2_fans": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_b_fans12.py", None),
+    "l8r2_slotlm": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py", None),
+    "l8r2_rt500": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_b_rt500.py", None),
+    "l8r2_fb01": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_a_fb01.py", None),
+    "l9stk_prot": ("fnd/l9stk", "2c8b29fb", "v2/docs/records/l9stk/l9stk_protection.out", None),
+    "l4e9r7": ("fnd/l4e9r7", "3737df82", "v2/docs/records/l4e9/l4e9_power_path.out", (2127, 2163)),
+}
+
+# the round 1 parser's lines that read a figure record l8r2 has since removed or superseded: set aside, not read
+SET_ASIDE = [
+    ("eta_slot", "l8r2's flat 0.90 for the slot converters (round 2's 7.84 W at VBAT): removed from l8r2's figures table at round 3, "
+                 "the slots' own converters carry it (round 1's R9)"),
+    ("l8r2's choice (a) line", "'choice (a), a step-up per slot (SELECTED): ... the three 7.56 W at VBAT': round 3's text, which quotes "
+                               "this record's round 1 R9 back and was superseded by round 4's decision (2c.5); R9 now reproduces round 6"),
+]
 
 STATES = ["IDLE", "IDLESPEC", "TYP", "BUSY", "RED", "REDB", "EMCON", "ALLTX", "RED2", "SURV", "SURVR"]
 SCEN = ("lo", "plan", "hi")
@@ -230,6 +263,50 @@ def gen_lm5176(key):
     return out
 
 
+def gen_lm5176_divider(key):
+    """board A's LM5176 stages: tag -> the FB divider's top resistor (the call's sixth argument), and the helper's default
+    bottom resistor (rfb_val)."""
+    tree = ast.parse(text(key))
+    bottom, top = None, {}
+    for n in tree.body:
+        if isinstance(n, ast.FunctionDef) and n.name == "lm5176":
+            names = [a.arg for a in n.args.args] + [a.arg for a in n.args.kwonlyargs]
+            defs = list(n.args.defaults)
+            d = dict(zip([a.arg for a in n.args.args][len(n.args.args) - len(defs):], defs))
+            d.update({a.arg: v for a, v in zip(n.args.kwonlyargs, n.args.kw_defaults) if v is not None})
+            if "rfb_val" in d:
+                bottom = ast.literal_eval(d["rfb_val"])
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "lm5176" and len(n.args) > 5:
+            top[ast.literal_eval(n.args[0])] = ast.literal_eval(n.args[5])
+    if bottom is None or not top:
+        die("gen_sch_a.py: the lm5176 helper's divider")
+    return top, bottom
+
+
+def module_literals(key, names):
+    """module-level NAME = <literal> assignments of a file (a draft read as text, never run)."""
+    out = {}
+    for n in ast.parse(text(key)).body:
+        if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name) and n.targets[0].id in names:
+            try:
+                out[n.targets[0].id] = ast.literal_eval(n.value)
+            except ValueError:
+                pass
+    for k in names:
+        if k not in out:
+            die("%s carries no literal %s" % (PINS[key], k))
+    return out
+
+
+def stage_window(vref, ibias, rtop, rbot, tol, drop):
+    """an LM5176 stage's output window on its FB divider (VREF and the resistors at their limits, IBIAS(FB) through the top
+    resistor), and the least voltage at the loads with the rail's whole drop budget."""
+    vmin = vref[0] * (1.0 + rtop * (1.0 - tol) / (rbot * (1.0 + tol))) - ibias * rtop
+    vmax = vref[2] * (1.0 + rtop * (1.0 + tol) / (rbot * (1.0 - tol))) + ibias * rtop
+    return vmin, vmax, vmin * (1.0 - drop)
+
+
 def draft_rails(key):
     """the _intent.rail texts a draft would write into its generator (string literals inside the draft)."""
     t = text(key)
@@ -327,9 +404,9 @@ def parse_inputs(pb):
     t8 = text("l8r2_out")
     F["su_eta"] = grab(t8, r"\n   eta\s+([\d.]+)\s+ASSUMPTION", "the step-up's efficiency")
     F["su_eta_lo"] = grab(t8, r"\n   eta_lo\s+([\d.]+)\s+ASSUMPTION", "the step-up's low efficiency")
-    F["eta_slot"] = grab(t8, r"\n   eta_slot\s+([\d.]+)\s+ASSUMPTION", "l8r2's slot efficiency")
+    if re.search(r"\n   eta_slot\s", t8):
+        die("record l8r2's figures table carries eta_slot again; this round set its parser line aside")
     F["su_efuse"] = grab(t8, r"eFuse ILM 1\.87 k: ([\d.]+) / ([\d.]+) / ([\d.]+) A", "the coolers' eFuse", 3)
-    F["su_choice_a"] = grab(t8, r"choice \(a\), a step-up per slot \(SELECTED\): ([\d.]+) W on \+5V_Sn per slot at full speed, ([\d.]+) A at 5\.1 V .*? the three ([\d.]+) W at VBAT", "l8r2's choice (a)", 3)
     F["ron_lo"] = grab(t8, r"\n   ron_lo\s+([\d.]+)\s+MAKER", "the TPS2596 RON")
     F["pnl_efuse"] = grab(t8, r"with U901 \(ILM 604 Ohm\) ([\d.]+) / ([\d.]+) / ([\d.]+) A", "PANEL_5V's eFuse", 3)
     fr = draft_rails("l8r2_fans")
@@ -338,6 +415,100 @@ def parse_inputs(pb):
     F["fans12_rail"] = [v for k, v in sorted(fr.items()) if k.startswith("<") and len(v) == 4][0]
     if "U901" not in text("l8r2_pnl"):
         die("the draft apply_gen_sch_b_panel5v.py no longer carries U901")
+    # ---- record l8r2 rounds 4 to 6 (fnd/l8r3 at 89924e40): the coolers' envelope, slots 1 and 3 on LM5176, RT 200 k, 0.1 %
+    # the coolers' eFuse window unrounded, l8r2's own method: TPS2596 Equation 7 at its ILM, the wider neighbouring row's tolerance
+    rilm = grab(t8, r"\n   rilm_fan\s+([\d.]+)\s+BOUND", "the coolers' ILM")
+    rows_ = ast.literal_eval(grab(t8, r"\n   ilim_rows\s+(\(\(.*?\)\))\s+MAKER", "the TPS2596 ILIM rows", conv=str))
+    k7 = grab(pdf("tps2596"), r"RILM :\s+(\d+)\s+ILIM A ([\d.]+)", "TPS2596 Equation 7", 2)
+    rows_ = sorted(rows_)
+    nb = [x for x in rows_ if x[0] < rilm][-1:] + [x for x in rows_ if x[0] > rilm][:1]
+    n7 = k7[0] / rilm + k7[1]
+    F["su_efuse_x"] = (n7 * (1 - max((x[2] - x[1]) / x[2] for x in nb)), n7, n7 * (1 + max((x[3] - x[2]) / x[2] for x in nb)))
+    if any(abs(round(a, 3) - b) > 1e-9 for a, b in zip(F["su_efuse_x"], F["su_efuse"])):
+        die("the coolers' eFuse window does not round to l8r2's printed figures")
+    # the step-up's highest output unrounded, l8r2's own method (VREF's highest on the 1 % divider's highest ratio, FB leakage)
+    vr = grab(t8, r"\n   vref\s+\(([\d.]+), ([\d.]+), ([\d.]+)\)\s+MAKER", "the TPS61089 VREF", 3)
+    ifb = grab(t8, r"\n   ifb\s+([\d.e-]+)\s+MAKER", "the TPS61089 FB leakage")
+    r1_, r2_, rt_ = (grab(t8, r"\n   %s\s+([\d.]+)\s+BOUND" % k, "the step-up's divider %s" % k) for k in ("r1", "r2", "rtol"))
+    F["su_vtop_x"] = vr[2] * (1 + r1_ * (1 + rt_) / (r2_ * (1 - rt_))) + ifb * r1_
+    if abs(round(F["su_vtop_x"], 3) - grab(t8, r"output [\d.]+ / [\d.]+ / ([\d.]+) V \(VREF and the 1 % divider", "the step-up's output")) > 1e-9:
+        die("the step-up's highest output does not round to l8r2's printed figure")
+    F["fan_env"] = grab(t8, r"\n   fan_env\s+([\d.]+)\s+BOUND", "the cooler's envelope bound")
+    F["start_bound"] = grab(t8, r"\n   start_bound\s+([\d.]+)\s+BOUND", "the cooler branch's bounded start")
+    F["ap_eq7"] = grab(t8, r"\n   ap_eq7\s+(\d+)\s+MAKER", "DS41979 Eq. 7")
+    F["su_vout"] = grab(t8, r"output ([\d.]+) / ([\d.]+) / ([\d.]+) V \(VREF and the 1 % divider", "the step-up's output", 3)
+    F["l8_window"] = grab(t8, r"with both resistors at 0\.1 % and IBIAS\(FB\) 25 nA through 53\.6 k \(1\.34 mV\) ([\d.]+) to ([\d.]+) V", "l8r2's 5.1 V window", 2)
+    F["l8_vload"] = grab(t8, r"the least load voltage with the 2 % drop ([\d.]+) V", "l8r2's least load voltage")
+    F["l8_loop"] = grab(t8, r"the loop's least: VSNS 43 mV over 6 mOhm at \+1 %: ([\d.]+) A", "l8r2's loop least")
+    F["l8_other"] = grab(t8, r"the slot's other loads at HIGH \(PS-BUSY\): ([\d.]+) W", "l8r2's slot loads before the cooler")
+    F["l8_slot2"] = grab(t8, r"slot 2 \(its own HIGH, the cooler's bounded start\): ([\d.]+) A", "l8r2's slot 2 start")
+    F["l8_peak_margin"] = grab(t8, r"\+([\d.]+) A at the declared ([\d.]+) A", "l8r2's margin at the declared peak", 2)
+    F["l8_rows"] = [(m.group(1), m.group(2), tuple(float(m.group(i)) for i in range(3, 10))) for m in re.finditer(
+        r"\n      (PS-[A-Za-z0-9-]+)\s+slot (\d)\s+([\d.]+) / ([\d.]+) A  start ([\d.]+) A  degraded ([\d.]+) A  \+([\d.]+) / \+([\d.]+) / \+([\d.]+) A", t8)]
+    if len(F["l8_rows"]) < 10:
+        die("record l8r2's section 2c.5 rows")
+    m = re.search(r"the energy at PLAN, VBAT side \(the stages' declared 0\.90 against the AP64500's curve point, slots 1 and 3\): ([^\n]+)", t8)
+    if not m:
+        die("record l8r2's energy line")
+    F["l8_energy"] = [(a, float(b)) for a, b in re.findall(r"(PS-[A-Za-z0-9-]+) \+([\d.]+) W", m.group(1))]
+    tf = text("l8r2_fans")
+    lit = module_literals("l8r2_fans", ("_OLD_LOAD", "_NEW_LOAD", "_NEW_PEAK"))
+    F["fan_row_old"] = grab(lit["_OLD_LOAD"], r'"J_FAN%d" % s: ([\d.]+),', "the drawn fan row")
+    F["fan_row"] = grab(lit["_NEW_LOAD"], r'\(701 \+ 30 \* \(s - 1\)\): ([\d.]+),', "the drafted fan row")
+    F["fan_row_basis"] = grab(lit["_NEW_LOAD"], r"([\d.]+) W of fan over ([\d.]+) \(ASSUMPTION\) at ([\d.]+) V", "the fan row's basis", 3)
+    F["slot_peak_b"] = grab(lit["_NEW_PEAK"], r'else 2\.5, ([\d.]+), "J_5V_S', "board B's slot peak")
+    sl = module_literals("l8r2_slotlm", ("BASE", "PEAK", "ENTRY", "_OLD_S1", "_OLD_S3"))
+    F["slot_base"], F["slot_peak"], F["slot_entry"] = sl["BASE"], sl["PEAK"], sl["ENTRY"]
+    ts = text("l8r2_slotlm")
+    F["slot_isns"] = ohms(grab(ts, r'isns="(\d+m)", isns_lcsc', "the slot stages' ISNS shunt", conv=str))
+    blk = ts[ts.index("_NEW_RAIL = ("):]
+    blk = blk[:blk.index("\n_OLD_NOTE")]
+    F["slot_eff"] = grab(blk, r"efficiency=([\d.]+)", "the drafted slot rails' efficiency")
+    for k in ("_OLD_S1", "_OLD_S3"):
+        if sl[k] not in text("gen_a"):
+            die("gen_sch_a.py no longer carries the AP64500 slot stage the draft replaces (%s)" % k)
+    rl = module_literals("l8r2_rt500", ("_OLD_RT", "_NEW_RT"))
+    F["rt_old"] = grab(rl["_OLD_RT"], r'"(\d+)k \(RT', "the drawn RT")
+    F["rt_new"] = grab(rl["_NEW_RT"], r'"(\d+)k 1% \(RT', "the drafted RT")
+    if rl["_OLD_RT"] not in text("gen_b"):
+        die("gen_sch_b.py no longer draws buck33's RT as the draft expects")
+    kw = module_literals("l8r2_fb01", ("KW",))["KW"]
+    F["fb_tol"] = grab(kw, r'rfb_tol="([\d.]+)%"', "the drafted divider tolerance") / 100.0
+    F["fb_tol_drawn"] = grab(module_literals("l8r2_fb01", ("_NEW_DEF",))["_NEW_DEF"], r'rfb_tol="([\d.]+)%"', "the helper's default tolerance") / 100.0
+    top, bot = gen_lm5176_divider("gen_a")
+    F["rfb"] = (ohms(top["S2"]), ohms(bot.split()[0]))
+    if ohms(top["SD"]) != F["rfb"][0]:
+        die("gen_sch_a.py: the device rail's divider differs from slot 2's")
+    lmp = pdf("lm5176", layout=True)
+    F["vref"] = grab(lmp, r"VREF\s+Feedback reference voltage\s+FB = COMP\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "LM5176 VREF", 3)
+    F["ibias"] = grab(lmp, r"IBIAS\(FB\)\s+Feedback pin input bias current\s+FB in regulation\s+(\d+)\s+nA", "LM5176 IBIAS(FB)") * 1e-9
+    ga = text("gen_a")
+    F["drop_s"] = grab(ga, r'_intent\.rail\("\+5V_S%s" % _n, [^\n]*?budget=([\d.]+)', "the slot rails' drop budget")
+    F["drop_dev"] = grab(ga, r'_intent\.rail\("\+5V_DEV", [^\n]*?budget=([\d.]+)', "the device rail's drop budget")
+    # ---- record l9stk section 15 (fnd/l9stk at 2c8b29fb): board P's breaker C-1 and the third battery FET
+    tk = flat(text("l9stk_prot"))
+    F["brk_rs_pair"] = tuple(x / 1000.0 for x in grab(tk, r"sense RS: ([\d.]+) and ([\d.]+) mOhm in parallel = [\d.]+ mOhm", "the breaker's two sense resistors", 2))
+    F["brk_rs"] = grab(tk, r"sense RS: [\d.]+ and [\d.]+ mOhm in parallel = ([\d.]+) mOhm", "the breaker's sense") / 1000.0
+    F["brk_rs_win"] = tuple(x / 1000.0 for x in grab(tk, r"its window: ([\d.]+) to ([\d.]+) mOhm", "the sense's window", 2))
+    F["brk_fets"] = grab(tk, r"FETs: (\d) x CSD18510Q5B \(40 V, VGS \+-20 V, ([\d.]+) mOhm at 10 V", "the breaker's FETs", 2)
+    F["brk_fet_hot"] = grab(tk, r"held at ([\d.]+) A: ([\d.]+) W each at ([\d.]+) mOhm \(Figure 8's x([\d.]+) at 150 C\)", "the breaker's FETs hot", 4)
+    F["bat_fets"] = grab(tk, r"\((\d) x BUK6Y10-30P, ([\d.]+) mOhm each at 150 C\)", "the battery FETs", 2)
+    F["bat_three_w"] = grab(tk, r"three \(Zself \+ 2 Zmut\) ([\d.]+) W each", "the three FETs' loss")
+    F["brk_sense_w"] = grab(tk, r"the breaker's sense \([\d.]+ and [\d.]+ mOhm\) ([\d.]+) W in [\d.]+ mOhm; ([\d.]+) W in [\d.]+ mOhm", "the sense's loss", 2)
+    if abs(F["bat_fets"][1] / 1000.0 - F["fet_bound"]) > 1e-12:
+        die("l9stk's battery FET bound differs from L4-E11's")
+    # ---- L4-E9 round 7 (fnd/l4e9r7 at 3737df82, out 30): decision D-11's all-transmit floor re-derived on round 1's drafts
+    t9r = flat(text("l4e9r7"))
+    F["r7_drawn"] = grab(t9r, r"DRAWN \(the generators in set 28's tree\): ([\d.]+) W, path ([\d.]+) Ohm: stack ([\d.]+) V, needs ([\d.]+) V", "L4-E9 r7's drawn need", 4)
+    F["r7_need"] = grab(t9r, r"DRAFTED \(DRAWN plus the release-guarded drafts that move a power figure\): ([\d.]+) W, path ([\d.]+) Ohm: stack ([\d.]+) V, needs ([\d.]+) V", "L4-E9 r7's drafted need", 4)
+    F["r7_parts"] = grab(t9r, r"the pair 18 A x ([\d.]+) mOhm = ([\d.]+) V, and the other drafts at HIGH .*? ([\d.]+) W at VBAT = ([\d.]+) V", "L4-E9 r7's parts", 4)
+    F["r7_floor"] = grab(t9r, r"RE-DERIVED on the drafted design: ([\d.]+) V rest \(([\d.]+) V a cell", "L4-E9 r7's floor", 2)
+    F["r7_rule"] = grab(t9r, r"the least floor on the floor's own ([\d.]+) V step that leaves at least ([\d.]+) V over the need", "L4-E9 r7's rule", 2)
+    F["r7_margin"] = grab(t9r, r"margin \+([\d.]+) V at R_cell 0\.06 Ohm, covering R_cell up to ([\d.]+) Ohm", "L4-E9 r7's margin", 2)
+    F["r7_heater"] = grab(t9r, r"with the heater on the drafts need ([\d.]+) V", "L4-E9 r7's heater row")
+    F["r7_pa"] = grab(t9r, r"the PA-alone floor 12\.4 V holds on the drafts \(([\d.]+) V needed", "L4-E9 r7's PA row")
+    F["r7_window"] = grab(t9r, r"from the floor up to ChargeVoltage's ([\d.]+) V maximum", "ChargeVoltage's maximum")
+    F["r7_modes"] = grab(t9r, r"DRAFTED: ([\d.]+) / ([\d.]+) / ([\d.]+) / ([\d.]+) W", "L4-E9 r7's restated modes", 4)
     # ---- L4-E12 and the review (B4, B7, the fans' share, the heat stage)
     t12 = flat(text("l4e12_out"))
     F["b4"] = grab(t12, r"input ([\d.]+) W less stored ([\d.]+) W less exported ([\d.]+) W = ([\d.]+) W of heat, which is the profile's ([\d.]+) W at the battery node, the source path's ([\d.]+) W, the charge path's ([\d.]+) W and the charging cells' ([\d.]+) W", "L4-E12's B4", 8)
@@ -378,6 +549,10 @@ class Config:
         self.fan_on = {}
         self.limits = {}
         self.heat_on = pb.HEAT_ON
+        self.lm51 = []                     # the LM5176 5.1 V stages (rv-pwr's tree has none)
+        self.shunts = {"S1": 0.005, "S2": 0.006, "S3": 0.005, "DEV": 0.006, "PA": 0.006, "HF": 0.010}   # the rails' INA226 shunts
+        self.window = None                 # the LM5176 5.1 V stages' output window: (least, highest, least at the loads)
+        self.cooler = None
 
     def load(self, name):
         for L in self.loads:
@@ -447,6 +622,8 @@ def evaluate(cfg, vals, scen, vpack=None, vbatt=14.4, eff_over=None):
             eta = pb.eff_curve(param, vin, p_out / vout) if p_out > 0 else 1.0
         elif kind in ("fixed",):
             eta = param
+        elif kind == "fixedsc":
+            eta = param[1] if scen == "hi" else param[0]
         elif kind == "fixedq":
             eta = param[0]
         elif kind == "ldo":
@@ -491,10 +668,13 @@ def shares(cfg, vals, ev):
 STEPS = []   # (id, status, short text) in the order they are applied
 
 
-def build(pb, F, hc, upto):
-    """the tree after applying the steps of section 1 up to and including `upto` (0: rv-pwr as committed)."""
+def build(pb, F, hc, upto, cooler="env"):
+    """the tree after applying the steps of section 1 up to and including `upto` (0: rv-pwr as committed). cooler="maker"
+    rebuilds round 1's D4 (the cooler at its maker's 2.0 W at 12 V over the step-up's 0.85 at HIGH, l8r2's round 2 row), for the
+    round 1 tree; "env" is round 6's (the envelope at HIGH over the step-up's low efficiency, the row 0.69 A)."""
     cfg = Config("step %d" % upto, pb)
     cfg.pb = pb
+    cfg.cooler = cooler
     rv_fan = {"cooler fan slot %d" % s: cfg.load("cooler fan slot %d" % s)["d"]["IDLE"] for s in (1, 2, 3)}
     rv_fan["two mixer fans"] = cfg.load("two mixer fans")["d"]["IDLE"]
     cfg.fan_on = dict(rv_fan)
@@ -508,6 +688,8 @@ def build(pb, F, hc, upto):
             cfg.nodes[n] = ["fixed", "VBAT", cfg.nodes[n][2], eff,
                             "%s, LM5176 stage %s (gen_sch_a.py), 5.1 V NOT PLOTTED (SNVSAI1D Fig. 6-2 is VOUT 12 V): the declared %.2f" % (cfg.nodes[n][4].split(",")[0], u, eff), "MAIN"]
             cfg.limits[n] = lm_limit(u, rs, F)
+            cfg.lm51.append(n)
+        cfg.window = stage_window(F["vref"], F["ibias"], F["rfb"][0], F["rfb"][1], F["fb_tol_drawn"], F["drop_s"])
     if upto >= 2:   # M2: slot 2's card buck set to 3.456 V (O-17)
         cfg.nodes["S2A"][2] = F["s2a_v"]
         cfg.nodes["S2A"][5] = "MAIN"
@@ -547,15 +729,21 @@ def build(pb, F, hc, upto):
         L["d"] = {st: (pb.OFF if is_off(t) else new) for st, t in L["d"].items()}
         cfg.fan_on["two mixer fans"] = new
         cfg.limits["FAN12"] = ("LTC3115-1 U22 (drafted)", F["u22_maxload"][1], "out", "L4-E11 18a: about %.1f A at 12 V out near %.1f V in (G12, typical, read) (DRAFTED)" % (F["u22_maxload"][1], F["u22_maxload"][0]), 1)
-    if upto >= 9:   # D4: the coolers, Layer 7's pick on a per-slot TPS61089 step-up (l8r2 item 1, DRAFTED)
+    if upto >= 9:   # D4: the coolers, Layer 7's pick on a per-slot TPS61089 step-up (l8r2 item 1 to round 6, DRAFTED)
         for s in (1, 2, 3):
             n = "S%dF" % s
-            cfg.nodes[n] = ["fixed", "S%d" % s, F["fans12_rail"][0], F["su_eta"], "slot %d's cooler fan 12 V, a TPS61089 step-up from +5V_S%d (l8r2 item 1, DRAFTED): %.2f (an ASSUMPTION of l8r2)" % (s, s, F["su_eta"]), "DRAFTED"]
             L = cfg.load("cooler fan slot %d" % s)
             lo, pl = rv_fan[L["name"]][0], rv_fan[L["name"]][1]
-            new = pb.up(lo, pl, float(F["cooler"][5]), "R")
+            if cooler == "maker":
+                cfg.nodes[n] = ["fixed", "S%d" % s, F["fans12_rail"][0], F["su_eta"], "slot %d's cooler fan 12 V, a TPS61089 step-up from +5V_S%d (l8r2 item 1 at round 2, DRAFTED): %.2f (an ASSUMPTION of l8r2)" % (s, s, F["su_eta"]), "DRAFTED"]
+                new = pb.up(lo, pl, float(F["cooler"][5]), "R")
+                L["src"] = "Layer 7's pick, Sanyo Denki %s, %s V, %s A, %s W at full speed (l7pwr, D-18 SESSION); LOW and PLAN keep rv-pwr's duty figures (the module's Fan_PWM sets the duty)" % (F["cooler"][0], F["cooler"][1], F["cooler"][4], F["cooler"][5])
+            else:
+                cfg.nodes[n] = ["fixedsc", "S%d" % s, F["fans12_rail"][0], (F["su_eta"], F["su_eta_lo"]), "slot %d's cooler fan 12 V, a TPS61089 step-up from +5V_S%d (l8r2 round 6, DRAFTED): %.2f at LOW and PLAN (the draft's declared figure), %.2f at HIGH (the envelope's, the slot row %.2f A), both ASSUMPTIONS of l8r2" % (s, s, F["su_eta"], F["su_eta_lo"], F["fan_row"]), "DRAFTED"]
+                new = pb.up(lo, pl, F["fan_env"], "R")
+                L["src"] = ("Layer 7's pick, Sanyo Denki %s, %s V, %s A, %s W at full speed at 12 V (l7pwr, D-18 SESSION); HIGH is l8r2's envelope, %.2f W at the step-up's %.2f V top, any duty (BOUND, l8r2 round 5; C4-3 holds the chain to it), no Fan_PWM maximum; LOW and PLAN keep rv-pwr's duty figures (the module's Fan_PWM sets the duty, R-150 unset)"
+                            % (F["cooler"][0], F["cooler"][1], F["cooler"][4], F["cooler"][5], F["fan_env"], F["su_vout"][2]))
             L["node"], L["status"] = n, "DRAFTED"
-            L["src"] = "Layer 7's pick, Sanyo Denki %s, %s V, %s A, %s W at full speed (l7pwr, D-18 SESSION); LOW and PLAN keep rv-pwr's duty figures (the module's Fan_PWM sets the duty)" % (F["cooler"][0], F["cooler"][1], F["cooler"][4], F["cooler"][5])
             L["d"] = {st: (pb.OFF if is_off(t) else new) for st, t in L["d"].items()}
             cfg.fan_on[L["name"]] = new
             cfg.limits[n] = ("TPS61089 and its eFuse (drafted)", F["su_efuse"][0], "out", "l8r2 item 1: the fan eFuse's least limit at 12 V (ILM 1.87 k) (DRAFTED)", 1)
@@ -564,6 +752,36 @@ def build(pb, F, hc, upto):
         L = cfg.load("panel board C")
         L["node"], L["status"] = "PNL", "DRAFTED"
         cfg.limits["PNL"] = ("TPS259631 U901 (drafted)", F["pnl_efuse"][0], "out", "l8r2 item 3: U901's least limit, ILM 604 Ohm (DRAFTED)", 1)
+    if upto >= 11:  # D6: slots 1 and 3 on board A's LM5176 stage (l8r2 rounds 4 to 6, DRAFTED)
+        for s in ("1", "3"):
+            n, u = "S" + s, "U%d" % (F["slot_base"][s] + 1)
+            cfg.nodes[n] = ["fixed", "VBAT", cfg.nodes[n][2], F["slot_eff"],
+                            "slot %s rail, LM5176 stage %s (apply_gen_sch_a_slotlm.py, DRAFTED; the AP64500 %s retired): 5.1 V NOT PLOTTED, the draft's declared %.2f" % (s, u, {"1": "U4", "3": "U6"}[s], F["slot_eff"]), "DRAFTED"]
+            cfg.limits[n] = lm_limit(u, F["slot_isns"], F)
+            cfg.shunts[n] = F["slot_isns"]
+            cfg.lm51.append(n)
+    if upto >= 12:  # D7: board B's six slot bucks at RT 200 k (l8r2 round 5, DRAFTED): the curves' own frequency; no figure moves
+        for s in (1, 2, 3):
+            for x in ("A", "B"):
+                n = "S%d%s" % (s, x)
+                cfg.nodes[n][4] += "; RT %.0f k drafted (apply_gen_sch_b_rt500.py): %.0f kHz, the curve's frequency" % (F["rt_new"], F["ap_eq7"] / F["rt_new"])
+                cfg.nodes[n][5] = "DRAFTED"
+    if upto >= 13:  # D8: the LM5176 5.1 V stages' dividers at 0.1 % (l8r2 round 6, DRAFTED): the window; no figure at 5.1 V moves
+        cfg.window = stage_window(F["vref"], F["ibias"], F["rfb"][0], F["rfb"][1], F["fb_tol"], F["drop_s"])
+        for n in cfg.lm51:
+            cfg.nodes[n][4] += "; divider at %.1f %% (apply_gen_sch_a_fb01.py, DRAFTED)" % (F["fb_tol"] * 100)
+            cfg.nodes[n][5] = "DRAFTED"
+    if upto >= 14:  # D9: board P's breaker C-1, its sense and two FETs in the pack path (l9stk 15.4, DRAFTED)
+        nf = int(F["brk_fets"][0])
+        r_brk = F["brk_rs_win"][1] + F["brk_fet_hot"][2] / 1000.0 / nf
+        cfg.r_parts.append(("board P's breaker C-1: the sense at its window's highest %.4f mOhm and %d x CSD18510Q5B at %.3f mOhm each (150 C) in parallel (l9stk 15.4, DRAFTED)"
+                            % (F["brk_rs_win"][1] * 1000, nf, F["brk_fet_hot"][2]), r_brk, "DRAFTED"))
+    if upto >= 15:  # D10: the third battery FET beside Q39 and Q40 (l9stk 15.5, DRAFTED)
+        nb = int(F["bat_fets"][0])
+        cfg.r_parts = [p for p in cfg.r_parts if not p[0].startswith("Q39 and Q40")]
+        cfg.r_parts.append(("Q39, Q40 and a third BUK6Y10-30P in parallel at L4-E11's 150 C bound %.3f mOhm each (l9stk 15.5, DRAFTED; its designator L4-E11's)" % F["bat_fets"][1],
+                            F["bat_fets"][1] / 1000.0 / nb, "DRAFTED"))
+    cfg.r_path = math.fsum(p[1] for p in cfg.r_parts)
     return cfg
 
 
@@ -628,18 +846,27 @@ STEP_TEXT = [
     ("D1", "DRAFTED", "L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied)"),
     ("D2", "DRAFTED", "L4-E11 15a: board E's auxiliary domain (U12, the controller, the mixers) on VSYS_E over the dock's pin 1 behind the eFuse U42 (apply_gen_sch_e_aux.py, not applied)"),
     ("D3", "DRAFTED", "L4-E11 18a with Layer 7's D-18: the two mixers are Sanyo Denki 9WL0612P4H001 on U22's 12.0 V rail (LTC3115-1, 0.85 assumed, 16 mA quiescent) (apply_gen_sch_e_aux.py, not applied)"),
-    ("D4", "DRAFTED", "l8r2 item 1 with Layer 7's D-18: the three coolers are Sanyo Denki 9WPA0412P6G001 on a per-slot TPS61089 step-up from +5V_Sn (0.85 assumed) (apply_gen_sch_b_fans12.py, not applied)"),
+    ("D4", "DRAFTED", "l8r2 item 1 to round 6 with Layer 7's D-18: the three coolers are Sanyo Denki 9WPA0412P6G001 on a per-slot TPS61089 step-up from +5V_Sn, at full speed with no Fan_PWM maximum; HIGH the envelope (2.75 W at 12.43 V over the step-up's 0.80, the slot row 0.69 A), PLAN at 0.85 (apply_gen_sch_b_fans12.py at 89924e40, not applied)"),
     ("D5", "DRAFTED", "l8r2 item 3: PANEL_5V behind the eFuse U901 (TPS259631), its RON in series with the panel (apply_gen_sch_b_panel5v.py, not applied)"),
+    ("D6", "DRAFTED", "l8r2 rounds 4 to 6: slots 1 and 3 on board A's LM5176 stage (U501, U531 on 6 mOhm ISNS shunts, the AP64500s U4 and U6 retired), 5.1 V NOT PLOTTED, the draft's declared 0.90; the three slot leads at 6.6 A (apply_gen_sch_a_slotlm.py at 89924e40, not applied)"),
+    ("D7", "DRAFTED", "l8r2 round 5: board B's six slot bucks at RT 200 k, 500 kHz, the frequency of the maker's curves rv-pwr uses (DRAWN's 68 k sets 1.47 MHz, where no curve is printed); no figure moves (apply_gen_sch_b_rt500.py at 89924e40, not applied)"),
+    ("D8", "DRAFTED", "l8r2 round 6: the LM5176 5.1 V stages' dividers at 0.1 %, the window 5.0019 to 5.1744 V; no figure at the model's 5.1 V moves, the least load voltage sets the stages' margins (apply_gen_sch_a_fb01.py at 89924e40, not applied)"),
+    ("D9", "DRAFTED", "l9stk 15.4: board P's breaker C-1 (LM5069-2, its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (l9stk at 2c8b29fb, a desk design, not applied)"),
+    ("D10", "DRAFTED", "l9stk 15.5: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, its designator L4-E11's (l9stk at 2c8b29fb, a desk design, not applied)"),
 ]
 
 NOT_MODELLED = [
     ("l8gnd (GND-002 and the HOT-R1 SLOT_EN hold)", "ground bonding and a logic hold: no load and no converter; nothing for the budget"),
     ("l8r2 item 2 (the VBUS20 over-voltage cut-off) and item 4 (J_QMX and J_CAM on the JST PH land)", "the charge path's protection and a connector land: no battery-side load"),
     ("l8r2's board D 3.3 V eFuse (apply_gen_sch_a_d8v3.py)", "a TPS259631 in series with board D's 0.06 A logic: under a milliwatt"),
+    ("l8r2 rounds 3 to 6's pack return (apply_gen_sch_a_packrtn.py, apply_gen_sch_e_packrtn.py) and the energy chain's board E texts (apply_energy_chain_e1oz.py)", "the return path declared as a rail and copper texts: no load and no converter"),
+    ("the slot leads' declared 6.6 A and VBAT's entries at 2.60 A (l8r2 round 6)", "declarations that the conductor checks read, not loads; printed beside the slot stages' currents in section 5b"),
+    ("the slot stages' CS shunts (5 mOhm in each LM5176 stage's input) and the breaker's enable loop, its RC hold and PTC guard (l9stk C-1b)", "inside the stages' declared efficiency as for slot 2 and the device rail since M1; the enable loop's divider and inverters carry no figure read here, milliwatts against the states' tens of watts"),
+    ("l9stk's copper decision (section 14) and its other protection items (the clamps, the retry, DD-4, DD-5)", "the pack path's band and its faults: no load in any state; the breaker's retry is a fault state"),
     ("L4-E4, L4-E5, L4-E6, L4-E7, L4-E8, L4-E13 (the front end's limits, the source control, the fault handling, the solar stage, the VBUS20 bank, the panel)", "the source and charge path, not the battery-side loads; L4-E8's ballasts enter the charging balance (section 8, B4) as L4-E12 counts them"),
     ("L4-E9's U17 on R227 (the PoE stage's sense)", "5 mOhm in the PoE stage's input, which is off in every state; 1.8 mW at the outlet's 0.6 A, under the model's rounding"),
     ("L4-E10 (the cell and its thermal design) and L4-E12 (the electronics' thermal)", "the pack model and the heat: this record's pack-side watts are their input, not the other way round"),
-    ("the rails' INA226 shunts (5 and 6 mOhm on the slot, device, PA and HF rails)", "not in rv-pwr's tree; their I2R is bounded in section 5 per state from the rails' own currents"),
+    ("the rails' INA226 shunts (5 and 6 mOhm on the slot, device, PA and HF rails; 6 mOhm on slots 1 and 3 with D6)", "not in rv-pwr's tree; their I2R is bounded in section 5 per state from the rails' own currents"),
     ("the BQ25730's own quiescent draw on battery", "no figure read in this record; a charger's battery-only quiescent is milliwatts against the states' tens of watts"),
     ("board E's CELL_F loads as drawn (U12 and the mixers, declared 1.0 A, before R17)", "the DRAWN tree passes them through R17 with the rest; at their PLAN current, about 0.2 A, that is under a milliwatt; DRAFTED moves them to VSYS_E (D2)"),
     ("the USB-C outlet's tablet budget (an 18 W cap, a proposal) and source-only operation", "an outlet overlay and a source-side question (L4-E11 section 3); the system-node demand per state is printed for it in section 3"),
@@ -661,7 +888,8 @@ def compute():
     R = {"pins": [(k, PINS[k], sha16(k)) for k in PINS], "F": F, "pred": {}}
     cfgs = [build(pb, F, hc, i) for i in range(len(STEP_TEXT))]
     RV, DRAWN, DRAFTED = cfgs[0], cfgs[5], cfgs[-1]
-    R["cfgs"] = {"RV": RV, "DRAWN": DRAWN, "DRAFTED": DRAFTED}
+    R1T = build(pb, F, hc, 10, cooler="maker")   # round 1's DRAFTED tree (38ef774c): D1 to D5 with l8r2's round 2 cooler
+    R["cfgs"] = {"RV": RV, "DRAWN": DRAWN, "DRAFTED": DRAFTED, "DRAFTED-R1": R1T}
     R["r_path"] = {k: (c.r_path, c.r_parts) for k, c in R["cfgs"].items()}
 
     # ---- 2. the model check: this evaluator on rv-pwr's tree against rv-pwr's own functions
@@ -750,13 +978,42 @@ def compute():
                     margins.append((cname, st, n, lim, i_pl, i_hi))
                 rails.append(row)
             shunt = 0.0
-            for n, rs in (("S1", 0.005), ("S2", 0.006), ("S3", 0.005), ("DEV", 0.006), ("PA", 0.006), ("HF", 0.010)):
+            for n, rs in sorted(cfg.shunts.items()):
                 if n in evs["hi"][1]["nodes"]:
                     i = evs["hi"][1]["nodes"][n][2]
                     shunt += i * i * rs
             per[(cname, st)] = {"loads": loads, "rails": rails, "shunt_hi": shunt}
     R["per"] = per
     R["margins"] = margins
+
+    # ---- 5b. the LM5176 5.1 V stages side by side (slots 1 to 3 and the device rail): the loop's least, the current at the model's
+    # 5.1 V and at the least load voltage the window gives, and for the slots the cooler branch's bounded start and a degraded
+    # cooler (record l8r2's bounds) on the slot's other loads at HIGH
+    stg = {}
+    for cname in ("DRAWN", "DRAFTED", "DRAFTED-R1"):
+        cfg = R["cfgs"][cname]
+        for st in STATES:
+            ev_pl = run_state(cfg, hc, st, "plan")[1]["nodes"]
+            ev_hi = run_state(cfg, hc, st, "hi")[1]["nodes"]
+            for n in ("S1", "S2", "S3", "DEV"):
+                if n not in ev_hi or ev_hi[n][1] <= 0:
+                    continue
+                lim = cfg.limits[n]
+                row = {"lim": lim, "lm": n in cfg.lm51, "status": cfg.nodes[n][5],
+                       "i_plan": ev_pl[n][2], "i_hi": ev_hi[n][2], "p_hi": ev_hi[n][1]}
+                if n in cfg.lm51 and cfg.window:
+                    row["v_least"] = cfg.window[0] * (1.0 - (F["drop_dev"] if n == "DEV" else F["drop_s"]))
+                    row["i_least"] = ev_hi[n][1] / row["v_least"]
+                fan = "S%sF" % n[1:] if n != "DEV" else None
+                if fan and fan in ev_hi and cfg.cooler == "env" and cname != "DRAWN":
+                    other = ev_hi[n][1] - ev_hi[fan][0]
+                    row["other"] = other
+                    if cfg.window and n in cfg.lm51:
+                        vl = cfg.window[2]
+                        row["start"] = other / vl + F["start_bound"]
+                        row["degraded"] = other / vl + F["su_efuse_x"][0] * F["su_vtop_x"] / F["su_eta_lo"] / vl
+                stg[(cname, st, n)] = row
+    R["stages"] = stg
 
     # ---- 6. the pack current against the contract (I_CONT continuous to the gauge's CUV, I_PEAK)
     v_cuv = F["cuv"] * F["series"]
@@ -783,7 +1040,7 @@ def compute():
     pc = []
     for lab, st, ov, kind in rows:
         r = {"label": lab, "kind": kind}
-        for cname in ("RV", "DRAWN", "DRAFTED"):
+        for cname in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1"):
             cfg = R["cfgs"][cname]
             ovx = {"pack heater mat (cold overlay)": cfg.heat_on} if ov == "HEAT" else ov
             for sc in ("plan", "hi"):
@@ -794,35 +1051,34 @@ def compute():
         pc.append(r)
     R["pc"] = pc
 
+    # ---- 6b. the pack path's elements per state (DRAFTED): each element's I2R at the state's pack current at 14.4 V
+    el = {}
+    for st in STATES:
+        for sc in ("plan", "hi"):
+            i = tot[("DRAFTED", st)][sc]["i14"]
+            i1 = tot[("DRAFTED-R1", st)][sc]["i14"]
+            el[(st, sc)] = {"I": i, "I_r1": i1, "parts": [(a, b, s, i * i * b) for a, b, s in DRAFTED.r_parts],
+                            "pair_r1": i1 * i1 * F["fet_bound"] / 2.0}
+    R["elems"] = el
+
     # ---- 7. D-11's floors on rv-pwr's method
     d11 = {}
-    for cname in ("RV", "DRAWN", "DRAFTED"):
-        cfg = R["cfgs"][cname]
-        r_rv = pb.R_DIST + (pb.R_R17 if cname == "RV" else 0.0)    # RV: rv-pwr's main_pack_path_R17 record
-        r = cfg.r_path if cname != "RV" else r_rv
-        typ = {}
-        for s in (1, 2, 3):
-            typ["CM5 slot %d" % s] = cfg.load("CM5 slot %d" % s)["d"]["TYP"]
-            typ["NVMe slot %d" % s] = cfg.load("NVMe slot %d" % s)["d"]["TYP"]
-        typ["WiFi link card 2 (standby)"] = pb.OFF
-        rows_ = {}
-        for lab, st, ov, sc, fl in (("all-transmit basis: non-transmit typical, standby card off, high", "ALLTX", typ, "hi", F["floor"]),
-                                    ("the same with the heater on", "ALLTX", {**typ, "pack heater mat (cold overlay)": "HEAT"}, "hi", F["floor"]),
-                                    ("PA alone over PS-TYP, PA at 113 W, the rest at plan", "TYP", pb.PA_113, "plan", F["pa_floor"])):
-            ovx = dict(ov)
-            if ovx.get("pack heater mat (cold overlay)") == "HEAT":
-                ovx["pack heater mat (cold overlay)"] = cfg.heat_on if cname != "RV" else pb.same(7.5 / 0.88, "S")
-                if cname == "RV":
-                    # rv-pwr's main_pack_path_R17 row: main's regulated heater at its declared 0.88, added at VBAT
-                    ovx.pop("pack heater mat (cold overlay)")
-            ev = run_state(cfg, hc, st, sc, extra=ovx)[1]
-            pv = ev["p_vbat"] + (7.5 / 0.88 if (cname == "RV" and "heater" in lab) else 0.0)
-            v_stack = pv / F["i_peak"] + F["i_peak"] * r
-            rc = {k: v_stack + F["i_peak"] * F["series"] * rr / 3.0 for k, rr in pb.R_CELL.items()}
-            rows_[lab] = {"vbat_W": pv, "floor": fl, "V_stack": v_stack, "V_rest": rc, "margin_hi": fl - rc["hi"],
-                          "r_cell_max": (fl - v_stack) * 3.0 / (F["series"] * F["i_peak"])}
-        d11[cname] = {"r": r, "rows": rows_}
+    for cname in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1"):
+        d11[cname] = d11_rows(pb, F, hc, R["cfgs"][cname], cname)
     R["d11"] = d11
+    # the same DRAFTED tree with the coolers at round 1's HIGH (the maker's 2.0 W at 12 V over 0.85): the floor's other end, should
+    # l8r2's C4-3 read the coolers' steady input at the maker's figure
+    R["d11_mk"] = d11_rows(pb, F, hc, build(pb, F, hc, len(STEP_TEXT) - 1, cooler="maker"), "DRAFTED-MK")
+    BASIS = "all-transmit basis: non-transmit typical, standby card off, high"
+    R["d11_steps"] = [(STEP_TEXT[i][0], d11_rows(pb, F, hc, c, "step")["rows"][BASIS]) for i, c in enumerate(cfgs) if i >= 5]
+    step, over = F["r7_rule"]
+    need = d11["DRAFTED"]["rows"][BASIS]["V_rest"]["hi"]
+    need_mk = R["d11_mk"]["rows"][BASIS]["V_rest"]["hi"]
+    R["floor_rule"] = {"need": need, "floor_r7": F["r7_floor"][0], "margin": F["r7_floor"][0] - need,
+                       "need_mk": need_mk, "floor_req_mk": floor_by_rule(need_mk, step, over),
+                       "floor_req": floor_by_rule(need, step, over), "step": step, "over": over,
+                       "heater": d11["DRAFTED"]["rows"]["the same with the heater on"]["V_rest"]["hi"],
+                       "pa": d11["DRAFTED"]["rows"]["PA alone over PS-TYP, PA at 113 W, the rest at plan"]["V_rest"]["hi"]}
     R["d11_rv_record"] = pb  # for the record's own figures below
     # rv-pwr's committed main_pack_path_R17 margins, from its JSON output (read, not recomputed)
     rvj = text("rvpwr_out")
@@ -842,6 +1098,39 @@ def compute():
     R["classified"] = classify(pb, F, R)
     predicates(pb, F, R)
     return R
+
+
+def floor_by_rule(need, step, over):
+    """L4-E9 round 7's rule: the least floor on its own step that leaves at least `over` above the need."""
+    return round(math.ceil(round((need + over) / step, 6)) * step, 6)
+
+
+def d11_rows(pb, F, hc, cfg, cname):
+    """D-11's three rows on rv-pwr's method (section 7.2 there) for one tree."""
+    r_rv = pb.R_DIST + (pb.R_R17 if cname == "RV" else 0.0)    # RV: rv-pwr's main_pack_path_R17 record
+    r = cfg.r_path if cname != "RV" else r_rv
+    typ = {}
+    for s in (1, 2, 3):
+        typ["CM5 slot %d" % s] = cfg.load("CM5 slot %d" % s)["d"]["TYP"]
+        typ["NVMe slot %d" % s] = cfg.load("NVMe slot %d" % s)["d"]["TYP"]
+    typ["WiFi link card 2 (standby)"] = pb.OFF
+    rows_ = {}
+    for lab, st, ov, sc, fl in (("all-transmit basis: non-transmit typical, standby card off, high", "ALLTX", typ, "hi", F["floor"]),
+                                ("the same with the heater on", "ALLTX", {**typ, "pack heater mat (cold overlay)": "HEAT"}, "hi", F["floor"]),
+                                ("PA alone over PS-TYP, PA at 113 W, the rest at plan", "TYP", pb.PA_113, "plan", F["pa_floor"])):
+        ovx = dict(ov)
+        if ovx.get("pack heater mat (cold overlay)") == "HEAT":
+            ovx["pack heater mat (cold overlay)"] = cfg.heat_on if cname != "RV" else pb.same(7.5 / 0.88, "S")
+            if cname == "RV":
+                # rv-pwr's main_pack_path_R17 row: main's regulated heater at its declared 0.88, added at VBAT
+                ovx.pop("pack heater mat (cold overlay)")
+        ev = run_state(cfg, hc, st, sc, extra=ovx)[1]
+        pv = ev["p_vbat"] + (7.5 / 0.88 if (cname == "RV" and "heater" in lab) else 0.0)
+        v_stack = pv / F["i_peak"] + F["i_peak"] * r
+        rc = {k: v_stack + F["i_peak"] * F["series"] * rr / 3.0 for k, rr in pb.R_CELL.items()}
+        rows_[lab] = {"vbat_W": pv, "floor": fl, "V_stack": v_stack, "V_rest": rc, "margin_hi": fl - rc["hi"],
+                      "r_cell_max": (fl - v_stack) * 3.0 / (F["series"] * F["i_peak"]), "r": r}
+    return {"r": r, "rows": rows_}
 
 
 def t_to(q, g, c, dt):
@@ -934,13 +1223,18 @@ def reconcile(pb, F, hc, R, cfgs):
     # R5 L4-E11's battery FET pair on battery
     rp = F["fet_bound"] / 2.0
     i1, i2 = m[0] / 14.4, R["committed"]["PS-TYP"][2] / 14.4
-    curp = {st: (round(tot[("DRAFTED", st)]["plan"]["i14"], 4), round(tot[("DRAFTED", st)]["plan"]["i14"] ** 2 * rp, 4)) for st in ("IDLESPEC", "TYP")}
+    r3 = F["bat_fets"][1] / 1000.0 / F["bat_fets"][0]
+    curp = {}
+    for st in ("IDLESPEC", "TYP"):
+        i_r1, i_d = tot[("DRAFTED-R1", st)]["plan"]["i14"], tot[("DRAFTED", st)]["plan"]["i14"]
+        curp["%s, round 1 (the pair)" % st] = (round(i_r1, 4), round(i_r1 ** 2 * rp, 4))
+        curp["%s, DRAFTED now (three FETs, D10)" % st] = (round(i_d, 4), round(i_d ** 2 * r3, 4))
     rec.append({"id": "R5", "what": "L4-E11 15c: the pair's loss on battery at PS-IDLE-SPEC and PS-TYP (A, W)",
                 "theirs": (F["fet_idle"][0], F["fet_idle"][1], F["fet_typ"][0], F["fet_typ"][1]),
                 "repro": (round(i1, 3), round(i1 * i1 * rp, 4), round(i2, 3), round(i2 * i2 * rp, 4)),
                 "equal": abs(round(i1, 3) - F["fet_idle"][0]) < 1e-9 and abs(round(i1 * i1 * rp, 4) - F["fet_idle"][1]) < 1e-9 and abs(round(i2, 3) - F["fet_typ"][0]) < 1e-9 and abs(round(i2 * i2 * rp, 4) - F["fet_typ"][1]) < 1e-9,
                 "cur": curp,
-                "why": "L4-E11 divides the profile's rounded %.1f W and %.1f W by 14.4 V; this record solves the pack current at 14.4 V with the whole pack path (R_DIST, R17, the pair) and the current design's profile" % (m[0], R["committed"]["PS-TYP"][2])})
+                "why": "L4-E11 divides the profile's rounded %.1f W and %.1f W by 14.4 V; this record solves the pack current at 14.4 V with the whole pack path (R_DIST, R17, the battery FETs, on DRAFTED board P's breaker) and the current design's profile; with l9stk's third FET (D10) the FETs' share of the current falls to a third each and their loss with it" % (m[0], R["committed"]["PS-TYP"][2])})
 
     # R6 and R7 L4-E12's fans' share and its heat stage
     def fan_share(cn, st):
@@ -962,28 +1256,74 @@ def reconcile(pb, F, hc, R, cfgs):
     l7 = own + 3 * F["l7_stepup_loss"] + F["u22_heat"][0]
     mine = own + 3 * (cf / F["su_eta"] - cf) + (2 * mx / F["fan12_eff_draft"] - 2 * mx)
     rv_plan_fans = math.fsum(pb.LOADS[[x[0] for x in pb.LOADS].index(n)][2]["IDLESPEC"][1] for n in ("cooler fan slot 1", "cooler fan slot 2", "cooler fan slot 3", "two mixer fans"))
+    env = 3 * F["fan_env"] / F["su_eta_lo"] + 2 * mx / F["fan12_eff_draft"]
     rec.append({"id": "R8", "what": "Layer 7 section 3: the five fans and their converters at full speed against the plan's fan figures (W)",
                 "theirs": F["l7_heat"], "repro": (round(l7, 2), round(rv_plan_fans, 3)), "equal": abs(round(l7, 2) - F["l7_heat"][0]) < 1e-9 and abs(round(rv_plan_fans, 3) - F["l7_heat"][1]) < 1e-9,
-                "cur": {"this record, the converters' losses unrounded": (round(mine, 4),), "U22's quiescent at 14.4 V, in neither figure": (round(F["vsyse_decl"][4] / 1000.0 * 14.4, 4),)},
+                "cur": {"this record, the converters' losses unrounded, the coolers at the maker's 2.0 W (round 1's HIGH)": (round(mine, 4),),
+                        "DRAFTED's HIGH now: the coolers at l8r2's envelope, %.2f W over %.2f each, the mixers as before" % (F["fan_env"], F["su_eta_lo"]): (round(env, 4),),
+                        "U22's quiescent at 14.4 V, in neither figure": (round(F["vsyse_decl"][4] / 1000.0 * 14.4, 4),)},
                 "why": "Layer 7 rounds each step-up's loss to %.2f W (%.4f W at %.2f), %.4f W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure" % (F["l7_stepup_loss"], cf / F["su_eta"] - cf, F["su_eta"], mine - l7)})
 
-    # R9 l8r2's choice (a)
-    per_slot = cf / F["su_eta"]
-    three = 3 * per_slot / F["eta_slot"]
-    cfg = R["cfgs"]["DRAFTED"]
-    vals, ev = run_state(cfg, hc, "IDLESPEC", "plan")
-    v2 = dict(vals)
-    for s in (1, 2, 3):
-        v2["cooler fan slot %d" % s] = 0.0
-    off = evaluate(cfg, v2, "plan")["p_vbat"]
-    for s in (1, 2, 3):
-        v2["cooler fan slot %d" % s] = cf
-    full = evaluate(cfg, v2, "plan")["p_vbat"]
-    rec.append({"id": "R9", "what": "l8r2 item 1, choice (a): per slot on +5V_Sn, its current at 5.1 V, the three at VBAT (W, A, W)",
-                "theirs": F["su_choice_a"], "repro": (round(per_slot, 3), round(per_slot / 5.1, 3), round(three, 2)),
-                "equal": abs(round(per_slot, 3) - F["su_choice_a"][0]) < 1e-9 and abs(round(per_slot / 5.1, 3) - F["su_choice_a"][1]) < 1e-9 and abs(round(three, 2) - F["su_choice_a"][2]) < 1e-9,
-                "cur": {"this record: the three at full speed against the three off, PS-IDLE-SPEC, VBAT": (round(full - off, 4),)},
-                "why": "l8r2 takes the slot converters at a flat %.2f; this record uses the slot rails' own converters (S1 and S3 on the AP64500 curve at their operating point, S2 at the declared %.2f)" % (F["eta_slot"], F["s2_eff"])})
+    # R9 record l8r2 round 6 (2c.5): slots 1 and 3 on the LM5176 stage, the steady envelope, the bounded start, a degraded cooler,
+    # the 0.1 % window and the loop's least (round 1's R9, l8r2's choice (a) on a flat eta_slot, is set aside: section 1). l8r2
+    # parsed this record's round 1 rails as printed (section 5: out W and eta at 3 places); its inputs are rebuilt here from
+    # DRAFTED-R1 at that precision and its arithmetic re-run on them
+    SN = {v.split(" (")[0]: k for k, v in STATE_NAME.items()}
+    stg = R["stages"]
+    r1t = R["cfgs"]["DRAFTED-R1"]
+    loop = F["vsns"][0] / (F["slot_isns"] * (1 + F["shunt_tol"]))
+    win = stage_window(F["vref"], F["ibias"], F["rfb"][0], F["rfb"][1], F["fb_tol"], F["drop_s"])
+    vl = win[2]
+    env_b = F["fan_env"] / F["su_eta_lo"]
+    degr_b = F["su_efuse_x"][0] * F["su_vtop_x"] / F["su_eta_lo"]
+    _pr = {}
+
+    def printed(k):
+        if k not in _pr:
+            ev = {sc: run_state(r1t, hc, k, sc)[1]["nodes"] for sc in SCEN}
+            _pr[k] = {n: {"out": tuple(round(ev[sc][n][1], 3) for sc in SCEN), "eta": round(ev["plan"][n][3], 3), "kind": r1t.nodes[n][0]}
+                      for n in ev["hi"] if n in ev["plan"] and n in ev["lo"]}
+        return _pr[k]
+
+    def base_w(k, s):
+        p = printed(k)
+        return (p["S" + s]["out"][2] / 5.1) * 5.1 - p["S%sF" % s]["out"][2] / p["S%sF" % s]["eta"]
+    rows_ok, worst_dev = True, 0.0
+    for name, slot, th in F["l8_rows"]:
+        b = base_w(SN[name], slot)
+        mine9 = ((b + env_b) / 5.1, (b + env_b) / vl, b / vl + F["start_bound"], (b + degr_b) / vl)
+        mine9 = tuple(round(x, 4) for x in mine9) + tuple(round(loop - x, 4) for x in mine9[1:])
+        rows_ok = rows_ok and all(abs(a - c) < 1e-9 for a, c in zip(mine9, th))
+        x = stg[("DRAFTED", SN[name], "S" + slot)]
+        worst_dev = max(worst_dev, abs(x["i_least"] - th[1]), abs(x["start"] - th[2]), abs(x["degraded"] - th[3]))
+    en_ok, en_mine, en_now = True, [], []
+    for name, v in F["l8_energy"]:
+        k = SN[name]
+        p = printed(k)
+        dw = math.fsum(p[n]["out"][1] * (1 / F["slot_eff"] - 1 / p[n]["eta"]) for n in ("S1", "S3") if p[n]["kind"] == "curve" and p[n]["out"][1] > 0)
+        en_mine.append((name, round(dw, 3)))
+        en_ok = en_ok and abs(round(dw, 3) - v) < 1e-9
+        en_now.append((name, run_state(cfgs[11], hc, k, "plan")[1]["p_vbat"] - run_state(cfgs[10], hc, k, "plan")[1]["p_vbat"]))
+    pb_ = printed("BUSY")
+    other_r1 = base_w("BUSY", "1")
+    s2_r1 = (pb_["S2"]["out"][2] - pb_["S2F"]["out"][2] / pb_["S2F"]["eta"]) / vl + F["start_bound"]
+    repro9 = (round(other_r1, 3), round(win[0], 4), round(win[1], 4), round(vl, 4), round(loop, 6), round(s2_r1, 4), round(loop - F["slot_peak"], 4))
+    theirs9 = (F["l8_other"], F["l8_window"][0], F["l8_window"][1], F["l8_vload"], F["l8_loop"], F["l8_slot2"], F["l8_peak_margin"][0])
+    least = {}
+    for col, key in (("steady at 5.1 V", None), ("steady at the least load voltage", "i_least"), ("bounded start", "start"), ("degraded cooler", "degraded")):
+        least[col] = slot_least(R, key)
+    busy = stg[("DRAFTED", "BUSY", "S1")]
+    s2_now = max(stg[("DRAFTED", st, "S2")]["start"] for st in STATES if ("DRAFTED", st, "S2") in stg and "start" in stg[("DRAFTED", st, "S2")])
+    rec.append({"id": "R9", "what": "l8r2 round 6 (2c.5): the slot's other loads at HIGH (PS-BUSY, W); the 0.1 %% window and its least load voltage (V); the loop's least (A); slot 2's bounded start (A); the margin at the declared %.1f A; every row of its per state table (A at 5.1 V, at the least voltage, start, degraded, the three margins) and its energy line" % F["slot_peak"],
+                "theirs": theirs9, "repro": repro9,
+                "equal": all(abs(a - b) < 1e-9 for a, b in zip(repro9, theirs9)) and rows_ok and en_ok,
+                "cur": {"its %d per state rows, re-run on round 1's printed rails" % len(F["l8_rows"]): ("EQUAL" if rows_ok else "NOT EQUAL",),
+                        "its energy line (D6's cost at VBAT at PLAN, W), re-run": tuple("%s %+.3f" % e for e in en_mine) + (("EQUAL",) if en_ok else ("NOT EQUAL",)),
+                        "round 2's DRAFTED unrounded: the slot's other loads (PS-BUSY, W), slot 2's start (A), the largest difference from l8r2's rows (A)": (round(busy["other"], 4), round(s2_now, 4), round(worst_dev, 4)),
+                        "round 2's DRAFTED unrounded: D6's cost at VBAT at PLAN (W)": tuple("%s %+.4f" % e for e in en_now),
+                        "round 2's DRAFTED: the least margin over every state, slots 1 and 3 (A, state, rail)": tuple("%s %+.4f (%s, %s)" % (c, v[0], STATE_NAME[v[1]], v[2]) for c, v in least.items()),
+                        "VBAT's entries at the declared peak (%.1f A x 5.1 V over %.2f x 14.4 V; declared %.2f A)" % (F["slot_peak"], F["slot_eff"], F["slot_entry"]): (round(F["slot_peak"] * 5.1 / (F["slot_eff"] * 14.4), 4),)},
+                "why": "l8r2 took this record's round 1 rails as printed (3 places), so its rows carry that rounding; re-run on the same printed rails they are equal, and round 2's DRAFTED, which carries l8r2's own round 6 drafts (the cooler at its %.2f W envelope over %.2f, slots 1 and 3 on the LM5176 at %.2f), gives them unrounded within the difference printed; the window from the LM5176 sheet's VREF and IBIAS(FB), the divider %.1f k over %.0f k (gen_sch_a.py) at fb01's %.1f %% and the rails' %.0f %% drop" % (F["fan_env"], F["su_eta_lo"], F["slot_eff"], F["rfb"][0] / 1000, F["rfb"][1] / 1000, F["fb_tol"] * 100, F["drop_s"] * 100)})
 
     # R10 rv-pwr's D-11 margin on main's pack path (R17)
     d = R["d11"]["RV"]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"]
@@ -996,13 +1336,68 @@ def reconcile(pb, F, hc, R, cfgs):
                              round(R["d11"][cn]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"]["V_rest"]["hi"], 2),
                              round(R["d11"][cn]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"]["margin_hi"], 2)) for cn in cur},
                 "why": "section 7: the drafted pair adds its resistance at 18 A, the fans at full speed (HIGH) their power"})
+    # R1c L4-E9 round 7's restated modes and R11 its D-17 floor, both on this record's round 1 tree (38ef774c)
+    r1 = R["cfgs"]["DRAFTED-R1"]
+    r1m = (pbp("DRAFTED-R1", "IDLESPEC"), pbp("DRAFTED-R1", "ALLTX"), pbp("DRAFTED-R1", "ALLTX", "hi"),
+           run_state(r1, hc, "IDLESPEC", "plan", extra=pb.PA_113)[1]["pb"])
+    rec.append({"id": "R1c", "what": "L4-E9 round 7 (out 30): the modes restated DRAFTED, PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W (W at the pack)",
+                "theirs": F["r7_modes"], "repro": tuple(round(x, 3) for x in r1m),
+                "equal": all(abs(round(a, 3) - b) < 1e-9 for a, b in zip(r1m, F["r7_modes"])),
+                "cur": {"DRAFTED now": tuple(round(x, 3) for x in cur["DRAFTED"])},
+                "why": "L4-E9 quotes this record's round 1 DRAFTED (rebuilt here as DRAFTED-R1: D1 to D5 with l8r2's round 2 cooler); round 2 moves them by D4's envelope at HIGH and D6 to D10"})
+    B = "all-transmit basis: non-transmit typical, standby card off, high"
+    dw, dr1 = R["d11"]["DRAWN"]["rows"], R["d11"]["DRAFTED-R1"]["rows"]
+
+    def need_at_printed(row, r):
+        """L4-E9's method: this record's printed VBAT watts (0.01 W) over 18 A, the path, the cells at R_cell high."""
+        vs = round(row["vbat_W"], 2) / F["i_peak"] + F["i_peak"] * r
+        return vs, vs + F["i_peak"] * F["series"] * pb.R_CELL["hi"] / 3.0
+    s_dw, n_dw = need_at_printed(dw[B], R["d11"]["DRAWN"]["r"])
+    s_r1, n_r1 = need_at_printed(dr1[B], R["d11"]["DRAFTED-R1"]["r"])
+    n_ht = need_at_printed(dr1["the same with the heater on"], R["d11"]["DRAFTED-R1"]["r"])[1]
+    n_pa = need_at_printed(dr1["PA alone over PS-TYP, PA at 113 W, the rest at plan"], R["d11"]["DRAFTED-R1"]["r"])[1]
+    fl = floor_by_rule(n_r1, F["r7_rule"][0], F["r7_rule"][1])
+    repro11 = (round(dw[B]["vbat_W"], 2), round(s_dw, 3), round(n_dw, 3), round(dr1[B]["vbat_W"], 2), round(R["d11"]["DRAFTED-R1"]["r"], 6), round(s_r1, 3), round(n_r1, 3),
+               round(F["i_peak"] * F["fet_bound"] / 2, 4), round(round(dr1[B]["vbat_W"], 2) - round(dw[B]["vbat_W"], 2), 2),
+               round((round(dr1[B]["vbat_W"], 2) - round(dw[B]["vbat_W"], 2)) / F["i_peak"], 4), round(n_ht, 3), round(n_pa, 3), fl, round(fl - n_r1, 3),
+               round((fl - s_r1) * 3.0 / (F["series"] * F["i_peak"]), 4))
+    theirs11 = (F["r7_drawn"][0], F["r7_drawn"][2], F["r7_drawn"][3], F["r7_need"][0], F["r7_need"][1], F["r7_need"][2], F["r7_need"][3],
+                F["r7_parts"][1], F["r7_parts"][2], F["r7_parts"][3], F["r7_heater"], F["r7_pa"], F["r7_floor"][0], F["r7_margin"][0], F["r7_margin"][1])
+    fr = R["floor_rule"]
+    rec.append({"id": "R11", "what": "L4-E9 round 7's D-17 (out 30): DRAWN W at VBAT, stack, need; DRAFTED W, path, stack, need; the pair's V at 18 A, the other drafts' W and V; the heater row's and the PA row's need; the floor by its rule, its margin, the R_cell it covers",
+                "theirs": theirs11, "repro": repro11,
+                "equal": all(abs(a - b) < 1e-9 for a, b in zip(repro11, theirs11)),
+                "cur": {"DRAFTED now, the all-transmit basis: VBAT W, path Ohm, stack V, the rest voltage needed at R_cell high": (round(R["d11"]["DRAFTED"]["rows"][B]["vbat_W"], 2), round(R["d11"]["DRAFTED"]["r"], 6), round(R["d11"]["DRAFTED"]["rows"][B]["V_stack"], 3), round(fr["need"], 3)),
+                        "against round 7's %.1f V floor: the margin (V), and the floor its own rule gives now" % fr["floor_r7"]: (round(fr["margin"], 3), fr["floor_req"]),
+                        "the heater row and the PA-alone row now (V)": (round(fr["heater"], 3), round(fr["pa"], 3))},
+                "why": "L4-E9 took this record's round 1 watts as printed (0.01 W) and its own pack path; reproduced here on DRAFTED-R1 the same way. Round 2's need moves by the steps of section 7's ladder; the rule is L4-E9's (%s V step, at least %s V over the need)" % (F["r7_rule"][0], F["r7_rule"][1])})
+
+    # R12 record l9stk section 15: the elements this budget adds to the pack path
+    nf, rhot = F["brk_fets"][0], F["brk_fet_hot"][2]
+    i_cl = F["brk_fet_hot"][0]
+    ra, rb_ = F["brk_rs_pair"]
+    rpar = ra * rb_ / (ra + rb_)
+    repro12 = (round(rpar * 1000, 4), round(F["brk_fets"][1] * F["brk_fet_hot"][3], 3), round((i_cl / nf) ** 2 * rhot / 1000.0, 3),
+               round((i_cl / F["bat_fets"][0]) ** 2 * F["bat_fets"][1] / 1000.0, 3),
+               round(i_cl ** 2 * rpar * (rpar / ra), 2), round(i_cl ** 2 * rpar * (rpar / rb_), 2))
+    theirs12 = (F["brk_rs"] * 1000, rhot, F["brk_fet_hot"][1], F["bat_three_w"], F["brk_sense_w"][0], F["brk_sense_w"][1])
+    rd = R["cfgs"]["DRAFTED"]
+    brk = [p for p in rd.r_parts if p[0].startswith("board P's breaker")][0][1]
+    three = [p for p in rd.r_parts if p[0].startswith("Q39, Q40 and a third")][0][1]
+    rec.append({"id": "R12", "what": "l9stk 15.4 and 15.5 at the breaker's largest limit %.2f A: the sense (mOhm), a breaker FET at 150 C (mOhm) and its loss (W), a battery FET's loss with three (W), the sense's loss in its 4 and 7.5 mOhm (W)" % i_cl,
+                "theirs": theirs12, "repro": repro12, "equal": all(abs(a - b) < 1e-9 for a, b in zip(repro12, theirs12)),
+                "cur": {"the pack path's change (mOhm): the breaker added (D9), the battery FETs from two to three (D10), the net": (round(brk * 1000, 4), round((three - F["fet_bound"] / 2) * 1000, 4), round((brk + three - F["fet_bound"] / 2) * 1000, 4)),
+                        "the pack path, round 1 and now (Ohm)": (round(R["cfgs"]["DRAFTED-R1"].r_path, 6), round(rd.r_path, 6))},
+                "why": "the breaker's sense at its window's highest and its FETs at the sheet's x1.8 at 150 C (l9stk's own bound), the battery FETs at L4-E11's 150 C bound: the conservative side for every limit this budget judges. The third FET is in parallel, so it lowers the path; with the breaker the net is within 0.01 mOhm of round 1's"})
+
     return rec
 
 
 def sensitivities(pb, F, hc, R):
     cfg = R["cfgs"]["DRAFTED"]
     f2 = grab(text("rvpwr"), r"fuse DCR ([\d.]+) to ([\d.]+) mOhm", "F2's DCR range", 2)
-    r_lo = pb.R_W2 + f2[0] / 1000.0 + pb.R_R17 + F["fet_25c"] * F["fet_gate"] / 2.0
+    nb, nf = F["bat_fets"][0], F["brk_fets"][0]
+    r_lo = pb.R_W2 + f2[0] / 1000.0 + pb.R_R17 + F["fet_25c"] * F["fet_gate"] / nb + F["brk_rs_win"][0] + F["brk_fets"][1] / 1000.0 / nf
     out = {}
     for st in STATES:
         base, ov = state_spec(cfg, hc, st)
@@ -1023,16 +1418,16 @@ def sensitivities(pb, F, hc, R):
         w12 = evaluate(cfg, vals, "plan", vpack=12.0, vbatt=12.0)["pb"]
         w168 = evaluate(cfg, vals, "plan", vpack=16.8, vbatt=16.8)["pb"]
         rows.append(("assumption", "the pack voltage", w12, w168, "12.0 to 16.8 V: the curves' input and the pack path's I2R"))
-        prox = {n: ap64500_proxy(cfg, ev0, n) for n in ("S2", "DEV")}
+        prox = {n: ap64500_proxy(cfg, ev0, n) for n in cfg.lm51}
         wp = evaluate(cfg, vals, "plan", eff_over=prox)["pb"]
-        rows.append(("assumption", "S2 and DEV, the LM5176 5.1 V stages' efficiency", wp, h0, "the AP64500 curve at their point (S2 %.3f, DEV %.3f; rv-pwr's model) to the declared %.2f (NOT PLOTTED)" % (prox["S2"], prox["DEV"], F["s2_eff"])))
+        rows.append(("assumption", "the LM5176 5.1 V stages' efficiency (%s)" % ", ".join(cfg.lm51), wp, h0, "the AP64500 curve at their point (%s; rv-pwr's model) to the declared %.2f (NOT PLOTTED)" % (", ".join("%s %.3f" % (n, prox[n]) for n in cfg.lm51), F["s2_eff"])))
         if any(vals["cooler fan slot %d" % s] > 0 for s in (1, 2, 3)):
             w80 = evaluate(cfg, vals, "plan", eff_over={"S%dF" % s: F["su_eta_lo"] for s in (1, 2, 3)})["pb"]
             rows.append(("assumption", "the cooler step-ups' efficiency (l8r2)", h0, w80, "%.2f to %.2f (TI's low figure for the inductor's worst case, l8r2)" % (F["su_eta"], F["su_eta_lo"])))
         w93 = evaluate(cfg, vals, "plan", eff_over={"FAN12": F["u22_eff_ta04"][1] / 100.0})["pb"]
         rows.append(("assumption", "U22's efficiency (L4-E11)", w93, h0, "%.2f (TA04b, typical, read at %.2f A) to %.2f (L4-E11's assumption)" % (F["u22_eff_ta04"][1] / 100.0, F["u22_eff_ta04"][0], F["fan12_eff_draft"])))
         wr = pb.battery_side(ev0["p_vbat"], 14.4, r_lo)
-        rows.append(("assumption", "the pack path's resistance", wr, h0, "%.2f to %.2f mOhm: F2 at %.1f to %.1f mOhm, the pair at 25 C (%.3f mOhm each at 8.5 V drive) to its 150 C bound" % (r_lo * 1000, cfg.r_path * 1000, f2[0], f2[1], F["fet_25c"] * F["fet_gate"] * 1000)))
+        rows.append(("assumption", "the pack path's resistance", wr, h0, "%.2f to %.2f mOhm: F2 at %.1f to %.1f mOhm, the %d battery FETs at 25 C (%.3f mOhm each at 8.5 V drive) to their 150 C bound, the breaker's sense over its window and its FETs at 25 C (%.2f mOhm) to 150 C" % (r_lo * 1000, cfg.r_path * 1000, f2[0], f2[1], nb, F["fet_25c"] * F["fet_gate"] * 1000, F["brk_fets"][1])))
         rows.sort(key=lambda r: (-abs(r[3] - r[2]), r[1]))
         out[st] = {"headline": h0, "top": rows[:5], "n": len(rows), "assumptions": [r for r in rows if r[0] == "assumption"]}
     return out
@@ -1061,7 +1456,7 @@ def curves(pb, F, hc, R):
                     rows.append((n, nv[3], i, tuple(pb.eff_curve(nv[3], v, i) for v in vs), "pack-fed"))
                 else:
                     rows.append((n, nv[3], i, (pb.eff_curve(nv[3], nv[2] if False else cfg.nodes[nv[1]][2], i),), "fed at %.3f V: NOT PLOTTED, rv-pwr's VIN 12 V curve" % cfg.nodes[nv[1]][2]))
-            elif nv[0] in ("fixed", "fixedq"):
+            elif nv[0] in ("fixed", "fixedq", "fixedsc"):
                 e = nv[3] if nv[0] == "fixed" else nv[3][0]
                 w0 = ev["pb"]
                 w1 = evaluate(cfg, vals, "plan", eff_over={n: e - 0.01})["pb"]
@@ -1081,11 +1476,27 @@ def findings(pb, F, R):
         for cname in ("DRAWN", "DRAFTED"):
             pl, hi = r[(cname, "plan")]["I"][-1], r[(cname, "hi")]["I"][-1]
             if pl > lim or hi > lim:
-                raw["pack"].append((cname, r["label"], r["kind"], lim, pl, hi, r[("RV", "plan")]["I"][-1], r[("RV", "hi")]["I"][-1]))
-    for cname in ("RV", "DRAWN", "DRAFTED"):
+                raw["pack"].append((cname, r["label"], r["kind"], lim, pl, hi, r[("RV", "plan")]["I"][-1], r[("RV", "hi")]["I"][-1],
+                                    r[("DRAFTED-R1", "plan")]["I"][-1], r[("DRAFTED-R1", "hi")]["I"][-1]))
+    for cname in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1"):
         for lab, row in R["d11"][cname]["rows"].items():
             raw["d11"].append((cname, lab, row["floor"], row["V_rest"]["hi"], row["margin_hi"], row["r_cell_max"]))
     return raw
+
+
+BASIS = "all-transmit basis: non-transmit typical, standby card off, high"
+
+
+def slot_least(R, key, cname="DRAFTED", rails=("S1", "S3")):
+    """the least margin to the LM5176 loop over every state for the slot stages: (margin, state, rail)."""
+    out = []
+    for k, x in R["stages"].items():
+        if k[0] != cname or k[2] not in rails or not x["lm"]:
+            continue
+        i = x["p_hi"] / 5.1 if key is None else x.get(key)
+        if i is not None:
+            out.append((x["lim"][1] - i, k[1], k[2]))
+    return min(out)
 
 
 def predicates(pb, F, R):
@@ -1096,19 +1507,34 @@ def predicates(pb, F, R):
     P["rv-pwr's committed headline table equals this evaluator at 0.1 W"] = all(
         abs(round(tot[("RV", st)][sc]["pb"], 1) - cm[pb.STATE_NAME[st]][1 + i]) < 1e-9 for st in pb.STATES for i, sc in enumerate(SCEN))
     for r in R["rec"]:
-        P["reconciliation %s: Layer 4's figure reproduced from its own inputs" % r["id"]] = bool(r["equal"])
+        P["reconciliation %s: the other record's figure reproduced from its own inputs" % r["id"]] = bool(r["equal"])
     P["DRAFTED's PLAN is above DRAWN's in every state"] = all(tot[("DRAFTED", st)]["plan"]["pb"] > tot[("DRAWN", st)]["plan"]["pb"] for st in STATES)
+    P["DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off"] = all(
+        (tot[("DRAFTED", st)]["plan"]["pb"] > tot[("DRAFTED-R1", st)]["plan"]["pb"]) == (st != "SURV") for st in STATES)
     P["DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered"] = all(
         (tot[("DRAWN", st)]["plan"]["pb"] > tot[("RV", st)]["plan"]["pb"]) == (st != "EMCON") for st in STATES)
     P["the waterfall's last step is DRAFTED and its first RV, on every state"] = all(
         abs(R["wf"][-1][st] - tot[("DRAFTED", st)]["plan"]["pb"]) < 1e-9 and abs(R["wf"][0][st] - tot[("RV", st)]["plan"]["pb"]) < 1e-9 for st in STATES)
-    d = {c: R["d11"][c]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"]["margin_hi"] for c in ("RV", "DRAWN", "DRAFTED")}
+    d = {c: R["d11"][c]["rows"][BASIS]["margin_hi"] for c in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1")}
     P["D-11's all-transmit floor holds on RV and DRAWN and fails on DRAFTED"] = d["RV"] > 0 and d["DRAWN"] > 0 and d["DRAFTED"] < 0
-    P["D-11's PA-alone floor holds on every tree"] = all(R["d11"][c]["rows"]["PA alone over PS-TYP, PA at 113 W, the rest at plan"]["margin_hi"] > 0 for c in ("RV", "DRAWN", "DRAFTED"))
+    fl = F["r7_floor"][0]
+    need = {c: R["d11"][c]["rows"][BASIS]["V_rest"]["hi"] for c in ("DRAFTED", "DRAFTED-R1")}
+    P["L4-E9 round 7's all-transmit floor covers round 1's drafted basis and not this round's"] = need["DRAFTED-R1"] <= fl < need["DRAFTED"]
+    P["D-11's PA-alone floor holds on every tree"] = all(R["d11"][c]["rows"]["PA alone over PS-TYP, PA at 113 W, the rest at plan"]["margin_hi"] > 0 for c in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1"))
     over_plan = [m for m in R["margins"] if m[4] > m[3][1]]
     P["no converter is over its limit at PLAN in any state, DRAWN or DRAFTED"] = not over_plan
-    P["every drafted node and row is labelled DRAFTED"] = all(v[5] == "DRAFTED" for n, v in R["cfgs"]["DRAFTED"].nodes.items() if n in ("VSYSE", "FAN12", "S1F", "S2F", "S3F", "PNL")) and all(
-        L["status"] == "DRAFTED" for L in R["cfgs"]["DRAFTED"].loads if L["name"] in ("two mixer fans", "cooler fan slot 1", "cooler fan slot 2", "cooler fan slot 3", "panel board C"))
+    P["slots 1 and 3 are within their LM5176 loop on DRAFTED in every state: at HIGH at 5.1 V and at the least load voltage, in the bounded start and with a degraded cooler"] = all(
+        slot_least(R, k)[0] > 0 for k in (None, "i_least", "start", "degraded"))
+    dev = [m for m in R["margins"] if m[2] == "DEV" and m[1] == "ALLTX"]
+    P["the device rail's LM5176 is over its loop at HIGH in PS-ALLTX on DRAWN and DRAFTED (L9P-F03)"] = sorted(m[0] for m in dev if m[5] > m[3][1]) == ["DRAFTED", "DRAWN"]
+    P["the drafted fan row equals the envelope over the step-up's low efficiency at 5.0 V, to 0.01 A"] = abs(round(F["fan_row_basis"][0] / F["fan_row_basis"][1] / F["fan_row_basis"][2], 2) - F["fan_row"]) < 1e-9 and abs(F["fan_row_basis"][0] - F["fan_env"]) < 1e-9 and abs(F["fan_row_basis"][1] - F["su_eta_lo"]) < 1e-9
+    src = text("sources")
+    P["every copy in inputs/ is pinned and named with its sha256 in SOURCES.txt"] = all(
+        PINS[k].startswith("v2/docs/records/l9pwr/inputs/") and ("%s sha256 %s" % (os.path.basename(PINS[k]), hashlib.sha256(open(path(k), "rb").read()).hexdigest())) in src for k in ORIGIN)
+    dn = R["cfgs"]["DRAFTED"]
+    P["every drafted node and row is labelled DRAFTED"] = all(v[5] == "DRAFTED" for n, v in dn.nodes.items() if n in ("VSYSE", "FAN12", "S1F", "S2F", "S3F", "PNL", "S1", "S3")) and all(
+        L["status"] == "DRAFTED" for L in dn.loads if L["name"] in ("two mixer fans", "cooler fan slot 1", "cooler fan slot 2", "cooler fan slot 3", "panel board C")) and all(
+        s == "DRAFTED" for a, b, s in dn.r_parts if "breaker" in a or "BUK6Y10" in a)
     ids = [x["id"] for x in R.get("classified", [])]
     P["every margin finding has a class among the instruction's three and an owner"] = all(
         x["class"] in ("DEMONSTRATED ANALYSIS DEFECT", "ASSUMPTION TO BOUND", "PHYSICAL QUESTION") and x["owner"] for x in R.get("classified", []))
@@ -1116,58 +1542,82 @@ def predicates(pb, F, R):
 
 
 def classify(pb, F, R):
-    """the margin findings with their class under the owner's instruction of 2 October 2026 and their owner. Each is
-    built from the computed figures; the class and the owner are this record's reading (SESSION)."""
+    """the margin findings with their class under the owner's instruction of 2 October 2026, their status in round 2 and their
+    owner. Each is built from the computed figures; the class, the status and the owner are this record's reading (SESSION)."""
     out = []
     raw = R["findings"]
-    d = {c: R["d11"][c]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"] for c in ("RV", "DRAWN", "DRAFTED")}
-    if d["DRAFTED"]["margin_hi"] < 0:
-        dv_pair = F["i_peak"] * F["fet_bound"] / 2.0
-        dv_load = (d["DRAFTED"]["vbat_W"] - d["DRAWN"]["vbat_W"]) / F["i_peak"]
-        out.append({
-            "id": "L9P-F01", "class": "DEMONSTRATED ANALYSIS DEFECT", "new": "new",
-            "subject": "D-11's all-transmit floor on the drafted design",
-            "figure": ("the basis (all transmitters keyed, non-transmit loads typical, the standby card off, every other load at HIGH) needs a pack rest voltage of %.2f V at the worst cell resistance, %.2f V over the %.1f V floor; DRAWN %.2f V (%.2f V under it), rv-pwr on main %.2f V; "
-                       "the drafted pair adds %.3f V at %.0f A (%.3f mOhm at L4-E11's 150 C bound) and the drafted fans and converters at HIGH %.3f V (%.2f W more at VBAT); the floor covers a cell resistance of at most %.4f Ohm, under rv-pwr's PLAN %.3f Ohm"
-                       % (d["DRAFTED"]["V_rest"]["hi"], -d["DRAFTED"]["margin_hi"], F["floor"], d["DRAWN"]["V_rest"]["hi"], d["DRAWN"]["margin_hi"], d["RV"]["V_rest"]["hi"],
-                          dv_pair, F["i_peak"], F["fet_bound"] / 2 * 1000, dv_load, d["DRAFTED"]["vbat_W"] - d["DRAWN"]["vbat_W"], d["DRAFTED"]["r_cell_max"], pb.R_CELL["plan"])),
-            "rule": "D-11's floor, set from the gauge's 20 A over-current trip with 10 percent margin (18 A) and the cells' 60 C window (pcb_requirements.yaml, D-11)",
-            "why": "the floor's own arithmetic, re-run on the drafts' own figures, does not hold: the drafts were written after the floor and none re-derived it; a desk result on maker figures and L4-E11's bound, not an assumption a measurement would settle",
-            "action": "correct the threshold set: re-derive the floor on the drafted pack path and loads (at least %.2f V rest, %.3f V a cell, plus the stated margin), or cap the fans' duty during a key-down in FW-A05 and take the basis at that duty; either is a firmware threshold and its contract text" % (d["DRAFTED"]["V_rest"]["hi"], d["DRAFTED"]["V_rest"]["hi"] / F["series"]),
-            "owner": "L4-E9 (C05: the key-down rules K1 to K5 and C4, FW-A05, the floors 15.5 and 12.4 V), with L4-E11 (the pair) and the fans' feeds (L4-E11 18a, l8r2 item 1); the contract text FW-A05 is Layer 5's"})
+    d = {c: R["d11"][c]["rows"][BASIS] for c in ("RV", "DRAWN", "DRAFTED", "DRAFTED-R1")}
+    fr = R["floor_rule"]
+    ladder = dict(R["d11_steps"])
+    nv = {k: v["V_rest"]["hi"] for k, v in ladder.items()}
+    d_env = nv["D5"] - d["DRAFTED-R1"]["V_rest"]["hi"]
+    parts = [("the coolers at l8r2's envelope at HIGH (D4: %.2f W at %.2f V over %.2f, against round 1's %.1f W over %.2f)" % (F["fan_env"], F["su_vout"][2], F["su_eta_lo"], float(F["cooler"][5]), F["su_eta"]), d_env),
+             ("slots 1 and 3 on the LM5176 at the declared %.2f (D6)" % F["slot_eff"], nv["D6"] - nv["D5"]),
+             ("board P's breaker (D9)", nv["D9"] - nv["D8"]), ("the third battery FET (D10)", nv["D10"] - nv["D9"])]
+    rest = (fr["need"] - d["DRAFTED-R1"]["V_rest"]["hi"]) - math.fsum(p[1] for p in parts)
+    holds = fr["margin"] >= 0
+    out.append({
+        "id": "L9P-F01", "class": "DEMONSTRATED ANALYSIS DEFECT", "new": "carried (round 1), moved",
+        "status": "OPEN: L4-E9 round 7's %.1f V does not cover this round's drafts" % fr["floor_r7"] if not holds else "CLOSED: round 7's %.1f V covers this round's drafts" % fr["floor_r7"],
+        "subject": "D-11's all-transmit floor on the drafted design (L4-E9 round 7's D-17 re-derived it at %.1f V on round 1's drafts)" % fr["floor_r7"],
+        "figure": ("the basis (all transmitters keyed, non-transmit loads typical, the standby card off, every other load at HIGH) needs a pack rest voltage of %.3f V at the worst cell resistance on this round's drafts, %.3f V %s round 7's %.1f V floor "
+                   "(round 1's drafts %.3f V, the floor's basis; DRAWN %.3f V under D-11's %.1f V). From round 1: %s; the rest %+.4f V. The coolers' envelope alone takes round 1's basis to %.3f V. By round 7's own rule (the least floor on its %.1f V step at least %.1f V over the need) the floor becomes %.1f V (%.3f V a cell), "
+                   "leaving %.3f V of rest voltage to ChargeVoltage's %.3f V maximum (round 7: %.3f V); at %.1f V the basis is covered to R_cell %.4f Ohm. With the coolers at the maker's %.1f W over %.2f instead (should C4-3 read them there) it needs %.3f V and the rule gives %.1f V"
+                   % (fr["need"], abs(fr["margin"]), "over" if fr["margin"] < 0 else "under", fr["floor_r7"], d["DRAFTED-R1"]["V_rest"]["hi"], d["DRAWN"]["V_rest"]["hi"], F["floor"],
+                      "; ".join("%s %+.4f V" % p for p in parts), rest, nv["D5"], fr["step"], fr["over"], fr["floor_req"], fr["floor_req"] / F["series"],
+                      F["r7_window"] - fr["floor_req"], F["r7_window"], F["r7_window"] - fr["floor_r7"], fr["floor_r7"],
+                      (fr["floor_r7"] - d["DRAFTED"]["V_stack"]) * 3.0 / (F["series"] * F["i_peak"]), float(F["cooler"][5]), F["su_eta"], fr["need_mk"], fr["floor_req_mk"])),
+        "rule": "D-11's floor, set from the gauge's 20 A over-current trip with 10 percent margin (18 A) and the cells' 60 C window (pcb_requirements.yaml, D-11); L4-E9 round 7's rule for the re-derived floor",
+        "why": "round 7 re-derived the floor on round 1's drafts; l8r2 round 6 then declared the coolers' envelope (the slot row %.2f A) and moved slots 1 and 3 to the LM5176, and l9stk added board P's breaker and the third battery FET (together %+.4f V); the floor's own arithmetic re-run on those drafts does not hold; a desk result on the drafts' own figures, not an assumption a measurement would settle" % (F["fan_row"], nv["D10"] - nv["D8"]),
+        "action": ("re-derive the floor on this round's drafts: %.1f V rest (%.3f V a cell) by round 7's rule; the coolers' share is l8r2's envelope bound, so C4-3's measured steady input lowers it by %.4f V per watt at VBAT (%.4f V per cooler and watt at the fan through %.2f and %.2f); a Fan_PWM cap during a key-down is not available "
+                   "(l8r2 round 4: the fan runs full whenever its PWM lead is not driven); the heater stays off while keyed (%.3f V needed with it)"
+                   % (fr["floor_req"], fr["floor_req"] / F["series"], 1.0 / F["i_peak"], 1.0 / F["i_peak"] / F["su_eta_lo"] / F["slot_eff"], F["su_eta_lo"], F["slot_eff"], fr["heater"])),
+        "owner": "L4-E9 (D-17, R-28 and LH-12: FW-A05's all-transmit floor), with l8r2 (C4-3, the coolers' envelope) and Layer 5 (FW-A05's text)"})
+    st13 = {k: slot_least(R, k) for k in (None, "i_least", "start", "degraded")}
+    r1s = [m for m in R["stages"].items() if m[0][0] == "DRAFTED-R1" and m[0][2] in ("S1", "S3")]
+    r1_worst = max(x["i_hi"] for k, x in r1s)
+    r1_lim = r1s[0][1]["lim"][1]
+    r1_over = sorted(set(k[1] for k, x in r1s if x["i_hi"] > x["lim"][1]), key=STATES.index)
+    out.append({
+        "id": "L9P-F02", "class": "ASSUMPTION TO BOUND", "new": "carried (round 1)",
+        "status": "RESOLVED IN THE DRAFTS (l8r2 rounds 4 to 6), CONDITIONAL on l8r2's C4-1 to C4-6" if st13["start"][0] > 0 else "OPEN",
+        "subject": "slots 1 and 3's converter at HIGH with the drafted coolers",
+        "figure": ("round 1: the AP64500 at %.3f A against its %.0f A at HIGH (%s). Round 2: slots 1 and 3 on the LM5176 stage, the loop's least %.4f A (VSNS %.0f mV over %.0f mOhm at +%.0f %%); the least margins over every state: %s"
+                   % (r1_worst, r1_lim, " and ".join(STATE_NAME[s] for s in r1_over), R["stages"][("DRAFTED", "BUSY", "S1")]["lim"][1],
+                      F["vsns"][0] * 1000, F["slot_isns"] * 1000, F["shunt_tol"] * 100,
+                      "; ".join("%s %+.4f A (%s, %s)" % (lab, v[0], STATE_NAME[v[1]], v[2]) for lab, v in (("steady at 5.1 V", st13[None]), ("steady at the least load voltage %.4f V" % R["cfgs"]["DRAFTED"].window[2], st13["i_least"]),
+                                                                                          ("bounded start", st13["start"]), ("degraded cooler", st13["degraded"]))))),
+        "rule": "CMP-001: the applied stress against the datasheet maximum for every part in a current path above 1 A",
+        "why": "the LM5176's average loop limits rather than a rating being exceeded; the start and the degraded cooler are l8r2's bounds (the branch at 1.80 A as a 100 us average; the cooler's eFuse at its least 0.448 A at 12.43 V over 0.80), each CONDITIONAL on its bench row",
+        "action": "none at the desk; l8r2's C4-1 (the stage over the envelopes, the 0.1 % window), C4-3 (the cooler chain in a loaded slot) and C4-6 (fit and copper) decide; the declared 6.6 A leads and VBAT's 2.60 A entries are the drafts' declarations",
+        "owner": "l8r2 (C4-1 to C4-6) with board A's generator owner (slotlm, fb01) and board B's (fans12, rt500)"})
     conv = raw["conv"]
-    s13 = [(c, n, v) for (c, n), v in sorted(conv.items()) if c == "DRAFTED" and n in ("S1", "S3")]
-    if s13:
-        worst = max(x[2] for _, _, v in s13 for x in v)
-        drawn_hi = max(m[5] for m in R["margins"] if m[0] == "DRAWN" and m[2] in ("S1", "S3"))
-        pl = max(x[1] for _, _, v in s13 for x in v)
-        sts = sorted(set(STATE_NAME[x[0]] for _, _, v in s13 for x in v))
-        out.append({
-            "id": "L9P-F02", "class": "ASSUMPTION TO BOUND", "new": "new",
-            "subject": "slots 1 and 3's AP64500 at HIGH with the drafted cooler step-ups",
-            "figure": "%s at HIGH: %.3f A against the AP64500's %.0f A (DS41979 p.1), %.3f A over; at PLAN at most %.3f A; DRAWN at most %.3f A at HIGH (the representative 5 V fan); the step-up takes %.3f A of the slot rail at full speed" % (", ".join(sts), worst, F["ap64500_a"], worst - F["ap64500_a"], pl, drawn_hi, float(F["cooler"][5]) / F["su_eta"] / 5.1),
-            "rule": "CMP-001: the applied stress against the datasheet maximum for every part in a current path above 1 A",
-            "why": "HIGH stacks every maximum at once: the CM5 at board B's declared 1.6 A (Raspberry Pi publishes no maximum), the WiFi card at AsiaRF's 9.1 W, the NVMe at its maximum and the cooler at full speed; no document puts them together",
-            "action": "bound it or design it out: l8r2's own alternative (b), one 12 V fan feed from board A over the bay harness, takes the cooler off the slot rail; or the module's Fan_PWM duty limited while the slot's INA226 reads above a set current; else a bench reading of the slot's peak with the module and card loaded (TEST-PLAN power rows)",
-            "owner": "l8r2 (item 1, choice (a) against (b)), with board A's generator owner for the slot rails (I-03)"})
+    stg = R["stages"]
     for (c, n), v in sorted(conv.items()):
         if n == "DEV":
             if c != "DRAFTED":
                 continue
-            x = v[0]
+            x = [y for y in v if y[0] == "ALLTX"][0]
             dr = [m for m in R["margins"] if m[0] == "DRAWN" and m[2] == "DEV" and m[1] == x[0]][0]
+            row = stg[("DRAFTED", "ALLTX", "DEV")]
+            lv_over = [(STATE_NAME[k[1]], y["i_least"], y["lim"][1] - y["i_least"]) for k, y in sorted(stg.items(), key=lambda t: STATES.index(t[0][1]))
+                       if k[0] == "DRAFTED" and k[2] == "DEV" and y["i_least"] > y["lim"][1] and k[1] != "ALLTX"]
+            beside = "; ".join("%s %.4f A (%+.4f A)" % (s, stg[("DRAFTED", "ALLTX", s)]["i_hi"], stg[("DRAFTED", "ALLTX", s)]["lim"][1] - stg[("DRAFTED", "ALLTX", s)]["i_hi"]) for s in ("S1", "S2", "S3"))
             out.append({
-                "id": "L9P-F03", "class": "ASSUMPTION TO BOUND", "new": "carried (I-03)",
-                "subject": "the device rail's LM5176 average loop in PS-ALLTX at HIGH",
-                "figure": "%.3f A DRAFTED, %.3f A DRAWN, against the loop's least %.4f A (VSNS %.0f mV over %.0f mOhm at +%.0f %%); PLAN %.3f A" % (x[2], dr[5], x[3][1], F["vsns"][0] * 1000, F["lm"]["SD"][3] * 1000, F["shunt_tol"] * 100, x[1]),
+                "id": "L9P-F03", "class": "ASSUMPTION TO BOUND", "new": "carried (I-03)", "status": "OPEN",
+                "subject": "the device rail's LM5176 average loop in PS-ALLTX at HIGH, with the three slot stages beside it",
+                "figure": ("%.3f A DRAFTED, %.3f A DRAWN, against the loop's least %.4f A (VSNS %.0f mV over %.0f mOhm at +%.0f %%), %+.4f A; PLAN %.3f A; at the least load voltage of fb01's window (%.4f V) %.3f A if every load draws constant power (%+.4f A), "
+                           "and at that voltage also %s; beside it in PS-ALLTX at HIGH at 5.1 V the slot stages on the same loop: %s"
+                           % (x[2], dr[5], x[3][1], F["vsns"][0] * 1000, F["lm"]["SD"][3] * 1000, F["shunt_tol"] * 100, x[3][1] - x[2], x[1], row["v_least"],
+                              row["i_least"], row["lim"][1] - row["i_least"], "; ".join("%s at HIGH %.3f A (%+.4f A)" % t for t in lv_over) if lv_over else "no other state", beside)),
                 "rule": "CMP-001; the generator's own I-03 comparison (gen_sch_a.py: the conditional P-tier fails the loop minimum)",
-                "why": "the PS-ALLTX currents of the device rail's loads are INCONCLUSIVE on held documents (cx1, I-03); HIGH takes each at its contract or maximum",
+                "why": "the PS-ALLTX currents of the device rail's loads are INCONCLUSIVE on held documents (cx1, I-03); HIGH takes each at its contract or maximum; no draft of this round moves a device rail load, and the slot stages carry their own coolers",
                 "action": "I-03's bench reading of the device rail in PS-ALLTX, or the rail split W2 F-PR-04 named; the loop limits rather than damages (the rail droops)",
                 "owner": "board A's generator owner under I-03, with the TEST-PLAN power rows"})
         if n == "PA" and c == "DRAFTED":
             x = v[0]
             out.append({
-                "id": "L9P-F04", "class": "PHYSICAL QUESTION", "new": "carried (rv-pwr; F-PR-01)",
+                "id": "L9P-F04", "class": "PHYSICAL QUESTION", "new": "carried (rv-pwr; F-PR-01)", "status": "OPEN",
                 "subject": "the PA rail's LM5176 average loop at the PA's 113 W bound",
                 "figure": "%.3f A at HIGH (W2 F-PR-02's 113 W, INFERRED) against the loop's least %.4f A; PLAN %.3f A (75 W)" % (x[2], x[3][1], x[1]),
                 "rule": "CMP-001; F-PR-01 (gen_sch_a.py) sets the loop above the 6.0 A declared peak so that the 8.2 A bound meets it and the rail droops",
@@ -1177,20 +1627,22 @@ def classify(pb, F, R):
     sus = [p for p in raw["pack"] if p[0] == "DRAFTED" and p[2] == "sustained"]
     states_hi = [p for p in sus if p[4] <= p[3] < p[5]]
     states_pl = [p for p in sus if p[4] > p[3]]
+    busy = [p for p in R["pc"] if p["label"] == "PS-BUSY"][0]
     if states_hi:
         out.append({
-            "id": "L9P-F05", "class": "ASSUMPTION TO BOUND", "new": "carried (rv-pwr 7.1), moved",
+            "id": "L9P-F05", "class": "ASSUMPTION TO BOUND", "new": "carried (rv-pwr 7.1), moved", "status": "OPEN",
             "subject": "sustained states over the pack's continuous current at HIGH at the gauge's under-voltage",
-            "figure": "; ".join("%s %.2f A at HIGH (rv-pwr %.2f), PLAN %.2f A" % (p[1], p[5], p[7], p[4]) for p in states_hi) + ", against %.0f A at %.1f V (the stack at %.2f V a cell)" % (F["i_cont"], F["cuv"] * F["series"], F["cuv"]),
+            "figure": "; ".join("%s %.2f A at HIGH (round 1 %.2f, rv-pwr %.2f), PLAN %.2f A" % (p[1], p[5], p[9], p[7], p[4]) for p in states_hi) + ", against %.0f A at %.1f V (the stack at %.2f V a cell)" % (F["i_cont"], F["cuv"] * F["series"], F["cuv"]),
             "rule": "the pack's declared continuous current (pcb_pack_protection.yaml, declared_continuous_a) at every stack voltage down to CUV",
-            "why": "HIGH stacks maxima; PS-BUSY's PLAN stays under (its margin at 10.0 V %.2f A, rv-pwr's %.2f A)" % (F["i_cont"] - [p for p in R["pc"] if p["label"] == "PS-BUSY"][0][("DRAFTED", "plan")]["I"][-1], F["i_cont"] - [p for p in R["pc"] if p["label"] == "PS-BUSY"][0][("RV", "plan")]["I"][-1]),
+            "why": "HIGH stacks maxima, the coolers now at their envelope; PS-BUSY's PLAN stays under (its margin at 10.0 V %.2f A, round 1's %.2f A, rv-pwr's %.2f A)" % (
+                F["i_cont"] - busy[("DRAFTED", "plan")]["I"][-1], F["i_cont"] - busy[("DRAFTED-R1", "plan")]["I"][-1], F["i_cont"] - busy[("RV", "plan")]["I"][-1]),
             "action": "bounded by the control rv-pwr 9.3 took (the current trigger of the module shedding, read on the gauge's pack current); the trigger's setting is re-read on the drafted figures",
             "owner": "L4-E9 (C02 and C06: the shedding and the gauge's relay), POWER-THERMAL section 9.3's control"})
     if states_pl:
         out.append({
-            "id": "L9P-F06", "class": "ASSUMPTION TO BOUND", "new": "carried (rv-pwr 7.1), moved",
+            "id": "L9P-F06", "class": "ASSUMPTION TO BOUND", "new": "carried (rv-pwr 7.1), moved", "status": "OPEN",
             "subject": "the outlets over PS-TYP and PS-BUSY at PLAN",
-            "figure": "; ".join("%s %.2f A at PLAN (rv-pwr %.2f)" % (p[1], p[4], p[6]) for p in states_pl) + " at %.1f V, against %.0f A" % (F["cuv"] * F["series"], F["i_cont"]),
+            "figure": "; ".join("%s %.2f A at PLAN (round 1 %.2f, rv-pwr %.2f)" % (p[1], p[4], p[8], p[6]) for p in states_pl) + " at %.1f V, against %.0f A" % (F["cuv"] * F["series"], F["i_cont"]),
             "rule": "the pack's declared continuous current, as L9P-F05",
             "why": "the outlets' contracts (PoE 32.4 W, USB-C 45 W) are what their stages may deliver; rv-pwr 7.1 found these rows over and took an outlet budget",
             "action": "bounded by rv-pwr 9.3's outlet budget (and the tablet's 18 W cap, a proposal); its numbers re-read on the drafted figures",
@@ -1202,16 +1654,20 @@ def render(R):
     F, pb = R["F"], R["cfgs"]["RV"].pb
     L = []
     w = L.append
-    w("L9PWR (MESHSAT-1357): LAYER 9 ITEM 9.1, THE POWER BUDGET ON THE CURRENT DESIGN, WITH MARGINS AND SENSITIVITIES. Prototype design,")
+    w("L9PWR (MESHSAT-1357): LAYER 9 ITEM 9.1, THE POWER BUDGET ON THE CURRENT DESIGN, WITH MARGINS AND SENSITIVITIES (ROUND 2). Prototype design,")
     w("desk arithmetic: nothing built, powered or measured; no figure is a measurement. RV is record rv-pwr's model as committed (the boards as")
-    w("generated at 1f614233); DRAWN the generators in this tree; DRAFTED is DRAWN plus the release-guarded drafts of Layers 4 and 8 that move a")
-    w("power figure, none applied. Tiers as rv-pwr's: S a primary document gives PLAN; R a document bounds the load and PLAN sits inside it by a")
+    w("generated at 1f614233); DRAWN the generators in this tree; DRAFTED is DRAWN plus the release-guarded drafts of Layers 4, 8 and 9 that move a")
+    w("power figure, none applied; DRAFTED-R1 is round 1's DRAFTED tree (38ef774c) rebuilt on the same evaluator, the figures other records took")
+    w("from round 1. Tiers as rv-pwr's: S a primary document gives PLAN; R a document bounds the load and PLAN sits inside it by a")
     w("stated duty; D a generator declares it; T a placeholder. LOW, PLAN and HIGH are rv-pwr's three values per load; HIGH puts every load at")
     w("its maximum at once (an upper bound, not a scenario). Watts at the pack side are rv-pwr's battery W (VBAT plus the pack path's I2R at 14.4 V).")
     w("")
     w("0. INPUTS (sha256/16)")
     for k, p, s in R["pins"]:
-        w("   %-10s %s  sha256 %s" % (k, p, s))
+        w("   %-11s %s  sha256 %s" % (k, p, s))
+    w("   the copies in inputs/ (inputs/SOURCES.txt), each read with git show from its author's branch, not merged:")
+    for k, (br, cm, src, lines) in ORIGIN.items():
+        w("     %-11s %s@%s on %s, %s" % (k, cm, src, br, "the whole file" if lines is None else "its lines %d to %d" % lines))
     w("")
     w("1. WHAT DIFFERS FROM RV-PWR'S MODEL, AND HOW THIS BUDGET TAKES IT (applied in this order; section 4 prints each step's effect)")
     for sid, st, tx in STEP_TEXT:
@@ -1229,7 +1685,28 @@ def render(R):
       % (F["mixer"][0], F["mixer"][1], F["mixer"][2], F["mixer"][3], F["mixer"][4], F["mixer"][5], F["u22_out"][0], F["u22_out"][1], F["u22_out"][2], F["fan12_eff_draft"], F["vsyse_decl"][4], F["u22_maxload"][1], F["u22_maxload"][0]))
     w("     D4 the cooler %s (Layer 7): %s V, %s to %s V, %s A, %s W at full speed; the step-up's efficiency %.2f (low %.2f), its eFuse %.3f / %.3f / %.3f A (l8r2); the draft's 12 V rail %.1f V, %.2f A typical, %.2f A peak"
       % (F["cooler"][0], F["cooler"][1], F["cooler"][2], F["cooler"][3], F["cooler"][4], F["cooler"][5], F["su_eta"], F["su_eta_lo"], F["su_efuse"][0], F["su_efuse"][1], F["su_efuse"][2], F["fans12_rail"][0], F["fans12_rail"][1], F["fans12_rail"][2]))
+    w("        round 6 (fans12 at 89924e40): HIGH the envelope %.2f W at the step-up's %.3f V top (its output %.3f / %.3f / %.3f V) over the step-up's %.2f, any duty, no Fan_PWM"
+      % (F["fan_env"], F["su_vout"][2], F["su_vout"][0], F["su_vout"][1], F["su_vout"][2], F["su_eta_lo"]))
+    w("        maximum; the slot row %.2f A (%.2f W of fan over %.2f at %.1f V; the drawn J_FAN row %.2f A); the 12 V rail %.2f A typical; board B's slot peak %.1f A; the branch's bounded start %.2f A (100 us average)"
+      % (F["fan_row"], F["fan_row_basis"][0], F["fan_row_basis"][1], F["fan_row_basis"][2], F["fan_row_old"], F["fans12_rail"][1], F["slot_peak_b"], F["start_bound"]))
     w("     D5 U901: RON at most %.4f Ohm, limit %.3f / %.3f / %.3f A (l8r2)" % (F["ron_lo"], F["pnl_efuse"][0], F["pnl_efuse"][1], F["pnl_efuse"][2]))
+    w("     D6 slots 1 and 3: LM5176 U%d and U%d (slotlm), ISNS %.0f mOhm, the rails' declared efficiency %.2f; the loop's least %.4f A; the slot leads' peak %.1f A, VBAT's entries Q%d, Q28, Q%d at %.2f A"
+      % (F["slot_base"]["1"] + 1, F["slot_base"]["3"] + 1, F["slot_isns"] * 1000, F["slot_eff"], F["vsns"][0] / (F["slot_isns"] * (1 + F["shunt_tol"])), F["slot_peak"], F["slot_base"]["1"] + 1, F["slot_base"]["3"] + 1, F["slot_entry"]))
+    w("     D7 board B's buck33 RT: %.0f k drawn, %.0f kHz by DS41979 Eq. 7 (RT[kOhm] = %.0f / fsw[kHz]); %.0f k drafted, %.0f kHz, the maker's curves' frequency"
+      % (F["rt_old"], F["ap_eq7"] / F["rt_old"], F["ap_eq7"], F["rt_new"], F["ap_eq7"] / F["rt_new"]))
+    wd = stage_window(F["vref"], F["ibias"], F["rfb"][0], F["rfb"][1], F["fb_tol_drawn"], F["drop_s"])
+    wf_ = stage_window(F["vref"], F["ibias"], F["rfb"][0], F["rfb"][1], F["fb_tol"], F["drop_s"])
+    w("     D8 the 5.1 V stages' divider %.1f k over %.0f k (gen_sch_a.py); VREF %.3f / %.3f / %.3f V and IBIAS(FB) at most %.0f nA (SNVSAI1D); the rails' drop budget %.0f %% (slots), %.0f %% (device rail):"
+      % (F["rfb"][0] / 1000, F["rfb"][1] / 1000, F["vref"][0], F["vref"][1], F["vref"][2], F["ibias"] * 1e9, F["drop_s"] * 100, F["drop_dev"] * 100))
+    w("        at %.1f %% (drawn) %.4f to %.4f V, the least at the loads %.4f V; at %.1f %% (fb01) %.4f to %.4f V, the least at the loads %.4f V"
+      % (F["fb_tol_drawn"] * 100, wd[0], wd[1], wd[2], F["fb_tol"] * 100, wf_[0], wf_[1], wf_[2]))
+    w("     D9 board P's breaker: the sense %.1f and %.1f mOhm in parallel, %.4f mOhm nominal, its window %.4f to %.4f mOhm (taken at the highest); %d x CSD18510Q5B, %.2f mOhm at 10 V and 25 C, %.3f mOhm at 150 C (x%.1f), in parallel"
+      % (F["brk_rs_pair"][0] * 1000, F["brk_rs_pair"][1] * 1000, F["brk_rs"] * 1000, F["brk_rs_win"][0] * 1000, F["brk_rs_win"][1] * 1000, F["brk_fets"][0], F["brk_fets"][1], F["brk_fet_hot"][2], F["brk_fet_hot"][3]))
+    w("     D10 the battery FETs: %d x BUK6Y10-30P at %.3f mOhm each at 150 C (l9stk, L4-E11's bound): %.4f mOhm, against the pair's %.4f mOhm"
+      % (F["bat_fets"][0], F["bat_fets"][1], F["bat_fets"][1] / F["bat_fets"][0], F["fet_bound"] / 2 * 1000))
+    w("   the round 1 parser's lines SET ASIDE in round 2 (the figure they read was removed or superseded by its record):")
+    for a, b in SET_ASIDE:
+        w("     %s: %s" % (a, b))
     w("   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S);")
     w("     LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same")
     w("     PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would")
@@ -1239,7 +1716,9 @@ def render(R):
     w("   the states: rv-pwr's eight and record hc2's three (CONOPS 4c: the reduced mode PS-RED2, slots 2 and 3; the heat stage PS-SURV as board B is")
     w("     generated and PS-SURV-R after BANK-R1); charging on shore is the B4 balance (section 8, R2); source-only operation and its entry current are")
     w("     L4-E11's (its section 3), not a pack-side figure; the system-node demand per state (VBAT, section 3) is what the charger must carry there")
-    w("   the pack path (ohms): " + "; ".join("%s %.4f %s" % (cn, R["r_path"][cn][0], "(" + ", ".join("%s %.4f" % (a.split(" (")[0], b) for a, b, s in R["r_path"][cn][1]) + ")") for cn in ("RV", "DRAWN", "DRAFTED")))
+    w("   the pack path (ohms):")
+    for cn in ("RV", "DRAWN", "DRAFTED-R1", "DRAFTED"):
+        w("     %-10s %.6f (%s)" % (cn, R["r_path"][cn][0], "; ".join("%s %.6f" % (a.split(" (")[0].split(":")[0], b) for a, b, s in R["r_path"][cn][1])))
     w("   NOT MODELLED, each with its reason:")
     for a, b in NOT_MODELLED:
         w("     %s: %s" % (a, b))
@@ -1261,6 +1740,13 @@ def render(R):
         t = R["tot"][("DRAFTED", st)]
         w("   %-28s %-25s %-25s %-25s %8.2f %7.3f %5.1f /%5.1f /%5.1f /%5.1f, %4.2f" % (STATE_NAME[st], cells[0], cells[1], cells[2], t["plan"]["vbat"], t["plan"]["i14"],
           t["tiers"]["S"], t["tiers"]["R"], t["tiers"]["D"], t["tiers"]["T"], t["drafted_share"]))
+    w("3b. DRAFTED BEFORE THIS ROUND AND AFTER: round 1's DRAFTED (DRAFTED-R1, 38ef774c, rebuilt here) against round 2's, the pack side LOW / PLAN / HIGH (W),")
+    w("   the change at PLAN and at HIGH, and the pack current at 14.4 V at PLAN (A)")
+    w("   %-28s %-25s %-25s %9s %9s %7s %7s" % ("state", "DRAFTED-R1", "DRAFTED", "dPLAN", "dHIGH", "I R1", "I now"))
+    for st in STATES:
+        a, b = R["tot"][("DRAFTED-R1", st)], R["tot"][("DRAFTED", st)]
+        w("   %-28s %7.2f /%7.2f /%7.2f   %7.2f /%7.2f /%7.2f   %+9.3f %+9.3f %7.3f %7.3f" % (STATE_NAME[st], a["lo"]["pb"], a["plan"]["pb"], a["hi"]["pb"], b["lo"]["pb"], b["plan"]["pb"], b["hi"]["pb"],
+          b["plan"]["pb"] - a["plan"]["pb"], b["hi"]["pb"] - a["hi"]["pb"], a["plan"]["i14"], b["plan"]["i14"]))
     w("")
     w("4. THE WATERFALL: each step of section 1 applied in turn, the pack side at PLAN and (second block) at HIGH, W; the delta of each step")
     for blk, wf in (("PLAN", R["wf"]), ("HIGH", R["wf_hi"])):
@@ -1304,31 +1790,82 @@ def render(R):
         w("     DRAWN's margins at HIGH that differ: %s" % (", ".join(diff) if diff else "none"))
         w("     the rails' INA226 shunts at HIGH (not in the tree): %.3f W in all" % P["shunt_hi"])
     w("")
+    W5 = R["cfgs"]["DRAFTED"].window
+    w("5b. THE LM5176 5.1 V STAGES SIDE BY SIDE (L9P-F02 and L9P-F03): slots 1 to 3 and the device rail, each against its average loop's least; the")
+    w("   output current at PLAN and at HIGH at the model's 5.1 V; on DRAFTED at HIGH also at the least load voltage of fb01's window, %.4f V (every load" % W5[2])
+    w("   behind a converter draws its power), and for the slots the cooler branch's bounded start (%.2f A, a 100 us average) and a degraded cooler" % F["start_bound"])
+    w("   (%.5f A, the eFuse's least limit by l8r2's method, at %.2f V over %.2f) on the slot's other loads at HIGH (l8r2's bounds, CONDITIONAL on C4-3); the margins at HIGH; DRAWN and round 1" % (F["su_efuse_x"][0], F["su_vout"][2], F["su_eta_lo"]))
+    w("   (DRAFTED-R1) at 5.1 V for comparison, slots 1 and 3 there on the AP64500's 5 A")
+    for st in STATES:
+        w("   == %s" % STATE_NAME[st])
+        for n in ("S1", "S2", "S3", "DEV"):
+            if ("DRAFTED", st, n) not in R["stages"]:
+                continue
+            x = R["stages"][("DRAFTED", st, n)]
+            lim = x["lim"][1]
+            s = "      %-4s %-34s %7.4f A  PLAN %6.3f  HIGH %6.3f (%+7.4f)" % (n, x["lim"][0], lim, x["i_plan"], x["i_hi"], lim - x["i_hi"])
+            if "i_least" in x:
+                s += "  least V %6.3f (%+7.4f)" % (x["i_least"], lim - x["i_least"])
+            if "start" in x:
+                s += "  start %6.3f (%+7.4f)  degraded %6.3f (%+7.4f)  other %7.3f W" % (x["start"], lim - x["start"], x["degraded"], lim - x["degraded"], x["other"])
+            for cn in ("DRAWN", "DRAFTED-R1"):
+                y = R["stages"].get((cn, st, n))
+                if y:
+                    s += "  %s %6.3f/%6.3f (%+.3f)" % ("DRAWN" if cn == "DRAWN" else "R1", y["i_hi"], y["lim"][1], y["lim"][1] - y["i_hi"])
+            w(s)
+    for lab, key in (("steady at 5.1 V", None), ("steady at the least load voltage", "i_least"), ("the bounded start", "start"), ("a degraded cooler", "degraded")):
+        v = slot_least(R, key)
+        w("   slots 1 and 3, the least margin over every state, %s: %+.4f A (%s, %s)" % (lab, v[0], STATE_NAME[v[1]], v[2]))
+    w("")
     w("6. THE PACK CURRENT (A) at the stack voltages %s V (the last the gauge's CUV, %.2f V a cell x %d), PLAN and HIGH, RV / DRAWN / DRAFTED;" % (" / ".join("%.1f" % v for v in R["v_stack"]), F["cuv"], F["series"]))
     w("   against the declared continuous %.0f A (sustained rows) or the peak %.0f A (key-down rows, which D-11's floors govern, section 7); the stack" % (F["i_cont"], F["i_peak"]))
     w("   voltage below which the row passes the limit (DRAFTED, PLAN / HIGH)")
     for r in R["pc"]:
         lim = F["i_cont"] if r["kind"] == "sustained" else F["i_peak"]
         w("   %-50s %-9s" % (r["label"], r["kind"]))
-        for cn in ("RV", "DRAWN", "DRAFTED"):
+        for cn in ("RV", "DRAWN", "DRAFTED-R1", "DRAFTED"):
             a, b = r[(cn, "plan")], r[(cn, "hi")]
-            w("      %-8s PLAN %s   HIGH %s" % (cn, " ".join("%6.2f" % x for x in a["I"]), " ".join("%6.2f" % x for x in b["I"])))
+            w("      %-10s PLAN %s   HIGH %s" % (cn, " ".join("%6.2f" % x for x in a["I"]), " ".join("%6.2f" % x for x in b["I"])))
         key = "V_cont" if r["kind"] == "sustained" else "V_peak"
         a, b = r[("DRAFTED", "plan")], r[("DRAFTED", "hi")]
         w("      over %.0f A below %.2f V (PLAN) / %.2f V (HIGH): %s" % (lim, a[key], b[key], "PLAN over at %.1f V" % R["v_stack"][-1] if a["I"][-1] > lim else ("HIGH over at %.1f V" % R["v_stack"][-1] if b["I"][-1] > lim else "within to %.1f V" % R["v_stack"][-1])))
+    w("6b. THE PACK PATH'S ELEMENTS PER STATE (DRAFTED): the pack current at 14.4 V (PLAN / HIGH, A) and each element's I2R (PLAN / HIGH, W); round 1's")
+    w("   battery FET pair at round 1's current beside the three FETs of D10; board P's breaker (D9) and the third FET (D10) are the elements this round adds")
+    names = [a.split(" (")[0].split(":")[0] for a, b, s in R["cfgs"]["DRAFTED"].r_parts]
+    w("   elements: " + "; ".join("%d %s %.6f Ohm" % (i + 1, n, b) for i, (n, (a, b, s)) in enumerate(zip(names, R["cfgs"]["DRAFTED"].r_parts))))
+    for st in STATES:
+        e0, e1 = R["elems"][(st, "plan")], R["elems"][(st, "hi")]
+        w("   %-28s I %6.3f / %6.3f  %s  | round 1's pair %6.4f / %6.4f W at %6.3f / %6.3f A" % (
+            STATE_NAME[st], e0["I"], e1["I"], "  ".join("%d %6.4f / %6.4f" % (i + 1, p0[3], p1[3]) for i, (p0, p1) in enumerate(zip(e0["parts"], e1["parts"]))),
+            e0["pair_r1"], e1["pair_r1"], e0["I_r1"], e1["I_r1"]))
     w("")
     w("7. D-11's FLOORS ON RV-PWR'S METHOD (section 7.2 there): the stack voltage at %.0f A, the rest voltage at the cell resistances %s Ohm, the" % (F["i_peak"], " / ".join("%.3f" % v for v in pb.R_CELL.values())))
     w("   margin under the floor at the highest, and the largest cell resistance the floor covers. RV is rv-pwr's main pack path (R17 added, its")
     w("   record main_pack_path_R17); the heater row adds the regulated mat as rv-pwr does (rv-pwr: 7.5 W at its declared 0.88; DRAWN and DRAFTED: U33's %.2f)" % F["heat_eff"])
-    for cn in ("RV", "DRAWN", "DRAFTED"):
+    for cn in ("RV", "DRAWN", "DRAFTED-R1", "DRAFTED"):
         D = R["d11"][cn]
-        w("   %s (pack path %.4f Ohm)" % (cn, D["r"]))
+        w("   %s (pack path %.6f Ohm)" % (cn, D["r"]))
         for lab, row in D["rows"].items():
             w("      %-66s VBAT %7.2f W  stack %6.3f V  rest %s V  floor %.1f V  margin %+6.3f V  R_cell covered %.4f" % (
                 lab, row["vbat_W"], row["V_stack"], " / ".join("%6.3f" % row["V_rest"][k] for k in ("lo", "plan", "hi")), row["floor"], row["margin_hi"], row["r_cell_max"]))
+    w("   the all-transmit basis step by step (each step of section 1 from DRAWN, the rest voltage needed at R_cell high and its change); DRAFTED-R1")
+    w("   is round 1's D5 with l8r2's round 2 cooler, so D5's row less DRAFTED-R1's is the coolers' envelope at HIGH alone")
+    prev = None
+    for sid, row in R["d11_steps"]:
+        w("      %-4s VBAT %7.2f W  path %.6f Ohm  stack %6.3f V  rest %6.3f V%s" % (sid, row["vbat_W"], row["r"], row["V_stack"], row["V_rest"]["hi"], "" if prev is None else "  %+7.4f V" % (row["V_rest"]["hi"] - prev)))
+        prev = row["V_rest"]["hi"]
+    r1 = R["d11"]["DRAFTED-R1"]["rows"][BASIS]
+    w("      R1   VBAT %7.2f W  path %.6f Ohm  stack %6.3f V  rest %6.3f V  (D5 less R1: %+7.4f V)" % (r1["vbat_W"], r1["r"], r1["V_stack"], r1["V_rest"]["hi"], dict(R["d11_steps"])["D5"]["V_rest"]["hi"] - r1["V_rest"]["hi"]))
+    fr = R["floor_rule"]
+    w("   L4-E9 round 7's floor %.1f V rest (%.3f V a cell, D-17, from round 1's drafts): DRAFTED needs %.3f V, margin %+.3f V; round 7's rule (the least floor" % (fr["floor_r7"], F["r7_floor"][1], fr["need"], fr["margin"]))
+    w("   on its %.1f V step with at least %.1f V over the need) gives %.1f V (%.3f V a cell) on this round's drafts; ChargeVoltage's %.3f V maximum leaves %.3f V of" % (fr["step"], fr["over"], fr["floor_req"], fr["floor_req"] / F["series"], F["r7_window"], F["r7_window"] - fr["floor_req"]))
+    w("   rest voltage for all-transmit (round 7: %.3f V); the heater row needs %.3f V (the heater stays off while keyed); the PA-alone row %.3f V against %.1f V" % (F["r7_window"] - fr["floor_r7"], fr["heater"], fr["pa"], F["pa_floor"]))
+    mk = R["d11_mk"]["rows"][BASIS]
+    w("   the same DRAFTED tree with the coolers at round 1's HIGH (the maker's %.1f W at 12 V over %.2f), the other end should l8r2's C4-3 read the coolers" % (float(F["cooler"][5]), F["su_eta"]))
+    w("   there: VBAT %.2f W, stack %.3f V, needs %.3f V (%+.3f V against %.1f V); round 7's rule gives %.1f V" % (mk["vbat_W"], mk["V_stack"], fr["need_mk"], fr["floor_r7"] - fr["need_mk"], fr["floor_r7"], fr["floor_req_mk"]))
     w("")
-    w("8. THE RECONCILIATION WITH LAYER 4 (each line: their figure, this script's reproduction from their inputs, EQUAL or not, the current")
-    w("   design's figure, and the difference explained)")
+    w("8. THE RECONCILIATION WITH LAYER 4 AND THE OTHER RECORDS (each line: their figure, this script's reproduction from their inputs, EQUAL or")
+    w("   not, the current design's figure, and the difference explained; R9 is record l8r2's, R12 record l9stk's)")
     for r in R["rec"]:
         w("   %s %s" % (r["id"], r["what"]))
         w("      theirs %s; reproduced %s: %s" % (r["theirs"], r["repro"], "EQUAL" if r["equal"] else "NOT EQUAL"))
@@ -1369,14 +1906,15 @@ def render(R):
     w("    measurement, an acceptance and the consequence of failure. The class and the owner are this record's reading (SESSION).")
     for x in R["classified"]:
         w("   %s  %s  (%s)  %s" % (x["id"], x["class"], x["new"], x["subject"]))
+        w("      status: %s" % x["status"])
         w("      figure: %s" % x["figure"])
         w("      rule:   %s" % x["rule"])
         w("      why:    %s" % x["why"])
         w("      action: %s" % x["action"])
         w("      owner:  %s" % x["owner"])
     w("   within their rules (no finding): every other converter in every state; U42 on VSYS_E, U22, the coolers' eFuses and U901 (DRAFTED);")
-    w("   D-11's PA-alone floor on every tree; the heater rows of section 7 are over the floor on every tree, which is why the rule holds the heater")
-    w("   off during any key-down (rv-pwr 7.2), so they are not a finding")
+    w("   slots 1 and 3 on the LM5176 (section 5b); D-11's PA-alone floor on every tree; the heater rows of section 7 are over the floor on every")
+    w("   tree, which is why the rule holds the heater off during any key-down (rv-pwr 7.2), so they are not a finding")
     w("")
     w("11. PREDICATES")
     for k in sorted(R["pred"]):
