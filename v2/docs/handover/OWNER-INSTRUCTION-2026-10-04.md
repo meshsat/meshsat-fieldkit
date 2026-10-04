@@ -14,6 +14,7 @@ entry of 4 October 2026 14:25 CEST.
 | 5. The review of the resume plan that part 4 applies (RSM-01, RSM-02) | 4 October 2026, about 18:45 CEST | `6aea0eff870b821387eae7ec0bb7dc475d010da68fabd449377d82756f8c977d` |
 | 6. The review of the 19:15 status report (STATUS-01: each external dependency stays attached to the criterion it holds; layer 12's desk work and physical testing apart) | 4 October 2026, about 19:20 CEST | `273a0d7a93e3f6b5d1a0a273b13409923e7e7ab2d2633ecdac9f4ec20fc8a661` |
 | 7. After the checks V2 and V3: the supervisors' regulator deficit given an owner, a named correction and an acceptance criterion; the dedicated return verified over the permitted aged-contact combinations | 4 October 2026, about 21:11 CEST | `c57ddc4876d3a328aa7fd4c6e80035631f0310d6cc7880c6a73242e98359862d` |
+| 8. A bounded research task: the three-SDR research and integration plan (one radio per compute module; nothing adopted, bought or contacted) | 4 October 2026, about 21:39 CEST | `1e8f5333d4dd8e56b2c214580d657a9e26d831303883cc693cb5f3e25ec6708c` |
 
 ## 1. Updated constitution and execution plan (as received)
 
@@ -405,3 +406,97 @@ The next useful milestones remain the completed set 29 gate and promotion, follo
 **One gap needs explicit ownership:** the reported **0.900 A supervisor demand versus 0.600 A regulator capacity**. Claude should verify its applicable operating conditions and give it a named correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit.
 
 No broad new plan is needed. Continue the three active workers, then verify the dedicated return across the permitted aged-contact combinations and resolve the regulator finding before claiming the affected supply path complete.
+
+## 8. The three-SDR research and integration plan (as received)
+
+# MeshSat V2 — three-SDR research and integration plan
+
+Continue the current approved work and add this bounded research task. The objective is a concrete, evidence-backed plan for expanding from one LimeSDR Mini 2.x to three SDRs, one per existing CM5. The proposed choice is three Ettus USRP B205mini-i; compare the B206mini-i before selecting the model.
+
+Each CM5 would process its own radio locally. Ethernet would carry decoded traffic, status and coordination. The intended benefit is simultaneous validated roles—for example experimental cellular service, a packet-radio link and spectrum monitoring—with one node changing role while the other two retain service. Dedicated LoRa and the provisioned Iridium modem remain available. This is a capability expansion to investigate, not an adopted circuit change.
+
+## 1. Keep existing work moving
+
+- Read the current owner brief, execution plan and actual branch state. Preserve healthy workers, existing fixes and accepted evidence. Use one author at the next suitable free slot, within the existing global limit of three author/reviewer workers plus the coordinator. Do not displace an active correction or start duplicate authors on a branch.
+- Research, desk calculations, proposed interfaces and the integration plan are authorized now. Record the proposal in the existing task register. Keep the selected baseline unchanged until I approve adoption; no hardware purchase, supplier contact or fabrication is authorized by this task. Existing compute permissions and idle-stop rules continue unchanged.
+- Preserve battery and solar, internal storage with no external battery, the Peli 1450, HF and tablet functions. Keep 48–72 hours as the runtime objective and tablet charging optional. Any proposed exception must be explicit and costed; do not quietly increase the solar allowance, reduce existing service or change thermal limits.
+- Keep DELTA-01, DELTA-02, I-03, the ground-return/regulator findings and the other current power corrections in their existing workstreams. Identify which results this proposal depends on or would supersede. More radios must not make an existing defect disappear from the register.
+
+## 2. Make one bounded comparison
+
+Compare these four configurations under the same operating assumptions:
+
+| Configuration | Purpose |
+|---|---|
+| Existing single LimeSDR, exact held revision | Baseline |
+| Three of that LimeSDR revision | Separate the benefit of three radios from changing manufacturer |
+| Three USRP B205mini-i | Requested expansion |
+| Three USRP B206mini-i | Check the successor Ettus currently recommends |
+
+Use current manufacturer documentation and the actual repository. Pin the exact SKU, revision, enclosure and driver/gateware versions. Verify frequency coverage, simultaneous TX/RX, usable bandwidth, USB requirements, synchronization, temperature limits, dimensions, availability and dated prices. Include enclosures, RF filtering, connectors and cooling in cost and fit estimates. The Lime already has an FPGA; do not credit FPGA availability as a new capability by itself.
+
+Check exact software compatibility on ARM64/CM5, including the FPGA toolchain if custom processing is proposed. Distinguish documented support, inference and an actual demonstrated combination. Stock gateware must not be assumed to contain cellular or packet-protocol acceleration.
+
+Useful official starting points; verify their current contents and revision applicability:
+
+- https://www.ettus.com/all-products/USRP-B205mini-i/
+- https://www.ettus.com/all-products/usrp-b206mini-i/
+- https://files.ettus.com/manual/page_usrp_b200.html
+- https://kb.ettus.com/B200/B210/B200mini/B205mini/B206mini
+- https://limemicro.com/sdr/limesdr-mini-2-0/
+- https://myriadrf.org/projects/limesdr-mini-2-0/
+- https://www.raspberrypi.com/products/compute-module-5/
+- https://docs.srsran.com/
+
+Resolve board-versus-RFIC specifications and bare-board-versus-enclosed temperature ratings. Do not copy B210 power figures into a B205/B206 budget as guaranteed values.
+
+## 3. Establish what the three-node design actually requires
+
+Produce one compact role matrix naming software, bands, channel bandwidth, TX power/duty cycle, CPU/RAM demand, USB sample traffic, Ethernet traffic, antennas/filtering and timing needs. For cellular, specify the generation, core-network location, UE/SIM assumptions and permitted test arrangement. Validate exact stack support rather than promising generic 4G/5G capability.
+
+Define single-node operation, the requested three simultaneous roles, the most demanding admitted combination, and role reassignment. Staged validation does not reduce the target to only one active radio. Identify which roles are portable across nodes and the measurable service interruption allowed during reassignment. Ordinary Ethernet coordination is not evidence of RF clock or phase coherence.
+
+Check four connected budgets against the actual design:
+
+1. **Power and endurance:** trace each USB supply and return through regulators, connectors and protection. Include radio startup, RX/TX, CM5 processing, conversion losses and extra cooling. Compare battery-only and solar-assisted runtime on the same existing energy boundary. Show the incremental load separately; retain the old model's assumptions visibly. Missing measurements get ranges or named unknowns, not invented typical or maximum values.
+2. **Thermal and mechanical:** fit all three complete assemblies, leads, RF connectors and cooling inside the held case arrangement. Identify heat paths and affected operating/storage profiles. An industrial rating on an enclosed radio does not qualify three radios inside the Peli.
+3. **USB and network:** inspect board B's real USB topology and the CM5 carrier connections. Establish independent enumeration, sustained traffic, recovery and power cycling. Keep high-rate I/Q local unless a separately justified mode needs transport over Ethernet.
+4. **RF and fault behavior:** assess simultaneous transmit/receive isolation, receiver desensitization, input protection, filtering, antenna arrangement, EMCON and existing all-transmit rules. Identify shared power/controller/network failure points and how essential LoRa/Iridium service remains available when an SDR node fails or exhausts its resources.
+
+Recommend one configuration, with the reasons and remaining conditions. If three radios cannot be supported within the retained constraints, state the demonstrated constraint and the smallest proposed change. Missing evidence alone is not proof of impossibility.
+
+## 4. Map the change into existing layer deliverables
+
+Produce a change-impact table using the repository's actual layer names and file paths. Each row needs the existing artifact, proposed change, dependency, owner, acceptance check and release gate affected.
+
+| Layer | Required impact analysis |
+|---|---|
+| 1–3: brief, CONOPS, requirements | Identify only clauses affected by the new concurrent services, coverage or operating modes. Prepare proposed amendments; preserve the accepted historical baselines. |
+| 4: architecture | Selected SDR/CM5 partition, control/data paths, power and thermal allocations, degraded modes and fault containment. |
+| 5: interfaces | USB/data, power/ground, RF, timing, EMCON, control, startup and recovery contracts. |
+| 6: parts | Exact radios, enclosures, connectors, filters and supporting parts; grades, supply and cost. |
+| 7: mechanical | Placement, mounting, cooling, cable/antenna routing, case sealing and service access. |
+| 8: circuits | Exact board generators and protection/control changes; composition with existing drafts. |
+| 9: analysis | Revised electrical, thermal, RF-coexistence and signal-integrity budgets under the agreed mode matrix. |
+| 10–11: layout and manufacturing | Changed constraints and documents; prerequisites for supplier review, prototype assembly and eventual release. |
+| 12: firmware, bring-up and physical verification | Per-node software, orchestration, role transitions, failure recovery, test procedures and supplier-executed qualification. |
+
+For each affected layer, distinguish work that can proceed now, work dependent on an adoption decision, and work requiring vendor/physical evidence. Keep unaffected work moving. Neither a planning document nor a passing software suite closes hardware qualification.
+
+## 5. End with an executable adoption plan
+
+Deliver one primary document, preferably `v2/docs/research/SDR-EXPANSION-PLAN.md`, using the existing documentation structure. Keep the decision and implementation sequence concise; attach only necessary source tables or reproducible calculations. Avoid duplicate registers, a new evidence framework or a broad vendor search.
+
+The plan must contain:
+
+- A selected model/configuration, one architecture diagram and the four-option comparison.
+- Incremental power, heat, fit and cost estimates with their evidence limits.
+- Specific repository tasks in dependency order, tied to the layer table, including which existing fixes are reused.
+- A staged validation route: one radio with one CM5 running the hardest selected role; two radios testing coexistence; three radios running the target roles; then integrated kit qualification. Each stage names the specimen, acceptance criteria and the decision it enables.
+- Supplier responsibilities. We have no in-house electronics engineer or assumed bench access. Identify what NextPCB/Seeed or their engineering partner must review, assemble or measure, with feasibility of those services still to be confirmed. A pending physical test must not prevent delivery of the research and integration plan.
+- Active engineering effort and dependencies separated from procurement, supplier response and physical-test lead times. Give estimates with their basis, not another unsupported completion promise.
+- Only the adoption decisions I genuinely need to make, with your recommended answer and consequences.
+
+Use one focused independent Astra challenge of the recommendation and consequential budgets within the worker limit, followed by a bounded correction and targeted recheck if warranted. Preserve the review's actual verdict. Unresolved evidence must remain explicit; do not iterate indefinitely to manufacture acceptance. Use existing repository gates; add no new freeze/replay infrastructure and repeat no unrelated reviews for this research proposal.
+
+At the first checkpoint report the draft recommendation and missing evidence. Finish with the actual integration plan and a short decision summary: recommended hardware, expected capability, incremental resource cost, affected layers, next implementation task and decisions required. Do not stop at an options catalogue or wait for another instruction to complete this authorized research.

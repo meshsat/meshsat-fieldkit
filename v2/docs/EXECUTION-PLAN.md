@@ -1602,3 +1602,15 @@ their capacity, and a dedicated ground return does not address it. It is a separ
 
 **The affected supply path is not claimed complete** until the dedicated return (L8R2-F31) is verified over every permitted
 aged-contact combination of the VH contacts and the ribbon conductors, and T10 is resolved.
+
+### Register addition, 4 October 2026 21:39 CEST: the three-SDR research and integration plan (T11), by the owner's instruction (part 8)
+
+A bounded research task, added beside the current corrections: **a proposal to investigate, not an adopted change.** The selected
+baseline (one LimeSDR Mini 2.4 on board B's bank 1) is unchanged until the owner approves an adoption; no purchase, no supplier
+contact and no fabrication are authorised by it. The power corrections (DELTA-01, DELTA-02, I-03, L8R2-F31, T10 and the others)
+stay in their own tasks; the research names which of their results it depends on or would supersede, and no finding leaves the
+register because radios are added.
+
+| Task | Kind | Smallest deliverable | Acceptance | Owner | Check |
+|---|---|---|---|---|---|
+| T11 three SDRs, one per compute module | research and integration plan | `v2/docs/research/SDR-EXPANSION-PLAN.md`: the four configurations compared on one set of assumptions (the held LimeSDR alone, three of it, three USRP B205mini-i, three USRP B206mini-i) from the makers' current documents and this repository; the role matrix; the four connected budgets (power and endurance on the existing energy boundary, thermal and fit in the held case arrangement, board B's real USB topology and the network, RF coexistence and fault behaviour); one recommended configuration with its conditions, or the demonstrated constraint and the smallest change; the change-impact table per layer; a staged validation route; supplier responsibilities; effort apart from lead times; only the adoption decisions that are the owner's | every figure labelled documented, inferred or demonstrated, with its source and date; battery, solar, internal storage, the Peli 1450, HF and the tablet kept, the 48 to 72 hour runtime objective kept, any exception explicit and costed; missing evidence named, never filled in | one research author on `fnd/sdr3`, at the next suitable free slot | one focused challenge by the collaborator of the recommendation and its consequential budgets, a bounded correction, one targeted recheck if warranted; the verdict kept as given |
