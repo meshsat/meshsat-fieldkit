@@ -58,6 +58,8 @@ PINS = {
     "thermal_coord": "v2/docs/review-packets/battery/THERMAL-COORDINATION.md",
     "jscj_2n7002": "v2/vendor/power/jscj-2n7002-c8545.pdf",
     "l8r2_vbus20ov": "v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py",
+    "ntc": "v2/vendor/battery/murata-nxrt15xh103fa1b.pdf",
+    "d4148": "v2/vendor/power/st-semtech-1n4148w-c81598.pdf",
 }
 # the session's design choices (SESSION under the owner's standing rule of 26 September 2026), each checked below
 RS_PARTS_MOHM = (4.0, 7.5)   # the breaker's sense: two metal-element shunts in parallel, 2.6087 mOhm
@@ -80,6 +82,8 @@ GRACE_TARGET = 0.1           # the RC hold's least release delay, s: the reverse
 R_DIS = 150.0                # the UVLO discharge resistor in the inverter's drain (keeps the 2N7002 at its continuous current)
 R_E1, R_E2 = 10e3, 22e3      # the enable loop: from VIN to the loop, and the first inverter's gate to ground
 R_G = 1e6                    # the second inverter's gate divider, each half
+ALLOW_MARGIN = 1.0           # the restart inhibit lets a restart through at the inside air plus this, K (the pad nears the air only slowly)
+R_BRIDGE = 150e3             # the inhibit's NTC bridge, the resistor over the NTC (keeps the NTC under its maximum current)
 SPLIT_EXAMPLE = 0.05         # a cell split the fallback is sized for, 5 % (a cell carrying 1.05 of its group's third)
 PAD_MM2 = 645.16             # 1 in2, the CSD18510Q5B sheet's RthJA pad
 E6 = (1.0, 1.5, 2.2, 3.3, 4.7, 6.8, 10.0)
@@ -157,6 +161,9 @@ def read():
     I["isink"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
     m = need(t, r"Insertion time current\s+%s\s+%s\s+%s\s+µA" % (num, num, num), "the insertion time current")
     I["iins"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
+    m = need(t, r"Decreasing\s+%s\s+%s\s+%s\s+PGDTH\s+V\s+SENSE-OUT\s+Increasing, relative to decreasing threshold\s+%s\s+%s\s+%s" % (num, num, num, num, num, num), "PGDTH")
+    I["pgd"] = (float(m.group(1)), float(m.group(3)), float(m.group(4)), float(m.group(6)))
+    need(t, r"When the voltage at OUT increases to within 1\.25 V of\s+the SENSE pin \(VDS <1\.25 V\), PGD switches high\. PGD switches low if the VDS of Q1 increases above 2\.5 V", "8.3.6")
     m = need(t, r"^UVLOTH\s+UVLO threshold\s+%s\s+%s\s+%s\s+V" % (num, num, num), "UVLOTH")
     I["uvth"] = (float(m.group(1)), float(m.group(3)))
     m = need(t, r"^UVLOHYS\s+UVLO hysteresis current\s+UVLO = 1 V\s+%s\s+%s\s+%s\s+µA" % (num, num, num), "UVLOHYS")
@@ -228,6 +235,18 @@ def read():
     I["n7_rds5"] = float(need(n7, r"VGS=5 V, ID=50mA\s+%s\s+%s" % (num, num), "2N7002 RDS(on) at 5 V").group(2))
     I["n7_ciss"] = float(need(n7, r"Input Capacitance \*\s+Ciss\s+(\d+)", "2N7002 Ciss").group(1)) * 1e-12
     need(open(rel(PINS["l8r2_vbus20ov"]), encoding="utf-8").read(), r"CSD19532Q5B Q41", "l8r2's Q41")
+    nt = pdf("ntc")
+    I["ntc_r25"] = float(need(nt, r"Resistance \(25℃\)\s+(\d+)kΩ", "the NTC's R25").group(1)) * 1e3
+    I["ntc_rtol"] = float(need(nt, r"Resistance Value Tolerance\s+±(\d+)%", "the NTC's tolerance").group(1)) / 100.0
+    I["ntc_b50"] = float(need(nt, r"B-Constant \(25/50℃\)\s+(\d+)K", "the NTC's B25/50").group(1))
+    I["ntc_btol"] = float(need(nt, r"B-Constant \(25/50℃\)\s+±(\d+)%", "the NTC's B tolerance").group(1)) / 100.0
+    I["ntc_b85"] = float(need(nt, r"B-Constant\(25/85℃\)\s+(\d+)K", "the NTC's B25/85").group(1))
+    I["ntc_imax"] = float(need(nt, r"Maximum Operating Current\s+([0-9.]+)mA", "the NTC's current").group(1)) * 1e-3
+    d4 = pdf("d4148")
+    I["d_vf1"] = float(need(d4, r"at IF = 1 mA\s+-\s+([0-9.]+)", "1N4148W VF at 1 mA").group(1))
+    I["d_vf150"] = float(need(d4, r"at IF = 150 mA\s+-\s+([0-9.]+)", "1N4148W VF at 150 mA").group(1))
+    I["d_ifsm1ms"] = float(need(d4, r"at t = 1 ms\s+IFSM\s+([0-9.]+)\s+A", "1N4148W IFSM").group(1))
+    I["d_ifav"] = float(need(d4, r"IF\(AV\)\s+(\d+)\s+mA", "1N4148W IF(AV)").group(1)) * 1e-3
     w = re.sub(r"\s+", " ", pdf("slva673a"))
     for phrase in ("a single MOSFET will take all of the current", "at least 10% above the maximum load current",
                    "the SOA can be derated accordingly using Equation 5", "The power function follows the format shown in Equation 6",
@@ -359,6 +378,28 @@ def retry(R, I, C, B, J, cm, W, ks, a, t0, vmax, cells, each, r17, pr17, p_each,
     beste["ratio_hot"] = plim / (soa_power(soa, t2) * B["derate"])
     beste["ratio_air_low"], beste["ratio_hot_low"] = beste["ratio_air"] / k_read, beste["ratio_hot"] / k_read
     X["start_rf"] = beste
+    # B-R1: the case at which that start meets TI's margin, with and without the figure's reading allowance; the restart inhibit
+    # (an NTC bridge on the breaker pad, acting through UVLO only while PGD is low) blocks restarts above it
+    st2 = soa_power(soa, t2)
+    ratio_at = lambda tc_: plim / (st2 * (I["fet_tj"] - tc_) / (I["fet_tj"] - 25.0))
+    t67 = I["fet_tj"] - (I["fet_tj"] - 25.0) * TI_MARGIN * plim / st2
+    t67r = I["fet_tj"] - (I["fet_tj"] - 25.0) * TI_MARGIN * plim / (st2 * k_read)
+    t_allow = t0 + ALLOW_MARGIN
+    tc_ = 0.5 * (t_allow + t67r)
+    half = 0.5 * (t67r - t_allow)
+    tk = tc_ + 273.15
+    b = I["ntc_b85"]
+    r_ntc = I["ntc_r25"] * math.exp(b * (1.0 / tk - 1.0 / 298.15))
+    sens = b / tk ** 2                                    # d(ln R)/dT, per K
+    d_r = I["ntc_rtol"] / sens
+    d_b = I["ntc_btol"] * b * abs(1.0 / tk - 1.0 / 298.15) / sens
+    v_ntc = I["vmin"] * r_ntc / (R_BRIDGE + r_ntc)
+    X["inh"] = dict(t67=t67, t67r=t67r, t_allow=t_allow, t_trip=tc_, half=half, r_ntc=r_ntc, d_ntc=d_r + d_b, d_r=d_r, d_b=d_b,
+                    budget=half - d_r - d_b, i_bridge=vmax / (R_BRIDGE + r_ntc), v_ntc=v_ntc, v_off_05=0.5 * sens * v_ntc,
+                    r_air=ratio_at(t0), r_trip=ratio_at(tc_), r_block=ratio_at(t67r), r_held=ratio_at(B["tc_held"]), r_103=ratio_at(B["tc"]),
+                    r_trip_low=ratio_at(tc_) / k_read, r_block_low=ratio_at(t67r) / k_read)
+    # IF-1 is now critical: a start meeting the power limit runs the timer, and the -1 latches
+    X["load_ramp_max"] = (B["plim_min"] - B["start_p"]) / vmax
     # the series current's envelope over one cycle at the slowest ramp, and the limited phase
     u_k = plim / icl
     i2t_ramp = (icl * icl * u_k + plim * plim * (1.0 / u_k - 1.0 / vmax)) / dv_lo
@@ -580,7 +621,9 @@ def compute():
     v_hi = vmax - I["uvhys"][0] * R_U
     v_lo = I["vmin"] - I["uvhys"][1] * R_U
     k_hi = math.log(v_hi / (v_hi - I["uvth"][0]))
-    k_lo = math.log(v_lo / (v_lo - I["uvth"][1]))
+    # the hold's node H (R_U into C_U) reaches UVLO through R_DIS and a 1N4148W, so UVLO passes its threshold when H is a diode
+    # drop above it (0 V at the least, the 1 mA maximum at the most, the hysteresis sink being 12 to 30 uA)
+    k_lo = math.log(v_lo / (v_lo - I["uvth"][1] - I["d_vf1"]))
     cu = e6(GRACE_TARGET / (R_U * (1 - RS_TOL) * k_hi) / (1 - CAP_TOL), up=True)
     B.update(cu=cu, uv_vinf_lo=v_lo, grace=(cu * (1 - CAP_TOL) * R_U * (1 - RS_TOL) * k_hi, cu * (1 + CAP_TOL) * R_U * (1 + RS_TOL) * k_lo))
     # without the hold: OUT rises at the dv/dt rate from UVLODEL on, and a power pin mating late meets it through the loop
@@ -591,11 +634,15 @@ def compute():
     # the undocking: the loop opens, the first inverter's gate falls, the second's rises, UVLO is discharged, then the gate
     t1 = R_E2 * I["n7_ciss"] * math.log((vmax * R_E2 / (R_E1 + I["ptc_r25"] * (1 - I["ptc_tol"]) + R_E2)) / I["n7_vth"][0])
     t2 = (R_G / 2) * I["n7_ciss"] * math.log((I["vmin"] / 2) / (I["vmin"] / 2 - I["n7_vth"][1]))
+    # the second inverter pulls UVLO itself, so the turn-off no longer waits for C_U; C_U drains behind it through R_DIS and the diode
     t3 = cu * (1 + CAP_TOL) * (R_DIS + I["n7_rds5"]) * math.log(vmax / I["uvth"][0])
-    B["t_break"] = t1 + t2 + t3 + B["t_off_timer"]
+    B["t_break"] = t1 + t2 + B["t_off_timer"]
     B["t_break_parts"] = (t1, t2, t3)
+    B["t_break_old"] = t1 + t2 + t3 + B["t_off_timer"]
+    B["v_withdraw_old"] = D_EN_MM * 1e-3 / B["t_break_old"]
     B["v_withdraw"] = D_EN_MM * 1e-3 / B["t_break"]
     B["i_dis"] = vmax / (R_DIS + I["n7_rds5"])
+    B["d_ratio"] = (B["i_dis"] / I["d_ifsm1ms"], B["i_dis"] / I["d_ifav"])
     # the inverters' gates against the 2N7002's VGS under VIN's clamp and its threshold at the pack's least voltage
     r_cold_lo, r_cold_hi = I["ptc_r25"] * (1 - I["ptc_tol"]), I["ptc_r25"] * (1 + I["ptc_tol"])
     B["g1_max"] = I["tvs"]["vc"] * R_E2 / (R_E1 + r_cold_lo + R_E2)
@@ -737,7 +784,9 @@ def compute():
     row("a start into a resistive fault on VSYS (the worst, %.3f ohm; either variant's first event)" % SR["rf"], "%.0f mJ: %.1f ms of ramp, then the power limit" % (1e3 * SR["e"], 1e3 * SR["t_ramp"]),
         "the power limit", "%.2f ms after the limit" % (max(RT["t_on"]) * 1e3),
         "the breaker FET, %.2f W for %.2f ms equivalent (SLVA673A equation 7)" % (B["plim_max"], SR["t2"] * 1e3),
-        "%.2f from the inside air (TI's start basis); %.2f at the %.1f C case (TI <= %.2f)" % (SR["ratio_air"], SR["ratio_hot"], B["tc"], 1 / TI_MARGIN), "derived; E-3")
+        "%.2f from the air; at most %.2f at the restart inhibit's block (%.1f C), %.2f with the reading; without it %.2f at the held %.1f C" % (
+            SR["ratio_air"], RT["inh"]["r_block"], RT["inh"]["t67r"], RT["inh"]["r_block_low"], RT["inh"]["r_held"], B["tc_held"]),
+        "derived; C-1c (DD-8); E-3, E-15")
     row("charging (the reverse direction)", "the charger's current; %g A precharge through a body diode while the breaker is off" % I["i_pre"], "none: the LM5069 does not limit reverse current",
         "not a fault", "the breaker FET's body diode, %.2f W, TJ %.1f C" % (B["pre_w"], B["pre_tj"]), "%.1f K" % (I["fet_tj"] - B["pre_tj"]), "printed (VSD); derived")
     row("the clamp shorted with board P's FETs welded (two faults)", "%g to %g A prospective" % (C["pf_low"], C["pf_high"]), "F1, 25 A MINI",
@@ -760,10 +809,13 @@ def compute():
          "the battery stream (BAT-F20, EQ-15)"),
         ("DD-6", "docking with the breaker on takes it past its SOA and VIN to SENSE's maximum (table); the make-last enable loop C-1b with its RC hold and the thermal guard is drafted here, not drawn; conditions C1 and C2", "board P's generator with the battery stream (the UVLO circuit); board E's generator (two J_SMB contacts with a ground between); Layer 7 with L4-E11 (two make-last dock contacts, the loop and the PTC on board A)"),
     ]
-    R["defects"].append(("DD-7", "the -1 stays off after a trip until UVLO or VIN cycles: when an input returns the charger may charge the pack through the latched breaker's body diodes; board A opens the enable loop for a pulse when an input appears, so the latch resets and the breaker restarts within %.3f s (the hold and the start); the charge until then is E-14's" % (
+    R["defects"].append(("DD-7", "the -1 stays off after a trip until UVLO or VIN cycles: board A opens the enable loop for a pulse when an input appears, so the latch resets and the breaker restarts within %.3f s (the hold and the start), later if the restart inhibit holds it; the charge through a latched breaker's body diodes until then is L4-E11's hardware charge inhibit (B-R2, their running round), E-14" % (
         B["grace"][1] + B["start_max"]), "board A's generator with L4-E11; board P's generator (the -1)"))
+    R["defects"].append(("DD-8", "a hot restart of the -1 into the worst resistive fault on VSYS reaches %.2f of the derated SOA at the held %.1f C case, past TI's margin: C-1c, the restart inhibit on the breaker pad (block from %.2f C, allow from %.2f C, trip %.2f C +-%.2f K), is drafted here, not drawn" % (
+        RT["inh"]["r_held"], B["tc_held"], RT["inh"]["t67r"], RT["inh"]["t_allow"], RT["inh"]["t_trip"], RT["inh"]["half"]), "board P's generator (record l8p)"))
     R["interfaces"] = [
-        ("IF-1", "board A's loads on VSYS stay off until the breaker's start ends (at most %.1f ms after the gate rises, which is up to %.3f s after the enable mates), or follow its PGD" % (B["start_max"] * 1e3, B["grace"][1]), "L4-E11 with board A's generator"),
+        ("IF-1", "CRITICAL TO THE SERVICE under the -1 (a start that meets the power limit latches the breaker): board A's loads on VSYS stay off, under %.2f A at full VDS, until the breaker's start ends (at most %.1f ms after the gate rises, which is up to %.3f s after the enable mates), or follow its PGD" % (
+            RT["load_ramp_max"], B["start_max"] * 1e3, B["grace"][1]), "L4-E11 with board A's generator"),
         ("IF-2", "each breaker FET's installed RthJA at most %.1f C/W (the sheet prints %g on 1 in2 of 2 oz, %g on its least pad); two 1 in2 pads take %.0f mm2 of the %.0f mm2 left on the P2 placement's top face (%.0f mm2 a face, %.0f placed, %.0f the holes; the bottom face empty), leaving %.0f mm2 for the round 4 parts, the breaker's other parts and the bands where they do not lie in the pads (an area budget, not a floor plan; the FETs' drain pads are the breaker's input band); the controller beside RS, VIN's bypass at RS" % (
             B["rthja_need"], I["fet_rthja"], I["fet_rthja_min_cu"], B["p_pads"], B["p_free"], B["p_face"], I["p_courtyards"]["F"], I["p_holes"], B["p_free"] - B["p_pads"]), "board P's generator"),
         ("IF-3", "the energy chain: a stage for the breaker between PACK_FETS and PACK_LEAD (its limit %.2f A)" % a, "the energy chain's owner (the integrator)"),
@@ -798,8 +850,10 @@ def compute():
          "the supplier's commissioning procedure"),
         ("E-13", "the thermal guard", "the battery FETs' coupon (E-1) with the PTC in place, and one with a FET's thermal pad left unsoldered",
          "no trip through the service (%g A for %g s after %g A held at %.2f C); the breaker off before the hottest junction passes 150 C at %.2f A held" % (service, C["kd_s"], cont, t0, a), "the supplier's thermal bench"),
-        ("E-14", "the charge through a latched breaker", "the board P specimen latched, with the charger at its largest charge current", "the breaker FET's junction under 150 C until the input-return reset restarts it (%.3f s at most)" % (
+        ("E-14", "the charge through a latched breaker", "the board P specimen latched, with the charger at its largest charge current", "the breaker FET's junction under 150 C until the input-return reset restarts it (%.3f s at most), behind L4-E11's charge inhibit" % (
             B["grace"][1] + B["start_max"]), "the supplier's bench"),
+        ("E-15", "the restart inhibit", "the board P specimen with the NTC on the breaker pad", "a restart allowed with the pad at %.2f C, blocked at %.2f C; the pad-to-NTC gradient measured while the pad cools after %.2f A held; the cooling time to the trip recorded" % (
+            RT["inh"]["t_allow"], RT["inh"]["t67r"], a), "the supplier's thermal bench"),
     ]
     R["conditions"] = [
         ("C1", "mating order: every power pin mates before the enable contacts at any angle the dock's guides allow. Without a hold a reversed order of more than %.2f ms lets OUT pass %.2f V and meet the breaker's %.2f A threshold at mate (OUT rises at %.3f V/ms through the %.1f mOhm loop); the RC hold (SELECTED) tolerates a reversed order up to %.1f ms" % (
@@ -825,6 +879,8 @@ def compute():
         "a single-wire enable to board A's ground: a short to ground, the commonest harness fault, would enable the breaker unseen (C2)",
         "no RC hold: a reversed mating order of %.2f ms would bring B-P1 back (C1)" % (B["t_rev0"] * 1e3),
         "a controller with a tighter limit tolerance now: the LM5066I of SLVA673A's examples, its sheet not held; it is E-5's fallback",
+        "for B-R1, one criterion at the SOA itself (under 1 with the reading) instead of the inhibit: it would accept the -1's hot restart at %.2f but leave %.0f %% against a power limit whose spread at 5 mV is not printed (E-2)" % (
+            R["RT"]["inh"]["r_103"] / k_read, 100 * (1 - R["RT"]["inh"]["r_103"] / k_read)),
     ]
     # 7. the predicates
     pr = {}
@@ -880,6 +936,12 @@ def compute():
     pr["the -1's timer falls under its re-enable threshold before the RC hold's least release"] = RT["latch_dis"] < B["grace"][0]
     pr["one start into the worst resistive fault on VSYS is inside TI's margin from the inside air"] = RT["start_rf"]["ratio_air_low"] <= 1 / TI_MARGIN
     pr["one start into it stays inside the derated SOA at the hot case"] = RT["start_rf"]["ratio_hot_low"] < 1.0
+    pr["without a restart inhibit a hot restart of the -1 passes TI's margin (B-R1 stands without C-1c)"] = RT["inh"]["r_held"] > 1 / TI_MARGIN
+    pr["the restart inhibit's window lies between the inside air and the margin's case with the reading"] = RT["inh"]["t_allow"] < RT["inh"]["t67r"]
+    pr["the NTC's own tolerance leaves a positive budget in the window, inside its current rating"] = RT["inh"]["budget"] > 0 and RT["inh"]["i_bridge"] <= I["ntc_imax"]
+    pr["every restart the inhibit lets through is inside TI's margin with the reading"] = RT["inh"]["r_block_low"] <= 1 / TI_MARGIN + 1e-9
+    pr["the undock turn-off bypasses C_U and holds above 2 m/s"] = B["v_withdraw"] > 2.0
+    pr["the hold's diode carries C_U's discharge inside its ratings"] = B["d_ratio"][0] < 1.0 and B["d_ratio"][1] < 1.0
     R["pred"] = pr
     return R
 
@@ -936,7 +998,7 @@ def render(R):
     w("   dv/dt start: %.0f nF (+-%g %%) into %.0f uF (VSYS's %.0f uF, CELL_FUSED's %.0f uF), gate %g to %g uA: inrush %.3f A at most, %.1f ms at most" % (
         B["cdv"] * 1e9, 100 * CAP_TOL, B["cout"] * 1e6, I["c_vsys"] * 1e6, I["c_cellfused"] * 1e6, I["igate"][0] * 1e6, I["igate"][1] * 1e6, B["inrush_max"], B["start_max"] * 1e3))
     w("     SLVA673A 3.2.2.7: %.1f W for %.1f ms equivalent, under the power limit's least %.1f W, so the timer never runs" % (B["start_p"], B["start_teq"] * 1e3, B["plim_min"]))
-    w("   the -2's timer ratio: %.2f %% at most from the worst currents and thresholds (%.1f %% typical); its dwell %.3f s at most (3b judges its whole cycle)" % (
+    w("   the -2's timer ratio: %.2f %% at most, conservative: it pairs the slowest fault current (on) with the fastest sink (off) (%.1f %% typical); its dwell %.3f s at most (3b judges its whole cycle)" % (
         100 * B["duty_max"], 100 * I["dc_retry_typ"], B["dwell_max"]))
     w("   FETs: %d x CSD18510Q5B (%g V, VGS +-%g V, %g mOhm at 10 V, IDM %g A, junction %g C, RthJA %g C/W on 1 in2 2 oz, %g on its least pad, RthJC %g C/W)" % (
         NFET, I["fet_vds"], I["fet_vgs"], I["fet_rds"] * 1e3, I["fet_idm"], I["fet_tj"], I["fet_rthja"], I["fet_rthja_min_cu"], I["fet_rthjc"]))
@@ -971,18 +1033,24 @@ def render(R):
     w("   C-1b SELECTED: a make-last enable loop into UVLO (LM5069 11.1.1 and Figure 45), with an RC hold. The loop leaves board P from VIN through")
     w("     %g kOhm on one J_SMB contact, crosses the dock on two contacts %g mm short of the power pins, passes board A's chip PTC beside the battery" % (R_E1 / 1e3, D_EN_MM))
     w("     FETs (the thermal guard, section 4) and returns on a second J_SMB contact, a ground contact between the two, to a %g kOhm divider on the" % (R_E2 / 1e3))
-    w("     first 2N7002's gate; that FET holds the second's gate low, and the second, when on, discharges UVLO through %g ohm. UVLO charges from VIN" % R_DIS)
-    w("     through R_U %g kOhm into C_U %g uF against the %g to %g uA hysteresis sink (at %.1f V it settles at %.1f V, over %g V)." % (
-        R_U / 1e3, B["cu"] * 1e6, I["uvhys"][0] * 1e6, I["uvhys"][1] * 1e6, I["vmin"], B["uv_vinf_lo"], I["uvth"][1]))
+    w("     first 2N7002's gate; that FET holds the second's gate low, and the second, when on, pulls UVLO itself. The hold: R_U %g kOhm from VIN" % (R_U / 1e3))
+    w("     charges C_U %g uF on a node H, which reaches UVLO through %g ohm and a 1N4148W, against the %g to %g uA hysteresis sink (at %.1f V H" % (
+        B["cu"] * 1e6, R_DIS, I["uvhys"][0] * 1e6, I["uvhys"][1] * 1e6, I["vmin"]))
+    w("     settles at %.1f V, over %g V and the diode's %g V); when the second inverter pulls UVLO, C_U drains behind it through %g ohm and the diode" % (
+        B["uv_vinf_lo"], I["uvth"][1], I["d_vf1"], R_DIS))
+    w("     (%.0f mA at most: %.2f of its %g A 1 ms surge, %.2f of its %g mA average rating), so the turn-off no longer waits for C_U" % (
+        B["i_dis"] * 1e3, B["d_ratio"][0], I["d_ifsm1ms"], B["d_ratio"][1], I["d_ifav"] * 1e3))
     w("   the timing: the insertion time runs only when VIN passes PORIT, so it applies to a start by the gauge's own FET (%.2f to %.2f ms), not to a" % (B["t_ins"][0] * 1e3, B["t_ins"][1] * 1e3))
     w("     docking; on the enable the LM5069 raises the gate UVLODEL (%g us typical, no maximum printed) after UVLO passes %g to %g V, which the RC" % (I["uvdel"][0] * 1e6, I["uvth"][0], I["uvth"][1]))
     w("     hold makes %.3f to %.3f s after the enable mates; then a dv/dt start at %.3f A at most, VIN to SENSE %.2f mV" % (B["grace"][0], B["grace"][1], B["inrush_max"], B["dock_vsense"] * 1e3))
     w("     without the hold a power pin mating %.2f ms late meets OUT at %.2f V (the dv/dt rate %.3f V/ms): the breaker's least %.2f A through the loop;" % (
         B["t_rev0"] * 1e3, B["icb_min"] * R["vmax"] / C["dock_pk"], B["dvdt"] * 1e-3, B["icb_min"]))
     w("     with it a reversed order up to %.1f ms is tolerated (condition C1)" % (B["t_rev_hold"] * 1e3))
-    w("   undocking: the loop opens; the first inverter is off in %.1f us, the second on in %.1f us, UVLO under its threshold in %.3f ms, the gate low %.0f us" % (
-        B["t_break_parts"][0] * 1e6, B["t_break_parts"][1] * 1e6, B["t_break_parts"][2] * 1e3, B["t_off_timer"] * 1e6))
-    w("     later: %.2f ms in all, before the pins part at a withdrawal under %.2f m/s. Any open is off (fail-safe); a short to ground on either loop" % (B["t_break"] * 1e3, B["v_withdraw"]))
+    w("   undocking: the loop opens; the first inverter is off in %.1f us, the second on in %.1f us and UVLO falls at once, the gate low %.0f us later" % (
+        B["t_break_parts"][0] * 1e6, B["t_break_parts"][1] * 1e6, B["t_off_timer"] * 1e6))
+    w("     (UVLODEL %g us typical, no maximum printed): %.2f ms in all, before the pins part at a withdrawal under %.2f m/s (through C_U it took %.2f ms," % (
+        I["uvdel"][1] * 1e6, B["t_break"] * 1e3, B["v_withdraw"], B["t_break_old"] * 1e3))
+    w("     %.2f m/s); C_U drains in %.2f ms behind it. Any open is off (fail-safe); a short to ground on either loop" % (B["v_withdraw_old"], B["t_break_parts"][2] * 1e3))
     w("     conductor holds it off (condition C2). The gauge's own FET turning on is a start too: E11-30's waveform no longer arises")
     w("   the alternative, an inrush element at board A's dock entry, is not taken (the not-taken list above): the pre-charge pin's lead time is the hand's")
     RT = R["RT"]
@@ -1009,15 +1077,42 @@ def render(R):
     w("   the -1 against the service and the recovery: the 10 A and the 18 A never reach the least limit, so neither variant trips in the service;")
     w("     after a fault the -1 stays off: on battery the kit goes dark, as CONOPS 4e already states for the over-current backstop (\"recovers only on")
     w("     an input\") and POWER-THERMAL 9.3 takes as the safe state (\"restarting into the same load would repeat it\"); recovery by redocking (the loop")
-    w("     pulls UVLO low), by an input's return (DD-7) and by the thermal guard's own cycle; the timer falls under %g V in %.1f ms at most, inside" % (I["vtmrl_latch"], RT["latch_dis"] * 1e3))
-    w("     the RC hold's least %.3f s, so a redocking restarts it" % B["grace"][0])
+    w("     pulls UVLO low), by an input's return (DD-7) and by the thermal guard's own cycle; the timer falls under %g V in %.1f ms at most" % (I["vtmrl_latch"], RT["latch_dis"] * 1e3))
+    w("   which UVLO edge: the sheet asks the timer under %g V for a restart and does not say at which edge; read at the falling edge, a pulse within" % I["vtmrl_latch"])
+    w("     %.1f ms of a latch does not restart, which fails safe (the breaker stays off; a later pulse or a redocking restarts it); read at the rising" % (RT["latch_dis"] * 1e3))
+    w("     edge, the RC hold's least %.3f s covers it" % B["grace"][0])
+    w("   IF-1 is now critical to the service: under the -1 a start that meets the power limit runs the timer and latches the breaker, and the start")
+    w("     leaves room for at most %.2f A of load at full VDS (the power limit's least less the inrush's %.1f W); L4-E11 owns the hold-off" % (RT["load_ramp_max"], B["start_p"]))
     w("   a fault just under a unit's limit and over the service (held, never tripping, either variant): every part at its held reading (section 4);")
-    w("     the battery FETs bounded by the thermal guard, which trips and restarts at the PTC's rate indefinitely (E-13); Q1 under BAT-F20 OVER (DD-5)")
+    w("     the battery FETs bounded by the thermal guard, which trips and restarts at the PTC's rate only for loads IF-1 holds off; a resistive")
+    w("     fault on VSYS, which IF-1 cannot hold off, latches the -1 at the guard's first restart; Q1 under BAT-F20 OVER (DD-5)")
     w("   SELECTED: the -1 (latch-off). Every protected part then meets one fault event, at the per-cycle energy above, with no accumulation")
     w("   one start into the worst resistive fault on VSYS (either variant's first event, %.3f ohm): %.0f mJ, equivalent %.2f W for %.2f ms (SLVA673A" % (
         RT["start_rf"]["rf"], 1e3 * RT["start_rf"]["e"], B["plim_max"], RT["start_rf"]["t2"] * 1e3))
-    w("     equation 7): %.2f of the derated SOA from the inside air (TI's start basis, %.2f with the reading), %.2f at the %.1f C case (%.2f), under 1" % (
-        RT["start_rf"]["ratio_air"], RT["start_rf"]["ratio_air_low"], RT["start_rf"]["ratio_hot"], B["tc"], RT["start_rf"]["ratio_hot_low"]))
+    w("     equation 7): %.2f of the derated SOA from the inside air (TI's start basis, %.2f with the reading); hot it is %.2f at the held %.1f C" % (
+        RT["start_rf"]["ratio_air"], RT["start_rf"]["ratio_air_low"], RT["inh"]["r_held"], B["tc_held"]))
+    w("     and %.2f at %.1f C, past the 1.5x margin the -2 was rejected on; hot restarts are credible (the guard's cycle, DD-7's pulse, a quick redock)" % (
+        RT["inh"]["r_103"], B["tc"]))
+    H = RT["inh"]
+    w("   B-R1, ONE CRITERION FOR BOTH VARIANTS: TI's 1.5x margin over the derated SOA for every event at the case it can occur at. The -2 fails it")
+    w("     (%.2f in a hard short; %.0f C in a resistive fault). The -1 meets it only if a restart happens at a case of %.1f C at most (%.1f C with" % (
+        RT["hs"]["ratio"], RT["rf"]["tc"], H["t67"], H["t67r"]))
+    w("     the reading allowance)")
+    w("   C-1c SELECTED: a restart inhibit on the breaker pad. An NTC (Murata NXRT15XH103FA1B, %g kOhm +-%.0f %%, B25/85 %g K, B +-%.0f %%) in a" % (
+        I["ntc_r25"] / 1e3, 100 * I["ntc_rtol"], I["ntc_b85"], 100 * I["ntc_btol"]))
+    w("     ratiometric bridge from VIN (%g kOhm over it; %.3f mA at most against its %.2f mA) drives a comparator that pulls UVLO, gated so that it" % (
+        R_BRIDGE / 1e3, H["i_bridge"] * 1e3, I["ntc_imax"] * 1e3))
+    w("     acts only while PGD is low (the breaker off, starting or in a fault: VDS over %g to %g V), never on a running breaker. Window: allow" % (
+        I["pgd"][0] + I["pgd"][2], I["pgd"][1] + I["pgd"][3]))
+    w("     from %.2f C (the inside air plus %g K), block from %.2f C; trip %.2f C +-%.2f K: the NTC takes +-%.2f K (R %.2f, B %.2f, the B" % (
+        H["t_allow"], ALLOW_MARGIN, H["t67r"], H["t_trip"], H["half"], H["d_ntc"], H["d_r"], H["d_b"]))
+    w("     tolerance taken as printed at 25/50), leaving +-%.2f K for the comparator (%.2f mV of offset is 0.5 K at %.3f V), the bridge, the" % (
+        H["budget"], H["v_off_05"] * 1e3, H["v_ntc"]))
+    w("     hysteresis and the pad's gradient (E-15); its NTC at the trip %.0f ohm" % H["r_ntc"])
+    w("     the worst resistive start: %.2f from the air, %.2f at the trip (%.2f with the reading), %.2f at the block edge (%.2f with the reading)" % (
+        H["r_air"], H["r_trip"], H["r_trip_low"], H["r_block"], H["r_block_low"]))
+    w("     a fault while hot: PGD low lets the inhibit pull UVLO, which the -1 does not latch; it restarts when the pad cools under the trip, so any")
+    w("     further event starts at %.1f C at most; a quick redock or DD-7's pulse after heavy use waits for the pad to cool (its time NOT HELD, E-15)" % H["t67r"])
     w("")
     w("4. B-P2: THE BATTERY FETS' JUNCTION LIMIT AND EVERY SERIES PART AT THE BREAKER'S LARGEST LIMIT, %.2f A, FROM %.2f C" % (B["icl_max"], R["t0"]))
     w("   the limit: the hottest battery FET's junction at most %g C held at %.2f A from %.2f C, the band carrying the current (%.2f K: 1 oz %.2f, 2 oz %.2f)" % (
