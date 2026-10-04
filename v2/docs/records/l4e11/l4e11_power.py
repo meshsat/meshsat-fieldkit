@@ -844,6 +844,7 @@ def compute():
     R["N18"] = fix18_round(R, T)
     R["S19"] = fix19_round(R, T)
     R["S20"] = fix20_round(R, T)
+    R["S21"] = fix21_round(R, T)
     return R
 
 
@@ -3792,7 +3793,7 @@ R10_CH_TOL = (0.10, 0.15)      # ASSUMPTION: K (+-10 %) and X7R's +-15 % over te
 R10_CH_BIAS = 0.15             # ASSUMPTION: C241's loss under DC bias at 12 V or less on its 100 V rating (no curve held); E11-45 times the hold
 R10_CH_IR = 100e6 * 1e-6       # ohm F, ASSUMPTION: insulation resistance 100 MOhm uF (a fifth of the usual 500 MOhm uF)
 R10_CTS, R10_CTS_TOL = 3.9e-9, 0.05        # F, SESSION: C248, C0G J on U47's CTS1
-R10_RA, R10_RK, R10_RBL = 56.0, 10e3, 4.7e3  # ohm, SESSION: R84 (1206), R253, R256 (1206)
+R10_RA, R10_RK, R10_RBL = 56.0, 10e3, 6.8e3  # ohm, SESSION: R84 (1206, pulse-rated), R253, R256 (1206; 4.7k until V1's minor of round 10)
 R10_RAG = (100e3, 200e3)       # ohm, SESSION: R251 over R252 (1 %), Q51's VGS
 R10_RPU = (100e3, 1e6, 1e6, 1e6)           # ohm, SESSION: R249 (DD7_LP), R250 (DD7_T), R255 (DD7_N), R254 (DD7_REF), from DD7_VC
 R10_RVC = 100e3                # ohm, SESSION: R233, VBAT to DD7_VC (D27 BZT52C12)
@@ -3850,6 +3851,7 @@ def fix20_round(R, T):
     k5 = f(find("tps37", r"tCTSx \(min\) = -ln \(([\d.]+)\) x RCTSx \(min\)", "Equation 5")[1])
     k6 = f(find("tps37", r"tCTSx \(max\) = -ln \(([\d.]+)\) x RCTSx \(max\)", "Equation 6")[1])
     vol = f(find("tps37", r"VOL \(5\)\s+Low level output voltage\s+(\d+)\s+mV", "RESET's VOL", layout=True)[1]) * 1e-3
+    S["i_rec"] = f(find("tps37", r"Current\s+IRESET1, IRESET2, IRESET1, IRESET2\s+0\s+±(\d+)\s+mA", "RESET's recommended current", layout=True)[1]) * 1e-3
     i_vol = f(find("tps37", r"IRESET = (\d+) mA", "VOL's current", layout=True)[1]) * 1e-3
     find("tps37", r"SENSE and RESET pins are 65 V graded", "the 65 V pins")
     S["vol_r"] = vol / i_vol
@@ -4019,6 +4021,7 @@ def fix20_round(R, T):
     S["z_w"] = S["z_i"] * S9["vz"][1]
     S["ra_w"] = 0.5 * c_hi * vb_hi ** 2
     S["ra_pk"] = (vb_hi - S["vf"][0]) ** 2 / (R10_RA * 0.99)
+    S["ra_pk_168"] = (S9["vpk"] - S["vf"][0]) ** 2 / (R10_RA * 0.99)
     need(yr, r"2\.5 times RCWV or maximum overload voltage\s+[^\n]*\n\s*Overload\s+which is less for 5 seconds", "RC's short-time overload")
     S["ra_sto"] = (2.5 * math.sqrt(S["r1206"][0] * R10_RA)) ** 2 / R10_RA * 5.0
     # ---- IF-1's static draw restated with round 10's parts (round 9's 19f table, its R107 and R108 row replaced)
@@ -4057,7 +4060,7 @@ def render_fix20(R, p):
     p("     U47 TPS37A010122 on VBAT: SENSE1 (OV) on DD7_H, CTS1 on C248 3.9 nF C0G (the set delay); SENSE2 (UV) on CELL+ over R107 464k / R108 100k,")
     p("       the divider's foot DD7_REF on Q52 to DD7_N while the loop is powered, else lifted by R254; RESET1 and RESET2 on DD7_N (the inhibit asked)")
     p("     the inhibit: Q47 (gate DD7_LP) passes DD7_N to SYS_INH_D, Q49 holds CH_BATDRV at VBAT (R82 / R83 as round 9); the bleeder Q48 (gate DD7_LP)")
-    p("       loads CELL+ with R256 4.7k into DD7_N; Q46's gate moves to DD7_N; DD7_VC is VBAT through R233 100k under D27 (BZT52C12)")
+    p("       loads CELL+ with R256 6.8k into DD7_N; Q46's gate moves to DD7_N; DD7_VC is VBAT through R233 100k under D27 (BZT52C12)")
     p("   20c. THE THRESHOLDS AND THEIR TOLERANCES (MAKER: VITP and VITN %s / %s / %s V, hysteresis %s %% +-%s %%, ISENSE %s nA at 800 mV, %s uA"
       % (fmt(T["vitp"][0], 3), fmt(T["vitp"][1], 3), fmt(T["vitp"][2], 3), fmt(T["hys"] * 100, 0), fmt(T["hacc"] * 100, 1), fmt(T["i_s"] * 1e9, 0), fmt(T["i_s_hi"] * 1e6, 0)))
     p("     its largest row; resistors at their tolerances, each at its worst sign; INFERRED)")
@@ -4159,9 +4162,8 @@ def render_fix20(R, p):
     p("   20g. THE PARTS WITHIN THEIR LIMITS (MAKER limits; INFERRED readings)")
     p("     U47, U48: VDD %s to %s V against VBAT %s to %s V; SENSE and RESET 65 V graded against %s V; RESET sinks at most %s mA (the bleeder at %s V)"
       % (fmt(S9["vdd"][0], 1), fmt(S9["vdd"][1], 0), fmt(H["floor"], 3), fmt(S9["vbat_clamp"], 1), fmt(S9["vbat_clamp"], 1), fmt(S["n_sink"][0] * 1e3, 2), fmt(S9["vpk"], 1)))
-    p("       against VOL's %s mA row (%s mA at the 29.2 V clamp, a transient: VOL then about %s V on the 60 ohm reading, CELL+ reads alive and Q49's VGS"
-      % (fmt(T["i_vol"] * 1e3, 0), fmt(S["n_sink"][1] * 1e3, 2), fmt(S["vol_r"] * S["n_sink"][1], 2)))
-    p("       stays under -9 V: the inhibit holds)")
+    p("       against VOL's %s mA row and TI's recommended %s mA at most, %s mA at the 29.2 V clamp (V1's minor: 6.39 mA with round 10's 4.7k, over it)"
+      % (fmt(T["i_vol"] * 1e3, 0), fmt(S["i_rec"] * 1e3, 0), fmt(S["n_sink"][1] * 1e3, 2)))
     p("     2N7002 (Q44 to Q48, Q50, Q52): VGS at most %s V (DD7_VC) against %s V; VDS at most %s V against %s V; currents at most %s mA against %s A"
       % (fmt(S["vgs_n_max"], 1), fmt(S9["vgs_max"], 0), fmt(S9["vbat_clamp"], 1), fmt(S["n_vds"], 0), fmt(S["n_sink"][1] * 1e3, 2), fmt(S["n_id"], 3)))
     p("     AO3401A (Q49, Q51): VGS %s to %s V against +-%s V; VDS %s V against %s V; Q51's arm peak %s A (%s A at %s V) against IDM %s A"
@@ -4170,10 +4172,12 @@ def render_fix20(R, p):
     p("     D26 (1N4148W): the arm's peak %s A decaying in %s us, I2t %s A2s, against its surge rows %s A for 1 us and %s A for 1 ms (I2t %s A2s);"
       % (fmt(S["arm_peak"], 3), fmt(S["tau_arm"] * 1e6, 1), "%.2e" % S["arm_i2t"], fmt(S["ifsm"][2], 0), fmt(S["ifsm"][1], 0), "%.0e" % (S["ifsm"][1] ** 2 * 1e-3)))
     p("       at most once a hold, so at least 1.0 s apart")
-    p("     R84 (56R 1206): the arm's %s mJ at the clamp (%s W peak, %s us), against Yageo's short-time overload, 2.5 times RCWV for 5 s, %s J at its"
-      % (fmt(S["ra_w"] * 1e3, 3), fmt(S["ra_pk"], 1), fmt(S["tau_arm"] * 1e6, 1), fmt(S["ra_sto"], 2)))
-    p("       0.25 W (no pulse curve printed: the energy compared, INFERRED); R256 (4.7k 1206): %s W at %s V while the inhibit holds after a restart,"
-      % (fmt(S["bleed_w"][0], 4), fmt(S9["vpk"], 1)))
+    p("     R84 (56R 1206): the arm's %s mJ at the clamp, %s W peak decaying in %s us (%s W at %s V): no held sheet prints a pulse rating for it"
+      % (fmt(S["ra_w"] * 1e3, 3), fmt(S["ra_pk"], 1), fmt(S["tau_arm"] * 1e6, 1), fmt(S["ra_pk_168"], 1), fmt(S9["vpk"], 1)))
+    p("       (Yageo's short-time overload is a 5 s test, no basis for a 71 us pulse: V1's minor, the comparison withdrawn); R84 is SPECIFIED as a")
+    p("       pulse-rated part whose maker prints a single-pulse curve covering %s W for %s us once a second, its code owed to Layer 6 (CONDITIONAL)"
+      % (fmt(S["ra_pk"], 1), fmt(S["tau_arm"] * 1e6, 0)))
+    p("     R256 (6.8k 1206; 4.7k until V1's minor): %s W at %s V while the inhibit holds after a restart," % (fmt(S["bleed_w"][0], 4), fmt(S9["vpk"], 1)))
     p("       %s W at the 29.2 V clamp, against RC1206's %s W derated to %s W at %s C (Yageo, the knee read as 70 C)"
       % (fmt(S["bleed_w"][1], 4), fmt(S["r1206"][0], 2), fmt(S["r1206_hot"], 3), fmt(S["t_hot"], 2)))
     p("     D27 (BZT52C12): at most %s mA, %s mW, from the 29.2 V clamp through R233" % (fmt(S["z_i"] * 1e3, 3), fmt(S["z_w"] * 1e3, 2)))
@@ -4229,6 +4233,173 @@ def render_fix20(R, p):
     p("     under %s mA, the LM5069's resistor down to %s of its value at 16.8 V); B-R2 with route R1 DRAFTED on both boards; composes in L4-E9's"
       % (fmt(S["isrc_max"] * 1e3, 3), "%.3f" % (S["rint_min"][0][1] / S["r_int"])))
     p("     order and reads DRAWN on the regenerated netlist; nothing measured")
+    p("")
+
+
+# ---- round 11 (4 October 2026, task T2): E-1 under an uneven split of the RDS(on) spread, and E11-37, compared over three approaches
+R11_PINS = {"pxp9r1": ("v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf", "88a7b67bfcec9ba7dbf4619be60cfaa883f61b7c9a93a19affc3a5278d91513f"),
+            "sqj407": ("v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf", "1c1038b032b5bf378878473ba170cdbbd640ce1597fbb9c23be20adeaea663e8")}
+PINS.update(R11_PINS)
+R11_DERATE = 25.0              # K, the record's convention (15c): a part's junction limit 25 K under its rated maximum (the BUK6Y10-30P's 150 C under 175 C)
+
+
+def worst_share(m):
+    """The factor by which the hottest of three paralleled FETs' junction rise can exceed the even split's, over every split of their
+    RDS(on) with each at most the allowance R (two at R, one at r = R / x, x >= 1), for m = Zmut / Zself: the rise of the one at r is
+    I^2 R (Zself x + 2 Zmut) / (x + 2)^2, largest at x = 2 - 4 m while m < 1/4; the even split's is I^2 R (Zself + 2 Zmut) / 9."""
+    if m >= 0.25:
+        return 1.0, 1.0
+    x = 2.0 - 4.0 * m
+    return 9.0 * (x + 2.0 * m) / ((x + 2.0) ** 2 * (1.0 + 2.0 * m)), x
+
+
+def fix21_round(R, T):
+    """T2 of the approved plan: E-1 (record l9stk 15.5) at its own case with the sharing NOT assumed even, and E11-37 (the three FETs'
+    Ciss against TI's 5 nF), over three approaches: (i) three FETs kept, (ii) two FETs under 5 nF, (iii) a buffer on BATDRV."""
+    S9, L, H, S20 = R["S19"], R["L"], R["H"], R["S20"]
+    S = {}
+    i_, t0, band = S9["i"], S9["t0"], S9["band"]
+    r17k = S9["r17_allow"] * S9["pr17"]
+    S["fet_budget"] = 150.0 - t0 - band - r17k                     # K the three FETs' own rise may take, R17 placed apart
+    ra = F16_RA
+    S["ra"] = ra
+    S["p_even"] = (i_ / 3.0) ** 2 * ra
+    S["p_worst"] = i_ ** 2 * ra / 8.0                               # m = 0: the one at R / 2 carries I / 2
+    S["bar_old"] = S9["rec"][3][2]                                  # record l9stk's 45.88 K/W, the even split's
+    S["tj_old_worst"] = t0 + band + r17k + S["bar_old"] * S["p_even"] * worst_share(0.0)[0]
+    S["bar_new"] = S["bar_old"] / worst_share(0.0)[0]               # on record l9stk's printed 45.88 K/W, the even split's bar
+    S["bar_m"] = [(m_, S["bar_old"] / worst_share(m_)[0], worst_share(m_)[1]) for m_ in (0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.4)]
+    S["bar_check"] = S["fet_budget"] / (S["p_even"] * worst_share(0.0)[0])  # the same from this record's rounding (within 0.1 %)
+    if abs(S["bar_check"] - S["bar_new"]) > 0.001 * S["bar_new"] + 0.02:
+        refuse(4, "the worst-split bar does not reproduce from the budget")
+    # the service rows at the corrected bar with the worst split, as round 9 printed them at the even split (identical by construction)
+    S["tj_rows"] = S9["tj_rec"]
+    # a bounded spread, for information only: the sheet's typical is no printed minimum
+    bk = flat(text_pdf("buk6y10"))
+    m = need(bk, r"RDSon drain-source on-state VGS = -10 V; ID = -13\.5 A; Tj = 25 °C - (\d+) (\d+) mΩ", "the BUK6Y10-30P's RDS(on) at 25 C")
+    S["bk_typ_max"] = f(m, 1) / f(m, 2)
+    xb = 1.0 / S["bk_typ_max"]
+    S["bounded"] = 9.0 * xb / (xb + 2.0) ** 2
+    S["bk_qg"] = f(need(bk, r"QG\(tot\) total gate charge VDS = -15 V; ID = -12 A; VGS = -10 V; - ([\d.]+) (\d+) nC", "the BUK6Y10-30P's QG(tot)"), 2) * 1e-9
+    # ---- (i)-b: three of another part of the class, PXP9R1-30QL (Nexperia, held), by the record's own bound and convention
+    Lp = lambda pat, what: find("pxp9r1", pat, what, layout=True)[1]
+    m = Lp(r"VGS = -10 V; ID = -10\.8 A; Tj = 25 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ\s+resistance\s+VGS = -10 V; ID = -10\.8 A; Tj = 150 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ\s+VGS = -4\.5 V; ID = -9\.1 A; Tj = 25 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ", "PXP9R1-30QL's RDS(on)")
+    px = dict(r10_25=f(m, 2), r10_hot=f(m, 4), t_hot=150.0, r45_25=f(m, 6))
+    px["tj_rated"] = f(Lp(r"Tj\s+junction temperature\s+-55\s+(\d+)\s+°C", "PXP9R1-30QL's junction rating"))
+    px["tj_lim"] = px["tj_rated"] - R11_DERATE
+    px["kg"], px["r"] = fet_bound(px["r10_25"], px["r10_hot"], px["t_hot"], px["r45_25"], 8.5, px["tj_lim"])
+    px["r"] *= 1e-3
+    px["ciss"] = f(Lp(r"Ciss\s+input capacitance\s+VDS = -15 V; f = 1 MHz; VGS = 0 V;\s+-\s+(\d+)", "PXP9R1-30QL's Ciss")) * 1e-12
+    find("pxp9r1", r"MLPAK33 \(SOT8002\)", "PXP9R1-30QL's package")
+    px["budget"] = px["tj_lim"] - t0 - band - r17k
+    px["p_even"] = (i_ / 3.0) ** 2 * px["r"]
+    px["bar"] = px["budget"] / (px["p_even"] * worst_share(0.0)[0])
+    px["ciss3"] = 3 * px["ciss"]
+    S["px"] = px
+    # ---- (ii) two FETs under TI's 5 nF: each part's Ciss from its held sheet against 2.5 nF; the pair's bar (two: the even split is the worst)
+    two = []
+    for lab, key, pat, k in (("BUK6Y10-30P (Nexperia)", None, None, None),
+                             ("PXP9R1-30QL (Nexperia)", None, None, None),
+                             ("AONS21357 (AOS)", "aons21357", r"Ciss\s+Input Capacitance\s+(\d+)\s+pF", 1),
+                             ("SQJ403EP (Vishay)", "sqj403", r"Input Capacitance\s+Ciss\s+-\s+(\d+)\s+(\d+)", 1),
+                             ("SQJ407EP (Vishay)", "sqj407", r"Input capacitance\s+Ciss\s+-\s+(\d+)\s+(\d+ \d+)", 1)):
+        if key is None:
+            c = L["ciss_t"] if lab.startswith("BUK") else px["ciss"]
+        else:
+            mm = find(key, pat, lab + "'s Ciss", layout=True)[1]
+            c = float(mm.group(k).replace(" ", "")) * 1e-12
+        two.append((lab, c, 2 * c, 2 * c < H["bf_ciss"]))
+    S["two"] = two
+    S["pair_bar"] = S9["rec"][2][2]                                 # record l9stk's 20.39 K/W for the BUK6Y10-30P pair (Zself + Zmut)
+    S["pair_ciss"] = (2 * L["ciss_t"], 2 * L["ciss_0"])
+    S["pair_tau"] = (H["rdrv"][1] * 2 * L["ciss_t"], H["rdrv"][1] * 2 * L["ciss_0"], L["roff"][1] * 2 * L["ciss_0"])
+    S["pair_vs_three"] = S["pair_bar"] / S["bar_new"]
+    # the class's figure of merit: RDS(on) maximum at -10 V and 25 C times Ciss, per held part (MAKER rows), against the pair's need
+    S["fom_bk"] = 10e-3 * L["ciss_t"]
+    # ---- (iii) a buffer between BATDRV and the FETs: what TI prints about BATDRV
+    tb = flat("".join(pdf_pages("bq25730")))
+    need(tb, r"BATDRV 21 O P-channel battery FET \(BATFET\) gate driver output\. It is shorted to VSYS to turn off the BATFET\. It goes 10 V below VSYS to fully turn on BATFET\. BATFET is in linear mode to regulate VSYS at minimum system voltage when battery is depleted\. BATFET is fully on during fast charge and works as an ideal-diode in supplement mode\.", "BATDRV's pin text")
+    need(tb, r"P-channel MOSFETs is used for battery charging BATFET\. The gate drivers are internally integrated into the IC with 10 V of gate drive voltage\.", "the BATFET's driver text")
+    need(tb, r"the Ciss of P-channel MOSFET should be chosen less than 5 nF", "TI's 5 nF")
+    S["buffer_texts"] = ("external", "buffer") 
+    S["buffer_mentions"] = len([s_ for s_ in tb.split(". ") if "BATDRV" in s_ and ("buffer" in s_ or "external driver" in s_)])
+    if S["buffer_mentions"]:
+        refuse(4, "SLUSE65A names a buffer or an external driver on BATDRV: read it before rejecting approach (iii)")
+    S["vbe_drive"] = H.get("batdrv_on_min", 8.5)
+    # ---- the connected path of the selected approach (unchanged parts)
+    S["tau3"] = (S9["tau3_on"][0], S9["tau3_on"][1], S9["tau3_off"])
+    S["q49_q"] = 3 * S["bk_qg"]
+    return S
+
+
+def render_fix21(R, p):
+    S, S9, H, L = R["S21"], R["S19"], R["H"], R["L"]
+    px = S["px"]
+    p("21. ROUND 11 (TASK T2): E-1 WITH THE SHARING NOT ASSUMED EVEN, AND E11-37, OVER THREE APPROACHES (4 October 2026)")
+    p("   21a. THE DEFECT ON C-PROT rev 1 (record l9stk's E-1 at 23.93 A held from L4-E12's 76.25 C, MODELED; the band %s K, R17's %s K apart; INFERRED)"
+      % (fmt(S9["band"], 2), fmt(S9["r17_allow"] * S9["pr17"], 2)))
+    p("     E-1 sized each FET at the even split, %s W at the RDS(on) allowance %s mOhm, and set (Zself + 2 Zmut) at most %s K/W. Every FET's"
+      % (fmt(S["p_even"], 4), fmt(S["ra"] * 1e3, 3), fmt(S["bar_old"], 2)))
+    p("     RDS(on) is at most the allowance; Nexperia prints no minimum. With two at R and one at R / x the hottest one's rise is I^2 R (Zself x")
+    p("     + 2 Zmut) / (x + 2)^2: largest at x = 2 - 4 m (m = Zmut / Zself) while m is under 1/4, the even split's otherwise; over the even")
+    p("     split it is 9 (x + 2 m) / ((x + 2)^2 (1 + 2 m)): %s at m = 0 (one FET at R / 2 takes I / 2 and %s W). At record l9stk's %s K/W the"
+      % (fmt(worst_share(0.0)[0], 4), fmt(S["p_worst"], 4), fmt(S["bar_old"], 2)))
+    p("     hottest junction reads %s C held at %s A where E-1 states 150 C: E-1 fails at its own case (round 10's 'under Zself / 7' is corrected:"
+      % (fmt(S["tj_old_worst"], 1), fmt(S9["i"], 2)))
+    p("     the worst split exceeds the even split's wherever Zmut is under Zself / 4)")
+    p("     with the spread bounded at the sheet's typical over its maximum (%s at -10 V and 25 C, no printed minimum: INFERRED, information only)"
+      % fmt(S["bk_typ_max"], 2))
+    p("     the factor would be %s" % fmt(S["bounded"], 4))
+    p("   21b. THE THREE APPROACHES (MAKER rows; the bars are installed per-FET figures at E-1's limit; INFERRED)")
+    p("     (i) THREE FETS KEPT. (a) The BUK6Y10-30P, E-1's installed acceptance taken over the worst split: (Zself + 2 Zmut) at most %s K/W"
+      % fmt(S["bar_new"], 2))
+    p("       for any m (the even split's %s K/W times 8 (1 - m)(1 + 2 m) / 9 for a measured m under 1/4):" % fmt(S["bar_old"], 2))
+    for m_, b_, x_ in S["bar_m"]:
+        p("         m %4s: (Zself + 2 Zmut) at most %s K/W (the worst one at R / %s)" % (fmt(m_, 2), fmt(b_, 2), fmt(x_, 3)))
+    p("       Ciss %s nF typical (%s near 0 V), %s times TI's 5 nF: E11-37 stays on TI's answer or the bench; no land, net or part changes"
+      % (fmt(S9["ciss3"][0] * 1e9, 2), fmt(S9["ciss3"][1] * 1e9, 2), fmt(S9["ciss_ratio"][0], 2)))
+    p("       (b) another part of the class, PXP9R1-30QL (MLPAK33, rated %s C, so the record's convention puts its limit at %s C): RDS(on) %s"
+      % (fmt(px["tj_rated"], 0), fmt(px["tj_lim"], 0), fmt(px["r"] * 1e3, 3)))
+    p("       mOhm at 8.5 V and %s C (printed %s mOhm at -10 V and 150 C, the gate chord x%s); the worst-split bar %s K/W, under (a)'s; Ciss"
+      % (fmt(px["tj_lim"], 0), fmt(px["r10_hot"], 1), fmt(px["kg"], 4), fmt(px["bar"], 2)))
+    p("       %s nF for three, %s times TI's 5 nF; a new land: worse on both counts" % (fmt(px["ciss3"] * 1e9, 2), fmt(px["ciss3"] / H["bf_ciss"], 2)))
+    p("     (ii) TWO FETS UNDER TI'S 5 nF (two: the even split is the worst split for any coupling): each part's Ciss against 2.5 nF:")
+    for lab, c, c2, ok in S["two"]:
+        p("         %s: %s nF, two %s nF: %s" % (lab, fmt(c * 1e9, 2), fmt(c2 * 1e9, 2), "under 5 nF" if ok else "over 5 nF"))
+    p("       only the BUK6Y10-30P pair stays under 5 nF (%s nF typical at the sheet's -15 V, %s near 0 V); its E-1 bar is record l9stk's (Zself +"
+      % (fmt(S["pair_ciss"][0] * 1e9, 2), fmt(S["pair_ciss"][1] * 1e9, 2)))
+    p("       Zmut) at most %s K/W, %s of (i)'s; BATDRV's time constants %s / %s us on and %s us off; Q42 and its land leave the draft"
+      % (fmt(S["pair_bar"], 2), fmt(S["pair_vs_three"], 3), fmt(S["pair_tau"][0] * 1e6, 2), fmt(S["pair_tau"][1] * 1e6, 2), fmt(S["pair_tau"][2] * 1e6, 2)))
+    p("     (iii) A BUFFER BETWEEN BATDRV AND THE FETS: SLUSE65A prints BATDRV as the gate driver of linear-mode regulation of VSYS_MIN and of the")
+    p("       ideal diode in supplement ('BATFET is in linear mode to regulate VSYS at minimum system voltage when battery is depleted ... works as")
+    p("       an ideal-diode in supplement mode'), the driver 'internally integrated into the IC', and names no external driver or buffer on")
+    p("       BATDRV in any sentence: a buffer would sit inside loops whose gain and compensation TI does not print, and a follower loses")
+    p("       its own drop from BATDRV's least 8.5 V drive (raising every RDS(on) bound); no printed figure supports it (MAKER, INFERRED)")
+    p("   21c. THE CONNECTED PATH (INFERRED)")
+    p("     the charger's gate drive: (i) BATDRV into the three, %s / %s us on and %s us off (round 9); (ii) %s / %s us and %s us; (iii) not bounded"
+      % (fmt(S["tau3"][0] * 1e6, 2), fmt(S["tau3"][1] * 1e6, 2), fmt(S["tau3"][2] * 1e6, 2), fmt(S["pair_tau"][0] * 1e6, 2), fmt(S["pair_tau"][1] * 1e6, 2),
+         fmt(S["pair_tau"][2] * 1e6, 2)))
+    p("     IF-1 (U46's hold) and DD-7 (Q49 on CH_BATDRV) do not depend on the count: Q49 moves at most %s nC (three QG(tot) maxima) and BATDRV"
+      % fmt(S["q49_q"] * 1e9, 0))
+    p("       sinks at most %s mA while it holds; the breaker's band (%s A) and R17 are untouched; (i)(a) keeps the land, the pour and RT1 at the"
+      % (fmt(S9["batdrv_sink"] * 1e3, 2), fmt(S9["i"], 2)))
+    p("       three's centroid; (ii) removes Q42 and moves RT1 to the pair's centroid; (iii) adds a supply below VSYS less 10 V, which board A has not")
+    p("   21d. THE SELECTION (SESSION, on printed figures)")
+    p("     (i)(a): the three BUK6Y10-30P stay; E-1's installed acceptance becomes the worst split's, (Zself + 2 Zmut) at most %s K/W (or the"
+      % fmt(S["bar_new"], 2))
+    p("       measured pair (Zself, Zmut) by the formula of 21b), so the hottest junction is at most 150 C held at %s A for any split of the"
+      % fmt(S9["i"], 2))
+    p("       RDS(on) spread under the allowance, the service rows unchanged (%s C at 10 A, %s C in the 18 A service, %s C held at %s A); E-1's"
+      % (fmt(S["tj_rows"][0], 1), fmt(S["tj_rows"][1], 1), fmt(S["tj_rows"][2], 1), fmt(S9["i"], 2)))
+    p("       limit, the 23.93 A, the 18 A for 60 s and 76.25 C are not lowered. Why: (ii)'s bar is %s of (i)'s and (iii) has no printed basis;"
+      % fmt(S["pair_vs_three"], 3))
+    p("       (i)(b) is worse on its bar and on Ciss. No circuit change: the charger draft's layout requirement carries the corrected bar")
+    p("     E11-37 STAYS OPEN: no printed figure decides a three-device gate load against TI's 5 nF; Q-TI-17 (clarification/TI-QUESTIONS.md) gains")
+    p("       (e) and (f) (round 11); the bench row E11-37 stands; on a negative answer the supplier's correction scope is (ii): the pair, its")
+    p("       bar %s K/W measured on the coupon, Q42 removed (a draft then owed)" % fmt(S["pair_bar"], 2))
+    p("   21e. STATUS: E-1's defect CORRECTED IN THE ACCEPTANCE (the bar %s K/W; CONDITIONAL on E11-29 at that bar); E11-37 OPEN (TI or the"
+      % fmt(S["bar_new"], 2))
+    p("     bench); no net changed, so a netlist reading does not apply to this round's correction (INFERRED)")
     p("")
 
 
@@ -4719,6 +4890,7 @@ def render(R):
     render_fix18(R, p)
     render_fix19(R, p)
     render_fix20(R, p)
+    render_fix21(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py")
     p("(R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three")
     p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist")

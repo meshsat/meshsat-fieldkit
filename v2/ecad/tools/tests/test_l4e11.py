@@ -1391,7 +1391,7 @@ def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fai
             ("Q47's gate on DD7_T (the inhibit no longer gated by the powered loop)",
              'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_LP"', 'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_T"'),
             ("R108's foot on ground (a dead CELL+ sets the inhibit again: L8P-F05)", 'r("R108", "100k 1%", "DD7_CS", "DD7_REF"', 'r("R108", "100k 1%", "DD7_CS", "GND"'),
-            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
+            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
             ("a 100 kOhm load on DOCK_EN_RET (the interface's 1 MOhm)", 'tp("TP1", "DD7_H")', 'r("R260", "100k", "DOCK_EN_RET", "GND", lcsc="C25803"); tp("TP1", "DD7_H")'),
         ]
         for k, (why, old, rep) in enumerate(mutations):
@@ -1436,12 +1436,12 @@ def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_d
     assert abs(S["box_rt1"] - S9["r_ret"]) < 1.0 and all(v < 4.0 for _rt, v in S["box_vin"])
     # the parts within their limits
     assert S["vgs_p"][1] < S["p_vgs"] and S9["vbat_clamp"] < S["p_vds"] and S["arm_peak"] < S["ifsm"][1] and S["arm_i2t"] < S["ifsm"][1] ** 2 * 1e-3
-    assert S["n_sink"][0] < S["tps"]["i_vol"] and S["bleed_w"][1] < S["r1206_hot"] and S["ra_w"] < S["ra_sto"] / 1000
+    assert S["n_sink"][1] <= S["i_rec"] and S["bleed_w"][1] < S["r1206_hot"], "U47's RESET over TI's recommended current or R256 over its rating"
     assert S["static_frac"] < 0.01
     page = open(PAGE, encoding="utf-8").read()
     sec = page.split("## 20. Round 10")[1]
     out = open(OUT, encoding="utf-8").read()
-    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.846", "19.9", "34.5", "4.076", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
+    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.597", "28.1", "48.9", "4.147", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
               "2.545", "3.535", "157.7", "61.3", "269", "4.08"):
         assert s in sec and s in out, "%s is not in both section 20 and the output" % s
     for f_ in ("L4E11-R10-F1", "L4E11-R10-F2", "L4E11-R10-F3", "C-PROT", "NOT\nSETTLED"):

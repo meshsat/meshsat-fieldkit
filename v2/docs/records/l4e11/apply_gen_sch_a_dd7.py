@@ -28,7 +28,7 @@ dead point (1.98 V on CELL+) sat under the 2.80 V the LM5069's internal 1 MOhm h
           CELL+ never SETS the inhibit; it keeps an inhibit that is set (the release on CELL+ alive).
   Q47,Q49 the inhibit: Q47 (2N7002, gate DD7_LP) passes DD7_N to SYS_INH_D; Q49 (AO3401A) then holds CH_BATDRV, the battery
           FETs' gates, at VBAT (R82 / R83 as round 9).
-  Q48,R256 the bleeder: Q48 (2N7002, gate DD7_LP) loads CELL+ with R256 4.7k into DD7_N while the inhibit holds, so the
+  Q48,R256 the bleeder: Q48 (2N7002, gate DD7_LP) loads CELL+ with R256 6.8k into DD7_N while the inhibit holds, so the
           LM5069's internal 1 MOhm (its tolerance not printed) and the battery FETs' off leakage cannot lift CELL+ to the
           alive threshold: CELL+ reads alive only when the breaker itself drives it.
   Q46     its gate moves from CELL+/2 (round 9's DD7_ALIVE) to DD7_N: the input-return pulse is blocked while VBAT is up and
@@ -113,7 +113,7 @@ _DD7 = (
     + _N % ("Q50", "2N7002: DD7_T high = the hold armed (1 G, 2 S, 3 D)", "DD7_T", "GND", "DD7_AD")
     + 'r("R251", "100k 1%", "VBAT", "DD7_AG", lcsc="C25803"); r("R252", "200k 1%", "DD7_AG", "DD7_AD")   # Q51 VGS -VBAT/3\n'
     + _P % ("Q51", "AO3401A P-FET: the hold's arm from VBAT (1 G, 2 S, 3 D)", "DD7_AG", "VBAT", "DD7_K")
-    + 'r("R253", "10k 1%", "DD7_K", "GND", lcsc="C25804"); r("R84", "56R 1%", "DD7_K", "DD7_KA", fp="RS")   # R253 bleeds Q51\'s off leakage; R84 sets the arm\'s current\n'
+    + 'r("R253", "10k 1%", "DD7_K", "GND", lcsc="C25804"); r("R84", "56R 1% pulse-rated", "DD7_K", "DD7_KA", fp="RS")   # R253 bleeds Q51\'s off leakage; R84 sets the arm\'s current: a part with a printed single-pulse curve (Layer 6)\n'
     'part("D26", "Device", "D", "1N4148W: the hold\'s arm diode (cathode on DD7_H)", "SOD123", {"1": "DD7_H", "2": "DD7_KA"}, "C81598")\n'
     'c("C241", "1u 100V 1210", "DD7_H", "GND", fp="C1210", lcsc="C382212"); r("R85", "1.2M 1%", "DD7_H", "GND")   # the hold: at least 1.0 s\n'
     'ic("U47", 11, "TPS37A010122DSKR 65 V OV/UV supervisor: DD-7\'s hold (channel 1) and the release on CELL+ alive (channel 2)", "WSON10", {\n'
@@ -126,7 +126,7 @@ _DD7 = (
     + 'r("R82", "100k 1%", "VBAT", "SYS_INH_P", lcsc="C25803"); r("R83", "200k 1%", "SYS_INH_P", "SYS_INH_D")   # Q49 VGS -VBAT/3\n'
     + _P % ("Q49", "AO3401A P-FET: the charge inhibit, the battery FETs' gates held at VBAT (1 G, 2 S, 3 D)", "SYS_INH_P", "VBAT", "CH_BATDRV")
     + _N % ("Q48", "2N7002: the CELL+ bleeder while the inhibit holds (1 G, 2 S, 3 D)", "DD7_LP", "DD7_N", "DD7_BL")
-    + 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")   # 3.6 mA at 16.8 V into DD7_N while the inhibit holds\n'
+    + 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")   # 2.5 mA at 16.8 V into DD7_N while the inhibit holds; U47\'s RESET at most 4.4 mA at the clamp (TI: 5 mA)\n'
     'tp("TP1", "DD7_H"); tp("TP2", "DD7_N")\n'
     '_r10 = "L4-E11 rounds 9 and 10 (DD-7, record l8p\'s L8P-F04 and L8P-F05): "\n'
     '_intent.node("DD7_G", 12.7, _r10 + "Q44\'s gate, VIN_RAW through R106 1M clamped by D25 (BZT52C12, 11.4 to 12.7 V, DS18004)")\n'

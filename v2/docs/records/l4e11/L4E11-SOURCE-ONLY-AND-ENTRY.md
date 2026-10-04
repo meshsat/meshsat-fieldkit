@@ -108,8 +108,8 @@ and L8P-F05 on board A's side of DD-7, and records T2 (E-1's even split) open.
 - **Round 10 (section 20):** record l8p's route R1 (board P holds the loop's return under 0.055 V while a charge passes the off breaker)
   met on board A: **L8P-F04 corrected** (U48 reads the held return under 0.7755 V and the powered loop over 1.981 V at most; the
   inhibit set within 0.85 ms, held at least 1.341 s after the return rises, released on CELL+ alive); **L8P-F05 corrected** (a dead
-  CELL+ never sets the inhibit; while it holds, a 4.7 kOhm bleeder keeps CELL+ at 0.154 V at 16.8 V against the 4.076 V dead reading,
-  for any source under 0.846 mA); **B-R2 drafted on both boards**; board A composed in L4-E9's order runs to its end and
+  CELL+ never sets the inhibit; while it holds, a 6.8 kOhm bleeder keeps CELL+ at 0.180 V at 16.8 V against the 4.147 V dead reading,
+  for any source under 0.597 mA); **B-R2 drafted on both boards**; board A composed in L4-E9's order runs to its end and
   `check_dd7_netlist.py` reads DRAWN (five mutations FAIL); **T2 recorded OPEN** (E-1's even split: one FET of three may take 9/8);
   findings L4E11-R10-F1 to F3 for records l8p and l9stk (F3: the PTC's printed points are 100 kOhm over 110 C and 4.7 MOhm at 130 C).
 - **D-06** stays resolved in design with the corrected envelope and floor; **D-09** keeps its reproduced margin (4.927 to 14.653
@@ -2047,7 +2047,7 @@ draft; nothing is built, bought or measured.
 | R107, R108, Q52, R254 | 464k / 100k 1 %; 2N7002; 1M | U47's CELL+ reading; its foot DD7_REF goes to DD7_N through Q52 only while the loop is powered and an inhibit is asked, else R254 lifts it and the channel reads alive |
 | R255 | 1M | DD7_N's pull-up; DD7_N low = the inhibit asked (U47's RESET1 and RESET2) |
 | Q47, Q49, R82, R83 | 2N7002; AO3401A; 100k / 200k | **the inhibit:** Q47 (gate DD7_LP) passes DD7_N to SYS_INH_D; Q49 holds CH_BATDRV, the battery FETs' gates, at VBAT |
-| Q48, R256 | 2N7002; 4.7k 1206 | **the bleeder:** while the inhibit holds, CELL+ is loaded into DD7_N, so it reads alive only when the breaker drives it |
+| Q48, R256 | 2N7002; 6.8k 1206 (4.7k until V1's minor of round 10) | **the bleeder:** while the inhibit holds, CELL+ is loaded into DD7_N, so it reads alive only when the breaker drives it |
 | Q46 | 2N7002, gate moved to DD7_N | the input-return pulse is blocked while VBAT is up and nothing is asked (the kit on its pack), allowed while VBAT is down or an inhibit holds |
 | R233, D27 | 100k; BZT52C12 | DD7_VC, the gates' supply under 12.7 V |
 | TP1, TP2 | test points | DD7_H and DD7_N, for E11-45 |
@@ -2068,7 +2068,7 @@ R-194 (L8G-F12).
 |---|---|---|
 | the return held (U48 channel 1, its OV release) | under **0.7755 V** at least; read closed over 0.84 V at most | board P's pull, 0.055 V: **0.72 V of margin**; the closed return in service, 2.894 V at the bound point: 2.054 V of margin |
 | the loop powered (U48 channel 2, its UV release) | over **1.981 V** at most (1.825 V at least); unpowered under 1.789 V at least | the interface's 2.0 V; the held DOCK_EN_OUT (RT1 at 5 kOhm, R106 +1 %, board A's 984 kOhm on it): **2.545 V at 7.6 V, 3.535 V at 10.6 V, 5.581 V at 16.8 V**, 0.564 V or more over the powered reading |
-| CELL+ alive (U47 channel 2, read only while an inhibit is asked and the loop is powered) | dead under **4.076 V** at least, alive over **4.774 V** at most (the foot at RESET's 0.060 V, VOL read as 60 ohm) | the breaker's restart drives CELL+ to the pack's 10.6 to 16.8 V; the latch holds CELL+ at 0.154 V (below) |
+| CELL+ alive (U47 channel 2, read only while an inhibit is asked and the loop is powered) | dead under **4.147 V** at least, alive over **4.774 V** at most (the foot at RESET's 0.044 V, VOL read as 60 ohm) | the breaker's restart drives CELL+ to the pack's 10.6 to 16.8 V; the latch holds CELL+ at 0.180 V (below) |
 
 **The load on DOCK_EN_RET** is SENSE1 alone, at most 2 uA: over 8.7 MOhm at the return's 17.4 V clamp, against the interface's 1 MOhm.
 **The bound point** (record l9stk, 10.6 V, RT1 47 kOhm): the first inverter's gate reads 2.952 V unloaded, 2.939 V with round 9's 2 MOhm,
@@ -2122,17 +2122,17 @@ DD7_K at 0.436 V through R253, 0.339 V under the OV release's least 0.7756 V.
 **A dead CELL+ never sets the inhibit.** U47's channel 2 reads alive while R254 lifts its foot, that is while nothing is asked. It
 **keeps** an inhibit that is set: Q52 then grounds the foot through DD7_N, and Q48 loads CELL+ through R256, so CELL+ reads alive
 only when the breaker itself drives it. Round 9's dead point leant on board A's 200 kOhm against the LM5069's internal 1 MOhm, whose
-tolerance is not printed; the latch leans on R256's 4.7 kOhm:
+tolerance is not printed; the latch leans on R256's 6.8 kOhm:
 
 | BRK_VIN | The LM5069's resistor may fall to | CELL+ at 1 MOhm with the three FETs' 3 uA (25 C) | Round 9 |
 |---|---|---|---|
-| 16.8 V | 19.9 kOhm (0.020 of 1 MOhm) | **0.154 V**, 3.922 V under the dead reading | 2.80 V against 1.98 V |
-| 29.2 V (the clamp) | 34.5 kOhm (0.035) | **0.213 V**, 3.864 V under it | 3.34 V against 1.98 V |
+| 16.8 V | 28.1 kOhm (0.028 of 1 MOhm) | **0.180 V**, 3.966 V under the dead reading | 2.80 V against 1.98 V |
+| 29.2 V (the clamp) | 48.9 kOhm (0.049) | **0.266 V**, 3.881 V under it | 3.34 V against 1.98 V |
 
-The latch reads dead while every source into CELL+ stays under **0.846 mA** together; the battery FETs' hot off leakage (not printed)
-may reach 272 uA each before it matters. By the hold's end CELL+ has fallen under the dead reading unless the breaker drives it:
-from VSYS's 17.375 V through R256 into CELL_FUSED's 104 uF (+20 %, ASSUMPTION) within 0.859 s, under the hold's least 1.341 s. The
-release: the breaker's restart drives CELL+ over 4.774 V against R256's 3.57 mA at 16.8 V, inside IF-1's 0.81 A room.
+The latch reads dead while every source into CELL+ stays under **0.597 mA** together; the battery FETs' hot off leakage (not printed)
+may reach 189 uA each before it matters. By the hold's end CELL+ has fallen under the dead reading unless the breaker drives it:
+from VSYS's 17.375 V through R256 into CELL_FUSED's 104 uF (+20 %, ASSUMPTION) within 1.228 s, under the hold's least 1.341 s. The
+release: the breaker's restart drives CELL+ over 4.774 V against R256's 2.47 mA at 16.8 V, inside IF-1's 0.81 A room.
 
 ### 20f. The service untouched (INFERRED)
 
@@ -2152,12 +2152,12 @@ release: the breaker's restart drives CELL+ over 4.774 V against R256's 3.57 mA 
 
 | Part | Reading | Limit |
 |---|---|---|
-| U47, U48 | VDD 12.054 to 29.2 V; SENSE and RESET at most 29.2 V; RESET sinks at most 3.73 mA (the bleeder at 16.8 V) | VDD 2.7 to 65 V; 65 V graded pins; VOL 300 mV at 5 mA (6.39 mA at the 29.2 V clamp, a transient: VOL about 0.38 V, CELL+ reads alive, Q49's VGS stays under -9 V) |
-| 2N7002 (Q44 to Q48, Q50, Q52) | VGS at most 12.7 V (DD7_VC); VDS at most 29.2 V; at most 6.39 mA | 20 V; 60 V; 0.115 A |
+| U47, U48 | VDD 12.054 to 29.2 V; SENSE and RESET at most 29.2 V; RESET sinks at most 2.62 mA (the bleeder at 16.8 V), 4.47 mA at the 29.2 V clamp | VDD 2.7 to 65 V; 65 V graded pins; TI's recommended RESET current 5 mA at most and VOL 300 mV at 5 mA (V1's minor: 6.39 mA with round 10's 4.7k, over it; R256 now 6.8k) |
+| 2N7002 (Q44 to Q48, Q50, Q52) | VGS at most 12.7 V (DD7_VC); VDS at most 29.2 V; at most 4.47 mA | 20 V; 60 V; 0.115 A |
 | AO3401A (Q49, Q51) | VGS 4.02 to 9.86 V; VDS 29.2 V; Q51's arm peak 0.514 A (0.29 A at 16.8 V) | +-12 V; 30 V; IDM 27 A |
 | D26 (1N4148W) | the arm's peak 0.514 A decaying in 71.5 us, I2t 9.44e-06 A2s, at most once a hold (1.0 s apart) | 4 A for 1 us; 1 A for 1 ms (I2t 1e-03 A2s) |
-| R84 (56R 1206) | the arm's 0.539 mJ at the clamp (14.6 W peak, 71.5 us) | Yageo's short-time overload, 2.5 times RCWV for 5 s: 7.81 J (no pulse curve printed: the energy compared) |
-| R256 (4.7k 1206) | 0.0596 W at 16.8 V while the inhibit holds after a restart; 0.1807 W at the 29.2 V clamp | RC1206's 0.25 W derated to 0.202 W at 86.25 C |
+| R84 (56R 1206, pulse-rated) | the arm's 0.539 mJ at the clamp: 14.6 W peak decaying in 71.5 us (4.7 W at 16.8 V), once a hold | no held sheet prints a pulse rating; Yageo's short-time overload is a 5 s test and no basis for a 71 us pulse (V1's minor: the comparison withdrawn). **Specified:** a part whose maker prints a single-pulse curve covering 14.6 W for 72 us once a second; its code owed to Layer 6 (CONDITIONAL) |
+| R256 (6.8k 1206) | 0.0413 W at 16.8 V while the inhibit holds after a restart; 0.125 W at the 29.2 V clamp | RC1206's 0.25 W derated to 0.202 W at 86.25 C |
 | D27 (BZT52C12) | at most 0.18 mA, 2.28 mW from the 29.2 V clamp through R233 | its 370 mW at 25 C ambient (DS18004 note 8) |
 
 **IF-1's static draw restated** (19f's table, R107 and R108's 0.084 mA row replaced): U47 and U48, 0.0052 mA; R233 into D27, at most
@@ -2170,7 +2170,7 @@ release: the breaker's restart drives CELL+ over 4.774 V against R256's 3.57 mA 
 |---|---|
 | (a) composes in L4-E9's order | board A composed with every pending board A draft and record l8p's PTC (the tree's, round 3), this draft before d8dec31's mainpb: the generator runs to its end with `intent.write` (750 parts); refused without l8p's loop, once applied, refused a second time and on the tree (`test_l4e11`) |
 | (b) the changed nets in the regenerated netlist | `check_dd7_netlist.py` reads every DD-7 pin, value and net membership from the netlist record l8p's `gen_netlist.py` regenerates: **DRAWN**; five circuit mutations each read **FAIL** (U48's SENSE1 on DOCK_EN_OUT, Q47's gate on DD7_T, R108's foot on ground, R256 removed, a 100 kOhm load on DOCK_EN_RET); the committed netlist reads NOT DRAWN |
-| (c) the electrical acceptance on C-PROT | out 20: the held return at 7.6 and 10.6 V sets the inhibit within 0.85 ms (was never); the hold at least 1.341 s; CELL+ with the breaker off at 16.8 V and 29.2 V held at 0.154 and 0.213 V against the 4.076 V dead reading (was 2.80 and 3.34 V against 1.98 V); the latch with a source present into a resistive fault: B-R2 with route R1, the charge ending within 1.41 ms; the service rows above; each part within its printed limit |
+| (c) the electrical acceptance on C-PROT | out 20: the held return at 7.6 and 10.6 V sets the inhibit within 0.85 ms (was never); the hold at least 1.341 s; CELL+ with the breaker off at 16.8 V and 29.2 V held at 0.180 and 0.266 V against the 4.147 V dead reading (was 2.80 and 3.34 V against 1.98 V); the latch with a source present into a resistive fault: B-R2 with route R1, the charge ending within 1.41 ms; the service rows above; each part within its printed limit |
 
 ### 20i. T2, recorded now: E-1's even split (OPEN against E-1's acceptance; its comparison is the next task)
 
@@ -2217,7 +2217,7 @@ SETTLED**; E11-29's row says so. T2 compares at most three approaches for E11-37
 | Item | Status |
 |---|---|
 | L8P-F04 | **corrected in the draft:** U48 reads the held return (under 0.7755 V) and the powered loop (over 1.981 V at most); the inhibit set within 0.85 ms, held at least 1.341 s, released on CELL+ alive |
-| L8P-F05 | **corrected in the draft:** a dead CELL+ never sets the inhibit; the bleeder holds the latch for any source under 0.846 mA (the LM5069's resistor down to 0.020 of its value at 16.8 V) |
+| L8P-F05 | **corrected in the draft:** a dead CELL+ never sets the inhibit; the bleeder holds the latch for any source under 0.597 mA (the LM5069's resistor down to 0.028 of its value at 16.8 V) |
 | B-R2 | **drafted on both boards** with route R1 (board P's detector, record l8p; board A's interface, this round); CONDITIONAL on E11-45 and record l8p's E-14 and E-12c |
 | T2 | **recorded, OPEN** against E-1's acceptance (20i) |
 | the composition and the netlist | board A composed in L4-E9's order runs to its end; `check_dd7_netlist.py` DRAWN, five mutations FAIL |

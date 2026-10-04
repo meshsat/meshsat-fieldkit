@@ -1,5 +1,7 @@
 # L4-E11: source-only and dead-pack operation, the vehicle-entry interconnect and the hot swap's fault timer (MESHSAT-1357)
 
+**ROUND 11 (T2, branch `fnd/l4e11r11`) INCOMPLETE at the owner's shutdown checkpoint, 4 October 2026:** `l4e11_power.py` carries section 21 (E-1 with the worst split of the RDS(on) spread, the three approaches, the selection of (i)(a) with the bar 40.78 K/W, E11-37 open) and V1's two minors of round 10 (R256 6.8 kOhm, R84 specified pulse-rated), but `l4e11_power.out` is NOT regenerated, the page has no section 21 yet, E11-29's and E11-37's rows, the charger draft's comment, TI-QUESTIONS (e) and (f) and the tests are NOT updated, and nothing of round 11 is tested.
+
 Layer 4 task L4-E11, 2 October 2026, on branch `fnd/l4e11` (round 10 on `fnd/l4e11r10`, 4 October 2026), with its fix round, final round, dependency round, consolidation round and the consolidation review's fix round of the same day; round 9 (4 October 2026, section 19) on branch `fnd/l4e11r9`. Prototype design, desk
 arithmetic: nothing is bought, built, powered or measured, and nothing here is applied to the tree.
 
