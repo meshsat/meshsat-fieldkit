@@ -22,16 +22,20 @@ and the chain's correction (section 3f). Both Layer 9 outputs are read from copi
 AP64500 on slots 1 and 3 is over its junction limit at HIGH with any cooler option. Slots 1 and 3 move to slot 2's LM5176 stage
 (`apply_gen_sch_a_slotlm.py`), and the coolers keep their step-up at full speed.
 
-**Round 7 (4 October 2026 evening, task T5b, branch `fnd/l8r4` from set 29's candidate `aa76c894`, section 3g).** The owner's
-review (RSM-01): board B's generator declares its ground return with typed figures (10.0 A, 21.0 A), and with this record's own
-fans12 draft the composed generator stops, 21.51 A of loads against the 21.0 A peak. Round 7 reproduces the stop, reconciles
-the load basis and the current-capacity basis, and drafts two corrections: the return's figures derived from the leads it
-returns (`apply_gen_sch_b_gndret.py`: 13.30 A typical, 26.40 A peak as an UPPER BOUND, 27.78 A with Layer 9's I-03 draft) and
+**Rounds 7 and 8 (4 October 2026 evening and night, task T5b and the recheck V3, branch `fnd/l8r4` from set 29's candidate
+`aa76c894`, section 3g).** The owner's review (RSM-01): board B's generator declares its ground return with typed figures (10.0 A,
+21.0 A), and with this record's own fans12 draft the composed generator stops, 21.51 A of loads against the 21.0 A peak. Round 7
+reproduces the stop, reconciles the load basis and drafts two corrections: the return's figures derived from the leads it
+returns (`apply_gen_sch_b_gndret.py`: 13.30 A typical, 26.40 A peak as an UPPER BOUND, 27.9108 A with Layer 9's round 3 draft) and
 the decoupling class row the cooler step-ups lacked (`apply_gen_sch_b_fandec.py`, a second stop behind the first). Board B's
-composition then runs to its end. **It does not correct the return path itself: L8R2-F31 is OPEN.** The two boards' grounds
-are joined by five lead contacts and seventeen signal-ribbon conductors in parallel, nothing sets the division, and on the
-makers' printed contact maxima a ribbon conductor passes its 1 A rating (with aged equal contacts at the upper bound, with
-unequal ones at the largest state already). Every figure is in `l8r2_gndret.out`.
+composition then runs to its end. **The return path itself is a known defect, L8R2-F31, and it is OPEN.** The two boards' grounds
+are joined by lead contacts and seventeen signal-ribbon conductors in parallel and nothing sets the division. Round 7's
+calculation of that division sampled six contact cases; the collaborator's targeted recheck V3 returned NOT CONFIRMED (a
+permitted corner it had left out puts 10.6375 A in a lead's ground pin against the printed 10 A). Round 8 enumerates every
+vertex of the contact-resistance box (as drawn, on C-DEV rev 1: 12.092 A in a lead's pin 2 and 2.672 A in a ribbon conductor)
+and drafts the correction: a dedicated ground return of three XT60 leads between the boards (`apply_gen_sch_a_gndrtn.py`,
+`apply_gen_sch_b_gndrtn.py`), with which every branch that has a printed rating is inside it at every vertex on the composed
+netlists. No independent check has read round 8 and nothing is applied. Every figure is in `l8r2_gndret.out`.
 
 Figures carry a class: **MAKER** (printed in a held sheet), **INFERRED** (derived from printed figures under a stated assumption),
 **ASSUMPTION** (no held document gives it), **BOUND** (a limit this record states and holds the design to). Every figure is in
@@ -754,20 +758,33 @@ lines naming 2 oz are board P's and E5's.
   the copper. It does not lower a rating to the copper as drawn, because that would turn a stage of BAT-002 and PWR-003 red on a board
   l9stk has not yet re-cut. That choice belongs to the energy chain's writer and l9stk's author (F3-06, F3-07).
 
-## 3g. Item 7 (round 7, task T5b): board B's ground return, its load basis and its capacity (the owner's review of 4 October 2026, RSM-01)
+## 3g. Item 7 (rounds 7 and 8): board B's ground return, its load basis, its capacity, and the dedicated return between boards A and B (the owner's review of 4 October 2026, RSM-01; the recheck V3)
 
-Round 7, 4 October 2026 evening, branch `fnd/l8r4` from set 29's candidate `aa76c894`. Every figure is in `l8r2_gndret.out`
-(`l8r2_gndret.py` prints it; sections in brackets), with its label: PRINTED (a maker's limit in a held sheet), DECLARED (a
-generator's or a record's declaration), MODEL (this record's arithmetic on labelled inputs), ASSUMPTION, BOUND (computed on the
-makers' printed extremes and never taken as the circuit's behaviour). Case rows, cited by id and revision from
+Round 7 (4 October 2026 evening, task T5b) and round 8 (the same night), branch `fnd/l8r4` from set 29's candidate `aa76c894`.
+Every figure is in `l8r2_gndret.out` (`l8r2_gndret.py` prints it; sections in brackets), with its label: PRINTED (a maker's limit
+in a held sheet), DECLARED (a generator's or a record's declaration), MODEL (this record's arithmetic on labelled inputs),
+INFERRED (from printed figures under a stated assumption), ASSUMPTION, BOUND. Case rows, cited by id and revision from
 `inputs/coordinator-cases-2026-10-04-rev3.md`: **C-DEV rev 1** for the device rail, **C-ALLTX rev 3** for the state; the slots'
-loads per state as record l9pwr prints them. Nothing is built, bought, powered or measured.
+loads per state as record l9pwr prints them. The figures are the merged ones: Layer 9's budget and its round 3 drafts are read
+from copies of `fnd/l9t5` at `841e6c7e` (record l9t5's finding L9T5-F05). Nothing is built, bought, powered or measured.
 
-**The owner's words.** "Reconcile the load and current-capacity basis; do not simply increase the declaration to make the
-generator pass."
+**Where this stands.** L8R2-F31 is **OPEN**. Round 7's return calculation was read by the collaborator's targeted recheck V3
+(`checks/astra-check-t5-recheck-cx41.md`, filed as received): **NOT CONFIRMED**. It had sampled six contact cases and called
+the largest a maximum; a permitted corner it left out puts 10.6375 A through `J_5V_IOC`'s ground pin on C-DEV rev 1 against the
+contact's printed 10 A. Round 8 corrects the calculation (every vertex enumerated), drafts the correction of the circuit (a
+dedicated ground return of three XT60 leads between the boards) and shows the recheck's closure criterion on it. **No
+independent check has read round 8**, nothing is applied, and this is the first correction after the first negative check of
+this path: it is not presented as closed.
 
-**The defect as found (L8R2-F30).** `gen_sch_b.py` declares its return with typed figures: 10.0 A typical, 21.0 A peak, four
-leads, a note of "19.4 A with all four at their declared peak". 21.0 A was the sum of the four leads' peaks on 13 September
+**The owner's words.** Round 7: "Reconcile the load and current-capacity basis; do not simply increase the declaration to make
+the generator pass." Round 8: "verify the dedicated return across the permitted aged-contact combinations"; "Compare every
+calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the
+required contact combinations and fault cases. Scratch figures are provisional."
+
+### The declaration (round 7, L8R2-F30)
+
+**The defect as found.** `gen_sch_b.py` declares its return with typed figures: 10.0 A typical, 21.0 A peak, four leads, a note
+of "19.4 A with all four at their declared peak". 21.0 A was the sum of the four leads' peaks on 13 September
 (5.0 + 5.0 + 5.0 + 6.0). Slot 2's lead went to 5.63 A on 28 September (S-98) and the line did not move. This record's
 `apply_gen_sch_b_fans12.py` then put each cooler's step-up on its slot rail, and the generator stops.
 
@@ -780,219 +797,259 @@ recorded before intent judges it:
 | as committed, and with gnd002 | 19.743 A | 21.42 A | runs to its end |
 | + fans12 | 21.513 A | 21.42 A | STOPS: "rail GND declares a 21.00 A peak and its loads sum to 21.51 A" |
 | + panel5v, + ph4, + rt500 | 21.513 A | 21.42 A | stops, the same line |
-| + Layer 9's I-03 draft (the copy of `fnd/l9t5` at `f70d3085`) | 21.513 A | 21.42 A | stops, the same line |
+| + Layer 9's I-03 draft (the copy at `841e6c7e`) | 21.513 A | 21.42 A | stops, the same line |
 
-fans12 alone moves the sum, by +1.770 A: on each slot the fan header's 0.100 A leaves and the step-up's 0.690 A enters (U701,
-U731, U761). Layer 9's draft moves it by 0.000 A (the three LDOs' 0.12 A leave the device rail's list and return as its own).
-Rounds 1 to 6 of this record never saw the stop: their composition proof read generator text and did not run the generator.
+fans12 alone moves the sum, by +1.770 A (on each slot the fan header's 0.100 A leaves and the step-up's 0.690 A enters);
+Layer 9's draft moves it by 0.000 A. Rounds 1 to 6 never saw the stop: their composition proof read generator text and did not
+run the generator.
 
-**The load basis [2].**
-
-- What `_GND_LOADS` sums: the union of the arriving 5 V rails' own allocations, each at the part its branch returns at. The
-  leads' allocations sum to 21.513 A and the return's list to 21.513 A: the same amperes.
-- Named twice, each judged: `J_PANEL` and `J_QMX` are also loads of a series segment of the device rail (the same current
-  further along its path, listed once in the return); `U3` and `U4` are also loads of +3V3_DEV (0.01 A each, inside U25's 5 V
-  input) while the return's entries there are +5V_HDMI's 0.20 A split in two. No ampere is in the list twice. The cooler branch
-  (the example the task names) is counted once: the step-up's 5 V input 0.69 A at U701, and not the fan's 12 V current.
-- Missing: the PoE port's return. +54V_POE (0.60 A peak) arrives on `J_54V`, whose pin 2 is on GND on both boards; its current
-  comes back through POE_DRAIN, Q1 and POE_SEN and enters GND at the sense resistor R12. The list had no entry and the
-  declaration did not name `J_54V`.
-- Returns elsewhere: none found.
-
-The three figures the declaration could hold:
+**The load basis [2].** `_GND_LOADS` is the union of the arriving 5 V rails' own allocations; no ampere is in it twice (the
+cooler branch is counted once, as the step-up's 5 V input) and none returns elsewhere. One return was missing: the PoE port's
+0.60 A, which enters GND at the sense resistor R12 and leaves on `J_54V` pin 2. The three figures the declaration could hold:
 
 | | figure | value | label |
 |---|---|---|---|
-| (i) | the sum of the leads' declared peaks | 26.40 A composed (27.78 A with Layer 9's draft; 22.23 A on the committed generator), with the PoE lead's 0.60 A | DECLARED, an **UPPER BOUND** (every lead at its own peak at once) |
-| (ii) | the largest state of Layer 9's budget | PS-ALLTX: 16.785 A at PLAN, 22.093 A at HIGH, 22.988 A at HIGH at the least load voltage; 24.087 A with one cooler's bounded start, 26.283 A with every start at once. On Layer 9's own rounds 4 and 5 (the standby card off) PS-BUSY is the largest: 22.832 A | MODEL (record l9pwr 5b) |
-| (iii) | what board A's stages can deliver | each LM5176 5.1 V stage's loop limits between 7.0957 and 9.5960 A: 38.38 A for the four leads (43.53 A with U601); one stage in its limit beside the largest state 25.112 A | PRINTED VSNS over the DECLARED shunt: a fault bound |
+| (i) | the sum of the leads' declared peaks | 26.40 A composed; **27.9108 A** with Layer 9's round 3 draft (3 x 6.6 + 6.0359 + 1.4749 + 0.6); 22.23 A on the committed generator | DECLARED, an **UPPER BOUND** (every lead at its own peak at once) |
+| (ii) | the largest state of Layer 9's budget | PS-BUSY: 14.465 A at PLAN, 21.944 A at HIGH, 22.832 A at HIGH at the least load voltage; with Layer 9's draft 22.8711 A, 26.166 A with every cooler start at once. C-DEV rev 1 (PS-ALLTX, HIGH, the least load voltage) with the draft: 20.9888 A | MODEL (record l9pwr 5b, record l9t5) |
+| (iii) | what board A's stages can deliver | each LM5176 5.1 V stage's loop limits between 7.0957 and 9.5960 A: 38.38 A for the four leads, 43.53 A with U601, 44.13 A with the PoE lead | PRINTED VSNS over the DECLARED shunt: a fault bound |
 
-**Which one the declaration holds, and why.** The peak holds (i), named an upper bound in its note; the typical holds the sum
-of the leads' typicals (13.30 A); the loads stay the union of the leads' allocations with the PoE return added (22.113 A).
-(i) is the only figure that is true by construction: the return cannot carry more than its leads are declared to carry, and
-those declarations are Layer 5's contract at both ends of each lead. (ii) is inside it with Layer 9's draft composed, like for
-like on the 5 V leads: 26.283 A against 27.18 A. Without that draft it is over by 0.483 A (26.283 A against 25.80 A), because
-the device lead declares 6.0 A where C-DEV rev 1 has 7.4717 A: that is I-03 itself (OPEN, Layer 9's), and the return follows
-what that lead declares and does not paper over it. (iii) is a fault current of four independent limits at once, which
-`intent.py`'s own rule puts in a note and not in the peak. The peak is not a claim that 27.78 A flows: the copper rules solve
-the return's mesh at the declared loads, and the peak is what a barrel is judged at.
+The peak holds (i), named an upper bound in its note; the typical holds the sum of the leads' typicals (13.30 A); the loads
+stay the union with the PoE return added (22.113 A). (i) is the only figure true by construction, and typed it went stale
+twice. (ii) is inside it with Layer 9's draft, like for like on the 5 V leads (26.166 A against 27.3108 A); without that draft
+it is over by 0.327 A, which is I-03 itself (Layer 9's). (iii) is a fault current, which `intent.py`'s own rule puts in a note.
 
-**The capacity basis [3].**
+**The drafts of round 7 [5].** `apply_gen_sch_b_gndret.py`: the head of the GND rail call becomes a helper `_gnd_return`
+that sums the typical and peak currents of every rail arriving on one of the return's lead connectors, adds `J_54V` and the
+PoE return at R12, and stops the generator if a lead connector carries no arriving rail or two.
+`apply_gen_sch_b_fandec.py` (**L8R2-F32**, the second stop found behind the first): fans12 declares its two TPS61089
+capacitors' class at the call, and board B's decision 42 block reads classes from its own table `_dec_rule`; one row hands the
+entry's own class to the block. fans12 is left byte for byte (record l7pwr pins its sha256 and record l4e9 holds its bytes).
+The declaration was not raised to make the generator pass: the same draft on the committed generator gives 22.23 A, and a lead
+declared lower lowers it.
 
-- The conductors, read on both committed netlists [3a]: the two boards' grounds are one net joined by **five lead contacts**
-  (`J_5V_S1`, `J_5V_S2`, `J_5V_S3`, `J_5V_DEV`, `J_54V`, pin 2 each; six with Layer 9's `J_5V_IOC`) and **seventeen ribbon
-  conductors** (`J_AB1` pins 3 to 8 and 22 to 24, `J_AB2` pins 3 to 10), in parallel. Nothing makes a lead's pin 2 carry its
-  own rail's current: the return divides by resistance.
-- The makers' printed figures [3b]. JST VH: 10 A a contact with AWG 16 on the standard header; 7 A with AWG 18 on the shrouded
-  header only, so `J_54V`'s AWG 18 lead on the fitted standard header has no stated rating; range to +105 C including the
-  rise, with no rise at the rated current and no derating curve; contact resistance 10 mOhm maximum initial and 20 mOhm after
-  test, **no minimum**; and the note "Do not branch in parallel current which exceeds the rated current. ... design the
-  circuits without causing any imbalance and provide extra margin for each circuit." Wurth ribbon and IDC socket: 1 A a
-  conductor at 25 C ambient, "the current rating may decrease due to the derating effect at higher temperatures" with no curve;
-  237 Ohm/km maximum; 20 mOhm a contact maximum.
-- The inside air [3b]: 76.25 C in E5's dwell (L4-E12, MODELED). A VH contact may add 28.75 K before its range's top; if the
-  rise at 10 A is 30 K (ASSUMPTION, `T_RATED_RISE`) it carries 9.789 A there. The rows are judged at the printed 10 A.
-- The conductors [3c]: an AWG 16 lead of 150 mm is 2.064 mOhm at 20 C (2.520 at 76.25 C); the AWG 18 lead 3.108 (3.796); a
-  ribbon conductor of 80 mm 18.960 (23.151), its maker's maximum. A lead's two contacts may add 20 to 40 mOhm, four to sixteen
-  times the lead: the division is set by the contacts, which the maker bounds from above only.
+### The return path as drawn (L8R2-F31), the worst case found
 
-The division [3d], MODEL at 76.25 C, A per conductor:
+**The conductors [3a].** Both committed netlists: the two boards' grounds are one net joined by **five lead contacts**
+(`J_5V_S1`, `J_5V_S2`, `J_5V_S3`, `J_5V_DEV`, `J_54V`, pin 2 each; six with Layer 9's `J_5V_IOC`) and **seventeen ribbon
+conductors** (`J_AB1` pins 3 to 8 and 22 to 24, `J_AB2` pins 3 to 10), in parallel. Nothing makes a lead's pin 2 carry its own
+rail's current: the return divides by resistance.
 
-| total | contacts | a 5 V lead's contact | `J_54V` | a ribbon conductor | in the ribbons |
+**The makers' printed figures [3b].**
+
+| part | PRINTED | not printed |
+|---|---|---|
+| JST VH (catalogue, revision not printed) | 10 A "when using AWG #16 with the standard type header"; 7 A with AWG 18 on the shrouded header only; range to +105 C including the rise; contact resistance 10 mOhm maximum initial, 20 mOhm after test; "Do not branch in parallel current which exceeds the rated current ... design the circuits without causing any imbalance and provide extra margin for each circuit" | a minimum contact resistance; the ambient of the rating; a derating curve; a rating for AWG 18 on the fitted standard header |
+| Wurth WR-CAB ribbon, WR-BHD IDC socket | 1 A a conductor at 25 C ambient, "the current rating may decrease due to the derating effect at higher temperatures", operating to +105 C, "the operating temperature is comprised of ambient temperature and temperature rise"; 237 Ohm/km maximum; socket 1 A, 20 mOhm maximum | a minimum; a derating curve |
+| Amass XT60 (XT60-F and XT60-M; the pack connector's make). V1.2, held: 30 A, 60 A momentary, 0.55 mOhm, 12 AWG, 1000 uses, -20 to 120 C. 2021V1, filed this round (`v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf`): 35 A MAX with 12 AWG at a rise under 85 C, contact resistance at most 1.0 mOhm, 100 times, the same range | as stated | a contact resistance after test; a minimum; a derating curve |
+
+The rows take the lower XT60 current (30 A), the higher contact resistance (1.0 mOhm, a printed limit taken as the contact's
+maximum over its printed life: INFERRED) and the shorter life. Where no derating curve is printed, each row carries beside
+the PRINTED rating the **least rating consistent with the sheet at the inside air** (INFERRED: the part may add the range's
+top less the air; heating as the current squared, ASSUMPTION): the ribbon at least 0.5995 A at 76.25 C; the XT60 at least
+25.11 A; the VH at least 5.995 A if its rating is taken at 25 C (ASSUMPTION; 9.789 A on round 7's 30 K rise).
+
+**The copper's temperature, both ends [3b].** 76.25 C, the inside air in E5's dwell (L4-E12, MODELED), and -20 C, the
+envelope's cold end in use. A conductor's largest share falls as the copper warms and the ground shift rises, so each
+maximum is at one end and both are enumerated.
+
+**The calculation, corrected [3d, 3e] (L8R2-F38).** For this network of parallel contacts and conductors the extreme of any
+one conductor's current lies at a vertex of the box of contact resistances (each contact at 0, no minimum being printed, or
+at its after-test or printed maximum). `enumerate_vertices()` visits every vertex for every conductor (4^23 raw vertices as
+drawn, 10773 distinct states once interchangeable conductors are counted together) and `extremes()` refuses unless the
+largest lands on the vertex the monotone argument names: the conductor's own two contacts low, every other contact high.
+
+| total | copper | a 5 V lead's pin 2 (printed 10 A) | `J_54V`'s pin 2 (no printed rating) | a ribbon conductor (printed 1 A) | ground shift |
 |---|---|---|---|---|---|
-| 22.988 A, Layer 9's largest state | K0, all at 0 | 3.529 | 2.343 | 0.384 | 6.530 |
-| | K1, all at the initial maxima (VH 10, IDC 20 mOhm) | 2.088 | 1.976 | 0.745 | 12.659 |
-| | K2, VH at the after-test 20 mOhm | 1.400 | 1.359 | 0.943 | 16.028 |
-| | K3, one lead's contacts at 0, the rest at the initial maxima (BOUND) | **10.843** | 1.148 | 0.433 | 7.356 |
-| | K5, IDC at 0, VH at the after-test maximum (BOUND) | 0.635 | 0.617 | **1.167** | 19.831 |
-| 27.78 A, the upper bound with Layer 9's draft | K1 | 2.313 | 2.189 | 0.825 | 14.024 |
-| | K2 | 1.595 | 1.549 | **1.074** | 18.257 |
-| | K3 (BOUND) | **12.446** | 1.318 | 0.497 | 8.444 |
-| | K5 (BOUND) | 0.747 | 0.725 | **1.372** | 23.320 |
+| 20.9888 A, C-DEV rev 1 | 76.25 C | **10.6376 A** | 8.5041 A | **2.0747 A** | 51.24 mV |
+| | -20 C | **12.0918 A** | 9.9501 A | **2.6716 A** | 46.96 mV |
+| 22.8711 A, the largest state | 76.25 C | **11.5916 A** | 9.2668 A | **2.2607 A** | 55.84 mV |
+| | -20 C | **13.1762 A** | 10.8424 A | **2.9112 A** | 51.17 mV |
+| 27.9108 A, the declared upper bound | 76.25 C | **14.1458 A** | 11.3087 A | **2.7589 A** | 68.14 mV |
+| | -20 C | **16.0796 A** | 13.2316 A | **3.5526 A** | 62.45 mV |
 
-Read: with new contacts at one value (K0, K1) no conductor passes its printed rating at any total. With the VH contacts aged to
-JST's own after-test limit a ribbon conductor carries 0.943 A at the largest state and 1.074 to 1.083 A at the upper bound,
-over its printed 1 A at 25 C. The ribbons carry 24.6 to 69.7 % of the whole return, which their contracts never counted, in
-air where their maker states a derating and prints no curve. At 20 C the ribbon rows are higher (1.101 A at K2 at the upper
-bound, 1.411 A at the extremes).
+The recheck's corner is reproduced: 10.6376 A (V3: 10.6375 A) on C-DEV rev 1 and 14.1458 A (V3: 14.1458 A) at the upper bound.
+**As drawn the return does not hold, on C-DEV rev 1 already.** Round 7's six sampled cases read 9.4036 A for a lead and 1.0364 A
+for a ribbon conductor there: they had no vertex with one lead low against peers at the after-test maximum, and none with one
+ribbon conductor low against every other contact high. Round 7's division table, its thresholds and its comparison of
+corrections are **WITHDRAWN**, and with them Layer 9's acceptance of `J_5V_IOC`'s pin 2 on those rows.
 
-What would have to be true of the contacts [3e]: at the largest state a ribbon conductor stays at or under 1 A only while
-every VH contact is at or under 6.78 mOhm, and a lead with perfect contacts stays at or under 10 A only while the others are at
-or under 4.71 mOhm (4.16 and 3.24 mOhm at the upper bound). JST's limit is 10 mOhm: a harness inside its maker's limits can put
-more than its printed rating through a ribbon conductor or a lead contact.
+### The correction drafted (round 8)
 
-The supply pins [3f] carry their own rail and nothing else: 5.434 A (6.532 A at the bounded start) on slots 1 and 3, 4.648 A
-on slot 2, and on `J_5V_DEV` 7.4717 A on C-DEV rev 1 as committed (over the lead's declared 6.0 A: I-03, OPEN, Layer 9's) and
-6.0359 A with Layer 9's draft, against the printed 10 A. The ground copper where the returns enter [3g], by decision 35's
-function (`track_current.width_for_current`, 10 K, inner 0.5 oz): 11.10 mm of plane for the balanced 4.052 A, 27.10 mm for a
-lead's declared 6.6 A, 57.98 mm for the contact's 10 A, shared by board B's three ground planes or board A's two. A land
-joined solidly to every plane has that within a few millimetres of the pin; four 0.5 mm thermal-relief spokes a plane give 6.0
-mm (B) and 4.0 mm (A), under the least row. Board A's end [3h]: its generator declares GND as a node, and this record's round 3
-draft declares the pack's return only; nothing lets a rule solve the 5 V returns' loop there. Layer 5 [3i]: IF-AB-POWER
-declares each rail lead by lead and has no row for the return's division; IF-AB-RIBBON and IF-AB-WALL declare their ground
-pins as signal returns at 1 A a contact.
+**The approaches compared [3j]** (every row a maximum over every vertex, both copper ends, the three totals; `J_54V`'s lead at
+AWG 16 in each, so that its pin 2 has a printed rating):
 
-**The judgment [4].**
+| | approach | a VH pin 2 | a ribbon conductor | an XT60 contact | every row on the printed ratings / on the least ratings | |
+|---|---|---|---|---|---|---|
+| D1 | a dedicated ground return of n conductors, two a lead (an Amass XT60 pair with both contacts on GND, two 12 AWG conductors of 150 mm): 2 (one lead) | 9.163 A | 1.403 A | 18.110 A | no / no | |
+| | 4 (two leads) | 6.408 A | 0.874 A | 13.711 A | yes / no | the least that hold the printed ratings |
+| | **6 (three leads)** | 4.927 A | 0.635 A | 11.031 A | yes / yes | **SELECTED** |
+| | 8 (four leads) | 4.002 A | 0.499 A | 9.228 A | yes / yes | |
+| D2 | one return lead and 1 Ohm in series with each ribbon ground conductor | 10.963 A | 0.033 A | 20.640 A | no / no | REJECTED |
+| D3 | one return lead as the only return (the VH leads' pin 2 off the ground, the ribbons ballasted) | none | 0.039 A | 22.190 A | yes / yes | REJECTED: every rail's return leaves its supply lead, and one open lead puts the whole return on the ribbons |
 
-1. **The declaration is wrong, and is corrected by a draft.** Typical 13.30 A and peak 26.40 A (27.78 A with Layer 9's draft),
-   derived in the generator from the leads' own declarations, the peak an UPPER BOUND; `J_54V` named.
-2. **The load list is right in what it counts and missed one return.** The PoE port's 0.60 A at R12 is added. The device
-   rail's allocations (5.49 A) and declared 6.0 A peak under C-DEV rev 1's 7.4717 A are I-03, Layer 9's, not this round's.
-3. **The return path does not hold on the makers' printed figures: L8R2-F31, OPEN, a circuit defect of the A to B interface.**
-   It is branched in parallel over contacts whose maker asks for a design "without causing any imbalance" with "extra margin
-   for each circuit", and over two signal ribbons. New equal contacts: every conductor inside its printed rating at every
-   total. VH contacts aged to JST's after-test limit, still equal: a ribbon conductor carries 0.959 A at Layer 9's largest
-   state, inside its printed 1 A at 25 C by 4.1 % in air where its maker states a derating and prints no curve, and 1.101 A
-   at the upper bound, over it. Unequal contacts inside the makers' limits (BOUNDS): at the largest state already 1.195 A in
-   a ribbon conductor and 11.7 A in a lead contact (1.41 A and 13.5 A at the upper bound). It holds only while the VH contacts stay under 2.8 to 6.8 mOhm, better
-   than their maker's 10 mOhm limit. These are the model's answers on printed maxima: no harness exists and no contact has
-   been measured, so they are not a measured overload, and a balanced reading is not evidence either.
+Three leads are the least that hold every row both on the printed ratings and, at the inside air, on the least rating
+consistent with each sheet; two hold the printed ratings only. More VH contacts (round 7's A0) are not revisited: the lead
+contacts' 20 mOhm after-test limit is what makes them unable to carry the return.
 
-The declaration was not raised to make the generator pass: the same draft on the committed generator gives 22.23 A, a lead
-declared lower lowers it, and the capacity finding stays OPEN beside it.
+**What is drawn [5].** `apply_gen_sch_b_gndrtn.py` and `apply_gen_sch_a_gndrtn.py`: on each board three sockets `J_GR1` to
+`J_GR3`, Amass **XT60-F**, pins 1 and 2 both on GND. Female on the boards and male on the leads: the pack lead carries an
+XT60-F for board E's `J_BATT` (XT60-M), so it cannot enter a return socket, and a return lead cannot enter `J_BATT`. On board B
+the helper `_gnd_return` names the three sockets beside the leads as the places the return leaves the board (the peak, the
+typical and the loads are unchanged); the draft requires `gndret` first and refuses otherwise. On board A the sockets sit in
+their own schematic block; board A's GND declaration is not changed (L8R2-F33). The land is KiCad's
+`Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical`, NOT READ on this host; no LCSC code is carried (L8R2-F40).
 
-**The correction drafted [5]** (release-guarded, not applied):
+**Composition, netlists, mutations [5].** Board B in four orders with Layer 9's draft and Layer 6's three: one generator byte
+for byte, 1479 parts, none unplaced, GND 13.30 A typical and 27.9108 A peak. Board A in L4-E9's order (the power drafts,
+record l8gnd's two, this record's five of rounds 1 to 6, record l8p's ptc, L4-E11's dd7, Layer 9's draft, mainpb last, Layer
+6's table) with the return draft last or first: 792 parts, none unplaced, one netlist. `check_gndret_netlist.py` reads the
+declaration DRAWN on board B and the dedicated return DRAWN on both boards (NOT DRAWN and NOT DRAWN on the committed boards);
+the same netlists read DRAWN under `check_l8r2_netlist.py` (boards A and B) and record l8gnd's `check_gnd002_netlist.py`.
+Thirteen mutations each stop the generator or fail a check: round 7's eight, and **the return removed** (the dedicated return
+NOT DRAWN, and the acceptance on that census fails: 16.080 A and 3.553 A), **the return landed on the wrong net** (`J_GR2`'s
+pin 1 on +5V_DEV: FAIL), **one termination dropped** (`J_GR3` absent on board B: FAIL; a pin of `J_GR1` absent on board A:
+FAIL), and a socket the declaration does not name (FAIL). The netlists are the generators' own part tables, no KiCad: the
+box's export is the reading of record.
 
-| draft | what it writes |
-|---|---|
-| `apply_gen_sch_b_gndret.py` | the head of the GND rail call becomes a helper `_gnd_return` that sums the typical and peak currents of every rail arriving on one of the return's lead connectors, adds `J_54V` and the PoE return at R12, and stops the generator if a lead connector carries no arriving rail or two; the note names the peak an upper bound. The list of leads and `loads=_GND_LOADS` stay byte for byte, so Layer 9's draft applies before or after |
-| `apply_gen_sch_b_fandec.py` | **L8R2-F32**, the second stop found behind the first: fans12 declares its two TPS61089 capacitors' class at the call, and board B's decision 42 block reads classes from its own table `_dec_rule` and stops on a part the table does not name ("C704 -> U701.9 ... carries no class"). One row in `_dec_rule` hands the entry's own class, clause and value floor to the block. fans12 is left byte for byte (record l7pwr pins its sha256 and record l4e9 holds its bytes) |
+### The acceptance (the recheck's closure criterion) [6]
 
-Composition: four orders (the round's order with Layer 9's draft and Layer 6's three; Layer 9's draft before this round's
-two; this round's two first; the round reversed) give one generator byte for byte, and each runs to its end: 1476 parts, GND
-13.30 A typical, 27.78 A peak, loads 22.113 A. Without Layer 9's draft: 1473 parts, 26.40 A. The netlist and intent check
-`check_gndret_netlist.py` reads NOT DRAWN on the committed board and DRAWN on both compositions. The same composed
-netlist is the first regenerated one this record's earlier corrections are read on: `check_l8r2_netlist.py` (board B: FANS,
-PNL, PH4) reads DRAWN on it, and record l8gnd's `check_gnd002_netlist.py` reads DRAWN (they had read fixtures until now). Eight mutations each stop the
-generator or fail the check: the old state (stops on the 21.00 A line); gndret without fandec (stops on C704); **the typed
-21.0 simply written as 30.0 (runs, and the check FAILS: the peak is not the leads' sum, `J_54V` is not named)**; `J_54V`
-dropped from the helper (FAIL); a lead's rail declared on another connector (stops); a slot allocation raised over its lead's
-peak (stops on +5V_S1, so the derived return hides no overloaded lead); `J_5V_S2` reversed on the netlist (FAIL); R12 off GND
-(FAIL). The regenerated netlists are the generator's own part tables, no KiCad: the box export is the reading of record.
+The census is read on the composed netlists of both boards, not assumed: six lead contacts, seventeen ribbon conductors, three
+return sockets whole on both boards, six return conductors. Every row below is a branch at its worst vertex (its own two
+contacts at 0, every other contact at its maximum: VH 20 mOhm after test, IDC 20 mOhm, XT60 1.0 mOhm), found by enumeration.
 
-**The correction not drafted: L8R2-F31 [3j].** On the upper bound with Layer 9's draft, every contact case, the worse of 20 C
-and 76.25 C:
+| branch | rating and its condition | total | at 76.25 C | at -20 C | least at 76.25 C | verdict |
+|---|---|---|---|---|---|---|
+| each 5 V lead's pin 2 (`J_5V_S1`, `S2`, `S3`, `DEV`, `IOC`) | PRINTED 10 A, JST VH with AWG 16 on the standard header (the fitted B2P-VH, the leads' gauge); no ambient and no derating printed | C-DEV rev 1 | 2.9578 A | 3.7056 A | 5.9948 A | HOLDS |
+| | | the upper bound | 3.9333 A | 4.9277 A | | HOLDS |
+| each ribbon conductor (`J_AB1` x9, `J_AB2` x8) | PRINTED 1 A a conductor at 25 C ambient; a derating stated, no curve | C-DEV rev 1 | 0.3671 A | 0.4776 A | 0.5995 A | HOLDS |
+| | | the upper bound | 0.4882 A | 0.6352 A | | HOLDS |
+| each XT60 contact of the return and its 12 AWG conductor (`J_GR1` to `J_GR3`, two each) | PRINTED 30 A (V1.2, no condition) and 35 A MAX with 12 AWG at a rise under 85 C (2021V1); range -20 to 120 C; no derating curve; no wire sheet held | C-DEV rev 1 | 6.9915 A | 8.2964 A | 25.1101 A | HOLDS |
+| | | the upper bound | 9.2972 A | **11.0326 A** | | HOLDS |
+| the PoE lead's pin 2 (`J_54V`) | **NO RATING PRINTED** for AWG 18 on the standard header (7 A for the shrouded header, a comparator) | C-DEV rev 1 | 2.0611 A | 2.6152 A | none | not covered |
+| | | the upper bound | 2.7408 A | 3.4777 A | | not covered |
 
-| | approach | what the model gives | |
-|---|---|---|---|
-| A0 | more VH return contacts | the rows hold from 14 contacts at the initial maxima and from 24 with the after-test maxima, against six drawn | REJECTED: not a small correction |
-| A1 | a dedicated ground return between the two boards' grounds (a strap on bolted lands, or the bay spacers bonded to both grounds), R_s end to end with its joints | every row inside the printed ratings while R_s is at or under 2.34 mOhm; with a ribbon conductor held to 0.5 A (`RIB_DERATE`, ASSUMPTION for the unprinted derating) at or under 0.53 mOhm; it then carries up to 22.8 A | **SELECTED as the direction**, not drafted |
-| A2 | 1 Ohm in series with each ribbon ground conductor | a ribbon conductor at most 0.173 A; the leads carry the whole return, 4.875 A a contact when equal and 18.562 A on K3 (BOUND) | the lead contacts stay unbounded; every ribbon signal's return gains the impedance |
-| A3 | no circuit change, a harness acceptance | every VH contact at or under 4.16 mOhm (ribbons) and 3.24 mOhm (leads), four-wire, at assembly and as the contacts age | an assigned test is not a corrected circuit |
+The largest state of Layer 9's budget (22.8711 A) sits between the two totals in every row. The ground shift is at most
+11.43 mV (68.14 mV as drawn) against the 0.9418 V the LDOs' input allows (the smaller of record l9t5's 0.960 V and the
+recheck's 0.9418 V). `J_54V`'s pin 2 is covered only with its lead at AWG 16 (6e: it is then one more VH contact of the 5 V
+leads' make, at most 4.9269 A against the printed 10 A, and no row is left without a printed rating); that is a harness row
+for Layer 7, part of this correction.
 
-A1 is not drafted in this round: it adds a land and a part on boards A and B, a strap or spacer row (Layer 7), a contract row
-(Layer 5), and must be read against GND-002's single chassis bond (record l8gnd: joining the two boards' grounds is no second
-bond; touching the plate would be). L8R2-F31 stays OPEN until a draft composes, is read on both netlists and holds these rows,
-or the harness is measured against 3e.
+**What the rows rest on that no maker prints [6d].**
 
-**The session's decisions in this round** (authority: SESSION under the owner's standing rule of 26 September 2026; each
-reversible):
+- The XT60's contact resistance after ageing. Amass prints one limit, 1.0 mOhm, with a 100-cycle life and no separate
+  after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under 2.06 mOhm, and on
+  the least ratings at or under 1.43 mOhm. A four-wire reading of the return leads at assembly and in service would show it.
+- The contacts' minimum resistance: none is printed, so every row takes the branch's own contacts at 0.
+- The derating at the inside air: none is printed; the least ratings are INFERRED, and the VH's rests on a 25 C ASSUMPTION.
+- The wires' own resistance: MODEL figures from nominal sections and lengths (no wire part is named), and the ribbon's is its
+  maker's maximum. With each branch's own wire at 0.82 of its figure (ASSUMPTION) the maxima are 5.7851 A, 0.7708 A and
+  12.3801 A, and every row still holds.
+- The lengths: the return leads at 150 mm and `J_AB2`'s ribbon at 80 mm are ASSUMPTIONS until Layer 7 routes them.
+
+**The fault cases [6g]** (maxima over every vertex at both copper ends; the figures are those at the declared upper bound, 27.9108 A, unless a total is named; the verdict covers C-DEV rev 1 and the upper bound):
+
+| case | a VH pin 2 | `J_54V` | a ribbon conductor | an XT60 contact | inside the printed / the least ratings | what protects or reveals it |
+|---|---|---|---|---|---|---|
+| F-1 one return lead absent or open (four conductors left) | 6.4094 A | 4.6107 A | 0.8746 A | 13.7130 A | yes / no at the upper bound (yes on C-DEV rev 1) | nothing interrupts, nothing signals: **LATENT** |
+| F-2 one XT60 contact of one lead open (five left) | 5.5717 A | 3.9649 A | 0.7359 A | 12.2276 A | yes / yes | LATENT |
+| F-3 one 5 V lead's pin 2 open | 4.9642 A | 3.5052 A | 0.6408 A | 11.1016 A | yes / yes | the rail works: LATENT |
+| F-4a one 5.1 V stage in its current limit beside the largest state (25.1511 A) | 4.4404 A | 3.1339 A | 0.5724 A | 9.9417 A | yes / yes | the stage's own loop bounds it; its INA226 shows it; firmware's action is Layer 5's rule, not re-read |
+| F-4b every source at its bound at once (44.1338 A) | 7.7919 A | 5.4992 A | **1.0044 A** | 17.4452 A | **no** / no | a four-fault bound: a ribbon conductor 0.44 % over its printed 1 A at -20 C; a fourth lead would read 0.7885 A; not drafted |
+| F-5 every return lead absent (the board as drawn today) | 16.0796 A | 13.2316 A | 3.5526 A | none | **no** / no | LATENT; the state the correction removes |
+
+Tolerated inside every printed rating: F-1, F-2, F-3, F-4a. Not tolerated: F-4b, F-5. Latent: F-1, F-2, F-3, F-5. The design
+makes F-1 to F-3 harmless inside the printed ratings; it does not make them visible (L8R2-F39).
+
+**The supply pins [3f]** carry their own rail and nothing else, against the printed 10 A: 5.4340 A on slots 1 and 3, 4.6480 A
+on slot 2, 6.0359 A on `J_5V_DEV` with Layer 9's draft, 1.4749 A on `J_5V_IOC`. On the severest reading of JST's sheet (the
+rating at 25 C, ASSUMPTION: at least 5.9948 A at 76.25 C) `J_5V_DEV`'s pin 1 is 0.0411 A over; it is inside the printed
+rating (L8R2-F43, for Layer 9 and Layer 5).
+
+**The ground copper where the return enters [6f]** (decision 35's function, 10 K, inner 0.5 oz; a layout constraint,
+L8R2-F33): 69.41 mm of plane for an XT60 contact's 11.033 A, 15.87 mm for a VH pin 2's 4.928 A, shared by board B's three
+ground planes or board A's two. Four 0.5 mm thermal-relief spokes a plane give 6.0 mm (B) and 4.0 mm (A): the return sockets'
+and the VH leads' pin 2 lands join their planes solidly, or with spokes of the row's width.
+
+**Credit, by the three criteria of the coordinator's brief**, for round 8's two drafts: (a) they compose in L4-E9's order on
+both boards and the generators run: yes; (b) the changed nets are read on the regenerated netlists with mutations that fail:
+yes; (c) electrical acceptance on the makers' printed figures: every branch with a printed rating is inside it at every
+vertex, on the conditions of 6d, with `J_54V`'s pin unrated until its lead is AWG 16. **NOT CLOSED: L8R2-F31 stays OPEN until an
+independent check has read the changed design.**
+
+**What the independent check should read:** (1) `enumerate_vertices()`, `analytic()` and `extremes()` against its own
+arithmetic for one corner; (2) `box()`: each contact's low and high end against the makers' sheets, the XT60's two
+specifications above all; (3) the census of 6a on the regenerated netlists; (4) each row of 6b against its rating and
+condition, and 6d's dependences; (5) the two return drafts and their land (NOT READ on this host); (6) the fault table 6g,
+and whether three latent faults without a detect line are acceptable.
+
+### Decisions, row texts, questions, findings
+
+**The session's decisions** (authority: SESSION under the owner's standing rule of 26 September 2026; each reversible):
 
 | id | decision | reason | to reverse |
 |---|---|---|---|
 | L8R2-D7-1 | the return's peak holds (i), the sum of the leads' declared peaks, derived in the generator | the only figure true by construction; typed, it went stale twice | declare a typed state figure and take the staleness back |
-| L8R2-D7-2 | the PoE return is a load at R12 and `J_54V` a source | its pin 2 is on GND on both boards and the port's current enters GND at R12 | drop the two lines of the helper (the check then FAILS, by design) |
-| L8R2-D7-3 | `_dec_rule` reads a TPS61089 entry's own class and clause | fans12 is pinned by two other records; the maker's words stay in one place | move the clauses into `_dec_rule` and drop the call's keywords in a new fans12 |
-| L8R2-D7-4 | A1 as the direction for L8R2-F31; A0 rejected | the one approach under which every row holds on printed maxima and the signal returns stay as they are | take A2 or A3 in L4-E9's register |
-| L8R2-D7-5 | `T_RATED_RISE` 30 K, `RIB_DERATE` 0.5, the `J_5V_IOC` lead as AWG 16 at 150 mm, `J_AB2`'s ribbon at 80 mm | no held document gives them; each is labelled ASSUMPTION and none passes a row | edit the constant and regenerate |
+| L8R2-D7-2 | the PoE return is a load at R12 and `J_54V` a source | its pin 2 is on GND on both boards | drop the helper's two lines (the check then FAILS, by design) |
+| L8R2-D7-3 | `_dec_rule` reads a TPS61089 entry's own class and clause | fans12 is pinned by other records | move the clauses into `_dec_rule` in a new fans12 |
+| L8R2-D8-1 | the worst case is found by enumerating every vertex of the contact-resistance box, at both ends of the copper's temperature (-20 C and 76.25 C) | the recheck's blocker; a maximum over the box lies at a vertex; the largest share is at the cold end, the largest shift at the hot | none: a sampled list is what failed |
+| L8R2-D8-2 | the dedicated return is XT60 leads, XT60-F on the boards | the pack connector's make, two Amass specifications held, a printed contact resistance limit in the right range; female sockets keep the pack lead out | another family whose maker prints an after-test resistance under about 1.4 mOhm a contact |
+| L8R2-D8-3 | three leads (`N_RETURN` 3 in both drafts) | the least that hold every row on the least ratings at the inside air; two hold the printed ratings only; one lead out stays inside the printed ratings | `N_RETURN` 2 and regenerate: section 6 then says what no longer holds |
+| L8R2-D8-4 | the XT60 box: 0 to 1.0 mOhm; rating 30 A; at the inside air at least 25.11 A | the higher printed resistance, the lower printed current, the 2021V1 rise criterion | edit `box()` and `rating()` |
+| L8R2-D8-5 | the least rating consistent with a sheet stands beside each printed rating where no derating is printed; `T_RATING_REF` 25 C for the VH | a printed rating at an unprinted ambient is not a rating at 76.25 C | edit `least_rating()` |
+| L8R2-D8-6 | `J_54V`'s lead at AWG 16 is part of the correction (a harness row, not a generator change) | its pin 2 has no printed rating at AWG 18 and stays in the return | keep AWG 18 and carry the row as not covered |
+| L8R2-D8-7 | one budget is read, the copy of Layer 9's at `841e6c7e` | the merged figures; the output no longer moves with the tree's own copy at a merge | read the tree's file again |
+| L8R2-D8-8 | the return leads at 150 mm, `J_AB2`'s ribbon at 80 mm, `WIRE_FLOOR` 0.82 | no held document gives them; each is labelled ASSUMPTION | edit the constant and regenerate |
 
-**Contract texts proposed for Layer 5** (its files are its own; these are row texts, not an apply script):
+Round 7's L8R2-D7-4 (a dedicated return as the direction, with its 0.53 mOhm figure) and L8R2-D7-5's ribbon share are
+superseded by L8R2-D8-2 to D8-5; their figures came from the sampled calculation and are WITHDRAWN.
 
-- IF-AB-POWER, a new field `return`: "the 5 V and PoE returns share one ground: five VH pin 2 contacts (six with J_5V_IOC) and
-  the seventeen ground conductors of J_AB1 and J_AB2 in parallel; the return divides by resistance, not lead by lead; on the
-  makers' printed contact maxima a ribbon conductor reads up to 1.41 A and a VH contact up to 13.5 A (record l8r2 round 7,
-  BOUNDS, the worse of 20 C and 76.25 C; finding L8R2-F31 OPEN)", and `tbd`: "the return's division (L8R2-F31); effect: the interface's return is not shown to
-  hold on printed figures".
-- IF-AB-POWER `currents`: the return, "13.30 A typical, 26.40 A peak (27.78 A with J_5V_IOC), the sums of the leads'
-  declarations, an upper bound (gen_sch_b.py `_gnd_return`, DRAFTED)".
-- IF-AB-RIBBON and IF-AB-WALL `current`: "the ground conductors also carry a share of board B's supply return, 0.33 to 0.86 A a
-  conductor with new equal contacts and over 1 A with aged VH contacts at the upper bound (record l8r2 round 7); 1 A a contact
-  at 25 C, derating not printed".
-- IF-AB-POWER `harness`: `J_54V`'s lead at AWG 16 gives it JST's printed 10 A row (it carries up to 2.69 A of the shared return
-  with equal contacts); the leads' wire part and insulation class named (L8R2-F34).
+**Row texts proposed for Layer 7** (ASSEMBLY.md section 4; its file is its own): "Ground return, 3 x | A22 `J_GR1..3` (XT60-F)
+| B16 `J_GR1..3` (XT60-F) | 2 x 12 AWG, 150 mm, both conductors ground | XT60-M both ends; marked as ground leads (never the
+pack lead)"; "PoE feed (54 V) ... 16 AWG, 150 mm" in place of 18 AWG; the wire part and insulation class of every A to B lead.
 
-**For Layer 9's author and the independent recheck [6].** Board B's composition in L4-E9's order with Layer 9's draft runs to
-its end once `fandec` and `gndret` are in the round (anywhere in it). On C-DEV rev 1 with Layer 9's draft composed (PS-ALLTX at
-HIGH at the least load voltage, total 22.9877 A, MODEL at 76.25 C):
+**Row texts proposed for Layer 5** (its files are its own): IF-AB-POWER gains `ends` J_GR1..3 on both boards (Amass XT60-F,
+both contacts GND), `harness` the three return leads, and a field `return`: "the 5 V and PoE returns share one ground: six VH
+pin 2 contacts, seventeen ribbon ground conductors and six conductors of the dedicated return in parallel, divided by
+resistance; maxima over every vertex of the contact resistances (record l8r2 round 8): a VH pin 2 4.93 A, a ribbon conductor
+0.64 A, an XT60 contact 11.03 A at the declared upper bound 27.9108 A; L8R2-F31 OPEN until an independent check"; `tbd`: "an
+absent or open return lead is latent (L8R2-F39)". IF-AB-RIBBON and IF-AB-WALL `current`: "the ground conductors carry a
+share of the supply return, at most 0.64 A a conductor with the dedicated return, 2.67 A without it on C-DEV rev 1".
 
-| connector | pin 1, its own rail (MODEL) | pin 2, K0 (MODEL) | pin 2, K1 (MODEL) | pin 2, K3 (BOUND, `J_5V_DEV`'s contacts at 0) |
-|---|---|---|---|---|
-| `J_5V_S1` | 5.4340 A | 3.059 A | 1.914 A | 1.153 A |
-| `J_5V_S2` | 4.6480 A | 3.059 A | 1.914 A | 1.153 A |
-| `J_5V_S3` | 5.4340 A | 3.059 A | 1.914 A | 1.153 A |
-| `J_5V_DEV` | 6.0359 A | 3.059 A | 1.914 A | 10.299 A |
-| `J_5V_IOC` | 1.4358 A | 3.059 A | 1.914 A | 1.153 A |
-| `J_54V` | 0 (the PoE stage is off in PS-ALLTX) | 2.031 A | 1.812 A | 1.091 A |
-| `J_AB1`, `J_AB2` | signals | 0.333 A x 17 | 0.683 A x 17 | 0.411 A x 17 |
+**Questions drafted for the makers (UNSENT; nothing was sent to anyone):**
 
-Pin 2 is the same total divided by resistance: `J_5V_IOC`'s pin 2 carries a lead's share whatever U601 supplies, and record
-l9t5's line "J_5V_DEV's return falls by the same current" holds for pin 1 and not for pin 2. The `J_5V_IOC` lead's gauge and
-length are ASSUMPTIONS here. On Layer 9's own rounds 4 and 5 slot 3 reads 3.396 A, the total 20.9497 A, and every row scales
-by 0.9113.
+- Q-JST-VH-1: for the VH series with SVH-41T-P1.1 contacts and AWG 16 on the B2P-VH header, the ambient temperature and the
+  temperature rise at which the 10 A rating is stated, a derating curve to +105 C, the typical and the minimum contact
+  resistance, and whether the 20 mOhm after-test figure is a limit over the product's life.
+- Q-AMASS-XT60-1: for XT60-F and XT60-M with 12 AWG, the contact resistance at the end of the stated mating life and after
+  the salt-spray item, the rise at 30 A and at 35 A, a derating curve to 120 C, and which of the two specifications (V1.2:
+  30 A, 0.55 mOhm, 1000 uses; 2021V1: 35 A MAX, at most 1.0 mOhm, 100 times) governs parts bought today.
+- Q-WE-CAB-1: for WR-CAB 63912615521CAB on WR-BHD sockets, the derating of the 1 A rating above 25 C, and the minimum
+  conductor resistance.
 
-**Credit, by the three criteria of the coordinator's brief**, for the two drafts: (a) they compose in L4-E9's order with the
-pending drafts and the generator runs: yes; (b) the changed declaration is read on the regenerated netlist and intent with
-mutations that fail: yes; (c) electrical acceptance on the makers' printed figures: the DECLARATION is supported as an upper
-bound; the RETURN PATH does not hold on the makers' printed figures and is NOT accepted (L8R2-F31 OPEN). A netlist check is not electrical
-acceptance of a circuit, and no independent check has read this round.
-
-**Findings of round 7.**
+**Findings of rounds 7 and 8.**
 
 | id | state | what | owner |
 |---|---|---|---|
 | L8R2-F30 | CORRECTED BY DRAFT, not applied, unchecked | the typed, stale GND declaration | the integrator (release with R-190) |
-| L8R2-F31 | **OPEN**, a known defect | the A to B return is branched in parallel over VH contacts and signal ribbons with nothing that sets its division; it does not hold on the makers' printed figures | boards A and B, Layers 5 and 7; A1 the direction |
-| L8R2-F32 | CORRECTED BY DRAFT, not applied, unchecked | fans12's TPS61089 capacitors had no class board B's block reads; rounds 1 to 6 never ran the generator | the integrator (with fans12) |
-| L8R2-F33 | OPEN, a layout constraint | no thermal relief on the VH leads' pin 2 on either board (or spokes of 3g's width); board A's intent cannot express the 5 V returns' loop | Layer 9 (layout constraints, record l9stk) |
-| L8R2-F34 | OWED | the leads' wire part and insulation class; `J_54V`'s AWG 18 lead has no stated rating and shares the return | Layer 7 |
-| L8R2-F35 | for record l9t5 | "J_5V_DEV's return falls by the same current" holds for pin 1 only; name `J_5V_IOC`'s gauge and length; the device lead's declared 6.0 A is under its own 6.0359 A at the least load voltage; add fandec and gndret to its board B order | Layer 9's author |
-| L8R2-F36 | for L4-E9 | two new board B rows in R-190's release; a register row for L8R2-F31 | L4-E9's author |
-| L8R2-F37 | MINOR | the return places +5V_HDMI's 0.20 A at U3 and U4 while the rail declares its load at J_HDMI: a location, no ampere | board B's generator owner |
+| L8R2-F31 | **OPEN**, a known defect; correction DRAFTED in round 8, unchecked | the A to B return divided over VH contacts and signal ribbons with nothing setting its division; as drawn 12.092 A in a lead's pin 2 and 2.672 A in a ribbon conductor on C-DEV rev 1 | boards A and B, Layers 5 and 7; an independent check next |
+| L8R2-F32 | CORRECTED BY DRAFT, not applied, unchecked | fans12's TPS61089 capacitors had no class board B's block reads | the integrator (with fans12) |
+| L8R2-F33 | OPEN, a layout constraint | the return sockets' and the VH leads' pin 2 lands join their ground planes solidly (6f's widths); board A's intent cannot express the 5 V returns' loop | Layer 9 (layout constraints, record l9stk) |
+| L8R2-F34 | OWED | the leads' wire parts and insulation classes; `J_54V`'s lead at AWG 16; the three return leads' row | Layer 7 |
+| L8R2-F35 | ANSWERED by Layer 9's round 3 | its acceptance of `J_5V_IOC`'s pin 2 on round 7's sampled rows is WITHDRAWN with them and now rests on this correction | Layer 9's author |
+| L8R2-F36 | for L4-E9 | board B rows for fandec, gndret and gndrtn (gndrtn after gndret), a board A row for gndrtn, one release; a register row for L8R2-F31 | L4-E9's author |
+| L8R2-F37 | MINOR | the return places +5V_HDMI's 0.20 A at U3 and U4; the rail declares J_HDMI | board B's generator owner |
+| L8R2-F38 | CORRECTED (this record's own defect, found by the recheck V3) | round 7's return calculation sampled six cases and called the largest a maximum | this record |
+| L8R2-F39 | OPEN | an absent or open return lead, an open XT60 contact and an open VH pin 2 are LATENT; next action: a four-wire bond reading between the boards' grounds in the assembly and service procedures, or a detect line (not drafted) | Layer 12, Layer 5 |
+| L8R2-F40 | for Layers 6 and 7 | the XT60-F's land is NOT READ on this host and no LCSC code is carried; a return lead's free XT60-M end could be mated to the pack lead by hand: mark the leads | Layers 6 and 7 |
+| L8R2-F41 | for Layer 5 | IF-AB-POWER gains the return leads and the return's division | Layer 5 |
+| L8R2-F42 | NOTED | the XT60's printed range starts at -20 C, the envelope's cold end in use: no margin | Layer 6 |
+| L8R2-F43 | for Layers 9 and 5 | on the severest reading of JST's sheet `J_5V_DEV`'s pin 1 (6.0359 A) is 0.0411 A over at the inside air; inside the printed 10 A; Q-JST-VH-1 would settle it | Layer 9's author |
 
-**What this round could not do.** Close L8R2-F31 (it needs a change on two boards, the harness and two contracts, or a
-measurement on a harness that does not exist). Read the corrections on a KiCad export or run a copper rule on a routed board
-(the box's). State the ribbon's or the VH contact's rating at 76.25 C (neither maker prints a curve). Bound the contact
-resistances from below (no sheet prints a minimum). Have the round read by an independent check.
+**What these rounds could not do.** Have round 8 read by an independent check (L8R2-F31 stays OPEN until one has). Read the
+corrections on a KiCad export, read the XT60-F's land, or run a copper rule on a routed board (the box's). State any
+maker's rating at 76.25 C from a printed curve, or bound any contact resistance from below (no sheet prints either). Draft the
+harness and contract rows into Layer 7's and Layer 5's files (their owners'), or a detect line for the latent faults. Send any
+question to a maker.
 
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7 and 6b)
 
@@ -1097,10 +1154,11 @@ each draft's own declared ADDS (the coolers' are computed per slot).
 | round 5's answers | the collaborator, the coordinator | a targeted recheck of B1 to B3 against section 1t; L9P-F02 stays OPEN until the corrections are implemented and verified |
 | round 4's bench and maker items (round 6's limits) | Layer 9, the owner | C4-1 (the stage over the matrix 3.0 to 6.6 A at 9.7 to 17.4 V, 50 C, the measured junction bound), C4-3 (the actual chain in a loaded slot, 3.44 W steady, the 1.80 A and 1.0 s waveform), C4-4 (the maker's answer, the owner sends it), C4-5 (the SoC at 8 W in 50 C air) |
 | the return's copper and the chain's widths | the box, record l9stk's author, board E's PCB generator owner | F3-06, F3-07, F3-09 |
-| round 7's two board B drafts | the integrator, the box | release `apply_gen_sch_b_fandec.py` and `apply_gen_sch_b_gndret.py` with fans12 (R-190's release; any place in board B's round); the box's KiCad export read by `check_gndret_netlist.py` (expected DRAWN); the copper rules on the routed board with the five (six) leads as sources |
-| L8R2-F31, the return's division | boards A and B, Layers 5 and 7, L4-E9's register | draft A1 (a dedicated return between the two boards' grounds, R_s at or under 0.53 mOhm by section 3g's figure) on both generators with its harness and contract rows, read it against GND-002's single bond, compose, regenerate, mutate, and judge every row of `l8r2_gndret.out` 3d again; or measure the harness four-wire against 3e. OPEN until then |
-| round 7's independent check | the coordinator | one focused check of section 3g (the load basis, the division model, the two drafts); none has read it |
-| round 7's layout constraint and harness items | Layer 9, Layer 7 | L8R2-F33 (no thermal relief on the VH leads' pin 2, both boards), L8R2-F34 (the leads' wire part and class; `J_54V` at AWG 16) |
+| rounds 7 and 8's four drafts | the integrator, the box | release `apply_gen_sch_b_fandec.py` and `apply_gen_sch_b_gndret.py` with fans12 (R-190's release; any place in board B's round), `apply_gen_sch_b_gndrtn.py` after gndret, and `apply_gen_sch_a_gndrtn.py` on board A before mainpb; the box's KiCad export of both boards read by `check_gndret_netlist.py` (expected: the declaration DRAWN, the dedicated return DRAWN); the XT60-F land read; the copper rules on the routed boards |
+| L8R2-F31, the return between boards A and B | the coordinator; then boards A and B, Layers 5 and 7, L4-E9's register | one independent check of round 8 (section 3g lists what it should read); OPEN until then. After it: the harness and contract rows (L8R2-F34, L8R2-F41) and the change-list rows (L8R2-F36) |
+| the latent faults of the return | Layer 12, Layer 5 | L8R2-F39: a four-wire bond reading between the two boards' grounds in the assembly and service procedures, or a detect line (not drafted) |
+| rounds 7 and 8's layout, harness and part items | Layer 9, Layer 7, Layer 6 | L8R2-F33 (solid joins, section 3g's widths), L8R2-F34 (the wire parts; `J_54V` at AWG 16; the three return leads), L8R2-F40 (the XT60-F's land and LCSC code; the leads' marking), L8R2-F42 (the XT60's range ends at the envelope's cold end) |
+| the makers' questions | the owner | Q-JST-VH-1, Q-AMASS-XT60-1 and Q-WE-CAB-1 are drafted in section 3g and UNSENT |
 
 ## 7. The tests (`v2/ecad/tools/tests/test_l8r2.py`)
 
@@ -1149,9 +1207,12 @@ each draft's own declared ADDS (the coolers' are computed per slot).
   in all six orders into one generator, its window 5.0019 to 5.1744 V; FB01 fails with one resistor left at 1 %; both of the
   collaborator's files are filed as received.
 
-Round 7 (task T5b): the old state stops on the typed return and the correction runs to its end (the same test fails without the
-drafts and passes with them); each draft is guarded and composes with Layer 9's draft in any order to one generator; the return
-is derived (22.23 A on the committed generator), and a typed figure, a lead left off, a lead reversed and a lead whose rail is
-elsewhere are refused; the capacity model reads the makers' figures, conserves the return and divides by resistance; the
-committed `l8r2_gndret.out` is what `l8r2_gndret.py` prints and every predicate holds; the page and the README carry the round
-with L8R2-F31 as OPEN.
+Rounds 7 and 8 (task T5b and the recheck V3): the old state stops on the typed return and the correction runs to its end (the
+same test fails without the drafts and passes with them); each draft is guarded and board B's compose with Layer 9's draft in
+any order to one generator; the return is derived (22.23 A on the committed generator), and a typed figure, a lead left off, a
+lead reversed and a lead whose rail is elsewhere are refused; the worst case is found, not sampled (round 7's sampled maximum
+sits under the printed 10 A where the enumerated maximum is over it; the recheck's corner is summed independently; a walk of
+every raw vertex of a small network agrees with the enumeration); the two return drafts are guarded and compose on both
+boards; the return removed, landed on the wrong net or with one termination dropped is refused; every branch with a printed
+rating is inside it at every vertex with the return and outside it without; the committed `l8r2_gndret.out` is what
+`l8r2_gndret.py` prints and its predicates hold; the page and the README carry the rounds with L8R2-F31 as OPEN.

@@ -23,31 +23,38 @@ repository's own generator until a `RELEASE.md` beside it names an accepted chec
 | `check_l8r2_netlist.py` | what the regenerated netlists must show, parsed; NOT DRAWN on the committed netlists |
 | `l8r2_drafts.py`, `l8r2_drafts.out` | the figures with their classes, the composition on boards A, B and E, the designators, the netlist check; round 3's sections 2b (item 1 on record l9pwr's parsed figures), 6b (board E), 9 (the pack returns) and 10 (the energy chain); round 4's section 2c (L9P-F02's focused check); inputs pinned by sha256; regenerated with `_bin/regen_out.py` |
 | `fetch_held_back.py` | TI's TPS4811-Q1 sheet (SLUSEE5E) into `v2/vendor/ti/held/`, and round 4's four San Ace catalogue pages into `v2/vendor/fans/held/`, each checked by sha256 (held back by their terms) |
-| `apply_gen_sch_b_gndret.py` | DRAFT, board B (round 7, task T5b, the owner's review RSM-01): the return's typical and peak derived in the generator from the rails that arrive on its lead connectors (13.30 A and 26.40 A, an UPPER BOUND; 27.78 A with Layer 9's I-03 draft; 22.23 A on the committed generator), `J_54V` and the PoE return at R12 added; composes with Layer 9's draft in either order |
+| `apply_gen_sch_b_gndret.py` | DRAFT, board B (round 7, task T5b, the owner's review RSM-01): the return's typical and peak derived in the generator from the rails that arrive on its lead connectors (13.30 A and 26.40 A, an UPPER BOUND; 27.9108 A with Layer 9's round 3 draft; 22.23 A on the committed generator), `J_54V` and the PoE return at R12 added; composes with Layer 9's draft in either order |
 | `apply_gen_sch_b_fandec.py` | DRAFT, board B (round 7, L8R2-F32), fans12's companion: the row in `_dec_rule` that gives the cooler step-ups' two capacitors the class board B's decision 42 block reads; without it the composed generator stops on C704 |
-| `check_gndret_netlist.py` | round 7: what the regenerated netlist and intent must show for the return (the leads read from the netlist, the sums, the PoE return, the loads); NOT DRAWN on the committed board |
-| `l8r2_gndret.py`, `l8r2_gndret.out` | round 7: the stop reproduced stage by stage, the load basis and its three figures, the return divided between the five lead contacts and the seventeen ribbon conductors by resistance on the makers' printed figures, the judgment (the declaration corrected; the return path not holding on the makers' printed figures, **L8R2-F31 OPEN**), four corrections compared, the composition in four orders, eight mutations, what Layer 9's author needs; regenerated with `_bin/regen_out.py` |
-| `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), the panel firmware's F-01 (`fnd/fw-panel` at `42c27369`), Layer 6's board C draft with its helper (`fnd/l6r2` at `7633ae0a`); round 3: record l9pwr's output (`fnd/l9pwr` at `38ef774c`), record l9stk's output and page (`fnd/l9stk` at `7388a84b`); round 7: Layer 9's board B draft, its output and its budget (`fnd/l9t5` at `f70d3085`) and the coordinator's case rows; byte for byte, `inputs/SOURCES.txt` |
+| `apply_gen_sch_b_gndrtn.py`, `apply_gen_sch_a_gndrtn.py` | DRAFTS, boards B and A (round 8, the correction drafted for L8R2-F31): the dedicated ground return, three Amass XT60-F sockets `J_GR1` to `J_GR3` a board with both contacts on GND (the leads: XT60-M both ends, two 12 AWG conductors, 150 mm); board B's requires gndret first and names the sockets among the return's sources; board A's adds the sockets and their schematic block and leaves its GND declaration alone; release-guarded like every draft here |
+| `check_gndret_netlist.py` | rounds 7 and 8: what the regenerated netlists and intent must show for the return (the leads read from the netlist, the sums, the PoE return, the loads; the return sockets whole on GND and named, and the same sockets whole on both boards); NOT DRAWN on the committed boards |
+| `l8r2_gndret.py`, `l8r2_gndret.out` | rounds 7 and 8: the stop reproduced stage by stage; the load basis and its three figures; the return divided by resistance with EVERY vertex of the contact-resistance box enumerated at both ends of the copper's temperature (the recheck's corner reproduced, 10.6376 A; as drawn the return does not hold, **L8R2-F31 OPEN**); three corrections compared; the four drafts composed on both boards, thirteen mutations; the acceptance with the dedicated return on the composed netlists' census, each branch against the rating its maker prints and its condition; what the rows rest on that no maker prints; the fault cases; what Layer 9's author and the independent check need; regenerated with `_bin/regen_out.py` |
+| `checks/astra-check-t5-recheck-cx41.md` | the collaborator's targeted recheck V3 of round 7 with Layer 9's round 3 (cx41), filed as received: NOT CONFIRMED; answered in the page's section 3g (round 8) |
+| `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), the panel firmware's F-01 (`fnd/fw-panel` at `42c27369`), Layer 6's board C draft with its helper (`fnd/l6r2` at `7633ae0a`); round 3: record l9pwr's output (`fnd/l9pwr` at `38ef774c`), record l9stk's output and page (`fnd/l9stk` at `7388a84b`); rounds 7 and 8: Layer 9's two round 3 drafts (boards A and B), its output and its budget (`fnd/l9t5` at `841e6c7e`) and the coordinator's case rows (revision 3); byte for byte, `inputs/SOURCES.txt` |
 
-**Round 8's state (4 October 2026, 21:45 CEST): CHECKPOINT, INCOMPLETE, stopped at the session's usage limit.** The recheck V3
-(`checks/astra-check-t5-recheck-cx41.md`, NOT CONFIRMED) found round 7's return calculation sampled and not a maximum; **L8R2-F31
-is OPEN and nothing of round 8 is accepted or checked.** DONE: V3 filed as received; Layer 9's round 3 drafts, output and budget
-copied at `841e6c7e` (the `f70d3085` copies replaced); Amass's XT60 specification 2021V1 filed
-(`v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf`); the two drafts of the dedicated ground return
-(`apply_gen_sch_a_gndrtn.py`, `apply_gen_sch_b_gndrtn.py`: three XT60-F sockets a board, both contacts on GND; they apply, refuse
-twice and refuse the tree, and both boards' generators ran with them on scratch copies); `check_gndret_netlist.py` reads the
-return sockets on both boards; in `l8r2_gndret.py` the header, the inputs, `figures()` and the capacity model are rewritten (every
-vertex of the contact-resistance box enumerated, refused unless it agrees with the monotone argument). A scratch run of that
-model reproduced V3's corner (10.6376 A in a 5 V lead's pin 2 on C-DEV rev 1 at 76.25 C; 12.09 A at -20 C; a ribbon conductor
-2.07 to 2.67 A) and, with three return leads, gave at most 4.93 A in a VH pin 2, 0.635 A in a ribbon conductor and 11.03 A in an
-XT60 contact at the declared upper bound: scratch figures, NOT in a committed output. NOT DONE, and BROKEN AT THIS COMMIT:
-`l8r2_gndret.py`'s `main()` still has round 7's body and does not run, `l8r2_gndret.out` is round 7's, and `test_l8r2`'s round 7
-tests fail on the replaced input copies. NEXT ACTION: assemble `main()` from `wip-round8/` (its `NOTE.md` says how), add
-section 6 (the acceptance from the composed netlists' census) and sections 7 to 9, regenerate the output with `_bin/regen_out.py`,
-rewrite the round 7 tests and add round 8's, restate the page's section 3g on the merged figures, and run `test_l8r2`,
-`test_l8gnd` and `test_public_hygiene`.
+**Round 8's state (4 October 2026, 22:40 CEST).** The recheck V3 (`checks/astra-check-t5-recheck-cx41.md`, NOT CONFIRMED) found
+round 7's return calculation sampled and not a maximum. **L8R2-F31 is OPEN: round 8's correction is drafted and has not been read
+by an independent check; nothing is applied to the tree, nothing is built, bought or measured.** DONE: V3 filed as received;
+Layer 9's round 3 drafts, output and budget copied at `841e6c7e`; Amass's XT60 specification 2021V1 filed
+(`v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf`); the calculation corrected (every vertex enumerated, refused unless
+it lands on the monotone vertex; the recheck's corner reproduced, 10.6376 A; as drawn on C-DEV rev 1 a lead's pin 2 reaches
+12.092 A against the printed 10 A and a ribbon conductor 2.672 A against the printed 1 A); three corrections compared and the
+dedicated return of three XT60 leads drafted on both boards (`apply_gen_sch_a_gndrtn.py`, `apply_gen_sch_b_gndrtn.py`); both
+boards composed with every draft they carry (board B in four orders to one generator; board A with the return draft first or
+last to one netlist); the netlist checks DRAWN and thirteen mutations stopping or failing; the acceptance on the composed
+census at the declared upper bound 27.9108 A, over every vertex and both copper ends: a VH pin 2 at most 4.9277 A (JST prints
+10 A with AWG 16 on the standard header), a ribbon conductor at most 0.6352 A (Wurth prints 1 A at 25 C), an XT60 contact at
+most 11.0326 A (Amass prints 30 A, and 35 A MAX with 12 AWG at a rise under 85 C), the ground shift at most 11.43 mV against
+0.9418 V; the fault cases (one return lead out, one XT60 contact open and one VH pin 2 open stay inside the printed ratings and
+are LATENT; every source at its bound at once does not); the page's section 3g restated on the merged figures; `test_l8r2`
+34 passed, 0 failed, 0 skipped. NOT DONE: an independent check of round 8; `J_54V`'s pin 2 has no printed rating until its lead is AWG 16 (a harness row
+for Layer 7); the XT60's aged contact resistance, every derating curve and every minimum contact resistance are not printed
+(the dependences are named in `l8r2_gndret.out` 6d; three questions to the makers are drafted and UNSENT); the XT60-F land is not
+read on this host and no KiCad export exists; the harness, contract and change-list rows are their owners'. NEXT ACTION: the
+coordinator's independent check of round 8 (the page's section 3g lists what it should read); the integrator adds the two
+return drafts to L4-E9's change list (board B: after gndret; board A: before mainpb).
 
-**Round 7's state (task T5b, 4 October 2026, 20:00 CEST).** DONE: the stop reproduced; the load basis and the capacity basis
+**Round 7's state (task T5b, 4 October 2026, 20:00 CEST; its return calculation and its comparison of corrections are
+WITHDRAWN by round 8, above).** DONE: the stop reproduced; the load basis and the capacity basis
 reconciled; the declaration corrected by a draft (`apply_gen_sch_b_gndret.py`) and the second stop by another
 (`apply_gen_sch_b_fandec.py`); board B's composition runs to its end with Layer 9's I-03 draft in any order; the netlist and
 intent check with eight mutations; `test_l8r2` 31 passed. NOT DONE: the return path itself. **L8R2-F31 is OPEN**: the return
