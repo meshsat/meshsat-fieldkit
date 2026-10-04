@@ -49,7 +49,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    4c97305f6b6eef31 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
    a21015ffae10e67d v2/docs/records/l9t5/l9t5_case.py
-   c51c9a99a2d72d06 v2/docs/records/l9t5/l9t5_case.out
+   be6af6b06bcd4482 v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    the two copies filed this round equal the sha256 SOURCES.txt names: yes
 
