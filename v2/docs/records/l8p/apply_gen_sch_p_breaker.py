@@ -1,40 +1,46 @@
 #!/usr/bin/env python3
-"""apply_gen_sch_p_breaker.py: DRAFT for board P's generator owner (Layer 8 record l8p, MESHSAT-1357, 4 October 2026). NOT
-APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
+"""apply_gen_sch_p_breaker.py: DRAFT for board P's generator owner (Layer 8 record l8p, MESHSAT-1357, 4 October 2026; round 2
+of the same day). NOT APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 
-The defect: W4DP-F2 (record l9stk section 15, DD-1 and DD-6, on branch fnd/l9stk at 2c8b29fb, independently checked
-CONFIRMED AS CONDITIONAL). With board P's FETs Q1 and Q2 welded and no firmware, nothing on this board opens the discharge path
-on current alone (l9stk 15.2), and a docking with a breaker that is already on reaches E11-30's 242.9 A (15.4, B-P1).
+The defects: W4DP-F2 (record l9stk section 15, DD-1, DD-6 and DD-8, branch fnd/l9stk at 0d72880b; its latest changes checked
+CONFIRMED AS CONDITIONAL). With board P's FETs Q1 and Q2 welded and no firmware, nothing on this board opens the discharge path on
+current alone (15.2); a docking with a breaker already on reaches E11-30's 242.9 A (15.4, B-P1); and a hot restart of the latching
+breaker into the worst resistive fault reaches 0.82 of the FET's derated SOA (15.4b, B-R1, DD-8).
 
 The correction drawn here, every value from record l9stk by its section (the record page's section 2 lists each with its source):
-  C-1 (15.4)    U101 LM5069MM-2 (C111822, board E's U6 part) from Q2's source, the new net BRK_VIN, to the pack terminal PACK_P;
-                the sense pair R101 4 mOhm and R102 7.5 mOhm in parallel (1 %, at most 50 ppm/K); Q101 and Q102 CSD18510Q5B
-                (C2876544, board A's PA stage part) from BRK_SNS to PACK_P; R103 RPWR 8.45 kOhm; C101 timer 10 nF; C102 dv/dt
-                22 nF on the gate; D101 SMCJ18A (C374030, board A's VBAT clamp part) on BRK_VIN; OVLO, the controller's ground,
-                the clamp and the small parts on PACK_N (IF-6).
+  C-1 (15.4, 15.4b)  U101 LM5069MM-1, the latch-off variant (the -2's retry overheats its own FET under a persistent fault, 15.4b;
+                the family and the VSSOP-10 land of board E's U6; the -1's order code is Layer 6's to file, owed) from Q2's source,
+                the new net BRK_VIN, to the pack terminal PACK_P; the sense pair R101 4 mOhm and R102 7.5 mOhm in parallel; Q101 and
+                Q102 CSD18510Q5B; R103 RPWR 8.45 kOhm; C101 timer 10 nF; C102 dv/dt 22 nF; D101 SMCJ18A on BRK_VIN; OVLO, the
+                controller's ground, the clamp and the small parts on PACK_N (IF-6).
   C-1b (15.4)   the make-last enable LOOP into UVLO with its RC hold: R106 10 kOhm from BRK_VIN onto J_SMB pin 7 (DOCK_EN_OUT),
-                out over board E and the dock to board A's thermal guard RT1 and back on J_SMB pin 5 (DOCK_EN_RET) into R107
-                22 kOhm on the first inverter Q103 (2N7002); Q103 holds the second inverter Q104's gate, R108 and R109 1 MOhm
-                each from BRK_VIN (l9stk_protection.py's R_G, prot 3a), low; Q104 discharges UVLO through R105 150 ohm; R104
-                200 kOhm from BRK_VIN and C103 3.3 uF 50 V make the RC hold. J_SMB pin 6 is the ground contact between the two
-                loop conductors (C2), J_SMB a JST-XH 1x7 (pins 1 to 4 unchanged).
-  IF-6          the gauge's PACK and VCC taps R6 and R7, and Q2's gate-source resistor R19, follow Q2's source to BRK_VIN; D1
-                stays on PACK_P; VCC_F is fed from BRK_VIN.
+                through board E, the dock and board A's thermal guard RT1 and back on J_SMB pin 5 (DOCK_EN_RET) into R107 22 kOhm on
+                the first inverter Q103; Q103 holds the second inverter Q104's gate (R108, R109 1 MOhm, l9stk_protection.py's R_G)
+                low; Q104 pulls UVLO DIRECTLY. The hold: R104 200 kOhm from BRK_VIN charges C103 3.3 uF 50 V on the node BRK_H, which
+                reaches UVLO through R105 150 ohm and D102 1N4148W, so C103 drains behind Q104 and the turn-off is 0.41 ms; the
+                release 0.110 to 0.907 s after the enable mates. J_SMB pin 6 is the ground between the loop conductors (C2).
+  C-1c (15.4b)  the restart inhibit on the breaker pad (DD-8): RT101, Murata NXRT15XH103FA1B010, bonded on the breaker FETs' pad
+                (10 mm leads to two lands), under R110 150 kOhm from BRK_VIN; a ratiometric reference R111 147 kOhm over R112 1.62
+                kOhm (1653.06 ohm equivalent, the trip's 1653); U102, a zero-drift OPA187 used as the comparator, with R113 15 MOhm
+                of hysteresis; it pulls UVLO through Q105 only while PGD is low (Q106 holds Q105's gate low while PGD is high), so it
+                never turns off a running breaker. Window: allow from 77.25 C, block from 83.20 C, trip 80.22 C +-2.97 K.
+  IF-6          the gauge's PACK and VCC taps R6 and R7, and Q2's R19, follow Q2's source to BRK_VIN; D1 stays on PACK_P.
 SESSION choices (under the owner's standing rule of 26 September 2026; L8P-BREAKER.md section 3): the designators (the free
-100 block: U101, Q101 to Q104, D101, R101 to R109, C101 to C105, TP101 to TP104), the net names, J_SMB's pin assignment, the
-input bypass at the sense pair (TI SNVS452G section 10 and 11.1.1) as C104 and C105, 2.2 uF 50 V in series (board P's own O-12
-rule for a part across the pack), PGD left open, the four test points for E-12.
+100 block), the net names, J_SMB's pin assignment, the input bypass C104 and C105 in series, the four E-12 test points; in round 2
+the comparator part (OPA187, its held sheet read for its offset over temperature), the reference values 147k and 1.62k, the
+hysteresis resistor, the PGD gating pair Q105 and Q106 with R114 to R117, C106, TP105 and TP106 (E-12b), the NTC's lead lands.
 
 What it changes in v2/ecad/tools/gen_sch_p.py, and nothing else:
   1. PACK_P's declaration: the breaker's output (loads Q101 and Q102, switch U101 on BRK_UVLO); BRK_VIN and BRK_SNS declared as
      segments of PACK_P (BRK_VIN switched by the gauge as PACK_P was);
   2. R6 and R7 on BRK_VIN;
   3. Q2's source and R19 on BRK_VIN;
-  4. the breaker and the enable loop drawn before the pack leads W_P and W_N, with their node declarations;
+  4. the breaker, the enable loop, the hold and the restart inhibit drawn before the pack leads W_P and W_N, with their node
+     declarations and C106's decoupling entry;
   5. J_SMB a 1x7 with the loop on pins 5 and 7 and the return on pin 6 (no order code: the 7-way code is Layer 6's, L8P-06);
   6. VCC_F fed from BRK_VIN;
   7. one schematic section for the new parts.
-Order (L8P-BREAKER.md section 4): released together with apply_gen_sch_e_enable.py and apply_gen_sch_a_ptc.py (never alone:
+Order (L8P-BREAKER.md section 5): released together with apply_gen_sch_e_enable.py and apply_gen_sch_a_ptc.py (never alone:
 J_SMB's two ends and the dock's two ends must change together), with l6r2's two board P drafts in either order.
 
 Usage:  apply_gen_sch_p_breaker.py TARGET [--check | --write]     (default --check: nothing is written)
@@ -49,20 +55,22 @@ import re
 import sys
 
 NAME = "apply_gen_sch_p_breaker"
-ADDS = ("U101", "Q101", "Q102", "Q103", "Q104", "D101", "R101", "R102", "R103", "R104", "R105", "R106", "R107", "R108", "R109",
-        "C101", "C102", "C103", "C104", "C105", "TP101", "TP102", "TP103", "TP104")
-NETS = ("BRK_VIN", "BRK_SNS", "BRK_GATE", "BRK_TMR", "BRK_PWR", "BRK_UVLO", "BRK_G2", "BRK_DIS", "BRK_CMID", "DOCK_EN_OUT", "DOCK_EN_RET")
+ADDS = ("U101", "U102", "Q101", "Q102", "Q103", "Q104", "Q105", "Q106", "D101", "D102", "RT101", "R101", "R102", "R103", "R104",
+        "R105", "R106", "R107", "R108", "R109", "R110", "R111", "R112", "R113", "R114", "R115", "R116", "R117", "C101", "C102",
+        "C103", "C104", "C105", "C106", "TP101", "TP102", "TP103", "TP104", "TP105", "TP106")
+NETS = ("BRK_VIN", "BRK_SNS", "BRK_GATE", "BRK_TMR", "BRK_PWR", "BRK_UVLO", "BRK_G2", "BRK_H", "BRK_HD", "BRK_PGD", "BRK_CMID",
+        "INH_NTC", "INH_REF", "INH_OUT", "INH_G", "DOCK_EN_OUT", "DOCK_EN_RET")
 
 _OLD_RAIL = (
     '_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R", v_work=16.8, converted=False,   # the GAUGE\'s own pin; R18, 5.1k, sits between it and the FET gate DSG_G\n'
     '             note="the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain")\n')
 _NEW_RAIL = (
     '# RECORD l8p (MESHSAT-1357, 4 October 2026; record l9stk 15.4, C-1 and C-1b, IF-5, IF-6): THE PACK TERMINAL IS THE BREAKER\'S\n'
-    '# OUTPUT. Q2\'s source is the net BRK_VIN, the LM5069-2 breaker U101 (drawn below, before the pack leads) passes BRK_VIN through\n'
+    '# OUTPUT. Q2\'s source is the net BRK_VIN, the LM5069-1 breaker U101 (drawn below, before the pack leads) passes BRK_VIN through\n'
     '# its sense pair to BRK_SNS and through Q101 and Q102 to PACK_P, so the terminal is live only while the gauge holds Q2 on AND\n'
     '# the dock\'s enable loop is closed. BRK_VIN and BRK_SNS are segments of the one pack path whose power PACK_P counts.\n'
     '_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q101": 5.0, "Q102": 5.0}, switch="U101", enable_net="BRK_UVLO", v_work=16.8, converted=False,\n'
-    '             note="the pack lead, the breaker\'s output (record l8p; l9stk 15.4 C-1, IF-6): U101 (LM5069-2) drives Q101 and Q102 '
+    '             note="the pack lead, the breaker\'s output (record l8p; l9stk 15.4 C-1, IF-6): U101 (LM5069-1, latch-off) drives Q101 and Q102 '
     '(CSD18510Q5B, an even split when enhanced, SLVA673A 2.4) from BRK_SNS; its UVLO is held low unless the dock\'s enable loop '
     'is closed (C-1b), so the terminal is live only while the gauge holds Q2 on and the kit is docked (IF-5)")\n'
     '_intent.rail("BRK_VIN", 14.4, 10.0, 18.0, "Q2", loads={"R101": 6.52, "R102": 3.48}, switch="U1", enable_net="DSG_R", series_of="PACK_P",\n'
@@ -85,34 +93,60 @@ _NEW_R19 = 'r("R19", "10M", "DSG_G", "BRK_VIN")'
 _ANCHOR_WP = 'part("W_P", "Connector", "Conn_01x01_Pin", "pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)", "WIRE", {"1": "PACK_P"})\n'
 _BREAKER = (
     '# =========================================================================================================================\n'
-    '# RECORD l8p (MESHSAT-1357, 4 October 2026): W4DP-F2\'S FIRMWARE-INDEPENDENT ELEMENT, drawn from record l9stk section 15\n'
-    '# (branch fnd/l9stk at 2c8b29fb, CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware, nothing on this board\n'
-    '# opened the discharge path on current alone (l9stk 15.2). C-1 (15.4): the LM5069-2 circuit breaker U101 from BRK_VIN (Q2\'s\n'
-    '# source) to PACK_P. The sense pair R101 4 mOhm and R102 7.5 mOhm in parallel, 2.6087 mOhm, 1 percent and at most 50 ppm/K\n'
-    '# (current limit 18.32 to 23.93 A, breaker 30.21 to 50.59 A); Q101 and Q102 CSD18510Q5B, 40 V; RPWR R103 8.45 kOhm (32.52 W\n'
-    '# nominal); the timer C101 10 nF (clearing at most 1.292 ms); the dv/dt capacitor C102 22 nF on the gate (a start is 0.659 A at\n'
-    '# most); the input clamp D101 SMCJ18A. The clamp, the controller and its small parts return to PACK_N (IF-6), and OVLO is\n'
-    '# tied there (15.4, the controller row). D1 stays on PACK_P and carries the lead\'s freewheel at turn-off (15.4, the clamps\n'
-    '# row). Where an older comment above names PACK_P as Q2\'s source, read BRK_VIN.\n'
-    '# C-1b (15.4, B-P1, conditions C1 and C2): THE MAKE-LAST ENABLE IS A LOOP. R106 10 kOhm from BRK_VIN onto J_SMB pin 7\n'
-    '# (DOCK_EN_OUT); board E passes it to the dock, board A passes it through its thermal guard RT1 (a PRF15BB103 on the battery\n'
-    '# FETs\' copper, 15.5) and back; it returns on J_SMB pin 5 (DOCK_EN_RET) into R107 22 kOhm on the first inverter Q103\'s gate.\n'
-    '# Q103 holds the second inverter Q104\'s gate (R108 and R109, 1 MOhm each: half of BRK_VIN, l9stk_protection.py\'s R_G) low;\n'
-    '# Q104, when on, discharges UVLO through R105 150 ohm. UVLO charges from BRK_VIN through R104 200 kOhm into C103 3.3 uF 50 V:\n'
-    '# the gate rises 0.110 to 0.593 s after the enable mates and a dv/dt start follows; the loop opening turns the gate off in\n'
-    '# 1.51 ms; an open or a short to ground on either conductor holds the breaker off. J_SMB pin 6 is the ground contact between\n'
-    '# the two conductors (C2). The order of mating (every power pin before the enable, 1 mm short) is Layer 7\'s (C1).\n'
+    '# RECORD l8p (MESHSAT-1357, 4 October 2026, round 2): W4DP-F2\'S FIRMWARE-INDEPENDENT ELEMENT, drawn from record l9stk section\n'
+    '# 15 (branch fnd/l9stk at 0d72880b, its latest changes CONFIRMED AS CONDITIONAL). With Q1 and Q2 welded and no firmware,\n'
+    '# nothing on this board opened the discharge path on current alone (l9stk 15.2).\n'
+    '# C-1 (15.4, 15.4b): the LM5069-1 circuit breaker U101, THE LATCH-OFF VARIANT (the -2\'s retry takes its own FET past TI\'s\n'
+    '# margin in a hard short and past 150 C in a resistive fault on VSYS, 15.4b), from BRK_VIN (Q2\'s source) to PACK_P. The sense\n'
+    '# pair R101 4 mOhm and R102 7.5 mOhm in parallel, 2.6087 mOhm, 1 percent and at most 50 ppm/K (current limit 18.32 to 23.93 A,\n'
+    '# breaker 30.21 to 50.59 A); Q101 and Q102 CSD18510Q5B, 40 V; RPWR R103 8.45 kOhm; the timer C101 10 nF (clearing at most\n'
+    '# 1.292 ms); the dv/dt capacitor C102 22 nF on the gate (a start is 0.659 A at most); the input clamp D101 SMCJ18A. The clamp,\n'
+    '# the controller and its small parts return to PACK_N (IF-6), and OVLO is tied there. D1 stays on PACK_P and carries the\n'
+    '# lead\'s freewheel at turn-off. Where an older comment above names PACK_P as Q2\'s source, read BRK_VIN. The -1\'s order code\n'
+    '# is Layer 6\'s to file (the -2 is C111822 on the same land): OWED.\n'
+    '# C-1b (15.4, conditions C1 and C2): THE MAKE-LAST ENABLE IS A LOOP. R106 10 kOhm from BRK_VIN onto J_SMB pin 7 (DOCK_EN_OUT);\n'
+    '# board E passes it to the dock, board A through its thermal guard RT1 (a PRF15BB103 on the battery FETs\' copper, 15.5) and\n'
+    '# back on J_SMB pin 5 (DOCK_EN_RET) into R107 22 kOhm on the first inverter Q103\'s gate. Q103 holds the second inverter Q104\'s\n'
+    '# gate (R108 and R109, 1 MOhm each, l9stk_protection.py\'s R_G) low; Q104, when on, pulls UVLO DIRECTLY. THE HOLD: R104 200\n'
+    '# kOhm from BRK_VIN charges C103 3.3 uF 50 V on the node BRK_H, which reaches UVLO through R105 150 ohm and D102 1N4148W, so\n'
+    '# when Q104 pulls UVLO, C103 drains behind it through R105 and D102 (107 mA at most, 0.11 of D102\'s 1 A 1 ms surge and 0.71\n'
+    '# of its 150 mA average) and the turn-off no longer waits for C103: the gate is low 0.41 ms after the loop opens, before the\n'
+    '# pins part at a withdrawal under 2.42 m/s. The release is 0.110 to 0.907 s after the enable mates, then a dv/dt start. An\n'
+    '# open or a short to ground on either conductor holds the breaker off. J_SMB pin 6 is the ground contact between the two\n'
+    '# conductors (C2). The order of mating (every power pin before the enable, 1 mm short) is Layer 7\'s (C1).\n'
+    '# C-1c (15.4b, DD-8): THE RESTART INHIBIT ON THE BREAKER PAD. RT101, the Murata NXRT15XH103FA1B010 NTC (10 kOhm 1 percent,\n'
+    '# B25/50 3380 K 1 percent, B25/85 3434 K a reference value), BONDED ON THE BREAKER FETS\' PAD with an electrically insulating,\n'
+    '# thermally conducting adhesive over the pad\'s solder mask (the pad is BRK_SNS, about BRK_VIN), its 10 mm leads soldered to\n'
+    '# two lands beside it; R110 150 kOhm 0.1 percent over it from BRK_VIN (0.111 mA at most, under its 0.12 mA). The reference is\n'
+    '# ratiometric from the same BRK_VIN: R111 147 kOhm over R112 1.62 kOhm, both 0.1 percent (1653.06 ohm equivalent against the\n'
+    '# trip\'s 1653). U102, a TI OPA187 zero-drift amplifier used as the comparator (+IN the reference, -IN the NTC: its output is\n'
+    '# high while the pad is hot), R113 15 MOhm from its output to the reference for the hysteresis. Its output drives Q105\'s gate\n'
+    '# through R114 and R115 (100 kOhm each, under the 2N7002\'s 20 V), and Q105 pulls UVLO. PGD gates it: R116 and R117 (1 MOhm\n'
+    '# each) hold U101\'s open-drain PGD at half BRK_VIN while the breaker runs, and Q106 then holds Q105\'s gate low, so the inhibit\n'
+    '# acts only while PGD is low (the breaker off, starting or in a fault, VDS over 1.62 to 3.4 V) and never turns off a running\n'
+    '# breaker. Pulling UVLO resets the -1\'s latch; the breaker restarts through the hold once the pad cools under the trip, so\n'
+    '# any further event starts at 83.2 C at most. THE WINDOW: allow from 77.25 C, block from 83.20 C, trip 80.22 C +-2.97 K: the\n'
+    '# NTC takes +-1.02 K (its tolerance at 80 C ASSUMED: the held sheet is Murata\'s product search sheet and B25/85 a reference\n'
+    '# value; to be confirmed by Murata\'s approval sheet or E-15). THE +-1.95 K LEFT, BY PART CHOICE (l8p_drafts.out section 3):\n'
+    '# the OPA187 with its offset over temperature, bias and offset currents and supply rejection at most 0.02 K; the three bridge\n'
+    '# resistors at 0.1 percent and at most 25 ppm/K between 25 C and the held 101.0 C case at most 0.32 K; the NTC\'s own heating\n'
+    '# 0.014 K; the hysteresis at most 0.37 K, on the allow side; the remainder, at least 1.2 K on the allow side, for the\n'
+    '# pad-to-NTC gradient E-15 measures (the checker asked for about 0.9 K). AN OPEN OR DETACHED NTC READS COLD AND SILENTLY\n'
+    '# REMOVES THE INHIBIT: E-12b at commissioning and each service reads TP105 against TP101 (the NTC\'s fraction of BRK_VIN at the\n'
+    '# ambient, 0.0625 at 25 C; near 1 is an open NTC, near 0 a short) with TP106 low. THE LOCKOUT AT THE ALLOW EDGE: a unit\n'
+    '# tripping at 77.25 C needs its pad within 1 K of a 76.25 C inside air before it restarts, and at that air the cells\' hot stop\n'
+    '# has already shut the kit down. E-10 gains: VDS under 1.62 V during current-limit excursions (PGD stays high, so the inhibit\n'
+    '# stays gated).\n'
     '# SESSION choices of record l8p (L8P-BREAKER.md section 3): the designators (the free 100 block), the net names, J_SMB\'s pin\n'
-    '# assignment, the input bypass C104 and C105 at the sense pair (TI SNVS452G section 10, "a 1-uF ceramic capacitor to ground close\n'
-    '# to the drain of the hot swap MOSFET", and 11.1.1, the bypass "close to Rsns instead of the VIN pin"), drawn as two 2.2 uF 50 V\n'
-    '# in SERIES through BRK_CMID (1.1 uF) for the reason C11 and C12 are (O-12, SLUSC67B 8.2.2.1.5): one shorted part across the\n'
-    '# pack must not short it; PGD left open (IF-1\'s PGD option\n'
-    '# would need a conductor to board A: L4-E11\'s), TP101 to TP104 for E-12 (BRK_VIN, the hold on BRK_UVLO, both loop conductors).\n'
+    '# assignment, the input bypass C104 and C105 at the sense pair (TI SNVS452G section 10 and 11.1.1), two 2.2 uF 50 V in SERIES\n'
+    '# through BRK_CMID (1.1 uF) as C11 and C12 are (O-12): one shorted part across the pack must not short it; the comparator part,\n'
+    '# the reference values, the hysteresis, the PGD gating, C106, the test points TP101 to TP106.\n'
     '# IF-2 for the layout (gen_pcb_p3.py): each breaker FET\'s installed RthJA at most 52.5 C/W (1 in2 of 2 oz each gives the\n'
-    '# sheet\'s 50), U101 beside the sense pair with Kelvin taps (E-9), C104 and C105 at the sense pair. Nothing here is built or measured.\n'
-    'ic("U101", 10, "LM5069MM-2 circuit breaker on the pack path (record l8p; l9stk 15.4 C-1): 1 SENSE, 2 VIN, 3 UVLO, 4 OVLO, 5 GND, 6 TIMER, 7 PWR, 8 PGD, 9 OUT, 10 GATE",\n'
+    '# sheet\'s 50), U101 beside the sense pair with Kelvin taps (E-9), C104 and C105 at the sense pair, RT101 on the FETs\' pad\n'
+    '# with U102 and its bridge away from it. Nothing here is built or measured.\n'
+    'ic("U101", 10, "LM5069MM-1 circuit breaker, latch-off, on the pack path (record l8p; l9stk 15.4 C-1 and 15.4b): 1 SENSE, 2 VIN, 3 UVLO, 4 OVLO, 5 GND, 6 TIMER, 7 PWR, 8 PGD, 9 OUT, 10 GATE",\n'
     '   "Package_SO:VSSOP-10_3x3mm_P0.5mm", {"1": "BRK_SNS", "2": "BRK_VIN", "3": "BRK_UVLO", "4": "PACK_N", "5": "PACK_N", "6": "BRK_TMR",\n'
-    '   "7": "BRK_PWR", "8": "NC", "9": "PACK_P", "10": "BRK_GATE"}, "C111822")\n'
+    '   "7": "BRK_PWR", "8": "BRK_PGD", "9": "PACK_P", "10": "BRK_GATE"})   # the -1\'s order code: Layer 6, owed\n'
     'r("R101", "4m 1% 2512 (breaker sense, at most 50 ppm/K; 2 W at the band\'s temperature, E-6)", "BRK_VIN", "BRK_SNS", "RS2512")\n'
     'r("R102", "7.5m 1% 2512 (breaker sense, at most 50 ppm/K; 2 W at the band\'s temperature, E-6)", "BRK_VIN", "BRK_SNS", "RS2512")\n'
     'pfet5("Q101", "CSD18510Q5B 40 V N-FET, breaker pass (one of two in parallel; IF-2: RthJA at most 52.5 C/W installed)", "BRK_GATE", "BRK_SNS", "PACK_P", "C2876544")\n'
@@ -128,20 +162,49 @@ _BREAKER = (
     'r("R106", "10k", "BRK_VIN", "DOCK_EN_OUT"); r("R107", "22k", "DOCK_EN_RET", "PACK_N")\n'
     'nfet("Q103", "DOCK_EN_RET", "PACK_N", "BRK_G2", "2N7002 60 V N-FET: the enable loop\'s first inverter, on while the loop is closed")\n'
     'r("R108", "1M", "BRK_VIN", "BRK_G2"); r("R109", "1M", "BRK_G2", "PACK_N")\n'
-    'nfet("Q104", "BRK_G2", "PACK_N", "BRK_DIS", "2N7002 60 V N-FET: the enable loop\'s second inverter, discharges UVLO while the loop is open")\n'
-    'r("R105", "150R", "BRK_DIS", "BRK_UVLO"); r("R104", "200k 1%", "BRK_VIN", "BRK_UVLO")\n'
-    'c("C103", "3.3u 50V X7R 1206 (UVLO: the RC hold)", "BRK_UVLO", "PACK_N", "C1206")\n'
-    'for _i8, _n8 in enumerate(("BRK_VIN", "BRK_UVLO", "DOCK_EN_OUT", "DOCK_EN_RET"), 101):\n'
-    '    part("TP%d" % _i8, "Connector", "TestPoint", _n8, "TP", {"1": _n8})   # E-12: the input, the hold\'s release, each loop conductor to ground in turn\n'
+    'nfet("Q104", "BRK_G2", "PACK_N", "BRK_UVLO", "2N7002 60 V N-FET: the enable loop\'s second inverter, pulls UVLO while the loop is open")\n'
+    'r("R104", "200k 1%", "BRK_VIN", "BRK_H"); c("C103", "3.3u 50V X7R 1206 (the RC hold on BRK_H)", "BRK_H", "PACK_N", "C1206")\n'
+    'r("R105", "150R", "BRK_H", "BRK_HD")\n'
+    'part("D102", "Device", "D", "1N4148W (the hold\'s diode: BRK_H through R105 to UVLO; C103 drains behind Q104 through it)", "SOD123", {"1": "BRK_UVLO", "2": "BRK_HD"}, "C81598")   # Device:D, pin 1 K, pin 2 A\n'
+    'part("RT101", "Device", "Thermistor_NTC", "NXRT15XH103FA1B010 NTC 10k 1%, B25/50 3380K 1%, 10 mm leads (Murata): the restart inhibit\'s sensor, bonded on the breaker FETs\' pad", "meshsat:LeadLands_1x02",\n'
+    '     {"1": "INH_NTC", "2": "PACK_N"})   # its order code: Layer 6, owed\n'
+    'r("R110", "150k 0.1% 25ppm (the NTC bridge)", "BRK_VIN", "INH_NTC"); r("R111", "147k 0.1% 25ppm (the trip reference)", "BRK_VIN", "INH_REF")\n'
+    'r("R112", "1.62k 0.1% 25ppm (the trip reference)", "INH_REF", "PACK_N"); r("R113", "15M 1% (the hysteresis)", "INH_OUT", "INH_REF")\n'
+    'ic("U102", 5, "OPA187IDBVR zero-drift amplifier as the restart inhibit\'s comparator (record l8p; l9stk 15.4b C-1c): 1 OUT, 2 V-, 3 +IN, 4 -IN, 5 V+",\n'
+    '   "Package_TO_SOT_SMD:SOT-23-5", {"1": "INH_OUT", "2": "PACK_N", "3": "INH_REF", "4": "INH_NTC", "5": "BRK_VIN"})   # its order code: Layer 6, owed\n'
+    'c("C106", "100n 50V X7R (U102\'s supply bypass)", "BRK_VIN", "PACK_N")\n'
+    '_intent.bypass("C106", "U102", "5", "BRK_VIN", cls="D", basis="TI OPA187 SBOS807E, revised May 2020 (v2/vendor/ti/held/ti-opa187-sbos807e.pdf, "\n'
+    '               "fetched by record l8p): 10.1 Layout Guidelines \\"Low-ESR, 0.1-uF ceramic bypass capacitors must be connected between each "\n'
+    '               "supply pin and ground; place the capacitors as close to the device as possible. A single bypass capacitor from V+ to "\n'
+    '               "ground is applicable to single-supply applications\\" (p.27); the 100n drawn at U102\'s V+ (pin 5)")\n'
+    'r("R114", "100k", "INH_OUT", "INH_G"); r("R115", "100k", "INH_G", "PACK_N")\n'
+    'nfet("Q105", "INH_G", "PACK_N", "BRK_UVLO", "2N7002 60 V N-FET: the restart inhibit pulls UVLO while the pad is hot and PGD is low")\n'
+    'r("R116", "1M", "BRK_VIN", "BRK_PGD"); r("R117", "1M", "BRK_PGD", "PACK_N")\n'
+    'nfet("Q106", "BRK_PGD", "PACK_N", "INH_G", "2N7002 60 V N-FET: PGD high (the breaker running) holds the inhibit\'s gate low")\n'
+    'for _i8, _n8 in enumerate(("BRK_VIN", "BRK_UVLO", "DOCK_EN_OUT", "DOCK_EN_RET", "INH_NTC", "INH_OUT"), 101):\n'
+    '    part("TP%d" % _i8, "Connector", "TestPoint", _n8, "TP", {"1": _n8})   # E-12 and E-12b: the input, the hold\'s release, each loop conductor to ground in turn, the NTC\'s reading and the inhibit\'s state\n'
     '_intent.node("BRK_GATE", 29.4, "the breaker FETs\' gate: OUT (PACK_P, at most the pack\'s 16.8 V) plus the gate drive, at most 12.6 V above OUT "\n'
     '             "(VGATE, SNVS452G 7.5; record l9stk 15.4, the FETs row)", rides_on="PACK_P", bias_v=12.6)\n'
-    '_intent.node("BRK_UVLO", 29.2, "the breaker\'s UVLO, charged from BRK_VIN through R104 200 kOhm: at most BRK_VIN, the pack\'s 16.8 V in "\n'
-    '             "service and the input clamp D101\'s 29.2 V (SMCJ18A, VC at 51.4 A; record l9stk 15.4, the clamps row)", v_work=16.8)\n'
+    '_intent.node("BRK_UVLO", 29.2, "the breaker\'s UVLO, a diode drop under BRK_H and at most BRK_VIN: the pack\'s 16.8 V in service and the "\n'
+    '             "input clamp D101\'s 29.2 V (SMCJ18A, VC at 51.4 A; record l9stk 15.4, the clamps row)", v_work=16.8)\n'
+    '_intent.node("BRK_H", 29.2, "the RC hold\'s node, charged from BRK_VIN through R104 200 kOhm: at most BRK_VIN, the input clamp\'s 29.2 V "\n'
+    '             "(record l9stk 15.4, the hold)", v_work=16.8)\n'
+    '_intent.node("BRK_HD", 29.2, "between R105 and D102\'s anode: at most BRK_H (record l9stk 15.4, the hold)", v_work=16.8)\n'
     '_intent.node("BRK_G2", 14.6, "the second inverter\'s gate, half of BRK_VIN through R108 and R109 (1 MOhm each): at most half the "\n'
     '             "clamp\'s 29.2 V (record l9stk 15.4, the inverters\' bounds)")\n'
+    '_intent.node("BRK_PGD", 14.6, "U101\'s open-drain PGD held at half of BRK_VIN by R116 and R117 (1 MOhm each) while released: at most "\n'
+    '             "half the clamp\'s 29.2 V, under Q106\'s 20 V gate rating and PGD\'s 100 V (SNVS452G 7.1)")\n'
     '_intent.node("BRK_CMID", 29.2, "the midpoint of the series input bypass C104 and C105: about half of BRK_VIN in service, and the "\n'
     '             "whole of it, at most the input clamp\'s 29.2 V, across one part when the other has shorted (the case the pair exists "\n'
     '             "for, as PACK_MID)", v_work=16.8)\n'
+    '_intent.node("INH_NTC", 29.2, "the NTC\'s node under R110 150 kOhm from BRK_VIN: 0.0625 of it at 25 C, 0.0109 at the trip, and BRK_VIN "\n'
+    '             "itself with the NTC open, at most the clamp\'s 29.2 V", v_work=16.8)\n'
+    '_intent.node("INH_REF", 1.0, "the trip reference, 0.0109 of BRK_VIN through R111 and R112 (0.32 V at the clamp\'s 29.2 V with the "\n'
+    '             "hysteresis), lifted on the cold side by U102\'s back-to-back input diodes (SBOS807E 7.3) through the bridge\'s "\n'
+    '             "resistance by under 0.4 V more: under 1 V")\n'
+    '_intent.node("INH_OUT", 29.2, "U102\'s output, rail to rail from PACK_N to BRK_VIN: at most the clamp\'s 29.2 V", v_work=16.8)\n'
+    '_intent.node("INH_G", 14.6, "Q105\'s gate, half of U102\'s output through R114 and R115 (100 kOhm each): at most half the clamp\'s "\n'
+    '             "29.2 V, under the 2N7002\'s 20 V")\n'
     '_intent.node("DOCK_EN_OUT", 29.2, "the enable loop leaving board P, BRK_VIN through R106 10 kOhm and BRK_VIN itself with the loop open: "\n'
     '             "at most the input clamp\'s 29.2 V (record l9stk 15.4)", v_work=16.8)\n'
     '_intent.node("DOCK_EN_RET", 17.4, "the enable loop\'s return, the first inverter\'s gate over R107 22 kOhm: at most 17.4 V under the "\n'
@@ -172,9 +235,10 @@ _NEW_VCCF = ('# record l8p: R7 follows Q2\'s source to BRK_VIN (l9stk IF-6), so 
              '_intent.rail("VCC_F", 14.4, 0.0, 0.00034, "R7", loads={"U1": 0.00034}, fed_from="BRK_VIN", converted=False, v_work=16.8,\n')
 
 _ANCHOR_SEC = 'placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}\n'
-_SEC = ('SECTIONS.append(("PACK BREAKER LM5069-2 (W4DP-F2), ITS FETS, SENSE PAIR AND CLAMP; THE DOCK ENABLE LOOP, ITS INVERTERS AND THE RC HOLD (RECORD l8p)",\n'
+_SEC = ('SECTIONS.append(("PACK BREAKER LM5069-1 (W4DP-F2), ITS FETS, SENSE PAIR AND CLAMP; THE DOCK ENABLE LOOP, ITS INVERTERS AND THE RC HOLD; THE RESTART INHIBIT (RECORD l8p)",\n'
         '                 ["U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "C104", "C105", "D101", "R106", "R107", "Q103", "R108", "R109",\n'
-        '                  "Q104", "R105", "R104", "C103", "TP101", "TP102", "TP103", "TP104"]))\n')
+        '                  "Q104", "R104", "C103", "R105", "D102", "RT101", "R110", "R111", "R112", "R113", "U102", "C106", "R114", "R115", "Q105",\n'
+        '                  "R116", "R117", "Q106", "TP101", "TP102", "TP103", "TP104", "TP105", "TP106"]))\n')
 
 EDITS = [
     (_OLD_RAIL, _NEW_RAIL),

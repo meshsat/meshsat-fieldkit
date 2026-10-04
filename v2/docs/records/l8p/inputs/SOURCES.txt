@@ -1,20 +1,29 @@
-Record l8p's inputs from record l9stk (MESHSAT-1357, 4 October 2026)
+Record l8p's inputs from other branches (MESHSAT-1357, 4 October 2026, round 2)
 
 Record l9stk is on branch fnd/l9stk, not merged into this record's base (main 64cd25ee). Its design of W4DP-F2's element (section
-15) was independently checked CONFIRMED AS CONDITIONAL, and its text corrections are in, at commit 2c8b29fb. These copies are
-taken from that commit with `git show 2c8b29fb:<path>` and are not edited; l8p_drafts.py reads every value it draws from them by
-its section and refuses when a pattern no longer matches.
+15) moved after round 1: the latch-off LM5069-1 (15.4b), the hold through a diode (15.4) and the restart inhibit C-1c (15.4b,
+DD-8), its latest changes checked CONFIRMED AS CONDITIONAL, at commit 0d72880b. Round 1's copies of 2c8b29fb are removed (git
+history keeps them). These copies are taken from 0d72880b with `git show 0d72880b:<path>` and are not edited; l8p_drafts.py
+reads every value it draws from them by its section and refuses when a phrase no longer matches.
 
-Full files at 2c8b29fb (sha256):
-  v2/docs/records/l9stk/L9-STACKUPS.md        6421b32afbaad83704a77be3778cdd98bfa5953760ca00708446bbd4579d35bf
-  v2/docs/records/l9stk/l9stk_protection.py   7a3a972de8755c839330dd61504df26abbffedf12cd137dea8ad1bf0a753efce
-  v2/docs/records/l9stk/l9stk_protection.out  ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
+Full files at 0d72880b (sha256):
+  v2/docs/records/l9stk/L9-STACKUPS.md        2e053ee48a4558a4e33d70f77b36ebdef0e9878600ae9ea30735597cf639ee5c
+  v2/docs/records/l9stk/l9stk_protection.py   ea7750efcda5ef6bf261a3833c47277cadf87b8b7e7e216aee5cbdcfe211c582
+  v2/docs/records/l9stk/l9stk_protection.out  d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac
 
 Copies here (sha256):
-  l9stk-section15-2c8b29fb.md               4cfd6733c7d2e0429d9fc8ad18a71d4996e0d280b1c5b40f5ef31372e52ed3e2
-      L9-STACKUPS.md lines 576 to 896: section 15 whole (15.1 to 15.8), the end of the page
-  l9stk_protection-2c8b29fb.out.txt         ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
+  l9stk-section15-0d72880b.md               a96099193dd92e8eecbb4ea444ee345bd87eb9af3146f005c507f14961f3ac80
+      L9-STACKUPS.md lines 576 to 1042: section 15 whole (15.1 to 15.8), the end of the page
+  l9stk_protection-0d72880b.out.txt         d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac
       l9stk_protection.out whole, renamed with .txt so no tool that re-pins a record's outputs touches the copy
-  l9stk_protection-constants-2c8b29fb.txt   58bd120aa8ad01ca7faa4053d4fd9b98beac65c5ed1f58ec67bc379e4819420b
-      l9stk_protection.py lines 62 to 87: the session's design constants (R_U, R_DIS, R_E1, R_E2, R_G among them); R_G, the
-      second inverter's gate divider, is the one value the page does not print
+  l9stk_protection-constants-0d72880b.txt   ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e
+      l9stk_protection.py lines 64 to 89: the session's design constants (R_U, R_DIS, R_E1, R_E2, R_G, R_BRIDGE among them);
+      R_G, the second inverter's gate divider, is the one value the page does not print
+
+L4-E7's backstop draft, which closes this record's finding L8P-F01 (C66, C67 and C68 without a decoupling class), is on branch
+fnd/l4e7r6 at 914a2f5a, not on main. Board E's composition in l8p_drafts.py uses this copy in place of main's draft:
+  l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py  dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544
+      v2/docs/records/l4e7/apply_gen_sch_e_backstop.py at 914a2f5a, byte for byte (the same sha256)
+
+Held back, not committed: TI's OPA187 sheet (SBOS807E), fetched by ../fetch_held_back.py into v2/vendor/ti/held/ and checked
+there by sha256 62bd7b52851715978aa52511ad946b1d725850b4d2e8672a901627ed65585c32.

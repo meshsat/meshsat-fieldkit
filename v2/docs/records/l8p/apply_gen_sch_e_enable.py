@@ -3,7 +3,7 @@
 APPLIED to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 
 Board E's half of the pack breaker's make-last enable loop (record l9stk section 15.4, C-1b, conditions C1 and C2; DD-6's owner
-row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at 2c8b29fb). Board E is a pass-through:
+row "board E's generator (two J_SMB contacts with a ground between)"; branch fnd/l9stk at 2c8b29fb, unchanged at 0d72880b). Board E is a pass-through:
 the loop comes from board P on the SMBus lead and leaves for the dock block on the signal lands, and nothing on this board
 touches it. Board P's draft (apply_gen_sch_p_breaker.py) drives it, board A's (apply_gen_sch_a_ptc.py) closes it through the
 thermal guard RT1.
