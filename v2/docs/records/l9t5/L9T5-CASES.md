@@ -1,13 +1,95 @@
 # L9T5: C-ALLTX rev 2 and C-DEV rev 1, the uncertainty, three approaches and the selection (task T5, MESHSAT-1357)
 
-4 October 2026, Layer 9's power author, worktree `l9t5` on branch `fnd/l9t5` from set 29's line `dc99897f`. **Status: a desk
-selection, not reviewed, nothing drafted.** Prototype design: nothing in this kit has been built, powered or measured, and no
+4 October 2026, Layer 9's power author, worktree `l9t5` on branch `fnd/l9t5` from set 29's line `dc99897f`. **Status (round 1): a desk
+selection, not reviewed, nothing drafted; round 2 in section 0.** Prototype design: nothing in this kit has been built, powered or measured, and no
 figure on this page is a measurement. Every figure is printed by `l9t5_case.py` into `l9t5_case.out` ("out N" is its section),
 which takes the case row from record l9pwr's budget (round 4, its out 7b) and every maker's figure from its pinned sheet. Labels:
 PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited by id: **C-ALLTX rev 2**, **C-DEV rev 1**
 (`inputs/coordinator-cases-2026-10-04.md`); the collaborator's challenge cx40 (`inputs/astra-challenge-f01-1.md`) is an advisory
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
+
+## 0. Round 2 (4 October 2026 evening, task T5 continued): I-03 checked on board A, A1's detector, L9P-F01 and C-PROT
+
+Case rows: **C-ALLTX rev 3** (`inputs/coordinator-cases-2026-10-04-rev3.md`: rev 2's definition stands, its quoted 16.214 V is
+withdrawn as D-11's basis; the case is this record's 15.5162 V, 16.0684 V with the printed bounds) and **C-DEV rev 1**. Every figure
+below is printed by `l9t5_drafts.py` (`l9t5_drafts.out`, "drafts N") or `l9t5_a1.py` (`l9t5_a1.out`, "a1 N").
+
+**I-03 (L9P-F03) on C-DEV rev 1: board A's half checked, board B's half UNCHECKED.** The three credit criteria, per board:
+
+| | (a) composes in L4-E9's order, the generator runs | (b) changed nets read, mutations fail | (c) electrical acceptance on C-DEV rev 1 |
+|---|---|---|---|
+| Board A (`apply_gen_sch_a_iocbuck.py`, 4 edits) | YES: after 3g, before 3h's mainpb; first and last compose too (drafts 3) | YES: U601, L601, the divider, J_5V_IOC, the enable on RAIL_EN read DRAWN; three mutations FAIL (the lead reversed, EN on SS, the divider inverted) (drafts 4) | **HOLDS** (drafts 6) |
+| Board B (`apply_gen_sch_b_iocbuck.py`, 13 edits) | **BLOCKED by T5b**: the composed generator stops on GND's declared 21.0 A peak against 21.51 A after record l8r2's fans12, with and without this draft | alone and in the composition without fans12 (DIAGNOSTIC, no credit): DRAWN, the pair with board A DRAWN; two mutations FAIL | UNCHECKED (the figures below are board B's too) |
+
+Board A's acceptance, each figure labelled (drafts 6): U7 at **6.0359 A against its loop's least 7.0957 A, +1.0598 A** (MODEL load at
+4.9019 V; VSNS 43 mV PRINTED; R43 6 mOhm +1 % DECLARED); U601 at **1.4358 A against its 3 A** (PRINTED, SLUSEA4D); its high-side
+limit 4.2 / 5.0 / 5.8 A and low-side 2.9 / 3.8 / 4.5 A (PRINTED), the output at most about 5.15 A (Equation 11) and hiccup on a short,
+under J_5V_IOC's VH **10 A** (PRINTED); L601's Isat 9.2 A over 5.8 A (PRINTED); +5V_IOC 5.002 V nominal, **4.872 to 5.133 V**, at least
+4.701 V at the LDOs after the declared 2 % and 1.5 % budgets against the AP2112K-3.3's 3.749 V need and under its 6.0 V maximum (PRINTED,
+DS39724); RAIL_EN with U601's EN pull-up added 4.890 V at 16.8 V and 5.227 V at 18 V against EN's 5.5 V recommended maximum (Ip and Ih
+TYPICAL only, U601 adds 0.0589 V); the enable relation read in the netlist (+5V_DEV is up only while +3V3 is, and U601 is on RAIL_EN);
+the upstream path: VBAT's declared loads unchanged in sum, C-ALLTX rev 3 unchanged at the declared 0.90 for U601 as for U7 (the
+TPS62933's own 5 V curve is NOT PLOTTED), +0.0073 V if U601 were at 0.85 (a bound shown).
+
+Negative checks of this solution: **one** (board B's round 1 text, kept in `inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py`, refused alone:
+"intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV"; round 2 adds the missed edit). **I-03 stays OPEN**
+until T5b's branch lands; then drafts 4 runs the full composition again with no other change, and V3 reads the completed correction.
+
+**What T5b needs** (drafts 6): the lead J_5V_IOC (pin 1 +5V_IOC, pin 2 GND) returns the three LDOs' current through pin 2 instead of
+J_5V_DEV's: 0.36 A typical (DECLARED), 1.4358 A at C-DEV (MODEL, constant power) or 1.3800 A (the LDOs' own current at rv-pwr's HIGH),
+0.3930 A at C-ALLTX rev 3. GND's declared loads change by **0.00 A** (the three allocations leave +5V_DEV's derived ground loads and
+return as `_IOC_LOADS`); GND gains J_5V_IOC as a fifth source; the 21.0 A declaration is not touched.
+
+**L9P-F01, restated** (record l9pwr round 5, its out 10): OPEN on the case, 15.5162 V against REQ-018's 15.5 V; D-11's 16.214 V a
+labelled scenario; L4-E9 round 7's 16.1 V, its rule's 16.4 V and FAN_OK printed as withdrawn.
+
+**L9T5-F04, for C-PROT rev 1's consumers** (record l9stk, T1, T2, T4, V1, V2; reported, nothing of theirs edited): the gauge's
+uncalibrated one-sided current error, **0.7988 A** (BQ4050 SLUSC67B 6.14's gain error, INL and offset PRINTED; R10's 1 % an ASSUMPTION;
+the drift over an assumed 32 K span; out 2), exceeds the **0.32 A** between the indicated 18 A service and the breaker's least trip
+**18.32 A** (C-PROT rev 1, record l9stk 15.4). An under-reading gauge at an indicated 18 A lets the true current reach 18.80 A, inside
+the breaker's band, so C-PROT's "18 A for 60 s never interrupted" holds for the true current only if the gauge is calibrated (0.1688 A,
+with a 0.2 % reference, an ASSUMPTION, fits the gap) or the firmware's indicated limit sits the gauge's error under 18 A. Which one is
+C-PROT's owners' choice (record l9stk with Layer 5's FW-A05).
+
+**A1's detector (a1 2 to 4): none prints a limit, so A1 stays a SELECTED DIRECTION, not drafted.** Four makers' sheets were read,
+held back by their terms (`fetch_held_back.py`, sha256-checked, never committed): ADI ADL5902 (Rev. B), ADI ADL5513 (Rev. B), TI
+LMH2110 (SNWS022D), ADI LTC5582 (Rev. D). Every temperature row near 144 to 146 MHz sits in the Typ column; none is printed at the
+band. On typical data the ADL5902 takes 0.30 dB of the 0.5 dB tier (the worse of its 100 and 700 MHz rows, an ASSUMPTION that it holds
+between them) and runs from 4.5 V, over board D's +5V_D8 floor 4.3408 V (record s99a); the ADL5513 runs from 3.3 V and takes 0.43 dB,
+leaving 0.07 dB for the sampler, the set point and the amplifier; the LMH2110 takes 0.5 dB; the LTC5582 prints nothing below 450 MHz;
+none fits the 0.25 dB tier. **SESSION decision:** "a printed accuracy that supports the tolerance" is read as a printed LIMIT, because a
+typical figure says nothing of a unit's spread and the loop exists to bound the case's power (reverse: if typical data is read as
+enough, the ADL5513 on +3V3_D8, or the ADL5902 with D-A1's supply, is drafted TYPICAL and CONDITIONAL on P-A1). The named items:
+
+- **V-A1 (vendor question, drafted, UNSENT):** to Analog Devices, product support for the ADL5902: "For the ADL5902 (data sheet Rev. B),
+  Table 1 gives the deviation vs. temperature at 100 MHz and 700 MHz as typical values (-0.11/+0.25 dB and +0.3/-0.2 dB at 0 dBm,
+  -40 C to +85 C). We intend to use the part in a closed power-control loop at 144 to 146 MHz with about 0 dBm at the input. (1) Is
+  there a specified limit (a minimum and a maximum), or a characterized distribution (mean and standard deviation, or a 3-sigma bound), of the deviation vs.
+  temperature at that frequency and level? (2) Is the part characterized for operation at a 4.34 V supply? (3) If neither, which ADI
+  RF power detector specifies its temperature deviation at 144 to 146 MHz as a limit?" (sent only by the owner).
+- **P-A1 (physical):** the loop's specimen over the kit's temperature range, its output deviation measured against a reference power
+  meter, the detector's drift tabulated per unit if firmware is to compensate it (board D already reads the PA's flange temperature,
+  U22); with the bench row already owed, the module's drain current at the loop's high end at 13.8 V.
+- **D-A1 (design, after V-A1 or P-A1):** a supply of at least 4.5 V for a 5 V detector on board D, or a 3.3 V part with the margin.
+- **For the coordinator, not drafted (materially different):** the loop could sense the PA's DC input on board A, where U14 (an INA226
+  on +13V8_PA) gives gain error and offset as maximum values; it bounds the case's own quantity, needs a path from board A to VGG on board
+  D, and leaves the RF output to the module's efficiency.
+
+F01 / D-17 stays **OPEN** on C-ALLTX rev 3; L9P-F04 stays with A1.
+
+**Other findings (drafts 7):** L9T5-F01 (T5b): board B's composition stops on GND's declared peak, the same stop without this
+record's draft. L9T5-F02 (d8dec31's mainpb, R-194; L4-E9's row 33): with this draft before it, mainpb takes R603 and C607, after it
+R248 and C247; row 33's text names R233 and C241, which set 29's tree already moves; fixed references would remove the dependency.
+L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads "its own branch off the device rail"; left,
+because the z-stack tables key on value texts.
+
+**SESSION decisions of round 2** (under the owner's standing rule of 26 September 2026; each reversible by editing the named line):
+(1) board A's draft after L4-E9's 3g and before 3h's mainpb (the docstring's place; first and last also compose); (2) record l8r2's
+d8v3 and vbus20ov compose in board A's round in l8r2's own order, as records l8r2 and l8p compose them, though L4-E9's list does not
+name them; (3) the TPS62933's IFB taken either way in the set-point band (its sign is not printed; stream s99a's method); (4) U601's
+efficiency at the board's declared 0.90 (as U41), 0.85 shown as a bound; (5) the printed-limit reading above; (6) the four detector
+sheets held back (a `.gitignore` line for `v2/vendor/adi/held/`); (7) board B's LDO value text left unchanged (L9T5-F03).
 
 ## 1. The budget defect, corrected (record l9pwr round 4)
 
@@ -102,4 +184,7 @@ highest 9.5960 A against J_5V_DEV's JST-VH 10 A.
 ## 7. Reproduce
 
 `python3 v2/docs/records/l9t5/l9t5_case.py` from the repository root (stdlib, PyYAML, pdftotext; it imports record l9pwr's budget,
-pinned). The output is regenerated only through `_bin/regen_out.py`, after record l9pwr's. Test: `v2/ecad/tools/tests/test_l9t5.py`.
+pinned). Round 2: `python3 v2/docs/records/l9t5/l9t5_drafts.py` (record l8p's `gen_netlist.py`, no KiCad; about ten seconds) and,
+after `python3 v2/docs/records/l9t5/fetch_held_back.py`, `python3 v2/docs/records/l9t5/l9t5_a1.py`. Each output is regenerated only
+through `_bin/regen_out.py`, in the order l9pwr_budget, l9t5_case, l9t5_drafts, l9t5_a1. Test: `v2/ecad/tools/tests/test_l9t5.py`
+(the A1 survey's test needs the four held sheets).
