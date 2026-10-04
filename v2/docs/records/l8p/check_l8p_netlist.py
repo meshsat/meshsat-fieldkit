@@ -36,8 +36,12 @@ reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
                  negative; the values
   board E  EN    J_SMB pins 1 to 4 SMBC, SMBD, GND, PRES_LEAD, 5 DOCK_EN_RET, 6 GND, 7 DOCK_EN_OUT; J_BLK pin 3 DOCK_EN_RET, 4 GND,
                  5 DOCK_EN_OUT; nothing else on board E on the loop's nets (a pass-through)
-  board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET, and nothing else
-                 on the loop's nets
+  board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET; on the loop's
+                 nets nothing else but DD-7's readers as task L4-E11 draws them (apply_gen_sch_a_dd7.py at a09e9a60, round 10; finding
+                 L4E11-R10-F2), each admitted by its PIN and not by its reference: on DOCK_EN_OUT one pin of R109, a resistor of at
+                 least 470 kOhm whose other end is on neither loop net nor the ground (U48's SENSE2 divider, either way round); on
+                 DOCK_EN_RET pin 3 of Q44 (its drain) with its pin 2 (source) on the ground, and pin 2 of U48 (SENSE1, a sense input).
+                 No resistor or capacitor reaches DOCK_EN_RET, so its load stays a FET's leakage and a sense input
   GROUND BETWEEN (condition C2), on every board present: on J_SMB (a 1x7 row, circuits numbered in order along it) the two loop
                  pins are not neighbours and every pin between them is the board's return; on J_BLK and J_DOCK (the 2 x 6 fields,
                  positions read from meshsat.pretty's PogoTargets_2x6 and PogoPins_2x6) a ground pad sits at the midpoint of the two
@@ -366,6 +370,17 @@ def checks_e(nl):
     return {"EN": ("FAIL", bad) if bad else ("DRAWN", [])}
 
 
+# DD-7's readers on the loop (task L4-E11, apply_gen_sch_a_dd7.py at a09e9a60, round 10; finding L4E11-R10-F2): (ref, pin) on
+# each loop net, admitted by pin, not by reference: a rule that admitted U48 or Q44 whole would pass U48's VDD or Q44's source
+# on the return. R109 is a resistor, so either of its pins may be the one on DOCK_EN_OUT; its other end is judged below.
+DD7_ON = {OUT: {("R109", "1"), ("R109", "2")}, RET: {("Q44", "3"), ("U48", "2")}}
+R109_LEAST = 470e3      # a sense divider on DOCK_EN_OUT, not a load on the loop (L4-E11 draws 562k over 422k)
+
+
+def _nodes(nl, net):
+    return {(r, p) for r, d in nl["pins"].items() for p, n in d.items() if n == net}
+
+
 def checks_a(nl):
     if "RT1" not in nl["comps"] and "DOCK_EN_OUT" not in nl["on"]:
         return {"EN": ("NOT DRAWN", ["RT1 is absent"])}
@@ -373,8 +388,21 @@ def checks_a(nl):
     if _two(nl, "RT1") != sorted({OUT, RET}):
         bad.append("RT1 on %s, wanted %s to %s" % (_two(nl, "RT1"), OUT, RET))
     for n in (OUT, RET):
-        if nl["on"].get(n, set()) != {"J_DOCK", "RT1"}:
-            bad.append("%s reaches %s, wanted J_DOCK and RT1 alone" % (n, sorted(nl["on"].get(n, set()))))
+        base = {("J_DOCK", "5" if n == OUT else "3")} | {(r, p) for r, p in _nodes(nl, n) if r == "RT1"}
+        extra = sorted(_nodes(nl, n) - base - DD7_ON[n])
+        if extra:
+            bad.append("%s reaches %s beyond J_DOCK, RT1 and DD-7's readers (by pin: %s)" % (n, extra, sorted(DD7_ON[n])))
+    if _pin(nl, "Q44", "3") == RET and _pin(nl, "Q44", "2") != "GND":
+        bad.append("Q44's drain is on the return and its source on %r, not the ground" % _pin(nl, "Q44", "2"))
+    on = [k for k, v in nl["pins"].get("R109", {}).items() if v == OUT]
+    if on:
+        other = _pin(nl, "R109", "2" if on == ["1"] else "1")
+        try:
+            ohms = _ohms(nl["comps"]["R109"]["value"])
+        except (KeyError, ValueError):
+            ohms = 0.0
+        if other in (OUT, RET, "GND") or ohms < R109_LEAST:
+            bad.append("R109 on DOCK_EN_OUT is %r to %r, not a sense divider of %.0f kOhm or more" % (nl["comps"].get("R109", {}).get("value"), other, R109_LEAST / 1e3))
     bad += values(nl, "a")
     o, r = loop_pins(nl, "J_DOCK")
     if len(o) == 1 and len(r) == 1:
