@@ -8,11 +8,11 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 14ea032a7fdd86ac v2/ecad/tools/pcb_rules.yaml
 393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
 119ca354c7ff83bc v2/docs/GROUNDING-AND-SHIELDS.md
-56ece4e160267333 v2/docs/HW-FW-CONTRACT.md
+9b0d04c39beafb7d v2/docs/HW-FW-CONTRACT.md
 c883f948f3221e74 v2/docs/ARCHITECTURE.md
 6cb7b241cb84d729 v2/docs/CONOPS.md
-d84e1e9c22d5bed7 v2/docs/handover/LAYER-STATUS.md
-996fc1b1ee4491fc v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+b6e47c6a124b56fe v2/docs/handover/LAYER-STATUS.md
+a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 2a9d80931a0bed4b v2/vendor/cluster/ksz989x-hw-design-checklist.pdf
 d6d6b918dec76c7b v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf
 76b85b47d0bd9f46 v2/vendor/pulse/pulse-h5007nl.pdf
@@ -34,7 +34,7 @@ ef2e4637284a4cbb v2/docs/records/s117/apply_gen_sch_a_s117.py
 6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
 bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
 347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -123,7 +123,7 @@ bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 5. DESIGNATORS ADDED PER BOARD A DRAFT (part-call position and tokens outside comments; H pads included)
   l4e6/apply_gen_sch_a_r12.py              none
   l4e11/apply_gen_sch_a_guard.py           none
-  l4e11/apply_gen_sch_a_charger.py         C236, C237, C238, C239, D23, Q39, Q40, R228, U42
+  l4e11/apply_gen_sch_a_charger.py         C105, C236, C237, C238, C239, D23, D24, Q39, Q40, Q42, Q43, R105, R228, R86, R87, R88, R89, U42, U46
   l4e4/apply_gen_sch_a_r11.py              none
   l4e8/apply_gen_sch_a_bank.py             R221, R222, R223, R224, R225, R226
   l4e4/apply_gen_sch_a_r138.py             none

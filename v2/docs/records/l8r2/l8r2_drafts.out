@@ -7,7 +7,7 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
 eb1f5e9f5e1ca9ae v2/ecad/tools/lcsc_fill.py
-996fc1b1ee4491fc v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
 29dbe3a0c4938274 v2/docs/ASSEMBLY.md
@@ -28,7 +28,7 @@ c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
 28d4d8d8dacd8c99 v2/docs/records/d8dec31/genpatch.py
 2ae78e5865ee308c v2/docs/records/d8dec31/netread.py
 6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-9fd2b4e3c6edf86e v2/docs/PANEL.md
+c4820a453aa7a159 v2/docs/PANEL.md
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 9b5cc24c3c9e286a v2/vendor/ti/ti-pca9555.pdf
 528fee9c7a3ebd46 v2/docs/records/l8r2/apply_gen_sch_c_pibtn.py
@@ -49,7 +49,7 @@ fd750e4dc429a790 v2/ecad/tools/track_current.py
 d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
 3a8eb81d3f58e0a5 v2/ecad/tools/gen_pcb_e3.py
 b0e303a557e38898 v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
-d88aabc2671fbfd0 v2/docs/records/l4e12/l4e12_thermal.out
+3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
 80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
 bd97a9e446861123 v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi
 fae7e21365939be5 v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
@@ -65,7 +65,7 @@ eef9321261f5dfb1 v2/docs/records/l6r2/l6r2_intent.py
 c864bfacf3396433 v2/docs/records/l8r2/checks/astra-check-l9pf02-2.md
 7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
 af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
 bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
 0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
 347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -86,12 +86,12 @@ d587db1f0cbda88e v2/docs/records/l4e9/apply_gen_sch_e_q1.py
 a6a60bac82c40000 v2/docs/records/l4e7/apply_gen_sch_e_u5_grade.py
 d58b41eb3e3238e7 v2/docs/records/l4e7/apply_gen_sch_e_hold.py
 cec278427751b16b v2/docs/records/l4e7/apply_gen_sch_e_input_limit.py
-261cb597dc70dc85 v2/docs/records/l4e7/apply_gen_sch_e_backstop.py
+dc560d0de51ac782 v2/docs/records/l4e7/apply_gen_sch_e_backstop.py
 b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
 ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
-418ea548a833b49f v2/docs/records/l4e11/apply_gen_sch_e_entry.py
+a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
 eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
-715eb965d4527d35 v2/docs/records/l4e11/apply_gen_sch_e_aux.py
+3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
 78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
 858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
 3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back by its terms, fetched by fetch_held_back.py)
@@ -452,7 +452,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
   with Layer 6's board B drafts (l6r2: xal_land, lcsc, intent) after this record's and before them: OK; OK; the same generator either way: YES
 
 6b. COMPOSITION ON BOARD E (scratch copies of gen_sch_e.py; the change list's board E round, d8dec31's cin last, and this record's pack return)
-  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_cin.py: the same as this script's E_ROUND
+  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_packrtn.py, apply_gen_sch_e_enable.py, apply_gen_sch_e_cin.py: DIFFERENT from this script's E_ROUND
   the round, then this record's packrtn:             OK at every step (12 drafts)
   this record's packrtn first, then the round:       OK at every step (12 drafts)
   the round with this record's packrtn before cin:   OK at every step (12 drafts)
@@ -461,7 +461,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
 7. DESIGNATORS
   A l4e6/apply_gen_sch_a_r12.py                none
   A l4e11/apply_gen_sch_a_guard.py             none
-  A l4e11/apply_gen_sch_a_charger.py           C236, C237, C238, C239, D23, Q39, Q40, R228, U42
+  A l4e11/apply_gen_sch_a_charger.py           C105, C236, C237, C238, C239, D23, D24, Q39, Q40, Q42, Q43, R105, R228, R86, R87, R88, R89, U42, U46
   A l4e4/apply_gen_sch_a_r11.py                none
   A l4e8/apply_gen_sch_a_bank.py               R221, R222, R223, R224, R225, R226
   A l4e4/apply_gen_sch_a_r138.py               none

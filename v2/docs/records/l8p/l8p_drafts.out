@@ -17,15 +17,15 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
    ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
-   418ea548a833b49f v2/docs/records/l4e11/apply_gen_sch_e_entry.py
+   a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
-   715eb965d4527d35 v2/docs/records/l4e11/apply_gen_sch_e_aux.py
+   3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
    351029a5db0ee871 v2/docs/records/l6r2/apply_gen_sch_e_xal_land.py
    3f3e58b950ef3f8d v2/docs/records/l6r2/apply_gen_sch_e_lcsc.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-   d857a70256d1c77e v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -207,19 +207,15 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
    board P composed in L4-E9's order: the generator ran to its end (135 parts, intent written: yes)
-   board E composed in L4-E9's order: the generator refused: intent: rail +12V_FAN names source L4, which is not on that net (refs on it: ['C143', 'J_FAN1', 'J_FAN2', 'R105', 'R108', 'U22'])
-     without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
-     with scratch stand-ins for L8P-F03 (never drafts, never applied): the generator ran to its end (295 parts, intent written: yes)
-   board A composed in L4-E9's order: the generator refused: intent: rail VSYS_DOCK names U42 as its source, and a multi-pin IC's pad on its own output net is a SENSE pin: dc_drop would take the rail's 1.32 A out of it. Name the inductor or the sense shunt the current really leaves through, or pass source_ic="<why this part's pin is a power pin>".
-     without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
-     with scratch stand-ins for L8P-F02 (never drafts, never applied): the generator ran to its end (704 parts, intent written: yes)
+   board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)
+   board A composed in L4-E9's order: the generator ran to its end (714 parts, intent written: yes)
      regenerated board P, composed in L4-E9's order sha256 987594f86a28448d
        P BRK  DRAWN
        P EN   DRAWN
        P INH  DRAWN
-     regenerated board E, composed in L4-E9's order with the stand-ins sha256 5dc75795ca195d15
+     regenerated board E, composed in L4-E9's order sha256 ce5b27b5b8d1ad3f
        E EN   DRAWN
-     regenerated board A, composed in L4-E9's order with the stand-ins sha256 2d836dec444330e2
+     regenerated board A, composed in L4-E9's order sha256 4d74aeef27f7da01
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN

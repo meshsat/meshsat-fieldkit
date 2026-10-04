@@ -12,8 +12,8 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    31b82bacb31ca7efaac19627ebc97e1e7c2649c3cf1fa68e8fa513b7b61bca8c v2/ecad/tools/jlc-mismatch.yaml
    cab57e0ed5be2f638e83a2fef8e99193ef20cddd32ac0d26a0c5503db679c2ff v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
    687c4acafacd96d22fa89dd6cd4786280f7aeb3548c3537ece3d5389ab906cc1 v2/docs/records/l6r2/inputs/bom_from_netlist.py
-   fd43195986d3080f230d450b5e32142f1525780426c2e22a366d901de4fbadd9 v2/docs/records/l4e9/l4e9_power_path.py
-   c71b1e680c4ef920525e5c14c8cb0a35fabf023c5e1c6c396f25eeeab25c6681 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   7708bae66577b944ba844aa616c9880d09c965d953a54d72ddc19766ab6890dc v2/docs/records/l4e9/l4e9_power_path.py
+   dd7a07eb421e937d7fd7a20476f4acf57c851efa360522545f7ff66e1ac5ba4c v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648 v2/vendor/passives/yageo-cc-series.pdf
    f8cd1e49d3ae1d2b573eed34fd8d4f6a156d0d919cd0b2c1e576f8996f2b408a v2/docs/records/l6r2/inputs/kicad-xal-footprints-9.0.9.json
    b26cf975bd56a807173b05665bddd49ed49323400330eb8f6fa63e24ff6d7d15 v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf
@@ -324,7 +324,6 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         from the maker's series sheet (the catalogue line prints none): Temperature Coefficient from v2/vendor/passives/milliohm-hojlr2512-series.pdf p.2; Operating Temperature from v2/vendor/passives/milliohm-hojlr2512-series.pdf p.2
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes HoJLR2512-3W-10mR-1% (Milliohm)
         alternative: C375691 YAGEO PA2512FKE7T0R01E, stock 24315, expand
-        a pending draft names R16: the draft's value key decides at the regeneration
      S-8b9f42fce2 RES        R12,R122,R127,R170,R177,R56 rows 6 [5mOhm 1% 2512 (CS)]: R_2512_6332Metric
         requirement: value 5mOhm; package 2512; tolerance_max_pct 1.0; power_min_w 1.0; tcr_max_ppm 200; resistor_kind current sense
         basis: tolerance_max_pct: stated; power_min_w: the package's standard rating; UNDERIVED: no current declared on its nets
@@ -340,7 +339,6 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         SELECTED: C20108830 ROHM Semicon GMR100HJAAFD5L00 2512 (expand), stock 412 against a need of 5; USD 1.8793 at 1, 1.8793 at 5; grade NOT READ (no range read  to  C)
         checks: package MEETS (2512); resistance MEETS (5mOhm); tolerance MEETS (+-1%); power MEETS (7W); temperature coefficient MEETS (0ppm/C~+50ppm/C)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes GMR100HJAAFD5L00 (ROHM Semicon)
-        a pending draft names R17: the draft's value key decides at the regeneration
      S-6982df0636 RES        R19 rows 1 [16.5k 1%]: R_0603_1608Metric
         requirement: value 16.5kOhm; package 0603; tolerance_max_pct 1.0; power_min_w 0.1; resistor_kind general
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
@@ -544,7 +542,6 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         from the maker's series sheet (the catalogue line prints none): Temperature Coefficient from v2/vendor/passives/milliohm-hojlr2512-series.pdf p.2; Operating Temperature from v2/vendor/passives/milliohm-hojlr2512-series.pdf p.2
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes HoJLR2512-3W-10mR-1% (Milliohm)
         alternative: C375691 YAGEO PA2512FKE7T0R01E, stock 24315, expand
-        a pending draft names R138: the draft's value key decides at the regeneration
      S-477807fcf6 RES        R139 rows 1 [43R 1W 2512 (DSCG)]: R_2512_6332Metric
         requirement: value 43Ohm; package 2512; tolerance_max_pct 5.0; power_min_w 1.0; resistor_kind general
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: stated; not checked (no exact voltage across it)
@@ -553,7 +550,6 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         checks: package MEETS (2512); resistance MEETS (43Ohm); tolerance MEETS (+-5%); power MEETS (1W); working voltage MEETS (200V)
         identity: DOCUMENT_OWED: no maker's ordering table in the tree decodes 25121WJ0430T4E (UNI-ROYAL(Uniroyal Elec))
         alternative: C728200 YAGEO AC2512FK-0743RL, stock 4371, expand
-        a pending draft names R139: the draft's value key decides at the regeneration
      S-33cc84bc82 RES        R140 rows 1 [1M (GD to VPWR, 9.1.3)]: R_0603_1608Metric
         requirement: value 1MOhm; package 0603; tolerance_max_pct 5.0; power_min_w 0.1; resistor_kind general
         basis: tolerance_max_pct: rule R-T1: unstated, 5 percent (the widest standard thick-film grade); power_min_w: rule R-P0: the package's standard rating; not checked (no exact voltage across it)
@@ -578,7 +574,6 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
         checks: package MEETS (0603); resistance MEETS (10Ohm); tolerance MEETS (+-1%); power MEETS (100mW); working voltage MEETS (75V)
         identity: DECODED on v2/vendor/passives/held/uniroyal-series-11cd644d.pdf p.2 (page 2 decodes it: value, package, tolerance, power)
         alternative: C109318 YAGEO RC0603FR-0710RL, stock 6047711, expand
-        a pending draft names R149: the draft's value key decides at the regeneration
      S-f0f5f7a0d2 RES        R150,R151,R152,R153,R154,R155+22 rows 28 [100R 1% (CS filter, Kelvin from the shunt's top)]: R_0603_1608Metric
         requirement: value 100Ohm; package 0603; tolerance_max_pct 1.0; power_min_w 0.1; resistor_kind general
         basis: tolerance_max_pct: stated; power_min_w: rule R-P0: the package's standard rating; checked: 0.01 W (V^2/R at 1.00 V, a DECLARED net to ground) at twice is inside it | rule R-P0: the package's standard rating; not checked (no exact voltage across it)
@@ -2202,7 +2197,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      C440151     GCM32ER70J476KE19L         need    15, stock      4972, margin      4957
      C414503     CS03W5F470LT5E             need     5, stock      5024, margin      5019
      C151256     SMBJ18A                    need     5, stock      6292, margin      6287
-   BOARD A: 41 findings (GRADE NOT READ 4; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 34; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
+   BOARD A: 42 findings (COMPOSITION 1; GRADE NOT READ 4; RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN 1; SPECIAL PART WITHOUT A CODE 34; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      RULE C-D3b: X5R TAKEN, THE HOT-SPOT QUESTION OPEN: C1, C2 [47u 25V]: C403725 GRM31CR61E476ME44L; rule C-D3b: no X7R line read meets the value, land and rating with stock; an X5R part is taken and the hot-spot question is OPEN
      GRADE NOT READ: R12, R122, R127, R170, R177, R56 [5mOhm 1% 2512 (CS)]: C500739 LR2512D-3W-5mR-1%: None
      GRADE NOT READ: R17 [5mOhm 1% 2512 (RSR, charge current sense)]: C20108830 GMR100HJAAFD5L00: None
@@ -2252,6 +2247,7 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
        (R103,R104,R111+), S-50018f6fcc (R110,R117,R142+), S-a6b3121bb8 (R115,R46,R52+), S-a44109c662 (R116,R118,R119+), S-05a6306966 (R129,R131), S-477807fcf6 (R139), S-33cc84bc82 (R140),
        S-f9685d1305 (R141), S-5763db5a29 (R146,R147,R148+)
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 24 selections, 90 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
+     COMPOSITION:  []: the other drafts alone: v2/docs/records/l4e11/apply_gen_sch_a_dd7.py refused: apply_gen_sch_a_dd7: record l8p's enable loop or U34's FE_RUN is not drawn in the target ('part("RT1", "Device", "Thermistor_PTC"' missing): apply l8p's PTC dra; apply_gen_sch_a_mainpb.py: commutes with this draft (identic
    BOARD E: 18 findings (SPECIAL PART WITHOUT A CODE 16; TOLERANCE NOT STATED BY THE GENERATOR 1; VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT 1)
      SPECIAL PART WITHOUT A CODE: F1 [10 A mini blade (Keystone 3568 holder): vehicle input]: names Keystone 3568; no LCSC code in the netlist
      SPECIAL PART WITHOUT A CODE: F2 [10 A mini blade (Keystone 3568 holder): panel input]: names Keystone 3568; no LCSC code in the netlist
@@ -2398,12 +2394,11 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      VOLTAGE NOT STATED BY THE GENERATOR, DERIVED FROM THE INTENT: 18 selections, 427 rows []: rule V-1: the voltage across each from the board's intent (DECLARED) or its nets' bound (BOUND) at the 20 percent margin; the derivation is the requirement, not a guess (each selection's basis line in section 2)
 
 4. THE DRAFTS: apply_gen_sch_X_lcsc.py per board, composition against every other pending draft of that generator
-   board A: 331 designators keyed by (designator, committed value); chain apply_gen_sch_a_r12.py, apply_gen_sch_a_guard.py, apply_gen_sch_a_charger.py, apply_gen_sch_a_r11.py, apply_gen_sch_a_bank.py, apply_gen_sch_a_r138.py, apply_gen_sch_a_u17.py, apply_gen_sch_a_mainpb.py; standalone apply_gen_sch_a_mainpb.py
-     apply_gen_sch_a_r12.py then apply_gen_sch_a_guard.py then apply_gen_sch_a_charger.py then apply_gen_sch_a_r11.py then apply_gen_sch_a_bank.py then apply_gen_sch_a_r138.py then apply_gen_sch_a_u17.py then apply_gen_sch_a_mainpb.py: commutes with this draft (identical text either order, sha256 c9d1bb3be09d5c62)
+   board A: 331 designators keyed by (designator, committed value); chain apply_gen_sch_a_r12.py, apply_gen_sch_a_guard.py, apply_gen_sch_a_charger.py, apply_gen_sch_a_r11.py, apply_gen_sch_a_bank.py, apply_gen_sch_a_r138.py, apply_gen_sch_a_u17.py, apply_gen_sch_a_dd7.py, apply_gen_sch_a_mainpb.py; standalone apply_gen_sch_a_mainpb.py
+     the other drafts alone: v2/docs/records/l4e11/apply_gen_sch_a_dd7.py refused: apply_gen_sch_a_dd7: record l8p's enable loop or U34's FE_RUN is not drawn in the target ('part("RT1", "Device", "Thermistor_PTC"' missing): apply l8p's PTC dra
      apply_gen_sch_a_mainpb.py: commutes with this draft (identical text either order, sha256 655c3a5dc309420f)
-     designators the pending drafts' changed lines name (their value key decides at the regeneration): R138, R139, R149, R16, R17
    board E: 91 designators keyed by (designator, committed value); chain apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_cin.py; standalone apply_gen_sch_e_pod.py
-     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py: commutes with this draft (identical text either order, sha256 6b7838a2ea1c1205)
+     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py: commutes with this draft (identical text either order, sha256 59be94150924aca4)
      apply_gen_sch_e_pod.py: commutes with this draft (identical text either order, sha256 561167d0b3075558)
      designators the pending drafts' changed lines name (their value key decides at the regeneration): C13, C14, C15, C30, C31, C32, C33, C5, C63, R14, R15, R16, R17, R19, R20, R21, R22, R23, R24, R25, R8, R9
    board P: 44 designators keyed by (designator, committed value); chain none; standalone none
@@ -2468,10 +2463,10 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
      apply_gen_sch_b_lcsc.py: commutes with this draft (identical text either order, sha256 d680d4878c3f2156)
    apply_gen_sch_e_xal_land.py on the committed generator: OK, 2 edit(s): the FP map gains the XAL4030 footprint; L3 on the XAL4030 footprint; keys added L4030 (L4030 -> Inductor_SMD:L_Coilcraft_XAL4030-XXX)
      keys whose footprint changed: none; the drafted generator's sha256 ee6b0b9a6f1cf7d9
-     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py: commutes with this draft (identical text either order, sha256 d0963ebe96567b47)
+     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py: commutes with this draft (identical text either order, sha256 aaa6e0f2f51e9d60)
      apply_gen_sch_e_pod.py: commutes with this draft (identical text either order, sha256 b8ce68eedc01b746)
      apply_gen_sch_e_lcsc.py: commutes with this draft (identical text either order, sha256 0d9af5be4b250664)
-     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py then apply_gen_sch_e_pod.py then apply_gen_sch_e_lcsc.py: commutes with this draft (identical text either order, sha256 6e9be044505db526)
+     apply_gen_sch_e_q1.py then apply_gen_sch_e_u5_grade.py then apply_gen_sch_e_hold.py then apply_gen_sch_e_input_limit.py then apply_gen_sch_e_backstop.py then apply_gen_sch_e_f1.py then apply_gen_sch_e_hotswap.py then apply_gen_sch_e_entry.py then apply_gen_sch_e_solar_guard.py then apply_gen_sch_e_aux.py then apply_gen_sch_e_cin.py then apply_gen_sch_e_pod.py then apply_gen_sch_e_lcsc.py: commutes with this draft (identical text either order, sha256 db73092757687ff0)
    8 rows on the six boards draw an XAL part on another series' footprint; 8 are moved by the two drafts; the rest: none
    Downstream (not done here): the regenerated boards B and E carry the new footprint names; v2/cad/zstack.py's reading takes the 3D
    model's height at the next z-stack run (zstack-models.json holds no XAL6030 model yet: the box reads it), which lowers board B's six
