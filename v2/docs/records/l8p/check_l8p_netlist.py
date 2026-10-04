@@ -18,6 +18,14 @@ reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
                  return; R113 from its output to the reference; R114 and R115 its output's divider onto Q105's gate; Q105's drain
                  on UVLO; Q106's gate on U101's PGD net (with R116 from BRK_VIN and R117 to the return) and its drain on Q105's gate;
                  C106 on U102's supply; the values
+           REV   the reverse-charge detector (B-R2, route R1, round 3): U103 (OPA187) +IN on R10's cell side (the net R10 shares
+                 with no PACK_N pin, through R120) with C109 to the return, -IN on R118 from U101's VIN over R119 to the return, V+
+                 on U101's VIN, V- on the return; U104 (OPA187) +IN on PACK_P over R121 and R122, -IN on BRK_SNS over R123 and
+                 R124, C110 across its inputs, the same supply; R125 and R126 halve U103's output onto Q107's gate, R127 and R128
+                 U104's onto Q108's; Q107 drain on the loop's return (Q103's gate net), source on Q108's drain; Q108 source on the
+                 return: the two in series, so the return is held low only while both comparators are high; C107 and C108 on
+                 the comparators' supply pins; the values; and U104's threshold sits on the right side (its -IN divider's ratio
+                 above its +IN's, so PACK_P must exceed BRK_SNS)
   board E  EN    J_SMB pins 1 to 4 SMBC, SMBD, GND, PRES_LEAD, 5 DOCK_EN_RET, 6 GND, 7 DOCK_EN_OUT; J_BLK pin 3 DOCK_EN_RET, 4 GND,
                  5 DOCK_EN_OUT; nothing else on board E on the loop's nets (a pass-through)
   board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET, and nothing else
@@ -200,6 +208,11 @@ EN_VALUES = ("R104", "C103", "R105", "D102", "R106", "R107", "Q103", "Q104", "R1
 INH_VALUES = ("RT101", "R110")
 # the restart inhibit's parts the record leaves to the drawing (record l8p's SESSION choices), each value's prefix
 INH_SESSION = (("U102", "OPA187"), ("R111", "147k 0.1%"), ("R112", "1.62k 0.1%"), ("R113", "15M"), ("Q105", "2N7002"), ("Q106", "2N7002"))
+# the reverse-charge detector (B-R2, route R1, round 3): record l8p's SESSION choices, each value's prefix
+REV_SESSION = (("U103", "OPA187"), ("U104", "OPA187"), ("R118", "1.5M 0.1%"), ("R119", "200R 0.1%"), ("R120", "1k"), ("C109", "100n"),
+               ("R121", "1M 0.05% 10ppm"), ("R122", "100k 0.05% 10ppm"), ("R123", "988k 0.05% 10ppm"), ("R124", "100k 0.05% 10ppm"),
+               ("C110", "1n"), ("C107", "100n"), ("C108", "100n"), ("R125", "100k"), ("R126", "100k"), ("R127", "100k"), ("R128", "100k"),
+               ("Q107", "2N7002"), ("Q108", "2N7002"))
 
 
 def _pairs(nl, rows):
@@ -208,7 +221,8 @@ def _pairs(nl, rows):
 
 def checks_p(nl):
     if "U101" not in nl["comps"] and _pin(nl, "J_SMB", "7") is None and "DOCK_EN_OUT" not in nl["on"]:
-        return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"]), "INH": ("NOT DRAWN", ["U102 is absent"])}
+        return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"]), "INH": ("NOT DRAWN", ["U102 is absent"]),
+                "REV": ("NOT DRAWN", ["U103 is absent"])}
     ret = _pin(nl, "W_N", "1")
     vin, sns, uvlo, pgd = "BRK_VIN", "BRK_SNS", "BRK_UVLO", "BRK_PGD"
     rows = [("U101", "1", sns), ("U101", "2", vin), ("U101", "3", uvlo), ("U101", "4", ret), ("U101", "5", ret),
@@ -253,7 +267,46 @@ def checks_p(nl):
     if (nl["comps"].get("RT101") or {}).get("footprint") != "meshsat:LeadLands_1x02":
         bad.append("RT101 is not on the lead lands (its 10 mm leads to two lands beside the pad)")
     out["INH"] = ("FAIL", bad) if bad else ("DRAWN", [])
+    # B-R2, route R1: the reverse-charge detector holds the loop's return low while the charge into the cells exceeds its threshold
+    # AND the breaker's body diodes conduct; its two senses, its supply and its one output are read from the pins
+    sens = [n for n in set(nl["pins"].get("R10", {}).values()) if n != ret]
+    cell = sens[0] if len(sens) == 1 else None
+    rows = [("U103", "1", "REV_IOUT"), ("U103", "2", ret), ("U103", "3", "REV_ISNS"), ("U103", "4", "REV_IREF"), ("U103", "5", vin_u),
+            ("U104", "1", "REV_VOUT"), ("U104", "2", ret), ("U104", "3", "REV_VP"), ("U104", "4", "REV_VN"), ("U104", "5", vin_u),
+            ("Q107", "1", "REV_IG"), ("Q107", "2", "REV_MID"), ("Q107", "3", _pin(nl, "Q103", "1")),
+            ("Q108", "1", "REV_VG"), ("Q108", "2", ret), ("Q108", "3", "REV_MID")]
+    bad = props(nl, rows)
+    if cell is None or ret not in nl["pins"].get("R10", {}).values():
+        bad.append("R10 is not the sense between the cells and the return (%s)" % _two(nl, "R10"))
+    if _pin(nl, "Q103", "1") != RET:
+        bad.append("Q107's drain is not on the loop's return: Q103's gate reads %r" % _pin(nl, "Q103", "1"))
+    bad += _pairs(nl, (("R118", vin_u, "REV_IREF"), ("R119", "REV_IREF", ret), ("R120", cell, "REV_ISNS"), ("C109", "REV_ISNS", ret),
+                       ("R121", "PACK_P", "REV_VP"), ("R122", "REV_VP", ret), ("R123", sns, "REV_VN"), ("R124", "REV_VN", ret),
+                       ("C110", "REV_VP", "REV_VN"), ("R125", "REV_IOUT", "REV_IG"), ("R126", "REV_IG", ret),
+                       ("R127", "REV_VOUT", "REV_VG"), ("R128", "REV_VG", ret), ("C107", vin_u, ret), ("C108", vin_u, ret)))
+    bad += ["%s value %r does not start %r (record l8p, SESSION)" % (r_, nl["comps"].get(r_, {}).get("value"), pre)
+            for r_, pre in REV_SESSION if not str(nl["comps"].get(r_, {}).get("value", "")).startswith(pre)]
+    if nl["on"].get("REV_MID", set()) != {"Q107", "Q108"}:
+        bad.append("REV_MID reaches %s, wanted Q107 and Q108 alone (the two in series)" % sorted(nl["on"].get("REV_MID", set())))
+    ratio = {}
+    for top, bot in (("R121", "R122"), ("R123", "R124")):
+        try:
+            rt_, rb_ = (_ohms(nl["comps"][x]["value"]) for x in (top, bot))
+            ratio[top] = rb_ / (rt_ + rb_)
+        except (KeyError, ValueError):
+            pass
+    if len(ratio) != 2 or not ratio["R123"] > ratio["R121"]:
+        bad.append("U104's threshold is not on the reverse side (the -IN divider's ratio %s, the +IN's %s)" % (ratio.get("R123"), ratio.get("R121")))
+    out["REV"] = ("FAIL", bad) if bad else ("DRAWN", [])
     return out
+
+
+def _ohms(value):
+    """A resistor value's leading figure in ohms: '988k 0.05% ...' is 988000.0, '200R ...' 200.0, '1.5M ...' 1500000.0."""
+    m = re.match(r"([0-9.]+)\s*([RkKM]?)", str(value))
+    if not m:
+        raise ValueError(value)
+    return float(m.group(1)) * {"": 1.0, "R": 1.0, "k": 1e3, "K": 1e3, "M": 1e6}[m.group(2)]
 
 
 def checks_e(nl):
