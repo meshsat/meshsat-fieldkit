@@ -34,24 +34,36 @@ l9stk-L9-STACKUPS-7388a84b.md sha256 4affe7feaf7cf37a15843ddd29409424d0868ed5742
   from v2/docs/records/l9stk/L9-STACKUPS.md at commit 7388a84b on branch fnd/l9stk, the whole file: sections 3 and 7 (boards A and
   E, 1 oz outer with the pack path and its return shared by both faces) and section 12's first two findings, which items 5 and 6 answer.
 
-Round 7 (4 October 2026 evening, task T5b, branch fnd/l8r4 from set 29's candidate aa76c894); whole files byte for byte, read with
-git show from the author's branch at its tip when read, not merged; this record reads the copies, never the branch:
-
-l9t5-apply_gen_sch_b_iocbuck-f70d3085.py sha256 afb77ab72e0d2d4cc677419900012f05ba0722f3d7afd090c417a06e37b14bd0
-  from v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py at commit f70d3085 on branch fnd/l9t5 (Layer 9 record l9t5, task T5, I-03 on
-  the case row C-DEV rev 1: the supervisors' LDOs on a new lead J_5V_IOC; the file last changed at 731e0939). Composed after this
-  record's board B drafts in section 1 of l8r2_gndret.py.
-
-l9t5_drafts-f70d3085.txt sha256 e78a17359462e4e58fc224493af1b8dbda631dbb78f0195458a97d93b9f06b6d
-  from v2/docs/records/l9t5/l9t5_drafts.out at commit f70d3085 on branch fnd/l9t5, the whole file, renamed .txt so that no tool reads
-  its pin lines as this record's own. Parsed: section 6's lines (1) and (2) (the device rail and U601 on C-DEV rev 1) and the block
-  "WHAT T5b NEEDS".
-
-l9pwr_budget-f70d3085.txt sha256 e5e8b9083cb087ffae26e206423dd8b24ce04c67526d5ddc9f944013029d64e1
-  from v2/docs/records/l9pwr/l9pwr_budget.out at commit f70d3085 on branch fnd/l9t5 (Layer 9's budget, rounds 4 and 5: PS-ALLTX with
-  the standby WiFi card off), the whole file, renamed as above. Parsed beside the tree's own v2/docs/records/l9pwr/l9pwr_budget.out
-  (set 29's candidate): section 5b, the four 5.1 V stages per state.
+Round 7 (4 October 2026 evening, task T5b, branch fnd/l8r4 from set 29's candidate aa76c894) copied Layer 9's board B draft, its
+output and its budget from fnd/l9t5 at f70d3085. Round 8 replaced the three copies by the ones below (record l9t5's finding L9T5-F05:
+the round 7 copies were stale against its round 3); the f70d3085 copies are in this branch's history at 04fa7a1d.
 
 coordinator-cases-2026-10-04-rev3.md sha256 0be579949c22eab11821cba696422e8ece36125f85c4eacaf541bc31814c4809
-  from the coordinator's working file _runs/cases/CASES-2026-10-04.md (the shared case rows as received with task T5b; the same
-  bytes record l9t5 holds as its inputs/coordinator-cases-2026-10-04-rev3.md). Cited by id and revision: C-DEV rev 1, C-ALLTX rev 3.
+  from the coordinator's working file _runs/cases/CASES-2026-10-04.md (the shared case rows as received with tasks T5b and round 8,
+  unchanged between them; the same bytes record l9t5 holds as its inputs/coordinator-cases-2026-10-04-rev3.md). Cited by id and
+  revision: C-DEV rev 1, C-ALLTX rev 3.
+
+Round 8 (4 October 2026 night, branch fnd/l8r4 from this record's round 7 at 04fa7a1d); whole files byte for byte, read with git show
+from fnd/l9t5 at its tip 841e6c7e (Layer 9's round 3, which holds this record's round 7 by merge), not merged; this record reads
+the copies, never the branch:
+
+l9t5-apply_gen_sch_b_iocbuck-841e6c7e.py sha256 ac1c6f82805048b003a39b1b110a01b7fa15892b1689bd6d6869908e33bf27ba
+l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py sha256 69e6ac4fc0417d3cd43396e81ddbedabb9523c3977230247698052f580239487
+  from v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py and apply_gen_sch_a_iocbuck.py at commit 841e6c7e on branch fnd/l9t5 (Layer 9
+  record l9t5 round 3, I-03 on C-DEV rev 1: the supervisors' LDOs on the new lead J_5V_IOC, 16 AWG and 150 mm; the device lead's
+  declared peak 6.0359 A and +5V_IOC's 1.4749 A from their basis). Composed with this record's drafts in l8r2_gndret.py section 5.
+
+l9t5_drafts-841e6c7e.txt sha256 a17be97cb9f813f4f285a5310ea18416e2e591e0da1664d017a470b1842bc9cd
+  from v2/docs/records/l9t5/l9t5_drafts.out at commit 841e6c7e on branch fnd/l9t5, the whole file, renamed .txt so that no tool reads
+  its pin lines as this record's own. Parsed: section 6's lines (1) and (2) (the device rail and U601 on C-DEV rev 1), the U601 limits,
+  and item (B4)'s LDO input figures (the least input, the AP2112K's need, the ground shift the input allows).
+
+l9pwr_budget-841e6c7e.txt sha256 b57b1ec493540f6e41057772822a31530dea290a433d4cab5aac7ef02604d94d
+  from v2/docs/records/l9pwr/l9pwr_budget.out at commit 841e6c7e on branch fnd/l9t5 (Layer 9's budget, rounds 4 to 6: PS-ALLTX with the
+  standby WiFi card off), the whole file, renamed as above. Parsed: section 5b, the four 5.1 V stages per state. Since round 8 it is
+  the ONE budget this record's return calculation reads (the merged figures), so the output does not move with the tree's own copy.
+
+The collaborator's targeted recheck V3 is filed as received, byte for byte, in checks/astra-check-t5-recheck-cx41.md, sha256
+b30615af5e6b45075d26c908dce06e5d9ff03c87b4c7d9ad7f6e9f212b3f6dba (job cx41-t5-recheck, run 20261004T185336Z-805732, an AI review of
+fnd/l9t5 at 841e6c7e; verdict NOT CONFIRMED). Parsed: its ground-shift allowance for the LDOs and its corner's current, each beside
+this record's own figure.
