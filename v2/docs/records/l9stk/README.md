@@ -20,7 +20,7 @@ run by the integrator.
 | `l9stk_copper.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_copper.py v2/docs/records/l9stk/l9stk_copper.out` |
 | `apply_energy_chain_l9stk.py` | The energy chain's DOCK_ENTRY, SHORE_INPUT and BOARD_A_NODE conductor texts at the revised widths and the 25 A blade's citation (MINI 297 for ATOF 287, six stages), for the integrator: it refuses until the register carries `(L9STK A)` and `(L9STK E)`, accepts the tree's texts or record l8r2's, and is a no-op on a second run; it REPLACES record l8r2's `apply_energy_chain_e1oz.py`. `--check` (the default) writes nothing |
 | `apply_blade_plating_l9stk.py` | Pins the 25 A MINI blade's silver terminals (0297025.WXNV) in `v2/vendor/SOURCES.yaml`, for Layer 6; `--check` is the default |
-| `l9stk_protection.py` | The pack path's protection (page section 15, the owner's correction of 4 October 2026), from the repository root: `python3 v2/docs/records/l9stk/l9stk_protection.py` (PyYAML, pdftotext and the copper script; no KiCad, no network). It pins 19 inputs by sha256 and prints board P's existing protection with its FETs welded, Q39/Q40's 150 C current with its uncertainty, the selected LM5069-2 breaker on board P (sense window, power limit, fault timer, dv/dt start, retry, the CSD18510Q5B's SOA derated by SLVA673A equations 4 to 7, the clamps, the charge direction), the docking correction (the make-last enable into UVLO) with the uncorrected excursion, the battery FETs' junction limit and the third FET selected, every series part at the breaker's largest limit, the owner's protection table, the design defects with owners, the interface demands, the missing evidence with specimen, acceptance and task, and the predicates the test reads |
+| `l9stk_protection.py` | The pack path's protection (page section 15, the owner's correction of 4 October 2026), from the repository root: `python3 v2/docs/records/l9stk/l9stk_protection.py` (PyYAML, pdftotext and the copper script; no KiCad, no network). It pins 21 inputs by sha256 and prints board P's existing protection with its FETs welded, Q39/Q40's 150 C current with its uncertainty, the selected LM5069-2 breaker on board P (sense window, power limit, fault timer, dv/dt start, retry, the CSD18510Q5B's SOA derated by SLVA673A equations 4 to 7, the clamps, the charge direction), the docking correction (the make-last enable into UVLO) with the uncorrected excursion, the battery FETs' junction limit and the third FET selected, every series part at the breaker's largest limit, the owner's protection table, the design defects with owners, the interface demands, the missing evidence with specimen, acceptance and task, and the predicates the test reads |
 | `l9stk_protection.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_protection.py v2/docs/records/l9stk/l9stk_protection.out`, after `l9stk_copper.out` |
 | `fetch_held_back.py` | Fetches TI's SLVA673A (the owner's named calculation basis, no grant to redistribute) into the ignored `v2/vendor/ti/held/` and checks its sha256; never run by a test |
 | `inputs/csd18510q5b-figure-readings-2026-10-04.json` | The CSD18510Q5B's Figure 10 (SOA) and Figure 8 (RDS(on) against temperature) read at 300 dpi: the segments' pixel ends, the axes, the reading uncertainty and the sheet's sha256/16 |
@@ -48,16 +48,17 @@ board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz i
 (`L9-STACKUPS.md` section 11). Every price at a board's real outline is NOT READ and left to the supplier's quotation
 (EQ-14).
 
-**W4DP-F2's element, designed (section 15; drafted, not drawn; revised after the recheck PROTECTION: NOT CONFIRMED):** an
+**W4DP-F2's element, designed (section 15; drafted, not drawn; revised after PROTECTION: NOT CONFIRMED, corrected after CONFIRMED AS CONDITIONAL):** an
 LM5069-2 circuit breaker on board P from Q2's source to PACK_P, with two CSD18510Q5B and a 2.6087 mOhm sense (4 and 7.5 mOhm in
 parallel): its actual limit 18.32 to 23.93 A, so the 10 A and the 18 A for 60 s never trip it and the cells' 24 A is never
 passed; above a unit's limit it clears within 1.29 ms with no firmware and with Q1/Q2 welded; a 0.659 A dv/dt start; the FET's
-SOA at 0.57 and 0.58 of the derated curve (TI asks 0.67). B-P1: a make-last dock contact into its UVLO (C-1b, TI's Figure 45)
-turns every docking into that start; without it a docking reached 2.64 times the derated 10 us line and 0.634 V across the
+SOA at 0.57 and 0.58 of the derated curve (TI asks 0.67). B-P1: a make-last enable loop into its UVLO with an RC hold (C-1b,
+TI's Figure 45) turns every docking into that start, 0.110 to 0.593 s after the enable mates; without it a docking reached 2.64 times the derated 10 us line and 0.634 V across the
 sense. B-P2: the battery FETs' target is a junction limit with the band and R17 in place (150 C at 23.93 A from 76.25 C); a
-third BUK6Y10-30P is selected, (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart, the pair at 20.39 K/W the fallback,
-E11-37 deciding its Ciss. Open: DD-1 to DD-6 with their owners, IF-1 to IF-6, the evidence E-1 to E-11 and the maker questions
-Q-TI-L9S-1 and Q-TI-17. (L9STK CU) lists option (4), the zero-cost route with each return laid apart, not credited by decision
+third BUK6Y10-30P is selected (its designator L4-E11's), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart, with the
+kit's chip PTC in the enable loop as a thermal guard, the pair at 20.39 K/W the fallback, E11-37 deciding its Ciss. Open: DD-1 to
+DD-6 with their owners, the conditions C1 (mating order) to C3 (Ciss), IF-1 to IF-6, the evidence E-1 to E-13 and the maker
+questions Q-TI-L9S-1 and Q-TI-17. (L9STK CU) lists option (4), the zero-cost route with each return laid apart, not credited by decision
 35's model and waiting on a coupon.
 
 ## Proposed LAYER-STATUS row (for the integrator; `LAYER-STATUS.md` is not edited here)
