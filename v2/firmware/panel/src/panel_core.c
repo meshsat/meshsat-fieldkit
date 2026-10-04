@@ -216,7 +216,7 @@ static void slot_set(panel_slot_t *s, bool en, uint8_t state, ms_t now)
 }
 
 void panel_init(panel_t *p, const panel_ops_t *ops, ms_t now, bool zeroize_raw_closed, const bool held[3],
-                bool drive[3])
+                bool power_on_reset, bool drive[3])
 {
     memset(p, 0, sizeof *p);
     p->ops = ops;
@@ -231,21 +231,53 @@ void panel_init(panel_t *p, const panel_ops_t *ops, ms_t now, bool zeroize_raw_c
     panel_deb_init(&p->sw_zer, !zeroize_raw_closed, now);
     /* FW-C01 step 3 and FW-C02: the toggle or a wipe-pending record drives every SLOT_EN low first (D-03) */
     bool pending = panel_zj_scan(p) == ZJ_PENDING;
+    /* FW-C05 and FW-C02 (F-14): each slot's spent retry and left-off state survive a watchdog, RUN or SWD reset; a
+     * power-on reset (a MAIN restart, a loss of the panel's supply) clears them, the third operator act */
+    uint8_t rec[3];
+    bool recorded = panel_slot_store_load(p, rec) == 0;
+    if (power_on_reset) {
+        static const uint8_t zero[3] = { 0, 0, 0 };
+        if (recorded && memcmp(rec, zero, 3) != 0)
+            panel_slot_store_save(p, zero);
+        memset(rec, 0, sizeof rec);
+    }
     for (unsigned i = 0; i < 3; i++) {
         drive[i] = (zeroize_raw_closed || pending) ? false : held[i];
-        if (drive[i])
-            slot_set(&p->slot[i], true, SLOT_WAIT_HB, now);      /* a module kept up by the keeper (FW-C02) */
-        else
-            slot_set(&p->slot[i], false, SLOT_OFF, now);
+        panel_slot_t *s = &p->slot[i];
+        s->cycled = (rec[i] & SLOTREC_CYCLED) != 0;          /* a slot read high keeps its spent retry */
+        if (drive[i]) {
+            slot_set(s, true, SLOT_WAIT_HB, now);            /* a module kept up by the keeper (FW-C02) */
+        } else if (rec[i] & SLOTREC_OFF) {
+            slot_set(s, false, SLOT_FAULT_OFF, now);         /* left off: stays off across the reset */
+            s->fault = true;
+            s->cycled = true;
+        } else {
+            slot_set(s, false, SLOT_OFF, now);
+        }
+        p->slot_rec_saved[i] = (uint8_t)((s->cycled ? SLOTREC_CYCLED : 0) | (s->state == SLOT_FAULT_OFF ? SLOTREC_OFF : 0));
     }
+}
+
+static void slot_rec_persist(panel_t *p)
+{
+    uint8_t now_rec[3];
+    for (unsigned i = 0; i < 3; i++)
+        now_rec[i] = (uint8_t)((p->slot[i].cycled ? SLOTREC_CYCLED : 0) |
+                               (p->slot[i].state == SLOT_FAULT_OFF ? SLOTREC_OFF : 0));
+    if (memcmp(now_rec, p->slot_rec_saved, 3) == 0 && !p->slot_rec_dirty)
+        return;
+    p->slot_rec_dirty = panel_slot_store_save(p, now_rec) != 0;    /* retried on the next tick if the write failed */
+    memcpy(p->slot_rec_saved, now_rec, 3);
 }
 
 void panel_slot_operator_retry(panel_t *p, unsigned i, ms_t now)
 {
-    if (i < 3 && p->slot[i].state == SLOT_FAULT_OFF) {
+    if (i >= 3)
+        return;
+    p->slot[i].cycled = false;                               /* the act re-arms the retry (FW-C05) */
+    if (p->slot[i].state == SLOT_FAULT_OFF) {
         p->slot[i].fault = false;
-        p->slot[i].cycled = false;
-        slot_set(&p->slot[i], false, SLOT_OFF, now);
+        slot_set(&p->slot[i], false, SLOT_OFF, now);         /* and raises a slot left off */
     }
 }
 
@@ -504,6 +536,29 @@ static void slots_heartbeats(panel_t *p, ms_t now, const panel_in_t *in)
     }
 }
 
+/* FW-C05 (F-14, record l5r4): a slot is supervised while its SLOT_EN is high and the controller has asked nothing of it:
+ * no shutdown, no hot stop, no shed (a shed slot is not wanted), no ZEROIZE */
+static bool slot_supervised(const panel_t *p, const panel_slot_t *s)
+{
+    return s->wanted && s->en && !p->kill && p->shdn == SHDN_IDLE && p->hot.state == HOT_NONE && !p->hot_pulse &&
+           p->zer.mode == ZM_ARMED_IDLE;
+}
+
+/* the one rule for both cases: the first time a power cycle (rail off 5 s), its one retry; the next time, off until the
+ * operator acts. A slot that came back after its cycle keeps its retry spent. */
+static void slot_flat_60s(panel_t *p, panel_slot_t *s, unsigned i, ms_t now)
+{
+    s->fault = true;
+    if (!s->cycled) {
+        s->cycled = true;
+        slot_set(s, false, SLOT_CYCLING, now);
+        ev_push(p, EV_SLOT_CYCLE, (uint8_t)i, now);
+    } else {
+        slot_set(s, false, SLOT_FAULT_OFF, now);
+        ev_push(p, EV_SLOT_OFF, (uint8_t)i, now);
+    }
+}
+
 static void slots_policy(panel_t *p, ms_t now)
 {
     bool want[3] = { true, true, true };
@@ -543,17 +598,28 @@ static void slots_policy(panel_t *p, ms_t now)
             break;
         case SLOT_WAIT_HB:
             if (s->alive && after(s->hb_edge, s->since)) {
-                s->state = SLOT_RUNNING;
+                s->state = SLOT_RUNNING;                     /* came back: shown no more, its retry stays spent */
                 s->fault = false;
-            } else if (after(now, s->since + PANEL_SLOT_FLAT_MS)) {
-                s->fault = true;
-                ev_push(p, EV_SLOT_FAULT, (uint8_t)i, now);
-                if (!s->cycled) {
-                    s->cycled = true;
-                    slot_set(s, false, SLOT_CYCLING, now);
-                } else {
-                    slot_set(s, false, SLOT_FAULT_OFF, now);
+                s->lost_reported = false;
+            } else if (slot_supervised(p, s) && after(now, s->since + PANEL_SLOT_FLAT_MS)) {
+                if (!s->fault)
+                    ev_push(p, EV_SLOT_FAULT, (uint8_t)i, now);   /* flat 60 s after its rail came up */
+                slot_flat_60s(p, s, i, now);
+            }
+            break;
+        case SLOT_RUNNING:
+            if (s->alive) {
+                s->fault = false;
+                s->lost_reported = false;
+            } else if (slot_supervised(p, s)) {
+                if (!s->lost_reported) {                     /* lost: 3 s without an edge (FW-C05), shown at once */
+                    s->lost_reported = true;
+                    s->fault = true;
+                    ev_push(p, EV_SLOT_FAULT, (uint8_t)i, now);
                 }
+                ms_t ref = after(s->hb_edge, s->since) ? s->hb_edge : s->since;
+                if (after(now, ref + PANEL_SLOT_FLAT_MS))    /* 60 s from the later of the rail and the last edge */
+                    slot_flat_60s(p, s, i, now);
             }
             break;
         case SLOT_CYCLING:
@@ -1126,6 +1192,7 @@ void panel_tick(panel_t *p, ms_t now, const panel_in_t *in, panel_out_t *out)
     power_controls_step(p, now);
     p->reduced_mode_flag = p->pack_fallback || p->c1_reduced || p->hot.line == HOT_LINE_HELD_HIGH;
     slots_policy(p, now);
+    slot_rec_persist(p);
     display_select(p);
     shore_step(p, now, out);
 

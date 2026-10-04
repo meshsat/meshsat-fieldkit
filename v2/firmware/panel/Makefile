@@ -6,7 +6,7 @@ CC      ?= gcc
 BUILD   ?= build
 CFLAGS  ?= -std=c11 -O1 -g -Wall -Wextra -Werror -pedantic -Wshadow -Wconversion -Wno-sign-conversion
 CPPFLAGS += -Iinclude -Itests
-CORE    := src/panel_core.c src/zeroize.c src/expander.c src/bus_recover.c src/sensors.c src/hal_host.c
+CORE    := src/panel_core.c src/zeroize.c src/slotstore.c src/expander.c src/bus_recover.c src/sensors.c src/hal_host.c
 TESTS   := tests/fixture.c tests/test_main.c tests/test_io.c tests/test_controls.c tests/test_zeroize.c tests/test_power.c
 
 .PHONY: test probe clean
