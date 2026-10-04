@@ -808,7 +808,7 @@ def compute():
     # 6. defects, interfaces, evidence
     R["defects"] = [
         ("DD-1", "W4DP-F2: no firmware-independent element opens the discharge path with board P's FETs welded; the breaker of section 3 is drafted here, not drawn", "board P's generator with W4DP-F2's owner (the battery stream)"),
-        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected (L4-E11's round 9 drafts it as %s, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere), with the thermal guard behind it; condition C3" % (
+        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected (its designator L4-E11's: %s in its round 9 draft, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere), with the thermal guard behind it; condition C3" % (
             a, t0, dt_band, pr17, J[2]["apart"], J[2]["anywhere"], R["fet_third"], J[3]["apart"], J[3]["anywhere"]), "L4-E11 (E11-29 restated as the junction limit and the third FET drafted as %s in its round 9, not applied; E11-37 with three)" % R["fet_third"]),
         ("DD-3", "R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6)", "L4-E11"),
         ("DD-4", "the Keystone 3568 holder prints no current rating", "Layer 6/7"),
@@ -1144,7 +1144,7 @@ def render(R):
         P["rth"], C["fet_rth"], C["fet_limit"]))
     w("     %g A from %g C); Ciss: the pair %.2f nF at -15 V and %.2f near 0 V, three %.2f and about %.2f, against TI's %g nF (L4-E11 16c, E11-37)" % (
         C["fet_i_held"], C["fet_t0"], J["ciss"][2][0], J["ciss"][2][1], J["ciss"][3][0], J["ciss"][3][1], I["ciss_ti"]))
-    w("   SELECTED: a third BUK6Y10-30P (L4-E11's round 9 drafts it as %s, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is %.2f times" % (R["fet_third"], J["vs_target"]))
+    w("   SELECTED: a third BUK6Y10-30P (its designator L4-E11's: %s in its round 9 draft, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is %.2f times" % (R["fet_third"], J["vs_target"]))
     w("     E11-29's former target, where the pair would need %.2f of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:" % (J[2]["apart"] / P["rth"]))
     w("     E11-37's bench with three decides (condition C3), the pair is the fallback")
     w("   THE THERMAL GUARD (SELECTED, a guard against the path never being met, unit by unit): the kit's PRF15BB103 chip PTC (%g kOhm +-%.0f %%," % (I["ptc_r25"] / 1e3, 100 * I["ptc_tol"]))

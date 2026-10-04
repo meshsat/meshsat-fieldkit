@@ -566,6 +566,33 @@ def t_copper_the_battery_fets_are_parsed_from_the_draft_not_a_quoted_sentence():
     assert loads is not None and tuple(sorted(loads)) == tuple(sorted(I["fet_refs"])), "the draft's CH_BATQ loads are not its battery FETs"
 
 
+def t_the_readers_cross_check_parses_the_readers_patterns_and_compares_what_they_read():
+    """xcheck_readers.py on fixtures: it parses a reader's patterns out of the reader's source (a literal, and a loop over
+    literal patterns), and its comparison names the same text, a changed figure, a changed wording with the same figures and
+    a line that is gone. It edits and pins nothing; its result on the tree is the README's, not a gate here (the readers are
+    other authors' records)."""
+    x = _load(os.path.join(REC, "xcheck_readers.py"), "l9stk_xcheck_under_test")
+    src = ("R9_COMMITS = {'l9stk': 'abc'}\n"
+           "R9_GIT = {'l9stk_out': ('l9stk', 'x.out', '00'), 'l9stk_page': ('l9stk', 'x.md', '11')}\n"
+           "def fix19_round(R, T):\n"
+           "    m = need(o9, r'held at ([\\d.]+) A', 'the limit')\n"
+           "    for n_, pat in ((2, r'the pair ([\\d.]+) W'), (3, r'three ([\\d.]+) W')):\n"
+           "        m = need(o9, pat, 'the %d FETs' % n_)\n"
+           "    need(p9, r'held to ([\\d.]+) K/W', 'R17')\n"
+           "    need(other, r'not a read of this record', 'x')\n")
+    consts, reads, unread = x.l4e11_reads(src)
+    assert unread == 0 and consts["R9_COMMITS"] == {"l9stk": "abc"}
+    assert sorted(reads) == sorted([("o9", r"held at ([\d.]+) A", "the limit"), ("o9", r"the pair ([\d.]+) W", "the 2 FETs"),
+                                    ("o9", r"three ([\d.]+) W", "the 3 FETs"), ("p9", r"held to ([\d.]+) K/W", "R17")])
+    old = "held at 23.93 A from 76.25 C, the band carrying the current (9.16 K"
+    pat = r"held at ([\d.]+) A from ([\d.]+) C, the band"
+    assert x.compare(pat, old, old, 0)[0] == "same"
+    assert x.compare(pat, old, old.replace("23.93", "23.90"), 0)[0] == "DIFFERS"
+    assert x.compare(pat, old, old.replace("held at", "kept at"), 0)[0] == "NO LONGER MATCHES"
+    assert x.compare(r"limit ([\d.]+) A \(\w+\)", "limit 5.0 A (typ)", "limit 5.0 A (max)", 0)[0] == "TEXT DIFFERS, FIGURES SAME"
+    assert x.compare(pat, "nothing here", old, 0)[0].startswith("NOT MATCHED")
+
+
 def t_copper_the_page_carries_the_outputs_figures():
     _CU()
     R, W, I = _C["CR"], _C["CR"]["w"], _C["CR"]["in"]
@@ -1052,7 +1079,7 @@ def t_protection_the_conditional_confirmations_corrections():
         if "Q41" in line:
             assert "l8r2" in line, "Q41 named outside its owner: %s" % line.strip()[:120]
     assert R["fet_third"] in C["fet_refs"] and R["fet_third"] not in ("Q39", "Q40", "Q41") and len(C["fet_refs"]) == _PR().NFET_BAT
-    assert ("drafts it as %s, not applied" % R["fet_third"]) in text and "DESIGN DEFECT DD-2 until drawn" in text
+    assert ("its designator L4-E11's: %s in its round 9 draft, not applied" % R["fet_third"]) in text and "DESIGN DEFECT DD-2 until drawn" in text
     # round 3: L4-E11's restated E11-29 is held to this section's own figures, never read back as an input of them
     assert abs(C["fet_rth"] - J[3]["apart"]) < 0.006 and abs(C["fet_i_held"] - B["icl_max"]) < 0.006 and C["fet_t0"] == R["t0"]
     for k in ("L4-E11's charger draft draws the battery FETs selected here, the third beside Q39 and Q40",

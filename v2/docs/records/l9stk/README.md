@@ -8,7 +8,8 @@ by a stated method, or the words NO MEASUREMENT HELD), the cost it adds from dat
 the stackup itself (layer roles, copper weights, the fabricator's row, the impedance targets with their geometry from the
 repository's 2D field solves) and the decision with its authority. No registry, generator, `stackup_write.STACKS`, board
 file, constraint sheet or `LAYER-STATUS.md` is edited; the decisions reach `pcb_decisions.yaml` through the apply script,
-run by the integrator.
+run by the integrator. **Round 3 (4 October 2026): a tool correction for set 29's integration; what moved and what did not is the
+section "Round 3" below.**
 
 | File | What it is |
 |---|---|
@@ -20,8 +21,9 @@ run by the integrator.
 | `l9stk_copper.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_copper.py v2/docs/records/l9stk/l9stk_copper.out` |
 | `apply_energy_chain_l9stk.py` | The energy chain's DOCK_ENTRY, SHORE_INPUT and BOARD_A_NODE conductor texts at the revised widths and the 25 A blade's citation (MINI 297 for ATOF 287, six stages), for the integrator: it refuses until the register carries `(L9STK A)` and `(L9STK E)`, accepts the tree's texts or record l8r2's, and is a no-op on a second run; it REPLACES record l8r2's `apply_energy_chain_e1oz.py`. `--check` (the default) writes nothing |
 | `apply_blade_plating_l9stk.py` | Pins the 25 A MINI blade's silver terminals (0297025.WXNV) in `v2/vendor/SOURCES.yaml`, for Layer 6; `--check` is the default |
-| `l9stk_protection.py` | The pack path's protection (page section 15, the owner's correction of 4 October 2026), from the repository root: `python3 v2/docs/records/l9stk/l9stk_protection.py` (PyYAML, pdftotext and the copper script; no KiCad, no network). It pins 23 inputs by sha256 and prints board P's existing protection with its FETs welded, Q39/Q40's 150 C current with its uncertainty, the selected LM5069-2 breaker on board P (sense window, power limit, fault timer, dv/dt start, retry, the CSD18510Q5B's SOA derated by SLVA673A equations 4 to 7, the clamps, the charge direction), the docking correction (the make-last enable into UVLO) with the uncorrected excursion, the battery FETs' junction limit and the third FET selected, every series part at the breaker's largest limit, the owner's protection table, the design defects with owners, the interface demands, the missing evidence with specimen, acceptance and task, and the predicates the test reads |
+| `l9stk_protection.py` | The pack path's protection (page section 15, the owner's correction of 4 October 2026), from the repository root: `python3 v2/docs/records/l9stk/l9stk_protection.py` (PyYAML, pdftotext and the copper script; no KiCad, no network). It pins 23 inputs by sha256 and prints board P's existing protection with its FETs welded, the 150 C current of the pair Q39/Q40 the element was sized against with its uncertainty, the selected LM5069 breaker on board P (the -1, latch-off, after 3b's retry check) (sense window, power limit, fault timer, dv/dt start, retry, the CSD18510Q5B's SOA derated by SLVA673A equations 4 to 7, the clamps, the charge direction), the docking correction (the make-last enable into UVLO) with the uncorrected excursion, the battery FETs' junction limit and the third FET selected, every series part at the breaker's largest limit, the owner's protection table, the design defects with owners, the interface demands, the missing evidence with specimen, acceptance and task, and the predicates the test reads |
 | `l9stk_protection.out` | Its output, committed; regenerated only through `_bin/regen_out.py <worktree> v2/docs/records/l9stk/l9stk_protection.py v2/docs/records/l9stk/l9stk_protection.out`, after `l9stk_copper.out` |
+| `xcheck_readers.py` | Round 3: what L4-E11's round 9 and record l8p read from this record's protection output and page, at the commit they read it and in this tree; their patterns are parsed out of their sources, nothing is edited or pinned; exit 0 when every pattern reads the same. From the repository root: `python3 v2/docs/records/l9stk/xcheck_readers.py` |
 | `fetch_held_back.py` | Fetches TI's SLVA673A (the owner's named calculation basis, no grant to redistribute) into the ignored `v2/vendor/ti/held/` and checks its sha256; never run by a test |
 | `inputs/csd18510q5b-figure-readings-2026-10-04.json` | The CSD18510Q5B's Figure 10 (SOA) and Figure 8 (RDS(on) against temperature) read at 300 dpi: the segments' pixel ends, the axes, the reading uncertainty and the sheet's sha256/16 |
 | `inputs/price-readings-2026-10-03.json` | The public pages read on 3 October 2026 (JLCPCB and NextPCB), each with its URL, read time, the page's own date where printed and the sha256/16 of the page as fetched; the sentence carrying each figure kept verbatim, never the page; what was not read |
@@ -54,9 +56,9 @@ TI's margin in a hard short and past 150 C in a resistive fault on VSYS; every o
 parallel): its actual limit 18.32 to 23.93 A, so the 10 A and the 18 A for 60 s never trip it and the cells' 24 A is never
 passed; above a unit's limit it clears within 1.29 ms with no firmware and with Q1/Q2 welded; a 0.659 A dv/dt start; the FET's
 SOA at 0.57 and 0.58 of the derated curve (TI asks 0.67). B-P1: a make-last enable loop into its UVLO with an RC hold (C-1b,
-TI's Figure 45) turns every docking into that start, 0.110 to 0.593 s after the enable mates; without it a docking reached 2.64 times the derated 10 us line and 0.634 V across the
+TI's Figure 45) turns every docking into that start, 0.110 to 0.907 s after the enable mates; without it a docking reached 2.64 times the derated 10 us line and 0.634 V across the
 sense. B-P2: the battery FETs' target is a junction limit with the band and R17 in place (150 C at 23.93 A from 76.25 C); a
-third BUK6Y10-30P is selected (its designator L4-E11's), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart, with the
+third BUK6Y10-30P is selected (its designator L4-E11's: Q42 in its round 9 draft, not applied), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart, with the
 kit's chip PTC in the enable loop as a thermal guard, the pair at 20.39 K/W the fallback, E11-37 deciding its Ciss. Open: DD-1 to
 DD-8 with their owners (DD-7 the -1's reset when an input returns, DD-8 the hot restart), the conditions C1 (mating order) to C3 (Ciss), IF-1 to IF-7,
 the evidence E-1 to E-15 and the maker questions Q-TI-L9S-1 and Q-TI-17. A hot restart of the -1 into the worst resistive fault
@@ -64,6 +66,72 @@ on VSYS reached 0.82 of the derated SOA at the held case; under one criterion fo
 event can occur at), C-1c, a restart inhibit on the breaker pad (an NTC bridge gated by PGD, block from 83.2 C), keeps every restart
 within it (DD-8, board P's generator in record l8p, E-15). Charging through a latched breaker is L4-E11's hardware charge inhibit. (L9STK CU) lists option (4), the zero-cost route with each return laid apart, not credited by decision
 35's model and waiting on a coupon.
+
+## Round 3 (4 October 2026, the integration of set 29, branch `fnd/l9r3` from `e58e906a`): a tool correction
+
+**The defect.** `l9stk_copper.py`, and `l9stk_protection.py` which imports it, refused on set 29's tree: "the pair's draft: the
+pattern for it no longer matches its pinned input". The script quoted one sentence of L4-E11's charger draft
+(`apply_gen_sch_a_charger.py`: "one of two in parallel"). L4-E11's round 9 drafts the third battery FET this record's 15.5
+selected, Q42, and the sentence now says three. It was the only stale read in either script.
+
+**The correction.** The draft is parsed (ast on its string constants, then on the generator line `for _qb in (...): nfet(...)`):
+the designators and their count are read, the sentence decides nothing. L4-E11's section 19c (E11-29 restated as 15.5's
+junction limit, the pair's targets withdrawn) is read beside its dated sections 15 and 16. The coordination table's battery
+FET rows are judged on the circuit as drafted; `l9stk_copper.out` section 9a and the page's 14.6a print each row on the pair
+beside it, both computed. The protection script holds L4-E11's restated figures equal to its own selection and allowance by
+predicates; it never reads them back as an input of its junction limit. **It closes no engineering finding:** DD-1 to DD-8,
+C1 to C3, E-1 to E-15, W4DP-F2 and (L9STK CU) stand as they were; DD-2 stays a design defect until the draft is applied and
+E-1 is read.
+
+**What moved** (`e58e906a` against this round, each from the regenerated outputs):
+
+| Figure | Before | Now | Cause |
+|---|---|---|---|
+| `l9stk_copper.out` 0, three pins (the charger draft, L4-E11's output, L4-E12's output) | `d857a702`, `302a0e2c`, `d88aabc2` | `bfdead54`, `3a461984`, `3bdd5e3e` | L4-E11's round 9 and set 29's freeze |
+| 5, the ends of CH_BATQ and of the VBAT trunk | Q39, Q40 | Q39, Q40, Q42 | the draft writes three |
+| 7, the battery FETs' 150 C current, held | 21.38 A from +70 C, 20.53 A from 76.25 C (the pair at 33.12 K/W, FETs only) | 23.93 A from 76.25 C, 24.93 A from +70 C (three at 45.88 K/W each with R17 apart, the band's 9.16 K and R17 in place) | two FETs to three, and E11-29 restated by L4-E11's 19c |
+| 9, 10 A continuous, the FETs | 93.75 C [0.24] | 89.42 C [0.18] | the same; limiting unchanged (the XT60 at 0.33) |
+| 9, 18 A for 60 s, the FETs | 132.95 C [0.77], the limiting part | 118.00 C [0.57]; limiting now the XT60 at 0.60 | the same |
+| 9, 25 A with the gauge working (1 s), the FETs | L4-E11 15c's gauge levels at E11-29's bar | no timed target held (L4-E11 19c withdrew the pair's) | L4-E11's 19c; limiting unchanged (the barrel field at 0.84) |
+| 9, 25 A with the gauge failed, the FETs | 185.63 C [1.48] OVER | 156.72 C [1.09] OVER | two FETs to three; still limiting, still (b) W4DP-F2 |
+| 9, 33.75 A sustained, the FETs | 275.59 C [2.70] OVER | 222.97 C [1.99] OVER | the same |
+| 9, 50 A for at most 600 s, the FETs | 513.77 C [5.93] OVER | 398.47 C [4.37] OVER | the same |
+| 9, 87.5 A for at most 5 s (device-alone estimate) | about 132.89 C [0.77] | about 101.42 C [0.34] | each FET a third of the current; limiting unchanged (the barrel field at 3.32) |
+| 9, 150 A for at most 0.5 s (estimate) | about 237.60 C [2.19] | about 147.96 C [0.97] | the same; limiting unchanged (the barrel field at 4.13) |
+| 9, 480 A for at most 0.1 s (estimate) | about 1728.43 C [22.40], the limiting part | about 810.55 C [9.96]; limiting now the barrel field at 11.08 | the same |
+| 9, the dispositions of the 18 A, the two 25 A, the sustained and the 600 s rows | name Q39/Q40 and the pair's figures | name Q39, Q40, Q42 and the three's; the 25 A gauge-working row's FET clause is now its own (c) line | the same; no class changed |
+| 10, predicates | 19 | 22: the pair's restated as dated, three added | round 3 |
+| `l9stk_protection.out` 0, three pins (the copper script and its output, L4-E11's output) | `0b9dec95`, `56646d7e`, `302a0e2c` | this round's | the copper script changed |
+| 2, 3 and 4, wording only | "E11-29's present target", "its designator L4-E11's" | "E11-29's target then" and "former target"; "its designator L4-E11's: Q42 in its round 9 draft, not applied"; section 2 headed as the pair the element was sized against | L4-E11's round 9 |
+| 4, the battery FETs' row in the series parts | Q39, Q40 and the third FET | Q39, Q40 and Q42 | the draft |
+| 7, predicates | 51 | 54: three added (the draft's FETs, L4-E11's restated limit, the copper record's readings) | round 3 |
+
+**What did not move** (stated because other records and a running review take these as their case basis):
+
+| Figure | Value, before and now |
+|---|---|
+| the breaker's actual limit and its clearing (15.4) | 18.32 / 21.08 / 23.93 A; 1.292 ms at most (1.29 ms in the table) |
+| the junction limit E-1 (15.5) | 150 C held at 23.93 A from 76.25 C; the band 9.16 K, R17 2.86 W, the budget 64.59 K; three at 45.88 K/W with R17 apart (48.01 FETs only, 15.34 anywhere); the pair 20.39 K/W |
+| at the allowances | 89.4 C at 10 A, 118.0 C at the 18 A service, 150.0 C at 23.93 A |
+| the copper widths (14.4) | 39.14 mm a face at 1 oz and 19.57 mm at 2 oz with the adjacent return (38.79 and 19.39 mm between through-hole ends); 21.81 mm and 22.01 mm laid apart |
+| the worst inside air | 76.25 C (L4-E12's output moved in set 29's freeze; the line read from it did not) |
+| the start, the hold and IF-1's inputs | 0.659 A, 40.7 ms, 0.110 to 0.907 s, the power limit's least 24.71 W, 0.81 A of room |
+| the shore rows L4-E11's DD-3 reads (14.6) | J_DCIN OVER (20 of 10 A); R19 OVER (4.0 W of 3 W from 17.32 A) |
+| `l9stk_stackups.out` | byte for byte |
+
+**The readers.** L4-E11's round 9 reads this record's protection output and page from commit `0d72880b` by sha256, and record
+l8p reads copies made at that commit. `xcheck_readers.py` parses their patterns out of their sources and applies each to the
+bytes at that commit and to this tree's files: 30 of 30 (L4-E11) and 45 of 45 (l8p) read the same text. L4-E11's DD-3 figures
+(7.136 A, 8.42 A) and IF-1's 78.6 ms are L4-E11's own; every line of this record they are computed from is among those 30.
+
+**For other authors** (nothing of theirs is edited here): this record pins L4-E11's output and charger draft and L4-E12's
+output by sha256, so a regeneration of either owes a regeneration here, in the order `l9stk_stackups.py`, `l9stk_copper.py`,
+`l9stk_protection.py`, then record l9pwr's `l9pwr_budget.py`. The pack currents of section 1 are still read from record
+l8r2's copy of record l9pwr's ROUND 1 output (`l8r2/inputs/l9pwr_budget-38ef774c.txt`); no width depends on them (the bands
+are sized at the blades' 25 A), and repointing the read at this tree's budget would close a loop through the protection
+output, so it is left and named. Section 14.6's shore rows still judge J_DCIN as the drawn JST VH and R19 as the drawn
+10 mOhm part: L4-E11's round 9 drafts J_DCIN as the XT60-F and R-123's 4.5 mOhm R19, which this record does not read; DD-3
+stays open as L4-E11 left it.
 
 ## Proposed LAYER-STATUS row (for the integrator; `LAYER-STATUS.md` is not edited here)
 
@@ -82,7 +150,7 @@ measurement or bound (records/l9stk); no price at any real outline; B conditiona
   make-last dock enable; BAT-F20 at the breaker's held current; the pack's terminal live only while docked.
 - L9C-F1 to L9C-F15 (section 14.9): the energy chain's texts through `apply_energy_chain_l9stk.py` instead of record l8r2's
   draft; BOARD_A_CONVERTERS' 25 A claim for the branches; the series parts in the blade's held band with the gauge failed
-  (R17, the XT60, the dock pins, Q39 and Q40, the 3568 holder's missing rating) beside W4DP-F2; R19 in F1's 600 s window;
+  (R17, the XT60, the dock pins, the battery FETs Q39, Q40 and Q42, the 3568 holder's missing rating) beside W4DP-F2; R19 in F1's 600 s window;
   P_CP and P_CN as plated-through lands; the pack return as GND with l8r2's drafts; TRK_OUT and the solar input outside the
   energy chain; the plane screen's limit; the laminate's maximum and the 2 oz price in the supplier's quotation.
 

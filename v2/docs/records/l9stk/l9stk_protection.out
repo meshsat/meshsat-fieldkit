@@ -180,7 +180,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    three (Zself + 2 Zmut)             1.345 W each: FETs only 48.01 K/W; R17 apart 45.88 K/W; R17 anywhere 15.34 K/W
    E11-29's target for the pair was 33.12 K/W (L4-E11's 19c withdraws it and restates E11-29 as this limit: 45.88 K/W a FET with R17 apart, 150 C held at
      23.93 A from 76.25 C); Ciss: the pair 4.72 nF at -15 V and 5.74 near 0 V, three 7.08 and about 8.61, against TI's 5 nF (L4-E11 16c, E11-37)
-   SELECTED: a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is 1.39 times
+   SELECTED: a third BUK6Y10-30P (its designator L4-E11's: Q42 in its round 9 draft, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is 1.39 times
      E11-29's former target, where the pair would need 0.62 of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:
      E11-37's bench with three decides (condition C3), the pair is the fallback
    THE THERMAL GUARD (SELECTED, a guard against the path never being met, unit by unit): the kit's PRF15BB103 chip PTC (10 kOhm +-50 %,
@@ -229,7 +229,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
 
 6. DESIGN DEFECTS (unresolved, each with its owner)
    DD-1 W4DP-F2: no firmware-independent element opens the discharge path with board P's FETs welded; the breaker of section 3 is drafted here, not drawn; owner board P's generator with W4DP-F2's owner (the battery stream)
-   DD-2 the charger's battery FETs: TJ at most 150 C held at 23.93 A from 76.25 C, with the band (9.16 K) and R17 (2.86 W) in place; the pair would need (Zself + Zmut) at most 20.39 K/W (10.96 K/W with R17 anywhere), so a third BUK6Y10-30P is selected (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart (15.34 K/W anywhere), with the thermal guard behind it; condition C3; owner L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three)
+   DD-2 the charger's battery FETs: TJ at most 150 C held at 23.93 A from 76.25 C, with the band (9.16 K) and R17 (2.86 W) in place; the pair would need (Zself + Zmut) at most 20.39 K/W (10.96 K/W with R17 anywhere), so a third BUK6Y10-30P is selected (its designator L4-E11's: Q42 in its round 9 draft, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart (15.34 K/W anywhere), with the thermal guard behind it; condition C3; owner L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three)
    DD-3 R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6); owner L4-E11
    DD-4 the Keystone 3568 holder prints no current rating; owner Layer 6/7
    DD-5 BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, 23.9 W at 23.93 A held (VSD 1 V at most), about 7 W at 10 A; owner the battery stream (BAT-F20, EQ-15)
