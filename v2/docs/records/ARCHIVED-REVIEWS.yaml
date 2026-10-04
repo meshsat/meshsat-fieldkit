@@ -24,3 +24,6 @@ reviews:
   - path: v2/docs/records/l4close/REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md
     sha256: "3496b279246fb6695713b7e7f6dcfbb188d0adf8eecb6d9a5b0d3612f21b4244"
     why: the external review of the supplier handover release candidate 761677ca (3 October 2026, findings L4-RC01 and L4-RC02), the reviewer's words kept as received, its probe quoted
+  - path: v2/docs/records/l4close/REVIEW-SUPPLIER-D834E6A7-AS-RECEIVED.md
+    sha256: "7572f15254ddea2c9781473aa018e5601c29cbfe303cb1e0ce0f81deaf9439fe"
+    why: the external review of the supplier handover release candidate d834e6a7 (4 October 2026, L4-RC01 and L4-RC02 closed, finding L4-RD01, the two protection checks), the reviewer's words kept as received
