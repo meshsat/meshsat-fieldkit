@@ -818,15 +818,15 @@ def t_protection_the_table_has_the_owners_columns_and_cases():
 def t_protection_the_defects_and_the_evidence_have_owners():
     _PR()
     R = _C["PRR"]
-    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 8)] and all(d[2] for d in R["defects"])
+    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 9)] and all(d[2] for d in R["defects"])
     assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2] and "BAT-F20" in R["defects"][4][1]
     assert "board P's generator" in R["defects"][5][2] and "Layer 7" in R["defects"][5][2]
-    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 15)]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 16)]
     assert [c[0] for c in R["conditions"]] == ["C1", "C2", "C3"] and all(c[2] for c in R["conditions"])
     assert "Layer 7" in R["conditions"][0][2] and "L4-E11" == R["conditions"][2][2] and "C1 and C2" in R["defects"][5][1]
     assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 8)]
     assert all("not sent" in q[2] for q in R["questions"]) and "48 V" in R["questions"][0][1]
-    assert len(R["not_taken"]) == 7 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
+    assert len(R["not_taken"]) == 8 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
     assert any("single-wire" in x for x in R["not_taken"]) and not any("PTC" in x for x in R["not_taken"])
 
 
@@ -848,13 +848,13 @@ def t_protection_the_page_carries_the_outputs_figures():
                 "%.2f" % (100 * B["split_max"]), "%.3f" % B["spread_need"], "%.2f" % (100 * B["d_ratchet"]), "%.2f" % B["pre_w"],
                 "%.0f" % B["p_free"], "%.0f" % (B["p_free"] - B["p_pads"])):
         assert fig in s15, "section 15 does not carry %s" % fig
-    for k in ("DD-%d" % i for i in range(1, 8)):
+    for k in ("DD-%d" % i for i in range(1, 9)):
         assert k in s15, "section 15 does not name %s" % k
     for fig in ("%.3f" % B["grace"][0], "%.3f" % B["grace"][1], "%.2f" % (B["t_rev0"] * 1e3), "%.1f" % (B["t_rev_hold"] * 1e3), "%.2f" % B["v_withdraw"],
                 "%.2f" % (B["t_break"] * 1e3), "%.1f" % B["d1_i2t"], "%.2f" % (B["d1_tau_max"] * 1e3), "%.1f" % (B["d1_l_max"] * 1e6),
                 "%.1f" % J["ptc_window"][0], "%.1f" % J["ptc_window"][1], "%.0f" % (B["r_trip_max"] / 1e3), "%.2f" % B["g1_on_sense"], "%.1f" % B["g1_max"]):
         assert fig in s15, "section 15 does not carry %s" % fig
-    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "IF-7", "Q-TI-L9S-1", "C-1b", "C1", "C2", "C3", "15.4b") + tuple("E-%d" % i for i in range(1, 15)):
+    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "IF-7", "Q-TI-L9S-1", "C-1b", "C-1c", "C1", "C2", "C3", "15.4b") + tuple("E-%d" % i for i in range(1, 16)):
         assert k in s15, "section 15 does not name %s" % k
     for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19", "L9C-F20", "L9C-F21", "L9C-F22"):
         assert f in t
@@ -999,4 +999,35 @@ def t_protection_the_retry_judged_over_every_protected_part():
     assert "**SELECTED: the -1 (latch-off).**" in s15 and "LM5069-2 breaker" not in s15
     for fig in ("%.2f" % RT["hs"]["ratio"], "%.1f" % RT["hs"]["tc"], "%.0f" % RT["rf"]["tc"], "%.2f" % RT["i_rms"], "%.2f" % RT["i2t"],
                 "%.1f" % (RT["latch_dis"] * 1e3), "%.2f" % RT["start_rf"]["ratio_air"], "%.2f" % RT["start_rf"]["ratio_hot"]):
+        assert fig in s15, "section 15 does not carry %s" % fig
+
+
+def t_protection_the_hot_restart_held_inside_one_criterion():
+    _PR()
+    R, B, I = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["in"]
+    RT = R["RT"]
+    H, SR = RT["inh"], RT["start_rf"]
+    # B-R1 as the recheck reads it: the worst resistive start at the checker's cases
+    soa_t2 = B["soa"]["1 ms"] * (SR["t2"] / 1e-3) ** (math.log(B["soa"]["1 ms"] / B["soa"]["10 ms"]) / math.log(0.1))
+    ratio = lambda tc: B["plim_max"] / (soa_t2 * (150.0 - tc) / 125.0)
+    assert round(ratio(76.25), 2) == 0.54 and round(ratio(101.0), 2) == 0.82 and round(ratio(103.0), 2) in (0.85, 0.86)
+    assert abs(ratio(H["t67"]) - 2 / 3) < 1e-6 and 89.5 < H["t67"] < 90.3 and 82.8 < H["t67r"] < 83.6
+    # the inhibit's window: allow from the air plus 1 K, block at the margin's case with the reading; the NTC's share by its sheet
+    assert _close(H["t_allow"], 77.25) and _close(H["t_trip"], 0.5 * (77.25 + H["t67r"]))
+    tk = H["t_trip"] + 273.15
+    r = 10e3 * math.exp(3434 * (1 / tk - 1 / 298.15))
+    assert _close(H["r_ntc"], r) and _close(H["d_r"], 0.01 * tk * tk / 3434) and H["budget"] > 1.5
+    assert H["i_bridge"] <= 0.12e-3 and H["r_block_low"] <= 2 / 3 + 1e-9 and H["r_held"] > 2 / 3
+    # the minors: IF-1's room, the fast undock, the hold's diode, the conservative duty
+    assert _close(RT["load_ramp_max"], (B["plim_min"] - B["start_p"]) / 16.8) and 0.75 < RT["load_ramp_max"] < 0.85
+    assert B["t_break"] < 0.5e-3 and B["v_withdraw"] > 2.0 and B["t_break_old"] > 1.4e-3
+    assert B["d_ratio"][0] < 0.2 and B["d_ratio"][1] < 1.0 and "conservative" in _C["ptext"]
+    rows = {r_["case"]: r_ for r_ in R["table"]}
+    assert "C-1c" in [r_ for c, r_ in rows.items() if c.startswith("a start into a resistive fault")][0]["status"]
+    assert "CRITICAL" in R["interfaces"][0][1] and "l8p" in R["defects"][7][2] and "B-R2" in R["defects"][6][1]
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    for fig in ("%.1f" % H["t67"], "%.1f" % H["t67r"], "%.2f" % H["t_allow"], "%.2f" % H["t_trip"], "%.2f" % H["half"], "%.2f" % H["d_ntc"],
+                "%.2f" % H["budget"], "%.0f" % H["r_ntc"], "%.2f" % RT["load_ramp_max"], "%.2f" % B["v_withdraw"], "%.2f" % (B["t_break_old"] * 1e3),
+                "%.2f" % H["r_held"], "%.2f" % H["r_block"], "%.2f" % H["r_trip_low"], "falling edge", "C-1c SELECTED"):
         assert fig in s15, "section 15 does not carry %s" % fig
