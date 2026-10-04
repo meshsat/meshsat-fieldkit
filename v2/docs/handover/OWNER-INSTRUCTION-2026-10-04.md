@@ -15,6 +15,9 @@ entry of 4 October 2026 14:25 CEST.
 | 6. The review of the 19:15 status report (STATUS-01: each external dependency stays attached to the criterion it holds; layer 12's desk work and physical testing apart) | 4 October 2026, about 19:20 CEST | `273a0d7a93e3f6b5d1a0a273b13409923e7e7ab2d2633ecdac9f4ec20fc8a661` |
 | 7. After the checks V2 and V3: the supervisors' regulator deficit given an owner, a named correction and an acceptance criterion; the dedicated return verified over the permitted aged-contact combinations | 4 October 2026, about 21:11 CEST | `c57ddc4876d3a328aa7fd4c6e80035631f0310d6cc7880c6a73242e98359862d` |
 | 8. A bounded research task: the three-SDR research and integration plan (one radio per compute module; nothing adopted, bought or contacted) | 4 October 2026, about 21:39 CEST | `1e8f5333d4dd8e56b2c214580d657a9e26d831303883cc693cb5f3e25ec6708c` |
+| 9. Resume after the usage limit: the three interrupted candidates finished from their checkpoints (the ground return with every current against a printed rating and its fault cases; DELTA-01; DELTA-02 with the procedure reconciled), then the recorded queue and T11 | 4 October 2026, about 22:10 CEST | `9cf7c4e190fac488954dcc5b980e06293d8eb7b37c39f275e943c347dc644227` |
+| 10. DELTA-01's independent check and the target firmware build queued explicitly; the quotation and the copper weight do not stop desk tasks | 4 October 2026, about 22:30 CEST | `9a315f75812065a8afb72da969cf42d80eb3a62b9b7d67bd57188c01ba982e65` |
+| 11. T11 clarified: the intended final configuration stays three SDRs; a bounded CAD fit assessment of three enclosed radios before any purchase recommendation; no purchase or baseline change authorised | 4 October 2026, about 23:43 CEST | `0b95e26de0fee0fe531b609f1a6750c61c96dc1d548600e87a1ff5417ba4f706` |
 
 ## 1. Updated constitution and execution plan (as received)
 
@@ -500,3 +503,58 @@ The plan must contain:
 Use one focused independent Astra challenge of the recommendation and consequential budgets within the worker limit, followed by a bounded correction and targeted recheck if warranted. Preserve the review's actual verdict. Unresolved evidence must remain explicit; do not iterate indefinitely to manufacture acceptance. Use existing repository gates; add no new freeze/replay infrastructure and repeat no unrelated reviews for this research proposal.
 
 At the first checkpoint report the draft recommendation and missing evidence. Finish with the actual integration plan and a short decision summary: recommended hardware, expected capability, incremental resource cost, affected layers, next implementation task and decisions required. Do not stop at an options catalogue or wait for another instruction to complete this authorized research.
+
+## 9. Resume after the usage limit (as received)
+
+Resume the approved plan now; the usage limit has reset.
+
+Read `~/worktrees/meshsat-fieldkit/_runs/resume-20261004-evening.md`. Check actual branch tips, working trees and live processes before launching anything. Preserve newer work and resume inactive tasks from their checkpoints, with one author per branch and the existing three-worker limit.
+
+Finish the three interrupted candidates:
+
+1. **Ground return — fnd/l8r4, checkpoint 8558dab9:** finish connecting the rewritten model to its main routine, regenerate the stale output and restore the targeted tests. Compare every calculated current against the actual connector, contact, wire and ribbon ratings under the applicable conditions. Include the required contact combinations and fault cases. Scratch figures are provisional.
+
+2. **DELTA-01 — fnd/fw-r5, checkpoint f33e86f0:** finish the firmware correction and reproduce both reported persistence failures against the old code. Verify the corrected behavior across reset and rollover, intended re-arming, and wipe-journal separation.
+
+3. **DELTA-02 — fnd/l4e11r11, checkpoint 6dbcfb66:** complete the selected measurement method, reconcile the procedure and calculations, and run its focused check. Keep TP-E11-29 non-executable until its method and acceptance conditions are ready for supplier agreement.
+
+Then follow the recorded queue. Start T11’s three-SDR research at the next suitable free slot; it need not wait for physical power qualification.
+
+Use the existing review and integration rules. Preserve negative reviewer verdicts and distinguish candidate corrections from verified closure. Continue independent work whenever a task waits on external evidence.
+
+Keep the rented-box idle-stop policy and retain its disk.
+
+Next update: completed artifacts and commits, actual check results, remaining blockers and the next assigned tasks. Continue without waiting for another instruction.
+
+## 10. DELTA-01's independent check and target build (as received)
+
+**This is real progress. No new broad prompt is needed right now.**
+
+- **DELTA-01:** Claude reports that the original failure probe now passes—useful evidence of a candidate fix.
+- **DELTA-02 and ground return:** actively being corrected.
+- **Three-SDR research:** underway.
+- **Power closure:** still blocked; the ground-return correction and T10’s regulator deficit are separate obligations.
+
+**One scheduling gap:** explicitly queue DELTA-01’s independent check and target firmware build. Those can proceed before hardware testing, while real-flash qualification remains open.
+
+Sending the quotation and choosing copper weight affect supplier engagement and the relevant layout work; they should not stop the current desk tasks.
+
+## 11. T11 clarified: three SDRs and the fit assessment (as received)
+
+Add this clarification to T11 and Astra’s current challenge without restarting either task.
+
+**The intended final configuration remains three SDRs, one per CM5.** Evaluating one enclosed B206mini-i first is a validation stage, not approval to reduce the final radio count.
+
+Before recommending a hardware purchase:
+
+1. Complete a bounded CAD fit assessment of three enclosed radios inside the existing Peli arrangement. Retain the approved battery, HF, tablet and other required equipment. Include USB/SMA connectors, cable bends, mounting, lid closure, service access and the space needed for cooling.
+
+2. “Two available locations in the current arrangement” is the starting observation. Examine at most three credible rearrangements and identify the exact dimensional constraints. Use manufacturer drawings and the repository’s actual mechanical model.
+
+3. Keep the enclosure and thermal assumptions explicit. Removing an industrial enclosure to gain space would require a separately supported thermal arrangement. A geometric fit alone does not establish thermal feasibility.
+
+4. If no three-radio arrangement is demonstrated, distinguish a confirmed dimensional conflict from missing dimensions or an incomplete placement study. Present the smallest proposed trade-off and its consequences. Any reduction in radio count, lost function or enclosure change requires my decision.
+
+Deliver one concise fit result with an annotated layout, dimensions, remaining uncertainties and its effect on the recommended SDR selection. Incorporate it into the existing integration plan and Astra’s current review.
+
+Keep the current power, firmware and coupon corrections running within the three-worker limit. Do not start another broad planning cycle or wait for physical qualification to finish this desk assessment. No hardware purchase or baseline change is authorized by this clarification.

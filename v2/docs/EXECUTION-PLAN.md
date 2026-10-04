@@ -1614,3 +1614,25 @@ register because radios are added.
 | Task | Kind | Smallest deliverable | Acceptance | Owner | Check |
 |---|---|---|---|---|---|
 | T11 three SDRs, one per compute module | research and integration plan | `v2/docs/research/SDR-EXPANSION-PLAN.md`: the four configurations compared on one set of assumptions (the held LimeSDR alone, three of it, three USRP B205mini-i, three USRP B206mini-i) from the makers' current documents and this repository; the role matrix; the four connected budgets (power and endurance on the existing energy boundary, thermal and fit in the held case arrangement, board B's real USB topology and the network, RF coexistence and fault behaviour); one recommended configuration with its conditions, or the demonstrated constraint and the smallest change; the change-impact table per layer; a staged validation route; supplier responsibilities; effort apart from lead times; only the adoption decisions that are the owner's | every figure labelled documented, inferred or demonstrated, with its source and date; battery, solar, internal storage, the Peli 1450, HF and the tablet kept, the 48 to 72 hour runtime objective kept, any exception explicit and costed; missing evidence named, never filled in | one research author on `fnd/sdr3`, at the next suitable free slot | one focused challenge by the collaborator of the recommendation and its consequential budgets, a bounded correction, one targeted recheck if warranted; the verdict kept as given |
+
+### Register note, 4 October 2026 23:43 CEST: T11 clarified by the owner (part 11), and the evening's checks as given
+
+**T11 (the three-SDR research), clarified.** The intended final configuration stays three SDRs, one per compute module; a first
+enclosed radio on a bench is a validation stage and never approval to reduce the count. Before any purchase is recommended the
+task delivers ONE bounded fit result: three enclosed radios in the existing Peli arrangement with the battery, HF, the tablet and
+the other required equipment kept; the connectors, cable bends, mounting, lid closure, service access and cooling space counted;
+at most three credible rearrangements examined from the makers' drawings and this repository's mechanical model; the enclosure
+and thermal assumptions explicit (a geometric fit is not thermal feasibility; a radio out of its enclosure needs its own
+supported thermal arrangement); a confirmed dimensional conflict told apart from missing dimensions or an unfinished study; the
+smallest trade-off with its consequences. A reduced radio count, a lost function or an enclosure change is the owner's decision.
+No purchase and no baseline change is authorised. The collaborator's challenge (cx42) was running when this arrived and cannot
+take new input: the fit result and the corrections reach its review through the one targeted recheck.
+
+**Checks of the evening, as given (reports filed with set 30):** V5 (the independent check of DELTA-01's firmware correction,
+`fnd/fw-r5` `593d8ef6`): the reproduction on the old code and the wipe-journal separation CONFIRMED; the correction, the
+conservative state, the re-arming, the target adapter and the tests CONFIRMED AS CONDITIONAL; one blocking finding at the 32-bit
+sequence number's wrap (V5-B1; round 6 in progress). The first RP2040 target build of that commit: configure and build exit 0,
+image 32,980 bytes; real flash stays open. V2R (the targeted recheck on `fnd/v2cand2` `8ce0441e`): V2-B1 CLOSED AS CONDITIONAL,
+V2-B2 and V2-B3 CLOSED BY THE CORRECTION; DELTA-02's method CONFIRMED AS CONDITIONAL; TP-E11-29's fixture and pass rules NOT
+CONFIRMED (V2R-B1, V2R-B2; round 14 queued); TP-E11-29 stays NOT EXECUTABLE. Record l8r2's round 8 (`fnd/l8r4` `c935542f`): the
+dedicated return of three XT60 leads drafted and composed, unchecked; L8R2-F31 and I-03 stay OPEN.
