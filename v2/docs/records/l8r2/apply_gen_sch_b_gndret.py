@@ -50,9 +50,11 @@ _NEW_HEAD = '''# RECORD l8r2 ROUND 7 (task T5b, the owner's review of 4 October 
 # and with the coolers' step-ups on the slot rails (record l8r2's fans12 draft) the loads sum to 21.51 A, which intent.rail
 # refuses. A larger typed number would go stale the same way, so the return reads its own leads:
 #   typical  the sum of the typical currents of every rail that ARRIVES on one of this net's lead connectors;
-#   peak     the sum of their declared peaks: an UPPER BOUND on what flows at one time (every lead at its own peak at once). The
-#            largest state of Layer 9's budget and the coolers' bounded starts sit inside it; what board A's stages can push into
-#            a fault is a fault current and belongs in the note, not in the peak (intent.py, "what amps_typ and amps_peak mean");
+#   peak     the sum of their declared peaks: an UPPER BOUND on what flows at one time (every lead at its own peak at once). With
+#            Layer 9's I-03 draft composed, the largest state of Layer 9's budget with every cooler's bounded start sits inside
+#            it; without that draft the device lead's own declaration is under its case (I-03), and this figure follows it.
+#            What board A's stages can push into a fault is a fault current and belongs in the note, not in the peak
+#            (intent.py, "what amps_typ and amps_peak mean");
 #   loads    the leads' own allocations at their ground ends (_GND_LOADS) plus the PoE port's return, which enters this net at
 #            the sense resistor R12 and was not counted; its lead J_54V has pin 2 on this net and is a return lead as the others.
 # A lead connector named here whose rail is not declared, or two rails on one connector, stops the generator.
