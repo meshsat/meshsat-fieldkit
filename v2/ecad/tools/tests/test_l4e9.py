@@ -404,6 +404,11 @@ def t_board_e_drafts_compose_in_the_change_list_order_with_no_duplicate():
             continue
         for s in [x.strip() for x in c[4].split(",")]:
             hit = glob.glob(os.path.join(recs, "*", s))
+            if not hit:
+                # a draft on a branch outside this one's history (round 8): its copy is pinned in this record's inputs and its own record
+                # composes it (l8r2 section 6b, l8p section 4); it is not run here
+                assert any(s[:-3] in rel and rel.startswith("v2/docs/records/l4e9/inputs/") for rel, _sha in m.PINS.values()), s
+                continue
             assert len(hit) == 1, s
             if hit[0] not in seq:
                 seq.append(hit[0])
@@ -670,7 +675,9 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     # the open material defects: D-10's guard-on case (L4-E7's round 5: an absolute-rating violation at a connector fault) and D-16
     # (B6-ENG-2), each handed to the engineer with a register row; D-11 addressed in drafts since L4-E7's remedies (check 5)
     opn = {d["id"]: d for d in m.DEFECTS if d["state"].startswith("OPEN")}
-    assert sorted(opn) == ["D-10", "D-16"] and "B6-ENG-2" in opn["D-16"]["state"] and "R-189" in opn["D-16"]["resolution"]
+    assert {"D-10", "D-16"} <= set(opn) and "B6-ENG-2" in opn["D-16"]["state"] and "R-189" in opn["D-16"]["resolution"]
+    # round 8: an open defect beyond those two is D-17, decision D-11's basis over REQ-018's pass line, with its design-out's rows named
+    assert set(opn) - {"D-10", "D-16"} <= {"D-17"} and ("D-17" not in opn or ("REQ-018" in opn["D-17"]["constraint"] and "R-210" in opn["D-17"]["resolution"]))
     assert "ABSOLUTE-RATING VIOLATION" in opn["D-10"]["state"] and "B6-ENG-1" in opn["D-10"]["state"] and "R-176" in opn["D-10"]["resolution"]
     assert [d for d in m.DEFECTS if d["id"] == "D-11"][0]["state"].startswith("ADDRESSED IN DRAFTS")
     st = {d["id"]: d["state"] for d in m.DEFECTS}
@@ -945,7 +952,7 @@ def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     assert "8.1817 A" in reg["R-29"][5]
     assert len(reg) >= 139
     ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
-    assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and len(ho) == 11, "J_SOLAR's rating amends LH-02, no new row"
+    assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and sum("13.82 A" in r_[2] for r_ in ho.values()) == 1, "J_SOLAR's rating amends LH-02, no new row"
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
     assert "SunPower SPR-E-Flex-100" in ow["OW-6"]["what"] and ow["OW-6"]["docs"][0][0] == "l4e13md"
     sec = _C["text"].split("13. UPDATE ROUND 3")[1]
@@ -1397,7 +1404,9 @@ def t_consolidation_the_panel_lead_surge():
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
     assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
-    assert g2["verdict"] != "PASS" and "two material defects are open" in g2["constraint"] and "D-16" in g2["constraint"] and "R-175" in g2["constraint"]
+    opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five"}
+    assert g2["verdict"] != "PASS" and ("%s material defects are open" % words[len(opn_)]) in g2["constraint"] and all(x in g2["constraint"] for x in opn_) and "R-175" in g2["constraint"]
     # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     r156, r173, r174, r175, r176 = (reg[x] for x in ("R-156", "R-173", "R-174", "R-175", "R-176"))
@@ -1496,7 +1505,7 @@ def t_fix_round_the_layer4_review_integrated():
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
     opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
-    assert opn_ == ["D-10", "D-16"] and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
+    assert {"D-10", "D-16"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
@@ -1789,7 +1798,7 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
     de = {d["id"]: d for d in m.DEFECTS}
     opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
-    assert opn_ == ["D-10", "D-16"] and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
+    assert {"D-10", "D-16"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     s14 = de["D-14"]["state"]
     assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
@@ -2032,7 +2041,8 @@ def t_the_fan_feed_after_layer7s_d18():
     # the register and the change list
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     r190 = reg["R-190"]
-    assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[6] == "MISSING DRAFT" and r190[7] == "B"
+    assert r190[1] == "IMPLEMENTATION" and "E11-40" in r190[3] and r190[4] == "Layer 8 board B generator owner" and r190[7] == "B"
+    assert r190[6] == "MISSING DRAFT" or (r190[6] == "DRAFTED" and "apply_gen_sch_b_fans12.py" in r190[2]), "R-190 DRAFTED names its draft"
     assert rail["cooler"] in r190[2] and fmt_(rail["b5v"]) in r190[2]
     assert "U22" in reg["R-177"][2] and "R103" in reg["R-177"][2] and "C142" in reg["R-177"][2] and "C141" not in reg["R-177"][2] and "D7 and D8 removed" in reg["R-177"][2] and fmt_(rail["decl"]) in reg["R-178"][2] and "R228 stays" in reg["R-181"][2]
     assert "NOT READ" in reg["R-179"][2] and rail["l7c"] in reg["R-179"][3] and "PWM-duty ramp" in reg["R-188"][2]
@@ -2270,3 +2280,71 @@ def t_the_release_candidate_reviews_findings_are_in_the_active_register():
     page = open(PAGE, encoding="utf-8").read()
     sec = page.split("## 11. ")[1].split("## 12. ")[0]
     assert "L4-RC01" in sec and "L4-RC02" in sec and r1[0] in sec and r2[0] in sec
+
+
+def t_decision_d11s_all_transmit_floor_on_the_final_drafts_is_open_and_its_design_out_bounded():
+    """Rounds 7 and 8 (Layer 9's L9P-F01): decision D-11's all-transmit basis is reproduced from Layer 9's round 2 watts (its output copied
+    into this record's inputs, never read with git); the final drafts' need is round 1's plus Layer 9's printed steps; REQ-018's pass line
+    is read from the registry and FW-A05's floors equal it; no check judges a floor above it (round 7's raise withdrawn as a correction);
+    D-17 is OPEN with its design-out's rows, and the design-out's bound is the need less the fans' input at full speed over 18 A; IF-10
+    judges the floor's own basis, never rv-pwr's PS-ALLTX PLAN line; the modes are restated as Layer 9 prints them; C2 and C3 bound every
+    shed state; the drafts this round registers are pinned copies naming their targets."""
+    m = _M()
+    F = _C["F"]
+    L9 = F["l9"]
+    I, S_, P_, rc = L9["i"], L9["series"], L9["parallel"], max(L9["rcell"])
+    rel, _sha = m.PINS["l9pwr"]
+    assert rel.startswith("v2/docs/records/l4e9/inputs/") and "l9pwr" not in m.FROM_COMMIT, "Layer 9's output is read from this tree, not from git"
+    assert I == F["pp_peak"] and S_ * P_ == 12
+    rest = lambda w, r: w / I + I * r + I * S_ * rc / P_
+    for tree, key in (("DRAWN", "drawn"), ("DRAFTED-R1", "r1"), ("DRAFTED", "drafted")):
+        row = L9["trees"][tree]["rows"]["alltx"]
+        assert abs(rest(row["w"], L9["trees"][tree]["path"]) - row["rest"][2]) <= 0.002 and L9[key] == row["rest"][2], tree
+    assert abs((L9["drafted"] - L9["r1"]) - (L9["envelope_v"] + L9["slots_v"] + L9["breaker_v"] + L9["third_v"])) <= 0.003
+    assert abs(L9["pair_v"] - I * F["fx"]["rds"] / 2000.0) < 0.0002
+    # the requirement: REQ-018's pass lines are FW-A05's floors, and no check judges a floor above them
+    assert L9["req_floor"] == F["d11_floor"] and L9["req_pa"] == F["pa_floor"] and "15.5 V or more" in L9["req018"]
+    rows = {r["id"]: r for r in _C["R"]}
+    ch = rows["IF-10"]["checks"]
+    floors = [c for c in ch if "all-transmit basis" in c.what or "the same on the final drafts" in c.what or "design-out" in c.what]
+    assert floors and all(c.b == L9["req_floor"] for c in floors), "a check judges a floor other than REQ-018's"
+    assert not any(c.a == F["alltx_rest_need"] for c in ch), "a check still reads rv-pwr's PS-ALLTX PLAN line"
+    drafted = [c for c in ch if c.scope == "selected" and "final drafts" in c.what][0]
+    assert drafted.met is (L9["drafted"] <= L9["req_floor"]) and _C["st"]["IF-10"][1] == ("NOT MET" if drafted.met is False else _C["st"]["IF-10"][1])
+    # the defect and its one design-out attempt
+    d17 = [d for d in m.DEFECTS if d["id"] == "D-17"][0]
+    if L9["drafted"] > L9["req_floor"]:
+        assert d17["state"].startswith("OPEN") and m.D_CLASS["D-17"] == m.KED and m.D_NEXT["D-17"].startswith("FIX")
+    off = [c for c in ch if "design-out" in c.what][0]
+    assert abs(L9["off_need"] - (L9["drafted"] - L9["fans_conv_hi"] / I)) < 1e-12 and off.cls == "CONDITIONAL" and "R-213" in off.src
+    assert L9["fans_conv_hi"] > L9["fans_conv_mk"] > 0 and L9["off_margin"] == L9["req_floor"] - L9["off_need"]
+    # round 7's rule is shown, not applied: it would narrow the requirement
+    assert L9["floor_rule"] > L9["req_floor"] and L9["floor_rule"] - L9["drafted"] >= m.D11_MARGIN_MIN - 1e-9
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "REQ-018" in reg["R-28"][2] and "16.1 V WITHDRAWN" in reg["R-28"][2] and "fans" in reg["R-28"][2]
+    for rid in ("R-210", "R-211", "R-212"):
+        assert reg[rid][1] == "IMPLEMENTATION" and "FAN_OK" in reg[rid][2] + reg[rid][5], rid
+    assert reg["R-213"][1] == "TEST" and "60 s" in reg["R-213"][2] and reg["R-214"][1] == "TEST" and "rest-voltage" in reg["R-214"][2]
+    ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
+    lh = [r for r in ho.values() if "FW-A05" in r[1] and "K4" in r[1]]
+    assert len(lh) == 1 and "the fans off while keyed" in lh[0][2] and "SoC floors 15.5 V and 12.4 V rest" in lh[0][2] and lh[0][4] == "DRAFTED"
+    contract = open(os.path.join(ROOT, "v2", "docs", "HW-FW-CONTRACT.md"), encoding="utf-8").read()
+    assert "the outlets and the heater off while keyed" in contract and "SoC floors 15.5 V and 12.4 V rest" in contract
+    # the modes as Layer 9 prints them, in 1d and out 3
+    mo = L9["modes"]
+    assert mo["theirs"] == (F["idle"][1], F["alltx"][1], F["alltx"][2], F["pa113"][0]) and L9["r1_equal"] == "EQUAL"
+    page = open(PAGE, encoding="utf-8").read()
+    d1 = page.split("### 1d.")[1].split("| Row | Interface |")[0]
+    for x in mo["drawn"] + mo["drafted"]:
+        assert m.fmt(x) in d1 and m.fmt(x) in _C["text"].split("4. THE INTERFACE ROWS")[0], "the modes in 1d and out 3: %s" % m.fmt(x)
+    assert "30. ROUNDS 7 AND 8" in _C["text"] and "DRAFTED (the final drafts, round 2): %s" % " / ".join(m.fmt(x) for x in mo["drafted"]) in _C["text"]
+    # C2 and C3: every shed state under the 9.0 A trigger at 10.0 V
+    cur = L9["cur"]
+    for shed in ("PS-RED2 (slots 2 and 3)", "PS-RED plus the heater (cold overlay)"):
+        assert cur[shed]["high"][3] < 9.0 and cur[shed]["plan"][3] < 9.0
+    # the registered drafts: pinned copies naming their targets, each in the change list
+    chl = m.cons_changes(_md_rows(REG, "| ID | Kind |"))
+    named = " ".join(c[4] + " " + c[7] for c in chl)
+    for key, name, target, rel_, sha in L9["drafts"]:
+        assert rel_.startswith("v2/docs/records/l4e9/inputs/") and target in open(os.path.join(ROOT, rel_), encoding="utf-8").read()
+        assert name + ".py" in named, "%s is not in the change list" % name
