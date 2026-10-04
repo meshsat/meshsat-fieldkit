@@ -97,7 +97,7 @@ and E11-37, selects one, and applies the two minors of the independent check V1 
   finding for its owner (E11-40).
 - **Round 9 (section 19):** L8P-F02 and L8P-F03 corrected in the drafts (board A composed in L4-E9's order runs to its end); **Q42**, the
   third BUK6Y10-30PX, drafted, with record l8p's PTC at the three's centroid; **E11-29** restated as record l9stk's junction limit (each
-  FET's Zself + 2 Zmut at most 45.88 K/W with R17 apart, the pair's fallback 20.39 K/W); **E11-37** rebound to the three (Ciss 7.08 nF
+  FET's Zself + 2 Zmut at most 45.88 K/W with R17 apart, 40.78 K/W for any split since round 11, the pair's fallback 20.39 K/W); **E11-37** rebound to the three (Ciss 7.08 nF
   typical, about 8.61 near 0 V; sharing and coupling read) and OPEN on Q-TI-17 extended or the bench with three; **DD-3 OPEN** after one
   design-out attempt (J_DCIN drafted as the XT60-F, R19 held on its maker's sheet in the continuous rows, a second pass FET selected; it
   fails on L2, 112.37 C at the breaker's 7.136 A from 76.25 C; E11-41); **IF-1** drafted as a VBAT supervisor U46 that holds U42 and
@@ -1774,7 +1774,7 @@ E11-29 is now record l9stk's E-1: **the installed three, each FET's (Zself + 2 Z
 coupling into each junction at most 1 K/W (heat R17 alone), so the hottest junction stays at most 150 C held at 23.93 A from 76.25 C** with
 the band and R17 in place. The pair's former 33.12 K/W target at +70 C air and its 1 s, 20 ms and 244 us targets are **withdrawn**: with
 record l8p's breaker no current over 23.93 A outlasts its clearing, and the held limit governs; without the breaker, record l9stk's DD-1
-stays open. The block in 17d is restated to the three, the band and R17 (CONDITIONAL on E11-29).
+stays open. The block in 17d is restated to the three, the band and R17 (CONDITIONAL on E11-29). Round 11 (21d) restates the bar at 40.78 K/W for any split.
 
 ### 19d. E11-37 rebound to the three-device network
 
