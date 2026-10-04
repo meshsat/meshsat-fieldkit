@@ -152,7 +152,7 @@ def _edit(name, old, new, count=1):
 def t_the_checker_refuses_broken_procedures():
     T = _T()
     cases = [
-        ("C3", _edit("TP-E11-29.md", "33.12 K/W steady and at 60 s", "34.12 K/W steady and at 60 s")),
+        ("C3", _edit("TP-E11-29.md", "45.88 K/W steady by the body diode", "46.88 K/W steady by the body diode")),
         ("C7", _edit("TP-E11-29.md", T.MARK, "for the supplier to review")),
         ("C2", _edit("TP-E11-29.md", "register: R-159", "register: R-159, R-9999")),
         ("C8", _edit("TP-E11-29.md", "## 3. Safety", "## 3. Safety " + chr(0x2014))),
