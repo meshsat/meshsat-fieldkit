@@ -13,6 +13,7 @@ entry of 4 October 2026 14:25 CEST.
 | 4. Resume amendments: the board B ground basis before V3, C4's technical claims in V2, the suite's ETA on its logged run | 4 October 2026, about 18:45 CEST | `c5565030cb131a44b7ce7f6042b0a13986dcb5bc0233d9f2aed167684ac00f73` |
 | 5. The review of the resume plan that part 4 applies (RSM-01, RSM-02) | 4 October 2026, about 18:45 CEST | `6aea0eff870b821387eae7ec0bb7dc475d010da68fabd449377d82756f8c977d` |
 | 6. The review of the 19:15 status report (STATUS-01: each external dependency stays attached to the criterion it holds; layer 12's desk work and physical testing apart) | 4 October 2026, about 19:20 CEST | `273a0d7a93e3f6b5d1a0a273b13409923e7e7ab2d2633ecdac9f4ec20fc8a661` |
+| 7. After the checks V2 and V3: the supervisors' regulator deficit given an owner, a named correction and an acceptance criterion; the dedicated return verified over the permitted aged-contact combinations | 4 October 2026, about 21:11 CEST | `c57ddc4876d3a328aa7fd4c6e80035631f0310d6cc7880c6a73242e98359862d` |
 
 ## 1. Updated constitution and execution plan (as received)
 
@@ -392,3 +393,15 @@ The October and November dates are desk-work estimates, not promised layer accep
 Review method: read the supplied 43-line status document and recomputed its explicit fractions. No live worker, VM, cloud account, suite log, circuit or physical result was independently checked. Newly reported thermal and electrical values remain claims awaiting their existing reviews.
 
 The next useful milestones remain the completed set 29 gate and promotion, followed by the planned checks of the actual engineering corrections.
+
+## 7. After the checks V2 and V3 (as received)
+
+**The review is producing useful corrections, but power closure remains blocked.** Based on this report:
+
+- **DELTA-01:** firmware correction running.
+- **DELTA-02:** correctly remains open; changing the thermal limit didn’t fix the measurement method.
+- **I-03:** correctly remains open after Astra found a ground contact carrying **10.64 A against 10 A**.
+
+**One gap needs explicit ownership:** the reported **0.900 A supervisor demand versus 0.600 A regulator capacity**. Claude should verify its applicable operating conditions and give it a named correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit.
+
+No broad new plan is needed. Continue the three active workers, then verify the dedicated return across the permitted aged-contact combinations and resolve the regulator finding before claiming the affected supply path complete.

@@ -1588,3 +1588,17 @@ J_5V_IOC's ground contact on C-DEV rev 1 against the contact's 10 A, so I-03's a
 L8R2-F31 (the return between boards A and B), which is OPEN. I-03 / L9P-F03 stays OPEN and is credited only with the load relief
 and the composition. This issue's focused check and targeted recheck are both used: the next check needs the changed design that
 corrects L8R2-F31, and the reason is recorded with that task.
+
+### Register addition, 4 October 2026 21:11 CEST: the supervisors' regulator deficit (T10), by the owner's instruction (part 7)
+
+The collaborator's recheck V3 and Layer 9's own finding L9T5-F06 report that each supervisor's 3.3 V regulator on board B (an
+AP2112K, 600 mA) is under the supervisor's printed demand at a hot junction (ST's row: 840 mA at TJ 125 C, 400 mA at TJ 85 C, for
+the 400 MHz workload; 0.900 A with the declared auxiliaries). I-03's draft moves those regulators' inputs and does not change
+their capacity, and a dedicated ground return does not address it. It is a separate finding with its own owner:
+
+| Task | Kind | Smallest deliverable | Case and acceptance | Owner | Check |
+|---|---|---|---|---|---|
+| T10 the supervisors' 3.3 V regulators (L9T5-F06) | missing evidence first, then a defect or a bounded condition | (1) the applicable operating conditions verified: the supervisor's clock and voltage-scale state as the contract and the firmware define it, its junction temperature from the inside air of L4-E12 and its own dissipation, and the maker's row for THAT state; (2) a named correction: either a regulator whose printed output capability covers the demand at the bounded junction temperature with margin, or a contract row that bounds the operating state with a firmware acceptance, never an unstated assumption; (3) its acceptance criterion | C-DEV rev 1 for the rail; the regulator's printed current, dropout and thermal limits against the demand at the bounded state and temperature; the draft composes, its nets are read with a mutation that fails, and the 3.3 V rail's regulation holds | Layer 9's power author with board B's generator owner (Layer 5 for a contract row) | with I-03's next check, on the changed design |
+
+**The affected supply path is not claimed complete** until the dedicated return (L8R2-F31) is verified over every permitted
+aged-contact combination of the VH contacts and the ribbon conductors, and T10 is resolved.
