@@ -17,43 +17,47 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
    ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
-   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_e_entry-a09e9a60.py
+   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py
    eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
-   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_e_aux-a09e9a60.py
+   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py
    78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
    351029a5db0ee871 v2/docs/records/l6r2/apply_gen_sch_e_xal_land.py
    3f3e58b950ef3f8d v2/docs/records/l6r2/apply_gen_sch_e_lcsc.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-   bfdead54766199eb v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py
+   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
    88908ca2202b33ad v2/docs/records/l4e9/apply_gen_sch_a_u17.py
    352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
    cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
-   98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
-   c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
    c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
    2863b7c8ba4db393 v2/docs/records/l6r2/apply_gen_sch_a_lcsc.py
-   725e4f897b93fe06 v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py
+   98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
+   c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
+   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py
    20c7b0795593d761 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
    2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    ee11d230d11e1298 v2/docs/records/l8p/inputs/l4e11-section15c-precharge-e60a94a8.md
    2707096383791409 v2/docs/records/l8p/inputs/l4e11-section19h-e60a94a8.md
-   c860006f87a5777a v2/docs/records/l8p/inputs/l4e11-section20c-a09e9a60.md
-   a5b5b306dadd2a14 v2/docs/records/l8p/inputs/l4e11-section20d-a09e9a60.md
-   b02cbebcfb670197 v2/docs/records/l8p/inputs/l4e11-section20e-a09e9a60.md
-   bfdead54766199eb v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py
-   725e4f897b93fe06 v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py
-   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_e_aux-a09e9a60.py
-   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r10-apply_gen_sch_e_entry-a09e9a60.py
+   c860006f87a5777a v2/docs/records/l8p/inputs/l4e11-section20c-ac72e730.md
+   a5b5b306dadd2a14 v2/docs/records/l8p/inputs/l4e11-section20d-ac72e730.md
+   9f3d4e017226d18f v2/docs/records/l8p/inputs/l4e11-section20e-ac72e730.md
+   583a346a0d2fa211 v2/docs/records/l8p/inputs/l4e11-section22b-ac72e730.md
+   a90a69fa982e8db8 v2/docs/records/l8p/inputs/l4e11-section22c-ac72e730.md
+   0595a5a24a5bbc34 v2/docs/records/l8p/inputs/l4e11-section22g-ac72e730.md
+   b65f1dcdb0f61d3c v2/docs/records/l8p/inputs/l4e11-section22h-ac72e730.md
+   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py
+   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py
+   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py
+   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    a96099193dd92e8e v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
    d97f94a0fa1f2559 v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
    ed559399fd3b2f2d v2/docs/records/l8p/inputs/l9stk_protection-constants-0d72880b.txt
-   5b5487835106f2b6 v2/docs/records/l8p/inputs/SOURCES.txt
+   1b6a68537c65544c v2/docs/records/l8p/inputs/SOURCES.txt
    1e3fa195a8f63a9c v2/ecad/meshsat.pretty/LeadLands_1x02.kicad_mod
    171fa629c58b8f1e v2/ecad/meshsat.pretty/PogoPins_2x6.kicad_mod
    94b2f0134ac6ee11 v2/ecad/meshsat.pretty/PogoTargets_2x6.kicad_mod
@@ -74,10 +78,10 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    e8f1294bb0f76c75 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    4174af5851fe1be0 v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
    c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
-   d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
    835d00d5a67583ad v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 10) equal the sha256 SOURCES.txt pins: yes
+   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 12) equal the sha256 SOURCES.txt pins: yes
 
 2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices
    P U101  LM5069MM-1       l9stk 15.4 C-1 and 15.4b: the -1, latch-off
@@ -186,7 +190,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        held 101.0 C case; over the most threshold 0.2681 V: a charge over U103's threshold always crosses U104's (INFERRED from a typical figure; E-14b)
    THE PULL: Q107 and Q108 in series, gates at half of each output: 3.8 V at BRK_VIN 7.6 V (PORIT, under which the -1 runs nothing) against the
      2N7002's 2.5 V threshold at most, 14.6 V at the 29.2 V clamp against its 20 V; DOCK_EN_RET held at 0.055 V at most (2 x 7 ohm x 2, 1.96 mA)
-   WHAT BOARD A READS (L4-E11's DD-7 as its round 10 draws it: section 20c at a09e9a60, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):
+   WHAT BOARD A READS (L4-E11's DD-7 as it draws it since its round 10: section 20c at ac72e730, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):
      the return held under 0.7755 V at least (read closed over 0.84 V at most) while the loop reads powered, over 1.981 V at most;
      the copy of 20c reads each figure and why the reading is narrower than round 3's 1.0 V box: yes
      board P's pull holds the return at 0.055 V at most, 0.721 V under board A's held reading; with the return held, DOCK_EN_OUT falls to
@@ -194,7 +198,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      round 9's Q47 read half of it, 1.26 and 1.75 V, under the 2N7002's 2.5 V (L8P-F04): answered by round 10's U48 on the return itself
      the inhibit sets within 1 ms and holds at least 1.0 s after the return rises (read closed); the breaker restarts within 0.9477 s (the hold
        0.907 s and the start 40.7 ms); the timer re-enables 34.0 ms after a latch
-     THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at a09e9a60, quoted): the inhibit set within 0.85 ms of the return falling, under the
+     THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at ac72e730, quoted): the inhibit set within 0.85 ms of the return falling, under the
        interface's 1 ms; the charge through the off breaker ends within 1.41 ms of passing board P's threshold (board P's pull 0.56 ms plus
        board A's set 0.85 ms: the sum agrees); the hold at least 1.341 s after the return rises, 0.341 s over the interface's 1.0 s and 0.393 s over the
        breaker's restart (0.9477 s, this record's 0.9477 s: the same)
@@ -254,18 +258,33 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        152 uA with R131 and EN at 16.8 V while the gauge holds the discharge FET on; 2.5 uA at most with the gauge shut down (U105 1.5, Q109's IDSS 1)
    DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT (the acceptance holds on printed limits; E-8, E-16 and E-12d stay open; nothing measured)
 
-3d. ROUND 5, THE CHECK V1'S MINOR AND CONDITION C3: L8P-F06 (the breaker FETs' hot off leakage) and L8P-F07 (the guard RT1's printed points)
-   L8P-F06, ON L4-E11's LATCH (20e at a09e9a60, quoted): it reads dead while every source into CELL+ stays under 0.846 mA together; the
-     LM5069's internal 1 MOhm feeds 16.8 uA at 16.8 V and 29.2 uA at the 29.2 V clamp, which leaves 829.2 and 816.8 uA (L4-E11's 272 uA a battery FET
-     is the clamp's room over three: 272.3 uA, reproduced); the breaker's FETs Q101 and Q102 are a source too: with the breaker off, BRK_SNS sits at BRK_VIN
-     and PACK_P at CELL+, so each FET's drain-to-source off leakage flows into PACK_P and CELL+
+3d. ROUNDS 5 AND 6, THE CHECKS V1 AND V2: L8P-F06 (the breaker FETs' hot off leakage) and L8P-F07 (the guard RT1's printed points)
+   L8P-F06, ON L4-E11's LATCH AS ITS ROUND 12 STATES IT (fnd/l4e11r11 at ac72e730; sections 20e, 22b, 22c and 22g copied; the check V2's V2-B1 and V2-B2):
+     TWO limits on the sources into CELL+ while the inhibit holds and the breaker is off (quoted): the static limit 0.846 mA (the latch reads
+       dead) and the timing limit 520.7 uA (the bleed of CELL+ through R256 ends inside the hold's least 1.341 s); between the two the hold may end
+       with CELL+ still read alive and the breaker off (L4-E11 22g)
+     reproduced here from its printed inputs (R256 4.7 kOhm +1 %, CELL_FUSED 104 uF +20 % ASSUMED by L4-E11, from 17.375 V to the dead reading
+       4.076 V, the foot 0.060 V, the sources lifting the level it falls towards): static 846.0 uA, timing 520.9 uA (L4-E11 prints 520.7), the bleed
+       1.218 s at its hot bound (it prints 1.218 s) and 0.866 s with no source
+     its source list (22b, quoted): the LM5069's internal 1 MOhm 16.8 uA at 16.8 V (29.2 uA at the 29.2 V clamp; MAKER value, the tolerance not
+       printed); the three battery FETs 3 uA at 25 C and 30 uA at Tj 125 C (Nexperia BUK6Y10-30P, 17 April 2020, Table 7 p.6, printed maxima
+       as L4-E11 and the check V2 read them; that sheet is held back and not read by this record); the breaker pair Q101 and Q102, this finding
+     the breaker pair is a source because, with the breaker off, BRK_SNS sits at BRK_VIN and PACK_P at CELL+: each FET's drain-to-source off
+       leakage flows into PACK_P and CELL+
      printed (TI SLPS632, March 2017, 5.1, TA = 25 C unless stated): IDSS 1 uA at most at VGS 0 V and VDS 32 V (against the 29.2 V clamp);
        1 IDSS row, no hot figure
      ASSUMPTION, the leakage doubling every 10 K from the 25 C row (L4-E11 20d's convention for Q51): the pair 69.8 uA at the 76.25 C air, 388.0 uA
-       at the held 101.0 C case (l9stk 15.4), 2.048 mA at TI's 125 C; at the held case it leaves 142.9 uA a battery FET (L4-E11's 272 uA);
-       the pair alone fills the clamp's room from a 111.7 C case; at the held case it does so if the leakage doubles every 8.76 K or faster
-     L8P-F06: the latch holds at the held case on the ASSUMED doubling (nothing printed above 25 C); the budget's owner L4-E11 counts five devices, not three; E-14c
-       measures IDSS of Q101 and Q102 hot (OPEN)
+       at the held 101.0 C case (l9stk 15.4), 2.048 mA at TI's 125 C; the sources at the hot bound 434.8 uA (L4-E11's 434.8 uA: the same)
+     AGAINST THE TIMING LIMIT (the pack at 16.8 V, L4-E11's basis): it leaves the pair 473.9 uA, 236.95 uA a breaker FET; at the held case the pair's
+       388.0 uA leaves 85.9 uA in hand and 38.6 uA a battery FET (Nexperia prints 10 uA each at 125 C); the pair alone fills it from a 103.9 C
+       case, 2.9 K over the held case, or at the held case if the leakage doubles every 9.63 K or faster; at the assumed 388.0 uA the bleed takes
+       1.218 s of the hold's least 1.341 s
+       with BRK_VIN at the 29.2 V clamp: the pair 461.5 uA, 73.5 uA in hand, filled from 103.5 C or by a doubling every 9.68 K
+     AGAINST THE STATIC LIMIT (the 29.2 V clamp): it leaves the pair 786.8 uA, 393.4 uA a breaker FET; at the held case 398.8 uA in hand and 142.9 uA a
+       battery FET (L4-E11's 272 uA each is that limit less the clamp's 1 MOhm over three, 272.3 uA: reproduced); the pair alone fills it from a
+       111.2 C case, or at the held case if the leakage doubles every 8.82 K or faster
+     L8P-F06: both limits hold at the held case on the ASSUMED doubling (nothing printed above 25 C): the timing limit is the nearer one, 85.9 uA and 2.9 K away;
+       E-14c measures IDSS of Q101 and Q102 hot and keeps the pair at most 388 uA at the held case, inside BOTH limits (OPEN)
    L8P-F07, THE GUARD RT1 (Murata PRF15BB103RB6RC; DM-SA16-E056 Rev.1, p.4, read from the sheet's text):
      printed: R25 10 kOhm +-50 %; 100 kOhm at a sensing temperature over 110 C (no upper bound); 4.7 MOhm at 130 +-3 C; 32 V; -20 to +140 C
      record l9stk 15.5 reads '47 kOhm at 130 C plus or minus 3 C': yes; the sheet's 47 kOhm column is its 470 ohm groups' (the header '*at 4.7kohm *at 47kohm')
@@ -282,7 +301,10 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        is cooler by up to 1.88 K at 23.93 A (89.07 and 116.94 C), so the junction's reading is the hot side for the no-trip judgement
      ON THE PRINTED POINTS:
        the trip side: over 4.7 MOhm from 133 C, against the 341.2 kOhm that turns the first inverter off at 16.8 V: the breaker is off before the
-         copper passes 133 C, the junction at most 134.88 C against 150 C: PRINTED
+         PTC's copper passes 133 C: PRINTED. The junction over that copper is NOT BOUNDED (the check V2's V2-m5): with L4-E11's worst split the
+         hottest FET dissipates 1.513 W (9/8 of the even split's 1.345 W), 2.12 K over ITS OWN mounting base (Rth(j-mb) 1.4 K/W; round 5 added the
+         even split's 1.88 K), 135.12 C if that base sat at the sensor's copper; how far the base leads the sensor's copper no record bounds:
+         14.88 K are left for it to 150 C; E11-29's coupon reads the PTC's site against each junction with one FET heated alone (L4-E11 22h)
        no trip at 10 A (89.4 C): under 100 kOhm against 58.4 kOhm at 10.6 V: NOT PRINTED; at a pack of 15.51 V or more the printed bound suffices: PRINTED
        no trip in the 18 A service (118.0 C): nothing printed under 4.7 MOhm between 110 and 127 C: NOT PRINTED at any pack voltage
        the window (25.8 kOhm, the copper from -20 to 76.25 C) and the held reading (3.57 kOhm): nothing printed but the 25 C row: NOT PRINTED
@@ -297,7 +319,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        so on the typical curve the guard may turn the breaker off in the 18 A service held at l9stk's reading: it does NOT keep C-PROT's 18 A for 60 s uninterrupted there
        its onset at 10.6 V on the typical curve: 107.3 C (R25 at its most), 111.1 C (nominal), 116.3 C (least); from 10 A held (89.4 C) the 60 s
          service stays under it if the copper's first-order time constant (an ASSUMED form) is at least 61.1 s, 42.2 s, 21.2 s: no record holds it
-     L8P-F07: OPEN; the trip side printed, the no-trip side at 10 A printed only from a 15.51 V pack, the 18 A no-trip side not printed and on the
+     L8P-F07: OPEN; the trip side's resistance printed (the junction over the sensor's copper not bounded), the no-trip side at 10 A printed only
+       from a 15.51 V pack, the 18 A no-trip side not printed and on the
        typical curve reached at l9stk's held reading; l9stk 15.5's '9.0 to 15.0 K under the band' rests on the 470 ohm column's 47 kOhm
    THE ALTERNATIVE PARTS (named, NOT SELECTED; SESSION):
      Murata PRF15BA102RB6RC (the same sheet, p.4): R25 1000 ohm +-50 %, 10 kOhm at 125 +-5 C, 100 kOhm at 140 +-3 C, -40 to +150 C: under
@@ -305,10 +328,21 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        500 ohm under the 3.57 kOhm held reading (fails): not a part swap
      TDK B59721A0130A062 (superior series, EIA 0805, August 2019, p.4; the sheet held back by its notice): RR 680 ohm +-50 % at 25 C;
        R(Tsense - 5 C) 5.5 kOhm at most, R(Tsense + 5 C) 13.3 kOhm and R(Tsense + 15 C) 40 kOhm at least: limits on both sides, as condition C3
-       asks; Tsense 130 C: no trip to 125 C, off by 145 C (the junction 146.88 C); its printed 40 kOhm is under the loop's sure-off, so the loop scales by k
-       (R106, R107 and the guard together keep every level of L4-E11's 20c): k at most 10.62 (no trip) and 8.53 (the sure-off at 16.8 V), at least
-       10.51 (the held reading at 7.6 V on its least R25) or 6.84 at 10.6 V: NO k EXISTS at 7.6 V, a k exists at 10.6 V; at k 8.53 it dissipates 18.1 mW at 16.8 V
-       (the sheet's measurement power 6 mW) and the loop draws 4.11 mA (l9stk's 0.45 mA): NOT SELECTED
+       asks; Tsense 130 C: no trip to 125 C, off by 145 C (the hottest junction 147.12 C over its own base at the worst split, the base against the
+       sensor not bounded); its printed 40 kOhm is under the loop's sure-off, so the loop scales by k (R106, R107 and the guard together keep
+       every level of L4-E11's 20c). The bounds on k (round 5 took the sure-off as an upper bound; it is a LOWER bound: the check V2's V2-B3):
+         no trip to 125 C: k x 5.5 kOhm at most 58.4 kOhm: k at most 10.62
+         surely off by 145 C: k x 40 kOhm at least 341.2 kOhm (at 16.8 V): k at least 8.53
+         the held reading at 7.6 V on its least R25 (340 ohm): k at least 10.51: the window 10.51 to 10.62, 1.0 % wide: A k EXISTS
+         the held reading at 10.6 V on its least R25 (340 ohm): k at least 6.84: the window 8.53 to 10.62, 24.5 % wide: A k EXISTS
+       so on the sheet's printed limits a window exists at both voltages (the resistors' 1 % is already in the loop's levels). NOT SELECTED, on:
+         (1) dissipation: in the part at its printed 5.5 kOhm, 18.1 to 21.4 mW over the window (k 8.53 to 10.62, the pack at 16.8 V), against the
+             sheet's note (p.4): 'the electrical power during measurement should be below 6 mW for EIA case size 0805': its printed
+             resistance limits are read under that power; the loop runs the part at three times it or more, so they are not its limits there
+         (2) static draw: 4.11 to 5.01 mA in the loop (the part at its least R25), against record l9stk's 0.45 mA
+         (3) the sheet's own reference table (p.29, 'Rmin and Rmax values are typical values for reference only'; TYPICAL): the part's least
+             resistance is not at 25 C: Rmin 212 ohm at 100 C asks k at least 16.86 at 7.6 V and 10.98 at 10.6 V, over the 10.62 no trip allows:
+             on that table no k exists at either voltage (round 5 applied the dip to Murata's part and not to TDK's)
      SESSION: RT1 stays PRF15BB103RB6RC in the A draft; L8P-F07 goes to record l9stk (15.5) with L4-E11; the question to Murata is drafted, unsent
 
 4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)
@@ -318,7 +352,12 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused; the tree's gen_sch_p.py refused
    the tree's generators are unchanged: yes
 
-5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3)
+5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3; board A as the candidate's list carries it,
+   fnd/v2cand at dfa1eef2, rows 24 to 33: gnd002, hotr1, packrtn, slotlm, fb01, this record's ptc, L4-E11's dd7, then mainpb; the check V2's V2-m9)
+   board A, the list's rows whose drafts are NOT in this record's tree (main at 64cd25ee; record l8r2's rounds 4 to 6 on fnd/l8r3 at 89924e40): packrtn (R-201), slotlm (R-199), fb01 (R-200);
+     left out below; their place is right before this record's draft; test_l8p composes the whole list wherever a tree holds them
+   board E, the list's rows whose drafts are NOT in this record's tree (main at 64cd25ee; record l8r2's rounds 4 to 6 on fnd/l8r3 at 89924e40): packrtn (R-202);
+     left out below; their place is right before this record's draft; test_l8p composes the whole list wherever a tree holds them
    board P, this record's drafts in its place:
      l8p/apply_gen_sch_p_breaker.py               OK
      l8p/apply_gen_sch_p_idealdiode.py            OK
@@ -334,9 +373,9 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK
      l4e9/apply_gen_sch_e_f1.py                   OK
      l4e9/apply_gen_sch_e_hotswap.py              OK
-     l8p/inputs/l4e11r10-apply_gen_sch_e_entry-a09e9a60.py OK
+     l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py OK
      l4e7/apply_gen_sch_e_solar_guard.py          OK
-     l8p/inputs/l4e11r10-apply_gen_sch_e_aux-a09e9a60.py OK
+     l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py OK
      l8p/apply_gen_sch_e_enable.py                OK
      d8dec31/apply_gen_sch_e_cin.py               OK
      l6r2/apply_gen_sch_e_xal_land.py             OK
@@ -346,23 +385,24 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board A, this record's draft in its place:
      l4e6/apply_gen_sch_a_r12.py                  OK
      l4e11/apply_gen_sch_a_guard.py               OK
-     l8p/inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py OK
+     l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py OK
      l4e4/apply_gen_sch_a_r11.py                  OK
      l4e8/apply_gen_sch_a_bank.py                 OK
      l4e4/apply_gen_sch_a_r138.py                 OK
      l4e9/apply_gen_sch_a_u17.py                  OK
      l8gnd/apply_gen_sch_a_gnd002.py              OK
      l8gnd/apply_gen_sch_a_hotr1.py               OK
-     l8r2/apply_gen_sch_a_d8v3.py                 OK
-     l8r2/apply_gen_sch_a_vbus20ov.py             OK
      l8p/apply_gen_sch_a_ptc.py                   OK
-     l8p/inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py OK
+     l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py OK
      d8dec31/apply_gen_sch_a_mainpb.py            OK (apply_gen_sch_a_mainpb (R257, C249): fwd_gen_sch_a.py, 10 line(s) added)
      l6r2/apply_gen_sch_a_lcsc.py                 OK
    board A, this record's draft first, then the order: every step OK
    board A, the order, then this record's draft last: every step OK
+     (without l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py there: the list puts it before d8dec31's mainpb, R-217 before R-193; applied after mainpb
+      it is refused, mainpb having taken its R233 and C241 as the next free: apply_gen_sch_a_dd7: designator R233 is already in use in the target; refusing)
+   board A, the same with the tree's drafts the list does not name (l8r2's d8v3, l8r2's vbus20ov), before this record's: every step OK
 
-6. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)
+6. DESIGNATORS EACH DRAFT ADDS (the forward order, with the tree's drafts the list does not name; part calls, listed tokens and each draft's declared ADDS)
    board P, this record's: C101, C102, C103, C104, C105, C106, C107, C108, C109, C110, C111, C112, C113, C114, C115, D101, D102, D103, D104, Q101, Q102, Q103, Q104, Q105, Q106, Q107, Q108, Q109, R101, R102, R103, R104, R105, R106, R107, R108, R109, R110, R111, R112, R113, R114, R115, R116, R117, R118, R119, R120, R121, R122, R123, R124, R125, R126, R127, R128, R129, R130, R131, RT101, TP101, TP102, TP103, TP104, TP105, TP106, TP107, TP108, TP109, U101, U102, U103, U104, U105
    board P, this record's against every other draft's: DISJOINT
    board P, literal part calls drawn twice in the composed generator: none
@@ -400,13 +440,13 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P DIO  DRAWN
      regenerated board E, this record's draft alone sha256 d53d54144ec24324
        E EN   DRAWN
-     regenerated board A, this record's draft alone sha256 2703da0c4f667380
+     regenerated board A, this record's draft alone sha256 c3ba460894515491
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
    board P composed in L4-E9's order: the generator ran to its end (169 parts, intent written: yes)
    board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)
-   board A composed in L4-E9's order: the generator ran to its end (750 parts, intent written: yes)
+   board A composed in L4-E9's order: the generator ran to its end (728 parts, intent written: yes)
      regenerated board P, composed in L4-E9's order sha256 f980a46e938137b1
        P BRK  DRAWN
        P EN   DRAWN
@@ -415,17 +455,21 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P DIO  DRAWN
      regenerated board E, composed in L4-E9's order sha256 ce5b27b5b8d1ad3f
        E EN   DRAWN
-     regenerated board A, composed in L4-E9's order sha256 31d9f8c32f3e01d9
+     regenerated board A, composed in L4-E9's order sha256 467d5ee2ad22fd2f
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-     mutated composed board A (U48's SENSE1 and VDD exchanged: VBAT's pin on the return) sha256 7ecd69fad503f053
+   board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (750 parts, intent written: yes)
+     regenerated board A, the list's order with those drafts sha256 b3eaea0660509ada
+       A EN   DRAWN
+     record l8p's breaker and enable loop on the netlists: DRAWN
+     mutated composed board A (U48's SENSE1 and VDD exchanged: VBAT's pin on the return) sha256 29a5f08c5a67377a
        A EN   FAIL: DOCK_EN_RET reaches [('U48', '1')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated composed board A (Q44's drain and source exchanged: the source on the return) sha256 57218b7e0b26e236
+     mutated composed board A (Q44's drain and source exchanged: the source on the return) sha256 5e7dbe5dd858ca46
        A EN   FAIL: DOCK_EN_RET reaches [('Q44', '2')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated composed board A (R109 from DOCK_EN_OUT to the ground: U48's SENSE2 reads nothing) sha256 7d823e6c9a59ffeb
+     mutated composed board A (R109 from DOCK_EN_OUT to the ground: U48's SENSE2 reads nothing) sha256 ae782b443da5a2f8
        A EN   FAIL: R109 on DOCK_EN_OUT is '562k 0.1%' to 'GND', not a sense divider of 470 kOhm or more
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board P (J_SMB pins 6 and 7 exchanged) sha256 c067d42edad3d21e
@@ -435,7 +479,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P REV  DRAWN
        P DIO  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 32f84d653b27eebf
+     mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 34db381d8d38da2c
        A EN   FAIL: J_DOCK.3 on 'GND', wanted DOCK_EN_RET; J_DOCK.4 on 'DOCK_EN_RET', wanted GND; DOCK_EN_RET reaches [('J_DOCK', '4')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD) sha256 39db5324ddd360e7
@@ -528,23 +572,27 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a
      (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it
    L8P-F02 board A: l4e11's charger draft: VSYS_DOCK named U42 as its source without source_ic, fed from VBAT before VBAT was declared:
-     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried in round 10 (fnd/l4e11r10 at a09e9a60); board A's composition above uses round 10's
+     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried to its round 12 (fnd/l4e11r11 at ac72e730); board A's composition above uses round 12's
      draft, copied byte for byte into inputs/, and needs no stand-in
-   L8P-F03 board E: l4e11's aux draft: +12V_FAN named L4 as its source, which is not on that net: CLOSED the same way (round 10's aux draft
-     at a09e9a60, copied byte for byte); board E's composition needs no stand-in
+   L8P-F03 board E: l4e11's aux draft: +12V_FAN named L4 as its source, which is not on that net: CLOSED the same way (the aux draft
+     at ac72e730, copied byte for byte); board E's composition needs no stand-in
    L8P-F04 board A: round 9's DD-7 read the loop powered at half of DOCK_EN_OUT; with the return held DOCK_EN_OUT falls to 2.52 V at BRK_VIN
-     7.6 V: ANSWERED by round 10 (a09e9a60, not on main): U48 reads the return held and the loop powered (section 3b); composed above
+     7.6 V: ANSWERED since L4-E11's round 10 (round 12 at ac72e730, not on main): U48 reads the return held and the loop powered (section 3b); composed above
    L8P-F05 board A: with the breaker off, the LM5069's internal 1 MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:
      with board A's 200 kOhm (R107, R108) alone CELL+ reads 2.80 V at BRK_VIN 16.8 V, over L4-E11's 1.98 V 'dead' point; with U104's divider
-     (365.2 kOhm) also on PACK_P, 1.92 V (3.34 V at the 29.2 V clamp); the 1 MOhm's tolerance is not printed: ANSWERED by round 10 (a09e9a60,
-     not on main) with a bleeder on CELL+ while the inhibit holds; the latch then holds for any source into CELL+ under 0.846 mA (L4-E11 20e)
-   L8P-F06 board P with L4-E11 (the check V1's minor, round 5): the breaker FETs' off leakage feeds PACK_P and CELL+ with the breaker off, a source
-     inside L4-E11's 0.846 mA; the CSD18510Q5B prints IDSS 1 uA at 32 V and 25 C only; on the ASSUMED doubling every 10 K the pair is 388.0 uA at the
-     held 101.0 C case, leaving 142.9 uA a battery FET where L4-E11 allows 272; it fills the room from a 111.7 C case, or at the held case if it doubles
-     every 8.76 K: OPEN (section 3d; page 12j; E-14c)
+     (365.2 kOhm) also on PACK_P, 1.92 V (3.34 V at the 29.2 V clamp); the 1 MOhm's tolerance is not printed: ANSWERED since L4-E11's round 10
+     (round 12 at ac72e730, not on main) with a bleeder on CELL+ while the inhibit holds: R256 4.7 kOhm; the latch then has two limits on the
+     sources into CELL+, the static 0.846 mA and the timing 520.7 uA (L4-E11 20e)
+   L8P-F06 board P with L4-E11 (the check V1's minor, round 5; restated in round 6 on L4-E11's round 12): the breaker FETs' off leakage feeds PACK_P
+     and CELL+ with the breaker off, a source inside BOTH of L4-E11's limits (static 0.846 mA, timing 520.7 uA); the CSD18510Q5B prints IDSS 1 uA at
+     32 V and 25 C only; on the ASSUMED doubling every 10 K the pair is 388.0 uA at the held 101.0 C case: 85.9 uA inside the timing limit's 473.9 uA for
+     the pair (filled from a 103.9 C case, or by a doubling every 9.63 K) and 398.8 uA inside the static limit's 786.8 uA (111.2 C; 8.82 K):
+     OPEN (section 3d; page 12j; E-14c keeps both limits)
    L8P-F07 board A with record l9stk (condition C3): Murata prints RT1 (PRF15BB103RB6RC) at 10 kOhm +-50 % at 25 C, 100 kOhm over 110 C and 4.7 MOhm
-     at 130 +-3 C (DM-SA16-E056 Rev.1, p.4): the trip side is printed; the no-trip side at 10 A only from a 15.51 V pack and in the 18 A service not
+     at 130 +-3 C (DM-SA16-E056 Rev.1, p.4): the trip side's resistance is printed (the junction over the sensor's copper is not bounded);
+     the no-trip side at 10 A only from a 15.51 V pack and in the 18 A service not
      at all; on the typical curve RT1 reaches 74.0 kOhm or more at l9stk's held 118.0 C, over the first inverter's 58.4 kOhm: OPEN (section 3d; page 12j;
-     the question to Murata drafted, unsent; TDK's B59721A named, not selected)
+     the question to Murata drafted, unsent; TDK's B59721A named, not selected: a window for k exists on its printed limits, and it is left on
+     its dissipation, its static draw and its own typical reference table). The guard's redesign is record l9stk's next round, not this one
 
 l8p_drafts: done
