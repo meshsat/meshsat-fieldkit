@@ -57,7 +57,11 @@ typical figure; V1's minors (R84 pulse-rated; R256's 6.8k superseded) read in th
 22, the independent check V2's V2-B1) adds: the bleed of CELL+ counts the sources into the node (the round refuses the no-source bleed, and the
 no-source figure is shown to pass where the sourced one fails); V2's figures reproduce; of V2's three corrections the selected one, R256
 back at 4.7 kOhm, keeps the bleed at the hot bound inside the hold's least and U47's RESET within TI's recommended current in every state
-without a second fault, the battery FETs' orientation read in the netlist; the minors V2-m1 to m5 are carried. Nothing here writes
+without a second fault, the battery FETs' orientation read in the netlist; the minors V2-m1 to m5 are carried. Round 13 (section 23, the
+owner's supplier-delta review's DELTA-02) adds: the body-diode method heats and reads nothing 'alone' on the common nets the draft and the
+regenerated netlist show, and the round refuses to select it; the selected method addresses one device by its own gate, on a specimen
+whose gates are apart and not on board A as drafted; its budget, powers and currents reproduce in closed form; the procedure TP-E11-29
+quotes this record word for word and stays NOT EXECUTABLE; section 20c is restated on the PTC's printed points. Nothing here writes
 into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -1787,3 +1791,156 @@ def t_round12_the_minors_v2_m1_to_m5_are_carried():
     else:
         assert r.returncode == 1 and b"l8r2/packrtn is not in this tree" in r.stdout, r.stdout.decode()[-300:]
         assert "NOT in this branch's tree" in open(OUT, encoding="utf-8").read().split("   22h. ")[1]
+
+
+# ---- round 13 (section 23): the owner's supplier-delta review, DELTA-02: E11-29's method on three body diodes in parallel
+
+TP29 = os.path.join(ROOT, "v2", "docs", "test-procedures", "TP-E11-29.md")
+
+
+def t_round13_delta02_the_body_diode_method_is_refused_and_the_selected_method_addresses_one_device():
+    """DELTA-02: Q39, Q40 and Q42 have common gate, drain and source nets in the draft (read by ast) and in the regenerated netlist (read
+    by the S-expression reader), so a body-diode step addresses no single device; the rule says so for the old method on the drafted nets
+    and with the gates apart; the selected method (B) addresses one device where the gates are apart and not on board A as drafted; the
+    round refuses to select the old method or (C); E11-29's row is the selected method's text and no longer states the body-diode one."""
+    R = _R()
+    m = _M()
+    S = R["S23"]
+    f_ = S["fets"]
+    assert f_["refs"] == ["Q39", "Q40", "Q42"] and (f_["G"], f_["D"], f_["S"]) == ("CH_BATDRV", "CH_BATQ", "VBAT") and "P-FET" in f_["value"]
+    assert f_["sha"] == _sha(os.path.join(REC, "apply_gen_sch_a_charger.py")), "the topology is not read from the draft's present bytes"
+    # the same topology in the regenerated netlist of board A, composed as round 10's test composes it
+    spec = importlib.util.spec_from_file_location("check_dd7_netlist_under_test", DD7_CHECK)
+    chk = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(chk)
+    with tempfile.TemporaryDirectory() as d:
+        g = _compose10(d)
+        _comps, pins, _on = chk.read_netlist(open(_netlist10(g, d, "r13"), "rb").read())
+    term = {"S": ("1", "2", "3"), "G": ("4",), "D": ("5",)}
+    nets = {t: {tuple(pins[q][x] for x in px) for q in ("Q39", "Q40", "Q42")} for t, px in term.items()}
+    private = tuple(t for t in ("S", "G", "D") if len(nets[t]) == 3)
+    assert private == () == S["board_private"], "a battery FET has a terminal on a net of its own: %s" % nets
+    assert nets["S"] == {("VBAT",) * 3} and nets["G"] == {("CH_BATDRV",)} and nets["D"] == {("CH_BATQ",)}
+    # the rule on the old method: not per-device on the drafted nets, nor with the gates apart (a diode has no selecting terminal)
+    old, a_, b_, c_ = (m.R13_METHODS[k] for k in ("old", "A", "B", "C"))
+    for step in ("heat", "sense"):
+        assert not m.per_device(old[step], private)[0] and not m.per_device(old[step], ("G",))[0], "the body-diode %s step reads as per-device" % step
+        assert not m.per_device(c_[step], c_["private"])[0] and c_["private"] == ()
+        assert m.per_device(a_[step], a_["private"])[0] and "S" in a_["private"]
+        assert m.per_device(b_[step], b_["private"])[0] and b_["private"] == ("G",), "method (B) does not address one device with the gates apart"
+        assert not m.per_device(b_[step], private)[0], "method (B) reads as per-device on board A as drafted (its gates share one net)"
+        # mutations of the selected method's statement: current entering at the drain (the unselected body diodes conduct), no selecting gate
+        assert not m.per_device(dict(b_[step], direction="drain to source"), ("G",))[0]
+        assert not m.per_device(dict(b_[step], select=None), ("G",))[0]
+        assert not m.per_device(dict(b_[step], path="body diode"), ("G",))[0]
+    assert m.R13_SELECT == "B" and S["judge"]["B"]["heat"][0] and S["judge"]["B"]["sense"][0] and not S["judge"]["B"]["heat_board"][0]
+    # the round refuses a selected method that heats or senses 'alone' on common nets
+    keep = m.R13_SELECT
+    for bad in ("old", "C"):
+        try:
+            m.R13_SELECT = bad
+            try:
+                m.fix23_round(R, None)
+                raise AssertionError("the round accepts %r as the selected method" % bad)
+            except SystemExit as e:
+                assert e.code == 4
+        finally:
+            m.R13_SELECT = keep
+    # the maker's sheet: the pinning, the diode rows, the threshold row
+    assert S["pin_p"] == 2 and S["vsd"] == (80.0, 0.7, 1.2) and S["is"] == 80.0 and S["vth"] == (250e-6, 1.5, 2.0, 3.0) and S["id100"] == 57.0
+    # E11-29's row and block
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert m.e11_29_method(R) in row and "by the body diode's VSD method" not in row and "its three gates can be driven apart" in row
+    assert "WITHDRAWN" in m.e11_29_method(R) and "selected by its gate" in m.e11_29_method(R) and "threshold voltage" in m.e11_29_method(R)
+    page = open(PAGE, encoding="utf-8").read()
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "the three gate traces brought out apart" in b29 and "is **withdrawn**" in b29 and "selected by its gate" in b29
+    assert "each FET heated through its body diode at the held limit" not in b29 and "junction read by VSD at a small sense current" not in b29
+
+
+def t_round13_method_b_powers_currents_and_budget_reproduce():
+    """The figures E11-29 now carries, in closed form: the worst split's powers, method (B)'s heating currents under the part's ID, the
+    ripple bound, the budget's six terms and the reading that passes the 40.78 K/W bar; (A)'s budget; (C)'s bracket wider than the gap
+    between the bar's two forms."""
+    R = _R()
+    m = _M()
+    S, S9, S21, L = R["S23"], R["S19"], R["S21"], R["L"]
+    i_, ra = S9["i"], m.F16_RA
+    assert abs(S["p"]["even"] - i_ ** 2 * ra / 9) < 1e-12 and abs(S["p"]["hot"] - i_ ** 2 * ra / 8) < 1e-12 and abs(S["p"]["other"] - i_ ** 2 * ra / 16) < 1e-12
+    assert abs(S["p"]["hot"] + 2 * S["p"]["other"] - S["slot_w"][1]) < 1e-12 and abs(3 * S["p"]["even"] - S["slot_w"][0]) < 1e-12
+    for got, p_ in ((S["i_single"], S["p"]["hot"]), (S["i_td"][0], S["slot_w"][0]), (S["i_td"][1], S["slot_w"][1])):
+        assert abs(got[0] - math.sqrt(p_ / ra)) < 1e-12 and abs(got[1] - math.sqrt(p_ / 8e-3)) < 1e-12 and got[1] < S["id100"]
+    assert abs(S["ripple"][0] - S["slot_w"][0] * L["z"][2.44e-4]) < 1e-12 and m.R13_B["slot"] == 2.44e-4
+    rise = S21["bar_new"] * S["p"]["even"]
+    assert abs(rise - S["rise_bar"]) < 1e-12 and abs(S["rise_total"] - (150.0 - S9["t0"])) < 1e-12
+    u_b = math.sqrt(0.02 ** 2 + 0.01 ** 2 + (1.0 / rise) ** 2 + (0.5 / rise) ** 2 + (0.3 / rise) ** 2 + (S["ripple"][0] / 2 / rise) ** 2)
+    u_a = math.sqrt(0.02 ** 2 + 0.01 ** 2 + (1.0 / rise) ** 2)
+    assert abs(S["u"]["B"] - u_b) < 1e-12 and abs(S["u"]["A"] - u_a) < 1e-12 and len(S["terms"]["B"]) == 6
+    assert abs(S["pass"]["B"] - S21["bar_new"] / (1 + u_b)) < 1e-12 and "%.2f" % S["pass"]["B"] == "39.51" and "%.2f" % (u_b * 100) == "3.22"
+    assert abs(S["pass_even"] - S21["bar_old"] / (1 + u_b)) < 1e-12 and abs(S["pass_rise"] - S["rise_total"] / (1 + u_b)) < 1e-12
+    assert S["u"]["B"] < S["bar_gap"] / 2 < S["c_frac"], "(B) does not resolve the bar's two forms, or (C) does"
+    assert abs(S["c_bracket"] - 8.617333e-5 * 423.15 * math.log(3.0) / 2e-3) < 1e-9
+    assert abs(S["leak_frac"] - 2 * 10e-6 / 1e-3) < 1e-12 and S["sense_k"] < 0.2
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o23, p23 = out.split("23. ROUND 13")[1], page.split("## 23. Round 13")[1]
+    for v_ in ("39.51", "3.22 %", "54.84", "40.78", "45.88", "44.45", "71.45", "73.75", "1.513", "0.756", "8.46", "13.75", "13.82", "22.46",
+               "11.96", "19.45", "1.04 K", "0.2589", "2.89 %", "39.64", "20 K", "11.1 %", "DELTA-02", "C-PROT rev 1", "NOT EXECUTABLE"):
+        assert v_ in o23 and v_ in p23, "%s is not in both section 23 and out 23" % v_
+    assert "SELECTED: (B)" in o23 and "no coefficient is printed" in o23 and "No temperature coefficient is printed" in p23
+
+
+def t_round13_section_20c_stands_on_the_ptcs_printed_points():
+    """Record l9stk's round 4 corrected its reading of Murata's sheet: 47 kOhm is not a point of the PRF15BB103. 20c and 20f no longer
+    use it as a bound; on the printed points the first inverter is not defined at 100 kOhm and 10.6 V, and a tripped PTC is read held
+    with the loop powered (a guard trip sets DD-7's inhibit); the selected switch's reading on DD-7 is named as owed."""
+    R = _R()
+    S, S20, S9 = R["S23"], R["S20"], R["S19"]
+    by = {(r_["rt"], r_["vin"]): r_ for r_ in S["ptc_rows"]}
+    assert len(by) == 8 and by[(100e3, 10.6)]["inv"] == "not defined" and by[(100e3, 16.8)]["inv"] == "on"
+    assert all(by[(rt, v)]["a"] == "closed" and by[(rt, v)]["inv"] == "on" for rt in (5e3, 15e3) for v in (10.6, 16.8))
+    assert all(by[(4.7e6, v)]["a"] == "held" and by[(4.7e6, v)]["inv"] == "off" and by[(4.7e6, v)]["powered"] for v in (10.6, 16.8))
+    assert abs(by[(100e3, 10.6)]["ret"] - (10.6 * 22e3 / 132e3)) < 0.06, "the return at 100 kOhm is not the divider's reading less the loads"
+    assert S["switch"] == (127.8, 132.2) and all(o > S20["out_rel"][1] and r_ > S20["ret_high"] for _v, o, r_ in S["sw_rows"])
+    mine = (S["inv_loaded"][0][1], S["inv_loaded"][1][1], S["inv_loaded"][0][2], S["inv_loaded"][1][2])
+    assert all(abs(a_ / 1e3 - b_) <= 0.10 * b_ for a_, b_ in zip(mine, S["l9_inv"])) and S["l9_inv"] == (58.4, 110.9, 203.4, 341.2)
+    assert abs(S9["rt1"][2] - 47e3) < 1e-6 and abs(S["withdrawn"][1] - S20["bound"][1]) < 1e-12
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o20c = out.split("   20c. ")[1].split("   20d. ")[0]
+    o20f = out.split("   20f. ")[1].split("   20g. ")[0]
+    assert "WITHDRAWN as a bound by round 13" in o20c and "the bound point (l9stk" not in o20c
+    assert "which bounds nothing" in o20f and "read closed with" not in o20f
+    p20 = " ".join(page.split("## 20. Round 10")[1].split("## 21. Round 11")[0].split())
+    assert "withdrawn as a bound by round 13" in p20 and "which bounds nothing" in p20 and "**The bound point** (record l9stk" not in p20
+    o23g = out.split("   23g. ")[1].split("   23h. ")[0]
+    assert "WHAT NO LONGER STANDS" in o23g and "OWED READING" in o23g and "NOT DRAFTED" in o23g and "L8P-F07" in o23g
+    for v_ in ("1.714", "2.737", "59.2", "112.3", "190.2", "319.5", "4.532", "127.8", "132.2"):
+        assert v_ in o23g and v_ in page.split("### 23g. ")[1], v_
+
+
+def t_round13_the_procedure_quotes_this_record_and_stays_not_executable():
+    """TP-E11-29 is rewritten on method (B) in this round: every quote it makes of THIS record is the record's text (the procedures'
+    own verifier), it carries the proposal mark and the NOT EXECUTABLE status with what must happen first, and it no longer instructs a
+    body-diode heating or a VSD reading. Its quotes of L4-E9's cells are that record's, on the line it is integrated on."""
+    need(TP29, "the procedure TP-E11-29")
+    tpdir = os.path.dirname(TP29)
+    spec = importlib.util.spec_from_file_location("tp_check_for_l4e11", os.path.join(tpdir, "tp_check.py"))
+    tp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tp)
+    text = open(TP29, encoding="utf-8").read()
+    _tq, n_table, n_text, fails = tp.verify_quotes(tp.Sources(ROOT), "v2/docs/test-procedures/TP-E11-29.md", text)
+    mine = [f_ for f_ in fails if "records/l4e11/" in f_ or "well-formed" in f_]
+    assert not mine, "the procedure misquotes this record: %s" % mine
+    quotes = [(dict(tp.ATTR_RX.findall(a)), b) for a, b in tp.Q_RX.findall(text)]
+    own = [q for q, _b in quotes if q.get("src") == "v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md"]
+    assert len(own) >= 10 and any(q.get("row") == "E11-29" and q.get("col") == "Acceptance" for q in own), "the row's acceptance is not quoted"
+    assert tp.MARK in text and "**NOT EXECUTABLE.**" in text and "the independent check" in text and "a supplier's written agreement" in text
+    body = "\n".join(l for l in text.split("\n") if not l.startswith(">"))       # the procedure's own words, its quotes apart
+    for gone in ("heated through its body diode", "body diode VSD", "the VSD sense taps", "gate tied to its source for the whole run"):
+        assert gone not in body, "the procedure still instructs %r" % gone
+    for kept in ("gate k on CH_BATQ", "One FET is read per interruption", "V2 | reciprocity", "39.51 K/W", "No temperature coefficient is printed",
+                 "Neither pour is cut", "RT1's land"):
+        assert kept in body, "the procedure lacks %r" % kept
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "DELTA-02" in readme and "TP-E11-29" in readme and "what the method cannot bound" in readme.lower()
