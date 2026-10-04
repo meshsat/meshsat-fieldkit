@@ -230,6 +230,10 @@ def budget(page):
     return W
 
 
+def r_div_k():
+    return (R121 + R122) / 1e3
+
+
 def rev_budget(page, l4, pre, W):
     """B-R2's detector (route R1, round 3): the figures read from record l9stk's and task L4-E11's copies and from the makers'
     sheets; the three readings of plotted typical curves are marked; the thresholds, their tolerances, the delays and the limits
@@ -281,6 +285,11 @@ def rev_budget(page, l4, pre, W):
     need(lm, r"The gate-to-source voltage is limited by an internal 12-V Zener diode", "LM5069: the internal gate clamp")
     need(lm, r"momentarily pulling the UVLO pin below\s+2\.5 V", "LM5069: the -1's reset by UVLO")
     need(lm, r"The voltage at the TIMER pin must be\s+<0\.3 V for the restart procedure to be effective", "LM5069: the timer's condition")
+    R["r_so"] = float(need(lm, r"OUT bias current \(disabled\) due to leakage current through an internal (\d+)-M\u03a9 resistance from SENSE to VOUT",
+                           "LM5069: the internal SENSE to OUT resistance while disabled").group(1)) * 1e6
+    m = need(l4, r"CELL\+\s+over\s+R107\s+/\s+R108\s+\((\d+)k\s+each\)", "L4-E11: DD7_ALIVE's divider")
+    R["r_alive"] = 2 * float(m.group(1)) * 1e3
+    R["dead"] = float(need(l4, r"under\s+%s\s+V\s+it\s+cannot\s+conduct" % N, "L4-E11: CELL+ read dead").group(1))
     # TI CSD18510Q5B (SLPS632)
     cs = pdftext(CSD_SHEET)
     R["rds_max"] = float(need(cs, r"VGS = 10 V, ID = 32 A\s+0\.79\s+%s" % N, "CSD18510Q5B: RDS(on)").group(1)) * 1e-3
@@ -357,6 +366,12 @@ def rev_budget(page, l4, pre, W):
     R["gate_run"] = R["v_run"] / 2.0
     R["out_run"] = R["v_run"] * R["rt1_min"] / (10e3 * (1 + R106_TOL) + R["rt1_min"])
     R["out_pack"] = R["v_pack_min"] * R["rt1_min"] / (10e3 * (1 + R106_TOL) + R["rt1_min"])
+    # CELL+ with the breaker off: the LM5069's internal SENSE to OUT resistance feeds PACK_P (L8P-F05)
+    r_div = R121 + R122
+    R["cell_off_a"] = W["vmax"] * R["r_alive"] / (R["r_so"] + R["r_alive"])
+    r_both = R["r_alive"] * r_div / (R["r_alive"] + r_div)
+    R["cell_off_ap"] = W["vmax"] * r_both / (R["r_so"] + r_both)
+    R["cell_off_clamp"] = V_CLAMP * r_both / (R["r_so"] + r_both)
     # the delays and the burst
     R["tau_i"], R["tau_v"] = R120 * C109, C110 * (rs1 + rs2)
     t_amp = 10 * (5.0 / 0.2e6 + 8e-6)                                # the OPA187's printed typical slew and recovery, taken ten times slower
@@ -834,6 +849,11 @@ def main():
             w("   %s board %s: %s\n" % (fid, b.upper(), why))
     w("   L8P-F04 board A: L4-E11's DD-7 draft reads the loop powered at half of DOCK_EN_OUT (Q47 through R109 and R144); with the return held low\n")
     w("     (board P's detector, or board A's own Q44) DOCK_EN_OUT falls to %.2f V at BRK_VIN %.1f V: the interface of section 3b is owed (open)\n" % (R["out_run"], R["v_run"]))
+    w("   L8P-F05 board A: with the breaker off, the LM5069's internal %.0f MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:\n" % (R["r_so"] / 1e6))
+    w("     with board A's %.0f kOhm (R107, R108) alone CELL+ reads %.2f V at BRK_VIN %.1f V, over L4-E11's %.2f V 'dead' point; with U104's divider\n" % (
+        R["r_alive"] / 1e3, R["cell_off_a"], B["vmax"], R["dead"]))
+    w("     (%.1f kOhm) also on PACK_P, %.2f V (%.2f V at the %.1f V clamp); the 1 MOhm's tolerance is not printed (open; route R1's return covers a charge)\n" % (
+        r_div_k(), R["cell_off_ap"], R["cell_off_clamp"], V_CLAMP))
     w("\nl8p_drafts: done\n")
     return 0
 

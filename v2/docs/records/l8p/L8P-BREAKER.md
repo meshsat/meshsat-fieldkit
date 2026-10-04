@@ -288,6 +288,7 @@ The check parses the netlists and reads the dock lands' pad positions from `mesh
 | L8P-F02 | A | L4-E11 (`apply_gen_sch_a_charger.py`) | VSYS_DOCK names U42 as its source without `source_ic`, which `intent.rail` refuses. With that passed, it is fed from VBAT before VBAT is declared, which is refused too. Board A's composition stops at step 3a. | open |
 | L8P-F03 | E | L4-E11 (`apply_gen_sch_e_aux.py`) | +12V_FAN names L4 as its source, and L4 is not on that net (it sits between F12_SW1 and F12_SW2). `intent.write` refuses. | open on main; L4-E11 reports L8P-F02 and L8P-F03 corrected on `fnd/l4e11r9` (`b985797a`, round 9), not checked here |
 | L8P-F04 | A | L4-E11 (`apply_gen_sch_a_dd7.py`) | Not a refusal: B-R2's interface (section 12f). The DD-7 draft reads the loop powered at half of DOCK_EN_OUT (Q47 through R109 and R144). With the return held low (board P's detector, or board A's own Q44), DOCK_EN_OUT falls to 2.52 V at BRK_VIN 7.6 V and 3.51 V at 10.6 V, so Q47's gate reads 1.26 and 1.75 V, under the 2N7002's 2.5 V; and nothing on board A reads DOCK_EN_RET. | open, owed |
+| L8P-F05 | A | L4-E11 (`apply_gen_sch_a_dd7.py`), with record l9stk | Not a refusal. With the breaker off, the LM5069 feeds PACK_P, and so CELL+, through its internal 1 MOhm from SENSE to OUT (SNVS452G 7.5, note 1). With board A's 200 kOhm (R107, R108) alone, CELL+ reads 2.80 V at BRK_VIN 16.8 V, over the DD-7 draft's 1.98 V 'dead' point, so Q48 may release the inhibit while the breaker is off. With this record's U104 divider (365.2 kOhm) also on PACK_P it reads 1.92 V, but 3.34 V at the 29.2 V clamp, and the 1 MOhm's tolerance is not printed. The 'dead' reading should not lean on it: a load of board A's own on CELL+, or a threshold that reads such a level as dead. Route R1's return covers a charge either way. | open |
 
 Each open refusal is the same without this record's draft. The stand-ins in `l8p_drafts.py` (STANDINS) are scratch text
 only, never drafts and never applied. They say only that the generator then runs on.
@@ -558,7 +559,8 @@ restarts within 1.0 s.
 
 **B-R2's route R1 DRAFTED on board P** (U103, U104, Q107, Q108, D103, R118 to R129, C107 to C110, TP107, TP108, in the breaker
 draft), the netlist check's REV group DRAWN on the regenerated netlists and FAIL on two mutations. **Board A's side is owed**
-(12f, L8P-F04, L4-E11's to draw).
+(12f, L8P-F04, L4-E11's to draw). Found on the way, for L4-E11 with record l9stk: L8P-F05, CELL+ held partly up through the
+LM5069's internal 1 MOhm while the breaker is off (section 9).
 
 CONDITIONAL on:
 - E-14b, the body diodes' VSD read from a typical figure;
