@@ -63,5 +63,9 @@ v2/vendor/battery/held/
 # Rugged tablet makers' spec sheets held back by their copyright notices (stream l3batt, 30 September 2026): fetched
 # by v2/docs/records/l3batt/fetch_held_back.py and checked by sha256, never committed.
 v2/vendor/tablet/held/
+# Sanyo Denki's San Ace catalogue pages (C1152B001 '25.10, pp. 362, 616, 623, 633), read by record l8r2 round 4 (3 October
+# 2026) for the coolers' PWM, start and curve figures; no redistribution grant was readable (the maker's conditions of use page
+# answered HTTP 403): fetched by v2/docs/records/l8r2/fetch_held_back.py and checked by sha256, never committed.
+v2/vendor/fans/held/
 # The write-path marker of v2/docs/records/s117/apply_gen_sch_a_s117.py (and its FET sibling): never committed.
 v2/docs/records/s117/*.applied

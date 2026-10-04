@@ -22,6 +22,9 @@ with board P's `returns`:
   - volts 0.0 kept, so a part between a live net and ground is judged against the live net exactly as the node made it (derate).
 A later draft that adds a VBAT load (L4-E11's U42, L4-E9's R227) does not add its return here: the return's copper at the dock
 contacts carries the whole either way, and a load added to VBAT can be added here in the same release.
+Round 4 (L9P-F02): where this record's apply_gen_sch_a_slotlm.py is already applied (VBAT's loads name its stages' entries Q501
+and Q531), slots 1 and 3 are LM5176 stages and their ground ends are their CS shunts R506 and R536 at 2.60 A (slot 2's R170 at 2.60 A, round 6); slotlm applied
+after this draft rewrites the same two entries, so either order gives one generator.
 Which rules then judge its copper (pcb_rules.yaml): PI-001 (conductor current capacity, dc_drop's density verdict on the routed
 board at the declared 18 A), PI-002 (the drop from the dock contacts to each stage against 0.5 % of 14.4 V), PI-003 (the barrels
 where the return changes layer, from dc_drop's solved mesh; In1 and In4 are this board's ground planes), and PWR-001 (the rail's
@@ -45,11 +48,16 @@ SOURCES = ("J_CN1", "J_CN2", "J_CN3", "J_CN4")
 LOADS = (("U4", 2.0), ("R170", 2.22), ("U6", 2.0), ("R177", 1.61), ("U41", 0.4), ("R56", 1.5), ("R122", 0.3), ("U12", 0.2),
          ("U22", 0.65), ("U21", 0.69))
 OF_VBAT = {"R170": "Q28", "R177": "Q32", "R56": "Q11", "R122": "U15"}   # the LM5176 stage's CS shunt for the load VBAT names
+# round 4: with slotlm applied first, slots 1 and 3 are LM5176 stages (VBAT names Q501, Q28 and Q531 at 2.60 A; their CS shunts R506, R170, R536)
+SLOTLM_VBAT = '"Q501": 2.60, "Q28": 2.60, "Q531": 2.60,'
+LOADS_SLOTLM = tuple(("R506", 2.60) if k == "U4" else ("R536", 2.60) if k == "U6" else ("R170", 2.60) if k == "R170" else (k, v)
+                     for k, v in LOADS)
 
 _OLD = ('_intent.node("GND", 0.0, "the board\'s reference. It is declared so that a part between a live net and ground "\n'
         '             "is judged against the live net rather than reported as sitting on an undeclared one")\n')
 
-_NEW = ('# THE PACK PATH\'S RETURN IS A RAIL (record l8r2 round 3, item 5, MESHSAT-1357, 3 October 2026; record l9stk\'s finding):\n'
+def _new(loads):
+    return ('# THE PACK PATH\'S RETURN IS A RAIL (record l8r2 round 3, item 5, MESHSAT-1357, 3 October 2026; record l9stk\'s finding):\n'
         '# GND from the dock return contacts J_CN1 to J_CN4 to the stages VBAT feeds carries the pack\'s whole current, the other\n'
         '# half of CELL+, CELL_FUSED and VBAT, and as a node no power rule solved it. Declared as board P declares PACK_N: its drop\n'
         '# judged against CELL+\'s 14.4 V (PI-002), its copper at the pack\'s 18 A (PI-001, PI-003), its watts not counted twice. Each\n'
@@ -65,9 +73,16 @@ _NEW = ('# THE PACK PATH\'S RETURN IS A RAIL (record l8r2 round 3, item 5, MESHS
         '                  "ground end of every stage VBAT feeds, at the pack\'s own 10.0 A typical and 18.0 A peak; the loads are "\n'
         '                  "VBAT\'s own, at their ground ends. Its drop is judged against CELL+, the rail it returns, at this "\n'
         '                  "board\'s half percent, the share its CELL+ declares")\n'
-        % ", ".join('"%s": %s' % (k, v) for k, v in LOADS))
+        % ", ".join('"%s": %s' % (k, v) for k, v in loads))
 
+
+_NEW = _new(LOADS)
 EDITS = [(_OLD, _NEW)]
+
+
+def edits_for(text):
+    """the edit for this target: slots 1 and 3's ground ends are their CS shunts where slotlm's stages are drawn"""
+    return [(_OLD, _new(LOADS_SLOTLM))] if SLOTLM_VBAT in text else EDITS
 
 
 def refuse(msg):
@@ -79,7 +94,7 @@ def patched(text):
     if re.search(r'_intent\.rail\(\s*"GND"', text):
         refuse("GND is already declared as a rail in the target")
     new = text
-    for old, rep in EDITS:
+    for old, rep in edits_for(text):
         if rep == old:
             refuse("an edit's new text equals its old text")
         if new.count(rep) != 0:
@@ -140,7 +155,7 @@ def main(argv):
         return 0
     open(target, "w", encoding="utf-8").write(new)
     back = open(target, encoding="utf-8").read()
-    if back != new or any(back.count(rep) != 1 for _o, rep in EDITS):
+    if back != new or any(back.count(rep) != 1 for _o, rep in edits_for(text)):
         refuse("the written file does not read back as the patched text")
     ast.parse(back)
     print("%s: WRITTEN, %d edit(s)" % (NAME, len(EDITS)))
