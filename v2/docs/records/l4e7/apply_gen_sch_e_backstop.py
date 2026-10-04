@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """apply_gen_sch_e_backstop.py: DRAFT for board E's generator owner (task L4-E7R, MESHSAT-1357, 1 October 2026; third round
-of 2 October 2026 after checks/astra-check-l4e7r-2.md, with the CS101 correction after checks/check-l4e7r-3.md). NOT APPLIED
+of 2 October 2026 after checks/astra-check-l4e7r-2.md, with the CS101 correction after checks/check-l4e7r-3.md; the decoupling
+classes of 4 October 2026 after record l8p's finding L8P-F01). NOT APPLIED
 to the tree by L4-E7; its author ran it only on scratch copies (the tests also write scratch copies).
 
 The control decision of L4E7-CONTROL-DECISION.md, approach C: a hardware 100 W backstop under the LT8705A's input-current
@@ -31,7 +32,12 @@ does not carry them. What it changes in v2/ecad/tools/gen_sch_e.py, and nothing 
     the 50 V parts; R14 (SHDN's divider top) moves to TRK_VS;
   - R16, RIMON_IN: 23.2k to 31.6k 0.1 % 25 ppm/K (RT0603BRD0731K6L, LCSC C705766), the regulation one step under the trip's
     lowest by more than CS101's filtered ripple;
-  - the declarations: PV_P's loads are the bank; TRK_VS a series segment of PV_P from the bank to R59; the tracker section's list.
+  - the declarations: PV_P's loads are the bank; TRK_VS a series segment of PV_P from the bank to R59; the tracker section's list;
+  - the decoupling classes (L8P-F01 of record l8p, 4 October 2026): C66 (U18's V+, pin 5), C67 (U19's VDD, pin 5) and C68
+    (U20's VDD, pin 6) are declared against their pins, and the generator's G14 loop refuses an entry without a class, so the
+    composed generator stopped there; each takes class D (DECOUPLING.md section 6, a capacitor a maker ties to a supply pin)
+    in _DEC_CLASS with its maker's clause: SBOS181F 9 (p.18), SBVS240C pin 5 VDD (p.3), SBVS050N pin 6 VDD (p.4), each 0.1 uF,
+    the 100n drawn.
 
 It is not the whole change: the layout owes the bank's Kelvin taps to U18 and R59's to U5 (board E's layout constraints), the
 regeneration and its gates, and the input capacitance's ripple and damping check with the new bulk (99 uF of bulk and
@@ -79,6 +85,21 @@ BLOCK = (
     'r("R70", "8.06k 0.1% 25ppm (SWEN supply guard top)", "TRK_LDO33", "TRK_SWEN", "R", "C861587"); '
     'r("R71", "6.04k 0.1% 25ppm (SWEN pull-down, the guard bottom)", "TRK_SWEN", "GND", "R", "C728595")\n'
     'for _ca in range(4): c("C7%d" % (_ca + 1), "10u 50V", "TRK_VS", "GND", "C10u50")   # L4-E7R: ahead of RSENSE1 at its pad\n')
+# L8P-F01 (record l8p, 4 October 2026): C66, C67 and C68 are declared against U18's V+, U19's VDD and U20's VDD (bypass=), and
+# gen_sch_e.py's G14 loop stops the generator on a decoupling entry without a class; each is class D, a capacitor its maker ties
+# to a supply pin (DECOUPLING.md section 6): D1 the maker's value (0.1 uF, the 100n drawn), D2 the own-pin window
+DEC_ROWS = (
+    '    # L4-E7R, L8P-F01 (MESHSAT-1357, 4 October 2026): the backstop\'s three supply capacitors, class D by role (a capacitor a\n'
+    '    # maker ties to a supply pin, DECOUPLING.md section 6); each maker\'s 0.1 uF is the 100n drawn (D1), at its pin (D2)\n'
+    '    "C66": ("D", "TI INA139/INA169 SBOS181F, revised February 2017 (v2/vendor/ti/held/ti-ina169-sbos181f.pdf): 9 Power Supply "\n'
+    '                 "Recommendations \\"TI recommends placing a 0.1-uF capacitor near the V+ pin on the INA139 or INA169\\" (p.18); "\n'
+    '                 "10.1 \\"connect the bypass capacitors close to the device pins\\" (p.19); U18\'s V+ (pin 5) on TRK_VS"),\n'
+    '    "C67": ("D", "TI TPS3701 SBVS240C, revised February 2019 (v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf): pin 5 VDD \\"It is "\n'
+    '                 "good analog design practice to place a 0.1-uF ceramic capacitor close to this pin\\" (p.3); 10.1 \\"Place the "\n'
+    '                 "VDD decoupling capacitor close to the device\\" (p.19); U19\'s VDD on TRK_LDO33"),\n'
+    '    "C68": ("D", "TI TPS3808 SBVS050N, revised August 2026 (v2/vendor/ti/ti-tps3808.pdf): pin 6 VDD (DBV) \\"It is good "\n'
+    '                 "analog design practice to place a 0.1uF ceramic capacitor close to this pin\\" (p.4); 8.4.1 \\"Place a 0.1-uF "\n'
+    '                 "ceramic capacitor near the VDD pin\\" (p.15); U20\'s VDD on TRK_LDO33"),\n')
 EDITS = [
     ('r("R59", "15mOhm 1% 2512 (RSENSE1: input-current sense, HoJLR2512-3W-15mR-1%)", "PV_P", "TRK_VIN", "RS2512", "C2903494")',
      'r("R59", "15mOhm 1% 2512 (RSENSE1: input-current sense, HoJLR2512-3W-15mR-1%)", "TRK_VS", "TRK_VIN", "RS2512", "C2903494")   '
@@ -106,6 +127,7 @@ EDITS = [
     ('"R14", "R15", "R16", "R17", "R59", "C65", "C24"',
      '"R14", "R15", "R16", "R17", "R59", "C65", "R60", "R61", "R62", "R63", "R64", "U18", "C66", "R65", "R66", "R67", "R68", "U19", '
      '"C67", "U20", "C68", "R69", "R70", "R71", "C69", "C70", "C71", "C72", "C73", "C74", "C75", "C76", "C77", "C78", "C24"'),
+    ('_DEC_CLASS = {\n', '_DEC_CLASS = {\n' + DEC_ROWS),
 ]
 
 

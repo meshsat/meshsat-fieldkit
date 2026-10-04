@@ -903,12 +903,13 @@ panel. It is not a current limit for the stage, and the LM5069's row does not en
 
 ## Board E changes (drafted, nothing applied)
 
-`apply_gen_sch_e_backstop.py`, nine edits on the text the hold and input limit drafts leave (it refuses a generator
+`apply_gen_sch_e_backstop.py`, ten edits on the text the hold and input limit drafts leave (it refuses a generator
 without them): the bank on PV_P to TRK_VS; the 50 V bulk (C11, C12, C69, EEHZA1H330XP) on PV_P ahead of it; R59 and CSPIN
 behind it, nothing in series with CSPIN or CSNIN; U18 with R65 16.9k, R66 8.45k (C861590) and the INB filter, C70 and C75
 to C78, five 100 nF NP0 50 V 1206 (C170182); U19 with R67 and R68; U20 with R69; SWEN on TRK_SWEN with R70 8.06k and R71
-6.04k (C728595); C66 to C68; C71 to C74 and D4 and R14 on TRK_VS; R16 31.6k (C705766); the declarations. Read back on a
-scratch copy; never applied to the tree; R10 untouched.
+6.04k (C728595); C66 to C68; C71 to C74 and D4 and R14 on TRK_VS; R16 31.6k (C705766); the declarations; C66, C67 and
+C68 class D in the generator's G14 table (round 6, below). Read back on a scratch copy; never applied to the tree; R10
+untouched.
 
 `apply_gen_sch_e_solar_guard.py` (the solar-fault remedies), eight edits after the backstop's, L4-E9's hot swap and L4-E11's
 entry drafts (it refuses a generator without them): J_SOLAR.2 to PV_RTN and F2 to PV_F; D11, the port bank C131, C132, C135
@@ -989,6 +990,12 @@ The texts are for the owner to send; the session contacts no one, and no answer 
 - `vishay-wsl2512.txt`: the bank's pulse capability at D4's own rating (the capability scenario, beyond the derived surge).
 
 ## The checks, and what changed
+
+| Item of Layer 8's record l8p (`L8P-BREAKER.md` section 8 at `fnd/l8p` `b1295c1e`), finding L8P-F01; round 6, 4 October 2026 | Change |
+|---|---|
+| Composed in L4-E9's change-list order, board E's generator stops at its G14 table: "decoupling entry C66 -> U18.5 carries no class (G14)"; the same without l8p's draft | Reproduced on scratch copies (every board E draft in L4-E9's order, the generator run to its end with record l8p's stand-in layout step): the refusal as read, with and without l8p's enable draft. The backstop draft's tenth edit gives C66 (U18's V+, pin 5), C67 (U19's VDD, pin 5) and C68 (U20's VDD, pin 6) class D in `_DEC_CLASS`, a capacitor a maker ties to a supply pin (DECOUPLING.md section 6), each with its maker's clause: SBOS181F section 9, "TI recommends placing a 0.1-uF capacitor near the V+ pin" (p.18) and 10.1 (p.19); SBVS240C pin 5 VDD, "a 0.1-uF ceramic capacitor close to this pin" (p.3) and 10.1 (p.19); SBVS050N pin 6 VDD, the same (p.4) and 8.4.1 (p.15). The class's two rules hold as drafted: D1, the maker's value, 0.1 uF, is the 100n drawn; D2, the own-pin window, is the layout's (each maker's "close to this pin"). U19's VDD is TRK_LDO33, a regulated 3.3 V, so SBVS240C section 9's RC filter (for a VDD supply with transients over 40 V or slewing above 1 V/us) does not apply. No value, net or other edit changes |
+| The composed generator after the correction | Runs past G14 in L4-E9's order, with and without l8p's enable draft; it stops next at `intent.write`: "+12V_FAN names source L4, which is not on that net", L4-E11's aux draft (L8P-F03, that record's). With record l8p's own scratch stand-in for L8P-F03 it runs to its end (295 parts, the intent written), C66 to C68 class D. The drafts up to the backstop alone run to the end. `test_l4e7` holds both on scratch copies, the order read from L4-E9's CHANGE_ORDER |
+| The results cache | The output's edit count and the new read-back ("C66 to C68 class D in G14's table") change it, so it was recomputed once through regen_out. The KEY did not record the drafts compute() reads back (importlib's own reader is not open()), so a changed draft would have left the cache standing: `load()` now reads each module's source through open(), and the drafts enter the KEY |
 
 | Item of the external review of the provisional fixes, L4-F01 (P1), and the coordinator's round-2 instruction | Change |
 |---|---|
