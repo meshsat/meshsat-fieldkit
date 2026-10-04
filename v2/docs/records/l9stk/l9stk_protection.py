@@ -6,8 +6,11 @@ Desk arithmetic on committed files and makers' sheets; nothing here was built, b
 
   1. board P's existing protection with its FETs welded: whether any element opens the discharge path on current alone, with no
      firmware, at a current and time that keep every series part within its limits;
-  2. the limiting series part, Q39/Q40 (L4-E11): its 150 C current with the uncertainty of its installed path (a target, not a
-     measurement), and the exposure a trip allowed at the cells' 24 A would leave;
+  2. the limiting series part the element was sized against, the pair Q39/Q40 as L4-E11 drafted it until its round 9: its
+     150 C current with the uncertainty of its installed path (a target, not a measurement), and the exposure a trip allowed
+     at the cells' 24 A would leave (round 3, 4 October 2026: L4-E11's round 9 drafts section 4's third FET as Q42 and restates
+     E11-29 as section 4's junction limit; the copper record reads both from L4-E11's files and this record holds them equal
+     to its own selection and allowance by a predicate);
   3. the selected element: an LM5069 breaker on board P between the gauge's discharge FET and PACK_P (the family board E's U6
      already uses), the -1 latch-off after section 3b's retry check, sized by the sheet's limits: its sense so its largest actual limit is the cells' 24 A and its smallest stays
      above the 18 A service, its power limit, fault timer, dv/dt start, input clamp and two CSD18510Q5B FETs, whose safe
@@ -76,7 +79,7 @@ RTH_SPREAD = 0.20            # the sensitivity shown on Q39/Q40's installed path
 TVS = "SMCJ18A"              # the breaker's input clamp: the part board A's D1 already uses (C374030)
 D_EN_MM = 1.0                # the enable contact's length short of the dock's power pins, mm (Layer 7's requirement)
 R17_ALLOW = 1.0              # R17 designed apart: its coupling into any battery FET's junction at most this, K/W (E-1 reads it)
-NFET_BAT = 3                 # the battery FETs selected (Q39, Q40 and a third BUK6Y10-30P, its designator L4-E11's: Q41 is taken)
+NFET_BAT = 3                 # the battery FETs selected (Q39, Q40 and a third BUK6Y10-30P; L4-E11's round 9 drafts it as Q42, read through the copper record)
 R_U = 200e3                  # the series resistor from VIN to UVLO, 1 % (the RC hold's charging resistor)
 GRACE_TARGET = 0.1           # the RC hold's least release delay, s: the reversed mating order it tolerates
 R_DIS = 150.0                # the UVLO discharge resistor in the inverter's drain (keeps the 2N7002 at its continuous current)
@@ -486,6 +489,10 @@ def compute():
     C = CR["in"]
     I = read()
     R = {"pins": {k: (p, sha(p)) for k, p in PINS.items()}, "in": I, "cu": C}
+    refs = C["fet_refs"]                                   # round 3: the battery FETs as L4-E11's charger draft writes them
+    third = [x for x in refs if x not in ("Q39", "Q40")]
+    R["fet_names"] = ", ".join(refs[:-1]) + " and " + refs[-1]
+    R["fet_third"] = ", ".join(third) if third else "none"
     vmax, t0, air = I["vmax"], C["t0"], C["air_c"]
     service, cont, cells = C["kd_a"], C["cont"], I["cell_a"] * I["par"]
     R.update(vmax=vmax, t0=t0, air=air, service=service, cont=cont, cells=cells)
@@ -708,7 +715,7 @@ def compute():
         S.append(dict(name=name, reading=reading, frac=frac, status=status))
     part("the cells (%dP of %g A continuous)" % (I["par"], I["cell_a"]), "%.2f A, %.2f A a cell at an even split" % (a, a / I["par"]), a / cells,
          "printed; the split NOT HELD: E-5 with its fallback")
-    part("Q39, Q40 and the third FET (%d x BUK6Y10-30P, %g mOhm each at 150 C)" % (NFET_BAT, C["pair_mohm_each"]), "TJ %.1f C at the junction limit's allowances" % J["tj_held"],
+    part("%s (%d x BUK6Y10-30P, %g mOhm each at 150 C)" % (R["fet_names"], NFET_BAT, C["fet_mohm_each"]), "TJ %.1f C at the junction limit's allowances" % J["tj_held"],
          (J["tj_held"] - t0) / (lim - t0), "DESIGN DEFECT DD-2 until drawn; E-1")
     part("Q1 on board P with BAT-F20 (CHGIN = 1, the reading above T3)", "its body diode %.1f W (VSD %g V at most)" % (I["q12_vsd"] * a, I["q12_vsd"]), None,
          "DESIGN DEFECT DD-5 (BAT-F20, EQ-15): about %g W at 10 A already" % I["batf20_w10"])
@@ -801,8 +808,8 @@ def compute():
     # 6. defects, interfaces, evidence
     R["defects"] = [
         ("DD-1", "W4DP-F2: no firmware-independent element opens the discharge path with board P's FETs welded; the breaker of section 3 is drafted here, not drawn", "board P's generator with W4DP-F2's owner (the battery stream)"),
-        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere), with the thermal guard behind it; condition C3" % (
-            a, t0, dt_band, pr17, J[2]["apart"], J[2]["anywhere"], J[3]["apart"], J[3]["anywhere"]), "L4-E11 (E11-29 restated as the junction limit; the third FET, its designator and land; E11-37 with three)"),
+        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected (L4-E11's round 9 drafts it as %s, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere), with the thermal guard behind it; condition C3" % (
+            a, t0, dt_band, pr17, J[2]["apart"], J[2]["anywhere"], R["fet_third"], J[3]["apart"], J[3]["anywhere"]), "L4-E11 (E11-29 restated as the junction limit and the third FET drafted as %s in its round 9, not applied; E11-37 with three)" % R["fet_third"]),
         ("DD-3", "R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6)", "L4-E11"),
         ("DD-4", "the Keystone 3568 holder prints no current rating", "Layer 6/7"),
         ("DD-5", "BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, %.1f W at %.2f A held (VSD %g V at most), about %g W at 10 A" % (I["q12_vsd"] * a, a, I["q12_vsd"], I["batf20_w10"]),
@@ -874,7 +881,7 @@ def compute():
         "a blade opening under the pair's current: at most %.2f A, and the service at %.0f %% of it lies between the row that holds and the row that opens" % (B["alt_blade"], B["alt_blade_pct"]),
         "for docking, an inrush element at board A's dock entry: the pre-charge pin J_PRE1 (%g ohm into %.0f uF, a %.2f ms time constant) needs a lead of %.1f ms over the power pins to keep the step under the breaker's least threshold and %.1f ms to keep VIN to SENSE under %g V, and a hand sets the lead; a series element in the %.2f A path heats beside the battery FETs, whose junction is the binding limit" % (
             I["r_pre"], cout * 1e6, tau * 1e3, B["pre"]["t_cb"] * 1e3, B["pre"]["t_abs"] * 1e3, I["vin_sense_abs"], a),
-        "the pair kept at (Zself + Zmut) at most %.2f K/W with R17 apart: %.0f %% under E11-29's present %g K/W, which L4-E11 judged of the order a board pour gives; it stays the fallback if E11-37 refuses three FETs" % (
+        "the pair kept at (Zself + Zmut) at most %.2f K/W with R17 apart: %.0f %% under E11-29's former %g K/W, which L4-E11 judged of the order a board pour gives; it stays the fallback if E11-37 refuses three FETs" % (
             J[2]["apart"], 100 * (1 - J[2]["apart"] / rth), rth),
         "a single-wire enable to board A's ground: a short to ground, the commonest harness fault, would enable the breaker unseen (C2)",
         "no RC hold: a reversed mating order of %.2f ms would bring B-P1 back (C1)" % (B["t_rev0"] * 1e3),
@@ -942,6 +949,13 @@ def compute():
     pr["every restart the inhibit lets through is inside TI's margin with the reading"] = RT["inh"]["r_block_low"] <= 1 / TI_MARGIN + 1e-9
     pr["the undock turn-off bypasses C_U and holds above 2 m/s"] = B["v_withdraw"] > 2.0
     pr["the hold's diode carries C_U's discharge inside its ratings"] = B["d_ratio"][0] < 1.0 and B["d_ratio"][1] < 1.0
+    # round 3: L4-E11's round 9 files against this section's own selection and allowance (the copper record reads them)
+    pr["L4-E11's charger draft draws the battery FETs selected here, the third beside Q39 and Q40"] = len(refs) == NFET_BAT and refs[:2] == ("Q39", "Q40") and len(third) == 1
+    pr["L4-E11's restated E11-29 is this section's junction limit: its allowance to 0.01 K/W, at this limit's current, air, ceiling and R17 coupling"] = (
+        abs(C["fet_rth"] - J[NFET_BAT]["apart"]) < 0.006 and abs(C["fet_i_held"] - a) < 0.006 and abs(C["fet_t0"] - t0) < 1e-9
+        and C["fet_limit"] == lim and C["fet_r17c"] == R17_ALLOW)
+    pr["the copper record's readings of the drafted FETs are this section's at 10 A, the service and the limit, to 0.05 K"] = (
+        abs(CR["fet_tj"]["cont"] - J["tj_cont"]) < 0.05 and abs(CR["fet_tj"]["service"] - J["tj_service"]) < 0.05 and abs(CR["fet_tj"]["held"] - J["tj_held"]) < 0.05)
     R["pred"] = pr
     return R
 
@@ -952,6 +966,8 @@ def render(R):
     w = L.append
     w("l9stk_protection: W4DP-F2's firmware-independent element and the pack path's protection table (record l9stk, MESHSAT-1357;")
     w("revised 4 October 2026 after the recheck PROTECTION: NOT CONFIRMED, B-P1 docking and B-P2 the battery FETs' junction).")
+    w("Round 3 (4 October 2026): L4-E11's round 9 drafts section 4's third battery FET as %s and restates E11-29 as section 4's limit; no figure of" % R["fet_third"])
+    w("the breaker, its table, the junction limit or the series parts moved; section 2 is the pair the element was sized against, dated.")
     w("Desk arithmetic on committed files and makers' sheets; nothing was built, bought or measured. Calculation basis: TI SLVA673A")
     w("(Robust Hot Swap Design) equations 3 to 7, its 2.4 on parallel FETs and its 3.1.2.2, 3.1.2.5 and 3.2.2.7 checks, on the LM5069's sheet.")
     w("")
@@ -965,15 +981,17 @@ def render(R):
     w("   the lowest current any of them opens on its own is %.2f A, over the battery FETs' 150 C current below: none meets the" % R["existing_floor"])
     w("   criterion, so a minimal addition is designed (section 3)")
     w("")
-    w("2. THE LIMITING SERIES PART: Q39/Q40, THE CHARGER'S BATTERY FETS ON BOARD A (L4-E11)")
+    w("2. THE LIMITING SERIES PART THE ELEMENT WAS SIZED AGAINST: Q39/Q40, THE CHARGER'S BATTERY FET PAIR ON BOARD A AS L4-E11 DRAFTED IT UNTIL ITS ROUND 9")
     w("   RDS(on) %g mOhm each: L4-E11's bound at a 150 C junction from the sheet's printed maxima (the actual is lower at a lower junction)" % (P["each"] * 1e3))
-    w("   installed (Zself + Zmut) %g K/W steady: E11-29's TARGET, not a measurement; with both FETs at the bound the even split" % P["rth"])
+    w("   installed (Zself + Zmut) %g K/W steady: E11-29's TARGET then (withdrawn in L4-E11's 19c), not a measurement; with both FETs at the bound the even split" % P["rth"])
     w("   gives each FET the largest loss (SLVA673A 2.4 for enhanced FETs; a lower RDS(on) in one FET lowers its loss)")
     w("   150 C held at %.2f A from the +%g C line and %.2f A from %.2f C (L4-E12's E5 dwell without the hold), FETs only: DERIVED, not a rating" % (P["i150_air"], R["air"], P["i150_t0"], R["t0"]))
     w("   its uncertainty is the installed path's: with it %g %% lower, as targeted, %g %% higher:" % (100 * RTH_SPREAD, 100 * RTH_SPREAD))
     w("     " + "; ".join("x%.1f: %.2f A (+%g C), %.2f A (%.2f C)" % (f_, a_, R["air"], b_, R["t0"]) for f_, a_, b_ in P["spread"]))
     w("   the exposure a trip at the cells' %g A would leave, held: %s" % (R["cells"], "; ".join("%.2f A: TJ %.1f C (+%g C), %.1f C (%.2f C)" % (a_, x_, R["air"], y_, R["t0"]) for a_, x_, y_ in P["exposure"])))
     w("   so 'at or under 24 A' is not a protection criterion; the criterion is current AND time for every part (section 5)")
+    w("   since L4-E11's round 9 its draft carries %s (section 4's selection, drafted, not applied) and E11-29 is section 4's junction limit;" % R["fet_names"])
+    w("   the figures above are the pair's, kept as the basis the criterion and the element were derived on")
     w("")
     w("3. THE SELECTED ELEMENT: AN LM5069 BREAKER ON BOARD P (THE -1, LATCH-OFF: 3b), FROM Q2'S SOURCE TO PACK_P, ENABLED BY A MAKE-LAST DOCK LOOP")
     w("   the family board E's U6 already uses (its -2, LCSC %s; the -1's code is Layer 6's to file, the same VSSOP-10 land) and the FET board A's PA" % I["u6_code"])
@@ -1122,10 +1140,12 @@ def render(R):
     w("     known; designed apart it is held to %g K/W, which E-1 reads" % R17_ALLOW)
     for n_, lab in ((2, "the pair (Zself + Zmut)"), (3, "three (Zself + 2 Zmut)")):
         w("   %-34s %.3f W each: FETs only %.2f K/W; R17 apart %.2f K/W; R17 anywhere %.2f K/W" % (lab, J[n_]["p"], J[n_]["fet_only"], J[n_]["apart"], J[n_]["anywhere"]))
-    w("   E11-29's present target is %g K/W; Ciss: the pair %.2f nF at -15 V and %.2f near 0 V, three %.2f and about %.2f, against TI's %g nF (L4-E11 16c, E11-37)" % (
-        P["rth"], J["ciss"][2][0], J["ciss"][2][1], J["ciss"][3][0], J["ciss"][3][1], I["ciss_ti"]))
-    w("   SELECTED: a third BUK6Y10-30P (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is %.2f times" % J["vs_target"])
-    w("     E11-29's present target, where the pair would need %.2f of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:" % (J[2]["apart"] / P["rth"]))
+    w("   E11-29's target for the pair was %g K/W (L4-E11's 19c withdraws it and restates E11-29 as this limit: %g K/W a FET with R17 apart, %g C held at" % (
+        P["rth"], C["fet_rth"], C["fet_limit"]))
+    w("     %g A from %g C); Ciss: the pair %.2f nF at -15 V and %.2f near 0 V, three %.2f and about %.2f, against TI's %g nF (L4-E11 16c, E11-37)" % (
+        C["fet_i_held"], C["fet_t0"], J["ciss"][2][0], J["ciss"][2][1], J["ciss"][3][0], J["ciss"][3][1], I["ciss_ti"]))
+    w("   SELECTED: a third BUK6Y10-30P (L4-E11's round 9 drafts it as %s, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is %.2f times" % (R["fet_third"], J["vs_target"]))
+    w("     E11-29's former target, where the pair would need %.2f of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:" % (J[2]["apart"] / P["rth"]))
     w("     E11-37's bench with three decides (condition C3), the pair is the fallback")
     w("   THE THERMAL GUARD (SELECTED, a guard against the path never being met, unit by unit): the kit's PRF15BB103 chip PTC (%g kOhm +-%.0f %%," % (I["ptc_r25"] / 1e3, 100 * I["ptc_tol"]))
     w("     %g kOhm at %g +-%g C, %g V) in the enable loop on the battery FETs' copper: the first inverter stays on to %g kOhm at %.1f V (gate %.2f V against" % (

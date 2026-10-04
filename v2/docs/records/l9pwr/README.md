@@ -2,7 +2,8 @@
 
 3 October 2026, the Layer 9 author, worktree `l9pwr` on branch `fnd/l9pwr` from set 28's tip `37bc2f1d` (round 1, `38ef774c`);
 **round 2, 4 October 2026, on branch `fnd/l9pwr2` from main `64cd25ee`** with `fnd/l9pwr` merged (`--no-ff`), the record's only
-author since round 1's context ran out. Prototype design, desk arithmetic: nothing has been built, powered or measured. This
+author since round 1's context ran out; **round 3, 4 October 2026, on branch `fnd/l9r3` from set 29's line `e58e906a`** (a tool
+correction by the record's author for that round; the table at the end of this page). Prototype design, desk arithmetic: nothing has been built, powered or measured. This
 folder brings record rv-pwr's power model to the current design with margins and sensitivities. It edits no generator,
 requirement, registry record or other record's file; rv-pwr's committed outputs stay as they are (other records pin them). The
 drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
@@ -12,7 +13,7 @@ drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
 | `L9-POWER-BUDGET.md` | The page: round 2 in short; the totals per state on four trees (rv-pwr as committed, the generators as drawn, round 1's drafted tree and round 2's); what differs from rv-pwr and how each change is taken (D1 to D10); the converters against their limits and the four LM5176 5.1 V stages side by side; the pack path's elements; the reconciliation with Layer 4, record l8r2 and record l9stk; the sensitivities; the margin findings with class, status and owner; what other records' authors own; the decisions taken |
 | `l9pwr_budget.py` | The script, run from the repository root: `python3 v2/docs/records/l9pwr/l9pwr_budget.py` (stdlib and pdftotext, about a second). It imports `v2/docs/records/rv-pwr/pwr_budget.py` unchanged, pins its inputs by sha256, parses every figure from its source (a record's output, a generator, a draft, a maker's datasheet), refuses when a figure is not found, reproduces rv-pwr on rv-pwr's own tree and every overlapping figure of another record from that record's inputs, then prints the current design's budget |
 | `l9pwr_budget.out` | Its output, committed, regenerated only through `_bin/regen_out.py` (two byte-identical runs and every pin current): 0 the pins and the copies' sources; 1 the differences and how they are taken; 2 the model check; 3 the totals, 3b round 1's DRAFTED against round 2's; 4 the waterfall; 5 per state every load, rail and converter against its limit, 5b the LM5176 5.1 V stages side by side; 6 the pack current, 6b the pack path's elements; 7 D-11's floors with the step ladder and L4-E9 round 7's rule; 8 the reconciliation; 9 the sensitivities; 10 the findings; 11 the predicates |
-| `inputs/` | Round 2's copies of other records' files, each made with `git show` at its commit and renamed `.txt` (record l8r2 at `89924e40`: its output and four drafts; record l9stk at `2c8b29fb`: its protection output; L4-E9 at `3737df82`: section 30 of its output); `inputs/SOURCES.txt` gives each source, commit, branch and sha256 |
+| `inputs/` | Round 2's copies of other records' files, each made with `git show` at its commit and renamed `.txt` (record l8r2 at `89924e40`: its output and four drafts; L4-E9 at `3737df82`: section 30 of its output); `inputs/SOURCES.txt` gives each source, commit, branch and sha256. Record l9stk's protection output was a copy at `2c8b29fb` until round 3, which retired it: the script reads the tree's `v2/docs/records/l9stk/l9stk_protection.out` |
 
 Test: `v2/ecad/tools/tests/test_l9pwr.py`, run isolated with `env -C v2/ecad/tools/tests python3 run.py test_l9pwr test_public_hygiene`.
 

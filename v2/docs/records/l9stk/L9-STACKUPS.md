@@ -13,7 +13,11 @@ coordination table and the open owner decision (L9STK CU) on the outer copper we
 supersedes the copper widths of sections 3 and 7. **Section 15 (4 October 2026, the owner's correction) designs W4DP-F2's
 firmware-independent element** on a current-and-time criterion: an LM5069 breaker on board P (the -1, latch-off) with a make-last dock enable,
 drafted, and the battery FETs' junction limit met by a third FET, from `l9stk_protection.py` and its output (revised after the
-recheck PROTECTION: NOT CONFIRMED).
+recheck PROTECTION: NOT CONFIRMED). **Round 3 (4 October 2026, the integration of set 29, a tool correction):** L4-E11's
+round 9 drafts that third FET as Q42 and restates E11-29 as section 15.5's limit; a quoted sentence of its draft ("one of two
+in parallel") stopped both scripts. They now parse the draft, the coordination table's battery FET rows are judged on the three
+as drafted (14.6a lists each row that moved, with the pair's reading beside it), and no width, limit, split, barrel count,
+breaker figure or junction-limit figure moved. No finding is closed by it.
 
 **What this page is for.** The supplier does the layout (`v2/docs/handover/supplier/SUPPLIER-HANDOVER.md` section 8,
 phase 3), so each decision below is the stackup design input that supplier receives: layer count, layer roles, copper
@@ -358,7 +362,8 @@ round 3 (`fnd/l8r3` at `854a2bf5`, merged here for its drafts) raised the confli
   - The outer weight is the **OWNER DECISION (L9STK CU)**: 2 oz, or 1 oz with a layout change (14.7).
   - At 2 oz the band and its return take 39.14 mm a face.
 - **The protection.** Parts, not copper, limit every overload row beyond the 25 A case.
-  - Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A.
+  - The battery FETs as drafted now (Q39, Q40, Q42) meet their 150 C limit at 23.93 A from 76.25 C with the band and R17 in
+    place; the pair the table was first judged on passed 150 C at 21.38 A held. R17 passes its 5 W at 31.62 A, the XT60 its 30 A.
   - These rows need **W4DP-F2's** firmware-independent element: section 15 designs it (an LM5069-1 breaker on board P with a
     make-last dock enable, drafted) and restates the battery FETs' target as a junction limit met by a third FET.
 
@@ -421,8 +426,8 @@ The +70 C line is the consolidation's with the hold, so it is not the worst air 
 |---|---|---|---|---|---|---|
 | A | CELL+, the dock contacts to F1 | TH / TH | 25 A | 38.79 mm | 19.39 mm | none |
 | A | CELL_FUSED, F1 to R17 | TH / 1F | 25 A | 39.14 mm | 19.57 mm | 16 or the split count, at R17 |
-| A | CH_BATQ (drafted), R17 to Q39 and Q40 | 1F / 1F | 25 A | a one-face hop at the parts' lands | the same | none possible |
-| A | VBAT trunk | 1F / loads | 25 A | 39.14 mm | 19.57 mm | at the pair |
+| A | CH_BATQ (drafted), R17 to Q39, Q40 and Q42 | 1F / 1F | 25 A | a one-face hop at the parts' lands | the same | none possible |
+| A | VBAT trunk | 1F / loads | 25 A | 39.14 mm | 19.57 mm | at the FETs |
 | A | GND, the pack return | TH / planes | 25 A | 38.79 mm | 19.39 mm | none at the pins; In1 and In4 at least 30 mm beside it |
 | E | CELL+, J_BATT to F3 | TH / TH | 25 A | 38.79 mm | 19.39 mm | none |
 | E | CELL_F, F3 to P_CP | TH / 1F | 25 A | 39.14 mm | 19.57 mm | 74 on E7, or a plated-through land |
@@ -476,15 +481,15 @@ covers any shorter time; above it, a time under 60 s needs a short-time rating n
 
 | Case | Current's basis | Protective device | Assured maximum clearing | Limiting component (reading) | Disposition |
 |---|---|---|---|---|---|
-| 10 A continuous | declared; states held under it by shedding | none needed | not a fault | the XT60 at 0.33 of 30 A; copper 1.89 K; Q39/Q40 93.8 C | (a) copper, barrels, R17, XT60, pins at an even split; (c) the dock contacts' split; (b) the 3568 holder; (c) R17's sheet and derating |
-| 18 A for 60 s | PWR-F12, every transmitter | the key-down limit K1 in firmware; no hardware element acts | none assured by hardware | Q39/Q40 at 0.77 (132.95 C; L4-E11's 126.7 C from +70 C) | (a) copper 5.22 K; (c) E11-29's specimen measured with the band carrying its current; (c) the pins; (b) the holder; (c) R17's sheet |
-| 25 A, the gauge working | a fault drawing the blades' rating | the gauge's OCD2, 24 A for 1 s (firmware-configured) | 1 s, the image's setting | the barrel field at 0.84 | (a) copper and barrels; Q39/Q40 as L4-E11 15c (CONDITIONAL on E11-29); (c) the pins; (b) the holder |
-| 25 A, the gauge failed | the same with board P's FETs welded; the rating is not a clamp (110 % holds 360,000 s) | none | none assured | **Q39/Q40 OVER, 185.6 C held** | (a) copper at 10 K; **(b) W4DP-F2**; (c) the pins; (b) the holder; (c) R17's sheet |
-| 20 to 33.75 A sustained | the gauge holds just under 20 A; failed, no blade row opens below 135 % | the gauge when it works; none when failed | none assured | **Q39/Q40 OVER (150 C at 21.38 A from +70 C, 20.53 A from 76.25 C); R17 OVER at 33.75 A (5.70 W of 5 W); the XT60 OVER (33.75 of 30 A)**; copper 94.55 C | **(b) W4DP-F2**; (b) the holder |
-| FETs failed short, 33.75 to 50 A | the blade's monotone envelope | the 25 A MINI blades | at most 600 s | **Q39/Q40, R17 (12.5 W), the XT60 (50 A), the pins (12.5 A each) all OVER**; copper 116.60 C | **(b) W4DP-F2**; (a) copper with the plating pinned; (b) the plating pinned (as fitted, 105 C is passed) |
+| 10 A continuous | declared; states held under it by shedding | none needed | not a fault | the XT60 at 0.33 of 30 A; copper 1.89 K; Q39, Q40, Q42 89.42 C | (a) copper, barrels, R17, XT60, pins at an even split; (c) the dock contacts' split; (b) the 3568 holder; (c) R17's sheet and derating |
+| 18 A for 60 s | PWR-F12, every transmitter | the key-down limit K1 in firmware; no hardware element acts | none assured by hardware | the XT60 at 0.60 of 30 A; Q39, Q40, Q42 at 0.57 (118.00 C) | (a) copper 5.22 K; (c) E11-29's specimen measured with the band carrying its current and R17 dissipating; (c) the pins; (b) the holder; (c) R17's sheet |
+| 25 A, the gauge working | a fault drawing the blades' rating | the gauge's OCD2, 24 A for 1 s (firmware-configured) | 1 s, the image's setting | the barrel field at 0.84 | (a) copper and barrels; (c) Q39, Q40, Q42: no timed target is held (L4-E11 19c withdrew the pair's), E11-29's specimen at the held limit, which governs behind the breaker (drafted); (c) the pins; (b) the holder |
+| 25 A, the gauge failed | the same with board P's FETs welded; the rating is not a clamp (110 % holds 360,000 s) | none | none assured | **Q39, Q40, Q42 OVER, 156.72 C held** | (a) copper at 10 K; **(b) W4DP-F2**; (c) the pins; (b) the holder; (c) R17's sheet |
+| 20 to 33.75 A sustained | the gauge holds just under 20 A; failed, no blade row opens below 135 % | the gauge when it works; none when failed | none assured | **Q39, Q40, Q42 OVER (150 C at 23.93 A from 76.25 C with the band and R17 in place, 24.93 A from the +70 C line; 222.97 C at 33.75 A); R17 OVER at 33.75 A (5.70 W of 5 W); the XT60 OVER (33.75 of 30 A)**; copper 94.55 C | **(b) W4DP-F2**; (b) the holder |
+| FETs failed short, 33.75 to 50 A | the blade's monotone envelope | the 25 A MINI blades | at most 600 s | **Q39, Q40, Q42, R17 (12.5 W), the XT60 (50 A), the pins (12.5 A each) all OVER**; copper 116.60 C | **(b) W4DP-F2**; (a) copper with the plating pinned; (b) the plating pinned (as fitted, 105 C is passed) |
 | FETs failed short, 50 to 87.5 A | as above | the blades | at most 5 s | **the barrel field OVER**; R17, XT60 and pins above their continuous ratings with no short-time rating held; copper 115.94 C | **(b) W4DP-F2**; (a) copper pinned; (b) the plating |
-| FETs failed short, 87.5 to 150 A | as above | the blades | at most 0.5 s | **the barrel field OVER**; Q39/Q40 about 237.6 C (INFERRED estimate) | **(b) W4DP-F2**; (a) copper |
-| FETs failed short, 150 to 480 A | as above | the blades | at most 0.1 s; 625 A2s is nominal melting, not a clearing figure | **Q39/Q40 and the barrel field OVER**; copper 99.56 C at the row's bound | **(b) W4DP-F2**; (a) copper; (c) the blade's total clearing I2t at 480 A and 16.8 V |
+| FETs failed short, 87.5 to 150 A | as above | the blades | at most 0.5 s | **the barrel field OVER**; Q39, Q40, Q42 about 147.96 C (INFERRED estimate, 0.97 of the limit) | **(b) W4DP-F2**; (a) copper |
+| FETs failed short, 150 to 480 A | as above | the blades | at most 0.1 s; 625 A2s is nominal melting, not a clearing figure | **the barrel field and Q39, Q40, Q42 OVER**; copper 99.56 C at the row's bound | **(b) W4DP-F2**; (a) copper; (c) the blade's total clearing I2t at 480 A and 16.8 V |
 | shore, Q7 shorted (or a clamp failed short), to 13.5 A | F1's envelope; the hot-swap's limit lost | F1, 10 A MINI | none assured | **J_DCIN's VH OVER (13.5 of 10 A)**; R19 at 0.61; copper 80.85 C | **(b) J_DCIN to L4-E11's D-06 30 A class connector**; (b) the holder |
 | shore, 13.5 to 20 A | as above | F1 | at most 600 s | **J_DCIN OVER (20 of 10 A); R19 OVER (4.0 W of 3 W from 17.32 A)**; copper 86.25 C | **(b) J_DCIN; (b) R19 to a shunt whose rating covers 20 A held**; (b) the holder |
 | shore, 20 to 35 A and 35 to 60 A | as above | F1 | at most 5 s; at most 0.5 s | R19 and J_DCIN above their continuous ratings, no short-time rating held; copper 90.08 and 80.25 C; barrels within | (b) J_DCIN and R19 as above; (b) the holder |
@@ -497,7 +502,8 @@ covers any shorter time; above it, a time under 60 s needs a short-time rating n
   - Acceptance: the lowest pin resistance at least 0.593 of the highest, so that no pin passes 9 A at 25 A.
   - Supplier task: each pin's contact resistance at mid-stroke.
 - **R17's maker sheet and its derating at the band's temperature** (ROHM GMR100HJAAFD5L00): owed, Layer 6.
-- **E11-29's specimen**, measured with the band carrying its current, because the band heats the pair's copper (L4-E11).
+- **E11-29's specimen**, measured with the band carrying its current and R17 dissipating, because both heat the FETs' copper
+  (L4-E11 19c: the three on one pour, R17 apart).
 - **The blade's total clearing I2t at 480 A and 16.8 V.**
   - Specimen: the fitted lot in the 3568 holder on a band coupon.
   - Acceptance: at most 41,953 A2s, the governing 1 oz face to 120 C from 76.25 C.
@@ -507,9 +513,33 @@ covers any shorter time; above it, a time under 60 s needs a short-time rating n
 **A coupon never stands in for a known rating violation:** those rows carry (b).
 
 **W4DP-F2 stays open.** Its closure is a current-and-time criterion for every series part with board P's FETs welded and no
-firmware (section 15.1), not one current: Q39/Q40 pass 150 C at 21.38 A held from the +70 C air and 20.53 A from 76.25 C
-(derived on E11-29's 33.12 K/W target), under the cells' 24 A, so a trip allowed at 24 A leaves them at 161.0 C at 22 A and
-168.8 C at 23 A from 76.25 C. Section 15 selects the element and the strengthening.
+firmware (section 15.1), not one current: the pair it was found on, Q39/Q40 as L4-E11 drafted it until its round 9, passed
+150 C at 21.38 A held from the +70 C air and 20.53 A from 76.25 C (derived on E11-29's 33.12 K/W target of then), under the
+cells' 24 A, so a trip allowed at 24 A left them at 161.0 C at 22 A and 168.8 C at 23 A from 76.25 C. Section 15 selects the
+element and the strengthening. The three drafted since meet their limit at 23.93 A from 76.25 C, under the blades' least
+assured opening, 33.75 A: without the element the rows above stay OVER.
+
+### 14.6a What moved in round 3: the battery FETs' rows (out 9a)
+
+**Cause.** L4-E11's round 9 draft writes Q39, Q40 and Q42 where it wrote Q39 and Q40, and its section 19c restates E11-29: from
+the pair's 33.12 K/W (the FETs' own heating, from the +70 C line) to 45.88 K/W a FET with R17 apart, the band and R17 in place,
+from 76.25 C. Both columns are computed by `l9stk_copper.py` from the pinned files; the fraction is of the 150 C rise.
+
+| Row | The pair, as first judged | Q39, Q40, Q42 as drafted now | Limiting component |
+|---|---|---|---|
+| 10 A continuous | 93.75 C [0.24] | 89.42 C [0.18] | unchanged: the XT60 at 0.33 |
+| 18 A for 60 s | 132.95 C [0.77] | 118.00 C [0.57] | was the pair at 0.77; now the XT60 at 0.60 |
+| 25 A, the gauge working, 1 s | L4-E11 15c's gauge levels at E11-29's bar | no timed target held (L4-E11 19c) | unchanged: the barrel field at 0.84 |
+| 25 A, the gauge failed | 185.63 C [1.48] | 156.72 C [1.09] | the battery FETs, OVER before and now |
+| 33.75 A sustained | 275.59 C [2.70] | 222.97 C [1.99] | the battery FETs, OVER before and now |
+| 50 A, at most 600 s | 513.77 C [5.93] | 398.47 C [4.37] | the battery FETs, OVER before and now |
+| 87.5 A, at most 5 s (estimate) | about 132.89 C [0.77] | about 101.42 C [0.34] | unchanged: the barrel field at 3.32 |
+| 150 A, at most 0.5 s (estimate) | about 237.60 C [2.19] | about 147.96 C [0.97] | unchanged: the barrel field at 4.13 |
+| 480 A, at most 0.1 s (estimate) | about 1728.43 C [22.40] | about 810.55 C [9.96] | was the pair at 22.40; now the barrel field at 11.08 |
+
+**Not moved:** every width, limit, split, transfer field and barrel count of 14.3 to 14.5, and every copper, barrel, R17, XT60,
+dock contact, R19 and J_DCIN reading of 14.6. No disposition changes class: the rows that were OVER are OVER, and each still
+carries (b) W4DP-F2.
 
 ### 14.7 The copper decision, and the OWNER DECISION
 
@@ -552,7 +582,7 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 |---|---|
 | L9C-F1: the energy chain's conductor texts and the 25 A blade's ATOF citation; `apply_energy_chain_l9stk.py` replaces record l8r2's draft | the integrator; the energy chain's writer |
 | L9C-F2: BOARD_A_CONVERTERS claims board A's own copper into each converter at 25 A; a branch is sized at its load, and a branch fault under OCD1's 20 A is cleared by nothing | the energy chain's writer; board A's generator owner |
-| L9C-F3: W4DP-F2 stays open with section 15's current-and-time criterion (not one current); Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A, the dock contacts 9 A a pin above 36 A | W4DP-F2's owner (the battery stream) with L4-E11 |
+| L9C-F3: W4DP-F2 stays open with section 15's current-and-time criterion (not one current); the pair Q39/Q40 passed 150 C held at 21.38 A (the three drafted since: 23.93 A from 76.25 C), R17 its 5 W at 31.62 A, the XT60 its 30 A, the dock contacts 9 A a pin above 36 A | W4DP-F2's owner (the battery stream) with L4-E11 |
 | L9C-F4: R19 (3 W) passes its rating at 17.32 A inside F1's 600 s interval; a shunt whose rating covers 20 A held | L4-E11 |
 | L9C-F5: J_DCIN's JST VH prints 10 A (AWG 16) and 105 C under L4-E11's 20 A; D-06's 30 A class connector | L4-E11, Layer 7 |
 | L9C-F6: the Keystone 3568 prints no current rating; a MINI 297/997 holder whose maker prints at least the coordination current | Layer 6/7 |
@@ -566,7 +596,7 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 | L9C-F14: TRK_OUT and the solar input have no stage in the energy chain; VIN_RAW's return path on board E is not declared | the energy chain's writer; L4-E7's owner |
 | L9C-F15: the supplier's quotation states the laminate's maximum operating temperature and the 2 oz price beside the 1 oz rows | the supplier handover's author |
 | L9C-F16: W4DP-F2's element drawn into board P: the LM5069-1 breaker of 15.4 (DD-1), its layout (IF-2) and its energy chain stage (IF-3) | board P's generator; W4DP-F2's owner; the integrator |
-| L9C-F17: E11-29 restated as a junction limit (DD-2, E-1): the hottest battery FET at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place; a third BUK6Y10-30P (its designator L4-E11's; Q41 is l8r2's VIN_RAW cut-off FET), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart; the PTC thermal guard in the enable loop beside them; E11-37 with three (C3) | L4-E11; board A's generator (the PTC) |
+| L9C-F17: E11-29 restated as a junction limit (DD-2, E-1): the hottest battery FET at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place; a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart; the PTC thermal guard in the enable loop beside them; E11-37 with three (C3) | L4-E11; board A's generator (the PTC) |
 | L9C-F18: board A's loads on VSYS held off during the breaker's start, at most 40.7 ms, or tied to its PGD (IF-1) | L4-E11; board A's generator |
 | L9C-F19: the power limit's accuracy at 5.05 mV, the limits at VIN 10.6 to 16.8 V and VIN to SENSE in a hot short: Q-TI-L9S-1 (drafted, not sent) and the supplier's E-2, E-3, E-9, E-10 and E-11 | the battery stream; the supplier handover's author |
 | L9C-F20: a live docking took the breaker past its SOA and VIN to SENSE's maximum; C-1b, the make-last enable loop into UVLO with its RC hold (DD-6, conditions C1 and C2) | board P's generator with the battery stream; board E's generator; Layer 7 with L4-E11 |
@@ -590,6 +620,14 @@ answers two blockers and the minors:
 - BAT-F20 on the 10 A and 18 A rows;
 - D1 judged on I2t;
 - the PTC thermal guard reconsidered and selected.
+
+**Round 3 (4 October 2026, the integration of set 29).** L4-E11's round 9 answers two of this section's demands in its drafts,
+not applied: the third battery FET is Q42 in `apply_gen_sch_a_charger.py`, and E11-29 is restated as 15.5's junction limit
+(45.88 K/W a FET with R17 apart; 150 C held at 23.93 A from 76.25 C), the pair's 33.12 K/W target withdrawn. The scripts read
+both from L4-E11's files and hold them equal to this section's own selection and allowance by predicates. No figure of the
+breaker, its table, the junction limit or the series parts moved. 15.3 below is the pair the element was sized against, kept
+as the basis of the criterion. DD-2 stays a design defect until the draft is applied and E-1 is read; C3 (E11-37 with three)
+stays open.
 
 The conditions C1 to C3 and the minors are written into 15.4 to 15.7.
 
@@ -636,9 +674,10 @@ None meets it, as the recheck confirmed:
 
 ### 15.3 The limiting part's current and its uncertainty (prot 2)
 
-Q39/Q40, board A's battery FETs (L4-E11), FETs only. **Derived, not a rating.**
+Q39/Q40, board A's battery FET pair as L4-E11 drafted it until its round 9 (the part the element was sized against), FETs
+only. **Derived, not a rating.**
 - RDS(on) at L4-E11's 150 C bound, 21.136 mOhm each.
-- The installed path at E11-29's **target** of 33.12 K/W, not a measurement.
+- The installed path at E11-29's **target** of then, 33.12 K/W (withdrawn in L4-E11's 19c), not a measurement.
 - With both FETs at the bound, the even split gives each the largest loss.
 
 | Installed path | From +70 C | From 76.25 C |
@@ -883,12 +922,13 @@ it is held to 1 K/W, which E-1 reads by heating R17 alone.
 | the pair, (Zself + Zmut) | 3.027 W | 21.34 K/W | **20.39 K/W** | 10.96 K/W |
 | three, (Zself + 2 Zmut) | 1.345 W | 48.01 K/W | **45.88 K/W** | 15.34 K/W |
 
-E11-29's present target is 33.12 K/W, which L4-E11 judged of the order a board pour gives. The first revision's 24.37 K/W
+E11-29's target for the pair was 33.12 K/W, which L4-E11 judged of the order a board pour gives; its round 9 withdraws it and
+restates E11-29 as this limit (45.88 K/W a FET with R17 apart). The first revision's 24.37 K/W
 counted the FETs' heating only; with the band's 9.16 K it reaches 159.2 C.
 
-**SELECTED: a third BUK6Y10-30P, with R17 designed apart.** Its designator is L4-E11's to give: Q41 is taken on board A by
-record l8r2's VIN_RAW cut-off FET (CSD19532Q5B).
-- **Why.** The path it asks is 1.39 times E11-29's present target, where the pair would need 0.62 of it.
+**SELECTED: a third BUK6Y10-30P, with R17 designed apart.** L4-E11's round 9 drafts it as Q42 (not applied): Q41 is taken on
+board A by record l8r2's VIN_RAW cut-off FET (CSD19532Q5B).
+- **Why.** The path it asks is 1.39 times E11-29's former target, where the pair would need 0.62 of it.
 - **Cost.** Ciss: three FETs are 7.08 nF typical at -15 V and about 8.61 near 0 V, against TI's 5 nF guidance (SLUSE65A p.92). The
   pair is already over that guidance near 0 V (5.74 nF), so E11-37's bench with three FETs decides, with Q-TI-17 extended to
   three. **Condition C3** (owner L4-E11): production conformance needs Q-TI-17's answer or E11-37's bench with three.
@@ -968,7 +1008,7 @@ At the allowances the junction reads:
 | Defect | Owner |
 |---|---|
 | DD-1 W4DP-F2: no firmware-independent element with board P's FETs welded; the breaker of 15.4 is drafted here, not drawn | board P's generator, with W4DP-F2's owner (the battery stream) |
-| DD-2 the battery FETs' junction limit (15.5): a third BUK6Y10-30P (its designator L4-E11's), (Zself + 2 Zmut) at most 45.88 K/W with R17 apart, the thermal guard behind it; the pair would need 20.39; condition C3 | L4-E11 (E11-29 restated as the junction limit; the third FET, its designator and land; E11-37 with three) |
+| DD-2 the battery FETs' junction limit (15.5): a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied), (Zself + 2 Zmut) at most 45.88 K/W with R17 apart, the thermal guard behind it; the pair would need 20.39; condition C3 | L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three) |
 | DD-3 R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6) | L4-E11 |
 | DD-4 the Keystone 3568 holder prints no current rating | Layer 6/7 |
 | DD-5 BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, 23.9 W at the breaker's 23.93 A | the battery stream (BAT-F20, EQ-15) |
@@ -1037,6 +1077,7 @@ The copper sizing of section 14 is unchanged.
 2. Board E's two J_SMB contacts with a ground between, and Layer 7's two make-last dock contacts with the loop and the PTC on
    board A (DD-6, C1, C2).
 3. L4-E11's third battery FET, its designator, and E11-29 restated as the junction limit (DD-2, C3), with IF-1; board A's
-   input-return pulse on the enable loop (DD-7) and the firmware's IF-7.
+   input-return pulse on the enable loop (DD-7) and the firmware's IF-7. (Drafted in L4-E11's round 9, not applied: Q42, its
+   section 19; E11-37 with three, C3, stays open.)
 4. The battery stream's answer to BAT-F20 (DD-5).
 5. Then the supplier's E-1, E-2, E-3, E-9, E-11 to E-15 on the first specimens.

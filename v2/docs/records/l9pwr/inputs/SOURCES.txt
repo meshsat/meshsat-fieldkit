@@ -23,9 +23,11 @@ l8r2-l8r2_drafts-89924e40.txt sha256 7b0ff84375825913272a5818586ffae30e84c20857e
   from v2/docs/records/l8r2/l8r2_drafts.out at commit 89924e40 on branch fnd/l8r3 (record l8r2's output after round 6 and the
   closing check), the whole file byte for byte. This record parses its figures table, its sections 2 and 2c, and its item 3 line.
 
-l9stk-l9stk_protection-2c8b29fb.txt sha256 ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
-  from v2/docs/records/l9stk/l9stk_protection.out at commit 2c8b29fb on branch fnd/l9stk (Layer 9 item 9.12, section 15: board P's
-  breaker and the third battery FET), the whole file byte for byte.
+RETIRED in round 3 (4 October 2026): the copy of v2/docs/records/l9stk/l9stk_protection.out at commit 2c8b29fb on branch fnd/l9stk
+  (sha256 ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1 while it was held). Record l9stk is merged beside this
+  record since set 29, and the copy had gone stale: it named the automatic-retry LM5069-2, where record l9stk 15.4b selects the
+  latch-off -1. The script now reads the tree's v2/docs/records/l9stk/l9stk_protection.out and pins it by sha256 in its section 0;
+  every figure the script takes from it read the same on the copy and on the tree's file.
 
 l4e9-l4e9_power_path-section30-3737df82.txt sha256 76c17d1cc02c0fd2f62f4a0f7f9fb53030ac8595804218779469019947279bc1
   from v2/docs/records/l4e9/l4e9_power_path.out at commit 3737df82 on branch fnd/l4e9r7 (L4-E9 round 7; the whole file's sha256

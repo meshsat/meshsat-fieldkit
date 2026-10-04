@@ -14,11 +14,11 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    gen_b       v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
    gen_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    pack        v2/ecad/tools/pcb_pack_protection.yaml  sha256 ab1dbc3f3f69aa46
-   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 996fc1b1ee4491fc
-   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 0f70d9eeb473cf4d
-   l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 715eb965d4527d35
-   l4e11_chg   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 d857a70256d1c77e
-   l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 2979856fdac67e50
+   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 a491b0cc0a960626
+   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
+   l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 3d0a7b1d7d0bd8bf
+   l4e11_chg   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 bfdead54766199eb
+   l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 3bdd5e3ebba68b07
    review      v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md  sha256 1f8508302012673f
    l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 418056947caf0f9d
    l8r2_out    v2/docs/records/l9pwr/inputs/l8r2-l8r2_drafts-89924e40.txt  sha256 7b0ff84375825913
@@ -27,9 +27,9 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l8r2_slotlm v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt  sha256 fc487ab269d2f758
    l8r2_rt500  v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_rt500-89924e40.txt  sha256 c81cd7ffa60561fe
    l8r2_fb01   v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt  sha256 ea95bd293e44676a
-   l9stk_prot  v2/docs/records/l9pwr/inputs/l9stk-l9stk_protection-2c8b29fb.txt  sha256 ca434347df8b322d
+   l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 a8275fa76fdfa6cd
    l4e9r7      v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt  sha256 76c17d1cc02c0fd2
-   sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 3adeacbfcbf9b9b3
+   sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 2a98e4ac0e307637
    l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 1a1fcd80871fe5f9
    ap64500     v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
    ap632       v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
@@ -38,7 +38,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    tlv755      v2/vendor/power/ti-tlv755p-ldo.pdf  sha256 7eb7bc6935bf6c1d
    lm5176      v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
    tps2596     v2/vendor/power/tps2596.pdf  sha256 66f6bae4494f7bfe
-   reqs        v2/ecad/tools/pcb_requirements.yaml  sha256 f7cc6ac3cfd5ad08
+   reqs        v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    rules       v2/ecad/tools/pcb_rules.yaml  sha256 14ea032a7fdd86ac
    the copies in inputs/ (inputs/SOURCES.txt), each read with git show from its author's branch, not merged:
      l8r2_out    89924e40@v2/docs/records/l8r2/l8r2_drafts.out on fnd/l8r3, the whole file
@@ -46,8 +46,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      l8r2_slotlm 89924e40@v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py on fnd/l8r3, the whole file
      l8r2_rt500  89924e40@v2/docs/records/l8r2/apply_gen_sch_b_rt500.py on fnd/l8r3, the whole file
      l8r2_fb01   89924e40@v2/docs/records/l8r2/apply_gen_sch_a_fb01.py on fnd/l8r3, the whole file
-     l9stk_prot  2c8b29fb@v2/docs/records/l9stk/l9stk_protection.out on fnd/l9stk, the whole file
      l4e9r7      3737df82@v2/docs/records/l4e9/l4e9_power_path.out on fnd/l4e9r7, its lines 2127 to 2163
+   read from this tree since round 3, no copy: l9stk_prot, record l9stk's protection output (section 15: board P's breaker C-1 and the third battery FET)
 
 1. WHAT DIFFERS FROM RV-PWR'S MODEL, AND HOW THIS BUDGET TAKES IT (applied in this order; section 4 prints each step's effect)
    R0  RV       rv-pwr as committed: the boards as generated at 1f614233 (R_DIST 22.5 mOhm, AP64500 curves on every 5.1 V rail, board D on +5V_DEV, the representative fans)
@@ -56,7 +56,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    M3  ON MAIN  board D's 5 V comes from its own TPS62933 U41 on VBAT since S-99 (gen_sch_a.py +5V_D8IN), no longer through +5V_DEV
    M4  ON MAIN  EMCON removes both WiFi link cards' supplies since 458b2873 (record hc2's EMCON_MAIN)
    M5  ON MAIN  board A's 5 mOhm RSR shunt R17 is in the pack's discharge path since 458b2873 (S-04); the heater mat is regulated to 12.0 V by U33 since 458b2873 (F-PR-06, the cold overlay only)
-   D1  DRAFTED  L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied)
+   D1  DRAFTED  L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied; since L4-E11's round 9 the draft writes three, the third is step D10)
    D2  DRAFTED  L4-E11 15a: board E's auxiliary domain (U12, the controller, the mixers) on VSYS_E over the dock's pin 1 behind the eFuse U42 (apply_gen_sch_e_aux.py, not applied)
    D3  DRAFTED  L4-E11 18a with Layer 7's D-18: the two mixers are Sanyo Denki 9WL0612P4H001 on U22's 12.0 V rail (LTC3115-1, 0.85 assumed, 16 mA quiescent) (apply_gen_sch_e_aux.py, not applied)
    D4  DRAFTED  l8r2 item 1 to round 6 with Layer 7's D-18: the three coolers are Sanyo Denki 9WPA0412P6G001 on a per-slot TPS61089 step-up from +5V_Sn, at full speed with no Fan_PWM maximum; HIGH the envelope (2.75 W at 12.43 V over the step-up's 0.80, the slot row 0.69 A), PLAN at 0.85 (apply_gen_sch_b_fans12.py at 89924e40, not applied)
@@ -64,8 +64,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    D6  DRAFTED  l8r2 rounds 4 to 6: slots 1 and 3 on board A's LM5176 stage (U501, U531 on 6 mOhm ISNS shunts, the AP64500s U4 and U6 retired), 5.1 V NOT PLOTTED, the draft's declared 0.90; the three slot leads at 6.6 A (apply_gen_sch_a_slotlm.py at 89924e40, not applied)
    D7  DRAFTED  l8r2 round 5: board B's six slot bucks at RT 200 k, 500 kHz, the frequency of the maker's curves rv-pwr uses (DRAWN's 68 k sets 1.47 MHz, where no curve is printed); no figure moves (apply_gen_sch_b_rt500.py at 89924e40, not applied)
    D8  DRAFTED  l8r2 round 6: the LM5176 5.1 V stages' dividers at 0.1 %, the window 5.0019 to 5.1744 V; no figure at the model's 5.1 V moves, the least load voltage sets the stages' margins (apply_gen_sch_a_fb01.py at 89924e40, not applied)
-   D9  DRAFTED  l9stk 15.4: board P's breaker C-1 (LM5069-2, its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (l9stk at 2c8b29fb, a desk design, not applied)
-   D10 DRAFTED  l9stk 15.5: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, its designator L4-E11's (l9stk at 2c8b29fb, a desk design, not applied)
+   D9  DRAFTED  l9stk 15.4: board P's breaker C-1 (an LM5069 in the variant l9stk 15.4b selects, printed below; its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (record l9stk in this tree, a desk design, not applied)
+   D10 DRAFTED  l9stk 15.5 and L4-E11 round 9: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, written by L4-E11's charger draft under the designator printed below (apply_gen_sch_a_charger.py, not applied)
    the figures each step reads (parsed from the pinned files):
      M1 LM5176 stages: S2 U5, DEV U7 (gen_sch_a.py lm5176 calls); declared efficiency 0.90 and 0.90; ISNS 6 and 6 mOhm at +1 %; VSNS 43 / 50 / 57 mV (SNVSAI1D)
      M2 +3V3_S2A at 3.456 V (gen_sch_b.py)
@@ -83,8 +83,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      D7 board B's buck33 RT: 68 k drawn, 1471 kHz by DS41979 Eq. 7 (RT[kOhm] = 100000 / fsw[kHz]); 200 k drafted, 500 kHz, the maker's curves' frequency
      D8 the 5.1 V stages' divider 53.6 k over 10 k (gen_sch_a.py); VREF 0.788 / 0.800 / 0.812 V and IBIAS(FB) at most 25 nA (SNVSAI1D); the rails' drop budget 2 % (slots), 2 % (device rail):
         at 1.0 % (drawn) 4.9267 to 5.2536 V, the least at the loads 4.8282 V; at 0.1 % (fb01) 5.0019 to 5.1744 V, the least at the loads 4.9019 V
-     D9 board P's breaker: the sense 4.0 and 7.5 mOhm in parallel, 2.6087 mOhm nominal, its window 2.6015 to 2.6546 mOhm (taken at the highest); 2 x CSD18510Q5B, 0.96 mOhm at 10 V and 25 C, 1.728 mOhm at 150 C (x1.8), in parallel
-     D10 the battery FETs: 3 x BUK6Y10-30P at 21.136 mOhm each at 150 C (l9stk, L4-E11's bound): 7.0453 mOhm, against the pair's 10.5680 mOhm
+     D9 board P's breaker, the LM5069-1 (latch-off, l9stk 15.4b): the sense 4.0 and 7.5 mOhm in parallel, 2.6087 mOhm nominal, its window 2.6015 to 2.6546 mOhm (taken at the highest); 2 x CSD18510Q5B, 0.96 mOhm at 10 V and 25 C, 1.728 mOhm at 150 C (x1.8), in parallel
+     D10 the battery FETs: 3 x BUK6Y10-30P at 21.136 mOhm each at 150 C (l9stk, L4-E11's bound): 7.0453 mOhm, against the pair's 10.5680 mOhm; L4-E11's charger draft writes Q39, Q40, Q42
    the round 1 parser's lines SET ASIDE in round 2 (the figure they read was removed or superseded by its record):
      eta_slot: l8r2's flat 0.90 for the slot converters (round 2's 7.84 W at VBAT): removed from l8r2's figures table at round 3, the slots' own converters carry it (round 1's R9)
      l8r2's choice (a) line: 'choice (a), a step-up per slot (SELECTED): ... the three 7.56 W at VBAT': round 3's text, which quotes this record's round 1 R9 back and was superseded by round 4's decision (2c.5); R9 now reproduces round 6
@@ -1823,6 +1823,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    DRAFTED's PLAN is above DRAWN's in every state                                                                         yes
    DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off                      yes
    DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered                             yes
+   L4-E11's charger draft writes the battery FETs record l9stk selected, the third beside Q39 and Q40 (D10)               yes
    L4-E9 round 7's all-transmit floor covers round 1's drafted basis and not this round's                                 yes
    every copy in inputs/ is pinned and named with its sha256 in SOURCES.txt                                               yes
    every drafted node and row is labelled DRAFTED                                                                         yes

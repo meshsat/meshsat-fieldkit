@@ -16,6 +16,11 @@ round 2's (finding L9P-F01); slots 1 and 3 sit within their LM5176 loop (L9P-F02
 class among the owner's three and an owner; the page carries the output's figures; the record's files carry no long dashes, no
 claim words and no private path. These are software predicates on the record's own arithmetic: they establish no property of
 any board, converter, fan or pack, and nothing here is measured.
+
+Round 3 (4 October 2026, the integration of set 29): a rail's declaration and the battery FETs are parsed from L4-E11's drafts,
+not matched by a one-line pattern (the defect: L4-E11's round 9 broke +12V_FAN's declaration over two lines and the pattern
+for its efficiency refused), which fixtures hold both ways; record l9stk's protection output is read from this tree, and the
+breaker's variant is the one that output selects.
 """
 import hashlib
 import importlib.util
@@ -24,6 +29,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
@@ -112,6 +118,54 @@ def t_every_copy_in_inputs_equals_its_source():
         seen += 1
     if not seen:
         raise Skip("none of the source commits is in this checkout")
+
+
+def t_a_drafts_rail_and_battery_fets_are_parsed_not_matched_on_one_line():
+    """The defect of 4 October 2026: a pattern that wanted `_intent.rail("+12V_FAN", ...` and its efficiency on one source line
+    refused when L4-E11's round 9 broke the declaration over two. The call is now parsed out of the draft's string constants;
+    one line or two read the same, and a draft that writes the rail twice, differently, refuses."""
+    m = _M()
+    one = '_intent.rail("+12V_X", 12.0, 0.34, 0.34, "L4", always_on=True, converted=True, efficiency=0.85, fed_from="VSYS_E")'
+    two = ('_intent.rail("+12V_X", 12.0, 0.34, 0.34, "U22", source_ic="U22 VOUT (its switches are inside the IC) "\n'
+           '             "and L4 is not on the rail", always_on=True, converted=True, efficiency=0.85, fed_from="VSYS_E")')
+    old = re.compile(r'_intent\.rail\(\\?"\+12V_X\\?", [^\n]*?efficiency=([\d.]+)')        # the round 2 pattern, the defect's witness
+    tdir = tempfile.mkdtemp(prefix="t_l9pwr_")
+    tmp = os.path.join(tdir, "draft_fixture.py")      # an absolute path: the script's path() joins it to the root unchanged
+    seen = {}
+    try:
+        for name, body in (("one", one), ("two", two), ("twice", one + "\n" + two.replace("0.85", "0.80"))):
+            # the draft's form: each generator line is its own string literal on its own source line
+            draft = "_A = (" + "\n      ".join(repr(x + "\n") for x in ["# a generator comment"] + body.split("\n")) + ")\n"
+            open(tmp, "w", encoding="utf-8").write(draft)
+            m.PINS["_fixture"] = tmp
+            if name == "twice":
+                try:
+                    m.draft_rail_call("_fixture", "+12V_X")
+                except SystemExit:
+                    continue
+                raise AssertionError("two differing declarations of one rail were read as one")
+            got = m.draft_rail_call("_fixture", "+12V_X")
+            seen[name] = (got["pos"][1], got["pos"][4], got["kw"]["efficiency"], got["kw"]["fed_from"], bool(old.search(draft)))
+    finally:
+        m.PINS.pop("_fixture", None)
+        shutil.rmtree(tdir, ignore_errors=True)
+    assert seen["one"] == (12.0, "L4", 0.85, "VSYS_E", True)
+    assert seen["two"] == (12.0, "U22", 0.85, "VSYS_E", False), "the two-line declaration reads, where the old pattern did not match"
+    # the tree's drafts: +12V_FAN's efficiency is the parsed declaration's, and the battery FETs are the charger draft's
+    F = _C["R"]["F"]
+    assert F["fan12_eff_draft"] == F["fan12_decl"]["kw"]["efficiency"] and F["fan12_decl"]["kw"]["fed_from"] == "VSYS_E"
+    assert F["fan12_decl"]["pos"][1] == 12.0 and "source_ic" in F["fan12_decl"]["kw"], "L8P-F03's correction: the source named with source_ic"
+    assert len(F["bat_refs"]) == int(F["bat_fets"][0]) and F["bat_refs"][:2] == ("Q39", "Q40")
+    assert _pred("L4-E11's charger draft writes the battery FETs record l9stk selected, the third beside Q39 and Q40 (D10)")
+    # record l9stk's output is read from this tree, not from a copy, and the breaker's variant is the one it selects
+    assert not m.PINS["l9stk_prot"].startswith("v2/docs/records/l9pwr/inputs/") and "l9stk_prot" not in m.ORIGIN and "l9stk_prot" in m.IN_TREE
+    sel = re.search(r"SELECTED: the (-\d) \(([a-z-]+)\)", open(os.path.join(ROOT, m.PINS["l9stk_prot"]), encoding="utf-8").read())
+    assert sel and F["brk_variant"] == (sel.group(1), sel.group(2))
+    assert ("the LM5069%s (%s, l9stk 15.4b)" % F["brk_variant"]) in _C["text"]
+    other = "-2" if F["brk_variant"][0] == "-1" else "-1"
+    assert ("LM5069" + other) not in _C["text"], "the output names the variant record l9stk did not select"
+    page = open(PAGE, encoding="utf-8").read()
+    assert ("LM5069%s" % F["brk_variant"][0]) in page and "Round 3" in page
 
 
 def t_the_reconciliation_lines_with_layer_4():
