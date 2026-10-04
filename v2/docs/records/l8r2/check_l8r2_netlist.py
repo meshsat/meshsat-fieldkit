@@ -6,6 +6,12 @@ MESHSAT-1357, 3 October 2026). It PARSES a KiCad netlist (an s-expression reader
                  VIN_RAW_IN; U45 pin 2 (OV) on VCO_OV, pin 13 (SRC) on VIN_RAW, pin 14 (PD) on VCO_GATE, pins 7, 8, 9, 10 on GND, pin 19
                  (ISCP) with pin 17 (CS-); R241 between VBUS20 and VCO_OV, R242 between VCO_OV and GND (item 2, S-111)
            D8V3  U44 pin 4 (IN) on +3V3, pin 5 (OUT) on +3V3_A2D; J_MEZZ1 pin 13 on +3V3_A2D; R234 on U44's ILM (item 3, L5R2-F05)
+           SLOTS for s in 1 and 3 (round 4, L9P-F02): the LM5176 U(501 or 531) pin 1 (EN) on SLOT_ENs, pin 12 (VOSNS) on +5V_Ss; the
+                 stage's VBAT entry Q(501 or 531) pin 5 (drain) on VBAT, pin 4 on Ss_HDRV1, pins 1 to 3 on Ss_SW1; the ISNS shunt
+                 R(505 or 535) between Ss_OUT and +5V_Ss; the CS shunt R(506 or 536) between Ss_CS and GND; the INA226 (U8, U10) pin 10
+                 on Ss_OUT and pin 8 on +5V_Ss; the AP64500 (U4, U6) and its inductor (L3, L5) gone
+           FB01  round 6 (F5-03): the 5.1 V LM5176 stages' dividers at 0.1 %: R32, R33 (slot 2), R40, R41 (the device rail), and R501,
+                 R502, R531, R532 where slots 1 and 3 are drawn, each value naming 0.1 %
   board B  FANs  for s in 1 to 3: J_FANs pin 1 on CFANs_V, pin 3 on CFANs_TACH, pin 4 on CFANs_PWM; the boost U(701+30(s-1)) pin 9 on
                  +5V_Ss and pin 6 on CFANs_12V; the eFuse U(702+30(s-1)) pin 4 on CFANs_12V and pin 5 on CFANs_V; the tach stage
                  Q(701+...) gate +3V3_CMs, source FAN_TACHOs, drain CFANs_TACH; the PWM stage Q(702+...) gate +3V3_CMs, source
@@ -56,16 +62,17 @@ def kv(node, key):
 def read_netlist(raw):
     tree = sexp(raw.decode("utf-8", "replace"))
     root = tree[0] if tree and isinstance(tree[0], list) else tree
-    fps, pins = {}, {}
+    fps, pins, vals = {}, {}, {}
     for sec in (root[1:] if isinstance(root, list) else []):
         if not (isinstance(sec, list) and sec):
             continue
         if sec[0] == "components":
             for c in sec[1:]:
                 if isinstance(c, list) and c and c[0] == "comp":
-                    ref, fp = kv(c, "ref"), kv(c, "footprint")
+                    ref, fp, va = kv(c, "ref"), kv(c, "footprint"), kv(c, "value")
                     if ref and len(ref) > 1:
                         fps[ref[1]] = fp[1] if fp and len(fp) > 1 else ""
+                        vals[ref[1]] = va[1] if va and len(va) > 1 else ""
         elif sec[0] == "nets":
             for n in sec[1:]:
                 if not (isinstance(n, list) and n and n[0] == "net"):
@@ -76,7 +83,7 @@ def read_netlist(raw):
                         r, p = kv(x, "ref"), kv(x, "pin")
                         if r and p and len(r) > 1 and len(p) > 1:
                             pins.setdefault(r[1], {})[p[1]] = name
-    return {"footprint": fps, "pins": pins}
+    return {"footprint": fps, "pins": pins, "value": vals}
 
 
 def judge_props(nl, props, marker):
@@ -101,6 +108,31 @@ def checks_a(nl):
     out["VCO"] = (v, why)
     d8 = [("U44", "4", "+3V3"), ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM")]
     out["D8V3"] = judge_props(nl, d8, ("J_MEZZ1", "13", "+3V3_A2D"))
+    out["SLOTS"] = judge_props(nl, slot_props(), ("U501", "12", "+5V_S1"))
+    if out["SLOTS"][0] == "DRAWN":
+        left = [r for r in ("U4", "U6", "L3", "L5") if r in nl["pins"]]
+        if left:
+            out["SLOTS"] = ("FAIL", ["the AP64500 stage's %s still on the board" % ", ".join(left)])
+    vals = nl.get("value", {})
+    refs = ["R32", "R33", "R40", "R41"] + [r for r in ("R501", "R502", "R531", "R532") if r in vals]
+    tight = [r for r in refs if "0.1%" in vals.get(r, "")]
+    if not tight:
+        out["FB01"] = ("NOT DRAWN", ["%s %r" % (r, vals.get(r)) for r in refs[:2]])
+    elif len(tight) != len(refs):
+        out["FB01"] = ("FAIL", ["%s %r" % (r, vals.get(r)) for r in refs if r not in tight])
+    else:
+        out["FB01"] = ("DRAWN", [])
+    return out
+
+
+def slot_props():
+    """round 4 (L9P-F02): slots 1 and 3 on LM5176 stages, slot 2's (apply_gen_sch_a_slotlm.py)"""
+    out = []
+    for s, b, ina in (("1", 500, "U8"), ("3", 530, "U10")):
+        out += [("U%d" % (b + 1), "1", "SLOT_EN%s" % s), ("U%d" % (b + 1), "12", "+5V_S%s" % s), ("Q%d" % (b + 1), "5", "VBAT"),
+                ("Q%d" % (b + 1), "4", "S%s_HDRV1" % s)] + [("Q%d" % (b + 1), p, "S%s_SW1" % s) for p in "123"] + [
+                ("R%d" % (b + 5), "1", "S%s_OUT" % s), ("R%d" % (b + 5), "2", "+5V_S%s" % s), ("R%d" % (b + 6), "1", "S%s_CS" % s),
+                ("R%d" % (b + 6), "2", "GND"), (ina, "10", "S%s_OUT" % s), (ina, "8", "+5V_S%s" % s)]
     return out
 
 
@@ -154,7 +186,7 @@ def fixture(letter):
     nets = {}
     def add(net, ref, pin):
         nets.setdefault(net, []).append((ref, pin))
-    comps = {}
+    comps, values = {}, {}
     if letter == "a":
         for k in range(1, 5): add("VIN_RAW_IN", "J_VR%d" % k, "1")
         for p in "123": add("VIN_RAW", "Q41", p)
@@ -163,6 +195,10 @@ def fixture(letter):
                               ("R241", "1", "VBUS20"), ("R241", "2", "VCO_OV"), ("R242", "1", "VCO_OV"), ("R242", "2", "GND"), ("U44", "4", "+3V3"),
                               ("U44", "5", "+3V3_A2D"), ("J_MEZZ1", "13", "+3V3_A2D"), ("R234", "1", "U44_ILM"), ("U44", "7", "U44_ILM")):
             add(net, ref, pin)
+        for ref, pin, net in slot_props():
+            add(net, ref, pin)
+        comps = {r: "Resistor_SMD:R_0603_1608Metric" for r in ("R32", "R33", "R40", "R41", "R501", "R502", "R531", "R532")}
+        values = {r: ("53.6k 0.1%" if r in ("R32", "R40", "R501", "R531") else "10k 0.1%") for r in comps}
     else:
         for s in (1, 2, 3):
             b = 700 + 30 * (s - 1)
@@ -183,7 +219,7 @@ def fixture(letter):
             add(net, ref, pin)
     s = '(export (version "E")\n  (components\n'
     for ref, fp in sorted(comps.items()):
-        s += '    (comp (ref "%s") (value "x") (footprint "%s"))\n' % (ref, fp)
+        s += '    (comp (ref "%s") (value "%s") (footprint "%s"))\n' % (ref, values.get(ref, "x"), fp)
     s += '  )\n  (nets\n'
     for i, (net, nodes) in enumerate(sorted(nets.items()), 1):
         s += '    (net (code "%d") (name "/%s")%s)\n' % (i, net, "".join(' (node (ref "%s") (pin "%s"))' % n for n in nodes))
