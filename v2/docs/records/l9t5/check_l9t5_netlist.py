@@ -20,9 +20,17 @@ board B's three AP2112K LDOs U40, U50 and U60. It PARSES the netlists (record l8
 Each board reads DRAWN (every property holds), NOT DRAWN (U601 on A, or J_5V_IOC on B, is absent: today's state) or FAIL.
 Nothing has been built or measured: the statements are about netlists.
 
+ROUND 3 (record l8r2's finding L8R2-F35): decl(letter, intent, basis) holds the DECLARATIONS a patched generator writes into its
+intent to their basis, which the caller computes from record l9t5's case script (never typed here): on board B the device lead's
+peak is the lead's own current on C-DEV rev 1 with the draft, rounded up to 0.1 mA, and +5V_IOC's peak is the supervisors' HIGH at
+constant power at that rail's least load voltage, rounded up; on board A +5V_DEV's peak is that lead plus the wall port's limit
+(stream s99's construction) and +5V_IOC's the same figure, with this board's 0.5 share of the rail's 2 percent. A typed figure that
+differs from its basis reads FAIL (round 2's drafts declared 6.0 A and 1.38 A).
+
 Usage:  check_l9t5_netlist.py [a=path.net] [b=path.net]      (default: the committed netlists of the tree)
 Exit 0 when every board given reads DRAWN (and the lead pair holds when both are given), 4 otherwise, 2 on a usage error."""
 import hashlib
+import math
 import os
 import sys
 
@@ -155,6 +163,59 @@ def checks_b(nl):
         why.append("%s also carries %s" % (IOC, ", ".join(extra)))
     res["LEAD"] = ("FAIL" if why else "DRAWN", why)
     return res
+
+
+def ceil4(x):
+    """a figure rounded UP to 0.1 mA: a declaration is never under its basis."""
+    return math.ceil(x * 1e4 - 1e-7) / 1e4
+
+
+def rails_of(intent):
+    return {k.lstrip("/"): v for k, v in (intent.get("rails") or {}).items()}
+
+
+def decl(letter, intent, basis):
+    """(verdict, why) for the declarations; basis = {"dev_lead": A, "ioc": A, "wall": A}, computed by the caller."""
+    r = rails_of(intent)
+    ioc, dev = r.get("+5V_IOC"), r.get("+5V_DEV") or {}
+    if not ioc:
+        return "NOT DRAWN", ["+5V_IOC is not declared"]
+    why = []
+    want_ioc, want_lead = ceil4(basis["ioc"]), ceil4(basis["dev_lead"])
+
+    def peak(x):
+        return float(x.get("amps_peak") or 0)
+    if abs(peak(ioc) - want_ioc) > 1e-9:
+        why.append("+5V_IOC declares a %.4f A peak; its basis gives %.4f A (%.6f A rounded up)" % (peak(ioc), want_ioc, basis["ioc"]))
+    if abs(float(ioc.get("amps_typ") or 0) - 0.36) > 1e-9:
+        why.append("+5V_IOC declares %.2f A typical, wanted 0.36" % float(ioc.get("amps_typ") or 0))
+    if letter == "a":
+        want = round(want_lead + basis["wall"], 4)
+        if abs(peak(dev) - want) > 1e-9:
+            why.append("+5V_DEV declares a %.4f A peak; board B's lead %.4f A plus the wall port's %.4f A is %.4f A" % (peak(dev), want_lead, basis["wall"], want))
+        if (ioc.get("source"), ioc.get("switch"), ioc.get("fed_from")) != ("L601", "U601", "VBAT"):
+            why.append("+5V_IOC's source, switch and feed are %r" % ((ioc.get("source"), ioc.get("switch"), ioc.get("fed_from")),))
+        if abs(float(ioc.get("share") or 0) - 0.005) > 1e-12:
+            why.append("+5V_IOC's share of its budget on board A is %r, wanted 0.005 (board B's is 0.015 of the 0.02)" % ioc.get("share"))
+        if ioc.get("loads") != {"J_5V_IOC": 0.36}:
+            why.append("+5V_IOC's loads are %r, wanted the typical allocation at J_5V_IOC" % ioc.get("loads"))
+    else:
+        if abs(peak(dev) - want_lead) > 1e-9:
+            why.append("+5V_DEV (the device lead) declares a %.4f A peak; its basis gives %.4f A (%.6f A rounded up)" % (peak(dev), want_lead, basis["dev_lead"]))
+        left = sorted(u for u, _r, _c in LDOS if u in (dev.get("loads") or {}))
+        if left:
+            why.append("+5V_DEV still allocates %s" % ", ".join(left))
+        if ioc.get("source") != "J_5V_IOC" or sorted(ioc.get("loads") or {}) != sorted(u for u, _r, _c in LDOS):
+            why.append("+5V_IOC's source and loads are %r, %r" % (ioc.get("source"), sorted(ioc.get("loads") or {})))
+        if abs(float(ioc.get("share") or 0) - 0.015) > 1e-12:
+            why.append("+5V_IOC's share on board B is %r, wanted 0.015" % ioc.get("share"))
+        for n in ("+3V3_IOCA", "+3V3_IOCB", "+3V3_IOCC"):
+            if (r.get(n) or {}).get("fed_from") != "+5V_IOC":
+                why.append("%s is fed from %r" % (n, (r.get(n) or {}).get("fed_from")))
+        src = (r.get("GND") or {}).get("source")
+        if "J_5V_IOC" not in (src if isinstance(src, list) else [src]):
+            why.append("GND does not name J_5V_IOC a source")
+    return ("FAIL" if why else "DRAWN"), why
 
 
 def check_pair(a, b):

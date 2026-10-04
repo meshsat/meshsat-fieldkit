@@ -17,10 +17,10 @@ board B (U40, U50, U60, AP2112K-3.3) leave the device rail for their own always-
   J_5V_IOC  JST-VH 1x2 (the slot and device leads' part), the supervisors' 5 V to board B: + -
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   1. the block above, after the D8 mezzanine's eFuse and lead (U41's network, which it copies);
-  2. +5V_IOC declared (0.36 A typical, the controllers' 0.12 A allocations on board B; 1.4750 A peak, from its basis since round 3:
+  2. +5V_IOC declared (0.36 A typical, the controllers' 0.12 A allocations on board B; 1.4749 A peak, from its basis since round 3:
      rv-pwr's HIGH for the three supervisors, 7.0380 W at the LDOs' inputs (each H743 at 400 mA, DS12110 Rev 10 Table 30 p.111's
      maximum at TJ 85 C at 400 MHz with all peripherals enabled, plus the declared 60 mA of its other parts: 1.3800 A of LDO current),
-     taken by the case's own method, every load at constant power at the rail's least load voltage 4.7718 V (U601's window 4.8718 V
+     taken by the case's own method, every load at constant power at the rail's least load voltage 4.7719 V (U601's window 4.8719 V
      less the rail's 2 percent), rounded up to 0.1 mA; this board's share of the rail's 2 percent is 0.5, as +5V_DEV's), its switching
      and bootstrap nodes; the lead is the device lead's make, 16 AWG, 150 mm, VH crimp both ends (v2/docs/ASSEMBLY.md section 4);
   3. VBAT's loads: Q32 (U7's entry) 1.61 to 1.47 A and U601 added at 0.14 A, the S-98 method (the typical over 0.90 and 14.4 V):
@@ -47,7 +47,7 @@ import sys
 NAME = "apply_gen_sch_a_iocbuck"
 ADDS = ("U601", "L601", "C601", "C602", "C603", "C604", "C605", "C606", "R601", "R602", "J_5V_IOC")
 NETS = ("+5V_IOC", "IOCB_SW", "IOCB_BST", "IOCB_SS", "IOCB_FB")
-IOC_TYP, IOC_PEAK = 0.36, 1.4750        # A: board B's three 0.12 A allocations; 7.0380 W (rv-pwr's HIGH) at 4.7718 V, rounded up (round 3)
+IOC_TYP, IOC_PEAK = 0.36, 1.4749        # A: board B's three 0.12 A allocations; 7.0380 W (rv-pwr's HIGH) at 4.7719 V, rounded up (round 3)
 DEV_LEAD_PEAK, WALL_LIMIT = 6.0359, 0.9142   # A: board B's device lead on C-DEV rev 1 with this draft (rounded up to 0.1 mA); U32's nominal limit
 DEV_PEAK = 6.9501                       # A: stream s99's construction, the lead plus the wall port; l9t5_drafts.py holds each to its basis
 Q32_NEW, U601_VBAT = 1.47, 0.14        # A at VBAT, the S-98 method (typical x V over 0.90 x 14.4 V), rounded as Q32 and U41 are
@@ -63,7 +63,7 @@ _HEAD = ("# I-03, RECORD l9t5 (task T5, MESHSAT-1357, 4 October 2026; v2/docs/re
          "# (SLUSEA4D 8.5) keep the lead under its 10 A. DRAFTED, not applied (apply_gen_sch_b_iocbuck.py is board B's half).\n"
          "# ROUND 3 (record l8r2's finding L8R2-F35): the lead is the device lead's make (16 AWG, 150 mm, VH crimp both ends, ASSEMBLY.md\n"
          "# section 4); +5V_IOC's and +5V_DEV's peaks are declared from their basis (Layer 9's budget at HIGH, every load at constant power\n"
-         "# at the rail's least load voltage), not typed: 1.4750 A, and board B's lead 6.0359 A plus the wall port's 0.9142 A = 6.9501 A.\n"
+         "# at the rail's least load voltage), not typed: 1.4749 A, and board B's lead 6.0359 A plus the wall port's 0.9142 A = 6.9501 A.\n"
          "# S-99's dated comment lines above keep their figures of 28 September (6.9142 A, B 6.0 + wall 0.9142).\n")
 _PARTS = ('ic("U601", 8, "TPS62933DRLR 3 A buck, 5.0 V for the three supervisors\' LDOs on board B (I-03)", "SOT583", {"1": "NC", "2": "RAIL_EN", '
           '"3": "VBAT", "4": "GND", "5": "IOCB_SW", "6": "IOCB_BST", "7": "IOCB_SS", "8": "IOCB_FB"}, "C3200405")\n'
@@ -80,7 +80,7 @@ _RAIL = ('_intent.rail("+5V_IOC", 5.0, %.2f, %.4f, "L601", loads={"J_5V_IOC": %.
          '                  "L601 and the lead J_5V_IOC (16 AWG, 150 mm, VH crimp both ends, the device lead\'s make, ASSEMBLY.md section 4); "\n'
          '                  "%.2f A typical (board B\'s three 0.12 A allocations); %.4f A peak, from its basis: rv-pwr\'s HIGH, 7.0380 W at the LDOs\' "\n'
          '                  "inputs (each H743 at 400 mA, DS12110 Rev 10 Table 30\'s maximum at TJ 85 C, plus 60 mA of its other parts: 1.3800 A of "\n'
-         '                  "LDO current), at constant power at the least load voltage 4.7718 V, rounded up; this board\'s share of the 2 percent "\n'
+         '                  "LDO current), at constant power at the least load voltage 4.7719 V, rounded up; this board\'s share of the 2 percent "\n'
          '                  "is 0.5 as +5V_DEV\'s; the buck limits at 4.2 to 5.8 A peak (SLUSEA4D 8.5), under the lead\'s 10 A")\n') % (IOC_TYP, IOC_PEAK, IOC_TYP, IOC_TYP, IOC_PEAK)
 _NODES = ('_intent.node("IOCB_SW", 16.8, "the supervisors\' buck U601\'s switching node: it swings to VBAT, the pack node that feeds it, and a diode drop below ground", v_min=-1.0)\n'
           '_intent.node("IOCB_BST", _intent.net_volts("IOCB_SW") + _TPS62933_BST,\n'

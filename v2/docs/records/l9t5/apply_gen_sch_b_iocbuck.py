@@ -15,9 +15,9 @@ What it changes in v2/ecad/tools/gen_sch_b.py, and nothing else:
      (record l8r2's finding L8R2-F35: rounds 1 and 2 kept a typed 6.0 A and said it overstated, which it did not): 6.0359 A, Layer 9's
      budget for this lead at HIGH with every load at constant power at the least load voltage 4.9019 V and the supervisors on +5V_IOC
      (29.5871 W; record l9t5's l9t5_drafts.out section 6), rounded up to 0.1 mA;
-  3. +5V_IOC declared after +5V_DEV: 0.36 A typical (the same three 0.12 A allocations); 1.4750 A peak from its basis (rv-pwr's HIGH
+  3. +5V_IOC declared after +5V_DEV: 0.36 A typical (the same three 0.12 A allocations); 1.4749 A peak from its basis (rv-pwr's HIGH
      for the three supervisors, 7.0380 W at the LDOs' inputs: each H743 at 400 mA, DS12110 Rev 10 Table 30's maximum at TJ 85 C, plus
-     60 mA, 1.3800 A of LDO current; at constant power at the rail's least load voltage 4.7718 V, rounded up), its source the lead
+     60 mA, 1.3800 A of LDO current; at constant power at the rail's least load voltage 4.7719 V, rounded up), its source the lead
      J_5V_IOC (16 AWG, 150 mm, VH crimp both ends, the device lead's make, v2/docs/ASSEMBLY.md section 4); the three +3V3_IOCx rails
      fed from it;
   4. GND keeps the three LDOs among its loads and names J_5V_IOC a source. Round 3 (L8R2-F35): the return does NOT come back lead by
@@ -39,7 +39,7 @@ import sys
 NAME = "apply_gen_sch_b_iocbuck"
 ADDS = ("J_5V_IOC", "D900", "C900")
 NETS = ("+5V_IOC",)
-IOC_TYP, IOC_PEAK = 0.36, 1.4750        # A: the three 0.12 A allocations; 7.0380 W (rv-pwr's HIGH) at 4.7718 V, rounded up (round 3)
+IOC_TYP, IOC_PEAK = 0.36, 1.4749        # A: the three 0.12 A allocations; 7.0380 W (rv-pwr's HIGH) at 4.7719 V, rounded up (round 3)
 DEV_LEAD_PEAK = 6.0359                  # A: this lead on C-DEV rev 1 with the draft, 29.5871 W at 4.9019 V, rounded up (round 3, L8R2-F35)
 
 _OLD_LOADS = '              "U40": 0.12, "U50": 0.12, "U60": 0.12,      # the three controllers\' private 3.3 V LDOs (AP2112K-3.3): each child rail\n'
@@ -66,7 +66,7 @@ _NEW_DEVNOTE = (
     '             note="record l9t5 (I-03): the three supervisors\' LDOs U40, U50, U60 over the lead J_5V_IOC (16 AWG, 150 mm, VH crimp both "\n'
     '                  "ends, ASSEMBLY.md section 4); %.2f A typical (their 0.12 A allocations); %.4f A peak, from its basis: rv-pwr\'s HIGH, "\n'
     '                  "7.0380 W at the LDOs\' inputs (each H743 at 400 mA, DS12110 Rev 10 Table 30\'s maximum at TJ 85 C, plus 60 mA of its "\n'
-    '                  "other parts: 1.3800 A of LDO current), at constant power at the least load voltage 4.7718 V, rounded up")\n'
+    '                  "other parts: 1.3800 A of LDO current), at constant power at the least load voltage 4.7719 V, rounded up")\n'
     % (DEV_LEAD_PEAK, IOC_TYP, IOC_PEAK, IOC_TYP, IOC_PEAK))
 _OLD_GNDL = 'for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))\n'
 _NEW_GNDL = _OLD_GNDL + "_GND_LOADS.update(_IOC_LOADS)   # record l9t5 (I-03): the three LDOs' ground ends; the return is shared, not lead by lead (l8r2 round 7)\n"

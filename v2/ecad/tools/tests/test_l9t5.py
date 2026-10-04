@@ -178,9 +178,9 @@ def t_round2_drafts_output_reproduced_and_every_predicate_holds():
     assert r.returncode == 0, "l9t5_drafts.py exited %d: %s" % (r.returncode, r.stderr.decode()[-300:])
     text = r.stdout.decode("utf-8")
     assert text == open(DRAFTS_OUT, encoding="utf-8").read(), "l9t5_drafts.out is not what the script prints"
-    pred = text.split("8. THE PREDICATES")[1].split("l9t5_drafts: done")[0]
+    pred = text.split("9. THE PREDICATES")[1].split("l9t5_drafts: done")[0]
     rows = [l for l in pred.splitlines() if l.strip()]
-    assert len(rows) == 10 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    assert len(rows) == 12 and all(l.rstrip().endswith(" yes") for l in rows), rows
     for p in re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M):
         assert hashlib.sha256(open(os.path.join(ROOT, p[1]), "rb").read()).hexdigest().startswith(p[0]), p[1]
 
@@ -225,7 +225,93 @@ def t_round2_cdev_acceptance_is_re_solved():
     assert round(lo, 3) == 4.872 and round(hi, 3) == 5.133 and round(nom, 3) == 5.002
     assert lo * (1 - 0.035) > 3.3 * 1.015 + 0.400 and hi < 6.0
     txt = open(DRAFTS_OUT, encoding="utf-8").read()
-    assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF: UNCHECKED" in txt and "BLOCKED BY T5b" in txt
+    assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF: HOLDS" in txt
+    # round 3: the shared return's finding stays visible beside the result, and I-03 stays open until the independent recheck
+    assert "L8R2-F31 stays OPEN beside this result and is not this record's" in txt and "I-03 STAYS OPEN" in txt
+
+
+def _basis(m):
+    """the declarations' basis, re-solved here from the case script (never read from the drafts or the output)."""
+    _M()
+    chk = _mod(CHECK, "l9t5_test_check3")
+    C = _C["R"]["C"]
+    lo, _nom, _hi = chk.vout_band(56.2e3, 10.7e3)
+    return chk, {"dev_lead": (C["i_least"] * C["v_least"] - C["ioc_in_w"]) / C["v_least"], "ioc": C["ioc_in_w"] / (lo - 0.02 * 5.0), "wall": 0.9142}
+
+
+def t_round3_board_b_composes_with_l8r2s_round7_drafts_and_the_tree_before_them_stops():
+    """Round 3: board B's composition in L4-E9's order with record l8r2's fandec and gndret runs to its end and reads DRAWN on the
+    netlist and on its declarations; without those two drafts (the tree before T5b) the generator stops on GND's declared peak."""
+    import io
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts")
+    assert ("l8r2", "fandec") in m.ORDER["b"] and ("l8r2", "gndret") in m.ORDER["b"]
+    chk, basis = _basis(m)
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        p, _res, ok = m.compose("b", m.seq_of("b", "slot"), d, "t_fwd")
+        assert ok
+        rc, path, table = m.netlist("b", p, d, "t_fwd")
+        assert rc == 0, path
+        kit, v = chk.run({"b": path}, ROOT, io.StringIO())
+        assert kit == "DRAWN", v
+        assert chk.decl("b", table["intent"], basis)[0] == "DRAWN", chk.decl("b", table["intent"], basis)
+        gnd = chk.rails_of(table["intent"])["GND"]
+        assert "J_5V_IOC" in gnd["source"] and "J_54V" in gnd["source"] and gnd["amps_peak"] > 27.0   # derived by record l8r2's gndret
+        q, _res, ok = m.compose("b", m.seq_of("b", "slot", skip=m.ROUND7), d, "t_old")
+        assert ok
+        rc, line, _t = m.netlist("b", q, d, "t_old")
+        assert rc != 0 and "rail GND declares a 21.00 A peak" in line, (rc, line)
+
+
+def t_round3_the_declarations_stand_on_their_basis_and_round2s_fail():
+    """L8R2-F35: round 2's drafts (kept in inputs/) declare the device lead at a typed 6.0 A, under its own 6.0359 A on C-DEV rev 1,
+    and +5V_IOC at 1.38 A: the declaration check FAILS on them and reads DRAWN on round 3's; a typed figure that merely passes
+    (6.04 A) is refused as well, because the check holds the declaration to its basis, not to an inequality."""
+    import subprocess
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts2")
+    chk, basis = _basis(m)
+    assert chk.ceil4(basis["dev_lead"]) == 6.0359 and chk.ceil4(basis["ioc"]) == 1.4749 and basis["dev_lead"] > 6.0
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        for b in "ab":
+            for tag, script, want in (("old", m.OLD_R2[b], "FAIL"), ("new", NEW[b], "DRAWN")):
+                t = os.path.join(d, "%s_gen_sch_%s.py" % (tag, b))
+                shutil.copy(GENS[b], t)
+                assert subprocess.run([sys.executable, "-B", script, t, "--write"], capture_output=True).returncode == 0
+                rc, path, table = m.netlist(b, t, d, tag)
+                assert rc == 0, path
+                got, why = chk.decl(b, table["intent"], basis)
+                assert got == want, (b, tag, why)
+                if tag == "old" and b == "b":
+                    assert any("6.0000 A peak" in x for x in why), why
+        # a number that merely passes
+        src = open(NEW["b"], encoding="utf-8").read()
+        assert src.count("DEV_LEAD_PEAK = 6.0359") == 1
+        typed = os.path.join(d, "apply_typed.py")
+        open(typed, "w", encoding="utf-8").write(src.replace("DEV_LEAD_PEAK = 6.0359", "DEV_LEAD_PEAK = 6.0400"))
+        t = os.path.join(d, "typed_gen_sch_b.py")
+        shutil.copy(GENS["b"], t)
+        assert subprocess.run([sys.executable, "-B", typed, t, "--write"], capture_output=True).returncode == 0
+        rc, path, table = m.netlist("b", t, d, "typed")
+        assert rc == 0, path
+        assert chk.decl("b", table["intent"], basis)[0] == "FAIL"
+
+
+def t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme():
+    """the lead is named in both drafts, the return sentence is withdrawn for pin 2, and the README carries V3's claim table."""
+    for b in "ab":
+        t = open(NEW[b], encoding="utf-8").read()
+        assert "16 AWG, 150 mm" in t and "ASSEMBLY.md section 4" in t, b
+    tb = open(NEW["b"], encoding="utf-8").read()
+    assert "now through J_5V_IOC's pin 2" not in tb and "L8R2-F31" in tb
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "WITHDRAWN for pin 2" in out and "It holds for pin 1 only" in out
+    readme = open(README, encoding="utf-8").read()
+    assert "## The claim table for the independent recheck V3" in readme
+    rows = [l for l in readme.split("## The claim table for the independent recheck V3")[1].splitlines() if l.startswith("| C")]
+    assert len(rows) >= 20 and all(l.count("|") >= 7 for l in rows), len(rows)
+    for lab in ("guaranteed", "typical", "declared", "model", "assumed"):
+        assert any(("| %s" % lab) in l for l in rows), lab
 
 
 A1 = os.path.join(REC, "l9t5_a1.py")
@@ -263,5 +349,18 @@ def t_record_hygiene():
         for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
             assert bad not in t, "a private path in %s" % os.path.basename(p)
         if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT):
+            if p == README:
+                # round 3: the claim table for the recheck V3 labels a maker's printed limit with the round 3 brief's own word. That
+                # word is taken out of the table's LABEL cell (the fifth), and of nothing else, before the claim-word scan: the other
+                # cells and the prose around the table are still scanned
+                kept = []
+                for line in t.splitlines():
+                    if re.match(r"\| C\d\d \|", line):
+                        cells = line.split(" | ")
+                        assert len(cells) == 6, "a claim row without six cells: %s" % line[:60]
+                        cells[4] = cells[4].replace("guaranteed", "")
+                        line = " | ".join(cells)
+                    kept.append(line)
+                t = "\n".join(kept)
             mm = CLAIM.search(t)
             assert not mm, "a claim word %r in %s" % (mm.group(0), os.path.basename(p))
