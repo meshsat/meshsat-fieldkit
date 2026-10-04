@@ -20,7 +20,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l4e11_chg   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 bfdead54766199eb
    l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 3bdd5e3ebba68b07
    review      v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md  sha256 1f8508302012673f
-   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 418056947caf0f9d
+   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 a67fc7ea8d96a230
    l8r2_out    v2/docs/records/l9pwr/inputs/l8r2-l8r2_drafts-89924e40.txt  sha256 7b0ff84375825913
    l8r2_fans   v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_fans12-89924e40.txt  sha256 cb03ff040b0ef784
    l8r2_pnl    v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py  sha256 3d2750a188913fef
@@ -30,7 +30,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 bfce0f996822f32b
    l4e9r7      v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt  sha256 76c17d1cc02c0fd2
    sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 2a98e4ac0e307637
-   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 1a1fcd80871fe5f9
+   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 c75aa0551d9904c1
    ap64500     v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
    ap632       v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
    tps62933    v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
@@ -1526,11 +1526,11 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       DRAFTED: (24.475,)
       why: record hc2's state on rv-pwr's model; section 4 moves it
    R8 Layer 7 section 3: the five fans and their converters at full speed against the plan's fan figures (W)
-      theirs (11.85, 2.97); reproduced (11.85, 2.97): EQUAL
+      theirs (11.86, 2.97); reproduced (11.86, 2.97): EQUAL
       this record, the converters' losses unrounded, the coolers at the maker's 2.0 W (round 1's HIGH): (11.8588,)
       DRAFTED's HIGH now: the coolers at l8r2's envelope, 2.75 W over 0.80 each, the mixers as before: (15.1125,)
       U22's quiescent at 14.4 V, in neither figure: (0.2304,)
-      why: Layer 7 rounds each step-up's loss to 0.35 W (0.3529 W at 0.85), 0.0088 W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure
+      why: Layer 7 rounds each step-up's loss to 0.35 W (0.3529 W at 0.85), 0.0001 W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure
    R9 l8r2 round 6 (2c.5): the slot's other loads at HIGH (PS-BUSY, W); the 0.1 % window and its least load voltage (V); the loop's least (A); slot 2's bounded start (A); the margin at the declared 6.6 A; every row of its per state table (A at 5.1 V, at the least voltage, start, degraded, the three margins) and its energy line
       theirs (23.197, 5.0019, 5.1744, 4.9019, 7.09571, 5.7473, 0.4957); reproduced (23.197, 5.0019, 5.1744, 4.9019, 7.09571, 5.7473, 0.4957): EQUAL
       its 17 per state rows, re-run on round 1's printed rails: ('EQUAL',)

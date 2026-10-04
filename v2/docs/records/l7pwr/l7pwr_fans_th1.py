@@ -272,6 +272,7 @@ def read_rails(R, aux):
     bl = need(bstr.get("_NEW_LOAD", ""), r'"U%d" % \(701 \+ 30 \* \(s - 1\)\): ([\d.]+),\s+# l8r2 \(E11-40\): the cooler fan\'s 12 V step-up, ([\d.]+) W of fan over ([\d.]+)', "l8r2's slot load row")
     bv = need(bstr.get("_NEW_LOAD", ""), r"\(ASSUMPTION\) at ([\d.]+) V", "l8r2's input voltage of the row")
     bo = need(b, r"from \+5V_Sn to C?FANs_12V at ([\d.]+) to ([\d.]+) V", "l8r2's boost output")
+    be = need(b, r"converted=True, efficiency=([\d.]+), fed_from=n5", "l8r2's step-up typical efficiency (its rail call)")
     R["rails"] = dict(
         vsys_e=dict(declared=va[2], loads=vk["loads"], v_work=vk.get("v_work")), fan=dict(v=fa[1], declared=fa[2], loads=fk["loads"], eta=fk["efficiency"], fed=fk["fed_from"]),
         fan_hdr="J_FAN1, J_FAN2 four pins (1 +12V_FAN, 2 GND, 3 FANn_PWM_OD, 4 FANn_TACH), +12V_FAN %.1f V from U22 on %s, its loads %s, declared %.2f A, efficiency %.2f (an ASSUMPTION of the draft); VSYS_E's loads %s, declared %.2f A"
@@ -280,7 +281,8 @@ def read_rails(R, aux):
         u12=float(u22.group(6)), declared=float(u22.group(7)), plan_total=float(plan.group(1)), least=float(least.group(1)), least_pct=float(least.group(2)),
         room=float(least.group(3)), contact_pct=float(contact.group(1)), u22_loss=float(loss.group(1)), u22_loss_plan=float(loss.group(4)),
         u22_vout=(float(vout.group(2)), float(vout.group(3))), start_w=float(start.group(1)), start_x=float(start.group(2)),
-        b_in_a=float(bl.group(1)), b_fan_w=float(bl.group(2)), b_eta=float(bl.group(3)), b_vin=float(bv.group(1)), b_vout=(float(bo.group(1)), float(bo.group(2))))
+        b_in_a=float(bl.group(1)), b_fan_w=float(bl.group(2)), b_eta=float(bl.group(3)), b_vin=float(bv.group(1)), b_vout=(float(bo.group(1)), float(bo.group(2))),
+        b_eta_typ=float(be.group(1)))
 
 
 def round1():
@@ -334,9 +336,15 @@ def judge(R):
     i_both = 2 * i_each + q                                       # U22's input, both mixers at full speed, with its quiescent current
     i_plan = PLAN_MIXER_W / (eta * v) + q
     start_w = (rl["least"] - rl["u12"] - i_each - q) * v * eta   # the power a starting fan may draw at the rail with the other running and U12 on
-    b_loss = rl["b_in_a"] * rl["b_vin"] - rl["b_fan_w"]           # l8r2's cooler step-up: its row's input power less the fan's
+    # F-L7-12 (set 29): one basis per sum. At full speed: the maker's rated fan power through the step-up at the draft's typical
+    # efficiency. At the bound: l8r2's fan envelope through the step-up at its low efficiency (the slot row's own figures). The slot
+    # row's current is l8r2's DECLARATION for the leads (the envelope), never a heat figure. The mixers have no stated envelope.
+    b_loss = c["w"] / rl["b_eta_typ"] - c["w"]                    # the rated cooler fan through the step-up at its typical efficiency
+    b_loss_bound = rl["b_fan_w"] / rl["b_eta"] - rl["b_fan_w"]    # l8r2's envelope through the step-up at its low efficiency
     hold_full = c["w"] + b_loss + 2 * m["w"] + rl["u22_loss"]     # slot 3's cooler and the two mixers, each converter's loss counted (inside the case)
     prof_full = 3 * (c["w"] + b_loss) + 2 * m["w"] + rl["u22_loss"]
+    hold_bound = rl["b_fan_w"] + b_loss_bound + 2 * m["w"] + rl["u22_loss"]
+    prof_bound = 3 * (rl["b_fan_w"] + b_loss_bound) + 2 * m["w"] + rl["u22_loss"]
     R["down"] = dict(
         mixer_w_each=m["w"], mixer_w_both=2 * m["w"], i_mixer_each_full=i_each, i_mixer_both_full=i_both,
         vsys_e_total_full=rl["u12"] + i_both, vsys_e_total_plan=rl["u12"] + i_plan, i_mixers_plan=i_plan,
@@ -346,6 +354,8 @@ def judge(R):
         rails_cover=(R["cands"][R["sel"]["mixer"]]["vlo"] <= rl["u22_vout"][0] and R["cands"][R["sel"]["mixer"]]["vhi"] >= rl["u22_vout"][1]
                      and c["vlo"] <= rl["b_vout"][0] and c["vhi"] >= rl["b_vout"][1]),
         cooler_w_each=c["w"], cooler_i_slot_full=rl["b_in_a"], cooler_i_12v=c["a"], b_loss=b_loss, u22_loss=rl["u22_loss"],
+        b_loss_bound=b_loss_bound, heat_hold_bound=hold_bound, heat_prof_bound=prof_bound,
+        line_shift_hold_bound=LINE_PER_W * (hold_bound - HOLD_FANS_W),
         heat_hold_full=hold_full, heat_hold_plan=HOLD_FANS_W, heat_prof_full=prof_full, heat_prof_plan=PROFILE_FANS_W,
         heat_hold_fans_only=c["w"] + 2 * m["w"],
         line_shift_hold=LINE_PER_W * (hold_full - HOLD_FANS_W),
@@ -627,13 +637,21 @@ def render(R):
       % (D["start_w"], D["start_x"]))
     P("   running power (L4-E11 18b: %.1f times): the stagger E11-39 stays; the 17a per-fan figures (0.3356 / 0.5713 A on VSYS_E directly) are superseded by the rail" % rl["start_x"])
     P("   the dock feed's current (E11-35): one 813 contact at %.4f A declared, %.1f %% of its 3.5 A (L4-E11: %.1f %%)." % (D["vsys_e_total_full"], 100.0 * D["vsys_e_total_full"] / 3.5, rl["contact_pct"]))
-    P("   the coolers' feed as drafted by record l8r2: a per-slot step-up from +5V_Sn (the slot rails are %.1f V) declared %.2f A at %.1f V (%.1f W of fan over %.2f), so %.2f W lost in it per running fan;" % (SLOT_5V, rl["b_in_a"], rl["b_vin"], rl["b_fan_w"], rl["b_eta"], D["b_loss"]))
+    P("   the coolers' feed as drafted by record l8r2: a per-slot step-up from +5V_Sn (the slot rails are %.1f V); the slot row declares %.2f A at %.1f V for the leads, l8r2's envelope (%.2f W of fan over %.2f),"
+      % (SLOT_5V, rl["b_in_a"], rl["b_vin"], rl["b_fan_w"], rl["b_eta"]))
+    P("   a declaration, not a heat figure (F-L7-12): at the maker's rated %.1f W and the draft's typical %.2f, so %.4f W lost in it per running fan; at the envelope %.4f W;"
+      % (D["cooler_w_each"], rl["b_eta_typ"], D["b_loss"], D["b_loss_bound"]))
     P("   an empty slot's fan stays dark with its slot; the module's Fan_PWM and Fan_Tacho reach the fan through l8r2's level stages; the header stays JST SH in l8r2's draft (record l7r2 F-R2-08: JST PH).")
     P("   the firmware stagger (E11-39, R-188): kept; the PWM ramp now drives the fan's PWM input, not a chopped supply; a 4-wire fan's own soft start is NOT READ for Sanyo (Same Sky prints one).")
     P("   the heat into the case at full speed, every converter's loss counted: the hold's fans (slot 3's cooler and its step-up, the two mixers and U22) %.2f W (the fans alone %.2f W," % (D["heat_hold_full"], D["heat_hold_fans_only"]))
     P("   U22's loss %.2f W from L4-E11 18a, the step-up's %.2f W) against the model's %.3f W (+%.2f W, E5's line +%.3f W/K at 0.100 W/K per W); the profile's five fans and their converters %.2f W"
       % (D["u22_loss"], D["b_loss"], D["heat_hold_plan"], D["heat_hold_full"] - D["heat_hold_plan"], D["line_shift_hold"], D["heat_prof_full"]))
     P("   against %.3f W. The controls set the duty (R-150); T-H1 logs the fans' real draw from a 12.0 V bench supply, so the converters' losses are board heat its heaters carry." % D["heat_prof_plan"])
+    P("   at the bound (F-L7-12: the coolers at l8r2's %.2f W envelope over its low %.2f, the mixers at their rated power, no envelope of theirs stated): the hold's fans %.2f W"
+      % (rl["b_fan_w"], rl["b_eta"], D["heat_hold_bound"]))
+    P("   (+%.2f W over the model, E5's line +%.3f W/K), the profile's five fans and their converters %.2f W. One basis per use: the plan's energy at the duty the controls set,"
+      % (D["heat_hold_bound"] - D["heat_hold_plan"], D["line_shift_hold_bound"], D["heat_prof_bound"]))
+    P("   the thermal bound on the envelope (R-150 restates E5's line on one of them, named).")
     P("   the airflow the picks would deliver (free air, MAKER): the two mixers %.4f m3/s (%.2f m3/min against the representatives' %.2f to %.2f m3/min, GF60151B9 to B6), the three cooler fans %.4f m3/s;" % (D["flow_mixers_m3s"], 2 * sm["m3min"], 2 * R["rep"]["mixers_cfm"][0] * 0.3048 ** 3, 2 * R["rep"]["mixers_cfm"][1] * 0.3048 ** 3, D["flow_coolers_m3s"]))
     P("   over the case's free air of about %.4f m3 (MODELED, the boards not subtracted) the mixers' free-air flow is %.1f case volumes a second, an upper bound: the delivered flow in the sealed" % (CASE_FREE_M3, D["changes_per_s"]))
     P("   case sits on the fan curve below its %.0f Pa maximum and no system curve is held. L4-E12's bound credits this flow at zero; T-H1's reading with these fans replaces the credit." % sm["pa"])
@@ -703,7 +721,7 @@ def render(R):
            "the hold's fans' heat into the case at full speed (W)": D["heat_hold_full"],
            "E5's line shift at full speed (W/K)": D["line_shift_hold"],
            "the profile's five fans' heat at full speed (W)": D["heat_prof_full"],
-           "a cooler fan's slot current at full speed (A)": D["cooler_i_slot_full"],
+           "a cooler fan's slot current at full speed (A)": D["cooler_i_slot_full"],   # l8r2's declared envelope current since its round 6
            "the dock lead's continuous draw against ECSS's 3.4 A (%)": K["cont_full_pct"]}
     old = R["round1"]
     for k in old:
