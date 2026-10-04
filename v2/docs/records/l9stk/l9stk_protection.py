@@ -56,6 +56,8 @@ PINS = {
     "gen_pcb_p": "v2/ecad/tools/gen_pcb_p.py",
     "board_p": "v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb",
     "thermal_coord": "v2/docs/review-packets/battery/THERMAL-COORDINATION.md",
+    "jscj_2n7002": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+    "l8r2_vbus20ov": "v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py",
 }
 # the session's design choices (SESSION under the owner's standing rule of 26 September 2026), each checked below
 RS_PARTS_MOHM = (4.0, 7.5)   # the breaker's sense: two metal-element shunts in parallel, 2.6087 mOhm
@@ -72,7 +74,12 @@ RTH_SPREAD = 0.20            # the sensitivity shown on Q39/Q40's installed path
 TVS = "SMCJ18A"              # the breaker's input clamp: the part board A's D1 already uses (C374030)
 D_EN_MM = 1.0                # the enable contact's length short of the dock's power pins, mm (Layer 7's requirement)
 R17_ALLOW = 1.0              # R17 designed apart: its coupling into any battery FET's junction at most this, K/W (E-1 reads it)
-NFET_BAT = 3                 # the battery FETs selected (Q39, Q40 and the added Q41, the same BUK6Y10-30P)
+NFET_BAT = 3                 # the battery FETs selected (Q39, Q40 and a third BUK6Y10-30P, its designator L4-E11's: Q41 is taken)
+R_U = 200e3                  # the series resistor from VIN to UVLO, 1 % (the RC hold's charging resistor)
+GRACE_TARGET = 0.1           # the RC hold's least release delay, s: the reversed mating order it tolerates
+R_DIS = 150.0                # the UVLO discharge resistor in the inverter's drain (keeps the 2N7002 at its continuous current)
+R_E1, R_E2 = 10e3, 22e3      # the enable loop: from VIN to the loop, and the first inverter's gate to ground
+R_G = 1e6                    # the second inverter's gate divider, each half
 SPLIT_EXAMPLE = 0.05         # a cell split the fallback is sized for, 5 % (a cell carrying 1.05 of its group's third)
 PAD_MM2 = 645.16             # 1 in2, the CSD18510Q5B sheet's RthJA pad
 E6 = (1.0, 1.5, 2.2, 3.3, 4.7, 6.8, 10.0)
@@ -150,6 +157,14 @@ def read():
     I["isink"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
     m = need(t, r"Insertion time current\s+%s\s+%s\s+%s\s+µA" % (num, num, num), "the insertion time current")
     I["iins"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
+    m = need(t, r"^UVLOTH\s+UVLO threshold\s+%s\s+%s\s+%s\s+V" % (num, num, num), "UVLOTH")
+    I["uvth"] = (float(m.group(1)), float(m.group(3)))
+    m = need(t, r"^UVLOHYS\s+UVLO hysteresis current\s+UVLO = 1 V\s+%s\s+%s\s+%s\s+µA" % (num, num, num), "UVLOHYS")
+    I["uvhys"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
+    m = need(t, r"Delay to GATE high\s+%s\s+µs\s+UVLODEL\s+UVLO delay\s+Delay to GATE low\s+%s" % (num, num), "UVLODEL")
+    I["uvdel"] = (float(m.group(1)) * 1e-6, float(m.group(2)) * 1e-6)
+    need(t, r"Upon releasing the UVLO pin the LM5069 switches on the\s+load current", "the UVLO release")
+    need(t, r"When the VIN voltage reaches the PORIT threshold \(7\.6 V\) the insertion time begins", "the insertion time's start")
     I["dc_retry_typ"] = float(need(t, r"Fault restart duty cycle\s+LM5069-2 only\s+%s%%" % num, "the restart duty").group(1)) / 100.0
     m = need(t, r"Source current\s+Normal operation, GATE-OUT = 5 V\s+%s\s+%s\s+%s\s+µA" % (num, num, num), "the gate source")
     I["igate"] = (float(m.group(1)) * 1e-6, float(m.group(3)) * 1e-6)
@@ -192,10 +207,22 @@ def read():
     m = need(v, r"^\s*%s\s+\S+\s+\S+\s+\S+\s+%s\s+%s\s+%s\s+%s\s+%s\s+%s\s" % (TVS, num, num, num, num, num, num), "the %s row" % TVS)
     I["tvs"] = dict(vr=float(m.group(1)), vbr_min=float(m.group(2)), vc=float(m.group(5)), ipp=float(m.group(6)))
     sm = pdf("mdd_smbj")
-    I["d1_ifsm"] = float(need(sm, r"Peak forward surge current, 8\.3ms single half sine-wave\s+IFSM\s+(\d+)\s+A", "SMBJ IFSM").group(1))
+    m = need(sm, r"Peak forward surge current, ([0-9.]+)ms single half sine-wave\s+IFSM\s+(\d+)\s+A", "SMBJ IFSM")
+    I["d1_ifsm"], I["d1_t"] = float(m.group(2)), float(m.group(1)) * 1e-3
     need(sm, r"^\s*SMBJ20A\s+SMBJ20CA\s", "the SMBJ20A row")
-    mp = need(pdf("murata_prf"), r"PRF15BB103RB6RC\s+10k\+/-50%\s+\S+\s+(\d+)\+/-(\d+)\s+32V", "the PRF15BB103 row")
-    I["ptc"] = (float(mp.group(1)), float(mp.group(2)))
+    mp = need(pdf("murata_prf"), r"PRF15BB103RB6RC\s+(\d+)k\+/-(\d+)%\s+\S+\s+(\d+)\+/-(\d+)\s+(\d+)V", "the PRF15BB103 row")
+    I["ptc"] = (float(mp.group(3)), float(mp.group(4)))
+    I["ptc_r25"], I["ptc_tol"], I["ptc_vmax"] = float(mp.group(1)) * 1e3, float(mp.group(2)) / 100.0, float(mp.group(5))
+    I["ptc_r_sense"] = 47e3
+    need(pdf("murata_prf"), r"\*at 4\.7kohm\s+\*at 47kohm", "the 47 kOhm sensing column")
+    n7 = pdf("jscj_2n7002")
+    I["n7_vgs"] = float(need(n7, r"Gate-Source Voltage\s+VGS\s+±(\d+)\s+V", "2N7002 VGS").group(1))
+    I["n7_id"] = float(need(n7, r"Continuous Drain Current\s+ID\s+([0-9.]+)\s+A", "2N7002 ID").group(1))
+    m = need(n7, r"Gate-Threshold Voltage\s+Vth\(GS\)\s+VDS=VGS, ID=250 µA\s+%s\s+%s\s+%s" % (num, num, num), "2N7002 Vth")
+    I["n7_vth"] = (float(m.group(1)), float(m.group(3)))
+    I["n7_rds5"] = float(need(n7, r"VGS=5 V, ID=50mA\s+%s\s+%s" % (num, num), "2N7002 RDS(on) at 5 V").group(2))
+    I["n7_ciss"] = float(need(n7, r"Input Capacitance \*\s+Ciss\s+(\d+)", "2N7002 Ciss").group(1)) * 1e-12
+    need(open(rel(PINS["l8r2_vbus20ov"]), encoding="utf-8").read(), r"CSD19532Q5B Q41", "l8r2's Q41")
     w = re.sub(r"\s+", " ", pdf("slva673a"))
     for phrase in ("a single MOSFET will take all of the current", "at least 10% above the maximum load current",
                    "the SOA can be derated accordingly using Equation 5", "The power function follows the format shown in Equation 6",
@@ -433,9 +460,37 @@ def compute():
     r_loop = vmax / C["dock_pk"]
     tau = I["r_pre"] * cout
     B["pre"] = dict(r_loop=r_loop, tau=tau, t_cb=tau * math.log(vmax / (B["icb_min"] * r_loop)), t_abs=tau * math.log(vmax / (B["sense_abs_a"] * r_loop)))
-    # (a) SELECTED: a make-last enable contact into UVLO (LM5069 11.1.1, Figure 45): the insertion time, then the dv/dt start
+    # (a) SELECTED: a make-last enable loop into UVLO (LM5069 11.1.1, Figure 45). The insertion time runs only from VIN passing
+    # PORIT (the gauge's FET turning on); on the enable, the gate rises UVLODEL after UVLO passes its threshold, so the grace is
+    # the RC hold's: R_U from VIN to UVLO against the hysteresis sink, into C_U
     B["t_ins"] = (ct * (1 - CAP_TOL) * I["vtmrh"][0] / I["iins"][1], ct * (1 + CAP_TOL) * I["vtmrh"][1] / I["iins"][0])
-    B["v_withdraw"] = D_EN_MM * 1e-3 / B["t_off_timer"]
+    v_hi = vmax - I["uvhys"][0] * R_U
+    v_lo = I["vmin"] - I["uvhys"][1] * R_U
+    k_hi = math.log(v_hi / (v_hi - I["uvth"][0]))
+    k_lo = math.log(v_lo / (v_lo - I["uvth"][1]))
+    cu = e6(GRACE_TARGET / (R_U * (1 - RS_TOL) * k_hi) / (1 - CAP_TOL), up=True)
+    B.update(cu=cu, uv_vinf_lo=v_lo, grace=(cu * (1 - CAP_TOL) * R_U * (1 - RS_TOL) * k_hi, cu * (1 + CAP_TOL) * R_U * (1 + RS_TOL) * k_lo))
+    # without the hold: OUT rises at the dv/dt rate from UVLODEL on, and a power pin mating late meets it through the loop
+    dvdt = I["igate"][1] / (cdv * (1 - CAP_TOL))
+    B["dvdt"] = dvdt
+    B["t_rev0"] = B["icb_min"] * (vmax / C["dock_pk"]) / dvdt
+    B["t_rev_hold"] = B["grace"][0] + B["t_rev0"]
+    # the undocking: the loop opens, the first inverter's gate falls, the second's rises, UVLO is discharged, then the gate
+    t1 = R_E2 * I["n7_ciss"] * math.log((vmax * R_E2 / (R_E1 + I["ptc_r25"] * (1 - I["ptc_tol"]) + R_E2)) / I["n7_vth"][0])
+    t2 = (R_G / 2) * I["n7_ciss"] * math.log((I["vmin"] / 2) / (I["vmin"] / 2 - I["n7_vth"][1]))
+    t3 = cu * (1 + CAP_TOL) * (R_DIS + I["n7_rds5"]) * math.log(vmax / I["uvth"][0])
+    B["t_break"] = t1 + t2 + t3 + B["t_off_timer"]
+    B["t_break_parts"] = (t1, t2, t3)
+    B["v_withdraw"] = D_EN_MM * 1e-3 / B["t_break"]
+    B["i_dis"] = vmax / (R_DIS + I["n7_rds5"])
+    # the inverters' gates against the 2N7002's VGS under VIN's clamp and its threshold at the pack's least voltage
+    r_cold_lo, r_cold_hi = I["ptc_r25"] * (1 - I["ptc_tol"]), I["ptc_r25"] * (1 + I["ptc_tol"])
+    B["g1_max"] = I["tvs"]["vc"] * R_E2 / (R_E1 + r_cold_lo + R_E2)
+    B["g1_on_cold"] = I["vmin"] * R_E2 / (R_E1 + r_cold_hi + R_E2)
+    B["g1_on_sense"] = I["vmin"] * R_E2 / (R_E1 + I["ptc_r_sense"] + R_E2)
+    B["r_trip_max"] = vmax * R_E2 / I["n7_vth"][0] - R_E1 - R_E2
+    B["g2"] = (I["vmin"] / 2, I["tvs"]["vc"] / 2)
+    B["ptc_v_tripped"] = I["tvs"]["vc"]
     B["dock_vsense"] = B["inrush_max"] * rs
     # the cells' split, the fallback's spread, the timer's integration of key-down excursions
     B["split_max"] = cells / B["icl_max"] - 1.0
@@ -445,7 +500,13 @@ def compute():
     # the charge direction, the clamp's freewheel duty
     B["pre_w"] = I["fet_vsd"] * I["i_pre"]
     B["pre_tj"] = t0 + I["fet_rthja"] * B["pre_w"]
-    B["d1_ratio"] = B["icb_max"] / I["d1_ifsm"]
+    # D1 on I2t: the lead's freewheel decays with the loop's L/R (not held); its 100 A half-sine rating as I2t
+    B["d1_i2t"] = I["d1_ifsm"] ** 2 * I["d1_t"] / 2.0
+    B["d1_tau_max"] = 2.0 * B["d1_i2t"] / C["pf_high"] ** 2
+    B["d1_l_max"] = B["d1_tau_max"] * vmax / C["pf_high"]
+    # BAT-F20 at the service rows: Q1's body diode carries the discharge with CHGIN = 1 above T3
+    B["q1_allow_w"] = (150.0 - t0) / I["q12_rthja"]
+    B["q1_w"] = {cont: (I["batf20_w10"], I["q12_vsd"] * cont), service: (I["batf20_w10"] * service / cont, I["q12_vsd"] * service)}
     # IF-2: the pads against board P's area (the P2 placement)
     B["p_face"] = I["p_outline"][0] * I["p_outline"][1]
     B["p_free"] = B["p_face"] - I["p_courtyards"]["F"] - I["p_holes"]
@@ -473,6 +534,11 @@ def compute():
     J["tj_cont"] = tj_sel(cont)
     J["tj_held"] = tj_sel(a)
     J["ptc_service_pair"] = tj_pair(service, t0)
+    # the thermal guard (SELECTED): the kit's PRF15BB103 chip PTC in the enable loop beside the battery FETs
+    J["ptc_lo"] = I["ptc"][0] - I["ptc"][1]
+    J["ptc_hi"] = I["ptc"][0] + I["ptc"][1]
+    J["ptc_window"] = (J["ptc_lo"] - J["tj_service"], J["ptc_hi"] - J["tj_service"])
+    J["jmb"] = I["bat_rthjmb"] * J[NFET_BAT]["p"]
     R["J"] = J
     per = 0.5 * a / CR["field_pack"]
     q12_p = a * a * I["q12_rds"] * rd["rdson_normalized_at_150c_vgs10"]
@@ -482,7 +548,7 @@ def compute():
         S.append(dict(name=name, reading=reading, frac=frac, status=status))
     part("the cells (%dP of %g A continuous)" % (I["par"], I["cell_a"]), "%.2f A, %.2f A a cell at an even split" % (a, a / I["par"]), a / cells,
          "printed; the split NOT HELD: E-5 with its fallback")
-    part("Q39/Q40/Q41 (%d x BUK6Y10-30P, %g mOhm each at 150 C)" % (NFET_BAT, C["pair_mohm_each"]), "TJ %.1f C at the junction limit's allowances" % J["tj_held"],
+    part("Q39, Q40 and the third FET (%d x BUK6Y10-30P, %g mOhm each at 150 C)" % (NFET_BAT, C["pair_mohm_each"]), "TJ %.1f C at the junction limit's allowances" % J["tj_held"],
          (J["tj_held"] - t0) / (lim - t0), "DESIGN DEFECT DD-2 until drawn; E-1")
     part("Q1 on board P with BAT-F20 (CHGIN = 1, the reading above T3)", "its body diode %.1f W (VSD %g V at most)" % (I["q12_vsd"] * a, I["q12_vsd"]), None,
          "DESIGN DEFECT DD-5 (BAT-F20, EQ-15): about %g W at 10 A already" % I["batf20_w10"])
@@ -510,13 +576,17 @@ def compute():
 
     def row(case, cur, trip, clear, limiting, margin, status):
         T.append(dict(case=case, cur=cur, trip=trip, clear=clear, limiting=limiting, margin=margin, status=status))
+    qa, qb = B["q1_w"][cont]
     row("10 A continuous", "%.1f A held" % cont, "none reached (%.2f A least)" % B["icl_min"], "not a fault",
-        "the XT60, %.2f of %g A" % (cont / C["xt60_a"], C["xt60_a"]), "%.2f" % (1 - cont / C["xt60_a"]), "printed")
+        "Q1's body diode under BAT-F20 (CHGIN = 1, above T3), %.0f to %.0f W against the %.2f W its pad holds; with BAT-F20 closed, the XT60 at %.2f" % (
+            qa, qb, B["q1_allow_w"], cont / C["xt60_a"]), "Q1 OVER (%.1f x)" % (qa / B["q1_allow_w"]), "DESIGN DEFECT DD-5; printed (VSD, RthJA)")
+    qa, qb = B["q1_w"][service]
     row("18 A for 60 s", "%.1f A, %g s" % (service, C["kd_s"]), "none reached (%.2f A least; %.2f A typical)" % (B["icl_min"], B["icl_typ"]),
-        "not a fault; firmware ends it", "Q39 to Q41, TJ %.1f C at the allowances" % J["tj_service"], "%.1f K; the least limit %.2f A over the service" % (lim - J["tj_service"], B["icl_min"] - service),
-        "derived; E-1, E-10")
+        "not a fault; firmware ends it", "Q1's body diode under BAT-F20, up to %.0f W; with BAT-F20 closed, the battery FETs at %.1f C (the guard %.1f to %.1f K above)" % (
+            qb, J["tj_service"], J["ptc_window"][0], J["ptc_window"][1]),
+        "Q1 OVER; %.1f K at the battery FETs; the least limit %.2f A over the service" % (lim - J["tj_service"], B["icl_min"] - service), "DESIGN DEFECT DD-5; derived; E-1, E-10, E-13")
     row("an overload under the unit's limit, held", "%.2f to %.2f A, indefinitely" % (service, a), "%.2f A largest (VCL %.1f mV, RS -%.1f %%)" % (a, vclmax * 1e3, 100 * u),
-        "none: held by design", "Q39 to Q41 at %.1f C; the cells at %.3f of 8 A; Q1's body diode %.1f W under BAT-F20" % (J["tj_held"], a / cells, I["q12_vsd"] * a),
+        "none: held by design; the thermal guard", "the battery FETs at %.1f C; the cells at %.3f of 8 A; Q1's body diode %.1f W under BAT-F20" % (J["tj_held"], a / cells, I["q12_vsd"] * a),
         "0 K at the allowances; %.2f %% split at most; Q1 OVER" % (100 * B["split_max"]), "DESIGN DEFECTS DD-2, DD-5; E-1, E-5")
     row("an overload over the unit's limit", "limited to %.2f A at most, then off" % a, "%.2f A largest" % a,
         "%.2f ms from the onset (timer %.3f, gate %.3f); regulated after tCL (%g us typ., no max.)" % (B["clear_max"] * 1e3, B["tf_max"] * 1e3, B["t_off_timer"] * 1e3, I["tcl_typ"] * 1e6),
@@ -528,12 +598,14 @@ def compute():
         "%.2f of IDM" % (B["icb_max"] / I["fet_idm"]), "(c) MISSING: E-3; the 0.3 V to TI (Q-TI-L9S-1)")
     row("a start into a short", "%.2f A at most (PLIM/VIN)" % (B["plim_max"] / vmax), "the power limit", "%.2f ms" % (B["clear_max"] * 1e3),
         "the breaker FET, as an overload", "%.2f" % B["fault_ratio"], "derived")
-    row("a start (the gauge's FET on, a retry, assembly)", "%.3f A at most for %.1f ms" % (B["inrush_max"], B["start_max"] * 1e3), "none: %.1f W < %.1f W least" % (B["start_p"], B["plim_min"]),
+    row("a start (the gauge's FET on, a retry, assembly)", "%.3f A at most for %.1f ms, from the insertion's end (%.2f to %.2f ms after VIN passes PORIT)" % (
+        B["inrush_max"], B["start_max"] * 1e3, B["t_ins"][0] * 1e3, B["t_ins"][1] * 1e3), "none: %.1f W < %.1f W least" % (B["start_p"], B["plim_min"]),
         "not a fault", "the breaker FET, %.1f W for %.1f ms vs %.1f W (DC line)" % (B["start_p"], B["start_teq"] * 1e3, B["start_soa"]), "%.2f (TI <= %.2f)" % (B["start_ratio"], 1 / TI_MARGIN),
         "derived; IF-1")
-    row("docking, the make-last enable (C-1b)", "%.3f A at most for %.1f ms, %.1f to %.1f ms after the enable mates" % (B["inrush_max"], B["start_max"] * 1e3, B["t_ins"][0] * 1e3, B["t_ins"][1] * 1e3),
+    row("docking, the make-last enable (C-1b)", "%.3f A at most for %.1f ms, from %.3f to %.3f s after the enable mates (the RC hold, then UVLODEL %g us typical, no maximum)" % (
+        B["inrush_max"], B["start_max"] * 1e3, B["grace"][0], B["grace"][1], I["uvdel"][0] * 1e6),
         "none: a start", "not a fault", "the breaker FET as a start; VIN to SENSE %.2f mV" % (B["dock_vsense"] * 1e3), "%.2f (TI <= %.2f)" % (B["start_ratio"], 1 / TI_MARGIN),
-        "derived; DD-6 until drawn; E-3")
+        "derived; DD-6 until drawn; conditions C1, C2; E-3, E-12")
     row("docking without the enable (the uncorrected design)", "E11-30's %.1f A peak with the breaker on" % C["dock_pk"], "%.2f A largest" % B["icb_max"], "%.1f us to the release" % (B["t_off_cb"] * 1e6),
         "the breaker FET: the 10 us line derated to %.1f C is %.1f A; VIN to SENSE %.3f V" % (B["tc"], B["dock_uncorr"]["i10_der"], B["dock_uncorr"]["vsense"]),
         "OVER: %.2f x the line (%.2f x at 75 C); %.2f x 0.3 V" % (B["dock_uncorr"]["ratio"], B["dock_uncorr"]["ratio75"], B["dock_uncorr"]["vsense"] / I["vin_sense_abs"]),
@@ -545,30 +617,36 @@ def compute():
     row("the clamp shorted with board P's FETs welded (two faults)", "%g to %g A prospective" % (C["pf_low"], C["pf_high"]), "F1, 25 A MINI",
         "at most %g s at %g A and over (its %g %% row)" % (C["mini_rows"][4][2], C["blade_a"] * C["mini_rows"][4][0] / 100.0, C["mini_rows"][4][0]),
         "the board P bands to the clamp (decision 28's copper)", "the clamp's short alone is cleared by the AFE's ASCD (R10 sees it, IF-6)", "printed (F1's 600 % row); disposition stated, no new defect")
+    row("the clamp failing resistive with board P's FETs welded (two faults)", "%.2f to %.0f A" % (C["blade_a"] * C["mini_rows"][1][0] / 100.0, C["blade_a"] * C["mini_rows"][4][0] / 100.0), "F1 and F2",
+        "F1's %g s and %g s rows; F2's %g %% opens within %g s" % (C["mini_rows"][1][2], C["mini_rows"][2][2], C["f2"]["open_pct"], C["f2"]["open_s"]),
+        "the clamp's own dissipation and board P's loop for up to that time; the breaker is downstream and cannot act",
+        "alone, the AFE's AOLD (%g A, %g ms) through Q1/Q2" % (C["gauge"][2][1], C["gauge"][2][2] * 1e3), "printed (F1's and F2's rows); a second fault: disposition stated, no new defect (the battery stream reviews)")
     row("the shore input, Q7 shorted", "F1's envelope (not through board P)", "F1, 10 A MINI", "section 14.6", "J_DCIN, R19", "OVER", "DESIGN DEFECT DD-3 (L4-E11)")
     R["table"] = T
     # 6. defects, interfaces, evidence
     R["defects"] = [
         ("DD-1", "W4DP-F2: no firmware-independent element opens the discharge path with board P's FETs welded; the breaker of section 3 is drafted here, not drawn", "board P's generator with W4DP-F2's owner (the battery stream)"),
-        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected: (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere)" % (
-            a, t0, dt_band, pr17, J[2]["apart"], J[2]["anywhere"], J[3]["apart"], J[3]["anywhere"]), "L4-E11 (E11-29 restated as the junction limit; Q41 and its land; E11-37 with three)"),
+        ("DD-2", "the charger's battery FETs: TJ at most 150 C held at %.2f A from %.2f C, with the band (%.2f K) and R17 (%.2f W) in place; the pair would need (Zself + Zmut) at most %.2f K/W (%.2f K/W with R17 anywhere), so a third BUK6Y10-30P is selected (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most %.2f K/W with R17 designed apart (%.2f K/W anywhere), with the thermal guard behind it; condition C3" % (
+            a, t0, dt_band, pr17, J[2]["apart"], J[2]["anywhere"], J[3]["apart"], J[3]["anywhere"]), "L4-E11 (E11-29 restated as the junction limit; the third FET, its designator and land; E11-37 with three)"),
         ("DD-3", "R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6)", "L4-E11"),
         ("DD-4", "the Keystone 3568 holder prints no current rating", "Layer 6/7"),
         ("DD-5", "BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, %.1f W at %.2f A held (VSD %g V at most), about %g W at 10 A" % (I["q12_vsd"] * a, a, I["q12_vsd"], I["batf20_w10"]),
          "the battery stream (BAT-F20, EQ-15)"),
-        ("DD-6", "docking with the breaker on takes it past its SOA and VIN to SENSE's maximum (table); the make-last enable C-1b is drafted here, not drawn", "board P's generator with the battery stream (the UVLO circuit); board E's generator (J_SMB's fifth contact); Layer 7 with L4-E11 (the dock's make-last contact and its land on board A)"),
+        ("DD-6", "docking with the breaker on takes it past its SOA and VIN to SENSE's maximum (table); the make-last enable loop C-1b with its RC hold and the thermal guard is drafted here, not drawn; conditions C1 and C2", "board P's generator with the battery stream (the UVLO circuit); board E's generator (two J_SMB contacts with a ground between); Layer 7 with L4-E11 (two make-last dock contacts, the loop and the PTC on board A)"),
     ]
     R["interfaces"] = [
-        ("IF-1", "board A's loads on VSYS stay off until the breaker's start ends (at most %.1f ms after the enable, plus the %.1f ms insertion), or follow its PGD" % (B["start_max"] * 1e3, B["t_ins"][1] * 1e3), "L4-E11 with board A's generator"),
+        ("IF-1", "board A's loads on VSYS stay off until the breaker's start ends (at most %.1f ms after the gate rises, which is up to %.3f s after the enable mates), or follow its PGD" % (B["start_max"] * 1e3, B["grace"][1]), "L4-E11 with board A's generator"),
         ("IF-2", "each breaker FET's installed RthJA at most %.1f C/W (the sheet prints %g on 1 in2 of 2 oz, %g on its least pad); two 1 in2 pads take %.0f mm2 of the %.0f mm2 left on the P2 placement's top face (%.0f mm2 a face, %.0f placed, %.0f the holes; the bottom face empty), leaving %.0f mm2 for the round 4 parts, the breaker's other parts and the bands where they do not lie in the pads (an area budget, not a floor plan; the FETs' drain pads are the breaker's input band); the controller beside RS, VIN's bypass at RS" % (
             B["rthja_need"], I["fet_rthja"], I["fet_rthja_min_cu"], B["p_pads"], B["p_free"], B["p_face"], I["p_courtyards"]["F"], I["p_holes"], B["p_free"] - B["p_pads"]), "board P's generator"),
         ("IF-3", "the energy chain: a stage for the breaker between PACK_FETS and PACK_LEAD (its limit %.2f A)" % a, "the energy chain's owner (the integrator)"),
         ("IF-4", "the gauge's OCD1/OCD2 stay the first level with working FETs; no setting changes", "the firmware owner"),
         ("IF-5", "the pack's terminal is live only while the enable is closed: a host other than the kit's dock closes it or gets a dead terminal (fail-safe); board A's pre-charge pin J_PRE1 and R1 are no longer exercised at docking; E11-30's docking waveform no longer arises with the breaker in place", "the battery stream (CONOPS); board A's generator; L4-E11"),
-        ("IF-6", "the gauge's PACK and VCC taps stay on Q2's source node; the clamp and the controller return to PACK_N, so a clamp short passes R10 where the AFE sees it; the breaker's output becomes the terminal PACK_P with D1 on it (its %g A forward surge against the %.2f A the lead can carry at turn-off)" % (I["d1_ifsm"], B["icb_max"]), "board P's generator"),
+        ("IF-6", "the gauge's PACK and VCC taps stay on Q2's source node; the clamp and the controller return to PACK_N, so a clamp short passes R10 where the AFE sees it; the breaker's output becomes the terminal PACK_P with D1 on it: its %g A for %g ms half-sine is %.1f A2s, so the lead's freewheel at the pack's %g A prospective is within it for any loop L/R up to %.2f ms (%.1f uH in that loop); the enable circuit: R_U %g kOhm from VIN to UVLO with C_U %g uF (50 V), two 2N7002 inverters (gates %.1f V at most under VIN's %.1f V clamp, %.2f V and %.1f V at least at %.1f V, against %g V and %g V), the discharge through %g ohm at %.0f mA at most against %g mA" % (
+            I["d1_ifsm"], I["d1_t"] * 1e3, B["d1_i2t"], C["pf_high"], B["d1_tau_max"] * 1e3, B["d1_l_max"] * 1e6, R_U / 1e3, B["cu"] * 1e6,
+            max(B["g1_max"], B["g2"][1]), I["tvs"]["vc"], B["g1_on_sense"], B["g2"][0], I["vmin"], I["n7_vgs"], I["n7_vth"][1], R_DIS, B["i_dis"] * 1e3, I["n7_id"] * 1e3), "board P's generator"),
     ]
     R["missing"] = [
-        ("E-1", "the battery FETs' junction limit", "the coupon of L4-E11 section 17 with Q39 to Q41, the band carrying %.2f A and R17 dissipating in place" % a,
+        ("E-1", "the battery FETs' junction limit", "the coupon of L4-E11 section 17 with the three battery FETs, the band carrying %.2f A and R17 dissipating in place" % a,
          "the hottest junction at most 150 C referred to %.2f C; R17's coupling into each junction at most %g K/W (heat R17 alone)" % (t0, R17_ALLOW), "the body diode's VSD method"),
         ("E-2", "the breaker's power limit at its design point", "six LM5069-2 on the board P specimen", "the shorted-output current at %.1f V and %.1f V within %.2f to %.2f A, at -40, 25 and 125 C (the table is printed at 48 V)" % (
             vmax, I["vmin"], B["plim_min"] / vmax, B["plim_max"] / vmax), "the supplier's bench, against Q-TI-L9S-1"),
@@ -587,6 +665,19 @@ def compute():
         ("E-10", "the pack current at key-down", "board A and the transmitters at the %g A service" % service, "the instantaneous pack current under %.2f A, or excursions above it each under %.3f ms and under %.2f %% of the time (the timer's integration)" % (
             B["icl_min"], B["tf_min"] * 1e3, 100 * B["d_ratchet"]), "the supplier's bring-up bench"),
         ("E-11", "the breaker FETs' installed path", "the board P specimen", "RthJA at most %.1f C/W per FET by the body diode's VSD method" % B["rthja_need"], "the supplier"),
+        ("E-12", "the enable loop", "the built kit at commissioning and at each service", "undocked, PACK_P dead; each loop conductor shorted to ground in turn, the breaker stays off when docked; the release after the enable mates at least %.3f s" % B["grace"][0],
+         "the supplier's commissioning procedure"),
+        ("E-13", "the thermal guard", "the battery FETs' coupon (E-1) with the PTC in place, and one with a FET's thermal pad left unsoldered",
+         "no trip through the service (%g A for %g s after %g A held at %.2f C); the breaker off before the hottest junction passes 150 C at %.2f A held" % (service, C["kd_s"], cont, t0, a), "the supplier's thermal bench"),
+    ]
+    R["conditions"] = [
+        ("C1", "mating order: every power pin mates before the enable contacts at any angle the dock's guides allow. Without a hold a reversed order of more than %.2f ms lets OUT pass %.2f V and meet the breaker's %.2f A threshold at mate (OUT rises at %.3f V/ms through the %.1f mOhm loop); the RC hold (SELECTED) tolerates a reversed order up to %.1f ms" % (
+            B["t_rev0"] * 1e3, B["icb_min"] * vmax / C["dock_pk"], B["icb_min"], B["dvdt"] * 1e-3, 1e3 * vmax / C["dock_pk"], B["t_rev_hold"] * 1e3),
+         "Layer 7 (the order); board P's generator (the hold)"),
+        ("C2", "a single fault on the enable must not enable the breaker unseen: the enable is a loop through board A, so a short to ground on either conductor holds the breaker off (fail-safe, revealed at the next docking because the kit does not start); a short between the two conductors is kept off by a ground contact between them in J_SMB and on the block; the inverters' own failures are found by E-12 at commissioning and at each service",
+         "board P's generator; board E's generator; Layer 7; the supplier (E-12)"),
+        ("C3", "the third battery FET's Ciss, %.2f nF typical (about %.2f near 0 V) against TI's %g nF guidance: production conformance needs Q-TI-17's answer or E11-37's bench with three; the pair at %.2f K/W is the fallback" % (
+            J["ciss"][3][0], J["ciss"][3][1], I["ciss_ti"], J[2]["apart"]), "L4-E11"),
     ]
     R["questions"] = [
         ("Q-TI-L9S-1", "LM5069: the power limit's accuracy at VSNS %.2f mV, and every limit at VIN %.1f to %.1f V (the table is printed at 48 V); VIN to SENSE above its %g V maximum for the microseconds before the gate is low in a hot short (%.0f A on this sense)" % (
@@ -600,8 +691,8 @@ def compute():
             I["r_pre"], cout * 1e6, tau * 1e3, B["pre"]["t_cb"] * 1e3, B["pre"]["t_abs"] * 1e3, I["vin_sense_abs"], a),
         "the pair kept at (Zself + Zmut) at most %.2f K/W with R17 apart: %.0f %% under E11-29's present %g K/W, which L4-E11 judged of the order a board pour gives; it stays the fallback if E11-37 refuses three FETs" % (
             J[2]["apart"], 100 * (1 - J[2]["apart"] / rth), rth),
-        "a thermal trip on the battery FETs' copper (the kit's PRF15BB103 chip PTC, %g +-%g C at 47 kOhm, into the enable loop): with E11-29's present target the %g A service already reaches %.1f C, inside its band" % (
-            I["ptc"][0], I["ptc"][1], service, J["ptc_service_pair"]),
+        "a single-wire enable to board A's ground: a short to ground, the commonest harness fault, would enable the breaker unseen (C2)",
+        "no RC hold: a reversed mating order of %.2f ms would bring B-P1 back (C1)" % (B["t_rev0"] * 1e3),
         "a controller with a tighter limit tolerance now: the LM5066I of SLVA673A's examples, its sheet not held; it is E-5's fallback",
     ]
     # 7. the predicates
@@ -631,7 +722,16 @@ def compute():
         B["dock_uncorr"]["ratio"] > 1.0 and B["dock_uncorr"]["ratio75"] > 1.0 and B["dock_uncorr"]["vsense"] > I["vin_sense_abs"])
     pr["with the make-last enable a docking is a start: under the power limit, the current limit and VIN to SENSE's maximum"] = (
         B["start_p"] < B["plim_min"] and B["inrush_max"] < B["icl_min"] and B["dock_vsense"] < I["vin_sense_abs"])
-    pr["the enable breaks before the power pins at a withdrawal under 2 m/s"] = B["v_withdraw"] > 2.0
+    pr["the enable breaks before the power pins at a withdrawal under 0.5 m/s"] = B["v_withdraw"] > 0.5
+    pr["the RC hold's least release delay is at least its target, and it tolerates a reversed order longer than the hold-free 1.9 ms"] = (
+        B["grace"][0] >= GRACE_TARGET and B["t_rev_hold"] > B["t_rev0"] and 1.8e-3 < B["t_rev0"] < 2.0e-3)
+    pr["UVLO passes its threshold at the pack's least voltage against the largest hysteresis sink"] = B["uv_vinf_lo"] > I["uvth"][1]
+    pr["the inverters' gates stay inside VGS under VIN's clamp and over the threshold at the pack's least voltage"] = (
+        max(B["g1_max"], B["g2"][1]) < I["n7_vgs"] and min(B["g1_on_cold"], B["g1_on_sense"], B["g2"][0]) > I["n7_vth"][1])
+    pr["the UVLO discharge stays inside the 2N7002's continuous current"] = B["i_dis"] < I["n7_id"]
+    pr["the PTC's maximum voltage covers VIN's clamp"] = I["ptc_vmax"] >= B["ptc_v_tripped"]
+    pr["the thermal guard's band sits above the service at the allowances and under 150 C"] = J["ptc_window"][0] > 0 and J["ptc_hi"] + J["jmb"] < lim
+    pr["under BAT-F20 Q1's body diode is over its pad's loss at 10 A and at 18 A"] = B["q1_w"][cont][0] > B["q1_allow_w"] and B["q1_w"][service][0] > B["q1_allow_w"]
     pr["the pre-charge pin needs a lead a hand does not bound (over 1 ms either way)"] = min(B["pre"]["t_cb"], B["pre"]["t_abs"]) > 1e-3
     pr["the pair cannot hold the junction limit at E11-29's present target"] = J[2]["apart"] < rth
     pr["three FETs hold it with R17 apart at a path above E11-29's present target"] = J[3]["apart"] > rth
@@ -640,7 +740,7 @@ def compute():
     pr["the cells' admissible split at the largest limit is under 0.5 %"] = B["split_max"] < 0.005
     pr["the LM5069's spread is wider than a 5 % split allows (E-5's fallback is a tighter controller)"] = B["spread"] > B["spread_need"]
     pr["the precharge through a body diode stays under 150 C"] = B["pre_tj"] < I["fet_tj"]
-    pr["D1's forward surge rating covers the lead's current at turn-off"] = B["d1_ratio"] < 1.0
+    pr["D1's I2t covers the lead's freewheel at the pack's prospective current for an L/R over 0.1 ms"] = B["d1_tau_max"] > 1e-4
     pr["the FETs' 1 in2 pads fit the P2 placement's free top face"] = B["p_pads"] < B["p_free"]
     pr["the installed RthJA the derating needs lies between the sheet's two printed boards"] = I["fet_rthja"] <= B["rthja_need"] < I["fet_rthja_min_cu"]
     R["pred"] = pr
@@ -712,9 +812,12 @@ def render(R):
     w("     with Figure 10 read %g %% high (the SOA %g %% lower): %.2f and %.2f; TI's margin holds up to an installed RthJA of %.1f C/W per FET" % (
         I["rd"]["uncertainty_pct"], I["rd"]["uncertainty_pct"], B["fault_ratio_low"], B["start_ratio_low"], B["rthja_need"]))
     w("     the 10 us line at %.1f V: %.1f A at 25 C; IDM %g A against the breaker's %.2f A (SLVA673A 3.1.2.2)" % (R["vmax"], B["i10us"], I["fet_idm"], B["icb_max"]))
-    w("   input clamp: %s on VIN (VR %g V, VBR %g V least, VC %g V at %g A), the part on board A's VBAT; output: board P's D1 (SMBJ20A), %g A forward" % (
-        TVS, I["tvs"]["vr"], I["tvs"]["vbr_min"], I["tvs"]["vc"], I["tvs"]["ipp"], I["d1_ifsm"]))
-    w("     surge (8.3 ms) against the %.2f A the lead can carry when the gate turns off (LM5069 11.1.2 B): %.2f" % (B["icb_max"], B["d1_ratio"]))
+    w("   input clamp: %s on VIN (VR %g V, VBR %g V least, VC %g V at %g A), the part on board A's VBAT; output: board P's D1 (SMBJ20A)" % (
+        TVS, I["tvs"]["vr"], I["tvs"]["vbr_min"], I["tvs"]["vc"], I["tvs"]["ipp"]))
+    w("     carries the lead's freewheel when the gate turns off (LM5069 11.1.2 B): on I2t, its %g A for %g ms half-sine is %.1f A2s; the freewheel" % (
+        I["d1_ifsm"], I["d1_t"] * 1e3, B["d1_i2t"]))
+    w("     decays with the loop's L/R (not held), so at the pack's %g A prospective it is within it for an L/R up to %.2f ms (%.1f uH in that loop)" % (
+        C["pf_high"], B["d1_tau_max"] * 1e3, B["d1_l_max"] * 1e6))
     w("     VIN to SENSE's %g V maximum is passed above %.1f A, which only a hot short reaches before the gate is low (Q-TI-L9S-1, E-3)" % (I["vin_sense_abs"], B["sense_abs_a"]))
     w("   controller: VIN %g to %g V recommended, on from %g V at most; the pack %.1f to %.1f V; OVLO to ground; UVLO from VIN through the enable" % (
         I["vin_roc"][0], I["vin_roc"][1], I["poren_max"], I["vmin"], R["vmax"]))
@@ -727,11 +830,22 @@ def render(R):
     w("3a. B-P1: DOCKING. Without a correction the breaker is on when the dock's power pins mate, so a docking reaches E11-30's %.1f A:" % C["dock_pk"])
     w("     VIN to SENSE %.3f V against the %g V maximum; the 10 us line at %.1f V derated to the %.1f C case is %.1f A (%.2f x over it), at a 75 C case %.2f x" % (
         B["dock_uncorr"]["vsense"], I["vin_sense_abs"], R["vmax"], B["tc"], B["dock_uncorr"]["i10_der"], B["dock_uncorr"]["ratio"], B["dock_uncorr"]["ratio75"]))
-    w("   C-1b SELECTED: a make-last enable contact into UVLO (LM5069 11.1.1 and Figure 45). On board P a 2N7002 holds UVLO low unless the enable line")
-    w("     is grounded; the line runs on a fifth J_SMB contact to board E and on to a dock contact %g mm short of the power pins that meets board A's" % D_EN_MM)
-    w("     ground. Docking: the power pins mate with the breaker off; the enable mates; after the insertion time (%.2f to %.2f ms) a dv/dt start at" % (B["t_ins"][0] * 1e3, B["t_ins"][1] * 1e3))
-    w("     %.3f A at most, VIN to SENSE %.2f mV. Undocking: the enable breaks first and the gate is off %.0f us later, before the pins part at any" % (B["inrush_max"], B["dock_vsense"] * 1e3, B["t_off_timer"] * 1e6))
-    w("     withdrawal under %.2f m/s. An open line is off (fail-safe). The gauge's own FET turning on is also a start now: E11-30's waveform no longer arises" % B["v_withdraw"])
+    w("   C-1b SELECTED: a make-last enable loop into UVLO (LM5069 11.1.1 and Figure 45), with an RC hold. The loop leaves board P from VIN through")
+    w("     %g kOhm on one J_SMB contact, crosses the dock on two contacts %g mm short of the power pins, passes board A's chip PTC beside the battery" % (R_E1 / 1e3, D_EN_MM))
+    w("     FETs (the thermal guard, section 4) and returns on a second J_SMB contact, a ground contact between the two, to a %g kOhm divider on the" % (R_E2 / 1e3))
+    w("     first 2N7002's gate; that FET holds the second's gate low, and the second, when on, discharges UVLO through %g ohm. UVLO charges from VIN" % R_DIS)
+    w("     through R_U %g kOhm into C_U %g uF against the %g to %g uA hysteresis sink (at %.1f V it settles at %.1f V, over %g V)." % (
+        R_U / 1e3, B["cu"] * 1e6, I["uvhys"][0] * 1e6, I["uvhys"][1] * 1e6, I["vmin"], B["uv_vinf_lo"], I["uvth"][1]))
+    w("   the timing: the insertion time runs only when VIN passes PORIT, so it applies to a start by the gauge's own FET (%.2f to %.2f ms), not to a" % (B["t_ins"][0] * 1e3, B["t_ins"][1] * 1e3))
+    w("     docking; on the enable the LM5069 raises the gate UVLODEL (%g us typical, no maximum printed) after UVLO passes %g to %g V, which the RC" % (I["uvdel"][0] * 1e6, I["uvth"][0], I["uvth"][1]))
+    w("     hold makes %.3f to %.3f s after the enable mates; then a dv/dt start at %.3f A at most, VIN to SENSE %.2f mV" % (B["grace"][0], B["grace"][1], B["inrush_max"], B["dock_vsense"] * 1e3))
+    w("     without the hold a power pin mating %.2f ms late meets OUT at %.2f V (the dv/dt rate %.3f V/ms): the breaker's least %.2f A through the loop;" % (
+        B["t_rev0"] * 1e3, B["icb_min"] * R["vmax"] / C["dock_pk"], B["dvdt"] * 1e-3, B["icb_min"]))
+    w("     with it a reversed order up to %.1f ms is tolerated (condition C1)" % (B["t_rev_hold"] * 1e3))
+    w("   undocking: the loop opens; the first inverter is off in %.1f us, the second on in %.1f us, UVLO under its threshold in %.3f ms, the gate low %.0f us" % (
+        B["t_break_parts"][0] * 1e6, B["t_break_parts"][1] * 1e6, B["t_break_parts"][2] * 1e3, B["t_off_timer"] * 1e6))
+    w("     later: %.2f ms in all, before the pins part at a withdrawal under %.2f m/s. Any open is off (fail-safe); a short to ground on either loop" % (B["t_break"] * 1e3, B["v_withdraw"]))
+    w("     conductor holds it off (condition C2). The gauge's own FET turning on is a start too: E11-30's waveform no longer arises")
     w("   the alternative, an inrush element at board A's dock entry, is not taken (the not-taken list above): the pre-charge pin's lead time is the hand's")
     w("")
     w("4. B-P2: THE BATTERY FETS' JUNCTION LIMIT AND EVERY SERIES PART AT THE BREAKER'S LARGEST LIMIT, %.2f A, FROM %.2f C" % (B["icl_max"], R["t0"]))
@@ -744,8 +858,17 @@ def render(R):
         w("   %-34s %.3f W each: FETs only %.2f K/W; R17 apart %.2f K/W; R17 anywhere %.2f K/W" % (lab, J[n_]["p"], J[n_]["fet_only"], J[n_]["apart"], J[n_]["anywhere"]))
     w("   E11-29's present target is %g K/W; Ciss: the pair %.2f nF at -15 V and %.2f near 0 V, three %.2f and about %.2f, against TI's %g nF (L4-E11 16c, E11-37)" % (
         P["rth"], J["ciss"][2][0], J["ciss"][2][1], J["ciss"][3][0], J["ciss"][3][1], I["ciss_ti"]))
-    w("   SELECTED: a third BUK6Y10-30P (Q41), R17 designed apart: the path asked is %.2f times E11-29's present target, where the pair would need %.2f" % (J["vs_target"], J[2]["apart"] / P["rth"]))
-    w("     of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V: E11-37's bench with three decides, the pair is the fallback")
+    w("   SELECTED: a third BUK6Y10-30P (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is %.2f times" % J["vs_target"])
+    w("     E11-29's present target, where the pair would need %.2f of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:" % (J[2]["apart"] / P["rth"]))
+    w("     E11-37's bench with three decides (condition C3), the pair is the fallback")
+    w("   THE THERMAL GUARD (SELECTED, a guard against the path never being met, unit by unit): the kit's PRF15BB103 chip PTC (%g kOhm +-%.0f %%," % (I["ptc_r25"] / 1e3, 100 * I["ptc_tol"]))
+    w("     %g kOhm at %g +-%g C, %g V) in the enable loop on the battery FETs' copper: the first inverter stays on to %g kOhm at %.1f V (gate %.2f V against" % (
+        I["ptc_r_sense"] / 1e3, I["ptc"][0], I["ptc"][1], I["ptc_vmax"], I["ptc_r_sense"] / 1e3, I["vmin"], B["g1_on_sense"]))
+    w("     %g V) and is off from %.0f kOhm at %.1f V: the breaker opens between the PTC's 47 kOhm point (%.0f to %.0f C) and its %.0f kOhm point (not printed," % (
+        I["n7_vth"][1], B["r_trip_max"] / 1e3, R["vmax"], J["ptc_lo"], J["ptc_hi"], B["r_trip_max"] / 1e3))
+    w("     E-13); the service at the allowances reads %.1f C, %.1f to %.1f K under the band; a junction leads its copper by %.2f K at %.2f A (Rth(j-mb) %g K/W)" % (
+        J["tj_service"], J["ptc_window"][0], J["ptc_window"][1], J["jmb"], B["icl_max"], I["bat_rthjmb"]))
+    w("     after a trip the breaker restarts through the RC hold when the PTC cools")
     w("   at the allowances: %.1f C at %g A, %.1f C at the %g A service, %.1f C at %.2f A" % (J["tj_cont"], R["cont"], J["tj_service"], R["service"], J["tj_held"], B["icl_max"]))
     for s_ in R["series"]:
         w("   %-62s %-58s %s  %s" % (s_["name"], s_["reading"], "[%.2f]" % s_["frac"] if s_["frac"] is not None else "[-]", s_["status"]))
@@ -762,6 +885,9 @@ def render(R):
     w("")
     w("6. DESIGN DEFECTS (unresolved, each with its owner)")
     for k, what, who in R["defects"]:
+        w("   %s %s; owner %s" % (k, what, who))
+    w("   CONDITIONS")
+    for k, what, who in R["conditions"]:
         w("   %s %s; owner %s" % (k, what, who))
     w("   INTERFACE DEMANDS")
     for k, what, who in R["interfaces"]:

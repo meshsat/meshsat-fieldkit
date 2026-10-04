@@ -820,10 +820,13 @@ def t_protection_the_defects_and_the_evidence_have_owners():
     assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 7)] and all(d[2] for d in R["defects"])
     assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2] and "BAT-F20" in R["defects"][4][1]
     assert "board P's generator" in R["defects"][5][2] and "Layer 7" in R["defects"][5][2]
-    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 12)]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 14)]
+    assert [c[0] for c in R["conditions"]] == ["C1", "C2", "C3"] and all(c[2] for c in R["conditions"])
+    assert "Layer 7" in R["conditions"][0][2] and "L4-E11" == R["conditions"][2][2] and "C1 and C2" in R["defects"][5][1]
     assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 7)]
     assert all("not sent" in q[2] for q in R["questions"]) and "48 V" in R["questions"][0][1]
-    assert len(R["not_taken"]) == 6 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
+    assert len(R["not_taken"]) == 7 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
+    assert any("single-wire" in x for x in R["not_taken"]) and not any("PTC" in x for x in R["not_taken"])
 
 
 def t_protection_the_page_carries_the_outputs_figures():
@@ -846,7 +849,11 @@ def t_protection_the_page_carries_the_outputs_figures():
         assert fig in s15, "section 15 does not carry %s" % fig
     for k in ("DD-%d" % i for i in range(1, 7)):
         assert k in s15, "section 15 does not name %s" % k
-    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "Q-TI-L9S-1", "C-1b") + tuple("E-%d" % i for i in range(1, 12)):
+    for fig in ("%.3f" % B["grace"][0], "%.3f" % B["grace"][1], "%.2f" % (B["t_rev0"] * 1e3), "%.1f" % (B["t_rev_hold"] * 1e3), "%.2f" % B["v_withdraw"],
+                "%.2f" % (B["t_break"] * 1e3), "%.1f" % B["d1_i2t"], "%.2f" % (B["d1_tau_max"] * 1e3), "%.1f" % (B["d1_l_max"] * 1e6),
+                "%.1f" % J["ptc_window"][0], "%.1f" % J["ptc_window"][1], "%.0f" % (B["r_trip_max"] / 1e3), "%.2f" % B["g1_on_sense"], "%.1f" % B["g1_max"]):
+        assert fig in s15, "section 15 does not carry %s" % fig
+    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "Q-TI-L9S-1", "C-1b", "C1", "C2", "C3") + tuple("E-%d" % i for i in range(1, 14)):
         assert k in s15, "section 15 does not name %s" % k
     for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19", "L9C-F20", "L9C-F21", "L9C-F22"):
         assert f in t
@@ -887,7 +894,7 @@ def t_protection_the_docking_correction_on_the_derated_curve():
     # C-1b: the insertion time from the sheet's insertion current, then the dv/dt start's current under every limit
     assert _close(B["t_ins"][0], 10e-9 * 0.9 * LM["vtmrh"][0] / 8e-6) and _close(B["t_ins"][1], 10e-9 * 1.1 * LM["vtmrh"][1] / 3e-6)
     assert B["inrush_max"] * rs < 0.3 and B["inrush_max"] < B["icl_min"] and B["start_p"] < B["plim_min"]
-    assert _close(B["v_withdraw"], 1e-3 / B["t_off_timer"])
+    assert _close(B["v_withdraw"], 1e-3 / B["t_break"]) and B["t_break"] > B["t_off_timer"]
     # the alternative: board A's pre-charge pin needs a lead the hand sets
     tau = 10.0 * 593e-6
     r_loop = 16.8 / C["dock_pk"]
@@ -911,7 +918,8 @@ def t_protection_the_minors_folded_in():
     assert _close(B["d_ratchet"], 1.25e-6 / (120e-6 + 1.25e-6))
     assert "18 A for 60 s after 10 A held" in miss["E-7"][3] and "103 C" in miss["E-3"][3]
     assert _close(B["pre_w"], I["fet_vsd"] * 1.0) and B["pre_tj"] < 150
-    assert _close(B["d1_ratio"], B["icb_max"] / 100.0)
+    assert _close(B["d1_i2t"], 100.0 ** 2 * 8.3e-3 / 2) and round(B["d1_i2t"], 1) == 41.5
+    assert _close(B["d1_tau_max"], 2 * B["d1_i2t"] / C["pf_high"] ** 2) and B["d1_tau_max"] > 1e-4
     assert B["p_face"] == 70 * 44 and B["p_pads"] < B["p_free"]
     assert any("BAT-F20" in s_["name"] for s_ in R["series"])
     assert any("reverse" in r["case"] for r in R["table"])
@@ -926,3 +934,33 @@ def t_copper_the_zero_cost_route_is_listed_and_not_credited():
     assert "(4)" in ask and "%.2f mm each" % W["alone_1k"] in ask and "%.2f mm plus the gap" % (2 * W["alone_1k"]) in ask
     assert "up to %.2f mm" % gap in ask and "no term for the distance" in ask and "coupon" in ask
     assert "%.2f mm" % gap in _C["ctext"] and "no gap is credited" in _C["ctext"]
+
+
+def t_protection_the_conditional_confirmations_corrections():
+    _PR()
+    R, B, J = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["J"]
+    C, I = R["cu"], R["in"]
+    text = _C["ptext"]
+    # 1. the docking's timing: the insertion time belongs to the gauge's FET start; on the enable the gate rises UVLODEL after UVLO's threshold
+    assert _close(I["uvdel"][0], 55e-6) and "no maximum printed" in text and "applies to a start by the gauge's own FET" in text
+    rows = {r["case"]: r for r in R["table"]}
+    dock = rows["docking, the make-last enable (C-1b)"]["cur"]
+    assert "%.3f to %.3f s after the enable mates" % (B["grace"][0], B["grace"][1]) in dock and "PORIT" not in dock
+    assert "PORIT" in rows["a start (the gauge's FET on, a retry, assembly)"]["cur"]
+    # the RC hold, recomputed: R_U against the hysteresis sink into C_U
+    vhi = 16.8 - 12e-6 * 200e3
+    assert _close(B["grace"][0], B["cu"] * 0.9 * 200e3 * 0.99 * math.log(vhi / (vhi - 2.45))) and B["grace"][0] >= 0.1
+    assert _close(B["t_rev0"], B["icb_min"] * (16.8 / C["dock_pk"]) / (22e-6 / (B["cdv"] * 0.9))) and 1.8e-3 < B["t_rev0"] < 2.0e-3
+    # 2. Q41 is l8r2's; the third battery FET's designator is L4-E11's
+    for line in text.splitlines():
+        if "Q41" in line:
+            assert "l8r2" in line, "Q41 named outside its owner: %s" % line.strip()[:120]
+    # 3. BAT-F20 on the 10 A and 18 A rows
+    for case in ("10 A continuous", "18 A for 60 s"):
+        assert "DD-5" in rows[case]["status"] and "Q1 OVER" in rows[case]["margin"]
+    assert B["q1_w"][10.0][0] / B["q1_allow_w"] > 4 and round(B["q1_w"][18.0][1]) == 18
+    # 5. the PTC guard, selected on its window
+    assert 8.9 < J["ptc_window"][0] < 9.1 and J["ptc_hi"] + J["jmb"] < 150 and any(k[0] == "E-13" for k in R["missing"])
+    # the minors: the inverters' gates and the discharge, the clamp's resistive failure
+    assert B["g1_max"] < 20 and B["g2"][1] < 20 and min(B["g1_on_sense"], B["g2"][0]) > 2.5 and B["i_dis"] < 0.115
+    assert any(r["case"].startswith("the clamp failing resistive") for r in R["table"])
