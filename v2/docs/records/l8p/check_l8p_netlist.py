@@ -19,8 +19,9 @@ reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
                  on UVLO; Q106's gate on U101's PGD net (with R116 from BRK_VIN and R117 to the return) and its drain on Q105's gate;
                  C106 on U102's supply; the values
            REV   the reverse-charge detector (B-R2, route R1, round 3): U103 (OPA187) +IN on R10's cell side (the net R10 shares
-                 with no PACK_N pin, through R120) with C109 to the return, -IN on R118 from U101's VIN over R119 to the return, V+
-                 on U101's VIN, V- on the return; U104 (OPA187) +IN on PACK_P over R121 and R122, -IN on BRK_SNS over R123 and
+                 with no PACK_N pin, through R120) with C109 to the return, -IN on R118 over R119 to the return from REV_VZ, which
+                 R129 feeds from U101's VIN and D103 (BZT52C12, cathode on REV_VZ) holds to the return; V+ on U101's VIN, V- on the
+                 return; U104 (OPA187) +IN on PACK_P over R121 and R122, -IN on BRK_SNS over R123 and
                  R124, C110 across its inputs, the same supply; R125 and R126 halve U103's output onto Q107's gate, R127 and R128
                  U104's onto Q108's; Q107 drain on the loop's return (Q103's gate net), source on Q108's drain; Q108 source on the
                  return: the two in series, so the return is held low only while both comparators are high; C107 and C108 on
@@ -209,8 +210,9 @@ INH_VALUES = ("RT101", "R110")
 # the restart inhibit's parts the record leaves to the drawing (record l8p's SESSION choices), each value's prefix
 INH_SESSION = (("U102", "OPA187"), ("R111", "147k 0.1%"), ("R112", "1.62k 0.1%"), ("R113", "15M"), ("Q105", "2N7002"), ("Q106", "2N7002"))
 # the reverse-charge detector (B-R2, route R1, round 3): record l8p's SESSION choices, each value's prefix
-REV_SESSION = (("U103", "OPA187"), ("U104", "OPA187"), ("R118", "1.5M 0.1%"), ("R119", "200R 0.1%"), ("R120", "1k"), ("C109", "100n"),
-               ("R121", "1M 0.05% 10ppm"), ("R122", "100k 0.05% 10ppm"), ("R123", "988k 0.05% 10ppm"), ("R124", "100k 0.05% 10ppm"),
+REV_SESSION = (("U103", "OPA187"), ("U104", "OPA187"), ("R118", "1.15M 0.1%"), ("R119", "200R 0.1%"), ("R120", "200R"), ("C109", "470n"),
+               ("R129", "47k"), ("D103", "BZT52C12"),
+               ("R121", "332k 0.05% 10ppm"), ("R122", "33.2k 0.05% 10ppm"), ("R123", "328k 0.05% 10ppm"), ("R124", "33.2k 0.05% 10ppm"),
                ("C110", "1n"), ("C107", "100n"), ("C108", "100n"), ("R125", "100k"), ("R126", "100k"), ("R127", "100k"), ("R128", "100k"),
                ("Q107", "2N7002"), ("Q108", "2N7002"))
 
@@ -274,13 +276,13 @@ def checks_p(nl):
     rows = [("U103", "1", "REV_IOUT"), ("U103", "2", ret), ("U103", "3", "REV_ISNS"), ("U103", "4", "REV_IREF"), ("U103", "5", vin_u),
             ("U104", "1", "REV_VOUT"), ("U104", "2", ret), ("U104", "3", "REV_VP"), ("U104", "4", "REV_VN"), ("U104", "5", vin_u),
             ("Q107", "1", "REV_IG"), ("Q107", "2", "REV_MID"), ("Q107", "3", _pin(nl, "Q103", "1")),
-            ("Q108", "1", "REV_VG"), ("Q108", "2", ret), ("Q108", "3", "REV_MID")]
+            ("Q108", "1", "REV_VG"), ("Q108", "2", ret), ("Q108", "3", "REV_MID"), ("D103", "1", "REV_VZ"), ("D103", "2", ret)]
     bad = props(nl, rows)
     if cell is None or ret not in nl["pins"].get("R10", {}).values():
         bad.append("R10 is not the sense between the cells and the return (%s)" % _two(nl, "R10"))
     if _pin(nl, "Q103", "1") != RET:
         bad.append("Q107's drain is not on the loop's return: Q103's gate reads %r" % _pin(nl, "Q103", "1"))
-    bad += _pairs(nl, (("R118", vin_u, "REV_IREF"), ("R119", "REV_IREF", ret), ("R120", cell, "REV_ISNS"), ("C109", "REV_ISNS", ret),
+    bad += _pairs(nl, (("R129", vin_u, "REV_VZ"), ("R118", "REV_VZ", "REV_IREF"), ("R119", "REV_IREF", ret), ("R120", cell, "REV_ISNS"), ("C109", "REV_ISNS", ret),
                        ("R121", "PACK_P", "REV_VP"), ("R122", "REV_VP", ret), ("R123", sns, "REV_VN"), ("R124", "REV_VN", ret),
                        ("C110", "REV_VP", "REV_VN"), ("R125", "REV_IOUT", "REV_IG"), ("R126", "REV_IG", ret),
                        ("R127", "REV_VOUT", "REV_VG"), ("R128", "REV_VG", ret), ("C107", vin_u, ret), ("C108", vin_u, ret)))
@@ -302,7 +304,7 @@ def checks_p(nl):
 
 
 def _ohms(value):
-    """A resistor value's leading figure in ohms: '988k 0.05% ...' is 988000.0, '200R ...' 200.0, '1.5M ...' 1500000.0."""
+    """A resistor value's leading figure in ohms: '328k 0.05% ...' is 328000.0, '200R ...' 200.0, '1.15M ...' 1150000.0."""
     m = re.match(r"([0-9.]+)\s*([RkKM]?)", str(value))
     if not m:
         raise ValueError(value)
