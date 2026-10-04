@@ -79,6 +79,7 @@ DRAFT = {"gnd002": "v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py", "fans12": 
 L6_HELP = ["v2/docs/records/l6r2/l6r2_apply.py", "v2/docs/records/l6r2/l6r2_land.py", "v2/docs/records/l6r2/l6r2_intent.py"]
 ENGINE = ["v2/ecad/tools/kisch.py", "v2/ecad/tools/intent.py", "v2/ecad/tools/idc_pads.py", "v2/ecad/tools/track_current.py", DC_DROP,
           "v2/docs/records/l8p/gen_netlist.py", "v2/docs/records/l8r2/check_l8r2_netlist.py", "v2/docs/records/l8r2/check_gndret_netlist.py",
+          "v2/docs/records/l8gnd/check_gnd002_netlist.py",
           "v2/docs/records/l8r2/l8r2_drafts.py"]
 # the record's own order of board B's round (rounds 1 to 6, l8r2_drafts.py L8_B, and record l9t5's ORDER): the change list's three rows
 # with this record's panel5v and ph4 (Layer 5's findings, no change-list row) between them; Layer 9's draft after the circuit
@@ -906,6 +907,14 @@ def main():
             w("     %s (netlist sha256 %s): %s\n" % (tag, hashlib.sha256(res["netlist"]).hexdigest()[:16], v))
             for l in lines:
                 w("       %s\n" % l)
+        # the same composed netlist under the two checks that had only read fixtures until a generator could be run on this host
+        import importlib.util as _ilu
+        _sp = _ilu.spec_from_file_location("l8gnd_check", P("v2/docs/records/l8gnd/check_gnd002_netlist.py"))
+        g2 = _ilu.module_from_spec(_sp); _sp.loader.exec_module(g2)
+        v8, l8 = CK._rd.judge("b", CK._rd.read_netlist(runs[0]["netlist"]))
+        vg, _lg = g2.judge("b", g2.read_netlist(runs[0]["netlist"]))
+        w("     the same composed netlist under the checks of the drafts it carries: check_l8r2_netlist.py (rounds 1 to 6, board B) %s\n"
+          "       (%s); record l8gnd's check_gnd002_netlist.py (board B) %s\n" % (v8, "; ".join(" ".join(x.split()) for x in l8), vg))
         # mutations
         w("   THE MUTATIONS (each must stop the generator or FAIL the check):\n")
         full = ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "iocbuck"]
@@ -1043,6 +1052,7 @@ def main():
             ("the four orders give one generator and each runs to its end", one_gen and all_run),
             ("the composed netlist and intent read DRAWN, the committed ones NOT DRAWN", vC == "NOT DRAWN" and all(v == "DRAWN" for v in checks.values())),
             ("every mutation stops the generator or fails the check", all_mut),
+            ("the composed netlist also reads DRAWN under check_l8r2_netlist.py and check_gnd002_netlist.py (board B)", v8 == "DRAWN" and vg == "DRAWN"),
             ("the derived peak equals the leads' sum and is not typed (22.23 A alone, 26.40 A composed, 27.78 A with Layer 9's)",
              g1 is not None and abs(g1["amps_peak"] - pk_0) < 1e-6 and abs(res5["intent"]["rails"]["GND"]["amps_peak"] - pk_c) < 1e-6 and abs(gi2["amps_peak"] - pk_i) < 1e-6),
             ("with Layer 9's draft the 5 V leads' declared peaks hold the budget's largest state with every start at once", bt[5] <= pk5_i),

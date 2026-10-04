@@ -689,10 +689,11 @@ def t_round7_the_committed_output_is_what_the_script_prints_and_its_predicates_h
     assert _sha(GEN_B) == before, "the script wrote into the tree"
     t = r.stdout.decode()
     preds = re.findall(r"^   (\S.*?)\s{2,}(yes|NO)$", t.split("\n8. PREDICATES\n")[1], re.M)
-    assert len(preds) >= 17 and all(v == "yes" for _p, v in preds), [p for p, v in preds if v != "yes"]
+    assert len(preds) == 18 and all(v == "yes" for _p, v in preds), [p for p, v in preds if v != "yes"]
     for s in ("the stop is reproduced after fans12 and at every later stage, without Layer 9's draft (rt500's line) and with it (iocbuck's line): yes",
               "WHICH DRAFT MOVES THE SUM: fans12 alone, by +1.770 A", "an UPPER BOUND", "the four orders give one generator, byte for byte: yes; every order runs to its end: yes",
-              "every mutation stops or fails: yes (8 of 8)", "L8R2-F31 OPEN", "SELECTED AS THE DIRECTION (authority SESSION): A1", "NOT DRAFTED in this round",
+              "every mutation stops or fails: yes (8 of 8)", "L8R2-F31 OPEN", "check_l8r2_netlist.py (rounds 1 to 6, board B) DRAWN",
+              "record l8gnd's check_gnd002_netlist.py (board B) DRAWN", "SELECTED AS THE DIRECTION (authority SESSION): A1", "NOT DRAFTED in this round",
               "(c) THE RETURN PATH DOES NOT HOLD ON THE MAKERS' PRINTED FIGURES", "NOT RAISED TO MAKE THE GENERATOR PASS",
               "C-DEV rev 1", "C-ALLTX rev 3", "PROTOTYPE DESIGN: nothing is built, bought, powered or measured"):
         assert s in t, s

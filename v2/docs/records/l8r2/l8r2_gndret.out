@@ -28,6 +28,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    e7702dbde301e4ae v2/docs/records/l8r2/check_gndret_netlist.py
+   fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
    701f6181c41fcf83 v2/docs/records/l8r2/l8r2_drafts.py
    6b9d1d051c21e052 v2/docs/records/l6r2/apply_gen_sch_b_intent.py
    a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
@@ -386,6 +387,8 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
        GND as declared: 13.3000 A typical, 27.7800 A peak, sources J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_5V_IOC, J_54V, 39 loads summing 22.1130 A
        the leads' own declarations sum to 13.3000 A typical and 27.7800 A peak
        board-to-board ground conductors on the netlist: 6 lead contacts (J_54V.2, J_5V_DEV.2, J_5V_IOC.2, J_5V_S1.2, J_5V_S2.2, J_5V_S3.2) and 17 ribbon conductors (J_AB1 pins 3,4,5,6,7,8,22,23,24; J_AB2 pins 3,4,5,6,7,8,9,10)
+     the same composed netlist under the checks of the drafts it carries: check_l8r2_netlist.py (rounds 1 to 6, board B) DRAWN
+       (B FANS DRAWN; B PNL DRAWN; B PH4 DRAWN); record l8gnd's check_gnd002_netlist.py (board B) DRAWN
    THE MUTATIONS (each must stop the generator or FAIL the check):
      m1 the old state: the full composition without the gndret draft
         STOPS: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same current as the peak: correct one of them.
@@ -467,6 +470,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    the four orders give one generator and each runs to its end                                                            yes
    the composed netlist and intent read DRAWN, the committed ones NOT DRAWN                                               yes
    every mutation stops the generator or fails the check                                                                  yes
+   the composed netlist also reads DRAWN under check_l8r2_netlist.py and check_gnd002_netlist.py (board B)                yes
    the derived peak equals the leads' sum and is not typed (22.23 A alone, 26.40 A composed, 27.78 A with Layer 9's)      yes
    with Layer 9's draft the 5 V leads' declared peaks hold the budget's largest state with every start at once            yes
    without it they do not, by the device lead's shortfall (I-03, OPEN, Layer 9's)                                         yes
