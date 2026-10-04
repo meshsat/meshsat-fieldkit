@@ -264,6 +264,9 @@ committed files: nothing was built, routed, measured or bought, and no figure be
 8. BOARD E'S CROSS-SECTION AND BOARD A'S CORRIDOR (each face)
    board E's pack end, the forward band and its return: 1 oz 78.29 mm, 2 oz 39.14 mm, 1 oz laid apart (no credit) 44.02 mm plus the gap;
      the strip is 68 mm: at 1 oz the pair cannot be laid side by side
+   the zero-cost route, (L9STK CU)'s option (4): the band and its return each 22.01 mm at 1 oz, laid apart, fit the strip with a gap up to
+     23.98 mm; decision 35's model holds no term for the distance between two conductors, so no gap is credited as apart: the route
+     needs a coupon (a board E strip at 1 oz with the band and its return at the gap carrying 25 A, each at most 10 K)
    board E's shore chain and VIN_RAW, each with its return, in one section: 1 oz 79.47 mm, 2 oz 39.74 mm
    board A's pack corridor, forward and return: 1 oz 78.29 mm, 2 oz 39.14 mm, of the board's 160 mm short side
 

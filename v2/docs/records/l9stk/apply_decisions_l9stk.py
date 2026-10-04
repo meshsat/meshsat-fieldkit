@@ -339,8 +339,11 @@ OPEN = dict(
          "two outer faces and its adjacent return rated as one conductor, a band and its return need 78.29 mm a face at 1 oz or "
          "39.14 mm at 2 oz; board E's 68 mm strip cannot lay the 1 oz pair at its pack end, and board A's floor plan has not shown "
          "a 78 mm corridor. Which: (1) 2 oz outer on A and E; (2) 1 oz on both with a layout change (on E the pack current taken "
-         "off the strip by an in-line MINI holder on the pack lead, on A the corridor shown by the supplier's floor plan); or (3) "
-         "2 oz on E and 1 oz on A with the corridor."),
+         "off the strip by an in-line MINI holder on the pack lead, on A the corridor shown by the supplier's floor plan); (3) "
+         "2 oz on E and 1 oz on A with the corridor; or (4), at no copper cost, 1 oz with each return laid apart from its band "
+         "(22.01 mm each, 44.02 mm plus the gap, inside board E's strip for a gap up to 23.98 mm), which decision 35's model cannot "
+         "credit because it holds no term for the distance between two conductors, so (4) waits on a coupon: a board E strip at "
+         "1 oz with the band and its return at the gap carrying 25 A, each at most 10 K."),
     recommendation=("(3): 2 oz on board E, whose strip cannot lay its 1 oz pairs, keeping its circuit as drawn; 1 oz on board A "
                     "if the supplier's floor plan shows the 78 mm corridor from the dock contacts to the VBAT node, else 2 oz on A "
                     "as well. The costs: 2 oz on E, a surcharge NOT READ, the routing half's floor from 0.09 to 0.16 mm and U10's "
