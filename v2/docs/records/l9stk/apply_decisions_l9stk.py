@@ -82,7 +82,7 @@ DECISIONS = [
             "BANDS; 3313 PREPREG 0.0994 MM DK 4.1; IN1 0.0152 MM SOLID GND, NO TRACKS; CORE 0.55 MM DK 4.6; IN2 SIGNALS "
             "AND POURS; 2116 PREPREG 0.1088 MM DK 4.16; IN3 SIGNALS AND POURS (THE VIN_RAW DIVE UNDER THE VBAT TRUNK, A "
             "CROSSING ONLY); CORE 0.55 MM; IN4 0.0152 MM SOLID GND, NO TRACKS; 3313 PREPREG 0.0994 MM; B.CU 0.035 MM "
-            "SIGNALS, BANDS AND THE UNDERSIDE THROUGH-HOLE PARTS. " + CU_NOTE + "; the one-face hop from R17 to the pair at least R17's 3.35 mm land and as short as the parts allow; "
+            "SIGNALS, BANDS AND THE UNDERSIDE THROUGH-HOLE PARTS. " + CU_NOTE + "; the one-face hop from R17 to the battery FETs at least R17's 3.35 mm land and as short as the parts allow; "
             "no stitching between the faces along a band ending at a one-face part except its transfer field; In1 and In4 "
             "not necked under 30 mm beside the return; no inner layer counted as a conductor of the pack path. "
             "Controlled impedance: the USB2_CM5 ribbon pairs at 90 ohm on F.Cu and B.Cu only, 0.130 mm wide at a 0.127 mm "

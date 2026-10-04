@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 """l9pwr_budget.py: Layer 9 item 9.1, the power budget brought to the current design with margins and sensitivities
-(MESHSAT-1357, 3 October 2026; round 2, 4 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing in this kit has been
-built, powered or measured, and no figure printed here is a measurement.
+(MESHSAT-1357, 3 October 2026; round 2, 4 October 2026; round 3, 4 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing in
+this kit has been built, powered or measured, and no figure printed here is a measurement.
+
+Round 3 (4 October 2026, the integration of set 29, branch fnd/l9r3): a tool correction, no figure moved. L4-E11's round 9
+broke +12V_FAN's declaration over two source lines in apply_gen_sch_e_aux.py (finding L8P-F03 corrected: U22 named as the
+source, with source_ic) and wrote a third battery FET, Q42, into apply_gen_sch_a_charger.py; a one-line pattern for the
+rail's efficiency refused. Both drafts are now PARSED (ast on the draft's string constants and on the call they hold), the
+battery FETs' designators and count are read from the charger draft and held equal to record l9stk's selection, and record
+l9stk's protection output is read from this tree (the copy at 2c8b29fb named the automatic-retry LM5069-2; record l9stk
+15.4b selects the latch-off -1, which the script now reads and prints).
 
 Round 2 (4 October 2026, branch fnd/l9pwr2 from main 64cd25ee): the DRAFTED tree follows record l8r2 to its round 6 on
 fnd/l8r3 at 89924e40 (slots 1 and 3 on board A's LM5176 stage, the coolers at full speed with no duty maximum and their row
-at the envelope, board B's slot bucks at RT 200 k, the 5.1 V stages' dividers at 0.1 %) and record l9stk's section 15 on
-fnd/l9stk at 2c8b29fb (board P's breaker C-1 and the third battery FET), each read from a copy in inputs/ that its git
-show made, pinned by sha256 (inputs/SOURCES.txt). The round 1 DRAFTED tree is rebuilt beside it so that every figure
+at the envelope, board B's slot bucks at RT 200 k, the 5.1 V stages' dividers at 0.1 %), read from copies in inputs/ that
+git show made, pinned by sha256 (inputs/SOURCES.txt), and record l9stk's section 15 (board P's breaker C-1 and the third
+battery FET), read at round 2 from a copy at 2c8b29fb and since round 3 from this tree's l9stk_protection.out. The round 1 DRAFTED tree is rebuilt beside it so that every figure
 another record took from round 1 (L4-E9 round 7, record l8r2) is reproduced from the same evaluator.
 
 What it does. It imports record rv-pwr's model (v2/docs/records/rv-pwr/pwr_budget.py) UNCHANGED, pinned by sha256, and
@@ -60,7 +68,7 @@ PINS = {
     "l8r2_slotlm": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt",
     "l8r2_rt500": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_rt500-89924e40.txt",
     "l8r2_fb01": "v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt",
-    "l9stk_prot": "v2/docs/records/l9pwr/inputs/l9stk-l9stk_protection-2c8b29fb.txt",
+    "l9stk_prot": "v2/docs/records/l9stk/l9stk_protection.out",
     "l4e9r7": "v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt",
     "sources": "v2/docs/records/l9pwr/inputs/SOURCES.txt",
     "l8gnd_out": "v2/docs/records/l8gnd/l8gnd_drafts.out",
@@ -82,9 +90,13 @@ ORIGIN = {
     "l8r2_slotlm": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py", None),
     "l8r2_rt500": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_b_rt500.py", None),
     "l8r2_fb01": ("fnd/l8r3", "89924e40", "v2/docs/records/l8r2/apply_gen_sch_a_fb01.py", None),
-    "l9stk_prot": ("fnd/l9stk", "2c8b29fb", "v2/docs/records/l9stk/l9stk_protection.out", None),
     "l4e9r7": ("fnd/l4e9r7", "3737df82", "v2/docs/records/l4e9/l4e9_power_path.out", (2127, 2163)),
 }
+
+# read from this tree since round 3 (no copy): record l9stk is merged beside this record, and a copy of its output went stale
+# (the copy at 2c8b29fb named the LM5069-2; l9stk 15.4b selects the -1). The order of regeneration is l9stk's three scripts
+# (stackups, copper, protection), then this one.
+IN_TREE = {"l9stk_prot": "record l9stk's protection output (section 15: board P's breaker C-1 and the third battery FET)"}
 
 # the round 1 parser's lines that read a figure record l8r2 has since removed or superseded: set aside, not read
 SET_ASIDE = [
@@ -318,6 +330,98 @@ def draft_rails(key):
     return out
 
 
+def draft_rail_call(key, name):
+    """One _intent.rail(...) call a draft would write into its generator, PARSED and never matched by a line pattern (round 3:
+    L4-E11's round 9 broke +12V_FAN's declaration over two source lines when it corrected L8P-F03, and a one-line pattern for
+    its efficiency no longer matched). The draft is read as text and parsed with ast (a draft is never run); the call's text
+    is found in the draft's string constants and parsed with ast again; the result is the call's positional and keyword
+    literals. Every copy of the call in the draft must agree."""
+    head = '_intent.rail("%s"' % name
+    found = []
+    for node in ast.walk(ast.parse(text(key))):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
+            continue
+        s, at = node.value, 0
+        while True:
+            at = s.find(head, at)
+            if at < 0:
+                break
+            call, end = None, at
+            while call is None:
+                end = s.find(")", end + 1)
+                if end < 0:
+                    break
+                try:
+                    call = ast.parse(s[at:end + 1], mode="eval").body
+                except SyntaxError:
+                    continue
+            if not isinstance(call, ast.Call):
+                die("%s: the %s rail's declaration does not parse" % (PINS[key], name))
+            try:
+                pos = [ast.literal_eval(a) for a in call.args]
+                kw = {k.arg: ast.literal_eval(k.value) for k in call.keywords}
+            except ValueError:
+                die("%s: the %s rail's declaration is not all literals" % (PINS[key], name))
+            found.append(dict(pos=pos, kw=kw))
+            at = end
+    if not found:
+        die("%s writes no _intent.rail for %s" % (PINS[key], name))
+    if any(x != found[0] for x in found[1:]):
+        die("%s writes %s's declaration more than once, differently" % (PINS[key], name))
+    return found[0]
+
+
+BAT_NETS = ("CH_BATDRV", "CH_BATQ", "VBAT")     # nfet's gate, drain and source for a battery FET
+
+
+def draft_battery_fets(key):
+    """The charger's battery FETs as L4-E11's draft writes them, PARSED (round 3; the same reading as record l9stk's
+    battery_fets): every nfet(ref, part, gate, drain, source, ...) inside the draft's string constants, read with ast, a `for`
+    over a literal tuple unrolled with its names bound; the battery FETs are the calls on CH_BATDRV, CH_BATQ and VBAT.
+    Returns the designators in the draft's order and the part's text."""
+    found = []
+
+    def walk(stmts, env):
+        for st in stmts:
+            if isinstance(st, ast.For):
+                try:
+                    vals = ast.literal_eval(st.iter)
+                except (ValueError, SyntaxError):
+                    continue
+                for v in vals:
+                    e2 = dict(env)
+                    if isinstance(st.target, ast.Name):
+                        e2[st.target.id] = v
+                    elif isinstance(st.target, ast.Tuple) and isinstance(v, tuple) and len(v) == len(st.target.elts):
+                        e2.update({e.id: x for e, x in zip(st.target.elts, v) if isinstance(e, ast.Name)})
+                    walk(st.body, e2)
+            elif isinstance(st, ast.Expr) and isinstance(st.value, ast.Call) and isinstance(st.value.func, ast.Name) \
+                    and st.value.func.id == "nfet" and len(st.value.args) >= 5:
+                try:
+                    args = tuple(eval(compile(ast.Expression(x), "<nfet>", "eval"), {"__builtins__": {}}, dict(env)) for x in st.value.args[:5])
+                except Exception:
+                    continue
+                if all(isinstance(x, str) for x in args) and args[2:5] == BAT_NETS:
+                    found.append((args[0], args[1]))
+    for node in ast.walk(ast.parse(text(key))):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str) and "nfet(" in node.value):
+            continue
+        try:
+            body = ast.parse(node.value).body
+        except SyntaxError:
+            body = []
+            for line in node.value.splitlines():
+                try:
+                    body += ast.parse(line.strip()).body
+                except SyntaxError:
+                    continue
+        walk(body, {})
+    refs, parts = tuple(r for r, _p in found), sorted({p for _r, p in found})
+    if len(refs) < 2 or len(set(refs)) != len(refs) or len(parts) != 1 or "BUK6Y10-30P" not in parts[0] or refs[:2] != ("Q39", "Q40"):
+        die("the charger draft no longer carries the BUK6Y10-30P battery FETs Q39, Q40 on CH_BATDRV, CH_BATQ and VBAT (read: %s)" % (", ".join(refs) or "none"))
+    return refs, parts[0]
+
+
 def parse_inputs(pb):
     F = {}
     # ---- the generators as they are in this tree (ON MAIN)
@@ -390,10 +494,12 @@ def parse_inputs(pb):
     if "VSYS_E" not in dr or "+12V_FAN" not in dr:
         die("the draft apply_gen_sch_e_aux.py no longer writes VSYS_E and +12V_FAN")
     F["aux_rails"] = dr
-    m = re.search(r'_intent\.rail\(\\?"\+12V_FAN\\?", [^\n]*?efficiency=([\d.]+)', text("l4e11_aux"))
-    F["fan12_eff_draft"] = float(m.group(1)) if m else die("the +12V_FAN efficiency in the draft")
-    if "BUK6Y10-30P" not in text("l4e11_chg") or "Q39" not in text("l4e11_chg"):
-        die("the charger draft no longer carries the BUK6Y10-30P pair Q39, Q40")
+    fan12 = draft_rail_call("l4e11_aux", "+12V_FAN")
+    if not isinstance(fan12["kw"].get("efficiency"), float):
+        die("the +12V_FAN efficiency in the draft")
+    F["fan12_eff_draft"] = fan12["kw"]["efficiency"]
+    F["fan12_decl"] = fan12
+    F["bat_refs"], F["bat_part"] = draft_battery_fets("l4e11_chg")      # round 3: Q39, Q40 and, since L4-E11's round 9, Q42
     # ---- Layer 7's picks
     t7 = flat(text("l7_out"))
     F["mixer"] = grab(t7, r"mixers \(2, board E\): Sanyo Denki (\S+), [^;]*?, (\d+) V \(([\d.]+) to ([\d.]+) V\), ([\d.]+) A, ([\d.]+) W", "the mixer pick", 6, conv=str)
@@ -485,8 +591,9 @@ def parse_inputs(pb):
     ga = text("gen_a")
     F["drop_s"] = grab(ga, r'_intent\.rail\("\+5V_S%s" % _n, [^\n]*?budget=([\d.]+)', "the slot rails' drop budget")
     F["drop_dev"] = grab(ga, r'_intent\.rail\("\+5V_DEV", [^\n]*?budget=([\d.]+)', "the device rail's drop budget")
-    # ---- record l9stk section 15 (fnd/l9stk at 2c8b29fb): board P's breaker C-1 and the third battery FET
+    # ---- record l9stk section 15 (this tree's output since round 3): board P's breaker C-1 and the third battery FET
     tk = flat(text("l9stk_prot"))
+    F["brk_variant"] = grab(tk, r"SELECTED: the (-\d) \(([a-z-]+)\)", "the breaker's selected variant", 2, conv=str)
     F["brk_rs_pair"] = tuple(x / 1000.0 for x in grab(tk, r"sense RS: ([\d.]+) and ([\d.]+) mOhm in parallel = [\d.]+ mOhm", "the breaker's two sense resistors", 2))
     F["brk_rs"] = grab(tk, r"sense RS: [\d.]+ and [\d.]+ mOhm in parallel = ([\d.]+) mOhm", "the breaker's sense") / 1000.0
     F["brk_rs_win"] = tuple(x / 1000.0 for x in grab(tk, r"its window: ([\d.]+) to ([\d.]+) mOhm", "the sense's window", 2))
@@ -779,7 +886,7 @@ def build(pb, F, hc, upto, cooler="env"):
     if upto >= 15:  # D10: the third battery FET beside Q39 and Q40 (l9stk 15.5, DRAFTED)
         nb = int(F["bat_fets"][0])
         cfg.r_parts = [p for p in cfg.r_parts if not p[0].startswith("Q39 and Q40")]
-        cfg.r_parts.append(("Q39, Q40 and a third BUK6Y10-30P in parallel at L4-E11's 150 C bound %.3f mOhm each (l9stk 15.5, DRAFTED; its designator L4-E11's)" % F["bat_fets"][1],
+        cfg.r_parts.append(("Q39, Q40 and a third BUK6Y10-30P in parallel at L4-E11's 150 C bound %.3f mOhm each (l9stk 15.5; L4-E11's round 9 drafts it as %s; DRAFTED)" % (F["bat_fets"][1], ", ".join(F["bat_refs"][2:]) or "none"),
                             F["bat_fets"][1] / 1000.0 / nb, "DRAFTED"))
     cfg.r_path = math.fsum(p[1] for p in cfg.r_parts)
     return cfg
@@ -843,7 +950,7 @@ STEP_TEXT = [
     ("M3", "ON MAIN", "board D's 5 V comes from its own TPS62933 U41 on VBAT since S-99 (gen_sch_a.py +5V_D8IN), no longer through +5V_DEV"),
     ("M4", "ON MAIN", "EMCON removes both WiFi link cards' supplies since 458b2873 (record hc2's EMCON_MAIN)"),
     ("M5", "ON MAIN", "board A's 5 mOhm RSR shunt R17 is in the pack's discharge path since 458b2873 (S-04); the heater mat is regulated to 12.0 V by U33 since 458b2873 (F-PR-06, the cold overlay only)"),
-    ("D1", "DRAFTED", "L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied)"),
+    ("D1", "DRAFTED", "L4-E11 15c: the BQ25730's battery FET pair Q39, Q40 (BUK6Y10-30P in parallel) in the pack path, at L4-E11's 150 C RDS(on) bound (apply_gen_sch_a_charger.py, not applied; since L4-E11's round 9 the draft writes three, the third is step D10)"),
     ("D2", "DRAFTED", "L4-E11 15a: board E's auxiliary domain (U12, the controller, the mixers) on VSYS_E over the dock's pin 1 behind the eFuse U42 (apply_gen_sch_e_aux.py, not applied)"),
     ("D3", "DRAFTED", "L4-E11 18a with Layer 7's D-18: the two mixers are Sanyo Denki 9WL0612P4H001 on U22's 12.0 V rail (LTC3115-1, 0.85 assumed, 16 mA quiescent) (apply_gen_sch_e_aux.py, not applied)"),
     ("D4", "DRAFTED", "l8r2 item 1 to round 6 with Layer 7's D-18: the three coolers are Sanyo Denki 9WPA0412P6G001 on a per-slot TPS61089 step-up from +5V_Sn, at full speed with no Fan_PWM maximum; HIGH the envelope (2.75 W at 12.43 V over the step-up's 0.80, the slot row 0.69 A), PLAN at 0.85 (apply_gen_sch_b_fans12.py at 89924e40, not applied)"),
@@ -851,8 +958,8 @@ STEP_TEXT = [
     ("D6", "DRAFTED", "l8r2 rounds 4 to 6: slots 1 and 3 on board A's LM5176 stage (U501, U531 on 6 mOhm ISNS shunts, the AP64500s U4 and U6 retired), 5.1 V NOT PLOTTED, the draft's declared 0.90; the three slot leads at 6.6 A (apply_gen_sch_a_slotlm.py at 89924e40, not applied)"),
     ("D7", "DRAFTED", "l8r2 round 5: board B's six slot bucks at RT 200 k, 500 kHz, the frequency of the maker's curves rv-pwr uses (DRAWN's 68 k sets 1.47 MHz, where no curve is printed); no figure moves (apply_gen_sch_b_rt500.py at 89924e40, not applied)"),
     ("D8", "DRAFTED", "l8r2 round 6: the LM5176 5.1 V stages' dividers at 0.1 %, the window 5.0019 to 5.1744 V; no figure at the model's 5.1 V moves, the least load voltage sets the stages' margins (apply_gen_sch_a_fb01.py at 89924e40, not applied)"),
-    ("D9", "DRAFTED", "l9stk 15.4: board P's breaker C-1 (LM5069-2, its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (l9stk at 2c8b29fb, a desk design, not applied)"),
-    ("D10", "DRAFTED", "l9stk 15.5: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, its designator L4-E11's (l9stk at 2c8b29fb, a desk design, not applied)"),
+    ("D9", "DRAFTED", "l9stk 15.4: board P's breaker C-1 (an LM5069 in the variant l9stk 15.4b selects, printed below; its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (record l9stk in this tree, a desk design, not applied)"),
+    ("D10", "DRAFTED", "l9stk 15.5 and L4-E11 round 9: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, written by L4-E11's charger draft under the designator printed below (apply_gen_sch_a_charger.py, not applied)"),
 ]
 
 NOT_MODELLED = [
@@ -1529,6 +1636,8 @@ def predicates(pb, F, R):
     dev = [m for m in R["margins"] if m[2] == "DEV" and m[1] == "ALLTX"]
     P["the device rail's LM5176 is over its loop at HIGH in PS-ALLTX on DRAWN and DRAFTED (L9P-F03)"] = sorted(m[0] for m in dev if m[5] > m[3][1]) == ["DRAFTED", "DRAWN"]
     P["the drafted fan row equals the envelope over the step-up's low efficiency at 5.0 V, to 0.01 A"] = abs(round(F["fan_row_basis"][0] / F["fan_row_basis"][1] / F["fan_row_basis"][2], 2) - F["fan_row"]) < 1e-9 and abs(F["fan_row_basis"][0] - F["fan_env"]) < 1e-9 and abs(F["fan_row_basis"][1] - F["su_eta_lo"]) < 1e-9
+    P["L4-E11's charger draft writes the battery FETs record l9stk selected, the third beside Q39 and Q40 (D10)"] = (
+        len(F["bat_refs"]) == int(F["bat_fets"][0]) and len(F["bat_refs"]) == 3)
     src = text("sources")
     P["every copy in inputs/ is pinned and named with its sha256 in SOURCES.txt"] = all(
         PINS[k].startswith("v2/docs/records/l9pwr/inputs/") and ("%s sha256 %s" % (os.path.basename(PINS[k]), hashlib.sha256(open(path(k), "rb").read()).hexdigest())) in src for k in ORIGIN)
@@ -1669,6 +1778,8 @@ def render(R):
     w("   the copies in inputs/ (inputs/SOURCES.txt), each read with git show from its author's branch, not merged:")
     for k, (br, cm, src, lines) in ORIGIN.items():
         w("     %-11s %s@%s on %s, %s" % (k, cm, src, br, "the whole file" if lines is None else "its lines %d to %d" % lines))
+    for k, what in IN_TREE.items():
+        w("   read from this tree since round 3, no copy: %s, %s" % (k, what))
     w("")
     w("1. WHAT DIFFERS FROM RV-PWR'S MODEL, AND HOW THIS BUDGET TAKES IT (applied in this order; section 4 prints each step's effect)")
     for sid, st, tx in STEP_TEXT:
@@ -1701,10 +1812,10 @@ def render(R):
       % (F["rfb"][0] / 1000, F["rfb"][1] / 1000, F["vref"][0], F["vref"][1], F["vref"][2], F["ibias"] * 1e9, F["drop_s"] * 100, F["drop_dev"] * 100))
     w("        at %.1f %% (drawn) %.4f to %.4f V, the least at the loads %.4f V; at %.1f %% (fb01) %.4f to %.4f V, the least at the loads %.4f V"
       % (F["fb_tol_drawn"] * 100, wd[0], wd[1], wd[2], F["fb_tol"] * 100, wf_[0], wf_[1], wf_[2]))
-    w("     D9 board P's breaker: the sense %.1f and %.1f mOhm in parallel, %.4f mOhm nominal, its window %.4f to %.4f mOhm (taken at the highest); %d x CSD18510Q5B, %.2f mOhm at 10 V and 25 C, %.3f mOhm at 150 C (x%.1f), in parallel"
-      % (F["brk_rs_pair"][0] * 1000, F["brk_rs_pair"][1] * 1000, F["brk_rs"] * 1000, F["brk_rs_win"][0] * 1000, F["brk_rs_win"][1] * 1000, F["brk_fets"][0], F["brk_fets"][1], F["brk_fet_hot"][2], F["brk_fet_hot"][3]))
-    w("     D10 the battery FETs: %d x BUK6Y10-30P at %.3f mOhm each at 150 C (l9stk, L4-E11's bound): %.4f mOhm, against the pair's %.4f mOhm"
-      % (F["bat_fets"][0], F["bat_fets"][1], F["bat_fets"][1] / F["bat_fets"][0], F["fet_bound"] / 2 * 1000))
+    w("     D9 board P's breaker, the LM5069%s (%s, l9stk 15.4b): the sense %.1f and %.1f mOhm in parallel, %.4f mOhm nominal, its window %.4f to %.4f mOhm (taken at the highest); %d x CSD18510Q5B, %.2f mOhm at 10 V and 25 C, %.3f mOhm at 150 C (x%.1f), in parallel"
+      % (F["brk_variant"][0], F["brk_variant"][1], F["brk_rs_pair"][0] * 1000, F["brk_rs_pair"][1] * 1000, F["brk_rs"] * 1000, F["brk_rs_win"][0] * 1000, F["brk_rs_win"][1] * 1000, F["brk_fets"][0], F["brk_fets"][1], F["brk_fet_hot"][2], F["brk_fet_hot"][3]))
+    w("     D10 the battery FETs: %d x BUK6Y10-30P at %.3f mOhm each at 150 C (l9stk, L4-E11's bound): %.4f mOhm, against the pair's %.4f mOhm; L4-E11's charger draft writes %s"
+      % (F["bat_fets"][0], F["bat_fets"][1], F["bat_fets"][1] / F["bat_fets"][0], F["fet_bound"] / 2 * 1000, ", ".join(F["bat_refs"])))
     w("   the round 1 parser's lines SET ASIDE in round 2 (the figure they read was removed or superseded by its record):")
     for a, b in SET_ASIDE:
         w("     %s: %s" % (a, b))

@@ -3,6 +3,12 @@
 COPPER: NOT CONFIRMED): the pack path's copper on boards A and E, sized on its actual basis. A candidate copper-sizing result,
 not completed fault-protection verification.
 
+Round 3 (4 October 2026, the integration of set 29): L4-E11's round 9 drafts a third battery FET, Q42, beside Q39 and Q40 and
+restates E11-29 as section 15.5's junction limit. The draft is now PARSED (the designators and their count are read from the
+nfet calls it writes on the battery nets, not from a quoted sentence, which refused the moment the sentence said three), the coordination
+table's battery FET rows are judged on the circuit as drafted, and section 9a prints each of those rows on the pair it was
+first judged on beside its reading now, both derived from the pinned files.
+
 Desk arithmetic on committed files. Nothing here was built, routed, measured or bought. It reads its inputs, every one pinned
 by sha256 in section 0, and prints:
 
@@ -17,13 +23,15 @@ by sha256 in section 0, and prints:
   3. the split between the faces (resistance and transfer barrels) and the barrels' two annulus conventions;
   4. the widths per conductor at 1 oz and 2 oz, each class on them with every failing row, and the widths quoted judged;
   5. the series parts and lands; board E's cross-section; the owner's coordination table, one row per case with its
-     protective device, its assured clearing time or "none assured", every component's reading and the limiting one;
+     protective device, its assured clearing time or "none assured", every component's reading and the limiting one; the
+     battery FETs' rows as they were on the pair (section 9a);
   6. the predicates test_l9stk.py holds.
 
 Run from the repository root: python3 v2/docs/records/l9stk/l9stk_copper.py
 The committed output is regenerated only through _bin/regen_out.py. Stdlib, PyYAML, pdftotext (poppler) and the tool modules;
 no KiCad, no network, no date, no host name, so a second run prints the same bytes.
 """
+import ast
 import hashlib
 import importlib.util
 import math
@@ -105,6 +113,70 @@ def pdf(key):
     except (OSError, subprocess.CalledProcessError) as e:
         refuse("pdftotext could not read %s (%s)" % (PINS[key], e))
     return r.stdout.decode("utf-8", "replace")
+
+
+BAT_NETS = ("CH_BATDRV", "CH_BATQ", "VBAT")     # nfet's gate, drain and source for a battery FET (TI's Figure 9-1: BATDRV, toward RSR, VSYS)
+
+
+def nfet_calls(draft):
+    """Every nfet(ref, part, gate, drain, source, ...) a draft would write into a generator, PARSED: the draft is read as text
+    and parsed with ast (a draft is never run); each of its string constants that mentions nfet is parsed again as generator
+    source (whole, or line by line where a constant is a fragment); a `for` over a literal tuple is unrolled with its names
+    bound, so the loop's variable names and the part's sentence decide nothing. Returns (ref, part, gate, drain, source) per
+    call whose five arguments are literals once the loop is bound."""
+    found = []
+
+    def walk(stmts, env):
+        for st in stmts:
+            if isinstance(st, ast.For):
+                try:
+                    vals = ast.literal_eval(st.iter)
+                except (ValueError, SyntaxError):
+                    continue
+                for v in vals:
+                    e2 = dict(env)
+                    if isinstance(st.target, ast.Name):
+                        e2[st.target.id] = v
+                    elif isinstance(st.target, ast.Tuple) and isinstance(v, tuple) and len(v) == len(st.target.elts):
+                        e2.update({e.id: x for e, x in zip(st.target.elts, v) if isinstance(e, ast.Name)})
+                    walk(st.body, e2)
+            elif isinstance(st, ast.Expr) and isinstance(st.value, ast.Call) and isinstance(st.value.func, ast.Name) \
+                    and st.value.func.id == "nfet" and len(st.value.args) >= 5:
+                try:
+                    args = tuple(eval(compile(ast.Expression(x), "<nfet>", "eval"), {"__builtins__": {}}, dict(env)) for x in st.value.args[:5])
+                except Exception:
+                    continue
+                if all(isinstance(x, str) for x in args):
+                    found.append(args)
+    for node in ast.walk(ast.parse(draft)):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str) and "nfet(" in node.value):
+            continue
+        try:
+            body = ast.parse(node.value).body
+        except SyntaxError:
+            body = []
+            for line in node.value.splitlines():
+                try:
+                    body += ast.parse(line.strip()).body
+                except SyntaxError:
+                    continue
+        walk(body, {})
+    return found
+
+
+def battery_fets(draft):
+    """The charger's battery FETs as L4-E11's draft writes them into board A's generator: the nfet calls whose gate is
+    CH_BATDRV, drain CH_BATQ and source VBAT. Returns the designators in the draft's order and the part's text; refuses on
+    fewer than two, on a designator written twice, on two different parts, or on a part that is not the BUK6Y10-30PX."""
+    fets = [(c[0], c[1]) for c in nfet_calls(draft) if c[2:5] == BAT_NETS]
+    refs, parts = tuple(r for r, _p in fets), sorted({p for _r, p in fets})
+    if len(refs) < 2:
+        refuse("the charger draft writes %d battery FET(s) on %s; two or more are read" % (len(refs), ", ".join(BAT_NETS)))
+    if len(set(refs)) != len(refs):
+        refuse("the charger draft writes a battery FET twice (%s)" % ", ".join(refs))
+    if len(parts) != 1 or "BUK6Y10-30PX" not in parts[0]:
+        refuse("the charger draft's battery FETs did not read as one part, the BUK6Y10-30PX")
+    return refs, parts[0]
 
 
 def stackups_module():
@@ -207,9 +279,10 @@ def read_inputs():
     need(a, r'part\("F1", "Device", "Fuse", "25 A mini blade \(Keystone 3568 holder\): pack node to the RSR shunt", "FUSE", \{"1": "CELL\+", "2": "CELL_FUSED"\}\)', "board A's F1")
     if not re.search(r'for k in range\(1, %d\):\s*\n\s*part\("J_CP%%d" %% k' % (I["pins"] + 1), a):
         refuse("board A's dock pins are not %d" % I["pins"])
-    need(text("charger_draft"), r'nfet\(_qb, \\"BUK6Y10-30PX 30 V P-FET \(the BQ25730\'s battery FET, one of two in parallel: S on VSYS, D toward RSR\)\\", \\"CH_BATDRV\\", \\"CH_BATQ\\", \\"VBAT\\"', "the pair's draft")
+    I["fet_refs"], I["fet_part"] = battery_fets(text("charger_draft"))      # round 3: parsed, as the draft now is (Q39, Q40, Q42)
     m = need(o, r"\(Q-c\) Nexperia BUK6Y10-30P, two in parallel \(MAKER, INFERRED\):\n\s+printed maxima:[^\n]*\n\s+limit 150 C[^\n]*?gate factor [0-9.]+, ([0-9.]+) mOhm per FET", "the pair's RDS(on) bound")
     I["pair_mohm_each"] = float(m.group(1))
+    I["fet_mohm_each"] = float(need(o, r"reproduced on this record's RDS\(on\) allowance ([0-9.]+) mOhm \(section 16a\)", "the battery FETs' RDS(on) allowance (L4-E11 19b)").group(1))
     e = text("gen_sch_e")
     need(e, r'part\("F3", "Device", "Fuse", "25 A mini blade \(Keystone 3568 holder\): pack to the block", "FUSE", \{"1": "CELL\+", "2": "CELL_F"\}\)', "board E's F3")
     need(e, r'part\("F1", "Device", "Fuse", "10 A mini blade \(Keystone 3568 holder\): vehicle input", "FUSE", \{"1": "DC_IN", "2": "DC_F"\}\)', "board E's F1")
@@ -247,6 +320,15 @@ def read_more(I):
     if len(I["pair_zjmb"]) != 3:
         refuse("L4-E11's three device impedances did not read")
     I["pair_tj_18"] = float(need(o, r"THE SERVICE, 18 A FOR 60 S FROM THE HOT STATE [^:]*: TJ ([0-9.]+) C", "the pair's 18 A service").group(1))
+    # round 3: L4-E11's round 9 (its section 19c) restates E11-29 for the three battery FETs as this record's junction limit and
+    # withdraws the pair's targets; the lines above stay in L4-E11's output as its dated sections 15 and 16 and are read as such
+    m = need(o, r"the installed three, each FET's \(Zself \+ 2 Zmut\) at most ([0-9.]+) K/W steady with R17 placed apart, R17's coupling into each junction at most ([0-9.]+) K/W\s+"
+             r"\(heat R17 alone\): so the hottest junction stays at most (\d+) C held at ([0-9.]+) A from ([0-9.]+) C with the band and R17 in place", "E11-29 restated (L4-E11 19c)")
+    I["fet_rth"], I["fet_r17c"], I["fet_limit"], I["fet_i_held"], I["fet_t0"] = (float(m.group(k)) for k in range(1, 6))
+    m = need(o, r"the pair's former steady target ([0-9.]+) K/W at \+(\d+) C air and its 1 s, 20 ms and 244 us targets are WITHDRAWN", "the pair's targets withdrawn (L4-E11 19c)")
+    I["pair_rth_withdrawn"] = float(m.group(1))
+    if len(I["fet_refs"]) != 3:
+        refuse("L4-E11's section 19c states E11-29 for three battery FETs and its charger draft draws %d" % len(I["fet_refs"]))
     t = pdf("xt60")
     I["xt60_max_c"] = float(need(t, r"\.-20\S to (\d+)\S", "the XT60's operating range").group(1))
     t = pdf("vh")
@@ -664,8 +746,8 @@ def compute():
     for b, net, fr, to, ek, prot, coord, k, wk, lk, fieldtxt in (
         ("A", "CELL+", "J_CP1 to J_CP4", "F1", "%s / %s" % (kind(fa, "J_CP1"), kind(fa, "F1")), "E's F3 (upstream), the gauge", blade, 1.0, "pair", "pack A", "none (both ends through-hole)"),
         ("A", "CELL_FUSED", "F1", "R17", "%s / %s" % (kind(fa, "F1"), kind(fa, "R17")), "A's F1, the gauge", blade, ks, "pair", "pack A", "at R17, out 3's count at the band's length"),
-        ("A", "CH_BATQ (drafted)", "R17", "Q39, Q40", "1F / 1F", "A's F1, the gauge", blade, ks, "hop", "pack A", "a one-face hop at the parts' lands"),
-        ("A", "VBAT trunk", "Q39, Q40 (R17 as drawn)", "the first branch", "1F / loads", "A's F1, the gauge", blade, ks, "pair", "pack A", "at the pair, out 3's count"),
+        ("A", "CH_BATQ (drafted)", "R17", ", ".join(I["fet_refs"]), "1F / 1F", "A's F1, the gauge", blade, ks, "hop", "pack A", "a one-face hop at the parts' lands"),
+        ("A", "VBAT trunk", "%s (R17 as drawn)" % ", ".join(I["fet_refs"]), "the first branch", "1F / loads", "A's F1, the gauge", blade, ks, "pair", "pack A", "at the FETs, out 3's count"),
         ("A", "GND (pack return)", "J_CN1 to J_CN4", "the returns and planes", "%s / planes" % kind(fa, "J_CN1"), "the loop's blades, the gauge", blade, 1.0, "pair", "pack A", "none at the pins"),
         ("E", "CELL+", "J_BATT pin 2", "F3", "%s / %s" % (kind(fe, "J_BATT"), kind(fe, "F3")), "P's F1 (upstream), the gauge", blade, 1.0, "pair", "pack E", "none (both ends through-hole)"),
         ("E", "CELL_F", "F3", "P_CP", "%s / %s" % (kind(fe, "F3"), kind(fe, "P_CP")), "E's F3, the gauge", blade, ks, "pair", "pack E", "E7: %d at P_CP (%.2f mm, split %d)" % (cf[0], R["e7_cellf_len"], cf[1])),
@@ -707,6 +789,30 @@ def compute():
     def pair_i150(air):
         return 2.0 * math.sqrt((I["pair_limit"] - air) / (I["pair_rth"] * each))
     R["pair_i150"] = {"70": pair_i150(I["air_c"]), "t0": pair_i150(I["t0"])}
+    # round 3: the battery FETs as L4-E11's round 9 drafts them, on E11-29 as its section 19c restates it
+    nf, each_f, r17_ohm = len(I["fet_refs"]), I["fet_mohm_each"] / 1000.0, r17["mohm"] / 1000.0
+
+    def band_rise(a):
+        rr = [rise_pair(a, W["pair_1k"], OZ1, ks), rise_pair(a, W["pair_2k"], OZ2, ks)]
+        return float("inf") if None in rr else max(rr)
+
+    def fet_tj(a, air):
+        """The hottest battery FET's junction, held: the air, the band's own rise at this current (the larger of the two copper
+        weights), each FET's loss at an even split through the restated allowance, and R17's loss through its coupling."""
+        return air + band_rise(a) + I["fet_rth"] * (a / nf) ** 2 * each_f + I["fet_r17c"] * a * a * r17_ohm
+
+    def fet_i_limit(air):
+        lo, hi = 0.0, 200.0
+        for _ in range(80):
+            mid = (lo + hi) / 2.0
+            if fet_tj(mid, air) < I["fet_limit"]:
+                lo = mid
+            else:
+                hi = mid
+        return lo
+    R["fet_i150"] = {"70": fet_i_limit(I["air_c"]), "t0": fet_i_limit(I["t0"])}
+    R["fet_tj"] = {"cont": fet_tj(I["cont"], I["t0"]), "service": fet_tj(I["kd_a"], I["t0"]), "held": fet_tj(I["fet_i_held"], I["t0"]),
+                   "band_held": band_rise(I["fet_i_held"])}
     R["pin_worst_ratio"] = None     # unbounded: the sheet prints a maximum and no minimum
     # the acceptance figures the dispositions quote
     R["pin_ratio_need"] = (blade / I["pin_a"] - 1.0) / (I["pins"] - 1)
@@ -715,7 +821,7 @@ def compute():
     R["lim_sh"] = lim_shore
     R["i2t_allow_shore"] = i2t_to(W["sh_pair_1k"] * t_out(OZ1), lim_shore, I) / (S_MAX * S_MAX)
     # the owner's coordination table
-    R["coord"] = coordination(R, I, W, F, pair_tj)
+    R["coord"] = coordination(R, I, W, F, pair_tj, fet_tj)
     # the predicates
     pred = predicates(R, I, W, F)
     R["pred"] = pred
@@ -750,7 +856,7 @@ def copper_reading(a, dur, w, oz, k, s, I):
     return st, "steady (reached before clearance)"
 
 
-def coordination(R, I, W, F, pair_tj):
+def coordination(R, I, W, F, pair_tj, fet_tj):
     blade, shore, wst = I["blade_a"], I["shore_fuse_a"], I["shore_withstand_a"]
     ks = R["ks"]
     cells_a = I["cells_a"]
@@ -780,7 +886,28 @@ def coordination(R, I, W, F, pair_tj):
         return ("Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) %g K/W, no board credit)" % z, "TJ about %s C for %s" % (f2(tj), dur_s(dur, "", I)),
                 (tj - I["t0"]) / (I["pair_limit"] - I["t0"]))
 
+    refs, nf, calls = ", ".join(I["fet_refs"]), len(I["fet_refs"]), []
+
+    def fet_comp(a, dur, gauge_on):
+        """The battery FETs as drafted (round 3): held rows on E11-29 as L4-E11's 19c restates it, with the band and R17 in
+        place; timed rows with the gauge working carry no figure (19c withdrew the pair's timed targets and states none for
+        the three); timed rows with the FETs failed short keep the device-alone estimate, each FET at its share."""
+        if dur is None or dur >= 60.0:
+            tj = fet_tj(a, I["t0"])
+            return ("%s (E11-29 restated: %g K/W each with R17 apart, %g mOhm each at 150 C)" % (refs, I["fet_rth"], I["fet_mohm_each"]),
+                    "TJ %s C held from %.2f C air, the band and R17 in place (%s C from %g C)" % (f2(tj), I["t0"], f2(fet_tj(a, I["air_c"])), I["air_c"]),
+                    (tj - I["t0"]) / (I["fet_limit"] - I["t0"]))
+        if gauge_on:
+            return (refs, "L4-E11 19c: the pair's 1 s, 20 ms and 244 us targets are withdrawn and none is stated for the three; the held limit governs "
+                          "behind the breaker (drafted), CONDITIONAL on E11-29", None)
+        under = [(ww, zz) for ww, zz in I["pair_zjmb"] if ww <= dur]
+        z = max(under)[1] if under else min(I["pair_zjmb"])[1]
+        tj = I["t0"] + (a / nf) ** 2 * I["fet_mohm_each"] / 1000.0 * z
+        return ("%s (INFERRED estimate: the 150 C RDS allowance, the device's own Zth(j-mb) %g K/W, no board credit)" % (refs, z), "TJ about %s C for %s" % (f2(tj), dur_s(dur, "", I)),
+                (tj - I["t0"]) / (I["fet_limit"] - I["t0"]))
+
     def pack_comps(a, dur, cls, gauge_on):
+        calls.append((a, dur, gauge_on))
         c = []
         for lab, w, oz in (("copper, 1 oz (%.2f mm a face)" % W["pair_1k"], W["pair_1k"], OZ1), ("copper, 2 oz (%.2f mm a face)" % W["pair_2k"], W["pair_2k"], OZ2)):
             r, how = copper_reading(a, dur, w, oz, ks, S_MAX, I)
@@ -800,7 +927,7 @@ def coordination(R, I, W, F, pair_tj):
         c.append(rated("XT60 (board E, %g A, %g C)" % (I["xt60_a"], I["xt60_max_c"]), a, I["xt60_a"], "A", dur))
         p = rated("dock contacts (%d Mill-Max, %g A each at a %g C rise)" % (I["pins"], I["pin_a"], I["pin_rise"]), a / I["pins"], I["pin_a"], "A a pin", dur)
         c.append((p[0], p[1] + " at an even split; the split is unbounded (%g mOhm maximum, no minimum)" % I["pin_mohm_max"], p[2]))
-        c.append(pair_comp(a, dur, gauge_on))
+        c.append(fet_comp(a, dur, gauge_on))
         c.append(("Keystone 3568 holder", "no current rating printed (NOT HELD)", None))
         return c
 
@@ -853,10 +980,18 @@ def coordination(R, I, W, F, pair_tj):
         c.append(("Keystone 3568 holder", "no current rating printed (NOT HELD)", None))
         rows.append(dict(case="the shore input, Q7 shorted, fuse %s" % lab, a=a, dur=dur, basis="F1's monotone envelope (L4-E11 section 6) with the hot-swap's limit lost; a clamp failed short ahead of Q7 (one fault) meets the same envelope",
                          device="F1, %g A MINI" % shore, clearing="none assured" if dur is None else "at most %g s (the row's maximum)" % dur, comps=c))
-    for r in rows:
+    for i, r in enumerate(rows):
         r["limit_comp"], r["limit_frac"] = limiting(r["comps"])
         r["not_held"] = [n for n, _t, f in r["comps"] if f is None]
         r["disp"] = disposition(r, R, I)
+        if i < len(calls):
+            # round 3: the same row with the battery FETs as the pair it was first judged on (L4-E11's draft until its round 9)
+            now = [x for x in r["comps"] if x[0].startswith(refs)][0]
+            was = pair_comp(*calls[i])
+            r["fet_now"], r["fet_was"] = now, was
+            r["limit_was"] = limiting([was if x is now else x for x in r["comps"]])
+    if len(calls) != len([r for r in rows if "fet_now" in r]) or any("fet_now" in r for r in rows[len(calls):]):
+        refuse("the pack rows and their battery FET readings do not pair up")
     return rows
 
 
@@ -869,27 +1004,31 @@ def disposition(r, R, I):
             "mid-stroke" % (R["pin_ratio_need"], I["pin_a"], I["blade_a"]))
     holder = "(b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7"
     r17 = "(c) R17's maker sheet and its derating at the band's temperature (Layer 6)"
+    refs = ", ".join(I["fet_refs"])
     if c == "10 A continuous":
         return ["(a) the copper at either weight, the barrels, R17's watts, the XT60 and the even split of the dock contacts", pins, holder, r17]
     if c == "18 A for 60 s":
         return ["(a) the copper at either weight (steady, no transient credit) and the barrels",
-                "(c) Q39/Q40 at L4-E11's %.1f C from the +%g C air (%.1f C from %.2f C): E11-29's specimen, measured with the band carrying its current (L4-E11)" % (
-                    I["pair_tj_18"], I["air_c"], I["pair_tj_18"] + I["t0"] - I["air_c"], I["t0"]), pins, holder, r17]
+                "(c) %s at %.1f C from %.2f C at E11-29's restated allowance, the band and R17 in place: E11-29's specimen, measured with the band carrying "
+                "its current and R17 dissipating (L4-E11 19c)" % (refs, R["fet_tj"]["service"], I["t0"]), pins, holder, r17]
     if c.startswith("the 25 A case, the gauge working"):
-        return ["(a) the copper at either weight and the barrels within 10 K for the gauge's 1 s; Q39/Q40 as L4-E11 15c (CONDITIONAL on E11-29)", pins, holder]
+        return ["(a) the copper at either weight and the barrels within 10 K for the gauge's 1 s",
+                "(c) %s for the gauge's 1 s: no timed target is held (L4-E11 19c withdrew the pair's); E11-29's specimen at the held limit, which governs "
+                "behind the breaker (drafted)" % refs, pins, holder]
     if c.startswith("the 25 A case, the gauge failed"):
         return ["(a) the copper at either weight at 10 K (the width is sized to it)",
-                "(b) Q39/Q40 pass 150 C held: W4DP-F2's element (the battery stream with L4-E11)", pins, holder, r17]
+                "(b) %s pass %g C held (the limit is met at %.2f A from %.2f C): W4DP-F2's element (the battery stream with L4-E11)" % (
+                    refs, I["fet_limit"], R["fet_i150"]["t0"], I["t0"]), pins, holder, r17]
     if c.startswith("sustained overloads"):
-        return ["(b) W4DP-F2: Q39/Q40 pass 150 C at %.2f A held (+%g C air), %.2f A from %.2f C; R17 passes %g W at %.2f A; the XT60 passes %g A; "
-                "no firmware-independent element opens in this band (the battery stream with L4-E11)" % (
-                    R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"], I["r17"]["w"], R["r17_limit_a"], I["xt60_a"]), holder]
+        return ["(b) W4DP-F2: %s pass %g C at %.2f A held from %.2f C with the band and R17 in place (%.2f A from the +%g C line); R17 passes %g W at "
+                "%.2f A; the XT60 passes %g A; no firmware-independent element opens in this band (the battery stream with L4-E11)" % (
+                    refs, I["fet_limit"], R["fet_i150"]["t0"], I["t0"], R["fet_i150"]["70"], I["air_c"], I["r17"]["w"], R["r17_limit_a"], I["xt60_a"]), holder]
     if c.startswith("board P's FETs failed short"):
         cu = [x for x in r["comps"] if x[0].startswith("copper, 1 oz")][0]
         out = []
         if r["dur"] is not None and r["dur"] >= 60.0:
-            out.append("(b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and Q39/Q40 are over their printed "
-                       "ratings for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)")
+            out.append("(b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and %s are over their printed "
+                       "ratings or limit for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)" % refs)
         else:
             out.append("(b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the "
                        "dock contacts carry currents above their continuous ratings with no short-time rating held (the battery "
@@ -948,7 +1087,13 @@ def predicates(R, I, W, F):
         "the blade's plating is not pinned in the tree, so the fitted limit is the tin blade's": (not I["blade_pinned"]) and R["blade_c"]["fitted"] == I["mini_sn_max_c"],
         "the outward annulus count is via_current's and the inward count is no smaller":
             all(v["inward"] >= v["outward"] for v in R["thermal_barrels"].values()),
-        "the pair passes 150 C held between the gauge's OCD1 and the cells' continuous rating": I["gauge"][0][1] < R["pair_i150"]["70"] < I["cells_a"],
+        "the pair L4-E11 drafted until its round 9 passed 150 C held between the gauge's OCD1 and the cells' continuous rating": I["gauge"][0][1] < R["pair_i150"]["70"] < I["cells_a"],
+        "the battery FETs as drafted now meet their junction limit between the gauge's OCD1 and the blades' least assured opening":
+            I["gauge"][0][1] < R["fet_i150"]["t0"] < I["blade_a"] * I["mini_rows"][1][0] / 100.0,
+        "L4-E11's restated E11-29 starts from this record's worst inside air and reads its limit at its held current, to 0.05 K":
+            abs(I["fet_t0"] - I["t0"]) < 1e-9 and abs(R["fet_tj"]["held"] - I["fet_limit"]) < 0.05,
+        "the target L4-E11 withdrew is the pair's target this record read, and the allowance per FET is the pair's bound":
+            I["pair_rth_withdrawn"] == I["pair_rth"] and I["fet_mohm_each"] == I["pair_mohm_each"],
         "every coordination row carries a disposition, and every row over a printed rating a design correction or a gap":
             all(r["disp"] for r in C) and all(any(d.startswith("(b)") or d.startswith("(c)") for d in r["disp"]) for r in over),
         "with the gauge failed the 25 A case is over a printed rating": [r for r in C if r["case"].startswith("the 25 A case, the gauge failed")][0]["limit_frac"] > 1.0,
@@ -980,6 +1125,8 @@ def render(R):
     P("l9stk_copper: the pack path's copper on boards A and E, on its basis (record l9stk, MESHSAT-1357), revised after the check")
     P("COPPER: NOT CONFIRMED. A candidate copper-sizing result, not completed fault-protection verification. Desk arithmetic on")
     P("committed files: nothing was built, routed, measured or bought, and no figure below is a measurement.")
+    P("Round 3 (4 October 2026): the battery FETs are read from L4-E11's round 9 draft as it is, %s (%d x BUK6Y10-30PX), and judged on" % (", ".join(I["fet_refs"]), len(I["fet_refs"])))
+    P("E11-29 as its section 19c restates it; no width, limit, split, field or barrel figure moved; the rows that moved are in section 9a.")
     P("")
     P("0. PINS (path  sha256/16)")
     for k, (p, s) in sorted(R["pins"].items()):
@@ -1092,9 +1239,15 @@ def render(R):
     P("7. THE SERIES PARTS AND THE LANDS")
     P("   R17 (%s, %g mOhm, %g W, %s; derating NOT HELD): its %g W at %.2f A" % (I["r17"]["mpn"], I["r17"]["mohm"], I["r17"]["w"], I["r17"]["code"], I["r17"]["w"], R["r17_limit_a"]))
     P("   R19 (%s, %g mOhm, %g W, %s; derating NOT HELD): its %g W at %.2f A" % (I["r19"]["mpn"], I["r19"]["mohm"], I["r19"]["w"], I["r19"]["code"], I["r19"]["w"], R["r19_limit_a"]))
-    P("   Q39/Q40 (E11-29's %g K/W, %g mOhm each at 150 C): 150 C held at %.2f A from +%g C, %.2f A from %.2f C; L4-E11's 18 A for 60 s" % (
-        I["pair_rth"], I["pair_mohm_each"], R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"]))
-    P("     %.1f C and 20 A held %.0f C (from +%g C)" % (I["pair_tj_18"], I["pair_tj_20"], I["air_c"]))
+    P("   %s, the battery FETs as L4-E11's round 9 drafts them (%d x BUK6Y10-30PX; E11-29 restated in its 19c: each FET's (Zself + 2 Zmut) at most" % (
+        ", ".join(I["fet_refs"]), len(I["fet_refs"])))
+    P("     %g K/W with R17 apart, R17's coupling at most %g K/W; %g mOhm each at 150 C): %g C held at %.2f A from %.2f C with the band (%.2f K) and" % (
+        I["fet_rth"], I["fet_r17c"], I["fet_mohm_each"], I["fet_limit"], R["fet_i150"]["t0"], I["t0"], R["fet_tj"]["band_held"]))
+    P("     R17 in place (%.2f A from the +%g C line); %.1f C at %g A, %.1f C at the %g A service; L4-E11 prints %g A, which reads %.2f C here" % (
+        R["fet_i150"]["70"], I["air_c"], R["fet_tj"]["cont"], I["cont"], R["fet_tj"]["service"], I["kd_a"], I["fet_i_held"], R["fet_tj"]["held"]))
+    P("   dated, the pair Q39/Q40 as drafted until L4-E11's round 9 (E11-29's former %g K/W, withdrawn in its 19c; FETs only): 150 C held at" % I["pair_rth"])
+    P("     %.2f A from +%g C, %.2f A from %.2f C; L4-E11's 18 A for 60 s %.1f C and 20 A held %.0f C (from +%g C): W4DP-F2 was found on it" % (
+        R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"], I["pair_tj_18"], I["pair_tj_20"], I["air_c"]))
     P("   the XT60: %g A, %g A instantaneous (no duration), %g C; the JST VH (J_DCIN as drawn): %g A with AWG 16, %g C" % (I["xt60_a"], I["xt60_peak"], I["xt60_max_c"], I["vh_a"], I["vh_max_c"]))
     P("   the dock contacts: %d Mill-Max pins, %g A each at a %g C rise, %g mOhm maximum and no minimum, so the split is unbounded; no pin" % (I["pins"], I["pin_a"], I["pin_rise"], I["pin_mohm_max"]))
     P("     passes %g A at %g A only if the lowest pin resistance is at least %.3f of the highest" % (I["pin_a"], I["blade_a"], R["pin_ratio_need"]))
@@ -1124,8 +1277,27 @@ def render(R):
         for d in r["disp"]:
             P("     disposition: %s" % d)
     P("   W4DP-F2 stays open; its closure is a current-and-time criterion for every series part with board P's FETs welded and no firmware,")
-    P("     not one current: Q39/Q40 pass 150 C held at %.2f A from +%g C and %.2f A from %.2f C (derived on E11-29's target), under the" % (R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"]))
-    P("     cells' %.0f A; the selected element and its table are l9stk_protection.py's (the page's section 15)" % I["cells_a"])
+    P("     not one current: the pair it was found on passed 150 C held at %.2f A from +%g C and %.2f A from %.2f C (derived on E11-29's" % (R["pair_i150"]["70"], I["air_c"], R["pair_i150"]["t0"], I["t0"]))
+    P("     former target), under the cells' %.0f A; the three drafted since meet their limit at %.2f A from %.2f C, under the blades' least" % (I["cells_a"], R["fet_i150"]["t0"], I["t0"]))
+    P("     assured opening %.2f A; the selected element and its table are l9stk_protection.py's (the page's section 15)" % (I["blade_a"] * I["mini_rows"][1][0] / 100.0))
+    P("")
+    P("9a. THE BATTERY FETS' ROWS: THE CIRCUIT AS DRAFTED NOW AGAINST THE PAIR THE TABLE WAS FIRST JUDGED ON (round 3)")
+    P("   the cause: L4-E11's round 9 draft writes %s (it wrote Q39 and Q40), and its 19c restates E11-29 from the pair's %g K/W (FETs only," % (", ".join(I["fet_refs"]), I["pair_rth"]))
+    P("     from the +%g C line) to %g K/W a FET with R17 apart, the band and R17 in place, from %.2f C; both columns are computed here" % (I["air_c"], I["fet_rth"], I["t0"]))
+    for r in R["coord"]:
+        if "fet_now" not in r:
+            continue
+        was, now = r["fet_was"], r["fet_now"]
+
+        def lim(x):
+            return x[0] if x[1] != x[1] else "%s at %.2f%s" % (x[0], x[1], " (OVER)" if x[1] > 1.0 + 1e-9 else "")
+        P("   %s: %.2f A, %s" % (r["case"], r["a"], dur_s(r["dur"], "", I)))
+        P("     the pair:  %s%s" % (was[1], "" if was[2] is None else "  [%.2f]" % was[2]))
+        P("     now:       %s%s" % (now[1], "" if now[2] is None else "  [%.2f]" % now[2]))
+        lw, ln = lim(r["limit_was"]), lim((r["limit_comp"], r["limit_frac"]))
+        P("     limiting:  %s" % ("unchanged: %s" % ln if lw == ln else "was %s; now %s" % (lw, ln)))
+    P("   not moved by the draft's change: every width, limit, split, transfer field and barrel count of sections 2 to 8, and every copper, barrel,")
+    P("     R17, XT60, dock contact, R19 and J_DCIN reading of section 9 (none reads the battery FETs)")
     P("")
     P("10. PREDICATES")
     for k, val in R["pred"].items():

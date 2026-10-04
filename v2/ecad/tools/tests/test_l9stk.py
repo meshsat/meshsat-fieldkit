@@ -13,8 +13,12 @@ proposes the LAYER-STATUS row. The copper question (4 October 2026, the page's s
 l9stk_copper.py prints from inputs pinned at their sha256; its widths and rises are decision 35's model re-solved here; the
 faces' split is checked on a resistor ladder solved here; the page carries its figures and files its findings; the energy
 chain draft refuses before the decisions, applies once on a copy, replaces record l8r2's texts to the same bytes and leaves
-energy_chain.check's counts unchanged; boards A and E's decisions carry the derived widths. These are software predicates
-on the record's text and arithmetic: they establish no property of any board, stack or price.
+energy_chain.check's counts unchanged; boards A and E's decisions carry the derived widths. Round 3 (4 October 2026, the
+integration of set 29): the battery FETs are parsed from L4-E11's charger draft, not matched as a quoted sentence (the
+defect: the sentence changed from two to three and both scripts refused), which a fixture holds both ways; the coordination
+table's battery FET rows are recomputed here for the circuit as drafted and for the pair they were first judged on; the page's
+14.6a carries both. These are software predicates on the record's text and arithmetic: they establish no property of any
+board, stack or price.
 """
 import ast
 import hashlib
@@ -392,9 +396,19 @@ def t_copper_the_limits_and_the_barrels():
     # the dock contacts' acceptance: no pin over its rating at the blade's current
     r = R["pin_ratio_need"]
     assert abs(I["blade_a"] / (1 + (I["pins"] - 1) * r) - I["pin_a"]) < 1e-9
-    # the pair's 150 C current from E11-29's target
+    # the pair's 150 C current from E11-29's former target (dated since round 3: the pair W4DP-F2 was found on)
     i150 = 2 * math.sqrt((I["pair_limit"] - I["air_c"]) / (I["pair_rth"] * I["pair_mohm_each"] / 1000.0))
     assert abs(i150 - R["pair_i150"]["70"]) < 1e-9 and round(i150, 1) == 21.4
+    # round 3: the FETs as drafted, on E11-29 as L4-E11 restates it, recomputed here: the limit is met at the solved current
+    n, W, ks = len(I["fet_refs"]), R["w"], R["ks"]
+    for key, air in (("70", I["air_c"]), ("t0", I["t0"])):
+        a = R["fet_i150"][key]
+        band = max(m.rise_pair(a, W["pair_1k"], m.OZ1, ks), m.rise_pair(a, W["pair_2k"], m.OZ2, ks))
+        tj = air + band + I["fet_rth"] * (a / n) ** 2 * I["fet_mohm_each"] / 1000.0 + I["fet_r17c"] * a * a * I["r17"]["mohm"] / 1000.0
+        assert abs(tj - I["fet_limit"]) < 1e-6, key
+    assert R["fet_i150"]["t0"] > R["pair_i150"]["t0"] and R["fet_i150"]["t0"] < I["blade_a"] * I["mini_rows"][1][0] / 100.0
+    # L4-E11 prints the restated limit's current to 0.01 A and its allowance to 0.01 K/W: this record's solved current agrees
+    assert abs(R["fet_i150"]["t0"] - I["fet_i_held"]) < 0.01 and n == 3
 
 
 def _ladder(n, rb, rv_end, rv_mid=None):
@@ -466,7 +480,8 @@ def t_copper_the_coordination_table_has_the_owners_rows():
                  "the shore input, Q7 shorted"):
         assert any(c.startswith(must) for c in cases), "no row %r" % must
     names = " ".join(n for r in C for n, _t, _f in r["comps"])
-    for comp in ("copper", "barrel field", "R17", "R19", "XT60", "dock contacts", "Q39/Q40", "3568 holder"):
+    refs = ", ".join(I["fet_refs"])    # round 3: the battery FETs under the designators the draft carries
+    for comp in ("copper", "barrel field", "R17", "R19", "XT60", "dock contacts", refs, "3568 holder"):
         assert comp in names, "no row reads %s" % comp
     for r in C:
         assert r["device"] and r["clearing"] and r["disp"], r["case"]
@@ -474,12 +489,118 @@ def t_copper_the_coordination_table_has_the_owners_rows():
         if r["dur"] is None and not r["case"].startswith(("10 A", "the 25 A case, the gauge working")):
             assert "none" in r["clearing"], "%s claims a clearing time no row prints" % r["case"]
     gf = [r for r in C if r["case"].startswith("the 25 A case, the gauge failed")][0]
-    assert gf["limit_comp"].startswith("Q39/Q40") and gf["limit_frac"] > 1.0
+    assert gf["limit_comp"].startswith(refs) and gf["limit_frac"] > 1.0
     assert any("W4DP-F2" in d for d in gf["disp"])
+    # round 3: each pack row carries the battery FETs' reading now and on the pair it was first judged on; the held rows of
+    # both are recomputed here, and no row that was over its limit on the pair is within it now without the element
+    pack = [r for r in C if "fet_now" in r]
+    assert len(pack) == len([r for r in C if not r["case"].startswith("the shore input")]) and len(pack) >= 9
+    m, W, ks, n = _C["CU"], R["w"], R["ks"], len(I["fet_refs"])
+    held = 0
+    for r in pack:
+        now, was = r["fet_now"], r["fet_was"]
+        assert now[0].startswith(refs) and was[0].startswith("Q39/Q40"), r["case"]
+        if r["dur"] is None or r["dur"] >= 60.0:
+            a = r["a"]
+            band = max(m.rise_pair(a, W["pair_1k"], m.OZ1, ks), m.rise_pair(a, W["pair_2k"], m.OZ2, ks))
+            tj_now = I["t0"] + band + I["fet_rth"] * (a / n) ** 2 * I["fet_mohm_each"] / 1000.0 + I["fet_r17c"] * a * a * I["r17"]["mohm"] / 1000.0
+            tj_was = I["t0"] + I["pair_rth"] * (a / 2.0) ** 2 * I["pair_mohm_each"] / 1000.0
+            assert abs(now[2] - (tj_now - I["t0"]) / (I["fet_limit"] - I["t0"])) < 1e-9, r["case"]
+            assert abs(was[2] - (tj_was - I["t0"]) / (I["pair_limit"] - I["t0"])) < 1e-9, r["case"]
+            assert ("TJ %.2f C" % tj_now) in now[1] and ("TJ %.2f C" % tj_was) in was[1], r["case"]
+            assert (now[2] > 1.0) == (was[2] > 1.0), "%s changed sides of the limit with the third FET" % r["case"]
+            held += 1
+    assert held >= 5
+    svc = [r for r in pack if r["case"] == "18 A for 60 s"][0]
+    assert svc["limit_was"][0].startswith("Q39/Q40") and not svc["limit_comp"].startswith(refs) and svc["limit_frac"] <= 1.0
+    assert "9a. THE BATTERY FETS' ROWS" in _C["ctext"]
     # a row over a printed rating never rests on a coupon alone
     for r in C:
         if r["limit_frac"] == r["limit_frac"] and r["limit_frac"] > 1.0:
             assert any(d.startswith("(b)") for d in r["disp"]), "%s is over a rating with no design correction" % r["case"]
+
+
+def _draft(line):
+    """A scratch draft in the form L4-E11's charger draft has: a Python file whose string constant carries generator source."""
+    return "_NEW = (%r\n        %r)\n" % ("c(\"C1\", \"100n\", \"A\", \"GND\")\n", line)
+
+
+def t_copper_the_battery_fets_are_parsed_from_the_draft_not_a_quoted_sentence():
+    """The defect of 4 October 2026: the script matched the draft's sentence 'one of two in parallel' and refused when L4-E11's
+    round 9 wrote 'one of three'. The designators and their count are now parsed from the nfet calls on the battery nets: a
+    reworded sentence, another loop variable, single calls or a loop over tuples read the same; swapped nets, one FET, another
+    part, two parts or a designator written twice refuse."""
+    m = _CU()
+    nets = '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")'
+    two = 'for _qb in ("QA", "QB"): nfet(_qb, "BUK6Y10-30PX 30 V P-FET (one of two in parallel)", ' + nets
+    three = 'for _qb in ("QA", "QB", "QC"): nfet(_qb, "BUK6Y10-30PX 30 V P-FET (one of three in parallel)", ' + nets
+    reworded = 'for _qb in ("QA", "QB", "QC"): nfet(_qb, "BUK6Y10-30PX, the battery FETs side by side", ' + nets
+    assert m.battery_fets(_draft(two))[0] == ("QA", "QB")
+    assert m.battery_fets(_draft(three))[0] == ("QA", "QB", "QC")
+    assert m.battery_fets(_draft(reworded))[0] == ("QA", "QB", "QC"), "the sentence decides nothing"
+    # the old pattern, kept here as the defect's witness: it matches the two-FET sentence only
+    old = re.compile(r"one of two in parallel")
+    assert old.search(_draft(two)) and not old.search(_draft(three)) and not old.search(_draft(reworded))
+    # the code's form decides nothing either: another loop variable, single calls, a loop over tuples, other FETs beside them
+    assert m.battery_fets(_draft(three.replace("_qb", "_q")))[0] == ("QA", "QB", "QC")
+    singles = "; ".join('nfet("%s", "BUK6Y10-30PX", %s' % (q, nets) for q in ("QA", "QB", "QC"))
+    assert m.battery_fets(_draft(singles))[0] == ("QA", "QB", "QC")
+    tuples = ('for _q, _g, _d, _s in (("QA", "CH_BATDRV", "CH_BATQ", "VBAT"), ("QB", "CH_BATDRV", "CH_BATQ", "VBAT"), '
+              '("QZ", "CH_HIDRV2", "VBAT", "CH_SW2")): nfet(_q, "BUK6Y10-30PX", _g, _d, _s)')
+    assert m.battery_fets(_draft(tuples))[0] == ("QA", "QB"), "a FET on other nets is not a battery FET"
+    assert ("QZ", "BUK6Y10-30PX", "CH_HIDRV2", "VBAT", "CH_SW2") in m.nfet_calls(_draft(tuples))
+    for bad in (three.replace('"CH_BATQ", "VBAT"', '"VBAT", "CH_BATQ"'),          # drain and source swapped: no battery FET
+                'for _qb in ("QA",): nfet(_qb, "BUK6Y10-30PX", ' + nets,            # one FET
+                three.replace("BUK6Y10-30PX", "SQJ403EP"),                          # another part
+                singles.replace('"QA", "BUK6Y10-30PX"', '"QA", "SQJ403EP"'),        # two different parts
+                three.replace('"QC"', '"QA"')):                                     # a designator written twice
+        try:
+            m.battery_fets(_draft(bad))
+        except SystemExit:
+            continue
+        raise AssertionError("the parser read a draft it must refuse: %s" % bad[:60])
+    try:
+        m.battery_fets(_draft(three) + _draft(two).replace("_NEW", "_NEW2"))
+    except SystemExit:
+        pass
+    else:
+        raise AssertionError("the same battery FETs written by two lines were read as one set")
+    # on the tree's draft: the designators the parser reads are the loads the same draft declares on CH_BATQ (parsed here)
+    I = _C["CR"]["in"]
+    draft = open(os.path.join(ROOT, m.PINS["charger_draft"]), encoding="utf-8").read()
+    loads = None
+    for node in ast.walk(ast.parse(draft)):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and '_intent.rail("CH_BATQ"' in node.value:
+            mm = re.search(r'_intent\.rail\("CH_BATQ".*?loads=(\{[^}]*\})', node.value, re.S)
+            loads = ast.literal_eval(mm.group(1))
+    assert loads is not None and tuple(sorted(loads)) == tuple(sorted(I["fet_refs"])), "the draft's CH_BATQ loads are not its battery FETs"
+
+
+def t_the_readers_cross_check_parses_the_readers_patterns_and_compares_what_they_read():
+    """xcheck_readers.py on fixtures: it parses a reader's patterns out of the reader's source (a literal, and a loop over
+    literal patterns), and its comparison names the same text, a changed figure, a changed wording with the same figures and
+    a line that is gone. It edits and pins nothing; its result on the tree is the README's, not a gate here (the readers are
+    other authors' records)."""
+    x = _load(os.path.join(REC, "xcheck_readers.py"), "l9stk_xcheck_under_test")
+    src = ("R9_COMMITS = {'l9stk': 'abc'}\n"
+           "R9_GIT = {'l9stk_out': ('l9stk', 'x.out', '00'), 'l9stk_page': ('l9stk', 'x.md', '11')}\n"
+           "def fix19_round(R, T):\n"
+           "    m = need(o9, r'held at ([\\d.]+) A', 'the limit')\n"
+           "    for n_, pat in ((2, r'the pair ([\\d.]+) W'), (3, r'three ([\\d.]+) W')):\n"
+           "        m = need(o9, pat, 'the %d FETs' % n_)\n"
+           "    need(p9, r'held to ([\\d.]+) K/W', 'R17')\n"
+           "    need(other, r'not a read of this record', 'x')\n")
+    consts, reads, unread = x.l4e11_reads(src)
+    assert unread == 0 and consts["R9_COMMITS"] == {"l9stk": "abc"}
+    assert sorted(reads) == sorted([("o9", r"held at ([\d.]+) A", "the limit"), ("o9", r"the pair ([\d.]+) W", "the 2 FETs"),
+                                    ("o9", r"three ([\d.]+) W", "the 3 FETs"), ("p9", r"held to ([\d.]+) K/W", "R17")])
+    old = "held at 23.93 A from 76.25 C, the band carrying the current (9.16 K"
+    pat = r"held at ([\d.]+) A from ([\d.]+) C, the band"
+    assert x.compare(pat, old, old, 0)[0] == "same"
+    assert x.compare(pat, old, old.replace("23.93", "23.90"), 0)[0] == "DIFFERS"
+    assert x.compare(pat, old, old.replace("held at", "kept at"), 0)[0] == "NO LONGER MATCHES"
+    assert x.compare(r"limit ([\d.]+) A \(\w+\)", "limit 5.0 A (typ)", "limit 5.0 A (max)", 0)[0] == "TEXT DIFFERS, FIGURES SAME"
+    assert x.compare(pat, "nothing here", old, 0)[0].startswith("NOT MATCHED")
 
 
 def t_copper_the_page_carries_the_outputs_figures():
@@ -500,6 +621,17 @@ def t_copper_the_page_carries_the_outputs_figures():
              "%d (through the blade's 600 s point)" % R["field_pack_600"], "(L9STK CU)", "COPPER: NOT CONFIRMED", "W4DP-F2",
              "{:,}".format(int(round(R["i2t_allow_pack"]))) + " A2s", "{:,}".format(int(round(R["i2t_allow_shore"]))) + " A2s",
              "%.4f" % (R["ks"] ** 2), "%.2f C" % I["t0"]]
+    # round 3: the battery FETs as drafted, and 14.6a's two columns for every pack row
+    want += ["%.2f A from %.2f C" % (R["fet_i150"]["t0"], I["t0"]), "%.2f A from the +%g C line" % (R["fet_i150"]["70"], I["air_c"]),
+             " and ".join([", ".join(I["fet_refs"][:-1]), I["fet_refs"][-1]]), "### 14.6a"]
+    s146a = sec[sec.index("### 14.6a"):sec.index("### 14.7")]
+    for r in R["coord"]:
+        if "fet_now" not in r:
+            continue
+        for x in (r["fet_was"], r["fet_now"]):
+            mm = re.search(r"TJ (?:about )?([0-9.]+) C", x[1])
+            if mm:
+                assert ("%s C [%.2f]" % (mm.group(1), x[2])) in s146a, "14.6a does not carry %s C [%.2f] (%s)" % (mm.group(1), x[2], r["case"])
     for s in want:
         assert s in sec, "section 14 does not carry %r" % s
     for f in ("L9C-F%d" % k for k in range(1, 16)):
@@ -952,10 +1084,17 @@ def t_protection_the_conditional_confirmations_corrections():
     vhi = 16.8 - 12e-6 * 200e3
     assert _close(B["grace"][0], B["cu"] * 0.9 * 200e3 * 0.99 * math.log(vhi / (vhi - 2.45))) and B["grace"][0] >= 0.1
     assert _close(B["t_rev0"], B["icb_min"] * (16.8 / C["dock_pk"]) / (22e-6 / (B["cdv"] * 0.9))) and 1.8e-3 < B["t_rev0"] < 2.0e-3
-    # 2. Q41 is l8r2's; the third battery FET's designator is L4-E11's
+    # 2. Q41 is l8r2's; the third battery FET's designator is L4-E11's, read from its draft since round 3 (never Q41)
     for line in text.splitlines():
         if "Q41" in line:
             assert "l8r2" in line, "Q41 named outside its owner: %s" % line.strip()[:120]
+    assert R["fet_third"] in C["fet_refs"] and R["fet_third"] not in ("Q39", "Q40", "Q41") and len(C["fet_refs"]) == _PR().NFET_BAT
+    assert ("its designator L4-E11's: %s in its round 9 draft, not applied" % R["fet_third"]) in text and "DESIGN DEFECT DD-2 until drawn" in text
+    # round 3: L4-E11's restated E11-29 is held to this section's own figures, never read back as an input of them
+    assert abs(C["fet_rth"] - J[3]["apart"]) < 0.006 and abs(C["fet_i_held"] - B["icl_max"]) < 0.006 and C["fet_t0"] == R["t0"]
+    for k in ("L4-E11's charger draft draws the battery FETs selected here, the third beside Q39 and Q40",
+              "the copper record's readings of the drafted FETs are this section's at 10 A, the service and the limit, to 0.05 K"):
+        assert R["pred"][k] is True, k
     # 3. BAT-F20 on the 10 A and 18 A rows
     for case in ("10 A continuous", "18 A for 60 s"):
         assert "DD-5" in rows[case]["status"] and "Q1 OVER" in rows[case]["margin"]
