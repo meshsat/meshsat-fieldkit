@@ -249,6 +249,28 @@ def t_margins_and_findings():
         assert F[k]["class"] == "ASSUMPTION TO BOUND", k
 
 
+def t_round4_c1_and_the_case_row():
+    """Round 4 (T5): C1 takes the standby card out of PS-ALLTX on DRAFTED and leaves DRAWN as rv-pwr's state; out 7b computes
+    C-ALLTX rev 2 from the row's text at the VBAT the case sets, and its parts close on the cells' EMF."""
+    m = _M()
+    for k in ("C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state",
+              "C-ALLTX rev 2's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W",
+              "C-ALLTX rev 2's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"):
+        assert _pred(k), k
+    ca = _C["R"]["calltx"]
+    nw = ca["new"]
+    assert abs(nw["vbat"] * 18.0 - nw["p"]) < 1e-6 and nw["vbat"] < 14.4
+    assert abs(nw["allow"] - 18.0 * (15.5 - 18.0 * (nw["r_path"] + 4 * 0.06 / 3.0))) < 1e-9
+    assert ca["old_raw"]["standby"] == 9.1 and ca["raw_fixed"]["standby"] == 0.0 and ca["old_raw"]["p"] - ca["raw_fixed"]["p"] > 9.1
+    # the row's text against D-11's basis: only non-transmit loads differ, and each is taken at its PS-ALLTX PLAN in the row
+    D = _C["R"]["cfgs"]["DRAFTED"]
+    for n, v in ca["vals"].items():
+        if abs(v - ca["basis_vals"][n]) > 1e-9 and not n.startswith("CM5"):
+            assert n not in m.CASE_TX and v == D.load(n)["d"]["ALLTX"][1], n
+    assert nw["need"] < ca["old_basis"]["V_rest"]["hi"] and round(ca["old_basis"]["V_rest"]["hi"], 3) == 16.214
+    assert ca["cm5_8"]["need"] > nw["need"] > ca["fans_plan"]["need"]
+
+
 def t_sensitivities_cover_every_state():
     m = _M()
     S = _C["R"]["sens"]
