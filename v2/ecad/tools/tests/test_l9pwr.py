@@ -1,12 +1,18 @@
-"""Layer 9 record l9pwr (MESHSAT-1357, 3 October 2026; v2/docs/records/l9pwr/): item 9.1, the power budget brought to the
-current design with margins and sensitivities, held as predicates on what l9pwr_budget.py computes.
+"""Layer 9 record l9pwr (MESHSAT-1357, 3 October 2026, round 2 on 4 October 2026; v2/docs/records/l9pwr/): item 9.1, the power
+budget brought to the current design with margins and sensitivities, held as predicates on what l9pwr_budget.py computes.
+
+Round 2: the DRAFTED tree carries record l8r2's round 6 drafts (fnd/l8r3 at 89924e40) and record l9stk's section 15 (fnd/l9stk at
+2c8b29fb) from copies in inputs/; each copy must equal git show of its source where the commit is present. Round 1's DRAFTED tree
+is rebuilt beside it and reproduces what L4-E9 round 7 and record l8r2 took from round 1.
 
 The predicates: the committed .out is what the script prints and every pinned input is present at the sha256 the output names;
 the script's evaluator reproduces record rv-pwr's model on rv-pwr's own tree (to 1e-9 W) and rv-pwr's committed headline table;
 each reconciliation line with Layer 4 (L4-E9's modes, the review's and L4-E12's B4 and B7, L4-E11's VSYS_E declaration and the
-battery FET pair's loss, L4-E12's fans' share and heat stage, Layer 7's fan heat, l8r2's choice (a), rv-pwr's D-11 margin on main)
-reproduces the other record's figure from its own inputs; the drafts are labelled DRAFTED and the waterfall runs from RV to
-DRAFTED; D-11's all-transmit floor holds on the drawn tree and fails on the drafted one (finding L9P-F01); the findings carry a
+battery FET pair's loss, L4-E12's fans' share and heat stage, Layer 7's fan heat, rv-pwr's D-11 margin on main, L4-E9 round 7's
+modes and D-17 floor) and with records l8r2 (round 6's slot envelope) and l9stk (the breaker and the third FET) reproduces the
+other record's figure from its own inputs; the drafts are labelled DRAFTED and the waterfall runs from RV to DRAFTED; D-11's
+all-transmit floor holds on the drawn tree and fails on the drafted one, and round 7's 16.1 V covers round 1's drafts and not
+round 2's (finding L9P-F01); slots 1 and 3 sit within their LM5176 loop (L9P-F02 resolved in the drafts); the findings carry a
 class among the owner's three and an owner; the page carries the output's figures; the record's files carry no long dashes, no
 claim words and no private path. These are software predicates on the record's own arithmetic: they establish no property of
 any board, converter, fan or pack, and nothing here is measured.
@@ -16,11 +22,13 @@ import importlib.util
 import os
 import re
 import shutil
+import subprocess
 import sys
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = os.path.join(ROOT, "v2", "docs", "records", "l9pwr")
+INPUTS = os.path.join(REC, "inputs")
 SCRIPT = os.path.join(REC, "l9pwr_budget.py")
 OUT = os.path.join(REC, "l9pwr_budget.out")
 PAGE = os.path.join(REC, "L9-POWER-BUDGET.md")
@@ -85,10 +93,31 @@ def t_the_evaluator_reproduces_rv_pwr():
     assert _C["R"]["check_worst"] < 1e-9
 
 
+def t_every_copy_in_inputs_equals_its_source():
+    """Each copy in inputs/ is git show of its source at the commit its name carries (whole, or the lines ORIGIN names), where the
+    commit is present in this checkout; the script pins each copy and SOURCES.txt names it with its sha256."""
+    m = _M()
+    assert _pred("every copy in inputs/ is pinned and named with its sha256 in SOURCES.txt")
+    if shutil.which("git") is None:
+        raise Skip("git is needed")
+    seen = 0
+    for key, (branch, commit, src, lines) in m.ORIGIN.items():
+        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, src)], capture_output=True)
+        if r.returncode != 0:
+            continue
+        body = r.stdout
+        if lines is not None:
+            body = b"".join(body.splitlines(keepends=True)[lines[0] - 1:lines[1]])
+        assert open(os.path.join(ROOT, m.PINS[key]), "rb").read() == body, "%s is not %s at %s" % (m.PINS[key], src, commit)
+        seen += 1
+    if not seen:
+        raise Skip("none of the source commits is in this checkout")
+
+
 def t_the_reconciliation_lines_with_layer_4():
     """Each line reproduces the other record's figure from its own inputs; the current design's figure beside it."""
-    for rid in ("R1", "R1b", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"):
-        assert _pred("reconciliation %s: Layer 4's figure reproduced from its own inputs" % rid), rid
+    for rid in ("R1", "R1b", "R1c", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"):
+        assert _pred("reconciliation %s: the other record's figure reproduced from its own inputs" % rid), rid
     r = _rec("R2")
     assert r["theirs"][2] == 50.043663 and r["repro"][2] == 50.043663, "B4: the review's 50.043663 W"
     assert r["ballast"][1] == 52.133663 and r["ballast"][2] == 52.133663
@@ -100,6 +129,12 @@ def t_the_reconciliation_lines_with_layer_4():
     assert r["repro"][2] == 89.8
     r = _rec("R1")
     assert r["repro"] == (42.8, 203.8, 272.0, 162.3)
+    r = _rec("R1c")
+    assert r["repro"] == (44.205, 209.007, 287.912, 165.76), "L4-E9 round 7's restated modes from round 1's tree"
+    r = _rec("R11")
+    assert r["repro"][6] == 15.986 and r["repro"][12] == 16.1, "L4-E9 round 7's D-17 from round 1's tree"
+    r = _rec("R9")
+    assert r["theirs"][0] == 23.197 and r["repro"][0] == 23.197 and r["repro"][3] == 4.9019, "record l8r2's round 6 envelope"
     # the current design moves them, and the waterfall carries the difference step by step
     R = _C["R"]
     for st in ("IDLESPEC", "ALLTX"):
@@ -114,20 +149,28 @@ def t_drafts_are_drafted_and_the_trees_are_ordered():
     assert _pred("DRAFTED's PLAN is above DRAWN's in every state")
     assert _pred("DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered")
     m = _M()
+    assert _pred("DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off")
     st = [s[1] for s in m.STEP_TEXT]
-    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:]) == {"DRAFTED"}
+    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:]) == {"DRAFTED"} and len(st) == 16
     for sid, status, tx in m.STEP_TEXT[6:]:
         assert "not applied" in tx, "%s does not say it is not applied" % sid
 
 
 def t_margins_and_findings():
     assert _pred("D-11's all-transmit floor holds on RV and DRAWN and fails on DRAFTED")
+    assert _pred("L4-E9 round 7's all-transmit floor covers round 1's drafted basis and not this round's")
     assert _pred("D-11's PA-alone floor holds on every tree")
     assert _pred("no converter is over its limit at PLAN in any state, DRAWN or DRAFTED")
+    assert _pred("slots 1 and 3 are within their LM5176 loop on DRAFTED in every state: at HIGH at 5.1 V and at the least load voltage, in the bounded start and with a degraded cooler")
+    assert _pred("the device rail's LM5176 is over its loop at HIGH in PS-ALLTX on DRAWN and DRAFTED (L9P-F03)")
+    assert _pred("the drafted fan row equals the envelope over the step-up's low efficiency at 5.0 V, to 0.01 A")
     assert _pred("every margin finding has a class among the instruction's three and an owner")
     assert _pred("the findings are L9P-F01 to L9P-F06")
     F = {x["id"]: x for x in _C["R"]["classified"]}
-    assert F["L9P-F01"]["class"] == "DEMONSTRATED ANALYSIS DEFECT" and "L4-E9" in F["L9P-F01"]["owner"]
+    assert F["L9P-F01"]["class"] == "DEMONSTRATED ANALYSIS DEFECT" and "L4-E9" in F["L9P-F01"]["owner"] and F["L9P-F01"]["status"].startswith("OPEN")
+    fr = _C["R"]["floor_rule"]
+    assert fr["need"] > fr["floor_r7"] and fr["floor_req"] >= fr["need"] + fr["over"] - 1e-9 and fr["floor_req"] - fr["step"] < fr["need"] + fr["over"]
+    assert F["L9P-F02"]["status"].startswith("RESOLVED IN THE DRAFTS") and "CONDITIONAL" in F["L9P-F02"]["status"]
     assert F["L9P-F04"]["class"] == "PHYSICAL QUESTION" and "specimen" in F["L9P-F04"]["action"]
     for k in ("L9P-F02", "L9P-F03", "L9P-F05", "L9P-F06"):
         assert F[k]["class"] == "ASSUMPTION TO BOUND", k
@@ -155,8 +198,13 @@ def t_the_page_carries_the_outputs_figures():
         t = R["tot"][("DRAFTED", st)]
         s = "%.2f / %.2f / %.2f" % (t["lo"]["pb"], t["plan"]["pb"], t["hi"]["pb"])
         assert s in page, "the page does not carry %s's DRAFTED %s" % (st, s)
-    for s in ("50.043663", "2.06349", "1.3208", "L9P-F01", "L9P-F06", "%.2f V" % R["d11"]["DRAFTED"]["rows"]["all-transmit basis: non-transmit typical, standby card off, high"]["V_rest"]["hi"]):
+    fr = R["floor_rule"]
+    for s in ("50.043663", "2.06349", "1.3208", "L9P-F01", "L9P-F06", "%.3f V" % fr["need"], "%.1f V" % fr["floor_req"], "%.3f V" % fr["need_mk"]):
         assert s in page, "the page does not carry %r" % s
+    for st in ("IDLESPEC", "ALLTX"):
+        t = R["tot"][("DRAFTED-R1", st)]
+        s = "%.2f / %.2f / %.2f" % (t["lo"]["pb"], t["plan"]["pb"], t["hi"]["pb"])
+        assert s in page, "the page does not carry %s's round 1 DRAFTED %s" % (st, s)
     need(README, "the README")
     rd = open(README, encoding="utf-8").read()
     assert "9.1" in rd and "LAYER-STATUS" in rd
@@ -164,6 +212,12 @@ def t_the_page_carries_the_outputs_figures():
 
 def t_record_hygiene_no_long_dashes_no_claim_words_no_private_paths():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__)]
+    copies = [os.path.join(INPUTS, f) for f in sorted(os.listdir(INPUTS))] if os.path.isdir(INPUTS) else []
+    for p in copies:
+        t = open(p, encoding="utf-8").read()
+        assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in inputs/%s" % os.path.basename(p)
+        for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
+            assert bad not in t, "a private path in inputs/%s" % os.path.basename(p)
     for p in files:
         need(p, os.path.basename(p))
         t = open(p, encoding="utf-8").read()
