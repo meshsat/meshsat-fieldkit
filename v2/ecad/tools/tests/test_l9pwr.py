@@ -219,11 +219,14 @@ def t_drafts_are_drafted_and_the_trees_are_ordered():
     assert _pred("DRAFTED's PLAN is above DRAWN's in every state")
     assert _pred("DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered")
     m = _M()
-    assert _pred("DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off")
+    # round 4: C1 takes the standby card's 1.0 W PLAN placeholder out of PS-ALLTX (REQ-018, CONOPS 4a), so PS-ALLTX joins PS-SURV
+    assert _pred("DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off, and PS-ALLTX, where C1 removes the standby card's 1.0 W")
     st = [s[1] for s in m.STEP_TEXT]
-    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:]) == {"DRAFTED"} and len(st) == 16
-    for sid, status, tx in m.STEP_TEXT[6:]:
+    # round 4: C1, the state's definition corrected (no drawing, no draft), is the last step
+    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:16]) == {"DRAFTED"} and st[16:] == ["CORRECTED"] and len(st) == 17
+    for sid, status, tx in m.STEP_TEXT[6:16]:
         assert "not applied" in tx, "%s does not say it is not applied" % sid
+    assert m.STEP_TEXT[16][0] == "C1" and "no drawing and no draft" in m.STEP_TEXT[16][2]
 
 
 def t_margins_and_findings():
