@@ -4690,7 +4690,7 @@ def render_fix22(R, p):
       % (fmt(S20["r_int"] / 1e6, 0), ua(S["lm"][0]), fmt(S20["f05"]["vin"], 1), ua(S["lm"][1]), fmt(S9["vbat_clamp"], 1)))
     p("     the three battery FETs: Nexperia prints IDSS at most %s uA at 25 C and %s uA at Tj 125 C, VDS -30 V (BUK6Y10-30P, 17 April 2020, Table 7"
       % (ua(S["bat"][0] / 3, 0), ua(S["bat"][1] / 3, 0)))
-    p("       p.6): %s and %s uA for the three (MAKER, guaranteed limits; V2-m2: rounds 10 and 11 called the hot figure 'not printed'); over 125 C"
+    p("       p.6): %s and %s uA for the three (MAKER, printed maxima; V2-m2: rounds 10 and 11 called the hot figure 'not printed'); over 125 C"
       % (ua(S["bat"][0], 0), ua(S["bat"][1], 0)))
     p("       nothing is printed: on the sheet's own two rows' slope E-1's 150 C would read %s uA for the three (INFERRED, information only)" % ua(S["bat_150"]))
     p("     the breaker pair Q101 and Q102 (CSD18510Q5B): TI SLPS632 (March 2017) p.%d prints IDSS %s uA at VGS 0 V, VDS %s V, TA 25 C, its only"
@@ -4777,7 +4777,7 @@ def render_fix22(R, p):
       % ua(b["pair_allow"]))
     p("       lever is then the hold on top of 4.7 kOhm (the static %s mA is its ceiling), a new round with both checks' arithmetic beside it"
       % fmt(b["v"]["isrc_max"] * 1e3, 3))
-    p("   22f. V1'S AND V2'S ARITHMETIC SIDE BY SIDE (R256 has moved twice: 4.7 kOhm in round 10, 6.8 kOhm on V1's minor in round 11, 4.7 kOhm now)")
+    p("   22f. V1'S AND V2'S ARITHMETIC SIDE BY SIDE (R256 has moved twice: 4.7 kOhm in round 10, 6.8 kOhm on V1's minor in round 11, 4.7 kOhm now; INFERRED)")
     p("     V1 (round 10's check, the sink at the clamp): 4.7 kOhm %s mA, over TI's recommended %s mA, 'transient only'; 6.8 kOhm %s mA"
       % (ma(b["v"]["sink"](vst["clamp"])), ma(S20["i_rec"], 0), ma(a["v"]["sink"](vst["clamp"]))))
     p("     V2 (round 11's check, the bleed with the sources): 4.7 kOhm ends inside the hold for sources under %s uA (%s s at the hot bound); 6.8 kOhm"
@@ -4797,14 +4797,14 @@ def render_fix22(R, p):
       % (fmt(S20["thr_lo"], 3), fmt(S20["thr_hi"], 3), fmt(S20["charge_end"] * 1e3, 2)))
     p("       named residual of 20l (the latched FET at most %s C, record l8p); that repeated cycle is not analysed further (INFERRED)" % fmt(S20["under_thr_tj"], 1))
     h = S["hys_alt"]
-    p("   22h. THE MINORS (V2-m1 to m5 and m9, this record's part)")
+    p("   22h. THE MINORS (V2-m1 to m5 and m9, this record's part; RECORD, INFERRED)")
     p("     V2-m1: 21b (ii) now takes Vishay's printed MAXIMA for the SQJ403EP and SQJ407EP and prints the typical figures beside them")
     p("     V2-m2: Nexperia's hot IDSS row quoted in 20e and 22b; V2-m3: the dd7 draft's comment restated from 22c's figures")
     p("     V2-m4, V1's two minors that no record carried: (1) the TPS37's hysteresis accuracy (+-%s %%) read as percentage points, not relative: the"
       % fmt(S20["tps"]["hacc"] * 100, 1))
     p("       return read held under %s V (board P holds %s V), the loop read powered over %s V at most (%s mV over the interface's 2.0 V; the"
       % (fmt(h["ret_low"], 4), fmt(S20["held"], 3), fmt(h["out_hi"], 3), fmt((h["out_hi"] - S20["if_out"]) * 1e3, 0)))
-    p("       held loop reads %s V over it at 7.6 V), the window's bound %s kOhm: every margin survives (V1's figures reproduced); OWNER this record,"
+    p("       held loop reads %s V over it at 7.6 V), the window's bound %s kOhm: every margin still holds (V1's figures reproduced); OWNER this record,"
       % (fmt(h["held_margin"], 3), fmt(h["window"] / 1e3, 1)))
     p("       NEXT Q-TI-19 (drafted, NOT SENT) and E11-45 (e); (2) the CONOPS wording of the named residual (a breaker latched with a source present")
     p("       and no charge over board P's threshold stays latched: the pack stays isolated while the source carries the kit): OWNER the CONOPS")

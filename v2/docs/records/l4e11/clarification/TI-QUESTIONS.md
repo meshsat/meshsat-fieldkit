@@ -123,3 +123,14 @@ That fallback is under 5 nF only on a typical figure, so the questions name it.
   VBATDRV_DIODE 30 mV, LDO mode at VSYS_MIN, the supplement entry), what gate load does TI accept on BATDRV over -20 to 70 C, stated
   as Ciss at a named VDS or as QG(tot) at -10 V (three BUK6Y10-30P: 192 nC at most at VDS -15 V, 7.08 nF typical at -15 V)? SLUSE65A names no
   external driver or buffer on BATDRV; does TI support one in any of the three modes, and if so with what added delay or offset?
+
+## Round 12 (4 October 2026, record section 22h): Q-TI-19
+
+Drafted, not sent. The independent check of round 10 (V1) read the hysteresis accuracy two ways and found every margin kept; no
+record carried the question until round 12.
+
+- **Q-TI-19 (E11-45 (e), TPS37A010122; record sections 20c and 22h).** SNVSBJ1E 7.5 (p.7) prints the hysteresis accuracy for "VHYS
+  Range = 2% to 13%" as -1.5 % to +1.5 %. For the 2 % variant, is that +-1.5 % of the hysteresis itself (1.97 to 2.03 % of the
+  threshold) or +-1.5 percentage points (0.5 to 3.5 % of the threshold)? The record sizes U48's readings on the first. On the second
+  the enable loop's return would read held under 0.7642 V, the loop powered over 2.008 V at most and the window's bound would be
+  25.1 kOhm; each margin still holds, and the interface's 2.0 V would be restated by its owner.

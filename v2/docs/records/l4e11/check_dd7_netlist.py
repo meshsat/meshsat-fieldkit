@@ -16,12 +16,16 @@ single pin row does not show:
   REL   U47's RESET1 and RESET2 both on DD7_N; the CELL+ divider's foot DD7_REF reaches ground only through Q52 to DD7_N;
   INH   Q47 from DD7_N to SYS_INH_D, gate DD7_LP; Q49 from VBAT to CH_BATDRV, gate SYS_INH_P; Q48 and R256 from CELL+ to DD7_N;
         every gate on DD7_LP is one of Q47, Q48 and Q52;
-  RST   Q44 on DOCK_EN_RET, gate DD7_G; Q45 and Q46 pull DD7_G, gates FE_RUN and DD7_N.
+  RST   Q44 on DOCK_EN_RET, gate DD7_G; Q45 and Q46 pull DD7_G, gates FE_RUN and DD7_N;
+  BODY  (round 12) the battery FETs Q39, Q40 and Q42 (the charger draft's) have their source pads 1 to 3 on VBAT, their gate on
+        CH_BATDRV and their drain tab on CH_BATQ: a P-channel FET's body diode conducts from drain to source, so with the inhibit set
+        VBAT cannot lift CELL+; the states in which U47's RESET sinks (record section 22d) rest on it.
 Exit 0: DRAWN; 4: FAIL (each failure printed); 3: NOT DRAWN (U47 absent). Nothing is written."""
 import hashlib
 import re
 import sys
 
+BATFETS = ("Q39", "Q40", "Q42")       # the charger draft's three battery FETs (round 12's BODY group)
 # the draft's own map: (ref, value prefix, {pin: net})
 MAP = [
     ("Q44", "2N7002", {"1": "DD7_G", "2": "GND", "3": "DOCK_EN_RET"}),
@@ -57,7 +61,7 @@ MAP = [
     ("R83", "200k", {"1": "SYS_INH_P", "2": "SYS_INH_D"}),
     ("Q49", "AO3401A", {"1": "SYS_INH_P", "2": "VBAT", "3": "CH_BATDRV"}),
     ("Q48", "2N7002", {"1": "DD7_LP", "2": "DD7_N", "3": "DD7_BL"}),
-    ("R256", "6.8k", {"1": "CELL+", "2": "DD7_BL"}),
+    ("R256", "4.7k", {"1": "CELL+", "2": "DD7_BL"}),                # round 12: 4.7k again (the check V2's V2-B1; 6.8k in round 11 only)
     ("TP1", "DD7_H", {"1": "DD7_H"}),
     ("TP2", "DD7_N", {"1": "DD7_N"}),
 ]
@@ -156,6 +160,14 @@ def judge(raw):
     for net, members in EXCLUSIVE.items():
         if on.get(net, set()) != members:
             bad.append("%s reaches %s, wanted %s" % (net, sorted(on.get(net, set())), sorted(members)))
+    for ref in BATFETS:
+        got = pins.get(ref, {})
+        if not comps.get(ref, "").startswith("BUK6Y10-30PX 30 V P-FET"):
+            bad.append("%s is not the P-channel battery FET the inhibit's states rest on (%r)" % (ref, comps.get(ref, "absent")[:40]))
+        want = {"1": "VBAT", "2": "VBAT", "3": "VBAT", "4": "CH_BATDRV", "5": "CH_BATQ"}
+        for p, n in want.items():
+            if got.get(p) != n:
+                bad.append("%s.%s on %r, wanted %s (the body diode must point from CELL+ to VBAT)" % (ref, p, got.get(p), n))
     gates_lp = sorted(r for r, d in pins.items() if r.startswith("Q") and d.get("1") == "DD7_LP")
     if gates_lp != ["Q47", "Q48", "Q52"]:
         bad.append("the gates on DD7_LP are %s, wanted Q47, Q48 and Q52" % gates_lp)

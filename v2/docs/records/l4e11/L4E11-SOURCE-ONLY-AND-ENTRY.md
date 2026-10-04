@@ -27,7 +27,9 @@ FET, E11-29 as a junction limit, DD-3, IF-1, C3), record l8p's findings L8P-F02 
 E11-37 to the three-device network. **Round 10** (section 20, 4 October 2026) answers record l8p's round 3: route R1 and its findings L8P-F04
 and L8P-F05 on board A's side of DD-7, and records T2 (E-1's even split) open. **Round 11** (section 21, 4 October 2026, task T2 on
 the shared case row C-PROT rev 1) takes E-1 over the worst split of the battery FETs' RDS(on) spread, compares three approaches for E-1
-and E11-37, selects one, and applies the two minors of the independent check V1 of round 10.
+and E11-37, selects one, and applies the two minors of the independent check V1 of round 10. **Round 12** (section 22, 4 October 2026)
+answers the independent check V2 of round 11: its blocking finding V2-B1 (the cost of R256 at 6.8 kOhm) as a design choice over V2's
+three corrections, and its minors V2-m1 to m5 and m9.
 
 ## In short
 
@@ -110,8 +112,8 @@ and E11-37, selects one, and applies the two minors of the independent check V1 
 - **Round 10 (section 20):** record l8p's route R1 (board P holds the loop's return under 0.055 V while a charge passes the off breaker)
   met on board A: **L8P-F04 corrected** (U48 reads the held return under 0.7755 V and the powered loop over 1.981 V at most; the
   inhibit set within 0.85 ms, held at least 1.341 s after the return rises, released on CELL+ alive); **L8P-F05 corrected** (a dead
-  CELL+ never sets the inhibit; while it holds, a 6.8 kOhm bleeder keeps CELL+ at 0.180 V at 16.8 V against the 4.147 V dead reading,
-  for any source under 0.597 mA); **B-R2 drafted on both boards**; board A composed in L4-E9's order runs to its end and
+  CELL+ never sets the inhibit; while it holds, a 4.7 kOhm bleeder keeps CELL+ at 0.154 V at 16.8 V against the 4.076 V dead reading,
+  for any source under 0.846 mA); **B-R2 drafted on both boards**; board A composed in L4-E9's order runs to its end and
   `check_dd7_netlist.py` reads DRAWN (five mutations FAIL); **T2 recorded OPEN** (E-1's even split: one FET of three may take 9/8);
   findings L4E11-R10-F1 to F3 for records l8p and l9stk (F3: the PTC's printed points are 100 kOhm over 110 C and 4.7 MOhm at 130 C).
 - **Round 11 (section 21, task T2, C-PROT rev 1):** E-1 sized the three battery FETs at the even split; with their RDS(on) spread
@@ -121,8 +123,16 @@ and E11-37, selects one, and applies the two minors of the independent check V1 
   only), (iii) a buffer on BATDRV (no printed basis). **SELECTED (SESSION): (i)(a), E11-29's installed (Zself + 2 Zmut) at most 40.78
   K/W** (or the measured Zself and Zmut by 21b's formula), at the charger's printed least drive; E-1's defect **corrected in the
   acceptance**, CONDITIONAL on E11-29 and E11-36; **E11-37 stays OPEN** with Q-TI-17 (e) and (f) drafted (not sent) and (ii) as the
-  correction scope on a negative answer. V1's minors: R256 6.8 kOhm (U47's RESET 4.47 mA at the clamp, under TI's 5 mA; the bleed's
-  margin to the hold now 0.112 s) and R84 specified pulse-rated, both read in the netlist (seven mutations FAIL).
+  correction scope on a negative answer. V1's minors: R84 specified pulse-rated; R256's move to 6.8 kOhm is **superseded by round 12**.
+- **Round 12 (section 22, the check V2's V2-B1, C-PROT rev 1):** round 11 gave the bleed of CELL+ with no source (1.228 s inside the
+  1.341 s hold) beside a static limit of 0.597 mA; with the sources counted, 6.8 kOhm keeps the bleed inside the hold only under
+  87.4 uA (V2's arithmetic, reproduced). The sources at their hot bound are 434.8 uA: the LM5069's 1 MOhm, the battery FETs on
+  Nexperia's printed 125 C row, the breaker pair on record l8p's ASSUMED doubling. V2's three corrections compared against both
+  needs: (a) text only fails the bleed; (c) 6.8 kOhm with a longer hold (C241 2.2 uF) holds it but moves the hold to 12.8 s at most
+  and the arm; **SELECTED (SESSION): (b) R256 back to 4.7 kOhm**, the bleed 1.218 s at the hot bound, inside the hold while the
+  sources total under 520.7 uA, and U47's RESET at most 4.32 mA in every state without a second fault (6.45 mA, under the absolute
+  10 mA, only with CELL+ at VBAT's 29.2 V clamp). **Need 1 stays CONDITIONAL and OPEN** on record l8p's E-14c and on E11-45 (f2):
+  no correction holds it on printed figures, the breaker FETs' hot leakage being unprinted. V2-m1 to m5 and m9 carried (22h).
 - **D-06** stays resolved in design with the corrected envelope and floor; **D-09** keeps its reproduced margin (4.927 to 14.653
   ms against 4.593 ms) and its conditional chart (0.71 A against 0.675 A), as the resolution while the LM5069 stays.
 
@@ -666,7 +676,7 @@ An owner and an acceptance close the assignment, not the item.
 | E11-26 | test | prototype bench | the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most 0.2 ms against the bank's 1 ms assumption gives the engineering margin section 11 names |
 | E11-27 | implementation | Layer 8 board A generator owner | `apply_gen_sch_a_charger.py` applied (sections 14 and 15): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (C3278350) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R228 11k 0.1 %, C237 22 nF, MODE to GND, C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C from GND to OUT, within 20 nH of C236, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each |
 | E11-28 | firmware | firmware owner | the BQ25730's register rules: EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 5.7 V on SRN (section 15c) |
-| E11-29 | layout | Layer 9 pre-layout analysis | the junction limit of record l9stk 15.5 (E-1; round 9, 19c), sized before layout and measured on the specimen of 17d (a coupon or the controlled first prototype; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most 40.78 K/W steady by the body diode's VSD method with the band carrying 23.93 A and R17 dissipating in place, R17's coupling into each junction at most 1 K/W (heat R17 alone), so the hottest junction stays at most 150 C held at 23.93 A from 76.25 C for ANY split of the RDS(on) spread under the allowance (round 11, section 21: one FET at R / 2 takes 9/8 of the even split's loss, so record l9stk's even-split 45.88 K/W is taken times 8/9; with Zself and Zmut read apart, the largest of each into any junction, (Zself + 2 Zmut) at most 45.88 x 8 (1 - m)(1 + 2 m) / 9 for m = Zmut / Zself under 1/4, 45.88 at or over it) (the pair's fallback, its Zself + Zmut at most 20.39 K/W, the even split its worst); the pair's former 33.12 K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it; recorded OPEN in round 10 (20i) on the even split, corrected in this acceptance by round 11 (21d), CONDITIONAL on this measurement |
+| E11-29 | layout | Layer 9 pre-layout analysis | the junction limit of record l9stk 15.5 (E-1; round 9, 19c), sized before layout and measured on the specimen of 17d (a coupon or the controlled first prototype; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most 40.78 K/W steady by the body diode's VSD method with the band carrying 23.93 A and R17 dissipating in place, R17's coupling into each junction at most 1 K/W (heat R17 alone), so the hottest junction stays at most 150 C held at 23.93 A from 76.25 C for ANY split of the RDS(on) spread under the allowance (round 11, section 21: one FET at R / 2 takes 9/8 of the even split's loss, so record l9stk's even-split 45.88 K/W is taken times 8/9; with Zself and Zmut read apart, the largest of each into any junction, (Zself + 2 Zmut) at most 45.88 x 8 (1 - m)(1 + 2 m) / 9 for m = Zmut / Zself under 1/4, 45.88 at or over it) (the pair's fallback, its Zself + Zmut at most 20.39 K/W, the even split its worst); the pair's former 33.12 K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it; recorded OPEN in round 10 (20i) on the even split, corrected in this acceptance by round 11 (21d), CONDITIONAL on this measurement; the coupon also reads the PTC's site (RT1 at the drain tabs' centroid) against each junction with one FET heated alone at the worst split's 1.513 W, so the thermal guard's trip side is judged on the hottest FET and not on the even split (round 12, the check V2's V2-m5; record l8p's guard) |
 | E11-30 | evidence | Layer 6 components | the WHOLE hot docking waveform accepted (sections 16d and 17b): 242.9 A peak, time constant 33.8 us, from a +70 C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: 6 parts, each 2000 pulses 10 s apart at 267.2 A peak and 37.2 us (x1.1), mounting base 75 C, every part passing VSD at 80 A pulsed within +5 % of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 % and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown) |
 | E11-31 | test | prototype bench | the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least 12.054 V; CHRG_INHIBIT 1 with SRN over 12.546 V, VSRN plus 150 mV within 2 percent, under 12.054 V at least 12.054 V, between at least 11.96 V; the held pack current at most 1 mA with board E on VSYS_E; the start from cold at VBUS20 19.15 and 20.96 V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and 62.1 C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more |
 | E11-32 | evidence | Layer 6 components | the BQ25730RSNR's supply for the build quantity (five boards) from an authorised source, filed: LCSC read stock 0 on 2 October 2026 (the Layer 6 author's L6P-F05: a procurement fact for the owner's list, not a reselection; TI and its distributors are the next sources to read), and the two battery FETs' (BUK6Y10-30PX, LCSC stock 67) |
@@ -682,7 +692,7 @@ An owner and an acceptance close the assignment, not the item.
 | E11-42 | test | prototype bench | IF-1's hold (round 9, 19f) on board A's first prototype docked onto a board P carrying record l8p's breaker, with no source: (a) twenty dockings, U42's output and RAIL_EN low until at least 78.6 ms after VBAT passes 8.476 V, and the breaker's start ending with its TIMER under the fault threshold, each recorded; (b) an undocking and redocking after 0.5, 1 and 2 s with VBAT held up by board A's capacitance: U46 asserting as VBAT falls under 8.309 V and the following start held the same way; (c) MAIN held through a docking: the release to KILL recorded, at least 207.7 ms of U1's blanking left; (d) with a source present at the plan load, the breaker's start completing, or the -1 latching while the source keeps the kit up, as 19f bounds; (e) the static draw from VBAT while U46 holds at most 40 mA at 16.8 V |
 | E11-43 | implementation | Layer 8 board A generator owner | `apply_gen_sch_a_dd7.py` applied after record l8p's `apply_gen_sch_a_ptc.py` and this record's charger draft, released with l8p's three drafts (rounds 9 and 10, 19h and 20; record l9stk's DD-7, record l8p's route R1 and its L8P-F04 and L8P-F05): the input-return reset Q44 to Q46, R106 and D25 on DOCK_EN_RET (Q46's gate on DD7_N); the loop reader U48 with R109, R144, R249 and R250; the hold and the release on CELL+ alive U47 with C241, R85, C248, R107, R108, Q52, R254 and R255, the arm Q50, Q51, R251, R252, R253, R84 and D26; the charge inhibit Q47, Q49, R82 and R83 on CH_BATDRV and the bleeder Q48 and R256 on CELL+; DD7_VC from R233 and D27; TP1 and TP2; the layout keeps Q49 within 10 mm of the battery FETs' gate node and U47 and U48 beside C238, their VDD bypass; R249 to R256 and C248 sit above the main-based order's highest, so d8dec31's mainpb takes the next ones; `check_dd7_netlist.py` reads DRAWN on the regenerated netlist; L4-E9's change list keeps the draft after l8p's PTC and before mainpb (the integrator's) |
 | E11-44 | firmware | firmware owner | record l9stk's IF-7 with 19h's hardware: the bridge reports a tripped breaker (the BQ25730's ADC reads SRN dead while the gauge reports its FETs on, or the charge inhibit holding) and writes ChargeCurrent only after the terminal reads alive; R-b's bound kept; the hardware inhibit holds the charge whether or not this rule runs |
-| E11-45 | test | prototype bench | DD-7 and E-14 (rounds 9 and 10, 19h and 20) on board A's first prototype with board P's -1 breaker and record l8p's reverse-charge detector: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least 78.6 ms and the breaker restarting within 1.149 s of VIN_RAW passing U34's threshold (the pad under C-1c's trip); (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: a hard short kept on VSYS, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (c2) the same with a 0.915 ohm fault removed after the latch (B-R2, route R1): the charge into PACK_P ends within 1.41 ms of passing board P's threshold, TP2 (DD7_N) low within 0.85 ms of DOCK_EN_RET falling, the battery FETs held off at least 1.341 s after DOCK_EN_RET rises (TP1 over 0.79 V), then released once CELL+ reads alive, the breaker restarted within 0.948 s; (d) failures, each found by its row: U47's RESET1 held high (the hold lost, (c2)), Q48 opened (the latch reads the leak, (f)), Q49's gate opened (the inhibit lost, (c)); (e) L8P-F04's interface alone: DOCK_EN_RET pulled under 0.06 V by a stand-in at BRK_VIN 7.6, 10.6 and 16.8 V with RT1 replaced by 5 kOhm: CH_BATDRV at VBAT within 1 ms whatever CELL+ reads, released no earlier than 1.0 s after the release; the loop closed at RET 0.9 V and DOCK_EN_OUT 2.0 V: nothing inhibited (20c); (f) L8P-F05: the breaker held off with BRK_VIN at 16.8 V and, from a bench supply through 10 mA, at 29.2 V: CELL+ under 3.58 V while the inhibit holds and the inhibit kept until the breaker is enabled; (g) a back-fed precharge (the gauge's FETs off, the charger in LDO mode) at 25 and 70 C: CH_BATDRV follows BATDRV and nothing is inhibited; (h) the hold timed from five triggers at -20, 25 and 85 C: at least 1.0 s each |
+| E11-45 | test | prototype bench | DD-7 and E-14 (rounds 9 and 10, 19h and 20) on board A's first prototype with board P's -1 breaker and record l8p's reverse-charge detector: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least 78.6 ms and the breaker restarting within 1.149 s of VIN_RAW passing U34's threshold (the pad under C-1c's trip); (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: a hard short kept on VSYS, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (c2) the same with a 0.915 ohm fault removed after the latch (B-R2, route R1): the charge into PACK_P ends within 1.41 ms of passing board P's threshold, TP2 (DD7_N) low within 0.85 ms of DOCK_EN_RET falling, the battery FETs held off at least 1.341 s after DOCK_EN_RET rises (TP1 over 0.79 V), then released once CELL+ reads alive, the breaker restarted within 0.948 s; (d) failures, each found by its row: U47's RESET1 held high (the hold lost, (c2)), Q48 opened (the latch reads the leak, (f)), Q49's gate opened (the inhibit lost, (c)); (e) L8P-F04's interface alone: DOCK_EN_RET pulled under 0.06 V by a stand-in at BRK_VIN 7.6, 10.6 and 16.8 V with RT1 replaced by 5 kOhm: CH_BATDRV at VBAT within 1 ms whatever CELL+ reads, released no earlier than 1.0 s after the release; the loop closed at RET 0.9 V and DOCK_EN_OUT 2.0 V: nothing inhibited (20c); (f) L8P-F05: the breaker held off with BRK_VIN at 16.8 V and, from a bench supply through 10 mA, at 29.2 V: CELL+ under 3.58 V while the inhibit holds and the inhibit kept until the breaker is enabled; (f2, round 12, the check V2's V2-B1) the bleed timed: CELL_FUSED charged to 17.4 V, the inhibit set and the breaker held off, the battery FETs' pour at 125 C and the breaker FETs' case at 101 C (or 435 uA injected into CELL+ on a cold board): CELL+ under 4.076 V at least 0.1 s before the same unit's hold ends as (h) times it; the current into CELL+ with both FET groups hot read, at most 521 uA; U47's RESET current read at the set and with the breaker restarted, at most 5 mA; (g) a back-fed precharge (the gauge's FETs off, the charger in LDO mode) at 25 and 70 C: CH_BATDRV follows BATDRV and nothing is inhibited; (h) the hold timed from five triggers at -20, 25 and 85 C: at least 1.0 s each, and each at least 0.1 s longer than (f2)'s bleed on the same unit |
 
 ## 9. What stays conditional, and the decisions this record takes
 
@@ -760,16 +770,16 @@ the window (only the gauge's window acts until the firmware writes the flag's bi
 
 | Row | The missing statement (the held sheet, its page) | The claim it affects (this record) | What a maker's answer would establish | What one bench sample could establish, and what it cannot | The bench method | If the answer is negative |
 |---|---|---|---|---|---|---|
-| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 194: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
-| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 448: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
-| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 415: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
-| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 181: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
-| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 647: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
-| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 452: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
-| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 439: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
-| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 438: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
-| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 252: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
-| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 270: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
+| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 204: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
+| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 458: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
+| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 425: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
+| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 191: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
+| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 657: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
+| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 462: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
+| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 449: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
+| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 448: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
+| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 262: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
+| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 280: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
 
 ### 11a. The bounded fallback: VSYS's hold-up with no battery that does not lean on the charger's transient response (out 10)
 
@@ -1523,7 +1533,9 @@ any final-board comparison and what requires a re-test. The first version's word
   carrying 23.93 A from a separate supply; R17 heated alone at 2.86 W for its coupling; junction read by VSD at a small sense current
   against a K-factor calibrated in an oven; readings at 60 s and steady. Unequal impedances (the middle FET couples to two
   neighbours) are judged by the largest Zself and the largest Zmut into any junction: the hottest rise over every split grows with
-  each, so the bound holds (INFERRED).
+  each, so the bound holds (INFERRED). **With each FET heated alone at the worst split's 1.513 W, the PTC's site (RT1, at the drain
+  tabs' centroid) is read against that FET's junction** (round 12, the check V2's V2-m5): record l8p's guard adds the even split's
+  rise to its trip side, and the hottest FET's mounting base leads the centroid by an amount no record bounds.
 - **Mounting:** the coupon fixed to a plate section as board A is fixed to the case, in its installed orientation.
 - **Thermal boundaries:** **device spacing** (Q39, Q40 and Q42 centre to centre as drafted, R17's distance from the pour);
   **copper connectivity** (the pour's connection to the VBAT and CH_BATQ planes, the via count to each inner plane, the planes' extent);
@@ -2064,7 +2076,7 @@ draft; nothing is built, bought or measured.
 | R107, R108, Q52, R254 | 464k / 100k 1 %; 2N7002; 1M | U47's CELL+ reading; its foot DD7_REF goes to DD7_N through Q52 only while the loop is powered and an inhibit is asked, else R254 lifts it and the channel reads alive |
 | R255 | 1M | DD7_N's pull-up; DD7_N low = the inhibit asked (U47's RESET1 and RESET2) |
 | Q47, Q49, R82, R83 | 2N7002; AO3401A; 100k / 200k | **the inhibit:** Q47 (gate DD7_LP) passes DD7_N to SYS_INH_D; Q49 holds CH_BATDRV, the battery FETs' gates, at VBAT |
-| Q48, R256 | 2N7002; 6.8k 1206 (4.7k until V1's minor of round 10) | **the bleeder:** while the inhibit holds, CELL+ is loaded into DD7_N, so it reads alive only when the breaker drives it |
+| Q48, R256 | 2N7002; 4.7k 1206 (6.8k in round 11 only: section 22) | **the bleeder:** while the inhibit holds, CELL+ is loaded into DD7_N, so it reads alive only when the breaker drives it |
 | Q46 | 2N7002, gate moved to DD7_N | the input-return pulse is blocked while VBAT is up and nothing is asked (the kit on its pack), allowed while VBAT is down or an inhibit holds |
 | R233, D27 | 100k; BZT52C12 | DD7_VC, the gates' supply under 12.7 V |
 | TP1, TP2 | test points | DD7_H and DD7_N, for E11-45 |
@@ -2085,7 +2097,7 @@ R-194 (L8G-F12).
 |---|---|---|
 | the return held (U48 channel 1, its OV release) | under **0.7755 V** at least; read closed over 0.84 V at most | board P's pull, 0.055 V: **0.72 V of margin**; the closed return in service, 2.894 V at the bound point: 2.054 V of margin |
 | the loop powered (U48 channel 2, its UV release) | over **1.981 V** at most (1.825 V at least); unpowered under 1.789 V at least | the interface's 2.0 V; the held DOCK_EN_OUT (RT1 at 5 kOhm, R106 +1 %, board A's 984 kOhm on it): **2.545 V at 7.6 V, 3.535 V at 10.6 V, 5.581 V at 16.8 V**, 0.564 V or more over the powered reading |
-| CELL+ alive (U47 channel 2, read only while an inhibit is asked and the loop is powered) | dead under **4.147 V** at least, alive over **4.774 V** at most (the foot at RESET's 0.044 V, VOL read as 60 ohm) | the breaker's restart drives CELL+ to the pack's 10.6 to 16.8 V; the latch holds CELL+ at 0.180 V (below) |
+| CELL+ alive (U47 channel 2, read only while an inhibit is asked and the loop is powered) | dead under **4.076 V** at least, alive over **4.774 V** at most (the foot at RESET's 0.060 V, VOL read as 60 ohm) | the breaker's restart drives CELL+ to the pack's 10.6 to 16.8 V; the latch holds CELL+ at 0.154 V (below) |
 
 **The load on DOCK_EN_RET** is SENSE1 alone, at most 2 uA: over 8.7 MOhm at the return's 17.4 V clamp, against the interface's 1 MOhm.
 **The bound point** (record l9stk, 10.6 V, RT1 47 kOhm): the first inverter's gate reads 2.952 V unloaded, 2.939 V with round 9's 2 MOhm,
@@ -2139,17 +2151,21 @@ DD7_K at 0.436 V through R253, 0.339 V under the OV release's least 0.7756 V.
 **A dead CELL+ never sets the inhibit.** U47's channel 2 reads alive while R254 lifts its foot, that is while nothing is asked. It
 **keeps** an inhibit that is set: Q52 then grounds the foot through DD7_N, and Q48 loads CELL+ through R256, so CELL+ reads alive
 only when the breaker itself drives it. Round 9's dead point leant on board A's 200 kOhm against the LM5069's internal 1 MOhm, whose
-tolerance is not printed; the latch leans on R256's 6.8 kOhm:
+tolerance is not printed; the latch leans on R256's 4.7 kOhm:
 
 | BRK_VIN | The LM5069's resistor may fall to | CELL+ at 1 MOhm with the three FETs' 3 uA (25 C) | Round 9 |
 |---|---|---|---|
-| 16.8 V | 28.1 kOhm (0.028 of 1 MOhm) | **0.180 V**, 3.966 V under the dead reading | 2.80 V against 1.98 V |
-| 29.2 V (the clamp) | 48.9 kOhm (0.049) | **0.266 V**, 3.881 V under it | 3.34 V against 1.98 V |
+| 16.8 V | 19.9 kOhm (0.020 of 1 MOhm) | **0.154 V**, 3.922 V under the dead reading | 2.80 V against 1.98 V |
+| 29.2 V (the clamp) | 34.5 kOhm (0.035) | **0.213 V**, 3.864 V under it | 3.34 V against 1.98 V |
 
-The latch reads dead while every source into CELL+ stays under **0.597 mA** together; the battery FETs' hot off leakage (not printed)
-may reach 189 uA each before it matters. By the hold's end CELL+ has fallen under the dead reading unless the breaker drives it:
-from VSYS's 17.375 V through R256 into CELL_FUSED's 104 uF (+20 %, ASSUMPTION) within 1.228 s, under the hold's least 1.341 s. The
-release: the breaker's restart drives CELL+ over 4.774 V against R256's 2.47 mA at 16.8 V, inside IF-1's 0.81 A room.
+The latch reads dead while every source into CELL+ stays under **0.846 mA** together (the static limit). The battery FETs' off
+leakage (Nexperia prints at most 1 uA each at 25 C and 10 uA at Tj 125 C, nothing over 125 C: MAKER; rounds 10 and 11 called the hot
+figure "not printed") may reach 272 uA each before that limit; the breaker pair's leakage enters CELL+ too (record l8p's L8P-F06),
+and section 22b counts all five devices. By the hold's end CELL+ has fallen under the dead reading unless the breaker drives it:
+from VSYS's 17.375 V through R256 into CELL_FUSED's 104 uF (+20 %, ASSUMPTION) **within 1.218 s with the sources at their hot bound
+(434.8 uA, 22b), inside the hold's least 1.341 s while the sources total under 520.7 uA** (the coupled limit, round 12; 0.859 s is
+the figure with no source, which rounds 10 and 11 printed alone: the check V2's V2-B1). The release: the breaker's restart drives
+CELL+ over 4.774 V against R256's 3.57 mA at 16.8 V, inside IF-1's 0.81 A room.
 
 ### 20f. The service untouched (INFERRED)
 
@@ -2169,12 +2185,12 @@ release: the breaker's restart drives CELL+ over 4.774 V against R256's 2.47 mA 
 
 | Part | Reading | Limit |
 |---|---|---|
-| U47, U48 | VDD 12.054 to 29.2 V; SENSE and RESET at most 29.2 V; RESET sinks at most 2.62 mA (the bleeder at 16.8 V), 4.47 mA at the 29.2 V clamp | VDD 2.7 to 65 V; 65 V graded pins; TI's recommended RESET current 5 mA at most and VOL 300 mV at 5 mA (V1's minor: 6.39 mA with round 10's 4.7k, over it; R256 now 6.8k) |
-| 2N7002 (Q44 to Q48, Q50, Q52) | VGS at most 12.7 V (DD7_VC); VDS at most 29.2 V; at most 4.47 mA | 20 V; 60 V; 0.115 A |
+| U47, U48 | VDD 12.054 to 29.2 V; SENSE and RESET at most 29.2 V; RESET sinks at most 3.73 mA (the bleeder at 16.8 V) and 4.32 mA with CELL+ following VBAT at SYSOVP (R256 at -1 %); 6.39 mA only with CELL+ at the 29.2 V clamp | VDD 2.7 to 65 V; 65 V graded pins; VOL 300 mV at 5 mA and TI's recommended 5 mA at most, the absolute maximum 10 mA; the clamp's state needs a second fault (V1's minor; the states in 22d) |
+| 2N7002 (Q44 to Q48, Q50, Q52) | VGS at most 12.7 V (DD7_VC); VDS at most 29.2 V; at most 6.39 mA | 20 V; 60 V; 0.115 A |
 | AO3401A (Q49, Q51) | VGS 4.02 to 9.86 V; VDS 29.2 V; Q51's arm peak 0.514 A (0.29 A at 16.8 V) | +-12 V; 30 V; IDM 27 A |
 | D26 (1N4148W) | the arm's peak 0.514 A decaying in 71.5 us, I2t 9.44e-06 A2s, at most once a hold (1.0 s apart) | 4 A for 1 us; 1 A for 1 ms (I2t 1e-03 A2s) |
 | R84 (56R 1206, pulse-rated) | the arm's 0.539 mJ at the clamp: 14.6 W peak decaying in 71.5 us (4.7 W at 16.8 V), once a hold | no held sheet prints a pulse rating; Yageo's short-time overload is a 5 s test and no basis for a 71 us pulse (V1's minor: the comparison withdrawn). **Specified:** a part whose maker prints a single-pulse curve covering 14.6 W for 72 us once a second; its code owed to Layer 6 (CONDITIONAL) |
-| R256 (6.8k 1206) | 0.0413 W at 16.8 V while the inhibit holds after a restart; 0.125 W at the 29.2 V clamp | RC1206's 0.25 W derated to 0.202 W at 86.25 C |
+| R256 (4.7k 1206; 6.8k in round 11 only) | 0.0596 W at 16.8 V while the inhibit holds after a restart; 0.1807 W at the 29.2 V clamp | RC1206's 0.25 W derated to 0.202 W at 86.25 C |
 | D27 (BZT52C12) | at most 0.18 mA, 2.28 mW from the 29.2 V clamp through R233 | its 370 mW at 25 C ambient (DS18004 note 8) |
 
 **IF-1's static draw restated** (19f's table, R107 and R108's 0.084 mA row replaced): U47 and U48, 0.0052 mA; R233 into D27, at most
@@ -2186,8 +2202,8 @@ release: the breaker's restart drives CELL+ over 4.774 V against R256's 2.47 mA 
 | Item | How it is shown |
 |---|---|
 | (a) composes in L4-E9's order | board A composed with every pending board A draft and record l8p's PTC (the tree's, round 3), this draft before d8dec31's mainpb: the generator runs to its end with `intent.write` (750 parts); refused without l8p's loop, once applied, refused a second time and on the tree (`test_l4e11`) |
-| (b) the changed nets in the regenerated netlist | `check_dd7_netlist.py` reads every DD-7 pin, value and net membership from the netlist record l8p's `gen_netlist.py` regenerates: **DRAWN**; five circuit mutations each read **FAIL** (U48's SENSE1 on DOCK_EN_OUT, Q47's gate on DD7_T, R108's foot on ground, R256 removed, a 100 kOhm load on DOCK_EN_RET); the committed netlist reads NOT DRAWN |
-| (c) the electrical acceptance on C-PROT | out 20: the held return at 7.6 and 10.6 V sets the inhibit within 0.85 ms (was never); the hold at least 1.341 s; CELL+ with the breaker off at 16.8 V and 29.2 V held at 0.180 and 0.266 V against the 4.147 V dead reading (was 2.80 and 3.34 V against 1.98 V); the latch with a source present into a resistive fault: B-R2 with route R1, the charge ending within 1.41 ms; the service rows above; each part within its printed limit |
+| (b) the changed nets in the regenerated netlist | `check_dd7_netlist.py` reads every DD-7 pin, value and net membership from the netlist record l8p's `gen_netlist.py` regenerates: **DRAWN**; five circuit mutations each read **FAIL** (U48's SENSE1 on DOCK_EN_OUT, Q47's gate on DD7_T, R108's foot on ground, R256 removed, a 100 kOhm load on DOCK_EN_RET), and since rounds 11 and 12 three more (R256 at 6.8k, R84 without its pulse rating, a battery FET drawn reversed); the committed netlist reads NOT DRAWN |
+| (c) the electrical acceptance on C-PROT | out 20: the held return at 7.6 and 10.6 V sets the inhibit within 0.85 ms (was never); the hold at least 1.341 s; CELL+ with the breaker off at 16.8 V and 29.2 V held at 0.154 and 0.213 V against the 4.076 V dead reading (was 2.80 and 3.34 V against 1.98 V); the latch with a source present into a resistive fault: B-R2 with route R1, the charge ending within 1.41 ms; the service rows above; each part within its printed limit |
 
 ### 20i. T2, recorded now: E-1's even split (OPEN against E-1's acceptance; its comparison is the next task)
 
@@ -2237,7 +2253,7 @@ SETTLED**; E11-29's row says so. T2 compares at most three approaches for E11-37
 | Item | Status |
 |---|---|
 | L8P-F04 | **corrected in the draft:** U48 reads the held return (under 0.7755 V) and the powered loop (over 1.981 V at most); the inhibit set within 0.85 ms, held at least 1.341 s, released on CELL+ alive |
-| L8P-F05 | **corrected in the draft:** a dead CELL+ never sets the inhibit; the bleeder holds the latch for any source under 0.597 mA (the LM5069's resistor down to 0.028 of its value at 16.8 V) |
+| L8P-F05 | **corrected in the draft:** a dead CELL+ never sets the inhibit; the bleeder holds the latch for any source under 0.846 mA (the LM5069's resistor down to 0.020 of its value at 16.8 V) |
 | B-R2 | **drafted on both boards** with route R1 (board P's detector, record l8p; board A's interface, this round); CONDITIONAL on E11-45 and record l8p's E-14 and E-12c |
 | T2 | **recorded, OPEN** against E-1's acceptance (20i); round 11 corrects it in the acceptance (21e) |
 | the composition and the netlist | board A composed in L4-E9's order runs to its end; `check_dd7_netlist.py` DRAWN, five mutations FAIL |
@@ -2286,9 +2302,11 @@ The bar of (i)(a) for a coupling read on the specimen (record l9stk's even-split
 |---|---|---|---|---|---|---|---|
 | (Zself + 2 Zmut) at most, K/W | **40.78** | 42.62 | 44.04 | 45.06 | 45.68 | 45.88 | 45.88 |
 
-(ii)'s parts, each Ciss against 2.5 nF (typical figures at each sheet's own VDS, except SQJ403EP's and SQJ407EP's printed maxima):
-BUK6Y10-30P 2.36 nF (two 4.72, under 5 nF); PXP9R1-30QL 2.86 (two 5.72, over); AONS21357 2.83 (two 5.66, over); SQJ403EP 3.4 (two
-6.8, over); SQJ407EP 8.2 (two 16.4, over). Only the BUK6Y10-30P pair stays under 5 nF, **on a typical figure: CONDITIONAL, Q-TI-17 (e)**.
+(ii)'s parts, each Ciss against 2.5 nF at its sheet's own VDS: the printed maximum where the sheet prints one (Vishay's two), the
+typical figure where it prints none (round 12, the check V2's V2-m1: round 11 took Vishay's typical column and called it the maximum).
+BUK6Y10-30P 2.36 nF typical (two 4.72, under 5 nF); PXP9R1-30QL 2.86 typical (two 5.72, over); AONS21357 2.83 typical (two 5.66,
+over); SQJ403EP 4.5 nF maximum, 3.4 typical (two 9, over); SQJ407EP 10.7 nF maximum, 8.2 typical (two 21.4, over). Only the
+BUK6Y10-30P pair stays under 5 nF, **on a typical figure: CONDITIONAL, Q-TI-17 (e)**.
 
 (iii): SLUSE65A prints BATDRV as the gate driver of the linear-mode regulation of VSYS_MIN and of the ideal diode in supplement
 ("BATFET is in linear mode to regulate VSYS at minimum system voltage when battery is depleted ... works as an ideal-diode in
@@ -2326,31 +2344,200 @@ measured on the coupon, Q42 removed (a draft then owed).
 |---|---|
 | E-1's even split (T2, recorded in 20i) | **CORRECTED IN THE ACCEPTANCE**: the bar 40.78 K/W for any split; CONDITIONAL on E11-29 at that bar and E11-36's allowance. No printed figure shows 40.78 K/W achievable: E11-29's coupon decides (the bar 11.1 % under the even split's) |
 | (a) composition | the charger draft changes only its layout comment (the bar); board A composes in L4-E9's order and runs to its end (`test_l4e11`) |
-| (b) netlist | no net changed by this correction, so a netlist reading does not apply to it; DD-7 still reads DRAWN |
+| (b) netlist | no net changed by this correction, so a netlist reading does not apply to it; DD-7 still reads DRAWN (at R256 4.7 kOhm since round 12) |
 | (c) electrical acceptance on C-PROT rev 1 | the hottest junction at most 150 C held at 23.93 A from 76.25 C over a scan of every split of the three RDS(on) values under the allowance at m from 0 to 0.4, at the printed least drive; the even split's 45.88 K/W, a bar 1 % over 40.78, or the split read as even each FAIL (`test_l4e11`) |
 | E11-37's state | **OPEN** (TI or the bench) |
 | E11-29's row and block | restated at 40.78 K/W (section 8, 17d) |
 
-### 21f. V1's minors of round 10, applied to `apply_gen_sch_a_dd7.py` (section 20 prints every figure)
+### 21f. V1's minors of round 10 (R84 stands; R256's part is superseded by round 12, section 22)
 
-- **R256 4.7k to 6.8k:** U47's RESET sinks at most **4.47 mA** at the 29.2 V clamp against TI's recommended 5 mA (was 6.39 mA). The
-  trade, each still inside its limit: the latch reads dead for any source into CELL+ under **0.597 mA** (was 0.846), the LM5069's
-  resistor down to 28.1 kOhm at 16.8 V (was 19.9), each battery FET's hot leakage to 189 uA (was 272), and CELL+ falls under the dead
-  reading within **1.228 s** against the hold's least 1.341 s (was 0.859 s): **0.112 s of margin**, on CELL_FUSED's 104 uF at +20 %
-  (ASSUMPTION). A release before CELL+ has fallen is re-set by the next charge over board P's threshold, ended within 1.41 ms as in 20d.
+- **R256:** round 11 moved it from 4.7k to 6.8k so that U47's RESET stayed under TI's recommended 5 mA at the 29.2 V clamp (4.47 mA
+  against 6.39 mA), and printed its cost as a static limit of 0.597 mA beside a bleed of 1.228 s, 0.112 s inside the hold. The
+  independent check V2 (V2-B1) showed that bleed counted no source: at 6.8k it ends inside the hold only for sources under 87.4 uA.
+  **Those figures are WITHDRAWN**; round 12 compares V2's three corrections and selects 4.7k again (section 22), so section 20
+  carries round 10's values.
 - **R84 56R: SPECIFIED pulse-rated.** Its value text carries it; a part whose maker prints a single-pulse curve covering 14.6 W for
   72 us, its code owed to Layer 6 (CONDITIONAL). The 5 s overload comparison is withdrawn.
-- **Credit:** (a) board A composes in L4-E9's order and runs to its end; (b) `check_dd7_netlist.py` now reads R84's value as "56R 1%
-  pulse-rated" and R256's as 6.8k: DRAWN, and two more mutations read FAIL (R256 back at 4.7k, R84 without its rating), seven in all;
-  (c) out 20g and 20e on C-PROT, each part within its printed limit.
+- **Credit:** (a) board A composes in main's order and runs to its end; (b) `check_dd7_netlist.py` reads R84's value as "56R 1%
+  pulse-rated" and R256's as 4.7k: DRAWN, and three more mutations read FAIL (R256 at 6.8k, R84 without its rating, a battery FET
+  reversed), eight in all; (c) out 20g, 20e and 22 on C-PROT rev 1.
 
 ### 21g. What stays open, and findings for other records
 
 - **Physical:** E11-29 at 40.78 K/W (the coupon or the first prototype); E11-36 (the allowance); E11-37 (Q-TI-17 (a) to (f), or the
-  bench with three); the 21f margin on CELL_FUSED's capacitance (E11-45 (f) and (h) read it).
+  bench with three); the bleed of CELL+ against the hold (section 22: E11-45 (f2) and (h), record l8p's E-14c).
+- **V1's two minors that no record carried** (the check V2's V2-m4) are named in 22h, each with its owner and next action: the
+  TPS37's hysteresis accuracy read as percentage points, and the CONOPS wording of the named residual.
 - **For record l9stk (15.5, E-1):** its even-split 45.88 K/W is not the bar for three paralleled FETs whose RDS(on) spread is
   unprinted; this record carries 40.78 K/W (or 21b's formula) and edits nothing of l9stk's. The same holds wherever a record
   credits "the even split bounds each FET's power" (true for two FETs, 15c and 16b, not for three).
 - **For Layer 9 and board A's PCB generator:** the layout requirement now carries 40.78 K/W (the charger draft's comment).
 
 Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only.
+
+## 22. Round 12: the check V2's finding V2-B1 (the cost of R256) as a design choice, and its minors for this record (4 October 2026; out 22)
+
+**The case** is C-PROT rev 1. The independent check V2 (an AI review, as the coordinator received it; it read the combined candidate
+`fnd/v2cand` at `dfa1eef2`, which holds round 11) confirmed round 11's item A (the worst split, the 40.78 K/W bar, E11-37 open) as
+conditional and found one claim that does not stand, **V2-B1**: the cost of moving R256 to 6.8 kOhm. This round reproduces V2's
+arithmetic in `l4e11_power.py`, compares V2's three corrections as an unresolved design choice, selects one, and carries V2's minors
+m1 to m5 and m9. Nothing is bought, built or measured.
+
+### 22a. The claim that did not stand, and V2's arithmetic reproduced (INFERRED)
+
+Round 11 (21f) gave CELL+'s bleed with the breaker off as 1.228 s, inside the hold's least 1.341 s, beside a static limit of 0.597 mA
+for the sources into CELL+. The bleed was taken towards 0 V, as if no source fed the node. A source I lifts the level CELL+ falls
+towards to the foot plus I x R256, so **t = R C ln((V0 - Vinf) / (Vdead - Vinf))**, from VSYS's 17.375 V into CELL_FUSED's 104 uF at
++20 % (ASSUMPTION). The script reproduces each of V2's figures within 1.2 % and refuses otherwise:
+
+| Case | This script | V2 |
+|---|---|---|
+| 6.8 kOhm, no source, towards 0 V (round 11's figure) | 1.228 s | 1.228 s |
+| 6.8 kOhm, the record's 25 C sources, 19.8 uA | 1.257 s | 1.257 s |
+| 6.8 kOhm, the sources at which the bleed takes the hold's least 1.341 s | **87.4 uA** | 88 uA |
+| the same with board P's U104 divider and R107 with R108 credited as loads | 121.3 uA | 122 uA |
+| 6.8 kOhm, the breaker pair at the 76.25 C air (L8P-F06) and the 1 MOhm, 86.6 uA | 1.339 s | 1.339 s |
+| 6.8 kOhm, the breaker pair at the held 101.0 C case and the 1 MOhm, 404.8 uA | **2.056 s** | 2.06 s |
+| 4.7 kOhm, no source, towards the foot (round 10 printed 0.859 s towards 0 V) | 0.866 s | 0.866 s |
+| 4.7 kOhm, the sources at which the bleed takes 1.341 s | **520.7 uA** | 521 uA |
+| 4.7 kOhm, the breaker pair at the held case and the 1 MOhm | 1.182 s | 1.18 s |
+
+So the two limits of 21f could not both be used: with R256 at 6.8 kOhm the bleed ends inside the hold only while the sources total
+under 87.4 uA, and V1's minor was applied by spending that margin.
+
+### 22b. The sources into CELL+ with the breaker off and the inhibit held (each labelled)
+
+| Source | Figure | Label and document |
+|---|---|---|
+| the LM5069's internal 1 MOhm, SENSE to OUT | 16.8 uA at BRK_VIN 16.8 V (29.2 uA at the 29.2 V clamp) | MAKER value (TI SNVS452G 7.5 note 1, as record l8p reads it); its tolerance is not printed |
+| the three battery FETs Q39, Q40, Q42 | 3 uA at 25 C, **30 uA at Tj 125 C** (1 and 10 uA each, VDS -30 V) | MAKER, printed maxima: Nexperia BUK6Y10-30P (17 April 2020) Table 7 p.6. Over 125 C nothing is printed; on the sheet's own two rows' slope E-1's 150 C would read 53.3 uA for the three (INFERRED, information only) |
+| the breaker pair Q101, Q102 (CSD18510Q5B) | 2 uA at 25 C; **69.8 uA at the 76.25 C air, 388.0 uA at the held 101.0 C case** | 25 C: MAKER (TI SLPS632, March 2017, p.3: IDSS 1 uA at VGS 0 V, VDS 32 V, TA 25 C, its only row). Hot: **ASSUMPTION**, record l8p's L8P-F06 (OPEN; `fnd/l8p2` at `69156072`, 12j, copied to `inputs/l8p-section12j-f06-69156072.md`): a doubling every 10 K |
+
+**The hot bound on C-PROT rev 1** (the pack at 16.8 V, the battery FETs on their printed 125 C row, the breaker pair at its held
+case): 16.8 + 30 + 388.0 = **434.8 uA** (116.6 uA at the air; 447.2 uA with BRK_VIN at the clamp; 458.2 uA with the battery FETs at
+150 C, INFERRED).
+
+### 22c. V2's three corrections on one basis
+
+**Need 1:** the bleed with the sources at their hot bound ends inside the hold's least value. **Need 2:** U47's RESET sink stays
+within TI's recommended 5 mA (SNVSBJ1E 7.3, p.6; the absolute maximum is 10 mA, 7.1, p.6) in every state where it sinks, R256 at -1 %.
+
+| | (a) text only: 6.8 kOhm, the hold as drawn | **(b) R256 back to 4.7 kOhm, the hold as drawn** | (c) 6.8 kOhm, the hold lengthened (C241 2.2 uF) |
+|---|---|---|---|
+| the hold, least to most | 1.341 to 5.82 s | 1.341 to 5.82 s | 2.585 to 12.8 s |
+| the static limit (the latch reads dead) | 0.597 mA | **0.846 mA** | 0.597 mA |
+| the bleed with no source (towards 0 V) | 1.228 s | 0.859 s | 1.228 s |
+| the bleed at the air's 116.6 uA | 1.381 s | 0.934 s | 1.381 s |
+| the bleed at the hot bound's 434.8 uA (with the loads credited) | 2.189 s (2.063 s) | **1.218 s** (1.181 s) | 2.189 s (2.063 s) |
+| the same with the battery FETs at 150 C (INFERRED) | 2.312 s | 1.248 s | 2.312 s |
+| the coupled limit: the sources under which the bleed ends inside the hold's least | 87.4 uA | **520.7 uA** | 498 uA |
+| what that leaves the breaker pair | 40.6 uA | **473.9 uA** | 451.2 uA |
+| on the ASSUMED doubling, the pair's case (held: 101.0 C) or the slowest doubling at the held case | 68.4 C; every 17.49 K | 103.9 C; every 9.63 K | 103.2 C; every 9.72 K |
+| **need 1** | **FAILS** at the hot bound and at the air | holds, 0.123 s inside the hold, on the ASSUMED leakage | holds, 0.396 s inside the hold, on the ASSUMED leakage |
+| RESET at the instant of setting (CELL+ at VSYS's 17.375 V) | 2.7 mA | 3.85 mA | 2.7 mA |
+| RESET with the breaker restarted while the hold runs (the pack's 16.8 V) | 2.61 mA | 3.72 mA | 2.61 mA |
+| RESET with CELL+ following VBAT at the charger's SYSOVP, 19.5 V | 3.02 mA | 4.32 mA | 3.02 mA |
+| RESET with CELL+ at VBAT's 29.2 V clamp | 4.51 mA | 6.45 mA | 4.51 mA |
+| CELL+ at which RESET reaches 5 mA | 32.45 V | 22.51 V | 32.45 V |
+| **need 2** | holds in every state | holds in every state without a second fault (22d) | holds in every state |
+
+**What (c) moves for the hold's readers** (20d, 20g, E-14 (c), E11-45 (h)): the hold's most 12.8 s, from 5.82 s (the battery FETs held
+off that long after every set, a false set at a docking included); the arm completes 0.9116 of the way before the set, from 0.99519,
+so the hold starts from 10.209 V; R84's pulse 1.186 mJ and D26's I2t 2.08e-05 A2s, from 0.539 mJ and 9.44e-06 A2s; a 2.2 uF 100 V
+part whose DC bias is not read. With R85 at 2.4 MOhm instead, the hold's least is only 2.08 s (D26's leakage and C241's insulation
+take more of it) and need 1 fails.
+
+### 22d. The states in which U47's RESET sinks, from the draft's netlist (INFERRED from the netlist; TI's limits MAKER)
+
+DD7_N is pulled low by U47's RESET1 and RESET2 alone. While the loop reads powered (Q47, Q48 and Q52 on) the pulls into it are R256
+from CELL+ (Q48), R107 with R108 from CELL+ (Q52), R82 with R83 from VBAT (Q47), R254 and R255 from DD7_VC; with the loop unpowered,
+only R255 (12.7 uA). **The battery FETs Q39, Q40 and Q42 have their source on VBAT and their drain on CH_BATQ** (the new BODY group
+of `check_dd7_netlist.py` reads it; a reversed FET reads FAIL). A P-channel FET's body diode conducts from drain to source, here from
+CELL+ towards VBAT, so once the inhibit holds their gates at VBAT nothing on VBAT can lift CELL+: it only bleeds, or is driven by
+the pack through the breaker.
+
+| State | CELL+ | RESET at 4.7 kOhm | Against TI |
+|---|---|---|---|
+| 1. the instant of setting (the FETs were on, a charge passing the off breaker's body diodes into the cells) | at most VBAT, regulated to VSYS's 17.375 V, and within the breaker FETs' VSD of the cells, 17.8 V at most | 3.85 mA, falling with the bleed | under 5 mA |
+| 2. the breaker restarted while the hold runs (5.82 s at most) | the pack's 16.8 V at most | 3.72 mA | under 5 mA |
+| 3. a charger regulating high | following VBAT up to SYSOVP's 19.5 V (SLUSE65A, the 4S row) | 4.32 mA | under 5 mA |
+| (i) **a second condition:** VBAT at the SMCJ18A's 29.2 V clamp (a surge) at the very instant of a set, CELL+ lifted 4.71 V over the cells and their body-diode drop while the charge that set it flows | over 22.51 V, 3.01 V over SYSOVP | at most 6.45 mA, over 5 mA for at most 0.155 s of the bleed | under the absolute 10 mA (V1's "transient only") |
+| (ii) **two faults:** a battery FET failed short AND VBAT held over 22.51 V, which SYSOVP stops | sustained over 22.51 V | at most 6.45 mA | under the absolute 10 mA |
+
+At 6.45 mA RESET's VOL on the 60 ohm reading is about 0.39 V: the inhibit still holds (Q49's VGS under -9 V).
+
+### 22e. The selection (SESSION) and what it costs
+
+No correction holds need 1 on printed figures alone: the breaker pair's hot leakage has no printed row, so each depends on record
+l8p's L8P-F06 (its bench row E-14c; TI's question drafted there, unsent). (a) fails need 1 at the hot bound and at the air. (c) holds
+it by 0.396 s with a pair allowance of 451.2 uA, at the cost of a new part, an arm that no longer completes and a hold of up to
+12.8 s. (b) holds it by 0.123 s with a pair allowance of 473.9 uA and the larger static room (0.846 mA against 0.597 mA), with no
+part beyond round 10's circuit, which the check V1 read in full.
+
+| Decision | Authority | Why no owner judgement stands | Reversed by |
+|---|---|---|---|
+| **(b): R256 back to 4.7 kOhm.** The least dependent of the three: the widest allowance for the unprinted leakage, and need 2 on TI's printed rows in every state without a second fault | SESSION (ruled by the L4-E11 author, 4 October 2026, under the owner's standing rules of 21 and 26 September 2026) | an engineering choice inside the task: no money, no requirement change, no reserved line; (a) fails on its numbers and (c) costs more for no wider allowance | E-14c reading the breaker pair over 473.9 uA at its held case, or E11-45 (f2) reading the bleed outside the unit's own hold. The next lever is then the hold on top of 4.7 kOhm (the static 0.846 mA is its ceiling): a new round, with both checks' arithmetic beside it |
+
+**What it costs:** U47's RESET goes over TI's recommended 5 mA in the two named states of 22d (never over the absolute 10 mA), where
+6.8 kOhm kept it under 5 mA in every state; and the margin of need 1 is 0.123 s on an ASSUMED leakage.
+
+### 22f. V1's and V2's arithmetic side by side
+
+R256 has moved twice: 4.7 kOhm in round 10, 6.8 kOhm on V1's minor in round 11, 4.7 kOhm now. It does not move again without this
+table restated.
+
+| Check | What it read | 4.7 kOhm | 6.8 kOhm |
+|---|---|---|---|
+| V1 (round 10) | U47's RESET sink with CELL+ at the 29.2 V clamp | 6.39 mA, over TI's recommended 5 mA, "transient only" | 4.47 mA |
+| V2 (round 11) | the bleed of CELL+ with the sources into it | ends inside the hold for sources under 520.7 uA; 1.218 s at the hot bound | only under 87.4 uA; 2.189 s at the hot bound, 1.381 s at the air |
+| this round | RESET's sink at the most without a second fault | 4.32 mA | 3.02 mA |
+
+### 22g. What stays open, and E11-45 (f) and (h)
+
+- **V2-B1's claim is corrected:** the bleed counts the sources, and the record states one coupled limit (520.7 uA) beside the static
+  one (0.846 mA).
+- **OPEN:** the latch's timing with the breaker off at the hot bound, on record l8p's **E-14c** (the breaker pair's IDSS hot) and on
+  this record's **E11-45 (f2)** (the bleed timed against the unit's own hold, the current into CELL+ read with both FET groups hot, at
+  most 521 uA; U47's RESET current read at the set and with the breaker restarted, at most 5 mA) and **(h)** (each hold at least 0.1 s
+  longer than (f2)'s bleed on the same unit). CELL_FUSED's 104 uF at +20 % is an ASSUMPTION.
+- **Between 520.7 uA and 0.846 mA** (not reached at the hot bound): the hold may end with CELL+ still read alive and the breaker off;
+  the inhibit releases, and a charge over board P's threshold (0.368 to 1.213 A) sets it again within 1.41 ms, once a hold; under
+  the threshold it is the named residual of 20l (the latched FET at most 139.9 C, record l8p). That repeated cycle is not analysed
+  further.
+
+### 22h. The minors (V2-m1 to m5 and m9, this record's part)
+
+- **V2-m1:** 21b (ii) takes Vishay's printed maxima for the SQJ403EP (4.5 nF) and the SQJ407EP (10.7 nF) and prints the typical
+  figures beside them; the verdict is unchanged.
+- **V2-m2:** Nexperia's hot IDSS row (10 uA at Tj 125 C) is quoted in 20e and 22b where the record said "not printed".
+- **V2-m3:** the dd7 draft's comment carries 22c's figures (3.85 mA at the set, 4.32 mA with CELL+ at SYSOVP, 6.45 mA only at the clamp).
+- **V2-m4, V1's two minors that no record carried:**
+  1. *The TPS37's hysteresis accuracy (+-1.5 %) read as percentage points, not relative.* The return reads held under 0.7642 V (board
+     P holds 0.055 V), the loop reads powered over 2.008 V at most (8 mV over the interface's 2.0 V; the held loop reads 0.536 V over
+     it at 7.6 V), the window's bound is 25.1 kOhm: every margin still holds (V1's figures, reproduced by the script).
+     **Owner:** this record. **Next action:** Q-TI-19 (`clarification/TI-QUESTIONS.md`, drafted, NOT SENT) and E11-45 (e), which reads
+     U48's thresholds on the unit; the interface's 2.0 V is record l8p's to restate if TI answers "percentage points".
+  2. *The CONOPS wording of the named residual.* Drafted sentence, for the CONOPS owner: "If the pack's breaker latches while a
+     source carries the kit and no charge over 0.368 to 1.213 A flows, the pack stays isolated: the kit runs on the source alone, and
+     the pack returns only on a redocking or when an input returns to a dark kit." **Owner:** the CONOPS owner with record l9stk (the
+     battery stream), as V1 named them. **Next action:** L4-E9's next round takes the sentence as a register row; a controlled
+     amendment of an accepted Layer 2 page is the coordinator's.
+- **V2-m5:** E11-29's coupon also reads the PTC's site (RT1) against each junction with one FET heated alone at the worst split's
+  1.513 W (the row in section 8 and block E11-29 in 17d), so the guard's trip side is judged on the hottest FET.
+- **V2-m9:** the tests compose board A in main's order, with record l8r2's d8v3 and vbus20ov. The candidate's change list (L4-E9
+  rows 24 to 33) names l8r2's packrtn, slotlm and fb01 instead; those three drafts are **not in this branch's tree** (`fnd/l8r3` at
+  `89924e40`), so the order shown is the one this tree can show. V2 composed both orders on the candidate (778 and 800 parts, DRAWN).
+
+### 22i. Status of round 12
+
+| Item | Status |
+|---|---|
+| V2-B1 | **answered by correction (b)**, R256 4.7 kOhm; the claim corrected (22a, 20e) |
+| need 1 (the bleed at the hot bound inside the hold) | **CONDITIONAL**, 0.123 s on record l8p's ASSUMED leakage; **OPEN** until E-14c or E11-45 (f2) reads |
+| need 2 (U47's RESET within TI's recommended 5 mA) | holds on TI's printed rows in every state without a second fault; the two other states named (22d) |
+| R84 | stays specified pulse-rated (CONDITIONAL, Layer 6) |
+| closure credit | (a) board A composes in main's order and runs to its end; (b) the netlist reads DRAWN at 4.7 kOhm, eight mutations FAIL (R256 at 6.8k and a reversed battery FET among them); (c) 22c on C-PROT rev 1, the round refusing a bleed that counts no source |
+| V2-m1 to m5, m9 | carried (22h) |
+
+Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only. This round is the
+author's answer to V2's first negative check of the 6.8 kOhm value; its targeted recheck is owed.

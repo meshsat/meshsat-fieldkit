@@ -53,7 +53,11 @@ the latch keeps CELL+ dead whatever the LM5069's resistor); T2's 9/8 is read in 
 case on C-PROT rev 1 over a scan of every split of the three FETs' RDS(on) under the allowance, at the charger's printed least drive, with
 the bar 40.78 K/W, and fails with the even split's bar, a bar 1 % looser, the split read as even or the drive read at 10 V; unequal
 coupling is bounded by the largest of each impedance; E11-37 stays open with Q-TI-17 (e) and (f) and its fallback conditional on a
-typical figure; V1's minors (R256 6.8k, R84 pulse-rated) read in the netlist with two more mutations failing. Nothing here writes
+typical figure; V1's minors (R84 pulse-rated; R256's 6.8k superseded) read in the netlist with more mutations failing. Round 12 (section
+22, the independent check V2's V2-B1) adds: the bleed of CELL+ counts the sources into the node (the round refuses the no-source bleed, and the
+no-source figure is shown to pass where the sourced one fails); V2's figures reproduce; of V2's three corrections the selected one, R256
+back at 4.7 kOhm, keeps the bleed at the hot bound inside the hold's least and U47's RESET within TI's recommended current in every state
+without a second fault, the battery FETs' orientation read in the netlist; the minors V2-m1 to m5 are carried. Nothing here writes
 into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -1171,7 +1175,13 @@ _m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m); sys.modul
 sys.argv = sys.argv[1:]
 runpy.run_path(sys.argv[0], run_name="__main__")
 '''
-# L4-E9's change list per board (records/l4e9/L4-POWER-ARCHITECTURE.md section 3), the drafts on main
+# L4-E9's change list per board (records/l4e9/L4-POWER-ARCHITECTURE.md section 3), the drafts on main.
+# Round 12 (the independent check V2's V2-m9): on the candidate's line (fnd/v2cand at dfa1eef2) the list's rows 24 to 33 name record
+# l8r2's packrtn (R-201), slotlm (R-199) and fb01 (R-200) where this order has l8r2's d8v3 and vbus20ov. Those three drafts are NOT in
+# this branch's tree (fnd/l8r3 at 89924e40), so board A is composed here in main's order, the one this tree can show. The list's order is
+# r12, guard, charger, r11, bank, r138, u17, gnd002, hotr1, packrtn, slotlm, fb01, then record l8p's ptc and this record's dd7
+# (_compose10), mainpb, lcsc; V2 composed it on the candidate (778 parts, DRAWN). In that order slotlm sets the references higher, so
+# the round 10 test's reading of mainpb's references (R257 and C249) is main's order's and moves with it (the integrator's change).
 _ORDER9 = {"a": [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
                  ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")],
            "e": [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
@@ -1370,8 +1380,8 @@ def _netlist10(g, d, tag):
 def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fail():
     """Closure credit (a) and (b) for L8P-F04 and L8P-F05: DD-7's redrawn draft is refused without record l8p's loop and on the tree,
     composes in L4-E9's order after l8p's PTC (round 3) and before d8dec31's mainpb, the generator runs to its end, and the regenerated
-    netlist reads DRAWN in check_dd7_netlist.py; seven circuit mutations (two added by round 11 for V1's minors), each a defect the
-    correction removes or the interface forbids, read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
+    netlist reads DRAWN in check_dd7_netlist.py; eight circuit mutations (two for V1's minors and the check V2's V2-B1, one for the
+    battery FETs' orientation, round 12), each a defect the correction removes or the interface forbids, read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
     _M()
     dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
     with tempfile.TemporaryDirectory() as d:
@@ -1395,13 +1405,16 @@ def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fai
             ("Q47's gate on DD7_T (the inhibit no longer gated by the powered loop)",
              'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_LP"', 'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_T"'),
             ("R108's foot on ground (a dead CELL+ sets the inhibit again: L8P-F05)", 'r("R108", "100k 1%", "DD7_CS", "DD7_REF"', 'r("R108", "100k 1%", "DD7_CS", "GND"'),
-            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
+            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
             ("a 100 kOhm load on DOCK_EN_RET (the interface's 1 MOhm)", 'tp("TP1", "DD7_H")', 'r("R260", "100k", "DOCK_EN_RET", "GND", lcsc="C25803"); tp("TP1", "DD7_H")'),
-            # round 11 (V1's minors of round 10): the two values the check now reads
-            ("R256 back at 4.7k (U47's RESET over TI's recommended 5 mA at the clamp)", 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")',
-             'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")'),
+            # rounds 11 and 12 (V1's minors of round 10, the check V2's V2-B1): the values the check reads
+            ("R256 at round 11's 6.8k (the bleed of CELL+ inside the hold only for sources under 87 uA: V2-B1)",
+             'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")'),
             ("R84 without its pulse rating (the 71 us arm pulse on a part with no printed pulse curve)", 'r("R84", "56R 1% pulse-rated", "DD7_K"',
              'r("R84", "56R 1%", "DD7_K"'),
+            # round 12: the states in which U47's RESET sinks rest on the battery FETs' body diodes pointing from CELL+ to VBAT
+            ("a battery FET drawn reversed (its body diode from VBAT to CELL+: VBAT could lift CELL+ with the inhibit set)",
+             '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56"', '"CH_BATDRV", "VBAT", "CH_BATQ", fp="LFPAK56"'),
         ]
         for k, (why, old, rep) in enumerate(mutations):
             assert text.count(old) == 1, why
@@ -1435,7 +1448,9 @@ def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_d
     assert S["rest_margin"] > 0.3, "the hold may never end"
     for (vin, vc), (_v, rmin) in zip(S["latch_cell"], S["rint_min"]):
         assert vc < S["dead"] - 3.5 and rmin < 0.05 * S["r_int"], "the latch leans on the LM5069's resistor at %s V" % vin
-    assert S["dead"] < S["alive"] < 9.0 and S["bleed_t"] < S["hold_min"], "the release on CELL+ alive is not where the breaker drives it"
+    assert S["dead"] < S["alive"] < 9.0, "the release on CELL+ alive is not where the breaker drives it"
+    S22 = R["S22"]
+    assert S22["sel"]["t_hot"] < S["hold_min"], "the bleed with the sources at their hot bound outlasts the hold's least (V2-B1)"
     assert S["charge_end"] < 10e-3, "the charge through the off breaker outlasts E-14's 10 ms"
     # the service: no trigger at the bound point, none on a back-fed ramp while RT1 is in its printed 25 C band, none before the guard
     assert S["bound"][1] > 2.5 + 0.35 and S["bound_margin"] > 2.0, "the loads move l9stk's bound point or the service reads held"
@@ -1445,12 +1460,13 @@ def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_d
     assert abs(S["box_rt1"] - S9["r_ret"]) < 1.0 and all(v < 4.0 for _rt, v in S["box_vin"])
     # the parts within their limits
     assert S["vgs_p"][1] < S["p_vgs"] and S9["vbat_clamp"] < S["p_vds"] and S["arm_peak"] < S["ifsm"][1] and S["arm_i2t"] < S["ifsm"][1] ** 2 * 1e-3
-    assert S["n_sink"][1] <= S["i_rec"] and S["bleed_w"][1] < S["r1206_hot"], "U47's RESET over TI's recommended current or R256 over its rating"
+    assert S["n_sink"][0] < S["i_rec"] and S22["sel"]["need2"] and S["n_sink"][1] < S22["i_abs"], "U47's RESET over TI's recommended current in a state without a second fault, or over its absolute maximum"
+    assert S["bleed_w"][1] < S["r1206_hot"], "R256 over its rating"
     assert S["static_frac"] < 0.01
     page = open(PAGE, encoding="utf-8").read()
     sec = page.split("## 20. Round 10")[1]
     out = open(OUT, encoding="utf-8").read()
-    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.597", "28.1", "48.9", "4.147", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
+    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.846", "19.9", "34.5", "4.076", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
               "2.545", "3.535", "157.7", "61.3", "269", "4.08"):
         assert s in sec and s in out, "%s is not in both section 20 and the output" % s
     for f_ in ("L4E11-R10-F1", "L4E11-R10-F2", "L4E11-R10-F3", "C-PROT", "NOT\nSETTLED"):
@@ -1609,7 +1625,7 @@ def t_round11_e1_holds_on_c_prot_over_every_split_and_its_mutations_fail():
     sec = page.split("## 21. Round 11")[1]
     o21 = out.split("21. ROUND 11")[1]
     for v in ("157.7", "40.78", "1.125", "1.5129", "32.85", "20.39", "4.72", "5.74", "1.0045", "0.9643", "15 mOhm", "8.5 V", "1.0651",
-              "42.62", "44.04", "45.06", "45.68", "4.47 mA", "0.597", "1.228", "0.112", "28.1", "189", "14.6 W", "11.1 %"):
+              "42.62", "44.04", "45.06", "45.68", "4.47 mA", "6.39 mA", "0.597", "1.228", "0.112", "87.4 uA", "WITHDRAWN", "14.6 W", "11.1 %"):
         assert v in sec and v in o21, "%s is not in both section 21 and out 21" % v
     assert "C-PROT rev 1" in sec and "C-PROT rev 1" in o21
 
@@ -1636,3 +1652,125 @@ def t_round11_e11_37_stays_open_with_q_ti_17_e_and_f_and_the_fallback_rests_on_a
     assert "**Q-TI-17 (e)" in r11 and "**Q-TI-17 (f)" in r11 and "Drafted, not sent." in r11
     for v in ("4.72 nF", "5.74 nF", "2.36 nF", "2.87 nF", "192 nC"):
         assert v in r11, v
+
+
+# ---- round 12 (section 22): the independent check V2's V2-B1 (the bleed of CELL+ with the sources into it) and its minors
+
+def _bleed12(r, c, v0, vdead, vinf):
+    """The test's own bleed: CELL+ from v0 under vdead through r into c, falling towards vinf; None when it never gets there."""
+    return None if vinf >= vdead else r * c * math.log((v0 - vinf) / (vdead - vinf))
+
+
+def t_round12_v2b1_the_bleed_counts_the_sources_and_the_selected_correction_meets_both_needs():
+    """V2-B1 on C-PROT rev 1: round 11 gave the bleed with no source beside a static limit. Here the sources at their hot bound come from
+    the makers' printed rows (Nexperia's 125 C row, TI's one 25 C row with record l8p's ASSUMED doubling, the LM5069's 1 MOhm); the bleed
+    is recomputed apart from the script; round 11's 6.8 kOhm fails it where the no-source figure passed; the round refuses a no-source
+    bleed; the selected 4.7 kOhm holds it and keeps U47's RESET within TI's recommended current in every state without a second fault."""
+    R = _R()
+    m = _M()
+    S, S20, S9 = R["S22"], R["S20"], R["S19"]
+    assert abs(S["bat"][0] - 3e-6) < 1e-12 and abs(S["bat"][1] - 30e-6) < 1e-12 and abs(S["brk25"] - 2e-6) < 1e-12, "the printed IDSS rows"
+    hot = 16.8 / 1e6 + 30e-6 + 2e-6 * 2 ** ((101.0 - 25.0) / 10.0)
+    assert abs(S["src"]["hot"] - hot) < 1e-10 and abs(hot - 434.8e-6) < 0.05e-6
+    hold, vs, c = S20["hold_min"], S20["vs_max"], S20["c_cell"] * 1.2
+    sel, a, cc = S["sel"], S["opts"]["a"], S["opts"]["c"]
+    assert sel["key"] == m.R12_SELECT == "b" and sel["v"]["rbl"] == m.R10_RBL == 4.7e3 and a["v"]["rbl"] == 6.8e3
+    # the selected correction, on the same failure case
+    r = sel["v"]["rbl"] * 1.01
+    t = _bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + hot * r)
+    assert abs(t - sel["t_hot"]) < 1e-9 and t < hold - 0.1, "the bleed at the hot bound is not 0.1 s inside the hold's least: %.3f s" % t
+    assert abs(_bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + sel["lim"] * r) - hold) < 1e-6, "the coupled limit is not where the bleed takes the hold"
+    assert _bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + 1.05 * sel["lim"] * r) > hold, "sources over the coupled limit still pass"
+    assert _bleed12(r, c * 1.15, vs, sel["v"]["dead"], sel["v"]["v_ref"] + hot * r) > hold, "a capacitance 15 % over the assumed most still passes"
+    assert hot < sel["lim"] < sel["v"]["isrc_max"], "the coupled limit is not between the hot bound and the static limit"
+    # round 11's 6.8 kOhm: the failure, and the no-source bleed that hid it
+    ra = a["v"]["rbl"] * 1.01
+    ta = _bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + hot * ra)
+    assert abs(ta - a["t_hot"]) < 1e-9 and ta > hold and not a["need1"], "6.8 kOhm does not fail at the hot bound"
+    assert a["t_air"] > hold and a["lim"] < S["src"]["air"] < S["src"]["hot"], "6.8 kOhm does not fail at the air's sources"
+    t0 = _bleed12(ra, c, vs, a["v"]["dead"], 0.0)
+    assert abs(t0 - a["v"]["bleed_zero"]) < 1e-9 and t0 < hold, "the no-source figure is not the one that passed at 6.8 kOhm"
+    keep = m.bleed_time
+    try:
+        m.bleed_time = lambda r_, c_, v0_, vd_, vinf_: r_ * c_ * math.log(v0_ / vd_)        # the no-source bleed of rounds 10 and 11
+        try:
+            m.fix22_round(R, None)
+            raise AssertionError("the round accepts a bleed that does not count the sources")
+        except SystemExit as e:
+            assert e.code == 4
+    finally:
+        m.bleed_time = keep
+    # V2's figures, reproduced by the script and here for three of them
+    for lab, mine, theirs, _unit in S["rep"]:
+        assert abs(mine - theirs) <= 0.012 * theirs, lab
+    assert abs(_bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + 19.8e-6 * ra) - 1.257) < 0.002
+    assert abs(_bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + 404.8e-6 * ra) - 2.06) < 0.01
+    assert abs(_bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + 404.8e-6 * r) - 1.18) < 0.005
+    # need 2: the sink by state, recomputed (R256 at -1 %; R82 with R83 300 kOhm from VBAT, R254 and R255 1 MOhm from 12.7 V, R107 with R108)
+    sink = lambda vc, vb, rr: vc / (rr * 0.99) + vb / 300e3 + 2 * 12.7 / 1e6 + vc / 564e3
+    vst = S["v_states"]
+    for k_, vc, vb in (("set", vs, vs), ("run", S9["vpk"], vs), ("ovp", vst["sysovp"], vst["sysovp"]), ("clamp", S9["vbat_clamp"], S9["vbat_clamp"])):
+        assert abs(sink(vc, vb, 4.7e3) - sel["sink"][k_]) < 1e-9 and abs(sink(vc, vb, 6.8e3) - a["sink"][k_]) < 1e-9, k_
+    assert max(sel["sink"]["set"], sel["sink"]["run"], sel["sink"]["ovp"]) < S20["i_rec"] - 0.5e-3 and sel["need2"] and not sel["need2_all"]
+    assert S20["i_rec"] < sel["sink"]["clamp"] < S["i_abs"] and S["i_abs"] == 10e-3 and S20["i_rec"] == 5e-3
+    assert sel["v_5ma"] > vst["sysovp"] + 2.5 and sel["v_5ma"] > vst["pack_diode"] + 4.0 and sel["t_over"] < 0.2
+    assert a["need2_all"] and a["sink"]["clamp"] < S20["i_rec"], "6.8 kOhm's side of the trade is not shown"
+    # (c): it holds need 1 too, by moving the hold's readers; R85 alone does not
+    assert cc["need1"] and cc["v"]["hold_max"] > 2 * S20["hold_max"] and cc["v"]["arm_frac"] < 0.95 and not S["opts"]["c2"]["need1"]
+    # the selection: the widest allowance for the unprinted leakage, and no correction holds without it
+    assert sel["pair_allow"] > cc["pair_allow"] > S["brk"][1] > a["pair_allow"]
+    assert 101.0 < sel["pair_t"] < 106.0, "the margin on the assumed doubling is misstated"
+    # the record carries it: the output, the page, the row, the draft
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o22, p22 = out.split("22. ROUND 12")[1], page.split("## 22. Round 12")[1]
+    for v_ in ("434.8", "520.7", "87.4", "1.218", "2.189", "0.123", "473.9", "103.9", "3.85 mA", "3.72 mA", "4.32 mA", "6.45 mA", "22.51",
+               "0.846", "0.597", "12.8 s", "451.2", "C-PROT rev 1", "E-14c", "9.63", "2.312", "1.248", "1.381", "0.934", "0.396", "0.155"):
+        assert v_ in o22 and v_ in p22, "%s is not in both section 22 and out 22" % v_
+    assert "SELECTED: (b)" in o22 and "OPEN" in o22.split("22g. ")[1].split("22h. ")[0] and "ASSUMED" in o22
+    o20e = out.split("   20e. ")[1].split("   20f. ")[0]
+    assert "with the sources at their hot bound" in o20e and "under the hold's least" not in o20e
+    row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
+    assert "(f2, round 12" in row and "at most 521 uA" in row and "0.1 s longer than (f2)'s bleed" in row
+    dd7 = open(os.path.join(REC, "apply_gen_sch_a_dd7.py"), encoding="utf-8").read()
+    assert 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")' in dd7 and '"6.8k 1%"' not in dd7
+
+
+def t_round12_the_minors_v2_m1_to_m5_are_carried():
+    """V2-m1: Vishay's printed Ciss maxima are the figures judged; V2-m2: Nexperia's hot IDSS row is quoted where the record said 'not
+    printed'; V2-m3: the dd7 draft's comment carries the script's sink figures; V2-m4: V1's two unowned minors are named with an owner and
+    a next action, the hysteresis reading's figures reproduced; V2-m5: E11-29's coupon reads the PTC's site with one FET heated alone."""
+    R = _R()
+    m = _M()
+    S, S21, S20 = R["S22"], R["S21"], R["S20"]
+    two = {lab: (c_, ok) for lab, c_, _c2, ok in S21["two"]}
+    assert abs(two["SQJ403EP (Vishay)"][0] - 4500e-12) < 1e-15 and abs(two["SQJ407EP (Vishay)"][0] - 10700e-12) < 1e-15, "Vishay's maxima are not the figures judged"
+    assert S21["two_note"]["SQJ403EP (Vishay)"] == (3400e-12, "maximum") and S21["two_note"]["SQJ407EP (Vishay)"] == (8200e-12, "maximum")
+    assert [lab for lab, (_c, ok) in two.items() if ok] == ["BUK6Y10-30P (Nexperia)"], "the verdict moved"
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o21 = out.split("21. ROUND 11")[1].split("22. ROUND 12")[0]
+    assert "4.5 nF maximum (3.4 nF typical), two 9 nF" in o21 and "10.7 nF maximum (8.2 nF typical), two 21.4 nF" in o21
+    p21 = page.split("## 21. Round 11")[1].split("## 22. Round 12")[0]
+    assert "4.5 nF maximum" in p21 and "10.7 nF maximum" in p21 and "except SQJ403EP's and SQJ407EP's printed maxima" not in p21
+    for text_ in (out.split("   20e. ")[1].split("   20f. ")[0], page.split("### 20e. ")[1].split("### 20f. ")[0]):
+        assert "10 uA at Tj 125 C" in " ".join(text_.split()) and "hot off leakage (not printed)" not in text_, "Nexperia's hot row is not quoted in 20e"
+    dd7 = open(os.path.join(REC, "apply_gen_sch_a_dd7.py"), encoding="utf-8").read()
+    sel = S["sel"]
+    for k_, lab in (("set", "%s mA at the set"), ("ovp", "%s mA with CELL+ at SYSOVP"), ("clamp", "%s mA only with CELL+ at VBAT")):
+        assert (lab % m.fmt(sel["sink"][k_] * 1e3, 2)) in dd7, "the dd7 draft's comment does not carry %s" % k_
+    assert "4.4 mA at the clamp" not in dd7
+    h = S["hys_alt"]
+    assert abs(h["ret_low"] - 0.7643) < 0.0006 and abs(h["out_hi"] - 2.008) < 0.001 and abs(h["window"] - 25.1e3) < 60.0
+    o22h = out.split("   22h. ")[1].split("   22i. ")[0]
+    assert o22h.count("OWNER") == 2 and o22h.count("NEXT") == 2 and "Q-TI-19" in o22h and "CONOPS" in o22h
+    p22h = page.split("### 22h. ")[1].split("### 22i. ")[0]
+    assert "**Owner:**" in p22h and p22h.count("**Next action:**") == 2 and "Q-TI-19" in p22h and "CONOPS" in p22h
+    ti = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    assert "**Q-TI-19" in ti.split("## Round 12")[1] and "Drafted, not sent." in ti.split("## Round 12")[1]
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert "the PTC's site" in row and "one FET heated alone" in row and "V2-m5" in row
+    b29 = page.split("#### Block E11-29")[1].split("#### Block E11-30")[0]
+    assert "the PTC's site" in " ".join(b29.split()) and "1.513 W" in b29
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2's findings answered" in readme and "V2-B1" in readme and "V2-m9" in readme
