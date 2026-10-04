@@ -9,8 +9,11 @@
   points; on Murata's typical curve the guard reaches the first inverter's turn-off at record l9stk's held 18 A reading), the Murata
   and TI questions DRAFTED and UNSENT, TDK's B59721A and Murata's PRF15BA102 named and not selected; `test_l8p` (15 passed),
   `test_l8r2` and `test_public_hygiene` pass.
-- Not done here: the closure of C4 on the merged candidate (`test_l8p` and `test_l4e11` there) is the integrator's; the scratch merge
-  with `a09e9a60` is recorded below.
+- The scratch merge with `a09e9a60` (read-only: `git merge-tree --write-tree` of `85447c4e` and `a09e9a60`, no merge in progress):
+  CLEAN, tree `66e753a7`; it brings only `records/l4e11/` and `test_l4e11.py`. On that tree, built as a scratch overlay (L4-E11's
+  held sheets linked read-only from other worktrees and checked by its `fetch_held_back.py`): `l8p_drafts.py` prints this
+  `l8p_drafts.out` byte for byte, `test_l8p` 15 passed, `test_l4e11` 65 passed, 0 failed, 0 skipped. That meets V1's closure for C4
+  on a scratch merge; the committed candidate and its suite are the integrator's.
 - Next: the independent check V2 of the changed technical claims (F06, F07, the alternative parts) with T2, T3 and T4; record l9stk's
   guard round for F07; L4-E11's latch budget for F06.
 
