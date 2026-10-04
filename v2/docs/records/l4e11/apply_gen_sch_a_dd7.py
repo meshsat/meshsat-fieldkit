@@ -2,12 +2,17 @@
 """apply_gen_sch_a_dd7.py: DRAFT for board A's generator owner (task L4-E11, MESHSAT-1357, round 9, 4 October 2026; record l9stk's
 DD-7). NOT APPLIED to the tree by L4-E11; its author ran it only on scratch copies (the tests write scratch copies).
 
-Why (L4E11-SOURCE-ONLY-AND-ENTRY.md section 19h, l4e11_power.out section 19h): record l9stk (branch fnd/l9stk at d449375b, 15.4b)
+Why (L4E11-SOURCE-ONLY-AND-ENTRY.md section 19h, l4e11_power.out section 19h): record l9stk (branch fnd/l9stk at 0d72880b, 15.4b)
 selects the latch-off LM5069-1 for board P's breaker. After a trip it stays off until its UVLO or its VIN cycles; on battery the kit
 goes dark. When an input returns, the charger could push charge current through the latched breaker's body diodes (E-14). Board A
 therefore opens the breaker's enable loop for a pulse when an input appears and the pack's terminal is dead: the second inverter on
-board P discharges UVLO, the latch resets, and when the loop closes the RC hold (0.110 to 0.593 s) and the dv/dt start (at most 40.7
-ms) restart the breaker, its timer re-enabled (under 0.3 V within 34.0 ms) long before.
+board P pulls UVLO at once (C_U drains in 1.10 ms behind it), the latch resets, and when the loop closes the RC hold (0.110 to 0.907 s,
+later while record l9stk's C-1c holds a hot pad) and the dv/dt start (at most 40.7 ms) restart the breaker, its timer re-enabled (under
+0.3 V within 34.0 ms) long before. A later latch with the input still present gets no second pulse: the hardware charge inhibit
+below holds the charge off the latched FET whenever the latch takes CELL+ dead (the checker's B-R2). Its reach (section 19h): a latch
+while a source holds VSYS, and so CELL+ through the battery FETs, into a resistive fault never takes CELL+ dead, and the breaker's PGD
+reads high with reverse current; that case stays OPEN for board P's gate state or a reverse-blocking element (route R1) or a hardware
+charge-current cap on board A (route R2).
 
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else (after record l8p's apply_gen_sch_a_ptc.py, which draws the loop's two
 nets DOCK_EN_OUT and DOCK_EN_RET and RT1 on this board):
@@ -23,7 +28,8 @@ nets DOCK_EN_OUT and DOCK_EN_RET and RT1 on this board):
           no second pulse): Q47 (2N7002, gate SYS_INH_G = DOCK_EN_OUT over R109 1M and R144 1M) turns Q49 (AO3401A, C15127) on through
           R82 100k and R83 200k, and Q49 holds CH_BATDRV, the battery FETs' gates, at VBAT, so Q39, Q40 and Q42 are off and no charge
           leaves VSYS for the pack; Q48 (2N7002, gate DD7_ALIVE) releases it once CELL+ is alive. The inhibit acts exactly while the
-          enable loop is powered (the cells reach board P's breaker) and the pack's terminal is dead (the breaker off): no firmware.
+          enable loop is powered (the cells reach board P's breaker) and the pack's terminal is dead (the breaker off): no firmware;
+          not set by a latch that leaves CELL+ held up from VSYS (its reach, section 19h).
   intent  DD7_G, DD7_ALIVE, SYS_INH_G, SYS_INH_D and SYS_INH_P declared as nodes; one schematic section for the thirteen parts and D25.
 The designators Q44 to Q49, R82, R83, R106 to R109, R144 and D25 are free in gen_sch_a.py and disjoint from every board A draft composed
 in L4-E9's order with record l8p's PTC draft (the resistors sit below every draft's reference, so d8dec31's next-free reference is
@@ -54,12 +60,12 @@ _RESET = (
     '# L4-E11 ROUND 9 (MESHSAT-1357, 4 October 2026; record l9stk 15.4b, DD-7): THE PACK BREAKER\'S INPUT-RETURN RESET. Board P\'s breaker is\n'
     '# the latch-off LM5069-1: after a trip it stays off until its UVLO or VIN cycles. When an input appears on the dock while the pack\'s\n'
     '# terminal is dead, Q44 pulls the enable loop\'s return (DOCK_EN_RET) low, as an undocking opens the loop: board P\'s second inverter\n'
-    '# discharges UVLO (under its threshold within 1.1 ms), the latch resets, and its timer falls under 0.3 V within 34.0 ms. The pulse\n'
+    '# pulls UVLO at once (C_U drains within 1.10 ms), the latch resets, and its timer falls under 0.3 V within 34.0 ms. The pulse\n'
     '# begins as VIN_RAW rises (R106 into Q44\'s gate, D25 clamping it) and ends when U34 releases FE_RUN, 79 to 201 ms after VIN_RAW\n'
     '# passes U34\'s UV threshold (Q45). Q46 holds the gate low while CELL+ is alive (the breaker on), so an input arriving while the kit\n'
-    '# runs on its pack never opens the loop. When the loop closes the RC hold (0.110 to 0.593 s) and the dv/dt start (at most 40.7 ms)\n'
-    '# restart the breaker. A Q44 shorted holds the breaker off (fail-safe, revealed at commissioning); a Q46 open lets an input\'s arrival\n'
-    '# drop a live pack for the pulse and the restart (found by E11-45 b). The charge until the restart is E-14\'s; IF-7 holds the charge.\n'
+    '# runs on its pack never opens the loop. When the loop closes the RC hold (0.110 to 0.907 s, later while C-1c holds a hot pad) and\n'
+    '# the dv/dt start (at most 40.7 ms) restart the breaker. A Q44 shorted holds the breaker off (fail-safe, revealed at commissioning); a Q46 open lets an input\'s arrival\n'
+    '# drop a live pack for the pulse and the restart (found by E11-45 b). The charge until the restart is held by the inhibit below; IF-7 reports.\n'
     'part("Q44", "Transistor_FET", "2N7002", "2N7002: DD7_G high = the breaker\'s enable loop opened at board A (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_G", "2": "GND", "3": "DOCK_EN_RET"}, "C8545")\n'
     'r("R106", "1M", "VIN_RAW", "DD7_G", lcsc="C22935"); part("D25", "Device", "D_Zener", "BZT52C12-7-F zener, the input-return reset\'s gate clamp", "SOD123", {"1": "DD7_G", "2": "GND"}, "C124196")\n'
     'part("Q45", "Transistor_FET", "2N7002", "2N7002: FE_RUN high = the input-return pulse ended (1 G, 2 S, 3 D)", "SOT23", {"1": "FE_RUN", "2": "GND", "3": "DD7_G"}, "C8545")\n'
@@ -78,6 +84,8 @@ _RESET = (
     '# the loop unpowered (the gauge\'s FETs off, the pack absent or undocked) nothing is inhibited: a pack\'s wake and its precharge pass\n'
     '# the body diodes at the gauge\'s own current, as record l9stk states. Q49 shorted holds the battery FETs off (their body diodes carry\n'
     '# the discharge, and record l8p\'s PTC trips the breaker before their junctions pass 150 C); Q47 or Q49 open loses the inhibit (E11-45).\n'
+    '# Its reach (L4-E11 19h): a latch while a source holds VSYS, and CELL+ through the battery FETs, into a resistive fault never takes\n'
+    '# CELL+ dead, and the breaker\'s PGD reads high with reverse current: that case is OPEN (routes R1 on board P, R2 a charge cap here).\n'
     'r("R109", "1M", "DOCK_EN_OUT", "SYS_INH_G", lcsc="C22935"); r("R144", "1M", "SYS_INH_G", "GND", lcsc="C22935")   # the loop\'s 2 MOhm sense: half of DOCK_EN_OUT\n'
     'part("Q47", "Transistor_FET", "2N7002", "2N7002: the enable loop powered and the terminal dead = the charge inhibited (1 G, 2 S, 3 D)", "SOT23", {"1": "SYS_INH_G", "2": "GND", "3": "SYS_INH_D"}, "C8545")\n'
     'part("Q48", "Transistor_FET", "2N7002", "2N7002: the pack\'s terminal alive = the charge inhibit released (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_ALIVE", "2": "GND", "3": "SYS_INH_G"}, "C8545")\n'

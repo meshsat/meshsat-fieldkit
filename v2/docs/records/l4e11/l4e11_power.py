@@ -121,6 +121,8 @@ PINS = {
     "tps62933": ("v2/vendor/ti/ti-tps62933.pdf", "16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6"),
     "n2n7002": ("v2/vendor/power/jscj-2n7002-c8545.pdf", "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6"),
     "bzt52c": ("v2/vendor/diodes/diodes-bzt52c-ds18004.pdf", "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f"),
+    "tps2596": ("v2/vendor/power/tps2596.pdf", "66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9"),
+    "ap64500": ("v2/vendor/diodes/diodes-ap64500.pdf", "d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
@@ -333,7 +335,7 @@ def compute():
               "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683", "bq25798", "lm74700", "tps4811", "csd19536", "tps1663",
               "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch", "msmf",
               "ltc3115", "tps55340", "tps63070", "xal60", "gen_b", "spra953", "an11158", "hollr2512", "tps37", "ltc2954", "tps62933",
-              "n2n7002", "bzt52c"):
+              "n2n7002", "bzt52c", "tps2596", "ap64500"):
         read(k)
     L9 = git_text("l4e9")
     R["inputs"] = [(k, PINS[k][0], sha_file(os.path.join(TOP, PINS[k][0]))) for k in PINS]
@@ -3204,13 +3206,13 @@ def render_fix18(R, p):
     p("")
 
 # ============================================================================================ round 9 (4 October 2026)
-# Record l9stk's protection section (15 at d449375b: checked CONFIRMED AS CONDITIONAL at 2c8b29fb, 15.4b and the -1 added since) and record l8p's breaker drafts (at
+# Record l9stk's protection section (15 at 0d72880b: checked CONFIRMED AS CONDITIONAL at 2c8b29fb; 15.4b, the -1 and C-1c added since) and record l8p's breaker drafts (at
 # b1295c1e) are read from their commits by sha256, never retyped: the junction limit, the start, the hold, IF-1, DD-3 and C3 from l9stk's
 # output and page; the findings L8P-F02 and L8P-F03 from l8p's page.
-R9_COMMITS = {"l9stk": "d449375b07bfbb6560f0d5396f6d2898e768cc2c", "l8p": "b1295c1e4fcfe03ea4d021067b6b9433e8133006"}
+R9_COMMITS = {"l9stk": "0d72880b34e337a6f2e26c1420507b813784b533", "l8p": "b1295c1e4fcfe03ea4d021067b6b9433e8133006"}
 R9_GIT = {
-    "l9stk_out": ("l9stk", "v2/docs/records/l9stk/l9stk_protection.out", "f6bec512ccaeb2f4e6097b43a6b1943a58047c5fccc634ae406d484069d9a53a"),
-    "l9stk_page": ("l9stk", "v2/docs/records/l9stk/L9-STACKUPS.md", "25fe0c5afb41472a81c2e3eb18c7ede2147245baeb0a87b3d65b312f91bec86d"),
+    "l9stk_out": ("l9stk", "v2/docs/records/l9stk/l9stk_protection.out", "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac"),
+    "l9stk_page": ("l9stk", "v2/docs/records/l9stk/L9-STACKUPS.md", "2e053ee48a4558a4e33d70f77b36ebdef0e9878600ae9ea30735597cf639ee5c"),
     "l8p_page": ("l8p", "v2/docs/records/l8p/L8P-BREAKER.md", "ad2eacf9f18aac324899fd56f8221f4e58388afcc933c23816f60caa86efebd6"),
 }
 R9_BAND_RISE = 10.0        # K, ASSUMPTION: board E's input bands are sized to a 10 K rise at 20 A (E11-14), taken as R19's local ambient over the air
@@ -3297,12 +3299,14 @@ def fix19_round(R, T):
     S["start_w"], S["dc_line"] = f(m, 1), f(m, 3)
     m = need(o9, r"hold makes ([\d.]+) to ([\d.]+) s after the enable mates", "the RC hold")
     S["grace"] = (f(m, 1), f(m, 2))
-    S["pack_lo"] = f(need(p9, r"the pack ([\d.]+) to ([\d.]+) V; OVLO to ground", "the pack's range"))
-    need(o9, r"IF-1 board A's loads on VSYS stay off until the breaker's start ends", "IF-1")
+    m = need(p9, r"the pack ([\d.]+) to ([\d.]+) V; OVLO to ground", "the pack's range")
+    S["pack_lo"], S["vpk"] = f(m, 1), f(m, 2)
+    need(o9, r"IF-1 CRITICAL TO THE SERVICE under the -1", "IF-1")
+    S["if1_room"] = f(need(o9, r"leaves room for at most ([\d.]+) A of load at full VDS", "IF-1's room"))
     # what IF-1 names, read on the drafts as they stood: U42 on from its IN's operating floor, at its overload limit's maximum
     vin_min = f(find("tps1663", r"IN, P_IN\s+([\d.]+)\s+60", "IN's operating floor", layout=True)[1])
     S["u42_vin"] = vin_min
-    S["u42_vds"] = S["vmax"] - vin_min
+    S["u42_vds"] = S["vpk"] - vin_min
     S["u42_w"] = S["u42_vds"] * (S["start"]["inrush"] + L["ilim"][1])
     # ---- the hold: U46, the TPS37A010122 (SNVSBJ1E), on VBAT
     m = find("tps37", r"\(Undervoltage\)\s+VIT = 800 mV \(3\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "VITN at 800 mV", layout=True)[1]
@@ -3367,7 +3371,7 @@ def fix19_round(R, T):
     # MAIN held through a docking: without the hold (the drawn RAIL_EN) and with it (the KILL window)
     s_lo = S["dvdt"][0]
     S["en_early"] = S["u1_on_min"] / s_lo + S["tdb"][0]
-    S["en_vds"] = S["vmax"] - s_lo * S["en_early"]
+    S["en_vds"] = S["vpk"] - s_lo * S["en_early"]
     loss = []
     for s_ in S["dvdt"]:
         rel = S["rise"][2] / s_ + S["hold"][2] + S["tsd"]
@@ -3376,15 +3380,41 @@ def fix19_round(R, T):
     S["kill_left"] = S["kill"][0] - max(loss)
     # a quick redocking with VBAT held up: the least aux load that takes VBAT under U46's highest fall before the breaker can start, and
     # the most the breaker FET carries if a smaller load leaves U42 on and then steps to U42's limit during the start
-    S["redock_i"] = S["start"]["c_vsys"] * (S["vmax"] - S["fall"][2]) / S["grace"][0]
-    S["redock_w"] = (S["vmax"] - S["fall"][0]) * (S["start"]["inrush"] + L["ilim"][1])
+    S["redock_i"] = S["start"]["c_vsys"] * (S["vpk"] - S["fall"][2]) / S["grace"][0]
+    S["redock_w"] = (S["vpk"] - S["fall"][0]) * (S["start"]["inrush"] + L["ilim"][1])
     # a source present: the excess over the charger's input limit that the breaker may carry before its power limit acts
-    S["src_vds"] = S["vmax"] - H["floor"]
+    S["src_vds"] = S["vpk"] - H["floor"]
     S["src_excess"] = S["plim"][0] / S["src_vds"] - S["start"]["inrush"]
-    # ---- DD-7 (l9stk 15.4b at d449375b): the latch-off -1, the input-return reset, the charger's hold (IF-7) and E-14
+    # ---- IF-1's guarantee, explicit: what board A still draws from VBAT while U46 holds (RAIL_EN low, +3V3 down, every enable on its
+    # pull-down: NETLIST), at the pack's 16.8 V top, each part at its sheet's largest printed figure (a typical where only that is printed)
+    vb = S["vpk"]
+    q = lambda key, pat, what, k=2: f(find(key, pat, what, layout=True)[1], k)
+    st = [("U3 BQ25730, battery only, performance mode (SLUSE65A, the largest row)", q("bq25730", r"= 00b, REGN on, Enable PSYS, In performance\s+(\d+)\s+(\d+)\s+µA", "U3's quiescent") * 1e-6, "MAKER"),
+          ("U42 TPS16630, held by UVLO (IQ(ON) taken as the bound: no row with UVLO low)", q("tps1663", r"Enabled: V\(SHDN\) = 2V\s+([\d.]+)\s+([\d.]+)\s+mA", "U42's IQ(ON)") * 1e-3, "MAKER"),
+          ("U1 LTC2954", q("ltc2954", r"IIN\s+VIN Supply Current\s+System Power-On, VIN = 2.7V to 24V\s+l\s+(\d+)\s+(\d+)\s+\S+A", "U1's IIN") * 1e-6, "MAKER"),
+          ("U46 TPS37A", q("tps37", r"VIT = 800 mV\s+([\d.]+)\s+([\d.]+)\s+µA", "U46's IDD") * 1e-6, "MAKER"),
+          ("U5, U7, U13, U15, U19 LM5176 in shutdown, five", 5 * q("lm5176", r"VIN shutdown current\s+VEN/UVLO = 0 V\s+([\d.]+)\s+(\d+)\s+µA", "the LM5176's shutdown") * 1e-6, "MAKER"),
+          ("U4, U6 AP64500 in shutdown, two", 2 * q("ap64500", r"Shutdown Supply Current\s+VEN = 0V\s+\u2014\s+(\d+)\s+(\d+)\s+\S+A", "the AP64500's shutdown") * 1e-6, "MAKER"),
+          ("U12, U41 TPS62933 in shutdown, two (typical only)", 2 * q("tps62933", r"ISHDN\s+Shutdown supply current\s+VEN = 0 V\s+([\d.]+)\s+µA", "the TPS62933's shutdown", 1) * 1e-6, "MAKER, typical"),
+          ("U21, U22 TPS259631 in shutdown, two", 2 * q("tps2596", r"VIN ≥ 4 V, VEN/UVLO < VSD\s+([\d.]+)\s+([\d.]+)\s+µA", "the TPS25963's shutdown") * 1e-6, "MAKER"),
+          ("R2 (RAIL_EN held low by Q43)", vb / R9_RAIL_EN[0], "NETLIST"),
+          ("R86 and R87 (U46's SENSE2)", vb / (R9_SUP[0] + R9_SUP[1]), "SESSION"),
+          ("R88 (EF_UVLO held low by RESET2)", vb / R9_EF[0], "SESSION"),
+          ("R105 into D24's clamp", (vb - S["vz"][0]) / 100e3, "SESSION"),
+          ("R82 and R83 (the charge inhibit, when it holds)", vb / 300e3, "SESSION"),
+          ("R92 and R96 (U21's and U22's OVLO dividers, their 143k tops as the bound)", 2 * vb / 143e3, "NETLIST"),
+          ("R107 and R108 on CELL+", vb / 200e3, "SESSION")]
+    S["static"] = st
+    S["static_sum"] = sum(x for _l, x, _c in st)
+    S["static_frac"] = S["static_sum"] / S["if1_room"]
+    S["redock_room"] = S["plim"][0] / (S["vpk"] - S["fall"][0]) - S["start"]["inrush"]
+    # ---- DD-7 (l9stk 15.4b, read at 0d72880b): the latch-off -1, the input-return reset, the charger's hold (IF-7) and E-14
     need(o9, r"SELECTED: the -1 \(latch-off\)", "the -1 selected")
     S["timer_reenable"] = f(need(o9, r"the timer falls under 0\.3 V in ([\d.]+) ms at most", "the timer's re-enable")) * 1e-3
-    S["uvlo_fall"] = f(need(o9, r"UVLO under its threshold in ([\d.]+) ms", "UVLO's fall when the loop opens")) * 1e-3
+    S["inv2_on"] = f(need(o9, r"the second on in ([\d.]+) us and UVLO falls at once", "the second inverter")) * 1e-6
+    S["uvlo_fall"] = f(need(o9, r"C_U drains in ([\d.]+) ms behind it", "C_U's drain when the loop opens")) * 1e-3
+    need(o9, r"read at the falling edge, a pulse within\s+([\d.]+) ms of a latch does not restart, which fails safe", "the UVLO edge")
+    need(o9, r"C-1c SELECTED: a restart inhibit on the breaker pad", "C-1c")
     S["dd7_restart"] = f(need(o9, r"restarts within ([\d.]+) s \(the hold and the start\)", "DD-7's restart"))
     need(o9, r"IF-7 the bridge reports a tripped breaker", "IF-7")
     need(o9, r"E-14 the charge through a latched breaker", "E-14")
@@ -3421,6 +3451,17 @@ def fix19_round(R, T):
     S["rbatdrv_on_min"] = f(m, 1) * 1e3
     S["batdrv_sink"] = S["batdrv_on"] / S["rbatdrv_on_min"]
     S["idss"] = f(need(flat(text_pdf("buk6y10")), r"IDSS drain leakage current VDS = -30 V; VGS = 0 V; Tj = 25 °C - - -(\d+) µA", "the BUK6Y10-30P's IDSS")) * 1e-6
+    # the inhibit's reach (B-R2): it sets only when CELL+ falls under Q48's release; with a source present at a latch, the battery FETs
+    # tie CELL+ to VSYS, which the charger holds up into a resistive fault; and the breaker's PGD reads high with reverse current (its VDS
+    # negative), so no board A signal and no PGD tells a latched -1 passing charge from an -1 that is on
+    m = need(ga, r"its (\d+\.\d) A ISNS maximum at (\d+\.\d) V", "the front end's ISNS maximum")
+    S["p_src"] = f(m, 1) * f(m, 2)
+    S["r_fault"] = f(need(o9, r"at ([\d.]+) ohm \(just over the least limit at full voltage\)", "the worst resistive fault"))
+    S["v_fault"] = math.sqrt(S["p_src"] * S["r_fault"])
+    S["r_assert"] = S["alive_off"] ** 2 / S["p_src"]
+    lm = flat("".join(pdf_pages("lm5069")))
+    need(lm, r"When the voltage at OUT increases to within 1\.25 V of the SENSE pin \(VDS <1\.25 V\), PGD switches high", "PGD's rule")
+    S["capwin"] = (N["rb_max"], (150.0 - S["t0"]) / (S["vsd"] * S["rja_brk"]))
     G = R["G"]
     S["e14"] = [(lab, i_, i_ * S["vsd"], S["t0"] + i_ * S["vsd"] * S["rja_brk"])
                 for lab, i_ in (("the charger's ChargeCurrent at POR (TI's E2E answer, D4)", G["por_ma"] * 1e-3),
@@ -3590,7 +3631,7 @@ def render_fix19(R, p):
     p("       RAIL_EN low from power-up until MAIN has been held %s ms at least (MAKER); U42's branch to board E is always on (NETLIST, drafts)" % fmt(S["tdb"][0] * 1e3, 0))
     p("     the defect IF-1 names (INFERRED): U42 on from its IN's %s V floor feeds board E's U12 and U22 through the start; at that point the breaker FET"
       % fmt(S["u42_vin"], 1))
-    p("       drops %s V and carries the inrush plus up to U42's %s A: %s W, over the power limit's least %s W, so the timer runs and the start retries;"
+    p("       drops %s V and carries the inrush plus up to U42's %s A: %s W, over the power limit's least %s W, so the timer runs and the -1 latches;"
       % (fmt(S["u42_vds"], 2), fmt(L["ilim"][1], 3), fmt(S["u42_w"], 1), fmt(S["plim"][0], 2)))
     p("       and MAIN held through a docking asserts RAIL_EN %s ms after the ramp begins at the slowest slope, with %s V across the breaker FET"
       % (fmt(S["en_early"] * 1e3, 1), fmt(S["en_vds"], 2)))
@@ -3619,9 +3660,7 @@ def render_fix19(R, p):
       % fmt(S["hold_margin"] * 1e3, 1))
     p("       through board E's load: more than %s mA takes VBAT under %s V before the breaker can start (VSYS's %s uF over %s s), U46 asserts and the"
       % (fmt(S["redock_i"] * 1e3, 1), fmt(S["fall"][2], 3), fmt(S["start"]["c_vsys"] * 1e6, 0), "%.3f" % S["grace"][0]))
-    p("       start is held; a smaller load leaves U42 on, and even stepped to U42's %s A the breaker FET carries at most %s W, under its %s W least"
-      % (fmt(L["ilim"][1], 3), fmt(S["redock_w"], 1), fmt(S["plim"][0], 2)))
-    p("       power limit, so its timer never runs")
+    p("       start is held; a smaller load leaves the hold released, and the guarantee below bounds that start")
     p("     PGD NOT USED (SESSION): it needs an eighth J_SMB position and a dock contact through two connectors from board P (record l8p); a supervisor")
     p("       on board A acts on what board A's loads see, for every start (a docking, the gauge's FET, a retry, a source-only rise), with no new interface")
     p("     the residuals (INFERRED):")
@@ -3637,13 +3676,24 @@ def render_fix19(R, p):
       % fmt(S["fall"][2], 3))
     p("         is at least the pack's %s V less the path's drop or VSYS_MIN's %s V in every mode, so only a collapse reaches it" % (fmt(S["pack_lo"], 1), fmt(H["floor"], 3)))
     p("       record l9stk's IF-5: once record l8p's drafts are applied the docking pulse E11-30 qualifies no longer arises; E11-30 is kept until then")
-    p("     THE GUARANTEE UNDER THE -1 (record l9stk 15.4b: a start that meets the power limit latches and the kit stays dark; INFERRED):")
+    p("     THE GUARANTEE UNDER THE -1 (record l9stk 15.4b: a start that meets the power limit latches and the kit stays dark; IF-1 CRITICAL TO THE")
+    p("       SERVICE: the start leaves room for at most %s A of load at full VDS; INFERRED):" % fmt(S["if1_room"], 2))
+    p("       what board A still draws from VBAT while U46 holds (RAIL_EN low, +3V3 down, every enable on its pull-down: NETLIST), at %s V,"
+      % fmt(S["vpk"], 1))
+    p("         each part at its sheet's largest printed figure:")
+    for lab, x, cl in S["static"]:
+        p("           %s: %s mA (%s)" % (lab, "%.4f" % (x * 1e3), cl))
+    p("         in all %s mA, %s %% of the %s A room; board E's VSYS_E is off behind U42" % ("%.2f" % (S["static_sum"] * 1e3), "%.2f" % (S["static_frac"] * 100), fmt(S["if1_room"], 2)))
     p("       every start from a VBAT under %s V (a docking, a redocking after the kit went dark, the input-return restart of 19h, the guard's cycle):"
       % fmt(S["fall"][0], 3))
     p("         no board A load draws (the hold outlasts the start by %s ms at the least); the breaker FET carries the inrush alone, %s W"
       % (fmt(S["hold_margin"] * 1e3, 1), "%.1f" % S["start_w"]))
-    p("       a start with VBAT held over %s V by board A's capacitance (a quick redocking): at most %s W, under the %s W least power limit"
-      % (fmt(S["fall"][0], 3), fmt(S["redock_w"], 1), fmt(S["plim"][0], 2)))
+    p("       a start with VBAT held over %s V by board A's capacitance (a quick redocking, the whole load under %s mA to hold it 0.110 s): the"
+      % (fmt(S["fall"][0], 3), fmt(S["redock_i"] * 1e3, 1)))
+    p("         breaker carries up to %s A of load before its power limit acts (VDS at most %s V); a step past that within the start latches the -1"
+      % (fmt(S["redock_room"], 2), fmt(S["vpk"] - S["fall"][0], 3)))
+    p("         and the kit goes dark until a redock or an input (a residual of a quick redock with a load stepping; U42's 1.802 A alone: %s W)"
+      % fmt(S["redock_w"], 1))
     p("       a start with a source carrying VSYS: at most %s A of excess over the charger before the power limit acts; beyond that the pack"
       % fmt(S["src_excess"], 2))
     p("         latches while the source carries the kit, which stays up (not dark)")
@@ -3651,8 +3701,10 @@ def render_fix19(R, p):
       % R9_COMMITS["l9stk"][:8])
     p("     the -1 (RECORD, l9stk): selected over the -2; after a trip it stays off until UVLO or VIN cycles; the timer falls under 0.3 V in %.1f ms at"
       % (S["timer_reenable"] * 1e3))
-    p("       most; UVLO falls under its threshold %s ms after the loop opens; a restart within %s s once the loop closes (the hold and the start)"
-      % (fmt(S["uvlo_fall"] * 1e3, 3), fmt(S["dd7_restart"], 3)))
+    p("       most; when the loop opens the second inverter is on in %s us and UVLO falls at once, C_U draining in %s ms behind it; a restart within"
+      % (fmt(S["inv2_on"] * 1e6, 1), "%.2f" % (S["uvlo_fall"] * 1e3)))
+    p("       %s s once the loop closes (the hold and the start), later while C-1c, the restart inhibit on the breaker pad, holds a hot pad (RECORD)"
+      % fmt(S["dd7_restart"], 3))
     p("     THE INPUT-RETURN RESET (SESSION, drafted in apply_gen_sch_a_dd7.py, after record l8p's PTC draft): Q44 (2N7002) pulls DOCK_EN_RET low,")
     p("       which opens the loop as an undocking does; its gate DD7_G is VIN_RAW through R106 1M, clamped by D25 (BZT52C12, %s to %s V);"
       % (fmt(S["vz"][0], 1), fmt(S["vz"][1], 1)))
@@ -3662,10 +3714,15 @@ def render_fix19(R, p):
     p("       R108) holds the gate low while CELL+ is over %s V, and cannot conduct under %s V: an input arriving on a live pack opens nothing"
       % (fmt(S["alive_on"], 2), fmt(S["alive_off"], 2)))
     p("       (MAKER, INFERRED)")
-    p("     the pulse against what it must do (INFERRED): at least %s ms, %s times UVLO's %s ms fall; the timer's %.1f ms re-enable falls inside the"
-      % (fmt(S["pulse"][0] * 1e3, 1), fmt(S["pulse_margin"], 0), fmt(S["uvlo_fall"] * 1e3, 3), S["timer_reenable"] * 1e3))
-    p("       pulse and the hold, %s ms to spare; from VIN_RAW passing U34's threshold to the restart's end at most %s s"
-      % (fmt(S["pulse_vs_timer"] * 1e3, 1), fmt(S["dd7_total"], 3)))
+    p("     the pulse against what it must do (INFERRED): at least %s ms, %s times C_U's %.2f ms drain; the timer's %.1f ms re-enable falls inside the"
+      % (fmt(S["pulse"][0] * 1e3, 1), fmt(S["pulse_margin"], 0), S["uvlo_fall"] * 1e3, S["timer_reenable"] * 1e3))
+    p("       pulse and the hold, %s ms to spare; from VIN_RAW passing U34's threshold to the restart's end at most %s s (the pulse %s ms, the hold"
+      % (fmt(S["pulse_vs_timer"] * 1e3, 1), fmt(S["dd7_total"], 3), fmt(S["pulse"][2] * 1e3, 1)))
+    p("       %s s, the start %s ms), longer while C-1c holds a hot pad (its cooling time NOT HELD, record l9stk's E-15)"
+      % (fmt(S["grace"][1], 3), fmt(S["start"]["tmax"] * 1e3, 1)))
+    p("     the UVLO edge (RECORD, l9stk): read at the falling edge, an input arriving within %.1f ms of a latch does not restart the breaker; that"
+      % (S["timer_reenable"] * 1e3))
+    p("       fails safe (the breaker stays off, the hardware inhibit below holds the charge); the input's next return or a redocking restarts it")
     p("     THE HARDWARE CHARGE INHIBIT (SESSION, the same draft; the checker's B-R2: a persistent fault latches the -1 again with the input still")
     p("       present and no second pulse comes): Q47 (gate SYS_INH_G, DOCK_EN_OUT over R109 1M and R144 1M) turns Q49 (AO3401A) on through R82")
     p("       100k and R83 200k; Q49 holds CH_BATDRV at VBAT, so Q39, Q40 and Q42 are off and their body diodes point from the pack to VSYS: no")
@@ -3690,14 +3747,31 @@ def render_fix19(R, p):
       % (fmt(S["idss"] * 1e6, 0), fmt(S["vsd"], 1), fmt(S["rja_brk"], 1)))
     for lab, i_, w_, tj_ in S["e14"]:
         p("         %s, %s A: %s W, TJ %s C held" % (lab, fmt(i_, 4), fmt(w_, 3), fmt(tj_, 1)))
-    p("       so the inhibit is what holds a commanded charge beyond R-b off the FET (the checker's 4 A, 4 W, 276 C); E11-45 measures it (INFERRED)")
-    p("     the charger-side hold (SESSION): hardware, the inhibit above, until the terminal is alive; the firmware's IF-7 reports the trip and writes")
+    p("       so the inhibit is what holds a commanded charge beyond R-b off the FET (the checker's 4 A, 4 W, 276 C) wherever it sets (its reach")
+    p("       below); E11-45 measures it (INFERRED)")
+    p("     the charger-side hold (SESSION): hardware, the inhibit above, until the terminal is alive where it sets; the firmware's IF-7 reports the trip and writes")
     p("       ChargeCurrent only after the restart (E11-44); the hold does not wait on it")
+    p("     ITS REACH, READ AFTER DRAFTING (INFERRED; the one design-out attempt): the inhibit sets only when CELL+ falls under %s V. A latch while"
+      % fmt(S["alive_off"], 2))
+    p("       a source is present (the pack supplementing into the fault, the battery FETs on) leaves CELL+ tied to VSYS, which the charger holds")
+    p("       into a resistive fault at sqrt(P x R): %s V at the breaker's least-limit fault of %s ohm with the front end's %s W (its %s A ISNS maximum)"
+      % (fmt(S["v_fault"], 1), fmt(S["r_fault"], 3), fmt(S["p_src"], 1), "5.7"))
+    p("       so the inhibit sets only for faults under %s mOhm; when such a fault clears with the -1 latched, a charge passes the breaker's body"
+      % fmt(S["r_assert"] * 1e3, 0))
+    p("       diode with CELL+ reading alive. The breaker's PGD reads high in that state too (its VDS negative; LM5069 8.3.6 switches on VDS alone),")
+    p("       so no board A signal tells a latched -1 passing charge from an -1 that is on: that case needs board P's gate state or a reverse-blocking")
+    p("       element (route R1, board P's generator with record l9stk), or a hardware cap on the charge current on board A (route R2: above R-b's")
+    p("       %s A and under %s A, the latched FET's body diode at 150 C held from %s C at VSD %s V and %s C/W; a high-side current-sense part with"
+      % (fmt(S["capwin"][0], 4), fmt(S["capwin"][1], 3), fmt(S["t0"], 2), fmt(S["vsd"], 1), fmt(S["rja_brk"], 1)))
+    p("       a timed off-state, none held). Until one is drawn, a charge past R-b in that state rests on the firmware (R-b and IF-7); at R-b's")
+    p("       largest the FET reads the E-14 row above (SESSION: R1 preferred; R2 the fallback)")
     p("     residuals (INFERRED): Q49 shorted holds the battery FETs off (their body diodes carry the discharge, and record l8p's PTC trips the breaker")
     p("       before their junctions pass 150 C); Q47, Q48 or Q49 open loses the inhibit or never releases it (both found by E11-45); a Q46 open lets")
     p("       an input's arrival drop a live pack for the pulse and the restart (E11-45 b); Q44 shorted holds the breaker off (fail-safe, revealed)")
-    p("     STATUS: DD-7 DRAFTED (the reset for the first restart, the hardware inhibit for every later latch), CONDITIONAL on E11-45 and on")
-    p("       TI's answer on BATDRV held at VSYS (Q-TI-17's addendum); IF-7 the firmware owner's (SESSION)")
+    p("     STATUS: DD-7 DRAFTED for the first restart and for every latch whose fault takes CELL+ dead (the dark kit, a hard short, the input's")
+    p("       return), CONDITIONAL on E11-45 and TI's answer on BATDRV held at VSYS (Q-TI-17's addendum); B-R2 OPEN for a latch with a source")
+    p("       present into a resistive fault (route R1, owner board P's generator with record l9stk; R2 this record's fallback); IF-7 the firmware")
+    p("       owner's (SESSION)")
     p("")
 
 # ============================================================================================ the output
@@ -4240,10 +4314,10 @@ def downstream(R):
     ("E11-39", "FIRMWARE", "firmware owner", "board E's mixer fans (four-wire, on the 12.0 V rail) started one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (sections 17a and 18c; Layer 7's F-L7-05): U22's %s ms soft start covers the rail's rise only, and the fans' start current is NOT READ, so the ramp is what keeps the start near the running current under U42's least limit %s A" % (fmt(R["N18"]["tss"] * 1e3, 0), fmt(R["L"]["ilim"][0], 3))),
     ("E11-40", "IMPLEMENTATION", "Layer 8 board B generator owner", "a FINDING, not a draft (section 18d; Layer 7's F-L7-02): board B's J_FAN1 to J_FAN3 carry +5V_Sn (%s V) on pin 1 and declare the fan at %s A, and no 12 V net exists on the board; the coolers %s print %s to %s V: a regulated 12.0 V feed per slot (a step-up from +5V_Sn, Layer 7's 0.436 A each at full speed, keeping an empty slot off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V, the slot budget's fan row 2.0 W at 12 V, the module's Fan_PWM and Fan_Tacho kept" % (fmt(R["N18"]["b_slot_v"], 1), fmt(R["N18"]["b_fan_a"], 1), L7_FAN["mpn_cooler"], fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1))),
     ("E11-41", "TEST", "prototype bench", "DD-3's condition (round 9, section 19e; record l9stk's DD-3): L2 (SRF1260-1R0Y) on board E's land at the TPS48110 breaker's highest held current, %s A, its winding's hot spot read by resistance or a thermocouple in still air at %s C (or referred to it), three samples: at most %s C including the rise; or Bourns's statement of the rise in this connection; or a choke rated at least %s A at a %s K rise with board E's input filter shown again to its attenuation; a reading over it returns to L4-E11 for the choke, and the second pass FET of section 19e is drafted with the choke in one board E change" % (fmt(R["N"]["ioc"][2], 3), fmt(R["S19"]["t0"], 2), fmt(R["S19"]["l2_tmax"], 0), fmt(R["S19"]["l2_irms_need"], 2), fmt(R["S19"]["l2_rise_rated"], 0))),
-    ("E11-42", "TEST", "prototype bench", "IF-1's hold (round 9, section 19f) on board A's first prototype docked onto a board P carrying record l8p's breaker, with no source: (a) twenty dockings, U42's output and RAIL_EN low until at least %s ms after VBAT passes %s V, and the breaker's start ending with its TIMER under the fault threshold, each recorded; (b) an undocking and redocking after 0.5, 1 and 2 s with VBAT held up by board A's capacitance: U46 asserting as VBAT falls under %s V and the following start held the same way; (c) MAIN held through a docking: the release to KILL recorded, at least %s ms of U1's blanking left; (d) with a source present at the plan load, the breaker's start completing or retrying as section 19f bounds" % (fmt(R["S19"]["hold"][0] * 1e3, 1), fmt(R["S19"]["rise"][2], 3), fmt(R["S19"]["fall"][2], 3), fmt(R["S19"]["kill_left"] * 1e3, 1))),
+    ("E11-42", "TEST", "prototype bench", "IF-1's hold (round 9, section 19f) on board A's first prototype docked onto a board P carrying record l8p's breaker, with no source: (a) twenty dockings, U42's output and RAIL_EN low until at least %s ms after VBAT passes %s V, and the breaker's start ending with its TIMER under the fault threshold, each recorded; (b) an undocking and redocking after 0.5, 1 and 2 s with VBAT held up by board A's capacitance: U46 asserting as VBAT falls under %s V and the following start held the same way; (c) MAIN held through a docking: the release to KILL recorded, at least %s ms of U1's blanking left; (d) with a source present at the plan load, the breaker's start completing, or the -1 latching while the source keeps the kit up, as section 19f bounds; (e) the static draw from VBAT while U46 holds at most %s mA at 16.8 V" % ( fmt(R["S19"]["hold"][0] * 1e3, 1), fmt(R["S19"]["rise"][2], 3), fmt(R["S19"]["fall"][2], 3), fmt(R["S19"]["kill_left"] * 1e3, 1), "%.0f" % (10 * R["S19"]["static_sum"] * 1e3))),
     ("E11-43", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_dd7.py applied after record l8p's apply_gen_sch_a_ptc.py and this record's charger draft, released with l8p's three drafts (round 9, section 19h; record l9stk's DD-7 and the checker's B-R2): the input-return reset Q44 to Q46, R106 to R108, D25 on DOCK_EN_RET, and the hardware charge inhibit Q47 to Q49, R82, R83, R109, R144 on CH_BATDRV; the layout keeps Q49 within 10 mm of the battery FETs' gate node and the 2 MOhm sense at J_DOCK pin 5; L4-E9's change list gains the draft (the integrator's)"),
     ("E11-44", "FIRMWARE", "firmware owner", "record l9stk's IF-7 with section 19h's hardware: the bridge reports a tripped breaker (the BQ25730's ADC reads SRN dead while the gauge reports its FETs on, or the charge inhibit holding) and writes ChargeCurrent only after the terminal reads alive; R-b's bound kept; the hardware inhibit holds the charge whether or not this rule runs"),
-    ("E11-45", "TEST", "prototype bench", "DD-7 and E-14 (round 9, section 19h) on board A's first prototype with board P's -1 breaker: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least %s ms and the breaker restarting within %s s of VIN_RAW passing U34's threshold; (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: the fault kept, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (d) Q49's gate opened, then Q48's: the inhibit lost, then never released, each found by (c) and by a docking on battery" % (fmt(R["S19"]["pulse"][0] * 1e3, 1), fmt(R["S19"]["dd7_total"], 3))),
+    ("E11-45", "TEST", "prototype bench", "DD-7 and E-14 (round 9, section 19h) on board A's first prototype with board P's -1 breaker: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least %s ms and the breaker restarting within %s s of VIN_RAW passing U34's threshold (the pad under C-1c's trip); (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: a hard short kept on VSYS, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (c2) the same with a %s ohm fault removed after the latch: the charge into PACK_P and the FET's junction recorded (the reach's open case, section 19h; acceptance with route R1 or R2); (d) Q49's gate opened, then Q48's: the inhibit lost, then never released, each found by (c) and by a docking on battery" % (fmt(R["S19"]["pulse"][0] * 1e3, 1), fmt(R["S19"]["dd7_total"], 3), fmt(R["S19"]["r_fault"], 3))),
 ]
 
 
