@@ -42,8 +42,12 @@ the docking waveform's qualification exceeds the waveform; the charger draft wri
 row names its specimen and blocks only the final release. The fans' feed round (section 18) adds: the mixers' rail covers VSYS_E's
 range and holds the fans' printed window, its RUN divider sits between the floor and U12's start, the inductor's saturation sits over the
 regulator's limit, the branch's declared current with the rail's input at the floor stays under U42's least limit, the board E draft writes
-the rail and the four-wire fans and no flyback, and board B's feed is read as not covering the coolers. Nothing here writes into the tree:
-drafts run on temporary copies.
+the rail and the four-wire fans and no flyback, and board B's feed is read as not covering the coolers. Round 9 (section 19, 4 October 2026) adds: record l8p's L8P-F02 and L8P-F03 are
+corrected, and board A composed in L4-E9's order runs to its end (board E too, with L4-E7's defect stood in); the third battery FET Q42 sits
+on record l9stk's junction limit, reproduced, and E11-29 carries it; E11-37 is bound to the three-device network and stays open; DD-3's
+one design-out attempt fails on L2 and stays open with its condition, J_DCIN drafted as the XT60-F; IF-1's hold outlasts the breaker's
+start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Nothing here writes
+into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -93,6 +97,9 @@ def _M():
             need(os.path.join(ROOT, rel), "an input of the L4-E11 record (held documents: its fetch_held_back.py)")
         if subprocess.run(["git", "-C", ROOT, "cat-file", "-e", m.L4E9_COMMIT], capture_output=True).returncode != 0:
             raise Skip("L4-E9's commit %s is not in this repository" % m.L4E9_COMMIT[:8])
+        for who, c in m.R9_COMMITS.items():
+            if subprocess.run(["git", "-C", ROOT, "cat-file", "-e", c], capture_output=True).returncode != 0:
+                raise Skip("record %s's commit %s is not in this repository" % (who, c[:8]))
         _CACHE["M"] = m
     return _CACHE["M"]
 
@@ -647,11 +654,13 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
             assert _run([s_, b, "--write"]).returncode == 0
         assert open(a, "rb").read() == open(b, "rb").read(), "the order of the two board A drafts changes the result"
         txt = open(a, encoding="utf-8").read()
-        for want in ('"21": "CH_BATDRV", "22": "VBAT"', '"C5219071")', 'for _qb in ("Q39", "Q40"): nfet(_qb, ',
+        for want in ('"21": "CH_BATDRV", "22": "VBAT"', '"C5219071")', 'for _qb in ("Q39", "Q40", "Q42"): nfet(_qb, ',
                      '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
                      '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
-                     '"R17", "Q39", "Q40", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.32, "U4": 2.0'):
+                     '"R17", "Q39", "Q40", "Q42", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "R88", "R89", "U46", "R86", "R87", "C105", "R105", "D24", "Q43", "C16"',
+                     '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.32, "U4": 2.0', 'loads={"Q39": 3.34, "Q40": 3.33, "Q42": 3.33}',
+                     '"7": "EF_UVLO"', '_intent.rail("VSYS_DOCK", 14.4, 1.32, 1.32, "U42", source_ic='):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -742,7 +751,8 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
         assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
         assert 'loads={"P_CP": 9.0},' in te and '{"1": "+12V_FAN", "2": "GND", "3": "FAN%s_PWM_OD" % n, "4": "FAN%s_TACH" % n}' in te
         assert '_intent.rail("VSYS_E", 14.4, 1.32, 1.32, "J_BLK"' in te and 'loads={"U12": 0.8, "U22": 0.52}' in te
-        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4"' in te and 'ic("U22", 21, "LTC3115EFE-1' in te
+        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "U22", source_ic=' in te and 'ic("U22", 21, "LTC3115EFE-1' in te
+        assert '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4"' not in te, "L8P-F03: +12V_FAN still names L4"
         assert 'part("D%s" % ("7" if n == "1" else "8")' not in te and te.count("FAN%s_SW") == 1, "the chopped supply's flybacks or nodes survive"
         left = set()
         for ln in te.splitlines():
@@ -962,7 +972,8 @@ def t_cp03_the_charger_draft_writes_none_of_the_withdrawn_statements():
         txt = open(a, encoding="utf-8").read()
     for w in R["M"]["withdrawn"]:
         assert w not in txt, "the draft still writes %r" % w
-    assert "SIZED to an RDS(on) allowance" in txt and "33.12 K/W" in txt and "no sharing credited" in txt
+    assert "SIZED to an RDS(on) allowance" in txt and "no sharing credited" in txt
+    assert "45.88 K/W" in txt and "20.39 K/W" in txt and "33.12 K/W target at +70 C air is withdrawn" in txt
 
 
 def t_every_measurement_row_names_its_specimen_and_blocks_only_the_final_release():
@@ -990,19 +1001,35 @@ def t_the_board_a_drafts_add_disjoint_designators():
             a = os.path.join(td, "gen_sch_a.py")
             shutil.copy(GEN_A, a)
             pre = r12 if d.endswith("apply_gen_sch_a_bank.py") else []
+            if d.endswith("apply_gen_sch_a_dd7.py"):        # round 9: after this record's charger and record l8p's PTC draft (its commit)
+                pre = [os.path.join(REC, "apply_gen_sch_a_charger.py"), _l8p_ptc(td)]
             for s in pre:
                 assert _run([s, a, "--write"]).returncode == 0, s
             before = set(pat.findall(open(a, encoding="utf-8").read()))
             r = _run([d, a, "--write"])
             assert r.returncode == 0, "%s: %s" % (os.path.relpath(d, ROOT), r.stderr.decode()[-200:])
             added[os.path.relpath(d, ROOT)] = set(pat.findall(open(a, encoding="utf-8").read())) - before
+    dd7 = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_dd7.py"), ROOT)]
+    assert {"Q44", "Q45", "Q46", "Q47", "Q48", "Q49", "R82", "R83", "R106", "R107", "R108", "R109", "R144", "D25"} <= dd7, sorted(dd7)
     mine = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_charger.py"), ROOT)]
-    assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40"} <= mine and "R221" not in mine
+    assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40", "Q42", "Q43", "U46", "R86", "R87", "R88", "R89", "R105", "C105", "D24"} <= mine
+    assert "R221" not in mine and not ({"Q41", "U44", "U45", "RT1"} & mine), sorted(mine)
     names = sorted(added)
     for i, x in enumerate(names):
         for y in names[i + 1:]:
             both = added[x] & added[y]
             assert not both, "%s and %s both add %s" % (x, y, sorted(both))
+
+
+def _l8p_ptc(d):
+    """Record l8p's board A PTC draft, read from its commit by sha256 (the enable loop's two nets and RT1; round 9's DD-7 draft follows it)."""
+    m = _M()
+    rel, want = "v2/docs/records/l8p/apply_gen_sch_a_ptc.py", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"
+    blob = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (m.R9_COMMITS["l8p"], rel)], capture_output=True).stdout
+    assert hashlib.sha256(blob).hexdigest() == want, "record l8p's PTC draft is not the one this record composed with"
+    p = os.path.join(d, "l8p_apply_gen_sch_a_ptc.py")
+    open(p, "wb").write(blob)
+    return p
 
 
 def t_the_fans_rail_covers_vsys_e_and_the_branch_stays_under_u42s_least_limit():
@@ -1119,3 +1146,226 @@ def t_the_withdrawn_fault_and_transfer_phrases_appear_only_in_withdrawal_sentenc
             if hit and "withdrawn" not in low and "historical" not in low:
                 bad.append("%s: %s: %s" % (os.path.basename(p), hit, sent[:120]))
     assert not bad, bad[:4]
+
+
+# ---- round 9 (section 19, 4 October 2026)
+_STUB = '''"""stand-in schlayout (test_l4e11, round 9): records the part table, lays out nothing"""
+import json, os
+def run(parts, sections, power, bypass, header, phase, board_title):
+    json.dump(dict(parts=[dict(ref=p["ref"], nets=p["nets"], value=p["value"]) for p in parts]), open(os.environ["L4E11_PARTS_JSON"], "w"))
+    return ("A3", 1, 1, 1)
+'''
+_RUNNER = '''import importlib.util, os, runpy, sys
+_here = os.path.dirname(os.path.abspath(__file__))
+_sp = importlib.util.spec_from_file_location("schlayout", os.path.join(_here, "stub_schlayout.py"))
+_m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m); sys.modules["schlayout"] = _m
+sys.argv = sys.argv[1:]
+runpy.run_path(sys.argv[0], run_name="__main__")
+'''
+# L4-E9's change list per board (records/l4e9/L4-POWER-ARCHITECTURE.md section 3), the drafts on main
+_ORDER9 = {"a": [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
+                 ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")],
+           "e": [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
+                 ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("d8dec31", "cin"), ("l6r2", "xal_land"),
+                 ("l6r2", "lcsc")]}
+_NET9 = {"a": os.path.join(ROOT, "v2", "ecad", "pcb-a-power-a23", "out", "pcb-a-power.net"), "e": os.path.join(ROOT, "v2", "ecad", "pcb-e1-dock-e7", "out", "pcb-e1-dock.net")}
+# L4-E7's backstop draft leaves C66 to C68 without a G14 class (record l8p's finding L8P-F01, L4-E7's to correct): a scratch stand-in so
+# board E's generator runs on; it is never a draft and never applied
+_F01 = ('_DEC_RULED = ("R", "D", "L", "A", "B1", "B2")',
+        'for _e in _intent._I["bypass"]: _DEC_CLASS.setdefault(_e["cap"], ("D", "test stand-in, not a class"))\n_DEC_RULED = ("R", "D", "L", "A", "B1", "B2")')
+
+
+def _compose9(board, d):
+    g = os.path.join(d, "gen_sch_%s.py" % board)
+    shutil.copy(os.path.join(TOOLS, "gen_sch_%s.py" % board), g)
+    for rec, name in _ORDER9[board]:
+        s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_%s_%s.py" % (board, name))
+        need(s, "board %s's draft %s/%s" % (board.upper(), rec, name))
+        r = _run([s, g, _NET9[board]] if rec == "d8dec31" else [s, g, "--write"])
+        assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+    return g
+
+
+def _run_generator9(g, project, d):
+    """The composed generator run to its end with a stand-in layout (kisch, intent and the checks are the tree's own); the part table."""
+    open(os.path.join(d, "stub_schlayout.py"), "w", encoding="utf-8").write(_STUB)
+    open(os.path.join(d, "run_stub.py"), "w", encoding="utf-8").write(_RUNNER)
+    js = os.path.join(d, "parts.json")
+    env = dict(os.environ, PYTHONPATH=TOOLS, L4E11_PARTS_JSON=js, KICAD_SYMBOLS=os.path.join(d, "no-kicad-symbols"), PYTHONDONTWRITEBYTECODE="1")
+    r = subprocess.run([sys.executable, "-B", os.path.join(d, "run_stub.py"), g, os.path.join(d, project + ".kicad_sch"), project],
+                       capture_output=True, cwd=d, env=env)
+    log = (r.stdout + r.stderr).decode("utf-8", "replace")
+    assert r.returncode == 0 and os.path.isfile(js), "the composed generator refused: %s" % log[-400:]
+    assert os.path.isfile(os.path.join(d, "out", project + "-intent.json")), "intent.write did not run"
+    import json
+    return {p["ref"]: p for p in json.load(open(js, encoding="utf-8"))["parts"]}, json.load(open(os.path.join(d, "out", project + "-intent.json"), encoding="utf-8"))
+
+
+def t_round9_l8p_f02_and_f03_the_composed_generators_run_to_their_end():
+    """L8P-F02 and L8P-F03: board A composed in L4-E9's order runs to its end with intent.write (VSYS_DOCK after VBAT, with source_ic);
+    board E too, with L4-E7's L8P-F01 stood in; +12V_FAN's source is U22, which is on the net."""
+    _M()
+    with tempfile.TemporaryDirectory() as d:
+        ga = _compose9("a", d)
+        txt = open(ga, encoding="utf-8").read()
+        assert txt.index('_intent.rail("VBAT", ') < txt.index('_intent.rail("VSYS_DOCK", '), "VSYS_DOCK is declared before VBAT"
+        parts, it = _run_generator9(ga, "pcb-a-power", d)
+        assert it["rails"]["VSYS_DOCK"]["source"] == "U42" and it["rails"]["VSYS_DOCK"]["fed_from"] == "VBAT"
+        assert set(it["rails"]["CH_BATQ"]["loads"]) == {"Q39", "Q40", "Q42"} and it["rails"]["VBAT"]["fed_from"] == "CH_BATQ"
+        assert parts["U42"]["nets"]["7"] == "EF_UVLO" and parts["U46"]["nets"]["5"] == "EF_UVLO" and parts["U46"]["nets"]["2"] == "EF_UVLO"
+        assert parts["Q43"]["nets"]["3"] == "RAIL_EN" and parts["Q43"]["nets"]["1"] == parts["U46"]["nets"]["4"] == "SYS_HOLD_G"
+        for q in ("Q39", "Q40", "Q42"):
+            assert parts[q]["nets"] == {"1": "VBAT", "2": "VBAT", "3": "VBAT", "4": "CH_BATDRV", "5": "CH_BATQ"}, q
+        assert any(b["cap"] == "C238" and b["part"] == "U46" and b["class"] == "D" for b in it["bypass"])
+    with tempfile.TemporaryDirectory() as d:
+        ge = _compose9("e", d)
+        t2 = open(ge, encoding="utf-8").read()
+        assert t2.count(_F01[0]) == 1
+        open(ge, "w", encoding="utf-8").write(t2.replace(_F01[0], _F01[1]))
+        parts, it = _run_generator9(ge, "pcb-e1-dock", d)
+        assert it["rails"]["+12V_FAN"]["source"] == "U22" and "+12V_FAN" in parts["U22"]["nets"].values()
+        assert "+12V_FAN" not in parts["L4"]["nets"].values()
+        assert parts["J_DCIN"]["nets"] == {"1": "DC_IN", "2": "GND_V"} and "XT60-F" in parts["J_DCIN"]["value"]
+
+
+def t_round9_the_third_fet_sits_on_l9stks_junction_limit_and_e11_29_carries_it():
+    R = _R()
+    m = _M()
+    S = R["S19"]
+    for n_ in (2, 3):
+        pe = (S["i"] / n_) ** 2 * m.F16_RA
+        assert abs(S[n_]["p"] - pe) < 1e-12
+        assert abs(S[n_]["apart"] - (150.0 - S["t0"] - S["band"] - S["r17_allow"] * S["pr17"]) / pe) < 1e-9
+        assert abs(S[n_]["apart"] - S["rec"][n_][2]) <= 0.001 * S["rec"][n_][2] + 0.011, "record l9stk's allowance is not reproduced"
+    assert S["rec"][3][2] > S["zsum_pair_old"] > S["rec"][2][2], "the three's allowance is not looser than the pair's former target"
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert "45.88 K/W" in row and "20.39 K/W" in row and "Q42" in row and "23.93 A from 76.25 C" in row and "withdrawn" in row
+    page = open(PAGE, encoding="utf-8").read()
+    b29 = page.split("#### Block E11-29")[1].split("#### Block E11-30")[0]
+    assert "Q42" in b29 and "45.88 K/W" in b29 and "R17" in b29 and "band" in b29
+
+
+def t_round9_e11_37_is_bound_to_the_three_and_stays_open():
+    R = _R()
+    m = _M()
+    S, L, H = R["S19"], R["L"], R["H"]
+    assert abs(S["ciss3"][0] - 3 * L["ciss_t"]) < 1e-15 and abs(S["ciss3"][1] - 3 * L["ciss_0"]) < 1e-15
+    assert S["ciss_ratio"][0] > 1.0 and S["ciss_ratio"][1] > S["ciss_ratio"][0], "the three are not shown over TI's 5 nF"
+    row = [x for x in m.downstream(R) if x[0] == "E11-37"][0][3]
+    assert "three-device network" in row and "share of the current" in row and "a result with the pair does not transfer" in row
+    page = open(PAGE, encoding="utf-8").read()
+    b37 = page.split("#### Block E11-37")[1].split("#### Block E11-38")[0]
+    assert "current sharing" in b37 and "thermal coupling" in b37 and "Thermal improvement does not close the gate-drive question" in b37
+    assert "Q-TI-17, extended" in open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read().split("19d. ")[1].split("19e. ")[0]
+    assert "STATUS: OPEN" in out
+
+
+def t_round9_dd3_one_attempt_fails_on_l2_and_j_dcin_is_drawn():
+    R = _R()
+    m = _M()
+    S, N = R["S19"], R["N"]
+    assert S["l2_t_trip"] > S["l2_tmax"] >= S["l2_t_service"], "L2's verdict is not the one the record states"
+    assert N["ioc"][0] < S["l2_i_max"] < N["ioc"][2], "L2's limit is not between the breaker's thresholds"
+    assert abs(S["l2_irms_need"] - N["ioc"][2] * math.sqrt(S["l2_rise_rated"] / (S["l2_tmax"] - S["t0"]))) < 1e-12
+    cont = [r for r in S["r19_rows"] if r[2] is None]
+    assert len(cont) == 3 and all(r[4] < 1.0 for r in cont), "R19's continuous rows do not hold on its maker's sheet"
+    assert abs(S["r19_der"] - 3.0 * (170.0 - S["t_r19"]) / 100.0) < 1e-12
+    with tempfile.TemporaryDirectory() as d:
+        hs = _hotswap(d)
+        e = os.path.join(d, "e.py")
+        shutil.copy(GEN_E, e)
+        for s in (hs, os.path.join(REC, "apply_gen_sch_e_entry.py")):
+            assert _run([s, e, "--write"]).returncode == 0
+        te = open(e, encoding="utf-8").read()
+    assert '"XT60F", {"1": "DC_IN", "2": "GND_V"}, "C98734")' in te and '"XT60F": "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"' in te
+    assert '"C274411")' not in te.split('part("J_DCIN"')[1].split("\n")[0]
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("### 19e. ")[1].split("### 19f. ")[0]
+    assert "**RESULT: the attempt FAILS on L2**" in sec and "**DD-3 stays OPEN**" in sec and "E11-41" in sec
+    assert [x for x in m.downstream(R) if x[0] == "E11-41"][0][2] == "prototype bench"
+
+
+def t_round9_if1_the_hold_outlasts_the_start_and_its_levels_clear_every_threshold():
+    R = _R()
+    m = _M()
+    S, H, L = R["S19"], R["H"], R["L"]
+    assert S["u42_w"] > S["plim"][0], "the defect IF-1 answers is not shown on the drafts as they stood"
+    assert S["hold"][0] > S["start"]["tmax"] and S["hold_margin"] > 0.03
+    assert S["rise"][2] < H["floor"] and S["rise"][2] < 9.494, "the hold's release threshold is over VBAT's floor in service"
+    assert S["own_on_max"] < S["fall"][0], "U42's own UVLO is not under U46's"
+    assert S["ef_release"] > S["uvlor"][2] and S["ef_release"] > 0.808 and m.R9_VOL < S["uvlof"][0] and m.R9_VOL < S["ov_fall_min"]
+    assert S["ef_clamp"] < 60.0 and S["ef_sink"] < 5e-3
+    assert S["vz"][1] < S["vgs_max"] and S["q43_overdrive"] > 1.0 and S["rail_held_vdd"] < S["ven_fall"]
+    assert S["redock_w"] < S["plim"][0] and S["kill_left"] > 0.2
+    lo, hi = S["dvdt"]
+    assert abs(S["vmax"] - S["start"]["tmax"] * lo) < 1e-12 and hi > lo
+    row = [x for x in m.downstream(R) if x[0] == "E11-42"][0][3]
+    assert "78.6 ms" in row and "(b) an undocking and redocking" in row and "(c) MAIN held" in row
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("### 19f. ")[1].split("### 19g. ")[0]
+    assert "**PGD is not used (SESSION):**" in sec and "U46" in sec
+
+
+def t_round9_the_record_carries_the_outputs_numbers():
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    for s in ("45.88", "20.39", "7.08", "8.61", "42.48", "51.66", "18.08", "112.37", "6.367", "8.42", "78.6", "201.2", "37.9", "207.7",
+              "8.476", "8.309", "7.856", "30.3 W", "22.1 W", "37.8 mA", "4.53 A", "1.831", "0.729", "0.935", "6.004", "0.8832", "2.513",
+              "6.90", "5.95", "3.921", "0.758", "101.64", "12.32"):
+        assert s in page and s in out, "%s is not in both the record and the output" % s
+
+
+def t_round9_dd7_composes_after_l8ps_ptc_and_the_generator_runs_to_its_end():
+    """DD-7's draft: refused without record l8p's loop, applied once after it, refused a second time and on the tree; board A composed in
+    L4-E9's order with l8p's PTC and this draft before d8dec31's mainpb runs to its end; the reset pulls the loop's return, the inhibit
+    holds the battery FETs' gates, and mainpb still takes R248 and C247."""
+    _M()
+    dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
+    with tempfile.TemporaryDirectory() as d:
+        bare = os.path.join(d, "bare.py")
+        shutil.copy(GEN_A, bare)
+        r = _run([dd7, bare, "--write"])
+        assert r.returncode == 3 and b"apply l8p's PTC draft first" in r.stderr, r.stderr.decode()[-200:]
+        r = _run([dd7, GEN_A, "--write"])
+        assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
+        ptc = _l8p_ptc(d)
+        g = os.path.join(d, "gen_sch_a.py")
+        shutil.copy(GEN_A, g)
+        for rec, name in _ORDER9["a"]:
+            if (rec, name) == ("d8dec31", "mainpb"):
+                for s in (ptc, dd7):
+                    assert _run([s, g, "--write"]).returncode == 0, s
+                assert _run([dd7, g, "--write"]).returncode == 3, "a second application was not refused"
+            s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
+            r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
+            assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+        parts, it = _run_generator9(g, "pcb-a-power", d)
+    assert parts["Q44"]["nets"] == {"1": "DD7_G", "2": "GND", "3": "DOCK_EN_RET"} and parts["RT1"]["nets"]["2"] == "DOCK_EN_RET"
+    assert parts["Q45"]["nets"]["1"] == "FE_RUN" and parts["Q46"]["nets"]["1"] == "DD7_ALIVE" and parts["R107"]["nets"]["1"] == "CELL+"
+    assert parts["Q49"]["nets"] == {"1": "SYS_INH_P", "2": "VBAT", "3": "CH_BATDRV"} and parts["R109"]["nets"]["1"] == "DOCK_EN_OUT"
+    assert parts["Q47"]["nets"]["1"] == "SYS_INH_G" and parts["Q48"]["nets"]["3"] == "SYS_INH_G"
+    assert "R248" in parts and "C247" in parts and "R249" not in parts and "C248" not in parts, "d8dec31's next-free references moved"
+
+
+def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_latch():
+    R = _R()
+    m = _M()
+    S, H, N = R["S19"], R["H"], R["N"]
+    assert S["pulse"][0] > S["uvlo_fall"] * 10 and S["pulse_vs_timer"] > 0, "the pulse does not reset the latch with margin"
+    assert abs(S["dd7_total"] - (S["pulse"][2] + S["grace"][1] + S["start"]["tmax"])) < 1e-12
+    assert S["alive_off"] < S["alive_on"] < S["pack_lo"] * 0.5, "the terminal's threshold does not sit between dead and alive"
+    assert S["inh_g_lo"] > S["vth"][2] + 1.0, "the loop's sense does not turn Q47 on firmly"
+    assert S["q49_vgs"][0] > 2.5 and S["q49_vgs"][1] < 12.0, "Q49's gate drive is out of its window"
+    assert S["ret_bound"][1] > 2.5 and S["ret_bound"][0] - S["ret_bound"][1] < 0.02, "the loop's load moves record l9stk's inverter bound too far"
+    assert S["batdrv_sink"] < 5e-3
+    tj = {lab: x for lab, _i, _w, x in S["e14"]}
+    assert all(x < 150.0 for x in tj.values()), "E-14 at the charger's POR or R-b's largest passes 150 C"
+    assert S["t0"] + 4.0 * S["vsd"] * S["rja_brk"] > 150.0, "the checker's 4 A case no longer needs the inhibit"
+    row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
+    assert "(c) E-14 extended" in row and "at most 1 mA" in row
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("### 19h. ")[1]
+    assert "**No firmware.**" in sec and "**the signal**" in sec and "**the threshold**" in sec and "**where it acts**" in sec
+    for s in ("78.6", "0.835", "3.829", "7.735", "4.07", "9.86", "3.83 mA", "2.939", "142.2", "89.7", "5.05", "1.98", "154.6"):
+        assert s in sec and s in open(OUT, encoding="utf-8").read(), s

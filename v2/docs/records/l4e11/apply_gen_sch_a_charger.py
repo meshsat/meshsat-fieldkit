@@ -102,7 +102,7 @@ _PAIR = ("# L4-E11 (MESHSAT-1357, the U-04 question for the consolidation and it
          "r(\"R88\", \"100k 1%\", \"VBAT\", \"EF_UVLO\", lcsc=\"C25803\"); r(\"R89\", \"22k 1%\", \"EF_UVLO\", \"GND\", lcsc=\"C31850\")   # U42's own UVLO 5.95 to 6.90 V\n"
          "ic(\"U46\", 11, \"TPS37A010122DSKR 65 V OV/UV supervisor: the VSYS hold through the pack breaker's start (IF-1)\", \"WSON10\", {\n"
          " \"1\": \"VBAT\", \"2\": \"EF_UVLO\", \"3\": \"SYS_UVS\", \"4\": \"SYS_HOLD_G\", \"5\": \"EF_UVLO\", \"6\": \"NC\", \"7\": \"NC\", \"8\": \"NC\", \"9\": \"SYS_CTR\", \"10\": \"GND\", \"11\": \"GND\"}, \"C3685740\")\n"
-         "r(\"R86\", \"91k 1%\", \"VBAT\", \"SYS_UVS\", lcsc=\"C23265\"); r(\"R87\", \"10k 1%\", \"SYS_UVS\", \"GND\", lcsc=\"C25804\")   # channel 2 (UV): 8.08 V falling, 8.24 V rising\n"
+         "r(\"R86\", \"91k 1%\", \"VBAT\", \"SYS_UVS\", lcsc=\"C23265\"); r(\"R87\", \"10k 1%\", \"SYS_UVS\", \"GND\", lcsc=\"C25804\")   # U46 channel 2 (UV) on VBAT: 8.08 V falling, 8.24 V rising\n"
          "c(\"C105\", \"100n\", \"SYS_CTR\", \"GND\", lcsc=\"C14663\")   # CTR2: the hold's release, 79 to 201 ms\n"
          "r(\"R105\", \"100k\", \"VBAT\", \"SYS_HOLD_G\", lcsc=\"C25803\"); part(\"D24\", \"Device\", \"D_Zener\", \"BZT52C12-7-F zener, the RAIL_EN hold's gate clamp\", \"SOD123\", {\"1\": \"SYS_HOLD_G\", \"2\": \"GND\"}, \"C124196\")\n"
          "part(\"Q43\", \"Transistor_FET\", \"2N7002\", \"2N7002: SYS_HOLD_G high = RAIL_EN held low (1 G, 2 S, 3 D)\", \"SOT23\", {\"1\": \"SYS_HOLD_G\", \"2\": \"GND\", \"3\": \"RAIL_EN\"}, \"C8545\")\n"
