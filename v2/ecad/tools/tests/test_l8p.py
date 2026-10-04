@@ -91,7 +91,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "board P, this record's against every other draft's: DISJOINT", "board E, this record's against every other draft's: DISJOINT",
               "board A, this record's against every other draft's: DISJOINT", "record l8p's breaker and enable loop on the netlists: NOT DRAWN",
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R248, C247)",
-              "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "       P REV  DRAWN",
+              "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
               "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct"):
         assert s in t, s
@@ -269,7 +269,7 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**The lockout at the allow edge.**", "**The NTC is bonded to the pad.**", "**DD-7, the input-return pulse:**", "**IF-7:**",
               "**CLOSED** by L4-E7's `fnd/l4e7r6` at `914a2f5a`", "**Order codes owed:**",
               "## 12. B-R2: the charge through a latched breaker", "**The criterion, item by item:**", "### 12a. What exists, and why none of it tells board A",
-              "**B-R2's interface, route R1 (section 12f, finding L8P-F04):**", "| L8P-F04 | A |", "### 12h. Not taken",
+              "**B-R2's interface, route R1 (section 12f, finding L8P-F04):**", "| L8P-F04 | A |", "| L8P-F05 | A |", "### 12h. Not taken",
               "**E-14 (record l9stk's, with route R1)**", "**E-12c, a commissioning check like E-12**", "**R10's tolerance and temperature coefficient**",
               "**B-R2's route R1 DRAFTED on board P**", "no new contact"):
         assert s in page, s

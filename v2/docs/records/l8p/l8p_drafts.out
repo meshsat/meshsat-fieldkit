@@ -356,5 +356,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    L8P-F02 board A: l4e11's charger draft: VSYS_DOCK names U42 as its source without source_ic, and is fed from VBAT before VBAT is declared
    L8P-F04 board A: L4-E11's DD-7 draft reads the loop powered at half of DOCK_EN_OUT (Q47 through R109 and R144); with the return held low
      (board P's detector, or board A's own Q44) DOCK_EN_OUT falls to 2.52 V at BRK_VIN 7.6 V: the interface of section 3b is owed (open)
+   L8P-F05 board A: with the breaker off, the LM5069's internal 1 MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:
+     with board A's 200 kOhm (R107, R108) alone CELL+ reads 2.80 V at BRK_VIN 16.8 V, over L4-E11's 1.98 V 'dead' point; with U104's divider
+     (365.2 kOhm) also on PACK_P, 1.92 V (3.34 V at the 29.2 V clamp); the 1 MOhm's tolerance is not printed (open; route R1's return covers a charge)
 
 l8p_drafts: done
