@@ -2751,7 +2751,7 @@ its tolerances (a consistency check, not an input).
 |---|---|
 | DELTA-02 | **answered in the record and in the procedure:** the method selected (B), E11-29 restated on it, TP-E11-29 rewritten on it |
 | TP-E11-29 | **NOT EXECUTABLE** until the independent check of this method, the limits agreed, and a supplier's agreement to the setup |
-| E11-29 | stays CONDITIONAL on its measurement; nothing is built or measured |
+| E11-29's state | stays CONDITIONAL on its measurement; nothing is built or measured |
 | closure credit | no circuit changed, so no netlist reading applies to the method; the topology is read from the draft by `ast` and from the regenerated netlist by `check_dd7_netlist.py`'s BODY group |
 | section 20c | restated on the printed points; the guard's reading on DD-7 OWED |
 

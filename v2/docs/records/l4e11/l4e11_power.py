@@ -4953,8 +4953,10 @@ def fix23_round(R, T):
         mth = R13_METHODS[key]
         S["judge"][key] = dict(heat=per_device(mth["heat"], mth["private"]), sense=per_device(mth["sense"], mth["private"]),
                                heat_board=per_device(mth["heat"], S["board_private"]), sense_board=per_device(mth["sense"], S["board_private"]))
+    if R13_SELECT not in S["judge"]:
+        refuse(4, "the selected method is not one of the three compared: the body-diode method on common nets is the defect")
     sel = S["judge"][R13_SELECT]
-    if R13_SELECT not in ("A", "B", "C") or not (sel["heat"][0] and sel["sense"][0]):
+    if not (sel["heat"][0] and sel["sense"][0]):
         refuse(4, "the selected method does not address one device: it heats or senses 'alone' on common nets")
     # ---- the powers E11-29 imposes (C-PROT rev 1, record l9stk's E-1 at the breaker's largest limit), and the rises at the bar
     i_, ra = S9["i"], S21["ra"]
