@@ -15,7 +15,7 @@ gen_netlist.py, which runs it, is of 4 October), so neither stop was seen.
 
 The correction: one row in _dec_rule for the TPS61089, which returns the class, the clause and the value floor the entry already
 carries from its call. The maker's words stay in one place (fans12's calls); a TPS61089 entry declared without them still stops the
-generator. fans12 itself is left byte for byte (records l7pwr and l9pwr pin it by sha256).
+generator. fans12 itself is left byte for byte (record l7pwr pins its sha256 and record l4e9 holds its bytes).
 
 What it changes in v2/ecad/tools/gen_sch_b.py, and nothing else: the row before _dec_rule's closing "return None". Order: board
 B's round, with fans12, before or after it (the row is inert until a TPS61089 is drawn).

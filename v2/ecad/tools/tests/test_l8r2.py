@@ -693,7 +693,7 @@ def t_round7_the_committed_output_is_what_the_script_prints_and_its_predicates_h
     for s in ("the stop is reproduced after fans12 and at every later stage, without Layer 9's draft (rt500's line) and with it (iocbuck's line): yes",
               "WHICH DRAFT MOVES THE SUM: fans12 alone, by +1.770 A", "an UPPER BOUND", "the four orders give one generator, byte for byte: yes; every order runs to its end: yes",
               "every mutation stops or fails: yes (8 of 8)", "L8R2-F31 OPEN", "SELECTED AS THE DIRECTION (authority SESSION): A1", "NOT DRAFTED in this round",
-              "(c) THE RETURN PATH IS SHORT OF THE LOAD ON THE MAKERS' PRINTED FIGURES", "NOT RAISED TO MAKE THE GENERATOR PASS",
+              "(c) THE RETURN PATH DOES NOT HOLD ON THE MAKERS' PRINTED FIGURES", "NOT RAISED TO MAKE THE GENERATOR PASS",
               "C-DEV rev 1", "C-ALLTX rev 3", "PROTOTYPE DESIGN: nothing is built, bought, powered or measured"):
         assert s in t, s
     # the state of the capacity finding is never printed as closed
