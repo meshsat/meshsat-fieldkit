@@ -92,3 +92,19 @@ Drafted, not sent:
   constant (over IS's 80 A for about 38 us), from a mounting base at +70 C, about 1000 times over the part's life at most once per 10 s;
   Table 5 (p.3) prints ISM 320 A for tp at most 10 us at Tmb 25 C only. Is the pulse inside the part's capability, and what VSD does
   the part show at 80 A and 240 A at a 70 C and a 150 C junction?
+
+## Round 9 (4 October 2026, record section 19d): Q-TI-17 extended to three devices
+
+Drafted, not sent:
+
+- **Q-TI-17, extended (E11-37, BQ25730; record l9stk's C3).** The case in hand is now three Nexperia BUK6Y10-30P in parallel on one
+  BATDRV pin, their gates on one node: Ciss 7.08 nF typical at VDS -15 V and about 8.61 nF near 0 V for the three (no maximum printed),
+  QG(tot) at most 192 nC at -10 V for the three (64 nC each). Beyond the questions above: (a) does the 5 nF figure apply to the total
+  gate load of paralleled FETs, and is three acceptable for the ideal diode's regulation at VBATDRV_DIODE 30 mV, LDO mode at VSYS_MIN and
+  the supplement entry; (b) with one gate node and three thresholds, does TI expect the FETs to share in LDO mode and as an ideal diode,
+  or must the design assume one FET carries the LDO-mode current; (c) does BATDRV's drive (RBATDRV_ON at most 6 kOhm, RBATDRV_OFF at most
+  2.1 kOhm) remain within its limits with that load, and does TI recommend a series gate resistor per FET.
+  (d) Record section 19h adds a hardware charge inhibit: while the pack's breaker is off with its cells present, an external P-channel FET
+  holds the battery FETs' gates (BATDRV's node) at VSYS whatever BATDRV drives, so BATDRV may sink up to its 11.5 V over its 3 kOhm least
+  RBATDRV_ON (about 3.8 mA) for minutes or hours. Is that within BATDRV's capability, and does the charger fault, latch or change mode when
+  its battery FETs do not turn on while it drives them (charging, LDO mode or supplement)?

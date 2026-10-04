@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C98734 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C98734), no login; kept fields only",
+ "read_utc": "2026-10-04T01:38Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), round 9",
+ "role": "board E J_DCIN, the shore and vehicle inlet as an Amass XT60-F (record l9stk's DD-3; D-06's XT60 class, the gender opposite J_BATT's XT60-M)",
+ "code": "C98734",
+ "brand": "Changzhou Amass Elec",
+ "model": "XT60-F",
+ "package": "-",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/6574e17e7f8147e7af5908efe97368a9.pdf?productCode=C98734",
+ "stock": 34130,
+ "params": {
+  "metal material": "Gold plating",
+  "colour": "Yellow",
+  "Connector type": "Banana plug",
+  "interface form": "Female"
+ }
+}

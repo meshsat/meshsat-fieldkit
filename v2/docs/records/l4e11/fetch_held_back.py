@@ -16,11 +16,13 @@ sheets read in the search for a P-channel part printing RDS(on) at a low gate dr
 62806, S22-0224 Rev. B, 7 March 2022) and Nexperia's PXP9R1-30QL (product data sheet of 5 January 2021). The fans' feed round (3 October 2026, section 18) adds the mixers' 12 V rail
 candidates: ADI's LTC3115-1 (Rev. E; analog.com refuses this host, so the archive's copy of the maker's file), TI's TPS55340
 (SLVSBD4E) and TPS63070 (SLVSC58B). The specimens' round (3 October 2026, section 17d) adds TI's "Semiconductor and IC Package
-Thermal Metrics" (TI serves SPRA953D, revised March 2024, at the SPRA953C address) and Nexperia's AN11158 (Rev. 7.0). All eighteen carry their makers' copyright and no grant to redistribute, so they
+Thermal Metrics" (TI serves SPRA953D, revised March 2024, at the SPRA953C address) and Nexperia's AN11158 (Rev. 7.0). Round 9 (4 October 2026,
+section 19) adds Shenzhen Milliohm's (moolee) HoLLR2512 alloy shunt specification (Ho-A0, revised 2022-01-06), the fitted R19's maker sheet
+(its power curve and the 5 s short-time overload), served by LCSC. All nineteen carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
-Usage: fetch_held_back.py [--root DIR]   (default: this repository's root)"""
+Usage: fetch_held_back.py [--root DIR] [--only TEXT]   (default: this repository's root, every document)"""
 import argparse
 import hashlib
 import os
@@ -71,15 +73,21 @@ DOCS = [
      "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "https://assets.nexperia.com/documents/application-note/AN11158.pdf",
      "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
+    ("v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf",
+     "https://datasheet.lcsc.com/datasheet/pdf/a6c04b348627a06d1c2e9d73fb46c6ff.pdf?productCode=C2985708",
+     "5dac9ede82062791abe6128aa7cad87c1422993820fbd21efa33dbea2ce04005"),
 ]
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=ROOT)
+    ap.add_argument("--only", default="", help="fetch only the documents whose path contains this text")
     a = ap.parse_args()
     bad = 0
     for rel, url, want in DOCS:
+        if a.only and a.only not in rel:
+            continue
         path = os.path.join(a.root, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
