@@ -228,8 +228,32 @@ def t_round2_cdev_acceptance_is_re_solved():
     assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF: UNCHECKED" in txt and "BLOCKED BY T5b" in txt
 
 
+A1 = os.path.join(REC, "l9t5_a1.py")
+A1_OUT = os.path.join(REC, "l9t5_a1.out")
+
+
+def t_round2_a1_detector_survey_reproduced_and_a1_stays_a_direction():
+    """A1's detector from the makers' sheets (held back: python3 v2/docs/records/l9t5/fetch_held_back.py): the survey reproduces, no
+    sheet prints its temperature row as a limit, and so record l9t5 holds no board D draft (the brief: never assume a figure)."""
+    import subprocess
+    need(A1, "the A1 survey script")
+    need(A1_OUT, "the A1 survey output")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    m = _mod(A1, "l9t5_test_a1")
+    for rel in m.SHEETS.values():
+        need(os.path.join(ROOT, rel), "a held detector sheet (python3 v2/docs/records/l9t5/fetch_held_back.py)")
+    r = subprocess.run([sys.executable, "-B", A1], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, "l9t5_a1.py exited %d: %s" % (r.returncode, r.stderr.decode()[-300:])
+    text = r.stdout.decode("utf-8")
+    assert text == open(A1_OUT, encoding="utf-8").read(), "l9t5_a1.out is not what the script prints"
+    assert "a detector whose PRINTED LIMIT supports A1's tolerance: NONE" in text and "A1 STAYS A SELECTED DIRECTION, NOT DRAFTED" in text
+    assert not [f for f in os.listdir(REC) if f.startswith("apply_gen_sch_d_")]
+
+
 def t_record_hygiene():
-    files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"]]
+    files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
+             os.path.join(REC, "fetch_held_back.py")]
     inputs = os.path.join(REC, "inputs")
     copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
     for p in files + copies:
@@ -238,6 +262,6 @@ def t_record_hygiene():
         assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in %s" % os.path.basename(p)
         for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
             assert bad not in t, "a private path in %s" % os.path.basename(p)
-        if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK):
+        if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT):
             mm = CLAIM.search(t)
             assert not mm, "a claim word %r in %s" % (mm.group(0), os.path.basename(p))
