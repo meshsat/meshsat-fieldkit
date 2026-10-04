@@ -155,7 +155,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      was CORRECTED, WE; the least-energy corner, A2: unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
 
 6. THE INTERACTION WITH L4-E5 (R10 115k to 232k, the ceiling raised, C26 and C27 re-rated)
-   apply_gen_sch_e_backstop.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C44322, C132788, C43698, C2076144, C178637, C705766, C861590, C861156, C728595, C170182: yes
+   apply_gen_sch_e_backstop.py: 10 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C44322, C132788, C43698, C2076144, C178637, C705766, C861590, C861156, C728595, C170182: yes
    apply_gen_sch_e_hold.py: 1 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C861068, C728597: yes
    apply_gen_sch_e_input_limit.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C2903494, C861244, C14663: yes
    apply_gen_sch_e_solar_guard.py: 8 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C17556513, C473333, C2985708, C80273, C124196, C184799, C97929, C861872, C728600, C861605, C375517: yes
@@ -1260,13 +1260,13 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      limit (a defeated backstop leaves the regulation, which holds the stage under the trip when its unprinted values are
      inside the joint assumptions), and every fault that defeats the backstop or its supply guard is found by the
      commissioning and periodic trip test (bench row 7b.15) at an interval layer 8 sets
-   THE DRAFT FOR BOARD E'S GENERATOR OWNER (drafted, never implemented here): apply_gen_sch_e_backstop.py, 9 edit(s) on
+   THE DRAFT FOR BOARD E'S GENERATOR OWNER (drafted, never implemented here): apply_gen_sch_e_backstop.py, 10 edit(s) on
      the text the hold and input limit drafts leave (it refuses a generator without them): the bank on PV_P to TRK_VS: yes;
      R59 and CSPIN behind it, nothing in series with CSPIN or CSNIN: yes; SWEN on TRK_SWEN with R70 and R71 as the guard:
      yes; D4 on TRK_VS: yes; the 50 V bulk on PV_P ahead of the bank: yes; C71 to C74 on TRK_VS: yes; the INB filter across
-     R66: yes; R66 at 8.45k: yes; R14 on TRK_VS: yes; R16 at 31.6k: yes; carries C44322, C132788, C43698, C2076144,
-     C178637, C705766, C861590, C861156, C728595, C170182: yes; R10 untouched: yes. Read back here on a scratch copy; never
-     applied to the tree
+     R66: yes; R66 at 8.45k: yes; R14 on TRK_VS: yes; R16 at 31.6k: yes; C66 to C68 class D in G14's table (each maker's
+     supply-pin clause): yes; carries C44322, C132788, C43698, C2076144, C178637, C705766, C861590, C861156, C728595,
+     C170182: yes; R10 untouched: yes. Read back here on a scratch copy; never applied to the tree
    PROTOTYPE MEASUREMENTS (REQ-016's second method; the exact downstream verification): 7b.15, on each built board, the
      input current at which SWEN falls, at 17.6 V and 25 V, against 3.0468 to 3.7408 A at 25 V, at commissioning and at
      layer 8's interval; 7b.16, the response from a current step over the trip to the last switching edge, against 1.087

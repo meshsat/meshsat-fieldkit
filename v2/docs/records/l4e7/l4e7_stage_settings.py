@@ -138,9 +138,14 @@ def need(text, pat, what):
 
 
 def load(name, rel):
-    sp = importlib.util.spec_from_file_location(name, os.path.join(TOP, rel))
+    """A module from a file under the repository, its source read through open() so that run_recorded() records the file and its
+    sha256 enters the results cache's KEY (L8P-F01's round, 4 October 2026: importlib's own reader is not open(), so the drafts read
+    back in compute() were outside the KEY, and a changed draft would have left a cache standing whose figures it no longer gives)."""
+    path = os.path.join(TOP, rel)
+    src = open(path, encoding="utf-8").read()
+    sp = importlib.util.spec_from_file_location(name, path)
     m = importlib.util.module_from_spec(sp)
-    sp.loader.exec_module(m)
+    exec(compile(src, path, "exec"), m.__dict__)
     return m
 
 
@@ -3437,6 +3442,12 @@ def compute():
                                guard='r("R70", "8.06k 0.1% 25ppm (SWEN supply guard top)", "TRK_LDO33", "TRK_SWEN", "R", "C861587")' in new
                                and 'r("R71", "6.04k 0.1% 25ppm (SWEN pull-down, the guard bottom)", "TRK_SWEN", "GND", "R", "C728595")' in new,
                                no_series=new.count('"33": "TRK_VS"') == 1 and new.count('"32": "TRK_VIN"') == 1 and "CSPF" not in new)
+    # L8P-F01 (record l8p, 4 October 2026): the three supply capacitors' decoupling class in G14's table, read from the patched text
+    dc_ = [n_ for n_ in ast.walk(ast.parse(new)) if isinstance(n_, ast.Assign) and isinstance(n_.value, ast.Dict)
+           and any(isinstance(t_, ast.Name) and t_.id == "_DEC_CLASS" for t_ in n_.targets)]
+    dc_ = {k_.value: v_.elts[0].value for k_, v_ in zip(dc_[0].value.keys, dc_[0].value.values) if isinstance(k_, ast.Constant)
+           and isinstance(v_, ast.Tuple) and isinstance(v_.elts[0], ast.Constant)} if len(dc_) == 1 else {}
+    R["backstop_draft"]["dec"] = all(dc_.get(c_) == "D" for c_ in ("C66", "C67", "C68"))
     # the solar-fault remedies' draft, read back on top of the backstop's, L4-E9's hotswap and L4-E11's entry drafts (the order its
     # docstring names); its codes and its OV divider and clamp the remedy's own
     nm = "apply_gen_sch_e_solar_guard.py"
@@ -4739,12 +4750,13 @@ def render(R):
           "%s; R59 and CSPIN behind it, nothing in series with CSPIN or CSNIN: %s; SWEN on TRK_SWEN with R70 and R71 as the guard: %s; "
           "D4 on TRK_VS: %s; the 50 V bulk on PV_P ahead of the bank: %s; C71 to C74 on TRK_VS: %s; the INB filter across R66: %s; R66 at "
           "%gk: %s; R14 on TRK_VS: %s; R16 "
-          "at %gk: %s; carries %s: %s; R10 untouched: %s. Read back here on a scratch copy; never applied to the tree" % (
+          "at %gk: %s; C66 to C68 class D in G14's table (each maker's supply-pin clause): %s; carries %s: %s; R10 untouched: %s. "
+          "Read back here on a scratch copy; never applied to the tree" % (
               n_e, "yes" if bd["bank"] else "NO", "yes" if (bd["cspin"] and bd["r59"] and bd["no_series"]) else "NO",
               "yes" if (bd["swen"] and bd["guard"]) else "NO", "yes" if bd["d4"] else "NO", "yes" if (bd["bulk"] and bd["bulk_at"]) else "NO",
               "yes" if bd["ca"] else "NO", "yes" if bd["c70"] else "NO", c["r66"] / 1e3, "yes" if bd["r66"] else "NO",
-              "yes" if bd["r14"] else "NO", c["rm"][0] / 1e3, "yes" if bd["r16"] else "NO", ", ".join(codes), "yes" if codes_ok else "NO",
-              "yes" if r10_once else "NO"))
+              "yes" if bd["r14"] else "NO", c["rm"][0] / 1e3, "yes" if bd["r16"] else "NO", "yes" if bd["dec"] else "NO", ", ".join(codes),
+              "yes" if codes_ok else "NO", "yes" if r10_once else "NO"))
     wrapP("   ", "     ", "PROTOTYPE MEASUREMENTS (REQ-016's second method; the exact downstream verification): 7b.15, on each built board, "
           "the input current at which SWEN falls, at 17.6 V and 25 V, against %.4f to %.4f A at 25 V, at commissioning and at layer 8's "
           "interval; 7b.16, the response from a current step over the trip to the last switching edge, against %.3f ms, and with R16 "
