@@ -235,6 +235,11 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      18 A for 60 s (taken as held): Q109 30.24 mV, 0.544 W (was 18.00 W); Q2 0.402 W; TJ 103.5 C on its own pad, 123.6 C with both through one pad, against 150 C
      the breaker's 23.93 A held:    Q109 30.24 mV, 0.724 W (was 23.93 W); Q2 0.711 W; TJ 112.4 C on its own pad, 148.0 C with both through one pad, against 150 C
      the installed path this asks: 51.4 K/W or better for the hottest junction with both losses counted (E-8, restated with Q109)
+     THE JOINT CASE (the check V2's V2-m8): at 23.93 A held the board dissipates 4.57 W in all (Q109 0.724, Q2 0.711, Q101 and Q102 0.495, R10 1.145, R101 0.974, R102 0.520);
+       the sheet's 50 C/W is one device on 1 in2 of 2 oz on a 1.5 in x 1.5 in board, and IF-2 takes two more such pads for the breaker FETs:
+       three test boards are 6.75 in2, board P is 4.77 in2 a face, and it carries R10 and the sense pair too: the pads' figures cannot all be the
+       sheet's at once without another heat path (the leads, the bottom face); E-8's specimen carries the current through every part and so
+       measures the joint case
      on the typical basis (RDS(on) 0.56 mOhm x1.68, the regulation's 20 mV, 40 C/W): 119.3 C at 23.93 A held
      at the breaker's largest threshold 50.59 A until it clears (1.292 ms): 3.18 W in Q109, its junction at most 2.5 K over its case (RthJC 0.8 C/W)
      with Q1 on (below T3) the two share, and the pair's loss is at most Q1's alone, l9stk's 0.711 W at 23.93 A: no row of l9stk 15.5 is worsened
