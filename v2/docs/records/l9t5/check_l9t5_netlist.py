@@ -44,6 +44,9 @@ COMMITTED = {"a": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "b": "v2/ecad/p
 IOC = "+5V_IOC"
 VFB = (0.784, 0.800, 0.816)           # V, TPS62933 VFB over TJ -40 to 150 C (TI SLUSEA4D 8.5): read by l9t5_drafts.py, held here as its check
 LDOS = (("U40", "R66", "C400"), ("U50", "R78", "C420"), ("U60", "R90", "C440"))
+# the divider a board A netlist must carry and the band its set point must stay in: I-03's draft (U601 at 5 V, as U41) and, with
+# task T10's pre-regulator draft composed after it, R602 at 13.3 k (round 4; record l9t5's l9t5_t10.py)
+DIVS = {"i03": (("56.2k 0.1%", "10.7k 0.1%"), (4.8, 5.2)), "t10": (("56.2k 0.1%", "13.3k 0.1%"), (4.05, 4.31))}
 
 
 def read(raw):
@@ -93,7 +96,8 @@ def vout_band(top, bot, tol=0.001, tcr=25e-6, dt=65.0, ifb=0.15e-6):
     return lo, VFB[1] * (1 + top / bot), hi
 
 
-def checks_a(nl):
+def checks_a(nl, div="i03"):
+    (want_top, want_bot), (v_lo, v_hi) = DIVS[div]
     if "U601" not in nl["pins"]:
         return {"BUCK": ("NOT DRAWN", ["U601 absent"])}
     res = {}
@@ -128,10 +132,10 @@ def checks_a(nl):
         why.append("no divider to read")
     else:
         lo, nom, hi = vout_band(d[0], d[1])
-        if not (value(nl, d[2]).startswith("56.2k 0.1%") and value(nl, d[3]).startswith("10.7k 0.1%")):
-            why.append("the divider is %s over %s, wanted 56.2k 0.1%% over 10.7k 0.1%%" % (value(nl, d[2]), value(nl, d[3])))
-        if not (4.8 < lo and hi < 5.2):
-            why.append("the output band %.3f to %.3f V leaves 4.8 to 5.2 V" % (lo, hi))
+        if not (value(nl, d[2]).startswith(want_top) and value(nl, d[3]).startswith(want_bot)):
+            why.append("the divider is %s over %s, wanted %s over %s" % (value(nl, d[2]), value(nl, d[3]), want_top, want_bot))
+        if not (v_lo < lo and hi < v_hi):
+            why.append("the output band %.3f to %.3f V leaves %s to %s V" % (lo, hi, v_lo, v_hi))
     res["DIV"] = ("FAIL" if why else "DRAWN", why)
     return res
 
@@ -244,15 +248,15 @@ def check_pair(a, b):
     return ("FAIL" if why else "DRAWN"), why
 
 
-def judge(letter, nl):
-    res = {"a": checks_a, "b": checks_b}[letter](nl)
+def judge(letter, nl, div="i03"):
+    res = checks_a(nl, div) if letter == "a" else checks_b(nl)
     lines = ["%s %-4s %s%s" % (letter.upper(), k, v, (": " + "; ".join(why[:3])) if why else "") for k, (v, why) in res.items()]
     vs = [v for v, _w in res.values()]
     worst = "DRAWN" if all(v == "DRAWN" for v in vs) else ("FAIL" if "FAIL" in vs else "NOT DRAWN")
     return worst, lines
 
 
-def run(paths, repo=REPO, out=sys.stdout, label=None):
+def run(paths, repo=REPO, out=sys.stdout, label=None, div="i03"):
     verdicts, nls = {}, {}
     for letter in ("a", "b"):
         if letter not in paths:
@@ -261,7 +265,7 @@ def run(paths, repo=REPO, out=sys.stdout, label=None):
         name = label(letter) if label else os.path.relpath(paths[letter], repo)
         out.write("%s sha256 %s\n" % (name, hashlib.sha256(raw).hexdigest()[:16]))
         nls[letter] = read(raw)
-        v, lines = judge(letter, nls[letter])
+        v, lines = judge(letter, nls[letter], div)
         verdicts[letter] = v
         for l in lines:
             out.write("  %s\n" % l)
