@@ -72,7 +72,7 @@ PINS = {
     "trace": ("v2/docs/records/l3batt/load_trace.out", "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218"),
     "packprot": ("v2/ecad/tools/pcb_pack_protection.yaml", "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b"),
     "envelope": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "9b0d04c39beafb7dd3ef3269b05e2230fe68ee019dc83c2e0c9be0ea80d391db"),
     "ifaces": ("v2/ecad/tools/pcb_interfaces.yaml", "393305bed4edfd26588164da96871f17ce70492688e5648729545a3cc5987023"),
     "lm5176": ("v2/vendor/ti/lm5176-datasheet.pdf", "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820"),
     "lm74700": ("v2/vendor/ti/ti-lm74700-q1.pdf", "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f"),
@@ -90,13 +90,13 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "533afd197355ac37f7c277b7db0ce2df9adfd1b7197eb510e24f90413640c3da"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "2ad2015b0c7aea9107fbd0188f80578fc172df0742ca9e748ecd71a147c6829d"),
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
     # rounds 7 and 8: Layer 9's power budget (l9pwr, item 9.1), round 2 on fnd/l9pwr2 at 51821143, its output copied byte for byte (a
     # commit outside this branch's history, never read with git here); its finding L9P-F01 is decision D-11's all-transmit floor
-    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-51821143.out", "243f2dbcfd9b1a1b4af426cf7627e8ea4c7518cf91262bd3c543210fc7249b38"),
+    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-51821143.txt", "243f2dbcfd9b1a1b4af426cf7627e8ea4c7518cf91262bd3c543210fc7249b38"),
     # round 8: the drafts this record registers, each copied byte for byte (git show at its commit, outside this branch's history)
     "l8r3_slotlm": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt", "fc487ab269d2f7585edc10ec6efd4a1c280f633d1da3e0888580249bba245f03"),
     "l8r3_fb01": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt", "ea95bd293e44676ae782fd81880d9cfa301816d4771dde5c92882db51c4b8257"),
@@ -111,7 +111,7 @@ PINS = {
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8bb83aacbd4c0fc752339669835b34907a91f2f396095ef23066baeb2a738e9c"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
     "yageo": ("v2/vendor/passives/yageo-cc-series.pdf", "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"),
     "lcsc": ("v2/ecad/tools/lcsc_fill.py", "eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216"),
@@ -119,9 +119,9 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "0f70d9eeb473cf4d7508dc47b6b1ac9e51627f8bd4e31805a0f8f9898f198b31"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d"),
-    "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "189ae6ef99f321655d7ca95bc8ef6c2e6f8002a8198be9a71620f6e9c0a7e4d6"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34"),
+    "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "2979856fdac67e50ce633cc7ff84daab93b5de7d4b819f132c127fa97101966b"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
@@ -152,14 +152,14 @@ PINS = {
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
     "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
-    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "9e26dfae5fd7962f23dd22bd125b5e4dd2c38401cd5d6dae08f296d5e8cf490b"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "a7f90fe48aeeadf6ab6d7d50a5f7c159231454226a561568861e360bc574546f"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
     # the consolidation's results: L4-E11's charger selection (B1), check 5 at 5aa18a69, and L4-E12's thermal verdict (T-H1
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "d857a70256d1c77e3a3d34bee0bf43df5e052f7fcfe769d832c118c71e21942e"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -173,11 +173,11 @@ PINS = {
     "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "9ed580a8dd2f35c80ca86fbebf0ef6ff1cb5617f48e730a68ecfed16094666d1"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
-    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "241d0cc5b010b05d2674620c10ecd04c87936a9081f45008536c46786184c458"),
+    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "8f6b173d8329c5dd6003fc026bf7606f769d83c87b39a808c0b295e533c0c754"),
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
-    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "715eb965d4527d35dede5829435b590971e4f4760a82f743821611f64fcec3ba"),
+    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
@@ -2034,11 +2034,33 @@ def f02_inputs(F, T):
     # every decimal figure the resolutions of D-13 to D-15 cite (their options, state and resolution; D-15's constraint too) is printed
     # by L4-E11's output (sections 15 and 16) or its page's section 16; D-13's and D-14's constraints are the earlier defects' history
     src = one(t.split("\n15. THE FIX ROUND FOR THE CONSOLIDATION REVIEW")[1].split("\nEND.")[0]) + " " + one(md.split("## 16. The fix round for the review of the provisional fixes")[1])
+    # set 29: D-14 is restated on L4-E11's round 9 (19b to 19d); the output after section 15 and the page after section 16 include
+    # section 19, so its restated figures are checked against it
     for d in DEFECTS:
         if d["id"] in ("D-13", "D-14", "D-15"):
             for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["constraint"] if d["id"] == "D-15" else "", d["options"], d["state"], d["resolution"]])):
                 if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(x), src):
                     refuse(4, "%s cites %s, which L4-E11 does not print" % (d["id"], x))
+    # set 29: L4-E11's round 9 (its output section 19): E11-29 restated as record l9stk's junction limit for the three battery FETs
+    # (19b, 19c) and E11-37 rebound to the three-device network (19d); read, never recomputed
+    if t.count("\n19. ROUND 9: ") != 1:
+        refuse(3, "L4-E11's section 19 (round 9)")
+    s19 = t.split("\n19. ROUND 9: ")[1].split("\nEND.")[0]
+    for k in "bcd":
+        if s19.count("\n   19%s. " % k) != 1:
+            refuse(3, "L4-E11 19%s" % k)
+    r9 = {k: one(s19.split("\n   19%s. " % k)[1].split("\n   19%s. " % chr(ord(k) + 1))[0]) for k in "bcd"}
+    m = need(r9["c"], r"each FET's \(Zself \+ 2 Zmut\) at most ([\d.]+) K/W steady with R17 placed apart, R17's coupling into each junction at most ([\d.]+) K/W", "the three's junction limit (19c)")
+    g["z3"], g["r17c"] = f(m, 1), f(m, 2)
+    m = need(r9["c"], r"the hottest junction stays at most 150 C held at ([\d.]+) A from ([\d.]+) C with the band and R17 in place \(CONDITIONAL on E11-29\)", "the held limit (19c)")
+    g["held_lim"] = (f(m, 1), f(m, 2))
+    need(r9["c"], r"the pair's former steady target [\d.]+ K/W at \+70 C air and its 1 s, 20 ms and 244 us targets are WITHDRAWN", "the pair's targets withdrawn (19c)")
+    m = need(r9["b"], r"at the allowances \(RECORD, l9stk\): ([\d.]+) C at 10 A, ([\d.]+) C at the 18 A service, ([\d.]+) C held at [\d.]+ A", "the junctions at the allowances (19b)")
+    g["at_allow"] = (f(m, 1), f(m, 2), f(m, 3))
+    g["z2_fb"] = f(need(r9["b"], r"the fallback \(RECORD, l9stk\): the pair at ([\d.]+) K/W with R17 apart, if E11-37 refuses three", "the pair's fallback (19b)"))
+    m = need(r9["d"], r"Ciss ([\d.]+) nF typical at -15 V and about ([\d.]+) nF near 0 V for the three", "the three's Ciss (19d)")
+    g["ciss3"] = (f(m, 1), f(m, 2))
+    need(r9["d"], r"STATUS: OPEN, condition: Q-TI-17 \(extended to three devices, drafted, not sent\) or E11-37's bench with the three", "19d's status")
     return g
 
 
@@ -3366,8 +3388,10 @@ def fx_u04_expect(F):
             "between at least %s V" % fmt(fx["pw"][3]), "down to %s V: the system node %s to %s V" % (fmt(fx["supp"][0]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1])),
             "%s mA is the quantified subset of its drains" % fmt(F["f02"]["held"][0]), "the bench acceptance at most %s mA" % fmt(F["f02"]["held"][1]),
             "a latch within %s s" % fmt(fx["latch_s"]), "an RDS(on) allowance of %s mOhm per FET" % fmt(F["f02"]["allow"]),
-            "(Zself + Zmut) at most %s K/W steady" % fmt(F["f02"]["z_steady"]), "from the hot state kept, at %s C" % fmt(F["f02"]["svc"][0]),
-            "Ciss %s nF typical at -15 V and about %s nF near 0 V" % tuple(fmt(x) for x in F["f02"]["ciss"]),
+            "held at %s A, the pack breaker's largest limit, from %s C" % tuple(fmt(x) for x in F["f02"]["held_lim"]),
+            "(Zself + 2 Zmut) at most %s K/W steady with R17 placed apart" % fmt(F["f02"]["z3"]),
+            "(Zself + Zmut) at most %s K/W the fallback" % fmt(F["f02"]["z2_fb"]), "at the allowances %.1f C in the 18 A service, kept" % F["f02"]["at_allow"][1],
+            "Ciss %s nF typical at -15 V and about %s nF near 0 V for the three" % tuple(fmt(x) for x in F["f02"]["ciss3"]),
             "the docking pulse %s A whole in one FET, TJ %s C" % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock_tj"][1])),
             "behind U42, %s to %s A" % (fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2])), "VSYS_E at least %s V" % fmt(F["f02"]["vsyse"]),
             "at most %.5f A, no charge under %s V on SRN" % (fx["pre"][0], fmt(fx["pre"][1])),
@@ -4133,8 +4157,8 @@ CHOICES = [
      "rows": ["IF-01"]},
     {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: (B1) selected, the BQ25730 with the battery FET pair Q39 and Q40 and board E on VSYS_E, drafted; the drawn board is arrangement (A))", "class": ARCH,
      "question": "with (B1) selected and drafted, does the BQ25730's VSYS hold the kit's load steps inside the 2.054 V margin (D2), does the "
-                 "pair's installed (Zself + Zmut) meet its allowances at the RDS(on) allowance (E11-29, E11-36), does BATDRV run the pair's "
-                 "Ciss against TI's 5 nF (E11-37), does the docking pulse stay inside one FET's hot VF and ISM (E11-30), does the start "
+                 "three battery FETs' installed (Zself + 2 Zmut) meet the junction limit at the RDS(on) allowance (E11-29, E11-36), does BATDRV "
+                 "run the three's Ciss against TI's 5 nF with their current shared (E11-37), does the docking pulse stay inside one FET's hot VF and ISM (E11-30), does the start "
                  "from cold reach VSYS_MIN (E11-31), does the dock's VSYS branch hold its limit and a hard short (E11-38), and is the "
                  "BQ25730 obtainable? On the board as drawn (arrangement (A)) D1 and D3 stay TI's",
      "constraint": "L4-E11's consolidation (check 5 at 5aa18a69), its fix round for the review's B1 and B2 (section 15 at 656fc540) and "
@@ -4150,12 +4174,14 @@ CHOICES = [
                    "the quantified subset of its drains (the monitor and D3 at 25 C; hot clamp leakage and body-diode current are not "
                    "bounded by a printed figure), the bench acceptance at most 1 mA (E11-31). The start is bounded on held "
                    "evidence to VSYS_MIN or a latch within 3.062 s (the earlier 502.3 ms withdrawn: 0.5 A is an input ceiling, not a "
-                   "delivered current). The pair at the +70 C mixed air, sized to an RDS(on) allowance of 21.136 mOhm per FET that no "
-                   "printed point bounds at -8.5 V hot (E11-36): every protection event from the held 20 A at TJ 150 C or under for an "
-                   "installed (Zself + Zmut) at most 33.12 K/W steady, 10.753 at 1 s, 3.785 at 20 ms and 0.703 at 244 us (E11-29), the "
-                   "device's own Fig. 4 with the coupling in the measured sum; 18 A for 60 s from the hot state kept, at 126.7 C (R-159's "
-                   "fallback, which lowered it, withdrawn); Ciss 4.72 nF typical at -15 V and about 5.74 nF near 0 V, not shown under TI's "
-                   "5 nF (E11-37, OPEN); the docking pulse 242.9 A whole in one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and "
+                   "delivered current). Since L4-E11's round 9 (19b to 19d, on record l9stk's E-1 and C3) the "
+                   "battery switch is three BUK6Y10-30P (Q39, Q40 and Q42), each sized to an RDS(on) allowance of 21.136 mOhm per FET that no "
+                   "printed point bounds at -8.5 V hot (E11-36): the hottest junction at most 150 C held at 23.93 A, the pack breaker's "
+                   "largest limit, from 76.25 C with the band and R17 in place, for each FET's installed (Zself + 2 Zmut) at most 45.88 K/W "
+                   "steady with R17 placed apart (E11-29; the pair's (Zself + Zmut) at most 20.39 K/W the fallback; the pair's earlier "
+                   "targets withdrawn with record l8p's breaker); at the allowances 118.0 C in the 18 A service, kept (R-159's fallback, "
+                   "which lowered it, withdrawn); Ciss 7.08 nF typical at -15 V and about 8.61 nF near 0 V for the three, not shown under "
+                   "TI's 5 nF, their current sharing and each junction read (E11-37, OPEN); the docking pulse 242.9 A whole in one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and "
                    "ISM hot not printed (E11-30); the dock's VSYS branch behind U42, 1.4713 to 1.8018 A, the contact at 51.5 % of its 3.5 A, "
                    "VSYS_E at least 9.539 V at 1.0 A, the hard short's peak open (E11-38); the precharge at most 0.33616 A, "
                    "no charge under 5.7 V on SRN; 0.0934 W in the pair at PS-IDLE-SPEC (0.218 % of the pack's output); L2 at 14.55 A peak "
@@ -4171,9 +4197,9 @@ CHOICES = [
                   "-8.5 V and 150 C (E11-36), VF above 80 A and hot and ISM at a hot mounting base (E11-30); TI's TPS16630 sheet (held) "
                   "bounds U42's limit; the BQ25730's supply from an authorised source (R-162); the fans' start and PWM level (E11-35)",
                   "the three modes, the held pack current, the start from cold and D2 on one BQ25730 build (E11-31, R-161), every step's "
-                  "minimum over the converters' floor; Zself and Zmut at 244 us, 20 ms, 1 s, 60 s and steady on the built board by the "
-                  "body diode's VSD (E11-29, R-159); a pulsed Kelvin RDS(on) at -8.5 V and 150 C on parts from the lot (E11-36, R-182); "
-                  "BATDRV with the pair at -20, 25 and 70 C (E11-37, R-183); the docking pulse's VF and ISM hot by a pulse test (E11-30, "
+                  "minimum over the converters' floor; Zself and Zmut of the three steady and at 60 s on the coupon or the first prototype "
+                  "by the body diode's VSD (E11-29, R-159); a pulsed Kelvin RDS(on) at -8.5 V and 150 C on parts from the lot (E11-36, R-182); "
+                  "BATDRV with the three at -20, 25 and 70 C, their current sharing and junctions read (E11-37, R-183); the docking pulse's VF and ISM hot by a pulse test (E11-30, "
                   "R-160); the dock branch's limit, its overload and a hard short at VSYS_E (E11-38, R-184); R-85 extended at the plug "
                   "(E11-06) and E4-O's warm-up (E11-23, R-137)",
                   "send TI's questions (OW-7); the BQ25730 and the pair bought for the build (money, the owner's)"),
@@ -4336,19 +4362,23 @@ DEFECTS = [
                    "-8.5 V and 150 C that no printed point bounds, AOS's transient shape borrowed for the new FETs, Ciss typical taken as "
                    "meeting TI's 5 nF, and the docking pulse judged by an I2t the sheet does not print",
      "options": "L4-E11's three on one basis (RDS(on) from the printed maxima at BATDRV's 8.5 V and the hot junction): (Q-a) one AONS21357, "
-                "a bar of 10.1 C/W; (Q-b) one SQJ403EP, 9.49 C/W; SELECTED (Q-c) two Nexperia BUK6Y10-30P in parallel (Q39, Q40); after "
-                "L4-F02 (L4-E11 16): sized to an RDS(on) ALLOWANCE of 21.136 mOhm per FET, no printed point bounding -8.5 V hot (E11-36); "
-                "the device's own Fig. 4 with the two FETs' coupling in the measured sum Zself + Zmut, at most 33.12 K/W steady, 10.753 at "
-                "1 s, 3.785 at 20 ms and 0.703 at 244 us for every protection event from the held 20 A at TJ 150 C or under (E11-29); 18 A "
-                "for 60 s from the hot state at 126.7 C, kept; Ciss 4.72 nF typical at -15 V and about 5.74 nF near 0 V, not shown under "
-                "TI's 5 nF (E11-37, OPEN; one FET with a heat path through the case the engineer's fallback); the docking pulse whole in "
+                "a bar of 10.1 C/W; (Q-b) one SQJ403EP, 9.49 C/W; SELECTED (Q-c) two Nexperia BUK6Y10-30P in parallel (Q39, Q40), "
+                "a third (Q42) added by L4-E11's round 9 on record l9stk's selection (19b); after L4-F02 (L4-E11 16): sized to an RDS(on) "
+                "ALLOWANCE of 21.136 mOhm per FET, no printed point bounding -8.5 V hot (E11-36); since round 9 (19c) record l9stk's junction "
+                "limit: the hottest junction at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place, each FET's installed "
+                "(Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart, the pair's 20.39 K/W the fallback (the pair's earlier "
+                "steady and transient targets withdrawn with record l8p's breaker) (E11-29); 18 A for 60 s kept, 118.0 C at the "
+                "allowances; Ciss of the three 7.08 nF typical at -15 V and about 8.61 nF near 0 V, not shown under TI's 5 nF (E11-37, "
+                "OPEN, their current sharing and each junction read; on a negative answer the pair at its fallback or one FET with a heat "
+                "path through the case, the engineer's); the docking pulse whole in "
                 "one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and ISM hot not printed (E11-30); R-159's fallback withdrawn; "
                 "after the second review's L4-CP02 (L4-E11 17b) a junction temperature does not extend ISM's printed 10 us: the WHOLE hot "
                 "waveform is accepted by a defined pulse qualification, SELECTED (D2): 6 parts, each 2000 pulses 10 s apart at 267.2 A peak "
                 "and 37.2 us (1.1 times the waveform), the mounting base at 75 C, with Nexperia's Q-NXP-1 asked in parallel (D1) and board "
                 "P's inrush bound (D3) only if (D2) fails; L4-CP03: the charger draft no longer writes the withdrawn claims (tested)",
-     "resolution": "R-157 (apply_gen_sch_a_charger.py, the pair), not applied; E11-29 (R-159: the installed Zself + Zmut), E11-30 (R-160: "
-                   "the docking pulse in one FET), E11-36 (R-182: RDS(on) at -8.5 V and 150 C), E11-37 (R-183: Ciss, OPEN), E11-32 "
+     "resolution": "R-157 (apply_gen_sch_a_charger.py, the pair, with Q42 since L4-E11's round 9, R-209), not applied; E11-29 (R-159: the three's "
+                   "installed Zself + 2 Zmut against the junction limit), E11-30 (R-160: "
+                   "the docking pulse in one FET), E11-36 (R-182: RDS(on) at -8.5 V and 150 C), E11-37 (R-183: Ciss of the three, OPEN), E11-32 "
                    "(R-162: the parts' supply)",
      "rows": ["IF-09", "IF-10"]},
     {"id": "D-16", "title": "the drafted input current sense leaves its +-100 mV operating range in normal operation at the 25 V corner (L4-E7's B6-ENG-2, a demonstrated defect of the drafted sense arrangement)",
@@ -5479,10 +5509,13 @@ def cons_comparisons(F):
     g = F["f02"]
     sf, hl = PRICES["saft"], PRICES["hl"]
     return [
-        {"id": "UDC-1", "what": "the battery switch (D-14; R-157's pair, its evidence R-159, R-160, R-182, R-183)",
-         "current": "(S1) the pair Q39 and Q40, two BUK6Y10-30P, with its qualification: the installed (Zself + Zmut) at most %s K/W (E11-29), the whole hot "
-                    "docking pulse (E11-30), RDS(on) at -8.5 V and 150 C at most %s mOhm (E11-36), BATDRV with the pair's Ciss (E11-37; "
-                    "4.72 nF typical at -15 V, about 5.74 nF near 0 V, against TI's below 5 nF)" % (fmt(g["z_steady"]), fmt(g["allow"])),
+        {"id": "UDC-1", "what": "the battery switch (D-14; R-157's pair with Q42, R-209, since L4-E11's round 9; its evidence R-159, R-160, R-182, R-183)",
+         "current": "(S1) the pair Q39 and Q40 with a third BUK6Y10-30P, Q42 (L4-E11 round 9 on record l9stk's selection), with its qualification: each "
+                    "FET's installed (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart, the hottest junction at most 150 C held at %s A "
+                    "from %s C (E11-29; the pair's %s K/W the fallback), the whole hot docking pulse (E11-30), RDS(on) at -8.5 V and 150 C at "
+                    "most %s mOhm (E11-36), BATDRV with the three's Ciss and their current sharing (E11-37; %s nF typical at -15 V, about %s nF "
+                    "near 0 V, against TI's below 5 nF)" % (fmt(g["z3"]), fmt(g["held_lim"][0]), fmt(g["held_lim"][1]), fmt(g["z2_fb"]), fmt(g["allow"]),
+                                                           fmt(g["ciss3"][0]), fmt(g["ciss3"][1])),
          "alternative": "(S2) one BUK6Y10-30P: Ciss about %s nF near 0 V, %s %% of TI's figure (typical), but a junction to air of at most %s "
                         "K/W for 20 A held, a heat path through the case, and still no printed hot RDS(on) or Ciss maximum; (S3) a P-FET whose "
                         "sheet prints both hot RDS(on) at -8.5 V and Ciss maxima: none found among the parts read (L4-E11 16a, 16c): no "
@@ -5495,7 +5528,7 @@ def cons_comparisons(F):
                        "interface board A to the case, the service kept at a hotter junction; (S3) unknown until a part is named",
          "selection": "SELECTED (SESSION; L4-E11 16c, its inputs unchanged, carried and not repeated): (S1), its qualification R-159, R-160, R-182 "
                       "and R-183. Reason: the only arrangement whose heat a board pour carries, and no supported alternative removes the "
-                      "dependency. Reversed by: a negative Ciss answer or bench (R-183), then the engineer's (S2); the (S3) search is "
+                      "dependency. Reversed by: a negative Ciss answer or bench (R-183), then the engineer's pair at its fallback or (S2); the (S3) search is "
                       "offered to the supplier's phase 1",
          "owner": ""},
         {"id": "UDC-2", "what": "the cell, U-01 (D-06's pack; R-103, R-167 to R-169; route (II)'s R-105, R-106, R-154)",
@@ -6345,6 +6378,7 @@ G_L8GND = "l8gnd's RELEASE.md (an accepted check of Layer 8's record l8gnd at 22
 G_L8R2 = "l8r2's RELEASE.md (its rounds 4 to 6 at 89924e40 on fnd/l8r3; each draft refuses the tree's generator until it names an accepted check)"
 G_L8P = "l8p's RELEASE.md (one release for its three drafts; each refuses the tree's generator until it names an accepted check)"
 G_L9STK = "a text draft for the integrator (it refuses a second run)"
+G_L4E11_R9 = "L4-E11's RELEASE.md naming an accepted check of its round 9 (R-147; the draft refuses the tree's generator until then)"
 CHANGE_ORDER = [
     ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
     ("1", "R-24", "pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
@@ -6361,7 +6395,7 @@ CHANGE_ORDER = [
     ("3a", "R-157", GA, "U-04's selected charger (B1): the BQ25730 and the battery FET pair Q39 and Q40 in U3's land, J_DOCK pin 1 on VSYS_DOCK behind U42 (R-181), with R-124 in either order; the strap kept fixed", G_L4E11 + " and its check 5 at 5aa18a69 (the pair: its fix round at 656fc540)"),
     ("3a", "R-181", GA, "with R-157 (the same draft): U42 from VBAT to the new net VSYS_DOCK on J_DOCK pin 1; before board E's VSYS_E feed (R-177)",
      G_L4E11 + " and its fix round at d2a59468 (L4-F03)"),
-    ("3a", "R-209", GA, "with R-157: the third battery FET beside Q39 and Q40, its designator L4-E11's (l9stk 15.5); RT1 (R-208) on the three FETs' copper", "no draft yet"),
+    ("3a", "R-209", GA, "with R-157 (the same draft, L4-E11 19b): the third battery FET Q42 beside Q39 and Q40 (l9stk 15.5); RT1 (R-208) on the three FETs' copper", G_L4E11_R9),
     ("3a", "R-178", "pcb_interfaces.yaml (IF-AE-DOCK; the Layer 4 coordinator)", "with R-157 and R-177: the dock's pin 1 VSYS_DOCK (behind U42) and VSYS_E, seven ground contacts", G_L4E11),
     ("3b", "R-04", GA, "after R-01: R11 never before R12", G_L4E4),
     ("3c", "R-07", GA, "after R-01: the ballasts and Cc2 only with R12", G_L4E8),
@@ -6377,6 +6411,7 @@ CHANGE_ORDER = [
     ("3g", "R-200", GA, "with or after R-199 (either order composes, l8r2 section 5); before d8dec31's R-193", G_L8R2),
     ("3g", "R-210", GA, "D-17's design-out: FAN_OK beside OUTLET_OK's gates; before d8dec31's R-193; in the release of R-211 and R-212", "no draft yet"),
     ("3g", "R-208", GA, "after 3g's other drafts and before d8dec31's R-193 (l8p section 5); in one release with R-206 and R-207", G_L8P),
+    ("3g", "R-217", GA, "AFTER record l8p's PTC draft (R-208: it refuses a target without DOCK_EN_RET) and L4-E11's charger (R-157: CH_BATDRV and the three battery FETs); before d8dec31's R-193; in the release of R-206 to R-208 (L4-E11 19h)", G_L4E11_R9),
     ("3h", "R-194", "d8dec31's draft, apply_gen_sch_a_mainpb.py (its owner)", "before R-193 is applied: fixed references above every board A draft's (L8G-F12)", "no draft yet"),
     ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
      "none: d8dec31's draft carries no release guard"),
@@ -6426,6 +6461,7 @@ CHANGE_ORDER = [
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
     ("5", "R-164", "firmware", "with R-163 (F3's switches)", "firmware"),
     ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time by a PWM-duty ramp into the fan's PWM input, never while U12 or U22 starts (E11-39)", "firmware"),
+    ("5", "R-218", "firmware", "only on a board A carrying R-217, with R-158 (record l9stk's IF-7: the trip reported, ChargeCurrent written only after the terminal reads alive; E11-44)", "firmware"),
     ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
     ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
     ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
@@ -6453,6 +6489,10 @@ ORDER_CONSTRAINTS = [
     ("the third battery FET with the pair (after R-157)", "R-157", "R-209"),
     ("the third battery FET before d8dec31's PB network", "R-209", "R-193"),
     ("FAN_OK before d8dec31's PB network", "R-210", "R-193"),
+    ("L4-E11's DD-7 after l8p's thermal-guard loop: it refuses a target without DOCK_EN_RET (L4-E11 19h)", "R-208", "R-217"),
+    ("L4-E11's DD-7 after its charger draft (CH_BATDRV and the three battery FETs)", "R-157", "R-217"),
+    ("L4-E11's DD-7 before d8dec31's PB network (LAST in board A's round)", "R-217", "R-193"),
+    ("DD-7's firmware (R-218) after its hardware (R-217)", "R-217", "R-218"),
     ("the coolers' EN after their step-ups are drawn (R-190)", "R-190", "R-211"),
     ("U22's RUN after L4-E11's aux draws U22 (R-177)", "R-177", "R-212"),
     ("U22's RUN before d8dec31's input capacitor (LAST in board E's round)", "R-212", "R-16"),
@@ -6499,7 +6539,7 @@ CHANGE_SCRIPTS = ["d8dec31/apply_gen_sch_a_mainpb.py", "l4e4/apply_gen_sch_a_r11
                   "l4e7/apply_gen_sch_e_solar_guard.py",
                   "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
                   "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_e_entry.py", "l4e11/apply_gen_sch_e_timer.py", "l4e11/apply_gen_sch_a_charger.py",
-                  "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py",
+                  "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py", "l4e11/apply_gen_sch_a_dd7.py",
                   "d8dec31/apply_gen_sch_e_cin.py"]
 
 
@@ -6920,14 +6960,14 @@ def cons_exit(F):
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
          "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until every admitted arrangement has failed its measurement or a bound shows none can meet the limit, a DEMONSTRATED CONFLICT (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
-         "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U22's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
-         % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
-         "apply R-157 with R-181, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), Zself and Zmut at the five widths on the built board (R-159), Nexperia's maximum or a Kelvin reading at -8.5 V and 150 C (R-182), TI's answer or the bench's BATDRV behaviour with the pair (R-183), VF and ISM hot or a pulse test (R-160), the branch's limit and shorts (R-184); Q-TI-15 to Q-TI-17 sent (OW-7; Q-AOS-1 withdrawn)",
-         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm every protection event from the held 20 A at TJ 150 C or under for (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
+         "with (B1): D2 (load steps against the %s V margin), the three battery FETs' installed Zself + 2 Zmut (at most %s K/W steady with R17 placed apart, the hottest junction at most 150 C held at %s A from %s C; the pair's (Zself + Zmut) at most %s K/W the fallback; E11-29) at the RDS(on) allowance (E11-36); the three's Ciss against TI's 5 nF with their current sharing (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U22's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
+         % ((b1["margin"], fmt(F["f02"]["z3"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
+         "apply R-157 with R-181, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), Zself and Zmut of the three steady and at 60 s on the coupon or the first prototype (R-159), Nexperia's maximum or a Kelvin reading at -8.5 V and 150 C (R-182), TI's answer or the bench's BATDRV behaviour with the three (R-183), VF and ISM hot or a pulse test (R-160), the branch's limit and shorts (R-184); Q-TI-15 to Q-TI-17 sent (OW-7; Q-AOS-1 withdrawn)",
+         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm the three's hottest junction at most 150 C held at %s A from %s C for each FET's (Zself + 2 Zmut) at most %s K/W steady with R17 apart, %.1f C in the 18 A service; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
          % (b1["vsys_min"], b1["inhib"][0], b1["inhib"][1], fmt(fx["pw"][2]), fmt(fx["pw"][1]), fmt(fx["pw"][0]), fmt(fx["pw"][3]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1]),
-            fmt(fx["pair_idle"][1]), fmt(F["f02"]["allow"]), fmt(F["f02"]["z_steady"]), fmt(F["f02"]["svc"][0]), fmt(F["f02"]["dock_tj"][1]),
+            fmt(fx["pair_idle"][1]), fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1]),
             fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), fmt(fx["latch_s"]), held_txt(F)),
-         "R-c's step rule (D2); more copper or a heat path for the pair, never a lowered protection or service; on a negative Ciss answer one BUK6Y10-30P with a heat path through the case (L4-E11 16c's (S2), the engineer's); a slower discharge-FET turn-on on board P for the docking pulse (board P's owner); a series inductance or a second contact for the branch's hard short; arrangement (A) with E11-24's hold-up if (B1) fails",
+         "R-c's step rule (D2); more copper or a heat path for the three, never a lowered protection or service; on a negative Ciss answer the pair at its fallback or one BUK6Y10-30P with a heat path through the case (L4-E11 16c's (S2), 19d, the engineer's); a slower discharge-FET turn-on on board P for the docking pulse (board P's owner); a series inductance or a second contact for the branch's hard short; arrangement (A) with E11-24's hold-up if (B1) fails",
          "once R-157 (with R-181), R-177 and R-178 are applied, nothing of the architecture (L4-E11 check 5 and its fix rounds); on the board as drawn TI's D1 and D3 decide the charger's power path"),
     ]
 
@@ -7250,10 +7290,10 @@ def cons_exit_defects(F):
          "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the mixers' start on U22's %s V rail (R-179; VSYS_E %s to %s V no longer reaches them)" % (fmt(F["f02"]["held"][1]), fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["drop"][2]), fmt(fx["vsys_rng"][1])),
          "nothing of the topology: a feed inside (B1)"),
         ("D-14", "(B1)'s battery FET bounded at an unprinted corner and a fallback lowering 18 A for 60 s (the review's B2)",
-         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, every protection event from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C, the docking pulse whole in one FET at TJ %s C"
-         % (fmt(F["f02"]["allow"]), fmt(F["f02"]["z_steady"]), fmt(F["f02"]["svc"][0]), fmt(F["f02"]["dock_tj"][1])),
-         "the draft applied (R-157)", "Zself and Zmut on the built board (R-159); RDS(on) at -8.5 V and 150 C at most %s mOhm (R-182); TI's answer on Ciss or BATDRV with the pair on the bench (R-183); VF and ISM hot (R-160)" % fmt(F["f02"]["allow"]),
-         "nothing of the topology: a part inside (B1); on a negative Ciss answer the engineer chooses one FET with a heat path through the case"),
+         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157) and the third, Q42, since L4-E11's round 9 (19b; R-209), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (the three's Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's installed (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart (the pair's %s K/W the fallback), %.1f C in the 18 A service, the docking pulse whole in one FET at TJ %s C"
+         % (fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), fmt(F["f02"]["z2_fb"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1])),
+         "the draft applied (R-157, with R-209)", "Zself and Zmut of the three on the coupon or the first prototype (R-159); RDS(on) at -8.5 V and 150 C at most %s mOhm (R-182); TI's answer on Ciss or BATDRV with the three on the bench (R-183); VF and ISM hot (R-160)" % fmt(F["f02"]["allow"]),
+         "nothing of the topology: a part inside (B1); on a negative Ciss answer the engineer chooses the pair at its fallback or one FET with a heat path through the case"),
         ("D-15", "the dock's new VSYS contact without branch protection (L4-F03)",
          "ADDRESSED IN DRAFTS: the eFuse U42 (TPS16630, R228 11.0k, C237 22 nF; L4-E11 16e; R-181), not applied; the contact at most %s A (%s %% of %s A) once the limit settles, VSYS_E at least %s V; %s (E11-38)"
          % (fmt(F["f02"]["ef_c"][0]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), L4F03_STATUS),
@@ -7446,8 +7486,8 @@ def cons_review_lines(F):
 # Prices are the ones this tree has READ and filed (each checked against its source file here); an item whose price was not read says so.
 # Nothing is bought, nothing is sent: purchases and outside contact are the owner's.
 PRICES = {
-    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's pair, four spare)",
-            "maker": "Nexperia", "qty": 20, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
+    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons of three, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's three, four spare)",
+            "maker": "Nexperia", "qty": 23, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
             "key": ("price_usd", "10"), "note": "the 10-piece tier, LCSC C3278350, stock 67 on 2 October 2026"},
     "d23": {"what": "B540C-13-F (D23 on E11-38's specimen)", "maker": "Diodes", "qty": 5, "cur": "USD", "unit": 0.2332,
             "src": "v2/docs/records/l4e11/inputs/lcsc-C72264-price-2026-10-02.json", "key": ("price_usd", "5"), "note": "the 5-piece tier, LCSC C72264"},
@@ -7551,9 +7591,10 @@ def cons_qual(F):
          "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
          un("T-H1") + "; " + pr("fan60") + "; " + pr("fan40") + " (the T-H1 mock-up's own bill is Layer 7's T-H1-MOCKUP-SPEC.md at 2087060b, cited, not copied)", sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
         ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"] + BLOCK_RULE % "E11-29",
-         "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
+         "D-14's installed path, the three FETs (L4-E11 19c, record l9stk's junction limit E-1): each FET's (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart and R17's coupling into each junction at most %s K/W, so the hottest junction stays at most 150 C held at %s A from %s C with the band and R17 in place, at the RDS(on) allowance; the fallback, if E11-37 refuses three, the pair's (Zself + Zmut) at most %s K/W with R17 apart"
+         % (fmt(F["f02"]["z3"]), fmt(F["f02"]["r17c"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])),
          sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
-         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none"),
+         pr("buk", 6) + "; " + un("E11-29, E11-36"), "none"),
         ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"] + BLOCK_RULE % "E11-30",
          "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
          % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock"][1]), pl[4], pl[3], fmt(pl[0]), fmt(pl[1]), fmt(pl[2])),
@@ -7564,9 +7605,10 @@ def cons_qual(F):
          sp["E11-36"]["blocks"], "an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading)", OWN + "the parts and the coupon",
          pr("buk", 4) + "; " + un("E11-29, E11-36"), "none drafted: Nexperia's maximum at -8.5 V and 150 C would close it for every lot (a draft is owed to L4-E11)"),
         ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"] + BLOCK_RULE % "E11-37",
-         "D-14's Ciss against TI's 5 nF: the pair (S1) or one FET with a heat path through the case (S2)",
+         "D-14's gate drive with the three FETs on one BATDRV (L4-E11 19d): Ciss %s nF typical at -15 V and about %s nF near 0 V against TI's 5 nF, each FET's current share and junction; OPEN on Q-TI-17 or this bench: the three (S1), or on a negative answer the pair at its fallback or one FET with a heat path through the case (S2)"
+         % tuple(fmt(x) for x in F["f02"]["ciss3"]),
          sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
-         pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
+         pr("buk", 3) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
         ("E11-31 (R-161)",
          "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, U22's 12.0 V rail with its capacitors C142 to C148 and the four-wire fan headers) and the pack or a pack simulator",
          "the charger's three modes under (B1): the pack absent, the charge inhibited with the pack present, the held pack current, the start from cold at -20, 25 and 62.1 C, D2's step response",
@@ -7909,9 +7951,10 @@ def cons_in_short(F, D, st, reg):
         "PENDING (1d). The review's B1 and B2 on (B1)'s draft are D-13 (board E's auxiliary domain on the pack's side of the battery FET) "
         "and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), and the review of the provisional fixes "
         "adds D-15 (the dock's new VSYS contact without branch protection, L4-F03); all three are ADDRESSED IN DRAFTS by L4-E11's fix "
-        "rounds (board E on VSYS_E, R-177 and R-178; the pair, R-157, sized to an RDS(on) allowance of %s mOhm, every protection event "
-        "from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s kept, D-14 "
-        "CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
+        "rounds (board E on VSYS_E, R-177 and R-178; the battery FETs, R-157 with Q42 since L4-E11's round 9 (R-209), sized to an RDS(on) "
+        "allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's installed (Zself + 2 Zmut) at most %s "
+        "K/W steady with R17 apart, 18 A for 60 s kept, D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with the three's Ciss against TI's 5 nF "
+        "OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
         "E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
         "bounded to VSYS_MIN or a latch within %s s; since L4-E11's fan-feed round the mixers sit on U22's regulated 12.0 V rail from VSYS_E "
         "and the branch is declared %s A, %s %% of U42's least limit, R228 kept; board B's coolers on a 5.1 V feed are a finding for its owner, "
@@ -7931,7 +7974,7 @@ def cons_in_short(F, D, st, reg):
         "resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, D-07 and D-09 "
         "superseded (8a); every resolution is a DRAFT or a register row, none applied."
         % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
-           fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
+           fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
            fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][1]),
            fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][0]), fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][1]),
            fmt(F["sv"]["rm"]["b6"]["u5_abs"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["mon"][0]), fmt(round(F["l9"]["drafted"], 3)), fmt(F["l9"]["req_floor"]), fmt(round(F["l9"]["off_margin"], 3)), F["sv"]["rm"]["b6"]["d12"]),
