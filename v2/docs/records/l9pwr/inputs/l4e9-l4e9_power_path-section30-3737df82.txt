@@ -1,0 +1,37 @@
+30. ROUND 7: DECISION D-11'S ALL-TRANSMIT FLOOR ON THE DRAFTED DESIGN (Layer 9's l9pwr at 38ef774c (fnd/l9pwr, from set 28's 37bc2f1d), finding L9P-F01, a DEMONSTRATED ANALYSIS DEFECT)
+   the method (rv-pwr 7.2, POWER-THERMAL 7.2): the basis (all-transmit basis: non-transmit typical, standby card off, high) at the gauge's 18 A peak (its 20 A trip with 10 percent margin); the stack
+     voltage = the basis's watts at VBAT / 18 A + 18 A x the pack path; the rest voltage = the stack + 18 A x 4 x R_cell / 3 (4S3P), at R_cell
+     0.035 / 0.05 / 0.06 Ohm (rv-pwr's range, INFERRED); the floor must not be under the rest voltage the basis needs at 0.06 Ohm
+   reproduced here from Layer 9's watts (its output copied byte for byte into inputs/, never read with git), rv-pwr's main pack path 0.0275 Ohm
+     (pinned) and L4-E11's pair at its 150 C bound, 21.136 mOhm per FET, two in parallel: 10.568 mOhm (pinned):
+     rv-pwr on main: 240.83 W at VBAT, path 0.0275 Ohm: needs 15.314 V (rv-pwr prints 15.31 V; Layer 9 15.314 V)
+     DRAWN (the generators in set 28's tree): 241.25 W, path 0.0275 Ohm: stack 13.898 V, needs 15.338 V, 0.162 V under the 15.5 V floor
+     DRAFTED (DRAWN plus the release-guarded drafts that move a power figure): 249.5 W, path 0.038068 Ohm: stack 14.546 V, needs 15.986 V, 0.486 V OVER the 15.5 V floor
+     the difference, exactly: the pair 18 A x 10.568 mOhm = 0.1902 V, and the other drafts at HIGH (mostly the picked fans at full speed and their
+     converters: U22 and the coolers' step-ups) 8.25 W at VBAT = 0.4583 V; Layer 9 prints 0.190 V and 0.458 V: EQUAL (to its rounding)
+     each alone breaks the 15.5 V floor: the drawn design with the pair alone needs 15.528 V; with the other drafts alone 15.796 V; at 15.5 V the drafted basis
+     is covered only to R_cell 0.0397 Ohm, under rv-pwr's PLAN 0.05 Ohm
+   where the budget was wrong in this record: IF-10's check read rv-pwr's PS-ALLTX PLAN line (12.92 V needed, 2.58 V of margin), not decision
+     D-11's own basis line (15.31 V on main, 0.19 V of margin): it never showed how thin the margin was, so it could not see the drafts take it
+   THE CORRECTION (SESSION, under the owner's standing rule of 26 September 2026; D-11's thresholds are the session's, FW-A05):
+     the all-transmit floor RE-DERIVED on the drafted design: 16.1 V rest (4.025 V a cell, from 15.5 V and 3.875 V a cell), the least floor on the
+     floor's own 0.1 V step that leaves at least 0.1 V over the need: margin +0.114 V at R_cell 0.06 Ohm, covering R_cell up to 0.0647 Ohm
+     the consequence: all-transmit is allowed only above 16.1 V rest; the all-transmit window, from the floor up to ChargeVoltage's 16.884 V
+     maximum, shrinks from 1.384 V of rest voltage to 0.784 V (no state-of-charge figure is claimed: no cell curve is read here); as drawn the 15.5 V floor
+     still holds (15.338 V), so the raised floor goes with the release that applies the first of the battery FET pair (R-157) and the picked
+     fans' feeds (R-177, R-190), each of which alone breaks 15.5 V; the PA-alone floor 12.4 V holds on the drafts (12.227 V needed, +0.173 V; Layer 9's
+     PA alone over PS-TYP at 113 W); with the heater on the drafts need 16.449 V, over even the raised floor: the heater stays off during a
+     key-down (FW-A05: 'the outlets and the heater off while keyed'); OCD1's 20 A is reached only below a 13.236 V stack on the drafted basis,
+     under its 18 A point's 14.546 V
+   not selected: a cap on the fans' duty during a key-down (FW-A05): the pair alone takes the drawn design to 15.528 V, over 15.5 V before any fan
+     changes, so a cap restores the 15.5 V floor only by holding the picked fans under the drawn design's own HIGH fan figures, and what it
+     restores rests on the picked fans' power at the capped duty, which no document gives (R-150 sets no duty; Layer 7 reads them at full
+     speed): a measurement, where the raised floor rests on the figures above; the fans stopped during a key-down: the coolers off for up to
+     60 s with the modules at TYP is a thermal question no desk figure settles. Neither is a design-out on evidence this record holds
+   the contract change owed to Layer 5 (FW-A05's text; R-28, the firmware owner): after 'SoC floors 15.5 V and 12.4 V rest' add: '; the all-transmit
+     floor 16.1 V rest from the release that applies the battery FET pair (R-157) or the picked fans' feeds (R-177, R-190) (L9P-F01, L4-E9 out 30)'
+   the modes this record quotes, restated (Layer 9's R1, W at the pack: PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W):
+     rv-pwr's figures (the boards at 1f614233), as this record quotes them: 42.8 / 203.8 / 272 / 162.3 W (Layer 9 reproduces them: EQUAL)
+     as drawn now: 43.301 / 205.652 / 274.291 / 163.465 W; DRAFTED: 44.205 / 209.007 / 287.912 / 165.76 W (Layer 9 section 4's steps; the drafts are not applied)
+     the endurance and the thermal lines downstream keep the approved profile's 42.8 W (item 9.2 and L4-E12 own their re-runs, Layer 9's own list)
+
