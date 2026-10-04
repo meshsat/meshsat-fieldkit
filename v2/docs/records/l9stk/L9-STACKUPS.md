@@ -596,7 +596,7 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 | L9C-F14: TRK_OUT and the solar input have no stage in the energy chain; VIN_RAW's return path on board E is not declared | the energy chain's writer; L4-E7's owner |
 | L9C-F15: the supplier's quotation states the laminate's maximum operating temperature and the 2 oz price beside the 1 oz rows | the supplier handover's author |
 | L9C-F16: W4DP-F2's element drawn into board P: the LM5069-1 breaker of 15.4 (DD-1), its layout (IF-2) and its energy chain stage (IF-3) | board P's generator; W4DP-F2's owner; the integrator |
-| L9C-F17: E11-29 restated as a junction limit (DD-2, E-1): the hottest battery FET at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place; a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart; the PTC thermal guard in the enable loop beside them; E11-37 with three (C3) | L4-E11; board A's generator (the PTC) |
+| L9C-F17: E11-29 restated as a junction limit (DD-2, E-1): the hottest battery FET at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place; a third BUK6Y10-30P (its designator L4-E11's: Q42 in its round 9 draft, not applied; Q41 is l8r2's VIN_RAW cut-off FET), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart; the PTC thermal guard in the enable loop beside them; E11-37 with three (C3) | L4-E11; board A's generator (the PTC) |
 | L9C-F18: board A's loads on VSYS held off during the breaker's start, at most 40.7 ms, or tied to its PGD (IF-1) | L4-E11; board A's generator |
 | L9C-F19: the power limit's accuracy at 5.05 mV, the limits at VIN 10.6 to 16.8 V and VIN to SENSE in a hot short: Q-TI-L9S-1 (drafted, not sent) and the supplier's E-2, E-3, E-9, E-10 and E-11 | the battery stream; the supplier handover's author |
 | L9C-F20: a live docking took the breaker past its SOA and VIN to SENSE's maximum; C-1b, the make-last enable loop into UVLO with its RC hold (DD-6, conditions C1 and C2) | board P's generator with the battery stream; board E's generator; Layer 7 with L4-E11 |
@@ -926,8 +926,8 @@ E11-29's target for the pair was 33.12 K/W, which L4-E11 judged of the order a b
 restates E11-29 as this limit (45.88 K/W a FET with R17 apart). The first revision's 24.37 K/W
 counted the FETs' heating only; with the band's 9.16 K it reaches 159.2 C.
 
-**SELECTED: a third BUK6Y10-30P, with R17 designed apart.** L4-E11's round 9 drafts it as Q42 (not applied): Q41 is taken on
-board A by record l8r2's VIN_RAW cut-off FET (CSD19532Q5B).
+**SELECTED: a third BUK6Y10-30P, with R17 designed apart.** Its designator is L4-E11's to give, and its round 9 draft gives
+Q42 (not applied): Q41 is taken on board A by record l8r2's VIN_RAW cut-off FET (CSD19532Q5B).
 - **Why.** The path it asks is 1.39 times E11-29's former target, where the pair would need 0.62 of it.
 - **Cost.** Ciss: three FETs are 7.08 nF typical at -15 V and about 8.61 near 0 V, against TI's 5 nF guidance (SLUSE65A p.92). The
   pair is already over that guidance near 0 V (5.74 nF), so E11-37's bench with three FETs decides, with Q-TI-17 extended to
@@ -1008,7 +1008,7 @@ At the allowances the junction reads:
 | Defect | Owner |
 |---|---|
 | DD-1 W4DP-F2: no firmware-independent element with board P's FETs welded; the breaker of 15.4 is drafted here, not drawn | board P's generator, with W4DP-F2's owner (the battery stream) |
-| DD-2 the battery FETs' junction limit (15.5): a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied), (Zself + 2 Zmut) at most 45.88 K/W with R17 apart, the thermal guard behind it; the pair would need 20.39; condition C3 | L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three) |
+| DD-2 the battery FETs' junction limit (15.5): a third BUK6Y10-30P (its designator L4-E11's: Q42 in its round 9 draft, not applied), (Zself + 2 Zmut) at most 45.88 K/W with R17 apart, the thermal guard behind it; the pair would need 20.39; condition C3 | L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three) |
 | DD-3 R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6) | L4-E11 |
 | DD-4 the Keystone 3568 holder prints no current rating | Layer 6/7 |
 | DD-5 BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, 23.9 W at the breaker's 23.93 A | the battery stream (BAT-F20, EQ-15) |
