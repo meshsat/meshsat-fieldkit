@@ -1,0 +1,20 @@
+Record l8p's inputs from record l9stk (MESHSAT-1357, 4 October 2026)
+
+Record l9stk is on branch fnd/l9stk, not merged into this record's base (main 64cd25ee). Its design of W4DP-F2's element (section
+15) was independently checked CONFIRMED AS CONDITIONAL, and its text corrections are in, at commit 2c8b29fb. These copies are
+taken from that commit with `git show 2c8b29fb:<path>` and are not edited; l8p_drafts.py reads every value it draws from them by
+its section and refuses when a pattern no longer matches.
+
+Full files at 2c8b29fb (sha256):
+  v2/docs/records/l9stk/L9-STACKUPS.md        6421b32afbaad83704a77be3778cdd98bfa5953760ca00708446bbd4579d35bf
+  v2/docs/records/l9stk/l9stk_protection.py   7a3a972de8755c839330dd61504df26abbffedf12cd137dea8ad1bf0a753efce
+  v2/docs/records/l9stk/l9stk_protection.out  ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
+
+Copies here (sha256):
+  l9stk-section15-2c8b29fb.md               4cfd6733c7d2e0429d9fc8ad18a71d4996e0d280b1c5b40f5ef31372e52ed3e2
+      L9-STACKUPS.md lines 576 to 896: section 15 whole (15.1 to 15.8), the end of the page
+  l9stk_protection-2c8b29fb.out.txt         ca434347df8b322da9185412d84c10d1848697710aee99e0709e19850430e7f1
+      l9stk_protection.out whole, renamed with .txt so no tool that re-pins a record's outputs touches the copy
+  l9stk_protection-constants-2c8b29fb.txt   58bd120aa8ad01ca7faa4053d4fd9b98beac65c5ed1f58ec67bc379e4819420b
+      l9stk_protection.py lines 62 to 87: the session's design constants (R_U, R_DIS, R_E1, R_E2, R_G among them); R_G, the
+      second inverter's gate divider, is the one value the page does not print

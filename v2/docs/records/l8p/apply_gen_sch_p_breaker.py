@@ -21,8 +21,9 @@ The correction drawn here, every value from record l9stk by its section (the rec
   IF-6          the gauge's PACK and VCC taps R6 and R7, and Q2's gate-source resistor R19, follow Q2's source to BRK_VIN; D1
                 stays on PACK_P; VCC_F is fed from BRK_VIN.
 SESSION choices (under the owner's standing rule of 26 September 2026; L8P-BREAKER.md section 3): the designators (the free
-100 block: U101, Q101 to Q104, D101, R101 to R109, C101 to C104, TP101 to TP104), the net names, J_SMB's pin assignment, C104
-1 uF 50 V at the sense pair (TI SNVS452G section 10 and 11.1.1), PGD left open, the four test points for E-12.
+100 block: U101, Q101 to Q104, D101, R101 to R109, C101 to C105, TP101 to TP104), the net names, J_SMB's pin assignment, the
+input bypass at the sense pair (TI SNVS452G section 10 and 11.1.1) as C104 and C105, 2.2 uF 50 V in series (board P's own O-12
+rule for a part across the pack), PGD left open, the four test points for E-12.
 
 What it changes in v2/ecad/tools/gen_sch_p.py, and nothing else:
   1. PACK_P's declaration: the breaker's output (loads Q101 and Q102, switch U101 on BRK_UVLO); BRK_VIN and BRK_SNS declared as
@@ -49,8 +50,8 @@ import sys
 
 NAME = "apply_gen_sch_p_breaker"
 ADDS = ("U101", "Q101", "Q102", "Q103", "Q104", "D101", "R101", "R102", "R103", "R104", "R105", "R106", "R107", "R108", "R109",
-        "C101", "C102", "C103", "C104", "TP101", "TP102", "TP103", "TP104")
-NETS = ("BRK_VIN", "BRK_SNS", "BRK_GATE", "BRK_TMR", "BRK_PWR", "BRK_UVLO", "BRK_G2", "BRK_DIS", "DOCK_EN_OUT", "DOCK_EN_RET")
+        "C101", "C102", "C103", "C104", "C105", "TP101", "TP102", "TP103", "TP104")
+NETS = ("BRK_VIN", "BRK_SNS", "BRK_GATE", "BRK_TMR", "BRK_PWR", "BRK_UVLO", "BRK_G2", "BRK_DIS", "BRK_CMID", "DOCK_EN_OUT", "DOCK_EN_RET")
 
 _OLD_RAIL = (
     '_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R", v_work=16.8, converted=False,   # the GAUGE\'s own pin; R18, 5.1k, sits between it and the FET gate DSG_G\n'
@@ -102,11 +103,13 @@ _BREAKER = (
     '# 1.51 ms; an open or a short to ground on either conductor holds the breaker off. J_SMB pin 6 is the ground contact between\n'
     '# the two conductors (C2). The order of mating (every power pin before the enable, 1 mm short) is Layer 7\'s (C1).\n'
     '# SESSION choices of record l8p (L8P-BREAKER.md section 3): the designators (the free 100 block), the net names, J_SMB\'s pin\n'
-    '# assignment, C104 1 uF 50 V at the sense pair (TI SNVS452G section 10, "a 1-uF ceramic capacitor to ground close to the drain\n'
-    '# of the hot swap MOSFET", and 11.1.1, the bypass "close to Rsns instead of the VIN pin"), PGD left open (IF-1\'s PGD option\n'
+    '# assignment, the input bypass C104 and C105 at the sense pair (TI SNVS452G section 10, "a 1-uF ceramic capacitor to ground close\n'
+    '# to the drain of the hot swap MOSFET", and 11.1.1, the bypass "close to Rsns instead of the VIN pin"), drawn as two 2.2 uF 50 V\n'
+    '# in SERIES through BRK_CMID (1.1 uF) for the reason C11 and C12 are (O-12, SLUSC67B 8.2.2.1.5): one shorted part across the\n'
+    '# pack must not short it; PGD left open (IF-1\'s PGD option\n'
     '# would need a conductor to board A: L4-E11\'s), TP101 to TP104 for E-12 (BRK_VIN, the hold on BRK_UVLO, both loop conductors).\n'
     '# IF-2 for the layout (gen_pcb_p3.py): each breaker FET\'s installed RthJA at most 52.5 C/W (1 in2 of 2 oz each gives the\n'
-    '# sheet\'s 50), U101 beside the sense pair with Kelvin taps (E-9), C104 at the sense pair. Nothing here is built or measured.\n'
+    '# sheet\'s 50), U101 beside the sense pair with Kelvin taps (E-9), C104 and C105 at the sense pair. Nothing here is built or measured.\n'
     'ic("U101", 10, "LM5069MM-2 circuit breaker on the pack path (record l8p; l9stk 15.4 C-1): 1 SENSE, 2 VIN, 3 UVLO, 4 OVLO, 5 GND, 6 TIMER, 7 PWR, 8 PGD, 9 OUT, 10 GATE",\n'
     '   "Package_SO:VSSOP-10_3x3mm_P0.5mm", {"1": "BRK_SNS", "2": "BRK_VIN", "3": "BRK_UVLO", "4": "PACK_N", "5": "PACK_N", "6": "BRK_TMR",\n'
     '   "7": "BRK_PWR", "8": "NC", "9": "PACK_P", "10": "BRK_GATE"}, "C111822")\n'
@@ -116,7 +119,8 @@ _BREAKER = (
     'pfet5("Q102", "CSD18510Q5B 40 V N-FET, breaker pass (one of two in parallel; IF-2: RthJA at most 52.5 C/W installed)", "BRK_GATE", "BRK_SNS", "PACK_P", "C2876544")\n'
     'r("R103", "8.45k 1% (PWR: the power limit)", "BRK_PWR", "PACK_N"); c("C101", "10n 50V X7R (TIMER)", "BRK_TMR", "PACK_N")\n'
     'c("C102", "22n 50V X7R (GATE: the dv/dt start)", "BRK_GATE", "PACK_N")\n'
-    'c("C104", "1u 50V X7R 1206 (VIN bypass at the sense pair)", "BRK_VIN", "PACK_N", "C1206")\n'
+    'c("C104", "2.2u 50V X7R 1206 (VIN bypass at the sense pair, in series with C105)", "BRK_VIN", "BRK_CMID", "C1206")\n'
+    'c("C105", "2.2u 50V X7R 1206 (VIN bypass at the sense pair, in series with C104)", "BRK_CMID", "PACK_N", "C1206")\n'
     'if _tvs:\n'
     '    _tvs("D101", "SMCJ18A (breaker input clamp, unidirectional: cathode on BRK_VIN)", "BRK_VIN", "PACK_N", "Diode_SMD:D_SMC", "C374030")\n'
     'else:\n'
@@ -135,6 +139,9 @@ _BREAKER = (
     '             "service and the input clamp D101\'s 29.2 V (SMCJ18A, VC at 51.4 A; record l9stk 15.4, the clamps row)", v_work=16.8)\n'
     '_intent.node("BRK_G2", 14.6, "the second inverter\'s gate, half of BRK_VIN through R108 and R109 (1 MOhm each): at most half the "\n'
     '             "clamp\'s 29.2 V (record l9stk 15.4, the inverters\' bounds)")\n'
+    '_intent.node("BRK_CMID", 29.2, "the midpoint of the series input bypass C104 and C105: about half of BRK_VIN in service, and the "\n'
+    '             "whole of it, at most the input clamp\'s 29.2 V, across one part when the other has shorted (the case the pair exists "\n'
+    '             "for, as PACK_MID)", v_work=16.8)\n'
     '_intent.node("DOCK_EN_OUT", 29.2, "the enable loop leaving board P, BRK_VIN through R106 10 kOhm and BRK_VIN itself with the loop open: "\n'
     '             "at most the input clamp\'s 29.2 V (record l9stk 15.4)", v_work=16.8)\n'
     '_intent.node("DOCK_EN_RET", 17.4, "the enable loop\'s return, the first inverter\'s gate over R107 22 kOhm: at most 17.4 V under the "\n'
@@ -166,7 +173,7 @@ _NEW_VCCF = ('# record l8p: R7 follows Q2\'s source to BRK_VIN (l9stk IF-6), so 
 
 _ANCHOR_SEC = 'placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}\n'
 _SEC = ('SECTIONS.append(("PACK BREAKER LM5069-2 (W4DP-F2), ITS FETS, SENSE PAIR AND CLAMP; THE DOCK ENABLE LOOP, ITS INVERTERS AND THE RC HOLD (RECORD l8p)",\n'
-        '                 ["U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "C104", "D101", "R106", "R107", "Q103", "R108", "R109",\n'
+        '                 ["U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "C104", "C105", "D101", "R106", "R107", "Q103", "R108", "R109",\n'
         '                  "Q104", "R105", "R104", "C103", "TP101", "TP102", "TP103", "TP104"]))\n')
 
 EDITS = [
