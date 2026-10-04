@@ -1,4 +1,4 @@
-**ROUND 2 DONE (4 October 2026 evening, task T5 continued):** I-03's board A draft composes in L4-E9's order, reads DRAWN with three mutations failing and HOLDS on C-DEV rev 1 (U7 6.0359 A against 7.0957 A); board B's draft is UNCHECKED, its composition BLOCKED by T5b (GND's declared 21.0 A peak after l8r2's fans12), read alone and in a diagnostic composition with two mutations failing; one negative check (round 1's board B text, corrected); L9P-F01 restated on C-ALLTX rev 3 (record l9pwr round 5); the C-PROT gauge finding filed (L9T5-F04); A1's detector: no maker's sheet read prints a limit, so A1 stays a SELECTED DIRECTION with V-A1, P-A1 and D-A1 named, no board D draft. Not done: the full board B composition (waits on T5b), V3 (the coordinator's). Next: T5b lands, then `l9t5_drafts.py` again; V3 reads the completed correction. Round 1's checkpoint line is history: section 0 of `L9T5-CASES.md`.
+**ROUND 3 DONE (4 October 2026 evening, task T5 round 3):** record l8r2's round 7 (T5b) is merged (`43c9b49d`); board B's half of I-03 composes in L4-E9's order with its fandec and gndret, reads DRAWN with two mutations failing, and HOLDS on C-DEV rev 1 for the draft's own parts and path; record l8r2's finding L8R2-F31 (the shared A to B return) is OPEN beside it and is not this record's; L8R2-F35 is answered (the return sentence withdrawn for pin 2, the lead named 16 AWG at 150 mm, the device lead's peak declared from its basis, 6.0359 A). **I-03 stays OPEN until the independent recheck V3 has read it; F01 / D-17 stays OPEN; A1 stays a selected direction, not drafted.** Not done: V3 (the coordinator's). Open `L9T5-CASES.md` section 0a, then the claim table below.
 
 # l9t5: task T5, C-ALLTX rev 2 and C-DEV rev 1 (Layer 9's power author, MESHSAT-1357)
 
@@ -12,10 +12,10 @@ bounds the uncertainties the row names, compares three service-neutral approache
 | `L9T5-CASES.md` | The page: the budget defect corrected, the case row and its parts, the uncertainty table, the three approaches, C-DEV's two options, the selection, what stays open |
 | `l9t5_case.py` | The script, from the repository root: `python3 v2/docs/records/l9t5/l9t5_case.py` (stdlib, PyYAML, pdftotext). It imports `v2/docs/records/l9pwr/l9pwr_budget.py` unchanged, pins every input by sha256, parses every maker's figure from its sheet and refuses when one is not found |
 | `l9t5_case.out` | Its output, committed, regenerated only through `_bin/regen_out.py`, after `l9pwr_budget.out` (0 the pins; 1 the case row; 2 the uncertainties; 3 the labelled scenarios; 4 the approaches; 5 C-DEV and L9P-F04; 6 the selection; 7 the predicates) |
-| `inputs/` | The coordinator's case rows (rev 2 and, round 2, rev 3) and the collaborator's challenge cx40, filed as received, and board B's round 1 draft text (the old defect), each with its sha256 in `inputs/SOURCES.txt` |
-| `apply_gen_sch_a_iocbuck.py`, `apply_gen_sch_b_iocbuck.py` | I-03's drafts for boards A and B (NOT RELEASED: each refuses the tree's generator until a `RELEASE.md` names an accepted check) |
-| `check_l9t5_netlist.py` | What the regenerated netlists must show (DRAWN, NOT DRAWN, FAIL), parsed with record l8p's reader |
-| `l9t5_drafts.py`, `l9t5_drafts.out` | Round 2: each draft alone, the compositions in L4-E9's order, the regeneration (record l8p's `gen_netlist.py`), five mutations, the intent, the acceptance on C-DEV rev 1, the state and the findings |
+| `inputs/` | The coordinator's case rows (rev 2 and, round 2, rev 3) and the collaborator's challenge cx40, filed as received; board B's round 1 draft text and both round 2 draft texts (the old states), each with its sha256 in `inputs/SOURCES.txt` |
+| `apply_gen_sch_a_iocbuck.py`, `apply_gen_sch_b_iocbuck.py` | I-03's drafts for boards A and B (NOT RELEASED: each refuses the tree's generator until a `RELEASE.md` names an accepted check); round 3: the peaks declared from their basis, the lead named |
+| `check_l9t5_netlist.py` | What the regenerated netlists must show (DRAWN, NOT DRAWN, FAIL), parsed with record l8p's reader; round 3: `decl()`, the declarations held to their basis |
+| `l9t5_drafts.py`, `l9t5_drafts.out` | Rounds 2 and 3: each draft alone, the compositions in L4-E9's order (board B with record l8r2's round 7 drafts), the regeneration (record l8p's `gen_netlist.py`), the old states that must stop or fail, five mutations, the intent beside its basis, the acceptance on C-DEV rev 1 for both boards, L8R2-F35 answered, the state and the findings |
 | `fetch_held_back.py`, `l9t5_a1.py`, `l9t5_a1.out` | Round 2: A1's detector survey over four makers' sheets held back by their terms (fetched and sha256-checked, never committed) |
 
 Test: `v2/ecad/tools/tests/test_l9t5.py` (`env -C v2/ecad/tools python3 tests/run.py test_l9t5`).
@@ -32,6 +32,59 @@ Test: `v2/ecad/tools/tests/test_l9t5.py` (`env -C v2/ecad/tools python3 tests/ru
 - **Selected for I-03: (b)**, the three supervisors' LDOs on their own TPS62933 buck: U7 at 6.0359 A against 7.0957 A. **L9P-F04
   closes with A1.**
 - Reported for C-PROT: the gauge's uncalibrated error exceeds the 0.32 A between the service and the breaker's least limit.
+
+## Round 3 in short
+
+- **The merge:** `fnd/l8r4` at `04fa7a1d` into this branch at `43c9b49d`. One conflict, `l9pwr_budget.out`, kept from this side and
+  regenerated; this record's three outputs and record l8r2's `l8r2_gndret.out` regenerated on the merged tree (finding L9T5-F05).
+- **Board B's half:** composes with record l8r2's fandec and gndret; DRAWN; two mutations FAIL; HOLDS on C-DEV rev 1 for the draft's
+  own parts and path (the LDOs' input 4.6580 V against 3.749 V; pin 1 at most 1.4749 A and pin 2 at most 9.404 A in record l8r2's
+  rows, against the VH's 10 A). **L8R2-F31 stays OPEN beside it.**
+- **L8R2-F35:** answered; the device lead's peak 6.0359 A, board A's rail 6.9501 A and +5V_IOC 1.4749 A are held to their basis by
+  `decl()`; the lead is 16 AWG, 150 mm.
+
+## The claim table for the independent recheck V3
+
+Each claim rounds 1 to 3 changed or added, with its file, its source and its state. Labels (the round 3 brief's): the first is a
+maker's limit printed in a minimum or maximum column (the outputs' PRINTED); **typical** a maker's typical figure; **declared** a
+figure a generator, a contract or a record states (a SESSION choice included); **model** arithmetic of this or another record on the
+figures named; **assumed** a figure no held document gives. "case" is `l9t5_case.out`, "drafts" `l9t5_drafts.out`, "a1"
+`l9t5_a1.out`, "budget" `../l9pwr/l9pwr_budget.out`. Nothing is built or measured; no row is a measurement.
+
+| Id | Claim | File | Source (document, revision, page) | Label | State |
+|---|---|---|---|---|---|
+| C01 | PS-ALLTX carries the standby WiFi card off | budget out 1 (C1), 7b | `pcb_requirements.yaml` REQ-018's acceptance; CONOPS 4a's PS-ALLTX row | declared | corrected in round 1 (l9pwr round 4); not independently checked |
+| C02 | C-ALLTX rev 3 from its own text: 241.039 W at VBAT, 15.5162 V needed at 18 A | budget 7b; case 1 | the budget's loads (rv-pwr `pwr_budget.py`, each load's own source) at the case's VBAT 13.391 V | model | F01 / D-17 OPEN (+0.0162 V over REQ-018's 15.5 V) |
+| C03 | R_cell 0.06 Ohm in C02 | case 2 (U2) | Samsung INR18650-35E specification Ver. 1.1, 7.4 (p.5): 35 mOhm initial AC impedance only | assumed | open (U2); 0.07 / 0.08 Ohm shown as scenarios |
+| C04 | the gauge's uncalibrated current error 0.7988 A at 18 A; the case then needs 16.0512 V | case 2 (U1) | TI BQ4050 SLUSC67B 6.14 (p.11): gain error 0.8 % FSR, INL 22.3 LSB, offset 10 uV, drift 150 ppm/K; R10's 1 % and the 32 K span | guaranteed (the four printed terms); assumed (R10's tolerance, the span) | bounded; with the dock contacts' maximum 16.0684 V |
+| C05 | L9T5-F04: that error exceeds the 0.32 A between the 18 A service and the breaker's least 18.32 A | case 6; page 0 | C04; record l9stk 15.4 (C-PROT rev 1) | model | finding for C-PROT's consumers; theirs to act on |
+| C06 | L9P-F01 judged on the case; D-11's 16.214 V a labelled scenario; 16.1 V, 16.4 V and FAN_OK withdrawn | budget 10 | C02; the owner's positions of 4 October 2026 (the common brief) | model | restated in round 2 (l9pwr round 5); OPEN on the case |
+| C07 | A1: the PA held to 30 W by a VGG loop closes the case with the printed bounds at +-0.5 dB (14.9585 V) | case 4 | Mitsubishi RA30H1317M1 (Oct. 2011): Pout 30 W min and total efficiency 40 % min (p.2), 45 W rating (p.2), output control by VGG and the heat-sink example (p.8) | model on guaranteed figures | SELECTED DIRECTION, not drafted; the bench row (drain current at the loop's high end) open |
+| C08 | no detector sheet read prints its temperature deviation near 144 to 146 MHz as a limit | a1 2 to 4 | ADI ADL5902 Rev. B Table 1 (p.3); ADI ADL5513 Rev. B (p.3; supply p.6); TI LMH2110 SNWS022D (p.6); ADI LTC5582 Rev. D (p.2); held back, `fetch_held_back.py` | typical | A1 not drafted; V-A1 (UNSENT), P-A1, D-A1 named |
+| C09 | board D's +5V_D8 floor 4.3408 V is under the ADL5902's 4.5 V minimum | a1 3 | record s99a `codec_floor.out` (its worst row); ADL5902 Rev. B (supply 4.5 to 5.5 V) | model; guaranteed (the supply range) | stands |
+| C10 | C-DEV rev 1 before: U7 7.4717 A against its loop's least 7.0957 A; no 1 % R43 serves both the case and the VH's 10 A | case 5 | TI LM5176 SNVSAI1D (p.7): VSNS 43 / 50 / 57 mV; `gen_sch_a.py` R43 6 mOhm 1 %; JST VH catalogue (p.1) | model on guaranteed and declared figures | I-03 OPEN; option (b) selected |
+| C11 | with the drafts U7 carries 6.0359 A against 7.0957 A (+1.0598 A), whatever the supervisors draw | drafts 6 (1), (B1) | C10; the composed netlists (no LDO input on +5V_DEV) | model | checked by its author on both boards; V3 owed |
+| C12 | scenario, not the case: with the wall port at U32's limit 6.9501 A against 7.0957 A (+0.1456 A) | drafts 6 (1) | `gen_sch_a.py` VBUS_WALL 0.9142 A (TPS2596 equation 7, SLVSET8A p.28, nominal) | model on a declared figure | labelled scenario |
+| C13 | the supervisors' HIGH: each H743 400 mA plus 60 mA; 1.3800 A of LDO current | drafts 6 (2) | ST DS12110 Rev 10 Table 30 (p.111): 400 MHz, VOS1, all peripherals enabled, maximum at TJ 85 C (840 mA at TJ 125 C); rv-pwr `pwr_budget.py` (the 60 mA) | guaranteed (by characterization, the table's note 2); declared (60 mA) | read this round; scenario and finding L9T5-F06 for the TJ 125 C row |
+| C14 | U601 carries at most 1.4749 A (constant power at its own least load voltage 4.7719 V) against its 3 A | drafts 6 (2) | TI TPS62933 SLUSEA4D (p.1, 3 A); C13; C17 | model against a guaranteed rating | holds |
+| C15 | U601's output is limited to about 5.15 A, under the lead's 10 A; hiccup on a short | drafts 6 (3) | SLUSEA4D 8.5 (pp.6 and 7): IHS_LIMIT 4.2 / 5.0 / 5.8 A, ILS_LIMIT 2.9 / 3.8 / 4.5 A; 9.3.12 and Equation 11 (pp.24 and 25, "approximately") | guaranteed (the limits); model (Equation 11) | holds |
+| C16 | L601's Isat 9.2 A is over the 5.8 A limit | drafts 6 (4) | Coilcraft XAL60xx series sheet (p.1, note 5: a 30 % inductance drop, typ) | typical | holds; round 2's label corrected |
+| C17 | +5V_IOC's set point 5.002 V nominal, 4.8719 to 5.1329 V | drafts 6 (5) | SLUSEA4D 8.5 (p.6): VFB 784 / 800 / 816 mV over TJ -40 to 150 C, IFB 0.15 uA maximum; the divider 56.2k over 10.7k at 0.1 %, 25 ppm/K over 65 K (stream s99a's pair) | model on guaranteed and declared figures | holds |
+| C18 | RAIL_EN stays under EN's 5.5 V with U601's EN added (5.227 V at 18 V) | drafts 6 (6) | SLUSEA4D 8.5 (p.6): Ip 0.7 uA, Ih 1.4 uA, typical only; 8.3 and 8.1 (p.5): EN 5.5 V recommended, 6 V absolute; `gen_sch_a.py` R2 100k over R184 39k | typical (Ip, Ih); guaranteed (EN's limits); declared (the divider) | holds on typical pull-up currents |
+| C19 | the supervisors are up whenever the device rail is (U601 on RAIL_EN; DEV_EN pulled to +3V3) | drafts 4 (A EN), 6 (7) | the regenerated netlist of the composed board A | declared (generator text read on a netlist) | drawn; mutation 2 fails |
+| C20 | C-ALLTX rev 3 is unchanged by the move at U601's declared 0.90; +0.0073 V at 0.85 | drafts 6 (8) | the draft's declared efficiency (as U41's); SLUSEA4D plots no 5 V curve for the TPS62933 | declared; assumed (the 0.85 bound) | holds; the 5 V efficiency a bench item |
+| C21 | the composed netlists read DRAWN on both boards and the pair; five mutations FAIL | drafts 4 | record l8p's `gen_netlist.py` on the composed generators (no KiCad) | declared (generator text read on a netlist) | drawn; the box's KiCad export is the reading of record |
+| C22 | board B composes only with record l8r2's fandec and gndret; the tree before them stops on GND's 21.0 A | drafts 3, 4 (O3) | record l8r2 round 7 (`04fa7a1d`, merged at `43c9b49d`) | declared | holds |
+| C23 | the device lead's declared peak is 6.0359 A (29.5871 W at 4.9019 V, rounded up), not a typed 6.0 A | drafts 5, 6 (B2), 7 (c); both drafts | C11's basis; record l8r2's finding L8R2-F35 | model; declared (the draft) | corrected in round 3; held by `decl()` |
+| C24 | board A's +5V_DEV peak is 6.9501 A (the lead plus the wall port's 0.9142 A) | drafts 5, 7 (c); board A's draft | stream s99's construction (`gen_sch_a.py` note); C23 | declared | corrected in round 3 |
+| C25 | +5V_IOC's declared peak is 1.4749 A on both boards; 0.36 A typical; board A's share 0.5 of the 2 % | drafts 5; both drafts | C13, C17 | model; declared | corrected in round 3 (was 1.38 A) |
+| C26 | the lead J_5V_IOC is 16 AWG, 150 mm, VH crimp both ends | drafts 6 (B4), 7 (b); both drafts | `v2/docs/ASSEMBLY.md` section 4 (the device lead's row); `pcb_interfaces.yaml` IF-AB-POWER's harness row | declared (SESSION) | named in round 3; its rows in ASSEMBLY.md and the contract are their owners' (L9T5-F07, F08) |
+| C27 | the lead's pin 1 carries at most 1.4749 A, 5.15 A at the limit, against the VH's 10 A | drafts 6 (B4) | JST VH catalogue (p.1): 10 A with AWG #16 on the standard header | model against a guaranteed rating | holds |
+| C28 | the LDOs' input is at least 4.6580 V against a 3.749 V need (+0.9085 V) | drafts 6 (B3) | C17; the rail's 2 % budget; record l8r2 3c (2.520 mOhm at 76.25 C) and 3d (the ground shift); JST VH catalogue (p.1): contact resistance 20 mOhm after test; Diodes AP2112 DS39724 Rev. 2-2 (p.8): VOUT +1.5 %, dropout 400 mV at 600 mA; (p.3) VIN 6.0 V | model on guaranteed, declared and another record's model figures | holds for any ground shift under 0.960 V |
+| C29 | "J_5V_DEV's return falls by the same current" | drafts 7 (a); page 0 | record l8r2 round 7 (the return divides by resistance) | model | WITHDRAWN for pin 2 in round 3; holds for pin 1 |
+| C30 | J_5V_IOC's pin 2 carries 1.205 to 2.793 A with equal contacts and at most 9.404 A in record l8r2's rows on the case, within the VH's 10 A | drafts 6 (B5) | record l8r2 `l8r2_gndret.out` 3d (MODEL at 76.25 C), scaled by 1.0019; JST VH catalogue (p.1); l8r2's 9.789 A comparator | model (another record's); assumed (its 30 K comparator, the leads of one make) | holds on the case; over at the declared upper bound: L8R2-F31, OPEN, not this record's |
+| C31 | the draft adds no load to board B's GND declaration and a sixth lead contact; GND's derived peak 27.9108 A | drafts 5 | the composed intent (record l8r2's gndret derives it) | declared | holds; record l8r2's output prints 27.78 A from round 2's copy (L9T5-F05) |
+| C32 | `l8r2_gndret.out` on this merged tree reads the round 4 and 5 budget (largest state PS-BUSY 22.832 A) | `../l8r2/l8r2_gndret.out` | record l8r2's script on this tree's `l9pwr_budget.out` | model (another record's) | regenerated in the merge; its page not edited (L9T5-F05) |
 
 ## Round 2 in short
 

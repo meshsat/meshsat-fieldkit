@@ -9,13 +9,87 @@ PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited 
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
 
+## 0a. Round 3 (4 October 2026 evening, from 20:15 CEST): board B's half composed with T5b, and L8R2-F35 answered
+
+Record l8r2's round 7 (task T5b, `fnd/l8r4` at `04fa7a1d`) is in this tree since the merge at `43c9b49d`. Its two drafts `fandec`
+and `gndret` let board B's composition run to its end, so board B's half of I-03 is composed, read and judged here as board A's
+was. Every figure is printed by `l9t5_drafts.py` (`l9t5_drafts.out`, "drafts N"). Case rows: **C-DEV rev 1**, **C-ALLTX rev 3**.
+**I-03 stays OPEN until the independent recheck V3 has read it; F01 / D-17 stays OPEN; A1 stays a selected direction.**
+
+| | (a) composes in L4-E9's order, the generator runs | (b) changed nets read, mutations fail | (c) electrical acceptance on C-DEV rev 1 |
+|---|---|---|---|
+| Board A (5 edits) | YES, in its place, first and last (drafts 3) | YES: DRAWN, three mutations FAIL; its declarations DRAWN on their basis (drafts 4) | **HOLDS** (drafts 6, items 1 to 8) |
+| Board B (13 edits) | YES, with record l8r2's fandec and gndret, in its place, first and last; the tree before T5b still stops on GND's declared peak (old state O3) | YES: DRAWN, the pair with board A DRAWN, two mutations FAIL; its declarations DRAWN; record l8r2's own check of the return reads DRAWN on the same netlist and intent | **HOLDS for the draft's own parts and path** (drafts 6, B1 to B5); the shared return, record l8r2's finding **L8R2-F31, is OPEN beside it** |
+
+**Board B's half on C-DEV rev 1 (drafts 6):**
+
+- **B1** the move is drawn: no LDO input left on +5V_DEV, none allocated on the device lead, so U7's **6.0359 A against 7.0957 A**
+  is the case with this board composed.
+- **B2** the declarations stand on their basis: the device lead 6.0359 A declared against its own 6.035894 A; +5V_IOC 1.4749 A against
+  1.474896 A (MODEL; round 2 declared a typed 6.0 A and 1.38 A, old state O2).
+- **B3** the LDOs' input at the least: U601's 4.8719 V, less the rail's whole 2 % copper budget (0.100 V, DECLARED), less the lead's
+  supply side at 1.4749 A (its conductor 2.520 mOhm at 76.25 C, MODEL, record l8r2 3c; two VH contacts at the after-test 20 mOhm,
+  PRINTED: 0.0627 V), less the ground shift between the boards (record l8r2 3d's largest row at the case's total, 0.0512 V, MODEL on
+  PRINTED maxima): **4.6580 V against the AP2112K-3.3's 3.749 V need, +0.9085 V**. It holds for any ground shift under 0.960 V.
+- **B4** the lead, named: **16 AWG, 150 mm, VH crimp both ends**, the device lead's make (SESSION; `v2/docs/ASSEMBLY.md` section 4 and
+  IF-AB-POWER's harness row). Its pin 1 carries 1.4749 A at most on the case and 5.15 A at U601's limit, against the VH's 10 A with
+  AWG 16 on the standard header (PRINTED, JST VH catalogue p.1).
+- **B5** its pin 2 is not its own rail's return: the whole A to B return divides by resistance over six VH contacts and seventeen
+  ribbon conductors. Record l8r2's division at the case's total (MODEL at 76.25 C, scaled by 1.0019 for this round's figure): 2.793,
+  1.748 and 1.205 A a lead with equal contacts; **9.404 A** at most in one lead (a BOUND: that lead's contacts at 0, the others at their
+  initial maximum), within the VH's 10 A (PRINTED) and within record l8r2's 9.789 A comparator at the inside air (its 30 K
+  ASSUMPTION). At the declared upper bound the same row reads 12.446 A and the ribbons pass their 1 A: that is L8R2-F31.
+
+**What the acceptance depends on, and what it does not.** It depends on the LM5176's printed VSNS with R43's declared tolerance, the
+TPS62933's printed rating and limits, the VH's printed 10 A at AWG 16 for the supply pin, the AP2112K's printed dropout, rv-pwr's
+HIGH loads, the lead as named, and record l8r2's model of the return for pin 2 and the ground shift. It does **not** depend on, and
+does not close, **L8R2-F31** (the A to B return is branched in parallel with nothing that sets its division; JST's note forbids
+parallel branching above the rating). The draft adds a sixth VH contact to that return and no load to it; whatever corrects
+L8R2-F31 changes pin 2's share and the ribbons', not items 1 to 8 or B1 to B4. L8R2-F31 is record l8r2's and stays OPEN.
+
+**L8R2-F35, answered (drafts 7).** (a) "J_5V_DEV's return falls by the same current" (round 2) is **WITHDRAWN for pin 2**; it holds
+for pin 1 only. (b) The lead is named in both drafts (B4). (c) The device lead's typed 6.0 A peak is corrected **from its basis**:
+the case's own figure for the lead (Layer 9's budget at HIGH, every load at constant power at the least load voltage, the
+supervisors gone: 29.5871 W at 4.9019 V), rounded up to 0.1 mA, **6.0359 A**; `check_l9t5_netlist.py`'s `decl()` refuses any other
+figure, a typed 6.04 A included (it also refused this round's first +5V_IOC figure, typed 1.4750 A against 1.474896 A). Board A's
+rail follows by stream s99's own construction, the lead plus the wall port's 0.9142 A: **6.9501 A**, 0.1456 A under U7's least loop
+limit. +5V_IOC's peak by the same method at its own least load voltage 4.7719 V: **1.4749 A**. (d) fandec and gndret are in board
+B's order.
+
+**What round 3 corrects in rounds 1 and 2:** the return sentence; the two typed peaks ("the peak 6.0 A stays (it now overstates)"
+was wrong: the lead's own case is 6.0359 A); U601's load is also judged at its own least load voltage (1.4749 A), where round 2
+printed only what leaves U7 (1.4358 A at U7's 4.9019 V) and the LDOs' own 1.3800 A; the supervisors' 400 mA is ST DS12110 Rev 10
+Table 30's maximum **at TJ 85 C** (p.111, read this round; the same row prints 840 mA at TJ 125 C); L601's Isat is a TYPICAL figure
+(Coilcraft: the current for a 30 % inductance drop), which round 2 labelled PRINTED; board A's +5V_IOC allocation at `J_5V_IOC` is the
+typical 0.36 A (it was the peak) and carries board A's 0.5 share of the rail's 2 %.
+
+**Findings (drafts 8):** L9T5-F01 closed by record l8r2's round 7 drafts. **L9T5-F05** (record l8r2's author): on this merged tree
+`l8r2_gndret.out` is regenerated, because it reads the tree's budget, which is now Layer 9's rounds 4 and 5 (the largest state
+PS-BUSY 22.832 A, C-DEV's total 20.950 A); its page's section 3g still prints the earlier tree's figures, and its copy of this
+record's draft is round 2's (the upper bound 27.78 A there, 27.9108 A with round 3's declarations); L8R2-F31 is unchanged.
+**L9T5-F06** (Layer 5 and board B's owner): the supervisors' HIGH is the TJ 85 C figure; at TJ 125 C the row's 840 mA is over each
+AP2112K's 600 mA; what bounds the H743's junction temperature, clock and peripheral state is not stated in a record read here.
+**L9T5-F07** (Layer 7): an `ASSEMBLY.md` section 4 row for the new lead. **L9T5-F08** (Layer 5): IF-AB-POWER gains `J_5V_IOC` and the
+device rail's rows restate (A 6.9501 A peak; B 6.0359 A peak arriving).
+
+**SESSION decisions of round 3** (under the owner's standing rule of 26 September 2026; each with how to reverse it):
+(1) `l8r2_gndret.out` regenerated through `regen_out` in the merge commit: record l8r2's own test requires the output to be what its
+script prints on the tree; nothing else of record l8r2 is edited (reverse: take the file from `04fa7a1d`; its test then fails here).
+(2) A declared peak is the case's own figure by the case's own method, rounded up to 0.1 mA, and is held to it by `decl()`
+(reverse: change the basis in `l9t5_drafts.py` and the drafts' constants together). (3) Board A's device rail keeps stream s99's
+construction (reverse: `DEV_PEAK` in the draft). (4) The lead is the device lead's make. (5) T5b's report is not filed in this
+folder (it names a private path); the record's source is record l8r2 in this tree. (6) The README's claim table uses the brief's
+label word for a maker's limit, which the record's hygiene test otherwise refuses as a claim word: the test exempts that label
+cell only.
+
 ## 0. Round 2 (4 October 2026 evening, task T5 continued): I-03 checked on board A, A1's detector, L9P-F01 and C-PROT
 
 Case rows: **C-ALLTX rev 3** (`inputs/coordinator-cases-2026-10-04-rev3.md`: rev 2's definition stands, its quoted 16.214 V is
 withdrawn as D-11's basis; the case is this record's 15.5162 V, 16.0684 V with the printed bounds) and **C-DEV rev 1**. Every figure
 below is printed by `l9t5_drafts.py` (`l9t5_drafts.out`, "drafts N") or `l9t5_a1.py` (`l9t5_a1.out`, "a1 N").
 
-**I-03 (L9P-F03) on C-DEV rev 1: board A's half checked, board B's half UNCHECKED.** The three credit criteria, per board:
+**I-03 (L9P-F03) on C-DEV rev 1: board A's half checked, board B's half UNCHECKED (round 2's state; round 3, section 0a, composes
+board B and corrects the peaks and the return sentence below).** The three credit criteria, per board:
 
 | | (a) composes in L4-E9's order, the generator runs | (b) changed nets read, mutations fail | (c) electrical acceptance on C-DEV rev 1 |
 |---|---|---|---|
@@ -36,10 +110,11 @@ Negative checks of this solution: **one** (board B's round 1 text, kept in `inpu
 "intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV"; round 2 adds the missed edit). **I-03 stays OPEN**
 until T5b's branch lands; then drafts 4 runs the full composition again with no other change, and V3 reads the completed correction.
 
-**What T5b needs** (drafts 6): the lead J_5V_IOC (pin 1 +5V_IOC, pin 2 GND) returns the three LDOs' current through pin 2 instead of
-J_5V_DEV's: 0.36 A typical (DECLARED), 1.4358 A at C-DEV (MODEL, constant power) or 1.3800 A (the LDOs' own current at rv-pwr's HIGH),
-0.3930 A at C-ALLTX rev 3. GND's declared loads change by **0.00 A** (the three allocations leave +5V_DEV's derived ground loads and
-return as `_IOC_LOADS`); GND gains J_5V_IOC as a fifth source; the 21.0 A declaration is not touched.
+**What T5b needed (round 2's text, corrected):** the lead J_5V_IOC's pin 1 carries the three LDOs' rail: 0.36 A typical (DECLARED),
+1.4358 A of U7's case (MODEL, constant power at U7's least voltage) or 1.3800 A (the LDOs' own current at rv-pwr's HIGH), 0.3930 A at
+C-ALLTX rev 3. Round 2 said the same current returns through its pin 2 instead of J_5V_DEV's: **WITHDRAWN in round 3** (section 0a,
+B5: the return divides by resistance over every ground conductor between the boards). GND's declared loads change by **0.00 A** (the
+three allocations leave +5V_DEV's derived ground loads and return as `_IOC_LOADS`); GND gains J_5V_IOC as a source.
 
 **L9P-F01, restated** (record l9pwr round 5, its out 10): OPEN on the case, 15.5162 V against REQ-018's 15.5 V; D-11's 16.214 V a
 labelled scenario; L4-E9 round 7's 16.1 V, its rule's 16.4 V and FAN_OK printed as withdrawn.
@@ -78,7 +153,7 @@ enough, the ADL5513 on +3V3_D8, or the ADL5902 with D-A1's supply, is drafted TY
 
 F01 / D-17 stays **OPEN** on C-ALLTX rev 3; L9P-F04 stays with A1.
 
-**Other findings (drafts 7):** L9T5-F01 (T5b): board B's composition stops on GND's declared peak, the same stop without this
+**Other findings (drafts 8):** L9T5-F01 (T5b): board B's composition stops on GND's declared peak, the same stop without this
 record's draft. L9T5-F02 (d8dec31's mainpb, R-194; L4-E9's row 33): with this draft before it, mainpb takes R603 and C607, after it
 R248 and C247; row 33's text names R233 and C241, which set 29's tree already moves; fixed references would remove the dependency.
 L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads "its own branch off the device rail"; left,

@@ -19,7 +19,7 @@ evidence bounds it).
    ra30         v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    reqs         v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    rvpwr        v2/docs/records/rv-pwr/pwr_budget.py  sha256 469d0820b046ef6f
-   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 4c97305f6b6eef31
+   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 b76135f5f93495d9
    tps62933     v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
    vh           v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
    xt60         v2/vendor/battery/amass-xt60-spec-tme.pdf  sha256 c2cbb5962c1f37da
