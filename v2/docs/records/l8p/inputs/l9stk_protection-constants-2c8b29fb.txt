@@ -1,0 +1,26 @@
+# the session's design choices (SESSION under the owner's standing rule of 26 September 2026), each checked below
+RS_PARTS_MOHM = (4.0, 7.5)   # the breaker's sense: two metal-element shunts in parallel, 2.6087 mOhm
+RS_TOL = 0.01                # their tolerance
+RS_TCR = 50e-6               # their temperature coefficient at most, per K (to be met by the part Layer 6 files)
+RS_DT = 100.0                # the span the coefficient is applied over, K (25 to 125 C)
+CAP_TOL = 0.10               # the timer and dv/dt capacitors (X7R), +-10 %
+T_FAULT_TARGET = 1.0e-3      # the fault timer's longest time, s: the capacitor is the E6 value at or under it
+I_INRUSH_TARGET = 0.75       # the dv/dt start's inrush ceiling, A: the capacitor is the E6 value at or over it
+NFET = 2                     # the breaker's FETs in parallel
+TI_MARGIN = 1.5              # SLVA673A 3.1.2.5: "the MOSFET can handle 1.5x more than what is required during a hot-short"
+TI_STEADY_C = 125.0          # SLVA673A 3.1.2.2: "keep the steady state FET temperature below 125 C"
+RTH_SPREAD = 0.20            # the sensitivity shown on Q39/Q40's installed path, +-20 %
+TVS = "SMCJ18A"              # the breaker's input clamp: the part board A's D1 already uses (C374030)
+D_EN_MM = 1.0                # the enable contact's length short of the dock's power pins, mm (Layer 7's requirement)
+R17_ALLOW = 1.0              # R17 designed apart: its coupling into any battery FET's junction at most this, K/W (E-1 reads it)
+NFET_BAT = 3                 # the battery FETs selected (Q39, Q40 and a third BUK6Y10-30P, its designator L4-E11's: Q41 is taken)
+R_U = 200e3                  # the series resistor from VIN to UVLO, 1 % (the RC hold's charging resistor)
+GRACE_TARGET = 0.1           # the RC hold's least release delay, s: the reversed mating order it tolerates
+R_DIS = 150.0                # the UVLO discharge resistor in the inverter's drain (keeps the 2N7002 at its continuous current)
+R_E1, R_E2 = 10e3, 22e3      # the enable loop: from VIN to the loop, and the first inverter's gate to ground
+R_G = 1e6                    # the second inverter's gate divider, each half
+SPLIT_EXAMPLE = 0.05         # a cell split the fallback is sized for, 5 % (a cell carrying 1.05 of its group's third)
+PAD_MM2 = 645.16             # 1 in2, the CSD18510Q5B sheet's RthJA pad
+E6 = (1.0, 1.5, 2.2, 3.3, 4.7, 6.8, 10.0)
+
+
