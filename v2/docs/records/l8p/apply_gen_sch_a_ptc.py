@@ -3,7 +3,7 @@
 to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 
 Board A's half of the pack breaker's make-last enable loop (record l9stk section 15.4, C-1b, and 15.5, THE THERMAL GUARD,
-SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb). The loop
+SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb, unchanged at 0d72880b). The loop
 from board P crosses the dock on two contacts and passes, on this board, the kit's PRF15BB103 chip PTC on the battery FETs'
 copper: 10 kOhm +-50 % cold, 47 kOhm at 130 +-3 C, 32 V. The first inverter on board P stays on to 47 kOhm at 10.6 V and is off
 from 338 kOhm at 16.8 V, so the breaker opens between the PTC's 47 kOhm point (127 to 133 C) and its 338 kOhm point (E-13), a
@@ -42,7 +42,7 @@ _ANCHOR_MAIN = ("# --- main power control LTC2954-1 (ltc2954.pdf): the panel MAI
                 "INT = shutdown request, KILL from the panel controller through Q1\n")
 _LOOP = (
     '# RECORD l8p (MESHSAT-1357, 4 October 2026; record l9stk 15.4, C-1b and condition C2, and 15.5, THE THERMAL GUARD): THE PACK\n'
-    '# BREAKER\'S DOCK ENABLE LOOP CROSSES THIS BOARD. Board P\'s LM5069-2 breaker (record l8p\'s apply_gen_sch_p_breaker.py) is held off\n'
+    '# BREAKER\'S DOCK ENABLE LOOP CROSSES THIS BOARD. Board P\'s LM5069-1 breaker (record l8p\'s apply_gen_sch_p_breaker.py) is held off\n'
     '# unless a loop from its input, out over board E and the dock and back, is closed: J_DOCK pins 5 (DOCK_EN_OUT) and 3 (DOCK_EN_RET)\n'
     '# with pin 4, between them in the 2 x 6 field\'s first row, still ground (C2: a short between the two conductors meets ground\n'
     '# first). On this board the loop passes RT1, the kit\'s PRF15BB103 chip PTC, on the battery FETs\' copper: the breaker opens\n'

@@ -19,8 +19,8 @@ GRACE_TARGET = 0.1           # the RC hold's least release delay, s: the reverse
 R_DIS = 150.0                # the UVLO discharge resistor in the inverter's drain (keeps the 2N7002 at its continuous current)
 R_E1, R_E2 = 10e3, 22e3      # the enable loop: from VIN to the loop, and the first inverter's gate to ground
 R_G = 1e6                    # the second inverter's gate divider, each half
+ALLOW_MARGIN = 1.0           # the restart inhibit lets a restart through at the inside air plus this, K (the pad nears the air only slowly)
+R_BRIDGE = 150e3             # the inhibit's NTC bridge, the resistor over the NTC (keeps the NTC under its maximum current)
 SPLIT_EXAMPLE = 0.05         # a cell split the fallback is sized for, 5 % (a cell carrying 1.05 of its group's third)
 PAD_MM2 = 645.16             # 1 in2, the CSD18510Q5B sheet's RthJA pad
 E6 = (1.0, 1.5, 2.2, 3.3, 4.7, 6.8, 10.0)
-
-

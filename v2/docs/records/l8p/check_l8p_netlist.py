@@ -4,15 +4,20 @@ MESHSAT-1357, 4 October 2026): W4DP-F2's breaker on board P and its make-last do
 l9stk section 15.4, C-1 and C-1b, conditions C1 and C2, 15.5's thermal guard). It PARSES the KiCad netlists (an s-expression
 reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
 
-  board P  BRK   U101 (LM5069-2) pins 1 SENSE BRK_SNS, 2 VIN BRK_VIN, 3 UVLO BRK_UVLO, 4 OVLO and 5 GND on the return, 6 TIMER, 7 PWR,
-                 8 PGD open, 9 OUT PACK_P, 10 GATE BRK_GATE; the sense pair R101 and R102 from BRK_VIN to BRK_SNS; Q101 and Q102
-                 sources on PACK_P, gates on BRK_GATE, drains on BRK_SNS; Q2's source, R6, R7 and R19 on BRK_VIN; R103 on PWR, C101
-                 on TIMER, C102 on GATE, each to the return; C104 and C105 in series from BRK_VIN to the return; D101's cathode on BRK_VIN and anode on the return; D1
-                 still on PACK_P; W_P on PACK_P; the values of record l9stk (VALUES below)
+  board P  BRK   U101 (LM5069-1, latch-off) pins 1 SENSE BRK_SNS, 2 VIN BRK_VIN, 3 UVLO BRK_UVLO, 4 OVLO and 5 GND on the return,
+                 6 TIMER, 7 PWR, 8 PGD on BRK_PGD, 9 OUT PACK_P, 10 GATE BRK_GATE; the sense pair R101 and R102 from BRK_VIN to BRK_SNS;
+                 Q101 and Q102 sources on PACK_P, gates on BRK_GATE, drains on BRK_SNS; Q2's source, R6, R7 and R19 on BRK_VIN; R103 on
+                 PWR, C101 on TIMER, C102 on GATE, each to the return; C104 and C105 in series from BRK_VIN to the return; D101's
+                 cathode on BRK_VIN and anode on the return; D1 still on PACK_P; W_P on PACK_P; the values of record l9stk (VALUES)
            EN    R106 from BRK_VIN to DOCK_EN_OUT; J_SMB pin 7 DOCK_EN_OUT, pin 5 DOCK_EN_RET, pins 1 to 4 SMBC, SMBD, the return,
                  PRES_J; R107 and Q103's gate on DOCK_EN_RET; Q103 drain BRK_G2; R108 and R109 the divider of BRK_G2; Q104 gate
-                 BRK_G2, drain BRK_DIS; R105 from BRK_DIS to BRK_UVLO; R104 from BRK_VIN to BRK_UVLO; C103 from BRK_UVLO to the return;
-                 every inverter source on the return; the return is W_N's net (PACK_N)
+                 BRK_G2, drain on UVLO itself; the hold: R104 from BRK_VIN to BRK_H, C103 from BRK_H to the return, R105 from BRK_H
+                 to BRK_HD, D102's anode on BRK_HD and cathode on UVLO; every inverter source on the return (W_N's net, PACK_N)
+           INH   the restart inhibit (C-1c): RT101 (NXRT15XH103FA1B) from INH_NTC to the return under R110 from BRK_VIN; R111 and
+                 R112 the reference from BRK_VIN; U102 (OPA187) +IN on the reference, -IN on the NTC, V+ on BRK_VIN, V- on the
+                 return; R113 from its output to the reference; R114 and R115 its output's divider onto Q105's gate; Q105's drain
+                 on UVLO; Q106's gate on U101's PGD net (with R116 from BRK_VIN and R117 to the return) and its drain on Q105's gate;
+                 C106 on U102's supply; the values
   board E  EN    J_SMB pins 1 to 4 SMBC, SMBD, GND, PRES_LEAD, 5 DOCK_EN_RET, 6 GND, 7 DOCK_EN_OUT; J_BLK pin 3 DOCK_EN_RET, 4 GND,
                  5 DOCK_EN_OUT; nothing else on board E on the loop's nets (a pass-through)
   board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET, and nothing else
@@ -42,29 +47,39 @@ OUT, RET = "DOCK_EN_OUT", "DOCK_EN_RET"
 XH7 = "Connector_JST:JST_XH_B7B-XH-A_1x07_P2.50mm_Vertical"
 LANDS = {"J_DOCK": "PogoPins_2x6", "J_BLK": "PogoTargets_2x6"}
 
-# The values the drafts draw, each with its place in record l9stk (branch fnd/l9stk at 2c8b29fb): (board, ref, value prefix,
-# l9stk source, the pattern l8p_drafts.py finds in the record's own text, input file key). The netlist must carry each prefix.
+# The values the drafts draw from record l9stk (branch fnd/l9stk at 0d72880b), each with its place there: (board, ref, value
+# prefix, l9stk source, the phrase l8p_drafts.py finds in the record's own text (spaces match any run of white space), input file
+# key). The netlist must carry each prefix. The parts the record leaves to the drawing are this record's SESSION choices and are
+# held by the checks below, not here.
 VALUES = [
-    ("p", "U101", "LM5069MM-2", "15.4 C-1, 'an LM5069-2 circuit breaker on board P'", r"C-1, an LM5069-2 circuit breaker on board P", "page"),
-    ("p", "R101", "4m 1%", "15.4 table, Sense RS: 4 mOhm and 7.5 mOhm in parallel, 1 %", r"\| Sense RS \| 4 mOhm and 7\.5 mOhm in parallel, 2\.6087 mOhm, 1 % and at most 50 ppm/K", "page"),
-    ("p", "R102", "7.5m 1%", "15.4 table, Sense RS", r"\| Sense RS \| 4 mOhm and 7\.5 mOhm in parallel", "page"),
-    ("p", "Q101", "CSD18510Q5B", "15.4 table, FETs: 2 x CSD18510Q5B", r"\| FETs \| 2 x CSD18510Q5B, 40 V", "page"),
-    ("p", "Q102", "CSD18510Q5B", "15.4 table, FETs", r"\| FETs \| 2 x CSD18510Q5B", "page"),
-    ("p", "R103", "8.45k", "15.4 table, Power limit: RPWR 8.45 kOhm", r"\| Power limit \| RPWR 8\.45 kOhm", "page"),
-    ("p", "C101", "10n", "15.4 table, Fault timer: 10 nF", r"\| Fault timer \| 10 nF", "page"),
-    ("p", "C102", "22n", "15.4 table, dv/dt start: 22 nF", r"\| dv/dt start \| 22 nF into 593 uF", "page"),
-    ("p", "D101", "SMCJ18A", "15.4 table, Clamps: SMCJ18A on VIN", r"\| Clamps \| SMCJ18A on VIN \(VR 18 V, VC 29\.2 V at 51\.4 A\)", "page"),
-    ("p", "R104", "200k", "15.4 table, Controller: UVLO from VIN through R_U 200 kOhm", r"UVLO from VIN through R_U 200 kOhm into C_U 3\.3 uF \(50 V\)", "page"),
-    ("p", "C103", "3.3u 50V", "15.4 table, Controller: into C_U 3.3 uF (50 V)", r"into C_U 3\.3 uF \(50 V\), released by the enable loop", "page"),
-    ("p", "R106", "10k", "15.4 C-1b: the loop leaves board P from VIN through 10 kOhm", r"The loop leaves board P from VIN through 10 kOhm on one J_SMB contact", "page"),
-    ("p", "R107", "22k", "15.4 C-1b: a 22 kOhm divider on a first 2N7002's gate", r"to a 22 kOhm divider on a first 2N7002's gate", "page"),
-    ("p", "Q103", "2N7002", "15.4 C-1b: a first 2N7002", r"a first 2N7002's gate\. That FET holds a\s+second 2N7002's gate low", "page"),
-    ("p", "Q104", "2N7002", "15.4 C-1b: a second 2N7002", r"second 2N7002's gate low; the second, when on, discharges UVLO through 150 ohm", "page"),
-    ("p", "R105", "150R", "15.4 C-1b: discharges UVLO through 150 ohm", r"discharges UVLO through 150 ohm", "page"),
-    ("p", "R108", "1M", "l9stk_protection.py R_G (prot 3a): the second inverter's gate divider, each half", r"R_G = 1e6\s+# the second inverter's gate divider, each half", "constants"),
-    ("p", "R109", "1M", "l9stk_protection.py R_G (prot 3a)", r"R_G = 1e6\s+# the second inverter's gate divider, each half", "constants"),
-    ("a", "RT1", "PRF15BB103RB6RC", "15.5 THE THERMAL GUARD: the kit's PRF15BB103 chip PTC, in the enable loop on the battery FETs' copper", r"\*\*The part\.\*\* The kit's PRF15BB103 chip PTC", "page"),
+    ("p", "U101", "LM5069MM-1", "15.4 C-1 and 15.4b: the -1, latch-off", "C-1, an LM5069 circuit breaker on board P, the -1 (latch-off, 15.4b),", "page"),
+    ("p", "R101", "4m 1%", "15.4 table, Sense RS: 4 mOhm and 7.5 mOhm in parallel, 1 %", "| Sense RS | 4 mOhm and 7.5 mOhm in parallel, 2.6087 mOhm, 1 % and at most 50 ppm/K", "page"),
+    ("p", "R102", "7.5m 1%", "15.4 table, Sense RS", "| Sense RS | 4 mOhm and 7.5 mOhm in parallel", "page"),
+    ("p", "Q101", "CSD18510Q5B", "15.4 table, FETs: 2 x CSD18510Q5B", "| FETs | 2 x CSD18510Q5B, 40 V", "page"),
+    ("p", "Q102", "CSD18510Q5B", "15.4 table, FETs", "| FETs | 2 x CSD18510Q5B", "page"),
+    ("p", "R103", "8.45k", "15.4 table, Power limit: RPWR 8.45 kOhm", "| Power limit | RPWR 8.45 kOhm", "page"),
+    ("p", "C101", "10n", "15.4 table, Fault timer: 10 nF", "| Fault timer | 10 nF", "page"),
+    ("p", "C102", "22n", "15.4 table, dv/dt start: 22 nF", "| dv/dt start | 22 nF into 593 uF", "page"),
+    ("p", "D101", "SMCJ18A", "15.4 table, Clamps: SMCJ18A on VIN", "| Clamps | SMCJ18A on VIN (VR 18 V, VC 29.2 V at 51.4 A)", "page"),
+    ("p", "R104", "200k", "15.4 table, Controller, and C-1b's hold: R_U 200 kOhm from VIN onto the node H", "R_U, the series resistor (200 kOhm from VIN), charges C_U on a node H.", "page"),
+    ("p", "C103", "3.3u 50V", "15.4 table, Controller: C_U 3.3 uF (50 V)", "into C_U 3.3 uF (50 V), released by the enable loop", "page"),
+    ("p", "R105", "150R", "15.4 C-1b, the hold: H reaches UVLO through 150 ohm", "H reaches UVLO through 150 ohm and a 1N4148W.", "page"),
+    ("p", "D102", "1N4148W", "15.4 C-1b, the hold: and a 1N4148W", "H reaches UVLO through 150 ohm and a 1N4148W.", "page"),
+    ("p", "R106", "10k", "15.4 C-1b: the loop leaves board P from VIN through 10 kOhm", "The loop leaves board P from VIN through 10 kOhm on one J_SMB contact", "page"),
+    ("p", "R107", "22k", "15.4 C-1b: a 22 kOhm divider on a first 2N7002's gate", "to a 22 kOhm divider on a first 2N7002's gate", "page"),
+    ("p", "Q103", "2N7002", "15.4 C-1b: a first 2N7002", "That FET holds a second 2N7002's gate low;", "page"),
+    ("p", "Q104", "2N7002", "15.4 C-1b: the second, when on, pulls UVLO itself", "the second, when on, pulls UVLO itself.", "page"),
+    ("p", "R108", "1M", "l9stk_protection.py R_G (prot 3a): the second inverter's gate divider, each half", "R_G = 1e6 # the second inverter's gate divider, each half", "constants"),
+    ("p", "R109", "1M", "l9stk_protection.py R_G (prot 3a)", "R_G = 1e6 # the second inverter's gate divider, each half", "constants"),
+    ("p", "RT101", "NXRT15XH103FA1B", "15.4b C-1c, the sensor: Murata NXRT15XH103FA1B", "The kit's NTC sheet part, Murata NXRT15XH103FA1B (10 kOhm plus or minus 1 %, B25/85 3434 K, B plus or minus 1 %),", "page"),
+    ("p", "R110", "150k 0.1%", "15.4b C-1c: 150 kOhm over the NTC", "The bridge has 150 kOhm over the NTC: 0.111 mA at most, against its 0.12 mA.", "page"),
+    ("a", "RT1", "PRF15BB103RB6RC", "15.5 THE THERMAL GUARD: the kit's PRF15BB103 chip PTC, in the enable loop on the battery FETs' copper", "**The part.** The kit's PRF15BB103 chip PTC", "page"),
 ]
+
+
+def phrase_rx(phrase):
+    """A phrase as a pattern: its words escaped, any run of white space between them."""
+    return r"\s+".join(re.escape(w) for w in phrase.split())
 
 
 def sexp(text):
@@ -180,37 +195,42 @@ def values(nl, board):
             for b, ref, pre, src, _pat, _f in VALUES if b == board and not str(nl["comps"].get(ref, {}).get("value", "")).startswith(pre)]
 
 
+BRK_VALUES = ("U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "D101")
+EN_VALUES = ("R104", "C103", "R105", "D102", "R106", "R107", "Q103", "Q104", "R108", "R109")
+INH_VALUES = ("RT101", "R110")
+# the restart inhibit's parts the record leaves to the drawing (record l8p's SESSION choices), each value's prefix
+INH_SESSION = (("U102", "OPA187"), ("R111", "147k 0.1%"), ("R112", "1.62k 0.1%"), ("R113", "15M"), ("Q105", "2N7002"), ("Q106", "2N7002"))
+
+
+def _pairs(nl, rows):
+    return ["%s on %s, wanted %s to %s" % (ref, _two(nl, ref), a, b) for ref, a, b in rows if _two(nl, ref) != sorted({a, b})]
+
+
 def checks_p(nl):
     if "U101" not in nl["comps"] and _pin(nl, "J_SMB", "7") is None and "DOCK_EN_OUT" not in nl["on"]:
-        return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"])}
+        return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"]), "INH": ("NOT DRAWN", ["U102 is absent"])}
     ret = _pin(nl, "W_N", "1")
-    vin, sns = "BRK_VIN", "BRK_SNS"
-    rows = [("U101", "1", sns), ("U101", "2", vin), ("U101", "3", "BRK_UVLO"), ("U101", "4", ret), ("U101", "5", ret),
-            ("U101", "6", "BRK_TMR"), ("U101", "7", "BRK_PWR"), ("U101", "9", "PACK_P"), ("U101", "10", "BRK_GATE"),
+    vin, sns, uvlo, pgd = "BRK_VIN", "BRK_SNS", "BRK_UVLO", "BRK_PGD"
+    rows = [("U101", "1", sns), ("U101", "2", vin), ("U101", "3", uvlo), ("U101", "4", ret), ("U101", "5", ret),
+            ("U101", "6", "BRK_TMR"), ("U101", "7", "BRK_PWR"), ("U101", "8", pgd), ("U101", "9", "PACK_P"), ("U101", "10", "BRK_GATE"),
             ("D101", "1", vin), ("D101", "2", ret), ("D1", "1", "PACK_P"), ("D1", "2", ret), ("W_P", "1", "PACK_P"),
             ("R6", "1", vin), ("R7", "1", vin), ("R19", "2", vin), ("Q2", "4", "DSG_G"), ("Q2", "5", "SW")]
     rows += [(q, p, "PACK_P") for q in ("Q101", "Q102") for p in "123"] + [(q, "4", "BRK_GATE") for q in ("Q101", "Q102")]
     rows += [(q, "5", sns) for q in ("Q101", "Q102")] + [("Q2", p, vin) for p in "123"]
     bad = props(nl, rows)
-    if _pin(nl, "U101", "8") not in (None, "") and not str(_pin(nl, "U101", "8")).startswith("unconnected-"):
-        bad.append("U101.8 (PGD) on %r, drafted open" % _pin(nl, "U101", "8"))
-    for ref, a, b in (("R101", vin, sns), ("R102", vin, sns), ("R103", "BRK_PWR", ret), ("C101", "BRK_TMR", ret),
-                      ("C102", "BRK_GATE", ret), ("C104", vin, "BRK_CMID"), ("C105", "BRK_CMID", ret)):
-        if _two(nl, ref) != sorted({a, b}):
-            bad.append("%s on %s, wanted %s to %s" % (ref, _two(nl, ref), a, b))
-    bad += [x for x in values(nl, "p") if x.split()[0] in ("U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "D101")]
+    bad += _pairs(nl, (("R101", vin, sns), ("R102", vin, sns), ("R103", "BRK_PWR", ret), ("C101", "BRK_TMR", ret),
+                       ("C102", "BRK_GATE", ret), ("C104", vin, "BRK_CMID"), ("C105", "BRK_CMID", ret)))
+    bad += [x for x in values(nl, "p") if x.split()[0] in BRK_VALUES]
     if "PACK_P" in {n for n in nl["pins"].get("Q2", {}).values()}:
         bad.append("Q2 still drives PACK_P")
     out = {"BRK": ("FAIL", bad) if bad else ("DRAWN", [])}
     rows = [("J_SMB", "1", "SMBC"), ("J_SMB", "2", "SMBD"), ("J_SMB", "3", ret), ("J_SMB", "4", "PRES_J"), ("J_SMB", "5", RET),
             ("J_SMB", "6", ret), ("J_SMB", "7", OUT), ("Q103", "1", RET), ("Q103", "2", ret), ("Q103", "3", "BRK_G2"),
-            ("Q104", "1", "BRK_G2"), ("Q104", "2", ret), ("Q104", "3", "BRK_DIS")]
+            ("Q104", "1", "BRK_G2"), ("Q104", "2", ret), ("Q104", "3", uvlo), ("D102", "1", uvlo), ("D102", "2", "BRK_HD")]
     bad = props(nl, rows)
-    for ref, a, b in (("R106", vin, OUT), ("R107", RET, ret), ("R108", vin, "BRK_G2"), ("R109", "BRK_G2", ret),
-                      ("R105", "BRK_DIS", "BRK_UVLO"), ("R104", vin, "BRK_UVLO"), ("C103", "BRK_UVLO", ret)):
-        if _two(nl, ref) != sorted({a, b}):
-            bad.append("%s on %s, wanted %s to %s" % (ref, _two(nl, ref), a, b))
-    bad += [x for x in values(nl, "p") if x.split()[0] not in ("U101", "R101", "R102", "Q101", "Q102", "R103", "C101", "C102", "D101")]
+    bad += _pairs(nl, (("R106", vin, OUT), ("R107", RET, ret), ("R108", vin, "BRK_G2"), ("R109", "BRK_G2", ret),
+                       ("R104", vin, "BRK_H"), ("C103", "BRK_H", ret), ("R105", "BRK_H", "BRK_HD")))
+    bad += [x for x in values(nl, "p") if x.split()[0] in EN_VALUES]
     if nl["comps"].get("J_SMB", {}).get("footprint") != XH7:
         bad.append("J_SMB on %r, not the 7-circuit XH land" % nl["comps"].get("J_SMB", {}).get("footprint"))
     o, r = loop_pins(nl, "J_SMB")
@@ -219,6 +239,20 @@ def checks_p(nl):
     else:
         bad.append("J_SMB carries the loop on %s and %s" % (o, r))
     out["EN"] = ("FAIL", bad) if bad else ("DRAWN", [])
+    # C-1c: the restart inhibit, ratiometric from the breaker's own input, gated by its PGD, acting on its UVLO
+    vin_u, uvlo_u, pgd_u = _pin(nl, "U101", "2"), _pin(nl, "U101", "3"), _pin(nl, "U101", "8")
+    rows = [("U102", "1", "INH_OUT"), ("U102", "2", ret), ("U102", "3", "INH_REF"), ("U102", "4", "INH_NTC"), ("U102", "5", vin_u),
+            ("Q105", "1", "INH_G"), ("Q105", "2", ret), ("Q105", "3", uvlo_u), ("Q106", "1", pgd_u), ("Q106", "2", ret), ("Q106", "3", "INH_G")]
+    bad = props(nl, rows)
+    bad += _pairs(nl, (("RT101", "INH_NTC", ret), ("R110", vin_u, "INH_NTC"), ("R111", vin_u, "INH_REF"), ("R112", "INH_REF", ret),
+                       ("R113", "INH_OUT", "INH_REF"), ("R114", "INH_OUT", "INH_G"), ("R115", "INH_G", ret),
+                       ("R116", vin_u, pgd_u), ("R117", pgd_u, ret), ("C106", vin_u, ret)))
+    bad += [x for x in values(nl, "p") if x.split()[0] in INH_VALUES]
+    bad += ["%s value %r does not start %r (record l8p, SESSION)" % (r_, nl["comps"].get(r_, {}).get("value"), pre)
+            for r_, pre in INH_SESSION if not str(nl["comps"].get(r_, {}).get("value", "")).startswith(pre)]
+    if (nl["comps"].get("RT101") or {}).get("footprint") != "meshsat:LeadLands_1x02":
+        bad.append("RT101 is not on the lead lands (its 10 mm leads to two lands beside the pad)")
+    out["INH"] = ("FAIL", bad) if bad else ("DRAWN", [])
     return out
 
 

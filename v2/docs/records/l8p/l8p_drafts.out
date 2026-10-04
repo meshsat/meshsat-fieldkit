@@ -1,5 +1,5 @@
-l8p_drafts: Layer 8 record l8p, W4DP-F2's breaker and its make-last dock enable loop drafted for boards P, E and A (MESHSAT-1357)
-prototype design; nothing built, bought or measured; nothing applied to the tree; the values are record l9stk's (fnd/l9stk at 2c8b29fb)
+l8p_drafts: Layer 8 record l8p, W4DP-F2's breaker, its make-last dock enable loop and its restart inhibit drafted for boards P, E and A (MESHSAT-1357)
+prototype design; nothing built, bought or measured; nothing applied to the tree; the values are record l9stk's (fnd/l9stk at 0d72880b)
 
 1. INPUTS, pinned by sha256
    740817ada5c8e14a v2/ecad/tools/gen_sch_p.py
@@ -14,7 +14,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    a6a60bac82c40000 v2/docs/records/l4e7/apply_gen_sch_e_u5_grade.py
    d58b41eb3e3238e7 v2/docs/records/l4e7/apply_gen_sch_e_hold.py
    cec278427751b16b v2/docs/records/l4e7/apply_gen_sch_e_input_limit.py
-   261cb597dc70dc85 v2/docs/records/l4e7/apply_gen_sch_e_backstop.py
+   dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
    ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
    418ea548a833b49f v2/docs/records/l4e11/apply_gen_sch_e_entry.py
@@ -39,22 +39,28 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    20c7b0795593d761 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
    2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   4cfd6733c7d2e042 v2/docs/records/l8p/inputs/l9stk-section15-2c8b29fb.md
-   ca434347df8b322d v2/docs/records/l8p/inputs/l9stk_protection-2c8b29fb.out.txt
-   58bd120aa8ad01ca v2/docs/records/l8p/inputs/l9stk_protection-constants-2c8b29fb.txt
-   458dde1337e5fa6d v2/docs/records/l8p/inputs/SOURCES.txt
+   dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
+   a96099193dd92e8e v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
+   d97f94a0fa1f2559 v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
+   ed559399fd3b2f2d v2/docs/records/l8p/inputs/l9stk_protection-constants-0d72880b.txt
+   fbff8b6bb2066fde v2/docs/records/l8p/inputs/SOURCES.txt
+   1e3fa195a8f63a9c v2/ecad/meshsat.pretty/LeadLands_1x02.kicad_mod
    171fa629c58b8f1e v2/ecad/meshsat.pretty/PogoPins_2x6.kicad_mod
    94b2f0134ac6ee11 v2/ecad/meshsat.pretty/PogoTargets_2x6.kicad_mod
    d60d8106a6e81139 v2/vendor/ti/ti-lm5069.pdf
-   ddc7258038c86b6a v2/docs/records/l8p/apply_gen_sch_p_breaker.py
-   3323d1831fd1dc46 v2/docs/records/l8p/apply_gen_sch_e_enable.py
-   c8e4eeb499491eab v2/docs/records/l8p/apply_gen_sch_a_ptc.py
-   53fe9ffd8f899a6f v2/docs/records/l8p/check_l8p_netlist.py
+   81a99339fb677f38 v2/vendor/battery/murata-nxrt15xh103fa1b.pdf
+   54de8e4089bb8221 v2/vendor/power/st-semtech-1n4148w-c81598.pdf
+   62bd7b5285171597 v2/vendor/ti/held/ti-opa187-sbos807e.pdf
+   5e59d586d59f7a26 v2/docs/records/l8p/fetch_held_back.py
+   30ef50af3baf6ce5 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
+   d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   855bb65bb9744405 v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   record l9stk's copies equal the sha256 SOURCES.txt pins: yes
+   record l9stk's and L4-E7's copies equal the sha256 SOURCES.txt pins: yes
 
-2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 2c8b29fb), and this record's SESSION choices
-   P U101  LM5069MM-2       l9stk 15.4 C-1, 'an LM5069-2 circuit breaker on board P'
+2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices
+   P U101  LM5069MM-1       l9stk 15.4 C-1 and 15.4b: the -1, latch-off
    P R101  4m 1%            l9stk 15.4 table, Sense RS: 4 mOhm and 7.5 mOhm in parallel, 1 %
    P R102  7.5m 1%          l9stk 15.4 table, Sense RS
    P Q101  CSD18510Q5B      l9stk 15.4 table, FETs: 2 x CSD18510Q5B
@@ -63,39 +69,64 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    P C101  10n              l9stk 15.4 table, Fault timer: 10 nF
    P C102  22n              l9stk 15.4 table, dv/dt start: 22 nF
    P D101  SMCJ18A          l9stk 15.4 table, Clamps: SMCJ18A on VIN
-   P R104  200k             l9stk 15.4 table, Controller: UVLO from VIN through R_U 200 kOhm
-   P C103  3.3u 50V         l9stk 15.4 table, Controller: into C_U 3.3 uF (50 V)
+   P R104  200k             l9stk 15.4 table, Controller, and C-1b's hold: R_U 200 kOhm from VIN onto the node H
+   P C103  3.3u 50V         l9stk 15.4 table, Controller: C_U 3.3 uF (50 V)
+   P R105  150R             l9stk 15.4 C-1b, the hold: H reaches UVLO through 150 ohm
+   P D102  1N4148W          l9stk 15.4 C-1b, the hold: and a 1N4148W
    P R106  10k              l9stk 15.4 C-1b: the loop leaves board P from VIN through 10 kOhm
    P R107  22k              l9stk 15.4 C-1b: a 22 kOhm divider on a first 2N7002's gate
    P Q103  2N7002           l9stk 15.4 C-1b: a first 2N7002
-   P Q104  2N7002           l9stk 15.4 C-1b: a second 2N7002
-   P R105  150R             l9stk 15.4 C-1b: discharges UVLO through 150 ohm
+   P Q104  2N7002           l9stk 15.4 C-1b: the second, when on, pulls UVLO itself
    P R108  1M               l9stk l9stk_protection.py R_G (prot 3a): the second inverter's gate divider, each half
    P R109  1M               l9stk l9stk_protection.py R_G (prot 3a)
+   P RT101 NXRT15XH103FA1B  l9stk 15.4b C-1c, the sensor: Murata NXRT15XH103FA1B
+   P R110  150k 0.1%        l9stk 15.4b C-1c: 150 kOhm over the NTC
    A RT1   PRF15BB103RB6RC  l9stk 15.5 THE THERMAL GUARD: the kit's PRF15BB103 chip PTC, in the enable loop on the battery FETs' copper
    l9stk reads: IF-6
    l9stk reads: the controller row: OVLO to ground
+   l9stk reads: 15.4b: the -1, latch-off, selected
    l9stk reads: condition C2: the ground between, in J_SMB and on the block
    l9stk reads: C-1b: two contacts 1 mm short (Layer 7's)
+   l9stk reads: C-1b: the hold, 0.110 to 0.907 s
+   l9stk reads: C-1b: the undocking, 0.41 ms
+   l9stk reads: 15.4b: C-1c selected
+   l9stk reads: C-1c: gated by PGD
    l9stk reads: 15.5: the third battery FET's designator is L4-E11's
    l9stk reads: 15.5: the PTC on the battery FETs' copper (board A)
    l9stk_protection.py's constants agree with the page: R_E1 10 kOhm, R_E2 22 kOhm, R_DIS 150 ohm, R_U 200 kOhm; R_G 1 MOhm
-   SESSION designators     the free 100 block on board P (U101, Q101 to Q104, D101, R101 to R109, C101 to C105, TP101 to TP104); RT1 on board A, which carries no RT designator
-   SESSION net names       BRK_VIN (Q2's source, the breaker's input), BRK_SNS, BRK_GATE, BRK_TMR, BRK_PWR, BRK_UVLO, BRK_G2, BRK_DIS, BRK_CMID; DOCK_EN_OUT and DOCK_EN_RET on all three boards
+   SESSION designators     the free 100 block on board P (U101, U102, Q101 to Q106, D101, D102, RT101, R101 to R117, C101 to C106, TP101 to TP106); RT1 on board A, which carries no RT designator
+   SESSION net names       BRK_VIN (Q2's source, the breaker's input), BRK_SNS, BRK_GATE, BRK_TMR, BRK_PWR, BRK_UVLO, BRK_G2, BRK_H, BRK_HD, BRK_PGD, BRK_CMID, INH_NTC, INH_REF, INH_OUT, INH_G; DOCK_EN_OUT and DOCK_EN_RET on all three boards
    SESSION J_SMB pins      a JST-XH 1x7 at both ends: 1 to 4 unchanged, 5 DOCK_EN_RET, 6 the return (the ground between), 7 DOCK_EN_OUT at the row's end
    SESSION dock positions  J_DOCK and J_BLK pins 3 (DOCK_EN_RET) and 5 (DOCK_EN_OUT), pin 4 ground between them; pin 5's neighbours 4, 6 and 11 are all ground
    SESSION input bypass    C104 and C105, 2.2 uF 50 V X7R in series (1.1 uF) at the sense pair: TI SNVS452G section 10 ('a 1-uF ceramic capacitor to ground close to the drain of the hot swap MOSFET') and 11.1.1; in series as C11 and C12 are (board P's O-12)
-   SESSION PGD             left open: IF-1's PGD option would need a conductor to board A, which is L4-E11's to decide
-   SESSION test points     TP101 BRK_VIN, TP102 BRK_UVLO, TP103 DOCK_EN_OUT, TP104 DOCK_EN_RET, for E-12's commissioning steps
-   SESSION lands           the VSSOP-10, SMC and 2512 lands the kit already uses for these parts; the 7-circuit XH header of the same row; RT1 on board P's 0402
+   SESSION comparator      U102, TI OPA187IDBVR, a zero-drift amplifier on BRK_VIN used as the comparator: 4.5 to 36 V, its input range from 0.1 V under its negative rail, its offset over temperature read from the held sheet (section 3); C106 its bypass
+   SESSION reference       R111 147 kOhm over R112 1.62 kOhm (1653.06 ohm against the trip's 1653), R113 15 MOhm of hysteresis, all from BRK_VIN as the NTC's bridge is (ratiometric)
+   SESSION PGD gating      U101's PGD on BRK_PGD at half BRK_VIN (R116, R117 1 MOhm); Q106 holds Q105's gate low while PGD is high; Q105 pulls UVLO; R114 and R115 halve U102's output for Q105's gate
+   SESSION test points     TP101 BRK_VIN, TP102 BRK_UVLO, TP103 DOCK_EN_OUT, TP104 DOCK_EN_RET (E-12); TP105 INH_NTC, TP106 INH_OUT (E-12b)
+   SESSION lands           the VSSOP-10, SMC, SOD-123, SOT-23-5 and 2512 lands the kit already uses; the 7-circuit XH header of the same row; RT1 on board P's 0402; RT101's 10 mm leads on the project's LeadLands_1x02
 
-3. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)
+3. C-1c'S BUDGET (DD-8): the window from l9stk 15.4b, the NTC from Murata's sheet, the comparator from TI's held OPA187 sheet (SBOS807E)
+   the window: allow from 77.25 C, block from 83.20 C, trip 80.22 C +-2.97 K with the NTC at 1653 ohm; the NTC's +-1.02 K and +-1.95 K left: consistent
+   the NTC (Murata NXRT15XH103FA1B010): R25 10000 ohm, B25/85 3434 K printed as a reference value, 0.12 mA at most, 1.5 mW/K, 10 mm leads;
+     its tolerance at 80 C (the record's +-1.02 K) is ASSUMED from the product search sheet: to be confirmed by Murata's approval sheet or E-15
+   the bridge at the trip: R110 150 kOhm over the NTC, 0.1155 V at the pack's least 10.6 V, 3.143 mV/K there (B/T^2 0.02750 per K); 0.111 mA at 16.8 V
+   the reference: R111 147 kOhm over R112 1.62 kOhm with R113 15 MOhm at the output low: 1652.88 ohm against 1653 (+0.003 K); hysteresis 0.359 K nominal, 0.363 K at most
+   the comparator, U102 OPA187 (read, high-voltage table): VOS 10 uV, drift 0.015 uV/K to 125 C, IB 7.5 nA and IOS 14.5 nA over temperature, PSRR 1 uV/V;
+     supply 4.5 to 36 V (absolute 40 V) against BRK_VIN's 29.2 V clamp; input range from 0.1 V under its negative rail; at most 54.1 uV in all: 0.017 K
+   the bridge and reference resistors: 0.1 % and at most 25 ppm/K between 25 and 101.0 C, each at 0.290 %, the worst of all signs: 0.317 K
+   the NTC's own heating at 0.111 mA: 0.014 K (it reads hot)
+   THE SPLIT OF +-1.95 K: allow side 0.710 K used (comparator, resistors, own heating, hysteresis, nominal), 1.240 K left for the pad-to-NTC gradient;
+     block side 0.336 K used, 1.614 K left; the checker's split asked about 0.9 K for the gradient, the comparator at most 0.47 K, the hysteresis at most 0.5 K: the split closes
+   THE LOCKOUT AT THE ALLOW EDGE: a unit tripping at 77.25 C needs its pad within 1.00 K of the 76.25 C inside air before it restarts; at that air the cells' hot stop has already shut the kit down
+   E-10 gains: VDS under 1.62 V during current-limit excursions (PGD stays high, so the inhibit stays gated)
+
+4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)
    apply_gen_sch_p_breaker.py: check OK; applied OK; second application refused; the tree's gen_sch_p.py refused (NOT RELEASED)
    apply_gen_sch_e_enable.py: check OK; applied OK; second application refused; the tree's gen_sch_e.py refused (NOT RELEASED)
    apply_gen_sch_a_ptc.py: check OK; applied OK; second application refused; the tree's gen_sch_a.py refused (NOT RELEASED)
    the tree's generators are unchanged: yes
 
-4. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3)
+5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3)
    board P, this record's draft in its place:
      l8p/apply_gen_sch_p_breaker.py               OK
      l6r2/apply_gen_sch_p_intent.py               OK
@@ -107,7 +138,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      l4e7/apply_gen_sch_e_u5_grade.py             OK
      l4e7/apply_gen_sch_e_hold.py                 OK
      l4e7/apply_gen_sch_e_input_limit.py          OK
-     l4e7/apply_gen_sch_e_backstop.py             OK
+     l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK
      l4e9/apply_gen_sch_e_f1.py                   OK
      l4e9/apply_gen_sch_e_hotswap.py              OK
      l4e11/apply_gen_sch_e_entry.py               OK
@@ -137,8 +168,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board A, this record's draft first, then the order: every step OK
    board A, the order, then this record's draft last: every step OK
 
-5. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)
-   board P, this record's: C101, C102, C103, C104, C105, D101, Q101, Q102, Q103, Q104, R101, R102, R103, R104, R105, R106, R107, R108, R109, TP101, TP102, TP103, TP104, U101
+6. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)
+   board P, this record's: C101, C102, C103, C104, C105, C106, D101, D102, Q101, Q102, Q103, Q104, Q105, Q106, R101, R102, R103, R104, R105, R106, R107, R108, R109, R110, R111, R112, R113, R114, R115, R116, R117, RT101, TP101, TP102, TP103, TP104, TP105, TP106, U101, U102
    board P, this record's against every other draft's: DISJOINT
    board P, literal part calls drawn twice in the composed generator: none
    board E, this record's: none (nets only)
@@ -148,7 +179,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board A, this record's against every other draft's: DISJOINT
    board A, literal part calls drawn twice in the composed generator: none
 
-6. REGENERATION ON THE RUNNER (gen_netlist.py: the generator's own part table, no KiCad) AND THE NETLIST CHECK
+7. REGENERATION ON THE RUNNER (gen_netlist.py: the generator's own part table, no KiCad) AND THE NETLIST CHECK
    board P unpatched: 206 connected pins against the committed KiCad netlist's 210; differences 4, all KiCad's names for open pins: yes; footprints differing: 0
    board E unpatched: 561 connected pins against the committed KiCad netlist's 582; differences 21, all KiCad's names for open pins: yes; footprints differing: 0
    board A unpatched: 1820 connected pins against the committed KiCad netlist's 1832; differences 12, all KiCad's names for open pins: yes; footprints differing: 0
@@ -156,62 +187,80 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256 20c7b0795593d761
        P BRK  NOT DRAWN: U101 is absent
        P EN   NOT DRAWN: J_SMB has no pin 7
+       P INH  NOT DRAWN: U102 is absent
      v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256 2ed95a0e8069ebf8
        E EN   NOT DRAWN: J_SMB has no pin 7
      v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
        A EN   NOT DRAWN: RT1 is absent
      record l8p's breaker and enable loop on the netlists: NOT DRAWN
-   board P with this record's draft alone: the generator ran to its end (119 parts, 0 unplaced, intent written: yes)
+   board P with this record's draft alone: the generator ran to its end (135 parts, 0 unplaced, intent written: yes)
    board E with this record's draft alone: the generator ran to its end (206 parts, 0 unplaced, intent written: yes)
    board A with this record's draft alone: the generator ran to its end (657 parts, 0 unplaced, intent written: yes)
-     regenerated board P, this record's draft alone sha256 535bdd6ae194a1bc
+     regenerated board P, this record's draft alone sha256 82af743bc2f4673d
        P BRK  DRAWN
        P EN   DRAWN
+       P INH  DRAWN
      regenerated board E, this record's draft alone sha256 d53d54144ec24324
        E EN   DRAWN
      regenerated board A, this record's draft alone sha256 2703da0c4f667380
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-   board P composed in L4-E9's order: the generator ran to its end (119 parts, intent written: yes)
-   board E composed in L4-E9's order: the generator refused: gen_sch_e: decoupling entry C66 -> U18.5 carries no class (G14): add it to _DEC_CLASS with its maker's clause
+   board P composed in L4-E9's order: the generator ran to its end (135 parts, intent written: yes)
+   board E composed in L4-E9's order: the generator refused: intent: rail +12V_FAN names source L4, which is not on that net (refs on it: ['C143', 'J_FAN1', 'J_FAN2', 'R105', 'R108', 'U22'])
      without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
-     with scratch stand-ins for L8P-F01, L8P-F03 (never drafts, never applied): the generator ran to its end (295 parts, intent written: yes)
+     with scratch stand-ins for L8P-F03 (never drafts, never applied): the generator ran to its end (295 parts, intent written: yes)
    board A composed in L4-E9's order: the generator refused: intent: rail VSYS_DOCK names U42 as its source, and a multi-pin IC's pad on its own output net is a SENSE pin: dc_drop would take the rail's 1.32 A out of it. Name the inductor or the sense shunt the current really leaves through, or pass source_ic="<why this part's pin is a power pin>".
      without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
      with scratch stand-ins for L8P-F02 (never drafts, never applied): the generator ran to its end (704 parts, intent written: yes)
-     regenerated board P, composed in L4-E9's order sha256 234fe9e9bfbac551
+     regenerated board P, composed in L4-E9's order sha256 987594f86a28448d
        P BRK  DRAWN
        P EN   DRAWN
+       P INH  DRAWN
      regenerated board E, composed in L4-E9's order with the stand-ins sha256 5dc75795ca195d15
        E EN   DRAWN
      regenerated board A, composed in L4-E9's order with the stand-ins sha256 2d836dec444330e2
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-     mutated board P (J_SMB pins 6 and 7 exchanged) sha256 24532299f6f03770
+     mutated board P (J_SMB pins 6 and 7 exchanged) sha256 0a473b2b52cf57a6
        P BRK  DRAWN
        P EN   FAIL: J_SMB.6 on 'DOCK_EN_OUT', wanted PACK_N; J_SMB.7 on 'PACK_N', wanted DOCK_EN_OUT; J_SMB pins 6 and 5 are neighbours
+       P INH  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 32f84d653b27eebf
        A EN   FAIL: J_DOCK.3 on 'GND', wanted DOCK_EN_RET; J_DOCK.4 on 'DOCK_EN_RET', wanted GND; J_DOCK pins 5 and 4 are neighbours (2.54 mm apart, pitch 2.54 mm)
      record l8p's breaker and enable loop on the netlists: FAIL
+     mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD) sha256 7ad446371fdac46b
+       P BRK  DRAWN
+       P EN   DRAWN
+       P INH  FAIL: Q105.1 on 'BRK_PGD', wanted INH_G; Q106.1 on 'INH_G', wanted BRK_PGD
+     record l8p's breaker and enable loop on the netlists: FAIL
 
-7. THE INTENT THE PATCHED BOARD P GENERATOR WRITES FOR THE NEW NETS
+8. THE INTENT THE PATCHED BOARD P GENERATOR WRITES FOR THE NEW NETS
    rail PACK_P   source W_P, loads {"Q101": 5.0, "Q102": 5.0}, switch U101 on BRK_UVLO
    rail BRK_VIN  source Q2, loads {"R101": 6.52, "R102": 3.48}, switch U1 on DSG_R, series of PACK_P
    rail BRK_SNS  source ['R101', 'R102'], loads {"Q101": 5.0, "Q102": 5.0}, switch - on -, series of PACK_P
    rail VCC_F    source R7, loads {"U1": 0.00034}, switch U1 on DSG_R, fed from BRK_VIN
    node BRK_GATE    v_max 29.4 V, rides on PACK_P by 12.6 V
    node BRK_UVLO    v_max 29.2 V
+   node BRK_H       v_max 29.2 V
+   node BRK_HD      v_max 29.2 V
    node BRK_G2      v_max 14.6 V
+   node BRK_PGD     v_max 14.6 V
    node BRK_CMID    v_max 29.2 V
+   node INH_NTC     v_max 29.2 V
+   node INH_REF     v_max 1.0 V
+   node INH_OUT     v_max 29.2 V
+   node INH_G       v_max 14.6 V
    node DOCK_EN_OUT v_max 29.2 V
    node DOCK_EN_RET v_max 17.4 V
    clamp D101: uni, protected BRK_VIN, return PACK_N
+   decoupling C106: class D at U102.5 on BRK_VIN
 
-8. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads)
-   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carry no G14 decoupling class
+9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads)
+   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a
+     (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it
    L8P-F03 board E: l4e11's aux draft: +12V_FAN names L4 as its source, which is not on that net
    L8P-F02 board A: l4e11's charger draft: VSYS_DOCK names U42 as its source without source_ic, and is fed from VBAT before VBAT is declared
 
