@@ -5166,7 +5166,7 @@ def render_fix23(R, p):
     p("     the bar by form: %s K/W for any coupling (a reading of %s or under); %s K/W for m at or over 1/4 (%s or under); the direct case: the worst"
       % ("%.2f" % S["bar"], "%.2f" % S["pass"]["B"], "%.2f" % S["bar_even"], "%.2f" % S["pass_even"]))
     p("       split's hottest junction, the band and R17 on, at most %s K over the air less the budget, %s K (INFERRED)" % (fmt(S["rise_total"], 2), fmt(S["pass_rise"], 2)))
-    p("   23f. THE CORRECTION SCOPE FOR TP-E11-29'S AUTHOR (the procedure is not edited here and stays NOT EXECUTABLE; RECORD)")
+    p("   23f. THE CORRECTION SCOPE FOR TP-E11-29 (rewritten on it in this round, by the coordinator's instruction; it stays NOT EXECUTABLE; RECORD)")
     p("     1. replace the body-diode excitation and the VSD reading (its sections 2, 4, 5 and 6: 'each FET heated alone', 'the VSD sense taps', the")
     p("        K-factor by VSD) by method (B)'s three connections of 23b, with a fixture schematic showing the supply, the shunt, the three gate")
     p("        drivers, the sense source and each device's four-wire taps in calibration, heating and sensing; the gates switch make-before-break")
@@ -5178,8 +5178,9 @@ def render_fix23(R, p):
     p("     4. the validity checks: two threshold calibrations within %s K; reciprocity; the off devices' leakage read at the run's temperature and under"
       % fmt(R13_B["rep"], 1))
     p("        1 % of the sense current, else a larger sense current with its own heating restated; the ripple at the slot chosen")
-    p("     5. the limits of 23e with the uncertainty budget recomputed for the supplier's instruments; section 8's 45.88 K/W restated")
-    p("     6. it stays NOT EXECUTABLE until the method and the limits are reviewed and a supplier agrees to the setup (the review's acceptance)")
+    p("     5. the limits of 23e with the uncertainty budget recomputed for the supplier's instruments; the register's R-159, which still carries")
+    p("        round 9's 45.88 K/W, is L4-E9's to restate from E11-29's row")
+    p("     6. it stays NOT EXECUTABLE until the method and the limits are independently checked and a supplier agrees to the setup")
     p("   23g. SECTION 20c RESTATED ON MURATA'S PRINTED POINTS (record l9stk's round 4, fnd/l9stk2 at 43da41ca, its 15.5 copied to inputs/; RECORD, INFERRED)")
     p("     the PRF15BB103 prints 10 kOhm +-50 % at 25 C, 100 kOhm at a sensing temperature over 110 C (no upper bound) and 4.7 MOhm at 130 +-3 C;")
     p("       '47 kOhm at 130 C' is the 470 ohm groups' column (this record's own finding L4E11-R10-F3; record l8p's L8P-F07, OPEN). With board A's loads:")
@@ -5215,8 +5216,8 @@ def render_fix23(R, p):
     p("       %s V; the release against the hold and section 22's bleed, a trip being the hot bound itself; the kit's state through a trip with a"
       % fmt(S20["ret_low"], 4))
     p("       source present; the 30 uA the switch adds on DOCK_EN_OUT against U48's divider (INFERRED)")
-    p("   23h. STATUS (SESSION): DELTA-02 answered in the record: the method selected, E11-29 restated on it, the procedure's correction scope written;")
-    p("     TP-E11-29 NOT EXECUTABLE until reviewed and a supplier agrees; E11-29 stays CONDITIONAL on its measurement; nothing is built or measured;")
+    p("   23h. STATUS (SESSION): DELTA-02 answered in the record and in the procedure: the method selected, E11-29 restated on it, TP-E11-29 rewritten on")
+    p("     it and NOT EXECUTABLE until independently checked and a supplier agrees; E11-29 stays CONDITIONAL on its measurement; nothing is built or measured;")
     p("     no circuit changed, so no netlist reading applies; 20c restated; the guard's reading on DD-7 OWED (RECORD)")
     p("")
 
