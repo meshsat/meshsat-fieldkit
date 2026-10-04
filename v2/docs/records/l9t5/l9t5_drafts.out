@@ -1,0 +1,264 @@
+l9t5_drafts: Layer 9 record l9t5, task T5 round 2: I-03 (C-DEV rev 1) drafted for boards A and B, composed, regenerated, mutated and judged (MESHSAT-1357)
+prototype design; nothing built, bought, powered or measured; nothing applied to the tree; every statement is about generator text, netlists and the makers' sheets
+
+1. INPUTS, pinned by sha256
+   6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   3e28374d15be25e0 v2/ecad/tools/kisch.py
+   0071fe553548eb5d v2/ecad/tools/intent.py
+   359895768625712d v2/ecad/tools/idc_pads.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   855bb65bb9744405 v2/docs/records/l8p/check_l8p_netlist.py
+   c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
+   bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   dc84f755eb231bc7 v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
+   af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
+   bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
+   347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
+   7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
+   0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
+   88908ca2202b33ad v2/docs/records/l4e9/apply_gen_sch_a_u17.py
+   2863b7c8ba4db393 v2/docs/records/l6r2/apply_gen_sch_a_lcsc.py
+   6b9d1d051c21e052 v2/docs/records/l6r2/apply_gen_sch_b_intent.py
+   a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
+   8016267ff0da3889 v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py
+   352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
+   cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
+   74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
+   d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
+   ea95bd293e44676a v2/docs/records/l8r2/apply_gen_sch_a_fb01.py
+   da98e9d508d8146d v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
+   fc487ab269d2f758 v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py
+   c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
+   cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+   3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
+   576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
+   c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
+   6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   3ef9b8c49a01b728 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+   16ec2eac43c7374e v2/vendor/ti/ti-tps62933.pdf
+   d51e669c597988b2 v2/vendor/connectors/jst-vh-catalogue.pdf
+   236888dabe560055 v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf
+   ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
+   98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
+   27d61be411f89886 v2/docs/records/l9t5/check_l9t5_netlist.py
+   23dae9bc1c461f84 v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
+   afb77ab72e0d2d4c v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py
+   8cd31cfbbca39087 v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py
+   4c97305f6b6eef31 v2/docs/records/l9t5/inputs/SOURCES.txt
+   0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
+   a21015ffae10e67d v2/docs/records/l9t5/l9t5_case.py
+   be6af6b06bcd4482 v2/docs/records/l9t5/l9t5_case.out
+   a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   the two copies filed this round equal the sha256 SOURCES.txt names: yes
+
+2. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse a second time, refuse the tree's own generator)
+   apply_gen_sch_a_iocbuck.py: check OK; applied OK (4 edits); second application refused; the tree's gen_sch_a.py refused (NOT RELEASED)
+   apply_gen_sch_b_iocbuck.py: check OK; applied OK (13 edits); second application refused; the tree's gen_sch_b.py refused (NOT RELEASED)
+   board B's round 1 text (inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py): applied OK (12 edits); its text lacks the edit to the LDO input
+     capacitor's explicit bypass entry (_intent.bypass(C_(0), U_(0), "1", "+5V_DEV")); section 4 regenerates it
+   the tree's generators are unchanged: yes
+
+3. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3; this record's draft after the board's
+   circuit drafts, before the last-taker and the tables)
+   board A, this record's draft in its place:
+     l4e6/apply_gen_sch_a_r12.py                    OK
+     l4e11/apply_gen_sch_a_guard.py                 OK
+     l4e11/apply_gen_sch_a_charger.py               OK
+     l4e4/apply_gen_sch_a_r11.py                    OK
+     l4e8/apply_gen_sch_a_bank.py                   OK
+     l4e4/apply_gen_sch_a_r138.py                   OK
+     l4e9/apply_gen_sch_a_u17.py                    OK
+     l8gnd/apply_gen_sch_a_gnd002.py                OK
+     l8gnd/apply_gen_sch_a_hotr1.py                 OK
+     l8r2/apply_gen_sch_a_d8v3.py                   OK
+     l8r2/apply_gen_sch_a_vbus20ov.py               OK
+     l8r2/apply_gen_sch_a_packrtn.py                OK
+     l8r2/apply_gen_sch_a_slotlm.py                 OK
+     l8r2/apply_gen_sch_a_fb01.py                   OK
+     l8p/apply_gen_sch_a_ptc.py                     OK
+     l4e11/apply_gen_sch_a_dd7.py                   OK
+     l9t5/apply_gen_sch_a_iocbuck.py                OK
+     d8dec31/apply_gen_sch_a_mainpb.py              OK
+     l6r2/apply_gen_sch_a_lcsc.py                   OK
+   board A, this record's draft first, then the order: every step OK
+   board A, this record's draft after the whole order: every step OK
+   board B, this record's draft in its place:
+     l8gnd/apply_gen_sch_b_gnd002.py                OK
+     l8r2/apply_gen_sch_b_fans12.py                 OK
+     l8r2/apply_gen_sch_b_panel5v.py                OK
+     l8r2/apply_gen_sch_b_ph4.py                    OK
+     l8r2/apply_gen_sch_b_rt500.py                  OK
+     l9t5/apply_gen_sch_b_iocbuck.py                OK
+     l6r2/apply_gen_sch_b_xal_land.py               OK
+     l6r2/apply_gen_sch_b_lcsc.py                   OK
+     l6r2/apply_gen_sch_b_intent.py                 OK
+   board B, this record's draft first, then the order: every step OK
+   board B, this record's draft after the whole order: every step OK
+   d8dec31's mainpb (the next free R and C at apply time): without this record's draft it takes R248 and C247 on set 29's tree (L4-E9's row 33
+     names R233 and C241: stale already, the later drafts took those);
+     with this record's draft before it, R603 and C607; with this record's draft after it, R248 and C247 (finding L9T5-F02)
+
+   THE DESIGNATORS EACH DRAFT ADDS (the forward order; part calls read with ast, and each draft's declared ADDS)
+   board A, this record's: C601, C602, C603, C604, C605, C606, J_5V_IOC, L601, R601, R602, U601
+   board A, against every other draft's: DISJOINT; literal part calls drawn twice in the composed generator: none
+   board B, this record's: C900, D900, J_5V_IOC
+   board B, against every other draft's: DISJOINT; literal part calls drawn twice in the composed generator: none
+
+4. REGENERATION ON THE RUNNER (record l8p's gen_netlist.py: the generator's own part table, no KiCad) AND THE NETLIST CHECK
+   board A unpatched: 1820 connected pins against the committed KiCad netlist's 1832; differences 12, all KiCad's names for open pins: yes
+   board B unpatched: 4918 connected pins against the committed KiCad netlist's 5962; differences 1044, all KiCad's names for open pins: yes
+     committed board A (KiCad's export) sha256 6c40250c47195ebb
+       A BUCK NOT DRAWN: U601 absent
+     committed board B (KiCad's export) sha256 3ef9b8c49a01b728
+       B LDO  NOT DRAWN: J_5V_IOC absent
+     record l9t5's supervisors' buck and lead on the netlists: NOT DRAWN
+   board A with this record's draft alone: the generator ran to its end (667 parts, 0 unplaced, intent written: yes)
+   board B with this record's draft alone: the generator ran to its end (1387 parts, 0 unplaced, intent written: yes)
+   board B with round 1's text alone (the old defect): the generator refused: intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV
+     board A, this record's draft alone sha256 a011c380f42afecd
+       A BUCK DRAWN
+       A LEAD DRAWN
+       A EN   DRAWN
+       A DEV  DRAWN
+       A DIV  DRAWN
+     board B, this record's draft alone sha256 c457c342712fd0bd
+       B LDO  DRAWN
+       B LEAD DRAWN
+       PAIR DRAWN
+     record l9t5's supervisors' buck and lead on the netlists: DRAWN
+   board A composed in L4-E9's order:
+     the generator ran to its end (789 parts, 0 unplaced, intent written: yes)
+     board A composed in L4-E9's order sha256 f3dc33735574e20e
+       A BUCK DRAWN
+       A LEAD DRAWN
+       A EN   DRAWN
+       A DEV  DRAWN
+       A DIV  DRAWN
+     record l9t5's supervisors' buck and lead on the netlists: DRAWN
+   board B composed in L4-E9's order:
+     the generator refused: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same current as the peak: correct one of them.
+     without this record's draft the same composition's generator refuses with the same line: the stop is not this record's
+     BLOCKED BY T5b: record l8r2's fans12 draft adds the coolers' step-ups to board B's return; GND's declared 21.0 A peak (gen_sch_b.py,
+       _intent.rail("GND", ...)) is not this record's to raise (task T5b reconciles it on its own branch): board B's I-03 draft stays UNCHECKED
+   board B composed without record l8r2's fans12 draft (DIAGNOSTIC ONLY, no credit: the composition criterion is not met):
+     every other draft OK; the generator ran to its end (1395 parts, intent written: yes)
+     board A, composed in L4-E9's order sha256 f3dc33735574e20e
+       A BUCK DRAWN
+       A LEAD DRAWN
+       A EN   DRAWN
+       A DEV  DRAWN
+       A DIV  DRAWN
+     board B, composed without l8r2's fans12 (diagnostic) sha256 28427e5575978777
+       B LDO  DRAWN
+       B LEAD DRAWN
+       PAIR DRAWN
+     record l9t5's supervisors' buck and lead on the netlists: DRAWN
+   THE MUTATIONS (each must FAIL)
+     mutation 1, board A: J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed) sha256 79e75ed2bc60dddb
+       A BUCK DRAWN
+       A LEAD FAIL: J_5V_IOC.1 on 'GND', wanted +5V_IOC; J_5V_IOC.2 on '+5V_IOC', wanted GND
+       A EN   DRAWN
+       A DEV  DRAWN
+       A DIV  DRAWN
+     record l9t5's supervisors' buck and lead on the netlists: FAIL
+     mutation 2, board A: U601's EN and SS exchanged (the buck no longer on RAIL_EN) sha256 5b0cc0964592e1d3
+       A BUCK FAIL: U601.2 on 'IOCB_SS', wanted RAIL_EN; U601.7 on 'RAIL_EN', wanted IOCB_SS
+       A LEAD DRAWN
+       A EN   FAIL: U601's enable 'IOCB_SS' is not U12's 'RAIL_EN'
+       A DEV  DRAWN
+       A DIV  DRAWN
+     record l9t5's supervisors' buck and lead on the netlists: FAIL
+     mutation 3, board A: R601's +5V_IOC end and R602's ground end exchanged (the divider inverted: 0.95 V out) sha256 06c28ae1a2a169c6
+       A BUCK DRAWN
+       A LEAD DRAWN
+       A EN   DRAWN
+       A DEV  DRAWN
+       A DIV  FAIL: the divider is 10.7k 0.1% 25ppm over 56.2k 0.1% 25ppm, wanted 56.2k 0.1% over 10.7k 0.1%; the output band 0.931 to 0.974 V leaves 4.8 to 5.2 V
+     record l9t5's supervisors' buck and lead on the netlists: FAIL
+     mutation 4, board B: U50's VIN and D1's cathode exchanged (controller B's LDO back on +5V_DEV) sha256 cce4d6c2b1ca811c
+       B LDO  FAIL: U50.1 on '+5V_DEV', wanted +5V_IOC; U50 still on +5V_DEV
+       B LEAD FAIL: +5V_IOC also carries D1.1
+     record l9t5's supervisors' buck and lead on the netlists: FAIL
+     mutation 5, board B: J_5V_IOC's pins 1 and 2 exchanged on board B (the lead reversed) sha256 c7b6a605171494a1
+       B LDO  DRAWN
+       B LEAD FAIL: J_5V_IOC.1 on 'GND', wanted +5V_IOC; J_5V_IOC.2 on '+5V_IOC', wanted GND
+     record l9t5's supervisors' buck and lead on the netlists: FAIL
+
+5. THE DECLARATIONS THE PATCHED GENERATORS WRITE (their intent)
+   board A, rail +5V_IOC: 5.0 V, 0.36 A typical, 1.38 A peak, source L601, switch U601, fed from VBAT, efficiency 0.9, v_work 5.14, loads J_5V_IOC 1.38
+   board A, rail +5V_DEV: typical 3.74 A (4.10 without this draft), peak 6.9142 A (6.9142), loads J_5V_DEV 3.44, U32 0.30
+   board A, rail VBAT: its declared loads sum to 14.47 A (14.47 without this draft): Q32 1.47 (1.61), U601 0.14; peak 18.0 A
+   board A, node IOCB_SW  v_max 16.8 V
+   board A, node IOCB_BST v_max 22.3 V, rides on IOCB_SW by 5.5 V
+   board B (diagnostic composition), rail +5V_IOC: 0.36 A typical, 1.38 A peak, source J_5V_IOC, always on: yes, loads U40 0.12, U50 0.12, U60 0.12
+   board B, the three +3V3_IOCx rails fed from: +3V3_IOCA +5V_IOC, +3V3_IOCB +5V_IOC, +3V3_IOCC +5V_IOC
+   board B, rail +5V_DEV: typical 3.44 A (3.80 without), its loads sum 5.13 A (5.49), peak 6.0 A (6.0)
+   board B, rail GND: sources J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_5V_IOC (without: J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV); its loads sum 19.74 A (19.74 without, +0.00 A); declared peak 21.0 A
+   board B, the LDO input capacitors' bypass entries: C400 at U40.1 on +5V_IOC; C420 at U50.1 on +5V_IOC; C440 at U60.1 on +5V_IOC
+
+6. THE ELECTRICAL ACCEPTANCE ON C-DEV REV 1 (record l9t5 out 5 for the case figures; the makers' sheets read here)
+   labels: PRINTED a maker's limit; TYPICAL a maker's typical figure; DECLARED a generator's or a record's declaration; MODEL this record's arithmetic
+   (1) U7, the device rail, on the case: 6.0359 A (MODEL: every load at constant power at 4.9019 V, the loads at rv-pwr's HIGH) against its
+       average loop's least 7.0957 A (PRINTED VSNS 43 mV, LM5176 SNVSAI1D; R43 6 mOhm at +1 %, DECLARED): margin +1.0598 A: HOLDS
+       (before: 7.4717 A, -0.3760 A); the loop's highest 9.5960 A stays under J_5V_DEV's VH 10 A (PRINTED): U7, R43 and its lead unchanged
+   (2) U601 on the case: 1.4358 A (MODEL, constant power; 1.3800 A as the LDOs' own current = 3 x (0.400 + 0.060), each H743 at rv-pwr's HIGH
+       400 mA, which rv-pwr cites as DS12110 Rev 10's maximum, not re-read here, plus 60 mA DECLARED) against its 3 A rating (PRINTED, SLUSEA4D): HOLDS
+   (3) U601's limit against J_5V_IOC's VH 10 A (PRINTED): high-side limit 4.2 / 5.0 / 5.8 A, low-side 2.9 / 3.8 / 4.5 A (PRINTED);
+       the output at most about (5.8 + 4.5) / 2 = 5.15 A (Equation 11, approximate, on PRINTED maxima), hiccup on a sustained short (9.3.12): HOLDS
+   (4) L601 XAL6060-682ME: Isat 9.2 A (PRINTED, Coilcraft) over the part's 5.8 A highest high-side limit: HOLDS
+   (5) +5V_IOC's set point: 56.2k over 10.7k at 0.1 % and 25 ppm/K over 65 K (DECLARED, stream s99a's pair, as U41), VFB 0.784 to 0.816 V over TJ
+       -40 to 150 C and IFB 0.15 uA (PRINTED): 5.002 V nominal, 4.872 to 5.133 V; at the LDOs after board A's 2 % and board B's 1.5 % drop budgets
+       (DECLARED) at least 4.701 V against the AP2112K-3.3's need 3.749 V (VOUT +1.5 % and dropout 400 mV at 600 mA, PRINTED, DS39724 Rev. 2 - 2), and at most
+       5.133 V against its 6.0 V input maximum (PRINTED): HOLDS; each LDO at HIGH 0.46 A under its 600 mA (PRINTED)
+   (6) RAIL_EN with U601's EN on it (R2 100k over R184 39k, DECLARED; the TPS62933's EN pull-up Ip 0.7 uA and Ih 1.4 uA, TYPICAL only, no limit
+       printed; 3 TPS62933 EN pins on the net, U12, U41 and U601): 2.983 V at 10 V, 4.890 V at 16.8 V, 5.227 V at the SMCJ18A's 18 V standoff; U601
+       adds 0.0589 V; against VEN_RISE 1.28 V maximum and EN's 5.5 V recommended (6 V absolute) maximum (PRINTED): HOLDS
+   (7) the enable relation (netlist, section 4 EN): +5V_DEV is up only while +3V3 is (U7's EN DEV_EN pulled to +3V3 by R42, driven by U27),
+       +3V3 only while RAIL_EN is high (U12), and U601 is on RAIL_EN: the supervisors are up whenever the device rail is (record l9t5 out 5's condition)
+   (8) the upstream path: U601 on VBAT beside U41 (C603, C604 at its VIN, as C229, C230 at U41's); VBAT's declared loads unchanged in sum (section 5);
+       on C-ALLTX rev 3 (record l9t5 out 1, at the case's VBAT 13.391 V) the supervisors take 2.0043 W at their typical: through U7 at its declared 0.90
+       or through U601 at its declared 0.90 (DECLARED, as U41; the TPS62933's own 5 V curve is NOT PLOTTED; the TPS62932, TPS62933F and TPS62933O are plotted) the case is unchanged
+       (15.5162 V); with U601 at 0.85 (a bound shown, ASSUMPTION) the case's input rises 0.1310 W, about +0.0073 V of rest voltage at 18 A (MODEL, first order)
+   BOARD A'S HALF: HOLDS on its case (C-DEV rev 1) on the printed figures, with the TYPICAL EN currents and the DECLARED budgets labelled above
+   BOARD B'S HALF: UNCHECKED. Its draft is read in the netlist alone and in the diagnostic composition (section 4: DRAWN, two mutations FAIL),
+     but its composition in L4-E9's order stops on T5b's line; the electrical figures above are board B's too (the LDOs' input, the lead)
+   WHAT T5b NEEDS (the return current this draft adds to board B's ground):
+     the lead J_5V_IOC: pin 1 +5V_IOC, pin 2 GND (board B's return to board A); the three LDOs' current returns through pin 2 instead of J_5V_DEV's
+     typical: 0.36 A (DECLARED: the three 0.12 A allocations, unchanged); at C-DEV: 1.4358 A (MODEL, constant power at 4.9019 V) or 1.3800 A
+     (the LDOs' own current at rv-pwr's HIGH); at C-ALLTX rev 3: 0.3930 A (the case's typical, 2.0043 W at 5.1 V)
+     GND's declared loads change by +0.00 A (section 5: the three allocations leave +5V_DEV's derived ground loads and return as _IOC_LOADS);
+     J_5V_DEV's return falls by the same current; GND gains J_5V_IOC as a fifth source; the draft does not touch the 21.0 A declaration
+
+7. THE STATE OF I-03 (L9P-F03, the case row C-DEV rev 1)
+   credit criteria (common brief): (a) composition and generator run: board A YES, board B BLOCKED by T5b; (b) the changed nets read with
+   mutations that fail: board A YES (three FAIL), board B YES alone and in the diagnostic composition (two FAIL), not in the full composition;
+   (c) the electrical acceptance on C-DEV rev 1: board A's half HOLDS, board B's half UNCHECKED. I-03 stays OPEN: board A's half is a checked
+   draft, board B's is UNCHECKED until T5b's branch lands; then this script's section 4 runs the full composition again (no other change)
+   negative checks of this solution: one (board B's round 1 text refused alone: a missed edit, corrected in round 2); the loop is not closed
+   physical conditions (open): U601 as drawn is a copy of U41's network; its 5 V efficiency, thermal rise, start-up into the LDOs' input
+   capacitance and the lead's resistance are bench items; the netlist check is not electrical qualification
+
+   FINDINGS FOR OTHER AUTHORS
+   L9T5-F01 (T5b, record l8r2's line): board B's composed generator stops on GND's declared 21.0 A peak after l8r2's fans12; this record's
+     draft adds 0.00 A to GND's declared loads and a fifth source (above); the same stop without this record's draft
+   L9T5-F02 (d8dec31's mainpb owner, R-194; L4-E9's row 33): with this record's draft before mainpb, mainpb takes R603 and C607, not R248 and C247;
+     no collision either way (both orders compose); row 33's text names R233 and C241, which set 29's tree already moves: R-194's fixed
+     references would remove the dependency
+   L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads "its own branch off the device rail"; left
+     unchanged because the z-stack tables key on value texts; the comment and the net are corrected by the draft
+
+8. THE PREDICATES
+   each draft applies once on a scratch copy and refuses a second time and the tree's generator                           yes
+   board A composes in L4-E9's order with this draft in its place, first and last, and its generator runs to its end      yes
+   board B's round 1 text refuses alone on the LDO input capacitor's bypass entry (the old defect)                        yes
+   board B with round 2's draft alone runs and reads DRAWN                                                                yes
+   board B's full composition stops on GND's declared peak with and without this draft (T5b's)                            yes
+   board B's diagnostic composition reads DRAWN with board A's composition (the pair)                                     yes
+   every mutation FAILS                                                                                                   yes
+   the draft adds nothing to board B's GND declared loads                                                                 yes
+   board A's VBAT declared loads are unchanged in sum                                                                     yes
+   C-DEV board A's half holds on the printed figures                                                                      yes
+
+l9t5_drafts: done

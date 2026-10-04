@@ -271,6 +271,21 @@ def t_round4_c1_and_the_case_row():
     assert ca["cm5_8"]["need"] > nw["need"] > ca["fans_plan"]["need"]
 
 
+def t_round5_l9pf01_is_judged_on_the_case_and_d11_is_a_labelled_scenario():
+    """Round 5 (T5 round 2, record l9t5): L9P-F01 is restated on C-ALLTX rev 3. Its status reads the case's need against REQ-018's
+    15.5 V; its figure carries D-11's 16.214 V only under LABELLED SCENARIO; round 7's 16.1 V floor and its rule's figure are
+    WITHDRAWN (the owner's positions of 4 October 2026). It fails against round 2's text, which judged the basis against 16.1 V."""
+    _M()
+    F = {x["id"]: x for x in _C["R"]["classified"]}
+    f1 = F["L9P-F01"]
+    nw = _C["R"]["calltx"]["new"]
+    assert f1["status"].startswith("OPEN on the case: C-ALLTX rev 3 needs %.4f V" % nw["need"]) and nw["need"] > 15.5
+    assert "16.1 V does not cover" not in f1["status"]
+    fig = f1["figure"]
+    assert fig.index("THE CASE (C-ALLTX rev 3") < fig.index("LABELLED SCENARIO, NOT THE CASE") < fig.index("16.214 V") < fig.index("WITHDRAWN")
+    assert "REQ-018's acceptance" in f1["rule"] and "record l9t5" in f1["owner"] and "never on a scenario" in f1["action"]
+
+
 def t_sensitivities_cover_every_state():
     m = _M()
     S = _C["R"]["sens"]

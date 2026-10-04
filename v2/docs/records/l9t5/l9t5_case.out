@@ -5,8 +5,8 @@ evidence bounds it).
 
 0. PINS (path  sha256/16)
    bq4050       v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
-   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 1d5a9717fc5cda05
-   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 6a17ca2b48188679
+   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 50713e9832f81c10
+   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 e5e8b9083cb087ff
    cases        v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04.md  sha256 cb8b0961e4b1ea67
    cell         v2/vendor/battery/samsung-35e-orbtronic.pdf  sha256 5ec577b952b9dc51
    chain        v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
@@ -19,7 +19,7 @@ evidence bounds it).
    ra30         v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    reqs         v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    rvpwr        v2/docs/records/rv-pwr/pwr_budget.py  sha256 469d0820b046ef6f
-   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 11199fb677ba75e8
+   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 4c97305f6b6eef31
    tps62933     v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
    vh           v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
    xt60         v2/vendor/battery/amass-xt60-spec-tme.pdf  sha256 c2cbb5962c1f37da
