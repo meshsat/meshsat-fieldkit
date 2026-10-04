@@ -4639,6 +4639,14 @@ def fix22_round(R, T):
         opts.append(o)
     S["opts"] = {o["key"]: o for o in opts}
     S["order"] = [o["key"] for o in opts]
+    # (c)'s reach: a still longer hold (C241 3.3 uF) moves its coupled limit towards its static limit, never past it
+    v3 = dd7_variant(R, R12_RBL["c"], ch=3.3e-6)
+    S["c_reach"] = dict(ch=3.3e-6, hold=(v3["hold_min"], v3["hold_max"]), lim=v3["limit"](v3["hold_min"]), static=v3["isrc_max"],
+                        t_hot=v3["bleed"](S["src"]["hot"]))
+    S["c_reach"]["pair_allow"] = S["c_reach"]["lim"] - S["lm"][0] - S["bat"][1]
+    S["c_reach"]["pair_t"] = 25.0 + R12_DBL * math.log(S["c_reach"]["pair_allow"] / S["brk25"], 2)
+    if not S["c_reach"]["lim"] < S["c_reach"]["static"] < S["opts"]["b"]["v"]["isrc_max"]:
+        refuse(4, "(c)'s coupled limit is not under its static limit, or its static limit is not under (b)'s")
     sel = S["opts"][R12_SELECT]
     if not (sel["need1"] and sel["need2"]):
         refuse(4, "the selected correction does not meet both needs")
@@ -4738,6 +4746,11 @@ def render_fix22(R, p):
       % (fmt(c["v"]["v0"], 3), fmt(c["v"]["ra_w"] * 1e3, 3), "%.2e" % c["v"]["arm_i2t"], fmt(S20["ra_w"] * 1e3, 3), "%.2e" % S20["arm_i2t"]))
     p("       %s MOhm instead the hold's least is only %s s (D26's leakage and C241's insulation take more of it): %s"
       % (fmt(R12_C_RH / 1e6, 1), fmt(c2["v"]["hold_min"], 3), "need 1 fails" if not c2["need1"] else "need 1 holds by %s s" % fmt(c2["margin"], 3)))
+    cr = S["c_reach"]
+    p("     (c)'s reach: with C241 %s uF the hold is %s to %s s and the coupled limit %s uA (the pair %s uA, a case of %s C on the ASSUMED"
+      % (fmt(cr["ch"] * 1e6, 1), fmt(cr["hold"][0], 2), fmt(cr["hold"][1], 1), ua(cr["lim"]), ua(cr["pair_allow"]), fmt(cr["pair_t"], 1)))
+    p("       doubling): wider than (b)'s by %s uA, never past its static %s mA, where (b)'s static room is %s mA (INFERRED)"
+      % (ua(cr["pair_allow"] - O["b"]["pair_allow"]), fmt(cr["static"] * 1e3, 3), fmt(O["b"]["v"]["isrc_max"] * 1e3, 3)))
     p("   22d. THE STATES IN WHICH U47'S RESET SINKS, FROM THE DRAFT'S NETLIST (INFERRED from the netlist; TI's limits MAKER)")
     p("     DD7_N is pulled low by U47's RESET1 and RESET2 alone. Into it, while the loop reads powered (Q47, Q48 and Q52 on): R256 from CELL+ (Q48),")
     p("       R107 with R108 from CELL+ (Q52), R82 with R83 from VBAT (Q47), R254 and R255 from DD7_VC; with the loop unpowered only R255 (%s uA)"
@@ -4751,13 +4764,15 @@ def render_fix22(R, p):
     p("     state 2, the breaker restarted while the hold runs (%s s at most): CELL+ at the pack's %s V at most: %s mA" % (fmt(sel["v"]["hold_max"], 2), fmt(vst["vpk"], 1), ma(sel["sink"]["run"])))
     p("     state 3, a charger regulating high: CELL+ following VBAT up to SYSOVP's %s V (SLUSE65A, the 4S row): %s mA, still under %s mA"
       % (fmt(vst["sysovp"], 1), ma(sel["sink"]["ovp"]), ma(S20["i_rec"], 0)))
-    p("     the states over %s mA need CELL+ over %s V, %s V over SYSOVP: (i) VBAT at the SMCJ18A's %s V clamp (a surge) at the very instant of a set,"
+    p("     the states over %s mA need CELL+ over %s V, %s V over SYSOVP: (i) a surge: VBAT at the SMCJ18A's %s V clamp at the very instant of a set,"
       % (ma(S20["i_rec"], 0), fmt(sel["v_5ma"], 2), fmt(sel["v_5ma"] - vst["sysovp"], 2), fmt(vst["clamp"], 1)))
     p("       with CELL+ lifted %s V over the cells and their body-diode drop while the charge that set it flows: at most %s mA, under the"
       % (fmt(sel["v_5ma"] - vst["pack_diode"], 2), ma(sel["sink"]["clamp"])))
     p("       absolute %s mA, and over %s mA for at most %s s of the bleed (a surge coinciding with the set: a second condition, V1's 'transient"
       % (ma(S["i_abs"], 0), ma(S20["i_rec"], 0), fmt(sel["t_over"], 3)))
-    p("       only'); (ii) sustained: a battery FET failed short AND VBAT held over")
+    p("       only'), or board P's BRK_VIN at its own %s V clamp with the breaker restarted while a hold runs (the same bound, the pack pulling"
+      % fmt(vst["clamp"], 1))
+    p("       CELL+ back at once); (ii) sustained: a battery FET failed short AND VBAT held over")
     p("       %s V, which SYSOVP stops: two faults. At %s mA VOL on the 60 ohm reading is about %s V: the inhibit still holds (Q49's VGS under -9 V)"
       % (fmt(sel["v_5ma"], 2), ma(sel["sink"]["clamp"]), fmt(S20["vol_r"] * sel["sink"]["clamp"], 2)))
     p("   22e. THE SELECTION (SESSION) AND WHAT IT COSTS")
@@ -4765,15 +4780,17 @@ def render_fix22(R, p):
     p("     no correction holds need 1 on printed figures alone: the breaker pair's hot leakage has no printed row, so each depends on record l8p's")
     p("       L8P-F06 (E-14c). (a) fails need 1 at the hot bound and at the air; (c) holds it by %s s with a pair allowance of %s uA, at the cost of"
       % (fmt(c["margin"], 3), ua(c["pair_allow"])))
-    p("       a new part, an arm that no longer completes and a hold of up to %s s; (b) holds it by %s s with a pair allowance of %s uA and the"
-      % (fmt(c["v"]["hold_max"], 2), fmt(b["margin"], 3), ua(b["pair_allow"])))
+    p("       a new part, an arm that reaches %s of the way and a hold of up to %s s; (b) holds it by %s s with a pair allowance of %s uA and the"
+      % ("%.2f" % c["v"]["arm_frac"], fmt(c["v"]["hold_max"], 2), fmt(b["margin"], 3), ua(b["pair_allow"])))
     p("       larger static room (%s mA against %s mA), with no part beyond round 10's checked circuit" % (fmt(b["v"]["isrc_max"] * 1e3, 3), fmt(a["v"]["isrc_max"] * 1e3, 3)))
-    p("     SELECTED: (b), R256 back to 4.7 kOhm (the least dependent of the three: the widest allowance for the unprinted leakage, need 2 on TI's")
-    p("       printed rows in every state without a second fault). It costs: U47's RESET over TI's recommended %s mA in the two named states of 22d"
-      % ma(S20["i_rec"], 0))
+    p("     SELECTED: (b), R256 back to 4.7 kOhm: at the hold as drawn it has the widest allowance for the unprinted leakage, and the higher")
+    p("       ceiling if the hold is ever lengthened; (c) buys %s uA more only with a hold of up to %s s, about %s K of case temperature on an"
+      % (ua(S["c_reach"]["pair_allow"] - b["pair_allow"]), fmt(S["c_reach"]["hold"][1], 0), fmt(S["c_reach"]["pair_t"] - b["pair_t"], 1)))
+    p("       assumed rate, which does not remove the dependence on E-14c; need 2 holds on TI's printed rows in every state without a second")
+    p("       fault. It costs: U47's RESET over TI's recommended %s mA in the named states of 22d" % ma(S20["i_rec"], 0))
     p("       (never over the absolute %s mA), where 6.8 kOhm kept it under %s mA in every state; and a margin of %s s on an ASSUMED leakage"
       % (ma(S["i_abs"], 0), ma(S20["i_rec"], 0), fmt(b["margin"], 3)))
-    p("     reversed by: E-14c reading the breaker pair over %s uA at its held case, or E11-45 (f) reading the bleed outside the unit's hold; the next"
+    p("     reversed by: E-14c reading the breaker pair over %s uA at its held case, or E11-45 (f2) reading the bleed outside the unit's hold; the next"
       % ua(b["pair_allow"]))
     p("       lever is then the hold on top of 4.7 kOhm (the static %s mA is its ceiling), a new round with both checks' arithmetic beside it"
       % fmt(b["v"]["isrc_max"] * 1e3, 3))
@@ -4796,6 +4813,13 @@ def render_fix22(R, p):
     p("       releases, and a charge over board P's threshold (%s to %s A) sets it again within %s ms, once a hold; under the threshold it is the"
       % (fmt(S20["thr_lo"], 3), fmt(S20["thr_hi"], 3), fmt(S20["charge_end"] * 1e3, 2)))
     p("       named residual of 20l (the latched FET at most %s C, record l8p); that repeated cycle is not analysed further (INFERRED)" % fmt(S20["under_thr_tj"], 1))
+    p("     FOR RECORD l8p (L8P-F06 and E-14c; nothing of its is edited here): the latch's budget is two limits, the static %s mA (round 10's"
+      % fmt(b["v"]["isrc_max"] * 1e3, 3))
+    p("       again, so its 12j figures stand for the static room) and the timing %s uA, which the pair alone fills from a %s C case, %s K over"
+      % (ua(b["lim"]), fmt(b["pair_t"], 1), fmt(b["pair_t"] - S["t_held"], 1)))
+    p("       its held case; E-14c's acceptance (the pair at most %s uA at %s C) keeps the timing with %s uA in hand; its copies of 20c to 20e"
+      % (ua(S["brk"][1], 0), fmt(S["t_held"], 0), ua(b["lim"] - S["src"]["hot"])))
+    p("       and of this record's drafts are round 10's and are taken again at this round (the check V2's V2-B2, its owner's) (RECORD, INFERRED)")
     h = S["hys_alt"]
     p("   22h. THE MINORS (V2-m1 to m5 and m9, this record's part; RECORD, INFERRED)")
     p("     V2-m1: 21b (ii) now takes Vishay's printed MAXIMA for the SQJ403EP and SQJ407EP and prints the typical figures beside them")
@@ -4812,10 +4836,13 @@ def render_fix22(R, p):
     p("       amendment of an accepted Layer 2 page is the coordinator's)")
     p("     V2-m5: E11-29's coupon reads the PTC's site against each junction with one FET heated alone (the row and block 17d)")
     p("     V2-m9: the tests compose board A in main's order, with record l8r2's d8v3 and vbus20ov; the candidate's change list (L4-E9 rows 24 to 33)")
-    p("       names l8r2's packrtn, slotlm and fb01 instead, which are NOT in this branch's tree (fnd/l8r3 at 89924e40): the order shown is the one")
-    p("       this tree can show; V2 composed both on the candidate (778 and 800 parts, DRAWN)")
-    p("   22i. STATUS (SESSION): V2-B1 answered by correction (b); need 1 CONDITIONAL on E-14c and E11-45 (f), OPEN until one reads; need 2 holds")
-    p("     on TI's printed rows without a second fault; R84 stays specified pulse-rated (CONDITIONAL, Layer 6); the netlist reads DRAWN at 4.7 kOhm")
+    p("       names l8r2's packrtn, slotlm and fb01 instead, which are NOT in this branch's tree (fnd/l8r3 at 89924e40): the tests keep the order")
+    p("       this tree can show. On a scratch copy of the candidate's files (fnd/v2cand at dfa1eef2) with this round's drafts laid over them,")
+    p("       compose_in_list_order.py composed the list's order (16 drafts, each exit 0), the generator ran to its end (778 parts, intent")
+    p("       written), check_dd7_netlist.py read DRAWN and three mutations read FAIL (a scratch run of 4 October 2026, not a committed test)")
+    p("   22i. STATUS (SESSION): V2-B1 answered by correction (b); need 1 CONDITIONAL on E-14c and E11-45 (f2), OPEN until one reads; need 2 holds")
+    p("     on TI's printed rows without a second fault; R84 stays specified pulse-rated (CONDITIONAL, Layer 6); the netlist reads DRAWN at 4.7 kOhm;")
+    p("     the round is the author's answer to V2's first negative check of the 6.8 kOhm value and is UNVERIFIED until its targeted recheck")
     p("")
 
 
