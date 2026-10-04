@@ -92,12 +92,16 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    the fans' start (E11-35, the start current NOT READ): with the other mixer and U12 running, U42's least limit leaves 3.26 W at the rail for the starting fan, 1.60 times its
    running power (L4-E11 18b: 1.6 times): the stagger E11-39 stays; the 17a per-fan figures (0.3356 / 0.5713 A on VSYS_E directly) are superseded by the rail
    the dock feed's current (E11-35): one 813 contact at 1.3208 A declared, 37.7 % of its 3.5 A (L4-E11: 37.7 %).
-   the coolers' feed as drafted by record l8r2: a per-slot step-up from +5V_Sn (the slot rails are 5.1 V) declared 0.69 A at 5.0 V (2.8 W of fan over 0.80), so 0.70 W lost in it per running fan;
+   the coolers' feed as drafted by record l8r2: a per-slot step-up from +5V_Sn (the slot rails are 5.1 V); the slot row declares 0.69 A at 5.0 V for the leads, l8r2's envelope (2.75 W of fan over 0.80),
+   a declaration, not a heat figure (F-L7-12): at the maker's rated 2.0 W and the draft's typical 0.85, so 0.3529 W lost in it per running fan; at the envelope 0.6875 W;
    an empty slot's fan stays dark with its slot; the module's Fan_PWM and Fan_Tacho reach the fan through l8r2's level stages; the header stays JST SH in l8r2's draft (record l7r2 F-R2-08: JST PH).
    the firmware stagger (E11-39, R-188): kept; the PWM ramp now drives the fan's PWM input, not a chopped supply; a 4-wire fan's own soft start is NOT READ for Sanyo (Same Sky prints one).
-   the heat into the case at full speed, every converter's loss counted: the hold's fans (slot 3's cooler and its step-up, the two mixers and U22) 7.50 W (the fans alone 6.08 W,
-   U22's loss 0.72 W from L4-E11 18a, the step-up's 0.70 W) against the model's 1.950 W (+5.55 W, E5's line +0.555 W/K at 0.100 W/K per W); the profile's five fans and their converters 12.90 W
+   the heat into the case at full speed, every converter's loss counted: the hold's fans (slot 3's cooler and its step-up, the two mixers and U22) 7.15 W (the fans alone 6.08 W,
+   U22's loss 0.72 W from L4-E11 18a, the step-up's 0.35 W) against the model's 1.950 W (+5.20 W, E5's line +0.520 W/K at 0.100 W/K per W); the profile's five fans and their converters 11.86 W
    against 2.970 W. The controls set the duty (R-150); T-H1 logs the fans' real draw from a 12.0 V bench supply, so the converters' losses are board heat its heaters carry.
+   at the bound (F-L7-12: the coolers at l8r2's 2.75 W envelope over its low 0.80, the mixers at their rated power, no envelope of theirs stated): the hold's fans 8.24 W
+   (+6.29 W over the model, E5's line +0.629 W/K), the profile's five fans and their converters 15.11 W. One basis per use: the plan's energy at the duty the controls set,
+   the thermal bound on the envelope (R-150 restates E5's line on one of them, named).
    the airflow the picks would deliver (free air, MAKER): the two mixers 0.0260 m3/s (1.56 m3/min against the representatives' 0.60 to 1.21 m3/min, GF60151B9 to B6), the three cooler fans 0.0190 m3/s;
    over the case's free air of about 0.0101 m3 (MODELED, the boards not subtracted) the mixers' free-air flow is 2.6 case volumes a second, an upper bound: the delivered flow in the sealed
    case sits on the fan curve below its 97 Pa maximum and no system curve is held. L4-E12's bound credits this flow at zero; T-H1's reading with these fans replaces the credit.
@@ -196,9 +200,9 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    that total against U42's least limit (%)                                   86.8000 ->   89.7735  MOVED
    VSYS_E's total at the plan's duty (A)                                       0.9690 ->    0.9942  MOVED
    the dock contact's share of its 3.5 A (%)                                  36.5000 ->   37.7382  MOVED
-   the hold's fans' heat into the case at full speed (W)                       6.0800 ->    7.5000  MOVED
-   E5's line shift at full speed (W/K)                                         0.4130 ->    0.5550  MOVED
-   the profile's five fans' heat at full speed (W)                            10.0800 ->   12.9000  MOVED
+   the hold's fans' heat into the case at full speed (W)                       6.0800 ->    7.1529  MOVED
+   E5's line shift at full speed (W/K)                                         0.4130 ->    0.5203  MOVED
+   the profile's five fans' heat at full speed (W)                            10.0800 ->   11.8588  MOVED
    a cooler fan's slot current at full speed (A)                               0.4360 ->    0.6900  MOVED
    the dock lead's continuous draw against ECSS's 3.4 A (%)                   38.0000 ->   38.8482  MOVED
    why: round 1 took a 0.90 converter (typed) at VSYS_E's 9.494 V and declared nothing for the converters' losses; L4-E11 section 18 drafts U22 at 0.85 (its
