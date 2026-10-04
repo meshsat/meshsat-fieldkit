@@ -77,7 +77,7 @@ MINE_A = [("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", 
 AFTER_CHARGER = [("l8r2", "slotlm")]
 # board E's round in the change list's order (L4-POWER-ARCHITECTURE.md's table; section 6b prints whether the page still says so)
 E_ROUND = [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
-           ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("d8dec31", "cin")]
+           ("l4e9", "hotswap"), ("l4e11", "entry"), ("l4e7", "solar_guard"), ("l4e11", "aux"), ("l8p", "enable"), ("d8dec31", "cin")]
 MINE_E = [("l8r2", "packrtn")]
 L8_B = [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
 MINE_B = [("l8r2", "fans12"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500")]
@@ -473,7 +473,9 @@ def item1_r3():
 
 
 def e_round_page():
-    """board E's scripts in the change list's order, as L4-POWER-ARCHITECTURE.md's change table gives them (the ALT rows left out)."""
+    """board E's scripts in the change list's order, as L4-POWER-ARCHITECTURE.md's change table gives them (the ALT rows left out,
+    and this record's own drafts, MINE_E, which the table lists since set 29 and which are composed against the round)."""
+    own = {"apply_gen_sch_e_%s.py" % n for _r, n in MINE_E}
     page = open(os.path.join(ROOT, L4E9_PAGE), encoding="utf-8").read().splitlines()
     i = [k for k, l in enumerate(page) if l.startswith("| # | Step | Row |")]
     if len(i) != 1:
@@ -486,7 +488,7 @@ def e_round_page():
         if c[1] == "ALT" or not c[3].startswith("board E, gen_sch_e.py") or not c[4].startswith("apply_gen_sch_e_"):
             continue
         for s in [x.strip() for x in c[4].split(",")]:
-            if s not in seq:
+            if s not in seq and s not in own:
                 seq.append(s)
     return seq
 
