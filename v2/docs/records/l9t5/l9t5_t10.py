@@ -118,7 +118,7 @@ def figures():
     for rev, n in (("Y", 12), ("V", 14)):
         if len(P[rev]) != n or ("on", 400) not in P[rev] or ("off", 25) not in P[rev] or ("off", 60) not in P[rev]:
             refuse("the rev %s run-mode table no longer reads as %d rows with maxima" % (rev, n))
-    need(t, r"2\. Guaranteed by characterization results", "the maxima's basis (characterization)")
+    need(t, r"2\. Guarantee[d] by characterization results", "the maxima's basis (characterization)")
     P["theta_mcu"] = float(need(t, r"Thermal resistance junction-ambient\s*\n\s*([\d.]+)\s*\n\s*LQFP100 - 14 x 14 mm /0\.5 mm pitch", "the LQFP100's junction to ambient").group(1))
     P["tj_mcu"] = float(need(t, r"TJ\s+Maximum junction temperature\s+(\d+)", "the H743's maximum junction").group(1))
     P["ta_mcu"] = float(need(t, r"Ambient temperature for the suffix 6\s+Maximum power dissipation\s+\S40\s+(\d+)", "the suffix 6 ambient at maximum dissipation").group(1))
@@ -249,8 +249,8 @@ def main():
     w("     architecture's 60 mA is an intent, and the part runs whatever its firmware sets, up to the worst state its sheet prints")
     w("")
     # 3. ST's rows
-    w("3. ST'S PRINTED ROWS (DS12110 Rev 10; Run mode, code with data processing from ITCM, the regulator ON; mA; the maxima 'guaranteed by")
-    w("   characterization results', rev Y's 400 MHz all-peripherals figures at TJ 25 and 105 C tested in production: PRINTED). The order code STM32H743VIT6 does")
+    w("3. ST'S PRINTED ROWS (DS12110 Rev 10; Run mode, code with data processing from ITCM, the regulator ON; mA; the maxima are the sheet's")
+    w("   characterization results (its table note 2), rev Y's 400 MHz all-peripherals figures at TJ 25 and 105 C tested in production: PRINTED). The order code STM32H743VIT6 does")
     w("   not fix the silicon revision, so both revisions' tables apply: rev Y, Table 30 (p.111); rev V, Table 129 (p.218)")
     w("   rev  state                                  typ   max at TJ 25 C   85 C  105 C  125 C")
     sel = [("off", 25), ("off", 60), ("off", 144), ("off", 200), ("on", 200), ("off", 400), ("on", 400)]
