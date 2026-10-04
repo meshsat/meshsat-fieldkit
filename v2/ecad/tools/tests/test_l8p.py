@@ -94,7 +94,8 @@ def t_the_committed_output_is_what_the_script_prints():
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 2, "the alone and the composed readings"
     assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 3, "the three mutations"
     assert "REFUSED" not in t.split("5. COMPOSITION")[1].split("6. DESIGNATORS")[0], "a composition step refused"
-    assert "L8P-F01" not in t.split("with scratch stand-ins for ")[1].split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
+    for seg in t.split("with scratch stand-ins for ")[1:]:      # none at all since L4-E11's round 9 corrected L8P-F02 and L8P-F03
+        assert "L8P-F01" not in seg.split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():

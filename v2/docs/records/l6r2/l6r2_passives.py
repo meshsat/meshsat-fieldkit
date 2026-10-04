@@ -684,6 +684,11 @@ def change_chain(board):
         for s in [x.strip() for x in c[4].split(",")]:
             if not s.startswith("apply_gen_sch_%s_" % board): continue
             hits = [p for p in m.CHANGE_SCRIPTS if p.endswith("/" + s)]
+            if not hits:      # a draft L4-E9 reads from a copied input (records l8p, l8r2): found in the tree by its name, exactly one
+                import glob
+                found = sorted(glob.glob(os.path.join(TOP, "v2", "docs", "records", "*", s)))
+                if len(found) == 1:
+                    hits = [os.path.relpath(found[0], os.path.join(TOP, "v2", "docs", "records")).replace(os.sep, "/")]
             for h in hits:
                 rel = "v2/docs/records/" + h
                 if rel not in out: out.append(rel)
