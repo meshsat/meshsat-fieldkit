@@ -46,7 +46,10 @@ the rail and the four-wire fans and no flyback, and board B's feed is read as no
 corrected, and board A composed in L4-E9's order runs to its end (board E too, with L4-E7's defect stood in); the third battery FET Q42 sits
 on record l9stk's junction limit, reproduced, and E11-29 carries it; E11-37 is bound to the three-device network and stays open; DD-3's
 one design-out attempt fails on L2 and stays open with its condition, J_DCIN drafted as the XT60-F; IF-1's hold outlasts the breaker's
-start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Nothing here writes
+start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Round 10 (section 20)
+adds: DD-7's board A side redrawn against record l8p's L8P-F04 and L8P-F05 composes in L4-E9's order, reads DRAWN in the regenerated
+netlist and FAIL on five mutations, and holds on C-PROT (the held return sets the inhibit within 1 ms, the hold outlasts the restart,
+the latch keeps CELL+ dead whatever the LM5069's resistor); T2's 9/8 is read in closed form. Nothing here writes
 into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -1010,7 +1013,9 @@ def t_the_board_a_drafts_add_disjoint_designators():
             assert r.returncode == 0, "%s: %s" % (os.path.relpath(d, ROOT), r.stderr.decode()[-200:])
             added[os.path.relpath(d, ROOT)] = set(pat.findall(open(a, encoding="utf-8").read())) - before
     dd7 = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_dd7.py"), ROOT)]
-    assert {"Q44", "Q45", "Q46", "Q47", "Q48", "Q49", "R82", "R83", "R106", "R107", "R108", "R109", "R144", "D25"} <= dd7, sorted(dd7)
+    assert {"Q44", "Q45", "Q46", "Q47", "Q48", "Q49", "R82", "R83", "R106", "R107", "R108", "R109", "R144", "D25",
+            "U47", "U48", "Q50", "Q51", "Q52", "D26", "D27", "R84", "R85", "R233", "R249", "R250", "R251", "R252", "R253", "R254", "R255",
+            "R256", "C241", "C248"} <= dd7, sorted(dd7)
     mine = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_charger.py"), ROOT)]
     assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40", "Q42", "Q43", "U46", "R86", "R87", "R88", "R89", "R105", "C105", "D24"} <= mine
     assert "R221" not in mine and not ({"Q41", "U44", "U45", "RT1"} & mine), sorted(mine)
@@ -1319,36 +1324,146 @@ def t_round9_the_record_carries_the_outputs_numbers():
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
-def t_round9_dd7_composes_after_l8ps_ptc_and_the_generator_runs_to_its_end():
-    """DD-7's draft: refused without record l8p's loop, applied once after it, refused a second time and on the tree; board A composed in
-    L4-E9's order with l8p's PTC and this draft before d8dec31's mainpb runs to its end; the reset pulls the loop's return, the inhibit
-    holds the battery FETs' gates, and mainpb still takes R248 and C247."""
+L8P3_PTC = ("v2/docs/records/l8p/apply_gen_sch_a_ptc.py", "d9c43966985172876ad1ea7339b417d31ecf10cd85824da1b983c3b1eb8b73d6")
+L8P3_GEN = ("v2/docs/records/l8p/gen_netlist.py", "f3339d09604757d370ff5526f1311dbf03bd1685b22c1019d6af506ac0dd5dca")
+DD7_CHECK = os.path.join(REC, "check_dd7_netlist.py")
+
+
+def _l8p3(pin):
+    """A file of record l8p's round 3 (fnd/l8p2 at a46597e2, merged into this branch), by sha256."""
+    path = os.path.join(ROOT, pin[0])
+    need(path, "record l8p's round 3 (%s)" % pin[0])
+    assert _sha(path) == pin[1], "%s is not the one this record composed with" % pin[0]
+    return path
+
+
+def _compose10(d):
+    """Board A in L4-E9's order with record l8p's PTC (round 3, the tree's) and this record's DD-7 draft before d8dec31's mainpb."""
+    ptc = _l8p3(L8P3_PTC)
+    dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
+    g = os.path.join(d, "gen_sch_a.py")
+    shutil.copy(GEN_A, g)
+    for rec, name in _ORDER9["a"]:
+        if (rec, name) == ("d8dec31", "mainpb"):
+            for s in (ptc, dd7):
+                r = _run([s, g, "--write"])
+                assert r.returncode == 0, "%s: %s" % (s, r.stderr.decode()[-300:])
+            assert _run([dd7, g, "--write"]).returncode == 3, "a second application was not refused"
+        s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
+        r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
+        assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+    return g
+
+
+def _netlist10(g, d, tag):
+    """The composed generator run to its end by record l8p's gen_netlist.py; the regenerated netlist's path."""
+    out = os.path.join(d, "a-%s.net" % tag)
+    r = _run([_l8p3(L8P3_GEN), g, out, "pcb-a-power"])
+    assert r.returncode == 0 and b"intent written" in r.stdout, "the composed generator refused: %s" % (r.stdout + r.stderr).decode()[-400:]
+    return out
+
+
+def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fail():
+    """Closure credit (a) and (b) for L8P-F04 and L8P-F05: DD-7's redrawn draft is refused without record l8p's loop and on the tree,
+    composes in L4-E9's order after l8p's PTC (round 3) and before d8dec31's mainpb, the generator runs to its end, and the regenerated
+    netlist reads DRAWN in check_dd7_netlist.py; five circuit mutations, each a defect the correction removes or the interface forbids,
+    read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
     _M()
     dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
     with tempfile.TemporaryDirectory() as d:
         bare = os.path.join(d, "bare.py")
         shutil.copy(GEN_A, bare)
         r = _run([dd7, bare, "--write"])
-        assert r.returncode == 3 and b"apply l8p's PTC draft first" in r.stderr, r.stderr.decode()[-200:]
+        assert r.returncode == 3 and b"apply l8p's PTC draft" in r.stderr, r.stderr.decode()[-200:]
         r = _run([dd7, GEN_A, "--write"])
         assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
-        ptc = _l8p_ptc(d)
-        g = os.path.join(d, "gen_sch_a.py")
-        shutil.copy(GEN_A, g)
-        for rec, name in _ORDER9["a"]:
-            if (rec, name) == ("d8dec31", "mainpb"):
-                for s in (ptc, dd7):
-                    assert _run([s, g, "--write"]).returncode == 0, s
-                assert _run([dd7, g, "--write"]).returncode == 3, "a second application was not refused"
-            s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
-            r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
-            assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
-        parts, it = _run_generator9(g, "pcb-a-power", d)
-    assert parts["Q44"]["nets"] == {"1": "DD7_G", "2": "GND", "3": "DOCK_EN_RET"} and parts["RT1"]["nets"]["2"] == "DOCK_EN_RET"
-    assert parts["Q45"]["nets"]["1"] == "FE_RUN" and parts["Q46"]["nets"]["1"] == "DD7_ALIVE" and parts["R107"]["nets"]["1"] == "CELL+"
-    assert parts["Q49"]["nets"] == {"1": "SYS_INH_P", "2": "VBAT", "3": "CH_BATDRV"} and parts["R109"]["nets"]["1"] == "DOCK_EN_OUT"
-    assert parts["Q47"]["nets"]["1"] == "SYS_INH_G" and parts["Q48"]["nets"]["3"] == "SYS_INH_G"
-    assert "R248" in parts and "C247" in parts and "R249" not in parts and "C248" not in parts, "d8dec31's next-free references moved"
+        g = _compose10(d)
+        net = _netlist10(g, d, "drawn")
+        r = _run([DD7_CHECK, net])
+        assert r.returncode == 0 and b"DD-7 on board A (L4-E11 round 10): DRAWN" in r.stdout, r.stdout.decode()[-600:]
+        raw = open(net, encoding="utf-8").read()
+        refs = set(re.findall(r'\(comp \(ref "([^"]+)"\)', raw))
+        dd7_r = [int(x[1:]) for x in refs if re.match(r"R\d+$", x) and x in ("R252", "R256", "R233", "R254", "R85", "R84", "R253", "R251", "R250", "R249", "R255")]
+        assert "R%d" % (max(dd7_r) + 1) in refs and "C249" in refs, "d8dec31's mainpb did not take the next free references after DD-7's"
+        text = open(g, encoding="utf-8").read()
+        mutations = [
+            ("U48's SENSE1 on DOCK_EN_OUT (the trigger reads the wrong conductor)", '"2": "DOCK_EN_RET", "3": "DD7_OS"', '"2": "DOCK_EN_OUT", "3": "DD7_OS"'),
+            ("Q47's gate on DD7_T (the inhibit no longer gated by the powered loop)",
+             'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_LP"', 'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_T"'),
+            ("R108's foot on ground (a dead CELL+ sets the inhibit again: L8P-F05)", 'r("R108", "100k 1%", "DD7_CS", "DD7_REF"', 'r("R108", "100k 1%", "DD7_CS", "GND"'),
+            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
+            ("a 100 kOhm load on DOCK_EN_RET (the interface's 1 MOhm)", 'tp("TP1", "DD7_H")', 'r("R260", "100k", "DOCK_EN_RET", "GND", lcsc="C25803"); tp("TP1", "DD7_H")'),
+        ]
+        for k, (why, old, rep) in enumerate(mutations):
+            assert text.count(old) == 1, why
+            gm = os.path.join(d, "gen_sch_a_m%d.py" % k)
+            open(gm, "w", encoding="utf-8").write(text.replace(old, rep))
+            r = _run([DD7_CHECK, _netlist10(gm, d, "m%d" % k)])
+            assert r.returncode == 4 and b"FAIL" in r.stdout, "%s: the check did not fail: %s" % (why, r.stdout.decode()[-400:])
+    r = _run([DD7_CHECK, _NET9["a"]])
+    assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, "the committed netlist does not read NOT DRAWN"
+
+
+def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_dead():
+    """Closure credit (c) on C-PROT: the failure reproduced on round 9's draft, then the redrawn circuit against the same cases, from the
+    makers' printed figures: the held return at 7.6 and 10.6 V sets the inhibit within the interface's 1 ms, the hold outlasts 1.0 s and
+    the restart, CELL+ with the breaker off at 16.8 V and 29.2 V stays dead under the latch, the service never triggers, the parts stay
+    within their limits."""
+    R = _R()
+    m = _M()
+    S, S9 = R["S20"], R["S19"]
+    # the failure, as record l8p found it (round 9's readings) and as this record recomputes it
+    assert S["f04"][0] < S["f04"][2] and S["f04"][1] < S["f04"][2], "L8P-F04 is not reproduced"
+    assert S["f05"]["v"] > S["f05"]["dead"] and S["f05"]["v_clamp"] > S["f05"]["dead"], "L8P-F05 is not reproduced"
+    held = dict(S["out_held"])
+    assert held[7.6] / 2 < S9["vth"][2] and held[10.6] / 2 < S9["vth"][2], "round 9's sense would read the held loop"
+    # the correction on the same cases
+    assert held[7.6] > S["out_rel"][1] + 0.5 and held[10.6] > S["out_rel"][1] + 1.5, "the held loop is not read powered"
+    assert S["out_rel"][1] <= S["if_out"] and S["out_ast"][0] > 0.5, "the powered reading leaves the interface's 2.0 V"
+    assert S["held"] < S["ret_low"] - 0.7 and S["ret_low"] < S["if_ret_lo"] and S["ret_high"] < S["if_ret_hi"]
+    assert S["t_set"] < 1e-3 and S["t_set_min"] > 4.5 * S["tau_arm"], "the set is late or the arm may not complete before it"
+    assert S["hold_min"] > S["if_hold"] + 0.3 and S["hold_min"] > S["restart"] + 0.35 and S["leak_x"] > 2.5
+    assert S["rest_margin"] > 0.3, "the hold may never end"
+    for (vin, vc), (_v, rmin) in zip(S["latch_cell"], S["rint_min"]):
+        assert vc < S["dead"] - 3.5 and rmin < 0.05 * S["r_int"], "the latch leans on the LM5069's resistor at %s V" % vin
+    assert S["dead"] < S["alive"] < 9.0 and S["bleed_t"] < S["hold_min"], "the release on CELL+ alive is not where the breaker drives it"
+    assert S["charge_end"] < 10e-3, "the charge through the off breaker outlasts E-14's 10 ms"
+    # the service: no trigger at the bound point, none on a back-fed ramp while RT1 is in its printed 25 C band, none before the guard
+    assert S["bound"][1] > 2.5 + 0.35 and S["bound_margin"] > 2.0, "the loads move l9stk's bound point or the service reads held"
+    assert S["window_rt1"] > 1.5 * S9["rt1"][1] and S["ldo_ret"] > S["ret_high"] + 1.0
+    assert all(g > i_[2] for (_v, g), i_ in zip(S["guard_rt1"], S["inv_rt1"])), "board A reads held before board P's guard"
+    # the interface's literal box contains a closed loop: the reason board A's reading is narrower
+    assert abs(S["box_rt1"] - S9["r_ret"]) < 1.0 and all(v < 4.0 for _rt, v in S["box_vin"])
+    # the parts within their limits
+    assert S["vgs_p"][1] < S["p_vgs"] and S9["vbat_clamp"] < S["p_vds"] and S["arm_peak"] < S["ifsm"][1] and S["arm_i2t"] < S["ifsm"][1] ** 2 * 1e-3
+    assert S["n_sink"][0] < S["tps"]["i_vol"] and S["bleed_w"][1] < S["r1206_hot"] and S["ra_w"] < S["ra_sto"] / 1000
+    assert S["static_frac"] < 0.01
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("## 20. Round 10")[1]
+    out = open(OUT, encoding="utf-8").read()
+    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.846", "19.9", "34.5", "4.076", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
+              "2.545", "3.535", "157.7", "61.3", "269", "4.08"):
+        assert s in sec and s in out, "%s is not in both section 20 and the output" % s
+    for f_ in ("L4E11-R10-F1", "L4E11-R10-F2", "L4E11-R10-F3", "C-PROT", "NOT\nSETTLED"):
+        assert re.search(f_.replace(" ", r"\s+"), sec), f_
+    row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
+    assert "(c2)" in row and "route R1" in row and "(e) L8P-F04" in row and "(f) L8P-F05" in row and "(h) the hold timed" in row
+
+
+def t_round10_t2_one_fet_of_three_may_take_nine_eighths():
+    """T2, recorded: with one FET at r and two at R the one dissipates I^2 R^2 r / (R + 2 r)^2, largest at r = R / 2, 9/8 of the even
+    split; with two FETs the even split is the largest; read in closed form and by a scan."""
+    R = _R()
+    S = R["S20"]
+    p3 = lambda r, rr=1.0: rr * rr * r / (rr + 2 * r) ** 2
+    p2 = lambda r, rr=1.0: rr * rr * r / (rr + r) ** 2
+    scan3 = max(p3(k / 1000.0) for k in range(1, 5000))
+    scan2 = max(p2(k / 1000.0) for k in range(1, 5000))
+    assert abs(scan3 / p3(1.0) - 9.0 / 8.0) < 1e-4 and abs(p3(0.5) / p3(1.0) - 9.0 / 8.0) < 1e-12
+    assert abs(scan2 - p2(1.0)) < 1e-6, "with two FETs the even split is not the worst case"
+    assert abs(S["t2"] - 9.0 / 8.0) < 1e-12 and S["t2_tj"] > 150.0
+    row = [x for x in _M().downstream(R) if x[0] == "E11-29"][0][3]
+    assert "OPEN since round 10" in row and "9/8" in row
 
 
 def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_latch():
