@@ -1,4 +1,4 @@
-"""Layer 9 task T5, record l9t5 (MESHSAT-1357, 4 October 2026; v2/docs/records/l9t5/): C-ALLTX rev 2 and C-DEV rev 1, held as
+"""Layer 9 task T5, record l9t5 (MESHSAT-1357, 4 October 2026; v2/docs/records/l9t5/): C-ALLTX rev 3 and C-DEV rev 1, held as
 predicates on what l9t5_case.py computes.
 
 The predicates: the committed .out is what the script prints and every pinned input is present at the sha256 the output names; the
@@ -133,7 +133,7 @@ def t_the_page_carries_the_outputs_figures():
     for s in ("%.4f V" % c["need"], "%.3f" % c["allow"], "%.3f" % c["p"], "%+.3f W" % c["deficit"], "%.4f V" % U["gauge_uncal_row"]["need"],
               "%.4f A" % U["gauge_uncal"], "%.4f V" % U["comb_printed"]["need"], "%.4f V" % by[0.5]["unc"]["need"], "%.4f V" % by[0.25]["m8"]["need"],
               "%.4f A against %.4f A" % (C["b_i_least"], C["lim_min"]), "%.4f mOhm" % (C["a_need_max"] * 1000), "%.4f mOhm" % (C["a_need_min"] * 1000),
-              "%.3f mOhm" % (A["a2_band"][2] * 1000), "%.4f V" % A["a3_unc"]["need"], "16.214", "C-ALLTX rev 2", "C-DEV rev 1"):
+              "%.3f mOhm" % (A["a2_band"][2] * 1000), "%.4f V" % A["a3_unc"]["need"], "16.214", "C-ALLTX rev 3", "C-DEV rev 1"):
         assert s in page, "the page does not carry %r" % s
     need(README, "the README")
     assert "%.4f V" % c["need"] in open(README, encoding="utf-8").read()
@@ -180,7 +180,7 @@ def t_round2_drafts_output_reproduced_and_every_predicate_holds():
     assert text == open(DRAFTS_OUT, encoding="utf-8").read(), "l9t5_drafts.out is not what the script prints"
     pred = text.split("9. THE PREDICATES")[1].split("l9t5_drafts: done")[0]
     rows = [l for l in pred.splitlines() if l.strip()]
-    assert len(rows) == 12 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    assert len(rows) == 15 and all(l.rstrip().endswith(" yes") for l in rows), rows
     for p in re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M):
         assert hashlib.sha256(open(os.path.join(ROOT, p[1]), "rb").read()).hexdigest().startswith(p[0]), p[1]
 
@@ -225,9 +225,9 @@ def t_round2_cdev_acceptance_is_re_solved():
     assert round(lo, 3) == 4.872 and round(hi, 3) == 5.133 and round(nom, 3) == 5.002
     assert lo * (1 - 0.035) > 3.3 * 1.015 + 0.400 and hi < 6.0
     txt = open(DRAFTS_OUT, encoding="utf-8").read()
-    assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF: HOLDS" in txt
-    # round 3: the shared return's finding stays visible beside the result, and I-03 stays open until the independent recheck
-    assert "L8R2-F31 stays OPEN beside this result and is not this record's" in txt and "I-03 STAYS OPEN" in txt
+    assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF, ITS OWN PARTS: HOLDS" in txt
+    # round 4: the connected path is never a pass on this record's evidence; I-03 stays open
+    assert "THE CONNECTED PATH: CONDITIONAL" in txt and "L8R2-F31 stays OPEN until its independent check" in txt and "I-03 STAYS OPEN" in txt
 
 
 def _basis(m):
@@ -335,6 +335,73 @@ def t_round2_a1_detector_survey_reproduced_and_a1_stays_a_direction():
     assert text == open(A1_OUT, encoding="utf-8").read(), "l9t5_a1.out is not what the script prints"
     assert "a detector whose PRINTED LIMIT supports A1's tolerance: NONE" in text and "A1 STAYS A SELECTED DIRECTION, NOT DRAFTED" in text
     assert not [f for f in os.listdir(REC) if f.startswith("apply_gen_sch_d_")]
+
+
+def t_round4_the_connected_path_consumes_l8r2s_worst_vertex_and_is_never_a_pass():
+    """V3's material blocker (1a). Round 3 accepted the lead's pin 2 on a sampled maximum (9.404 A) and said the acceptance did not
+    depend on L8R2-F31. Now: the as-drawn figure is record l8r2's worst vertex and is OVER the VH's printed 10 A on the case (the row
+    reads NOT MET there); with that record's return drafts composed the row is CONDITIONAL; which one applies is read from the
+    composed netlists (the return sockets), never typed; the independence claim is gone from the output and the README."""
+    import io
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts4")
+    chk = _mod(CHECK, "l9t5_test_check4")
+    G = m.gndret()
+    assert G["ioc"]["drawn_hot"] > 10.0 and G["ioc"]["drawn_cold"] > G["ioc"]["drawn_hot"], G["ioc"]           # the old statement: 9.404 A, "within it"
+    assert abs(G["ioc"]["drawn_hot"] - 10.6376) < 5e-4                                                          # V3's corner, 10.6375 A
+    assert G["ret"][(G["ub_total"], -20.0)]["lead"] < 10.0 and G["shift_ret"] < G["shift_drawn_ub"]
+    assert ("l8r2", "gndrtn") in m.ORDER["a"] and m.ORDER["a"].index(("l8r2", "gndrtn")) < m.ORDER["a"].index(("d8dec31", "mainpb"))
+    assert m.ORDER["b"].index(("l8r2", "gndrtn")) == m.ORDER["b"].index(("l8r2", "gndret")) + 1
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        for b in "ab":
+            for tag, skip, want in (("ret", (), "DRAWN"), ("noret", m.RETURN, "NOT DRAWN")):
+                p, _res, ok = m.compose(b, m.seq_of(b, "slot", skip=skip), d, "t4_%s" % tag)
+                assert ok, (b, tag)
+                rc, path, _t = m.netlist(b, p, d, "t4_%s" % tag)
+                assert rc == 0, path
+                assert chk.return_drawn(chk.read(open(path, "rb").read()))[0] == want, (b, tag)
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "AS DRAWN (no dedicated return)" in out and "NOT MET (the recheck's corner, 10.6375 A)" in out
+    assert "THE CONNECTED PATH: CONDITIONAL. It holds ONLY WITH that return correction" in out
+    assert "does NOT depend on, and does not close" not in out and "is WITHDRAWN: the draft adds a VH contact" in out
+    readme = open(README, encoding="utf-8").read()
+    assert "does not depend on" not in readme.split("## The claim table")[1].split("## Round 2 in short")[0].replace("does not depend on L8R2-F31 is withdrawn", "")
+
+
+def t_round4_the_ldo_requirement_carries_its_regulation_terms():
+    """V3's blocker 2 (1b): 3.7495 V was the output tolerance (printed at 1 to 30 mA) and the dropout alone; with the printed load
+    and line regulation maxima the requirement is 3.7674 V and the ground shift the LDOs allow 0.9417 V."""
+    m = _mod(DRAFTS, "l9t5_test_drafts5")
+    P = m.figures()
+    chk = _mod(CHECK, "l9t5_test_check5")
+    lo, _n, hi = chk.vout_band(56.2e3, 10.7e3)
+    need = 3.3 * (P["ap_vout_hi"] + P["ap_load"] * 0.46 + P["ap_line"] * (hi - 4.3)) + P["ap_drop"]
+    assert P["ap_load"] == 0.01 and P["ap_line"] == 0.001 and abs(need - 3.7674) < 5e-5 and need > 3.7495
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "3.7674 V (round 3's 3.7495 V was the simplified figure" in out and "The ground shift the LDOs allow: 0.9417 V" in out
+
+
+def t_round4_sequencing_is_stated_as_an_enable_relation():
+    """V3's blocker 3 (1c): shared enable connectivity is not evidence that the supervisors' rail is valid whenever the device rail
+    is; the old sentence is gone and the timing stays an unverified bench item."""
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "the supervisors are up whenever the device rail is (record l9t5 out 5's condition)" not in out
+    assert "the enable RELATION" in out and "That is connectivity, not timing" in out and "UNVERIFIED: a bench item" in out
+
+
+def t_round4_the_gauge_bound_has_its_offset_drift_and_the_case_file_is_rev_3():
+    """V3's blockers 4 and 5 (1d, 1e): the BQ4050's printed offset drift is in the gauge's sum (0.0048 A over the assumed 32 K; the
+    bound 16.0684 V becomes 16.0718 V; F01 stays open on either), and the case script pins and labels the rev 3 case file."""
+    m = _M()
+    R = _C["R"]
+    I, U = R["in"], R["U"]
+    assert abs(I["g_off_drift"] - 0.3e-6) < 1e-12 and abs(U["off_drift"] - 0.3e-6 * 32.0 / 0.002) < 1e-9 and round(U["off_drift"], 4) == 0.0048
+    assert any(lab.startswith("offset drift") for lab, _x in U["gauge_terms"])
+    assert round(U["comb_before_r4"]["need"], 4) == 16.0684 and round(U["comb_printed"]["need"], 4) == 16.0718 and U["comb_printed"]["need"] > 15.5
+    assert m.PINS["cases"].endswith("coordinator-cases-2026-10-04-rev3.md")
+    first = _C["text"].splitlines()[0]
+    assert first.startswith("l9t5_case: C-ALLTX rev 3 and C-DEV rev 1") and "1. THE CASE ROW, C-ALLTX REV 3" in _C["text"]
+    assert abs(I["rev3_case"][1] - R["case"]["need"]) < 5e-5 and I["rev3_bound"] == 16.0684
 
 
 def t_record_hygiene():

@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-"""l9t5_drafts.py: Layer 9 record l9t5, task T5 rounds 2 and 3: I-03's correction (the case row C-DEV rev 1) drafted for boards A
+"""l9t5_drafts.py: Layer 9 record l9t5, task T5 rounds 2 to 4: I-03's correction (the case row C-DEV rev 1) drafted for boards A
 and B, composed, regenerated, mutated and judged on scratch copies (MESHSAT-1357, 4 October 2026). PROTOTYPE DESIGN: nothing in this
 kit has been built, bought, powered or measured, nothing is applied to the tree, and no figure printed here is a measurement.
+
+Round 4 (after the collaborator's targeted recheck V3, NOT CONFIRMED, an AI review): record l8r2's round 8 (merged at 927cdd1e)
+enumerates every vertex of the contact-resistance box and drafts a dedicated return between the boards; its two gndrtn drafts are in
+both orders here. The lead's pin 2 and the ground shift are read from that record's output at their WORST VERTEX: as drawn the
+connected path is NOT MET, with the return composed it is CONDITIONAL on that unchecked draft. Round 3's claim that this acceptance
+does not depend on L8R2-F31 is withdrawn; the AP2112K's requirement carries its regulation terms; the enable relation is stated as
+connectivity, not as sequencing.
 
 Round 3: record l8r2's round 7 (task T5b, in this tree since the merge at 43c9b49d) lets board B's composition run to its end, so
 board B's half is composed, read and judged here as board A's was; and its finding L8R2-F35 for this record is answered: the
@@ -68,12 +75,15 @@ GNDRET_CHK = os.path.join(RECS, "l8r2", "check_gndret_netlist.py")
 ORDER = {
     "a": [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
           ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm"),
-          ("l8r2", "fb01"), ("l8p", "ptc"), ("l4e11", "dd7"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")],
+          ("l8r2", "fb01"), ("l8p", "ptc"), ("l4e11", "dd7"), ("l8r2", "gndrtn"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")],
     "b": [("l8gnd", "gnd002"), ("l8r2", "fans12"), ("l8r2", "fandec"), ("l8r2", "panel5v"), ("l8r2", "ph4"), ("l8r2", "rt500"),
-          ("l8r2", "gndret"), ("l6r2", "xal_land"), ("l6r2", "lcsc"), ("l6r2", "intent")],
+          ("l8r2", "gndret"), ("l8r2", "gndrtn"), ("l6r2", "xal_land"), ("l6r2", "lcsc"), ("l6r2", "intent")],
 }
-SLOT = {"a": 16, "b": 7}
-ROUND7 = (("l8r2", "fandec"), ("l8r2", "gndret"))     # record l8r2's round 7 drafts: without them board B's composition is the old state
+# round 4: record l8r2's round 8 return drafts gndrtn are in both orders (board B's after gndret, board A's before mainpb); this
+# record's draft stays before them on board A and after them on board B
+SLOT = {"a": 16, "b": 8}
+ROUND7 = (("l8r2", "fandec"), ("l8r2", "gndret"), ("l8r2", "gndrtn"))   # record l8r2's rounds 7 and 8 on board B: without them, the tree before T5b
+RETURN = (("l8r2", "gndrtn"),)                        # record l8r2's round 8 return draft: without it the return is as drawn
 SHEETS = {"tps62933": "v2/vendor/ti/ti-tps62933.pdf", "vh": "v2/vendor/connectors/jst-vh-catalogue.pdf",
           "xal60": "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "lm5176": "v2/vendor/ti/lm5176-datasheet.pdf", "h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf"}
@@ -174,6 +184,10 @@ def figures():
     P["ap_imax"] = float(need(sec, r"IOUT\(MAX\)\s+Maximum Output Current\s+VIN = 4\.3V, VOUT = [\d.]+V to [\d.]+V\s+(\d+)", "IOUT(MAX)").group(1)) / 1000.0
     P["ap_drop"] = float(need(sec, r"IOUT = 600mA\s+\u2014\s+250\s+(\d+)", "the dropout at 600 mA").group(1)) / 1000.0
     P["ap_vin_max"] = float(need(t, r"VIN\s+Supply Voltage\s+([\d.]+)\s+([\d.]+)\s+V", "VIN's range").group(2))
+    # round 4 (the recheck V3's blocker 2): the +1.5 % is printed at 1 to 30 mA; the load and line regulation limits are separate rows
+    need(sec, r"Output Voltage\s+VIN = 4\.3V, 1mA ≤ IOUT ≤ 30mA", "VOUT's test condition (1 to 30 mA)")
+    P["ap_load"] = float(need(sec, r"Load Regulation\s+VIN = 4\.3V, 1mA ≤ IOUT ≤ 600mA\s+-1\s+0\.2\s+([\d.]+)\s+%/A", "the load regulation maximum").group(1)) / 100.0
+    P["ap_line"] = float(need(sec, r"Line Regulation\s+4\.3V≤ VIN ≤ 6V, IOUT = 30mA\s+-0\.1\s+0\.02\s+([\d.]+)\s+%/V", "the line regulation maximum").group(1)) / 100.0
     # the supervisors' current: ST DS12110 Rev 10 Table 30 (p.111), 400 MHz, VOS1, all peripherals enabled: typ, max at TJ 25, 85, 105, 125 C
     t = pdf("h743")
     need(t, r"DS12110 Rev 10", "the H743 sheet's revision")
@@ -193,29 +207,39 @@ def figures():
 
 
 def gndret():
-    """record l8r2's round 7 output in this tree (parsed, never typed): the lead's conductor, the return's division at C-DEV rev 1 with
-    this record's draft composed (six leads) and at the declared upper bound, and L8R2-F31's state."""
+    """record l8r2's round 8 output in this tree (parsed, never typed): the lead's conductor, each connector's pin 2 on C-DEV rev 1 at
+    its WORST VERTEX of the contact-resistance box, as drawn and with that record's dedicated return, the 5 V leads' rows at the
+    declared upper bound, the ground shift, the supply pin's least reading (L8R2-F43) and L8R2-F31's state."""
     t = open(GNDRET_OUT, encoding="utf-8").read()
     G = {}
-    m = need(t, r"J_5V_DEV\s+AWG16\s+1 conductor\s+([\d.]+) mOhm each at 20 C,\s+([\d.]+) at ([\d.]+) C", "l8r2's lead conductor (3c)")
-    G["r20"], G["rhot"], G["t_hot"] = float(m.group(1)) * 1e-3, float(m.group(2)) * 1e-3, float(m.group(3))
-    row = re.compile(r"^\s+(K\d)\s.*?\s([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(MODEL|BOUND)(.*)$", re.M)
+    m = need(t, r"J_5V_IOC\s+AWG16\s+([\d.]+) at -20 C,\s+([\d.]+) at ([\d.]+) C; each of its two contacts 0 to ([\d.]+) mOhm", "l8r2's lead conductor (3c)")
+    G["rcold"], G["rhot"], G["t_hot"], G["vh_rmax"] = float(m.group(1)) * 1e-3, float(m.group(2)) * 1e-3, float(m.group(3)), float(m.group(4)) * 1e-3
+    G["cdev_total"] = float(need(t, r"THE RETURN EACH CONNECTOR CARRIES ON C-DEV rev 1 \(([\d.]+) A in all;", "l8r2's C-DEV total (7)").group(1))
 
-    def block(pat, what):
-        m_ = need(t, pat, what, re.M | re.S)
-        rows = {k: dict(lead=float(a), largest=float(b), j54=float(c), ribbon=float(d_), ribbons=float(e), mv=float(f), label=(lab + tail).strip())
-                for k, a, b, c, d_, e, f, lab, tail in row.findall(m_.group(2))}
-        if sorted(rows) != ["K0", "K1", "K2", "K3", "K4", "K5"]:
-            refuse("%s: its six rows no longer read" % what)
-        return float(m_.group(1)), rows
-    G["cdev_total"], G["cdev"] = block(r"C-DEV rev 1's state \(PS-ALLTX, HIGH, the least load voltage\) with Layer 9's draft composed, six leads: ([\d.]+) A\n(.*?)\n\s+the upper bound \(i\), five leads",
-                                       "l8r2's division at C-DEV rev 1 with six leads (3d)")
-    G["ub_total"], G["ub"] = block(r"the upper bound \(i\) with Layer 9's draft, six leads: ([\d.]+) A\n(.*?)\n\s+READ\.", "l8r2's division at the upper bound with six leads (3d)")
-    m = need(t, r"total ([\d.]+) A = S1 ([\d.]+) \+ S2 ([\d.]+) \+ S3 ([\d.]+) \+ U7 ([\d.]+) \+ U601 ([\d.]+), MODEL", "l8r2's C-DEV total (6)")
-    G["total"], G["parts"] = float(m.group(1)), tuple(float(x) for x in m.groups()[1:])
-    G["vh_hot"] = float(need(t, r"([\d.]+) A at 76\.25 C; the printed 10 A is what the rows below are judged at", "l8r2's comparator at the inside air (3b)").group(1))
-    need(t, r"L8R2-F31 OPEN \(KNOWN DEFECT of the A to B power interface", "L8R2-F31's state")
-    need(t, r"L8R2-F35 FOR LAYER 9'S AUTHOR \(record l9t5\)", "L8R2-F35")
+    def conn(name):
+        m_ = need(t, r"^\s+%s\s+([\d.]+) A\s+([\d.]+) A\s+([\d.]+) A\s+([\d.]+) A\s+([\d.]+) A\s+10 A\s*$" % re.escape(name), "l8r2's row for %s (7)" % name)
+        return dict(zip(("pin1", "drawn_hot", "drawn_cold", "ret_hot", "ret_cold"), (float(x) for x in m_.groups())))
+    G["ioc"], G["dev"] = conn("J_5V_IOC"), conn("J_5V_DEV")
+    if len(G["ioc"]) != 5 or len(G["dev"]) != 5:
+        refuse("l8r2's per-connector rows no longer carry five figures")
+    rows = re.findall(r"^\s+([\d.]+) A\s+(-?[\d.]+) C\s+([\d.]+) (HOLDS|DOES NOT HOLD)\s+([\d.]+) (?:no rating|HOLDS|DOES NOT HOLD)\s+([\d.]+) (HOLDS|DOES NOT HOLD)\s+([\d.]+) \d+ states", t, re.M)
+    G["drawn"] = {(float(tot), float(cu)): dict(lead=float(ld), lead_v=lv, ribbon=float(rb), ribbon_v=rv, mv=float(mv)) for tot, cu, ld, lv, _j, rb, rv, mv in rows}
+    blk = need(t, r"each 5 V lead's pin 2 \(([^)]*)\)\n(.*?)\n\s+the PoE lead's pin 2", "l8r2's rows for the 5 V leads with the return (6b)", re.S)
+    if "J_5V_IOC" not in blk.group(1):
+        refuse("l8r2's 6b rows for the 5 V leads no longer name J_5V_IOC")
+    rows = re.findall(r"^\s+([\d.]+) A\s+(-?[\d.]+) C\s+([\d.]+) A\s+10 A\s+([\d.]+) A\s+\+([\d.]+) %\s+(HOLDS|DOES NOT HOLD)", blk.group(2), re.M)
+    G["ret"] = {(float(tot), float(cu)): dict(lead=float(ld), least=float(ls), verdict=v) for tot, cu, ld, ls, _m, v in rows}
+    G["ub_total"] = float(need(t, r"^\s+([\d.]+) A: the declared upper bound \(i\) with Layer 9's draft", "l8r2's upper bound total").group(1))
+    if len(G["drawn"]) != 6 or len(G["ret"]) != 6 or (G["cdev_total"], 76.25) not in G["ret"] or (G["ub_total"], -20.0) not in G["ret"]:
+        refuse("l8r2's as-drawn (3d) or with-the-return (6b) rows no longer read as six each on its three totals")
+    m = need(t, r"THE GROUND SHIFT between the boards, every contact at its maximum: at most ([\d.]+) mV \(as drawn: ([\d.]+) mV\)", "l8r2's ground shift (6c)")
+    G["shift_ret"], G["shift_drawn_ub"] = float(m.group(1)) * 1e-3, float(m.group(2)) * 1e-3
+    G["vh_least"] = float(need(t, r"76\.25 C at least ([\d.]+) A if the rating is stated at 25 C \(ASSUMPTION", "l8r2's least reading of the VH's rating (3f)").group(1))
+    m = need(t, r"J_5V_DEV\s+pin 1: ([\d.]+) A steady.*?OVER the severest least reading by ([\d.]+) A", "l8r2's finding F43 row (3f)")
+    G["f43"] = (float(m.group(1)), float(m.group(2)))
+    need(t, r"L8R2-F31 OPEN \(KNOWN DEFECT of the A to B power interface\)", "L8R2-F31's state")
+    need(t, r"UNCHECKED: it stays OPEN until an independent check has read the changed design", "L8R2-F31's correction unchecked")
+    need(t, r"L8R2-F35 ANSWERED by Layer 9's round 3", "L8R2-F35's state")
     return G
 
 
@@ -532,6 +556,10 @@ def main():
         GND_CHK = rg.returncode
         w("     record l8r2's own check of the return's declaration (check_gndret_netlist.py) on the same netlist and intent: %s" % (
             "DRAWN (exit 0)" if rg.returncode == 0 else "exit %d: %s" % (rg.returncode, scrub((rg.stdout + rg.stderr).decode("utf-8", "replace").strip().splitlines()[-1], d))))
+        RET = {}
+        for b, pth in (("a", path_ac), ("b", path_bc)):
+            RET[b], why_r = CHK.return_drawn(CHK.read(open(pth, "rb").read()))
+        w("     record l8r2's dedicated return (round 8's gndrtn: J_GR1 to J_GR3, both contacts on GND) on the composed netlists: board A %s, board B %s" % (RET["a"], RET["b"]))
         w("   THE OLD STATES (each must stop or FAIL)")
         b_, t_, _rc = OLD["r1b"]
         rc_o1, line_o1, _t = netlist(b_, t_, d, "old_r1b")
@@ -546,8 +574,17 @@ def main():
             w("     O2 board %s, round 2's text alone (the netlist DRAWN as before): %s" % (b_.upper(), line))
         q, _r, _ok = compose("b", seq_of("b", "slot", skip=ROUND7), d, "pre_t5b")
         rc_o3, line_o3, _t = netlist("b", q, d, "pre_t5b")
-        w("     O3 board B composed without record l8r2's round 7 drafts (the tree before T5b): %s" % (
+        w("     O3 board B composed without record l8r2's rounds 7 and 8 drafts (the tree before T5b): %s" % (
             "the generator ran (NOT EXPECTED)" if rc_o3 == 0 else "the generator refused: %s" % line_o3))
+        RET_OLD = {}
+        for b in "ab":
+            q4, _r4, ok4 = compose(b, seq_of(b, "slot", skip=RETURN), d, "no_return")
+            rc4, path4, _t4 = netlist(b, q4, d, "no_return")
+            if rc4 or not ok4:
+                refuse("board %s without the return draft no longer composes and regenerates: %s" % (b, path4))
+            RET_OLD[b] = CHK.return_drawn(CHK.read(open(path4, "rb").read()))[0]
+        w("     O4 both boards composed without record l8r2's return draft (the return as drawn): the dedicated return reads %s on board A and %s on" % (RET_OLD["a"], RET_OLD["b"]))
+        w("        board B, so the connected-path row of section 6 takes record l8r2's AS DRAWN figures there: NOT MET (the recheck V3's corner)")
         w("   THE MUTATIONS (each must FAIL)")
         muts = [("a", path_ac, "J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed)", [(("J_5V_IOC", "1"), ("J_5V_IOC", "2"))]),
                 ("a", path_ac, "U601's EN and SS exchanged (the buck no longer on RAIL_EN)", [(("U601", "2"), ("U601", "7"))]),
@@ -672,8 +709,14 @@ def main():
         n_en, v_en[10.0], v_en[16.8], v_en[18.0]))
     w("       adds %.4f V; against VEN_RISE %.2f V maximum and EN's %.1f V recommended (%.0f V absolute) maximum (PRINTED): %s" % (
         rth * EXTRA_EN * (P["ip"] + P["ih"]), P["ven_rise"], P["en_rec"], P["en_abs"], "HOLDS" if e6 else "FAILS"))
-    w("   (7) the enable relation (netlist, section 4 EN): +5V_DEV is up only while +3V3 is (U7's EN DEV_EN pulled to +3V3 by R42, driven by U27),")
-    w("       +3V3 only while RAIL_EN is high (U12), and U601 is on RAIL_EN: the supervisors are up whenever the device rail is (record l9t5 out 5's condition)")
+    w("   (7) the enable RELATION (netlist, section 4 EN): U7's EN (DEV_EN) is pulled to +3V3 by R42 and driven by U27; +3V3 is U12's output, enabled")
+    w("       by RAIL_EN; U601's EN is on RAIL_EN. So U601 is ENABLED whenever U7 can be enabled. That is connectivity, not timing: it does NOT show")
+    w("       that +5V_IOC is in regulation whenever +5V_DEV is (round 3 said 'the supervisors are up whenever the device rail is': WITHDRAWN as")
+    w("       stated). U601's start (SS 10 nF), U7's start, the LDOs' start into their loads and the recovery after a hiccup or a brown-out are")
+    w("       UNVERIFIED: a bench item (the two rails and the three +3V3_IOCx captured at power-on, at RAIL_EN's release by U46, and after a short on")
+    w("       +5V_IOC is removed; acceptance: +5V_IOC and each +3V3_IOCx in regulation no later than +5V_DEV at each of those events, or the")
+    w("       interval covered by the supervisors' reset state and the voter's default, which Layer 5's contract would have to state). No verdict")
+    w("       is taken on it here")
     nodes = case["nodes"]
     ioc_in = nodes["IOC"][0]
     eta_dev = nodes["DEV"][3]
@@ -688,7 +731,7 @@ def main():
     acc_a = e1 and e2 and e3 and e4 and e5 and e6 and D_COMP["a"] == "DRAWN"
     w("   BOARD A'S HALF: %s on its case (C-DEV rev 1) on the printed figures, with the TYPICAL EN currents and Isat and the DECLARED figures labelled above" % ("HOLDS" if acc_a else "DOES NOT HOLD"))
     w("")
-    w("   BOARD B'S HALF (the LDOs on +5V_IOC, the lead J_5V_IOC, the device lead's declaration)")
+    w("   BOARD B'S HALF, ITS OWN PARTS (the LDOs on +5V_IOC, the lead's supply pin, the declarations)")
     b1 = not on_dev and not dev_alloc and V_COMP.get("b") == "DRAWN"
     w("   (B1) the move is drawn in the composed netlist: U40, U50 and U60 take their input, their EN pull-up and their input capacitor from +5V_IOC;")
     w("        LDOs still on +5V_DEV: %s; still allocated on the device lead: %s; so item (1)'s %.4f A is U7's case with this board composed: %s" % (
@@ -698,100 +741,127 @@ def main():
         rb["+5V_DEV"]["amps_peak"], basis["dev_lead"]))
     w("        %.4f A against %.6f A: %s (round 2 declared 6.0 A and 1.38 A: O2 above)" % (rb["+5V_IOC"]["amps_peak"], ioc_bound, "HOLDS" if b2 else "FAILS"))
     r_sup = G["rhot"] + 2 * P["vh_r"][1]
-    scale = (G["total"] - G["parts"][4] + ioc_bound) / G["total"]
-    shift = max(r["mv"] for r in G["cdev"].values()) * 1e-3 * scale
-    v_ldo = lo - RAIL_BUDGET * 5.0 - ioc_bound * r_sup - shift
-    ldo_need = 3.3 * P["ap_vout_hi"] + P["ap_drop"]
-    b3 = v_ldo > ldo_need
+    my_total = G["cdev_total"] - G["ioc"]["pin1"] - G["dev"]["pin1"] + CHK.ceil4(ioc_bound) + CHK.ceil4(basis["dev_lead"])
+    scale = my_total / G["cdev_total"]
+    with_return = RET == {"a": "DRAWN", "b": "DRAWN"}
+    shift_drawn = max(G["drawn"][(G["cdev_total"], cu)]["mv"] for cu in (76.25, -20.0)) * 1e-3 * scale
+    i_ldo = P["rv_h7"] + P["rv_other"]
+    need_simple = 3.3 * P["ap_vout_hi"] + P["ap_drop"]
+    ldo_need = 3.3 * (P["ap_vout_hi"] + P["ap_load"] * i_ldo + P["ap_line"] * (hi - 4.3)) + P["ap_drop"]
+    v_before = lo - RAIL_BUDGET * 5.0 - ioc_bound * r_sup
+    allow = v_before - ldo_need
+    b3 = allow > max(shift_drawn, G["shift_ret"], G["shift_drawn_ub"])
     w("   (B3) the LDOs' input at the least: U601's %.4f V, less the rail's whole %.0f %% copper budget on both boards (%.3f V, DECLARED), less the" % (
         lo, RAIL_BUDGET * 100, RAIL_BUDGET * 5.0))
     w("        lead's supply side at %.4f A (its conductor %.3f mOhm at %.2f C, MODEL, record l8r2 3c for this make of lead; two VH contacts at the" % (
         ioc_bound, G["rhot"] * 1e3, G["t_hot"]))
-    w("        after-test %.0f mOhm, PRINTED): %.4f V, less the ground shift between the boards (record l8r2 3d at the case's total with six leads," % (
-        P["vh_r"][1] * 1e3, ioc_bound * r_sup))
-    w("        its largest row: %.4f V, MODEL on PRINTED maxima): %.4f V against the AP2112K-3.3's need %.3f V (VOUT +%.1f %% and dropout %.0f mV" % (
-        shift, v_ldo, ldo_need, (P["ap_vout_hi"] - 1) * 100, P["ap_drop"] * 1000))
-    w("        at 600 mA, PRINTED, %s): %+.4f V: %s; each LDO at HIGH %.2f A under its %.0f mA (PRINTED)" % (
-        P["ap_rev"], v_ldo - ldo_need, "HOLDS" if b3 else "FAILS", P["rv_h7"] + P["rv_other"], P["ap_imax"] * 1000))
-    w("        the input holds while the ground shift between the boards stays under %.3f V, so it does not depend on how the return is corrected" % (v_ldo - ldo_need + shift))
+    w("        after-test %.0f mOhm, PRINTED): %.4f V; that leaves %.4f V before the ground shift between the boards" % (P["vh_r"][1] * 1e3, ioc_bound * r_sup, v_before))
+    w("        the AP2112K-3.3's requirement (round 4, the recheck's blocker 2; %s p.8): its VOUT maximum +%.1f %% is printed at 1 to 30 mA; its load" % (
+        P["ap_rev"], (P["ap_vout_hi"] - 1) * 100))
+    w("        regulation (+%.0f %%/A maximum, at %.2f A) and line regulation (+%.1f %%/V maximum, over VIN 4.3 V to U601's %.4f V) are separate printed" % (
+        P["ap_load"] * 100, i_ldo, P["ap_line"] * 100, hi))
+    w("        rows; the three added (conservative) with the dropout %.0f mV at 600 mA: %.4f V (round 3's %.4f V was the simplified figure: the" % (
+        P["ap_drop"] * 1000, ldo_need, need_simple))
+    w("        output tolerance and the dropout alone). The ground shift the LDOs allow: %.4f V. The return's shift (MODEL, record l8r2, every contact" % allow)
+    w("        at its maximum): as drawn at most %.4f V on the case and %.4f V at the declared upper bound (3d); with its dedicated return at most" % (shift_drawn, G["shift_drawn_ub"]))
+    w("        %.4f V (6c): %s on every one of those; each LDO at HIGH %.2f A under its %.0f mA (PRINTED; finding L9T5-F06 and task T10 for" % (
+        G["shift_ret"], "HOLDS" if b3 else "FAILS", i_ldo, P["ap_imax"] * 1000))
+    w("        the supervisors' other states)")
     b4 = ioc_bound < P["vh_a"] and iomax < P["vh_a"] and P["lead"][0] == P["vh_awg"]
     w("   (B4) the lead J_5V_IOC, named: %d AWG, %d mm, VH crimp both ends, the device lead's make (SESSION; ASSEMBLY.md section 4's device lead row" % P["lead"])
     w("        and IF-AB-POWER's harness row for the 5 V leads); its pin 1 carries +5V_IOC and nothing else: %.4f A at most on the case (MODEL), %.2f A" % (ioc_bound, iomax))
     w("        at U601's limit, against the VH's %.0f A with AWG %d on the standard header (PRINTED, JST VH catalogue p.1): %s" % (P["vh_a"], P["vh_awg"], "HOLDS" if b4 else "FAILS"))
-    eq = [G["cdev"][k]["lead"] * scale for k in ("K0", "K1", "K2")]
-    worst2 = max(r["largest"] for r in G["cdev"].values()) * scale
-    ub_worst = max(r["largest"] for r in G["ub"].values())
-    b5 = worst2 < P["vh_a"]
-    w("   (B5) its pin 2 is NOT its own rail's return: boards A and B share one ground, and the whole A to B return divides by resistance over six VH")
-    w("        contacts and seventeen ribbon conductors (record l8r2 round 7). Its division on the case, read from l8r2_gndret.out (%.3f A in all there," % G["cdev_total"])
-    w("        scaled by %.4f for this round's %.4f A at J_5V_IOC, a linear network; MODEL at %.2f C, the leads of one make): equal contacts %.3f, %.3f" % (
-        scale, ioc_bound, G["t_hot"], eq[0], eq[1]))
-    w("        and %.3f A a lead (K0, K1, K2); the largest any one lead's pin 2 carries in its rows, %.3f A (K3, a BOUND: that lead's two contacts" % (eq[2], worst2))
-    w("        at 0, every other at its initial maximum), against the VH's %.0f A (PRINTED): %s on the case (record l8r2's comparator at the inside" % (P["vh_a"], "within it" if b5 else "OVER"))
-    w("        air, %.3f A on its 30 K ASSUMPTION, shown beside it: %s)" % (G["vh_hot"], "also within" if worst2 < G["vh_hot"] else "over that comparator"))
-    w("        at the declared upper bound with this draft (%.2f A there, every lead at its own peak at once) the same row reads %.3f A: OVER, and a" % (G["ub_total"], ub_worst))
-    rib_over = [k for k in sorted(G["ub"]) if G["ub"][k]["ribbon"] > 1.0]
-    w("        ribbon conductor passes its 1 A in %s: that is record l8r2's finding L8R2-F31, OPEN, with or without this draft" % ", ".join(rib_over))
-    acc_b = b1 and b2 and b3 and b4 and b5
-    w("   BOARD B'S HALF: %s on its case (C-DEV rev 1) for the draft's own parts and path, on the printed figures with the labels above" % ("HOLDS" if acc_b else "DOES NOT HOLD"))
+    w("        record l8r2's finding L8R2-F43 (the supply pins): JST prints no ambient and no derating for that rating; on that record's severest")
+    w("        reading (the rating taken at 25 C, an ASSUMPTION: %.4f A at the inside air) J_5V_IOC's pin 1 is inside it, and J_5V_DEV's pin 1 at" % G["vh_least"])
+    w("        %.4f A is %.4f A OVER it while inside the printed %.0f A (before the draft it carried %.4f A): an inferred reading, not a printed" % (
+        G["f43"][0], G["f43"][1], P["vh_a"], C["i_least"]))
+    w("        limit; it stays a named vendor item (record l8r2's question to JST, drafted there, UNSENT) and a condition of the device lead")
+    acc_b = b1 and b2 and b3 and b4
+    w("   BOARD B'S HALF, ITS OWN PARTS: %s on its case (C-DEV rev 1) on the printed figures with the labels above" % ("HOLDS" if acc_b else "DOES NOT HOLD"))
     w("")
-    w("   WHAT THIS ACCEPTANCE DEPENDS ON, AND WHAT IT DOES NOT")
-    w("   it depends on: the LM5176's printed VSNS and R43's declared tolerance; the TPS62933's printed rating and limits; the VH's printed %.0f A at AWG %d" % (P["vh_a"], P["vh_awg"]))
-    w("     for the supply pin; the AP2112K's printed dropout; rv-pwr's HIGH loads (DECLARED where no maker prints a maximum); the lead as %d AWG at %d mm" % P["lead"])
-    w("     (SESSION); record l8r2's model of the return's division for pin 2 and for the ground shift (MODEL, its assumptions its own)")
-    w("   it does NOT depend on, and does not close: record l8r2's finding L8R2-F31 (the A to B return is branched in parallel with nothing that sets its")
-    w("     division; JST's note forbids parallel branching above the rating). The draft adds a sixth VH contact to that return and no load to it")
-    w("     (section 5: %+.3f A); on the case every row of l8r2's division keeps J_5V_IOC's pin 2 inside the VH's printed rating, and the LDOs' input holds" % GND_ADD)
-    w("     for any ground shift under %.3f V. Whatever corrects L8R2-F31 (its selected direction is a dedicated ground return, not drafted) changes" % (v_ldo - ldo_need + shift))
-    w("     pin 2's share and the ribbons'; it does not change items (1) to (8) or (B1) to (B4). L8R2-F31 stays OPEN beside this result and is not this record's")
+    w("   THE CONNECTED PATH (the lead's pin 2 and the return between the boards; round 4, the recheck V3's material blocker)")
+    w("   (B5) J_5V_IOC's pin 2 is a branch of the ONE return between boards A and B. Round 3 accepted it on record l8r2's round 7 rows, a sampled")
+    w("        list whose largest was not the maximum, and said this acceptance did not depend on L8R2-F31: BOTH WITHDRAWN. It depends on it.")
+    d_hot, d_cold = G["ioc"]["drawn_hot"] * scale, G["ioc"]["drawn_cold"] * scale
+    rib = [G["drawn"][(G["cdev_total"], cu)]["ribbon"] * scale for cu in (76.25, -20.0)]
+    drawn_not_met = max(d_hot, d_cold) > P["vh_a"]
+    w("        AS DRAWN (no dedicated return), its worst vertex of the contact-resistance box on the case, read from record l8r2's round 8 output")
+    w("        (%.4f A in all there; scaled by %.4f for this tree's drafts; MODEL on PRINTED contact limits): %.4f A at %.2f C and %.4f A at" % (
+        G["cdev_total"], scale, d_hot, G["t_hot"], d_cold))
+    w("        -20 C against the VH's %.0f A (PRINTED): %s (the recheck's corner, 10.6375 A); a ribbon conductor %.4f and %.4f A against its 1 A" % (
+        P["vh_a"], "NOT MET" if drawn_not_met else "within", rib[0], rib[1]))
+    r_case = [G["ret"][(G["cdev_total"], cu)]["lead"] * scale for cu in (76.25, -20.0)]
+    r_ub = [G["ret"][(G["ub_total"], cu)]["lead"] for cu in (76.25, -20.0)]
+    ret_ok = max(r_case + r_ub) < P["vh_a"] and r_ub[0] < G["vh_least"] and all(v["verdict"] == "HOLDS" for v in G["ret"].values())
+    w("        WITH RECORD l8r2'S DEDICATED RETURN (three XT60 leads between the boards, drafted in its round 8 for both generators): at most")
+    w("        %.4f A at %.2f C and %.4f A at -20 C on the case, %.4f and %.4f A at the declared upper bound (%.4f A), against the printed %.0f A" % (
+        r_case[0], G["t_hot"], r_case[1], r_ub[0], r_ub[1], G["ub_total"], P["vh_a"]))
+    w("        and against that record's least reading %.4f A at the inside air (ASSUMPTION): %s on its model" % (G["vh_least"], "inside both" if ret_ok else "NOT inside"))
+    conn = "CONDITIONAL" if (with_return and ret_ok and b3) else "NOT MET"
+    w("        ON THIS COMPOSITION the dedicated return reads %s on board A and %s on board B (section 4), so the row takes the %s figures:" % (
+        RET["a"], RET["b"], "with-the-return" if with_return else "AS DRAWN"))
+    w("   THE CONNECTED PATH: %s" % (
+        "CONDITIONAL. It holds ONLY WITH that return correction, whose drafts no independent check has read; record l8r2's finding" if conn == "CONDITIONAL"
+        else "NOT MET (the return as drawn)"))
+    w("        L8R2-F31 stays OPEN until its independent check, and the conditions of its section 6d are its own (the XT60's aged contact")
+    w("        resistance, no printed minimum resistances, no printed derating curves, the leads' assumed lengths). On a composition without the")
+    w("        return drafts (old state O4) this row reads NOT MET. It is never a pass on this record's evidence alone")
     w("")
-    # 7. L8R2-F35
-    w("7. RECORD l8r2'S FINDING L8R2-F35, ANSWERED")
-    w("   (a) 'J_5V_DEV's return falls by the same current' (round 2's line): WITHDRAWN for pin 2. It holds for pin 1 only: J_5V_DEV's pin 1 falls by")
-    w("       %.4f A on the case and J_5V_IOC's pin 1 carries the supervisors' rail; pin 2 of each carries a share of the whole return (item B5)" % C["b_buck_a"])
-    w("   (b) J_5V_IOC's lead: %d AWG, %d mm, VH crimp both ends (SESSION: the device lead's make, so the VH's printed rating applies and the return's" % P["lead"])
-    w("       model has leads of one make; source of the make: v2/docs/ASSEMBLY.md section 4 and IF-AB-POWER's harness row); named in both drafts; its")
-    w("       ASSEMBLY.md row and its contract row are their owners' (findings L9T5-F07 and L9T5-F08); record l8r2 assumed the same lead")
-    w("   (c) the device lead's declaration: board B declared a typed 6.0 A peak, under the lead's own %.4f A on the case with the draft. Corrected from" % basis["dev_lead"])
-    w("       its basis, not to a passing number: the peak is the case's own figure for the lead (Layer 9's budget at HIGH, every load at constant power")
-    w("       at the least load voltage, the supervisors gone), rounded up to 0.1 mA, %.4f A, and check_l9t5_netlist.py's decl() refuses any other" % CHK.ceil4(basis["dev_lead"]))
-    w("       figure; board A's rail follows by stream s99's own construction (the lead plus the wall port's limit): %.4f A, %+.4f A to U7's least" % (
-        ra["+5V_DEV"]["amps_peak"], C["lim_min"] - ra["+5V_DEV"]["amps_peak"]))
-    w("       loop limit; +5V_IOC's peak by the same method at its own least load voltage: %.4f A (it was 1.38 A, the LDOs' own current)" % rb["+5V_IOC"]["amps_peak"])
-    w("       consequence for record l8r2 (reported, its files not edited): the return's derived upper bound reads %.4f A with this round's drafts" % GND[1])
-    w("       (l8r2_gndret.out composes round 2's copy and prints %.2f A)" % G["ub_total"])
-    w("   (d) fandec and gndret are in board B's order (section 3)")
+    w("   WHAT THIS ACCEPTANCE DEPENDS ON")
+    w("   the LM5176's printed VSNS and R43's declared tolerance; the TPS62933's printed rating and limits; the VH's printed %.0f A at AWG %d; the AP2112K's" % (P["vh_a"], P["vh_awg"]))
+    w("     printed dropout, tolerance and regulation limits; rv-pwr's HIGH loads (DECLARED where no maker prints a maximum); the lead as %d AWG at %d mm" % P["lead"])
+    w("     (SESSION); AND, for the lead's pin 2, the ribbons and the ground shift, a supported correction of the return between the boards: record l8r2's")
+    w("     dedicated return, unchecked. Round 3's claim that I-03's acceptance does not depend on L8R2-F31 is WITHDRAWN: the draft adds a VH contact to")
+    w("     that return, and as drawn that contact can carry more than its printed rating on the case")
+    w("   what the return does not change (stated so the next check can read each alone, not as a claim of independence): U7's load relief (1), U601's")
+    w("     rating and limit (2), (3), the supply pin (B4), and the LDOs' input for any ground shift under %.4f V (B3)" % allow)
+    w("")
+    # 7. L8R2-F35 and L8R2-F43
+    w("7. RECORD l8r2'S FINDINGS FOR THIS RECORD: L8R2-F35 (ANSWERED IN ROUND 3, ITS PIN 2 ACCEPTANCE WITHDRAWN IN ROUND 4) AND L8R2-F43")
+    w("   (a) 'J_5V_DEV's return falls by the same current' (round 2's line): WITHDRAWN for pin 2 in round 3. It holds for pin 1 only: J_5V_DEV's pin 1")
+    w("       falls by %.4f A on the case and J_5V_IOC's pin 1 carries the supervisors' rail; pin 2 of each is a branch of the whole return (B5)" % C["b_buck_a"])
+    w("   (b) J_5V_IOC's lead: %d AWG, %d mm, VH crimp both ends (SESSION: the device lead's make; v2/docs/ASSEMBLY.md section 4 and IF-AB-POWER's" % P["lead"])
+    w("       harness row); named in both drafts; its ASSEMBLY.md row and its contract row are their owners' (findings L9T5-F07 and L9T5-F08)")
+    w("   (c) the device lead's declaration: a typed 6.0 A stood under the lead's own %.4f A on the case with the draft. Corrected from its basis: the" % basis["dev_lead"])
+    w("       case's own figure for the lead rounded up to 0.1 mA, %.4f A, held by check_l9t5_netlist.py's decl(); board A's rail by stream s99's" % CHK.ceil4(basis["dev_lead"]))
+    w("       construction (the lead plus the wall port's limit): %.4f A, %+.4f A to U7's least loop limit; +5V_IOC by the same method: %.4f A" % (
+        ra["+5V_DEV"]["amps_peak"], C["lim_min"] - ra["+5V_DEV"]["amps_peak"], rb["+5V_IOC"]["amps_peak"]))
+    w("       record l8r2's round 8 reads these drafts: its declared upper bound %.4f A is this composition's GND peak %.4f A: %s" % (
+        G["ub_total"], GND[1], "equal" if abs(G["ub_total"] - GND[1]) < 5e-5 else "DIFFERENT"))
+    w("   (d) fandec, gndret and (round 4) gndrtn are in board B's order; gndrtn is in board A's before mainpb (section 3)")
+    w("   (e) L8R2-F43: item B4. Nothing in this record's drafts changes for it; the device lead's pin 1 stays a condition on JST's answer")
     w("")
     # 8. state, findings
     w("8. THE STATE OF I-03 (L9P-F03, the case row C-DEV rev 1)")
-    w("   credit criteria (common brief), per board:")
+    w("   THE COLLABORATOR'S TARGETED RECHECK V3 (cx41, an AI review, on this record's round 3 at 841e6c7e): NOT CONFIRMED. Its material point: the")
+    w("   return pin's acceptance used a sampled maximum; its four smaller points: the AP2112K's requirement terms, sequencing read from enable")
+    w("   connectivity, the BQ4050's offset drift, the case file's revision. Round 4 corrects this record's part of each (B3, item 7, B5; record l9t5's")
+    w("   case script for the last two). None of that closes anything")
+    w("   I-03 STAYS OPEN. It is credited only with U7's load relief and the compositions:")
     w("   board A: (a) composes in L4-E9's order and the generator runs: YES; (b) the changed nets read with mutations that fail: YES (three FAIL);")
-    w("            (c) the electrical acceptance on C-DEV rev 1: HOLDS" if acc_a else "            (c) DOES NOT HOLD")
-    w("   board B: (a) composes in L4-E9's order with record l8r2's round 7 drafts and the generator runs: YES; (b) the changed nets read with")
-    w("            mutations that fail: YES (two FAIL; the tree before T5b stops); (c) the electrical acceptance on C-DEV rev 1: %s for the draft's own" % ("HOLDS" if acc_b else "DOES NOT HOLD"))
-    w("            parts and path; the shared return (L8R2-F31) is OPEN beside it and is record l8r2's")
-    w("   I-03 STAYS OPEN: both halves are checked drafts by their author only; the independent recheck V3 has not read them; nothing is applied")
-    w("   negative checks of this solution: one (round 1's board B text refused alone, a missed edit, corrected in round 2); round 3 corrects two")
-    w("   declarations and one sentence on record l8r2's finding, which was not a check of the solution; the loop is not closed")
-    w("   physical conditions (open): U601 as drawn is a copy of U41's network; its 5 V efficiency, thermal rise, start-up into the LDOs' input")
-    w("   capacitance, the lead's resistance and the return's division are bench items; the netlist check is not electrical qualification")
+    w("            (c) its own parts on C-DEV rev 1: %s" % ("HOLD" if acc_a else "DO NOT HOLD"))
+    w("   board B: (a) composes in L4-E9's order with record l8r2's rounds 7 and 8 drafts and the generator runs: YES; (b) the changed nets read with")
+    w("            mutations that fail: YES (two FAIL; the tree before T5b stops); (c) its own parts on C-DEV rev 1: %s" % ("HOLD" if acc_b else "DO NOT HOLD"))
+    w("   the connected path (the lead's pin 2, the ribbons, the ground shift): %s on record l8r2's return draft, which is unchecked; L8R2-F31 OPEN" % conn)
+    w("   checks of this issue: the advisory challenge cx40 and the recheck cx41 (V3) are both used; the next independent check reads the CHANGED")
+    w("   design (record l8r2's dedicated return composed with these drafts), not this one again")
+    w("   negative checks of this solution: one independent (V3, NOT CONFIRMED on the return pin; answered by a changed design, record l8r2's, and")
+    w("   by the withdrawals above) and one of the author's own (round 1's board B text, a missed edit); no third attempt of the same design is made")
+    w("   physical conditions (open): U601's 5 V efficiency, thermal rise and start-up, the rails' sequencing (item 7), the lead's resistance, the")
+    w("   return's division and contact resistances; the netlist check is not electrical qualification")
     w("")
     w("   FINDINGS FOR OTHER AUTHORS")
-    w("   L9T5-F01 CLOSED BY RECORD l8r2's ROUND 7 DRAFTS (T5b): board B's composed generator stopped on GND's declared 21.0 A peak; with fandec and")
-    w("     gndret it runs (O3 keeps the old state as a regression)")
+    w("   L9T5-F01 CLOSED BY RECORD l8r2's ROUND 7 DRAFTS (T5b): board B's composed generator stopped on GND's declared 21.0 A peak (O3 keeps it)")
     w("   L9T5-F02 (d8dec31's mainpb owner, R-194; L4-E9's row 33): with this record's draft before mainpb, mainpb takes %s and %s, not %s and %s;" % (
         PICKS["with"] + PICKS["without"]))
     w("     no collision either way (both orders compose); row 33's text names %s and %s, which this tree already moves: R-194's fixed" % PICKS["row33"])
     w("     references would remove the dependency")
     w("   L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads \"its own branch off the device rail\"; left")
     w("     unchanged because the z-stack tables key on value texts; the comment and the net are corrected by the draft")
-    w("   L9T5-F04 (C-PROT rev 1's consumers): the gauge's uncalibrated error against the breaker's 0.32 A gap: L9T5-CASES.md section 0, unchanged")
-    w("   L9T5-F05 (record l8r2's author): on this merged tree l8r2_gndret.out is regenerated (it reads the tree's budget, now Layer 9's rounds 4 and")
-    w("     5): its page's section 3g still prints the earlier tree's figures; and its copy of this record's draft is round 2's (the upper bound")
-    w("     %.2f A there, %.4f A with round 3's declarations); L8R2-F31's state is unchanged" % (G["ub_total"], GND[1]))
-    w("   L9T5-F06 (Layer 5, the supervisors' firmware contract; board B's owner): the supervisors' HIGH is Table 30's TJ 85 C figure (%.0f mA); the same" % (P["rv_h7"] * 1000))
-    w("     row prints %.0f mA at TJ 125 C, over each AP2112K's %.0f mA: what bounds the H743's junction temperature, clock and peripheral state is" % (P["h7"][4] * 1000, P["ap_imax"] * 1000))
-    w("     not stated in a record read here; independent of this draft (U7's case no longer carries the supervisors)")
+    w("   L9T5-F04 (C-PROT rev 1's consumers): the gauge's uncalibrated error against the breaker's 0.32 A gap: L9T5-CASES.md section 0 (round 4: the")
+    w("     error includes the offset drift)")
+    w("   L9T5-F05 ANSWERED by record l8r2's round 8 (its page rewritten, its copies of this record's files at 841e6c7e)")
+    w("   L9T5-F06 (the supervisors' regulators): the owner's task T10; record l9t5's l9t5_t10.py and L9T5-CASES.md carry it")
     w("   L9T5-F07 (Layer 7, ASSEMBLY.md section 4): a row for the new lead: A22 J_5V_IOC (VH) to B16 J_5V_IOC (VH), %d AWG, %d mm, VH crimp both ends" % P["lead"])
     w("   L9T5-F08 (Layer 5, IF-AB-POWER): the contract gains J_5V_IOC (+5V_IOC %.2f A typical, %.4f A peak on both ends) and the device rail's rows" % (rb["+5V_IOC"]["amps_typ"], rb["+5V_IOC"]["amps_peak"]))
     w("     restate (A: 3.74 A typical, %.4f A peak, 3.44 A apportioned to J_5V_DEV; B: 3.44 A typical, %.4f A peak arriving); with record l8r2's rows" % (
@@ -804,14 +874,17 @@ def main():
     pred["the committed netlists read NOT DRAWN; each draft alone and both compositions read DRAWN, the pair included"] = (
         kit0 == "NOT DRAWN" and kit_alone == "DRAWN" and kit_c == "DRAWN" and V_COMP.get("pair") == "DRAWN")
     pred["the declarations read DRAWN on their basis alone and composed, on both boards"] = all(v == "DRAWN" for v in list(D_ALONE.values()) + list(D_COMP.values()))
-    pred["record l8r2's check of the return reads DRAWN on the composed board B"] = GND_CHK == 0
+    pred["record l8r2's checks read its declaration and its dedicated return DRAWN on the composed boards"] = GND_CHK == 0 and with_return
     pred["O1: board B's round 1 text refuses alone on the LDO input capacitor's bypass entry"] = rc_o1 != 0 and "bypass C400 -> U40.1" in line_o1
     pred["O2: round 2's texts FAIL the declaration check on both boards"] = O2 == {"a": "FAIL", "b": "FAIL"}
-    pred["O3: board B without record l8r2's round 7 drafts stops on GND's declared peak"] = rc_o3 != 0 and "rail GND declares a 21.00 A peak" in line_o3
+    pred["O3: board B without record l8r2's rounds 7 and 8 drafts stops on GND's declared peak"] = rc_o3 != 0 and "rail GND declares a 21.00 A peak" in line_o3
+    pred["O4: without the return drafts the dedicated return reads NOT DRAWN on both boards"] = RET_OLD == {"a": "NOT DRAWN", "b": "NOT DRAWN"}
     pred["every mutation FAILS"] = all(k == "FAIL" for k in MUT) and len(MUT) == 5
     pred["the draft adds nothing to board B's GND declared loads, and board A's VBAT declared loads are unchanged in sum"] = abs(GND_ADD) < 1e-9 and abs(vb - vb0) < 1e-9
-    pred["C-DEV rev 1: board A's half holds on the printed figures"] = acc_a
-    pred["C-DEV rev 1: board B's half holds for the draft's own parts and path; L8R2-F31 is read OPEN in record l8r2's output"] = acc_b
+    pred["C-DEV rev 1: board A's own parts hold on the printed figures"] = acc_a
+    pred["C-DEV rev 1: board B's own parts hold on the printed figures, the AP2112K's regulation terms included"] = acc_b
+    pred["the connected path is NOT MET as drawn (the lead's pin 2 over the VH's printed 10 A on the case)"] = drawn_not_met
+    pred["the connected path is CONDITIONAL with record l8r2's return composed, and L8R2-F31 is read OPEN and unchecked there"] = conn == "CONDITIONAL"
     w("9. THE PREDICATES")
     for k, v in pred.items():
         w("   %-126s %s" % (k, "yes" if v else "NO"))

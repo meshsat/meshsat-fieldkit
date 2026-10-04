@@ -10,7 +10,7 @@ are printed DRAFTED, none is applied to a generator, and their release guards st
 
 - **L9P-F01 is restated on the case row C-ALLTX rev 3** (rev 2's definition, its quoted figure withdrawn): out 10 now judges the
   case computed from its own text (out 7b) against REQ-018's 15.5 V. **OPEN on the case: 15.5162 V needed at 18 A** (241.039 W at
-  VBAT 13.391 V, R_cell 0.06 Ohm an ASSUMPTION), +0.0162 V; record l9t5 bounds the printed uncertainties (16.0684 V). D-11's basis
+  VBAT 13.391 V, R_cell 0.06 Ohm an ASSUMPTION), +0.0162 V; record l9t5 bounds the printed uncertainties (16.0718 V since its round 4; 16.0684 V before the gauge's offset drift). D-11's basis
   as rv-pwr models it (16.214 V, the figure round 2 carried) is printed in the same finding as a **LABELLED SCENARIO, NOT THE CASE**.
   **WITHDRAWN** by the owner's positions of 4 October 2026 and printed as such: L4-E9 round 7's 16.1 V floor, the 16.4 V its rule gives
   on these drafts, FAN_OK. The finding's action is the case's correction, record l9t5's A1, never a scenario; its owner is record

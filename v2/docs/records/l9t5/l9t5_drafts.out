@@ -28,12 +28,14 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
    98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
    ea95bd293e44676a v2/docs/records/l8r2/apply_gen_sch_a_fb01.py
+   4adb13047770eb1c v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py
    da98e9d508d8146d v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
    fc487ab269d2f758 v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py
    c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
    f6381296fc8ad657 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
    cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
    8b68f596a809ad54 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
+   b9048dcbb1ff023f v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py
    3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
@@ -45,7 +47,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
    98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
    9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
-   d252378d9922c163 v2/docs/records/l9t5/check_l9t5_netlist.py
+   bafcd96cd584ec24 v2/docs/records/l9t5/check_l9t5_netlist.py
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
    ac1c6f82805048b0 v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py
    8cd31cfbbca39087 v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py
@@ -53,11 +55,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    afb77ab72e0d2d4c v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-7c28f9da.py
    b76135f5f93495d9 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
-   a21015ffae10e67d v2/docs/records/l9t5/l9t5_case.py
-   9215e643b44a132e v2/docs/records/l9t5/l9t5_case.out
+   6a1a50f08917216e v2/docs/records/l9t5/l9t5_case.py
+   098930931103136b v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   4bc57a1ef85db177 v2/docs/records/l8r2/l8r2_gndret.out
-   e7702dbde301e4ae v2/docs/records/l8r2/check_gndret_netlist.py
+   f5b72f55ac5989ac v2/docs/records/l8r2/l8r2_gndret.out
+   fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
@@ -91,6 +93,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      l8p/apply_gen_sch_a_ptc.py                     OK
      l4e11/apply_gen_sch_a_dd7.py                   OK
      l9t5/apply_gen_sch_a_iocbuck.py                OK
+     l8r2/apply_gen_sch_a_gndrtn.py                 OK
      d8dec31/apply_gen_sch_a_mainpb.py              OK
      l6r2/apply_gen_sch_a_lcsc.py                   OK
    board A, this record's draft first, then the order: every step OK
@@ -103,6 +106,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      l8r2/apply_gen_sch_b_ph4.py                    OK
      l8r2/apply_gen_sch_b_rt500.py                  OK
      l8r2/apply_gen_sch_b_gndret.py                 OK
+     l8r2/apply_gen_sch_b_gndrtn.py                 OK
      l9t5/apply_gen_sch_b_iocbuck.py                OK
      l6r2/apply_gen_sch_b_xal_land.py               OK
      l6r2/apply_gen_sch_b_lcsc.py                   OK
@@ -143,16 +147,16 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        A DECL DRAWN
        B DECL DRAWN
    board A composed in L4-E9's order:
-     the generator ran to its end (789 parts, 0 unplaced, intent written: yes)
+     the generator ran to its end (792 parts, 0 unplaced, intent written: yes)
    board B composed in L4-E9's order with record l8r2's round 7 drafts:
-     the generator ran to its end (1476 parts, 0 unplaced, intent written: yes)
-     board A composed in L4-E9's order sha256 f3dc33735574e20e
+     the generator ran to its end (1479 parts, 0 unplaced, intent written: yes)
+     board A composed in L4-E9's order sha256 c1945520154df9da
        A BUCK DRAWN
        A LEAD DRAWN
        A EN   DRAWN
        A DEV  DRAWN
        A DIV  DRAWN
-     board B composed in L4-E9's order sha256 31552f2eca22bca4
+     board B composed in L4-E9's order sha256 958909180fdc5835
        B LDO  DRAWN
        B LEAD DRAWN
        PAIR DRAWN
@@ -160,38 +164,41 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        A DECL DRAWN
        B DECL DRAWN
      record l8r2's own check of the return's declaration (check_gndret_netlist.py) on the same netlist and intent: DRAWN (exit 0)
+     record l8r2's dedicated return (round 8's gndrtn: J_GR1 to J_GR3, both contacts on GND) on the composed netlists: board A DRAWN, board B DRAWN
    THE OLD STATES (each must stop or FAIL)
      O1 board B, round 1's text alone: the generator refused: intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV
      O2 board A, round 2's text alone (the netlist DRAWN as before): A DECL FAIL: +5V_IOC declares a 1.3800 A peak; its basis gives 1.4749 A (1.474896 A rounded up); +5V_DEV declares a 6.9142 A peak; board B's lead 6.0359 A plus the wall port's 0.9142 A is 6.9501 A; +5V_IOC's share of its budget on board A is None, wanted 0.005 (board B's is 0.015 of the 0.02)
      O2 board B, round 2's text alone (the netlist DRAWN as before): B DECL FAIL: +5V_IOC declares a 1.3800 A peak; its basis gives 1.4749 A (1.474896 A rounded up); +5V_DEV (the device lead) declares a 6.0000 A peak; its basis gives 6.0359 A (6.035894 A rounded up)
-     O3 board B composed without record l8r2's round 7 drafts (the tree before T5b): the generator refused: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same current as the peak: correct one of them.
+     O3 board B composed without record l8r2's rounds 7 and 8 drafts (the tree before T5b): the generator refused: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same current as the peak: correct one of them.
+     O4 both boards composed without record l8r2's return draft (the return as drawn): the dedicated return reads NOT DRAWN on board A and NOT DRAWN on
+        board B, so the connected-path row of section 6 takes record l8r2's AS DRAWN figures there: NOT MET (the recheck V3's corner)
    THE MUTATIONS (each must FAIL)
-     mutation 1, board A composed: J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed) sha256 79e75ed2bc60dddb
+     mutation 1, board A composed: J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed) sha256 90559e51536ca100
        A BUCK DRAWN
        A LEAD FAIL: J_5V_IOC.1 on 'GND', wanted +5V_IOC; J_5V_IOC.2 on '+5V_IOC', wanted GND
        A EN   DRAWN
        A DEV  DRAWN
        A DIV  DRAWN
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 2, board A composed: U601's EN and SS exchanged (the buck no longer on RAIL_EN) sha256 5b0cc0964592e1d3
+     mutation 2, board A composed: U601's EN and SS exchanged (the buck no longer on RAIL_EN) sha256 7682ac768546038c
        A BUCK FAIL: U601.2 on 'IOCB_SS', wanted RAIL_EN; U601.7 on 'RAIL_EN', wanted IOCB_SS
        A LEAD DRAWN
        A EN   FAIL: U601's enable 'IOCB_SS' is not U12's 'RAIL_EN'
        A DEV  DRAWN
        A DIV  DRAWN
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 3, board A composed: R601's +5V_IOC end and R602's ground end exchanged (the divider inverted: 0.95 V out) sha256 06c28ae1a2a169c6
+     mutation 3, board A composed: R601's +5V_IOC end and R602's ground end exchanged (the divider inverted: 0.95 V out) sha256 aacf8d212a75b392
        A BUCK DRAWN
        A LEAD DRAWN
        A EN   DRAWN
        A DEV  DRAWN
        A DIV  FAIL: the divider is 10.7k 0.1% 25ppm over 56.2k 0.1% 25ppm, wanted 56.2k 0.1% over 10.7k 0.1%; the output band 0.931 to 0.974 V leaves 4.8 to 5.2 V
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 4, board B composed: U50's VIN and D1's cathode exchanged (controller B's LDO back on +5V_DEV) sha256 bf8d80f6391e8b72
+     mutation 4, board B composed: U50's VIN and D1's cathode exchanged (controller B's LDO back on +5V_DEV) sha256 03620b2c9633f46d
        B LDO  FAIL: U50.1 on '+5V_DEV', wanted +5V_IOC; U50 still on +5V_DEV
        B LEAD FAIL: +5V_IOC also carries D1.1
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 5, board B composed: J_5V_IOC's pins 1 and 2 exchanged on board B (the lead reversed) sha256 3c8e770ae290a540
+     mutation 5, board B composed: J_5V_IOC's pins 1 and 2 exchanged on board B (the lead reversed) sha256 7eb3a682c92a390c
        B LDO  DRAWN
        B LEAD FAIL: J_5V_IOC.1 on 'GND', wanted +5V_IOC; J_5V_IOC.2 on '+5V_IOC', wanted GND
      record l9t5's supervisors' buck and lead on the netlists: FAIL
@@ -210,7 +217,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    board B, rail +5V_DEV (the device lead): typical 3.44 A (3.80 without), its loads sum 5.13 A (5.49), peak 6.0359 A (6.0000 without)
      the peak's basis: Layer 9's budget for this lead on C-DEV rev 1 with the draft, (36.6251 - 7.0380) W = 29.5871 W at 4.9019 V: 6.035894 A, rounded up
      to 6.0359 A (MODEL); without the draft the lead's own case is 7.4717 A against the 6.0 A declared (I-03 itself)
-   board B, rail GND (derived in the generator by record l8r2's gndret draft): sources J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_5V_IOC, J_54V;
+   board B, rail GND (derived in the generator by record l8r2's gndret draft): sources J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_5V_IOC, J_54V, J_GR1, J_GR2, J_GR3;
      13.30 A typical, 27.9108 A peak, the sum of the leads' declared peaks, an UPPER BOUND (26.4000 A without this draft); its loads sum 22.113 A
      (22.113 A without, +0.000 A: the three allocations leave +5V_DEV's derived ground loads and return as _IOC_LOADS)
    board B, the LDO input capacitors' bypass entries: C400 at U40.1 on +5V_IOC; C420 at U50.1 on +5V_IOC; C440 at U60.1 on +5V_IOC
@@ -242,91 +249,109 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    (6) RAIL_EN with U601's EN on it (R2 100k over R184 39k, DECLARED; the TPS62933's EN pull-up Ip 0.7 uA and Ih 1.4 uA, TYPICAL only, no limit
        printed; 3 TPS62933 EN pins on the net, U12, U41 and U601): 2.983 V at 10 V, 4.890 V at 16.8 V, 5.227 V at the SMCJ18A's 18 V standoff; U601
        adds 0.0589 V; against VEN_RISE 1.28 V maximum and EN's 5.5 V recommended (6 V absolute) maximum (PRINTED): HOLDS
-   (7) the enable relation (netlist, section 4 EN): +5V_DEV is up only while +3V3 is (U7's EN DEV_EN pulled to +3V3 by R42, driven by U27),
-       +3V3 only while RAIL_EN is high (U12), and U601 is on RAIL_EN: the supervisors are up whenever the device rail is (record l9t5 out 5's condition)
+   (7) the enable RELATION (netlist, section 4 EN): U7's EN (DEV_EN) is pulled to +3V3 by R42 and driven by U27; +3V3 is U12's output, enabled
+       by RAIL_EN; U601's EN is on RAIL_EN. So U601 is ENABLED whenever U7 can be enabled. That is connectivity, not timing: it does NOT show
+       that +5V_IOC is in regulation whenever +5V_DEV is (round 3 said 'the supervisors are up whenever the device rail is': WITHDRAWN as
+       stated). U601's start (SS 10 nF), U7's start, the LDOs' start into their loads and the recovery after a hiccup or a brown-out are
+       UNVERIFIED: a bench item (the two rails and the three +3V3_IOCx captured at power-on, at RAIL_EN's release by U46, and after a short on
+       +5V_IOC is removed; acceptance: +5V_IOC and each +3V3_IOCx in regulation no later than +5V_DEV at each of those events, or the
+       interval covered by the supervisors' reset state and the voter's default, which Layer 5's contract would have to state). No verdict
+       is taken on it here
    (8) the upstream path: U601 on VBAT beside U41 (C603, C604 at its VIN, as C229, C230 at U41's); VBAT's declared loads unchanged in sum (section 5);
        on C-ALLTX rev 3 (record l9t5 out 1, at the case's VBAT 13.391 V) the supervisors take 2.0043 W at their typical: through U7 at its declared 0.90
        or through U601 at its declared 0.90 (DECLARED, as U41; the TPS62933's own 5 V curve is NOT PLOTTED; the TPS62932, TPS62933F and TPS62933O are plotted) the case is unchanged
        (15.5162 V); with U601 at 0.85 (a bound shown, ASSUMPTION) the case's input rises 0.1310 W, about +0.0073 V of rest voltage at 18 A (MODEL, first order)
    BOARD A'S HALF: HOLDS on its case (C-DEV rev 1) on the printed figures, with the TYPICAL EN currents and Isat and the DECLARED figures labelled above
 
-   BOARD B'S HALF (the LDOs on +5V_IOC, the lead J_5V_IOC, the device lead's declaration)
+   BOARD B'S HALF, ITS OWN PARTS (the LDOs on +5V_IOC, the lead's supply pin, the declarations)
    (B1) the move is drawn in the composed netlist: U40, U50 and U60 take their input, their EN pull-up and their input capacitor from +5V_IOC;
         LDOs still on +5V_DEV: none; still allocated on the device lead: none; so item (1)'s 6.0359 A is U7's case with this board composed: HOLDS
    (B2) the declarations stand on their basis (section 5; L8R2-F35): the device lead 6.0359 A declared against its own 6.035894 A on the case; +5V_IOC
         1.4749 A against 1.474896 A: HOLDS (round 2 declared 6.0 A and 1.38 A: O2 above)
    (B3) the LDOs' input at the least: U601's 4.8719 V, less the rail's whole 2 % copper budget on both boards (0.100 V, DECLARED), less the
         lead's supply side at 1.4749 A (its conductor 2.520 mOhm at 76.25 C, MODEL, record l8r2 3c for this make of lead; two VH contacts at the
-        after-test 20 mOhm, PRINTED): 0.0627 V, less the ground shift between the boards (record l8r2 3d at the case's total with six leads,
-        its largest row: 0.0512 V, MODEL on PRINTED maxima): 4.6580 V against the AP2112K-3.3's need 3.749 V (VOUT +1.5 % and dropout 400 mV
-        at 600 mA, PRINTED, DS39724 Rev. 2 - 2): +0.9085 V: HOLDS; each LDO at HIGH 0.46 A under its 600 mA (PRINTED)
-        the input holds while the ground shift between the boards stays under 0.960 V, so it does not depend on how the return is corrected
+        after-test 20 mOhm, PRINTED): 0.0627 V; that leaves 4.7091 V before the ground shift between the boards
+        the AP2112K-3.3's requirement (round 4, the recheck's blocker 2; DS39724 Rev. 2 - 2 p.8): its VOUT maximum +1.5 % is printed at 1 to 30 mA; its load
+        regulation (+1 %/A maximum, at 0.46 A) and line regulation (+0.1 %/V maximum, over VIN 4.3 V to U601's 5.1329 V) are separate printed
+        rows; the three added (conservative) with the dropout 400 mV at 600 mA: 3.7674 V (round 3's 3.7495 V was the simplified figure: the
+        output tolerance and the dropout alone). The ground shift the LDOs allow: 0.9417 V. The return's shift (MODEL, record l8r2, every contact
+        at its maximum): as drawn at most 0.0512 V on the case and 0.0681 V at the declared upper bound (3d); with its dedicated return at most
+        0.0114 V (6c): HOLDS on every one of those; each LDO at HIGH 0.46 A under its 600 mA (PRINTED; finding L9T5-F06 and task T10 for
+        the supervisors' other states)
    (B4) the lead J_5V_IOC, named: 16 AWG, 150 mm, VH crimp both ends, the device lead's make (SESSION; ASSEMBLY.md section 4's device lead row
         and IF-AB-POWER's harness row for the 5 V leads); its pin 1 carries +5V_IOC and nothing else: 1.4749 A at most on the case (MODEL), 5.15 A
         at U601's limit, against the VH's 10 A with AWG 16 on the standard header (PRINTED, JST VH catalogue p.1): HOLDS
-   (B5) its pin 2 is NOT its own rail's return: boards A and B share one ground, and the whole A to B return divides by resistance over six VH
-        contacts and seventeen ribbon conductors (record l8r2 round 7). Its division on the case, read from l8r2_gndret.out (20.950 A in all there,
-        scaled by 1.0019 for this round's 1.4749 A at J_5V_IOC, a linear network; MODEL at 76.25 C, the leads of one make): equal contacts 2.793, 1.748
-        and 1.205 A a lead (K0, K1, K2); the largest any one lead's pin 2 carries in its rows, 9.404 A (K3, a BOUND: that lead's two contacts
-        at 0, every other at its initial maximum), against the VH's 10 A (PRINTED): within it on the case (record l8r2's comparator at the inside
-        air, 9.789 A on its 30 K ASSUMPTION, shown beside it: also within)
-        at the declared upper bound with this draft (27.78 A there, every lead at its own peak at once) the same row reads 12.446 A: OVER, and a
-        ribbon conductor passes its 1 A in K2, K4, K5: that is record l8r2's finding L8R2-F31, OPEN, with or without this draft
-   BOARD B'S HALF: HOLDS on its case (C-DEV rev 1) for the draft's own parts and path, on the printed figures with the labels above
+        record l8r2's finding L8R2-F43 (the supply pins): JST prints no ambient and no derating for that rating; on that record's severest
+        reading (the rating taken at 25 C, an ASSUMPTION: 5.9948 A at the inside air) J_5V_IOC's pin 1 is inside it, and J_5V_DEV's pin 1 at
+        6.0359 A is 0.0411 A OVER it while inside the printed 10 A (before the draft it carried 7.4717 A): an inferred reading, not a printed
+        limit; it stays a named vendor item (record l8r2's question to JST, drafted there, UNSENT) and a condition of the device lead
+   BOARD B'S HALF, ITS OWN PARTS: HOLDS on its case (C-DEV rev 1) on the printed figures with the labels above
 
-   WHAT THIS ACCEPTANCE DEPENDS ON, AND WHAT IT DOES NOT
-   it depends on: the LM5176's printed VSNS and R43's declared tolerance; the TPS62933's printed rating and limits; the VH's printed 10 A at AWG 16
-     for the supply pin; the AP2112K's printed dropout; rv-pwr's HIGH loads (DECLARED where no maker prints a maximum); the lead as 16 AWG at 150 mm
-     (SESSION); record l8r2's model of the return's division for pin 2 and for the ground shift (MODEL, its assumptions its own)
-   it does NOT depend on, and does not close: record l8r2's finding L8R2-F31 (the A to B return is branched in parallel with nothing that sets its
-     division; JST's note forbids parallel branching above the rating). The draft adds a sixth VH contact to that return and no load to it
-     (section 5: +0.000 A); on the case every row of l8r2's division keeps J_5V_IOC's pin 2 inside the VH's printed rating, and the LDOs' input holds
-     for any ground shift under 0.960 V. Whatever corrects L8R2-F31 (its selected direction is a dedicated ground return, not drafted) changes
-     pin 2's share and the ribbons'; it does not change items (1) to (8) or (B1) to (B4). L8R2-F31 stays OPEN beside this result and is not this record's
+   THE CONNECTED PATH (the lead's pin 2 and the return between the boards; round 4, the recheck V3's material blocker)
+   (B5) J_5V_IOC's pin 2 is a branch of the ONE return between boards A and B. Round 3 accepted it on record l8r2's round 7 rows, a sampled
+        list whose largest was not the maximum, and said this acceptance did not depend on L8R2-F31: BOTH WITHDRAWN. It depends on it.
+        AS DRAWN (no dedicated return), its worst vertex of the contact-resistance box on the case, read from record l8r2's round 8 output
+        (20.9888 A in all there; scaled by 1.0000 for this tree's drafts; MODEL on PRINTED contact limits): 10.6376 A at 76.25 C and 12.0918 A at
+        -20 C against the VH's 10 A (PRINTED): NOT MET (the recheck's corner, 10.6375 A); a ribbon conductor 2.0747 and 2.6716 A against its 1 A
+        WITH RECORD l8r2'S DEDICATED RETURN (three XT60 leads between the boards, drafted in its round 8 for both generators): at most
+        2.9578 A at 76.25 C and 3.7056 A at -20 C on the case, 3.9333 and 4.9277 A at the declared upper bound (27.9108 A), against the printed 10 A
+        and against that record's least reading 5.9948 A at the inside air (ASSUMPTION): inside both on its model
+        ON THIS COMPOSITION the dedicated return reads DRAWN on board A and DRAWN on board B (section 4), so the row takes the with-the-return figures:
+   THE CONNECTED PATH: CONDITIONAL. It holds ONLY WITH that return correction, whose drafts no independent check has read; record l8r2's finding
+        L8R2-F31 stays OPEN until its independent check, and the conditions of its section 6d are its own (the XT60's aged contact
+        resistance, no printed minimum resistances, no printed derating curves, the leads' assumed lengths). On a composition without the
+        return drafts (old state O4) this row reads NOT MET. It is never a pass on this record's evidence alone
 
-7. RECORD l8r2'S FINDING L8R2-F35, ANSWERED
-   (a) 'J_5V_DEV's return falls by the same current' (round 2's line): WITHDRAWN for pin 2. It holds for pin 1 only: J_5V_DEV's pin 1 falls by
-       1.4358 A on the case and J_5V_IOC's pin 1 carries the supervisors' rail; pin 2 of each carries a share of the whole return (item B5)
-   (b) J_5V_IOC's lead: 16 AWG, 150 mm, VH crimp both ends (SESSION: the device lead's make, so the VH's printed rating applies and the return's
-       model has leads of one make; source of the make: v2/docs/ASSEMBLY.md section 4 and IF-AB-POWER's harness row); named in both drafts; its
-       ASSEMBLY.md row and its contract row are their owners' (findings L9T5-F07 and L9T5-F08); record l8r2 assumed the same lead
-   (c) the device lead's declaration: board B declared a typed 6.0 A peak, under the lead's own 6.0359 A on the case with the draft. Corrected from
-       its basis, not to a passing number: the peak is the case's own figure for the lead (Layer 9's budget at HIGH, every load at constant power
-       at the least load voltage, the supervisors gone), rounded up to 0.1 mA, 6.0359 A, and check_l9t5_netlist.py's decl() refuses any other
-       figure; board A's rail follows by stream s99's own construction (the lead plus the wall port's limit): 6.9501 A, +0.1456 A to U7's least
-       loop limit; +5V_IOC's peak by the same method at its own least load voltage: 1.4749 A (it was 1.38 A, the LDOs' own current)
-       consequence for record l8r2 (reported, its files not edited): the return's derived upper bound reads 27.9108 A with this round's drafts
-       (l8r2_gndret.out composes round 2's copy and prints 27.78 A)
-   (d) fandec and gndret are in board B's order (section 3)
+   WHAT THIS ACCEPTANCE DEPENDS ON
+   the LM5176's printed VSNS and R43's declared tolerance; the TPS62933's printed rating and limits; the VH's printed 10 A at AWG 16; the AP2112K's
+     printed dropout, tolerance and regulation limits; rv-pwr's HIGH loads (DECLARED where no maker prints a maximum); the lead as 16 AWG at 150 mm
+     (SESSION); AND, for the lead's pin 2, the ribbons and the ground shift, a supported correction of the return between the boards: record l8r2's
+     dedicated return, unchecked. Round 3's claim that I-03's acceptance does not depend on L8R2-F31 is WITHDRAWN: the draft adds a VH contact to
+     that return, and as drawn that contact can carry more than its printed rating on the case
+   what the return does not change (stated so the next check can read each alone, not as a claim of independence): U7's load relief (1), U601's
+     rating and limit (2), (3), the supply pin (B4), and the LDOs' input for any ground shift under 0.9417 V (B3)
+
+7. RECORD l8r2'S FINDINGS FOR THIS RECORD: L8R2-F35 (ANSWERED IN ROUND 3, ITS PIN 2 ACCEPTANCE WITHDRAWN IN ROUND 4) AND L8R2-F43
+   (a) 'J_5V_DEV's return falls by the same current' (round 2's line): WITHDRAWN for pin 2 in round 3. It holds for pin 1 only: J_5V_DEV's pin 1
+       falls by 1.4358 A on the case and J_5V_IOC's pin 1 carries the supervisors' rail; pin 2 of each is a branch of the whole return (B5)
+   (b) J_5V_IOC's lead: 16 AWG, 150 mm, VH crimp both ends (SESSION: the device lead's make; v2/docs/ASSEMBLY.md section 4 and IF-AB-POWER's
+       harness row); named in both drafts; its ASSEMBLY.md row and its contract row are their owners' (findings L9T5-F07 and L9T5-F08)
+   (c) the device lead's declaration: a typed 6.0 A stood under the lead's own 6.0359 A on the case with the draft. Corrected from its basis: the
+       case's own figure for the lead rounded up to 0.1 mA, 6.0359 A, held by check_l9t5_netlist.py's decl(); board A's rail by stream s99's
+       construction (the lead plus the wall port's limit): 6.9501 A, +0.1456 A to U7's least loop limit; +5V_IOC by the same method: 1.4749 A
+       record l8r2's round 8 reads these drafts: its declared upper bound 27.9108 A is this composition's GND peak 27.9108 A: equal
+   (d) fandec, gndret and (round 4) gndrtn are in board B's order; gndrtn is in board A's before mainpb (section 3)
+   (e) L8R2-F43: item B4. Nothing in this record's drafts changes for it; the device lead's pin 1 stays a condition on JST's answer
 
 8. THE STATE OF I-03 (L9P-F03, the case row C-DEV rev 1)
-   credit criteria (common brief), per board:
+   THE COLLABORATOR'S TARGETED RECHECK V3 (cx41, an AI review, on this record's round 3 at 841e6c7e): NOT CONFIRMED. Its material point: the
+   return pin's acceptance used a sampled maximum; its four smaller points: the AP2112K's requirement terms, sequencing read from enable
+   connectivity, the BQ4050's offset drift, the case file's revision. Round 4 corrects this record's part of each (B3, item 7, B5; record l9t5's
+   case script for the last two). None of that closes anything
+   I-03 STAYS OPEN. It is credited only with U7's load relief and the compositions:
    board A: (a) composes in L4-E9's order and the generator runs: YES; (b) the changed nets read with mutations that fail: YES (three FAIL);
-            (c) the electrical acceptance on C-DEV rev 1: HOLDS
-   board B: (a) composes in L4-E9's order with record l8r2's round 7 drafts and the generator runs: YES; (b) the changed nets read with
-            mutations that fail: YES (two FAIL; the tree before T5b stops); (c) the electrical acceptance on C-DEV rev 1: HOLDS for the draft's own
-            parts and path; the shared return (L8R2-F31) is OPEN beside it and is record l8r2's
-   I-03 STAYS OPEN: both halves are checked drafts by their author only; the independent recheck V3 has not read them; nothing is applied
-   negative checks of this solution: one (round 1's board B text refused alone, a missed edit, corrected in round 2); round 3 corrects two
-   declarations and one sentence on record l8r2's finding, which was not a check of the solution; the loop is not closed
-   physical conditions (open): U601 as drawn is a copy of U41's network; its 5 V efficiency, thermal rise, start-up into the LDOs' input
-   capacitance, the lead's resistance and the return's division are bench items; the netlist check is not electrical qualification
+            (c) its own parts on C-DEV rev 1: HOLD
+   board B: (a) composes in L4-E9's order with record l8r2's rounds 7 and 8 drafts and the generator runs: YES; (b) the changed nets read with
+            mutations that fail: YES (two FAIL; the tree before T5b stops); (c) its own parts on C-DEV rev 1: HOLD
+   the connected path (the lead's pin 2, the ribbons, the ground shift): CONDITIONAL on record l8r2's return draft, which is unchecked; L8R2-F31 OPEN
+   checks of this issue: the advisory challenge cx40 and the recheck cx41 (V3) are both used; the next independent check reads the CHANGED
+   design (record l8r2's dedicated return composed with these drafts), not this one again
+   negative checks of this solution: one independent (V3, NOT CONFIRMED on the return pin; answered by a changed design, record l8r2's, and
+   by the withdrawals above) and one of the author's own (round 1's board B text, a missed edit); no third attempt of the same design is made
+   physical conditions (open): U601's 5 V efficiency, thermal rise and start-up, the rails' sequencing (item 7), the lead's resistance, the
+   return's division and contact resistances; the netlist check is not electrical qualification
 
    FINDINGS FOR OTHER AUTHORS
-   L9T5-F01 CLOSED BY RECORD l8r2's ROUND 7 DRAFTS (T5b): board B's composed generator stopped on GND's declared 21.0 A peak; with fandec and
-     gndret it runs (O3 keeps the old state as a regression)
+   L9T5-F01 CLOSED BY RECORD l8r2's ROUND 7 DRAFTS (T5b): board B's composed generator stopped on GND's declared 21.0 A peak (O3 keeps it)
    L9T5-F02 (d8dec31's mainpb owner, R-194; L4-E9's row 33): with this record's draft before mainpb, mainpb takes R603 and C607, not R248 and C247;
      no collision either way (both orders compose); row 33's text names R233 and C241, which this tree already moves: R-194's fixed
      references would remove the dependency
    L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads "its own branch off the device rail"; left
      unchanged because the z-stack tables key on value texts; the comment and the net are corrected by the draft
-   L9T5-F04 (C-PROT rev 1's consumers): the gauge's uncalibrated error against the breaker's 0.32 A gap: L9T5-CASES.md section 0, unchanged
-   L9T5-F05 (record l8r2's author): on this merged tree l8r2_gndret.out is regenerated (it reads the tree's budget, now Layer 9's rounds 4 and
-     5): its page's section 3g still prints the earlier tree's figures; and its copy of this record's draft is round 2's (the upper bound
-     27.78 A there, 27.9108 A with round 3's declarations); L8R2-F31's state is unchanged
-   L9T5-F06 (Layer 5, the supervisors' firmware contract; board B's owner): the supervisors' HIGH is Table 30's TJ 85 C figure (400 mA); the same
-     row prints 840 mA at TJ 125 C, over each AP2112K's 600 mA: what bounds the H743's junction temperature, clock and peripheral state is
-     not stated in a record read here; independent of this draft (U7's case no longer carries the supervisors)
+   L9T5-F04 (C-PROT rev 1's consumers): the gauge's uncalibrated error against the breaker's 0.32 A gap: L9T5-CASES.md section 0 (round 4: the
+     error includes the offset drift)
+   L9T5-F05 ANSWERED by record l8r2's round 8 (its page rewritten, its copies of this record's files at 841e6c7e)
+   L9T5-F06 (the supervisors' regulators): the owner's task T10; record l9t5's l9t5_t10.py and L9T5-CASES.md carry it
    L9T5-F07 (Layer 7, ASSEMBLY.md section 4): a row for the new lead: A22 J_5V_IOC (VH) to B16 J_5V_IOC (VH), 16 AWG, 150 mm, VH crimp both ends
    L9T5-F08 (Layer 5, IF-AB-POWER): the contract gains J_5V_IOC (+5V_IOC 0.36 A typical, 1.4749 A peak on both ends) and the device rail's rows
      restate (A: 3.74 A typical, 6.9501 A peak, 3.44 A apportioned to J_5V_DEV; B: 3.44 A typical, 6.0359 A peak arriving); with record l8r2's rows
@@ -336,13 +361,16 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    both boards compose in L4-E9's order with this draft in its place, first and last, and their designators are disjoint          yes
    the committed netlists read NOT DRAWN; each draft alone and both compositions read DRAWN, the pair included                    yes
    the declarations read DRAWN on their basis alone and composed, on both boards                                                  yes
-   record l8r2's check of the return reads DRAWN on the composed board B                                                          yes
+   record l8r2's checks read its declaration and its dedicated return DRAWN on the composed boards                                yes
    O1: board B's round 1 text refuses alone on the LDO input capacitor's bypass entry                                             yes
    O2: round 2's texts FAIL the declaration check on both boards                                                                  yes
-   O3: board B without record l8r2's round 7 drafts stops on GND's declared peak                                                  yes
+   O3: board B without record l8r2's rounds 7 and 8 drafts stops on GND's declared peak                                           yes
+   O4: without the return drafts the dedicated return reads NOT DRAWN on both boards                                              yes
    every mutation FAILS                                                                                                           yes
    the draft adds nothing to board B's GND declared loads, and board A's VBAT declared loads are unchanged in sum                 yes
-   C-DEV rev 1: board A's half holds on the printed figures                                                                       yes
-   C-DEV rev 1: board B's half holds for the draft's own parts and path; L8R2-F31 is read OPEN in record l8r2's output            yes
+   C-DEV rev 1: board A's own parts hold on the printed figures                                                                   yes
+   C-DEV rev 1: board B's own parts hold on the printed figures, the AP2112K's regulation terms included                          yes
+   the connected path is NOT MET as drawn (the lead's pin 2 over the VH's printed 10 A on the case)                               yes
+   the connected path is CONDITIONAL with record l8r2's return composed, and L8R2-F31 is read OPEN and unchecked there            yes
 
 l9t5_drafts: done

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Layer 9 task T5, record l9t5 (MESHSAT-1357, 4 October 2026): the case rows C-ALLTX rev 2 and C-DEV rev 1, their uncertainty,
+"""Layer 9 task T5, record l9t5 (MESHSAT-1357, 4 October 2026): the case rows C-ALLTX rev 3 and C-DEV rev 1, their uncertainty,
 at most three service-neutral approaches to F01 (D-17) compared, and I-03 / L9P-F04's correction selected. PROTOTYPE DESIGN,
 DESK ARITHMETIC: nothing in this kit has been built, powered or measured; no figure printed here is a measurement.
 
 It imports record l9pwr's budget (v2/docs/records/l9pwr/l9pwr_budget.py, round 4) UNCHANGED, pinned by sha256, and takes the
-case row from it (its section 7b: C-ALLTX rev 2 computed from the row's own text, each pack-fed converter at the VBAT the case
+case row from it (its section 7b: C-ALLTX's definition, rev 2's text which rev 3 keeps, computed from the row's own text; rev 3
+withdrew rev 2's quoted figure and prints this record's; round 4 pins the rev 3 case file; each pack-fed converter at the VBAT the case
 sets). It then reads the makers' printed figures, every one parsed from its pinned sheet (pdftotext), never typed:
   1. the case row: the need at 18 A, the allowance at 15.5 V rest, the deficit, split into load pins, conversion, path and cells;
   2. the uncertainties the coordinator's row names, each with its label (PRINTED, TYPICAL, MODEL, ASSUMPTION, MISSING): the
@@ -38,7 +39,7 @@ PINS = {
     "budget": "v2/docs/records/l9pwr/l9pwr_budget.py",
     "budget_out": "v2/docs/records/l9pwr/l9pwr_budget.out",
     "rvpwr": "v2/docs/records/rv-pwr/pwr_budget.py",
-    "cases": "v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04.md",
+    "cases": "v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md",
     "challenge": "v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md",
     "sources": "v2/docs/records/l9t5/inputs/SOURCES.txt",
     "bq4050": "v2/vendor/battery/ti-bq4050.pdf",
@@ -127,7 +128,11 @@ def read():
             refuse("SOURCES.txt does not name %s at its sha256" % PINS[k])
     # the case rows, as the coordinator fixed them (read to quote, never to compute)
     c = flat(text("cases"))
-    I["case_quote"] = need(c, r"On Layer 9's final drafts this case needs ([\d.]+) V rest \(([\d.]+) W at VBAT\)", "C-ALLTX rev 2's quoted figure").groups()
+    I["case_quote"] = need(c, r"On Layer 9's final drafts this case needs ([\d.]+) V rest \(([\d.]+) W at VBAT\)", "rev 2's quoted figure (withdrawn by rev 3)").groups()
+    need(c, r"## C-ALLTX rev 3 \(15:45 CEST; rev 2's quoted figure withdrawn\) Rev 2's definition stands; its quoted figure did not belong to it\.", "rev 3's heading")
+    m = need(c, r"THE CASE \(REQ-018 \+ CONOPS 4a\): ([\d.]+) W at VBAT, need ([\d.]+) V at 18 A and R_cell 0\.06 Ohm: deficit \+([\d.]+) V nominal", "rev 3's case figures")
+    I["rev3_case"] = tuple(float(x) for x in m.groups())
+    I["rev3_bound"] = float(need(c, r"With the printed uncertainties bounded \(the gauge's uncalibrated error, the dock contacts at their printed maximum\): ([\d.]+) V\.", "rev 3's bounded figure").group(1))
     I["case_text"] = need(c, r"Fixed: (that state and no other: transmitters keyed at HIGH, monitor full, FANS RUNNING, outlets 0 W, heater off, standby card off, every other load at typical)", "C-ALLTX rev 2's text").group(1)
     m = need(c, r"C-DEV rev 1.*?([\d.]+) A demanded \(([\d.]+) V, every load at constant power; ([\d.]+) A at 5\.1 V\) against the LM5176 stage's ([\d.]+) A loop minimum", "C-DEV rev 1", re.S)
     I["cdev_quote"] = tuple(float(x) for x in m.groups())
@@ -146,6 +151,8 @@ def read():
     I["g_inl"] = float(need(sec, r"Integral nonlinearity \(1\)\s+16-bit, best fit over input voltage range\s+±([\d.]+)\s+±([\d.]+)\s+LSB", "INL").group(2))
     I["g_off"] = float(need(sec, r"Offset error\s+16-bit, Post-calibration\s+±([\d.]+)\s+±([\d.]+)\s+µV", "the offset").group(2)) * 1e-6
     I["g_drift"] = float(need(sec, r"Gain error drift\s+15-bit \+ sign, over input voltage range\s+(\d+)\s+PPM/°C", "the gain drift").group(1)) * 1e-6
+    # round 4 (the recheck V3's blocker 4): the offset's own drift, printed beside the gain drift and left out until now
+    I["g_off_drift"] = float(need(sec, r"Offset error drift\s+15-bit \+ sign, Post-calibration\s+([\d.]+)\s+([\d.]+)\s+µV/°C", "the offset drift").group(2)) * 1e-6
     I["g_range"] = float(need(sec, r"Input voltage range\s+.([\d.]+)\s+([\d.]+)\s+V", "the input range").group(2))
     # board P's sense resistor (gen_sch_p.py R10) and the tree's 2 mOhm 2512 part (lcsc_fill.py)
     m = need(text("gen_p"), r'r\("R10", "(\d+)m 2512 (\d+)W \(sense\)", "GND", "PACK_N", "RS2512"\)', "board P's R10")
@@ -245,7 +252,9 @@ def compute():
              ("integral nonlinearity, PRINTED maximum %.1f LSB of %.2f uV" % (I["g_inl"], I["g_lsb"] * 1e6), I["g_inl"] * I["g_lsb"] / I["r10"]),
              ("offset, PRINTED maximum %.0f uV post-calibration (the counter's offset is calibrated by its own routine)" % (I["g_off"] * 1e6), I["g_off"] / I["r10"]),
              ("R10's tolerance, ASSUMPTION %.0f %% (the generator prints none; the tree's 2 mOhm 2512 part)" % (100 * I["r10_tol"]), I["r10_tol"] * I_CASE),
-             ("gain drift, PRINTED maximum %.0f ppm/K over %.0f K (ASSUMPTION: a 23 C calibration to the +55 C cell limit)" % (I["g_drift"] * 1e6, GAUGE_DT), I["g_drift"] * GAUGE_DT * I_CASE)]
+             ("gain drift, PRINTED maximum %.0f ppm/K over %.0f K (ASSUMPTION: a 23 C calibration to the +55 C cell limit)" % (I["g_drift"] * 1e6, GAUGE_DT), I["g_drift"] * GAUGE_DT * I_CASE),
+             ("offset drift, PRINTED maximum %.1f uV/K over the same %.0f K (round 4: rounds 1 to 3 left it out)" % (I["g_off_drift"] * 1e6, GAUGE_DT), I["g_off_drift"] * GAUGE_DT / I["r10"])]
+    U["off_drift"] = terms[-1][1]
     U["gauge_terms"] = terms
     U["gauge_uncal"] = math.fsum(x for _l, x in terms)
     U["gauge_cal"] = math.fsum(x for l_, x in terms[1:] if not l_.startswith("R10")) + CAL_REF * I_CASE
@@ -271,6 +280,7 @@ def compute():
     U["q60"] = (q, q / 3.0 / I["cell_cap"])
     # combined: the printed gauge (uncalibrated) with the dock contacts' maximum, R_cell at the assumption
     U["comb_printed"] = row(i=I_CASE - U["gauge_uncal"], r_extra=max(0.0, pins_rt - I["w2"][4]))
+    U["comb_before_r4"] = row(i=I_CASE - (U["gauge_uncal"] - U["off_drift"]), r_extra=max(0.0, pins_rt - I["w2"][4]))   # rounds 1 to 3's sum, which rev 3 quotes
     U["comb_all"] = row(i=I_CASE - U["gauge_uncal"], r_extra=max(0.0, pins_rt - I["w2"][4]), r_cell=0.07,
                         eff_over={"PA": 0.95, "S1": 0.85, "S2": 0.85, "S3": 0.85, "DEV": 0.85})
     R["U"] = U
@@ -363,9 +373,14 @@ def predicates(R):
     P["the budget's predicates all hold on this tree (record l9pwr round 4)"] = R["bud_pred_ok"]
     P["the case row reproduces the challenge's allowance at 18 A and 15.5 V to 1 mW"] = abs(case["allow"] - I["ch_allow"]) < 0.001
     P["the gauge's printed gain error alone reproduces the challenge's 0.486 A to 1 mA"] = abs(U["gauge_gain_only"] - I["ch_gain_a"]) < 0.001
-    P["the row's quoted 16.214 V is D-11's basis (rv-pwr's typ_nontx), not the row's text, to 1 mV"] = (
+    P["rev 2's quoted 16.214 V, withdrawn by rev 3, is D-11's basis (rv-pwr's typ_nontx), not the case's text, to 1 mV"] = (
         abs(R["case_quote_row"]["V_rest"]["hi"] - float(I["case_quote"][0])) < 0.001 and abs(case["need"] - float(I["case_quote"][0])) > 0.5)
     P["the case row needs more than 15.5 V nominally (F01 / D-17 stays open on the case)"] = case["need"] > R["V"]
+    P["C-ALLTX rev 3's printed case (241.039 W at VBAT, 15.5162 V, +0.0162 V) is what this script computes from the pinned rev 3 file"] = (
+        PINS["cases"].endswith("-rev3.md") and abs(case["p"] - I["rev3_case"][0]) < 0.0005 and abs(case["need"] - I["rev3_case"][1]) < 0.00005
+        and abs(case["need"] - R["V"] - I["rev3_case"][2]) < 0.00005)
+    P["rev 3's bounded 16.0684 V is this record's sum before the gauge's offset drift; with that printed term the bound is higher"] = (
+        abs(U["comb_before_r4"]["need"] - I["rev3_bound"]) < 0.00005 and U["comb_printed"]["need"] > U["comb_before_r4"]["need"])
     P["the printed gauge bound alone takes the case further from 15.5 V than the nominal deficit"] = U["gauge_uncal_row"]["need"] - case["need"] > case["need"] - R["V"]
     by = {a["db"]: a for a in A["a1"]}
     P["A1 at +-0.25 and +-0.5 dB meets 15.5 V on the case with the printed gauge bound and the dock contacts' maximum; at +-1 dB it does not"] = (
@@ -393,7 +408,7 @@ def render(R):
     V, Ic = R["V"], R["I"]
     L = []
     w = L.append
-    w("l9t5_case: C-ALLTX rev 2 and C-DEV rev 1 for task T5 (record l9t5, MESHSAT-1357, 4 October 2026). PROTOTYPE DESIGN, DESK")
+    w("l9t5_case: C-ALLTX rev 3 and C-DEV rev 1 for task T5 (record l9t5, MESHSAT-1357, 4 October 2026). PROTOTYPE DESIGN, DESK")
     w("ARITHMETIC: nothing in this kit has been built, powered or measured. Labels: PRINTED (a maker's limit), TYPICAL (a maker's typical")
     w("figure or curve), MODEL (this record's or the budget's arithmetic), ASSUMPTION (a value no held document gives), MISSING (no held")
     w("evidence bounds it).")
@@ -403,7 +418,8 @@ def render(R):
         w("   %-12s %s  sha256 %s" % (k, p, s))
     w("   the copies in inputs/ (filed as received, named with their sha256 in inputs/SOURCES.txt): %s" % ", ".join(PINS[k] for k in COPIES))
     w("")
-    w("1. THE CASE ROW, C-ALLTX REV 2 (record l9pwr round 4, out 7b, on DRAFTED)")
+    w("1. THE CASE ROW, C-ALLTX REV 3 (its definition is rev 2's text, kept by rev 3; record l9pwr round 4, out 7b, on DRAFTED; the case file")
+    w("   pinned is the coordinator's rev 3, inputs/coordinator-cases-2026-10-04-rev3.md)")
     w("   the row's text: %s" % I["case_text"])
     w("   REQ-018's acceptance: %s" % I["req018"])
     w("   need %.4f V rest at %.0f A; the allowance at %.1f V and %.0f A %.3f W at VBAT (the challenge: %.3f W); the deficit %+.3f W, %+.4f V" % (
@@ -419,10 +435,11 @@ def render(R):
     w("     the cells, %.4f Ohm (R_cell %.3f Ohm, ASSUMPTION)  %8.3f W" % (case["r_cells"], case["r_cell"], case["cell_w"]))
     w("     the sum less the EMF: %+.3f W = the deficit" % (case["load"] + case["conv"] + case["path_w"] + case["cell_w"] - case["emf_w"]))
     q = R["case_quote_row"]
-    w("   the row's quoted figure %s V (%s W at VBAT) is D-11's basis on rv-pwr's typ_nontx: %.4f V, %.3f W; the row's text gives %.4f V (out 7b of" % (
-        I["case_quote"][0], I["case_quote"][1], q["V_rest"]["hi"], q["vbat_W"], case["need"]))
-    w("     record l9pwr names the loads that differ): a revision of the row is the coordinator's; this record computes the text and shows the")
-    w("     basis beside it as a labelled scenario")
+    w("   rev 2's quoted figure %s V (%s W at VBAT), WITHDRAWN by rev 3, is D-11's basis on rv-pwr's typ_nontx: %.4f V, %.3f W; the case's text gives" % (
+        I["case_quote"][0], I["case_quote"][1], q["V_rest"]["hi"], q["vbat_W"]))
+    w("     %.4f V (out 7b of record l9pwr names the loads that differ); rev 3 prints the case as %.3f W, %.4f V, +%.4f V: this script's figures;" % (
+        case["need"], I["rev3_case"][0], I["rev3_case"][1], I["rev3_case"][2]))
+    w("     the basis is shown beside it as a labelled scenario")
     w("")
     w("2. THE UNCERTAINTIES THE ROW NAMES, EACH BOUNDED ALONE, THEN COMBINED (need at the bound; the case's nominal %.4f V)" % case["need"])
     w("   U1 the gauge's current indication against the indicated %.0f A (TI BQ4050 %s 6.14, p.11, -40 to 85 C; board P's R10 %.0f mOhm):" % (Ic, I["g_rev"], I["r10"] * 1000))
@@ -452,6 +469,9 @@ def render(R):
         case["r_cell"], U["comb_printed"]["p"]))
     w("      %.4f A, needs %.4f V (%+.4f V); with R_cell 0.070 Ohm and the converters at U4's lower figures also: needs %.4f V" % (
         U["comb_printed"]["i"], U["comb_printed"]["need"], U["comb_printed"]["need"] - V, U["comb_all"]["need"]))
+    w("      (round 4: the gauge's offset drift, %.4f A, is in U1's sum now; without it the bound was %.4f V, the figure the case row's rev 3" % (
+        U["off_drift"], U["comb_before_r4"]["need"]))
+    w("      quotes, %.4f V: the row's quoted bound is the coordinator's to restate; F01 / D-17 is OPEN on either figure)" % I["rev3_bound"])
     w("")
     w("3. LABELLED SCENARIOS BESIDE THE CASE (never substituted for it)")
     w("   the compute modules at 8 W (the budget's HIGH; K4's hold has no numerical ceiling): %.3f W, needs %.4f V" % (R["cm5_8"]["p"], R["cm5_8"]["need"]))
@@ -525,7 +545,7 @@ def render(R):
     w("   L9P-F04: the PA rail at HIGH %.4f A against U13's %.4f A; with A1 it is the PA's capped figure (section 4), no shunt or lead change" % C["f04"])
     w("")
     w("6. THE SELECTION")
-    w("   F01 / D-17 on C-ALLTX rev 2: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,")
+    w("   F01 / D-17 on C-ALLTX rev 3: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,")
     w("     money or claim changes; the kit's VHF stage is a 30 W stage). It is the only approach that closes the case with the printed gauge")
     w("     bound; A2 and A3 close only the nominal deficit. Its acceptance: the loop's half-tolerance at most 0.5 dB over temperature (the case")
     w("     with the printed bounds), at most 0.25 dB to cover the 8 W modules and D-11's basis as well. CONDITIONAL on the bench row of section 4")

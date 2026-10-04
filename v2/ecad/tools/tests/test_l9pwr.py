@@ -251,11 +251,12 @@ def t_margins_and_findings():
 
 def t_round4_c1_and_the_case_row():
     """Round 4 (T5): C1 takes the standby card out of PS-ALLTX on DRAFTED and leaves DRAWN as rv-pwr's state; out 7b computes
-    C-ALLTX rev 2 from the row's text at the VBAT the case sets, and its parts close on the cells' EMF."""
+    C-ALLTX (rev 2's definition; labelled rev 3 since round 6) from the row's text at the VBAT the case sets, and its parts close on the
+    cells' EMF."""
     m = _M()
     for k in ("C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state",
-              "C-ALLTX rev 2's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W",
-              "C-ALLTX rev 2's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"):
+              "C-ALLTX rev 3's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W",
+              "C-ALLTX rev 3's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"):
         assert _pred(k), k
     ca = _C["R"]["calltx"]
     nw = ca["new"]
