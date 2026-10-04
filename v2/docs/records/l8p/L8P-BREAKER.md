@@ -3,7 +3,7 @@
 Record `l8p`, MESHSAT-1357, 4 October 2026, branch `fnd/l8p` from main `64cd25ee`; round 3 on branch `fnd/l8p2` from
 `fnd/l8p` at `e1bc3cba`. The author is board P's generator author for this one correction and, since round 2, DD-8's owner.
 
-**Status: DRAFTED, not applied.** Three release-guarded apply scripts, a netlist check and their proof on scratch copies.
+**Status: DRAFTED, not applied.** Four release-guarded apply scripts, a netlist check and their proof on scratch copies.
 Nothing in this kit has been built, bought, powered or measured. Every apply script refuses the repository's own generator
 until a `RELEASE.md` beside it reads `released: yes` and names an accepted check of this record; none exists.
 
@@ -26,6 +26,13 @@ on board P:** a reverse-charge detector (U103 and U104, two more OPA187s) holds 
 the breaker's body diodes pass a charge into the cells over 0.368 to 1.213 A. That return already reaches board A on J_DOCK pin
 3: **no new contact.** Board A's inhibit must read it (the interface of section 12f, owed to L4-E11's DD-7 draft, finding
 L8P-F04).
+
+**Round 4 (4 October 2026, the correction of design defect DD-5; section 13).** With the gauge's CHGIN = 1 above T3 the
+discharge current crossed the charge switch Q1's body diode: 10 W at 10 A and 23.9 W at the breaker's held 23.93 A, against the
+1.48 W its pad holds (record `l9stk` 15.5 to 15.7; BAT-F20, EQ-15). **Corrected in a new board P draft,
+`apply_gen_sch_p_idealdiode.py`:** an ideal diode beside Q1 (Q109, a second CSD17570Q5B, under U105, an LM74700-Q1). On case
+row C-PROT with CHGIN = 1, Q109 carries 10 A at 0.30 W, 18 A at 0.54 W and 23.93 A at 0.72 W at most. The gauge's charge blocking
+and its drive of Q1 are unchanged, and no discharge is refused. E-8 (restated), E-16 and E-12d stay open.
 
 **The defects** (record `l9stk` section 15):
 - DD-1: with board P's FETs Q1 and Q2 welded and no firmware, nothing on board P opens the discharge path on current alone
@@ -51,6 +58,7 @@ pinned by `inputs/SOURCES.txt`.
 |---|---|---|
 | `apply_gen_sch_p_breaker.py` | P | The breaker U101 (the -1) with its sense pair, FETs, power limit, timer, dv/dt capacitor, input clamp and input bypass. The enable loop's two inverters and the RC hold through R105 and D102. The restart inhibit: RT101 on the pad, its bridge and reference, the comparator U102, the PGD gate Q105 and Q106. Round 3: the reverse-charge detector (B-R2, section 12): U103 on R10's charge with its zener-held reference (R129, D103, R118, R119), U104 on the FETs' reverse VDS (R121 to R124), Q107 and Q108 in series on DOCK_EN_RET, C107 to C110, R120, R125 to R128. J_SMB as a 1x7 with the loop on pins 5 and 7 and the return on pin 6. The gauge's PACK and VCC taps and Q2's R19 moved to Q2's source (IF-6). PACK_P re-declared as the breaker's output. Eight test points for E-12, E-12b and E-12c. One schematic section. |
 | `apply_gen_sch_e_enable.py` | E | J_SMB as the same 1x7, pin for pin. J_BLK pins 3 and 5 carry the loop to the block, with pin 4 ground between them. The loop's two nets declared. Board E is a pass-through: no part. Unchanged in round 2. |
+| `apply_gen_sch_p_idealdiode.py` | P | Round 4, DD-5 (section 13), applied after the breaker draft, which it requires: Q109 beside Q1 on SCP_OUT and SW, its controller U105, the charge pump's C111, R130 from gate to source, EN from BRK_VIN through D104 with R131, the anode pair C112 and C113, the cathode pair C114 and C115, TP109. SCP_OUT's loads and SW's sources re-declared with Q109. One schematic section. |
 | `apply_gen_sch_a_ptc.py` | A | J_DOCK pins 3 and 5 carry the loop, with pin 4 ground between them. RT1, the PRF15BB103, closes the loop on the battery FETs' copper. The loop's two nets declared. Round 2 changed only its comment (the -1). |
 
 Each draft:
@@ -170,7 +178,7 @@ NOT HELD (E-15).
 
 | Board | This record's | Against every other draft of the board, composed in L4-E9's order |
 |---|---|---|
-| P | U101 to U104, Q101 to Q108, D101 to D103, RT101, R101 to R129, C101 to C110, TP101 to TP108 | DISJOINT (l6r2's two board P drafts add none) |
+| P | The breaker draft: U101 to U104, Q101 to Q108, D101 to D103, RT101, R101 to R129, C101 to C110, TP101 to TP108. The ideal diode draft (round 4): Q109, U105, D104, R130, R131, C111 to C115, TP109 | DISJOINT, from each other too (l6r2's two board P drafts add none) |
 | E | none (nets only) | DISJOINT |
 | A | RT1 | DISJOINT (L4-E4 to L4-E11, l8gnd, l8r2, d8dec31's mainpb, l6r2) |
 
@@ -181,11 +189,13 @@ l8r2's VIN_RAW cut-off FET.
 
 ## 6. Order constraints for L4-E9's change list
 
-1. **One release for the three drafts.** P, E and A are released and applied together, never one alone.
+1. **One release for the four drafts.** P (the breaker, then the ideal diode), E and A are released and applied together, never
+   one alone. The netlist check reads FAIL on a board P that carries the breaker without the ideal diode (DD-5 uncorrected).
    - `check_contracts.py` section 15c compares J_SMB at both ends: family, pitch, pin count and roles.
    - Section 4 compares the dock's 2 x 6 map on J_DOCK and J_BLK.
    - Either check fails when only one end has changed.
-2. **Board P: a new round.** No board P circuit change is in the list today, apart from U-01's R-105, which is undrafted and
+2. **Board P: a new round.** The ideal diode draft follows the breaker draft directly (it reads BRK_VIN and refuses a target
+   without it); l6r2's two tables before or after the pair. No other board P circuit change is in the list today, apart from U-01's R-105, which is undrafted and
    only under approach (II).
    - The breaker draft goes into board P's round with l6r2's two board P tables, in either order (both shown).
    - R-105, when drafted, must leave U101, Q2's source and J_SMB as this draft leaves them.
@@ -227,12 +237,15 @@ l8r2's VIN_RAW cut-off FET.
 | **L4-E11** (with board A's generator) | **DD-7, the input-return pulse:** board A opens the enable loop for a pulse when an input appears, so the -1's latch resets. It sits in the loop on board A, in series with RT1 between J_DOCK pins 5 and 3 (DOCK_EN_OUT and DOCK_EN_RET), so it composes with this record's A draft. |
 | **L4-E11** (with board A's generator) | **B-R2's interface, route R1 (section 12f, finding L8P-F04):** board A's charge inhibit sets while DOCK_EN_RET is under 1.0 V and DOCK_EN_OUT is at 2.0 V or over, whatever CELL+ reads, within 1 ms; it holds at least 1.0 s after DOCK_EN_RET rises over 2.5 V, then releases on CELL+ alive as now. Board A loads DOCK_EN_RET with 1 MOhm or more. No new contact: J_DOCK pin 3. E-14 as it now reads (section 12g) and E11-45 (c2)'s acceptance. |
 | The firmware owner | **IF-7:** the bridge reports a tripped breaker (the pack's terminal dead while the gauge's FETs are on) and enables charging only after the breaker's restart; recovery on battery is redocking. |
+| Layer 6 | **Round 4:** C111, a 220 nF 50 V X7R 0805 whose maker's curve keeps at least 0.136 uF at 14 V and to 125 C (section 13d takes 20 % for the bias, ASSUMED); C112 to C115 at 50 V, each able to hold the applied voltage alone. Q109 and U105 are parts the kit already orders (C529279, C2941042). |
 | Layer 6 (L8P-06) | **Order codes owed:** the LM5069-1 (U101; the -2's C111822 is not it); the OPA187IDBVR (U102, and U103 and U104 in round 3); the NXRT15XH103FA1B010 (RT101); the 7-way J_SMB at both ends, pinned in the generators as R8P-02 pinned the 4-way C144395, so no fill decides it (`lcsc_fill.py`'s rule `SMBus lead.*JST-XH 1x4` no longer matches). |
 | Layer 6 | E-6 for the sense pair: 2 W each at the band's temperature, at most 50 ppm/K. R110, R111 and R112 at 0.1 % and at most 25 ppm/K (the budget of section 4 rests on it); R113 15 MOhm 1 %. C103's capacitance at its 0 to 2.55 V charge within the record's 10 % (the hold's 0.110 s least). R105 and D102's single pulse at each undocking and each inhibit pull (C_U from 16.8 V through 150 ohm, about 0.47 mJ, 107 mA peak). RT101's bonding adhesive: electrically insulating, thermally conducting, to 125 C. Codes for the new passives. Round 3: R121 to R124 at 0.05 % and at most 10 ppm/K, R118 and R119 at 0.1 % and at most 25 ppm/K (section 12c rests on them); **R10's tolerance and temperature coefficient** (the gauge's 2 mOhm sense: the generator prints neither; section 12c takes 1 % and 75 ppm/K, ASSUMED); R129's temperature coefficient (100 ppm/K ASSUMED). |
 | Tools owner | `check_contracts.py` 15c: a role for DOCK_EN_OUT and DOCK_EN_RET, equal at both ends, before the regenerated P and E are judged. `gen_pcb_e5.py`'s silk table `SHORT` gains the two nets (the block's land labels read "?" otherwise; cosmetic). |
-| Board P's PCB generator (`gen_pcb_p3.py`) | **Round 3:** U103's sense by Kelvin taps from R10's two pads (R120's trace from the GND pad; U103's V-, R119 and C109 at the PACK_N pad), as the gauge's SRP and SRN are taken; U104's dividers from the FETs' own drain and source pads (BRK_SNS and PACK_P at Q101 and Q102), so no band drop adds to the reverse VDS; U103 and U104 away from the pad. **IF-2:** each breaker FET's installed RthJA at most 52.5 C/W (1 in2 of 2 oz each gives the sheet's 50). The area budget is two 1 in2 pads, 1290 of the 2084 mm2 left, 793 mm2 for the rest. U101 sits beside the sense pair with Kelvin taps (E-9). C104 and C105 sit at the sense pair. RT101 sits on the FETs' pad with its two lead lands beside it; U102 and its bridge sit away from the pad. Q2's source band becomes BRK_VIN, and the PACK_P band runs from the breaker FETs' sources to W_P. |
+| Board P's PCB generator (`gen_pcb_p3.py`) | **Round 4 (IF-8, DD-5):** Q109 beside Q1 on the same SCP_OUT and SW bands, each on the bands' full width; the SW pour (Q1's, Q109's and Q2's drains) at 51.4 K/W or better to the inside air for the hottest junction with Q109's and Q2's losses counted, with 35.5 K/W as the target (section 13d; the bottom face is free); U105 off the pour where the board stays under 125 C at 23.93 A held, its ANODE, GATE and CATHODE traces taken at Q109's own pins (TI 12.1); C111 away from the FETs; C112 at U105's ANODE pin. **Round 3:** U103's sense by Kelvin taps from R10's two pads (R120's trace from the GND pad; U103's V-, R119 and C109 at the PACK_N pad), as the gauge's SRP and SRN are taken; U104's dividers from the FETs' own drain and source pads (BRK_SNS and PACK_P at Q101 and Q102), so no band drop adds to the reverse VDS; U103 and U104 away from the pad. **IF-2:** each breaker FET's installed RthJA at most 52.5 C/W (1 in2 of 2 oz each gives the sheet's 50). The area budget is two 1 in2 pads, 1290 of the 2084 mm2 left, 793 mm2 for the rest. U101 sits beside the sense pair with Kelvin taps (E-9). C104 and C105 sit at the sense pair. RT101 sits on the FETs' pad with its two lead lands beside it; U102 and its bridge sit away from the pad. Q2's source band becomes BRK_VIN, and the PACK_P band runs from the breaker FETs' sources to W_P. |
 | The integrator | IF-3: a stage for the breaker in `pcb_energy_chain.yaml` between PACK_FETS and PACK_LEAD (its limit 23.93 A). |
+| The l9stk register's owner | **Round 4:** DD-5's row (15.5, 15.6 and 15.7) with the correction of section 13: Q1's row reads Q109 at 0.724 W and 148.0 C with Q2 through one pad at 23.93 A held; **E-8 restated** with Q109 (three FETs on the SW pour; CHG off and CHG on); **E-16** and **E-12d** added (section 13g). |
 | The l9stk register's owner | E-10's line gains VDS under 1.62 V during current-limit excursions; E-12b (section 4) joins E-12; E-15 measures the pad-to-NTC gradient against section 4's 1.24 K. Round 3: **E-14 as it now reads** and E-12c (section 12g); **a fourth recovery of the -1** (15.4b lists redocking, an input's return and the guard's cycle): a charge over the detector's threshold through the off breaker resets it, and it restarts after the hold with board A's battery FETs held off (section 12b). |
+| **The battery stream** (BAT-F20, EQ-15, S-46; `review-packets/battery/`) | **Round 4, DD-5's correction (section 13):** the ladder rows L2 and L4a, the mode table and BAT-F20's text, which read the discharge crossing Q1's body diode under CHGIN = 1, are answered by Q109 under U105; FET Options stays 0x3D (CHGIN = 1), and no gauge setting changes (IF-4). For its review: U105's ANODE and GND sit directly on the cell node behind F1 and F2 (TI's circuit; every other IC on that node is behind a series resistor); a welded Q109 is found as a welded Q1 is (CFETF, SLUUAQ3A 3.10, if the golden image enables it; the second level behind it); U105 draws 152 uA at most while the gauge holds the discharge FET on, and 2.5 uA with the gauge shut down. The correction does not wait on Q-P18 or Q-TI-10 (drafted, unsent); whether they are still sent is the battery stream's. |
 | The battery stream | Round 3: the detector draws 0.47 mA from BRK_VIN at 16.8 V (two OPA187s, the reference's feed, the dividers), a standby load on the pack beside U101's and U102's. |
 
 ## 8. Regeneration on the runner and the netlist check (`l8p_drafts.out` section 7)
@@ -256,10 +269,11 @@ was not started.
 | Netlist | Reading |
 |---|---|
 | The committed netlists | NOT DRAWN on all three |
-| P, E and A each with this record's draft alone (the generators ran to their end) | DRAWN on BRK, EN, INH and REV; the LOOP across the three boards DRAWN |
-| Board P composed in L4-E9's order | DRAWN on BRK, EN, INH and REV |
+| P, E and A each with this record's drafts alone (the generators ran to their end) | DRAWN on BRK, EN, INH, REV and DIO; the LOOP across the three boards DRAWN |
+| Board P composed in L4-E9's order | DRAWN on BRK, EN, INH, REV and DIO |
+| Board P with the breaker draft and without the ideal diode | FAIL: DIO NOT DRAWN beside a drawn breaker (DD-5 uncorrected) |
 | Boards E and A composed in L4-E9's order | the generators refuse on other drafts' defects (section 9); with scratch stand-ins for those, DRAWN, LOOP DRAWN |
-| Five mutated netlists (P's J_SMB pins 6 and 7 exchanged; A's J_DOCK pins 3 and 4 exchanged; P's Q105 and Q106 gates exchanged, so the inhibit is no longer gated by PGD; round 3: U104's inputs exchanged, so the detector reads a forward drop; R120 moved to PACK_N and R119 to GND, so U103 no longer reads R10) | FAIL |
+| Seven mutated netlists (round 4: Q109's source and drain exchanged, the ideal diode the wrong way round; U105's GATE on Q1's gate, a second driver on the gauge's charge switch; P's J_SMB pins 6 and 7 exchanged; A's J_DOCK pins 3 and 4 exchanged; P's Q105 and Q106 gates exchanged, so the inhibit is no longer gated by PGD; round 3: U104's inputs exchanged, so the detector reads a forward drop; R120 moved to PACK_N and R119 to GND, so U103 no longer reads R10) | FAIL |
 
 The check parses the netlists and reads the dock lands' pad positions from `meshsat.pretty`. It holds:
 - the breaker's nets and values, U101's PGD on BRK_PGD;
@@ -269,6 +283,10 @@ The check parses the netlists and reads the dock lands' pad positions from `mesh
 - the ground contact between the loop conductors, on J_SMB (by position along the row) and on J_DOCK and J_BLK (a ground
   pad at the midpoint of the two loop pads);
 - the loop's continuity from BRK_VIN through R106, the lead, the dock and RT1 back to Q103's gate;
+- round 4, DIO, the ideal diode: Q109's three source pins on Q1's source net and its drain on Q1's drain net, which is Q2's
+  drain; U105's ANODE and CATHODE on those two nets, its GATE on Q109's gate with R130 and TP109 and nothing of the gauge's,
+  its GND on the cells' side of R10; C111 from VCAP to the anode; D104's cathode on EN and its anode on U101's VIN, which is
+  Q2's source; R131; the two series pairs to the cells' negative; Q1's gate still on the gauge's drive; the values;
 - round 3, REV, the reverse-charge detector: U103's +IN on R10's cell side through R120 and its -IN on the zener-held reference
   (R129 from U101's VIN, D103's cathode, R118 over R119), U104's +IN on PACK_P's divider and its -IN on BRK_SNS's, with the
   -IN divider's ratio over the +IN's (so PACK_P must exceed BRK_SNS), Q107's drain on Q103's gate net (the loop's return) and
@@ -322,6 +340,7 @@ only, never drafts and never applied. They say only that the generator then runs
     but it interrupts the service, and E-12b does not find it.
 
 - **The reverse-charge detector's own failures** (round 3) are listed with how each is found in section 12d.
+- **The ideal diode's own failures** (round 4) are listed with how each is found in section 13h.
 
 ## 11. How to run
 
@@ -569,3 +588,171 @@ CONDITIONAL on:
 
 Not claimed: nothing here is built, bought, powered or measured; the statements are about generator text, netlists and
 arithmetic on the makers' printed figures.
+
+## 13. DD-5: the charge switch's body diode in discharge (round 4; `l8p_drafts.out` section 3c)
+
+**The case row: C-PROT**, record l9stk 15.1's criterion at set 29's line `e58e906a` (l9stk at `0d72880b`, copied in `inputs/`):
+10 A held and 18 A for 60 s never interrupted; every series part within its limits below and above the trip; the start at
+L4-E12's 76.25 C plus own heating; the breaker's band 18.32 to 23.93 A. For DD-5, the state that makes it bite: CHGIN = 1 above
+T3, in discharge. Nothing is labelled unsettled.
+
+**The defect** (record l9stk 15.5 to 15.7, DD-5; finding L9C-F21; the battery packet's BAT-F20, EQ-15, S-46). With FET Options
+CHGIN = 1 the BQ4050 trips its charge inhibit while "Not charging" in the High Temp range and sets XCHG = 1 (SLUUAQ3A, revised
+October 2022, 4.13, p.40; 14.2.1.1, p.116: "Charging and Precharging disabled, FETs off"). "Not charging" is relax and discharge
+alike, so above T3 the discharge current crosses Q1's body diode:
+
+| Discharge | In Q1's diode (VSD 1 V at most, SLPS471D 5.1, printed) | Against the 1.48 W its pad holds from 76.25 C |
+|---|---|---|
+| 10 A held | 10.0 W | 6.8 times |
+| 18 A for 60 s | 18.0 W | 12.2 times |
+| the breaker's 23.93 A held | 23.9 W | 16.2 times |
+
+Record l9stk reads the same defect as 7 to 10 W at 10 A (OVER by 4.7 times), 23.9 W held, and 266 C in its retry table.
+
+### 13a. Three approaches compared
+
+| | (i) The gauge keeps Q1 on in discharge | (ii) A diode path that may carry the service | (iii) An ideal diode beside Q1 (SELECTED) |
+|---|---|---|---|
+| What it is | A function of the BQ4050 that turns the charge FET on while discharge current flows and charging is inhibited; or the setting CHGIN = 0 | A Schottky rectifier across Q1 | A second FET beside Q1, driven by an ideal-diode controller on its own drain-to-source voltage |
+| Printed data | **No such function is printed:** "body diode" occurs nowhere in SLUUAQ3A or in the data sheet SLUSC67B, and no table turns the charge FET on in discharge (4.12, 4.13, 4.14). CHGIN = 0 is printed (14.2.1.1: "0 = FET active (default)") | On Q1's pad (50 C/W at most, 1.48 W) the forward drop may be 0.148 V at 10 A, 0.082 V at 18 A and 0.062 V at 23.93 A; with Q2's loss on the same pour, 0.032 V at 23.93 A | LM74700-Q1 (SNOSD17G, revised December 2020): regulated forward drop 13 to 29 mV; CSD17570Q5B (SLPS471D): 0.69 mOhm at most |
+| What it changes | The golden image (FET Options 0x3D to 0x2D) | One large rectifier and its heat path on board P | Q109, U105 and nine small parts on board P; no setting |
+| What it needs | With CHGIN = 0 the inhibit above T3 only writes ChargingCurrent() 0 and no longer opens Q1: the charge start above 42 C then rests on the charger's obedience and on OTC. That reduces the ladder's level L4a, and it is outside the case row, which fixes CHGIN = 1 | No junction diode prints such a drop (a Schottky's 0.3 to 0.5 V is a statement of the class; no sheet is held: ASSUMPTION). At 0.3 V the pad would have to be 25 K/W at 10 A and 10 K/W at 23.93 A, on a 70 x 44 mm board | The kit's own parts (board E's U3 and this board's Q1); 51.4 K/W for the SW pour (E-8, as today's enhanced row asks) |
+| The breaker draft, B-R2's detector, IF-1, DD-7, the copper | No effect on the circuit; the battery stream's ladder, mode table and tests change | The rectifier's leakage hot, its heat beside F2 and RT1, a new band | None on the breaker, the detector, IF-1 or DD-7 (13e); Q109 on Q1's two bands |
+| Verdict | **DROPPED**: the function is not printed, and the setting reduces a protection | **NOT SELECTED**: not supported on printed data | **SELECTED** |
+
+A separate charge path (EQ-15's option b) is not a fourth approach: with one terminal for charge and discharge it needs the same
+ideal diode in the discharge path.
+
+### 13b. The correction drawn (`apply_gen_sch_p_idealdiode.py`)
+
+| Ref | Value | What it does | Decoupling class |
+|---|---|---|---|
+| Q109 | CSD17570Q5B (Q1's part, C529279), PowerPAK SO-8 | Source on SCP_OUT, drain on SW, as Q1: its body diode points as Q1's, and off it blocks a charge as Q1 does | |
+| U105 | LM74700QDBVRQ1 (board E's U3 part, C2941042), SOT-23-6 | ANODE on SCP_OUT, CATHODE on SW, GATE on Q109's gate alone, GND on the cells' negative. Forward: it holds 20 mV (13 to 29 mV) across Q109 by its gate, and connects the gate to its charge pump above 50 mV. Reverse: the gate is at the anode | |
+| C111 | 220 nF 50 V X7R 0805 | VCAP to the anode: the charge pump's reservoir | L: TI 10.1.1.2.3, at least 0.1 uF and ten times Ciss (0.136 uF); ESR not stated |
+| R130 | 10 MOhm | Q109's gate to its source, as R17 on Q1: an open GATE pin leaves Q109 off | |
+| D104, R131 | 1N4148W (C81598); 1 MOhm | EN from BRK_VIN, with 1 MOhm to ground: U105 runs only while the gauge holds the discharge FET on or a charger is present. The diode keeps a negative transient of BRK_VIN off EN (-0.3 V) | |
+| C112, C113 | 100 nF 50 V X7R, in series | The anode's capacitance, 50 nF (TI: at least 22 nF) | C112 D: ANODE is the supply pin |
+| C114, C115 | 470 nF 50 V X7R 0805, in series | The cathode's capacitance, 235 nF (TI: at least 100 nF) | C114 B2: no distance stated |
+| TP109 | test point | Q109's gate, for E-12d | |
+
+Nets: IDL_GATE, IDL_VCAP, IDL_EN, IDL_AMID, IDL_CMID. The intent re-declares SCP_OUT's loads (Q1 and Q109) and SW's sources
+(Q1 and Q109).
+
+### 13c. The SESSION choices
+
+| Choice | Taken | Why |
+|---|---|---|
+| A second FET beside Q1, not a second driver on Q1's gate | Q109 | The gauge's CHG drive, R16 and R17 stay as TI draws them, so its charge blocking and its CFETF check are untouched. The netlist check fails a GATE wired to Q1's gate |
+| The FET | Q1's own part | At 23.93 A hot it must stay near 0.7 W: 1.24 mOhm or less. A FET inside TI's guideline window at 10 A (2 mOhm) would dissipate 2.06 W there |
+| EN's source | BRK_VIN through D104 | An always-on U105 would draw up to 130 uA from a pack whose gauge has shut down. BRK_VIN is live only while the gauge holds Q2 on, or a charger is present |
+| Series pairs | C112 with C113, C114 with C115 | As C11 and C12 (O-12): one shorted part across the cells must not short them |
+| U105's ground | GND, the cells' negative | As the gauge's VSS; its 0.13 mA is under the coulomb counter's resolution either side of R10 |
+| Designators and nets | Q109, U105, D104, R130, R131, C111 to C115, TP109; IDL_* | The 100 block, after round 3's |
+
+### 13d. The electrical acceptance on C-PROT with CHGIN = 1
+
+**The labels.**
+- **Printed guarantees:**
+  - V(AK REG) 13 / 20 / 29 mV, full conduction above 34 / 50 / 57 mV, reverse blocking at -17 / -11 / -2 mV within 0.75 us,
+    and the gate drive 10.8 to 13.9 V over the anode (SNOSD17G 6.5 and 6.6, TJ -40 to 125 C);
+  - RDS(on) 0.69 mOhm at most at VGS 10 V and 25 C, RthJA 50 C/W at most on 1 in2 of 2 oz, TJ 150 C (SLPS471D 5.1, 5.2).
+- **Assumption:** RDS(on) 1.8 times hot, as record l9stk takes it (E-8); and both losses through one pad of 50 C/W, l9stk's
+  bound for Q1 and Q2 on the SW pour.
+- **Typical, read by eye:** the CSD17570Q5B's own Figure 8 gives 1.68 times at 150 C.
+- **Model:** Q109's loss is the current times the larger of the regulated drop and the current times RDS(on) hot. The regulated
+  drop is taken at 29 mV plus 1.24 mV for R130 and the gate's leakage through the error amplifier (1200 uA/V at least): 30.24 mV.
+
+| Case (from 76.25 C) | Q109 | Was, in Q1's diode | Q2 | TJ on its own pad | TJ, both through one pad | Limit |
+|---|---|---|---|---|---|---|
+| 10 A held | 30.24 mV, 0.302 W | 10.0 W | 0.124 W | 91.4 C | 97.6 C | 150 C |
+| 18 A for 60 s (taken as held) | 30.24 mV, 0.544 W | 18.0 W | 0.402 W | 103.5 C | 123.6 C | 150 C |
+| the breaker's 23.93 A held | 30.24 mV, 0.724 W | 23.9 W | 0.711 W | 112.4 C | 148.0 C | 150 C |
+| the breaker's largest threshold, 50.59 A, until it clears (1.292 ms) | 62.8 mV, 3.18 W | | | 2.5 K over its case | | |
+
+- **The installed path this asks:** 51.4 K/W or better for the hottest junction with both losses counted. That is E-8, restated
+  with Q109; record l9stk's enhanced row asked the same of Q1 and Q2 (147.4 C).
+- **On the typical basis** (0.56 mOhm times 1.68, the regulation's 20 mV, 40 C/W): 119.3 C at 23.93 A held.
+- **With Q1 on** (below T3) the two FETs share, and the pair's loss is at most Q1's alone (0.711 W at 23.93 A): no row of
+  l9stk 15.5 is worsened.
+- **The service is not reduced:** an ideal diode cannot refuse a discharge. With U105 dead or disabled the body diodes still
+  conduct (SNOSD17G 9.4.1), which is the defect's state and not an interruption.
+
+**The condition that stays (E-16).** TI's guideline (10.1.1.2.2) asks RDS(on) between 20 mV and 50 mV over the nominal current:
+2.0 to 5.0 mOhm at 10 A, 1.11 to 2.78 at 18 A, 0.84 to 2.09 at 23.93 A. Q109's 0.56 to 1.24 mOhm is under it at 10 A, where
+U105 holds it in regulated conduction (the sheet's light-load mode), and at its edge above 18 A. That the regulation settles
+with this FET is a model (a first-order loop: the error amplifier into the gate's capacitance), not a printed guarantee. If it
+did not settle, the drop is still bounded by the full conduction threshold, 57 mV:
+
+| Case | Q109 at most | TJ, both through one pad of 50 C/W |
+|---|---|---|
+| 10 A held | 0.570 W | 111.0 C |
+| 18 A held | 1.026 W | 147.7 C |
+| 23.93 A held | 1.364 W | 180.0 C: OVER |
+
+So the 10 A and 18 A rows hold either way, and the 23.93 A row rests on E-16 unless the SW pour is 35.5 K/W or better with both
+losses counted. **That is the layout's target** (section 7; the bottom face is free).
+
+**Delays and the transitions** (printed limits unless marked):
+- **U105's start.** It drives 11.61 ms at most after EN (ENTDLY 110 us; C111 at +10 % to 7.7 V at 162 uA). The breaker's hold
+  keeps every load off for 0.110 s at least after BRK_VIN rises, so only the start's 0.659 A crosses the body diodes meanwhile.
+- **Q1 turned off under load** (the inhibit trips in discharge). Q109's gate is up within 85.5 us (2.6 us, then 249 nC at 3 mA;
+  the charge is a model). The body diodes carry the current meanwhile, at most 19.1 K over the case (VSD times RthJC).
+- **C111.** At least 0.158 uF derated (10 % tolerance, 20 % for its bias, ASSUMED) against ten times Ciss, 0.136 uF. VCAP falls
+  1.57 V as the gate connects, from 10.8 V at least to 9.23 V, over its 6.0 V lockout.
+- **EN.** On from BRK_VIN 3.31 V (2.6 V at most, plus D104's 0.715 V at 1 mA); off under 0.5 V.
+
+**The charge blocking, unchanged:**
+- The gauge's drive of Q1 is not touched, and Q109 is off in reverse: "ensures zero DC reverse current flow" (SNOSD17G 9.4.2.1).
+- What crosses when Q1 is off: Q1's and Q109's IDSS (1 uA each at 24 V and 25 C). U105's cathode current, 2.2 uA at most, goes to
+  ground, not into the cells.
+- A reversal faster than the regulation follows is ended by the comparator within 0.75 us from 30.4 A (17 mV over the typical
+  0.56 mOhm; no minimum is printed). Under that, the regulation's sink (6 uA at least) ends it in 41.5 ms: 0.46 C at board A's
+  largest 11.1 A. Both are a model.
+
+### 13e. The rest of the pack path
+
+- **The breaker draft:** unchanged. BRK_VIN gains D104 and R131 (17 uA at 16.8 V) and U105's EN (5 uA).
+- **B-R2's detector (section 12):** unchanged. With Q1 off a charge is blocked by Q1 and Q109, so R10 carries none and U103
+  stays low.
+- **IF-1 and the breaker's start:** unchanged. U105 is driving before any load (13d).
+- **DD-7 and board A's charge inhibit:** unchanged; nothing new crosses the dock.
+- **The gauge:** no setting changes (IF-4). Its discharge protections act through Q2, which Q109 does not bypass. Q109 conducts
+  in every state that holds Q1 off in discharge (the inhibit, COV, sleep with SLEEPCHG = 0), not only above T3.
+- **The copper:** Q109 sits on Q1's two bands; no new band. The SW pour carries the same two losses record l9stk already counts.
+- **Standby:** U105 draws 80 uA typical and 130 uA at most while the gauge holds the discharge FET on (152 uA with R131 and EN at
+  16.8 V), and 2.5 uA at most with the gauge shut down.
+
+### 13f. The closure credit
+
+| Condition | Reading |
+|---|---|
+| (a) It composes with board P's other pending drafts in change-list order, and the generator runs | The breaker draft, then the ideal diode, then l6r2's two tables: every step OK; the pair first and the pair last: every step OK; the composed generator ran to its end (169 parts, intent written). The ideal diode draft refuses a target without the breaker draft, and a second application (`l8p_drafts.out` sections 4, 5 and 7) |
+| (b) Its changed nets are read in the regenerated netlist, with a mutation that fails | DIO reads DRAWN on the regenerated board P. FAIL with Q109's source and drain exchanged, with U105's GATE on Q1's gate, and (in the tests) with U105's ANODE and CATHODE exchanged, D104 reversed and U105's GND on PACK_N. FAIL also on the breaker draft without the ideal diode |
+| (c) The electrical acceptance holds | Section 13d: Q109 inside its printed limits at 10 A held, 18 A held and 23.93 A held from 76.25 C, on the labelled basis |
+
+A netlist check is not electrical acceptance, and nothing here is a measurement. **The claim made: DD-5 is corrected in the
+draft, and its electrical acceptance holds on printed limits.** Not claimed: implemented, independently checked, built or
+measured.
+
+### 13g. What stays open
+
+| Item | Specimen | Acceptance | Owner |
+|---|---|---|---|
+| **E-8, restated** | Board P's first specimen, the three FETs on the SW pour | The hottest junction under 150 C at 23.93 A held from 76.25 C, with CHG off (Q109 and Q2) and with CHG on (Q1, Q109 and Q2); the pour at 51.4 K/W or better with both losses counted, 35.5 K/W as the target | Board P's PCB generator; the supplier's thermal bench (the body diode's VSD method) |
+| **E-16**, the ideal diode's regulated drop and its reverse blocking | The same specimen, CHG held off by the gauge (the FET test command, SLUUAQ3A 13.1.12, or a reading above T3) | SCP_OUT to SW (TP13 to TP5) at 2.5, 10, 18 and 23.93 A, at 25 C and at the 76.25 C air: within 13 to 30.3 mV, or the current times RDS(on) where that is larger; steady, with under 10 mV peak to peak of ripple. A source at PACK_P 2 V over the cells with CHG off: under 1 mA into the cells (the two FETs' leakage) | The supplier's bench |
+| **E-12d**, a commissioning check like E-12 | The built pack at commissioning and at each service | With CHG held off and a discharge of 2 A or more: TP13 to TP5 under 60 mV (a body diode reads 0.4 V or more), and TP109 over TP13 by more than 1 V | The supplier's commissioning procedure |
+| C111's capacitance at 14 V and hot | The part's sheet | At least 0.136 uF | Layer 6 |
+| U105 directly on the cell node; a welded Q109's detection (CFETF enabled in the golden image); the standby | | | The battery stream's review |
+
+### 13h. The ideal diode's own failures
+
+| Failure | Effect | Found by |
+|---|---|---|
+| U105 dead or its EN low (D104 open); C111 shorted; U105's GATE open | Q109 stays off behind R130 and the body diodes carry the discharge: the defect's state returns, latent. No interruption | E-12d |
+| Q109 shorted, or its gate stuck high | The charge blocking is lost while Q1 is off: the gauge reads a charge with CHG off and sets CFETF (SLUUAQ3A 3.10), as for a welded Q1; the second level stands behind it | The gauge |
+| Q109 open | As U105 dead | E-12d |
+| D104 shorted | EN follows BRK_VIN, a negative transient included (EN's -0.3 V); latent | not found by a check here |
+| R131 open | EN is pulled low by U105's own sink alone (3 uA typical; no minimum printed) | not found |
+| One capacitor of a series pair shorted | Its partner holds the voltage (50 V parts) | not found |
+| A short inside U105 from ANODE to GND | Behind F1 and F2 only, as section 13g names for the battery stream | |

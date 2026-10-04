@@ -56,11 +56,16 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    cb747de812f66859 v2/vendor/battery/ti-csd18510q5b.pdf
    7941fb423af7c6c6 v2/vendor/power/jscj-2n7002-c8545.pdf
    0fbd7d137524820f v2/vendor/diodes/diodes-bzt52c-ds18004.pdf
+   525d16b2bdee44e5 v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf
+   2664e33fe6d6ebed v2/vendor/battery/ti-bq4050.pdf
+   596555c33dce1fca v2/vendor/battery/ti-csd17570q5b.pdf
+   e16b3a8c0023201f v2/vendor/ti/ti-lm74700-q1.pdf
    5e59d586d59f7a26 v2/docs/records/l8p/fetch_held_back.py
    e8f1294bb0f76c75 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   4174af5851fe1be0 v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
    c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
    d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
-   fcb14e95fa70f654 v2/docs/records/l8p/check_l8p_netlist.py
+   59ec04020e7572b0 v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    record l9stk's, L4-E7's and L4-E11's copies equal the sha256 SOURCES.txt pins: yes
 
@@ -109,6 +114,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    SESSION PGD gating      U101's PGD on BRK_PGD at half BRK_VIN (R116, R117 1 MOhm); Q106 holds Q105's gate low while PGD is high; Q105 pulls UVLO; R114 and R115 halve U102's output for Q105's gate
    SESSION test points     TP101 BRK_VIN, TP102 BRK_UVLO, TP103 DOCK_EN_OUT, TP104 DOCK_EN_RET (E-12); TP105 INH_NTC, TP106 INH_OUT (E-12b)
    SESSION lands           the VSSOP-10, SMC, SOD-123, SOT-23-5 and 2512 lands the kit already uses; the 7-circuit XH header of the same row; RT1 on board P's 0402; RT101's 10 mm leads on the project's LeadLands_1x02
+   SESSION DD-5 ideal diode round 4: Q109 CSD17570Q5B beside Q1 (source SCP_OUT, drain SW) under U105 LM74700QDBVRQ1 (ANODE SCP_OUT, CATHODE SW, GND the cells' negative); C111 220 nF 50 V on VCAP; R130 10 MOhm gate to source; EN from BRK_VIN through D104 1N4148W with R131 1 MOhm to ground; C112 and C113 100 nF in series at the anode, C114 and C115 470 nF in series at the cathode; TP109 on the gate (E-12d); a second FET beside Q1, not a second driver on Q1's gate
    SESSION B-R2 detector   round 3, route R1: U103 and U104 (OPA187, U102's part), U103 on R10's cell side through R120 200 ohm and C109 470 nF against R118 1.15 MOhm over R119 200 ohm from REV_VZ (BRK_VIN through R129 47 kOhm under D103, the BZT52C12 board A's D25 uses); U104 on PACK_P over R121 332 kOhm and R122 33.2 kOhm against BRK_SNS over R123 328 kOhm and R124 33.2 kOhm (0.05 %, 10 ppm/K), C110 1 nF; Q107 and Q108 2N7002 in series on DOCK_EN_RET, their gates at half of each output (R125 to R128); C107, C108; TP107, TP108 (E-12c)
 
 3. C-1c'S BUDGET (DD-8): the window from l9stk 15.4b, the NTC from Murata's sheet, the comparator from TI's held OPA187 sheet (SBOS807E)
@@ -182,15 +188,65 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      the battery stream
    B-R2 BY THE CRITERION: MEETS ON PAPER (drafted; nothing measured)
 
+3c. DD-5, THE CHARGE SWITCH'S BODY DIODE IN DISCHARGE (round 4): case row C-PROT (l9stk 15.1 at 0d72880b) with CHGIN = 1 above T3, in discharge
+   THE DEFECT (l9stk 15.5 to 15.7; BAT-F20): SLUUAQ3A 4.13 trips the inhibit while 'Not charging' and sets XCHG = 1 if FET Options[CHGIN] = 1
+     (14.2.1.1: 'Charging and Precharging disabled, FETs off'), so Q1 is off in discharge above T3 and its body diode carries the pack:
+     10.00 A: 10.00 W in Q1's diode (VSD 1 V at most, SLPS471D, printed) against the 1.48 W its pad holds from 76.25 C: 6.8 times
+     18.00 A: 18.00 W in Q1's diode (VSD 1 V at most, SLPS471D, printed) against the 1.48 W its pad holds from 76.25 C: 12.2 times
+     23.93 A: 23.93 W in Q1's diode (VSD 1 V at most, SLPS471D, printed) against the 1.48 W its pad holds from 76.25 C: 16.2 times
+     record l9stk reads 23.9 W at the held current, OVER by 4.7 times at 10 A, and 266 C in its retry table
+   APPROACH (i), THE GAUGE: 'body diode' occurs 0 times in SLUUAQ3A and SLUSC67B: no function is printed that turns the charge FET on while
+     discharge current flows; CHGIN = 0 ('FET active', the default) is printed, and it removes the inhibit's FET action above T3 (the pack
+     ladder's level L4a), leaving the charge start to the charger's obedience and to OTC: a protection reduced, and outside the case row: DROPPED
+   APPROACH (ii), A DIODE THAT MAY CARRY THE SERVICE: on Q1's pad (50 C/W at most, 1.48 W) the forward drop may be 0.148 V at 10 A, 0.082 V at 18 A
+     and 0.062 V at 23.93 A; with Q2's loss on the same pour 0.0319 V at 23.93 A; no junction diode prints that (a Schottky's 0.3 to 0.5 V is a
+     statement of the class, no sheet held, ASSUMPTION), and a pad for it (6 to 10 K/W) does not exist on a 70 x 44 mm board: NOT SELECTED
+   APPROACH (iii), SELECTED: an ideal diode beside Q1: Q109 (CSD17570Q5B, Q1's part) under U105 (LM74700-Q1, board E's U3 part), SNOSD17G:
+     printed: V(AK REG) 13 / 20 / 29 mV; full conduction above 34 / 50 / 57 mV; reverse blocking at -17 / -11 / -2 mV within 0.75 us;
+       the gate drive 10.8 to 13.9 V over the anode (the FET's VGS 20 V, U105's GATE 15 V); 'ensures zero DC reverse current flow'
+     printed: Q109's RDS(on) 0.56 mOhm typical, 0.69 at most at VGS 10 V and 25 C; taken x1.8 hot as l9stk takes it (ASSUMPTION, E-8): 1.2420 mOhm;
+       the part's own Figure 8 reads x1.68 at 150 C (typical, read by eye, INFERRED); RthJA 50 C/W at most on 1 in2 of 2 oz, 40 typical
+     model: Q109's loss is I x max(the regulated drop, I x RDS(on) hot); the regulated drop at most 29 mV plus 1.24 mV for R130 and the gate's
+       leakage through the error amplifier (1200 uA/V at least): 30.24 mV
+   THE ACCEPTANCE ON C-PROT WITH CHGIN = 1 (from 76.25 C; Q109 and Q2 on the SW pour, both losses through one pad of 50 C/W, l9stk's bound):
+     10 A held:                     Q109 30.24 mV, 0.302 W (was 10.00 W); Q2 0.124 W; TJ 91.4 C on its own pad, 97.6 C with both through one pad, against 150 C
+     18 A for 60 s (taken as held): Q109 30.24 mV, 0.544 W (was 18.00 W); Q2 0.402 W; TJ 103.5 C on its own pad, 123.6 C with both through one pad, against 150 C
+     the breaker's 23.93 A held:    Q109 30.24 mV, 0.724 W (was 23.93 W); Q2 0.711 W; TJ 112.4 C on its own pad, 148.0 C with both through one pad, against 150 C
+     the installed path this asks: 51.4 K/W or better for the hottest junction with both losses counted (E-8, restated with Q109)
+     on the typical basis (RDS(on) 0.56 mOhm x1.68, the regulation's 20 mV, 40 C/W): 119.3 C at 23.93 A held
+     at the breaker's largest threshold 50.59 A until it clears (1.292 ms): 3.18 W in Q109, its junction at most 2.5 K over its case (RthJC 0.8 C/W)
+     with Q1 on (below T3) the two share, and the pair's loss is at most Q1's alone, l9stk's 0.711 W at 23.93 A: no row of l9stk 15.5 is worsened
+   IF THE REGULATION DID NOT SETTLE (not a printed guarantee with a FET under TI's window): the drop is bounded by the full conduction threshold,
+     10.00 A: at most 0.570 W in Q109, 111.0 C with both through one pad
+     18.00 A: at most 1.026 W in Q109, 147.7 C with both through one pad
+     23.93 A: at most 1.364 W in Q109, 180.0 C with both through one pad: OVER at 50 C/W, so this row rests on E-16
+     THE LAYOUT'S TARGET: 35.5 K/W or better for the SW pour with both losses counted makes the 23.93 A row hold on that bound too (the bottom face is free)
+     TI's guideline (10.1.1.2.2): RDS(on) between 20 mV and 50 mV over the nominal current: 2.00 to 5.00 mOhm at 10.00 A; 1.11 to 2.78 mOhm at 18.00 A; 0.84 to 2.09 mOhm at 23.93 A;
+       Q109's 0.56 to 1.24 mOhm is under it at 10 A (U105 then holds it in regulated conduction, its light-load mode), at its edge above 18 A; a FET
+       inside the window at 10 A (2 mOhm) would dissipate 2.06 W at 23.93 A hot, over the pad
+   DELAYS: U105 drives 11.61 ms at most after EN (ENTDLY 110 us, C111 +10 % to 7.7 V at 162 uA), against the breaker's hold of 0.110 s at least before
+       any load; Q1 turned off under load: the gate is up within 85.5 us (2.6 us and 249 nC at 3 mA; the charge a model), the body diodes carrying
+       the current meanwhile at 19.1 K over the case at most (VSD x RthJC); C111 at least 0.158 uF derated (-10 %, and -20 % for its bias, ASSUMED)
+       against ten times Ciss, 0.136 uF; VCAP falls 1.57 V as the gate connects, from 10.8 V at least to 9.23 V, over its 6.0 V lockout
+   THE CHARGE BLOCKING, unchanged: the gauge's drive of Q1 is not touched; Q109 off in reverse (Q1's and Q109's IDSS, U105's cathode 2.2 uA to ground);
+       a reversal faster than the regulation follows is ended by the comparator within 0.75 us from 30.4 A (typical RDS(on), no minimum printed) or,
+       under it, by the regulation's sink (6 uA at least): 41.5 ms and 0.46 C at board A's largest 11.1 A, a model; Q109 welded reads as a welded Q1
+       (SLUUAQ3A 3.10, CFETF)
+   EN AND THE STANDBY: EN on from BRK_VIN 3.31 V (EN high 2.6 V at most, D104 0.715 V at 1 mA), off under 0.5 V; U105 80 uA typical, 130 at most,
+       152 uA with R131 and EN at 16.8 V while the gauge holds the discharge FET on; 2.5 uA at most with the gauge shut down (U105 1.5, Q109's IDSS 1)
+   DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT (the acceptance holds on printed limits; E-8, E-16 and E-12d stay open; nothing measured)
+
 4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)
    apply_gen_sch_p_breaker.py: check OK; applied OK; second application refused; the tree's gen_sch_p.py refused (NOT RELEASED)
    apply_gen_sch_e_enable.py: check OK; applied OK; second application refused; the tree's gen_sch_e.py refused (NOT RELEASED)
    apply_gen_sch_a_ptc.py: check OK; applied OK; second application refused; the tree's gen_sch_a.py refused (NOT RELEASED)
+   apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused; the tree's gen_sch_p.py refused
    the tree's generators are unchanged: yes
 
 5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3)
-   board P, this record's draft in its place:
+   board P, this record's drafts in its place:
      l8p/apply_gen_sch_p_breaker.py               OK
+     l8p/apply_gen_sch_p_idealdiode.py            OK
      l6r2/apply_gen_sch_p_intent.py               OK
      l6r2/apply_gen_sch_p_lcsc.py                 OK
    board P, this record's draft first, then the order: every step OK
@@ -231,7 +287,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board A, the order, then this record's draft last: every step OK
 
 6. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)
-   board P, this record's: C101, C102, C103, C104, C105, C106, C107, C108, C109, C110, D101, D102, D103, Q101, Q102, Q103, Q104, Q105, Q106, Q107, Q108, R101, R102, R103, R104, R105, R106, R107, R108, R109, R110, R111, R112, R113, R114, R115, R116, R117, R118, R119, R120, R121, R122, R123, R124, R125, R126, R127, R128, R129, RT101, TP101, TP102, TP103, TP104, TP105, TP106, TP107, TP108, U101, U102, U103, U104
+   board P, this record's: C101, C102, C103, C104, C105, C106, C107, C108, C109, C110, C111, C112, C113, C114, C115, D101, D102, D103, D104, Q101, Q102, Q103, Q104, Q105, Q106, Q107, Q108, Q109, R101, R102, R103, R104, R105, R106, R107, R108, R109, R110, R111, R112, R113, R114, R115, R116, R117, R118, R119, R120, R121, R122, R123, R124, R125, R126, R127, R128, R129, R130, R131, RT101, TP101, TP102, TP103, TP104, TP105, TP106, TP107, TP108, TP109, U101, U102, U103, U104, U105
    board P, this record's against every other draft's: DISJOINT
    board P, literal part calls drawn twice in the composed generator: none
    board E, this record's: none (nets only)
@@ -251,69 +307,97 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P EN   NOT DRAWN: J_SMB has no pin 7
        P INH  NOT DRAWN: U102 is absent
        P REV  NOT DRAWN: U103 is absent
+       P DIO  NOT DRAWN: U105 is absent
      v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256 2ed95a0e8069ebf8
        E EN   NOT DRAWN: J_SMB has no pin 7
      v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
        A EN   NOT DRAWN: RT1 is absent
      record l8p's breaker and enable loop on the netlists: NOT DRAWN
-   board P with this record's draft alone: the generator ran to its end (158 parts, 0 unplaced, intent written: yes)
+   board P with this record's draft alone: the generator ran to its end (169 parts, 0 unplaced, intent written: yes)
    board E with this record's draft alone: the generator ran to its end (206 parts, 0 unplaced, intent written: yes)
    board A with this record's draft alone: the generator ran to its end (657 parts, 0 unplaced, intent written: yes)
-     regenerated board P, this record's draft alone sha256 2e924123a5659ee0
+     regenerated board P, this record's draft alone sha256 c69857dfeff01e47
        P BRK  DRAWN
        P EN   DRAWN
        P INH  DRAWN
        P REV  DRAWN
+       P DIO  DRAWN
      regenerated board E, this record's draft alone sha256 d53d54144ec24324
        E EN   DRAWN
      regenerated board A, this record's draft alone sha256 2703da0c4f667380
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-   board P composed in L4-E9's order: the generator ran to its end (158 parts, intent written: yes)
+   board P composed in L4-E9's order: the generator ran to its end (169 parts, intent written: yes)
    board E composed in L4-E9's order: the generator refused: intent: rail +12V_FAN names source L4, which is not on that net (refs on it: ['C143', 'J_FAN1', 'J_FAN2', 'R105', 'R108', 'U22'])
      without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
      with scratch stand-ins for L8P-F03 (never drafts, never applied): the generator ran to its end (295 parts, intent written: yes)
    board A composed in L4-E9's order: the generator refused: intent: rail VSYS_DOCK names U42 as its source, and a multi-pin IC's pad on its own output net is a SENSE pin: dc_drop would take the rail's 1.32 A out of it. Name the inductor or the sense shunt the current really leaves through, or pass source_ic="<why this part's pin is a power pin>".
      without this record's draft the same composition's generator refuses with the same line: the refusal is another draft's (section 8)
      with scratch stand-ins for L8P-F02 (never drafts, never applied): the generator ran to its end (704 parts, intent written: yes)
-     regenerated board P, composed in L4-E9's order sha256 9eb442db07a005b3
+     regenerated board P, composed in L4-E9's order sha256 f980a46e938137b1
        P BRK  DRAWN
        P EN   DRAWN
        P INH  DRAWN
        P REV  DRAWN
+       P DIO  DRAWN
      regenerated board E, composed in L4-E9's order with the stand-ins sha256 5dc75795ca195d15
        E EN   DRAWN
      regenerated board A, composed in L4-E9's order with the stand-ins sha256 2d836dec444330e2
        A EN   DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-     mutated board P (J_SMB pins 6 and 7 exchanged) sha256 c0e2dbfa8691659b
+     mutated board P (J_SMB pins 6 and 7 exchanged) sha256 c067d42edad3d21e
        P BRK  DRAWN
        P EN   FAIL: J_SMB.6 on 'DOCK_EN_OUT', wanted PACK_N; J_SMB.7 on 'PACK_N', wanted DOCK_EN_OUT; J_SMB pins 6 and 5 are neighbours
        P INH  DRAWN
        P REV  DRAWN
+       P DIO  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 32f84d653b27eebf
        A EN   FAIL: J_DOCK.3 on 'GND', wanted DOCK_EN_RET; J_DOCK.4 on 'DOCK_EN_RET', wanted GND; J_DOCK pins 5 and 4 are neighbours (2.54 mm apart, pitch 2.54 mm)
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD) sha256 44e379c6b35805dd
+     mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD) sha256 39db5324ddd360e7
        P BRK  DRAWN
        P EN   DRAWN
        P INH  FAIL: Q105.1 on 'BRK_PGD', wanted INH_G; Q106.1 on 'INH_G', wanted BRK_PGD
        P REV  DRAWN
+       P DIO  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated board P (U104's inputs exchanged: the detector reads a forward drop) sha256 840a3ba9af299ec3
+     mutated board P (U104's inputs exchanged: the detector reads a forward drop) sha256 ae00ad7fd6e886a3
        P BRK  DRAWN
        P EN   DRAWN
        P INH  DRAWN
        P REV  FAIL: U104.3 on 'REV_VN', wanted REV_VP; U104.4 on 'REV_VP', wanted REV_VN
+       P DIO  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated board P (R120 on PACK_N and R119 on GND: U103 no longer reads R10) sha256 4ea579fb5c85ad6e
+     mutated board P (R120 on PACK_N and R119 on GND: U103 no longer reads R10) sha256 d1386e958d040b79
        P BRK  DRAWN
        P EN   DRAWN
        P INH  DRAWN
        P REV  FAIL: R119 on ['GND', 'REV_IREF'], wanted REV_IREF to PACK_N; R120 on ['PACK_N', 'REV_ISNS'], wanted GND to REV_ISNS
+       P DIO  DRAWN
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated board P (Q109's source pin 1 and its drain exchanged: the ideal diode the wrong way round) sha256 1dfb57f1dc80f41c
+       P BRK  DRAWN
+       P EN   DRAWN
+       P INH  DRAWN
+       P REV  DRAWN
+       P DIO  FAIL: Q109.1 on 'SW', wanted SCP_OUT; Q109.5 on 'SCP_OUT', wanted SW
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated board P (U105's GATE on Q1's gate: a second driver on the gauge's charge switch) sha256 3bcc3105cd47ae5d
+       P BRK  DRAWN
+       P EN   DRAWN
+       P INH  DRAWN
+       P REV  DRAWN
+       P DIO  FAIL: U105.5 on 'CHG_G', wanted IDL_GATE; Q1's gate 'CHG_G' is not the gauge's own drive apart from the ideal diode; IDL_GATE reaches ['Q109', 'R130', 'R16', 'TP109'], wanted U105, Q109, R130 and TP109 alone
+     record l8p's breaker and enable loop on the netlists: FAIL
+     regenerated board P, the breaker draft without the ideal diode (DD-5 uncorrected) sha256 2e924123a5659ee0
+       P BRK  DRAWN
+       P EN   DRAWN
+       P INH  DRAWN
+       P REV  DRAWN
+       P DIO  NOT DRAWN: U105 is absent
      record l8p's breaker and enable loop on the netlists: FAIL
 
 8. THE INTENT THE PATCHED BOARD P GENERATOR WRITES FOR THE NEW NETS
@@ -321,6 +405,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    rail BRK_VIN  source Q2, loads {"R101": 6.52, "R102": 3.48}, switch U1 on DSG_R, series of PACK_P
    rail BRK_SNS  source ['R101', 'R102'], loads {"Q101": 5.0, "Q102": 5.0}, switch - on -, series of PACK_P
    rail VCC_F    source R7, loads {"U1": 0.00034}, switch U1 on DSG_R, fed from BRK_VIN
+   rail SCP_OUT  source F2, loads {"Q1": 9.0, "Q109": 9.0}, switch - on -, fed from FUSED
+   rail SW       source ['Q1', 'Q109'], loads {"Q2": 10.0}, switch - on -, series of SCP_OUT
    node BRK_GATE    v_max 29.4 V, rides on PACK_P by 12.6 V
    node BRK_UVLO    v_max 29.2 V
    node BRK_H       v_max 29.2 V
@@ -344,10 +430,18 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    node REV_VOUT    v_max 29.2 V
    node REV_VG      v_max 14.6 V
    node REV_MID     v_max 17.4 V
+   node IDL_GATE    v_max 30.7 V, rides on SCP_OUT by 13.9 V
+   node IDL_VCAP    v_max 30.7 V, rides on SCP_OUT by 13.9 V
+   node IDL_EN      v_max 29.2 V
+   node IDL_AMID    v_max 16.8 V
+   node IDL_CMID    v_max 29.2 V
    clamp D101: uni, protected BRK_VIN, return PACK_N
    decoupling C106: class D at U102.5 on BRK_VIN
    decoupling C107: class D at U103.5 on BRK_VIN
    decoupling C108: class D at U104.5 on BRK_VIN
+   decoupling C111: class L at U105.1 on IDL_VCAP
+   decoupling C112: class D at U105.6 on SCP_OUT
+   decoupling C114: class B2 at U105.4 on SW
 
 9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)
    L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a

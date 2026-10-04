@@ -1,15 +1,18 @@
-"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 3; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
+"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 4; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
 release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, the
 restart inhibit C-1c gated by PGD, and in round 3 B-R2's reverse-charge detector on the loop's return), board E (the loop through
 J_SMB to the dock) and board A (the loop's thermal guard RT1), from record l9stk section 15 (fnd/l9stk at 0d72880b) and task
-L4-E11's section 19h (fnd/l4e11r9 at e60a94a8).
+L4-E11's section 19h (fnd/l4e11r9 at e60a94a8); and in round 4 a second board P draft, the ideal diode beside the charge switch
+Q1 that corrects design defect DD-5 (BAT-F20) on case row C-PROT with CHGIN = 1.
 
 The predicates: the committed .out is what the script prints; each draft checks, applies once on a scratch copy, refuses twice and
 refuses the tree's own generator; each board composes in L4-E9's change-list order with this record's draft in its place, first
 and last (board E with L4-E7's backstop draft of fnd/l4e7r6, which closes L8P-F01); the designators are this record's sets and
 disjoint from every other draft's; every value is found in record l9stk's copied text and the copies are the bytes SOURCES.txt
 pins; C-1c's budget closes on figures read from TI's held OPA187 sheet and Murata's NTC sheet; B-R2's detector closes on figures
-read from L4-E11's copies and the LM5069, CSD18510Q5B, 2N7002 and BZT52C sheets; the netlist check reads NOT DRAWN
+read from L4-E11's copies and the LM5069, CSD18510Q5B, 2N7002 and BZT52C sheets; DD-5's correction closes on figures read from
+the BQ4050's, the CSD17570Q5B's and the LM74700-Q1's sheets, and the old state (Q1's body diode) fails the same computation; the
+ideal diode draft refuses a target without the breaker draft; the netlist check reads NOT DRAWN
 on the committed netlists, DRAWN on the netlists regenerated from the patched generators (the loop across the three boards and
 the inhibit included) and FAIL on mutated ones; the page carries no em or en dash and no claim word, and names the conditions
 and the interface rows owed. No KiCad: generator text, the generators' own part tables and netlist text, on scratch copies; the
@@ -93,10 +96,16 @@ def t_the_committed_output_is_what_the_script_prints():
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R248, C247)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
-              "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct"):
+              "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
+              "DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT", "'body diode' occurs 0 times in SLUUAQ3A and SLUSC67B",
+              "apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused",
+              "l8p/apply_gen_sch_p_idealdiode.py            OK", "decoupling C111: class L at U105.1 on IDL_VCAP",
+              "decoupling C112: class D at U105.6 on SCP_OUT", "decoupling C114: class B2 at U105.4 on SW",
+              "rail SW       source ['Q1', 'Q109']", "the breaker draft without the ideal diode (DD-5 uncorrected)"):
         assert s in t, s
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 2, "the alone and the composed readings"
-    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 5, "the five mutations"
+    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 8, "the seven mutations and the breaker without the ideal diode"
+    assert t.count("       P DIO  FAIL") == 2 and t.count("       P DIO  NOT DRAWN") == 2, "DIO's two mutations; NOT DRAWN on the tree and without the draft"
     assert "REFUSED" not in t.split("5. COMPOSITION")[1].split("6. DESIGNATORS")[0], "a composition step refused"
     assert "L8P-F01" not in t.split("with scratch stand-ins for ")[1].split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
 
@@ -114,6 +123,15 @@ def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
             assert _run([s, tgt, "--write"]).returncode == 3, "a second application was not refused"
             r = _run([s, GEN[b], "--write"]); assert r.returncode == 3 and b"NOT RELEASED" in r.stderr, "the tree's own generator was not refused"
             compile(open(tgt, encoding="utf-8").read(), tgt, "exec")
+            for s2 in m.MINE2.get(b, []):       # round 4: the second draft needs the first, and is guarded as it is
+                bare = os.path.join(d, os.path.basename(s2) + ".bare.py"); shutil.copy(GEN[b], bare); pre2 = _sha(bare)
+                r = _run([s2, bare, "--write"]); assert r.returncode == 3 and b"breaker draft is not applied" in r.stderr and _sha(bare) == pre2, "applied without the breaker draft"
+                pre2 = _sha(tgt)
+                r = _run([s2, tgt]); assert r.returncode == 0 and b"CHECK OK" in r.stdout and _sha(tgt) == pre2, r.stderr.decode()[-300:]
+                r = _run([s2, tgt, "--write"]); assert r.returncode == 0 and b"WRITTEN" in r.stdout, r.stderr.decode()[-300:]
+                assert _run([s2, tgt, "--write"]).returncode == 3, "a second application was not refused"
+                r = _run([s2, GEN[b], "--write"]); assert r.returncode == 3 and b"NOT RELEASED" in r.stderr, "the tree's own generator was not refused"
+                compile(open(tgt, encoding="utf-8").read(), tgt, "exec")
     assert not os.path.exists(os.path.join(REC, "RELEASE.md")), "a release record exists: the drafts are no longer guarded"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "a draft wrote into the tree"
 
@@ -123,7 +141,8 @@ def t_each_board_composes_in_l4e9s_order_in_its_place_first_and_last():
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
             seq = [m.draft(r, n, b) for r, n in m.ORDER[b]]
-            for tag, order in (("fwd", seq[:m.SLOT[b]] + [m.MINE[b]] + seq[m.SLOT[b]:]), ("first", [m.MINE[b]] + seq), ("last", seq + [m.MINE[b]])):
+            mine = m.mine_seq(b)
+            for tag, order in (("fwd", seq[:m.SLOT[b]] + mine + seq[m.SLOT[b]:]), ("first", mine + seq), ("last", seq + mine)):
                 p, res = m.compose(b, order, d, tag)
                 assert len(res) == len(order) and all(v.startswith("OK") for _s, v in res), (b, tag, res)
                 compile(open(p, encoding="utf-8").read(), p, "exec")
@@ -131,22 +150,26 @@ def t_each_board_composes_in_l4e9s_order_in_its_place_first_and_last():
 
 def t_the_designators_are_this_records_sets_and_disjoint():
     m = _need_inputs()
-    want = {"p": {"U101", "U102", "U103", "U104", "D101", "D102", "D103", "RT101"} | {"Q%d" % k for k in range(101, 109)}
-            | {"R%d" % k for k in range(101, 130)} | {"C%d" % k for k in range(101, 111)} | {"TP%d" % k for k in range(101, 109)},
+    want = {"p": {"U101", "U102", "U103", "U104", "U105", "D101", "D102", "D103", "D104", "RT101"} | {"Q%d" % k for k in range(101, 110)}
+            | {"R%d" % k for k in range(101, 132)} | {"C%d" % k for k in range(101, 116)} | {"TP%d" % k for k in range(101, 110)},
             "e": set(), "a": {"RT1"}}
+    second = {"Q109", "U105", "D104", "R130", "R131", "C111", "C112", "C113", "C114", "C115", "TP109"}
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
             seq = [m.draft(r, n, b) for r, n in m.ORDER[b]]
-            fwd = seq[:m.SLOT[b]] + [m.MINE[b]] + seq[m.SLOT[b]:]
+            fwd = seq[:m.SLOT[b]] + m.mine_seq(b) + seq[m.SLOT[b]:]
             p = os.path.join(d, "g_%s.py" % b); shutil.copy(GEN[b], p)
             before = open(p, encoding="utf-8").read(); adds = {}
             for s in fwd:
                 assert m.run(s, p, b)[0] == 0, s
                 after = open(p, encoding="utf-8").read(); adds[s] = m.added(before, after, s); before = after
-            mine = adds[m.MINE[b]]
+            own = m.mine_seq(b)
+            mine = set().union(*[adds[x] for x in own])
             assert mine == want[b], (b, sorted(mine ^ want[b]))
+            if b == "p":
+                assert adds[own[1]] == second and not (adds[own[0]] & second), "the two board P drafts' designators"
             for s, a in adds.items():
-                assert s == m.MINE[b] or not (a & mine), "%s meets this record's %s" % (s, sorted(a & mine))
+                assert s in own or not (a & mine), "%s meets this record's %s" % (s, sorted(a & mine))
             assert not m.duplicates(before), (b, m.duplicates(before))
 
 
@@ -156,7 +179,7 @@ def t_every_value_is_the_records_and_the_copies_are_pinned():
         assert _sha(os.path.join(REC, f)) == full, f
         assert full in open(os.path.join(REC, "inputs", "SOURCES.txt"), encoding="utf-8").read(), "SOURCES.txt does not pin %s" % f
     texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
-    drafts = {b: open(m.MINE[b], encoding="utf-8").read() for b in "pea"}
+    drafts = {b: "".join(open(x, encoding="utf-8").read() for x in m.mine_seq(b)) for b in "pea"}
     for b, ref, pre, src, pat, key in chk.VALUES:
         assert re.search(chk.phrase_rx(pat), texts[key]), "l9stk no longer reads %s's value (%s)" % (ref, src)
         call = re.search(r'(?:ic|r|c|part|pfet5|nfet)\(\\?"%s\\?", ' % re.escape(ref), drafts[b])
@@ -174,7 +197,7 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
         paths = {}
         for b in "pea":
             t = os.path.join(d, "gen_sch_%s.py" % b); shutil.copy(GEN[b], t)
-            assert m.run(m.MINE[b], t, b)[0] == 0
+            assert all(m.run(x, t, b)[0] == 0 for x in m.mine_seq(b))
             rc, path, table = m.netlist_text(b, t, d, "t")
             assert rc == 0 and table["intent_written"] and not table["unplaced"], (b, path)
             paths[b] = path
@@ -196,6 +219,21 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
             bad = m.mutate(paths["p"], d, "mut_%s" % swap[0][0], [tuple(swap)])
             buf = io.StringIO(); kit, v = chk.run({"p": bad}, ROOT, buf)
             assert kit == "FAIL", "%s and the check did not fail: %s" % (what, buf.getvalue())
+        # round 4, DD-5: the ideal diode's nets, each mutation read on the DIO group itself
+        for swap, what in (([("Q109", "1"), ("Q109", "5")], "the ideal diode the wrong way round"),
+                           ([("U105", "6"), ("U105", "4")], "the controller's ANODE and CATHODE exchanged"),
+                           ([("U105", "5"), ("R16", "1")], "the controller's GATE on the gauge's charge switch"),
+                           ([("D104", "1"), ("D104", "2")], "EN's diode reversed"),
+                           ([("U105", "2"), ("R112", "2")], "the controller's ground on the pack side of R10"),
+                           ([("C111", "2"), ("R131", "2")], "the charge pump's capacitor to ground and not to the anode")):
+            bad = m.mutate(paths["p"], d, "mut_dio", [tuple(swap)])
+            buf = io.StringIO(); kit, v = chk.run({"p": bad}, ROOT, buf)
+            assert kit == "FAIL" and "P DIO  FAIL" in buf.getvalue(), "%s and the DIO group did not fail: %s" % (what, buf.getvalue())
+        t = os.path.join(d, "breaker_only.py"); shutil.copy(GEN["p"], t)
+        assert m.run(m.MINE["p"], t, "p")[0] == 0
+        rc, path, _tb = m.netlist_text("p", t, d, "bo")
+        buf = io.StringIO(); kit, v = chk.run({"p": path}, ROOT, buf)
+        assert rc == 0 and kit == "FAIL" and "P DIO  NOT DRAWN" in buf.getvalue(), "the breaker without the ideal diode did not read FAIL"
 
 
 def t_the_unpatched_generators_reproduce_the_committed_netlists():
@@ -256,6 +294,40 @@ def t_b_r2s_detector_closes_on_read_figures():
         assert frag in drafts, frag
 
 
+def t_dd5s_correction_closes_on_read_figures_and_the_old_state_does_not():
+    """DD-5 (round 4), case row C-PROT with CHGIN = 1: the defect's figures are record l9stk's and the sheets'; with the ideal diode
+    Q109 stays inside its pad and its junction limit at 10 A held, 18 A held and the breaker's 23.93 A held from 76.25 C; the old
+    state (Q1's body diode) fails the same limits at every one of them; the BQ4050's documents print no body-diode function; the
+    drive, the delays and EN hold their printed limits."""
+    m = _need_inputs()
+    for sheet in (m.TRM_SHEET, m.BQ4050_SHEET, m.CSD17570_SHEET, m.LM74700_SHEET, m.D4148_SHEET):
+        need(sheet, "a maker's sheet DD-5's correction reads")
+    texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
+    B = m.budget(texts["page"])
+    R = m.rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
+    D = m.dd5_budget(texts["page"], B, R)
+    assert D["ok"], {k: D[k] for k in ("rth_need", "t_drv_en", "droop", "c111_min", "en_on")}
+    assert D["body_diode_hits"] == 0, "the BQ4050's documents now print a body-diode function: approach (i) is to be read again"
+    assert (D["p_pad"], D["p_enh"], D["k_hot"], round(D["rds_max"] * 1e6), D["rja"], D["tj_max"]) == (1.48, 0.711, 1.8, 690, 50.0, 150.0), D
+    assert [round(x * 1e3) for x in D["vreg"] + D["vfull"] + D["vrev"]] == [13, 20, 29, 34, 50, 57, -17, -11, -2], (D["vreg"], D["vfull"], D["vrev"])
+    assert [r["i"] for r in D["rows"]] == [10.0, 18.0, R["i_lim"]] and B["air"] == 76.25, "the case row's currents and start"
+    for r in D["rows"]:
+        assert r["p109"] <= D["p_pad"] and r["tj_one"] <= D["tj_max"], ("the corrected state", r)
+        assert r["p_before"] > D["p_pad"] and B["air"] + r["p_before"] * D["rja"] > D["tj_max"], ("the old state must fail the same limits", r)
+        assert r["p109"] < r["p_before"] / 10, r
+    assert abs(D["rows"][2]["p2"] - D["p_enh"]) < 5e-4, "Q2's loss is record l9stk's enhanced row"
+    assert D["rows"][2]["tj_one"] < 148.5 and 51.0 < D["rth_need"] < 52.0 and 35.0 < D["rth_robust"] < 36.0, (D["rows"][2], D["rth_need"], D["rth_robust"])
+    assert D["rows"][0]["tj_hunt"] <= 150 and D["rows"][1]["tj_hunt"] <= 150 and D["rows"][2]["tj_hunt"] > 150, "which rows rest on E-16"
+    assert D["t_drv_en"] < D["hold_min"] / 5 and D["vcap_on_min"] - D["droop"] > D["uvlof_max"] + 2 and D["c111_min"] >= 10 * D["ciss_max"], D
+    assert D["vcap_off_max"] <= 15 <= D["vgs_abs"] and D["en_on"] < 4.0 and D["i_off"] < 3e-6 and D["i_run"] < 200e-6, D
+    dio = open(m.MINE2["p"][0], encoding="utf-8").read()
+    for frag in ('pfet5("Q109", "CSD17570Q5B 30 V N-FET', '"IDL_GATE", "SW", "SCP_OUT", "C529279")', 'ic("U105", 6, "LM74700QDBVRQ1',
+                 '{"1": "IDL_VCAP", "2": "GND", "3": "IDL_EN", "4": "SW", "5": "IDL_GATE", "6": "SCP_OUT"}, "C2941042")',
+                 'c("C111", "220n 50V X7R 0805', '{"1": "IDL_EN", "2": "BRK_VIN"}', 'cls="L"', 'cls="D"', 'cls="B2"'):
+        assert frag in dio, frag
+    assert '"CHG_G"' not in dio, "the ideal diode draft touches the gauge's charge drive"
+
+
 def t_the_page_is_clean_and_names_the_rows_owed():
     page = open(need(PAGE, "the l8p record page"), encoding="utf-8").read()
     for p in [PAGE, os.path.join(REC, "README.md")] + [os.path.join(REC, f) for f in os.listdir(REC) if f.endswith(".py")]:
@@ -271,7 +343,13 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "## 12. B-R2: the charge through a latched breaker", "**The criterion, item by item:**", "### 12a. What exists, and why none of it tells board A",
               "**B-R2's interface, route R1 (section 12f, finding L8P-F04):**", "| L8P-F04 | A |", "| L8P-F05 | A |", "### 12h. Not taken",
               "**E-14 (record l9stk's, with route R1)**", "**E-12c, a commissioning check like E-12**", "**R10's tolerance and temperature coefficient**",
-              "**B-R2's route R1 DRAFTED on board P**", "no new contact"):
+              "**B-R2's route R1 DRAFTED on board P**", "no new contact",
+              "## 13. DD-5: the charge switch's body diode in discharge", "**The case row: C-PROT**", "### 13a. Three approaches compared",
+              "**No such function is printed:**", "### 13d. The electrical acceptance on C-PROT with CHGIN = 1", "**Printed guarantees:**",
+              "**The condition that stays (E-16).**", "### 13f. The closure credit", "### 13g. What stays open", "**E-8, restated**",
+              "**E-12d**, a commissioning check like E-12", "**Round 4 (IF-8, DD-5):**", "### 13h. The ideal diode's own failures",
+              "| 10 A held | 30.24 mV, 0.302 W | 10.0 W | 0.124 W | 91.4 C | 97.6 C | 150 C |",
+              "| the breaker's 23.93 A held | 30.24 mV, 0.724 W | 23.9 W | 0.711 W | 112.4 C | 148.0 C | 150 C |"):
         assert s in page, s
     for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R105", "D102", "R106", "R107", "Q103",
                 "Q104", "R108, R109", "RT101", "R110", "RT1 (board A)"):
