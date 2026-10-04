@@ -88,10 +88,13 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    the round 1 parser's lines SET ASIDE in round 2 (the figure they read was removed or superseded by its record):
      eta_slot: l8r2's flat 0.90 for the slot converters (round 2's 7.84 W at VBAT): removed from l8r2's figures table at round 3, the slots' own converters carry it (round 1's R9)
      l8r2's choice (a) line: 'choice (a), a step-up per slot (SELECTED): ... the three 7.56 W at VBAT': round 3's text, which quotes this record's round 1 R9 back and was superseded by round 4's decision (2c.5); R9 now reproduces round 6
-   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S);
-     LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same
-     PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would
-     replace an unset duty by its maximum and hide the duty's effect inside the headline instead of showing it as a sensitivity
+   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S)
+     for the mixers, and for the coolers since round 2 l8r2's envelope (2.75 W at the step-up's 12.430 V top over its 0.80, the slot row 0.69 A the draft
+     declares; the maker prints only 12 V and free air); LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set
+     (R-150) is unset and L4-E11 18b and Layer 7 carry the same PLAN; a draft converter's efficiency is the draft's own assumption, its range in
+     section 9. Why: the alternative, PLAN at full speed, would replace an unset duty by its maximum and hide the duty's effect inside the
+     headline instead of showing it as a sensitivity; the coolers' HIGH is the bound the draft sizes its slot rows and leads on, so the budget's
+     HIGH and the drafts' declarations agree (section 8, R9); the maker's 2.0 W is kept as the other end in section 7 (DRAFTED-MK)
    the pack: no difference. pcb_pack_protection.yaml declares '4S3P Samsung INR18650-35E, about 145 Wh', 4S3P; rv-pwr already models it (C_MIN 3.35 Ah a cell, R_CELL 0.035 / 0.050 / 0.060 Ohm
      LOW / PLAN / HIGH); L4-E10's usable 107.9 Wh enters only B7's consequence (section 8, R3), energy being item 9.2's
    the states: rv-pwr's eight and record hc2's three (CONOPS 4c: the reduced mode PS-RED2, slots 2 and 3; the heat stage PS-SURV as board B is
@@ -150,6 +153,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    PS-RED2 (slots 2 and 3)        18.36 /  32.74 /  62.23     18.42 /  32.90 /  64.92      +0.160    +2.688   2.274   2.285
    PS-SURV (slot 2 alone)         13.08 /  22.92 /  46.66     13.08 /  22.92 /  47.89      -0.000    +1.226   1.592   1.592
    PS-SURV-R (the heat stage)     13.36 /  24.31 /  51.36     13.42 /  24.47 /  52.81      +0.160    +1.448   1.689   1.700
+   of dHIGH, the coolers' envelope over round 1's maker figure alone (section 4's D5 at HIGH less DRAFTED-R1's HIGH), W: PS-IDLE +3.799; PS-IDLE-SPEC +3.801; PS-TYP +3.890; PS-BUSY +3.818; PS-RED +1.167; PS-RED-b +3.784; PS-EMCON +3.689; PS-ALLTX +4.043; PS-RED2 +2.406; PS-SURV +1.226; PS-SURV-R +1.167
 
 4. THE WATERFALL: each step of section 1 applied in turn, the pack side at PLAN and (second block) at HIGH, W; the delta of each step
    PLAN        IDLE  IDLESPEC       TYP      BUSY       RED      REDB     EMCON     ALLTX      RED2      SURV     SURVR
@@ -1481,6 +1485,10 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       DRAWN: (43.30085,)
       DRAFTED: (44.57641,)
       why: the same figure at five and three places
+   R1c L4-E9 round 7 (out 30): the modes restated DRAFTED, PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W (W at the pack)
+      theirs (44.205, 209.007, 287.912, 165.76); reproduced (44.205, 209.007, 287.912, 165.76): EQUAL
+      DRAFTED now: (44.576, 209.89, 292.027, 166.149)
+      why: L4-E9 quotes this record's round 1 DRAFTED (rebuilt here as DRAFTED-R1: D1 to D5 with l8r2's round 2 cooler); round 2 moves them by D4's envelope at HIGH and D6 to D10
    R2 B4: the charging heat with the profile running (W): input, stored, heat; the source path and the charge path
       theirs (95.943663, 45.9, 50.043663, 3.17382, 3.44629); reproduced (95.943663, 45.9, 50.043663, 3.17382, 3.44629): EQUAL
       DRAWN: (96.4563, 45.9, 50.5563, 3.2092, 3.4463, 52.6463)
@@ -1537,10 +1545,6 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       DRAWN: (241.25, 13.9, 15.34, 0.16)
       DRAFTED: (253.61, 14.77, 16.21, -0.71)
       why: section 7: the drafted pair adds its resistance at 18 A, the fans at full speed (HIGH) their power
-   R1c L4-E9 round 7 (out 30): the modes restated DRAFTED, PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W (W at the pack)
-      theirs (44.205, 209.007, 287.912, 165.76); reproduced (44.205, 209.007, 287.912, 165.76): EQUAL
-      DRAFTED now: (44.576, 209.89, 292.027, 166.149)
-      why: L4-E9 quotes this record's round 1 DRAFTED (rebuilt here as DRAFTED-R1: D1 to D5 with l8r2's round 2 cooler); round 2 moves them by D4's envelope at HIGH and D6 to D10
    R11 L4-E9 round 7's D-17 (out 30): DRAWN W at VBAT, stack, need; DRAFTED W, path, stack, need; the pair's V at 18 A, the other drafts' W and V; the heater row's and the PA row's need; the floor by its rule, its margin, the R_cell it covers
       theirs (241.25, 13.898, 15.338, 249.5, 0.038068, 14.546, 15.986, 0.1902, 8.25, 0.4583, 16.449, 12.227, 16.1, 0.114, 0.0647); reproduced (241.25, 13.898, 15.338, 249.5, 0.038068, 14.546, 15.986, 0.1902, 8.25, 0.4583, 16.449, 12.227, 16.1, 0.114, 0.0647): EQUAL
       DRAFTED now, the all-transmit basis: VBAT W, path Ohm, stack V, the rest voltage needed at R_cell high: (253.61, 0.038064, 14.774, 16.214)

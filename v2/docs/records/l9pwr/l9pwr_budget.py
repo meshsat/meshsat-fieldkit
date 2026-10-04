@@ -1390,7 +1390,8 @@ def reconcile(pb, F, hc, R, cfgs):
                         "the pack path, round 1 and now (Ohm)": (round(R["cfgs"]["DRAFTED-R1"].r_path, 6), round(rd.r_path, 6))},
                 "why": "the breaker's sense at its window's highest and its FETs at the sheet's x1.8 at 150 C (l9stk's own bound), the battery FETs at L4-E11's 150 C bound: the conservative side for every limit this budget judges. The third FET is in parallel, so it lowers the path; with the breaker the net is within 0.01 mOhm of round 1's"})
 
-    return rec
+    order = ["R1", "R1b", "R1c", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"]
+    return sorted(rec, key=lambda r: order.index(r["id"]))
 
 
 def sensitivities(pb, F, hc, R):
@@ -1707,10 +1708,13 @@ def render(R):
     w("   the round 1 parser's lines SET ASIDE in round 2 (the figure they read was removed or superseded by its record):")
     for a, b in SET_ASIDE:
         w("     %s: %s" % (a, b))
-    w("   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S);")
-    w("     LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set (R-150) is unset and L4-E11 18b and Layer 7 carry the same")
-    w("     PLAN; a draft converter's efficiency is the draft's own assumption, its range in section 9. Why: the alternative, PLAN at full speed, would")
-    w("     replace an unset duty by its maximum and hide the duty's effect inside the headline instead of showing it as a sensitivity")
+    w("   how the fans are taken (SESSION, under the owner's standing rule of 26 September 2026): HIGH is the picked fan's maker figure at full speed (S)")
+    w("     for the mixers, and for the coolers since round 2 l8r2's envelope (%.2f W at the step-up's %.3f V top over its %.2f, the slot row %.2f A the draft" % (F["fan_env"], F["su_vout"][2], F["su_eta_lo"], F["fan_row"]))
+    w("     declares; the maker prints only 12 V and free air); LOW and PLAN keep rv-pwr's duty figures (tier R), because the duty the controls set")
+    w("     (R-150) is unset and L4-E11 18b and Layer 7 carry the same PLAN; a draft converter's efficiency is the draft's own assumption, its range in")
+    w("     section 9. Why: the alternative, PLAN at full speed, would replace an unset duty by its maximum and hide the duty's effect inside the")
+    w("     headline instead of showing it as a sensitivity; the coolers' HIGH is the bound the draft sizes its slot rows and leads on, so the budget's")
+    w("     HIGH and the drafts' declarations agree (section 8, R9); the maker's 2.0 W is kept as the other end in section 7 (DRAFTED-MK)")
     w("   the pack: no difference. pcb_pack_protection.yaml declares '%s', %dS%dP; rv-pwr already models it (C_MIN %.2f Ah a cell, R_CELL %s Ohm" % (F["topology"], F["series"], F["parallel"], pb.C_MIN, " / ".join("%.3f" % v for v in pb.R_CELL.values())))
     w("     LOW / PLAN / HIGH); L4-E10's usable %.1f Wh enters only B7's consequence (section 8, R3), energy being item 9.2's" % F["usable_wh"])
     w("   the states: rv-pwr's eight and record hc2's three (CONOPS 4c: the reduced mode PS-RED2, slots 2 and 3; the heat stage PS-SURV as board B is")
@@ -1747,6 +1751,8 @@ def render(R):
         a, b = R["tot"][("DRAFTED-R1", st)], R["tot"][("DRAFTED", st)]
         w("   %-28s %7.2f /%7.2f /%7.2f   %7.2f /%7.2f /%7.2f   %+9.3f %+9.3f %7.3f %7.3f" % (STATE_NAME[st], a["lo"]["pb"], a["plan"]["pb"], a["hi"]["pb"], b["lo"]["pb"], b["plan"]["pb"], b["hi"]["pb"],
           b["plan"]["pb"] - a["plan"]["pb"], b["hi"]["pb"] - a["hi"]["pb"], a["plan"]["i14"], b["plan"]["i14"]))
+    w("   of dHIGH, the coolers' envelope over round 1's maker figure alone (section 4's D5 at HIGH less DRAFTED-R1's HIGH), W: " + "; ".join(
+        "%s %+.3f" % (STATE_NAME[st].split(" (")[0], R["wf_hi"][10][st] - R["tot"][("DRAFTED-R1", st)]["hi"]["pb"]) for st in STATES))
     w("")
     w("4. THE WATERFALL: each step of section 1 applied in turn, the pack side at PLAN and (second block) at HIGH, W; the delta of each step")
     for blk, wf in (("PLAN", R["wf"]), ("HIGH", R["wf_hi"])):
