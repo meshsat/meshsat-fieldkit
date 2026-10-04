@@ -33,3 +33,25 @@ l9stk_stackups-7388a84b.txt sha256 5af6b7c043df43f36b572f2c934a2ab364604da499f59
 l9stk-L9-STACKUPS-7388a84b.md sha256 4affe7feaf7cf37a15843ddd29409424d0868ed5742e35537ed8988edfdca194
   from v2/docs/records/l9stk/L9-STACKUPS.md at commit 7388a84b on branch fnd/l9stk, the whole file: sections 3 and 7 (boards A and
   E, 1 oz outer with the pack path and its return shared by both faces) and section 12's first two findings, which items 5 and 6 answer.
+
+Round 7 (4 October 2026 evening, task T5b, branch fnd/l8r4 from set 29's candidate aa76c894); whole files byte for byte, read with
+git show from the author's branch at its tip when read, not merged; this record reads the copies, never the branch:
+
+l9t5-apply_gen_sch_b_iocbuck-f70d3085.py sha256 afb77ab72e0d2d4cc677419900012f05ba0722f3d7afd090c417a06e37b14bd0
+  from v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py at commit f70d3085 on branch fnd/l9t5 (Layer 9 record l9t5, task T5, I-03 on
+  the case row C-DEV rev 1: the supervisors' LDOs on a new lead J_5V_IOC; the file last changed at 731e0939). Composed after this
+  record's board B drafts in section 1 of l8r2_gndret.py.
+
+l9t5_drafts-f70d3085.txt sha256 e78a17359462e4e58fc224493af1b8dbda631dbb78f0195458a97d93b9f06b6d
+  from v2/docs/records/l9t5/l9t5_drafts.out at commit f70d3085 on branch fnd/l9t5, the whole file, renamed .txt so that no tool reads
+  its pin lines as this record's own. Parsed: section 6's lines (1) and (2) (the device rail and U601 on C-DEV rev 1) and the block
+  "WHAT T5b NEEDS".
+
+l9pwr_budget-f70d3085.txt sha256 e5e8b9083cb087ffae26e206423dd8b24ce04c67526d5ddc9f944013029d64e1
+  from v2/docs/records/l9pwr/l9pwr_budget.out at commit f70d3085 on branch fnd/l9t5 (Layer 9's budget, rounds 4 and 5: PS-ALLTX with
+  the standby WiFi card off), the whole file, renamed as above. Parsed beside the tree's own v2/docs/records/l9pwr/l9pwr_budget.out
+  (set 29's candidate): section 5b, the four 5.1 V stages per state.
+
+coordinator-cases-2026-10-04-rev3.md sha256 0be579949c22eab11821cba696422e8ece36125f85c4eacaf541bc31814c4809
+  from the coordinator's working file _runs/cases/CASES-2026-10-04.md (the shared case rows as received with task T5b; the same
+  bytes record l9t5 holds as its inputs/coordinator-cases-2026-10-04-rev3.md). Cited by id and revision: C-DEV rev 1, C-ALLTX rev 3.
