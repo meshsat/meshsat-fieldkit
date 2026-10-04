@@ -30,3 +30,6 @@ reviews:
   - path: v2/docs/records/l4close/REVIEW-SUPPLIER-ADDENDUM-REV2-AS-RECEIVED.md
     sha256: "5c008dd2d90318078e2a978e31652be979bdff5d5e176280444ebc804d852425"
     why: the focused review of the supplier addendum's revision 2 (4 October 2026, L4-RD02 and L4-RD03 closed, finding L4-RD04), the reviewer's words kept as received
+  - path: v2/docs/records/l4close/REVIEW-SUPPLIER-DELTA-AA76C894-AS-RECEIVED.md
+    sha256: "73efaadfd85b1f567e1e6f7b38fb55151dd510632e08b2200d235d93e2362dc7"
+    why: the external review of the supplier delta aa76c894 over d834e6a7 (4 October 2026, findings DELTA-01 and DELTA-02, with its continuation prompt and its firmware probe), the reviewer's words kept as received
