@@ -699,7 +699,7 @@ def main():
               % (tot, tag, F["cab_a"], "%.2f" % c1 if c1 is not None else "none: over at every value", F["vh_a16"],
                  "%.2f" % c2 if c2 is not None else "none: over at every value"))
         w("      JST's own limit is %.0f mOhm initial and %.0f mOhm after test: a harness INSIDE its maker's limits can put more than its printed\n"
-          "      rating through a ribbon conductor or a lead contact. The design holds only while the VH contacts are better than guaranteed.\n"
+          "      rating through a ribbon conductor or a lead contact. The design holds only while the VH contacts are better than their maker's printed limit.\n"
           % (F["vh_rc0"], F["vh_rc1"]))
         w("3f. THE SUPPLY PINS (pin 1 carries its own rail and nothing else; PRINTED %.0f A with AWG 16; %.3f A at %.2f C on the ASSUMPTION):\n" % (F["vh_a16"], hot, T))
         for n in ("S1", "S2", "S3"):
@@ -758,7 +758,7 @@ def main():
         w("3i. LAYER 5'S CONTRACT ROWS (%s). IF-AB-POWER: harness '%s'; pins '%s'; its currents rows declare each rail lead by lead\n"
           "    (5.0, 5.63 and 6.0 A peaks, INTERIM) and its contact_rating reads the %.0f A as this record does. It carries %s for the return's\n"
           "    division, and IF-AB-RIBBON and IF-AB-WALL declare their ground pins as signal returns at %.0f A a contact. The row texts this\n"
-          "    round proposes are in the record's section 7 (Layer 5's files are its own).\n"
+          "    round proposes are in the record's section 3g (Layer 5's files are its own).\n"
           % (IFACES, " ".join(str(ifp.get("harness")).split()), ifp.get("pins_each"), F["vh_a16"], "a row" if says_return else "NO ROW", F["sock_a"]))
         ub = [totals[4]]
 

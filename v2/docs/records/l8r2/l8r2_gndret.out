@@ -35,7 +35,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
    84297a48f39b8598 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
    cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
-   384b576bdbebfa8b v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
+   f5d15853e9ca5af8 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
    3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
@@ -270,7 +270,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
         a ribbon conductor whose own contacts are at 0 stays at or under 1 A only while EVERY VH contact is at or under 4.16 mOhm;
         a 5 V lead whose two contacts are at 0 stays at or under 10 A only while the other VH contacts are at or under 3.24 mOhm
       JST's own limit is 10 mOhm initial and 20 mOhm after test: a harness INSIDE its maker's limits can put more than its printed
-      rating through a ribbon conductor or a lead contact. The design holds only while the VH contacts are better than guaranteed.
+      rating through a ribbon conductor or a lead contact. The design holds only while the VH contacts are better than their maker's printed limit.
 3f. THE SUPPLY PINS (pin 1 carries its own rail and nothing else; PRINTED 10 A with AWG 16; 9.789 A at 76.25 C on the ASSUMPTION):
       J_5V_S1 pin 1: 5.434 A at the largest state (HIGH, least voltage), 6.532 A at its bounded start; declared peak 6.6 A: within
       J_5V_S2 pin 1: 4.648 A at the largest state (HIGH, least voltage), 5.747 A at its bounded start; declared peak 6.6 A: within
@@ -302,7 +302,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
 3i. LAYER 5'S CONTRACT ROWS (v2/ecad/tools/pcb_interfaces.yaml). IF-AB-POWER: harness 'JST-VH pairs, 16 AWG on the four 5 V leads and 18 AWG on J_54V, 150 mm (cable; ASSEMBLY.md section 4)'; pins '1 = the rail, 2 = GND, on both ends'; its currents rows declare each rail lead by lead
     (5.0, 5.63 and 6.0 A peaks, INTERIM) and its contact_rating reads the 10 A as this record does. It carries NO ROW for the return's
     division, and IF-AB-RIBBON and IF-AB-WALL declare their ground pins as signal returns at 1 A a contact. The row texts this
-    round proposes are in the record's section 7 (Layer 5's files are its own).
+    round proposes are in the record's section 3g (Layer 5's files are its own).
 3j. THE CORRECTIONS COMPARED on the upper bound with Layer 9's draft (27.78 A, six leads; every contact case K0 to K5; the worse of
     20 C and 76.25 C; MODEL):
     A0 MORE VH RETURN CONTACTS (the plain remedy): with every return an AWG 16 lead of 150 mm, the rows that take the contacts at
@@ -351,7 +351,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
        declared lower lowers it, and the capacity finding stays OPEN beside it.
 
 5. THE CORRECTION (two drafts, release-guarded, on scratch copies)
-   v2/docs/records/l8r2/apply_gen_sch_b_gndret.py sha256 384b576bdbebfa8b
+   v2/docs/records/l8r2/apply_gen_sch_b_gndret.py sha256 f5d15853e9ca5af8
      --check exit 0 (target unchanged: yes); --write exit 0 (parses: yes); a second --write exit 3 (apply_gen_sch_b_gndret: already applied (_gnd_return is defined in the target); refusing);
      on the tree's own generator exit 3 (apply_gen_sch_b_gndret: NOT RELEASED: no RELEASE.md; l8r2's drafts wait on an accepted check; refusing)
    v2/docs/records/l8r2/apply_gen_sch_b_fandec.py sha256 84297a48f39b8598
