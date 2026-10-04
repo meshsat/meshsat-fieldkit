@@ -21,7 +21,8 @@ remedy for each fault on held sheets, the cut-off's band recomputed here, the wi
 draft applies once after the five drafts it follows; the guard already on (the consolidation review's B6) is bounded in the
 loaded network against every printed rating with the least lead inductance each holds at, the solver checked against the
 closed-form series RLC step, the drafted network failing and each change necessary; the backstop's
-draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
+draft applies only after the hold and input limit drafts, and gives its three supply capacitors class D, so board E's generator
+composed in L4-E9's change-list order runs past its decoupling table (record l8p's L8P-F01); the drafts to the makers follow the decision and quote its
 figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
 import contextlib
@@ -1060,6 +1061,146 @@ GUARD = "apply_gen_sch_e_solar_guard.py"
 
 def _run_any(path, target, *flags):
     return subprocess.run([sys.executable, "-B", path, target] + list(flags), capture_output=True, text=True, cwd=os.path.dirname(target))
+
+
+# L8P-F01 (record l8p, Layer 8's breaker author, 4 October 2026): the backstop declared C66, C67 and C68 against their supply pins
+# with no decoupling class, so board E's generator, composed in L4-E9's change-list order, stopped at its G14 table
+L4E9_PY = os.path.join(ROOT, "v2", "docs", "records", "l4e9", "l4e9_power_path.py")
+# L4-E9's register rows of board E's drafts (DOWNSTREAM-REGISTER.md) and their apply scripts; their order is CHANGE_ORDER's
+E_ROWS = {"R-17": ("l4e9", "q1"), "R-12": ("l4e7", "u5_grade"), "R-19": ("l4e7", "hold"), "R-20": ("l4e7", "input_limit"),
+          "R-21": ("l4e7", "backstop"), "R-18": ("l4e9", "f1"), "R-94": ("l4e9", "hotswap"), "R-123": ("l4e11", "entry"),
+          "R-173": ("l4e7", "solar_guard"), "R-177": ("l4e11", "aux"), "R-16": ("d8dec31", "cin")}
+E_NET = os.path.join(ROOT, "v2", "ecad", "pcb-e1-dock-e7", "out", "pcb-e1-dock.net")
+L8P_ENABLE = os.path.join(ROOT, "v2", "docs", "records", "l8p", "apply_gen_sch_e_enable.py")
+DEC_DOCS = {"C66": ("U18", "5", "SBOS181F", "v2/vendor/ti/held/ti-ina169-sbos181f.pdf"),
+            "C67": ("U19", "5", "SBVS240C", "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"),
+            "C68": ("U20", "6", "SBVS050N", "v2/vendor/ti/ti-tps3808.pdf")}
+_STUB = 'def run(parts, sections, power, bypass, header, phase, board_title):\n    return ("A3", 1, 1, 1)\n'
+_RUNNER = ('import importlib.util, os, runpy, sys\n'
+           '_sp = importlib.util.spec_from_file_location("schlayout", os.path.join(os.path.dirname(os.path.abspath(__file__)), "stub_schlayout.py"))\n'
+           '_m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m); sys.modules["schlayout"] = _m\n'
+           'sys.argv = sys.argv[1:]\n'
+           'runpy.run_path(sys.argv[0], run_name="__main__")\n')
+
+
+def _l4e9_board_e_order():
+    """Board E's drafts in L4-E9's change-list order: CHANGE_ORDER's register ids read with ast from l4e9_power_path.py (never
+    imported), kept where E_ROWS names an apply script; every board E draft of its CHANGE_SCRIPTS is in it (L4-E11's timer only
+    as the LM5069 alternative, R-119); Layer 6's l6r2 tables, outside the list and order-independent, after them as record l8p ran them."""
+    import ast
+    need(L4E9_PY, "L4-E9's record (its change list)")
+    tree = ast.parse(open(L4E9_PY, encoding="utf-8").read()).body
+    rows = [n for n in tree if isinstance(n, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "CHANGE_ORDER" for x in n.targets)]
+    assert len(rows) == 1, "L4-E9's CHANGE_ORDER"
+    ids = [e.elts[1].value for e in rows[0].value.elts if isinstance(e, ast.Tuple) and isinstance(e.elts[1], ast.Constant)]
+    seq = [E_ROWS[i] for i in ids if i in E_ROWS]
+    assert sorted(seq) == sorted(E_ROWS.values()), "L4-E9's change list no longer names each board E draft row once: %s" % ids
+    lst = [n for n in tree if isinstance(n, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "CHANGE_SCRIPTS" for x in n.targets)]
+    assert len(lst) == 1, "L4-E9's CHANGE_SCRIPTS"
+    have = {(s_.split("/")[0], s_.split("/")[1][len("apply_gen_sch_e_"):-3]) for s_ in ast.literal_eval(lst[0].value) if "/apply_gen_sch_e_" in s_}
+    assert have - set(seq) <= {("l4e11", "timer")}, "a board E draft of L4-E9's list outside the composition: %s" % sorted(have - set(seq))
+    return seq + [("l6r2", "xal_land"), ("l6r2", "lcsc")]
+
+
+def _compose_e(d, seq, after_aux=None):
+    """A copy of gen_sch_e.py in d with seq applied in order (d8dec31's draft takes the committed netlist, the others --write);
+    after_aux, a draft's path, applied right after L4-E11's aux draft (record l8p's slot for its enable draft)."""
+    cp = os.path.join(d, "gen_sch_e.py")
+    shutil.copy(GEN_E, cp)
+    for rec, name in seq:
+        s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_e_%s.py" % name)
+        need(s, "board E's draft %s/%s" % (rec, name))
+        r = _run_any(s, cp, E_NET) if rec == "d8dec31" else _run_any(s, cp, "--write")
+        assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr[-300:])
+        if after_aux and (rec, name) == ("l4e11", "aux"):
+            r = _run_any(after_aux, cp, "--write")
+            assert r.returncode == 0, "%s refused: %s" % (after_aux, r.stderr[-300:])
+    return cp
+
+
+def _gen_e_run(gen):
+    """A copy of a (patched) gen_sch_e.py run to its end with a stand-in layout step, record l8p's method (its gen_netlist.py): kisch,
+    intent and the generator's own checks are the tree's; only schlayout, which needs KiCad's symbol libraries, is replaced by one
+    that lays out nothing. (exit code, the run's output, the intent it wrote or None); nothing is written outside a temporary
+    directory."""
+    import json
+    with tempfile.TemporaryDirectory(prefix="l4e7-gen-") as d:
+        g = os.path.join(d, "gen_sch_e.py")
+        shutil.copy(gen, g)
+        open(os.path.join(d, "stub_schlayout.py"), "w", encoding="utf-8").write(_STUB)
+        open(os.path.join(d, "run_gen.py"), "w", encoding="utf-8").write(_RUNNER)
+        env = dict(os.environ, PYTHONPATH=TOOLS, KICAD_SYMBOLS=os.path.join(d, "no-kicad-symbols"), PYTHONDONTWRITEBYTECODE="1")
+        r = subprocess.run([sys.executable, "-B", os.path.join(d, "run_gen.py"), g, os.path.join(d, "pcb-e1-dock.kicad_sch"), "pcb-e1-dock"],
+                           capture_output=True, text=True, cwd=d, env=env)
+        ip = os.path.join(d, "out", "pcb-e1-dock-intent.json")
+        intent = json.load(open(ip, encoding="utf-8")) if r.returncode == 0 and os.path.isfile(ip) else None
+    return r.returncode, r.stdout + r.stderr, intent
+
+
+def _dec_rows(text):
+    """{designator: (class, basis)} of the G14 table (_DEC_CLASS) in a generator's text, read with ast."""
+    import ast
+    rows = [n for n in ast.walk(ast.parse(text)) if isinstance(n, ast.Assign) and isinstance(n.value, ast.Dict)
+            and any(isinstance(x, ast.Name) and x.id == "_DEC_CLASS" for x in n.targets)]
+    assert len(rows) == 1, "the generator's G14 table"
+    return {k.value: (v.elts[0].value, v.elts[1].value) for k, v in zip(rows[0].value.keys, rows[0].value.values)
+            if isinstance(k, ast.Constant) and isinstance(v, ast.Tuple) and all(isinstance(e, ast.Constant) for e in v.elts[:2])}
+
+
+def t_the_backstop_gives_its_three_supply_capacitors_their_decoupling_class_in_l4e9s_order():
+    """L8P-F01 (record l8p at b1295c1e, 4 October 2026): composed in L4-E9's change-list order, board E's generator stopped at its
+    G14 table on C66 (U18's V+). On scratch copies: (1) the drafts up to the backstop (L4-E9's order to R-21) give a generator that
+    runs to its end with a stand-in layout, its intent naming C66 at U18 pin 5, C67 at U19 pin 5 and C68 at U20 pin 6, each class D
+    with its maker's document (held in the tree); the same text without the backstop's class rows (its DEC_ROWS) refuses on C66 as
+    the finding read; (2) every board E draft in L4-E9's order (and record l8p's enable draft after L4-E11's aux draft when the tree
+    holds it) applies, the composed G14 table gives the three class D, and a refusal of the composed generator, if any, is never a
+    missing class of theirs (another record's defect, such as L8P-F03, is that record's); (3) the backstop still refuses the tree's
+    own generator (NOT RELEASED), which is unchanged."""
+    need(GEN_E, "board E's generator")
+    need(E_NET, "board E's committed netlist (d8dec31's draft reads it)")
+    for _c, (_u, _p, _doc, rel) in DEC_DOCS.items():
+        need(os.path.join(ROOT, rel), "the maker's document of %s" % _c)
+    before = _sha(GEN_E)
+    seq = _l4e9_board_e_order()
+    prefix = seq[:seq.index(("l4e7", "backstop")) + 1]
+    assert [x for x in prefix if x[0] == "l4e7"] == [("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop")], prefix
+    sp = importlib.util.spec_from_file_location("backstop_for_l8pf01", os.path.join(REC, BACKSTOP))
+    bk = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(bk)
+    assert sum(1 for _o, rep in bk.EDITS if bk.DEC_ROWS in rep) == 1, "the class rows are not one edit of the backstop draft"
+    with tempfile.TemporaryDirectory(prefix="l4e7-f01-") as d:
+        cp = _compose_e(d, prefix)
+        text = open(cp, encoding="utf-8").read()
+        dec = _dec_rows(text)
+        for c_, (u_, p_, doc, rel) in DEC_DOCS.items():
+            assert dec.get(c_, ("",))[0] == "D" and doc in dec[c_][1] and rel in dec[c_][1], (c_, dec.get(c_))
+        rc, log, intent = _gen_e_run(cp)
+        assert rc == 0 and intent is not None, "the composition to the backstop does not run to its end: %s" % log.strip().splitlines()[-1:]
+        by = {e["cap"]: e for e in intent["bypass"]}
+        for c_, (u_, p_, doc, _rel) in DEC_DOCS.items():
+            e = by.get(c_)
+            assert e and (e["part"], e["pin"], e.get("class")) == (u_, p_, "D") and doc in e.get("basis", ""), (c_, e)
+        # the defect as the finding read: the same text without the backstop's class rows stops at C66
+        bare = os.path.join(d, "bare_gen_sch_e.py")
+        assert text.count(bk.DEC_ROWS) == 1
+        open(bare, "w", encoding="utf-8").write(text.replace(bk.DEC_ROWS, ""))
+        rc, log, _i = _gen_e_run(bare)
+        assert rc != 0 and "decoupling entry C66 -> U18.5 carries no class (G14)" in log, log.strip().splitlines()[-1:]
+    variants = [None] + ([L8P_ENABLE] if os.path.isfile(L8P_ENABLE) else [])
+    for extra in variants:
+        with tempfile.TemporaryDirectory(prefix="l4e7-f01-all-") as d:
+            cp = _compose_e(d, seq, after_aux=extra)
+            dec = _dec_rows(open(cp, encoding="utf-8").read())
+            assert all(dec.get(c_, ("",))[0] == "D" for c_ in DEC_DOCS), {c_: dec.get(c_) for c_ in DEC_DOCS}
+            rc, log, intent = _gen_e_run(cp)
+            for c_, (u_, p_, _doc, _rel) in DEC_DOCS.items():
+                assert "decoupling entry %s -> %s.%s carries no class" % (c_, u_, p_) not in log, log.strip().splitlines()[-1:]
+            if rc == 0:
+                by = {e["cap"]: e for e in intent["bypass"]}
+                assert all(by[c_].get("class") == "D" for c_ in DEC_DOCS), {c_: by.get(c_) for c_ in DEC_DOCS}
+    r = _run(BACKSTOP, GEN_E, "--write")
+    assert r.returncode == 3 and "NOT RELEASED" in r.stderr, r.stderr
+    assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
 
 
 def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
