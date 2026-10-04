@@ -1,0 +1,43 @@
+{
+ "what": "JLCPCB public parts search (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList), no login: keyword 'XT60-F', first page of 50; every row kept (code, model, brand, stock, description); non-ASCII characters of the descriptions dropped",
+ "read_utc": "2026-10-04T01:36Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), round 9",
+ "why": "the Amass XT60-F's catalogue code (LCSC's search refused this host)",
+ "rows": [
+  {
+   "code": "C98734",
+   "model": "XT60-F",
+   "brand": "Changzhou Amass Elec",
+   "stock": 34298,
+   "describe": "Banana Connector Female Gold Plated Yellow - Power connector / plug connector"
+  },
+  {
+   "code": "C9900249190",
+   "model": "XT60-F-B",
+   "brand": "JLCPCB Assembly",
+   "stock": 0,
+   "describe": "TH-2P-P7.2_L16.0-W7.9 SMT ROHS"
+  },
+  {
+   "code": "C9900174302",
+   "model": "XT60-F-HX",
+   "brand": "JLCPCB Assembly",
+   "stock": 0,
+   "describe": "XT60-F- SMT ROHS"
+  },
+  {
+   "code": "C9900286894",
+   "model": "XT60-F-60CM",
+   "brand": "JLCPCB Assembly",
+   "stock": 0,
+   "describe": "SMT ROHS"
+  },
+  {
+   "code": "C55129948",
+   "model": "XT60-F-1-200(5)-16A-UL3239",
+   "brand": "HanElectricity",
+   "stock": 364,
+   "describe": "Dupont wire / terminal block wire / electronic wire ROHS"
+  }
+ ]
+}

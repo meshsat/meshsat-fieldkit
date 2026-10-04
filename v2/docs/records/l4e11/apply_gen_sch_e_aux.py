@@ -25,7 +25,8 @@ What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else:
   fans    J_FAN1 and J_FAN2 pin 1 and the flyback diodes D7 and D8 on VSYS_E.
   intent  VSYS_E declared (source J_BLK, 1.32 A: U12 0.8, U22 0.52 at the floor, always on, v_work 17.4 V: VSYS reaches 17.375 V with
           the charge held); CELL_F's loads the pack path alone; +5V_E6's reason; E6_SW, E6_BST and the fans' switched returns
-          re-declared to 17.4 V; a power flag on VSYS_E.
+          re-declared to 17.4 V; a power flag on VSYS_E; +12V_FAN declared with U22 as its source and source_ic (round 9, 4 October
+          2026, record l8p's finding L8P-F03: L4 sits between U22's SW1 and SW2, not on the rail, and intent.write refused it).
 CELL_F keeps the pack path to board A (P_CP), D3, C1, TP8 and the pack monitor R42 and R43 (0.14 mA at 16.884 V, intended).
 
 ORDER: with apply_gen_sch_a_charger.py (board A's J_DOCK pin 1 on VSYS_DOCK, behind U42) and apply_pcb_interfaces_dock.py; never alone, or the
@@ -49,7 +50,8 @@ _VSYS_E = ('\n# L4-E11 (MESHSAT-1357, the fix round for the consolidation review
            '             always_on_why="board A\'s VSYS over the dock\'s pin 1 behind its eFuse U42: the pack (through the battery FETs, on with the battery alone) or a source holds it; nothing on this board switches it",\n'
            '             loads={"U12": 0.8, "U22": 0.52},\n'
            '             note="board A\'s VSYS_DOCK (VBAT through U42) on J_BLK pin 1: U12\'s VIN and EN, C31, and the mixers\' 12 V rail U22 (0.52 A at the 9.494 V floor with both fans at full speed; L4-E11 sections 15a and 18)")\n'
-           '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4", always_on=True, converted=True, efficiency=0.85, fed_from="VSYS_E",\n'
+           '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "U22", source_ic="U22 (LTC3115-1) VOUT pins carry the rail: its four switches are inside the IC and L4 "\n'
+           '             "sits between SW1 and SW2, not on +12V_FAN (L4-E11 round 9, record l8p\'s finding L8P-F03)", always_on=True, converted=True, efficiency=0.85, fed_from="VSYS_E",\n'
            '             always_on_why="U22\'s RUN divider enables it whenever VSYS_E is over about 8.3 V, so the rail follows VSYS_E and has no switch of its own; the fans\' speed is their PWM input",\n'
            '             loads={"J_FAN1": 0.17, "J_FAN2": 0.17},\n'
            '             note="L4-E11 section 18: the mixers\' regulated 12.0 V (Sanyo Denki 9WL0612P4H001, 10.8 to 13.2 V printed, 0.17 A each at 12 V, Layer 7), an LTC3115-1 buck-boost from VSYS_E 9.494 to 17.375 V")')
