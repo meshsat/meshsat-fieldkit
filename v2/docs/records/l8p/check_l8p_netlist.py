@@ -27,6 +27,13 @@ reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
                  return: the two in series, so the return is held low only while both comparators are high; C107 and C108 on
                  the comparators' supply pins; the values; and U104's threshold sits on the right side (its -IN divider's ratio
                  above its +IN's, so PACK_P must exceed BRK_SNS)
+           DIO   the ideal diode beside the charge switch (DD-5, round 4; apply_gen_sch_p_idealdiode.py): Q109 (CSD17570Q5B) source
+                 pins on Q1's source net and its drain on Q1's drain net, which is Q2's drain (in parallel with Q1, the same way
+                 round); U105 (LM74700) ANODE on that source net, CATHODE on that drain net, GATE on Q109's gate and on nothing of
+                 the gauge's (Q1's gate stays on the gauge's CHG drive), GND on the cells' side of R10; C111 from VCAP to the anode;
+                 R130 from the gate to the anode; EN on D104's cathode with its anode on U101's VIN (Q2's source), R131 to the
+                 cells' negative; the anode pair C112 and C113 and the cathode pair C114 and C115, each in series to the cells'
+                 negative; the values
   board E  EN    J_SMB pins 1 to 4 SMBC, SMBD, GND, PRES_LEAD, 5 DOCK_EN_RET, 6 GND, 7 DOCK_EN_OUT; J_BLK pin 3 DOCK_EN_RET, 4 GND,
                  5 DOCK_EN_OUT; nothing else on board E on the loop's nets (a pass-through)
   board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET, and nothing else
@@ -215,6 +222,9 @@ REV_SESSION = (("U103", "OPA187"), ("U104", "OPA187"), ("R118", "1.15M 0.1%"), (
                ("R121", "332k 0.05% 10ppm"), ("R122", "33.2k 0.05% 10ppm"), ("R123", "328k 0.05% 10ppm"), ("R124", "33.2k 0.05% 10ppm"),
                ("C110", "1n"), ("C107", "100n"), ("C108", "100n"), ("R125", "100k"), ("R126", "100k"), ("R127", "100k"), ("R128", "100k"),
                ("Q107", "2N7002"), ("Q108", "2N7002"))
+# the ideal diode beside the charge switch (DD-5, round 4): record l8p's SESSION choices, each value's prefix
+DIO_SESSION = (("Q109", "CSD17570Q5B"), ("U105", "LM74700"), ("C111", "220n 50V"), ("R130", "10M"), ("D104", "1N4148W"), ("R131", "1M"),
+               ("C112", "100n 50V"), ("C113", "100n 50V"), ("C114", "470n 50V"), ("C115", "470n 50V"))
 
 
 def _pairs(nl, rows):
@@ -224,7 +234,7 @@ def _pairs(nl, rows):
 def checks_p(nl):
     if "U101" not in nl["comps"] and _pin(nl, "J_SMB", "7") is None and "DOCK_EN_OUT" not in nl["on"]:
         return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"]), "INH": ("NOT DRAWN", ["U102 is absent"]),
-                "REV": ("NOT DRAWN", ["U103 is absent"])}
+                "REV": ("NOT DRAWN", ["U103 is absent"]), "DIO": ("NOT DRAWN", ["U105 is absent"])}
     ret = _pin(nl, "W_N", "1")
     vin, sns, uvlo, pgd = "BRK_VIN", "BRK_SNS", "BRK_UVLO", "BRK_PGD"
     rows = [("U101", "1", sns), ("U101", "2", vin), ("U101", "3", uvlo), ("U101", "4", ret), ("U101", "5", ret),
@@ -300,7 +310,32 @@ def checks_p(nl):
     if len(ratio) != 2 or not ratio["R123"] > ratio["R121"]:
         bad.append("U104's threshold is not on the reverse side (the -IN divider's ratio %s, the +IN's %s)" % (ratio.get("R123"), ratio.get("R121")))
     out["REV"] = ("FAIL", bad) if bad else ("DRAWN", [])
+    out["DIO"] = checks_dio(nl, ret, cell)
     return out
+
+
+def checks_dio(nl, ret, cell):
+    """DD-5: Q109 in parallel with the charge switch Q1, the same way round, driven by U105 alone; the gauge's drive of Q1 untouched."""
+    if "U105" not in nl["comps"] and "Q109" not in nl["comps"]:
+        return ("NOT DRAWN", ["U105 is absent"])
+    anode, sw, chg = _pin(nl, "Q1", "1"), _pin(nl, "Q1", "5"), _pin(nl, "Q1", "4")
+    vin_u = _pin(nl, "U101", "2")
+    rows = [("Q109", "1", anode), ("Q109", "2", anode), ("Q109", "3", anode), ("Q109", "4", "IDL_GATE"), ("Q109", "5", sw),
+            ("Q1", "2", anode), ("Q1", "3", anode), ("Q2", "5", sw),
+            ("U105", "1", "IDL_VCAP"), ("U105", "2", cell), ("U105", "3", "IDL_EN"), ("U105", "4", sw), ("U105", "5", "IDL_GATE"),
+            ("U105", "6", anode), ("D104", "1", "IDL_EN"), ("D104", "2", vin_u), ("Q2", "1", vin_u), ("TP109", "1", "IDL_GATE")]
+    bad = props(nl, rows)
+    if anode is None or sw is None or anode == sw or cell is None or cell in (anode, sw, ret):
+        bad.append("Q1's source %r and drain %r and the cells' negative %r are not three nets apart from the return" % (anode, sw, cell))
+    if chg is None or chg == "IDL_GATE" or "U105" in nl["on"].get(chg, set()) or "Q109" in nl["on"].get(chg, set()):
+        bad.append("Q1's gate %r is not the gauge's own drive apart from the ideal diode" % chg)
+    if nl["on"].get("IDL_GATE", set()) != {"U105", "Q109", "R130", "TP109"}:
+        bad.append("IDL_GATE reaches %s, wanted U105, Q109, R130 and TP109 alone" % sorted(nl["on"].get("IDL_GATE", set())))
+    bad += _pairs(nl, (("C111", "IDL_VCAP", anode), ("R130", "IDL_GATE", anode), ("R131", "IDL_EN", cell),
+                       ("C112", anode, "IDL_AMID"), ("C113", "IDL_AMID", cell), ("C114", sw, "IDL_CMID"), ("C115", "IDL_CMID", cell)))
+    bad += ["%s value %r does not start %r (record l8p, SESSION)" % (r_, nl["comps"].get(r_, {}).get("value"), pre)
+            for r_, pre in DIO_SESSION if not str(nl["comps"].get(r_, {}).get("value", "")).startswith(pre)]
+    return ("FAIL", bad) if bad else ("DRAWN", [])
 
 
 def _ohms(value):
