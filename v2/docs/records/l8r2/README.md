@@ -29,6 +29,24 @@ repository's own generator until a `RELEASE.md` beside it names an accepted chec
 | `l8r2_gndret.py`, `l8r2_gndret.out` | round 7: the stop reproduced stage by stage, the load basis and its three figures, the return divided between the five lead contacts and the seventeen ribbon conductors by resistance on the makers' printed figures, the judgment (the declaration corrected; the return path not holding on the makers' printed figures, **L8R2-F31 OPEN**), four corrections compared, the composition in four orders, eight mutations, what Layer 9's author needs; regenerated with `_bin/regen_out.py` |
 | `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), the panel firmware's F-01 (`fnd/fw-panel` at `42c27369`), Layer 6's board C draft with its helper (`fnd/l6r2` at `7633ae0a`); round 3: record l9pwr's output (`fnd/l9pwr` at `38ef774c`), record l9stk's output and page (`fnd/l9stk` at `7388a84b`); round 7: Layer 9's board B draft, its output and its budget (`fnd/l9t5` at `f70d3085`) and the coordinator's case rows; byte for byte, `inputs/SOURCES.txt` |
 
+**Round 8's state (4 October 2026, 21:45 CEST): CHECKPOINT, INCOMPLETE, stopped at the session's usage limit.** The recheck V3
+(`checks/astra-check-t5-recheck-cx41.md`, NOT CONFIRMED) found round 7's return calculation sampled and not a maximum; **L8R2-F31
+is OPEN and nothing of round 8 is accepted or checked.** DONE: V3 filed as received; Layer 9's round 3 drafts, output and budget
+copied at `841e6c7e` (the `f70d3085` copies replaced); Amass's XT60 specification 2021V1 filed
+(`v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf`); the two drafts of the dedicated ground return
+(`apply_gen_sch_a_gndrtn.py`, `apply_gen_sch_b_gndrtn.py`: three XT60-F sockets a board, both contacts on GND; they apply, refuse
+twice and refuse the tree, and both boards' generators ran with them on scratch copies); `check_gndret_netlist.py` reads the
+return sockets on both boards; in `l8r2_gndret.py` the header, the inputs, `figures()` and the capacity model are rewritten (every
+vertex of the contact-resistance box enumerated, refused unless it agrees with the monotone argument). A scratch run of that
+model reproduced V3's corner (10.6376 A in a 5 V lead's pin 2 on C-DEV rev 1 at 76.25 C; 12.09 A at -20 C; a ribbon conductor
+2.07 to 2.67 A) and, with three return leads, gave at most 4.93 A in a VH pin 2, 0.635 A in a ribbon conductor and 11.03 A in an
+XT60 contact at the declared upper bound: scratch figures, NOT in a committed output. NOT DONE, and BROKEN AT THIS COMMIT:
+`l8r2_gndret.py`'s `main()` still has round 7's body and does not run, `l8r2_gndret.out` is round 7's, and `test_l8r2`'s round 7
+tests fail on the replaced input copies. NEXT ACTION: assemble `main()` from `wip-round8/` (its `NOTE.md` says how), add
+section 6 (the acceptance from the composed netlists' census) and sections 7 to 9, regenerate the output with `_bin/regen_out.py`,
+rewrite the round 7 tests and add round 8's, restate the page's section 3g on the merged figures, and run `test_l8r2`,
+`test_l8gnd` and `test_public_hygiene`.
+
 **Round 7's state (task T5b, 4 October 2026, 20:00 CEST).** DONE: the stop reproduced; the load basis and the capacity basis
 reconciled; the declaration corrected by a draft (`apply_gen_sch_b_gndret.py`) and the second stop by another
 (`apply_gen_sch_b_fandec.py`); board B's composition runs to its end with Layer 9's I-03 draft in any order; the netlist and

@@ -9,18 +9,20 @@ nothing sets how the supply return divides between them. Over the contact resist
 20 mOhm after test; Wurth IDC: no minimum, 20 mOhm) one lead's pin 2 carries more than its printed 10 A and a ribbon conductor more
 than its printed 1 A (l8r2_gndret.out section 3d, every vertex enumerated).
 
-The correction (the record's section 3g; l8r2_gndret.out sections 3j and 6): a DEDICATED GROUND RETURN between the two boards, two
-leads, each an Amass XT60 pair with BOTH contacts on GND and two 12 AWG conductors of 150 mm: four conductors in parallel whose
+The correction (the record's section 3g; l8r2_gndret.out sections 3j and 6): a DEDICATED GROUND RETURN between the two boards, three
+leads, each an Amass XT60 pair with BOTH contacts on GND and two 12 AWG conductors of 150 mm: six conductors in parallel whose
 resistance, with every termination at its maker's printed limit (1.0 mOhm a contact, Amass XT60 specification 2021V1), is low
 enough that every VH pin 2, every ribbon conductor and every XT60 contact stays inside its printed rating at every vertex of the
-contact-resistance box. What this draft draws on board B:
-  J_GR1, J_GR2  Amass XT60-F, pins 1 and 2 both on GND, beside J_54V. FEMALE on the boards and male on the leads: the pack lead
+contact-resistance box. Two leads hold every row on the printed ratings; the third makes the rows at the inside air hold on the
+least rating consistent with each maker's sheet, where no derating curve is printed, and keeps the printed-rating rows with one
+lead unmated. What this draft draws on board B:
+  J_GR1 to J_GR3  Amass XT60-F, pins 1 and 2 both on GND, beside J_54V. FEMALE on the boards and male on the leads: the pack lead
                 carries an XT60-F for board E's J_BATT (XT60-M), so it cannot be plugged into a ground return socket, and a return
                 lead's XT60-M cannot be plugged into J_BATT. The land is KiCad's Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical
                 (NOT READ on the record's host, which has no KiCad library: the box's generation checks it); no LCSC code is
                 carried (Layer 6 names it).
-  the return's declaration: _gnd_return (this record's apply_gen_sch_b_gndret.py, which must be applied first) names J_GR1 and
-                J_GR2 beside the leads as the places the return leaves the board, so the copper rules solve the ground with the
+  the return's declaration: _gnd_return (this record's apply_gen_sch_b_gndret.py, which must be applied first) names J_GR1 to
+                J_GR3 beside the leads as the places the return leaves the board, so the copper rules solve the ground with the
                 current leaving where it does; the peak, the typical and the loads are unchanged (they are the leads' sums).
 What it does not change: no lead, no ribbon and no load; the VH pin 2 contacts and the ribbons' ground conductors stay (the leads'
 returns stay beside their supplies; the ribbons' signal returns stay as they are).
@@ -37,7 +39,8 @@ import re
 import sys
 
 NAME = "apply_gen_sch_b_gndrtn"
-ADDS = ("J_GR1", "J_GR2")
+N_RETURN = 3
+ADDS = tuple("J_GR%d" % k for k in range(1, N_RETURN + 1))
 NETS = ()
 LAND = "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"
 
@@ -47,20 +50,20 @@ _OLD_AT = 'part("J_54V", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A
 _NEW_AT = _OLD_AT + (
     "# L8R2-F31, RECORD l8r2 ROUND 8 (MESHSAT-1357, 4 October 2026): THE DEDICATED GROUND RETURN TO A22. Boards A and B share one ground\n"
     "# over the VH leads' pin 2 and the ribbons' ground conductors, and nothing set how the supply return divided between them: over\n"
-    "# the contact resistances their makers permit, one lead's pin 2 passed 10 A and a ribbon conductor 1 A. Two return leads, each an\n"
+    "# the contact resistances their makers permit, one lead's pin 2 passed 10 A and a ribbon conductor 1 A. Three return leads, each an\n"
     "# Amass XT60 pair with both contacts on GND and two 12 AWG conductors, carry the return whatever the other contacts do (record\n"
     "# l8r2, l8r2_gndret.out section 6: every vertex of the contact-resistance box). XT60-F here and XT60-M on the leads, so the pack\n"
-    "# lead (an XT60-F, for board E's J_BATT) cannot be plugged into either socket. DRAFTED, not applied.\n"
-    'part("J_GR1", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return 1 to A22 J_GR1 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n'
-    'part("J_GR2", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return 2 to A22 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n')
+    "# lead (an XT60-F, for board E's J_BATT) cannot be plugged into any of the sockets. DRAFTED, not applied.\n"
+    + "".join('part("J_GR%d", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return %d to A22 J_GR%d (lead: XT60-M both ends, '
+              '2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n' % (k, k, k) for k in range(1, N_RETURN + 1)))
 _OLD_SRCS = '    _srcs = list(leads) + ["J_54V"]\n'
-_NEW_SRCS = _OLD_SRCS + ('    _rets = ["J_GR1", "J_GR2"]   # record l8r2 round 8 (L8R2-F31): the dedicated return\'s two sockets, where most of the return '
-                         'leaves this board; they carry no rail, so the leads\' sums below are unchanged\n')
+_NEW_SRCS = _OLD_SRCS + ('    _rets = [%s]   # record l8r2 round 8 (L8R2-F31): the dedicated return\'s sockets, where most of the '
+                         'return leaves this board; they carry no rail, so the leads\' sums below are unchanged\n' % ", ".join('"%s"' % r for r in ADDS))
 _OLD_RAIL = '    _intent.rail("GND", 0.0, _typ, _peak, _srcs, loads=_l,'
 _NEW_RAIL = '    _intent.rail("GND", 0.0, _typ, _peak, _srcs + _rets, loads=_l,'
 _OLD_NOTE = '                  "the lead contacts and the ribbons\' ground conductors by resistance, not lead by lead (record l8r2 round 7)")\n'
 _NEW_NOTE = ('                  "the lead contacts and the ribbons\' ground conductors by resistance, not lead by lead (record l8r2 round 7); "\n'
-             '                  "since round 8 the dedicated return J_GR1 and J_GR2 (two XT60 leads, four 12 AWG conductors) carries most of it")\n')
+             '                  "since round 8 the dedicated return J_GR1 to J_GR3 (three XT60 leads, six 12 AWG conductors) carries most of it")\n')
 EDITS = [(_OLD_FP, _NEW_FP), (_OLD_AT, _NEW_AT), (_OLD_SRCS, _NEW_SRCS), (_OLD_RAIL, _NEW_RAIL), (_OLD_NOTE, _NEW_NOTE)]
 
 

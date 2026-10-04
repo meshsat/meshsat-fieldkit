@@ -4,16 +4,16 @@
 scratch copies (the tests write scratch copies).
 
 The defect and the correction are apply_gen_sch_b_gndrtn.py's: the supply return between boards A and B divided, by nothing but
-contact resistance, over the VH leads' pin 2 contacts and the two ribbons' ground conductors; a dedicated ground return of two
+contact resistance, over the VH leads' pin 2 contacts and the two ribbons' ground conductors; a dedicated ground return of three
 leads (each an Amass XT60 pair with both contacts on GND and two 12 AWG conductors of 150 mm) carries it at every vertex of the
 contact-resistance box (the record's section 3g; l8r2_gndret.out section 6). What this draft draws on board A:
-  J_GR1, J_GR2  Amass XT60-F, pins 1 and 2 both on GND, beside J_54V (the other end of board B's J_GR1 and J_GR2), in their own
+  J_GR1 to J_GR3  Amass XT60-F, pins 1 and 2 both on GND, beside J_54V (the other end of board B's J_GR1 to J_GR3), in their own
                 schematic section. FEMALE on the boards and male on the leads, so the pack lead (an XT60-F, for board E's J_BATT)
                 cannot be plugged into either. The land is KiCad's Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical (NOT READ on
                 the record's host: the box's generation checks it); no LCSC code is carried (Layer 6 names it).
 What it does not change: board A's GND declaration. As generated it is a node, and this record's round 3 draft
 (apply_gen_sch_a_packrtn.py) declares it the pack path's return; intent.rail cannot express a second loop on one net (the 5 V
-returns entering at these sockets and closing at each stage's output), so the copper at J_GR1 and J_GR2 is a layout constraint
+returns entering at these sockets and closing at each stage's output), so the copper at J_GR1 to J_GR3 is a layout constraint
 with its currents in l8r2_gndret.out (finding L8R2-F33), not a declared rail.
 
 Order: board A's round, anywhere (its anchors are the land table, the PoE lead's line and the line that collects the unlisted
@@ -29,7 +29,8 @@ import re
 import sys
 
 NAME = "apply_gen_sch_a_gndrtn"
-ADDS = ("J_GR1", "J_GR2")
+N_RETURN = 3
+ADDS = tuple("J_GR%d" % k for k in range(1, N_RETURN + 1))
 NETS = ()
 LAND = "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"
 
@@ -39,14 +40,14 @@ _OLD_AT = 'vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_P
 _NEW_AT = _OLD_AT + (
     "# L8R2-F31, RECORD l8r2 ROUND 8 (MESHSAT-1357, 4 October 2026): THE DEDICATED GROUND RETURN FROM B16. The grounds of this board and\n"
     "# board B are one net over the VH leads' pin 2 and the ribbons' ground conductors, and nothing set how board B's supply return\n"
-    "# divided between them. Two return leads, each an Amass XT60 pair with both contacts on GND and two 12 AWG conductors, carry it\n"
+    "# divided between them. Three return leads, each an Amass XT60 pair with both contacts on GND and two 12 AWG conductors, carry it\n"
     "# whatever the other contacts do (record l8r2, l8r2_gndret.out section 6). XT60-F here and XT60-M on the leads, so the pack lead\n"
-    "# (an XT60-F, for board E's J_BATT) cannot be plugged into either socket. DRAFTED, not applied.\n"
-    'part("J_GR1", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return 1 from B16 J_GR1 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n'
-    'part("J_GR2", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return 2 from B16 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n')
+    "# (an XT60-F, for board E's J_BATT) cannot be plugged into any of the sockets. DRAFTED, not applied.\n"
+    + "".join('part("J_GR%d", "Connector_Generic", "Conn_01x02", "Amass XT60-F, both contacts GND: ground return %d from B16 J_GR%d (lead: XT60-M both ends, '
+              '2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})\n' % (k, k, k) for k in range(1, N_RETURN + 1)))
 _OLD_SEC = '_listed = {r for _, refs in SECTIONS for r in refs}\n'
-_NEW_SEC = ('SECTIONS.insert(len(SECTIONS) - 1, ("GROUND RETURN FROM B16 (RECORD l8r2 ROUND 8, L8R2-F31): TWO XT60-F, BOTH CONTACTS ON GND", '
-            '["J_GR1", "J_GR2"]))   # its own block, ahead of the test points\n' + _OLD_SEC)
+_NEW_SEC = ('SECTIONS.insert(len(SECTIONS) - 1, ("GROUND RETURN FROM B16 (RECORD l8r2 ROUND 8, L8R2-F31): THREE XT60-F, BOTH CONTACTS ON GND", '
+            '[%s]))   # its own block, ahead of the test points\n' % ", ".join('"%s"' % r for r in ADDS) + _OLD_SEC)
 EDITS = [(_OLD_FP, _NEW_FP), (_OLD_AT, _NEW_AT), (_OLD_SEC, _NEW_SEC)]
 
 

@@ -1,0 +1,153 @@
+        # ---------------------------------------------------------------- 3
+        w("\n3. THE CAPACITY BASIS AS DRAWN\n")
+        nlA = CK.read_netlist(open(P(NET_A), "rb").read()); nlB = CK.read_netlist(open(P(NET_B), "rb").read())
+        gA, gB = CK.ground_conductors(nlA), CK.ground_conductors(nlB)
+        vhA = sorted(r for r, pp in nlA["pins"].items() if r.startswith(("J_5V_", "J_54V")) and pp.get("2") == "GND")
+        vhB = sorted(r for r, pp in nlB["pins"].items() if r.startswith(("J_5V_", "J_54V")) and pp.get("2") == "GND")
+        w("3a. THE GROUND CONDUCTORS BETWEEN BOARDS A AND B, read on both committed netlists (%s, %s):\n" % (NET_A, NET_B))
+        w("      lead contacts, pin 2 on GND: board A %s; board B %s: %s\n" % (", ".join(vhA), ", ".join(vhB), "the same five" if vhA == vhB and len(vhA) == 5 else "DIFFER"))
+        w("      ribbon conductors on GND: J_AB1 pins %s (board A) and %s (board B); J_AB2 pins %s and %s: %d conductors, %s\n"
+          % (",".join(gA["J_AB1"]), ",".join(gB["J_AB1"]), ",".join(gA["J_AB2"]), ",".join(gB["J_AB2"]), len(gB["J_AB1"]) + len(gB["J_AB2"]),
+             "the same on both boards" if gA == gB else "DIFFER"))
+        if not (vhA == vhB and len(vhA) == 5 and gA == gB and len(gB["J_AB1"]) == 9 and len(gB["J_AB2"]) == 8):
+            refuse("the netlists' ground conductors are not the model's (five leads, nine and eight ribbon conductors)")
+        w("      so the two boards' grounds are ONE net joined by five lead contacts and seventeen ribbon conductors in parallel (six leads\n"
+          "      with Layer 9's draft). Nothing makes a lead's pin 2 carry its own rail's current: the return divides by resistance.\n"
+          "      NOT IN THE MODEL (each takes current off the conductors below; none has a held resistance): the shields of the GNSS and\n"
+          "      LoRa pigtails if board A bonds its jacks to GND, and each board's own plane resistance, taken as one node a board.\n")
+        TH, TC = F["t_e5"], F["t_cold"]
+        vh_assume = F["vh_a16"] * min(1.0, math.sqrt((F["vh_tmax"] - TH) / T_RATED_RISE))
+        w("3b. THE MAKERS' PRINTED FIGURES\n")
+        w("      JST VH (%s, catalogue, revision not printed): %.0f A 'when using AWG #16 with the standard type header' (PRINTED); %.0f A\n"
+          "        'when using AWG #18 with the shrouded type header' (PRINTED; the fitted B2P-VH is the standard header, so J_54V's AWG %d lead\n"
+          "        has NO STATED RATING, Layer 5's own INCONCLUSIVE); range to +%.0f C including the rise (PRINTED); contact resistance %.0f mOhm\n"
+          "        maximum initial, %.0f mOhm after test (PRINTED; NO MINIMUM and no typical); conductors %.2f mm2 (AWG 16) and %.2f mm2 (AWG 18)\n"
+          "        (PRINTED). Its note (PRINTED): 'Do not branch in parallel current which exceeds the rated current. If branched in parallel,\n"
+          "        current imbalance or other problems may occur. If it is absolutely necessary to branch such a large current in parallel,\n"
+          "        design the circuits without causing any imbalance and provide extra margin for each circuit.'\n"
+          % (SHEETS["vh"], F["vh_a16"], F["vh_a18"], F["poe_awg"], F["vh_tmax"], F["vh_rc0"], F["vh_rc1"], F["mm2_16"], F["mm2_18"]))
+        w("      Wurth WR-CAB ribbon (%s): rated current %.0f A a conductor at 25 C ambient, 'the current rating may decrease due to the derating\n"
+          "        effect at higher temperatures' with no curve, operating to +%.0f C, 'the operating temperature is comprised of ambient\n"
+          "        temperature and temperature rise of the component' (PRINTED); conductor resistance %.0f Ohm/km maximum, AWG %d (PRINTED).\n"
+          "      Wurth WR-BHD IDC socket (%s): %.0f A a contact, contact resistance %.0f mOhm maximum, NO MINIMUM (PRINTED). Box header: %.0f A at 25 C.\n"
+          % (SHEETS["cab"], F["cab_a"], F["cab_tmax"], F["cab_ohm_km"], F["cab_awg"], SHEETS["sock"], F["sock_a"], F["sock_rc"], F["hdr_a"]))
+        w("      Amass XT60 (the pack connector's make, J_BATT on board E; XT60-F and XT60-M). The held specification V1.2 (%s):\n"
+          "        rated current %.0f A, momentary %.0f A, contact resistance %.2f mOhm (no limit sign), %d AWG, %d uses, %.0f to %.0f C (PRINTED).\n"
+          "        The specification 2021V1 the distributor serves for the same part (%s, filed this round):\n"
+          "        %.0f A MAX with %d AWG at a temperature rise under %.0f C, contact resistance at most %.1f mOhm, service life %d times, the same\n"
+          "        range (PRINTED). Neither prints a contact resistance after test, a minimum or a derating curve. The rows below take the\n"
+          "        LOWER rated current (%.0f A), the HIGHER contact resistance (%.1f mOhm, a printed limit, taken as the contact's maximum over\n"
+          "        its printed life: INFERRED, the sheet does not say so) and the SHORTER life.\n"
+          % (SHEETS["xt_old"], F["xt_a_old"], F["xt_a_mom"], F["xt_r_old"], F["xt_awg"], F["xt_cycles_old"], F["xt_tmin"], F["xt_tmax"], SHEETS["xt_new"],
+             F["xt_a_new"], F["xt_awg"], F["xt_rise"], F["xt_r_new"], F["xt_cycles_new"], min(F["xt_a_old"], F["xt_a_new"]), max(F["xt_r_old"], F["xt_r_new"])))
+        w("      THE COPPER'S TEMPERATURE, both ends: %.2f C, the inside air in E5's dwell (L4-E12, MODELED; %.2f C in E3-O), and %.0f C, the\n"
+          "        envelope's cold end in use (%s ambient_c.in_use.min: the harness at ambient at a cold start). A conductor's largest\n"
+          "        share falls as the copper warms (its own resistance is copper, the others' is mostly contact) and the ground shift rises:\n"
+          "        each maximum is at one end, so both ends are enumerated. The budget's largest states at either end are conservative pairings.\n"
+          % (TH, F["t_e3o"], TC, ENVELOPE))
+        w("      THE RATINGS AT THE INSIDE AIR. No maker here prints a derating curve. Beside each PRINTED rating the rows carry the LEAST\n"
+          "        rating consistent with its sheet at that air (INFERRED): the part may add (range top - air) K, and heating goes as the\n"
+          "        current squared (ASSUMPTION). The ribbon: its %.0f A is printed at 25 C and its range ends at +%.0f C, so its rise at %.0f A is\n"
+          "        at most %.0f K and at %.2f C it carries at least %.4f A. The XT60: %.0f A at a rise under %.0f K and a range to %.0f C give\n"
+          "        %.2f A at %.2f C. The VH: no ambient is printed for its %.0f A; taken at %.0f C (ASSUMPTION) the same rule gives %.3f A (with a\n"
+          "        %.0f K rise at the rating, round 7's ASSUMPTION, %.3f A). At the cold end every printed rating applies as printed.\n"
+          % (F["cab_a"], F["cab_tmax"], F["cab_a"], F["cab_tmax"] - T_RATING_REF, TH, least_rating(F["cab_a"], F["cab_tmax"], TH),
+             F["xt_a_new"], F["xt_rise"], F["xt_tmax"], least_rating(F["xt_a_new"], F["xt_tmax"], TH, F["xt_rise"]), TH,
+             F["vh_a16"], T_RATING_REF, least_rating(F["vh_a16"], F["vh_tmax"], TH), T_RATED_RISE, vh_assume))
+        allow = min(F["l9_shift_allow"], F["v3_shift_allow"])
+        w("      THE GROUND SHIFT LAYER 9'S LDOS ALLOW: record l9t5 (round 3, the copy) prints the LDOs' input %.4f V against the AP2112K's need\n"
+          "        %.3f V with %.4f V of shift taken, and holds 'while the ground shift between the boards stays under %.3f V'; the recheck V3\n"
+          "        adds the regulator's line and load regulation and prints about %.4f V. The rows below are judged at the smaller, %.4f V.\n"
+          % (F["l9_ldo_in"], F["l9_ldo_need"], F["l9_shift_used"], F["l9_shift_allow"], F["v3_shift_allow"], allow))
+
+        def rating(kind, Tx):
+            """(printed A or None, least A consistent with the sheet at air Tx, the part)"""
+            if kind == "VH":
+                return F["vh_a16"], least_rating(F["vh_a16"], F["vh_tmax"], Tx), "a VH pin 2 with AWG 16"
+            if kind == "VH18":
+                return None, None, "J_54V's pin 2 with AWG 18"
+            if kind == "RIB":
+                return F["cab_a"], least_rating(F["cab_a"], F["cab_tmax"], Tx), "a ribbon conductor"
+            pr = min(F["xt_a_old"], F["xt_a_new"])
+            return pr, min(pr, least_rating(F["xt_a_new"], F["xt_tmax"], Tx, F["xt_rise"])), "an XT60 contact and its 12 AWG conductor"
+
+        def verdict(cur, kind, Tx):
+            pr, le, _what = rating(kind, Tx)
+            if pr is None:
+                return "NO RATING PRINTED"
+            if cur <= le + 1e-12:
+                return "HOLDS"
+            return "holds on the printed rating, NOT on the least at this air" if cur <= pr + 1e-12 else "DOES NOT HOLD"
+
+        w("3c. THE CONDUCTORS' RESISTANCE (MODEL: rho %.3g Ohm m at 20 C from dc_drop.py; the JST catalogue's sections; 12 AWG at %.2f mm2\n"
+          "    from the energy chain's pack lead row; %.0f mm leads and the %.0f mm ribbon from ASSEMBLY.md section 4; mOhm a conductor):\n"
+          % (F["rho"], F["mm2_12"], F["lead_mm"], F["ab1_mm"]))
+        cC, cH = conductors(F, TC, True, 2), conductors(F, TH, True, 2)
+        for (n, kind, k, rc_), (_n, _k, _kk, rh_) in zip(cC, cH):
+            lo, hi = box(F)[kind]
+            w("      %-9s %-6s %2s  %7.3f at %.0f C, %7.3f at %.2f C; each of its two contacts 0 to %.1f mOhm%s\n"
+              % ({"J_GR": "J_GR1.."}.get(n, n), {"VH": "AWG%d" % F["slot_awg"], "VH18": "AWG%d" % F["poe_awg"], "RIB": "AWG%d" % F["cab_awg"], "RET": "AWG%d" % F["xt_awg"]}[kind],
+                 "x%d" % k if kind == "RIB" else ("x2 a lead" if kind == "RET" else ""), rc_, TC, rh_, TH, hi,
+                 {"RIB": " (the wire's figure is its maker's maximum)", "RET": " (round 8's dedicated return, section 3j)"}.get(kind, "")))
+        w("      a lead's two contacts may add up to %.0f mOhm after test, sixteen to twenty-three times the lead itself: the division between\n"
+          "      the leads is set by the contacts, which the maker bounds from above only.\n" % (2 * F["vh_rc1"]))
+
+        # the three totals, on the merged figures, with Layer 9's sixth lead
+        totals = [("C-DEV rev 1 (PS-ALLTX, HIGH, the least load voltage) with Layer 9's draft", tot_cdev),
+                  ("the largest state of Layer 9's budget (%s, HIGH, the least load voltage) with Layer 9's draft" % bt[0], tot_big),
+                  ("the declared upper bound (i) with Layer 9's draft", pk_i)]
+        TEMPS = [(TH, "%.2f C" % TH), (TC, "%.0f C" % TC)]
+        w("3d. THE RETURN DIVIDED BY RESISTANCE AS DRAWN, THE WORST CASE FOUND (MODEL; six leads, J_54V at AWG %d, seventeen ribbon conductors,\n"
+          "    no dedicated return). Each conductor's current is largest at a vertex of the box of contact resistances (every contact at 0\n"
+          "    or at its after-test or printed maximum), so EVERY vertex is enumerated for every conductor and the largest kept; the\n"
+          "    enumeration is refused unless it lands on the vertex the monotone argument names (the conductor's own two contacts low,\n"
+          "    every other contact high). A per conductor; the largest ground shift is the vertex with every contact high.\n" % F["poe_awg"])
+        w("      %-30s %-8s %24s %22s %24s %10s %s\n" % ("total", "copper", "a 5 V lead's pin 2", "J_54V's pin 2", "a ribbon conductor", "shift mV", "vertices"))
+        DR = {}
+        for ti, (tag, tot) in enumerate(totals):
+            for Tx, tl in TEMPS:
+                ext, shift, nst, raw = extremes(tot, conductors(F, Tx, True), box(F)); DR[(ti, Tx)] = (ext, shift)
+                w("      %-30s %-8s %8.4f %-15s %8.4f %-13s %8.4f %-15s %10.2f %d states = 4^%d\n"
+                  % ("%.4f A" % tot, tl, ext["VH"][0], verdict(ext["VH"][0], "VH", Tx)[:15], ext["VH18"][0], "no rating", ext["RIB"][0], verdict(ext["RIB"][0], "RIB", Tx)[:15],
+                     shift, nst, round(math.log(raw, 4))))
+        for ti, (tag, tot) in enumerate(totals):
+            w("      %.4f A: %s\n" % (tot, tag))
+        v3_here = DR[(0, TH)][0]["VH"][0]; v3_peak = DR[(2, TH)][0]["VH"][0]
+        w("    THE RECHECK'S CORNER, REPRODUCED: on C-DEV rev 1 at %.2f C, J_5V_IOC's two contacts at 0 with every other VH contact at %.0f mOhm\n"
+          "    and every IDC contact at %.0f mOhm: %.4f A in its pin 2 (V3: %.4f A), over the printed %.0f A; at the declared upper bound %.4f A\n"
+          "    (V3: %.4f A). It is the same vertex for each 5 V lead: they are one make. At %.0f C the same corner reads %.4f A.\n"
+          % (TH, F["vh_rc1"], F["sock_rc"], v3_here, F["v3_ioc"], F["vh_a16"], v3_peak, F["v3_peak_lead"], TC, DR[(0, TC)][0]["VH"][0]))
+        if abs(v3_here - F["v3_ioc"]) > 2e-3 or abs(v3_peak - F["v3_peak_lead"]) > 2e-3:
+            refuse("the enumeration does not reproduce the recheck's corner")
+        drawn_over = sorted({(k, ti) for (ti, Tx), (ext, _s) in DR.items() for k in ("VH", "RIB") if ext[k][0] > rating(k, Tx)[0]})
+        w("    READ: as drawn, over the contact resistances the makers permit, a 5 V lead's pin 2 reaches %.3f A against its printed %.0f A and\n"
+          "    a ribbon conductor %.3f A against its printed %.0f A, on C-DEV rev 1 already (the worse copper end of each): DOES NOT HOLD.\n"
+          % (max(DR[(0, Tx)][0]["VH"][0] for Tx, _l in TEMPS), F["vh_a16"], max(DR[(0, Tx)][0]["RIB"][0] for Tx, _l in TEMPS), F["cab_a"]))
+        w("3e. WHAT ROUND 7'S SAMPLING MISSED (the old state; the recheck's material blocker). Round 7 took six cases (K0 to K5): every contact\n"
+          "    at one value, ONE lead low against peers at the INITIAL maximum, and every IDC contact low together. At %.2f C:\n" % TH)
+        missed = []
+        for ti, (tag, tot) in enumerate(totals):
+            old = sampled_round7(tot, conductors(F, TH, True), F); new = DR[(ti, TH)][0]
+            missed.append((old, new))
+            w("      %.4f A: a 5 V lead's pin 2: sampled %.4f A, the maximum %.4f A; a ribbon conductor: sampled %.4f A, the maximum %.4f A;\n"
+              "        J_54V's pin 2: sampled %.4f A, the maximum %.4f A\n"
+              % (tot, old["VH"], new["VH"][0], old["RIB"], new["RIB"][0], old["VH18"], new["VH18"][0]))
+        w("    The sampled list had no vertex with one lead low against peers at the AFTER-TEST maximum, and none with ONE ribbon conductor low\n"
+          "    against every other contact high (its K4 and K5 put all seventeen low at once, which shares the current among them). The\n"
+          "    'maximum' it printed was not a maximum: round 7's 3d, 3e and 3j and Layer 9's acceptance of J_5V_IOC's pin 2 on it are WITHDRAWN.\n")
+
+        ret_a = least_rating(F["xt_a_new"], F["xt_tmax"], TH, F["xt_rise"])
+        w("3f. THE SUPPLY PINS (pin 1 carries its own rail and nothing else; PRINTED %.0f A with AWG 16; at %.2f C at least %.3f A on the sheet's\n"
+          "    range with the rating taken at %.0f C, ASSUMPTION):\n" % (F["vh_a16"], TH, least_rating(F["vh_a16"], F["vh_tmax"], TH), T_RATING_REF))
+        for n in ("S1", "S2", "S3"):
+            w("      J_5V_%s pin 1: %.3f A on C-DEV rev 1, %.3f A in the largest state, %.3f A at its bounded start; declared peak %.1f A: within the printed rating\n"
+              % (n, rows[n]["least"], bt[6][n]["least"], max(rows[n]["start"], bt[6][n]["start"]), call_of(comp_res, "+5V_%s" % n)["peak"]))
+        w("      J_5V_DEV pin 1: %.4f A on C-DEV rev 1 as committed (I-03, OPEN, Layer 9's); %.4f A with Layer 9's draft, which now declares that\n"
+          "        figure as the lead's peak (its round 3, answering L8R2-F35); the stage's loop can hold up to %.4f A, a fault current, under the\n"
+          "        contact's printed %.0f A\n"
+          "      J_5V_IOC pin 1 (Layer 9's draft): %.4f A on the case, its declared peak; J_54V pin 1: %.2f A peak on AWG %d (no stated rating; %.0f A\n"
+          "        the comparator)\n"
+          % (F["cdev_u7_before"], F["cdev_u7"], F["loop_max"], F["vh_a16"], F["cdev_u601"], poe["peak"], F["poe_awg"], F["vh_a18"]))
+        w("      THE LEAD: AWG %d, %.0f mm; JST's %.0f A is stated for the crimped contact WITH that gauge, so it is the lead's rating too. The wire\n"
+          "      itself (its part, its insulation's temperature class) is named nowhere in the tree: OWED to Layer 7 (finding L8R2-F34).\n"
+          % (F["slot_awg"], F["lead_mm"], F["vh_a16"]))
