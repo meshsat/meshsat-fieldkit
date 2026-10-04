@@ -1,33 +1,42 @@
 #!/usr/bin/env python3
-"""l8r2_gndret.py: Layer 8 record l8r2, round 7 (task T5b, the owner's review of 4 October 2026, RSM-01): board B's ground return, its
-load basis and its current capacity reconciled (MESHSAT-1357). PROTOTYPE DESIGN: nothing in this kit has been built, bought,
-powered or measured, nothing is applied to the tree, and no figure printed here is a measurement.
+"""l8r2_gndret.py: Layer 8 record l8r2, rounds 7 and 8: board B's ground return, its load basis and its current capacity
+reconciled (round 7, task T5b, the owner's review of 4 October 2026, RSM-01), and the return between boards A and B corrected by a
+dedicated ground return and verified over every permitted aged-contact combination (round 8, finding L8R2-F31, after the
+collaborator's recheck V3, checks/astra-check-t5-recheck-cx41.md) (MESHSAT-1357). PROTOTYPE DESIGN: nothing in this kit has been
+built, bought, powered or measured, nothing is applied to the tree, and no figure printed here is a measurement.
 
 It prints, deterministically and without touching the tree:
   0. the inputs, each pinned by sha256;
   1. THE REPRODUCTION: board B's pending drafts applied one by one in L4-E9's change-list order on a scratch copy, first without and
      then with Layer 9's I-03 draft (the copy in inputs/); after each, what the generator hands intent.rail for GND (recorded before
      intent judges it), the sum, the move load by load, and whether the generator runs or stops, in intent's own words;
-  2. THE LOAD BASIS: what _GND_LOADS sums and whether that is the return current (the union of the leads' allocations, what is
-     named twice, what is missing); the three figures the declaration could hold: (i) the sum of the leads' declared peaks, an
-     UPPER BOUND, (ii) the largest state of Layer 9's budget, (iii) what board A's stages can deliver; which one it holds and why;
-  3. THE CAPACITY BASIS: every ground conductor between boards A and B read on both netlists; the makers' printed figures; the
-     division of the return between them by resistance over the contact resistances the makers bound; each conductor against its
-     printed rating at L4-E12's inside air; the supply pins; board B's and board A's ground copper where the leads enter by
-     decision 35's function; Layer 5's contract rows;
+  2. THE LOAD BASIS: what _GND_LOADS sums and whether that is the return current; the three figures the declaration could hold:
+     (i) the sum of the leads' declared peaks, an UPPER BOUND, (ii) the largest state of Layer 9's budget, (iii) what board A's
+     stages can deliver; which one it holds and why;
+  3. THE CAPACITY BASIS AS DRAWN: every ground conductor between boards A and B read on both netlists; the makers' printed figures;
+     the return divided between them by resistance with the WORST CASE FOUND, not sampled: the extreme of each conductor's current
+     over the box of contact resistances the makers permit (zero where no minimum is printed, the after-test maximum) lies at a
+     vertex, so every vertex is enumerated for every conductor, at both ends of the copper's temperature; round 7's six sampled
+     cases beside it and what they missed; the supply pins; the ground copper where the leads enter; Layer 5's rows; the
+     corrections compared;
   4. THE JUDGMENT;
-  5. THE CORRECTION: the two drafts on scratch copies (checked, applied once, refused twice, refused on the tree), the composition
-     in every order with Layer 9's draft and Layer 6's, the regenerated netlist read by check_gndret_netlist.py, and the mutations,
-     each of which must stop the generator or fail the check;
-  6. what Layer 9's author and the independent recheck need: the return each connector carries on C-DEV rev 1;
-  7. findings; 8. the predicates test_l8r2.py holds.
+  5. THE DRAFTS: round 7's two (the declaration, the cooler step-ups' class row) and round 8's two (the dedicated return's sockets
+     on boards A and B) on scratch copies: checked, applied once, refused twice, refused on the tree; both boards composed in
+     L4-E9's change-list order with Layer 9's drafts; the regenerated netlists read by check_gndret_netlist.py; the mutations,
+     each of which must stop the generator or fail a check;
+  6. THE ACCEPTANCE WITH THE DEDICATED RETURN (the recheck's closure criterion): on C-DEV rev 1, on the largest state of Layer 9's
+     budget and on the declared upper bound, every VH pin 2, every ribbon conductor, the PoE lead and every conductor and contact
+     of the dedicated return at its maximum over every vertex, its own terminations at their limit included, against the rating
+     its maker prints, at L4-E12's inside air and at the envelope's cold end; the ground shift against Layer 9's LDO headroom;
+  7. what Layer 9's author and the independent check need; 8. findings; 9. the predicates test_l8r2.py holds.
 Labels: PRINTED a maker's limit in a held sheet; TYPICAL a maker's typical figure; DECLARED a generator's or a record's declaration;
-MODEL this record's arithmetic on labelled inputs; ASSUMPTION a figure no held document gives; BOUND a limit computed on the
-makers' printed extremes, named as such and never taken as the circuit's behaviour.
+MODEL this record's arithmetic on labelled inputs; INFERRED derived from printed figures under a stated assumption; ASSUMPTION a
+figure no held document gives; BOUND a limit computed on the makers' printed extremes, never taken as the circuit's behaviour.
 Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_gndret.py  (l8r2_gndret.out is its output, regenerated with
-_bin/regen_out.py). Stdlib, PyYAML and pdftotext; a few seconds."""
+_bin/regen_out.py). Stdlib, PyYAML and pdftotext; about twenty seconds."""
 import ast
 import hashlib
+import itertools
 import json
 import math
 import os
@@ -52,14 +61,20 @@ import track_current as TC  # noqa: E402  (decision 35's function)
 import yaml  # noqa: E402
 
 GEN_B = "v2/ecad/tools/gen_sch_b.py"
+GEN = {"a": "v2/ecad/tools/gen_sch_a.py", "b": "v2/ecad/tools/gen_sch_b.py"}
+PROJECT = {"a": "pcb-a-power", "b": "pcb-b-compute"}
 NET_A = "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net"
 NET_B = "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net"
 INT_B = "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json"
 L4E9_PAGE = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"
-BUDGET = "v2/docs/records/l9pwr/l9pwr_budget.out"
-BUDGET_L9T5 = "v2/docs/records/l8r2/inputs/l9pwr_budget-f70d3085.txt"
-L9T5_OUT = "v2/docs/records/l8r2/inputs/l9t5_drafts-f70d3085.txt"
-L9T5_DRAFT = "v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_b_iocbuck-f70d3085.py"
+BUDGET = "v2/docs/records/l8r2/inputs/l9pwr_budget-841e6c7e.txt"      # Layer 9's budget at fnd/l9t5's tip: the ONE budget read since round 8
+L9T5_OUT = "v2/docs/records/l8r2/inputs/l9t5_drafts-841e6c7e.txt"
+L9T5_DRAFT = "v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_b_iocbuck-841e6c7e.py"
+L9T5_DRAFT_A = "v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py"
+V3 = "v2/docs/records/l8r2/checks/astra-check-t5-recheck-cx41.md"
+ENVELOPE = "v2/ecad/tools/pcb_envelope.yaml"
+CHAIN = "v2/ecad/tools/pcb_energy_chain.yaml"
+MAINPB = "v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py"
 CASES = "v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-04-rev3.md"
 L4E12_OUT = "v2/docs/records/l4e12/l4e12_thermal.out"
 L9STK_PAGE = "v2/docs/records/l9stk/L9-STACKUPS.md"
@@ -69,15 +84,24 @@ DC_DROP = "v2/ecad/tools/dc_drop.py"
 GEN_A = "v2/ecad/tools/gen_sch_a.py"
 PACKRTN = "v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py"
 SHEETS = {"vh": "v2/vendor/connectors/jst-vh-catalogue.pdf", "cab": "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf",
+          "xt_old": "v2/vendor/battery/amass-xt60-spec-tme.pdf", "xt_new": "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf",
           "sock": "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf", "hdr": "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf"}
-MINE = {"gndret": "v2/docs/records/l8r2/apply_gen_sch_b_gndret.py", "fandec": "v2/docs/records/l8r2/apply_gen_sch_b_fandec.py"}
+MINE = {"gndret": "v2/docs/records/l8r2/apply_gen_sch_b_gndret.py", "fandec": "v2/docs/records/l8r2/apply_gen_sch_b_fandec.py",
+        "gndrtn": "v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py"}
+MINE_A = {"gndrtn_a": "v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py"}
+# board A's round in L4-E9's change-list order (records l8r2 rounds 1 to 6 and l9t5 compose it so): the power drafts, record l8gnd's
+# two, this record's five, record l8p's ptc, L4-E11's dd7, then Layer 9's draft; d8dec31's mainpb LAST; Layer 6's table after it
+ROUND_A = [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
+           ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("l8r2", "packrtn"), ("l8r2", "slotlm"),
+           ("l8r2", "fb01"), ("l8p", "ptc"), ("l4e11", "dd7")]
+L6_A = "v2/docs/records/l6r2/apply_gen_sch_a_lcsc.py"
 DRAFT = {"gnd002": "v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py", "fans12": "v2/docs/records/l8r2/apply_gen_sch_b_fans12.py",
          "panel5v": "v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py", "ph4": "v2/docs/records/l8r2/apply_gen_sch_b_ph4.py",
          "rt500": "v2/docs/records/l8r2/apply_gen_sch_b_rt500.py", "iocbuck": L9T5_DRAFT,
          "xal_land": "v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py", "lcsc": "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py",
          "intent": "v2/docs/records/l6r2/apply_gen_sch_b_intent.py", **MINE}
 L6_HELP = ["v2/docs/records/l6r2/l6r2_apply.py", "v2/docs/records/l6r2/l6r2_land.py", "v2/docs/records/l6r2/l6r2_intent.py"]
-ENGINE = ["v2/ecad/tools/kisch.py", "v2/ecad/tools/intent.py", "v2/ecad/tools/idc_pads.py", "v2/ecad/tools/track_current.py", DC_DROP,
+ENGINE = ["v2/ecad/tools/kisch.py", "v2/ecad/tools/intent.py", "v2/ecad/tools/idc_pads.py", "v2/ecad/tools/track_current.py", DC_DROP, ENVELOPE, CHAIN,
           "v2/docs/records/l8p/gen_netlist.py", "v2/docs/records/l8r2/check_l8r2_netlist.py", "v2/docs/records/l8r2/check_gndret_netlist.py",
           "v2/docs/records/l8gnd/check_gnd002_netlist.py",
           "v2/docs/records/l8r2/l8r2_drafts.py"]
@@ -89,12 +113,9 @@ L6 = ["xal_land", "lcsc", "intent"]
 # the session's choices (authority: SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 T_RATED_RISE = 30.0     # K, ASSUMPTION: the temperature rise at the rated current that JST's 10 A stands for; the held catalogue prints none
 CU_ALPHA = 0.00393      # 1/K, ASSUMPTION (ideal copper, as records cx1 and l4e11 take it; no held source)
-IOC_AWG = 16            # ASSUMPTION: record l9t5's draft names no gauge for J_5V_IOC's lead; taken as the four 5 V leads'
 AB2_MM = None           # J_AB2's ribbon length is TBD in its contract (IF-AB-WALL); taken as J_AB1's, ASSUMPTION
-RIB_DERATE = 0.5        # ASSUMPTION: the share of its 25 C rating a ribbon conductor is held to in section 3j's acceptance figure, for the
-                        # derating at the inside air that its maker states and does not print
-BALLAST_MOHM = 1000.0   # section 3j's illustration of approach A2: 1 Ohm in series with each ribbon ground conductor
-
+RET_LEAD_MM = None      # the dedicated return's lead length: taken as the 5 V leads' (ASSEMBLY.md section 4), ASSUMPTION until Layer 7 routes it
+T_RATING_REF = 25.0     # C: the ambient a current rating is taken to be stated at where its sheet prints none (the ribbon's sheet prints 25 C)
 
 def rel(p):
     return os.path.relpath(p, ROOT)
@@ -197,11 +218,52 @@ def figures():
     o = text(L9T5_OUT)
     F["cdev_u7"] = float(need(o, r"\(1\) U7, the device rail, on the case: ([\d.]+) A \(MODEL", "record l9t5's U7 on the case").group(1))
     F["cdev_u7_before"] = float(need(o, r"\(before: ([\d.]+) A,", "record l9t5's U7 before").group(1))
-    F["cdev_u601"] = float(need(o, r"\(2\) U601 on the case: ([\d.]+) A \(MODEL", "record l9t5's U601 on the case").group(1))
+    m = need(o, r"constant power, [\d.]+ W: ([\d.]+) A at U7's [\d.]+ V \(what leaves U7\) and ([\d.]+) A at U601's own least load voltage", "record l9t5's U601 on the case")
+    F["cdev_u601_at_u7"], F["cdev_u601"] = float(m.group(1)), float(m.group(2))
     F["l9_loop_max"] = float(need(o, r"the loop's highest ([\d.]+) A stays under J_5V_DEV's VH 10 A", "record l9t5's loop maximum").group(1))
-    m = need(o, r"high-side limit [\d.]+ / [\d.]+ / ([\d.]+) A, low-side [\d.]+ / [\d.]+ / ([\d.]+) A \(PRINTED\)", "record l9t5's U601 limits")
+    m = need(o, r"high-side limit [\d.]+ / [\d.]+ / ([\d.]+) A, low-side\s+[\d.]+ / [\d.]+ / ([\d.]+) A \(PRINTED\)", "record l9t5's U601 limits")
     F["u601_hs"], F["u601_ls"] = float(m.group(1)), float(m.group(2))
     F["u601_out"] = float(need(o, r"the output at most about \([\d.]+ \+ [\d.]+\) / 2 = ([\d.]+) A", "record l9t5's U601 output bound").group(1))
+    m = need(o, r"less the ground shift between the boards.*?: ([\d.]+) V, MODEL on PRINTED maxima\): ([\d.]+) V against the AP2112K-3\.3's need ([\d.]+) V",
+             "record l9t5's LDO input chain", re.S)
+    F["l9_shift_used"], F["l9_ldo_in"], F["l9_ldo_need"] = float(m.group(1)), float(m.group(2)), float(m.group(3))
+    F["l9_shift_allow"] = float(need(o, r"the input holds while the ground shift between the boards stays under ([\d.]+) V", "record l9t5's ground shift allowance").group(1))
+    # the collaborator's recheck V3, as filed: its corner, its total and its allowance (an AI review; each is reproduced or bettered here)
+    v = text(V3)
+    F["v3_total"] = float(need(v, r"the updated total return is ([\d.]+) A", "V3's total").group(1))
+    F["v3_ioc"] = float(need(v, r"J_5V_IOC return is ([\d.]+) A", "V3's corner").group(1))
+    F["v3_peak_lead"] = float(need(v, r"the omitted asymmetric-aged lead carries ([\d.]+) A", "V3's corner at the declared peak").group(1))
+    F["v3_shift_allow"] = float(need(v, r"The corresponding ground-shift allowance is about ([\d.]+) V", "V3's ground shift allowance").group(1))
+    need(v, r"T5 RECHECK: NOT CONFIRMED", "V3's verdict")
+    # Amass XT60: the held V1.2 sheet (the pack connector's) and the 2021V1 sheet the distributor serves for the same part
+    x = pdf("xt_old")
+    cr = set(re.findall(r"XT60-[FM]\s+\u63a5\u89e6\u7535\u963b\s+([\d.]+)m", x)); rc = set(re.findall(r"\u989d\u5b9a\u7535\u6d41\s+(\d+)A", x))
+    mc = set(re.findall(r"\u77ac\u65f6\u7535\u6d41\s+(\d+)A", x)); ut = set(re.findall(r"(\d+) TIMES", x)); aw = set(re.findall(r"\s(\d+)AWG", x))
+    tr = set(re.findall(r"-(\d+)\S+ to (\d+)", x))
+    if not all(len(s) == 1 for s in (cr, rc, mc, ut, aw, tr)) or len(re.findall(r"XT60-[FM]\s+\u63a5\u89e6\u7535\u963b", x)) != 2:
+        refuse("the held Amass XT60 sheet (V1.2) no longer reads as one set of figures on its two pages")
+    F["xt_r_old"], F["xt_a_old"], F["xt_a_mom"], F["xt_cycles_old"], F["xt_awg"] = float(cr.pop()), float(rc.pop()), float(mc.pop()), int(ut.pop()), int(aw.pop())
+    lo, hi = tr.pop(); F["xt_tmin"], F["xt_tmax"] = -float(lo), float(hi)
+    x = pdf("xt_new")
+    need(x, r"2021V1", "the Amass XT60 sheet's version 2021V1")
+    m = need(x, r"\u989d\u5b9a\u7535\u6d41\s+(\d+)A MAX\S(\d+)AWG/\S\S(\d+)", "the 2021V1 rated current row")
+    F["xt_a_new"], awg_new, F["xt_rise"] = float(m.group(1)), int(m.group(2)), float(m.group(3))
+    F["xt_r_new"] = float(need(x, r"\u63a5\u89e6\u7535\u963b\s+\u2264([\d.]+)m", "the 2021V1 contact resistance limit").group(1))
+    F["xt_cycles_new"] = int(need(x, r"\u4f7f\u7528\u5bff\u547d\s+(\d+) ", "the 2021V1 service life").group(1))
+    m = need(x, r"\u5de5\u4f5c\u6e29\u5ea6\s+-(\d+)\S+ to (\d+)", "the 2021V1 operating temperature")
+    if awg_new != F["xt_awg"] or (-float(m.group(1)), float(m.group(2))) != (F["xt_tmin"], F["xt_tmax"]) or not ("XT60-F" in x and "XT60-M" in x):
+        refuse("the two Amass XT60 sheets no longer agree on the wire gauge and the temperature range, or 2021V1 no longer names both halves")
+    # the pack lead's conductor as the energy chain declares it: the same 12 AWG the return leads use
+    ch = yaml.safe_load(text(CHAIN))
+    stages = ch if isinstance(ch, list) else next(v for v in ch.values() if isinstance(v, list) and v and isinstance(v[0], dict) and "id" in v[0])
+    pl = [s for s in stages if s.get("id") == "PACK_LEAD"]
+    if len(pl) != 1:
+        refuse("pcb_energy_chain.yaml no longer carries one PACK_LEAD stage")
+    m = need(str(pl[0]["conductor"]["what"]), r"^12 AWG \(([\d.]+) mm2\)", "the pack lead's 12 AWG section")
+    F["mm2_12"], F["awg12_a"] = float(m.group(1)), float(pl[0]["conductor"]["rating_a"])
+    # the envelope's cold end (ambient in use)
+    env = yaml.safe_load(text(ENVELOPE))
+    F["t_cold"] = float(env["ambient_c"]["in_use"]["min"])
     # the case rows
     c = text(CASES)
     need(c, r"^## C-DEV rev 1\n.*?the device rail U7 at the least load voltage: 7\.472 A demanded \(4\.9019 V", "C-DEV rev 1", re.M | re.S)
@@ -318,65 +380,124 @@ def r_ribbon(mm, T, F):
     return F["cab_ohm_km"] * (mm / 1000.0) * (1 + CU_ALPHA * (T - 20.0))                          # mOhm (Ohm/km x m = mOhm), the maker's maximum at 20 C
 
 
-def conductors(F, T, ioc, strap=None, ballast=0.0):
-    """[(name, kind, n conductors, wire mOhm each)]: the ground conductors between boards A and B (section 3a's census). strap: an
-    added return of that end-to-end resistance (mOhm, its joints inside it); ballast: mOhm added in series with every ribbon ground
-    conductor (section 3j's two circuit corrections)."""
+def conductors(F, T, ioc, n_ret=0, poe_awg=None, vh_ground=True):
+    """[(name, kind, n conductors, wire mOhm each)]: the ground conductors between boards A and B. ioc: Layer 9's sixth lead;
+    n_ret: the dedicated return's conductors (two a lead: an XT60 contact, a 12 AWG conductor, an XT60 contact); poe_awg: the PoE
+    lead's gauge (18 as drawn); vh_ground False takes the leads' pin 2 off the return (section 3j's third approach)."""
     mm2 = {16: F["mm2_16"], 18: F["mm2_18"]}
-    c = [("J_5V_S%d" % s, "VH", 1, r_wire(mm2[F["slot_awg"]], F["lead_mm"], T, F)) for s in (1, 2, 3)]
-    c.append(("J_5V_DEV", "VH", 1, r_wire(mm2[F["dev_awg"]], F["lead_mm"], T, F)))
-    if ioc:
-        c.append(("J_5V_IOC", "VH", 1, r_wire(mm2[IOC_AWG], F["lead_mm"], T, F)))
-    c.append(("J_54V", "VH18", 1, r_wire(mm2[F["poe_awg"]], F["lead_mm"], T, F)))
-    c.append(("J_AB1", "RIB", 9, r_ribbon(F["ab1_mm"], T, F) + ballast))
-    c.append(("J_AB2", "RIB", 8, r_ribbon(F["ab1_mm"] if AB2_MM is None else AB2_MM, T, F) + ballast))
-    if strap is not None:
-        c.append(("STRAP", "STRAP", 1, strap))
+    c = []
+    if vh_ground:
+        c = [("J_5V_S%d" % s, "VH", 1, r_wire(mm2[F["slot_awg"]], F["lead_mm"], T, F)) for s in (1, 2, 3)]
+        c.append(("J_5V_DEV", "VH", 1, r_wire(mm2[F["dev_awg"]], F["lead_mm"], T, F)))
+        if ioc:
+            c.append(("J_5V_IOC", "VH", 1, r_wire(mm2[F["dev_awg"]], F["lead_mm"], T, F)))
+        awg = F["poe_awg"] if poe_awg is None else poe_awg
+        c.append(("J_54V", "VH" if awg == 16 else "VH18", 1, r_wire(mm2[awg], F["lead_mm"], T, F)))
+    c.append(("J_AB1", "RIB", 9, r_ribbon(F["ab1_mm"], T, F)))
+    c.append(("J_AB2", "RIB", 8, r_ribbon(F["ab1_mm"] if AB2_MM is None else AB2_MM, T, F)))
+    if n_ret:
+        c.append(("J_GR", "RET", n_ret, r_wire(F["mm2_12"], F["lead_mm"] if RET_LEAD_MM is None else RET_LEAD_MM, T, F)))
     return c
 
 
-def split(total, conds, rc):
-    """the return divided by conductance: {name: amps per conductor}, and the return's own drop in mV. rc(name, kind) is the contact
-    resistance at EACH end of that conductor, mOhm."""
-    g = {n: k / (w + 2.0 * rc(n, kind)) for n, kind, k, w in conds}
-    G = sum(g.values())
-    return {n: total * g[n] / G / k for n, _kind, k, _w in conds}, total / G
+def box(F, ret_hi=None, ballast=0.0):
+    """{kind: (lo, hi)}: the contact resistance at EACH end of a conductor, mOhm. lo is the printed minimum where one is printed and
+    zero where none is (none is, for any of these parts); hi is the after-test maximum (JST VH), the printed maximum (Wurth IDC) or
+    the printed limit (Amass XT60, 2021V1, which prints no separate after-test figure; ret_hi overrides it to find how far a
+    termination may age past it). ballast adds a series resistance to each ribbon conductor (half at each end, both lo and hi)."""
+    return {"VH": (0.0, F["vh_rc1"]), "VH18": (0.0, F["vh_rc1"]), "RIB": (ballast / 2.0, F["sock_rc"] + ballast / 2.0),
+            "RET": (0.0, F["xt_r_new"] if ret_hi is None else ret_hi)}
 
 
-def cases(F):
-    """[(tag, label, rc)]: K0 to K2 put every contact of a kind at ONE value (EQUAL); K3 to K5 put the makers' printed maxima beside
-    zero, which no sheet excludes because none prints a minimum (EXTREMES, BOUNDS). A strap's joints are inside its own figure."""
+def classes_of(conds, bx):
+    """conductors with one wire resistance and one box are interchangeable: [(names, kind, m, [g both lo, g one of each, g both hi])]"""
+    cl = {}
+    for n, kind, k, wres in conds:
+        lo, hi = bx[kind]
+        key = (kind if kind != "VH18" else "VH18", round(wres, 12), lo, hi)
+        if key not in cl:
+            cl[key] = dict(names=[], kind=kind, m=0, w=wres, g=[1.0 / (wres + 2 * lo), 1.0 / (wres + lo + hi), 1.0 / (wres + 2 * hi)])
+        cl[key]["names"].append(n); cl[key]["m"] += k
+    return list(cl.values())
+
+
+def enumerate_vertices(total, C):
+    """EVERY vertex of the contact-resistance box: each conductor has two contacts, each at its low or its high end. Conductors of a
+    class are interchangeable, so a vertex is, per class, how many conductors have both contacts low (a) and how many one of each
+    (b). For every such state the return's conductance and each class's largest conductor current are computed; returned per class:
+    (the maximum over every vertex, the state it occurs at), then the largest ground shift (mV), the states visited and the raw
+    vertices they stand for (4 to the power of the conductors)."""
+    states = [[(a, b) for a in range(c["m"] + 1) for b in range(c["m"] + 1 - a)] for c in C]
+    best = [(0.0, None)] * len(C); gmin = None; n = 0
+    for st in itertools.product(*states):
+        G = 0.0; top = []
+        for (a, b), c in zip(st, C):
+            g = c["g"]
+            G += a * g[0] + b * g[1] + (c["m"] - a - b) * g[2]
+            top.append(g[0] if a else (g[1] if b else g[2]))
+        n += 1
+        if gmin is None or G < gmin:
+            gmin = G
+        for i, g in enumerate(top):
+            cur = total * g / G
+            if cur > best[i][0]:
+                best[i] = (cur, st)
+    return best, total / gmin, n, 4 ** sum(c["m"] for c in C)
+
+
+def analytic(total, C):
+    """the same maxima from the monotone argument: a conductor's current rises as its own contacts fall and as every other contact
+    rises, so its extreme is the vertex with its own two contacts low and every other contact high; the shift's is every contact high"""
+    out = []
+    for i, c in enumerate(C):
+        G = sum((cc["m"] - (1 if j == i else 0)) * cc["g"][2] for j, cc in enumerate(C)) + c["g"][0]
+        out.append(total * c["g"][0] / G)
+    return out, total / sum(cc["m"] * cc["g"][2] for cc in C)
+
+
+def extremes(total, conds, bx):
+    """{kind: (maximum per conductor A, names)}, the largest ground shift mV, the states and the raw vertices: enumerated, and refused
+    unless the enumeration agrees with the monotone argument and occurs at the vertex it names"""
+    C = classes_of(conds, bx)
+    best, shift, n, raw = enumerate_vertices(total, C)
+    an, shift_a = analytic(total, C)
+    for i, c in enumerate(C):
+        want = tuple((1, 0) if j == i else (0, 0) for j in range(len(C)))
+        if abs(best[i][0] - an[i]) > 1e-9 * max(1.0, an[i]) or (best[i][1] != want and c["g"][0] != c["g"][2]):
+            refuse("the enumerated maximum of %s (%.6f A at %s) is not the monotone argument's vertex (%.6f A)" % (c["names"], best[i][0], best[i][1], an[i]))
+    if abs(shift - shift_a) > 1e-9:
+        refuse("the enumerated ground shift is not the all-high vertex's")
+    out = {}
+    for c, (cur, _st) in zip(C, best):
+        k = c["kind"]
+        if k in out:
+            out[k] = (max(out[k][0], cur), out[k][1] + c["names"])
+        else:
+            out[k] = (cur, list(c["names"]))
+    return out, shift, n, raw
+
+
+def sampled_round7(total, conds, F):
+    """round 7's six sampled cases (K0 to K5), kept as the old state the regression holds: {kind: the largest it found}"""
     v0, v1, i1 = F["vh_rc0"], F["vh_rc1"], F["sock_rc"]
 
     def mk(vh_r, idc_r, zero=None):
-        return lambda n, k: 0.0 if (k == "STRAP" or n == zero) else (vh_r if k in ("VH", "VH18") else idc_r)
-    return [
-        ("K0 every contact 0 mOhm (the leads and conductors alone)", "MODEL", mk(0.0, 0.0)),
-        ("K1 every contact at its printed initial maximum (VH %.0f, IDC %.0f mOhm)" % (v0, i1), "MODEL on PRINTED maxima", mk(v0, i1)),
-        ("K2 VH at the printed after-test maximum %.0f mOhm, IDC %.0f mOhm" % (v1, i1), "MODEL on PRINTED maxima", mk(v1, i1)),
-        ("K3 one 5 V lead's two contacts at 0, every other contact at its initial maximum", "BOUND", mk(v0, i1, zero="J_5V_DEV")),
-        ("K4 every IDC contact 0, every VH contact at its initial maximum", "BOUND", mk(v0, 0.0)),
-        ("K5 every IDC contact 0, every VH contact at its after-test maximum", "BOUND", mk(v1, 0.0)),
-    ]
-
-
-def survey(F, T, totals, strap=None, ballast=0.0):
-    """{(total index, case index): dict(vh_min, vh_max, j54, rib, rib_sum, drop, strap)} over every total and contact case at air T"""
+        return lambda n, k: 0.0 if n == zero else (vh_r if k in ("VH", "VH18") else idc_r)
     out = {}
-    for ti, (_tag, tot, ioc) in enumerate(totals):
-        conds = conductors(F, T, ioc, strap, ballast)
-        for ci, (_ctag, _lab, rc) in enumerate(cases(F)):
-            amps, drop = split(tot, conds, rc)
-            vh = [amps[n] for n, kind, _k, _w in conds if kind == "VH"]
-            out[(ti, ci)] = dict(vh_min=min(vh), vh_max=max(vh), j54=amps["J_54V"], rib=max(amps["J_AB1"], amps["J_AB2"]),
-                                 rib_sum=9 * amps["J_AB1"] + 8 * amps["J_AB2"], drop=drop, strap=amps.get("STRAP", 0.0), total=tot)
+    for rc in (mk(0.0, 0.0), mk(v0, i1), mk(v1, i1), mk(v0, i1, zero="J_5V_DEV"), mk(v0, 0.0), mk(v1, 0.0)):
+        g = {n: k / (wres + 2.0 * rc(n, kind)) for n, kind, k, wres in conds}
+        G = sum(g.values())
+        for n, kind, k, _w in conds:
+            out[kind] = max(out.get(kind, 0.0), total * g[n] / G / k)
     return out
 
 
-def hot_rating(F, T):
-    """the VH contact's current at air T: its range's top less T is the rise it may add; the rise at the rated current is not printed"""
-    room = F["vh_tmax"] - T
-    return F["vh_a16"] * min(1.0, math.sqrt(room / T_RATED_RISE)), room
+def least_rating(printed, t_max, T, rise_at_rating=None):
+    """the least current rating consistent with a sheet at air T: the part may add (t_max - T) K before its range's top; if its rise at
+    the printed rating is rise_at_rating K (printed for the XT60; otherwise the whole span from T_RATING_REF to the range's top, the
+    most severe reading the sheet allows) the rating falls with the square root of the rise left (heating as the current squared)"""
+    span = (t_max - T_RATING_REF) if rise_at_rating is None else rise_at_rating
+    return printed * min(1.0, math.sqrt(max(0.0, t_max - T) / span))
 
 
 def bisect(f, lo, hi, n=60):

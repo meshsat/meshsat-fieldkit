@@ -1,0 +1,62 @@
+        w("2c. the three figures the declaration could hold (A; composed through rt500, with Layer 9's draft in brackets):\n")
+        pk_c = sum(c["peak"] for c in arr_c) + poe["peak"]; pk_i = sum(c["peak"] for c in arr_i) + poe["peak"]
+        ty_c = sum(c["typ"] for c in arr_c) + poe["typ"]; ty_i = sum(c["typ"] for c in arr_i) + poe["typ"]
+        pk_0 = sum(c["peak"] for c in base_res["calls"] if isinstance(c["source"], str) and c["source"].startswith("J_5V")) + poe["peak"]
+        pk5_c, pk5_i = pk_c - poe["peak"], pk_i - poe["peak"]          # the 5 V leads alone, for a like-for-like reading against the budget
+        w("    (i) THE SUM OF THE LEADS' DECLARED PEAKS, an UPPER BOUND (every lead at its own peak at once): %.4f A (%.4f A) with the PoE\n"
+          "        lead's %.2f A; %.2f A on the committed generator. The typicals sum to %.2f A (%.2f A). DECLARED.\n"
+          % (pk_c, pk_i, poe["peak"], pk_0, ty_c, ty_i))
+        bud = budget(BUDGET)
+        w("    (ii) LAYER 9'S BUDGET (the copy of fnd/l9t5 at 841e6c7e, its rounds 4 to 6: PS-ALLTX with the standby card off; the ONE budget\n"
+          "         this record reads since round 8): the four 5.1 V stages' output summed per state, before Layer 9's draft moves the\n"
+          "         supervisors (MODEL, record l9pwr section 5b; the PoE stage is off in every state of that budget):\n")
+        w("         %-28s %8s %8s %12s %14s %16s\n" % ("state", "PLAN", "HIGH", "HIGH least V", "+ one start", "+ every start"))
+        bt = None
+        for st, rows_ in bud.items():
+            plan = sum(r["plan"] for r in rows_.values()); high = sum(r["high"] for r in rows_.values()); least = sum(r["least"] for r in rows_.values())
+            adds = sorted((r["start"] - r["least"] for r in rows_.values() if r["start"] is not None), reverse=True)
+            one = least + (adds[0] if adds else 0.0); allst = least + sum(adds)
+            w("         %-28s %8.3f %8.3f %12.3f %14.3f %16.3f\n" % (st, plan, high, least, one, allst))
+            if bt is None or least > bt[1]:
+                bt = (st, least, high, plan, one, allst, rows_)
+        rows = bud["PS-ALLTX"]                   # C-DEV rev 1's state: PS-ALLTX at HIGH at the least load voltage
+        if abs(rows["DEV"]["least"] - F["cdev_u7_before"]) > 6e-4:
+            refuse("the budget's PS-ALLTX device rail (%.3f A) is not record l9t5's figure before its draft (%.4f A)" % (rows["DEV"]["least"], F["cdev_u7_before"]))
+        d_ioc = F["cdev_u601"] - F["cdev_u601_at_u7"]          # what the move adds to a state's total: U601's rail at its own least voltage
+        tot_cdev = rows["S1"]["least"] + rows["S2"]["least"] + rows["S3"]["least"] + F["cdev_u7"] + F["cdev_u601"]
+        tot_big = bt[1] + d_ioc; tot_big_starts = bt[5] + d_ioc
+        w("         the largest state: %s, %.3f A at HIGH at the least load voltage (%.3f A at 5.1 V, %.3f A at PLAN); with one cooler's\n"
+          "         bounded start %.3f A, with every running slot's at once %.3f A (the starts are 100 us averages, record l8r2 round 6)\n"
+          % (bt[0], bt[1], bt[2], bt[3], bt[4], bt[5]))
+        w("         WITH LAYER 9'S DRAFT COMPOSED (record l9t5 round 3, MODEL): the supervisors' %.4f A leaves U7 and U601 carries %.4f A at its\n"
+          "         own least load voltage, %+.4f A on a state's total: the largest state %.4f A (%.4f A with every start); on C-DEV rev 1\n"
+          "         (PS-ALLTX, HIGH, the least load voltage) U7 %.4f A and U601 %.4f A, total %.4f A (the recheck V3 prints %.6f A from the\n"
+          "         budget's unrounded figures)\n"
+          % (F["cdev_u601_at_u7"], F["cdev_u601"], d_ioc, tot_big, tot_big_starts, F["cdev_u7"], F["cdev_u601"], tot_cdev, F["v3_total"]))
+        if abs(tot_cdev - F["v3_total"]) > 2e-3:
+            refuse("C-DEV rev 1's total (%.4f A) is not the recheck's (%.6f A)" % (tot_cdev, F["v3_total"]))
+        n_lm = 4
+        src_c = n_lm * F["loop_max"]; src_i = src_c + F["u601_out"]
+        w("    (iii) WHAT THE SOURCES CAN DELIVER (a fault bound): each LM5176 5.1 V stage's average loop limits between %.4f and %.4f A (VSNS\n"
+          "         %.0f to %.0f mV PRINTED, SNVSAI1D, over the 6 mOhm shunt at 1 %%, DECLARED; record l9t5 prints %.4f A); with this record's\n"
+          "         slotlm draft all four leads are such stages: %d x %.3f = %.2f A (with Layer 9's U601 at its output bound %.2f A: %.2f A).\n"
+          "         One stage in its limit with the others at the largest state: %.3f A.\n"
+          % (F["loop_min"], F["loop_max"], R6.V["vsns"][0] * 1e3, R6.V["vsns"][2] * 1e3, F["l9_loop_max"], n_lm, F["loop_max"], src_c, F["u601_out"], src_i,
+             bt[1] - max(r["least"] for r in bt[6].values()) + F["loop_max"]))
+        dev_big = bt[6]["DEV"]["least"]
+        w("    WHICH ONE THE DECLARATION HOLDS, AND WHY: the peak holds (i), named an upper bound in its note; the typical holds the sum of the\n"
+          "    leads' typicals; the loads stay the union of the leads' allocations, with the PoE return added.\n"
+          "      - (i) is the only figure that is true by construction: the return cannot carry more than its leads are declared to carry,\n"
+          "        and those declarations are Layer 5's contract at both ends of each lead. Derived in the generator, it follows a lead\n"
+          "        that is declared again; typed, it went stale on 28 September (S-98) and again with fans12.\n"
+          "      - (ii) against (i), like for like (the PoE stage is off in the budget, so the 5 V leads alone): with Layer 9's draft composed\n"
+          "        the largest state with every start at once is %.3f A against %.4f A: %s. Without that draft it is %.3f A against\n"
+          "        %.2f A: %s by %.3f A, because the device lead declares %.1f A where the budget has %.3f A in that state (%.4f A on\n"
+          "        C-DEV rev 1). That is I-03 itself (OPEN, Layer 9's): the return follows what that lead declares and does not paper over it.\n"
+          "      - (iii) is a fault current of four independent limits at once; intent.py's own rule puts a fault current in the note,\n"
+          "        not in the peak (the barrel rule PI-003 reads the peak). One stage in its limit is inside (i).\n"
+          "      - what the peak is NOT: a claim that %.2f A flows. The copper rules solve the return's mesh at the declared loads,\n"
+          "        %.3f A with the PoE return; the peak is what a barrel is judged at.\n"
+          % (tot_big_starts, pk5_i, "inside" if tot_big_starts <= pk5_i else "OVER", bt[5], pk5_c, "inside" if bt[5] <= pk5_c else "OVER", abs(bt[5] - pk5_c),
+             call_of(comp_res, "+5V_DEV")["peak"], dev_big, F["cdev_u7_before"], pk_i, sum(gc["loads"].values()) + poe["peak"]))
+

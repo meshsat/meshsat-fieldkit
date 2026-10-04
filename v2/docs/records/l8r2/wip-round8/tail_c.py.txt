@@ -1,0 +1,286 @@
+        # ---- 3j: the corrections compared
+        def design(n_ret, poe_awg=16, ballast=0.0, vh_ground=True, ret_hi=None, tis=(0, 1, 2), enum=False):
+            """rows of a design over the totals tis and both copper ends: [(ti, T, kind, names, current, printed, least, verdict)], the
+            largest ground shift, and whether every row holds on the printed ratings and on the least ratings"""
+            out, smax = [], 0.0
+            for ti in tis:
+                for Tx, _tl in TEMPS:
+                    conds = conductors(F, Tx, True, n_ret, poe_awg, vh_ground); bx = box(F, ret_hi, ballast)
+                    if enum:
+                        ext, shift, _n, _raw = extremes(totals[ti][1], conds, bx)
+                    else:
+                        C = classes_of(conds, bx); an, shift = analytic(totals[ti][1], C); ext = {}
+                        for c, cur in zip(C, an):
+                            ext[c["kind"]] = (max(ext.get(c["kind"], (0.0, []))[0], cur), ext.get(c["kind"], (0.0, []))[1] + c["names"])
+                    smax = max(smax, shift)
+                    for kind in ("VH", "VH18", "RIB", "RET"):
+                        if kind in ext:
+                            pr, le, _wh = rating(kind, Tx)
+                            out.append((ti, Tx, kind, ext[kind][1], ext[kind][0], pr, le, verdict(ext[kind][0], kind, Tx)))
+            rated = [r for r in out if r[5] is not None]
+            return dict(rows=out, shift=smax, printed=all(r[4] <= r[5] + 1e-12 for r in rated) and smax <= allow * 1e3,
+                        least=all(r[4] <= r[6] + 1e-12 for r in rated) and smax <= allow * 1e3, unrated=[r for r in out if r[5] is None])
+
+        def worst(dg, kind, ti=None, Tx=None):
+            r = [x[4] for x in dg["rows"] if x[2] == kind and (ti is None or x[0] == ti) and (Tx is None or x[1] == Tx)]
+            return max(r) if r else 0.0
+        N_DRAFT = {n: importlib.util.spec_from_file_location("gr_" + n, P(pth)) for n, pth in (("b", MINE["gndrtn"]), ("a", MINE_A["gndrtn_a"]))}
+        n_drafted = {}
+        for n, sp_ in N_DRAFT.items():
+            md = importlib.util.module_from_spec(sp_); sp_.loader.exec_module(md); n_drafted[n] = md.N_RETURN
+        w("3j. THE CORRECTIONS COMPARED (three approaches; every row is a conductor's maximum over every vertex, at both copper ends, on C-DEV\n"
+          "    rev 1, the largest state and the declared upper bound; J_54V's lead at AWG 16 in each, so that its pin 2 has a printed rating):\n")
+        w("    D1 A DEDICATED GROUND RETURN between the two boards' grounds: n conductors, two a lead; a lead is an Amass XT60 pair with both\n"
+          "       contacts on GND and two %d AWG conductors of %.0f mm; each termination from 0 to the printed %.1f mOhm:\n"
+          % (F["xt_awg"], F["lead_mm"] if RET_LEAD_MM is None else RET_LEAD_MM, F["xt_r_new"]))
+        w("       %-12s %12s %14s %16s %10s  %s\n" % ("conductors", "a VH pin 2", "a ribbon", "an XT60 contact", "shift mV", "every row holds"))
+        D1 = {}
+        for n in (0, 2, 4, 6, 8):
+            D1[n] = design(n)
+            w("       %-12s %10.3f A %12.3f A %14.3f A %10.2f  on the printed ratings: %s; on the least ratings at the inside air: %s\n"
+              % ("%d (%d lead%s)" % (n, n // 2, "" if n == 2 else "s") if n else "none (as drawn)", worst(D1[n], "VH"), worst(D1[n], "RIB"), worst(D1[n], "RET"), D1[n]["shift"],
+                 "yes" if D1[n]["printed"] else "NO", "yes" if D1[n]["least"] else "NO"))
+        n_printed = min((n for n in (2, 4, 6, 8) if D1[n]["printed"]), default=None); n_least = min((n for n in (2, 4, 6, 8) if D1[n]["least"]), default=None)
+        if n_printed is None or n_least is None:
+            refuse("no dedicated return of up to four leads holds every row: section 3j cannot select D1")
+        D2 = design(2, ballast=BALLAST_MOHM); D3 = design(2, ballast=BALLAST_MOHM, vh_ground=False)
+        w("    D2 ONE RETURN LEAD AND THE RIBBONS' GROUND CONDUCTORS BALLASTED (%.0f Ohm in series with each, a resistor's printed tolerance being a\n"
+          "       printed minimum): a VH pin 2 %.3f A, a ribbon conductor %.3f A, an XT60 contact %.3f A, shift %.2f mV; every row on the printed\n"
+          "       ratings: %s; on the least ratings: %s. Thirty-four more parts on a board and an impedance in every ribbon signal's return\n"
+          "       (RET-001 to RET-003 re-read) for one lead fewer than D1: REJECTED.\n"
+          % (BALLAST_MOHM / 1000.0, worst(D2, "VH"), worst(D2, "RIB"), worst(D2, "RET"), D2["shift"], "yes" if D2["printed"] else "NO", "yes" if D2["least"] else "NO"))
+        w("    D3 ONE RETURN LEAD AS THE ONLY RETURN (the VH leads' pin 2 taken off the ground, the ribbons ballasted as D2): an XT60 contact\n"
+          "       %.3f A, a ribbon conductor %.3f A, shift %.2f mV; every row on the printed ratings: %s; on the least ratings: %s. No VH contact\n"
+          "       is left in the return, but every rail's return leaves its supply lead (the loops the leads' pairs close are opened), and one\n"
+          "       open return lead puts the whole return on the ballasted ribbons: REJECTED.\n"
+          % (worst(D3, "RET"), worst(D3, "RIB"), D3["shift"], "yes" if D3["printed"] else "NO", "yes" if D3["least"] else "NO"))
+        w("    SELECTED (authority SESSION): D1 with %d conductors, %d leads. %d conductors (%d leads) are the least that hold every row on the\n"
+          "       makers' printed ratings; %d (%d leads) are the least that also hold every row at the inside air on the least rating\n"
+          "       consistent with each sheet, where no maker prints a derating curve, and they keep every printed-rating row with one lead\n"
+          "       unmated (section 6). Reason: the design is then indifferent to the unprinted derating, to the VH and IDC contact\n"
+          "       resistances, and to one lead. DRAFTED this round on boards A and B (section 5): %d sockets a board. To reverse: drop a\n"
+          "       socket in both drafts (N_RETURN) and regenerate; the rows of section 6 then say what no longer holds.\n"
+          % (n_least, n_least // 2, n_printed, n_printed // 2, n_least, n_least // 2, n_drafted["b"]))
+        if not (n_drafted["a"] == n_drafted["b"] == n_least // 2):
+            refuse("the drafts draw %s sockets a board and the selection is %d leads" % (n_drafted, n_least // 2))
+        SEL = D1[n_least]
+
+        # ---------------------------------------------------------------- 4
+        w("\n4. THE JUDGMENT\n")
+        w("   (a) THE DECLARATION IS WRONG, and is corrected (round 7, section 5). Its peak was a typed sum of the leads' peaks that went stale\n"
+          "       twice; its typical %.1f A is under the leads' own %.2f A; its sources omit J_54V. The basis supports: typical %.2f A and peak\n"
+          "       %.2f A (%.4f A with Layer 9's draft), derived in the generator from the leads' declarations, the peak an UPPER BOUND.\n"
+          % (by["rt500"][1]["typ"], ty_c, ty_c, pk_c, pk_i))
+        w("   (b) THE LOAD LIST IS RIGHT IN WHAT IT COUNTS AND MISSED ONE RETURN: no ampere is counted twice and none returns elsewhere; the PoE\n"
+          "       port's %.2f A at R12 is added. The device rail's shortfall against C-DEV rev 1 is I-03 (Layer 9's draft, which now declares\n"
+          "       the device lead's peak from its basis, %.4f A).\n" % (poe["peak"], F["cdev_u7"]))
+        w("   (c) THE RETURN PATH AS DRAWN DOES NOT HOLD: a circuit defect of the A to B interface, finding L8R2-F31, OPEN. With every vertex of\n"
+          "       the permitted contact resistances enumerated (round 7 had sampled six and missed the worst), on C-DEV rev 1 a 5 V lead's pin 2\n"
+          "       reaches %.3f A against its printed %.0f A and a ribbon conductor %.3f A against its printed %.0f A (3d). These are the MODEL's\n"
+          "       answers on the makers' printed limits: no harness exists and no contact has been measured.\n"
+          "   (d) THE CORRECTION IS DRAFTED, NOT ACCEPTED: a dedicated ground return of %d XT60 leads (%d conductors of %d AWG) between the two\n"
+          "       boards, drawn on both generators (section 5) and verified over every vertex with its own terminations at their printed\n"
+          "       limit (section 6): a VH pin 2 at most %.3f A, a ribbon conductor at most %.3f A, an XT60 contact at most %.3f A, the\n"
+          "       ground shift at most %.2f mV. L8R2-F31 STAYS OPEN until an independent check has read the changed design; what it rests\n"
+          "       on that no maker prints is listed in section 6 and is not hidden by this arithmetic.\n"
+          "   NOT RAISED TO MAKE THE GENERATOR PASS: the declaration is derived, the same text reads %.2f A on the committed generator, a lead\n"
+          "       declared lower lowers it.\n"
+          % (max(DR[(0, Tx)][0]["VH"][0] for Tx, _l in TEMPS), F["vh_a16"], max(DR[(0, Tx)][0]["RIB"][0] for Tx, _l in TEMPS), F["cab_a"],
+             n_least // 2, n_least, F["xt_awg"], worst(SEL, "VH"), worst(SEL, "RIB"), worst(SEL, "RET"), SEL["shift"], pk_0))
+
+        # ---------------------------------------------------------------- 5
+        w("\n5. THE DRAFTS (four, release-guarded, on scratch copies)\n")
+        ok_guard = True
+        for name, board, pre in (("gndret", "b", []), ("fandec", "b", []), ("gndrtn", "b", ["gndret"]), ("gndrtn_a", "a", [])):
+            pth_d = dict(MINE, **MINE_A)[name]
+            t = os.path.join(d, "g_%s.py" % name); shutil.copy(P(GEN[board]), t)
+            for pre_ in pre:
+                if apply(pre_, t)[0]:
+                    refuse("%s refused a copy ahead of %s" % (pre_, name))
+            before = open(t, "rb").read()
+            c_rc, c_msg = apply_p(pth_d, t, "--check"); same = open(t, "rb").read() == before
+            w_rc, w_msg = apply_p(pth_d, t); a_ok = True
+            try:
+                ast.parse(open(t, encoding="utf-8").read())
+            except SyntaxError:
+                a_ok = False
+            r_rc, r_msg = apply_p(pth_d, t); t_rc, t_msg = apply_p(pth_d, P(GEN[board]))
+            good = (c_rc, same, w_rc, a_ok, r_rc, t_rc) == (0, True, 0, True, 3, 3)
+            ok_guard = ok_guard and good
+            w("   %s sha256 %s (board %s%s)\n     --check exit %d (target unchanged: %s); --write exit %d (parses: %s); a second --write exit %d (%s);\n"
+              "     on the tree's own generator exit %d (%s)\n"
+              % (pth_d, sha(pth_d), board.upper(), ", after gndret" if pre else "", c_rc, "yes" if same else "NO", w_rc, "yes" if a_ok else "NO", r_rc, short(r_msg, 90), t_rc, short(t_msg, 110)))
+        t = os.path.join(d, "g_noret.py"); shutil.copy(P(GEN_B), t); o_rc, o_msg = apply("gndrtn", t)
+        w("   the board B return draft on a generator WITHOUT gndret: exit %d (%s)\n" % (o_rc, short(o_msg, 150)))
+        ok_guard = ok_guard and o_rc == 3
+        orders = [("the round's order, this record's three in place, Layer 9's draft, Layer 6's", ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "gndrtn", "iocbuck"] + L6),
+                  ("Layer 9's draft before this record's three", ["gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck", "fandec", "gndret", "gndrtn"] + L6),
+                  ("this record's three first", ["gndret", "gndrtn", "fandec", "gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck"] + L6),
+                  ("the round reversed", ["gndret", "gndrtn", "rt500", "ph4", "panel5v", "fandec", "fans12", "gnd002", "iocbuck"] + L6)]
+        w("   BOARD B COMPOSED with Layer 9's draft (the copy at 841e6c7e) and Layer 6's three (xal_land, lcsc, intent), in four orders:\n")
+        gens, runs = [], []
+        for i, (tag, seq) in enumerate(orders):
+            pth, err = compose(seq, d, "ord%d" % i)
+            if err:
+                w("     %-76s %s\n" % (tag, err)); gens.append(None); runs.append(None)
+                continue
+            res = run_gen(pth); gens.append(hashlib.sha256(open(pth, "rb").read()).hexdigest()[:16]); runs.append(res)
+            g = (res["intent"] or {}).get("rails", {}).get("GND") if res["intent"] else None
+            w("     %-76s generator sha256 %s: %s\n" % (tag, gens[-1], "RUNS to its end, %d parts, %d unplaced, GND %.2f A typical, %.4f A peak, loads %.3f A"
+                                                         % (len(res["table"]["parts"]), len(res["table"]["unplaced"]), g["amps_typ"], g["amps_peak"], sum(g["loads"].values()))
+                                                         if res["stop"] is None else "STOPS: " + short(res["stop"], 150)))
+        one_gen = len({x for x in gens}) == 1 and gens[0] is not None
+        all_run = all(r is not None and r["stop"] is None and not r["table"]["unplaced"] for r in runs)
+        w("     the four orders give one generator, byte for byte: %s; every order runs to its end: %s\n" % ("yes" if one_gen else "NO", "yes" if all_run else "NO"))
+        pth7, err7 = compose(["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "iocbuck"] + L6, d, "round7"); res7 = run_gen(pth7)
+        w("     round 7's state (without the return draft): %s; without Layer 9's draft and the return draft: RUNS to its end, %d parts\n"
+          % ("RUNS to its end, %d parts" % len(res7["table"]["parts"]) if not err7 and res7["stop"] is None else "STOPS", len(res5["table"]["parts"])))
+        pth1, _e = compose(["gndret"], d, "alone"); res1 = run_gen(pth1)
+        g1 = res1["intent"]["rails"]["GND"] if res1["intent"] else None
+        w("     the gndret draft alone on the committed generator: %s\n"
+          % ("RUNS, GND %.2f A typical and %.2f A peak, loads %.3f A: the same text, a smaller figure (nothing typed)" % (g1["amps_typ"], g1["amps_peak"], sum(g1["loads"].values()))
+             if g1 else "STOPS: " + short(res1["stop"], 150)))
+        # board A
+        w("   BOARD A COMPOSED in L4-E9's change-list order (r12, guard, charger, r11, bank, r138, u17; record l8gnd's two; this record's five\n"
+          "   of rounds 1 to 6; record l8p's ptc; L4-E11's dd7), Layer 9's draft (the copy at 841e6c7e), d8dec31's mainpb LAST, then Layer 6's table:\n")
+        round_a = [P("v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn) for rn in ROUND_A] + [P(L9T5_DRAFT_A)]
+        runs_a, gens_a = [], []
+        for tag, seq in (("the return draft after Layer 9's (the round's order)", round_a + [P(MINE_A["gndrtn_a"])]),
+                         ("the return draft first", [P(MINE_A["gndrtn_a"])] + round_a),
+                         ("round 7's state (without the return draft)", round_a)):
+            pth, err = compose_a(seq, d, "a%d" % len(runs_a))
+            if err:
+                w("     %-56s %s\n" % (tag, err)); runs_a.append(None); gens_a.append(None)
+                continue
+            res = run_gen(pth, "a"); runs_a.append(res); gens_a.append(hashlib.sha256(open(pth, "rb").read()).hexdigest()[:16])
+            w("     %-56s generator sha256 %s: %s\n" % (tag, gens_a[-1], "RUNS to its end, %d parts, %d unplaced, netlist sha256 %s"
+                                                         % (len(res["table"]["parts"]), len(res["table"]["unplaced"]), hashlib.sha256(res["netlist"]).hexdigest()[:16])
+                                                         if res["stop"] is None else "STOPS: " + short(res["stop"], 150)))
+        a_run = all(r is not None and r["stop"] is None and not r["table"]["unplaced"] for r in runs_a)
+        a_same_net = a_run and runs_a[0]["netlist"] == runs_a[1]["netlist"]
+        w("     the return draft first or last gives the same netlist: %s (the generator text differs in the order of two SECTIONS.insert\n"
+          "     lines, this draft's and another's: a schematic page's order, no net)\n" % ("yes" if a_same_net else "NO"))
+        w("   THE NETLIST CHECKS (check_gndret_netlist.py; the regenerated netlists are the generators' own part tables, no KiCad: the box\n"
+          "   export is the reading of record):\n")
+        vC, lC = CK.judge(nlB, json.load(open(P(INT_B), encoding="utf-8")))
+        vPc, lPc, _wh = CK.judge_pair(nlA, nlB)
+        w("     the committed board B netlist and intent (%s sha256 %s): %s; the dedicated return on the committed boards: %s\n" % (NET_B, sha(NET_B), vC, vPc))
+        for l in lC:
+            w("       %s\n" % l)
+        if not all_run or not a_run:
+            refuse("a composition does not run: no netlist to check")
+        nB, nA = CK.read_netlist(runs[0]["netlist"]), CK.read_netlist(runs_a[0]["netlist"])
+        vB, lB = CK.judge(nB, runs[0]["intent"]); vP, lP, whole = CK.judge_pair(nA, nB)
+        w("     board B composed (netlist sha256 %s): the return's declaration %s\n" % (hashlib.sha256(runs[0]["netlist"]).hexdigest()[:16], vB))
+        for l in lB:
+            w("       %s\n" % l)
+        w("     boards A and B composed: the dedicated return %s\n" % vP)
+        for l in lP:
+            w("       %s\n" % l)
+        v7, _l7 = CK.judge(CK.read_netlist(res7["netlist"]), res7["intent"]); vP7, _lP7, whole7 = CK.judge_pair(CK.read_netlist(runs_a[2]["netlist"]), CK.read_netlist(res7["netlist"]))
+        w("     round 7's state: the declaration %s, the dedicated return %s\n" % (v7, vP7))
+        _sp = importlib.util.spec_from_file_location("l8gnd_check", P("v2/docs/records/l8gnd/check_gnd002_netlist.py"))
+        g2 = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(g2)
+        v8, l8 = CK._rd.judge("b", CK._rd.read_netlist(runs[0]["netlist"])); v8a, l8a = CK._rd.judge("a", CK._rd.read_netlist(runs_a[0]["netlist"]))
+        vg, _lg = g2.judge("b", g2.read_netlist(runs[0]["netlist"])); vga, _lga = g2.judge("a", g2.read_netlist(runs_a[0]["netlist"]))
+        w("     the same composed netlists under the checks of the drafts they carry: check_l8r2_netlist.py (rounds 1 to 6) board B %s (%s),\n"
+          "       board A %s (%s); record l8gnd's check_gnd002_netlist.py board B %s, board A %s\n"
+          % (v8, "; ".join(" ".join(x.split()) for x in l8), v8a, "; ".join(" ".join(x.split()) for x in l8a), vg, vga))
+        # mutations
+        w("   THE MUTATIONS (each must stop the generator or FAIL a check):\n")
+        full = ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "gndrtn", "iocbuck"]
+        muts = []
+
+        def gen_mut(tag, seq, edit=None, pair=False):
+            pth, err = compose(seq, d, "mut%d" % len(muts))
+            if err:
+                refuse("a mutation's composition refused: %s" % err)
+            if edit:
+                t0 = open(pth, encoding="utf-8").read(); t1 = edit(t0)
+                if t1 == t0:
+                    refuse("mutation '%s' changed nothing" % tag)
+                open(pth, "w", encoding="utf-8").write(t1)
+            res = run_gen(pth)
+            if res["stop"]:
+                out = "STOPS: " + short(res["stop"], 170); bad = True
+            else:
+                nm = CK.read_netlist(res["netlist"])
+                v, lines = CK.judge(nm, res["intent"])
+                out = "runs; the declaration reads %s%s" % (v, (": " + short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 200)) if v != "DRAWN" else "")
+                bad = v != "DRAWN"
+                if pair:
+                    vp, lp, _w2 = CK.judge_pair(nA, nm)
+                    out += "; the dedicated return reads %s%s" % (vp, (": " + short("; ".join(lp[1:]), 160)) if vp != "DRAWN" else "")
+                    bad = bad or vp != "DRAWN"
+            muts.append(bad)
+            w("     m%d %s\n        %s\n" % (len(muts), tag, out))
+
+        def sub1(old, new):
+            def f(t):
+                if t.count(old) != 1:
+                    refuse("a mutation's anchor occurs %d times: %r" % (t.count(old), old[:50]))
+                return t.replace(old, new)
+            return f
+        gen_mut("the old state: the composition without the gndret draft (and so without the return draft, which needs it)", [s for s in full if s not in ("gndret", "gndrtn")])
+        gen_mut("the gndret draft without its companion fandec (the second stop behind the first)", [s for s in full if s != "fandec"])
+        gen_mut("the typed declaration kept and simply raised: 21.0 written as 30.0 on the old text (the refused outcome)",
+                [s for s in full if s not in ("gndret", "gndrtn")], sub1('_intent.rail("GND", 0.0, 10.0, 21.0, ', '_intent.rail("GND", 0.0, 10.0, 30.0, '))
+        gen_mut("J_54V dropped from the return's sources in the helper", full, sub1('_srcs = list(leads) + ["J_54V"]', "_srcs = list(leads)"))
+        gen_mut("a lead named on the return whose rail is declared on another connector (+5V_S2's source J_5V_S2 written J_5V_S9)", full,
+                sub1('6.6, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n)', '6.6, "J_5V_S%d" % (9 if _n == 2 else _n), loads=_SLOT_LOADS(_n)'))
+        gen_mut("a slot's card buck allocation raised from 2.2 to 4.2 A (a lead over its own peak: the derived return must not hide it)", full,
+                sub1('    "U%d03" % s: 2.2, ', '    "U%d03" % s: 4.2, '))
+        base = runs[0]
+
+        def net_mut(tag, f, pair=False, board="b"):
+            src = base if board == "b" else runs_a[0]
+            raw = src["netlist"].decode("utf-8"); m = f(raw)
+            if m == raw:
+                refuse("netlist mutation '%s' changed nothing" % tag)
+            nm = CK.read_netlist(m.encode("utf-8"))
+            if board == "b":
+                v, lines = CK.judge(nm, base["intent"]); vp, lp, wm = CK.judge_pair(nA, nm)
+            else:
+                v, lines = vB, []; vp, lp, wm = CK.judge_pair(nm, nB)
+            bad = v == "FAIL" or (pair and vp == "FAIL")
+            muts.append(bad)
+            w("     m%d %s\n        the declaration reads %s%s; the dedicated return reads %s%s\n"
+              % (len(muts), tag, v, (": " + short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 170)) if v == "FAIL" else "",
+                 vp, (": " + short("; ".join(lp[1:]), 170)) if vp == "FAIL" else ""))
+            return wm
+
+        def swap_pins(ref):
+            def f(raw):
+                a, b, z = '(node (ref "%s") (pin "1"))' % ref, '(node (ref "%s") (pin "2"))' % ref, "\x00"
+                if raw.count(a) != 1 or raw.count(b) != 1:
+                    refuse("the netlist does not carry %s's two pins once each" % ref)
+                return raw.replace(a, z).replace(b, a).replace(z, b)
+            return f
+
+        def drop_part(ref):
+            def f(raw):
+                out_ = re.sub(r' \(node \(ref "%s"\) \(pin "[^"]+"\)\)' % re.escape(ref), "", raw)
+                return re.sub(r'    \(comp \(ref "%s"\)[^\n]*\n' % re.escape(ref), "", out_)
+            return f
+        net_mut("J_5V_S2's pins 1 and 2 exchanged on board B's netlist (the lead reversed)", swap_pins("J_5V_S2"))
+        net_mut("R12's pin 2 taken off GND on board B's netlist (the PoE return's entry gone)", lambda raw: raw.replace(' (node (ref "R12") (pin "2"))', "", 1))
+        # round 8: the return removed, landed on the wrong net, one termination dropped, a socket the declaration does not name
+        acc_removed = design(2 * len(whole7), enum=True)
+        muts.append(vP7 != "DRAWN" and not acc_removed["printed"])
+        w("     m%d THE RETURN REMOVED (both boards composed without the two return drafts: round 7's state)\n"
+          "        the dedicated return reads %s; the acceptance on that census (%d return conductors): a VH pin 2 %.3f A, a ribbon conductor\n"
+          "        %.3f A: every row on the printed ratings: %s\n"
+          % (len(muts), vP7, 2 * len(whole7), worst(acc_removed, "VH"), worst(acc_removed, "RIB"), "yes" if acc_removed["printed"] else "NO"))
+        gen_mut("THE RETURN LANDED ON THE WRONG NET: J_GR2's pin 1 drawn on +5V_DEV on board B", full,
+                sub1('ground return 2 to A22 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})',
+                     'ground return 2 to A22 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "+5V_DEV", "2": "GND"})'), pair=True)
+        wm = net_mut("ONE TERMINATION DROPPED: J_GR3 absent on board B's netlist (the lead plugged at board A only)", drop_part("J_GR3"), pair=True)
+        acc_dropped = design(2 * len(wm), enum=True)
+        w("        the acceptance on the sockets left whole on both boards (%d conductors): every row on the printed ratings: %s; on the least\n"
+          "        ratings at the inside air: %s (the third lead's margin is gone)\n"
+          % (2 * len(wm), "yes" if acc_dropped["printed"] else "NO", "yes" if acc_dropped["least"] else "NO"))
+        net_mut("ONE TERMINATION DROPPED on board A: J_GR1's pin 2 absent on board A's netlist", lambda raw: raw.replace(' (node (ref "J_GR1") (pin "2"))', "", 1), pair=True, board="a")
+        gen_mut("a return socket the declaration does not name: J_GR3 left out of the helper's list", full,
+                sub1('_rets = ["J_GR1", "J_GR2", "J_GR3"]', '_rets = ["J_GR1", "J_GR2"]'))
+        all_mut = all(muts)
+        w("     every mutation stops or fails: %s (%d of %d)\n" % ("yes" if all_mut else "NO", sum(muts), len(muts)))
