@@ -138,7 +138,13 @@ board E drafts in the change list's order with no designator written twice (186 
 `fnd/l4e9r6` from `5a6ad183`): C5's fitted part read the way `lcsc_fill.py` fills it (code and part number of the line that fills
 it: C113803, YAGEO CC0603KRX7R0BB104, 100 V), never from `gen_sch_e.py`'s note on C46 and C59; the held Yageo sheet read for that
 part number and for R227's capacitors (COVERED, out 11's last block); the timer envelope unchanged; R227's stacked energy 4.369 mJ
-(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). Round 7 (`fnd/l4e9r7` from `37bc2f1d`; Layer 9's
+(was 4.189: C81 and C82 are high capacitance products, +-20 % after endurance). The release-candidate review (3 October
+2026, `fnd/l4e9rc` from `db1cffb5`): its findings kept in the active register, R-197 (L4-RC01, L4-E7's panel-lead scan, OPEN until
+`fnd/l4e7rc` is integrated and its tests pass) and R-198 (L4-RC02, the replay wording, CLOSED at `db1cffb5` and the packer's
+README): 188 items; no figure and no other row's state changes. R-197 reworded on `fnd/l4e9rc2` (from `c4e4f7d7`): the
+probe described without a length (L4-E7's guard reads the register; the exact text in the archived review), and OPEN until
+`test_l4e7` passes at the guard round's integration `c4e4f7d7`, where L4-E7's results cache did not hold; CLOSED at set 28's
+integration on `test_l4e7` passing on the frozen line `f67ea9cf` ("tests: 54 passed, 0 failed, 1 skipped"). Round 7 (`fnd/l4e9r7` from `37bc2f1d`; Layer 9's
 L9P-F01 at `38ef774c`, its output copied into `inputs/`): decision D-11's all-transmit basis needs 15.986 V rest on the drafted design,
 over its 15.5 V floor (the pair 0.1902 V, the fans at full speed and their converters 0.4583 V over the drawn 15.338 V); reproduced
 (out 30) and corrected by the floor re-derived at 16.1 V with the drafts (D-17, R-28, LH-12 for FW-A05's text); IF-10 now checks the

@@ -3,7 +3,7 @@
 
 # MeshSat field kit V2: requirements, second issue of layer 3 (L3-R2)
 
-MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `6e9458783e8cf887`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
+MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `f7cc6ac3cfd5ad08`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
 
 ## 1. How to read this document
 

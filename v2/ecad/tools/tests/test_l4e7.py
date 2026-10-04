@@ -24,8 +24,10 @@ closed-form series RLC step, the drafted network failing and each change necessa
 draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
 figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
+import contextlib
 import hashlib
 import importlib.util
+import io
 import os
 import shutil
 import subprocess
@@ -320,6 +322,161 @@ def t_the_lead_guard_compares_the_stated_length_with_the_input():
         ok2, bad2 = m.lead_scan(td)
         assert not bad2 and not any(p_ == "v2/docs/fixtures/b.md" for p_, _l, _v in ok2)
     assert _git_status() == before, "the repository's git status changed during the test"
+
+
+@contextlib.contextmanager
+def _on_tree(m, td):
+    """The script's tree pointed at the scratch tree td, its solver made to fail if reached (a results cache miss would reach it)."""
+    def no_compute():
+        raise AssertionError("the run reached the solver (a results cache miss)")
+    top0, rr0 = m.TOP, m.run_recorded
+    m.TOP, m.run_recorded = td, no_compute
+    try:
+        yield
+    finally:
+        m.TOP, m.run_recorded = top0, rr0
+
+
+def _main_on(m, td):
+    """main() as a run does it, on the scratch tree td: (exit code, stdout, stderr); the solver is never reached."""
+    out_, err_ = io.StringIO(), io.StringIO()
+    with _on_tree(m, td), contextlib.redirect_stdout(out_), contextlib.redirect_stderr(err_):
+        try:
+            code_ = m.main([])
+        except SystemExit as e:
+            code_ = e.code
+    return code_, out_.getvalue(), err_.getvalue()
+
+
+def _link_key_inputs(td, data):
+    """Symlink into td every input the committed results cache's KEY records that td does not already hold (read, never written), so
+    a run on td checks the KEY on the same bytes; the documents a test edits are copies made before this."""
+    for rel in data["parts"]["files"]:
+        if not os.path.lexists(os.path.join(td, rel)):
+            os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
+            os.symlink(os.path.join(ROOT, rel), os.path.join(td, rel))
+
+
+def t_a_second_length_in_the_approved_statements_cell_is_caught():
+    """The supplier package's external review (finding L4-RC01): the older guard took a statement as approved whenever its Markdown
+    table cell held an approved sentence, so "The selected panel lead is 9 m." appended to the cell of R-180's statement (5 m) gave
+    no hit and an unchanged scan key. On a scratch tree (the input and today's citing documents copied by _lead_tree, the KEY's
+    recorded inputs symlinked and never written, the real R-180 cell taken from L4-E9's DOWNSTREAM-REGISTER.md; nothing written into
+    the repository, whose git status must not change during the test), each case run through main() as a run does it, with the
+    solver made to fail if reached: the unmodified cell passes and is cited at 5 m; the reviewer's sentence appended to the SAME cell
+    refuses with exit 3, naming the file, its line, 9 m and LEAD_M = 5 m, while the cell's own 5 m stays a consistent citation; the
+    cell's own 5 m edited to 9 m refuses too; an unrelated sentence appended to the same cell passes with the KEY unchanged, the
+    output rendered from the cache byte for byte and the cache file untouched (no recompute)."""
+    import json
+    _R()
+    m = _CACHE["M"]
+    reg = "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"
+    anchor = "two conductors 6.09 mm apart over 5 m"
+    real = open(os.path.join(ROOT, reg), encoding="utf-8").read()
+    lines = real.split("\n")
+    rows = [i for i, ln in enumerate(lines) if anchor in ln]
+    assert len(rows) == 1 and lines[rows[0]].startswith("| R-180 |"), "R-180's row in %s" % reg
+    line, cells = rows[0] + 1, lines[rows[0]].split("|")
+    cols = [k for k, c in enumerate(cells) if anchor in c]
+    assert len(cols) == 1 and cells[cols[0]].count(anchor) == 1, "R-180's statement cell"
+    cell = cells[cols[0]]
+
+    def with_cell(text):
+        """The real register with R-180's statement cell replaced by text, every other byte unchanged."""
+        return "\n".join(lines[:rows[0]] + ["|".join(cells[:cols[0]] + [text] + cells[cols[0] + 1:])] + lines[rows[0] + 1:])
+
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    cache_bytes = open(m.CACHE, "rb").read()
+    data = json.loads(cache_bytes)
+    refusal = "differs from the derivation's input (%s LEAD_M = 5 m): %s line %d: 9 m; refusing" % (m.A1_CALC, reg, line)
+    cited = "consistent panel lead length %s line %d: 5 m (the input 5 m)" % (reg, line)
+    before = _git_status()
+    with tempfile.TemporaryDirectory() as td:
+        _lead_tree(td, m)
+        _link_key_inputs(td, data)
+        dst = os.path.join(td, reg)
+        assert not os.path.islink(dst) and open(dst, encoding="utf-8").read() == real, "the register is a scratch copy"
+        # the unmodified cell: consistent at 5 m, the committed output from the cache
+        code, out, err = _main_on(m, td)
+        assert code == 0 and cited in err and out == committed, (code, err)
+        # the reviewer's sentence in the SAME cell: refused; the cell's own 5 m is still compared, and consistent
+        open(dst, "w", encoding="utf-8").write(with_cell(cell.rstrip() + " The selected panel lead is 9 m. "))
+        ok, bad = m.lead_scan(td)
+        assert bad == [(reg, line, 9.0)] and (reg, line, 5.0) in ok, (bad, ok)
+        code, out, err = _main_on(m, td)
+        assert code == 3 and refusal in err and out == "", (code, err)
+        # the cell's own 5 m edited to 9 m: refused
+        open(dst, "w", encoding="utf-8").write(with_cell(cell.replace(anchor, anchor[:-3] + "9 m")))
+        code, out, err = _main_on(m, td)
+        assert code == 3 and refusal in err and out == "", (code, err)
+        # an unrelated sentence in the same cell: the KEY unchanged, the committed output from the cache, no recompute
+        open(dst, "w", encoding="utf-8").write(with_cell(cell.rstrip() + " The engineer answers this row in the supplier's phase 1. "))
+        with _on_tree(m, td):
+            assert m.key_of(m.key_parts(data["parts"]["files"])) == data["key"], "unrelated prose moved the KEY"
+        code, out, err = _main_on(m, td)
+        assert code == 0 and cited in err and out == committed, (code, err)
+    assert open(m.CACHE, "rb").read() == cache_bytes and not os.path.exists(m.CACHE + ".tmp"), "the results cache was written"
+    assert _git_status() == before, "the repository's git status changed during the test"
+
+
+def t_an_archived_review_is_left_unread_only_while_designated_and_unchanged():
+    """The owner's amendment to L4-RC01's round: a filed external review is a third party's text kept verbatim and may quote a probe
+    (the supplier package's review quotes "The selected panel lead is 9 m."); the guard leaves a file unread only when
+    ARCHIVED-REVIEWS.yaml lists its path AND its sha256 equals the listed one. In the real tree every listed file is at its listed
+    sha256, no stated length differs and no listed file is cited. On a scratch tree (today's citing documents, the designation and the
+    listed reviews copied, the KEY's recorded inputs symlinked and never written; the repository's git status unchanged), each case
+    run through main() with the solver made to fail if reached: (e) the valid unchanged tree passes, the committed output from the
+    cache, the KEY unchanged; (b) the 9 m quotation inside the designated, fingerprint-matching review passes, is not read and is not
+    cited; (c) the same text in an undesignated design document named X-AS-RECEIVED.md refuses with exit 3 on its 9 m; (d) the
+    designated review with its content changed is read again and refuses on its 9 m."""
+    import json
+    _R()
+    m = _CACHE["M"]
+    rev = "v2/docs/records/l4close/REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md"
+    held = m.archived()
+    assert rev in held, "the release candidate review is designated"
+    assert all(_sha(os.path.join(ROOT, p_)) == d_ for p_, d_ in held.items()), "a designated review is not at its listed sha256"
+    q = [i + 1 for i, ln in enumerate(open(os.path.join(ROOT, rev), encoding="utf-8").read().split("\n")) if ln == "> The selected panel lead is 9 m."]
+    assert len(q) == 1, "the review's quotation"
+    ok, bad = m.lead_scan()
+    assert bad == [] and not any(p_ in held for p_, _l, _v in ok), (bad, ok)
+    committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
+    cache_bytes = open(m.CACHE, "rb").read()
+    data = json.loads(cache_bytes)
+    hit = "%s line %d: 9 m" % (rev, q[0])
+    before = _git_status()
+    with tempfile.TemporaryDirectory() as td:
+        _lead_tree(td, m)
+        for rel in [m.ARCHIVED] + sorted(held):
+            os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
+            shutil.copyfile(os.path.join(ROOT, rel), os.path.join(td, rel))
+        _link_key_inputs(td, data)
+        assert not os.path.islink(os.path.join(td, rev)), "the review is a scratch copy"
+        # (e) and (b): passes, the committed output from the cache, the KEY unchanged; the review not read and not cited
+        code, out, err = _main_on(m, td)
+        assert code == 0 and out == committed, (code, err)
+        assert "archived review not read: %s (its sha256 matches %s)" % (rev, m.ARCHIVED) in err and "length %s line" % rev not in err, err
+        with _on_tree(m, td):
+            assert m.key_of(m.key_parts(data["parts"]["files"])) == data["key"], "the designation moved the KEY"
+        skipped = []
+        ok, bad = m.lead_scan(td, None, skipped)
+        assert bad == [] and rev in skipped and not any(p_ == rev for p_, _l, _v in ok), (bad, ok, skipped)
+        # (c): the same text in an undesignated design document named X-AS-RECEIVED.md
+        fx = "v2/docs/X-AS-RECEIVED.md"
+        shutil.copyfile(os.path.join(td, rev), os.path.join(td, fx))
+        code, out, err = _main_on(m, td)
+        assert code == 3 and out == "" and "%s line %d: 9 m" % (fx, q[0]) in err and "LEAD_M = 5 m" in err and hit not in err, (code, err)
+        os.remove(os.path.join(td, fx))
+        # (d): the designated review with its content changed is read again
+        open(os.path.join(td, rev), "a", encoding="utf-8").write("\nEdited after filing.\n")
+        skipped = []
+        ok, bad = m.lead_scan(td, None, skipped)
+        assert (rev, q[0], 9.0) in bad and rev not in skipped, (bad, skipped)
+        code, out, err = _main_on(m, td)
+        assert code == 3 and out == "" and hit in err and "LEAD_M = 5 m" in err, (code, err)
+    assert open(m.CACHE, "rb").read() == cache_bytes and not os.path.exists(m.CACHE + ".tmp"), "the results cache was written"
+    assert _git_status() == before, "the repository's git status changed during the test"
+
 
 def t_r176_row_3_carries_the_computed_turn_off_everywhere_it_is_supplied():
     """R-176 row 3's Q12 turn-off figure (the step test's bound) is the computed one, rounded up: the worst over every start, bulk

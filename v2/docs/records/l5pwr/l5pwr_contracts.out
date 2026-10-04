@@ -8,12 +8,12 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
    yaml       22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  1e18a1ca@v2/ecad/tools/pcb_interfaces.yaml
    hwfw       7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  1e18a1ca@v2/docs/HW-FW-CONTRACT.md
    panel      3f380ef79c6bc54ab1053584a723e5b17d1c9ebf675d6c689c094715bf9284f6  1e18a1ca@v2/docs/PANEL.md
-   l4e9md     a760101cde41633adb8baa9eae198404857637622d6a66708d7feed247539e3c  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   l4e9out    75be325c843cdac3956e32e0410565a04c82d5e70a5b43b4819d902813196981  v2/docs/records/l4e9/l4e9_power_path.out
-   reg        24418b62e0062d8c1ab1a83f1513d8bc48782da9934732bcc752567a9df04403  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   l4e9md     996fc1b1ee4491fc58d6c2ab0b9ae3cefc7e9f8b56311290d0aef34b0947926d  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   l4e9out    335e8bb14e4dddfa4a9a702f8e0cb576d6bfc46783b6fdaa1f72d1c078b17626  v2/docs/records/l4e9/l4e9_power_path.out
+   reg        c71b1e680c4ef920525e5c14c8cb0a35fabf023c5e1c6c396f25eeeab25c6681  v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    hand       ebba684d01f219235aedf3ba20ccbae7f9c36a1c97443f18ed8997dee88dbeb9  v2/docs/records/l4e9/LAYER5-HANDOVER.md
    l4e11md    f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   l4e11out   302a0e2c0583ffcd333d3236d1ada569db0a1a2b9f79c8130613bd223949f882  v2/docs/records/l4e11/l4e11_power.out
+   l4e11out   0f70d9eeb473cf4d7508dc47b6b1ac9e51627f8bd4e31805a0f8f9898f198b31  v2/docs/records/l4e11/l4e11_power.out
    l4e11entry 418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    l4e12md    b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    l4e13md    1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191  v2/docs/records/l4e13/L4E13-PANEL.md
@@ -402,7 +402,7 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       why: L4-E11 section 18 withdrew the fans directly on VSYS_E; on U22's regulated rail the start rule in amperes on VSYS_E is superseded (R-179) by the room U42 leaves at the declared branch (18b)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
          v2/docs/records/l4e11/l4e11_power.out:1018: "no fan read prints a range covering VSYS_E's 9.494 to 17.375 V, so 15a's fans directly on VSYS_E is WITHDRAWN"
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:267: "the supply range question of 15a to 17a (17.375 V at the top, 9.539 V at the bottom, 0.3356 and 0.5713 A on VSYS_E) is superseded by the rail"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:269: "the supply range question of 15a to 17a (17.375 V at the top, 9.539 V at the bottom, 0.3356 and 0.5713 A on VSYS_E) is superseded by the rail"
          v2/docs/records/l4e11/l4e11_power.out:1043: "with one fan running and U12 on, U42's room 0.1504 A leaves 1.21 W at the rail for the other fan's start"
       figures in the replacing text (parsed): 9.494, 17.375 V, 9.539 V, 0.3356, 0.5713 A, 0.1504 A, 1.21 W
       contract value: CHANGES: the rule is no longer the both-together and one-at-a-time currents on VSYS_E; it is U42's room at the declared branch, as power at U22's rail for one fan's start, the start current NOT READ (E11-35); VSYS_E at U42's least limit stands
@@ -419,8 +419,8 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       why: L4-E11 18c restated the stagger for the fans on U22's rail (E11-39, R-188): the ramp is a PWM-duty ramp into the fan's PWM input, U22's start joins U12's, and the room is U42's at the declared branch (18b), the per-fan start current on VSYS_E superseded (R-179)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
          v2/docs/records/l4e11/l4e11_power.out:485: "each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts"
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:276: "U42's room 0.1504 A at the floor"
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:276: "the current through J_DOCK pin 1 under 1.4713 A at every start"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:278: "U42's room 0.1504 A at the floor"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:278: "the current through J_DOCK pin 1 under 1.4713 A at every start"
       figures in the replacing text (parsed): 1 s, 0.1504 A, 1.4713 A
       contract value: CHANGES the rule's wording, not its intent: a PWM ramp becomes a PWM-duty ramp into the fan's PWM input, and never while U12 starts becomes never while U12 or U22 starts; the trigger's per-fan start current gives way to U42's room
       mark now: RULE (L4-E11 17a and 18c, SESSION); DRAFTED R-177, R-181; PROVISIONAL
@@ -432,9 +432,9 @@ the rows whose cited figures set 27's Layer 4 corrections changed, against the t
       no longer standing (printed by reg at 2c240414): 75 V, 61 A, 3.30 uH
       why: L4-E7's round 5 restated R-176: row 2's bound on PV_F and row 3's turn-off current changed, and row 3's pass from the reference loop was withdrawn (no loop is claimed to pass)
       replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "PV_F at most 85 V, its slew and INP inside their absolute ratings"
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "U21 turning Q12 off (at most 63 A, within 12 us)"
-         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:264: "no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:266: "PV_F at most 85 V, its slew and INP inside their absolute ratings"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:266: "U21 turning Q12 off (at most 63 A, within 12 us)"
+         v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:266: "no loop is claimed to pass (round 5): at 3.30 uH the pins' complete budget is outside +-0.240 V and B6-ENG-1 decides"
       figures in the replacing text (parsed): 85 V, 63 A, 12 us, 3.30 uH, +-0.240 V
       contract value: CHANGES in V-E16's rows 2 and 3, not in the excerpt (rows 5 and 6 stand): the parsed bounds replace those the pass wrote for rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1 is decided
       mark now: TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 OPEN (no loop claimed to pass), PROVISIONAL
