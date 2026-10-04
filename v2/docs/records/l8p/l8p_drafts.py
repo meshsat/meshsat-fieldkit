@@ -14,12 +14,15 @@ It prints, deterministically and without touching the tree:
   3b. B-R2's detector (round 3, route R1): why no existing element tells board A a latched breaker passing a charge, the charge
      threshold and the reverse threshold with every tolerance, the delays, the protector's own limits, what board A must read
      (L4-E11's DD-7 interface) and E-14 as it now reads, from task L4-E11's copies (fnd/l4e11r9 at e60a94a8) and the makers' sheets;
+  3c. DD-5 (round 4): the charge switch's body diode in discharge under CHGIN = 1, the three approaches, the ideal diode beside
+     Q1 (apply_gen_sch_p_idealdiode.py) and its acceptance on case row C-PROT, from the BQ4050's, the CSD17570Q5B's and the
+     LM74700-Q1's sheets;
   4. each draft on a scratch copy: checked, applied once, refused twice, and refused on the tree's own generator (NOT RELEASED);
   5. the composition of each board in L4-E9's change-list order with this record's draft in its place, first and last;
   6. the designators each draft adds, pairwise disjoint, and every literal part call drawn once in the composed generators;
   7. the regeneration on the runner (gen_netlist.py: the generator's own part table, no KiCad): the unpatched generators
      reproduce the committed KiCad netlists pin for pin; the netlist check (check_l8p_netlist.py) on the committed netlists
-     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN), and on five
+     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN), and on seven
      mutated netlists (FAIL);
   8. the declarations the patched board P generator writes into its intent for the new nets;
   9. the findings for other authors and their state.
@@ -51,6 +54,14 @@ NET = {b: os.path.join(ROOT, p) for b, p in CHK.COMMITTED.items()}
 PROJECT = {"p": "pcb-p-pack", "e": "pcb-e1-dock", "a": "pcb-a-power"}
 MINE = {"p": os.path.join(HERE, "apply_gen_sch_p_breaker.py"), "e": os.path.join(HERE, "apply_gen_sch_e_enable.py"),
         "a": os.path.join(HERE, "apply_gen_sch_a_ptc.py")}
+# board P's second draft (round 4, DD-5): applied after the breaker draft, which it requires
+MINE2 = {"p": [os.path.join(HERE, "apply_gen_sch_p_idealdiode.py")]}
+
+
+def mine_seq(b):
+    return [MINE[b]] + MINE2.get(b, [])
+
+
 # L4-E9's change list (records/l4e9/L4-POWER-ARCHITECTURE.md section 3) for each board's round, in application order; d8dec31's
 # drafts take the board's committed netlist as their second argument; Layer 6's l6r2 drafts are order-independent tables
 ORDER = {
@@ -82,6 +93,10 @@ LM5069_SHEET = os.path.join(ROOT, "v2", "vendor", "ti", "ti-lm5069.pdf")
 CSD_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "ti-csd18510q5b.pdf")
 N7002_SHEET = os.path.join(ROOT, "v2", "vendor", "power", "jscj-2n7002-c8545.pdf")
 BZT_SHEET = os.path.join(ROOT, "v2", "vendor", "diodes", "diodes-bzt52c-ds18004.pdf")
+TRM_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "ti-sluuaq3a-bq4050-trm.pdf")
+BQ4050_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "ti-bq4050.pdf")
+CSD17570_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "ti-csd17570q5b.pdf")
+LM74700_SHEET = os.path.join(ROOT, "v2", "vendor", "ti", "ti-lm74700-q1.pdf")
 # C-1c as drawn (apply_gen_sch_p_breaker.py): the bridge, the reference, the hysteresis, and the bounds the budget applies
 R_BRIDGE, R_REF_T, R_REF_B, R_HYST = 150e3, 147e3, 1.62e3, 15e6
 R_TOL, R_TCR, HYST_TOL = 0.001, 25e-6, 0.01     # the bridge and reference parts: 0.1 %, at most 25 ppm/K; the hysteresis part 1 %
@@ -103,6 +118,11 @@ CSD_RDS_150 = 1.8                               # CSD18510Q5B Figure 8: normaliz
 CSD_VSD = {25: (0.575, 0.632), 125: (0.368, 0.432)}   # Figure 9: typical VSD at 0.1 A and at 1 A, by case temperature
 CSD_ZTH_10MS = 0.54                             # Figure 1: the single pulse's normalized ZthJC at 10 ms
 N7002_HOT = 2.0                                 # the 2N7002's RDS(on) taken as twice its 25 C maximum when hot (a bound, no figure read)
+# DD-5's ideal diode as drawn (apply_gen_sch_p_idealdiode.py, round 4)
+C111, C111_TOL, C111_BIAS = 220e-9, 0.10, 0.20  # U105's VCAP capacitor: X7R 50 V 0805, 10 %; its loss of capacitance at 13.9 V taken as 20 % (ASSUMED, Layer 6's part)
+R130, R131 = 10e6, 1e6                          # Q109's gate to source; EN to ground
+IGSS_17570, IDSS_17570 = 100e-9, 1e-6           # CSD17570Q5B SLPS471D 5.1: IGSS at 20 V and IDSS at 24 V, the printed maxima at 25 C
+CSD17570_RDS_150 = 1.68                         # CSD17570Q5B Figure 8: normalized RDS(on) at VGS 10 V and 150 C (typical, read by eye, INFERRED)
 SESSION = [
     ("designators", "the free 100 block on board P (U101, U102, Q101 to Q106, D101, D102, RT101, R101 to R117, C101 to C106, TP101 to TP106); RT1 on board A, which carries no RT designator"),
     ("net names", "BRK_VIN (Q2's source, the breaker's input), BRK_SNS, BRK_GATE, BRK_TMR, BRK_PWR, BRK_UVLO, BRK_G2, BRK_H, BRK_HD, BRK_PGD, BRK_CMID, INH_NTC, INH_REF, INH_OUT, INH_G; DOCK_EN_OUT and DOCK_EN_RET on all three boards"),
@@ -114,6 +134,7 @@ SESSION = [
     ("PGD gating", "U101's PGD on BRK_PGD at half BRK_VIN (R116, R117 1 MOhm); Q106 holds Q105's gate low while PGD is high; Q105 pulls UVLO; R114 and R115 halve U102's output for Q105's gate"),
     ("test points", "TP101 BRK_VIN, TP102 BRK_UVLO, TP103 DOCK_EN_OUT, TP104 DOCK_EN_RET (E-12); TP105 INH_NTC, TP106 INH_OUT (E-12b)"),
     ("lands", "the VSSOP-10, SMC, SOD-123, SOT-23-5 and 2512 lands the kit already uses; the 7-circuit XH header of the same row; RT1 on board P's 0402; RT101's 10 mm leads on the project's LeadLands_1x02"),
+    ("DD-5 ideal diode", "round 4: Q109 CSD17570Q5B beside Q1 (source SCP_OUT, drain SW) under U105 LM74700QDBVRQ1 (ANODE SCP_OUT, CATHODE SW, GND the cells' negative); C111 220 nF 50 V on VCAP; R130 10 MOhm gate to source; EN from BRK_VIN through D104 1N4148W with R131 1 MOhm to ground; C112 and C113 100 nF in series at the anode, C114 and C115 470 nF in series at the cathode; TP109 on the gate (E-12d); a second FET beside Q1, not a second driver on Q1's gate"),
     ("B-R2 detector", "round 3, route R1: U103 and U104 (OPA187, U102's part), U103 on R10's cell side through R120 200 ohm and C109 470 nF against R118 1.15 MOhm over R119 200 ohm from REV_VZ (BRK_VIN through R129 47 kOhm under D103, the BZT52C12 board A's D25 uses); U104 on PACK_P over R121 332 kOhm and R122 33.2 kOhm against BRK_SNS over R123 328 kOhm and R124 33.2 kOhm (0.05 %, 10 ppm/K), C110 1 nF; Q107 and Q108 2N7002 in series on DOCK_EN_RET, their gates at half of each output (R125 to R128); C107, C108; TP107, TP108 (E-12c)"),
 ]
 
@@ -274,7 +295,7 @@ def rev_budget(page, l4, pre, W):
     R["r10"] = float(m.group(1)) * 1e-3
     # TI LM5069 (SNVS452G)
     lm = pdftext(LM5069_SHEET)
-    m = need(lm, r"Normal operation, GATE-OUT = 5 V\s+%s\s+%s\s+%s\s+µA" % (N, N, N), "LM5069: IGATE")
+    m = need(lm, r"Normal operation, GATE-OUT = 5 V\s+%s\s+%s\s+%s\s+\u00b5A" % (N, N, N), "LM5069: IGATE")
     R["igate"] = (float(m.group(1)), float(m.group(3)))
     m = need(lm, r"UVLO < 2\.5 V\s+%s\s+%s\s+%s\s+mA" % (N, N, N), "LM5069: the gate's 2 mA sink")
     R["isink"] = (float(m.group(1)), float(m.group(3)))
@@ -300,9 +321,9 @@ def rev_budget(page, l4, pre, W):
     # JSCJ 2N7002 (C8545)
     nj = pdftext(N7002_SHEET)
     R["n_rds"] = float(need(nj, r"VGS=5 V, ID=50mA\s+1\.1\s+%s" % N, "2N7002: RDS(on) at 5 V").group(1))
-    m = need(nj, r"Vth\(GS\)\s+VDS=VGS, ID=250 µA\s+%s\s+%s\s+%s" % (N, N, N), "2N7002: the threshold")
+    m = need(nj, r"Vth\(GS\)\s+VDS=VGS, ID=250 \u00b5A\s+%s\s+%s\s+%s" % (N, N, N), "2N7002: the threshold")
     R["n_vth"] = (float(m.group(1)), float(m.group(3)))
-    R["n_vgs"] = float(need(nj, r"Gate-Source Voltage\s+VGS\s+±(\d+)", "2N7002: VGS").group(1))
+    R["n_vgs"] = float(need(nj, r"Gate-Source Voltage\s+VGS\s+\u00b1(\d+)", "2N7002: VGS").group(1))
     # Diodes BZT52C (DS18004)
     bz = pdftext(BZT_SHEET)
     m = need(bz, r"BZT52C12\s+WH\s+12\s+%s\s+%s\s+5\s+25\s+150\s+1\.0\s+%s\s+%s\s+%s\s+%s" % (N, N, N, N, N, N), "BZT52C12's row")
@@ -385,6 +406,142 @@ def rev_budget(page, l4, pre, W):
                and R["gate_run"] > R["n_vth"][1] and V_CLAMP / 2.0 < R["n_vgs"] and R["t_restart"] < STRETCH_MIN
                and R["tj_at_max"] < 150.0 and R["v_floor"] >= W["vs"][0] and R["out_run"] >= OUT_POWERED + 0.5)
     return R
+
+
+def dd5_budget(page, W, R):
+    """DD-5 (round 4): the charge switch Q1's body diode in discharge under CHGIN = 1, and the ideal diode beside it. Case row
+    C-PROT (record l9stk 15.1 at 0d72880b) with CHGIN = 1 above T3, in discharge. Every figure is read from record l9stk's
+    copy or from a maker's sheet; the one reading of a plotted typical curve is marked."""
+    N = r"([0-9.]+)"
+    D = {}
+    # the case row and the defect, record l9stk section 15
+    need(page, r"the\s+service\s+is\s+never\s+interrupted:\s+10\s+A\s+held\s+and\s+18\s+A\s+for\s+60\s+s", "l9stk 15.1: the service")
+    m = need(page, r"Q1/Q2\s+on\s+board\s+P,\s+both\s+enhanced\s+\|\s+%s\s+W\s+each;\s+TJ\s+%s\s+C\s+on\s+its\s+own\s+pad,\s+%s\s+C\s+with\s+both\s+losses\s+through\s+one\s+pad" % (N, N, N),
+             "l9stk 15.5: Q1 and Q2 enhanced")
+    D["p_enh"], D["tj_own_l9"], D["tj_one_l9"] = (float(m.group(k)) for k in (1, 2, 3))
+    D["k_hot"] = float(need(page, r"the\s+x%s\s+is\s+the\s+CSD18510Q5B's\s+\(ASSUMPTION,\s+E-8\)" % N, "l9stk 15.5: the hot factor").group(1))
+    D["p_diode_l9"] = float(need(page, r"its\s+body\s+diode\s+%s\s+W\*\*\s+\(VSD\s+1\s+V\s+at\s+most\)" % N, "l9stk 15.5: Q1's body diode").group(1))
+    D["p_pad"] = float(need(page, r"7\s+to\s+10\s+W\s+against\s+the\s+%s\s+W\s+its\s+pad\s+holds" % N, "l9stk 15.6: Q1's pad").group(1))
+    D["over"] = float(need(page, r"\*\*Q1\s+OVER\s+\(%s\s+x\)\*\*" % N, "l9stk 15.6: Q1 over").group(1))
+    D["tj_retry"] = float(need(page, r"\*\*TJ\s+(\d+)\s+C\*\*\s+\|\s+150\s+C\s+\(1\.48\s+W\s+on\s+its\s+pad\)", "l9stk 15.4b: Q1 in the retry table").group(1))
+    m = need(page, r"Breaker\s+\|\s+%s\s+to\s+%s\s+A" % (N, N), "l9stk 15.4: the breaker's threshold")
+    D["i_cb"] = float(m.group(2))
+    D["t_clear"] = float(need(page, r"\*\*clearing\s+at\s+most\s+%s\s+ms\*\*" % N, "l9stk 15.4: the clearing time").group(1)) * 1e-3
+    D["hold_min"] = float(need(page, r"\*\*%s\s+to\s+0\.907\s+s\s+after\s+the\s+enable\s+mates\*\*" % N, "l9stk 15.4: the hold's least").group(1))
+    air, i_lim = W["air"], R["i_lim"]
+    # TI BQ4050: the technical reference SLUUAQ3A and the data sheet SLUSC67B
+    trm, ds = pdftext(TRM_SHEET), pdftext(BQ4050_SHEET)
+    need(trm, r"Literature Number: SLUUAQ3A", "the BQ4050 reference's revision"); need(ds, r"SLUSC67B", "the BQ4050 sheet's revision")
+    need(trm, r"Not charging AND \(ChargingStatus\(\)\[HT\] = 1", "SLUUAQ3A 4.13: the inhibit's trip while not charging")
+    need(trm, r"OperationStatus\(\)\[XCHG\] = 1 if FET Options\[CHGIN\] = 1\.", "SLUUAQ3A 4.13: the FET action under CHGIN")
+    need(trm, r"CHGIN \(Bit 4\): FET action in CHARGE INHIBIT mode\s+1 = Charging and Precharging disabled, FETs off\s+0 = FET active \(default\)",
+         "SLUUAQ3A 14.2.1.1: CHGIN")
+    need(trm, r"CHG FET off AND Current\(\) continuously \u2265 CFET:OFF Threshold", "SLUUAQ3A 3.10: the charge FET's permanent fail")
+    D["body_diode_hits"] = len(re.findall(r"body[\s-]*diode", trm, re.I)) + len(re.findall(r"body[\s-]*diode", ds, re.I))
+    # TI CSD17570Q5B (SLPS471D): Q1's part, and Q109's
+    cs = pdftext(CSD17570_SHEET)
+    need(cs, r"SLPS471D", "the CSD17570Q5B sheet's revision")
+    m = need(cs, r"VGS = 10 V, ID = 50 A\s+%s\s+%s\s+m\u2126" % (N, N), "CSD17570Q5B: RDS(on) at 10 V")
+    D["rds_typ"], D["rds_max"] = float(m.group(1)) * 1e-3, float(m.group(2)) * 1e-3
+    D["vsd_max"] = float(need(cs, r"ISD = 50 A, VGS = 0 V\s+0\.8\s+(\d+)\s+V", "CSD17570Q5B: VSD").group(1))
+    D["rjc"] = float(need(cs, r"Junction-to-Case Thermal Resistance \(1\)\s+%s" % N, "CSD17570Q5B: RthJC").group(1))
+    D["rja"] = float(need(cs, r"Junction-to-Ambient Thermal Resistance \(1\) \(2\)\s+(\d+)", "CSD17570Q5B: RthJA").group(1))
+    D["rja_typ"] = float(need(cs, r"Typical R\u03b8JA = (\d+)\u00b0C/W on a 1 inch2", "CSD17570Q5B: the typical RthJA").group(1))
+    m = need(cs, r"VDS = VGS, ID = 250 \u03bcA\s+%s\s+%s\s+%s\s+V" % (N, N, N), "CSD17570Q5B: the threshold")
+    D["vth"] = (float(m.group(1)), float(m.group(3)))
+    D["ciss_max"] = float(need(cs, r"Ciss\s+Input Capacitance\s+(\d+)\s+(\d+)\s+pF", "CSD17570Q5B: Ciss").group(2)) * 1e-12
+    D["qg45_max"] = float(need(cs, r"Qg\s+Gate Charge Total \(4\.5 V\)\s+(\d+)\s+(\d+)\s+nC", "CSD17570Q5B: Qg").group(2)) * 1e-9
+    D["vgs_abs"] = float(need(cs, r"VGS\s+Gate-to-Source Voltage\s+\u00b1(\d+)\s+V", "CSD17570Q5B: VGS").group(1))
+    D["tj_max"] = float(need(cs, r"\u201355 to (\d+)", "CSD17570Q5B: the junction's range").group(1))
+    need(cs, r"Figure 8\. Normalized On-State Resistance vs Temperature", "CSD17570Q5B: Figure 8")
+    # TI LM74700-Q1 (SNOSD17G): U105
+    lm = pdftext(LM74700_SHEET)
+    U, DASH = "\u00b5", "\u2013"
+    need(lm, r"SNOSD17G", "the LM74700-Q1 sheet's revision")
+    m = need(lm, r"Regulated Forward V\(AK\) Threshold\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "LM74700: V(AK REG)")
+    D["vreg"] = tuple(float(m.group(k)) * 1e-3 for k in (1, 2, 3))
+    m = need(lm, r"threshold for full conduction\s+V\(AK\)\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "LM74700: the full conduction threshold")
+    D["vfull"] = tuple(float(m.group(k)) * 1e-3 for k in (1, 2, 3))
+    m = need(lm, r"threshold for reverse current\s+V\(AK REV\)\s+%s(\d+)\s+%s(\d+)\s+%s(\d+)\s+mV" % (DASH, DASH, DASH), "LM74700: V(AK REV)")
+    D["vrev"] = tuple(-float(m.group(k)) * 1e-3 for k in (1, 2, 3))
+    D["gm_min"] = float(need(lm, r"Gm\s+(\d+)\s+(\d+)\s+(\d+)\s+%sA/V" % U, "LM74700: the error amplifier").group(1)) * 1e-6
+    D["i_src_min"] = float(need(lm, r"Peak source current\s+(\d+)\s+(\d+)\s+mA", "LM74700: the gate's source current").group(1)) * 1e-3
+    m = need(lm, r"Regulation max sink current\s+(\d+)\s+(\d+)\s+%sA" % U, "LM74700: the regulation's sink")
+    D["i_sink"] = (float(m.group(1)) * 1e-6, float(m.group(2)) * 1e-6)
+    D["i_pump_min"] = float(need(lm, r"V\(VCAP\) %s V\(ANODE\) = 7 V\s+(\d+)\s+(\d+)\s+(\d+)\s+%sA" % (DASH, U), "LM74700: the charge pump's current").group(1)) * 1e-6
+    D["vcap_on_min"] = float(need(lm, r"Charge pump turn on voltage\s+%s\s+%s\s+%s\s+V" % (N, N, N), "LM74700: the pump's turn on").group(1))
+    D["vcap_off_max"] = float(need(lm, r"Charge pump turn off voltage\s+%s\s+%s\s+%s\s+V" % (N, N, N), "LM74700: the pump's turn off").group(3))
+    D["uvlor_max"] = float(need(lm, r"UV release at rising\s+V\(ANODE\) %s V\(CATHODE\) = 100 mV\s+%s\s+%s\s+%s\s+V" % (DASH, N, N, N), "LM74700: VCAP's release").group(3))
+    D["uvlof_max"] = float(need(lm, r"UV threshold at\s+V\(ANODE\) %s V\(CATHODE\) = 100 mV\s+%s\s+%s\s+(\d+)\s+V" % (DASH, N, N), "LM74700: VCAP's lockout").group(3))
+    D["i_shdn"] = float(need(lm, r"Shutdown Supply Current\s+V\(EN\) = 0 V\s+%s\s+%s\s+%sA" % (N, N, U), "LM74700: the shutdown current").group(2)) * 1e-6
+    m = need(lm, r"Operating Quiescent Current\s+(\d+)\s+(\d+)\s+%sA" % U, "LM74700: the quiescent current")
+    D["iq"] = (float(m.group(1)) * 1e-6, float(m.group(2)) * 1e-6)
+    D["en_il_min"] = float(need(lm, r"Enable input low threshold\s+%s\s+%s\s+%s" % (N, N, N), "LM74700: EN low").group(1))
+    D["en_ih_max"] = float(need(lm, r"Enable input high threshold\s+%s\s+%s\s+%s" % (N, N, N), "LM74700: EN high").group(3))
+    D["i_en"] = float(need(lm, r"Enable sink current\s+V\(EN\) = 12 V\s+(\d+)\s+(\d+)\s+%sA" % U, "LM74700: EN's sink").group(2)) * 1e-6
+    D["entdly"] = float(need(lm, r"ENTDLY\s+V\(VCAP\) > V\(VCAP UVLOR\)\s+(\d+)\s+(\d+)\s+%ss" % U, "LM74700: ENTDLY").group(2)) * 1e-6
+    D["t_rev"] = float(need(lm, r"tReverse delay\s+%s\s+%s\s+%ss" % (N, N, U), "LM74700: the reverse delay").group(2)) * 1e-6
+    D["t_fwd"] = float(need(lm, r"tForward recovery\s+%s\s+%s\s+%ss" % (N, N, U), "LM74700: the forward recovery").group(2)) * 1e-6
+    D["i_cath"] = float(need(lm, r"V\(ANODE\) %s V\(CATHODE\) = %s100 mV\s+1\.2\s+%s\s+%sA" % (DASH, DASH, N, U), "LM74700: the cathode's current").group(1)) * 1e-6
+    D["en_abs"] = (-0.3, float(need(lm, r"EN to GND, V\(ANODE\) > 0 V\s+%s0\.3\s+(\d+)\s+V" % DASH, "LM74700: EN's rating").group(1)))
+    D["gate_abs"] = float(need(lm, r"GATE to ANODE\s+%s0\.3\s+(\d+)\s+V" % DASH, "LM74700: GATE's rating").group(1))
+    need(lm, r"ensures\s+zero\s+DC\s+reverse\s+current\s+flow", "LM74700: zero DC reverse current")
+    need(lm, r"VCAP: Minimum 0\.1 %sF is required; recommended value of VCAP \(%sF\) \u2265 10 x CISS\(MOSFET\)\(%sF\)" % (U, U, U), "LM74700: VCAP's capacitor")
+    need(lm, r"CIN: minimum 22 nF of input capacitance", "LM74700: CIN"); need(lm, r"COUT: minimum 100 nF of output capacitance", "LM74700: COUT")
+    need(lm, r"As a guideline, it is suggested to choose \(20 mV / ILoad\(Nominal\)\) \u2264 RDS\(ON\) \u2264 \( 50 mV / ILoad\(Nominal\)\)", "LM74700: the FET guideline")
+    need(lm, r"During forward regulation mode the ANODE\s+to CATHODE voltage is regulated to 20 mV by adjusting the GATE to ANODE voltage", "LM74700: the regulated mode")
+    need(lm, r"forward current flow through the external MOSFET is not interrupted but is conducted through\s+the MOSFET.s body diode", "LM74700: shutdown")
+    # the 1N4148W (D104), read at 1 mA
+    d4 = pdftext(D4148_SHEET)
+    D["vf_d"] = float(need(d4, r"at IF = 1 mA\s+-\s+%s" % N, "1N4148W: VF at 1 mA").group(1))
+    # the arithmetic: Q109's loss, with Q2's on the same pour
+    r_hot = D["rds_max"] * D["k_hot"]
+    D["r_hot"] = r_hot
+    D["v_leak"] = (D["vcap_off_max"] / R130 + IGSS_17570) / D["gm_min"]          # R130's and the gate's leakage through the error amplifier
+    v_reg = D["vreg"][2] + D["v_leak"]
+    D["v_reg_max"] = v_reg
+    rows = []
+    for i in (10.0, 18.0, i_lim):
+        v_ir = i * r_hot
+        vak = max(v_reg, v_ir)
+        p109, p2 = i * vak, i * i * r_hot
+        rows.append({"i": i, "v_ir": v_ir, "vak": vak, "p109": p109, "p2": p2, "p_before": i * D["vsd_max"],
+                     "tj_own": air + p109 * D["rja"], "tj_one": air + (p109 + p2) * D["rja"],
+                     "p_hunt": i * max(D["vfull"][2], v_ir), "tj_hunt": air + (i * max(D["vfull"][2], v_ir) + p2) * D["rja"]})
+    D["rows"] = rows
+    D["rth_need"] = (D["tj_max"] - air) / (rows[2]["p109"] + rows[2]["p2"])
+    D["rth_robust"] = (D["tj_max"] - air) / (rows[2]["p_hunt"] + rows[2]["p2"])
+    # the typical basis, for scale: typical RDS(on) at Figure 8's 150 C factor (read), the regulation's 20 mV, the typical path
+    rt = D["rds_typ"] * CSD17570_RDS_150
+    vt = max(D["vreg"][1], i_lim * rt)
+    D["tj_typ"] = air + (i_lim * vt + i_lim * i_lim * rt) * D["rja_typ"]
+    # the breaker's largest threshold until it clears; the body diodes before U105 drives
+    D["p_cb"] = D["i_cb"] ** 2 * r_hot
+    D["dt_cb"] = D["p_cb"] * D["rjc"]
+    D["dt_diode"] = i_lim * D["vsd_max"] * D["rjc"]
+    c111_min = C111 * (1 - C111_TOL) * (1 - C111_BIAS)
+    D["c111_min"] = c111_min
+    D["t_drv_en"] = D["entdly"] + C111 * (1 + C111_TOL) * D["uvlor_max"] / D["i_pump_min"]
+    D["qg_full"] = D["qg45_max"] + D["ciss_max"] * (D["vcap_off_max"] - 4.5)       # a model: Ciss above the plateau
+    D["droop"] = D["qg_full"] / c111_min
+    D["t_on"] = D["t_fwd"] + D["qg_full"] / D["i_src_min"]
+    # reverse: the fast comparator and, under it, the regulation's sink
+    D["i_rev_fast"] = -D["vrev"][0] / D["rds_typ"]
+    D["t_rev_slow"] = D["qg_full"] / D["i_sink"][0]
+    D["q_rev"] = R["i_chg_fe"] * D["t_rev_slow"]
+    # EN and the standby
+    D["en_on"] = D["en_ih_max"] + D["vf_d"]
+    D["i_run"] = D["iq"][1] + W["vmax"] / R131 + D["i_en"]
+    D["i_off"] = D["i_shdn"] + IDSS_17570
+    # TI's guideline window against the kit's currents
+    D["win"] = [(i, 0.020 / i, 0.050 / i) for i in (10.0, 18.0, i_lim)]
+    D["p_window_fet"] = i_lim ** 2 * (0.020 / 10.0) * D["k_hot"]
+    D["ok"] = (all(r_["tj_one"] <= D["tj_max"] for r_ in rows) and all(r_["p109"] <= D["p_pad"] for r_ in rows)
+               and all(r_["p_before"] > D["p_pad"] for r_ in rows)
+               and D["t_drv_en"] < D["hold_min"] and D["vcap_on_min"] - D["droop"] > D["uvlof_max"]
+               and c111_min >= 10 * D["ciss_max"] and D["vcap_off_max"] <= min(D["vgs_abs"], D["gate_abs"])
+               and D["vth"][1] <= 2.0 and V_CLAMP <= D["en_abs"][1] and D["en_on"] < W["vmin"] and D["body_diode_hits"] == 0)
+    return D
 
 
 def rel(p):
@@ -540,8 +697,9 @@ def main():
     inputs += others + [NET["p"], NET["e"], NET["a"]]
     inputs += [os.path.join(HERE, f) for f in sorted(SOURCES_SHA)] + [os.path.join(HERE, "inputs", "SOURCES.txt")]
     inputs += [os.path.join(CHK.PRETTY, l + ".kicad_mod") for l in sorted(set(CHK.LANDS.values()) | {"LeadLands_1x02"})]
-    inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, os.path.join(HERE, "fetch_held_back.py")]
-    inputs += [MINE["p"], MINE["e"], MINE["a"], os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
+    inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, TRM_SHEET, BQ4050_SHEET, CSD17570_SHEET, LM74700_SHEET,
+               os.path.join(HERE, "fetch_held_back.py")]
+    inputs += [MINE["p"]] + MINE2["p"] + [MINE["e"], MINE["a"], os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
     w("1. INPUTS, pinned by sha256\n")
     for p in inputs:
         if not os.path.isfile(p):
@@ -686,6 +844,78 @@ def main():
     w("\n")
     if not R["ok"]:
         refuse("B-R2's detector does not close")
+    # 3c. DD-5
+    D = dd5_budget(texts["page"], B, R)
+    w("3c. DD-5, THE CHARGE SWITCH'S BODY DIODE IN DISCHARGE (round 4): case row C-PROT (l9stk 15.1 at 0d72880b) with CHGIN = 1 above T3, in discharge\n")
+    w("   THE DEFECT (l9stk 15.5 to 15.7; BAT-F20): SLUUAQ3A 4.13 trips the inhibit while 'Not charging' and sets XCHG = 1 if FET Options[CHGIN] = 1\n")
+    w("     (14.2.1.1: 'Charging and Precharging disabled, FETs off'), so Q1 is off in discharge above T3 and its body diode carries the pack:\n")
+    for r_ in D["rows"]:
+        w("     %5.2f A: %5.2f W in Q1's diode (VSD %.0f V at most, SLPS471D, printed) against the %.2f W its pad holds from %.2f C: %.1f times\n" % (
+            r_["i"], r_["p_before"], D["vsd_max"], D["p_pad"], B["air"], r_["p_before"] / D["p_pad"]))
+    w("     record l9stk reads %.1f W at the held current, OVER by %.1f times at 10 A, and %.0f C in its retry table\n" % (D["p_diode_l9"], D["over"], D["tj_retry"]))
+    w("   APPROACH (i), THE GAUGE: 'body diode' occurs %d times in SLUUAQ3A and SLUSC67B: no function is printed that turns the charge FET on while\n" % D["body_diode_hits"])
+    w("     discharge current flows; CHGIN = 0 ('FET active', the default) is printed, and it removes the inhibit's FET action above T3 (the pack\n")
+    w("     ladder's level L4a), leaving the charge start to the charger's obedience and to OTC: a protection reduced, and outside the case row: DROPPED\n")
+    w("   APPROACH (ii), A DIODE THAT MAY CARRY THE SERVICE: on Q1's pad (%.0f C/W at most, %.2f W) the forward drop may be %.3f V at 10 A, %.3f V at 18 A\n" % (
+        D["rja"], D["p_pad"], D["p_pad"] / 10.0, D["p_pad"] / 18.0))
+    w("     and %.3f V at %.2f A; with Q2's loss on the same pour %.4f V at %.2f A; no junction diode prints that (a Schottky's 0.3 to 0.5 V is a\n" % (
+        D["p_pad"] / R["i_lim"], R["i_lim"], ((D["tj_max"] - B["air"]) / D["rja"] - D["rows"][2]["p2"]) / R["i_lim"], R["i_lim"]))
+    w("     statement of the class, no sheet held, ASSUMPTION), and a pad for it (6 to 10 K/W) does not exist on a 70 x 44 mm board: NOT SELECTED\n")
+    w("   APPROACH (iii), SELECTED: an ideal diode beside Q1: Q109 (CSD17570Q5B, Q1's part) under U105 (LM74700-Q1, board E's U3 part), SNOSD17G:\n")
+    w("     printed: V(AK REG) %.0f / %.0f / %.0f mV; full conduction above %.0f / %.0f / %.0f mV; reverse blocking at %.0f / %.0f / %.0f mV within %.2f us;\n" % (
+        D["vreg"][0] * 1e3, D["vreg"][1] * 1e3, D["vreg"][2] * 1e3, D["vfull"][0] * 1e3, D["vfull"][1] * 1e3, D["vfull"][2] * 1e3,
+        D["vrev"][0] * 1e3, D["vrev"][1] * 1e3, D["vrev"][2] * 1e3, D["t_rev"] * 1e6))
+    w("       the gate drive %.1f to %.1f V over the anode (the FET's VGS %.0f V, U105's GATE %.0f V); 'ensures zero DC reverse current flow'\n" % (
+        D["vcap_on_min"], D["vcap_off_max"], D["vgs_abs"], D["gate_abs"]))
+    w("     printed: Q109's RDS(on) %.2f mOhm typical, %.2f at most at VGS 10 V and 25 C; taken x%.1f hot as l9stk takes it (ASSUMPTION, E-8): %.4f mOhm;\n" % (
+        D["rds_typ"] * 1e3, D["rds_max"] * 1e3, D["k_hot"], D["r_hot"] * 1e3))
+    w("       the part's own Figure 8 reads x%.2f at 150 C (typical, read by eye, INFERRED); RthJA %.0f C/W at most on 1 in2 of 2 oz, %.0f typical\n" % (
+        CSD17570_RDS_150, D["rja"], D["rja_typ"]))
+    w("     model: Q109's loss is I x max(the regulated drop, I x RDS(on) hot); the regulated drop at most %.0f mV plus %.2f mV for R130 and the gate's\n" % (
+        D["vreg"][2] * 1e3, D["v_leak"] * 1e3))
+    w("       leakage through the error amplifier (%.0f uA/V at least): %.2f mV\n" % (D["gm_min"] * 1e6, D["v_reg_max"] * 1e3))
+    w("   THE ACCEPTANCE ON C-PROT WITH CHGIN = 1 (from %.2f C; Q109 and Q2 on the SW pour, both losses through one pad of %.0f C/W, l9stk's bound):\n" % (B["air"], D["rja"]))
+    for r_, lab in zip(D["rows"], ("10 A held", "18 A for 60 s (taken as held)", "the breaker's %.2f A held" % R["i_lim"])):
+        w("     %-30s Q109 %.2f mV, %.3f W (was %.2f W); Q2 %.3f W; TJ %.1f C on its own pad, %.1f C with both through one pad, against %.0f C\n" % (
+            lab + ":", r_["vak"] * 1e3, r_["p109"], r_["p_before"], r_["p2"], r_["tj_own"], r_["tj_one"], D["tj_max"]))
+    w("     the installed path this asks: %.1f K/W or better for the hottest junction with both losses counted (E-8, restated with Q109)\n" % D["rth_need"])
+    w("     on the typical basis (RDS(on) %.2f mOhm x%.2f, the regulation's %.0f mV, %.0f C/W): %.1f C at %.2f A held\n" % (
+        D["rds_typ"] * 1e3, CSD17570_RDS_150, D["vreg"][1] * 1e3, D["rja_typ"], D["tj_typ"], R["i_lim"]))
+    w("     at the breaker's largest threshold %.2f A until it clears (%.3f ms): %.2f W in Q109, its junction at most %.1f K over its case (RthJC %.1f C/W)\n" % (
+        D["i_cb"], D["t_clear"] * 1e3, D["p_cb"], D["dt_cb"], D["rjc"]))
+    w("     with Q1 on (below T3) the two share, and the pair's loss is at most Q1's alone, l9stk's %.3f W at %.2f A: no row of l9stk 15.5 is worsened\n" % (D["p_enh"], R["i_lim"]))
+    w("   IF THE REGULATION DID NOT SETTLE (not a printed guarantee with a FET under TI's window): the drop is bounded by the full conduction threshold,\n")
+    for r_ in D["rows"]:
+        w("     %5.2f A: at most %.3f W in Q109, %.1f C with both through one pad%s\n" % (r_["i"], r_["p_hunt"], r_["tj_hunt"], "" if r_["tj_hunt"] <= D["tj_max"] else ": OVER at %.0f C/W, so this row rests on E-16" % D["rja"]))
+    w("     THE LAYOUT'S TARGET: %.1f K/W or better for the SW pour with both losses counted makes the %.2f A row hold on that bound too (the bottom face is free)\n" % (
+        D["rth_robust"], R["i_lim"]))
+    w("     TI's guideline (10.1.1.2.2): RDS(on) between 20 mV and 50 mV over the nominal current: " + "; ".join(
+        "%.2f to %.2f mOhm at %.2f A" % (lo * 1e3, hi * 1e3, i) for i, lo, hi in D["win"]) + ";\n")
+    w("       Q109's %.2f to %.2f mOhm is under it at 10 A (U105 then holds it in regulated conduction, its light-load mode), at its edge above 18 A; a FET\n" % (
+        D["rds_typ"] * 1e3, D["r_hot"] * 1e3))
+    w("       inside the window at 10 A (2 mOhm) would dissipate %.2f W at %.2f A hot, over the pad\n" % (D["p_window_fet"], R["i_lim"]))
+    w("   DELAYS: U105 drives %.2f ms at most after EN (ENTDLY %.0f us, C111 +%.0f %% to %.1f V at %.0f uA), against the breaker's hold of %.3f s at least before\n" % (
+        D["t_drv_en"] * 1e3, D["entdly"] * 1e6, C111_TOL * 100, D["uvlor_max"], D["i_pump_min"] * 1e6, D["hold_min"]))
+    w("       any load; Q1 turned off under load: the gate is up within %.1f us (%.1f us and %.0f nC at %.0f mA; the charge a model), the body diodes carrying\n" % (
+        D["t_on"] * 1e6, D["t_fwd"] * 1e6, D["qg_full"] * 1e9, D["i_src_min"] * 1e3))
+    w("       the current meanwhile at %.1f K over the case at most (VSD x RthJC); C111 at least %.3f uF derated (-%.0f %%, and -%.0f %% for its bias, ASSUMED)\n" % (
+        D["dt_diode"], D["c111_min"] * 1e6, C111_TOL * 100, C111_BIAS * 100))
+    w("       against ten times Ciss, %.3f uF; VCAP falls %.2f V as the gate connects, from %.1f V at least to %.2f V, over its %.1f V lockout\n" % (
+        10 * D["ciss_max"] * 1e6, D["droop"], D["vcap_on_min"], D["vcap_on_min"] - D["droop"], D["uvlof_max"]))
+    w("   THE CHARGE BLOCKING, unchanged: the gauge's drive of Q1 is not touched; Q109 off in reverse (Q1's and Q109's IDSS, U105's cathode %.1f uA to ground);\n" % (D["i_cath"] * 1e6))
+    w("       a reversal faster than the regulation follows is ended by the comparator within %.2f us from %.1f A (typical RDS(on), no minimum printed) or,\n" % (
+        D["t_rev"] * 1e6, D["i_rev_fast"]))
+    w("       under it, by the regulation's sink (%.0f uA at least): %.1f ms and %.2f C at board A's largest %.1f A, a model; Q109 welded reads as a welded Q1\n" % (
+        D["i_sink"][0] * 1e6, D["t_rev_slow"] * 1e3, D["q_rev"], R["i_chg_fe"]))
+    w("       (SLUUAQ3A 3.10, CFETF)\n")
+    w("   EN AND THE STANDBY: EN on from BRK_VIN %.2f V (EN high %.1f V at most, D104 %.3f V at 1 mA), off under %.1f V; U105 %.0f uA typical, %.0f at most,\n" % (
+        D["en_on"], D["en_ih_max"], D["vf_d"], D["en_il_min"], D["iq"][0] * 1e6, D["iq"][1] * 1e6))
+    w("       %.0f uA with R131 and EN at %.1f V while the gauge holds the discharge FET on; %.1f uA at most with the gauge shut down (U105 %.1f, Q109's IDSS 1)\n" % (
+        D["i_run"] * 1e6, B["vmax"], D["i_off"] * 1e6, D["i_shdn"] * 1e6))
+    w("   DD-5 BY THE CASE ROW: %s\n" % ("CORRECTED IN THE DRAFT (the acceptance holds on printed limits; E-8, E-16 and E-12d stay open; nothing measured)" if D["ok"] else "DOES NOT CLOSE"))
+    w("\n")
+    if not D["ok"]:
+        refuse("DD-5's correction does not close on its case row")
     with tempfile.TemporaryDirectory(prefix="l8p_") as d:
         # 4. each draft alone
         w("4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)\n")
@@ -702,6 +932,24 @@ def main():
             w("   %s: check %s; applied %s; second application %s; the tree's gen_sch_%s.py %s\n" % (
                 os.path.basename(s), "OK" if ok1 else "FAILED", "OK" if ok2 else "FAILED",
                 "refused" if r3.returncode == 3 else "NOT REFUSED", b, "refused (NOT RELEASED)" if r4.returncode == 3 and b"NOT RELEASED" in r4.stderr else "NOT REFUSED"))
+        for b, extra in sorted(MINE2.items()):
+            for s in extra:
+                t0 = os.path.join(d, "bare_gen_sch_%s.py" % b); shutil.copy(GEN[b], t0)
+                r0 = subprocess.run([sys.executable, "-B", s, t0, "--write"], capture_output=True)
+                t = os.path.join(d, "second_gen_sch_%s.py" % b); shutil.copy(GEN[b], t)
+                if run(MINE[b], t, b)[0] != 0:
+                    refuse("this record's first board %s draft refused a clean copy" % b)
+                pre = sha(t, 64)
+                r1 = subprocess.run([sys.executable, "-B", s, t], capture_output=True)
+                ok1 = r1.returncode == 0 and b"CHECK OK" in r1.stdout and sha(t, 64) == pre
+                r2 = subprocess.run([sys.executable, "-B", s, t, "--write"], capture_output=True)
+                ok2 = r2.returncode == 0 and b"WRITTEN" in r2.stdout
+                r3 = subprocess.run([sys.executable, "-B", s, t, "--write"], capture_output=True)
+                r4 = subprocess.run([sys.executable, "-B", s, GEN[b], "--write"], capture_output=True)
+                w("   %s (after %s): without it %s; check %s; applied %s; second application %s; the tree's gen_sch_%s.py %s\n" % (
+                    os.path.basename(s), os.path.basename(MINE[b]), "refused" if r0.returncode == 3 and sha(t0, 64) == before[b] else "NOT REFUSED",
+                    "OK" if ok1 else "FAILED", "OK" if ok2 else "FAILED", "refused" if r3.returncode == 3 else "NOT REFUSED", b,
+                    "refused" if r4.returncode == 3 else "NOT REFUSED"))
         if any(sha(GEN[b], 64) != before[b] for b in "pea"):
             refuse("a draft wrote into the tree")
         w("   the tree's generators are unchanged: yes\n\n")
@@ -710,24 +958,24 @@ def main():
         composed = {}
         for b in "pea":
             seq = [draft(r, n, b) for r, n in ORDER[b]]
-            fwd = seq[:SLOT[b]] + [MINE[b]] + seq[SLOT[b]:]
+            fwd = seq[:SLOT[b]] + mine_seq(b) + seq[SLOT[b]:]
             p, res = compose(b, fwd, d, "fwd")
             composed[b] = p if all(v.startswith("OK") for _s, v in res) and len(res) == len(fwd) else None
-            w("   board %s, this record's draft in its place:\n" % b.upper())
+            w("   board %s, this record's draft%s in its place:\n" % (b.upper(), "s" if len(mine_seq(b)) > 1 else ""))
             for s, v in res:
                 w("     %-44s %s\n" % (s, v))
-            _p, res = compose(b, [MINE[b]] + seq, d, "rev")
-            w("   board %s, this record's draft first, then the order: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + 1
+            _p, res = compose(b, mine_seq(b) + seq, d, "rev")
+            w("   board %s, this record's draft first, then the order: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + len(mine_seq(b))
                                                                       else "; ".join("%s %s" % x for x in res if not x[1].startswith("OK"))))
-            _p, res = compose(b, seq + [MINE[b]], d, "last")
-            w("   board %s, the order, then this record's draft last: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + 1
+            _p, res = compose(b, seq + mine_seq(b), d, "last")
+            w("   board %s, the order, then this record's draft last: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + len(mine_seq(b))
                                                                        else "; ".join("%s %s" % x for x in res if not x[1].startswith("OK"))))
         w("\n")
         # 6. designators
         w("6. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)\n")
         for b in "pea":
             seq = [draft(r, n, b) for r, n in ORDER[b]]
-            fwd = seq[:SLOT[b]] + [MINE[b]] + seq[SLOT[b]:]
+            fwd = seq[:SLOT[b]] + mine_seq(b) + seq[SLOT[b]:]
             p = os.path.join(d, "desig_gen_sch_%s.py" % b); shutil.copy(GEN[b], p)
             before_t = open(p, encoding="utf-8").read(); adds = {}
             for s in fwd:
@@ -736,9 +984,12 @@ def main():
                 after_t = open(p, encoding="utf-8").read()
                 adds[os.path.relpath(s, RECS)] = added(before_t, after_t, s)
                 before_t = after_t
-            mine = adds.get(os.path.relpath(MINE[b], RECS), set())
+            own = {os.path.relpath(x, RECS) for x in mine_seq(b)}
+            mine = set().union(*[adds.get(k, set()) for k in own])
+            if len(own) > 1 and sum(len(adds.get(k, set())) for k in own) != len(mine):
+                refuse("this record's board %s drafts share a designator" % b)
             w("   board %s, this record's: %s\n" % (b.upper(), ", ".join(sorted(mine, key=lambda x: (re.sub(r"\d", "", x), int(re.sub(r"\D", "", x) or 0)))) or "none (nets only)"))
-            meets = {k: sorted(v & mine) for k, v in adds.items() if k != os.path.relpath(MINE[b], RECS) and v & mine}
+            meets = {k: sorted(v & mine) for k, v in adds.items() if k not in own and v & mine}
             w("   board %s, this record's against every other draft's: %s\n" % (b.upper(), "DISJOINT" if not meets else "MEETS %s" % meets))
             dup = duplicates(before_t)
             w("   board %s, literal part calls drawn twice in the composed generator: %s\n" % (b.upper(), ", ".join(dup) if dup else "none"))
@@ -762,7 +1013,7 @@ def main():
         alone = {}
         for b in "pea":
             t = os.path.join(d, "regen_gen_sch_%s.py" % b); shutil.copy(GEN[b], t)
-            if run(MINE[b], t, b)[0] != 0:
+            if any(run(x, t, b)[0] != 0 for x in mine_seq(b)):
                 refuse("this record's board %s draft refused a clean copy" % b)
             rc, path, table = netlist_text(b, t, d, "mine")
             if rc:
@@ -822,23 +1073,36 @@ def main():
         m5 = mutate(alone["p"][0], d, "mut_p4", [(("R120", "1"), ("R119", "2"))])
         buf = io.StringIO(); CHK.run({"p": m5}, ROOT, buf, label=lambda x: "mutated board P (R120 on PACK_N and R119 on GND: U103 no longer reads R10)")
         w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        m6 = mutate(alone["p"][0], d, "mut_p5", [(("Q109", "1"), ("Q109", "5"))])
+        buf = io.StringIO(); CHK.run({"p": m6}, ROOT, buf, label=lambda x: "mutated board P (Q109's source pin 1 and its drain exchanged: the ideal diode the wrong way round)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        m7 = mutate(alone["p"][0], d, "mut_p6", [(("U105", "5"), ("R16", "1"))])
+        buf = io.StringIO(); CHK.run({"p": m7}, ROOT, buf, label=lambda x: "mutated board P (U105's GATE on Q1's gate: a second driver on the gauge's charge switch)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        t = os.path.join(d, "breaker_only_gen_sch_p.py"); shutil.copy(GEN["p"], t)
+        if run(MINE["p"], t, "p")[0] != 0:
+            refuse("the breaker draft refused a clean copy")
+        rc, path, _t = netlist_text("p", t, d, "breaker_only")
+        buf = io.StringIO(); CHK.run({"p": path}, ROOT, buf, label=lambda x: "regenerated board P, the breaker draft without the ideal diode (DD-5 uncorrected)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
         w("\n")
         # 8. intent
         w("8. THE INTENT THE PATCHED BOARD P GENERATOR WRITES FOR THE NEW NETS\n")
         it = alone["p"][1]["intent"]
-        for n in ("PACK_P", "BRK_VIN", "BRK_SNS", "VCC_F"):
+        for n in ("PACK_P", "BRK_VIN", "BRK_SNS", "VCC_F", "SCP_OUT", "SW"):
             r = it["rails"].get(n) or {}
             w("   rail %-8s source %s, loads %s, switch %s on %s%s%s\n" % (n, r.get("source"), json.dumps(r.get("loads"), sort_keys=True), r.get("switch", "-"),
                                                                       r.get("enable_net", "-"), ", series of %s" % r["series_of"] if r.get("series_of") else "",
                                                                       ", fed from %s" % r["fed_from"] if r.get("fed_from") else ""))
         for n in ("BRK_GATE", "BRK_UVLO", "BRK_H", "BRK_HD", "BRK_G2", "BRK_PGD", "BRK_CMID", "INH_NTC", "INH_REF", "INH_OUT", "INH_G", "DOCK_EN_OUT", "DOCK_EN_RET",
-                  "REV_VZ", "REV_IREF", "REV_ISNS", "REV_IOUT", "REV_IG", "REV_VP", "REV_VN", "REV_VOUT", "REV_VG", "REV_MID"):
+                  "REV_VZ", "REV_IREF", "REV_ISNS", "REV_IOUT", "REV_IG", "REV_VP", "REV_VN", "REV_VOUT", "REV_VG", "REV_MID",
+                  "IDL_GATE", "IDL_VCAP", "IDL_EN", "IDL_AMID", "IDL_CMID"):
             r = it["nodes"].get(n) or {}
             w("   node %-11s v_max %s V%s%s\n" % (n, r.get("v_max"), ", v_min %s V" % r["v_min"] if r.get("v_min") else "",
                                              ", rides on %s by %s V" % (r["rides_on"], r["bias_v"]) if r.get("rides_on") else ""))
         cl = it.get("clamps", {}).get("D101") or {}
         w("   clamp D101: %s, protected %s, return %s\n" % (cl.get("direction"), cl.get("protected"), cl.get("return")))
-        for cap in ("C106", "C107", "C108"):
+        for cap in ("C106", "C107", "C108", "C111", "C112", "C114"):
             bp = [b_ for b_ in it.get("bypass", []) if b_.get("cap") == cap]
             w("   decoupling %s: %s\n" % (cap, "class %s at %s.%s on %s" % (bp[0].get("class"), bp[0].get("part"), bp[0].get("pin"), bp[0].get("net")) if bp else "ABSENT"))
     w("\n9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)\n")
