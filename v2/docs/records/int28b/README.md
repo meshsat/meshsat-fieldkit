@@ -29,3 +29,25 @@ nothing is bought or sent. `RESULT.md` holds the outcome.
 5. After each later merge (Layer 5 round 3, L4-E9 round 6, L4-E7's guard, Layer 5's F-12 round, Layers 6 and 7's rounds, the
    firmware's round 3): `apply_set28b_rebind.py --write` where PANEL.md or ASSEMBLY.md moved, then steps 2 to 4 again; six freezes.
 6. The checks, `verify_l3am`, `verify_acceptance` and the single module run on the final tip (RESULT.md sections 3 and 4).
+
+## Promotion (4 October 2026)
+
+Promoted to main as `d834e6a7` (`d834e6a7be211d1cdd1b18ded54bec1c427048fd`) by fast-forward, pushed and mirrored. Gated by
+`_bin/suite_gate.py` on three passes of that exact commit: the box on Python 3.12 (2747 passed, 0 failed, 13 skipped), the box on
+Python 3.11 for test_l4e10 and test_l4e12 (48 passed, 0 failed), the runner for test_l4e7 (50 passed, 0 failed, 1 skipped, the gated
+recompute); 228 of 228 modules, the tree unchanged after each pass. `v2/ecad/tools/candidate_guard.py check` passed before each pass
+against the manifest recorded at the frozen commit (984 evidence files, four historical outputs declared unbound by path: cx1's check,
+h2's and h3's counts, s99's stage; L4-E7's results cache frozen), and on main after the fast-forward.
+
+Two earlier candidates were refused on the way, both by the coordinator's own errors, and are kept here as such:
+- `37bc2f1d` (not pushed, reset): the requirements registry was edited by the CON-010/REQ-044 page rebind after the Layer 4
+  freeze, so every Layer 4 record refused on its registry pin; the pages had been rendered without the full evidence archive. The
+  order was redone (evidence, render, rebind, then freeze) and the owner's amendment added `candidate_guard.py`, which refuses such
+  a candidate before any suite runs.
+- `3b9aa97d`: one test failed (test_l4e9's page and output tables): `apply_close_r197.py` wrote "OPEN 0" into L4-E9's page counts row,
+  which the output omits; corrected by `apply_close_r197_fix.py`, then a targeted run of every module reading L4-E9's files before
+  the suite.
+
+The proposed LAYER-STATUS rows (RESULT.md section 7) are not applied in this set: LAYER-STATUS.md is read by tests, so the rows go
+into set 29 under its own gate. The supplier package re-issued from this commit is
+`MESHSAT-SUPPLIER-HANDOVER-RELEASE-CANDIDATE-d834e6a7.zip` (12,894,538 bytes, sha256 29ed399a...).
