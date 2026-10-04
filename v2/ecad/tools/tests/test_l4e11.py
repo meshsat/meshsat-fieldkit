@@ -1297,7 +1297,10 @@ def t_round9_if1_the_hold_outlasts_the_start_and_its_levels_clear_every_threshol
     assert S["ef_release"] > S["uvlor"][2] and S["ef_release"] > 0.808 and m.R9_VOL < S["uvlof"][0] and m.R9_VOL < S["ov_fall_min"]
     assert S["ef_clamp"] < 60.0 and S["ef_sink"] < 5e-3
     assert S["vz"][1] < S["vgs_max"] and S["q43_overdrive"] > 1.0 and S["rail_held_vdd"] < S["ven_fall"]
-    assert S["redock_w"] < S["plim"][0] and S["kill_left"] > 0.2
+    assert S["redock_w"] < S["plim"][0] and S["kill_left"] > 0.2 and S["redock_room"] > 1.0
+    assert S["static_sum"] < 0.01 * S["if1_room"], "board A's static draw while held is not small against IF-1's room"
+    assert abs(S["static_sum"] - sum(x for _l, x, _c in S["static"])) < 1e-15 and len(S["static"]) >= 15
+    assert abs(S["redock_room"] - (S["plim"][0] / (S["vpk"] - S["fall"][0]) - S["start"]["inrush"])) < 1e-12
     lo, hi = S["dvdt"]
     assert abs(S["vmax"] - S["start"]["tmax"] * lo) < 1e-12 and hi > lo
     row = [x for x in m.downstream(R) if x[0] == "E11-42"][0][3]
@@ -1311,8 +1314,8 @@ def t_round9_the_record_carries_the_outputs_numbers():
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
     for s in ("45.88", "20.39", "7.08", "8.61", "42.48", "51.66", "18.08", "112.37", "6.367", "8.42", "78.6", "201.2", "37.9", "207.7",
-              "8.476", "8.309", "7.856", "30.3 W", "22.1 W", "37.8 mA", "4.53 A", "1.831", "0.729", "0.935", "6.004", "0.8832", "2.513",
-              "6.90", "5.95", "3.921", "0.758", "101.64", "12.32"):
+              "8.476", "8.309", "7.856", "30.3 W", "37.7 mA", "4.55 A", "1.831", "0.729", "0.935", "6.004", "0.8832", "2.513",
+              "6.90", "5.95", "3.921", "0.758", "101.64", "12.3 V", "0.907", "1.149", "0.948", "3.98", "0.81 A", "8.944", "4.746"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -1352,7 +1355,8 @@ def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_la
     R = _R()
     m = _M()
     S, H, N = R["S19"], R["H"], R["N"]
-    assert S["pulse"][0] > S["uvlo_fall"] * 10 and S["pulse_vs_timer"] > 0, "the pulse does not reset the latch with margin"
+    assert S["pulse"][0] > S["uvlo_fall"] * 10 and S["pulse"][0] > S["inv2_on"] * 1000 and S["pulse_vs_timer"] > 0, "the pulse does not reset the latch with margin"
+    assert abs(S["grace"][1] - 0.907) < 1e-9 and abs(S["dd7_restart"] - 0.948) < 1e-9, "not record l9stk's figures at 0d72880b"
     assert abs(S["dd7_total"] - (S["pulse"][2] + S["grace"][1] + S["start"]["tmax"])) < 1e-12
     assert S["alive_off"] < S["alive_on"] < S["pack_lo"] * 0.5, "the terminal's threshold does not sit between dead and alive"
     assert S["inh_g_lo"] > S["vth"][2] + 1.0, "the loop's sense does not turn Q47 on firmly"
@@ -1362,10 +1366,19 @@ def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_la
     tj = {lab: x for lab, _i, _w, x in S["e14"]}
     assert all(x < 150.0 for x in tj.values()), "E-14 at the charger's POR or R-b's largest passes 150 C"
     assert S["t0"] + 4.0 * S["vsd"] * S["rja_brk"] > 150.0, "the checker's 4 A case no longer needs the inhibit"
+    # the inhibit's reach: a source holding VSYS into the breaker's least-limit resistive fault keeps CELL+ over Q48's release, so the case
+    # stays open; the routes' window is R-b's largest to the latched FET's 150 C
+    assert abs(S["v_fault"] - math.sqrt(S["p_src"] * S["r_fault"])) < 1e-12 and S["v_fault"] > S["alive_on"], "the open case is not shown"
+    assert abs(S["r_assert"] - S["alive_off"] ** 2 / S["p_src"]) < 1e-15 and S["r_assert"] < 0.1
+    assert S["capwin"][0] < S["capwin"][1] and abs(S["capwin"][1] - (150.0 - S["t0"]) / (S["vsd"] * S["rja_brk"])) < 1e-12
+    sec19 = open(PAGE, encoding="utf-8").read().split("### 19h. ")[1]
+    assert "**B-R2 stays OPEN for that case**" in sec19 and "| **R1 (SESSION: preferred)** |" in sec19 and "PGD reads high in that state too" in sec19
+    for s in ("10.4 V", "33 mOhm", "1.405 A", "0.915 ohm"):
+        assert s in sec19 and s in open(OUT, encoding="utf-8").read(), s
     row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
     assert "(c) E-14 extended" in row and "at most 1 mA" in row
     page = open(PAGE, encoding="utf-8").read()
     sec = page.split("### 19h. ")[1]
     assert "**No firmware.**" in sec and "**the signal**" in sec and "**the threshold**" in sec and "**where it acts**" in sec
-    for s in ("78.6", "0.835", "3.829", "7.735", "4.07", "9.86", "3.83 mA", "2.939", "142.2", "89.7", "5.05", "1.98", "154.6"):
+    for s in ("78.6", "1.149", "0.948", "3.829", "7.735", "4.07", "9.86", "3.83 mA", "2.939", "142.2", "89.7", "5.05", "1.98", "154.6", "C-1c"):
         assert s in sec and s in open(OUT, encoding="utf-8").read(), s
