@@ -801,7 +801,8 @@ def t_protection_the_table_has_the_owners_columns_and_cases():
     T = _C["PRR"]["table"]
     for must in ("10 A continuous", "18 A for 60 s", "an overload under the unit's limit, held", "an overload over the unit's limit",
                  "a hot short, board P's FETs welded", "a start into a short", "a start", "docking, the make-last enable (C-1b)",
-                 "docking without the enable (the uncorrected design)", "a persistent fault, retrying", "charging (the reverse direction)",
+                 "docking without the enable (the uncorrected design)", "a persistent fault on the -2 (rejected, 3b)", "a persistent fault on the -1 (selected)",
+                 "a start into a resistive fault on VSYS", "charging (the reverse direction)",
                  "the clamp shorted with board P's FETs welded (two faults)", "the shore input, Q7 shorted"):
         assert any(r["case"] == must or r["case"].startswith(must + " ") for r in T), "no row %r" % must
     for r in T:
@@ -817,13 +818,13 @@ def t_protection_the_table_has_the_owners_columns_and_cases():
 def t_protection_the_defects_and_the_evidence_have_owners():
     _PR()
     R = _C["PRR"]
-    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 7)] and all(d[2] for d in R["defects"])
+    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 8)] and all(d[2] for d in R["defects"])
     assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2] and "BAT-F20" in R["defects"][4][1]
     assert "board P's generator" in R["defects"][5][2] and "Layer 7" in R["defects"][5][2]
-    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 14)]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 15)]
     assert [c[0] for c in R["conditions"]] == ["C1", "C2", "C3"] and all(c[2] for c in R["conditions"])
     assert "Layer 7" in R["conditions"][0][2] and "L4-E11" == R["conditions"][2][2] and "C1 and C2" in R["defects"][5][1]
-    assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 7)]
+    assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 8)]
     assert all("not sent" in q[2] for q in R["questions"]) and "48 V" in R["questions"][0][1]
     assert len(R["not_taken"]) == 7 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
     assert any("single-wire" in x for x in R["not_taken"]) and not any("PTC" in x for x in R["not_taken"])
@@ -847,13 +848,13 @@ def t_protection_the_page_carries_the_outputs_figures():
                 "%.2f" % (100 * B["split_max"]), "%.3f" % B["spread_need"], "%.2f" % (100 * B["d_ratchet"]), "%.2f" % B["pre_w"],
                 "%.0f" % B["p_free"], "%.0f" % (B["p_free"] - B["p_pads"])):
         assert fig in s15, "section 15 does not carry %s" % fig
-    for k in ("DD-%d" % i for i in range(1, 7)):
+    for k in ("DD-%d" % i for i in range(1, 8)):
         assert k in s15, "section 15 does not name %s" % k
     for fig in ("%.3f" % B["grace"][0], "%.3f" % B["grace"][1], "%.2f" % (B["t_rev0"] * 1e3), "%.1f" % (B["t_rev_hold"] * 1e3), "%.2f" % B["v_withdraw"],
                 "%.2f" % (B["t_break"] * 1e3), "%.1f" % B["d1_i2t"], "%.2f" % (B["d1_tau_max"] * 1e3), "%.1f" % (B["d1_l_max"] * 1e6),
                 "%.1f" % J["ptc_window"][0], "%.1f" % J["ptc_window"][1], "%.0f" % (B["r_trip_max"] / 1e3), "%.2f" % B["g1_on_sense"], "%.1f" % B["g1_max"]):
         assert fig in s15, "section 15 does not carry %s" % fig
-    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "Q-TI-L9S-1", "C-1b", "C1", "C2", "C3") + tuple("E-%d" % i for i in range(1, 14)):
+    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "IF-7", "Q-TI-L9S-1", "C-1b", "C1", "C2", "C3", "15.4b") + tuple("E-%d" % i for i in range(1, 15)):
         assert k in s15, "section 15 does not name %s" % k
     for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19", "L9C-F20", "L9C-F21", "L9C-F22"):
         assert f in t
@@ -964,3 +965,38 @@ def t_protection_the_conditional_confirmations_corrections():
     # the minors: the inverters' gates and the discharge, the clamp's resistive failure
     assert B["g1_max"] < 20 and B["g2"][1] < 20 and min(B["g1_on_sense"], B["g2"][0]) > 2.5 and B["i_dis"] < 0.115
     assert any(r["case"].startswith("the clamp failing resistive") for r in R["table"])
+
+
+def t_protection_the_retry_judged_over_every_protected_part():
+    _PR()
+    R, B, I = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["in"]
+    RT = R["RT"]
+    # the timer's cycle at the printed limits (8.4.3): the fault time from 0.3 V, the seven restart cycles and the last fall
+    cmin, cmax = 9e-9, 11e-9
+    on_max = cmax * (LM["vtmrh"][1] - LM["vtmrl"]) / LM["itmr"][0] + B["t_off_timer"]
+    dv = LM["vtmrh"][0] - LM["restart"][1]
+    off_min = cmin * (7 * (dv / LM["isink"][1] + dv / LM["itmr"][1]) + (LM["vtmrh"][0] - LM["vtmrl"]) / LM["isink"][1])
+    assert _close(RT["t_on"][1], on_max) and _close(RT["t_off"][0], off_min)
+    # the series envelope: never over the limit nor over PLIM over VDS, through the slowest ramp
+    icl, plim = B["icl_max"], B["plim_max"]
+    dvlo = 10e-6 / (22e-9 * 1.1)
+    u = plim / icl
+    i2t = (icl * icl * u + plim * plim * (1 / u - 1 / 16.8)) / dvlo + icl * icl * on_max
+    assert _close(RT["i2t"], i2t) and RT["k"] < 0.1 and RT["i_rms"] < icl
+    # the breaker FET, a hard short, retried: the case from the average and the SOA ratio past TI's margin
+    hs = RT["hs"]
+    assert hs["tc"] > 115 and hs["ratio"] > 1 / 1.5 and RT["rf"]["tc"] > 150 and RT["minus2_fails"]
+    # every protected part has a row, and only the breaker FET, Q1 under BAT-F20 and the unrated holder are not within
+    names = " ".join(r["name"] for r in RT["rows"])
+    for part in ("Q1/Q2", "BAT-F20", "battery FETs", "R17", "R10", "sense", "XT60", "dock contacts", "copper", "barrel", "blades", "3568", "cells", "enable loop", "breaker FET"):
+        assert part in names, "no retry row for %s" % part
+    bad = [r["name"] for r in RT["rows"] if not r["verdict"].startswith(("within", "not cycled"))]
+    assert all(("breaker FET" in n) or ("BAT-F20" in n) or ("3568" in n) for n in bad), bad
+    # the -1 selected: its timer re-enables before the hold's least release, and the page says so
+    assert RT["latch_dis"] < B["grace"][0]
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    assert "**SELECTED: the -1 (latch-off).**" in s15 and "LM5069-2 breaker" not in s15
+    for fig in ("%.2f" % RT["hs"]["ratio"], "%.1f" % RT["hs"]["tc"], "%.0f" % RT["rf"]["tc"], "%.2f" % RT["i_rms"], "%.2f" % RT["i2t"],
+                "%.1f" % (RT["latch_dis"] * 1e3), "%.2f" % RT["start_rf"]["ratio_air"], "%.2f" % RT["start_rf"]["ratio_hot"]):
+        assert fig in s15, "section 15 does not carry %s" % fig

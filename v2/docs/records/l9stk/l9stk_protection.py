@@ -8,8 +8,8 @@ Desk arithmetic on committed files and makers' sheets; nothing here was built, b
      firmware, at a current and time that keep every series part within its limits;
   2. the limiting series part, Q39/Q40 (L4-E11): its 150 C current with the uncertainty of its installed path (a target, not a
      measurement), and the exposure a trip allowed at the cells' 24 A would leave;
-  3. the selected element: an LM5069-2 breaker on board P between the gauge's discharge FET and PACK_P (the part board E's U6
-     already uses), sized by the sheet's limits: its sense so its largest actual limit is the cells' 24 A and its smallest stays
+  3. the selected element: an LM5069 breaker on board P between the gauge's discharge FET and PACK_P (the family board E's U6
+     already uses), the -1 latch-off after section 3b's retry check, sized by the sheet's limits: its sense so its largest actual limit is the cells' 24 A and its smallest stays
      above the 18 A service, its power limit, fault timer, dv/dt start, input clamp and two CSD18510Q5B FETs, whose safe
      operating area is read from the FET's Figure 10 and derated to their case temperature (SLVA673A equations 4 to 7);
   4. every series part held at the breaker's largest actual limit, from L4-E12's inside air plus its own heating;
@@ -181,7 +181,12 @@ def read():
     I["vin_roc"] = (float(m.group(1)), float(m.group(2)))
     I["tj_roc"] = float(need(t, r"^TJ\s+Junction temperature\s+[-\u20130-9]+\s+(\d+)\s+°C", "the junction range").group(1))
     I["vin_sense_abs"] = float(need(t, r"^VIN to SENSE\s+[-\u20130-9.]+\s+([0-9.]+)\s+V", "VIN to SENSE's maximum").group(1))
+    need(t, r"5 Device Comparison\s+DEVICE NUMBER\s+RETRY BEHAVIOR AFTER FAULT\s+PACKAGE\s+LM5069-1\s+Latch Off on Fault", "section 5's -1")
     need(t, r"LM5069-2\s+Auto Retry on Fault", "the retry option")
+    need(t, r"If the fault condition is still present, the fault timeout period and the restart cycle repeat", "8.4.3's repeat")
+    need(t, r"The LM5069-1 latches the GATE pin low at the end of the fault timeout period", "8.4.3's latch")
+    need(t, r"The voltage at the TIMER pin must be\s+<0\.3 V for the restart procedure to be effective", "the latch's restart condition")
+    I["vtmrl_latch"] = float(need(t, r"Re-enable Threshold \(LM5069-1\)\s+([0-9.]+)\s+V", "the -1 re-enable threshold").group(1))
     need(t, r"Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= \u201340°C to 125°C", "the table's range")
     s = pdf("csd18510")
     I["fet_vds"] = float(need(s, r"^BVDSS\s+Drain-to-source voltage\s+VGS = 0 V, ID = 250 μA\s+(\d+)\s+V", "CSD18510 BVDSS").group(1))
@@ -293,6 +298,114 @@ def board_p_areas(t):
             r_ = math.hypot(float(m.group(3)) - float(m.group(1)), float(m.group(4)) - float(m.group(2)))
             holes += math.pi * r_ * r_
     return area, holes, parts
+
+
+def retry(R, I, C, B, J, cm, W, ks, a, t0, vmax, cells, each, r17, pr17, p_each, rds_hot, soa, k_read, q12_p, per):
+    """A persistent fault on the -2 (8.4.3: the fault timeout and the restart cycle repeat while the fault remains): the timer's
+    on and off times at their limits for the capacitor at either end of its tolerance; the series current's envelope over one
+    cycle (never over the current limit, never over the power limit over VDS, through the slowest dv/dt ramp and the limited
+    phase); the breaker FET's energy per cycle for a hard short and for the worst resistive fault on VSYS; each part's energy
+    per cycle, its average and the temperature it settles to from the inside air, against its limit. Then the -1."""
+    X = {}
+    plim, icl = B["plim_max"], B["icl_max"]
+    cts = (B["ct"] * (1 - CAP_TOL), B["ct"] * (1 + CAP_TOL))
+    dv_min = I["vtmrh"][0] - I["vtmrl_restart"][1]
+    t_on = [c * (I["vtmrh"][1] - I["vtmrl_end"]) / I["itmr"][0] + B["t_off_timer"] for c in cts]
+    t_off = [c * (7 * (dv_min / I["isink"][1] + dv_min / I["itmr"][1]) + (I["vtmrh"][0] - I["vtmrl_end"]) / I["isink"][1]) for c in cts]
+    X.update(t_on=t_on, t_off=t_off)
+    dv_lo = I["igate"][0] / (B["cdv"] * (1 + CAP_TOL))
+    dv_hi = B["dvdt"]
+    X.update(dv=(dv_lo, dv_hi))
+    # the breaker FET, a hard short: no current until the gate reaches threshold, then the power limit for the timer and the turn-off
+    hs = []
+    for ton, toff in zip(t_on, t_off):
+        e = plim * ton
+        pav = e / (ton + toff)
+        tc = t0 + I["fet_rthja"] * pav
+        d = (I["fet_tj"] - tc) / (I["fet_tj"] - 25.0)
+        hs.append(dict(e=e, pav=pav, tc=tc, ratio=plim / (soa_power(soa, ton) * d) if d > 0 else float("inf")))
+    X["hs"] = max(hs, key=lambda x: x["tc"])
+    X["hs"]["ratio_low"] = X["hs"]["ratio"] / k_read
+    # the breaker FET, a resistive fault on VSYS loading the ramp: the ramp runs at the gate's dv/dt until the power limit or the
+    # current limit engages, then the timer; the worst over the fault's resistance, the ramp rate and the capacitor
+    best, beste = None, None
+    for dv in (dv_lo, dv_hi):
+        iinr = B["cout"] * dv
+        for k in range(1, 400):
+            rf = 0.0025 * k
+            if vmax / rf <= B["icl_min"]:
+                continue
+            v, e, tr, n = 0.0, 0.0, 0.0, 2000
+            hv = vmax / n
+            while v < vmax:
+                i_ = v / rf + iinr
+                pw = (vmax - v) * i_
+                if pw >= plim or i_ >= icl:
+                    break
+                e += pw * hv / dv
+                tr += hv / dv
+                v += hv
+            for ton, toff in zip(t_on, t_off):
+                pav = (e + plim * ton) / (tr + ton + toff)
+                if best is None or pav > best["pav"]:
+                    best = dict(rf=rf, dv=dv, e_ramp=e, t_ramp=tr, e=e + plim * ton, pav=pav, tc=t0 + I["fet_rthja"] * pav)
+                if beste is None or e + plim * ton > beste["e"]:
+                    beste = dict(rf=rf, dv=dv, e_ramp=e, t_ramp=tr, e=e + plim * ton)
+    X["rf"] = best
+    # one start into that fault (either variant's first event): SLVA673A equation 7's equivalent square pulse at the power limit
+    t2 = beste["e"] / plim
+    beste["t2"] = t2
+    beste["ratio_air"] = plim / (soa_power(soa, t2) * (I["fet_tj"] - t0) / (I["fet_tj"] - 25.0))
+    beste["ratio_hot"] = plim / (soa_power(soa, t2) * B["derate"])
+    beste["ratio_air_low"], beste["ratio_hot_low"] = beste["ratio_air"] / k_read, beste["ratio_hot"] / k_read
+    X["start_rf"] = beste
+    # the series current's envelope over one cycle at the slowest ramp, and the limited phase
+    u_k = plim / icl
+    i2t_ramp = (icl * icl * u_k + plim * plim * (1.0 / u_k - 1.0 / vmax)) / dv_lo
+    q_ramp = (plim * math.log(vmax / u_k) + plim) / dv_lo
+    t_ramp = vmax / dv_lo
+    i2t_lim = icl * icl * max(t_on)
+    X.update(i2t=i2t_ramp + i2t_lim, q=q_ramp + icl * max(t_on))
+    i2_avg = max((i2t_ramp + i2t_lim) / (t_ramp + min(t_on) + min(t_off)), i2t_lim / (min(t_on) + min(t_off)))
+    X["i2_avg"], X["i_rms"] = i2_avg, math.sqrt(i2_avg)
+    k_ = i2_avg / (icl * icl)
+    X["k"] = k_
+    rows = []
+
+    def prow(name, e_cycle, avg, settled, limit, verdict):
+        rows.append(dict(name=name, e=e_cycle, avg=avg, settled=settled, limit=limit, verdict=verdict))
+    i2t = X["i2t"]
+    prow("board P's Q1/Q2, enhanced (each)", "%.1f mJ" % (1e3 * i2t * q12_p / (a * a)), "%.3f W" % (k_ * q12_p),
+         "TJ %.1f C (both losses through one pad)" % (t0 + k_ * (I["q12_rthja"] * 2 * q12_p)), "150 C", "within")
+    q1_e = I["q12_vsd"] * X["q"]
+    q1_pav = q1_e / (t_ramp + max(t_on) + min(t_off))
+    X["q1"] = dict(e=q1_e, pav=q1_pav, tj=t0 + I["q12_rthja"] * q1_pav)
+    prow("board P's Q1 under BAT-F20 (its body diode)", "%.0f mJ" % (1e3 * q1_e), "%.2f W" % q1_pav, "TJ %.0f C" % X["q1"]["tj"], "150 C (%.2f W on its pad)" % B["q1_allow_w"],
+         "OVER: DD-5, as in the held and service rows")
+    tjb = J["tj_held"]
+    prow("the three battery FETs (each)", "%.1f mJ" % (1e3 * i2t / 9.0 * each), "%.3f W" % (k_ * (a / 3) ** 2 * each), "TJ %.1f C" % (t0 + k_ * (tjb - t0)), "150 C", "within")
+    prow("R17 (%g W)" % C["r17"]["w"], "%.1f mJ" % (1e3 * i2t * r17), "%.3f W" % (k_ * pr17), "-", "%g W" % C["r17"]["w"], "within (derating NOT HELD, E-6)")
+    prow("R10 (%g W)" % I["r10"][1], "%.1f mJ" % (1e3 * i2t * I["r10"][0]), "%.3f W" % (k_ * a * a * I["r10"][0]), "-", "%g W" % I["r10"][1], "within (E-6)")
+    prow("the breaker's sense", "%.1f mJ" % (1e3 * i2t * B["rs"]), "%.3f W" % (k_ * a * a * B["rs"]), "-", "2 W each (a requirement)", "within")
+    prow("the XT60 (%g A)" % C["xt60_a"], "-", "%.2f A RMS, %.2f A peak" % (X["i_rms"], a), "-", "%g A" % C["xt60_a"], "within")
+    prow("the dock contacts (4 x %g A)" % C["pin_a"], "-", "%.2f A RMS a pin at an even split" % (X["i_rms"] / C["pins"]), "-", "%g A" % C["pin_a"], "within (E-4)")
+    prow("the pack path's copper", "-", "-", "%.2f K over the air" % (k_ * J["dt_band"]), "10 K", "within")
+    prow("the barrel field", "-", "-", "%.2f K" % (k_ * cm.barrel_rise(per, "inward")), "10 K", "within")
+    prow("the 25 A blades and F2", "-", "%.2f A RMS" % X["i_rms"], "-", "%g A, %g A" % (C["blade_a"], C["f2"]["a"]), "within (E-7)")
+    prow("the Keystone 3568 holder", "-", "%.2f A RMS" % X["i_rms"], "-", "no rating printed", "NOT HELD: DD-4")
+    prow("the cells", "-", "%.2f A RMS" % X["i_rms"], "-", "%g A" % cells, "within")
+    prow("the enable loop's parts (2N7002s, PTC, R_U, C_U)", "0", "the loop's static %.2f mA" % (1e3 * vmax / (R_E1 + I["ptc_r25"] * (1 - I["ptc_tol"]) + R_E2)), "-", "-",
+         "not cycled by the -2's restart (internal)")
+    prow("the breaker FET, a hard short", "%.1f mJ" % (1e3 * X["hs"]["e"]), "%.2f W" % X["hs"]["pav"], "case %.1f C" % X["hs"]["tc"],
+         "SOA with TI's margin %.2f" % (1 / TI_MARGIN), "OVER TI's margin: %.2f (%.2f with the reading)" % (X["hs"]["ratio"], X["hs"]["ratio_low"]))
+    prow("the breaker FET, a resistive fault on VSYS (%.3f ohm)" % X["rf"]["rf"], "%.0f mJ (%.0f in the ramp)" % (1e3 * X["rf"]["e"], 1e3 * X["rf"]["e_ramp"]), "%.2f W" % X["rf"]["pav"],
+         "case %.0f C" % X["rf"]["tc"], "150 C", "OVER" if X["rf"]["tc"] > I["fet_tj"] else "within")
+    X["rows"] = rows
+    X["minus2_fails"] = X["hs"]["ratio"] > 1 / TI_MARGIN or X["rf"]["tc"] > I["fet_tj"]
+    # the -1: one fault event, then latched until UVLO is pulled under its threshold or VIN is cycled, with the timer under 0.3 V
+    X["latch_dis"] = cts[1] * (I["vtmrh"][1] - I["vtmrl_latch"]) / I["isink"][0]
+    X["one_event_ratio"] = B["fault_ratio"]
+    return X
 
 
 def soa_amps(rd, seg, vds):
@@ -571,6 +684,8 @@ def compute():
     part("the barrel field (%d of 0.4 mm)" % CR["field_pack"], "%.2f A a barrel, %.2f K" % (per, cm.barrel_rise(per, "inward")), cm.barrel_rise(per, "inward") / 10.0, "decision 35's model")
     part("the Keystone 3568 holder", "no current rating printed", None, "DESIGN DEFECT DD-4 (NOT HELD)")
     R["series"] = S
+    # 3b. the retry: the -2's repeated waveform against every protected part, and the -1 (section 8.4.3)
+    R["RT"] = retry(R, I, C, B, J, cm, W, ks, a, t0, vmax, cells, each, r17, pr17, p_each, rds_hot, soa, k_read, q12_p, per)
     # 5. the protection table
     T = []
 
@@ -586,7 +701,7 @@ def compute():
             qb, J["tj_service"], J["ptc_window"][0], J["ptc_window"][1]),
         "Q1 OVER; %.1f K at the battery FETs; the least limit %.2f A over the service" % (lim - J["tj_service"], B["icl_min"] - service), "DESIGN DEFECT DD-5; derived; E-1, E-10, E-13")
     row("an overload under the unit's limit, held", "%.2f to %.2f A, indefinitely" % (service, a), "%.2f A largest (VCL %.1f mV, RS -%.1f %%)" % (a, vclmax * 1e3, 100 * u),
-        "none: held by design; the thermal guard", "the battery FETs at %.1f C; the cells at %.3f of 8 A; Q1's body diode %.1f W under BAT-F20" % (J["tj_held"], a / cells, I["q12_vsd"] * a),
+        "none: held by design; the thermal guard trips and restarts at the PTC's rate (either variant)", "the battery FETs at %.1f C; the cells at %.3f of 8 A; Q1's body diode %.1f W under BAT-F20" % (J["tj_held"], a / cells, I["q12_vsd"] * a),
         "0 K at the allowances; %.2f %% split at most; Q1 OVER" % (100 * B["split_max"]), "DESIGN DEFECTS DD-2, DD-5; E-1, E-5")
     row("an overload over the unit's limit", "limited to %.2f A at most, then off" % a, "%.2f A largest" % a,
         "%.2f ms from the onset (timer %.3f, gate %.3f); regulated after tCL (%g us typ., no max.)" % (B["clear_max"] * 1e3, B["tf_max"] * 1e3, B["t_off_timer"] * 1e3, I["tcl_typ"] * 1e6),
@@ -610,8 +725,19 @@ def compute():
         "the breaker FET: the 10 us line derated to %.1f C is %.1f A; VIN to SENSE %.3f V" % (B["tc"], B["dock_uncorr"]["i10_der"], B["dock_uncorr"]["vsense"]),
         "OVER: %.2f x the line (%.2f x at 75 C); %.2f x 0.3 V" % (B["dock_uncorr"]["ratio"], B["dock_uncorr"]["ratio75"], B["dock_uncorr"]["vsense"] / I["vin_sense_abs"]),
         "DESIGN DEFECT DD-6, corrected by C-1b (not a coupon)")
-    row("a persistent fault, retrying", "the power limit at %.2f %% duty at most (%.1f %% typ.)" % (100 * B["duty_max"], 100 * I["dc_retry_typ"]), "as above", "each try as above",
-        "the breaker FET, %.2f W average, case %.1f C" % (B["retry_avg"], B["tc_retry"]), "in the derating above", "derived")
+    RT = R["RT"]
+    row("a persistent fault on the -2 (rejected, 3b)", "the restart cycle: %.2f to %.2f ms on, %.1f to %.1f ms off, repeated" % (
+        RT["t_on"][0] * 1e3, RT["t_on"][1] * 1e3, RT["t_off"][0] * 1e3, RT["t_off"][1] * 1e3), "as above", "each cycle as above",
+        "the breaker FET: a hard short %.2f W average, case %.1f C; a resistive fault on VSYS %.2f W, case %.0f C" % (RT["hs"]["pav"], RT["hs"]["tc"], RT["rf"]["pav"], RT["rf"]["tc"]),
+        "OVER: %.2f of the derated SOA (TI <= %.2f); over 150 C" % (RT["hs"]["ratio"], 1 / TI_MARGIN), "derived; the -2 rejected, corrected by selecting the -1 (3b)")
+    row("a persistent fault on the -1 (selected)", "one event, then latched until UVLO or VIN cycles", "as above", "%.2f ms, once" % (B["clear_max"] * 1e3),
+        "the breaker FET at %.2f; every series part once, at its per-cycle energy (3b)" % B["fault_ratio"], "no accumulation",
+        "derived; recovery: redocking, the input's return (DD-7), the guard's cycle")
+    SR = RT["start_rf"]
+    row("a start into a resistive fault on VSYS (the worst, %.3f ohm; either variant's first event)" % SR["rf"], "%.0f mJ: %.1f ms of ramp, then the power limit" % (1e3 * SR["e"], 1e3 * SR["t_ramp"]),
+        "the power limit", "%.2f ms after the limit" % (max(RT["t_on"]) * 1e3),
+        "the breaker FET, %.2f W for %.2f ms equivalent (SLVA673A equation 7)" % (B["plim_max"], SR["t2"] * 1e3),
+        "%.2f from the inside air (TI's start basis); %.2f at the %.1f C case (TI <= %.2f)" % (SR["ratio_air"], SR["ratio_hot"], B["tc"], 1 / TI_MARGIN), "derived; E-3")
     row("charging (the reverse direction)", "the charger's current; %g A precharge through a body diode while the breaker is off" % I["i_pre"], "none: the LM5069 does not limit reverse current",
         "not a fault", "the breaker FET's body diode, %.2f W, TJ %.1f C" % (B["pre_w"], B["pre_tj"]), "%.1f K" % (I["fet_tj"] - B["pre_tj"]), "printed (VSD); derived")
     row("the clamp shorted with board P's FETs welded (two faults)", "%g to %g A prospective" % (C["pf_low"], C["pf_high"]), "F1, 25 A MINI",
@@ -634,6 +760,8 @@ def compute():
          "the battery stream (BAT-F20, EQ-15)"),
         ("DD-6", "docking with the breaker on takes it past its SOA and VIN to SENSE's maximum (table); the make-last enable loop C-1b with its RC hold and the thermal guard is drafted here, not drawn; conditions C1 and C2", "board P's generator with the battery stream (the UVLO circuit); board E's generator (two J_SMB contacts with a ground between); Layer 7 with L4-E11 (two make-last dock contacts, the loop and the PTC on board A)"),
     ]
+    R["defects"].append(("DD-7", "the -1 stays off after a trip until UVLO or VIN cycles: when an input returns the charger may charge the pack through the latched breaker's body diodes; board A opens the enable loop for a pulse when an input appears, so the latch resets and the breaker restarts within %.3f s (the hold and the start); the charge until then is E-14's" % (
+        B["grace"][1] + B["start_max"]), "board A's generator with L4-E11; board P's generator (the -1)"))
     R["interfaces"] = [
         ("IF-1", "board A's loads on VSYS stay off until the breaker's start ends (at most %.1f ms after the gate rises, which is up to %.3f s after the enable mates), or follow its PGD" % (B["start_max"] * 1e3, B["grace"][1]), "L4-E11 with board A's generator"),
         ("IF-2", "each breaker FET's installed RthJA at most %.1f C/W (the sheet prints %g on 1 in2 of 2 oz, %g on its least pad); two 1 in2 pads take %.0f mm2 of the %.0f mm2 left on the P2 placement's top face (%.0f mm2 a face, %.0f placed, %.0f the holes; the bottom face empty), leaving %.0f mm2 for the round 4 parts, the breaker's other parts and the bands where they do not lie in the pads (an area budget, not a floor plan; the FETs' drain pads are the breaker's input band); the controller beside RS, VIN's bypass at RS" % (
@@ -644,15 +772,16 @@ def compute():
         ("IF-6", "the gauge's PACK and VCC taps stay on Q2's source node; the clamp and the controller return to PACK_N, so a clamp short passes R10 where the AFE sees it; the breaker's output becomes the terminal PACK_P with D1 on it: its %g A for %g ms half-sine is %.1f A2s, so the lead's freewheel at the pack's %g A prospective is within it for any loop L/R up to %.2f ms (%.1f uH in that loop); the enable circuit: R_U %g kOhm from VIN to UVLO with C_U %g uF (50 V), two 2N7002 inverters (gates %.1f V at most under VIN's %.1f V clamp, %.2f V and %.1f V at least at %.1f V, against %g V and %g V), the discharge through %g ohm at %.0f mA at most against %g mA" % (
             I["d1_ifsm"], I["d1_t"] * 1e3, B["d1_i2t"], C["pf_high"], B["d1_tau_max"] * 1e3, B["d1_l_max"] * 1e6, R_U / 1e3, B["cu"] * 1e6,
             max(B["g1_max"], B["g2"][1]), I["tvs"]["vc"], B["g1_on_sense"], B["g2"][0], I["vmin"], I["n7_vgs"], I["n7_vth"][1], R_DIS, B["i_dis"] * 1e3, I["n7_id"] * 1e3), "board P's generator"),
+        ("IF-7", "the bridge reports a tripped breaker (the pack's terminal dead while the gauge's FETs are on) and enables charging only after the breaker's restart; recovery on battery is redocking", "the firmware owner"),
     ]
     R["missing"] = [
         ("E-1", "the battery FETs' junction limit", "the coupon of L4-E11 section 17 with the three battery FETs, the band carrying %.2f A and R17 dissipating in place" % a,
          "the hottest junction at most 150 C referred to %.2f C; R17's coupling into each junction at most %g K/W (heat R17 alone)" % (t0, R17_ALLOW), "the body diode's VSD method"),
-        ("E-2", "the breaker's power limit at its design point", "six LM5069-2 on the board P specimen", "the shorted-output current at %.1f V and %.1f V within %.2f to %.2f A, at -40, 25 and 125 C (the table is printed at 48 V)" % (
+        ("E-2", "the breaker's power limit at its design point", "six LM5069-1 on the board P specimen", "the shorted-output current at %.1f V and %.1f V within %.2f to %.2f A, at -40, 25 and 125 C (the table is printed at 48 V)" % (
             vmax, I["vmin"], B["plim_min"] / vmax, B["plim_max"] / vmax), "the supplier's bench, against Q-TI-L9S-1"),
         ("E-3", "the hot short and the enabled docking", "the board P specimen with Q1/Q2 bypassed, the 12 AWG lead, boards E and A as built, a charged block",
-         "10 shorts and 100 dockings with the FETs' case at %.0f C: the gate low within %.1f us of VCB; the docking current at most %.3f A; VIN to SENSE recorded; VCL read back within %g to %g mV; each FET's RDS(on) within +5 %%" % (
-             B["tc"], B["t_off_cb"] * 1e6, B["inrush_max"], I["vcl"][0] * 1e3, I["vcl"][2] * 1e3), "the supplier's fault bench"),
+         "10 shorts, 10 starts into a %.2f ohm fault on VSYS and 100 dockings with the FETs' case at %.0f C: the gate low within %.1f us of VCB; the -1 latched after each fault; the docking current at most %.3f A; VIN to SENSE recorded; VCL read back within %g to %g mV; each FET's RDS(on) within +5 %%" % (
+             RT["start_rf"]["rf"], B["tc"], B["t_off_cb"] * 1e6, B["inrush_max"], I["vcl"][0] * 1e3, I["vcl"][2] * 1e3), "the supplier's fault bench"),
         ("E-4", "the dock contacts' split", "the four-pin set of the fitted lot", "the lowest pin resistance at least %.3f of the highest (at the blades' %g A; %.3f at the breaker's %.2f A)" % (
             CR["pin_ratio_need"], C["blade_a"], (a / C["pin_a"] - 1.0) / (C["pins"] - 1), a), "each pin at mid-stroke"),
         ("E-5", "the cells' parallel split", "each series group of the built block", "no cell over %g A at %.2f A: the groups share within %.2f %%; FALLBACK, named now: a controller whose limit spread with its sense is at most %.3f (for a %g %% split; the LM5069's is %.3f), the LM5066I of SLVA673A's examples, its sheet not held" % (
@@ -669,6 +798,8 @@ def compute():
          "the supplier's commissioning procedure"),
         ("E-13", "the thermal guard", "the battery FETs' coupon (E-1) with the PTC in place, and one with a FET's thermal pad left unsoldered",
          "no trip through the service (%g A for %g s after %g A held at %.2f C); the breaker off before the hottest junction passes 150 C at %.2f A held" % (service, C["kd_s"], cont, t0, a), "the supplier's thermal bench"),
+        ("E-14", "the charge through a latched breaker", "the board P specimen latched, with the charger at its largest charge current", "the breaker FET's junction under 150 C until the input-return reset restarts it (%.3f s at most)" % (
+            B["grace"][1] + B["start_max"]), "the supplier's bench"),
     ]
     R["conditions"] = [
         ("C1", "mating order: every power pin mates before the enable contacts at any angle the dock's guides allow. Without a hold a reversed order of more than %.2f ms lets OUT pass %.2f V and meet the breaker's %.2f A threshold at mate (OUT rises at %.3f V/ms through the %.1f mOhm loop); the RC hold (SELECTED) tolerates a reversed order up to %.1f ms" % (
@@ -743,6 +874,12 @@ def compute():
     pr["D1's I2t covers the lead's freewheel at the pack's prospective current for an L/R over 0.1 ms"] = B["d1_tau_max"] > 1e-4
     pr["the FETs' 1 in2 pads fit the P2 placement's free top face"] = B["p_pads"] < B["p_free"]
     pr["the installed RthJA the derating needs lies between the sheet's two printed boards"] = I["fet_rthja"] <= B["rthja_need"] < I["fet_rthja_min_cu"]
+    pr["the -2's repeated waveform takes the breaker FET past TI's margin in a hard short and past 150 C in a resistive fault on VSYS"] = (
+        RT["hs"]["ratio"] > 1 / TI_MARGIN and RT["rf"]["tc"] > I["fet_tj"])
+    pr["every series part settles under its held reading through the -2's retries (the current never over the limit, its RMS under it)"] = RT["k"] < 1.0
+    pr["the -1's timer falls under its re-enable threshold before the RC hold's least release"] = RT["latch_dis"] < B["grace"][0]
+    pr["one start into the worst resistive fault on VSYS is inside TI's margin from the inside air"] = RT["start_rf"]["ratio_air_low"] <= 1 / TI_MARGIN
+    pr["one start into it stays inside the derated SOA at the hot case"] = RT["start_rf"]["ratio_hot_low"] < 1.0
     R["pred"] = pr
     return R
 
@@ -776,8 +913,9 @@ def render(R):
     w("   the exposure a trip at the cells' %g A would leave, held: %s" % (R["cells"], "; ".join("%.2f A: TJ %.1f C (+%g C), %.1f C (%.2f C)" % (a_, x_, R["air"], y_, R["t0"]) for a_, x_, y_ in P["exposure"])))
     w("   so 'at or under 24 A' is not a protection criterion; the criterion is current AND time for every part (section 5)")
     w("")
-    w("3. THE SELECTED ELEMENT: AN LM5069-2 BREAKER ON BOARD P, FROM Q2'S SOURCE TO PACK_P, ENABLED BY A MAKE-LAST DOCK CONTACT")
-    w("   the controller board E's U6 already uses (LCSC %s) and the FET board A's PA stage already uses (LCSC %s): no new part family" % (I["u6_code"], I["fet_code"]))
+    w("3. THE SELECTED ELEMENT: AN LM5069 BREAKER ON BOARD P (THE -1, LATCH-OFF: 3b), FROM Q2'S SOURCE TO PACK_P, ENABLED BY A MAKE-LAST DOCK LOOP")
+    w("   the family board E's U6 already uses (its -2, LCSC %s; the -1's code is Layer 6's to file, the same VSSOP-10 land) and the FET board A's PA" % I["u6_code"])
+    w("   stage already uses (LCSC %s): no new part family" % I["fet_code"])
     w("   sense RS: %s mOhm in parallel = %.4f mOhm, %g %% and %g ppm/K over %g K: +-%.1f %% (the parts only; the traces and Kelvin taps are E-9's)" % (
         " and ".join("%g" % x for x in RS_PARTS_MOHM), B["rs"] * 1e3, 100 * RS_TOL, RS_TCR * 1e6, RS_DT, 100 * B["u"]))
     w("     its window: %.4f to %.4f mOhm (the largest limit at most the cells' %g A, the least above the %g A service)" % (B["rs_lo"] * 1e3, B["rs_hi"] * 1e3, R["cells"], R["service"]))
@@ -798,13 +936,13 @@ def render(R):
     w("   dv/dt start: %.0f nF (+-%g %%) into %.0f uF (VSYS's %.0f uF, CELL_FUSED's %.0f uF), gate %g to %g uA: inrush %.3f A at most, %.1f ms at most" % (
         B["cdv"] * 1e9, 100 * CAP_TOL, B["cout"] * 1e6, I["c_vsys"] * 1e6, I["c_cellfused"] * 1e6, I["igate"][0] * 1e6, I["igate"][1] * 1e6, B["inrush_max"], B["start_max"] * 1e3))
     w("     SLVA673A 3.2.2.7: %.1f W for %.1f ms equivalent, under the power limit's least %.1f W, so the timer never runs" % (B["start_p"], B["start_teq"] * 1e3, B["plim_min"]))
-    w("   retry (-2): duty %.2f %% at most from the worst currents and thresholds (%.1f %% typical); dwell %.3f s at most; %.2f W average" % (
-        100 * B["duty_max"], 100 * I["dc_retry_typ"], B["dwell_max"], B["retry_avg"]))
+    w("   the -2's timer ratio: %.2f %% at most from the worst currents and thresholds (%.1f %% typical); its dwell %.3f s at most (3b judges its whole cycle)" % (
+        100 * B["duty_max"], 100 * I["dc_retry_typ"], B["dwell_max"]))
     w("   FETs: %d x CSD18510Q5B (%g V, VGS +-%g V, %g mOhm at 10 V, IDM %g A, junction %g C, RthJA %g C/W on 1 in2 2 oz, %g on its least pad, RthJC %g C/W)" % (
         NFET, I["fet_vds"], I["fet_vgs"], I["fet_rds"] * 1e3, I["fet_idm"], I["fet_tj"], I["fet_rthja"], I["fet_rthja_min_cu"], I["fet_rthjc"]))
     w("     held at %.2f A: %.3f W each at %.3f mOhm (Figure 8's x%g at 150 C); case %.1f C with both losses through one pad, junction %.1f C" % (
         B["icl_max"], B["p_each"], B["rds_hot"] * 1e3, I["rd"]["rdson_normalized_at_150c_vgs10"], B["tc_held"], B["tj_held"]))
-    w("     retrying: case %.1f C; the case used for the derating %.1f C, factor %.3f (equation 5)" % (B["tc_retry"], B["tc"], B["derate"]))
+    w("     the case used for the derating %.1f C, factor %.3f (equation 5): the first revision's retry estimate, kept as a bound over the held %.1f C" % (B["tc"], B["derate"], B["tc_held"]))
     w("     SOA at %.1f V and 25 C (Figure 10 read at 300 dpi, +-%g %%): %s" % (R["vmax"], I["rd"]["uncertainty_pct"], "; ".join("%s %.0f W" % (k, v) for k, v in B["soa"].items())))
     w("     the fault pulse: %.2f W for %.3f ms against %.1f W derated: %.2f (TI asks %.2f at most); %.2f with the offset reading" % (
         B["plim_max"], B["clear_max"] * 1e3, B["fault_soa"], B["fault_ratio"], 1 / TI_MARGIN, B["fault_ratio_abs"]))
@@ -847,6 +985,39 @@ def render(R):
     w("     later: %.2f ms in all, before the pins part at a withdrawal under %.2f m/s. Any open is off (fail-safe); a short to ground on either loop" % (B["t_break"] * 1e3, B["v_withdraw"]))
     w("     conductor holds it off (condition C2). The gauge's own FET turning on is a start too: E11-30's waveform no longer arises")
     w("   the alternative, an inrush element at board A's dock entry, is not taken (the not-taken list above): the pre-charge pin's lead time is the hand's")
+    RT = R["RT"]
+    w("")
+    w("3b. THE RETRY: THE -2'S REPEATED WAVEFORM AGAINST EVERY PROTECTED PART, AND THE -1 (LM5069 sections 5 and 8.4.3)")
+    w("   the sheet: the -1 latches off on a fault, the -2 retries; on the -2 the TIMER cycles seven times between its restart threshold (%g to %g V)" % I["vtmrl_restart"])
+    w("     and VTMRH (%g to %g V) after the fault time, the" % I["vtmrh"])
+    w("     gate turns on at %g V on the eighth fall, and the fault time and the restart repeat while the fault remains" % I["vtmrl_end"])
+    w("   one cycle with C_T at %g nF +-%g %%: on (the fault time from %g V, then the gate's turn-off) %.3f to %.3f ms; off %.1f to %.1f ms (the shortest from the" % (
+        B["ct"] * 1e9, 100 * CAP_TOL, I["vtmrl_end"], RT["t_on"][0] * 1e3, RT["t_on"][1] * 1e3, RT["t_off"][0] * 1e3, RT["t_off"][1] * 1e3))
+    w("     largest sink current); a ramp ahead of it while the load lets the output rise, at %.3f to %.3f V/ms" % (RT["dv"][0] * 1e-3, RT["dv"][1] * 1e-3))
+    w("   the series current per cycle is never over the largest limit, %.2f A, nor over the power limit over VDS: through the slowest ramp and the" % B["icl_max"])
+    w("     limited phase at most %.2f A2s and %.3f As; over the cycle at most %.1f A2 on average, %.2f A RMS, %.3f of the held %.2f A's heating" % (
+        RT["i2t"], RT["q"], RT["i2_avg"], RT["i_rms"], RT["k"], B["icl_max"]))
+    w("   the breaker FET: a hard short %.1f mJ a cycle, %.2f W, case %.1f C, %.2f of the derated SOA (%.2f with the reading); a resistive fault on VSYS" % (
+        1e3 * RT["hs"]["e"], RT["hs"]["pav"], RT["hs"]["tc"], RT["hs"]["ratio"], RT["hs"]["ratio_low"]))
+    w("     at %.3f ohm (just over the least limit at full voltage) loads the ramp: %.0f mJ a cycle (%.0f in %.1f ms of ramp), %.2f W, case %.0f C" % (
+        RT["rf"]["rf"], 1e3 * RT["rf"]["e"], 1e3 * RT["rf"]["e_ramp"], 1e3 * RT["rf"]["t_ramp"], RT["rf"]["pav"], RT["rf"]["tc"]))
+    w("   per part through a persistent fault on the -2, settled from %.2f C (energy a cycle | average | settled | limit | verdict):" % R["t0"])
+    for r in RT["rows"]:
+        w("     %s | %s | %s | %s | %s | %s" % (r["name"], r["e"], r["avg"], r["settled"], r["limit"], r["verdict"]))
+    w("   so the -2 does NOT meet the criterion: its repeated waveform takes the breaker FET past TI's margin in a hard short and past %g C in a" % I["fet_tj"])
+    w("     resistive fault on VSYS; every other protected part settles under its held reading (section 4), Q1 under BAT-F20 excepted (DD-5)")
+    w("   the -1 against the service and the recovery: the 10 A and the 18 A never reach the least limit, so neither variant trips in the service;")
+    w("     after a fault the -1 stays off: on battery the kit goes dark, as CONOPS 4e already states for the over-current backstop (\"recovers only on")
+    w("     an input\") and POWER-THERMAL 9.3 takes as the safe state (\"restarting into the same load would repeat it\"); recovery by redocking (the loop")
+    w("     pulls UVLO low), by an input's return (DD-7) and by the thermal guard's own cycle; the timer falls under %g V in %.1f ms at most, inside" % (I["vtmrl_latch"], RT["latch_dis"] * 1e3))
+    w("     the RC hold's least %.3f s, so a redocking restarts it" % B["grace"][0])
+    w("   a fault just under a unit's limit and over the service (held, never tripping, either variant): every part at its held reading (section 4);")
+    w("     the battery FETs bounded by the thermal guard, which trips and restarts at the PTC's rate indefinitely (E-13); Q1 under BAT-F20 OVER (DD-5)")
+    w("   SELECTED: the -1 (latch-off). Every protected part then meets one fault event, at the per-cycle energy above, with no accumulation")
+    w("   one start into the worst resistive fault on VSYS (either variant's first event, %.3f ohm): %.0f mJ, equivalent %.2f W for %.2f ms (SLVA673A" % (
+        RT["start_rf"]["rf"], 1e3 * RT["start_rf"]["e"], B["plim_max"], RT["start_rf"]["t2"] * 1e3))
+    w("     equation 7): %.2f of the derated SOA from the inside air (TI's start basis, %.2f with the reading), %.2f at the %.1f C case (%.2f), under 1" % (
+        RT["start_rf"]["ratio_air"], RT["start_rf"]["ratio_air_low"], RT["start_rf"]["ratio_hot"], B["tc"], RT["start_rf"]["ratio_hot_low"]))
     w("")
     w("4. B-P2: THE BATTERY FETS' JUNCTION LIMIT AND EVERY SERIES PART AT THE BREAKER'S LARGEST LIMIT, %.2f A, FROM %.2f C" % (B["icl_max"], R["t0"]))
     w("   the limit: the hottest battery FET's junction at most %g C held at %.2f A from %.2f C, the band carrying the current (%.2f K: 1 oz %.2f, 2 oz %.2f)" % (

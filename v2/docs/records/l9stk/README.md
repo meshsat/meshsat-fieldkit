@@ -48,8 +48,9 @@ board C, both before any order or payment; and A to 2 oz, E to 2 oz, P to 1 oz i
 (`L9-STACKUPS.md` section 11). Every price at a board's real outline is NOT READ and left to the supplier's quotation
 (EQ-14).
 
-**W4DP-F2's element, designed (section 15; drafted, not drawn; revised after PROTECTION: NOT CONFIRMED, corrected after CONFIRMED AS CONDITIONAL):** an
-LM5069-2 circuit breaker on board P from Q2's source to PACK_P, with two CSD18510Q5B and a 2.6087 mOhm sense (4 and 7.5 mOhm in
+**W4DP-F2's element, designed (section 15; drafted, not drawn; revised after PROTECTION: NOT CONFIRMED, corrected after CONFIRMED AS CONDITIONAL, checked for the reviewer's retry question):** an
+LM5069 circuit breaker on board P from Q2's source to PACK_P, the -1 (latch-off: the -2's repeated waveform takes its FET past
+TI's margin in a hard short and past 150 C in a resistive fault on VSYS; every other part settles under its held reading), with two CSD18510Q5B and a 2.6087 mOhm sense (4 and 7.5 mOhm in
 parallel): its actual limit 18.32 to 23.93 A, so the 10 A and the 18 A for 60 s never trip it and the cells' 24 A is never
 passed; above a unit's limit it clears within 1.29 ms with no firmware and with Q1/Q2 welded; a 0.659 A dv/dt start; the FET's
 SOA at 0.57 and 0.58 of the derated curve (TI asks 0.67). B-P1: a make-last enable loop into its UVLO with an RC hold (C-1b,
@@ -57,8 +58,8 @@ TI's Figure 45) turns every docking into that start, 0.110 to 0.593 s after the 
 sense. B-P2: the battery FETs' target is a junction limit with the band and R17 in place (150 C at 23.93 A from 76.25 C); a
 third BUK6Y10-30P is selected (its designator L4-E11's), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart, with the
 kit's chip PTC in the enable loop as a thermal guard, the pair at 20.39 K/W the fallback, E11-37 deciding its Ciss. Open: DD-1 to
-DD-6 with their owners, the conditions C1 (mating order) to C3 (Ciss), IF-1 to IF-6, the evidence E-1 to E-13 and the maker
-questions Q-TI-L9S-1 and Q-TI-17. (L9STK CU) lists option (4), the zero-cost route with each return laid apart, not credited by decision
+DD-7 with their owners (DD-7 the -1's reset when an input returns), the conditions C1 (mating order) to C3 (Ciss), IF-1 to IF-7,
+the evidence E-1 to E-14 and the maker questions Q-TI-L9S-1 and Q-TI-17. (L9STK CU) lists option (4), the zero-cost route with each return laid apart, not credited by decision
 35's model and waiting on a coupon.
 
 ## Proposed LAYER-STATUS row (for the integrator; `LAYER-STATUS.md` is not edited here)
