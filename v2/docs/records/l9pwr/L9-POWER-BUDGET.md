@@ -1,4 +1,4 @@
-# L9-POWER-BUDGET: Layer 9 item 9.1, the power budget on the current design (MESHSAT-1357, 3 October 2026; round 2, 4 October 2026)
+# L9-POWER-BUDGET: Layer 9 item 9.1, the power budget on the current design (MESHSAT-1357, 3 October 2026; round 2 and round 3, 4 October 2026)
 
 **Status: PROVISIONAL desk calculation, not reviewed.** Prototype design: nothing in this kit has been built, powered or
 measured, and no figure on this page is a measurement. Every figure is printed by `l9pwr_budget.py` into `l9pwr_budget.out`
@@ -6,14 +6,36 @@ measured, and no figure on this page is a measurement. Every figure is printed b
 `v2/ecad/tools/tests/test_l9pwr.py` holds the page to the output. The drafts of Layers 4, 8 and 9 are modelled as drafts: they
 are printed DRAFTED, none is applied to a generator, and their release guards stand.
 
+## Round 3 in short (4 October 2026, the integration of set 29): a tool correction, no figure moved
+
+- **The defect.** `l9pwr_budget.py` refused on set 29's tree ("the +12V_FAN efficiency in the draft"). L4-E11's round 9 corrected
+  finding L8P-F03 in `apply_gen_sch_e_aux.py` (+12V_FAN's source is U22 with `source_ic`, not L4), which broke the declaration
+  over two source lines; the script matched the rail's name and its efficiency on one line.
+- **The correction.** The declaration is parsed (ast on the draft's string constants, then on the call they hold); its
+  efficiency reads 0.85 as before. The battery FETs are parsed from `apply_gen_sch_a_charger.py` the same way: L4-E11's round 9
+  writes Q39, Q40 and Q42, the third FET record l9stk 15.5 selected and this budget's step D10 already carried (three at
+  21.136 mOhm each, 7.0453 mOhm against the pair's 10.568), so D10's source is now L4-E11's draft and its figure is unchanged.
+- **Record l9stk's output is read from this tree,** not from the copy at `2c8b29fb`, which is retired: the copy named the
+  automatic-retry LM5069-2, and record l9stk 15.4b selects the latch-off LM5069-1, which out 1's D9 line now prints as read. Every
+  figure taken from that output reads the same on the copy and on the tree's file (the sense, its window, the breaker's FETs,
+  the battery FETs' count, bound and loss).
+- **What moved in `l9pwr_budget.out`:** eight pin lines of section 0 (L4-E9's page, L4-E11's output and two drafts, L4-E12's
+  output, the requirements registry, record l9stk's output, this record's `inputs/SOURCES.txt`), the copies' list, the texts of
+  D1, D9 and D10 and the wording of D9's and D10's figure lines, and one new predicate. **What did not move: every figure.** In particular L9P-F01's 16.214 V, the device
+  rail's 7.181 A at 5.1 V and 7.472 A at 4.9019 V against 7.0957 A (L9P-F03), the pack path's 0.038064 Ohm, and every state's
+  LOW / PLAN / HIGH. No finding is closed or changed: L9P-F01 to L9P-F06 stand as round 2 left them.
+- **Order of regeneration:** `l9stk_stackups.py`, `l9stk_copper.py`, `l9stk_protection.py`, then this script, each through
+  `_bin/regen_out.py`; after any regeneration of L4-E9's page or of L4-E11's or L4-E12's output, all of them again.
+
 ## Round 2 in short (4 October 2026)
 
 - **What moved.** Set 28 was promoted to main (`d834e6a7`, record `64cd25ee`); this round runs on main. Record l8r2's rounds 4 to
   6 (`fnd/l8r3` at `89924e40`) put slots 1 and 3 on board A's LM5176 stage, keep the coolers at full speed with no Fan_PWM maximum
   and declare their slot row at the envelope (0.69 A), set board B's six slot bucks to RT 200 k and every LM5176 5.1 V divider to
-  0.1 %. Record l9stk's section 15 (`fnd/l9stk` at `2c8b29fb`) drafts board P's breaker C-1 (LM5069-2, two CSD18510Q5B, a
-  2.6087 mOhm sense) and a third battery FET on board A. Each source is read from a copy in `inputs/` that `git show` made at that
-  commit, pinned by sha256 and listed in `inputs/SOURCES.txt`; the test compares every copy with its source.
+  0.1 %. Record l9stk's section 15 (`fnd/l9stk` at `2c8b29fb`) drafts board P's breaker C-1 (an LM5069, the -2 at that commit and
+  the latch-off LM5069-1 since its 15.4b, two CSD18510Q5B, a 2.6087 mOhm sense) and a third battery FET on board A. Each source
+  was read from a copy in `inputs/` that `git show` made at that commit, pinned by sha256 and listed in `inputs/SOURCES.txt`; the
+  test compares every copy with its source (round 3 reads record l9stk's output from the tree instead).
 - **The DRAFTED tree now carries ten drafts (D1 to D10, out 1 and out 4);** round 1's DRAFTED tree is rebuilt beside it as
   DRAFTED-R1, so every figure another record took from round 1 is reproduced on the same evaluator (out 8: L4-E9 round 7's R1c and
   R11, record l8r2's R9, all EQUAL). Two parser lines of round 1 are set aside because their figure was removed or superseded:
@@ -80,7 +102,7 @@ the profile (PS-IDLE-SPEC) and for PS-ALLTX:
 | D7 | DRAFTED (l8r2 round 5) | board B's six slot bucks at RT 200 k, 500 kHz: the frequency of the curves rv-pwr uses (68 k drawn sets 1471 kHz, where no curve is printed) | 0 | 0 |
 | D8 | DRAFTED (l8r2 round 6) | the 5.1 V stages' dividers at 0.1 %: 5.0019 to 5.1744 V, the least at the loads 4.9019 V (drawn 1 %: 4.9267 to 5.2536 V, 4.8282 V) | 0 | 0 |
 | D9 | DRAFTED (l9stk 15.4) | board P's breaker C-1 in the pack path: the sense at its window's highest 2.6546 mOhm and two CSD18510Q5B at 1.728 mOhm each (150 C) in parallel, 3.5186 mOhm | +0.034 W | +0.816 W |
-| D10 | DRAFTED (l9stk 15.5) | a third BUK6Y10-30P beside Q39, Q40: three at 21.136 mOhm each, 7.0453 mOhm against the pair's 10.568 | -0.034 W | -0.817 W |
+| D10 | DRAFTED (l9stk 15.5; L4-E11 round 9 writes it as Q42) | a third BUK6Y10-30P beside Q39, Q40: three at 21.136 mOhm each, 7.0453 mOhm against the pair's 10.568 | -0.034 W | -0.817 W |
 
 **Not modelled, each with its reason (out 1):** l8gnd's GND-002 and HOT-R1 hold, l8r2's VBUS20 cut-off and PH land, its board D
 3.3 V eFuse, its pack return and energy chain texts, the slot leads' 6.6 A and VBAT's 2.60 A entries (declarations, printed

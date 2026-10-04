@@ -1,12 +1,14 @@
 l9stk_copper: the pack path's copper on boards A and E, on its basis (record l9stk, MESHSAT-1357), revised after the check
 COPPER: NOT CONFIRMED. A candidate copper-sizing result, not completed fault-protection verification. Desk arithmetic on
 committed files: nothing was built, routed, measured or bought, and no figure below is a measurement.
+Round 3 (4 October 2026): the battery FETs are read from L4-E11's round 9 draft as it is, Q39, Q40, Q42 (3 x BUK6Y10-30PX), and judged on
+E11-29 as its section 19c restates it; no width, limit, split, field or barrel figure moved; the rows that moved are in section 9a.
 
 0. PINS (path  sha256/16)
    board_a         v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb  sha256 58e26c67987b1daa
    board_e         v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb  sha256 a462ac2620b9b8d3
    chain           v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
-   charger_draft   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 d857a70256d1c77e
+   charger_draft   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 bfdead54766199eb
    dc_drop         v2/ecad/tools/dc_drop.py  sha256 0b28f57e0a09a385
    decisions       v2/ecad/tools/pcb_decisions.yaml  sha256 823a6b32baf41481
    ecss_70_12c     v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md  sha256 6a8ae167b317221c
@@ -14,8 +16,8 @@ committed files: nothing was built, routed, measured or bought, and no figure be
    gauge_image     v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md  sha256 6726f23778f48e10
    gen_sch_a       v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
    gen_sch_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
-   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 302a0e2c0583ffcd
-   l4e12_out       v2/docs/records/l4e12/l4e12_thermal.out  sha256 d88aabc2671fbfd0
+   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
+   l4e12_out       v2/docs/records/l4e12/l4e12_thermal.out  sha256 3bdd5e3ebba68b07
    l9pwr_out       v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt  sha256 a2fe27d3f2cf1ddf
    lcsc_fill       v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    mini_297        v2/vendor/keystone/littelfuse-297-ficcorp.pdf  sha256 98a7e99bc5bbdf2a
@@ -212,10 +214,10 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        1 oz 38.79 mm, 2 oz 19.39 mm (apart, 1 oz, no credit: 21.81 mm); field: none (both ends through-hole); limit 105 C (the blade (MINI 297)), 125 C pinned
    A CELL_FUSED             F1 to R17 [TH / 1F]; A's F1, the gauge; coordination 25.00 A, k 1.005
        1 oz 39.14 mm, 2 oz 19.57 mm (apart, 1 oz, no credit: 22.01 mm); field: at R17, out 3's count at the band's length; limit 105 C (the blade (MINI 297)), 125 C pinned
-   A CH_BATQ (drafted)      R17 to Q39, Q40 [1F / 1F]; A's F1, the gauge; coordination 25.00 A, k 1.005
+   A CH_BATQ (drafted)      R17 to Q39, Q40, Q42 [1F / 1F]; A's F1, the gauge; coordination 25.00 A, k 1.005
        a one-face hop between two one-face parts: at least the larger land, as short as the parts allow; a one-face hop at the parts' lands
-   A VBAT trunk             Q39, Q40 (R17 as drawn) to the first branch [1F / loads]; A's F1, the gauge; coordination 25.00 A, k 1.005
-       1 oz 39.14 mm, 2 oz 19.57 mm (apart, 1 oz, no credit: 22.01 mm); field: at the pair, out 3's count; limit 105 C (the blade (MINI 297)), 125 C pinned
+   A VBAT trunk             Q39, Q40, Q42 (R17 as drawn) to the first branch [1F / loads]; A's F1, the gauge; coordination 25.00 A, k 1.005
+       1 oz 39.14 mm, 2 oz 19.57 mm (apart, 1 oz, no credit: 22.01 mm); field: at the FETs, out 3's count; limit 105 C (the blade (MINI 297)), 125 C pinned
    A GND (pack return)      J_CN1 to J_CN4 to the returns and planes [TH / planes]; the loop's blades, the gauge; coordination 25.00 A, k 1.000
        1 oz 38.79 mm, 2 oz 19.39 mm (apart, 1 oz, no credit: 21.81 mm); field: none at the pins; limit 105 C (the blade (MINI 297)), 125 C pinned
    E CELL+                  J_BATT pin 2 to F3 [TH / TH]; P's F1 (upstream), the gauge; coordination 25.00 A, k 1.000
@@ -254,8 +256,11 @@ committed files: nothing was built, routed, measured or bought, and no figure be
 7. THE SERIES PARTS AND THE LANDS
    R17 (ROHM GMR100HJAAFD5L00, 5 mOhm, 5 W, C20108830; derating NOT HELD): its 5 W at 31.62 A
    R19 (HoJLR2512-3W-10mR-1%, 10 mOhm, 3 W, C2903468; derating NOT HELD): its 3 W at 17.32 A
-   Q39/Q40 (E11-29's 33.12 K/W, 21.136 mOhm each at 150 C): 150 C held at 21.38 A from +70 C, 20.53 A from 76.25 C; L4-E11's 18 A for 60 s
-     126.7 C and 20 A held 140 C (from +70 C)
+   Q39, Q40, Q42, the battery FETs as L4-E11's round 9 drafts them (3 x BUK6Y10-30PX; E11-29 restated in its 19c: each FET's (Zself + 2 Zmut) at most
+     45.88 K/W with R17 apart, R17's coupling at most 1 K/W; 21.136 mOhm each at 150 C): 150 C held at 23.93 A from 76.25 C with the band (9.16 K) and
+     R17 in place (24.93 A from the +70 C line); 89.4 C at 10 A, 118.0 C at the 18 A service; L4-E11 prints 23.93 A, which reads 149.97 C here
+   dated, the pair Q39/Q40 as drafted until L4-E11's round 9 (E11-29's former 33.12 K/W, withdrawn in its 19c; FETs only): 150 C held at
+     21.38 A from +70 C, 20.53 A from 76.25 C; L4-E11's 18 A for 60 s 126.7 C and 20 A held 140 C (from +70 C): W4DP-F2 was found on it
    the XT60: 30 A, 60 A instantaneous (no duration), 120 C; the JST VH (J_DCIN as drawn): 10 A with AWG 16, 105 C
    the dock contacts: 4 Mill-Max pins, 9 A each at a 10 C rise, 20 mOhm maximum and no minimum, so the split is unbounded; no pin
      passes 9 A at 25 A only if the lowest pin resistance is at least 0.593 of the highest
@@ -280,7 +285,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            0.500 W  [0.10]
        XT60 (board E, 30 A, 120 C)                                    10.000 A  [0.33]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            2.500 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [0.28]
-       Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 93.75 C held from 76.25 C air (87.50 C from 70 C)  [0.24]
+       Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) TJ 89.42 C held from 76.25 C air, the band and R17 in place (83.17 C from 70 C)  [0.18]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: XT60 (board E, 30 A, 120 C) at 0.33 of its rating
      disposition: (a) the copper at either weight, the barrels, R17's watts, the XT60 and the even split of the dock contacts
@@ -296,11 +301,11 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            1.620 W  [0.32]
        XT60 (board E, 30 A, 120 C)                                    18.000 A  [0.60]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            4.500 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [0.50]
-       Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 132.95 C held from 76.25 C air (126.70 C from 70 C)  [0.77]
+       Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) TJ 118.00 C held from 76.25 C air, the band and R17 in place (111.75 C from 70 C)  [0.57]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 0.77 of its rating
+     limiting: XT60 (board E, 30 A, 120 C) at 0.60 of its rating
      disposition: (a) the copper at either weight (steady, no transient credit) and the barrels
-     disposition: (c) Q39/Q40 at L4-E11's 126.7 C from the +70 C air (132.9 C from 76.25 C): E11-29's specimen, measured with the band carrying its current (L4-E11)
+     disposition: (c) Q39, Q40, Q42 at 118.0 C from 76.25 C at E11-29's restated allowance, the band and R17 in place: E11-29's specimen, measured with the band carrying its current and R17 dissipating (L4-E11 19c)
      disposition: (c) the dock contacts' split: specimen, the four-pin set of the fitted lot (and E5's targets); acceptance, the lowest pin resistance at least 0.593 of the highest so no pin passes 9 A at 25 A; supplier task, each pin's contact resistance at mid-stroke
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
      disposition: (c) R17's maker sheet and its derating at the band's temperature (Layer 6)
@@ -313,10 +318,11 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            3.125 W  [0.62]
        XT60 (board E, 30 A, 120 C)                                    25.000 A  [0.83]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            6.250 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [0.69]
-       Q39/Q40                                                        L4-E11 15c: the gauge's levels at 150 C or under at E11-29's bar (CONDITIONAL on E11-29)
+       Q39, Q40, Q42                                                  L4-E11 19c: the pair's 1 s, 20 ms and 244 us targets are withdrawn and none is stated for the three; the held limit governs behind the breaker (drafted), CONDITIONAL on E11-29
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: barrel field, 16 of 0.4 mm (inward annulus) at 0.84 of its rating
-     disposition: (a) the copper at either weight and the barrels within 10 K for the gauge's 1 s; Q39/Q40 as L4-E11 15c (CONDITIONAL on E11-29)
+     disposition: (a) the copper at either weight and the barrels within 10 K for the gauge's 1 s
+     disposition: (c) Q39, Q40, Q42 for the gauge's 1 s: no timed target is held (L4-E11 19c withdrew the pair's); E11-29's specimen at the held limit, which governs behind the breaker (drafted)
      disposition: (c) the dock contacts' split: specimen, the four-pin set of the fitted lot (and E5's targets); acceptance, the lowest pin resistance at least 0.593 of the highest so no pin passes 9 A at 25 A; supplier task, each pin's contact resistance at mid-stroke
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    the 25 A case, the gauge failed: 25.00 A, held
@@ -328,11 +334,11 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            3.125 W  [0.62]
        XT60 (board E, 30 A, 120 C)                                    25.000 A  [0.83]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            6.250 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [0.69]
-       Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 185.63 C held from 76.25 C air (179.38 C from 70 C)  [1.48]
+       Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) TJ 156.72 C held from 76.25 C air, the band and R17 in place (150.47 C from 70 C)  [1.09]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 1.48 of its rating (OVER)
+     limiting: Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 1.09 of its rating (OVER)
      disposition: (a) the copper at either weight at 10 K (the width is sized to it)
-     disposition: (b) Q39/Q40 pass 150 C held: W4DP-F2's element (the battery stream with L4-E11)
+     disposition: (b) Q39, Q40, Q42 pass 150 C held (the limit is met at 23.93 A from 76.25 C): W4DP-F2's element (the battery stream with L4-E11)
      disposition: (c) the dock contacts' split: specimen, the four-pin set of the fitted lot (and E5's targets); acceptance, the lowest pin resistance at least 0.593 of the highest so no pin passes 9 A at 25 A; supplier task, each pin's contact resistance at mid-stroke
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
      disposition: (c) R17's maker sheet and its derating at the band's temperature (Layer 6)
@@ -345,10 +351,10 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            5.695 W  [1.14]
        XT60 (board E, 30 A, 120 C)                                    33.750 A  [1.12]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            8.438 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [0.94]
-       Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 275.59 C held from 76.25 C air (269.34 C from 70 C)  [2.70]
+       Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) TJ 222.97 C held from 76.25 C air, the band and R17 in place (216.72 C from 70 C)  [1.99]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 2.70 of its rating (OVER)
-     disposition: (b) W4DP-F2: Q39/Q40 pass 150 C at 21.38 A held (+70 C air), 20.53 A from 76.25 C; R17 passes 5 W at 31.62 A; the XT60 passes 30 A; no firmware-independent element opens in this band (the battery stream with L4-E11)
+     limiting: Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 1.99 of its rating (OVER)
+     disposition: (b) W4DP-F2: Q39, Q40, Q42 pass 150 C at 23.93 A held from 76.25 C with the band and R17 in place (24.93 A from the +70 C line); R17 passes 5 W at 31.62 A; the XT60 passes 30 A; no firmware-independent element opens in this band (the battery stream with L4-E11)
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    board P's FETs failed short, blade 135 to 200 %, at most 600 s: 50.00 A, 600s
      basis: a fault behind the welded FETs, read on the blade's monotone envelope
@@ -359,10 +365,10 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            12.500 W  [2.50]
        XT60 (board E, 30 A, 120 C)                                    50.000 A  [1.67]
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            12.500 A a pin at an even split; the split is unbounded (20 mOhm maximum, no minimum)  [1.39]
-       Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C)         TJ 513.77 C held from 76.25 C air (507.52 C from 70 C)  [5.93]
+       Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) TJ 398.47 C held from 76.25 C air, the band and R17 in place (392.22 C from 70 C)  [4.37]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 5.93 of its rating (OVER)
-     disposition: (b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and Q39/Q40 are over their printed ratings for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)
+     limiting: Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 4.37 of its rating (OVER)
+     disposition: (b) W4DP-F2's element removes the row: R17, the XT60, the dock contacts and Q39, Q40, Q42 are over their printed ratings or limit for up to the row's time (the battery stream with L4-E11; a coupon does not stand in for it)
      disposition: (a) the copper bands at either weight, with the blade's plating pinned
      disposition: (b) the blade's plating pinned to silver, 0297025.WXNV (Layer 6; apply_blade_plating_l9stk.py): as fitted the tin part's 105 C is passed
    board P's FETs failed short, blade 200 to 350 %, at most 5 s: 87.50 A, 5s
@@ -374,7 +380,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            38.281 W for 5s: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    87.500 A for 5s: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            21.875 A a pin for 5s: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.4 K/W, no board credit) TJ about 132.89 C for 5s  [0.77]
+       Q39, Q40, Q42 (INFERRED estimate: the 150 C RDS allowance, the device's own Zth(j-mb) 1.4 K/W, no board credit) TJ about 101.42 C for 5s  [0.34]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: barrel field, 16 of 0.4 mm (inward annulus) at 3.32 of its rating (OVER)
      disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
@@ -389,7 +395,7 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            112.500 W for 500ms: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    150.000 A for 500ms: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            37.500 A a pin for 500ms: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 237.60 C for 500ms  [2.19]
+       Q39, Q40, Q42 (INFERRED estimate: the 150 C RDS allowance, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 147.96 C for 500ms  [0.97]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
      limiting: barrel field, 16 of 0.4 mm (inward annulus) at 4.13 of its rating (OVER)
      disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
@@ -403,9 +409,9 @@ committed files: nothing was built, routed, measured or bought, and no figure be
        R17 (ROHM GMR100HJAAFD5L00, 5 W; derating NOT HELD)            1152.000 W for 100ms: over the continuous rating, no short-time rating held
        XT60 (board E, 30 A, 120 C)                                    480.000 A for 100ms: over the continuous rating, no short-time rating held
        dock contacts (4 Mill-Max, 9 A each at a 10 C rise)            120.000 A a pin for 100ms: over the continuous rating, no short-time rating held at an even split; the split is unbounded (20 mOhm maximum, no minimum)
-       Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 1728.43 C for 100ms  [22.40]
+       Q39, Q40, Q42 (INFERRED estimate: the 150 C RDS allowance, the device's own Zth(j-mb) 1.3571 K/W, no board credit) TJ about 810.55 C for 100ms  [9.96]
        Keystone 3568 holder                                           no current rating printed (NOT HELD)
-     limiting: Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) at 22.40 of its rating (OVER)
+     limiting: barrel field, 16 of 0.4 mm (inward annulus) at 11.08 of its rating (OVER)
      disposition: (b) W4DP-F2's element removes the row: the barrel field passes the band's limit, and R17, the XT60 and the dock contacts carry currents above their continuous ratings with no short-time rating held (the battery stream with L4-E11; a coupon does not stand in for it)
      disposition: (a) the copper bands at either weight, with the blade's plating pinned
      disposition: (c) the blade's total clearing I2t at 480 A and 16.8 V (not printed; 625 A2s is nominal melting): specimen, the fitted lot in the 3568 holder on a band coupon; acceptance, at most 41953 A2s (the governing 1 oz face to 120 C from 76.25 C); supplier task, Littelfuse's clearing data or a short-circuit test
@@ -475,8 +481,51 @@ committed files: nothing was built, routed, measured or bought, and no figure be
      disposition: (c) F1's total clearing I2t at 900 A and 58 V DC (E11-16, L4-E11): acceptance at most 12451 A2s on the governing 1 oz face to 105 C
      disposition: (b) the 3568 holder prints no current rating: a MINI 297/997 holder whose maker prints at least the coordination current, Layer 6/7
    W4DP-F2 stays open; its closure is a current-and-time criterion for every series part with board P's FETs welded and no firmware,
-     not one current: Q39/Q40 pass 150 C held at 21.38 A from +70 C and 20.53 A from 76.25 C (derived on E11-29's target), under the
-     cells' 24 A; the selected element and its table are l9stk_protection.py's (the page's section 15)
+     not one current: the pair it was found on passed 150 C held at 21.38 A from +70 C and 20.53 A from 76.25 C (derived on E11-29's
+     former target), under the cells' 24 A; the three drafted since meet their limit at 23.93 A from 76.25 C, under the blades' least
+     assured opening 33.75 A; the selected element and its table are l9stk_protection.py's (the page's section 15)
+
+9a. THE BATTERY FETS' ROWS: THE CIRCUIT AS DRAFTED NOW AGAINST THE PAIR THE TABLE WAS FIRST JUDGED ON (round 3)
+   the cause: L4-E11's round 9 draft writes Q39, Q40, Q42 (it wrote Q39 and Q40), and its 19c restates E11-29 from the pair's 33.12 K/W (FETs only,
+     from the +70 C line) to 45.88 K/W a FET with R17 apart, the band and R17 in place, from 76.25 C; both columns are computed here
+   10 A continuous: 10.00 A, held
+     the pair:  TJ 93.75 C held from 76.25 C air (87.50 C from 70 C)  [0.24]
+     now:       TJ 89.42 C held from 76.25 C air, the band and R17 in place (83.17 C from 70 C)  [0.18]
+     limiting:  unchanged: XT60 (board E, 30 A, 120 C) at 0.33
+   18 A for 60 s: 18.00 A, 60s
+     the pair:  TJ 132.95 C held from 76.25 C air (126.70 C from 70 C)  [0.77]
+     now:       TJ 118.00 C held from 76.25 C air, the band and R17 in place (111.75 C from 70 C)  [0.57]
+     limiting:  was Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 0.77; now XT60 (board E, 30 A, 120 C) at 0.60
+   the 25 A case, the gauge working: 25.00 A, 1s
+     the pair:  L4-E11 15c: the gauge's levels at 150 C or under at E11-29's bar (CONDITIONAL on E11-29)
+     now:       L4-E11 19c: the pair's 1 s, 20 ms and 244 us targets are withdrawn and none is stated for the three; the held limit governs behind the breaker (drafted), CONDITIONAL on E11-29
+     limiting:  unchanged: barrel field, 16 of 0.4 mm (inward annulus) at 0.84
+   the 25 A case, the gauge failed: 25.00 A, held
+     the pair:  TJ 185.63 C held from 76.25 C air (179.38 C from 70 C)  [1.48]
+     now:       TJ 156.72 C held from 76.25 C air, the band and R17 in place (150.47 C from 70 C)  [1.09]
+     limiting:  was Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 1.48 (OVER); now Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 1.09 (OVER)
+   sustained overloads 20 to 33.75 A, no fuse opening assured: 33.75 A, held
+     the pair:  TJ 275.59 C held from 76.25 C air (269.34 C from 70 C)  [2.70]
+     now:       TJ 222.97 C held from 76.25 C air, the band and R17 in place (216.72 C from 70 C)  [1.99]
+     limiting:  was Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 2.70 (OVER); now Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 1.99 (OVER)
+   board P's FETs failed short, blade 135 to 200 %, at most 600 s: 50.00 A, 600s
+     the pair:  TJ 513.77 C held from 76.25 C air (507.52 C from 70 C)  [5.93]
+     now:       TJ 398.47 C held from 76.25 C air, the band and R17 in place (392.22 C from 70 C)  [4.37]
+     limiting:  was Q39/Q40 (E11-29: 33.12 K/W, 21.136 mOhm each at 150 C) at 5.93 (OVER); now Q39, Q40, Q42 (E11-29 restated: 45.88 K/W each with R17 apart, 21.136 mOhm each at 150 C) at 4.37 (OVER)
+   board P's FETs failed short, blade 200 to 350 %, at most 5 s: 87.50 A, 5s
+     the pair:  TJ about 132.89 C for 5s  [0.77]
+     now:       TJ about 101.42 C for 5s  [0.34]
+     limiting:  unchanged: barrel field, 16 of 0.4 mm (inward annulus) at 3.32 (OVER)
+   board P's FETs failed short, blade 350 to 600 %, at most 0.5 s: 150.00 A, 500ms
+     the pair:  TJ about 237.60 C for 500ms  [2.19]
+     now:       TJ about 147.96 C for 500ms  [0.97]
+     limiting:  unchanged: barrel field, 16 of 0.4 mm (inward annulus) at 4.13 (OVER)
+   board P's FETs failed short, blade over 600 % to 480 A, at most 0.1 s: 480.00 A, 100ms
+     the pair:  TJ about 1728.43 C for 100ms  [22.40]
+     now:       TJ about 810.55 C for 100ms  [9.96]
+     limiting:  was Q39/Q40 (INFERRED estimate: the 150 C RDS bound, the device's own Zth(j-mb) 1.3571 K/W, no board credit) at 22.40 (OVER); now barrel field, 16 of 0.4 mm (inward annulus) at 11.08 (OVER)
+   not moved by the draft's change: every width, limit, split, transfer field and barrel count of sections 2 to 8, and every copper, barrel,
+     R17, XT60, dock contact, R19 and J_DCIN reading of section 9 (none reads the battery FETs)
 
 10. PREDICATES
    each face rated alone reproduces the candidate's widths: 6.72, 11.95, 12.26 and 14.60 mm                                 yes
@@ -489,7 +538,10 @@ committed files: nothing was built, routed, measured or bought, and no figure be
    board E's pack end at 1 oz with its return adjacent exceeds the strip; at 2 oz it fits                                   yes
    the blade's plating is not pinned in the tree, so the fitted limit is the tin blade's                                    yes
    the outward annulus count is via_current's and the inward count is no smaller                                            yes
-   the pair passes 150 C held between the gauge's OCD1 and the cells' continuous rating                                     yes
+   the pair L4-E11 drafted until its round 9 passed 150 C held between the gauge's OCD1 and the cells' continuous rating    yes
+   the battery FETs as drafted now meet their junction limit between the gauge's OCD1 and the blades' least assured opening yes
+   L4-E11's restated E11-29 starts from this record's worst inside air and reads its limit at its held current, to 0.05 K   yes
+   the target L4-E11 withdrew is the pair's target this record read, and the allowance per FET is the pair's bound          yes
    every coordination row carries a disposition, and every row over a printed rating a design correction or a gap           yes
    with the gauge failed the 25 A case is over a printed rating                                                             yes
    the 10 A continuous row is within every held rating                                                                      yes
