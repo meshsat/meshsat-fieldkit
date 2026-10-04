@@ -1534,3 +1534,32 @@ proposal. Across layers: the supplier delta from the promoted set, an engineerin
 accepted; defects corrected and verified; new or regressed defects; external dependencies; active jobs with progress evidence; the
 next critical-path milestones; resource use, compute and storage apart. A workday without a verified closure or a usable
 engineering deliverable on the critical path (T1, T5) changes the scope or the method, and that change is reported.
+
+### Milestone, 4 October 2026 20:01 CEST: integration set 29 promoted (Layers 4, 5, 8, 9 and 12's rounds onto set 28)
+
+**Promoted:** main `aa76c894` (`aa76c89448ec943e3a37357ebc11ce3322fa4020`), the commit that was frozen and gated, by fast-forward.
+Gated by `_bin/suite_gate.py` on three passes of that exact commit (the box on Python 3.12, the box on 3.11 for test_l4e10 and
+test_l4e12, the runner for test_l4e7): 2937 passed, 0 failed, 15 skipped, 232 of 232 modules, the tree unchanged after each pass;
+`v2/ecad/tools/candidate_guard.py` checked the candidate and its 990 evidence files before each pass and on main after the
+fast-forward. The record: `v2/docs/records/int29/RESULT.md`. A first box run was not gated: sixty tests of three records had
+skipped there for six held makers' sheets missing from the evidence list; the manifest was recorded again at the same commit with
+the complete list, the passes were run again, and the gate now refuses an unexplained skip (its condition G7).
+
+**What set 29 carries:** `v2/docs/records/int29/README.md` lists it commit by commit: Layer 5's slot-fault rule, the panel
+firmware's round 4, L4-E7's round 6, Layer 9's power budget and its stackups with the pack path's copper and protection, Layer 8's
+round 3 and breaker drafts, L4-E9's round 8 and rows A to A3, L4-E11's round 9, the refreshed test procedures, the reviews of the
+supplier package filed as received, `LAYER-STATUS.md` brought to sets 28 and 29, and finding F-L7-12 corrected.
+
+**Five claims, apart:** documents and editable artifacts of these rounds on main as drafts; design reviewed and accepted: NO beyond
+the named checks; circuit changes implemented: NONE; physical qualification: NONE; fabrication release: BLOCKED. Promotion of this
+set closes no power item and is not power-design closure or layer completion.
+
+**Measured:** the two box passes together 34 min 8 s on a resumed, already prepared instance (no host setup in that figure); the
+runner pass about one minute.
+
+**Next set (30), on branches, not in this commit:** T1 (B-R2's board A side, the independent check V1 CONFIRMED AS CONDITIONAL),
+T2 (E-1's sharing: the bar restated at 40.78 K/W for any split; E11-37 OPEN), T3 (DD-3's choke), T4 (DD-5's ideal diode) and board
+P's round 5 (findings L8P-F06 and L8P-F07, both OPEN), all under the independent check V2; T5 (I-03's correction: board A composes
+and holds on C-DEV rev 1, board B waits for T5b; F01 / D-17 OPEN, the selected direction A1 not drafted because no detector sheet
+prints its accuracy as a limit); T5b (board B's ground return, its load and capacity basis); L4-E9's round 9. The supplier delta is
+issued from this promoted revision and recorded when built; the quotation and every vendor question stay unsent.
