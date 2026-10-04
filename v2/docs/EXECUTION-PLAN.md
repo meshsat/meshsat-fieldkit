@@ -1345,3 +1345,104 @@ hardware progress.
 21:00 took 25 min); the Astra recheck about 1 h (runs of this size took 45 to 70 min); the box suite about 25 min plus the
 instance's resume; promotion 30 min. Layer 5's first task about 2 to 3 h on one slot; Layer 6's first task about 2 to 3 h on the
 other. External and not estimable: the vendor answers and every measurement.
+
+### Milestone, 3 October 2026 18:23 CEST: Layer 4's power design converged on one candidate, blocked on named defects (integration set 27 on main)
+
+**What changed, and its commit.** Set 27 (`94971c8c`, promoted from `fnd/int27`) carries the whole response to the two external
+reviews of 2 October (both filed as received under `records/l4close/`): B1 to B7 of the collaborator's review and L4-F01 to
+L4-F04, L4-CP01 to L4-CP03 of the owner's reviewers, each answered by the record that owns it, integrated by the consolidation
+(L4-E9 at `df082643`) and frozen through the safe regeneration helper (every Layer 4 output byte-identical twice, the chain's
+pins current). Runner checks: every validator current and 0 errors; modules 274 passed, 0 failed, 1 gated skip on the runner; the box suite 2554 passed, 0 failed, 92 skipped plus the 3.11 pass 28 passed, 0 failed; the gate PASS (its first run on b138fec0 found a
+provenance defect, the consolidation reading Layer 7's price file at a commit outside the candidate's history, corrected before
+this promotion: a record reads its inputs from its own tree or its own history only).
+
+**The engineering result, in the owner's three decisions (L4-POWER-ARCHITECTURE.md section 6):** the architecture candidate
+CONDITIONAL; the power-design closure gate BLOCKED (an unresolved material protection or feasibility condition suffices; no
+requirement conflict is needed or demonstrated); fabrication release BLOCKED; the engineer handoff READY TO START, provisional,
+its omitted dependencies named. Status phrase: known defects addressed in drafts; feasibility conditions remain open.
+
+- **Corrected (demonstrated defects):** the charging-heat omission (50.043663 W; 52.133663 W with ballasts, reproduced by the
+  reviewer); the runtime's thermal exemption (2.52 h energy only; +50 C at 2.06349 h on the bound); the thermal classes (three
+  categories replace "class (iii)": a modelled shortfall of the analysed arrangement for M3 and M4, a missing storage
+  qualification for M6 and M7, no demonstrated conflict, so CFL-002 and OW-10 are no longer forced questions); board E's
+  auxiliary feed moved to VSYS_E behind a TI TPS16630 eFuse (U42, R228 11.0k, 1.471 to 1.802 A, four fault cases labelled
+  printed, inferred or typical; the typical 45 A threshold no longer used as a maximum); a regulated 12 V fan rail on board E
+  (ADI LTC3115-1, U18) because no IP68 fan covers VSYS_E's range (Layer 7's D-18: Sanyo Denki San Ace, 12 V, -20 to +70 C);
+  R97 at 0.1 percent (YAGEO RT0603BRD0728KL); the charger draft no longer writes withdrawn FET claims (a test guards it); a
+  designator collision on board A (R221 to R228).
+- **Bounded or designed out (unresolved assumptions):** the battery switch's qualification rests on printed data only where it
+  is printed (21.136 mOhm an allowance; the device's own Zth; Ciss OPEN against TI's below-5 nF; the docking inrush taken whole in
+  one FET, judged by a defined pulse test on six sample parts, Nexperia's acceptance asked in parallel); the solar guard's
+  margin 0.240 V budgeted (parasitics +0.2487 / -0.2885 V, holding only with RSENSE1 at or under 3.0 nH); the eFuse's status
+  "sustained-overload remedy drafted; fault qualification open".
+- **To the engineer (one design-out attempt made, then stopped):** B6-ENG-1: the solar guard holds every rating with margin
+  only from a 3.30 uH source loop; route 3 (the sense moved off the input capacitance) tried in seven splits, none holds both
+  the transient and the sense's +-100 mV operating range; the pin-level limiter excluded by the LT8705A's own sheet (p.30); PV_F
+  80.58 V over the TPS4811-Q1's recommended 80 V row by 0.58 V. **B6-ENG-2 / D-16 (OPEN):** the drafted current sense leaves its
+  operating range in normal operation at the 25 V corner (0.1174 to 0.1297 V peaks); the third compensating change asked of the
+  stage's sense and guard, so the sense arrangement itself is the engineer's (R-187, R-189); the 100 W backstop unaffected.
+- **Endurance (apart, honest):** the 48 to 72 h objective is NOT MET at the approved 42.8 W profile: battery-only 2.52 h energy
+  only (2.01 to 2.51 h before C1 sheds on the thermal bound), solar-assisted 8.0 W steady at 48 h against 42.8 W; the tablet's
+  charging at most 38.7 Wh a day.
+
+**The prototype qualification route (section 5d):** 14 experiments, each with specimen, what transfers, pass limits, consequence,
+performer type and the authorisation needed; the purchase list (EUR 176.49, NZD 238.72, USD 220.60 read publicly; nine items
+without a read price, the T-H1 mock-up bill at about EUR 640 plus GBP 887 plus USD 147 in Layer 7's record); the send list
+(TI Q-TI-15 to Q-TI-18, Nexperia Q-NXP-1, Saft, Topwell, Analog Devices items 6 and 7, PDi, Eaton, Sensirion, Preci-Dip, the
+battery review request). Desk work on these items stops here; each advances only by its measurement or answer, or by the
+named design change (B6 route 3 as the engineer's, the hold-up bank for U-04, a storage-rated e-paper, a case heat-rejection
+route).
+
+**Layer 4's five claims, apart:** documents and editable artifacts complete for this candidate (one diagram, one budget, one
+change list of 69 implementation changes with 22 drafts missing, the operating behaviour, the handover, the exit statement,
+the findings ledger of 58 rows plus the reviews' items, 180 register items); design reviewed and accepted: NO (Astra's one targeted
+recheck on `b138fec0`, job cx37, run 20261003T065537Z, read NOT YET with six items: board E's fan-feed draft reused the solar
+drafts' designators; the solar guard's 3.30 uH 'passing floor' contradicted its own pin budget and credited lead resistance at a
+connector fault; the sense-error model kept negative monitor current the LT8705A does not produce; the eFuse's 566 A ceiling used
+an on-resistance specified to 6 A and the 1.5 s timeout as a duration; the thermal escalation rule took one failed arrangement
+for a requirement conflict; B2 open as a design item. B3, B4, B5, B7 and CP03 read CLOSED. Each item was corrected in the
+record that owns it before this promotion (the corrections named below); both Astra runs for the issue are spent, so the
+coordinator's verification of the corrections is labelled as such and the NOT YET stands as filed, never restated); circuit changes implemented: NONE (every change a release-guarded draft); physical qualification: NONE; fabrication
+release: BLOCKED.
+
+**Running and next.** The recheck is filed (`records/l4close/checks/astra-check-l4close-2.md`) and the ledger updated; the box suite on `94971c8c` in two passes (gate `suite_gate.py`); set 28 prepared at `fnd/int28` `a1f696de`
+(Layers 5, 6 and 7's first passes: the power contracts with 46 entries, 21 provisional; 28 part identities; the fans, the T-H1
+mock-up bill and the dock contact's pulse question), to be re-based onto set 27 and promoted after its own checks and the box
+re-takes (interfaces.py on every board, the identity readings). Then Layer 5's remaining rows (the SLOT_EN hold, GND-002),
+Layer 6's BOM identity for the rest of the boards, Layer 7's CAD findings (the fans' fit), Layer 8's first applied drafts once
+L4-E4's release record reads released.
+
+**Owner decisions genuinely needed:** none for the design. Actions only he can take: send the drafts on the send list;
+authorise the T-H1 mock-up purchase (OW-8) and the sample parts of the pulse test (about USD 35); the cell change stays a
+proposal (no purchase).
+
+### Milestone, 4 October 2026 02:30 CEST: Layers 5 to 9 and 12's rounds on main as an engineering handover (integration set 28)
+
+**Promoted:** main `d834e6a7` (`d834e6a7be211d1cdd1b18ded54bec1c427048fd`), gated by `_bin/suite_gate.py` on three passes of that
+exact commit (the box on Python 3.12, the box on 3.11 for test_l4e10 and test_l4e12, the runner for test_l4e7, whose results cache
+is keyed on the runner's interpreter and pdftotext): 2845 passed, 0 failed, 14 skipped, 228 of 228 modules, the tree unchanged
+after each pass. Before each pass `v2/ecad/tools/candidate_guard.py` checked the candidate and its 984 evidence files against the
+manifest recorded at the frozen commit (kept outside the tree); it passed on main after the fast-forward too. The record:
+`v2/docs/records/int28b/README.md` (section "Promotion").
+
+**What set 28 carries:** Layer 5's power contracts (round 2, round 3's panel decisions F-04 to F-13, the restatements so that no
+withdrawn Layer 4 claim stays in the contracts), Layer 6's part identities and the corrected `lcsc_fill.py` table, Layer 7's fans and
+T-H1 mock-up bill, Layer 8's release-guarded drafts (GND-002, the SLOT_EN hold, round 2's known defects), Layer 9's supplier
+test procedures and the bring-up page, Layer 12's panel controller firmware with its contract tests, L4-E9's round 6 and L4-E7's
+numeric panel-lead guard; the release-candidate review's L4-RC01 (R-197, closed on its passing evidence) and L4-RC02 (R-198);
+`candidate_guard.py` with its regressions (the owner's amendment after the first set 28 suite failed on a registry edit made after
+the freeze).
+
+**Five claims, apart:** documents and editable artifacts for these rounds complete as drafts; design reviewed and accepted: NO
+beyond the named checks; circuit changes implemented: NONE; physical qualification: NONE; fabrication release: BLOCKED.
+
+**Supplier handover re-issued:** `MESHSAT-SUPPLIER-HANDOVER-RELEASE-CANDIDATE-d834e6a7.zip` (12,894,538 bytes, sha256
+29ed399ae8f7cb29801b9f6080725cc44cf06957430b8642440faf032e76cb7d), cut from the exact commit the suite ran on; its README discloses the
+later findings below; the quotation request stays a draft (unsent, outside the repository).
+
+**Next set (29), on branches, not in this commit:** L9P-F02 (slots 1 and 3 to the LM5176 stage, the coolers at full speed; the
+collaborator's check and recheck NOT CONFIRMED and NOT CLOSED, the corrections made, the coordinator's closing check CLOSED AS
+CONDITIONAL on C4-1 to C4-6); the pack path's copper (stacked faces and returns rated as one conductor; the outer copper weight
+an owner decision, money) and W4DP-F2's protection (an LM5069-2 breaker on board P with a make-last enable at the dock and a third
+battery FET, CONFIRMED AS CONDITIONAL by the independent check; DD-3 and DD-5 open defects); L9P-F01 (the all-transmit floor);
+Layer 9's power budget; Layer 5's slot-fault rule; the firmware's round 4; the proposed LAYER-STATUS rows of Layers 5, 6, 7, 8 and 12.

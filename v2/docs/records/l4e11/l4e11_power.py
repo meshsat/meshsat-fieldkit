@@ -48,7 +48,7 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 REC = "v2/docs/records/l4e11"
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "07fec30d43271245fd266d4c397a1578db00731e0ca2f97815592831435aa0d9"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
     "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059"),
@@ -113,7 +113,7 @@ PINS = {
     "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "a760101cde41633adb8baa9eae198404857637622d6a66708d7feed247539e3c"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "996fc1b1ee4491fc58d6c2ab0b9ae3cefc7e9f8b56311290d0aef34b0947926d"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",

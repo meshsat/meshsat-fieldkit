@@ -139,7 +139,7 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**2 of 338 required rows changed class; 81 more changed only their first failing cause.**
+**2 of 338 required rows changed class; 102 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
@@ -159,14 +159,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 13 | 0 | 11 | 33 | 4 | 0 | 5 | 55 |
-| B | 13 | 0 | 10 | 32 | 5 | 0 | 6 | 56 |
-| C | 10 | 0 | 8 | 30 | 4 | 0 | 4 | 48 |
-| D | 11 | 0 | 9 | 32 | 4 | 0 | 4 | 51 |
-| E | 14 | 0 | 13 | 33 | 4 | 0 | 4 | 55 |
-| P | 14 | 0 | 12 | 27 | 4 | 0 | 3 | 48 |
-| E5 | 8 | 0 | 6 | 12 | 3 | 0 | 2 | 25 |
-| **set** | **83** | **0** | **69** | **199** | **28** | **0** | **28** | **338** |
+| A | 13 | 0 | 11 | 34 | 4 | 0 | 4 | 55 |
+| B | 13 | 0 | 10 | 33 | 5 | 0 | 5 | 56 |
+| C | 10 | 0 | 8 | 31 | 4 | 0 | 3 | 48 |
+| D | 11 | 0 | 9 | 33 | 4 | 0 | 3 | 51 |
+| E | 14 | 0 | 13 | 34 | 4 | 0 | 3 | 55 |
+| P | 14 | 0 | 12 | 28 | 4 | 0 | 2 | 48 |
+| E5 | 8 | 0 | 6 | 13 | 3 | 0 | 1 | 25 |
+| **set** | **83** | **0** | **69** | **206** | **28** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -256,8 +256,8 @@ tool.
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 13 | 0 |
-| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 26 | 25 | 22 | 25 | 26 | 19 | 6 | 149 | 9 |
-| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 5 | 5 | 5 | 5 | 5 | 5 | 4 | 34 | 0 |
+| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 29 | 28 | 25 | 28 | 29 | 22 | 9 | 170 | 9 |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 20 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
 
 ## Writers whose configuration is not declared yet
@@ -282,9 +282,10 @@ stream, which audits each writer by reading it, file and line.
 | `dc_drop.py` | PI-001, PI-002 |
 | `doc_provenance.py` | DOC-002 |
 | `emc_sheet.py` | EMC-001 |
-| `final_gate.py` | DOC-001 |
+| `final_gate.py` | DOC-001, OUT-001 |
 | `hardset.py` | PLC-001, RTE-002 |
 | `impedance_check.py` | IMP-001, PAIR-001 |
+| `layer_judge.py` | STK-002 |
 | `ledger_verify.py` | DOC-002 |
 | `place_audit.py` | PLC-001 |
 | `pruned_gate.py` | RTE-002 |
@@ -339,7 +340,7 @@ tools that have changed since, across every board's revisions.
 
 | historical aggregate, mixed revisions | PASS | FAIL | INCONCLUSIVE | WAIVED | pairs |
 |---|---:|---:|---:|---:|---:|
-| rule-board pairs | 189 (55.9 percent, mixed revisions) | 32 | 117 | 0 | 338 |
+| rule-board pairs | 195 (57.7 percent, mixed revisions) | 39 | 104 | 0 | 338 |
 
 ## How this page is computed
 

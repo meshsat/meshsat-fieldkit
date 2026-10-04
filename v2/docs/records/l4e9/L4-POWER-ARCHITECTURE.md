@@ -649,7 +649,7 @@ fit mock-up R-167 blocks that adoption and the dependent mechanical release only
 
 | Layer | Owners | Register rows | By kind | By state |
 |---|---|---|---|---|
-| 4 (release records) | Layer 4 coordinator | 10: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 5 | DRAFTED 2; OWED 8; APPLIED 0 |
+| 4 (release records) | Layer 4 coordinator | 12: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155, R-178, R-197, R-198 | EVIDENCE 3; IMPLEMENTATION 2; RELEASE 7 | CLOSED 2; DRAFTED 2; OWED 8; APPLIED 0 |
 | 5 | Layer 5 interfaces, CONOPS owner | 5: R-23, R-24, R-125, R-133, R-138 | IMPLEMENTATION 5 | DRAFTED 5; APPLIED 0 |
 | 5 (firmware, by the contract) | firmware owner | 11: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154, R-158, R-164, R-188 | IMPLEMENTATION 11 | DRAFTED 1; OWED 10; APPLIED 0 |
 | 6 | Layer 6 components | 28: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150, R-160, R-162, R-165, R-168, R-179, R-182, R-183, R-186 | EVIDENCE 27; TEST 1 | OWED 28; APPLIED 0 |
@@ -1216,7 +1216,7 @@ The minors: R96 at 0.1 % (L4-E7's draft at 1a73f5b4); L4-E11 16d's withdrawn sen
 | KNOWN ENGINEERING DEFECT | 7 | 2 | 0 | fix it, or ASSIGN a specific design-correction task to the supplier's phase 1 (8g) |
 | PHYSICAL UNCERTAINTY | 74 | 4 | 3 | TEST or ASK: its executable specification (5d's row where it is one), the decision it settles, external execution (the supplier's phase 2), the unaffected work continuing |
 | UNCERTAIN DESIGN CHOICE | 6 | 1 | 1 | COMPARE once (the table below), then SELECT within the existing authority or present the smallest genuine owner decision |
-| SETTLED WORK | 99 | 10 | 0 | DO it in its step: no open question (implementation, layout, release and record work on a settled basis) |
+| SETTLED WORK | 101 | 10 | 0 | DO it in its step: no open question (implementation, layout, release and record work on a settled basis) |
 
 | Item | State | Class | Next action |
 |---|---|---|---|
@@ -1272,7 +1272,7 @@ The minors: R96 at 0.1 % (L4-E7's draft at 1a73f5b4); L4-E11 16d's withdrawn sen
 
 **The uncertain design choices:** UDC-1 SELECTED; UDC-2 OWNER DECISION, the smallest genuine one; UDC-3 SELECTED.
 
-**Unaffected work that continues** (SETTLED WORK, 99 register rows): the change list's steps in order (section 3), the release records, the layout constraints and the records' re-issues.
+**Unaffected work that continues** (SETTLED WORK, 101 register rows): the change list's steps in order (section 3), the release records, the layout constraints and the records' re-issues.
 <!-- gen:supplier:end -->
 
 ## 9. Decisions this record takes (SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026 that engineering decisions are the session's)
@@ -1450,12 +1450,12 @@ The minors: R96 at 0.1 % (L4-E7's draft at 1a73f5b4); L4-E11 16d's withdrawn sen
 
 ## 11. The downstream register and the release order (criterion 4)
 
-`DOWNSTREAM-REGISTER.md` holds 186 items, each with one owner, an acceptance, a state and a step in the release order (out 10):
-Layer 4 coordinator 10, Layer 5 interfaces 4, Layer 6 components 28, Layer 7 mechanical 10, Layer 8 board A generator owner 19,
+`DOWNSTREAM-REGISTER.md` holds 188 items, each with one owner, an acceptance, a state and a step in the release order (out 10):
+Layer 4 coordinator 12, Layer 5 interfaces 4, Layer 6 components 28, Layer 7 mechanical 10, Layer 8 board A generator owner 19,
 Layer 8 board B generator owner 5, Layer 8 board C generator owner 1, Layer 8 board E generator owner 27, Layer 8 board P
 generator owner 1, Layer 9 pre-layout analysis 24, prototype bench 42, firmware owner 11, TEST-PLAN owner 3, CONOPS owner 1. By
 kind: 75 implementation changes (34 drafted, 24 missing a draft, 17 owed as work, none PENDING), 14 layout constraints, 46
-tests, 46 pieces of evidence (none PENDING since L4-E7's surge round landed), 5 release records. They are category (a): 186 items, each
+tests, 46 pieces of evidence (none PENDING since L4-E7's surge round landed), 7 release records (two of them review findings kept in the register: R-197 and R-198 CLOSED). They are category (a): 188 items, each
 with one owner and an acceptance that
 close the assignment, not the item, and none of them stands in for U-01, U-02 or U-04. U-03 is now among them: PANEL-ACC is
 R-35 (Layer 6 component selection; the purchase and the measurement the owner's, OW-6), with R-52 (the unit's trace rerun),
@@ -1532,7 +1532,18 @@ last in board A's round and the finding on its references): 185 items. **L4-E7's
 targeted recheck): R-176 carries its six rows as round 5 gives them (the earlier "a pass only from a 3.30 uH loop" and the budgeted
 reserve with its 3.0 nH bound are withdrawn; row 3 claims no passing loop), R-180 keeps round 2's sentence quoted and withdrawn as a
 passing floor, R-186's filter is no longer read as a pass at every loop, R-173 carries R96 at 0.1 %, R-189's consequence is
-corrected (the monitor rectified, "no damage" withdrawn); D-10's guard-on case OPEN: still 185 items.
+corrected (the monitor rectified, "no damage" withdrawn); D-10's guard-on case OPEN: still 185 items. **The release-candidate
+review of the supplier package** (the owner's reviewer, 3 October 2026, on `761677ca`: READY for an initial supplier engineering
+review and quotation, power-design closure and fabrication release BLOCKED; `records/l4close/REVIEW-SUPPLIER-RELEASE-CANDIDATE-AS-RECEIVED.md`,
+as received, cited), its two findings kept in the active register under the owner's amendment, beside the earlier reviews'
+(L4-SH01 to L4-SH03, L4-QR01, L4-CP01 to L4-CP03): R-197, L4-RC01, L4-E7's panel-lead scan, where an approved sentence exempted a
+second statement in the same table cell (set 28's numeric guard compares every stated length with a1solar's LEAD_M; the same-cell
+regression and the archived-review list on `fnd/l4e7rc`, integrated at `c4e4f7d7`), OPEN until `test_l4e7` passes there (L4-E7's
+results cache does not hold at `c4e4f7d7`: its KEY records an earlier L4-E11 output; to be regenerated with L4-E7's output), the
+integrator's hook in its acceptance; the row states no panel-lead length (L4-E7's guard reads this register; the probe's exact
+text is in the archived review); R-198, L4-RC02, the replay wording (the tested and the packaged commit, the cached render apart
+from a fresh solver run), CLOSED at the entry page's `db1cffb5` and the packer's README, verified when the package is built from the
+suite-checked commit: 188 items.
 
 **The release order** (the register's own section): release records first (L4-E4's names accepted checks of L4-E4 to L4-E6 and
 L4-E8; L4-E7's names L4-E7R's check 4; L4-E11's its check 3), with the text drafts for Layer 5, CONOPS and L4-E5; the missing

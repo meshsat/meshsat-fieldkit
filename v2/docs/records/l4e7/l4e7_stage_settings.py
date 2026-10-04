@@ -548,8 +548,13 @@ def sense_ripple(cu, cd, i_in, vin, vout, f, L, t_rf, r59, l59, rb, bulk, dt=1e-
 
 # the panel lead's length (set 28, restated on the derivation's input): the derivation reads it from a1solar's array_calc.py (LEAD_M,
 # ESTIMATE, through the module the replay loads and pins). A stated length elsewhere in v2's documents is parsed as a number with its
-# unit and compared with that input: equal, it is a consistent citation (recorded, never refused); different, compute() refuses
+# unit and compared with that input: equal, it is a consistent citation (recorded, never refused); different, compute() refuses.
+# Not read: maker documents, release deliverables and generated outputs (their folders, in lead_scan), and an archived review that
+# ARCHIVED-REVIEWS.yaml designates by path and sha256 while its sha256 still matches (archived(): a third party's text filed verbatim
+# may quote a probe, as the supplier package's review L4-RC01 quotes "The selected panel lead is 9 m.", and is never a design
+# authority; a listed file whose content changed is read like any document, an unlisted file is read whatever its name).
 A1_CALC = "v2/docs/records/a1solar/array_calc.py"
+ARCHIVED = "v2/docs/records/ARCHIVED-REVIEWS.yaml"
 LEAD_PHRASE = re.compile(r"(?:solar|panel)\W+(?:lead|cable|extension)", re.I)
 LEAD_LENGTH = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)\s?(?:m|metres?|meters?)\b")
 _PAUSE = [False]       # the results cache's file recorder is paused while a tree scan runs (the scans enter the KEY by their outcome)
@@ -564,20 +569,48 @@ def lead_input(top=None):
     refuse(3, "%s binds no LEAD_M; the panel lead's derivation has no input" % A1_CALC)
 
 
-def lead_scan(top=None, length=None):
+def archived(top=None):
+    """The designated archived reviews, {path: sha256}, read from ARCHIVED-REVIEWS.yaml at every scan (no file: none). Each entry
+    needs a path, a 64-hex sha256 and a why; anything else refuses (exit 3) rather than skip a file on a malformed designation. It
+    enters neither the results cache's files (read while the recorder is paused) nor the KEY's scans: no computed figure depends on
+    it, so designating a review never forces a recompute."""
+    import yaml
+    p_ = os.path.join(top or TOP, ARCHIVED)
+    if not os.path.exists(p_):
+        return {}
+    doc_ = yaml.safe_load(open(p_, encoding="utf-8"))
+    rows_ = doc_.get("reviews") if isinstance(doc_, dict) else None
+    if not isinstance(rows_, list) or not all(isinstance(r_, dict) and isinstance(r_.get("path"), str) and isinstance(r_.get("why"), str)
+                                              and r_["why"].strip() and re.fullmatch(r"[0-9a-f]{64}", str(r_.get("sha256", "")))
+                                              for r_ in rows_):
+        refuse(3, "%s is not a list of reviews, each with a path, a sha256 and why" % ARCHIVED)
+    return {r_["path"]: r_["sha256"] for r_ in rows_}
+
+
+def lead_scan(top=None, length=None, skipped=None):
     """Every .md and .yaml of v2 (vendor, release, out and this record's folder left out): each length in metres stated within the
     window around a solar or panel lead, cable or extension (120 characters before, 160 after), parsed as a number and compared with
-    the derivation's input (lead_input(), or length). Returns (consistent, differing), each a sorted list of (path, line, metres)."""
+    the derivation's input (lead_input(), or length). A designated archived review whose sha256 matches its designation (archived())
+    is not read; its path is appended to skipped when a list is given. Returns (consistent, differing), each a sorted list of (path,
+    line, metres)."""
     top = top or TOP
     length = lead_input(top) if length is None else length
     seen, ok, bad = set(), set(), set()
     _PAUSE[0] = True
     try:
+        held_ = archived(top)
         for root_, dirs_, files_ in os.walk(os.path.join(top, "v2")):
+            # not read: maker documents, release deliverables, generated outputs, this record's own folder; and, file by file, a
+            # filed external review designated in ARCHIVED-REVIEWS.yaml while its sha256 matches (kept verbatim, never a design
+            # authority; a changed or unlisted file is read)
             dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
             for f_ in files_:
                 if f_.endswith((".md", ".yaml")):
                     rel_ = os.path.relpath(os.path.join(root_, f_), top)
+                    if rel_ in held_ and hashlib.sha256(open(os.path.join(root_, f_), "rb").read()).hexdigest() == held_[rel_]:
+                        if skipped is not None:
+                            skipped.append(rel_)
+                        continue
                     t_ = open(os.path.join(root_, f_), encoding="utf-8", errors="replace").read()
                     for m_ in LEAD_PHRASE.finditer(t_):
                         for v_ in LEAD_LENGTH.finditer(t_, max(0, m_.start() - 120), m_.end() + 160):
@@ -594,16 +627,20 @@ def lead_scan(top=None, length=None):
 def lead_guard(top=None, report=False):
     """lead_scan() as every run uses it (main() before the cache is read, and compute()): refuses (exit 3) on a stated length that
     differs from the input, naming the file, its line and both values; else returns the consistent citations, written to stderr with
-    report=True. The citations never enter the output or the results cache's KEY: they change no computed figure. top: the tree to
-    scan and to read the input from (a scratch tree in the tests, never a fixture written into the repository)."""
+    report=True beside the designated archived reviews left unread. The citations never enter the output or the results cache's KEY:
+    they change no computed figure. top: the tree to scan and to read the input from (a scratch tree in the tests, never a fixture
+    written into the repository)."""
     length_ = lead_input(top)
-    ok_, bad_ = lead_scan(top, length_)
+    skipped_ = []
+    ok_, bad_ = lead_scan(top, length_, skipped_)
     if bad_:
         refuse(3, "a document states a panel lead length that differs from the derivation's input (%s LEAD_M = %g m): %s" % (
             A1_CALC, length_, "; ".join("%s line %d: %g m" % b_ for b_ in bad_)))
     if report:
         for p_, l_, v_ in ok_:
             sys.stderr.write("l4e7_stage_settings: consistent panel lead length %s line %d: %g m (the input %g m)\n" % (p_, l_, v_, length_))
+        for p_ in sorted(skipped_):
+            sys.stderr.write("l4e7_stage_settings: archived review not read: %s (its sha256 matches %s)\n" % (p_, ARCHIVED))
     return ok_
 
 

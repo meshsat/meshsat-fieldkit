@@ -7,7 +7,7 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
 eb1f5e9f5e1ca9ae v2/ecad/tools/lcsc_fill.py
-a760101cde41633a v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+996fc1b1ee4491fc v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
 29dbe3a0c4938274 v2/docs/ASSEMBLY.md
