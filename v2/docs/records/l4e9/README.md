@@ -156,7 +156,9 @@ final drafts 44.576, 209.89 / 292.027, 166.149 W; C2 and C3 re-read; the budget'
 204 items. Set 29 (`fnd/l4e9s29` from `99a59252`): ten pins re-pinned to the files in the tree (the contract, the requirements, L4-E7's
 output and page, L4-E11's output, page, entry, charger and aux drafts and its TI questions), Layer 9's copied output renamed
 `inputs/l9pwr-budget-51821143.txt` as the other copied inputs are, and L4-E11's round 9 registered: R-215 to R-219 (E11-41 to E11-45),
-its DD-7 draft `apply_gen_sch_a_dd7.py` in the change list after record l8p's PTC draft (R-217): 209 items. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+its DD-7 draft `apply_gen_sch_a_dd7.py` in the change list after record l8p's PTC draft (R-217): 209 items; R-159 and R-183
+restated on round 9's three battery FETs (the junction limit 45.88 K/W, the three's Ciss), R-209 DRAFTED (Q42), and D-14, U-04, the exit,
+UDC-1 and In short read from L4-E11's section 19. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
