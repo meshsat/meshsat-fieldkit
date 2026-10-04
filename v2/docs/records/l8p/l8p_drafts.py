@@ -18,6 +18,9 @@ It prints, deterministically and without touching the tree:
   3c. DD-5 (round 4): the charge switch's body diode in discharge under CHGIN = 1, the three approaches, the ideal diode beside
      Q1 (apply_gen_sch_p_idealdiode.py) and its acceptance on case row C-PROT, from the BQ4050's, the CSD17570Q5B's and the
      LM74700-Q1's sheets;
+  3d. round 5 (the check V1's minor and condition C3): L8P-F06, the breaker FETs' hot off leakage against L4-E11's latch (its
+     section 20e, copied), and L8P-F07, the guard RT1's printed points (Murata's PRF sheet, read from its text) against the loop's
+     levels, then on Murata's typical curve as read_prf_typical.py reads it (INFERRED), and the alternative parts named;
   4. each draft on a scratch copy: checked, applied once, refused twice, and refused on the tree's own generator (NOT RELEASED);
   5. the composition of each board in L4-E9's change-list order with this record's draft in its place, first and last (L4-E11's
      DD-7 draft, which requires this record's board A draft, right after it and after the drafts it requires);
@@ -90,7 +93,8 @@ ORDER = {
 SLOT = {"p": 0, "e": 10, "a": 11}
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
                "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-e60a94a8.md",
-               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11r10": "inputs/l4e11-section20c-a09e9a60.md"}
+               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11r10": "inputs/l4e11-section20c-a09e9a60.md",
+               "l4e11r10d": "inputs/l4e11-section20d-a09e9a60.md", "l4e11r10e": "inputs/l4e11-section20e-a09e9a60.md"}
 SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444ee345bd87eb9af3146f005c507f14961f3ac80",
                "inputs/l9stk_protection-0d72880b.out.txt": "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac",
                "inputs/l9stk_protection-constants-0d72880b.txt": "ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e",
@@ -98,6 +102,8 @@ SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444
                "inputs/l4e11-section19h-e60a94a8.md": "270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486",
                "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146",
                "inputs/l4e11-section20c-a09e9a60.md": "c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086",
+               "inputs/l4e11-section20d-a09e9a60.md": "a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241",
+               "inputs/l4e11-section20e-a09e9a60.md": "b02cbebcfb670197745bd6ee42d8e78dd45f22f8f3380f6e0441f271d06a1663",
                "inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py": "bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9",
                "inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py": "725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343",
                "inputs/l4e11r10-apply_gen_sch_e_aux-a09e9a60.py": "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
@@ -155,6 +161,27 @@ C111, C111_TOL, C111_BIAS = 220e-9, 0.10, 0.20  # U105's VCAP capacitor: X7R 50 
 R130, R131 = 10e6, 1e6                          # Q109's gate to source; EN to ground
 IGSS_17570, IDSS_17570 = 100e-9, 1e-6           # CSD17570Q5B SLPS471D 5.1: IGSS at 20 V and IDSS at 24 V, the printed maxima at 25 C
 CSD17570_RDS_150 = 1.68                         # CSD17570Q5B Figure 8: normalized RDS(on) at VGS 10 V and 150 C (typical, read by eye, INFERRED)
+# Round 5 (the check V1's minor and condition C3): L8P-F06, the breaker FETs' hot off leakage into CELL+, and L8P-F07, the guard RT1's
+# printed points. Murata's PRF sheet is committed; TDK's is held back by its notice (fetch_held_back.py)
+PRF_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "murata-prf-series.pdf")
+TDK_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "held", "tdk-ptc-limit-sensors-smd-superior-2019-08.pdf")
+IDSS_DOUBLING = 10.0                            # ASSUMPTION: the off leakage doubles every 10 K from the sheet's 25 C row (the convention L4-E11 20d applies to Q51); no hot row is printed
+R107_TOL = 0.01                                 # R107 22 kOhm, ASSUMED 1 % as R106 (the draft prints no tolerance)
+# Murata DM-SA16-E056 Rev.1, 3.2 (p.5): the BB characteristic's typical R/R25 against T, read by read_prf_typical.py at 400 dpi
+# (INFERRED: a TYPICAL curve, normalised to R25, drawn per characteristic code and not per resistance group); two points the
+# reader takes where the stroke crosses a grid line (111.82 and 112.62 C) are left out
+PRF_BB_TYP = ((77.62, 0.9908), (79.63, 1.0092), (83.40, 1.0763), (86.16, 1.1249), (88.17, 1.1865), (89.18, 1.2197), (90.93, 1.2771),
+              (92.94, 1.3721), (95.71, 1.5435), (97.72, 1.7172), (99.73, 1.9676), (101.82, 2.3005), (103.91, 2.7650), (106.38, 3.5118),
+              (108.01, 4.2208), (109.69, 4.9806), (111.15, 5.8772), (113.25, 7.7442), (114.71, 9.3422), (115.76, 10.9834), (116.60, 12.0412),
+              (117.22, 13.2010), (117.85, 14.4725), (118.48, 15.8664), (119.74, 18.7225), (121.41, 25.5005), (123.46, 36.8378),
+              (125.72, 53.2155), (127.61, 68.8429), (129.57, 100.5533), (131.79, 131.0425), (133.68, 172.6714), (136.19, 249.4393),
+              (138.07, 328.6799), (140.54, 466.1550))
+PRF_LOWEST = 0.749                              # 3.2: the figure's lowest stroke, any curve, -20 to 125 C (read, typical)
+PRF_TOP_M20 = 1.515                             # 3.2: the curve bundle's top edge at -19.5 C (read, typical): every B curve under it there
+# TDK superior series, EIA 0805, B59721A0xxxA062 (the held sheet, August 2019, p.4 table; typed here, read against the held sheet
+# by test_l8p when it is present): RR at TR = 25 C, its tolerance, the printed limits around Tsense,1, Vmax, the measurement power
+TDK_B59721 = {"rr": 680.0, "drr": 0.50, "tsense": (90, 100, 110, 120, 130), "r_m5": 5.5e3, "r_p5": 13.3e3, "r_p15": 40e3, "vmax": 32.0,
+              "p_meas": 6e-3, "page": 4}
 SESSION = [
     ("designators", "the free 100 block on board P (U101, U102, Q101 to Q106, D101, D102, RT101, R101 to R117, C101 to C106, TP101 to TP106); RT1 on board A, which carries no RT designator"),
     ("net names", "BRK_VIN (Q2's source, the breaker's input), BRK_SNS, BRK_GATE, BRK_TMR, BRK_PWR, BRK_UVLO, BRK_G2, BRK_H, BRK_HD, BRK_PGD, BRK_CMID, INH_NTC, INH_REF, INH_OUT, INH_G; DOCK_EN_OUT and DOCK_EN_RET on all three boards"),
@@ -570,6 +597,170 @@ def dd5_budget(page, W, R):
     return D
 
 
+def typ_ratio(t):
+    """Murata 3.2's typical BB curve, R/R25 at t (log-linear between the read points; INFERRED)."""
+    pts = PRF_BB_TYP
+    if not pts[0][0] <= t <= pts[-1][0]:
+        refuse("the typical curve is read from %.2f to %.2f C only, not at %.2f C" % (pts[0][0], pts[-1][0], t))
+    for (t0, r0), (t1, r1) in zip(pts, pts[1:]):
+        if t0 <= t <= t1:
+            return r0 * (r1 / r0) ** ((t - t0) / (t1 - t0))
+
+
+def typ_temp(ratio):
+    """The inverse: the temperature at which the typical BB curve reads ratio (INFERRED)."""
+    pts = PRF_BB_TYP
+    for (t0, r0), (t1, r1) in zip(pts, pts[1:]):
+        if r0 <= ratio <= r1:
+            return t0 + (t1 - t0) * math.log(ratio / r0) / math.log(r1 / r0)
+    refuse("the typical curve does not reach R/R25 %.3f in its read span" % ratio)
+
+
+def round5(page, l10c, l10d, l10e, W, R):
+    """Round 5: the interface of 12f restated from L4-E11's 20c and 20d at a09e9a60; L8P-F06 (the breaker FETs' hot off leakage
+    against the latch's source budget, L4-E11 20e) and L8P-F07 (the guard RT1's printed points against the loop's levels), from
+    the copies, Murata's and TI's sheets, and Murata's typical curve as read (INFERRED); the alternative guard part's limits as
+    typed from TDK's held sheet."""
+    N = r"([0-9.]+)"
+    F = {}
+    # 12f restated: L4-E11 20c (the levels; section 3b reads them) and 20d (the delays)
+    F["t_set"] = float(need(l10d, r"\|\s+\*\*the\s+inhibit\s+set\*\*\s+\|\s+\*\*%s\s+ms\*\*,\s+under\s+the\s+interface's\s+1\s+ms" % N,
+                            "L4-E11 20d: the inhibit set").group(1)) * 1e-3
+    F["t_end"] = float(need(l10d, r"\*\*The\s+charge\s+through\s+the\s+off\s+breaker\s+ends\s+within\s+%s\s+ms\*\*\s+of\s+passing\s+board\s+P's\s+threshold" % N,
+                            "L4-E11 20d: the charge ended").group(1)) * 1e-3
+    F["hold_min"] = float(need(l10d, r"It\s+lasts\s+\*\*at\s+least\s+%s\s+s\*\*\s+after\s+the\s+return\s+rises" % N, "L4-E11 20d: the hold").group(1))
+    m = need(l10d, r"%s\s+s\s+over\s+the\s+interface's\s+1\.0\s+s\s+and\s+%s\s+s\s+over\s+the\s+breaker's\s+restart\s+\(%s\s+s\)" % (N, N, N),
+             "L4-E11 20d: the hold against the restart")
+    F["over_if"], F["over_rs"], F["restart_l4"] = float(m.group(1)), float(m.group(2)), float(m.group(3))
+    F["load_ret"] = float(need(l10c, r"\*\*The\s+load\s+on\s+DOCK_EN_RET\*\*\s+is\s+SENSE1\s+alone,\s+at\s+most\s+%s\s+uA" % N,
+                               "L4-E11 20c: the load on the return").group(1)) * 1e-6
+    F["load_out"] = float(need(l10c, r"board\s+A's\s+%s\s+kOhm\s+on\s+it" % N, "L4-E11 20c: the load on DOCK_EN_OUT").group(1)) * 1e3
+    m = need(l10c, r"board\s+P's\s+first\s+inverter\s+turns\s+off\s+\(its\s+gate\s+2\.5\s+to\s+1\.0\s+V\)\s+from\s+%s\s+to\s+%s\s+kOhm\s+at\s+%s\s+V" % (N, N, N),
+             "L4-E11 20c: the first inverter's turn-off band")
+    F["l4_on"], F["l4_off"], F["l4_v"] = float(m.group(1)) * 1e3, float(m.group(2)) * 1e3, float(m.group(3))
+    F["window"] = float(need(l10c, r"never\s+reads\s+held\s+while\s+RT1\s+is\s+under\s+\*\*%s\s+kOhm\*\*" % N, "L4-E11 20c: the window").group(1)) * 1e3
+    need(l10c, r"Murata\s+prints\s+RT1\s+at\s+most\s+15\s+kOhm\s+at\s+25\s+C\s+and\s+100\s+kOhm\s+only\s+above\s+110\s+C", "L4-E11 20c: Murata's points")
+    # the 2N7002's off leakage (Q107 on the return): JSCJ C8545
+    nj = pdftext(N7002_SHEET)
+    F["n_idss"] = float(need(nj, r"Zero Gate Voltage Drain Current\s+IDSS\s+VDS=60 V, VGS=0 V\s+(\d+)\s+nA", "2N7002: IDSS").group(1)) * 1e-9
+    # the first inverter's gate (the loop's return) against RT1, with board A's loads: node OUT carries the 984 kOhm, node RET the
+    # sinks; R106 and R107 at their ASSUMED 1 %, each at the sign that is worse for the side judged
+    i_s = F["load_ret"] + F["n_idss"]
+    v_on, v_off = R["n_vth"][1], R["n_vth"][0]
+
+    def rt_on(v):          # the largest RT1 that still holds the gate at the 2N7002's most threshold: no trip under it
+        r6, r7 = 10e3 * (1 + R106_TOL), 22e3 * (1 - R107_TOL)
+        out = (v / r6 - v_on / r7 - i_s) / (1.0 / r6 + 1.0 / F["load_out"])
+        return (out - v_on) / (v_on / r7 + i_s)
+
+    def rt_off(v):         # the least RT1 that surely turns the first inverter off (its gate at the least threshold, no loads)
+        r6, r7 = 10e3 * (1 - R106_TOL), 22e3 * (1 + R107_TOL)
+        return v * r7 / v_off - r6 - r7
+
+    def rt_low(v):         # the least RT1 for which a held DOCK_EN_OUT still reads powered (the return taken at 0 V)
+        r6 = 10e3 * (1 + R106_TOL)
+        rp = OUT_POWERED * r6 / (v - OUT_POWERED)
+        return rp * F["load_out"] / (F["load_out"] - rp)
+    F["nom_on"] = F["l4_v"] * 22e3 / v_on - 32e3
+    F["nom_off"] = F["l4_v"] * 22e3 / v_off - 32e3
+    F["on"] = {v: rt_on(v) for v in (F["l4_v"], W["vmax"])}
+    F["off"] = {v: rt_off(v) for v in (F["l4_v"], W["vmax"])}
+    F["low"] = {v: rt_low(v) for v in (R["v_run"], F["l4_v"])}
+    # ---- L8P-F06: the breaker FETs' off leakage into CELL+ while the breaker is off (L4-E11 20e's budget)
+    cs = pdftext(CSD_SHEET)
+    need(cs, r"5\.1 Electrical Characteristics\s*\nTA = 25\u00b0C \(unless otherwise stated\)", "CSD18510Q5B: 5.1 at 25 C")
+    m = need(cs, r"^IDSS\s+Drain-to-source leakage current\s+VGS = 0 V, VDS = (\d+) V\s+([0-9.]+)\s+\u03bcA", "CSD18510Q5B: IDSS")
+    F["idss_v"], F["idss"] = float(m.group(1)), float(m.group(2)) * 1e-6
+    F["idss_rows"] = len(re.findall(r"^IDSS\s", cs, re.M))
+    m = need(l10e, r"The\s+latch\s+reads\s+dead\s+while\s+every\s+source\s+into\s+CELL\+\s+stays\s+under\s+\*\*%s\s+mA\*\*\s+together;\s+the\s+battery\s+FETs'\s+hot\s+off\s+leakage\s+\(not\s+printed\)\s+may\s+reach\s+(\d+)\s+uA\s+each" % N,
+             "L4-E11 20e: the latch's source budget")
+    F["i_latch"], F["l4_each"] = float(m.group(1)) * 1e-3, float(m.group(2)) * 1e-6
+    need(l10e, r"with\s+the\s+three\s+FETs'\s+3\s+uA\s+\(25\s+C\)", "L4-E11 20e: the battery FETs at 25 C")
+    F["i_so"] = {v: v / R["r_so"] for v in (W["vmax"], V_CLAMP)}
+    F["room"] = {v: F["i_latch"] - F["i_so"][v] for v in (W["vmax"], V_CLAMP)}
+    F["l4_each_re"] = F["room"][V_CLAMP] / 3.0                      # L4-E11's 272 uA each, reproduced: the clamp's room over three FETs
+    idss_t = lambda t, d=IDSS_DOUBLING: F["idss"] * 2.0 ** ((t - 25.0) / d)
+    F["t_case"], F["t_air"] = W["case_held"], W["air"]
+    F["pair_case"], F["pair_air"], F["pair_125"] = 2 * idss_t(W["case_held"]), 2 * idss_t(W["air"]), 2 * idss_t(125.0)
+    F["each_left"] = (F["room"][V_CLAMP] - F["pair_case"]) / 3.0
+    F["t_fill"] = 25.0 + IDSS_DOUBLING * math.log2(F["room"][V_CLAMP] / (2 * F["idss"]))
+    F["d_fill"] = (W["case_held"] - 25.0) / math.log2(F["room"][V_CLAMP] / (2 * F["idss"]))
+    F["f06_holds"] = F["pair_case"] < F["room"][V_CLAMP] and F["idss_v"] >= V_CLAMP
+    # ---- L8P-F07: RT1's printed points (Murata DM-SA16-E056 Rev.1, p.4) against the loop
+    mt = pdftext(PRF_SHEET)
+    need(mt, r"Doc\.\.No\. DM-SA16-E056 Rev\.1 201608\s+4 / 16", "Murata PRF: the sheet's revision and page 4")
+    need(mt, r"3\.2 Resistance-Temperature Characteristics Typical Curve", "Murata PRF: 3.2 is a typical curve")
+    need(mt, r"The resistance change with\s+Resistance at each ambient temperature is\s*\n\s+characteristics\s+temperature typical curve", "Murata PRF: 3.3.2")
+    need(mt, r"4\.1 Resistance - Temperature characteristics Range \(Reference\)\s*\nExample PRF18 Series / BB Type", "Murata PRF: 4.1, a reference range for PRF18 BB")
+    hdrs = [(h.start(), h.group(1), h.group(2)) for h in re.finditer(r"\*at ([0-9.]+[kM]?ohm)\s+\*at ([0-9.]+[kM]?ohm)", mt)]
+    row = r"%s\s+(\d+)k?\+/-(\d+)%%\s+([>\uff1e]?)(\d+)(?:\+/-(\d+))?\s+(\d+)\+/-(\d+)\s+(\d+)V\s+-(\d+)\S\s*\+\s*(\d+)"
+    P = {}
+    for pn in ("PRF15BB103RB6RC", "PRF15BB102RB6RC", "PRF15BA102RB6RC"):
+        m = need(mt, row % pn, "Murata PRF: the row %s" % pn)
+        h = [x for x in hdrs if x[0] < m.start()][-1]
+        unit = lambda t: float(re.match(r"[0-9.]+", t).group(0)) * {"k": 1e3, "M": 1e6}.get(re.sub(r"[0-9.]", "", t)[0], 1.0)
+        P[pn] = {"r25": float(m.group(1)) * (1e3 if "k+" in m.group(0) else 1.0), "tol": float(m.group(2)) / 100.0, "gt": m.group(3) != "",
+                 "t1": float(m.group(4)), "t1_tol": float(m.group(5)) if m.group(5) else None, "t2": float(m.group(6)), "t2_tol": float(m.group(7)),
+                 "vmax": float(m.group(8)), "tmin": -float(m.group(9)), "tmax": float(m.group(10)), "r1": unit(h[1]), "r2": unit(h[2])}
+    F["prf"] = P
+    g = P["PRF15BB103RB6RC"]
+    F["l9_47k"] = bool(re.search(r"PRF15BB103\s+chip\s+PTC:\s+10\s+kOhm\s+plus\s+or\s+minus\s+50\s+%,\s+47\s+kOhm\s+at\s+130\s+C\s+plus\s+or\s+minus\s+3\s+C", page))
+    F["hdr_47k"] = [h[1] for h in hdrs if h[2] == "47kohm"]          # the 470 ohm groups' columns: at 4.7 kOhm and at 47 kOhm
+    # l9stk 15.5's junction readings at the allowances (held), and the junction's lead over its copper
+    m = need(page, r"-\s+%s\s+C\s+at\s+10\s+A;\s*\n-\s+%s\s+C\s+in\s+the\s+18\s+A\s+service;\s*\n-\s+%s\s+C\s+at\s+23\.93\s+A,\s+by\s+construction" % (N, N, N),
+             "l9stk 15.5: the junction at the allowances")
+    F["tj10"], F["tj18"], F["tj24"] = float(m.group(1)), float(m.group(2)), float(m.group(3))
+    F["lead24"] = float(need(page, r"A\s+junction\s+leads\s+its\s+copper\s+by\s+%s\s+K\s+at\s+23\.93\s+A" % N, "l9stk 15.5: the junction's lead").group(1))
+    F["static"] = float(need(page, r"the\s+loop's\s+static\s+%s\s+mA" % N, "l9stk: the loop's static draw").group(1)) * 1e-3
+    F["cu10"], F["cu18"] = (F["tj10"] - F["lead24"] * (10.0 / R["i_lim"]) ** 2, F["tj18"] - F["lead24"] * (18.0 / R["i_lim"]) ** 2)
+    r25_lo, r25_hi = g["r25"] * (1 - g["tol"]), g["r25"] * (1 + g["tol"])
+    F["r25"] = (r25_lo, r25_hi)
+    # the printed bounds, each read as a single crossing (INFERRED: the sheet defines the sensing temperature where R reaches the value)
+    F["print"] = {"under_r1_to": g["t1"], "under_r2_to": g["t2"] - g["t2_tol"], "over_r2_from": g["t2"] + g["t2_tol"]}
+    lo, hi = F["l4_v"], V_CLAMP                                      # the pack voltage from which the printed r1 bound keeps the guard closed
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        lo, hi = (mid, hi) if rt_on(mid) < g["r1"] else (lo, mid)
+    F["v_print"] = hi
+    F["trip_print"] = g["r2"] >= F["off"][W["vmax"]] and F["print"]["over_r2_from"] + F["lead24"] < 150.0
+    F["notrip10_print_low"] = g["r1"] <= F["on"][F["l4_v"]] and F["tj10"] <= g["t1"]
+    F["notrip10_print_high"] = g["r1"] <= F["on"][W["vmax"]] and F["tj10"] <= g["t1"]
+    F["notrip18_print"] = F["tj18"] <= g["t1"] and g["r1"] <= F["on"][F["l4_v"]]
+    # the typical curve (3.2, INFERRED), the PTC taken at the junction's reading (the copper is cooler: the side judged is the hot one)
+    F["typ10"], F["typ18"] = typ_ratio(F["tj10"]), typ_ratio(F["tj18"])
+    F["typ18_cu"] = typ_ratio(F["cu18"])
+    F["r10_typ"] = F["typ10"] * r25_hi
+    F["r18_typ"] = (F["typ18"] * r25_lo, F["typ18"] * g["r25"], F["typ18"] * r25_hi)
+    F["r18_typ_cu_lo"] = F["typ18_cu"] * r25_lo
+    F["onset"] = {lab: typ_temp(F["on"][F["l4_v"]] / r) for lab, r in (("most", r25_hi), ("nominal", g["r25"]), ("least", r25_lo))}
+    F["r25_max_16v8"] = F["on"][W["vmax"]] / F["typ18"]
+    F["win_typ"] = PRF_TOP_M20 * r25_hi
+    F["low_typ"] = PRF_LOWEST * r25_lo
+    F["curve_x10"], F["curve_x100"] = typ_temp(10.0), typ_temp(100.0)
+    F["curve_at_r2"] = typ_ratio(F["print"]["over_r2_from"])           # the curve where the 10 kOhm part prints at least 4.7 MOhm
+    F["print_at_r2"] = g["r2"] / r25_hi                                # that point as a ratio, with R25 at its printed most
+    rise = F["tj18"] - F["tj10"]
+    F["tau_need"] = {lab: -60.0 / math.log(1.0 - (t - F["tj10"]) / rise) for lab, t in F["onset"].items() if t < F["tj18"]}
+    F["f07_typ_10"] = F["r10_typ"] < F["on"][F["l4_v"]] and F["r10_typ"] < F["window"]
+    F["f07_typ_18"] = F["r18_typ"][0] < F["on"][F["l4_v"]]
+    # the alternative parts (named, not selected)
+    b = P["PRF15BA102RB6RC"]
+    F["ba102_notrip"] = F["tj18"] <= b["t1"] - b["t1_tol"] and b["r1"] <= F["on"][F["l4_v"]]
+    F["ba102_trip"] = b["r2"] >= F["off"][W["vmax"]]
+    F["ba102_low"] = b["r25"] * (1 - b["tol"]) >= F["low"][R["v_run"]]
+    T5 = TDK_B59721
+    F["tdk_k_notrip"] = F["on"][F["l4_v"]] / T5["r_m5"]
+    F["tdk_k_trip"] = F["off"][W["vmax"]] / T5["r_p15"]
+    F["tdk_k_low"] = {v: F["low"][v] / (T5["rr"] * (1 - T5["drr"])) for v in F["low"]}
+    F["tdk_fits_7v6"] = F["tdk_k_low"][R["v_run"]] <= min(F["tdk_k_trip"], F["tdk_k_notrip"])
+    F["tdk_fits_10v6"] = F["tdk_k_low"][F["l4_v"]] <= min(F["tdk_k_trip"], F["tdk_k_notrip"])
+    k = F["tdk_k_trip"]
+    F["tdk_p"] = (W["vmax"] / ((32e3 / k) + T5["r_m5"])) ** 2 * T5["r_m5"]
+    F["tdk_static"] = W["vmax"] / (32e3 / k + T5["rr"] * (1 - T5["drr"]))
+    F["tdk_trip_tj"] = 130 + 15 + F["lead24"]
+    return F
+
+
 def rel(p):
     return os.path.relpath(p, ROOT)
 
@@ -724,7 +915,7 @@ def main():
     inputs += [os.path.join(HERE, f) for f in sorted(SOURCES_SHA)] + [os.path.join(HERE, "inputs", "SOURCES.txt")]
     inputs += [os.path.join(CHK.PRETTY, l + ".kicad_mod") for l in sorted(set(CHK.LANDS.values()) | {"LeadLands_1x02"})]
     inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, TRM_SHEET, BQ4050_SHEET, CSD17570_SHEET, LM74700_SHEET,
-               os.path.join(HERE, "fetch_held_back.py")]
+               PRF_SHEET, os.path.join(HERE, "fetch_held_back.py"), os.path.join(HERE, "read_prf_typical.py")]
     inputs += [MINE["p"]] + MINE2["p"] + [MINE["e"], MINE["a"], os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
     w("1. INPUTS, pinned by sha256\n")
     for p in inputs:
@@ -793,6 +984,7 @@ def main():
         refuse("C-1c's split does not close or the window is inconsistent")
     # 3b. B-R2's detector
     R = rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
+    F = round5(texts["page"], texts["l4e11r10"], texts["l4e11r10d"], texts["l4e11r10e"], B, R)
     w("3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c at e60a94a8, the makers' sheets\n")
     w("   the open case (L4-E11 19h): a latch while a source holds VSYS keeps CELL+ tied to it, %.1f V into the %.3f ohm fault, so the\n" % (R["v_fault"], R["r_fault"]))
     w("     inhibit (CELL+ under %.2f V) sets only for faults under %.0f mOhm; the latched FET at %.4f A (R-b's largest) is held at %.1f C, %.3f A is its\n" % (
@@ -867,6 +1059,13 @@ def main():
     w("     the inhibit sets within 1 ms and holds at least %.1f s after the return rises (read closed); the breaker restarts within %.4f s (the hold\n" % (
         STRETCH_MIN, R["t_restart"]))
     w("       %.3f s and the start %.1f ms); the timer re-enables %.1f ms after a latch\n" % (R["hold"], R["start"] * 1e3, R["t_timer"] * 1e3))
+    w("     THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at a09e9a60, quoted): the inhibit set within %.2f ms of the return falling, under the\n" % (F["t_set"] * 1e3))
+    w("       interface's 1 ms; the charge through the off breaker ends within %.2f ms of passing board P's threshold (board P's pull %.2f ms plus\n" % (
+        F["t_end"] * 1e3, R["t_d"] * 1e3))
+    w("       board A's set %.2f ms: %s); the hold at least %.3f s after the return rises, %.3f s over the interface's 1.0 s and %.3f s over the\n" % (
+        F["t_set"] * 1e3, "the sum agrees" if abs(round(R["t_d"] * 1e3, 2) + F["t_set"] * 1e3 - F["t_end"] * 1e3) < 0.011 else "THE SUM DISAGREES",
+        F["hold_min"], F["over_if"], F["over_rs"]))
+    w("       breaker's restart (%.4f s, this record's %.4f s: %s)\n" % (F["restart_l4"], R["t_restart"], "the same" if abs(F["restart_l4"] - R["t_restart"]) < 5e-5 else "DIFFERENT"))
     w("   THE DELAYS: U103's filter %.0f us, U104's %.0f us, each to a 10 %% overdrive x%.2f, the OPA187's typical slew and recovery taken ten times\n" % (
         R["tau_i"] * 1e6, R["tau_v"] * 1e6, math.log(1.1 / 0.1)))
     w("     slower: %.2f ms at most to the pull; a charge over the threshold for %.0f ms at the pack path's %.2f A and VSD %.1f V in one FET raises its\n" % (
@@ -953,6 +1152,108 @@ def main():
     w("\n")
     if not D["ok"]:
         refuse("DD-5's correction does not close on its case row")
+    # 3d. round 5: L8P-F06 and L8P-F07
+    g = F["prf"]["PRF15BB103RB6RC"]
+    w("3d. ROUND 5, THE CHECK V1'S MINOR AND CONDITION C3: L8P-F06 (the breaker FETs' hot off leakage) and L8P-F07 (the guard RT1's printed points)\n")
+    w("   L8P-F06, ON L4-E11's LATCH (20e at a09e9a60, quoted): it reads dead while every source into CELL+ stays under %.3f mA together; the\n" % (F["i_latch"] * 1e3))
+    w("     LM5069's internal %.0f MOhm feeds %.1f uA at %.1f V and %.1f uA at the %.1f V clamp, which leaves %.1f and %.1f uA (L4-E11's %.0f uA a battery FET\n" % (
+        R["r_so"] / 1e6, F["i_so"][B["vmax"]] * 1e6, B["vmax"], F["i_so"][V_CLAMP] * 1e6, V_CLAMP, F["room"][B["vmax"]] * 1e6, F["room"][V_CLAMP] * 1e6,
+        F["l4_each"] * 1e6))
+    w("     is the clamp's room over three: %.1f uA, %s); the breaker's FETs Q101 and Q102 are a source too: with the breaker off, BRK_SNS sits at BRK_VIN\n" % (
+        F["l4_each_re"] * 1e6, "reproduced" if round(F["l4_each_re"] * 1e6) == round(F["l4_each"] * 1e6) else "NOT REPRODUCED"))
+    w("     and PACK_P at CELL+, so each FET's drain-to-source off leakage flows into PACK_P and CELL+\n")
+    w("     printed (TI SLPS632, March 2017, 5.1, TA = 25 C unless stated): IDSS %.0f uA at most at VGS 0 V and VDS %.0f V (against the %.1f V clamp);\n" % (
+        F["idss"] * 1e6, F["idss_v"], V_CLAMP))
+    w("       %d IDSS row, no hot figure\n" % F["idss_rows"])
+    w("     ASSUMPTION, the leakage doubling every %.0f K from the 25 C row (L4-E11 20d's convention for Q51): the pair %.1f uA at the %.2f C air, %.1f uA\n" % (
+        IDSS_DOUBLING, F["pair_air"] * 1e6, F["t_air"], F["pair_case"] * 1e6))
+    w("       at the held %.1f C case (l9stk 15.4), %.3f mA at TI's 125 C; at the held case it leaves %.1f uA a battery FET (L4-E11's %.0f uA);\n" % (
+        F["t_case"], F["pair_125"] * 1e3, F["each_left"] * 1e6, F["l4_each"] * 1e6))
+    w("       the pair alone fills the clamp's room from a %.1f C case; at the held case it does so if the leakage doubles every %.2f K or faster\n" % (
+        F["t_fill"], F["d_fill"]))
+    w("     L8P-F06: %s on the ASSUMED doubling (nothing printed above 25 C); the budget's owner L4-E11 counts five devices, not three; E-14c\n" % (
+        "the latch holds at the held case" if F["f06_holds"] else "THE LATCH DOES NOT HOLD"))
+    w("       measures IDSS of Q101 and Q102 hot (OPEN)\n")
+    w("   L8P-F07, THE GUARD RT1 (Murata PRF15BB103RB6RC; DM-SA16-E056 Rev.1, p.4, read from the sheet's text):\n")
+    w("     printed: R25 %.0f kOhm +-%.0f %%; %.0f kOhm at a sensing temperature %s%.0f C (no upper bound); %.1f MOhm at %.0f +-%.0f C; %.0f V; %.0f to +%.0f C\n" % (
+        g["r25"] / 1e3, g["tol"] * 100, g["r1"] / 1e3, "over " if g["gt"] else "", g["t1"], g["r2"] / 1e6, g["t2"], g["t2_tol"], g["vmax"], g["tmin"], g["tmax"]))
+    w("     record l9stk 15.5 reads '47 kOhm at 130 C plus or minus 3 C': %s; the sheet's 47 kOhm column is its 470 ohm groups' (the header '*at %s *at 47kohm')\n" % (
+        "yes" if F["l9_47k"] else "no", ", ".join(F["hdr_47k"])))
+    w("     read as single crossings (INFERRED: the sheet defines a sensing temperature as where R reaches the value): RT1 under %.0f kOhm to %.0f C,\n" % (
+        g["r1"] / 1e3, F["print"]["under_r1_to"]))
+    w("       under %.1f MOhm to %.0f C, over %.1f MOhm from %.0f C; at 25 C only, %.0f to %.0f kOhm\n" % (
+        g["r2"] / 1e6, F["print"]["under_r2_to"], g["r2"] / 1e6, F["print"]["over_r2_from"], F["r25"][0] / 1e3, F["r25"][1] / 1e3))
+    w("     what the loop asks of RT1 (the first inverter's gate DOCK_EN_RET, with board A's %.0f kOhm on DOCK_EN_OUT and %.2f uA on the return,\n" % (
+        F["load_out"] / 1e3, (F["load_ret"] + F["n_idss"]) * 1e6))
+    w("       R106 and R107 at 1 %%, ASSUMED, each at its worse sign; the 2N7002's threshold %.1f to %.1f V):\n" % (R["n_vth"][0], R["n_vth"][1]))
+    w("       no trip while RT1 is under %.1f kOhm at %.1f V and %.1f kOhm at %.1f V (L4-E11 20c's %.1f kOhm at %.1f V is the nominal: %.2f here)\n" % (
+        F["on"][F["l4_v"]] / 1e3, F["l4_v"], F["on"][B["vmax"]] / 1e3, B["vmax"], F["l4_on"] / 1e3, F["l4_v"], F["nom_on"] / 1e3))
+    w("       surely off from %.1f kOhm at %.1f V and %.1f kOhm at %.1f V (L4-E11 20c's %.1f kOhm nominal: %.1f here)\n" % (
+        F["off"][F["l4_v"]] / 1e3, F["l4_v"], F["off"][B["vmax"]] / 1e3, B["vmax"], F["l4_off"] / 1e3, F["nom_off"] / 1e3))
+    w("       a ramping closed loop never read held while RT1 is under %.1f kOhm (L4-E11 20c), the copper at the air, %.2f C or under\n" % (F["window"] / 1e3, B["air"]))
+    w("       a held DOCK_EN_OUT read powered while RT1 is at least %.2f kOhm at %.1f V and %.2f kOhm at %.1f V (the return taken at 0 V; the check V1\n" % (
+        F["low"][R["v_run"]] / 1e3, R["v_run"], F["low"][F["l4_v"]] / 1e3, F["l4_v"]))
+    w("         took it at its 0.055 V most and read 3.46 kOhm)\n")
+    w("     where the PTC sits (l9stk 15.5 at the allowances, held): the junction %.1f C at 10 A, %.1f C in the 18 A service, %.1f C at 23.93 A; the copper\n" % (
+        F["tj10"], F["tj18"], F["tj24"]))
+    w("       is cooler by up to %.2f K at 23.93 A (%.2f and %.2f C), so the junction's reading is the hot side for the no-trip judgement\n" % (
+        F["lead24"], F["cu10"], F["cu18"]))
+    w("     ON THE PRINTED POINTS:\n")
+    w("       the trip side: over %.1f MOhm from %.0f C, against the %.1f kOhm that turns the first inverter off at %.1f V: the breaker is off before the\n" % (
+        g["r2"] / 1e6, F["print"]["over_r2_from"], F["off"][B["vmax"]] / 1e3, B["vmax"]))
+    w("         copper passes %.0f C, the junction at most %.2f C against 150 C: %s\n" % (F["print"]["over_r2_from"], F["print"]["over_r2_from"] + F["lead24"],
+                                                                                  "PRINTED" if F["trip_print"] else "NOT PRINTED"))
+    w("       no trip at 10 A (%.1f C): under %.0f kOhm against %.1f kOhm at %.1f V: %s; at a pack of %.2f V or more the printed bound suffices: %s\n" % (
+        F["tj10"], g["r1"] / 1e3, F["on"][F["l4_v"]] / 1e3, F["l4_v"], "PRINTED" if F["notrip10_print_low"] else "NOT PRINTED",
+        F["v_print"], "PRINTED" if F["notrip10_print_high"] else "NOT PRINTED"))
+    w("       no trip in the 18 A service (%.1f C): nothing printed under %.1f MOhm between %.0f and %.0f C: %s at any pack voltage\n" % (
+        F["tj18"], g["r2"] / 1e6, g["t1"], F["print"]["under_r2_to"], "PRINTED" if F["notrip18_print"] else "NOT PRINTED"))
+    w("       the window (%.1f kOhm, the copper from -20 to %.2f C) and the held reading (%.2f kOhm): nothing printed but the 25 C row: NOT PRINTED\n" % (
+        F["window"] / 1e3, B["air"], F["low"][R["v_run"]] / 1e3))
+    w("     ON THE TYPICAL CURVE (3.2, the BB characteristic normalised to R25, read by read_prf_typical.py; INFERRED): it reads x10 at %.1f C and x100\n" % F["curve_x10"])
+    w("       at %.1f C, the 1 kOhm group's printed 115 +-5 and 130 +-3 C; at %.0f C, where PRF15BB103 prints at least x%.0f (R25 at its most), it reads\n" % (
+        F["curve_x100"], F["print"]["over_r2_from"], F["print_at_r2"]))
+    w("       x%.0f: the curve is not the 10 kOhm part's own above x10, the only curve the maker draws for it\n" % F["curve_at_r2"])
+    w("       10 A, %.1f C: x%.3f, RT1 at most %.1f kOhm (R25 at its most): no trip at any pack voltage, inside the window: %s\n" % (
+        F["tj10"], F["typ10"], F["r10_typ"] / 1e3, "HOLDS" if F["f07_typ_10"] else "DOES NOT HOLD"))
+    w("       the window: at most x%.3f from -20 C (the curves' top at -19.5 C), %.1f kOhm against %.1f kOhm; the held reading: at least x%.3f (the figure's\n" % (
+        PRF_TOP_M20, F["win_typ"] / 1e3, F["window"] / 1e3, PRF_LOWEST))
+    w("         lowest stroke), %.3f kOhm against %.3f kOhm\n" % (F["low_typ"] / 1e3, F["low"][R["v_run"]] / 1e3))
+    w("       the 18 A service held, %.1f C: x%.2f, RT1 %.1f / %.1f / %.1f kOhm (R25 least, nominal, most), every one over the %.1f kOhm at %.1f V; at\n" % (
+        F["tj18"], F["typ18"], F["r18_typ"][0] / 1e3, F["r18_typ"][1] / 1e3, F["r18_typ"][2] / 1e3, F["on"][F["l4_v"]] / 1e3, F["l4_v"]))
+    w("         %.1f V the %.1f kOhm holds only for R25 under %.2f kOhm; at the copper's %.2f C, x%.2f, %.1f kOhm at R25's least: still over\n" % (
+        B["vmax"], F["on"][B["vmax"]] / 1e3, F["r25_max_16v8"] / 1e3, F["cu18"], F["typ18_cu"], F["r18_typ_cu_lo"] / 1e3))
+    w("       so on the typical curve the guard may turn the breaker off in the 18 A service held at l9stk's reading: %s\n" % (
+        "it does NOT keep C-PROT's 18 A for 60 s uninterrupted there" if not F["f07_typ_18"] else "it does not"))
+    w("       its onset at %.1f V on the typical curve: %.1f C (R25 at its most), %.1f C (nominal), %.1f C (least); from 10 A held (%.1f C) the 60 s\n" % (
+        F["l4_v"], F["onset"]["most"], F["onset"]["nominal"], F["onset"]["least"], F["tj10"]))
+    w("         service stays under it if the copper's first-order time constant (an ASSUMED form) is at least %.1f s, %.1f s, %.1f s: no record holds it\n" % (
+        F["tau_need"]["most"], F["tau_need"]["nominal"], F["tau_need"]["least"]))
+    w("     L8P-F07: OPEN; the trip side printed, the no-trip side at 10 A printed only from a %.2f V pack, the 18 A no-trip side not printed and on the\n" % F["v_print"])
+    w("       typical curve reached at l9stk's held reading; l9stk 15.5's '9.0 to 15.0 K under the band' rests on the 470 ohm column's 47 kOhm\n")
+    w("   THE ALTERNATIVE PARTS (named, NOT SELECTED; SESSION):\n")
+    b = F["prf"]["PRF15BA102RB6RC"]
+    w("     Murata PRF15BA102RB6RC (the same sheet, p.4): R25 %.0f ohm +-%.0f %%, %.0f kOhm at %.0f +-%.0f C, %.0f kOhm at %.0f +-%.0f C, %.0f to +%.0f C: under\n" % (
+        b["r25"], b["tol"] * 100, b["r1"] / 1e3, b["t1"], b["t1_tol"], b["r2"] / 1e3, b["t2"], b["t2_tol"], b["tmin"], b["tmax"]))
+    w("       %.0f kOhm to %.0f C prints the no-trip side at 10 and 18 A (%s); its %.0f kOhm point is under the %.1f kOhm sure-off (%s) and its least R25\n" % (
+        b["r1"] / 1e3, b["t1"] - b["t1_tol"], "yes" if F["ba102_notrip"] else "no", b["r2"] / 1e3, F["off"][B["vmax"]] / 1e3, "trip printed" if F["ba102_trip"] else "trip NOT printed"))
+    w("       %.0f ohm under the %.2f kOhm held reading (%s): not a part swap\n" % (b["r25"] * (1 - b["tol"]), F["low"][R["v_run"]] / 1e3,
+                                                                            "holds" if F["ba102_low"] else "fails"))
+    T5 = TDK_B59721
+    w("     TDK B59721A0130A062 (superior series, EIA 0805, August 2019, p.%d; the sheet held back by its notice): RR %.0f ohm +-%.0f %% at 25 C;\n" % (
+        T5["page"], T5["rr"], T5["drr"] * 100))
+    w("       R(Tsense - 5 C) %.1f kOhm at most, R(Tsense + 5 C) %.1f kOhm and R(Tsense + 15 C) %.0f kOhm at least: limits on both sides, as condition C3\n" % (
+        T5["r_m5"] / 1e3, T5["r_p5"] / 1e3, T5["r_p15"] / 1e3))
+    w("       asks; Tsense 130 C: no trip to 125 C, off by 145 C (the junction %.2f C); its printed %.0f kOhm is under the loop's sure-off, so the loop scales by k\n" % (F["tdk_trip_tj"], T5["r_p15"] / 1e3))
+    w("       (R106, R107 and the guard together keep every level of L4-E11's 20c): k at most %.2f (no trip) and %.2f (the sure-off at %.1f V), at least\n" % (
+        F["tdk_k_notrip"], F["tdk_k_trip"], B["vmax"]))
+    w("       %.2f (the held reading at %.1f V on its least R25) or %.2f at %.1f V: %s at %.1f V, %s at %.1f V; at k %.2f it dissipates %.1f mW at %.1f V\n" % (
+        F["tdk_k_low"][R["v_run"]], R["v_run"], F["tdk_k_low"][F["l4_v"]], F["l4_v"], "a k exists" if F["tdk_fits_7v6"] else "NO k EXISTS", R["v_run"],
+        "a k exists" if F["tdk_fits_10v6"] else "no k exists", F["l4_v"], F["tdk_k_trip"], F["tdk_p"] * 1e3, B["vmax"]))
+    w("       (the sheet's measurement power %.0f mW) and the loop draws %.2f mA (l9stk's %.2f mA): NOT SELECTED\n" % (
+        T5["p_meas"] * 1e3, F["tdk_static"] * 1e3, F["static"] * 1e3))
+    w("     SESSION: RT1 stays PRF15BB103RB6RC in the A draft; L8P-F07 goes to record l9stk (15.5) with L4-E11; the question to Murata is drafted, unsent\n")
+    w("\n")
     with tempfile.TemporaryDirectory(prefix="l8p_") as d:
         # 4. each draft alone
         w("4. EACH DRAFT ON A SCRATCH COPY (check, apply once, refuse twice, refuse the tree's own generator)\n")
@@ -1167,11 +1468,19 @@ def main():
     w("     (%.1f kOhm) also on PACK_P, %.2f V (%.2f V at the %.1f V clamp); the 1 MOhm's tolerance is not printed: ANSWERED by round 10 (a09e9a60,\n" % (
         r_div_k(), R["cell_off_ap"], R["cell_off_clamp"], V_CLAMP))
     w("     not on main) with a bleeder on CELL+ while the inhibit holds; the latch then holds for any source into CELL+ under 0.846 mA (L4-E11 20e)\n")
-    w("   L8P-F06 board P (the check V1's minor, round 5): the breaker FETs' off leakage feeds PACK_P with the breaker off, a source under that\n")
-    w("     0.846 mA; the CSD18510Q5B sheet prints IDSS 1 uA at VDS 32 V and 25 C only (no hot figure): named, open (page 12j)\n")
-    w("   L8P-F07 board A (condition C3, with record l9stk): Murata prints RT1 (PRF15BB103RB6RC) only at 10 kOhm +-50 % at 25 C, its 100 kOhm sensing\n")
-    w("     temperature over 110 C and 4.7 MOhm at 130 +-3 C (DM-SA16-E056 Rev.1, p.4): the guard's no-trip side at 10 and 18 A held rests on the\n")
-    w("     typical curve; the question to Murata is drafted, unsent, and a guard part whose sheet prints both points is named (page 12j)\n")
+    w("   L8P-F06 board P with L4-E11 (the check V1's minor, round 5): the breaker FETs' off leakage feeds PACK_P and CELL+ with the breaker off, a source\n")
+    w("     inside L4-E11's %.3f mA; the CSD18510Q5B prints IDSS %.0f uA at %.0f V and 25 C only; on the ASSUMED doubling every %.0f K the pair is %.1f uA at the\n" % (
+        F["i_latch"] * 1e3, F["idss"] * 1e6, F["idss_v"], IDSS_DOUBLING, F["pair_case"] * 1e6))
+    w("     held %.1f C case, leaving %.1f uA a battery FET where L4-E11 allows %.0f; it fills the room from a %.1f C case, or at the held case if it doubles\n" % (
+        F["t_case"], F["each_left"] * 1e6, F["l4_each"] * 1e6, F["t_fill"]))
+    w("     every %.2f K: OPEN (section 3d; page 12j; E-14c)\n" % F["d_fill"])
+    w("   L8P-F07 board A with record l9stk (condition C3): Murata prints RT1 (PRF15BB103RB6RC) at %.0f kOhm +-%.0f %% at 25 C, %.0f kOhm over %.0f C and %.1f MOhm\n" % (
+        g["r25"] / 1e3, g["tol"] * 100, g["r1"] / 1e3, g["t1"], g["r2"] / 1e6))
+    w("     at %.0f +-%.0f C (DM-SA16-E056 Rev.1, p.4): the trip side is printed; the no-trip side at 10 A only from a %.2f V pack and in the 18 A service not\n" % (
+        g["t2"], g["t2_tol"], F["v_print"]))
+    w("     at all; on the typical curve RT1 reaches %.1f kOhm or more at l9stk's held %.1f C, over the first inverter's %.1f kOhm: OPEN (section 3d; page 12j;\n" % (
+        F["r18_typ"][0] / 1e3, F["tj18"], F["on"][F["l4_v"]] / 1e3))
+    w("     the question to Murata drafted, unsent; TDK's B59721A named, not selected)\n")
     w("\nl8p_drafts: done\n")
     return 0
 
