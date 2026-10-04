@@ -128,7 +128,10 @@ l8r2's VIN_RAW cut-off FET.
    - Layer 5's interface rows go in the same release (section 6).
 6. **The layout follows the schematic.** The board P PCB generator draws IF-2 and the bands; board A's places RT1; board E's
    places the 7-way land (section 6).
-7. **The regeneration steps R-11 and R-22 are blocked today by three other drafts' run-time refusals** (section 8), with or
+7. **Record l8r2's later rounds** (branch `fnd/l8r3` at `89924e40`, not on main) were also checked once on scratch copies,
+   outside the script: board A's fb01, slotlm and packrtn and board E's packrtn compose with this record's drafts, before
+   and after them.
+8. **The regeneration steps R-11 and R-22 are blocked today by three other drafts' run-time refusals** (section 8), with or
    without this record. This record adds no refusal: with scratch stand-ins for those three, the composed generators run to
    their end and the loop reads DRAWN.
 
