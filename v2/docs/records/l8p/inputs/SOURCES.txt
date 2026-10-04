@@ -43,39 +43,59 @@ Copies here (sha256):
 Held back, not committed: TI's OPA187 sheet (SBOS807E), fetched by ../fetch_held_back.py into v2/vendor/ti/held/ and checked
 there by sha256 62bd7b52851715978aa52511ad946b1d725850b4d2e8672a901627ed65585c32.
 
-Round 5 (branch fnd/l8p2, the check V1's condition C4 and its minors): task L4-E11's round 10 is on branch fnd/l4e11r10 at a09e9a60,
-not on main. It corrects L8P-F02 and L8P-F03 and redraws DD-7 against route R1 (L8P-F04, L8P-F05). Its four drafts are copied byte
-for byte, so board A's and board E's compositions in l8p_drafts.py read alike on this branch and on a merge with a09e9a60 (where
-records/l4e11/ holds the same bytes), and three sections of its page are copied so section 3b and section 9 read the interface's
-levels, its delays and the latch's source budget from them. These copies are taken from a09e9a60 with `git show a09e9a60:<path>`
-(the sections with `sed -n`) and are not edited; l8p_drafts.py refuses when a phrase no longer matches.
+Round 5 (branch fnd/l8p2, the check V1's condition C4 and its minors): task L4-E11's round 10 was on branch fnd/l4e11r10 at a09e9a60.
+Round 5 copied its four drafts (charger bfdead54..., dd7 725e4f89..., aux 3d0a7b1d..., entry a859aa4a...) and its sections 20c, 20d
+and 20e (c860006f..., a5b5b306..., b02cbebc...). THOSE COPIES ARE REMOVED IN ROUND 6 (git history keeps them: commits 32c8bcf5 and
+8dba7755): the independent check V2 found the record a round behind the candidate it sat in (V2-B2), and round 6 takes every copy
+again at L4-E11's round 12.
 
-Full files at a09e9a60 (sha256):
-  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   2441927d7c6bc4028d5c678252ca4772cc518c0f9f7d218ed83ea5b1141ec291
-  v2/docs/records/l4e11/apply_gen_sch_a_charger.py       bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9
-  v2/docs/records/l4e11/apply_gen_sch_a_dd7.py           725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343
+Round 6 (branch fnd/l8p2, the check V2's findings V2-B2 and V2-B3): task L4-E11's round 12 is on branch fnd/l4e11r11 at
+ac72e730855eea41f8b0e60deb4ffa4a3a90b617, not on main. It answers V2-B1 (R256 back at 4.7 kOhm; the latch budget two limits, the
+static 0.846 mA and the timing 520.7 uA; the sources at the hot bound 434.8 uA). Its four drafts are copied byte for byte, so board
+A's and board E's compositions in l8p_drafts.py read alike on this branch and on a line that holds records/l4e11/ at ac72e730; seven
+sections of its page are copied so sections 3b, 3d and 9 of the output and the page's 12f and 12j read the interface's levels, its
+delays, the latch's two limits, its source list and its V2-m5 reading from them. The copies are taken from ac72e730 with
+`git show ac72e730:<path>` (the sections with `sed -n`) and are not edited; l8p_drafts.py refuses when a phrase no longer matches,
+and test_l8p compares every copy with records/l4e11/ wherever the tree holds L4-E11's round 12 or later (a copy a round behind
+then fails).
+
+Full files at ac72e730 (sha256):
+  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   f4debb19e59ca0585d83e9a417b519f880438d3f2e78113983dd743b6ceded86
+  v2/docs/records/l4e11/apply_gen_sch_a_charger.py       cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f
+  v2/docs/records/l4e11/apply_gen_sch_a_dd7.py           bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034
   v2/docs/records/l4e11/apply_gen_sch_e_aux.py           3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
   v2/docs/records/l4e11/apply_gen_sch_e_entry.py         a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
 
 Copies here (sha256):
-  l4e11r10-apply_gen_sch_a_charger-a09e9a60.py   bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9
-      v2/docs/records/l4e11/apply_gen_sch_a_charger.py at a09e9a60, byte for byte (R-157; corrects L8P-F02)
-  l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py       725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343
-      v2/docs/records/l4e11/apply_gen_sch_a_dd7.py at a09e9a60, byte for byte (DD-7 redrawn: U48 on the loop's two conductors)
-  l4e11r10-apply_gen_sch_e_aux-a09e9a60.py       3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
-      v2/docs/records/l4e11/apply_gen_sch_e_aux.py at a09e9a60, byte for byte (R-177; corrects L8P-F03)
-  l4e11r10-apply_gen_sch_e_entry-a09e9a60.py     a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
-      v2/docs/records/l4e11/apply_gen_sch_e_entry.py at a09e9a60, byte for byte
-  l4e11-section20c-a09e9a60.md                   c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086
-      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2065 to 2093: section 20c whole (the thresholds board A reads, the restated box,
-      the window and the guard's turn-off band)
-  l4e11-section20d-a09e9a60.md                   a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241
-      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2094 to 2119: section 20d whole (the delays: the inhibit set within 0.85 ms, the
-      charge ended within 1.41 ms, the hold at least 1.341 s)
-  l4e11-section20e-a09e9a60.md                   b02cbebcfb670197745bd6ee42d8e78dd45f22f8f3380f6e0441f271d06a1663
-      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2120 to 2136: section 20e whole (L8P-F05 corrected: the latch reads dead while every
-      source into CELL+ stays under 0.846 mA together)
+  l4e11r12-apply_gen_sch_a_charger-ac72e730.py   cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f
+      v2/docs/records/l4e11/apply_gen_sch_a_charger.py at ac72e730, byte for byte (R-157; round 11's comment on the 40.78 K/W bar)
+  l4e11r12-apply_gen_sch_a_dd7-ac72e730.py       bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034
+      v2/docs/records/l4e11/apply_gen_sch_a_dd7.py at ac72e730, byte for byte (R-217; R256 4.7 kOhm, R84 pulse-rated)
+  l4e11r12-apply_gen_sch_e_aux-ac72e730.py       3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+      v2/docs/records/l4e11/apply_gen_sch_e_aux.py at ac72e730, byte for byte (R-177; the same bytes as at a09e9a60)
+  l4e11r12-apply_gen_sch_e_entry-ac72e730.py     a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+      v2/docs/records/l4e11/apply_gen_sch_e_entry.py at ac72e730, byte for byte (R-123; the same bytes as at a09e9a60)
+  l4e11-section20c-ac72e730.md                   c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2094 to 2122: section 20c whole (the thresholds board A reads; the same bytes as at
+      a09e9a60: the dead reading is 4.076 V again with R256 at 4.7 kOhm)
+  l4e11-section20d-ac72e730.md                   a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241
+      lines 2123 to 2148: section 20d whole (the delays; the same bytes as at a09e9a60)
+  l4e11-section20e-ac72e730.md                   9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a
+      lines 2149 to 2169: section 20e whole (the static limit 0.846 mA, the bleed 1.218 s at the hot bound, the timing limit
+      520.7 uA)
+  l4e11-section22b-ac72e730.md                   583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45
+      lines 2408 to 2419: section 22b whole (the sources into CELL+, each labelled; the hot bound 434.8 uA)
+  l4e11-section22c-ac72e730.md                   a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec
+      lines 2420 to 2451: section 22c whole (V2's three corrections on one basis; what the timing limit leaves the breaker pair)
+  l4e11-section22g-ac72e730.md                   0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704
+      lines 2497 to 2514: section 22g whole (what stays open; E11-45 (f2) and (h); the paragraph for record l8p)
+  l4e11-section22h-ac72e730.md                   b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f
+      lines 2515 to 2541: section 22h whole (the minors; V2-m5: E11-29's coupon reads the PTC's site with one FET heated alone at
+      the worst split's 1.513 W)
 
-Read in round 5 from this tree (no copy needed): Murata's PRF series sheet v2/vendor/battery/murata-prf-series.pdf (DM-SA16-E056
+Read in rounds 5 and 6 from this tree (no copy needed): Murata's PRF series sheet v2/vendor/battery/murata-prf-series.pdf (DM-SA16-E056
 Rev.1 201608, sha256 a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a, SOURCES.yaml entry pack-ptc-element) and
 TI's CSD18510Q5B sheet v2/vendor/battery/ti-csd18510q5b.pdf (SLPS632, March 2017), both committed.
+Held back, not committed (round 5): TDK's superior-series PTC sheet (B59421, B59641, B59721; August 2019), fetched by
+../fetch_held_back.py into v2/vendor/battery/held/ and checked there by sha256
+4d87b17891fa933f90d833e9cf8211e5ca2cc70911f43ea7bc513af7d8936955; round 6 reads its p.4 table and its p.29 reference table.
