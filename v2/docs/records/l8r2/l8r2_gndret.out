@@ -36,7 +36,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
    f6381296fc8ad657 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
    cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
-   f5d15853e9ca5af8 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
+   8b68f596a809ad54 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
    3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
@@ -355,17 +355,17 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
        declared lower lowers it, and the capacity finding stays OPEN beside it.
 
 5. THE CORRECTION (two drafts, release-guarded, on scratch copies)
-   v2/docs/records/l8r2/apply_gen_sch_b_gndret.py sha256 f5d15853e9ca5af8
+   v2/docs/records/l8r2/apply_gen_sch_b_gndret.py sha256 8b68f596a809ad54
      --check exit 0 (target unchanged: yes); --write exit 0 (parses: yes); a second --write exit 3 (apply_gen_sch_b_gndret: already applied (_gnd_return is defined in the target); refusing);
      on the tree's own generator exit 3 (apply_gen_sch_b_gndret: NOT RELEASED: no RELEASE.md; l8r2's drafts wait on an accepted check; refusing)
    v2/docs/records/l8r2/apply_gen_sch_b_fandec.py sha256 f6381296fc8ad657
      --check exit 0 (target unchanged: yes); --write exit 0 (parses: yes); a second --write exit 3 (apply_gen_sch_b_fandec: already applied (_dec_rule names the TPS61089); refusing);
      on the tree's own generator exit 3 (apply_gen_sch_b_fandec: NOT RELEASED: no RELEASE.md; l8r2's drafts wait on an accepted check; refusing)
    THE COMPOSITION WITH Layer 9's draft and Layer 6's three (xal_land, lcsc, intent), in four orders:
-     the round's order, this record's two in place, Layer 9's draft, Layer 6's    generator sha256 2a8a75a99cef041f: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
-     Layer 9's draft before this record's two                                     generator sha256 2a8a75a99cef041f: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
-     this record's two first                                                      generator sha256 2a8a75a99cef041f: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
-     the round reversed                                                           generator sha256 2a8a75a99cef041f: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
+     the round's order, this record's two in place, Layer 9's draft, Layer 6's    generator sha256 40e2f6f6b2befb34: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
+     Layer 9's draft before this record's two                                     generator sha256 40e2f6f6b2befb34: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
+     this record's two first                                                      generator sha256 40e2f6f6b2befb34: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
+     the round reversed                                                           generator sha256 40e2f6f6b2befb34: RUNS to its end, 1476 parts, GND 13.30 A typical, 27.78 A peak, loads 22.113 A
      the four orders give one generator, byte for byte: yes; every order runs to its end: yes
      without Layer 9's draft (this record's round alone): RUNS to its end, 1473 parts
      the gndret draft alone on the committed generator: RUNS, GND 13.30 A typical and 22.23 A peak, loads 20.343 A: the same text, a smaller figure (nothing typed)
