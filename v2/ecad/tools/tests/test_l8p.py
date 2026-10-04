@@ -1,4 +1,4 @@
-"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 4; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
+"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 5; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
 release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, the
 restart inhibit C-1c gated by PGD, and in round 3 B-R2's reverse-charge detector on the loop's return), board E (the loop through
 J_SMB to the dock) and board A (the loop's thermal guard RT1), from record l9stk section 15 (fnd/l9stk at 0d72880b) and task
@@ -12,7 +12,10 @@ disjoint from every other draft's; every value is found in record l9stk's copied
 pins; C-1c's budget closes on figures read from TI's held OPA187 sheet and Murata's NTC sheet; B-R2's detector closes on figures
 read from L4-E11's copies and the LM5069, CSD18510Q5B, 2N7002 and BZT52C sheets; DD-5's correction closes on figures read from
 the BQ4050's, the CSD17570Q5B's and the LM74700-Q1's sheets, and the old state (Q1's body diode) fails the same computation; the
-ideal diode draft refuses a target without the breaker draft; the netlist check reads NOT DRAWN
+ideal diode draft refuses a target without the breaker draft; round 5 (the check V1's condition C4 and its minors): the compositions
+use L4-E11's round 10 drafts with no stand-in, the interface of 12f is quoted from L4-E11's copied sections 20c and 20d, L8P-F06's
+leakage budget and L8P-F07's printed and typical points recompute from the sheets and the copies, and the alternative part's typed
+figures read against TDK's held sheet when it is present; the netlist check reads NOT DRAWN
 on the committed netlists, DRAWN on the netlists regenerated from the patched generators (the loop across the three boards and
 the inhibit included) and FAIL on mutated ones; the page carries no em or en dash and no claim word, and names the conditions
 and the interface rows owed. No KiCad: generator text, the generators' own part tables and netlist text, on scratch copies; the
@@ -87,13 +90,13 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "l8p_drafts.out is not what l8p_drafts.py prints; regenerate it with _bin/regen_out.py"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("record l9stk's, L4-E7's and L4-E11's copies equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+    for s in ("record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 10) equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
               "+-1.95 K left: consistent", "the split closes", "is ASSUMED from the product search sheet", "THE LOCKOUT AT THE ALLOW EDGE",
               "E-10 gains: VDS under 1.62 V during current-limit excursions", "CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a",
               "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
               "board P, this record's against every other draft's: DISJOINT", "board E, this record's against every other draft's: DISJOINT",
               "board A, this record's against every other draft's: DISJOINT", "record l8p's breaker and enable loop on the netlists: NOT DRAWN",
-              "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R248, C247)",
+              "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R257, C249)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
               "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
@@ -101,13 +104,27 @@ def t_the_committed_output_is_what_the_script_prints():
               "apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused",
               "l8p/apply_gen_sch_p_idealdiode.py            OK", "decoupling C111: class L at U105.1 on IDL_VCAP",
               "decoupling C112: class D at U105.6 on SCP_OUT", "decoupling C114: class B2 at U105.4 on SW",
-              "rail SW       source ['Q1', 'Q109']", "the breaker draft without the ideal diode (DD-5 uncorrected)"):
+              "rail SW       source ['Q1', 'Q109']", "the breaker draft without the ideal diode (DD-5 uncorrected)",
+              # round 5
+              "l8p/inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py OK", "l8p/inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py OK",
+              "board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)",
+              "board A composed in L4-E9's order: the generator ran to its end (750 parts, intent written: yes)",
+              "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at a09e9a60, quoted)", "board A's set 0.85 ms: the sum agrees",
+              "breaker's restart (0.9477 s, this record's 0.9477 s: the same)",
+              "L8P-F06: the latch holds at the held case on the ASSUMED doubling", "is the clamp's room over three: 272.3 uA, reproduced",
+              "PACK_P at CELL+", "1 IDSS row, no hot figure",
+              "record l9stk 15.5 reads '47 kOhm at 130 C plus or minus 3 C': yes", "the header '*at 4.7kohm *at 47kohm'",
+              "copper passes 133 C, the junction at most 134.88 C against 150 C: PRINTED",
+              "NOT PRINTED at any pack voltage", "it does NOT keep C-PROT's 18 A for 60 s uninterrupted there",
+              "inside the window: HOLDS", "NO k EXISTS at 7.6 V", "NOT SELECTED", "L8P-F06 board P with L4-E11", "L8P-F07 board A with record l9stk"):
         assert s in t, s
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 2, "the alone and the composed readings"
-    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 8, "the seven mutations and the breaker without the ideal diode"
+    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 11, "the ten mutations and the breaker without the ideal diode"
     assert t.count("       P DIO  FAIL") == 2 and t.count("       P DIO  NOT DRAWN") == 2, "DIO's two mutations; NOT DRAWN on the tree and without the draft"
+    comp_a = t.split("mutated composed board A (")[1:]
+    assert len(comp_a) == 3 and all("       A EN   FAIL: " in c.split("record l8p's")[0] for c in comp_a), "the three mutations of the composed board A"
     assert "REFUSED" not in t.split("5. COMPOSITION")[1].split("6. DESIGNATORS")[0], "a composition step refused"
-    assert "L8P-F01" not in t.split("with scratch stand-ins for ")[1].split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
+    assert "with scratch stand-ins" not in t and "the generator refused" not in t, "a stand-in or a refusal is back in the compositions"
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
@@ -341,7 +358,7 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**The lockout at the allow edge.**", "**The NTC is bonded to the pad.**", "**DD-7, the input-return pulse:**", "**IF-7:**",
               "**CLOSED** by L4-E7's `fnd/l4e7r6` at `914a2f5a`", "**Order codes owed:**",
               "## 12. B-R2: the charge through a latched breaker", "**The criterion, item by item:**", "### 12a. What exists, and why none of it tells board A",
-              "**B-R2's interface, route R1 (section 12f, finding L8P-F04):**", "| L8P-F04 | A |", "| L8P-F05 | A |", "### 12h. Not taken",
+              "**B-R2's interface, route R1 (section 12f, finding L8P-F04), restated in round 5:**", "| L8P-F04 | A |", "| L8P-F05 | A |", "### 12h. Not taken",
               "**E-14 (record l9stk's, with route R1)**", "**E-12c, a commissioning check like E-12**", "**R10's tolerance and temperature coefficient**",
               "**B-R2's route R1 DRAFTED on board P**", "no new contact",
               "## 13. DD-5: the charge switch's body diode in discharge", "**The case row: C-PROT**", "### 13a. Three approaches compared",
@@ -349,8 +366,117 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**The condition that stays (E-16).**", "### 13f. The closure credit", "### 13g. What stays open", "**E-8, restated**",
               "**E-12d**, a commissioning check like E-12", "**Round 4 (IF-8, DD-5):**", "### 13h. The ideal diode's own failures",
               "| 10 A held | 30.24 mV, 0.302 W | 10.0 W | 0.124 W | 91.4 C | 97.6 C | 150 C |",
-              "| the breaker's 23.93 A held | 30.24 mV, 0.724 W | 23.9 W | 0.711 W | 112.4 C | 148.0 C | 150 C |"):
+              "| the breaker's 23.93 A held | 30.24 mV, 0.724 W | 23.9 W | 0.711 W | 112.4 C | 148.0 C | 150 C |",
+              # round 5
+              "**Round 5 (4 October 2026 evening", "### 12f. The interface with L4-E11's DD-7 draft (finding L8P-F04; restated in round 5",
+              "**Round 3's box, and why it is restated.**", "### 12j. Round 5's findings: L8P-F06 and L8P-F07",
+              "#### L8P-F06: the breaker FETs' off leakage into CELL+", "#### L8P-F07: the guard RT1's printed points",
+              "**The question to TI (DRAFTED, UNSENT", "**The question to Murata (DRAFTED, UNSENT", "**SESSION decision (round 5):**",
+              "| L8P-F06 | P, with A |", "| L8P-F07 | A, with P |", "**E-14c** (new)", "**No k exists at 7.6 V.**",
+              "| C4: `l8p_drafts.out` regenerated on the merged line;", "No stand-in is used since round 5"):
         assert s in page, s
     for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R105", "D102", "R106", "R107", "Q103",
                 "Q104", "R108, R109", "RT101", "R110", "RT1 (board A)"):
         assert "| %s" % ref in page, "the value table omits %s" % ref
+
+
+def _round5():
+    m = _need_inputs()
+    for sheet in (m.CSD_SHEET, m.N7002_SHEET, m.PRF_SHEET, m.LM5069_SHEET):
+        need(sheet, "a maker's sheet round 5 reads")
+    texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
+    B = m.budget(texts["page"])
+    R = m.rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
+    return m, texts, B, R, m.round5(texts["page"], texts["l4e11r10"], texts["l4e11r10d"], texts["l4e11r10e"], B, R)
+
+
+def _flat(t):
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def t_round5_the_interface_is_quoted_from_the_copies_not_typed():
+    """12f (round 5): every blockquote and every quoted cell of the interface table occurs, whitespace aside, in the copy of
+    L4-E11's section it names (20c or 20d at a09e9a60); the delays the output sums agree with 20d's."""
+    m, texts, B, R, F = _round5()
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("### 12f.")[1].split("### 12g.")[0]
+    copy = {"20c": _flat(texts["l4e11r10"]), "20d": _flat(texts["l4e11r10d"])}
+    quotes = [_flat(" ".join(l[2:] for l in grp.split("\n"))) for grp in re.findall(r"(?m)((?:^> .*\n?)+)", sec)]
+    assert len(quotes) == 2 and all(q in copy["20c"] for q in quotes), [q for q in quotes if q not in copy["20c"]]
+    rows = [l for l in sec.split("\n") if l.startswith("| ") and l.rstrip().endswith(("| 20c |", "| 20d |"))]
+    assert len(rows) == 8, rows
+    for l in rows:
+        cells = [c.strip() for c in l.strip().strip("|").split("|")]
+        parts = re.findall(r'"(.+?)"', cells[1])
+        assert parts and all(_flat(q) in copy[cells[2]] for q in parts), (cells[2], [q for q in parts if _flat(q) not in copy[cells[2]]])
+    assert (F["t_set"], F["t_end"], F["hold_min"], F["restart_l4"]) == (0.85e-3, 1.41e-3, 1.341, 0.9477), F
+    assert abs(round(R["t_d"] * 1e3, 2) + F["t_set"] * 1e3 - F["t_end"] * 1e3) < 0.011, "board P's pull plus board A's set is 20d's sum"
+    assert abs(F["restart_l4"] - R["t_restart"]) < 5e-5 and abs(F["hold_min"] - R["t_restart"] - F["over_rs"]) < 1e-3
+
+
+def t_round5_l8p_f06_the_breaker_fets_leakage_against_the_latch():
+    """L8P-F06: L4-E11's 272 uA a battery FET is reproduced from its 0.846 mA and the LM5069's 1 MOhm at the clamp; TI prints one
+    IDSS row, at 25 C; on the ASSUMED doubling every 10 K the breaker pair at the held case stays inside the room and leaves the
+    battery FETs about half of L4-E11's figure; a doubling every 8.76 K or a 111.7 C case fills it; at 125 C it is over."""
+    m, texts, B, R, F = _round5()
+    assert (F["i_latch"], F["l4_each"], R["r_so"]) == (0.846e-3, 272e-6, 1e6), F
+    assert round(F["l4_each_re"] * 1e6) == 272 and abs(F["room"][m.V_CLAMP] - (0.846e-3 - 29.2e-6)) < 1e-12
+    assert (F["idss"], F["idss_v"], F["idss_rows"]) == (1e-6, 32.0, 1), "the sheet now prints another IDSS row: read it instead of the assumption"
+    assert F["idss_v"] >= m.V_CLAMP and m.IDSS_DOUBLING == 10.0 and F["t_case"] == 101.0 and F["t_air"] == 76.25
+    assert abs(F["pair_case"] - 2e-6 * 2 ** 7.6) < 1e-12 and abs(F["pair_case"] - 388.0e-6) < 0.1e-6, F["pair_case"]
+    assert F["f06_holds"] and abs(F["each_left"] - (816.8e-6 - 388.0e-6) / 3) < 0.1e-6 and F["each_left"] < F["l4_each"] / 1.8
+    assert 111.5 < F["t_fill"] < 112.0 and 8.7 < F["d_fill"] < 8.8 and F["pair_125"] > F["i_latch"], (F["t_fill"], F["d_fill"], F["pair_125"])
+    assert 2 * F["idss"] * 2 ** ((F["t_fill"] - 25.0) / m.IDSS_DOUBLING) - F["room"][m.V_CLAMP] < 1e-12
+
+
+def t_round5_l8p_f07_rt1s_printed_and_typical_points_against_the_loop():
+    """L8P-F07 (V1's condition C3): Murata's row is read from the sheet's text under its own column header (100 kOhm over 110 C,
+    4.7 MOhm at 130 +-3 C), and record l9stk's '47 kOhm at 130 C' is the 470 ohm groups' column; the loop's thresholds reproduce
+    L4-E11 20c's nominal 61.3 and 201.2 kOhm and tighten with the loads and 1 % parts; the trip side is printed, the no-trip side at
+    10 A only from about 15.5 V, the 18 A side not at all; on the typical curve 10 A holds and the 18 A service held does not, for
+    every R25 the sheet allows, also at the copper's lower reading; the curve matches the 1 kOhm group's points and not the 10 kOhm
+    part's 4.7 MOhm point."""
+    m, texts, B, R, F = _round5()
+    g = F["prf"]["PRF15BB103RB6RC"]
+    assert (g["r25"], g["tol"], g["gt"], g["t1"], g["t1_tol"], g["r1"], g["t2"], g["t2_tol"], g["r2"], g["vmax"], g["tmin"], g["tmax"]) == \
+        (10e3, 0.5, True, 110.0, None, 100e3, 130.0, 3.0, 4.7e6, 32.0, -20.0, 140.0), g
+    b = F["prf"]["PRF15BB102RB6RC"]
+    assert (b["r25"], b["t1"], b["t1_tol"], b["r1"], b["t2"], b["t2_tol"], b["r2"]) == (1e3, 115.0, 5.0, 10e3, 130.0, 3.0, 100e3), b
+    assert F["l9_47k"] and F["hdr_47k"] == ["4.7kohm"], "l9stk's 47 kOhm reading or the sheet's 470 ohm column changed"
+    assert abs(F["nom_on"] - F["l4_on"]) < 50 and abs(F["nom_off"] - F["l4_off"]) < 50, "L4-E11 20c's nominal thresholds"
+    assert F["on"][10.6] < F["nom_on"] and 58.0e3 < F["on"][10.6] < 58.8e3 and 110.5e3 < F["on"][16.8] < 111.3e3, F["on"]
+    assert 203.0e3 < F["off"][10.6] < 203.8e3 and 340.8e3 < F["off"][16.8] < 341.6e3, F["off"]
+    assert 3.55e3 < F["low"][7.6] < 3.60e3 and F["low"][7.6] > 3.46e3, "with the return at 0 V the least RT1 is over V1's 3.46 kOhm"
+    assert (F["tj10"], F["tj18"], F["tj24"], F["lead24"]) == (89.4, 118.0, 150.0, 1.88), F
+    assert F["trip_print"] and g["r2"] > F["off"][16.8] and F["print"]["over_r2_from"] + F["lead24"] < 150.0
+    assert not F["notrip10_print_low"] and F["notrip10_print_high"] and not F["notrip18_print"]
+    assert 15.3 < F["v_print"] < 15.7 and F["v_print"] < B["vmax"], F["v_print"]
+    pts = m.PRF_BB_TYP
+    assert all(a[0] < b_[0] and a[1] < b_[1] for a, b_ in zip(pts, pts[1:])), "the read curve is not monotonic"
+    assert abs(F["curve_x10"] - b["t1"]) <= b["t1_tol"] and abs(F["curve_x100"] - b["t2"]) <= b["t2_tol"], "the 1 kOhm group's points"
+    assert F["curve_at_r2"] < F["print_at_r2"] / 1.5, "the curve is not the 10 kOhm part's own above x10"
+    assert F["f07_typ_10"] and F["r10_typ"] < F["window"] < F["on"][10.6]
+    assert not F["f07_typ_18"] and min(F["r18_typ"]) > F["on"][10.6] and F["r18_typ_cu_lo"] > F["on"][10.6], F["r18_typ"]
+    assert F["onset"]["most"] < F["onset"]["nominal"] < F["onset"]["least"] < F["cu18"] < F["tj18"], F["onset"]
+    assert 60.0 < F["tau_need"]["most"] < 62.0 and F["tau_need"]["least"] < F["tau_need"]["nominal"] < F["tau_need"]["most"]
+    assert F["win_typ"] < F["window"] and F["low_typ"] > F["low"][7.6], (F["win_typ"], F["low_typ"])
+    # the alternative parts
+    assert F["ba102_notrip"] and not F["ba102_trip"] and not F["ba102_low"]
+    assert F["tdk_k_trip"] < F["tdk_k_low"][7.6] and not F["tdk_fits_7v6"] and F["tdk_fits_10v6"], (F["tdk_k_trip"], F["tdk_k_low"])
+    assert F["tdk_p"] > m.TDK_B59721["p_meas"] * 2 and F["tdk_static"] > 5 * F["static"] and F["tdk_trip_tj"] < 150.0
+
+
+def t_round5_the_alternative_parts_typed_figures_are_tdks():
+    """TDK's B59721A figures in l8p_drafts.py are the held sheet's p.4 table (held back by its notice; skipped when absent)."""
+    m = _M()
+    need(m.TDK_SHEET, "TDK's held sheet (python3 v2/docs/records/l8p/fetch_held_back.py)")
+    t = m.pdftext(m.TDK_SHEET)
+    T = m.TDK_B59721
+    assert "Reproduction, publication and dissemination of this publication" in t, "the notice the sheet is held back by"
+    page4 = t.split("Page 3 of 35")[1].split("Page 4 of 35")[0]
+    assert re.search(r"\(Tsense,1 .5\u00b0C\) \(Tsense,1 \+5\u00b0C\)\s+\(Tsense,1 \+15\u00b0C\)", page4), "the 0805 table's columns"
+    for ts in T["tsense"]:
+        row = re.search(r"^%d\s+±%d\s+%d\s+≤ ([0-9.]+)\s+≥ ([0-9.]+)\s+≥ ([0-9.]+)\s+B59721A0%03dA062" % (T["rr"], T["drr"] * 100, ts, ts), page4, re.M)
+        assert row and tuple(float(x) * 1e3 for x in row.groups()) == (T["r_m5"], T["r_p5"], T["r_p15"]), ts
+    assert re.search(r"Max\. operating voltage\s+Vmax\s+%d\s+V DC" % T["vmax"], t)
+    assert "should be below\n6 mW for EIA case size 0805" in page4 and T["p_meas"] == 6e-3
