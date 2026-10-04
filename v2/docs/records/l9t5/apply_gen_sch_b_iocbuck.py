@@ -73,9 +73,14 @@ _NEW_TVS = ('part("J_5V_IOC", "Connector_Generic", "Conn_01x02", "JST-VH socket,
             + _OLD_TVS)
 _OLD_SEC = '["J_5V_DEV", "D1", "C1", "C2", '
 _NEW_SEC = '["J_5V_DEV", "D1", "C1", "C2", "J_5V_IOC", "D900", "C900", '
+# round 2 (4 October 2026 evening): the LDO's input capacitor is also declared by an explicit bypass entry naming its net; the round 1
+# text missed it, and the generator with this draft alone refused ("intent: bypass C400 -> U40.1: the capacitor is not on that pin's
+# net +5V_DEV"): record l9t5's l9t5_drafts.py section 4 keeps that refusal as the mutation that must fail
+_OLD_BYP = '_intent.bypass(C_(0), U_(0), "1", "+5V_DEV")'
+_NEW_BYP = '_intent.bypass(C_(0), U_(0), "1", "+5V_IOC")'
 EDITS = [(_OLD_LOADS, _NEW_LOADS), (_OLD_DEV, _NEW_DEV), (_OLD_DEVNOTE, _NEW_DEVNOTE), (_OLD_GNDL, _NEW_GNDL), (_OLD_GNDS, _NEW_GNDS),
          (_OLD_FED, _NEW_FED), (_OLD_WHY, _NEW_WHY), (_OLD_VIN, _NEW_VIN), (_OLD_EN, _NEW_EN), (_OLD_CIN, _NEW_CIN), (_OLD_TVS, _NEW_TVS),
-         (_OLD_SEC, _NEW_SEC)]
+         (_OLD_SEC, _NEW_SEC), (_OLD_BYP, _NEW_BYP)]
 
 
 def refuse(msg):
