@@ -49,7 +49,11 @@ one design-out attempt fails on L2 and stays open with its condition, J_DCIN dra
 start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Round 10 (section 20)
 adds: DD-7's board A side redrawn against record l8p's L8P-F04 and L8P-F05 composes in L4-E9's order, reads DRAWN in the regenerated
 netlist and FAIL on five mutations, and holds on C-PROT (the held return sets the inhibit within 1 ms, the hold outlasts the restart,
-the latch keeps CELL+ dead whatever the LM5069's resistor); T2's 9/8 is read in closed form. Nothing here writes
+the latch keeps CELL+ dead whatever the LM5069's resistor); T2's 9/8 is read in closed form. Round 11 (section 21) adds: E-1 holds at its
+case on C-PROT rev 1 over a scan of every split of the three FETs' RDS(on) under the allowance, at the charger's printed least drive, with
+the bar 40.78 K/W, and fails with the even split's bar, a bar 1 % looser, the split read as even or the drive read at 10 V; unequal
+coupling is bounded by the largest of each impedance; E11-37 stays open with Q-TI-17 (e) and (f) and its fallback conditional on a
+typical figure; V1's minors (R256 6.8k, R84 pulse-rated) read in the netlist with two more mutations failing. Nothing here writes
 into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -1366,8 +1370,8 @@ def _netlist10(g, d, tag):
 def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fail():
     """Closure credit (a) and (b) for L8P-F04 and L8P-F05: DD-7's redrawn draft is refused without record l8p's loop and on the tree,
     composes in L4-E9's order after l8p's PTC (round 3) and before d8dec31's mainpb, the generator runs to its end, and the regenerated
-    netlist reads DRAWN in check_dd7_netlist.py; five circuit mutations, each a defect the correction removes or the interface forbids,
-    read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
+    netlist reads DRAWN in check_dd7_netlist.py; seven circuit mutations (two added by round 11 for V1's minors), each a defect the
+    correction removes or the interface forbids, read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
     _M()
     dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
     with tempfile.TemporaryDirectory() as d:
@@ -1393,6 +1397,11 @@ def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fai
             ("R108's foot on ground (a dead CELL+ sets the inhibit again: L8P-F05)", 'r("R108", "100k 1%", "DD7_CS", "DD7_REF"', 'r("R108", "100k 1%", "DD7_CS", "GND"'),
             ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
             ("a 100 kOhm load on DOCK_EN_RET (the interface's 1 MOhm)", 'tp("TP1", "DD7_H")', 'r("R260", "100k", "DOCK_EN_RET", "GND", lcsc="C25803"); tp("TP1", "DD7_H")'),
+            # round 11 (V1's minors of round 10): the two values the check now reads
+            ("R256 back at 4.7k (U47's RESET over TI's recommended 5 mA at the clamp)", 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")',
+             'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")'),
+            ("R84 without its pulse rating (the 71 us arm pulse on a part with no printed pulse curve)", 'r("R84", "56R 1% pulse-rated", "DD7_K"',
+             'r("R84", "56R 1%", "DD7_K"'),
         ]
         for k, (why, old, rep) in enumerate(mutations):
             assert text.count(old) == 1, why
@@ -1463,7 +1472,8 @@ def t_round10_t2_one_fet_of_three_may_take_nine_eighths():
     assert abs(scan2 - p2(1.0)) < 1e-6, "with two FETs the even split is not the worst case"
     assert abs(S["t2"] - 9.0 / 8.0) < 1e-12 and S["t2_tj"] > 150.0
     row = [x for x in _M().downstream(R) if x[0] == "E11-29"][0][3]
-    assert "OPEN since round 10" in row and "9/8" in row
+    # round 11 (section 21d) restated the row: round 10's OPEN is kept as its history, the 9/8 as its reason
+    assert "recorded OPEN in round 10 (section 20i)" in row and "9/8" in row
 
 
 def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_latch():
@@ -1497,3 +1507,132 @@ def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_la
     assert "**No firmware.**" in sec and "**the signal**" in sec and "**the threshold**" in sec and "**where it acts**" in sec
     for s in ("78.6", "1.149", "0.948", "3.829", "7.735", "4.07", "9.86", "3.83 mA", "2.939", "142.2", "89.7", "5.05", "1.98", "154.6", "C-1c"):
         assert s in sec and s in open(OUT, encoding="utf-8").read(), s
+
+
+# ---- round 11 (section 21, task T2): E-1 on C-PROT rev 1 with the worst sharing, and E11-37
+
+def _hottest(rs, zs, zm):
+    """The hottest of three paralleled FETs' junction rise per unit I^2 for RDS(on) values rs, self impedance zs and mutual zm (a
+    number for equal coupling, or a 3x3 table of the mutual impedances): each FET takes the current share of its conductance."""
+    g = [1.0 / r for r in rs]
+    gs = sum(g)
+    pw = [gi / gs ** 2 for gi in g]                     # I^2 g_k / G^2 = I_k^2 r_k
+    zmt = zm if isinstance(zm, (list, tuple)) else [[zm] * 3 for _ in range(3)]
+    return max(pw[k] * zs + sum(pw[j] * zmt[k][j] for j in range(3) if j != k) for k in range(3))
+
+
+_M_GRID = (0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.4)
+
+
+def _e1_worst_tj(R, bar, ra=None):
+    """E-1 on C-PROT rev 1, recomputed apart from the script: the hottest junction held at the breaker's 23.93 A from L4-E12's 76.25 C
+    with the band and R17 in place, each FET's installed (Zself + 2 Zmut) at bar, over every split of the three RDS(on) values under the
+    allowance (a 24-step grid on each, plus the closed form's worst point) and the coupling ratios of _M_GRID. ra is the RDS(on) the FETs
+    actually reach (the allowance at the charger's printed least drive unless a mutation passes another)."""
+    m = _M()
+    S9 = R["S19"]
+    ra = m.F16_RA if ra is None else ra
+    i_ = S9["i"]
+    base = S9["t0"] + S9["band"] + S9["r17_allow"] * S9["pr17"]
+    worst = (None, -1.0)
+    for mm in _M_GRID:
+        zs = bar / (1.0 + 2.0 * mm)
+        zm = mm * zs
+        ks = sorted(set([k / 24.0 for k in range(1, 25)] + [1.0 / max(1.0, 2.0 - 4.0 * mm)]))
+        for a in ks:
+            for b in ks:
+                for c in ks:
+                    tj = base + i_ ** 2 * ra * _hottest((a, b, c), zs, zm) * 1.0
+                    if tj > worst[1]:
+                        worst = ((mm, a, b, c), tj)
+    return worst
+
+
+def t_round11_e1_holds_on_c_prot_over_every_split_and_its_mutations_fail():
+    """T2's correction against the same failure case (C-PROT rev 1, record l9stk's E-1): with the installed bar 40.78 K/W the hottest
+    junction stays at most 150 C held at 23.93 A from 76.25 C for every split of the three RDS(on) values under the allowance, at the
+    charger's printed least gate drive (SLUSE65A's VBATDRV_ON minimum); the even split's 45.88 K/W, a bar 1 % looser, the script's split
+    replaced by the even one, and the allowance read at a 10 V drive each FAIL; unequal coupling is bounded by the largest impedance."""
+    R = _R()
+    m = _M()
+    S, S9, H = R["S21"], R["S19"], R["H"]
+    # the drive: the allowance is section 15c's figure at TI's printed least VBATDRV_ON, not at the typical 10 V
+    assert S["vg"] == H["drv"][0] == 8.5 and abs(S["ra"] - m.F16_RA) < 1e-15
+    assert S["ra_10v"] < S["ra"] / 1.3, "the 10 V figure is not the looser one"
+    # the closed form against a scan, and the failure on round 10's bar (the defect reproduced)
+    for mm in _M_GRID:
+        f_, x_ = m.worst_share(mm)
+        scan = max(m.split_share(1.0 + k / 400.0, mm) for k in range(0, 1201))
+        assert abs(scan - max(f_, 1.0)) < 2e-5 and (mm >= 0.25 or abs(x_ - (2.0 - 4.0 * mm)) < 1e-12), mm
+    (pt, tj_old) = _e1_worst_tj(R, S["bar_old"])
+    assert tj_old > 157.0 and abs(tj_old - S["tj_old_worst"]) < 0.05, "the even split's bar does not fail at its case (%.2f C)" % tj_old
+    # the correction on the same case
+    (pt, tj_new) = _e1_worst_tj(R, S["bar_new"])
+    assert tj_new <= 150.0 + 1e-9, "E-1 fails at 40.78 K/W: %.3f C at %s" % (tj_new, pt)
+    assert tj_new > 149.9, "the bar is looser than the case needs (not the worst split's)"
+    assert abs(S["bar_new"] - S["bar_old"] / 1.125) < 1e-12 and "%.2f" % S["bar_new"] == "40.78"
+    # mutations: each FAILS the same acceptance
+    assert _e1_worst_tj(R, S["bar_new"] * 1.01)[1] > 150.0, "a bar 1 % looser still passes: the acceptance does not bind"
+    assert _e1_worst_tj(R, S["bar_new"] * S["ra"] / S["ra_10v"])[1] > 150.0, "the bar sized at a 10 V drive passes at the least drive"
+    keep = m.worst_share
+    try:
+        m.worst_share = lambda mm: (1.0, 1.0)                     # the split read as even (round 10's defect)
+        Sm = m.fix21_round(R, None)
+    finally:
+        m.worst_share = keep
+    assert abs(Sm["bar_new"] - S["bar_old"]) < 1e-12 and _e1_worst_tj(R, Sm["bar_new"])[1] > 150.0, "the even split's mutation passes"
+    # unequal coupling (the middle FET has two neighbours): the hottest rise over every split stays under the bound taken with the
+    # largest mutual impedance, as the record's block E11-29 states
+    zs = 1.0
+    for z12, z13, z23 in ((0.2, 0.05, 0.2), (0.1, 0.0, 0.1), (0.24, 0.12, 0.24), (0.3, 0.1, 0.3)):
+        zt = [[0, z12, z13], [z12, 0, z23], [z13, z23, 0]]
+        zmax = max(z12, z13, z23)
+        ks = [k / 24.0 for k in range(1, 25)]
+        asym = max(_hottest((a, b, c), zs, zt) for a in ks for b in ks for c in ks)
+        sym = max(m.worst_share(zmax / zs)[0], 1.0) * (zs + 2 * zmax) / 9.0
+        assert asym <= sym + 1e-12, (z12, z13, z23)
+    # the record and the drafts carry it
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert ("%.2f K/W" % S["bar_new"]) in row and "ANY split" in row and "the largest of each" in row and "CONDITIONAL" in row
+    with tempfile.TemporaryDirectory() as d:
+        a = os.path.join(d, "gen_sch_a.py")
+        shutil.copy(GEN_A, a)
+        _apply("apply_gen_sch_a_charger.py", a)
+        txt = open(a, encoding="utf-8").read()
+    assert "(Zself + 2 Zmut) at most\n# 40.78 K/W" in txt and "for ANY split of the RDS(on) spread" in txt
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    b29 = page.split("#### Block E11-29")[1].split("#### Block E11-30")[0]
+    assert "**40.78 K/W**" in b29 and "for any split of the RDS(on) spread" in b29.replace("\n  ", " ")
+    s20i = out.split("   20i. ")[1].split("   20j. ")[0]
+    assert "Zself / 4" in s20i and "Zself / 4" in page.split("### 20i. ")[1].split("### 20j. ")[0]
+    sec = page.split("## 21. Round 11")[1]
+    o21 = out.split("21. ROUND 11")[1]
+    for v in ("157.7", "40.78", "1.125", "1.5129", "32.85", "20.39", "4.72", "5.74", "1.0045", "0.9643", "15 mOhm", "8.5 V", "1.0651",
+              "42.62", "44.04", "45.06", "45.68", "4.47 mA", "0.597", "1.228", "0.112", "28.1", "189", "14.6 W", "11.1 %"):
+        assert v in sec and v in o21, "%s is not in both section 21 and out 21" % v
+    assert "C-PROT rev 1" in sec and "C-PROT rev 1" in o21
+
+
+def t_round11_e11_37_stays_open_with_q_ti_17_e_and_f_and_the_fallback_rests_on_a_typical_figure():
+    """E11-37 is not closed by this round: three FETs stay over TI's 5 nF on typical figures; the fallback pair is under it only at the
+    sheet's -15 V and on a typical figure, so it is CONDITIONAL and Q-TI-17 (e) names it; (iii) has no printed basis (SLUSE65A names
+    no buffer on BATDRV) and Q-TI-17 (f) asks; the questions are drafted, not sent."""
+    R = _R()
+    m = _M()
+    S, S9, H, L = R["S21"], R["S19"], R["H"], R["L"]
+    assert S9["ciss_ratio"][0] > 1.0, "the three are not over TI's 5 nF"
+    under = [lab for lab, _c, _c2, ok in S["two"] if ok]
+    assert under == ["BUK6Y10-30P (Nexperia)"], under
+    assert S["pair_ciss"][0] < H["bf_ciss"] < S["pair_ciss"][1], "the pair's near-0 V typical is not shown over 5 nF"
+    assert abs(S["pair_ciss"][0] - 2 * L["ciss_t"]) < 1e-15 and S["buffer_mentions"] == 0
+    assert abs(S["pair_vs_three"] - S["pair_bar"] / S["bar_new"]) < 1e-12 and S["pair_vs_three"] < 0.55
+    o21 = open(OUT, encoding="utf-8").read().split("21. ROUND 11")[1]
+    assert "E11-37 STAYS OPEN" in o21 and "E11-37 OPEN" in o21 and "on a TYPICAL figure" in o21 and "NOT SENT" in o21
+    row = [x for x in m.downstream(R) if x[0] == "E11-37"][0][3]
+    assert "Q-TI-17 (e) and (f)" in row and "round 11's (ii)" in row and "a result with the pair does not transfer" in row
+    ti = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    r11 = ti.split("## Round 11")[1]
+    assert "**Q-TI-17 (e)" in r11 and "**Q-TI-17 (f)" in r11 and "Drafted, not sent." in r11
+    for v in ("4.72 nF", "5.74 nF", "2.36 nF", "2.87 nF", "192 nC"):
+        assert v in r11, v
