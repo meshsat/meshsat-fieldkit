@@ -6,6 +6,18 @@ measured, and no figure on this page is a measurement. Every figure is printed b
 `v2/ecad/tools/tests/test_l9pwr.py` holds the page to the output. The drafts of Layers 4, 8 and 9 are modelled as drafts: they
 are printed DRAFTED, none is applied to a generator, and their release guards stand.
 
+## Round 5 in short (4 October 2026 evening, task T5 round 2, case row C-ALLTX rev 3)
+
+- **L9P-F01 is restated on the case row C-ALLTX rev 3** (rev 2's definition, its quoted figure withdrawn): out 10 now judges the
+  case computed from its own text (out 7b) against REQ-018's 15.5 V. **OPEN on the case: 15.5162 V needed at 18 A** (241.039 W at
+  VBAT 13.391 V, R_cell 0.06 Ohm an ASSUMPTION), +0.0162 V; record l9t5 bounds the printed uncertainties (16.0684 V). D-11's basis
+  as rv-pwr models it (16.214 V, the figure round 2 carried) is printed in the same finding as a **LABELLED SCENARIO, NOT THE CASE**.
+  **WITHDRAWN** by the owner's positions of 4 October 2026 and printed as such: L4-E9 round 7's 16.1 V floor, the 16.4 V its rule gives
+  on these drafts, FAN_OK. The finding's action is the case's correction, record l9t5's A1, never a scenario; its owner is record
+  l9t5 with L4-E9, l8r2 and Layer 5.
+- **Nothing else moved:** every figure of out 0 to out 9 and every other finding; the round 2 table row below is history (round 5
+  restates it, the output carries the current text).
+
 ## Round 4 in short (4 October 2026, task T5, case rows C-ALLTX rev 2 and C-DEV rev 1)
 
 - **C1, a budget defect corrected.** rv-pwr's PS-ALLTX powered the standby WiFi card at its placeholder (1.0 W PLAN, 9.1 W
@@ -231,7 +243,7 @@ record's reading (SESSION).
 
 | Id | Class | Status | Finding | Owner |
 |---|---|---|---|---|
-| L9P-F01 | DEMONSTRATED ANALYSIS DEFECT | **OPEN** (carried, moved) | D-11's all-transmit basis needs **16.214 V** rest at the worst cell resistance on this round's drafts, 0.114 V over L4-E9 round 7's 16.1 V (round 1's drafts: 15.986 V). From round 1: the coolers' envelope at HIGH +0.2019 V, slots 1 and 3 on the LM5176 +0.0264 V, the breaker +0.0633 V, the third FET -0.0634 V. By round 7's rule the floor becomes **16.4 V** (4.100 V a cell), the window to 16.884 V 0.484 V; at 16.1 V the basis is covered to R_cell 0.0552 Ohm, under rv-pwr's HIGH 0.06. With the coolers at the maker's 2.0 W: 16.014 V, the rule gives 16.2 V. A Fan_PWM cap during a key-down is not available (l8r2 round 4: the fan runs full whenever its PWM lead is not driven) | L4-E9 (D-17, R-28, LH-12: FW-A05's floor), with l8r2 (C4-3, the envelope) and Layer 5 (FW-A05's text) |
+| L9P-F01 | DEMONSTRATED ANALYSIS DEFECT | **OPEN** (carried, moved; **restated in round 5**: OPEN on C-ALLTX rev 3, 15.5162 V against 15.5 V, D-11's basis below a labelled scenario, 16.1 V and 16.4 V withdrawn) | Round 2's text: D-11's all-transmit basis needs **16.214 V** rest at the worst cell resistance on this round's drafts, 0.114 V over L4-E9 round 7's 16.1 V (round 1's drafts: 15.986 V). From round 1: the coolers' envelope at HIGH +0.2019 V, slots 1 and 3 on the LM5176 +0.0264 V, the breaker +0.0633 V, the third FET -0.0634 V. By round 7's rule the floor becomes **16.4 V** (4.100 V a cell), the window to 16.884 V 0.484 V; at 16.1 V the basis is covered to R_cell 0.0552 Ohm, under rv-pwr's HIGH 0.06. With the coolers at the maker's 2.0 W: 16.014 V, the rule gives 16.2 V. A Fan_PWM cap during a key-down is not available (l8r2 round 4: the fan runs full whenever its PWM lead is not driven) | L4-E9 (D-17, R-28, LH-12: FW-A05's floor), with l8r2 (C4-3, the envelope) and Layer 5 (FW-A05's text) |
 | L9P-F02 | ASSUMPTION TO BOUND | **RESOLVED IN THE DRAFTS**, CONDITIONAL on l8r2's C4-1 to C4-6 | round 1: the AP64500 at 5.010 A against 5 A (PS-BUSY, PS-ALLTX). Now slots 1 and 3 on the LM5176, least margins over every state +1.8732 A (5.1 V), +1.6621 A (4.9019 V), +0.5634 A (bounded start), +0.9432 A (degraded cooler) | l8r2 (C4-1 to C4-6), with board A's and board B's generator owners |
 | L9P-F03 | ASSUMPTION TO BOUND | OPEN (carried, I-03) | the device rail's LM5176 at 7.181 A DRAFTED, 7.154 A DRAWN, against 7.0957 A in PS-ALLTX at HIGH; at fb01's least load voltage 4.9019 V with every load at constant power 7.472 A (-0.376 A), and PS-TYP and PS-BUSY at HIGH 7.316 A (-0.220 A); the slot stages beside it +1.87 to +2.63 A | board A's generator owner under I-03, with the TEST-PLAN power rows |
 | L9P-F04 | PHYSICAL QUESTION | OPEN (carried, F-PR-01) | the PA rail at the PA's 113 W bound, 8.188 A against 7.0957 A. Specimen: one RA30H1317M1 at 13.8 V with the design's VGG into 50 Ohm at 144 to 146 MHz; measure the drain current at 30 W out; accept at most 7.10 A; on failure the rail limits and the PA gives less than 30 W (no damage) | the TEST-PLAN power rows, with board A's F-PR-01 and POWER-THERMAL 7.2 |

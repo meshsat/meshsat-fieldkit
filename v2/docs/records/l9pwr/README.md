@@ -17,6 +17,12 @@ drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
 
 Test: `v2/ecad/tools/tests/test_l9pwr.py`, run isolated with `env -C v2/ecad/tools/tests python3 run.py test_l9pwr test_public_hygiene`.
 
+## Round 5 (4 October 2026 evening, task T5 round 2 on `fnd/l9t5`): L9P-F01 on C-ALLTX rev 3
+
+- **L9P-F01 restated (out 10):** OPEN on the case row C-ALLTX rev 3, 15.5162 V needed at 18 A against REQ-018's 15.5 V; D-11's basis
+  (16.214 V) printed as a labelled scenario, not the case; L4-E9 round 7's 16.1 V floor, its rule's 16.4 V and FAN_OK printed as
+  withdrawn. Its action is record l9t5's A1. No other figure or finding moved. Test: `t_round5_l9pf01_is_judged_on_the_case_and_d11_is_a_labelled_scenario`.
+
 ## Round 4 (4 October 2026, task T5 on `fnd/l9t5`): C1 and the case row C-ALLTX rev 2
 
 - **C1 (CORRECTED, the last step of out 1):** PS-ALLTX carries the standby WiFi card off in every scenario, as REQ-018's acceptance
