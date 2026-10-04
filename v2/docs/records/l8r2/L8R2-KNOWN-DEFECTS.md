@@ -901,7 +901,9 @@ declared lower lowers it, and the capacity finding stays OPEN beside it.
 Composition: four orders (the round's order with Layer 9's draft and Layer 6's three; Layer 9's draft before this round's
 two; this round's two first; the round reversed) give one generator byte for byte, and each runs to its end: 1476 parts, GND
 13.30 A typical, 27.78 A peak, loads 22.113 A. Without Layer 9's draft: 1473 parts, 26.40 A. The netlist and intent check
-`check_gndret_netlist.py` reads NOT DRAWN on the committed board and DRAWN on both compositions. Eight mutations each stop the
+`check_gndret_netlist.py` reads NOT DRAWN on the committed board and DRAWN on both compositions. The same composed
+netlist is the first regenerated one this record's earlier corrections are read on: `check_l8r2_netlist.py` (board B: FANS,
+PNL, PH4) reads DRAWN on it, and record l8gnd's `check_gnd002_netlist.py` reads DRAWN (they had read fixtures until now). Eight mutations each stop the
 generator or fail the check: the old state (stops on the 21.00 A line); gndret without fandec (stops on C704); **the typed
 21.0 simply written as 30.0 (runs, and the check FAILS: the peak is not the leads' sum, `J_54V` is not named)**; `J_54V`
 dropped from the helper (FAIL); a lead's rail declared on another connector (stops); a slot allocation raised over its lead's
