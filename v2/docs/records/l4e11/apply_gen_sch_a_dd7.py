@@ -19,7 +19,7 @@ dead point (1.98 V on CELL+) sat under the 2.80 V the LM5069's internal 1 MOhm h
           return reads held AND the loop reads powered (the trigger).
   Q50,Q51 the arm: Q50 (2N7002) on DD7_T pulls Q51's (AO3401A) gate through R249 (Q51's VGS -VBAT/3, R69 from VBAT); Q51
           charges the hold node DD7_H from VBAT through R84 56R and D26 (1N4148W); R79 10k bleeds Q51's off leakage.
-  C241,R85 the hold: 1 uF 100 V X7R and 1 MOhm on DD7_H.
+  C241,R85 the hold: 1 uF 100 V X7R and 1.2 MOhm on DD7_H.
   U47     TPS37A010122DSKR on VBAT. Channel 1 (OV) reads DD7_H: RESET1 (DD7_N) asserts after CTS1's delay (C248 3.9 nF C0G:
           0.382 to 0.709 ms, Equations 5 and 6) and holds while DD7_H is over 0.79 V: at least 1.0 s after the trigger ends. The
           set delay makes the trigger last until the arm is complete, because board P's pull holds while the charge flows.
@@ -99,7 +99,7 @@ _DD7 = (
     + _P % ("Q51", "AO3401A P-FET: the hold's arm from VBAT (1 G, 2 S, 3 D)", "DD7_AG", "VBAT", "DD7_K")
     + 'r("R79", "10k 1%", "DD7_K", "GND", lcsc="C25804"); r("R84", "56R 1%", "DD7_K", "DD7_KA", fp="RS")   # R79 bleeds Q51\'s off leakage; R84 sets the arm\'s current\n'
     'part("D26", "Device", "D", "1N4148W: the hold\'s arm diode (cathode on DD7_H)", "SOD123", {"1": "DD7_H", "2": "DD7_KA"}, "C81598")\n'
-    'c("C241", "1u 100V 1210", "DD7_H", "GND", fp="C1210", lcsc="C382212"); r("R85", "1M", "DD7_H", "GND", lcsc="C22935")   # the hold: at least 1.0 s\n'
+    'c("C241", "1u 100V 1210", "DD7_H", "GND", fp="C1210", lcsc="C382212"); r("R85", "1.2M 1%", "DD7_H", "GND")   # the hold: at least 1.0 s\n'
     'ic("U47", 11, "TPS37A010122DSKR 65 V OV/UV supervisor: DD-7\'s hold (channel 1) and the release on CELL+ alive (channel 2)", "WSON10", {\n'
     ' "1": "VBAT", "2": "DD7_H", "3": "DD7_CS", "4": "DD7_N", "5": "DD7_N", "6": "NC", "7": "DD7_CTS", "8": "NC", "9": "NC", "10": "GND", "11": "GND"}, "C3685740")\n'
     'c("C248", "3.9n 50V C0G", "DD7_CTS", "GND")   # U47 CTS1: the set delay, 0.382 to 0.709 ms (SNVSBJ1E Equations 5 and 6)\n'
