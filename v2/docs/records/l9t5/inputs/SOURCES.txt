@@ -1,0 +1,11 @@
+Inputs copied into record l9t5 so that it reads them from its own tree (4 October 2026). Each is filed as received, byte for
+byte; neither is an instruction to this record beyond the coordinator's case rows, and the challenge is an advisory AI review
+that accepts and closes nothing.
+
+coordinator-cases-2026-10-04.md sha256 cb8b0961e4b1ea67664706caa0e20309a18583f0a6625e4bec1a2e099efd2505
+  the coordinator's shared case rows of 4 October 2026 (plan section 4a, PLAN-01): C-PROT rev 1, C-ALLTX rev 2 (14:50 CEST, rev 1
+  withdrawn), C-DEV rev 1, C-SHORE rev 1, C-CU rev 1; the coordinator's local working copy, received with task T5.
+
+astra-challenge-f01-1.md sha256 806c116b88d3a90fd9bdea15e9c095f131bec6f6a94ed2ff1238775166cb1bc8
+  the collaborator's advisory challenge of D-17 / L9P-F01 with L9P-F03 (job cx40-f01-challenge, run 20261004T122353Z-295848, at
+  commit 8c484b04 on fnd/l4e9s29), filed as received by the coordinator; an AI review, read-only.

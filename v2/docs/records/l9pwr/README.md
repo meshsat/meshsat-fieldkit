@@ -17,6 +17,18 @@ drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
 
 Test: `v2/ecad/tools/tests/test_l9pwr.py`, run isolated with `env -C v2/ecad/tools/tests python3 run.py test_l9pwr test_public_hygiene`.
 
+## Round 4 (4 October 2026, task T5 on `fnd/l9t5`): C1 and the case row C-ALLTX rev 2
+
+- **C1 (CORRECTED, the last step of out 1):** PS-ALLTX carries the standby WiFi card off in every scenario, as REQ-018's acceptance
+  and CONOPS 4a define the state; DRAWN and round 1's tree keep rv-pwr's state. On DRAFTED, PS-ALLTX at the pack moves from
+  174.23 / 209.89 / 292.03 W to 174.23 / 208.47 / 279.63 W; its raw HIGH row at VBAT from 276.373 W (17.4792 V) to 265.274 W (16.8626 V).
+- **Out 7b:** C-ALLTX rev 2 computed from the row's text at the VBAT the case sets: 241.039 W at VBAT, **needs 15.5162 V** at 18 A,
+  **deficit +0.292 W** against the 240.747 W allowance. The row's quoted 16.214 V is D-11's basis (out 7), printed beside it.
+- **Did not move:** L9P-F01's 16.214 V (D-11's basis), L9P-F03's 7.181 A and 7.472 A, every state but PS-ALLTX, every converter's
+  margin but slot 3's in PS-ALLTX at HIGH (3.2639 A, the standby card off). One predicate restated: PS-ALLTX joins PS-SURV below round
+  1's PLAN.
+- The uncertainty, the approaches and the corrections are record l9t5's (`v2/docs/records/l9t5/`).
+
 ## Round 3 (4 October 2026, the integration of set 29): a tool correction, what moved and what did not
 
 The script refused on set 29's tree at its read of +12V_FAN's efficiency in L4-E11's `apply_gen_sch_e_aux.py` (L4-E11's round 9

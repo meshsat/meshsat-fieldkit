@@ -1272,18 +1272,20 @@ def case_vals(cfg, cm5=None, fans_idx=2):
     return vals, rule
 
 
-def case_row(pb, F, cfg, vals, i=CASE_I, v_rest=CASE_V_REST, at="case", r_cell=None):
+def case_row(pb, F, cfg, vals, i=CASE_I, v_rest=CASE_V_REST, at="case", r_cell=None, eff_over=None, r_extra=0.0):
     """the case's power at VBAT with each pack-fed converter at the VBAT the case sets (VBAT = P / I at the pack current i,
     solved by fixed point) or, at="rv", at rv-pwr's HIGH scenario voltage 16.8 V; the rest voltage needed at i; the allowance at
-    v_rest and i; the deficit and its parts (load pins, conversion, path, cells)."""
+    v_rest and i; the deficit and its parts (load pins, conversion, path, cells). eff_over replaces converters' efficiencies and
+    r_extra adds path resistance, for the sensitivities of record l9t5."""
     rc = pb.R_CELL["hi"] if r_cell is None else r_cell
+    r_path = cfg.r_path + r_extra
     r_cells = F["series"] * rc / 3.0
     if at == "rv":
-        ev, v = evaluate(cfg, vals, "hi"), pb.VIN_OF["hi"]
+        ev, v = evaluate(cfg, vals, "hi", eff_over=eff_over), pb.VIN_OF["hi"]
     else:
         v = 14.4
         for _ in range(200):
-            ev = evaluate(cfg, vals, "hi", vpack=v)
+            ev = evaluate(cfg, vals, "hi", vpack=v, eff_over=eff_over)
             v2 = ev["p_vbat"] / i
             if abs(v2 - v) < 1e-12:
                 break
@@ -1291,10 +1293,10 @@ def case_row(pb, F, cfg, vals, i=CASE_I, v_rest=CASE_V_REST, at="case", r_cell=N
         else:
             die("the case row's VBAT did not settle")
     p = ev["p_vbat"]
-    allow = i * (v_rest - i * (cfg.r_path + r_cells))
+    allow = i * (v_rest - i * (r_path + r_cells))
     conv = {n: x[0] - x[1] for n, x in ev["nodes"].items() if n != "VBAT" and x[0] > 0}
-    return {"p": p, "load": ev["p_load"], "conv": p - ev["p_load"], "vbat": v, "i": i, "r_path": cfg.r_path, "r_cells": r_cells,
-            "need": p / i + i * (cfg.r_path + r_cells), "allow": allow, "deficit": p - allow, "path_w": i * i * cfg.r_path,
+    return {"p": p, "load": ev["p_load"], "conv": p - ev["p_load"], "vbat": v, "i": i, "r_path": r_path, "r_cells": r_cells,
+            "need": p / i + i * (r_path + r_cells), "allow": allow, "deficit": p - allow, "path_w": i * i * r_path,
             "cell_w": i * i * r_cells, "emf_w": i * v_rest, "nodes": ev["nodes"], "conv_by": conv, "r_cell": rc}
 
 
