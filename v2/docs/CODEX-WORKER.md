@@ -51,7 +51,8 @@ integrated revision.
 
 ## 5. Limits
 
-- One coordinator and at most two active workers across both model families, reviewers included. No worker starts
+- One coordinator and at most three active workers across both model families, reviewers included (the owner's execution
+  constitution of 4 October 2026, `v2/docs/EXECUTION-CONSTITUTION.md` section 7; two until then). No worker starts
   another agent or calls another model.
 - A time limit per job (five minutes for a fixture call, twenty for a bounded engineering job); at the limit the
   launcher ends the child's own process group, keeps what was written and records a timeout.
@@ -98,7 +99,7 @@ automatic fallback to a paid API.
   next action (a correction or the next evidence to gather), its measurable closure criterion, and whether an actual
   owner decision is required and which. A result without a next action or a closure criterion, or one that says an
   owner decision is required without naming it, is an invalid result.
-- **Bounds.** At most two active workers across both model families, one author per worktree, the per-job time limit
+- **Bounds.** At most three active workers across both model families (two until 4 October 2026), one author per worktree, the per-job time limit
   of section 5; one assessment and one targeted follow-up per unchanged issue, enforced by the launcher's issue ledger;
   independent tasks continue while an issue stays open.
 - **Reporting.** The coordinator reports accepted engineering outcomes, the remaining genuine owner decisions, the
