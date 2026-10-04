@@ -640,6 +640,19 @@ def dd5_budget(page, W, R):
     # TI's guideline window against the kit's currents
     D["win"] = [(i, 0.020 / i, 0.050 / i) for i in (10.0, 18.0, i_lim)]
     D["p_window_fet"] = i_lim ** 2 * (0.020 / 10.0) * D["k_hot"]
+    # round 6 (the check V2's V2-m8): the board's whole loss at the held current, from the drawn values, against the area the
+    # makers' test boards assume: the sheet's 50 C/W is one device on 1 in2 of 2 oz on a 1.5 in x 1.5 in board (SLPS471D 5.2 notes)
+    need(cs, r"mounted on a 1 inch2 \(6\.45 cm2\), 2 oz\. \(0\.071 mm thick\) Cu pad on a 1\.5 inches \u00d7 1\.5 inches", "CSD17570Q5B: the RthJA test board")
+    gp = open(os.path.join(TOOLS, "gen_pcb_p.py"), encoding="utf-8").read()
+    m = need(gp, r"^BOARD_L, BOARD_W, BOARD_R = ([0-9.]+), ([0-9.]+), ", "board P's outline")
+    D["board_in2"] = float(m.group(1)) * float(m.group(2)) / 645.16
+    brk = open(MINE["p"], encoding="utf-8").read()
+    rs = [float(need(brk, r'r\("%s", "([0-9.]+)m 1%% 2512 \(breaker sense' % ref, "the breaker draft's %s" % ref).group(1)) * 1e-3 for ref in ("R101", "R102")]
+    v_rs = i_lim * rs[0] * rs[1] / (rs[0] + rs[1])
+    D["joint"] = (("Q109", rows[2]["p109"]), ("Q2", rows[2]["p2"]), ("Q101 and Q102", 2 * (i_lim / 2.0) ** 2 * R["rds_max"] * CSD_RDS_150),
+                  ("R10", i_lim ** 2 * R["r10"]), ("R101", v_rs ** 2 / rs[0]), ("R102", v_rs ** 2 / rs[1]))
+    D["p_joint"] = sum(p_ for _n, p_ in D["joint"])
+    D["pads_in2"] = 3 * 1.5 * 1.5                                    # the SW pour's test board and IF-2's two for the breaker FETs
     D["ok"] = (all(r_["tj_one"] <= D["tj_max"] for r_ in rows) and all(r_["p109"] <= D["p_pad"] for r_ in rows)
                and all(r_["p_before"] > D["p_pad"] for r_ in rows)
                and D["t_drv_en"] < D["hold_min"] and D["vcap_on_min"] - D["droop"] > D["uvlof_max"]
@@ -665,6 +678,27 @@ def typ_temp(ratio):
         if r0 <= ratio <= r1:
             return t0 + (t1 - t0) * math.log(ratio / r0) / math.log(r1 / r0)
     refuse("the typical curve does not reach R/R25 %.3f in its read span" % ratio)
+
+
+def stale_copies(l4dir):
+    """The check V2's V2-B2, as a guard: this record's copies of task L4-E11 against a tree's records/l4e11/. It returns the copies
+    that are not that tree's: a copied section that is not in the tree's page word for word, a copied draft whose bytes differ.
+    A tree whose L4-E11 page predates its round 10 (no section 20c: this record's own base, main at 64cd25ee) holds nothing the
+    copies could be behind, and returns nothing."""
+    page = os.path.join(l4dir, "L4E11-SOURCE-ONLY-AND-ENTRY.md")
+    text = open(page, encoding="utf-8").read() if os.path.isfile(page) else ""
+    if "\n### 20c. " not in text:
+        return []
+    bad = []
+    for key, head in L4E11_SECTIONS:
+        copy = open(os.path.join(HERE, INPUT_FILES[key]), encoding="utf-8").read()
+        if not copy.startswith(head) or copy not in text:
+            bad.append("%s is not the tree's section %s" % (INPUT_FILES[key], head.strip()))
+    for copy_rel, name in L4E11_DRAFTS:
+        t = os.path.join(l4dir, name)
+        if not os.path.isfile(t) or open(t, "rb").read() != open(os.path.join(HERE, copy_rel), "rb").read():
+            bad.append("%s is not the tree's %s" % (copy_rel, name))
+    return bad
 
 
 def tdk_window(k_low, k_trip, k_notrip):
@@ -812,6 +846,7 @@ def round5(texts, W, R):
     if abs(F["bleed_hot_re"] - F["bleed_hot"]) > 0.002 or abs(F["i_timing_re"] / F["i_timing"] - 1.0) > 0.005 or abs(F["i_static_re"] / F["i_static"] - 1.0) > 0.005:
         refuse("L4-E11's bleed is not reproduced from its printed inputs: %.4f s against %.3f s, %.1f uA against %.1f uA, %.1f uA against %.1f uA" % (
             F["bleed_hot_re"], F["bleed_hot"], F["i_timing_re"] * 1e6, F["i_timing"] * 1e6, F["i_static_re"] * 1e6, F["i_static"] * 1e6))
+    F["bleed_fn"] = bleed
     F["f06_static"] = F["pair_case"] < F["room_static"][V_CLAMP]
     F["f06_timing"] = F["pair_case"] < F["room_timing"][W["vmax"]]
     F["f06_holds"] = F["f06_static"] and F["f06_timing"] and F["idss_v"] >= V_CLAMP
@@ -1262,6 +1297,13 @@ def main():
         w("     %-30s Q109 %.2f mV, %.3f W (was %.2f W); Q2 %.3f W; TJ %.1f C on its own pad, %.1f C with both through one pad, against %.0f C\n" % (
             lab + ":", r_["vak"] * 1e3, r_["p109"], r_["p_before"], r_["p2"], r_["tj_own"], r_["tj_one"], D["tj_max"]))
     w("     the installed path this asks: %.1f K/W or better for the hottest junction with both losses counted (E-8, restated with Q109)\n" % D["rth_need"])
+    w("     THE JOINT CASE (the check V2's V2-m8): at %.2f A held the board dissipates %.2f W in all (%s);\n" % (
+        R["i_lim"], D["p_joint"], ", ".join("%s %.3f" % x for x in D["joint"])))
+    w("       the sheet's %.0f C/W is one device on 1 in2 of 2 oz on a 1.5 in x 1.5 in board, and IF-2 takes two more such pads for the breaker FETs:\n" % D["rja"])
+    w("       three test boards are %.2f in2, board P is %.2f in2 a face, and it carries R10 and the sense pair too: the pads' figures cannot all be the\n" % (
+        D["pads_in2"], D["board_in2"]))
+    w("       sheet's at once without another heat path (the leads, the bottom face); E-8's specimen carries the current through every part and so\n")
+    w("       measures the joint case\n")
     w("     on the typical basis (RDS(on) %.2f mOhm x%.2f, the regulation's %.0f mV, %.0f C/W): %.1f C at %.2f A held\n" % (
         D["rds_typ"] * 1e3, CSD17570_RDS_150, D["vreg"][1] * 1e3, D["rja_typ"], D["tj_typ"], R["i_lim"]))
     w("     at the breaker's largest threshold %.2f A until it clears (%.3f ms): %.2f W in Q109, its junction at most %.1f K over its case (RthJC %.1f C/W)\n" % (
