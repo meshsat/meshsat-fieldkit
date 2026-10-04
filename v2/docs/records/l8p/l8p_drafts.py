@@ -131,7 +131,7 @@ INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9st
                "l4e11_22b": "inputs/l4e11-section22b-ac72e730.md", "l4e11_22c": "inputs/l4e11-section22c-ac72e730.md",
                "l4e11_22g": "inputs/l4e11-section22g-ac72e730.md", "l4e11_22h": "inputs/l4e11-section22h-ac72e730.md"}
 # the copies of L4-E11's page (INPUT_FILES key, its section heading's start) and of its drafts (the copy, records/l4e11's file):
-# test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 12 or later (V2-B2: a copy a round behind)
+# test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (V2-B2: a copy a round behind)
 L4E11_SECTIONS = (("l4e11c", "### 20c. "), ("l4e11d", "### 20d. "), ("l4e11e", "### 20e. "), ("l4e11_22b", "### 22b. "),
                   ("l4e11_22c", "### 22c. "), ("l4e11_22g", "### 22g. "), ("l4e11_22h", "### 22h. "))
 L4E11_DRAFTS = (("inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py", "apply_gen_sch_a_charger.py"),

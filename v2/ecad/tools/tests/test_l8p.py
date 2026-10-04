@@ -706,3 +706,30 @@ def t_round6_e8_measures_the_joint_case_and_e16_reads_u105():
     assert "U105's package at most 125 C at 23.93 A held" in e16 and "TJ -40 to 125 C only (SNOSD17G 6.5)" in e16
     lm = m.pdftext(m.LM74700_SHEET)
     assert re.search(r"6\.5 Electrical Characteristics\s*\nTJ = –40°C to \+125°C", lm), "SNOSD17G 6.5's temperature range"
+
+
+def t_round6_the_l4e11_pin_draft_moves_one_pin_and_only_behind_the_draft():
+    """Round 6 changed the PTC draft's bytes, and L4-E11's test pins them (L8P3_PTC). apply_test_l4e11_ptc_pin.py, a draft for the
+    integrator, moves that one pin: it carries the sha256 the tree's PTC draft has now, checks before it writes, applies once,
+    refuses a second time, and refuses a test_l4e11.py that does not carry the old pin (this tree's own, main's)."""
+    m = _M()
+    s = os.path.join(REC, "apply_test_l4e11_ptc_pin.py")
+    pin = _mod("l8p_pin_under_test", "apply_test_l4e11_ptc_pin.py")
+    assert _sha(m.MINE["a"]) == pin.NEW and pin.OLD != pin.NEW, "the pin draft's NEW is not the tree's PTC draft: take it again"
+    tree_test = os.path.join(TESTS, "test_l4e11.py")
+    before = _sha(tree_test) if os.path.isfile(tree_test) else None
+    with tempfile.TemporaryDirectory() as d:
+        t = os.path.join(d, "test_l4e11.py")
+        body = "import os\n" + pin.LINE % pin.OLD + "\nX = 1\n"
+        open(t, "w", encoding="utf-8").write(body)
+        r = _run([s, t]); assert r.returncode == 0 and b"CHECK OK" in r.stdout and open(t, encoding="utf-8").read() == body, r.stderr.decode()[-300:]
+        r = _run([s, t, "--write"]); assert r.returncode == 0 and b"WRITTEN" in r.stdout, r.stderr.decode()[-300:]
+        assert open(t, encoding="utf-8").read() == body.replace(pin.OLD, pin.NEW)
+        assert _run([s, t, "--write"]).returncode == 3, "a second application was not refused"
+        open(t, "w", encoding="utf-8").write("import os\nX = 1\n")
+        assert _run([s, t, "--write"]).returncode == 3 and open(t, encoding="utf-8").read() == "import os\nX = 1\n", "a file without the pin was written"
+    if before is not None:
+        text = open(tree_test, encoding="utf-8").read()
+        if pin.LINE % pin.OLD not in text and pin.LINE % pin.NEW not in text:
+            assert _run([s]).returncode == 3, "a test_l4e11.py without the pin was not refused"
+        assert _sha(tree_test) == before, "the pin draft wrote into the tree"
