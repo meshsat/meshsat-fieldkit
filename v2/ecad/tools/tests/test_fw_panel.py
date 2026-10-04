@@ -490,10 +490,12 @@ def t_contract_f14_one_slot_fault_rule():
     rule = re.search(r"at (\d+) s without an edge, counted from the later of its rail coming up and its last edge, "
                      r"power-cycle it once \(SLOT_EN low (\d+) s\), its one retry; at the next such (\d+) s drop SLOT_EN "
                      r"and leave it off until the operator acts", row)
-    keep = ("keep the spent retry and the left-off state with the wipe-pending record across a watchdog, RUN or SWD reset, "
-            "cleared only by a power-on reset")
+    # the row as Layer 5's F-15 follow-up words it (3758328f): kept beside the wipe record, cleared only on a power-on reset
+    keep = ("keep the spent retry and the left-off state beside the wipe-pending record",
+            "across a watchdog, RUN or SWD reset; clear them only on a power-on reset",
+            "read as CHIP_RESET HAD_POR set and the watchdog's REASON zero")
     rearm = "each act re-arming the retry" in row
-    assert lost and rule and keep in row and rearm, (
+    assert lost and rule and all(k in row for k in keep) and rearm, (
         "FW-C05's slot-fault rule moved: re-read F-14 (record l5r4) before changing slots_policy")
     lost_ms, flat_ms, off_ms, next_ms = int(lost.group(1)) * 1000, int(rule.group(1)) * 1000, int(rule.group(2)) * 1000, \
         int(rule.group(3)) * 1000
