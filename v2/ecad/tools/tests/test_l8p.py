@@ -1,14 +1,17 @@
-"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026; v2/docs/records/l8p/): W4DP-F2's breaker drawn as release-guarded drafts for
-board P (an LM5069-2 breaker and the make-last enable loop's inverters and RC hold), board E (the loop through J_SMB to the dock)
-and board A (the loop's thermal guard RT1), from record l9stk section 15 (fnd/l9stk at 2c8b29fb).
+"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 and 2; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
+release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, and
+the restart inhibit C-1c gated by PGD), board E (the loop through J_SMB to the dock) and board A (the loop's thermal guard RT1), from
+record l9stk section 15 (fnd/l9stk at 0d72880b).
 
 The predicates: the committed .out is what the script prints; each draft checks, applies once on a scratch copy, refuses twice and
 refuses the tree's own generator; each board composes in L4-E9's change-list order with this record's draft in its place, first
-and last; the designators are this record's sets and disjoint from every other draft's; every value is found in record l9stk's
-copied text and the copies are the bytes SOURCES.txt pins; the netlist check reads NOT DRAWN on the committed netlists, DRAWN on
-the netlists regenerated from the patched generators (the loop across the three boards included) and FAIL on a mutated one; the
-page carries no em or en dash and no claim word, and names the interface rows owed. No KiCad: generator text, the generators'
-own part tables and netlist text, on scratch copies; the tree is never written."""
+and last (board E with L4-E7's backstop draft of fnd/l4e7r6, which closes L8P-F01); the designators are this record's sets and
+disjoint from every other draft's; every value is found in record l9stk's copied text and the copies are the bytes SOURCES.txt
+pins; C-1c's budget closes on figures read from TI's held OPA187 sheet and Murata's NTC sheet; the netlist check reads NOT DRAWN
+on the committed netlists, DRAWN on the netlists regenerated from the patched generators (the loop across the three boards and
+the inhibit included) and FAIL on mutated ones; the page carries no em or en dash and no claim word, and names the conditions
+and the interface rows owed. No KiCad: generator text, the generators' own part tables and netlist text, on scratch copies; the
+tree is never written."""
 import hashlib
 import importlib.util
 import io
@@ -63,6 +66,7 @@ def _run(args):
 
 def _need_inputs():
     m = _M()
+    need(m.OPA187, "TI's held OPA187 sheet (python3 v2/docs/records/l8p/fetch_held_back.py)")
     for b in "pea":
         need(GEN[b], "board %s's generator" % b.upper()); need(m.NET[b], "board %s's committed netlist" % b.upper())
         for r, n in m.ORDER[b]:
@@ -78,15 +82,19 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "l8p_drafts.out is not what l8p_drafts.py prints; regenerate it with _bin/regen_out.py"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("record l9stk's copies equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+    for s in ("record l9stk's and L4-E7's copies equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+              "+-1.95 K left: consistent", "the split closes", "is ASSUMED from the product search sheet", "THE LOCKOUT AT THE ALLOW EDGE",
+              "E-10 gains: VDS under 1.62 V during current-limit excursions", "CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a",
+              "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
               "board P, this record's against every other draft's: DISJOINT", "board E, this record's against every other draft's: DISJOINT",
               "board A, this record's against every other draft's: DISJOINT", "record l8p's breaker and enable loop on the netlists: NOT DRAWN",
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R248, C247)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E"):
         assert s in t, s
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 2, "the alone and the composed readings"
-    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 2, "the two mutations"
-    assert "REFUSED" not in t.split("4. COMPOSITION")[1].split("5. DESIGNATORS")[0], "a composition step refused"
+    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 3, "the three mutations"
+    assert "REFUSED" not in t.split("5. COMPOSITION")[1].split("6. DESIGNATORS")[0], "a composition step refused"
+    assert "L8P-F01" not in t.split("with scratch stand-ins for ")[1].split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
@@ -119,8 +127,8 @@ def t_each_board_composes_in_l4e9s_order_in_its_place_first_and_last():
 
 def t_the_designators_are_this_records_sets_and_disjoint():
     m = _need_inputs()
-    want = {"p": {"U101", "Q101", "Q102", "Q103", "Q104", "D101"} | {"R%d" % k for k in range(101, 110)} | {"C%d" % k for k in range(101, 106)}
-            | {"TP%d" % k for k in range(101, 105)}, "e": set(), "a": {"RT1"}}
+    want = {"p": {"U101", "U102", "D101", "D102", "RT101"} | {"Q%d" % k for k in range(101, 107)} | {"R%d" % k for k in range(101, 118)}
+            | {"C%d" % k for k in range(101, 107)} | {"TP%d" % k for k in range(101, 107)}, "e": set(), "a": {"RT1"}}
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
             seq = [m.draft(r, n, b) for r, n in m.ORDER[b]]
@@ -145,10 +153,12 @@ def t_every_value_is_the_records_and_the_copies_are_pinned():
     texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
     drafts = {b: open(m.MINE[b], encoding="utf-8").read() for b in "pea"}
     for b, ref, pre, src, pat, key in chk.VALUES:
-        assert re.search(pat, texts[key]), "l9stk no longer reads %s's value (%s)" % (ref, src)
+        assert re.search(chk.phrase_rx(pat), texts[key]), "l9stk no longer reads %s's value (%s)" % (ref, src)
         call = re.search(r'(?:ic|r|c|part|pfet5|nfet)\(\\?"%s\\?", ' % re.escape(ref), drafts[b])
         assert call, "%s is not drawn in the board %s draft" % (ref, b.upper())
-    assert "R_G = 1e6" in texts["constants"] and "R_E1, R_E2 = 10e3, 22e3" in texts["constants"]
+    assert "R_G = 1e6" in texts["constants"] and "R_E1, R_E2 = 10e3, 22e3" in texts["constants"] and "R_BRIDGE = 150e3" in texts["constants"]
+    assert m.R_BRIDGE == 150e3 and 'r("R110", "150k 0.1% 25ppm (the NTC bridge)", "BRK_VIN", "INH_NTC")' in drafts["p"]
+    assert '"LM5069MM-1 circuit breaker' in drafts["p"] and "LM5069MM-2" not in drafts["p"], "U101 is not the -1"
 
 
 def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
@@ -172,6 +182,11 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
         open(os.path.join(d, "mut_p.net"), "w", encoding="utf-8").write(raw)
         kit, v = chk.run({"p": os.path.join(d, "mut_p.net")}, ROOT, io.StringIO())
         assert kit == "FAIL", "the input clamp left BRK_VIN and the check did not fail"
+        for swap, what in (([("Q106", "1"), ("R117", "2")], "Q106's gate left PGD"), ([("Q104", "3"), ("R105", "1")], "Q104 no longer pulls UVLO directly"),
+                           ([("U102", "3"), ("U102", "4")], "the comparator's inputs exchanged")):
+            bad = m.mutate(paths["p"], d, "mut_%s" % swap[0][0], [tuple(swap)])
+            buf = io.StringIO(); kit, v = chk.run({"p": bad}, ROOT, buf)
+            assert kit == "FAIL", "%s and the check did not fail: %s" % (what, buf.getvalue())
 
 
 def t_the_unpatched_generators_reproduce_the_committed_netlists():
@@ -187,16 +202,37 @@ def t_the_unpatched_generators_reproduce_the_committed_netlists():
             assert all(a["comps"][r]["footprint"] == k["comps"][r]["footprint"] for r in a["comps"]), b
 
 
+def t_the_restart_inhibits_budget_closes_on_read_figures():
+    """C-1c (DD-8): the window is the record's, the comparator's figures are read from TI's held sheet and the NTC's from Murata's,
+    the split leaves the checker's 0.9 K for the gradient on both sides, the comparator under 0.47 K, the hysteresis under 0.5 K,
+    the drawn reference within 0.05 K of the record's trip, the bridge current under the NTC's rating."""
+    m = _need_inputs()
+    page = open(os.path.join(REC, m.INPUT_FILES["page"]), encoding="utf-8").read()
+    B = m.budget(page)
+    assert (B["allow"], B["block"], B["trip"], B["half"], B["r_trip"]) == (77.25, 83.20, 80.22, 2.97, 1653.0), B
+    assert B["window_ok"] and B["closes"], B
+    read = {"vos": 10e-6, "drift": 0.015e-6, "ios": 14.5e-9, "ib": 7.5e-9, "psrr": 1e-6}
+    assert all(abs(B[k] - v) <= 1e-6 * v for k, v in read.items()), ("the OPA187's figures", {k: B[k] for k in read})
+    assert B["vs"][1] >= 29.2 and B["vs_abs"] >= 36, "the OPA187's supply against BRK_VIN's clamp"
+    assert B["k_op"] <= 0.47 and B["hyst_max"] <= 0.5 and 0 < B["hyst_nom"] <= B["hyst_max"], B
+    assert B["grad_allow"] >= 0.9 and B["grad_block"] >= 0.9, B
+    assert abs(B["k_nominal"]) <= 0.05 and B["i_bridge"] <= B["imax"], B
+    assert abs(B["lockout"] - 1.0) < 1e-9, "the allow edge is the inside air plus 1 K"
+
+
 def t_the_page_is_clean_and_names_the_rows_owed():
     page = open(need(PAGE, "the l8p record page"), encoding="utf-8").read()
     for p in [PAGE, os.path.join(REC, "README.md")] + [os.path.join(REC, f) for f in os.listdir(REC) if f.endswith(".py")]:
         t = open(p, encoding="utf-8").read()
-        assert "—" not in t and "–" not in t, "an em or en dash in %s" % os.path.basename(p)
+        assert "\u2014" not in t and "\u2013" not in t, "an em or en dash in %s" % os.path.basename(p)
     assert not CLAIM.search(page), CLAIM.search(page).group(0)
     for s in ("**Status: DRAFTED, not applied.**", "**The fifth to seventh J_SMB contacts:**", "**The dock enable contacts:**",
               "**PACK_P live only while docked:**", "**The make-last contact's 1 mm (C1):**", "**The mating order C1, both ways:**",
-              "**The third battery FET's designator**", "**IF-1:**", "**IF-2:**", "L8P-F01", "L8P-F02", "L8P-F03"):
+              "**The third battery FET's designator**", "**IF-1, critical to the service under the -1:**", "**IF-2:**", "L8P-F01", "L8P-F02", "L8P-F03",
+              "**The NTC's tolerance at 80 C is ASSUMED.**", "**E-12b, a commissioning check like E-12**", "**E-10's line gains:**",
+              "**The lockout at the allow edge.**", "**The NTC is bonded to the pad.**", "**DD-7, the input-return pulse:**", "**IF-7:**",
+              "**CLOSED** by L4-E7's `fnd/l4e7r6` at `914a2f5a`", "**Order codes owed:**"):
         assert s in page, s
-    for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R106", "R107", "Q103", "Q104",
-                "R105", "R108, R109", "RT1 (board A)"):
+    for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R105", "D102", "R106", "R107", "Q103",
+                "Q104", "R108, R109", "RT101", "R110", "RT1 (board A)"):
         assert "| %s" % ref in page, "the value table omits %s" % ref
