@@ -1,0 +1,1033 @@
+"""Layer 9 item 9.12, record l9stk (MESHSAT-1357, 3 October 2026; v2/docs/records/l9stk/): one stackup decision per board,
+held as predicates on what l9stk_stackups.py computes and on the decisions apply_decisions_l9stk.py would write.
+
+The predicates: the committed .out is what the script prints and every pinned input is present at the sha256 the output
+names; every predicate the script states holds (the outlines and the fabricator's size classes, the pack path's widths, the
+bounds on board E's cross-section and on the inner planes, the 2 oz floors, the eight-layer pair geometry); there is one
+decision per board, A, B, C, D, E, P and E5, each naming a measurement, a derived bound or the words NO MEASUREMENT HELD,
+each on the stack the script computes for its board, each the session's with its way back naming a script; the apply
+script parses, appends seven entries to a temporary copy of the register with nothing else moved, and refuses a second run;
+the price readings are dated excerpts with their URLs, never a vendor's page; the page carries the output's figures and
+every board's price as NOT READ where it was not read; the record's files carry no long dash and no claim word; the README
+proposes the LAYER-STATUS row. The copper question (4 October 2026, the page's section 14): l9stk_copper.out is what
+l9stk_copper.py prints from inputs pinned at their sha256; its widths and rises are decision 35's model re-solved here; the
+faces' split is checked on a resistor ladder solved here; the page carries its figures and files its findings; the energy
+chain draft refuses before the decisions, applies once on a copy, replaces record l8r2's texts to the same bytes and leaves
+energy_chain.check's counts unchanged; boards A and E's decisions carry the derived widths. These are software predicates
+on the record's text and arithmetic: they establish no property of any board, stack or price.
+"""
+import ast
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
+REC = os.path.join(ROOT, "v2", "docs", "records", "l9stk")
+SCRIPT = os.path.join(REC, "l9stk_stackups.py")
+OUT = os.path.join(REC, "l9stk_stackups.out")
+APPLY = os.path.join(REC, "apply_decisions_l9stk.py")
+PAGE = os.path.join(REC, "L9-STACKUPS.md")
+README = os.path.join(REC, "README.md")
+PRICES = os.path.join(REC, "inputs", "price-readings-2026-10-03.json")
+REGISTER = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_decisions.yaml")
+sys.dont_write_bytecode = True
+sys.path.insert(0, TOOLS)
+from harness import need, Skip  # noqa: E402
+
+_C = {}
+BOARDS = ["a", "b", "c", "d", "e", "p", "e5"]
+LABELS = ("MEASURED", "DERIVED BOUND", "NO MEASUREMENT HELD")
+DASHES = (chr(0x2013), chr(0x2014))   # the en and em dash, written by code point so this file carries neither
+
+
+def _load(path, name):
+    sp = importlib.util.spec_from_file_location(name, path)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def _M():
+    if "M" not in _C:
+        need(SCRIPT, "the l9stk record")
+        m = _load(SCRIPT, "l9stk_stackups_under_test")
+        for rel in m.PINS.values():
+            need(os.path.join(ROOT, rel), "a pinned input of the l9stk record")
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l9stk_stackups.py refused (exit %s)" % e.code)
+        _C.update(M=m, R=R, text=m.render(R))
+    return _C["M"]
+
+
+def _A():
+    if "A" not in _C:
+        need(APPLY, "the l9stk apply script")
+        if shutil.which("git") is None or subprocess.run(["git", "-C", REC, "rev-parse"], capture_output=True).returncode:
+            raise Skip("the apply script locates the register through git")
+        try:
+            import yaml  # noqa: F401
+        except ImportError:
+            raise Skip("PyYAML is needed")
+        _C["A"] = _load(APPLY, "apply_decisions_l9stk_under_test")
+    return _C["A"]
+
+
+def t_output_reproduced_byte_for_byte():
+    _M()
+    need(OUT, "the committed output")
+    assert _C["text"] == open(OUT, encoding="utf-8").read(), "l9stk_stackups.out is not what the script prints"
+
+
+def t_every_input_is_pinned_and_present():
+    m = _M()
+    for key, rel in m.PINS.items():
+        p = os.path.join(ROOT, rel)
+        sha = hashlib.sha256(open(p, "rb").read()).hexdigest()
+        assert ("%s  sha256 %s" % (rel, sha[:16])) in _C["text"], "%s is not pinned at its current sha256" % rel
+
+
+def t_every_predicate_holds():
+    _M()
+    P = _C["R"]["pred"]
+    assert len(P) >= 15, "the script states fewer predicates than the record relies on"
+    bad = [k for k, v in P.items() if not v]
+    assert not bad, "false: %s" % "; ".join(bad)
+    for must in ("the pack path needs 23.91 mm on one 1 oz face and 11.95 mm on one 2 oz face",
+                 "board E's listed conductors side by side at 1 oz on one face exceed the strip",
+                 "on eight layers one width per class meets its target within 2 ohm on outer and inner layers",
+                 "no price reading prints a figure at any board's outline"):
+        assert must in P, "the predicate %r is gone" % must
+
+
+def t_the_outlines_are_the_board_files():
+    _M()
+    O = _C["R"]["outline"]
+    assert sorted(O) == sorted(BOARDS)
+    want = {"a": (240.0, 160.0), "b": (330.0, 200.0), "c": (344.0, 228.0), "d": (100.0, 80.0), "e": (267.0, 68.0),
+            "p": (70.0, 44.0), "e5": (43.0, 26.0)}
+    for b, wh in want.items():
+        assert (O[b]["w"], O[b]["h"]) == wh, "board %s's outline reads %s x %s" % (b, O[b]["w"], O[b]["h"])
+        assert abs(O[b]["order_m2"] - wh[0] * wh[1] * 5 / 1e6) < 1e-4, "the order area is not five boards"
+
+
+def _decisions():
+    A = _A()
+    return A, A.DECISIONS
+
+
+def t_one_decision_per_board_each_names_a_measurement():
+    A, D = _decisions()
+    assert [d["board"] for d in D] == BOARDS, "not one decision per board in the order A, B, C, D, E, P, E5"
+    for d in D:
+        txt = d["measurement"]
+        assert any(l in txt for l in LABELS), "board %s names no measurement and does not say none is held" % d["board"]
+        assert any(l in d["measurement_kind"] for l in LABELS)
+        for l in LABELS:
+            if l in d["measurement_kind"]:
+                assert l in txt, "board %s's kind says %s and its text does not" % (d["board"], l)
+    held = {d["board"]: d["measurement"] for d in D}
+    for b in ("b", "d", "e5"):    # no route of the alternative (B at eight, D at two) and nothing to route (E5)
+        assert "NO MEASUREMENT HELD" in held[b], "board %s must say what is not held" % b
+
+
+def t_each_decision_is_the_sessions_on_the_computed_stack():
+    m = _M()
+    A, D = _decisions()
+    for d in D:
+        b = d["board"]
+        row = m.STACK[b][0]
+        assert row.upper() in (d["title"] + " " + d["outcome"]).upper(), "board %s's decision does not name %s" % (b, row)
+        assert ".py" in d["reversed_by"] and len(d["reversed_by"]) > 60
+        assert len(d["authority_why"]) > 200 and "26 September 2026" in d["authority_why"]
+        assert d["mark"] == "(L9STK %s)" % b.upper()
+    owner = {"c": "decision 27", "p": "decision 28", "e5": "ruling 7", "b": "decision 43"}
+    for d in D:
+        if d["board"] in owner:
+            assert owner[d["board"]] in d["authority_why"] or owner[d["board"]] in d["title"], \
+                "board %s's decision does not name the owner's ruling it builds on" % d["board"]
+
+
+def _marked(decisions):
+    """The entries whose TITLE ends with one of this record's marks (a text field may name another mark, as A's and E's name
+    the open decision)."""
+    return [x for x in decisions if re.search(r"\(L9STK (A|B|C|D|E|P|E5|CU)\)$", str(x.get("title", "")).strip())]
+
+
+def t_the_apply_script_checks_by_default_appends_eight_and_refuses_a_second_run():
+    ast.parse(open(APPLY, encoding="utf-8").read())
+    A, D = _decisions()
+    import yaml
+    real = yaml.safe_load(open(REGISTER, encoding="utf-8").read())["decisions"]
+    applied = _marked(real)
+    tmp = tempfile.mkdtemp(prefix="l9stk-")
+    try:
+        copy = os.path.join(tmp, "pcb_decisions.yaml")
+        shutil.copyfile(REGISTER, copy)
+        before = open(copy, encoding="utf-8").read()
+        r0 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy], capture_output=True, text=True)
+        assert open(copy, encoding="utf-8").read() == before, "a run without --write wrote the register"
+        r1 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy, "--write"], capture_output=True, text=True)
+        if applied:
+            assert len(applied) == 8, "the register carries %d of the eight marks" % len(applied)
+            assert r1.returncode == 2 and "second run" in r1.stdout, "a run on an applied register was not refused"
+            return
+        assert r0.returncode == 0 and "CHECK ONLY" in r0.stdout, r0.stdout + r0.stderr
+        assert r1.returncode == 0, r1.stdout + r1.stderr
+        after = yaml.safe_load(open(copy, encoding="utf-8").read())["decisions"]
+        assert after[:len(real)] == real, "an existing decision moved"
+        new = after[len(real):]
+        n0 = max(int(x["n"]) for x in real) + 1
+        assert len(new) == 8 and [e["n"] for e in new] == list(range(n0, n0 + 8))
+        for e, d in zip(new[:7], D):
+            assert e["authority"] == "SESSION" and e["status"] == "ruled" and e["blocks"] == {}
+            assert e["measurement"] == d["measurement"] and str(e["title"]).endswith(d["mark"])
+            assert str(e.get("ruled_on")) == "2026-10-03"
+        cu = new[7]
+        assert cu["status"] == "open" and cu["authority"] == "OWNER" and str(cu["title"]).endswith("(L9STK CU)")
+        assert cu["ask"] and cu["holds_nothing_today"] and cu["blocks"] == {}
+        r2 = subprocess.run([sys.executable, "-B", APPLY, "--registry", copy, "--write"], capture_output=True, text=True)
+        assert r2.returncode == 2 and "second run" in r2.stdout, "a second run was not refused"
+        assert len(_marked(yaml.safe_load(open(copy, encoding="utf-8").read())["decisions"])) == 8
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def t_the_price_readings_are_dated_excerpts():
+    need(PRICES, "the price readings")
+    P = json.load(open(PRICES, encoding="utf-8"))
+    assert P["read_on"] == "2026-10-03" and P["not_read"]
+    ids = set()
+    for r in P["readings"]:
+        assert r["url"].startswith("https://") and ("jlcpcb.com" in r["url"] or "nextpcb.com" in r["url"])
+        assert r["read_local"].startswith("2026-10-03 ") and re.match(r"[0-9a-f]{16}$", r["page_sha256_16"])
+        assert r["excerpts"] and all(10 < len(x) < 700 for x in r["excerpts"]), "%s is not an excerpt" % r["id"]
+        assert r["figures"], "%s carries no figure" % r["id"]
+        ids.add(r["id"])
+    assert {"JLC-1", "JLC-3", "JLC-5", "JLC-6", "JLC-7", "NXP-1"} <= ids
+    raw = open(PRICES, encoding="utf-8").read()
+    assert not any(c in raw for c in DASHES)
+    assert len(raw) < 20000, "the readings file is too large to be excerpts"
+
+
+def t_the_page_carries_the_outputs_figures_and_the_unread_prices():
+    _M()
+    R = _C["R"]
+    need(PAGE, "the page")
+    page = open(PAGE, encoding="utf-8").read()
+    P = R["p_planes"]
+    lo, hi = P["wmin"]["0.5 oz"]
+    cs = R["e_cross"]["sum"]
+    imp = {(what.split(",")[0], t): (w, z) for what, t, sec, w, s, z in R["imp"]["b"] if s}
+    for s in ("23.91", "6.72", "11.95", "3.36", "195.80", "345", "416", "93 opens", "%.2f to %.2f mm" % (lo, hi),
+              "%.2f mm on one 1 oz face" % cs["1 oz"][0], "%.2f mm on each of two faces" % cs["1 oz"][1],
+              "0.148 / 0.127", "0.112 / 0.127", "0.332 mm", "0.155 mm", "0.181 mm", "0.130 mm at a 0.127 mm gap",
+              "JLC06161H-3313", "JLC08161H-2116", "JLC04161H-7628", "JLC04162H-7628", "2L-2oz", "0.16 mm", "784.32"):
+        assert s in page, "the page does not carry %r" % s
+    assert page.count("**NOT READ**") >= 7, "every board's price at its outline must read NOT READ"
+    for b in ("A", "B", "C", "D", "E", "P", "E5"):
+        assert re.search(r"^\| %s \| [^\n]*\*\*NOT READ\*\* \|$" % b, page, re.M), "board %s's price row" % b
+
+
+def t_the_record_carries_no_long_dash_and_no_claim_word():
+    import claims_check
+    for fn in sorted(os.listdir(REC)) + ["inputs/" + x for x in sorted(os.listdir(os.path.join(REC, "inputs")))]:
+        p = os.path.join(REC, fn)
+        if os.path.isdir(p):
+            continue
+        t = open(p, encoding="utf-8").read()
+        assert not any(c in t for c in DASHES), "%s carries a long dash" % fn
+        hit = claims_check.CLAIM.search(t)
+        assert not hit, "%s carries the claim word %r" % (fn, hit.group(0) if hit else "")
+    t = open(os.path.abspath(__file__), encoding="utf-8").read()
+    assert not any(c in t for c in DASHES)
+
+
+def t_the_readme_proposes_the_layer_status_row():
+    need(README, "the README")
+    t = open(README, encoding="utf-8").read()
+    assert re.search(r"^\| 9\.12 \| stackup decided per board with measurement and cost \|", t, re.M), \
+        "the README does not propose the 9.12 row"
+    for f in ("L9-STACKUPS.md", "l9stk_stackups.py", "l9stk_stackups.out", "apply_decisions_l9stk.py",
+              "inputs/price-readings-2026-10-03.json"):
+        assert f in t, "the README does not name %s" % f
+
+
+# ------------------------------------------------------------------------------------------------ the copper question
+# (revised 4 October 2026 after the check COPPER: NOT CONFIRMED, the page's section 14): l9stk_copper.py's output, its
+# arithmetic re-solved here from the ruled method (decision 35's track_current) with a band's faces and its adjacent return as
+# one conductor, the split checked on a resistor ladder solved here, the coordination table's rows and dispositions, the
+# drafts on copies.
+COPPER = os.path.join(REC, "l9stk_copper.py")
+COPPER_OUT = os.path.join(REC, "l9stk_copper.out")
+CHAIN_DRAFT = os.path.join(REC, "apply_energy_chain_l9stk.py")
+PLATING_DRAFT = os.path.join(REC, "apply_blade_plating_l9stk.py")
+CHAIN = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_energy_chain.yaml")
+SOURCES = os.path.join(ROOT, "v2", "vendor", "SOURCES.yaml")
+L8R2_DRAFT = os.path.join(ROOT, "v2", "docs", "records", "l8r2", "apply_energy_chain_e1oz.py")
+
+
+def _CU():
+    if "CU" not in _C:
+        need(COPPER, "the l9stk copper record")
+        if shutil.which("pdftotext") is None:
+            raise Skip("pdftotext (poppler) reads the makers' sheets")
+        m = _load(COPPER, "l9stk_copper_under_test")
+        for rel in m.PINS.values():
+            need(os.path.join(ROOT, rel), "a pinned input of the l9stk copper record")
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l9stk_copper.py refused (exit %s)" % e.code)
+        _C.update(CU=m, CR=R, ctext=m.render(R))
+    return _C["CU"]
+
+
+def t_copper_output_reproduced_byte_for_byte():
+    _CU()
+    need(COPPER_OUT, "the committed copper output")
+    assert _C["ctext"] == open(COPPER_OUT, encoding="utf-8").read(), "l9stk_copper.out is not what the script prints"
+
+
+def t_copper_every_input_is_pinned_and_present():
+    m = _CU()
+    for key, rel in m.PINS.items():
+        sha = hashlib.sha256(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()
+        assert ("%s  sha256 %s" % (rel, sha[:16])) in _C["ctext"], "%s is not pinned at its current sha256" % rel
+
+
+def t_copper_every_predicate_holds():
+    _CU()
+    P = _C["CR"]["pred"]
+    assert len(P) >= 18, "the copper script states fewer predicates than the record relies on"
+    bad = [k for k, v in P.items() if not v]
+    assert not bad, "false: %s" % "; ".join(bad)
+    for must in ("the candidate's two 12.26 mm faces as one conductor read 18.9 K at 25 A and 12.0 K at 20 A",
+                 "two 1 oz faces as one conductor need 21.81 mm each at 25 A",
+                 "board E's pack end at 1 oz with its return adjacent exceeds the strip; at 2 oz it fits",
+                 "every coordination row carries a disposition, and every row over a printed rating a design correction or a gap"):
+        assert must in P, "the predicate %r is gone" % must
+
+
+def _rise(tc, amps, width, t_mm, internal=False):
+    """The rise at which decision 35's model rates one conductor (width x t_mm) at amps, by its own bisection here."""
+    f = 1.0 if internal else tc.EXTERNAL_FACTOR
+    lo, hi = 1e-4, 300.0
+    for _ in range(100):
+        mid = (lo + hi) / 2.0
+        if tc.conservative(width * t_mm, mid)[0] * f < amps:
+            lo = mid
+        else:
+            hi = mid
+    return hi
+
+
+def t_copper_the_stacked_faces_and_the_adjacent_return_on_the_ruled_method():
+    """The checker's figures and the record's widths, re-solved here: two faces as one conductor of their combined section,
+    a band and its return as one conductor of twice the width carrying twice the current (an even split)."""
+    m = _CU()
+    import track_current as tc
+    R, I, W = _C["CR"], _C["CR"]["in"], _C["CR"]["w"]
+    t1 = 0.035
+    assert tc.width_for_current.__defaults__[1] == 10.0
+    blade = I["blade_a"]
+    # the candidate's 12.26 mm as one conductor: 0.858 mm2 at 25 A, 20 A, and 50 A from the +70 C line
+    assert abs(2 * W["cand_even"] * t1 - 0.858) < 1e-3
+    assert round(_rise(tc, 25.0, W["cand_even"], 2 * t1), 1) == 18.9
+    assert round(_rise(tc, 20.0, W["cand_even"], 2 * t1), 1) == 12.0
+    assert round(I["air_c"] + _rise(tc, 50.0, W["cand_even"], 2 * t1), 1) == 147.1
+    # the widths: two faces alone, and the pair (each band half of the conductor carrying twice the current)
+    assert abs(W["alone_1"] - tc.width_for_current(blade, oz=2.0)) < 1e-9 and round(W["alone_1"], 2) == 21.81
+    assert abs(W["pair_1"] - tc.width_for_current(2 * blade, oz=2.0) / 2.0) < 1e-9
+    assert abs(W["pair_2"] - tc.width_for_current(2 * blade, oz=4.0) / 2.0) < 1e-9
+    k2 = 2 * (m.S_MAX ** 2 + (1 - m.S_MAX) ** 2)
+    assert abs(W["pair_1k"] - tc.width_for_current(2 * blade * math.sqrt(k2), oz=2.0) / 2.0) < 1e-9
+    # the decided pair is at 10 K at 25 A, re-solved as a conductor of twice the width and twice the face copper
+    assert abs(_rise(tc, 2 * blade * math.sqrt(k2), 2 * W["pair_1k"], 2 * t1) - 10.0) < 1e-3
+    assert abs(_rise(tc, 2 * blade * math.sqrt(k2), 2 * W["pair_2k"], 4 * t1) - 10.0) < 1e-3
+    # every held row of the decided families is the ruled model's own
+    for fk in ("D1", "D2", "H1"):
+        f = R["fam"][fk]
+        for x in f["rows"]:
+            if x["dur"] is None and x["cls"] != "pulse" and x["st"] is not None:
+                mine = _rise(tc, x["a"] * math.sqrt(2 * 2 * f["k"] ** 2), 2 * f["w"], 2 * t1 * f["oz"])
+                assert abs(mine - x["st"]) < 1e-3, "%s %s: %.4f against %.4f" % (fk, x["lab"], mine, x["st"])
+    # Onderdonk forward and back, from the worst inside air
+    c = m.cmil(W["pair_1k"] * t1)
+    for i_face, tt in ((40.0, 0.5), (100.0, 0.05)):
+        dT = m.rise_adiabatic(i_face * i_face * tt, W["pair_1k"] * t1, I)
+        back = c * math.sqrt(math.log10(1.0 + dT / (I["k234"] + I["t0"])) / (tt * I["k33"]))
+        assert abs(back - i_face) < 1e-6 * i_face
+    # the cross-sections
+    assert abs(R["e_pack_end"]["1 oz"] - 2 * W["pair_1k"]) < 1e-9 and R["e_pack_end"]["1 oz"] > R["strip"]
+
+
+def t_copper_the_limits_and_the_barrels():
+    m = _CU()
+    import via_current as vc
+    import track_current as tc
+    R, I = _C["CR"], _C["CR"]["in"]
+    # the lowest printed limit of the parts each band joins, from the worst inside air the tree holds
+    assert I["t0"] == max(I["air_c"], I["air_e3o"], I["air_e5"]) and I["t0"] > I["air_c"]
+    assert R["limits"]["pack E"][0] == min(I["mini_sn_max_c"], I["holder_max_c"], I["xt60_max_c"])
+    assert R["limits_pinned"]["pack E"] == min(I["mini_max_c"], I["holder_max_c"], I["xt60_max_c"])
+    assert R["limits"]["shore E"][0] == min(I["mini_sn_max_c"], I["holder_max_c"], I["vh_max_c"])
+    # the two annulus conventions, both counts
+    t = vc.PLATING_UM / 1000.0
+    d = m.drill()
+    assert abs(R["barrel"]["outward"]["area"] - math.pi * (d + t) * t) < 1e-12
+    assert abs(R["barrel"]["inward"]["area"] - math.pi * (d - t) * t) < 1e-12
+    assert R["thermal_barrels"]["pack"]["outward"] == vc.barrels_for(I["blade_a"] / 2.0, d)
+    amp_in = tc.conservative(math.pi * (d - t) * t, 10.0)[0]
+    assert R["thermal_barrels"]["pack"]["inward"] == int(math.ceil(I["blade_a"] / 2.0 / amp_in - 1e-12))
+    # the dock contacts' acceptance: no pin over its rating at the blade's current
+    r = R["pin_ratio_need"]
+    assert abs(I["blade_a"] / (1 + (I["pins"] - 1) * r) - I["pin_a"]) < 1e-9
+    # the pair's 150 C current from E11-29's target
+    i150 = 2 * math.sqrt((I["pair_limit"] - I["air_c"]) / (I["pair_rth"] * I["pair_mohm_each"] / 1000.0))
+    assert abs(i150 - R["pair_i150"]["70"]) < 1e-9 and round(i150, 1) == 21.4
+
+
+def _ladder(n, rb, rv_end, rv_mid=None):
+    """Two faces of n series segments tied at node 0 (through-hole); the sink on face F at the far end; face B joins F through
+    rv_end there and through rv_mid at every inner node when given. Nodal analysis solved here; returns face F's current in its
+    last segment, for 1 A in."""
+    r = rb / n
+    N = 2 * n + 1
+    G = [[0.0] * N for _ in range(N)]
+
+    def link(a, b, res):
+        g = 1.0 / res
+        G[a][a] += g; G[b][b] += g; G[a][b] -= g; G[b][a] -= g
+    F = lambda k: k
+    B = lambda k: n + k
+    link(0, F(1), r)
+    link(0, B(1), r)
+    for k in range(1, n):
+        link(F(k), F(k + 1), r)
+        link(B(k), B(k + 1), r)
+        if rv_mid:
+            link(F(k), B(k), rv_mid)
+    link(B(n), F(n), rv_end)
+    keep = [i for i in range(N) if i != F(n)]
+    A = [[G[i][j] for j in keep] for i in keep]
+    bvec = [1.0 if i == 0 else 0.0 for i in keep]
+    m = len(keep)
+    for c in range(m):
+        piv = max(range(c, m), key=lambda x: abs(A[x][c]))
+        A[c], A[piv] = A[piv], A[c]; bvec[c], bvec[piv] = bvec[piv], bvec[c]
+        for x in range(c + 1, m):
+            f = A[x][c] / A[c][c]
+            for y in range(c, m):
+                A[x][y] -= f * A[c][y]
+            bvec[x] -= f * bvec[c]
+    v = [0.0] * m
+    for c in range(m - 1, -1, -1):
+        v[c] = (bvec[c] - sum(A[c][y] * v[y] for y in range(c + 1, m))) / A[c][c]
+    V = {keep[i]: v[i] for i in range(m)}
+    V[F(n)] = 0.0
+    return (V[F(n - 1)] - V[F(n)]) / r
+
+
+def t_copper_the_split_on_a_solved_ladder():
+    m = _CU()
+    W = _C["CR"]["w"]
+    h = _C["CR"]["h"][1]
+    rb = m.r_band(10.0, W["pair_1k"], 1.0)
+    rv = m.r_barrel(h) / 15
+    want = m.share_one_end(10.0, W["pair_1k"], 1.0, 15, h)
+    got = _ladder(20, rb, rv)
+    assert abs(got - want) < 1e-9, "the one-end share %.6f against the ladder's %.6f" % (want, got)
+    assert _ladder(20, rb, rv, rv_mid=m.r_barrel(h)) > want + 0.01, "stitching along the band did not raise the part's face share"
+    for name, w, hh, oz, rows in _C["CR"]["transfer"]:
+        for L, n1, n2 in rows:
+            assert m.share_one_end(L, w, oz, n1, hh) <= m.S_MAX + 1e-12
+            assert m.share_both_ends(L, w, oz, n2, hh) <= m.S_MAX + 1e-12
+            if n1 > 1:
+                assert m.share_one_end(L, w, oz, n1 - 1, hh) > m.S_MAX, "%s at %g mm: one barrel fewer still holds" % (name, L)
+
+
+def t_copper_the_coordination_table_has_the_owners_rows():
+    _CU()
+    R, I = _C["CR"], _C["CR"]["in"]
+    C = R["coord"]
+    cases = [r["case"] for r in C]
+    for must in ("10 A continuous", "18 A for 60 s", "the 25 A case, the gauge working", "the 25 A case, the gauge failed",
+                 "sustained overloads", "board P's FETs failed short, blade 135 to 200", "board P's FETs failed short, blade over 600",
+                 "the shore input, Q7 shorted"):
+        assert any(c.startswith(must) for c in cases), "no row %r" % must
+    names = " ".join(n for r in C for n, _t, _f in r["comps"])
+    for comp in ("copper", "barrel field", "R17", "R19", "XT60", "dock contacts", "Q39/Q40", "3568 holder"):
+        assert comp in names, "no row reads %s" % comp
+    for r in C:
+        assert r["device"] and r["clearing"] and r["disp"], r["case"]
+        assert all(d[:3] in ("(a)", "(b)", "(c)") for d in r["disp"]), r["case"]
+        if r["dur"] is None and not r["case"].startswith(("10 A", "the 25 A case, the gauge working")):
+            assert "none" in r["clearing"], "%s claims a clearing time no row prints" % r["case"]
+    gf = [r for r in C if r["case"].startswith("the 25 A case, the gauge failed")][0]
+    assert gf["limit_comp"].startswith("Q39/Q40") and gf["limit_frac"] > 1.0
+    assert any("W4DP-F2" in d for d in gf["disp"])
+    # a row over a printed rating never rests on a coupon alone
+    for r in C:
+        if r["limit_frac"] == r["limit_frac"] and r["limit_frac"] > 1.0:
+            assert any(d.startswith("(b)") for d in r["disp"]), "%s is over a rating with no design correction" % r["case"]
+
+
+def t_copper_the_page_carries_the_outputs_figures():
+    _CU()
+    R, W, I = _C["CR"], _C["CR"]["w"], _C["CR"]["in"]
+    need(PAGE, "the page")
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page[page.index("## 14. The pack path's copper on its basis"):]
+    fam = {(fk, x["lab"]): x for fk, f in R["fam"].items() for x in f["rows"]}
+    want = ["%.2f" % W[k] for k in ("pair_1", "pair_1k", "pair_2", "pair_2k", "alone_1", "sh_pair_1", "sh_pair_1k", "sh_pair_2k", "vin_pair_1k")]
+    want += ["%.2f" % x for _l, _a, w1, w2, w3 in R["ask"] for x in (w1, w2, w3)]
+    want += ["%.2f mm" % R["e_pack_end"]["1 oz"], "%.2f mm" % R["e_pack_end"]["2 oz"], "%.2f mm" % R["e_shore"]["1 oz"],
+             "%.2f C" % fam[("D1", "gauge failed: blade 135 to 200 %, at most 600 s")]["T"],
+             "%.2f C" % fam[("D1", "gauge failed: blade 200 to 350 %, at most 5 s")]["T"],
+             "%.2f A" % R["r17_limit_a"], "%.2f A" % R["r19_limit_a"], "%.2f A held" % R["pair_i150"]["70"],
+             "%.2f A from %.2f C" % (R["pair_i150"]["t0"], I["t0"]), "%.3f of the highest" % R["pin_ratio_need"],
+             "0297025.%s" % I["mini_ag_order"], "0297025.%s" % I["mini_sn_order"], "%g C" % I["xt60_max_c"],
+             "%d (through the blade's 600 s point)" % R["field_pack_600"], "(L9STK CU)", "COPPER: NOT CONFIRMED", "W4DP-F2",
+             "{:,}".format(int(round(R["i2t_allow_pack"]))) + " A2s", "{:,}".format(int(round(R["i2t_allow_shore"]))) + " A2s",
+             "%.4f" % (R["ks"] ** 2), "%.2f C" % I["t0"]]
+    for s in want:
+        assert s in sec, "section 14 does not carry %r" % s
+    for f in ("L9C-F%d" % k for k in range(1, 16)):
+        assert f in sec, "section 14 does not file %s" % f
+
+
+def _reg_with_decisions(tmp):
+    reg = os.path.join(tmp, "pcb_decisions.yaml")
+    shutil.copyfile(REGISTER, reg)
+    import yaml
+    if not _marked(yaml.safe_load(open(reg, encoding="utf-8"))["decisions"]):
+        r = subprocess.run([sys.executable, "-B", APPLY, "--registry", reg, "--write"], capture_output=True, text=True)
+        assert r.returncode == 0, r.stdout + r.stderr
+    return reg
+
+
+def t_the_energy_chain_draft_follows_the_decisions_and_replaces_l8r2s():
+    m = _CU()
+    _A()
+    need(CHAIN_DRAFT, "the energy chain draft")
+    ast.parse(open(CHAIN_DRAFT, encoding="utf-8").read())
+    W = _C["CR"]["w"]
+    import track_current as tc
+    tmp = tempfile.mkdtemp(prefix="l9stk-chain-")
+    try:
+        import yaml
+        bare = os.path.join(tmp, "bare.yaml")
+        shutil.copyfile(REGISTER, bare)
+        if not _marked(yaml.safe_load(open(bare, encoding="utf-8"))["decisions"]):
+            c0 = os.path.join(tmp, "c0.yaml")
+            shutil.copyfile(CHAIN, c0)
+            r0 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c0, "--registry", bare], capture_output=True, text=True)
+            assert r0.returncode == 3 and "not integrated" in r0.stderr, "the draft ran before the decisions"
+        reg = _reg_with_decisions(tmp)
+        c1 = os.path.join(tmp, "c1.yaml")
+        shutil.copyfile(CHAIN, c1)
+        r1 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c1, "--registry", reg, "--write"], capture_output=True, text=True)
+        if "ALREADY CORRECTED" not in r1.stdout:
+            assert r1.returncode == 0 and "WRITTEN" in r1.stdout, r1.stdout + r1.stderr
+        r2 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c1, "--registry", reg, "--write"], capture_output=True, text=True)
+        assert r2.returncode == 0 and "ALREADY CORRECTED" in r2.stdout, "a second run was not a no-op"
+        st = {s["id"]: s for s in yaml.safe_load(open(c1, encoding="utf-8"))["stages"]}
+        sh2 = tc.width_for_current(2 * 20.0, oz=4.0) / 2.0
+        for sid, ws in (("DOCK_ENTRY", (W["pair_1"], W["pair_1k"], W["pair_2"], W["pair_2k"])),
+                        ("BOARD_A_NODE", (W["pair_1"], W["pair_1k"], W["pair_2"], W["pair_2k"])),
+                        ("SHORE_INPUT", (W["sh_pair_1"], W["sh_pair_1k"], sh2, W["sh_pair_2k"]))):
+            for w in ws:
+                assert "%.2f mm" % w in st[sid]["conductor"]["what"] or ("%.2f" % w) in st[sid]["conductor"]["what"], \
+                    "%s does not carry %.2f" % (sid, w)
+            assert "(L9STK CU)" in st[sid]["conductor"]["what"]
+        for sid, s in st.items():
+            pr = s.get("protection") or {}
+            if sid in ("PACK_CELLS", "PACK_LEAD", "DOCK_ENTRY", "DOCK_BLOCK", "BOARD_A_NODE", "BOARD_A_CONVERTERS"):
+                assert "287-atof" not in str(pr.get("basis")) and "littelfuse-297" in str(pr.get("basis")), sid
+                assert float(pr.get("i2t_a2s")) == 625.0, sid
+        orig = {s["id"]: s for s in yaml.safe_load(open(CHAIN, encoding="utf-8"))["stages"]}
+        for sid in orig:
+            if sid not in ("DOCK_ENTRY", "BOARD_A_NODE", "SHORE_INPUT", "PACK_CELLS", "PACK_LEAD", "DOCK_BLOCK", "BOARD_A_CONVERTERS"):
+                assert st[sid] == orig[sid], "%s moved" % sid
+            assert st[sid].get("conductor", {}).get("rating_a") == orig[sid].get("conductor", {}).get("rating_a")
+            assert (st[sid].get("protection") or {}).get("rating_a") == (orig[sid].get("protection") or {}).get("rating_a")
+        if os.path.isfile(L8R2_DRAFT):
+            c2 = os.path.join(tmp, "c2.yaml")
+            shutil.copyfile(CHAIN, c2)
+            subprocess.run([sys.executable, "-B", L8R2_DRAFT, "--chain", c2, "--registry", reg, "--write"], capture_output=True, text=True)
+            r3 = subprocess.run([sys.executable, "-B", CHAIN_DRAFT, "--chain", c2, "--registry", reg, "--write"], capture_output=True, text=True)
+            assert r3.returncode == 0, r3.stdout + r3.stderr
+            assert open(c1, encoding="utf-8").read() == open(c2, encoding="utf-8").read()
+        import energy_chain
+        a, b = energy_chain.check(), energy_chain.check(c1)
+        for k in ("stages", "checked", "fails", "stage_fails", "derate_fails"):
+            assert a[k] == b[k], "energy_chain.check's %s moved" % k
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def t_the_plating_draft_pins_the_silver_blade_once():
+    m = _CU()
+    I = _C["CR"]["in"]
+    need(PLATING_DRAFT, "the plating draft")
+    tmp = tempfile.mkdtemp(prefix="l9stk-plating-")
+    try:
+        import yaml
+        src = os.path.join(tmp, "SOURCES.yaml")
+        shutil.copyfile(SOURCES, src)
+        before = open(src, encoding="utf-8").read()
+        r0 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src], capture_output=True, text=True)
+        assert open(src, encoding="utf-8").read() == before, "a run without --write wrote the file"
+        if I["blade_pinned"]:
+            assert "ALREADY PINNED" in r0.stdout
+            return
+        r1 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src, "--write"], capture_output=True, text=True)
+        assert r1.returncode == 0 and "WRITTEN" in r1.stdout, r1.stdout + r1.stderr
+        r2 = subprocess.run([sys.executable, "-B", PLATING_DRAFT, "--sources", src, "--write"], capture_output=True, text=True)
+        assert r2.returncode == 0 and "ALREADY PINNED" in r2.stdout
+        a = yaml.safe_load(before)["parts"]
+        b = yaml.safe_load(open(src, encoding="utf-8").read())["parts"]
+        for x, y in zip(a, b):
+            if x.get("id") == "pack-blade-fuse-holder":
+                assert ("0297025." + I["mini_ag_order"]) in y["fitted_mpn"] and y["fitted_mpn"] != x["fitted_mpn"]
+                x = dict(x, fitted_mpn=y["fitted_mpn"])
+            assert x == y, "entry %s moved" % x.get("id")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def t_boards_a_and_e_leave_the_copper_weight_to_the_owner():
+    _CU()
+    A, D = _decisions()
+    W = _C["CR"]["w"]
+    by = {d["board"]: d for d in D}
+    for b in ("a", "e"):
+        d = by[b]
+        assert "1 oz outer" in d["title"] and "open decision" in d["title"], "board %s's title" % b
+        assert "(L9STK CU)" in d["outcome"] and "(L9STK CU)" in d["authority_why"]
+        for k in ("pair_1", "pair_1k", "pair_2", "pair_2k"):
+            assert "%.2f" % W[k] in d["outcome"], "board %s's outcome does not carry %.2f mm" % (b, W[k])
+        assert "l9stk_copper.out" in d["measurement"] and "l9stk_copper.py" in d["reversed_by"]
+        for old in ("6.72 mm wide on each", "12.26 mm a face", "14.60 mm a face"):
+            assert old not in d["outcome"], "board %s still lays %s" % (b, old)
+    assert "%.2f" % W["sh_pair_1k"] in by["e"]["outcome"] and "%.2f" % W["vin_pair_1k"] in by["e"]["outcome"]
+    assert A.OPEN["mark"] == "(L9STK CU)" and "(3)" in A.OPEN["recommendation"]
+
+
+def t_the_readme_names_the_copper_files():
+    need(README, "the README")
+    t = open(README, encoding="utf-8").read()
+    for f in ("l9stk_copper.py", "l9stk_copper.out", "apply_energy_chain_l9stk.py", "apply_blade_plating_l9stk.py", "(L9STK CU)"):
+        assert f in t, "the README does not name %s" % f
+
+
+# ------------------------------------------------------------------------------------------------ the protection (section 15)
+PROT = os.path.join(REC, "l9stk_protection.py")
+PROT_OUT = os.path.join(REC, "l9stk_protection.out")
+FETCH = os.path.join(REC, "fetch_held_back.py")
+HELD = os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-slva673a.pdf")
+READINGS = os.path.join(REC, "inputs", "csd18510q5b-figure-readings-2026-10-04.json")
+# the LM5069's printed limits (SNVS452G, electrical characteristics), typed here so a misread in the script shows
+LM = dict(vcl=(48.5e-3, 55e-3, 61.5e-3), vcb=(80e-3, 130e-3), tcb=1.2e-6, vtmrh=(3.76, 4.16), itmr=(51e-6, 120e-6),
+          isink=(1.25e-6, 3.75e-6), restart=(1.187, 1.313), vtmrl=0.3, igate=(10e-6, 22e-6), cb_sink=45e-3, off_sink=1.75e-3,
+          vgate=12.6, pwrlim=(19.0, 25.0, 31.0), kpwr=1.30e5, vpwr=1.18e-3, vsns=5e-3)
+FET = dict(rds=0.96e-3, qg=153e-9, rthja=50.0, rthjc=0.8, tj=150.0, idm=400.0, vds=40.0)
+
+
+def _PR():
+    if "PR" not in _C:
+        need(PROT, "the l9stk protection record")
+        need(HELD, "TI's SLVA673A, held back (python3 v2/docs/records/l9stk/fetch_held_back.py fetches it)")
+        if shutil.which("pdftotext") is None:
+            raise Skip("pdftotext (poppler) reads the makers' sheets")
+        m = _load(PROT, "l9stk_protection_under_test")
+        for rel in m.PINS.values():
+            need(os.path.join(ROOT, rel), "a pinned input of the l9stk protection record")
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l9stk_protection.py refused (exit %s)" % e.code)
+        _C.update(PR=m, PRR=R, ptext=m.render(R))
+    return _C["PR"]
+
+
+def t_protection_output_reproduced_byte_for_byte():
+    _PR()
+    need(PROT_OUT, "the committed protection output")
+    assert _C["ptext"] == open(PROT_OUT, encoding="utf-8").read(), "l9stk_protection.out is not what the script prints"
+
+
+def t_protection_every_input_is_pinned_and_present():
+    m = _PR()
+    t = _C["ptext"]
+    for k, rel in m.PINS.items():
+        got = hashlib.sha256(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()[:16]
+        assert "%s  sha256 %s" % (rel, got) in t, "the output does not pin %s at %s" % (rel, got)
+    assert "pins %d inputs by sha256" % len(m.PINS) in open(README, encoding="utf-8").read()
+
+
+def t_protection_every_predicate_holds():
+    _PR()
+    pr = _C["PRR"]["pred"]
+    assert len(pr) >= 20
+    bad = [k for k, v in pr.items() if not v]
+    assert not bad, "predicates that do not hold: %s" % bad
+    assert all(("   %s" % k) in _C["ptext"] for k in pr)
+
+
+def _close(a, b, rel=1e-9):
+    if isinstance(a, (tuple, list)):
+        return len(a) == len(b) and all(_close(x, y, rel) for x, y in zip(a, b))
+    return abs(a - b) <= rel * max(abs(a), abs(b), 1e-300)
+
+
+def t_protection_the_script_read_the_sheets_as_printed():
+    _PR()
+    I = _C["PRR"]["in"]
+    pairs = [(I["vcl"], LM["vcl"]), ((I["vcb"][0], I["vcb"][2]), LM["vcb"]), (I["tcb_max"], LM["tcb"]), (I["vtmrh"], LM["vtmrh"]),
+             (I["itmr"], LM["itmr"]), (I["isink"], LM["isink"]), (I["vtmrl_restart"], LM["restart"]), (I["vtmrl_end"], LM["vtmrl"]),
+             (I["igate"], LM["igate"]), (I["isink_cb_min"], LM["cb_sink"]), (I["isink_off_min"], LM["off_sink"]), (I["vgate"][1], LM["vgate"]),
+             (I["pwrlim"], LM["pwrlim"]), (I["kpwr"], LM["kpwr"]), (I["vpwr_off"], LM["vpwr"]), (I["vsns_min"], LM["vsns"])]
+    pairs += [(I["fet_" + k], FET[k]) for k in ("rds", "qg", "rthja", "rthjc", "idm", "tj", "vds")]
+    pairs += [((I["tvs"]["vr"], I["tvs"]["vc"], I["tvs"]["ipp"]), (18.0, 29.2, 51.4))]
+    for i, (a, b) in enumerate(pairs):
+        assert _close(a, b), "reading %d: the script read %r, the sheet prints %r" % (i, a, b)
+
+
+def t_protection_the_breaker_resolved_from_the_printed_limits():
+    m = _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    rs = 1.0 / (1.0 / 4e-3 + 1.0 / 7.5e-3)
+    u = 0.01 + 50e-6 * 100.0
+    assert abs(B["rs"] - rs) < 1e-12 and abs(B["u"] - u) < 1e-12
+    icl_max, icl_min = LM["vcl"][2] / (rs * (1 - u)), LM["vcl"][0] / (rs * (1 + u))
+    assert abs(B["icl_max"] - icl_max) < 1e-9 and abs(B["icl_min"] - icl_min) < 1e-9
+    assert round(icl_max, 2) == 23.93 and round(icl_min, 2) == 18.32 and icl_max <= 24.0 < icl_max + 0.1 and icl_min > 18.0
+    assert round(LM["vcb"][1] / (rs * (1 - u)), 2) == round(B["icb_max"], 2) == 50.59
+    # equation 9 at the 5 mV floor, the next E96 value up
+    vmax = 16.8
+    exact = LM["kpwr"] * rs * (LM["vsns"] * vmax / rs - LM["vpwr"] * vmax / rs)
+    e96 = sorted(round(10 ** (k / 96.0), 2) * 1000 for k in range(96))
+    assert _close(B["rpwr"], min(v for v in e96 if v >= exact)) and _close(B["rpwr"], 8450.0)
+    plim = B["rpwr"] / (LM["kpwr"] * rs) + LM["vpwr"] * vmax / rs
+    assert abs(B["plim_nom"] - plim) < 1e-9 and abs(B["plim_max"] - plim * 31 / 25) < 1e-9
+    # the timer, the gate charge, the clearing time
+    assert _close(B["ct"], 10e-9)
+    tf_max = 10e-9 * 1.1 * LM["vtmrh"][1] / LM["itmr"][0]
+    q = 2 * FET["qg"] * LM["vgate"] / 10.0 + 22e-9 * 1.1 * LM["vgate"]
+    assert _close(B["tf_max"], tf_max) and _close(B["q_off"], q)
+    assert _close(B["clear_max"], tf_max + q / LM["off_sink"]) and round(B["clear_max"] * 1e3, 3) == 1.292
+    assert _close(B["t_off_cb"], LM["tcb"] + q / LM["cb_sink"])
+    # the dv/dt start: 489 uF + 104 uF, the gate's largest current, the capacitor's least
+    assert _close(B["cdv"], 22e-9) and _close(B["cout"], 593e-6)
+    inrush = LM["igate"][1] * 593e-6 / (22e-9 * 0.9)
+    assert _close(B["inrush_max"], inrush) and inrush * vmax < B["plim_min"]
+    # the retry's duty, independent of the capacitor
+    on = (LM["vtmrh"][1] - LM["vtmrl"]) / LM["itmr"][0]
+    dv = LM["vtmrh"][0] - LM["restart"][1]
+    off = 7 * (dv / LM["isink"][1] + dv / LM["itmr"][1]) + (LM["vtmrh"][0] - LM["vtmrl"]) / LM["isink"][1]
+    assert _close(B["duty_max"], on / (on + off)) and 0.005 < B["duty_max"] < 0.02
+
+
+def t_protection_the_soa_by_slva673a():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    rd = json.load(open(READINGS, encoding="utf-8"))
+    ax = rd["axes"]
+
+    def amps(seg, v):
+        (xa, ya), (xb, yb) = rd["soa_segments"][seg]
+        x = ax["x_px"]["1"] + (ax["x_px"]["10"] - ax["x_px"]["1"]) * math.log10(v)
+        y = ya + (yb - ya) * (x - xa) / (xb - xa)
+        return 10 ** ((ax["y_px"]["1"] - y) / ((ax["y_px"]["1"] - ax["y_px"]["100"]) / 2.0))
+    soa = {k: amps(k, 16.8) * 16.8 for k in ("DC", "10 ms", "1 ms", "100 us", "10 us")}
+    for k in soa:
+        assert abs(B["soa"][k] - soa[k]) < 1e-9
+    # equation 6 between 1 and 10 ms; equation 4 with both losses through one pad; equation 5
+    t = B["clear_max"]
+    mexp = math.log(soa["1 ms"] / soa["10 ms"]) / math.log(1e-3 / 1e-2)
+    p_t = soa["1 ms"] * (t / 1e-3) ** mexp
+    p_each = (B["icl_max"] / 2) ** 2 * FET["rds"] * rd["rdson_normalized_at_150c_vgs10"]
+    tc = max(R["t0"] + FET["rthja"] * 2 * p_each, R["t0"] + FET["rthja"] * B["plim_max"] * B["duty_max"])
+    der = (FET["tj"] - tc) / (FET["tj"] - 25.0)
+    assert abs(B["tc"] - tc) < 1e-9 and abs(B["fault_soa"] - p_t * der) < 1e-9
+    assert B["plim_max"] / (p_t * der) <= 1 / 1.5 and round(B["fault_ratio"], 2) == 0.57
+    # the start: SLVA673A 3.2.2.7's equivalent pulse, the DC line past 10 ms
+    teq = 16.8 * 22e-9 * 1.1 / LM["igate"][0] / 2.0
+    assert teq > 10e-3 and abs(B["start_soa"] - soa["DC"] * der) < 1e-9
+    assert B["start_p"] / (soa["DC"] * der) <= 1 / 1.5
+    # the pulsed rating against the breaker and the docking peak (SLVA673A 3.1.2.2)
+    assert FET["idm"] > B["icb_max"] and FET["idm"] > R["cu"]["dock_pk"]
+
+
+def t_protection_the_pair_its_uncertainty_and_the_exposure():
+    _PR()
+    R, P = _C["PRR"], _C["PRR"]["pair"]
+    C = R["cu"]
+    each = C["pair_mohm_each"] / 1000.0
+    for f, a70, at0 in P["spread"]:
+        assert abs(a70 - 2 * math.sqrt((150 - 70) / (33.12 * f * each))) < 1e-9
+        assert abs(at0 - 2 * math.sqrt((150 - 76.25) / (33.12 * f * each))) < 1e-9
+    assert (round(P["i150_air"], 2), round(P["i150_t0"], 2)) == (21.38, 20.53)
+    tj = {a: 76.25 + 33.12 * (a / 2) ** 2 * each for a in (22.0, 23.0)}
+    assert round(tj[22.0], 1) == 161.0 and round(tj[23.0], 1) == 168.8
+    # B-P2: the junction limit with the band and R17 in place (the FET-only target the recheck derived)
+    m = _CU()
+    J, a = R["J"], R["B"]["icl_max"]
+    W, ks = _C["CR"]["w"], _C["CR"]["ks"]
+    band = max(m.rise_pair(a, W["pair_1k"], m.OZ1, ks), m.rise_pair(a, W["pair_2k"], m.OZ2, ks))
+    budget = 150 - 76.25 - band
+    p2, p3, pr17 = (a / 2) ** 2 * each, (a / 3) ** 2 * each, a * a * C["r17"]["mohm"] / 1000.0
+    assert _close(J["budget"], budget) and round(band, 2) == 9.16 and round(pr17, 2) == 2.86
+    assert round(budget / p2, 2) == round(J[2]["fet_only"], 2) and 21.3 < budget / p2 < 21.4
+    assert _close(J[2]["anywhere"], budget / (p2 + pr17)) and _close(J[3]["anywhere"], budget / (p3 + pr17))
+    assert _close(J[3]["apart"], (budget - 1.0 * pr17) / p3) and J[3]["apart"] > 33.12 > J[2]["apart"]
+    # at 24.37 K/W, the first revision's FET-only target, the junction passes 150 C once the band is counted
+    assert 76.25 + band + p2 * 24.37 > 150.0
+
+
+def t_protection_the_table_has_the_owners_columns_and_cases():
+    _PR()
+    T = _C["PRR"]["table"]
+    for must in ("10 A continuous", "18 A for 60 s", "an overload under the unit's limit, held", "an overload over the unit's limit",
+                 "a hot short, board P's FETs welded", "a start into a short", "a start", "docking, the make-last enable (C-1b)",
+                 "docking without the enable (the uncorrected design)", "a persistent fault on the -2 (rejected, 3b)", "a persistent fault on the -1 (selected)",
+                 "a start into a resistive fault on VSYS", "charging (the reverse direction)",
+                 "the clamp shorted with board P's FETs welded (two faults)", "the shore input, Q7 shorted"):
+        assert any(r["case"] == must or r["case"].startswith(must + " ") for r in T), "no row %r" % must
+    for r in T:
+        for k in ("case", "cur", "trip", "clear", "limiting", "margin", "status"):
+            assert r[k], "%s has no %s" % (r["case"], k)
+        assert any(w in r["status"] for w in ("printed", "derived", "MISSING", "DESIGN DEFECT")), r["case"]
+        if "OVER" in r["margin"]:
+            assert "DESIGN DEFECT" in r["status"] or "corrected by" in r["status"], "%s is over a limit with no design correction named" % r["case"]
+    rows = [l for l in _C["ptext"].splitlines() if l.startswith("   ") and l.count(" | ") == 6]
+    assert len(rows) == len(T)
+
+
+def t_protection_the_defects_and_the_evidence_have_owners():
+    _PR()
+    R = _C["PRR"]
+    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 9)] and all(d[2] for d in R["defects"])
+    assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2] and "BAT-F20" in R["defects"][4][1]
+    assert "board P's generator" in R["defects"][5][2] and "Layer 7" in R["defects"][5][2]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 16)]
+    assert [c[0] for c in R["conditions"]] == ["C1", "C2", "C3"] and all(c[2] for c in R["conditions"])
+    assert "Layer 7" in R["conditions"][0][2] and "L4-E11" == R["conditions"][2][2] and "C1 and C2" in R["defects"][5][1]
+    assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 8)]
+    assert all("not sent" in q[2] for q in R["questions"]) and "48 V" in R["questions"][0][1]
+    assert len(R["not_taken"]) == 8 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
+    assert any("single-wire" in x for x in R["not_taken"]) and not any("PTC" in x for x in R["not_taken"])
+
+
+def t_protection_the_page_carries_the_outputs_figures():
+    _PR()
+    need(PAGE, "the page")
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    B, P = _C["PRR"]["B"], _C["PRR"]["pair"]
+    J = _C["PRR"]["J"]
+    for fig in ("%.2f" % B["icl_min"], "%.2f" % B["icl_max"], "%.2f" % B["icl_typ"], "%.2f" % B["icb_max"], "%.4f" % (B["rs"] * 1e3),
+                "%.2f" % B["plim_nom"], "%.2f" % B["plim_min"], "%.2f" % B["plim_max"], "%.3f" % (B["tf_max"] * 1e3),
+                "%.3f" % (B["clear_max"] * 1e3), "%.3f" % B["inrush_max"], "%.1f" % (B["start_max"] * 1e3), "%.2f" % B["fault_ratio"],
+                "%.2f" % B["start_ratio"], "%.2f" % P["i150_air"], "%.2f" % P["i150_t0"], "%.2f" % B["alt_icl_min"], "%.2f" % B["alt_blade"],
+                "%.1f" % B["sense_abs_a"], "%.3f" % B["dock_uncorr"]["vsense"], "%.1f" % B["dock_uncorr"]["i10_der"], "%.2f" % B["dock_uncorr"]["ratio"],
+                "%.2f" % B["dock_uncorr"]["ratio75"], "%.2f" % (B["t_ins"][0] * 1e3), "%.2f" % (B["t_ins"][1] * 1e3), "%.2f" % B["v_withdraw"],
+                "%.2f" % J["dt_band"], "%.2f" % J["budget"], "%.2f" % J[2]["fet_only"], "%.2f" % J[2]["apart"], "%.2f" % J[2]["anywhere"],
+                "%.2f" % J[3]["apart"], "%.2f" % J[3]["anywhere"], "%.2f" % J["ciss"][3][0], "%.1f" % J["tj_service"], "%.1f" % B["rthja_need"],
+                "%.2f" % (100 * B["split_max"]), "%.3f" % B["spread_need"], "%.2f" % (100 * B["d_ratchet"]), "%.2f" % B["pre_w"],
+                "%.0f" % B["p_free"], "%.0f" % (B["p_free"] - B["p_pads"])):
+        assert fig in s15, "section 15 does not carry %s" % fig
+    for k in ("DD-%d" % i for i in range(1, 9)):
+        assert k in s15, "section 15 does not name %s" % k
+    for fig in ("%.3f" % B["grace"][0], "%.3f" % B["grace"][1], "%.2f" % (B["t_rev0"] * 1e3), "%.1f" % (B["t_rev_hold"] * 1e3), "%.2f" % B["v_withdraw"],
+                "%.2f" % (B["t_break"] * 1e3), "%.1f" % B["d1_i2t"], "%.2f" % (B["d1_tau_max"] * 1e3), "%.1f" % (B["d1_l_max"] * 1e6),
+                "%.1f" % J["ptc_window"][0], "%.1f" % J["ptc_window"][1], "%.0f" % (B["r_trip_max"] / 1e3), "%.2f" % B["g1_on_sense"], "%.1f" % B["g1_max"]):
+        assert fig in s15, "section 15 does not carry %s" % fig
+    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "IF-7", "Q-TI-L9S-1", "C-1b", "C-1c", "C1", "C2", "C3", "15.4b") + tuple("E-%d" % i for i in range(1, 16)):
+        assert k in s15, "section 15 does not name %s" % k
+    for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19", "L9C-F20", "L9C-F21", "L9C-F22"):
+        assert f in t
+    assert "at or below the\ncells' 24 A" not in t and "current-and-time" in t
+
+
+def t_the_readme_names_the_protection_files():
+    need(README, "the README")
+    t = open(README, encoding="utf-8").read()
+    for f in ("l9stk_protection.py", "l9stk_protection.out", "fetch_held_back.py", "csd18510q5b-figure-readings-2026-10-04.json", "SLVA673A"):
+        assert f in t, "the README does not name %s" % f
+
+
+def t_the_held_back_document_is_ignored_and_its_fetch_pins_the_same_bytes():
+    need(FETCH, "the fetch script")
+    tree = ast.parse(open(FETCH, encoding="utf-8").read())
+    docs = [n for n in tree.body if isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "DOCS" for t in n.targets)]
+    assert len(docs) == 1
+    (rel, url, want), = [tuple(e.value for e in el.elts) for el in docs[0].value.elts]
+    assert rel == "v2/vendor/ti/held/ti-slva673a.pdf" and url.startswith("https://www.ti.com/") and len(want) == 64
+    need(PROT_OUT, "the committed protection output")
+    assert "%s  sha256 %s" % (rel, want[:16]) in open(PROT_OUT, encoding="utf-8").read()
+    if shutil.which("git") and os.path.exists(os.path.join(ROOT, ".git")):
+        r = subprocess.run(["git", "-C", ROOT, "check-ignore", "-q", rel], capture_output=True)
+        assert r.returncode == 0, "%s is not ignored: it must never be committed" % rel
+
+
+def t_protection_the_docking_correction_on_the_derated_curve():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    C = R["cu"]
+    rs = B["rs"]
+    # B-P1 as the recheck reads it: VIN to SENSE at the docking peak, the 10 us line derated by equation 5
+    assert round(C["dock_pk"] * rs, 3) == 0.634 > 0.3
+    der = (150.0 - B["tc"]) / 125.0
+    assert _close(B["dock_uncorr"]["i10_der"], B["i10us"] * der) and 91.0 < B["i10us"] * der < 92.5
+    assert 2.6 < C["dock_pk"] / (B["i10us"] * der) < 2.7 and 1.6 < C["dock_pk"] / (B["i10us"] * 0.6) < 1.7
+    # C-1b: the insertion time from the sheet's insertion current, then the dv/dt start's current under every limit
+    assert _close(B["t_ins"][0], 10e-9 * 0.9 * LM["vtmrh"][0] / 8e-6) and _close(B["t_ins"][1], 10e-9 * 1.1 * LM["vtmrh"][1] / 3e-6)
+    assert B["inrush_max"] * rs < 0.3 and B["inrush_max"] < B["icl_min"] and B["start_p"] < B["plim_min"]
+    assert _close(B["v_withdraw"], 1e-3 / B["t_break"]) and B["t_break"] > B["t_off_timer"]
+    # the alternative: board A's pre-charge pin needs a lead the hand sets
+    tau = 10.0 * 593e-6
+    r_loop = 16.8 / C["dock_pk"]
+    assert _close(B["pre"]["t_cb"], tau * math.log(16.8 / (B["icb_min"] * r_loop)))
+    assert _close(B["pre"]["t_abs"], tau * math.log(16.8 / (B["sense_abs_a"] * r_loop)))
+    rows = {r["case"]: r for r in R["table"]}
+    assert "OVER" in rows["docking without the enable (the uncorrected design)"]["margin"]
+    assert "%.2f" % B["start_ratio"] in rows["docking, the make-last enable (C-1b)"]["margin"]
+
+
+def t_protection_the_minors_folded_in():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    C, I = R["cu"], R["in"]
+    a = B["icl_max"]
+    miss = {e[0]: e for e in R["missing"]}
+    assert "%.3f" % _C["CR"]["pin_ratio_need"] in miss["E-4"][3] and "0.593" in miss["E-4"][3] and "25 A" in miss["E-4"][3]
+    assert "%.2f A under the cells'" % (24.0 - a) in miss["E-9"][3] and "-40, 25 and 125 C" in miss["E-9"][3]
+    assert _close(B["split_max"], 24.0 / a - 1) and "FALLBACK" in miss["E-5"][3]
+    assert _close(B["spread_need"], 24.0 / 1.05 / 18.0) and B["spread"] > B["spread_need"]
+    assert _close(B["d_ratchet"], 1.25e-6 / (120e-6 + 1.25e-6))
+    assert "18 A for 60 s after 10 A held" in miss["E-7"][3] and "103 C" in miss["E-3"][3]
+    assert _close(B["pre_w"], I["fet_vsd"] * 1.0) and B["pre_tj"] < 150
+    assert _close(B["d1_i2t"], 100.0 ** 2 * 8.3e-3 / 2) and round(B["d1_i2t"], 1) == 41.5
+    assert _close(B["d1_tau_max"], 2 * B["d1_i2t"] / C["pf_high"] ** 2) and B["d1_tau_max"] > 1e-4
+    assert B["p_face"] == 70 * 44 and B["p_pads"] < B["p_free"]
+    assert any("BAT-F20" in s_["name"] for s_ in R["series"])
+    assert any("reverse" in r["case"] for r in R["table"])
+
+
+def t_copper_the_zero_cost_route_is_listed_and_not_credited():
+    _CU()
+    A, _D = _decisions()
+    W, R = _C["CR"]["w"], _C["CR"]
+    gap = R["strip"] - 2 * W["alone_1k"]
+    ask = A.OPEN["ask"]
+    assert "(4)" in ask and "%.2f mm each" % W["alone_1k"] in ask and "%.2f mm plus the gap" % (2 * W["alone_1k"]) in ask
+    assert "up to %.2f mm" % gap in ask and "no term for the distance" in ask and "coupon" in ask
+    assert "%.2f mm" % gap in _C["ctext"] and "no gap is credited" in _C["ctext"]
+
+
+def t_protection_the_conditional_confirmations_corrections():
+    _PR()
+    R, B, J = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["J"]
+    C, I = R["cu"], R["in"]
+    text = _C["ptext"]
+    # 1. the docking's timing: the insertion time belongs to the gauge's FET start; on the enable the gate rises UVLODEL after UVLO's threshold
+    assert _close(I["uvdel"][0], 55e-6) and "no maximum printed" in text and "applies to a start by the gauge's own FET" in text
+    rows = {r["case"]: r for r in R["table"]}
+    dock = rows["docking, the make-last enable (C-1b)"]["cur"]
+    assert "%.3f to %.3f s after the enable mates" % (B["grace"][0], B["grace"][1]) in dock and "PORIT" not in dock
+    assert "PORIT" in rows["a start (the gauge's FET on, a retry, assembly)"]["cur"]
+    # the RC hold, recomputed: R_U against the hysteresis sink into C_U
+    vhi = 16.8 - 12e-6 * 200e3
+    assert _close(B["grace"][0], B["cu"] * 0.9 * 200e3 * 0.99 * math.log(vhi / (vhi - 2.45))) and B["grace"][0] >= 0.1
+    assert _close(B["t_rev0"], B["icb_min"] * (16.8 / C["dock_pk"]) / (22e-6 / (B["cdv"] * 0.9))) and 1.8e-3 < B["t_rev0"] < 2.0e-3
+    # 2. Q41 is l8r2's; the third battery FET's designator is L4-E11's
+    for line in text.splitlines():
+        if "Q41" in line:
+            assert "l8r2" in line, "Q41 named outside its owner: %s" % line.strip()[:120]
+    # 3. BAT-F20 on the 10 A and 18 A rows
+    for case in ("10 A continuous", "18 A for 60 s"):
+        assert "DD-5" in rows[case]["status"] and "Q1 OVER" in rows[case]["margin"]
+    assert B["q1_w"][10.0][0] / B["q1_allow_w"] > 4 and round(B["q1_w"][18.0][1]) == 18
+    # 5. the PTC guard, selected on its window
+    assert 8.9 < J["ptc_window"][0] < 9.1 and J["ptc_hi"] + J["jmb"] < 150 and any(k[0] == "E-13" for k in R["missing"])
+    # the minors: the inverters' gates and the discharge, the clamp's resistive failure
+    assert B["g1_max"] < 20 and B["g2"][1] < 20 and min(B["g1_on_sense"], B["g2"][0]) > 2.5 and B["i_dis"] < 0.115
+    assert any(r["case"].startswith("the clamp failing resistive") for r in R["table"])
+
+
+def t_protection_the_retry_judged_over_every_protected_part():
+    _PR()
+    R, B, I = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["in"]
+    RT = R["RT"]
+    # the timer's cycle at the printed limits (8.4.3): the fault time from 0.3 V, the seven restart cycles and the last fall
+    cmin, cmax = 9e-9, 11e-9
+    on_max = cmax * (LM["vtmrh"][1] - LM["vtmrl"]) / LM["itmr"][0] + B["t_off_timer"]
+    dv = LM["vtmrh"][0] - LM["restart"][1]
+    off_min = cmin * (7 * (dv / LM["isink"][1] + dv / LM["itmr"][1]) + (LM["vtmrh"][0] - LM["vtmrl"]) / LM["isink"][1])
+    assert _close(RT["t_on"][1], on_max) and _close(RT["t_off"][0], off_min)
+    # the series envelope: never over the limit nor over PLIM over VDS, through the slowest ramp
+    icl, plim = B["icl_max"], B["plim_max"]
+    dvlo = 10e-6 / (22e-9 * 1.1)
+    u = plim / icl
+    i2t = (icl * icl * u + plim * plim * (1 / u - 1 / 16.8)) / dvlo + icl * icl * on_max
+    assert _close(RT["i2t"], i2t) and RT["k"] < 0.1 and RT["i_rms"] < icl
+    # the breaker FET, a hard short, retried: the case from the average and the SOA ratio past TI's margin
+    hs = RT["hs"]
+    assert hs["tc"] > 115 and hs["ratio"] > 1 / 1.5 and RT["rf"]["tc"] > 150 and RT["minus2_fails"]
+    # every protected part has a row, and only the breaker FET, Q1 under BAT-F20 and the unrated holder are not within
+    names = " ".join(r["name"] for r in RT["rows"])
+    for part in ("Q1/Q2", "BAT-F20", "battery FETs", "R17", "R10", "sense", "XT60", "dock contacts", "copper", "barrel", "blades", "3568", "cells", "enable loop", "breaker FET"):
+        assert part in names, "no retry row for %s" % part
+    bad = [r["name"] for r in RT["rows"] if not r["verdict"].startswith(("within", "not cycled"))]
+    assert all(("breaker FET" in n) or ("BAT-F20" in n) or ("3568" in n) for n in bad), bad
+    # the -1 selected: its timer re-enables before the hold's least release, and the page says so
+    assert RT["latch_dis"] < B["grace"][0]
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    assert "**SELECTED: the -1 (latch-off).**" in s15 and "LM5069-2 breaker" not in s15
+    for fig in ("%.2f" % RT["hs"]["ratio"], "%.1f" % RT["hs"]["tc"], "%.0f" % RT["rf"]["tc"], "%.2f" % RT["i_rms"], "%.2f" % RT["i2t"],
+                "%.1f" % (RT["latch_dis"] * 1e3), "%.2f" % RT["start_rf"]["ratio_air"], "%.2f" % RT["start_rf"]["ratio_hot"]):
+        assert fig in s15, "section 15 does not carry %s" % fig
+
+
+def t_protection_the_hot_restart_held_inside_one_criterion():
+    _PR()
+    R, B, I = _C["PRR"], _C["PRR"]["B"], _C["PRR"]["in"]
+    RT = R["RT"]
+    H, SR = RT["inh"], RT["start_rf"]
+    # B-R1 as the recheck reads it: the worst resistive start at the checker's cases
+    soa_t2 = B["soa"]["1 ms"] * (SR["t2"] / 1e-3) ** (math.log(B["soa"]["1 ms"] / B["soa"]["10 ms"]) / math.log(0.1))
+    ratio = lambda tc: B["plim_max"] / (soa_t2 * (150.0 - tc) / 125.0)
+    assert round(ratio(76.25), 2) == 0.54 and round(ratio(101.0), 2) == 0.82 and round(ratio(103.0), 2) in (0.85, 0.86)
+    assert abs(ratio(H["t67"]) - 2 / 3) < 1e-6 and 89.5 < H["t67"] < 90.3 and 82.8 < H["t67r"] < 83.6
+    # the inhibit's window: allow from the air plus 1 K, block at the margin's case with the reading; the NTC's share by its sheet
+    assert _close(H["t_allow"], 77.25) and _close(H["t_trip"], 0.5 * (77.25 + H["t67r"]))
+    tk = H["t_trip"] + 273.15
+    r = 10e3 * math.exp(3434 * (1 / tk - 1 / 298.15))
+    assert _close(H["r_ntc"], r) and _close(H["d_r"], 0.01 * tk * tk / 3434) and H["budget"] > 1.5
+    assert H["i_bridge"] <= 0.12e-3 and H["r_block_low"] <= 2 / 3 + 1e-9 and H["r_held"] > 2 / 3
+    # the minors: IF-1's room, the fast undock, the hold's diode, the conservative duty
+    assert _close(RT["load_ramp_max"], (B["plim_min"] - B["start_p"]) / 16.8) and 0.75 < RT["load_ramp_max"] < 0.85
+    assert B["t_break"] < 0.5e-3 and B["v_withdraw"] > 2.0 and B["t_break_old"] > 1.4e-3
+    assert B["d_ratio"][0] < 0.2 and B["d_ratio"][1] < 1.0 and "conservative" in _C["ptext"]
+    rows = {r_["case"]: r_ for r_ in R["table"]}
+    assert "C-1c" in [r_ for c, r_ in rows.items() if c.startswith("a start into a resistive fault")][0]["status"]
+    assert "CRITICAL" in R["interfaces"][0][1] and "l8p" in R["defects"][7][2] and "B-R2" in R["defects"][6][1]
+    t = open(PAGE, encoding="utf-8").read()
+    s15 = t[t.index("## 15. "):]
+    for fig in ("%.1f" % H["t67"], "%.1f" % H["t67r"], "%.2f" % H["t_allow"], "%.2f" % H["t_trip"], "%.2f" % H["half"], "%.2f" % H["d_ntc"],
+                "%.2f" % H["budget"], "%.0f" % H["r_ntc"], "%.2f" % RT["load_ramp_max"], "%.2f" % B["v_withdraw"], "%.2f" % (B["t_break_old"] * 1e3),
+                "%.2f" % H["r_held"], "%.2f" % H["r_block"], "%.2f" % H["r_trip_low"], "falling edge", "C-1c SELECTED"):
+        assert fig in s15, "section 15 does not carry %s" % fig

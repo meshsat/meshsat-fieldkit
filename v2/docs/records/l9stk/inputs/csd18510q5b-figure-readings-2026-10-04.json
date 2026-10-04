@@ -1,0 +1,16 @@
+{
+  "what": "Readings of TI CSD18510Q5B (SLPS632, March 2017), v2/vendor/battery/ti-csd18510q5b.pdf, page 6: Figure 10 (Maximum Safe Operating Area, single pulse, max RthJC 0.8 C/W, case 25 C) and Figure 8 (normalized on-state resistance against case temperature), for record l9stk's protection design (MESHSAT-1357, 4 October 2026)",
+  "method": "the page rendered with pdftoppm at 300 dpi and cropped to the figure (x 380, y 1290, 840 by 600 pixels); each straight segment of a curve read at its two end points in that crop's pixels; the axes calibrated on their labelled gridlines; a current at a drain voltage is the log-log interpolation along the segment. Reading uncertainty about 3 pixels, which is 5 percent in current; the record carries 10 percent",
+  "pdf_sha256_16": "cb747de812f66859",
+  "axes": {"x_px": {"1": 280, "10": 540}, "y_px": {"100": 157, "1": 435}},
+  "soa_segments": {
+    "DC": [[260, 157], [700, 432]],
+    "10 ms": [[270, 72], [700, 409]],
+    "1 ms": [[355, 72], [700, 372]],
+    "100 us": [[440, 72], [665, 192]],
+    "10 us": [[540, 72], [700, 157]]
+  },
+  "rdson_normalized_at_150c_vgs10": 1.8,
+  "rdson_normalized_note": "Figure 8 at VGS 10 V reads about 1.8 at a 150 C case, the figure's right end (typical curve, ID 32 A); used as the bound for the conduction loss at the junction limit",
+  "uncertainty_pct": 10
+}
