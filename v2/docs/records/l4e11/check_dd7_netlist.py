@@ -41,7 +41,7 @@ MAP = [
     ("R252", "200k", {"1": "DD7_AG", "2": "DD7_AD"}),
     ("Q51", "AO3401A", {"1": "DD7_AG", "2": "VBAT", "3": "DD7_K"}),
     ("R253", "10k", {"1": "DD7_K", "2": "GND"}),
-    ("R84", "56R", {"1": "DD7_K", "2": "DD7_KA"}),
+    ("R84", "56R 1% pulse-rated", {"1": "DD7_K", "2": "DD7_KA"}),   # round 11: V1's minor, the pulse rating read in the value
     ("D26", "1N4148W", {"1": "DD7_H", "2": "DD7_KA"}),
     ("C241", "1u 100V", {"1": "DD7_H", "2": "GND"}),
     ("R85", "1.2M", {"1": "DD7_H", "2": "GND"}),

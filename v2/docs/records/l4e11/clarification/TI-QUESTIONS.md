@@ -108,3 +108,18 @@ Drafted, not sent:
   holds the battery FETs' gates (BATDRV's node) at VSYS whatever BATDRV drives, so BATDRV may sink up to its 11.5 V over its 3 kOhm least
   RBATDRV_ON (about 3.8 mA) for minutes or hours. Is that within BATDRV's capability, and does the charger fault, latch or change mode when
   its battery FETs do not turn on while it drives them (charging, LDO mode or supplement)?
+
+## Round 11 (4 October 2026, record section 21d): Q-TI-17 (e) and (f)
+
+Drafted, not sent. Round 11 keeps the three BUK6Y10-30P and sizes their thermal path for the worst split of the RDS(on) spread
+(section 21); E11-37 stays open on TI's answer or the bench, and on a negative answer the supplier's correction scope is two FETs.
+That fallback is under 5 nF only on a typical figure, so the questions name it.
+
+- **Q-TI-17 (e) (E11-37, BQ25730).** SLUSE65A 9.2.2 (p.92) gives the 5 nF without a drain-source voltage. Nexperia prints the
+  BUK6Y10-30P's Ciss as 2.36 nF typical at VDS -15 V and no maximum (17 April 2020, Table 7); its Fig. 12 reads about 2.87 nF typical
+  at VDS -0.1 V (this record's reading of the rendered page, `inputs/`). Two in parallel are 4.72 nF typical at -15 V and about 5.74 nF typical near 0 V. At which VDS should a design read Ciss
+  against the 5 nF, and with what margin for the part-to-part spread a maker does not print: is the pair within TI's rule?
+- **Q-TI-17 (f) (E11-37, BQ25730).** If the 5 nF stands for a property of BATDRV's loops (the ideal diode's regulation at
+  VBATDRV_DIODE 30 mV, LDO mode at VSYS_MIN, the supplement entry), what gate load does TI accept on BATDRV over -20 to 70 C, stated
+  as Ciss at a named VDS or as QG(tot) at -10 V (three BUK6Y10-30P: 192 nC at most at VDS -15 V, 7.08 nF typical at -15 V)? SLUSE65A names no
+  external driver or buffer on BATDRV; does TI support one in any of the three modes, and if so with what added delay or offset?
