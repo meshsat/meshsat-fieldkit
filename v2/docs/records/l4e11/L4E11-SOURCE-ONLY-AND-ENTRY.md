@@ -2205,6 +2205,9 @@ SETTLED**; E11-29's row says so. T2 compares at most three approaches for E11-37
 - **Physical:** the hold's capacitor under DC bias and D26's hot leakage (E11-45 h); U47's and U48's thresholds as the lot reads them;
   the latch with the breaker held off (E11-45 f); board P's own conditions (record l8p: E-14b, R10's tolerance, E-12c).
 - **T2 (20i):** E-1's even split, OPEN against its acceptance; **E11-37** OPEN (Q-TI-17 or the bench with three).
+- **The latch with a source present and no charge over board P's threshold** stays latched (nothing asks an inhibit and Q46 blocks
+  the pulse): it restarts on board P's detector at a charge over 0.368 to 1.213 A, on a redocking, or on the input's return to a dark
+  kit (record l9stk's DD-7 reach, unchanged).
 - **The window's bound** (RT1 under 25.8 kOhm) rests on RT1 staying under it while the FETs' copper sits at the air: Murata prints no
   point between 25 C and 110 C (its curve is typical).
 - **DD-3** (19e) and the rest of section 19g as they stand.

@@ -4216,6 +4216,10 @@ def render_fix20(R, p):
     p("     physical: the hold's capacitor under DC bias and D26's hot leakage (E11-45 h); U47's and U48's thresholds as the lot reads them; the")
     p("       latch with the breaker held off (E11-45 f); board P's own conditions (record l8p: E-14b, R10's tolerance, E-12c)")
     p("     T2 (20i): E-1's even split, OPEN against its acceptance; E11-37 OPEN (Q-TI-17 or the bench with three)")
+    p("     the -1 latched with a source present and no charge over board P's threshold stays latched (nothing asks an inhibit and Q46 blocks the")
+    p("       pulse): it restarts on board P's detector at a charge over %s to %s A, on a redocking, or on the input's return to a dark kit (record"
+      % (fmt(S["thr_lo"], 3), fmt(S["thr_hi"], 3)))
+    p("       l9stk's DD-7 reach, unchanged; RECORD)")
     p("     the window's bound (RT1 under %s kOhm) rests on RT1 staying under it while the FETs' copper sits at the air: Murata prints no point"
       % fmt(S["window_rt1"] / 1e3, 1))
     p("       between 25 C and 110 C (its curve is typical)")
