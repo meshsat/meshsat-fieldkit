@@ -20,3 +20,11 @@ apply_gen_sch_b_iocbuck-bdbed9bb.py sha256 8cd31cfbbca390875df06a67e1677c15c1930
   this record's own board B draft as round 1 committed it (fnd/l9t5 at bdbed9bb), kept byte for byte as the old text: alone on board
   B's generator it refuses ("intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV"), the defect round 2
   corrects; l9t5_drafts.py and test_l9t5.py run it as the case that must fail.
+
+apply_gen_sch_a_iocbuck-7c28f9da.py sha256 23dae9bc1c461f84322f781578d4616cfe010b4cb3d0f5452b49826e4a09709f
+apply_gen_sch_b_iocbuck-7c28f9da.py sha256 afb77ab72e0d2d4cc677419900012f05ba0722f3d7afd090c417a06e37b14bd0
+  this record's own two drafts as round 2 committed them (fnd/l9t5 at 7c28f9da), kept byte for byte as the old text of round 3:
+  board B's declares the device lead at a typed 6.0 A peak, under its own 6.0359 A on C-DEV rev 1 with the draft composed, and
+  +5V_IOC at 1.38 A on both boards (record l8r2's finding L8R2-F35); l9t5_drafts.py and test_l9t5.py run them as the declarations
+  that must fail. T5b's report itself is not filed here (it names a private path): its content is record l8r2's round 7 in this
+  tree since the merge at 43c9b49d (v2/docs/records/l8r2/l8r2_gndret.out and L8R2-KNOWN-DEFECTS.md section 3g).
