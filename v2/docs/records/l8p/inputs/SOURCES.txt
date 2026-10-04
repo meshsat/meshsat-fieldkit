@@ -42,3 +42,40 @@ Copies here (sha256):
 
 Held back, not committed: TI's OPA187 sheet (SBOS807E), fetched by ../fetch_held_back.py into v2/vendor/ti/held/ and checked
 there by sha256 62bd7b52851715978aa52511ad946b1d725850b4d2e8672a901627ed65585c32.
+
+Round 5 (branch fnd/l8p2, the check V1's condition C4 and its minors): task L4-E11's round 10 is on branch fnd/l4e11r10 at a09e9a60,
+not on main. It corrects L8P-F02 and L8P-F03 and redraws DD-7 against route R1 (L8P-F04, L8P-F05). Its four drafts are copied byte
+for byte, so board A's and board E's compositions in l8p_drafts.py read alike on this branch and on a merge with a09e9a60 (where
+records/l4e11/ holds the same bytes), and three sections of its page are copied so section 3b and section 9 read the interface's
+levels, its delays and the latch's source budget from them. These copies are taken from a09e9a60 with `git show a09e9a60:<path>`
+(the sections with `sed -n`) and are not edited; l8p_drafts.py refuses when a phrase no longer matches.
+
+Full files at a09e9a60 (sha256):
+  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   2441927d7c6bc4028d5c678252ca4772cc518c0f9f7d218ed83ea5b1141ec291
+  v2/docs/records/l4e11/apply_gen_sch_a_charger.py       bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9
+  v2/docs/records/l4e11/apply_gen_sch_a_dd7.py           725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343
+  v2/docs/records/l4e11/apply_gen_sch_e_aux.py           3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+  v2/docs/records/l4e11/apply_gen_sch_e_entry.py         a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+
+Copies here (sha256):
+  l4e11r10-apply_gen_sch_a_charger-a09e9a60.py   bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9
+      v2/docs/records/l4e11/apply_gen_sch_a_charger.py at a09e9a60, byte for byte (R-157; corrects L8P-F02)
+  l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py       725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343
+      v2/docs/records/l4e11/apply_gen_sch_a_dd7.py at a09e9a60, byte for byte (DD-7 redrawn: U48 on the loop's two conductors)
+  l4e11r10-apply_gen_sch_e_aux-a09e9a60.py       3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+      v2/docs/records/l4e11/apply_gen_sch_e_aux.py at a09e9a60, byte for byte (R-177; corrects L8P-F03)
+  l4e11r10-apply_gen_sch_e_entry-a09e9a60.py     a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+      v2/docs/records/l4e11/apply_gen_sch_e_entry.py at a09e9a60, byte for byte
+  l4e11-section20c-a09e9a60.md                   c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2065 to 2093: section 20c whole (the thresholds board A reads, the restated box,
+      the window and the guard's turn-off band)
+  l4e11-section20d-a09e9a60.md                   a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2094 to 2119: section 20d whole (the delays: the inhibit set within 0.85 ms, the
+      charge ended within 1.41 ms, the hold at least 1.341 s)
+  l4e11-section20e-a09e9a60.md                   b02cbebcfb670197745bd6ee42d8e78dd45f22f8f3380f6e0441f271d06a1663
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2120 to 2136: section 20e whole (L8P-F05 corrected: the latch reads dead while every
+      source into CELL+ stays under 0.846 mA together)
+
+Read in round 5 from this tree (no copy needed): Murata's PRF series sheet v2/vendor/battery/murata-prf-series.pdf (DM-SA16-E056
+Rev.1 201608, sha256 a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a, SOURCES.yaml entry pack-ptc-element) and
+TI's CSD18510Q5B sheet v2/vendor/battery/ti-csd18510q5b.pdf (SLPS632, March 2017), both committed.
