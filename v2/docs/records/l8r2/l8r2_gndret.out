@@ -33,7 +33,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
    8016267ff0da3889 v2/docs/records/l6r2/apply_gen_sch_b_xal_land.py
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-   84297a48f39b8598 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
+   f6381296fc8ad657 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
    cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
    f5d15853e9ca5af8 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
    3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
@@ -335,18 +335,21 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    (b) THE LOAD LIST IS RIGHT IN WHAT IT COUNTS AND MISSED ONE RETURN: no ampere is counted twice and none returns elsewhere; the PoE
        port's 0.60 A at R12 is added. Against Layer 9's budget the device rail's ALLOCATIONS (5.49 A) and its declared 6.0 A peak are
        under C-DEV rev 1's 7.4717 A: that is I-03 (OPEN), corrected by Layer 9's draft, not by this round.
-   (c) THE RETURN PATH IS SHORT OF THE LOAD ON THE MAKERS' PRINTED FIGURES: a circuit defect of the A to B interface, finding
-       L8R2-F31, OPEN. The return is branched in parallel over five (six) VH contacts and the seventeen ground conductors of two
-       signal ribbons, and nothing sets its division. With new contacts at one value (K0, K1) every conductor is inside its
-       printed rating at every total. With the VH contacts aged to JST's own after-test limit (K2) a ribbon conductor carries
-       0.959 A at Layer 9's largest state and 1.101 A at the upper bound against its printed 1 A at 25 C; on the printed
-       extremes a lead contact reads 13.5 A against 10 A. The division holds only while the VH contacts stay under 2.8 to
-       6.8 mOhm, better than their maker's 10 mOhm limit (3e); JST's note asks a parallel branch to be designed 'without
-       causing any imbalance' with 'extra margin for each circuit', and the ribbons' contracts never counted supply current.
-       These are the MODEL's answers on printed maxima: no harness exists and no contact has been measured, so they are not a
-       measured overload, and a balanced reading is not evidence either. More return contacts close it only from 24 VH
-       contacts in place of six (3j, A0); 3j scopes the correction (A1, a dedicated return, selected as the direction; not
-       drafted: boards A and B, the harness and two contracts).
+   (c) THE RETURN PATH DOES NOT HOLD ON THE MAKERS' PRINTED FIGURES: a circuit defect of the A to B interface, finding L8R2-F31,
+       OPEN. The return is branched in parallel over five (six) VH contacts and the seventeen ground conductors of two signal
+       ribbons, and nothing sets its division.
+       - New contacts at one value (K0, K1): every conductor is inside its printed rating at every total.
+       - VH contacts aged to JST's own after-test limit, still equal (K2): a ribbon conductor carries 0.959 A at Layer 9's largest
+         state, inside its printed 1 A at 25 C by 4.1 % in air where its maker states a derating and prints no curve; and
+         1.101 A at the upper bound, over it.
+       - Unequal contacts inside the makers' limits (K3 to K5, BOUNDS): at the largest state already a ribbon conductor reads
+         1.195 A and a lead contact 11.7 A; at the upper bound 1.41 A and 13.5 A.
+       The division holds only while the VH contacts stay under 2.8 to 6.8 mOhm, better than their maker's 10 mOhm limit (3e);
+       JST's note asks a parallel branch to be designed 'without causing any imbalance' with 'extra margin for each circuit',
+       and the ribbons' contracts never counted supply current. These are the MODEL's answers on printed maxima: no harness
+       exists and no contact has been measured, so they are not a measured overload, and a balanced reading is not evidence
+       either. More return contacts close it only from 24 VH contacts in place of six (3j, A0); 3j scopes the correction (A1,
+       a dedicated return, selected as the direction; not drafted: boards A and B, the harness and two contracts).
    NOT RAISED TO MAKE THE GENERATOR PASS: the declaration is derived, the same text reads 22.23 A on the committed generator, a lead
        declared lower lowers it, and the capacity finding stays OPEN beside it.
 
@@ -354,7 +357,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    v2/docs/records/l8r2/apply_gen_sch_b_gndret.py sha256 f5d15853e9ca5af8
      --check exit 0 (target unchanged: yes); --write exit 0 (parses: yes); a second --write exit 3 (apply_gen_sch_b_gndret: already applied (_gnd_return is defined in the target); refusing);
      on the tree's own generator exit 3 (apply_gen_sch_b_gndret: NOT RELEASED: no RELEASE.md; l8r2's drafts wait on an accepted check; refusing)
-   v2/docs/records/l8r2/apply_gen_sch_b_fandec.py sha256 84297a48f39b8598
+   v2/docs/records/l8r2/apply_gen_sch_b_fandec.py sha256 f6381296fc8ad657
      --check exit 0 (target unchanged: yes); --write exit 0 (parses: yes); a second --write exit 3 (apply_gen_sch_b_fandec: already applied (_dec_rule names the TPS61089); refusing);
      on the tree's own generator exit 3 (apply_gen_sch_b_fandec: NOT RELEASED: no RELEASE.md; l8r2's drafts wait on an accepted check; refusing)
    THE COMPOSITION WITH Layer 9's draft and Layer 6's three (xal_land, lcsc, intent), in four orders:
@@ -427,8 +430,8 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
      scales by 0.9113.
    CREDIT (the common brief's three criteria) for this round's two drafts: (a) composes in L4-E9's order and the generator runs: yes;
    (b) the changed declaration read on the regenerated netlist and intent with mutations that fail: yes; (c) electrical acceptance on
-   the makers' printed figures: the DECLARATION is supported as an upper bound (section 2c); the RETURN PATH is short on the
-   makers' printed maxima (section 3, L8R2-F31 OPEN): NOT accepted. A netlist check is not electrical qualification.
+   the makers' printed figures: the DECLARATION is supported as an upper bound (section 2c); the RETURN PATH does not hold on
+   the makers' printed figures (section 3, L8R2-F31 OPEN): NOT accepted. A netlist check is not electrical qualification.
 
 7. FINDINGS
    L8R2-F30 CORRECTED BY DRAFT (not applied): board B's GND declaration was typed and stale (10.0 A, 21.0 A, four leads, a note of

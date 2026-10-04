@@ -26,15 +26,15 @@ repository's own generator until a `RELEASE.md` beside it names an accepted chec
 | `apply_gen_sch_b_gndret.py` | DRAFT, board B (round 7, task T5b, the owner's review RSM-01): the return's typical and peak derived in the generator from the rails that arrive on its lead connectors (13.30 A and 26.40 A, an UPPER BOUND; 27.78 A with Layer 9's I-03 draft; 22.23 A on the committed generator), `J_54V` and the PoE return at R12 added; composes with Layer 9's draft in either order |
 | `apply_gen_sch_b_fandec.py` | DRAFT, board B (round 7, L8R2-F32), fans12's companion: the row in `_dec_rule` that gives the cooler step-ups' two capacitors the class board B's decision 42 block reads; without it the composed generator stops on C704 |
 | `check_gndret_netlist.py` | round 7: what the regenerated netlist and intent must show for the return (the leads read from the netlist, the sums, the PoE return, the loads); NOT DRAWN on the committed board |
-| `l8r2_gndret.py`, `l8r2_gndret.out` | round 7: the stop reproduced stage by stage, the load basis and its three figures, the return divided between the five lead contacts and the seventeen ribbon conductors by resistance on the makers' printed figures, the judgment (the declaration corrected; the return path short on printed maxima, **L8R2-F31 OPEN**), four corrections compared, the composition in four orders, eight mutations, what Layer 9's author needs; regenerated with `_bin/regen_out.py` |
+| `l8r2_gndret.py`, `l8r2_gndret.out` | round 7: the stop reproduced stage by stage, the load basis and its three figures, the return divided between the five lead contacts and the seventeen ribbon conductors by resistance on the makers' printed figures, the judgment (the declaration corrected; the return path not holding on the makers' printed figures, **L8R2-F31 OPEN**), four corrections compared, the composition in four orders, eight mutations, what Layer 9's author needs; regenerated with `_bin/regen_out.py` |
 | `inputs/` | Layer 7's cooler identity (`fnd/l7pwr` at `2087060b`) and Layer 5's round 2 findings (`fnd/l5r2` at `6902db8f`), the panel firmware's F-01 (`fnd/fw-panel` at `42c27369`), Layer 6's board C draft with its helper (`fnd/l6r2` at `7633ae0a`); round 3: record l9pwr's output (`fnd/l9pwr` at `38ef774c`), record l9stk's output and page (`fnd/l9stk` at `7388a84b`); round 7: Layer 9's board B draft, its output and its budget (`fnd/l9t5` at `f70d3085`) and the coordinator's case rows; byte for byte, `inputs/SOURCES.txt` |
 
 **Round 7's state (task T5b, 4 October 2026, 20:00 CEST).** DONE: the stop reproduced; the load basis and the capacity basis
 reconciled; the declaration corrected by a draft (`apply_gen_sch_b_gndret.py`) and the second stop by another
 (`apply_gen_sch_b_fandec.py`); board B's composition runs to its end with Layer 9's I-03 draft in any order; the netlist and
-intent check with eight mutations; `test_l8r2` 31 passed. NOT DONE: the return path itself. **L8R2-F31 is OPEN**: on the makers'
-printed contact maxima the signal ribbons' ground conductors carry more than their 1 A; a dedicated return (A1) is selected as
-the direction and is not drafted. No independent check has read this round, and nothing is applied to the tree. NEXT ACTION:
+intent check with eight mutations; `test_l8r2` 31 passed. NOT DONE: the return path itself. **L8R2-F31 is OPEN**: the return
+divides between five lead contacts and seventeen signal-ribbon conductors by resistance, and on the makers' printed contact
+maxima a ribbon conductor passes its 1 A; a dedicated return (A1) is selected as the direction and is not drafted. No independent check has read this round, and nothing is applied to the tree. NEXT ACTION:
 the coordinator's focused check of the page's section 3g; then A1's draft on boards A and B with Layers 5 and 7, or the
 harness measurement of `l8r2_gndret.out` 3e.
 

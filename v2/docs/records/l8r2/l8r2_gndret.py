@@ -827,21 +827,26 @@ def main():
           "       under C-DEV rev 1's %.4f A: that is I-03 (OPEN), corrected by Layer 9's draft, not by this round.\n"
           % (poe["peak"], sum(call_of(comp_res, "+5V_DEV")["loads"].values()), call_of(comp_res, "+5V_DEV")["peak"], F["cdev_u7_before"]))
         thr_all = [x for v in thr.values() for x in v if x is not None]
-        w("   (c) THE RETURN PATH IS SHORT OF THE LOAD ON THE MAKERS' PRINTED FIGURES: a circuit defect of the A to B interface, finding\n"
-          "       L8R2-F31, OPEN. The return is branched in parallel over five (six) VH contacts and the seventeen ground conductors of two\n"
-          "       signal ribbons, and nothing sets its division. With new contacts at one value (K0, K1) every conductor is inside its\n"
-          "       printed rating at every total. With the VH contacts aged to JST's own after-test limit (K2) a ribbon conductor carries\n"
-          "       %.3f A at Layer 9's largest state and %.3f A at the upper bound against its printed %.0f A at 25 C; on the printed\n"
-          "       extremes a lead contact reads %.1f A against %.0f A. The division holds only while the VH contacts stay under %.1f to\n"
-          "       %.1f mOhm, better than their maker's %.0f mOhm limit (3e); JST's note asks a parallel branch to be designed 'without\n"
-          "       causing any imbalance' with 'extra margin for each circuit', and the ribbons' contracts never counted supply current.\n"
-          "       These are the MODEL's answers on printed maxima: no harness exists and no contact has been measured, so they are not a\n"
-          "       measured overload, and a balanced reading is not evidence either. More return contacts close it only from %s VH\n"
-          "       contacts in place of six (3j, A0); 3j scopes the correction (A1, a dedicated return, selected as the direction; not\n"
-          "       drafted: boards A and B, the harness and two contracts).\n"
+        st_rib_x = max(mx(S, EXT, "rib", (1, 2)) for S in (SV, SV20)); st_vh_x = max(mx(S, EXT, "vh_max", (1, 2)) for S in (SV, SV20))
+        w("   (c) THE RETURN PATH DOES NOT HOLD ON THE MAKERS' PRINTED FIGURES: a circuit defect of the A to B interface, finding L8R2-F31,\n"
+          "       OPEN. The return is branched in parallel over five (six) VH contacts and the seventeen ground conductors of two signal\n"
+          "       ribbons, and nothing sets its division.\n"
+          "       - New contacts at one value (K0, K1): every conductor is inside its printed rating at every total.\n"
+          "       - VH contacts aged to JST's own after-test limit, still equal (K2): a ribbon conductor carries %.3f A at Layer 9's largest\n"
+          "         state, inside its printed %.0f A at 25 C by %.1f %% in air where its maker states a derating and prints no curve; and\n"
+          "         %.3f A at the upper bound, over it.\n"
+          "       - Unequal contacts inside the makers' limits (K3 to K5, BOUNDS): at the largest state already a ribbon conductor reads\n"
+          "         %.3f A and a lead contact %.1f A; at the upper bound %.2f A and %.1f A.\n"
+          "       The division holds only while the VH contacts stay under %.1f to %.1f mOhm, better than their maker's %.0f mOhm limit (3e);\n"
+          "       JST's note asks a parallel branch to be designed 'without causing any imbalance' with 'extra margin for each circuit',\n"
+          "       and the ribbons' contracts never counted supply current. These are the MODEL's answers on printed maxima: no harness\n"
+          "       exists and no contact has been measured, so they are not a measured overload, and a balanced reading is not evidence\n"
+          "       either. More return contacts close it only from %s VH contacts in place of six (3j, A0); 3j scopes the correction (A1,\n"
+          "       a dedicated return, selected as the direction; not drafted: boards A and B, the harness and two contracts).\n"
           "   NOT RAISED TO MAKE THE GENERATOR PASS: the declaration is derived, the same text reads %.2f A on the committed generator, a lead\n"
           "       declared lower lowers it, and the capacity finding stays OPEN beside it.\n"
-          % (worst["RIB_aged_state"], worst["RIB_aged"], F["cab_a"], worst["VH"], F["vh_a16"], min(thr_all), max(thr_all), F["vh_rc0"],
+          % (worst["RIB_aged_state"], F["cab_a"], 100 * (F["cab_a"] - worst["RIB_aged_state"]) / F["cab_a"], worst["RIB_aged"], st_rib_x, st_vh_x,
+             worst["RIB"], worst["VH"], min(thr_all), max(thr_all), F["vh_rc0"],
              n_all if n_all else "more than 120", pk_0))
 
         # ---------------------------------------------------------------- 5
@@ -996,8 +1001,8 @@ def main():
           % (poe["peak"], IOC_AWG, F["lead_mm"], s3_l9, tot6 - rows["S3"]["least"] + s3_l9, (tot6 - rows["S3"]["least"] + s3_l9) / tot6))
         w("   CREDIT (the common brief's three criteria) for this round's two drafts: (a) composes in L4-E9's order and the generator runs: %s;\n"
           "   (b) the changed declaration read on the regenerated netlist and intent with mutations that fail: %s; (c) electrical acceptance on\n"
-          "   the makers' printed figures: the DECLARATION is supported as an upper bound (section 2c); the RETURN PATH is short on the\n"
-          "   makers' printed maxima (section 3, L8R2-F31 OPEN): NOT accepted. A netlist check is not electrical qualification.\n"
+          "   the makers' printed figures: the DECLARATION is supported as an upper bound (section 2c); the RETURN PATH does not hold on\n"
+          "   the makers' printed figures (section 3, L8R2-F31 OPEN): NOT accepted. A netlist check is not electrical qualification.\n"
           % ("yes" if all_run else "NO", "yes" if checks.get("composed with Layer 9's draft and Layer 6's") == "DRAWN" and all_mut else "NO"))
 
         # ---------------------------------------------------------------- 7

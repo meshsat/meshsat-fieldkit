@@ -30,7 +30,8 @@ returns (`apply_gen_sch_b_gndret.py`: 13.30 A typical, 26.40 A peak as an UPPER 
 the decoupling class row the cooler step-ups lacked (`apply_gen_sch_b_fandec.py`, a second stop behind the first). Board B's
 composition then runs to its end. **It does not correct the return path itself: L8R2-F31 is OPEN.** The two boards' grounds
 are joined by five lead contacts and seventeen signal-ribbon conductors in parallel, nothing sets the division, and on the
-makers' printed contact maxima a ribbon conductor passes its 1 A rating. Every figure is in `l8r2_gndret.out`.
+makers' printed contact maxima a ribbon conductor passes its 1 A rating (with aged equal contacts at the upper bound, with
+unequal ones at the largest state already). Every figure is in `l8r2_gndret.out`.
 
 Figures carry a class: **MAKER** (printed in a held sheet), **INFERRED** (derived from printed figures under a stated assumption),
 **ASSUMPTION** (no held document gives it), **BOUND** (a limit this record states and holds the design to). Every figure is in
@@ -877,11 +878,15 @@ pins as signal returns at 1 A a contact.
    derived in the generator from the leads' own declarations, the peak an UPPER BOUND; `J_54V` named.
 2. **The load list is right in what it counts and missed one return.** The PoE port's 0.60 A at R12 is added. The device
    rail's allocations (5.49 A) and declared 6.0 A peak under C-DEV rev 1's 7.4717 A are I-03, Layer 9's, not this round's.
-3. **The return path is short of the load on the makers' printed figures: L8R2-F31, OPEN.** It is branched in parallel over
-   contacts whose maker asks for a design "without causing any imbalance" with "extra margin for each circuit", and over two
-   signal ribbons. It holds only while the VH contacts stay under 2.8 to 6.8 mOhm, better than their maker's 10 mOhm limit.
-   These are the model's answers on printed maxima: no harness exists and no contact has been measured, so they are not a
-   measured overload, and a balanced reading is not evidence either.
+3. **The return path does not hold on the makers' printed figures: L8R2-F31, OPEN, a circuit defect of the A to B interface.**
+   It is branched in parallel over contacts whose maker asks for a design "without causing any imbalance" with "extra margin
+   for each circuit", and over two signal ribbons. New equal contacts: every conductor inside its printed rating at every
+   total. VH contacts aged to JST's after-test limit, still equal: a ribbon conductor carries 0.959 A at Layer 9's largest
+   state, inside its printed 1 A at 25 C by 4.1 % in air where its maker states a derating and prints no curve, and 1.101 A
+   at the upper bound, over it. Unequal contacts inside the makers' limits (BOUNDS): at the largest state already 1.195 A in
+   a ribbon conductor and 11.7 A in a lead contact (1.41 A and 13.5 A at the upper bound). It holds only while the VH contacts stay under 2.8 to 6.8 mOhm, better
+   than their maker's 10 mOhm limit. These are the model's answers on printed maxima: no harness exists and no contact has
+   been measured, so they are not a measured overload, and a balanced reading is not evidence either.
 
 The declaration was not raised to make the generator pass: the same draft on the committed generator gives 22.23 A, a lead
 declared lower lowers it, and the capacity finding stays OPEN beside it.
@@ -891,7 +896,7 @@ declared lower lowers it, and the capacity finding stays OPEN beside it.
 | draft | what it writes |
 |---|---|
 | `apply_gen_sch_b_gndret.py` | the head of the GND rail call becomes a helper `_gnd_return` that sums the typical and peak currents of every rail arriving on one of the return's lead connectors, adds `J_54V` and the PoE return at R12, and stops the generator if a lead connector carries no arriving rail or two; the note names the peak an upper bound. The list of leads and `loads=_GND_LOADS` stay byte for byte, so Layer 9's draft applies before or after |
-| `apply_gen_sch_b_fandec.py` | **L8R2-F32**, the second stop found behind the first: fans12 declares its two TPS61089 capacitors' class at the call, and board B's decision 42 block reads classes from its own table `_dec_rule` and stops on a part the table does not name ("C704 -> U701.9 ... carries no class"). One row in `_dec_rule` hands the entry's own class, clause and value floor to the block. fans12 is left byte for byte (records l7pwr and l9pwr pin it) |
+| `apply_gen_sch_b_fandec.py` | **L8R2-F32**, the second stop found behind the first: fans12 declares its two TPS61089 capacitors' class at the call, and board B's decision 42 block reads classes from its own table `_dec_rule` and stops on a part the table does not name ("C704 -> U701.9 ... carries no class"). One row in `_dec_rule` hands the entry's own class, clause and value floor to the block. fans12 is left byte for byte (record l7pwr pins its sha256 and record l4e9 holds its bytes) |
 
 Composition: four orders (the round's order with Layer 9's draft and Layer 6's three; Layer 9's draft before this round's
 two; this round's two first; the round reversed) give one generator byte for byte, and each runs to its end: 1476 parts, GND
@@ -966,7 +971,7 @@ by 0.9113.
 **Credit, by the three criteria of the coordinator's brief**, for the two drafts: (a) they compose in L4-E9's order with the
 pending drafts and the generator runs: yes; (b) the changed declaration is read on the regenerated netlist and intent with
 mutations that fail: yes; (c) electrical acceptance on the makers' printed figures: the DECLARATION is supported as an upper
-bound; the RETURN PATH is short on the printed maxima and is NOT accepted (L8R2-F31 OPEN). A netlist check is not electrical
+bound; the RETURN PATH does not hold on the makers' printed figures and is NOT accepted (L8R2-F31 OPEN). A netlist check is not electrical
 acceptance of a circuit, and no independent check has read this round.
 
 **Findings of round 7.**
@@ -974,7 +979,7 @@ acceptance of a circuit, and no independent check has read this round.
 | id | state | what | owner |
 |---|---|---|---|
 | L8R2-F30 | CORRECTED BY DRAFT, not applied, unchecked | the typed, stale GND declaration | the integrator (release with R-190) |
-| L8R2-F31 | **OPEN**, a known defect | the A to B return is branched in parallel over VH contacts and signal ribbons with nothing that sets its division; short on the makers' printed maxima | boards A and B, Layers 5 and 7; A1 the direction |
+| L8R2-F31 | **OPEN**, a known defect | the A to B return is branched in parallel over VH contacts and signal ribbons with nothing that sets its division; it does not hold on the makers' printed figures | boards A and B, Layers 5 and 7; A1 the direction |
 | L8R2-F32 | CORRECTED BY DRAFT, not applied, unchecked | fans12's TPS61089 capacitors had no class board B's block reads; rounds 1 to 6 never ran the generator | the integrator (with fans12) |
 | L8R2-F33 | OPEN, a layout constraint | no thermal relief on the VH leads' pin 2 on either board (or spokes of 3g's width); board A's intent cannot express the 5 V returns' loop | Layer 9 (layout constraints, record l9stk) |
 | L8R2-F34 | OWED | the leads' wire part and insulation class; `J_54V`'s AWG 18 lead has no stated rating and shares the return | Layer 7 |
