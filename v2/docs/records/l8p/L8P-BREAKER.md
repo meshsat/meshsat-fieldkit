@@ -215,6 +215,9 @@ never drafts and never applied. They say only that the generator then runs on.
 - **An open dock.** A conductor that bridges the two enable targets on E5 without touching the ground target between
   them makes the terminal live undocked. That is the same as a docking: a dv/dt start with the breaker in place. This is
   Layer 7's cover and geometry.
+- **The gauge's wake from a charger.** VCC's tap R7 now sits on BRK_VIN (IF-6), so a charger at PACK_P reaches it
+  through the breaker FETs' body diodes while the breaker is off: one diode drop (VSD at most 1 V, 15.4's charge direction).
+  This is the path the record states; R7's own comment in the generator still says "from the pack terminal".
 - **The inverters' own failures** are the record's remaining latent faults: R105 or Q104 open, or Q103 shorted. E-12 finds
   them: PACK_P dead undocked, and each loop conductor to ground in turn.
 
