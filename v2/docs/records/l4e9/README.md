@@ -153,7 +153,10 @@ merged; Layer 9's round 2 at `51821143`): 16.214 V needed on the final drafts ag
 withdrawn as a correction (it narrowed REQ-018); D-17 OPEN with one design-out attempt, the five fans' supplies off while the PA keys
 (R-210 to R-212, at least +0.126 V by a bound, CONDITIONAL on R-213); the cell's rest-voltage curve UNRESOLVED (R-214); the modes on the
 final drafts 44.576, 209.89 / 292.027, 166.149 W; C2 and C3 re-read; the budget's drafts registered (R-199 to R-209, R-190 DRAFTED):
-204 items. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+204 items. Set 29 (`fnd/l4e9s29` from `99a59252`): ten pins re-pinned to the files in the tree (the contract, the requirements, L4-E7's
+output and page, L4-E11's output, page, entry, charger and aux drafts and its TI questions), Layer 9's copied output renamed
+`inputs/l9pwr-budget-51821143.txt` as the other copied inputs are, and L4-E11's round 9 registered: R-215 to R-219 (E11-41 to E11-45),
+its DD-7 draft `apply_gen_sch_a_dd7.py` in the change list after record l8p's PTC draft (R-217): 209 items. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |

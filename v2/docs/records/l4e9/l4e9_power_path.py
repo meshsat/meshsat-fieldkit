@@ -72,7 +72,7 @@ PINS = {
     "trace": ("v2/docs/records/l3batt/load_trace.out", "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218"),
     "packprot": ("v2/ecad/tools/pcb_pack_protection.yaml", "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b"),
     "envelope": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "9b0d04c39beafb7dd3ef3269b05e2230fe68ee019dc83c2e0c9be0ea80d391db"),
     "ifaces": ("v2/ecad/tools/pcb_interfaces.yaml", "393305bed4edfd26588164da96871f17ce70492688e5648729545a3cc5987023"),
     "lm5176": ("v2/vendor/ti/lm5176-datasheet.pdf", "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820"),
     "lm74700": ("v2/vendor/ti/ti-lm74700-q1.pdf", "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f"),
@@ -90,13 +90,13 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "533afd197355ac37f7c277b7db0ce2df9adfd1b7197eb510e24f90413640c3da"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "2ad2015b0c7aea9107fbd0188f80578fc172df0742ca9e748ecd71a147c6829d"),
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
     # rounds 7 and 8: Layer 9's power budget (l9pwr, item 9.1), round 2 on fnd/l9pwr2 at 51821143, its output copied byte for byte (a
     # commit outside this branch's history, never read with git here); its finding L9P-F01 is decision D-11's all-transmit floor
-    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-51821143.out", "243f2dbcfd9b1a1b4af426cf7627e8ea4c7518cf91262bd3c543210fc7249b38"),
+    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-51821143.txt", "243f2dbcfd9b1a1b4af426cf7627e8ea4c7518cf91262bd3c543210fc7249b38"),
     # round 8: the drafts this record registers, each copied byte for byte (git show at its commit, outside this branch's history)
     "l8r3_slotlm": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt", "fc487ab269d2f7585edc10ec6efd4a1c280f633d1da3e0888580249bba245f03"),
     "l8r3_fb01": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt", "ea95bd293e44676ae782fd81880d9cfa301816d4771dde5c92882db51c4b8257"),
@@ -111,7 +111,7 @@ PINS = {
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8bb83aacbd4c0fc752339669835b34907a91f2f396095ef23066baeb2a738e9c"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
     "yageo": ("v2/vendor/passives/yageo-cc-series.pdf", "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"),
     "lcsc": ("v2/ecad/tools/lcsc_fill.py", "eb1f5e9f5e1ca9ae1c3caafc954633b9aec3f86f39b252d2302558f816150216"),
@@ -119,9 +119,9 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "0f70d9eeb473cf4d7508dc47b6b1ac9e51627f8bd4e31805a0f8f9898f198b31"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f4c127dd3f236d6f928607490cfe2f2e672e64cb4066527dfb70456d167dbe8d"),
-    "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "189ae6ef99f321655d7ca95bc8ef6c2e6f8002a8198be9a71620f6e9c0a7e4d6"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34"),
+    "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "2979856fdac67e50ce633cc7ff84daab93b5de7d4b819f132c127fa97101966b"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
@@ -152,14 +152,14 @@ PINS = {
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
     "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
-    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "9e26dfae5fd7962f23dd22bd125b5e4dd2c38401cd5d6dae08f296d5e8cf490b"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "a7f90fe48aeeadf6ab6d7d50a5f7c159231454226a561568861e360bc574546f"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
     # the consolidation's results: L4-E11's charger selection (B1), check 5 at 5aa18a69, and L4-E12's thermal verdict (T-H1
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "d857a70256d1c77e3a3d34bee0bf43df5e052f7fcfe769d832c118c71e21942e"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -173,11 +173,11 @@ PINS = {
     "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "9ed580a8dd2f35c80ca86fbebf0ef6ff1cb5617f48e730a68ecfed16094666d1"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
-    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "241d0cc5b010b05d2674620c10ecd04c87936a9081f45008536c46786184c458"),
+    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "8f6b173d8329c5dd6003fc026bf7606f769d83c87b39a808c0b295e533c0c754"),
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
-    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "715eb965d4527d35dede5829435b590971e4f4760a82f743821611f64fcec3ba"),
+    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
@@ -6345,6 +6345,7 @@ G_L8GND = "l8gnd's RELEASE.md (an accepted check of Layer 8's record l8gnd at 22
 G_L8R2 = "l8r2's RELEASE.md (its rounds 4 to 6 at 89924e40 on fnd/l8r3; each draft refuses the tree's generator until it names an accepted check)"
 G_L8P = "l8p's RELEASE.md (one release for its three drafts; each refuses the tree's generator until it names an accepted check)"
 G_L9STK = "a text draft for the integrator (it refuses a second run)"
+G_L4E11_R9 = "L4-E11's RELEASE.md naming an accepted check of its round 9 (R-147; the draft refuses the tree's generator until then)"
 CHANGE_ORDER = [
     ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
     ("1", "R-24", "pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
@@ -6377,6 +6378,7 @@ CHANGE_ORDER = [
     ("3g", "R-200", GA, "with or after R-199 (either order composes, l8r2 section 5); before d8dec31's R-193", G_L8R2),
     ("3g", "R-210", GA, "D-17's design-out: FAN_OK beside OUTLET_OK's gates; before d8dec31's R-193; in the release of R-211 and R-212", "no draft yet"),
     ("3g", "R-208", GA, "after 3g's other drafts and before d8dec31's R-193 (l8p section 5); in one release with R-206 and R-207", G_L8P),
+    ("3g", "R-217", GA, "AFTER record l8p's PTC draft (R-208: it refuses a target without DOCK_EN_RET) and L4-E11's charger (R-157: CH_BATDRV and the three battery FETs); before d8dec31's R-193; in the release of R-206 to R-208 (L4-E11 19h)", G_L4E11_R9),
     ("3h", "R-194", "d8dec31's draft, apply_gen_sch_a_mainpb.py (its owner)", "before R-193 is applied: fixed references above every board A draft's (L8G-F12)", "no draft yet"),
     ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
      "none: d8dec31's draft carries no release guard"),
@@ -6426,6 +6428,7 @@ CHANGE_ORDER = [
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
     ("5", "R-164", "firmware", "with R-163 (F3's switches)", "firmware"),
     ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time by a PWM-duty ramp into the fan's PWM input, never while U12 or U22 starts (E11-39)", "firmware"),
+    ("5", "R-218", "firmware", "only on a board A carrying R-217, with R-158 (record l9stk's IF-7: the trip reported, ChargeCurrent written only after the terminal reads alive; E11-44)", "firmware"),
     ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
     ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
     ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
@@ -6453,6 +6456,10 @@ ORDER_CONSTRAINTS = [
     ("the third battery FET with the pair (after R-157)", "R-157", "R-209"),
     ("the third battery FET before d8dec31's PB network", "R-209", "R-193"),
     ("FAN_OK before d8dec31's PB network", "R-210", "R-193"),
+    ("L4-E11's DD-7 after l8p's thermal-guard loop: it refuses a target without DOCK_EN_RET (L4-E11 19h)", "R-208", "R-217"),
+    ("L4-E11's DD-7 after its charger draft (CH_BATDRV and the three battery FETs)", "R-157", "R-217"),
+    ("L4-E11's DD-7 before d8dec31's PB network (LAST in board A's round)", "R-217", "R-193"),
+    ("DD-7's firmware (R-218) after its hardware (R-217)", "R-217", "R-218"),
     ("the coolers' EN after their step-ups are drawn (R-190)", "R-190", "R-211"),
     ("U22's RUN after L4-E11's aux draws U22 (R-177)", "R-177", "R-212"),
     ("U22's RUN before d8dec31's input capacitor (LAST in board E's round)", "R-212", "R-16"),
@@ -6499,7 +6506,7 @@ CHANGE_SCRIPTS = ["d8dec31/apply_gen_sch_a_mainpb.py", "l4e4/apply_gen_sch_a_r11
                   "l4e7/apply_gen_sch_e_solar_guard.py",
                   "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
                   "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_e_entry.py", "l4e11/apply_gen_sch_e_timer.py", "l4e11/apply_gen_sch_a_charger.py",
-                  "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py",
+                  "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py", "l4e11/apply_gen_sch_a_dd7.py",
                   "d8dec31/apply_gen_sch_e_cin.py"]
 
 
