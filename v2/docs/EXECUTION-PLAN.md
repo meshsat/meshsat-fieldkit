@@ -1415,3 +1415,34 @@ L4-E4's release record reads released.
 **Owner decisions genuinely needed:** none for the design. Actions only he can take: send the drafts on the send list;
 authorise the T-H1 mock-up purchase (OW-8) and the sample parts of the pulse test (about USD 35); the cell change stays a
 proposal (no purchase).
+
+### Milestone, 4 October 2026 02:30 CEST: Layers 5 to 9 and 12's rounds on main as an engineering handover (integration set 28)
+
+**Promoted:** main `d834e6a7` (`d834e6a7be211d1cdd1b18ded54bec1c427048fd`), gated by `_bin/suite_gate.py` on three passes of that
+exact commit (the box on Python 3.12, the box on 3.11 for test_l4e10 and test_l4e12, the runner for test_l4e7, whose results cache
+is keyed on the runner's interpreter and pdftotext): 2845 passed, 0 failed, 14 skipped, 228 of 228 modules, the tree unchanged
+after each pass. Before each pass `v2/ecad/tools/candidate_guard.py` checked the candidate and its 984 evidence files against the
+manifest recorded at the frozen commit (kept outside the tree); it passed on main after the fast-forward too. The record:
+`v2/docs/records/int28b/README.md` (section "Promotion").
+
+**What set 28 carries:** Layer 5's power contracts (round 2, round 3's panel decisions F-04 to F-13, the restatements so that no
+withdrawn Layer 4 claim stays in the contracts), Layer 6's part identities and the corrected `lcsc_fill.py` table, Layer 7's fans and
+T-H1 mock-up bill, Layer 8's release-guarded drafts (GND-002, the SLOT_EN hold, round 2's known defects), Layer 9's supplier
+test procedures and the bring-up page, Layer 12's panel controller firmware with its contract tests, L4-E9's round 6 and L4-E7's
+numeric panel-lead guard; the release-candidate review's L4-RC01 (R-197, closed on its passing evidence) and L4-RC02 (R-198);
+`candidate_guard.py` with its regressions (the owner's amendment after the first set 28 suite failed on a registry edit made after
+the freeze).
+
+**Five claims, apart:** documents and editable artifacts for these rounds complete as drafts; design reviewed and accepted: NO
+beyond the named checks; circuit changes implemented: NONE; physical qualification: NONE; fabrication release: BLOCKED.
+
+**Supplier handover re-issued:** `MESHSAT-SUPPLIER-HANDOVER-RELEASE-CANDIDATE-d834e6a7.zip` (12,894,538 bytes, sha256
+29ed399ae8f7cb29801b9f6080725cc44cf06957430b8642440faf032e76cb7d), cut from the exact commit the suite ran on; its README discloses the
+later findings below; the quotation request stays a draft (unsent, outside the repository).
+
+**Next set (29), on branches, not in this commit:** L9P-F02 (slots 1 and 3 to the LM5176 stage, the coolers at full speed; the
+collaborator's check and recheck NOT CONFIRMED and NOT CLOSED, the corrections made, the coordinator's closing check CLOSED AS
+CONDITIONAL on C4-1 to C4-6); the pack path's copper (stacked faces and returns rated as one conductor; the outer copper weight
+an owner decision, money) and W4DP-F2's protection (an LM5069-2 breaker on board P with a make-last enable at the dock and a third
+battery FET, CONFIRMED AS CONDITIONAL by the independent check; DD-3 and DD-5 open defects); L9P-F01 (the all-transmit floor);
+Layer 9's power budget; Layer 5's slot-fault rule; the firmware's round 4; the proposed LAYER-STATUS rows of Layers 5, 6, 7, 8 and 12.
