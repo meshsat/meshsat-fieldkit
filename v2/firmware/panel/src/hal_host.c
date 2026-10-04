@@ -62,6 +62,10 @@ void hal_delay_us(unsigned us) { (void)us; }
 void hal_watchdog_start(ms_t period_ms) { (void)period_ms; }
 void hal_watchdog_feed(void) {}
 int hal_reset_reason(void) { return 0; }
+bool hal_reset_was_power_on(void) { return true; }
+int hal_slotstore_read(uint32_t off, uint8_t *buf, unsigned len) { (void)off; memset(buf, 0xFF, len); return 0; }
+int hal_slotstore_program(uint32_t off, const uint8_t *buf, unsigned len) { (void)off; (void)buf; (void)len; return 0; }
+int hal_slotstore_erase(void) { return 0; }
 void hal_arm_slot_cut_alarm(ms_t at_ms) { (void)at_ms; }
 void hal_cancel_slot_cut_alarm(void) {}
 int hal_journal_read(uint32_t off, uint8_t *buf, unsigned len) { (void)off; memset(buf, 0xFF, len); return 0; }

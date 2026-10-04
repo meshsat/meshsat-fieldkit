@@ -23,6 +23,7 @@
 #include "hardware/structs/sio.h"
 #include "hardware/structs/timer.h"
 #include "hardware/structs/vreg_and_chip_reset.h"
+#include "hardware/structs/watchdog.h"
 #include "hardware/sync.h"
 #include "hardware/timer.h"
 #include "hardware/watchdog.h"
@@ -34,9 +35,11 @@
 #define CUT_ALARM 1u                         /* timer alarm 1, TIMER_IRQ_1: alarm 3 is the SDK's default alarm pool
                                               (PICO_TIME_DEFAULT_ALARM_POOL_HARDWARE_ALARM_NUM, pico/time.h, default 3) */
 
-/* The journal: the top two 4 KiB sectors of U4 (W25Q16JV, 2 MiB). */
+/* The journal: the top two 4 KiB sectors of U4 (W25Q16JV, 2 MiB); the slot-fault store (FW-C05) the sector below it. */
 #define JOURNAL_SIZE (2u * FLASH_SECTOR_SIZE)
 #define JOURNAL_OFF  (PICO_FLASH_SIZE_BYTES - JOURNAL_SIZE)
+#define SLOTSTORE_SIZE FLASH_SECTOR_SIZE
+#define SLOTSTORE_OFF  (JOURNAL_OFF - SLOTSTORE_SIZE)
 
 /*
  * FW-C02 (finding F-03): pico-sdk 2.3.1's runtime_init_early_resets() resets every peripheral but the QSPI bank, the
@@ -262,6 +265,14 @@ int hal_reset_reason(void)
     return 0;
 }
 
+/* FW-C05 (F-14) and finding F-15: a power-on reset is HAD_POR with the watchdog's REASON zero. CHIP_RESET records the
+ * last CHIP-LEVEL reset (RP2040 datasheet 2.12.7), which a watchdog reset is not, so HAD_POR alone stays 1 across a
+ * watchdog reset that follows a power-on; REASON is zero after a hardware reset (datasheet 4.7, Table 548). */
+bool hal_reset_was_power_on(void)
+{
+    return watchdog_hw->reason == 0 && (vreg_and_chip_reset_hw->chip_reset & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS);
+}
+
 /* FW-C01 and FW-C02: the ROM bootloader only with every slot off, and an activity mask of GPIO25 only */
 int hal_reboot_to_bootsel(void)
 {
@@ -323,6 +334,37 @@ int hal_journal_program(uint32_t off, const uint8_t *buf, unsigned len)
     flash_range_program(JOURNAL_OFF + base, page, FLASH_PAGE_SIZE);
     restore_interrupts(s);
     return memcmp((const void *)(XIP_BASE + JOURNAL_OFF + off), buf, len) == 0 ? 0 : -1;
+}
+
+/* the slot-fault store: the same page-program scheme as the journal, its own sector */
+int hal_slotstore_read(uint32_t off, uint8_t *buf, unsigned len)
+{
+    if (off + len > SLOTSTORE_SIZE)
+        return -1;
+    memcpy(buf, (const void *)(XIP_BASE + SLOTSTORE_OFF + off), len);
+    return 0;
+}
+
+int hal_slotstore_program(uint32_t off, const uint8_t *buf, unsigned len)
+{
+    static uint8_t page[FLASH_PAGE_SIZE];
+    uint32_t base = off & ~(FLASH_PAGE_SIZE - 1u);
+    if (off + len > SLOTSTORE_SIZE || (off - base) + len > FLASH_PAGE_SIZE)
+        return -1;
+    memcpy(page, (const void *)(XIP_BASE + SLOTSTORE_OFF + base), FLASH_PAGE_SIZE);
+    memcpy(page + (off - base), buf, len);
+    uint32_t s = save_and_disable_interrupts();
+    flash_range_program(SLOTSTORE_OFF + base, page, FLASH_PAGE_SIZE);
+    restore_interrupts(s);
+    return memcmp((const void *)(XIP_BASE + SLOTSTORE_OFF + off), buf, len) == 0 ? 0 : -1;
+}
+
+int hal_slotstore_erase(void)
+{
+    uint32_t s = save_and_disable_interrupts();
+    flash_range_erase(SLOTSTORE_OFF, SLOTSTORE_SIZE);
+    restore_interrupts(s);
+    return 0;
 }
 
 /* only at boot with no wipe due (never in the wipe's path) */

@@ -2,7 +2,7 @@
 
 MESHSAT-1357, Layer 12. **Prototype firmware for an unbuilt kit: no board C exists, nothing here has run on hardware,
 and the target build has not been compiled** (this host has no arm toolchain and no pico-sdk). What has run: the
-portable core and its 58 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
+portable core and its 64 host unit tests, compiled with the host gcc 12.2 under `-std=c11 -Wall -Wextra -Werror
 -pedantic -Wshadow -Wconversion`, all passing, and the Python checks of `v2/ecad/tools/tests/test_fw_panel.py` that bind
 the code to the netlists and the contract pages.
 
@@ -11,6 +11,11 @@ the code to the netlists and the contract pages.
 session choices (`PANEL.md` section 9a, `HW-FW-CONTRACT.md` section 3.8). The firmware now follows every decided value:
 F-05 (no TX lamp floor), F-07 (two modules lost is MASTER WARN), F-11 (board D's power-up levels) and the declined S-19 changed
 the code; the rest it already did. Each decided value is bound by `test_fw_panel.py`'s `t_contract_*` cases (section 2).
+
+**Round 4 (3 October 2026, branch `fnd/fw-r4` from `dea639a4` with Layer 5's `fnd/l5r4` at `0b3c058c` merged):** Layer 5
+decided F-14 (record l5r4, `v2/docs/records/l5r4/L5-R4-SLOT-FAULTS.md`): ONE slot-fault rule for a module lost at start-up
+and one lost while running, in `PANEL.md` section 5 and FW-C05, kept across a controller reset (FW-C02, V-C05). The firmware
+follows it (section 1, FW-C05; finding F-14 closed, section 5), bound by `t_contract_f14_one_slot_fault_rule`.
 
 The contract this implements: `v2/docs/PANEL.md` (cited P s.n), `v2/docs/HW-FW-CONTRACT.md` rows FW-C01 to FW-C15
 (and the FW-A, FW-K rows they lean on), `v2/docs/feasibility/ZEROIZE.md` sections 3.4 and 3.5 (ZER), the pins of board
@@ -44,7 +49,14 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
 - **P s.5, FW-C01, FW-C02, FW-C05, FW-C06**: the boot order; the SLOT_EN levels read and adopted at boot (all driven
   low first when the toggle is closed or a wipe is pending); the heartbeat (alive while toggling, lost 3 s after the
   last edge); a flat heartbeat 60 s after the rail came up is a slot fault, power-cycled once with 5 s off, then left
-  off until the operator acts; the slots raised one at a time; HDMI_SEL follows the bridge, else the lowest live slot,
+  off until the operator acts; since round 4 (F-14, record l5r4, FW-C05) ONE rule for both cases: a supervised slot
+  (SLOT_EN high, no shutdown, hot stop, shed or ZEROIZE asked of it) is shown lost at once (3 s without an edge, or flat
+  60 s after its rail came up; `EV_SLOT_FAULT`, MASTER CAUT); at 60 s without an edge counted from the later of its rail
+  coming up and its last edge it is power-cycled once (`slot_flat_60s`, its one retry, `EV_SLOT_CYCLE`), and the next time
+  left off (`EV_SLOT_OFF`) until the operator acts (`panel_slot_operator_retry` for the touch UI and the bridge, or MAIN);
+  coming back never re-arms the retry; each slot's spent retry and left-off state are kept in their own flash region beside
+  the wipe journal (`src/slotstore.c`) across a watchdog, RUN or SWD reset and cleared by a power-on reset (`panel_init`);
+  the slots raised one at a time; HDMI_SEL follows the bridge, else the lowest live slot,
   never a dark one (slot 1 = both low, slot 2 = SEL1 high, slot 3 = SEL2 high, read from `gen_sch_b.py:1342-1348`).
 - **P s.5, FW-C03**: a MAIN tap (INT low at least 32 ms), the PI button's short press or the bridge's command starts the
   clean shutdown: PI_SHDN_REQ low 200 ms, the heartbeats awaited, then PI_KILL high and held; the PI button held 8 s is
@@ -87,7 +99,7 @@ replace each with a fake (a PCA9555 register model, an ATECC608B that can fail, 
 
 ## 2. Statement to test
 
-Every host test (58), from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
+Every host test (64), from `tests/test_list.h` (the Python wrapper checks that each runs and passes, and that this table
 names each).
 
 | Test | Statement |
@@ -127,7 +139,13 @@ names each).
 | t_boot_slot_adopt | FW-C02 |
 | t_exp_outputs_before_config | FW-A08, FW-C01 step 4, P s.5 |
 | t_hb_lost_3s | FW-C05 |
-| t_slot_fault_cycle | P s.5: the slot fault |
+| t_slot_fault_cycle | P s.5, FW-C05: lost at start-up, cycled once, then off until the operator acts |
+| t_slot_lost_while_running_cycled_once | FW-C05 (F-14): lost while running, shown at 3 s, cycled 60 s after its last edge |
+| t_slot_lost_again_after_cycle_left_off | FW-C05 (F-14): lost again after a good cycle, left off; the retry re-arms |
+| t_slot_not_supervised_while_stopping | FW-C05 (F-14): no supervision while a stop is asked (the hot stop) |
+| t_slot_off_kept_across_controller_reset | FW-C05, FW-C02 (F-14): left off across a watchdog, RUN or SWD reset |
+| t_slot_record_cleared_by_power_on | FW-C05 (F-14): a power-on reset clears every slot's state |
+| t_slot_store_torn_keeps_previous | FW-C05 (F-14, S-37): a torn slot record keeps the previous state, never a pending wipe |
 | t_hdmi_select | FW-C06, P s.5 |
 | t_shutdown_main_tap | FW-C03, FW-A10, FW-A12 |
 | t_shore_inhibit | P s.10, FW-C08 |
@@ -157,8 +175,9 @@ bit hal.h names matches its PCA9555 pin on boards A, B, C and D, and every addre
 button reaches no controller pin (F-01's evidence, which fails the day it is wired); no controller pin reaches the
 panel LDO's enable (FW-C11); the e-paper messages quoted by P s.9, FW-C13 and FW-C15 are carried verbatim; 29 timing and
 threshold constants equal the contract's figures, each with the words that must still stand in its page; the target
-build keeps FW-C01's two rules and FW-C02's reset scope; and, since round 3, nine `t_contract_*` cases (F-04, F-05,
-F-06, F-07, F-08, F-10, F-11, F-12, F-13) that read each decided value from the contract's own sentence and compare it with
+build keeps FW-C01's two rules and FW-C02's reset scope; and, since rounds 3 and 4, ten `t_contract_*` cases (F-04, F-05,
+F-06, F-07, F-08, F-10, F-11, F-12, F-13, and F-14's FW-C05 rule: 3 s, 60 s from the later of the rail and the last edge,
+rail off 5 s, one retry, kept across a controller reset, cleared by a power-on reset, re-armed by the operator) that read each decided value from the contract's own sentence and compare it with
 what the core does, measured by the host program `tests/contract_probe.c` (`make -C v2/firmware/panel probe`): a contract row
 the code contradicts fails by its finding's name, and a sentence that no longer parses fails as a contract change to re-read.
 
@@ -170,10 +189,10 @@ other two statuses are cited by none.
 | Row | Status | What the firmware does | What is owed |
 |---|---|---|---|
 | FW-C01 | PARTLY | steps 1 to 4 and 6 (`panel_init`, `boot_step`, `panel_exp_boot`); the E5 fix off and the BOOTSEL mask in `CMakeLists.txt` and `hal_reboot_to_bootsel` | step 5, the charger's registers (FW-A01 to A03, A16 to A18): no charger driver here |
-| FW-C02 | PARTLY | the held levels read and adopted, all low first with a wipe due; the watchdog with SIO, IO_BANK0 and PADS_BANK0 out of its scope and the SDK's early resets overridden (F-03); no ROM bootloader while a slot runs; the reset reason read | the boot reason reported (protocol, F-02); every hardware behaviour (V-C02) |
+| FW-C02 | PARTLY | the held levels read and adopted, all low first with a wipe due; a slot left off stays off across the reset (F-14); the watchdog with SIO, IO_BANK0 and PADS_BANK0 out of its scope and the SDK's early resets overridden (F-03); no ROM bootloader while a slot runs; the reset reason read | the boot reason reported (protocol, F-02); every hardware behaviour (V-C02) |
 | FW-C03 | IMPLEMENTED | the MAIN tap, the PI short press and 8 s hold, the bridge's commands; the drafted PI input on U1 P1.3 read behind `pi_btn_wired` | the PI button's input is not wired on board C as generated (F-01; drafted by record l8r2, PROVISIONAL) |
 | FW-C04 | PARTLY | the level-sensitive trigger, the abort, ZER 3.4's sequence and bounds, the journal, the boot table, the re-arm, an absent SE retried every 60 s, no slot newly raised while armed or wiping | the ATECC608B command layer (CryptoAuthLib and the bounded six-function HAL), P_A0 and P_B0 at enrolment, the modules told over the protocol (F-02); Z-EXP-A to C |
-| FW-C05 | IMPLEMENTED | inputs without pad pulls, alive while toggling, lost after 3 s, the display re-elected | |
+| FW-C05 | IMPLEMENTED | inputs without pad pulls, alive while toggling, lost after 3 s, the display re-elected; the one slot-fault rule of F-14 (round 4): shown at the loss, cycled once at 60 s from the later of the rail and the last edge, then left off until the operator acts, the state kept across a controller reset and cleared by a power-on reset | the e-paper's naming of the slot (the rendering, section 4); a bridge message that suspends supervision for a planned restart (MESHSAT-837) |
 | FW-C06 | IMPLEMENTED | follow the bridge, else the lowest live slot, never a dark slot | |
 | FW-C07 | IMPLEMENTED | GPIO21 an input only, every EMCON edge reported, MASTER CAUT steady, EMCON on the e-paper (its own page, and in the SOS pages) | the software holds themselves (queue, AT+CFUN, rfkill) are the bridge's |
 | FW-C08 | IMPLEMENTED | boot low, only the two reasons, the warning first, never a charge hold | |
@@ -218,7 +237,8 @@ Each is raised for the page or board named; nothing in a contract, record, gener
 | F-11 | minor | Board D's U16 outputs X_SA_PD, X_AMP_EN and X_MMUTE (FW-D01) have no stated boot level; the firmware writes 0 (S-11), which may hold the SA868 powered down until the bridge acts | `HW-FW-CONTRACT.md` FW-D01; `gen_sch_d.py:930` | board D's author | decided: X_SA_PD 1, X_AMP_EN 1, X_MMUTE 0, the generator's levels; S-11 declined; CODE CHANGED: `EXP_BOOT` (0x60, configuration 0x1F); `t_contract_f11` |
 | F-12 | minor | FW-C15's "an SOS raised meanwhile is queued as under EMCON and the operator told" gives no message; the EMCON message ("OPEN EMCON TO SEND") would be wrong. Taken: "SOS QUEUED: MARGIN HOLD, COOLING" | `HW-FW-CONTRACT.md` FW-C15 | the contract's writer | decided: the firmware's text, in PANEL.md 9 and FW-C15; `t_contract_f12` |
 | F-13 | observation | HDMI_SEL's encoding is in no contract page; read from board B: slot 1 both low, slot 2 SEL1 high, slot 3 SEL2 high (U3 and U4 cascade, U519 and U520 enables) | `gen_sch_b.py:1342-1348` | PANEL.md's writer | decided: the encoding as read; the code already did, now `panel_hdmi_encode`; `t_contract_f13` |
-| F-14 | minor | A compute module lost while running: `CONOPS.md` section 4e's row "a compute module lost" handles it as "the slot is cycled once and then left off until the operator acts (`PANEL.md` section 5)", but PANEL.md section 5's trigger is a heartbeat flat for 60 s after the rail came up, the start-up case. The firmware follows PANEL.md 5's trigger: a module that stops while running is shown lost (MASTER CAUT, two lost MASTER WARN, F-07) and is not power-cycled | `CONOPS.md` section 4e's fault table; `PANEL.md` section 5 | Layer 5 (PANEL.md's writer) | raised after round 3 (`fnd/fw-r3`); open |
+| F-14 | minor | A compute module lost while running: `CONOPS.md` section 4e's row "a compute module lost" handles it as "the slot is cycled once and then left off until the operator acts (`PANEL.md` section 5)", but PANEL.md section 5's trigger is a heartbeat flat for 60 s after the rail came up, the start-up case. The firmware follows PANEL.md 5's trigger: a module that stops while running is shown lost (MASTER CAUT, two lost MASTER WARN, F-07) and is not power-cycled | `CONOPS.md` section 4e's fault table; `PANEL.md` section 5 | Layer 5 (PANEL.md's writer) | CLOSED by Layer 5 round 4 (record l5r4): one rule for both cases in PANEL.md 5 and FW-C05, CONOPS 4e governing; the firmware follows it in round 4 (`slots_policy`, `slot_flat_60s`, `src/slotstore.c`, `panel_init`); `t_contract_f14_one_slot_fault_rule` |
+| F-15 | minor | FW-C05 clears the slot state on a power-on reset named as "CHIP_RESET HAD_POR", and record l5r4's list says "after a watchdog, RUN or SWD reset (`HAD_POR` clear)". The RP2040 datasheet says CHIP_RESET gives "the source of the most recent chip-level reset" (2.12.7), and a watchdog reset is not chip-level, so HAD_POR still reads 1 after a watchdog reset that follows a power-on; on HAD_POR alone a watchdog reset would clear a slot left off. The firmware takes a power-on reset as HAD_POR with the watchdog's REASON zero ("Both bits are zero for the case of a hardware reset", 4.7, Table 548): `hal_reset_was_power_on` | `HW-FW-CONTRACT.md` FW-C05; `records/l5r4/L5-R4-SLOT-FAULTS.md` section 7 item 4; `v2/vendor/rp2040/rpi-rp2040-datasheet.pdf` 2.12.7 and 4.7 | Layer 5 (the contract's writer) | raised in round 4 (`fnd/fw-r4`); the code follows the datasheet, V-C05's watchdog reset checks it |
 
 ## 6. Session choices
 
@@ -263,6 +283,7 @@ choice. Each is reversed by changing the named constant or line.
 | S-34 | no slot is newly raised while ZEROIZE is armed (the 5 s) or wiping; a running slot is left to step 6 | fail secure: D-03 cuts the slots | `zeroize_blocks_raise` | adopted (PANEL.md 9a; FW-C04 in 3.8) |
 | S-35 | an absent secure element is retried every 60 s (two GenKey-public reads, about 0.26 s of the loop); its answer clears the warning | ZER 3.5 says it is retried and states no period | `PANEL_SE_PROBE_MS` | adopted (FW-C04 in 3.8) |
 | S-36 | the TMP117 polled every 250 ms and counted once per Data_Ready (its reset setting converts each second); the VEML7700 at gain x1/8 and 100 ms (to about 35 klx), polled each second | "two readings in a row" are two conversions; daylight without saturation at NIGHT's cost of 0.54 lx steps | `PANEL_TMP117_POLL_MS`, `sensors.c` | adopted in part: the definition of a reading (FW-C13 in 3.8); the polling period and the VEML7700's gain stay internal |
+| S-37 | each slot's spent retry and left-off state kept in a flash sector of its own beside the wipe journal, append-only, the last valid record winning and a torn one skipped | FW-C05 asks for it "with the wipe-pending record"; inside the journal ZEROIZE.md's invariant I3 would read a slot record torn by a power loss as a pending wipe and crypto-erase the keys | `src/slotstore.c`, `SLOTSTORE_OFF` | new in round 4; the contract's "with the wipe-pending record" read as beside it, in the same flash |
 
 ## 7. What needs the hardware
 

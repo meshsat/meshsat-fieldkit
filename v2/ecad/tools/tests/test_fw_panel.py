@@ -481,3 +481,38 @@ def t_contract_f13_hdmi_encoding():
     for slot, (a, b) in want.items():
         g = (int(got["f13_slot%d_sel1" % slot]), int(got["f13_slot%d_sel2" % slot]))
         assert g == (a, b), "F-13: slot %d encodes as %s, PANEL.md section 5 gives %s" % (slot, g, (a, b))
+
+
+def t_contract_f14_one_slot_fault_rule():
+    """FW-C05 (F-14, record l5r4): the one slot-fault rule, read from the row's own words and measured on the core."""
+    row = _contract_row("FW-C05")
+    lost = re.search(r"declare it lost after (\d+) s without an edge", row)
+    rule = re.search(r"at (\d+) s without an edge, counted from the later of its rail coming up and its last edge, "
+                     r"power-cycle it once \(SLOT_EN low (\d+) s\), its one retry; at the next such (\d+) s drop SLOT_EN "
+                     r"and leave it off until the operator acts", row)
+    keep = ("keep the spent retry and the left-off state with the wipe-pending record across a watchdog, RUN or SWD reset, "
+            "cleared only by a power-on reset")
+    rearm = "each act re-arming the retry" in row
+    assert lost and rule and keep in row and rearm, (
+        "FW-C05's slot-fault rule moved: re-read F-14 (record l5r4) before changing slots_policy")
+    lost_ms, flat_ms, off_ms, next_ms = int(lost.group(1)) * 1000, int(rule.group(1)) * 1000, int(rule.group(2)) * 1000, \
+        int(rule.group(3)) * 1000
+    g = {k: int(v) for k, v in probe().items() if k.startswith("f14_")}
+    tick = 50                                                   # the probe reads an output one tick late at most
+    checks = [
+        ("a running slot shown lost after %d ms" % lost_ms, lost_ms <= g["f14_lost_shown_after_ms"] <= lost_ms + tick),
+        ("cycled %d ms after its last edge" % flat_ms, flat_ms <= g["f14_cycle_after_last_edge_ms"] <= flat_ms + tick),
+        ("its rail off %d ms" % off_ms, off_ms - 2 <= g["f14_cycle_off_ms"] <= off_ms + 2),
+        ("left off %d ms after its rail came back" % next_ms, next_ms <= g["f14_off_after_rail_back_ms"] <= next_ms + tick),
+        ("cycled once", g["f14_cycles_before_off"] == 1 and g["f14_left_off"] == 1),
+        ("lost again after a good cycle: left off at %d ms, no second cycle" % flat_ms,
+         flat_ms <= g["f14_second_loss_after_last_edge_ms"] <= flat_ms + tick and g["f14_second_loss_cycles"] == 0
+         and g["f14_second_loss_left_off"] == 1),
+        ("lost at start-up: cycled %d ms after its rail came up" % flat_ms,
+         flat_ms <= g["f14_startup_cycle_after_rail_ms"] <= flat_ms + tick),
+        ("kept off across a controller reset", g["f14_reset_keeps_off"] == 1),
+        ("cleared by a power-on reset", g["f14_power_on_clears"] == 1),
+        ("the operator's retry raises the slot and re-arms its retry", g["f14_retry_rearms"] == 1),
+    ]
+    bad = [name for name, ok in checks if not ok]
+    assert not bad, "F-14: the core contradicts FW-C05 on: %s (measured %s)" % ("; ".join(bad), g)

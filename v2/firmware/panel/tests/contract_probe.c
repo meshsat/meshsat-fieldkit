@@ -135,8 +135,101 @@ static void f10(void)
     printf("f10_first_slot_after_boot_ms=%u\n", (unsigned)up);
 }
 
+/* F-14, FW-C05: the one slot-fault rule measured on slot 2 */
+static ms_t until_low(fx_t *x, unsigned slot, ms_t limit, const bool t[3])
+{
+    ms_t t0 = x->now;
+    while (x->out.slot_en[slot] && x->now - t0 < limit)
+        fx_run_hb(x, 1, t);
+    return x->now - t0;
+}
+
+static unsigned count_ev(fx_t *x, uint8_t type, uint8_t value, ms_t *first_at)
+{
+    panel_ev_t e;
+    unsigned n = 0;
+    while (panel_ev_pop(&x->p, &e))
+        if (e.type == type && e.value == value) {
+            if (!n && first_at)
+                *first_at = e.at;
+            n++;
+        }
+    return n;
+}
+
+static void f14(void)
+{
+    static const bool all[3] = { true, true, true }, two_off[3] = { true, false, true };
+    fx_t F, *x = &F;
+    fx_boot(x);
+    fx_run_hb(x, 5000, all);
+    count_ev(x, 0, 0, NULL);
+    x->in.hb[1] = !x->in.hb[1];
+    fx_run_hb(x, 1, two_off);
+    ms_t edge = x->p.slot[1].hb_edge, shown = 0;
+    fx_run_hb(x, 3500, two_off);
+    count_ev(x, EV_SLOT_FAULT, 1, &shown);
+    until_low(x, 1, 70000, two_off);
+    ms_t cyc = x->now - edge;
+    ms_t off0 = x->now;
+    while (!x->out.slot_en[1] && x->now - off0 < 20000)
+        fx_run_hb(x, 1, two_off);
+    ms_t off = x->now - off0, back = x->now;
+    until_low(x, 1, 70000, two_off);                         /* flat after its cycle */
+    ms_t left = x->now - back;
+    unsigned cycles = count_ev(x, EV_SLOT_CYCLE, 1, NULL);
+    int state_off = x->p.slot[1].state == SLOT_FAULT_OFF;
+    fx_run_hb(x, 120000, two_off);
+    printf("f14_lost_shown_after_ms=%u\nf14_cycle_after_last_edge_ms=%u\nf14_cycle_off_ms=%u\n", (unsigned)(shown - edge),
+           (unsigned)cyc, (unsigned)off);
+    printf("f14_off_after_rail_back_ms=%u\nf14_cycles_before_off=%u\nf14_left_off=%d\n", (unsigned)left, cycles,
+           state_off && !x->out.slot_en[1]);
+    /* a controller reset with slot 2 left off, then a power-on reset */
+    bool held[3] = { true, false, true }, low[3] = { false, false, false };
+    fx_reset(x, held, false);
+    fx_run_hb(x, 20000, all);
+    printf("f14_reset_keeps_off=%d\n", !x->out.slot_en[1]);
+    fx_reset(x, low, true);
+    fx_run_hb(x, 6000, all);
+    printf("f14_power_on_clears=%d\n", x->out.slot_en[1] && !x->p.slot[1].cycled);
+    /* lost again after a successful cycle */
+    fx_t G, *y = &G;
+    fx_boot(y);
+    fx_run_hb(y, 5000, all);
+    until_low(y, 1, 70000, two_off);
+    fx_run_hb(y, 5100, two_off);
+    fx_run_hb(y, 20000, all);
+    count_ev(y, 0, 0, NULL);
+    y->in.hb[1] = !y->in.hb[1];
+    fx_run_hb(y, 1, two_off);
+    ms_t edge2 = y->p.slot[1].hb_edge;
+    until_low(y, 1, 70000, two_off);
+    printf("f14_second_loss_after_last_edge_ms=%u\nf14_second_loss_cycles=%u\nf14_second_loss_left_off=%d\n",
+           (unsigned)(y->now - edge2), count_ev(y, EV_SLOT_CYCLE, 1, NULL), y->p.slot[1].state == SLOT_FAULT_OFF);
+    /* the operator's retry (the touch UI or the bridge): raised, its retry re-armed, so the next loss cycles again */
+    panel_slot_operator_retry(&y->p, 1, y->now);
+    fx_run_hb(y, 4000, all);
+    int raised = y->out.slot_en[1];
+    count_ev(y, 0, 0, NULL);
+    until_low(y, 1, 70000, two_off);
+    printf("f14_retry_rearms=%d\n", raised && count_ev(y, EV_SLOT_CYCLE, 1, NULL) == 1);
+    /* lost at start-up: slot 2 flat from its rail coming up */
+    fx_t H, *z = &H;
+    fx_new(z);
+    fx_init(z, false, NULL);
+    ms_t up = 0;
+    for (int i = 0; i < 100000 && !up; i++) {
+        fx_run_hb(z, 1, two_off);
+        if (z->out.slot_en[1])
+            up = z->now;
+    }
+    until_low(z, 1, 70000, two_off);
+    printf("f14_startup_cycle_after_rail_ms=%u\n", (unsigned)(z->now - up));
+}
+
 int main(void)
 {
+    f14();
     f05();
     f11_f04();
     f06();
