@@ -1,13 +1,13 @@
-l9t5_case: C-ALLTX rev 2 and C-DEV rev 1 for task T5 (record l9t5, MESHSAT-1357, 4 October 2026). PROTOTYPE DESIGN, DESK
+l9t5_case: C-ALLTX rev 3 and C-DEV rev 1 for task T5 (record l9t5, MESHSAT-1357, 4 October 2026). PROTOTYPE DESIGN, DESK
 ARITHMETIC: nothing in this kit has been built, powered or measured. Labels: PRINTED (a maker's limit), TYPICAL (a maker's typical
 figure or curve), MODEL (this record's or the budget's arithmetic), ASSUMPTION (a value no held document gives), MISSING (no held
 evidence bounds it).
 
 0. PINS (path  sha256/16)
    bq4050       v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
-   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 50713e9832f81c10
-   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 b57b1ec493540f6e
-   cases        v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04.md  sha256 cb8b0961e4b1ea67
+   budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 afae23c87c38302b
+   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 421c32cc2321dfba
+   cases        v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    cell         v2/vendor/battery/samsung-35e-orbtronic.pdf  sha256 5ec577b952b9dc51
    chain        v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
    challenge    v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md  sha256 806c116b88d3a90f
@@ -23,9 +23,10 @@ evidence bounds it).
    tps62933     v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
    vh           v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
    xt60         v2/vendor/battery/amass-xt60-spec-tme.pdf  sha256 c2cbb5962c1f37da
-   the copies in inputs/ (filed as received, named with their sha256 in inputs/SOURCES.txt): v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04.md, v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md
+   the copies in inputs/ (filed as received, named with their sha256 in inputs/SOURCES.txt): v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md, v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md
 
-1. THE CASE ROW, C-ALLTX REV 2 (record l9pwr round 4, out 7b, on DRAFTED)
+1. THE CASE ROW, C-ALLTX REV 3 (its definition is rev 2's text, kept by rev 3; record l9pwr round 4, out 7b, on DRAFTED; the case file
+   pinned is the coordinator's rev 3, inputs/coordinator-cases-2026-10-04-rev3.md)
    the row's text: that state and no other: transmitters keyed at HIGH, monitor full, FANS RUNNING, outlets 0 W, heater off, standby card off, every other load at typical
    REQ-018's acceptance: PS-ALLTX (every transmitter keyed, the accessory outlets off at their minimum contract of 0 W, the pack heater and the standby WiFi card off) is supplied with every rail in regulation through a 60 s key-down begun at a pack rest voltage of 15.5 V or more with every cell at most +55 C, and the PA keyed alone likewise from a rest voltage of 12.4 V or more; no key-down lasts longer than 60 s (D-11's declared values, SC-35, from SC-10).
    need 15.5162 V rest at 18 A; the allowance at 15.5 V and 18 A 240.747 W at VBAT (the challenge: 240.747 W); the deficit +0.292 W, +0.0162 V
@@ -44,9 +45,9 @@ evidence bounds it).
         Q39, Q40 and a third BUK6Y10-30P in parallel at L4-E11's 150 C bou   2.283 W (7.0453 mOhm)
      the cells, 0.0800 Ohm (R_cell 0.060 Ohm, ASSUMPTION)    25.920 W
      the sum less the EMF: +0.292 W = the deficit
-   the row's quoted figure 16.214 V (253.61 W at VBAT) is D-11's basis on rv-pwr's typ_nontx: 16.2145 V, 253.608 W; the row's text gives 15.5162 V (out 7b of
-     record l9pwr names the loads that differ): a revision of the row is the coordinator's; this record computes the text and shows the
-     basis beside it as a labelled scenario
+   rev 2's quoted figure 16.214 V (253.61 W at VBAT), WITHDRAWN by rev 3, is D-11's basis on rv-pwr's typ_nontx: 16.2145 V, 253.608 W; the case's text gives
+     15.5162 V (out 7b of record l9pwr names the loads that differ); rev 3 prints the case as 241.039 W, 15.5162 V, +0.0162 V: this script's figures;
+     the basis is shown beside it as a labelled scenario
 
 2. THE UNCERTAINTIES THE ROW NAMES, EACH BOUNDED ALONE, THEN COMBINED (need at the bound; the case's nominal 15.5162 V)
    U1 the gauge's current indication against the indicated 18 A (TI BQ4050 SLUSC67B 6.14, p.11, -40 to 85 C; board P's R10 2 mOhm):
@@ -55,9 +56,10 @@ evidence bounds it).
         offset, PRINTED maximum 10 uV post-calibration (the counter's offset is calibrated by its own routine)         0.0050 A
         R10's tolerance, ASSUMPTION 1 % (the generator prints none; the tree's 2 mOhm 2512 part)                       0.1800 A
         gain drift, PRINTED maximum 150 ppm/K over 32 K (ASSUMPTION: a 23 C calibration to the +55 C cell limit)       0.0864 A
-      one-sided sum, uncalibrated: 0.7988 A, so the true current at the indicated 18 A is 17.2012 A: needs 16.0512 V
+        offset drift, PRINTED maximum 0.3 uV/K over the same 32 K (round 4: rounds 1 to 3 left it out)                 0.0048 A
+      one-sided sum, uncalibrated: 0.8036 A, so the true current at the indicated 18 A is 17.1964 A: needs 16.0546 V
       the gain error alone (the challenge's reading): 0.4860 A: needs 15.8348 V
-      calibrated (the TRM's routines calibrate the counter's gain and offset; the reference at 0.2 % of 18 A, ASSUMPTION): 0.1688 A: needs 15.6245 V
+      calibrated (the TRM's routines calibrate the counter's gain and offset; the reference at 0.2 % of 18 A, ASSUMPTION): 0.1736 A: needs 15.6276 V
    U2 R_cell 0.060 Ohm is an ASSUMPTION; the cell sheet (Samsung SDI INR18650-35E Ver. 1.1, 7.4) prints 35 mOhm at most, INITIAL, AC 1 kHz; no
       DC or pulse figure is printed; the nominal row covers R_cell up to 0.0593 Ohm; at 0.035 Ohm needs 14.9162 V; at 0.070 Ohm needs 15.7562 V; at 0.080 Ohm needs 15.9962 V
    U3 the path: W2's 20.0 mOhm is 10.94 mOhm of VERIFIED parts and about 9 mOhm of leads and contacts INFERRED (rv-pwr); the dock's 4
@@ -68,8 +70,10 @@ evidence bounds it).
       at 0.95 it needs 15.7479 V; the four LM5176 5.1 V stages' 0.90 is the generators' declaration (NOT PLOTTED): at 0.85 it needs 15.8190 V
    U5 the rest voltage's fall during the key-down: 0.30 Ah leaves the pack in 60 s at 18 A, 2.99 % of a cell's 3.35 Ah (35E 7.2); the cell's
       rest-voltage curve is not held as data (R-214, OWED): MISSING; D-11's method takes the rest voltage at the key-down's start only
-   COMBINED, printed bounds with the stated assumptions (U1 uncalibrated, U3 the dock contacts' maximum, R_cell 0.060 Ohm): 241.168 W at VBAT at
-      17.2012 A, needs 16.0684 V (+0.5684 V); with R_cell 0.070 Ohm and the converters at U4's lower figures also: needs 16.8498 V
+   COMBINED, printed bounds with the stated assumptions (U1 uncalibrated, U3 the dock contacts' maximum, R_cell 0.060 Ohm): 241.169 W at VBAT at
+      17.1964 A, needs 16.0718 V (+0.5718 V); with R_cell 0.070 Ohm and the converters at U4's lower figures also: needs 16.8532 V
+      (round 4: the gauge's offset drift, 0.0048 A, is in U1's sum now; without it the bound was 16.0684 V, the figure the case row's rev 3
+      quotes, 16.0684 V: the row's quoted bound is the coordinator's to restate; F01 / D-17 is OPEN on either figure)
 
 3. LABELLED SCENARIOS BESIDE THE CASE (never substituted for it)
    the compute modules at 8 W (the budget's HIGH; K4's hold has no numerical ceiling): 252.840 W, needs 16.1718 V
@@ -84,14 +88,14 @@ evidence bounds it).
       the change: a forward-power detector and a VGG loop on board D whose low end is the 30 W service; the PA's DC figure at the loop's
         high end over the maker's 40 %, by the loop's half-tolerance (the loop is not designed: three bounds):
         +-0.25 dB: Pout at most 33.66 W, the PA 84.15 W (rail 6.098 A against U13's 7.0957 A): the case 211.496 W, needs 13.8749 V; with the printed
-          gauge bound and the dock contacts' maximum 14.3465 V (R_cell covered to 0.1103 Ohm); modules at 8 W 15.0314 V; D-11's basis 15.0425 V; R_cell
-          0.080 Ohm with U4's lower efficiencies as well 15.3067 V
+          gauge bound and the dock contacts' maximum 14.3494 V (R_cell covered to 0.1102 Ohm); modules at 8 W 15.0345 V; D-11's basis 15.0456 V; R_cell
+          0.080 Ohm with U4's lower efficiencies as well 15.3095 V
         +-0.50 dB: Pout at most 37.77 W, the PA 94.42 W (rail 6.842 A against U13's 7.0957 A): the case 221.972 W, needs 14.4569 V; with the printed
-          gauge bound and the dock contacts' maximum 14.9585 V (R_cell covered to 0.0836 Ohm); modules at 8 W 15.6440 V; D-11's basis 15.6551 V; R_cell
-          0.080 Ohm with U4's lower efficiencies as well 15.9375 V
+          gauge bound and the dock contacts' maximum 14.9616 V (R_cell covered to 0.0835 Ohm); modules at 8 W 15.6473 V; D-11's basis 15.6584 V; R_cell
+          0.080 Ohm with U4's lower efficiencies as well 15.9406 V
         +-1.00 dB: Pout at most 47.55 W, the PA 118.87 W (rail 8.614 A against U13's 7.0957 A): the case 247.070 W, needs 15.8513 V; with the printed
-          gauge bound and the dock contacts' maximum 16.4195 V (R_cell covered to 0.0199 Ohm); modules at 8 W 17.1063 V; D-11's basis 17.1176 V; R_cell
-          0.080 Ohm with U4's lower efficiencies as well 17.4396 V
+          gauge bound and the dock contacts' maximum 16.4230 V (R_cell covered to 0.0197 Ohm); modules at 8 W 17.1100 V; D-11's basis 17.1213 V; R_cell
+          0.080 Ohm with U4's lower efficiencies as well 17.4431 V
       verdict: the loop's accuracy binds: at +-0.5 dB the case closes with the printed gauge bound (R_cell to about 0.084 Ohm), at +-0.25 dB also
         the 8 W modules, D-11's basis and R_cell 0.08 Ohm with U4's lower efficiencies; at +-1 dB the high end passes the module's 45 W rating
         and the approach fails. A variant inside A1: the PA rail at the sheet's own VDD 12.5 V (U13's divider), so the 40 % is read at its condition
@@ -101,7 +105,7 @@ evidence bounds it).
       evidence owed: the module's drain current at the loop's high end, VDD 13.8 V, 135 / 155 / 175 MHz, case -20 to +70 C, three samples
         (a bench row; the sheet's 40 % is printed at 12.5 V); the loop's own accuracy over temperature (its parts' sheets)
    A2 THE PACK PATH'S RESISTANCE (T6's copper is the owner's decision)
-      the whole path 38.0639 mOhm is worth 0.6852 V at 18 A; the case's nominal deficit equals 0.901 mOhm; with the printed gauge bound 33.047 mOhm
+      the whole path 38.0639 mOhm is worth 0.6852 V at 18 A; the case's nominal deficit equals 0.901 mOhm; with the printed gauge bound 33.253 mOhm
       T6's options: the band at 1 oz, 2.74 mm2 (39.14 mm a face, two faces), and at 2 oz, 2.74 mm2 (19.57 mm a face): the SAME section, so
         either option is worth 0 V against the other as sized (record l9stk 14.4); each 100 mm of band, forward and return, hot at 85.41 C is
         1.582 mOhm, 28.5 mV at 18 A (MODEL, IEC 60028 copper); the band lengths are the layout's (not known)
@@ -112,7 +116,7 @@ evidence bounds it).
       IOC     in 2.004 W, out 1.297 W: 0.479 W less at its input
       KSZ2V5  in 1.089 W, out 0.825 W: 0.118 W less at its input
       E3V3    in 0.758 W, out 0.500 W: 0.169 W less at its input
-      the case 240.161 W, needs 15.4674 V; with the printed gauge bound and the dock contacts' maximum 16.0173 V: closes the nominal deficit, NOT the
+      the case 240.161 W, needs 15.4674 V; with the printed gauge bound and the dock contacts' maximum 16.0207 V: closes the nominal deficit, NOT the
         bound; touches boards B and E and the supervisors' high-availability supply (ARCH-PCB-B-IOHA)
    the 5.1 V stages' efficiency (0.90 declared, NOT PLOTTED) is not an approach: no maker figure supports a better one
 
@@ -135,16 +139,16 @@ evidence bounds it).
    L9P-F04: the PA rail at HIGH 8.1884 A against U13's 7.0957 A; with A1 it is the PA's capped figure (section 4), no shunt or lead change
 
 6. THE SELECTION
-   F01 / D-17 on C-ALLTX rev 2: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,
+   F01 / D-17 on C-ALLTX rev 3: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,
      money or claim changes; the kit's VHF stage is a 30 W stage). It is the only approach that closes the case with the printed gauge
      bound; A2 and A3 close only the nominal deficit. Its acceptance: the loop's half-tolerance at most 0.5 dB over temperature (the case
      with the printed bounds), at most 0.25 dB to cover the 8 W modules and D-11's basis as well. CONDITIONAL on the bench row of section 4
      (the drain current at the loop's high end at VDD 13.8 V) and on a detector whose sheet prints that accuracy; not drafted: no detector
      part is held and the loop is not designed (the next deliverable: a held detector's sheet and board D's draft)
    I-03 / C-DEV: (b), the supervisors on their own buck; L9P-F04: with A1 at +-0.5 dB or tighter
-   FOR C-PROT (record l9stk's, reported, not changed here): the gauge's uncalibrated one-sided error (U1, 0.7988 A) exceeds the 0.32 A between
+   FOR C-PROT (record l9stk's, reported, not changed here): the gauge's uncalibrated one-sided error (U1, 0.8036 A) exceeds the 0.32 A between
      the 18 A service and the breaker's least limit 18.32 A (l9stk 15.4), so an under-reading gauge lets the true current reach the
-     breaker's least limit while it indicates under 18 A; calibrated (U1, 0.1688 A) the error is under that gap
+     breaker's least limit while it indicates under 18 A; calibrated (U1, 0.1736 A) the error is under that gap
    OPEN: F01 / D-17 and I-03 until a draft composes and its acceptance holds on its case, and the collaborator's targeted check (V3);
      U5 (R-214), the PA bench row, the case row's quoted figure (a revision is the coordinator's)
 
@@ -152,8 +156,10 @@ evidence bounds it).
    the budget's predicates all hold on this tree (record l9pwr round 4)                                                             yes
    the case row reproduces the challenge's allowance at 18 A and 15.5 V to 1 mW                                                     yes
    the gauge's printed gain error alone reproduces the challenge's 0.486 A to 1 mA                                                  yes
-   the row's quoted 16.214 V is D-11's basis (rv-pwr's typ_nontx), not the row's text, to 1 mV                                      yes
+   rev 2's quoted 16.214 V, withdrawn by rev 3, is D-11's basis (rv-pwr's typ_nontx), not the case's text, to 1 mV                  yes
    the case row needs more than 15.5 V nominally (F01 / D-17 stays open on the case)                                                yes
+   C-ALLTX rev 3's printed case (241.039 W at VBAT, 15.5162 V, +0.0162 V) is what this script computes from the pinned rev 3 file   yes
+   rev 3's bounded 16.0684 V is this record's sum before the gauge's offset drift; with that printed term the bound is higher       yes
    the printed gauge bound alone takes the case further from 15.5 V than the nominal deficit                                        yes
    A1 at +-0.25 and +-0.5 dB meets 15.5 V on the case with the printed gauge bound and the dock contacts' maximum; at +-1 dB it does not yes
    A1 at +-0.25 dB also meets 15.5 V with the 8 W modules, with D-11's basis, and with R_cell 0.08 Ohm and U4's lower efficiencies  yes

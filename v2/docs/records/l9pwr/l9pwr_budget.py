@@ -3,6 +3,8 @@
 (MESHSAT-1357, 3 October 2026; round 2, 4 October 2026; round 3, 4 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing in
 this kit has been built, powered or measured, and no figure printed here is a measurement.
 
+Round 6 (4 October 2026 night, task T5 round 4): labels only. Section 7b, its two predicates and out 7's NEW line name the case row
+C-ALLTX rev 3 (rev 2's definition, which rev 3 keeps; the recheck V3's blocker 5); no figure moves.
 Round 4 (4 October 2026, task T5 on branch fnd/l9t5, case rows C-ALLTX rev 2 and C-DEV rev 1): two corrections. C1, the
 state PS-ALLTX carries the standby WiFi card OFF in every scenario (REQ-018's acceptance and CONOPS 4a's PS-ALLTX row; rv-pwr's
 state powered it at its placeholder, 1.0 W PLAN and 9.1 W HIGH, the challenge cx40's Q1), applied as the last step so that
@@ -977,7 +979,7 @@ STEP_TEXT = [
 
 STANDBY = "WiFi link card 2 (standby)"
 
-# C-ALLTX rev 2 (the coordinator's case row of 4 October 2026, 14:50 CEST, plan section 4a): the state REQ-018's acceptance, CONOPS 4a's
+# C-ALLTX rev 3 (rev 2's definition, the coordinator's case row of 4 October 2026, 14:50 CEST, kept by rev 3 at 15:45; plan section 4a): the state REQ-018's acceptance, CONOPS 4a's
 # PS-ALLTX row and D-11's basis define. Each load's figure is chosen by the row's text, never by its effect:
 CASE_TX = (   # "every transmitter keyed at its HIGH figure": the loads whose PS-ALLTX figure in rv-pwr is a transmit figure
     "WiFi link card 1 (live)", "5G RM520N-GL", "LimeSDR Mini 2.4", "RockBLOCK 9704", "LoRa E22-900M30S",
@@ -1213,7 +1215,7 @@ def compute():
                        "heater": d11["DRAFTED"]["rows"]["the same with the heater on"]["V_rest"]["hi"],
                        "pa": d11["DRAFTED"]["rows"]["PA alone over PS-TYP, PA at 113 W, the rest at plan"]["V_rest"]["hi"]}
     R["d11_rv_record"] = pb  # for the record's own figures below
-    # ---- 7b. C-ALLTX rev 2, the case row, from its text (round 4)
+    # ---- 7b. C-ALLTX rev 3 (rev 2's definition), the case row, from its text (round 4; relabelled in round 6)
     cv, crule = case_vals(DRAFTED)
     ca = {"rule": crule, "vals": cv}
     ca["new"] = case_row(pb, F, DRAFTED, cv)
@@ -1250,7 +1252,7 @@ def compute():
 
 
 def case_vals(cfg, cm5=None, fans_idx=2):
-    """C-ALLTX rev 2's load figures, by the row's text: transmitters at HIGH, the monitor full, the fans running at full speed
+    """C-ALLTX rev 3's load figures (rev 2's definition), by the row's text: transmitters at HIGH, the monitor full, the fans running at full speed
     (HIGH; fans_idx=1 is the PLAN duty, a separately labelled sensitivity), the outlets, the heater and the standby card off, the
     compute modules at CASE_CM5 (cm5 replaces it in a sensitivity), every other load at its PS-ALLTX PLAN figure. Returns
     (values, rule per load)."""
@@ -1740,10 +1742,10 @@ def predicates(pb, F, R):
     P["C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state"] = (
         all(run_state(R["cfgs"]["DRAFTED"], R["hc"], "ALLTX", sc)[0][STANDBY] == 0.0 for sc in SCEN)
         and run_state(R["cfgs"]["DRAWN"], R["hc"], "ALLTX", "hi")[0][STANDBY] > 0.0)
-    P["C-ALLTX rev 2's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W"] = (
+    P["C-ALLTX rev 3's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W"] = (
         all(ca["vals"][n] == R["cfgs"]["DRAFTED"].load(n)["d"]["ALLTX"][2] for n in CASE_TX) and all(ca["vals"][n] == 0.0 for n in CASE_OFF)
         and all(ca["vals"]["CM5 slot %d" % k] == CASE_CM5 for k in (1, 2, 3)))
-    P["C-ALLTX rev 2's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"] = abs(
+    P["C-ALLTX rev 3's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"] = abs(
         ca["new"]["load"] + ca["new"]["conv"] + ca["new"]["path_w"] + ca["new"]["cell_w"] - ca["new"]["emf_w"] - ca["new"]["deficit"]) < 1e-9
     P["L4-E11's charger draft writes the battery FETs record l9stk selected, the third beside Q39 and Q40 (D10)"] = (
         len(F["bat_refs"]) == int(F["bat_fets"][0]) and len(F["bat_refs"]) == 3)
@@ -2100,7 +2102,7 @@ def render(R):
     w("")
     ca = R["calltx"]
     nw, nr, ob, orw = ca["new"], ca["new_rv"], ca["old_basis"], ca["old_raw"]
-    w("7b. C-ALLTX REV 2, THE CASE ROW (the coordinator's row of 4 October 2026, plan section 4a), FROM ITS TEXT, ON DRAFTED: every transmitter at")
+    w("7b. C-ALLTX REV 3, THE CASE ROW (the coordinator's row of 4 October 2026, plan section 4a; rev 2's definition, which rev 3 keeps), FROM ITS TEXT, ON DRAFTED: every transmitter at")
     w("   its HIGH figure, the monitor full, the fans running at full speed, the outlets, the heater and the standby card off, every other load at its")
     w("   PS-ALLTX PLAN figure, the compute modules at their typical %.1f W; %.0f A from a %.1f V rest, R_cell %.3f Ohm (an ASSUMPTION; rv-pwr's high)" % (
         CASE_CM5, CASE_I, CASE_V_REST, nw["r_cell"]))
@@ -2124,7 +2126,7 @@ def render(R):
     w("     the same row after C1 (the standby card %.1f W): %.3f W, needs %.4f V" % (ca["raw_fixed"]["standby"], ca["raw_fixed"]["p"], ca["raw_fixed"]["need"]))
     w("     old, D-11's basis on rv-pwr's typ_nontx (section 7: the compute modules and the NVMe at PS-TYP, the standby card off, every other load at")
     w("       HIGH, converters at 16.8 V): %.3f W, needs %.4f V; at the case's VBAT %.3f V: %.3f W, needs %.4f V" % (ob["vbat_W"], ob["V_rest"]["hi"], ca["basis_case"]["vbat"], ca["basis_case"]["p"], ca["basis_case"]["need"]))
-    w("     NEW, C-ALLTX rev 2 from its text at the case's VBAT: %.3f W, needs %.4f V; the loads D-11's basis keeps at HIGH and the row's text takes at" % (nw["p"], nw["need"]))
+    w("     NEW, C-ALLTX rev 3 from its text at the case's VBAT: %.3f W, needs %.4f V; the loads D-11's basis keeps at HIGH and the row's text takes at" % (nw["p"], nw["need"]))
     w("       typical: " + "; ".join("%s %.3f to %.3f W" % (n, ca["basis_vals"][n], ca["vals"][n]) for n in sorted(ca["vals"]) if abs(ca["basis_vals"][n] - ca["vals"][n]) > 1e-9 and not n.startswith("CM5")))
     w("     on DRAWN (the generators as they are, no draft): %.3f W, needs %.4f V" % (ca["drawn"]["p"], ca["drawn"]["need"]))
     w("   SENSITIVITIES (labelled scenarios, not the case): the compute modules at 8 W (the budget's HIGH; K4 holds no numerical ceiling): %.3f W," % ca["cm5_8"]["p"])

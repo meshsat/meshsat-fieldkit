@@ -218,6 +218,21 @@ def decl(letter, intent, basis):
     return ("FAIL" if why else "DRAWN"), why
 
 
+RETURN_SOCKETS = ("J_GR1", "J_GR2", "J_GR3")     # record l8r2's round 8 draft: three XT60 sockets, both contacts on GND, on each board
+
+
+def return_drawn(nl):
+    """(verdict, why): record l8r2's dedicated ground return between boards A and B as this netlist carries it. DRAWN: the three
+    sockets each with pins 1 and 2 on GND; NOT DRAWN: none present; FAIL: some present or a contact off GND. Round 4: record
+    l9t5's connected-path row reads which return figures apply from this, never from a typed flag."""
+    have = [j for j in RETURN_SOCKETS if j in nl["pins"]]
+    if not have:
+        return "NOT DRAWN", ["no return socket"]
+    why = ["%s absent" % j for j in RETURN_SOCKETS if j not in nl["pins"]]
+    why += ["%s.%s on %r, wanted GND" % (j, p_, pin(nl, j, p_)) for j in have for p_ in ("1", "2") if pin(nl, j, p_) != "GND"]
+    return ("FAIL" if why else "DRAWN"), why
+
+
 def check_pair(a, b):
     why = []
     for p in ("1", "2"):

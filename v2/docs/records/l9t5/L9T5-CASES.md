@@ -1,4 +1,4 @@
-# L9T5: C-ALLTX rev 2 and C-DEV rev 1, the uncertainty, three approaches and the selection (task T5, MESHSAT-1357)
+# L9T5: C-ALLTX rev 3 and C-DEV rev 1, the uncertainty, three approaches and the selection (task T5, MESHSAT-1357)
 
 4 October 2026, Layer 9's power author, worktree `l9t5` on branch `fnd/l9t5` from set 29's line `dc99897f`. **Status (round 1): a desk
 selection, not reviewed, nothing drafted; round 2 in section 0.** Prototype design: nothing in this kit has been built, powered or measured, and no
@@ -9,12 +9,65 @@ PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited 
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
 
+## 0b. Round 4 (4 October 2026 night, from 23:15 CEST): the recheck V3's corrections, the return drafts composed
+
+**The collaborator's targeted recheck V3 (cx41, an AI review of round 3 at `841e6c7e`): NOT CONFIRMED.** I-03 / L9P-F03 stays OPEN
+and is credited only with U7's load relief and the compositions. Record l8r2's round 8 (`fnd/l8r4` at `c935542f`, merged here at
+`927cdd1e`) enumerates every vertex of the contact-resistance box and drafts a dedicated return of three XT60 leads between boards
+A and B; its two `gndrtn` drafts are in both orders of `l9t5_drafts.py` (board B's after `gndret`, board A's before `mainpb`).
+This issue's two collaborator checks (cx40, cx41) are used: the next check reads the changed design. Figures: `l9t5_drafts.out`
+("drafts N") and `l9t5_case.out` ("case N").
+
+**1a. The connected path (drafts 6, B5): WITHDRAWN and restated.** Round 3 accepted `J_5V_IOC`'s pin 2 on record l8r2's round 7
+rows (9.404 A, a sampled list whose largest was not the maximum) and said the acceptance did not depend on L8R2-F31. Both are
+withdrawn. Read from record l8r2's round 8 output at its worst vertex (MODEL on PRINTED contact limits):
+
+| The return | `J_5V_IOC`'s pin 2 on C-DEV rev 1 (76.25 C / -20 C) | At the declared upper bound | Against the VH's printed 10 A | The row |
+|---|---|---|---|---|
+| as drawn (old state O4) | **10.6376 / 12.0918 A** (the recheck's corner, 10.6375 A) | 14.1458 / 16.0796 A | over | **NOT MET** |
+| with record l8r2's dedicated return composed | 2.9578 / 3.7056 A | 3.9333 / 4.9277 A | inside, and inside that record's least reading 5.9948 A at the inside air (ASSUMPTION) | **CONDITIONAL** |
+
+Which row applies is read from the composed netlists (the sockets `J_GR1` to `J_GR3`, both contacts on GND, on both boards), never
+typed. **The connected-path acceptance holds only with that return correction, whose drafts no independent check has read;
+L8R2-F31 stays OPEN until its independent check**, and the conditions of that record's section 6d (the XT60's aged contact
+resistance, no printed minimum resistances, no printed derating curves, the leads' assumed lengths) are its own. It is never a pass
+on this record's evidence alone.
+
+**1b. The AP2112K's requirement (drafts 6, B3).** Its +1.5 % output maximum is printed at 1 to 30 mA; with its printed load
+regulation (+1 %/A maximum, at 0.46 A) and line regulation (+0.1 %/V maximum, from 4.3 V to U601's 5.1329 V) added, and the dropout
+400 mV at 600 mA: **3.7674 V** (DS39724 Rev. 2-2 p.8; round 3's 3.7495 V was the simplified figure). The LDOs' input before the
+ground shift is 4.7091 V, so the ground shift they allow is **0.9417 V**; the return's shift is at most 0.0512 V on the case and
+0.0681 V at the upper bound as drawn, 0.0114 V with the dedicated return (record l8r2, MODEL).
+
+**1c. Sequencing (drafts 6, item 7).** The netlist shows an enable RELATION: U601's EN is on RAIL_EN, and U7's EN is pulled to
++3V3, which U12 makes while RAIL_EN is high. That is connectivity, not timing. Round 3's "the supervisors are up whenever the
+device rail is" is WITHDRAWN as stated. U601's and U7's starts, the LDOs' start into their loads and the recovery after a hiccup or
+a brown-out are UNVERIFIED: a bench item (both rails and the three +3V3_IOCx captured at power-on, at RAIL_EN's release, and after
+a short on +5V_IOC is removed).
+
+**1d. The gauge's offset drift (case 2, U1).** TI BQ4050 SLUSC67B 6.14 (p.11) prints an offset error drift of 0.3 uV/K maximum
+beside the gain drift; rounds 1 to 3 left it out. Over the same assumed 32 K it is 0.0048 A on the 2 mOhm shunt: the uncalibrated
+sum is **0.8036 A** (was 0.7988 A), the case with the printed bounds needs **16.0718 V** (was 16.0684 V, the figure the case row's
+rev 3 quotes: the row's quoted bound is the coordinator's to restate). F01 / D-17 is OPEN on either figure.
+
+**1e. The case file.** `l9t5_case.py` pins `inputs/coordinator-cases-2026-10-04-rev3.md` and labels the computation C-ALLTX rev 3;
+it reads rev 3's own printed case (241.039 W, 15.5162 V, +0.0162 V) and holds them equal to what it computes. Record l9pwr's out
+7b carries the same label (its round 6, labels only). The load selection did not change.
+
+**L8R2-F43 (drafts 6, B4):** JST prints no ambient and no derating for the VH's 10 A. On record l8r2's severest reading (the rating
+taken at 25 C, an ASSUMPTION: 5.9948 A at the inside air) `J_5V_DEV`'s pin 1 at 6.0359 A is 0.0411 A over it and inside the printed
+10 A (before the draft it carried 7.4717 A); `J_5V_IOC`'s pin 1 at 1.4749 A is inside both. It stays a named vendor item (record
+l8r2's question to JST, UNSENT).
+
 ## 0a. Round 3 (4 October 2026 evening, from 20:15 CEST): board B's half composed with T5b, and L8R2-F35 answered
 
 Record l8r2's round 7 (task T5b, `fnd/l8r4` at `04fa7a1d`) is in this tree since the merge at `43c9b49d`. Its two drafts `fandec`
 and `gndret` let board B's composition run to its end, so board B's half of I-03 is composed, read and judged here as board A's
 was. Every figure is printed by `l9t5_drafts.py` (`l9t5_drafts.out`, "drafts N"). Case rows: **C-DEV rev 1**, **C-ALLTX rev 3**.
 **I-03 stays OPEN until the independent recheck V3 has read it; F01 / D-17 stays OPEN; A1 stays a selected direction.**
+**Round 4 (section 0b) withdraws from this section:** B5's acceptance of pin 2 (9.404 A was a sampled figure, not the maximum),
+the paragraph on what the acceptance depends on (its claim of no dependence on L8R2-F31), B3's 3.749 V requirement (3.7674 V with
+the regulation terms) and the reading of the enable relation as sequencing. The text below is round 3's, kept as dated history.
 
 | | (a) composes in L4-E9's order, the generator runs | (b) changed nets read, mutations fail | (c) electrical acceptance on C-DEV rev 1 |
 |---|---|---|---|
@@ -85,7 +138,7 @@ cell only.
 ## 0. Round 2 (4 October 2026 evening, task T5 continued): I-03 checked on board A, A1's detector, L9P-F01 and C-PROT
 
 Case rows: **C-ALLTX rev 3** (`inputs/coordinator-cases-2026-10-04-rev3.md`: rev 2's definition stands, its quoted 16.214 V is
-withdrawn as D-11's basis; the case is this record's 15.5162 V, 16.0684 V with the printed bounds) and **C-DEV rev 1**. Every figure
+withdrawn as D-11's basis; the case is this record's 15.5162 V, 16.0684 V with the printed bounds as rev 3 quotes it, 16.0718 V since round 4) and **C-DEV rev 1**. Every figure
 below is printed by `l9t5_drafts.py` (`l9t5_drafts.out`, "drafts N") or `l9t5_a1.py` (`l9t5_a1.out`, "a1 N").
 
 **I-03 (L9P-F03) on C-DEV rev 1: board A's half checked, board B's half UNCHECKED (round 2's state; round 3, section 0a, composes
@@ -120,10 +173,10 @@ three allocations leave +5V_DEV's derived ground loads and return as `_IOC_LOADS
 labelled scenario; L4-E9 round 7's 16.1 V, its rule's 16.4 V and FAN_OK printed as withdrawn.
 
 **L9T5-F04, for C-PROT rev 1's consumers** (record l9stk, T1, T2, T4, V1, V2; reported, nothing of theirs edited): the gauge's
-uncalibrated one-sided current error, **0.7988 A** (BQ4050 SLUSC67B 6.14's gain error, INL and offset PRINTED; R10's 1 % an ASSUMPTION;
+uncalibrated one-sided current error, **0.8036 A** (BQ4050 SLUSC67B 6.14's gain error, INL and offset PRINTED; R10's 1 % an ASSUMPTION;
 the drift over an assumed 32 K span; out 2), exceeds the **0.32 A** between the indicated 18 A service and the breaker's least trip
 **18.32 A** (C-PROT rev 1, record l9stk 15.4). An under-reading gauge at an indicated 18 A lets the true current reach 18.80 A, inside
-the breaker's band, so C-PROT's "18 A for 60 s never interrupted" holds for the true current only if the gauge is calibrated (0.1688 A,
+the breaker's band, so C-PROT's "18 A for 60 s never interrupted" holds for the true current only if the gauge is calibrated (0.1736 A,
 with a 0.2 % reference, an ASSUMPTION, fits the gap) or the firmware's indicated limit sits the gauge's error under 18 A. Which one is
 C-PROT's owners' choice (record l9stk with Layer 5's FW-A05).
 
@@ -197,14 +250,14 @@ the basis beside it as a labelled scenario; **a revision of the row is the coord
 
 | Item | Label | Its bound | Needs |
 |---|---|---|---|
-| U1 the gauge's indication against the indicated 18 A (BQ4050 SLUSC67B 6.14: gain error 0.8 % FSR, INL 22.3 LSB, offset 10 uV, drift 150 ppm/K; R10's 1 % an ASSUMPTION) | PRINTED and ASSUMPTION | 0.7988 A one-sided uncalibrated (the gain error alone 0.4860 A, the challenge's figure); 0.1688 A calibrated | 16.0512 V; 15.8348 V; 15.6245 V |
+| U1 the gauge's indication against the indicated 18 A (BQ4050 SLUSC67B 6.14: gain error 0.8 % FSR, INL 22.3 LSB, offset 10 uV, gain drift 150 ppm/K and, since round 4, offset drift 0.3 uV/K; R10's 1 % an ASSUMPTION) | PRINTED and ASSUMPTION | 0.8036 A one-sided uncalibrated (the gain error alone 0.4860 A, the challenge's figure); 0.1736 A calibrated | 16.0546 V; 15.8348 V; 15.6276 V |
 | U2 R_cell (35E Ver. 1.1 7.4 prints 35 mOhm INITIAL AC only) | ASSUMPTION | the row covers 0.0593 Ohm | 15.7562 V at 0.070, 15.9962 V at 0.080 |
 | U3 the path (the dock's contacts at their printed 20 mOhm are 10.0 mOhm forward and return, against W2's 9 mOhm inferred for every lead and contact) | PRINTED and MISSING | +1.0 mOhm at least; 18.0 mV a mOhm | 15.5342 V |
 | U4 the PA stage at 13.8 V and the 5.1 V stages' 0.90 | NOT PLOTTED | the PA at 0.95; the 5.1 V stages at 0.85 | 15.7479 V; 15.8190 V |
 | U5 the rest voltage's fall during the 60 s (0.30 Ah, 2.99 % of a cell's 3.35 Ah) | MISSING (R-214) | no curve held | not bounded |
 
-**Combined**, U1 uncalibrated with U3 and R_cell 0.060 Ohm: 241.168 W at 17.2012 A, **needs 16.0684 V (+0.5684 V)**; with R_cell
-0.070 Ohm and U4's lower efficiencies also, 16.8498 V. The printed gauge bound alone moves the case further than its deficit.
+**Combined**, U1 uncalibrated with U3 and R_cell 0.060 Ohm: 241.169 W at 17.1964 A, **needs 16.0718 V (+0.5718 V)** (16.0684 V before round 4's offset-drift term, the figure the case row's rev 3 quotes); with R_cell
+0.070 Ohm and U4's lower efficiencies also, 16.8532 V. The printed gauge bound alone moves the case further than its deficit.
 
 **Labelled scenarios (out 3):** the compute modules at 8 W, 252.840 W and 16.1718 V; D-11's basis at the case's VBAT, 253.032 W
 and 16.1825 V.
@@ -213,9 +266,9 @@ and 16.1825 V.
 
 | | What it changes | The case with the printed bounds (U1, U3) | Touches | Evidence owed |
 |---|---|---|---|---|
-| **A1** the VHF PA held to its 30 W service by its maker's own output control | a forward-power detector and a VGG loop on board D (today VGG is set open-loop to 4.30 to 4.68 V, so nothing holds Pout under the module's 45 W rating; the budget's 113 W is 45 W at the printed minimum 40 %) | at +-0.25 dB the PA 84.15 W: 14.3465 V; at +-0.5 dB 94.42 W: **14.9585 V**; at +-1 dB 118.87 W: 16.4195 V (fails) | board D, Layer 5's PA contract, the PA's RF checks; L9P-F04 closes with it | the module's drain current at the loop's high end at VDD 13.8 V (the maker prints 40 % at 30 W only as its heat-sink design condition at 12.5 V, IDD 0.84 + 5.16 A, 75.0 W); the detector's printed accuracy |
-| **A2** the pack path's resistance | copper, contacts, a fourth battery FET | the whole path is worth 0.6852 V; the nominal deficit is 0.901 mOhm; the printed bound needs 33.047 mOhm, more than the path can lose | boards A, E, P, the energy chain | the leads' and bands' resistance (MISSING) |
-| **A3** the LDO-fed rails onto bucks | the supervisors, the KSZ's 2.5 V, board E's 3.3 V | 15.4674 V nominal; 16.0173 V with the bound | boards B and E, the supervisors' supply | the bucks' points (NOT PLOTTED at 3.3 V) |
+| **A1** the VHF PA held to its 30 W service by its maker's own output control | a forward-power detector and a VGG loop on board D (today VGG is set open-loop to 4.30 to 4.68 V, so nothing holds Pout under the module's 45 W rating; the budget's 113 W is 45 W at the printed minimum 40 %) | at +-0.25 dB the PA 84.15 W: 14.3494 V; at +-0.5 dB 94.42 W: **14.9616 V**; at +-1 dB 118.87 W: 16.4195 V (fails) | board D, Layer 5's PA contract, the PA's RF checks; L9P-F04 closes with it | the module's drain current at the loop's high end at VDD 13.8 V (the maker prints 40 % at 30 W only as its heat-sink design condition at 12.5 V, IDD 0.84 + 5.16 A, 75.0 W); the detector's printed accuracy |
+| **A2** the pack path's resistance | copper, contacts, a fourth battery FET | the whole path is worth 0.6852 V; the nominal deficit is 0.901 mOhm; the printed bound needs 33.253 mOhm, more than the path can lose | boards A, E, P, the energy chain | the leads' and bands' resistance (MISSING) |
+| **A3** the LDO-fed rails onto bucks | the supervisors, the KSZ's 2.5 V, board E's 3.3 V | 15.4674 V nominal; 16.0207 V with the bound | boards B and E, the supervisors' supply | the bucks' points (NOT PLOTTED at 3.3 V) |
 
 **T6's copper in volts:** the two options carry the same section (2.74 mm2 a band: 39.14 mm a face at 1 oz, 19.57 mm at 2 oz),
 so either is worth 0 V against the other as sized; each 100 mm of band, forward and return, hot, is 1.582 mOhm, 28.5 mV at 18 A
@@ -223,8 +276,8 @@ so either is worth 0 V against the other as sized; each 100 mm of band, forward 
 not an approach: no maker figure supports a better one.
 
 **A1's acceptance (the loop's accuracy binds):** half-tolerance at most 0.5 dB over temperature closes the case with the printed
-bounds (R_cell to about 0.084 Ohm); at most 0.25 dB also covers the 8 W modules (15.0314 V), D-11's basis (15.0425 V) and R_cell
-0.080 Ohm with U4's lower efficiencies (15.3067 V).
+bounds (R_cell to about 0.084 Ohm); at most 0.25 dB also covers the 8 W modules (15.0345 V), D-11's basis (15.0456 V) and R_cell
+0.080 Ohm with U4's lower efficiencies (15.3095 V).
 
 ## 5. C-DEV rev 1 and L9P-F04 (out 5)
 
@@ -249,9 +302,9 @@ highest 9.5960 A against J_5V_DEV's JST-VH 10 A.
   detector whose sheet prints the loop's accuracy; **not drafted** (no detector part is held, the loop is not designed). No
   owner decision is needed.
 - **I-03: (b)**; **L9P-F04: with A1.**
-- **For C-PROT (record l9stk's, reported only):** the gauge's uncalibrated one-sided error (0.7988 A) exceeds the 0.32 A between
+- **For C-PROT (record l9stk's, reported only):** the gauge's uncalibrated one-sided error (0.8036 A) exceeds the 0.32 A between
   the 18 A service and the breaker's least limit 18.32 A; an under-reading gauge lets the true current reach that limit while it
-  indicates under 18 A. Calibrated (0.1688 A) it is under the gap.
+  indicates under 18 A. Calibrated (0.1736 A) it is under the gap.
 - **Open:** F01 / D-17 and I-03 until a draft composes with its board's pending drafts, its nets are read in the regenerated
   netlist with a mutation that fails, its acceptance holds on its case, and the collaborator's targeted check (V3) reads it;
   U5 (R-214); the PA's bench row; the case row's quoted figure.
