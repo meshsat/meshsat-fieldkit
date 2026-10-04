@@ -5,7 +5,7 @@ not completed fault-protection verification.
 
 Round 3 (4 October 2026, the integration of set 29): L4-E11's round 9 drafts a third battery FET, Q42, beside Q39 and Q40 and
 restates E11-29 as section 15.5's junction limit. The draft is now PARSED (the designators and their count are read from the
-generator line it writes, not from a quoted sentence, which refused the moment the sentence said three), the coordination
+nfet calls it writes on the battery nets, not from a quoted sentence, which refused the moment the sentence said three), the coordination
 table's battery FET rows are judged on the circuit as drafted, and section 9a prints each of those rows on the pair it was
 first judged on beside its reading now, both derived from the pinned files.
 
@@ -115,41 +115,68 @@ def pdf(key):
     return r.stdout.decode("utf-8", "replace")
 
 
-def battery_fets(draft):
-    """The charger's battery FETs as L4-E11's draft writes them into board A's generator, PARSED: the draft is read as text and
-    parsed with ast (a draft is never run); among its string constants the generator line `for _qb in (...): nfet(_qb, ...)`
-    is found and parsed again. Returns the designators in the draft's order and the part's text; refuses unless there is one
-    such line and every FET's gate is CH_BATDRV, its drain CH_BATQ and its source VBAT (nfet's g, d, s)."""
+BAT_NETS = ("CH_BATDRV", "CH_BATQ", "VBAT")     # nfet's gate, drain and source for a battery FET (TI's Figure 9-1: BATDRV, toward RSR, VSYS)
+
+
+def nfet_calls(draft):
+    """Every nfet(ref, part, gate, drain, source, ...) a draft would write into a generator, PARSED: the draft is read as text
+    and parsed with ast (a draft is never run); each of its string constants that mentions nfet is parsed again as generator
+    source (whole, or line by line where a constant is a fragment); a `for` over a literal tuple is unrolled with its names
+    bound, so the loop's variable names and the part's sentence decide nothing. Returns (ref, part, gate, drain, source) per
+    call whose five arguments are literals once the loop is bound."""
     found = []
+
+    def walk(stmts, env):
+        for st in stmts:
+            if isinstance(st, ast.For):
+                try:
+                    vals = ast.literal_eval(st.iter)
+                except (ValueError, SyntaxError):
+                    continue
+                for v in vals:
+                    e2 = dict(env)
+                    if isinstance(st.target, ast.Name):
+                        e2[st.target.id] = v
+                    elif isinstance(st.target, ast.Tuple) and isinstance(v, tuple) and len(v) == len(st.target.elts):
+                        e2.update({e.id: x for e, x in zip(st.target.elts, v) if isinstance(e, ast.Name)})
+                    walk(st.body, e2)
+            elif isinstance(st, ast.Expr) and isinstance(st.value, ast.Call) and isinstance(st.value.func, ast.Name) \
+                    and st.value.func.id == "nfet" and len(st.value.args) >= 5:
+                try:
+                    args = tuple(eval(compile(ast.Expression(x), "<nfet>", "eval"), {"__builtins__": {}}, dict(env)) for x in st.value.args[:5])
+                except Exception:
+                    continue
+                if all(isinstance(x, str) for x in args):
+                    found.append(args)
     for node in ast.walk(ast.parse(draft)):
-        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str) and "nfet(" in node.value):
             continue
-        for line in node.value.splitlines():
-            if not line.lstrip().startswith("for _qb in"):
-                continue
-            try:
-                st = ast.parse(line.strip()).body[0]
-            except SyntaxError:
-                continue
-            if not (isinstance(st, ast.For) and len(st.body) == 1 and isinstance(st.body[0], ast.Expr) and isinstance(st.body[0].value, ast.Call)):
-                continue
-            call = st.body[0].value
-            if not (isinstance(call.func, ast.Name) and call.func.id == "nfet" and len(call.args) >= 5):
-                continue
-            try:
-                refs = tuple(ast.literal_eval(st.iter))
-                args = [ast.literal_eval(a) for a in call.args[1:5]]
-            except ValueError:
-                refuse("the charger draft's battery FET line is not all literals")
-            found.append((refs, args[0], tuple(args[1:])))
-    if len(found) != 1:
-        refuse("the charger draft writes %d battery FET lines (for _qb in ...: nfet), one is read" % len(found))
-    refs, part_text, nets = found[0]
-    if nets != ("CH_BATDRV", "CH_BATQ", "VBAT"):
-        refuse("the charger draft's battery FETs are not gate CH_BATDRV, drain CH_BATQ, source VBAT (%s)" % ", ".join(nets))
-    if len(refs) < 2 or len(set(refs)) != len(refs) or not all(isinstance(x, str) for x in refs) or "BUK6Y10-30PX" not in part_text:
-        refuse("the charger draft's battery FETs did not read as two or more BUK6Y10-30PX")
-    return refs, part_text
+        try:
+            body = ast.parse(node.value).body
+        except SyntaxError:
+            body = []
+            for line in node.value.splitlines():
+                try:
+                    body += ast.parse(line.strip()).body
+                except SyntaxError:
+                    continue
+        walk(body, {})
+    return found
+
+
+def battery_fets(draft):
+    """The charger's battery FETs as L4-E11's draft writes them into board A's generator: the nfet calls whose gate is
+    CH_BATDRV, drain CH_BATQ and source VBAT. Returns the designators in the draft's order and the part's text; refuses on
+    fewer than two, on a designator written twice, on two different parts, or on a part that is not the BUK6Y10-30PX."""
+    fets = [(c[0], c[1]) for c in nfet_calls(draft) if c[2:5] == BAT_NETS]
+    refs, parts = tuple(r for r, _p in fets), sorted({p for _r, p in fets})
+    if len(refs) < 2:
+        refuse("the charger draft writes %d battery FET(s) on %s; two or more are read" % (len(refs), ", ".join(BAT_NETS)))
+    if len(set(refs)) != len(refs):
+        refuse("the charger draft writes a battery FET twice (%s)" % ", ".join(refs))
+    if len(parts) != 1 or "BUK6Y10-30PX" not in parts[0]:
+        refuse("the charger draft's battery FETs did not read as one part, the BUK6Y10-30PX")
+    return refs, parts[0]
 
 
 def stackups_module():

@@ -7,7 +7,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
 
 0. PINS (path  sha256/16)
    board_p          v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb  sha256 d79865e7b1aceb95
-   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 0c7b9e356a6cdca9
+   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 896a14dc5b4df123
    copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 9eddb1ef271e0333
    csd17570         v2/vendor/battery/ti-csd17570q5b.pdf  sha256 596555c33dce1fca
    csd18510         v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
