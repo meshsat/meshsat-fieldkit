@@ -1774,24 +1774,32 @@ def classify(pb, F, R):
              ("slots 1 and 3 on the LM5176 at the declared %.2f (D6)" % F["slot_eff"], nv["D6"] - nv["D5"]),
              ("board P's breaker (D9)", nv["D9"] - nv["D8"]), ("the third battery FET (D10)", nv["D10"] - nv["D9"])]
     rest = (fr["need"] - d["DRAFTED-R1"]["V_rest"]["hi"]) - math.fsum(p[1] for p in parts)
-    holds = fr["margin"] >= 0
+    # ROUND 5 (task T5 round 2, record l9t5, 4 October 2026): L9P-F01 is restated on the case row C-ALLTX rev 3 (REQ-018's acceptance
+    # with CONOPS 4a's row, computed from its own text in out 7b). Its round 2 figure, 16.214 V, is decision D-11's basis as rv-pwr models
+    # it and is kept below as a LABELLED SCENARIO; round 7's 16.1 V floor and the 16.4 V its rule gives are WITHDRAWN (the owner's
+    # positions of 4 October 2026), so the finding is judged against REQ-018's 15.5 V only.
+    nw = R["calltx"]["new"]
+    case_holds = nw["need"] <= CASE_V_REST
     out.append({
-        "id": "L9P-F01", "class": "DEMONSTRATED ANALYSIS DEFECT", "new": "carried (round 1), moved",
-        "status": "OPEN: L4-E9 round 7's %.1f V does not cover this round's drafts" % fr["floor_r7"] if not holds else "CLOSED: round 7's %.1f V covers this round's drafts" % fr["floor_r7"],
-        "subject": "D-11's all-transmit floor on the drafted design (L4-E9 round 7's D-17 re-derived it at %.1f V on round 1's drafts)" % fr["floor_r7"],
-        "figure": ("the basis (all transmitters keyed, non-transmit loads typical, the standby card off, every other load at HIGH) needs a pack rest voltage of %.3f V at the worst cell resistance on this round's drafts, %.3f V %s round 7's %.1f V floor "
-                   "(round 1's drafts %.3f V, the floor's basis; DRAWN %.3f V under D-11's %.1f V). From round 1: %s; the rest %+.4f V. The coolers' envelope alone takes round 1's basis to %.3f V. By round 7's own rule (the least floor on its %.1f V step at least %.1f V over the need) the floor becomes %.1f V (%.3f V a cell), "
-                   "leaving %.3f V of rest voltage to ChargeVoltage's %.3f V maximum (round 7: %.3f V); at %.1f V the basis is covered to R_cell %.4f Ohm. With the coolers at the maker's %.1f W over %.2f instead (should C4-3 read them there) it needs %.3f V and the rule gives %.1f V"
-                   % (fr["need"], abs(fr["margin"]), "over" if fr["margin"] < 0 else "under", fr["floor_r7"], d["DRAFTED-R1"]["V_rest"]["hi"], d["DRAWN"]["V_rest"]["hi"], F["floor"],
-                      "; ".join("%s %+.4f V" % p for p in parts), rest, nv["D5"], fr["step"], fr["over"], fr["floor_req"], fr["floor_req"] / F["series"],
-                      F["r7_window"] - fr["floor_req"], F["r7_window"], F["r7_window"] - fr["floor_r7"], fr["floor_r7"],
-                      (fr["floor_r7"] - d["DRAFTED"]["V_stack"]) * 3.0 / (F["series"] * F["i_peak"]), float(F["cooler"][5]), F["su_eta"], fr["need_mk"], fr["floor_req_mk"])),
-        "rule": "D-11's floor, set from the gauge's 20 A over-current trip with 10 percent margin (18 A) and the cells' 60 C window (pcb_requirements.yaml, D-11); L4-E9 round 7's rule for the re-derived floor",
-        "why": "round 7 re-derived the floor on round 1's drafts; l8r2 round 6 then declared the coolers' envelope (the slot row %.2f A) and moved slots 1 and 3 to the LM5176, and l9stk added board P's breaker and the third battery FET (together %+.4f V); the floor's own arithmetic re-run on those drafts does not hold; a desk result on the drafts' own figures, not an assumption a measurement would settle" % (F["fan_row"], nv["D10"] - nv["D8"]),
-        "action": ("re-derive the floor on this round's drafts: %.1f V rest (%.3f V a cell) by round 7's rule; the coolers' share is l8r2's envelope bound, so C4-3's measured steady input lowers it by %.4f V per watt at VBAT (%.4f V per cooler and watt at the fan through %.2f and %.2f); a Fan_PWM cap during a key-down is not available "
-                   "(l8r2 round 4: the fan runs full whenever its PWM lead is not driven); the heater stays off while keyed (%.3f V needed with it)"
-                   % (fr["floor_req"], fr["floor_req"] / F["series"], 1.0 / F["i_peak"], 1.0 / F["i_peak"] / F["su_eta_lo"] / F["slot_eff"], F["su_eta_lo"], F["slot_eff"], fr["heater"])),
-        "owner": "L4-E9 (D-17, R-28 and LH-12: FW-A05's all-transmit floor), with l8r2 (C4-3, the coolers' envelope) and Layer 5 (FW-A05's text)"})
+        "id": "L9P-F01", "class": "DEMONSTRATED ANALYSIS DEFECT", "new": "carried (round 1), restated in round 5 on C-ALLTX rev 3",
+        "status": ("OPEN on the case: C-ALLTX rev 3 needs %.4f V rest at %.0f A against REQ-018's %.1f V (record l9t5 bounds the printed uncertainties)"
+                   % (nw["need"], CASE_I, CASE_V_REST)) if not case_holds else "CLOSED on the case: C-ALLTX rev 3 needs %.4f V" % nw["need"],
+        "subject": "REQ-018's all-transmit case on the drafted design (D-17, the case row C-ALLTX rev 3); D-11's basis is a labelled scenario",
+        "figure": ("THE CASE (C-ALLTX rev 3: REQ-018's acceptance with CONOPS 4a's row; every transmitter keyed at HIGH, the fans running, the outlets, the heater and the standby card off, every other load at typical; out 7b, each pack-fed converter at the case's VBAT %.3f V): "
+                   "%.3f W at VBAT, a pack rest voltage of %.4f V needed at %.0f A and R_cell %.2f Ohm (an ASSUMPTION), %+.4f V against REQ-018's %.1f V. "
+                   "LABELLED SCENARIO, NOT THE CASE: decision D-11's basis as rv-pwr models it (all transmitters keyed, the compute modules and the NVMe typical, the standby card off, every other load at HIGH, every converter at 16.8 V) needs %.3f V at the worst cell resistance on this round's drafts "
+                   "(round 1's drafts %.3f V; DRAWN %.3f V); from round 1: %s; the rest %+.4f V; the coolers' envelope alone takes round 1's basis to %.3f V; with the coolers at the maker's %.1f W over %.2f, %.3f V. "
+                   "WITHDRAWN (the owner's positions of 4 October 2026): L4-E9 round 7's %.1f V floor, the %.1f V its rule gives on these drafts, FAN_OK (rejected)"
+                   % (nw["vbat"], nw["p"], nw["need"], CASE_I, nw["r_cell"], nw["need"] - CASE_V_REST, CASE_V_REST,
+                      fr["need"], d["DRAFTED-R1"]["V_rest"]["hi"], d["DRAWN"]["V_rest"]["hi"], "; ".join("%s %+.4f V" % p for p in parts), rest, nv["D5"],
+                      float(F["cooler"][5]), F["su_eta"], fr["need_mk"], fr["floor_r7"], fr["floor_req"])),
+        "rule": "REQ-018's acceptance: PS-ALLTX supplied with every rail in regulation through a 60 s key-down begun at a pack rest voltage of 15.5 V or more, every cell at most +55 C (pcb_requirements.yaml); the case row C-ALLTX rev 3; D-11's service limit, 18 A indicated",
+        "why": "the case computed from its own text needs more than REQ-018's rest voltage on this round's drafts; l8r2 round 6 declared the coolers' envelope (the slot row %.2f A) and moved slots 1 and 3 to the LM5176, and l9stk added board P's breaker and the third battery FET (together %+.4f V on the basis); a desk result on the drafts' own figures, not an assumption a measurement would settle" % (F["fan_row"], nv["D10"] - nv["D8"]),
+        "action": ("close the deficit on the case, never on a scenario: record l9t5's A1 (the VHF PA held to its 30 W service by a closed VGG loop on board D), the selected direction, drafted and judged in record l9t5; "
+                   "the coolers' share stays l8r2's envelope bound (C4-3: %.4f V per watt at VBAT); a Fan_PWM cap during a key-down is not available "
+                   "(l8r2 round 4: the fan runs full whenever its PWM lead is not driven); the heater stays off while keyed (%.3f V needed with it on the basis)"
+                   % (1.0 / F["i_peak"], fr["heater"])),
+        "owner": "record l9t5 (A1, Layer 9's power author) with L4-E9 (D-17, R-28 and LH-12: FW-A05's all-transmit rule on the case), l8r2 (C4-3, the coolers' envelope) and Layer 5 (FW-A05's text)"})
     st13 = {k: slot_least(R, k) for k in (None, "i_least", "start", "degraded")}
     r1s = [m for m in R["stages"].items() if m[0][0] == "DRAFTED-R1" and m[0][2] in ("S1", "S3")]
     r1_worst = max(x["i_hi"] for k, x in r1s)
