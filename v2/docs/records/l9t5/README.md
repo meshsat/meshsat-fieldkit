@@ -1,3 +1,5 @@
+**INCOMPLETE (shutdown checkpoint, 4 October 2026):** I-03's two drafts `apply_gen_sch_a_iocbuck.py` and `apply_gen_sch_b_iocbuck.py` are written and NOT CHECKED by any committed script or test: board A's composed in L4-E9's order on a scratch copy and its generator ran to its end; board B's applied but its composed generator stops on another record's defect (GND's 21.0 A peak against 21.51 A of loads after record l8r2's fans12 on record l8gnd's GND-002), so no board B netlist, mutation or acceptance is read yet. Not started: the record script that composes, regenerates and mutates; L9P-F01's line restated as D-11's scenario (C-ALLTX rev 3); A1's detector and loop; the C-PROT finding's entry. Nothing below this line is changed by the checkpoint.
+
 # l9t5: task T5, C-ALLTX rev 2 and C-DEV rev 1 (Layer 9's power author, MESHSAT-1357)
 
 4 October 2026, worktree `l9t5` on branch `fnd/l9t5` from set 29's line `dc99897f`. Prototype design, desk arithmetic: nothing
