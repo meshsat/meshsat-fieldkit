@@ -19,7 +19,9 @@ SRF1260-1R0Y, whose 7.51 A carries the breaker's highest current at 98.2 C again
 What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: U6's comment and call; R19's and Q7's calls; L4-E9's R20 to
 R23 line (UVLO 59.0k over 10.0k at 1 %, OV 332k over 10.0k at 0.1 %); the C5, R24, R25 line (C5 the 22 nF C0G timer, R24 the
 39.7k 0.1 % RIWRN, R25 unchanged) with the new parts R80 to R86 and C122 to C125; L2's value text; the footprint map (DGX19,
-D2PAK); _VEH_T and _VEH_P (the breaker's 7.14 A); the vehicle entry's schematic section. The board's narrative comments and
+D2PAK, XT60F); _VEH_T and _VEH_P (the breaker's 7.14 A); the vehicle entry's schematic section; J_DCIN (round 9, 4 October 2026:
+record l9stk's DD-3) from the JST VH to the Amass XT60-F (C98734; V1.2: 30 A rated, 60 A instantaneous, -20 to 120 C), the gender
+opposite J_BATT's XT60-M, as D-06 (section 6) selected; its nets unchanged. The board's narrative comments and
 the intent notes that still name the LM5069 are E11-01's to restate with the regeneration.
 
 FOOTPRINTS OWED (E11-01): DGX19 names meshsat:TI_DGX0019A_VSSOP-19_3x5.1mm_P0.5mm, which does not exist yet (TI's DGX0019A
@@ -69,7 +71,13 @@ EDITS = [
      '"Bourns SRF1260-1R0Y dual-winding choke, common-mode connection (each winding carries the line current: 7.51 A Irms and 11.8 A Isat in the series column, 1.0 uH per winding; L4-E11: the breaker\'s 7.14 A)'),
     ('           "DFN6S": "meshsat:Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm"})',
      '           "DFN6S": "meshsat:Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm",\n'
-     '           "DGX19": "meshsat:TI_DGX0019A_VSSOP-19_3x5.1mm_P0.5mm", "D2PAK": "Package_TO_SOT_SMD:TO-263-2"})   # L4-E11: the entry\'s U6 (land owed) and Q7'),
+     '           "DGX19": "meshsat:TI_DGX0019A_VSSOP-19_3x5.1mm_P0.5mm", "D2PAK": "Package_TO_SOT_SMD:TO-263-2",\n'
+     '           "XT60F": "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"})   # L4-E11: the entry\'s U6 (land owed) and Q7; J_DCIN (round 9)'),
+    ('part("J_DCIN", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -", "VH2", {"1": "DC_IN", "2": "GND_V"}, "C274411")',
+     '# L4-E11 (MESHSAT-1357, D-06 and round 9, DD-3 of record l9stk): J_DCIN leaves the JST VH (10 A at AWG 16, 7 A at AWG 18, 105 C) for\n'
+     '# an Amass XT60-F (V1.2: 30 A rated, 60 A instantaneous, -20 to 120 C, 12 AWG), the gender opposite J_BATT\'s XT60-M so the pack lead\n'
+     '# cannot mate it; the inside lead ends in an XT60-M. Pad 1 is the + contact, read against KiCad\'s AMASS land at regeneration.\n'
+     'part("J_DCIN", "Connector_Generic", "Conn_01x02", "Amass XT60-F, 30 A: vehicle and shore DC in 9 to 36 V (the inside lead from the D38999 wall receptacle DC pair, on an XT60-M): 1 +, 2 -", "XT60F", {"1": "DC_IN", "2": "GND_V"}, "C98734")'),
     ('_VEH_T, _VEH_P = 6.15, 6.15',
      '_VEH_T, _VEH_P = 7.14, 7.14   # L4-E11: the TPS48110 breaker\'s highest current with R19 4.5 mOhm (was the LM5069\'s 6.15 A)'),
     ('"U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8"',
