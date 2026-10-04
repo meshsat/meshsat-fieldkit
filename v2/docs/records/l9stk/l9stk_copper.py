@@ -694,6 +694,7 @@ def compute():
     R["e_shore"] = {"1 oz": 2 * W["sh_pair_1k"] + 2 * W["vin_pair_1k"], "2 oz": 2 * W["sh_pair_2k"] + 2 * W["vin_pair_2k"]}
     R["strip"] = S.outline(S.PINS["board_e"])[1]
     R["a_short"] = S.outline(S.PINS["board_a"])[1]
+    R["gap_max"] = R["strip"] - R["e_pack_end"]["1 oz apart"]
     # the series parts
     r17, r19 = I["r17"], I["r19"]
     R["r17_limit_a"] = math.sqrt(r17["w"] / (r17["mohm"] / 1000.0))
@@ -1103,6 +1104,9 @@ def render(R):
     P("   board E's pack end, the forward band and its return: 1 oz %.2f mm, 2 oz %.2f mm, 1 oz laid apart (no credit) %.2f mm plus the gap;" % (
         R["e_pack_end"]["1 oz"], R["e_pack_end"]["2 oz"], R["e_pack_end"]["1 oz apart"]))
     P("     the strip is %.0f mm: at 1 oz the pair cannot be laid side by side" % R["strip"])
+    P("   the zero-cost route, (L9STK CU)'s option (4): the band and its return each %.2f mm at 1 oz, laid apart, fit the strip with a gap up to" % W["alone_1k"])
+    P("     %.2f mm; decision 35's model holds no term for the distance between two conductors, so no gap is credited as apart: the route" % R["gap_max"])
+    P("     needs a coupon (a board E strip at 1 oz with the band and its return at the gap carrying %g A, each at most 10 K)" % I["blade_a"])
     P("   board E's shore chain and VIN_RAW, each with its return, in one section: 1 oz %.2f mm, 2 oz %.2f mm" % (R["e_shore"]["1 oz"], R["e_shore"]["2 oz"]))
     P("   board A's pack corridor, forward and return: 1 oz %.2f mm, 2 oz %.2f mm, of the board's %.0f mm short side" % (2 * W["pair_1k"], 2 * W["pair_2k"], R["a_short"]))
     P("")

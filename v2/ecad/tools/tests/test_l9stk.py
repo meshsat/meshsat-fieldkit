@@ -781,23 +781,35 @@ def t_protection_the_pair_its_uncertainty_and_the_exposure():
     assert (round(P["i150_air"], 2), round(P["i150_t0"], 2)) == (21.38, 20.53)
     tj = {a: 76.25 + 33.12 * (a / 2) ** 2 * each for a in (22.0, 23.0)}
     assert round(tj[22.0], 1) == 161.0 and round(tj[23.0], 1) == 168.8
-    need_rth = (150 - 76.25) / ((R["B"]["icl_max"] / 2) ** 2 * each)
-    assert abs(R["rth_need"] - need_rth) < 1e-9 and round(need_rth, 2) == 24.37 < 33.12
+    # B-P2: the junction limit with the band and R17 in place (the FET-only target the recheck derived)
+    m = _CU()
+    J, a = R["J"], R["B"]["icl_max"]
+    W, ks = _C["CR"]["w"], _C["CR"]["ks"]
+    band = max(m.rise_pair(a, W["pair_1k"], m.OZ1, ks), m.rise_pair(a, W["pair_2k"], m.OZ2, ks))
+    budget = 150 - 76.25 - band
+    p2, p3, pr17 = (a / 2) ** 2 * each, (a / 3) ** 2 * each, a * a * C["r17"]["mohm"] / 1000.0
+    assert _close(J["budget"], budget) and round(band, 2) == 9.16 and round(pr17, 2) == 2.86
+    assert round(budget / p2, 2) == round(J[2]["fet_only"], 2) and 21.3 < budget / p2 < 21.4
+    assert _close(J[2]["anywhere"], budget / (p2 + pr17)) and _close(J[3]["anywhere"], budget / (p3 + pr17))
+    assert _close(J[3]["apart"], (budget - 1.0 * pr17) / p3) and J[3]["apart"] > 33.12 > J[2]["apart"]
+    # at 24.37 K/W, the first revision's FET-only target, the junction passes 150 C once the band is counted
+    assert 76.25 + band + p2 * 24.37 > 150.0
 
 
 def t_protection_the_table_has_the_owners_columns_and_cases():
     _PR()
     T = _C["PRR"]["table"]
     for must in ("10 A continuous", "18 A for 60 s", "an overload under the unit's limit, held", "an overload over the unit's limit",
-                 "a hot short, board P's FETs welded", "a start into a short", "a start", "docking a live pack",
-                 "a persistent fault, retrying", "the shore input, Q7 shorted"):
+                 "a hot short, board P's FETs welded", "a start into a short", "a start", "docking, the make-last enable (C-1b)",
+                 "docking without the enable (the uncorrected design)", "a persistent fault, retrying", "charging (the reverse direction)",
+                 "the clamp shorted with board P's FETs welded (two faults)", "the shore input, Q7 shorted"):
         assert any(r["case"] == must or r["case"].startswith(must + " ") for r in T), "no row %r" % must
     for r in T:
         for k in ("case", "cur", "trip", "clear", "limiting", "margin", "status"):
             assert r[k], "%s has no %s" % (r["case"], k)
         assert any(w in r["status"] for w in ("printed", "derived", "MISSING", "DESIGN DEFECT")), r["case"]
         if "OVER" in r["margin"]:
-            assert "DESIGN DEFECT" in r["status"], "%s is over a limit with no design defect named" % r["case"]
+            assert "DESIGN DEFECT" in r["status"] or "corrected by" in r["status"], "%s is over a limit with no design correction named" % r["case"]
     rows = [l for l in _C["ptext"].splitlines() if l.startswith("   ") and l.count(" | ") == 6]
     assert len(rows) == len(T)
 
@@ -805,10 +817,13 @@ def t_protection_the_table_has_the_owners_columns_and_cases():
 def t_protection_the_defects_and_the_evidence_have_owners():
     _PR()
     R = _C["PRR"]
-    assert [d[0] for d in R["defects"]] == ["DD-1", "DD-2", "DD-3", "DD-4"] and all(d[2] for d in R["defects"])
-    assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2]
-    assert all(len(e) == 5 and all(e) for e in R["missing"]) and len(R["missing"]) == 8
-    assert all(i[2] for i in R["interfaces"]) and [q[2] for q in R["questions"]] == ["drafted, not sent"]
+    assert [d[0] for d in R["defects"]] == ["DD-%d" % i for i in range(1, 7)] and all(d[2] for d in R["defects"])
+    assert "W4DP-F2" in R["defects"][0][1] and "L4-E11" in R["defects"][1][2] and "BAT-F20" in R["defects"][4][1]
+    assert "board P's generator" in R["defects"][5][2] and "Layer 7" in R["defects"][5][2]
+    assert all(len(e) == 5 and all(e) for e in R["missing"]) and [e[0] for e in R["missing"]] == ["E-%d" % i for i in range(1, 12)]
+    assert all(i[2] for i in R["interfaces"]) and [i[0] for i in R["interfaces"]] == ["IF-%d" % i for i in range(1, 7)]
+    assert all("not sent" in q[2] for q in R["questions"]) and "48 V" in R["questions"][0][1]
+    assert len(R["not_taken"]) == 6 and any("LM5066I" in x for x in R["not_taken"]) and any("pair kept" in x for x in R["not_taken"])
 
 
 def t_protection_the_page_carries_the_outputs_figures():
@@ -817,15 +832,23 @@ def t_protection_the_page_carries_the_outputs_figures():
     t = open(PAGE, encoding="utf-8").read()
     s15 = t[t.index("## 15. "):]
     B, P = _C["PRR"]["B"], _C["PRR"]["pair"]
+    J = _C["PRR"]["J"]
     for fig in ("%.2f" % B["icl_min"], "%.2f" % B["icl_max"], "%.2f" % B["icl_typ"], "%.2f" % B["icb_max"], "%.4f" % (B["rs"] * 1e3),
                 "%.2f" % B["plim_nom"], "%.2f" % B["plim_min"], "%.2f" % B["plim_max"], "%.3f" % (B["tf_max"] * 1e3),
                 "%.3f" % (B["clear_max"] * 1e3), "%.3f" % B["inrush_max"], "%.1f" % (B["start_max"] * 1e3), "%.2f" % B["fault_ratio"],
-                "%.2f" % B["start_ratio"], "%.2f" % _C["PRR"]["rth_need"], "%.2f" % P["i150_air"], "%.2f" % P["i150_t0"],
-                "%.2f" % B["alt_icl_min"], "%.2f" % B["alt_blade"], "%.1f" % B["sense_abs_a"], "%.2f" % (B["t_pl_charge"] * 1e3)):
+                "%.2f" % B["start_ratio"], "%.2f" % P["i150_air"], "%.2f" % P["i150_t0"], "%.2f" % B["alt_icl_min"], "%.2f" % B["alt_blade"],
+                "%.1f" % B["sense_abs_a"], "%.3f" % B["dock_uncorr"]["vsense"], "%.1f" % B["dock_uncorr"]["i10_der"], "%.2f" % B["dock_uncorr"]["ratio"],
+                "%.2f" % B["dock_uncorr"]["ratio75"], "%.2f" % (B["t_ins"][0] * 1e3), "%.2f" % (B["t_ins"][1] * 1e3), "%.2f" % B["v_withdraw"],
+                "%.2f" % J["dt_band"], "%.2f" % J["budget"], "%.2f" % J[2]["fet_only"], "%.2f" % J[2]["apart"], "%.2f" % J[2]["anywhere"],
+                "%.2f" % J[3]["apart"], "%.2f" % J[3]["anywhere"], "%.2f" % J["ciss"][3][0], "%.1f" % J["tj_service"], "%.1f" % B["rthja_need"],
+                "%.2f" % (100 * B["split_max"]), "%.3f" % B["spread_need"], "%.2f" % (100 * B["d_ratchet"]), "%.2f" % B["pre_w"],
+                "%.0f" % B["p_free"], "%.0f" % (B["p_free"] - B["p_pads"])):
         assert fig in s15, "section 15 does not carry %s" % fig
-    for k in ("DD-1", "DD-2", "DD-3", "DD-4", "IF-1", "IF-2", "IF-3", "IF-4", "Q-TI-L9S-1") + tuple("E-%d" % i for i in range(1, 9)):
+    for k in ("DD-%d" % i for i in range(1, 7)):
         assert k in s15, "section 15 does not name %s" % k
-    for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19"):
+    for k in ("IF-1", "IF-2", "IF-3", "IF-4", "IF-5", "IF-6", "Q-TI-L9S-1", "C-1b") + tuple("E-%d" % i for i in range(1, 12)):
+        assert k in s15, "section 15 does not name %s" % k
+    for f in ("L9C-F16", "L9C-F17", "L9C-F18", "L9C-F19", "L9C-F20", "L9C-F21", "L9C-F22"):
         assert f in t
     assert "at or below the\ncells' 24 A" not in t and "current-and-time" in t
 
@@ -849,3 +872,57 @@ def t_the_held_back_document_is_ignored_and_its_fetch_pins_the_same_bytes():
     if shutil.which("git") and os.path.exists(os.path.join(ROOT, ".git")):
         r = subprocess.run(["git", "-C", ROOT, "check-ignore", "-q", rel], capture_output=True)
         assert r.returncode == 0, "%s is not ignored: it must never be committed" % rel
+
+
+def t_protection_the_docking_correction_on_the_derated_curve():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    C = R["cu"]
+    rs = B["rs"]
+    # B-P1 as the recheck reads it: VIN to SENSE at the docking peak, the 10 us line derated by equation 5
+    assert round(C["dock_pk"] * rs, 3) == 0.634 > 0.3
+    der = (150.0 - B["tc"]) / 125.0
+    assert _close(B["dock_uncorr"]["i10_der"], B["i10us"] * der) and 91.0 < B["i10us"] * der < 92.5
+    assert 2.6 < C["dock_pk"] / (B["i10us"] * der) < 2.7 and 1.6 < C["dock_pk"] / (B["i10us"] * 0.6) < 1.7
+    # C-1b: the insertion time from the sheet's insertion current, then the dv/dt start's current under every limit
+    assert _close(B["t_ins"][0], 10e-9 * 0.9 * LM["vtmrh"][0] / 8e-6) and _close(B["t_ins"][1], 10e-9 * 1.1 * LM["vtmrh"][1] / 3e-6)
+    assert B["inrush_max"] * rs < 0.3 and B["inrush_max"] < B["icl_min"] and B["start_p"] < B["plim_min"]
+    assert _close(B["v_withdraw"], 1e-3 / B["t_off_timer"])
+    # the alternative: board A's pre-charge pin needs a lead the hand sets
+    tau = 10.0 * 593e-6
+    r_loop = 16.8 / C["dock_pk"]
+    assert _close(B["pre"]["t_cb"], tau * math.log(16.8 / (B["icb_min"] * r_loop)))
+    assert _close(B["pre"]["t_abs"], tau * math.log(16.8 / (B["sense_abs_a"] * r_loop)))
+    rows = {r["case"]: r for r in R["table"]}
+    assert "OVER" in rows["docking without the enable (the uncorrected design)"]["margin"]
+    assert "%.2f" % B["start_ratio"] in rows["docking, the make-last enable (C-1b)"]["margin"]
+
+
+def t_protection_the_minors_folded_in():
+    _PR()
+    R, B = _C["PRR"], _C["PRR"]["B"]
+    C, I = R["cu"], R["in"]
+    a = B["icl_max"]
+    miss = {e[0]: e for e in R["missing"]}
+    assert "%.3f" % _C["CR"]["pin_ratio_need"] in miss["E-4"][3] and "0.593" in miss["E-4"][3] and "25 A" in miss["E-4"][3]
+    assert "%.2f A under the cells'" % (24.0 - a) in miss["E-9"][3] and "-40, 25 and 125 C" in miss["E-9"][3]
+    assert _close(B["split_max"], 24.0 / a - 1) and "FALLBACK" in miss["E-5"][3]
+    assert _close(B["spread_need"], 24.0 / 1.05 / 18.0) and B["spread"] > B["spread_need"]
+    assert _close(B["d_ratchet"], 1.25e-6 / (120e-6 + 1.25e-6))
+    assert "18 A for 60 s after 10 A held" in miss["E-7"][3] and "103 C" in miss["E-3"][3]
+    assert _close(B["pre_w"], I["fet_vsd"] * 1.0) and B["pre_tj"] < 150
+    assert _close(B["d1_ratio"], B["icb_max"] / 100.0)
+    assert B["p_face"] == 70 * 44 and B["p_pads"] < B["p_free"]
+    assert any("BAT-F20" in s_["name"] for s_ in R["series"])
+    assert any("reverse" in r["case"] for r in R["table"])
+
+
+def t_copper_the_zero_cost_route_is_listed_and_not_credited():
+    _CU()
+    A, _D = _decisions()
+    W, R = _C["CR"]["w"], _C["CR"]
+    gap = R["strip"] - 2 * W["alone_1k"]
+    ask = A.OPEN["ask"]
+    assert "(4)" in ask and "%.2f mm each" % W["alone_1k"] in ask and "%.2f mm plus the gap" % (2 * W["alone_1k"]) in ask
+    assert "up to %.2f mm" % gap in ask and "no term for the distance" in ask and "coupon" in ask
+    assert "%.2f mm" % gap in _C["ctext"] and "no gap is credited" in _C["ctext"]
