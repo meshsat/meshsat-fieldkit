@@ -1,13 +1,18 @@
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
-**INCOMPLETE (round 5, checkpoint at the owner's shutdown, 4 October 2026 15:56 CEST).** Round 5 (the check V1's items F1, F2
-and the findings) is part done on this branch: `check_l8p_netlist.py`'s board A EN group admits DD-7's readers by pin
-(L4E11-R10-F2) and `l8p_drafts.py` composes L4-E11's round 10 drafts (`fnd/l4e11r10` at `a09e9a60`, byte-for-byte copies in
-`inputs/`), drops the stand-ins, reads the restated interface levels from the copy of L4-E11's section 20c and adds three
-mutations of the composed board A. **`l8p_drafts.out` is STALE** (not regenerated: the committed output is round 4's, so
-`test_l8p`'s first test fails until it is regenerated through `_bin/regen_out.py`); `inputs/SOURCES.txt` does not yet list the
-round 10 copies; the page's 12f box, its findings L8P-F06 and L8P-F07 (section 12j) and `test_l8p.py` are not yet updated; the
-scratch merge with `a09e9a60` is not run.
+**Round 5 (4 October 2026 evening, branch `fnd/l8p2`): the check V1's condition C4 DONE on this branch; L8P-F06 and L8P-F07 OPEN.**
+- Done: `check_l8p_netlist.py`'s board A EN group admits DD-7's readers by pin (L4E11-R10-F2), three mutations of the composed board A
+  fail it; the compositions use L4-E11's round 10 drafts (`fnd/l4e11r10` at `a09e9a60`, byte-for-byte copies listed in
+  `inputs/SOURCES.txt` round 5) with no stand-in, boards E and A run to their end; `l8p_drafts.out` regenerated through
+  `_bin/regen_out.py`; the page's 12f restated from L4-E11's 20c and 20d (quoted, a test reads every quote against the copies), 12i,
+  section 9, and the new 12j: L8P-F06 (the breaker FETs' hot off leakage inside L4-E11's 0.846 mA latch) and L8P-F07 (RT1's printed
+  points; on Murata's typical curve the guard reaches the first inverter's turn-off at record l9stk's held 18 A reading), the Murata
+  and TI questions DRAFTED and UNSENT, TDK's B59721A and Murata's PRF15BA102 named and not selected; `test_l8p` (15 passed),
+  `test_l8r2` and `test_public_hygiene` pass.
+- Not done here: the closure of C4 on the merged candidate (`test_l8p` and `test_l4e11` there) is the integrator's; the scratch merge
+  with `a09e9a60` is recorded below.
+- Next: the independent check V2 of the changed technical claims (F06, F07, the alternative parts) with T2, T3 and T4; record l9stk's
+  guard round for F07; L4-E11's latch budget for F06.
 
 Layer 8 record `l8p`, 4 October 2026, branch `fnd/l8p` from main `64cd25ee`. It draws record `l9stk` section 15's design
 (branch `fnd/l9stk` at `0d72880b`, its latest changes CONFIRMED AS CONDITIONAL):
@@ -36,8 +41,9 @@ accepted check of this record; none exists.
 | `apply_gen_sch_a_ptc.py` | DRAFT, board A: J_DOCK pins 3 and 5 on the loop with 4 ground between; RT1 PRF15BB103 on the battery FETs' copper. |
 | `check_l8p_netlist.py` | What the regenerated netlists must show, parsed: the breaker, the loop on each board, the hold, the restart inhibit and its PGD gate, the reverse-charge detector (REV), the ideal diode beside Q1 (DIO), the ground contact between the loop conductors, and the loop's continuity across the boards. It reads NOT DRAWN on the committed netlists. |
 | `gen_netlist.py` | A generator's own part table written as a KiCad-form netlist on a host without KiCad: a stand-in layout step, with `intent.write` run. |
-| `fetch_held_back.py` | TI's OPA187 sheet (SBOS807E) into `v2/vendor/ti/held/`, checked by sha256 (held back by TI's notice). |
+| `fetch_held_back.py` | TI's OPA187 sheet (SBOS807E) into `v2/vendor/ti/held/` and, round 5, TDK's superior-series PTC sheet into `v2/vendor/battery/held/`, each checked by sha256 (held back by their notices). |
+| `read_prf_typical.py` | Round 5: the reading of Murata's typical BB curve (DM-SA16-E056 Rev.1, 3.2) that `l8p_drafts.py` carries as `PRF_BB_TYP`, INFERRED; a reading aid, not a gate. |
 | `l8p_drafts.py`, `l8p_drafts.out` | The inputs pinned by sha256, the values found in l9stk's text, C-1c's budget read from the makers' sheets, B-R2's detector (section 3b), DD-5's acceptance (section 3c), each draft on a scratch copy, the composition in L4-E9's order, the designators, the regeneration and the netlist check, the intent, and the findings. Regenerated with `_bin/regen_out.py`. |
-| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`. |
+| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; round 5: L4-E11's round 10 drafts and its sections 20c, 20d and 20e at `a09e9a60`. |
 
 Tests: `v2/ecad/tools/tests/test_l8p.py`. Run `python3 run.py test_l8p test_l8r2 test_public_hygiene` from the tests folder.
