@@ -9,6 +9,139 @@ PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited 
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
 
+## 0d. Round 4, part 3: finding SDR3-F02, the Compute Module 5's supply design figure
+
+Figures: `l9t5_cm5.out` ("cm5 N"), printed by `l9t5_cm5.py`, which reads the sheet held in the tree
+(`v2/vendor/cm5/cm5-datasheet.pdf`, Release 3) and imports record l9pwr's budget unchanged. **No case row is changed here: a case
+row's change is the coordinator's.**
+
+**What the sheet prints (cm5 2).** Appendix B, "CM4 and CM5 differences", B.3 "Power budget": "CM5 delivers significantly more
+performance than CM4, and therefore consumes more power. Power supply designs should accommodate 5 V at up to 2.5 A. If this
+creates an issue with an existing board design, lowering the CPU clock rate can reduce the peak power consumption." Table 9
+(section 4.3.3) prints idle 400 mA and operation 900 mA as TYPICAL figures and leaves its minimum and maximum columns empty.
+
+**What kind of figure it is.** A supply design figure: the maker's advice to a carrier's designer, tied by its own next sentence to
+the module's peak consumption. It is not a row of the consumption table, not a printed maximum and not a typical; the sheet prints
+no consumption limit at all. It is the nearest figure the maker gives to an upper figure of a module's draw. Board B's generator
+declares a module at 1.6 A and says "no maximum given", which is true of Table 9 and silent on B.3; rv-pwr and record l9pwr take
+4.5 W typical and 8.0 W HIGH; the maker's figure is 12.5 W.
+
+| What it is owed by | What it owes | The figures (MODEL on the budget's rows; the loop's least PRINTED VSNS over the DECLARED shunt) |
+|---|---|---|
+| the slot stages (L9P-F02) | **a bound, and a finding (L9T5-F15)** | steady, each module at 12.5 W: 6.3516 A against 7.0957 A on slots 1 and 3 (**+0.7441 A**), +1.5292 A on slot 2. With a cooler's bounded start coinciding (record l8r2, a 100 us average): 7.4503 A, **-0.3546 A** on slots 1 and 3 (+0.4305 A on slot 2). With a degraded cooler: +0.0251 A |
+| C-ALLTX rev 3 ("the compute modules at typical") | **a labelled scenario, nothing in its definition** | the case 15.5162 V; at the budget's HIGH (8.0 W) 16.1718 V; at the maker's figure 268.014 W at VBAT, **17.0148 V** (+1.5148 V over REQ-018's 15.5 V rest). The row's unsettled item on the modules (nothing drawn holds them at typical) gains the maker's upper figure |
+| the budget's states | **a labelled scenario row beside HIGH, in the budget's next round** | HIGH for a module (8.0 W) is the generator's allowance, not a maker's bound; the maker's figure is 4.5 W more a module, 13.5 W for three. HIGH is not changed here: L9P-F02's rows and D-11's scenario are stated on it |
+| board B's slot rails (the generator's declaration) | **a finding for the generator's owner** | the slot branches sum to 4.751 A against a declared peak of 5.00 A (slot 2: 5.63 A); with the module at 2.5 A they sum to 5.651 A, over the 5.100 A that slots 1 and 3's declaration may carry |
+
+**The assessment (cm5 6).** SDR3-F02 is confirmed as a finding. It bounds what the supply should carry, and the slot stages do
+carry it steadily; they do not carry it together with a cooler's start on slots 1 and 3. What would settle it: the modules' measured
+peak input current under the kit's own workload (a bench row), or a firmware ceiling on the CPU clock, which the maker's sentence
+names as the lever. Neither exists in the tree. Nothing is drafted: the declaration is board B's generator owner's, L9P-F02's
+conditions are record l8r2's, the case row is the coordinator's.
+
+## 0c. Round 4, part 2: task T10, the supervisors' 3.3 V regulators (finding L9T5-F06)
+
+The owner's instruction of 4 October 2026, part 7, on L9T5-F06: "verify its applicable operating conditions and give it a named
+correction and acceptance criterion. Adding a dedicated ground return does not address that separate deficit." Figures:
+`l9t5_t10.out` ("t10 N"), printed by `l9t5_t10.py` from the makers' sheets held in the tree. **L9T5-F06 STAYS OPEN:** the
+conditions are verified, a correction is selected with its acceptance criterion and its circuit half is drafted; no independent
+check has read it, Layer 5 has not accepted its row, nothing is applied. This is the first attempt at this correction.
+
+**2a. The applicable operating conditions (t10 2 to 7).**
+
+- **The state is unbounded.** Eleven rows of `HW-FW-CONTRACT.md` name the supervisors (U41, U51, U61, STM32H743VIT6); none bounds
+  a run mode, a clock or a voltage scale. `PANEL.md` bounds nothing either, and `v2/firmware` holds the panel's firmware only.
+  `ARCH-PCB-B-IOHA.md`'s "roughly 60 mA each" is an intent with no clock, no voltage scale and no acceptance (DECLARED).
+- **ST's rows** (DS12110 Rev 10, run mode from ITCM, PRINTED maxima; the order code does not fix the silicon revision, so both
+  tables apply: rev Y Table 30, p.111; rev V Table 129, p.218). At 400 MHz with all peripherals enabled: rev Y 220, 400, 500 and
+  840 mA at a junction of 25, 85, 105 and 125 C; rev V 256, 327, 416 and 536 mA. rv-pwr's HIGH, 400 mA, is rev Y's row at 85 C.
+- **The controller's own limit.** LQFP100 45.0 C/W junction to ambient (Table 230, p.346), junction 125 C at most (Table 23,
+  p.105), PRINTED. At L4-E12's inside air, 76.25 C (MODELED), the junction reaches 125 C at 0.328 A. Each state's operating point
+  is the fixed point TJ = air + 45.0 C/W x 3.3 V x Imax(TJ), the maxima interpolated between their printed columns (MODEL): the
+  400 MHz states have NO operating point at or under 125 C on either revision. Above 0.328 A the controller itself is outside its
+  rating at this air, whatever regulator feeds it.
+- **The other parts on each regulator.** Two TCAN334 (TI SLLSEQ7F 5.5, PRINTED): 7.0 mA recessive, 120 mA while both drive
+  dominant bits, 360 mA with both buses faulted, against the 60 mA DECLARED for a supervisor's other parts.
+- **The regulator as drawn**, AP2112K-3.3 (Diodes DS39724 Rev. 2-2): 600 mA capability, SOT25 184 C/W with no heat sink, junction
+  150 C absolute maximum (PRINTED), thermal shutdown 160 C (TYPICAL). It drops its whole input to 3.3 V, so from +5V_IOC's 5.1329 V
+  maximum its junction reaches 150 C at **0.2187 A** and 125 C at 0.1445 A. **The deficit is thermal before it is a current limit**,
+  and wider than L9T5-F06 stated it in round 3.
+
+| The demand on one regulator | A | Label | Junction as drawn (from 5.1329 V) | Junction with the pre-regulator (from 4.2907 V) |
+|---|---|---|---|---|
+| declared typical | 0.1200 | DECLARED | 116.7 C | 98.1 C |
+| bounded: VOS3, HCLK at most 144 MHz, the larger revision at its operating point (0.1691 A at 101.4 C) plus the declared auxiliaries | 0.2291 (0.3091 while both transceivers drive dominant bits) | MODEL on PRINTED maxima and DECLARED auxiliaries | **153.5 C**, over the 150 C absolute maximum | **118.0 C** |
+| the declared peak | 0.2500 | DECLARED | 160.6 C | 121.8 C |
+| the case's HIGH (C-DEV rev 1's supervisors, rv-pwr) | 0.4600 | PRINTED row at TJ 85 C plus DECLARED auxiliaries; no operating point at this air | 231.4 C | 160.1 C, NOT COVERED |
+| the worst nothing forbids (rev Y, 400 MHz, all peripherals, TJ 125 C) | 0.9000 | PRINTED row; no operating point at this air | 379.8 C, over the 600 mA capability as well | not covered |
+
+**2b. Three corrections compared (t10 8).**
+
+| | K1: a regulator per supervisor (a buck in place of each LDO, the AP63203WU-7 board B already fits as U25) | K2: a contract row that bounds the state (Layer 5's), the circuit as drawn | K3: the supervisors fed differently (U601 as a pre-regulator for the LDOs) |
+|---|---|---|---|
+| board A | none | none | one resistor value (R602 13.3 k) and the rail's declarations |
+| board B | three bucks with an inductor, a bootstrap and two output capacitors each in the supervisors' pockets; switching ripple on each controller's VDD and VDDA | none | declarations only: no part, no net |
+| U601's load | 0.5401 A bounded, 2.1218 A at the worst, against its 3 A (PRINTED) | as I-03's draft | the LDOs' own current: 1.3800 A at the case's HIGH |
+| the lead's pin 1 | the same as U601's load | as I-03's draft | the same as U601's load |
+| the regulator's junction at 76.25 C | 85.4 C bounded, 112.3 C at the worst (MODEL; efficiency 0.88 DECLARED, its 5 V curve NOT PLOTTED) | 153.5 C bounded: over the 150 C absolute maximum | 118.0 C bounded, 121.8 C at the declared peak, 160.1 C at the case's HIGH |
+| what stays physical | the pockets' placement and routing, the ripple, the start | a firmware acceptance and a measured current | the LDOs' thermal resistance on board B's copper, U601's efficiency at this output, the LDOs' accuracy between dropout and 4.3 V (the sheet tests VOUT at 4.3 V and prints line regulation from 4.3 V) |
+| does it hold alone | no: the controller has no operating point in the unbounded state, so K2's row is needed with it | no: the bound is needed and is not enough | no: it needs K2's row; with it, yes at the bounded state and the declared peak |
+
+**2c. Selected (SESSION): K3 with K2's row as its condition.** The state must be bounded under every option, because the controller
+itself has no operating point above it; with the bound the demand is 0.2291 A, which K2 alone does not hold (153.5 C) and K3
+holds at 118.0 C on a one-resistor change in a draft this record already owns; K1 covers currents the controller cannot draw at
+this air and costs three switching stages in board B's tightest area. To reverse: drop the two `iocpre` drafts (they are separate
+from I-03's) and take K1; that becomes necessary if Layer 5 cannot bound the state or the bench reads the LDOs hotter than the
+printed figure. Not the owner's: no requirement changes and nothing is bought. Layer 5's row is its owner's to accept.
+
+The set point: R602 13.3 k is the least E96 value (R601 kept) that holds each LDO's input over its requirement at its full 600 mA
+(3.7693 V: VOUT +1.5 %, load regulation 1 %/A, dropout 400 mV; PRINTED) after the rail's 2 % budget, the lead at three times
+600 mA and the return's shift as drawn (0.0681 V, record l8r2): 4.1805 V nominal, 4.0711 to 4.2907 V, the LDOs' input at least
+3.8428 V. The next value, 13.7 k, falls under the requirement (the test re-solves both).
+
+**The acceptance criterion (T10), every condition required:**
+
+1. **T10-A1** the contract carries a row that bounds each supervisor to VOS3 and HCLK at most 144 MHz (the least printed row over
+   the 64 MHz the part is taken to start at, an ASSUMPTION: RM0433 is not held; the row's owner confirms the reset state is inside
+   the bound), with only the peripheral clocks the board uses enabled, and a firmware acceptance: the clock tree and the voltage
+   scale read back at start and refused otherwise; the printed figure for that state with the enabled set's own currents summed, or
+   the supply current measured on the first article at a junction of at least 105 C. The row's text for its owner is in t10 8.
+2. **T10-A2** at 76.25 C inside air and that state's demand (0.2291 A here) each regulator's junction is at most 125 C (SESSION
+   criterion, 25 K under the absolute maximum) on its printed thermal resistance, and at its declared peak 0.25 A as well.
+3. **T10-A3** each LDO's input stays over its requirement at its full 600 mA at the least set point with the return as drawn:
+   3.8428 V against 3.7693 V (+0.0735 V).
+4. **T10-A4** the draft composes in L4-E9's order after I-03's, its divider is read in the regenerated netlist with a mutation that
+   fails, and the declarations it writes are read in the intent.
+5. **T10-A5** PHYSICAL, on the first article: each LDO's case temperature at the bounded state in a 76 C chamber and each
+   supervisor's supply current in that state; a supervisor forced out of the bound must end in the LDO's thermal shutdown or the
+   controller's reset with the voters at their default (Layer 5's FMEA row, not shown here).
+
+**The draft (t10 9).** `apply_gen_sch_a_iocpre.py` and `apply_gen_sch_b_iocpre.py`, release-guarded by `RELEASE-T10.md` (absent),
+applied after I-03's drafts. Each refuses a target without I-03's draft, applies once after it, refuses a second application and
+refuses the tree's generator. Composition in L4-E9's order: board A 21 drafts (792 parts), board B 13 drafts (1479 parts), every
+step OK, the generators run to their end. Netlist: every check DRAWN with the T10 divider, the declarations DRAWN on their basis
+(+5V_IOC 4.18 V, 1.3800 A peak; the three +3V3_IOCx at efficiency 0.79); the divider read as 56.2 k over 13.3 k, 4.1805 V. The
+old state (board A composed without the T10 draft) FAILS the pre-regulator's check, and so does the mutation (the divider
+inverted). Judged on C-DEV rev 1:
+
+| Item | The figure | Against | The row |
+|---|---|---|---|
+| U7 | 6.0359 A, unchanged (the supervisors are on +5V_IOC either way) | 7.0957 A (PRINTED VSNS over the DECLARED shunt) | HOLDS |
+| U601 and the lead's pin 1 | 1.3800 A at the case's HIGH (an LDO passes its output current) | 3 A and the VH's 10 A (PRINTED) | HOLDS |
+| the LDOs' input | at least 3.8428 V; at most 4.2907 V | 3.7693 V; the AP2112's 6.0 V | HOLDS |
+| the regulators' junctions at 76.25 C | 118.0 C bounded, 121.8 C at the declared peak; 160.1 C at the case's HIGH | 125 C (SESSION) | HOLDS only under T10-A1's bound; at the case's HIGH **NOT COVERED** |
+| the return between the boards | the draft adds no load and no contact | section 0b, 1a | unchanged: CONDITIONAL on record l8r2's return |
+
+T10-A1 (Layer 5's row) and T10-A5 (the bench) are met by nothing in this tree. U601 at 4.18 V is inside the TPS62933's printed
+output range; its 6.8 uH inductor sits between the sheet's 3.3 V and 5 V rows (TYPICAL guidance) and its efficiency at this output
+is not plotted.
+
+**Findings for other authors (t10 10):** L9T5-F09 (Layer 5: the row and the FMEA row), L9T5-F10 (the net keeps the name +5V_IOC at
+4.18 V), L9T5-F11 (Layer 6: R602's order code), L9T5-F12 (the budget's HIGH for the supervisors is a state with no operating point
+at the hot stop's air; once Layer 5 accepts T10-A1 it is the bounded figure; a case row's input, not changed here), L9T5-F13 (the
+declared 60 mA for a supervisor's other parts against two TCAN334's printed 120 mA dominant and 360 mA bus-fault currents),
+L9T5-F14 (Layer 6: the order code admits silicon revisions Y and V).
+
 ## 0b. Round 4 (4 October 2026 night, from 23:15 CEST): the recheck V3's corrections, the return drafts composed
 
 **The collaborator's targeted recheck V3 (cx41, an AI review of round 3 at `841e6c7e`): NOT CONFIRMED.** I-03 / L9P-F03 stays OPEN
@@ -314,5 +447,7 @@ highest 9.5960 A against J_5V_DEV's JST-VH 10 A.
 `python3 v2/docs/records/l9t5/l9t5_case.py` from the repository root (stdlib, PyYAML, pdftotext; it imports record l9pwr's budget,
 pinned). Round 2: `python3 v2/docs/records/l9t5/l9t5_drafts.py` (record l8p's `gen_netlist.py`, no KiCad; about ten seconds) and,
 after `python3 v2/docs/records/l9t5/fetch_held_back.py`, `python3 v2/docs/records/l9t5/l9t5_a1.py`. Each output is regenerated only
-through `_bin/regen_out.py`, in the order l9pwr_budget, l9t5_case, l9t5_drafts, l9t5_a1. Test: `v2/ecad/tools/tests/test_l9t5.py`
-(the A1 survey's test needs the four held sheets).
+through `_bin/regen_out.py`, in the order l9pwr_budget, l9t5_case, l9t5_drafts, l9t5_t10, l9t5_cm5, l9t5_a1. Round 4:
+`python3 v2/docs/records/l9t5/l9t5_t10.py` (it imports `l9t5_drafts.py` and composes both boards with the T10 drafts) and
+`python3 v2/docs/records/l9t5/l9t5_cm5.py`. Test: `v2/ecad/tools/tests/test_l9t5.py` (the A1 survey's test needs the four held
+sheets).

@@ -16,7 +16,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
    f5b72f55ac5989ac v2/docs/records/l8r2/l8r2_gndret.out
    0460711f0c1ce6cd v2/docs/records/l9t5/l9t5_drafts.py
-   99bac8aa1eee7a11 v2/docs/records/l9t5/l9t5_drafts.out
+   58683de50a613afd v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
 
@@ -33,8 +33,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    FINDING: THE STATE IS UNBOUNDED. Nothing in the tree defines, limits or tests a supervisor's run mode, clock or voltage scale; the
      architecture's 60 mA is an intent, and the part runs whatever its firmware sets, up to the worst state its sheet prints
 
-3. ST'S PRINTED ROWS (DS12110 Rev 10; Run mode, code with data processing from ITCM, the regulator ON; mA; the maxima 'guaranteed by
-   characterization results', rev Y's 400 MHz all-peripherals figures at TJ 25 and 105 C tested in production: PRINTED). The order code STM32H743VIT6 does
+3. ST'S PRINTED ROWS (DS12110 Rev 10; Run mode, code with data processing from ITCM, the regulator ON; mA; the maxima are the sheet's
+   characterization results (its table note 2), rev Y's 400 MHz all-peripherals figures at TJ 25 and 105 C tested in production: PRINTED). The order code STM32H743VIT6 does
    not fix the silicon revision, so both revisions' tables apply: rev Y, Table 30 (p.111); rev V, Table 129 (p.218)
    rev  state                                  typ   max at TJ 25 C   85 C  105 C  125 C
    Y    VOS3  25 MHz, all peripherals disabled  10.0             24     99    160    270

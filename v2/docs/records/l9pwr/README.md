@@ -17,6 +17,15 @@ drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
 
 Test: `v2/ecad/tools/tests/test_l9pwr.py`, run isolated with `env -C v2/ecad/tools/tests python3 run.py test_l9pwr test_public_hygiene`.
 
+## Round 6 (4 October 2026 night, task T5 round 4 on `fnd/l9t5`): labels only
+
+The case file's current revision is rev 3 (the recheck V3's item 1e). Out 7b's heading, two predicate names and one line of the
+restated L9P-F01 now read "C-ALLTX rev 3"; **no figure moved** (the case 15.5162 V, 241.039 W). Round 4 of record l9t5 adds two
+scenarios BESIDE this budget, in its own files and without editing this one: the supervisors' bounded state (T10, finding L9T5-F12:
+the budget's HIGH for the supervisors, 400 mA a controller, is a state with no operating point at the hot stop's air) and the
+Compute Module 5's supply design figure (SDR3-F02, finding L9T5-F15: 12.5 W a module against this budget's 8.0 W HIGH). Both are
+owed to this budget's next round as labelled rows; neither changes a case row here.
+
 ## Round 5 (4 October 2026 evening, task T5 round 2 on `fnd/l9t5`): L9P-F01 on C-ALLTX rev 3
 
 - **L9P-F01 restated (out 10):** OPEN on the case row C-ALLTX rev 3, 15.5162 V needed at 18 A against REQ-018's 15.5 V; D-11's basis
