@@ -94,9 +94,21 @@ PINS = {
     # Layer 7's FindChips reading of the fans, copied byte for byte from fnd/l7pwr at 2087060b (a commit outside this branch's history,
     # so it is never read with git here): the record reads only its own tree and its own history (the coordinator's rule, set 27)
     "l7fans": ("v2/docs/records/l4e9/inputs/l7pwr-findchips-fans-heaters-2026-10-03.json", "63fad48957e8a0f3708e33f9688844f7ec4ade317907f401435da14d81c941cc"),
-    # round 7: Layer 9's power budget (l9pwr, item 9.1) on fnd/l9pwr at 38ef774c, its output copied byte for byte (a commit outside this
-    # branch's history, never read with git here); its finding L9P-F01 is decision D-11's all-transmit floor on the drafted design
-    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-38ef774c.out", "a2fe27d3f2cf1ddf6b1ab4825c8ad9418daf3bd1497725f715a3b5490da5cb27"),
+    # rounds 7 and 8: Layer 9's power budget (l9pwr, item 9.1), round 2 on fnd/l9pwr2 at 51821143, its output copied byte for byte (a
+    # commit outside this branch's history, never read with git here); its finding L9P-F01 is decision D-11's all-transmit floor
+    "l9pwr": ("v2/docs/records/l4e9/inputs/l9pwr-budget-51821143.out", "243f2dbcfd9b1a1b4af426cf7627e8ea4c7518cf91262bd3c543210fc7249b38"),
+    # round 8: the drafts this record registers, each copied byte for byte (git show at its commit, outside this branch's history)
+    "l8r3_slotlm": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_slotlm-89924e40.txt", "fc487ab269d2f7585edc10ec6efd4a1c280f633d1da3e0888580249bba245f03"),
+    "l8r3_fb01": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_fb01-89924e40.txt", "ea95bd293e44676ae782fd81880d9cfa301816d4771dde5c92882db51c4b8257"),
+    "l8r3_packrtn_a": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_a_packrtn-89924e40.txt", "da98e9d508d8146d653f3749b69609ac46a4b1dcfbd5176c683b2b8c32970bcd"),
+    "l8r3_packrtn_e": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_e_packrtn-89924e40.txt", "858611469545569cdd67e5e391d7d7c900e5e7e32d0e2773f3c1286f4badefce"),
+    "l8r3_rt500": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_b_rt500-89924e40.txt", "c81cd7ffa60561fec87c4f30480bc42a86d47c5dd37619887c0851e71a0dce29"),
+    "l8r3_fans12": ("v2/docs/records/l4e9/inputs/l8r2-apply_gen_sch_b_fans12-89924e40.txt", "cb03ff040b0ef78490fa6ef74f64df1bcaaf54461e6ffd85a3ef3eea5a3b8e6b"),
+    "l9stk_dec": ("v2/docs/records/l4e9/inputs/l9stk-apply_decisions_l9stk-2c8b29fb.txt", "5fd5e45c7a7069457bc101c0261e5c5c53d09e5406cf1a37b05800e7ff2e3480"),
+    "l9stk_ec": ("v2/docs/records/l4e9/inputs/l9stk-apply_energy_chain_l9stk-2c8b29fb.txt", "3361fdc535e488d91002d3556a81378cb6b17192d6664f54c6263bde5d421aeb"),
+    "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt", "ddc7258038c86b6ad03416dafcaab68bb8133cb25540b7fb2cba1263874ff541"),
+    "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt", "3323d1831fd1dc46664b739f51d981ab0c9c84f49838e7c8f62053782fc0caa9"),
+    "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8bb83aacbd4c0fc752339669835b34907a91f2f396095ef23066baeb2a738e9c"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
@@ -3790,8 +3802,10 @@ def rows(F, D, A, E):
             Chk("the PA keyed alone at 113 W from the %s V rest floor, at a 10.0 V stack, inside the declared peak" % fmt(F["pa_floor"]), F["pa113"][4], "<=", F["pp_peak"], "A", "MODELED", "pwr_budget.out; FW-A05"),
             Chk("decision D-11's all-transmit basis (every transmitter keyed, non-transmit loads typical, the standby card off, every other load at HIGH) held under the %s A peak: the rest voltage it needs at the worst cell resistance under the %s V floor" % (fmt(F["l9"]["i"]), fmt(F["d11_floor"])),
                 round(F["l9"]["drawn"], 3), "<=", F["d11_floor"], "V", "MODELED", "Layer 9's l9pwr out 7, DRAWN (its output copied); reproduced in out 30; FW-A05's floor (PROVISIONAL thresholds)", scope="drawn"),
-            Chk("the same on the drafted design (the battery FET pair at L4-E11's 150 C bound, the picked fans at full speed), under the all-transmit floor re-derived at %s V (round 7, L9P-F01, D-17)" % fmt(F["l9"]["floor_new"]),
-                round(F["l9"]["drafted"], 3), "<=", F["l9"]["floor_new"], "V", "MODELED", "l9pwr out 7, DRAFTED; out 30; R-28: FW-A05's text is Layer 5's, the firmware owed; at the present %s V floor the drafted basis is %s V over it" % (fmt(F["d11_floor"]), fmt(round(-F["l9"]["margin_old"], 3)))),
+            Chk("the same on the final drafts (Layer 9's round 2: the battery FETs and board P's breaker in the path, the coolers at full speed through their step-ups, slots 1 and 3 on the LM5176), under REQ-018's %s V pass line (D-17, OPEN)" % fmt(F["l9"]["req_floor"]),
+                round(F["l9"]["drafted"], 3), "<=", F["l9"]["req_floor"], "V", "MODELED", "Layer 9's l9pwr round 2 out 7, DRAFTED (its output copied); reproduced in out 30; round 7's raised floor withdrawn (REQ-018)"),
+            Chk("the same with the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, MISSING DRAFT; K4 in FW-A05, R-28), a bound", round(F["l9"]["off_need"], 3), "<=", F["l9"]["req_floor"], "V",
+                "CONDITIONAL", "out 30: the basis less at least Layer 9's R8 fan input %s W; CONDITIONAL on the %s s fan-stop thermal test R-213" % (fmt(F["l9"]["fans_conv_hi"]), fmt(F["l9"]["req_key_s"]))),
             Chk("OCD1 (%s A for %s s) reached only below a %s V stack on the drafted basis, under its %s A point's %s V" % (fmt(F["ocd1"][0]), fmt(F["ocd1"][1]), fmt(round(F["l9"]["i20_stack_df"], 3)), fmt(F["l9"]["i"]), fmt(round(F["l9"]["stack_df"], 3))),
                 round(F["l9"]["i20_stack_df"], 3), "<", round(F["l9"]["stack_df"], 3), "V", "MODELED", "out 30 (Layer 9's DRAFTED watts, the drafted pack path)"),
             Chk("the chain's short-time rating at 18 A for 60 s with F2 near +60 C (PWR-F12)", None, "<=", None, "a rating", "CONDITIONAL", "FEA-004: re-declaration and Eaton's answer or the bench owed"),
@@ -3909,12 +3923,15 @@ GATE = [
                  "resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
      "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-06", "IF-09", "IF-10", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
-     "constraint": "two material defects are open: D-10's source arriving with the guard already on (B6; L4-E7's round 5: round 2's 3.30 uH loop "
+     "constraint": "three material defects are open: D-10's source arriving with the guard already on (B6; L4-E7's round 5: round 2's 3.30 uH loop "
                    "WITHDRAWN as a passing floor; there a fault at the connector, no lead resistance credited, reads U5's pins -0.3021 V, past the "
                    "-0.3 V absolute maximum, an absolute-rating violation, and +0.2591 V over the +-0.240 V design target; no loop is claimed to "
                    "pass; the stage question is the engineer's, B6-ENG-1) and D-16 (L4-E7's B6-ENG-2: the drafted input current sense leaves its +-100 mV operating range in normal "
                    "operation at the 25 V corner, demonstrated at the desk on the sheet's operating range, handed to the engineer as the sense "
-                   "arrangement itself; the 100 W backstop bound unaffected); the review's B1 and B2 on (B1)'s draft, D-13 (board E's auxiliary domain on the pack's side of "
+                   "arrangement itself; the 100 W backstop bound unaffected) and D-17 (Layer 9's L9P-F01 on the final drafts: decision D-11's all-transmit basis "
+                   "needs 16.214 V rest against REQ-018's 15.5 V pass line; round 7's raised floor withdrawn as a correction, since it narrowed the "
+                   "requirement; one design-out attempt, the five fans' supplies off while the PA keys, R-210 to R-212, MISSING DRAFT, at least "
+                   "+0.126 V under 15.5 V by a bound, CONDITIONAL on the fan-stop thermal test R-213); the review's B1 and B2 on (B1)'s draft, D-13 (board E's auxiliary domain on the pack's side of "
                    "the battery FET) and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), are addressed "
                    "in drafts by L4-E11's fix round (board E on VSYS_E, R-177 and R-178; the pair Q39 and Q40, R-157), CONDITIONAL on the "
                    "installed (Zself + Zmut) (E11-29), the docking pulse in one FET (E11-30), the RDS(on) allowance (E11-36) and the bench rows (E11-31), "
@@ -3925,8 +3942,7 @@ GATE = [
                    "margin lines not held at a connector fault near 0.30 uH), D-10's guard-on case OPEN as above (R-176 row 3; B6-ENG-1), D-11 "
                    "CONDITIONAL on Q13's leakage above +25 C; the band between "
                    "25 V and the cut-off, where a stiff source still runs the stage, is a residual for layer 8 (R-175); D-12 (CS116 and CS115 on the drawn entry) is resolved in the drafted entry, CS115 CONDITIONAL on the cable's loop "
-                   "current (L4-E7's derivation, set 27); D-17, decision D-11's all-transmit floor on the drafted design (Layer 9's L9P-F01), is resolved in design by "
-                   "the floor re-derived on the drafts (R-28, out 30; Layer 5's contract text owed); D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
+                   "current (L4-E7's derivation, set 27); D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
                    "L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 "
                    "(E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and "
                    "short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service "
@@ -4389,18 +4405,21 @@ DEFECTS = [
                    "contact body at or under 85 C); E11-35 (R-179: the fans' start on U22's rail under U42's room); E11-39 (R-188: the fans started "
                    "one at a time with a PWM-duty ramp)",
      "rows": ["IF-06", "IF-11"]},
-    {"id": "D-17", "title": "decision D-11's all-transmit floor does not cover its own basis on the drafted design (Layer 9's L9P-F01, a demonstrated analysis defect)",
-     "state": "RESOLVED (drafted: the floor re-derived on the drafts, SESSION; Layer 5's contract text and the firmware owed, R-28)",
+    {"id": "D-17", "title": "decision D-11's all-transmit basis is not supplied from REQ-018's 15.5 V pass line on the final drafts (Layer 9's L9P-F01, a demonstrated analysis defect)",
+     "state": "OPEN (round 8: the floor raise of round 7 withdrawn as a correction, it narrowed REQ-018's pass line; one design-out attempt, the fans' supplies off while the PA keys, registered as R-210 to R-212, MISSING DRAFT, CONDITIONAL on R-213)",
      "constraint": "the basis (every transmitter keyed, non-transmit loads typical, the standby card off, every other load at HIGH) at the gauge's 18 A "
-                   "needs 15.986 V rest at R_cell 0.06 Ohm on the drafted design, 0.486 V over the 15.5 V floor: the drawn 15.338 V plus the battery "
-                   "FET pair's 0.1902 V and the other drafts at HIGH, mostly the picked fans at full speed, 0.4583 V; each draft alone breaks the floor "
-                   "(15.528 V with the pair alone); this record's IF-10 had read rv-pwr's PS-ALLTX PLAN line, not the floor's basis",
-     "options": "SELECTED: the floor re-derived at 16.1 V rest (4.025 V a cell; +0.114 V, R_cell to 0.0647 Ohm), the all-transmit window "
-                "smaller; not selected: a cap on the fans' duty during a key-down (FW-A05), whose effect rests on the picked fans' power at the "
-                "duty, which no document gives, and which must hold them under the drawn design's own fan figures; not selected: the fans "
-                "stopped during a key-down, a thermal question",
-     "resolution": "register R-28 (FW-A05's all-transmit floor 16.1 V from the release that applies the first of R-157, R-177 and R-190; the "
-                   "contract text Layer 5's); out 30",
+                   "needs 16.214 V rest at R_cell 0.06 Ohm on the final drafts (Layer 9's round 2), 0.714 V over REQ-018's 15.5 V pass line (D-11's "
+                   "declared value, SC-35): the drawn 15.338 V, the battery FET pair 0.1902 V, the mixers on U22, the coolers at full speed through "
+                   "their step-ups (their envelope alone 0.2019 V over round 1's), slots 1 and 3 on the LM5176 0.0264 V, board P's breaker and the "
+                   "third battery FET cancelling (0.0633 V and -0.0634 V); round 7's 15.986 V on round 1's drafts reproduces; a PWM cap is impossible "
+                   "(the fans run at full speed whenever their PWM lead is not driven)",
+     "options": "not a correction: the floor raised (round 7's rule now gives 16.4 V, the window 0.484 V; 16.2 V if the coolers read the maker's "
+                "2.0 W), which removes all-transmit between 15.5 V and the floor that REQ-018 requires; the one design-out attempt: the five fans' "
+                "supplies off while the PA keys (FAN_OK like OUTLET_OK, to the coolers' step-up EN and U22's RUN; K4's off-list), the need at "
+                "most 15.374 V (a bound), at least +0.126 V under 15.5 V, CONDITIONAL on the 60 s fan-stop thermal test; not taken: the pack "
+                "path (all of it 0.685 V at 18 A), the PA's share (a weaker required service)",
+     "resolution": "register R-210 to R-212 (FAN_OK and the two enables, MISSING DRAFT), R-28 (K4 with the fans, the floors REQ-018's), "
+                   "R-213 (the fan-stop thermal test), R-214 (the cell's rest-voltage curve); LH-12 (FW-A05's text); out 30",
      "rows": ["IF-10"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
@@ -5122,183 +5141,269 @@ def cons_check2(F):
     return L
 
 
-# ---------------------------------------------------------------------------------- round 7: decision D-11's all-transmit floor
-# Layer 9's L9P-F01 (l9pwr at 38ef774c, a DEMONSTRATED ANALYSIS DEFECT): decision D-11's all-transmit basis needs a pack rest voltage
-# over its own 15.5 V floor on the drafted design. The floor is set by the session under D-11 (HW-FW-CONTRACT FW-A05: "the thresholds
-# are set by the session under D-11"); this record re-derives it on the drafts, SESSION under the owner's standing rule of 26 September
-# 2026: the least floor on the floor's own 0.1 V step that leaves at least 0.1 V over the rest voltage the basis needs at the worst cell
-# resistance (room for the firmware's estimate of the rest voltage under load, which no document bounds).
-D11_STEP = 0.1
+# ---------------------------------------------------------------------------------- rounds 7 and 8: decision D-11's all-transmit floor
+# Layer 9's L9P-F01 (a DEMONSTRATED ANALYSIS DEFECT): decision D-11's all-transmit basis needs a pack rest voltage over its own 15.5 V
+# floor on the drafted design. Round 7 (3 October 2026, on Layer 9's round 1) answered by raising the floor to 16.1 V; round 8 (4 October
+# 2026, on Layer 9's round 2, the final drafts: 16.214 V) WITHDRAWS that answer as a correction: REQ-018's acceptance takes D-11's declared
+# values as its pass lines (SC-35), all-transmit supplied "through a 60 s key-down begun at a pack rest voltage of 15.5 V or more", so a
+# floor above 15.5 V removes all-transmit operation the requirement requires (the owner's rule: never weaken the required service to make
+# a calculation pass). D-17 stays OPEN; the correction is a design change in the loads during key-down that restores the margin at
+# 15.5 V (one design-out attempt): the five fans' supplies off while the PA keys.
+D11_STEP = 0.1           # round 7's rule, kept only to show what it would give on the final drafts (it is not the correction)
 D11_MARGIN_MIN = 0.1
-L9_REF = "Layer 9's l9pwr at 38ef774c (fnd/l9pwr, from set 28's 37bc2f1d)"
+L9_REF = "Layer 9's l9pwr round 2 at 51821143 (fnd/l9pwr2, on main 64cd25ee)"
 D11_BASIS = "all-transmit basis: non-transmit typical, standby card off, high"
+D11_STATES = ("PS-TYP", "PS-BUSY", "PS-RED2 (slots 2 and 3)", "PS-TYP plus PoE", "PS-TYP plus USB-C", "PS-TYP plus both outlets",
+              "PS-BUSY plus both outlets", "PS-TYP plus the heater (cold overlay)", "PS-RED plus the heater (cold overlay)")
+# the drafts this round registers (copies in inputs/, each pinned; their commits are outside this branch's history): key, file, target
+L8_DRAFTS = (("l8r3_slotlm", "apply_gen_sch_a_slotlm", "gen_sch_a.py"), ("l8r3_fb01", "apply_gen_sch_a_fb01", "gen_sch_a.py"),
+             ("l8r3_packrtn_a", "apply_gen_sch_a_packrtn", "gen_sch_a.py"), ("l8r3_packrtn_e", "apply_gen_sch_e_packrtn", "gen_sch_e.py"),
+             ("l8r3_rt500", "apply_gen_sch_b_rt500", "gen_sch_b.py"), ("l8r3_fans12", "apply_gen_sch_b_fans12", "gen_sch_b.py"),
+             ("l9stk_dec", "apply_decisions_l9stk", "pcb_decisions.yaml"), ("l9stk_ec", "apply_energy_chain_l9stk", "pcb_energy_chain.yaml"),
+             ("l8p_breaker", "apply_gen_sch_p_breaker", "gen_sch_p.py"), ("l8p_enable", "apply_gen_sch_e_enable", "gen_sch_e.py"),
+             ("l8p_ptc", "apply_gen_sch_a_ptc", "gen_sch_a.py"))
 
 
 def l9_inputs(F, T):
-    """Decision D-11's floors on the current design, read from Layer 9's budget output (copied) and reproduced here: the method is
-    rv-pwr's section 7.2 (the stack voltage at the gauge's 18 A, the rest voltage at the cell resistances), the pack path from rv-pwr's
-    main line and L4-E11's pair, the loads' watts at VBAT from Layer 9's three trees (RV, DRAWN, DRAFTED)."""
+    """Decision D-11's floors on the final drafts, read from Layer 9's round 2 output (copied) and reproduced here (rv-pwr's section 7.2:
+    the stack voltage at the gauge's 18 A, the rest voltage at the cell resistances); the requirement's pass line read from REQ-018; the
+    design-out's bound from Layer 9's printed fan power; the shedding trigger and the outlet budget re-read on its section 6 currents."""
     t = T["l9pwr"]
     if "7. D-11's FLOORS ON RV-PWR'S METHOD" not in t or "\n8. THE RECONCILIATION" not in t:
         refuse(3, "Layer 9's section 7 not found")
     s7 = t.split("7. D-11's FLOORS ON RV-PWR'S METHOD")[1].split("\n8. THE RECONCILIATION")[0]
     L = {"trees": {}}
     labels = (("alltx", D11_BASIS), ("heater", "the same with the heater on"), ("pa", "PA alone over PS-TYP, PA at 113 W, the rest at plan"))
-    for tree in ("RV", "DRAWN", "DRAFTED"):
-        m = need(s7, r"\n   %s \(pack path ([\d.]+) Ohm\)\n(.*?)(?=\n   [A-Z]+ \(pack path|\Z)" % tree, "Layer 9's %s rows" % tree, re.S)
+    for tree in ("RV", "DRAWN", "DRAFTED-R1", "DRAFTED"):
+        m = need(s7, r"\n   %s \(pack path ([\d.]+) Ohm\)\n(.*?)(?=\n   [A-Z][A-Z0-9-]* \(pack path|\n   the all-transmit basis step by step|\Z)" % re.escape(tree),
+                 "Layer 9's %s rows" % tree, re.S)
         rows = {}
         for key, lab in labels:
             mm = need(m.group(2), re.escape(lab) + r"\s+VBAT\s+([\d.]+) W\s+stack ([\d.]+) V\s+rest ([\d.]+) / ([\d.]+) / ([\d.]+) V\s+floor ([\d.]+) V"
                       r"\s+margin ([+-][\d.]+) V\s+R_cell covered ([\d.]+)", "Layer 9's %s %s row" % (tree, key))
             rows[key] = {"w": f(mm, 1), "stack": f(mm, 2), "rest": (f(mm, 3), f(mm, 4), f(mm, 5)), "floor": f(mm, 6), "margin": f(mm, 7), "rcov": f(mm, 8)}
         L["trees"][tree] = {"path": float(m.group(1)), "rows": rows}
+    steps = {}
+    for mm in re.finditer(r"\n      (M5|D\d+|R1)\s+VBAT\s+([\d.]+) W\s+path ([\d.]+) Ohm\s+stack ([\d.]+) V\s+rest ([\d.]+) V(?:\s+([+-][\d.]+) V)?", s7):
+        steps[mm.group(1)] = {"w": float(mm.group(2)), "path": float(mm.group(3)), "rest": float(mm.group(5)),
+                              "d": float(mm.group(6)) if mm.group(6) else None}
+    if not all(k in steps for k in ("M5", "D1", "D3", "D4", "D5", "D6", "D9", "D10", "R1")):
+        refuse(3, "Layer 9's step-by-step basis is incomplete")
+    L["steps"] = steps
+    L["envelope_v"] = f(need(s7, r"\(D5 less R1: \+([\d.]+) V\)", "the coolers' envelope step"))
+    mk = need(s7, r"the same DRAFTED tree with the coolers at round 1's HIGH .*?VBAT ([\d.]+) W, stack ([\d.]+) V, needs ([\d.]+) V", "the maker's-figure line", re.S)
+    L["mk"] = {"w": f(mk, 1), "stack": f(mk, 2), "need": f(mk, 3)}
     mh = need(s7, r"the stack voltage at (\d+) A, the rest voltage at the cell resistances ([\d.]+) / ([\d.]+) / ([\d.]+) Ohm", "Layer 9's method")
     L["i"], L["rcell"] = float(mh.group(1)), (f(mh, 2), f(mh, 3), f(mh, 4))
     tup = lambda s: tuple(float(x) for x in s.split(","))
     r1 = need(t, r"R1 L4-E9's modes \(1d\)[^\n]*\n\s+theirs \(([\d., ]+)\); reproduced \(([\d., ]+)\): ([A-Z ]+)\n\s+DRAWN: \(([\d., ]+)\)\n"
                  r"\s+DRAFTED: \(([\d., ]+)\)", "Layer 9's R1")
-    L["modes"] = {"theirs": tup(r1.group(1)), "repro": tup(r1.group(2)), "drawn": tup(r1.group(4)), "drafted": tup(r1.group(5))}
+    L["modes"] = {"theirs": tup(r1.group(1)), "drawn": tup(r1.group(4)), "drafted": tup(r1.group(5))}
     L["r1_equal"] = r1.group(3).strip()
-    r10 = need(t, r"R10 rv-pwr's D-11 all-transmit basis[^\n]*\n\s+theirs \(([-\d., ]+)\); reproduced \(([-\d., ]+)\): ([A-Z ]+)\n\s+DRAWN: \(([-\d., ]+)\)\n"
-                  r"\s+DRAFTED: \(([-\d., ]+)\)", "Layer 9's R10")
-    L["r10"] = {"theirs": tup(r10.group(1)), "drawn": tup(r10.group(4)), "drafted": tup(r10.group(5)), "equal": r10.group(3).strip()}
-    m = need(t, r"L9P-F01\s+DEMONSTRATED ANALYSIS DEFECT\s+\(new\)\s+([^\n]*)\n\s+figure: ([^\n]*)\n", "L9P-F01")
-    L["f01_subject"], L["f01"] = m.group(1).strip(), m.group(2)
-    m = need(L["f01"], r"needs a pack rest voltage of ([\d.]+) V at the worst cell resistance, ([\d.]+) V over the ([\d.]+) V floor", "L9P-F01's need")
-    L["f01_need"] = (f(m, 1), f(m, 2), f(m, 3))
-    m = need(L["f01"], r"the drafted pair adds ([\d.]+) V at (\d+) A \(([\d.]+) mOhm", "L9P-F01's pair")
-    L["f01_pair"] = (f(m, 1), f(m, 3))
-    m = need(L["f01"], r"the drafted fans and converters at HIGH ([\d.]+) V \(([\d.]+) W more at VBAT\)", "L9P-F01's fans")
-    L["f01_fans"] = (f(m, 1), f(m, 2))
-    # the reproduction on this record's own inputs: rv-pwr's committed main line (pinned), the pack (pinned), L4-E11's pair (pinned)
+    r1c = need(t, r"R1c L4-E9 round 7[^\n]*\n\s+theirs \(([\d., ]+)\); reproduced \(([\d., ]+)\): ([A-Z ]+)\n", "Layer 9's R1c")
+    L["modes_r7"], L["r1c_equal"] = tup(r1c.group(1)), r1c.group(3).strip()
+    r8 = need(t, r"R8 Layer 7[^\n]*\n\s+theirs \(([\d., ]+)\); reproduced[^\n]*\n(?:[^\n]*\n)*?\s+DRAFTED's HIGH now: [^\n]*?: \(([\d.]+),\)", "Layer 9's R8")
+    L["fans_conv_hi"] = f(r8, 2)
+    L["fans_conv_mk"] = f(need(t, r"this record, the converters' losses unrounded, the coolers at the maker's 2\.0 W \(round 1's HIGH\): \(([\d.]+),\)", "Layer 9's R8 at the maker's figure"))
+    r10 = need(t, r"R10 rv-pwr's D-11 all-transmit basis[^\n]*\n\s+theirs \(([-\d., ]+)\); reproduced \(([-\d., ]+)\): ([A-Z ]+)\n", "Layer 9's R10")
+    L["r10_theirs"] = tup(r10.group(1))
+    m = need(t, r"L9P-F01\s+DEMONSTRATED ANALYSIS DEFECT\s+\((.*?)\)  +([^\n]*)\n\s+status: ([^\n]*)\n\s+figure: ([^\n]*)\n", "L9P-F01")
+    L["f01_status"], L["f01"] = m.group(3), m.group(4)
+    # section 6: the pack currents at 16.8 / 14.4 / 12.0 / 10.0 V, PLAN and HIGH, DRAFTED
+    s6 = need(t, r"\n6\. THE PACK CURRENT \(A\).*?(?=\n6b\. )", "Layer 9's section 6", re.S).group(0)
+    L["cur"] = {}
+    for st in D11_STATES:
+        mm = need(s6, r"\n   %s\s+(?:sustained|key-down)\s*\n(?:[^\n]*\n){3}\s+DRAFTED\s+PLAN\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+HIGH\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)"
+                  % re.escape(st), "Layer 9's currents of %s" % st)
+        L["cur"][st] = {"plan": tuple(f(mm, i) for i in range(1, 5)), "high": tuple(f(mm, i) for i in range(5, 9))}
+    # the requirement's pass lines (REQ-018, SC-35) and D-11's own words, read from the registry (pinned)
+    L["req018"] = " ".join(need(T["reqs"], r"- id: REQ-018\n.*?acceptance: >-\n(.*?)\n    provisional:", "REQ-018's acceptance", re.S).group(1).split())
+    L["d11_ruling"] = " ".join(need(T["reqs"], r"- id: D-11\n    authority: OWNER\n.*?ruling: >-\n(.*?)\n    source:", "D-11's ruling", re.S).group(1).split())
+    mpl = need(L["req018"], r"begun at a pack rest voltage of ([\d.]+) V or more", "REQ-018's all-transmit pass line")
+    L["req_floor"] = f(mpl)
+    L["req_pa"] = f(need(L["req018"], r"from a rest voltage of ([\d.]+) V or more", "REQ-018's PA-alone pass line"))
+    L["req_key_s"] = f(need(L["req018"], r"no key-down lasts longer than ([\d.]+) s", "REQ-018's key-down"))
+    if abs(L["req_floor"] - F["d11_floor"]) > 1e-9 or abs(L["req_pa"] - F["pa_floor"]) > 1e-9:
+        refuse(4, "FW-A05's floors are not REQ-018's pass lines")
+    # the reproduction on this record's own inputs: rv-pwr's main line, the pack, L4-E11's pair
     jb = json.loads(need(T["budget"], r"^main's pack path with R17 \(S-04\): (\{.*\})$", "rv-pwr's main pack path").group(1))
     rvb = jb[D11_BASIS]
-    bl = need(T["budget"], r"^ALLTX, non-transmit loads typical, standby card off \(high\) (\{.*\})$", "rv-pwr's D-11 basis").group(1)
-    rc_rv = tuple(json.loads(bl)["by_R_cell"][k]["R_cell"] for k in ("lo", "plan", "hi"))
     pk = yaml.safe_load(T["packprot"])["pack"]
     if pk["parallel_min"] != pk["parallel_max"]:
         refuse(3, "the pack's parallel count is not one figure")
     L["series"], L["parallel"] = pk["series"], pk["parallel_max"]
-    if L["i"] != F["pp_peak"] or rc_rv != L["rcell"] or abs(rvb["floor_V"] - F["d11_floor"]) > 1e-9:
-        refuse(3, "Layer 9's method is not rv-pwr's (the current, the cell resistances or the floor differ)")
+    if L["i"] != F["pp_peak"] or abs(rvb["floor_V"] - F["d11_floor"]) > 1e-9:
+        refuse(3, "Layer 9's method is not rv-pwr's (the current or the floor differs)")
     I, S_, P_, rc = L["i"], L["series"], L["parallel"], max(L["rcell"])
-    rest = lambda w, r: w / I + I * r + I * S_ * rc / P_
-    stack = lambda w, r: w / I + I * r
+    def rest(w, r):
+        return w / I + I * r + I * S_ * rc / P_
+
+    def stack(w, r):
+        return w / I + I * r
     L["r_main"], L["pair_r"] = jb["R_DIST_main_ohm"], F["fx"]["rds"] / 2.0 / 1000.0
-    L["r_drafted"] = L["r_main"] + L["pair_r"]
     tr = L["trees"]
-    if abs(tr["DRAWN"]["path"] - L["r_main"]) > 1e-9 or abs(round(L["r_drafted"], 4) - tr["DRAFTED"]["path"]) > 1e-9:
+    if abs(tr["DRAWN"]["path"] - L["r_main"]) > 1e-9 or abs(tr["DRAFTED-R1"]["path"] - (L["r_main"] + L["pair_r"])) > 5e-7:
         refuse(3, "Layer 9's pack paths are not rv-pwr's main path and L4-E11's pair")
-    w_dr, w_df = tr["DRAWN"]["rows"]["alltx"]["w"], tr["DRAFTED"]["rows"]["alltx"]["w"]
-    L["rv"] = rest(rvb["vbat_W"], L["r_main"])
-    L["drawn"], L["drafted"] = rest(w_dr, L["r_main"]), rest(w_df, L["r_drafted"])
-    L["stack_dr"], L["stack_df"] = stack(w_dr, L["r_main"]), stack(w_df, L["r_drafted"])
-    L["pair_v"] = I * L["pair_r"]
-    L["others_w"] = w_df - w_dr
-    L["others_v"] = L["others_w"] / I
-    L["pair_only"], L["others_only"] = L["drawn"] + L["pair_v"], L["drawn"] + L["others_v"]
-    for mine, theirs, tol, what in ((L["rv"], rvb["V_rest_pack"]["hi"], 0.006, "rv-pwr's main line"), (L["drawn"], tr["DRAWN"]["rows"]["alltx"]["rest"][2], 0.002, "DRAWN"),
-                                    (L["drafted"], tr["DRAFTED"]["rows"]["alltx"]["rest"][2], 0.002, "DRAFTED"), (L["pair_v"], L["f01_pair"][0], 0.0006, "the pair"),
-                                    (L["others_v"], L["f01_fans"][0], 0.0006, "the fans"), (L["drafted"], L["f01_need"][0], 0.006, "L9P-F01's need")):
-        if abs(mine - theirs) > tol:
-            refuse(4, "decision D-11's basis does not reproduce on %s: %.4f against %.4f" % (what, mine, theirs))
-    if abs(L["drawn"] + L["pair_v"] + L["others_v"] - L["drafted"]) > 1e-9:
-        refuse(4, "the drafted need is not the drawn need plus the pair plus the other drafts")
-    L["margin_old"] = F["d11_floor"] - L["drafted"]
-    L["rcov_old"] = (F["d11_floor"] - L["stack_df"]) * P_ / (I * S_)
-    # the correction (SESSION): the floor re-derived on the drafts
-    L["floor_new"] = round(math.ceil((L["drafted"] + D11_MARGIN_MIN) / D11_STEP - 1e-9) * D11_STEP, 3)
-    L["margin_new"] = L["floor_new"] - L["drafted"]
-    L["rcov_new"] = (L["floor_new"] - L["stack_df"]) * P_ / (I * S_)
-    L["cell_new"], L["cell_old"] = L["floor_new"] / S_, F["d11_floor"] / S_
-    L["i20_stack_df"] = w_df / F["ocd1"][0] + F["ocd1"][0] * L["r_drafted"]
-    pa = tr["DRAFTED"]["rows"]["pa"]
-    L["pa_drafted"] = rest(pa["w"], L["r_drafted"])
-    if abs(L["pa_drafted"] - pa["rest"][2]) > 0.002 or abs(pa["floor"] - F["pa_floor"]) > 1e-9:
+    for tree, key in (("DRAWN", "drawn"), ("DRAFTED-R1", "r1"), ("DRAFTED", "drafted")):
+        row = tr[tree]["rows"]["alltx"]
+        L[key + "_repro"] = rest(row["w"], tr[tree]["path"])       # from Layer 9's watts printed at 0.01 W
+        if abs(L[key + "_repro"] - row["rest"][2]) > 0.002:
+            refuse(4, "decision D-11's basis does not reproduce on %s: %.4f against %.4f" % (tree, L[key + "_repro"], row["rest"][2]))
+        L[key], L["stack_" + key] = row["rest"][2], row["stack"]      # the figures as Layer 9 prints them, reproduced above
+    L["stack_dr"], L["stack_df"] = L["stack_drawn"], L["stack_drafted"]
+    st_ = L["steps"]
+    L["pair_v"] = st_["D1"]["d"]
+    L["slots_v"], L["breaker_v"], L["third_v"] = st_["D6"]["d"], st_["D9"]["d"], st_["D10"]["d"]
+    if abs(L["pair_v"] - I * L["pair_r"]) > 0.0002:
+        refuse(4, "the pair's step is not L4-E11's bound at 18 A")
+    if abs((L["drafted"] - L["r1"]) - (L["envelope_v"] + L["slots_v"] + L["breaker_v"] + L["third_v"])) > 0.003:
+        refuse(4, "the move from round 1 is not the sum of its printed steps")
+    L["margin_req"] = L["req_floor"] - L["drafted"]
+    # round 7's rule on the final drafts: what it would give (WITHDRAWN as a correction, REQ-018)
+    L["floor_rule"] = round(math.ceil((L["drafted"] + D11_MARGIN_MIN) / D11_STEP - 1e-9) * D11_STEP, 3)
+    L["floor_rule_mk"] = round(math.ceil((L["mk"]["need"] + D11_MARGIN_MIN) / D11_STEP - 1e-9) * D11_STEP, 3)
+    L["floor_r7"] = round(math.ceil((L["r1"] + D11_MARGIN_MIN) / D11_STEP - 1e-9) * D11_STEP, 3)
+    L["window_req"], L["window_rule"] = F["chg_v_max"] - L["req_floor"], F["chg_v_max"] - L["floor_rule"]
+    L["window_r7"], L["window_mk"] = F["chg_v_max"] - L["floor_r7"], F["chg_v_max"] - L["floor_rule_mk"]
+    # the design-out (one attempt): the five fans' supplies off during every PA key-down. A bound, not a model run: the basis's watts at
+    # VBAT fall by at least the fans' and their converters' input (Layer 9's R8 at full speed), since every converter upstream has an
+    # efficiency of at most 1 and U22's quiescent is not counted as saved
+    L["off_need"] = L["drafted"] - L["fans_conv_hi"] / I
+    L["off_margin"] = L["req_floor"] - L["off_need"]
+    L["off_rcov"] = (L["req_floor"] - (L["stack_drafted"] - L["fans_conv_hi"] / I)) * P_ / (I * S_)
+    L["off_need_mk"] = L["mk"]["need"] - L["fans_conv_mk"] / I
+    L["off_margin_mk"] = L["req_floor"] - L["off_need_mk"]
+    L["pa"] = rest(tr["DRAFTED"]["rows"]["pa"]["w"], tr["DRAFTED"]["path"])
+    if abs(L["pa"] - tr["DRAFTED"]["rows"]["pa"]["rest"][2]) > 0.002:
         refuse(4, "the PA-alone row does not reproduce")
-    L["heater_drafted"] = tr["DRAFTED"]["rows"]["heater"]["rest"][2]
+    L["heater"] = tr["DRAFTED"]["rows"]["heater"]["rest"][2]
+    L["i20_stack_df"] = tr["DRAFTED"]["rows"]["alltx"]["w"] / F["ocd1"][0] + F["ocd1"][0] * tr["DRAFTED"]["path"]
     need(T["hwfw"], r"the outlets and the heater off while keyed", "FW-A05's heater rule")
+    # the drafts registered this round: each copy names its target and is not applied
+    L["drafts"] = []
+    for key, name, target in L8_DRAFTS:
+        txt = T[key]
+        if not re.search(r"NOT\s+APPLIED|DRAFT\s+for\s+the\s+integrator", txt[:3000]):
+            refuse(3, "%s does not say it is a draft" % name)
+        if target not in txt:
+            refuse(3, "%s does not name its target %s" % (name, target))
+        L["drafts"].append((key, name, target, PINS[key][0], PINS[key][1]))
     d17 = [d for d in DEFECTS if d["id"] == "D-17"][0]
-    for fig in (fmt(round(L["drafted"], 3)), fmt(round(-L["margin_old"], 3)), fmt(F["d11_floor"]), fmt(round(L["drawn"], 3)), fmt(round(L["pair_v"], 4)),
-                fmt(round(L["others_v"], 4)), fmt(round(L["pair_only"], 3)), fmt(rc), fmt(L["i"])):
-        if fig not in d17["constraint"]:
-            refuse(4, "D-17's constraint does not state %s" % fig)
-    for fig in (fmt(L["floor_new"]), fmt(round(L["cell_new"], 4)), fmt(round(L["margin_new"], 3)), fmt(round(L["rcov_new"], 4))):
-        if fig not in d17["options"]:
-            refuse(4, "D-17's options do not state %s" % fig)
+    for fig in (fmt(round(L["drafted"], 3)), fmt(round(-L["margin_req"], 3)), fmt(L["req_floor"]), fmt(round(L["off_need"], 3))):
+        if fig not in d17["constraint"] + d17["options"]:
+            refuse(4, "D-17 does not state %s" % fig)
     return L
 
 
+def _cross(cur, level, volts=(16.8, 14.4, 12.0, 10.0)):
+    """The stack voltage at which a current row crosses `level`, linear between the printed points (None if it never does)."""
+    if cur[0] > level:
+        return volts[0]
+    for (v0, i0), (v1, i1) in zip(zip(volts, cur), zip(volts[1:], cur[1:])):
+        if i0 <= level < i1:
+            return v0 + (level - i0) * (v1 - v0) / (i1 - i0)
+    return None
+
+
 def d11_lines(F):
-    """Out 30: round 7, decision D-11's all-transmit floor on the drafted design (Layer 9's L9P-F01), reproduced and corrected."""
+    """Out 30: rounds 7 and 8, decision D-11's all-transmit floor on the final drafts (Layer 9's L9P-F01), the requirement's reading, the
+    defect kept OPEN, the one design-out attempt, the modes restated and the shedding and outlet controls re-read."""
     L9 = F["l9"]
     tr = L9["trees"]
     rc = L9["rcell"]
-    L = ["30. ROUND 7: DECISION D-11'S ALL-TRANSMIT FLOOR ON THE DRAFTED DESIGN (%s, finding L9P-F01, a DEMONSTRATED ANALYSIS DEFECT)" % L9_REF]
+    L = ["30. ROUNDS 7 AND 8: DECISION D-11'S ALL-TRANSMIT FLOOR ON THE FINAL DRAFTS (%s, finding L9P-F01, a DEMONSTRATED ANALYSIS DEFECT, %s)" % (L9_REF, L9["f01_status"])]
     p = L.append
-    p("   the method (rv-pwr 7.2, POWER-THERMAL 7.2): the basis (%s) at the gauge's %s A peak (its 20 A trip with 10 percent margin); the stack"
-      % (D11_BASIS, fmt(L9["i"])))
-    p("     voltage = the basis's watts at VBAT / %s A + %s A x the pack path; the rest voltage = the stack + %s A x %d x R_cell / %d (%dS%dP), at R_cell"
-      % (fmt(L9["i"]), fmt(L9["i"]), fmt(L9["i"]), L9["series"], L9["parallel"], L9["series"], L9["parallel"]))
-    p("     %s / %s / %s Ohm (rv-pwr's range, INFERRED); the floor must not be under the rest voltage the basis needs at %s Ohm" % (fmt(rc[0]), fmt(rc[1]), fmt(rc[2]), fmt(rc[2])))
-    p("   reproduced here from Layer 9's watts (its output copied byte for byte into inputs/, never read with git), rv-pwr's main pack path %s Ohm"
-      % fmt(L9["r_main"]))
-    p("     (pinned) and L4-E11's pair at its 150 C bound, %s mOhm per FET, two in parallel: %s mOhm (pinned):" % (fmt(F["fx"]["rds"]), fmt(round(L9["pair_r"] * 1000, 3))))
-    rvt = tr["RV"]["rows"]["alltx"]
-    p("     rv-pwr on main: %s W at VBAT, path %s Ohm: needs %s V (rv-pwr prints %s V; Layer 9 %s V)"
-      % (fmt(rvt["w"]), fmt(L9["r_main"]), fmt(round(L9["rv"], 3)), fmt(L9["r10"]["theirs"][2]), fmt(rvt["rest"][2])))
-    p("     DRAWN (the generators in set 28's tree): %s W, path %s Ohm: stack %s V, needs %s V, %s V under the %s V floor"
-      % (fmt(tr["DRAWN"]["rows"]["alltx"]["w"]), fmt(L9["r_main"]), fmt(round(L9["stack_dr"], 3)), fmt(round(L9["drawn"], 3)), fmt(round(F["d11_floor"] - L9["drawn"], 3)), fmt(F["d11_floor"])))
-    p("     DRAFTED (DRAWN plus the release-guarded drafts that move a power figure): %s W, path %s Ohm: stack %s V, needs %s V, %s V OVER the %s V floor"
-      % (fmt(tr["DRAFTED"]["rows"]["alltx"]["w"]), "%.6f" % L9["r_drafted"], fmt(round(L9["stack_df"], 3)), fmt(round(L9["drafted"], 3)), fmt(round(-L9["margin_old"], 3)), fmt(F["d11_floor"])))
-    p("     the difference, exactly: the pair %s A x %s mOhm = %s V, and the other drafts at HIGH (mostly the picked fans at full speed and their"
-      % (fmt(L9["i"]), fmt(round(L9["pair_r"] * 1000, 3)), fmt(round(L9["pair_v"], 4))))
-    p("     converters: U22 and the coolers' step-ups) %s W at VBAT = %s V; Layer 9 prints %s V and %s V: EQUAL (to its rounding)"
-      % (fmt(round(L9["others_w"], 2)), fmt(round(L9["others_v"], 4)), "%.3f" % L9["f01_pair"][0], "%.3f" % L9["f01_fans"][0]))
-    p("     each alone breaks the %s V floor: the drawn design with the pair alone needs %s V; with the other drafts alone %s V; at %s V the drafted basis"
-      % (fmt(F["d11_floor"]), fmt(round(L9["pair_only"], 3)), fmt(round(L9["others_only"], 3)), fmt(F["d11_floor"])))
-    p("     is covered only to R_cell %s Ohm, under rv-pwr's PLAN %s Ohm" % (fmt(round(L9["rcov_old"], 4)), fmt(rc[1])))
-    p("   where the budget was wrong in this record: IF-10's check read rv-pwr's PS-ALLTX PLAN line (%s V needed, %s V of margin), not decision"
-      % (fmt(F["alltx_rest_need"]), fmt(round(F["d11_floor"] - F["alltx_rest_need"], 2))))
-    p("     D-11's own basis line (%s V on main, %s V of margin): it never showed how thin the margin was, so it could not see the drafts take it"
-      % (fmt(L9["r10"]["theirs"][2]), fmt(L9["r10"]["theirs"][3])))
-    p("   THE CORRECTION (SESSION, under the owner's standing rule of 26 September 2026; D-11's thresholds are the session's, FW-A05):")
-    p("     the all-transmit floor RE-DERIVED on the drafted design: %s V rest (%s V a cell, from %s V and %s V a cell), the least floor on the"
-      % (fmt(L9["floor_new"]), fmt(round(L9["cell_new"], 4)), fmt(F["d11_floor"]), fmt(round(L9["cell_old"], 4))))
-    p("     floor's own %s V step that leaves at least %s V over the need: margin +%s V at R_cell %s Ohm, covering R_cell up to %s Ohm"
-      % (fmt(D11_STEP), fmt(D11_MARGIN_MIN), fmt(round(L9["margin_new"], 3)), fmt(rc[2]), fmt(round(L9["rcov_new"], 4))))
-    p("     the consequence: all-transmit is allowed only above %s V rest; the all-transmit window, from the floor up to ChargeVoltage's %s V"
-      % (fmt(L9["floor_new"]), fmt(F["chg_v_max"])))
-    p("     maximum, shrinks from %s V of rest voltage to %s V (no state-of-charge figure is claimed: no cell curve is read here); as drawn the %s V floor"
-      % (fmt(round(F["chg_v_max"] - F["d11_floor"], 3)), fmt(round(F["chg_v_max"] - L9["floor_new"], 3)), fmt(F["d11_floor"])))
-    p("     still holds (%s V), so the raised floor goes with the release that applies the first of the battery FET pair (R-157) and the picked"
-      % fmt(round(L9["drawn"], 3)))
-    p("     fans' feeds (R-177, R-190), each of which alone breaks %s V; the PA-alone floor %s V holds on the drafts (%s V needed, +%s V; Layer 9's"
-      % (fmt(F["d11_floor"]), fmt(F["pa_floor"]), fmt(round(L9["pa_drafted"], 3)), fmt(round(F["pa_floor"] - L9["pa_drafted"], 3))))
-    p("     PA alone over PS-TYP at 113 W); with the heater on the drafts need %s V, over even the raised floor: the heater stays off during a"
-      % fmt(L9["heater_drafted"]))
-    p("     key-down (FW-A05: 'the outlets and the heater off while keyed'); OCD1's %s A is reached only below a %s V stack on the drafted basis,"
-      % (fmt(F["ocd1"][0]), fmt(round(L9["i20_stack_df"], 3))))
-    p("     under its %s A point's %s V" % (fmt(L9["i"]), fmt(round(L9["stack_df"], 3))))
-    p("   not selected: a cap on the fans' duty during a key-down (FW-A05): the pair alone takes the drawn design to %s V, over %s V before any fan"
-      % (fmt(round(L9["pair_only"], 3)), fmt(F["d11_floor"])))
-    p("     changes, so a cap restores the %s V floor only by holding the picked fans under the drawn design's own HIGH fan figures, and what it"
-      % fmt(F["d11_floor"]))
-    p("     restores rests on the picked fans' power at the capped duty, which no document gives (R-150 sets no duty; Layer 7 reads them at full")
-    p("     speed): a measurement, where the raised floor rests on the figures above; the fans stopped during a key-down: the coolers off for up to")
-    p("     60 s with the modules at TYP is a thermal question no desk figure settles. Neither is a design-out on evidence this record holds")
-    p("   the contract change owed to Layer 5 (FW-A05's text; R-28, the firmware owner): after 'SoC floors %s V and %s V rest' add: '; the all-transmit"
-      % (fmt(F["d11_floor"]), fmt(F["pa_floor"])))
-    p("     floor %s V rest from the release that applies the battery FET pair (R-157) or the picked fans' feeds (R-177, R-190) (L9P-F01, L4-E9 out 30)'"
-      % fmt(L9["floor_new"]))
+    p("   the method (rv-pwr 7.2, POWER-THERMAL 7.2): the basis (%s) at the gauge's %s A peak; stack = watts at VBAT / %s A + %s A x the path;"
+      % (D11_BASIS, fmt(L9["i"]), fmt(L9["i"]), fmt(L9["i"])))
+    p("     rest = stack + %s A x %d x R_cell / %d (%dS%dP) at R_cell %s / %s / %s Ohm (rv-pwr's range, INFERRED); reproduced here from Layer 9's watts"
+      % (fmt(L9["i"]), L9["series"], L9["parallel"], L9["series"], L9["parallel"], fmt(rc[0]), fmt(rc[1]), fmt(rc[2])))
+    p("     (its output copied byte for byte into inputs/), rv-pwr's main path %s Ohm and L4-E11's pair %s mOhm (both pinned):"
+      % (fmt(L9["r_main"]), fmt(round(L9["pair_r"] * 1000, 3))))
+    for tree, key in (("DRAWN", "drawn"), ("DRAFTED-R1", "r1"), ("DRAFTED", "drafted")):
+        row = tr[tree]["rows"]["alltx"]
+        p("     %-10s %s W at VBAT, path %s Ohm: stack %s V, needs %s V rest (reproduced %s V), %s V against the %s V floor"
+          % (tree, fmt(row["w"]), "%.6f" % tr[tree]["path"], fmt(round(L9["stack_" + key], 3)), fmt(round(L9[key], 3)), fmt(round(L9[key + "_repro"], 4)),
+             ("+%s" % fmt(round(L9["req_floor"] - L9[key], 3))) if L9[key] <= L9["req_floor"] else fmt(round(L9["req_floor"] - L9[key], 3)), fmt(L9["req_floor"])))
+    p("     the move from round 1 (%s V, round 7's) to the final drafts (%s V), Layer 9's printed steps: the coolers' full-speed envelope (l8r2's"
+      % (fmt(round(L9["r1"], 3)), fmt(round(L9["drafted"], 3))))
+    p("     2.75 W through the step-up at 0.80) +%s V, slots 1 and 3 on the LM5176 +%s V, board P's breaker +%s V, the third battery FET %s V"
+      % (fmt(L9["envelope_v"]), fmt(L9["slots_v"]), fmt(L9["breaker_v"]), fmt(L9["third_v"])))
+    p("     (the last two cancel); with the coolers at the maker's 2.0 W (l8r2's C4-3, should it read them there) the need is %s V" % fmt(L9["mk"]["need"]))
+    st_ = L9["steps"]
+    p("     every step from DRAWN (Layer 9's out 7): %s" % "; ".join("%s %s V" % (k, ("+" if st_[k]["d"] >= 0 else "") + fmt(st_[k]["d"]))
+                                                           for k in ("D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10") if k in st_ and st_[k]["d"] is not None))
+    p("     (D1 the battery FET pair, D3 the mixers on U22, D4 the coolers through their step-ups, D6 slots 1 and 3 on the LM5176, D9 the breaker,")
+    p("     D10 the third battery FET)")
+    p("   WHAT THE REQUIREMENTS REQUIRE OF ALL-TRANSMIT (read from pcb_requirements.yaml, pinned):")
+    p("     D-11 (OWNER, 26 September 2026): '%s'" % L9["d11_ruling"])
+    p("     REQ-018's acceptance (D-11's declared values as pass lines, SC-35): '%s'" % L9["req018"])
+    p("     so the all-transmit pass line is a rest voltage of %s V, the PA alone %s V, a key-down at most %s s: a floor above %s V removes"
+      % (fmt(L9["req_floor"]), fmt(L9["req_pa"]), fmt(L9["req_key_s"]), fmt(L9["req_floor"])))
+    p("     all-transmit operation the requirement requires (between %s V and the floor), and CONOPS section 5 states the same values as REQ-018's"
+      % fmt(L9["req_floor"]))
+    p("     pass lines (cited, not read here); changing them is a requirement change (SC-35: 'Reverse by stating other values in REQ-018 and REQ-059')")
+    p("     how often a %s V or %s V floor would make all-transmit unavailable on the cell's own curve: UNRESOLVED. No rest-voltage (open-circuit)"
+      % (fmt(L9["floor_rule"]), fmt(L9["floor_rule_mk"])))
+    p("     curve of the INR18650-35E is held as data: the four held copies of Samsung's specification carry their discharge curves as raster images,")
+    p("     and no record reads one; the measurement is named (R-214): one cell of the lot at 23 C, discharged at 0.2 C in 5 % steps with a 1 h")
+    p("     rest after each, the rest voltage against the charge removed; it gives the share of the usable charge above %s, %s and %s V a cell"
+      % (fmt(round(L9["req_floor"] / L9["series"], 4)), fmt(round(L9["floor_rule_mk"] / L9["series"], 4)), fmt(round(L9["floor_rule"] / L9["series"], 4))))
+    p("   THE DECISION (b): the requirement is NOT met at a raised floor, so D-17 stays OPEN and round 7's 16.1 V is WITHDRAWN as a correction")
+    p("     (it narrowed REQ-018's pass line, a requirement change, not a design correction); round 7's rule would now give %s V (%s V a cell),"
+      % (fmt(L9["floor_rule"]), fmt(round(L9["floor_rule"] / L9["series"], 4))))
+    p("     the all-transmit window to ChargeVoltage's %s V maximum %s V (round 7: %s V; REQ-018's: %s V); with the coolers at the maker's figure %s V"
+      % (fmt(F["chg_v_max"]), fmt(round(L9["window_rule"], 3)), fmt(round(L9["window_r7"], 3)), fmt(round(L9["window_req"], 3)), fmt(L9["floor_rule_mk"])))
+    p("     at the %s V pass line the final drafts are %s V over it (R_cell covered %s Ohm against rv-pwr's PLAN %s Ohm)"
+      % (fmt(L9["req_floor"]), fmt(round(-L9["margin_req"], 3)), fmt(tr["DRAFTED"]["rows"]["alltx"]["rcov"]), fmt(rc[1])))
+    p("   THE DESIGN-OUT (one attempt): the five fans' supplies off while the PA keys, through a hardware line like OUTLET_OK (FAN_OK = NOT")
+    p("     (TR_APRS AND PA_EN)) to each cooler step-up's EN on board B (now tied to +5V_Sn) and to U22's RUN on board E, and K4's off-list with the")
+    p("     fans in FW-A05 (Layer 5's text): a PWM cap is impossible (the fans run at full speed whenever their PWM lead is not driven, l8r2 round 4),")
+    p("     so the supply is the only lever. Its margin, a BOUND (the basis's watts fall by at least the fans' and converters' input, Layer 9's R8")
+    p("     %s W at the coolers' envelope; every upstream converter is at most 1 efficient; U22's quiescent not counted as saved): the need at most"
+      % fmt(L9["fans_conv_hi"]))
+    p("     %s V, +%s V under the %s V pass line, R_cell covered at least %s Ohm; at the maker's 2.0 W (%s W): at most %s V, +%s V"
+      % (fmt(round(L9["off_need"], 3)), fmt(round(L9["off_margin"], 3)), fmt(L9["req_floor"]), fmt(round(L9["off_rcov"], 4)), fmt(L9["fans_conv_mk"]),
+         fmt(round(L9["off_need_mk"], 3)), fmt(round(L9["off_margin_mk"], 3))))
+    p("     it is CONDITIONAL on the thermal question it opens (R-213): every cooler and mixer stopped for a %s s key-down with the modules at TYP" % fmt(L9["req_key_s"]))
+    p("     from C1's +50 C inside air, each CM5's SoC under its throttle point and the mixed air's rise within the hold's reference; its owners:")
+    p("     board A (FAN_OK, R-210), board B (the step-ups' EN, R-211), board E (U22's RUN, R-212), firmware and Layer 5 (K4, R-28, LH-12); the")
+    p("     CONOPS 4a row of PS-ALLTX lists the fans among its loads: its text follows K4 (the CONOPS owner's, flagged, not a requirement change)")
+    p("     not taken: the pack path (the whole path is %s Ohm, %s V at %s A, and the drafts' FETs and breaker net +%s V: no path change recovers"
+      % ("%.6f" % tr["DRAFTED"]["path"], fmt(round(L9["i"] * tr["DRAFTED"]["path"], 3)), fmt(L9["i"]), fmt(round(L9["pair_v"] + L9["breaker_v"] + L9["third_v"], 4))))
+    p("     %s V); the PA's share (a lower PA power during all-transmit weakens the required service)" % fmt(round(-L9["margin_req"], 3)))
+    p("     the PA-alone line holds on the final drafts: %s V needed, +%s V under %s V; with the heater on the basis needs %s V: the heater stays"
+      % (fmt(round(L9["pa"], 3)), fmt(round(L9["req_pa"] - L9["pa"], 3)), fmt(L9["req_pa"]), fmt(L9["heater"])))
+    p("     off while keyed (FW-A05); OCD1's %s A is reached only below a %s V stack on the drafted basis, under its %s A point's %s V"
+      % (fmt(F["ocd1"][0]), fmt(round(L9["i20_stack_df"], 3)), fmt(L9["i"]), fmt(round(L9["stack_drafted"], 3))))
     mo = L9["modes"]
     p("   the modes this record quotes, restated (Layer 9's R1, W at the pack: PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W):")
-    p("     rv-pwr's figures (the boards at 1f614233), as this record quotes them: %s / %s / %s / %s W (Layer 9 reproduces them: %s)"
-      % (*[fmt(x) for x in mo["theirs"]], L9["r1_equal"]))
-    p("     as drawn now: %s / %s / %s / %s W; DRAFTED: %s / %s / %s / %s W (Layer 9 section 4's steps; the drafts are not applied)"
-      % (*[fmt(x) for x in mo["drawn"]], *[fmt(x) for x in mo["drafted"]]))
-    p("     the endurance and the thermal lines downstream keep the approved profile's %s W (item 9.2 and L4-E12 own their re-runs, Layer 9's own list)"
-      % fmt(mo["theirs"][0]))
+    p("     rv-pwr's (the boards at 1f614233): %s / %s / %s / %s W (Layer 9: %s); as drawn now %s / %s / %s / %s W"
+      % (*[fmt(x) for x in mo["theirs"]], L9["r1_equal"], *[fmt(x) for x in mo["drawn"]]))
+    p("     DRAFTED (the final drafts, round 2): %s / %s / %s / %s W; round 7's restated figures %s / %s / %s / %s W reproduce on round 1's drafts (%s)"
+      % (*[fmt(x) for x in mo["drafted"]], *[fmt(x) for x in L9["modes_r7"]], L9["r1c_equal"]))
+    p("   the shedding trigger and the outlet budget re-read on Layer 9's round 2 currents (DRAFTED, A at 16.8 / 14.4 / 12.0 / 10.0 V; C2 and C3")
+    p("     at a 10 s average of 9.0 A, POWER-THERMAL 9.3, held during a key-down):")
+    cur = L9["cur"]
+    for st, sc, shed in (("PS-TYP", "high", "PS-RED2 (slots 2 and 3)"), ("PS-BUSY", "high", "PS-RED2 (slots 2 and 3)"),
+                         ("PS-TYP plus the heater (cold overlay)", "high", "PS-RED plus the heater (cold overlay)"), ("PS-BUSY", "plan", "PS-RED2 (slots 2 and 3)")):
+        v = _cross(cur[st][sc], 9.0)
+        p("     %s %s: %s A; over 9.0 A below %s V: C3 sheds modules, and %s %s reads %s A at 10.0 V (under 9.0 A)"
+          % (st, sc.upper(), " / ".join(fmt(x) for x in cur[st][sc]), fmt(round(v, 2)) if v else "no voltage", shed, sc.upper(), fmt(cur[shed][sc][3])))
+        if cur[shed][sc][3] >= 9.0:
+            refuse(4, "a shed state is not under C3's trigger at 10.0 V")
+    for st in ("PS-TYP plus both outlets", "PS-TYP plus USB-C", "PS-TYP plus PoE", "PS-BUSY plus both outlets"):
+        v = _cross(cur[st]["plan"], 9.0)
+        p("     %s PLAN: %s A; over 9.0 A below %s V" % (st, " / ".join(fmt(x) for x in cur[st]["plan"]), fmt(round(v, 2)) if v else "no voltage"))
+    p("     so C2 sheds USB-C, then PoE: with both outlets PS-TYP is over 9.0 A from %s V (the USB-C outlet is not kept on the pack with both"
+      % fmt(round(_cross(cur["PS-TYP plus both outlets"]["plan"], 9.0), 2)))
+    p("     requested), PoE alone from %s V; PS-BUSY with both is over at every voltage and, its outlets shed, PS-BUSY alone at PLAN crosses 9.0 A"
+      % fmt(round(_cross(cur["PS-TYP plus PoE"]["plan"], 9.0), 2)))
+    p("     below %s V, where C3 sheds modules; every shed state is under 9.0 A to 10.0 V: the triggers bound F05 and F06 as set (no setting moves;"
+      % fmt(round(_cross(cur["PS-BUSY"]["plan"], 9.0), 2)))
+    p("     the outlets serve no core function, C2's text)")
+    p("   the drafts registered this round (copies in inputs/, each pinned; their commits are outside this branch's history; none applied):")
+    for key, name, target, rel, sha in L9["drafts"]:
+        p("     %s.py -> %s: %s, sha256 %s" % (name, target, os.path.basename(rel), sha[:16]))
     return L
 
 
@@ -5478,14 +5583,15 @@ def cons_classes(F, reg):
 
 
 D_CLASS = {"D-01": SET, "D-02": SET, "D-03": SET, "D-04": SET, "D-05": SET, "D-06": PHY, "D-07": SET, "D-08": SET, "D-09": SET,
-           "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": KED, "D-17": SET}
+           "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": KED, "D-17": KED}
 D_NEXT = {"D-06": "TEST: E11-10 to E11-16, its evidence items (R-113, R-115, R-118, R-134)",
           "D-10": "ASSIGN to the supplier's phase 1, task P1-1 (the guard-on case; acceptance R-176 rows 2 and 3)",
           "D-11": "TEST: Q13's leakage at the hot end (R-176 row 5)",
           "D-13": "TEST: E11-31, the held pack current and the start (R-161)",
           "D-14": "COMPARE: UDC-1 (8f): (S1) selected, its qualification R-159, R-160, R-182, R-183",
           "D-15": "TEST: E11-38, the fault envelope's histories (R-184)",
-          "D-16": "ASSIGN to the supplier's phase 1, task P1-1 (the sense arrangement; acceptance R-189)"}
+          "D-16": "ASSIGN to the supplier's phase 1, task P1-1 (the sense arrangement; acceptance R-189)",
+          "D-17": "FIX: the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, R-28; LH-12), verified by R-213"}
 U_CLASS = {"U-01": (UDC, "COMPARE: UDC-2 (8f): an OWNER DECISION, the Saft evidence route (OW-9), then the adoption (OW-3)"),
            "U-02": (PHY, "TEST: T-H1's points (R-104, R-151) and the e-paper's storage soak (R-185), the supplier's phase 2"),
            "U-03": (PHY, "TEST: PANEL-ACC's unit measured (R-35, R-149; the purchase the owner's, OW-6)"),
@@ -5668,7 +5774,7 @@ def cons_diagram(F, st):
         ("C02", "CTL_PANEL", "LOADS", "the expanders (FW-A08): SLOT_EN, DEV_EN, HEAT_EN; the margin hold (R-138, R-139); MAIN and PI_KILL (FW-A10 to A12)", "firmware"),
         ("C03", "CTL_PANEL", "USBC", "PD_SW_EN AND OUTLET_OK (FW-A06); the tablet's window (a proposal)", "firmware and hardware"),
         ("C04", "CTL_PANEL", "POE", "POE_SW_EN AND OUTLET_OK (FW-A06); U17 read on R227 (FW-A09, R-27)", "firmware and hardware"),
-        ("C05", "CTL_PANEL", "PA", "the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors %s V (%s V with the drafts, R-28) and %s V" % (fmt(F["d11_floor"]), fmt(F["l9"]["floor_new"]), fmt(F["pa_floor"])), "firmware"),
+        ("C05", "CTL_PANEL", "PA", "the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors %s and %s V (REQ-018); K4 with the fans off while keyed (D-17's design-out, R-28, R-210 to R-212)" % (fmt(F["d11_floor"]), fmt(F["pa_floor"])), "firmware"),
         ("C06", "CTL_SENS", "PACK", "the gauge's SMBus (FW-E01): its ranges relayed to the charger by the host; SHUTDOWN for storage (FW-E09); HWD 10 s", "firmware"),
         ("C07", "CTL_SENS", "LOADS", "the mixer fans (FW-E07), the Geiger supply (FW-E08), VIN_MON for FW-A16 (FW-E04)", "firmware"),
         ("C08", "CTL_HW", "U5", "the hold (FBIN divider R8, R9 at 0.1 %%), the regulation (IMON_IN, RIMON_IN %s), the backstop comparators on SWEN, off below %s V of TRK_LDO33" % (F["rimon"], fmt(F["swen_v"])), "hardware"),
@@ -6236,6 +6342,9 @@ G_L4E8 = "L4-E8's RELEASE.md (R-91: check-l4e8-3.md), and the draft refuses a ge
 G_L4E9 = "this record's RELEASE.md (R-93, after its check)"
 G_L4E11 = "L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384)"
 G_L8GND = "l8gnd's RELEASE.md (an accepted check of Layer 8's record l8gnd at 226e9143; its drafts arrive with set 28)"
+G_L8R2 = "l8r2's RELEASE.md (its rounds 4 to 6 at 89924e40 on fnd/l8r3; each draft refuses the tree's generator until it names an accepted check)"
+G_L8P = "l8p's RELEASE.md (one release for its three drafts; each refuses the tree's generator until it names an accepted check)"
+G_L9STK = "a text draft for the integrator (it refuses a second run)"
 CHANGE_ORDER = [
     ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
     ("1", "R-24", "pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
@@ -6243,6 +6352,8 @@ CHANGE_ORDER = [
     ("1", "R-133", "CONOPS", "with the release records", "a text draft"),
     ("1", "R-135", "L4-E5's V-A08 (Layer 4)", "with the release records", "a text draft"),
     ("1", "R-138", "CONOPS 4, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
+    ("1", "R-204", "pcb_decisions.yaml (the integrator)", "with the release records; decisions_render.py after it", G_L9STK),
+    ("1", "R-205", "pcb_energy_chain.yaml (the integrator)", "INSTEAD of l8r2's apply_energy_chain_e1oz.py, never both; R-95, when drafted, on its texts", G_L9STK),
     ("3a", "R-01", GA, "first in board A's round, together with R-03 and R-124: L4-E6 forbids R12 before the H3 line", "none: L4-E6's draft carries no release guard"),
     ("3a", "R-02", "board A, lcsc_fill.py", "with R-01", "none"),
     ("3a", "R-03", GA, "with R-01 and R-124 (the corrected knee)", "no draft yet"),
@@ -6250,6 +6361,7 @@ CHANGE_ORDER = [
     ("3a", "R-157", GA, "U-04's selected charger (B1): the BQ25730 and the battery FET pair Q39 and Q40 in U3's land, J_DOCK pin 1 on VSYS_DOCK behind U42 (R-181), with R-124 in either order; the strap kept fixed", G_L4E11 + " and its check 5 at 5aa18a69 (the pair: its fix round at 656fc540)"),
     ("3a", "R-181", GA, "with R-157 (the same draft): U42 from VBAT to the new net VSYS_DOCK on J_DOCK pin 1; before board E's VSYS_E feed (R-177)",
      G_L4E11 + " and its fix round at d2a59468 (L4-F03)"),
+    ("3a", "R-209", GA, "with R-157: the third battery FET beside Q39 and Q40, its designator L4-E11's (l9stk 15.5); RT1 (R-208) on the three FETs' copper", "no draft yet"),
     ("3a", "R-178", "pcb_interfaces.yaml (IF-AE-DOCK; the Layer 4 coordinator)", "with R-157 and R-177: the dock's pin 1 VSYS_DOCK (behind U42) and VSYS_E, seven ground contacts", G_L4E11),
     ("3b", "R-04", GA, "after R-01: R11 never before R12", G_L4E4),
     ("3c", "R-07", GA, "after R-01: the ballasts and Cc2 only with R12", G_L4E8),
@@ -6260,6 +6372,11 @@ CHANGE_ORDER = [
     ("3f", "R-10", "board A, the declarations", "with R-04", "no draft yet"),
     ("3g", "R-191", GA, "after board A's power round (3a to 3f); with R-192 in either order (l8gnd's composition proof, its section 4); before d8dec31's R-193", G_L8GND),
     ("3g", "R-192", GA, "with R-191 in either order; before d8dec31's R-193", G_L8GND),
+    ("3g", "R-201", GA, "after board A's power round; in either order with R-199 (l8r2 section 5); before d8dec31's R-193", G_L8R2),
+    ("3g", "R-199", GA, "AFTER L4-E11's charger (R-157): its anchor names VBAT's U4, which this draft rewrites (l8r2 round 4); before d8dec31's R-193", G_L8R2),
+    ("3g", "R-200", GA, "with or after R-199 (either order composes, l8r2 section 5); before d8dec31's R-193", G_L8R2),
+    ("3g", "R-210", GA, "D-17's design-out: FAN_OK beside OUTLET_OK's gates; before d8dec31's R-193; in the release of R-211 and R-212", "no draft yet"),
+    ("3g", "R-208", GA, "after 3g's other drafts and before d8dec31's R-193 (l8p section 5); in one release with R-206 and R-207", G_L8P),
     ("3h", "R-194", "d8dec31's draft, apply_gen_sch_a_mainpb.py (its owner)", "before R-193 is applied: fixed references above every board A draft's (L8G-F12)", "no draft yet"),
     ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
      "none: d8dec31's draft carries no release guard"),
@@ -6284,6 +6401,9 @@ CHANGE_ORDER = [
     ("4e", "R-173", GE, "AFTER L4-E7's three drafts (R-19, R-20, R-21), L4-E9's hot swap (R-94) and L4-E11's entry draft (R-123): it uses their texts and the DGX19 land, and refuses a generator without them",
      G_L4E7 + " and its check 5 at 573fd5b8"),
     ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12 and C31 off CELL_F; the aux draft rewritten by L4-E11 18: U22 LTC3115-1 and its TA04 network (R103 to R109, C142 to C148, L4) on +12V_FAN, four-wire fan headers, Q9 and Q10 as PWM drivers, D7 and D8 removed; the designators renumbered after the recheck (U18, R59 to R65 and C65 to C71 were the solar drafts'), a disjointness test over every board E draft composed in this list's order in test_l4e11", G_L4E11 + " and its fan-feed round at af4672f4, corrected at b929d8be"),
+    ("4e", "R-202", GE, "any position in board E's round (l8r2 section 6b), before d8dec31's input capacitor (R-16)", G_L8R2),
+    ("4e", "R-207", GE, "after L4-E11's aux (R-177), before d8dec31's input capacitor (R-16); in one release with R-206 and R-208", G_L8P),
+    ("4e", "R-212", GE, "D-17's design-out: U22's RUN from FAN_OK, after L4-E11's aux (R-177, which draws U22), before R-16", "no draft yet"),
     ("4f", "R-196", "d8dec31's draft, apply_gen_sch_e_cin.py (its owner)", "before R-16 is applied: a fixed reference above every board E draft's (L4-E11 17e)", "no draft yet"),
     ("4f", "R-16", GE, "LAST in board E's round, after 4a to 4e, in the same release as R-13: the draft takes the next free capacitor at apply time, and earlier it took C65 before L4-E7's input-limit draft (R-20) writes its own (L4-E11 17e; the set 27 run)",
      "none: d8dec31's draft carries no release guard"),
@@ -6292,12 +6412,15 @@ CHANGE_ORDER = [
     ("B", "R-163", GB, "U-02's F3: board B's round", "no draft yet"),
     ("B", "R-166", GB, "U-02's +85 C connectors and HX magnetics, after R-165's picks", "no draft yet"),
     ("B", "R-195", GB, "board B's round: GND-002 changes 2 and 3; no other draft targets gen_sch_b.py (l8gnd section 4), so its place in board B's round is free", G_L8GND),
-    ("B", "R-190", GB, "board B's round: the coolers' regulated 12.0 V feed (E11-40, Layer 7's F-L7-02), per slot from +5V_Sn or from board A over the bay harness", "no draft yet"),
+    ("B", "R-190", GB, "board B's round: the coolers' regulated 12.0 V feed (E11-40, Layer 7's F-L7-02), l8r2's per-slot step-up (round 6 at 89924e40)", G_L8R2),
+    ("B", "R-203", GB, "board B's round, any order (l8r2 section 6)", G_L8R2),
+    ("B", "R-211", GB, "D-17's design-out: each cooler step-up's EN from FAN_OK, after R-190's step-ups", "no draft yet"),
+    ("P", "R-206", GP, "board P's round with l6r2's two board P tables in either order; in one release with R-207 and R-208; board P regenerated on the box after it", G_L8P),
     ("C", "R-145", GC, "board C's round", "no draft yet"),
     ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
     ("5", "R-26", "firmware", "with R-23", "firmware"),
     ("5", "R-27", "firmware", "after R-06", "firmware"),
-    ("5", "R-28", "firmware", "with the D-11 rules; the raised all-transmit floor in the release that applies the first of R-157, R-177 and R-190 (out 30)", "firmware"),
+    ("5", "R-28", "firmware", "with the D-11 rules at REQ-018's pass lines; K4 with the fans in the release of R-210 to R-212 (out 30)", "firmware"),
     ("5", "R-126", "firmware", "with R-125", "firmware"),
     ("5", "R-139", "firmware", "with R-138", "firmware"),
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
@@ -6321,6 +6444,21 @@ CHANGE_ORDER = [
     ("ALT", "R-152", GA, "arrangement (A) only: withdrawn once R-157 is applied (its zone and height Layer 9's)", "no draft yet"),
 ]
 ORDER_CONSTRAINTS = [
+    ("l8r2's slot stages after L4-E11's charger: its anchor names VBAT's U4 (l8r2 round 4)", "R-157", "R-199"),
+    ("l8r2's board A drafts before d8dec31's PB network (LAST in board A's round)", "R-199", "R-193"),
+    ("l8r2's dividers before d8dec31's PB network", "R-200", "R-193"),
+    ("l8r2's pack return before d8dec31's PB network", "R-201", "R-193"),
+    ("l8p's thermal-guard loop after Layer 8's GND-002 draft (3g)", "R-191", "R-208"),
+    ("l8p's thermal-guard loop before d8dec31's PB network", "R-208", "R-193"),
+    ("the third battery FET with the pair (after R-157)", "R-157", "R-209"),
+    ("the third battery FET before d8dec31's PB network", "R-209", "R-193"),
+    ("FAN_OK before d8dec31's PB network", "R-210", "R-193"),
+    ("the coolers' EN after their step-ups are drawn (R-190)", "R-190", "R-211"),
+    ("U22's RUN after L4-E11's aux draws U22 (R-177)", "R-177", "R-212"),
+    ("U22's RUN before d8dec31's input capacitor (LAST in board E's round)", "R-212", "R-16"),
+    ("l8p's board E enable after L4-E11's aux (R-177)", "R-177", "R-207"),
+    ("l8p's board E enable before d8dec31's input capacitor", "R-207", "R-16"),
+    ("l8r2's board E pack return before d8dec31's input capacitor", "R-202", "R-16"),
     ("Layer 8's board A drafts after board A's power round (R-10)", "R-10", "R-191"),
     ("Layer 8's SLOT_EN hold after board A's power round (R-10)", "R-10", "R-192"),
     ("Layer 8's drafts after U17's move (R-06)", "R-06", "R-191"),
@@ -7786,15 +7924,17 @@ def cons_in_short(F, D, st, reg):
         "and there a fault at the connector reads U5's pins %s to +%s V, past the -%s V ABSOLUTE MAXIMUM (an absolute-rating violation; the "
         "margin %s); the stage question is the engineer's B6-ENG-1. D-16, the drafted sense out of its +-100 mV operating range at the 25 V "
         "corner, is OPEN (B6-ENG-2: the monitor's average +%s %%, the limit regulating below its setting, MODELED on an unprinted amplifier "
-        "model). A residual band between 25 V and the cut-off is named for layer 8 (R-175); D-12, CS116 and CS115 on the panel lead, is "
+        "model). D-17, decision D-11's all-transmit basis on the final drafts (Layer 9's L9P-F01), is OPEN: it needs %s V rest against "
+        "REQ-018's %s V pass line; round 7's raised floor is withdrawn as a correction (it narrowed the requirement), and the one design-out "
+        "attempt, the five fans' supplies off while the PA keys (R-210 to R-212), is at least +%s V under the pass line by a bound, CONDITIONAL "
+        "on the fan-stop thermal test (R-213). A residual band between 25 V and the cut-off is named for layer 8 (R-175); D-12, CS116 and CS115 on the panel lead, is "
         "resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, D-07 and D-09 "
-        "superseded, D-17 (decision D-11's all-transmit floor on the drafted design, Layer 9's L9P-F01) by the floor re-derived at %s V (R-28) "
-        "(8a); every resolution is a DRAFT or a register row, none applied."
+        "superseded (8a); every resolution is a DRAFT or a register row, none applied."
         % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
            fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
            fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][1]),
            fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][0]), fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][1]),
-           fmt(F["sv"]["rm"]["b6"]["u5_abs"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["mon"][0]), F["sv"]["rm"]["b6"]["d12"], fmt(F["l9"]["floor_new"])),
+           fmt(F["sv"]["rm"]["b6"]["u5_abs"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["mon"][0]), fmt(round(F["l9"]["drafted"], 3)), fmt(F["l9"]["req_floor"]), fmt(round(F["l9"]["off_margin"], 3)), F["sv"]["rm"]["b6"]["d12"]),
         "**Endurance** (apart from feasibility; the approved profile %s W kept): battery-only %s h ENERGY ONLY (%.3f h with (B1)'s pair; "
         "%s with the tablet's window at the start) at room temperature and %s h with the cells at -10 C (energy only); ENERGY AND "
         "THERMAL (L4-E12 12c): on the conservative bound C1 sheds the profile at %s to %s h and the run with the shed states lasts %s "
