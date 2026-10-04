@@ -1563,3 +1563,28 @@ P's round 5 (findings L8P-F06 and L8P-F07, both OPEN), all under the independent
 and holds on C-DEV rev 1, board B waits for T5b; F01 / D-17 OPEN, the selected direction A1 not drafted because no detector sheet
 prints its accuracy as a limit); T5b (board B's ground return, its load and capacity basis); L4-E9's round 9. The supplier delta is
 issued from this promoted revision and recorded when built; the quotation and every vendor question stay unsent.
+
+### Register additions, 4 October 2026 21:05 CEST: the supplier-delta review's two findings, and the checks V2 and V3 as given
+
+**The review of the supplier delta** (`MESHSAT-SUPPLIER-DELTA-aa76c894-over-d834e6a7.zip`, sha256 `1bda2d70...fe16`) is filed as
+received at `v2/docs/records/l4close/REVIEW-SUPPLIER-DELTA-AA76C894-AS-RECEIVED.md` and designated in `ARCHIVED-REVIEWS.yaml`. It reads
+the delta READY for a supplier's engineering review and quotation with the review attached; power-design closure and fabrication
+release stay BLOCKED. Its two findings are mapped once, here; neither reopens Layers 1 to 3 or blocks unrelated deliverables.
+
+| Task | Kind | Finding | Checked against newer work | Owner and branch | Acceptance | Check |
+|---|---|---|---|---|---|---|
+| T9 | software defect (P1) | DELTA-01: a failed flash program or an interrupted rollover of the panel firmware's slot store loses a committed slot lockout across a reset that is not a power-on reset (`v2/firmware/panel/src/slotstore.c`, `panel_core.c`); Layer 5's FW-C02 and FW-C05 persistence | reproduced on main `dfea910c` with the review's own probe: both controls PASS, both fault cases FAIL; no newer commit addresses it | the panel firmware's owner, `fnd/fw-r5` | regressions that fail on the old code; a failure injected at every erase and program boundary and after a successful retry; a committed lockout survives; rollover, the intended re-arming and the wipe journal's independence still hold; the conservative behaviour stated for a store that cannot be trusted | the firmware's host tests and `test_fw_panel`; the probe unmodified; the target build and real flash stay physical |
+| T2 (extended) | procedure defect (P1) | DELTA-02: TP-E11-29 and E11-29 heat and sense "each FET alone" through its body diode while Q39, Q40 and Q42 share one drain pour and one source pour, so the three diodes are in parallel and neither the heating power nor the junction reading is per device | L4-E11's rounds 11 and 12 (on a branch) restate the limit at 40.78 K/W and keep the same method: not addressed | L4-E11's author, then the procedures' author | a fixture or another method with the current paths in calibration, heating and sensing shown, each heating power and each temperature with its uncertainty, the self and mutual readings and the coupon's transfer rule reconciled; TP-E11-29 stays NOT EXECUTABLE until the method and the limits are reviewed and a supplier agrees to the setup | inside V2's targeted recheck |
+
+**The independent check V2** (an AI review of the combined candidate `fnd/v2cand` `dfa1eef2`, filed with set 30): T2, T3 and T4
+CONFIRMED AS CONDITIONAL; V1's corrections NOT CONFIRMED for one claim (V2-B1, the cost of R256 at 6.8 kOhm; answered in L4-E11's
+round 12 by returning it to 4.7 kOhm, the timing need left OPEN on an assumed leakage); board P's findings L8P-F06 and L8P-F07
+CONFIRMED real and OPEN, NOT CONFIRMED for two statements (V2-B2, V2-B3; board P's round 6 in progress). Its targeted recheck
+follows the corrections.
+
+**The collaborator's targeted recheck V3** (cx41, an AI review of `fnd/l9t5` `841e6c7e`, filed with set 30): **NOT CONFIRMED.** The
+U7 load relief and both compositions reproduce; an aged-contact combination the return calculation omitted puts 10.64 A through
+J_5V_IOC's ground contact on C-DEV rev 1 against the contact's 10 A, so I-03's acceptance on the connected path depends on
+L8R2-F31 (the return between boards A and B), which is OPEN. I-03 / L9P-F03 stays OPEN and is credited only with the load relief
+and the composition. This issue's focused check and targeted recheck are both used: the next check needs the changed design that
+corrects L8R2-F31, and the reason is recorded with that task.
