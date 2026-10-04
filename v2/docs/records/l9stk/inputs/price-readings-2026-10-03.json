@@ -1,0 +1,305 @@
+{
+ "what": "Public fabricator price readings for Layer 9 item 9.12 (record l9stk, MESHSAT-1357). Dated text excerpts only, never the vendor's page.",
+ "read_on": "2026-10-03",
+ "method": "HTTP GET of each public page from the runner with no cookie, no login, no account, no quote form and no request to the vendor; HTML tags removed; the sentence that carries each figure kept verbatim (a dash in a range written as 'to'); page_sha256_16 is the first 16 hex digits of the sha256 of the HTML as fetched, for identity only, the page itself is not kept",
+ "not_read": [
+  "a price at any of the seven boards' real outlines (no public table prints one; the fabricators' instant quote forms were not used, by the task's rule: no quote request)",
+  "any six-layer per-area rate (JLCPCB prints a 4-layer and an 8-layer rate, NextPCB a start price only)",
+  "the 2 oz outer surcharge and the 1 oz or 2 oz inner surcharge at either fabricator (JLC-7 says a surcharge applies and prints no amount)",
+  "the amount of JLCPCB's large board fee per 50 square centimetres (JLC-5 prints the threshold only)",
+  "Seeed (the alternative supplier named in the supplier handover): not read"
+ ],
+ "readings": [
+  {
+   "id": "JLC-1",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/features/prototype-pcb-way",
+   "read_local": "2026-10-03 21:19:13 CEST",
+   "page_date": null,
+   "page_sha256_16": "52a84e3d1f101448",
+   "excerpts": [
+    "Get incredibly competitive pricing: 4-layer PCBs (10x10cm) start at just $7, and 6-layer PCBs(10x10cm) from only $35.",
+    "JLCPCB offers cost-effective PCB manufacturing with 1-8 layer PCBs starting at $2."
+   ],
+   "figures": [
+    {
+     "layers": 4,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": null,
+     "copper_outer_oz": null,
+     "usd": 7.0,
+     "kind": "start price"
+    },
+    {
+     "layers": 6,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": null,
+     "copper_outer_oz": null,
+     "usd": 35.0,
+     "kind": "start price"
+    }
+   ],
+   "conditions_not_printed": "quantity, thickness, copper weight, finish and build time are not printed beside these figures"
+  },
+  {
+   "id": "JLC-2",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/resources/multilayer-pcb",
+   "read_local": "2026-10-03 21:20:26 CEST",
+   "page_date": null,
+   "page_sha256_16": "a14f4d5e8c8482a6",
+   "excerpts": [
+    "A 6-layer, 50x50mm board with ENIG 2u\" surface finish starts at just $2 (for 5 pcs), and larger sizes such as the 6-layer 100x100mm boards begin at $35.1 (5 pcs)."
+   ],
+   "figures": [
+    {
+     "layers": 6,
+     "size_mm": [
+      50,
+      50
+     ],
+     "qty": 5,
+     "copper_outer_oz": null,
+     "usd": 2.0,
+     "kind": "start price"
+    },
+    {
+     "layers": 6,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": 5,
+     "copper_outer_oz": null,
+     "usd": 35.1,
+     "kind": "start price"
+    }
+   ],
+   "conditions_not_printed": "thickness, copper weight and build time are not printed beside these figures"
+  },
+  {
+   "id": "JLC-3",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/blog/JLCPCB-High-precision-Multi-layer-PCB-Extended-to-8-20-Layer",
+   "read_local": "2026-10-03 21:19:11 CEST",
+   "page_date": "2022-12-02 (printed: Product Update Dec 02, 2022)",
+   "page_sha256_16": "9cc61bb97b89b447",
+   "excerpts": [
+    "Engineering-fee-charged 4-layer PCB ≈ $20.52/type, small batches PCB ≈$ 65.67/㎡; Special priced 8-layer PCB (length and width within 10cm, 5 PCB prototype)≈$82.09; small batch PCB fee≈ $116.30 /㎡, engineering fee≈$82.09/type"
+   ],
+   "figures": [
+    {
+     "layers": 4,
+     "kind": "small batch rate",
+     "usd_per_m2": 65.67,
+     "usd_per_design": 20.52
+    },
+    {
+     "layers": 8,
+     "kind": "special price within 10 cm",
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": 5,
+     "usd": 82.09
+    },
+    {
+     "layers": 8,
+     "kind": "small batch rate",
+     "usd_per_m2": 116.3,
+     "usd_per_design": 82.09
+    }
+   ],
+   "conditions_not_printed": "no six-layer rate is printed; the page is dated December 2022; what counts as a small batch is not printed"
+  },
+  {
+   "id": "JLC-4",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/news/discount-on-quality-4-layer-pcbs",
+   "read_local": "2026-10-03 21:19:12 CEST",
+   "page_date": "2024-03-06 (printed: Price Update Mar 06, 2024)",
+   "page_sha256_16": "75536d06793fc8a7",
+   "excerpts": [
+    "We are thrilled to announce a price reduction for small-batch orders of 4-layer PCBs. Now, you can enjoy a special discount of $4.5 per square meter, reducing the board charge from $75.1/m² to $70.6/m².",
+    "Placing an order for 100mm*100mm 100pcs 4-layer PCB with basic parameters on the JLCPCB online quote page , you'll see the board price on the shopping cart is only $70.60, resulting in a total charge of $106.30 for the 4-layer PCBs."
+   ],
+   "figures": [
+    {
+     "layers": 4,
+     "kind": "small batch board charge",
+     "usd_per_m2": 70.6
+    },
+    {
+     "layers": 4,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": 100,
+     "kind": "worked example, board charge",
+     "usd": 70.6
+    },
+    {
+     "layers": 4,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": 100,
+     "kind": "worked example, total",
+     "usd": 106.3
+    }
+   ],
+   "conditions_not_printed": "no six-layer or eight-layer rate; the 2 oz surcharge is not printed"
+  },
+  {
+   "id": "JLC-5",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/help/article/in-what-cases-will-there-be-charged-extra",
+   "read_local": "2026-10-03 21:19:45 CEST",
+   "page_date": "2026-09-09 (printed: Last updated on Sep 09, 2026)",
+   "page_sha256_16": "06ade79148510c9c",
+   "excerpts": [
+    "Basically, the basic cost for the PCB consists of the engineering fee and the board fee. For a single PCB that is within or equal to 102*102mm, there is a special price charged only.",
+    "15. Large Board Fee If the board is too large, the labor and materials used will increase significantly. When the area of one board exceeds 650 square centimeters, an additional charge will be added every 50 square centimeters.",
+    "If the trace width or spacing of multi-layer boards is 3.0-3.5mil, extra cost will be charged for the difficulty of the process: 20% of the order amount for 4-8 layers, and 30% of the order amount for 10 layers and above.",
+    "If the length of the board reaches or exceeds 60cm, the extra charge will be $31.43 per design for the prototype and $31.43 per square meter for the batch order."
+   ],
+   "figures": [
+    {
+     "kind": "special price class",
+     "max_size_mm": [
+      102,
+      102
+     ]
+    },
+    {
+     "kind": "large board fee threshold",
+     "area_cm2": 650.0,
+     "step_cm2": 50.0,
+     "usd": null
+    },
+    {
+     "kind": "fine line surcharge, 4 to 8 layers",
+     "min_mil": 3.0,
+     "max_mil": 3.5,
+     "fraction": 0.2
+    }
+   ],
+   "conditions_not_printed": "the large board fee's amount per 50 square centimetres is not printed"
+  },
+  {
+   "id": "JLC-6",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/help/article/jlcpcb-copper-weight",
+   "read_local": "2026-10-03 21:19:46 CEST",
+   "page_date": "2026-09-09 (printed: Last updated on Sep 09, 2026)",
+   "page_sha256_16": "b1e03dc8f9697f49",
+   "excerpts": [
+    "FR4 PCB Outer layer 1oz, 2oz (standard) Heavier options for 2-layer only 2-layer FR4 only 2.5oz, 3.5oz, 4.5oz Special high-current designs Inner layer 0.5oz (default), 1oz, 2oz Availability depends on total layers and overall thickness",
+    "Always refer to the actual online order page for current availability and pricing.",
+    "2oz Any layer FR4 0.16 mm (6.5 mil)"
+   ],
+   "figures": [
+    {
+     "kind": "minimum track and space at 2 oz, any layer count",
+     "mm": 0.16
+    }
+   ],
+   "conditions_not_printed": "no price for any copper weight"
+  },
+  {
+   "id": "JLC-7",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/blog/custom-pcb-cost",
+   "read_local": "2026-10-03 21:19:46 CEST",
+   "page_date": null,
+   "page_sha256_16": "74f03a8c146391fd",
+   "excerpts": [
+    "The standard 1.6mm board thickness paired with 1 oz (35μm) outer copper weight offers the lowest cost. Choosing other thicknesses or 2 oz copper will incur extra raw material and processing surcharges."
+   ],
+   "figures": [
+    {
+     "kind": "2 oz surcharge",
+     "usd": null
+    }
+   ],
+   "conditions_not_printed": "the surcharge's amount is not printed"
+  },
+  {
+   "id": "JLC-8",
+   "vendor": "JLCPCB",
+   "url": "https://jlcpcb.com/resources/pcb-layers",
+   "read_local": "2026-10-03 21:19:12 CEST",
+   "page_date": null,
+   "page_sha256_16": "dc2596c4397495c4",
+   "excerpts": [
+    "Offering 6-layer, 50x50mm boards with ENIG 2u\" surface finish starting at just $2 for 5 pieces, JLCPCB provides affordable options without compromising quality."
+   ],
+   "figures": [
+    {
+     "layers": 6,
+     "size_mm": [
+      50,
+      50
+     ],
+     "qty": 5,
+     "usd": 2.0,
+     "kind": "start price"
+    }
+   ],
+   "conditions_not_printed": "the same figure as JLC-2's first; kept as the second page that prints it"
+  },
+  {
+   "id": "NXP-1",
+   "vendor": "NextPCB",
+   "url": "https://www.nextpcb.com/pcb-prototype",
+   "read_local": "2026-10-03 21:18:17 CEST",
+   "page_date": null,
+   "page_sha256_16": "9d543a3c935b989b",
+   "excerpts": [
+    "PCB Type Starting Price Quick-Turn Lead Time Key Specs 1 to 2 Layer $5 24 hours Up to 1500 × 600 mm; Min 10 × 10 mm; HASL / ENIG; No MOQ 4-Layer $30 48 hours Impedance control ±5%; blind/buried vias 6-Layer $60 3 to 5 days Rigid-flex options; Rogers materials available 8 to 32 Layer / HDI Custom 5 to 10 days",
+    "A 2-layer prototype at NextPCB starts from $5 (up to 100×100 mm). A 4-layer prototype starts from $30 . Price depends on board size, layer count, surface finish, quantity, and turnaround. Use our instant quote tool for an exact figure."
+   ],
+   "figures": [
+    {
+     "layers": 2,
+     "size_mm": [
+      100,
+      100
+     ],
+     "qty": null,
+     "usd": 5.0,
+     "kind": "start price"
+    },
+    {
+     "layers": 4,
+     "size_mm": null,
+     "qty": null,
+     "usd": 30.0,
+     "kind": "start price"
+    },
+    {
+     "layers": 6,
+     "size_mm": null,
+     "qty": null,
+     "usd": 60.0,
+     "kind": "start price"
+    },
+    {
+     "layers": 8,
+     "kind": "no price: Custom",
+     "usd": null
+    }
+   ],
+   "conditions_not_printed": "the page prints ranges with a dash; this excerpt writes them with 'to' (the project's no-dash rule); the quantity behind each start price is not printed, nor any size for the 4- and 6-layer figures"
+  }
+ ]
+}

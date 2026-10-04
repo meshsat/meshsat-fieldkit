@@ -17,3 +17,19 @@ l6r2-l6r2_apply-7633ae0a.py sha256 3861922c585a40195b105b3dbaed5650af6024cf17267
   from v2/docs/records/l6r2/apply_gen_sch_c_lcsc.py and v2/docs/records/l6r2/l6r2_apply.py at commit 7633ae0a on branch fnd/l6r2
   (Layer 6's board C draft and the helper it imports), whole files byte for byte; this record's proof runs them as
   apply_gen_sch_c_lcsc.py and l6r2_apply.py side by side in a scratch git repository (the helper asks git for its top level).
+
+Round 3 (3 October 2026, branch fnd/l8r3 from set 28's 37bc2f1d); whole files byte for byte, read with git show from the authors'
+branches, not merged:
+
+l9pwr_budget-38ef774c.txt sha256 a2fe27d3f2cf1ddf6b1ab4825c8ad9418daf3bd1497725f715a3b5490da5cb27
+  from v2/docs/records/l9pwr/l9pwr_budget.out at commit 38ef774c on branch fnd/l9pwr (Layer 9 item 9.1, the power budget), the whole
+  file; renamed .txt so that no tool reads its pin lines as this record's own. Item 1 parses its section 5 (every rail and limit per
+  state), its section 8 line R9 and its section 10 line L9P-F02; no figure of it is typed in this record.
+
+l9stk_stackups-7388a84b.txt sha256 5af6b7c043df43f36b572f2c934a2ab364604da499f59b13d0aa2e7266527503
+  from v2/docs/records/l9stk/l9stk_stackups.out at commit 7388a84b on branch fnd/l9stk (Layer 9 item 9.12, the stackups), the whole
+  file, renamed as above. Items 5 and 6 parse its section 2 (the widths per board and the line "returns declared in the intents").
+
+l9stk-L9-STACKUPS-7388a84b.md sha256 4affe7feaf7cf37a15843ddd29409424d0868ed5742e35537ed8988edfdca194
+  from v2/docs/records/l9stk/L9-STACKUPS.md at commit 7388a84b on branch fnd/l9stk, the whole file: sections 3 and 7 (boards A and
+  E, 1 oz outer with the pack path and its return shared by both faces) and section 12's first two findings, which items 5 and 6 answer.
