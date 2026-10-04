@@ -2445,7 +2445,9 @@ within TI's recommended 5 mA (SNVSBJ1E 7.3, p.6; the absolute maximum is 10 mA, 
 off that long after every set, a false set at a docking included); the arm completes 0.9116 of the way before the set, from 0.99519,
 so the hold starts from 10.209 V; R84's pulse 1.186 mJ and D26's I2t 2.08e-05 A2s, from 0.539 mJ and 9.44e-06 A2s; a 2.2 uF 100 V
 part whose DC bias is not read. With R85 at 2.4 MOhm instead, the hold's least is only 2.08 s (D26's leakage and C241's insulation
-take more of it) and need 1 fails.
+take more of it) and need 1 fails. **(c)'s reach:** with C241 at 3.3 uF the hold is 3.35 to 19.2 s and the coupled limit 557.6 uA (the
+pair 510.8 uA, a case of 105 C on the ASSUMED doubling): wider than (b)'s by 36.9 uA, and never past its static 0.597 mA, where (b)'s
+static room is 0.846 mA.
 
 ### 22d. The states in which U47's RESET sinks, from the draft's netlist (INFERRED from the netlist; TI's limits MAKER)
 
@@ -2461,7 +2463,7 @@ the pack through the breaker.
 | 1. the instant of setting (the FETs were on, a charge passing the off breaker's body diodes into the cells) | at most VBAT, regulated to VSYS's 17.375 V, and within the breaker FETs' VSD of the cells, 17.8 V at most | 3.85 mA, falling with the bleed | under 5 mA |
 | 2. the breaker restarted while the hold runs (5.82 s at most) | the pack's 16.8 V at most | 3.72 mA | under 5 mA |
 | 3. a charger regulating high | following VBAT up to SYSOVP's 19.5 V (SLUSE65A, the 4S row) | 4.32 mA | under 5 mA |
-| (i) **a second condition:** VBAT at the SMCJ18A's 29.2 V clamp (a surge) at the very instant of a set, CELL+ lifted 4.71 V over the cells and their body-diode drop while the charge that set it flows | over 22.51 V, 3.01 V over SYSOVP | at most 6.45 mA, over 5 mA for at most 0.155 s of the bleed | under the absolute 10 mA (V1's "transient only") |
+| (i) **a second condition, a surge:** VBAT at the SMCJ18A's 29.2 V clamp at the very instant of a set, CELL+ lifted 4.71 V over the cells and their body-diode drop while the charge that set it flows; or board P's BRK_VIN at its own 29.2 V clamp with the breaker restarted while a hold runs (the pack pulling CELL+ back at once) | over 22.51 V, 3.01 V over SYSOVP | at most 6.45 mA, over 5 mA for at most 0.155 s of the bleed | under the absolute 10 mA (V1's "transient only") |
 | (ii) **two faults:** a battery FET failed short AND VBAT held over 22.51 V, which SYSOVP stops | sustained over 22.51 V | at most 6.45 mA | under the absolute 10 mA |
 
 At 6.45 mA RESET's VOL on the 60 ohm reading is about 0.39 V: the inhibit still holds (Q49's VGS under -9 V).
@@ -2470,15 +2472,15 @@ At 6.45 mA RESET's VOL on the 60 ohm reading is about 0.39 V: the inhibit still 
 
 No correction holds need 1 on printed figures alone: the breaker pair's hot leakage has no printed row, so each depends on record
 l8p's L8P-F06 (its bench row E-14c; TI's question drafted there, unsent). (a) fails need 1 at the hot bound and at the air. (c) holds
-it by 0.396 s with a pair allowance of 451.2 uA, at the cost of a new part, an arm that no longer completes and a hold of up to
+it by 0.396 s with a pair allowance of 451.2 uA, at the cost of a new part, an arm that reaches 0.91 of the way and a hold of up to
 12.8 s. (b) holds it by 0.123 s with a pair allowance of 473.9 uA and the larger static room (0.846 mA against 0.597 mA), with no
 part beyond round 10's circuit, which the check V1 read in full.
 
 | Decision | Authority | Why no owner judgement stands | Reversed by |
 |---|---|---|---|
-| **(b): R256 back to 4.7 kOhm.** The least dependent of the three: the widest allowance for the unprinted leakage, and need 2 on TI's printed rows in every state without a second fault | SESSION (ruled by the L4-E11 author, 4 October 2026, under the owner's standing rules of 21 and 26 September 2026) | an engineering choice inside the task: no money, no requirement change, no reserved line; (a) fails on its numbers and (c) costs more for no wider allowance | E-14c reading the breaker pair over 473.9 uA at its held case, or E11-45 (f2) reading the bleed outside the unit's own hold. The next lever is then the hold on top of 4.7 kOhm (the static 0.846 mA is its ceiling): a new round, with both checks' arithmetic beside it |
+| **(b): R256 back to 4.7 kOhm.** At the hold as drawn it has the widest allowance for the unprinted leakage, and the higher ceiling if the hold is ever lengthened; (c) buys 36.9 uA more only with a hold of up to 19 s, about 1.1 K of case temperature on an assumed rate, which does not remove the dependence on E-14c; need 2 holds on TI's printed rows in every state without a second fault | SESSION (ruled by the L4-E11 author, 4 October 2026, under the owner's standing rules of 21 and 26 September 2026) | an engineering choice inside the task: no money, no requirement change, no reserved line; (a) fails on its numbers and (c) costs more for no wider allowance | E-14c reading the breaker pair over 473.9 uA at its held case, or E11-45 (f2) reading the bleed outside the unit's own hold. The next lever is then the hold on top of 4.7 kOhm (the static 0.846 mA is its ceiling): a new round, with both checks' arithmetic beside it |
 
-**What it costs:** U47's RESET goes over TI's recommended 5 mA in the two named states of 22d (never over the absolute 10 mA), where
+**What it costs:** U47's RESET goes over TI's recommended 5 mA in the named states of 22d (never over the absolute 10 mA), where
 6.8 kOhm kept it under 5 mA in every state; and the margin of need 1 is 0.123 s on an ASSUMED leakage.
 
 ### 22f. V1's and V2's arithmetic side by side
@@ -2504,6 +2506,11 @@ table restated.
   the inhibit releases, and a charge over board P's threshold (0.368 to 1.213 A) sets it again within 1.41 ms, once a hold; under
   the threshold it is the named residual of 20l (the latched FET at most 139.9 C, record l8p). That repeated cycle is not analysed
   further.
+- **For record l8p (L8P-F06 and E-14c; nothing of its is edited here):** the latch's budget is two limits, the static 0.846 mA
+  (round 10's again, so its 12j figures stand for the static room) and the timing 520.7 uA, which the pair alone fills from a
+  103.9 C case, 2.9 K over its held case. E-14c's acceptance (the pair at most 388 uA at 101 C) keeps the timing with 85.9 uA in
+  hand. Its copies of 20c to 20e and of this record's drafts are round 10's and are taken again at this round (the check V2's V2-B2,
+  its owner's).
 
 ### 22h. The minors (V2-m1 to m5 and m9, this record's part)
 
@@ -2526,7 +2533,11 @@ table restated.
   1.513 W (the row in section 8 and block E11-29 in 17d), so the guard's trip side is judged on the hottest FET.
 - **V2-m9:** the tests compose board A in main's order, with record l8r2's d8v3 and vbus20ov. The candidate's change list (L4-E9
   rows 24 to 33) names l8r2's packrtn, slotlm and fb01 instead; those three drafts are **not in this branch's tree** (`fnd/l8r3` at
-  `89924e40`), so the order shown is the one this tree can show. V2 composed both orders on the candidate (778 and 800 parts, DRAWN).
+  `89924e40`), so the tests keep the order this tree can show. **The list's order, shown where its drafts are:** on a scratch copy of
+  the candidate's files (`fnd/v2cand` at `dfa1eef2`) with this round's drafts laid over them, `compose_in_list_order.py` composed the
+  list's order (16 drafts, each exit 0), the generator ran to its end (778 parts, intent written), `check_dd7_netlist.py` read DRAWN
+  and three mutations read FAIL (a scratch run of 4 October 2026). `test_l4e11` runs that script: in this tree it reports the missing
+  drafts; once they are in the tree (the candidate's line) it requires the list's order to compose and read DRAWN.
 
 ### 22i. Status of round 12
 
@@ -2536,7 +2547,7 @@ table restated.
 | need 1 (the bleed at the hot bound inside the hold) | **CONDITIONAL**, 0.123 s on record l8p's ASSUMED leakage; **OPEN** until E-14c or E11-45 (f2) reads |
 | need 2 (U47's RESET within TI's recommended 5 mA) | holds on TI's printed rows in every state without a second fault; the two other states named (22d) |
 | R84 | stays specified pulse-rated (CONDITIONAL, Layer 6) |
-| closure credit | (a) board A composes in main's order and runs to its end; (b) the netlist reads DRAWN at 4.7 kOhm, eight mutations FAIL (R256 at 6.8k and a reversed battery FET among them); (c) 22c on C-PROT rev 1, the round refusing a bleed that counts no source |
+| closure credit | (a) board A composes in main's order in this tree and, on a scratch copy of the candidate's files, in L4-E9's change-list order (22h), the generator running to its end both ways; (b) the netlist reads DRAWN at 4.7 kOhm, eight mutations FAIL (R256 at 6.8k and a reversed battery FET among them); (c) 22c on C-PROT rev 1, the round refusing a bleed that counts no source |
 | V2-m1 to m5, m9 | carried (22h) |
 
 Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only. This round is the

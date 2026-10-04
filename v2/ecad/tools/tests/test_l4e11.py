@@ -1774,3 +1774,16 @@ def t_round12_the_minors_v2_m1_to_m5_are_carried():
     assert "the PTC's site" in " ".join(b29.split()) and "1.513 W" in b29
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
     assert "V2's findings answered" in readme and "V2-B1" in readme and "V2-m9" in readme
+    # V2-m9: L4-E9's change-list order as the candidate lists it. Where record l8r2's packrtn, slotlm and fb01 are in the tree (the
+    # candidate's line) the list's order composes, the generator runs to its end, the netlist reads DRAWN and three mutations FAIL;
+    # where they are not (this branch's own tree) the script says so and the tests above compose main's order
+    lo = os.path.join(REC, "compose_in_list_order.py")
+    have = all(os.path.isfile(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "apply_gen_sch_a_%s.py" % n_)) for n_ in ("packrtn", "slotlm", "fb01"))
+    with tempfile.TemporaryDirectory() as d:
+        r = _run([lo, ROOT, d])
+    if have:
+        assert r.returncode == 0 and b"intent written; DD-7 on board A (L4-E11 round 10): DRAWN" in r.stdout and r.stdout.count(b": FAIL") == 3, \
+            "board A does not compose in L4-E9's list order: %s" % r.stdout.decode()[-400:]
+    else:
+        assert r.returncode == 1 and b"l8r2/packrtn is not in this tree" in r.stdout, r.stdout.decode()[-300:]
+        assert "NOT in this branch's tree" in open(OUT, encoding="utf-8").read().split("   22h. ")[1]
