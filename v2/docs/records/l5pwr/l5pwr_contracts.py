@@ -14,7 +14,11 @@ Set 28 (finding F-12, 3 October 2026): set 27's corrections of L4-E7 (round 5) a
 figures mean, and two of those figures are no longer printed. Those rows are restated in RESTATED (section 1a of the output), never
 edited in the table: the figures that no longer stand are checked as printed by the row's sources at L4_BASE, the text that replaced
 them is matched once in the tree's sources with its figures parsed from the match, and the targets are read as set 28 carries them
-(SET28_COMMIT) to say whether record l5r2 restated them in place or a withdrawn text is still there (a finding)."""
+(SET28_COMMIT) to say whether record l5r2 restated them in place or a withdrawn text is still there (a finding).
+
+Set 29 (finding L5-F13, 4 October 2026, the coordinator's integration correction): L4-E9's rounds 7 and 8 corrected LH-04's pointer,
+so the two stack voltages row LH-04b cited are no longer printed. The row is restated the same way and named as restated at set 29;
+its contract text is NOT RESTATED in the targets (Layer 5's next round)."""
 import hashlib
 import os
 import re
@@ -270,9 +274,11 @@ SET28_COMMIT = "5515ecc0"
 RESTATED = {}
 
 
-def restate(i, withdrawn, why, now, value, mark, trigger, where, target=(), finding=None):
+def restate(i, withdrawn, why, now, value, mark, trigger, where, target=(), finding=None,
+            at=("set 28, F-12", "SET 28 (F-12)", "F-12")):
+    """at: the set the row was restated at, as the page words it, as the output words it, and its finding."""
     RESTATED[i] = dict(withdrawn=withdrawn, why=why, now=now, value=value, mark=mark, trigger=trigger, where=where,
-                       target=list(target), finding=finding)
+                       target=list(target), finding=finding, at=at)
 
 
 restate("S27-B6", ["0.2396", "0.5287", "60.3", "3.30 uH"],
@@ -365,6 +371,21 @@ restate("SEQ-08", ["17.375", "9.539"],
         "E11-35 (R-179): the named fans' start current and PWM input level read; R-177's release (U22 and the four-wire headers drawn)",
         "18, 18a; out 18, 18a",
         [("restated", "yaml", r"\+12V_FAN \d+\.\d+ V \(\d+\.\d+ to \d+\.\d+ V at FB's limits\) from U22 on VSYS_E, inside the fans' \d+\.\d+ to \d+\.\d+ V")])
+
+restate("LH-04b", ["11.48", "10.42"],
+        "L4-E9's round 7 corrected LH-04's pointer, which had read rv-pwr's PS-ALLTX PLAN line and not the floor's basis (decision "
+        "D-11's all-transmit basis), and its round 8 restated it on Layer 9's final drafts",
+        [("hand", r"decision D-11's all-transmit basis at \d+ A from a \d+\.\d+ V stack as drawn and \d+\.\d+ V on the final drafts, OCD1's \d+ A only below a \d+\.\d+ V stack there"),
+         ("l4e9md", r"decision D-11's all-transmit basis at \d+ A from a \d+\.\d+ V stack as drawn, \d+\.\d+ V on the final drafts, needing \d+\.\d+ V rest against REQ-018's \d+\.\d+ V \(D-17 OPEN")],
+        "CHANGES: the pointer is no longer the PS-ALLTX PLAN line's stack voltages; it is decision D-11's all-transmit basis and OCD1's "
+        "stack as parsed above, and that basis is not supplied from REQ-018's pass line (D-17 OPEN); the continuous and the peak "
+        "service currents stand",
+        "MODELED (L4-E9 out 30, on Layer 9's final drafts); PROVISIONAL; D-17 OPEN",
+        "PWR-F12 (FEA-004): the chain's short-time rating at the peak service current and F2 near its hot corner; D-17 (L4-E9 8a): "
+        "the all-transmit basis against REQ-018's pass line",
+        "1d row IF-10; LH-04 as L4-E9's rounds 7 and 8 corrected it (out 30)",
+        [("stale", "yaml", r"PS-ALLTX's \d+ A at an \d+\.\d+ V stack and OCD1's \d+ A below \d+\.\d+ V")],
+        finding="L5-F13", at=("set 29, L5-F13", "SET 29 (L5-F13)", "L5-F13"))
 
 # A parsed figure: a signed decimal, or an integer with its unit (a section number, a round or an id is not a figure).
 FIG = re.compile(r"(?<![\w.+-])(?:\+-|[-+])?\d+(?:\.\d+)?(?: (?:uH|nH|mV|V|mA|A2s|A|W|us|ms|s|%|kOhm|mOhm))?(?![\w.])")
@@ -530,7 +551,7 @@ def compute():
             sys.stderr.write("l5pwr_contracts: %s\n" % b)
         sys.exit(3)
     by_crit = {c: [e["id"] for e in T if c in e["criteria"]] for c in CRITERIA}
-    prov = [(e["id"], e["contract"], e["trigger"], bool(e["restated"])) for e in results if "PROVISIONAL" in e["mark"]]
+    prov = [(e["id"], e["contract"], e["trigger"], e["restated"]["at"][2] if e["restated"] else "") for e in results if "PROVISIONAL" in e["mark"]]
     nfig = sum(len(e["figures"]) for e in T)
     ngone = sum(len(r["withdrawn"]) for r in RESTATED.values())
     return dict(pins=pins, pins2=pins2, rows=results, by_crit=by_crit, prov=prov, nfig=nfig, ngone=ngone)
@@ -543,14 +564,14 @@ def md_rows(R):
         r = e["restated"]
         keys = list(e["sources"]) + ([k for k, _p in r["now"] if k not in e["sources"]] if r else [])
         files = "; ".join(dict.fromkeys(os.path.basename({**TARGETS, **SOURCES}[s]) for s in keys))
-        src = files + "; " + (r["where"] + " (restated at set 28, F-12, section 4a; as written: " + e["was"]["where"] + ")" if r else e["where"])
+        src = files + "; " + (r["where"] + " (restated at " + r["at"][0] + ", section 4a; as written: " + e["was"]["where"] + ")" if r else e["where"])
         out.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (e["id"], e["contract"], e["field"], e["text"].replace("|", "/"), src,
                                                                 e["mark"], e["trigger"], ", ".join(e["criteria"])))
     return out
 
 
 def md_restated(R):
-    out = ["| id | cited at `%s`, no longer standing | why (set 27's Layer 4 change) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`%s`) |" % (L4_BASE, SET28_COMMIT),
+    out = ["| id | cited at `%s`, no longer standing | why (the Layer 4 change: set 27's, or L4-E9's rounds 7 and 8 for a row restated at set 29) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`%s`) |" % (L4_BASE, SET28_COMMIT),
            "|---|---|---|---|---|---|"]
     for e in R["rows"]:
         r = e["restated"]
@@ -601,13 +622,20 @@ def render(R):
         p("      trigger: %s" % e["was"]["trigger"])
         p("      criteria: %s" % ", ".join(e["criteria"]))
         if e["restated"]:
-            p("      RESTATED AT SET 28 (F-12): section 1a")
+            p("      RESTATED AT %s: section 1a" % e["restated"]["at"][1])
     p("")
     rows = [e for e in R["rows"] if e["restated"]]
-    p("1a. RESTATED AT SET 28 (finding F-12; authority SESSION): %d rows whose cited figures set 27's Layer 4 corrections changed" % len(rows))
+    s28 = [e for e in rows if e["restated"]["at"][2] == "F-12"]
+    p("1a. RESTATED AT SET 28 (finding F-12; authority SESSION): %d rows whose cited figures set 27's Layer 4 corrections changed" % len(s28))
+    if len(rows) != len(s28):
+        p("    AND AT SET 29 (finding L5-F13; the coordinator's integration correction, authority SESSION): %d row whose cited figures"
+          % (len(rows) - len(s28)))
+        p("    L4-E9's rounds 7 and 8 changed; it is marked 'restated at set 29' below")
     for e in rows:
         r = e["restated"]
         p("   %s | %s | %s" % (e["id"], e["contract"], e["field"]))
+        if r["at"][2] != "F-12":
+            p("      restated at %s" % r["at"][0])
         p("      no longer standing (printed by %s at %s): %s" % (", ".join(e["sources"]), L4_BASE, ", ".join(r["withdrawn"])))
         p("      why: %s" % r["why"])
         p("      replaced by (the tree's Layer 4 text, matched once; its figures parsed, none typed):")
@@ -633,7 +661,7 @@ def render(R):
     p("")
     p("3. THE PROVISIONAL ENTRIES AND THEIR INVALIDATION TRIGGERS (%d; a restated row's trigger as restated at set 28)" % len(R["prov"]))
     for i, c, t, rs in R["prov"]:
-        p("   %s (%s)%s: %s" % (i, c, " [restated, F-12]" if rs else "", t))
+        p("   %s (%s)%s: %s" % (i, c, (" [restated, %s]" % rs) if rs else "", t))
     p("")
     p("4. THE TABLE AS MARKDOWN (L5-POWER-CONTRACTS.md carries these lines; a restated row's mark and trigger as restated)")
     for ln in md_rows(R):
