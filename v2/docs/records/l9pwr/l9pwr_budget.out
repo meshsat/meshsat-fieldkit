@@ -20,7 +20,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l4e11_chg   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 bfdead54766199eb
    l4e12_out   v2/docs/records/l4e12/l4e12_thermal.out  sha256 3bdd5e3ebba68b07
    review      v2/docs/records/l4close/REVIEW-PROVISIONAL-FIXES-AS-RECEIVED.md  sha256 1f8508302012673f
-   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 418056947caf0f9d
+   l7_out      v2/docs/records/l7pwr/l7pwr_fans_th1.out  sha256 89679f909b411f0d
    l8r2_out    v2/docs/records/l9pwr/inputs/l8r2-l8r2_drafts-89924e40.txt  sha256 7b0ff84375825913
    l8r2_fans   v2/docs/records/l9pwr/inputs/l8r2-apply_gen_sch_b_fans12-89924e40.txt  sha256 cb03ff040b0ef784
    l8r2_pnl    v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py  sha256 3d2750a188913fef
@@ -30,7 +30,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    l9stk_prot  v2/docs/records/l9stk/l9stk_protection.out  sha256 bfce0f996822f32b
    l4e9r7      v2/docs/records/l9pwr/inputs/l4e9-l4e9_power_path-section30-3737df82.txt  sha256 76c17d1cc02c0fd2
    sources     v2/docs/records/l9pwr/inputs/SOURCES.txt  sha256 2a98e4ac0e307637
-   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 1a1fcd80871fe5f9
+   l8gnd_out   v2/docs/records/l8gnd/l8gnd_drafts.out  sha256 c75aa0551d9904c1
    ap64500     v2/vendor/diodes/diodes-ap64500.pdf  sha256 d3bcdc7dd4ca44cb
    ap632       v2/vendor/diodes/diodes-ap63200-series-buck.pdf  sha256 ef99daa3789d835b
    tps62933    v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
@@ -66,6 +66,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    D8  DRAFTED  l8r2 round 6: the LM5176 5.1 V stages' dividers at 0.1 %, the window 5.0019 to 5.1744 V; no figure at the model's 5.1 V moves, the least load voltage sets the stages' margins (apply_gen_sch_a_fb01.py at 89924e40, not applied)
    D9  DRAFTED  l9stk 15.4: board P's breaker C-1 (an LM5069 in the variant l9stk 15.4b selects, printed below; its 2.6087 mOhm sense and two CSD18510Q5B) in the pack path from Q2's source to PACK_P (record l9stk in this tree, a desk design, not applied)
    D10 DRAFTED  l9stk 15.5 and L4-E11 round 9: a third BUK6Y10-30P in parallel with the battery FET pair Q39, Q40, written by L4-E11's charger draft under the designator printed below (apply_gen_sch_a_charger.py, not applied)
+   C1  CORRECTED PS-ALLTX carries the standby WiFi card OFF in every scenario, as REQ-018's acceptance and CONOPS 4a's PS-ALLTX row define the state (rv-pwr's state powered it at its placeholder, 1.0 W PLAN and 9.1 W HIGH; the challenge cx40's Q1): a correction of the state's definition, no drawing and no draft, applied last so every earlier step reads as before; DRAWN and round 1's tree keep rv-pwr's state
    the figures each step reads (parsed from the pinned files):
      M1 LM5176 stages: S2 U5, DEV U7 (gen_sch_a.py lm5176 calls); declared efficiency 0.90 and 0.90; ISNS 6 and 6 mOhm at +1 %; VSNS 43 / 50 / 57 mV (SNVSAI1D)
      M2 +3V3_S2A at 3.456 V (gen_sch_b.py)
@@ -135,7 +136,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    PS-RED (slot 3 alone)          12.66 /  22.21 /  45.86   12.82 /  22.61 /  45.94   13.30 /  23.40 /  51.71    23.30   1.625  11.1 /  6.1 /  6.2 /  0.0, 4.29
    PS-RED-b                       26.91 /  35.70 /  71.50   27.18 /  36.16 /  71.70   28.20 /  37.41 /  84.91    37.15   2.598  17.2 / 12.4 /  6.5 /  1.3, 5.65
    PS-EMCON                       37.33 /  53.06 / 103.27   37.85 /  47.78 /  81.04   38.98 /  49.11 /  94.18    48.67   3.410  21.6 / 12.1 /  8.2 /  7.2, 7.38
-   PS-ALLTX                      168.93 / 203.82 / 272.03  170.87 / 205.65 / 274.29  174.23 / 209.89 / 292.03   201.80  14.576  62.7 /100.6 / 42.3 /  4.3, 10.02
+   PS-ALLTX                      168.93 / 203.82 / 272.03  170.87 / 205.65 / 274.29  174.23 / 208.47 / 279.63   200.49  14.477  62.7 /100.6 / 42.3 /  2.9, 10.02
    PS-RED2 (slots 2 and 3)        17.62 /  31.38 /  55.56   17.86 /  31.98 /  55.80   18.42 /  32.90 /  64.92    32.71   2.285  11.1 /  6.5 /  6.2 /  0.0, 4.97
    PS-SURV (slot 2 alone)         12.45 /  21.73 /  42.00   12.66 /  22.29 /  42.26   13.08 /  22.92 /  47.89    22.83   1.592   4.1 /  5.1 /  5.8 /  0.0, 4.29
    PS-SURV-R (the heat stage)     12.78 /  23.27 /  46.94   12.94 /  23.68 /  47.03   13.42 /  24.47 /  52.81    24.36   1.700  11.1 /  6.1 /  6.2 /  0.0, 4.29
@@ -149,7 +150,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    PS-RED (slot 3 alone)          13.24 /  23.24 /  50.26     13.30 /  23.40 /  51.71      +0.160    +1.447   1.614   1.625
    PS-RED-b                       27.77 /  37.04 /  80.43     28.20 /  37.41 /  84.91      +0.371    +4.486   2.572   2.598
    PS-EMCON                       38.52 /  48.75 /  89.79     38.98 /  49.11 /  94.18      +0.362    +4.391   3.385   3.410
-   PS-ALLTX                      173.20 / 209.01 / 287.91    174.23 / 209.89 / 292.03      +0.883    +4.115  14.514  14.576
+   PS-ALLTX                      173.20 / 209.01 / 287.91    174.23 / 208.47 / 279.63      -0.540    -8.285  14.514  14.477
    PS-RED2 (slots 2 and 3)        18.36 /  32.74 /  62.23     18.42 /  32.90 /  64.92      +0.160    +2.688   2.274   2.285
    PS-SURV (slot 2 alone)         13.08 /  22.92 /  46.66     13.08 /  22.92 /  47.89      -0.000    +1.226   1.592   1.592
    PS-SURV-R (the heat stage)     13.36 /  24.31 /  51.36     13.42 /  24.47 /  52.81      +0.160    +1.448   1.689   1.700
@@ -188,7 +189,9 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
        delta       +0.030    +0.034    +0.075    +0.160    +0.009    +0.024    +0.042    +0.816    +0.019    +0.009    +0.010
    D10 DRAFTED     41.466    44.576    65.650    95.314    23.404    37.407    49.109   209.890    32.904    22.923    24.475
        delta       -0.030    -0.034    -0.075    -0.160    -0.009    -0.024    -0.042    -0.817    -0.019    -0.009    -0.010
-   DRAFTED against RV    +1.731    +1.753    +2.692    +3.305    +1.199    +1.706    -3.946    +6.069    +1.523    +1.189    +1.203
+   C1  CORRECTED    41.466    44.576    65.650    95.314    23.404    37.407    49.109   208.467    32.904    22.923    24.475
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    -1.423    +0.000    +0.000    +0.000
+   DRAFTED against RV    +1.731    +1.753    +2.692    +3.305    +1.199    +1.706    -3.946    +4.646    +1.523    +1.189    +1.203
    HIGH        IDLE  IDLESPEC       TYP      BUSY       RED      REDB     EMCON     ALLTX      RED2      SURV     SURVR
    R0  RV          81.669    82.765   120.576   134.403    45.856    71.500   103.267   272.026    55.565    42.000    46.944
    M1  ON MAIN     81.741    82.838   120.995   134.717    45.891    71.572   103.580   272.355    55.729    42.214    46.979
@@ -221,7 +224,9 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
        delta       +0.160    +0.164    +0.328    +0.400    +0.046    +0.127    +0.156    +1.640    +0.073    +0.040    +0.048
    D10 DRAFTED     95.255    96.371   135.142   148.883    51.711    84.913    94.181   292.027    64.920    47.886    52.808
        delta       -0.160    -0.164    -0.328    -0.401    -0.046    -0.127    -0.157    -1.642    -0.074    -0.040    -0.048
-   DRAFTED against RV   +13.586   +13.606   +14.565   +14.481    +5.854   +13.413    -9.086   +20.001    +9.355    +5.886    +5.865
+   C1  CORRECTED    95.255    96.371   135.142   148.883    51.711    84.913    94.181   279.628    64.920    47.886    52.808
+       delta       +0.000    +0.000    +0.000    +0.000    +0.000    +0.000    +0.000   -12.400    +0.000    +0.000    +0.000
+   DRAFTED against RV   +13.586   +13.606   +14.565   +14.481    +5.854   +13.413    -9.086    +7.601    +9.355    +5.886    +5.865
 
 5. PER STATE, DRAFTED: every load (LOW / PLAN / HIGH at its pins, its battery-side share at PLAN, tier, status), every rail (output W
    LOW / PLAN / HIGH, output A PLAN / HIGH, efficiency and loss at PLAN), and each converter against its limit (the current judged at PLAN /
@@ -905,35 +910,34 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
           limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.588 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
      DRAWN's margins at HIGH that differ: S1 +2.987 A, S2 +5.078 A, S3 +2.987 A, DEV +1.896 A
      the rails' INA226 shunts at HIGH (not in the tree): 0.284 W in all
-   == PS-ALLTX (pack side 174.225 / 209.890 / 292.027 W)
-     load CM5 slot 1                                   S1         4.500   8.000   8.000  pack   9.245  D RV
+   == PS-ALLTX (pack side 174.225 / 208.467 / 279.628 W)
+     load CM5 slot 1                                   S1         4.500   8.000   8.000  pack   9.243  D RV
      load cooler fan slot 1                            S1F        0.360   0.510   2.750  pack   0.693  R DRAFTED
      load PCIe switch 3.3 V slot 1                     S1B        0.355   0.390   0.390  pack   0.498  S RV
      load PCIe switch 1.0 V slot 1                     S1C        0.270   0.676   0.676  pack   0.919  S RV
-     load NVMe slot 1                                  S1B        2.600   3.600   3.600  pack   4.602  S RV
-     load CM5 slot 2                                   S2         4.500   8.000   8.000  pack   9.245  D RV
+     load NVMe slot 1                                  S1B        2.600   3.600   3.600  pack   4.600  S RV
+     load CM5 slot 2                                   S2         4.500   8.000   8.000  pack   9.243  D RV
      load cooler fan slot 2                            S2F        0.360   0.510   2.750  pack   0.693  R DRAFTED
      load PCIe switch 3.3 V slot 2                     S2B        0.355   0.390   0.390  pack   0.498  S RV
      load PCIe switch 1.0 V slot 2                     S2C        0.270   0.676   0.676  pack   0.919  S RV
-     load NVMe slot 2                                  S2B        2.600   3.600   3.600  pack   4.602  S RV
-     load CM5 slot 3                                   S3         4.500   8.000   8.000  pack   9.245  D RV
+     load NVMe slot 2                                  S2B        2.600   3.600   3.600  pack   4.600  S RV
+     load CM5 slot 3                                   S3         4.500   8.000   8.000  pack   9.243  D RV
      load cooler fan slot 3                            S3F        0.360   0.510   2.750  pack   0.693  R DRAFTED
      load PCIe switch 3.3 V slot 3                     S3B        0.355   0.390   0.390  pack   0.498  S RV
      load PCIe switch 1.0 V slot 3                     S3C        0.270   0.676   0.676  pack   0.919  S RV
-     load NVMe slot 3                                  S3B        2.600   3.600   3.600  pack   4.602  S RV
-     load WiFi link card 1 (live)                      S1A        9.100   9.100   9.100  pack  11.543  S RV
-     load WiFi link card 2 (standby)                   S3A        0.000   1.000   9.100  pack   1.367  T RV
-     load 5G RM520N-GL                                 S2A        5.590   5.590   5.590  pack   7.096  S RV
-     load LimeSDR Mini 2.4                             DEVP       4.500   4.500   4.500  pack   5.200  S RV
-     load RockBLOCK 9704                               DEVP       1.400   1.400   1.400  pack   1.618  S RV
-     load LoRa E22-900M30S                             DEVP       3.250   3.250   3.250  pack   3.756  S RV
-     load camera (part TBD)                            DEVP       1.000   2.500   2.500  pack   2.889  T RV
-     load panel board C                                PNL        5.000   5.000   5.000  pack   5.937  D DRAFTED
+     load NVMe slot 3                                  S3B        2.600   3.600   3.600  pack   4.600  S RV
+     load WiFi link card 1 (live)                      S1A        9.100   9.100   9.100  pack  11.540  S RV
+     load 5G RM520N-GL                                 S2A        5.590   5.590   5.590  pack   7.094  S RV
+     load LimeSDR Mini 2.4                             DEVP       4.500   4.500   4.500  pack   5.199  S RV
+     load RockBLOCK 9704                               DEVP       1.400   1.400   1.400  pack   1.617  S RV
+     load LoRa E22-900M30S                             DEVP       3.250   3.250   3.250  pack   3.755  S RV
+     load camera (part TBD)                            DEVP       1.000   2.500   2.500  pack   2.888  T RV
+     load panel board C                                PNL        5.000   5.000   5.000  pack   5.936  D DRAFTED
      load QMX USB and HDMI 5 V                         DEVP       0.300   0.300   2.500  pack   0.347  D RV
-     load board D (SA868 and logic)                    D8IN       3.000   3.300   3.300  pack   3.814  D MAIN
+     load board D (SA868 and logic)                    D8IN       3.000   3.300   3.300  pack   3.813  D MAIN
      load four CP2102N bridges                         DEVP       0.400   0.400   0.400  pack   0.462  D RV
      load KSZ9897R AVDDH 2.5 V                         KSZ2V5     0.050   0.825   0.825  pack   1.392  S RV
-     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.338  S RV
+     load KSZ9897R VDDIO 3.3 V                         D3V3       0.099   0.264   0.264  pack   0.337  S RV
      load KSZ9897R AVDDL+DVDDL 1.2 V                   KSZ1V2     0.216   1.452   1.452  pack   1.974  S RV
      load three TUSB8041 hubs VDD33                    D3V3       0.023   0.783   0.981  pack   1.001  R RV
      load three TUSB8041 hubs VDD 1.1 V                HUB1V1     0.093   0.625   2.568  pack   0.850  R RV
@@ -942,19 +946,19 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      load LG290P GNSS                                  D3V3       0.327   0.327   0.327  pack   0.418  S RV
      load other +3V3_DEV logic                         D3V3       0.500   1.300   1.300  pack   1.662  D RV
      load board A logic                                A3V3       0.500   1.000   1.000  pack   1.182  D RV
-     load VHF PA 30 W                                  PA        75.000  75.000 113.000  pack  79.363  R RV
-     load QMX HF                                       HF         8.400  12.000  13.200  pack  12.987  R RV
-     load Xenarc 709GNK                                MON       10.000  10.000  10.000  pack  10.401  S RV
+     load VHF PA 30 W                                  PA        75.000  75.000 113.000  pack  79.342  R RV
+     load QMX HF                                       HF         8.400  12.000  13.200  pack  12.984  R RV
+     load Xenarc 709GNK                                MON       10.000  10.000  10.000  pack  10.398  S RV
      load board E controller and sensors               E3V3       0.300   0.500   1.000  pack   0.862  D RV
      load Geiger module                                E5V        0.100   0.300   0.500  pack   0.341  D RV
-     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   2.006  R DRAFTED
-     rail VBAT     root    14.400 V  out 168.653 201.804 276.373 W  14.014 16.451 A  eta 1.000  loss  0.000 W  RV
+     load two mixer fans                               FAN12      0.780   1.440   4.080  pack   2.005  R DRAFTED
+     rail VBAT     root    14.400 V  out 168.653 200.490 265.274 W  13.923 15.790 A  eta 1.000  loss  0.000 W  RV
      rail S1       fixed    5.100 V  out  18.532  23.797  26.635 W   4.666  5.222 A  eta 0.900  loss  2.644 W  DRAFTED
           limit LM5176 U501, average loop on 6 mOhm           7.096 A (out): judged  4.666 /  5.222 A, margin at HIGH  +1.873 A ( +26.4 %): within
      rail S2       fixed    5.100 V  out  14.684  19.949  22.786 W   3.911  4.468 A  eta 0.900  loss  2.217 W  DRAFTED
           limit LM5176 U5, average loop on 6 mOhm             7.096 A (out): judged  3.911 /  4.468 A, margin at HIGH  +2.628 A ( +37.0 %): within
-     rail S3       fixed    5.100 V  out   8.544  14.991  26.635 W   2.939  5.222 A  eta 0.900  loss  1.666 W  DRAFTED
-          limit LM5176 U531, average loop on 6 mOhm           7.096 A (out): judged  2.939 /  5.222 A, margin at HIGH  +1.873 A ( +26.4 %): within
+     rail S3       fixed    5.100 V  out   8.544  13.808  16.646 W   2.708  3.264 A  eta 0.900  loss  1.534 W  DRAFTED
+          limit LM5176 U531, average loop on 6 mOhm           7.096 A (out): judged  2.708 /  3.264 A, margin at HIGH  +3.832 A ( +54.0 %): within
      rail DEV      fixed    5.100 V  out  19.628  26.873  36.625 W   5.269  7.181 A  eta 0.900  loss  2.986 W  DRAFTED
           limit LM5176 U7, average loop on 6 mOhm             7.096 A (out): judged  5.269 /  7.181 A, margin at HIGH  -0.086 A (  -1.2 %): OVER at HIGH
      rail A3V3     fixed    3.300 V  out   0.500   1.000   1.000 W   0.303  0.303 A  eta 0.880  loss  0.136 W  RV
@@ -993,8 +997,6 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
           limit AP64500 U204                                  5.000 A (out): judged  1.209 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
      rail S2C      fixed    1.000 V  out   0.270   0.676   0.676 W   0.676  0.676 A  eta 0.850  loss  0.119 W  RV
           limit TPS62933 U205                                 3.000 A (out): judged  0.676 /  0.676 A, margin at HIGH  +2.324 A ( +77.5 %): within
-     rail S3A      curve    3.300 V  out   0.000   1.000   9.100 W   0.303  2.758 A  eta 0.846  loss  0.183 W  DRAFTED
-          limit AP64500 U303                                  5.000 A (out): judged  0.303 /  2.758 A, margin at HIGH  +2.242 A ( +44.8 %): within
      rail S3B      curve    3.300 V  out   2.955   3.990   3.990 W   1.209  1.209 A  eta 0.904  loss  0.423 W  DRAFTED
           limit AP64500 U304                                  5.000 A (out): judged  1.209 /  1.209 A, margin at HIGH  +3.791 A ( +75.8 %): within
      rail S3C      fixed    1.000 V  out   0.270   0.676   0.676 W   0.676  0.676 A  eta 0.850  loss  0.119 W  RV
@@ -1013,8 +1015,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
           limit TPS61089 and its eFuse (drafted)              0.448 A (out): judged  0.043 /  0.229 A, margin at HIGH  +0.219 A ( +48.8 %): within
      rail PNL      series   5.100 V  out   5.000   5.000   5.000 W   0.980  0.980 A  eta 0.973  loss  0.138 W  DRAFTED
           limit TPS259631 U901 (drafted)                      1.375 A (out): judged  0.980 /  0.980 A, margin at HIGH  +0.395 A ( +28.7 %): within
-     DRAWN's margins at HIGH that differ: S1 +0.342 A, S2 +3.192 A, S3 +0.342 A, DEV -0.059 A
-     the rails' INA226 shunts at HIGH (not in the tree): 1.171 W in all
+     DRAWN's margins at HIGH that differ: S1 +0.342 A, S2 +3.192 A, S3 +0.342 A, DEV -0.059 A, S3A +2.242 A
+     the rails' INA226 shunts at HIGH (not in the tree): 1.071 W in all
    == PS-RED2 (slots 2 and 3) (pack side 18.421 / 32.904 / 64.920 W)
      load CM5 slot 2                                   S2         2.000   4.500   4.500  pack   5.030  S RV
      load cooler fan slot 2                            S2F        0.360   0.510   2.750  pack   0.671  X DRAFTED
@@ -1273,7 +1275,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    == PS-ALLTX
       S1   LM5176 U501, average loop on 6 mOhm  7.0957 A  PLAN  4.666  HIGH  5.222 (+1.8732)  least V  5.434 (+1.6621)  start  6.532 (+0.5634)  degraded  6.153 (+0.9432)  other  23.197 W  DRAWN  4.658/ 5.000 (+0.342)  R1  5.010/ 5.000 (-0.010)
       S2   LM5176 U5, average loop on 6 mOhm   7.0957 A  PLAN  3.911  HIGH  4.468 (+2.6278)  least V  4.648 (+2.4473)  start  5.747 (+1.3485)  degraded  5.367 (+1.7283)  other  19.349 W  DRAWN  3.904/ 7.096 (+3.192)  R1  4.255/ 7.096 (+2.841)
-      S3   LM5176 U531, average loop on 6 mOhm  7.0957 A  PLAN  2.939  HIGH  5.222 (+1.8732)  least V  5.434 (+1.6621)  start  6.532 (+0.5634)  degraded  6.153 (+0.9432)  other  23.197 W  DRAWN  4.658/ 5.000 (+0.342)  R1  5.010/ 5.000 (-0.010)
+      S3   LM5176 U531, average loop on 6 mOhm  7.0957 A  PLAN  2.708  HIGH  3.264 (+3.8318)  least V  3.396 (+3.6999)  start  4.495 (+2.6011)  degraded  4.115 (+2.9809)  other  13.208 W  DRAWN  4.658/ 5.000 (+0.342)  R1  5.010/ 5.000 (-0.010)
       DEV  LM5176 U7, average loop on 6 mOhm   7.0957 A  PLAN  5.269  HIGH  7.181 (-0.0857)  least V  7.472 (-0.3760)  DRAWN  7.154/ 7.096 (-0.059)  R1  7.181/ 7.096 (-0.086)
    == PS-RED2 (slots 2 and 3)
       S2   LM5176 U5, average loop on 6 mOhm   7.0957 A  PLAN  1.402  HIGH  2.091 (+5.0046)  least V  2.176 (+4.9201)  start  3.274 (+3.8213)  degraded  2.895 (+4.2011)  other   7.227 W  DRAWN  1.527/ 7.096 (+5.569)  R1  1.878/ 7.096 (+5.217)
@@ -1339,8 +1341,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       RV         PLAN  12.06  14.15  17.16  20.92   HIGH  16.06  18.89  22.99  28.19
       DRAWN      PLAN  12.15  14.28  17.36  21.25   HIGH  16.16  19.05  23.27  28.70
       DRAFTED-R1 PLAN  12.31  14.51  17.75  21.93   HIGH  16.88  19.99  24.65  30.91
-      DRAFTED    PLAN  12.36  14.58  17.82  22.03   HIGH  17.11  20.28  25.02  31.39
-      over 18 A below 11.90 V (PLAN) / 16.04 V (HIGH): PLAN over at 10.0 V
+      DRAFTED    PLAN  12.28  14.48  17.70  21.87   HIGH  16.40  19.42  23.92  29.94
+      over 18 A below 11.82 V (PLAN) / 15.42 V (HIGH): PLAN over at 10.0 V
    PS-RED2 (slots 2 and 3)                            sustained
       RV         PLAN   1.87   2.18   2.62   3.15   HIGH   3.30   3.86   4.64   5.59
       DRAWN      PLAN   1.90   2.22   2.67   3.21   HIGH   3.32   3.88   4.67   5.63
@@ -1429,7 +1431,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    PS-RED (slot 3 alone)        I  1.625 /  3.591  1 0.0594 / 0.2901  2 0.0132 / 0.0645  3 0.0093 / 0.0454  4 0.0186 / 0.0909  | round 1's pair 0.0275 / 0.1288 W at  1.614 /  3.491 A
    PS-RED-b                     I  2.598 /  5.897  1 0.1518 / 0.7824  2 0.0337 / 0.1739  3 0.0237 / 0.1223  4 0.0475 / 0.2450  | round 1's pair 0.0699 / 0.3297 W at  2.572 /  5.585 A
    PS-EMCON                     I  3.410 /  6.540  1 0.2617 / 0.9625  2 0.0582 / 0.2139  3 0.0409 / 0.1505  4 0.0819 / 0.3014  | round 1's pair 0.1211 / 0.4109 W at  3.385 /  6.235 A
-   PS-ALLTX                     I 14.576 / 20.280  1 4.7802 / 9.2535  2 1.0623 / 2.0563  3 0.7475 / 1.4471  4 1.4968 / 2.8975  | round 1's pair 2.2263 / 4.2246 W at 14.514 / 19.994 A
+   PS-ALLTX                     I 14.477 / 19.419  1 4.7155 / 8.4843  2 1.0479 / 1.8854  3 0.7374 / 1.3268  4 1.4766 / 2.6567  | round 1's pair 2.2263 / 4.2246 W at 14.514 / 19.994 A
    PS-RED2 (slots 2 and 3)      I  2.285 /  4.508  1 0.1175 / 0.4573  2 0.0261 / 0.1016  3 0.0184 / 0.0715  4 0.0368 / 0.1432  | round 1's pair 0.0546 / 0.1974 W at  2.274 /  4.322 A
    PS-SURV (slot 2 alone)       I  1.592 /  3.325  1 0.0570 / 0.2488  2 0.0127 / 0.0553  3 0.0089 / 0.0389  4 0.0179 / 0.0779  | round 1's pair 0.0268 / 0.1110 W at  1.592 /  3.240 A
    PS-SURV-R (the heat stage)   I  1.700 /  3.667  1 0.0650 / 0.3026  2 0.0144 / 0.0672  3 0.0102 / 0.0473  4 0.0204 / 0.0948  | round 1's pair 0.0301 / 0.1344 W at  1.689 /  3.567 A
@@ -1466,6 +1468,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       D8   VBAT  253.61 W  path 0.038068 Ohm  stack 14.775 V  rest 16.215 V  +0.0000 V
       D9   VBAT  253.61 W  path 0.041587 Ohm  stack 14.838 V  rest 16.278 V  +0.0633 V
       D10  VBAT  253.61 W  path 0.038064 Ohm  stack 14.774 V  rest 16.214 V  -0.0634 V
+      C1   VBAT  253.61 W  path 0.038064 Ohm  stack 14.774 V  rest 16.214 V  +0.0000 V
       R1   VBAT  249.50 W  path 0.038068 Ohm  stack 14.546 V  rest 15.986 V  (D5 less R1: +0.2019 V)
    L4-E9 round 7's floor 16.1 V rest (4.025 V a cell, D-17, from round 1's drafts): DRAFTED needs 16.214 V, margin -0.114 V; round 7's rule (the least floor
    on its 0.1 V step with at least 0.1 V over the need) gives 16.4 V (4.100 V a cell) on this round's drafts; ChargeVoltage's 16.884 V maximum leaves 0.484 V of
@@ -1473,12 +1476,108 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    the same DRAFTED tree with the coolers at round 1's HIGH (the maker's 2.0 W at 12 V over 0.85), the other end should l8r2's C4-3 read the coolers
    there: VBAT 249.99 W, stack 14.574 V, needs 16.014 V (+0.086 V against 16.1 V); round 7's rule gives 16.2 V
 
+7b. C-ALLTX REV 2, THE CASE ROW (the coordinator's row of 4 October 2026, plan section 4a), FROM ITS TEXT, ON DRAFTED: every transmitter at
+   its HIGH figure, the monitor full, the fans running at full speed, the outlets, the heater and the standby card off, every other load at its
+   PS-ALLTX PLAN figure, the compute modules at their typical 4.5 W; 18 A from a 15.5 V rest, R_cell 0.060 Ohm (an ASSUMPTION; rv-pwr's high)
+   each load's figure and the rule that set it (W at its pins; HIGH and PLAN are its PS-ALLTX figures):
+     CM5 slot 1                                       4.500 W  compute module, typical 4.5 W        (PLAN   8.000, HIGH   8.000; D-11's basis   4.500)
+     cooler fan slot 1                                2.750 W  fans running, HIGH (full speed)      (PLAN   0.510, HIGH   2.750; D-11's basis   2.750)
+     PCIe switch 3.3 V slot 1                         0.390 W  typical (PS-ALLTX PLAN)              (PLAN   0.390, HIGH   0.390; D-11's basis   0.390)
+     PCIe switch 1.0 V slot 1                         0.676 W  typical (PS-ALLTX PLAN)              (PLAN   0.676, HIGH   0.676; D-11's basis   0.676)
+     NVMe slot 1                                      3.600 W  typical (PS-ALLTX PLAN)              (PLAN   3.600, HIGH   3.600; D-11's basis   3.600)
+     CM5 slot 2                                       4.500 W  compute module, typical 4.5 W        (PLAN   8.000, HIGH   8.000; D-11's basis   4.500)
+     cooler fan slot 2                                2.750 W  fans running, HIGH (full speed)      (PLAN   0.510, HIGH   2.750; D-11's basis   2.750)
+     PCIe switch 3.3 V slot 2                         0.390 W  typical (PS-ALLTX PLAN)              (PLAN   0.390, HIGH   0.390; D-11's basis   0.390)
+     PCIe switch 1.0 V slot 2                         0.676 W  typical (PS-ALLTX PLAN)              (PLAN   0.676, HIGH   0.676; D-11's basis   0.676)
+     NVMe slot 2                                      3.600 W  typical (PS-ALLTX PLAN)              (PLAN   3.600, HIGH   3.600; D-11's basis   3.600)
+     CM5 slot 3                                       4.500 W  compute module, typical 4.5 W        (PLAN   8.000, HIGH   8.000; D-11's basis   4.500)
+     cooler fan slot 3                                2.750 W  fans running, HIGH (full speed)      (PLAN   0.510, HIGH   2.750; D-11's basis   2.750)
+     PCIe switch 3.3 V slot 3                         0.390 W  typical (PS-ALLTX PLAN)              (PLAN   0.390, HIGH   0.390; D-11's basis   0.390)
+     PCIe switch 1.0 V slot 3                         0.676 W  typical (PS-ALLTX PLAN)              (PLAN   0.676, HIGH   0.676; D-11's basis   0.676)
+     NVMe slot 3                                      3.600 W  typical (PS-ALLTX PLAN)              (PLAN   3.600, HIGH   3.600; D-11's basis   3.600)
+     WiFi link card 1 (live)                          9.100 W  transmitter, HIGH                    (PLAN   9.100, HIGH   9.100; D-11's basis   9.100)
+     WiFi link card 2 (standby)                       0.000 W  off                                  (PLAN   1.000, HIGH   9.100; D-11's basis   0.000)
+     5G RM520N-GL                                     5.590 W  transmitter, HIGH                    (PLAN   5.590, HIGH   5.590; D-11's basis   5.590)
+     LimeSDR Mini 2.4                                 4.500 W  transmitter, HIGH                    (PLAN   4.500, HIGH   4.500; D-11's basis   4.500)
+     RockBLOCK 9704                                   1.400 W  transmitter, HIGH                    (PLAN   1.400, HIGH   1.400; D-11's basis   1.400)
+     LoRa E22-900M30S                                 3.250 W  transmitter, HIGH                    (PLAN   3.250, HIGH   3.250; D-11's basis   3.250)
+     camera (part TBD)                                2.500 W  typical (PS-ALLTX PLAN)              (PLAN   2.500, HIGH   2.500; D-11's basis   2.500)
+     panel board C                                    5.000 W  typical (PS-ALLTX PLAN)              (PLAN   5.000, HIGH   5.000; D-11's basis   5.000)
+     QMX USB and HDMI 5 V                             0.300 W  typical (PS-ALLTX PLAN)              (PLAN   0.300, HIGH   2.500; D-11's basis   2.500)
+     board D (SA868 and logic)                        3.300 W  transmitter, HIGH                    (PLAN   3.300, HIGH   3.300; D-11's basis   3.300)
+     four CP2102N bridges                             0.400 W  typical (PS-ALLTX PLAN)              (PLAN   0.400, HIGH   0.400; D-11's basis   0.400)
+     KSZ9897R AVDDH 2.5 V                             0.825 W  typical (PS-ALLTX PLAN)              (PLAN   0.825, HIGH   0.825; D-11's basis   0.825)
+     KSZ9897R VDDIO 3.3 V                             0.264 W  typical (PS-ALLTX PLAN)              (PLAN   0.264, HIGH   0.264; D-11's basis   0.264)
+     KSZ9897R AVDDL+DVDDL 1.2 V                       1.452 W  typical (PS-ALLTX PLAN)              (PLAN   1.452, HIGH   1.452; D-11's basis   1.452)
+     three TUSB8041 hubs VDD33                        0.783 W  typical (PS-ALLTX PLAN)              (PLAN   0.783, HIGH   0.981; D-11's basis   0.981)
+     three TUSB8041 hubs VDD 1.1 V                    0.625 W  typical (PS-ALLTX PLAN)              (PLAN   0.625, HIGH   2.568; D-11's basis   2.568)
+     three STM32H743 supervisors and their parts      1.297 W  typical (PS-ALLTX PLAN)              (PLAN   1.297, HIGH   4.554; D-11's basis   4.554)
+     E72 x2 (Zigbee, Thread)                          0.700 W  transmitter, HIGH                    (PLAN   0.700, HIGH   0.700; D-11's basis   0.700)
+     LG290P GNSS                                      0.327 W  typical (PS-ALLTX PLAN)              (PLAN   0.327, HIGH   0.327; D-11's basis   0.327)
+     other +3V3_DEV logic                             1.300 W  typical (PS-ALLTX PLAN)              (PLAN   1.300, HIGH   1.300; D-11's basis   1.300)
+     board A logic                                    1.000 W  typical (PS-ALLTX PLAN)              (PLAN   1.000, HIGH   1.000; D-11's basis   1.000)
+     VHF PA 30 W                                    113.000 W  transmitter, HIGH                    (PLAN  75.000, HIGH 113.000; D-11's basis 113.000)
+     QMX HF                                          13.200 W  transmitter, HIGH                    (PLAN  12.000, HIGH  13.200; D-11's basis  13.200)
+     Xenarc 709GNK                                   10.000 W  monitor full, HIGH                   (PLAN  10.000, HIGH  10.000; D-11's basis  10.000)
+     board E controller and sensors                   0.500 W  typical (PS-ALLTX PLAN)              (PLAN   0.500, HIGH   1.000; D-11's basis   1.000)
+     Geiger module                                    0.300 W  typical (PS-ALLTX PLAN)              (PLAN   0.300, HIGH   0.500; D-11's basis   0.500)
+     two mixer fans                                   4.080 W  fans running, HIGH (full speed)      (PLAN   1.440, HIGH   4.080; D-11's basis   4.080)
+     PoE outlet (delivered outside)                   0.000 W  off                                  (PLAN   0.000, HIGH   0.000; D-11's basis   0.000)
+     USB-C outlet (delivered outside)                 0.000 W  off                                  (PLAN   0.000, HIGH   0.000; D-11's basis   0.000)
+     pack heater mat (cold overlay)                   0.000 W  off                                  (PLAN   0.000, HIGH   0.000; D-11's basis   0.000)
+   the converters at the case's VBAT 13.391 V (each pack-fed converter's input; the loss in W, largest first):
+     DEV       2.986 W lost: in   29.859 W, out   26.873 W, efficiency 0.9000 at 13.391 V in  (device rail, LM5176 stage U7 (gen_sch_a.py), 5.1 V NOT PLOTTED (SNVSAI1D Fig. 6-2 is VOUT )
+     S1        2.571 W lost: in   25.705 W, out   23.135 W, efficiency 0.9000 at 13.391 V in  (slot 1 rail, LM5176 stage U501 (apply_gen_sch_a_slotlm.py, DRAFTED; the AP64500 U4 retired)
+     S2        2.143 W lost: in   21.429 W, out   19.286 W, efficiency 0.9000 at 13.391 V in  (slot 2 rail, LM5176 stage U5 (gen_sch_a.py), 5.1 V NOT PLOTTED (SNVSAI1D Fig. 6-2 is VOUT )
+     PA        1.793 W lost: in  114.793 W, out  113.000 W, efficiency 0.9844 at 13.391 V in  (+13V8_PA, LM5176 U13 (VOUT 13.8 V against the plotted 12 V))
+     S3        1.461 W lost: in   14.607 W, out   13.146 W, efficiency 0.9000 at 13.391 V in  (slot 3 rail, LM5176 stage U531 (apply_gen_sch_a_slotlm.py, DRAFTED; the AP64500 U6 retired)
+     FAN12     0.934 W lost: in    5.014 W, out    4.080 W, efficiency 0.8500 at 13.391 V in  (+12V_FAN, LTC3115-1 U22 on VSYS_E (L4-E11 18a, DRAFTED): 0.85 (an ASSUMPTION of L4-E11) an)
+     S1A       0.889 W lost: in    9.989 W, out    9.100 W, efficiency 0.9110 at  5.100 V in  (slot 1 card socket 3.3 V, AP64500 U103; RT 200 k drafted (apply_gen_sch_b_rt500.py): 500 k)
+     IOC       0.707 W lost: in    2.004 W, out    1.297 W, efficiency 0.6471 at  5.100 V in  (three supervisor LDOs, AP2112K-3.3 U40/U50/U60 from 5.1 V)
+     S1F       0.688 W lost: in    3.438 W, out    2.750 W, efficiency 0.8000 at  5.100 V in  (slot 1's cooler fan 12 V, a TPS61089 step-up from +5V_S1 (l8r2 round 6, DRAFTED): 0.85 at )
+     S2F       0.688 W lost: in    3.438 W, out    2.750 W, efficiency 0.8000 at  5.100 V in  (slot 2's cooler fan 12 V, a TPS61089 step-up from +5V_S2 (l8r2 round 6, DRAFTED): 0.85 at )
+     S3F       0.688 W lost: in    3.438 W, out    2.750 W, efficiency 0.8000 at  5.100 V in  (slot 3's cooler fan 12 V, a TPS61089 step-up from +5V_S3 (l8r2 round 6, DRAFTED): 0.85 at )
+     S2A       0.550 W lost: in    6.140 W, out    5.590 W, efficiency 0.9104 at  5.100 V in  (slot 2 card socket 3.3 V, AP64500 U203; RT 200 k drafted (apply_gen_sch_b_rt500.py): 500 k)
+     D3V3      0.475 W lost: in    4.938 W, out    4.463 W, efficiency 0.9039 at  5.100 V in  (+3V3_DEV, AP63203 U25 from 5 V (gen_sch_b.py:833))
+     HF        0.452 W lost: in   13.652 W, out   13.200 W, efficiency 0.9669 at 13.391 V in  (+12V_HF, LM5176 U15)
+     S1B       0.423 W lost: in    4.413 W, out    3.990 W, efficiency 0.9041 at  5.100 V in  (slot 1 NVMe and switch 3.3 V, AP64500 U104; RT 200 k drafted (apply_gen_sch_b_rt500.py): 5)
+     S2B       0.423 W lost: in    4.413 W, out    3.990 W, efficiency 0.9041 at  5.100 V in  (slot 2 NVMe and switch 3.3 V, AP64500 U204; RT 200 k drafted (apply_gen_sch_b_rt500.py): 5)
+     S3B       0.423 W lost: in    4.413 W, out    3.990 W, efficiency 0.9041 at  5.100 V in  (slot 3 NVMe and switch 3.3 V, AP64500 U304; RT 200 k drafted (apply_gen_sch_b_rt500.py): 5)
+     D8IN      0.367 W lost: in    3.667 W, out    3.300 W, efficiency 0.9000 at 13.391 V in  (+5V_D8IN, TPS62933 U41 from VBAT (S-99, gen_sch_a.py): the declared 0.90; a 5 V plot exist)
+     KSZ2V5    0.264 W lost: in    1.089 W, out    0.825 W, efficiency 0.7576 at  3.300 V in  (KSZ AVDDH, AP2112K-2.5 U27 from 3.3 V)
+     E3V3      0.258 W lost: in    0.758 W, out    0.500 W, efficiency 0.6600 at  5.000 V in  (board E 3.3 V, TLV75533 LDO: Vout/Vin)
+     KSZ1V2    0.256 W lost: in    1.708 W, out    1.452 W, efficiency 0.8500 at  5.100 V in  (KSZ AVDDL and DVDDL, TPS62933 U26: 1.2 V NOT PLOTTED, declared floor)
+     PNL       0.138 W lost: in    5.138 W, out    5.000 W, efficiency 0.9732 at  5.100 V in  (PANEL_5V behind U901, a TPS259631 (l8r2 item 3, DRAFTED): RON at most 0.1434 Ohm (SLVSET8A)
+     A3V3      0.136 W lost: in    1.136 W, out    1.000 W, efficiency 0.8800 at 13.391 V in  (board A logic, TPS62933 U12: 3.3 V NOT PLOTTED (SLUSEA4D plots 5 V), declared floor)
+     S1C       0.119 W lost: in    0.795 W, out    0.676 W, efficiency 0.8500 at  5.100 V in  (slot 1 PCIe switch core, TPS62933 U105: NOT PLOTTED)
+     S2C       0.119 W lost: in    0.795 W, out    0.676 W, efficiency 0.8500 at  5.100 V in  (slot 2 PCIe switch core, TPS62933 U205: NOT PLOTTED)
+     S3C       0.119 W lost: in    0.795 W, out    0.676 W, efficiency 0.8500 at  5.100 V in  (slot 3 PCIe switch core, TPS62933 U305: NOT PLOTTED)
+     HUB1V1    0.110 W lost: in    0.735 W, out    0.625 W, efficiency 0.8500 at  5.100 V in  (three hub cores, TPS62933 U106/U206/U306: NOT PLOTTED, declared floor)
+     E5V       0.090 W lost: in    1.148 W, out    1.058 W, efficiency 0.9212 at 13.391 V in  (board E always-on 5 V, AP63205 U12 on CELL_F (gen_sch_e.py:491))
+     VSYSE     0.029 W lost: in    6.191 W, out    6.162 W, efficiency 0.9954 at 13.391 V in  (VSYS_E over the dock's pin 1 behind U42 (L4-E11 15a, DRAFTED): 0.1359 Ohm from L4-E11's 0.)
+     ZB        0.000 W lost: in    0.700 W, out    0.700 W, efficiency 1.0000 at  3.300 V in  (+3V3_ZB behind TPS22810 U22)
+     DEVP      0.000 W lost: in   12.350 W, out   12.350 W, efficiency 1.0000 at  5.100 V in  (eFuses, load switches and polyfuses on +5V_DEV (LimeSDR, RockBLOCK, LoRa, camera, panel, Q)
+     MON       0.000 W lost: in   10.000 W, out   10.000 W, efficiency 1.0000 at 13.391 V in  (Xenarc behind the TPS259631 eFuse U21 (RON loss ignored))
+   THE ROW: load pins 220.741 W + conversion 20.298 W = 241.039 W at VBAT (13.391 V at 18 A); path 0.038064 Ohm, 12.333 W; cells 0.0800 Ohm, 25.920 W
+     needs 15.5162 V rest at 18 A; the allowance at 15.5 V and 18 A is 240.747 W at VBAT (279.0 W of cell EMF less the cells' 25.920 W and the path's 12.333 W)
+     the deficit +0.292 W at VBAT, +0.0162 V of rest voltage; with the converters at rv-pwr's 16.8 V instead: 241.744 W, needs 15.5554 V, deficit +0.997 W
+   OLD AND NEW (the rows this one replaces as the case's figure, all on DRAFTED, R_cell 0.060 Ohm):
+     old, the raw PS-ALLTX HIGH row before C1 (every load at HIGH, the standby card at 9.1 W, converters at 16.8 V): 276.373 W, needs 17.4792 V
+     the same row after C1 (the standby card 0.0 W): 265.274 W, needs 16.8626 V
+     old, D-11's basis on rv-pwr's typ_nontx (section 7: the compute modules and the NVMe at PS-TYP, the standby card off, every other load at
+       HIGH, converters at 16.8 V): 253.608 W, needs 16.2145 V; at the case's VBAT 14.057 V: 253.032 W, needs 16.1825 V
+     NEW, C-ALLTX rev 2 from its text at the case's VBAT: 241.039 W, needs 15.5162 V; the loads D-11's basis keeps at HIGH and the row's text takes at
+       typical: Geiger module 0.500 to 0.300 W; QMX USB and HDMI 5 V 2.500 to 0.300 W; board E controller and sensors 1.000 to 0.500 W; three STM32H743 supervisors and their parts 4.554 to 1.297 W; three TUSB8041 hubs VDD 1.1 V 2.568 to 0.625 W; three TUSB8041 hubs VDD33 0.981 to 0.783 W
+     on DRAWN (the generators as they are, no draft): 228.120 W, needs 14.6083 V
+   SENSITIVITIES (labelled scenarios, not the case): the compute modules at 8 W (the budget's HIGH; K4 holds no numerical ceiling): 252.840 W,
+     needs 16.1718 V; the fans at their PLAN duty: 228.433 W, needs 14.8159 V
+
 8. THE RECONCILIATION WITH LAYER 4 AND THE OTHER RECORDS (each line: their figure, this script's reproduction from their inputs, EQUAL or
    not, the current design's figure, and the difference explained; R9 is record l8r2's, R12 record l9stk's)
    R1 L4-E9's modes (1d): PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W over PS-IDLE-SPEC (W at the pack)
       theirs (42.8, 203.8, 272.0, 162.3); reproduced (42.8, 203.8, 272.0, 162.3): EQUAL
       DRAWN: (43.301, 205.652, 274.291, 163.465)
-      DRAFTED: (44.576, 209.89, 292.027, 166.149)
+      DRAFTED: (44.576, 208.467, 279.628, 166.149)
       why: rv-pwr's figures, which L4-E9 quotes at 0.1 W; the current design moves them by the steps of section 4
    R1b the review's and L4-E12's profile (PS-IDLE-SPEC at the pack, W)
       theirs (42.82355, 42.824); reproduced (42.82355, 42.824): EQUAL
@@ -1487,7 +1586,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       why: the same figure at five and three places
    R1c L4-E9 round 7 (out 30): the modes restated DRAFTED, PS-IDLE-SPEC, PS-ALLTX plan and high, the PA keyed alone at 113 W (W at the pack)
       theirs (44.205, 209.007, 287.912, 165.76); reproduced (44.205, 209.007, 287.912, 165.76): EQUAL
-      DRAFTED now: (44.576, 209.89, 292.027, 166.149)
+      DRAFTED now: (44.576, 208.467, 279.628, 166.149)
       why: L4-E9 quotes this record's round 1 DRAFTED (rebuilt here as DRAFTED-R1: D1 to D5 with l8r2's round 2 cooler); round 2 moves them by D4's envelope at HIGH and D6 to D10
    R2 B4: the charging heat with the profile running (W): input, stored, heat; the source path and the charge path
       theirs (95.943663, 45.9, 50.043663, 3.17382, 3.44629); reproduced (95.943663, 45.9, 50.043663, 3.17382, 3.44629): EQUAL
@@ -1526,16 +1625,16 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       DRAFTED: (24.475,)
       why: record hc2's state on rv-pwr's model; section 4 moves it
    R8 Layer 7 section 3: the five fans and their converters at full speed against the plan's fan figures (W)
-      theirs (11.85, 2.97); reproduced (11.85, 2.97): EQUAL
+      theirs (12.9, 2.97); reproduced (12.9, 2.97): EQUAL
       this record, the converters' losses unrounded, the coolers at the maker's 2.0 W (round 1's HIGH): (11.8588,)
       DRAFTED's HIGH now: the coolers at l8r2's envelope, 2.75 W over 0.80 each, the mixers as before: (15.1125,)
       U22's quiescent at 14.4 V, in neither figure: (0.2304,)
-      why: Layer 7 rounds each step-up's loss to 0.35 W (0.3529 W at 0.85), 0.0088 W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure
+      why: Layer 7 rounds each step-up's loss to 0.70 W (0.3529 W at 0.85), -1.0412 W in all; U22's 16 mA quiescent is in L4-E11's input current and in this record's VSYS_E, not in either heat figure
    R9 l8r2 round 6 (2c.5): the slot's other loads at HIGH (PS-BUSY, W); the 0.1 % window and its least load voltage (V); the loop's least (A); slot 2's bounded start (A); the margin at the declared 6.6 A; every row of its per state table (A at 5.1 V, at the least voltage, start, degraded, the three margins) and its energy line
       theirs (23.197, 5.0019, 5.1744, 4.9019, 7.09571, 5.7473, 0.4957); reproduced (23.197, 5.0019, 5.1744, 4.9019, 7.09571, 5.7473, 0.4957): EQUAL
       its 17 per state rows, re-run on round 1's printed rails: ('EQUAL',)
       its energy line (D6's cost at VBAT at PLAN, W), re-run: ('PS-IDLE +0.373', 'PS-IDLE-SPEC +0.373', 'PS-TYP +0.730', 'PS-BUSY +0.872', 'PS-RED +0.158', 'PS-RED-b +0.373', 'PS-EMCON +0.348', 'PS-ALLTX +0.822', 'PS-RED2 +0.158', 'PS-SURV +0.000', 'PS-SURV-R +0.158', 'EQUAL')
-      round 2's DRAFTED unrounded: the slot's other loads (PS-BUSY, W), slot 2's start (A), the largest difference from l8r2's rows (A): (23.1971, 5.7472, 0.0001)
+      round 2's DRAFTED unrounded: the slot's other loads (PS-BUSY, W), slot 2's start (A), the largest difference from l8r2's rows (A): (23.1971, 5.7472, 2.0378)
       round 2's DRAFTED unrounded: D6's cost at VBAT at PLAN (W): ('PS-IDLE +0.3656', 'PS-IDLE-SPEC +0.3656', 'PS-TYP +0.7266', 'PS-BUSY +0.8625', 'PS-RED +0.1585', 'PS-RED-b +0.3656', 'PS-EMCON +0.3557', 'PS-ALLTX +0.8160', 'PS-RED2 +0.1585', 'PS-SURV +0.0000', 'PS-SURV-R +0.1585')
       round 2's DRAFTED: the least margin over every state, slots 1 and 3 (A, state, rail): ('steady at 5.1 V +1.8732 (PS-ALLTX, S1)', 'steady at the least load voltage +1.6621 (PS-ALLTX, S1)', 'bounded start +0.5634 (PS-ALLTX, S1)', 'degraded cooler +0.9432 (PS-ALLTX, S1)')
       VBAT's entries at the declared peak (6.6 A x 5.1 V over 0.90 x 14.4 V; declared 2.60 A): (2.5972,)
@@ -1556,7 +1655,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       the pack path's change (mOhm): the breaker added (D9), the battery FETs from two to three (D10), the net: (3.5186, -3.5227, -0.0041)
       the pack path, round 1 and now (Ohm): (0.038068, 0.038064)
       why: the breaker's sense at its window's highest and its FETs at the sheet's x1.8 at 150 C (l9stk's own bound), the battery FETs at L4-E11's 150 C bound: the conservative side for every limit this budget judges. The third FET is in parallel, so it lowers the path; with the breaker the net is within 0.01 mOhm of round 1's
-   line by line for the profile (PS-IDLE-SPEC, PLAN, pack side): the steps of section 4, each with its delta: M1 +0.4316 W; M2 +0.0000 W; M3 +0.0000 W; M4 +0.0000 W; M5 +0.0456 W; D1 +0.0971 W; D2 +0.0009 W; D3 +0.4978 W; D4 +0.2941 W; D5 +0.0140 W; D6 +0.3717 W; D7 +0.0000 W; D8 +0.0000 W; D9 +0.0343 W; D10 -0.0344 W
+   line by line for the profile (PS-IDLE-SPEC, PLAN, pack side): the steps of section 4, each with its delta: M1 +0.4316 W; M2 +0.0000 W; M3 +0.0000 W; M4 +0.0000 W; M5 +0.0456 W; D1 +0.0971 W; D2 +0.0009 W; D3 +0.4978 W; D4 +0.2941 W; D5 +0.0140 W; D6 +0.3717 W; D7 +0.0000 W; D8 +0.0000 W; D9 +0.0343 W; D10 -0.0344 W; C1 +0.0000 W
 
 9. SENSITIVITIES (DRAFTED): for each state's headline (the pack side at PLAN, VIN 14.4 V), the five loads or assumptions that move it most, each
    moved alone over its LOW to HIGH (a load at its pins; an assumption over its stated range), the others at PLAN; the swing is W(HIGH) - W(LOW)
@@ -1609,13 +1708,13 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       load       NVMe slot 1                                        48.744 to   52.043 W, swing   +3.299 W  RV: 0.900 to 3.600 W at the pins (R)
       load       NVMe slot 2                                        48.744 to   52.043 W, swing   +3.299 W  RV: 0.900 to 3.600 W at the pins (R)
       every assumption: the LM5176 5.1 V stages' efficiency (S2, DEV, S1, S3) +1.004 W; the pack voltage -0.210 W; U22's efficiency (L4-E11) +0.149 W; the cooler step-ups' efficiency (l8r2) +0.127 W; the pack path's resistance +0.051 W
-   == PS-ALLTX, headline 209.890 W (37 candidates)
-      load       VHF PA 30 W                                       209.890 to  252.095 W, swing  +42.204 W  RV: 75.000 to 113.000 W at the pins (R)
-      load       WiFi link card 2 (standby)                        208.467 to  220.514 W, swing  +12.047 W  RV: 0.000 to 9.100 W at the pins (T)
-      load       three STM32H743 supervisors and their parts       209.190 to  215.958 W, swing   +6.767 W  RV: 0.921 to 4.554 W at the pins (R)
-      assumption the pack voltage                                  213.449 to  208.044 W, swing   -5.405 W  12.0 to 16.8 V: the curves' input and the pack path's I2R
-      load       QMX HF                                            206.001 to  211.207 W, swing   +5.206 W  RV: 8.400 to 13.200 W at the pins (R)
-      every assumption: the pack voltage -5.405 W; the LM5176 5.1 V stages' efficiency (S2, DEV, S1, S3) +1.630 W; the pack path's resistance +0.977 W; U22's efficiency (L4-E11) +0.159 W; the cooler step-ups' efficiency (l8r2) +0.135 W
+   == PS-ALLTX, headline 208.467 W (36 candidates)
+      load       VHF PA 30 W                                       208.467 to  250.647 W, swing  +42.180 W  RV: 75.000 to 113.000 W at the pins (R)
+      load       three STM32H743 supervisors and their parts       207.768 to  214.531 W, swing   +6.763 W  RV: 0.921 to 4.554 W at the pins (R)
+      assumption the pack voltage                                  211.968 to  206.652 W, swing   -5.316 W  12.0 to 16.8 V: the curves' input and the pack path's I2R
+      load       QMX HF                                            204.580 to  209.783 W, swing   +5.203 W  RV: 8.400 to 13.200 W at the pins (R)
+      load       two mixer fans                                    207.623 to  211.853 W, swing   +4.230 W  DRAFTED: 0.780 to 4.080 W at the pins (R)
+      every assumption: the pack voltage -5.316 W; the LM5176 5.1 V stages' efficiency (S2, DEV, S1, S3) +1.596 W; the pack path's resistance +0.963 W; U22's efficiency (L4-E11) +0.158 W; the cooler step-ups' efficiency (l8r2) +0.135 W
    == PS-RED2 (slots 2 and 3), headline 32.904 W (30 candidates)
       load       three STM32H743 supervisors and their parts        32.251 to   38.572 W, swing   +6.321 W  RV: 0.921 to 4.554 W at the pins (R)
       load       panel board C                                      32.904 to   36.985 W, swing   +4.081 W  DRAFTED: 1.500 to 5.000 W at the pins (D)
@@ -1645,7 +1744,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       PS-RED (slot 3 alone)          23.396   23.396   23.404   23.416   23.432
       PS-RED-b                       37.469   37.430   37.407   37.396   37.393
       PS-EMCON                       49.255   49.168   49.109   49.070   49.045
-      PS-ALLTX                      213.449  211.363  209.890  208.825  208.044
+      PS-ALLTX                      211.968  209.916  208.467  207.420  206.652
       PS-RED2 (slots 2 and 3)        32.925   32.908   32.904   32.910   32.921
       PS-SURV (slot 2 alone)         22.913   22.915   22.923   22.936   22.952
       PS-SURV-R (the heat stage)     24.455   24.461   24.475   24.493   24.515
@@ -1727,11 +1826,11 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       S2F     declared 0.85     0.043 A  0.0082  W at the pack per point below the declared figure
       S3F     declared 0.85     0.043 A  0.0082  W at the pack per point below the declared figure
    == PS-ALLTX
-      S1      declared 0.90     4.666 A  0.3219  W at the pack per point below the declared figure
-      S2      declared 0.90     3.911 A  0.2699  W at the pack per point below the declared figure
-      S3      declared 0.90     2.939 A  0.2028  W at the pack per point below the declared figure
-      DEV     declared 0.90     5.269 A  0.3635  W at the pack per point below the declared figure
-      A3V3    declared 0.88     0.303 A  0.0142  W at the pack per point below the declared figure
+      S1      declared 0.90     4.666 A  0.3217  W at the pack per point below the declared figure
+      S2      declared 0.90     3.911 A  0.2697  W at the pack per point below the declared figure
+      S3      declared 0.90     2.708 A  0.1867  W at the pack per point below the declared figure
+      DEV     declared 0.90     5.269 A  0.3633  W at the pack per point below the declared figure
+      A3V3    declared 0.88     0.303 A  0.0141  W at the pack per point below the declared figure
       PA      LM5176_12V        5.435 A  0.9859 0.9844 0.9829 0.9814 0.9799  pack-fed
       HF      LM5176_12V        1.000 A  0.9700 0.9655 0.9610 0.9565 0.9520  pack-fed
       E5V     AP632_5V          0.212 A  0.9290 0.9223 0.9156 0.9089 0.9022  pack-fed
@@ -1744,7 +1843,6 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       S2A     AP64500_3V3       1.617 A  0.9104  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
       S2B     AP64500_3V3       1.209 A  0.9041  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
       S2C     declared 0.85     0.676 A  0.0114  W at the pack per point below the declared figure
-      S3A     AP64500_3V3       0.303 A  0.8456  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
       S3B     AP64500_3V3       1.209 A  0.9041  fed at 5.100 V: NOT PLOTTED, rv-pwr's VIN 12 V curve
       S3C     declared 0.85     0.676 A  0.0114  W at the pack per point below the declared figure
       D8IN    declared 0.90     0.660 A  0.0446  W at the pack per point below the declared figure
@@ -1787,7 +1885,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
       owner:  l8r2 (C4-1 to C4-6) with board A's generator owner (slotlm, fb01) and board B's (fans12, rt500)
    L9P-F03  ASSUMPTION TO BOUND  (carried (I-03))  the device rail's LM5176 average loop in PS-ALLTX at HIGH, with the three slot stages beside it
       status: OPEN
-      figure: 7.181 A DRAFTED, 7.154 A DRAWN, against the loop's least 7.0957 A (VSNS 43 mV over 6 mOhm at +1 %), -0.0857 A; PLAN 5.269 A; at the least load voltage of fb01's window (4.9019 V) 7.472 A if every load draws constant power (-0.3760 A), and at that voltage also PS-TYP at HIGH 7.316 A (-0.2204 A); PS-BUSY at HIGH 7.316 A (-0.2204 A); beside it in PS-ALLTX at HIGH at 5.1 V the slot stages on the same loop: S1 5.2225 A (+1.8732 A); S2 4.4679 A (+2.6278 A); S3 5.2225 A (+1.8732 A)
+      figure: 7.181 A DRAFTED, 7.154 A DRAWN, against the loop's least 7.0957 A (VSNS 43 mV over 6 mOhm at +1 %), -0.0857 A; PLAN 5.269 A; at the least load voltage of fb01's window (4.9019 V) 7.472 A if every load draws constant power (-0.3760 A), and at that voltage also PS-TYP at HIGH 7.316 A (-0.2204 A); PS-BUSY at HIGH 7.316 A (-0.2204 A); beside it in PS-ALLTX at HIGH at 5.1 V the slot stages on the same loop: S1 5.2225 A (+1.8732 A); S2 4.4679 A (+2.6278 A); S3 3.2639 A (+3.8318 A)
       rule:   CMP-001; the generator's own I-03 comparison (gen_sch_a.py: the conditional P-tier fails the loop minimum)
       why:    the PS-ALLTX currents of the device rail's loads are INCONCLUSIVE on held documents (cx1, I-03); HIGH takes each at its contract or maximum; no draft of this round moves a device rail load, and the slot stages carry their own coolers
       action: I-03's bench reading of the device rail in PS-ALLTX, or the rail split W2 F-PR-04 named; the loop limits rather than damages (the rail droops)
@@ -1818,10 +1916,13 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    tree, which is why the rule holds the heater off during any key-down (rv-pwr 7.2), so they are not a finding
 
 11. PREDICATES
+   C-ALLTX rev 2's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit yes
+   C-ALLTX rev 2's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W yes
+   C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state              yes
    D-11's PA-alone floor holds on every tree                                                                              yes
    D-11's all-transmit floor holds on RV and DRAWN and fails on DRAFTED                                                   yes
    DRAFTED's PLAN is above DRAWN's in every state                                                                         yes
-   DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off                      yes
+   DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off, and PS-ALLTX, where C1 removes the standby card's 1.0 W yes
    DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered                             yes
    L4-E11's charger draft writes the battery FETs record l9stk selected, the third beside Q39 and Q40 (D10)               yes
    L4-E9 round 7's all-transmit floor covers round 1's drafted basis and not this round's                                 yes
