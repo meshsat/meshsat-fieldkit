@@ -109,7 +109,7 @@ PINS = {
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt", "ddc7258038c86b6ad03416dafcaab68bb8133cb25540b7fb2cba1263874ff541"),
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt", "3323d1831fd1dc46664b739f51d981ab0c9c84f49838e7c8f62053782fc0caa9"),
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8bb83aacbd4c0fc752339669835b34907a91f2f396095ef23066baeb2a738e9c"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "bbacc459552e22c520ed92846b38e7abe88fab69eb1be81d56691589cdf91317"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -119,10 +119,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "189ae6ef99f321655d7ca95bc8ef6c2e6f8002a8198be9a71620f6e9c0a7e4d6"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3a46198439d54bfb11fd8a0a25b236793eb4a088af36127cd1cbcb431fcfe04f"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "2979856fdac67e50ce633cc7ff84daab93b5de7d4b819f132c127fa97101966b"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "3bdd5e3ebba68b077710ca11d1c5a31f3e5d759edc2270e664b0c36cc3468289"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -139,7 +139,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "a79bfce6425a515378136c8a2497d21376dbe95935321c66c225c982a3d8e21b"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "14cb2c48d9796c3f9d7559749c7a150eacb086add2a53c73d16980dce94b8755"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
