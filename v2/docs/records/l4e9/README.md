@@ -144,7 +144,16 @@ part number and for R227's capacitors (COVERED, out 11's last block); the timer 
 README): 188 items; no figure and no other row's state changes. R-197 reworded on `fnd/l4e9rc2` (from `c4e4f7d7`): the
 probe described without a length (L4-E7's guard reads the register; the exact text in the archived review), and OPEN until
 `test_l4e7` passes at the guard round's integration `c4e4f7d7`, where L4-E7's results cache did not hold; CLOSED at set 28's
-integration on `test_l4e7` passing on the frozen line `f67ea9cf` ("tests: 54 passed, 0 failed, 1 skipped"). Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
+integration on `test_l4e7` passing on the frozen line `f67ea9cf` ("tests: 54 passed, 0 failed, 1 skipped"). Round 7 (`fnd/l4e9r7` from `37bc2f1d`; Layer 9's
+L9P-F01 at `38ef774c`, its output copied into `inputs/`): decision D-11's all-transmit basis needs 15.986 V rest on the drafted design,
+over its 15.5 V floor (the pair 0.1902 V, the fans at full speed and their converters 0.4583 V over the drawn 15.338 V); reproduced
+(out 30) and corrected by the floor re-derived at 16.1 V with the drafts (D-17, R-28, LH-12 for FW-A05's text); IF-10 now checks the
+floor's own basis; the modes restated beside rv-pwr's (44.205, 209.007 / 287.912, 165.76 W DRAFTED). Round 8 (`fnd/l4e9r8`, main `64cd25ee`
+merged; Layer 9's round 2 at `51821143`): 16.214 V needed on the final drafts against REQ-018's 15.5 V pass line; round 7's raised floor
+withdrawn as a correction (it narrowed REQ-018); D-17 OPEN with one design-out attempt, the five fans' supplies off while the PA keys
+(R-210 to R-212, at least +0.126 V by a bound, CONDITIONAL on R-213); the cell's rest-voltage curve UNRESOLVED (R-214); the modes on the
+final drafts 44.576, 209.89 / 292.027, 166.149 W; C2 and C3 re-read; the budget's drafts registered (R-199 to R-209, R-190 DRAFTED):
+204 items. Status: Selected power-architecture candidate. Known design defects and qualification gaps remain open. Changes are
 drafts, not an implemented or qualified circuit. Power-design closure and fabrication release are blocked.
 
 | File | What it is |
