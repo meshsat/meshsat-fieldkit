@@ -48,11 +48,11 @@ TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_
 REC = "v2/docs/records/l4e11"
 
 PINS = {
-    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "f7cc6ac3cfd5ad083ce9cfd16a669bdbe122e161b9c5bc8fc1399691b7c62e31"),
+    "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "rules": ("v2/ecad/tools/pcb_rules.yaml", "14ea032a7fdd86ac877a51ec7bdc804d95c1c639ddbca4035338da5a09d8b83f"),
     "testplan": ("v2/docs/TEST-PLAN.md", "42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7"),
-    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059"),
-    "panel": ("v2/docs/PANEL.md", "9fd2b4e3c6edf86e482256e81f7b924de13d2f010c2124a02bfbd688552ea9cc"),
+    "hwfw": ("v2/docs/HW-FW-CONTRACT.md", "9b0d04c39beafb7dd3ef3269b05e2230fe68ee019dc83c2e0c9be0ea80d391db"),
+    "panel": ("v2/docs/PANEL.md", "c4820a453aa7a159ee2641bd921e39023737c3eefe8dcbe7bfca3bd36420b90d"),
     "assembly": ("v2/docs/ASSEMBLY.md", "29dbe3a0c4938274b3fe780d27c565737adf9dd506b8c8c81e72f3776ef75fed"),
     "gen_a": ("v2/ecad/tools/gen_sch_a.py", "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b"),
     "gen_e": ("v2/ecad/tools/gen_sch_e.py", "f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186"),
@@ -113,7 +113,7 @@ PINS = {
     "spra953": ("v2/vendor/ti/held/ti-spra953c-thermal-metrics.pdf", "8ab81b5a351132ae8ab049d984e7cc72f1eb3dd3e4d9d8e063be6fcd841080a9"),
     "an11158": ("v2/vendor/nexperia/held/nexperia-an11158-rev7.pdf", "9e3211549d0bcd774b265d0598588b3b221b13b9c528b7374445fd0f21d47aec"),
     "gen_b": ("v2/ecad/tools/gen_sch_b.py", "3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "996fc1b1ee4491fc58d6c2ab0b9ae3cefc7e9f8b56311290d0aef34b0947926d"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "6b033c4182666fd031a6b8ae1082f57b2e109eabe0ff81352f11fa897e6994da"),
     # round 9 (4 October 2026, section 19): R19's maker sheet (held back), the VSYS hold's parts, RAIL_EN's controller and buck
     "hollr2512": ("v2/vendor/passives/held/moolee-hollr2512-ho-a0-2022-01-06.pdf", "5dac9ede82062791abe6128aa7cad87c1422993820fbd21efa33dbea2ce04005"),
     "tps37": ("v2/vendor/ti/ti-tps37-snvsbj1e.pdf", "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545"),
