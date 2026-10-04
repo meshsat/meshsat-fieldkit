@@ -36,6 +36,7 @@ Run from the repository root:  python3 v2/docs/records/l8r2/l8r2_gndret.py  (l8r
 _bin/regen_out.py). Stdlib, PyYAML and pdftotext; about twenty seconds."""
 import ast
 import hashlib
+import importlib.util
 import itertools
 import json
 import math
@@ -116,6 +117,9 @@ CU_ALPHA = 0.00393      # 1/K, ASSUMPTION (ideal copper, as records cx1 and l4e1
 AB2_MM = None           # J_AB2's ribbon length is TBD in its contract (IF-AB-WALL); taken as J_AB1's, ASSUMPTION
 RET_LEAD_MM = None      # the dedicated return's lead length: taken as the 5 V leads' (ASSEMBLY.md section 4), ASSUMPTION until Layer 7 routes it
 T_RATING_REF = 25.0     # C: the ambient a current rating is taken to be stated at where its sheet prints none (the ribbon's sheet prints 25 C)
+BALLAST_MOHM = 1000.0   # section 3j's approaches D2 and D3: 1 Ohm in series with each ribbon ground conductor (an illustration)
+WIRE_FLOOR = 0.82       # ASSUMPTION for section 6's wire sensitivity: a conductor's own wire at 0.82 of the modelled figure (the ribbon's
+                        # maker prints a MAXIMUM, 237 Ohm/km; a 7 x 0.127 mm strand at the tree's resistivity is 194 Ohm/km, 0.82 of it)
 
 def rel(p):
     return os.path.relpath(p, ROOT)
@@ -178,6 +182,8 @@ def figures():
     F["cab_a"] = float(need(t, r"Rated Current\s+IR\s+(\d+)\s+A\s+max", "the ribbon's rated current").group(1))
     F["cab_ohm_km"] = float(need(t, r"Conductor Resistance\s+R\s+1 Kilometer\s+(\d+)\s+\S+\s+max", "the ribbon's conductor resistance").group(1))
     F["cab_awg"] = int(need(t, r"Stranded Wire Section \(AWG\)\s+(\d+) \(AWG\)", "the ribbon's gauge").group(1))
+    m = need(t, r"Operating Temperature\s+-(\d+) °C up to \+(\d+) °C", "the ribbon's operating range")
+    F["cab_tmin"], F["cab_tmax"] = -float(m.group(1)), float(m.group(2))
     need(t, r"\(@ 25°C\)", "the ribbon sheet's 25 C rating condition")
     need(t, r"current rating may decrease due to the derating effect at higher temperatures", "the ribbon sheet's derating sentence")
     t = pdf("sock")
@@ -322,23 +328,23 @@ sys.exit(1 if _stop else 0)
 '''
 
 
-def run_gen(gen):
+def run_gen(gen, board="b"):
     """One run of a generator copy as record l8p's gen_netlist.py runs it (its stand-in layout, the tree's kisch and intent), with
     every intent.rail call recorded BEFORE intent judges it: dict(stop, calls, table, netlist)."""
     with tempfile.TemporaryDirectory(prefix="l8r2_gnd_") as d:
-        g = os.path.join(d, "gen_sch_b.py"); shutil.copy(gen, g)
+        g = os.path.join(d, "gen_sch_%s.py" % board); shutil.copy(gen, g); prj = PROJECT[board]
         open(os.path.join(d, "l8p_stub_schlayout.py"), "w", encoding="utf-8").write(GN.STUB)
         open(os.path.join(d, "run.py"), "w", encoding="utf-8").write(RUNNER)
         js, dj = os.path.join(d, "parts.json"), os.path.join(d, "decl.json")
         env = dict(os.environ, PYTHONPATH=TOOLS, L8P_PARTS_JSON=js, L8R2_DECL_JSON=dj, KICAD_SYMBOLS=os.path.join(d, "no-kicad-symbols"),
                    PYTHONDONTWRITEBYTECODE="1")
-        r = subprocess.run([sys.executable, "-B", os.path.join(d, "run.py"), g, os.path.join(d, "pcb-b-compute.kicad_sch"), "pcb-b-compute"],
+        r = subprocess.run([sys.executable, "-B", os.path.join(d, "run.py"), g, os.path.join(d, prj + ".kicad_sch"), prj],
                            capture_output=True, cwd=d, env=env)
         if not os.path.isfile(dj):
             refuse("a generator run died before its record was written: %s" % (r.stderr.decode("utf-8", "replace").strip().splitlines() or ["?"])[-1][:300])
         dec = json.load(open(dj, encoding="utf-8"))
         res = dict(stop=dec["stop"], calls=dec["calls"], table=None, netlist=None, intent=None)
-        ij = os.path.join(d, "out", "pcb-b-compute-intent.json")
+        ij = os.path.join(d, "out", prj + "-intent.json")
         if dec["stop"] is None and os.path.isfile(js) and os.path.isfile(ij):
             res["table"] = json.load(open(js, encoding="utf-8"))
             res["intent"] = json.load(open(ij, encoding="utf-8"))
@@ -346,10 +352,14 @@ def run_gen(gen):
     return res
 
 
-def apply(name, target, flag="--write"):
-    r = subprocess.run([sys.executable, "-B", P(DRAFT[name]), target, flag], capture_output=True)
+def apply_p(path, target, flag="--write"):
+    r = subprocess.run([sys.executable, "-B", path if os.path.isabs(path) else P(path), target, flag], capture_output=True)
     last = (r.stderr.decode("utf-8", "replace").strip().splitlines() or r.stdout.decode("utf-8", "replace").strip().splitlines() or [""])[-1]
     return r.returncode, last
+
+
+def apply(name, target, flag="--write"):
+    return apply_p(DRAFT[name], target, flag)
 
 
 def compose(seq, d, tag):
@@ -358,6 +368,23 @@ def compose(seq, d, tag):
         rc, msg = apply(s, p)
         if rc:
             return p, "%s REFUSED (%s)" % (s, msg)
+    return p, None
+
+
+def compose_a(paths, d, tag):
+    """board A: the drafts in order, then d8dec31's mainpb (which takes the next free R and C against the committed netlist) LAST,
+    then Layer 6's table"""
+    p = os.path.join(d, tag + ".py"); shutil.copy(P(GEN["a"]), p)
+    for s in paths:
+        rc, msg = apply_p(s, p)
+        if rc:
+            return p, "%s REFUSED (%s)" % (os.path.basename(s), msg)
+    r = subprocess.run([sys.executable, "-B", P(MAINPB), p, P(NET_A)], capture_output=True)
+    if r.returncode:
+        return p, "mainpb REFUSED (%s)" % (r.stderr.decode("utf-8", "replace").strip().splitlines() or r.stdout.decode("utf-8", "replace").strip().splitlines() or [""])[-1]
+    rc, msg = apply_p(L6_A, p)
+    if rc:
+        return p, "Layer 6's lcsc REFUSED (%s)" % msg
     return p, None
 
 
@@ -380,10 +407,11 @@ def r_ribbon(mm, T, F):
     return F["cab_ohm_km"] * (mm / 1000.0) * (1 + CU_ALPHA * (T - 20.0))                          # mOhm (Ohm/km x m = mOhm), the maker's maximum at 20 C
 
 
-def conductors(F, T, ioc, n_ret=0, poe_awg=None, vh_ground=True):
+def conductors(F, T, ioc, n_ret=0, poe_awg=None, vh_ground=True, vh_open=0):
     """[(name, kind, n conductors, wire mOhm each)]: the ground conductors between boards A and B. ioc: Layer 9's sixth lead;
     n_ret: the dedicated return's conductors (two a lead: an XT60 contact, a 12 AWG conductor, an XT60 contact); poe_awg: the PoE
-    lead's gauge (18 as drawn); vh_ground False takes the leads' pin 2 off the return (section 3j's third approach)."""
+    lead's gauge (18 as drawn); vh_ground False takes the leads' pin 2 off the return (section 3j's third approach); vh_open: that
+    many 5 V leads with pin 2 open (a fault case of section 6g)."""
     mm2 = {16: F["mm2_16"], 18: F["mm2_18"]}
     c = []
     if vh_ground:
@@ -391,6 +419,7 @@ def conductors(F, T, ioc, n_ret=0, poe_awg=None, vh_ground=True):
         c.append(("J_5V_DEV", "VH", 1, r_wire(mm2[F["dev_awg"]], F["lead_mm"], T, F)))
         if ioc:
             c.append(("J_5V_IOC", "VH", 1, r_wire(mm2[F["dev_awg"]], F["lead_mm"], T, F)))
+        c = c[:len(c) - vh_open]
         awg = F["poe_awg"] if poe_awg is None else poe_awg
         c.append(("J_54V", "VH" if awg == 16 else "VH18", 1, r_wire(mm2[awg], F["lead_mm"], T, F)))
     c.append(("J_AB1", "RIB", 9, r_ribbon(F["ab1_mm"], T, F)))
@@ -416,7 +445,7 @@ def classes_of(conds, bx):
         lo, hi = bx[kind]
         key = (kind if kind != "VH18" else "VH18", round(wres, 12), lo, hi)
         if key not in cl:
-            cl[key] = dict(names=[], kind=kind, m=0, w=wres, g=[1.0 / (wres + 2 * lo), 1.0 / (wres + lo + hi), 1.0 / (wres + 2 * hi)])
+            cl[key] = dict(names=[], kind=kind, m=0, w=wres, lo=lo, hi=hi, g=[1.0 / (wres + 2 * lo), 1.0 / (wres + lo + hi), 1.0 / (wres + 2 * hi)])
         cl[key]["names"].append(n); cl[key]["m"] += k
     return list(cl.values())
 
@@ -445,13 +474,15 @@ def enumerate_vertices(total, C):
     return best, total / gmin, n, 4 ** sum(c["m"] for c in C)
 
 
-def analytic(total, C):
+def analytic(total, C, wire_floor=1.0):
     """the same maxima from the monotone argument: a conductor's current rises as its own contacts fall and as every other contact
-    rises, so its extreme is the vertex with its own two contacts low and every other contact high; the shift's is every contact high"""
+    rises, so its extreme is the vertex with its own two contacts low and every other contact high; the shift's is every contact high.
+    wire_floor scales the conductor's OWN wire resistance (section 6d's sensitivity; 1.0 is the modelled figure)."""
     out = []
     for i, c in enumerate(C):
-        G = sum((cc["m"] - (1 if j == i else 0)) * cc["g"][2] for j, cc in enumerate(C)) + c["g"][0]
-        out.append(total * c["g"][0] / G)
+        g0 = 1.0 / (wire_floor * c["w"] + 2 * c["lo"])
+        G = sum((cc["m"] - (1 if j == i else 0)) * cc["g"][2] for j, cc in enumerate(C)) + g0
+        out.append(total * g0 / G)
     return out, total / sum(cc["m"] * cc["g"][2] for cc in C)
 
 
@@ -516,25 +547,29 @@ def bisect(f, lo, hi, n=60):
 def main():
     w = sys.stdout.write
     F = figures()
-    w("l8r2_gndret.py: Layer 8 record l8r2, round 7 (task T5b): board B's ground return, its load basis and its current capacity\n"
-      "reconciled (the owner's review of 4 October 2026, RSM-01). PROTOTYPE DESIGN: nothing is built, bought, powered or measured;\n"
-      "nothing here is applied to the tree; no figure is a measurement. Case rows cited (inputs/coordinator-cases-2026-10-04-rev3.md):\n"
+    w("l8r2_gndret.py: Layer 8 record l8r2, rounds 7 and 8: board B's ground return, its load basis and its current capacity reconciled\n"
+      "(round 7, the owner's review of 4 October 2026, RSM-01), and the return between boards A and B corrected by a dedicated ground\n"
+      "return and verified over every permitted aged-contact combination (round 8, finding L8R2-F31, after the collaborator's recheck\n"
+      "V3, NOT CONFIRMED). PROTOTYPE DESIGN: nothing is built, bought, powered or measured; nothing here is applied to the tree; no\n"
+      "figure is a measurement; no independent check has read round 8. Case rows cited (inputs/coordinator-cases-2026-10-04-rev3.md):\n"
       "C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the slots' loads per state as record l9pwr prints them.\n")
     w("\n0. INPUTS (sha256/16)\n")
-    ins = [GEN_B, GEN_A, NET_A, NET_B, INT_B, L4E9_PAGE, BUDGET, BUDGET_L9T5, L9T5_OUT, CASES, "v2/docs/records/l8r2/inputs/SOURCES.txt",
-           L4E12_OUT, L9STK_PAGE, ASSEMBLY, IFACES, PACKRTN] + ENGINE + sorted(set(DRAFT.values())) + L6_HELP + sorted(SHEETS.values())
+    ins = [GEN_B, GEN_A, NET_A, NET_B, INT_B, L4E9_PAGE, BUDGET, L9T5_OUT, L9T5_DRAFT_A, V3, CASES, "v2/docs/records/l8r2/inputs/SOURCES.txt",
+           L4E12_OUT, L9STK_PAGE, ASSEMBLY, IFACES, PACKRTN, MAINPB, L6_A] + ENGINE + sorted(set(DRAFT.values()) | set(MINE_A.values())) + L6_HELP \
+        + sorted(SHEETS.values()) + ["v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn for rn in ROUND_A]
     for p in ins:
         w("   %s %s\n" % (sha(p), p))
     w("   the session's choices (authority SESSION, each reversible by editing the constant and regenerating):\n"
-      "     T_RATED_RISE %.0f K: the rise at the rated current JST's %.0f A is taken to stand for (ASSUMPTION; the held catalogue prints the range\n"
-      "       -40 to +%.0f C 'including temperature rise in applying electrical current' and no rise, no derating curve); it is used only to\n"
-      "       label a hot-air figure beside the printed rating, never to pass a row\n"
+      "     T_RATED_RISE %.0f K: round 7's reading of JST's %.0f A (a %.0f K rise at the rating; the held catalogue prints the range -40 to\n"
+      "       +%.0f C 'including temperature rise in applying electrical current' and no rise, no ambient, no derating curve); shown beside the\n"
+      "       stricter reading T_RATING_REF %.0f C (the rating taken at that ambient with the contact at its range's top); neither passes a row\n"
+      "       that the printed rating fails\n"
       "     CU_ALPHA %.5f /K: ideal copper (ASSUMPTION, as records cx1 and l4e11); rho %.3g Ohm m is dc_drop.py's own (parsed)\n"
-      "     the J_5V_IOC lead at AWG %d and %.0f mm: record l9t5's draft names no gauge or length (ASSUMPTION, as the four 5 V leads)\n"
       "     J_AB2's ribbon at J_AB1's %.0f mm: its length is TBD in its contract IF-AB-WALL (ASSUMPTION)\n"
-      "     RIB_DERATE %.1f: a ribbon conductor held to that share of its 25 C rating in section 3j's acceptance figure (ASSUMPTION: its\n"
-      "       maker states a derating at higher ambient and prints no curve)\n"
-      % (T_RATED_RISE, F["vh_a16"], F["vh_tmax"], CU_ALPHA, F["rho"], IOC_AWG, F["lead_mm"], F["ab1_mm"], RIB_DERATE))
+      "     the dedicated return's leads at the 5 V leads' %.0f mm (ASSUMPTION until Layer 7 routes them; a shorter lead lowers every row)\n"
+      "     WIRE_FLOOR %.2f: section 6's sensitivity of a conductor's own wire resistance (ASSUMPTION; no wire part is named in the tree)\n"
+      "     BALLAST_MOHM %.0f: the series resistance of approaches D2 and D3 in section 3j (an illustration)\n"
+      % (T_RATED_RISE, F["vh_a16"], T_RATED_RISE, F["vh_tmax"], T_RATING_REF, CU_ALPHA, F["rho"], F["ab1_mm"], F["lead_mm"], WIRE_FLOOR, BALLAST_MOHM))
 
     with tempfile.TemporaryDirectory(prefix="l8r2_gndret_") as d:
         # ---------------------------------------------------------------- 1
@@ -656,37 +691,38 @@ def main():
         ty_c = sum(c["typ"] for c in arr_c) + poe["typ"]; ty_i = sum(c["typ"] for c in arr_i) + poe["typ"]
         pk_0 = sum(c["peak"] for c in base_res["calls"] if isinstance(c["source"], str) and c["source"].startswith("J_5V")) + poe["peak"]
         pk5_c, pk5_i = pk_c - poe["peak"], pk_i - poe["peak"]          # the 5 V leads alone, for a like-for-like reading against the budget
-        w("    (i) THE SUM OF THE LEADS' DECLARED PEAKS, an UPPER BOUND (every lead at its own peak at once): %.2f A (%.2f A) with the PoE\n"
+        w("    (i) THE SUM OF THE LEADS' DECLARED PEAKS, an UPPER BOUND (every lead at its own peak at once): %.4f A (%.4f A) with the PoE\n"
           "        lead's %.2f A; %.2f A on the committed generator. The typicals sum to %.2f A (%.2f A). DECLARED.\n"
           % (pk_c, pk_i, poe["peak"], pk_0, ty_c, ty_i))
-        B = {"the tree's budget (set 29's candidate)": budget(BUDGET), "Layer 9's rounds 4 and 5 (the copy of fnd/l9t5 at f70d3085)": budget(BUDGET_L9T5)}
-        big = {}
-        for tag, bud in B.items():
-            w("    (ii) LAYER 9'S BUDGET, %s: the four 5.1 V stages' output summed per state (MODEL, record l9pwr section 5b; the PoE\n"
-              "         stage is off in every state of that budget):\n" % tag)
-            w("         %-28s %8s %8s %12s %14s %16s\n" % ("state", "PLAN", "HIGH", "HIGH least V", "+ one start", "+ every start"))
-            best = None
-            for st, rows in bud.items():
-                plan = sum(r["plan"] for r in rows.values()); high = sum(r["high"] for r in rows.values()); least = sum(r["least"] for r in rows.values())
-                adds = sorted((r["start"] - r["least"] for r in rows.values() if r["start"] is not None), reverse=True)
-                one = least + (adds[0] if adds else 0.0); allst = least + sum(adds)
-                w("         %-28s %8.3f %8.3f %12.3f %14.3f %16.3f\n" % (st, plan, high, least, one, allst))
-                if best is None or least > best[1]:
-                    best = (st, least, high, plan, one, allst, rows)
-            big[tag] = best
-            w("         the largest state: %s, %.3f A at HIGH at the least load voltage (%.3f A at 5.1 V, %.3f A at PLAN); with one cooler's\n"
-              "         bounded start %.3f A, with every running slot's at once %.3f A (the starts are 100 us averages, record l8r2 round 6)\n"
-              % (best[0], best[1], best[2], best[3], best[4], best[5]))
-        TREE_B, L9_B = "the tree's budget (set 29's candidate)", "Layer 9's rounds 4 and 5 (the copy of fnd/l9t5 at f70d3085)"
-        bt = big[TREE_B]
-        rows = B[TREE_B]["PS-ALLTX"]                   # C-DEV rev 1's state: PS-ALLTX at HIGH at the least load voltage
+        bud = budget(BUDGET)
+        w("    (ii) LAYER 9'S BUDGET (the copy of fnd/l9t5 at 841e6c7e, its rounds 4 to 6: PS-ALLTX with the standby card off; the ONE budget\n"
+          "         this record reads since round 8): the four 5.1 V stages' output summed per state, before Layer 9's draft moves the\n"
+          "         supervisors (MODEL, record l9pwr section 5b; the PoE stage is off in every state of that budget):\n")
+        w("         %-28s %8s %8s %12s %14s %16s\n" % ("state", "PLAN", "HIGH", "HIGH least V", "+ one start", "+ every start"))
+        bt = None
+        for st, rows_ in bud.items():
+            plan = sum(r["plan"] for r in rows_.values()); high = sum(r["high"] for r in rows_.values()); least = sum(r["least"] for r in rows_.values())
+            adds = sorted((r["start"] - r["least"] for r in rows_.values() if r["start"] is not None), reverse=True)
+            one = least + (adds[0] if adds else 0.0); allst = least + sum(adds)
+            w("         %-28s %8.3f %8.3f %12.3f %14.3f %16.3f\n" % (st, plan, high, least, one, allst))
+            if bt is None or least > bt[1]:
+                bt = (st, least, high, plan, one, allst, rows_)
+        rows = bud["PS-ALLTX"]                   # C-DEV rev 1's state: PS-ALLTX at HIGH at the least load voltage
         if abs(rows["DEV"]["least"] - F["cdev_u7_before"]) > 6e-4:
             refuse("the budget's PS-ALLTX device rail (%.3f A) is not record l9t5's figure before its draft (%.4f A)" % (rows["DEV"]["least"], F["cdev_u7_before"]))
-        tot6 = rows["S1"]["least"] + rows["S2"]["least"] + rows["S3"]["least"] + F["cdev_u7"] + F["cdev_u601"]
-        s3_l9 = B[L9_B]["PS-ALLTX"]["S3"]["least"]
-        w("         on C-DEV rev 1 the device rail is %.4f A of that state's figure; with Layer 9's draft composed U7 carries %.4f A and\n"
-          "         U601 %.4f A (record l9t5, MODEL), the same %.4f A on two leads: the board's total return does not move\n"
-          % (F["cdev_u7_before"], F["cdev_u7"], F["cdev_u601"], F["cdev_u7"] + F["cdev_u601"]))
+        d_ioc = F["cdev_u601"] - F["cdev_u601_at_u7"]          # what the move adds to a state's total: U601's rail at its own least voltage
+        tot_cdev = rows["S1"]["least"] + rows["S2"]["least"] + rows["S3"]["least"] + F["cdev_u7"] + F["cdev_u601"]
+        tot_big = bt[1] + d_ioc; tot_big_starts = bt[5] + d_ioc
+        w("         the largest state: %s, %.3f A at HIGH at the least load voltage (%.3f A at 5.1 V, %.3f A at PLAN); with one cooler's\n"
+          "         bounded start %.3f A, with every running slot's at once %.3f A (the starts are 100 us averages, record l8r2 round 6)\n"
+          % (bt[0], bt[1], bt[2], bt[3], bt[4], bt[5]))
+        w("         WITH LAYER 9'S DRAFT COMPOSED (record l9t5 round 3, MODEL): the supervisors' %.4f A leaves U7 and U601 carries %.4f A at its\n"
+          "         own least load voltage, %+.4f A on a state's total: the largest state %.4f A (%.4f A with every start); on C-DEV rev 1\n"
+          "         (PS-ALLTX, HIGH, the least load voltage) U7 %.4f A and U601 %.4f A, total %.4f A (the recheck V3 prints %.6f A from the\n"
+          "         budget's unrounded figures)\n"
+          % (F["cdev_u601_at_u7"], F["cdev_u601"], d_ioc, tot_big, tot_big_starts, F["cdev_u7"], F["cdev_u601"], tot_cdev, F["v3_total"]))
+        if abs(tot_cdev - F["v3_total"]) > 2e-3:
+            refuse("C-DEV rev 1's total (%.4f A) is not the recheck's (%.6f A)" % (tot_cdev, F["v3_total"]))
         n_lm = 4
         src_c = n_lm * F["loop_max"]; src_i = src_c + F["u601_out"]
         w("    (iii) WHAT THE SOURCES CAN DELIVER (a fault bound): each LM5176 5.1 V stage's average loop limits between %.4f and %.4f A (VSNS\n"
@@ -695,24 +731,25 @@ def main():
           "         One stage in its limit with the others at the largest state: %.3f A.\n"
           % (F["loop_min"], F["loop_max"], R6.V["vsns"][0] * 1e3, R6.V["vsns"][2] * 1e3, F["l9_loop_max"], n_lm, F["loop_max"], src_c, F["u601_out"], src_i,
              bt[1] - max(r["least"] for r in bt[6].values()) + F["loop_max"]))
+        dev_big = bt[6]["DEV"]["least"]
         w("    WHICH ONE THE DECLARATION HOLDS, AND WHY: the peak holds (i), named an upper bound in its note; the typical holds the sum of the\n"
           "    leads' typicals; the loads stay the union of the leads' allocations, with the PoE return added.\n"
           "      - (i) is the only figure that is true by construction: the return cannot carry more than its leads are declared to carry,\n"
           "        and those declarations are Layer 5's contract at both ends of each lead. Derived in the generator, it follows a lead\n"
           "        that is declared again; typed, it went stale on 28 September (S-98) and again with fans12.\n"
           "      - (ii) against (i), like for like (the PoE stage is off in the budget, so the 5 V leads alone): with Layer 9's draft composed\n"
-          "        the largest state with every start at once is %.3f A against %.2f A: %s. Without that draft it is %.3f A against\n"
-          "        %.2f A: %s by %.3f A, because the device lead declares %.1f A where C-DEV rev 1 has %.4f A. That is I-03 itself\n"
-          "        (OPEN, Layer 9's): the return follows what that lead declares and does not paper over it.\n"
+          "        the largest state with every start at once is %.3f A against %.4f A: %s. Without that draft it is %.3f A against\n"
+          "        %.2f A: %s by %.3f A, because the device lead declares %.1f A where the budget has %.3f A in that state (%.4f A on\n"
+          "        C-DEV rev 1). That is I-03 itself (OPEN, Layer 9's): the return follows what that lead declares and does not paper over it.\n"
           "      - (iii) is a fault current of four independent limits at once; intent.py's own rule puts a fault current in the note,\n"
           "        not in the peak (the barrel rule PI-003 reads the peak). One stage in its limit is inside (i).\n"
           "      - what the peak is NOT: a claim that %.2f A flows. The copper rules solve the return's mesh at the declared loads,\n"
           "        %.3f A with the PoE return; the peak is what a barrel is judged at.\n"
-          % (bt[5], pk5_i, "inside" if bt[5] <= pk5_i else "OVER", bt[5], pk5_c, "inside" if bt[5] <= pk5_c else "OVER", abs(bt[5] - pk5_c),
-             call_of(comp_res, "+5V_DEV")["peak"], F["cdev_u7_before"], pk_i, sum(gc["loads"].values()) + poe["peak"]))
+          % (tot_big_starts, pk5_i, "inside" if tot_big_starts <= pk5_i else "OVER", bt[5], pk5_c, "inside" if bt[5] <= pk5_c else "OVER", abs(bt[5] - pk5_c),
+             call_of(comp_res, "+5V_DEV")["peak"], dev_big, F["cdev_u7_before"], pk_i, sum(gc["loads"].values()) + poe["peak"]))
 
         # ---------------------------------------------------------------- 3
-        w("\n3. THE CAPACITY BASIS\n")
+        w("\n3. THE CAPACITY BASIS AS DRAWN\n")
         nlA = CK.read_netlist(open(P(NET_A), "rb").read()); nlB = CK.read_netlist(open(P(NET_B), "rb").read())
         gA, gB = CK.ground_conductors(nlA), CK.ground_conductors(nlB)
         vhA = sorted(r for r, pp in nlA["pins"].items() if r.startswith(("J_5V_", "J_54V")) and pp.get("2") == "GND")
@@ -728,6 +765,8 @@ def main():
           "      with Layer 9's draft). Nothing makes a lead's pin 2 carry its own rail's current: the return divides by resistance.\n"
           "      NOT IN THE MODEL (each takes current off the conductors below; none has a held resistance): the shields of the GNSS and\n"
           "      LoRa pigtails if board A bonds its jacks to GND, and each board's own plane resistance, taken as one node a board.\n")
+        TH, TL = F["t_e5"], F["t_cold"]
+        vh_assume = F["vh_a16"] * min(1.0, math.sqrt((F["vh_tmax"] - TH) / T_RATED_RISE))
         w("3b. THE MAKERS' PRINTED FIGURES\n")
         w("      JST VH (%s, catalogue, revision not printed): %.0f A 'when using AWG #16 with the standard type header' (PRINTED); %.0f A\n"
           "        'when using AWG #18 with the shrouded type header' (PRINTED; the fitted B2P-VH is the standard header, so J_54V's AWG %d lead\n"
@@ -738,121 +777,136 @@ def main():
           "        design the circuits without causing any imbalance and provide extra margin for each circuit.'\n"
           % (SHEETS["vh"], F["vh_a16"], F["vh_a18"], F["poe_awg"], F["vh_tmax"], F["vh_rc0"], F["vh_rc1"], F["mm2_16"], F["mm2_18"]))
         w("      Wurth WR-CAB ribbon (%s): rated current %.0f A a conductor at 25 C ambient, 'the current rating may decrease due to the derating\n"
-          "        effect at higher temperatures' with no curve (PRINTED); conductor resistance %.0f Ohm/km maximum, AWG %d (PRINTED).\n"
-          "      Wurth WR-BHD IDC socket (%s): %.0f A a contact, contact resistance %.0f mOhm maximum (PRINTED). Box header: %.0f A at 25 C (PRINTED).\n"
-          % (SHEETS["cab"], F["cab_a"], F["cab_ohm_km"], F["cab_awg"], SHEETS["sock"], F["sock_a"], F["sock_rc"], F["hdr_a"]))
-        T = F["t_e5"]
-        hot, room = hot_rating(F, T)
-        w("      THE INSIDE AIR (L4-E12, MODELED): %.2f C in E3-O, %.2f C in E5's dwell. The VH contact may add %.2f K at %.2f C before its range's\n"
-          "        top. The catalogue prints no rise at %.0f A and no derating curve: if that rise is %.0f K (ASSUMPTION) the contact carries\n"
-          "        %.3f A at %.2f C; the printed %.0f A is what the rows below are judged at, and this figure is shown beside it. The budget's\n"
-          "        largest state at E5's air is a conservative pairing: L4-E12's states at that air run less than PS-ALLTX.\n"
-          % (F["t_e3o"], T, room, T, F["vh_a16"], T_RATED_RISE, hot, T, F["vh_a16"]))
-        w("3c. THE CONDUCTORS' RESISTANCE (MODEL: rho %.3g Ohm m at 20 C from dc_drop.py, the catalogue's sections, %.0f mm leads and the %.0f mm\n"
-          "    ribbon from ASSEMBLY.md section 4; at 20 C and at %.2f C):\n" % (F["rho"], F["lead_mm"], F["ab1_mm"], T))
-        c20, cT = conductors(F, 20.0, False), conductors(F, T, False)
-        for (n, kind, k, r20), (_n, _k, _kk, rT) in zip(c20, cT):
-            w("      %-9s %-5s %2d conductor%s  %7.3f mOhm each at 20 C, %7.3f at %.2f C%s\n"
-              % (n, {"VH": "AWG%d" % F["slot_awg"], "VH18": "AWG%d" % F["poe_awg"], "RIB": "AWG%d" % F["cab_awg"]}[kind], k, " " if k == 1 else "s", r20, rT, T,
-                 "  (the maker's maximum)" if kind == "RIB" else ""))
-        w("      a lead's two contacts may add up to %.0f mOhm initial and %.0f mOhm after test, four to sixteen times the lead itself: the\n"
-          "      division between the leads is set by the contacts, which the maker bounds from above only.\n"
-          % (2 * F["vh_rc0"], 2 * F["vh_rc1"]))
-        loads_c = sum(gc["loads"].values()) + poe["peak"]
-        totals = [("the declared loads composed, with the PoE return", loads_c, False),
-                  ("Layer 9's largest state (the tree's budget, %s, HIGH at the least load voltage)" % bt[0], bt[1], False),
-                  ("C-DEV rev 1's state (PS-ALLTX, HIGH, the least load voltage) with Layer 9's draft composed, six leads", tot6, True),
-                  ("the upper bound (i), five leads", pk_c, False),
-                  ("the upper bound (i) with Layer 9's draft, six leads", pk_i, True)]
-        CS = cases(F); EQ, NEW, AGED, EXT = (0, 1, 2), (0, 1), (2,), (3, 4, 5)
-        w("3d. THE RETURN DIVIDED BY RESISTANCE (MODEL at %.2f C; A per conductor; 'OVER' against the PRINTED %.0f A of a VH contact with AWG 16\n"
-          "    and %.0f A of a ribbon conductor at 25 C; J_54V's AWG %d contact has no stated rating and is shown against the shrouded header's %.0f A\n"
-          "    as a comparator only). The ribbon's resistance is its maker's MAXIMUM: a conductor under it carries more than its row.\n"
-          % (T, F["vh_a16"], F["cab_a"], F["poe_awg"], F["vh_a18"]))
-        SV = survey(F, T, totals); SV20 = survey(F, 20.0, totals)
+          "        effect at higher temperatures' with no curve, operating to +%.0f C, 'the operating temperature is comprised of ambient\n"
+          "        temperature and temperature rise of the component' (PRINTED); conductor resistance %.0f Ohm/km maximum, AWG %d (PRINTED).\n"
+          "      Wurth WR-BHD IDC socket (%s): %.0f A a contact, contact resistance %.0f mOhm maximum, NO MINIMUM (PRINTED). Box header: %.0f A at 25 C.\n"
+          % (SHEETS["cab"], F["cab_a"], F["cab_tmax"], F["cab_ohm_km"], F["cab_awg"], SHEETS["sock"], F["sock_a"], F["sock_rc"], F["hdr_a"]))
+        w("      Amass XT60 (the pack connector's make, J_BATT on board E; XT60-F and XT60-M). The held specification V1.2 (%s):\n"
+          "        rated current %.0f A, momentary %.0f A, contact resistance %.2f mOhm (no limit sign), %d AWG, %d uses, %.0f to %.0f C (PRINTED).\n"
+          "        The specification 2021V1 the distributor serves for the same part (%s, filed this round):\n"
+          "        %.0f A MAX with %d AWG at a temperature rise under %.0f C, contact resistance at most %.1f mOhm, service life %d times, the same\n"
+          "        range (PRINTED). Neither prints a contact resistance after test, a minimum or a derating curve. The rows below take the\n"
+          "        LOWER rated current (%.0f A), the HIGHER contact resistance (%.1f mOhm, a printed limit, taken as the contact's maximum over\n"
+          "        its printed life: INFERRED, the sheet does not say so) and the SHORTER life.\n"
+          % (SHEETS["xt_old"], F["xt_a_old"], F["xt_a_mom"], F["xt_r_old"], F["xt_awg"], F["xt_cycles_old"], F["xt_tmin"], F["xt_tmax"], SHEETS["xt_new"],
+             F["xt_a_new"], F["xt_awg"], F["xt_rise"], F["xt_r_new"], F["xt_cycles_new"], min(F["xt_a_old"], F["xt_a_new"]), max(F["xt_r_old"], F["xt_r_new"])))
+        w("      THE COPPER'S TEMPERATURE, both ends: %.2f C, the inside air in E5's dwell (L4-E12, MODELED; %.2f C in E3-O), and %.0f C, the\n"
+          "        envelope's cold end in use (%s ambient_c.in_use.min: the harness at ambient at a cold start). A conductor's largest\n"
+          "        share falls as the copper warms (its own resistance is copper, the others' is mostly contact) and the ground shift rises:\n"
+          "        each maximum is at one end, so both ends are enumerated. The budget's largest states at either end are conservative pairings.\n"
+          % (TH, F["t_e3o"], TL, ENVELOPE))
+        w("      THE RATINGS AT THE INSIDE AIR. No maker here prints a derating curve. Beside each PRINTED rating the rows carry the LEAST\n"
+          "        rating consistent with its sheet at that air (INFERRED): the part may add (range top - air) K, and heating goes as the\n"
+          "        current squared (ASSUMPTION). The ribbon: its %.0f A is printed at 25 C and its range ends at +%.0f C, so its rise at %.0f A is\n"
+          "        at most %.0f K and at %.2f C it carries at least %.4f A. The XT60: %.0f A at a rise under %.0f K and a range to %.0f C give\n"
+          "        %.2f A at %.2f C. The VH: no ambient is printed for its %.0f A; taken at %.0f C (ASSUMPTION) the same rule gives %.3f A (with a\n"
+          "        %.0f K rise at the rating, round 7's ASSUMPTION, %.3f A). At the cold end every printed rating applies as printed.\n"
+          % (F["cab_a"], F["cab_tmax"], F["cab_a"], F["cab_tmax"] - T_RATING_REF, TH, least_rating(F["cab_a"], F["cab_tmax"], TH),
+             F["xt_a_new"], F["xt_rise"], F["xt_tmax"], least_rating(F["xt_a_new"], F["xt_tmax"], TH, F["xt_rise"]), TH,
+             F["vh_a16"], T_RATING_REF, least_rating(F["vh_a16"], F["vh_tmax"], TH), T_RATED_RISE, vh_assume))
+        allow = min(F["l9_shift_allow"], F["v3_shift_allow"])
+        w("      THE GROUND SHIFT LAYER 9'S LDOS ALLOW: record l9t5 (round 3, the copy) prints the LDOs' input %.4f V against the AP2112K's need\n"
+          "        %.3f V with %.4f V of shift taken, and holds 'while the ground shift between the boards stays under %.3f V'; the recheck V3\n"
+          "        adds the regulator's line and load regulation and prints about %.4f V. The rows below are judged at the smaller, %.4f V.\n"
+          % (F["l9_ldo_in"], F["l9_ldo_need"], F["l9_shift_used"], F["l9_shift_allow"], F["v3_shift_allow"], allow))
 
-        def flags_of(r):
-            return (["VH OVER"] if r["vh_max"] > F["vh_a16"] + 1e-9 else []) + (["RIBBON OVER"] if r["rib"] > F["cab_a"] + 1e-9 else [])
-        for ti, (tag, tot, ioc) in enumerate(totals):
-            w("    %s: %.3f A\n" % (tag, tot))
-            w("      %-80s %9s %9s %9s %9s %10s %8s\n" % ("contacts", "5 V lead", "(largest)", "J_54V", "a ribbon", "in ribbons", "drop mV"))
-            for ci, (ctag, lab, _rc) in enumerate(CS):
-                r = SV[(ti, ci)]; fl = flags_of(r)
-                w("      %-80s %9.3f %9.3f %9.3f %9.3f %10.3f %8.1f  %s%s\n"
-                  % (ctag, r["vh_min"], r["vh_max"], r["j54"], r["rib"], r["rib_sum"], r["drop"], lab, (": " + ", ".join(fl)) if fl else ""))
-        mx = lambda S, cis, key, tis=range(len(totals)): max(S[(ti, ci)][key] for ti in tis for ci in cis)
-        shares = [SV[(ti, ci)]["rib_sum"] / totals[ti][1] for ti in range(len(totals)) for ci in EQ]
-        new_over = [(ti, ci) for ti in range(len(totals)) for ci in NEW if flags_of(SV[(ti, ci)]) or flags_of(SV20[(ti, ci)])]
-        aged_over = [(ti, ci) for ti in range(len(totals)) for ci in AGED if flags_of(SV[(ti, ci)]) or flags_of(SV20[(ti, ci)])]
-        ext_over = [(ti, ci) for ti in range(len(totals)) for ci in EXT if flags_of(SV[(ti, ci)]) or flags_of(SV20[(ti, ci)])]
-        w("    READ.\n"
-          "    EQUAL CONTACTS, zero or the initial maxima (K0, K1): %s. A 5 V lead's contact carries at most %.3f A of %.0f A\n"
-          "      (%.3f A at %.2f C on the %.0f K ASSUMPTION), J_54V's at most %.3f A, a ribbon conductor at most %.3f A of %.0f A at 25 C.\n"
-          "    EQUAL CONTACTS, the VH contacts aged to JST's after-test limit (K2): a ribbon conductor carries %.3f A at Layer 9's largest\n"
-          "      state and %.3f A at the upper bound: %s.\n"
-          "    The ribbons carry %.1f to %.1f %% of the whole return over K0 to K2. Their contracts (IF-AB-RIBBON, IF-AB-WALL: signals, 1 A a\n"
-          "      contact) never counted it, and at %.2f C the maker prints a derating and no curve.\n"
-          "    THE PRINTED EXTREMES (K3 to K5, BOUNDS: no sheet prints a minimum contact resistance): a lead contact reads %.3f A and a ribbon\n"
-          "      conductor %.3f A.\n"
-          "    AT 20 C (the ribbon rating's own condition; copper colder, the contacts unchanged) the ribbon rows are higher: %.3f A at K2 at\n"
-          "      the largest state, %.3f A at K2 at the upper bound, %.3f A at the extremes; a lead contact %.3f A at the extremes.\n"
-          % ("no conductor passes its printed rating at any total" if not new_over else "A CONDUCTOR PASSES ITS PRINTED RATING",
-             mx(SV, NEW, "vh_max"), F["vh_a16"], hot, T, T_RATED_RISE, mx(SV, NEW, "j54"), mx(SV, NEW, "rib"), F["cab_a"],
-             mx(SV, AGED, "rib", (1, 2)), mx(SV, AGED, "rib", (3, 4)), "OVER its printed %.0f A" % F["cab_a"] if aged_over else "inside its printed rating",
-             100 * min(shares), 100 * max(shares), T, mx(SV, EXT, "vh_max"), mx(SV, EXT, "rib"),
-             mx(SV20, AGED, "rib", (1, 2)), mx(SV20, AGED, "rib", (3, 4)), mx(SV20, EXT, "rib"), mx(SV20, EXT, "vh_max")))
-        worst = {"VH": max(mx(SV, EXT, "vh_max"), mx(SV20, EXT, "vh_max")), "RIB": max(mx(SV, EXT, "rib"), mx(SV20, EXT, "rib")),
-                 "VH_bal": mx(SV, EQ, "vh_max"), "VH18_bal": mx(SV, EQ, "j54"), "RIB_new": max(mx(SV, NEW, "rib"), mx(SV20, NEW, "rib")),
-                 "RIB_aged": max(mx(SV, AGED, "rib"), mx(SV20, AGED, "rib")), "RIB_aged_state": max(mx(SV, AGED, "rib", (1, 2)), mx(SV20, AGED, "rib", (1, 2)))}
-        w("3e. WHAT WOULD HAVE TO BE TRUE OF THE CONTACTS (MODEL; the worse of 20 C and %.2f C; what a harness measurement would be judged against):\n" % T)
-        thr = {}
-        for ti in (1, 3, 4):
-            tag, tot, ioc = totals[ti]
+        def rating(kind, Tx):
+            """(printed A or None, least A consistent with the sheet at air Tx, the part)"""
+            if kind == "VH":
+                return F["vh_a16"], least_rating(F["vh_a16"], F["vh_tmax"], Tx), "a VH pin 2 with AWG 16"
+            if kind == "VH18":
+                return None, None, "J_54V's pin 2 with AWG 18"
+            if kind == "RIB":
+                return F["cab_a"], least_rating(F["cab_a"], F["cab_tmax"], Tx), "a ribbon conductor"
+            pr = min(F["xt_a_old"], F["xt_a_new"])
+            return pr, min(pr, least_rating(F["xt_a_new"], F["xt_tmax"], Tx, F["xt_rise"])), "an XT60 contact and its 12 AWG conductor"
 
-            def f1(c, tot=tot, ioc=ioc):
-                return all(max(split(tot, conductors(F, Tx, ioc), lambda n, k: c if k in ("VH", "VH18") else 0.0)[0][h] for h in ("J_AB1", "J_AB2")) <= F["cab_a"] for Tx in (20.0, T))
+        def verdict(cur, kind, Tx):
+            pr, le, _what = rating(kind, Tx)
+            if pr is None:
+                return "NO RATING PRINTED"
+            if cur <= le + 1e-12:
+                return "HOLDS"
+            return "holds on the printed rating, NOT on the least at this air" if cur <= pr + 1e-12 else "DOES NOT HOLD"
 
-            def f2(x, tot=tot, ioc=ioc):
-                return all(split(tot, conductors(F, Tx, ioc), lambda n, k: 0.0 if n == "J_5V_DEV" else (x if k in ("VH", "VH18") else F["sock_rc"]))[0]["J_5V_DEV"] <= F["vh_a16"] for Tx in (20.0, T))
-            c1, c2 = bisect(f1, 0.0, 100.0), bisect(f2, 0.0, 100.0); thr[ti] = (c1, c2)
-            w("      at %.3f A (%s):\n"
-              "        a ribbon conductor whose own contacts are at 0 stays at or under %.0f A only while EVERY VH contact is at or under %s mOhm;\n"
-              "        a 5 V lead whose two contacts are at 0 stays at or under %.0f A only while the other VH contacts are at or under %s mOhm\n"
-              % (tot, tag, F["cab_a"], "%.2f" % c1 if c1 is not None else "none: over at every value", F["vh_a16"],
-                 "%.2f" % c2 if c2 is not None else "none: over at every value"))
-        w("      JST's own limit is %.0f mOhm initial and %.0f mOhm after test: a harness INSIDE its maker's limits can put more than its printed\n"
-          "      rating through a ribbon conductor or a lead contact. The design holds only while the VH contacts are better than their maker's printed limit.\n"
-          % (F["vh_rc0"], F["vh_rc1"]))
-        w("3f. THE SUPPLY PINS (pin 1 carries its own rail and nothing else; PRINTED %.0f A with AWG 16; %.3f A at %.2f C on the ASSUMPTION):\n" % (F["vh_a16"], hot, T))
-        for n in ("S1", "S2", "S3"):
-            w("      J_5V_%s pin 1: %.3f A at the largest state (HIGH, least voltage), %.3f A at its bounded start; declared peak %.1f A: within\n"
-              % (n, rows[n]["least"], rows[n]["start"], call_of(comp_res, "+5V_%s" % n)["peak"]))
-        w("      J_5V_DEV pin 1: %.4f A on C-DEV rev 1 as committed and composed without Layer 9's draft, over the lead's declared %.1f A peak\n"
-          "        (I-03, OPEN, Layer 9's); %.4f A with Layer 9's draft; the stage's loop can hold up to %.4f A, under the contact's %.0f A (PRINTED)\n"
-          "        and over %.3f A at %.2f C on the ASSUMPTION: a fault current, named for Layer 9's author\n"
-          % (F["cdev_u7_before"], call_of(comp_res, "+5V_DEV")["peak"], F["cdev_u7"], F["loop_max"], F["vh_a16"], hot, T))
-        w("      J_5V_IOC pin 1 (Layer 9's draft): %.4f A on the case; J_54V pin 1: %.2f A peak on AWG %d (no stated rating; %.0f A the comparator)\n"
-          % (F["cdev_u601"], poe["peak"], F["poe_awg"], F["vh_a18"]))
+        w("3c. THE CONDUCTORS' RESISTANCE (MODEL: rho %.3g Ohm m at 20 C from dc_drop.py; the JST catalogue's sections; 12 AWG at %.2f mm2\n"
+          "    from the energy chain's pack lead row; %.0f mm leads and the %.0f mm ribbon from ASSEMBLY.md section 4; mOhm a conductor):\n"
+          % (F["rho"], F["mm2_12"], F["lead_mm"], F["ab1_mm"]))
+        cC, cH = conductors(F, TL, True, 2), conductors(F, TH, True, 2)
+        for (n, kind, k, rc_), (_n, _k, _kk, rh_) in zip(cC, cH):
+            lo, hi = box(F)[kind]
+            w("      %-9s %-6s %2s  %7.3f at %.0f C, %7.3f at %.2f C; each of its two contacts 0 to %.1f mOhm%s\n"
+              % ({"J_GR": "J_GR1.."}.get(n, n), {"VH": "AWG%d" % F["slot_awg"], "VH18": "AWG%d" % F["poe_awg"], "RIB": "AWG%d" % F["cab_awg"], "RET": "AWG%d" % F["xt_awg"]}[kind],
+                 "x%d" % k if kind == "RIB" else ("x2 a lead" if kind == "RET" else ""), rc_, TL, rh_, TH, hi,
+                 {"RIB": " (the wire's figure is its maker's maximum)", "RET": " (round 8's dedicated return, section 3j)"}.get(kind, "")))
+        w("      a lead's two contacts may add up to %.0f mOhm after test, sixteen to twenty-three times the lead itself: the division between\n"
+          "      the leads is set by the contacts, which the maker bounds from above only.\n" % (2 * F["vh_rc1"]))
+
+        # the three totals, on the merged figures, with Layer 9's sixth lead
+        totals = [("C-DEV rev 1 (PS-ALLTX, HIGH, the least load voltage) with Layer 9's draft", tot_cdev),
+                  ("the largest state of Layer 9's budget (%s, HIGH, the least load voltage) with Layer 9's draft" % bt[0], tot_big),
+                  ("the declared upper bound (i) with Layer 9's draft", pk_i)]
+        TEMPS = [(TH, "%.2f C" % TH), (TL, "%.0f C" % TL)]
+        w("3d. THE RETURN DIVIDED BY RESISTANCE AS DRAWN, THE WORST CASE FOUND (MODEL; six leads, J_54V at AWG %d, seventeen ribbon conductors,\n"
+          "    no dedicated return). Each conductor's current is largest at a vertex of the box of contact resistances (every contact at 0\n"
+          "    or at its after-test or printed maximum), so EVERY vertex is enumerated for every conductor and the largest kept; the\n"
+          "    enumeration is refused unless it lands on the vertex the monotone argument names (the conductor's own two contacts low,\n"
+          "    every other contact high). A per conductor; the largest ground shift is the vertex with every contact high.\n" % F["poe_awg"])
+        w("      %-30s %-8s %24s %22s %24s %10s %s\n" % ("total", "copper", "a 5 V lead's pin 2", "J_54V's pin 2", "a ribbon conductor", "shift mV", "vertices"))
+        DR = {}
+        for ti, (tag, tot) in enumerate(totals):
+            for Tx, tl in TEMPS:
+                ext, shift, nst, raw = extremes(tot, conductors(F, Tx, True), box(F)); DR[(ti, Tx)] = (ext, shift)
+                w("      %-30s %-8s %8.4f %-15s %8.4f %-13s %8.4f %-15s %10.2f %d states = 4^%d\n"
+                  % ("%.4f A" % tot, tl, ext["VH"][0], verdict(ext["VH"][0], "VH", Tx)[:15], ext["VH18"][0], "no rating", ext["RIB"][0], verdict(ext["RIB"][0], "RIB", Tx)[:15],
+                     shift, nst, round(math.log(raw, 4))))
+        for ti, (tag, tot) in enumerate(totals):
+            w("      %.4f A: %s\n" % (tot, tag))
+        v3_here = DR[(0, TH)][0]["VH"][0]; v3_peak = DR[(2, TH)][0]["VH"][0]
+        w("    THE RECHECK'S CORNER, REPRODUCED: on C-DEV rev 1 at %.2f C, J_5V_IOC's two contacts at 0 with every other VH contact at %.0f mOhm\n"
+          "    and every IDC contact at %.0f mOhm: %.4f A in its pin 2 (V3: %.4f A), over the printed %.0f A; at the declared upper bound %.4f A\n"
+          "    (V3: %.4f A). It is the same vertex for each 5 V lead: they are one make. At %.0f C the same corner reads %.4f A.\n"
+          % (TH, F["vh_rc1"], F["sock_rc"], v3_here, F["v3_ioc"], F["vh_a16"], v3_peak, F["v3_peak_lead"], TL, DR[(0, TL)][0]["VH"][0]))
+        if abs(v3_here - F["v3_ioc"]) > 2e-3 or abs(v3_peak - F["v3_peak_lead"]) > 2e-3:
+            refuse("the enumeration does not reproduce the recheck's corner")
+        drawn_over = sorted({(k, ti) for (ti, Tx), (ext, _s) in DR.items() for k in ("VH", "RIB") if ext[k][0] > rating(k, Tx)[0]})
+        w("    READ: as drawn, over the contact resistances the makers permit, a 5 V lead's pin 2 reaches %.3f A against its printed %.0f A and\n"
+          "    a ribbon conductor %.3f A against its printed %.0f A, on C-DEV rev 1 already (the worse copper end of each): DOES NOT HOLD.\n"
+          % (max(DR[(0, Tx)][0]["VH"][0] for Tx, _l in TEMPS), F["vh_a16"], max(DR[(0, Tx)][0]["RIB"][0] for Tx, _l in TEMPS), F["cab_a"]))
+        w("3e. WHAT ROUND 7'S SAMPLING MISSED (the old state; the recheck's material blocker). Round 7 took six cases (K0 to K5): every contact\n"
+          "    at one value, ONE lead low against peers at the INITIAL maximum, and every IDC contact low together. At %.2f C:\n" % TH)
+        missed = []
+        for ti, (tag, tot) in enumerate(totals):
+            old = sampled_round7(tot, conductors(F, TH, True), F); new = DR[(ti, TH)][0]
+            missed.append((old, new))
+            w("      %.4f A: a 5 V lead's pin 2: sampled %.4f A, the maximum %.4f A; a ribbon conductor: sampled %.4f A, the maximum %.4f A;\n"
+              "        J_54V's pin 2: sampled %.4f A, the maximum %.4f A\n"
+              % (tot, old["VH"], new["VH"][0], old["RIB"], new["RIB"][0], old["VH18"], new["VH18"][0]))
+        w("    The sampled list had no vertex with one lead low against peers at the AFTER-TEST maximum, and none with ONE ribbon conductor low\n"
+          "    against every other contact high (its K4 and K5 put all seventeen low at once, which shares the current among them). The\n"
+          "    'maximum' it printed was not a maximum: round 7's 3d, 3e and 3j and Layer 9's acceptance of J_5V_IOC's pin 2 on it are WITHDRAWN.\n")
+
+        vh_least = least_rating(F["vh_a16"], F["vh_tmax"], TH)
+        w("3f. THE SUPPLY PINS (pin 1 carries its own rail and nothing else). Rating: PRINTED %.0f A with AWG 16 on the standard header; at\n"
+          "    %.2f C at least %.4f A if the rating is stated at %.0f C (ASSUMPTION, the severest reading of a sheet that prints no ambient and\n"
+          "    no derating), %.3f A on round 7's %.0f K rise (ASSUMPTION):\n" % (F["vh_a16"], TH, vh_least, T_RATING_REF, vh_assume, T_RATED_RISE))
+        pin1_rows = [("J_5V_S1", rows["S1"]["least"]), ("J_5V_S2", rows["S2"]["least"]), ("J_5V_S3", max(rows["S3"]["least"], bt[6]["S3"]["least"])),
+                     ("J_5V_DEV", F["cdev_u7"]), ("J_5V_IOC", F["cdev_u601"])]
+        pin1_over = []
+        for n_, cur in pin1_rows:
+            vd = "inside the printed rating and the least" if cur <= vh_least else ("inside the printed rating; OVER the severest least reading by %.4f A" % (cur - vh_least) if cur <= F["vh_a16"] else "OVER the printed rating")
+            if cur > vh_least:
+                pin1_over.append(n_)
+            w("      %-9s pin 1: %.4f A steady at HIGH at the least load voltage (C-DEV rev 1 or the largest state, the larger): %s\n" % (n_, cur, vd))
+        w("      the slots' bounded starts (%.3f A, a 100 us average, record l8r2 round 6) and declared peaks (%.1f A) are transients inside the\n"
+          "      printed %.0f A; the device stage's loop can hold up to %.4f A in a fault, under the printed %.0f A; as committed (no Layer 9 draft)\n"
+          "      J_5V_DEV's pin 1 carries %.4f A on C-DEV rev 1 (I-03, OPEN, Layer 9's). J_54V pin 1: %.2f A peak on AWG %d: NO RATING PRINTED\n"
+          "      (%.0f A for the shrouded header, a comparator).\n"
+          % (max(r["start"] for r in bt[6].values() if r["start"]), call_of(comp_res, "+5V_S1")["peak"], F["vh_a16"], F["loop_max"], F["vh_a16"],
+             F["cdev_u7_before"], poe["peak"], F["poe_awg"], F["vh_a18"]))
         w("      THE LEAD: AWG %d, %.0f mm; JST's %.0f A is stated for the crimped contact WITH that gauge, so it is the lead's rating too. The wire\n"
           "      itself (its part, its insulation's temperature class) is named nowhere in the tree: OWED to Layer 7 (finding L8R2-F34).\n"
           % (F["slot_awg"], F["lead_mm"], F["vh_a16"]))
-        w("3g. THE GROUND COPPER WHERE THE RETURNS ENTER (decision 35's function, track_current.width_for_current, 10 K, inner layers; Layer 9's\n"
-          "    stackup for board B is %s, layer use %s: %d ground planes at %.1f oz; board A's has %d at %.1f oz):\n"
-          % (F["b_stack"], F["b_use"], F["b_gnd_planes"], F["b_inner_oz"], F["a_gnd_planes"], F["a_inner_oz"]))
-        for lab, amps in (("a 5 V lead's contact at balance, the largest (K0 to K2)", worst["VH_bal"]), ("a lead's declared peak %.1f A (its own rail returning alone)" % call_of(comp_res, "+5V_S1")["peak"], call_of(comp_res, "+5V_S1")["peak"]),
-                          ("the contact's printed %.0f A" % F["vh_a16"], F["vh_a16"])):
-            wB = TC.width_for_current(amps, F["b_inner_oz"], 10.0, internal=True); wA = TC.width_for_current(amps, F["a_inner_oz"], 10.0, internal=True)
-            w("      %-62s %6.3f A: %6.2f mm of %.1f oz plane in all; board B %5.2f mm on each of %d planes (a solid ring at radius %.2f mm),\n"
-              "      %-62s           board A %5.2f mm on each of %d (radius %.2f mm)\n"
-              % (lab, amps, wB, F["b_inner_oz"], wB / F["b_gnd_planes"], F["b_gnd_planes"], wB / F["b_gnd_planes"] / (2 * math.pi), "", wA / F["a_gnd_planes"], F["a_gnd_planes"], wA / F["a_gnd_planes"] / (2 * math.pi)))
-        spB, spA = 4 * 0.5 * F["b_gnd_planes"], 4 * 0.5 * F["a_gnd_planes"]
-        least = TC.width_for_current(worst["VH_bal"], F["b_inner_oz"], 10.0, internal=True)
-        w("      READ (MODEL: the ruled function applied to the plane's section around the pin): a pin 2 land joined SOLIDLY to every ground\n"
-          "      plane has the width within a few millimetres of the pin on either board; four thermal-relief spokes of 0.5 mm on each\n"
-          "      plane give %.1f mm on board B and %.1f mm on board A, %s the least row above (%.2f mm). A LAYOUT CONSTRAINT for both boards\n"
-          "      (finding L8R2-F33): no thermal relief on the VH leads' pin 2, or spokes summing to the row's width. The routed board's own\n"
-          "      reading is dc_drop's, at the declared loads, with the five (six) leads as sources.\n"
-          % (spB, spA, "under" if max(spB, spA) < least else "NOT under", least))
         ga = text(GEN_A)
         a_node = '_intent.node("GND"' in ga and '_intent.rail("GND"' not in ga
         pr = text(PACKRTN)
@@ -882,117 +936,133 @@ def main():
           "    division, and IF-AB-RIBBON and IF-AB-WALL declare their ground pins as signal returns at %.0f A a contact. The row texts this\n"
           "    round proposes are in the record's section 3g (Layer 5's files are its own).\n"
           % (IFACES, " ".join(str(ifp.get("harness")).split()), ifp.get("pins_each"), F["vh_a16"], "a row" if says_return else "NO ROW", F["sock_a"]))
-        ub = [totals[4]]
+        # ---- 3j: the corrections compared
+        def design(n_ret, poe_awg=16, ballast=0.0, vh_ground=True, ret_hi=None, tot_list=None, enum=False, vh_open=0, wire_floor=1.0):
+            """rows of a design over a list of totals (the three of 3d unless given) and both copper ends: [(index of the total, T, kind,
+            names, current, printed, least, verdict)], the largest ground shift, and whether every row with a printed rating holds on it
+            and on the least rating. enum: every vertex enumerated (extremes); otherwise the monotone argument's vertex (the same
+            figure, which extremes() itself refuses to differ from)."""
+            out, smax = [], 0.0
+            for ti, (_tg, tot_) in enumerate(totals if tot_list is None else tot_list):
+                for Tx, _tl in TEMPS:
+                    conds = conductors(F, Tx, True, n_ret, poe_awg, vh_ground, vh_open); bx = box(F, ret_hi, ballast)
+                    if enum:
+                        ext, shift, _n, _raw = extremes(tot_, conds, bx)
+                    else:
+                        C = classes_of(conds, bx); an, shift = analytic(tot_, C, wire_floor); ext = {}
+                        for c, cur in zip(C, an):
+                            ext[c["kind"]] = (max(ext.get(c["kind"], (0.0, []))[0], cur), ext.get(c["kind"], (0.0, []))[1] + c["names"])
+                    smax = max(smax, shift)
+                    for kind in ("VH", "VH18", "RIB", "RET"):
+                        if kind in ext:
+                            pr, le, _wh = rating(kind, Tx)
+                            out.append((ti, Tx, kind, ext[kind][1], ext[kind][0], pr, le, verdict(ext[kind][0], kind, Tx)))
+            rated = [r for r in out if r[5] is not None]
+            return dict(rows=out, shift=smax, printed=all(r[4] <= r[5] + 1e-12 for r in rated) and smax <= allow * 1e3,
+                        least=all(r[4] <= r[6] + 1e-12 for r in rated) and smax <= allow * 1e3, unrated=[r for r in out if r[5] is None])
 
-        def holds(strap=None, ballast=0.0, rib_lim=None):
-            lim = F["cab_a"] if rib_lim is None else rib_lim
-            return all(r["rib"] <= lim + 1e-12 and r["vh_max"] <= F["vh_a16"] + 1e-12 for Tx in (20.0, T) for r in survey(F, Tx, ub, strap, ballast).values())
-        rs1 = bisect(lambda x: holds(strap=x), 0.001, 50.0); rs05 = bisect(lambda x: holds(strap=x, rib_lim=RIB_DERATE * F["cab_a"]), 0.001, 50.0)
-        if rs1 is None or rs05 is None:
-            refuse("no added return holds the upper bound: section 3j cannot state approach A1")
-        i_strap = max(r["strap"] for Tx in (20.0, T) for r in survey(F, Tx, ub, rs05).values())
-        SB = [survey(F, Tx, ub, None, BALLAST_MOHM) for Tx in (20.0, T)]
-        b_rib = max(r["rib"] for S in SB for r in S.values()); b_eq = max(S[(0, ci)]["vh_max"] for S in SB for ci in EQ); b_x = max(S[(0, ci)]["vh_max"] for S in SB for ci in EXT)
-        w("3j. THE CORRECTIONS COMPARED on the upper bound with Layer 9's draft (%.2f A, six leads; every contact case K0 to K5; the worse of\n"
-          "    20 C and %.2f C; MODEL):\n" % (pk_i, T))
-
-        def n_leads(case_ix):
-            """the least number of equal AWG 16 VH return contacts with which every row of case_ix holds at both temperatures"""
-            for n in range(2, 121):
-                good = True
-                for Tx in (20.0, T):
-                    rw16 = r_wire(F["mm2_16"], F["lead_mm"], Tx, F)
-                    conds = [("J_5V_DEV", "VH", 1, rw16)] + [("L%d" % i, "VH", 1, rw16) for i in range(1, n)] + conductors(F, Tx, False)[-2:]
-                    for ci in case_ix:
-                        amps, _d = split(pk_i, conds, CS[ci][2])
-                        if max(amps["J_AB1"], amps["J_AB2"]) > F["cab_a"] + 1e-12 or max(amps[c[0]] for c in conds if c[1] == "VH") > F["vh_a16"] + 1e-12:
-                            good = False
-                if good:
-                    return n
-            return None
-        n_new, n_all = n_leads((0, 1, 3, 4)), n_leads(range(6))
-        w("    A0 MORE VH RETURN CONTACTS (the plain remedy): with every return an AWG %d lead of %.0f mm, the rows that take the contacts at\n"
-          "       their initial maxima (K0, K1, K3, K4) hold from %s contacts, and every row (the after-test maxima too) from %s, against\n"
-          "       the six drawn. Not a small correction: REJECTED.\n"
-          % (F["slot_awg"], F["lead_mm"], n_new if n_new else "no number up to 120", n_all if n_all else "no number up to 120"))
-        w("    A1 A DEDICATED GROUND RETURN between the two boards' grounds (a strap on bolted lands, or the bay spacers bonded to both\n"
-          "       grounds), R_s end to end with its joints: every row is inside the printed ratings (a VH contact %.0f A, a ribbon conductor\n"
-          "       %.0f A) while R_s is at or under %.2f mOhm; with a ribbon conductor held to %.1f A (RIB_DERATE, ASSUMPTION) while R_s is at or\n"
-          "       under %.2f mOhm. The added return then carries up to %.1f A and needs its own rating and a bond-resistance check at\n"
-          "       assembly. It takes the dependence on the VH contacts away: no contact case fails.\n"
-          % (F["vh_a16"], F["cab_a"], rs1, RIB_DERATE * F["cab_a"], rs05, i_strap))
-        w("    A2 THE RIBBONS' GROUND CONDUCTORS BALLASTED (%.0f Ohm in series with each, on one board; an illustration): a ribbon conductor\n"
-          "       carries at most %.3f A in every row; the leads then carry the whole return, %.3f A a contact with equal contacts and\n"
-          "       %.3f A on the extreme K3 (BOUND, over the printed %.0f A). The ribbons are protected on printed figures; the lead contacts\n"
-          "       are left to JST's 'no imbalance' and 'extra margin'; every ribbon signal's return gains that impedance (the signal\n"
-          "       return rules RET-001 to RET-003 would have to be re-read).\n"
-          % (BALLAST_MOHM / 1000.0, b_rib, b_eq, b_x, F["vh_a16"]))
-        w("    A3 NO CIRCUIT CHANGE, a harness acceptance: every VH contact at or under %s mOhm for the ribbons and %s mOhm for the leads\n"
-          "       (3e at this total), under the maker's own %.0f mOhm limit, measured four-wire at assembly and again as the contacts age. An\n"
-          "       assigned test is not a corrected circuit.\n"
-          % ("%.2f" % thr[4][0] if thr[4][0] is not None else "no value", "%.2f" % thr[4][1] if thr[4][1] is not None else "no value", F["vh_rc0"]))
-        w("    SELECTED AS THE DIRECTION (authority SESSION): A1. Reason: it is the one approach under which every row holds on the makers'\n"
-          "       printed maxima, it leaves the signal ribbons' returns as they are, and its own unknown (the joints) is a bond resistance\n"
-          "       a four-wire reading at assembly settles. NOT DRAFTED in this round: it adds a land and a part on boards A and B, a\n"
-          "       strap or spacer row (Layer 7), a contract row (Layer 5), and it must be read against GND-002's single chassis bond\n"
-          "       (record l8gnd: joining the two boards' grounds is no second bond; touching the plate would be). To reverse: take A2 or A3\n"
-          "       in L4-E9's register. L8R2-F31 stays OPEN until a draft composes, is read on both netlists and holds these rows.\n")
+        def worst(dg, kind, ti=None, Tx=None):
+            r = [x[4] for x in dg["rows"] if x[2] == kind and (ti is None or x[0] == ti) and (Tx is None or x[1] == Tx)]
+            return max(r) if r else 0.0
+        N_DRAFT = {n: importlib.util.spec_from_file_location("gr_" + n, P(pth)) for n, pth in (("b", MINE["gndrtn"]), ("a", MINE_A["gndrtn_a"]))}
+        n_drafted = {}
+        for n, sp_ in N_DRAFT.items():
+            md = importlib.util.module_from_spec(sp_); sp_.loader.exec_module(md); n_drafted[n] = md.N_RETURN
+        w("3j. THE CORRECTIONS COMPARED (three approaches; every row is a conductor's maximum over every vertex, at both copper ends, on C-DEV\n"
+          "    rev 1, the largest state and the declared upper bound; J_54V's lead at AWG 16 in each, so that its pin 2 has a printed rating):\n")
+        w("    D1 A DEDICATED GROUND RETURN between the two boards' grounds: n conductors, two a lead; a lead is an Amass XT60 pair with both\n"
+          "       contacts on GND and two %d AWG conductors of %.0f mm; each termination from 0 to the printed %.1f mOhm:\n"
+          % (F["xt_awg"], F["lead_mm"] if RET_LEAD_MM is None else RET_LEAD_MM, F["xt_r_new"]))
+        w("       %-12s %12s %14s %16s %10s  %s\n" % ("conductors", "a VH pin 2", "a ribbon", "an XT60 contact", "shift mV", "every row holds"))
+        D1 = {}
+        for n in (0, 2, 4, 6, 8):
+            D1[n] = design(n)
+            w("       %-12s %10.3f A %12.3f A %14.3f A %10.2f  on the printed ratings: %s; on the least ratings at the inside air: %s\n"
+              % ("%d (%d lead%s)" % (n, n // 2, "" if n == 2 else "s") if n else "none (as drawn)", worst(D1[n], "VH"), worst(D1[n], "RIB"), worst(D1[n], "RET"), D1[n]["shift"],
+                 "yes" if D1[n]["printed"] else "NO", "yes" if D1[n]["least"] else "NO"))
+        n_printed = min((n for n in (2, 4, 6, 8) if D1[n]["printed"]), default=None); n_least = min((n for n in (2, 4, 6, 8) if D1[n]["least"]), default=None)
+        if n_printed is None or n_least is None:
+            refuse("no dedicated return of up to four leads holds every row: section 3j cannot select D1")
+        D2 = design(2, ballast=BALLAST_MOHM); D3 = design(2, ballast=BALLAST_MOHM, vh_ground=False)
+        w("    D2 ONE RETURN LEAD AND THE RIBBONS' GROUND CONDUCTORS BALLASTED (%.0f Ohm in series with each, a resistor's printed tolerance being a\n"
+          "       printed minimum): a VH pin 2 %.3f A, a ribbon conductor %.3f A, an XT60 contact %.3f A, shift %.2f mV; every row on the printed\n"
+          "       ratings: %s; on the least ratings: %s. Thirty-four more parts on a board and an impedance in every ribbon signal's return\n"
+          "       (RET-001 to RET-003 re-read) for one lead fewer than D1: REJECTED.\n"
+          % (BALLAST_MOHM / 1000.0, worst(D2, "VH"), worst(D2, "RIB"), worst(D2, "RET"), D2["shift"], "yes" if D2["printed"] else "NO", "yes" if D2["least"] else "NO"))
+        w("    D3 ONE RETURN LEAD AS THE ONLY RETURN (the VH leads' pin 2 taken off the ground, the ribbons ballasted as D2): an XT60 contact\n"
+          "       %.3f A, a ribbon conductor %.3f A, shift %.2f mV; every row on the printed ratings: %s; on the least ratings: %s. No VH contact\n"
+          "       is left in the return, but every rail's return leaves its supply lead (the loops the leads' pairs close are opened), and one\n"
+          "       open return lead puts the whole return on the ballasted ribbons: REJECTED.\n"
+          % (worst(D3, "RET"), worst(D3, "RIB"), D3["shift"], "yes" if D3["printed"] else "NO", "yes" if D3["least"] else "NO"))
+        w("    SELECTED (authority SESSION): D1 with %d conductors, %d leads. %d conductors (%d leads) are the least that hold every row on the\n"
+          "       makers' printed ratings; %d (%d leads) are the least that also hold every row at the inside air on the least rating\n"
+          "       consistent with each sheet, where no maker prints a derating curve, and they keep every printed-rating row with one lead\n"
+          "       unmated (section 6). Reason: the design is then indifferent to the unprinted derating, to the VH and IDC contact\n"
+          "       resistances, and to one lead. DRAFTED this round on boards A and B (section 5): %d sockets a board. To reverse: drop a\n"
+          "       socket in both drafts (N_RETURN) and regenerate; the rows of section 6 then say what no longer holds.\n"
+          % (n_least, n_least // 2, n_printed, n_printed // 2, n_least, n_least // 2, n_drafted["b"]))
+        if not (n_drafted["a"] == n_drafted["b"] == n_least // 2):
+            refuse("the drafts draw %s sockets a board and the selection is %d leads" % (n_drafted, n_least // 2))
+        SEL = D1[n_least]
 
         # ---------------------------------------------------------------- 4
         w("\n4. THE JUDGMENT\n")
-        w("   (a) THE DECLARATION IS WRONG, and is corrected (section 5). Its peak was a typed sum of the leads' peaks that went stale twice;\n"
-          "       its typical %.1f A is under the leads' own %.2f A; its sources omit J_54V. The basis supports: typical %.2f A and peak %.2f A\n"
-          "       (%.2f A with Layer 9's draft), derived in the generator from the leads' declarations, the peak an UPPER BOUND.\n"
+        w("   (a) THE DECLARATION IS WRONG, and is corrected (round 7, section 5). Its peak was a typed sum of the leads' peaks that went stale\n"
+          "       twice; its typical %.1f A is under the leads' own %.2f A; its sources omit J_54V. The basis supports: typical %.2f A and peak\n"
+          "       %.2f A (%.4f A with Layer 9's draft), derived in the generator from the leads' declarations, the peak an UPPER BOUND.\n"
           % (by["rt500"][1]["typ"], ty_c, ty_c, pk_c, pk_i))
         w("   (b) THE LOAD LIST IS RIGHT IN WHAT IT COUNTS AND MISSED ONE RETURN: no ampere is counted twice and none returns elsewhere; the PoE\n"
-          "       port's %.2f A at R12 is added. Against Layer 9's budget the device rail's ALLOCATIONS (%.2f A) and its declared %.1f A peak are\n"
-          "       under C-DEV rev 1's %.4f A: that is I-03 (OPEN), corrected by Layer 9's draft, not by this round.\n"
-          % (poe["peak"], sum(call_of(comp_res, "+5V_DEV")["loads"].values()), call_of(comp_res, "+5V_DEV")["peak"], F["cdev_u7_before"]))
-        thr_all = [x for v in thr.values() for x in v if x is not None]
-        st_rib_x = max(mx(S, EXT, "rib", (1, 2)) for S in (SV, SV20)); st_vh_x = max(mx(S, EXT, "vh_max", (1, 2)) for S in (SV, SV20))
-        w("   (c) THE RETURN PATH DOES NOT HOLD ON THE MAKERS' PRINTED FIGURES: a circuit defect of the A to B interface, finding L8R2-F31,\n"
-          "       OPEN. The return is branched in parallel over five (six) VH contacts and the seventeen ground conductors of two signal\n"
-          "       ribbons, and nothing sets its division.\n"
-          "       - New contacts at one value (K0, K1): every conductor is inside its printed rating at every total.\n"
-          "       - VH contacts aged to JST's own after-test limit, still equal (K2): a ribbon conductor carries %.3f A at Layer 9's largest\n"
-          "         state, inside its printed %.0f A at 25 C by %.1f %% in air where its maker states a derating and prints no curve; and\n"
-          "         %.3f A at the upper bound, over it.\n"
-          "       - Unequal contacts inside the makers' limits (K3 to K5, BOUNDS): at the largest state already a ribbon conductor reads\n"
-          "         %.3f A and a lead contact %.1f A; at the upper bound %.2f A and %.1f A.\n"
-          "       The division holds only while the VH contacts stay under %.1f to %.1f mOhm, better than their maker's %.0f mOhm limit (3e);\n"
-          "       JST's note asks a parallel branch to be designed 'without causing any imbalance' with 'extra margin for each circuit',\n"
-          "       and the ribbons' contracts never counted supply current. These are the MODEL's answers on printed maxima: no harness\n"
-          "       exists and no contact has been measured, so they are not a measured overload, and a balanced reading is not evidence\n"
-          "       either. More return contacts close it only from %s VH contacts in place of six (3j, A0); 3j scopes the correction (A1,\n"
-          "       a dedicated return, selected as the direction; not drafted: boards A and B, the harness and two contracts).\n"
+          "       port's %.2f A at R12 is added. The device rail's shortfall against C-DEV rev 1 is I-03 (Layer 9's draft, which now declares\n"
+          "       the device lead's peak from its basis, %.4f A).\n" % (poe["peak"], F["cdev_u7"]))
+        w("   (c) THE RETURN PATH AS DRAWN DOES NOT HOLD: a circuit defect of the A to B interface, finding L8R2-F31, OPEN. With every vertex of\n"
+          "       the permitted contact resistances enumerated (round 7 had sampled six and missed the worst), on C-DEV rev 1 a 5 V lead's pin 2\n"
+          "       reaches %.3f A against its printed %.0f A and a ribbon conductor %.3f A against its printed %.0f A (3d). These are the MODEL's\n"
+          "       answers on the makers' printed limits: no harness exists and no contact has been measured.\n"
+          "   (d) THE CORRECTION IS DRAFTED, NOT ACCEPTED: a dedicated ground return of %d XT60 leads (%d conductors of %d AWG) between the two\n"
+          "       boards, drawn on both generators (section 5) and verified over every vertex with its own terminations at their printed\n"
+          "       limit (section 6), on the declared upper bound: a VH pin 2 at most %.3f A against JST's printed %.0f A (AWG 16, standard\n"
+          "       header); a ribbon conductor at most %.3f A against Wurth's printed %.0f A at 25 C (%.3f A at the inside air against at least\n"
+          "       %.4f A there, INFERRED); an XT60 contact at most %.3f A against Amass's printed %.0f A (V1.2) and %.0f A MAX with %d AWG at a\n"
+          "       rise under %.0f C (2021V1), at least %.2f A at the inside air (INFERRED); the ground shift at most %.2f mV against %.4f V.\n"
+          "       L8R2-F31 STAYS OPEN until an independent check has read the changed design; what the rows rest on that no maker prints\n"
+          "       is listed in 6d and is not hidden by this arithmetic.\n"
           "   NOT RAISED TO MAKE THE GENERATOR PASS: the declaration is derived, the same text reads %.2f A on the committed generator, a lead\n"
-          "       declared lower lowers it, and the capacity finding stays OPEN beside it.\n"
-          % (worst["RIB_aged_state"], F["cab_a"], 100 * (F["cab_a"] - worst["RIB_aged_state"]) / F["cab_a"], worst["RIB_aged"], st_rib_x, st_vh_x,
-             worst["RIB"], worst["VH"], min(thr_all), max(thr_all), F["vh_rc0"],
-             n_all if n_all else "more than 120", pk_0))
+          "       declared lower lowers it.\n"
+          % (max(DR[(0, Tx)][0]["VH"][0] for Tx, _l in TEMPS), F["vh_a16"], max(DR[(0, Tx)][0]["RIB"][0] for Tx, _l in TEMPS), F["cab_a"],
+             n_least // 2, n_least, F["xt_awg"], worst(SEL, "VH"), F["vh_a16"], worst(SEL, "RIB"), F["cab_a"], worst(SEL, "RIB", Tx=TH),
+             least_rating(F["cab_a"], F["cab_tmax"], TH), worst(SEL, "RET"), F["xt_a_old"], F["xt_a_new"], F["xt_awg"], F["xt_rise"],
+             least_rating(F["xt_a_new"], F["xt_tmax"], TH, F["xt_rise"]), SEL["shift"], allow, pk_0))
 
         # ---------------------------------------------------------------- 5
-        w("\n5. THE CORRECTION (two drafts, release-guarded, on scratch copies)\n")
+        w("\n5. THE DRAFTS (four, release-guarded, on scratch copies)\n")
         ok_guard = True
-        for name in ("gndret", "fandec"):
-            t = os.path.join(d, "g_%s.py" % name); shutil.copy(P(GEN_B), t)
-            c_rc, c_msg = apply(name, t, "--check"); same = open(t, "rb").read() == open(P(GEN_B), "rb").read()
-            w_rc, w_msg = apply(name, t); a_ok = True
+        for name, board, pre in (("gndret", "b", []), ("fandec", "b", []), ("gndrtn", "b", ["gndret"]), ("gndrtn_a", "a", [])):
+            pth_d = dict(MINE, **MINE_A)[name]
+            t = os.path.join(d, "g_%s.py" % name); shutil.copy(P(GEN[board]), t)
+            for pre_ in pre:
+                if apply(pre_, t)[0]:
+                    refuse("%s refused a copy ahead of %s" % (pre_, name))
+            before = open(t, "rb").read()
+            c_rc, c_msg = apply_p(pth_d, t, "--check"); same = open(t, "rb").read() == before
+            w_rc, w_msg = apply_p(pth_d, t); a_ok = True
             try:
                 ast.parse(open(t, encoding="utf-8").read())
             except SyntaxError:
                 a_ok = False
-            r_rc, r_msg = apply(name, t); t_rc, t_msg = apply(name, P(GEN_B))
+            r_rc, r_msg = apply_p(pth_d, t); t_rc, t_msg = apply_p(pth_d, P(GEN[board]))
             good = (c_rc, same, w_rc, a_ok, r_rc, t_rc) == (0, True, 0, True, 3, 3)
             ok_guard = ok_guard and good
-            w("   %s sha256 %s\n     --check exit %d (target unchanged: %s); --write exit %d (parses: %s); a second --write exit %d (%s);\n"
+            w("   %s sha256 %s (board %s%s)\n     --check exit %d (target unchanged: %s); --write exit %d (parses: %s); a second --write exit %d (%s);\n"
               "     on the tree's own generator exit %d (%s)\n"
-              % (MINE[name], sha(MINE[name]), c_rc, "yes" if same else "NO", w_rc, "yes" if a_ok else "NO", r_rc, short(r_msg, 90), t_rc, short(t_msg, 110)))
-        orders = [("the round's order, this record's two in place, Layer 9's draft, Layer 6's", ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "iocbuck"] + L6),
-                  ("Layer 9's draft before this record's two", ["gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck", "fandec", "gndret"] + L6),
-                  ("this record's two first", ["gndret", "fandec", "gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck"] + L6),
-                  ("the round reversed", ["gndret", "rt500", "ph4", "panel5v", "fandec", "fans12", "gnd002", "iocbuck"] + L6)]
-        w("   THE COMPOSITION WITH Layer 9's draft and Layer 6's three (xal_land, lcsc, intent), in four orders:\n")
+              % (pth_d, sha(pth_d), board.upper(), ", after gndret" if pre else "", c_rc, "yes" if same else "NO", w_rc, "yes" if a_ok else "NO", r_rc, short(r_msg, 90), t_rc, short(t_msg, 110)))
+        t = os.path.join(d, "g_noret.py"); shutil.copy(P(GEN_B), t); o_rc, o_msg = apply("gndrtn", t)
+        w("   the board B return draft on a generator WITHOUT gndret: exit %d (%s)\n" % (o_rc, short(o_msg, 150)))
+        ok_guard = ok_guard and o_rc == 3
+        orders = [("the round's order, this record's three in place, Layer 9's draft, Layer 6's", ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "gndrtn", "iocbuck"] + L6),
+                  ("Layer 9's draft before this record's three", ["gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck", "fandec", "gndret", "gndrtn"] + L6),
+                  ("this record's three first", ["gndret", "gndrtn", "fandec", "gnd002", "fans12", "panel5v", "ph4", "rt500", "iocbuck"] + L6),
+                  ("the round reversed", ["gndret", "gndrtn", "rt500", "ph4", "panel5v", "fandec", "fans12", "gnd002", "iocbuck"] + L6)]
+        w("   BOARD B COMPOSED with Layer 9's draft (the copy at 841e6c7e) and Layer 6's three (xal_land, lcsc, intent), in four orders:\n")
         gens, runs = [], []
         for i, (tag, seq) in enumerate(orders):
             pth, err = compose(seq, d, "ord%d" % i)
@@ -1001,47 +1071,72 @@ def main():
                 continue
             res = run_gen(pth); gens.append(hashlib.sha256(open(pth, "rb").read()).hexdigest()[:16]); runs.append(res)
             g = (res["intent"] or {}).get("rails", {}).get("GND") if res["intent"] else None
-            w("     %-76s generator sha256 %s: %s\n" % (tag, gens[-1], "RUNS to its end, %d parts, GND %.2f A typical, %.2f A peak, loads %.3f A"
-                                                         % (len(res["table"]["parts"]), g["amps_typ"], g["amps_peak"], sum(g["loads"].values()))
+            w("     %-76s generator sha256 %s: %s\n" % (tag, gens[-1], "RUNS to its end, %d parts, %d unplaced, GND %.2f A typical, %.4f A peak, loads %.3f A"
+                                                         % (len(res["table"]["parts"]), len(res["table"]["unplaced"]), g["amps_typ"], g["amps_peak"], sum(g["loads"].values()))
                                                          if res["stop"] is None else "STOPS: " + short(res["stop"], 150)))
         one_gen = len({x for x in gens}) == 1 and gens[0] is not None
-        all_run = all(r is not None and r["stop"] is None for r in runs)
+        all_run = all(r is not None and r["stop"] is None and not r["table"]["unplaced"] for r in runs)
         w("     the four orders give one generator, byte for byte: %s; every order runs to its end: %s\n" % ("yes" if one_gen else "NO", "yes" if all_run else "NO"))
-        w("     without Layer 9's draft (this record's round alone): RUNS to its end, %d parts\n" % len(res5["table"]["parts"]))
+        pth7, err7 = compose(["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "iocbuck"] + L6, d, "round7"); res7 = run_gen(pth7)
+        w("     round 7's state (without the return draft): %s; without Layer 9's draft and the return draft: RUNS to its end, %d parts\n"
+          % ("RUNS to its end, %d parts" % len(res7["table"]["parts"]) if not err7 and res7["stop"] is None else "STOPS", len(res5["table"]["parts"])))
         pth1, _e = compose(["gndret"], d, "alone"); res1 = run_gen(pth1)
         g1 = res1["intent"]["rails"]["GND"] if res1["intent"] else None
         w("     the gndret draft alone on the committed generator: %s\n"
           % ("RUNS, GND %.2f A typical and %.2f A peak, loads %.3f A: the same text, a smaller figure (nothing typed)" % (g1["amps_typ"], g1["amps_peak"], sum(g1["loads"].values()))
              if g1 else "STOPS: " + short(res1["stop"], 150)))
-        w("   THE NETLIST CHECK (check_gndret_netlist.py; the regenerated netlists are the generator's own part tables, no KiCad: the box\n"
+        # board A
+        w("   BOARD A COMPOSED in L4-E9's change-list order (r12, guard, charger, r11, bank, r138, u17; record l8gnd's two; this record's five\n"
+          "   of rounds 1 to 6; record l8p's ptc; L4-E11's dd7), Layer 9's draft (the copy at 841e6c7e), d8dec31's mainpb LAST, then Layer 6's table:\n")
+        round_a = [P("v2/docs/records/%s/apply_gen_sch_a_%s.py" % rn) for rn in ROUND_A] + [P(L9T5_DRAFT_A)]
+        runs_a, gens_a = [], []
+        for tag, seq in (("the return draft after Layer 9's (the round's order)", round_a + [P(MINE_A["gndrtn_a"])]),
+                         ("the return draft first", [P(MINE_A["gndrtn_a"])] + round_a),
+                         ("round 7's state (without the return draft)", round_a)):
+            pth, err = compose_a(seq, d, "a%d" % len(runs_a))
+            if err:
+                w("     %-56s %s\n" % (tag, err)); runs_a.append(None); gens_a.append(None)
+                continue
+            res = run_gen(pth, "a"); runs_a.append(res); gens_a.append(hashlib.sha256(open(pth, "rb").read()).hexdigest()[:16])
+            w("     %-56s generator sha256 %s: %s\n" % (tag, gens_a[-1], "RUNS to its end, %d parts, %d unplaced, netlist sha256 %s"
+                                                         % (len(res["table"]["parts"]), len(res["table"]["unplaced"]), hashlib.sha256(res["netlist"]).hexdigest()[:16])
+                                                         if res["stop"] is None else "STOPS: " + short(res["stop"], 150)))
+        a_run = all(r is not None and r["stop"] is None and not r["table"]["unplaced"] for r in runs_a)
+        a_same_net = a_run and runs_a[0]["netlist"] == runs_a[1]["netlist"]
+        w("     the return draft first or last gives the same netlist: %s (the generator text differs in the order of two SECTIONS.insert\n"
+          "     lines, this draft's and another's: a schematic page's order, no net)\n" % ("yes" if a_same_net else "NO"))
+        w("   THE NETLIST CHECKS (check_gndret_netlist.py; the regenerated netlists are the generators' own part tables, no KiCad: the box\n"
           "   export is the reading of record):\n")
         vC, lC = CK.judge(nlB, json.load(open(P(INT_B), encoding="utf-8")))
-        w("     the committed netlist and intent (%s sha256 %s): %s\n" % (NET_B, sha(NET_B), vC))
+        vPc, lPc, _wh = CK.judge_pair(nlA, nlB)
+        w("     the committed board B netlist and intent (%s sha256 %s): %s; the dedicated return on the committed boards: %s\n" % (NET_B, sha(NET_B), vC, vPc))
         for l in lC:
             w("       %s\n" % l)
-        checks = {}
-        for tag, res in (("composed without Layer 9's draft", res5), ("composed with Layer 9's draft and Layer 6's", runs[0])):
-            if res is None or res["stop"]:
-                w("     %s: NO NETLIST (the generator stops)\n" % tag); checks[tag] = "STOPS"
-                continue
-            v, lines = CK.judge(CK.read_netlist(res["netlist"]), res["intent"]); checks[tag] = v
-            w("     %s (netlist sha256 %s): %s\n" % (tag, hashlib.sha256(res["netlist"]).hexdigest()[:16], v))
-            for l in lines:
-                w("       %s\n" % l)
-        # the same composed netlist under the two checks that had only read fixtures until a generator could be run on this host
-        import importlib.util as _ilu
-        _sp = _ilu.spec_from_file_location("l8gnd_check", P("v2/docs/records/l8gnd/check_gnd002_netlist.py"))
-        g2 = _ilu.module_from_spec(_sp); _sp.loader.exec_module(g2)
-        v8, l8 = CK._rd.judge("b", CK._rd.read_netlist(runs[0]["netlist"]))
-        vg, _lg = g2.judge("b", g2.read_netlist(runs[0]["netlist"]))
-        w("     the same composed netlist under the checks of the drafts it carries: check_l8r2_netlist.py (rounds 1 to 6, board B) %s\n"
-          "       (%s); record l8gnd's check_gnd002_netlist.py (board B) %s\n" % (v8, "; ".join(" ".join(x.split()) for x in l8), vg))
+        if not all_run or not a_run:
+            refuse("a composition does not run: no netlist to check")
+        nB, nA = CK.read_netlist(runs[0]["netlist"]), CK.read_netlist(runs_a[0]["netlist"])
+        vB, lB = CK.judge(nB, runs[0]["intent"]); vP, lP, whole = CK.judge_pair(nA, nB)
+        w("     board B composed (netlist sha256 %s): the return's declaration %s\n" % (hashlib.sha256(runs[0]["netlist"]).hexdigest()[:16], vB))
+        for l in lB:
+            w("       %s\n" % l)
+        w("     boards A and B composed: the dedicated return %s\n" % vP)
+        for l in lP:
+            w("       %s\n" % l)
+        v7, _l7 = CK.judge(CK.read_netlist(res7["netlist"]), res7["intent"]); vP7, _lP7, whole7 = CK.judge_pair(CK.read_netlist(runs_a[2]["netlist"]), CK.read_netlist(res7["netlist"]))
+        w("     round 7's state: the declaration %s, the dedicated return %s\n" % (v7, vP7))
+        _sp = importlib.util.spec_from_file_location("l8gnd_check", P("v2/docs/records/l8gnd/check_gnd002_netlist.py"))
+        g2 = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(g2)
+        v8, l8 = CK._rd.judge("b", CK._rd.read_netlist(runs[0]["netlist"])); v8a, l8a = CK._rd.judge("a", CK._rd.read_netlist(runs_a[0]["netlist"]))
+        vg, _lg = g2.judge("b", g2.read_netlist(runs[0]["netlist"])); vga, _lga = g2.judge("a", g2.read_netlist(runs_a[0]["netlist"]))
+        w("     the same composed netlists under the checks of the drafts they carry: check_l8r2_netlist.py (rounds 1 to 6) board B %s (%s),\n"
+          "       board A %s (%s); record l8gnd's check_gnd002_netlist.py board B %s, board A %s\n"
+          % (v8, "; ".join(" ".join(x.split()) for x in l8), v8a, "; ".join(" ".join(x.split()) for x in l8a), vg, vga))
         # mutations
-        w("   THE MUTATIONS (each must stop the generator or FAIL the check):\n")
-        full = ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "iocbuck"]
+        w("   THE MUTATIONS (each must stop the generator or FAIL a check):\n")
+        full = ["gnd002", "fans12", "fandec", "panel5v", "ph4", "rt500", "gndret", "gndrtn", "iocbuck"]
         muts = []
 
-        def gen_mut(tag, seq, edit=None):
+        def gen_mut(tag, seq, edit=None, pair=False):
             pth, err = compose(seq, d, "mut%d" % len(muts))
             if err:
                 refuse("a mutation's composition refused: %s" % err)
@@ -1054,9 +1149,14 @@ def main():
             if res["stop"]:
                 out = "STOPS: " + short(res["stop"], 170); bad = True
             else:
-                v, lines = CK.judge(CK.read_netlist(res["netlist"]), res["intent"])
-                out = "runs; the check reads %s%s" % (v, (": " + short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 200)) if v != "DRAWN" else "")
+                nm = CK.read_netlist(res["netlist"])
+                v, lines = CK.judge(nm, res["intent"])
+                out = "runs; the declaration reads %s%s" % (v, (": " + short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 200)) if v != "DRAWN" else "")
                 bad = v != "DRAWN"
+                if pair:
+                    vp, lp, _w2 = CK.judge_pair(nA, nm)
+                    out += "; the dedicated return reads %s%s" % (vp, (": " + short("; ".join(lp[1:]), 160)) if vp != "DRAWN" else "")
+                    bad = bad or vp != "DRAWN"
             muts.append(bad)
             w("     m%d %s\n        %s\n" % (len(muts), tag, out))
 
@@ -1066,27 +1166,33 @@ def main():
                     refuse("a mutation's anchor occurs %d times: %r" % (t.count(old), old[:50]))
                 return t.replace(old, new)
             return f
-        gen_mut("the old state: the full composition without the gndret draft", [s for s in full if s != "gndret"])
+        gen_mut("the old state: the composition without the gndret draft (and so without the return draft, which needs it)", [s for s in full if s not in ("gndret", "gndrtn")])
         gen_mut("the gndret draft without its companion fandec (the second stop behind the first)", [s for s in full if s != "fandec"])
         gen_mut("the typed declaration kept and simply raised: 21.0 written as 30.0 on the old text (the refused outcome)",
-                [s for s in full if s != "gndret"], sub1('_intent.rail("GND", 0.0, 10.0, 21.0, ', '_intent.rail("GND", 0.0, 10.0, 30.0, '))
+                [s for s in full if s not in ("gndret", "gndrtn")], sub1('_intent.rail("GND", 0.0, 10.0, 21.0, ', '_intent.rail("GND", 0.0, 10.0, 30.0, '))
         gen_mut("J_54V dropped from the return's sources in the helper", full, sub1('_srcs = list(leads) + ["J_54V"]', "_srcs = list(leads)"))
         gen_mut("a lead named on the return whose rail is declared on another connector (+5V_S2's source J_5V_S2 written J_5V_S9)", full,
                 sub1('6.6, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n)', '6.6, "J_5V_S%d" % (9 if _n == 2 else _n), loads=_SLOT_LOADS(_n)'))
         gen_mut("a slot's card buck allocation raised from 2.2 to 4.2 A (a lead over its own peak: the derived return must not hide it)", full,
                 sub1('    "U%d03" % s: 2.2, ', '    "U%d03" % s: 4.2, '))
-        # netlist-level mutations on the composed netlist
         base = runs[0]
-        if base is None or base["stop"]:
-            refuse("no composed netlist for the netlist mutations")
 
-        def net_mut(tag, f):
-            raw = base["netlist"].decode("utf-8"); m = f(raw)
+        def net_mut(tag, f, pair=False, board="b"):
+            src = base if board == "b" else runs_a[0]
+            raw = src["netlist"].decode("utf-8"); m = f(raw)
             if m == raw:
                 refuse("netlist mutation '%s' changed nothing" % tag)
-            v, lines = CK.judge(CK.read_netlist(m.encode("utf-8")), base["intent"])
-            muts.append(v == "FAIL")
-            w("     m%d %s\n        the check reads %s: %s\n" % (len(muts), tag, v, short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 200)))
+            nm = CK.read_netlist(m.encode("utf-8"))
+            if board == "b":
+                v, lines = CK.judge(nm, base["intent"]); vp, lp, wm = CK.judge_pair(nA, nm)
+            else:
+                v, lines = vB, []; vp, lp, wm = CK.judge_pair(nm, nB)
+            bad = v == "FAIL" or (pair and vp == "FAIL")
+            muts.append(bad)
+            w("     m%d %s\n        the declaration reads %s%s; the dedicated return reads %s%s\n"
+              % (len(muts), tag, v, (": " + short("; ".join(l for l in lines if l[:2] in ("R1", "R2", "R3", "R4")), 170)) if v == "FAIL" else "",
+                 vp, (": " + short("; ".join(lp[1:]), 170)) if vp == "FAIL" else ""))
+            return wm
 
         def swap_pins(ref):
             def f(raw):
@@ -1095,98 +1201,284 @@ def main():
                     refuse("the netlist does not carry %s's two pins once each" % ref)
                 return raw.replace(a, z).replace(b, a).replace(z, b)
             return f
-        net_mut("J_5V_S2's pins 1 and 2 exchanged on the netlist (the lead reversed)", swap_pins("J_5V_S2"))
-        net_mut("R12's pin 2 taken off GND on the netlist (the PoE return's entry gone)", lambda raw: raw.replace(' (node (ref "R12") (pin "2"))', "", 1))
+
+        def drop_part(ref):
+            def f(raw):
+                out_ = re.sub(r' \(node \(ref "%s"\) \(pin "[^"]+"\)\)' % re.escape(ref), "", raw)
+                return re.sub(r'    \(comp \(ref "%s"\)[^\n]*\n' % re.escape(ref), "", out_)
+            return f
+        net_mut("J_5V_S2's pins 1 and 2 exchanged on board B's netlist (the lead reversed)", swap_pins("J_5V_S2"))
+        net_mut("R12's pin 2 taken off GND on board B's netlist (the PoE return's entry gone)", lambda raw: raw.replace(' (node (ref "R12") (pin "2"))', "", 1))
+        # round 8: the return removed, landed on the wrong net, one termination dropped, a socket the declaration does not name
+        acc_removed = design(2 * len(whole7), poe_awg=F["poe_awg"], enum=True)
+        muts.append(vP7 != "DRAWN" and not acc_removed["printed"])
+        w("     m%d THE RETURN REMOVED (both boards composed without the two return drafts: round 7's state)\n"
+          "        the dedicated return reads %s; the acceptance on that census (%d return conductors): a VH pin 2 %.3f A, a ribbon conductor\n"
+          "        %.3f A: every row on the printed ratings: %s\n"
+          % (len(muts), vP7, 2 * len(whole7), worst(acc_removed, "VH"), worst(acc_removed, "RIB"), "yes" if acc_removed["printed"] else "NO"))
+        gen_mut("THE RETURN LANDED ON THE WRONG NET: J_GR2's pin 1 drawn on +5V_DEV on board B", full,
+                sub1('ground return 2 to A22 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "GND", "2": "GND"})',
+                     'ground return 2 to A22 J_GR2 (lead: XT60-M both ends, 2 x 12 AWG, 150 mm)", "XT60F", {"1": "+5V_DEV", "2": "GND"})'), pair=True)
+        wm = net_mut("ONE TERMINATION DROPPED: J_GR3 absent on board B's netlist (the lead plugged at board A only)", drop_part("J_GR3"), pair=True)
+        acc_dropped = design(2 * len(wm), poe_awg=F["poe_awg"], enum=True)
+        w("        the acceptance on the sockets left whole on both boards (%d conductors): every row on the printed ratings: %s; on the least\n"
+          "        ratings at the inside air: %s (the third lead's margin is gone)\n"
+          % (2 * len(wm), "yes" if acc_dropped["printed"] else "NO", "yes" if acc_dropped["least"] else "NO"))
+        net_mut("ONE TERMINATION DROPPED on board A: J_GR1's pin 2 absent on board A's netlist", lambda raw: raw.replace(' (node (ref "J_GR1") (pin "2"))', "", 1), pair=True, board="a")
+        gen_mut("a return socket the declaration does not name: J_GR3 left out of the helper's list", full,
+                sub1('_rets = ["J_GR1", "J_GR2", "J_GR3"]', '_rets = ["J_GR1", "J_GR2"]'))
         all_mut = all(muts)
         w("     every mutation stops or fails: %s (%d of %d)\n" % ("yes" if all_mut else "NO", sum(muts), len(muts)))
 
         # ---------------------------------------------------------------- 6
-        w("\n6. FOR LAYER 9'S AUTHOR AND THE INDEPENDENT RECHECK (V3)\n")
-        w("   board B's composition in L4-E9's order with Layer 9's draft RUNS TO ITS END once this round's two drafts are in it (section 5):\n"
-          "     gnd002, fans12, fandec, panel5v, ph4, rt500, gndret, iocbuck, then Layer 6's three; fandec and gndret anywhere in the round.\n"
-          "   the corrected declaration with Layer 9's draft composed (read from the regenerated intent):\n")
-        gi2 = runs[0]["intent"]["rails"]["GND"]
-        w("     GND: %.2f A typical, %.2f A peak (the UPPER BOUND, DECLARED), sources %s; %d loads summing %.3f A\n"
-          % (gi2["amps_typ"], gi2["amps_peak"], ", ".join(gi2["source"]), len(gi2["loads"]), sum(gi2["loads"].values())))
-        w("     the load list: _GND_LOADS as Layer 9's draft leaves it (U40, U50 and U60 at 0.12 A each from _IOC_LOADS) plus R12 %.2f A\n" % gi2["loads"]["R12"])
-        conds = conductors(F, T, True)
-        w("   THE RETURN EACH CONNECTOR CARRIES ON C-DEV rev 1 WITH LAYER 9'S DRAFT COMPOSED (the state PS-ALLTX at HIGH at the least load voltage\n"
-          "   4.9019 V; total %.4f A = S1 %.3f + S2 %.3f + S3 %.3f + U7 %.4f + U601 %.4f, MODEL: records l9pwr and l9t5; MODEL at %.2f C):\n"
-          % (tot6, rows["S1"]["least"], rows["S2"]["least"], rows["S3"]["least"], F["cdev_u7"], F["cdev_u601"], T))
-        pin1 = {"J_5V_S1": rows["S1"]["least"], "J_5V_S2": rows["S2"]["least"], "J_5V_S3": rows["S3"]["least"], "J_5V_DEV": F["cdev_u7"], "J_5V_IOC": F["cdev_u601"], "J_54V": 0.0}
-        cs = cases(F)
-        sp = [split(tot6, conds, rc)[0] for _t, _l, rc in (cs[0], cs[1], cs[3])]
-        w("     %-10s %14s %22s %22s %30s\n" % ("connector", "pin 1 (MODEL)", "pin 2, K0 (MODEL)", "pin 2, K1 (MODEL)", "pin 2, K3 (BOUND, J_5V_DEV at 0)"))
-        for n, kind, k, _w in conds:
-            if kind == "RIB":
-                w("     %-10s %14s %22s %22s %30s\n" % (n, "signals", "%.3f A x %d" % (sp[0][n], k), "%.3f A x %d" % (sp[1][n], k), "%.3f A x %d" % (sp[2][n], k)))
-            else:
-                w("     %-10s %12.4f A %20.3f A %20.3f A %28.3f A\n" % (n, pin1[n], sp[0][n], sp[1][n], sp[2][n]))
-        w("     labels: pin 1 is each rail's own current (J_54V's 0: the PoE stage is off in PS-ALLTX; %.2f A DECLARED peak when the outlet is on);\n"
-          "     pin 2 is the SAME total divided by resistance, so J_5V_IOC's pin 2 carries about a sixth of the leads' share whatever U601\n"
-          "     supplies, and 'J_5V_DEV's return falls by the same current' (record l9t5's line) holds for pin 1 and not for pin 2. The J_5V_IOC\n"
-          "     lead's gauge and length are ASSUMPTIONS here (AWG %d, %.0f mm): record l9t5's draft names neither.\n"
-          "     On Layer 9's own rounds 4 and 5 (PS-ALLTX with the standby card off) slot 3 reads %.3f A and the total %.4f A; every row above\n"
-          "     scales by %.4f.\n"
-          % (poe["peak"], IOC_AWG, F["lead_mm"], s3_l9, tot6 - rows["S3"]["least"] + s3_l9, (tot6 - rows["S3"]["least"] + s3_l9) / tot6))
-        w("   CREDIT (the common brief's three criteria) for this round's two drafts: (a) composes in L4-E9's order and the generator runs: %s;\n"
-          "   (b) the changed declaration read on the regenerated netlist and intent with mutations that fail: %s; (c) electrical acceptance on\n"
-          "   the makers' printed figures: the DECLARATION is supported as an upper bound (section 2c); the RETURN PATH does not hold on\n"
-          "   the makers' printed figures (section 3, L8R2-F31 OPEN): NOT accepted. A netlist check is not electrical qualification.\n"
-          % ("yes" if all_run else "NO", "yes" if checks.get("composed with Layer 9's draft and Layer 6's") == "DRAWN" and all_mut else "NO"))
+        w("\n6. THE ACCEPTANCE WITH THE DEDICATED RETURN (the recheck's closure criterion; every current is a MODEL maximum over every vertex of\n"
+          "   the contact-resistance box, enumerated; no figure is a measurement)\n")
+        L_c = CK.leads(nB, runs[0]["intent"]); gcB, gcA = CK.ground_conductors(nB), CK.ground_conductors(nA)
+        leadsA = sorted(r for r, pp in nA["pins"].items() if r.startswith(("J_5V_", "J_54V")) and pp.get("2") == "GND")
+        n_ret = 2 * len(whole)
+        w("6a. THE CENSUS, read on the composed netlists of both boards (not assumed): lead contacts with pin 2 on GND: board B %s; board A %s;\n"
+          "    ribbon conductors on GND: %d on board B, %d on board A; return sockets whole on both boards: %s, two contacts and two %d AWG\n"
+          "    conductors each: %d return conductors\n"
+          % (", ".join(r for r, _n in L_c), ", ".join(leadsA), sum(len(v) for v in gcB.values()), sum(len(v) for v in gcA.values()), ", ".join(whole) or "none",
+             F["xt_awg"], n_ret))
+        if not (sorted(r for r, _n in L_c) == leadsA and len(L_c) == 6 and gcA == gcB and len(gcB["J_AB1"]) == 9 and len(gcB["J_AB2"]) == 8 and len(whole) == n_drafted["b"]):
+            refuse("the composed netlists' ground conductors are not the model's (six leads, seventeen ribbon conductors, %d return sockets)" % n_drafted["b"])
+        ACC = design(n_ret, poe_awg=F["poe_awg"], enum=True)
+        hot_xt = least_rating(F["xt_a_new"], F["xt_tmax"], TH, F["xt_rise"])
+        COND = {"VH": "PRINTED %.0f A, JST VH 'when using AWG #16 with the standard type header' (the fitted B2P-VH, the leads' gauge); no ambient and no derating printed" % F["vh_a16"],
+                "VH18": "NO RATING PRINTED for AWG %d on the standard header (%.0f A is printed for the shrouded header: a comparator only)" % (F["poe_awg"], F["vh_a18"]),
+                "RIB": "PRINTED %.0f A a conductor at 25 C ambient (the cable; the IDC socket %.0f A a contact); a derating stated, no curve printed" % (F["cab_a"], F["sock_a"]),
+                "RET": "PRINTED %.0f A (V1.2, no condition) and %.0f A MAX with %d AWG at a rise under %.0f C (2021V1); range %.0f to %.0f C; no derating curve.\n"
+                       "              The %d AWG conductor: the gauge both sheets name for the rating; no wire sheet is held (the energy chain DECLARES %.0f A for the pack lead's)"
+                       % (F["xt_a_old"], F["xt_a_new"], F["xt_awg"], F["xt_rise"], F["xt_tmin"], F["xt_tmax"], F["xt_awg"], F["awg12_a"])}
+        WHO = {"VH": "each 5 V lead's pin 2 (%s)", "VH18": "the PoE lead's pin 2 (%s)", "RIB": "each ribbon conductor (%s: 9 and 8)",
+               "RET": "each XT60 contact of the return and its 12 AWG conductor (%s: " + "%d sockets, 2 each)" % len(whole)}
+        w("6b. EVERY BRANCH AT ITS WORST VERTEX, against the rating its maker prints under the applicable condition. The vertex of each row: the\n"
+          "    branch's own two contacts at 0 mOhm (no maker prints a minimum), every other contact at its maximum (VH %.0f mOhm after test, IDC\n"
+          "    %.0f mOhm, XT60 %.1f mOhm), found by enumeration. 'least' is the least rating consistent with the sheet at that air (INFERRED, 3b).\n"
+          % (F["vh_rc1"], F["sock_rc"], F["xt_r_new"]))
+        for kind in ("VH", "VH18", "RIB", "RET"):
+            names = next(r[3] for r in ACC["rows"] if r[2] == kind)
+            w("    %s\n      rating: %s\n" % (WHO[kind] % ", ".join(sorted(set(names))), COND[kind]))
+            w("      %-12s %-9s %10s %10s %10s %10s  %s\n" % ("total", "copper", "maximum", "printed", "least", "margin", "verdict"))
+            for ti, Tx, k_, _names, cur, pr, le, vd in ACC["rows"]:
+                if k_ == kind:
+                    w("      %-12s %-9s %8.4f A %10s %10s %10s  %s\n"
+                      % ("%.4f A" % totals[ti][1], "%.2f C" % Tx, cur, "%.0f A" % pr if pr else "none", "%.4f A" % le if le else "none",
+                         "%+.1f %%" % (100 * (pr - cur) / pr) if pr else "", vd))
+        for ti, (tag, tot) in enumerate(totals):
+            w("    %.4f A: %s\n" % (tot, tag))
+        rated = [r for r in ACC["rows"] if r[5] is not None]
+        acc_printed = all(r[4] <= r[5] + 1e-12 for r in rated); acc_least = all(r[4] <= r[6] + 1e-12 for r in rated)
+        w("    READ: every branch that has a printed rating is inside it at every vertex, at both copper ends, on all three totals: %s; inside the\n"
+          "    least rating consistent with its sheet at the inside air: %s. J_54V's pin 2 carries at most %.4f A and has NO printed rating as\n"
+          "    drawn (AWG %d on the standard header): its row is NOT covered until its lead is AWG 16 (6e).\n"
+          % ("yes" if acc_printed else "NO", "yes" if acc_least else "NO", worst(ACC, "VH18"), F["poe_awg"]))
+        w("6c. THE GROUND SHIFT between the boards, every contact at its maximum: at most %.2f mV (as drawn: %.2f mV) against the %.4f V the LDOs'\n"
+          "    input allows (the smaller of Layer 9's %.3f V and the recheck's %.4f V): inside by a factor of %.0f.\n"
+          % (ACC["shift"], max(s for (_e, s) in DR.values()), allow, F["l9_shift_allow"], F["v3_shift_allow"], allow * 1e3 / ACC["shift"]))
+        # what the rows rest on that no maker prints
+        a_pr = bisect(lambda x: design(n_ret, poe_awg=F["poe_awg"], ret_hi=x)["printed"], F["xt_r_new"], 100.0)
+        a_le = bisect(lambda x: design(n_ret, poe_awg=F["poe_awg"], ret_hi=x)["least"], F["xt_r_new"], 100.0)
+        WF = design(n_ret, poe_awg=F["poe_awg"], wire_floor=WIRE_FLOOR)
+        wf_printed = all(r[4] <= r[5] + 1e-12 for r in WF["rows"] if r[5] is not None); wf_least = all(r[4] <= r[6] + 1e-12 for r in WF["rows"] if r[5] is not None)
+        w("6d. WHAT THE ROWS REST ON THAT NO MAKER PRINTS, each named with its dependence:\n"
+          "    - the XT60's contact resistance after ageing. Amass prints one limit (%.1f mOhm, 2021V1) with a %d-cycle life and no separate\n"
+          "      after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under %s mOhm, and on\n"
+          "      the least ratings at or under %s mOhm (%.1f and %.1f times the printed limit). Beyond that a row fails: a four-wire reading of the\n"
+          "      return leads at assembly and in service is what would show it.\n"
+          "    - the contacts' minimum resistance: none is printed, so every row takes the branch's own contacts at 0 (the most adverse).\n"
+          "    - the derating at the inside air: none is printed, so every row carries the least rating consistent with its sheet beside\n"
+          "      the printed one (3b); the VH's rests on the ASSUMPTION that its rating is stated at %.0f C.\n"
+          "    - the wires' own resistance: MODEL figures from nominal sections and lengths (no wire part is named, L8R2-F34), and the ribbon's\n"
+          "      is its maker's MAXIMUM. With each branch's own wire at %.2f of its figure (ASSUMPTION, WIRE_FLOOR) the maxima become: a VH\n"
+          "      pin 2 %.4f A, a ribbon conductor %.4f A (%.4f A at the inside air against at least %.4f A), an XT60 contact %.4f A: every\n"
+          "      row on the printed ratings: %s; on the least ratings: %s.\n"
+          "    - the lengths: the return leads at %.0f mm and J_AB2's ribbon at %.0f mm are ASSUMPTIONS (Layer 7 routes them).\n"
+          % (F["xt_r_new"], F["xt_cycles_new"], "%.2f" % a_pr if a_pr else "no value", "%.2f" % a_le if a_le else "no value",
+             (a_pr or 0) / F["xt_r_new"], (a_le or 0) / F["xt_r_new"], T_RATING_REF, WIRE_FLOOR, worst(WF, "VH"), worst(WF, "RIB"), worst(WF, "RIB", Tx=TH),
+             least_rating(F["cab_a"], F["cab_tmax"], TH), worst(WF, "RET"),
+             "yes" if wf_printed else "NO", "yes" if wf_least else "NO", F["lead_mm"] if RET_LEAD_MM is None else RET_LEAD_MM, F["ab1_mm"] if AB2_MM is None else AB2_MM))
+        ACC16 = design(n_ret, poe_awg=16, enum=True)
+        w("6e. THE PoE LEAD AT AWG 16 (a harness row for Layer 7, part of this correction; no generator text changes): J_54V's pin 2 is then one\n"
+          "    more VH contact of the 5 V leads' make with the printed %.0f A: a VH pin 2 at most %.4f A, a ribbon conductor %.4f A, an XT60\n"
+          "    contact %.4f A; every row on the printed ratings: %s; on the least ratings: %s; no row is left without a printed rating: %s.\n"
+          % (F["vh_a16"], worst(ACC16, "VH"), worst(ACC16, "RIB"), worst(ACC16, "RET"), "yes" if ACC16["printed"] else "NO", "yes" if ACC16["least"] else "NO",
+             "yes" if not ACC16["unrated"] else "NO"))
+        w("6f. THE GROUND COPPER WHERE THE RETURN ENTERS (decision 35's function, track_current.width_for_current, 10 K, inner layers; Layer 9's\n"
+          "    stackup for board B is %s, layer use %s: %d ground planes at %.1f oz; board A's has %d at %.1f oz). A LAYOUT CONSTRAINT for both\n"
+          "    boards (finding L8R2-F33), not a judged layout: no board is routed with these parts.\n"
+          % (F["b_stack"], F["b_use"], F["b_gnd_planes"], F["b_inner_oz"], F["a_gnd_planes"], F["a_inner_oz"]))
+        spB, spA = 4 * 0.5 * F["b_gnd_planes"], 4 * 0.5 * F["a_gnd_planes"]
+        for lab, amps in (("an XT60 contact's land at its worst vertex", worst(ACC, "RET")), ("a VH pin 2's land at its worst vertex", worst(ACC, "VH")),
+                          ("a VH pin 2's land at the contact's printed %.0f A" % F["vh_a16"], F["vh_a16"])):
+            wB = TC.width_for_current(amps, F["b_inner_oz"], 10.0, internal=True); wA = TC.width_for_current(amps, F["a_inner_oz"], 10.0, internal=True)
+            w("      %-52s %7.3f A: %6.2f mm of %.1f oz plane in all; board B %5.2f mm on each of %d planes; board A %5.2f mm on each of %d\n"
+              % (lab, amps, wB, F["b_inner_oz"], wB / F["b_gnd_planes"], F["b_gnd_planes"], wA / F["a_gnd_planes"], F["a_gnd_planes"]))
+        w("      four thermal-relief spokes of 0.5 mm on each plane give %.1f mm on board B and %.1f mm on board A, under every row: the return\n"
+          "      sockets' and the VH leads' pin 2 lands join their ground planes SOLIDLY (no thermal relief), or with spokes of the row's width.\n" % (spB, spA))
+
+        # the fault cases
+        tot_src = src_i + poe["peak"]
+        w("6g. THE FAULT CASES (the owner's instruction: each with its currents, what protects or reveals it, whether it is tolerated inside the\n"
+          "    ratings and whether it is latent). Every figure is the maximum over every vertex at both copper ends; 'printed' and 'least' say\n"
+          "    whether every branch with a printed rating stays inside it and inside the least rating at the inside air.\n")
+        w("      %-66s %-12s %9s %9s %9s %9s %8s  %s\n" % ("case", "total", "VH pin 2", "J_54V", "a ribbon", "an XT60", "shift mV", "printed / least"))
+        FC = []
+
+        def fault(tag, dg_fn, tot_list, note):
+            for tg, tot in tot_list:
+                dg = dg_fn([(tg, tot)])
+                FC.append((tag, tot, dg))
+                w("      %-66s %-12s %9.4f %9.4f %9.4f %9.4f %8.2f  %s / %s\n"
+                  % (tag, "%.4f A" % tot, worst(dg, "VH"), worst(dg, "VH18"), worst(dg, "RIB"), worst(dg, "RET"), dg["shift"], "yes" if dg["printed"] else "NO", "yes" if dg["least"] else "NO"))
+            w("        %s\n" % note)
+        two = [totals[0], totals[2]]
+        fault("F-0 no fault (the design)", lambda tl: design(n_ret, poe_awg=F["poe_awg"], tot_list=tl, enum=True), two, "the rows of 6b.")
+        fault("F-1 one return lead absent or open (%d conductors left)" % (n_ret - 2), lambda tl: design(n_ret - 2, poe_awg=F["poe_awg"], tot_list=tl, enum=True), two,
+              "Nothing interrupts and nothing signals: the kit runs as before. LATENT. Revealed only by a four-wire reading between the two\n"
+              "        boards' grounds or by looking (an assembly and service check, OWED: finding L8R2-F39).")
+        fault("F-2 one XT60 contact of one return lead open (%d conductors left)" % (n_ret - 1), lambda tl: design(n_ret - 1, poe_awg=F["poe_awg"], tot_list=tl, enum=True), two,
+              "As F-1 with one conductor more: LATENT, revealed the same way.")
+        fault("F-3 one 5 V lead's pin 2 open (its pin 1 still supplies its rail)", lambda tl: design(n_ret, poe_awg=F["poe_awg"], tot_list=tl, enum=True, vh_open=1), two,
+              "The rail's return finds the other conductors and the rail works: LATENT. With the dedicated return in place the other\n"
+              "        branches barely move; as drawn (no dedicated return) the same fault is worse than 3d's rows, which already do not hold.")
+        tot_one = tot_big - max(r["least"] for r in bt[6].values()) + F["loop_max"]
+        fault("F-4a one 5.1 V stage in its current limit (%.3f A) beside the largest state" % F["loop_max"],
+              lambda tl: design(n_ret, poe_awg=F["poe_awg"], tot_list=tl, enum=True), [("one stage in its limit", tot_one)],
+              "A single overload: the stage's average current loop bounds it (PRINTED VSNS %.0f mV maximum over the DECLARED 6 mOhm shunt) and\n"
+              "        does not interrupt. The rail's INA226 on board A shows it to the panel controller; what firmware then does is Layer 5's\n"
+              "        slot-fault rule, not re-read here: NOT LATENT by design intent, not verified." % (R6.V["vsns"][2] * 1e3))
+        fault("F-4b the sources' deliverable bound (four loops at %.3f A, U601 at %.2f A, PoE %.2f A)" % (F["loop_max"], F["u601_out"], poe["peak"]),
+              lambda tl: design(n_ret, poe_awg=F["poe_awg"], tot_list=tl, enum=True), [("the sources' bound", tot_src)],
+              "Every source at its bound at once: four independent overloads and U601's. A ribbon conductor then reads %.4f A at %.0f C against its\n"
+              "        printed %.0f A (over by %.2f %%) at its extreme vertex; every other branch stays inside its printed rating. A fourth return\n"
+              "        lead would read %.4f A there; it is not drafted for a four-fault bound. Revealed as F-4a."
+              % (worst(design(n_ret, poe_awg=F["poe_awg"], tot_list=[("s", tot_src)]), "RIB"), TL, F["cab_a"],
+                 100 * (worst(design(n_ret, poe_awg=F["poe_awg"], tot_list=[("s", tot_src)]), "RIB") - F["cab_a"]) / F["cab_a"],
+                 worst(design(n_ret + 2, poe_awg=F["poe_awg"], tot_list=[("s", tot_src)]), "RIB")))
+        fault("F-5 every return lead absent (the board as drawn today)", lambda tl: design(0, poe_awg=F["poe_awg"], tot_list=tl, enum=True), two,
+              "Section 3d's rows: DOES NOT HOLD. LATENT in the same way. It is the state the correction exists to remove.")
+        fc = {t_[0].split()[0]: [] for t_ in FC}
+        for t_ in FC:
+            fc[t_[0].split()[0]].append(t_)
+        tol_pr = sorted(k for k, v in fc.items() if all(x[2]["printed"] for x in v)); tol_le = sorted(k for k, v in fc.items() if all(x[2]["least"] for x in v))
+        w("    TOLERATED inside every printed rating: %s; inside the least ratings at the inside air as well: %s; NOT tolerated: %s.\n"
+          "    LATENT (nothing protects against it and nothing reveals it in service): F-1, F-2, F-3 and F-5. The design does not make them\n"
+          "    visible; it makes F-1 to F-3 harmless inside the printed ratings. A detect line on the return is not drafted (L8R2-F39).\n"
+          "    F-1 with the return at its extreme vertex is over the ribbon's LEAST rating at the inside air on the upper bound, inside its\n"
+          "    printed rating: with one lead out the third lead's margin against the unprinted derating is gone, which is what it was for.\n"
+          % (", ".join(tol_pr) or "none", ", ".join(tol_le) or "none", ", ".join(sorted(k for k in fc if k not in tol_pr)) or "none"))
 
         # ---------------------------------------------------------------- 7
-        w("\n7. FINDINGS\n")
-        w("   L8R2-F30 CORRECTED BY DRAFT (not applied): board B's GND declaration was typed and stale (10.0 A, 21.0 A, four leads, a note of\n"
-          "            19.4 A); derived by apply_gen_sch_b_gndret.py; the PoE return and J_54V added. Credit (a) and (b) above; UNCHECKED by\n"
-          "            an independent check.\n"
-          "   L8R2-F31 OPEN (KNOWN DEFECT of the A to B power interface, boards A and B, Layers 5 and 7): the return is branched in parallel\n"
-          "            over five (six) VH contacts and seventeen ribbon conductors with nothing that sets its division. New equal contacts:\n"
-          "            inside every printed rating; the ribbons carry %.0f to %.0f %% of the return; VH contacts at JST's after-test limit: a\n"
-          "            ribbon conductor over its printed 1 A at the upper bound; printed extremes: a lead contact %.1f A, a ribbon conductor\n"
-          "            %.2f A (BOUNDS). Correction scoped in 3j (A1 selected, not drafted); acceptance figures in 3e and 3j.\n"
-          "   L8R2-F32 CORRECTED BY DRAFT (not applied): fans12's two TPS61089 capacitors carried their class at the call, which board B's\n"
-          "            decision 42 block does not read; the composed generator stopped there once the ground's stop was gone;\n"
-          "            apply_gen_sch_b_fandec.py. Rounds 1 to 6's composition proof never ran the generator: a finding against this record.\n"
-          "   L8R2-F33 OPEN (layout constraint, boards A and B; Layer 9's layout-constraints and record l9stk): each VH lead's pin 2 joins its\n"
-          "            ground planes without thermal relief (or with spokes of the width section 3g prints); board A's intent has no\n"
-          "            declaration that makes a rule solve the 5 V returns' loop.\n"
-          "   L8R2-F34 OWED (Layer 7): the leads' wire part and its insulation class at the inside air; J_54V's AWG %d lead on the standard\n"
-          "            header has no stated rating and now shares the 5 V return (up to %.3f A balanced): an AWG 16 lead gives it the printed row.\n"
-          "   L8R2-F35 FOR LAYER 9'S AUTHOR (record l9t5): its line 'J_5V_DEV's return falls by the same current' holds for the supply pin only;\n"
-          "            name J_5V_IOC's lead gauge and length; the device lead's declared %.1f A peak is under its own %.4f A on C-DEV rev 1\n"
-          "            at the least load voltage; add fandec and gndret to its board B order.\n"
-          "   L8R2-F36 FOR L4-E9 (the change list): two new board B rows in R-190's release (fandec with fans12; gndret); R-190's row says the\n"
-          "            slot's budget is re-derived, and the return's was not; a register row for L8R2-F31 (the interface's return).\n"
-          "   L8R2-F37 MINOR (board B's generator owner): the return places +5V_HDMI's 0.20 A at the display switches U3 and U4 while the rail\n"
-          "            +5V_HDMI declares its load at J_HDMI; a location, no ampere.\n"
-          % (100 * min(shares), 100 * max(shares), worst["VH"], worst["RIB"], F["poe_awg"], worst["VH18_bal"], call_of(ioc_res, "+5V_DEV")["peak"], F["cdev_u7"]))
+        w("\n7. FOR LAYER 9'S AUTHOR AND THE INDEPENDENT CHECK\n")
+        w("   board B's and board A's compositions in L4-E9's order with Layer 9's drafts run to their ends with this round's two return drafts\n"
+          "   in them (section 5); on board B the return draft follows gndret.\n")
+        gi2 = runs[0]["intent"]["rails"]["GND"]
+        w("   the declaration with Layer 9's draft composed (read from the regenerated intent): GND %.2f A typical, %.4f A peak (the UPPER BOUND,\n"
+          "   DECLARED), sources %s; %d loads summing %.3f A\n"
+          % (gi2["amps_typ"], gi2["amps_peak"], ", ".join(gi2["source"]), len(gi2["loads"]), sum(gi2["loads"].values())))
+        w("   THE RETURN EACH CONNECTOR CARRIES ON C-DEV rev 1 (%.4f A in all; pin 1 is the rail's own current, MODEL: records l9pwr and l9t5; pin 2\n"
+          "   is the maximum over every vertex, MODEL on PRINTED limits, at %.2f C and at %.0f C):\n" % (tot_cdev, TH, TL))
+        pin1 = {"J_5V_S1": rows["S1"]["least"], "J_5V_S2": rows["S2"]["least"], "J_5V_S3": rows["S3"]["least"], "J_5V_DEV": F["cdev_u7"], "J_5V_IOC": F["cdev_u601"], "J_54V": 0.0}
+        w("     %-10s %12s %26s %30s %12s\n" % ("connector", "pin 1", "pin 2 as drawn (hot, cold)", "pin 2 with the return (hot, cold)", "printed"))
+
+        def at(dg, kind, Tx):
+            return max(r[4] for r in dg["rows"] if r[2] == kind and r[0] == 0 and r[1] == Tx)
+        for n_ in ("J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV", "J_5V_IOC"):
+            w("     %-10s %10.4f A %12.4f A %10.4f A %14.4f A %12.4f A %10.0f A\n"
+              % (n_, pin1[n_], DR[(0, TH)][0]["VH"][0], DR[(0, TL)][0]["VH"][0], at(ACC, "VH", TH), at(ACC, "VH", TL), F["vh_a16"]))
+        w("     %-10s %10.4f A %12.4f A %10.4f A %14.4f A %12.4f A %12s\n"
+          % ("J_54V", pin1["J_54V"], DR[(0, TH)][0]["VH18"][0], DR[(0, TL)][0]["VH18"][0], at(ACC, "VH18", TH), at(ACC, "VH18", TL), "none"))
+        w("     %-10s %12s %12.4f A %10.4f A %14.4f A %12.4f A %10.0f A\n"
+          % ("a ribbon", "signals", DR[(0, TH)][0]["RIB"][0], DR[(0, TL)][0]["RIB"][0], at(ACC, "RIB", TH), at(ACC, "RIB", TL), F["cab_a"]))
+        w("     %-10s %12s %12s %12s %14.4f A %12.4f A %10.0f A\n" % ("an XT60", "none", "not drawn", "", at(ACC, "RET", TH), at(ACC, "RET", TL), min(F["xt_a_old"], F["xt_a_new"])))
+        w("   J_5V_IOC's pin 2 on the case: %.4f A as drawn at %.2f C (the recheck's corner, over the printed %.0f A) and %.4f A with the dedicated\n"
+          "   return; Layer 9's acceptance of that pin and of the LDOs' input depends on this correction, and on nothing else of this record.\n"
+          % (DR[(0, TH)][0]["VH"][0], TH, F["vh_a16"], at(ACC, "VH", TH)))
+        w("   CREDIT (the common brief's three criteria) for round 8's two return drafts: (a) they compose in L4-E9's order on both boards and\n"
+          "   the generators run: %s; (b) the changed nets are read on the regenerated netlists with mutations that fail: %s; (c) the\n"
+          "   electrical acceptance on the makers' printed figures: every branch with a printed rating inside it at every vertex: %s; the\n"
+          "   conditions of 6d and J_54V's unrated pin stay. NOT CLOSED: L8R2-F31 is OPEN until an independent check has read this.\n"
+          % ("yes" if all_run and a_run else "NO", "yes" if vB == "DRAWN" and vP == "DRAWN" and all_mut else "NO", "yes" if acc_printed else "NO"))
+        w("   WHAT THE INDEPENDENT CHECK SHOULD READ: (1) enumerate_vertices(), analytic() and extremes() in this script against its own\n"
+          "   arithmetic for one corner (3d reproduces the recheck's); (2) box(): each contact's low and high end against the makers' sheets, the\n"
+          "   XT60's two specifications above all (3b); (3) the census of 6a on the regenerated netlists; (4) each row of 6b against its\n"
+          "   rating and condition, and 6d's four dependences; (5) the two drafts apply_gen_sch_a_gndrtn.py and apply_gen_sch_b_gndrtn.py and\n"
+          "   their land (NOT READ on this host); (6) the fault table 6g, and whether three latent faults without a detect line are acceptable.\n")
 
         # ---------------------------------------------------------------- 8
-        w("\n8. PREDICATES\n")
+        w("\n8. FINDINGS\n")
+        w("   L8R2-F30 CORRECTED BY DRAFT (round 7, not applied): board B's typed, stale GND declaration; apply_gen_sch_b_gndret.py.\n"
+          "   L8R2-F31 OPEN (KNOWN DEFECT of the A to B power interface): the return divided over VH contacts and signal ribbons with nothing\n"
+          "            setting its division; as drawn a 5 V lead's pin 2 reaches %.3f A and a ribbon conductor %.3f A on C-DEV rev 1 (every\n"
+          "            vertex). CORRECTION DRAFTED in round 8 (three XT60 return leads, both boards), credit (a) and (b), acceptance (c) on\n"
+          "            the conditions of 6d; UNCHECKED: it stays OPEN until an independent check has read the changed design.\n"
+          "   L8R2-F32 CORRECTED BY DRAFT (round 7, not applied): fans12's TPS61089 capacitors' class; apply_gen_sch_b_fandec.py.\n"
+          "   L8R2-F33 OPEN (layout constraint, boards A and B; Layer 9): the return sockets' and the VH leads' pin 2 lands join their ground\n"
+          "            planes solidly or with spokes of 6f's widths; board A's intent cannot express the 5 V returns' loop.\n"
+          "   L8R2-F34 OWED (Layer 7): the leads' wire parts and insulation classes; J_54V's lead at AWG 16 (its pin 2 has no printed rating\n"
+          "            at AWG 18 and carries up to %.3f A of the return); the three return leads' row (XT60-M both ends, 2 x %d AWG, their length).\n"
+          "   L8R2-F35 ANSWERED by Layer 9's round 3 (the lead named, the peaks from their basis, the pin 2 sentence withdrawn); its acceptance\n"
+          "            of J_5V_IOC's pin 2 on round 7's sampled rows is WITHDRAWN with them (3e) and now rests on this correction.\n"
+          "   L8R2-F36 FOR L4-E9 (the change list): board B rows for fandec, gndret and gndrtn (gndrtn after gndret), a board A row for gndrtn,\n"
+          "            one release; a register row for L8R2-F31.\n"
+          "   L8R2-F37 MINOR (board B's generator owner): the return places +5V_HDMI's 0.20 A at U3 and U4; the rail declares J_HDMI.\n"
+          "   L8R2-F38 CORRECTED (this record's own defect, found by the recheck V3): round 7's return calculation sampled six cases and\n"
+          "            called the largest a maximum; every vertex is now enumerated and checked against the monotone argument.\n"
+          "   L8R2-F39 OPEN (commissioning and service, Layer 12; Layer 5): an absent or open return lead, an open XT60 contact and an open VH\n"
+          "            pin 2 are LATENT (6g). Tolerated inside the printed ratings, not revealed. Next action: a four-wire bond reading\n"
+          "            between the boards' grounds in the assembly and service procedures, or a detect line (not drafted).\n"
+          "   L8R2-F40 FOR LAYER 7 AND LAYER 6: the return sockets are XT60-F so that the pack lead (XT60-F) cannot enter them; a return lead's\n"
+          "            free XT60-M end could still be mated to the pack lead by hand: mark the leads. The XT60-F's land (KiCad's\n"
+          "            Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical) is NOT READ on this host and no LCSC code is carried.\n"
+          "   L8R2-F41 FOR LAYER 5: IF-AB-POWER gains the three return leads and the return's division (row texts in the page's section 3g).\n"
+          "   L8R2-F42 NOTED: the XT60's printed range starts at %.0f C, the envelope's cold end in use (%.0f C): no margin (the pack connector's\n"
+          "            source entry says the same).\n"
+          "   L8R2-F43 FOR LAYER 9 AND LAYER 5 (the supply pins, not the return): JST prints no ambient and no derating for the VH's %.0f A. On the\n"
+          "            severest reading of its sheet (the rating at %.0f C, the contact at its range's top) a pin 1 may carry %.4f A at the\n"
+          "            inside air; %s is over that reading on its steady HIGH figure and inside the printed rating. A question for JST\n"
+          "            (the rise at the rated current, or a derating curve) is drafted in the page and UNSENT.\n"
+          % (max(DR[(0, Tx)][0]["VH"][0] for Tx, _l in TEMPS), max(DR[(0, Tx)][0]["RIB"][0] for Tx, _l in TEMPS), worst(ACC, "VH18"), F["xt_awg"], F["xt_tmin"], TL,
+             F["vh_a16"], T_RATING_REF, vh_least, ", ".join(pin1_over) if pin1_over else "no pin 1"))
+
+        # ---------------------------------------------------------------- 9
+        w("\n9. PREDICATES\n")
+        f1 = [x for x in FC if x[0].startswith("F-1")]; f4a = [x for x in FC if x[0].startswith("F-4a")]; f4b = [x for x in FC if x[0].startswith("F-4b")]
+        f5 = [x for x in FC if x[0].startswith("F-5")]; f23 = [x for x in FC if x[0].startswith(("F-2", "F-3"))]
         preds = [
             ("the stop is reproduced after fans12, without and with Layer 9's draft", bool(first_stop and first_stop[0] == "fans12" and by["rt500"][0]["stop"] and by["iocbuck"][0]["stop"])),
             ("fans12 alone moves the sum, by 1.770 A; Layer 9's draft by 0.000 A", abs(fan_delta - 1.77) < 1e-9 and abs(sum(gI["loads"].values()) - sum(gc["loads"].values())) < 1e-9),
             ("the return's list is the union of the leads' allocations (no ampere twice)", abs(tot_c - sum(gc["loads"].values())) < 1e-9),
-            ("both netlists carry the same five lead contacts and seventeen ribbon conductors on GND", vhA == vhB and gA == gB and len(gB["J_AB1"]) + len(gB["J_AB2"]) == 17),
-            ("each draft checks, applies once, refuses twice and refuses the tree's generator", ok_guard),
-            ("the four orders give one generator and each runs to its end", one_gen and all_run),
-            ("the composed netlist and intent read DRAWN, the committed ones NOT DRAWN", vC == "NOT DRAWN" and all(v == "DRAWN" for v in checks.values())),
-            ("every mutation stops the generator or fails the check", all_mut),
-            ("the composed netlist also reads DRAWN under check_l8r2_netlist.py and check_gnd002_netlist.py (board B)", v8 == "DRAWN" and vg == "DRAWN"),
-            ("the derived peak equals the leads' sum and is not typed (22.23 A alone, 26.40 A composed, 27.78 A with Layer 9's)",
+            ("both committed netlists carry the same five lead contacts and seventeen ribbon conductors on GND", vhA == vhB and gA == gB and len(gB["J_AB1"]) + len(gB["J_AB2"]) == 17),
+            ("the derived peak equals the leads' sum and is not typed (22.23 A alone, 26.40 A composed, 27.9108 A with Layer 9's)",
              g1 is not None and abs(g1["amps_peak"] - pk_0) < 1e-6 and abs(res5["intent"]["rails"]["GND"]["amps_peak"] - pk_c) < 1e-6 and abs(gi2["amps_peak"] - pk_i) < 1e-6),
-            ("with Layer 9's draft the 5 V leads' declared peaks hold the budget's largest state with every start at once", bt[5] <= pk5_i),
-            ("without it they do not, by the device lead's shortfall (I-03, OPEN, Layer 9's)", bt[5] > pk5_c),
-            ("new equal contacts (K0, K1): no conductor passes its printed rating at any total, at 20 C and at the inside air", not new_over),
-            ("VH contacts at JST's after-test limit (K2): a ribbon conductor passes its printed 1 A at the upper bound", bool(aged_over)),
-            ("the printed extremes (K3 to K5): a lead contact and a ribbon conductor pass their ratings", bool(ext_over) and worst["VH"] > F["vh_a16"] and worst["RIB"] > F["cab_a"]),
-            ("the contacts' acceptance figures (3e) are all under JST's printed initial maximum", bool(thr_all) and max(thr_all) < F["vh_rc0"]),
-            ("a dedicated return holds every row on the printed maxima (3j, A1)", rs1 is not None and rs05 is not None and rs05 <= rs1),
-            ("more VH return contacts alone would take more than twice the six drawn (3j, A0)", n_all is None or n_all > 12),
+            ("with Layer 9's draft the 5 V leads' declared peaks hold the budget's largest state with every start at once", tot_big_starts <= pk5_i),
+            ("the recheck's corner is reproduced: J_5V_IOC's pin 2 on C-DEV rev 1 as drawn, over its printed 10 A", abs(v3_here - F["v3_ioc"]) < 2e-3 and v3_here > F["vh_a16"]),
+            ("round 7's sampled maximum is under the true one for a VH pin 2 and for a ribbon conductor, on every total",
+             all(old["VH"] < new["VH"][0] - 1e-6 and old["RIB"] < new["RIB"][0] - 1e-6 for old, new in missed)),
+            ("as drawn the return does not hold on C-DEV rev 1: a VH pin 2 and a ribbon conductor pass their printed ratings", bool(drawn_over) and all((k, 0) in drawn_over for k in ("VH", "RIB"))),
+            ("each of the four drafts checks, applies once, refuses twice and refuses the tree; the return draft refuses without gndret", ok_guard),
+            ("board B: the four orders give one generator and each runs to its end with no part unplaced", one_gen and all_run),
+            ("board A composes in L4-E9's order with the return draft first or last, to one netlist", a_run and a_same_net),
+            ("composed: the declaration DRAWN and the dedicated return DRAWN on both boards; committed: NOT DRAWN and NOT DRAWN", (vB, vP, vC, vPc) == ("DRAWN", "DRAWN", "NOT DRAWN", "NOT DRAWN")),
+            ("the composed netlists also read DRAWN under check_l8r2_netlist.py and check_gnd002_netlist.py, both boards", (v8, v8a, vg, vga) == ("DRAWN",) * 4),
+            ("every mutation stops the generator or fails a check (the return removed, on the wrong net, one termination dropped among them)", all_mut and len(muts) >= 13),
+            ("the census of the composed netlists is the model's: six leads, seventeen ribbon conductors, %d return conductors" % n_ret, n_ret == n_least and len(L_c) == 6),
+            ("WITH THE RETURN every branch with a printed rating is inside it at every vertex, both copper ends, all three totals", acc_printed),
+            ("and inside the least rating consistent with its sheet at the inside air", acc_least),
+            ("the ground shift is inside the LDOs' allowance", ACC["shift"] <= allow * 1e3),
+            ("J_54V's pin 2 has no printed rating as drawn (AWG 18) and has one with an AWG 16 lead, which every row then holds", bool(ACC["unrated"]) and not ACC16["unrated"] and ACC16["printed"]),
+            ("the XT60 contacts may age past their printed limit before a printed-rating row fails", a_pr is not None and a_pr > F["xt_r_new"]),
+            ("one return lead absent is tolerated inside the printed ratings and is latent (6g F-1)", all(x[2]["printed"] for x in f1)),
+            ("one open XT60 contact and one open VH pin 2 are tolerated inside the printed and the least ratings (6g F-2, F-3)", all(x[2]["least"] for x in f23)),
+            ("one stage in its current limit is tolerated inside the printed ratings (6g F-4a)", all(x[2]["printed"] for x in f4a)),
+            ("every source at its bound at once is NOT tolerated: a ribbon conductor passes its printed rating (6g F-4b)", not any(x[2]["printed"] for x in f4b)),
+            ("every return lead absent is not tolerated (6g F-5, the board as drawn)", not any(x[2]["printed"] for x in f5)),
+            ("the selection is the least number of leads that holds the least ratings, and the drafts draw it", n_drafted["a"] == n_drafted["b"] == n_least // 2),
         ]
         for tag, ok in preds:
-            w("   %-118s %s\n" % (tag, "yes" if ok else "NO"))
+            w("   %-134s %s\n" % (tag, "yes" if ok else "NO"))
     w("\nEND\n")
     return 0
 
