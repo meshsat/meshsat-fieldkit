@@ -83,6 +83,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    sqj407    1c1038b032b5bf37  v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf
    csd18510  cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
    l8p_f06   aa4e1fe9a3ec164c  v2/docs/records/l4e11/inputs/l8p-section12j-f06-69156072.md
+   l9stk_guard 90ae3c25377af117  v2/docs/records/l4e11/inputs/l9stk-section15.5-guard-43da41ca.md
    l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
    l4e9_hotswap ed22896891676446  3c09b3da:v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py (L4-E9's commit, read with git show)
    l8p2_out  4bed261029cdcabb  a46597e2:v2/docs/records/l8p/l8p_drafts.out (record l8p2's commit, read with git show; round 9)
@@ -493,7 +494,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    E11-26 | TEST | prototype bench | the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most 0.2 ms against the bank's 1 ms assumption gives the engineering margin the record names
    E11-27 | IMPLEMENTATION | Layer 8 board A generator owner | apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (C3278350) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R228 11k 0.1 %, C237 22 nF, MODE to GND, C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C from GND to OUT, within 20 nH of C236, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each
    E11-28 | FIRMWARE | firmware owner | the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 5.7 V on SRN (section 15c)
-   E11-29 | LAYOUT | Layer 9 pre-layout analysis | the junction limit of record l9stk 15.5 (E-1; round 9, section 19c), sized before layout and measured on the specimen of section 17d (a coupon or the controlled first prototype; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most 40.78 K/W steady by the body diode's VSD method with the band carrying 23.93 A and R17 dissipating in place, R17's coupling into each junction at most 1 K/W (heat R17 alone), so the hottest junction stays at most 150 C held at 23.93 A from 76.25 C for ANY split of the RDS(on) spread under the allowance (round 11, section 21: one FET at R / 2 takes 9/8 of the even split's loss, so record l9stk's even-split 45.88 K/W is taken times 8/9; with Zself and Zmut read apart, the largest of each into any junction, (Zself + 2 Zmut) at most 45.88 x 8 (1 - m)(1 + 2 m) / 9 for m = Zmut / Zself under 1/4, 45.88 at or over it) (the pair's fallback, its Zself + Zmut at most 20.39 K/W, the even split its worst); the pair's former 33.12 K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it; recorded OPEN in round 10 (section 20i) on the even split, corrected in this acceptance by round 11 (section 21d), CONDITIONAL on this measurement; the coupon also reads the PTC's site (RT1 at the drain tabs' centroid) against each junction with one FET heated alone at the worst split's 1.513 W, so the thermal guard's trip side is judged on the hottest FET and not on the even split (round 12, the check V2's V2-m5; record l8p's guard)
+   E11-29 | LAYOUT | Layer 9 pre-layout analysis | the junction limit of record l9stk 15.5 (E-1; round 9, section 19c), sized before layout and measured on the specimen of section 17d (a coupon; the first prototype only once its three gates can be driven apart, section 23d; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most 40.78 K/W steady with the band carrying 23.93 A and R17 dissipating in place, R17's coupling into each junction at most 1 K/W (heat R17 alone), so the hottest junction stays at most 150 C held at 23.93 A from 76.25 C for ANY split of the RDS(on) spread under the allowance (round 11, section 21: one FET at R / 2 takes 9/8 of the even split's loss, so record l9stk's even-split 45.88 K/W is taken times 8/9; with Zself and Zmut read apart, the largest of each into any junction, (Zself + 2 Zmut) at most 45.88 x 8 (1 - m)(1 + 2 m) / 9 for m = Zmut / Zself under 1/4, 45.88 at or over it) (the pair's fallback, its Zself + Zmut at most 20.39 K/W, the even split its worst); the pair's former 33.12 K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it; recorded OPEN in round 10 (section 20i) on the even split, corrected in this acceptance by round 11 (section 21d), CONDITIONAL on this measurement; the coupon also reads the PTC's site (RT1 at the drain tabs' centroid) against each junction with one FET heated alone at the worst split's 1.513 W, so the thermal guard's trip side is judged on the hottest FET and not on the even split (round 12, the check V2's V2-m5; record l8p's guard); the method (round 13, section 23, after the owner's supplier-delta review's DELTA-02: the three body diodes are in parallel, so the earlier 'each FET heated through its body diode alone, each junction by its own VSD' is WITHDRAWN): on a coupon with board A's drain and source pours unchanged and the three gates brought out apart, one channel conducts at a time, selected by its gate, the current entering at the source so the other two are off and their body diodes reverse-biased; each device's heating power is the supply's current times that device's own source-to-drain voltage on four-wire taps; each junction is read by that device's threshold voltage at 1 mA with its gate switched to the drain, the other gates on the source, against a K-factor calibrated in an oven in the same connection; cases: each FET alone at 1.345 W and at 1.513 W (the 3 x 3 matrix of Zself and Zmut, its reciprocity checked), the three evenly at 1.345 W each and the worst split (1.513 W in one, 0.756 W in each other, each FET in turn) by time division in slots of at most 244 us, the band carrying 23.93 A and R17 dissipating in place; acceptance: each FET's (Zself + 2 Zmut) at most 40.78 K/W less the budget's 3.22 % (a reading of 39.51 K/W or under), or by the measured m as section 21b; the worst split's hottest junction at most 71.45 K over the air (73.75 K less the budget); R17's coupling at most 1 K/W; the PTC's site (RT1's land at the drain tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard
    E11-30 | EVIDENCE | Layer 6 components | the WHOLE hot docking waveform accepted (sections 16d and 17b): 242.9 A peak, time constant 33.8 us, from a +70 C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: 6 parts, each 2000 pulses 10 s apart at 267.2 A peak and 37.2 us (x1.1), mounting base 75 C, every part passing VSD at 80 A pulsed within +5 % of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 % and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown)
    E11-31 | TEST | prototype bench | the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least 12.054 V; CHRG_INHIBIT 1 with SRN over 12.546 V, VSRN plus 150 mV within 2 percent, under 12.054 V at least 12.054 V, between at least 11.96 V; the held pack current at most 1 mA with board E on VSYS_E; the start from cold at VBUS20 19.15 and 20.96 V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and 62.1 C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more
    E11-32 | EVIDENCE | Layer 6 components | the BQ25730RSNR's supply for the build quantity (five boards) from an authorised source, filed: LCSC read stock 0 on 2 October 2026 (the Layer 6 author's L6P-F05: a procurement fact for the owner's list, not a reselection; TI and its distributors are the next sources to read), and the two battery FETs' (BUK6Y10-30PX, LCSC stock 67)
@@ -1292,8 +1293,10 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
        held there only past RT1 91.1 kOhm (INFERRED)
      against board P's guard: board A reads the closed return as held only past RT1 269 kOhm at 10.6 V and 445 kOhm at 16.8 V; board P's first
        inverter turns off (RET 2.5 to 1.0 V) from 61.3 to 201.2 kOhm at 10.6 V: board A never reads held before the guard's own trip (INFERRED)
-     the bound point (l9stk, 10.6 V, RT1 47 kOhm): the first inverter's gate 2.952 V unloaded (2.939 V with round 9's 2 MOhm), 2.894 V with round 10's (R109 + R144 on
-       DOCK_EN_OUT, 2 uA on the return), against its 2.5 V; board A reads it closed with 2.054 V to spare
+     the loop at 10.6 V and RT1 47 kOhm (record l9stk's former 'bound point'; WITHDRAWN as a bound by round 13, section 23g: 47 kOhm is not a
+       point of this part): the first inverter's gate 2.952 V unloaded (2.939 V with round 9's 2 MOhm), 2.894 V with round 10's (R109 + R144 on
+       DOCK_EN_OUT, 2 uA on the return), against its 2.5 V; board A reads it closed with 2.054 V to spare: board A's loads move the loop's
+       levels by 0.058 V there, and no more is claimed of it (INFERRED)
      CELL+ (U47 channel 2, read only while an inhibit is asked and the loop is powered): dead under 4.076 V at least, alive over 4.774 V at most
        (k 0.17441 to 0.18024, the foot at RESET's 0.0598 V at its sink, VOL 300 mV at 5 mA read as 60 ohm)
    20d. THE DELAYS (INFERRED; each element's bound named)
@@ -1326,8 +1329,10 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
        sources total under 520.7 uA (the coupled limit, round 12; 0.859 s is the figure with no source, which rounds 10 and 11 printed alone)
      the release: the breaker's restart drives CELL+ over 4.774 V against R256's 3.57 mA at 16.8 V, inside IF-1's 0.81 A room
    20f. THE SERVICE UNTOUCHED (INFERRED)
-     10 A held, 18 A for 60 s and every current-limit excursion: the breaker on, the return at least 2.894 V at the pack's 10.6 V with RT1 to its
-       47 kOhm, read closed with 2.054 V to spare; board P's detector never pulls a running breaker (record l8p 12e): no trigger, no hold, no request;
+     10 A held, 18 A for 60 s and every current-limit excursion: while the breaker is on, board A reads the return closed for any RT1 under
+       269 kOhm at the pack's 10.6 V (445 kOhm at 16.8 V), past the guard's own trip (20c): 2.894 V at RT1 47 kOhm, which bounds nothing (round 13, 23g:
+       whether the guard itself stays closed in the service is not printed, record l8p's L8P-F07); board P's detector never pulls a running
+       breaker (record l8p 12e): no trigger, no hold, no request;
        Q47, Q48 and Q52 idle; Q46 blocks the input-return pulse (DD7_N high): no board A part acts on a running breaker or its loop
      the precharge and the gauge's wake (a closed loop back-fed through the body diodes): never read held while RT1 is under 25.8 kOhm; CELL+ never
        sets the inhibit: a dead pack's precharge passes (round 9's inhibit set on CELL+ under its dead point whenever the loop read powered,
@@ -1603,6 +1608,139 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    22i. STATUS (SESSION): V2-B1 answered by correction (b); need 1 CONDITIONAL on E-14c and E11-45 (f2), OPEN until one reads; need 2 holds
      on TI's printed rows without a second fault; R84 stays specified pulse-rated (CONDITIONAL, Layer 6); the netlist reads DRAWN at 4.7 kOhm;
      the round is the author's answer to V2's first negative check of the 6.8 kOhm value and is UNVERIFIED until its targeted recheck
+
+23. ROUND 13: DELTA-02, E11-29'S METHOD ON THREE PARALLELED BODY DIODES, AND SECTION 20c ON MURATA'S PRINTED POINTS (4 October 2026; C-PROT rev 1)
+   23a. THE DEFECT (the owner's supplier-delta review of 4 October 2026, DELTA-02, P1; NETLIST, MAKER, INFERRED)
+     the draft: cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+       draws Q39, Q40 and Q42 by one statement: every gate on CH_BATDRV, every drain on CH_BATQ, every source on VBAT: no terminal has a net of its own
+     the part (Nexperia BUK6Y10-30P, 17 April 2020): Table 2 (p.2) pins 1 to 3 source, 4 gate, the mounting base the drain, the symbol's diode
+       from drain to source of this P-channel part; the source-drain diode rows IS 80 A (p.3) and VSD 0.7 V typical, 1.2 V at most at 80 A
+       (p.6): so the three body diodes are in parallel between CH_BATQ and VBAT (MAKER, INFERRED)
+     E11-29 as rounds 9 to 12 wrote it, and TP-E11-29 after it: heating one diode alone: NO: both terminals of the path are common and nothing selects one device: the three are in parallel
+       reading one junction by its own VSD: NO: both terminals of the path are common and nothing selects one device: the three are in parallel
+       three sources on the same two nets do not set one diode's current, and four-wire taps remove lead drops, they isolate nothing;
+       rounds 11 and 12 moved the limit to 40.78 K/W and kept this method: the limit was not the defect (DELTA-02, reproduced; INFERRED)
+   23b. THREE METHODS: THE CURRENT PATHS IN CALIBRATION, HEATING AND SENSING (SESSION; INFERRED)
+     (A) a coupon whose three sources sit on islands of their own, island k joined to the VBAT pour by a link Lk, gate k on island k
+       calibration (oven; links open):  source k (+) -> CH_BATQ pour (the common anode) -> body diode k -> island k -> source k (-), at the sense current
+       heating (links open):            the same path at the heating current, one source a device; P_k = I_k x V(drain tab k, island k)
+       sensing (links open):            source k back to the sense current; VSD_k read on its own taps, the three at once
+       the coupon's electrical test:    links closed (the three in parallel, as board A)
+     (B) the pours as board A's; only the gates apart: gate k to a driver, the other gates on VBAT (off)
+       calibration (oven):   I_M 1 mA (+) -> VBAT pour (the common source) -> channel k at threshold, GATE k ON CH_BATQ -> CH_BATQ pour -> (-)
+                             (VDS = VGS, the connection of the sheet's own threshold row);
+                             the other two off, their body diodes reverse-biased (the source positive); V(source tap k, drain tap k) is device k's threshold
+       heating:              I_H (+) -> VBAT pour -> channel k, gate k driven 10 V under VBAT -> CH_BATQ pour -> shunt -> (-); P_k = I_H x V(source tap k, drain tap k)
+       sensing:              I_H off, gate k switched to CH_BATQ, I_M as in calibration; then gate j, then gate l in turn (one device read at a time)
+       several heated:       time division: the channels conduct in turn in slots of at most 244 us, so each device's power is still I_H x its own VDS over its slots
+     (C) the pours as board A's, the gates on VBAT
+       calibration, heating, sensing:  one source (+) -> CH_BATQ pour -> THREE body diodes in parallel -> VBAT pour -> (-): the total power and one voltage
+   23c. EACH METHOD JUDGED (per-device heating power and junction temperature; MAKER rows, INFERRED, ASSUMPTION as named)
+     (A) a coupon whose three sources sit on islands of their own behind links, each gate on its own island: body-diode heating, VSD sensing
+       heating one device, on its specimen: YES: a terminal of the path is on a net of the device's own
+       reading one junction, on its specimen: YES: a terminal of the path is on a net of the device's own
+       on board A as drafted (no gate, drain or source of a device's own): heating NO, reading NO (INFERRED)
+       power: each source's current times its own VSD, within the block's 1 % (INFERRED); temperature: VSD at a fixed sense current, the K-factor within 2 %
+       budget on (Zself + 2 Zmut): 2.89 % (the block's three terms), a reading of 39.64 K/W or under; Zself and Zmut separable electrically
+       the copper: the VBAT source pour is cut into three islands behind links, and each gate leaves the common node: the source leads' heat
+         path and the coupling through the source pour are not board A's. Transfer: joining the islands again adds conductance between the three
+         and to the pour, which lowers the hottest junction for the FETs' own heat (the coupon is the safe side there), but Zmut reads LOW, so
+         section 21b's relaxed bar cannot be fed, and heat reaching the FETs through the VBAT copper from its neighbours reads LOW: an allowance
+         a second specimen would have to give (INFERRED; not a measurement uncertainty, so not in the 2.89 %)
+     (B) the pours as board A's, the three gates brought out apart: one channel at a time selected by its gate, heated source to drain, its threshold read with the gate on the drain
+       heating one device, on its specimen: YES: the channel is selected by a gate of the device's own, the unselected body diodes reverse-biased
+       reading one junction, on its specimen: YES: the channel is selected by a gate of the device's own, the unselected body diodes reverse-biased
+       on board A as drafted (no gate, drain or source of a device's own): heating NO, reading NO (INFERRED)
+       power: one channel conducts at a time, so P_k is the supply's current times device k's own VDS; the two off devices carry their leakage
+         (Nexperia: IDSS at most 10 uA each at 125 C); alone at 1.513 W: 8.46 to 13.75 A (the allowance to the typical 25 C 8 mOhm); the three evenly
+         by time division 13.82 to 22.46 A (4.034 W in the conducting one), the worst split 11.96 to 19.45 A (3.026 W; duties 0.5 and 0.25), all under ID's 57 A
+         at a 100 C mounting base (MAKER, p.3); the junction's ripple at most 1.04 K (the device's 0.2589 K/W at 244 us, section 16b's reading)
+       temperature: device k's threshold at 1 mA with its gate on its drain (Table 7, p.6: 1.5 / 2 / 3 V at 250 uA and 25 C; Fig. 11, p.8, prints it
+         against junction temperature; no coefficient is printed: the K-factor is calibrated per device, as VSD's was); the sense current heats
+         the junction by at most 0.12 K; the two off devices divert at most 2 % of it at 125 C (MAKER, INFERRED)
+       budget on (Zself + 2 Zmut), expanded terms in quadrature on the 54.84 K rise at the bar:
+         the K-factor: 2 %
+         the heating power: 1 %
+         the air within 1 K: 1.82 %
+         the threshold reading repeated between two calibrations, 0.5 K: 0.91 %
+         the off devices' leakage in the sense current, 0.3 K: 0.55 %
+         half the time-division ripple, 0.52 K: 0.95 %
+         in all 3.22 %: a reading of 39.51 K/W or under passes the 40.78 K/W bar (the last three terms are SESSION proposals, the supplier's to confirm)
+       Zself and Zmut: separable, device by device: k alone gives Zself k and the two Zmut into the others; the matrix's reciprocity (Zjk against
+         Zkj) checks the method on the specimen; section 21b's formula is fed by the largest Zself and the largest Zmut (INFERRED)
+       the copper: the drain pour, the source pour, R17, the band and RT1's land are board A's; only the three gate traces differ, which carry
+         no heat of consequence. Transfer: block E11-29's comparison rule, unchanged (INFERRED)
+     (C) the three body diodes heated and read together on the pours as drafted: the total power and one voltage
+       heating one device, on its specimen: NO: both terminals of the path are common and nothing selects one device: the three are in parallel
+       reading one junction, on its specimen: NO: both terminals of the path are common and nothing selects one device: the three are in parallel
+       on board A as drafted (no gate, drain or source of a device's own): heating NO, reading NO (INFERRED)
+       power: the total only, within 1 %; the split between the three follows each diode's own forward voltage, and the hotter diode takes
+         more: no device's power is known (INFERRED)
+       temperature: one voltage; at the sense current it lies between the three evenly sharing and the hottest carrying it all, a bracket of
+         n (kT/q) ln 3 over the K-factor = 20 K at 150 C (ASSUMPTION: n 1, 2 mV/K), 37 % of the 54.84 K rise at the bar, against the 11.1 %
+         between the bar's two forms (40.78 and 45.88 K/W): it cannot decide the acceptance
+       Zself and Zmut: not separable; no split can be imposed, the worst split least of all. The copper is board A's. It can bound: the
+         region's total power against one bracketed junction, a cross-check of (A) or (B), never the acceptance (INFERRED)
+   23d. THE SELECTION (SESSION)
+     SELECTED: (B). It is the only one of the three that leaves the copper as board A's, gives each device's power and junction with no
+       assumption about sharing, and can impose the worst split itself; it costs a gate driver per device, a sequencer and a threshold
+       calibration whose repeatability the specimen must show
+     reversed by: the two threshold calibrations (before and after the runs) differing by more than 0.5 K, or the matrix failing reciprocity
+       beyond the budget, or no supplier agreeing to the setup: then (A), judged on the 40.78 K/W bar alone with the VBAT copper's allowance
+       named as owed; (C) only as a cross-check (INFERRED)
+     the first prototype of board A is NOT a specimen for (B) as drafted: its three gates share CH_BATDRV (heating NO); it becomes one only with
+       a removable link in each gate branch, a change to the charger draft and the layout NOT DRAFTED here (owed before the prototype's layout; RECORD)
+   23e. E11-29'S ACCEPTANCE ON (B) (C-PROT rev 1: 23.93 A held from 76.25 C; the row of section 8 carries this text; RECORD, INFERRED)
+     the method (round 13, section 23, after the owner's supplier-delta review's DELTA-02: the three body diodes are in parallel, so the earlier 'each FET heated through its body diode alone, each junction by its own VSD' is WITHDRAWN): on a coupon with board A's drain and source pours unchanged and the three gates brought out apart, one channel conducts at a time, selected by its gate, the current entering at the source so the other two are off and their body diodes reverse-biased; each device's heating power is the supply's current times that device's own source-to-drain voltage on four-wire taps; each junction is read by that device's threshold voltage at 1 mA with its gate switched to the drain, the other gates on the source, against a K-factor calibrated in an oven in the same connection; cases: each FET alone at 1.345 W and at 1.513 W (the 3 x 3 matrix of Zself and Zmut, its reciprocity checked), the three evenly at 1.345 W each and the worst split (1.513 W in one, 0.756 W in each other, each FET in turn) by time division in slots of at most 244 us, the band carrying 23.93 A and R17 dissipating in place; acceptance: each FET's (Zself + 2 Zmut) at most 40.78 K/W less the budget's 3.22 % (a reading of 39.51 K/W or under), or by the measured m as section 21b; the worst split's hottest junction at most 71.45 K over the air (73.75 K less the budget); R17's coupling at most 1 K/W; the PTC's site (RT1's land at the drain tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard
+     the bar by form: 40.78 K/W for any coupling (a reading of 39.51 or under); 45.88 K/W for m at or over 1/4 (44.45 or under); the direct case: the worst
+       split's hottest junction, the band and R17 on, at most 73.75 K over the air less the budget, 71.45 K (INFERRED)
+   23f. THE CORRECTION SCOPE FOR TP-E11-29 (rewritten on it in this round, by the coordinator's instruction; it stays NOT EXECUTABLE; RECORD)
+     1. replace the body-diode excitation and the VSD reading (its sections 2, 4, 5 and 6: 'each FET heated alone', 'the VSD sense taps', the
+        K-factor by VSD) by method (B)'s three connections of 23b, with a fixture schematic showing the supply, the shunt, the three gate
+        drivers, the sense source and each device's four-wire taps in calibration, heating and sensing; the gates switch make-before-break
+        (or the supply is clamped), so the heating supply never meets three channels off
+     2. the coupon: board A's region as before, with the three gate traces brought to the fixture apart and a tap pair at each device's source
+        leads and drain tab; no source island, no cut in either pour
+     3. the cases of 23e (each alone at two powers, the three evenly, the worst split with each FET in turn, R17 alone, the band on) and the
+        thermocouple on RT1's land in every case
+     4. the validity checks: two threshold calibrations within 0.5 K; reciprocity; the off devices' leakage read at the run's temperature and under
+        1 % of the sense current, else a larger sense current with its own heating restated; the ripple at the slot chosen
+     5. the limits of 23e with the uncertainty budget recomputed for the supplier's instruments; the register's R-159, which still carries
+        round 9's 45.88 K/W, is L4-E9's to restate from E11-29's row
+     6. it stays NOT EXECUTABLE until the method and the limits are independently checked and a supplier agrees to the setup
+   23g. SECTION 20c RESTATED ON MURATA'S PRINTED POINTS (record l9stk's round 4, fnd/l9stk2 at 43da41ca, its 15.5 copied to inputs/; RECORD, INFERRED)
+     the PRF15BB103 prints 10 kOhm +-50 % at 25 C, 100 kOhm at a sensing temperature over 110 C (no upper bound) and 4.7 MOhm at 130 +-3 C;
+       '47 kOhm at 130 C' is the 470 ohm groups' column (this record's own finding L4E11-R10-F3; record l8p's L8P-F07, OPEN). With board A's loads:
+         RT1 25 C, at least 5 kOhm,                   BRK_VIN 10.6 V: DOCK_EN_RET 6.239 V, board P's first inverter on, board A reads the return closed
+         RT1 25 C, at least 5 kOhm,                   BRK_VIN 16.8 V: DOCK_EN_RET 9.898 V, board P's first inverter on, board A reads the return closed
+         RT1 25 C, at most 15 kOhm,                   BRK_VIN 10.6 V: DOCK_EN_RET 4.899 V, board P's first inverter on, board A reads the return closed
+         RT1 25 C, at most 15 kOhm,                   BRK_VIN 16.8 V: DOCK_EN_RET 7.778 V, board P's first inverter on, board A reads the return closed
+         RT1 100 kOhm, reached somewhere over 110 C,  BRK_VIN 10.6 V: DOCK_EN_RET 1.714 V, board P's first inverter not defined, board A reads the return closed
+         RT1 100 kOhm, reached somewhere over 110 C,  BRK_VIN 16.8 V: DOCK_EN_RET 2.737 V, board P's first inverter on, board A reads the return closed
+         RT1 4.7 MOhm at 130 +-3 C,                   BRK_VIN 10.6 V: DOCK_EN_RET 0.005 V, board P's first inverter off, board A reads the return held and the loop powered
+         RT1 4.7 MOhm at 130 +-3 C,                   BRK_VIN 16.8 V: DOCK_EN_RET 0.034 V, board P's first inverter off, board A reads the return held and the loop powered
+     the first inverter with board A's loads: on while RT1 is under 59.2 kOhm at 10.6 V (112.3 kOhm at 16.8 V), off from 190.2 kOhm (319.5 kOhm) (nominal resistors,
+       the return's 2 uA drawn; record l9stk reads 58.4 and 110.9 kOhm, 203.4 and 341.2 kOhm with its tolerances: a consistency check, not an input)
+     WHAT NO LONGER STANDS: 20c's 'bound point (l9stk, 10.6 V, RT1 47 kOhm)' and the 2.952 / 2.894 V read on it, and 20f's 'the return at least 2.894 V
+       ... with RT1 to its 47 kOhm, read closed with 2.054 V to spare': 47 kOhm is not a point of this part, so they bound nothing in service; they
+       stay only as the loop's reading at one resistance. Between 25 C and 110 C the part prints only 'under 100 kOhm', where the first
+       inverter at 10.6 V is not defined: whether the guard stays closed in the 10 A and 18 A service is not printed (L8P-F07)
+     WHAT STANDS: board A's own thresholds; board A reads the closed return as held only past 269 kOhm at 10.6 V (445 kOhm at 16.8 V), after the guard's
+       own trip; the window's bound (25.8 kOhm) with its condition of 20l; and a tripped PTC (4.7 MOhm) holds the return low with the loop powered,
+       so a guard trip already sets DD-7's inhibit
+     THE GUARD RECORD l9stk SELECTED (a factory-set temperature switch, no trip under 127.8 C, tripped from 132.2 C, pulling the return, a fixed
+       15 kOhm in RT1's place; NOT DRAFTED, its draft record l8p's with this record): a trip pulls DOCK_EN_RET low while DOCK_EN_OUT stays
+       powered, which is DD-7's trigger: the inhibit sets at the trip itself (within 0.85 ms), holds at least 1.341 s after the return rises and
+       keeps until CELL+ reads alive: a thermal trip takes the breaker AND the battery FETs off. With the fixed 15 kOhm this record's loop reads:
+         BRK_VIN  7.6 V: the pulled loop's DOCK_EN_OUT 4.532 V (powered over 1.981 V at most), the closed return 3.506 V (closed over 0.84 V)
+         BRK_VIN 10.6 V: the pulled loop's DOCK_EN_OUT 6.321 V (powered over 1.981 V at most), the closed return 4.899 V (closed over 0.84 V)
+         BRK_VIN 16.8 V: the pulled loop's DOCK_EN_OUT 10.019 V (powered over 1.981 V at most), the closed return 7.778 V (closed over 0.84 V)
+       OWED READING, once the guard is drafted (this record with record l8p; nothing drafted or checked here): the switch's pulled level against
+       0.7755 V; the release against the hold and section 22's bleed, a trip being the hot bound itself; the kit's state through a trip with a
+       source present; the 30 uA the switch adds on DOCK_EN_OUT against U48's divider (INFERRED)
+   23h. STATUS (SESSION): DELTA-02 answered in the record and in the procedure: the method selected, E11-29 restated on it, TP-E11-29 rewritten on
+     it and NOT EXECUTABLE until independently checked and a supplier agrees; E11-29 stays CONDITIONAL on its measurement; nothing is built or measured;
+     no circuit changed, so no netlist reading applies; 20c restated; the guard's reading on DD-7 OWED (RECORD)
 
 END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py
 (R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three
