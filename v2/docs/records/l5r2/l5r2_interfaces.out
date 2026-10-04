@@ -4,7 +4,7 @@ NOT READ; DRAFTED: true of a release-guarded draft no generator carries; PROVISI
 
 0. INPUTS (sha256)
    yaml       393305bed4edfd26588164da96871f17ce70492688e5648729545a3cc5987023  v2/ecad/tools/pcb_interfaces.yaml
-   hwfw       56ece4e160267333afd737cdd22cac656325c82ff8df67ec84fc3ca618771059  v2/docs/HW-FW-CONTRACT.md
+   hwfw       9b0d04c39beafb7dd3ef3269b05e2230fe68ee019dc83c2e0c9be0ea80d391db  v2/docs/HW-FW-CONTRACT.md
    base_yaml  22aeae7530c8f52361c248f7d923e2bbd0be700d71e353c188fedd3705d035fb  a1f696de@v2/ecad/tools/pcb_interfaces.yaml
    base_hwfw  7b8cb44aeb5547911ca04c2468f18d5dcdb19f03a533e093f31a1fce2e48e758  a1f696de@v2/docs/HW-FW-CONTRACT.md
    e18        0f3a1f39367c449c4ee6bdf7fc3a6212ea4981d51295381714f70a6be62698b3  v2/docs/records/l5r2/inputs/l4e11-section-18-b929d8be.md
