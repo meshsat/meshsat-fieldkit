@@ -2039,6 +2039,24 @@ def f02_inputs(F, T):
             for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["constraint"] if d["id"] == "D-15" else "", d["options"], d["state"], d["resolution"]])):
                 if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(x), src):
                     refuse(4, "%s cites %s, which L4-E11 does not print" % (d["id"], x))
+    # set 29: L4-E11's round 9 (its output section 19): E11-29 restated as record l9stk's junction limit for the three battery FETs
+    # (19b, 19c) and E11-37 rebound to the three-device network (19d); read, never recomputed
+    if t.count("\n19. ROUND 9: ") != 1:
+        refuse(3, "L4-E11's section 19 (round 9)")
+    s19 = t.split("\n19. ROUND 9: ")[1].split("\nEND.")[0]
+    for k in "bcd":
+        if s19.count("\n   19%s. " % k) != 1:
+            refuse(3, "L4-E11 19%s" % k)
+    r9 = {k: one(s19.split("\n   19%s. " % k)[1].split("\n   19%s. " % chr(ord(k) + 1))[0]) for k in "bcd"}
+    m = need(r9["c"], r"each FET's \(Zself \+ 2 Zmut\) at most ([\d.]+) K/W steady with R17 placed apart, R17's coupling into each junction at most ([\d.]+) K/W", "the three's junction limit (19c)")
+    g["z3"], g["r17c"] = f(m, 1), f(m, 2)
+    m = need(r9["c"], r"the hottest junction stays at most 150 C held at ([\d.]+) A from ([\d.]+) C with the band and R17 in place \(CONDITIONAL on E11-29\)", "the held limit (19c)")
+    g["held_lim"] = (f(m, 1), f(m, 2))
+    need(r9["c"], r"the pair's former steady target [\d.]+ K/W at \+70 C air and its 1 s, 20 ms and 244 us targets are WITHDRAWN", "the pair's targets withdrawn (19c)")
+    g["z2_fb"] = f(need(r9["b"], r"the fallback \(RECORD, l9stk\): the pair at ([\d.]+) K/W with R17 apart, if E11-37 refuses three", "the pair's fallback (19b)"))
+    m = need(r9["d"], r"Ciss ([\d.]+) nF typical at -15 V and about ([\d.]+) nF near 0 V for the three", "the three's Ciss (19d)")
+    g["ciss3"] = (f(m, 1), f(m, 2))
+    need(r9["d"], r"STATUS: OPEN, condition: Q-TI-17 \(extended to three devices, drafted, not sent\) or E11-37's bench with the three", "19d's status")
     return g
 
 
@@ -6362,7 +6380,7 @@ CHANGE_ORDER = [
     ("3a", "R-157", GA, "U-04's selected charger (B1): the BQ25730 and the battery FET pair Q39 and Q40 in U3's land, J_DOCK pin 1 on VSYS_DOCK behind U42 (R-181), with R-124 in either order; the strap kept fixed", G_L4E11 + " and its check 5 at 5aa18a69 (the pair: its fix round at 656fc540)"),
     ("3a", "R-181", GA, "with R-157 (the same draft): U42 from VBAT to the new net VSYS_DOCK on J_DOCK pin 1; before board E's VSYS_E feed (R-177)",
      G_L4E11 + " and its fix round at d2a59468 (L4-F03)"),
-    ("3a", "R-209", GA, "with R-157: the third battery FET beside Q39 and Q40, its designator L4-E11's (l9stk 15.5); RT1 (R-208) on the three FETs' copper", "no draft yet"),
+    ("3a", "R-209", GA, "with R-157 (the same draft, L4-E11 19b): the third battery FET Q42 beside Q39 and Q40 (l9stk 15.5); RT1 (R-208) on the three FETs' copper", G_L4E11_R9),
     ("3a", "R-178", "pcb_interfaces.yaml (IF-AE-DOCK; the Layer 4 coordinator)", "with R-157 and R-177: the dock's pin 1 VSYS_DOCK (behind U42) and VSYS_E, seven ground contacts", G_L4E11),
     ("3b", "R-04", GA, "after R-01: R11 never before R12", G_L4E4),
     ("3c", "R-07", GA, "after R-01: the ballasts and Cc2 only with R12", G_L4E8),
@@ -7453,8 +7471,8 @@ def cons_review_lines(F):
 # Prices are the ones this tree has READ and filed (each checked against its source file here); an item whose price was not read says so.
 # Nothing is bought, nothing is sent: purchases and outside contact are the owner's.
 PRICES = {
-    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's pair, four spare)",
-            "maker": "Nexperia", "qty": 20, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
+    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons of three, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's three, four spare)",
+            "maker": "Nexperia", "qty": 23, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
             "key": ("price_usd", "10"), "note": "the 10-piece tier, LCSC C3278350, stock 67 on 2 October 2026"},
     "d23": {"what": "B540C-13-F (D23 on E11-38's specimen)", "maker": "Diodes", "qty": 5, "cur": "USD", "unit": 0.2332,
             "src": "v2/docs/records/l4e11/inputs/lcsc-C72264-price-2026-10-02.json", "key": ("price_usd", "5"), "note": "the 5-piece tier, LCSC C72264"},
@@ -7558,9 +7576,10 @@ def cons_qual(F):
          "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
          un("T-H1") + "; " + pr("fan60") + "; " + pr("fan40") + " (the T-H1 mock-up's own bill is Layer 7's T-H1-MOCKUP-SPEC.md at 2087060b, cited, not copied)", sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
         ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"] + BLOCK_RULE % "E11-29",
-         "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
+         "D-14's installed path, the three FETs (L4-E11 19c, record l9stk's junction limit E-1): each FET's (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart and R17's coupling into each junction at most %s K/W, so the hottest junction stays at most 150 C held at %s A from %s C with the band and R17 in place, at the RDS(on) allowance; the fallback, if E11-37 refuses three, the pair's (Zself + Zmut) at most %s K/W with R17 apart"
+         % (fmt(F["f02"]["z3"]), fmt(F["f02"]["r17c"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])),
          sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
-         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none"),
+         pr("buk", 6) + "; " + un("E11-29, E11-36"), "none"),
         ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"] + BLOCK_RULE % "E11-30",
          "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
          % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock"][1]), pl[4], pl[3], fmt(pl[0]), fmt(pl[1]), fmt(pl[2])),
@@ -7571,9 +7590,10 @@ def cons_qual(F):
          sp["E11-36"]["blocks"], "an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading)", OWN + "the parts and the coupon",
          pr("buk", 4) + "; " + un("E11-29, E11-36"), "none drafted: Nexperia's maximum at -8.5 V and 150 C would close it for every lot (a draft is owed to L4-E11)"),
         ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"] + BLOCK_RULE % "E11-37",
-         "D-14's Ciss against TI's 5 nF: the pair (S1) or one FET with a heat path through the case (S2)",
+         "D-14's gate drive with the three FETs on one BATDRV (L4-E11 19d): Ciss %s nF typical at -15 V and about %s nF near 0 V against TI's 5 nF, each FET's current share and junction; OPEN on Q-TI-17 or this bench: the three (S1), or on a negative answer the pair at its fallback or one FET with a heat path through the case (S2)"
+         % tuple(fmt(x) for x in F["f02"]["ciss3"]),
          sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
-         pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
+         pr("buk", 3) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
         ("E11-31 (R-161)",
          "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, U22's 12.0 V rail with its capacitors C142 to C148 and the four-wire fan headers) and the pack or a pack simulator",
          "the charger's three modes under (B1): the pack absent, the charge inhibited with the pack present, the held pack current, the start from cold at -20, 25 and 62.1 C, D2's step response",
