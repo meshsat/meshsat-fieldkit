@@ -11,7 +11,7 @@ answers the copper question on boards A and E** as a candidate copper-sizing res
 verification: the pack path sized at the blades' 25 A with a band's faces and its adjacent return rated as one conductor, the
 coordination table and the open owner decision (L9STK CU) on the outer copper weight, from `l9stk_copper.py` and its output; it
 supersedes the copper widths of sections 3 and 7. **Section 15 (4 October 2026, the owner's correction) designs W4DP-F2's
-firmware-independent element** on a current-and-time criterion: an LM5069-2 breaker on board P with a make-last dock enable,
+firmware-independent element** on a current-and-time criterion: an LM5069 breaker on board P (the -1, latch-off) with a make-last dock enable,
 drafted, and the battery FETs' junction limit met by a third FET, from `l9stk_protection.py` and its output (revised after the
 recheck PROTECTION: NOT CONFIRMED).
 
@@ -359,7 +359,7 @@ round 3 (`fnd/l8r3` at `854a2bf5`, merged here for its drafts) raised the confli
   - At 2 oz the band and its return take 39.14 mm a face.
 - **The protection.** Parts, not copper, limit every overload row beyond the 25 A case.
   - Q39/Q40 pass 150 C held at 21.38 A, R17 its 5 W at 31.62 A, the XT60 its 30 A.
-  - These rows need **W4DP-F2's** firmware-independent element: section 15 designs it (an LM5069-2 breaker on board P with a
+  - These rows need **W4DP-F2's** firmware-independent element: section 15 designs it (an LM5069-1 breaker on board P with a
     make-last dock enable, drafted) and restates the battery FETs' target as a junction limit met by a third FET.
 
 ### 14.2 The currents by class (out 1)
@@ -565,7 +565,7 @@ it is not shown to be layable: board E's strip cannot take its 78.29 mm pair, an
 | L9C-F13: the blades' total clearing I2t (25 A at 16.8 V, and F1's at 58 V, E11-16) | the battery stream; L4-E11 |
 | L9C-F14: TRK_OUT and the solar input have no stage in the energy chain; VIN_RAW's return path on board E is not declared | the energy chain's writer; L4-E7's owner |
 | L9C-F15: the supplier's quotation states the laminate's maximum operating temperature and the 2 oz price beside the 1 oz rows | the supplier handover's author |
-| L9C-F16: W4DP-F2's element drawn into board P: the LM5069-2 breaker of 15.4 (DD-1), its layout (IF-2) and its energy chain stage (IF-3) | board P's generator; W4DP-F2's owner; the integrator |
+| L9C-F16: W4DP-F2's element drawn into board P: the LM5069-1 breaker of 15.4 (DD-1), its layout (IF-2) and its energy chain stage (IF-3) | board P's generator; W4DP-F2's owner; the integrator |
 | L9C-F17: E11-29 restated as a junction limit (DD-2, E-1): the hottest battery FET at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place; a third BUK6Y10-30P (its designator L4-E11's; Q41 is l8r2's VIN_RAW cut-off FET), (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart; the PTC thermal guard in the enable loop beside them; E11-37 with three (C3) | L4-E11; board A's generator (the PTC) |
 | L9C-F18: board A's loads on VSYS held off during the breaker's start, at most 40.7 ms, or tied to its PGD (IF-1) | L4-E11; board A's generator |
 | L9C-F19: the power limit's accuracy at 5.05 mV, the limits at VIN 10.6 to 16.8 V and VIN to SENSE in a hot short: Q-TI-L9S-1 (drafted, not sent) and the supplier's E-2, E-3, E-9, E-10 and E-11 | the battery stream; the supplier handover's author |
@@ -592,6 +592,15 @@ answers two blockers and the minors:
 - the PTC thermal guard reconsidered and selected.
 
 The conditions C1 to C3 and the minors are written into 15.4 to 15.7.
+
+**Checked for the owner's reviewer's retry question** (review of the d834e6a7 package, 4 October 2026, "Two precise checks",
+item 1). The LM5069-2 retries while a fault remains (its sheet, sections 5 and 8.4.3), so 15.4b judges that repeated waveform
+against every protected part.
+- **The -2 does not meet the criterion.** Its repeated waveform takes the breaker FET past TI's margin in a hard short, and
+  past 150 C in a resistive fault on VSYS.
+- **SELECTED: the -1 (latch-off).** It matches the recovery policy the project already holds for an over-current backstop.
+- **New items:** one new design defect (DD-7, the latch's reset when an input returns), IF-7, E-14, and a start-margin finding
+  (15.4b).
 
 Every figure is printed by `l9stk_protection.py` into `l9stk_protection.out` ("prot N" is its section) from 21 inputs pinned by
 sha256. The calculation basis is TI's application report SLVA673A, "Robust Hot Swap Design" (equations 3 to 7, its 2.4 on
@@ -642,9 +651,10 @@ The 22 to 23 A exposure stands. A trip allowed at the cells' 24 A leaves these j
 
 ### 15.4 The selected element and the docking correction (prot 3 and 3a)
 
-**C-1, an LM5069-2 circuit breaker on board P,** from Q2's source to PACK_P. It acts on current alone, with no firmware and with
-Q1/Q2 welded. The parts are already in the kit:
-- the controller board E's U6 uses (LCSC C111822);
+**C-1, an LM5069 circuit breaker on board P, the -1 (latch-off, 15.4b),** from Q2's source to PACK_P. It acts on current
+alone, with no firmware and with Q1/Q2 welded. The parts are already in the kit:
+- the controller's family, which board E's U6 uses (its -2 is LCSC C111822; Layer 6 files the -1's code, on the same VSSOP-10
+  land);
 - the FET board A's PA stage uses (C2876544);
 - the clamp on board A's VBAT.
 
@@ -656,10 +666,10 @@ Q1/Q2 welded. The parts are already in the kit:
 | Power limit | RPWR 8.45 kOhm: 32.52 W, VSNS 5.05 mV; 24.71 to 40.32 W with the table's spread read as a ratio, 71.16 W read as an offset | relied on: without it 402.1 W (E-2, Q-TI-L9S-1) |
 | Fault timer | 10 nF: 0.282 to 0.897 ms; the gate off 395 us later; **clearing at most 1.292 ms**; the insertion time 4.23 to 15.25 ms runs only when VIN passes PORIT (a start by the gauge's FET) | VTMRH, ITIMER, the insertion current at their limits |
 | dv/dt start | 22 nF into 593 uF: **inrush at most 0.659 A** for at most 40.7 ms; 11.1 W, under the power limit's least 24.7 W | SLVA673A 2.2.2, 3.2.2.7 |
-| Retry (-2) | duty at most 1.33 % (0.5 % typical), dwell at most 0.222 s, 0.53 W average | the timer at its limits |
+| The -2's timer ratio | at most 1.33 % (0.5 % typical), dwell at most 0.222 s; 15.4b judges the -2's whole cycle and rejects it | the timer at its limits |
 | FETs | 2 x CSD18510Q5B, 40 V, VGS 20 V against the gate's 12.6 V, IDM 400 A against the breaker's 50.59 A | SLVA673A 3.1.2.2 |
 | FETs held at 23.93 A | 0.247 W each; case 101.0 C with both losses through one pad, junction 101.2 C (TI asks under 125 C) | equation 4 |
-| FET SOA at 16.8 V | case 103.0 C retrying, derating 0.376; fault pulse 40.32 W for 1.292 ms against 71.1 W: **0.57**; start 11.1 W for 20.3 ms against 19.0 W (DC line): **0.58**; with the figure's 10 % against them 0.63 and 0.65; TI asks at most 0.67 | equations 5 to 7 |
+| FET SOA at 16.8 V | case 103.0 C (the first revision's retry estimate, kept as a bound over the held 101.0 C), derating 0.376; fault pulse 40.32 W for 1.292 ms against 71.1 W: **0.57**; start 11.1 W for 20.3 ms against 19.0 W (DC line): **0.58**; with the figure's 10 % against them 0.63 and 0.65; TI asks at most 0.67 | equations 5 to 7 |
 | Clamps | SMCJ18A on VIN (VR 18 V, VC 29.2 V at 51.4 A); D1 SMBJ20A on PACK_P carries the lead's freewheel at turn-off (LM5069 11.1.2 B), judged on I2t: its 100 A 8.3 ms half-sine is 41.5 A2s, which the freewheel at the pack's 480 A prospective stays within for any loop L/R up to 0.36 ms (12.6 uH in that loop) | IF-6: both return to PACK_N, so R10 sees a clamp short |
 | Controller | VIN 9 to 80 V recommended, on from 9 V at most; the pack 10.6 to 16.8 V; OVLO to ground; UVLO from VIN through R_U 200 kOhm into C_U 3.3 uF (50 V), released by the enable loop | UVLOTH 2.45 to 2.55 V, UVLOHYS 12 to 30 uA, UVLODEL 55 us typical (no maximum) |
 
@@ -730,6 +740,82 @@ bounds the charge current, the gauge's own levels protect it, and F1 and F2 back
 and cannot act. Board P's loop and the clamp itself then carry the current on F1's 600 s and 5 s rows, and F2's 200 % opens
 within 60 s. Alone, the clamp's failure is cleared by the AFE's AOLD (30 A, 20 ms) through Q1/Q2. Disposition: a second fault,
 stated, no new defect; the battery stream reviews it.
+
+### 15.4b The retry: the -2's repeated waveform against every protected part, and the -1 (prot 3b)
+
+**What the sheet says.** The -1 latches off on a fault; the -2 retries (section 5). On the -2, after the fault time the TIMER cycles
+seven times between its restart threshold and VTMRH. The gate turns on at 0.3 V on the eighth fall, and the fault time and the
+restart repeat while the fault remains (8.4.3).
+
+**One cycle, with C_T at 10 nF plus or minus 10 %.**
+- **On:** 1.076 to 1.227 ms (the fault time from 0.3 V, then the gate's turn-off).
+- **Off:** 50.7 to 62.0 ms.
+- **Ahead of it:** a ramp while the load lets the output rise, at 0.413 to 1.111 V/ms.
+
+**The series current per cycle** never exceeds the largest limit (23.93 A), nor the power limit over VDS.
+- Through the slowest ramp and the limited phase: at most 5.14 A2s and 0.351 As a cycle.
+- Over the cycle: at most 55.6 A2 on average, 7.46 A RMS, which is 0.097 of the held 23.93 A's heating.
+
+**Each protected part through a persistent fault on the -2, settled from the inside air's 76.25 C:**
+
+| Part | Energy a cycle | Average | Settled | Limit | Verdict |
+|---|---|---|---|---|---|
+| board P's Q1/Q2, enhanced (each) | 6.4 mJ | 0.069 W | TJ 83.2 C (both losses through one pad) | 150 C | within |
+| **board P's Q1 under BAT-F20** (its body diode) | 351 mJ | 3.80 W | **TJ 266 C** | 150 C (1.48 W on its pad) | **OVER**: DD-5, as in the held and service rows |
+| the three battery FETs (each) | 12.1 mJ | 0.131 W | TJ 83.4 C | 150 C | within |
+| R17 (5 W) | 25.7 mJ | 0.278 W | | 5 W | within (derating NOT HELD, E-6) |
+| R10 (2 W) | 10.3 mJ | 0.111 W | | 2 W | within (E-6) |
+| the breaker's sense | 13.4 mJ | 0.145 W | | 2 W each (a requirement) | within |
+| the XT60 (30 A) | | 7.46 A RMS, 23.93 A peak | | 30 A | within |
+| the dock contacts | | 1.86 A RMS a pin at an even split | | 9 A | within (E-4) |
+| the pack path's copper | | | 0.89 K over the air | 10 K | within |
+| the barrel field | | | 0.74 K | 10 K | within |
+| the 25 A blades and F2 | | 7.46 A RMS | | 25 A, 30 A | within (E-7) |
+| the Keystone 3568 holder | | 7.46 A RMS | | no rating printed | NOT HELD: DD-4 |
+| the cells | | 7.46 A RMS | | 24 A | within |
+| the enable loop's parts (2N7002s, PTC, R_U, C_U) | 0 | the loop's static 0.45 mA | | | not cycled by the -2's restart, which is internal |
+| **the breaker FET, a hard short** | 43.4 mJ | 0.84 W | **case 118.1 C** | SOA with TI's 1.5x margin (0.67) | **OVER TI's margin: 0.79** (0.88 with the reading) |
+| **the breaker FET, a resistive fault on VSYS** (0.915 ohm, just over the least limit at full voltage) | 174 mJ (130 in 5.6 ms of ramp) | 3.03 W | **case 228 C** | 150 C | **OVER** |
+
+**So the -2 does not meet the criterion.**
+- Its repeated waveform takes the breaker FET past TI's margin in a hard short, and past 150 C in a resistive fault on VSYS.
+- No pad on board P's area brings the resistive case under 150 C.
+- Every other protected part settles under its held reading (15.5). The exception is Q1 under BAT-F20 (DD-5), which is already
+  over in the held and service rows.
+
+**The -1 against the service and the recovery.**
+- **The service.** The 10 A and the 18 A never reach the least limit, so neither variant trips in the service.
+- **After a fault.** The -1 stays off; on battery the kit goes dark. CONOPS 4e already states this for the over-current backstop
+  ("recovers only on an input"), and POWER-THERMAL 9.3 takes it as the safe state ("restarting into the same load would repeat
+  it").
+- **Recovery:**
+  - by redocking, since the loop pulls UVLO low;
+  - by an input's return (DD-7);
+  - by the thermal guard's own cycle.
+- **The restart condition.** The timer falls under its 0.3 V re-enable threshold in 34.0 ms at most, inside the RC hold's least
+  0.110 s, so a redocking restarts the breaker.
+
+**SELECTED: the -1 (latch-off).** Every protected part then meets one fault event, at the per-cycle energy above, with no
+accumulation.
+
+**A fault just under a unit's limit and over the service** is held and never trips, on either variant. Every part sits at its
+held reading (15.5). The battery FETs are bounded by the thermal guard, which trips and restarts at the PTC's rate indefinitely
+(E-13). Q1 under BAT-F20 is OVER (DD-5).
+
+**A start into the worst resistive fault on VSYS** (0.915 ohm) is either variant's first event:
+- 180 mJ, an equivalent 40.32 W for 4.46 ms (SLVA673A equation 7);
+- 0.54 of the derated SOA from the inside air (TI's start basis; 0.60 with the reading);
+- **0.85 at the 103.0 C case** (0.95 with the reading): under the SOA, but **over TI's 1.5x margin** for a hot restart.
+
+E-3 now includes ten such starts with the FETs' case at 103 C.
+
+**New items from this check:**
+- **DD-7** (owners: board A's generator with L4-E11; board P's generator for the -1). When an input returns, the charger could
+  charge the pack through the latched breaker's body diodes. Board A opens the enable loop for a pulse when an input appears, so
+  the latch resets and the breaker restarts within 0.633 s (the hold and the start).
+- **E-14.** The charge through a latched breaker, at the charger's largest current, until that restart.
+- **IF-7** (owner: the firmware owner). The bridge reports a tripped breaker and enables charging only after the breaker's
+  restart.
 
 ### 15.5 B-P2: the battery FETs' junction limit, and the selection (prot 4)
 
@@ -803,14 +889,16 @@ At the allowances the junction reads:
 |---|---|---|---|---|---|---|
 | 10 A continuous | 10.0 A held | none reached (18.32 A least) | not a fault | **Q1's body diode under BAT-F20** (CHGIN = 1, above T3), 7 to 10 W against the 1.48 W its pad holds; with BAT-F20 closed, the XT60 at 0.33 | **Q1 OVER (4.7 x)** | **DESIGN DEFECT DD-5**; printed (VSD, RthJA) |
 | 18 A for 60 s | 18.0 A, 60 s | none reached (18.32 A least; 21.08 A typical) | not a fault; firmware ends it | **Q1's body diode under BAT-F20, up to 18 W**; with BAT-F20 closed, the battery FETs at 118.0 C (the guard 9.0 to 15.0 K above) | **Q1 OVER**; 32.0 K at the battery FETs; the least limit 0.32 A over the service | **DESIGN DEFECT DD-5**; derived; E-1, E-10 (the key-down current), E-13 |
-| an overload under the unit's limit, held | 18.00 to 23.93 A, indefinitely | 23.93 A (VCL 61.5 mV, RS -1.5 %) | none: held by design; the thermal guard | the battery FETs at 150.0 C; the cells at 0.997 of 8 A; **Q1's body diode 23.9 W under BAT-F20** | 0 K at the allowances; 0.28 % split; **Q1 OVER** | **DESIGN DEFECTS DD-2, DD-5**; E-1, E-5 |
+| an overload under the unit's limit, held | 18.00 to 23.93 A, indefinitely | 23.93 A (VCL 61.5 mV, RS -1.5 %) | none: held by design; the thermal guard trips and restarts at the PTC's rate (either variant) | the battery FETs at 150.0 C; the cells at 0.997 of 8 A; **Q1's body diode 23.9 W under BAT-F20** | 0 K at the allowances; 0.28 % split; **Q1 OVER** | **DESIGN DEFECTS DD-2, DD-5**; E-1, E-5 |
 | an overload over the unit's limit | limited to 23.93 A, then off | 23.93 A | 1.29 ms from the onset (timer 0.897, gate 0.395); regulated after tCL (45 us typical, no maximum) | the breaker FET, 40.3 W for 1.29 ms against 71.1 W | 0.57 (TI at most 0.67) | derived: the power limit at 5 mV and 10.6 to 16.8 V not printed (E-2) |
 | a hot short, board P's FETs welded | 240 to 480 A prospective | 50.59 A (VCB 130 mV) | 16.5 us to the release, then as above: 1.31 ms | the breaker FET: IDM 400 A against the breaker's threshold; VIN to SENSE over 0.3 V above 116.8 A | 0.13 of IDM | (c) MISSING: E-3; the 0.3 V to TI (Q-TI-L9S-1) |
 | a start into a short | 2.40 A at most | the power limit | 1.29 ms | the breaker FET, as above | 0.57 | derived |
 | a start (the gauge's FET on, a retry, assembly) | 0.659 A at most for 40.7 ms, from the insertion's end (4.23 to 15.25 ms after VIN passes PORIT) | none: 11.1 W under 24.7 W | not a fault | the breaker FET, 11.1 W for 20.3 ms against 19.0 W | 0.58 | derived; IF-1 |
 | **docking, the make-last enable (C-1b)** | 0.659 A at most for 40.7 ms, from 0.110 to 0.593 s after the enable mates (the RC hold, then UVLODEL 55 us typical, no maximum) | none: a start | not a fault | the breaker FET as a start; VIN to SENSE 1.72 mV | **0.58** | derived; DD-6 until drawn; conditions C1, C2; E-3, E-12 |
 | docking without the enable (the uncorrected design) | E11-30's 242.9 A with the breaker on | 50.59 A | 16.5 us to the release | the 10 us line derated to 103.0 C is 91.8 A; VIN to SENSE 0.634 V | **OVER**: 2.64 x the line (1.66 x at 75 C); 2.11 x 0.3 V | **DESIGN DEFECT DD-6**, corrected by C-1b (not a coupon) |
-| a persistent fault, retrying | the power limit at 1.33 % duty at most | as above | each try as above | the breaker FET, 0.53 W average, case 103.0 C | inside the derating | derived |
+| a persistent fault on the -2 (rejected, 15.4b) | the restart cycle: 1.08 to 1.23 ms on, 50.7 to 62.0 ms off, repeated | as above | each cycle as above | the breaker FET: a hard short 0.84 W average, case 118.1 C; a resistive fault on VSYS 3.03 W, case 228 C | **OVER**: 0.79 of the derated SOA (TI at most 0.67); over 150 C | derived; the -2 rejected, corrected by selecting the -1 |
+| **a persistent fault on the -1 (selected)** | one event, then latched until UVLO or VIN cycles | as above | 1.29 ms, once | the breaker FET at 0.57; every series part once, at its per-cycle energy (15.4b) | no accumulation | derived; recovery by redocking, the input's return (DD-7), the guard's cycle |
+| a start into a resistive fault on VSYS (the worst, 0.915 ohm; either variant's first event) | 180 mJ: 5.6 ms of ramp, then the power limit | the power limit | 1.23 ms after the limit | the breaker FET, 40.32 W for 4.46 ms equivalent (SLVA673A equation 7) | 0.54 from the inside air (TI's start basis); **0.85 at the 103.0 C case** (TI at most 0.67) | derived; E-3 |
 | charging (the reverse direction) | the charger's current; 1 A precharge in a body diode while off | none: no reverse limit | not a fault | the breaker FET's body diode, 1.00 W, TJ 126.2 C | 23.8 K | printed (VSD); derived |
 | the clamp shorted with board P's FETs welded (two faults) | 240 to 480 A prospective | F1, 25 A MINI | at most 0.1 s at 150 A and over | board P's bands (decision 28) | the clamp's short alone is cleared by the AFE's ASCD (R10 sees it, IF-6) | printed (F1's 600 % row); disposition stated, no new defect |
 | the clamp failing resistive with board P's FETs welded (two faults) | 33.75 to 150 A | F1 and F2 | F1's 600 s and 5 s rows; F2's 200 % opens within 60 s | the clamp's own dissipation and board P's loop; the breaker is downstream and cannot act | alone, the AFE's AOLD (30 A, 20 ms) through Q1/Q2 | printed (F1's and F2's rows); a second fault: disposition stated, no new defect (the battery stream reviews) |
@@ -822,6 +910,7 @@ At the allowances the junction reads:
 - between 18.32 and 23.93 A, a unit holds or clears by its own threshold;
 - above 23.93 A, every unit clears within 1.29 ms of its limit's onset;
 - a docking is a start;
+- a fault latches the -1 once; recovery by redocking, an input's return or the thermal guard's cycle;
 - no firmware and no working FET of board P in that path.
 
 ### 15.7 Design defects, interfaces and the evidence owed (prot 6)
@@ -836,6 +925,7 @@ At the allowances the junction reads:
 | DD-4 the Keystone 3568 holder prints no current rating | Layer 6/7 |
 | DD-5 BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, 23.9 W at the breaker's 23.93 A | the battery stream (BAT-F20, EQ-15) |
 | DD-6 docking with the breaker on is past its SOA and VIN to SENSE's maximum; C-1b, the make-last enable loop with its RC hold and the thermal guard, is drafted here, not drawn; conditions C1 and C2 (15.4) | board P's generator with the battery stream (the UVLO circuit and the hold); board E's generator (two J_SMB contacts with a ground between); Layer 7 with L4-E11 (two make-last dock contacts, the loop and the PTC on board A) |
+| DD-7 the -1 stays off after a trip until UVLO or VIN cycles; when an input returns the charger could charge through the latched breaker's body diodes: board A opens the enable loop for a pulse when an input appears, so the latch resets and the breaker restarts within 0.633 s; the charge until then is E-14's | board A's generator with L4-E11; board P's generator (the -1) |
 
 **Interface demands:**
 - **IF-1** board A's loads on VSYS stay off until the breaker's start ends (at most 40.7 ms after the gate rises, which is up to
@@ -851,14 +941,16 @@ At the allowances the junction reads:
 - **IF-6** the gauge's PACK and VCC taps stay on Q2's source node, and the clamp and the controller return to PACK_N. The
   breaker's output becomes the terminal PACK_P, with D1 on it (judged on I2t, 15.4). The enable circuit's parts and bounds are
   those of 15.4. Owner: board P's generator.
+- **IF-7** the bridge reports a tripped breaker (the pack's terminal dead while the gauge's FETs are on) and enables charging only
+  after the breaker's restart; recovery on battery is redocking. Owner: the firmware owner.
 
 **Missing physical evidence** (specimen; acceptance; supplier task):
 
 | Item | Specimen | Acceptance | Task |
 |---|---|---|---|
 | E-1 the battery FETs' junction limit | L4-E11 section 17's coupon with the three battery FETs, the band carrying 23.93 A and R17 dissipating in place | the hottest junction at most 150 C referred to 76.25 C; R17's coupling into each junction at most 1 K/W (heat R17 alone) | the body diode's VSD method |
-| E-2 the power limit at its design point | six LM5069-2 on the board P specimen | the shorted-output current at 16.8 V and 10.6 V within 1.47 to 2.40 A at -40, 25 and 125 C (the table is printed at 48 V) | the supplier's bench |
-| E-3 the hot short and the enabled docking | board P with Q1/Q2 bypassed, the 12 AWG lead, boards E and A as built, a charged block | 10 shorts and 100 dockings with the FETs' case at 103 C: the gate low within 16.5 us of VCB; the docking current at most 0.659 A; VIN to SENSE recorded; VCL within 48.5 to 61.5 mV; each FET's RDS(on) within +5 % | the supplier's fault bench |
+| E-2 the power limit at its design point | six LM5069-1 on the board P specimen | the shorted-output current at 16.8 V and 10.6 V within 1.47 to 2.40 A at -40, 25 and 125 C (the table is printed at 48 V) | the supplier's bench |
+| E-3 the hot short and the enabled docking | board P with Q1/Q2 bypassed, the 12 AWG lead, boards E and A as built, a charged block | 10 shorts, 10 starts into a 0.92 ohm fault on VSYS and 100 dockings with the FETs' case at 103 C: the gate low within 16.5 us of VCB; the -1 latched after each fault; the docking current at most 0.659 A; VIN to SENSE recorded; VCL within 48.5 to 61.5 mV; each FET's RDS(on) within +5 % | the supplier's fault bench |
 | E-4 the dock contacts' split | the fitted lot's four-pin set | the lowest pin at least 0.593 of the highest, at the blades' 25 A (0.553 at the breaker's 23.93 A) | each pin at mid-stroke |
 | E-5 the cells' parallel split | each series group of the built block | no cell over 8 A at 23.93 A (within 0.28 %); fallback: a controller whose limit spread is at most 1.270 | the pack builder; Layer 6 for the fallback's sheet |
 | E-6 R17, R10 and the breaker's sense derated | the makers' sheets | each at its 15.5 reading at the band's temperature | Layer 6 |
@@ -869,6 +961,7 @@ At the allowances the junction reads:
 | E-11 the breaker FETs' installed path | the board P specimen | RthJA at most 52.5 C/W per FET | the body diode's VSD method |
 | E-12 the enable loop | the built kit at commissioning and at each service | undocked, PACK_P dead; each loop conductor shorted to ground in turn, the breaker stays off when docked; the release after the enable mates at least 0.110 s | the supplier's commissioning procedure |
 | E-13 the thermal guard | the battery FETs' coupon (E-1) with the PTC in place, and one with a FET's thermal pad left unsoldered | no trip through the service (18 A for 60 s after 10 A held at 76.25 C); the breaker off before the hottest junction passes 150 C at 23.93 A held | the supplier's thermal bench |
+| E-14 the charge through a latched breaker | the board P specimen latched, the charger at its largest charge current | the breaker FET's junction under 150 C until the input-return reset restarts it (0.633 s at most) | the supplier's bench |
 
 **Maker questions, drafted, not sent:**
 - **Q-TI-L9S-1 (TI, the LM5069).** Three questions:
@@ -888,9 +981,10 @@ the changed protection design and its affected interfaces only:
 The copper sizing of section 14 is unchanged.
 
 **Next deliverable**, in this order:
-1. Board P's generator draft of the breaker with its enable loop and RC hold (DD-1, DD-6, IF-2, IF-3, IF-6).
+1. Board P's generator draft of the breaker, the -1, with its enable loop and RC hold (DD-1, DD-6, IF-2, IF-3, IF-6).
 2. Board E's two J_SMB contacts with a ground between, and Layer 7's two make-last dock contacts with the loop and the PTC on
    board A (DD-6, C1, C2).
-3. L4-E11's third battery FET, its designator, and E11-29 restated as the junction limit (DD-2, C3), with IF-1.
+3. L4-E11's third battery FET, its designator, and E11-29 restated as the junction limit (DD-2, C3), with IF-1; board A's
+   input-return pulse on the enable loop (DD-7) and the firmware's IF-7.
 4. The battery stream's answer to BAT-F20 (DD-5).
-5. Then the supplier's E-1, E-2, E-3, E-9, E-11, E-12 and E-13 on the first specimens.
+5. Then the supplier's E-1, E-2, E-3, E-9, E-11, E-12, E-13 and E-14 on the first specimens.
