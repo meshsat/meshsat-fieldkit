@@ -12,7 +12,7 @@ The defect. gen_sch_b.py declares the board's return with typed figures:
 generator (loads over 1.02 times the peak). Board B's composition in L4-E9's change-list order has not run to its end since, with
 or without Layer 9's I-03 draft (record l9t5's apply_gen_sch_b_iocbuck.py), which adds a lead and its return.
 
-The correction (the record's section 7, l8r2_gndret.out): the return's figures are DERIVED in the generator from the rails it
+The correction (the record's section 3g, l8r2_gndret.out): the return's figures are DERIVED in the generator from the rails it
 returns, so they cannot go stale when a lead is declared again:
   typical = the sum of the declared typical currents of every rail that arrives on one of the net's lead connectors;
   peak    = the sum of their declared peaks, an UPPER BOUND on what flows at one time, named so in the note;
