@@ -4,8 +4,8 @@
 
 It prints, deterministically and without touching the tree:
   1. the inputs, each pinned by sha256 (the generators and the engine, every other draft it composes with, record l9stk's copies
-     of 0d72880b, L4-E7's backstop draft of fnd/l4e7r6 at 914a2f5a, the committed netlists, the lands, the makers' sheets read,
-     the held OPA187 sheet, this record's own files);
+     of 0d72880b, L4-E7's backstop draft of fnd/l4e7r6 at 914a2f5a, L4-E11's round 10 drafts and section 20c of fnd/l4e11r10 at
+     a09e9a60, the committed netlists, the lands, the makers' sheets read, the held OPA187 sheet, this record's own files);
   2. the values: each value the drafts draw found in record l9stk's own text by its section (refused when a phrase no longer
      matches), and this record's SESSION choices;
   3. C-1c's budget: the restart inhibit's window from the record, the NTC's figures from Murata's sheet, the OPA187's offset over
@@ -13,17 +13,19 @@ It prints, deterministically and without touching the tree:
      the NTC's own heating and the hysteresis computed for the drawn values, and the remainder left for the pad's gradient;
   3b. B-R2's detector (round 3, route R1): why no existing element tells board A a latched breaker passing a charge, the charge
      threshold and the reverse threshold with every tolerance, the delays, the protector's own limits, what board A must read
-     (L4-E11's DD-7 interface) and E-14 as it now reads, from task L4-E11's copies (fnd/l4e11r9 at e60a94a8) and the makers' sheets;
+     (L4-E11's DD-7 interface, as its round 10 section 20c reads it at a09e9a60) and E-14 as it now reads, from task L4-E11's
+     copies (fnd/l4e11r9 at e60a94a8, fnd/l4e11r10 at a09e9a60) and the makers' sheets;
   3c. DD-5 (round 4): the charge switch's body diode in discharge under CHGIN = 1, the three approaches, the ideal diode beside
      Q1 (apply_gen_sch_p_idealdiode.py) and its acceptance on case row C-PROT, from the BQ4050's, the CSD17570Q5B's and the
      LM74700-Q1's sheets;
   4. each draft on a scratch copy: checked, applied once, refused twice, and refused on the tree's own generator (NOT RELEASED);
-  5. the composition of each board in L4-E9's change-list order with this record's draft in its place, first and last;
+  5. the composition of each board in L4-E9's change-list order with this record's draft in its place, first and last (L4-E11's
+     DD-7 draft, which requires this record's board A draft, right after it and after the drafts it requires);
   6. the designators each draft adds, pairwise disjoint, and every literal part call drawn once in the composed generators;
   7. the regeneration on the runner (gen_netlist.py: the generator's own part table, no KiCad): the unpatched generators
      reproduce the committed KiCad netlists pin for pin; the netlist check (check_l8p_netlist.py) on the committed netlists
-     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN), and on seven
-     mutated netlists (FAIL);
+     (NOT DRAWN), on the three boards with this record's drafts alone and composed in L4-E9's order (DRAWN, board A with
+     DD-7's readers on the loop), and on ten mutated netlists (FAIL);
   8. the declarations the patched board P generator writes into its intent for the new nets;
   9. the findings for other authors and their state.
 Run from the repository root:  python3 v2/docs/records/l8p/l8p_drafts.py  (l8p_drafts.out is its output, regenerated with
@@ -62,6 +64,18 @@ def mine_seq(b):
     return [MINE[b]] + MINE2.get(b, [])
 
 
+def order(b, where):
+    """The scripts composed on board b: 'fwd' this record's drafts in their SLOT, 'first', 'last', or 'without' them; FOLLOW's
+    drafts right after this record's and after the drafts they require (left out 'without')."""
+    seq = [draft(r, n, b) for r, n in ORDER[b]]
+    out = {"fwd": seq[:SLOT[b]] + mine_seq(b) + seq[SLOT[b]:], "first": mine_seq(b) + seq, "last": seq + mine_seq(b), "without": seq}[where]
+    if where != "without":
+        for f, after in FOLLOW.get(b, ()):
+            i = max([out.index(x) for x in mine_seq(b)] + [out.index(draft(r, n, b)) for r, n in after])
+            out = out[:i + 1] + [f] + out[i + 1:]
+    return out
+
+
 # L4-E9's change list (records/l4e9/L4-POWER-ARCHITECTURE.md section 3) for each board's round, in application order; d8dec31's
 # drafts take the board's committed netlist as their second argument; Layer 6's l6r2 drafts are order-independent tables
 ORDER = {
@@ -76,16 +90,31 @@ ORDER = {
 SLOT = {"p": 0, "e": 10, "a": 11}
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
                "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-e60a94a8.md",
-               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md"}
+               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11r10": "inputs/l4e11-section20c-a09e9a60.md"}
 SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444ee345bd87eb9af3146f005c507f14961f3ac80",
                "inputs/l9stk_protection-0d72880b.out.txt": "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac",
                "inputs/l9stk_protection-constants-0d72880b.txt": "ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e",
                "inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py": "dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544",
                "inputs/l4e11-section19h-e60a94a8.md": "270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486",
-               "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146"}
+               "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146",
+               "inputs/l4e11-section20c-a09e9a60.md": "c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086",
+               "inputs/l4e11r10-apply_gen_sch_a_charger-a09e9a60.py": "bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9",
+               "inputs/l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py": "725e4f897b93fe060eab5d4222b1f4eed5b375de864e6a922b691780bdba4343",
+               "inputs/l4e11r10-apply_gen_sch_e_aux-a09e9a60.py": "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
+               "inputs/l4e11r10-apply_gen_sch_e_entry-a09e9a60.py": "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"}
 # L8P-F01 is closed by L4-E7's backstop draft on fnd/l4e7r6 at 914a2f5a (not on main): board E's composition uses that draft,
 # copied byte for byte into inputs/, in place of main's
-REPLACED = {("l4e7", "backstop", "e"): os.path.join(HERE, "inputs", "l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py")}
+# Round 5: L4-E11's round 10 (fnd/l4e11r10 at a09e9a60, not on main) corrects L8P-F02 and L8P-F03 and redraws DD-7 against route
+# R1 (L8P-F04, L8P-F05). Its charger, aux and entry drafts are used the same way, copied byte for byte, so the output reads alike
+# on this branch and on a merge with a09e9a60 (where records/l4e11/ holds the same bytes)
+REPLACED = {("l4e7", "backstop", "e"): os.path.join(HERE, "inputs", "l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py"),
+            ("l4e11", "charger", "a"): os.path.join(HERE, "inputs", "l4e11r10-apply_gen_sch_a_charger-a09e9a60.py"),
+            ("l4e11", "aux", "e"): os.path.join(HERE, "inputs", "l4e11r10-apply_gen_sch_e_aux-a09e9a60.py"),
+            ("l4e11", "entry", "e"): os.path.join(HERE, "inputs", "l4e11r10-apply_gen_sch_e_entry-a09e9a60.py")}
+# Other authors' drafts that require this record's draft (L4-E11's DD-7 refuses a target without RT1 and DOCK_EN_RET): each goes
+# right after this record's drafts and after every draft it names as required (its docstring's ORDER), in every order composed
+# here; a composition without this record's draft leaves it out. The copy is a09e9a60's, byte for byte.
+FOLLOW = {"a": [(os.path.join(HERE, "inputs", "l4e11r10-apply_gen_sch_a_dd7-a09e9a60.py"), (("l4e11", "charger"),))]}
 OPA187 = os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-opa187-sbos807e.pdf")
 NTC_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "murata-nxrt15xh103fa1b.pdf")
 D4148_SHEET = os.path.join(ROOT, "v2", "vendor", "power", "st-semtech-1n4148w-c81598.pdf")
@@ -112,7 +141,10 @@ TOL_FEED, TCR_FEED = 0.01, 100e-6               # R129, a 1 % part; its 100 ppm/
 R10_TOL, R10_TCR = 0.01, 75e-6                  # board P's R10, the gauge's sense: no tolerance or TCR is printed in the generator; ASSUMED, owed to Layer 6
 R106_TOL = 0.01                                 # R106 10 kOhm, ASSUMED 1 %
 STRETCH_MIN = 1.0                               # the least time board A holds its inhibit after the return rises (the interface), s
-OUT_POWERED, RET_LOW, RET_HIGH = 2.0, 1.0, 2.5  # the interface's levels: DOCK_EN_OUT read as powered, DOCK_EN_RET read low and high, V
+# the interface's levels as board A reads them (L4-E11 section 20c at a09e9a60, U48 TPS37A010122 on TI SNVSBJ1E, finding
+# L4E11-R10-F1): DOCK_EN_OUT read powered over 1.981 V at most; DOCK_EN_RET read held under 0.7755 V at least and closed over
+# 0.84 V at most, V. Not retyped: section 3b refuses unless the copy reads each
+OUT_POWERED, RET_LOW, RET_HIGH = 1.981, 0.7755, 0.84
 # readings of TI's plotted typical curves (no figure has a text layer), INFERRED: E-14b measures them on the specimen
 CSD_RDS_150 = 1.8                               # CSD18510Q5B Figure 8: normalized RDS(on) at VGS 10 V and 150 C
 CSD_VSD = {25: (0.575, 0.632), 125: (0.368, 0.432)}   # Figure 9: typical VSD at 0.1 A and at 1 A, by case temperature
@@ -139,17 +171,11 @@ SESSION = [
 ]
 
 
-# SCRATCH STAND-INS for run-time defects of OTHER records' drafts that stop the composed generators (section 8 lists them as
+# SCRATCH STAND-INS for run-time defects of OTHER records' drafts that stop the composed generators (section 9 lists them as
 # findings for their owners). Each is applied to a scratch copy only when its old text is there; none is a draft, none is applied
-# anywhere else, and each says only that the generator then runs on, so this record's loop can be judged in the whole composition.
-STANDINS = {
-    "e": [
-          ("L8P-F03", "l4e11's aux draft: +12V_FAN names L4 as its source, which is not on that net",
-           '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "L4",', '_intent.rail("+12V_FAN", 12.0, 0.34, 0.34, "C143",')],
-    "a": [("L8P-F02", "l4e11's charger draft: VSYS_DOCK names U42 as its source without source_ic, and is fed from VBAT before VBAT is declared",
-           '_intent.rail("VSYS_DOCK", 14.4, 1.32, 1.32, "U42", always_on=True, v_work=17.4, converted=False, fed_from="VBAT",',
-           '_intent.rail("VSYS_DOCK", 14.4, 1.32, 1.32, "U42", source_ic="record l8p scratch stand-in", always_on=True, v_work=17.4, converted=False,')],
-}
+# anywhere else, and each says only that the generator then runs on. None since round 5: L8P-F02 and L8P-F03 are corrected in
+# L4-E11's round 10 drafts (REPLACED), which the compositions use.
+STANDINS = {}
 
 
 def pdftext(path):
@@ -692,7 +718,7 @@ def main():
     w("l8p_drafts: Layer 8 record l8p, W4DP-F2's breaker, its make-last dock enable loop and its restart inhibit drafted for boards P, E and A (MESHSAT-1357)\n")
     w("prototype design; nothing built, bought or measured; nothing applied to the tree; the values are record l9stk's (fnd/l9stk at 0d72880b)\n\n")
     # 1. inputs
-    others = [draft(r, n, b) for b in "pea" for r, n in ORDER[b]]
+    others = [draft(r, n, b) for b in "pea" for r, n in ORDER[b]] + [f for b in "pea" for f, _a in FOLLOW.get(b, ())]
     inputs = [GEN["p"], GEN["e"], GEN["a"], os.path.join(TOOLS, "kisch.py"), os.path.join(TOOLS, "intent.py"), os.path.join(TOOLS, "idc_pads.py")]
     inputs += others + [NET["p"], NET["e"], NET["a"]]
     inputs += [os.path.join(HERE, f) for f in sorted(SOURCES_SHA)] + [os.path.join(HERE, "inputs", "SOURCES.txt")]
@@ -708,7 +734,7 @@ def main():
     for f, full in sorted(SOURCES_SHA.items()):
         if sha(os.path.join(HERE, f), 64) != full:
             refuse("the copy %s is not the file SOURCES.txt pins" % f)
-    w("   record l9stk's, L4-E7's and L4-E11's copies equal the sha256 SOURCES.txt pins: yes\n\n")
+    w("   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 10) equal the sha256 SOURCES.txt pins: yes\n\n")
     # 2. the values
     texts = {k: open(os.path.join(HERE, v), encoding="utf-8").read() for k, v in INPUT_FILES.items()}
     w("2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices\n")
@@ -822,14 +848,25 @@ def main():
         R["gate_run"], R["v_run"]))
     w("     2N7002's %.1f V threshold at most, %.1f V at the %.1f V clamp against its %.0f V; DOCK_EN_RET held at %.3f V at most (2 x %.0f ohm x %.0f, %.2f mA)\n" % (
         R["n_vth"][1], V_CLAMP / 2.0, V_CLAMP, R["n_vgs"], R["v_ret"], R["n_rds"], N7002_HOT, V_CLAMP / (10e3 * (1 - R106_TOL) + R["rt1_min"]) * 1e3))
-    w("   WHAT BOARD A READS (the interface owed to L4-E11's DD-7 draft): with the return held, DOCK_EN_OUT falls to %.2f V at BRK_VIN %.1f V and %.2f V at\n" % (
-        R["out_run"], R["v_run"], R["out_pack"]))
-    w("     %.1f V (RT1 at %.0f kOhm, R106 +1 %%); Q47's gate at half of it (R109, R144) reads %.2f and %.2f V, under the 2N7002's %.1f V: L8P-F04\n" % (
-        R["v_pack_min"], R["rt1_min"] / 1e3, R["out_run"] / 2, R["out_pack"] / 2, R["n_vth"][1]))
-    w("     the inhibit sets while DOCK_EN_RET is under %.1f V and DOCK_EN_OUT at %.1f V or over, within 1 ms, and holds at least %.1f s after the return\n" % (
-        RET_LOW, OUT_POWERED, STRETCH_MIN))
-    w("       rises over %.1f V; the breaker restarts within %.4f s (the hold %.3f s and the start %.1f ms); the timer re-enables %.1f ms after a latch\n" % (
-        RET_HIGH, R["t_restart"], R["hold"], R["start"] * 1e3, R["t_timer"] * 1e3))
+    l10 = texts["l4e11r10"]
+    for pat, what in ((r"under \*\*%s V\*\* at least; read closed over %s V at most" % (re.escape("%.4f" % RET_LOW), re.escape("%.2f" % RET_HIGH)), "the return held and closed"),
+                      (r"over \*\*%s V\*\* at most" % re.escape("%.3f" % OUT_POWERED), "the loop powered"),
+                      (r"why board A reads the return held under %s V and not up to 1\.0 V" % re.escape("%.4f" % RET_LOW), "the box restated"),
+                      (r"The 1\.0 V figure is a 2N7002's least threshold \(l8p 12f\)", "the 1.0 V figure's origin")):
+        need(l10, pat, "L4-E11 20c at a09e9a60: %s" % what)
+    w("   WHAT BOARD A READS (L4-E11's DD-7 as its round 10 draws it: section 20c at a09e9a60, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):\n")
+    w("     the return held under %.4f V at least (read closed over %.2f V at most) while the loop reads powered, over %.3f V at most;\n" % (
+        RET_LOW, RET_HIGH, OUT_POWERED))
+    w("     the copy of 20c reads each figure and why the reading is narrower than round 3's 1.0 V box: yes\n")
+    w("     board P's pull holds the return at %.3f V at most, %.3f V under board A's held reading; with the return held, DOCK_EN_OUT falls to\n" % (
+        R["v_ret"], RET_LOW - R["v_ret"]))
+    w("     %.2f V at BRK_VIN %.1f V and %.2f V at %.1f V (RT1 at %.0f kOhm, R106 +1 %%, the return taken at 0 V), %.3f V over the powered reading\n" % (
+        R["out_run"], R["v_run"], R["out_pack"], R["v_pack_min"], R["rt1_min"] / 1e3, R["out_run"] - OUT_POWERED))
+    w("     round 9's Q47 read half of it, %.2f and %.2f V, under the 2N7002's %.1f V (L8P-F04): answered by round 10's U48 on the return itself\n" % (
+        R["out_run"] / 2, R["out_pack"] / 2, R["n_vth"][1]))
+    w("     the inhibit sets within 1 ms and holds at least %.1f s after the return rises (read closed); the breaker restarts within %.4f s (the hold\n" % (
+        STRETCH_MIN, R["t_restart"]))
+    w("       %.3f s and the start %.1f ms); the timer re-enables %.1f ms after a latch\n" % (R["hold"], R["start"] * 1e3, R["t_timer"] * 1e3))
     w("   THE DELAYS: U103's filter %.0f us, U104's %.0f us, each to a 10 %% overdrive x%.2f, the OPA187's typical slew and recovery taken ten times\n" % (
         R["tau_i"] * 1e6, R["tau_v"] * 1e6, math.log(1.1 / 0.1)))
     w("     slower: %.2f ms at most to the pull; a charge over the threshold for %.0f ms at the pack path's %.2f A and VSD %.1f V in one FET raises its\n" % (
@@ -957,25 +994,25 @@ def main():
         w("5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3)\n")
         composed = {}
         for b in "pea":
-            seq = [draft(r, n, b) for r, n in ORDER[b]]
-            fwd = seq[:SLOT[b]] + mine_seq(b) + seq[SLOT[b]:]
+            fwd = order(b, "fwd")
             p, res = compose(b, fwd, d, "fwd")
             composed[b] = p if all(v.startswith("OK") for _s, v in res) and len(res) == len(fwd) else None
             w("   board %s, this record's draft%s in its place:\n" % (b.upper(), "s" if len(mine_seq(b)) > 1 else ""))
             for s, v in res:
                 w("     %-44s %s\n" % (s, v))
-            _p, res = compose(b, mine_seq(b) + seq, d, "rev")
-            w("   board %s, this record's draft first, then the order: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + len(mine_seq(b))
+            first = order(b, "first")
+            _p, res = compose(b, first, d, "rev")
+            w("   board %s, this record's draft first, then the order: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(first)
                                                                       else "; ".join("%s %s" % x for x in res if not x[1].startswith("OK"))))
-            _p, res = compose(b, seq + mine_seq(b), d, "last")
-            w("   board %s, the order, then this record's draft last: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(seq) + len(mine_seq(b))
+            last = order(b, "last")
+            _p, res = compose(b, last, d, "last")
+            w("   board %s, the order, then this record's draft last: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(last)
                                                                        else "; ".join("%s %s" % x for x in res if not x[1].startswith("OK"))))
         w("\n")
         # 6. designators
         w("6. DESIGNATORS EACH DRAFT ADDS (the forward order; part calls, listed tokens and each draft's declared ADDS)\n")
         for b in "pea":
-            seq = [draft(r, n, b) for r, n in ORDER[b]]
-            fwd = seq[:SLOT[b]] + mine_seq(b) + seq[SLOT[b]:]
+            fwd = order(b, "fwd")
             p = os.path.join(d, "desig_gen_sch_%s.py" % b); shutil.copy(GEN[b], p)
             before_t = open(p, encoding="utf-8").read(); adds = {}
             for s in fwd:
@@ -1036,8 +1073,7 @@ def main():
                 continue
             w("   board %s composed in L4-E9's order: the generator refused: %s\n" % (b.upper(), path))
             # the same composition without this record's draft: the refusal is the other drafts' (a finding for their owners)
-            seq = [draft(r, n, b) for r, n in ORDER[b]]
-            q, res = compose(b, seq, d, "without")
+            q, res = compose(b, order(b, "without"), d, "without")
             rc2, line2, _t2 = netlist_text(b, q, d, "without")
             w("     without this record's draft the same composition's generator %s\n" % (
                 "refuses with the same line: the refusal is another draft's (section 8)" if rc2 and line2 == path else
@@ -1057,6 +1093,16 @@ def main():
                 comp[b] = path3
         if comp:
             buf = io.StringIO(); CHK.run(comp, ROOT, buf, label=lambda x: "regenerated board %s, composed in L4-E9's order%s" % (x.upper(), "" if "standin" not in comp[x] else " with the stand-ins"))
+            w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        # DD-7's readers admitted by pin (L4E11-R10-F2): mutations of the composed board A that a rule admitting U48, Q44 or R109 by
+        # its reference alone would pass
+        for tag, swaps, what in (("mut_a2", [(("U48", "2"), ("U48", "1"))], "U48's SENSE1 and VDD exchanged: VBAT's pin on the return"),
+                                 ("mut_a3", [(("Q44", "3"), ("Q44", "2"))], "Q44's drain and source exchanged: the source on the return"),
+                                 ("mut_a4", [(("R109", "2"), ("R144", "2"))], "R109 from DOCK_EN_OUT to the ground: U48's SENSE2 reads nothing")):
+            if "a" not in comp:
+                refuse("board A composed in L4-E9's order did not regenerate, so DD-7's readers cannot be mutated")
+            m = mutate(comp["a"], d, tag, swaps)
+            buf = io.StringIO(); CHK.run({"a": m}, ROOT, buf, label=lambda x, what=what: "mutated composed board A (%s)" % what)
             w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
         m1 = mutate(alone["p"][0], d, "mut_p", [(("J_SMB", "6"), ("J_SMB", "7"))])
         buf = io.StringIO(); CHK.run({"p": m1}, ROOT, buf, label=lambda x: "mutated board P (J_SMB pins 6 and 7 exchanged)")
@@ -1108,16 +1154,24 @@ def main():
     w("\n9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)\n")
     w("   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a\n")
     w("     (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it\n")
-    for b in "ea":
-        for fid, why, _o, _r in STANDINS[b]:
-            w("   %s board %s: %s\n" % (fid, b.upper(), why))
-    w("   L8P-F04 board A: L4-E11's DD-7 draft reads the loop powered at half of DOCK_EN_OUT (Q47 through R109 and R144); with the return held low\n")
-    w("     (board P's detector, or board A's own Q44) DOCK_EN_OUT falls to %.2f V at BRK_VIN %.1f V: the interface of section 3b is owed (open)\n" % (R["out_run"], R["v_run"]))
+    w("   L8P-F02 board A: l4e11's charger draft: VSYS_DOCK named U42 as its source without source_ic, fed from VBAT before VBAT was declared:\n")
+    w("     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried in round 10 (fnd/l4e11r10 at a09e9a60); board A's composition above uses round 10's\n")
+    w("     draft, copied byte for byte into inputs/, and needs no stand-in\n")
+    w("   L8P-F03 board E: l4e11's aux draft: +12V_FAN named L4 as its source, which is not on that net: CLOSED the same way (round 10's aux draft\n")
+    w("     at a09e9a60, copied byte for byte); board E's composition needs no stand-in\n")
+    w("   L8P-F04 board A: round 9's DD-7 read the loop powered at half of DOCK_EN_OUT; with the return held DOCK_EN_OUT falls to %.2f V at BRK_VIN\n" % R["out_run"])
+    w("     %.1f V: ANSWERED by round 10 (a09e9a60, not on main): U48 reads the return held and the loop powered (section 3b); composed above\n" % R["v_run"])
     w("   L8P-F05 board A: with the breaker off, the LM5069's internal %.0f MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:\n" % (R["r_so"] / 1e6))
     w("     with board A's %.0f kOhm (R107, R108) alone CELL+ reads %.2f V at BRK_VIN %.1f V, over L4-E11's %.2f V 'dead' point; with U104's divider\n" % (
         R["r_alive"] / 1e3, R["cell_off_a"], B["vmax"], R["dead"]))
-    w("     (%.1f kOhm) also on PACK_P, %.2f V (%.2f V at the %.1f V clamp); the 1 MOhm's tolerance is not printed (open; route R1's return covers a charge)\n" % (
+    w("     (%.1f kOhm) also on PACK_P, %.2f V (%.2f V at the %.1f V clamp); the 1 MOhm's tolerance is not printed: ANSWERED by round 10 (a09e9a60,\n" % (
         r_div_k(), R["cell_off_ap"], R["cell_off_clamp"], V_CLAMP))
+    w("     not on main) with a bleeder on CELL+ while the inhibit holds; the latch then holds for any source into CELL+ under 0.846 mA (L4-E11 20e)\n")
+    w("   L8P-F06 board P (the check V1's minor, round 5): the breaker FETs' off leakage feeds PACK_P with the breaker off, a source under that\n")
+    w("     0.846 mA; the CSD18510Q5B sheet prints IDSS 1 uA at VDS 32 V and 25 C only (no hot figure): named, open (page 12j)\n")
+    w("   L8P-F07 board A (condition C3, with record l9stk): Murata prints RT1 (PRF15BB103RB6RC) only at 10 kOhm +-50 % at 25 C, its 100 kOhm sensing\n")
+    w("     temperature over 110 C and 4.7 MOhm at 130 +-3 C (DM-SA16-E056 Rev.1, p.4): the guard's no-trip side at 10 and 18 A held rests on the\n")
+    w("     typical curve; the question to Murata is drafted, unsent, and a guard part whose sheet prints both points is named (page 12j)\n")
     w("\nl8p_drafts: done\n")
     return 0
 

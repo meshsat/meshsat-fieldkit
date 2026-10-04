@@ -1,5 +1,14 @@
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
+**INCOMPLETE (round 5, checkpoint at the owner's shutdown, 4 October 2026 15:56 CEST).** Round 5 (the check V1's items F1, F2
+and the findings) is part done on this branch: `check_l8p_netlist.py`'s board A EN group admits DD-7's readers by pin
+(L4E11-R10-F2) and `l8p_drafts.py` composes L4-E11's round 10 drafts (`fnd/l4e11r10` at `a09e9a60`, byte-for-byte copies in
+`inputs/`), drops the stand-ins, reads the restated interface levels from the copy of L4-E11's section 20c and adds three
+mutations of the composed board A. **`l8p_drafts.out` is STALE** (not regenerated: the committed output is round 4's, so
+`test_l8p`'s first test fails until it is regenerated through `_bin/regen_out.py`); `inputs/SOURCES.txt` does not yet list the
+round 10 copies; the page's 12f box, its findings L8P-F06 and L8P-F07 (section 12j) and `test_l8p.py` are not yet updated; the
+scratch merge with `a09e9a60` is not run.
+
 Layer 8 record `l8p`, 4 October 2026, branch `fnd/l8p` from main `64cd25ee`. It draws record `l9stk` section 15's design
 (branch `fnd/l9stk` at `0d72880b`, its latest changes CONFIRMED AS CONDITIONAL):
 - an LM5069-1 latch-off breaker on board P;
