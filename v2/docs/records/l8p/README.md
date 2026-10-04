@@ -1,5 +1,28 @@
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
+**Round 6b (4 October 2026 late evening, branch `fnd/l8p2` from `053901ea`): the copies of L4-E11 taken again at its round 13.**
+L4-E11 moved one more round after round 6 (`fnd/l4e11r11` at `4def5975`), and on the coordinator's merged candidate this
+record's own guard fired, as round 6 built it to (`test_l8p.t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree`).
+- **Retaken at `4def5975`:** the four drafts and sections 20c, 20d, 20e, 22b, 22c, 22g, 22h; round 12's copies removed
+  (`inputs/SOURCES.txt`, round 6b). The copies' names are now built from two values in `l8p_drafts.py` (`L4E11_AT`,
+  `L4E11_ROUND`).
+- **What changed: one copy of eleven, section 20c.** L4-E11 restated it on Murata's printed points: record l9stk's "bound point"
+  (the loop at 10.6 V with RT1 at 47 kOhm, the first inverter's gate at 2.894 V) is withdrawn as a bound.
+- **Which quoted figures moved: none.** The held and closed readings (0.7755 V, 0.84 V), the powered reading (1.981 V), the dead
+  and alive readings (4.076 V, 4.774 V), the load on the return (2 uA), the window (25.8 kOhm), the first inverter's band (61.3
+  to 201.2 kOhm), the delays (0.85 ms, 1.41 ms, 1.341 s), the two limits (0.846 mA, 520.7 uA), the hot bound (434.8 uA) and
+  everything L8P-F06 and E-14c derive from them read as in round 6. `l8p_drafts.out` changed only in the copies' names and pins
+  and in four new lines of section 3b.
+- **What no longer stands, and where this record leant on it:** one sentence of 12e ("so l9stk's bound point of the inverters
+  and the thermal guard is unchanged"), restated; 12f gains L4-E11's own words on the withdrawal, quoted from the copy. It
+  agrees with L8P-F07, which stays OPEN.
+- **Scratch checks of round 6b** (read-only `git merge-tree`, then a scratch overlay, deleted): the merge with `4def5975` is
+  CLEAN; it brings `records/l4e11/`, `test_l4e11.py` and `test-procedures/TP-E11-29.md`. On it `l8p_drafts.py` prints this
+  `l8p_drafts.out` byte for byte; `test_l8p` 22 passed; `test_l4e11` 71 passed, 2 failed with L4-E11's pin of this record's PTC
+  draft as it is at `4def5975` (still the old sha256), and 73 passed, 0 failed after `apply_test_l4e11_ptc_pin.py --write` on
+  the overlay's copy.
+- **Not in this round:** the guard's draft (this record's next round, with its own brief); V2's targeted recheck of round 6.
+
 **Round 6 (4 October 2026 evening, branch `fnd/l8p2` from `69156072`): the independent check V2's findings for this record
 answered; UNVERIFIED until its targeted recheck. L8P-F06 and L8P-F07 stay OPEN.** V2 (an AI review; it read `fnd/v2cand` at
 `dfa1eef2`, which held round 5) confirmed the ideal diode as conditional and F06 and F07 as real and correctly open, and did not
@@ -79,6 +102,6 @@ accepted check of this record; none exists.
 | `read_prf_typical.py` | Round 5: the reading of Murata's typical BB curve (DM-SA16-E056 Rev.1, 3.2) that `l8p_drafts.py` carries as `PRF_BB_TYP`, INFERRED; a reading aid, not a gate. |
 | `apply_test_l4e11_ptc_pin.py` | Round 6: a one-line draft for the integrator and L4-E11's author, the sha256 by which `test_l4e11.py` pins this record's PTC draft. Not applied here. |
 | `l8p_drafts.py`, `l8p_drafts.out` | The inputs pinned by sha256, the values found in l9stk's text, C-1c's budget read from the makers' sheets, B-R2's detector (section 3b), DD-5's acceptance (section 3c), each draft on a scratch copy, the composition in L4-E9's order, the designators, the regeneration and the netlist check, the intent, and the findings. Regenerated with `_bin/regen_out.py`. |
-| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; since round 6: L4-E11's round 12 drafts and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h at `ac72e730` (round 5's copies of `a09e9a60` removed). |
+| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; since round 6b: L4-E11's round 13 drafts and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h at `4def5975` (round 5's copies of `a09e9a60` and round 6's of `ac72e730` removed). |
 
 Tests: `v2/ecad/tools/tests/test_l8p.py`. Run `python3 run.py test_l8p`, `test_l8r2` and `test_public_hygiene` from the tests folder, one module a run.

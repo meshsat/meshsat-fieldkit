@@ -4,8 +4,8 @@
 
 It prints, deterministically and without touching the tree:
   1. the inputs, each pinned by sha256 (the generators and the engine, every other draft it composes with, record l9stk's copies
-     of 0d72880b, L4-E7's backstop draft of fnd/l4e7r6 at 914a2f5a, L4-E11's round 12 drafts and sections 20c to 20e and 22b, 22c,
-     22g and 22h of fnd/l4e11r11 at ac72e730, the committed netlists, the lands, the makers' sheets read, the held OPA187 sheet,
+     of 0d72880b, L4-E7's backstop draft of fnd/l4e7r6 at 914a2f5a, L4-E11's drafts and sections 20c to 20e and 22b, 22c, 22g and
+     22h of fnd/l4e11r11 at 4def5975 (its round 13; round 6 copied round 12 at ac72e730), the committed netlists, the lands, the makers' sheets read, the held OPA187 sheet,
      this record's own files);
   2. the values: each value the drafts draw found in record l9stk's own text by its section (refused when a phrase no longer
      matches), and this record's SESSION choices;
@@ -14,8 +14,8 @@ It prints, deterministically and without touching the tree:
      the NTC's own heating and the hysteresis computed for the drawn values, and the remainder left for the pad's gradient;
   3b. B-R2's detector (round 3, route R1): why no existing element tells board A a latched breaker passing a charge, the charge
      threshold and the reverse threshold with every tolerance, the delays, the protector's own limits, what board A must read
-     (L4-E11's DD-7 interface, as its section 20c reads it at ac72e730) and E-14 as it now reads, from task L4-E11's copies
-     (fnd/l4e11r9 at e60a94a8, fnd/l4e11r11 at ac72e730) and the makers' sheets;
+     (L4-E11's DD-7 interface, as its section 20c reads it at 4def5975) and E-14 as it now reads, from task L4-E11's copies
+     (fnd/l4e11r9 at e60a94a8, fnd/l4e11r11 at 4def5975) and the makers' sheets;
   3c. DD-5 (round 4): the charge switch's body diode in discharge under CHGIN = 1, the three approaches, the ideal diode beside
      Q1 (apply_gen_sch_p_idealdiode.py) and its acceptance on case row C-PROT, from the BQ4050's, the CSD17570Q5B's and the
      LM74700-Q1's sheets;
@@ -123,52 +123,55 @@ ORDER = {
 SLOT = {"p": 0, "e": 10, "a": 9}
 LIST_ABSENT = {"a": [("l8r2", "packrtn", "R-201"), ("l8r2", "slotlm", "R-199"), ("l8r2", "fb01", "R-200")], "e": [("l8r2", "packrtn", "R-202")]}
 TREE_ONLY = {"a": [("l8r2", "d8v3"), ("l8r2", "vbus20ov")]}
-L4E11_AT = "ac72e730"                           # task L4-E11's round 12, branch fnd/l4e11r11: every copy of its text and drafts is this commit's
+# Task L4-E11's round copied here, branch fnd/l4e11r11: every copy of its text and drafts is this commit's, and their file names
+# are built from these two values, so taking the copies again is these two lines, SOURCES_SHA and inputs/SOURCES.txt.
+# Round 6: round 12 at ac72e730. Round 6b: round 13 at 4def5975 (of the eleven copies only section 20c changed).
+L4E11_AT, L4E11_ROUND = "4def5975", 13
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
                "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-e60a94a8.md",
-               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11c": "inputs/l4e11-section20c-ac72e730.md",
-               "l4e11d": "inputs/l4e11-section20d-ac72e730.md", "l4e11e": "inputs/l4e11-section20e-ac72e730.md",
-               "l4e11_22b": "inputs/l4e11-section22b-ac72e730.md", "l4e11_22c": "inputs/l4e11-section22c-ac72e730.md",
-               "l4e11_22g": "inputs/l4e11-section22g-ac72e730.md", "l4e11_22h": "inputs/l4e11-section22h-ac72e730.md"}
+               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11c": "inputs/l4e11-section20c-%s.md" % L4E11_AT,
+               "l4e11d": "inputs/l4e11-section20d-%s.md" % L4E11_AT, "l4e11e": "inputs/l4e11-section20e-%s.md" % L4E11_AT,
+               "l4e11_22b": "inputs/l4e11-section22b-%s.md" % L4E11_AT, "l4e11_22c": "inputs/l4e11-section22c-%s.md" % L4E11_AT,
+               "l4e11_22g": "inputs/l4e11-section22g-%s.md" % L4E11_AT, "l4e11_22h": "inputs/l4e11-section22h-%s.md" % L4E11_AT}
 # the copies of L4-E11's page (INPUT_FILES key, its section heading's start) and of its drafts (the copy, records/l4e11's file):
 # test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (V2-B2: a copy a round behind)
 L4E11_SECTIONS = (("l4e11c", "### 20c. "), ("l4e11d", "### 20d. "), ("l4e11e", "### 20e. "), ("l4e11_22b", "### 22b. "),
                   ("l4e11_22c", "### 22c. "), ("l4e11_22g", "### 22g. "), ("l4e11_22h", "### 22h. "))
-L4E11_DRAFTS = (("inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py", "apply_gen_sch_a_charger.py"),
-                ("inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py", "apply_gen_sch_a_dd7.py"),
-                ("inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py", "apply_gen_sch_e_aux.py"),
-                ("inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py", "apply_gen_sch_e_entry.py"))
+L4E11_DRAFTS = (("inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_a_charger.py"),
+                ("inputs/l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_a_dd7.py"),
+                ("inputs/l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_e_aux.py"),
+                ("inputs/l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_e_entry.py"))
 SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444ee345bd87eb9af3146f005c507f14961f3ac80",
                "inputs/l9stk_protection-0d72880b.out.txt": "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac",
                "inputs/l9stk_protection-constants-0d72880b.txt": "ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e",
                "inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py": "dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544",
                "inputs/l4e11-section19h-e60a94a8.md": "270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486",
                "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146",
-               "inputs/l4e11-section20c-ac72e730.md": "c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086",
-               "inputs/l4e11-section20d-ac72e730.md": "a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241",
-               "inputs/l4e11-section20e-ac72e730.md": "9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a",
-               "inputs/l4e11-section22b-ac72e730.md": "583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45",
-               "inputs/l4e11-section22c-ac72e730.md": "a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec",
-               "inputs/l4e11-section22g-ac72e730.md": "0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704",
-               "inputs/l4e11-section22h-ac72e730.md": "b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f",
-               "inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py": "cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f",
-               "inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py": "bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034",
-               "inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py": "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
-               "inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py": "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"}
+               "inputs/l4e11-section20c-%s.md" % L4E11_AT: "b3619bd411f5b64f2ae8efa3580041e2789513ccf5cda147b762df5cc4d2e9dc",
+               "inputs/l4e11-section20d-%s.md" % L4E11_AT: "a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241",
+               "inputs/l4e11-section20e-%s.md" % L4E11_AT: "9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a",
+               "inputs/l4e11-section22b-%s.md" % L4E11_AT: "583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45",
+               "inputs/l4e11-section22c-%s.md" % L4E11_AT: "a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec",
+               "inputs/l4e11-section22g-%s.md" % L4E11_AT: "0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704",
+               "inputs/l4e11-section22h-%s.md" % L4E11_AT: "b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f",
+               "inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT): "cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f",
+               "inputs/l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT): "bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034",
+               "inputs/l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT): "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
+               "inputs/l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT): "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"}
 # L8P-F01 is closed by L4-E7's backstop draft on fnd/l4e7r6 at 914a2f5a (not on main): board E's composition uses that draft,
 # copied byte for byte into inputs/, in place of main's
 # Rounds 5 and 6: L4-E11's rounds 9 and 10 correct L8P-F02 and L8P-F03 and redraw DD-7 against route R1 (L8P-F04, L8P-F05); its
-# round 12 (fnd/l4e11r11 at ac72e730, not on main) is the round copied here since round 6 (the check V2's V2-B2: round 5's copies
-# were round 10's, a round behind the candidate). Its charger, aux and entry drafts are used the same way, copied byte for byte,
+# round 13 (fnd/l4e11r11 at 4def5975, not on main) is the round copied here since round 6b (the check V2's V2-B2: round 5's copies
+# were round 10's, a round behind the candidate; round 6 took round 12, and round 13 followed it). Its charger, aux and entry drafts are used the same way, copied byte for byte,
 # so the output reads alike on this branch and on a line where records/l4e11/ holds the same bytes
 REPLACED = {("l4e7", "backstop", "e"): os.path.join(HERE, "inputs", "l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py"),
-            ("l4e11", "charger", "a"): os.path.join(HERE, "inputs", "l4e11r12-apply_gen_sch_a_charger-ac72e730.py"),
-            ("l4e11", "aux", "e"): os.path.join(HERE, "inputs", "l4e11r12-apply_gen_sch_e_aux-ac72e730.py"),
-            ("l4e11", "entry", "e"): os.path.join(HERE, "inputs", "l4e11r12-apply_gen_sch_e_entry-ac72e730.py")}
+            ("l4e11", "charger", "a"): os.path.join(HERE, "inputs", "l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT)),
+            ("l4e11", "aux", "e"): os.path.join(HERE, "inputs", "l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT)),
+            ("l4e11", "entry", "e"): os.path.join(HERE, "inputs", "l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT))}
 # Other authors' drafts that require this record's draft (L4-E11's DD-7 refuses a target without RT1 and DOCK_EN_RET): each goes
 # right after this record's drafts and after every draft it names as required (its docstring's ORDER), in every order composed
-# here; a composition without this record's draft leaves it out. The copy is ac72e730's, byte for byte.
-FOLLOW = {"a": [(os.path.join(HERE, "inputs", "l4e11r12-apply_gen_sch_a_dd7-ac72e730.py"), (("l4e11", "charger"),))]}
+# here; a composition without this record's draft leaves it out. The copy is L4E11_AT's, byte for byte.
+FOLLOW = {"a": [(os.path.join(HERE, "inputs", "l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT)), (("l4e11", "charger"),))]}
 OPA187 = os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-opa187-sbos807e.pdf")
 NTC_SHEET = os.path.join(ROOT, "v2", "vendor", "battery", "murata-nxrt15xh103fa1b.pdf")
 D4148_SHEET = os.path.join(ROOT, "v2", "vendor", "power", "st-semtech-1n4148w-c81598.pdf")
@@ -195,7 +198,7 @@ TOL_FEED, TCR_FEED = 0.01, 100e-6               # R129, a 1 % part; its 100 ppm/
 R10_TOL, R10_TCR = 0.01, 75e-6                  # board P's R10, the gauge's sense: no tolerance or TCR is printed in the generator; ASSUMED, owed to Layer 6
 R106_TOL = 0.01                                 # R106 10 kOhm, ASSUMED 1 %
 STRETCH_MIN = 1.0                               # the least time board A holds its inhibit after the return rises (the interface), s
-# the interface's levels as board A reads them (L4-E11 section 20c at ac72e730, U48 TPS37A010122 on TI SNVSBJ1E, finding
+# the interface's levels as board A reads them (L4-E11 section 20c at L4E11_AT, U48 TPS37A010122 on TI SNVSBJ1E, finding
 # L4E11-R10-F1): DOCK_EN_OUT read powered over 1.981 V at most; DOCK_EN_RET read held under 0.7755 V at least and closed over
 # 0.84 V at most, V. Not retyped: section 3b refuses unless the copy reads each
 OUT_POWERED, RET_LOW, RET_HIGH = 1.981, 0.7755, 0.84
@@ -252,7 +255,7 @@ SESSION = [
 # SCRATCH STAND-INS for run-time defects of OTHER records' drafts that stop the composed generators (section 9 lists them as
 # findings for their owners). Each is applied to a scratch copy only when its old text is there; none is a draft, none is applied
 # anywhere else, and each says only that the generator then runs on. None since round 5: L8P-F02 and L8P-F03 are corrected in
-# L4-E11's drafts (REPLACED; round 12's since round 6), which the compositions use.
+# L4-E11's drafts (REPLACED; the round L4E11_ROUND names), which the compositions use.
 STANDINS = {}
 
 
@@ -712,7 +715,7 @@ def tdk_window(k_low, k_trip, k_notrip):
 
 def round5(texts, W, R):
     """Rounds 5 and 6: the interface of 12f restated from L4-E11's 20c and 20d; L8P-F06 (the breaker FETs' hot off leakage against
-    BOTH limits of L4-E11's latch as its round 12 states them at ac72e730: the static limit and the timing limit, with its own
+    BOTH limits of L4-E11's latch as its round 12 states them (copied at L4E11_AT): the static limit and the timing limit, with its own
     source list) and L8P-F07 (the guard RT1's printed points against the loop's levels), from the copies, Murata's and TI's
     sheets, and Murata's typical curve as read (INFERRED); the alternative guard part's limits as typed from TDK's held sheet."""
     N = r"([0-9.]+)"
@@ -768,7 +771,7 @@ def round5(texts, W, R):
     m = need(cs, r"^IDSS\s+Drain-to-source leakage current\s+VGS = 0 V, VDS = (\d+) V\s+([0-9.]+)\s+\u03bcA", "CSD18510Q5B: IDSS")
     F["idss_v"], F["idss"] = float(m.group(1)), float(m.group(2)) * 1e-6
     F["idss_rows"] = len(re.findall(r"^IDSS\s", cs, re.M))
-    # L4-E11's round 12 (ac72e730): TWO limits on the sources into CELL+ while the inhibit holds and the breaker is off
+    # L4-E11's round 12, unchanged in the round copied: TWO limits on the sources into CELL+ while the inhibit holds and the breaker is off
     F["i_static"] = float(need(l10e, r"The\s+latch\s+reads\s+dead\s+while\s+every\s+source\s+into\s+CELL\+\s+stays\s+under\s+\*\*%s\s+mA\*\*\s+together\s+\(the\s+static\s+limit\)" % N,
                                "L4-E11 20e: the static limit").group(1)) * 1e-3
     F["l4_each"] = float(need(l10e, r"may\s+reach\s+(\d+)\s+uA\s+each\s+before\s+that\s+limit", "L4-E11 20e: the battery FETs' static room").group(1)) * 1e-6
@@ -1107,7 +1110,7 @@ def main():
     for f, full in sorted(SOURCES_SHA.items()):
         if sha(os.path.join(HERE, f), 64) != full:
             refuse("the copy %s is not the file SOURCES.txt pins" % f)
-    w("   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 12) equal the sha256 SOURCES.txt pins: yes\n\n")
+    w("   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and %d) equal the sha256 SOURCES.txt pins: yes\n\n" % L4E11_ROUND)
     # 2. the values
     texts = {k: open(os.path.join(HERE, v), encoding="utf-8").read() for k, v in INPUT_FILES.items()}
     w("2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices\n")
@@ -1228,10 +1231,21 @@ def main():
                       (r"why board A reads the return held under %s V and not up to 1\.0 V" % re.escape("%.4f" % RET_LOW), "the box restated"),
                       (r"The 1\.0 V figure is a 2N7002's least threshold \(l8p 12f\)", "the 1.0 V figure's origin")):
         need(l10, pat, "L4-E11 20c at %s: %s" % (L4E11_AT, what))
+    m13 = need(l10, r"the\s+closed\s+return\s+reads\s+closed\s+for\s+any\s+RT1\s+under\s+([0-9.]+)\s+kOhm\s+at\s+([0-9.]+)\s+V\s+\(([0-9.]+)\s+V\s+at\s+RT1\s+47\s+kOhm,\s+which\s+bounds\s+nothing:\s+round\s+13,\s+23g\)",
+               "L4-E11 20c at %s: the closed return as round 13 restates it" % L4E11_AT)
+    need(l10, r"record\s+l9stk's\s+former\s+\"bound\s+point\";\s+\*\*withdrawn\s+as\s+a\s+bound\s+by\s+round\s+13,\s+23g:\*\*\s+47\s+kOhm\s+is\s+not\s+a\s+point\s+of\s+this\s+part",
+         "L4-E11 20c at %s: the 47 kOhm bound point withdrawn" % L4E11_AT)
+    need(l10, r"Board\s+A\s+reads\s+a\s+closed\s+return\s+as\s+held\s+only\s+past\s+RT1\s+%s\s+kOhm\s+at\s+%s\s+V" % (re.escape(m13.group(1)), re.escape(m13.group(2))),
+         "L4-E11 20c at %s: the closed return held only past that resistance" % L4E11_AT)
     w("   WHAT BOARD A READS (L4-E11's DD-7 as it draws it since its round 10: section 20c at %s, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):\n" % L4E11_AT)
     w("     the return held under %.4f V at least (read closed over %.2f V at most) while the loop reads powered, over %.3f V at most;\n" % (
         RET_LOW, RET_HIGH, OUT_POWERED))
     w("     the copy of 20c reads each figure and why the reading is narrower than round 3's 1.0 V box: yes\n")
+    w("     20c AS L4-E11's ROUND 13 RESTATES IT ON MURATA'S PRINTED POINTS (its 23g): record l9stk's former 'bound point' (RT1 47 kOhm, the gate at\n")
+    w("       %s V) is WITHDRAWN as a bound, 47 kOhm not being a point of this part; the closed return reads closed for any RT1 under %s kOhm at %s V;\n" % (
+        m13.group(3), m13.group(1), m13.group(2)))
+    w("       every level this record reads of 20c (the held and powered readings, the dead and alive readings, the load on the return, the window,\n")
+    w("       the first inverter's band) is unchanged from its round 12\n")
     w("     board P's pull holds the return at %.3f V at most, %.3f V under board A's held reading; with the return held, DOCK_EN_OUT falls to\n" % (
         R["v_ret"], RET_LOW - R["v_ret"]))
     w("     %.2f V at BRK_VIN %.1f V and %.2f V at %.1f V (RT1 at %.0f kOhm, R106 +1 %%, the return taken at 0 V), %.3f V over the powered reading\n" % (
@@ -1344,7 +1358,8 @@ def main():
     # 3d. round 5: L8P-F06 and L8P-F07
     g = F["prf"]["PRF15BB103RB6RC"]
     w("3d. ROUNDS 5 AND 6, THE CHECKS V1 AND V2: L8P-F06 (the breaker FETs' hot off leakage) and L8P-F07 (the guard RT1's printed points)\n")
-    w("   L8P-F06, ON L4-E11's LATCH AS ITS ROUND 12 STATES IT (fnd/l4e11r11 at %s; sections 20e, 22b, 22c and 22g copied; the check V2's V2-B1 and V2-B2):\n" % L4E11_AT)
+    w("   L8P-F06, ON L4-E11's LATCH AS ITS ROUND 12 STATES IT (copied at its round %d, fnd/l4e11r11 at %s, where sections 20e, 22b, 22c and 22g are\n" % (L4E11_ROUND, L4E11_AT))
+    w("     unchanged; the check V2's V2-B1 and V2-B2):\n")
     w("     TWO limits on the sources into CELL+ while the inhibit holds and the breaker is off (quoted): the static limit %.3f mA (the latch reads\n" % (F["i_static"] * 1e3))
     w("       dead) and the timing limit %.1f uA (the bleed of CELL+ through R256 ends inside the hold's least %.3f s); between the two the hold may end\n" % (
         F["i_timing"] * 1e6, F["hold_min"]))
@@ -1714,20 +1729,20 @@ def main():
     w("   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a\n")
     w("     (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it\n")
     w("   L8P-F02 board A: l4e11's charger draft: VSYS_DOCK named U42 as its source without source_ic, fed from VBAT before VBAT was declared:\n")
-    w("     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried to its round 12 (fnd/l4e11r11 at %s); board A's composition above uses round 12's\n" % L4E11_AT)
+    w("     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried to its round %d (fnd/l4e11r11 at %s); board A's composition above uses that round's\n" % (L4E11_ROUND, L4E11_AT))
     w("     draft, copied byte for byte into inputs/, and needs no stand-in\n")
     w("   L8P-F03 board E: l4e11's aux draft: +12V_FAN named L4 as its source, which is not on that net: CLOSED the same way (the aux draft\n")
     w("     at %s, copied byte for byte); board E's composition needs no stand-in\n" % L4E11_AT)
     w("   L8P-F04 board A: round 9's DD-7 read the loop powered at half of DOCK_EN_OUT; with the return held DOCK_EN_OUT falls to %.2f V at BRK_VIN\n" % R["out_run"])
-    w("     %.1f V: ANSWERED since L4-E11's round 10 (round 12 at %s, not on main): U48 reads the return held and the loop powered (section 3b); composed above\n" % (R["v_run"], L4E11_AT))
+    w("     %.1f V: ANSWERED since L4-E11's round 10 (round %d at %s, not on main): U48 reads the return held and the loop powered (section 3b); composed above\n" % (R["v_run"], L4E11_ROUND, L4E11_AT))
     w("   L8P-F05 board A: with the breaker off, the LM5069's internal %.0f MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:\n" % (R["r_so"] / 1e6))
     w("     with board A's %.0f kOhm (R107, R108) alone CELL+ reads %.2f V at BRK_VIN %.1f V, over L4-E11's %.2f V 'dead' point; with U104's divider\n" % (
         R["r_alive"] / 1e3, R["cell_off_a"], B["vmax"], R["dead"]))
     w("     (%.1f kOhm) also on PACK_P, %.2f V (%.2f V at the %.1f V clamp); the 1 MOhm's tolerance is not printed: ANSWERED since L4-E11's round 10\n" % (
         r_div_k(), R["cell_off_ap"], R["cell_off_clamp"], V_CLAMP))
-    w("     (round 12 at %s, not on main) with a bleeder on CELL+ while the inhibit holds: R256 %.1f kOhm; the latch then has two limits on the\n" % (L4E11_AT, F["r256"] / 1e3))
+    w("     (round %d at %s, not on main) with a bleeder on CELL+ while the inhibit holds: R256 %.1f kOhm; the latch then has two limits on the\n" % (L4E11_ROUND, L4E11_AT, F["r256"] / 1e3))
     w("     sources into CELL+, the static %.3f mA and the timing %.1f uA (L4-E11 20e)\n" % (F["i_static"] * 1e3, F["i_timing"] * 1e6))
-    w("   L8P-F06 board P with L4-E11 (the check V1's minor, round 5; restated in round 6 on L4-E11's round 12): the breaker FETs' off leakage feeds PACK_P\n")
+    w("   L8P-F06 board P with L4-E11 (the check V1's minor, round 5; restated in round 6 on the two limits of L4-E11's round 12): the breaker FETs' off leakage feeds PACK_P\n")
     w("     and CELL+ with the breaker off, a source inside BOTH of L4-E11's limits (static %.3f mA, timing %.1f uA); the CSD18510Q5B prints IDSS %.0f uA at\n" % (
         F["i_static"] * 1e3, F["i_timing"] * 1e6, F["idss"] * 1e6))
     w("     %.0f V and 25 C only; on the ASSUMED doubling every %.0f K the pair is %.1f uA at the held %.1f C case: %.1f uA inside the timing limit's %.1f uA for\n" % (

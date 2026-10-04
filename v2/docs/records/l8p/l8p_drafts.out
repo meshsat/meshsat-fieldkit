@@ -17,15 +17,15 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
    ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
-   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py
+   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_entry-4def5975.py
    eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
-   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py
+   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_aux-4def5975.py
    78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
    351029a5db0ee871 v2/docs/records/l6r2/apply_gen_sch_e_xal_land.py
    3f3e58b950ef3f8d v2/docs/records/l6r2/apply_gen_sch_e_lcsc.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py
+   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -36,28 +36,28 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    2863b7c8ba4db393 v2/docs/records/l6r2/apply_gen_sch_a_lcsc.py
    98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
    c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
-   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py
+   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py
    20c7b0795593d761 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
    2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
    ee11d230d11e1298 v2/docs/records/l8p/inputs/l4e11-section15c-precharge-e60a94a8.md
    2707096383791409 v2/docs/records/l8p/inputs/l4e11-section19h-e60a94a8.md
-   c860006f87a5777a v2/docs/records/l8p/inputs/l4e11-section20c-ac72e730.md
-   a5b5b306dadd2a14 v2/docs/records/l8p/inputs/l4e11-section20d-ac72e730.md
-   9f3d4e017226d18f v2/docs/records/l8p/inputs/l4e11-section20e-ac72e730.md
-   583a346a0d2fa211 v2/docs/records/l8p/inputs/l4e11-section22b-ac72e730.md
-   a90a69fa982e8db8 v2/docs/records/l8p/inputs/l4e11-section22c-ac72e730.md
-   0595a5a24a5bbc34 v2/docs/records/l8p/inputs/l4e11-section22g-ac72e730.md
-   b65f1dcdb0f61d3c v2/docs/records/l8p/inputs/l4e11-section22h-ac72e730.md
-   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py
-   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py
-   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py
-   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py
+   b3619bd411f5b64f v2/docs/records/l8p/inputs/l4e11-section20c-4def5975.md
+   a5b5b306dadd2a14 v2/docs/records/l8p/inputs/l4e11-section20d-4def5975.md
+   9f3d4e017226d18f v2/docs/records/l8p/inputs/l4e11-section20e-4def5975.md
+   583a346a0d2fa211 v2/docs/records/l8p/inputs/l4e11-section22b-4def5975.md
+   a90a69fa982e8db8 v2/docs/records/l8p/inputs/l4e11-section22c-4def5975.md
+   0595a5a24a5bbc34 v2/docs/records/l8p/inputs/l4e11-section22g-4def5975.md
+   b65f1dcdb0f61d3c v2/docs/records/l8p/inputs/l4e11-section22h-4def5975.md
+   cc4aab01c30bd3c8 v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py
+   bc3fb88bae6a166f v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py
+   3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_aux-4def5975.py
+   a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_entry-4def5975.py
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
    a96099193dd92e8e v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
    d97f94a0fa1f2559 v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
    ed559399fd3b2f2d v2/docs/records/l8p/inputs/l9stk_protection-constants-0d72880b.txt
-   17f85dc13eed06f5 v2/docs/records/l8p/inputs/SOURCES.txt
+   aeb26319d2745730 v2/docs/records/l8p/inputs/SOURCES.txt
    1e3fa195a8f63a9c v2/ecad/meshsat.pretty/LeadLands_1x02.kicad_mod
    171fa629c58b8f1e v2/ecad/meshsat.pretty/PogoPins_2x6.kicad_mod
    94b2f0134ac6ee11 v2/ecad/meshsat.pretty/PogoTargets_2x6.kicad_mod
@@ -81,7 +81,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
    835d00d5a67583ad v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 12) equal the sha256 SOURCES.txt pins: yes
+   record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 13) equal the sha256 SOURCES.txt pins: yes
 
 2. THE VALUES, each found in record l9stk's own text (fnd/l9stk at 0d72880b), and this record's SESSION choices
    P U101  LM5069MM-1       l9stk 15.4 C-1 and 15.4b: the -1, latch-off
@@ -190,15 +190,19 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        held 101.0 C case; over the most threshold 0.2681 V: a charge over U103's threshold always crosses U104's (INFERRED from a typical figure; E-14b)
    THE PULL: Q107 and Q108 in series, gates at half of each output: 3.8 V at BRK_VIN 7.6 V (PORIT, under which the -1 runs nothing) against the
      2N7002's 2.5 V threshold at most, 14.6 V at the 29.2 V clamp against its 20 V; DOCK_EN_RET held at 0.055 V at most (2 x 7 ohm x 2, 1.96 mA)
-   WHAT BOARD A READS (L4-E11's DD-7 as it draws it since its round 10: section 20c at ac72e730, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):
+   WHAT BOARD A READS (L4-E11's DD-7 as it draws it since its round 10: section 20c at 4def5975, U48 TPS37A010122 on TI SNVSBJ1E; L4E11-R10-F1):
      the return held under 0.7755 V at least (read closed over 0.84 V at most) while the loop reads powered, over 1.981 V at most;
      the copy of 20c reads each figure and why the reading is narrower than round 3's 1.0 V box: yes
+     20c AS L4-E11's ROUND 13 RESTATES IT ON MURATA'S PRINTED POINTS (its 23g): record l9stk's former 'bound point' (RT1 47 kOhm, the gate at
+       2.894 V) is WITHDRAWN as a bound, 47 kOhm not being a point of this part; the closed return reads closed for any RT1 under 269 kOhm at 10.6 V;
+       every level this record reads of 20c (the held and powered readings, the dead and alive readings, the load on the return, the window,
+       the first inverter's band) is unchanged from its round 12
      board P's pull holds the return at 0.055 V at most, 0.721 V under board A's held reading; with the return held, DOCK_EN_OUT falls to
      2.52 V at BRK_VIN 7.6 V and 3.51 V at 10.6 V (RT1 at 5 kOhm, R106 +1 %, the return taken at 0 V), 0.536 V over the powered reading
      round 9's Q47 read half of it, 1.26 and 1.75 V, under the 2N7002's 2.5 V (L8P-F04): answered by round 10's U48 on the return itself
      the inhibit sets within 1 ms and holds at least 1.0 s after the return rises (read closed); the breaker restarts within 0.9477 s (the hold
        0.907 s and the start 40.7 ms); the timer re-enables 34.0 ms after a latch
-     THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at ac72e730, quoted): the inhibit set within 0.85 ms of the return falling, under the
+     THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at 4def5975, quoted): the inhibit set within 0.85 ms of the return falling, under the
        interface's 1 ms; the charge through the off breaker ends within 1.41 ms of passing board P's threshold (board P's pull 0.56 ms plus
        board A's set 0.85 ms: the sum agrees); the hold at least 1.341 s after the return rises, 0.341 s over the interface's 1.0 s and 0.393 s over the
        breaker's restart (0.9477 s, this record's 0.9477 s: the same)
@@ -264,7 +268,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT (the acceptance holds on printed limits; E-8, E-16 and E-12d stay open; nothing measured)
 
 3d. ROUNDS 5 AND 6, THE CHECKS V1 AND V2: L8P-F06 (the breaker FETs' hot off leakage) and L8P-F07 (the guard RT1's printed points)
-   L8P-F06, ON L4-E11's LATCH AS ITS ROUND 12 STATES IT (fnd/l4e11r11 at ac72e730; sections 20e, 22b, 22c and 22g copied; the check V2's V2-B1 and V2-B2):
+   L8P-F06, ON L4-E11's LATCH AS ITS ROUND 12 STATES IT (copied at its round 13, fnd/l4e11r11 at 4def5975, where sections 20e, 22b, 22c and 22g are
+     unchanged; the check V2's V2-B1 and V2-B2):
      TWO limits on the sources into CELL+ while the inhibit holds and the breaker is off (quoted): the static limit 0.846 mA (the latch reads
        dead) and the timing limit 520.7 uA (the bleed of CELL+ through R256 ends inside the hold's least 1.341 s); between the two the hold may end
        with CELL+ still read alive and the breaker off (L4-E11 22g)
@@ -378,9 +383,9 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK
      l4e9/apply_gen_sch_e_f1.py                   OK
      l4e9/apply_gen_sch_e_hotswap.py              OK
-     l8p/inputs/l4e11r12-apply_gen_sch_e_entry-ac72e730.py OK
+     l8p/inputs/l4e11r13-apply_gen_sch_e_entry-4def5975.py OK
      l4e7/apply_gen_sch_e_solar_guard.py          OK
-     l8p/inputs/l4e11r12-apply_gen_sch_e_aux-ac72e730.py OK
+     l8p/inputs/l4e11r13-apply_gen_sch_e_aux-4def5975.py OK
      l8p/apply_gen_sch_e_enable.py                OK
      d8dec31/apply_gen_sch_e_cin.py               OK
      l6r2/apply_gen_sch_e_xal_land.py             OK
@@ -390,7 +395,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board A, this record's draft in its place:
      l4e6/apply_gen_sch_a_r12.py                  OK
      l4e11/apply_gen_sch_a_guard.py               OK
-     l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py OK
+     l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py OK
      l4e4/apply_gen_sch_a_r11.py                  OK
      l4e8/apply_gen_sch_a_bank.py                 OK
      l4e4/apply_gen_sch_a_r138.py                 OK
@@ -398,12 +403,12 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      l8gnd/apply_gen_sch_a_gnd002.py              OK
      l8gnd/apply_gen_sch_a_hotr1.py               OK
      l8p/apply_gen_sch_a_ptc.py                   OK
-     l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py OK
+     l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py OK
      d8dec31/apply_gen_sch_a_mainpb.py            OK (apply_gen_sch_a_mainpb (R257, C249): fwd_gen_sch_a.py, 10 line(s) added)
      l6r2/apply_gen_sch_a_lcsc.py                 OK
    board A, this record's draft first, then the order: every step OK
    board A, the order, then this record's draft last: every step OK
-     (without l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py there: the list puts it before d8dec31's mainpb, R-217 before R-193; applied after mainpb
+     (without l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py there: the list puts it before d8dec31's mainpb, R-217 before R-193; applied after mainpb
       it is refused, mainpb having taken its R233 and C241 as the next free: apply_gen_sch_a_dd7: designator R233 is already in use in the target; refusing)
    board A, the same with the tree's drafts the list does not name (l8r2's d8v3, l8r2's vbus20ov), before this record's: every step OK
 
@@ -577,18 +582,18 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a
      (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it
    L8P-F02 board A: l4e11's charger draft: VSYS_DOCK named U42 as its source without source_ic, fed from VBAT before VBAT was declared:
-     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried to its round 12 (fnd/l4e11r11 at ac72e730); board A's composition above uses round 12's
+     CLOSED by L4-E11's round 9 (fnd/l4e11r9) and carried to its round 13 (fnd/l4e11r11 at 4def5975); board A's composition above uses that round's
      draft, copied byte for byte into inputs/, and needs no stand-in
    L8P-F03 board E: l4e11's aux draft: +12V_FAN named L4 as its source, which is not on that net: CLOSED the same way (the aux draft
-     at ac72e730, copied byte for byte); board E's composition needs no stand-in
+     at 4def5975, copied byte for byte); board E's composition needs no stand-in
    L8P-F04 board A: round 9's DD-7 read the loop powered at half of DOCK_EN_OUT; with the return held DOCK_EN_OUT falls to 2.52 V at BRK_VIN
-     7.6 V: ANSWERED since L4-E11's round 10 (round 12 at ac72e730, not on main): U48 reads the return held and the loop powered (section 3b); composed above
+     7.6 V: ANSWERED since L4-E11's round 10 (round 13 at 4def5975, not on main): U48 reads the return held and the loop powered (section 3b); composed above
    L8P-F05 board A: with the breaker off, the LM5069's internal 1 MOhm from SENSE to OUT (SNVS452G 7.5, note 1) feeds PACK_P and so CELL+:
      with board A's 200 kOhm (R107, R108) alone CELL+ reads 2.80 V at BRK_VIN 16.8 V, over L4-E11's 1.98 V 'dead' point; with U104's divider
      (365.2 kOhm) also on PACK_P, 1.92 V (3.34 V at the 29.2 V clamp); the 1 MOhm's tolerance is not printed: ANSWERED since L4-E11's round 10
-     (round 12 at ac72e730, not on main) with a bleeder on CELL+ while the inhibit holds: R256 4.7 kOhm; the latch then has two limits on the
+     (round 13 at 4def5975, not on main) with a bleeder on CELL+ while the inhibit holds: R256 4.7 kOhm; the latch then has two limits on the
      sources into CELL+, the static 0.846 mA and the timing 520.7 uA (L4-E11 20e)
-   L8P-F06 board P with L4-E11 (the check V1's minor, round 5; restated in round 6 on L4-E11's round 12): the breaker FETs' off leakage feeds PACK_P
+   L8P-F06 board P with L4-E11 (the check V1's minor, round 5; restated in round 6 on the two limits of L4-E11's round 12): the breaker FETs' off leakage feeds PACK_P
      and CELL+ with the breaker off, a source inside BOTH of L4-E11's limits (static 0.846 mA, timing 520.7 uA); the CSD18510Q5B prints IDSS 1 uA at
      32 V and 25 C only; on the ASSUMED doubling every 10 K the pair is 388.0 uA at the held 101.0 C case: 85.9 uA inside the timing limit's 473.9 uA for
      the pair (filled from a 103.9 C case, or by a doubling every 9.63 K) and 398.8 uA inside the static limit's 786.8 uA (111.2 C; 8.82 K):

@@ -1,4 +1,4 @@
-"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 6; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
+"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 6b; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
 release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, the
 restart inhibit C-1c gated by PGD, and in round 3 B-R2's reverse-charge detector on the loop's return), board E (the loop through
 J_SMB to the dock) and board A (the loop's thermal guard RT1), from record l9stk section 15 (fnd/l9stk at 0d72880b) and task
@@ -16,7 +16,8 @@ ideal diode draft refuses a target without the breaker draft; round 5 (the check
 use L4-E11's round 10 drafts with no stand-in, the interface of 12f is quoted from L4-E11's copied sections 20c and 20d, L8P-F06's
 leakage budget and L8P-F07's printed and typical points recompute from the sheets and the copies, and the alternative part's typed
 figures read against TDK's held sheet when it is present; round 6 (the independent check V2's V2-B2, V2-B3 and its minors): every
-copy of L4-E11 is its round 12's (fnd/l4e11r11 at ac72e730) and a copy a round behind a tree's records/l4e11/ fails, L8P-F06 stands
+copy of L4-E11 is the round's that l8p_drafts.L4E11_AT names (round 12 at ac72e730 in round 6; round 13 at 4def5975 since round 6b,
+where only section 20c changed and no figure this record reads of it moved) and a copy that is not a tree's records/l4e11/ fails, L8P-F06 stands
 against BOTH limits of L4-E11's latch (the timing limit reproduced), TDK's window takes the sure-off as a lower bound and a
 mutation of that direction fails, the trip side's junction is on the worst split and named not bounded, board A composes in L4-E9's
 list order and the whole list composes wherever a tree holds its drafts, the PTC draft quotes what Murata prints; the netlist
@@ -96,7 +97,7 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "l8p_drafts.out is not what l8p_drafts.py prints; regenerate it with _bin/regen_out.py"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 12) equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+    for s in ("record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 13) equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
               "+-1.95 K left: consistent", "the split closes", "is ASSUMED from the product search sheet", "THE LOCKOUT AT THE ALLOW EDGE",
               "E-10 gains: VDS under 1.62 V during current-limit excursions", "CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a",
               "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
@@ -112,12 +113,14 @@ def t_the_committed_output_is_what_the_script_prints():
               "decoupling C112: class D at U105.6 on SCP_OUT", "decoupling C114: class B2 at U105.4 on SW",
               "rail SW       source ['Q1', 'Q109']", "the breaker draft without the ideal diode (DD-5 uncorrected)",
               # rounds 5 and 6
-              "l8p/inputs/l4e11r12-apply_gen_sch_a_dd7-ac72e730.py OK", "l8p/inputs/l4e11r12-apply_gen_sch_a_charger-ac72e730.py OK",
+              "l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py OK", "l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py OK",
               "board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)",
               "board A composed in L4-E9's order: the generator ran to its end (728 parts, intent written: yes)",
               "board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (750 parts",
               "packrtn (R-201), slotlm (R-199), fb01 (R-200)", "it is refused, mainpb having taken its R233 and C241 as the next free",
-              "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at ac72e730, quoted)", "board A's set 0.85 ms: the sum agrees",
+              "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at 4def5975, quoted)", "board A's set 0.85 ms: the sum agrees",
+              "20c AS L4-E11's ROUND 13 RESTATES IT ON MURATA'S PRINTED POINTS", "2.894 V) is WITHDRAWN as a bound",
+              "the closed return reads closed for any RT1 under 269 kOhm at 10.6 V", "is unchanged from its round 12",
               "breaker's restart (0.9477 s, this record's 0.9477 s: the same)",
               "the static limit 0.846 mA", "the timing limit 520.7 uA", "static 846.0 uA, timing 520.9 uA (L4-E11 prints 520.7)",
               "it leaves the pair 473.9 uA", "leaves 85.9 uA in hand", "it leaves the pair 786.8 uA",
@@ -130,7 +133,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "on that table no k exists at either voltage", "NOT SELECTED", "THE JOINT CASE (the check V2's V2-m8): at 23.93 A held the board dissipates 4.57 W",
               "L8P-F06 board P with L4-E11", "L8P-F07 board A with record l9stk"):
         assert s in t, s
-    for old in ("NO k EXISTS", "a09e9a60", "the junction at most 134.88 C against 150 C: PRINTED", "the pair alone fills the clamp's room from a 111.7 C case"):
+    for old in ("NO k EXISTS", "a09e9a60", "ac72e730", "the junction at most 134.88 C against 150 C: PRINTED", "the pair alone fills the clamp's room from a 111.7 C case"):
         assert old not in t, "round 5's statement is back in the output: %s" % old
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 3, "the alone, the composed and the tree-order readings"
     assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 11, "the ten mutations and the breaker without the ideal diode"
@@ -396,10 +399,14 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**A window exists on the printed limits: 10.51 to 10.62 at 7.6 V (1.0 % wide), 8.53 to 10.62 at 10.6 V.**",
               "| The trip, the junction over that copper (V2-m5) |", "NOT BOUNDED: E11-29's coupon",
               "**U105's package at most 125 C at 23.93 A held (round 6, V2-m7):**", "**The joint case (round 6, V2-m8):**",
-              "**L4-E11's DD-7 draft must precede d8dec31's mainpb**"):
+              "**L4-E11's DD-7 draft must precede d8dec31's mainpb**",
+              # round 6b
+              "**Round 6b (4 October 2026 late evening): the copies of L4-E11 taken again at its round 13.**",
+              "**What L4-E11's round 13 changed in 20c, and what it did not (round 6b).**", "- **No longer stands:** the \"bound point\" as a bound."):
         assert s in page, s
     for old in ("**No k exists at 7.6 V.**", "does not close at 7.6 V", "the junction at most 134.9 C against 150 C | PRINTED",
-                "| 111.7 C | 816.8 uA | the room filled by the pair alone |", "inputs/l4e11-section20c-a09e9a60.md", "inputs/l4e11-section20e-a09e9a60.md"):
+                "| 111.7 C | 816.8 uA | the room filled by the pair alone |", "inputs/l4e11-section20c-a09e9a60.md", "inputs/l4e11-section20e-a09e9a60.md",
+                "inputs/l4e11-section20c-ac72e730.md", "and nothing on DOCK_EN_OUT, so l9stk's bound point"):
         assert old not in page, "round 5's statement is still on the page: %s" % old
     for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R105", "D102", "R106", "R107", "Q103",
                 "Q104", "R108, R109", "RT101", "R110", "RT1 (board A)"):
@@ -428,13 +435,15 @@ def _quotes(sec):
 
 def t_round5_the_interface_is_quoted_from_the_copies_not_typed():
     """12f and 12j: every blockquote and every quoted cell of the interface table occurs, whitespace aside, in the copy of L4-E11's
-    section it names (20c, 20d, 20e or 22g at ac72e730); the delays the output sums agree with 20d's."""
+    section it names (20c, 20d, 20e or 22g at the commit L4E11_AT names); the delays the output sums agree with 20d's. Since round
+    6b 12f carries a third quote, 20c's own withdrawal of record l9stk's 47 kOhm "bound point"."""
     m, texts, B, R, F = _round5()
     page = open(PAGE, encoding="utf-8").read()
     sec = page.split("### 12f.")[1].split("### 12g.")[0]
     copy = {"20c": _flat(texts["l4e11c"]), "20d": _flat(texts["l4e11d"]), "20e": _flat(texts["l4e11e"]), "22g": _flat(texts["l4e11_22g"])}
     quotes = _quotes(sec)
-    assert len(quotes) == 2 and all(q in copy["20c"] for q in quotes), [q for q in quotes if q not in copy["20c"]]
+    assert len(quotes) == 3 and all(q in copy["20c"] for q in quotes), [q for q in quotes if q not in copy["20c"]]
+    assert sum("withdrawn as a bound by round 13, 23g" in q for q in quotes) == 1, "round 6b's quote of the restated 20c"
     rows = [l for l in sec.split("\n") if l.startswith("| ") and l.rstrip().endswith(("| 20c |", "| 20d |", "| 20e |"))]
     assert len(rows) == 10, rows
     for l in rows:
@@ -460,7 +469,8 @@ def t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree():
     assert all(m.L4E11_AT in v for k, v in m.INPUT_FILES.items() if k.startswith(("l4e11c", "l4e11d", "l4e11e", "l4e11_22")))
     assert all(m.L4E11_AT in c for c, _n in m.L4E11_DRAFTS) and all(m.L4E11_AT in f for f, _a in m.FOLLOW["a"])
     assert all(m.L4E11_AT in v for k, v in m.REPLACED.items() if k[0] == "l4e11"), "a composition still uses an older copy of L4-E11's drafts"
-    assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "a09e9a60" in f], "round 10's copies are still in inputs/"
+    assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "a09e9a60" in f or "ac72e730" in f], "round 10's or round 12's copies are still in inputs/"
+    assert (m.L4E11_AT, m.L4E11_ROUND) == ("4def5975", 13), "the round copied moved: read every quote of a changed section again (the brief of round 6b)"
     assert m.stale_copies(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) == [], "a copy of L4-E11 is not the tree's: take it again (V2-B2)"
     with tempfile.TemporaryDirectory() as d:
         page = "## 20. Round 10\n\n" + "".join(open(os.path.join(REC, m.INPUT_FILES[k]), encoding="utf-8").read() for k, _h in m.L4E11_SECTIONS)
@@ -468,6 +478,11 @@ def t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree():
         for c, n in m.L4E11_DRAFTS:
             shutil.copy(os.path.join(REC, c), os.path.join(d, n))
         assert m.stale_copies(d) == [], "the copies do not pass against a tree made of themselves"
+        r12 = page.replace("**withdrawn as a bound by round 13, 23g:** ", "")        # round 12's 20c did not carry the withdrawal: round 6's copies against round 13
+        assert r12 != page
+        open(os.path.join(d, "L4E11-SOURCE-ONLY-AND-ENTRY.md"), "w", encoding="utf-8").write(r12)
+        bad = m.stale_copies(d)
+        assert len(bad) == 1 and "### 20c." in bad[0], bad
         r11 = page.replace("stays under **0.846 mA** together", "stays under **0.597 mA** together")
         assert r11 != page
         open(os.path.join(d, "L4E11-SOURCE-ONLY-AND-ENTRY.md"), "w", encoding="utf-8").write(r11)
@@ -733,3 +748,31 @@ def t_round6_the_l4e11_pin_draft_moves_one_pin_and_only_behind_the_draft():
         if pin.LINE % pin.OLD not in text and pin.LINE % pin.NEW not in text:
             assert _run([s]).returncode == 3, "a test_l4e11.py without the pin was not refused"
         assert _sha(tree_test) == before, "the pin draft wrote into the tree"
+
+
+def t_round6b_l4e11s_round_13_moved_no_figure_this_record_reads():
+    """Round 6b: L4-E11's round 13 restated its 20c on Murata's printed points (record l9stk's 47 kOhm 'bound point' withdrawn as a
+    bound) and changed no other section this record copies. Every figure this record reads of 20c, 20d, 20e and 22 is what it was
+    at round 12: the held, closed and powered readings, the dead and alive readings, the load on the return, the window, the
+    first inverter's band, the delays, the two limits. The page no longer leans on the bound point (12e's sentence restated),
+    and the sections that did not change carry the sha256 they had at ac72e730."""
+    m, texts, B, R, F = _round5()
+    c20 = texts["l4e11c"]
+    assert "**withdrawn as a bound by round 13, 23g:** 47 kOhm is\nnot a point of this part" in c20 and "which bounds nothing: round 13, 23g" in c20
+    assert "**The bound point** (record l9stk, 10.6 V, RT1 47 kOhm)" not in c20, "the copy is round 12's 20c"
+    assert (m.RET_LOW, m.RET_HIGH, m.OUT_POWERED) == (0.7755, 0.84, 1.981)
+    for k, want in (("v_dead", 4.076), ("v_alive", 4.774), ("v_foot", 0.060), ("load_ret", 2e-6), ("load_out", 984e3), ("window", 25.8e3),
+                    ("l4_on", 61.3e3), ("l4_off", 201.2e3), ("l4_v", 10.6), ("t_set", 0.85e-3), ("t_end", 1.41e-3), ("hold_min", 1.341),
+                    ("i_static", 0.846e-3), ("i_timing", 520.7e-6), ("hot_bound", 434.8e-6), ("bleed_hot", 1.218), ("p_worst", 1.513)):
+        assert abs(F[k] / want - 1) < 1e-9, "a figure read from L4-E11's copies moved: %s is %r" % (k, F[k])
+    assert abs(F["room_timing"][16.8] - 473.9e-6) < 1e-9 and abs(F["left_timing"][16.8] - 85.9e-6) < 0.06e-6 and abs(F["room_static"][m.V_CLAMP] - 786.8e-6) < 1e-9
+    same = {"20d": "a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241", "20e": "9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a",
+            "22b": "583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45", "22c": "a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec",
+            "22g": "0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704", "22h": "b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f"}
+    for sec, sha_ in same.items():
+        assert m.SOURCES_SHA["inputs/l4e11-section%s-%s.md" % (sec, m.L4E11_AT)] == sha_, "section %s is no longer round 12's bytes: read its quotes again" % sec
+    assert m.SOURCES_SHA["inputs/l4e11-section20c-%s.md" % m.L4E11_AT] != "c860006f87a5777add732c3868c7b17ce3643546afcfc5eb139b4d9377da0086", "20c is still round 12's"
+    page = open(PAGE, encoding="utf-8").read()
+    e12 = page.split("### 12e.")[1].split("### 12f.")[0]
+    assert "so the detector moves no level of the loop." in e12 and "is withdrawn as a bound: 12f, round 6b" in e12
+    assert "and nothing on DOCK_EN_OUT, so l9stk's bound point" not in page, "12e still leans on the withdrawn bound point"
