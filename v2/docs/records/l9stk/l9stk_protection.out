@@ -1,12 +1,14 @@
 l9stk_protection: W4DP-F2's firmware-independent element and the pack path's protection table (record l9stk, MESHSAT-1357;
 revised 4 October 2026 after the recheck PROTECTION: NOT CONFIRMED, B-P1 docking and B-P2 the battery FETs' junction).
+Round 3 (4 October 2026): L4-E11's round 9 drafts section 4's third battery FET as Q42 and restates E11-29 as section 4's limit; no figure of
+the breaker, its table, the junction limit or the series parts moved; section 2 is the pair the element was sized against, dated.
 Desk arithmetic on committed files and makers' sheets; nothing was built, bought or measured. Calculation basis: TI SLVA673A
 (Robust Hot Swap Design) equations 3 to 7, its 2.4 on parallel FETs and its 3.1.2.2, 3.1.2.5 and 3.2.2.7 checks, on the LM5069's sheet.
 
 0. PINS (path  sha256/16)
    board_p          v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb  sha256 d79865e7b1aceb95
-   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 0b9dec9582548b07
-   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 56646d7e5d1f9d1f
+   copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 0c7b9e356a6cdca9
+   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 9eddb1ef271e0333
    csd17570         v2/vendor/battery/ti-csd17570q5b.pdf  sha256 596555c33dce1fca
    csd18510         v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
    d4148            v2/vendor/power/st-semtech-1n4148w-c81598.pdf  sha256 54de8e4089bb8221
@@ -15,7 +17,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    gen_sch_e        v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    gen_sch_p        v2/ecad/tools/gen_sch_p.py  sha256 740817ada5c8e14a
    jscj_2n7002      v2/vendor/power/jscj-2n7002-c8545.pdf  sha256 7941fb423af7c6c6
-   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 302a0e2c0583ffcd
+   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
    l8r2_vbus20ov    v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py  sha256 c2d16dba8dc5204f
    lcsc_fill        v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5069           v2/vendor/ti/ti-lm5069.pdf  sha256 d60d8106a6e81139
@@ -38,15 +40,17 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    the lowest current any of them opens on its own is 33.75 A, over the battery FETs' 150 C current below: none meets the
    criterion, so a minimal addition is designed (section 3)
 
-2. THE LIMITING SERIES PART: Q39/Q40, THE CHARGER'S BATTERY FETS ON BOARD A (L4-E11)
+2. THE LIMITING SERIES PART THE ELEMENT WAS SIZED AGAINST: Q39/Q40, THE CHARGER'S BATTERY FET PAIR ON BOARD A AS L4-E11 DRAFTED IT UNTIL ITS ROUND 9
    RDS(on) 21.136 mOhm each: L4-E11's bound at a 150 C junction from the sheet's printed maxima (the actual is lower at a lower junction)
-   installed (Zself + Zmut) 33.12 K/W steady: E11-29's TARGET, not a measurement; with both FETs at the bound the even split
+   installed (Zself + Zmut) 33.12 K/W steady: E11-29's TARGET then (withdrawn in L4-E11's 19c), not a measurement; with both FETs at the bound the even split
    gives each FET the largest loss (SLVA673A 2.4 for enhanced FETs; a lower RDS(on) in one FET lowers its loss)
    150 C held at 21.38 A from the +70 C line and 20.53 A from 76.25 C (L4-E12's E5 dwell without the hold), FETs only: DERIVED, not a rating
    its uncertainty is the installed path's: with it 20 % lower, as targeted, 20 % higher:
      x0.8: 23.90 A (+70 C), 22.95 A (76.25 C); x1.0: 21.38 A (+70 C), 20.53 A (76.25 C); x1.2: 19.52 A (+70 C), 18.74 A (76.25 C)
    the exposure a trip at the cells' 24 A would leave, held: 22.00 A: TJ 154.7 C (+70 C), 161.0 C (76.25 C); 23.00 A: TJ 162.6 C (+70 C), 168.8 C (76.25 C); 24.00 A: TJ 170.8 C (+70 C), 177.1 C (76.25 C)
    so 'at or under 24 A' is not a protection criterion; the criterion is current AND time for every part (section 5)
+   since L4-E11's round 9 its draft carries Q39, Q40 and Q42 (section 4's selection, drafted, not applied) and E11-29 is section 4's junction limit;
+   the figures above are the pair's, kept as the basis the criterion and the element were derived on
 
 3. THE SELECTED ELEMENT: AN LM5069 BREAKER ON BOARD P (THE -1, LATCH-OFF: 3b), FROM Q2'S SOURCE TO PACK_P, ENABLED BY A MAKE-LAST DOCK LOOP
    the family board E's U6 already uses (its -2, LCSC C111822; the -1's code is Layer 6's to file, the same VSSOP-10 land) and the FET board A's PA
@@ -83,7 +87,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
      - a limit whose largest is the pair's 20.53 A: its least 15.71 A falls under the 18 A service
      - a blade opening under the pair's current: at most 15.21 A, and the service at 118 % of it lies between the row that holds and the row that opens
      - for docking, an inrush element at board A's dock entry: the pre-charge pin J_PRE1 (10 ohm into 593 uF, a 5.93 ms time constant) needs a lead of 12.4 ms over the power pins to keep the step under the breaker's least threshold and 4.3 ms to keep VIN to SENSE under 0.3 V, and a hand sets the lead; a series element in the 23.93 A path heats beside the battery FETs, whose junction is the binding limit
-     - the pair kept at (Zself + Zmut) at most 20.39 K/W with R17 apart: 38 % under E11-29's present 33.12 K/W, which L4-E11 judged of the order a board pour gives; it stays the fallback if E11-37 refuses three FETs
+     - the pair kept at (Zself + Zmut) at most 20.39 K/W with R17 apart: 38 % under E11-29's former 33.12 K/W, which L4-E11 judged of the order a board pour gives; it stays the fallback if E11-37 refuses three FETs
      - a single-wire enable to board A's ground: a short to ground, the commonest harness fault, would enable the breaker unseen (C2)
      - no RC hold: a reversed mating order of 1.88 ms would bring B-P1 back (C1)
      - a controller with a tighter limit tolerance now: the LM5066I of SLVA673A's examples, its sheet not held; it is E-5's fallback
@@ -174,9 +178,10 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
      known; designed apart it is held to 1 K/W, which E-1 reads
    the pair (Zself + Zmut)            3.027 W each: FETs only 21.34 K/W; R17 apart 20.39 K/W; R17 anywhere 10.96 K/W
    three (Zself + 2 Zmut)             1.345 W each: FETs only 48.01 K/W; R17 apart 45.88 K/W; R17 anywhere 15.34 K/W
-   E11-29's present target is 33.12 K/W; Ciss: the pair 4.72 nF at -15 V and 5.74 near 0 V, three 7.08 and about 8.61, against TI's 5 nF (L4-E11 16c, E11-37)
-   SELECTED: a third BUK6Y10-30P (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is 1.39 times
-     E11-29's present target, where the pair would need 0.62 of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:
+   E11-29's target for the pair was 33.12 K/W (L4-E11's 19c withdraws it and restates E11-29 as this limit: 45.88 K/W a FET with R17 apart, 150 C held at
+     23.93 A from 76.25 C); Ciss: the pair 4.72 nF at -15 V and 5.74 near 0 V, three 7.08 and about 8.61, against TI's 5 nF (L4-E11 16c, E11-37)
+   SELECTED: a third BUK6Y10-30P (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET), R17 designed apart: the path asked is 1.39 times
+     E11-29's former target, where the pair would need 0.62 of it; its cost is Ciss over TI's guidance, which the pair also passes near 0 V:
      E11-37's bench with three decides (condition C3), the pair is the fallback
    THE THERMAL GUARD (SELECTED, a guard against the path never being met, unit by unit): the kit's PRF15BB103 chip PTC (10 kOhm +-50 %,
      47 kOhm at 130 +-3 C, 32 V) in the enable loop on the battery FETs' copper: the first inverter stays on to 47 kOhm at 10.6 V (gate 2.95 V against
@@ -185,7 +190,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
      after a trip the breaker restarts through the RC hold when the PTC cools
    at the allowances: 89.4 C at 10 A, 118.0 C at the 18 A service, 150.0 C at 23.93 A
    the cells (3P of 8 A continuous)                               23.93 A, 7.98 A a cell at an even split                    [1.00]  printed; the split NOT HELD: E-5 with its fallback
-   Q39, Q40 and the third FET (3 x BUK6Y10-30P, 21.136 mOhm each at 150 C) TJ 150.0 C at the junction limit's allowances              [1.00]  DESIGN DEFECT DD-2 until drawn; E-1
+   Q39, Q40 and Q42 (3 x BUK6Y10-30P, 21.136 mOhm each at 150 C)  TJ 150.0 C at the junction limit's allowances              [1.00]  DESIGN DEFECT DD-2 until drawn; E-1
    Q1 on board P with BAT-F20 (CHGIN = 1, the reading above T3)   its body diode 23.9 W (VSD 1 V at most)                    [-]  DESIGN DEFECT DD-5 (BAT-F20, EQ-15): about 7 W at 10 A already
    Q1/Q2 on board P, both enhanced (CSD17570Q5B, 0.69 mOhm at 10 V, RthJA 50 C/W) 0.711 W each; TJ 111.8 C on its own pad, 147.4 C with both losses through one pad [0.96]  derived: the x1.8 is the CSD18510Q5B's (ASSUMPTION, E-8)
    the breaker's FETs (2 x CSD18510Q5B)                           0.247 W each; TJ 101.2 C (case 101.0 C)                    [0.51]  derived (IF-2, E-11)
@@ -224,7 +229,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
 
 6. DESIGN DEFECTS (unresolved, each with its owner)
    DD-1 W4DP-F2: no firmware-independent element opens the discharge path with board P's FETs welded; the breaker of section 3 is drafted here, not drawn; owner board P's generator with W4DP-F2's owner (the battery stream)
-   DD-2 the charger's battery FETs: TJ at most 150 C held at 23.93 A from 76.25 C, with the band (9.16 K) and R17 (2.86 W) in place; the pair would need (Zself + Zmut) at most 20.39 K/W (10.96 K/W with R17 anywhere), so a third BUK6Y10-30P is selected (its designator L4-E11's: Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart (15.34 K/W anywhere), with the thermal guard behind it; condition C3; owner L4-E11 (E11-29 restated as the junction limit; the third FET, its designator and land; E11-37 with three)
+   DD-2 the charger's battery FETs: TJ at most 150 C held at 23.93 A from 76.25 C, with the band (9.16 K) and R17 (2.86 W) in place; the pair would need (Zself + Zmut) at most 20.39 K/W (10.96 K/W with R17 anywhere), so a third BUK6Y10-30P is selected (L4-E11's round 9 drafts it as Q42, not applied; Q41 is l8r2's VIN_RAW cut-off FET): (Zself + 2 Zmut) at most 45.88 K/W with R17 designed apart (15.34 K/W anywhere), with the thermal guard behind it; condition C3; owner L4-E11 (E11-29 restated as the junction limit and the third FET drafted as Q42 in its round 9, not applied; E11-37 with three)
    DD-3 R19 passes its 3 W and J_DCIN its VH rating inside F1's envelope on the shore input (section 14.6); owner L4-E11
    DD-4 the Keystone 3568 holder prints no current rating; owner Layer 6/7
    DD-5 BAT-F20: with CHGIN = 1 above T3 the discharge runs through Q1's body diode, 23.9 W at 23.93 A held (VSD 1 V at most), about 7 W at 10 A; owner the battery stream (BAT-F20, EQ-15)
@@ -315,3 +320,6 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    every restart the inhibit lets through is inside TI's margin with the reading                                        yes
    the undock turn-off bypasses C_U and holds above 2 m/s                                                               yes
    the hold's diode carries C_U's discharge inside its ratings                                                          yes
+   L4-E11's charger draft draws the battery FETs selected here, the third beside Q39 and Q40                            yes
+   L4-E11's restated E11-29 is this section's junction limit: its allowance to 0.01 K/W, at this limit's current, air, ceiling and R17 coupling yes
+   the copper record's readings of the drafted FETs are this section's at 10 A, the service and the limit, to 0.05 K    yes
