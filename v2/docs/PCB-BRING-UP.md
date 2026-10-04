@@ -96,7 +96,7 @@ whole order composes:
 | `apply_gen_sch_a_r12.py` | R-01 | R12 12 mOhm and C147 on the front end U2 | R-64's bench line is not judged on that board |
 | none: a missing draft | R-03 | the ILIM_HIZ network (H3) to the corrected knee | the firmware's input limit is the derated 4.00 A (R-25, quoted below); R-74 and R-77 are not judged |
 | `apply_gen_sch_a_guard.py` | R-124 | U34's restart guard with R14 76.8k | U34 as drawn (its fall up to 8.309 V, Layer 5's `power_line_states`); R-77's guard line is not judged |
-| `apply_gen_sch_a_charger.py` | R-157, R-181 | the BQ25730 with the battery FET pair Q39, Q40 (BATDRV) and the eFuse U42 on J_DOCK pin 1 (VSYS_DOCK) | the drawn BQ25731 with no battery FET and pin 1 on GND: none of TP-E11-29, TP-E11-31, TP-E11-37, TP-E11-38 has a specimen on that board, and board E's auxiliary domain is not fed over the dock (section E) |
+| `apply_gen_sch_a_charger.py` | R-157, R-181, R-209 | the BQ25730 with the three battery FETs Q39, Q40 and Q42 (BATDRV; Q42 added by L4-E11's round 9) and the eFuse U42 on J_DOCK pin 1 (VSYS_DOCK) | the drawn BQ25731 with no battery FET and pin 1 on GND: none of TP-E11-29, TP-E11-31, TP-E11-37, TP-E11-38 has a specimen on that board, and board E's auxiliary domain is not fed over the dock (section E) |
 | `apply_gen_sch_a_r11.py` | R-04 | R11 8 mOhm | R-60 and R-62 are not judged |
 | `apply_gen_sch_a_bank.py` | R-07 | the six 45 mOhm ballasts and Cc2 | R-66 and R-68 are not judged |
 | `apply_gen_sch_a_r138.py` | R-05 | R138 5 mOhm | R-79 is not judged |
@@ -217,8 +217,8 @@ The charger under (B1), at every charger power-on reset, before any other write:
 
 | Measurement | Procedure or register row | Register row |
 |---|---|---|
-| the battery switch's thermal path, if board A's first prototype is the specimen | `v2/docs/test-procedures/TP-E11-29.md` | R-159 |
-| BATDRV with the pair, on the first prototype | `v2/docs/test-procedures/TP-E11-37.md` | R-183 |
+| the three battery FETs' thermal path and junction limit, if board A's first prototype is the specimen (its acceptance awaits a correction and the supplier's agreement; not to be run yet) | `v2/docs/test-procedures/TP-E11-29.md` | R-159 |
+| BATDRV with the three battery FETs, their current sharing and junctions, on the first prototype | `v2/docs/test-procedures/TP-E11-37.md` | R-183 |
 | the three modes, the held pack current, the start and D2 | `v2/docs/test-procedures/TP-E11-31.md` | R-161 |
 | the dock's VSYS branch through cases (a) to (h), with board E | `v2/docs/test-procedures/TP-E11-38.md` | R-184 |
 | the first docking with a pack: the waveform measured and compared value by value with TP-E11-30's tested envelope | `v2/docs/test-procedures/TP-E11-30.md` (its block's comparison rule) | R-160 |

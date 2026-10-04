@@ -25,10 +25,10 @@ these experiments exist. The route table these procedures implement is section 5
 | Procedure | File | Register rows | What it decides | Performer (from 5d) |
 |---|---|---|---|---|
 | TP-TH1 | `v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md` (written earlier, not in this folder, not rewritten here) | R-104, R-151 | U-02: the sealed case's conductance per required mode | an engineer, on a bench |
-| TP-E11-29 | TP-E11-29.md | R-159 | D-14's installed thermal path of the battery switch Q39, Q40 | an engineer, on a bench (the body diode's VSD method) |
+| TP-E11-29 | TP-E11-29.md | R-159 | D-14's installed thermal path and junction limit of the three battery FETs Q39, Q40 and Q42 (its acceptance awaits a correction and the supplier's agreement: its section 8; not to be run yet) | an engineer, on a bench (the body diode's VSD method) |
 | TP-E11-30 | TP-E11-30.md | R-160 | D-14's docking pulse: the whole hot waveform in one body diode | an engineer, on a bench (a capacitor-discharge rig) |
 | TP-E11-36 | TP-E11-36.md | R-182 | D-14's RDS(on) allowance at VGS -8.5 V and a 150 C junction | an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading) |
-| TP-E11-37 | TP-E11-37.md | R-183 | BATDRV with the FET pair: the pair (S1) or one FET with a case heat path (S2) | an engineer, on a bench |
+| TP-E11-37 | TP-E11-37.md | R-183 | BATDRV with the three battery FETs on one gate node, their current sharing and junctions: the three (S1), or the pair at its fallback or one FET with a case heat path (S2) | an engineer, on a bench |
 | TP-E11-31 | TP-E11-31.md | R-161 | U-04: source-only start and the held states on the BQ25730 | an engineer, on a bench |
 | TP-E11-38 | TP-E11-38.md | R-184 | D-15: the eFuse U42 and the dock's VSYS branch through cases (a) to (h) | an engineer, on a bench |
 | TP-E11-35 | TP-E11-35.md | R-179, R-188 | the mixer fans' start current and PWM level, and the firmware's stagger (E11-35, E11-39) | an engineer, on a bench |
@@ -77,7 +77,7 @@ The records state the rule for a reading against a limit in two places:
 
 <!-- q src="v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md" -->
 > **Measurement uncertainty:** the K-factor within 2 %, the heating power within 1 %, the air within 1 K, stated as an expanded
-> uncertainty on Zself + Zmut; a reading passes when it plus its uncertainty is under the limits of E11-29.
+> uncertainty on Zself + 2 Zmut; a reading passes when it plus its uncertainty is under the limits of E11-29.
 <!-- /q -->
 
 <!-- q src="v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md" -->
@@ -170,3 +170,7 @@ The test `v2/ecad/tools/tests/test_test_procedures.py` holds the same properties
 the row exists; every pass condition is quoted from its source; every procedure carries the PROPOSED mark; no long dash) and
 checks that the committed output is what the script prints. The quotes are checked against the records as they stand in this
 tree: if a record's acceptance changes, the check fails and the procedure is re-read before its output is regenerated.
+
+**What a passing check shows, and what it does not.** A passing quote check (`tp_check.py` printing ALL PASS) shows that the
+quoted texts match their sources; it does not approve any procedure to run. Every procedure stays PROPOSED until the supplier
+agrees it.

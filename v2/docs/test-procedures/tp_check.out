@@ -13,17 +13,17 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
     - owed by R-168: the charge current and the CV termination current of the CC/CV 4.2 V charge before each capacity check (Saft's
     - owed by R-168: whether S3 applies Method 507.6's humidity to the bare cell or only its temperature profile
   PROPOSED mark: present
-2678c9a2d0716cd2 v2/docs/test-procedures/TP-E11-29.md
-  id TP-E11-29: The battery switch's installed thermal path (Zself + Zmut of Q39 and Q40)
+215345dd98f50b70 v2/docs/test-procedures/TP-E11-29.md
+  id TP-E11-29: The three battery FETs' installed thermal path and junction limit (Q39, Q40 and Q42)
   register R-159: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-29: exists
   5d row 'E11-29 (R-159)': exists
-  quotes: 6 table (each equal to its cell), 3 text (each found verbatim)
+  quotes: 6 table (each equal to its cell), 5 text (each found verbatim)
   cross-references: 1 paths from v2/, all present
   TBD: 1
-    - owed by R-159: the list of parts within 30 mm of Q39 and Q40 that dissipate in service, each with its declared heat and posit
+    - owed by R-159: the list of the parts the block counts as neighbouring sources of Q39, Q40, Q42 and R17's place, each with its
   PROPOSED mark: present
-586ab2ab4b5b54ab v2/docs/test-procedures/TP-E11-30.md
+6c16cb8b45584d07 v2/docs/test-procedures/TP-E11-30.md
   id TP-E11-30: The docking pulse in one body diode (six BUK6Y10-30PX, 2000 pulses each)
   register R-160: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-30: exists
@@ -33,7 +33,7 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
   TBD: 1
     - owed by R-160: whether a fall beyond the measurement's uncertainty counts as a failure; until stated, any such fall is report
   PROPOSED mark: present
-77dbcbbee7459ce4 v2/docs/test-procedures/TP-E11-31.md
+6d37aba38d671bb9 v2/docs/test-procedures/TP-E11-31.md
   id TP-E11-31: Source-only start and the held states on the BQ25730 (U-04)
   register R-161: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-31: exists
@@ -58,7 +58,7 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
     - owed by R-188: the ramp's duration and the PWM frequency the firmware writes
     - owed by R-179: the start quantity (the peak power at the rail, total or above the running draw, and over which averaging wind
   PROPOSED mark: present
-c4805a1701f271d2 v2/docs/test-procedures/TP-E11-36.md
+366aebdcfac686c8 v2/docs/test-procedures/TP-E11-36.md
   id TP-E11-36: RDS(on) of the battery FETs at VGS -8.5 V and a 150 C junction
   register R-182: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-36: exists
@@ -67,15 +67,16 @@ c4805a1701f271d2 v2/docs/test-procedures/TP-E11-36.md
   cross-references: 1 paths from v2/, all present
   TBD: 0
   PROPOSED mark: present
-c733fe43e2ada630 v2/docs/test-procedures/TP-E11-37.md
-  id TP-E11-37: BATDRV with the battery FET pair (supplement entry, ideal diode, LDO mode)
+e093563dc1a0993e v2/docs/test-procedures/TP-E11-37.md
+  id TP-E11-37: BATDRV with the three battery FETs (supplement entry, ideal diode, LDO mode, current sharing)
   register R-183: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-37: exists
   5d row 'E11-37 (R-183)': exists
-  quotes: 6 table (each equal to its cell), 4 text (each found verbatim)
-  cross-references: 3 paths from v2/, all present
-  TBD: 2
+  quotes: 7 table (each equal to its cell), 5 text (each found verbatim)
+  cross-references: 4 paths from v2/, all present
+  TBD: 3
     - owed by R-183: the band within which the regulated drop counts as "regulation", and until it is stated the drop is RECORDED
+    - owed by R-183: the share of the current, or the junction reading, at which the three's sharing counts as a negative answer in
     - owed by R-183: the criterion that makes a waveform an oscillation (a periodic component's amplitude at BATDRV or VSYS, and ho
   PROPOSED mark: present
 c502c2831387de6f v2/docs/test-procedures/TP-E11-38.md
@@ -112,7 +113,7 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
     - owed by R-189: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
   PROPOSED mark: present
 
-2d42063c9ad6678d v2/docs/test-procedures/README.md
+7474be23b08d7ea6 v2/docs/test-procedures/README.md
   quotes: 0 table, 4 text, each checked against its source
   PROPOSED mark: present
 
@@ -120,12 +121,12 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
 | Procedure | File | Register rows | L4-E11 rows | 5d route row | Quotes | TBDs |
 |---|---|---|---|---|---|---|
 | TP-CELL | TP-CELL.md | R-168, R-169 | none | The limited sample qualification of one cell (R-168, R-169; L4-E10 15g) | 8 | 2 |
-| TP-E11-29 | TP-E11-29.md | R-159 | E11-29 | E11-29 (R-159) | 9 | 1 |
+| TP-E11-29 | TP-E11-29.md | R-159 | E11-29 | E11-29 (R-159) | 11 | 1 |
 | TP-E11-30 | TP-E11-30.md | R-160 | E11-30 | E11-30 (R-160) | 9 | 1 |
 | TP-E11-31 | TP-E11-31.md | R-161 | E11-31 | E11-31 (R-161) | 9 | 2 |
 | TP-E11-35 | TP-E11-35.md | R-179, R-188 | E11-35, E11-39 | E11-35 (R-179) | 11 | 3 |
 | TP-E11-36 | TP-E11-36.md | R-182 | E11-36 | E11-36 (R-182) | 9 | 0 |
-| TP-E11-37 | TP-E11-37.md | R-183 | E11-37 | E11-37 (R-183) | 10 | 2 |
+| TP-E11-37 | TP-E11-37.md | R-183 | E11-37 | E11-37 (R-183) | 12 | 3 |
 | TP-E11-38 | TP-E11-38.md | R-184 | E11-38 | E11-38 (R-184) | 12 | 2 |
 | TP-EPAPER | TP-EPAPER.md | R-185 | none | The e-paper's storage soak (R-185) | 9 | 1 |
 | TP-SOLAR | TP-SOLAR.md | R-176, R-189, R-174 | none | The solar guard's bench (R-176 rows 1 to 6; R-174 at layer 8); B6-ENG-2's bench (R-189; D-16) | 22 | 2 |
@@ -152,7 +153,7 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
 - E11-35
   - TP-E11-35: the mounting drawing and tolerance the fans' hole pattern is checked against
 - R-159
-  - TP-E11-29: the list of parts within 30 mm of Q39 and Q40 that dissipate in service, each with its declared heat
+  - TP-E11-29: the list of the parts the block counts as neighbouring sources of Q39, Q40, Q42 and R17's place, eac
 - R-160
   - TP-E11-30: whether a fall beyond the measurement's uncertainty counts as a failure; until stated, any such fall
 - R-161
@@ -167,6 +168,7 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   - TP-E11-35: the start quantity (the peak power at the rail, total or above the running draw, and over which aver
 - R-183
   - TP-E11-37: the band within which the regulated drop counts as "regulation", and until it is stated the drop is 
+  - TP-E11-37: the share of the current, or the junction reading, at which the three's sharing counts as a negative
   - TP-E11-37: the criterion that makes a waveform an oscillation (a periodic component's amplitude at BATDRV or VS
 - R-184
   - TP-E11-38: the duty of the intermittent short at each frequency, with 50 % proposed until it is stated
@@ -179,12 +181,12 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   - TP-SOLAR: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
 
 5. The bring-up page and its inputs
-52ddda1b56af798b the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
+6f0c3497932a87f9 the procedure above the marker of v2/docs/PCB-BRING-UP.md (sha256/16 of the procedure only; the generated block below is rules_render.py's)
   PROPOSED mark: present; the drafts statement: present
   boards: A, B, C, D, E, E5, P, each with its seven subsections
   quotes: 14 table, 11 text, each checked against its source
   cross-references: 14 paths from v2/, all present
-  register rows named in the drafts and hand-off tables: 77, all exist
+  register rows named in the drafts and hand-off tables: 78, all exist
   the generated block under the marker starts with the renderer's header: yes
   TBD: 8
     - owed by R-51: board A's quiescent draw with every switched load off, which no record itemizes
@@ -201,4 +203,4 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   input l5r2-HW-FW-CONTRACT-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/HW-FW-CONTRACT.md; sha256 e5b4d65046f4ace5 verified
   input l5r2-L5-INTERFACES-R2-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/records/l5r2/L5-INTERFACES-R2.md; sha256 818e348940ecd87a verified
 
-RESULT: ALL PASS (10 procedures, 108 quotes, 16 TBDs; the bring-up page with 8 TBDs)
+RESULT: ALL PASS (10 procedures, 112 quotes, 17 TBDs; the bring-up page with 8 TBDs)
