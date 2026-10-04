@@ -52,7 +52,7 @@ real and correctly OPEN; **NOT CONFIRMED for two statements**, both corrected he
    L4-E11's round 12 (`fnd/l4e11r11` at `ac72e730`) has since answered V2-B1: R256 back at 4.7 kOhm and the latch budget as TWO
    limits, the static 0.846 mA and the timing 520.7 uA. Every copy is taken again at `ac72e730`, the boards recomposed, the output
    regenerated, and 12f, 12j and E-14c restated on both limits. A test now compares each copy with `records/l4e11/` wherever a tree
-   holds round 12 or later, so a copy a round behind fails.
+   holds L4-E11's round 10 or later, so a copy a round behind fails.
 2. **V2-B3: TDK's alternative, the bound taken the wrong way round.** The sure-off is a LOWER bound on the loop's scale k. On the
    sheet's printed limits a window exists: 10.51 to 10.62 at 7.6 V, 8.53 to 10.62 at 10.6 V. NOT SELECTED stands on three other
    grounds, each with its printed figure (12j).
@@ -354,6 +354,11 @@ The check parses the netlists and reads the dock lands' pad positions from `mesh
 | L8P-F07 | A, with P | record l9stk (15.5, the guard) with L4-E11 (RT1) and this record (the loop) | Not a refusal; V1's condition C3. Murata prints RT1 only at 25 C, over 110 C for 100 kOhm and at 130 +-3 C for 4.7 MOhm: the trip side's resistance is printed (the junction over the sensor's copper is not bounded), the no-trip side at 10 A only from a 15.51 V pack and in the 18 A service not at all; on the typical curve RT1 is 74.0 kOhm or more at the held 118.0 C, over the first inverter's 58.4 kOhm at 10.6 V. Record l9stk 15.5 read the 470 ohm group's 47 kOhm column (12j) | **OPEN** (the Murata question drafted, unsent; TDK's B59721A and Murata's PRF15BA102 named, not selected). The guard's redesign is record l9stk's next round, not this record's round 6 |
 
 No stand-in is used since round 5: `STANDINS` in `l8p_drafts.py` is empty, and every board composes in L4-E9's order to its end.
+
+**For the integrator and L4-E11's author (round 6).** `test_l4e11.py` pins this record's board A PTC draft by sha256 (`L8P3_PTC`,
+the draft of rounds 3 to 5). Round 6 corrected that draft's quote of Murata's sheet, so its sha256 moved. On a line that holds both,
+one L4-E11 test stops at that pin; on a scratch merge with `ac72e730`, `test_l4e11` read 68 passed and 1 failed with the pin as it
+is, and 69 passed with that one pin moved. `apply_test_l4e11_ptc_pin.py` drafts the one-line change; it is not applied here.
 
 ## 10. Residuals of the drawing (for the record's owner; no new defect)
 

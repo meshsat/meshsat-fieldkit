@@ -56,8 +56,8 @@ A's and board E's compositions in l8p_drafts.py read alike on this branch and on
 sections of its page are copied so sections 3b, 3d and 9 of the output and the page's 12f and 12j read the interface's levels, its
 delays, the latch's two limits, its source list and its V2-m5 reading from them. The copies are taken from ac72e730 with
 `git show ac72e730:<path>` (the sections with `sed -n`) and are not edited; l8p_drafts.py refuses when a phrase no longer matches,
-and test_l8p compares every copy with records/l4e11/ wherever the tree holds L4-E11's round 12 or later (a copy a round behind
-then fails).
+and test_l8p compares every copy with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (a copy that is not that
+tree's then fails).
 
 Full files at ac72e730 (sha256):
   v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   f4debb19e59ca0585d83e9a417b519f880438d3f2e78113983dd743b6ceded86
