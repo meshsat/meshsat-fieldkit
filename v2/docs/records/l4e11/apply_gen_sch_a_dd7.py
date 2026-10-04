@@ -28,9 +28,11 @@ dead point (1.98 V on CELL+) sat under the 2.80 V the LM5069's internal 1 MOhm h
           CELL+ never SETS the inhibit; it keeps an inhibit that is set (the release on CELL+ alive).
   Q47,Q49 the inhibit: Q47 (2N7002, gate DD7_LP) passes DD7_N to SYS_INH_D; Q49 (AO3401A) then holds CH_BATDRV, the battery
           FETs' gates, at VBAT (R82 / R83 as round 9).
-  Q48,R256 the bleeder: Q48 (2N7002, gate DD7_LP) loads CELL+ with R256 6.8k into DD7_N while the inhibit holds, so the
+  Q48,R256 the bleeder: Q48 (2N7002, gate DD7_LP) loads CELL+ with R256 4.7k into DD7_N while the inhibit holds, so the
           LM5069's internal 1 MOhm (its tolerance not printed) and the battery FETs' off leakage cannot lift CELL+ to the
-          alive threshold: CELL+ reads alive only when the breaker itself drives it.
+          alive threshold: CELL+ reads alive only when the breaker itself drives it. R256 was 4.7k in round 10, 6.8k in round 11
+          (the check V1's minor: U47's RESET at the 29.2 V clamp) and is 4.7k again since round 12 (the check V2's V2-B1: at 6.8k
+          the bleed of CELL+ ends inside the hold only for sources under 87 uA; at 4.7k under 521 uA; record section 22).
   Q46     its gate moves from CELL+/2 (round 9's DD7_ALIVE) to DD7_N: the input-return pulse is blocked while VBAT is up and
           no inhibit is asked (the kit running on its pack), allowed while VBAT is down (the dark kit) or an inhibit holds.
   R233,D27 DD7_VC, the gates' supply: VBAT through 100k, clamped by a BZT52C12 under 12.7 V; R249 DD7_LP's pull-up, R255 DD7_N's.
@@ -126,7 +128,7 @@ _DD7 = (
     + 'r("R82", "100k 1%", "VBAT", "SYS_INH_P", lcsc="C25803"); r("R83", "200k 1%", "SYS_INH_P", "SYS_INH_D")   # Q49 VGS -VBAT/3\n'
     + _P % ("Q49", "AO3401A P-FET: the charge inhibit, the battery FETs' gates held at VBAT (1 G, 2 S, 3 D)", "SYS_INH_P", "VBAT", "CH_BATDRV")
     + _N % ("Q48", "2N7002: the CELL+ bleeder while the inhibit holds (1 G, 2 S, 3 D)", "DD7_LP", "DD7_N", "DD7_BL")
-    + 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")   # 2.5 mA at 16.8 V into DD7_N while the inhibit holds; U47\'s RESET at most 4.4 mA at the clamp (TI: 5 mA)\n'
+    + 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")   # 3.6 mA at 16.8 V into DD7_N while the inhibit holds; U47\'s RESET sinks at most 3.85 mA at the set and 4.32 mA with CELL+ at SYSOVP (TI: 5 mA recommended); 6.45 mA only with CELL+ at VBAT\'s 29.2 V clamp, which needs a second fault (TI: 10 mA absolute); L4-E11 section 22\n'
     'tp("TP1", "DD7_H"); tp("TP2", "DD7_N")\n'
     '_r10 = "L4-E11 rounds 9 and 10 (DD-7, record l8p\'s L8P-F04 and L8P-F05): "\n'
     '_intent.node("DD7_G", 12.7, _r10 + "Q44\'s gate, VIN_RAW through R106 1M clamped by D25 (BZT52C12, 11.4 to 12.7 V, DS18004)")\n'
