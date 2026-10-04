@@ -527,8 +527,9 @@ def _draft(line):
 
 def t_copper_the_battery_fets_are_parsed_from_the_draft_not_a_quoted_sentence():
     """The defect of 4 October 2026: the script matched the draft's sentence 'one of two in parallel' and refused when L4-E11's
-    round 9 wrote 'one of three'. The designators and their count are now parsed from the generator line; a reworded sentence
-    reads the same, and a changed net, a missing line or a second line refuses."""
+    round 9 wrote 'one of three'. The designators and their count are now parsed from the nfet calls on the battery nets: a
+    reworded sentence, another loop variable, single calls or a loop over tuples read the same; swapped nets, one FET, another
+    part, two parts or a designator written twice refuse."""
     m = _CU()
     nets = '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")'
     two = 'for _qb in ("QA", "QB"): nfet(_qb, "BUK6Y10-30PX 30 V P-FET (one of two in parallel)", ' + nets
@@ -540,10 +541,19 @@ def t_copper_the_battery_fets_are_parsed_from_the_draft_not_a_quoted_sentence():
     # the old pattern, kept here as the defect's witness: it matches the two-FET sentence only
     old = re.compile(r"one of two in parallel")
     assert old.search(_draft(two)) and not old.search(_draft(three)) and not old.search(_draft(reworded))
-    for bad in (three.replace('"CH_BATQ", "VBAT"', '"VBAT", "CH_BATQ"'),          # drain and source swapped
-                three.replace("for _qb in", "for _qx in"),                          # no battery FET line
+    # the code's form decides nothing either: another loop variable, single calls, a loop over tuples, other FETs beside them
+    assert m.battery_fets(_draft(three.replace("_qb", "_q")))[0] == ("QA", "QB", "QC")
+    singles = "; ".join('nfet("%s", "BUK6Y10-30PX", %s' % (q, nets) for q in ("QA", "QB", "QC"))
+    assert m.battery_fets(_draft(singles))[0] == ("QA", "QB", "QC")
+    tuples = ('for _q, _g, _d, _s in (("QA", "CH_BATDRV", "CH_BATQ", "VBAT"), ("QB", "CH_BATDRV", "CH_BATQ", "VBAT"), '
+              '("QZ", "CH_HIDRV2", "VBAT", "CH_SW2")): nfet(_q, "BUK6Y10-30PX", _g, _d, _s)')
+    assert m.battery_fets(_draft(tuples))[0] == ("QA", "QB"), "a FET on other nets is not a battery FET"
+    assert ("QZ", "BUK6Y10-30PX", "CH_HIDRV2", "VBAT", "CH_SW2") in m.nfet_calls(_draft(tuples))
+    for bad in (three.replace('"CH_BATQ", "VBAT"', '"VBAT", "CH_BATQ"'),          # drain and source swapped: no battery FET
                 'for _qb in ("QA",): nfet(_qb, "BUK6Y10-30PX", ' + nets,            # one FET
-                three.replace("BUK6Y10-30PX", "SQJ403EP")):                         # another part
+                three.replace("BUK6Y10-30PX", "SQJ403EP"),                          # another part
+                singles.replace('"QA", "BUK6Y10-30PX"', '"QA", "SQJ403EP"'),        # two different parts
+                three.replace('"QC"', '"QA"')):                                     # a designator written twice
         try:
             m.battery_fets(_draft(bad))
         except SystemExit:
@@ -554,7 +564,7 @@ def t_copper_the_battery_fets_are_parsed_from_the_draft_not_a_quoted_sentence():
     except SystemExit:
         pass
     else:
-        raise AssertionError("two battery FET lines were read as one")
+        raise AssertionError("the same battery FETs written by two lines were read as one set")
     # on the tree's draft: the designators the parser reads are the loads the same draft declares on CH_BATQ (parsed here)
     I = _C["CR"]["in"]
     draft = open(os.path.join(ROOT, m.PINS["charger_draft"]), encoding="utf-8").read()

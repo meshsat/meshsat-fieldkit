@@ -146,9 +146,25 @@ def t_a_drafts_rail_and_battery_fets_are_parsed_not_matched_on_one_line():
                 raise AssertionError("two differing declarations of one rail were read as one")
             got = m.draft_rail_call("_fixture", "+12V_X")
             seen[name] = (got["pos"][1], got["pos"][4], got["kw"]["efficiency"], got["kw"]["fed_from"], bool(old.search(draft)))
+        # the battery FETs: the nfet calls on the battery nets, whatever the loop's form or the part's sentence
+        nets = '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56")'
+        forms = {"loop": 'for _qb in ("Q39", "Q40", "QX"): nfet(_qb, "BUK6Y10-30PX (one of three in parallel)", ' + nets,
+                 "renamed": 'for _q in ("Q39", "Q40", "QX"): nfet(_q, "BUK6Y10-30PX, side by side", ' + nets,
+                 "singles": "; ".join('nfet("%s", "BUK6Y10-30PX", %s' % (q, nets) for q in ("Q39", "Q40", "QX")),
+                 "pair": 'for _qb in ("Q39", "Q40"): nfet(_qb, "BUK6Y10-30PX (one of two in parallel)", ' + nets}
+        for name, body in sorted(forms.items()):
+            open(tmp, "w", encoding="utf-8").write("_B = (%r\n      %r)\n" % ("# a generator comment\n", body + "\n"))
+            seen["fets " + name] = m.draft_battery_fets("_fixture")[0]
+        open(tmp, "w", encoding="utf-8").write("_B = (%r)\n" % (forms["loop"].replace('"CH_BATQ", "VBAT"', '"VBAT", "CH_BATQ"') + "\n"))
+        try:
+            m.draft_battery_fets("_fixture")
+        except SystemExit:
+            seen["fets swapped"] = "refused"
     finally:
         m.PINS.pop("_fixture", None)
         shutil.rmtree(tdir, ignore_errors=True)
+    assert seen["fets loop"] == seen["fets renamed"] == seen["fets singles"] == ("Q39", "Q40", "QX") and seen["fets pair"] == ("Q39", "Q40")
+    assert seen.get("fets swapped") == "refused", "FETs with the drain and the source swapped were read as battery FETs"
     assert seen["one"] == (12.0, "L4", 0.85, "VSYS_E", True)
     assert seen["two"] == (12.0, "U22", 0.85, "VSYS_E", False), "the two-line declaration reads, where the old pattern did not match"
     # the tree's drafts: +12V_FAN's efficiency is the parsed declaration's, and the battery FETs are the charger draft's

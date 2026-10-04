@@ -74,8 +74,9 @@ pattern for it no longer matches its pinned input". The script quoted one senten
 (`apply_gen_sch_a_charger.py`: "one of two in parallel"). L4-E11's round 9 drafts the third battery FET this record's 15.5
 selected, Q42, and the sentence now says three. It was the only stale read in either script.
 
-**The correction.** The draft is parsed (ast on its string constants, then on the generator line `for _qb in (...): nfet(...)`):
-the designators and their count are read, the sentence decides nothing. L4-E11's section 19c (E11-29 restated as 15.5's
+**The correction.** The draft is parsed (ast on its string constants, then on the generator source they hold, a loop over a
+literal tuple unrolled): the battery FETs are the `nfet` calls on CH_BATDRV, CH_BATQ and VBAT, their designators and count are
+read, and neither the part's sentence nor the loop's form decides anything. L4-E11's section 19c (E11-29 restated as 15.5's
 junction limit, the pair's targets withdrawn) is read beside its dated sections 15 and 16. The coordination table's battery
 FET rows are judged on the circuit as drafted; `l9stk_copper.out` section 9a and the page's 14.6a print each row on the pair
 beside it, both computed. The protection script holds L4-E11's restated figures equal to its own selection and allowance by
@@ -105,6 +106,7 @@ E-1 is read.
 | 2, 3 and 4, wording only | "E11-29's present target", "its designator L4-E11's" | "E11-29's target then" and "former target"; "its designator L4-E11's: Q42 in its round 9 draft, not applied"; section 2 headed as the pair the element was sized against | L4-E11's round 9 |
 | 4, the battery FETs' row in the series parts | Q39, Q40 and the third FET | Q39, Q40 and Q42 | the draft |
 | 7, predicates | 51 | 54: three added (the draft's FETs, L4-E11's restated limit, the copper record's readings) | round 3 |
+| `apply_decisions_l9stk.py`, board A's decision text (not applied) | "the one-face hop from R17 to the pair" | "the one-face hop from R17 to the battery FETs" | the draft writes three; no figure in the decision moved (L4-E9 holds its own copy of this script at `2c8b29fb`, with the earlier wording) |
 
 **What did not move** (stated because other records and a running review take these as their case basis):
 

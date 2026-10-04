@@ -371,33 +371,55 @@ def draft_rail_call(key, name):
     return found[0]
 
 
+BAT_NETS = ("CH_BATDRV", "CH_BATQ", "VBAT")     # nfet's gate, drain and source for a battery FET
+
+
 def draft_battery_fets(key):
-    """The charger's battery FETs as L4-E11's draft writes them, PARSED (round 3): the generator line
-    `for _qb in (...): nfet(_qb, <part>, <gate>, <drain>, <source>, ...)` inside the draft's string constants, read with ast.
-    Returns the designators and the part's text."""
+    """The charger's battery FETs as L4-E11's draft writes them, PARSED (round 3; the same reading as record l9stk's
+    battery_fets): every nfet(ref, part, gate, drain, source, ...) inside the draft's string constants, read with ast, a `for`
+    over a literal tuple unrolled with its names bound; the battery FETs are the calls on CH_BATDRV, CH_BATQ and VBAT.
+    Returns the designators in the draft's order and the part's text."""
     found = []
-    for node in ast.walk(ast.parse(text(key))):
-        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
-            continue
-        for line in node.value.splitlines():
-            if not line.lstrip().startswith("for _qb in"):
-                continue
-            try:
-                st = ast.parse(line.strip()).body[0]
-            except SyntaxError:
-                continue
-            if isinstance(st, ast.For) and len(st.body) == 1 and isinstance(st.body[0], ast.Expr) and isinstance(st.body[0].value, ast.Call) \
-                    and isinstance(st.body[0].value.func, ast.Name) and st.body[0].value.func.id == "nfet" and len(st.body[0].value.args) >= 5:
+
+    def walk(stmts, env):
+        for st in stmts:
+            if isinstance(st, ast.For):
                 try:
-                    found.append((tuple(ast.literal_eval(st.iter)), [ast.literal_eval(a) for a in st.body[0].value.args[1:5]]))
-                except ValueError:
-                    die("%s: the battery FET line is not all literals" % PINS[key])
-    if len(found) != 1:
-        die("%s writes %d battery FET lines (for _qb in ...: nfet), one is read" % (PINS[key], len(found)))
-    refs, args = found[0]
-    if args[1:] != ["CH_BATDRV", "CH_BATQ", "VBAT"] or "BUK6Y10-30P" not in args[0] or len(refs) < 2 or tuple(refs[:2]) != ("Q39", "Q40"):
-        die("the charger draft no longer carries the BUK6Y10-30P battery FETs Q39, Q40 on CH_BATDRV, CH_BATQ and VBAT")
-    return refs, args[0]
+                    vals = ast.literal_eval(st.iter)
+                except (ValueError, SyntaxError):
+                    continue
+                for v in vals:
+                    e2 = dict(env)
+                    if isinstance(st.target, ast.Name):
+                        e2[st.target.id] = v
+                    elif isinstance(st.target, ast.Tuple) and isinstance(v, tuple) and len(v) == len(st.target.elts):
+                        e2.update({e.id: x for e, x in zip(st.target.elts, v) if isinstance(e, ast.Name)})
+                    walk(st.body, e2)
+            elif isinstance(st, ast.Expr) and isinstance(st.value, ast.Call) and isinstance(st.value.func, ast.Name) \
+                    and st.value.func.id == "nfet" and len(st.value.args) >= 5:
+                try:
+                    args = tuple(eval(compile(ast.Expression(x), "<nfet>", "eval"), {"__builtins__": {}}, dict(env)) for x in st.value.args[:5])
+                except Exception:
+                    continue
+                if all(isinstance(x, str) for x in args) and args[2:5] == BAT_NETS:
+                    found.append((args[0], args[1]))
+    for node in ast.walk(ast.parse(text(key))):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str) and "nfet(" in node.value):
+            continue
+        try:
+            body = ast.parse(node.value).body
+        except SyntaxError:
+            body = []
+            for line in node.value.splitlines():
+                try:
+                    body += ast.parse(line.strip()).body
+                except SyntaxError:
+                    continue
+        walk(body, {})
+    refs, parts = tuple(r for r, _p in found), sorted({p for _r, p in found})
+    if len(refs) < 2 or len(set(refs)) != len(refs) or len(parts) != 1 or "BUK6Y10-30P" not in parts[0] or refs[:2] != ("Q39", "Q40"):
+        die("the charger draft no longer carries the BUK6Y10-30P battery FETs Q39, Q40 on CH_BATDRV, CH_BATQ and VBAT (read: %s)" % (", ".join(refs) or "none"))
+    return refs, parts[0]
 
 
 def parse_inputs(pb):
