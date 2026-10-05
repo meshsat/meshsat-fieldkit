@@ -19,6 +19,7 @@ qualification and fabrication release as separate gates and the supplier's valid
 | 19. Handover scope amendment and review of the external packet: the deliverable is the desk engineering package for a receiving company; sequential DESK acceptance per layer; the packet reframed as the supplier validation annex with three corrections (a failed arrangement is not a requirements conflict; the mock-up sum; investigating the Saft option apart from adopting it) | 5 October 2026, about 15:45 CEST | `d448616ce3607d9653fe47efea771aa9a68e31198ec943bf52a9f4bf8262b02a` |
 | 20. Targeted revision check of the supplier annex: its revised scope accepted (not the circuitry); two follow-throughs (residual owner-role wording; the live plan must show sequential desk-handover gates governing while the design and fabrication gates stay honest) | 5 October 2026, about 15:58 CEST | `0755be17a7931895b431c0d75419d15246c46e1d9e9c88554b31aa58927f539d` |
 | 21. Targeted review of P0 checkpoint 2: continue; the independent check of T10's drafted correction must establish four things (the air and tolerances, the CAN service under the share, enforceability, the match to C-DEV rev 2); F01's next selection record disposes of cx44's ten findings individually; the freed checker slot on P0-7 is within the limit | 5 October 2026, about 16:08 CEST | `9db73b773db19c04c5306dbdaafc885e96a522362adbb2fa7663a252c8f05131` |
+| 22. Targeted review of P0 checkpoint 3: continue; the guard's latent-fault disposition (L8P-D9) needs an engineering basis per fault or the defect stays open with a correction; the 146.4 C babbling-supervisor case needs its applicable criterion named (125 C design criterion kept distinct from the 150 C absolute maximum); revision V tied to the part specification, sourcing and case selection; F01 and the solar alternative provisional until checked | 5 October 2026, about 17:05 CEST | `9dbcee0e973b2401387a7a68e7a2e869c2b1cfa70b861bfb3907c6e91580c275` |
 
 
 ---
@@ -586,3 +587,77 @@ Using the freed checker slot for a bounded P0-7 design task is consistent with t
 The reported next checkpoint is **by 16:50 CEST**, or sooner for a material result. The useful outputs are F01's corrected selection, the eFuse correction and the P0-7 comparison, followed by their combined effect on the power path.
 
 The revised 15–19-hour desk-candidate estimate is a forecast, not evidence of completion. No new owner purchase, laboratory action, worker restart or `/plan` cycle is needed on the basis of these two files.
+
+---
+
+## 22. Targeted review of P0 checkpoint 3: continue; the guard's latent-fault disposition (L8P-D9) needs an engineering basis per fault or the defect stays open with a correction; the 146.4 C babbling-supervisor case needs its applicable criterion named (125 C design criterion kept distinct from the 150 C absolute maximum); revision V tied to the part specification, sourcing and case selection; F01 and the solar alternative provisional until checked (as received)
+
+# MeshSat P0 checkpoint 3 — targeted review
+
+## Decision
+
+**Continue the current P0 work. Resolve the guard's fault-acceptance basis before crediting it as a corrected design.** No worker restart or new general plan is required.
+
+The checkpoint reports further circuit drafts, composition/mutation checks, a revised CAN thermal analysis, and a solar-sense alternative. It explicitly reports no independently accepted power correction yet. That distinction is appropriate.
+
+## Scope
+
+Source: `MESHSAT-P0-CHECKPOINT-3-2026-10-05-1650.md`, dated 5 October 2026, 16:50 CEST.
+
+SHA-256: `e4b5a99328adcd4a70eafde829b4a9ad6168f479fe8e8450679524e8b09f1e64`.
+
+I reviewed the supplied checkpoint. The branch diffs, actual fault rows, SESSION decisions, component sources and Astra finding dispositions are not attached. This review therefore identifies specific acceptance questions; it does not independently validate the circuit calculations or establish that a requirement has been violated.
+
+## 1. Guard: a latent-fault disposition needs an engineering basis
+
+**P1 — verification and acceptance gap.** Lines 24–25 and 34 say a second sensing path failed its window and three single failures are now tolerated as latent between checks under SESSION decision L8P-D9.
+
+Some designs can legitimately tolerate latent faults under specified detection and response arrangements. This checkpoint does not provide the evidence needed to determine whether that is allowed here. A SESSION label alone cannot change an approved protection obligation.
+
+Before crediting the guard correction, identify for each fault:
+
+- The failed component/path, the protective function lost and the actual consequence.
+- The applicable approved requirement and whether its fault model permits the proposed latent state.
+- What detects the fault, which detection path remains functional, the maximum interval before detection and the resulting response.
+- Whether a prohibited temperature, voltage, current or service condition can occur during that interval, including relevant normal operating conditions and fault combinations.
+- What circuit correction is required if the permitted exposure cannot be bounded.
+
+If the existing requirements support that disposition, retain its evidence for the planned independent check. If they do not, keep the defect open and use the available P0 capacity for a correction. Do not silently accept reduced protection, or send a desk-fixable protection defect to the supplier as if it were only a measurement.
+
+## 2. CAN thermal results: keep the applicable criteria distinct
+
+**P1 — acceptance clarification.** The report appropriately retains the revision-Y failure at 125.2–126.5 °C against 125 °C. It then reports a revision-V route at 109.4–110.7 °C, while a babbling-supervisor fault reaches 146.4 °C and is described as below 150 °C.
+
+The latter comparison is insufficient by itself. The existing review must establish which criterion applies to that fault, what service and protective response are required, and whether the result is a bounded transient or a sustained condition. If 125 °C applies, the row fails that criterion. If the approved fault criteria differ, demonstrate compliance with those criteria as well as the absolute limit. An absolute maximum is not an operating target.
+
+This is not a conclusion that every fault must use the normal-operation criterion. The requirement and fault-response contract decide that; their application must be explicit.
+
+## 3. Revision-specific correction: make the implementation enforceable
+
+**Verification target for the existing check.** Selecting revision V may be a valid engineering correction. The supported revision must be explicit in the part specification, sourcing/assembly acceptance and the model's case selection. A proof for revision V must not be applied to an unqualified revision X or Y.
+
+The proposed R602 alternative should be judged over the complete connected circuit, including voltage headroom and the return correction, rather than only the improved temperature figure. The checkpoint already assigns that decision to Slot A; no parallel redesign is requested here.
+
+## 4. F01 and solar: progress remains provisional
+
+F01's reported 15.1307 V result and 0.369 V margin support the stated model only under its assumptions. The required RF service under the current cap remains unproven as B-PA1. Keeping F01 and the dependent PA/loop rows provisional is the correct scope treatment.
+
+The statement that the other nine Astra findings have been answered still needs the planned independent check against the actual corrections. No conclusion about their closure is possible from this checkpoint alone.
+
+P0-7's sense-network change is reported drafted with normal/fault checks, but its final report is pending. It must be part of the combined candidate before the final independent review.
+
+## Short coordinator follow-up
+
+```text
+Continue the current P0 assignments. Do not restart the plan or repeat completed work.
+
+Before crediting L8P-D9, state for each of the three latent guard faults the approved requirement permitting that disposition, the surviving detection path, maximum detection interval, response, and the worst exposure before detection. A SESSION decision cannot reduce required protection. If the disposition is unsupported, keep the defect open and assign the available P0 capacity to the circuit correction.
+
+For the 146.4 C babbling-supervisor case, name the applicable fault-temperature and service criteria. Being below a 150 C absolute maximum is not sufficient by itself; preserve the distinct 125 C design criterion wherever it applies.
+
+Keep revision V's selection and its evidence tied to the actual supported parts and case rows. F01 remains provisional until its required RF service is supported; the other nine cx44 findings still go through the planned independent check.
+
+Answer these within the existing P0 record and cx45 scope. No new general review, procurement task or supplier contact is requested.
+```
+
+The next checkpoint is reported due by **17:35 CEST**. It should provide the solar alternative's final record and progress on the return correction, with the guard disposition made checkable.
