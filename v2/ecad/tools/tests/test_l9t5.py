@@ -446,7 +446,7 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 19, "the T10 script")
+    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 21, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "Round 4 was the first attempt at this correction",
                "round 5 is the second round on the same correction"):
@@ -739,6 +739,49 @@ def t_round5_t10_the_four_answers_of_part_21_are_re_solved():
         assert s_ in sec, s_
     # L9T5-F22's scenario: 14.0 k holds the held current's requirement and brings rev Y's cover under 125 C
     assert re.search(r"14\.0 k: [\d.]+ V nominal, top [\d.]+ V; the LDOs' input at least [\d.]+ V \(holds\); rev Y's cover, both fabrics faulted, 1[01]\d\.\d C", sec)
+
+
+def t_round5_t10_part22_the_babbling_row_fails_at_13k3_and_holds_with_the_set_point_delta():
+    """The owner's review of checkpoint 3 (part 22), B and C. The old statement: the babbling row at 146.4 C read 'under 150 C' as if the
+    absolute maximum were its criterion. A babbler is a SUSTAINED state (nothing in hardware ends it), so 125 C applies: re-solved here, on
+    revision V's rows (the fitted revision) it FAILS with iocpre's 13.3k and holds with the set point delta's 14.0k; the delta composes,
+    reads 14.0k and both its mutations fail; the proof is keyed to revision V and the cover's rows decide nothing."""
+    import io as _io
+    import subprocess
+    import tempfile
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    m = _mod(T10, "l9t5_test_t10p22")
+    P = m.figures(); Q = m.figures5(P)
+    assert (m.FITTED_REV, m.COVER_REV, m.R602_SET) == ("V", "Y", 14.0e3)
+    text = open(T10_OUT, encoding="utf-8").read()
+    i_aux = float(re.search(r"over its value less 1 % \(ASSUMED\): ([\d.]+) A at most", text).group(1))
+    chk = _mod(CHECK, "l9t5_test_check_p22")
+    hi13 = chk.vout_band(56.2e3, 13.3e3)[2]
+    lo14, nom14, hi14 = chk.vout_band(56.2e3, 14.0e3)
+    assert (round(lo14, 4), round(nom14, 4), round(hi14, 4)) == (3.9063, 4.0114, 4.1174)
+    i_m = m.mcu_point(P, Q, "V", P["air"])[1]
+    i_bab = i_m + i_aux + 2 * P["can_dom_hi"]
+    t13 = P["air"] + P["theta_ldo"] * (hi13 - 3.3 * P["vout_lo"]) * i_bab
+    t14 = P["air"] + P["theta_ldo"] * (hi14 - 3.3 * P["vout_lo"]) * i_bab
+    assert t14 <= m.TJ_GOAL < t13 < P["tj_ldo"], (t13, t14)
+    sec = text.split("   10i. THE OWNER'S REVIEW OF CHECKPOINT 3")[1].split("\n11. THE STATE")[0]
+    assert re.search(r"babbling \(nothing ends it\) +V +%.4f A +125 C \(sustained\) +%.1f C FAILS +%.1f C holds" % (i_bab, t13, t14), sec)
+    assert "never applied to revisions X or Y" in sec and "SILICON REVISION" in sec and "REV_ID 0x2003" in sec
+    assert "the set point DRAWN; mutations: the divider inverted FAIL, R602 back to 13.3k FAIL" in sec
+    # the delta refuses a generator without iocpre and the tree's; applies once after iocpre
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_p22_") as d:
+        for b in "ab":
+            s = os.path.join(REC, "apply_gen_sch_%s_iocset.py" % b)
+            t0 = os.path.join(d, "bare_%s.py" % b)
+            shutil.copy(GENS[b], t0)
+            assert subprocess.run([sys.executable, "-B", s, t0, "--write"], capture_output=True).returncode == 3
+            assert subprocess.run([sys.executable, "-B", s, GENS[b], "--write"], capture_output=True).returncode == 3
+            rc, net = _regen(b, (NEW[b], PRE[b], s), d, "p22")
+            assert rc == 0, net
+            if b == "a":
+                assert m.set_check(chk.read(open(net, "rb").read()))[0] == "DRAWN"
+                assert m.set_check(chk.read(open(net, "rb").read().replace(b"14.0k 0.1%", b"13.3k 0.1%")))[0] == "FAIL"
 
 
 def t_round5_t10_the_shdn_draft_composes_and_the_contract_draft_applies_once():
@@ -1061,7 +1104,8 @@ def t_p0_connected_the_re_trace_reads_its_sources():
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
              os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
-             F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT]
+             F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT,
+             os.path.join(REC, "apply_gen_sch_a_iocset.py"), os.path.join(REC, "apply_gen_sch_b_iocset.py")]
     inputs = os.path.join(REC, "inputs")
     copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
     for p in files + copies:
