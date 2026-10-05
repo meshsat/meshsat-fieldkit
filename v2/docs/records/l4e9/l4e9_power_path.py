@@ -2054,6 +2054,11 @@ def f02_inputs(F, T):
     r9 = {k: one(s19.split("\n   19%s. " % k)[1].split("\n   19%s. " % chr(ord(k) + 1))[0]) for k in "bcd"}
     m = need(r9["c"], r"each FET's \(Zself \+ 2 Zmut\) at most ([\d.]+) K/W steady with R17 placed apart, R17's coupling into each junction at most ([\d.]+) K/W", "the three's junction limit (19c)")
     g["z3"], g["r17c"] = f(m, 1), f(m, 2)
+    # set 31 (PC-05): E11-29 as L4-E11's row restates it (its rounds 11 to 16): the bar without m and the design target; read, never recomputed
+    e29 = need(t, r"^\s*E11-29 \| LAYOUT \|[^\n]*", "E11-29's row").group(0)
+    g["z3m"] = f(need(e29, r"so each \(Zself \+ 2 Zmut\) at most ([\d.]+) K/W without m", "E11-29's bar without m"))
+    m = need(e29, r"each junction's worst-split figure Zw at most ([\d.]+) K/W \(Zself [\d.]+ K/W for three side by side at m [\d.]+\), R17's coupling at most ([\d.]+) K/W", "E11-29's design target")
+    g["zw"], g["r17t"] = f(m, 1), f(m, 2)
     m = need(r9["c"], r"the hottest junction stays at most 150 C held at ([\d.]+) A from ([\d.]+) C with the band and R17 in place \(CONDITIONAL on E11-29\)", "the held limit (19c)")
     g["held_lim"] = (f(m, 1), f(m, 2))
     need(r9["c"], r"the pair's former steady target [\d.]+ K/W at \+70 C air and its 1 s, 20 ms and 244 us targets are WITHDRAWN", "the pair's targets withdrawn (19c)")
@@ -3830,7 +3835,7 @@ def rows(F, D, A, E):
                 round(F["l9"]["drawn"], 3), "<=", F["d11_floor"], "V", "MODELED", "Layer 9's l9pwr out 7, DRAWN (its output copied); reproduced in out 30; FW-A05's floor (PROVISIONAL thresholds)", scope="drawn"),
             Chk("the same on the final drafts (Layer 9's round 2: the battery FETs and board P's breaker in the path, the coolers at full speed through their step-ups, slots 1 and 3 on the LM5176), under REQ-018's %s V pass line (D-17, OPEN)" % fmt(F["l9"]["req_floor"]),
                 round(F["l9"]["drafted"], 3), "<=", F["l9"]["req_floor"], "V", "MODELED", "Layer 9's l9pwr round 2 out 7, DRAFTED (its output copied); reproduced in out 30; round 7's raised floor withdrawn (REQ-018)"),
-            Chk("the same with the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, MISSING DRAFT; K4 in FW-A05, R-28), a bound", round(F["l9"]["off_need"], 3), "<=", F["l9"]["req_floor"], "V",
+            Chk("the same with the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, WITHDRAWN: kept only as round 8's reading of the withdrawn design-out), a bound", round(F["l9"]["off_need"], 3), "<=", F["l9"]["req_floor"], "V",
                 "CONDITIONAL", "out 30: the basis less at least Layer 9's R8 fan input %s W; CONDITIONAL on the %s s fan-stop thermal test R-213" % (fmt(F["l9"]["fans_conv_hi"]), fmt(F["l9"]["req_key_s"]))),
             Chk("OCD1 (%s A for %s s) reached only below a %s V stack on the drafted basis, under its %s A point's %s V" % (fmt(F["ocd1"][0]), fmt(F["ocd1"][1]), fmt(round(F["l9"]["i20_stack_df"], 3)), fmt(F["l9"]["i"]), fmt(round(F["l9"]["stack_df"], 3))),
                 round(F["l9"]["i20_stack_df"], 3), "<", round(F["l9"]["stack_df"], 3), "V", "MODELED", "out 30 (Layer 9's DRAFTED watts, the drafted pack path)"),
@@ -3924,85 +3929,30 @@ def rows(F, D, A, E):
 
 
 # ------------------------------------------------------------------------------------------------------- the gate
+# Set 31 (6 October 2026): the DESIGN gate's criteria 1 to 5 as the coordinator assesses them on the set 30 candidate (the brief's
+# verdict words, on the filed evidence; L4E9-SECTION8-SET30.draft.md's block 8 supplies the texts, its [ALIAS:N] citations being
+# lines at 7070f106, the alias table at the head of the page's section 8). Set 29's texts are this file at 7070f106 (git history).
 GATE = [
-    {"n": 1, "criterion": "one architecture selected, its mandatory functions with a defensible feasibility basis",
-     "rows": ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its panel on PANEL-ACC (U-03, a CONDITIONAL "
-                   "DOWNSTREAM UNIT SELECTION since L4-E13: no unit bought or measured, R-35); REQ-015 at "
-                   "9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04; L4-E11's consolidation, "
-                   "check 5 at 5aa18a69, selects (B1), the BQ25730 with the battery FET pair Q39 and Q40 and board E on VSYS_E after its "
-                   "fix round, drafted: once applied U-04 is a downstream qualification test, on the board as drawn TI's D1 and D3 decide "
-                   "it); thermal feasibility per required mode is U-02's (L4-E12's fix round: each mode's governing local limit, T-H1 "
-                   "deciding every class (i) and (ii) line; four lines over the modelled capacity, none shown impossible: E3-L lid closed "
-                   "as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's row a MISSING STORAGE "
-                   "QUALIFICATION, no DEMONSTRATED CONFLICT, so no requirement question goes to the owner, OW-10 held for one: every "
-                   "admitted arrangement failed its measurement, or a bound); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
-                   "windows, not yet adoptable: current at temperature and the storage dwell AWAITING, L4-E10 10g); PS-ALLTX's chain at "
-                   "18 A for 60 s (PWR-F12) is an open obligation",
-     "overturn": "possibly, on named evidence only: U-01 on Saft's answer or the sample qualification and on the HL18650V's signed "
-                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a DEMONSTRATED CONFLICT (the "
-                 "measured failure of every admitted arrangement, the analysed one and the route with the local sensor relocated, or a bound "
-                 "that none can meet the limit; one arrangement's failed test is that arrangement's shortfall; none at present: its four lines over the "
-                 "modelled capacity are a modelled shortfall and a missing storage qualification, engineering and evidence tasks) and "
-                 "on a class (i) or (ii) point read short with the route "
-                 "also short, U-04 on the board as drawn on TI's D1 or D3 (none once (B1) is applied); the rest, the panel unit included, "
-                 "resolves by a value, a part or a measurement on the same topology"},
-    {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
-     "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-06", "IF-09", "IF-10", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
-     "constraint": "three material defects are open: D-10's source arriving with the guard already on (B6; L4-E7's round 5: round 2's 3.30 uH loop "
-                   "WITHDRAWN as a passing floor; there a fault at the connector, no lead resistance credited, reads U5's pins -0.3021 V, past the "
-                   "-0.3 V absolute maximum, an absolute-rating violation, and +0.2591 V over the +-0.240 V design target; no loop is claimed to "
-                   "pass; the stage question is the engineer's, B6-ENG-1) and D-16 (L4-E7's B6-ENG-2: the drafted input current sense leaves its +-100 mV operating range in normal "
-                   "operation at the 25 V corner, demonstrated at the desk on the sheet's operating range, handed to the engineer as the sense "
-                   "arrangement itself; the 100 W backstop bound unaffected) and D-17 (Layer 9's L9P-F01 on the final drafts: decision D-11's all-transmit basis "
-                   "needs 16.214 V rest against REQ-018's 15.5 V pass line; round 7's raised floor withdrawn as a correction, since it narrowed the "
-                   "requirement; one design-out attempt, the five fans' supplies off while the PA keys, R-210 to R-212, MISSING DRAFT, at least "
-                   "+0.126 V under 15.5 V by a bound, CONDITIONAL on the fan-stop thermal test R-213); the review's B1 and B2 on (B1)'s draft, D-13 (board E's auxiliary domain on the pack's side of "
-                   "the battery FET) and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), are addressed "
-                   "in drafts by L4-E11's fix round (board E on VSYS_E, R-177 and R-178; the pair Q39 and Q40, R-157), CONDITIONAL on the "
-                   "installed (Zself + Zmut) (E11-29), the docking pulse in one FET (E11-30), the RDS(on) allowance (E11-36) and the bench rows (E11-31), "
-                   "with Ciss against TI's 5 nF OPEN (E11-37); D-15 (the dock's new VSYS contact without branch protection, the review of "
-                   "the provisional fixes' L4-F03) is addressed in drafts by the eFuse U42 (R-181): " + L4F03_STATUS + " (E11-38); the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
-                   "panel), single faults, are addressed in drafts, a selected remedy each (L4-E7, check 5 at 573fd5b8: the over-voltage cut-off U21 "
-                   "with Q12 and the return switch Q13, R-173, drafted, not applied; D-10's cold connection inside the absolute ratings, its "
-                   "margin lines not held at a connector fault near 0.30 uH), D-10's guard-on case OPEN as above (R-176 row 3; B6-ENG-1), D-11 "
-                   "CONDITIONAL on Q13's leakage above +25 C; the band between "
-                   "25 V and the cut-off, where a stiff source still runs the stage, is a residual for layer 8 (R-175); D-12 (CS116 and CS115 on the drawn entry) is resolved in the drafted entry, CS115 CONDITIONAL on the cable's loop "
-                   "current (L4-E7's derivation, set 27); D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
-                   "L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 "
-                   "(E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and "
-                   "short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service "
-                   "on open evidence (the loop's inductance, E11-20); the dependency rounds add no defect: L4-E11's D9 and D10 are the "
-                   "entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), "
-                   "not a defect's resolution",
-     "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry or on (B1)'s draft; D-10 and D-11 by "
-                 "the drafted guard, which adds protection at the solar entry and changes no topology, D-10's guard-on case by the stage's "
-                 "current-sense arrangement, the engineer's, inside the same stage; D-13, D-14 and D-15 by a feed, a "
-                 "part and a branch protection inside (B1); D-16 by where and how the stage's input current is sensed, the engineer's, inside "
-                 "the same stage"},
-    {"n": 3, "criterion": "remaining assumptions explicit, with their impact and verification method",
-     "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
-    {"n": 4, "criterion": "downstream implementation changes, layout constraints and tests have named owners and acceptance criteria",
-     "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
-    {"n": 5, "criterion": "no unresolved uncertainty could overturn the selected architecture while described as routine later testing",
-     "rows": ["IF-09", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "three unresolved choices could overturn it and are named as such, not as later testing, each with its question, evidence, "
-                   "supplier and fallback stated by its dependency round: U-01 (FEA-008's cell: the signed specification and the owner's two "
-                   "items; L4-E10, check 4 at e464ff88; its fix round: the Saft supported for the temperature windows, not yet adoptable), U-02 "
-                   "(MESHSAT-1478: each required mode against its governing local limit, L4-E12's fix round at b1cd32ba; T-H1's points of "
-                   "12d decide every class (i) and (ii) line, as ruled the heat stage at +40 C against the SGP41's Table 4, 2.905 W/K on the "
-                   "pack and 3.081 W/K on shore, under CFL-002's C the cells' hot stop, 1.804 and 1.767 W/K; four lines over the modelled "
-                   "capacity, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (M3, M4) and a MISSING STORAGE QUALIFICATION (M6, M7), no "
-                   "DEMONSTRATED CONFLICT), U-04 ((B1) selected and drafted with the pair and board E on VSYS_E, a downstream "
-                   "qualification test once applied; on the board as drawn TI's D1 and D3; L4-E11, check 5 at 5aa18a69, fix round at "
-                   "656fc540); an "
-                   "owner and an acceptance criterion do not close them. U-03 "
-                   "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
-                   "unit, not the topology or the source class",
-     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (a DEMONSTRATED CONFLICT, every admitted arrangement failed its measurement or a bound, and any line read short "
-                 "with the route also short: CFL-002, REQ-042's coverage, D-02b, the sealed case's thermal design or the device set, the "
-                 "owner's), U-04 (on the board as drawn only, TI's D1 or D3: the charger's power path); U-03 no "
-                 "longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06)"},
+    {'n': 1, 'criterion': 'one architecture selected, its mandatory functions with a defensible feasibility basis',
+     'rows': ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], 'choices': ["U-01", "U-02", "U-04"], 'verdict': 'CONDITIONAL',
+     'constraint': "set 29's constraint stands ([PAGE:966], column 4: the 100 W bound on G_CM and U18's VIN+ bias, PANEL-ACC, REQ-015 at 9.00 V a CONDITIONAL CANDIDATE, U-02's thermal feasibility per mode, U-01's battery path, PWR-F12); added by the P0 round: F01 / D-17 PROVISIONAL, the 30 W service under the cap's least not established by any printed row and the reference's loading and acceptance limits REMAINING ENGINEERING ([F01:155], [CON:341-342]); T10's thermal bound and T10-A3's hardware bound weakened by the latent rail trip and the sustained peaks, both OPEN ([CON:322-325]); CON-004's quorum service and FW-B22 weakened by L9T5-F21, OPEN ([CON:328-329]); controller survival under VOS0, OPEN ([CON:330-331]); the return's rows with V6-B1 OPEN ([CON:332-333]); no row of the connected output's sections 5 to 10 is a positive electrical acceptance ([CON:336-340])",
+     'overturn': "on named evidence only, as set 29's row says for U-01, U-02 and U-04 ([PAGE:966], column 5), now carried as the annex's ARCHITECTURE-LEVEL rows ([ANX:21], [ANX:62], [ANX:81]); the P0 list classes only U-01, U-02 and U-04 as 3 ARCH ([P0L:26-28]), P0-1's overlap as 3 without ARCH ([P0L:18]) and E11-29 as a qualification, not ARCH ([P0L:29]); the remaining engineering items are design tasks inside their boards' circuits as the ledger states them ([REM:589-607]); no record read here states that one of them can overturn the architecture"},
+    {'n': 2, 'criterion': 'material power-path defects have engineering resolutions and bounded supporting calculations',
+     'rows': ["IF-01", "IF-02", "IF-04", "IF-05", "IF-06", "IF-09", "IF-10", "IF-13"], 'choices': [], 'verdict': 'FAIL',
+     'constraint': 'material defects OPEN: D-10 (E-1) and D-17 (RE-2); the P0 round\'s power-path findings OPEN as REMAINING ENGINEERING after cx46: the ledger\'s RE-2, RE-4, RE-5, RE-6, RE-7, RE-9, RE-10, RE-13, RE-17 ([REM:589-607]); on the set 30 candidate the records read: D-10 an unresolved protection defect with failing cases F1 to F4 ([P0SOL:104-110], [P11:19-49]); D-17 OPEN, its correction PROVISIONAL with REMAINING ENGINEERING ([CON:341-342]); twelve cx46 findings NOT CLOSED and seven handed-over cases carried as REMAINING ENGINEERING ([REM:585]), among them V6-B1 (the return), the T10 bounds, the guard\'s latent double failure and retry heating, the CAN service ([CON:322-335]); the eFuse conditions CLOSED AS CONDITIONAL ([CX46:191-194]); no correction of the P0 round reads independently confirmed: cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED." ([CX46:10]); the gate\'s rule above refuses PASS on criterion 2 while a material defect is open',
+     'overturn': "set 29's answer for D-01 to D-17 stands ([PAGE:967], column 5); the P0 list classes P0-1 to P0-7 as 1 or 2 (desk-fixable or boundable at the desk; P0-1's overlap 3), none 3 ARCH ([P0L:18-24]); D-10's correction candidates stay at the solar entry (a choke rated over the cut current and damped against CS101, a lower-impedance clamp or a snubber, a different cut-off element or method, a model revision on measured loops, [P0SOL:116-122])"},
+    {'n': 3, 'criterion': 'remaining assumptions explicit, with their impact and verification method',
+     'rows': [], 'choices': [], 'verdict': 'PASS',
+     'constraint': '',
+     'overturn': ''},
+    {'n': 4, 'criterion': 'downstream implementation changes, layout constraints and tests have named owners and acceptance criteria',
+     'rows': [], 'choices': [], 'verdict': 'PASS',
+     'constraint': '',
+     'overturn': ''},
+    {'n': 5, 'criterion': 'no unresolved uncertainty could overturn the selected architecture while described as routine later testing',
+     'rows': ["IF-09", "IF-10", "IF-11"], 'choices': ["U-01", "U-02", "U-04"], 'verdict': 'CONDITIONAL',
+     'constraint': "three unresolved choices could overturn it and are named as such, not as later testing ([PAGE:970], column 4, unchanged as to the choices); since the owner's part 19 their evidence routes are the receiving company's and the owner is asked for nothing ([ANX:111-119]); none is answered by a held document or a measurement on this base ([ANX:60], [ANX:76], [ANX:96])",
+     'overturn': "yes, on named evidence only, as set 29's row ([PAGE:970], column 5)"},
 ]
 
 ARCH = "ARCHITECTURE-LEVEL CHOICE"                              # could overturn the architecture: named by criteria 1 and 5
@@ -4048,8 +3998,7 @@ CHOICES = [
                   "approve D-06's cell, energy and spend once the evidence supports it, which it does not yet: the Saft as 4S1P (about 145 to "
                   "about 82 Wh nominal, NZ$ 954.88; OW-3), or the HL18650V once its specification or a soak confirms; send the requests "
                   "and authorise the qualification (OW-2, OW-9); if declined, LO-01d to g stay a release gate"),
-     "supplier": "Saft and Yichun Topwell Power, through the owner; Layer 7 (the mock-up); the prototype bench (the limited sample "
-                 "qualification, T-H1, the LO rows); Layer 6 files the answers (R-103, R-168); the session re-runs L4-E10's margins (R-47); the owner approves the cell",
+     "supplier": "the receiving company, as its validation scope ([ANX:111-119]): Saft's statement through whichever party engages Saft (drafted, UNSENT), the one-cell screen and the printed mock-up ([ANX:89-93]); Yichun Topwell Power's signed specification for the HL18650V route (drafted, UNSENT, [ANX:94]); Layer 6 files the answers (R-103, R-168) and L4-E10's margins are re-run (R-47), as set 29's cell says ([PAGE:1159]); the ADOPTION of a cell is a separate owner decision, not requested ([ANX:96])",
      "fallback": "the HL18650V, the higher-energy alternative (90.2 Wh usable), on its signed specification or a lot soak; with no answer and no "
                  "approval, U-01 stays a release gate and every row CONDITIONAL (no ruling needed). With a narrower signed HL18650V figure, at "
                  "L4-E10's thresholds: an idle limit under 78.94 C makes H1 act in E5's dwell, under 74.73 C E5's cells pass it, under 73.07 C "
@@ -4111,10 +4060,7 @@ CHOICES = [
                   "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only on a DEMONSTRATED CONFLICT "
                   "(every admitted arrangement failed its measurement, or a bound; one arrangement's failed local test is that arrangement's "
                   "shortfall and the next arrangement is tried)"),
-     "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
-                 "components for the fans' start and PWM level (R-142, R-150, E11-35; D-18 settled by Layer 7); Layer 7 mechanical for the combined route "
-                 "(R-170 to R-172) and a closed-lid conduction path; the prototype bench for an e-paper storage soak; the makers "
-                 "(Sensirion, PDi), through the owner",
+     "supplier": "the receiving company's bench or laboratory for T-H1 (cost NOT QUOTED, its capability to be confirmed, [ANX:60]); the makers' statements (Sensirion, PDi) drafted, UNSENT; Layer 6 and Layer 7 as set 29's cell names them ([PAGE:1160])",
      "fallback": "under a class (i) or (ii) line's point, the combined route inside the rulings (R-170 to R-172, passive: no power, no "
                  "endurance change) read at the same point; for the MODELLED SHORTFALL (M3, M4) the session develops a closed-lid "
                  "conduction path from the plate to the lid's inner face inside the seal (the combined route carried to the closed lid; "
@@ -4205,9 +4151,7 @@ CHOICES = [
                   "R-160); the dock branch's limit, its overload and a hard short at VSYS_E (E11-38, R-184); R-85 extended at the plug "
                   "(E11-06) and E4-O's warm-up (E11-23, R-137)",
                   "send TI's questions (OW-7); the BQ25730 and the pair bought for the build (money, the owner's)"),
-     "supplier": "Layer 8 board A applies R-157 with R-181 and board E E11-33 under L4-E11's release record (R-147); the Layer 4 "
-                 "coordinator applies E11-34's interface draft; the prototype bench (R-161, R-184); Layer 9 (R-159); Layer 6 (R-160, R-162, "
-                 "R-182, R-183, E11-35); TI and Nexperia through the owner",
+     "supplier": "the receiving company: route (R1), TI's evaluation module, and/or route (R2), a controlled coupon of the drafted charger block ([ANX:71-76]); TI's and Nexperia's questions drafted, UNSENT ([ANX:76]); Layer 8 board A, Layer 9 and Layer 6 as set 29's cell names them ([PAGE:1162])",
      "fallback": "inside (B1): R-c's step rule for D2; more copper or a heat path for the pair's installed sum, never a lowered "
                  "protection or service (18 A for 60 s and 10 A continuous kept); a reading over the RDS(on) allowance re-sizes the "
                  "installed path before layout (E11-36); on a negative Ciss answer one BUK6Y10-30P with a heat path through the case "
@@ -5116,11 +5060,13 @@ DECISIONS = [
      "A1 under D-06 is selected and connected (section 1); its feasibility basis rests on the unresolved choices U-01, U-02 and U-04 and on the "
      "CONDITIONAL interface rows of 1d; nothing measured"),
     ("the power-design closure gate", "BLOCKED",
-     "an unresolved material protection or feasibility condition keeps it blocked, and no requirement conflict is needed for that: D-10's "
-     "source arriving with the guard already on is OPEN (an absolute-rating violation at a connector fault at the reference loop, no loop "
-     "claimed to pass, B6-ENG-1), D-16 is OPEN (the drafted input current sense out of its operating range at "
-     "the 25 V corner, L4-E7's B6-ENG-2, handed to the engineer), D-14 is CONDITIONAL with Ciss OPEN, D-15 reads %s, U-02 waits on "
-     "T-H1 and the storage evidence, U-01 is not adoptable, U-04 is a closure condition on the board as drawn; criteria 1, 2 and 5 CONDITIONAL" % L4F03_STATUS),
+     "an unresolved material protection or feasibility condition keeps it blocked, and no requirement conflict is needed for that: D-10 is "
+     "OPEN, an UNRESOLVED PROTECTION DEFECT in the present model (E-1: the guard's port-level transient, F1 to F4, and the lower-source "
+     "back-feed; U5's absolute-rating violation corrected in draft by R-240), D-17 is OPEN (its correction, the PA drain-current cap R-227 "
+     "and R-238, PROVISIONAL; RE-2), the P0 round's findings are REMAINING ENGINEERING after cx46 (RE-2, RE-4 to RE-10, RE-13, RE-17), "
+     "D-16 is addressed in a draft (R-240), PROVISIONAL on S3 and S4, D-14 is CONDITIONAL with Ciss OPEN, D-15 reads %s, U-02 waits on "
+     "T-H1 and the storage evidence, U-01 is not adoptable, U-04 is a closure condition on the board as drawn; criteria 1 and 5 "
+     "CONDITIONAL, criterion 2 FAIL (section 8)" % L4F03_STATUS),
     ("fabrication release", "BLOCKED",
      "no circuit change is applied (every change in section 3 is a draft, APPLIED 0), no board of the set has a layout, and the closure gate is blocked"),
     ("the engineer handoff", "READY TO START, PROVISIONAL",
@@ -5160,10 +5106,32 @@ CHECK2_MINORS = ("the minors: R96 at 0.1 % (L4-E7's draft at 1a73f5b4); L4-E11 1
                  "11.512 to 12.431 V with the 1 % divider (b929d8be)")
 
 
+# Set 31 (6 October 2026): section 8's text for the set 30 candidate, from record l4e9's section 8 draft (fnd/l4e9s8 at f47d1fc4,
+# L4E9-SECTION8-SET30.draft.md, blocks 8e, 8f and 8g), its citations [ALIAS:N] being lines at 7070f106 (the alias table heads
+# section 8 of the page); 8g's items 2, 4 and 6 reconciled with the page consistency draft (fnd/l4e9pc at 8282895e) as set 31
+# applies it (SET31-CHANGES.md). Quotations are verbatim from the filed checks and the ledger; nothing here is a verdict of this record.
+P0CHK_TABLE_HEAD = "| Check | Candidate read | What it checked | Verdict, as filed | Record |"
+CX46_TABLE_HEAD = "| Item, as filed | Class, as filed | Carried as |"
+LEDGER_TABLE_HEAD = "| Item | What | Class | The receiving company's task (the ledger's words, [REM:589-617]) |"
+P0CHK_HEAD = '**The independent checks of the P0 candidate, kept as given** (AI reviews, labelled so; each filed unchanged in `v2/docs/records/l4close/`). None accepts the design; each verdict is quoted as filed.'
+P0CHK_ROWS = ['| V6 (Claude, the independent checker) | 7a82e82a | the board A and B power drafts, items A to F | each of the six items "CONFIRMED AS CONDITIONAL" ([V6:20-25]); "The affected supply path is not complete:" ([V6:27]); "Neither may be reported as closed on this check." ([V6:28]) | `v2/docs/records/l4close/CHECK-V6-POWER-DRAFTS-7a82e82a-AS-RECEIVED.md` |', '| cx44 (Astra, an advisory challenge before drafting) | 8c7c335f | P0-1\'s selection (c), the PA drain-current cap | "F01 SELECTION: NOT SUPPORTED because the selected current cap has no established bound showing that it preserves the mandatory 30 W RF service across the operating envelope." ([CX44:10]) | `v2/docs/records/l4close/CHECK-CX44-F01-SELECTION-8c7c335f-AS-RECEIVED.md` |', '| cx45 (Astra, the one focused check) | 06077cee | the complete P0 candidate, P0-1 to P0-7 | "P0 CANDIDATE: NOT CONFIRMED. P0-1: NOT CONFIRMED because the reference-loading disposition and complete tolerance claim need correction, although the service and dynamics are correctly PROVISIONAL. P0-2: NOT CONFIRMED because the return resistance is not demonstrated realisable on the current placement. P0-3: NOT CONFIRMED because CAN fault containment, thermal-envelope coverage and the final contract remain incomplete. P0-4: CONFIRMED AS CONDITIONAL on connector thermal qualification and the RockBLOCK build condition. P0-5: NOT CONFIRMED because the guard correction has not been propagated through the connected calculation and common-path protection failures remain open. P0-6: NOT CONFIRMED because successful composition does not establish complete protection coordination, preserved service or stable regenerated outputs. P0-7: NOT CONFIRMED because B2\'s connection and short-circuit guarantees do not stand, although D-16\'s correction and D-10\'s remaining-engineering classification are supported." ([CX45:10]) | `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md` |', '| cx46 (Astra, the one targeted recheck) | 4d0ff8a2 | the corrected candidate against cx45\'s findings | "P0 RECHECK: CORRECTIONS NOT CLOSED. P0-1 NOT CONFIRMED: the steady-state MODEL band reproduces, but complete reference-loading coverage and conservative acceptance limits remain REMAINING ENGINEERING. P0-2 NOT CONFIRMED: the distributed return study improves the evidence, but actual socket geometry and the complete electrical bound remain REMAINING ENGINEERING. P0-3 NOT CONFIRMED: independent hardware is drafted, but fault containment, response timing and sustained peak-temperature bounds remain REMAINING ENGINEERING. P0-4 CONFIRMED AS CONDITIONAL: connector thermal qualification, exact parts and the RockBLOCK pads-open build condition remain required. P0-5 NOT CONFIRMED: the second guard path improves single-fault coverage, but propagation, repeated thermal exposure and latent-fault coverage remain REMAINING ENGINEERING. P0-6 NOT CONFIRMED: composition records and input digests are improved, but unsupported dependent claims remain REMAINING ENGINEERING. P0-7 NOT CONFIRMED: D-10 remains explicit REMAINING ENGINEERING, while B2 has lost protection credit and baseline membership but still has inconsistent selection and owner-action wording." ([CX46:10]) | `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` |']
+P0CHK_ENDED = '**The method ended.** cx46 is the second negative on the method, which ends it ([CX46:3]; the constitution: "After two negative checks of the same proposed solution, end that correction loop." [CONST:49]); the constitution\'s default is one focused check and one targeted recheck for a candidate, a further check needing a materially changed approach and an explicit bounded reason ([CONST:55]); the coordinator runs none on this candidate (the coordinator\'s brief for this draft). The owner: "Stopping an unsuccessful method after cx46 is reasonable." ([OWN:784]); "A review limit stops an unsuccessful method; it does not make an unresolved defect disappear." ([OWN:850]). cx46\'s next action, as filed: "Preserve cx45 and this targeted recheck unchanged. End this correction loop, reconcile the unsupported claims and governing records, and transfer each unresolved circuit or model issue to the receiving company as a bounded REMAINING ENGINEERING task with its failed cases, attempted correction and affected provisional outputs." ([CX46:113]).'
+CX46_HEAD = "**cx46's eighteen items, as filed, and where each is carried** (the ledger's identifiers: RE remaining engineering, CL closed in its stated scope, CO closed as conditional):"
+CX46_ROWS = ['| "1. Missing governing inputs and twelve-row states: NOT CLOSED" ([CX46:116]) | MISSING_EVIDENCE | RE-1 ([REM:90]) |', '| "2. Q1 reference loading, resistor corners and propagation: NOT CLOSED" ([CX46:121]) | IMPLEMENTATION_DEFECT | RE-2 ([REM:110]) |', '| "3. Q1 obsolete draft-script texts: CLOSED BY THE CORRECTION" ([CX46:126]) | IMPLEMENTATION_DEFECT | CL-3 ([REM:559]) |', '| "4. Q2 return placement and distributed solution: NOT CLOSED" ([CX46:131]) | MISSING_EVIDENCE | RE-4 ([REM:161]) |', '| "5. Q3 CAN schedule, containment, quorum and recovery: NOT CLOSED" ([CX46:136]) | IMPLEMENTATION_DEFECT | RE-5 ([REM:196]) |', '| "6. Q3 independent clock/share/excess-current protection: NOT CLOSED" ([CX46:141]) | IMPLEMENTATION_DEFECT | RE-6 ([REM:228]) |', '| "7. Q3 sustained peak junction and qualification envelope: NOT CLOSED" ([CX46:146]) | IMPLEMENTATION_DEFECT | RE-7 ([REM:259]) |', '| "8. Q3 consistency across active rows: NOT CLOSED" ([CX46:151]) | IMPLEMENTATION_DEFECT | RE-8 ([REM:291]) |', '| "9. Q5 guard propagation into L4-E11 and dependents: NOT CLOSED" ([CX46:156]) | IMPLEMENTATION_DEFECT | RE-9 ([REM:316]) |', '| "10. Q5 common-path faults and automatic diagnostic: NOT CLOSED" ([CX46:161]) | IMPLEMENTATION_DEFECT | RE-10 ([REM:342]) |', '| "11. Q6 cold-connection guarantee: CLOSED BY THE CORRECTION" ([CX46:166]) | MISSING_EVIDENCE | CL-11 ([REM:560]) |', '| "12. Q6 presence-pair short and protection credit: CLOSED BY THE CORRECTION" ([CX46:171]) | IMPLEMENTATION_DEFECT | CL-12 ([REM:561]) |', '| "13. Q7 connected coordination and service claims: NOT CLOSED" ([CX46:176]) | IMPLEMENTATION_DEFECT | RE-13 ([REM:374]) |', '| "14. Q7 regeneration and stable bindings: CLOSED AS CONDITIONAL" ([CX46:181]) | MISSING_EVIDENCE | CO-14 ([REM:563]) |', '| "15. D-10 retained as remaining engineering: CLOSED BY THE CORRECTION" ([CX46:186]) | IMPLEMENTATION_DEFECT | CL-15 ([REM:562]) |', '| "16. P0-4 eFuse conditions retained: CLOSED AS CONDITIONAL" ([CX46:191]) | MISSING_EVIDENCE | CO-16 ([REM:564]) |', '| "17. Handed-over cases propagated to every affected claim: NOT CLOSED" ([CX46:196]) | IMPLEMENTATION_DEFECT | RE-17 ([REM:394]) |', '| "18. B2 uniformly unselected and withdrawn outside baseline: NOT CLOSED" ([CX46:201]) | IMPLEMENTATION_DEFECT | RE-18 ([REM:410]) |']
+CHK2_HIST = "**The earlier targeted recheck, as history.** astra-check-l4close-2 read set 27's candidate b138fec0 NOT YET ([PAGE:1241]); its six blocking discrepancies and the states after their corrections are set 29's record and stay unchanged below as history."
+LEDGER_HEAD = '**The open items by class on the set 30 candidate** (the ledger\'s classes after cx46, [REM:33-36]; the owner\'s part 24: an unsupported correction is handed over as remaining engineering, "Qualification-only items remain separately identified." [OWN:786]). The ledger\'s counts: "Counts: remaining engineering 19; qualification 1; external architecture fact 3; closed 4; conditional 2." ([REM:585]).'
+LEDGER_ROWS = ["| RE-1 | the governing inputs and the twelve-row states (cx46 item 1) | REMAINING ENGINEERING | none of engineering; read states from the records (the list is the coordinator's); the P0 list on this base is revision 2 ([P0L:1]) |", "| RE-2 | F01's reference loading, the resistor corners and the acceptance limits (item 2) | REMAINING ENGINEERING | bound the reference at its held load and release; then V-PA-REF, B-PA1, B-PA2 |", "| RE-4 | the dedicated return between boards A and B, V6-B1 (item 4) | REMAINING ENGINEERING | XT60-F lands, real sites, justified distributed resistance, each LDO's shift |", '| RE-5 | the CAN schedule, containment, quorum and recovery (item 5) | REMAINING ENGINEERING | peer-silence or diagnostic circuit and recovery proof |', "| RE-6 | the independent clock, share and excess-current protection, the rail trip's response (item 6) | REMAINING ENGINEERING | a rail-trip response on printed timing and its full network |", '| RE-7 | the sustained peak junction and the qualification envelope (item 7) | REMAINING ENGINEERING | peak-current containment or a periodic electrothermal solution with uncertainty |', "| RE-8 | the T10 rows made to agree: revision V, the set point, the admission route (item 8) | REMAINING ENGINEERING | a rev X part's qualification (V-B20 at most 0.2183 A) on RE-7's bound |", "| RE-9 | the replacement guard's propagation into L4-E11 and its allowance consumers (item 9) | REMAINING ENGINEERING | replay 20f and 22 at the owners' restated allowance |", "| RE-10 | the guard's common-path faults and an automatic diagnostic (item 10) | REMAINING ENGINEERING | retry-energy analysis; automatic diagnostic or fault-tolerant redesign |", '| RE-13 | the connected coordination and service claims (item 13) | REMAINING ENGINEERING | re-run the connected trace after the seven rows close |', '| RE-17 | the handed-over cases propagated to every affected claim (item 17) | REMAINING ENGINEERING | HO-A to HO-E |', '| RE-18 | route B2 marked unselected and withdrawn throughout (item 18) | REMAINING ENGINEERING | HO-G, only if a presence-pair route is taken up again |', "| HO-A | L8P-R9-F1, the guard's latent first failure followed by a second | REMAINING ENGINEERING | automatic diagnostic with a bounded interval, or a redesign |", '| HO-B | the single-path retry heating after path 1 is lost | REMAINING ENGINEERING | bounded retry-energy analysis of path 2 alone |', "| HO-C | L9T5-F21, a TX pin toggled as a GPIO under the limiter's share | REMAINING ENGINEERING | 2-of-2 peer observation and vote (not drafted) |", '| HO-D | a latent stuck comparator in either CAN bound | REMAINING ENGINEERING | a diagnostic for the latent comparators |', '| HO-E | VOS0 below the trip, the controller past its 105 C VOS0 limit | REMAINING ENGINEERING | a hardware bar on VOS0 or its acceptance |', "| HO-F | D-10 / E-1, the solar guard-on failing cases F1 to F4 and the lower-source back-feed | REMAINING ENGINEERING | E-1's correction or a measured model revision; then S1, S2 |", "| HO-G | route B2's own defects P2 and P3, outside the baseline | REMAINING ENGINEERING | monitored detection, INP's protection, the timing proof (outside the baseline) |", "| HO-H | E11-29, the three paralleled battery FETs' sharing | QUALIFICATION | TP-E11-29 on a coupon, after R-159's restatement |", "| HO-I | U-01, the cell | EXTERNAL ARCHITECTURE FACT | Saft's statement and/or the one-cell screen; the fit |", "| HO-J | U-02, the sealed case's heat rejection | EXTERNAL ARCHITECTURE FACT | T-H1 per mode |", "| HO-K | U-04, the charger (B1) on the battery FET pair | EXTERNAL ARCHITECTURE FACT | route (R1) and/or (R2) to R-161's limits |", "| CL-3, CL-11, CL-12, CL-15 | cx46 items 3, 11, 12 and 15 | CLOSED, in each item's stated scope only | none |", '| CO-14, CO-16 | cx46 items 14 and 16 | CONDITIONAL, with their conditions | byte-identical repeated runs bound to the candidate; the contacts at the inside air, the pads OPEN, the part obligations |']
+LEDGER_WITHDRAWN = '**Withdrawn:** route B2, UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline ([B2:1-25]); cx46: "B2 remains excluded and withdrawn unless a materially corrected proposal is separately developed and authorised." ([CX46:207]); the FAN_OK design-out, R-210 to R-212, WITHDRAWN by the owner\'s rejection of FAN_OK ([REG:304-306]).'
+CMP_HEAD = "**The comparisons** UDC-1 and UDC-3 stand as set 29 wrote them (their inputs unchanged: P0-8 reads unchanged, [P0L:25]); UDC-2's last cell reads as below."
+SUP8G = ["**The receiving company's task list for the set 30 candidate** (the owner's part 19: the deliverable is the desk engineering package for a receiving company; physical work belongs to the receiving supplier, [OWN:730]). Nothing here is sent or bought; no supplier is engaged and its engineering and laboratory capability remain to be confirmed ([ANX:118-119]).", "1. **Remaining engineering** (design and analysis tasks, never relabelled as qualification only, [CX46:206]): the ledger `v2/docs/records/l4close/REMAINING-ENGINEERING.md`, its section 5 ([REM:583-617]): the twelve findings cx46 left NOT CLOSED (RE-1, RE-2, RE-4 to RE-10, RE-13, RE-17, RE-18) and the seven handed-over cases HO-A to HO-G, each with its failed cases, attempted correction, unresolved fact or decision, affected outputs and a reproduction route. D-10's E-1 is set 29's P1-1 as P0-7 narrows it in `v2/docs/records/l4e7/SUPPLIER-P1-1-P0SOL.md` (UNSENT): its current-sense half is answered at the desk by R-240, and what remains is engineering, not test ([P11:9-17]).", "2. **Set 29's P1-2 and P1-3, corrected at the desk by record l8r2** ([L8R2:10-12]): board B's coolers' 12 V feed (R-190, DRAFTED, [REG:284]) and VBUS20's over-voltage cut-off on VIN_RAW (R-221, DRAFTED, [REG:315]); set 31 restates the register's R-48 and R-190 from the supplier's phase 1 to the check and application of those desk drafts (PC-16), both still OPEN, nothing credited.", "3. **The external architecture facts, the receiving company's validation scope** (`v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`): U-02 by T-H1 ([ANX:21-60]); U-04 by route (R1) and/or (R2) to R-161's pass limits ([ANX:62-79]); U-01 by routes (a) to (d), the adoption of a cell kept apart ([ANX:81-99]).", "4. **Qualification, kept apart:** E11-29 by TP-E11-29, written and NOT EXECUTABLE ([ANX:101-109]); set 31 restates R-159 from E11-29's row (PC-05), and the procedure's quotation of R-159 and its check are re-taken by their owner, and a supplier agrees the fixture requirement, before it is executable.", "5. **The validation tasks of the P0 records** (each with specimen, quantity and pass limit; UNSENT): B-PA1, B-PA2 and V-PA-REF ([F01:221-239]); S1 to S4 ([P11:103-137]); the eFuse contacts in a 76 C chamber ([EFS:154-157]); the return's vendor curves and V6-B2's vendor tasks ([CON:343-345]); a rev X part's V-B20 ([CON:350]).", "6. **Set 29's phase 2 lists** (the decision-critical experiments, the first prototype's verification rows, the makers' statements) stand as lists (set 29's lists, [PAGE:1315-1317], rendered below from the register as it stands), except: the solar guard's bench rows qualify E-1's correction once it exists ([P11:110-111]); B6-ENG-2's bench R-189 is replaced by S4 and S3 ([P0SOL:166]); the makers' requests stay drafted and UNSENT, the sending party unconfirmed, and the owner is asked for nothing ([ANX:113-119])."]
+
+
 def cons_check2(F):
     """The collaborator's targeted recheck (astra-check-l4close-2, NOT YET): its six blocking discrepancies with their states after the
     corrections, as this record reads them; never restated as accepted."""
-    L = ["**The collaborator's targeted recheck: NOT YET** (%s). Six blocking discrepancies and three minors. Both runs the owner authorised "
+    L = [P0CHK_HEAD, "", P0CHK_TABLE_HEAD, "|---|---|---|---|---|"] + P0CHK_ROWS + ["", P0CHK_ENDED, "", CX46_HEAD, "",
+         CX46_TABLE_HEAD, "|---|---|---|"] + CX46_ROWS + ["", CHK2_HIST, ""]
+    L += ["**The collaborator's targeted recheck: NOT YET** (%s). Six blocking discrepancies and three minors. Both runs the owner authorised "
          "for L4-CLOSE are spent; the coordinator's verification follows the corrections and is labelled as such. The states below are this "
          "record's reading after the corrections, each with the commit that carries it; none is restated as accepted, and a correction is not "
          "a closure." % CHECK2_REF, "",
@@ -5441,7 +5409,14 @@ def d11_lines(F):
 
 
 def cons_check2_lines(F):
-    L = ["28. THE COLLABORATOR'S TARGETED RECHECK (astra-check-l4close-2: NOT YET) AND THE STATES AFTER THE CORRECTIONS (%s)" % CHECK2_REF]
+    L = ["28. THE COLLABORATOR'S TARGETED RECHECK (astra-check-l4close-2: NOT YET) AND THE STATES AFTER THE CORRECTIONS (%s)" % CHECK2_REF,
+         "   set 30, before it (page 8e): the independent checks of the P0 candidate, as given (AI reviews; none accepts the design):"]
+    for row in P0CHK_ROWS:
+        c = [x.strip() for x in row.strip().strip("|").split("|")]
+        L.append("   %s on %s, %s: %s" % (c[0], c[1], c[2], c[3]))
+    L.append("   the method ended: cx46 is the second negative on the method (the constitution, section 5); its eighteen items are carried "
+             "by records/l4close/REMAINING-ENGINEERING.md (RE, HO, CL, CO); none is re-checked on this candidate")
+    L.append("   as history, astra-check-l4close-2 on set 27's candidate b138fec0:")
     for n, what, cls, state, where in CHECK2:
         L.append("   %s %s [%s]: %s (%s)" % (n, what, cls, state, where))
     L.append("   %s" % CHECK2_MINORS)
@@ -5459,7 +5434,22 @@ CLASSES = (KED, PHY, UDC, SET)
 VERB = {KED: ("FIX", "ASSIGN"), PHY: ("TEST", "ASK OR TEST"), UDC: ("COMPARE",), SET: ("DO",)}
 # the known engineering defects: a demonstrated failure of the drafted design with no working correction drafted (a defect whose
 # correction is fully defined and only owes its draft file is SETTLED WORK); each assigned to the supplier's phase 1 as a task
-KED_ROWS = {"R-173": "P1-1", "R-20": "P1-1", "R-180": "P1-1", "R-186": "P1-1", "R-187": "P1-1", "R-190": "P1-2", "R-48": "P1-3"}
+KED_ROWS = {"R-173": "P1-1", "R-20": "P1-1", "R-180": "P1-1", "R-187": "P1-1"}   # set 31: R-186 WITHDRAWN under R-240 (PC-02 (e))
+# set 31 (PC-16): set 29's P1-2 and P1-3, corrected at the desk by record l8r2 (L8R2-KNOWN-DEFECTS.md: "This record corrects P1-2, P1-3"),
+# drafted, not applied, not independently checked: the rows stay known engineering defects, their next action the check and the
+# application of the desk drafts, the receiving company's task only if that check refuses them
+DESK_ROWS = {"R-190": ("P1-2", "record l8r2's 12 V feed for board B's coolers (R-190 with R-228)"),
+             "R-48": ("P1-3", "record l8r2's VBUS20 over-voltage cut-off on VIN_RAW (R-221 for S-111)")}
+# set 31 (PC-09): the P0 round's rows whose own Acceptance or the remaining-engineering ledger (records/l4close/REMAINING-ENGINEERING.md
+# section 5, after cx46) names remaining engineering: known engineering defects, ASSIGNED to the ledger's items
+RE_TASK = {"RE-2": "bound the reference at its held load and release; then V-PA-REF, B-PA1, B-PA2",
+           "RE-4": "XT60-F lands, real sites, justified distributed resistance, each LDO's shift",
+           "RE-5": "peer-silence or diagnostic circuit and recovery proof",
+           "RE-6": "a rail-trip response on printed timing and its full network",
+           "RE-7": "peak-current containment or a periodic electrothermal solution with uncertainty",
+           "RE-10": "retry-energy analysis; automatic diagnostic or fault-tolerant redesign"}
+RE_ROWS = {"R-227": ("RE-2",), "R-238": ("RE-2",), "R-225": ("RE-4",), "R-232": ("RE-4",), "R-245": ("RE-5", "RE-6", "RE-7"),
+           "R-242": ("RE-7",), "R-244": ("RE-10",)}
 # the uncertain design choices: the rows that carry a choice a supported alternative could remove
 UDC_ROWS = {"R-157": "UDC-1, UDC-3", "R-162": "UDC-3", "R-152": "UDC-3", "R-105": "UDC-2", "R-106": "UDC-2", "R-154": "UDC-2"}
 # physical uncertainties outside the default rule (a layout or analysis row that rests on an unmeasured or unprinted fact)
@@ -5471,28 +5461,31 @@ PHY_NAMED = ("R-159", "R-160", "R-179", "R-182", "R-183", "R-184", "R-104", "R-1
 
 
 def cons_p1_tasks(F):
-    """The supplier's phase 1 (design review and correction): the known engineering defects, each a specific design-correction task."""
+    """Set 29's phase 1 tasks (the known engineering defects, each a specific design-correction task) as set 30's records restate
+    them: P1-1 narrowed to E-1 by record l4e7's P0-7 (SUPPLIER-P1-1-P0SOL.md, UNSENT), its current-sense half answered at the desk by
+    R-240; P1-2 and P1-3 corrected at the desk by record l8r2, drafted, not applied, not independently checked."""
     b6 = F["sv"]["rm"]["b6"]
     return [
-        ("P1-1", "the solar input stage's guard and current-sense arrangement (D-10's guard-on case, B6-ENG-1; D-16, B6-ENG-2): where the "
-                 "stage's input current is sensed and with what, with RSENSE1's inductance and the source's loop and resistance bounded; the "
-                 "drafted guard (R-173) and sense (R-20) the starting point; the earlier routes R-180, R-186 and R-187 inputs, none a passing "
-                 "route; the port bank's part (CL32B225KCJSNNE) and TRK_VIN's ceramics re-picked with it (Layer 6's L6P-F05: LCSC 0, JLCPCB "
-                 "assembly stock only)",
-         "R-173, R-20, R-180, R-186, R-187 (acceptance R-176, R-189)",
-         "a stiff %s V source arriving with the guard on over the declared %s to %s uH, at both fault positions (the connector with no "
-         "lead resistance credited, the lead's far end): U5's CSPIN to CSNIN inside its +-%s V absolute maximum and the +-%s V design "
-         "target, INP inside its %s V margin line, PV_F under the TPS4811-Q1's recommended %s V row, the cold connection's slew and INP "
-         "inside their margin lines (R-176 rows 2 and 3); in operation at the 25 V corner the sense pins within +-100 mV or the regulated "
-         "input current within check (a)'s error budget (R-189); the 100 W backstop bound kept (R-21, R-98)"
-         % (fmt(F["sv"]["src"][1]), "%.2f" % b6["env"][0], "%.2f" % b6["env"][1], fmt(b6["u5_abs"]), "%.3f" % b6["margin"],
-            fmt(b6["inp_row"][2]), fmt(b6["pvf_rec"]))),
-        ("P1-2", "board B's coolers' 12 V feed (E11-40): J_FAN1 to J_FAN3 on the slot rail +5V_Sn, no 12 V net on board B; a per-slot "
-                 "step-up from +5V_Sn or a 12 V feed from board A over the bay harness, the choice with it",
+        ("P1-1", "the solar input stage's port-level transient with the guard on (D-10, E-1: set 29's P1-1 as record l4e7's P0-7 narrows "
+                 "it in SUPPLIER-P1-1-P0SOL.md, UNSENT; its current-sense half, D-16, answered at the desk by R-240): bound the current a "
+                 "stiff source drives into the stage's capacitance through the closed guard, or the energy and voltage it delivers to the "
+                 "port when Q12 opens, at every loop (a choke rated over the cut current and damped against CS101, a lower-impedance clamp "
+                 "or a snubber, a different cut-off element or method, or a model revision only on measured loops and resistances); the "
+                 "drafted guard (R-173) the starting point; the earlier routes R-180 and R-187 inputs, none a passing route; the port "
+                 "bank's part (CL32B225KCJSNNE) and TRK_VIN's ceramics re-picked with it (Layer 6's L6P-F05: LCSC 0, JLCPCB assembly stock only)",
+         "R-173, R-20, R-180, R-187 (acceptance S1 and S2 on the correction; R-176 rows 2 and 3)",
+         "a stiff %s V source over the declared %s to %s uH at both fault positions (the connector with no lead resistance credited, "
+         "the lead's far end), the guard on and the source arriving (F1 to F4) and the lower-source back-feed: every part inside its "
+         "absolute maximum ratings and the controller inside its recommended conditions while it must act, the SESSION 10 %% lines "
+         "(E-1's (b)); then S1 and S2 on the corrected port; the 100 W backstop bound kept (R-21, R-98)"
+         % (fmt(F["sv"]["src"][1]), "%.2f" % b6["env"][0], "%.2f" % b6["env"][1])),
+        ("P1-2", "board B's coolers' 12 V feed (E11-40): corrected at the desk by record l8r2 (R-190 with R-228, drafted, not applied, "
+                 "not independently checked); the receiving company's design-correction task only if that check refuses it",
          "R-190", "each cooler's pin 1 inside the fans' %s to %s V at its current, the slot's budget or the harness re-derived, board B's "
                   "suite with the new parts (R-190)" % (fmt(F["cp"]["rail"]["win"][0]), fmt(F["cp"]["rail"]["win"][1]))),
-        ("P1-3", "VBUS20 against U2's single faults (S-111: Q2 short or FB open puts VIN_RAW on VBUS20, past U3's 32 V; no clamp, no "
-                 "exemption claimed): an SMCJ22A on VBUS20 or an independent over-voltage trip, selected and drafted",
+        ("P1-3", "VBUS20 against U2's single faults (S-111: Q2 short or FB open puts VIN_RAW on VBUS20, past U3's 32 V): corrected at the "
+                 "desk by record l8r2 (R-221, VBUS20's over-voltage cut-off on VIN_RAW, drafted, not applied, not independently checked); "
+                 "the receiving company's design-correction task only if that check refuses it",
          "R-48", "U3's input under its absolute maximum with Q2 shorted at VIN_RAW's highest steady input, or the decision recorded with "
                  "s120 section 11's figures (R-48)"),
     ]
@@ -5549,10 +5542,11 @@ def cons_comparisons(F):
          "interfaces": "D-06's pack energy and the battery-only service change with the cell (Saft about 82 Wh nominal against the ruled "
                        "pack's 145 Wh); board P's cell rows and the gauge image (route (II)'s R-105, R-106, R-154)",
          "selection": "",
-         "owner": "OWNER DECISION, the smallest genuine one (money, then adoption): authorise the Saft evidence route (OW-9: Saft's request "
-                  "sent, the limited sample qualification at %s %s a cell and a laboratory, the mock-up at no purchase); the adoption of a "
-                  "cell (OW-3) follows its evidence. No session selection: a cell change changes D-06's ruled pack energy and the "
-                  "service, which is the owner's" % (sf["cur"], fmt(sf["unit"]))},
+         "owner": "OWNER DECISION, NOT requested (the adoption of a 4S1P Saft pack, a separate owner decision; no session selection: a "
+                  "cell change changes D-06's ruled pack energy and the service, which is the owner's): the evidence route, Saft's "
+                  "statement and/or the one-cell screen (about %s %s a cell) and the mock-up, is the receiving company's validation scope "
+                  "(records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md); the pack baseline unchanged, the Saft option a PROPOSAL "
+                  "(the P0 list, P0-8)" % (sf["cur"], fmt(sf["unit"]))},
         {"id": "UDC-3", "what": "the charger, U-04's (B1) (R-157, its supply R-162; the alternative R-152)",
          "current": "(B1) TI's BQ25730 with the pair, its qualification E11-31 (the three modes, the start, the held pack current) with its "
                     "supply from an authorised source (E11-32): its sheet bounds VSYS in all three modes (D1, D3, D4 removed, D7 bounded "
@@ -5589,9 +5583,22 @@ def cons_classes(F, reg):
     out = {}
     for r in reg:
         rid, kind, item, frm, owner, acc, state, order = r[:8]
-        if rid in KED_ROWS:
+        if state == "WITHDRAWN":   # set 31: read first (a withdrawn row is never a test or a task); FAN_OK's rows, R-213 and R-186
+            why = ("R-240 makes it obsolete (record l4e7's L4E7-P0SOL.md section 5)" if rid == "R-186" else
+                   "the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is R-227 and R-238")
+            cls, nxt = SET, "DO: nothing: WITHDRAWN, %s; never applied" % why
+        elif rid in RE_ROWS:
+            ids = RE_ROWS[rid]
+            cls, nxt = KED, ("ASSIGN to the receiving company's remaining engineering item%s %s (records/l4close/REMAINING-ENGINEERING.md "
+                             "section 5): %s; the draft itself stays in its step %s (%s)" % ("s" if len(ids) > 1 else "", ", ".join(ids),
+                                                                                        "; ".join(RE_TASK[x] for x in ids), order, state))
+        elif rid in DESK_ROWS:
+            tk = p1[DESK_ROWS[rid][0]]
+            cls, nxt = KED, ("FIX: CHECK and APPLY %s, drafted at the desk, not applied, not independently checked; task %s of the receiving "
+                             "company stands only if that check refuses it; acceptance: %s" % (DESK_ROWS[rid][1], tk[0], _head(tk[3], 160)))
+        elif rid in KED_ROWS:
             tk = p1[KED_ROWS[rid]]
-            cls, nxt = KED, "ASSIGN to the supplier's phase 1, task %s: %s; acceptance: %s" % (tk[0], _head(tk[1], 110), _head(tk[3], 160))
+            cls, nxt = KED, "ASSIGN to the receiving company, task %s: %s; acceptance: %s" % (tk[0], _head(tk[1], 110), _head(tk[3], 160))
         elif rid in UDC_ROWS:
             cls, nxt = UDC, "COMPARE: %s (8f) decides whether and how it applies; the selection or the owner's decision is stated there" % UDC_ROWS[rid]
         elif rid in PHY_EXTRA or (rid not in SET_EXTRA and (kind == "TEST" or (kind == "EVIDENCE" and owner == "Layer 6 components")
@@ -5608,9 +5615,6 @@ def cons_classes(F, reg):
             else:
                 nxt = ("TEST (external: the supplier's phase 2 on the first prototype or a coupon): the specification is this row's "
                        "acceptance; it settles %s; unaffected work continues" % _head(item))
-        elif state == "WITHDRAWN":   # the P0 round: FAN_OK rejected by the owner (5 October 2026); D-17's correction is R-227 and R-238
-            cls, nxt = SET, ("DO: nothing: WITHDRAWN by the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is "
-                             "R-227 and R-238; never applied")
         elif state == "CLOSED":   # a review finding kept in the register (the owner's amendment), its closing evidence at hand
             cls, nxt = SET, "DO: nothing further: CLOSED on the evidence its acceptance names"
         elif state == "OPEN":     # a review finding whose defined correction is in progress elsewhere
@@ -5622,16 +5626,16 @@ def cons_classes(F, reg):
 
 
 D_CLASS = {"D-01": SET, "D-02": SET, "D-03": SET, "D-04": SET, "D-05": SET, "D-06": PHY, "D-07": SET, "D-08": SET, "D-09": SET,
-           "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": KED, "D-17": KED}
+           "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": PHY, "D-17": KED}
 D_NEXT = {"D-06": "TEST: E11-10 to E11-16, its evidence items (R-113, R-115, R-118, R-134)",
           "D-10": "ASSIGN to the receiving company's remaining engineering item E-1 (record l4e7's SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4, the correction or measured model revision before any passing claim, then S1 and S2)",
           "D-11": "TEST: Q13's leakage at the hot end (R-176 row 5)",
           "D-13": "TEST: E11-31, the held pack current and the start (R-161)",
           "D-14": "COMPARE: UDC-1 (8f): (S1) selected, its qualification R-159, R-160, R-182, R-183",
           "D-15": "TEST: E11-38, the fault envelope's histories (R-184)",
-          "D-16": "VERIFY at layer 9 and on the bench: P0-7's draft (R-240) with S3 (A7's zero-differential output) and S4 (the regulation at 25 V)",
-          "D-17": "FIX: the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, R-28; LH-12), verified by R-213"}
-U_CLASS = {"U-01": (UDC, "COMPARE: UDC-2 (8f): an OWNER DECISION, the Saft evidence route (OW-9), then the adoption (OW-3)"),
+          "D-16": "TEST: S3 and S4, the receiving company's (record l4e7's SUPPLIER-P1-1-P0SOL.md; R-189 replaced by them), on P0-7's draft (R-240)",
+          "D-17": "ASSIGN: RE-2 to the receiving company (the reference at its held load and release; then V-PA-REF, B-PA1, B-PA2)"}
+U_CLASS = {"U-01": (UDC, "COMPARE: UDC-2 (8f): the Saft evidence route the receiving company's validation scope; the adoption of a cell a separate owner decision, not requested"),
            "U-02": (PHY, "TEST: T-H1's points (R-104, R-151) and the e-paper's storage soak (R-185), the supplier's phase 2"),
            "U-03": (PHY, "TEST: PANEL-ACC's unit measured (R-35, R-149; the purchase the owner's, OW-6)"),
            "U-04": (PHY, "TEST: E11-31 on the BQ25730 build (R-161); its charger's supply is UDC-3's (8f)")}
@@ -5642,14 +5646,20 @@ def cons_class_block(F, reg):
     cnt = {c: sum(1 for v in cl.values() if v[0] == c) for c in CLASSES}
     dcnt = {c: sum(1 for d in DEFECTS if D_CLASS[d["id"]] == c) for c in CLASSES}
     ucnt = {c: sum(1 for u in U_CLASS.values() if u[0] == c) for c in CLASSES}
-    L = ["**The open items by class** (the owner's amendment of 3 October 2026, %s). Every register row has one class and the next action "
-         "of its kind in `DOWNSTREAM-REGISTER.md` (its Class and Next action columns); every defect row and every architecture-level choice "
-         "below has one too. A future test never erases a known defect; a physical uncertainty is settled by its executable specification, "
-         "executed outside (the supplier's phase 2) while the unaffected work continues; an uncertain design choice gets one bounded "
-         "comparison and a selection within the existing authority, or the smallest genuine owner decision." % AMEND_REF, "",
+    p0 = [r for r in sorted(cl, key=lambda x: int(x[2:])) if 220 <= int(r[2:]) <= 245]
+    p0k = [r for r in p0 if cl[r][0] == KED]
+    L = [LEDGER_HEAD, "", LEDGER_TABLE_HEAD, "|---|---|---|---|"] + LEDGER_ROWS + ["", LEDGER_WITHDRAWN, "",
+         "**The register's own classes** (the owner's amendment of 3 October 2026, %s; counted from the register's Class column, %d rows; "
+         "of the P0 round's rows R-220 to R-245 (none R-241), %d are KNOWN ENGINEERING DEFECT, each ASSIGNED to the ledger's remaining "
+         "engineering (%s; set 31, PC-09) and the other %d SETTLED WORK). Every register row has one class and the next action of its kind "
+         "in `DOWNSTREAM-REGISTER.md` (its Class and Next action columns); every defect row and every architecture-level choice below has "
+         "one too. A future test never erases a known defect; a physical uncertainty is settled by its executable specification, executed "
+         "outside by the receiving company while the unaffected work continues; an uncertain design choice gets one bounded comparison and "
+         "a selection within the existing authority, or the smallest genuine owner decision."
+         % (AMEND_REF, len(cl), len(p0k), ", ".join(p0k), len(p0) - len(p0k)), "",
          "| Class | Register rows | Defect rows | Choices (U) | The next action of its kind |", "|---|---|---|---|---|"]
-    kinds = {KED: "fix it, or ASSIGN a specific design-correction task to the supplier's phase 1 (8g)",
-             PHY: "TEST or ASK: its executable specification (5d's row where it is one), the decision it settles, external execution (the supplier's phase 2), the unaffected work continuing",
+    kinds = {KED: "fix it, or ASSIGN a specific design-correction task to the receiving company (8g)",
+             PHY: "TEST or ASK: its executable specification (5d's row where it is one), the decision it settles, external execution by the receiving company, the unaffected work continuing",
              UDC: "COMPARE once (the table below), then SELECT within the existing authority or present the smallest genuine owner decision",
              SET: "DO it in its step: no open question (implementation, layout, release and record work on a settled basis)"}
     for c in CLASSES:
@@ -5662,7 +5672,7 @@ def cons_class_block(F, reg):
     for uid in ("U-01", "U-02", "U-03", "U-04"):
         c = [x for x in CHOICES if x["id"] == uid][0]
         L.append("| %s | %s | %s | %s |" % (uid, c["class"], U_CLASS[uid][0], U_CLASS[uid][1]))
-    L += ["", "**The comparisons** (the uncertain design choices; the records' own comparisons carried where their inputs did not change):", "",
+    L += ["", CMP_HEAD + " The comparisons (the uncertain design choices; the records' own comparisons carried where their inputs did not change):", "",
           "| Choice | The current choice and its qualification | The supported alternative | Total effort | Availability | Interfaces and service | Selection, or the owner's decision |",
           "|---|---|---|---|---|---|---|"]
     for c in cons_comparisons(F):
@@ -5674,13 +5684,13 @@ def cons_class_block(F, reg):
 def cons_supplier_block(F, reg):
     cl = cons_classes(F, reg)
     rows = {r[0]: r for r in reg}
-    L = ["**The supplier package's task list** (the owner's amendment of 3 October 2026, sections 3 and 4; the supplier entry page cites this "
-         "block). Nothing here is sent or bought; the request is the owner's to send.", "",
-         "**Phase 1, design review and correction: the known engineering defects, each a specific design-correction task**", "",
-         "| Task | What to redesign | Register rows | Acceptance |", "|---|---|---|---|"]
+    L = [SUP8G[0], ""] + [SUP8G[k] for k in range(1, 6)] + [SUP8G[6], ""]
+    L += ["**Set 29's phase 1 tasks as set 30's records restate them** (the register's Next action names them):", "",
+          "| Task | What to redesign | Register rows | Acceptance |", "|---|---|---|---|"]
     for tk in cons_p1_tasks(F):
         L.append("| %s | %s | %s | %s |" % tk)
-    L += ["", "**Phase 2, prototype qualification: the physical uncertainties**", "",
+    L += ["", "**Set 29's phase 2 lists, as they stand** (the physical uncertainties; the receiving company's execution, its capability "
+          "to be confirmed):", "",
           "- The decision-critical experiments, each specified in full by 5d's route table (specimen, what it represents and transfers, "
           "the decision, what it blocks, the performer, the authorisation, what to buy and what to send): %s."
           % "; ".join(r[0] for r in cons_qual(F)[:-1])]
@@ -5688,9 +5698,10 @@ def cons_supplier_block(F, reg):
     bench = [rid for rid, v in cl.items() if v[0] == PHY and rid not in rt and rows[rid][1] == "TEST"]
     ask = [rid for rid, v in cl.items() if v[0] == PHY and rid not in rt and rows[rid][1] != "TEST"]
     L.append("- The first prototype's verification rows, each specified by its register acceptance (%d): %s." % (len(bench), ", ".join(bench)))
-    L.append("- The makers' statements or, in their place, a measurement (%d; the owner sends the drafted requests): %s." % (len(ask), ", ".join(ask)))
-    L += ["", "**The uncertain design choices:** %s." % "; ".join("%s %s" % (c["id"], (c["selection"] or c["owner"]).split(":")[0].split(" (")[0])
-                                                          for c in cons_comparisons(F)),
+    L.append("- The makers' statements or, in their place, a measurement (%d; the requests drafted and UNSENT, the sending party "
+             "unconfirmed, the owner asked for nothing): %s." % (len(ask), ", ".join(ask)))
+    L += ["", "**The uncertain design choices:** UDC-1 SELECTED; UDC-2 no session selection, its evidence route the receiving company's "
+          "and the adoption the owner's, not requested; UDC-3 SELECTED.",
           "", "**Unaffected work that continues** (SETTLED WORK, %d register rows): the change list's steps in order (section 3), the "
           "release records, the layout constraints and the records' re-issues." % sum(1 for v in cl.values() if v[0] == SET)]
     return L
@@ -5722,15 +5733,18 @@ def cons_decisions(F):
     opn = [d["id"] for d in DEFECTS if d["state"].startswith("OPEN")]
     L.append("**What stands where, exactly** (the collaborator's recheck and the owner's review of the supplier handover, L4-SH03, found the "
              "earlier status phrase overstating closure while the drafts carried defects): **known design defects, open** (KNOWN ENGINEERING "
-             "DEFECT, 8f; each a design-correction task for the supplier's phase 1, 8g): D-10's source arriving with the guard already on, D-16 "
-             "and E11-40 (board B's coolers' feed, R-190), and VBUS20 against U2's single faults (R-48); **defects with a drafted correction, "
+             "DEFECT, 8f; each a design-correction task for the receiving company, 8g): D-10 (E-1, the guard's port-level transient and the "
+             "lower-source back-feed), D-17 (decision D-11's all-transmit basis; its correction PROVISIONAL, RE-2), the P0 round's findings "
+             "carried as remaining engineering after cx46 (8f), and E11-40 (board B's coolers' feed, R-190) and VBUS20 against U2's single "
+             "faults (R-48), each with a correction drafted at the desk by record l8r2, unchecked; **defects with a drafted correction, "
              "not implemented, no qualification done:** %s, and D-10's over-voltage cut-off and cold connection (the cold connection's margin lines not "
              "held at a connector fault, inside the absolute ratings); D-14 CONDITIONAL with Ciss OPEN, D-15 %s. "
              "**Drafts corrected after the recheck:** L4-E11's board E fan rail (the designators U22, R103 to R109 and C142 to C148, at b929d8be "
              "and 1080e085) and its L4-CP01 texts at b929d8be; L4-E7's guard (R96 at 0.1 %%, the passing-floor claim withdrawn) and its sense model at 1a73f5b4; "
-             "L4-E12's and this record's escalation rule and storage soak at 20188e03. **Open:** %s (D-10's source arriving with the guard "
-             "already on, an absolute-rating violation at a connector fault; D-16, the drafted sense out of its operating range), the "
-             "architecture-level choices U-01, U-02 and U-04, and every qualification row of 5d, none performed (8e: the recheck's six items)."
+             "L4-E12's and this record's escalation rule and storage soak at 20188e03. **Open:** %s (D-10, an unresolved protection defect, "
+             "E-1; D-17, its correction PROVISIONAL, RE-2), the remaining engineering of the ledger after cx46, the architecture-level "
+             "choices U-01, U-02 and U-04, and every qualification row of 5d, none performed (8e: the checks of the P0 candidate as given, "
+             "and the recheck's six items as history)."
              % (", ".join(adr), L4F03_STATUS, ", ".join(opn)))
     L.append("**Status:** %s" % STATUS)
     return L
@@ -5813,7 +5827,7 @@ def cons_diagram(F, st):
         ("C02", "CTL_PANEL", "LOADS", "the expanders (FW-A08): SLOT_EN, DEV_EN, HEAT_EN; the margin hold (R-138, R-139); MAIN and PI_KILL (FW-A10 to A12)", "firmware"),
         ("C03", "CTL_PANEL", "USBC", "PD_SW_EN AND OUTLET_OK (FW-A06); the tablet's window (a proposal)", "firmware and hardware"),
         ("C04", "CTL_PANEL", "POE", "POE_SW_EN AND OUTLET_OK (FW-A06); U17 read on R227 (FW-A09, R-27)", "firmware and hardware"),
-        ("C05", "CTL_PANEL", "PA", "the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors %s and %s V (REQ-018); K4 with the fans off while keyed (D-17's design-out, R-28, R-210 to R-212)" % (fmt(F["d11_floor"]), fmt(F["pa_floor"])), "firmware"),
+        ("C05", "CTL_PANEL", "PA", "the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors %s and %s V (REQ-018); K4 with the outlets and the heater off while keyed (the fans never on it: FAN_OK and the fans' cut are rejected, R-210 to R-212 WITHDRAWN; D-17's correction the PA cap, R-227 and R-238)" % (fmt(F["d11_floor"]), fmt(F["pa_floor"])), "firmware"),
         ("C06", "CTL_SENS", "PACK", "the gauge's SMBus (FW-E01): its ranges relayed to the charger by the host; SHUTDOWN for storage (FW-E09); HWD 10 s", "firmware"),
         ("C07", "CTL_SENS", "LOADS", "the mixer fans (FW-E07), the Geiger supply (FW-E08), VIN_MON for FW-A16 (FW-E04)", "firmware"),
         ("C08", "CTL_HW", "U5", "the hold (FBIN divider R8, R9 at 0.1 %%), the regulation (IMON_IN, RIMON_IN %s), the backstop comparators on SWEN, off below %s V of TRK_LDO33" % (F["rimon"], fmt(F["swen_v"])), "hardware"),
@@ -6382,7 +6396,7 @@ G_L4E9 = "this record's RELEASE.md (R-93, after its check)"
 G_L4E11 = "L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384)"
 G_L8GND = "l8gnd's RELEASE.md (an accepted check of Layer 8's record l8gnd at 226e9143; its drafts arrive with set 28)"
 G_L8R2 = "l8r2's RELEASE.md (its rounds 4 to 6 at 89924e40 on fnd/l8r3; each draft refuses the tree's generator until it names an accepted check)"
-G_L8P = "l8p's RELEASE.md (one release for its three drafts; each refuses the tree's generator until it names an accepted check)"
+G_L8P = "l8p's RELEASE.md (one release for its drafts on boards P, E and A, L8P-BREAKER.md section 6 item 1; each refuses the tree's generator until it names an accepted check)"
 G_L9STK = "a text draft for the integrator (it refuses a second run)"
 G_L4E11_R9 = "L4-E11's RELEASE.md naming an accepted check of its round 9 (R-147; the draft refuses the tree's generator until then)"
 # the P0 round (record l9t5, Slot A, 5 October 2026; V6-m11): the drafts composed in the P0 candidate that had no row
@@ -6491,11 +6505,12 @@ CHANGE_ORDER = [
     ("D", "R-239", GD, "first in board D's round: it takes the next free R and D at apply time, above R-238's fixed R57, R58 and C76", "none: d8dec31's drafts carry no release guard"),
     ("D", "R-238", GD, "board D's round: after d8dec31's PTT draft, before Layer 6's two board D tables; in one release with R-227", G_L9T5_F01),
     ("P", "R-206", GP, "board P's round with l6r2's two board P tables in either order; in one release with R-207 and R-208; board P regenerated on the box after it", G_L8P),
+    ("P", "R-246", GP, "AFTER R-206 (it reads BRK_VIN and refuses a target without the breaker draft); in one release with R-206, R-207 and R-208; l6r2's two board P tables before or after the pair; board P regenerated on the box after it", G_L8P),
     ("C", "R-145", GC, "board C's round", "no draft yet"),
     ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
     ("5", "R-26", "firmware", "with R-23", "firmware"),
     ("5", "R-27", "firmware", "after R-06", "firmware"),
-    ("5", "R-28", "firmware", "with the D-11 rules at REQ-018's pass lines; K4 with the fans in the release of R-210 to R-212 (out 30)", "firmware"),
+    ("5", "R-28", "firmware", "with the D-11 rules at REQ-018's pass lines (out 30); K4's off-list without the fans (R-210 to R-212 WITHDRAWN)", "firmware"),
     ("5", "R-126", "firmware", "with R-125", "firmware"),
     ("5", "R-139", "firmware", "with R-138", "firmware"),
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
@@ -6528,7 +6543,8 @@ ORDER_CONSTRAINTS = [
     ("l8p's thermal-guard loop before d8dec31's PB network", "R-208", "R-193"),
     ("the third battery FET with the pair (after R-157)", "R-157", "R-209"),
     ("the third battery FET before d8dec31's PB network", "R-209", "R-193"),
-    ("FAN_OK before d8dec31's PB network", "R-210", "R-193"),
+    ("FAN_OK before d8dec31's PB network (a withdrawn row; holds trivially)", "R-210", "R-193"),
+    ("l8p's ideal diode after its breaker (it refuses a target without BRK_VIN)", "R-206", "R-246"),
     ("L4-E11's DD-7 after l8p's thermal-guard loop: it refuses a target without DOCK_EN_RET (L4-E11 19h)", "R-208", "R-217"),
     ("L4-E11's DD-7 after its charger draft (CH_BATDRV and the three battery FETs)", "R-157", "R-217"),
     ("L4-E11's DD-7 before d8dec31's PB network (LAST in board A's round)", "R-217", "R-193"),
@@ -6602,9 +6618,9 @@ CHANGE_SCRIPTS = ["d8dec31/apply_gen_sch_a_mainpb.py", "l4e4/apply_gen_sch_a_r11
                   "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
                   "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_e_entry.py", "l4e11/apply_gen_sch_e_timer.py", "l4e11/apply_gen_sch_a_charger.py",
                   "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py", "l4e11/apply_gen_sch_a_dd7.py",
-                  "d8dec31/apply_gen_sch_e_cin.py", "l4e7/apply_gen_sch_e_p0sol.py"]
-# route B2 is OUT of the baseline (record l4e7 after cx45 Q6 and the owner's part 24): its draft stays in its record as an
-# unapproved partial interface proposal, the owner's item, with no change-list row; the change list does not read it
+                  "d8dec31/apply_gen_sch_e_cin.py", "l4e7/apply_gen_sch_e_p0sol.py", "l8p/apply_gen_sch_p_idealdiode.py"]
+# route B2 is OUT of the baseline (record l4e7 after cx45 Q6 and the owner's parts 24 and 25): its draft stays in its record,
+# UNSELECTED and WITHDRAWN AS DRAFTED, with no protection credit and no owner item, and no change-list row; the change list does not read it
 OUT_OF_BASELINE = {"l4e7/apply_gen_sch_e_p0sol_b2.py"}
 
 
@@ -7026,12 +7042,12 @@ def cons_exit(F):
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
          "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until every admitted arrangement has failed its measurement or a bound shows none can meet the limit, a DEMONSTRATED CONFLICT (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
-         "with (B1): D2 (load steps against the %s V margin), the three battery FETs' installed Zself + 2 Zmut (at most %s K/W steady with R17 placed apart, the hottest junction at most 150 C held at %s A from %s C; the pair's (Zself + Zmut) at most %s K/W the fallback; E11-29) at the RDS(on) allowance (E11-36); the three's Ciss against TI's 5 nF with their current sharing (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U22's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
-         % ((b1["margin"], fmt(F["f02"]["z3"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
+         "with (B1): D2 (load steps against the %s V margin), the three battery FETs' installed Zself + 2 Zmut (at most %s K/W without m, for any split, with R17 placed apart (E11-29 as L4-E11 restates it), the hottest junction at most 150 C held at %s A from %s C; the pair's (Zself + Zmut) at most %s K/W the fallback; E11-29) at the RDS(on) allowance (E11-36); the three's Ciss against TI's 5 nF with their current sharing (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the mixers' start current and PWM level on U22's %s V rail, the branch declared %s A under U42's %s A (E11-35, L4-E11 18); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
+         % ((b1["margin"], fmt(F["f02"]["z3m"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])) + (fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][0]))),
          "apply R-157 with R-181, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), Zself and Zmut of the three steady and at 60 s on the coupon or the first prototype (R-159), Nexperia's maximum or a Kelvin reading at -8.5 V and 150 C (R-182), TI's answer or the bench's BATDRV behaviour with the three (R-183), VF and ISM hot or a pulse test (R-160), the branch's limit and shorts (R-184); Q-TI-15 to Q-TI-17 sent (OW-7; Q-AOS-1 withdrawn)",
-         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm the three's hottest junction at most 150 C held at %s A from %s C for each FET's (Zself + 2 Zmut) at most %s K/W steady with R17 apart, %.1f C in the 18 A service; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
+         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm the three's hottest junction at most 150 C held at %s A from %s C for each FET's (Zself + 2 Zmut) at most %s K/W steady for any split with R17 apart (E11-29 as L4-E11 restates it), %.1f C in the 18 A service; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
          % (b1["vsys_min"], b1["inhib"][0], b1["inhib"][1], fmt(fx["pw"][2]), fmt(fx["pw"][1]), fmt(fx["pw"][0]), fmt(fx["pw"][3]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1]),
-            fmt(fx["pair_idle"][1]), fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1]),
+            fmt(fx["pair_idle"][1]), fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3m"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1]),
             fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), fmt(fx["latch_s"]), held_txt(F)),
          "R-c's step rule (D2); more copper or a heat path for the three, never a lowered protection or service; on a negative Ciss answer the pair at its fallback or one BUK6Y10-30P with a heat path through the case (L4-E11 16c's (S2), 19d, the engineer's); a slower discharge-FET turn-on on board P for the docking pulse (board P's owner); a series inductance or a second contact for the branch's hard short; arrangement (A) with E11-24's hold-up if (B1) fails",
          "once R-157 (with R-181), R-177 and R-178 are applied, nothing of the architecture (L4-E11 check 5 and its fix rounds); on the board as drawn TI's D1 and D3 decide the charger's power path"),
@@ -7366,16 +7382,19 @@ def cons_exit_defects(F):
          "the draft applied with R-157 (R-181)", "the limit read at -20, 25 and 70 C, the overload and a hard short at VSYS_E, the contact's resistance after (R-184)",
          "nothing of the topology: a branch protection inside (B1)"),
         ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]),
-         "OPEN for the guard-on case: an absolute-rating violation at a connector fault (round 2's %.2f uH WITHDRAWN as a passing floor; there U5's pins %s to +%s V, past the -%s V absolute maximum; no loop claimed to pass; the margin %s); the cut-off (rising at %s to %s V, falling back at %s V or more) and the cold connection drafted, not applied (the cold connection's margin lines not held at a connector fault near %s uH, inside the absolute ratings)"
-         % (rm["b6"]["l_uh"], fmt(rm["b6"]["pins"]["conn"][0]), fmt(rm["b6"]["pins"]["conn"][1]), fmt(rm["b6"]["u5_abs"]), RESERVE_NOTE, fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["cold_conn"]["near"])),
-         "the draft applied after its release record (R-92's L4-E7 RELEASE.md); the guard-on case decided by the engineer's B6-ENG-1 (the stage's current-sense arrangement itself)",
-         owed + "; B6-ENG-1: the stage question with RSENSE1's inductance and the source's loop and resistance bounded and measured (R-180 an input, no longer a floor; R-186 a sense-pin filter only if Analog Devices permits it; R-187 route 3, result (ii))", topo),
+         "OPEN: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's 100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240); the cut-off (rising at %s to %s V, falling back at %s V or more) and the cold connection drafted, not applied (the cold connection's margin lines not held at a connector fault near %s uH, inside the absolute ratings)"
+         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["cold_conn"]["near"])),
+         "E-1's correction or a measured model revision (record l4e7's SUPPLIER-P1-1-P0SOL.md, UNSENT; the ledger's HO-F), then the drafts applied after their release records",
+         owed + "; E-1, then S1 and S2 on the correction (R-180 and R-187 inputs, no passing route; R-186 WITHDRAWN under R-240)", topo),
         ("D-11", "a reversed panel (E-N1, a single fault)", adr + "; CONDITIONAL on Q13's leakage above +25 C", "the same draft", "Q13's leakage at the hot end (R-176)", topo),
         ("D-16", "the drafted input current sense out of its +-100 mV operating range in normal operation at the 25 V corner (L4-E7's B6-ENG-2)",
-         "OPEN: a demonstrated defect of the drafted sense (MODELED on the sheet's operating range): the resistive peak %s V at the regulation's highest current, the pins %s to +%s V; the monitor's average +%s %% (%s %% at the trip's), the limit regulating BELOW its setting, on an amplifier model the sheet does not print (L4-E7's round 5; round 3's 5.7 %% low withdrawn); M1's 10 ns edges %s V at the pins, a possible stress; the Figure 1 arrangement reads %s V but fails the transient; handed to the engineer as B6-ENG-2 (R-189); the 100 W bound unaffected"
-         % (fmt(rm["b6"]["sense"][0]), fmt(rm["b6"]["sense"][2]), fmt(rm["b6"]["sense"][3]), fmt(rm["b6"]["mon"][0]), fmt(rm["b6"]["mon"][1]), fmt(rm["b6"]["sens10"]), fmt(rm["b6"]["fig1"])),
-         "the engineer reconsiders the current-sense arrangement (B6-ENG-2); no further desk split", "the pins' waveform at 25 V in and the lowest bus, or Analog Devices' item 7 (R-189)",
+         "ADDRESSED IN DRAFTS: corrected in draft by P0-7 (R-240, not applied; U5's input sense not used, 0 V by construction; the regulation's sense U23 on the bank, its average at most 1.34 % high, the safe side); PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4)",
+         "the draft applied after its release record (R-240, L4-E7's RELEASE.md)", "S3 and S4 (record l4e7's SUPPLIER-P1-1-P0SOL.md, UNSENT; R-189 replaced by them)",
          "nothing of the topology: the sense's place on the stage's input"),
+        ("D-17", "decision D-11's all-transmit basis not supplied from REQ-018's 15.5 V pass line on the final drafts (Layer 9's L9P-F01)",
+         "OPEN: its correction, the PA drain-current cap (R-227, R-238), DRAFTED and PROVISIONAL (C-ALLTX rev 3 at the cap 15.1308 V, MODEL on PRINTED bounds)",
+         "the reference's loading through Q551's hold and release bounded at the desk (cx46 item 2, RE-2)", "V-PA-REF, B-PA1 and B-PA2 (F01's validation rows, UNSENT)",
+         "whether the all-transmit service holds from REQ-018's 15.5 V rest under the cap; nothing of the topology"),
         ("D-12", "CS116 and CS115 on the panel lead, as drawn", "RESOLVED in the drafted entry (R-21, R-173): %s" % rm["b6"]["d12"],
          "the loop current recorded (R-174)", "the test of R-174 at layer 8", "nothing: the drafted entry's parts"),
         ("residual", "a stiff source between %s V and the cut-off (outside the window)" % fmt(F["pv"]["v_max"]), "a residual named for layer 8: the stage runs, at most %s W under the backstop's trip" % fmt(rm["resid"]),
@@ -7657,9 +7676,9 @@ def cons_qual(F):
          "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
          un("T-H1") + "; " + pr("fan60") + "; " + pr("fan40") + " (the T-H1 mock-up's own bill is Layer 7's T-H1-MOCKUP-SPEC.md at 2087060b, cited, not copied)", sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
         ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"] + BLOCK_RULE % "E11-29",
-         "D-14's installed path, the three FETs (L4-E11 19c, record l9stk's junction limit E-1): each FET's (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart and R17's coupling into each junction at most %s K/W, so the hottest junction stays at most 150 C held at %s A from %s C with the band and R17 in place, at the RDS(on) allowance; the fallback, if E11-37 refuses three, the pair's (Zself + Zmut) at most %s K/W with R17 apart"
-         % (fmt(F["f02"]["z3"]), fmt(F["f02"]["r17c"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z2_fb"])),
-         sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
+         "D-14's installed path, the three FETs (E11-29 as L4-E11's row restates it, its rounds 9 to 16; record l9stk's junction limit, l9stk's E-1): each FET's (Zself + 2 Zmut) at most %s K/W without m (each junction's worst-split figure at its own m at most %s K/W) with the band carrying %s A and R17 dissipating in place, R17's coupling into each junction at most %s K/W, so the hottest junction stays at most 150 C held at %s A from %s C for any split of the RDS(on) spread; the design target Zw at most %s K/W, R17's coupling at most %s K/W; the fallback, if E11-37 refuses three, the pair's (Zself + Zmut) at most %s K/W with R17 apart"
+         % (fmt(F["f02"]["z3m"]), fmt(F["f02"]["z3"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["r17c"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["zw"]), fmt(F["f02"]["r17t"]), fmt(F["f02"]["z2_fb"])),
+         sp["E11-29"]["blocks"], "an engineer, on a bench (round 13's method: one channel at a time, each junction by its threshold voltage; the fixture's 10 mW a lead demonstrated by the supplier first)", OWN + "the coupon's fabrication and parts",
          pr("buk", 6) + "; " + un("E11-29, E11-36"), "none"),
         ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"] + BLOCK_RULE % "E11-30",
          "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
@@ -8018,8 +8037,8 @@ def cons_in_short(F, D, st, reg):
         "and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), and the review of the provisional fixes "
         "adds D-15 (the dock's new VSYS contact without branch protection, L4-F03); all three are ADDRESSED IN DRAFTS by L4-E11's fix "
         "rounds (board E on VSYS_E, R-177 and R-178; the battery FETs, R-157 with Q42 since L4-E11's round 9 (R-209), sized to an RDS(on) "
-        "allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's installed (Zself + 2 Zmut) at most %s "
-        "K/W steady with R17 apart, 18 A for 60 s kept, D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with the three's Ciss against TI's 5 nF "
+        "allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's (Zself + 2 Zmut) at most %s "
+        "K/W steady for any split with R17 apart (E11-29 as L4-E11 restates it), 18 A for 60 s kept, D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with the three's Ciss against TI's 5 nF "
         "OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
         "E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
         "bounded to VSYS_MIN or a latch within %s s; since L4-E11's fan-feed round the mixers sit on U22's regulated 12.0 V rail from VSYS_E "
@@ -8028,22 +8047,24 @@ def cons_in_short(F, D, st, reg):
         "the port, and D-11, a reversed panel, and reads NOT MET on D-10's: L4-E7's selected remedies are drafted (the over-voltage cut-off "
         "U21 with Q12, the return switch Q13, the port bank C131, C132, C135 and C136, C133 and C134, C71 to C74, C126, R96 and R97 at "
         "0.1 %%; R-173, apply_gen_sch_e_solar_guard.py, not applied), D-11 CONDITIONAL on Q13's leakage above +25 C, D-10's cut-off holding "
-        "and its cold connection inside the absolute ratings at both fault positions but over its margin lines at a connector fault; D-10's "
-        "source arriving with the guard already on is OPEN (L4-F01, L4-E7's round 5): round 2's %.2f uH loop is WITHDRAWN as a passing floor, "
-        "and there a fault at the connector reads U5's pins %s to +%s V, past the -%s V ABSOLUTE MAXIMUM (an absolute-rating violation; the "
-        "margin %s); the stage question is the engineer's B6-ENG-1. D-16, the drafted sense out of its +-100 mV operating range at the 25 V "
-        "corner, is OPEN (B6-ENG-2: the monitor's average +%s %%, the limit regulating below its setting, MODELED on an unprinted amplifier "
-        "model). D-17, decision D-11's all-transmit basis on the final drafts (Layer 9's L9P-F01), is OPEN: it needs %s V rest against "
-        "REQ-018's %s V pass line; round 7's raised floor is withdrawn as a correction (it narrowed the requirement), and the one design-out "
-        "attempt, the five fans' supplies off while the PA keys (R-210 to R-212), is at least +%s V under the pass line by a bound, CONDITIONAL "
-        "on the fan-stop thermal test (R-213). A residual band between 25 V and the cut-off is named for layer 8 (R-175); D-12, CS116 and CS115 on the panel lead, is "
+        "and its cold connection inside the absolute ratings at both fault positions but over its margin lines at a connector fault; D-10 "
+        "is OPEN, an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: "
+        "the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's "
+        "100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the "
+        "lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240). D-16 is ADDRESSED IN "
+        "DRAFTS: corrected in draft by P0-7 (R-240, not applied; U5's input sense not used, 0 V by construction; the regulation's sense U23 "
+        "on the bank), PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4). D-17, decision D-11's "
+        "all-transmit basis on the final drafts (Layer 9's L9P-F01), is OPEN: it needs %s V rest against REQ-018's %s V pass line; round "
+        "7's raised floor is withdrawn as a correction (it narrowed the requirement); its correction, the PA drain-current cap (R-227, "
+        "R-238), is DRAFTED and PROVISIONAL: C-ALLTX rev 3 at the cap 15.1308 V (MODEL on PRINTED bounds) against the 15.5 V rest, on B-PA1 "
+        "and B-PA2, with cx46 item 2 NOT CLOSED (remaining engineering RE-2); round 8's fan design-out (R-210 to R-212) is WITHDRAWN (FAN_OK "
+        "rejected). A residual band between 25 V and the cut-off is named for layer 8 (R-175); D-12, CS116 and CS115 on the panel lead, is "
         "resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, D-07 and D-09 "
         "superseded (8a); every resolution is a DRAFT or a register row, none applied."
         % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
-           fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
+           fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3m"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
            fmt(F["cp"]["rail"]["decl"]), fmt(F["cp"]["rail"]["u42"][1]),
-           fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][0]), fmt(F["sv"]["rm"]["b6"]["pins"]["conn"][1]),
-           fmt(F["sv"]["rm"]["b6"]["u5_abs"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["mon"][0]), fmt(round(F["l9"]["drafted"], 3)), fmt(F["l9"]["req_floor"]), fmt(round(F["l9"]["off_margin"], 3)), F["sv"]["rm"]["b6"]["d12"]),
+           fmt(F["sv"]["src"][1]), fmt(round(F["l9"]["drafted"], 3)), fmt(F["l9"]["req_floor"]), F["sv"]["rm"]["b6"]["d12"]),
         "**Endurance** (apart from feasibility; the approved profile %s W kept): battery-only %s h ENERGY ONLY (%.3f h with (B1)'s pair; "
         "%s with the tablet's window at the start) at room temperature and %s h with the cells at -10 C (energy only); ENERGY AND "
         "THERMAL (L4-E12 12c): on the conservative bound C1 sheds the profile at %s to %s h and the run with the shed states lasts %s "
@@ -8082,10 +8103,14 @@ def cons_in_short(F, D, st, reg):
         "temperature and the storage dwell await Saft or the limited sample qualification; the owner's approval required), and the "
         "ruled 35E is unsuitable on its own published evidence for the margins. Beside them D-13, D-14 and D-15 (the review's B1 and "
         "B2 and the provisional fixes' L4-F03; D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN; D-15 %s, E11-38), D-11 "
-        "(on Q13's hot leakage) and D-10's cut-off and cold connection are addressed in drafts, none applied; D-10's source arriving with "
-        "the guard already on is OPEN (an absolute-rating violation at a connector fault; the passing floor withdrawn, no loop claimed to "
-        "pass; B6-ENG-1) and D-16 is OPEN (B6-ENG-2); the band between 25 V and the cut-off a residual for layer 8 (R-175). The "
-        "collaborator's targeted recheck (astra-check-l4close-2) reads NOT YET; the drafts it found defective were corrected after it "
+        "(on Q13's hot leakage) and D-10's cut-off and cold connection are addressed in drafts, none applied; D-10 is OPEN (E-1: the "
+        "guard's port-level transient and the lower-source back-feed; U5's absolute-rating violation corrected in draft by R-240), D-16 is "
+        "ADDRESSED IN DRAFTS (P0-7, R-240; PROVISIONAL on S3 and S4) and D-17 is OPEN (its correction the PA drain-current cap, R-227 and "
+        "R-238, PROVISIONAL; RE-2); the band between 25 V and the cut-off a residual for layer 8 (R-175). The independent checks as given: "
+        "cx45 on the P0 candidate reads 'P0 CANDIDATE: NOT CONFIRMED.' and cx46, its one targeted recheck, 'P0 RECHECK: CORRECTIONS NOT "
+        "CLOSED.' (the second negative, which ends the method); twelve findings pass to the receiving company as remaining engineering "
+        "(records/l4close/REMAINING-ENGINEERING.md); the earlier collaborator's targeted recheck (astra-check-l4close-2) reads NOT YET and "
+        "is history: the drafts it found defective were corrected after it "
         "(L4-E11's fan rail designators and L4-CP01 texts, L4-E7's passing-floor claim, sense model and R96, the escalation rule and the "
         "storage soak), none re-reviewed (8e). Each has its exact missing fact and the smallest experiment or "
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
