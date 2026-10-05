@@ -26,5 +26,5 @@ overturn the selected architecture). Slots: A the power-design author (`fnd/p0pw
 
 Paused and preserved, outside this list: T11 (three SDRs), DELTA-01's firmware rounds (V5F, V5R as given; V5FR interim only), the
 copper weight T6/T6b (an owner decision, incomplete), set 30 as scoped on 4 October (now the P0 candidate's integration only).
-The external rows U-01, U-02, U-04 and E11-29 are made actionable (missing fact, evidence gap, specimen and limit, capability, cost by label) in `EXTERNAL-DECISION-PACKET-2026-10-05.md` beside this list.
+The external rows U-01, U-02, U-04 and E11-29 are made actionable (missing fact, evidence gap, specimen and limit, capability, cost by label) in `SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` beside this list (the receiving company's validation scope, reframed under the owner's part 19; the owner is asked for nothing).
 Not reopened: D-01 to D-05, D-07 to D-09, D-12 (RESOLVED), D-11, D-13, D-14, D-15 (ADDRESSED IN DRAFTS, their tests named in L4-E9 8a).

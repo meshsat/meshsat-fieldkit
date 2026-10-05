@@ -1,12 +1,22 @@
-# The external decision packet: U-01, U-02, U-04 and E11-29 made actionable (5 October 2026, 15:50 CEST)
+# The supplier validation and remaining engineering annex: U-01, U-02, U-04 and E11-29 (5 October 2026; written 15:30 to 15:34 CEST, reframed 15:55 under the owner's amendment of 15:45, part 19)
 
-Written by the coordinator under the owner's review of P0 checkpoint 1 (`handover/OWNER-INSTRUCTION-2026-10-05.md`, part 18) and his
-instruction of 14:20 (part 15, section 5: "Identify the specimen, measured quantity, pass limit, required capability and owner; do not
-claim a planned test has passed"). It reuses the records' analyses; nothing is reopened without evidence. Prototype framing: nothing is
-built, bought or measured. **No purchase, outside contact or requirement change is authorised by this packet; every request stays
-UNSENT.** Money figures carry their label: VERIFIED (read on the named page at the named date), INDICATOR (a distributor's figure the
-record read), ESTIMATE (the coordinator's, from the named basis), NOT READ. Rates: ECB 5 October 2026, 1 EUR = 1.1225 USD = 0.85033
-GBP = 2.0002 NZD. The vendors' own pages (TI, Pico, Peli, Mouser, Digikey) render prices by script and gave none to a plain GET today.
+**Purpose (the owner's clarification, `handover/OWNER-INSTRUCTION-2026-10-05.md` part 19).** The project's deliverable is the most complete,
+internally consistent engineering package that desk engineering, modelling, simulation and review can produce, for a RECEIVING COMPANY
+to complete, physically validate and manufacture. This annex is that company's validation and remaining-engineering scope for the four
+items the desk cannot close: for each, the claim the missing fact supports, why the held evidence does not establish it, the specimen,
+measured quantity and pass limit, the capability needed, the affected outputs that stay PROVISIONAL until it is known, and a labelled
+cost as supporting information. **The owner is NOT asked to supply a bench, buy equipment, book a test, answer a procurement question
+or authorise an experiment before the handover.** No supplier is assumed engaged; its engineering and laboratory capability remain to
+be confirmed. Nothing here is a request for a requirement change, a purchase, an outside contact, fabrication or energisation.
+
+Three states are kept apart throughout: the LAYER DESK PACKAGE (editable design, analysis, internal consistency, reviews and the scoped
+supplier work: complete or not within the declared scope); DESIGN AND QUALIFICATION (open defects, provisional choices, unverified
+assumptions, the supplier validation still required); FABRICATION RELEASE (its own gate, BLOCKED where its criteria are unmet). An
+architecture uncertainty is not erased by this framing: where a measurement could change a component, topology, arrangement or layout,
+the affected outputs are named and kept provisional. A desk-fixable defect is never parked here. Prototype framing: nothing is built,
+bought or measured. Money labels: VERIFIED (read on the named page at the named date), INDICATOR (a distributor's figure the record read),
+ESTIMATE (the coordinator's, from the named basis), NOT READ. Rates: ECB 5 October 2026, 1 EUR = 1.1225 USD = 0.85033 GBP = 2.0002 NZD.
+The vendors' own pages (TI, Pico, Peli, Mouser, Digikey) render prices by script and gave none to a plain GET today.
 
 ## 1. U-02, the sealed case's heat rejection (ARCHITECTURE-LEVEL; T-H1)
 
@@ -17,7 +27,7 @@ heat path assumed and the prediction:
 
 | Point | Requirement and governing limit (as ruled) | Heat into the case (counted once, 16.2) | Need, and pass at a reading of at least | Where the model puts it (1.22 to 2.85 W/K, the coefficient ends; a MODEL range, not a physical bound) | What T-H1 decides, and the next action on a fail |
 |---|---|---|---|---|---|
-| M1 (K1, K2) heat stage on the pack, +40 C, lid open | REQ-024 / E3-A; the SGP41's Table 4 +50 C as ruled (CFL-002 open); under the owner's option C, A or B the cells' hot stop H1 | 25.536 W | 2.554 W/K, pass at 2.905 (as ruled); 1.666, pass at 1.804 (under C, A, B) | as ruled: ABOVE the model's top (2.85): reachable only with the route (fins on the free strips, the loads led into the plate, the lid skin); under C, A, B: inside the range | SCREENS an uncertain route as ruled (bare reading, then the same point with the route fitted); a fail with the route fitted and a measured local temperature over the limit is the only DEMONSTRATED CONFLICT that becomes an owner requirement question |
+| M1 (K1, K2) heat stage on the pack, +40 C, lid open | REQ-024 / E3-A; the SGP41's Table 4 +50 C as ruled (CFL-002 open); under the owner's option C, A or B the cells' hot stop H1 | 25.536 W | 2.554 W/K, pass at 2.905 (as ruled); 1.666, pass at 1.804 (under C, A, B) | as ruled: ABOVE the model's top (2.85): reachable only with the route (fins on the free strips, the loads led into the plate, the lid skin); under C, A, B: inside the range | SCREENS an uncertain route as ruled (bare reading, then the same point with the route fitted); a fail with the route fitted shows THAT arrangement failing under those conditions: it is rejected or revised and the remaining permitted routes (L4-E12 sections 9, 10 and 13) are assessed; a requirement question reaches the owner only when the evidence shows no permitted route holds, or as an explicit trade-off |
 | M2 (K1, K2, K9) heat stage on shore, +40 C | REQ-024 / E3-A; the same limits | 27.086 W | 2.709, pass at 3.081 (as ruled); 1.642, pass at 1.767 (under C, A, B) | as ruled: ABOVE the model's top; under C, A, B: inside | as M1 |
 | M3, M4 lid closed (E3-L), +40 C | REQ-052 / E3-L; the SGP41's Table 4 as ruled | 25.536 / 27.086 W | 2.554 / 2.709, pass at 2.905 / 3.081 | OVER the model even with the route: a **MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT** (0.275 W/K = 2.749 W; 0.430 W/K = 4.300 W) | MEASURES a design currently predicted to miss this line; a reading under it is expected and is an engineering task (the arrangement, the hold), not new information; under C, A or B the governing line is H1 (1.804 / 1.767), inside the range |
 | M5 (K6) the profile on the pack, +20 C | REQ-014; C1's +50 C inside-air trigger | 43.413 W | 1.447, pass at 1.508 | inside the range (lower half) | SCREENS; a fail puts C1's shedding inside REQ-014's profile: routes of sections 9 and 10 measured on the same point |
@@ -30,11 +40,9 @@ heat path assumed and the prediction:
 the model's conservative end (only K3's 0.941 and K4's 0.620 W/K do, and they do not govern). It **SCREENS an uncertain route** on
 M5, M7 (U-02's line), M8, M9 and, under CFL-002's option C, A or B, on M1 to M4. As ruled today (the SGP41's Table 4) it **MEASURES a
 design predicted to miss** M1 and M2 bare (reachable only with the route) and M3 and M4 even with the route. It cannot pass the e-paper
-lines (M6, M7 on that row): those are a MISSING STORAGE QUALIFICATION, a vendor statement (OW-4), not heat rejection. The one thing a
-reading changes for the architecture: a measured local temperature over a mandatory limit with the route fitted makes a line a
-DEMONSTRATED CONFLICT and an owner requirement question; everything else is an engineering task on the arrangement.
+lines (M6, M7 on that row): those are a MISSING STORAGE QUALIFICATION, a vendor statement (OW-4), not heat rejection. A measured local temperature over a mandatory limit with a route fitted demonstrates that THAT arrangement fails under those conditions, nothing more: the disposition is to reject or revise the arrangement and assess the remaining permitted routes; a requirement change is put to the owner only when the evidence shows why one is necessary, or as an explicit trade-off. Modelled shortfalls, missing vendor specifications and measured failures stay three different things.
 
-**The mock-up, summed (the owner's authorisation OW-8; the session cannot run it):**
+**The mock-up, summed (T-H1 is a receiving-company validation task; the owner is not asked to buy, book or run it; OW-8 stays a drafted authorisation text, not a request):**
 
 | Item | Qty | Price | Label and basis |
 |---|---|---|---|
@@ -47,10 +55,9 @@ DEMONSTRATED CONFLICT and an owner requirement question; everything else is an e
 | PicoLog TC-08 loggers (sixteen channels) | 2 (or 1 if one is at hand) | GBP 349 each (VERIFIED, READY-TO-ACT 5.2, VAT treatment not stated) = EUR 410 each at today's rate | the draft needs sixteen channels; READY-TO-ACT listed one, unbought |
 | type K thermocouples, fine wire | 16 | EUR 80 to 160 | ESTIMATE |
 | bench supply with two logged channels (heaters, fans) | 1 | assumed at hand | not costed; if absent, NOT READ |
-| **Sum** | | **about EUR 1,100 to 1,250 with stand-in fans and two loggers** (EUR 700 to 850 with one logger; +EUR 130 for the picked fans); the case already paid apart | ESTIMATE, dated 5 October 2026, excluding the plate's and consumables' exact quotes and anyone's time |
+| **Sum of the listed items** | | **EUR 1,191.08 to 1,326.08 with stand-in fans and two loggers** (EUR 781.08 to 916.08 with one logger; +EUR 129 with the picked Sanyo Denki fans in place of the stand-ins); the paid case apart | ESTIMATE, dated 5 October 2026 (the first sum, 1,100 to 1,250, was mis-added; corrected by the owner's review, part 19); excludes the paid case, any missing bench instrument, labour, delivery and the tax treatment where unstated. A stand-in fan changes what the run represents (its draw and flow differ from the picked fan's): a run on stand-ins is labelled so, and the fans' MEASURED draw replaces the model's share (T-H1 section 2) |
 
-Who runs it: the owner's bench, or a laboratory (cost NOT QUOTED; a quote is an outside contact, the owner's). A +60 C chamber run
-only if wanted, at a laboratory (OW-8). Duration: the draft's point matrix, several hours a point (section 4).
+Who runs it: the receiving company's bench or laboratory (cost NOT QUOTED; its capability to be confirmed). A +60 C chamber run only if the company judges it needed (OW-8's text). Duration: the draft's point matrix, several hours a point (section 4). Until it runs, the outputs that depend on the conductance stay PROVISIONAL: L4-E12's selection (c) and the hold's trigger window, the fan duty rows (L7), the hot-stop lines of CONOPS 4c's reduced mode, and REQ-024's and REQ-052's acceptance rows.
 
 ## 2. U-04, the charger (B1) on the battery FET pair (ARCHITECTURE-LEVEL; E11-31 / R-161)
 
@@ -59,18 +66,14 @@ CHRG_INHIBIT set and a source present through OUR pair Q39/Q40 (with Q42) and bo
 2.054 V margin with OUR inductor, output capacitors and compensation. Those decide whether (B1) as composed serves the kit's modes.
 
 **Two evidence routes that do NOT depend on the whole-kit fabrication release** (the owner's P1 point: the test must not wait for the
-release it informs). Both are limited evidence builds under the constitution's section 10: their own engineering review of the exact
-circuit under test, a controlled test plan, no energising of an unresolved hazardous path (the pack simulated by a bench source with a
-current limit and the breaker's function stood in by the bench's limit), and the owner's purchase and execution authorisation.
+release it informs). Both are limited evidence builds under the constitution's section 10, for the receiving company: their own engineering review of the exact circuit under test, a controlled test plan, no energising of an unresolved hazardous path (the pack simulated by a bench source with a current limit and the breaker's function stood in by the bench's limit) and, if ever run, the applicable purchase and execution authorisation. This annex asks the owner for none of it; neither setup is certified executable by any review yet.
 
 | Route | Specimen | What it represents | What transfers to the final circuit | What stays layout- or part-specific (open after it) | Capability and who | Cost |
 |---|---|---|---|---|---|---|
 | (R1) TI's evaluation module BQ25730EVM, as sold, with its own FETs | the controller on TI's reference layout | the controller's mode behaviour: VSYS regulation in each mode (D1, D3, D4), the CHRG_INHIBIT behaviour and sequencing, the start from cold, the VSYS_MIN accuracy (A11-18) | the controller's behaviour and register settings; the piecewise mode table of E11-31 (section 15d) | the held pack current through OUR pair's body diodes and its drive (E11-29, E11-37); D2's step response with OUR inductor and capacitors (TI's parts differ); R17's sense layout; thermal | a bench with a programmable source (9 to 25 V, 100 W class), an electronic load and a 4S pack or a pack simulator; the owner's bench or a supplier's (none secured) | the module's price NOT READ (TI's page renders it by script); ESTIMATE from TI's EVM class: USD 100 to 200; the bench instruments assumed at hand |
 | (R2) a controlled coupon of the drafted charger block | a small 4-layer coupon carrying exactly `apply_gen_sch_a_charger.py`'s block as drafted (the BQ25730, Q39, Q40, Q42, R17, the inductor, the capacitors, the sense and the FET drive), with test points | OUR circuit as drawn, apart from board A's planes | everything (R1) transfers plus the held pack current through our pair, D2 with our parts, R17's layout; the same coupon can carry TP-E11-29's FET fixture (section 3 below), one build for two qualifications | board A's plane resistance and thermal environment; the composed return (V6-B1) | fabrication and assembly by a board house (JLCPCB or NextPCB, five pieces) and the same bench as (R1); the coupon's design review before ordering (its own gate, not the kit's) | ESTIMATE EUR 150 to 300 for five assembled coupons, from the September 2026 JLC lines in `release/revA/order/ORDER-LOG.md` (a small 4-layer board EUR 20 to 60, assembly EUR 50 to 150, parts about EUR 40); NOT QUOTED |
 
-**Recommendation (SESSION, within the owner's rule that purchases are his):** (R2) is the route that answers U-04's question for our
-circuit; (R1) answers the controller's part sooner and cheaper and can run first on the owner's bench. Neither requires the whole-kit
-release; each needs its own authorisation (OW-7's questions to TI, Q-TI-15 to Q-TI-18, stay drafted and UNSENT and would sharpen (R1)).
+**Recommendation to the receiving company (SESSION):** (R2) answers U-04's question for our circuit; (R1) answers the controller's part sooner and cheaper and can run first. Neither requires the whole-kit fabrication release; each is a scoped validation task with its own review. OW-7's questions to TI (Q-TI-15 to Q-TI-18) stay drafted and UNSENT and would sharpen (R1). Until one runs, (B1)'s mode table (E11-31), D2's step margin and the held pack current stay PROVISIONAL in L4-E11's page and L4-E9's rows IF-10 and U-04.
 The pass limits are R-161's as printed (pack absent VSYS at least 12.054 V; inhibited with SRN over 12.546 V, VSRN plus 150 mV within
 2 percent; under 12.054 V at least 12.054 V; between at least 11.96 V; the held pack current under the limit the record states; D2's
 step within 2.054 V).
@@ -85,12 +88,12 @@ its own published rows (LO-01d to LO-01g).
 
 | Route | What it proves | What it does NOT prove | Decision it supports | Cost and capability |
 |---|---|---|---|---|
-| (a) Saft's statement (OW-9, the drafted request `records/l4e10/clarification/saft-mp176065xtd.txt`, UNSENT) | the maker's warranted envelope: current at temperature for the three points, charge below 0 C, the storage dwell and recovery, termination, the minimum capacity | the fit (the mock-up) and the pack's behaviour as built | ADOPTION of the route (OW-3) on a maker's guarantee: the cell-limit rows read MET | the owner sends the request; no money |
+| (a) Saft's statement (OW-9, the drafted request `records/l4e10/clarification/saft-mp176065xtd.txt`, UNSENT) | the maker's warranted envelope: current at temperature for the three points, charge below 0 C, the storage dwell and recovery, termination, the minimum capacity | the fit (the mock-up) and the pack's behaviour as built | the cell-limit rows LO-01d to g read MET for the Saft option on a maker's guarantee; ADOPTION of a 4S1P Saft pack is a SEPARATE owner decision (OW-3), not asked here | the owner sends the request; no money |
 | (b) the limited sample qualification (L4-E10 10g): ONE cell, a chamber -40 to +85 C, a 25 A load, the kit's three current points at the modelled temperatures, the storage dwell and recovery, about two weeks | THAT specimen's behaviour at THOSE tested conditions: whether the route is excluded or not excluded at the kit's points | a maker's guarantee; pack-level behaviour (4S1P series balance, the interconnects' heat, the gauge's view of the string); production variation across cells and lots; the fit | a SCREEN: continue the Saft route's engineering (the pack design on the published windows with the screened currents) or stop it; it does not support adoption by itself | one cell NZ$ 238.72 = EUR 119 (distributor pages read 1 to 2 October); the chamber and load run NOT QUOTED (a laboratory, an outside contact, the owner's); nobody in house |
 | (c) the printed mock-up of four cells in the pocket (OW-9; no purchase) | the fit of a 4S1P in D-06's pocket (58 x 160 x 48 mm under B16's overhang) | anything electrical | the fit line of U-01 | no money; the session can prepare the model, the owner prints |
 | (d) the alternative HL18650V 4S3P (OW-2) | its rows only once Topwell's signed specification arrives or a lot soak (24 h at +71 C and at -33 C at 30 percent) is run | | the fallback route | about USD 42 a pack (INDICATOR, 1 October); the request drafted, UNSENT |
 
-**What remains unproven at pack level even after (a) and (b):** the built pack's thermal coupling to the air (U-02's T-H1 and T-H2), the
+**Three actions, kept apart (the owner's part 19, item 4):** (1) a REQUEST FOR EVIDENCE (OW-9's drafted letter to Saft: no money, no change; UNSENT); (2) a LIMITED EXPERIMENT (route (b), the one-cell screen, a receiving-company task); (3) ADOPTION of a 4S1P Saft pack (OW-3), which changes the pack's cell and is NOT requested by this annex. The owner-approved pack baseline (the 4S pack family in D-06's pocket, as ruled on 7 September and in the foundation batch of 25 and 26 September) stands until an actual change is authorised; the handover carries the Saft option as a PROPOSAL with its evidence state. **What remains unproven at pack level even after (a) and (b):** the built pack's thermal coupling to the air (U-02's T-H1 and T-H2), the
 string's balance and the gauge's calibration (Layer 12), the pack's own I2R at 18 A in the pocket (L4-E10's figures are MODEL). The
 architecture decision (b) can support is the smallest one: whether the Saft route stays the selected candidate for the engineering that
 follows; adoption needs (a) or a lot qualification, and the fit needs (c).
@@ -105,9 +108,14 @@ laboratory bench with the heating leads, thermocouples and the record's method (
 estimate if the same coupon carries both. Its fallback if the sharing fails: lower-resistance FETs or a fourth, a design change inside
 UDC-1, not an architecture change.
 
-## 5. What this packet asks of the owner, and what it does not
+## 5. What this annex asks of the owner (nothing) and what it hands to the receiving company
 
-Asks (each an action under his authority, none a question): OW-8 (T-H1, with the sum above), OW-3 and OW-9 (the Saft route: send the
-request and/or authorise the one-cell screen), OW-7 (TI's questions), the authorisation of (R1) and/or (R2) for U-04 with E11-29's
-fixture on the same coupon if (R2). Does not ask: any requirement change, any change of pack, case, service or spend ceiling. The desk
-work of P0-1 to P0-8 does not wait for any of it.
+Asked of the owner: nothing. The drafted texts OW-3, OW-7, OW-8 and OW-9 remain in L4-E9's owner table as drafted authorisations and
+letters, UNSENT and unexecuted; none is a condition of the handover. No requirement, pack, case, service or spend change is requested.
+
+Handed to the receiving company, as its validation and remaining-engineering scope, each with specimen, quantity, pass limit and the
+outputs it keeps provisional: T-H1 (section 1), U-04's route (R1) and/or (R2) with E11-29's fixture on the same coupon if (R2)
+(sections 2 and 4), the Saft route's evidence (section 3: Saft's statement and/or the one-cell screen, with adoption apart). Its
+engineering and laboratory capability are to be confirmed; no supplier is engaged.
+
+The desk work of P0-1 to P0-8 does not wait for any of it, and a desk-solvable defect is never moved into this annex.
