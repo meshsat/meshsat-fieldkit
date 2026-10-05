@@ -67,10 +67,19 @@ MINE = {"p": os.path.join(HERE, "apply_gen_sch_p_breaker.py"), "e": os.path.join
         "a": os.path.join(HERE, "apply_gen_sch_a_ptc.py")}
 # board P's second draft (round 4, DD-5): applied after the breaker draft, which it requires
 MINE2 = {"p": [os.path.join(HERE, "apply_gen_sch_p_idealdiode.py")]}
+# Round 8: board A's thermal guard as record l9stk's round 5 re-selected it (C4), which replaces the PTC draft's block. It goes AFTER
+# the drafts of FOLLOW (L4-E11's DD-7 refuses a target without RT1's call) and, where none is composed, right after this record's
+# own; never in mine_seq(), whose drafts FOLLOW's come after
+MINE_AFTER = {"a": [os.path.join(HERE, "apply_gen_sch_a_thguard.py")]}
 
 
 def mine_seq(b):
     return [MINE[b]] + MINE2.get(b, [])
+
+
+def mine_all(b):
+    """Every draft of this record for board b, in its order (round 8: the guard after the PTC draft it replaces)."""
+    return mine_seq(b) + MINE_AFTER.get(b, [])
 
 
 def order(b, where):
@@ -86,6 +95,10 @@ def order(b, where):
     if where not in ("without", "last"):
         for f, after in FOLLOW.get(b, ()):
             i = max([out.index(x) for x in mine_seq(b)] + [out.index(draft(r, n, b)) for r, n in after])
+            out = out[:i + 1] + [f] + out[i + 1:]
+    if where != "without":
+        for f in MINE_AFTER.get(b, ()):
+            i = max([out.index(x) for x in mine_seq(b)] + [out.index(x) for x, _a in FOLLOW.get(b, ()) if x in out])
             out = out[:i + 1] + [f] + out[i + 1:]
     return out
 
@@ -132,7 +145,8 @@ INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9st
                "l4e11pre": "inputs/l4e11-section15c-precharge-%s.md" % L4E11_AT, "l4e11c": "inputs/l4e11-section20c-%s.md" % L4E11_AT,
                "l4e11d": "inputs/l4e11-section20d-%s.md" % L4E11_AT, "l4e11e": "inputs/l4e11-section20e-%s.md" % L4E11_AT,
                "l4e11_22b": "inputs/l4e11-section22b-%s.md" % L4E11_AT, "l4e11_22c": "inputs/l4e11-section22c-%s.md" % L4E11_AT,
-               "l4e11_22g": "inputs/l4e11-section22g-%s.md" % L4E11_AT, "l4e11_22h": "inputs/l4e11-section22h-%s.md" % L4E11_AT}
+               "l4e11_22g": "inputs/l4e11-section22g-%s.md" % L4E11_AT, "l4e11_22h": "inputs/l4e11-section22h-%s.md" % L4E11_AT,
+               "l9g": "inputs/l9stk-section15.9-bb6d2c8f.md"}
 # the copies of L4-E11's page (INPUT_FILES key, its section heading's start) and of its drafts (the copy, records/l4e11's file):
 # test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (V2-B2: a copy a round behind).
 # Round 7 (the recheck V2R's V2R-m8): section 19h and the excerpt of 15c, round 9's copies until now and outside this list, are taken
@@ -160,7 +174,11 @@ SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444
                "inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT): "cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f",
                "inputs/l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT): "bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034",
                "inputs/l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT): "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
-               "inputs/l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT): "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"}
+               "inputs/l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT): "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1",
+               # round 8: record l9stk's round 5 (fnd/l9stk2 at bb6d2c8f), the selection C4 this record's guard draft draws
+               "inputs/l9stk-section15.9-bb6d2c8f.md": "08a656ab0230986dbac4ec0c33c7f6c00f876eecb5792cf0343591796093cb9b",
+               "inputs/l9stk_guard-bb6d2c8f.out.txt": "d84dcb3bab2f1f6009eafa5aec98533d59ee9513e89f574595d7080020ffa79c",
+               "inputs/l9stk-readme-round5-bb6d2c8f.md": "03274200411401fe5cc48a3a75d4e2f51a9b8908c08e6dc84f34d174d37822c5"}
 # L8P-F01 is closed by L4-E7's backstop draft on fnd/l4e7r6 at 914a2f5a (not on main): board E's composition uses that draft,
 # copied byte for byte into inputs/, in place of main's
 # Rounds 5 and 6: L4-E11's rounds 9 and 10 correct L8P-F02 and L8P-F03 and redraw DD-7 against route R1 (L8P-F04, L8P-F05); its
@@ -1078,6 +1096,66 @@ def netlist_text(board, generator, d, tag):
     return 0, out, table
 
 
+def mutate_ops(path, d, tag, ops):
+    """A copy of a netlist with the edits ops, each one of: ("move", ref, pin, net) the node to another net (made if absent);
+    ("repin", ref, pin, new_pin) the node's pin number; ("value", ref, value) a component's value; ("drop", ref) a component with
+    every node of it. Round 8: the guard's mutations (L9S5-F1) are no exchanges of two nodes."""
+    lines = open(path, encoding="utf-8").read().split("\n")
+
+    def node(ref, pin):
+        return ' (node (ref "%s") (pin "%s"))' % (ref, pin)
+    for op in ops:
+        if op[0] == "move":
+            _k, ref, pin, net = op
+            hit = [i for i, l in enumerate(lines) if node(ref, pin) in l]
+            if len(hit) != 1:
+                refuse("mutation: %s.%s is not on one net" % (ref, pin))
+            lines[hit[0]] = lines[hit[0]].replace(node(ref, pin), "")
+            tgt = [i for i, l in enumerate(lines) if '(name "%s")' % net in l or '(name "/%s")' % net in l]
+            if tgt:
+                lines[tgt[0]] = lines[tgt[0]][:-1] + node(ref, pin) + ")"
+            else:
+                k = max(i for i, l in enumerate(lines) if l.startswith("    (net "))
+                lines.insert(k + 1, '    (net (code "9999") (name "/%s")%s)' % (net, node(ref, pin)))
+        elif op[0] == "repin":
+            _k, ref, pin, new = op
+            hit = [i for i, l in enumerate(lines) if node(ref, pin) in l]
+            if len(hit) != 1:
+                refuse("mutation: %s.%s is not on one net" % (ref, pin))
+            lines[hit[0]] = lines[hit[0]].replace(node(ref, pin), node(ref, new))
+        elif op[0] == "value":
+            _k, ref, value = op
+            hit = [i for i, l in enumerate(lines) if l.startswith('    (comp (ref "%s") (value ' % ref)]
+            if len(hit) != 1:
+                refuse("mutation: component %s is not listed once" % ref)
+            lines[hit[0]] = re.sub(r'\(value "(?:[^"\\]|\\.)*"\)', '(value "%s")' % value, lines[hit[0]], count=1)
+        elif op[0] == "drop":
+            _k, ref = op
+            n0 = len(lines)
+            lines = [l for l in lines if not l.startswith('    (comp (ref "%s") ' % ref)]
+            if len(lines) != n0 - 1:
+                refuse("mutation: component %s is not listed once" % ref)
+            lines = [re.sub(r' \(node \(ref "%s"\) \(pin "[^"]*"\)\)' % re.escape(ref), "", l) for l in lines]
+        else:
+            refuse("mutation: unknown edit %r" % (op,))
+    q = os.path.join(d, tag + ".net")
+    open(q, "w", encoding="utf-8").write("\n".join(lines))
+    return q
+
+
+# The seven mutations record l9stk's round 5 names for the guard's draft (L9S5-F1; its page 15.9 (b)), each on the composed board A
+GUARD_MUTATIONS = (
+    ("the shunt on DOCK_EN_OUT", [("move", "Q60", "3", "DOCK_EN_OUT")]),
+    ("the open-drain output used", [("repin", "U60", "5", "3")]),
+    ("the regulator fed from VBAT", [("move", "U61", "1", "VBAT")]),
+    ("the pair's sum outside 3.574 to 25.8 kOhm (two 15 kOhm)", [("value", "R260", "15k 1%"), ("value", "R261", "15k 1%")]),
+    ("one resistor in place of the pair (R260 at 15 kOhm from DOCK_EN_OUT to DOCK_EN_RET, R261 gone)",
+     [("drop", "R261"), ("move", "R260", "2", "DOCK_EN_RET"), ("value", "R260", "15k 1%")]),
+    ("the shunt drawn as an AO3400A", [("value", "Q60", "AO3400A: THG_G high = the thermal guard tripped, DOCK_EN_RET held low (1 G, 2 S, 3 D)")]),
+    ("the gate capacitor removed", [("drop", "C260")]),
+)
+
+
 def mutate(path, d, tag, swaps):
     """A copy of a netlist with the nets of two (ref, pin) nodes exchanged."""
     raw = open(path, encoding="utf-8").read()
@@ -1104,7 +1182,7 @@ def main():
     inputs += [os.path.join(CHK.PRETTY, l + ".kicad_mod") for l in sorted(set(CHK.LANDS.values()) | {"LeadLands_1x02"})]
     inputs += [LM5069_SHEET, NTC_SHEET, D4148_SHEET, OPA187, CSD_SHEET, N7002_SHEET, BZT_SHEET, TRM_SHEET, BQ4050_SHEET, CSD17570_SHEET, LM74700_SHEET,
                PRF_SHEET, os.path.join(HERE, "fetch_held_back.py"), os.path.join(HERE, "read_prf_typical.py")]
-    inputs += [MINE["p"]] + MINE2["p"] + [MINE["e"], MINE["a"], os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
+    inputs += [MINE["p"]] + MINE2["p"] + [MINE["e"], MINE["a"]] + MINE_AFTER["a"] + [os.path.join(HERE, "check_l8p_netlist.py"), os.path.join(HERE, "gen_netlist.py")]
     w("1. INPUTS, pinned by sha256\n")
     for p in inputs:
         if not os.path.isfile(p):
@@ -1520,7 +1598,7 @@ def main():
             w("   %s: check %s; applied %s; second application %s; the tree's gen_sch_%s.py %s\n" % (
                 os.path.basename(s), "OK" if ok1 else "FAILED", "OK" if ok2 else "FAILED",
                 "refused" if r3.returncode == 3 else "NOT REFUSED", b, "refused (NOT RELEASED)" if r4.returncode == 3 and b"NOT RELEASED" in r4.stderr else "NOT REFUSED"))
-        for b, extra in sorted(MINE2.items()):
+        for b, extra in sorted(MINE2.items()) + sorted(MINE_AFTER.items()):
             for s in extra:
                 t0 = os.path.join(d, "bare_gen_sch_%s.py" % b); shutil.copy(GEN[b], t0)
                 r0 = subprocess.run([sys.executable, "-B", s, t0, "--write"], capture_output=True)
@@ -1565,6 +1643,8 @@ def main():
             w("   board %s, the order, then this record's draft last: %s\n" % (b.upper(), "every step OK" if all(v.startswith("OK") for _s, v in res) and len(res) == len(last)
                                                                        else "; ".join("%s %s" % x for x in res if not x[1].startswith("OK"))))
             for f, _after in FOLLOW.get(b, ()):
+                # on the order with this record's own drafts last but without the round 8 guard, which would remove RT1 first
+                _p, _res = compose(b, [x for x in last if x not in MINE_AFTER.get(b, ())], d, "last_nothg")
                 rc_f, why_f = run(f, _p, b)
                 w("     (without %s there: the list puts it before d8dec31's mainpb, R-217 before R-193; applied after mainpb\n" % os.path.relpath(f, RECS))
                 w("      it is %s)\n" % ("refused, mainpb having taken its R233 and C241 as the next free: %s" % scrub(why_f, d) if rc_f else "NOT REFUSED"))
@@ -1588,7 +1668,7 @@ def main():
                 after_t = open(p, encoding="utf-8").read()
                 adds[os.path.relpath(s, RECS)] = added(before_t, after_t, s)
                 before_t = after_t
-            own = {os.path.relpath(x, RECS) for x in mine_seq(b)}
+            own = {os.path.relpath(x, RECS) for x in mine_all(b)}
             mine = set().union(*[adds.get(k, set()) for k in own])
             if len(own) > 1 and sum(len(adds.get(k, set())) for k in own) != len(mine):
                 refuse("this record's board %s drafts share a designator" % b)
@@ -1617,7 +1697,7 @@ def main():
         alone = {}
         for b in "pea":
             t = os.path.join(d, "regen_gen_sch_%s.py" % b); shutil.copy(GEN[b], t)
-            if any(run(x, t, b)[0] != 0 for x in mine_seq(b)):
+            if any(run(x, t, b)[0] != 0 for x in mine_all(b)):
                 refuse("this record's board %s draft refused a clean copy" % b)
             rc, path, table = netlist_text(b, t, d, "mine")
             if rc:
@@ -1681,6 +1761,20 @@ def main():
             m = mutate(comp["a"], d, tag, swaps)
             buf = io.StringIO(); CHK.run({"a": m}, ROOT, buf, label=lambda x, what=what: "mutated composed board A (%s)" % what)
             w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        # Round 8: the guard's seven mutations (record l9stk 15.9 round 5 (b), L9S5-F1), each on the composed board A, each read on THG
+        for k_, (what, ops) in enumerate(GUARD_MUTATIONS, 1):
+            m = mutate_ops(comp["a"], d, "mut_thg%d" % k_, ops)
+            buf = io.StringIO(); CHK.run({"a": m}, ROOT, buf, label=lambda x, what=what: "mutated composed board A, the guard: %s" % what)
+            w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        # Round 8: the old guard, board A with round 7's PTC draft and no guard (RT1 closes the loop): withdrawn, so it must not read DRAWN
+        t = os.path.join(d, "ptc_only_gen_sch_a.py"); shutil.copy(GEN["a"], t)
+        if run(MINE["a"], t, "a")[0] != 0:
+            refuse("the PTC draft refused a clean copy")
+        rc, path, _t = netlist_text("a", t, d, "ptc_only")
+        if rc:
+            refuse("board A with the PTC draft alone did not run: %s" % path)
+        buf = io.StringIO(); CHK.run({"a": path}, ROOT, buf, label=lambda x: "regenerated board A, round 7's RT1 without the guard (the withdrawn PTC)")
+        w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
         m1 = mutate(alone["p"][0], d, "mut_p", [(("J_SMB", "6"), ("J_SMB", "7"))])
         buf = io.StringIO(); CHK.run({"p": m1}, ROOT, buf, label=lambda x: "mutated board P (J_SMB pins 6 and 7 exchanged)")
         w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
@@ -1728,6 +1822,16 @@ def main():
         for cap in ("C106", "C107", "C108", "C111", "C112", "C114"):
             bp = [b_ for b_ in it.get("bypass", []) if b_.get("cap") == cap]
             w("   decoupling %s: %s\n" % (cap, "class %s at %s.%s on %s" % (bp[0].get("class"), bp[0].get("part"), bp[0].get("pin"), bp[0].get("net")) if bp else "ABSENT"))
+        # round 8: what the patched board A generator writes for the guard's nets
+        ia = alone["a"][1]["intent"]
+        w("   board A (round 8, the thermal guard):\n")
+        for n in ("DOCK_EN_OUT", "DOCK_EN_RET", "THG_MID", "THG_VDD", "THG_OT", "THG_G", "THG_TT", "THG_VT"):
+            r = ia["nodes"].get(n) or {}
+            w("   node %-11s v_max %s V\n" % (n, r.get("v_max")))
+        for cap in ("C261", "C262", "C263"):
+            bp = [b_ for b_ in ia.get("bypass", []) if b_.get("cap") == cap]
+            w("   decoupling %s: %s\n" % (cap, "class %s at %s.%s on %s%s" % (bp[0].get("class"), bp[0].get("part"), bp[0].get("pin"), bp[0].get("net"),
+              ", value_floor %s, value_ceiling %s, esr_max %s" % (bp[0].get("value_floor"), bp[0].get("value_ceiling"), bp[0].get("esr_max")) if bp[0].get("class") == "L" else "") if bp else "ABSENT"))
     w("\n9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)\n")
     w("   L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a\n")
     w("     (class D with each maker's clause); board E's composition above uses that draft, copied byte for byte into inputs/, and needs no stand-in for it\n")
