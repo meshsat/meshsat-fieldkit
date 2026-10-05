@@ -5,22 +5,22 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
-   264c4127cfc9a105 v2/docs/records/l4e9/l4e9_power_path.py
-   82aaa92548e8c22d v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   d4f7fa953a9541fe v2/docs/records/l4e9/l4e9_power_path.py
+   3b2374d10186b913 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   0256db75457b61b0 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
-   7b586acfa021e2b1 v2/docs/records/l9pwr/l9pwr_budget.out
-   82ed43263da2c9bd v2/docs/records/l9t5/l9t5_drafts.out
-   4025887b32d83ea8 v2/docs/records/efuse/efuse_check.out
-   9df1a664742cdfe8 v2/docs/records/l9stk/l9stk_protection.out
-   74742ed4236f3e36 v2/docs/records/l8p/l8p_c4.out
-   32afbf9082a6fdd0 v2/docs/records/l9t5/l9t5_t10.out
-   6234a8397ab278f1 v2/docs/records/l9t5/l9t5_f01.out
+   38879f3ac22cf773 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   7b54d7ac587eab81 v2/docs/records/l9pwr/l9pwr_budget.out
+   094ba05fa7d0237a v2/docs/records/l9t5/l9t5_drafts.out
+   7205a24508a1284f v2/docs/records/efuse/efuse_check.out
+   65a8ea907633c104 v2/docs/records/l9stk/l9stk_protection.out
+   eee720dba6702bbf v2/docs/records/l8p/l8p_c4.out
+   8d876c565646d8d8 v2/docs/records/l9t5/l9t5_t10.out
+   4b6cfb0ce7f754e6 v2/docs/records/l9t5/l9t5_f01.out
    424e078b5d11f52e v2/docs/records/l8r2/l8r2_p0.out
-   f493307bcb73225c v2/docs/records/l4e7/l4e7_p0sol.out
-   6417a77e25ccc27a v2/docs/records/l8r2/l8r2_dist.out
+   d02b5d66c46aa81b v2/docs/records/l4e7/l4e7_p0sol.out
+   09744f640513a59d v2/docs/records/l8r2/l8r2_dist.out
    20bc65b077167ea8 v2/docs/records/l8r2/l8r2_dist.py
-   0c59ff81884862e9 v2/docs/records/l4e7/l4e7_p0sol.py
+   42f47948aee200fd v2/docs/records/l4e7/l4e7_p0sol.py
    0041a749eb1f84c7 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
@@ -35,7 +35,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
-   66c246df3f3029ab v2/docs/records/l4e11/check_dd7_netlist.py
+   625f5f0065abbba6 v2/docs/records/l4e11/check_dd7_netlist.py
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
@@ -56,9 +56,9 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
 
 2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and
    script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-244 for the drafts
-   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 117 changes, every
+   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 116 changes, every
    order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: yes; WITHDRAWN: R-210, R-212, R-211
-   board A: 26 drafts, every one applied; regenerated rc 0: 832 parts, 0 unplaced, intent written True, designators unique
+   board A: 26 drafts, every one applied; regenerated rc 0: 838 parts, 0 unplaced, intent written True, designators unique
      l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l8p/thgfs R-244; l9t5/iocbuck R-223; l9t5/iocpre R-224; l9t5/iocset R-242; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
    board B: 17 drafts, every one applied; regenerated rc 0: 1437 parts, 0 unplaced, intent written True, designators unique
@@ -67,10 +67,10 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    board D: 4 drafts, every one applied; regenerated rc 0: 254 parts, 0 unplaced, intent written True, designators unique
      d8dec31/ptt R-239; l9t5/paloop R-238; l6r2/intent order-free; l6r2/lcsc order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
-   board E: 17 drafts, every one applied; regenerated rc 0: 280 parts, 0 unplaced, intent written True, designators unique
-     l4e9/q1 R-17; l4e7/u5_grade R-12; l4e7/hold R-19; l4e7/input_limit R-20; l4e7/backstop R-98; l4e9/f1 R-18; l4e9/hotswap R-94; l4e11/entry R-123; l4e7/solar_guard R-173; l4e7/p0sol R-240; l4e7/p0sol_b2 R-241 (PROPOSAL); l4e11/aux R-177; l8r2/packrtn R-202; l8p/enable R-207; d8dec31/cin R-16; l6r2/xal_land order-free; l6r2/lcsc order-free
+   board E: 16 drafts, every one applied; regenerated rc 0: 278 parts, 0 unplaced, intent written True, designators unique
+     l4e9/q1 R-17; l4e7/u5_grade R-12; l4e7/hold R-19; l4e7/input_limit R-20; l4e7/backstop R-98; l4e9/f1 R-18; l4e9/hotswap R-94; l4e11/entry R-123; l4e7/solar_guard R-173; l4e7/p0sol R-240; l4e11/aux R-177; l8r2/packrtn R-202; l8p/enable R-207; d8dec31/cin R-16; l6r2/xal_land order-free; l6r2/lcsc order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
-   board E is record l4e7's own composition with route B2 (ORDER_E_B2, imported): the same order
+   board E is record l4e7's own baseline composition (ORDER_E, imported; no route B2 step: it is out of the baseline): the same order
    record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap, T10's
      set point delta and record l8p's fail-safe delta (both later than its round 2) and the last taker: yes, both boards (V6-m3 answered)
    d8dec31's mainpb, the last next-free taker: R603, C607 on MAIN_PB (V6 read R603 and C607; the register's R-193 text names R233 and C241
@@ -93,7 +93,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    l9t5 F01 the PA cap, board D                                   DRAWN  J_HARN1 pin 16, R57, C76, R58 and R83 as drafted
    l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16              DRAWN  PA_ILIM / PA_ILIM
    l8p the loop's board E half (J_SMB, J_BLK)                     DRAWN  E EN DRAWN
-   l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)        DRAWN  every predicate of C2 and B2 holds
+   l4e7 P0-7 the sense on the backstop's bank (C2)                DRAWN  every predicate of C2 holds
    not netlist checks, read from their records' outputs on this candidate (pinned above): the efuse record (section 6), T10's
      SHDN nets (l9t5_t10.out 10f), the breaker on board P (record l8p; board P is outside this composition, R-206)
 
@@ -113,7 +113,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    l9t5 F01 the PA cap, board D                                   R57 into VGG_SW (U15's output, not its feedback): FAIL  R57 is not between PA_ILIM and VGG_FB: ['PA_ILIM', 'VGG_SW']
    l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16              J_HARN1 pin 16 back on AB_SPARE: FAIL  PA_ILIM / AB_SPARE
    l8p the loop's board E half (J_SMB, J_BLK)                     J_SMB pin 7 on GND: FAIL  E EN FAIL: J_SMB.7 on 'GND', wanted DOCK_EN_OUT; DOCK_EN_OUT reaches ['J_BLK'], wanted J_S
-   l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)        J_SOLP pin 2 off INP (the loop open on the board): FAIL  J_SOLP pin 1 on R96's loop net and pin 2 on U21's INP (pin 3), the loop's only path to INP
+   l4e7 P0-7 the sense on the backstop's bank (C2)                U23's output off IMON_IN (the regulation's sense lost): FAIL  U23's output on U5's IMON_IN (pin 38), TRK_IMONI, with R16 and C65 to GND and nothing else
    16 of 16 mutations do not read DRAWN
 
 5. THE PACK AND THE CASE AT THE CAP (C-ALLTX rev 3; l9t5_case.py section 8, the PA's row the only one changed)
@@ -182,18 +182,20 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      EXAMPLE); its top under the PRINTED ratings downstream: J_PA's VH 10 A yes, U551's 15 A continuous yes; under J_PA's least at
      76.25 C (5.9948 A, INFERRED): NO (L9T5-F25, L8R2-F43's vendor task); under U13's own least loop 7.0338 A with R55's other loads: yes,
      so the cap acts first and U13's loop is the backstop
-   the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9: the fail-safe delta after round 8's guard, section
-     2; its reader check_l8p_fs.py, section 3): no trip at 10 A held (89.4 C, 38.4 K under 127.8 C), at the 18 A service read as held (118.0 C,
-     9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) on the switches' PRINTED limits (each switch, l8p_c4.out 10c (a)); the trip
-     within 25.4 ms (10c (b)), under the RC hold; the FETs' 150 C behind it (DD-2 with Q42, condition C3). NOT established: the common
-     path's single failures that remove both switches' trip (L8P-R9-F1, OPEN: cx45 Q5, Slot C's); the guard's DOCK_EN_OUT draw at 50 uA
-     cold and 180 uA tripped against the 30 uA of L4-E11 20c and 20f and record l9stk 15.9 (L8P-R9-F2, a prerequisite before adoption,
-     its owners' re-take: cx45 Q5); V6-m7 CORRECTED IN DRAFT, UNCHECKED
-   the solar entry (P0-7, record l4e7, merged at 66ec67ca; l4e7_p0sol.out pinned): board E composed here (section 2) and there in
-     L4-E9's order with P0-7's sense and route B2 composed as a PROPOSAL (record l4e7's C2 composition 296 parts); D-16 CORRECTED in draft; D-10 an
+   the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9 after cx45 Q5: TWO PATHS sharing only the pour and
+     the loop, path 1 round 8's guard with the cold clamp, path 2 U62 on VBAT through U63 with its own shunt Q61 on DOCK_EN_OUT; drawn by
+     the delta, section 2, read by check_l8p_fs.py, section 3): no trip at 10 A held (89.4 C, 38.4 K under 127.8 C), at the 18 A service read
+     as held (118.0 C, 9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) on each switch's PRINTED limits (l8p_c4.out 10c (a)); the trip
+     within 43.8 ms on path 1 and 40.0 ms on path 2 (10c (b)), under the RC hold; no single failure removes the trip (10c (2)); the FETs' 150 C behind it (DD-2 with
+     Q42, condition C3). NOT established: the double failure after a latent first one (L8P-R9-F1, handed over as remaining engineering);
+     the guard's DOCK_EN_OUT draw at 40 uA cold and 50 uA tripped against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;
+     L4-E11 section 28 restates 20c and 20f on them, record l9stk's re-take owed); V6-m7 and the common path CORRECTED IN DRAFT, UNCHECKED
+   the solar entry (P0-7, record l4e7, merged at 5cc9cb9d; l4e7_p0sol.out pinned): board E composed here (section 2) and there in
+     L4-E9's order with P0-7's sense, route B2 out of the baseline (record l4e7's C2 composition 296 parts); D-16 CORRECTED in draft; D-10 an
      UNRESOLVED PROTECTION DEFECT in the model (record l4e7 reads it so, E-1: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop
-     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is an unapproved PARTIAL interface
-     proposal (the owner's item), and neither adopting nor declining it closes D-10; the solar guard's trip against its demand is
+     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2, out of the baseline, is an
+     unapproved PARTIAL interface proposal with no protection credit (the owner's item), and neither adopting nor declining it closes
+     D-10; the solar guard's trip against its demand is
      record l4e7's reading, not re-traced here
 
 9. THE THERMAL LIMITS (each at the air its record reads)
@@ -273,29 +275,28 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,
      L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT
    the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and
-     J_PA at the inside air (L9T5-F25), the guard's common path and its draw (L8P-R9-F1, L8P-R9-F2; cx45 Q5, Slot C's); the CAN
+     J_PA at the inside air (L9T5-F25), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN
      service under a babbling supervisor (5; L9T5-F21, cx45 Q3, Slot C's)
    the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2
    T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20
-   the guard's fail-safe delta (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance restated from 30 uA to 50 uA cold and
-     180 uA tripped in L4-E11 20c and 20f and record l9stk 15.9 before the delta is adopted (L8P-R9-F2, a named prerequisite, their
-     owners'); check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by record l8p's
-     check_l8p_fs.py (section 3)
+   the guard's two paths (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance against the 30 uA row (L8P-R9-F2: L4-E11
+     section 28 restated, record l9stk 15.9's re-take owed); the double failure after a latent first one (L8P-R9-F1, handed over);
+     check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by check_l8p_fs.py (3)
    VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,
      over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
    the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route
-     B2 composed as an unapproved PARTIAL interface proposal (the owner's item), which does not close it
+     B2 out of the baseline (an unapproved PARTIAL interface proposal, the owner's item, with no protection credit), which does not close it
    L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's
      and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
 
 12. THE PREDICATES
-   the drafted change list carries rows R-220 to R-244, holds every order constraint, its page table is its list, FAN_OK withdrawn yes
+   the drafted change list carries rows R-220 to R-244 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn yes
    board A composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board B composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board D composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board E composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
-   board E composes as record l4e7 composes it, route B2 as a PROPOSAL                                                           yes
+   board E composes as record l4e7's baseline composes it (route B2 out of the baseline)                                         yes
    record efuse composes boards A and B in the same order                                                                        yes
    mainpb takes R603 and C607 on the full composition (V6's reading)                                                             yes
    every record check reads DRAWN on the composed candidate (DD-7 with the guard, V6-m2; l9t5 in its automatic mode, V6-m1)      yes

@@ -57,12 +57,12 @@ ORDER = {
     "b": ["l8gnd/gnd002", "l8r2/fans12", "l8r2/fandec", "l8r2/panel5v", "l8r2/ph4", "l8r2/rt500", "l8r2/gndret", "l8r2/gndrtn",
           "l9t5/iocbuck", "l9t5/iocpre", "l9t5/iocset", "l9t5/canshdn", "efuse/u23ilm", "efuse/u24ilm", "l6r2/xal_land", "l6r2/lcsc", "l6r2/intent"],
     "d": ["d8dec31/ptt", "l9t5/paloop", "l6r2/intent", "l6r2/lcsc"],
-    # board E (P0-7's round; route B2 composed as the PROPOSAL it is, after P0-7's sense, so the check reads it: INBOX 12 and 13)
+    # board E (P0-7's round: its C2 sense; route B2 is OUT of the baseline after cx45 Q6 and the owner's part 24, INBOX 20: no step)
     "e": ["l4e9/q1", "l4e7/u5_grade", "l4e7/hold", "l4e7/input_limit", "l4e7/backstop", "l4e9/f1", "l4e9/hotswap", "l4e11/entry",
-          "l4e7/solar_guard", "l4e7/p0sol", "l4e7/p0sol_b2", "l4e11/aux", "l8r2/packrtn", "l8p/enable", "d8dec31/cin", "l6r2/xal_land",
+          "l4e7/solar_guard", "l4e7/p0sol", "l4e11/aux", "l8r2/packrtn", "l8p/enable", "d8dec31/cin", "l6r2/xal_land",
           "l6r2/lcsc"],
 }
-PROPOSAL = ("l4e7/p0sol_b2",)  # composed as a PROPOSAL: its row is step ALT (R-241), the owner's item of record l4e7's B2-PRESENCE.md
+PROPOSAL = ()                  # route B2 (record l4e7's B2-PRESENCE.md) is out of the baseline: neither composed nor in the change list
 P0SOL_PY = "v2/docs/records/l4e7/l4e7_p0sol.py"
 ORDER_FREE = ("l6r2",)          # Layer 6's tables: order-free, after every circuit draft (no change-list row; L4-E9 section 3)
 L4E9 = "v2/docs/records/l4e9/l4e9_power_path.py"
@@ -267,8 +267,8 @@ def checks(raws, intents, S):
     if "e" in raws:
         E = raws["e"]
         out["l8p the loop's board E half (J_SMB, J_BLK)"] = L8P.judge("e", L8P.read_netlist(E))
-        bad = [s for s, ok in P0SOL.judge_b2(L8P.read_netlist(E)) if not ok]
-        out["l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)"] = ("FAIL" if bad else "DRAWN", bad or ["every predicate of C2 and B2 holds"])
+        bad = [s for s, ok in P0SOL.judge(L8P.read_netlist(E)) if not ok]
+        out["l4e7 P0-7 the sense on the backstop's bank (C2)"] = ("FAIL" if bad else "DRAWN", bad or ["every predicate of C2 holds"])
     return out
 
 
@@ -295,8 +295,8 @@ def mutations(T):
         ("l9t5 F01 the PA cap, board D", "R57 into VGG_SW (U15's output, not its feedback)", "d", mut_pin_on(d, "R57", "VGG_FB", "VGG_SW")),
         ("l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16", "J_HARN1 pin 16 back on AB_SPARE", "d", mut_pin(d, "J_HARN1", "16", "AB_SPARE")),
         ("l8p the loop's board E half (J_SMB, J_BLK)", "J_SMB pin 7 on GND", "e", mut_pin(T["e"], "J_SMB", "7", "GND")),
-        ("l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)", "J_SOLP pin 2 off INP (the loop open on the board)", "e",
-         mut_pin(T["e"], "J_SOLP", "2", "PV_INPX")),
+        ("l4e7 P0-7 the sense on the backstop's bank (C2)", "U23's output off IMON_IN (the regulation's sense lost)", "e",
+         mut_pin(T["e"], "U23", "1", "IMON_X")),
     ]
 
 
@@ -435,8 +435,8 @@ def main():
         w("   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): %d changes, every" % n_ch)
         w("   order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: %s; WITHDRAWN: %s" % (
             "yes" if page_ok else "NO", ", ".join(wd) or "none"))
-        P0_ = {"the drafted change list carries rows R-220 to R-244, holds every order constraint, its page table is its list, FAN_OK withdrawn":
-               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 245))}
+        P0_ = {"the drafted change list carries rows R-220 to R-244 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn":
+               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 245) if n != 241)}
         P = dict(P0_)
         T, raws, intents, ok_all = {}, {}, {}, True
         for b in "abde":
@@ -465,9 +465,10 @@ def main():
             P["board %s composes in L4-E9's change-list order with every draft, every one with a row, and regenerates" % b.upper()] = (
                 ok and in_order and not no_row and tail_free and not dup and table and not table["unplaced"] and table.get("intent_written"))
             T[b], raws[b], intents[b] = table, raw, (table or {}).get("intent")
-        e_same = [tuple(k.split("/")) for k in ORDER["e"]] == [tuple(x) for x in P0SOL.ORDER_E_B2]
-        w("   board E is record l4e7's own composition with route B2 (ORDER_E_B2, imported): %s" % ("the same order" if e_same else "A DIFFERENT ORDER"))
-        P["board E composes as record l4e7 composes it, route B2 as a PROPOSAL"] = e_same
+        e_same = [tuple(k.split("/")) for k in ORDER["e"]] == [tuple(x) for x in P0SOL.ORDER_E]
+        w("   board E is record l4e7's own baseline composition (ORDER_E, imported; no route B2 step: it is out of the baseline): %s" % (
+            "the same order" if e_same else "A DIFFERENT ORDER"))
+        P["board E composes as record l4e7's baseline composes it (route B2 out of the baseline)"] = e_same
         eo = efuse_orders()
         circ = {b: [k for k in ORDER[b] if k.split("/")[0] not in ORDER_FREE and k.split("/")[0] != "efuse"
                     and k not in ("l9t5/paloop", "d8dec31/mainpb", "l9t5/iocset", "l8p/thgfs")] for b in "ab"}
@@ -672,29 +673,36 @@ def main():
         w("     76.25 C (%.4f A, INFERRED): NO (L9T5-F25, L8R2-F43's vendor task); under U13's own least loop %.4f A with R55's other loads: yes," % (
             least_th, L["u13_min"]))
         w("     so the cap acts first and U13's loop is the backstop")
-        w("   the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9: the fail-safe delta after round 8's guard, section")
-        w("     2; its reader check_l8p_fs.py, section 3): no trip at 10 A held (%s C, %s K under %s C), at the 18 A service read as held (%s C," % (
-            nt.group(1), nt.group(2), nt.group(3), nt.group(4)))
-        w("     %s K) and at the gauge's condition C4 (%s C, %s K) on the switches' PRINTED limits (each switch, l8p_c4.out 10c (a)); the trip" % (
-            nt.group(5), nt.group(6), nt.group(7)))
-        fsx = need(c4.split("10c. ROUND 9", 1)[-1], r"2\.5 V within ([\d.]+) ms at the tolerances", "the delta's trip time (10c)")
-        w("     within %s ms (10c (b)), under the RC hold; the FETs' 150 C behind it (DD-2 with Q42, condition C3). NOT established: the common" % fsx.group(1))
-        w("     path's single failures that remove both switches' trip (L8P-R9-F1, OPEN: cx45 Q5, Slot C's); the guard's DOCK_EN_OUT draw at 50 uA")
-        w("     cold and 180 uA tripped against the 30 uA of L4-E11 20c and 20f and record l9stk 15.9 (L8P-R9-F2, a prerequisite before adoption,")
-        w("     its owners' re-take: cx45 Q5); V6-m7 CORRECTED IN DRAFT, UNCHECKED")
+        c10 = " ".join(c4.split("10c. ROUND 9", 1)[-1].split())
+        tp = need(c10, r"2\.5 V within ([\d.]+) ms at the tolerances \(round 8: [\d.]+ ms\); path 2 within ([\d.]+) ms", "the two paths' trip times (10c)")
+        al = need(c10, r"Allowances taken: (\d+) uA cold, (\d+) uA tripped", "the guard's draw allowances (10c)")
+        two = "no single failure removes the trip" in c10
+        w("   the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9 after cx45 Q5: TWO PATHS sharing only the pour and")
+        w("     the loop, path 1 round 8's guard with the cold clamp, path 2 U62 on VBAT through U63 with its own shunt Q61 on DOCK_EN_OUT; drawn by")
+        w("     the delta, section 2, read by check_l8p_fs.py, section 3): no trip at 10 A held (%s C, %s K under %s C), at the 18 A service read" % (
+            nt.group(1), nt.group(2), nt.group(3)))
+        w("     as held (%s C, %s K) and at the gauge's condition C4 (%s C, %s K) on each switch's PRINTED limits (l8p_c4.out 10c (a)); the trip" % (
+            nt.group(4), nt.group(5), nt.group(6), nt.group(7)))
+        w("     within %s ms on path 1 and %s ms on path 2 (10c (b)), under the RC hold; %s (10c (2)); the FETs' 150 C behind it (DD-2 with" % (
+            tp.group(1), tp.group(2), "no single failure removes the trip" if two else "the common path NOT READ"))
+        w("     Q42, condition C3). NOT established: the double failure after a latent first one (L8P-R9-F1, handed over as remaining engineering);")
+        w("     the guard's DOCK_EN_OUT draw at %s uA cold and %s uA tripped against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;" % (
+            al.group(1), al.group(2)))
+        w("     L4-E11 section 28 restates 20c and 20f on them, record l9stk's re-take owed); V6-m7 and the common path CORRECTED IN DRAFT, UNCHECKED")
         P["each protective row states its band against its demand and its downstream printed rating, and names what is not established"] = coord_ok
         sol = text(OUTS["p0sol"])
         e_parts = need(sol, r"gen_netlist: (\d+) parts, 0 unplaced", "record l4e7's board E composition").group(1)
         d16 = "D-16: CORRECTED on the drafted circuit" in sol
         d10 = re.search(r"D-10 \(B6, L4-F01\): an UNRESOLVED PROTECTION DEFECT in the present model", sol) is not None
         b2_not = "adopting or declining it does not resolve D-10" in sol
-        w("   the solar entry (P0-7, record l4e7, merged at 66ec67ca; l4e7_p0sol.out pinned): board E composed here (section 2) and there in")
-        w("     L4-E9's order with P0-7's sense and route B2 composed as a PROPOSAL (record l4e7's C2 composition %s parts); D-16 %s; D-10 an" % (
+        w("   the solar entry (P0-7, record l4e7, merged at 5cc9cb9d; l4e7_p0sol.out pinned): board E composed here (section 2) and there in")
+        w("     L4-E9's order with P0-7's sense, route B2 out of the baseline (record l4e7's C2 composition %s parts); D-16 %s; D-10 an" % (
             e_parts, "CORRECTED in draft" if d16 else "NOT READ"))
         w("     UNRESOLVED PROTECTION DEFECT in the model (%s: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop" % (
             "record l4e7 reads it so, E-1" if d10 else "NOT READ"))
-        w("     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is an unapproved PARTIAL interface")
-        w("     proposal (the owner's item), and neither adopting nor declining it closes D-10; the solar guard's trip against its demand is")
+        w("     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2, out of the baseline, is an")
+        w("     unapproved PARTIAL interface proposal with no protection credit (the owner's item), and neither adopting nor declining it closes")
+        w("     D-10; the solar guard's trip against its demand is")
         w("     record l4e7's reading, not re-traced here")
         P["record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve"] = (
             d16 and d10 and b2_not)
@@ -806,19 +814,18 @@ def main():
         w("     extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,")
         w("     L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
         w("   the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and")
-        w("     J_PA at the inside air (L9T5-F25), the guard's common path and its draw (L8P-R9-F1, L8P-R9-F2; cx45 Q5, Slot C's); the CAN")
+        w("     J_PA at the inside air (L9T5-F25), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN")
         w("     service under a babbling supervisor (5; L9T5-F21, cx45 Q3, Slot C's)")
         w("   the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2")
         w("   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20")
-        w("   the guard's fail-safe delta (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance restated from 30 uA to 50 uA cold and")
-        w("     180 uA tripped in L4-E11 20c and 20f and record l9stk 15.9 before the delta is adopted (L8P-R9-F2, a named prerequisite, their")
-        w("     owners'); check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by record l8p's")
-        w("     check_l8p_fs.py (section 3)")
+        w("   the guard's two paths (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance against the 30 uA row (L8P-R9-F2: L4-E11")
+        w("     section 28 restated, record l9stk 15.9's re-take owed); the double failure after a latent first one (L8P-R9-F1, handed over);")
+        w("     check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by check_l8p_fs.py (3)")
         w("   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,")
         w("     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes")
         w("     a 1x4 VH with two contacts a pole (a harness row and a board A land)")
         w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route")
-        w("     B2 composed as an unapproved PARTIAL interface proposal (the owner's item), which does not close it")
+        w("     B2 out of the baseline (an unapproved PARTIAL interface proposal, the owner's item, with no protection credit), which does not close it")
         w("   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's")
         w("     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin")
         w("")
