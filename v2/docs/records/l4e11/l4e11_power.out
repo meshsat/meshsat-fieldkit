@@ -13,7 +13,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   l8p_c4    eee720dba6702bbf  v2/docs/records/l8p/l8p_c4.out
+   l8p_c4    3dbd9bda6bce760d  v2/docs/records/l8p/l8p_c4.out
    l8p_thgfs 19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
    l8p_thguard 544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
@@ -2034,16 +2034,24 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    27d. STATUS (SESSION): V6-m2 answered; the guard's reading on DD-7 (23g's OWED READING) taken: its pulled level read held with the loop powered at 7.6, 10.6 and 16.8 V, the window and the docking hold; no circuit changed by this record
 
 28. ROUND 18: 20c AND 20f WITH RECORD l8p's FAIL-SAFE GUARD (the check cx45's Q5 on candidate 06077cee; record l8p round 9, 10c)
-   cx45 (an AI review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone. Record l8p's delta (apply_gen_sch_a_thgfs.py,
-     after the guard, NOT APPLIED) keeps round 8's shunt Q60 on the return (path 1) with a cold clamp, adds path 2 (a second switch on
-     VBAT whose shunt Q61 pulls DOCK_EN_OUT) and splits U61's input capacitor; its draw on DOCK_EN_OUT is restated to 40 uA cold and
-     50 uA tripped (record l8p 10c, RECORD). Nothing here changes a circuit (INFERRED on 20c's and 27's figures)
+   cx45 (an AI review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone; its recheck cx46 read this section's first form
+     CORRECTIONS NOT CLOSED: the method ends and this section is a DISPOSITION (every row PROVISIONAL, nothing closed).
+   THE CHANGED CIRCUIT AND CASE, stated: 27a and 27b judge round 8's guard (one path, its draw 30 uA, C261 1 uF); this section judges
+     record l8p's delta (apply_gen_sch_a_thgfs.py, after the guard, NOT APPLIED), which keeps round 8's shunt Q60 on the return (path 1)
+     with a cold clamp, adds path 2 (a second switch on VBAT whose shunt Q61 pulls DOCK_EN_OUT) and splits U61's input capacitor into
+     C261 and C268 (330 nF each). Its draw on DOCK_EN_OUT: 40 uA cold and 50 uA tripped (record l8p 10c, RECORD); the delta's FIRST form
+     (a diode OR, superseded) carried 50 uA cold and 180 uA tripped, the case the P0 list named: both are executed below. Layer 5's row and
+     record l9stk 15.9 still carry 30 uA: their restatement is the owners' (draft texts on record l8p's page 12o, L8P-R9-F2). Nothing
+     here changes a circuit (INFERRED on 20c's and 27's figures)
    28a. 20c WITH PATH 1 TRIPPED: the return held at 0.0665 V at most (the guard's trip, or the clamp's 0.0665 V with Q60's gate on its drain;
      RECORD) against the held reading under 0.7755 V: read held; the guard's 50 uA drawn, R106 +1 %, the pair -1 %, board A's 984 kOhm:
        BRK_VIN  7.6 V: DOCK_EN_OUT 4.224 V against the powered reading's 1.981 V at most: read powered
        BRK_VIN 10.6 V: DOCK_EN_OUT 5.999 V against the powered reading's 1.981 V at most: read powered
        BRK_VIN 16.8 V: DOCK_EN_OUT 9.666 V against the powered reading's 1.981 V at most: read powered
-     so a trip of path 1 IS DD-7's trigger, as in 27a
+     so a trip of path 1 IS DD-7's trigger, as in 27a; the earlier case (180 uA tripped), the same rows:
+       BRK_VIN  7.6 V: DOCK_EN_OUT 3.447 V: read powered
+       BRK_VIN 10.6 V: DOCK_EN_OUT 5.222 V: read powered
+       BRK_VIN 16.8 V: DOCK_EN_OUT 8.89 V: read powered
    28b. 20c WITH PATH 2 TRIPPED: Q61 holds DOCK_EN_OUT at 50.8 mV and the return at 30.4 mV at the 29.2 V clamp (record l8p 10c, RECORD, its
      on-resistance ASSUMED): DOCK_EN_OUT under the unpowered reading's least 1.789 V and the return under 0.7755 V: DD-7 reads the loop dark, the
      state of an undocked pack: no trigger; board P's first inverter reads the return low and turns the breaker off
@@ -2052,11 +2060,14 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    28d. 20f WITH THE DELTA (INFERRED): a docking steps BRK_VIN through R106 onto DOCK_EN_OUT, which carries C261 and C268 (0.33 and 0.33 uF) and
      through U61 in dropout C262 (4.7 uF): the rise's time constant about 60 ms (all at +10 %, MODEL); path 2's regulator is on VBAT and loads no
      docking; the return follows DOCK_EN_OUT through the pair resistively, so RET/OUT stays at 0.4707 or more: no trigger; the cold 40 uA
-     lowers DOCK_EN_OUT by at most 0.404 V (R106 +1 %); the breaker's start comes no sooner than the RC hold's least 0.110 s (record l8p
+     lowers DOCK_EN_OUT by at most 0.404 V (R106 +1 %; 0.505 V at the earlier case's 50 uA); the breaker's start comes no sooner than
+     the RC hold's least 0.110 s (record l8p
      10c (e): a hot docking reaches path 1's shunt before it)
-   28e. STATUS (SESSION): cx45's Q5 propagation taken: path 1's trip read held with the loop powered, path 2's read dark, the window and the docking;
-     PROVISIONAL on record l8p's delta (L8P-R9-F1: a double failure after a latent first one, handed over as remaining engineering) and on
-     Layer 5's restated allowance (L8P-R9-F2)
+   28e. DISPOSITION (SESSION, after cx46): these rows hold on the delta's intact circuit at both allowance cases; PROVISIONAL, not closed:
+     record l8p's L8P-R9-F1 (a latent first failure and a second remove the trip; with path 1 lost, path 2's retry heating is unbounded)
+     weakens every protection claim here, and the allowance consumers (Layer 5's row, record l9stk 15.9) are unrestated (L8P-R9-F2).
+     REMAINING ENGINEERING: the replay of the dependent start-up and protection rows (20f's timing against U47's and U48's tSD at the
+     owners' restated allowance, 22's bleed with path 2's VBAT load) once the owners restate the allowance
 END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py
 (R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three
 battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist

@@ -59,7 +59,7 @@ PINS = {
     "gen_p": ("v2/ecad/tools/gen_sch_p.py", "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3"),
     "net_a": ("v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5"),
     # round 17 (the check V6's V6-m2): record l8p's thermal guard, drafted in its round 8 and judged in its rounds 8 and 9
-    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "eee720dba6702bbff8622afd80bd915aa35ef7dd372d3d9644e992a3218003de"),
+    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "3dbd9bda6bce760d41ca1e5ba4664c29c6e1ba683156cc6aaa271c7f31b77827"),
     "l8p_thgfs": ("v2/docs/records/l8p/apply_gen_sch_a_thgfs.py", "19af759a934be6cc07390a43873ce1d1d6ef754a58dcac202c89063974e0d23c"),
     "l8p_thguard": ("v2/docs/records/l8p/apply_gen_sch_a_thguard.py", "544a462a9031862a953748a631023f59491203198aa4810321baed121606ecab"),
     "net_e": ("v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4"),
@@ -6401,7 +6401,7 @@ def fix27_round(R, T):
     m = need(c4, r"board A's (\d+) kOhm and the guard's\s+(\d+) uA on DOCK_EN_OUT", "the guard's draw on DOCK_EN_OUT (l8p 4)")
     S["i_guard"] = float(m.group(2)) * 1e-6
     need(c4, r"\(L8P-D9\); that label is WITHDRAWN", "record l8p's round 9 (V6-m7, the owner's part 22)")
-    need(c4, r"VERDICT \(10c\): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT", "record l8p's round 9 delta (part 22, cx45 Q5)")
+    need(c4, r"DISPOSITION \(10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends\)", "record l8p's round 9 delta (part 22, cx45 Q5, cx46)")
     g = flat(text("l8p_thguard"))
     need(g, r'r\("R260", "7\.5k 1%", "DOCK_EN_OUT", "THG_MID"\); r\("R261", "7\.5k 1%", "THG_MID", "DOCK_EN_RET"\)', "the guard's pair")
     m = need(g, r'c\("C261", "(\d+(?:\.\d+)?)u 50V X7R", "DOCK_EN_OUT", "GND"\); c\("C262", "(\d+(?:\.\d+)?)u 16V X7R", "THG_VDD", "GND"\)', "the guard's capacitors")
@@ -6490,7 +6490,7 @@ def fix28_round(R, T):
     S["p2"] = (float(m.group(1)) / 1e3, float(m.group(2)) / 1e3, float(m.group(3)) / 1e3)
     m = need(c4, r"the return ([\d.]+) mV, HELD: the breaker off, DD-7 reads board P's own pull: the fault TRIPS", "the clamp's held return (l8p 10c)")
     S["clamp"] = float(m.group(1)) / 1e3
-    need(c4, r"VERDICT \(10c\): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT", "record l8p's round 9 verdict (cx45 Q5)")
+    need(c4, r"DISPOSITION \(10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends\)", "record l8p's round 9 disposition (cx46)")
     g = flat(text("l8p_thgfs"))
     m = need(g, r'c\("C261", "(\d+)n 50V X7R", "DOCK_EN_OUT", "GND"\);', "the delta's C261")
     S["c261"] = float(m.group(1)) * 1e-9
@@ -6509,10 +6509,16 @@ def fix28_round(R, T):
         rows.append((vin, vout))
     S["pulled"] = rows
     S["held"] = held
+    # the earlier case the P0 list named (the delta's first form, 50 uA cold and 180 uA tripped), executed on the same rows (cx46 9)
+    S["early"] = (50e-6, 180e-6)
+    S["pulled_early"] = [(vin, (vin / (r_feed * 1.01) + held / (S27["pair"] * 0.99) - S["early"][1]) / (1 / (r_feed * 1.01) + 1 / r_oload + 1 / (S27["pair"] * 0.99)))
+                         for vin in (7.6, 10.6, 16.8)]
+    S["sag_early"] = S["early"][0] * r_feed * 1.01
     S["tau"] = r_feed * 1.01 * (S["c261"] + S["c268"] + S27["c262"]) * (1 + R17_C_TOL)
     S["sag"] = S["cold"] * r_feed * 1.01
     S["held_ok"] = held < S20["ret_low"]
     S["powered_ok"] = all(v > S20["out_rel"][1] for _vin, v in rows)
+    S["powered_early_ok"] = all(v > S20["out_rel"][1] for _vin, v in S["pulled_early"])
     S["dark_ok"] = S["p2"][1] < S20["out_ast"][0] and S["p2"][2] < S20["ret_low"]
     return S
 
@@ -6521,10 +6527,17 @@ def render_fix28(R, p):
     S, S20, S27 = R["S28"], R["S20"], R["S27"]
     p("")
     p("28. ROUND 18: 20c AND 20f WITH RECORD l8p's FAIL-SAFE GUARD (the check cx45's Q5 on candidate 06077cee; record l8p round 9, 10c)")
-    p("   cx45 (an AI review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone. Record l8p's delta (apply_gen_sch_a_thgfs.py,")
-    p("     after the guard, NOT APPLIED) keeps round 8's shunt Q60 on the return (path 1) with a cold clamp, adds path 2 (a second switch on")
-    p("     VBAT whose shunt Q61 pulls DOCK_EN_OUT) and splits U61's input capacitor; its draw on DOCK_EN_OUT is restated to %s uA cold and" % fmt(S["cold"] * 1e6, 0))
-    p("     %s uA tripped (record l8p 10c, RECORD). Nothing here changes a circuit (INFERRED on 20c's and 27's figures)" % fmt(S["trip"] * 1e6, 0))
+    p("   cx45 (an AI review; RECORD) found 27a and 27b still on round 8's 30 uA and C261 alone; its recheck cx46 read this section's first form")
+    p("     CORRECTIONS NOT CLOSED: the method ends and this section is a DISPOSITION (every row PROVISIONAL, nothing closed).")
+    p("   THE CHANGED CIRCUIT AND CASE, stated: 27a and 27b judge round 8's guard (one path, its draw 30 uA, C261 1 uF); this section judges")
+    p("     record l8p's delta (apply_gen_sch_a_thgfs.py, after the guard, NOT APPLIED), which keeps round 8's shunt Q60 on the return (path 1)")
+    p("     with a cold clamp, adds path 2 (a second switch on VBAT whose shunt Q61 pulls DOCK_EN_OUT) and splits U61's input capacitor into")
+    p("     C261 and C268 (330 nF each). Its draw on DOCK_EN_OUT: %s uA cold and %s uA tripped (record l8p 10c, RECORD); the delta's FIRST form" % (
+        fmt(S["cold"] * 1e6, 0), fmt(S["trip"] * 1e6, 0)))
+    p("     (a diode OR, superseded) carried %s uA cold and %s uA tripped, the case the P0 list named: both are executed below. Layer 5's row and" % (
+        fmt(S["early"][0] * 1e6, 0), fmt(S["early"][1] * 1e6, 0)))
+    p("     record l9stk 15.9 still carry 30 uA: their restatement is the owners' (draft texts on record l8p's page 12o, L8P-R9-F2). Nothing")
+    p("     here changes a circuit (INFERRED on 20c's and 27's figures)")
     p("   28a. 20c WITH PATH 1 TRIPPED: the return held at %s V at most (the guard's trip, or the clamp's %s V with Q60's gate on its drain;" % (
         fmt(S["held"], 4), fmt(S["clamp"], 4)))
     p("     RECORD) against the held reading under %s V: %s; the guard's %s uA drawn, R106 +1 %%, the pair -1 %%, board A's %s kOhm:" % (
@@ -6532,7 +6545,9 @@ def render_fix28(R, p):
     for vin, v in S["pulled"]:
         p("       BRK_VIN %4s V: DOCK_EN_OUT %s V against the powered reading's %s V at most: %s" % (fmt(vin, 1), fmt(v, 3), fmt(S20["out_rel"][1], 3),
                                                                                                  "read powered" if v > S20["out_rel"][1] else "NOT read powered"))
-    p("     so a trip of path 1 IS DD-7's trigger, as in 27a")
+    p("     so a trip of path 1 IS DD-7's trigger, as in 27a; the earlier case (%s uA tripped), the same rows:" % fmt(S["early"][1] * 1e6, 0))
+    for vin, v in S["pulled_early"]:
+        p("       BRK_VIN %4s V: DOCK_EN_OUT %s V: %s" % (fmt(vin, 1), fmt(v, 3), "read powered" if v > S20["out_rel"][1] else "NOT read powered"))
     p("   28b. 20c WITH PATH 2 TRIPPED: Q61 holds DOCK_EN_OUT at %s mV and the return at %s mV at the 29.2 V clamp (record l8p 10c, RECORD, its" % (
         fmt(S["p2"][1] * 1e3, 1), fmt(S["p2"][2] * 1e3, 1)))
     p("     on-resistance ASSUMED): DOCK_EN_OUT under the unpowered reading's least %s V and the return under %s V: DD-7 reads the loop dark, the" % (
@@ -6547,12 +6562,16 @@ def render_fix28(R, p):
         fmt(S27["c262"] * 1e6, 1), fmt(S["tau"] * 1e3, 0)))
     p("     docking; the return follows DOCK_EN_OUT through the pair resistively, so RET/OUT stays at %s or more: no trigger; the cold %s uA" % (
         fmt(S27["ratio"], 4), fmt(S["cold"] * 1e6, 0)))
-    p("     lowers DOCK_EN_OUT by at most %s V (R106 +1 %%); the breaker's start comes no sooner than the RC hold's least 0.110 s (record l8p" % fmt(S["sag"], 3))
+    p("     lowers DOCK_EN_OUT by at most %s V (R106 +1 %%; %s V at the earlier case's %s uA); the breaker's start comes no sooner than" % (
+        fmt(S["sag"], 3), fmt(S["sag_early"], 3), fmt(S["early"][0] * 1e6, 0)))
+    p("     the RC hold's least 0.110 s (record l8p")
     p("     10c (e): a hot docking reaches path 1's shunt before it)")
-    p("   28e. STATUS (SESSION): cx45's Q5 propagation taken: %s;" % (
-        "path 1's trip read held with the loop powered, path 2's read dark, the window and the docking" if (S["held_ok"] and S["powered_ok"] and S["dark_ok"]) else "A ROW DOES NOT HOLD"))
-    p("     PROVISIONAL on record l8p's delta (L8P-R9-F1: a double failure after a latent first one, handed over as remaining engineering) and on")
-    p("     Layer 5's restated allowance (L8P-R9-F2)")
+    p("   28e. DISPOSITION (SESSION, after cx46): these rows %s on the delta's intact circuit at both allowance cases; PROVISIONAL, not closed:" % (
+        "hold" if (S["held_ok"] and S["powered_ok"] and S["powered_early_ok"] and S["dark_ok"]) else "DO NOT ALL HOLD"))
+    p("     record l8p's L8P-R9-F1 (a latent first failure and a second remove the trip; with path 1 lost, path 2's retry heating is unbounded)")
+    p("     weakens every protection claim here, and the allowance consumers (Layer 5's row, record l9stk 15.9) are unrestated (L8P-R9-F2).")
+    p("     REMAINING ENGINEERING: the replay of the dependent start-up and protection rows (20f's timing against U47's and U48's tSD at the")
+    p("     owners' restated allowance, 22's bleed with path 2's VBAT load) once the owners restate the allowance")
 
 
 # ============================================================================================ the output
