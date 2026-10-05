@@ -23,7 +23,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
    8e374670868696ba v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
-   a4a079e321cb165b v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
+   85156e936ce21bcc v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
 
 2. THE APPLICABLE OPERATING STATE OF A SUPERVISOR (U41, U51, U61, STM32H743VIT6), AS THE TREE DEFINES IT
    v2/docs/HW-FW-CONTRACT.md: 11 rows name the supervisors (their I2C target addresses, CAN FD at 1 Mbps or less, the quorum, the vote rate);
@@ -477,7 +477,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    (4) THE COMPOSED CHANGES AGAINST THE CALCULATION AND THE ISSUED CASE ROW
      the contract draft's rows carry this record's figures (VOS3; at most 144 MHz; at most 2 % of every 100 ms window; no more than once a second; for at most 100 ms; no valid frame for 100 ms; FDCAN_CCCR.DAR = 1; PD2 (fabric A) and PB14 (fabric B) with 100 k; between 500 kbit/s and 1 Mbit/s): every one
      the SHDN draft's nets in the regenerated board B netlist: DRAWN (10f); the pre-regulator's divider: section 9's reading
-     C-DEV rev 2 as the coordinator issued it (the copy inputs/cases-cdev-rev2-20261005.md, sha256 a4a079e321cb165b, of _runs/cases/CASES-2026-10-04.md):
+     C-DEV rev 2 as the coordinator issued it (the copy inputs/cases-cdev-rev2-20261005.md, sha256 85156e936ce21bcc, of _runs/cases/CASES-2026-10-04.md):
      its figures against this output's (0.2558 A a regulator; 0.1732 A rev V; 0.2396 A at TJ 111.8 C; 2.966 W at +3V3_IOCx; +5V_IOC 0.8989 A; 0.0069 A at most): every one equal
 
 11. THE STATE OF L9T5-F06 (T10)
