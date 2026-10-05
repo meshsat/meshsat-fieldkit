@@ -4,6 +4,32 @@ Hardware for the MeshSat field kits, the portable go-boxes that carry a MeshSat 
 
 MeshSat is a prototype. Nothing here has been through a field deployment yet. The V1 kits are bench and demo units. The V2 boards are designed and generated, and the engineering foundations beneath them are still being completed: no V2 board is ready for layout, no layout of boards A, B, C, D, E or P carries its board's corrected schematic (E5 has none), and none has been fabricated or ordered ([`v2/docs/CURRENT-EVIDENCE.md`](v2/docs/CURRENT-EVIDENCE.md): "Foundations incomplete; 0 boards ready for layout; 0 physically verified").
 
+## Latest: compact v2, the pocket-sized node in a printed enclosure (6 October 2026)
+
+<img src="compact/v2/renders/renders_exploded_rear.png" alt="Exploded view of the compact v2 enclosure as designed: the belt plate, the body with the SOS guard and the LoRa antenna, the RockBLOCK 9704 on its rails, the separator, the T-Beam Supreme with its cell, the lid with the OLED window, and the button membrane, plungers and retainer to the side, with a ruler and a 2 euro coin for scale" width="820">
+
+<sub>The compact v2 enclosure exploded, as designed (an OpenSCAD render; nothing printed). From the bottom: the belt plate, the body with the SOS guard and the LoRa antenna, the RockBLOCK 9704-SMA on its rails, the printed separator, the T-Beam Supreme with its 18650 cell, the lid with the OLED window; to the side, the TPU button membrane, the three plungers and their retainer.</sub>
+
+The compact kit is the small MeshSat node: a Meshtastic LoRa radio and an Iridium modem in a case that fits a pocket, running the MeshSat fork of the Meshtastic firmware and talking to the MeshSat phone apps over one Bluetooth link. Its third version, **compact v2**, puts a LILYGO T-Beam Supreme over a RockBLOCK 9704-SMA in a 3D-printed stacked enclosure: ASA body, lid, separator and carry plates, a TPU membrane over the board's three side buttons, an O-ring cord seal, a polycarbonate pane over the OLED, two SMA bulkheads, an IP67 panel USB-C, an M12 vent and a 12 mm IP67 switch under a guard; 62.5 x 146.0 x 62.7 mm, 154.0 mm long with the SOS guard. The design is `meshsat-enclosure` v0.6 of 5 October 2026, the answer to an engineering audit of its v0.5: both boards are registered from the makers' STEP models, every printed part is clash-checked against them, and three test coupons (the 9704 rail slot, the rim with its seal and inserts, the upper bay with the real board) come before any full print. [`compact/`](compact/README.md) holds the version table for compact v0, v1 and v2; [`compact/v2/`](compact/v2/README.md) the source, the print files, the coupons, the renders and the validation chain.
+
+State: designed, and cleared by its own audit response for prototype printing only. The first test coupons are being printed in October 2026; nothing has been printed, fitted or sealed. Open before a full build: the panel part numbers, how the 9704 is powered, Ground Control's certification condition on other transmitters in the same housing, and the leak, button and insert tests ([`compact/v2/AUDIT-RESPONSE.md`](compact/v2/AUDIT-RESPONSE.md)). Firmware, wiring and the Bluetooth contract: [meshsat-esp32](https://github.com/meshsat/meshsat-esp32), [meshsat-firmware](https://github.com/meshsat/meshsat-firmware) and [docs.meshsat.net/node/](https://docs.meshsat.net/node/).
+
+## News
+
+| Date | What |
+|---|---|
+| 6 October 2026 | The compact kit joins this repository as [`compact/`](compact/README.md): the version table for compact v0, v1 and v2, and the v2 enclosure package (OpenSCAD source, print STLs, test coupons, renders, validation chain, the makers' reference CAD). The first test coupons are being printed. |
+| 5 October 2026 | The v2 enclosure reaches v0.6, the response to an engineering audit of v0.5 (findings F01 to F15, [`compact/v2/AUDIT-RESPONSE.md`](compact/v2/AUDIT-RESPONSE.md)): boards registered from the makers' STEP models, every printed part clash-checked, grounded test coupons in place of a floating fit check, a membrane and guided plungers for the side buttons. |
+| 4 October 2026 | The V2 programme adopts an execution constitution ([`v2/docs/EXECUTION-CONSTITUTION.md`](v2/docs/EXECUTION-CONSTITUTION.md)): layer deliverables with explicit dependencies, independent checking, one freeze per candidate, and separate statements of handover readiness, power-design closure and fabrication release. |
+| 3 October 2026 | A panel controller firmware for board C ([`v2/firmware/panel/`](v2/firmware/panel/README.md)): a portable core with its hardware layer, a pico-sdk port and host tests. The supplier engineering-handover entry page ([`v2/docs/handover/supplier/`](v2/docs/handover/supplier/)) with a per-board BOM reader from the committed netlists. Desk work: no board exists. |
+| 27 September 2026 | The case set for the Peli 1450 ([`v2/release/case-2026-09-27/`](v2/release/case-2026-09-27/README.md)): face plate, RF entry plates, connector plate, frame legs and the lid tray as CAD, drawings and 1:1 templates. Nothing cut or fitted. |
+| 26 September 2026 | Circuit corrections in the schematics of boards A, B, C, D, E and P. No committed layout carries them; the deliverable folders of `v2/release/revA/` predate them. |
+| 7 September 2026 | The MESHSAT-830 generation: the Peli 1450 go-box around three Compute Module 5 slots, its boards generated from their generators (the V2 section below). |
+| 3 September 2026 | This repository opens with the Rev A design release (`revA`) of the previous board generation (one compute module, the Touch Display, a twelve-cell battery module), kept on the GitHub release as the record. |
+| April 2026 | The V1 kits tesseract and parallax built, in use since as bench and demo units ([`v1/`](v1/README.md)). |
+
+## Folders
+
 | Folder | What it is | State |
 |---|---|---|
 | `v1/` | tesseract and parallax as built: IP67 case, HDPE plates on M3 rods, UV-K5 + AIOC APRS chain, per-kit BOM and GPIO pinouts, FreeCAD plate model | built April 2026, in use |
@@ -57,10 +83,6 @@ Concept renders of the assembled kit as designed (not built; `v2/cad/render/` ho
 | the switch corner | closed for transport |
 
 **The V2 build guide, [`v2/BUILD.md`](v2/BUILD.md), is the 7 September generation's guide, kept as the assembly narrative and not to be used to order boards:** no board is ready for layout, and the order folder is rebuilt and quarantined with nothing ordered from it (owner decision 41 of 25 September 2026). Sources, generators, vendor references, the release and the order record are described in [`v2/README.md`](v2/README.md). The design record is [`v2/docs/MESHSAT-709-geometry-appendix.md`](v2/docs/MESHSAT-709-geometry-appendix.md), the build procedure [`v2/docs/ASSEMBLY.md`](v2/docs/ASSEMBLY.md), the panel controller contract [`v2/docs/PANEL.md`](v2/docs/PANEL.md).
-
-## Compact kit: the pocket-sized node (compact v0, v1, v2)
-
-The compact kit is the small MeshSat node: a Meshtastic LoRa radio and an Iridium modem in a case that fits a pocket, running the MeshSat fork of the Meshtastic firmware and talking to the MeshSat phone apps over one Bluetooth link. It is a kit in its own right beside the field kits, with its own version line: **v0** is the Seeed XIAO ESP32-S3 + Wio-SX1262 + RockBLOCK 9603 bench unit in a Peli 1050; **v1** the LILYGO T-Beam Supreme + RockBLOCK 9603 with one 18650 cell, meant for a Peli 1020 (running on the bench since 21 September 2026, the Peli build not finished); **v2** the T-Beam Supreme over a RockBLOCK 9704-SMA in a 3D-printed stacked enclosure (ASA, a TPU button membrane, an O-ring cord, a polycarbonate window over the OLED), designed in OpenSCAD as `meshsat-enclosure` v0.6 on 5 October 2026 and cleared by its own audit response for prototype printing only. [`compact/README.md`](compact/README.md) holds the version table; [`compact/v2/`](compact/v2/README.md) the enclosure source, print files, test coupons, renders and the validation chain (clash check against the makers' STEP models, mesh report). Nothing of v2 has been printed or fitted: the first test coupons are being printed in October 2026. The firmware, the wiring tables and the Bluetooth contract live in [meshsat-esp32](https://github.com/meshsat/meshsat-esp32) and [meshsat-firmware](https://github.com/meshsat/meshsat-firmware).
 
 ## How to build one
 
