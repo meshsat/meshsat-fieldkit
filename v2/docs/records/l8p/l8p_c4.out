@@ -19,7 +19,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    54de8e4089bb8221  v2/vendor/power/st-semtech-1n4148w-c81598.pdf
    e96e76df5ddf8b4f  v2/docs/records/l8p/check_l8p_fs.py
    66c246df3f3029ab  v2/docs/records/l4e11/check_dd7_netlist.py
-   88cc6068e604b096  v2/docs/records/l8p/l8p_c4.py
+   12ae16d82b88bf5c  v2/docs/records/l8p/l8p_c4.py
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
