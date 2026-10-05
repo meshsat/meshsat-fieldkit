@@ -1,0 +1,272 @@
+L4-E7 / P0-7: THE SOLAR STAGE'S D-10 AND D-16 BY CIRCUIT ALTERNATIVES (MESHSAT-1357, 5 October 2026)
+Prototype design, desk arithmetic: nothing is bought, built, powered or measured; no generator, registry or page of the tree is
+edited (apply_gen_sch_e_p0sol.py is a draft, composed here on scratch copies only). Bases: PRINTED LIMIT, TYPICAL, MEASURED (none
+exists), ASSUMPTION, MODELED, INFERRED, SESSION, NETLIST, CATALOGUE. The lead-inductance method is ended: no loop is searched and
+none is claimed to pass; the record's transient model runs only at its reference loop and the envelope's ends, on the changed
+circuit, against the same failure case.
+
+INPUTS (sha256, the first 16 hex digits)
+  d632d6ecf5db520f v2/docs/records/l4e7/l4e7_stage_settings.py
+  2ad2015b0c7aea91 v2/docs/records/l4e7/l4e7_stage_settings.out
+  df1a51ad531c2ec9 v2/docs/records/l4e7/l4e7_stage_settings.results.json
+  f7547d465e0eb7d2 v2/docs/records/l4e7/apply_gen_sch_e_p0sol.py
+  f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
+  2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+  d0aa86fe88e03eee v2/docs/records/l4e11/l4e11_power.out
+  8f552a0b57677bfa v2/vendor/power/lt8705a.pdf
+  dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
+  27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
+  3cfe41fef1407b85 v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf
+  1b5c68910aa562a0 v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf
+  ccbf7fa97649e098 v2/vendor/power/coilcraft-xal1510.pdf
+  adccf37d9343f7e2 v2/vendor/passives/held/samsung-CL31B106KBHNNN-2026-10-02.json
+  074ea4b6607c221b v2/vendor/passives/held/samsung-CL32B106KBJNNN-2026-10-02.json
+  f483cb318d868fc5 v2/vendor/passives/held/samsung-CL32B225KCJSNN-2026-10-02.json
+  fb7b8c4aedc6acb0 v2/docs/records/l4e7/inputs/jlc-search-rt0603brd07-2026-10-01.json
+  65a7be822c030176 v2/docs/records/l4e7/inputs/jlc-search-rt0603brd07-30k-2026-10-01.json
+  13326c9841e148b7 v2/docs/records/l4e7/inputs/lcsc-C44322-2026-10-01.json
+
+0. REPRODUCTION ON THE BASE (fnd/p0base e132db0e), before any change
+  0a The record's results cache (l4e7_stage_settings.results.json): its KEY does NOT hold on this tree. The only part that differs
+     is the file v2/docs/records/l4e11/l4e11_power.out (3a46198439d54bfb at 69921ce8, set 29's freeze, against d0aa86fe88e03eee
+     here: L4-E11's rounds 12 to 16). The figures compute() reads from it, with its own patterns, in both versions: UVLO rising
+     7.87/8.14/8.44; UVLO falling 7.46/7.66/7.95; the start's slew 17.28/20.71/24.65; INP high 7.23; the short-circuit threshold
+     10.36/12.04/13.87; the overcurrent threshold 6.364/6.8/7.136. EQUAL in both, so the cached results are this base's results;
+     the cache is not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and
+     the record's tests read the cache through results(), which recomputes whenever the KEY does not hold).
+  0b render(cache) against the committed l4e7_stage_settings.out: BYTE-IDENTICAL (sha256 2ad2015b0c7aea91).
+  0c D-16 recomputed by the record's own sense_ripple on its cached parameters (the as-drafted split; 25 V in, the oscillator's
+     least 170 kHz, L1 at -20 %, M1's edges 20 ns, RSENSE1 at its highest with 5 nH, the bulk new at 20 C): every figure equal to
+     the cached one (largest difference 0):
+       bus 12.00 V, 2.9337 A: resistive peak 0.1174 V, the pins -0.1556 to +0.1295 V, the clipped monitor's average +4.4 %
+       bus 12.00 V, 3.7408 A: resistive peak 0.1421 V, the pins -0.1866 to +0.1863 V, the clipped monitor's average -10.2 %
+       bus 15.09 V, 2.9337 A: resistive peak 0.1000 V, the pins -0.1307 to +0.1055 V, the clipped monitor's average +7.9 %
+       bus 15.09 V, 3.7408 A: resistive peak 0.1200 V, the pins -0.1554 to +0.1424 V, the clipped monitor's average +2.0 %
+       M1's edges at 10 ns: the pins reach -0.4329 V (equal to the cached -0.4329 V); the sheet's Figure 1 arrangement: resistive 0.0983 V,
+       the pins -0.1552 to +0.1658 V. Against: the operating range +-100 mV (8705af p.5, PRINTED LIMIT), the absolute maximum +-0.3 V (p.2).
+       REPRODUCED: D-16 stands on the base (0.1174 V resistive at the regulation's highest, over the 100 mV range).
+  0d D-10 recomputed by the record's own guard_event_b, every ceramic bank rebuilt from Samsung's held curves at the record's
+     cached bounds (each bank's effective capacitance equal to the record's), the selected corner, every start the guard is on in,
+     the three bulk corners, D11 at both ends and both fault positions (60 events) at the reference loop 3.30 uH: U5's resistive
+     peak 0.248500 V (+ the numerical error 0.000781: 0.2493 V); the pins' complete budget (RSENSE1 5 nH, the Kelvin pair 1 nH)
+     -0.3021 to +0.2591 V at a fault at the connector and -0.2884 to +0.2486 V at the lead's far end; PV_F 83.47 V, Q12 off at
+     62.66 A, the bank's differential 0.4795 V. Every figure equal to the cached one (largest difference 0).
+     The cold connection at the envelope's least loop (0.30 uH), a fault at the connector, the port bank at its least and its
+     largest: PV_F 84.62 V, its slew 56.10 V/us, INP 18.54 V (R97 28.0k); equal to the cached maxima over the whole grid
+     (difference 0). Against: the slew's 60 V/us absolute and 54 V/us margin line, INP's 20 V absolute and 18 V line.
+     REPRODUCED: D-10 stands on the base: -0.3021 V on U5's pins at a connector fault, past their -0.3 V absolute maximum; INP
+     18.29 V (guard on) and 18.54 V (cold) over the 18 V line; the cold slew 56.1 V/us over 54 V/us.
+
+1. THE COMPARISON: THREE MATERIALLY DIFFERENT CIRCUIT ALTERNATIVES, EACH ON THE FAULT CASE (D-10) AND THE NORMAL CASE (D-16)
+  What both defects share: RSENSE1 puts U5's own input amplifier, whose pins are rated -0.3 to +0.3 V absolute and -100 to +100 mV
+  operating (8705af p.2, p.5: PRINTED LIMIT), in the path of a current the stage does not bound on printed figures: the charge a
+  stiff source pushes into whatever sits behind RSENSE1 (D-10, set by a loop no document bounds) and M1's pulsed draw (D-16).
+  Splitting the ceramics around RSENSE1 cannot satisfy both (round 3, result (ii)). The alternatives below change what carries the
+  sense, where, or whether the event can happen. M2 (CS101) is judged on the record's own accepted model (MODELED, typical loop
+  rows), reproduced first: the accepted spectrum over its 121 frequencies to 0.
+
+  (A) THE SENSE MOVED AHEAD OF EVERY BANK (route 3's wider form, R-187; the sheet's Figure 1 taken past the bulk): RSENSE1 between
+      Q12 and PV_P, so it carries the port's own current. Normal case: the source behind the lead is a current source at the
+      switching frequency, so RSENSE1 reads the flat input current, 0.0453 V at the regulation's highest (inside +-100 mV; D-16
+      MEETS). Fault case, the record's model at the reference loop with RSENSE1 in Q12's branch: Q12's current reaches 61.86 A and
+      U5's resistive differential 0.9556 V, 3.2 times the 0.3 V absolute maximum (D-10 WORSE). M2: the regulation would hold the
+      port current, the bulk's and the bank's together, so within the loop's bandwidth the bank carries the bulk's CS101 current
+      inverted: the filtered peak 0.3324 A at 1597 Hz against the accepted margin 0.1130 A, over it at 38 of the 121 frequencies
+      from 271 Hz (the accepted design: 0.0585 A at 2121 Hz). REJECTED: fails D-10 by the same mechanism made larger, and undoes
+      the accepted CS101 correction.
+
+  (B) THE GUARD-ON EVENT BOUNDED OR REMOVED AT THE PORT (the source's step limited before it reaches the stage's capacitance, or
+      made impossible): (B1) a series choke at the port, the board's own L1 part, Coilcraft XAL1510-103 (10 uH +-20 %, Isat 26.3
+      A, PRINTED): with the choke at its least (8.0 uH) and the envelope's least source loop, the short-circuit trip's highest
+      (13.87 A) plus the 28.54 V step over the trip's 5.0 us propagation reaches 31.1 A at the cut, over the choke's Isat, where
+      its inductance is no longer the printed one; its resonance with the entry's capacitance (225.8 uF at its largest) and the
+      lead falls at 2.71 to 3.15 kHz, inside CS101's 2 to 5 kHz band where the accepted M2 immunity is decided; and it leaves D-16
+      as it is. (B2) a presence contact pair in the solar receptacle carrying U21's INP: the plug's withdrawal pulls INP low
+      (V(INP_L) 0.8 V least, PRINTED; turn-off within tPD(INP_L)) before any other source can mate, so a source can only ever
+      arrive cold, the case whose absolute ratings the record shows held; it removes D-10's guard-on event for a source in the
+      receptacle, not for a second source on the same lead; it needs the receptacle's contact set and a rule that every plug for
+      it bridges the pair (Layer 7's harness, R-180 rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is
+      not supported on printed figures; B2 is the route for D-10's port-level residual (section 3) and depends on a Layer 7
+      decision outside this record.
+
+  (C) U5'S OWN INPUT SENSE RETIRED, THE REGULATION'S SENSE AN AMPLIFIER WHOSE PINS TOLERATE THE STEP: CSPIN and CSNIN tied to VIN,
+      as the sheet asks when the input sense is not in use (8705af p.12, p.29, p.31), so their differential is zero in every state
+      by construction, and RSENSE1 removed; the input-current regulation fed into IMON_IN by a current-output amplifier, EA2
+      unchanged (p.31: "IMON_IN voltages exceeding 1.208V (typical) cause the VC voltage to reduce"). Its sense point decides M2:
+      (C1) at the port's R87 through U21's own IMON (the TPS48110-Q1's monitor, gain error +-1.27 %, offset +-200 uV, PRINTED)
+      holds the port current like (A): filtered CS101 peak 0.3324 A at 1597 Hz, over any margin the accepted coordination gives:
+      REJECTED; (C2) a second INA169 (U23, U18's part) on the backstop's own bank R60 to R64, where the loop holds the bank's
+      current and the trip reads the same bank: SELECTED (below). The INA169's differential is rated +2 V / -40 V (SBOS181F p.4,
+      PRINTED), seven times U5's, and its rows are printed over VSENSE 10 to 150 mV (gm 990 to 1010 uA/V, offset +-1 mV,
+      nonlinearity +-0.1 %), where A7's are printed only at 50 mV.
+      (C3) the same INA169 reading the drafted RSENSE1 instead of A7 (R59 and the accepted split kept, R16 31.6k): the regulation
+      stays independent of the trip and the accepted M2 topology is kept (filtered peak 0.0593 A at 2121 Hz against its own
+      independent margin 0.1615 A); in the fault case U23's differential is the record's U5 budget, -3.463 to +1.447 V at the
+      envelope's least loop, -0.302 to +0.259 V at the reference loop, inside the INA169's +2 V / -40 V at every loop (its 1.8 V
+      line held); in normal operation RSENSE1's own current never reverses, but its 5 nH puts negative spikes across the pins, and
+      the average U23 regulates on reads high by +0.09 % at the INA169's typical bandwidth, +0.78 % at three times it, +7.14 % at
+      ten times it and +10.06 % if it followed every edge: the regulation's accuracy then rests on a bandwidth printed only as
+      typical. C2's own average, the same way (the bank at 5 nH, no sharing credited): +0.11 / +0.00 / +0.02 / +1.34 % (the bank's
+      current is smooth at the 25 V corner).
+
+  THE SELECTION (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain dependencies): (C2).
+  It removes U5's absolute-rating violation of D-10 and D-16's operating-range exceedance by construction, at every source loop,
+  with no new loop dependency; it adds one part the design already carries (an INA169) and one 100 nF, removes one (RSENSE1, whose
+  inductance no maker prints) and changes two values; its one new unprinted term (A7's own output at zero differential) lowers the
+  regulation if A7 sources, and a sink, which p.31's text excludes (INFERRED), would have to reach 3.67 uA to bring the margin to
+  the accepted design's (section 2h). Over (C3): C2's averaging does not depend on the amplifier's unprinted bandwidth and its
+  CS101 margin is 2.3 times C3's; C3 keeps the regulation independent of the trip and holds U23's rating at the envelope's least
+  loop, where the port itself fails (section 3). The price of C2, stated: the regulation and the 100 W trip share the bank, so a
+  short across the bank, which already defeats the trip (the record's single-fault list), now also defeats the regulation (never
+  credited for the 100 W bound); Layer 8's fault table carries it. Reversal: to (C3), the same draft with U23 on R59's pads and
+  R59 kept, if Layer 8's fault analysis rules the shared shunt out; the drafted RSENSE1 with A7 returns only with a measured or
+  maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.
+
+2. THE SELECTED CIRCUIT (C2) ON BOTH CASES
+  2a COMPOSITION, NETLIST AND MUTATIONS. Board E's generator composed in L4-E9's change-list order with the draft after the solar
+     guard (R-173) and before L4-E11's aux (R-177): l4e9/q1 OK, l4e7/u5_grade OK, l4e7/hold OK, l4e7/input_limit OK, l4e7/backstop
+     OK, l4e9/f1 OK, l4e9/hotswap OK, l4e11/entry OK, l4e7/solar_guard OK, l4e7/p0sol OK, l4e11/aux OK, l8r2/packrtn OK,
+     l8p/enable OK, d8dec31/cin OK, l6r2/xal_land OK, l6r2/lcsc OK. The draft refuses a second application (exit 3). The generator
+     ran to its end on the composed text (record l8p's gen_netlist.py: gen_netlist: 296 parts, 0 unplaced, intent written ->
+     <scratch>/p0sol.net). The changed nets, read in that netlist (NETLIST):
+       holds: U5's CSNIN (pin 32), CSPIN (pin 33) and VIN (pin 34) on one net, TRK_VS
+       holds: no RSENSE1 (R59) and no net TRK_VIN
+       holds: U5's input net is the bank's far side: R60 to R64 between PV_P and it, U18's VIN- on it
+       holds: U23 on the bank's pads as U18 is (VIN+ PV_P, VIN- and V+ on U5's input), GND
+       holds: U23's output on U5's IMON_IN (pin 38), TRK_IMONI, with R16 and C65 to GND and nothing else
+       holds: R16 34.0k, R97 24.9k (INP's bottom, PV_INP to GND)
+       holds: C79 from U5's input net to GND (U23's V+ bypass)
+       holds: M1's drain (Q3 pins 5 to 8), C13 to C15, C64, C71 to C74 and D4 on U5's input net
+       holds: U18 and the trip unchanged (U18 pin 1 on TRK_ISO into R65 and R66)
+     Mutations, each applied to the composed text and regenerated (each must fail the check):
+       U5's CSNIN on a net of its own: FAILS: U5's CSNIN (pin 32), CSPIN (pin 33) and VIN (pin 34) on one net, TRK_VS; no RSENSE1 (R59) and no net TRK_VIN
+       U23's VIN- off the bank's pad: FAILS: U23 on the bank's pads as U18 is (VIN+ PV_P, VIN- and V+ on U5's input), GND
+       R59 back between TRK_VS and U5's CSNIN: FAILS: U5's CSNIN (pin 32), CSPIN (pin 33) and VIN (pin 34) on one net, TRK_VS; no RSENSE1 (R59) and no net TRK_VIN
+       U23's output off IMON_IN: FAILS: U23's output on U5's IMON_IN (pin 38), TRK_IMONI, with R16 and C65 to GND and nothing else; U18 and the trip unchanged (U18 pin 1 on TRK_ISO into R65 and R66)
+  2b THE FAULT CASE, D-10, ON THE SELECTED CIRCUIT. U5's CSPIN to CSNIN: 0 V in every state (NETLIST: both pins and VIN on one net
+     with no element between them; the record's model ties RSENSE1's former branch at 1e-06 Ohm and reads it at most 9e-05 V, the
+     tie's own drop). The record's model with that tie, every start, bulk corner, D11 end and both fault positions, at the
+     envelope's least loop, about 1 uH, the reference loop and the envelope's largest (MODELED; information about the port, no
+     loop claimed):
+       loop uH   bank (U18, U23) V   PV_F V    INP V (R97 24.9k)   Q12 VDS V   TRK_VS V   D4 A     the as-drafted bank / PV_F
+         0.30      2.5694             321.85     64.27              307.42      37.83      16.11   2.5472 / 321.61
+         1.04      1.1637             118.53     23.67              108.54      31.58       0.00   1.1571 / 118.50
+         3.30      0.4829              83.48     16.67               74.85      29.14       0.00   0.4795 / 83.47
+        10.20      0.2252              69.29     13.84               61.03      29.32       0.00   -
+     Against: the bank's differential 1.8 V (U18's and U23's +2 V absolute maximum less 10 %, PRINTED); PV_F 90 V (the exclusion
+     line) and the TPS4811-Q1's recommended 80 V VS row; INP 18 V (20 V less 10 %); TRK_VS under D4's least breakdown at the cold
+     end, 31.80 V. The bank's corner search at the reference loop, the sixteen combinations of the four banks' bounds: its highest
+     differential 0.5477 V at the corner lo/lo/hi/hi (PV_F 83.52 V, TRK_VS 28.45 V). At the reference loop every rating but one
+     holds its line on the selected circuit: U5 by construction, the bank, INP (with R97 24.9k), VDS, TRK_VS, D4; PV_F 83.48 V
+     stays over the recommended 80 V row (L6P-F10, OPEN, unchanged by this round). At the envelope's least loop the port's own
+     ratings fail as they did (PV_F 321.9 V; the bank 2.57 V, over U18's and U23's +2 V): that is the guard-on event's port-level
+     residual, section 3.
+     The other ratings at the reference loop on the selected circuit: PV_F's slew 26.6 V/us (54), EN/UVLO 12.31 V (18), PV_P 29.25
+     V (45: the bulk's 50 V, U18's and U23's common mode), PV_F's least 7.46 V (-1): all inside their lines.
+     INP with R97 24.9k (0.1 %, 25 ppm/K): its divider's highest ratio 0.19968 (was 0.21909), so INP stays at or under 18 V for
+     every PV_F up to 90.1 V, past PV_F's own 90 V exclusion line: INP no longer fails anywhere PV_F holds. The cold connection's
+     INP at its worst (PV_F 84.62 V): 16.90 V (was 18.54 V). U21 turns on by 10.05 V at the most (V(INP_H) 2.0 V, PRINTED; was
+     9.16 V), over the stage's own enable (about 9.5 V) and under the hold's least 16.97 V: no operating point is lost; it turns
+     off by INP only under 4.01 V, below the UVLO's 7.46 V, so the UVLO still sets the turn-off.
+  2c IMON_IN UNDER THE FAULT. U23's output can add at most its highest transconductance times the bank's highest differential for
+     the whole 60 us event, on C65 at its least (90 nF): 0.30 uH 1.732 V, 1.04 uH 0.784 V, 3.30 uH 0.325 V, 10.20 uH 0.152 V; from
+     the IMON_IN fault's highest (1.67 V) that stays under the pin's 5 V absolute maximum (8705af p.2, PRINTED) at every loop
+     listed, at most 3.40 V (a bound, INFERRED: linear, no saturation credited).
+  2d THE NORMAL CASE, D-16, ON THE SELECTED CIRCUIT. The periodic model written out (ladder) reproduces the record's sense_ripple
+     on the as-drafted split to 0 V, then takes the selected network: the bulk new at 20 C ahead of the bank, every ceramic behind
+     it at its least (C71 to C74, C13 to C15, C64; the most pulse through the bank), U5's input on that node, the bank 14 mOhm at
+     its least with its own inductance (Vishay's WSL prints 0.5 to 5 nH a part, TYPICAL span: five in parallel 0.1 and 1.0 nH, and
+     5 nH for no sharing credited). U5's pins: 0 V. The bank's sense (what U23 reads), 25 V in (MODELED):
+       bus V   input A   bank L nH   sense min / max mV   bank current min / max A   U23's clipped average, raw / at its bandwidth
+       12.00   2.9212     0.0          +8.17 /  +89.61      +0.609 / +6.681             +0.00 % / +0.10 %
+       12.00   2.9212     0.1          +3.52 /  +89.74      +0.609 / +6.682             +0.00 % / +0.10 %
+       12.00   2.9212     1.0         -71.72 /  +95.40      +0.607 / +6.683             +0.60 % / +0.10 %
+       12.00   2.9212     5.0        -139.95 / +114.47      +0.429 / +6.683             +1.34 % / +0.11 %
+       12.00   3.7408     0.0         +10.46 / +110.02      +0.780 / +8.203             +0.00 % / +0.10 %
+       12.00   3.7408     0.1          +6.36 / +110.15      +0.780 / +8.203             +0.00 % / +0.10 %
+       12.00   3.7408     1.0         -84.31 / +116.79      +0.777 / +8.206             +0.55 % / +0.10 %
+       12.00   3.7408     5.0        -167.44 / +164.63      +0.560 / +8.205             +1.20 % / +0.11 %
+       15.09   2.9212     0.0          +8.42 /  +77.20      +0.628 / +5.756             +0.00 % / +0.08 %
+       15.09   2.9212     0.1          +5.57 /  +77.30      +0.627 / +5.756             +0.00 % / +0.08 %
+       15.09   2.9212     1.0         -58.23 /  +81.85      +0.618 / +5.756             +0.46 % / +0.08 %
+       15.09   2.9212     5.0        -115.94 /  +83.58      +0.456 / +5.756             +0.96 % / +0.10 %
+       15.09   3.7408     0.0         +10.76 /  +93.91      +0.802 / +7.002             +0.00 % / +0.08 %
+       15.09   3.7408     0.1          +8.44 /  +94.01      +0.801 / +7.002             +0.00 % / +0.08 %
+       15.09   3.7408     1.0         -67.74 /  +99.31      +0.791 / +7.003             +0.42 % / +0.08 %
+       15.09   3.7408     5.0        -137.30 / +122.83      +0.595 / +7.002             +0.89 % / +0.10 %
+     Against: U5's +-100 mV operating range, met by construction (0 V); U23's printed linear range 10 to 150 mV for the average it
+     regulates (29.3 to 42.7 mV at the regulation's band) with instantaneous peaks to 164.6 mV inside its 500 mV full-scale sense
+     voltage (SBOS181F p.6) and far inside its +2 V / -40 V absolute maxima; the negative excursions it cannot follow make its
+     average read HIGH by at most +1.34 % (raw clipping, the bound; the INA169 outputs no current for a negative sense), so the
+     regulation errs to a LOWER input current, never toward the trip. At the hold (16.97 V in, the drawn setpoint out) the sense
+     spans -26.68 to +67.36 mV. M1's 10 ns edges: -234.1 to +154.9 mV at the bank's Kelvin pads, inside the INA169's absolute
+     maxima; U5 sees none of it. D-16: CORRECTED on the drafted circuit (U5's operating range met by construction; the
+     regulation's error in the safe direction and bounded above).
+  2e THE REGULATION ON PRINTED ROWS (U23 into R16 34.0k, 0.1 %, 25 ppm/K, aged; EA2's regulation voltage 1.187 / 1.208 / 1.229 V
+     and its line term at twice its printed maximum, EA2 at half its typical gain: the record's design floor; the INA169's printed
+     gm, nonlinearity, offset, CMR and PSR, and the record's G_CM assumption): nominal 2.5378 A, highest 2.9212 A, lowest 2.1839 A
+     over the regulation's input range (the accepted drafted regulation: nominal 2.5485 A, highest 2.9337 A). The trip reads the
+     same bank, so the bank's tolerance, TCR, aging and heating cancel between them: the margin is the trip's least sense voltage
+     less the regulation's highest, over the bank at its highest resistance, 0.3645 A at its least over the input range (the
+     accepted design's independent margin 0.1130 A). The record's trip reproduces exactly (0.044502 / 0.050169 V, 3.0468 / 3.7408
+     A).
+       RIMON_IN candidates (stocked RT0603BRD07, JLCPCB of 1 October 2026): value, code, nominal / highest / lowest A, correlated margin A
+          30.0k C723585   2.8762 / 3.2926 / 2.4920   0.0235
+          30.1k C705764   2.8666 / 3.2821 / 2.4833   0.0331
+          30.9k C861313   2.7924 / 3.2007 / 2.4157   0.1079
+          31.6k C705766   2.7306 / 3.1328 / 2.3594   0.1702
+          32.0k C861325   2.6964 / 3.0953 / 2.3283   0.2046
+          32.4k C861323   2.6631 / 3.0588 / 2.2980   0.2382
+          32.8k C861324   2.6307 / 3.0231 / 2.2685   0.2709
+          33.0k C705768   2.6147 / 3.0056 / 2.2539   0.2870
+          33.2k C705767   2.5990 / 2.9883 / 2.2396   0.3029
+          34.0k C705770   2.5378 / 2.9212 / 2.1839   0.3645   <- drafted (SESSION: keeps the accepted regulation's band, nominal within 0.5 %)
+          35.7k C861344   2.4170 / 2.7886 / 2.0739   0.4863
+          36.0k C136964   2.3968 / 2.7665 / 2.0556   0.5066
+  2f M2 (CS101) WITH THE SELECTED SENSING (MODELED, the record's model and typical loop rows, U23's typical bandwidth as a pole at
+     129 kHz): the loop now holds the bank's own current, everything behind the bank inside it. The filtered peak 0.1093 A at 1714
+     Hz against the correlated margin 0.3645 A; the loop branch may be 3.17 times its typical model before the margin is spent
+     (the accepted design: 0.0585 A at 2121 Hz against 0.1130 A, room 2.51). Below the loop's crossover the bank's CS101 current
+     falls far under the accepted one (30 Hz: 0.00042 A against 0.02310 A); near the crossover it rises over it (the loop's
+     typical peak now acts on the ceramics too), inside the larger margin. M2: HOLDS on the accepted model, CONDITIONAL on its
+     typical loop rows as the accepted design was.
+  2g THE START, THE RATINGS AND THE WINDOW. The start through Q12 puts at most 1.762 A through the bank (the record's figure with
+     C79 added): U23 then holds IMON_IN at most 0.930 V even with no filter, under the IMON_IN fault's least 1.55 V, so the start
+     never trips U5. U23 sits on U18's nets pin for pin, so every rating check (c) and the surge rounds give for U18 holds for U23
+     (NETLIST); its supply draw at most 4.0 mW. RSENSE1's loss (0.133 W at the regulation's highest) is gone. The 100 W bound,
+     re-run: U23's VIN+ pin, like U18's, takes its output current and its input bias (the record's SESSION assumption, 1 mA) from
+     ahead of the bank, so the static bound rises by at most 0.0263 W, from 93.5521 W to 93.5783 W, and check (b)'s response
+     allowance, with C79's charge added, falls from 1.087 ms to 1.052 ms, still over the ten typical sums' 0.401 ms. Unchanged:
+     the hold (R8, R9; FBIN on PV_P), the cut-off's band (28.55 to 31.06 V rising, 27.07 V or more falling), the trip itself,
+     REQ-016's window, D4, the guard's start.
+  2h THE ONE NEW UNPRINTED TERM: A7's own output with CSPIN = CSNIN. The sheet prints no current out of IMON_IN for a negative
+     differential and no figure at zero (p.31); whatever A7 sources at zero ADDS to U23's current and lowers the regulated input
+     current, away from the trip. The regulation's lowest at 25 V with A7 sourcing (ASSUMPTION, a sensitivity): 0.0 uA 2.1839 A,
+     0.5 uA 2.1497 A, 1.0 uA 2.1155 A, 2.0 uA 2.0472 A, 5.0 uA 1.8420 A. That A7 cannot sink is read from p.31's statement that a
+     negative differential drives no current out of the pin (INFERRED, asked of Analog Devices); were it to sink, the regulation
+     would rise toward the trip: the correlated margin with A7 sinking 0.5 uA 0.3302 A, 1.0 uA 0.2960 A, 2.0 uA 0.2274 A, and it
+     falls to the accepted design's 0.1130 A only at a sink of 3.67 uA. A bounded PROVISIONAL choice (the scope amendment, point
+     2): the regulation's band above holds with A7 at 0 uA; the energy at the limit falls by about 3 % per uA sourced. Supplier
+     validation: the IMON_IN pin current of five LT8705AIUHF parts with CSPIN = CSNIN = VIN = 16 V and 25 V and IMON_IN held at
+     1.20 V, at -20, +25 and +62 C; pass from -0.5 uA (sinking) to +1.0 uA (sourcing): the regulation within 3 % of its setting
+     and the margin to the trip at least 0.3302 A; the clarification to Analog Devices is drafted, item 8, UNSENT.
+
+3. WHAT STAYS OPEN, EXACTLY
+  D-10's port-level residual (the guard's own transient, not U5): a stiff source stepping onto the port with the guard on charges
+  every capacitor behind Q12 at a rate only the source's loop sets; at the envelope's least loop PV_F, Q12's VDS, INP, EN, D4,
+  TRK_VS and the bank's INA169s exceed their ratings (section 2b), and at the reference loop PV_F stays over the TPS4811-Q1's
+  recommended 80 V row (under it from 4.03 uH; L6P-F10). No circuit with the guard closed bounds that charge without a series
+  element (B1, not supported) or the event's removal (B2). The cold connection's slew stays at 56.1 V/us at a connector fault on
+  the least loop, inside its 60 V/us absolute maximum and over the 54 V/us SESSION margin line (the margin line holds from 0.53
+  uH). Both are carried as PROVISIONAL under the scope amendment with the exact actions: (i) the coordinator brings B2 forward as
+  a named Layer 7 prerequisite (the solar receptacle's presence pair, every plug bridging it; then a draft moves U21's INP divider
+  onto it), which removes the guard-on event for a source in the receptacle; (ii) the narrowed supplier request P1-1
+  (SUPPLIER-P1-1-P0SOL.md, UNSENT) for what remains.
+
+4. VERDICTS
+  D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in
+    one term (A7's zero-differential output, 2h): sourcing lowers the regulation (energy only); a sink, excluded by p.31's text
+    (INFERRED), is covered by the margin up to 3.67 uA.
+  D-10 (B6, L4-F01): NARROWED, OPEN. CORRECTED: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line
+    (R97 24.9k). OPEN: the guard-on event's port-level residual below the port's own floors and PV_F over the recommended 80 V row at the
+    reference loop (L6P-F10); the cold connection's slew margin line at the least loop. Next: B2 at Layer 7, or P1-1 (narrowed).

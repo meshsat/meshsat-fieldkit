@@ -1609,3 +1609,116 @@ def t_the_decision_page_is_linked_and_carries_the_printed_figures():
         assert fig in t, fig
     assert "\u2013" not in t and "\u2014" not in t
     assert "CONDITIONAL on two named assumptions" in t and "astra-check-l4e7r-2" in t
+
+
+# ---- P0-7 (MESHSAT-1357, 5 October 2026): the solar stage's D-10 and D-16 by circuit alternatives (L4E7-P0SOL.md, l4e7_p0sol.py).
+# These never call _R(): the record's results cache is re-keyed only by the integrator's recompute; they run P0-7's own parts.
+P0SOL = os.path.join(REC, "l4e7_p0sol.py")
+P0SOL_OUT = os.path.join(REC, "l4e7_p0sol.out")
+P0SOL_DRAFT = os.path.join(REC, "apply_gen_sch_e_p0sol.py")
+
+
+def _p0sol():
+    if "P0" not in _CACHE:
+        need(P0SOL, "P0-7's script")
+        need(os.path.join(ROOT, ".git"), "a git checkout (the script reads one input at a commit of this branch's history)")
+        for rel in ("v2/vendor/power/lt8705a.pdf", "v2/vendor/ti/held/ti-ina169-sbos181f.pdf", "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf",
+                    "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf",
+                    "v2/vendor/power/coilcraft-xal1510.pdf"):
+            need(os.path.join(ROOT, rel), "an input of P0-7 (held documents: the L4-E7 record's fetch_held_back.py)")
+        for pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN"):
+            need(os.path.join(ROOT, "v2/vendor/passives/held/samsung-%s-2026-10-02.json" % pn), "Samsung's held excerpts (fetch_maker_curves.py)")
+        if shutil.which("pdftotext") is None:
+            raise Skip("pdftotext is needed")
+        sp = importlib.util.spec_from_file_location("l4e7_p0sol_under_test", P0SOL)
+        m = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(m)
+        _CACHE["P0"] = m
+    return _CACHE["P0"]
+
+
+def t_p0sol_committed_out_is_what_the_script_prints():
+    """The committed l4e7_p0sol.out is the script's output on this tree (about 70 s): section 0 reproduces both failing cases
+    before any figure, and the script refuses (exit 4) if a reproduction, the composition or a mutation's failure does not hold."""
+    m = _p0sol()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        try:
+            rc = m.main()
+        except SystemExit as e:
+            raise AssertionError("l4e7_p0sol.py refused (exit %s)" % e.code)
+    committed = open(P0SOL_OUT, encoding="utf-8").read()
+    assert rc == 0 and buf.getvalue() == committed, "l4e7_p0sol.out is not the script's current output"
+    assert "–" not in committed and "—" not in committed
+
+
+def t_p0sol_the_inputs_it_pins_are_this_trees_files():
+    text = open(P0SOL_OUT, encoding="utf-8").read()
+    pins = [l.split() for l in text.split("INPUTS (sha256", 1)[1].split("\n\n", 1)[0].splitlines()[1:]]
+    assert len(pins) >= 19
+    for h, rel in pins:
+        assert _sha(os.path.join(ROOT, rel)).startswith(h), rel
+
+
+def t_p0sol_the_ladder_reproduces_the_records_sense_ripple_and_takes_the_selected_network():
+    """The periodic model P0-7 writes out is the record's sense_ripple term for term on the as-drafted split (to 1e-12 V), and
+    with RSENSE1 removed it returns the bank's current, which at the 25 V corner never reverses."""
+    import json
+    m = _p0sol()
+    LS = m.load("l4e7_stage_settings_for_test_p0sol", m.LS_PY)
+    R = LS._dec(json.load(open(os.path.join(ROOT, m.LS_CACHE), encoding="utf-8"))["R"])
+    r3, G6 = R["remedy"]["b6"]["r3"], R["remedy"]["b6"]["G6"]
+    row0, rowF = r3["rows"][0], r3["rows"][6]
+    s = LS.sense_ripple(row0["cu"], row0["cd"], r3["i_reg_hi"], 25.0, 12.0, r3["F_LO"], r3["L1_LO"], r3["T_RF"], G6["r59"], r3["L59"], G6["rb"], r3["bulk_op"])
+    lad = m.ladder(row0["cu"], row0["cd"], r3["i_reg_hi"], 25.0, 12.0, r3["F_LO"], r3["L1_LO"], r3["T_RF"], G6["rb"], 0.0, G6["r59"], r3["L59"], r3["bulk_op"])
+    assert abs(max(lad["v59"]) - s["peak"]) < 1e-12 and abs(min(lad["v59"]) - s["trough"]) < 1e-12
+    assert abs(max(G6["r59"] * i for i in lad["i59"]) - s["r_peak"]) < 1e-12
+    sel = m.ladder(None, rowF["cd"], r3["i_reg_hi"], 25.0, 12.0, r3["F_LO"], r3["L1_LO"], r3["T_RF"], G6["rb"], 5e-9, None, None, r3["bulk_op"])
+    assert min(sel["ib"]) > 0.3 and abs(sum(sel["ib"]) / len(sel["ib"]) - r3["i_reg_hi"]) < 1e-3
+    assert m.clip_avg([1.0, -1.0, 3.0]) == 4.0 / 3.0
+
+
+def t_p0sol_the_draft_composes_in_l4e9_order_and_its_netlist_check_bites():
+    """Board E's generator composed in L4-E9's change-list order with P0-7's draft after the solar guard: every draft applies, the
+    draft refuses a second application, the generator runs to its end, every predicate on the changed nets holds, and each of the
+    four mutations fails the check (the check is not blind to the defect it guards)."""
+    m = _p0sol()
+    K = m.compose_and_check()
+    assert not K.get("refused"), K.get("refused")
+    assert [s for s, _rc in K["steps"]] == ["%s/%s" % x for x in m.ORDER_E] and all(rc == 0 for _s, rc in K["steps"])
+    assert K["second"] == 3 and K["checks"] and all(ok for _s, ok in K["checks"]), K["checks"]
+    assert len(K["mutations"]) == 4 and all(r.startswith("FAILS") for _l, r in K["mutations"]), K["mutations"]
+
+
+def t_p0sol_the_draft_refuses_without_the_drafts_it_follows_and_never_writes_the_tree():
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "gen_sch_e.py")
+        shutil.copy(GEN_E, p)
+        r = _run("apply_gen_sch_e_p0sol.py", p, "--write")
+        assert r.returncode == 3 and "not applied" in r.stderr, r.stderr
+        assert open(p, encoding="utf-8").read() == open(GEN_E, encoding="utf-8").read()
+    r = subprocess.run([sys.executable, "-B", P0SOL_DRAFT, GEN_E, "--write"], capture_output=True, text=True)
+    assert r.returncode == 3 and "NOT RELEASED" in r.stderr, r.stderr
+    tree = open(GEN_E, encoding="utf-8").read()
+    assert "P0-7" not in tree and '"U23"' not in tree and not os.path.exists(os.path.join(REC, "RELEASE.md"))
+
+
+def t_p0sol_the_selection_verdicts_and_owed_texts_are_written_where_they_belong():
+    out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
+    page = " ".join(open(os.path.join(REC, "L4E7-P0SOL.md"), encoding="utf-8").read().split())
+    for s in ("REPRODUCED: D-16 stands on the base", "REPRODUCED: D-10 stands on the base", "BYTE-IDENTICAL", "THE SELECTION (SESSION",
+              "): (C2).", "D-16 (B6-ENG-2): CORRECTED on the drafted circuit", "D-10 (B6, L4-F01): NARROWED, OPEN", "REJECTED"):
+        assert s in out, s
+    for fig in ("0.1174", "-0.3021", "0.3645 A", "2.5378 A", "2.9212 A", "0.1093 A", "16.90 V", "10.05 V", "+1.34 %", "93.5783 W",
+                "1.052 ms", "3.67 uA"):
+        assert fig in out and fig in page, fig
+    assert page.startswith("DONE:") and "NOT DONE:" in page and "NEXT:" in page
+    assert "–" not in page and "—" not in page
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    for nm in ("L4E7-P0SOL.md", "l4e7_p0sol.py", "apply_gen_sch_e_p0sol.py", "SUPPLIER-P1-1-P0SOL.md", "analog-devices-lt8705a-p0sol.txt"):
+        assert nm in readme, nm
+    sup = open(os.path.join(REC, "SUPPLIER-P1-1-P0SOL.md"), encoding="utf-8").read()
+    clar = open(os.path.join(REC, "clarification", "analog-devices-lt8705a-p0sol.txt"), encoding="utf-8").read()
+    assert "UNSENT" in sup.splitlines()[0] and clar.startswith("DRAFT FOR THE OWNER TO SEND. UNSENT.")
+    for s in ("Specimen", "Pass:", "Capability needed", "Acceptance"):
+        assert s in sup, s

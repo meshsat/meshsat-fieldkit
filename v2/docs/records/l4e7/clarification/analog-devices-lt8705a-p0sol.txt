@@ -1,0 +1,30 @@
+DRAFT FOR THE OWNER TO SEND. UNSENT. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Analog Devices, technical support for the LT8705A (the owner chooses the channel).
+Prepared 5 October 2026, task P0-7 of MESHSAT-1357 (record l4e7, L4E7-P0SOL.md). It is item 8 of the questions in
+analog-devices-lt8705a.txt beside this file; under the selected arrangement below, items 6 and 7 of that file apply only if
+the drafted RSENSE1 arrangement is ever restored.
+
+Subject: LT8705AIUHF: the input-current regulation driven by an external current-output amplifier into IMON_IN, with CSPIN
+and CSNIN tied to VIN
+
+We use the LT8705AIUHF#PBF in a solar input stage (data sheet 8705af,
+https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf). We are considering not using the on-chip
+input current sense: CSPIN and CSNIN tied directly to VIN at the pins, as pages 12, 29 and 31 ask when the input current
+sensing is not in use, and the input-current regulation fed instead by an external current-output monitor (a TI INA169,
+1 mA/V into the same RIMON_IN of about 34 kOhm and CIMON_IN of 100 nF) whose output is connected to IMON_IN. EA2 would then
+regulate the IMON_IN voltage to 1.208 V (typical) exactly as page 31 and Figure 11 describe, with the current coming from
+the external monitor rather than from A7. Page 31 also says to tie IMON_IN to ground when the input current sensing is not
+in use; in our arrangement the input current regulation is in use, only A7's inputs are not.
+
+8. (a) Is this use of IMON_IN supported, and do the IMON_IN regulation voltage (page 4: 1.187 / 1.208 / 1.229 V at
+   VC = 1.2 V over the full temperature range) and the IMON_IN overvoltage threshold (page 5: 1.55 / 1.61 / 1.67 V) hold
+   when the pin's current comes from an external source in parallel with A7's output?
+   (b) With CSPIN and CSNIN on the same node (zero differential), what current does A7 source into IMON_IN at most over
+   -40 to 125 C junction for the I grade, at 16 V to 25 V common mode? Page 31 states that no current flows for a negative
+   differential; we find no figure for zero. Can A7's output ever sink current from the IMON_IN node?
+   (c) Does a current source driving IMON_IN while the converter is disabled (SWEN low, or SHDN low, or in a fault cycle
+   after IMON_IN exceeded its overvoltage threshold) affect the soft-start or the fault timing? Is there a limit on the
+   capacitance or the source impedance at IMON_IN beyond the 0.1 uF to 1 uF page 31 gives for CIMON_IN?
+
+For each item we ask for a limit Analog Devices warrants and the conditions under which it applies. Typical curves are
+welcome as supporting evidence, but on their own we cannot treat them as a guarantee. Thank you.
