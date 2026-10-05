@@ -956,6 +956,9 @@ RECORD is another record's figure read from its copy.
   read HELD. A closed loop ramping through DOCK_EN_OUT 1.825 to 2.12 V may read held.
 - **Where the window holds.** At the 76.25 C air the shunt leaks 21.8 uA, 23.9 uA in all, and the return reads 0.863 V. The window
   holds only while the shunt's site stays under **77.9 C**, 1.6 K over the air, on the assumed doubling.
+- **The same doubling on the FETs already on the return.** 20c counts SENSE1 alone. Board A's Q44 and board P's Q107 over Q108 (2N7002s,
+  80 nA PRINTED at 25 C) at the air on the same doubling add 5.6 uA: 7.6 uA before the guard, and the window still holds (1.009 V).
+  With the AO3400A at the air too it fails (29.4 uA, 0.814 V); the shunt's site would have to stay under 74.2 C, under the air itself.
 - **Two unprinted figures.** The leakage at the ramp's VDS of about 0.84 V is not printed (AOS prints IDSS at 30 V). The 30 V row
   is taken as the bound, as record l9stk counts it.
 - **Why record l9stk's figures did not show it.** Its predicate "the loop with the fixed resistor keeps ... the window ... at every
@@ -973,14 +976,17 @@ selected; under the constitution's section 5 a second negative of the same solut
 each a material change, one of them):
 1. **A shunt of lower leakage: the kit's 2N7002** (Q44's and Q107's part).
    - PRINTED: IDSS 80 nA at 60 V and 25 C.
-   - On the same doubling: 5.58 uA at 86.25 C, **7.7 uA on the return in all, against 26.45 uA**.
+   - On the same doubling: 5.58 uA at 86.25 C, **7.7 uA on the return in all, against 26.45 uA** (13.2 uA with Q44 and Q107 at the air
+     on that doubling too).
    - Its on-resistance is printed at VGS 5 V (7 ohm at most) and 10 V only; the switch drives at least 4.75 V. Taking 14 ohm hot
      (ASSUMED under 5 V), the tripped return is 16.5 mV at 29.2 V, under 0.7755 V by far.
    - This record's recommendation for the next round, not taken here (the selection is record l9stk's): it removes the dependence on
      an unbounded site temperature and adds no part type.
-2. **The fixed resistor at most 11.57 kOhm (11 kOhm in E24)** with the AO3400A at 86.25 C. Tripped, the regulator then meets its
-   table's VIN only from 11.93 V, over the pack's least 10.6 V: a trip low in the service holds on under 5 V, its reset unprinted.
-3. **The shunt's site bounded under 77.9 C,** a layout condition 1.6 K over the air, with the leakage's doubling still ASSUMED.
+2. **The fixed resistor at most 11.57 kOhm (11 kOhm in E24)** with the AO3400A at 86.25 C (10.86 kOhm with Q44 and Q107 counted hot
+   too). Tripped, the regulator then meets its table's VIN only from 11.93 V, over the pack's least 10.6 V: a trip low in the service
+   holds on under 5 V, its reset unprinted.
+3. **The shunt's site bounded under 77.9 C,** a layout condition 1.6 K over the air, with the leakage's doubling still ASSUMED. With Q44
+   and Q107 counted on the same doubling the bound is 74.2 C, under the air: not available on that count.
 
 **Prepared for the draft, not judged** (the draft does not exist; listed so the next round starts from them):
 - **E-13 unchanged.**

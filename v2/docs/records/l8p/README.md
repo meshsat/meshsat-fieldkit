@@ -20,9 +20,9 @@ l9stk) or the coordinator picks one of 12k's three corrections (this record reco
 | Item | Where | What to read |
 |---|---|---|
 | G2 checked on the sheets | `l8p_guard.py` sections 1 to 6; `l8p_guard.out`; page 12k | each PRINTED figure against TI SNIS144G, SBVS186H (held back, `fetch_held_back.py`), AOS AO3400A Rev 3.1, JSCJ 2N7002; the loop's readings at tolerance |
-| L8P-F08, the window with the shunt's leakage | `l8p_guard.out` 5 (e); page 12k and section 9 | 26.45 uA allowed, 45.7 uA at l9stk's site; 0.770 V at the most favourable corners; 77.9 C as the site limit |
+| L8P-F08, the window with the shunt's leakage | `l8p_guard.out` 5 (e); page 12k and section 9 | 26.45 uA allowed, 45.7 uA at l9stk's site; 0.770 V at the most favourable corners; 77.9 C as the site limit, 74.2 C (under the air) with Q44 and Q107 counted on the same doubling |
 | The stop | page 12k "The stop"; `apply_gen_sch_a_ptc.py` unchanged | no G2 draft exists; this is the first negative check of G2 as selected |
-| The correction scope | `l8p_guard.out` 7; page 12k | the 2N7002 (7.7 uA), 11 kOhm (tripped VIN condition from 11.93 V), the site under 77.9 C; DERIVED, not drafted |
+| The correction scope | `l8p_guard.out` 7; page 12k | the 2N7002 (7.7 uA; 13.2 uA with Q44 and Q107 hot), 11 kOhm (tripped VIN condition from 11.93 V), the site under 77.9 C (not available with Q44 and Q107 counted); DERIVED, not drafted |
 | V2R-m8 | `l8p_drafts.py` `L4E11_SECTIONS`, `inputs/l4e11-section19h-4def5975.md`, `inputs/l4e11-section15c-precharge-4def5975.md`, `inputs/SOURCES.txt` | both under the guard; a scratch mutation of each fails (`test_l8p.t_round7_v2r_m8_19h_and_15c_are_under_the_guard`) |
 | V2R-m9 | page 12l, 12g (E-14 (a)), 13g (E-8); `l8p_guard.out` 8; `inputs/l4e11-sections23d-24b-08f7e38a.md` | the pair's reading lies between its junctions; RthJC 0.8 K/W times the pair's power plus the mounting bases' difference; L4-E11's method (B) quoted, unchecked |
 | E11-45 (c), for L4-E11 | page 12l | the 1 mA clause bounds each junction within 0.8 mK of its base; the VSD clause reads nothing per device |
