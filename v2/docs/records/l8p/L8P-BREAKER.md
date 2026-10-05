@@ -1311,7 +1311,7 @@ round.
 **State:** L8P-F07 and L8P-F08 stay OPEN until an independent check reads rounds 8 and 9 (the brief); this round changes no figure of
 the judgement on C-PROT rev 1.
 
-### 12o. Round 9, the owner's part 22 item A: the three failures stated in full, and the fail-safe delta (`l8p_c4.out` 10b and 10c; `apply_gen_sch_a_thgfs.py`, `check_l8p_fs.py`)
+### 12o. Round 9, the owner's part 22 item A and the check cx45's Q5: the three failures stated in full, and the fail-safe delta (`l8p_c4.out` 10b and 10c; `apply_gen_sch_a_thgfs.py`, `check_l8p_fs.py`)
 
 **No approved requirement permits a latent state (searched, `l8p_c4.out` 10b).** `pcb_requirements.yaml` (77 requirements) has no
 "latent", "proof test", "test interval" or "diagnostic coverage"; REQ-044 (the cell block's protection not on software alone) and
@@ -1328,50 +1328,61 @@ the trip, a condition C-PROT rev 1 covers. Normal service (10 A held 89.4 C, 18 
 |---|---|---|---|---|---|
 | Q60 gate to drain short | the gate network on the return: cold the return 0.799 V (window FAILS, a precharge can be stopped); tripped Q60 is diode-connected, no trip shown: the protection LOST | E-13b (a) only; in service none (the return reads 3.62 V at 10.6 V, the loop closed) | UNBOUNDED | FETs over 150 C from 20.53 A held to the breaker's limit: NOT BOUNDED | the cold clamp: the short TRIPS |
 | C261 open | U61 without the input capacitor TI calls necessary for line steps over 10 V; a docking steps it over 10 V from BRK_VIN 13.22 V; its output (both switches' VDD, 6 V absolute) not bounded | none (E-13b (d) reads a settled level) | UNBOUNDED | VDD over 6 V not excluded at each docking: NOT BOUNDED | C268 beside C261 |
-| U60's pad open | the die couples through its leads alone; the lag behind the pour not printed | E-13's heat step once, X-ray at assembly; none in service | UNBOUNDED in service | a late trip, a FET over 150 C: NOT BOUNDED | U62, a second switch, ORed |
+| U60's pad open | the die couples through its leads alone; the lag behind the pour not printed | E-13's heat step once, X-ray at assembly; none in service | UNBOUNDED in service | a late trip, a FET over 150 C: NOT BOUNDED | path 2: U62 on its own pad, supply and shunt |
 
-**The correction, `apply_gen_sch_a_thgfs.py` (DRAFT, after the round 8 guard; NOT APPLIED):** the cold clamp Q62 over Q63 (2N7002 in
-series) from Q60's gate to ground, gated by THG_ODN: the two switches' open-drain outputs (pin 3, active low, unused in round 8)
-pulled to VDD by R268 and R269 (47 kOhm each, in series); a second LM26LV-130, U62, on its own pad on the same pour with C269; D60 and
-D61 (1N4148W) OR the two push-pull OVERTEMPs into R262, now 22 kOhm (C260 stays 1 uF); U61's input as C261 and C268, 330 nF each;
-TP64 to TP66 (U62's TRIP_TEST and VTEMP, THG_ODN). Designators clear of d8dec31's next-free picks (R264, C264 on this composition).
-Judged on C-PROT rev 1 (`l8p_c4.out` 10c, DERIVED on the printed rows; the on-resistance ASSUMED by section 4's convention):
-- **Q60's short now trips:** in the held state at BRK_VIN 7.6 V VDD is 4.20 V; the clamp's gates at least 3.99 V (2.95 V with the
-  gates' leakage doubled); 23.5 ohm (78.3 ohm) each against at most 329 ohm; the return 55.3 mV (184.7 mV) under 0.7755 V: held, the
-  breaker off, found at once. At a docking the clamp holds before the RC hold's least 0.110 s.
-- **C261 open:** C268 leaves 330 nF (297 nF at -10 %), inside TI's 0.1 to 2.2 uF; together 0.66 uF.
-- **U60's pad open:** U62 trips on the same printed limits, drives the shunt through D61 and releases the clamp.
-- **The rest of C-PROT rev 1:** the no-trip side unchanged (38.4, 9.8, 6.0 K per switch); the trip 2.5 V within 25.4 ms (round 8:
-  40.0 ms) after the diode's drop; the window unchanged (0.908 V, 0.859 V all doubled, against 0.84 V: the clamp is not on the return);
-  the gate 0.888 V before tEN at the tolerances; a hot docking reaches the shunt at 106.4 / 62.4 / 41.3 ms at 7.6 / 10.6 / 16.8 V,
-  before 0.110 s (the 7.6 V corner has 3.6 ms of margin on the ASSUMED regulator model); FM1 within 16.2 uF; every new part within its
-  rating (C260 sees the return only with Q60's short, at most 13.81 V against 16 V).
-- **The delta's own single failures:** none removes the guard (two FETs and two resistors in series for the clamp; either diode, either
-  switch alone leaves the other; a short of Q62's gate to its drain trips).
-- **Composed** in L4-E9's order with this record's drafts then the delta (15 scripts OK, 725 parts): `check_l8p_fs.py` reads A EN and
-  A THG DRAWN, L4-E11's `check_dd7_netlist.py` (its round 18 admits C268) DRAWN; seven mutations each FAIL on THG; the delta refuses
-  without the round 8 guard, a second time and on the tree's own generator.
+**The correction, `apply_gen_sch_a_thgfs.py` (DRAFT, after the round 8 guard; NOT APPLIED), revised for the check cx45's Q5: two guard
+paths that share only the pour they sense and the loop they open.**
+- **Path 1, round 8's guard kept** (U60, U61 from DOCK_EN_OUT, R262 47 kOhm, C260 1 uF, R263 1 MOhm, Q60 on the return), with a **cold
+  clamp**: Q62 over Q63 (2N7002 in series) from Q60's gate to ground, gated by U60's open drain (pin 3, unused in round 8) pulled to VDD
+  by R268 and R269 (220 kOhm each, in series); U61's input as C261 and C268, 330 nF each.
+- **Path 2, new:** U62, a second LM26LV-130 on the same pour on its own pad (C269), supplied by U63, a second TPS70950, **from VBAT**
+  (C270 in, C271 out; on VBAT its start loads no docking); its OVERTEMP through R270 47 kOhm with C272 1 uF and R271 1 MOhm drives Q61,
+  a 2N7002 **from DOCK_EN_OUT to ground**. Tripped, Q61 pulls the loop's source low and the return with it; a sink on DOCK_EN_OUT does
+  not move the return against DOCK_EN_OUT, so L4-E11 20c's window is unchanged. TP64 to TP67.
+- Designators clear of d8dec31's next-free picks (R264 and C264 on this composition). Round 9's first form (a diode OR of the two
+  switches into one gate network, R262 at 22 kOhm) is superseded: it kept a common path.
+
+Judged on C-PROT rev 1 (`l8p_c4.out` 10c, DERIVED on the printed rows; on-resistance ASSUMED by section 4's convention):
+- **Q60's short trips:** the clamp's gates at least 3.74 V (VDD 4.26 V held at 7.6 V, the open drain's 1 uA and the gates' printed
+  0.16 uA through 444.4 kOhm); 28.2 ohm each against at most 329 ohm; the return 66.5 mV under 0.7755 V. The clamp needs each gate's
+  leakage at most 1.36 uA (printed 0.08 uA at 25 C, hot not printed): a Layer 6 or bench condition; with the gates at the off
+  leakage's doubling it is not shown, and Q60's short then leaves path 2 holding the protection.
+- **The common path:** each single failure of path 1 (U61, U60, R262, C260, R263, Q60, FM2) leaves path 2, and each of path 2 leaves
+  path 1: no single failure removes the trip. Path 2 tripped holds DOCK_EN_OUT at 50.8 mV and the return at 30.4 mV (the 29.2 V
+  clamp): the breaker off, DD-7 reading the loop dark (L4-E11 28b).
+- **The rest of C-PROT rev 1:** the no-trip side unchanged (38.4, 9.8, 6.0 K per switch); path 1 trips to 2.5 V within 43.8 ms,
+  path 2 within 40.0 ms; the window unchanged (0.908 V, 0.859 V all doubled, against 0.84 V); both gates under 1 V before tEN
+  (0.438 V); a hot docking reaches path 1's shunt at 104.0 / 72.0 / 57.0 ms at 7.6 / 10.6 / 16.8 V, before 0.110 s; with path 1 lost
+  and VBAT from the pack alone, path 2 acts at most 43.8 ms after a breaker start, a relaxation whose on-time's junction rise is not
+  bounded here (as section 9 (b)'s delay); every new part within its rating.
+- **The delta's own single failures:** none removes the trip (`l8p_c4.out` 10c's table).
+- **Composed** in L4-E9's order with this record's drafts then the delta (15 scripts OK, 731 parts): `check_l8p_fs.py` reads A EN and
+  A THG DRAWN (paths 1 and 2 by pin and their separation), L4-E11's `check_dd7_netlist.py` (its round 18 admits C268 and Q61) DRAWN;
+  seven mutations each FAIL; the delta refuses without the round 8 guard, a second time and on the tree's own generator.
 
 **SESSION decision L8P-D10** (authority: SESSION, under the owner's standing rule of 26 September 2026; it adds protection and reduces
-none): the arrangement and values above (the open-drain clamp rather than a logic buffer, whose input at an intermediate level draws a
-current no sheet bounds in the tripped hold; R262 22 kOhm rather than a smaller C260, which would not keep the gate under 1 V before
-tEN). To reverse: a check that finds the clamp's drive or the 7.6 V docking corner not supported.
+none): the two-path arrangement and values above (path 2 on VBAT rather than DOCK_EN_OUT, whose second regulator's charge would delay
+a hot docking past the RC hold at 7.6 V; Q61 on DOCK_EN_OUT rather than on the return or the pair's midpoint, where its off leakage
+would fail L4-E11 20c's window; the clamp's pull-up at 2 x 220 kOhm so the hot docking stays inside the hold). To reverse: a check that
+finds the separation, the clamp's drive or the 7.6 V docking corner not supported.
 
 **Findings:**
-- **L8P-R9-F1 (owner or Layer 3; OPEN):** the common path of section 10's table (U61 open, Q60 open, R262 open, C260 or R263 shorted,
-  FM2) still removes both switches' trip as a single failure, found only by E-13b, the interval UNBOUNDED, the exposure that of Q60's
-  short; no requirement permits it. Removing it needs a requirement for the latent-fault interval of a protective function (with an
-  automatic check), or a loop whose window admits two shunts (L4-E11 20c's window fails with a second shunt today). Not drafted here.
-- **L8P-R9-F2 (Layer 5's row, record l9stk 15.9; OPEN):** the guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 47.42 uA cold
-  and 172.78 uA tripped (printed maxima, the worst single fault); the loop's readings hold at allowances of 50 uA and 180 uA (10c).
-  The 30 uA allowance is a named prerequisite to restate.
+- **L8P-R9-F1 (handed over as remaining engineering, the owner's part 24; no latent-fault exception presumed):** a first failure that
+  silently removes ONE path is found only by E-13b, each path on its own, and no service interval bounds that; a second failure in the
+  other path before it is found removes the trip (the exposure of 10b). No automatic diagnostic is drafted: one that tests a shunt opens
+  the breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts. The cases:
+  the double failures; the attempted correction: this delta (single failures survived); the outputs PROVISIONAL on it: 10c's verdict,
+  C-PROT rev 1 for the guard, L4-E11 section 28.
+- **L8P-R9-F2 (Layer 5's row, record l9stk 15.9; OPEN):** the guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 36.00 uA cold
+  and 47.02 uA tripped (printed maxima, the off leakage at the doubling, the worst single fault); the loop's readings hold at allowances
+  of 40 uA and 50 uA (10c), and L4-E11 section 28 restates 20c and 20f on them. The 30 uA allowance is a named prerequisite to restate.
 - **L8P-R9-F3 (this record and Slot A, when the delta is released):** `check_l8p_netlist.py`'s THG group knows no delta and reads it
   FAIL; it stays untouched here because `l9t5_drafts.out` and `l8p_drafts.out` print its digest. `check_l8p_fs.py` reads the delta.
-- **E-13b gains (e):** TRIP_TEST on each switch alone (TP60, then TP64) opens the breaker; THG_ODN (TP66) within 0.21 V of VDD cold and
-  low with either TRIP_TEST high.
+- **E-13b gains (e):** TRIP_TEST on each switch alone (TP60 with TP63, then TP64 with TP67) opens the breaker; THG_ODN (TP66) within
+  0.52 V of VDD cold and low with TP60 high; TP67 reads 4.95 to 5.05 V with VBAT over U63's dropout.
 
-**State:** V6-m7 OPEN until an independent check reads 10b and 10c; its three failures CORRECTED IN DRAFT, the desk acceptance met by
-its author, unchecked. L8P-F07 and L8P-F08 stay OPEN.
+**State:** V6-m7 OPEN until an independent check reads 10b and 10c; its three failures and cx45's common path CORRECTED IN DRAFT, the
+desk acceptance met by its author, unchecked. L8P-F07 and L8P-F08 stay OPEN.
 
 ## 13. DD-5: the charge switch's body diode in discharge (round 4; `l8p_drafts.out` section 3c)
 
