@@ -8,12 +8,16 @@ another record's figure, read from its copy.
    fabaf09e34ff7ea1  v2/docs/records/l8p/inputs/l9stk-section15.9-43da41ca.md
    b3619bd411f5b64f  v2/docs/records/l8p/inputs/l4e11-section20c-4def5975.md
    a96099193dd92e8e  v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
+   fb6624bfc910198a  v2/docs/records/l8p/inputs/l4e11-sections23d-24b-08f7e38a.md
+   42242974cac952b7  v2/docs/records/l8p/l8p_drafts.out
    e8ce79af19c668cb  v2/vendor/ti/held/ti-lm26lv-snis144g.pdf  (held back, fetch_held_back.py)
    8c14e3efae738a27  v2/vendor/ti/held/ti-tps709-sbvs186h.pdf  (held back, fetch_held_back.py)
    9c60d0b6c1ddc760  v2/vendor/power/aos-ao3400a-n-mosfet.pdf
    7941fb423af7c6c6  v2/vendor/power/jscj-2n7002-c8545.pdf
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
-   b1d6316ecfe0fd04  v2/docs/records/l8p/l8p_guard.py
+   cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
+   596555c33dce1fca  v2/vendor/battery/ti-csd17570q5b.pdf
+   0e5e57fc9ad3d8a6  v2/docs/records/l8p/l8p_guard.py
 
 1. WHAT RECORD l9stk STATES OF G2 (RECORD: its l9stk_guard.out and page 15.9 at 43da41ca, copied)
    the 130 C preset: no trip under 127.8 C, surely tripped from 132.2 C, resets between 122.3 and 127.7 C
@@ -137,7 +141,25 @@ another record's figure, read from its copy.
      (iii) the shunt's site bounded under 77.9 C (a layout condition, 1.6 K over the air), with the leakage's doubling still ASSUMED
    The trip and no-trip sides on the case row (section 6) do not depend on this choice.
 
-8. PREDICATES
+8. DELTA-02'S CLASS ON BOARD P (the recheck V2R's V2R-m9; INFERRED unless labelled): three bench items name the body diode's VSD
+   method on FETs that share drain and source, where neither a per-device power nor a per-device junction reading is defined
+   E-14 (a): Q101 and Q102 (CSD18510Q5B) share BRK_SNS, PACK_P and BRK_GATE; E-8: Q1 and Q109 (CSD17570Q5B) share SCP_OUT and SW,
+     their gates apart (the gauge's CHG, U105); Q2, alone between SW and BRK_VIN, is a device of its own; E11-45 (c): L4-E11's item
+   what such an item reads as written: the pair's own drop at a common voltage (a pair calibrated as a pair in an isothermal oven
+     reads a temperature BETWEEN its two junctions, since at one voltage the hotter diode carries more: a lower bound for the hotter);
+     and the pair's total power exactly (the current times the common drop); never either device's power or junction
+   what it can bound if the item adds a reading of the two mounting bases' difference dT_mb: the hotter junction at most the pair's
+     reading + RthJC x the pair's total power + dT_mb, RthJC 0.8 K/W at most (PRINTED, CSD18510Q5B SLPS632 and CSD17570Q5B, each 0.8)
+     E-14 (a) below the band's top 1.213 A, VSD at most 1.0 V (PRINTED at 32 A, a bound at an ampere): 1.213 W, 0.97 K + dT_mb
+     E-8 at 23.93 A held, Q109's 0.724 W (RECORD, this record's section 3c; with CHG on the pair shares it): 0.58 K + dT_mb
+   the per-device method that bounds each without dT_mb: L4-E11's method (B) (round 13 23d, its fixture as round 14 redrew it, 24b;
+     fnd/l4e11r11 at 08f7e38a, copied; UNCHECKED: the recheck V2R confirmed (B) as conditional and found round 13's fixture and pass
+     rules not ready, which round 14 answers and no check has read): each gate apart, one channel heated at a time, each junction read
+     by that FET's own threshold; written for Nexperia's P-channel BUK6Y10-30P on board A. Board P's pairs are TI N-channel parts:
+     Q1 and Q109 have their gates apart already, Q101 and Q102 share BRK_GATE, so a specimen with a link in each gate branch (not
+     drafted). No third fixture is written here
+
+9. PREDICATES
    the 130 C preset's printed band is 127.8 to 132.2 C and its resets 122.3 to 127.7 C, as record l9stk prints                      yes
    the trip accuracy is printed at VDD 5 V only                                                                                     yes
    the switch and the regulator draw 18.25 uA at their printed maxima, under the 30 uA allowance                                    yes
@@ -152,3 +174,4 @@ another record's figure, read from its copy.
    L4-E11 20c's window holds with the AO3400A at record l9stk's site (G2 as selected)                                               NO
    C-PROT's no-trip side is printed at 10 A and in the 18 A service, and at condition C4                                            yes
    C-PROT's trip side leaves the gradient record l9stk prints                                                                       yes
+   both TI FETs of board P's paired items print RthJC 0.8 K/W at most                                                               yes

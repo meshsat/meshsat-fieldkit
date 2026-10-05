@@ -118,3 +118,23 @@ Held back, not committed (round 7): TI's LM26LV (SNIS144G) and TPS709 (SBVS186H)
 v2/vendor/ti/held/ and checked there by sha256 (e8ce79af... and 8c14e3ef..., the bytes record l9stk pins). Read from this tree
 (committed): AOS AO3400A v2/vendor/power/aos-ao3400a-n-mosfet.pdf (Rev 3.1, July 2023) and JSCJ 2N7002
 v2/vendor/power/jscj-2n7002-c8545.pdf.
+Round 7, the recheck V2R's V2R-m8 (the two copies of L4-E11 still at its round 9, outside the stale-copies guard): taken again
+at 4def5975 (L4E11_AT, the commit of every other copy) and listed in l8p_drafts.L4E11_SECTIONS, so the guard compares them with
+the tree's records/l4e11/ as it does the others. Round 9's copies (l4e11-section19h-e60a94a8.md, 270709638379...;
+l4e11-section15c-precharge-e60a94a8.md, ee11d230d11e...) are removed.
+  l4e11-section19h-4def5975.md                   b4bd0832b4f89385a94ddf08db6f8cf482ded968089f1dc3861337d505d8f051
+      L4E11-SOURCE-ONLY-AND-ENTRY.md at 4def5975, lines 1981 to 2073: section 19h whole. Against round 9's copy two notes were
+      added (the board A sensing superseded by round 10's section 20; the 47 kOhm point withdrawn as a bound by round 13, 23g);
+      every phrase l8p_drafts.py reads of it reads as before, so no figure of section 3b moved. The same bytes at 08f7e38a
+  l4e11-section15c-precharge-4def5975.md         ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146
+      the excerpt of section 15c (the precharge in LDO mode), word for word in the page at 4def5975 and at 08f7e38a: the same
+      bytes as round 9's copy, renamed to the commit it is now compared at
+Round 7 also read, for the tree's L4-E11 at round 14 (fnd/l4e11r11 at 08f7e38a, through git show into scratch, nothing copied
+for it): the eleven copies above and these two equal that page's sections and drafts (stale_copies() returns nothing there).
+Round 7, the recheck V2R's V2R-m9 (DELTA-02's defect class on board P): task L4-E11's method for paralleled FETs, read at its round
+14 (fnd/l4e11r11 at 08f7e38a; UNCHECKED: V2R confirmed method (B) as conditional and did not confirm round 13's fixture and pass
+rules, which round 14 answers and no check has read), copied for the restatement of E-8 and E-14 (a):
+  l4e11-sections23d-24b-08f7e38a.md              fb6624bfc910198af156a8b549f1c0b3d1f39674784ce813115ebcd887e18f74
+      L4E11-SOURCE-ONLY-AND-ENTRY.md at 08f7e38a: section 23d whole (the selection of method (B), SESSION, and the note that board
+      A's first prototype is no specimen until each gate branch has a removable link) then section 24b whole (the fixture as round
+      14 redrew it: SW_S, SW_B, each gate tied to its own drain tap, the interlock, the states and their margins)

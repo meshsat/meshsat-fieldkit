@@ -106,7 +106,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R257, C249)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
-              "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
+              "l8p/inputs/l4e11-section19h-4def5975.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
               "DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT", "'body diode' occurs 0 times in SLUUAQ3A and SLUSC67B",
               "apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused",
               "l8p/apply_gen_sch_p_idealdiode.py            OK", "decoupling C111: class L at U105.1 on IDL_VCAP",
@@ -305,7 +305,7 @@ def t_b_r2s_detector_closes_on_read_figures():
     the latched FET's safe level, the reverse threshold sits between a running breaker's channel drop and the body diodes' typical
     VSD, the pull and the interface's levels hold at PORIT, the restart fits board A's least hold, and the copies are pinned."""
     m = _need_inputs()
-    for f in ("inputs/l4e11-section19h-e60a94a8.md", "inputs/l4e11-section15c-precharge-e60a94a8.md"):
+    for f in (m.INPUT_FILES["l4e11"], m.INPUT_FILES["l4e11pre"]):
         assert _sha(os.path.join(REC, f)) == m.SOURCES_SHA[f], f
     for sheet in (m.CSD_SHEET, m.N7002_SHEET, m.BZT_SHEET, m.LM5069_SHEET):
         need(sheet, "a maker's sheet the detector reads")
@@ -466,7 +466,7 @@ def t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree():
     draft with R256 at 6.8k each fail. This record's own tree holds an older L4-E11 (before its round 10), which the copies
     cannot be behind."""
     m = _M()
-    assert all(m.L4E11_AT in v for k, v in m.INPUT_FILES.items() if k.startswith(("l4e11c", "l4e11d", "l4e11e", "l4e11_22")))
+    assert all(m.L4E11_AT in v for k, v in m.INPUT_FILES.items() if k.startswith("l4e11"))
     assert all(m.L4E11_AT in c for c, _n in m.L4E11_DRAFTS) and all(m.L4E11_AT in f for f, _a in m.FOLLOW["a"])
     assert all(m.L4E11_AT in v for k, v in m.REPLACED.items() if k[0] == "l4e11"), "a composition still uses an older copy of L4-E11's drafts"
     assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "a09e9a60" in f or "ac72e730" in f], "round 10's or round 12's copies are still in inputs/"

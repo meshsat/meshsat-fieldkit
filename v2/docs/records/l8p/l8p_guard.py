@@ -18,7 +18,10 @@ AO3400A and 2N7002 sheets committed) and reproduces, or does not, each figure th
      20c's window (a ramping closed loop never read held);
   6. the case row's two sides for the switch on its printed limits (the no-trip side with the gauge's condition C4, the trip
      side's gradient budget on the worst split);
-  7. the verdict, the stop, and the smallest correction scope for the selection's owner (DERIVED, not drafted, not checked).
+  7. the verdict, the stop, and the smallest correction scope for the selection's owner (DERIVED, not drafted, not checked);
+  8. the recheck V2R's V2R-m9, DELTA-02's defect class on board P: what the bench items E-8 and E-14 (a) can and cannot bound as
+     written on paralleled FETs, and the per-device method they would need (L4-E11's method (B) at 08f7e38a, copied, unchecked);
+  9. the predicates.
 Labels: PRINTED (a maker's printed limit), TYPICAL (a maker's typical figure or curve), ASSUMED, DERIVED (this script's
 arithmetic), RECORD (another record's figure, read from its copy). Nothing has been built, bought or measured.
 
@@ -42,6 +45,10 @@ L9_OUT = os.path.join(HERE, "inputs", "l9stk_guard-43da41ca.out.txt")
 L9_PAGE = os.path.join(HERE, "inputs", "l9stk-section15.9-43da41ca.md")
 L4_20C = os.path.join(HERE, "inputs", "l4e11-section20c-4def5975.md")
 L9_P15 = os.path.join(HERE, "inputs", "l9stk-section15-0d72880b.md")
+L4_B = os.path.join(HERE, "inputs", "l4e11-sections23d-24b-08f7e38a.md")
+DRAFTS_OUT = os.path.join(HERE, "l8p_drafts.out")
+CSD18510 = os.path.join(VENDOR, "battery", "ti-csd18510q5b.pdf")
+CSD17570 = os.path.join(VENDOR, "battery", "ti-csd17570q5b.pdf")
 PINNED = {L9_OUT: "66ee65bd07ef3fc17aba3fcf790464240aebc46a1cc455867e0283b474ca6bab",
           L9_PAGE: "fabaf09e34ff7ea1d3632d9148d7b033f245fe937ed289801d656bc527df1184",
           LM26LV: "e8ce79af19c668cbbaa964f78fff3eaae5d0f8b09e97d373efe0666d42885d2d",
@@ -90,7 +97,7 @@ def need(text, pat, what, flags=re.M):
 
 
 N = r"([0-9.]+)"
-D = "[–-]"                       # TI prints its minus signs as en dashes
+D = "[\u2013-]"                       # TI prints its minus signs as en dashes
 
 
 def read_l9stk():
@@ -236,6 +243,25 @@ def held(v, i_out, r6, rf, r_out, v_ret=0.0):
     return (v / r6 - i_out + v_ret / rf) / (1.0 / r6 + 1.0 / rf + 1.0 / r_out)
 
 
+def delta02():
+    """The figures section 9 uses: the two TI FETs' RthJC and VSD rows (PRINTED), the band's top and Q109's power (RECORD, this
+    record's own l8p_drafts.out sections 3b and 3c), and L4-E11's method as copied (its selection row and its fixture's table)."""
+    D = {}
+    a = pdftext(CSD18510)
+    D["rjc"] = float(need(a, r"R\u03b8JC\s+Junction-to-case thermal resistance \(1\)\s+%s" % N, "CSD18510Q5B: RthJC").group(1))
+    D["vsd"] = float(need(a, r"VSD\s+Diode forward voltage\s+ISD = 32 A, VGS = 0 V\s+%s\s+%s\s+V" % (N, N), "CSD18510Q5B: VSD").group(2))
+    b = pdftext(CSD17570)
+    D["rjc17"] = float(need(b, r"R\u03b8JC\s+Junction-to-Case Thermal Resistance \(1\)\s+%s" % N, "CSD17570Q5B: RthJC").group(1))
+    o = open(DRAFTS_OUT, encoding="utf-8").read()
+    D["i_top"] = float(need(o, r"most %s A against the latched FET's" % N, "l8p_drafts.out 3b: the band's top").group(1))
+    D["p109"] = float(need(o, r"the breaker's 23\.93 A held:\s+Q109 [0-9.]+ mV, %s W" % N, "l8p_drafts.out 3c: Q109 at 23.93 A").group(1))
+    c = open(L4_B, encoding="utf-8").read()
+    need(c, r"\*\*\(B\)\.\*\* It is the only one of the three that leaves the copper as board A's, gives each device's power and junction with no\s+assumption about sharing",
+         "L4-E11 23d: method (B)")
+    need(c, r"A series switch \*\*SW_S\*\* in the heating supply's \+ lead", "L4-E11 24b: the fixture")
+    return D
+
+
 def bisect(f, lo, hi, n=80):
     """The least x in [lo, hi] with f(x) true (f monotone false then true)."""
     for _ in range(n):
@@ -258,7 +284,7 @@ def main():
     w("LABELS: PRINTED a maker's printed limit; TYPICAL a maker's typical figure or curve; ASSUMED; DERIVED this script's arithmetic; RECORD\n")
     w("another record's figure, read from its copy.\n\n")
     w("0. PINS (sha256/16)\n")
-    for p in (L9_OUT, L9_PAGE, L4_20C, L9_P15, LM26LV, TPS709, AO3400A, N7002, LM5069, os.path.abspath(__file__)):
+    for p in (L9_OUT, L9_PAGE, L4_20C, L9_P15, L4_B, DRAFTS_OUT, LM26LV, TPS709, AO3400A, N7002, LM5069, CSD18510, CSD17570, os.path.abspath(__file__)):
         w("   %s  %s%s\n" % (sha(p, 16), rel(p), "  (held back, fetch_held_back.py)" if "/held/" in p else ""))
     w("\n1. WHAT RECORD l9stk STATES OF G2 (RECORD: its l9stk_guard.out and page 15.9 at 43da41ca, copied)\n")
     w("   the 130 C preset: no trip under %.1f C, surely tripped from %.1f C, resets between %.1f and %.1f C\n" % (L["no_trip"], L["trip"], L["reset_lo"], L["reset_hi"]))
@@ -486,7 +512,29 @@ def main():
       % (t_star, t_star - R["air"]))
     w("   The trip and no-trip sides on the case row (section 6) do not depend on this choice.\n")
 
-    # ------------------------------------------------------------------ 8. predicates
+    # ------------------------------------------------------------------ 8. DELTA-02's class on board P (the recheck V2R's V2R-m9)
+    D9 = delta02()
+    w("\n8. DELTA-02'S CLASS ON BOARD P (the recheck V2R's V2R-m9; INFERRED unless labelled): three bench items name the body diode's VSD\n")
+    w("   method on FETs that share drain and source, where neither a per-device power nor a per-device junction reading is defined\n")
+    w("   E-14 (a): Q101 and Q102 (CSD18510Q5B) share BRK_SNS, PACK_P and BRK_GATE; E-8: Q1 and Q109 (CSD17570Q5B) share SCP_OUT and SW,\n")
+    w("     their gates apart (the gauge's CHG, U105); Q2, alone between SW and BRK_VIN, is a device of its own; E11-45 (c): L4-E11's item\n")
+    w("   what such an item reads as written: the pair's own drop at a common voltage (a pair calibrated as a pair in an isothermal oven\n")
+    w("     reads a temperature BETWEEN its two junctions, since at one voltage the hotter diode carries more: a lower bound for the hotter);\n")
+    w("     and the pair's total power exactly (the current times the common drop); never either device's power or junction\n")
+    w("   what it can bound if the item adds a reading of the two mounting bases' difference dT_mb: the hotter junction at most the pair's\n")
+    w("     reading + RthJC x the pair's total power + dT_mb, RthJC %.1f K/W at most (PRINTED, CSD18510Q5B SLPS632 and CSD17570Q5B, each 0.8)\n" % D9["rjc"])
+    w("     E-14 (a) below the band's top %.3f A, VSD at most %.1f V (PRINTED at 32 A, a bound at an ampere): %.3f W, %.2f K + dT_mb\n"
+      % (D9["i_top"], D9["vsd"], D9["i_top"] * D9["vsd"], D9["i_top"] * D9["vsd"] * D9["rjc"]))
+    w("     E-8 at 23.93 A held, Q109's %.3f W (RECORD, this record's section 3c; with CHG on the pair shares it): %.2f K + dT_mb\n"
+      % (D9["p109"], D9["p109"] * D9["rjc17"]))
+    w("   the per-device method that bounds each without dT_mb: L4-E11's method (B) (round 13 23d, its fixture as round 14 redrew it, 24b;\n")
+    w("     fnd/l4e11r11 at 08f7e38a, copied; UNCHECKED: the recheck V2R confirmed (B) as conditional and found round 13's fixture and pass\n")
+    w("     rules not ready, which round 14 answers and no check has read): each gate apart, one channel heated at a time, each junction read\n")
+    w("     by that FET's own threshold; written for Nexperia's P-channel BUK6Y10-30P on board A. Board P's pairs are TI N-channel parts:\n")
+    w("     Q1 and Q109 have their gates apart already, Q101 and Q102 share BRK_GATE, so a specimen with a link in each gate branch (not\n")
+    w("     drafted). No third fixture is written here\n")
+
+    # ------------------------------------------------------------------ 9. predicates
     preds = [
         ("the 130 C preset's printed band is 127.8 to 132.2 C and its resets 122.3 to 127.7 C, as record l9stk prints", abs(lo_trip - L["no_trip"]) < 1e-9 and abs(hi_trip - L["trip"]) < 1e-9
          and abs(rs_lo - L["reset_lo"]) < 1e-9 and abs(rs_hi - L["reset_hi"]) < 1e-9),
@@ -504,8 +552,9 @@ def main():
         ("L4-E11 20c's window holds with the AO3400A at record l9stk's site (G2 as selected)", win[rows[2][0]]),
         ("C-PROT's no-trip side is printed at 10 A and in the 18 A service, and at condition C4", m10 > 0 and m18 > 0 and m_c4 > 0),
         ("C-PROT's trip side leaves the gradient record l9stk prints", abs(g_left - L["grad"]) < 0.006 and abs(g_left2 - L["grad2"]) < 0.006),
+        ("both TI FETs of board P's paired items print RthJC 0.8 K/W at most", D9["rjc"] == 0.8 and D9["rjc17"] == 0.8),
     ]
-    w("\n8. PREDICATES\n")
+    w("\n9. PREDICATES\n")
     for text, val in preds:
         w("   %-128s %s\n" % (text, "yes" if val else "NO"))
     sys.stdout.write("".join(out))
