@@ -9,6 +9,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    bb89f067e6a79028 v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
    16ec2eac43c7374e v2/vendor/ti/ti-tps62933.pdf
    9ba54135736a47a3 v2/vendor/st/st-rm0433-rev8.pdf
+   dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
+   27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
    9b0d04c39beafb7d v2/docs/HW-FW-CONTRACT.md
    c4820a453aa7a159 v2/docs/PANEL.md
    55620cf51446bfc8 v2/docs/ARCH-PCB-B-IOHA.md
@@ -22,10 +24,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
-   8e374670868696ba v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   0bbe11d33a1c509a v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    85156e936ce21bcc v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
    4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
    ca218c9ed2f267ed v2/docs/records/l9t5/apply_gen_sch_b_iocset.py
+   6b74365e476309f7 v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py
 
 2. THE APPLICABLE OPERATING STATE OF A SUPERVISOR (U41, U51, U61, STM32H743VIT6), AS THE TREE DEFINES IT
    v2/docs/HW-FW-CONTRACT.md: 11 rows name the supervisors (their I2C target addresses, CAN FD at 1 Mbps or less, the quorum, the vote rate);
@@ -321,7 +324,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    Diodes does not print (MISSING); whatever that constant, the junction never passes the held figure of section 8 (m) (146.4 C on rev Y
    at this air with the enabled set, under the 150 C absolute maximum)
    F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads 109.4 C on rev V (inside 125 C) and 125.2 C on rev Y's cover
-     (OVER by 0.2 K; a rev X part waits on V-B20 under L9T5-D7) at 76.25 C, the worst drop's corner
+     (OVER by 0.2 K; a rev X part HELD under L9T5-D7) at 76.25 C, the worst drop's corner
 
    10e. THE CREDIBLE BUS FAULTS INSIDE BOARD B (V6-B3, 1a; F16 and F17 restated per fault)
    Both fabrics lie wholly on board B: the parts on CANH_*/CANL_* in the composed netlist are R470, R471, R472, R473, R504, R505, R506, R507, R508, R509, R511, R512, TP535, TP536, TP537, TP538, U43, U44, U53, U54, U63, U64, no connector among them. Board B's
@@ -544,10 +547,102 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      the model's case selection (this script): the verdicts of F13, F16, F17 and the rows above read revision V's printed rows only;
        revision Y's rows are printed as the cover for a rev X part and decide nothing; no figure of revision V is applied to X or Y
 
+   10j. THE CHECK cx45's Q3 (focused check of candidate 06077cee, NOT CONFIRMED): THE SCHEDULE, A CONTAINMENT NO FIRMWARE SETS, THE SURVIVING
+   QUORUM, THE OTHER CONTROLLERS' HEADROOM, THE THERMAL ENVELOPE, AND THE ROWS MADE TO AGREE (DERIVED on the printed rows; labels as above)
+   (a) THE MESSAGE SCHEDULE, FW-B22 (drafted in apply_hw_fw_contract_t10.py): per controller and fabric, in every 100 ms window, one state
+     frame (its view of the assignment, its health, a sequence count) and at most five event frames; classic 8-byte frames at 500 kbit/s
+     or 1 Mbit/s, 135 bit-times each with stuffing (MODEL); a larger change spreads over windows. Its dominant bound, every bit counted
+     dominant plus 12 acknowledgements: 822 bit-times against FW-B21's 1000 (2 % of the window at 500 kbit/s; 2000 at 1 Mbit/s): inside;
+     the bus 4.9 % loaded at 500 kbit/s; a state frame waits at most 4.6 ms behind every other frame of its window; the quorum's
+     2-of-3 decision reads the three state frames of one window: at most 100 ms plus 4.6 ms
+   (b) THE CONTAINMENT DRAFTED (apply_gen_sch_b_iocguard.py, after iocbuck, iocpre and canshdn; NOT APPLIED): two bounds that no firmware
+     sets, each acting on one controller only; the rows read (PRINTED): INA169 990 to 1010 uA/V, offset at most 1.0 mV, specified to 85 C;
+     TPS3701 VIT-(INB) 387 to 400 mV, VIT+(INB) 397 to 403 mV, its inputs at most 25 nA, OUTB low over VIT+(INB); TCAN334 SHDN VIH 2 V, VIL
+     0.8 V, at most 4 uA out of the pin at 0 V
+     1. THE TRANSMIT-SHARE LIMITER, one per transceiver: TXD through 1000 kOhm over 150 kOhm with 1 uF (144 ms at its slowest), the
+        average 0.1304 of the rail times (1 - the dominant share); the transceiver is silenced when its share passes 4.7 to 12.3 % (the
+        rail at +-1.5 %, the resistors at 0.1 %, the threshold and the input current printed); at the legitimate 2 % it stays enabled: yes;
+        SHDN driven to at least 2.27 V (VIH 2 V) by LIMO's 10 kOhm through a 1N4148W (0.715 V PRINTED at 1 mA, taken as the bound) into 100 kOhm,
+        and held at 0.40 V (VIL 0.8 V) by that 100 kOhm against the pin's own 4 uA when nothing drives it; the controller's own SHDN
+        request reaches the pin through the other diode. A held-dominant TXD is silenced within 16.0 ms (the driver's own time-out, 1.2 to
+        3.8 ms PRINTED, frees the bus first); a babbler through its FDCAN, whose frames carry at least 15 % dominant bits (ASSUMED,
+        FRAME_D_MIN: an all-recessive 8-byte frame carries about 24 dominant bits in 130), within 227 ms; the silence lasts while its
+        TXD keeps the share over the limit and ends by itself when the share falls
+     2. THE RAIL TRIP, one per controller: 0.3 ohm from +5V_IOC to its LDO, the INA169 into 5.76 kOhm, a 1.1 s average (100 kOhm, 10 uF,
+        at its slowest), a TPS3701 holding the LDO's EN low while the average is over the threshold: 0.2183 to 0.2452 A at the tolerances;
+        tripped, the controller is unpowered; the average then falls, the LDO restarts, and a controller still over the threshold is
+        unpowered again: its supply's average is held at the threshold (DERIVED)
+   (c) THE SURVIVING QUORUM AND RECOVERY, FAULT BY FAULT (quorum: two of three controllers serving; IOHA rows 3, 7 and 8):
+     a babbler through its FDCAN (FW-B21 broken), one or both fabrics its limiter silences its transceiver within 227 ms; the bus free; the other two                                        automatic: the limiter releases when its share falls
+     a held-dominant TXD                                            the time-out frees the bus within 3.8 ms, the limiter silences it within 16.0 ms                                       automatic
+     a clock or load outside FW-B20 (any firmware)                  the rail trip unpowers it, its average held at 0.2452 A or less; the other two                                         automatic: it restarts while its average is under the trip
+     a fabric shorted, the firmware's response absent               its transceivers' share bounded by the limiter, the rail under the trip; the other fabric                              the fabric's repair
+     a limiter's comparator dead, or its OUTB released              that transceiver silent: the controller on its other fabric; the quorum holds                                          found at once (its frames absent)
+     a limiter's OUTB stuck low                                     that transceiver's share no longer bounded: LATENT, a second fault (a babbler) needed                                  bench V-B22; handed over (below)
+     the rail trip's OUTB stuck low, or its monitor's output high   the controller unpowered: the other two                                                                                found at once
+     the rail trip's monitor dead or its OUTB released              no current bound for that controller: LATENT, a second fault needed                                                    bench V-B23; handed over (below)
+     one firmware fault in all three (a systematic fault)           each rail and each transceiver bounded on its own; the service may stop: the voters hold the home assignment (row 8)   the firmware's V-B20 to V-B22
+     a CONTROLLER-DRIVEN babbler denies the bus at most for its detection time, 227 ms, the voters holding their assignment meanwhile
+     (row 8), because its frames' dominant bits keep its share over the limit;
+     WHAT IS NOT CLOSED (handed over as remaining engineering, no exception presumed): a TX pin repurposed as a GPIO and toggled under
+     the limiter's least 4.7 % share disrupts the bus without tripping it; attributing it needs each controller's TXD read by the other
+     two and a 2-of-2 vote of the other two on its SHDN or its LDO's EN (twelve observation inputs and six vote outputs, a pin plan for
+     the three H743s): NOT DRAFTED here. And a latent stuck comparator in either bound, found only on the bench (V-B22, V-B23), with
+     no service interval bounding that: the double faults. Outputs PROVISIONAL on them: L9T5-F21 and this section's quorum rows
+   (d) THE OTHER CONTROLLERS' HEADROOM DURING A RESPONSE: one controller at the worst current any firmware draws until its trip, 0.6776 A
+     (the sheet's largest rev V row 0.550 A, the auxiliaries, both transceivers held dominant), the other two at the largest served 0.1855 A:
+     U601's load 1.0487 A, under its declared peak; each other LDO's input at least 3.6571 V against its 3.4798 V: holds (the lead at the
+     total current, the return's shift as drawn, the sense resistor at +1 %)
+     T10-A3 RESTATED ON A HARDWARE BOUND (L9T5-D8's criterion superseded): each LDO's input at the trip's maximum 0.2452 A, the sense
+     resistor's drop counted: at least 3.6524 V against 3.5213 V: holds
+   (e) THE THERMAL ENVELOPE, PEAK AND SUSTAINED (cx45's averaged-current point):
+     sustained: the rail trip holds every controller's average at 0.2452 A or less whatever its firmware or its share does: the LDO's
+       junction at most 115.4 C at 76.25 C air (the drop's worst corner, 159.5 K/A, MODEL), the controller's own at most 112.7 C; no average
+       is used to bound a peak: the bound is the held current itself. Every served state is under the trip's least 0.2183 A (the largest
+       0.1855 A): none trips
+         the bounded state with the limiters' pull-ups        0.1739 A   LDO 104.0 C
+         B1 with the response                                 0.1763 A   LDO 104.4 C
+         B2 with the response                                 0.1763 A   LDO 104.4 C
+         B3 with the response                                 0.1743 A   LDO 104.1 C
+         B4 with the response                                 0.1772 A   LDO 104.5 C
+         B5 with the response                                 0.1767 A   LDO 104.4 C
+         B6 with the response                                 0.1738 A   LDO 104.0 C
+         B7a with the response                                0.1739 A   LDO 104.0 C
+         both fabrics faulted, responded                      0.1806 A   LDO 105.1 C
+         a babbler, the limiters bounding it                  0.1855 A   LDO 105.8 C
+     transient: from the bounded state to the worst current, the trip acts within 171 ms (the average's slowest time constant); the
+       steady figure at that current is 184.3 C, so the 150 C transient rule needs the LDO's transient thermal impedance at 171 ms no
+       more than 105 C/W on board B's copper (its steady 184 C/W PRINTED for its own board): NOT PRINTED by Diodes, a QUALIFICATION LIMIT
+       (first article, below); the controller passes its own rating in that time at VOS0 (a firmware fault, ended by the trip)
+     qualification limits, with their uncertainty: the LDO's junction-to-air resistance on board B at most 229 C/W at 76.25 C air, or
+       the local air at most 85.9 C at the printed 184 C/W (each holds 125 C at the trip's maximum); Zth(171 ms) at most 105 C/W;
+       the INA169's site under its specified 85 C; measured on the first article of board B in a 76 C chamber with one controller
+       forced to the trip (a load on its rail), not at the bounded state alone (T10-A5 restated, T10-ROUND5.md section 6)
+     residual handed over: VOS0 at a current under the trip takes the H743 past its own 105 C VOS0 limit at this air (112.7 C at 0.2452 A):
+       the LDO is held, the controller is not; a VOS0 entry no hardware prevents (Layer 5 and Layer 6)
+   (f) THE ROWS MADE TO AGREE: the fitted part is revision V (L9T5-D7), revision X held until its own qualification; the set point R602 14.0k
+     (4.0114 V nominal); 125 C for every sustained state; the contract draft's FW-B20 row, the part-selection and inspection rows of 10i,
+     T10-ROUND5.md and this output state the same; a rev X part must now also stay under the rail trip's least 0.2183 A in its bounded
+     state (V-B20's pass limit min(0.2318, 0.2183) A)
+   COMPOSED: board B in L4-E9's order with I-03's draft, iocpre, canshdn, iocset and the containment delta (16 drafts): every step OK; the generator
+     ran to its end; read by pin (each rail's sense, monitor, filter and trip on its EN; each transceiver's SD, diodes, average and
+     limiter): DRAWN
+     mutated, the limiter reading RXD, not TXD:                FAIL
+     mutated, the rail trip's EN and its input exchanged:      FAIL
+     mutated, the LDO before the sense resistor:               FAIL
+     mutated, the limiter's pull-up from +5V_IOC:              FAIL
+     mutated, the controller's SHDN diode reversed:            FAIL
+     mutated, the filter capacitor reversed onto ground:       FAIL
+     the delta on a generator without record l9t5's drafts: refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)
+     record l9t5's own I-03 check (Slot A's check_l9t5_netlist.py) holds the LDOs' VIN on +5V_IOC: its entry is Slot A's to restate when
+     it takes this delta (L9T5-F25)
+   VERDICT (10j): cx45's Q3 (a) to (d) CORRECTED IN DRAFT on revision V at 14.0k, the desk acceptance MET by its author, UNCHECKED; the
+     qualification limits of (e) and the residuals of (c) and (e) handed over; L9T5-F21 OPEN on the GPIO-toggled TX pin only
+
 11. THE STATE OF L9T5-F06 (T10)
    L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2
    is restated with the enabled peripherals at the drop's worst corner: at the case's 76.25 C air it holds on rev V's rows (109.4 C), the revision
-   L9T5-D7 fits, and NOT on rev Y's rows (125.2 C), the cover for a rev X part, which is PROVISIONAL on V-B20 (pass limit 0.2318 A; 10h (1)); T10-A3
+   L9T5-D7 fits, and NOT on rev Y's rows (125.2 C), the cover for a rev X part, which is HELD (round 6: V-B20 at most min(0.2318, 0.2183) A, 10j (f)); T10-A3
    and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;
    Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to
    76.23 C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check
@@ -578,10 +673,12 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    L9T5-F19 (board B's layout owner, Layer 10): +54V_POE, MDI_A_N, MDI_A_P, POE_P on board B exceed the TCAN334's +-14 V bus pins; a short from one to a CAN
      conductor is outside every printed figure: a clearance rule between those nets and the fabrics is a layout means, not credited here
    L9T5-F21 (Layer 5, IOHA section 12's owner): a supervisor whose firmware babbles on both fabrics (a running firmware that breaks FW-B21)
-     is in no FMEA row; thermally it is bounded (10h (3)), but it can deny the quorum both fabrics: the FMEA row and its detection are owed
-   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the
-     pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without
-     V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)
+     is in no FMEA row; round 6 (10j) bounds a babbler through its FDCAN in hardware (the transmit-share limiters, 0.23 s); OPEN for a TX
+     pin toggled as a GPIO under the limiter's least share (the peers' TXD observation and 2-of-2 vote, not drafted) and the FMEA row
+   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): DRAFTED in part 22 (apply_gen_sch_?_iocset.py, R602 14.0k, taken);
+     revision X stays HELD until its own qualification (10j (f))
+   L9T5-F25 (Slot A, record l9t5's I-03 check): check_l9t5_netlist.py reads the LDOs' VIN on +5V_IOC; with the containment delta
+     (apply_gen_sch_b_iocguard.py, round 6) each sits behind its sense resistor on IOC{t}_LDO_IN: to restate when the delta is taken
    L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when
      the set point delta (apply_gen_sch_?_iocset.py, part 22) is taken; and the delta folded into iocpre (one writer per file)
    L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and
@@ -609,5 +706,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's               yes
    round 5 (part 22): the babbling row FAILS 125 C on rev V with iocpre alone and every rev V row holds with the set point delta          yes
    round 5 (part 22): the delta composes, reads 14.0k, refuses without iocpre and the tree; both mutations FAIL; T10-A3 holds restated    yes
+   round 6 (cx45 Q3): the schedule's dominant bound is inside FW-B21's share at 500 kbit/s                                                yes
+   round 6: the share limiter leaves the legitimate share enabled, trips over it, drives SHDN past VIH and holds it under VIL             yes
+   round 6: every served state is under the rail trip's least current, and the trip's maximum holds 125 C                                 yes
+   round 6: T10-A3 holds at the trip's maximum with the sense drop, and the other LDOs hold during a response                             yes
+   round 6: the containment delta composes, reads DRAWN by pin, its six mutations FAIL, and it refuses as a draft must                    yes
 
 l9t5_t10: done

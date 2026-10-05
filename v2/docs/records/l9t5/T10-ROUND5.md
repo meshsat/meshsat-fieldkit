@@ -1,3 +1,5 @@
+**ROUND 6 (T10, 5 October 2026, the check cx45's Q3 on candidate 06077cee), Slot C: DONE: the quorum's schedule drafted (FW-B22: 822 dominant bit-times at most against the 1000 of the share); a containment no firmware sets drafted, composed, read and mutated (apply_gen_sch_b_iocguard.py: a transmit-share limiter per transceiver, silencing a held-dominant TXD within 16 ms and a babbler through its FDCAN within 0.23 s, and a rail trip per supervisor holding its supply's average at 0.2183 to 0.2452 A); the surviving quorum per fault; the other supervisors' headroom traced; the thermal envelope on the held trip current (115.4 C sustained) with its qualification limits (junction-to-air at most 229 C/W, Zth(0.17 s) at most 105 C/W); every row on revision V, R602 14.0k and 125 C for sustained states, revision X held. Round 5 below as written, its superseded statements marked. NOT DONE: no independent check; the rows unapplied; handed over as remaining engineering: a TX pin toggled as a GPIO under the limiter's least share (L9T5-F21), the latent stuck comparators, VOS0 under the trip; nothing physical. NEXT: the independent check; Slot A restates its I-03 check for the sense resistor (L9T5-F25).**
+
 **ROUND 5 (T10, 5 October 2026), Slot C: DONE: V6-B3 corrected (CON-004 traced); FW-B20 and FW-B21 drafted; SHDN drafted, composed, read and mutated; the credible bus faults re-solved; C-DEV rev 2 issued from it; the owner's four questions of part 21 answered (every junction at the LDO's worst drop corner; rev V fitted, L9T5-D7); and the owner's part 22: the criterion per state (125 C for every sustained state, 150 C only for a transient hardware ends), the babbling supervisor a SUSTAINED state that FAILED 125 C on rev V (130.6 C) and holds with the set point delta drafted (R602 14.0k, apply_gen_sch_?_iocset.py: 121.5 C), revision V made enforceable by three drafted rows (Layer 6 identity, Layer 12 inspection, the model's selection). NOT DONE: no independent check; the rows unapplied; the babbler's quorum effect (L9T5-F21) not drafted; nothing physical. NEXT: Slot A takes the canshdn and iocset drafts and restates its pre-regulator check (L9T5-F24).**
 
 # T10 round 5: the supervisors' regulators after the independent check V6 (L9T5-F06, F13, F16, F17)
@@ -55,7 +57,7 @@ with it).
 
 **(2) The CAN service under the bound.** The fabrics carry the supervisors' quorum only; the modules' heartbeats (GPIO, FW-B01), the
 voted outputs (GPIO, FW-B12) and FW-E07's stopped-fan report (board E, the kit bus, V-E07's 5 s) are not on them. The tree defines no
-CAN message rate; the record ASSUMES one state frame per supervisor per fabric per 100 ms and a burst of 8 event frames when ownership
+CAN message rate; the record ASSUMED (round 5; SUPERSEDED in round 6 by the drafted schedule FW-B22, section 12) one state frame per supervisor per fabric per 100 ms and a burst of 8 event frames when ownership
 moves. With every bit of a 135-bit frame counted dominant and two acknowledgements a frame, the 2 % share leaves 7 frames a window at
 500 kbit/s and 14 at 1 Mbit/s (1 at 125 kbit/s, which FW-B21 therefore excludes: its rates are now 500 kbit/s to 1 Mbit/s). REQ-004's
 30 s is 300 windows; A7's surviving fabric carries the same traffic under its own share. The firmware confirms its real message set
@@ -69,7 +71,7 @@ window carries at most 2 ms of own dominant drive by the schedule, so a fault's 
 per-fault table is t10 10h (3)). The firmware as the faulting party: a hang ends at the IWDG; with DAR mis-set and the CPU hung,
 B6's endless retransmission reads 133.2 C on rev Y's cover; a babbling supervisor at the clock bound reads 146.4 C on rev Y's cover:
 under 150 C, over 125 C (it costs margin, not the regulator; its quorum effect is finding L9T5-F21). A firmware that breaks the CLOCK
-bound takes the H743 itself outside its rating and can take the LDO over 150 C: nothing in hardware prevents it. That is a systematic
+bound takes the H743 itself outside its rating and can take the LDO over 150 C: nothing in hardware prevents it (round 5; SUPERSEDED in round 6: the rail trip, section 12, holds each supply's average at 0.2452 A or less). That is a systematic
 firmware defect, closed by the firmware's verification (FW-B20's read-back, V-B20, CON-017 (4)'s firmware stage): an OPEN
 implementation obligation, not a desk-fixable circuit defect. **SESSION L9T5-D6:** round 4's K1 (a buck per supervisor) is not taken
 for it, because it would keep the regulator alive in a state the controller itself cannot hold; to reverse, K1.
@@ -136,17 +138,19 @@ declaration for any dominant current up to 828.5 mA.
   The circuit half composes, reads DRAWN and fails under mutation; the firmware half is a contract row (no supervisor firmware exists).
 - **L9T5-F06: STAYS OPEN** for the same check and application; T10-A5 is the supplier's (section 6); the clock bound's enforcement is
   an OPEN firmware-verification obligation (section 3 (3)).
-- **Residual B7b (L9T5-D5):** a transceiver whose driver, time-out and SHDN fail together: 120.0 C on rev V (inside 125 C), 135.8 C on
-  rev Y's cover (inside 150 C): tolerated where it is over.
-- **For a rev X part: PROVISIONAL** on V-B20 (pass limit 0.2318 A), or closed by L9T5-F22's set point.
+- **Residual B7b:** a transceiver whose driver, time-out and SHDN fail together: 120.0 C on revision V, the fitted part, inside 125 C
+  (round 6: L9T5-D5 WITHDRAWN, nothing is tolerated over 125 C; over the rail trip's least 0.2183 A the supervisor is unpowered and the
+  other two hold the quorum).
+- **Revision X: HELD** (not fitted, round 6) until its own qualification: V-B20 in its bounded state at most 0.2183 A (the rail trip's
+  least) and its rows re-solved; no revision V figure is applied to it.
 
 ## 6. The supplier's validation tasks and the bounded provisional choices (amendment 1)
 
 | Fact not established at the desk | Claim it supports | Bounded provisional choice | Supplier task: specimen, quantity, pass limit |
 |---|---|---|---|
-| a rev X controller's supply current (DS12110 prints rev Y and rev V only) | T10-A2, F13, F16 on a rev X part | fit rev V (L9T5-D7); or L9T5-F22's set point | three rev X STM32H743VIT6 on the first-article board B: each supervisor's supply current at the FW-B20 bound and FW-B21 share at its operating junction: at most 0.2318 A (V-B20) |
+| a rev X controller's supply current (DS12110 prints rev Y and rev V only) | T10-A2, F13, F16 on a rev X part | fit rev V (L9T5-D7); revision X HELD | three rev X STM32H743VIT6 on the first-article board B: each supervisor's supply current at the FW-B20 bound and FW-B21 share at its operating junction: at most 0.2183 A (V-B20, the rail trip's least) |
 | the enabled peripherals' maxima (typical only printed) | T10-A2 | typical times 144 MHz times the whole set's max/typ ratio (MODEL) | the same measurement (V-B20) |
-| each LDO's thermal resistance on board B's copper (184 C/W printed, its board not printed) | every junction | the printed 184 C/W | first-article board B in a 76 C chamber: each AP2112K's case temperature in the bounded state, the implied junction at most 125 C (T10-A5) |
+| each LDO's thermal resistance on board B's copper (184 C/W printed, its board not printed), and its transient impedance (not printed) | every junction; the trip's transient | the printed 184 C/W; the steady figure as the transient's bound | first-article board B in a 76 C chamber with one supervisor forced to its rail trip (the worst sustained state, 0.2452 A, round 6): each AP2112K's implied junction at most 125 C (junction-to-air at most 229 C/W on board B's copper, or the local air at most 85.9 C at 184 C/W); the step to the worst current inside Zth(0.17 s) at most 105 C/W; the INA169's site under 85 C (T10-A5 restated) |
 | the TCAN334's current with a bus line at 0 V or on a rail (not printed) | B1, B2, B5 | the printed 180 mA and 200 mA rows; the share holds to 828.5 mA | V-B21: each fault injected with traffic running; each AP2112K's output current averaged over 1 s at or under the response figure |
 | the firmware's implementation of FW-B20 and FW-B21 | every row | the drafted rows | V-B20, V-B21 on the first firmware build; the clock bound's code review (CON-017 (4)) |
 
@@ -164,10 +168,11 @@ fitted figure; 0.2558 A stays the conservative one for power.
 | L9T5-D2 | FDCAN_CCCR.DAR = 1 | every transmission a scheduled one, so the share holds whatever the fault (B6's endless retransmission removed) | automatic retransmission with a bounded retry count in FW-B21 |
 | L9T5-D3 | SHDN on PD2 (fabric A) and PB14 (fabric B), 100 k to GND | free GPIO next to each FDCAN's pins; today's normal mode kept in reset; TI does not want the internal bias relied on | drop `apply_gen_sch_b_canshdn.py` |
 | L9T5-D4 | judged at 76.25 C at the drop's worst corner; FDCAN's peripheral current counted twice; the circuit's own auxiliaries instead of the 0.020 A declaration | the case's air; one clock enable serves both instances; the declaration is not a bound | read at the exhaust air (t10 10c prints it) |
-| L9T5-D5 | the B7b residual tolerated where it is over 125 C | one part failing three of its own functions; inside 150 C; the quorum holds on the other fabric | a load switch per transceiver |
-| L9T5-D6 | K1 not taken for a firmware that breaks the clock bound | the controller itself has no operating point there; the enforcement must be the firmware's verification | round 4's K1 |
-| L9T5-D8 | T10-A3 restated at the largest current the record computes for a regulator (0.4512 A) in place of the LDO's 600 mA | at 14.0k it holds there; a supervisor drawing more is a fault its own BOR ends, the other two holding the quorum | round 4's 600 mA with R602 13.3k (the babbler then FAILS 125 C) |
-| L9T5-D7 | the supervisors fitted in revision V | rev V's printed rows hold with 14 K or more; rev Y's (the cover for rev X) miss 125 C; inside CON-017 (5) | a rev X part after V-B20 (0.2318 A), or L9T5-F22's set point |
+| L9T5-D5 | WITHDRAWN (round 6): was the B7b residual tolerated where it is over 125 C | on revision V, the fitted part, B7b reads 120.0 C, inside 125 C; nothing is tolerated over it | none |
+| L9T5-D6 | REVERSED (round 6): was K1 not taken for a firmware that breaks the clock bound | the rail trip (L9T5-D9) bounds that supply in hardware instead | none |
+| L9T5-D8 | SUPERSEDED (round 6): T10-A3 is judged at the rail trip's maximum, 0.2452 A, a hardware bound, the sense resistor's drop counted (3.6524 V against 3.5213 V) | no supervisor carries a larger average | none |
+| L9T5-D7 | the supervisors fitted in revision V | rev V's printed rows hold with 14 K or more; rev Y's (the cover for rev X) miss 125 C; inside CON-017 (5) | a rev X part only after its own qualification (V-B20 at most 0.2183 A) |
+| L9T5-D9 (round 6) | the containment as hardware on each controller: a transmit-share limiter per transceiver and a rail trip per supervisor (`apply_gen_sch_b_iocguard.py`), not a vote of the peers | no firmware sets either bound, a fault common to all three firmwares included; no H743 pin plan needed; the parts are the kit's (INA169, TPS3701) | the peers' 2-of-2 vote on SHDN or EN with TXD observation (twelve inputs, six outputs) |
 
 ## 9. The README lines for Slot A to apply (the README is Slot A's)
 
@@ -184,6 +189,10 @@ fitted figure; 0.2558 A stays the conservative one for power.
 - The composition order (`l9t5_drafts.py`): `apply_gen_sch_b_canshdn.py` after `apply_gen_sch_b_iocpre.py`, and a row for it in L4-E9's
   change list (L9T5-F20). `inputs/SOURCES.txt`: one line for `inputs/cases-cdev-rev2-20261005.md` (the C-DEV rev 2 section of
   `_runs/cases/CASES-2026-10-04.md` at sha256 b2dfb4a643f9f997..., copied verbatim with its 16:25 clarification, 5 October 2026).
+- Round 6 (the check cx45's Q3): line 1 (status), add "Round 6 (T10, Slot C): `T10-ROUND5.md` section 12; the containment drafted
+  (`apply_gen_sch_b_iocguard.py`: transmit-share limiters and rail trips), FW-B22 and V-B22, V-B23 drafted, revision V only at R602
+  14.0 k"; the composition order: `apply_gen_sch_b_iocguard.py` after `apply_gen_sch_b_iocset.py`, with its row in L4-E9's change list;
+  `check_l9t5_netlist.py`'s I-03 entry restated for the LDOs behind their sense resistors (L9T5-F25).
 
 ## 10. Findings for other authors
 
@@ -198,6 +207,41 @@ revision (L9T5-F14); CON-017 (5) already reads the marking (V or X) and REV_ID a
 Consequence: if the distributor's stock is rev X only, the lot is held until the supplier's V-B20 reads a rev X part at or under
 0.2318 A, or until L9T5-F22's set point (R602 14.0 k) is drafted and checked, which admits either revision on printed rows. No
 purchase is made and no supplier is asked here; lot availability of rev V against rev X is not read (no distributor query sent).
+
+## 12. Round 6: the check cx45's Q3 (t10 10j)
+
+cx45 (Astra's focused check of the complete candidate 06077cee) read Q3 NOT CONFIRMED: the quorum service and a babbler's
+containment not established, no independent mechanism for clock or share violations or a sustained excess current, the peak junction
+bounded from an averaged current, and rows still permitting revision X and the old set point. Answered in `l9t5_t10.out` 10j:
+
+- **(a) The schedule, FW-B22 (drafted in `apply_hw_fw_contract_t10.py`):** per supervisor and fabric, in every 100 ms window, one state
+  frame and at most five event frames: 822 dominant bit-times at most (every bit counted dominant, the acknowledgements added) against
+  FW-B21's 1000 at 500 kbit/s; the bus 4.9 % loaded; a state frame waits at most 4.6 ms; the 2-of-3 decision reads one window.
+- **(b) A containment no firmware sets (`apply_gen_sch_b_iocguard.py`, DRAFTED, composed after iocbuck, iocpre, canshdn and iocset, read
+  by pin, six mutations FAIL, refuses twice and on the tree):** a TRANSMIT-SHARE LIMITER per transceiver (TXD averaged over 130 ms, a
+  TPS3701 raising SHDN through a diode when the dominant share passes 4.7 to 12.3 %: a held-dominant TXD silenced within 16 ms, a
+  babbler through its FDCAN within 0.23 s, the release automatic) and a RAIL TRIP per supervisor (0.3 ohm, an INA169 and a TPS3701 on
+  the LDO's EN: the supply's 1 s average held at 0.2183 to 0.2452 A, whatever the firmware's clock, load or share). Both are the kit's
+  parts (L4-E7's backstop uses them).
+- **(c) The surviving quorum per fault:** the table in 10j (c): a babbler, a held-dominant TXD, a clock or load violation, a shorted
+  fabric with no response, each limiter's and trip's own failures, a fault common to all three firmwares; two supervisors serve in each
+  single fault; a controller-driven babbler denies the bus at most 0.23 s (the voters holding their assignment, row 8).
+- **(d) The other supervisors' headroom:** one at the worst current any firmware draws (0.6776 A until its trip), the other two at the
+  largest served 0.1855 A: each other LDO's input 3.6571 V against 3.4798 V. T10-A3 at the trip's maximum: 3.6524 V against 3.5213 V.
+- **(e) The thermal envelope:** sustained, the held trip current 0.2452 A: the LDO 115.4 C, the controller 112.7 C at 76.25 C air; every
+  served state under the trip's least (largest 0.1855 A, 105.8 C, the babbler bounded by the limiters); the transient to the worst
+  current ends within 0.17 s, its peak a QUALIFICATION LIMIT (Zth(0.17 s) at most 105 C/W) with the junction-to-air at most 229 C/W and
+  the local air at most 85.9 C (section 6, T10-A5 restated).
+- **(f) The rows agree:** revision V only (rev X HELD, V-B20 at most 0.2183 A), R602 14.0k (4.01 V), 125 C for every sustained state:
+  the contract draft's FW-B20 and FW-B21 rows, V-B20 to V-B23, sections 5, 6 and 8 here, the 10i rows.
+- **Handed over as remaining engineering (the owner's part 24; no exception presumed):** a TX pin repurposed as a GPIO and toggled under
+  the limiter's least share (L9T5-F21: attributing it needs the peers' TXD observation and a 2-of-2 vote; not drafted); a latent stuck
+  comparator in either bound, found only on the bench (V-B22, V-B23); VOS0 at a current under the trip (the H743's own 105 C VOS0
+  limit). Outputs PROVISIONAL on them: L9T5-F21 and 10j's quorum rows.
+- **Findings:** L9T5-F25 (Slot A): `check_l9t5_netlist.py`'s I-03 entry reads the LDOs' VIN on +5V_IOC; with this delta it sits behind
+  the sense resistor (IOC{t}_LDO_IN): to restate when Slot A takes the delta. The contract draft now carries FW-B22, V-B22 and V-B23.
+- **For the coordinator (C-DEV):** the limiters' two pull-up currents raise each supervisor's bounded state to 0.1739 A on revision V
+  (against C-DEV rev 2's 0.1732 A, inside its conservative 0.2558 A); no row is changed by this record.
 
 ## 11. Reproduce
 
