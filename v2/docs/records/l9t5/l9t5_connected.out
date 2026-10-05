@@ -6,7 +6,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    264c4127cfc9a105 v2/docs/records/l4e9/l4e9_power_path.py
-   8b1f39f7adf1bc6a v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   82aaa92548e8c22d v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    5a2a348f0267c3a1 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    736f9c314f36d555 v2/docs/records/l9pwr/l9pwr_budget.out
