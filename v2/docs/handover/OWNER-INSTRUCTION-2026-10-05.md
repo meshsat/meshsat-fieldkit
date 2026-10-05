@@ -3,9 +3,9 @@
 Filed as received (MESHSAT-1357), byte for byte inside each part below, including the owner's own typography (the saved copies'
 one-line filing headers removed; the texts themselves untouched). Nothing here is edited. Parts 1 to 11 are in
 `OWNER-INSTRUCTION-2026-10-04.md`. The live plan that applies these parts is `v2/docs/EXECUTION-PLAN.md`, entry of 5 October 2026
-14:48 CEST; the compact blocker list part 15 asks for is `v2/docs/records/l4close/P0-POWER-LIST.md`. Part 15 supersedes the earlier
-permission to keep later layers moving: Layer 4's power architecture is the only active layer, with Layers 5 to 12 paused except
-named prerequisites of its gate. Prototype framing: nothing is built, bought or measured.
+14:48 CEST; the compact blocker list part 15 asks for is `v2/docs/records/l4close/P0-POWER-LIST.md`. Part 15 made Layer 4's power architecture the only active layer; part 19 narrows that: the
+deliverable is the desk engineering package for a receiving company, each layer accepted at its DESK gate in order, with physical
+qualification and fabrication release as separate gates and the supplier's validation scope written down, not awaited. Prototype framing: nothing is built, bought or measured.
 
 | Part | Received | sha256 of the part's text |
 |---|---|---|
@@ -16,6 +16,7 @@ named prerequisites of its gate. Prototype framing: nothing is built, bought or 
 | 16. Review of the P0 execution plan: proceed after four targeted amendments (calibration and layout bounds need a feasibility basis; the integration order and one combined base; preserve work and start engineering beside the clerical work; the external closure path made actionable) | 5 October 2026, about 14:45 CEST | `a80ab901ae447f789bc74ec0cfbfc0103725c44d73c4282764908d02c489f726` |
 | 17. Second review of the revised plan: READY to approve for execution; the baseline watchpoint; 14 to 18 h is a desk candidate, not Layer 4's closure | 5 October 2026, about 14:55 CEST | `14f5dcc8fc2aacc4a5a9e33a06b321021651889cf5d7b6dfeee12bc3776d8b8d` |
 | 18. Review of P0 checkpoint 1: continue the authors; finish the external decision packet (U-02's per-mode reconciliation and the mock-up's sum, U-04's evidence route apart from the whole-kit release, U-01's two kinds of evidence) | 5 October 2026, about 15:30 CEST | `62351f9c8ca4a11b1328b5fcfb161c680b17701335242d8a3d505b5c900085a2` |
+| 19. Handover scope amendment and review of the external packet: the deliverable is the desk engineering package for a receiving company; sequential DESK acceptance per layer; the packet reframed as the supplier validation annex with three corrections (a failed arrangement is not a requirements conflict; the mock-up sum; investigating the Saft option apart from adopting it) | 5 October 2026, about 15:45 CEST | `d448616ce3607d9653fe47efea771aa9a68e31198ec943bf52a9f4bf8262b02a` |
 
 
 ---
@@ -382,4 +383,100 @@ Alongside the engineering, finish the external decision packet already requested
 - U-01: distinguish manufacturer-guaranteed limits from evidence on one tested cell, and state what remains unproven at pack level.
 
 These are coordinator follow-ups within the existing P0 scope. No purchase or external contact is authorised. The next engineering milestone remains F01's selection and the corrected CAN fault analysis.
+```
+
+---
+
+## 19. Handover scope amendment and review of the external packet: the deliverable is the desk engineering package for a receiving company; sequential DESK acceptance per layer; the packet reframed as the supplier validation annex with three corrections (a failed arrangement is not a requirements conflict; the mock-up sum; investigating the Saft option apart from adopting it) (as received)
+
+# MeshSat — handover scope amendment and external packet review
+
+## Decision
+
+**Keep this packet as a draft supplier-validation annex. Update its purpose and owner-action section to reflect the owner's clarified goal. Continue the current P0 authors.**
+
+The project deliverable is the most complete, internally consistent engineering package achievable through desk engineering, modelling, simulation and review, for a receiving company to complete, test and qualify. The owner is not commissioning these experiments as a prerequisite to receiving that package.
+
+The packet follows the earlier brief asking for owner decisions and costs. That earlier instruction needs a narrow amendment. Physical evidence remains necessary for the claims it supports, but obtaining it must not be a blanket condition for completing the engineering handover.
+
+## Scope and evidence
+
+Reviewed `MESHSAT-EXTERNAL-DECISION-PACKET-2026-10-05.md`.
+
+SHA-256: `7b123e7ee479ac8358dcbead5f76dabb8276c78c9198ff00cedadce79cc89241`.
+
+Checked its scope against the owner's clarification, its decision logic, and the arithmetic of its mock-up table. I have not independently verified the datasheets, market prices, exchange rate, thermal calculations, coupon design or executable test procedures. No physical work or external contact was performed.
+
+## Findings and corrections
+
+### 1. Reframe the packet as company handover work
+
+**P1 — scope/gate correction.** Sections 1–5 repeatedly assign purchases, a bench and physical work to the owner, while section 5 explicitly asks for test/build authorisations. Under the clarified mission, these become proposed receiving-company activities, with capability and engagement still to be confirmed.
+
+Retain the specimens, limits, dependencies, estimates and possible evidence routes. Present them as the supplier's review and validation scope, not actions the owner must complete before desk deliverables can progress. Cost estimates are supporting information; they are not an acceptance gate for the handover.
+
+Maintain separate states:
+
+- **Layer desk package:** whether its editable design, analysis, internal consistency, reviews and supplier handover are complete within the declared scope.
+- **Design/qualification:** open defects, provisional choices, unverified assumptions and supplier validation still required.
+- **Fabrication release:** the separate approval gate, which remains blocked where its criteria are unmet.
+
+Do not erase architecture uncertainty by changing a label. Where a future measurement could change a component, topology, mechanical arrangement or layout, identify the affected outputs and keep them provisional. Complete stable work and document the remaining decision. A known desk-fixable failure still needs correction; the supplier annex is not a way to close it.
+
+### 2. A failed arrangement does not establish a requirements conflict
+
+**P1 — confirmed decision-logic defect.** The M1/M2 discussion and the paragraph at lines 29–35 say a measured over-temperature with the heat-rejection route fitted becomes a demonstrated conflict and an owner requirement question.
+
+Such a result would demonstrate that the tested arrangement fails the applicable limit under those conditions. It would not, by itself, establish that the owner's requirements are mutually incompatible or that every permitted engineering route is exhausted.
+
+Correct the disposition to: reject or revise that arrangement, assess the remaining permitted routes, and request a requirement change only when the evidence shows why one is necessary or the owner is being offered an explicit trade-off. Keep modelled shortfalls, missing vendor specifications and measured failures distinct.
+
+### 3. Correct the mock-up subtotal
+
+**P2 — confirmed arithmetic inconsistency.** Using the table's own rounded EUR figures, with stand-in fans and two loggers:
+
+| Listed items | EUR |
+|---|---:|
+| Panel frame | 37.08 |
+| Plate | 30–60 |
+| Stack heaters | 15–30 |
+| PA patch block | 10–20 |
+| Stand-in fans | 199 |
+| Two loggers | 820 |
+| Thermocouples | 80–160 |
+| **Subtotal** | **1,191.08–1,326.08** |
+
+This differs from the packet's EUR 1,100–1,250. With one logger, the same arithmetic gives **EUR 781.08–916.08**, rather than EUR 700–850.
+
+These are internal arithmetic corrections, not independently verified quotations. They exclude the already-paid case, any missing bench instruments, labour, delivery and unresolved tax treatment. Equipment substitutions also need a stated effect on what the test represents; a cheaper fan is not automatically equivalent for thermal evidence.
+
+### 4. Separate investigating the Saft route from adopting it
+
+**P2 — decision ambiguity.** Section 3 identifies a proposed 4S1P route and refers to adoption under OW-3; section 5 asks for OW-3 while also saying no pack change is requested.
+
+State separately whether an action authorises a request for evidence, a limited experiment, or adoption of a different pack configuration. The handover may contain the Saft option as a proposal without treating it as adopted. Preserve the existing owner-approved pack baseline until an actual change is authorised.
+
+The revised distinction between one-cell screening and a manufacturer guarantee is useful and should remain. Likewise, retain the charger evaluation-module/coupon alternatives and their transfer limits; this review does not certify either setup as executable.
+
+## Ready-to-paste scope amendment for Claude Code
+
+```text
+Clarification of the project's deliverable: prepare the most complete, internally consistent engineering files and analysis we can hand to a company for completion, physical validation and manufacturing. We are not undertaking or funding the physical validation now.
+
+This supersedes the earlier blanket instruction to pause all later layers until supplier-only measurements or vendor replies have arrived. It does not authorise a requirement change, a purchase, outside contact, fabrication or energisation.
+
+Continue the current P0 authors and their independent checks. Do not restart them or the cancelled queue. Fix every remaining desk-solvable power defect and check the connected design. Keep P0 as the priority.
+
+Keep sequential layer-by-layer DESK acceptance. Each layer's handover must contain coherent editable sources, calculations/simulations, review evidence and clearly scoped outstanding supplier work. After that scoped desk gate passes, advance to the next layer. Keep physical qualification and fabrication-release gates separate and honest; do not relabel them as passed.
+
+For an unresolved measurement or vendor fact, identify the claim it supports, the affected files/decisions, a bounded provisional choice where possible, and the supplier's validation or redesign task. Complete stable portions; mark dependent portions provisional. Do not claim unconditional completion of a design that still depends on an unknown. Do not park a solvable circuit defect in the supplier list to make a desk gate pass.
+
+Reframe MESHSAT-EXTERNAL-DECISION-PACKET as the SUPPLIER VALIDATION AND REMAINING ENGINEERING annex. Remove the expectation that I supply a bench, buy test equipment, book tests or answer procurement questions before handover. Retain the useful specimens, acceptance limits, dependencies and labelled estimates for the receiving company. Its engineering and lab capabilities remain to be confirmed; no supplier is assumed engaged.
+
+Correct these specific points in the normal coordinator update:
+1. A thermal failure of the tested arrangement is a design failure, not automatically a conflict in my requirements. Assess compliant alternatives before requesting a requirement change.
+2. Recalculate the mock-up total from the listed items: approximately EUR 1,191–1,326 with two loggers, or EUR 781–916 with one, before the stated exclusions. Preserve the estimates/quotation distinction.
+3. Distinguish investigating or testing the Saft option from adopting its 4S1P pack. No pack change has been approved by this clarification.
+
+Apply this as a narrow scope amendment in the existing plan, records and worker briefs. No new constitution, general review round or laboratory procurement workstream. The next engineering deliverables remain the F01 correction and CAN fault analysis.
 ```
