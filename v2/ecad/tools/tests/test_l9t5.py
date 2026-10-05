@@ -1135,17 +1135,23 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     assert by["L9T5-D8, superseded"][("13.3", "as drawn")] == "holds" and by["L9T5-D8, superseded"][("14.0", "as drawn")] == "FAILS", by
     t10 = open(T10_OUT, encoding="utf-8").read()
     t10j = " ".join(t10.split("10j. THE CHECK cx45's Q3", 1)[1].split())
-    a3 = re.search(r"each LDO's input at the trip's maximum ([\d.]+) A, the sense resistor's drop counted: at least ([\d.]+) V against ([\d.]+) V", t10j)
+    a3 = re.search(r"each LDO's input at ([\d.]+) A, the sense resistor's drop counted: at least ([\d.]+) V against ([\d.]+) V", t10j)
     assert a3 and ("input %s V against %s V (Slot C: %s V against" % (a3.group(2), a3.group(3), a3.group(2))) in text   # Slot C's figure reproduced
     assert "%s V): the same" % a3.group(3) in text
     assert "0.3R 1% 0805 for U40" in text and "taken at 0.3030 Ohm" in text      # the sense resistor read on the composed board B
     # the babbling row on revision V without the containment: Slot C's two computed points, read from l9t5_t10.out
     bab = re.search(r"babbling \(nothing ends it\)\s+V\s+[\d.]+ A\s+125 C \(sustained\)\s+([\d.]+) C FAILS\s+([\d.]+) C holds", t10)
     assert bab and ("R602 13.3 k %s C (Slot C's MODEL) FAILS" % bab.group(1)) in text and ("R602 14.0 k %s C (Slot C's MODEL) holds" % bab.group(2)) in text
-    # with the containment: the trip's held maximum, Slot C's MODEL at 14.0 k, under 125 C
-    th = re.search(r"the LDO's junction at most ([\d.]+) C at ([\d.]+) C air", t10j)
+    # with the containment: a constant current at the trip's average maximum (Slot C's MODEL at 14.0 k, NOT a bound after cx46) and
+    # cx46's periodic countermodel over 125 C as Slot C reproduces it
+    th = re.search(r"a constant current at the trip's average maximum [\d.]+ A reads the LDO's junction ([\d.]+) C at ([\d.]+) C air", t10j)
     assert th and ("R602 14.0 k: %s C (Slot C's MODEL): holds" % th.group(1)) in text
-    assert "FINDING L9T5-F27" in text and "superseded" in text
+    pk = re.search(r"the junction's periodic peak ([\d.]+) C, OVER 125 C", t10j)
+    assert pk and float(pk.group(1)) > 125.0 and ("at 14.0 k: %s C, OVER 125 C" % pk.group(1)) in " ".join(text.split())
+    assert "a constant-current MODEL, not a bound" in " ".join(text.split())
+    assert "FINDING L9T5-F27" in text and "ANSWERED, Slot C renamed it L9T5-D10" in " ".join(text.split()) and "superseded" in text
+    assert "route B2 is UNSELECTED and WITHDRAWN AS DRAFTED (record l4e7 reads it so)" in " ".join(text.split())
+    assert "the owner's item" not in text and "unapproved PARTIAL interface proposal" not in text
     m = re.search(r"14\.0 k: [\d.]+ V nominal, top ([\d.]+) V; the LDOs' input at least ([\d.]+) V", t10)
     assert m and ("top %s V)" % m.group(1)) in text
     # the same chain as Slot C's part 22 scenario (no containment then): at 14.0 k, as drawn, at 0.4512 A the only difference is the sense drop

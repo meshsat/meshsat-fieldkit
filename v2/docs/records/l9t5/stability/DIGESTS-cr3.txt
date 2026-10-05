@@ -1,0 +1,21 @@
+# RUN-cr3: CANDIDATE READY 3's two passes of regen_cascade.sh (5 October 2026, 21:40 to 22:00 CEST: pass 1 ended 21:50, pass 2 21:59; each pass exit 0, its log
+# beside this file); every output's sha256 after pass 1 and after pass 2, read from the files (equal: the second pass changed no
+# byte); written in a form no pin reader takes for a current pin
+v2/docs/records/l9stk/l9stk_copper.out pass 1: sha256=69c3c88558b3c65d2f3d5e18806b2dea81e9a0bb8f3a3e55c7b772261c86970c; pass 2: sha256=69c3c88558b3c65d2f3d5e18806b2dea81e9a0bb8f3a3e55c7b772261c86970c; equal
+v2/docs/records/l9stk/l9stk_protection.out pass 1: sha256=f76dac5a2cc7cc244227cae1e43ec575d1a2727150482ab8f3e400e7df06a7d2; pass 2: sha256=f76dac5a2cc7cc244227cae1e43ec575d1a2727150482ab8f3e400e7df06a7d2; equal
+v2/docs/records/l9pwr/l9pwr_budget.out pass 1: sha256=39b34accbd29b4fdaf18b243cc8884e258c7d3078c9a3424dcf429dfc998e0d6; pass 2: sha256=39b34accbd29b4fdaf18b243cc8884e258c7d3078c9a3424dcf429dfc998e0d6; equal
+v2/docs/records/l8r2/l8r2_gndret.out pass 1: sha256=6963c627ab37427c3c94c4ae8dd4f8b01cd7009195eb3e2300ebca04a6a42f9c; pass 2: sha256=6963c627ab37427c3c94c4ae8dd4f8b01cd7009195eb3e2300ebca04a6a42f9c; equal
+v2/docs/records/l8r2/l8r2_p0.out pass 1: sha256=4e6fa442cc3f45ee3def6a1d3af100437487a4de9cebab60e05d7c6cba017c6d; pass 2: sha256=4e6fa442cc3f45ee3def6a1d3af100437487a4de9cebab60e05d7c6cba017c6d; equal
+v2/docs/records/l8r2/l8r2_dist.out pass 1: sha256=64d7d7021d64d23f8c9665b338b05fe51119cf101f03708a5f74f6d54cc7c480; pass 2: sha256=64d7d7021d64d23f8c9665b338b05fe51119cf101f03708a5f74f6d54cc7c480; equal
+v2/docs/records/l9t5/l9t5_case.out pass 1: sha256=9154ee149c9d0b440341db217c3e86d3b0f8a7bbe1b7fdf4922c87d936d8b913; pass 2: sha256=9154ee149c9d0b440341db217c3e86d3b0f8a7bbe1b7fdf4922c87d936d8b913; equal
+v2/docs/records/l9t5/l9t5_a1.out pass 1: sha256=5c9a84af6589727f9ce1b5e05824196b5db7a6f12ee0df688b841bc70cbe61f2; pass 2: sha256=5c9a84af6589727f9ce1b5e05824196b5db7a6f12ee0df688b841bc70cbe61f2; equal
+v2/docs/records/l9t5/l9t5_drafts.out pass 1: sha256=3fb9f1c34d865e5075ce44644670a5be1c776392711d08bf6d408794b22af40f; pass 2: sha256=3fb9f1c34d865e5075ce44644670a5be1c776392711d08bf6d408794b22af40f; equal
+v2/docs/records/l9t5/l9t5_t10.out pass 1: sha256=94071bc12ccf53894704dc871a09a9c23652944e77287505ab4f93c9f048072f; pass 2: sha256=94071bc12ccf53894704dc871a09a9c23652944e77287505ab4f93c9f048072f; equal
+v2/docs/records/l9t5/l9t5_cm5.out pass 1: sha256=a6ea395a23a8ba42467d298d159b2516a54a49b60e08a68a00544f609f2325f8; pass 2: sha256=a6ea395a23a8ba42467d298d159b2516a54a49b60e08a68a00544f609f2325f8; equal
+v2/docs/records/l9t5/l9t5_f01.out pass 1: sha256=2c590640a2f7322ba08c2c4ffcc738bbfcc030ff01b4336206f170724a1d6096; pass 2: sha256=2c590640a2f7322ba08c2c4ffcc738bbfcc030ff01b4336206f170724a1d6096; equal
+v2/docs/records/l9t5/l9t5_f01_drafts.out pass 1: sha256=03efdf0757f8c4cc03446fc58ebcc08c2e34998ed5b8c00424307ff38da4b5a1; pass 2: sha256=03efdf0757f8c4cc03446fc58ebcc08c2e34998ed5b8c00424307ff38da4b5a1; equal
+v2/docs/records/l8r2/l8r2_drafts.out pass 1: sha256=40a1de51ca309c6b87d6aa0657dfb53cfe8d83117c9672a3d4ca31ffb7a58dc2; pass 2: sha256=40a1de51ca309c6b87d6aa0657dfb53cfe8d83117c9672a3d4ca31ffb7a58dc2; equal
+v2/docs/records/efuse/efuse_check.out pass 1: sha256=bb631b8dafdbd5de412d658e4ddcd288733aa7be4087c1a715fd6422d3885c85; pass 2: sha256=bb631b8dafdbd5de412d658e4ddcd288733aa7be4087c1a715fd6422d3885c85; equal
+v2/docs/records/l6r2/l6r2_passives.out pass 1: sha256=15b2b228b3d63970808258d786810e67205935ff3ac22c4fe6c3bdb6521677e7; pass 2: sha256=15b2b228b3d63970808258d786810e67205935ff3ac22c4fe6c3bdb6521677e7; equal
+v2/docs/records/l4e7/l4e7_p0sol.out pass 1: sha256=a343ccfe29ba9a60f9f971dec46bba26edfa052021e519064ae410e5767d76e7; pass 2: sha256=a343ccfe29ba9a60f9f971dec46bba26edfa052021e519064ae410e5767d76e7; equal
+v2/docs/records/l9t5/l9t5_connected.out pass 1: sha256=ee4c244130d26f645895c999c6d30850a1332ff1b2338326b0fab733166546cd; pass 2: sha256=ee4c244130d26f645895c999c6d30850a1332ff1b2338326b0fab733166546cd; equal

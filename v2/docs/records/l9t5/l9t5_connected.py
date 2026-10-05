@@ -389,12 +389,16 @@ def f22_chain(nlb):
     need(t10, r"10j\. THE CHECK cx45's Q3", "T10's round 6 (10j)")
     t10j = " ".join(t10.split("10j. THE CHECK cx45's Q3", 1)[1].split("\n11. ", 1)[0].split())
     i_hold = float(need(t10, r"computes for a regulator \(([\d.]+) A, the held B5 row on rev Y", "T10's held current (L9T5-D8)").group(1))
-    a3 = need(t10j, r"T10-A3 RESTATED ON A HARDWARE BOUND \(L9T5-D8's criterion superseded\): each LDO's input at the trip's maximum ([\d.]+) A, "
-                    r"the sense resistor's drop counted: at least ([\d.]+) V against ([\d.]+) V: holds", "T10-A3 on the hardware bound (10j (d))")
+    a3 = need(t10j, r"T10-A3 at the trip's AVERAGE maximum \(L9T5-D8's criterion superseded; .*?\): each LDO's input at ([\d.]+) A, "
+                    r"the sense resistor's drop counted: at least ([\d.]+) V against ([\d.]+) V: holds", "T10-A3 at the trip's average maximum (10j (d))")
     i_trip = float(a3.group(1))
     win = need(t10j, r"the average is over the threshold: ([\d.]+) to ([\d.]+) A at the tolerances", "the rail trip's window (10j (b))")
-    th = need(t10j, r"the LDO's junction at most ([\d.]+) C at ([\d.]+) C air", "the trip's held temperature (10j (e))")
+    th = need(t10j, r"a constant current at the trip's average maximum [\d.]+ A reads the LDO's junction ([\d.]+) C at ([\d.]+) C air",
+              "the trip's constant-current temperature (10j (e))")
     tj_trip14, air = float(th.group(1)), float(th.group(2))
+    cm = need(t10j, r"the junction's periodic peak ([\d.]+) C, OVER 125 C: the universal sustained bound and its positive margin are WITHDRAWN",
+              "cx46's periodic countermodel as Slot C reproduces it (10j (e))")
+    tj_peak = float(cm.group(1))
     serve = [(m.group(1), float(m.group(2)), float(m.group(3))) for m in re.finditer(
         r"(the bounded state with the limiters' pull-ups|B\w+ with the response|both fabrics faulted, responded|a babbler, the limiters bounding it) "
         r"([\d.]+) A LDO ([\d.]+) C", t10j)]
@@ -438,7 +442,7 @@ def f22_chain(nlb):
                 at = lo - D.RAIL_BUDGET * nom - 3 * i * r_sup - shift - r_s * i
                 rows.append(dict(rb=rb, lo=lo, nom=nom, hi=hi, ret=ret, shift=shift, i=i, crit=crit, need=need_, at=at, lab=lab, ok=at >= need_))
     return dict(rows=rows, i_hold=i_hold, i_trip=i_trip, win=(float(win.group(1)), float(win.group(2))), a3=(float(a3.group(2)), float(a3.group(3))),
-                tj=tj, tj_trip=tj_trip, air=air, serve=serve, sense=sense, r_s=r_s, r_sup=r_sup, vin_max=P["vin"][1], i_bab=float(bab.group(1)),
+                tj=tj, tj_trip=tj_trip, tj_peak=tj_peak, air=air, serve=serve, sense=sense, r_s=r_s, r_sup=r_sup, vin_max=P["vin"][1], i_bab=float(bab.group(1)),
                 bab_ok=bab.group(4) == "holds", drop_trip=drop_at(i_trip)[0], tops=tops)
 
 
@@ -801,15 +805,17 @@ def main():
         e_parts = need(sol, r"gen_netlist: (\d+) parts, 0 unplaced", "record l4e7's board E composition").group(1)
         d16 = "D-16: CORRECTED on the drafted circuit" in sol
         d10 = re.search(r"D-10 \(B6, L4-F01\): an UNRESOLVED PROTECTION DEFECT in the present model", sol) is not None
-        b2_not = "adopting or declining it does not resolve D-10" in sol
+        b2_not = ("Route B2 (section 5) is UNSELECTED and WITHDRAWN AS DRAFTED, with no protection credit and no owner item; it does not resolve D-10"
+                  in " ".join(sol.split()))                  # the solar author's disposition after cx46 item 18 (4d1d02de)
         w("   the solar entry (P0-7, record l4e7, merged at 5cc9cb9d; l4e7_p0sol.out pinned): board E composed here (section 2) and there in")
         w("     L4-E9's order with P0-7's sense, route B2 out of the baseline (record l4e7's C2 composition %s parts); D-16 %s; D-10 an" % (
             e_parts, "CORRECTED in draft" if d16 else "NOT READ"))
         w("     UNRESOLVED PROTECTION DEFECT in the model (%s: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop" % (
             "record l4e7 reads it so, E-1" if d10 else "NOT READ"))
-        w("     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2, out of the baseline, is an")
-        w("     unapproved PARTIAL interface proposal with no protection credit (the owner's item), and neither adopting nor declining it closes")
-        w("     D-10; the solar guard's trip against its demand is")
+        w("     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is UNSELECTED and WITHDRAWN AS")
+        w("     DRAFTED (%s), out of the baseline, with no protection credit and no owner item; it does not resolve D-10, and its P2/P3" % (
+            "record l4e7 reads it so" if b2_not else "NOT READ"))
+        w("     defects are remaining engineering outside the baseline; the solar guard's trip against its demand is")
         w("     record l4e7's reading, not re-traced here")
         P["record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve"] = (
             d16 and d10 and b2_not)
@@ -857,9 +863,10 @@ def main():
         w("   (read on the composed board B by topology: %s; taken at %.4f Ohm, its printed tolerance's top);" % (
             ", ".join("%s %s for %s" % (s[1], s[2], s[0]) for s in FC["sense"]), FC["r_s"]))
         w("   against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked. The currents:")
-        w("   the LDO's printed 600 mA (its rating, not a demand); the hardware bound T10-A3 is judged at since Slot C's round 6 (the rail trip's")
-        w("   maximum %.4f A, l9t5_t10.out 10j (d): the trip holds a controller's average at %.4f to %.4f A whatever its firmware does); and L9T5-D8's" % (
+        w("   the LDO's printed 600 mA (its rating, not a demand); the bound T10-A3 is judged at since Slot C's round 6, the rail trip's AVERAGE")
+        w("   maximum %.4f A (l9t5_t10.out 10j (d): the trip holds a controller's average at %.4f to %.4f A; PROVISIONAL after cx46: a periodic" % (
             FC["i_trip"], FC["win"][0], FC["win"][1]))
+        w("   peak above it is not covered, and a latent rail-trip failure removes it); and L9T5-D8's")
         w("   %.4f A (rev Y's held B5 row, SUPERSEDED in round 6; shown for the record)" % FC["i_hold"])
         for r in FC["rows"]:
             w("   R602 %.1f k (least %.4f V, top %.4f V), return %-25s shift %.4f V, %.4f A a LDO (%s; dropout %s): input %.4f V against %.4f V: %s %+.4f V" % (
@@ -884,16 +891,21 @@ def main():
         w("   the thermal side on revision V, criterion 125 C (a sustained state):")
         w("     without the containment, the babbling supervisor (%.4f A; Slot C's part 22 rows, l9t5_t10.out 10i): %s" % (FC["i_bab"], "; ".join(
             "R602 %.1f k %.1f C (%s) %s" % (rb / 1e3, FC["tj"][rb][0], FC["tj"][rb][1], "holds" if FC["tj"][rb][0] <= 125.0 else "FAILS") for rb in sorted(FC["tj"]))))
-        w("     with the containment composed, the rail trip's held maximum %.4f A, which bounds every sustained state whatever the firmware does" % FC["i_trip"])
-        w("     (10j (e), %.2f C air):" % FC["air"])
+        w("     with the containment composed, a constant current at the trip's average maximum %.4f A (10j (e), %.2f C air; a constant-current" % (
+            FC["i_trip"], FC["air"]))
+        w("     MODEL, not a bound: the trip holds an average):")
         for rb in sorted(FC["tj_trip"]):
             v_, lab = FC["tj_trip"][rb]
             w("       R602 %.1f k: %.1f C (%s): %s, margin %+.1f K" % (rb / 1e3, v_, lab, "holds" if v_ <= 125.0 else "FAILS", 125.0 - v_))
+        w("     cx46's periodic countermodel under the trip (0.50 A for 0.40 s every 1.50 s; Slot C's reproduction, 10j (e)) at 14.0 k: %.2f C," % FC["tj_peak"])
+        w("     %s 125 C: the sustained thermal bound WITHDRAWN (Slot C), peak-current containment or a periodic electrothermal solution" % (
+            "OVER" if FC["tj_peak"] > 125.0 else "under"))
+        w("     REMAINING ENGINEERING")
         tt = FC["tj_trip"]
         w("   DECISION L9T5-D9 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;")
         w("   reversed_by: none; its reasons restated on the containment after cx45): Slot C's set point delta (R602 14.0 k) is TAKEN, composed")
         w("   after iocpre on both boards (section 2; a separate draft, one writer a file). Why, over the connected circuit with the containment:")
-        w("   at 14.0 k every LDO's input holds its need at the hardware bound with the sense resistor's drop, with the return as drawn (%+.4f V)" % (
+        w("   at 14.0 k every LDO's input holds its need at the trip's average maximum with the sense resistor's drop, as drawn (%+.4f V)" % (
             t14[0]["at"] - t14[0]["need"]))
         w("   and with the dedicated return (%+.4f V), and the trip's held average leaves the LDO at %.1f C (%+.1f K); at 13.3 k that held current" % (
             t14[1]["at"] - t14[1]["need"], tt[14.0e3][0], 125.0 - tt[14.0e3][0]))
@@ -925,34 +937,39 @@ def main():
         w("   check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k; the band 3.87 to 4.18 V, its floor from the superseded")
         w("   L9T5-D8 row as drawn without the sense resistor, stricter than the hardware bound's, kept) and its guard mode (each LDO behind one")
         w("   sense resistor, L9T5-F25 restated)")
-        w("   FINDING L9T5-F27 (for the coordinator and Slot C; an identifier, no circuit): Slot C's T10-ROUND5.md section 12 names its containment")
-        w("   decision \"L9T5-D9 (round 6)\", the identifier of this SESSION decision on the set point (taken at 06077cee); the containment's writer")
-        w("   renames it (proposed: L9T5-D10); in this record L9T5-D9 is the set point")
+        r5 = text("v2/docs/records/l9t5/T10-ROUND5.md")
+        renamed = re.search(r"^\| L9T5-D10 \(round 6; renamed from D9, L9T5-F27", r5, re.M) is not None and not re.search(r"^\| L9T5-D9 \(round 6\)", r5, re.M)
+        w("   FINDING L9T5-F27 (an identifier, no circuit): Slot C's T10-ROUND5.md section 12 had named its containment decision \"L9T5-D9")
+        w("   (round 6)\", the identifier of this SESSION decision on the set point (taken at 06077cee): %s; in this record L9T5-D9 is the set point" % (
+            "ANSWERED, Slot C renamed it L9T5-D10 (6b768b1e)" if renamed else "OPEN, the containment's writer renames it"))
         w("   THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k and the containment composed, section 2): each")
         w("   regulator's temperature against 125 C per served state on revision V (Slot C's MODEL at %.2f C air and the drop's worst corner," % FC["air"])
         w("   10j (e), the limiters' pull-ups counted, AVERAGE currents) and the trip's held average; after cx46 an average bound does not bound a")
         w("   periodic peak (item 7) and a latent rail-trip failure removes it (item 6): every row below is a MODEL reading, PROVISIONAL/OPEN:")
         for lab, i_, t_ in FC["serve"]:
             w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % (lab, i_, t_, 125.0 - t_))
-        w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % ("the rail trip's held maximum", FC["i_trip"], tt[14.0e3][0], 125.0 - tt[14.0e3][0]))
+        w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % ("a constant current at the trip's average maximum", FC["i_trip"],
+                                                                                    tt[14.0e3][0], 125.0 - tt[14.0e3][0]))
+        w("     %-46s           periodic   criterion 125 C: %6.2f C (margin %+5.1f K)" % ("cx46's countermodel under the trip", FC["tj_peak"], 125.0 - FC["tj_peak"]))
         sv_max = max(t_ for _l, _i, t_ in FC["serve"])
-        w("   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance %s, section 11): the sustained-state margin %+.1f K on" % (
+        w("   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance %s, section 11): on revision V %+.1f K at a" % (
             RE if (OPEN[6] or OPEN[7]) else "as shown", 125.0 - tt[14.0e3][0]))
-        w("     revision V at the trip's held average (the largest served state %+.1f K); rev Y's rows no longer cover a revision X part (its" % (
-            125.0 - sv_max))
-        w("     bounded state over the trip's least; HELD on")
-        w("     V-B20); the LDO input headroom of T10-A3's chain at the hardware bound %+.4f V with the return as drawn and %+.4f V with the" % (
+        w("     constant current at the trip's average maximum, %+.1f K under cx46's periodic countermodel (the largest served state %+.1f K);" % (
+            125.0 - FC["tj_peak"], 125.0 - sv_max))
+        w("     rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on V-B20); the LDO input headroom of T10-A3's chain at the hardware bound %+.4f V with the return as drawn and %+.4f V with the" % (
             t14[0]["at"] - t14[0]["need"], t14[1]["at"] - t14[1]["need"]))
         w("     dedicated return (the return's effect %+.4f V), the top %.4f V under the LDO's %.1f V maximum; the required service unchanged (only" % (
             (t14[1]["at"] - t14[1]["need"]) - (t14[0]["at"] - t14[0]["need"]), FC["tops"][14.0e3][2], FC["vin_max"]))
         w("     U601's set point moves and board B gains the containment: no load, rate, state or transmitter reduced, the supervisors' bounded")
-        wc_state = "PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7]) else "PROVISIONAL"
+        wc_state = "PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7] or FC["tj_peak"] > 125.0) else "PROVISIONAL"
         w("     state and C-DEV rev 2 as issued). THE WORST-CASE MARGIN ROW: %s (no peak bound established, cx46 item 7; a latent rail-trip" % wc_state)
-        w("     failure removes the hardware bound, item 6): %+.1f K (thermal, at the trip's held average, rev V, MODEL) and %+.4f V (the LDO's" % (
-            125.0 - tt[14.0e3][0], t14[0]["at"] - t14[0]["need"]))
+        w("     failure removes the hardware bound, item 6): %+.1f K at a constant current at the trip's average maximum (rev V, MODEL), %+.1f K" % (
+            125.0 - tt[14.0e3][0], 125.0 - FC["tj_peak"]))
+        w("     under cx46's periodic countermodel, and %+.4f V (the LDO's" % (t14[0]["at"] - t14[0]["need"]))
         w("     input, as drawn, at the hardware bound on an INFERRED dropout, PROVISIONAL on V-T10-DROP)")
         P["the final R602 figures keep a positive MODEL margin on average currents; the worst-case margin row reads PROVISIONAL/OPEN while the peaks or the latent rail trip are open"] = (
-            sv_max < 125.0 and tt[14.0e3][0] < 125.0 and wc_state == ("PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7]) else "PROVISIONAL"))
+            sv_max < 125.0 and tt[14.0e3][0] < 125.0 and wc_state == ("PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7] or FC["tj_peak"] > 125.0) else "PROVISIONAL"))
+        P["L9T5-F27 answered: Slot C's containment decision is L9T5-D10 and L9T5-D9 is this record's set point"] = renamed
         P["L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return (MODEL), Slot C's figure reproduced"] = (
             all(r["ok"] for r in t14) and same and tt[14.0e3][0] <= 125.0 < FC["tj"][13.3e3][0] and FC["bab_ok"])
         w("")
@@ -992,7 +1009,7 @@ def main():
         w("     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes")
         w("     a 1x4 VH with two contacts a pole (a harness row and a board A land)")
         w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route")
-        w("     B2 out of the baseline (an unapproved PARTIAL interface proposal, the owner's item, with no protection credit), which does not close it")
+        w("     B2 UNSELECTED and WITHDRAWN AS DRAFTED, out of the baseline, no protection credit and no owner item; it does not close D-10")
         w("   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's")
         w("     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin")
         w("")

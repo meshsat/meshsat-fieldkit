@@ -1083,9 +1083,15 @@ the declared upper bound's included (the ribbon's largest 0.7729 A against 1 A, 
 upper bound at 76.25 C (the ribbon 0.6299 A against 0.5995 A, and a VH pin 2 6.4485 A against 5.9948 A, both INFERRED deratings: the
 VH row is the same as its pin 1's, L8R2-F43; the ribbon row is L8R2-F44, Wurth's WR-CAB derating, UNSENT, with a fourth lead beside
 the ribbon headers as the placed and solved route, 0.4107 A, NOT drafted: SESSION L8R2-D11). The ground shift at the supervisors'
-LDOs on the service cases is at most 0.0205 V (the one-node model's 0.0114 V with the return). V6-B1: CORRECTED IN DRAFT on the desk
-model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed extraction) and on each stage sitting beside
-its connector on board A; the targeted recheck decides.
+LDOs on the service cases is at most 0.0205 V (the probe's AVERAGE over the three LDOs; the one-node model's 0.0114 V with the return).
+**After the recheck cx46 (CORRECTIONS NOT CLOSED, kept as given in `records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md`; the
+second negative, which ends the method): V6-B1 OPEN, REMAINING ENGINEERING for the receiving company.** The record holds a STUDY, not a
+correction: the XT60-M courtyard and pad pitch of board E's J_BATT stand in for the selected XT60-F land (`LAND` in
+`apply_gen_sch_b_gndrtn.py`; the tree draws no XT60-F), the sources sit at the loads' pads where placed and the stages at their connector
+lands (ASSUMPTION), the fill scales uniformly (no bound on a split or a neck), the contact search is local (no global tolerance bound) and
+the LDO probe averages the three pads. The receiving company's scope: the selected female lands, the real source and load sites, a
+justified distributed resistance with tolerance coverage and each LDO's own shift; the declared upper bound's least rows with L8R2-F43
+and L8R2-F44.
 
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7 and 6b)
 
