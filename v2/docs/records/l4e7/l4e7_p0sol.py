@@ -718,6 +718,54 @@ def compute():
         worst_ = max(f_(a_) for a_ in arr)
         b2rows.append(dict(lab=lab_, worst=worst_, abs=abs_, line=line_, unit=unit_, abs_ok=(abs_ is None or worst_ <= abs_),
                            line_ok=worst_ <= line_, from_=holds_from(f_, line_)))
+    # the cold-connection guarantee WITHDRAWN (cx45, Q6): what a proof would need, with the figures this record holds; nothing of it
+    # proves the arrival cold. A spatial lead is a time lead only under a speed bound (the speeds are ASSUMPTIONS, no held sheet
+    # prints one); BST is kept charged while VS is supplied and EN/UVLO is high (TI SLUSEE5E p.17, PRINTED), and a withdrawal leaves
+    # both supplied through the back-fed PV_F
+    t48_17 = LS.flat(LS.pg(T48, 17))
+    cp_txt = need(t48_17, r"(A 12V, 100.A charge pump is derived from VS terminal).*?(With VS applied and EN/UVLO pulled high, the charge "
+                  r"pump turns ON)", "TPS4811 p.17, the charge pump's supply").group(1, 2)
+    tpu = float(need(LS.flat(LS.pg(T48, 10)), r"tPU\(INP_H\) INP Turn ON propagation Delay .*? (\d+) (\d+) .s", "TPS4811 p.10 tPU(INP_H)").group(2))
+    speeds = (0.5, 1.0, 2.0)
+    timing = dict(speeds=[(v_, 1e-3 / v_, v_ * t_off) for v_ in speeds], v_1mm=1e-3 / t_off, cp=cp_txt, tpu=tpu,
+                  ov_fall=R["remedy"]["bandA"]["fall"], uvf=b6["uvf_lo"])
+    # the presence pair's faults (cx45, Q6): the loop solved as a circuit by nodal analysis, nodes A (PV_PRA, R96's lower end) and B
+    # (PV_INP, U21's INP); R96 at its least and R97 at its highest (INP's highest, as k97); a fault a 10 mOhm short, the plug's
+    # bridged pair 50 mOhm, an open pair 1 GOhm; U21's own INP pull-down not credited. Every element is linear, so INP = a x PV_F
+    r96_lo, r97_hi = 100e3 * (1 - tol_y), R97v * (1 + tol_y)
+    R_SH, R_PAIR, R_OPEN = 0.01, 0.05, 1e9
+
+    def inp_of(vf_, pair_, fault_):
+        g_ = {("A", "F"): 1.0 / r96_lo, ("A", "B"): 1.0 / (R_PAIR if pair_ else R_OPEN), ("B", "G"): 1.0 / r97_hi}
+        if fault_:
+            g_[fault_] = g_.get(fault_, 0.0) + 1.0 / R_SH
+        gab_ = g_[("A", "B")]
+        a11_, a22_ = sum(v_ for k_, v_ in g_.items() if "A" in k_), sum(v_ for k_, v_ in g_.items() if "B" in k_)
+        b1_ = vf_ * sum(v_ for k_, v_ in g_.items() if "A" in k_ and "F" in k_)
+        b2_ = vf_ * sum(v_ for k_, v_ in g_.items() if "B" in k_ and "F" in k_)
+        det_ = a11_ * a22_ - gab_ * gab_
+        return (b1_ * a22_ + gab_ * b2_) / det_, (a11_ * b2_ + gab_ * b1_) / det_
+    FAULTS = (("none", "the plug in, the pair bridged", True, None),
+              ("none", "the plug withdrawn, the pair open", False, None),
+              ("P1", "the two presence cores shorted together, the plug withdrawn", False, ("A", "B")),
+              ("P2", "INP's core shorted to a positive core of the lead, the plug withdrawn", False, ("B", "F")),
+              ("P3", "R96's core shorted to a positive core of the lead, the plug in", True, ("A", "F")),
+              ("P4", "INP's core shorted to the return, the plug in", True, ("B", "G")),
+              ("P5", "R96's core shorted to the return, the plug in", True, ("A", "G")),
+              ("P6", "either core open, the plug in (as withdrawn)", False, None))
+    vpts = (("U21's turn-on at the most", on97), ("the hold's least", lo_h), ("a 25 V source", 25.0), ("the cut-off's highest", G6["ov"]),
+            ("the class's 36 V", 36.0), ("the arriving ring's worst", b2rows[0]["worst"]))
+    pin_abs = rw_pin_abs(R)
+    frows = []
+    for id_, lab_, pair_, fault_ in FAULTS:
+        a_ = inp_of(1.0, pair_, fault_)[1]
+        frows.append(dict(id=id_, lab=lab_, a=a_, inp=[a_ * v_ for _l, v_ in vpts], on_from=(inp_h / a_ if inp_h < 1e3 * a_ else None),
+                          abs_from=(pin_abs / a_ if pin_abs < 1e3 * a_ else None)))
+    p_r96 = max(v_ for _l, v_ in vpts) ** 2 / r96_lo
+    fr = {f_["id"]: f_ for f_ in frows if f_["id"] != "none"}
+    if abs(fr["P1"]["a"] - k97) > 1e-6 or fr["P2"]["abs_from"] > 20.1 or max(fr[k_]["a"] for k_ in ("P4", "P5", "P6")) > 1e-4:
+        refuse(4, "the presence pair's fault model does not reproduce the divider (%s)" % [(f_["id"], f_["a"]) for f_ in frows])
+    O["B2f"] = dict(rows=frows, vpts=vpts, p_r96=p_r96, r96_lo=r96_lo, r97_hi=r97_hi, timing=timing, pin_abs=pin_abs)
     O["B2"] = dict(c80=c80, v_inp0=v_inp0, tau_off=tau_off, t_inp_off=t_inp_off, t_off=t_off, t_on_hold=t_on_hold, rows=b2rows,
                    floor=min(a_["vFmin"] for a_ in arr), grid=(grid6[0], grid6[-1], len(grid6)), n=len(arr) * 2 * len(cold_st) * len(R_CASES) * 2,
                    t_ov=G6["t_ov"], tinp=b6["tinp"], ov_hi=G6["ov"], inp_l=inp_l, inp_h=inp_h, i_l=max(a_["iL"] for a_ in arr),
@@ -951,8 +999,10 @@ def render(O, K, R, b6, r3, K2):
          "Isat, where its inductance is no longer the printed one; its resonance with the entry's capacitance (%.1f uF at its largest) "
          "and the lead falls at %.2f to %.2f kHz, inside CS101's 2 to 5 kHz band where the accepted M2 immunity is decided; and it "
          "leaves D-16 as it is. (B2) a presence contact pair in the solar receptacle carrying U21's INP: the plug's withdrawal pulls "
-         "INP low (V(INP_L) %.1f V least, PRINTED; turn-off within tPD(INP_L)) before any other source can mate, so a source can only "
-         "ever arrive cold, the case whose absolute ratings the record shows held; it would prevent the guard-on step only for a source "
+         "INP low (V(INP_L) %.1f V least, PRINTED; turn-off within tPD(INP_L)), with the INTENT that a source arrives with Q12 off, the "
+         "case whose absolute ratings the record shows held; that is NOT PROVEN (no sequenced connector selected, no contact and "
+         "control timing proof, BST kept charged from the back-fed VS; section 5e) and the pair's faults are not fail-safe (section "
+         "5f), so no protection credit is taken; at best it would prevent the guard-on step only for a source "
          "arriving through the loop's mating points (a partial measure), not for a second source on the same lead, and it does not "
          "change the port's response when a step happens; it needs the receptacle's contact set and a rule that every plug for it "
          "bridges the pair (Layer 7's harness, R-180 rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is not "
@@ -1171,13 +1221,16 @@ def render(O, K, R, b6, r3, K2):
     P("    (INFERRED), is covered by the margin up to %.2f uA." % C_["sink_be_acc"])
     P("  D-10 (B6, L4-F01): an UNRESOLVED PROTECTION DEFECT in the present model, the remaining engineering item E-1 (section 3).")
     P("    CORRECTED within it: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line (R97 24.9k).")
-    P("    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10.")
+    P("    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10. No")
+    P("    protection credit is taken for it: its cold-arrival guarantee is WITHDRAWN (5e) and its pair faults are not fail-safe,")
+    P("    P2 and P3 putting INP over its absolute maximum, an OPEN defect of the B2 draft (5f).")
     P("")
     # ---------------------------------------------------------------- 5
     b2 = O["B2"]
     K2_ = K2
     P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (an unapproved PARTIAL proposal; the coordinator's task of")
-    P("   5 October 2026, 17:12; it does not resolve D-10, section 3)")
+    P("   5 October 2026, 17:12; it does not resolve D-10, section 3; NOT part of the baseline: the baseline composition ORDER_E has")
+    P("   no B2 step and no baseline row depends on it, the owner's review part 24)")
     wrap("  5a ", "     ", "AUTHORITY (B2-PRESENCE.md section 1): reserved.json protects no connector or contact arrangement; but B2 "
          "changes the kit's external interface (BUILD.md and appendix 32.32: the panel, an accessory of the owner's choice, on the "
          "shore plug's second pair; with B2 a panel charges only through a plug that bridges the presence pair), changes the "
@@ -1199,17 +1252,16 @@ def render(O, K, R, b6, r3, K2):
     wrap("  5c ", "     ", "THE WITHDRAWN PLUG. With the presence pair open INP has no source but R97 to GND (and U21's own pull-down, not "
          "credited): from its highest while the guard is on, %.2f V (PV_F at the cut-off's highest %.2f V), it falls under V(INP_L)'s "
          "least %.1f V (PRINTED) in at most %.3f ms through R97 aged and C80 at its largest (%.2f nF), and U21 then pulls Q12's gate "
-         "(tPD(INP_L) at most %.0f us, PRINTED; the gate's fall, the record's): Q12 is off at most %.3f ms after the pair opens. A "
-         "broken or shorted presence core can only hold INP low: the guard off, never on. On the next plug INP rises only when the "
-         "pair makes, last; at the hold's least it crosses V(INP_H)'s most %.1f V in at most %.3f ms, a delay nothing in service sees." % (
+         "(tPD(INP_L) at most %.0f us, PRINTED; the gate's fall, the record's): Q12 is off at most %.3f ms after the pair opens, with "
+         "the pair intact (its faults: 5f). On the next plug INP rises once the pair makes; at the hold's least it crosses V(INP_H)'s "
+         "most %.1f V in at most %.3f ms." % (
              b2["v_inp0"], b2["ov_hi"], b2["inp_l"], 1e3 * b2["t_inp_off"], 1e9 * b2["c80"], b2["tinp"], 1e3 * b2["t_off"], b2["inp_h"],
              1e3 * (b2["t_on_hold"] or 0.0)))
-    wrap("  5d ", "     ", "THE ARRIVING SOURCE (the cold connection recomputed as the case every arrival becomes): a stiff 36 V source "
-         "meets Q12 off; the power contacts make first (the contact requirement R-180: the pair makes last at every mating point of "
-         "the loop), so PV_F is at the source when the pair makes and U21's OV, at or under %.2f V and acting within %.0f us "
-         "(PRINTED), holds Q12 off (and BST until it charges, at least 50 ms from discharged, the record's); a source under the "
-         "cut-off starts the stage through Q12's gate slew once the pair has made, the record's start (at most %.3f A, under the "
-         "breaker's least); "
+    wrap("  5d ", "     ", "THE ARRIVING SOURCE IF IT MEETS Q12 OFF (a CONDITION, not a result: the model holds Q12 non-conducting, the "
+         "record's cold connection with cold=True; it is not derived from the contact sequence or the control timing, and 5e withdraws "
+         "the guarantee that an arrival meets it). Under that condition a stiff 36 V source over the cut-off finds U21's OV, at or under "
+         "%.2f V and acting within %.0f us (PRINTED), holding Q12 off, and a source under the cut-off starts the stage through Q12's gate "
+         "slew once the pair has made, the record's start (at most %.3f A, under the breaker's least); "
          "the port's own ring is the record's cold connection, re-run here over the record's whole grid (%.2f to %.2f uH, %d loops), "
          "both fault positions, the port bank at its least and its largest, from a discharged port and from 25 V (%d events; the "
          "worst equals the record's cold maxima):" % (b2["ov_hi"], 1e6 * b2["t_ov"], b2["i_start"], 1e6 * b2["grid"][0], 1e6 * b2["grid"][1],
@@ -1220,16 +1272,72 @@ def render(O, K, R, b6, r3, K2):
                                                          r_["line"], "everywhere" if r_["from_"] in (None, 0.0) and r_["line_ok"] else
                                                          ("%.2f uH" % (1e6 * r_["from_"]) if r_["from_"] else "nowhere")))
     wrap("     ", "     ", "PV_F's least %.2f V (VS, CS+, CS- and ISCP rated -1 V to GND): held; the lead's current in the ring at most "
-         "%.1f A and D11 at most %.1f mJ (the record's figures). Every absolute rating holds over the whole envelope. The 54 V/us "
-         "SESSION margin line on the slew holds only from the loop the table names (at the least loop %.1f V/us, inside the 60 V/us "
-         "absolute maximum), and PV_F stays over the recommended 80 V row below the loop the table names: both are carried as "
-         "PROVISIONAL, validated by S2 (the arriving source at 0.30 uH on the specimen)." % (
+         "%.1f A and D11 at most %.1f mJ (the record's figures). Under the condition, every absolute rating holds over the whole "
+         "envelope. The 54 V/us SESSION margin line on the slew holds only from the loop the table names (at the least loop %.1f V/us, "
+         "inside the 60 V/us absolute maximum), and PV_F stays over the recommended 80 V row below the loop the table names: both "
+         "are carried as PROVISIONAL, validated by S2 (the arriving source at 0.30 uH on the specimen)." % (
              b2["floor"], b2["i_l"], 1e3 * b2["e11"], b2["rows"][2]["worst"]))
-    wrap("  5e ", "     ", "WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence "
-         "loop closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; and a "
+    tm = O["B2f"]["timing"]
+    wrap("  5e ", "     ", "THE COLD-CONNECTION GUARANTEE, WITHDRAWN (Astra's check cx45, Q6): round 2 claimed that every source "
+         "arriving through a mating point of the loop meets Q12 off. Nothing in this record proves it, and every claim resting on it "
+         "stays PROVISIONAL (5d's condition, R-180's reason, the owner item's benefit). What a proof needs, and what this record holds:")
+    wrap("     (i)   ", "           ", "THE CONTACT SEQUENCE: no sequenced connector is selected. The held Glenair D38999 sheets print no "
+         "first-mate-last-break contact, so the wall receptacle cannot sequence the pair; the solar tail's connector is not selected "
+         "(B2-PRESENCE.md section 4). A selected part with a printed mating sequence is owed.")
+    wrap("     (ii)  ", "           ", "THE TIME LEAD, NOT A DISTANCE: Q12 is off at most %.3f ms after the pair opens (5c), so the pair "
+         "must open at least that long before either power contact parts (otherwise a power contact re-making in the same movement can "
+         "find Q12 still on). A spatial lead gives time only under a speed bound, and no held sheet prints a mating speed (the speeds "
+         "below are ASSUMPTIONS): %s. Round 2's 1 mm covers the turn-off only under %.2f m/s." % (
+             1e3 * b2["t_off"], "; ".join("at %.1f m/s, 1 mm is %.2f ms and the turn-off needs %.2f mm" % (v_, 1e3 * t1_, 1e3 * d_)
+                                          for v_, t1_, d_ in tm["speeds"]), tm["v_1mm"]))
+    wrap("     (iii) ", "           ", "BST IS NOT DISCHARGED BY A WITHDRAWAL: \"%s\" and \"%s\" (TI SLUSEE5E p.17, PRINTED). After a "
+         "withdrawal PV_F is back-fed from PV_P through Q12's body diode, so VS stays supplied and EN/UVLO stays high until the back-fed "
+         "PV_F falls through U21's UVLO falling point (the band's least %.2f V, the record's); BST therefore stays charged and a remating "
+         "turns Q12 on within tPU(INP_H), at most %.0f us (PRINTED), of INP crossing V(INP_H). No fresh-bootstrap delay may be credited "
+         "(round 2's \"at least 50 ms from discharged\" is withdrawn); how long the back-fed PV_F stays above the UVLO is not computed "
+         "here." % (tm["cp"][0], tm["cp"][1], tm["uvf"], tm["tpu"]))
+    wrap("     (iv)  ", "           ", "BOUNCE AND INTERRUPTION: a power contact interrupted after the pair has made is not bounded. With "
+         "a source under the cut-off Q12 is on by then, and the re-make steps the source onto the port with the guard on (E-1's "
+         "mechanism, by the droop the interruption allowed; not computed). With a source over the cut-off OV holds Q12 off, but an "
+         "interruption long enough for PV_F to fall through OV's falling point (%.2f to %.2f V, the record's band) while the pair holds "
+         "INP high releases OV; with BST charged Q12 turns on, and the re-make is E-1's guard-on case (F1 to F3). PV_F's decay with "
+         "Q12 off and the contacts' interruption times are not computed or printed here." % tuple(tm["ov_fall"]))
+    wrap("     (v)   ", "           ", "THE COMPLETE ENABLE PATH is not simulated: the contact sequence and its bounce, the loop and C80, "
+         "INP's thresholds and delays, OV, UVLO, the gate drive with BST charged and the port's ring, together, at the timing extremes. "
+         "Until (i) to (v) are done, B2 claims no cold arrival.")
+    f2 = O["B2f"]
+    wrap("  5f ", "     ", "THE PRESENCE PAIR'S FAULTS (Astra's check cx45, Q6; round 2's \"a broken or shorted presence core can "
+         "only hold INP low\" was FALSE and is withdrawn). The loop solved as a circuit (nodal analysis; R96 at its least %.1f kOhm, "
+         "R97 at its highest %.2f kOhm, INP's highest; a fault a 10 mOhm short; the bridged pair 50 mOhm; U21's own pull-down not "
+         "credited). INP in V at PV_F of: %s. V(INP_H) at most %.1f V turns the guard on; INP's absolute maximum %.0f V (PRINTED):" % (
+             1e-3 * f2["r96_lo"], 1e-3 * f2["r97_hi"], "; ".join("%s %.2f V" % (l_, v_) for l_, v_ in f2["vpts"]), b2["inp_h"], f2["pin_abs"]))
+    P("       fault                                                                      INP / PV_F    INP at the six PV_F points (V)            the guard on from   INP over %.0f V from" % f2["pin_abs"])
+    for r_ in f2["rows"]:
+        P("       %-4s %-70s  %7.4f   %s   %s   %s" % (r_["id"], r_["lab"], r_["a"], " ".join("%6.2f" % x_ for x_ in r_["inp"]),
+                                                      ("PV_F %6.2f V" % r_["on_from"]) if r_["on_from"] is not None else "not under 1 kV",
+                                                      ("PV_F %6.2f V" % r_["abs_from"]) if r_["abs_from"] is not None else "not under 1 kV"))
+    fr = {r_["id"]: r_ for r_ in f2["rows"] if r_["id"] != "none"}
+    wrap("     ", "     ", "Consequences and detection. P1 (the cores shorted together, or the pair's contacts welded): INP is the "
+         "drawn divider whatever the plug does, the guard on from PV_F %.2f V at INP's highest corner (by %.2f V at the most, 2b), so "
+         "with the plug withdrawn the back-fed PV_F holds the "
+         "guard on and E-1's guard-on step returns; nothing on board E detects it (a LATENT loss of B2's function). P2 and P3 (a "
+         "presence core shorted to a positive core of the lead, the solar or the DC pair): INP is PV_F, the guard on from %.2f V and INP "
+         "over its %.0f V absolute maximum from PV_F %.2f V, under every source over 20 V and the arriving ring's %.2f V; a hazard the "
+         "draft INTRODUCES (without B2, INP's net never leaves board E): an OPEN defect of the B2 draft. P4 to P6: the guard held off "
+         "(the stage loses the solar input; R96 dissipates at most %.0f mW in P5); fail-safe for D-10 and unmonitored (no charging is "
+         "the only symptom). NO PROTECTION CREDIT is taken for the loop. If B2 is pursued, owed before any credit: monitored or "
+         "fault-tolerant presence detection (for example a coded resistance in the plug's bridge read by a window comparator, so that "
+         "P1 and P2 to P6 read as faults and hold the guard off) and INP held inside its absolute maximum for a core at the lead's "
+         "highest voltage (a series resistance at J_SOLP pin 2 and a clamp), each drafted, composed and checked like this one, then "
+         "the timing proof of 5e. Neither is drafted here; the guard-on case stays with E-1." % (
+             fr["P1"]["on_from"], O["Cfault"]["on97"], fr["P2"]["on_from"], f2["pin_abs"], fr["P2"]["abs_from"], b2["rows"][0]["worst"],
+             1e3 * f2["p_r96"]))
+    wrap("  5g ", "     ", "WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence "
+         "loop closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; a "
          "stiff source BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode "
-         "(PV_P back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here. Validation: P1-1's S1 "
-         "(both added to its rows).")
+         "(PV_P back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here; the timing proof (5e) "
+         "and the pair's fault detection and INP's protection (5f). Validation: P1-1's S1 (the first two added to its rows); the "
+         "last two are engineering, not validation.")
     return lines
 
 

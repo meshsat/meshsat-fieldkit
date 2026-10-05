@@ -1786,3 +1786,67 @@ def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure()
         for m in re.finditer(r"B2[^.]{0,80}\b(closes|resolves|closed|resolved)\b D-10", tx):
             assert re.search(r"\b(not|neither|nor|never)\b", m.group(0)), (nm, m.group(0))
     assert "PARTIAL" in texts["B2-PRESENCE.md"] and "does not resolve D-10" in texts["B2-PRESENCE.md"]
+
+
+def t_p0sol_b2_cold_guarantee_withdrawn_and_pair_faults_tabled():
+    """Astra's focused check cx45 (5 October 2026, Q6): B2's cold-connection guarantee was claimed without a selected sequenced
+    connector or a contact and control timing proof, and "a shorted presence core can only hold INP low" was false. The output
+    withdraws the guarantee (5e: the time leads, BST kept charged from VS, bounce, the enable path not simulated), solves the pair's
+    faults as a circuit and tables them (5f), and takes no protection credit; no text, the draft's included, keeps either claim."""
+    import re
+    out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
+    for s in ("5d THE ARRIVING SOURCE IF IT MEETS Q12 OFF (a CONDITION, not a result", "5e THE COLD-CONNECTION GUARANTEE, WITHDRAWN",
+              "THE TIME LEAD, NOT A DISTANCE", "BST IS NOT DISCHARGED BY A WITHDRAWAL", "charge pump is derived from VS terminal",
+              "BOUNCE AND INTERRUPTION", "THE COMPLETE ENABLE PATH is not simulated", "5f THE PRESENCE PAIR'S FAULTS",
+              "NO PROTECTION CREDIT", "an OPEN defect of the B2 draft", "a LATENT loss of B2's function"):
+        assert s in out, s
+    rows = {}
+    for line in open(P0SOL_OUT, encoding="utf-8").read().split("5f THE PRESENCE PAIR'S FAULTS", 1)[1].splitlines():
+        mm = re.match(r"\s+(P\d|none)\s+(.+?)\s+(\d+\.\d{4})\s+((?:\s*\d+\.\d\d){6})\s", line)
+        if mm:
+            rows.setdefault(mm.group(1), []).append((float(mm.group(3)), [float(x) for x in mm.group(4).split()]))
+    assert sorted(rows) == ["P1", "P2", "P3", "P4", "P5", "P6", "none"] and len(rows["none"]) == 2, sorted(rows)
+    # independent arithmetic from the printed corners: R96 99.9 kOhm at its least, R97 24.92 kOhm at its highest
+    r96 = float(re.search(r"R96 at its least ([\d.]+) kOhm", out).group(1))
+    r97 = float(re.search(r"R97 at its highest ([\d.]+) kOhm", out).group(1))
+    assert abs(rows["P1"][0][0] - r97 / (r96 + r97)) < 2e-4 and rows["P1"][0] == rows["none"][0]
+    for p_ in ("P2", "P3"):
+        a_, inp_ = rows[p_][0]
+        assert abs(a_ - 1.0) < 1e-3 and max(inp_) > 20.0, (p_, inp_)        # INP over its 20 V absolute maximum
+    for p_ in ("P4", "P5", "P6"):
+        assert max(rows[p_][0][1]) < 0.8, p_                                    # the guard held off
+    assert re.search(r"INP over its 20 V absolute maximum from PV_F 20\.00 V", out)
+    texts = {nm: " ".join(open(os.path.join(REC, nm), encoding="utf-8").read().split())
+             for nm in ("l4e7_p0sol.out", "L4E7-P0SOL.md", "B2-PRESENCE.md", "SUPPLIER-P1-1-P0SOL.md", "apply_gen_sch_e_p0sol_b2.py")}
+    for nm, tx in texts.items():
+        for m in re.finditer(r"can only hold INP low", tx):
+            ctx = tx[max(0, m.start() - 160):m.end() + 60]
+            assert "FALSE" in ctx or "withdrawn" in ctx, (nm, ctx)
+        for bad in ("never closed when a stiff source arrives", "can only ever arrive cold", "guard-on event is then removed",
+                    "such an arrival meets the cold connection", "BST until it charges"):
+            for m in re.finditer(re.escape(bad), tx):
+                assert "withdrawn" in tx[max(0, m.start() - 160):m.end() + 60], (nm, bad)
+    page = texts["B2-PRESENCE.md"]
+    for s in ("NO PROTECTION CREDIT", "GUARANTEE is WITHDRAWN", "5a. The cold-connection guarantee, WITHDRAWN",
+              "5b. The presence pair's faults", "| P1,", "| P2,", "| P3,", "| P4,", "| P5,", "| P6,", "Recommendation (revised after cx45): NOT (a) as drafted"):
+        assert s in page, s
+    draft = texts["apply_gen_sch_e_p0sol_b2.py"]
+    assert "WITHDRAWN" in draft and "not fail-safe" in draft and "No protection credit" in draft
+
+
+def t_p0sol_the_baseline_does_not_depend_on_b2():
+    """The owner's review, part 24: the baseline must not depend on an unapproved proposal. The baseline composition of board E has
+    no B2 step (B2 is composed only in its separate check), and the record files B2's draft, contact requirement and Layer 6 rows
+    as a proposal that enters no change list."""
+    m = _p0sol()
+    assert ("l4e7", "p0sol_b2") not in m.ORDER_E and ("l4e7", "p0sol_b2") in m.ORDER_E_B2
+    assert [x for x in m.ORDER_E_B2 if x != ("l4e7", "p0sol_b2")] == list(m.ORDER_E)
+    page = " ".join(open(os.path.join(REC, "L4E7-P0SOL.md"), encoding="utf-8").read().split())
+    b2 = " ".join(open(os.path.join(REC, "B2-PRESENCE.md"), encoding="utf-8").read().split())
+    draft = " ".join(open(os.path.join(REC, "apply_gen_sch_e_p0sol_b2.py"), encoding="utf-8").read().split())
+    out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
+    assert "**R-180**: UNCHANGED in the baseline" in page and "no row for B2 enters L4-E9's change list" in page
+    assert "**R-NEW2**" not in page
+    assert "The baseline does not depend on B2" in b2 and "NOT entered in L4-E9's change list" in b2 and "NOT entered in Layer 6" in b2
+    assert "NOT in L4-E9's change list and not part of the baseline" in draft
+    assert "NOT part of the baseline: the baseline composition ORDER_E has no B2 step" in out
