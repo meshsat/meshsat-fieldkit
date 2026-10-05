@@ -1041,7 +1041,20 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     for band in bands:
         assert ("band %s A" % band) in text, band
     assert "the required service unchanged" in text and "replaced, by the cap's top" in text
-    assert "SESSION DECISION L9T5-D8" in text and "NOT taken in this candidate" in text
+    assert "DECISION L9T5-D8 (SESSION" in text and "L9T5-F22 (R602 at 14.0 k) is NOT taken" in text
+    # L9T5-F22 over the connected circuit: the chain's rows, 13.3 k holding T10-A3 at the printed 600 mA with either return and 14.0 k not
+    rows = re.findall(r"R602 (1\d\.\d) k .*?return (as drawn|with the dedicated return)\s+shift [\d.]+ V, (0\.6000|[\d.]+) A a LDO .*?: (holds|FAILS) ", text)
+    assert len(rows) == 8, rows
+    at600 = {(r[0], r[1]): r[3] for r in rows if r[2] == "0.6000"}
+    assert at600 == {("13.3", "as drawn"): "holds", ("13.3", "with the dedicated return"): "holds",
+                     ("14.0", "as drawn"): "FAILS", ("14.0", "with the dedicated return"): "FAILS"}, at600
+    t10 = open(T10_OUT, encoding="utf-8").read()
+    m = re.search(r"14\.0 k: [\d.]+ V nominal, top ([\d.]+) V; the LDOs' input at least ([\d.]+) V", t10)
+    assert m and ("top %s V)" % m.group(1)) in text and ("input %s V against" % m.group(2)) in text   # the same chain as Slot C's scenario
+    # L8R2-F33a on the placement as drawn, read from record l8r2's output
+    p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
+    mm = re.search(r"holds every entry within ([\d.]+) mm of its socket on both boards: MET", p0)
+    assert mm and ("within %s mm of its socket on both" % mm.group(1)) in text
     assert "J_PA and its 16 AWG lead" in text and "PROVISIONAL with L8R2-F43's vendor task" in text
 
 

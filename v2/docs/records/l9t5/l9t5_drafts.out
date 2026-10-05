@@ -53,12 +53,12 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    8cd31cfbbca39087 v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py
    23dae9bc1c461f84 v2/docs/records/l9t5/inputs/apply_gen_sch_a_iocbuck-7c28f9da.py
    afb77ab72e0d2d4c v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-7c28f9da.py
-   60c807573ff788f5 v2/docs/records/l9t5/inputs/SOURCES.txt
+   ab05b829283594c0 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   f1e89dc7e3de7e00 v2/docs/records/l9t5/l9t5_case.out
+   d99db6c52b25c116 v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   9ec3c20ab9d5082d v2/docs/records/l8r2/l8r2_gndret.out
+   d6d86506bdfe7291 v2/docs/records/l8r2/l8r2_gndret.out
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
