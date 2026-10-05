@@ -921,10 +921,134 @@ def t_p0_f01_the_drafts_refuse_the_tree_and_a_second_application():
         assert r.returncode == 3, "a second application was not refused"
 
 
+CONN = os.path.join(REC, "l9t5_connected.py")
+CONN_OUT = os.path.join(REC, "l9t5_connected.out")
+L4E9_DIR = os.path.join(ROOT, "v2", "docs", "records", "l4e9")
+
+
+def _l4e9():
+    """L4-E9's register and script with this record's change-list draft applied in memory (the tree's files are not written)"""
+    sp = importlib.util.spec_from_file_location("cl_draft_for_p0_test", os.path.join(REC, "apply_l4e9_changelist_p0.py"))
+    d = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(d)
+    files, ch, m = d.patch_all(ROOT)
+    reg = m.md_table(files[os.path.join(L4E9_DIR, "DOWNSTREAM-REGISTER.md")], "| ID | Kind |")
+    return d, files, ch, m, reg
+
+
+def t_p0_connected_output_reproduced_pinned_and_every_predicate_holds():
+    """4b and 4c: the connected candidate's output is what the script prints, its pins are the tree's bytes, every predicate holds"""
+    text = _run_plain(CONN, CONN_OUT)
+    rows = [l for l in text.split("12. THE PREDICATES")[1].split("l9t5_connected: done")[0].splitlines() if l.strip()]
+    assert len(rows) >= 16 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    pins = re.findall(r"^   ([0-9a-f]{16}) (v2/\S+)$", text.split("1. THE CASE ROWS")[0], re.M)
+    assert len(pins) >= 30
+    for h, rel_ in pins:
+        assert hashlib.sha256(open(os.path.join(ROOT, rel_), "rb").read()).hexdigest().startswith(h), rel_
+
+
+def t_p0_connected_every_check_reads_drawn_and_every_mutation_fails():
+    """V6's two breaking checks read the composed design (DD-7 with the guard, l9t5's automatic mode); one mutation per check fails it"""
+    text = open(CONN_OUT, encoding="utf-8").read()
+    sec3 = text.split("3. EVERY RECORD NETLIST CHECK")[1].split("   not netlist checks")[0]
+    checks = [l for l in sec3.splitlines()[1:] if l.startswith("   ") and not l.startswith("    ")]
+    verdicts = [l[66:].split("  ")[0].strip() for l in checks]
+    assert len(checks) >= 14 and all(v == "DRAWN" for v in verdicts), list(zip(checks, verdicts))
+    for k in ("L4-E11 DD-7 (round 17, with the guard), board A", "l9t5 I-03 / T10, board A (automatic mode)"):
+        assert any(l.startswith("   " + k) for l in checks), k
+    m = re.search(r"(\d+) of (\d+) mutations do not read DRAWN", text)
+    assert m and m.group(1) == m.group(2) == str(len(checks))
+    for b in "ABD":
+        assert re.search(r"board %s: \d+ drafts, every one applied; regenerated rc 0: \d+ parts, 0 unplaced, intent written True, "
+                         r"designators unique" % b, text), b
+
+
+def t_p0_connected_the_change_list_carries_every_composed_draft():
+    """V6-m11: every circuit draft the candidate composes has a register row in L4-E9's change list, in the composition's order; FAN_OK's
+    rows are WITHDRAWN; the page's section 3 table is the script's change list (the record's other generated sections are owed)"""
+    tree_reg = open(os.path.join(L4E9_DIR, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read()
+    assert "| R-220 |" not in tree_reg, "the draft is the integrator's to apply, not this branch's"
+    d, files, ch, m, reg = _l4e9()
+    assert ch == m.cons_changes(reg)
+    named = {}
+    for c in ch:
+        for s_ in re.findall(r"apply_[a-z0-9_]+\.py", c[4]):
+            named[s_] = (c[2], c[0], c[8])
+    sp = importlib.util.spec_from_file_location("conn_under_test", CONN)
+    C = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(C)
+    for b, keys in C.ORDER.items():
+        seq = []
+        for k in keys:
+            if k.split("/")[0] in C.ORDER_FREE:
+                continue
+            s_ = os.path.basename(C.script_of(b, k))
+            assert s_ in named, "%s (board %s) has no change-list row" % (k, b)
+            seq.append(named[s_][1])
+        assert seq == sorted(seq), "board %s composes out of the change list's order" % b
+    for rid in ("R-210", "R-211", "R-212"):
+        row = [r for r in reg if r[0] == rid][0]
+        assert row[6] == "WITHDRAWN" and "FAN_OK is rejected" in row[2], rid
+        assert [c for c in ch if c[2] == rid][0][8].startswith("WITHDRAWN")
+    page = m.md_table(files[os.path.join(L4E9_DIR, "L4-POWER-ARCHITECTURE.md")], "| # | Step | Row |")
+    assert page == [["%d" % c[0]] + [str(x) for x in c[1:]] for c in ch], "the patched page's change list is the patched script's"
+    # a second application is refused (the register and the page already carry the rows)
+    for fn, arg in ((d.patch_register, files[os.path.join(L4E9_DIR, "DOWNSTREAM-REGISTER.md")]),):
+        try:
+            fn(arg)
+            raise AssertionError("a second application must be refused")
+        except SystemExit as e:
+            assert e.code == 3
+    for r in reg:
+        if r[0] in ("R-210", "R-211", "R-212") or (r[0].startswith("R-2") and int(r[0][2:]) >= 220):
+            want = ("DO: nothing: WITHDRAWN by the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is R-227 and "
+                    "R-238; never applied") if r[6] == "WITHDRAWN" else (
+                "DO: step %s (%s), no open question; it continues while the open items are worked" % (r[7], r[6]))
+            assert r[1] == "IMPLEMENTATION" and r[8] == "SETTLED WORK" and r[9] == want, r[0]
+            assert r[4] in m.OWNERS, r[0]
+    # a broken order is refused: the PA cap's board A half before fb01
+    saved = list(m.CHANGE_ORDER)
+    try:
+        i = [k for k, c in enumerate(saved) if c[1] == "R-227"][0]
+        j = [k for k, c in enumerate(saved) if c[1] == "R-200"][0]
+        bad = list(saved)
+        bad[i], bad[j] = bad[j], bad[i]
+        m.CHANGE_ORDER = bad
+        try:
+            m.cons_changes(reg)
+            raise AssertionError("the PA cap before fb01 must be refused")
+        except SystemExit:
+            pass
+    finally:
+        m.CHANGE_ORDER = saved
+
+
+def t_p0_connected_the_re_trace_reads_its_sources():
+    """4b: the figures the re-trace prints are its sources' figures (the case, the breaker, the return solver, the eFuse bands)"""
+    text = open(CONN_OUT, encoding="utf-8").read()
+    case = open(OUT, encoding="utf-8").read()
+    m = re.search(r"contacts' maximum: need ([\d.]+) V: MEETS against REQ-018's 15\.5 V, margin ([\d.]+) V", case)
+    assert m and ("%s V (MODEL on PRINTED" % m.group(1)) in text and ("margin %s V" % m.group(2)) in text
+    stk = open(os.path.join(ROOT, "v2", "docs", "records", "l9stk", "l9stk_protection.out"), encoding="utf-8").read()
+    b = re.search(r"current limit ([\d.]+) / ([\d.]+) / ([\d.]+) A \(VCL", stk)
+    assert b and ("breaker band %s /" % b.group(1)) in text
+    p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
+    for tot in ("20.9888", "22.8711", "27.9108", "20.4746"):
+        assert tot in p0 and ("%s A at +76.25 C" % tot) in text, tot
+    ef = open(os.path.join(ROOT, "v2", "docs", "records", "efuse", "efuse_check.out"), encoding="utf-8").read()
+    bands = re.findall(r"^   EFUSE   [AB] U\d+\s+tps2596\s+([\d.]+ / [\d.]+ / [\d.]+) A", ef, re.M)
+    assert len(bands) == 3
+    for band in bands:
+        assert ("band %s A" % band) in text, band
+    assert "the required service unchanged" in text and "replaced, by the cap's top" in text
+    assert "SESSION DECISION L9T5-D8" in text and "NOT taken in this candidate" in text
+    assert "J_PA and its 16 AWG lead" in text and "PROVISIONAL with L8R2-F43's vendor task" in text
+
+
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
              os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
-             F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"]]
+             F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT]
     inputs = os.path.join(REC, "inputs")
     copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
     for p in files + copies:
@@ -934,7 +1058,7 @@ def t_record_hygiene():
         for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
             assert bad not in t, "a private path in %s" % os.path.basename(p)
         if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT, T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
-                 F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"]):
+                 F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT):
             if p == README:
                 # round 3: the claim table for the recheck V3 labels a maker's printed limit with the round 3 brief's own word. That
                 # word is taken out of the table's LABEL cell (the fifth), and of nothing else, before the claim-word scan: the other

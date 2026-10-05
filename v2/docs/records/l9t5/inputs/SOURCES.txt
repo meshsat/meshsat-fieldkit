@@ -35,3 +35,9 @@ cx44-astra-f01-selection-as-received.md sha256 63faa4dcbd4b0f4e9c79372637447523c
   5 October 2026): F01 SELECTION: NOT SUPPORTED, the first negative of (c), ten blockers; an AI review, read-only, kept as given.
   REDACTED of private paths only: the worktree root is written <worktrees>/ (the as-received original, sha256 4f1b667dde2b6d36d67259a22f9f3af1231491b6e5dd5bdcd7ddf3822a836187, is the
   coordinator's file named above; nothing else differs).
+
+cases-cdev-rev2-20261005.md sha256 85156e936ce21bcce6dc372ebdc70fcc16e47bb3fb733f883aa1e857a1a29eaa
+  the C-DEV rev 2 section of the coordinator's shared case rows (_runs/cases/CASES-2026-10-04.md at sha256
+  b2dfb4a643f9f99741d7027dd1fca4f4632d68b639ab21b66685b19c684a6104), copied verbatim with its 16:25 CEST clarification, 5 October
+  2026, by Slot C's T10 round 5 (fnd/p0t10 ed021fac); the whole file at that sha is record l8r2's
+  inputs/coordinator-cases-2026-10-05-cdev-rev2.md. Read by l9t5_t10.py; the case row is the coordinator's.
