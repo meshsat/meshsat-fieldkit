@@ -848,6 +848,7 @@ def compute():
     R["S22"] = fix22_round(R, T)
     R["S23"] = fix23_round(R, T)
     R["S24"] = fix24_round(R, T)
+    R["S25"] = fix25_round(R, T)
     return R
 
 
@@ -5679,6 +5680,443 @@ def render_fix24(R, p):
     p("")
 
 
+# ---- round 15 (5 October 2026): the final recheck V2RF's V2RF-B1 (the heavy leads) and its minors m1 to m5 (C-PROT rev 1)
+R15_LEAD = dict(hp=(0.15, 0.25),   # W/(m K): h times perimeter of a 4 mm2 insulated lead in still air, V2RF's order (ASSUMPTION here)
+                k_cu=390.0,        # W/(m K): copper, a handbook value (ASSUMPTION, as round 14)
+                area=4e-6,         # m2: the lead (proposal)
+                dx=0.03,           # m: the guard's thermocouple pair, under the guard's heater (proposal)
+                dt0=0.05,          # K: the pair's offset left after its isothermal reading in the oven (proposal)
+                dtc=0.05,          # K: the guard's control band, logged (proposal)
+                rises=(5.0, 10.0, 20.0, 40.0),   # K: joints over the lead's own temperature, V2RF's cases
+                rho=1.72e-8, n=2)  # ohm m: copper at 20 C (handbook, ASSUMPTION); the heavy leads of the heating supply
+R15_PAIR_OLD = dict(dt=0.05)       # K: an unguarded pair's resolution, for option (b)'s reading
+R15_U = dict(k=0.02, p=0.01, p17=0.01, air=1.0, band=0.02, pick=0.1, unit=0.05, rep=0.5, leak=0.3, early=0.5, c0=0.25, rip=0.52)
+# the budget's sources, expanded (k = 2), each with its kind (round 15, V2RF-m4): k the K-factor, common to every reading of one junction
+# (relative); p the FETs' heating powers (relative, taken common); p17 R17's power (relative); air 1 K, common to every reading over the
+# air; band, the band's current within 1 % so its share of each reading within 2 % of the baseline; pick, the pickup's subtraction, common
+# to one junction; unit, the lot correction of each Zself (K/W, proposal); per reading: rep, leak (every reading), early and c0 (the
+# heated junction's readings only; c0 is what is left of the control run's measured correction once applied, proposal); rip, half the
+# time-division ripple (direct readings only)
+R15_RP = 0.1e-3                    # ohm: the pours' allowance (SESSION): each pour's largest path, joint to FET land, summed
+R15_SEARCH = dict(seed=20261015, n=1200)
+R15_BUDGET_SEED = 31
+
+
+def r15_reduce(rd, K, rp, qres):
+    """The procedure's step 14 on a set of readings: rd holds each junction's baseline rise over the air base[k], its rise over the air
+    in each alone case alone[k][j], in R17's case r17[k], the measured powers P[j] and P17, and each Zself's lot correction unit[k].
+    Returns (line 1's figure, line 2's hottest T_k, R17's largest coupling, the per-junction T_k)."""
+    Z = [[(rd["alone"][k][j] - rd["base"][k]) / rd["P"][j] for j in range(3)] for k in range(3)]
+    for k in range(3):
+        Z[k][k] += rd["unit"][k]
+    z17 = [(rd["r17"][k] - rd["base"][k]) / rd["P17"] for k in range(3)]
+    zw = [worst_row(Z[k])[0] for k in range(3)]
+    t = [rd["base"][k] + z17[k] * K["p17"] + K["p_even"] * zw[k] + Z[k][k] * (K["i2"] * rp + K["n_lead"] * qres) for k in range(3)]
+    return max(zw), max(t), max(z17), t
+
+
+def r15_readings(tr, e):
+    """Readings from a TRUE specimen (tr: B, Z, z17, P, P17) and an error set e (each source's value, zero when absent)."""
+    rd = dict(base=[], alone=[], r17=[], P=[p_ * (1 + e.get("p", 0.0)) for p_ in tr["P"]], P17=tr["P17"] * (1 + e.get("p17", 0.0)),
+              unit=[e.get(("unit", k), 0.0) for k in range(3)])
+    for k in range(3):
+        com = e.get("air", 0.0) + e.get("band", 0.0) * tr["B"][k] + e.get(("pick", k), 0.0)
+        g = 1.0 + e.get(("k", k), 0.0)
+        rd["base"].append(tr["B"][k] * g + com + e.get(("b", k), 0.0))
+        rd["alone"].append([(tr["B"][k] + tr["Z"][k][j] * tr["P"][j]) * g + com + e.get(("a", k, j), 0.0) for j in range(3)])
+        rd["r17"].append((tr["B"][k] + tr["z17"][k] * tr["P17"]) * g + com + e.get(("r", k), 0.0))
+    return rd
+
+
+def r15_sources():
+    """Each source of the budget with its expanded amplitude (R15_U)."""
+    u = R15_U
+    heated = math.sqrt(u["rep"] ** 2 + u["leak"] ** 2 + u["early"] ** 2 + u["c0"] ** 2)
+    other = math.sqrt(u["rep"] ** 2 + u["leak"] ** 2)
+    s = [("p", u["p"]), ("p17", u["p17"]), ("air", u["air"]), ("band", u["band"])]
+    for k in range(3):
+        s += [(("k", k), u["k"]), (("pick", k), u["pick"]), (("unit", k), u["unit"]), (("b", k), other), (("r", k), other)]
+        s += [(("a", k, j), heated if j == k else other) for j in range(3)]
+    return s
+
+
+def r15_u(rd, K, rp, qres):
+    """Each line's expanded uncertainty PROPAGATED through the reduction from the readings (V2RF-m4): every source moved by its expanded
+    amplitude in turn, the lines recomputed, the changes combined in quadrature (absolute terms stay absolute; the K-factor is common to
+    one junction's readings, the air and the band to every reading, so they cancel where the reduction takes differences)."""
+    base = r15_reduce(rd, K, rp, qres)[:3]
+    acc = [0.0, 0.0, 0.0]
+    for src, a in r15_sources():
+        r2 = dict(base=list(rd["base"]), alone=[list(r_) for r_ in rd["alone"]], r17=list(rd["r17"]), P=list(rd["P"]), P17=rd["P17"],
+                  unit=list(rd["unit"]))
+        if src == "p":
+            r2["P"] = [p_ * (1 + a) for p_ in r2["P"]]
+        elif src == "p17":
+            r2["P17"] *= 1 + a
+        elif src in ("air", "band"):
+            for k in range(3):
+                d = a if src == "air" else a * rd["base"][k]
+                r2["base"][k] += d
+                r2["r17"][k] += d
+                r2["alone"][k] = [x + d for x in r2["alone"][k]]
+        elif src[0] == "k":
+            k = src[1]
+            r2["base"][k] *= 1 + a
+            r2["r17"][k] *= 1 + a
+            r2["alone"][k] = [x * (1 + a) for x in r2["alone"][k]]
+        elif src[0] == "pick":
+            k = src[1]
+            r2["base"][k] += a
+            r2["r17"][k] += a
+            r2["alone"][k] = [x + a for x in r2["alone"][k]]
+        elif src[0] == "unit":
+            r2["unit"][src[1]] += a
+        elif src[0] == "b":
+            r2["base"][src[1]] += a
+        elif src[0] == "r":
+            r2["r17"][src[1]] += a
+        else:
+            r2["alone"][src[1]][src[2]] += a
+        new = r15_reduce(r2, K, rp, qres)[:3]
+        acc = [acc[i] + (new[i] - base[i]) ** 2 for i in range(3)]
+    return [math.sqrt(x) for x in acc]
+
+
+def r15_verdict(rd, K, rp, qres):
+    l1, l2, l17, _t = r15_reduce(rd, K, rp, qres)
+    u1, u2, u17 = r15_u(rd, K, rp, qres)
+    return (l1 + u1 <= K["bar_even"] and l2 + u2 <= K["rise"] and l17 + u17 <= K["z17"]), (l1, u1), (l2, u2), (l17, u17)
+
+
+def r15_true_t(tr, K, pours, guard):
+    """The service junction's rise over the air at its own worst split, with the pours' actual shortfall and the leads' actual residual."""
+    return max(tr["B"][k] + tr["z17"][k] * K["p17"] + K["p_even"] * worst_row(tr["Z"][k])[0] + pours[k] + guard[k] for k in range(3))
+
+
+def r15_coupon(s, m_, z17, b, p_alone):
+    """A coupon at a given Zself s: three side by side, each pair coupled at m s (the ends at m s / 2), the baseline b, R17's coupling z17."""
+    Z = [[s, m_ * s, m_ * s / 2.0], [m_ * s, s, m_ * s], [m_ * s / 2.0, m_ * s, s]]
+    return dict(B=[b] * 3, Z=Z, z17=[z17] * 3, P=[p_alone] * 3, P17=None)
+
+
+def r15_states(rules):
+    """Every state the fixture can reach from rest by single permitted steps (V2RF-m1): SW_S closed (1) or open, SW_B closed or open, the
+    heating supply on or off, each gate off (on VBAT), on (10 V under VBAT) or tie (on its drain tap). rules is 'old' (round 14 as
+    written: a tie only with the shunt under 10 mA, SW_S closing only with a gate on) or 'new' (round 15). Returns the reachable states,
+    the hazardous ones among them and a path to the first."""
+    import itertools
+    def shunt(st):
+        sws, swb, sup, g = st
+        return sup and sws and any(x in ("on", "tie") for x in g)
+    def ok(st, nx):
+        sws, swb, sup, g = st
+        nsws, nswb, nsup, ng = nx
+        if rules == "old":
+            if ng != g:
+                k = [i for i in range(3) if ng[i] != g[i]][0]
+                if ng[k] == "tie" and shunt(st):
+                    return False
+            if nsws and not sws and "on" not in g:
+                return False
+            return True
+        if ng != g:
+            k = [i for i in range(3) if ng[i] != g[i]][0]
+            if ng[k] == "tie" and (sws or shunt(st)):
+                return False                      # R1: a tie only with SW_S open by its own state, and the shunt under 10 mA
+            if g[k] == "on" and sws and sum(1 for x in g if x == "on") == 1:
+                return False                      # R3: the last conducting gate stays while SW_S is closed
+        if nsws and not sws and ("tie" in g or "on" not in g):
+            return False                          # R2: SW_S closes only with no gate tied and a gate on
+        if not nswb and swb and not (sws and "on" in g):
+            return False                          # R4: SW_B opens only while SW_S is closed and a gate is on
+        if not nsws and sws and not swb:
+            return False                          # R5: SW_S opens only while SW_B is closed
+        if nsup and not sup and not (swb or (sws and "on" in g)):
+            return False                          # R6: the supply starts only with a path
+        return True
+    def hazard(st):
+        sws, swb, sup, g = st
+        h = []
+        if sws and "tie" in g:
+            h.append("H1: a gate on its drain tap with SW_S closed (the clamp: the heating current through a diode-connected FET)")
+        if sup and not (swb or (sws and "on" in g)):
+            h.append("H2: the heating supply on with no path (at its compliance)")
+        return h
+    start = (0, 1, 0, ("off", "off", "off"))
+    seen, order, todo, prev = {start}, [start], [start], {start: None}
+    while todo:
+        st = todo.pop(0)
+        sws, swb, sup, g = st
+        nexts = [(1 - sws, swb, sup, g), (sws, 1 - swb, sup, g), (sws, swb, 1 - sup, g)]
+        for k in range(3):
+            for v in ("off", "on", "tie"):
+                if v != g[k]:
+                    nexts.append((sws, swb, sup, g[:k] + (v,) + g[k + 1:]))
+        for nx in nexts:
+            if nx not in seen and ok(st, nx):
+                seen.add(nx)
+                order.append(nx)
+                prev[nx] = st
+                todo.append(nx)
+    bad = [st for st in order if hazard(st)]          # in the order found: the first of each kind is the nearest to rest
+    paths = {}
+    for kind in ("H1", "H2"):
+        first = [st for st in bad if any(h.startswith(kind) for h in hazard(st))][:1]
+        if first:
+            st, path = first[0], []
+            while st is not None:
+                path.append(st)
+                st = prev[st]
+            paths[kind] = (path[::-1], [h for h in hazard(first[0]) if h.startswith(kind)][0])
+    return seen, bad, paths
+
+
+def fix25_round(R, T):
+    """Round 15: V2RF-B1, the heavy leads (the old treatment reproduced, two corrections compared, the guard selected and its residual
+    bounded), and V2RF-m1 to m5: the interlock on SW_S's own state (a state search), the galvanic boundary and the census, SW_S's clamp,
+    each line's uncertainty propagated through the reduction (a search with readings drawn from the budget), the pours' allowance in
+    the sizing target, and a coupon at the target shown to pass under the limit and fail over it."""
+    S9, S21, S23, S24 = R["S19"], R["S21"], R["S23"], R["S24"]
+    S = {}
+    K = dict(S24["K"])
+    K["i2"] = S9["i"] ** 2
+    K["n_lead"] = R15_LEAD["n"]
+    S["K"] = K
+    ld = R15_LEAD
+    ka = ld["k_cu"] * ld["area"]
+    # ---- V2RF-B1 reproduced: round 14's V8 and lead term
+    S["g_fin"] = tuple(math.sqrt(h * ka) for h in ld["hp"])
+    S["v8"] = R14_LEAD["frac"] * S23["p"]["hot"]
+    S["v8_dt"] = tuple(S["v8"] / g for g in S["g_fin"])
+    S["q_at"] = [(r_, S["g_fin"][0] * r_, S["g_fin"][1] * r_) for r_ in ld["rises"]]
+    S["old_term"] = (2 * S21["bar_new"] * S["q_at"][0][1], 2 * S21["bar_new"] * S["q_at"][-1][2])
+    i_hi = S23["i_td"][0][1]
+    S["self_rise"] = [(i_, i_ ** 2 * ld["rho"] / ld["area"] / ld["hp"][1], i_ ** 2 * ld["rho"] / ld["area"] / ld["hp"][0])
+                      for i_ in (S23["i_single"][0], S23["i_td"][0][0], i_hi)]
+    def factor(zjj, zjk, share):
+        g = share / zjj
+        a, b = 1 - g * zjj, -g * zjk
+        det = a * a - b * b
+        return (a - b) / det                     # the column sum of (I - G Z_JJ)^-1 for two equal leads
+    S["factor"] = (factor(20.0, 15.0, 0.5), factor(20.0, 2.0, 0.5))
+    if not (abs(S["factor"][0] - 8.0) < 1e-9 and S["old_term"][0] > 6.0 and S["old_term"][1] > 60.0):
+        refuse(4, "V2RF-B1's arithmetic is not reproduced")
+    # ---- two corrections compared: (b) measure the correction on passive leads, (a) guard the leads
+    S["b_curv"] = tuple(h * ld["dx"] * r_ / 2.0 for h in ld["hp"] for r_ in (ld["rises"][0], ld["rises"][-1]))
+    S["b_res"] = ka * R15_PAIR_OLD["dt"] / ld["dx"]
+    S["b_err"] = (S["b_res"] + min(S["b_curv"]), S["b_res"] + max(S["b_curv"]))
+    S["a_res"] = ka * (ld["dt0"] + ld["dtc"]) / ld["dx"]
+    S["a_term"] = K["n_lead"] * S["a_res"] * S21["bar_new"]
+    S["a_heat"] = (S["q_at"][0][1], S["q_at"][-1][2])          # the guard's heater must supply what the passive lead would draw
+    if not (S["a_res"] < 0.01 and S["a_term"] < 1.0 and S["b_err"][1] > 5 * S["a_res"]):
+        refuse(4, "the guard does not leave a residual smaller than the measured correction's own error")
+    # ---- V2RF-m1: the interlock, by a state search
+    S["st_old"] = r15_states("old")
+    S["st_new"] = r15_states("new")
+    if "H1" not in S["st_old"][2] or S["st_new"][1]:
+        refuse(4, "the old interlock reaches no hazard, or the new one reaches one")
+    S["leg_v"] = i_hi * R14_SW["r_leg"]
+    S["vth_hot_min"] = 0.75                                    # V2RF's reading of Fig. 11's min curve at 150 C (T, by eye)
+    # ---- V2RF-m2: the census with the galvanic boundary's elements (each a PROPOSAL the supplier's parts or readings must meet)
+    i_m = R13_B["i_m"]
+    vth_max = S23["vth"][3]
+    S["m2_add"] = [("the thermocouples on live copper, each insulated at 100 MOhm or more, 12 of them in series pairs through a common logger",
+                    12 * vth_max / 100e6),
+                   ("the guard heaters' insulation from the live leads, two, at 100 MOhm or more", 2 * vth_max / 100e6),
+                   ("the supplies' output-to-earth leakage through the one earth point, each at most 1 uA, five supplies", 5e-6),
+                   ("the isolated interlock, sequencer and gate-drive barriers, at 1 GOhm or more, four", 4 * 15.0 / 1e9),
+                   ("SW_S's clamp at the reading's 3.1 V, under its 20 V standoff row", 1e-6)]
+    S["m2_sum"] = S24["sense_sum"] + sum(x for _l, x in S["m2_add"])
+    S["m2_frac"] = S["m2_sum"] / i_m
+    # ---- V2RF-m3: SW_S's interruption
+    S["m3_e"] = [(l_, i_, 0.5 * l_ * i_ ** 2) for l_ in (0.6e-6, 1.2e-6) for i_ in (8.4, 17.4)]
+    S["m3_t"] = 1.2e-6 * 17.4 / 30.0
+    # ---- V2RF-m4: each line's U propagated, on a coupon at the target (below) and in a search with readings drawn from the budget
+    p_alone = S23["p"]["hot"]
+    qres = S["a_res"]
+    def lines_at(s, z17, rp, m_=0.1, b=S9["band"]):
+        tr = r15_coupon(s, m_, z17, b, p_alone)
+        tr["P17"] = K["p17"]
+        rd = r15_readings(tr, {})
+        return tr, rd, r15_reduce(rd, K, rp, qres), r15_u(rd, K, rp, qres)
+    # R17's design target: its line passes with twice its U (the guard band); then the FETs' target with the pours' allowance
+    def solve(f, lo, hi):
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if f(mid):
+                lo = mid
+            else:
+                hi = mid
+        return lo
+    s_ref = S21["bar_new"]
+    S["z17_t"] = solve(lambda z: (lambda r_: r_[2][2] + 2 * r_[3][2] <= K["z17"])(lines_at(s_ref, z, R15_RP)), 0.0, 1.0)
+    S["s_t"] = {}
+    S["zw_t"] = {}
+    for rp in (0.0, 0.05e-3, 0.1e-3, 0.15e-3, 0.2e-3):
+        S["s_t"][rp] = solve(lambda s: (lambda r_: r_[2][1] + 2 * r_[3][1] <= K["rise"] and r_[2][0] + 2 * r_[3][0] <= K["bar_even"])(
+            lines_at(s, S["z17_t"], rp)), 10.0, 60.0)
+        S["zw_t"][rp] = lines_at(S["s_t"][rp], S["z17_t"], rp)[2][0]
+    st = S["s_t"][R15_RP]
+    tr, rd, red, u = lines_at(st, S["z17_t"], R15_RP)
+    S["target"] = dict(s=st, S=st * 1.2, zw=red[0], l2=red[1], u=u, l17=red[2])
+    uu = R15_U
+    heated = math.sqrt(uu["rep"] ** 2 + uu["leak"] ** 2 + uu["early"] ** 2 + uu["c0"] ** 2)
+    S["u3"] = math.sqrt((uu["k"] * red[1]) ** 2 + uu["air"] ** 2 + (uu["band"] * S9["band"]) ** 2 + uu["pick"] ** 2 + heated ** 2 + uu["rip"] ** 2)
+    # the same coupon, the ILLUSTRATION round 14 printed (3.47 % on every line) against the propagated U
+    S["u_illus"] = (u[0] / red[0], u[1] / red[1], u[2] / red[2])
+    # the verdict table: the FETs' part moved so the TRUE hottest junction sits at chosen points; the reading of each line at its error edge
+    S["table"] = []
+    for lab, dt in (("the design target", None), ("the target's U under the limit", "U"), ("0.1 K under the limit", -0.1), ("0.1 K over the limit", 0.1),
+                    ("1 K over the limit", 1.0)):
+        if dt is None:
+            s = st
+        else:
+            lev = K["rise"] - u[1] if dt == "U" else K["rise"] + dt
+            s = solve(lambda s_: lines_at(s_, S["z17_t"], R15_RP)[2][1] <= lev, 10.0, 60.0)
+        tr, rd, red, uu = lines_at(s, S["z17_t"], R15_RP)
+        true2 = red[1]                              # the coupon's own figure (the pours and the guard at their bounds: the worst case)
+        row = dict(lab=lab, s=s, true=true2, u=uu[1])
+        for sgn, nm in ((1, "high"), (0, "exact"), (-1, "low")):
+            row[nm] = (true2 + sgn * uu[1]) + uu[1] <= K["rise"] and red[0] + sgn * uu[0] + uu[0] <= K["bar_even"]
+        S["table"].append(row)
+    # the old lead term at the same target: a passive lead's flux at V2RF's joint rises, times twice Zself, on both leads
+    S["old_at_target"] = (red[1] + 2 * K["n_lead"] * st * S["q_at"][0][1], red[1] + 2 * K["n_lead"] * st * S["q_at"][-1][2])
+    # ---- the search: readings drawn from the budget (each source normal, its expanded amplitude two standard deviations)
+    import random
+    rnd = random.Random(R15_SEARCH["seed"])
+    srcs = r15_sources()
+    c = dict(n=0, acc=0, over=0, acc_over=0, near=0, near_acc=0, worst=0.0, under_refused_far=0)
+    for fam in ("net", "row", "sym"):
+        for _ in range(R15_SEARCH["n"]):
+            Zt = r14_matrix(rnd, fam)
+            zw = max(worst_row(Zt[k])[0] for k in range(3))
+            sc = rnd.uniform(0.75, 1.05) * K["bar_even"] / zw
+            Zt = [[x * sc for x in r_] for r_ in Zt]
+            trs = dict(B=[rnd.uniform(4.0, 14.0) for _k in range(3)], Z=Zt, z17=[rnd.uniform(0.0, 0.9) for _k in range(3)], P=[p_alone] * 3,
+                       P17=K["p17"])
+            pours = [Zt[k][k] * K["i2"] * R15_RP * rnd.uniform(0.3, 1.0) for k in range(3)]
+            guard = [Zt[k][k] * K["n_lead"] * qres * rnd.uniform(-1.0, 1.0) for k in range(3)]
+            true_t = r15_true_t(trs, K, pours, guard)
+            e = {src: rnd.gauss(0.0, a / 2.0) for src, a in srcs}
+            ok = r15_verdict(r15_readings(trs, e), K, R15_RP, qres)[0]
+            over = true_t > K["rise"] + 1e-9
+            c["n"] += 1
+            c["over"] += over
+            c["acc"] += ok
+            if ok and over:
+                c["acc_over"] += 1
+                c["worst"] = max(c["worst"], true_t - K["rise"])
+            if over and true_t <= K["rise"] + 3.0:
+                c["near"] += 1
+                c["near_acc"] += ok
+    S["search"] = c
+    # ---- V2RF-m5: the pours' allowance in the target and the layout requirement
+    S["m5"] = [(rp, S["s_t"][rp], S["zw_t"][rp]) for rp in sorted(S["s_t"])]
+    S["pours_at_t"] = st * K["i2"] * R15_RP
+    S["guard_at_t"] = st * K["n_lead"] * qres
+    return S
+
+
+def render_fix25(R, p):
+    S, S21, S23, S24 = R["S25"], R["S21"], R["S23"], R["S24"]
+    K, ld = S["K"], R15_LEAD
+    p("25. ROUND 15: THE FINAL RECHECK V2RF'S FINDINGS ON TP-E11-29'S HEAVY LEADS AND THE FIXTURE'S MINORS (5 October 2026; C-PROT rev 1)")
+    p("   25a. V2RF-B1 REPRODUCED: ROUND 14'S V8 AND LEAD TERM CANNOT BE MET (INFERRED; V2RF's heat-transfer order, ASSUMPTION)")
+    p("     a long 4 mm2 lead offers its joint the fin conductance sqrt(h P k A) = %s to %s W/K (h P %s to %s W/(m K), k %s W/(m K))"
+      % (fmt(S["g_fin"][0], 4), fmt(S["g_fin"][1], 4), fmt(ld["hp"][0], 2), fmt(ld["hp"][1], 2), fmt(ld["k_cu"], 0)))
+    p("     V8's %s mW holds only while the joint sits within %s to %s K of the lead's own temperature; the lead's self-heating:"
+      % (fmt(S["v8"] * 1e3, 1), fmt(S["v8_dt"][1], 2), fmt(S["v8_dt"][0], 2)))
+    for i_, a, b in S["self_rise"]:
+        p("       %s A: %s to %s K" % (fmt(i_, 2), fmt(a, 1), fmt(b, 1)))
+    for r_, a, b in S["q_at"]:
+        p("     a joint %s K over the lead draws %s to %s W, %s to %s times V8" % (fmt(r_, 0), fmt(a, 3), fmt(b, 3), fmt(a / S["v8"], 1), fmt(b / S["v8"], 1)))
+    p("     round 14's term 2 x Zself x q at %s K/W: %s to %s K a lead; its factor 2 was derived for one lead: for two equal leads each taking"
+      % ("%.2f" % S21["bar_new"], fmt(S["old_term"][0], 1), fmt(S["old_term"][1], 1)))
+    p("       half the heat at its own joint the column sum of (I - G Z_JJ)^-1 is %s with the joints coupled at 15 of 20 K/W, %s at 2 K/W:"
+      % (fmt(S["factor"][0], 2), fmt(S["factor"][1], 2)))
+    p("       V8 and the lead term are WITHDRAWN")
+    p("   25b. TWO CORRECTIONS COMPARED (SESSION; INFERRED)")
+    p("     (b) MEASURE the correction on passive leads: q from a pair over an unheated section is biased by that section's own loss, h P dx dT / 2,")
+    p("       %s to %s mW at joints %s to %s K over the lead, plus the pair's %s mW; the correction Z0 q then needs (I - F)^-1 measured too, F up to"
+      % (fmt(min(S["b_curv"]) * 1e3, 1), fmt(max(S["b_curv"]) * 1e3, 0), fmt(ld["rises"][0], 0), fmt(ld["rises"][-1], 0), fmt(S["b_res"] * 1e3, 1)))
+    p("       a half or more: an error of the order of the whole of round 14's V8 on each lead")
+    p("     (a) GUARD each lead (SELECTED): a heater tape over the lead from its joint, the pair under it %s mm apart, an integral controller"
+      % fmt(ld["dx"] * 1e3, 0))
+    p("       holding the pair's difference at zero: with the lead held at its joint's temperature along the heated length, its flux at the")
+    p("       joint is the pair's offset and the control band only, %s K and %s K: %s mW a lead (k A dT / dx), whatever the joint's temperature;"
+      % (fmt(ld["dt0"], 2), fmt(ld["dtc"], 2), fmt(S["a_res"] * 1e3, 1)))
+    p("       at steady state the guarded coupon IS the coupon without its leads plus a fixed source of at most that flux, so no factor and no")
+    p("       assumption on the leads' share is needed; its effect on junction k is at most Z_kJ times it, Z_kJ read by reciprocity from the joint's")
+    p("       thermocouple in cases A to C (Z_kJ = Z_Jk), at most Zself,k: both leads together %s K at the bar's %s K/W"
+      % (fmt(S["a_term"], 2), "%.2f" % S21["bar_new"]))
+    p("     the guard's heater supplies what the passive lead would draw, %s to %s W a lead; it can only heat, so each lead is sized so its own"
+      % (fmt(S["a_heat"][0], 2), fmt(S["a_heat"][1], 2)))
+    p("       self-heating stays under its joint's rise (V8 restated: the guard in control, its output never at zero or full, the pair's logged")
+    p("       difference within the band; else INCONCLUSIVE and a larger lead)")
+    p("   25c. V2RF-m1: THE INTERLOCK ON SW_S'S OWN STATE (a search of every state reachable from rest by single permitted steps)")
+    for nm, lab in (("st_old", "round 14's rules (a tie with the shunt under 10 mA; SW_S closing with a gate on)"),
+                    ("st_new", "round 15's rules R1 to R6")):
+        seen, bad, paths = S[nm]
+        p("     %s: %d states reachable, %d hazardous" % (lab, len(seen), len(bad)))
+        for kind in ("H1", "H2"):
+            if kind in paths:
+                path, why = paths[kind]
+                p("       %s" % why)
+                p("         the nearest path: %s" % " -> ".join("SW_S %s, SW_B %s, supply %s, gates %s" % ("closed" if a else "open", "closed" if b else "open",
+                                                                                                      "on" if c else "off", "/".join(g)) for a, b, c, g in path))
+    p("     a failed-short SW_S with SW_B closed: the leg holds the pours at %s V at most (22.46 A x 5 mOhm), under the threshold's %s V (Fig. 11's"
+      % (fmt(S["leg_v"], 3), fmt(S["vth_hot_min"], 2)))
+    p("       min curve at 150 C, V2RF's reading, T): no FET takes the heating current, and the reading falls outside its calibration (INCONCLUSIVE)")
+    p("   25d. V2RF-m2: THE GALVANIC BOUNDARY AND THE CENSUS (PROPOSALS for the supplier's parts; MAKER rows as round 14)")
+    for lab, x in S["m2_add"]:
+        p("     %s: %s uA" % (lab, fmt(x * 1e6, 2)))
+    p("     with round 14's %s uA: %s uA, %s %% of the sense current; check V3 is repeated in the chamber with every supply, dummy, thermocouple and"
+      % (fmt(R["S24"]["sense_sum"] * 1e6, 2), fmt(S["m2_sum"] * 1e6, 2), fmt(S["m2_frac"] * 100, 2)))
+    p("       instrument connected as in a run, before the cases and after the last")
+    p("   25e. V2RF-m3: SW_S's OPENING (V2RF's inductance and current, MINE in its terms)")
+    for l_, i_, e_ in S["m3_e"]:
+        p("     %s uH, %s A: %s uJ" % (fmt(l_ * 1e6, 1), fmt(i_, 1), fmt(e_ * 1e6, 0)))
+    p("     SW_S is solid-state (no relay); a clamp across it (a bidirectional TVS, standoff 20 V or more, clamping under 0.8 of the MOSFETs' VDS")
+    p("       rating, 0.2 mJ or more repetitive at 1 Hz; or MOSFETs with a printed repetitive avalanche rating of 0.2 mJ); the clamp ends the")
+    p("       current in %s us at 30 V, before the tie at 2 us; its leakage is in the census (25d)" % fmt(S["m3_t"] * 1e6, 2))
+    tg = S["target"]
+    p("   25f. V2RF-m4: EACH LINE'S U PROPAGATED THROUGH THE REDUCTION (the budget's sources as R15_U; INFERRED)")
+    p("     on a coupon at the design target (25g): line 1 %s K/W, U %s K/W (%s %%); line 2 %s K, U %s K (%s %%); R17 %s K/W, U %s K/W (%s %%)"
+      % (fmt(tg["zw"], 2), fmt(tg["u"][0], 2), fmt(S["u_illus"][0] * 100, 2), fmt(tg["l2"], 2), fmt(tg["u"][1], 2), fmt(S["u_illus"][1] * 100, 2),
+         fmt(tg["l17"], 3), fmt(tg["u"][2], 3), fmt(S["u_illus"][2] * 100, 1)))
+    p("       against round 14's 3.47 %% on every line; line 3, one reading over the air with the ripple, %s K; the control run's measured difference"
+      % fmt(S["u3"], 2))
+    p("       is applied as a correction and only its own %s K stays in U (V9 still refuses a difference over 0.5 K)" % fmt(R15_U["c0"], 2))
+    sr = S["search"]
+    p("     the search (seed %d, %d matrices in each of three families; every source of the budget drawn normal, its expanded amplitude two"
+      % (R15_SEARCH["seed"], R15_SEARCH["n"]))
+    p("       standard deviations; each line's U propagated from the readings): %d accepted of %d; over 150 C %d; accepted over 150 C %d, the worst"
+      % (sr["acc"], sr["n"], sr["over"], sr["acc_over"]))
+    p("       %s K over; of the %d within 3 K over the limit, %d accepted. The claim, on this model: a specimen exactly at the limit passes with"
+      % (fmt(sr["worst"], 2), sr["near"], sr["near_acc"]))
+    p("       a probability of about 2.5 % (a guarded rule at k = 2) and one over it with less; round 14's 'none over 150 C' followed from the lines'")
+    p("       monotony with each reading's error bounded by the U the rule adds, which is not the budget's model (V2RF-m4)")
+    p("   25g. V2RF-m5 AND THE DESIGN TARGET: THE POURS' ALLOWANCE, R17'S AND THE FETs' TARGETS (SESSION; INFERRED)")
+    p("     R17's coupling target: at most %s K/W (its line passes with twice its U)" % fmt(S["z17_t"], 3))
+    for rp, s, zw in S["m5"]:
+        p("     the pours' allowance %s mOhm: each junction's worst-split figure Zw at most %s K/W (for three side by side at m 0.1: Zself %s, S %s K/W)"
+          % (fmt(rp * 1e3, 2), fmt(zw, 2), fmt(s, 2), fmt(s * 1.2, 2)))
+    p("     SELECTED: %s mOhm, each pour's largest path from its current's joint to the FET lands, summed, at the operating temperature (a layout"
+      % fmt(R15_RP * 1e3, 2))
+    p("       requirement): the target Zw %s K/W (Zself %s, S %s K/W at m 0.1), line 2 with twice its U; the pours' term %s K and the guard's %s K"
+      % (fmt(tg["zw"], 2), fmt(tg["s"], 2), fmt(tg["S"], 2), fmt(S["pours_at_t"], 2), fmt(S["guard_at_t"], 2)))
+    p("     the verdict on a coupon whose TRUE line-2 figure sits at a chosen point, each line read at its error's edges (+U, exact, -U):")
+    for r_ in S["table"]:
+        yn = lambda v: "PASS" if v else "FAIL"
+        p("       %-22s true %s K (U %s K): read high %s, exact %s, low %s" % (r_["lab"] + ":", fmt(r_["true"], 2), fmt(r_["u"], 2), yn(r_["high"]),
+                                                                           yn(r_["exact"]), yn(r_["low"])))
+    p("     round 14's lead term at the same target, both leads passive at V2RF's joints 5 to 40 K over them: line 2 %s to %s K: FAIL"
+      % (fmt(S["old_at_target"][0], 1), fmt(S["old_at_target"][1], 1)))
+    p("   25h. STATUS (SESSION): V2RF-B1 CORRECTED on the desk (the guard); m1 to m5 answered; TP-E11-29 NOT EXECUTABLE until R-159 is restated")
+    p("     and a supplier agrees in writing; this is the answer to the FIRST negative check of the lead treatment: a second ends that loop")
+    p("")
+
+
 def e11_29_method(R):
     """E11-29's method and acceptance as they now stand (round 13's method, round 14's fixture and pass lines): one text, for the row of
     section 8 and the page's row."""
@@ -5690,7 +6128,9 @@ def e11_29_method(R):
             "supply's current times that device's own source-to-drain voltage on four-wire taps; each junction is read by that device's "
             "threshold voltage at %s mA with its gate tied to its own drain tap, the other gates on the source, against a K-factor calibrated in "
             "an oven in the same connection, the heating supply isolated from the pours by a series switch for every reading (round 14, section "
-            "24b, the recheck V2R's V2R-B1: a bypass across the supply joined the pours and is WITHDRAWN); cases: each FET alone at %s W and at "
+            "24b, the recheck V2R's V2R-B1: a bypass across the supply joined the pours and is WITHDRAWN), a gate tied only while that switch is "
+            "open by its own state (round 15, section 25c), each heavy lead of the heating supply guarded so its flux at its joint is zero "
+            "within its residual (round 15, section 25b, the final recheck V2RF's V2RF-B1); cases: each FET alone at %s W and at "
             "%s W (the 3 x 3 matrix of Zself and Zmut over step 6's baseline, its reciprocity checked), the three evenly, the worst split for "
             "each row of the measured matrix (each FET in turn) and the fixed split %s / %s / %s W by time division in slots of at most %s us, "
             "the band carrying %s A and R17 dissipating in place; acceptance (round 14, section 24d, V2R-B2), each line the reading plus its "
@@ -5698,14 +6138,18 @@ def e11_29_method(R):
             "the other two, m_k = D_k / (2 C_k): 9 C_k^2 / (4 (2 C_k - D_k)) under m_k 1/4, else C_k + D_k; that is, its S_k against section "
             "21b's bar at m_k) at most %s K/W, so each (Zself + 2 Zmut) at most %s K/W without m; THE LIMIT, each junction's baseline rise "
             "(the band and the neighbours' dummies on) plus R17's coupling times %s W plus %s W times its worst-split figure plus the bounds for "
-            "the pours' service loss and the heavy leads, at most %s K over the air, and the same read directly at each row's worst split; "
-            "R17's coupling at most %s K/W; step 14's bar at the largest Zmut over the largest Zself WITHDRAWN (the record's proposed budget, "
-            "%s %%, illustrates: a sum of %s K/W or under against %s K/W, %s K or under against %s K); the PTC's site (RT1's land at the drain "
+            "the pours' service loss (Zself times (23.93 A)^2 times the pours' measured largest paths) and the guarded leads' residual, at most "
+            "%s K over the air, and the same read directly at each row's worst split; R17's coupling at most %s K/W; step 14's bar at the "
+            "largest Zmut over the largest Zself WITHDRAWN; each line's U propagated through the reduction from the budget's sources (round 15, "
+            "section 25f; on a coupon at the design target %s %% on line 1, %s %% on line 2, %s K/W on R17's line; round 14's single 3.47 %% "
+            "withdrawn); the design target (round 15, section 25g, V2RF-m5): the two pours' largest paths summed at most %s mOhm (a layout "
+            "requirement), each Zself at most %s K/W, R17's coupling at most %s K/W, so line 2 passes with twice its U; the PTC's site (RT1's land at the drain "
             "tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard"
             % (fmt(R13_B["i_m"] * 1e3, 0), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["other"], 3),
                fmt(S["p"]["other"], 3), fmt(R13_B["slot"] * 1e6, 0), fmt(S9["i"], 2), "%.2f" % S24["K"]["bar_even"], "%.2f" % S21["bar_new"],
-               fmt(S24["K"]["p17"], 2), fmt(S24["K"]["p_even"], 3), fmt(S24["K"]["rise"], 2), fmt(S9["r17_allow"], 1), fmt(S24["u"] * 100, 2),
-               "%.2f" % S24["pass_bar"], "%.2f" % S21["bar_new"], fmt(S24["pass_rise"], 2), fmt(S24["K"]["rise"], 2)))
+               fmt(S24["K"]["p17"], 2), fmt(S24["K"]["p_even"], 3), fmt(S24["K"]["rise"], 2), fmt(S9["r17_allow"], 1),
+               fmt(R["S25"]["u_illus"][0] * 100, 1), fmt(R["S25"]["u_illus"][1] * 100, 1), fmt(R["S25"]["target"]["u"][2], 2),
+               fmt(R15_RP * 1e3, 2), fmt(R["S25"]["target"]["s"], 2), fmt(R["S25"]["z17_t"], 2)))
 
 
 # ============================================================================================ the output
@@ -6199,6 +6643,7 @@ def render(R):
     render_fix22(R, p)
     render_fix23(R, p)
     render_fix24(R, p)
+    render_fix25(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py")
     p("(R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three")
     p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist")
