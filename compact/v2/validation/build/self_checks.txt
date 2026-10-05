@@ -1,0 +1,5 @@
+chk_groove: Current top level object is empty.
+chk_rearbores: Current top level object is empty.
+chk_topbores: Current top level object is empty.
+chk_lid_body: Current top level object is empty.
+chk_rail_lip: NON-EMPTY

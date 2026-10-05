@@ -1,0 +1,11 @@
+# Reference CAD for the compact v2 enclosure
+
+Third-party models and drawings the enclosure was registered against, kept so the design can be checked against the same files later. **They are not covered by this repository's licence.** Each file belongs to its maker under that maker's terms and is kept here as reference material for the design record. If you hold the rights to one of these files and want it removed, open an issue and it goes.
+
+| Folder | Source | Used for |
+|---|---|---|
+| `lilygo-t-beam-supreme/` | LILYGO T-Beam Supreme: the board STEP (`T-Beam-Supreme-board.stp`), the V3.0 DXF, the V3.1 schematic PDF, and under `lilygo-shell/` the three STL files of LilyGO's own shell; from github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series at commit 5e2da3f. © LILYGO | the board's registration in the upper bay (PCB 1.0 mm, the tallest top-side part, the three side buttons' actuator faces, the OLED window), and the 18650 holder envelope, which the STEP does not carry and the shell does |
+| `groundcontrol-rockblock-9704/` | Ground Control RockBLOCK 9704-SMA: the mount STEP (Rev A) and the Maxtena helical antenna STEP (100-00003-02 Rev B); from docs.groundcontrol.com/iot/rockblock-9704/hardware. © Ground Control | the mount's slot height (1.70 +/-0.05, the datum for the printed rails' 1.80) and the antenna in the assembly view |
+| `meshes/` | `supreme_step.stl` and `rb9704_step.stl`: our tessellations of the two board STEP files | the only inputs the validation chain reads (`../validation/clash_check.py`, `../validation/build_and_check.sh`) and the board bodies drawn in the `.scad`'s assembly and exploded views |
+
+Two files of the delivered package are not duplicated here because this repository already holds them byte for byte: the board STEP `RockBLOCK-9704-SMA-2A.step` is [`v2/vendor/rockblock/RockBLOCK 9704-SMA-2A.step`](../../../v2/vendor/rockblock/) (52.7 MB, sha256 `44ec669bd683b7ee4d98f88535e0d98bf4a09cf471c74ae74a776c67088a85ce`), and the mount drawing `RB9704SMA-MOUNT-DIMS-REV-A.pdf` is [`v2/vendor/rockblock/rb9704-sma-dims.pdf`](../../../v2/vendor/rockblock/rb9704-sma-dims.pdf) (sha256 `968d7d5205517335db7ac8bd39f1852639b4683c01079573b93dd23a5184f343`). The package's own README names all of them under "Sources".
