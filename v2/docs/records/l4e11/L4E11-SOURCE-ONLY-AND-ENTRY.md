@@ -1582,8 +1582,8 @@ any final-board comparison and what requires a re-test. The first version's word
   their declared heat and positions); **airflow** (still air, or the mixers' flow where they reach the region, as installed);
   **enclosure coupling** (the plate section and its attachment; the air at 76.25 C in a chamber, or the rise referred to it);
   **the fixture's heavy leads** (round 14, V2R-m7: each heating lead's cross-section, length and joint, two thermocouples near its joint
-  giving the heat it carries; the heat leaving through a lead, times the junction's own Zself, is added to the limit's line, never
-  transferred).
+  giving the heat it carries; the heat leaving through a lead, times twice the junction's own Zself, is added to the limit's line,
+  never transferred).
 - **Measurement uncertainty:** the K-factor within 2 %, the heating power within 1 %, the air within 1 K, stated as an expanded uncertainty
   on Zself + 2 Zmut; a reading passes when it plus its ACHIEVED expanded uncertainty is under the limits of E11-29 (round 14, V2R-m4: the
   supplier's achieved U, not a fixed figure). Method (B) adds three terms (SESSION proposals, the supplier's to confirm): the threshold
@@ -2959,14 +2959,16 @@ exact readings, as V2R counted them.
 - **The heavy leads** (V2R-m7): each heating lead at least 4 mm2 (proposal), joined where board A's own current joins its pour, with two
   insulated thermocouples 20 mm apart near its joint: the heat it carries is q = k A dT / dx (copper's k, 390 W/(m K), a handbook value,
   ASSUMPTION). At 2 % of the hot FET's 1.513 W, 0.030 W, dT reads 0.39 K. A lead carrying more is redone (validity check V8), and the heat
-  leaving the coupon through any heavy lead, times the junction's own Zself, is added to lines 2 and 3: an upper bound, since in a passive
-  network no source raises junction k more per watt than FET k itself (the argument record l9stk gives for R17). The lead's own loss is
-  2.17 W/m at 22.46 A; heat flowing into the coupon is recorded and not credited.
+  leaving the coupon through any heavy lead, times TWICE the junction's own Zself, is added to lines 2 and 3. Removing a lead that
+  carries q from its joint raises junction k by q times the joint-to-junction impedance of the coupon without the lead, which is at most
+  Zself,k / (1 - g Z_jj) by reciprocity and the maximum principle (the argument record l9stk gives for R17; g the lead's conductance, Z_jj
+  the joint's own impedance): the factor is taken at 2, an ASSUMPTION that a lead takes at most half of any heat put in at its joint. The
+  lead's own loss is 2.17 W/m at 22.46 A; heat flowing into the coupon is recorded and not credited.
 - **The pours** (V2R-m7): one channel at a time carries the heating current through the pours' shared copper, so the heating cases carry
   0.333 (FETs at the allowance) to 0.881 (at 8 mOhm) of the service's loss there; item 4 of the procedure's setup recorded it and corrected
-  nothing. **Line 2 now adds the pours' service loss**: at most (23.93 A)^2 times the largest of the three pour paths' resistance (read
-  four-wire from each heavy lead's joint to each FET's taps; the pour network's transfer resistances are at most its largest path's),
-  times the junction's own Zself, crediting nothing for the share the cases already carry. For scale only, at an ASSUMED 0.2 mOhm path:
+  nothing. **Line 2 now adds the pours' service loss**: at most (23.93 A)^2 times the sum of the two pours' largest path resistances
+  (each pour read four-wire from its heavy lead's joint to each FET's tap on it; within one pour the transfer resistances are at most its
+  largest path's), times the junction's own Zself, crediting nothing for the share the cases already carry. For scale only, at an ASSUMED 0.2 mOhm path:
   0.115 W, 4.67 K at a Zself of 40.78 K/W. If this bound decides a verdict, the pours' own coupling can be measured instead (a run at the
   same current with two gate drives); that is an option for the supplier, not part of the procedure.
 - **The band** stops at each pour's joint on the coupon: its supply drives the band's own copper and its terminals join no pour beyond
