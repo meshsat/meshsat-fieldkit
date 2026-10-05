@@ -274,7 +274,7 @@ def compute():
     L["rest"] = PL.rest_top(S)
     L["band"] = PL.vgg_band(S, gnd_shift=PL.GND_SHIFT, rest_hi=L["rest"])
     L["band_drawn"] = PL.vgg_band(S, r83=10.0e3, rinj=1e18, gnd_shift=0.0, rest_hi=0.0)
-    L["dyn"], L["fall"], L["ramp_t"] = PL.dynamics(S)
+    L["dyn"], L["fall"], L["ramp_t"], L["exc"] = PL.dynamics(S)
     # the service overlap: the maker's 30 W design condition (an EXAMPLE at the printed minimum efficiency, 25 C, 12.5 V, VGG 5 V, full
     # drive) against the cap's least current; and the efficiency the cap's least needs at the module's terminals
     L["svc_i_ex"] = S["pa_ex_idd"]
@@ -318,6 +318,7 @@ def predicates(R):
     P["(c): the INA250's junction at the inside air and the cap's top is under its 125 C specified range (TYPICAL RthJA)"] = L["ina_tj"] < 125.0
     P["(c): the set point's ramp (3 tau) outlasts K1's 3 ms operate time, so the drive arrives under a low set point"] = L["ramp_t"] > 0.003
     P["selection: (c), PROVISIONAL on B-PA1 (F01's row is PROVISIONAL, never closed on printed limits)"] = R["sel"] == "c"
+    P["(c): every modelled excursion under a load step ends inside the breaker's 0.282 ms least timer (MODEL, TYPICAL plant)"] = max(t for _k, _d, t in L["exc"]) < 0.282e-3
     return P
 
 
@@ -386,10 +387,10 @@ def render(R):
     w("     test condition); R559 1k and C557 10 uF ramp it into PA_ISP, held at 0 V by Q551 (2N7002) while OUTLET_OK is high (the PA not keyed;")
     w("     OUTLET_OK = NOT (TR_APRS AND PA_EN) is U30's, drawn), so at each key the set point rises from zero (3 tau = %.0f ms, longer than K1's" % (L["ramp_t"] * 1e3))
     w("     3 ms operate time: the RF drive arrives under a low set point and the current approaches the cap from below); U553 TLV9062: half A")
-    w("     integrates PA_IMON against PA_ISP (R553 10k, C554 47 nF), R560 470k into its summing node winds it down while held, half B inverts it")
+    w("     integrates PA_IMON against PA_ISP (R553 10k, C554 10 nF), R560 470k into its summing node winds it down while held, half B inverts it")
     w("     about PA_MID, so PA_ILIM rests at 0 V under the set point; R558 1k into J_MEZZ1 pin 16 (AB_SPARE); U13's FB divider at 0.1 % (fb01's")
     w("     keyword) and U13's BIAS re-tapped from +13V8_PA to PA_OUT, ahead of R55. Board D: R57 110k from PA_ILIM into VGG_FB, R83 to 11.0k")
-    w("     (R83 // R57 = 10.0k), C76 1 nF, and R58 10k from VGG_SW to ground: U15 (an LDO) cannot sink, so VGG's fall needs a defined bleed")
+    w("     (R83 // R57 = 10.0k), C76 1 nF, and R58 470 Ohm from VGG_SW to ground: U15 (an LDO) cannot sink, so VGG's fall needs a defined bleed")
     w("   R55 CARRIES MORE THAN THE PA (cx44): U13's BIAS (pin 24) sits on +13V8_PA behind R55 as drawn and takes VCC's power above 8 V (LM5176")
     w("     SNVSAI1D 7.3.2): four CSD18510Q5B at VCC's %.2f V top, Qg read between the PRINTED %.0f nC (4.5 V) and %.0f nC (10 V) maxima (MODEL:" % (
         S["lm_vcc"][2], S["fet_qg45"] * 1e9, S["fet_qg10"] * 1e9))
@@ -428,8 +429,8 @@ def render(R):
         L["r55_w"], L["r55_t"], PL.T_AIR, PL.R55_RTH))
     w("     not a printed thermal resistance): least %.4f A (%.4f A initial); the cap's top and R55's other loads %.4f A: %.4f A under it" % (
         L["u13_min"], L["u13_min_init"], L["i_max"] + L["r55_other"], L["u13_min"] - L["i_max"] - L["r55_other"]))
-    w("     so in the steady state U13 stays in voltage regulation at the cap: L9P-F04 CORRECTED IN THE STEADY STATE on these bounded figures")
-    w("     (the dynamics are below and PROVISIONAL)")
+    w("     so in the steady state U13 stays in voltage regulation at the cap on these bounded figures: L9P-F04 PROVISIONAL with the selection")
+    w("     (the owner's part 21: the PA rail's rows depend on the PROVISIONAL service and dynamics)")
     w("   U13's output: VREF %.3f to %.3f V PRINTED, 162k over 10k; at 1 %% (as drawn, 100 ppm/K over 65 K ASSUMPTION) %.3f to %.3f V; at 0.1 %% 25" % (
         S["lm_vref"][0], S["lm_vref"][2], L["vpa_drawn"][0], L["vpa_drawn"][2]))
     w("     ppm/K (fb01's keyword, values unchanged) %.3f to %.3f V" % (L["vpa"][0], L["vpa"][2]))
@@ -463,11 +464,14 @@ def render(R):
         100 * L["svc_eta_need_hi"]))
     w("     VERDICT: the overlap is a BOUNDED PROVISIONAL CHOICE under the owner's part 19 (amendment 1, point 2), never a printed closure: the")
     w("     cap's band as above, the supplier's validation task B-PA1 (section 6) decides it; F01's row is PROVISIONAL on it")
-    w("   the loop's dynamics (cx44): compensation the integrator R553 C554 (0.47 ms), the inverter unity, the injection R82/R57 = %.2f;" % (PL.R82 / PL.R_INJ))
+    w("   the loop's dynamics (cx44): compensation the integrator R553 C554 (0.1 ms; 0.47 ms in round 2, shortened in 2b against the breaker's timer), the inverter unity, the injection R82/R57 = %.2f;" % (PL.R82 / PL.R_INJ))
     for k, fc, pm in L["dyn"]:
         w("     at a module slope dIDD/dVGG of %4.1f A/V (TYPICAL curves only) the crossover is %6.0f Hz and the phase margin %.1f deg against the" % (k, fc, pm))
         w("       INA250A2's TYPICAL %.0f kHz bandwidth and the 1 us harness filter (MODEL)" % (S["ina_bw"] / 1e3))
-    w("     VGG falls only by its loads (U15 cannot sink): with R58 at least %.2f V/ms at 4.2 V (MODEL, the module's own gate current not counted);" % (L["fall"] / 1e3))
+    w("     VGG falls only by its loads (U15 cannot sink): with R58 470 Ohm about %.2f V/ms at 4.2 V (MODEL, the module's own gate current not counted);" % (L["fall"] / 1e3))
+    w("     an excursion over the cap mid key-down (a load step) lasts about the VGG travel dI / slope over the lesser of the loop's slew and the")
+    w("       bleed's rate (MODEL, first order): " + "; ".join("%.0f A/V %.1f A %.3f ms" % (k, di, t * 1e3) for k, di, t in L["exc"]))
+    w("       against record l9stk's breaker timer, 0.282 ms least: every modelled corner inside it (MODEL on TYPICAL plant figures)")
     w("     saturation: half A rests at its top rail under the set point and leaves it at once, half B's output then rises from 0 V (no dead band);")
     w("     acquisition at each key: the set point ramps from zero (held by OUTLET_OK), so the current approaches the cap from below; settling is")
     w("     milliseconds against the 60 s key-down. NOT BOUNDED at the desk: a disturbance that raises the drain current over the cap mid key-down")
@@ -506,7 +510,8 @@ def render(R):
         100 * A["eta_need"][1][1]))
     w("     of them on the failing case). (b) cannot close the case. RANK: (c) first, (a) second.")
     w("   SELECTED: (c), PROVISIONAL: F01 / D-17's row reads PROVISIONAL on B-PA1 (feasibility of the 30 W service under the cap) and B-PA2")
-    w("     (the dynamics), never closed on printed limits; L9P-F04 is corrected in the steady state on bounded figures")
+    w("     (the dynamics), never closed on printed limits; its dependants read PROVISIONAL too: L9P-F04's closure claim, the PA rail's rows")
+    w("     (+13V8_PA and +13V8_PAJ at 6.93 A) and board D's loop (R57, R58, R83)")
     w("   WITHDRAWN (cx44): round 1's fallback \"a lower-VGG-wins RF loop for the service floor\": an RF loop cannot restore output while the current")
     w("     cap binds. If B-PA1 fails (the module needs more than the cap's least for 30 W), the ARRANGEMENT fails (amendment point 4), not a")
     w("     requirement: the remaining routes are (R1) raise U13's own limit and the cap with it (R55 lower, J_PA's lead and contacts re-rated: the")
@@ -529,19 +534,64 @@ def render(R):
     w("     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time)")
     w("   U5 (R-214, the rest voltage's fall in the 60 s) MISSING: the case at the cap has %.4f V of MODEL margin against it" % (V - L["bnd"]["need"]))
     w("")
-    w("7. CX44'S TEN BLOCKERS, EACH ANSWERED HERE (as received: inputs-20261004e/CX44-ASTRA-F01-SELECTION-AS-RECEIVED.md)")
-    for i_, t_ in enumerate((
-            "the 6 A example: labelled an EXAMPLE and its transfer an ASSUMPTION; the service claim withdrawn; B-PA1 a FEASIBILITY task (4, 6)",
-            "typical stress data: split from the PRINTED terms and carried whole as TYPICAL allowances; the printed-only band shown beside it (4)",
-            "reference loading, junction, supply range, amplifier common mode: a 1 mA preload, TJ under 85 C, +5V_D8IN's band, CMRR, AOL, IB, leakage (4)",
-            "R55's other loads: BIAS's gate drive bounded at %.4f A and moved off R55; the rest summed (%.3f mA) against a hot-shunt limit (4)" % (L["bias"][0], L["r55_other"] * 1e3),
-            "the dynamics: compensation, crossover and phase margin on labelled slopes, VGG's bleed, saturation and acquisition stated; B-PA2 (4, 6)",
-            "0.2981 V was a conditional margin: the new figure %.4f V is labelled MODEL with the loop's supply, the path and the scenarios (4)" % (V - L["bnd"]["need"]),
-            "the lower-VGG-wins fallback withdrawn; the remaining routes R1 and R2 named (5)",
-            "B-PA1 and B-PA2 rewritten with the cold end, terminal VDD, load mismatch, uncertainty and transfer (6)",
-            "the connected consequences listed with figures (4b)",
-            "the gauge bound's own assumptions kept labelled in 1 and 3; the rejection of (b) alone stands (3)")):
-        w("   %2d. %s" % (i_ + 1, t_))
+    w("7. CX44'S TEN FINDINGS, EACH DISPOSED OF (the owner's part 21: CORRECTED WITH DESK EVIDENCE, STILL AN OPEN DESIGN DEFECT, or GENUINELY")
+    w("   EXTERNAL with its effect on the candidate; as received: inputs/cx44-astra-f01-selection-as-received.md; the evidence is this output's")
+    w("   section named, l9t5_f01_drafts.out and the drafts)")
+    e = L["exc"]
+    worst_exc = max(t for _k, _d, t in e)
+    rows = [
+        ("1", "the 6 A example does not establish 30 W at the cap's least", "GENUINELY EXTERNAL",
+         "the module's drain current for 30 W over the kit's envelope is printed nowhere: the 6.00 A is labelled the maker's EXAMPLE and its "
+         "transfer an ASSUMPTION (4, THE 30 W SERVICE); effect: F01 / D-17 PROVISIONAL on B-PA1 (6); if B-PA1 reads over %.3f A less the lab's "
+         "uncertainty the arrangement fails and routes R1 or R2 are taken (5)" % L["i_min"]),
+        ("2", "typical stress data and an assumed bias in a printed band", "CORRECTED WITH DESK EVIDENCE",
+         "the terms split by label (l9t5_paloop.py cap(); 4, the INA250A2 gain and offset, the integrator): %.4f to %.4f A with the TYPICAL "
+         "allowances carried whole, %.4f to %.4f A on PRINTED terms alone; residual GENUINELY EXTERNAL: no printed maximum for the shunt's "
+         "stress rows; effect: the %.4f A under U13's least absorbs %.2f %% more gain drift" % (
+             L["i_min"], L["i_max"], L["i_min_printed_only"], L["i_max_printed_only"], L["u13_min"] - L["i_max"] - L["r55_other"],
+             100 * (L["u13_min"] - L["i_max"] - L["r55_other"]) / L["i_max"])),
+        ("3", "reference loading, junction, supply, common mode, loop residuals", "CORRECTED WITH DESK EVIDENCE",
+         "R552 549 Ohm gives a %.4f mA preload (SBVS351D's IOUT = 1 mA test condition); TJ under 85 C at the %.2f C air; +5V_D8IN 4.872 to 5.133 V; "
+         "the integrator's terms %.4f mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)" % (L["ref_preload"] * 1e3, PL.T_AIR, L["vos"] * 1e3)),
+        ("4", "R55 carries U13's BIAS and other loads", "CORRECTED WITH DESK EVIDENCE",
+         "BIAS bounded at %.4f A (4) and re-tapped to PA_OUT (apply_gen_sch_a_paloop.py edit 1; U13.24 on PA_OUT on the composed netlist; mutation "
+         "M06 fails, l9t5_f01_drafts.out 4); R55's other loads %.3f mA; R55 at %.1f C (printed TCR; its thermal resistance a MODEL); the cap's "
+         "top and the rest %.4f A under %.4f A. L9P-F04's closure claim reads PROVISIONAL with the selection (part 21)" % (
+             L["bias"][0], L["r55_other"] * 1e3, L["r55_t"], L["u13_min"] - L["i_max"] - L["r55_other"], L["u13_min"])),
+        ("5", "no compensation, settling or excursion bound", "CORRECTED WITH DESK EVIDENCE (MODEL)",
+         "the integrator 0.1 ms, crossover %.0f to %.0f Hz and phase margin %.1f to %.1f deg on TYPICAL slopes and bandwidth; R58 470 Ohm, VGG falls "
+         "about %.2f V/ms; the set point held and ramped at each key (3 tau %.0f ms, over K1's 3 ms); an excursion under a load step at most "
+         "%.3f ms on the model against the breaker's 0.282 ms; residual GENUINELY EXTERNAL: the module's slope and dynamics (B-PA2, l9stk "
+         "E-10); effect: the dynamic rows PROVISIONAL" % (
+             min(x[1] for x in L["dyn"]), max(x[1] for x in L["dyn"]), min(x[2] for x in L["dyn"]), max(x[2] for x in L["dyn"]), L["fall"] / 1e3,
+             L["ramp_t"] * 1e3, worst_exc * 1e3)),
+        ("6", "0.2981 V was a conditional margin", "CORRECTED WITH DESK EVIDENCE",
+         "relabelled MODEL; %.4f V with the loop's own %.3f W, covering %.2f mOhm more path or R_cell to %.4f Ohm (4); the case's own "
+         "assumptions (R_cell DC, the converters' efficiencies, U5) stay GENUINELY EXTERNAL; effect: R_cell 0.08 Ohm reads %.4f V, over 15.5 V, "
+         "a labelled scenario" % (V - L["bnd"]["need"], L["loop_w"], L["rx_cover"] * 1e3, L["rc_cover"], L["bnd_r08"]["need"])),
+        ("7", "a lower-VGG-wins RF loop cannot restore output", "CORRECTED WITH DESK EVIDENCE",
+         "the fallback withdrawn; the remaining routes R1 (U13's limit and the cap raised: the case allows %.4f A) and R2 (the PA rail at "
+         "12.5 V, VGG to 5 V) named (5)" % L["i_case_max"]),
+        ("8", "B-PA1 and B-PA2 decide feasibility, envelope and uncertainty missing", "CORRECTED WITH DESK EVIDENCE",
+         "rewritten (6): the cold end, terminal VDD %.2f and %.2f V, 3:1 load, the lab's k = 2 uncertainty in the pass limit, the transfer the "
+         "supplier's to justify; the facts they produce are GENUINELY EXTERNAL and F01 stays PROVISIONAL on them" % (L["vdd_term"][0], L["vdd_term"][1])),
+        ("9", "the connected consequences omitted", "CORRECTED WITH DESK EVIDENCE; texts owed",
+         "listed with figures (4b); STILL OPEN as texts owed by their owners (no circuit defect): IF-A-PA and IF-AD-HARNESS (Layer 5), the lost "
+         "PA_ILIM conductor's single-failure row (Layer 8), REQ-059's thermal row at %.2f W of DC input (Layer 7/8)" % L["p_max"]),
+        ("10", "the gauge bound's own assumptions", "CORRECTED WITH DESK EVIDENCE",
+         "kept labelled in 1 and 3 (the 32 K span, board P at the inside air, R10's self-heating from its power curve); board P's air "
+         "GENUINELY EXTERNAL until its own row; effect: none on the selection, (b) fails even with a perfect gauge (3)"),
+    ]
+    for no, what, state, ev in rows:
+        w("   %-3s %-66s %s" % (no, what, state))
+        txt = ev
+        while txt:
+            cut = txt[:126]
+            if len(txt) > 126:
+                cut = cut[:cut.rfind(" ")]
+            w("        %s" % cut)
+            txt = txt[len(cut):].lstrip()
+    R["dispo"] = rows
     w("")
     w("8. PREDICATES")
     for k, v in R["pred"].items():

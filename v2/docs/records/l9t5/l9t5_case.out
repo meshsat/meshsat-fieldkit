@@ -11,17 +11,25 @@ evidence bounds it).
    cell         v2/vendor/battery/samsung-35e-orbtronic.pdf  sha256 5ec577b952b9dc51
    chain        v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
    challenge    v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md  sha256 806c116b88d3a90f
+   csd18510     v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
    gen_a        v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
    gen_b        v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
    gen_d        v2/ecad/tools/gen_sch_d.py  sha256 54f17c8187d3bd19
    gen_p        v2/ecad/tools/gen_sch_p.py  sha256 740817ada5c8e14a
+   ina226       v2/vendor/ti/ti-ina226.pdf  sha256 c9b67f886d4a5241
+   ina250       v2/vendor/ti/held/ti-ina250-sbos511c.pdf  sha256 4690d49c0e10739b
    lcsc_fill    v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
+   lm5176       v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
+   paloop       v2/docs/records/l9t5/l9t5_paloop.py  sha256 a35a16c1cb39e2be
    ra30         v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    reqs         v2/ecad/tools/pcb_requirements.yaml  sha256 8c8e26858293d6f7
    rvpwr        v2/docs/records/rv-pwr/pwr_budget.py  sha256 469d0820b046ef6f
-   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 b76135f5f93495d9
+   sources      v2/docs/records/l9t5/inputs/SOURCES.txt  sha256 60c807573ff788f5
+   tlv758p      v2/vendor/ti/ti-tlv758p.pdf  sha256 4a86306d6734f1f4
+   tlv9062      v2/vendor/ti/ti-tlv9062-op-amp.pdf  sha256 18e67fa48b2a3c2e
    tps62933     v2/vendor/ti/ti-tps62933.pdf  sha256 16ec2eac43c7374e
    vh           v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
+   wsl          v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf  sha256 96c2dc89ae1e3039
    xt60         v2/vendor/battery/amass-xt60-spec-tme.pdf  sha256 c2cbb5962c1f37da
    the copies in inputs/ (filed as received, named with their sha256 in inputs/SOURCES.txt): v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md, v2/docs/records/l9t5/inputs/astra-challenge-f01-1.md
 
@@ -138,7 +146,7 @@ evidence bounds it).
      must stay up whenever +5V_DEV's must (the slots off, the hot stop, the recovery): the buck follows RAIL_EN as U7 does (L4-E11's U46 hold)
    L9P-F04: the PA rail at HIGH 8.1884 A against U13's 7.0957 A; with A1 it is the PA's capped figure (section 4), no shunt or lead change
 
-6. THE SELECTION
+6. THE SELECTION (rounds 1 to 4; SUPERSEDED for F01 / D-17 by P0-1's correction (c), section 8)
    F01 / D-17 on C-ALLTX rev 3: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,
      money or claim changes; the kit's VHF stage is a 30 W stage). It is the only approach that closes the case with the printed gauge
      bound; A2 and A3 close only the nominal deficit. Its acceptance: the loop's half-tolerance at most 0.5 dB over temperature (the case
@@ -172,3 +180,14 @@ evidence bounds it).
    C-DEV option (b)'s buck carries its load under its printed rating, and its limit under the VH's 10 A                             yes
    the PA rail at its present HIGH is over U13's loop minimum (L9P-F04, as the case row quotes)                                     yes
    C-DEV's quoted 7.472 A and 7.0957 A are the budget's                                                                             yes
+   P0-1: with the PA at the cap's top the case meets 15.5 V on the printed gauge bound and the dock contacts' maximum (MODEL, PROVISIONAL) yes
+   P0-1: the cap's top and R55's other loads stay under U13's own loop minimum with R55 hot (L9P-F04, PROVISIONAL)                  yes
+
+8. P0-1 (5 October 2026, record l9t5 Slot A): THE CASE WITH CORRECTION (c), THE PA DRAIN-CURRENT CAP, PROVISIONAL (l9t5_f01.out; it
+   supersedes section 6's A1 selection; Astra's cx44 read round 1 NOT SUPPORTED, round 2 answers it; the 30 W service under the cap is
+   the supplier's feasibility task B-PA1 and the dynamics B-PA2, so F01 / D-17 reads PROVISIONAL, never closed on printed limits)
+   the cap (l9t5_paloop.py, MODEL on PRINTED terms with TYPICAL allowances): 6.3522 to 6.9257 A; U13's BIAS on PA_OUT; U13's own loop least
+     7.0338 A with R55 hot: 0.1077 A of room (L9P-F04 PROVISIONAL with the selection)
+   the PA's DC input at most 14.040 V x 6.9257 A = 97.24 W (it was 113.0 W); the loop's own supply 0.018 W at VBAT
+   C-ALLTX rev 3 at 15.5 V rest, 18 A indicated: nominal need 14.6183 V; with the gauge's uncalibrated 0.8036 A (true 17.1964 A) and the dock
+     contacts' maximum: need 15.1307 V: MEETS against REQ-018's 15.5 V, margin 0.3693 V (MODEL; R_cell 0.060 Ohm the case's ASSUMPTION; PROVISIONAL)

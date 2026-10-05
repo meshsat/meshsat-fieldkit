@@ -21,7 +21,7 @@ tasks B-PA1 and B-PA2): the PA's drain current is the controlled quantity.
          holds PA_ISP at 0 V while OUTLET_OK is high (U30: OUTLET_OK = NOT (TR_APRS AND PA_EN), the PA not keyed), so at each key the set
          point rises from zero (10 ms) and the current approaches the cap from below, the RF drive arriving through K1 (3 ms at most)
          under a low set point
-  U553   TLV9062IDGK (TI SBOS839N, board D's U8): half A integrates PA_IMON against PA_ISP (R553 10.0k, C554 47 nF C0G); R560 470k from
+  U553   TLV9062IDGK (TI SBOS839N, board D's U8): half A integrates PA_IMON against PA_ISP (R553 10.0k, C554 10 nF C0G, 0.1 ms); R560 470k from
          +5V_D8IN into its summing node winds it down while the set point is held; half B inverts its output about PA_MID (R554, R555
          10.0k; R556 over R557 10.0k from +5V_D8IN, C556 100 nF), so PA_ILIM_A rests at 0 V while the current is under the set point;
          R558 1k into PA_ILIM, J_MEZZ1 pin 16 (AB_SPARE until now) and TP27, to board D's VGG_FB through R57 (apply_gen_sch_d_paloop.py,
@@ -86,7 +86,7 @@ _PARTS = ('FP.update({"TSSOP16": "Package_SO:TSSOP-16_4.4x5mm_P0.65mm", "VSSOP8"
           'ic("U553", 8, "TLV9062IDGK dual op amp: A integrates the PA current against PA_ISP, B inverts it about PA_MID (F01)", "VSSOP8",\n'
           '   {"1": "PA_INTO", "2": "PA_INTN", "3": "PA_ISP", "4": "GND", "5": "PA_MID", "6": "PA_INVN", "7": "PA_ILIM_A", "8": "+5V_D8IN"})\n'
           'c("C555", "100n", "+5V_D8IN", "GND", bypass=("U553", "8"))\n'
-          'r("R553", "10.0k 0.1% 25ppm", "PA_IMON", "PA_INTN"); c("C554", "47n 50V C0G", "PA_INTN", "PA_INTO"); r("R560", "470k", "+5V_D8IN", "PA_INTN")\n'
+          'r("R553", "10.0k 0.1% 25ppm", "PA_IMON", "PA_INTN"); c("C554", "10n 50V C0G", "PA_INTN", "PA_INTO"); r("R560", "470k", "+5V_D8IN", "PA_INTN")\n'
           'r("R554", "10.0k 0.1% 25ppm", "PA_INTO", "PA_INVN"); r("R555", "10.0k 0.1% 25ppm", "PA_INVN", "PA_ILIM_A")\n'
           'r("R556", "10.0k 0.1% 25ppm", "+5V_D8IN", "PA_MID"); r("R557", "10.0k 0.1% 25ppm", "PA_MID", "GND"); c("C556", "100n", "PA_MID", "GND")\n'
           'r("R558", "1k", "PA_ILIM_A", "PA_ILIM")\n')

@@ -15,12 +15,12 @@ The loop (correction (c) of F01 / D-17):
            to ground; U552 TLV758P set point PA_ISET (R551 2.80k over R552 549 Ohm, 0.1 %, a 1.0 mA preload); R559 1k and C557 10 uF
            into PA_ISP, the integrator's set point, held at 0 V by Q551 (2N7002) while OUTLET_OK is high (the PA not keyed:
            OUTLET_OK = NOT (TR_APRS AND PA_EN), U30), so at each key the set point rises from zero with 10 ms; U553 TLV9062: half A
-           integrates PA_IMON against PA_ISP (R553 10.0k, C554 47 nF), R560 470k from +5V_D8IN into its summing node makes the held
+           integrates PA_IMON against PA_ISP (R553 10.0k, C554 10 nF), R560 470k from +5V_D8IN into its summing node makes the held
            state wind down; half B inverts it about PA_MID (R554 to R557), so PA_ILIM_A rests at 0 V while the current is under the
            set point; R558 into J_MEZZ1 pin 16 (AB_SPARE renamed PA_ILIM); U13's FB divider to 0.1 % (fb01's keyword); U13's BIAS
            re-tapped to PA_OUT.
   board D  J_HARN1 pin 16 PA_ILIM; C76 1 nF; R57 110k into VGG_FB; R83 10.0k to 11.0k (R83 // R57 = 10.0k: the band at rest is the
-           drawn one); R58 10k from VGG_SW to ground, the bleed that gives VGG a defined fall rate with C62.
+           drawn one); R58 470 Ohm from VGG_SW to ground, the bleed that gives VGG a defined fall rate with C62.
 """
 import math
 import os
@@ -44,12 +44,12 @@ SHEETS = {
 G_SENSE = 0.5                      # V/A, INA250A2
 R_SET_TOP, R_SET_BOT = 2.80e3, 549.0      # R551, R552: 0.1 % 25 ppm/K; 0.55 V / 549 = 1.0 mA preload (SBVS351D's IOUT = 1 mA test)
 R_SS, C_SS = 1e3, 10e-6            # R559, C557: the set point's ramp at each key, 10 ms
-R_INT, C_INT = 10e3, 47e-9         # R553, C554: the integrator, 0.47 ms
+R_INT, C_INT = 10e3, 10e-9         # R553, C554: the integrator, 0.1 ms (round 2b: an excursion corrected inside the breaker's 0.282 ms)
 R_BIAS = 470e3                     # R560: +5V_D8IN into the summing node (the held state winds down)
 R_INV = 10e3                       # R554 to R557, 0.1 % 25 ppm/K
 R_OUT = 1e3                        # R558
 R83_NEW, R_INJ, R82 = 11.0e3, 110e3, 71.5e3   # board D
-R_BLEED = 10e3                     # board D's R58 on VGG_SW
+R_BLEED = 470.0                    # board D's R58 on VGG_SW (round 2b: VGG falls at about 4.1 V/ms at 4.2 V with C62)
 C62 = 2.2e-6                       # board D's U15 output capacitor (nominal)
 C_FILT = 1e-9                      # board D's C76
 U13_RT, U13_RB = 162e3, 10e3
@@ -92,43 +92,43 @@ def read_sheets():
     S["ina_rev"] = _need(t, r"(SBOS511C)", "the INA250 sheet's number").group(1)
     S["ina_gerr"] = float(_need(t, r"System gain error\(6\)\s+±([\d.]+)%", "INA250 gain error over temperature").group(1)) / 100
     S["ina_ios"] = float(_need(t, r"INA250A2, ISENSE = 0 A\s+±([\d.]+)\s+±([\d.]+)", "INA250A2 offset current").group(2)) * 1e-3
-    S["ina_dios"] = float(_need(t, r"RTI versus temperature\s+TA = –40°C to 125°C\s+(\d+)\s+(\d+)\s+μA/°C", "INA250 offset drift").group(2)) * 1e-6
-    S["ina_psr"] = float(_need(t, r"PSR\s+VS = 2\.7 V to 36 V, TA = –40°C to 125°C\s+±([\d.]+)\s+±([\d.]+)\s+mA/V", "INA250 PSR").group(2)) * 1e-3
+    S["ina_dios"] = float(_need(t, r"RTI versus temperature\s+TA = \u201340°C to 125°C\s+(\d+)\s+(\d+)\s+μA/°C", "INA250 offset drift").group(2)) * 1e-6
+    S["ina_psr"] = float(_need(t, r"PSR\s+VS = 2\.7 V to 36 V, TA = \u201340°C to 125°C\s+±([\d.]+)\s+±([\d.]+)\s+mA/V", "INA250 PSR").group(2)) * 1e-3
     S["ina_cmr"] = float(_need(t, r"INA250A2, VIN\+ = 0 V to 36 V,\s*\n\s*(\d+)\s+(\d+)", "INA250A2 CMR").group(1))
     S["ina_rsh"] = float(_need(t, r"Shunt resistance\s+([\d.]+)\s+(\d)\s+([\d.]+)\s*\n\s*RSHUNT\s+onboard amplifier", "INA250 shunt").group(2)) * 1e-3
-    S["ina_rpkg"] = float(_need(t, r"Package resistance\s+IN\+ to IN–\s+([\d.]+)", "INA250 package resistance").group(1)) * 1e-3
-    S["ina_imax"] = float(_need(t, r"TA = –40°C to 85°C\s+±(\d+)\s+A", "INA250 continuous current").group(1))
+    S["ina_rpkg"] = float(_need(t, r"Package resistance\s+IN\+ to IN\u2013\s+([\d.]+)", "INA250 package resistance").group(1)) * 1e-3
+    S["ina_imax"] = float(_need(t, r"TA = \u201340°C to 85°C\s+±(\d+)\s+A", "INA250 continuous current").group(1))
     S["ina_rja"] = float(_need(t, r"RθJA\s+Junction-to-ambient thermal resistance\s+([\d.]+)", "INA250 RthJA").group(1))
-    S["ina_iq"] = float(_need(t, r"IQ\s+Quiescent current\s+TA = –40°C to 125°C\s+(\d+)\s+(\d+)\s+μA", "INA250 IQ").group(2)) * 1e-6
+    S["ina_iq"] = float(_need(t, r"IQ\s+Quiescent current\s+TA = \u201340°C to 125°C\s+(\d+)\s+(\d+)\s+μA", "INA250 IQ").group(2)) * 1e-6
     S["ina_ib"] = float(_need(t, r"IB\s+Input bias current\s+IB\+, IB-, ISENSE = 0 A\s+±(\d+)\s+±(\d+)\s+μA", "INA250 IB").group(2)) * 1e-6
     S["ina_bw"] = float(_need(t, r"INA250A2, CL = 10 pF\s+(\d+)", "INA250A2 bandwidth (TYPICAL)").group(1)) * 1e3
-    S["ina_stress"] = [float(x) / 100 for x in re.findall(r"(?:ISENSE = 30 A for 5 seconds|500 cycles|260°C solder, 10 s|1000 hours, TA = 150°C|24 hours, TA = –65°C)\s+±([\d.]+)%", t)]
+    S["ina_stress"] = [float(x) / 100 for x in re.findall(r"(?:ISENSE = 30 A for 5 seconds|500 cycles|260°C solder, 10 s|1000 hours, TA = 150°C|24 hours, TA = \u201365°C)\s+±([\d.]+)%", t)]
     if len(S["ina_stress"]) != 5:
         raise SystemExit("l9t5_paloop: the INA250's five shunt stress rows")
     _need(t, r"System gain error does not include the\s*\n\s*stress related characteristics", "INA250 note 6")
-    pins = {"IN–": "1, 2, 3", "IN\\+": "14, 15, 16", "OUT": "9", "REF": "7", "SH–": "4", "SH\\+": "13", "VIN–": "5", "VIN\\+": "12", "VS": "10"}
+    pins = {"IN\u2013": "1, 2, 3", "IN\\+": "14, 15, 16", "OUT": "9", "REF": "7", "SH\u2013": "4", "SH\\+": "13", "VIN\u2013": "5", "VIN\\+": "12", "VS": "10"}
     for nm, nos in pins.items():
         _need(t, r"^\s*%s\s+%s\s" % (nm, re.escape(nos)), "INA250 pin %s" % nm)
     _need(t, r"^\s*GND\s+6, 8, 11\s", "INA250 GND pins")
     t = _pdf("tlv758p")
     S["ref_rev"] = _need(t, r"(SBVS351D)", "the TLV758P sheet's number").group(1)
     S["ref_vfb"] = float(_need(t, r"VFB\s+Feedback voltage\s+TJ = 25°C\s+([\d.]+)\s+V", "TLV758P VFB").group(1))
-    S["ref_acc"] = float(_need(t, r"Output accuracy\(1\)\s+–40°C ≤ TJ ≤ \+85°C\s+–(\d+)%\s+(\d+)%", "TLV758P accuracy").group(2)) / 100
-    S["ref_acc125"] = float(_need(t, r"–40°C ≤ TJ ≤ \+125°C\s+–([\d.]+)%\s+([\d.]+)%", "TLV758P accuracy to 125 C").group(2)) / 100
+    S["ref_acc"] = float(_need(t, r"Output accuracy\(1\)\s+\u201340°C ≤ TJ ≤ \+85°C\s+\u2013(\d+)%\s+(\d+)%", "TLV758P accuracy").group(2)) / 100
+    S["ref_acc125"] = float(_need(t, r"\u201340°C ≤ TJ ≤ \+125°C\s+\u2013([\d.]+)%\s+([\d.]+)%", "TLV758P accuracy to 125 C").group(2)) / 100
     _need(t, r"VIN = VOUT\(NOM\) \+ 0\.5 V or 1\.5 V \(whichever is greater\), IOUT = 1 mA,", "TLV758P test condition IOUT = 1 mA")
     S["ref_line"] = float(_need(t, r"Line regulation\s+VOUT\(NOM\) \+ 0\.5 V\(2\) ≤ VI N ≤ 6\.0 V\s+(\d+)\s+([\d.]+)\s+mV", "TLV758P line regulation").group(2)) * 1e-3
     S["ref_ifb"] = float(_need(t, r"IFB\s+Feedback pin current\s+([\d.]+)\s+([\d.]+)\s+µA", "TLV758P IFB").group(2)) * 1e-6
-    S["ref_ignd"] = float(_need(t, r"IGND\s+Ground current\s+–40°C ≤ TJ ≤ \+125°C\s+(\d+)\s+µA", "TLV758P IGND").group(1)) * 1e-6
+    S["ref_ignd"] = float(_need(t, r"IGND\s+Ground current\s+\u201340°C ≤ TJ ≤ \+125°C\s+(\d+)\s+µA", "TLV758P IGND").group(1)) * 1e-6
     S["ref_cout_min"] = float(_need(t, r"COUT\s+Output capacitor\(1\)\s+(\d+)\s+(\d+)\s+µF", "TLV758P COUT").group(1)) * 1e-6
     t = _pdf("tlv9062")
     S["oa_rev"] = _need(t, r"(SBOS839N)", "the TLV906x sheet's number").group(1)
-    S["oa_vos"] = float(_need(t, r"VS = 5V, TA = –40°C to 125°C\s+±([\d.]+)\s*\n", "TLV9062 VOS over temperature").group(1)) * 1e-3
-    S["oa_psrr"] = float(_need(t, r"PSRR\s+Power-supply rejection ratio\s+VS = 1\.8V – 5\.5V, VCM = \(V–\)\s+±([\d.]+)\s+±([\d.]+)\s+µV/V", "TLV9062 PSRR").group(2)) * 1e-6
-    S["oa_cmrr"] = float(_need(t, r"VS = 5\.5V, \(V–\) – 0\.1V < VCM < \(V\+\) – 1\.4V,\s*\n\s*(\d+)\s+(\d+)", "TLV9062 CMRR").group(1))
+    S["oa_vos"] = float(_need(t, r"VS = 5V, TA = \u201340°C to 125°C\s+±([\d.]+)\s*\n", "TLV9062 VOS over temperature").group(1)) * 1e-3
+    S["oa_psrr"] = float(_need(t, r"PSRR\s+Power-supply rejection ratio\s+VS = 1\.8V \u2013 5\.5V, VCM = \(V\u2013\)\s+±([\d.]+)\s+±([\d.]+)\s+µV/V", "TLV9062 PSRR").group(2)) * 1e-6
+    S["oa_cmrr"] = float(_need(t, r"VS = 5\.5V, \(V\u2013\) \u2013 0\.1V < VCM < \(V\+\) \u2013 1\.4V,\s*\n\s*(\d+)\s+(\d+)", "TLV9062 CMRR").group(1))
     S["oa_ib_typ"] = float(_need(t, r"IB\s+Input bias current\s+±([\d.]+)\s+pA", "TLV9062 IB").group(1)) * 1e-12
     S["oa_swing"] = float(_need(t, r"Voltage output swing from supply\s+VS = 5\.5V, RL = 10kΩ\s+(\d+)", "TLV9062 output swing").group(1)) * 1e-3
-    S["oa_iq"] = float(_need(t, r"VS = 5\.5V, IO = 0mA, TA = –40°C to 125°C\s+(\d+)", "TLV9062 IQ").group(1)) * 1e-6
-    S["oa_aol"] = float(_need(t, r"VS = 5\.5V, \(V–\) \+ 0\.05V < VO < \(V\+\) – 0\.05V,\s*\n\s*(\d+)\s+(\d+)", "TLV9062 AOL").group(1))
+    S["oa_iq"] = float(_need(t, r"VS = 5\.5V, IO = 0mA, TA = \u201340°C to 125°C\s+(\d+)", "TLV9062 IQ").group(1)) * 1e-6
+    S["oa_aol"] = float(_need(t, r"VS = 5\.5V, \(V\u2013\) \+ 0\.05V < VO < \(V\+\) \u2013 0\.05V,\s*\n\s*(\d+)\s+(\d+)", "TLV9062 AOL").group(1))
     t = _pdf("lm5176")
     S["lm_vref"] = tuple(float(x) for x in _need(t, r"VREF\s+Feedback reference voltage\s+FB = COMP\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "LM5176 VREF").groups())
     S["lm_ibfb"] = float(_need(t, r"IBIAS\(FB\)\s+Feedback pin input bias current\s+FB in regulation\s+(\d+)\s+nA", "LM5176 FB bias").group(1)) * 1e-9
@@ -288,4 +288,11 @@ def dynamics(S, km=(3.0, 10.0, 30.0)):
         out.append((k, fc, 90.0 - lag))
     fall = 4.2 / R_BLEED / C62                  # V/s at VGG 4.2 V, the bleed alone (no module gate current counted)
     ramp_t = 3 * R_SS * C_SS
-    return out, fall, ramp_t
+    # an excursion over the cap (a load step mid key-down): VGG must fall dI / km; it falls at the lesser of the integrator's slew seen
+    # at VGG (R82/R57 x G x dI / (R553 C554)) and the bleed's rate; the time is the travel over that rate (MODEL, first order)
+    exc = []
+    for k in km:
+        for di in (0.5, 1.0, 2.7):
+            rate = min((R82 / R_INJ) * G_SENSE * di / (R_INT * C_INT), fall)
+            exc.append((k, di, di / k / rate))
+    return out, fall, ramp_t, exc

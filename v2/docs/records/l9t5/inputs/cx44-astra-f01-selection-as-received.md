@@ -1,6 +1,6 @@
 # cx44, Astra's advisory challenge of the F01 / D-17 selection (c) on fnd/p0pwr 8c7c335f: AS RECEIVED (saved 15:53 CEST, 5 Oct 2026)
 
-An AI review (GPT-6 Astra at xhigh, read-only), the advisory challenge of P0-1's selection before drafting; it accepts nothing and is kept as given. Run dir: /home/claude-runner/worktrees/meshsat-fieldkit/_runs/codex/cx44-f01-selection/20261005T134057Z-1974083/
+An AI review (GPT-6 Astra at xhigh, read-only), the advisory challenge of P0-1's selection before drafting; it accepts nothing and is kept as given. Run dir: <worktrees>/_runs/codex/cx44-f01-selection/20261005T134057Z-1974083/
 
 ```json
 {

@@ -1,0 +1,82 @@
+l9t5_f01_drafts: P0-1 part 1c, the F01 / D-17 drafts (the PA drain-current cap, round 2 of the selection) composed, regenerated, read and
+judged (record l9t5, Slot A, MESHSAT-1357, 5 October 2026). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measured.
+A netlist reading is not electrical qualification; the electrical acceptance is section 5, and F01 / D-17 stays PROVISIONAL on the
+supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).
+
+0. PINS (sha256/16  path)
+   86fb99427e51e2ed v2/docs/records/l9t5/apply_gen_sch_a_paloop.py
+   06a2cdb0d008d275 v2/docs/records/l9t5/apply_gen_sch_d_paloop.py
+   9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
+   a35a16c1cb39e2be v2/docs/records/l9t5/l9t5_paloop.py
+   a0157062e5d8f460 v2/docs/records/l9t5/l9t5_f01.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+   54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
+   6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   a2d48972d171aad1 v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+
+1. THE OLD STATES (they must not read DRAWN)
+   the tree's committed board A netlist: NOT DRAWN (U551 is absent (the drawn state: J_PA on +13V8_PA, VGG open loop))
+   the tree's committed board D netlist: NOT DRAWN (R57 is absent (the drawn state: VGG open loop at 4.30 to 4.68 V))
+   board A with every other pending draft, without this one: 23 steps OK, regenerated rc 0: NOT DRAWN
+
+2. EACH DRAFT ALONE ON THE TREE'S GENERATOR, AND BOARD A'S WITH ITS ONE DEPENDENCY
+   board A alone: REFUSED as it must: it needs record l8r2's fb01 keyword (apply_gen_sch_a_paloop: the target has no rfb_tol="1%" (record l8r2's fb01 must be applied first for rfb_tol); refusing)
+   board A after fb01 alone: steps l8r2/fb01 rc 0, l9t5/paloop rc 0; regenerated rc 0; DRAWN
+   board D alone: steps l9t5/paloop rc 0; regenerated rc 0; DRAWN
+
+3. THE FULL COMPOSITION (L4-E9's change-list order with each author's placement; this draft after record l8r2's gndrtn, before
+   d8dec31's mainpb; board D after d8dec31's ptt, before Layer 6's two)
+   board A: 24 steps every step OK; regenerated rc 0, 849 parts, 0 unplaced, intent written True
+     F01 check: DRAWN (U551, U552, U553 and the harness conductor as drafted; set point 6.7102 A)
+   board D: 4 steps every step OK; regenerated rc 0, 262 parts, 0 unplaced, intent written True
+     F01 check: DRAWN (J_HARN1 pin 16, R57, C76, R58 and R83 as drafted)
+   the harness pair J_MEZZ1.16 / J_HARN1.16: HOLDS (PA_ILIM / PA_ILIM)
+   mainpb's next-free picks on the full composition: R603, C607 (V6 read R603 and C607 before this draft: unmoved)
+
+4. MUTATIONS OF THE FULL COMPOSITION (each must not read DRAWN)
+   M01 board A, the sense bypassed: J_PA back on +13V8_PA: the generator REFUSES (intent: rail +13V8_PAJ names load J_PA, which is not on that net)
+   M02 board A, positive feedback: the integrator's inputs swapped: FAIL: U553.2 on 'PA_ISP', wanted PA_INTN
+   M03 board A, the set point raised: R552 549 to 499 Ohm (7.38 A): FAIL: the set point from R551 2.80k 0.1% 25ppm and R552 499 0.1% 25ppm is 7.2723 A, not l9t5_paloop.py's
+   M04 board A, round 1's divider: no preload (51.1k over 10.0k): FAIL: the set point from R551 51.1k 0.1% 25ppm and R552 10.0k 0.1% 25ppm is 6.7210 A, not l9t5_paloop.py's
+   M05 board A, U13's divider left at 1 %: FAIL: R50 (U13's FB divider) is '162k 1%', not 0.1 percent
+   M06 board A, U13's BIAS left behind R55: FAIL: U13.24 on '+13V8_PA', wanted PA_OUT
+   M07 board A, the hold lost: Q551's gate on ground: FAIL: Q551.1 on 'GND', wanted OUTLET_OK
+   M08 board D, the injection on U15's output: R57 to VGG_SW: FAIL: R57 is not between PA_ILIM and VGG_FB: ['PA_ILIM', 'VGG_SW']
+   M09 board D, R83 left at 10.0k (the band moves up): FAIL: VGG's nominal at rest is 4.8400 V, not the drawn 4.4825 V (R82 71.5k 1%, R83 10.0k 1%, R57 110k 1%)
+   M10 board D, the bleed lost: R58 to PA_ILIM: FAIL: R58 is not between VGG_SW and GND: ['PA_ILIM', 'VGG_SW']
+   M11 board D, the harness pin left on AB_SPARE: FAIL: J_HARN1.16 on 'AB_SPARE', wanted PA_ILIM
+   11 of 11 mutations fail
+
+5. THE ELECTRICAL ACCEPTANCE ON C-ALLTX REV 3 (the values read from the composed netlists; labels as l9t5_f01.out section 4)
+   the set point from R551 and R552 on the netlist: 6.7102 A nominal (no R560 term) ; the cap 6.3522 to 6.9257 A (MODEL on PRINTED terms with
+     TYPICAL allowances); U13's average loop least 7.0338 A with R55 hot: the cap's top and R55's other loads 0.1077 A under it (BIAS on
+     PA_OUT on the netlist)
+   THE CASE at 15.5 V rest and the indicated 18 A, every transmitter keyed, fans running, the standby card off, the other loads typical,
+     the gauge's uncalibrated 0.8036 A and the dock contacts' maximum, the PA at the cap's top 97.24 W and the loop's own 0.018 W: need 15.1307 V:
+     MEETS 15.5 V on the MODEL, margin 0.3693 V (nominal 14.6183 V); no other load reduced (the budget's loads unchanged but the PA's);
+     F01 / D-17 PROVISIONAL (below), never closed on printed limits
+   the rails in regulation through the 60 s: U13 (the PA rail) at the cap stays under its own current loop's least (above); every
+     other rail carries the case's own load (the budget's model: unchanged); +5V_D8IN carries 3.20 mA more, under its 2.0 A declared peak
+   board D's VGG from R82 71.5k 1%, R83 11.0k 1% and R57 110k 1% on the netlist: at rest 4.202 / 4.4825 / 4.743 V (the drawn 4.297 / 4.4825 / 4.675 V), the top under
+     the module's VGG<5V; the loop's authority 1.483 V
+   EMCON and the key, read on the netlists: U15's EN on PA_KEY; PA_ILIM's only source U553 through R558 (its supply +5V_D8IN); R57 enters
+     U15's feedback node only; Q551's gate on OUTLET_OK (the set point held while the PA is not keyed)
+   PROVISIONAL (the owner's part 19): the 30 W service under the cap's least 6.3522 A (B-PA1, a feasibility task); the dynamics (B-PA2 and
+     record l9stk's E-10); the case's own assumptions (R_cell 0.060 Ohm, the converters' declared and extrapolated efficiencies, U5)
+
+6. THE DECLARATIONS THE DRAFT WRITES, HELD TO THEIR BASIS
+   +13V8_PA: peak 6.93 A (the cap's top 6.9257 A rounded up to 0.01 A: HOLDS)
+   +13V8_PAJ: peak 6.93 A (the cap's top 6.9257 A rounded up to 0.01 A: HOLDS)
+
+7. THE PREDICATES
+   the tree's netlists read NOT DRAWN on both boards                                                                        yes
+   board A without this draft reads NOT DRAWN                                                                               yes
+   both boards compose with every pending draft and read DRAWN                                                              yes
+   the harness pair holds                                                                                                   yes
+   every mutation fails                                                                                                     yes
+   the case at the cap's top passes 15.5 V on the bounded terms (MODEL)                                                     yes
+   the cap's top and R55's other loads stay under U13's least                                                               yes
+   board D's VGG top at rest stays under 5 V and the authority under 3.5 V                                                  yes
+
+l9t5_f01_drafts: done
