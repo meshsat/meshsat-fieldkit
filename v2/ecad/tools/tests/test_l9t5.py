@@ -418,6 +418,7 @@ T10 = os.path.join(REC, "l9t5_t10.py")
 T10_OUT = os.path.join(REC, "l9t5_t10.out")
 PRE = {b: os.path.join(REC, "apply_gen_sch_%s_iocpre.py" % b) for b in "ab"}
 SHDN = os.path.join(REC, "apply_gen_sch_b_canshdn.py")
+GUARD_B = os.path.join(REC, "apply_gen_sch_b_iocguard.py")
 CONTRACT_DRAFT = os.path.join(REC, "apply_hw_fw_contract_t10.py")
 ROUND5 = os.path.join(REC, "T10-ROUND5.md")
 CM5 = os.path.join(REC, "l9t5_cm5.py")
@@ -446,7 +447,7 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 21, "the T10 script")
+    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 26, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "Round 4 was the first attempt at this correction",
                "round 5 is the second round on the same correction"):
@@ -820,7 +821,7 @@ def t_round5_t10_the_shdn_draft_composes_and_the_contract_draft_applies_once():
         assert r.returncode == 0, r.stderr.decode()[-300:]
         got = open(cp, encoding="utf-8").read()
         ids = [l.split(" | ")[0].lstrip("| ") for l in got.splitlines() if re.match(r"\| FW-B\d\d \|", l)]
-        assert ids == ["FW-B%02d" % i for i in range(1, 22)]
+        assert ids == ["FW-B%02d" % i for i in range(1, 23)]
         assert "at most 2 % of every 100 ms window" in got and "FDCAN_CCCR.DAR = 1" in got and "| V-B21 | FW-B21 |" in got
         assert subprocess.run([sys.executable, "-B", CONTRACT_DRAFT, cp, "--write"], capture_output=True).returncode == 3
         assert open(page, "rb").read() == before
@@ -838,7 +839,8 @@ def t_round5_the_page_carries_the_outputs_figures():
     assert len(figs) >= 30
     missing = [f for f in figs if f not in out]
     assert not missing, "the page's figures not in the output: %s" % missing
-    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "Residual B7b (L9T5-D5)", "SESSION L9T5-D7", "L9T5-F22",
+    # round 6 (cx45 Q3 (d)): L9T5-D5 is withdrawn, so the page states the residual and the withdrawal, not the tolerance
+    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "**Residual B7b:**", "(round 6: L9T5-D5 WITHDRAWN", "SESSION L9T5-D7", "L9T5-F22",
                "covered by CON-004", "the drop's worst corner"):
         assert s_ in page, s_
     for s_ in ("L9T5-F13: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V", "L9T5-F16: A DRAFTED CORRECTION",
@@ -1128,11 +1130,55 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     assert "J_PA and its 16 AWG lead" in text and "PROVISIONAL with L8R2-F43's vendor task" in text
 
 
+def t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved():
+    """The check cx45's Q3, round 6 (l9t5_t10.out 10j), re-solved from the drafts' own values and the printed rows: the schedule's dominant
+    bound inside the share; the transmit-share limiter's threshold window (4.7 to 12.3 % of dominant share) clear of the legitimate 2 % and
+    under a controller babbler's least 15 %; the rail trip's window (0.2183 to 0.2452 A) over every served state; the LDO at the trip's
+    maximum inside 125 C; the contract draft carrying FW-B22 and revision V only at 4.01 V; the containment delta's checks in the output."""
+    m = _mod(T10, "l9t5_test_t10r6")
+    gv = m.guard_values()
+    # the schedule: six 135-bit frames counted dominant, twelve acknowledgement bits, against 2 % of 100 ms at 500 kbit/s
+    assert 6 * 135 + 12 == 822 <= 0.02 * 0.1 * 500e3
+    # the limiter: TXD over R1 and R2 (0.1 %) into the TPS3701's 387 to 400 mV falling threshold; the rail 3.3 V +-1.5 %; 25 nA at the input
+    r1, r2 = gv["r1"], gv["r2"]
+    k_lo, k_hi = r2 * 0.999 / (r1 * 1.001 + r2 * 0.999), r2 * 1.001 / (r1 * 0.999 + r2 * 1.001)
+    e = 25e-9 * r1 * 1.001 * r2 * 1.001 / (r1 * 1.001 + r2 * 1.001)
+    d_lo, d_hi = 1 - (0.400 + e) / (3.3 * 0.985 * k_lo), 1 - (0.387 - e) / (3.3 * 1.015 * k_hi)
+    assert round(100 * d_lo, 1) == 4.7 and round(100 * d_hi, 1) == 12.3 and 0.02 < d_lo and d_hi < m.FRAME_D_MIN
+    assert (1 - 0.02) * 3.3 * 0.985 * k_lo - e > 0.403, "the legitimate share must leave the transceiver enabled"
+    # the rail trip: (VIT+ / (gm RL) +- Vos) / Rs, gm 990 to 1010 uA/V, Vos 1 mV, VIT+(INB) 397 to 403 mV, resistors 1 %, 25 nA into 100 kOhm
+    rs, rl, rf = gv["rs"], gv["rl"], gv["rf"]
+    i_max = (0.403 / (990e-6 * rl * 0.99) + 1e-3) / (rs * 0.99) + 25e-9 * rf * 1.01 / (990e-6 * rl * 0.99 * rs * 0.99)
+    i_min = (0.397 / (1010e-6 * rl * 1.01) - 1e-3) / (rs * 1.01) - 25e-9 * rf * 1.01 / (1010e-6 * rl * 1.01 * rs * 1.01)
+    assert round(i_min, 4) == 0.2183 and round(i_max, 4) == 0.2452
+    # the LDO at the trip's maximum: 76.25 C + 184 C/W x (4.1174 - 3.3 x 0.985) V x I
+    tj = 76.25 + 184.0 * (4.1174 - 3.3 * 0.985) * i_max
+    assert round(tj, 1) == 115.4 and tj <= m.TJ_GOAL
+    out = open(T10_OUT, encoding="utf-8").read()
+    sec = out.split("   10j. THE CHECK cx45's Q3")[1].split("\n11. THE STATE OF L9T5-F06")[0]
+    for s_ in ("822 bit-times against FW-B21's 1000", "silenced when its share passes 4.7 to 12.3 %", "0.2183 to 0.2452 A at the tolerances",
+               "junction at most 115.4 C at 76.25 C air", "none trips", "Zth(171 ms) at most 105 C/W", "at most 229 C/W at 76.25 C air",
+               "each other LDO's input at least 3.6571 V against its 3.4798 V: holds", "at least 3.6524 V against 3.5213 V: holds",
+               "read by pin (each rail's sense", "limiter): DRAWN", "refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)",
+               "WHAT IS NOT CLOSED (handed over as remaining engineering, no exception presumed)", "L9T5-F25",
+               "VERDICT (10j): cx45's Q3 (a) to (d) CORRECTED IN DRAFT on revision V at 14.0k, the desk acceptance MET"):
+        assert s_ in sec, s_
+    assert sec.count("     mutated, ") == 6 and sec.count(": ") and all(l.rstrip().endswith("FAIL") for l in sec.splitlines() if l.startswith("     mutated, "))
+    cd = _mod(CONTRACT_DRAFT, "l9t5_test_contract_r6")
+    assert "silicon revision V only" in cd.FW_B20 and "4.01 V" in cd.FW_B20 and "4.18 V" not in cd.FW_B20 and " or X" not in cd.FW_B20
+    assert "| FW-B22 |" in cd.FW_B22 and "| V-B22 |" in cd.V_B22 and "| V-B23 |" in cd.V_B23
+    page = open(ROUND5, encoding="utf-8").read()
+    for s_ in ("## 12. Round 6: the check cx45's Q3", "| L9T5-D5 | WITHDRAWN (round 6)", "| L9T5-D8 | SUPERSEDED (round 6)", "| L9T5-D9 (round 6)",
+               "- **Revision X: HELD**"):
+        assert s_ in page, s_
+    assert "For a rev X part: PROVISIONAL" not in page and "or L9T5-F22's set point |" not in page
+
+
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
              os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
              F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT,
-             os.path.join(REC, "apply_gen_sch_a_iocset.py"), os.path.join(REC, "apply_gen_sch_b_iocset.py")]
+             os.path.join(REC, "apply_gen_sch_a_iocset.py"), os.path.join(REC, "apply_gen_sch_b_iocset.py"), GUARD_B]
     inputs = os.path.join(REC, "inputs")
     copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
     for p in files + copies:
@@ -1142,7 +1188,7 @@ def t_record_hygiene():
         for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
             assert bad not in t, "a private path in %s" % os.path.basename(p)
         if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT, T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
-                 F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT):
+                 F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"], CONN, CONN_OUT, GUARD_B):
             if p == README:
                 # round 3: the claim table for the recheck V3 labels a maker's printed limit with the round 3 brief's own word. That
                 # word is taken out of the table's LABEL cell (the fifth), and of nothing else, before the claim-word scan: the other
