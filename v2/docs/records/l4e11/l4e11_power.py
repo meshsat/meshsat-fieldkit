@@ -58,6 +58,9 @@ PINS = {
     "gen_e": ("v2/ecad/tools/gen_sch_e.py", "f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186"),
     "gen_p": ("v2/ecad/tools/gen_sch_p.py", "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3"),
     "net_a": ("v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5"),
+    # round 17 (the check V6's V6-m2): record l8p's thermal guard, drafted in its round 8 and judged in its rounds 8 and 9
+    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "9db1a31e3cfe92d3b53ab1f2a1cd5a58c9de56a4a0fd09025ad3a0b7f7d4c789"),
+    "l8p_thguard": ("v2/docs/records/l8p/apply_gen_sch_a_thguard.py", "544a462a9031862a953748a631023f59491203198aa4810321baed121606ecab"),
     "net_e": ("v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4"),
     "packprot": ("v2/ecad/tools/pcb_pack_protection.yaml", "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b"),
     "primcfg": ("v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md", "6726f23778f48e1017d29fffe923c4b07b9e196d4636e3e90432774d9f922aac"),
@@ -850,6 +853,7 @@ def compute():
     R["S24"] = fix24_round(R, T)
     R["S25"] = fix25_round(R, T)
     R["S26"] = fix26_round(R, T)
+    R["S27"] = fix27_round(R, T)
     return R
 
 
@@ -6376,6 +6380,98 @@ def e11_29_method(R):
                fmt(R["S26"]["sel"]["s"], 2), fmt(R["S26"]["z17_t"], 2)))
 
 
+R17_C_TOL = 0.10        # SESSION (round 17): the guard's capacitors at +-10 % (record l8p's C_TOL, an X7R K grade; the value text prints none)
+
+
+def fix27_round(R, T):
+    """Round 17 (the check V6's V6-m2, record l8p's L8P-R8-F1): DD-7 on a board A that carries record l8p's thermal guard in RT1's
+    place. Section 20c's and 20f's rows restated for the guard's fixed pair, its shunt, its 30 uA and its input capacitor C261, the
+    owed readings of 23g taken, and the DD-7 netlist check's LOOP group restated (check_dd7_netlist.py)."""
+    S20 = R["S20"]
+    S = {}
+    c4 = flat(text("l8p_c4"))
+    m = need(c4, r"the pair intact: \(a\) on: .*? \(c\) tripped: ([\d.]+) mA through the shunt at the clamp, the return ([\d.]+) mV", "the guard's tripped return (l8p 4)")
+    S["trip"] = (float(m.group(1)) / 1e3, float(m.group(2)) / 1e3)
+    m = need(c4, r"one of the pair shorted: \(a\) on: .*? \(c\) tripped: ([\d.]+) mA through the shunt at the clamp, the return ([\d.]+) mV", "one shorted (l8p 4)")
+    S["trip1"] = (float(m.group(1)) / 1e3, float(m.group(2)) / 1e3)
+    m = need(c4, r"the return at DOCK_EN_OUT ([\d.]+) V: ([\d.]+) V \(([\d.]+) V all doubled\) against ([\d.]+) V: HOLDS", "the window on the full count (l8p 3)")
+    S["win"] = tuple(float(x) for x in m.groups())
+    m = need(c4, r"board A's (\d+) kOhm and the guard's\s+(\d+) uA on DOCK_EN_OUT", "the guard's draw on DOCK_EN_OUT (l8p 4)")
+    S["i_guard"] = float(m.group(2)) * 1e-6
+    need(c4, r"SESSION decision L8P-D9", "record l8p's round 9 (V6-m7)")
+    g = flat(text("l8p_thguard"))
+    need(g, r'r\("R260", "7\.5k 1%", "DOCK_EN_OUT", "THG_MID"\); r\("R261", "7\.5k 1%", "THG_MID", "DOCK_EN_RET"\)', "the guard's pair")
+    m = need(g, r'c\("C261", "(\d+(?:\.\d+)?)u 50V X7R", "DOCK_EN_OUT", "GND"\); c\("C262", "(\d+(?:\.\d+)?)u 16V X7R", "THG_VDD", "GND"\)', "the guard's capacitors")
+    S["c261"], S["c262"] = float(m.group(1)) * 1e-6, float(m.group(2)) * 1e-6
+    S["pair"] = 15e3
+    r_feed = R["S19"]["r_feed"]
+    r_oload = R10_OUT[0] + R10_OUT[1]
+    # 20c: the pulled loop's DOCK_EN_OUT with the return held at the guard's tripped level, the guard's 30 uA drawn from DOCK_EN_OUT,
+    # R106 at +1 %, the pair at -1 % (the most current into the held node), board A's divider on it (INFERRED)
+    rows = []
+    for vin in (7.6, 10.6, 16.8):
+        rf = r_feed * 1.01
+        rp = S["pair"] * 0.99
+        held = max(S["trip"][1], S["trip1"][1])
+        vout = (vin / rf + held / rp - S["i_guard"]) / (1 / rf + 1 / r_oload + 1 / rp)
+        rows.append((vin, vout))
+    S["pulled"] = rows
+    # 20f: a docking with C261 on DOCK_EN_OUT and U61 in dropout passing its output capacitor (both at +10 %): the time constant (MODEL)
+    S["tau"] = r_feed * 1.01 * (S["c261"] + S["c262"]) * (1 + R17_C_TOL)
+    S["ratio"] = S["win"][2] / S["win"][0]
+    S["sag"] = S["i_guard"] * r_feed * 1.01
+    S["held_ok"] = max(S["trip"][1], S["trip1"][1]) < S20["ret_low"]
+    S["powered_ok"] = all(v > S20["out_rel"][1] for _vin, v in rows)
+    S["window_ok"] = S["win"][2] >= S20["ret_high"] - 5e-4 and S["win"][1] >= S20["ret_high"]
+    return S
+
+
+def render_fix27(R, p):
+    S, S20 = R["S27"], R["S20"]
+    p("")
+    p("27. ROUND 17: DD-7 ON A BOARD A THAT CARRIES THE THERMAL GUARD (the check V6's V6-m2 on candidate 7a82e82a; record l8p's L8P-R8-F1; C-PROT rev 1)")
+    p("   V6 (an AI review; RECORD) found this record's DD-7 netlist check reading FAIL on any board A that carries record l8p's guard (it")
+    p("     required RT1 on DOCK_EN_RET and DOCK_EN_OUT), and the guard's C261 and 30 uA counted in no row of 20c or 20f. Record l8p's round 8")
+    p("     drafted the guard (apply_gen_sch_a_thguard.py, after DD-7) and its rounds 8 and 9 judged it (l8p_c4.out). Nothing here changes a")
+    p("     circuit (RECORD, INFERRED)")
+    p("   27a. 20c RESTATED WITH THE GUARD (23g's OWED READINGS TAKEN)")
+    p("     the guard's pulled level: tripped, the return %s V (%s V with one of its pair shorted; record l8p 4 (c), at the clamp, the shunt's" % (
+        fmt(S["trip"][1], 4), fmt(S["trip1"][1], 4)))
+    p("       on-resistance ASSUMED 17.2 ohm) against board A's held reading under %s V: %s; DOCK_EN_OUT stays powered, so a trip IS DD-7's trigger" % (
+        fmt(S20["ret_low"], 4), "read held" if S["held_ok"] else "NOT read held"))
+    p("     the pulled loop's DOCK_EN_OUT with the return at %s V, the guard's %s uA drawn from it, R106 +1 %%, the pair -1 %%, board A's %s kOhm:" % (
+        fmt(max(S["trip"][1], S["trip1"][1]), 4), fmt(S["i_guard"] * 1e6, 0), fmt((R10_OUT[0] + R10_OUT[1]) / 1e3, 0)))
+    for vin, v in S["pulled"]:
+        p("       BRK_VIN %4s V: %s V against the powered reading's %s V at most: %s" % (fmt(vin, 1), fmt(v, 3), fmt(S20["out_rel"][1], 3),
+                                                                                       "read powered" if v > S20["out_rel"][1] else "NOT read powered"))
+    p("     the window with the guard (record l8p 3, on the full count of sinks, its shunt's off leakage among them): the return %s V (%s V all" % (
+        fmt(S["win"][1], 3), fmt(S["win"][2], 3)))
+    p("       doubled) at DOCK_EN_OUT %s V against the closed reading's %s V: a ramping closed loop never reads held (RET/OUT at least %s with every" % (
+        fmt(S["win"][0], 3), fmt(S20["ret_high"], 2), fmt(S["ratio"], 4)))
+    p("       sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single")
+    p("       failure of 10b (Q60's gate on its drain: the return 0.799 V there), which its SESSION decision L8P-D9 tolerates as latent between checks")
+    p("     the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a")
+    p("       source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release")
+    p("       (record l8p 9 (e)); nothing new acts")
+    p("   27b. 20f RESTATED WITH THE GUARD (C261 and the 30 uA on DOCK_EN_OUT)")
+    p("     a docking: BRK_VIN steps through R106 onto DOCK_EN_OUT, which now carries C261 (%s uF) and, through U61 in dropout, its output's C262" % (
+        fmt(S["c261"] * 1e6, 1)))
+    p("       (%s uF): the rise's time constant about %s ms (both at +10 %%, MODEL), slower than RT1's loop; the return follows DOCK_EN_OUT through" % (
+        fmt(S["c262"] * 1e6, 1), fmt(S["tau"] * 1e3, 0)))
+    p("       the pair resistively, so RET/OUT stays at %s or more at every instant of the rise: no trigger. The 30 uA lowers DOCK_EN_OUT by at" % fmt(S["ratio"], 4))
+    p("       most %s V (R106 +1 %%), counted in 27a's pulled readings; at power-up U47 and U48 still hold asserted for tSD (2 ms at most); the" % fmt(S["sag"], 3))
+    p("       breaker's start comes no sooner than the RC hold's least 0.110 s after mating (record l8p 9 (e)), after the rise")
+    p("     10 A held, 18 A for 60 s: the guard stays closed on the switch's printed no-trip side (record l8p 9 (a): 38.4, 9.8 and 6.0 K), so")
+    p("       board A reads the return closed; 23g's 'whether the guard stays closed in the service is not printed' is read on the guard's")
+    p("       printed limits, on record l9stk's junctions (RECORD; L8P-F07 stays OPEN in record l8p until its independent check)")
+    p("   27c. THE DD-7 NETLIST CHECK'S LOOP GROUP RESTATED (check_dd7_netlist.py round 17): the loop's element is RT1 or the guard's pair, never")
+    p("     both, never neither; with the guard DOCK_EN_RET reaches J_DOCK, R261, Q44, U48 and Q60, DOCK_EN_OUT J_DOCK, R260, R109, U61 and C261,")
+    p("     THG_MID R260, R261 and TP62; R260 and R261 7.5k, Q60 a 2N7002 with its drain on the return, U61 a TPS70950 and C261 on DOCK_EN_OUT")
+    p("     (test_l4e11 composes board A with the guard after DD-7 and reads DRAWN, and its mutations FAIL)")
+    p("   27d. STATUS (SESSION): V6-m2 answered; the guard's reading on DD-7 (23g's OWED READING) taken: %s; no circuit changed by this record"
+      % ("its pulled level read held with the loop powered at 7.6, 10.6 and 16.8 V, the window and the docking hold" if (S["held_ok"] and S["powered_ok"] and S["window_ok"]) else "A ROW DOES NOT HOLD"))
+
+
 # ============================================================================================ the output
 def render(R):
     out = []
@@ -6869,6 +6965,7 @@ def render(R):
     render_fix24(R, p)
     render_fix25(R, p)
     render_fix26(R, p)
+    render_fix27(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py")
     p("(R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three")
     p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist")

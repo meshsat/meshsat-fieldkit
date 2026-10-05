@@ -3287,3 +3287,23 @@ fails whatever they are.
 | closure credit | no circuit changed; the charger draft's layout comment carries the restated target; nothing is built or measured |
 
 Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only.
+
+## 27. Round 17: DD-7 on a board A that carries the thermal guard (the check V6's V6-m2; 5 October 2026; out 27)
+
+V6 (an AI review of candidate `7a82e82a`, item E and minor m2) found this record's `check_dd7_netlist.py` reading FAIL on any board A
+that carries record l8p's thermal guard, because it required RT1 on DOCK_EN_RET and DOCK_EN_OUT, and `test_l4e11` passing only because
+it never composed the guard; and the guard's C261 (1 uF) and its 30 uA on DOCK_EN_OUT counted in no row of 20c or 20f. Round 13's 23g
+owed the guard's reading on DD-7. Nothing here changes a circuit.
+
+- **The check's LOOP group restated** (`check_dd7_netlist.py`, round 17): the loop's element is RT1 or the guard's pair, never both and
+  never neither; with the guard DOCK_EN_RET reaches J_DOCK, R261, Q44, U48 and Q60, DOCK_EN_OUT J_DOCK, R260, R109, U61 and C261, and
+  THG_MID R260, R261 and TP62. `test_l4e11` now composes board A with the guard after DD-7 and reads DRAWN; RT1 beside the guard, R261's
+  far end off the return and a 100 kOhm load on the return each read FAIL.
+- **20c with the guard (out 27a):** tripped, the guard holds the return at 0.0203 V (0.029 V with one of its pair shorted; record l8p),
+  under board A's held reading of 0.7755 V while DOCK_EN_OUT stays powered (4.328, 6.103 and 9.771 V at BRK_VIN 7.6, 10.6 and 16.8 V
+  with the guard's 30 uA drawn): a trip is DD-7's trigger. The window: the return 0.908 V (0.859 V all doubled) at DOCK_EN_OUT 1.825 V,
+  RET/OUT at least 0.4707, so a ramping closed loop never reads held; record l8p's single failure of 10b (Q60's gate on its drain) is the
+  one that would, tolerated there as latent (L8P-D9).
+- **20f with the guard (out 27b):** a docking's rise is slowed by C261 and, through U61 in dropout, C262 (about 63 ms, MODEL), but the
+  return follows DOCK_EN_OUT resistively: no trigger. The 30 uA lowers DOCK_EN_OUT by at most 0.303 V, counted in 27a.
+- **State (SESSION):** V6-m2 answered; record l8p's copy of this record is taken again at this round (record l8p's round 9).

@@ -13,6 +13,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   l8p_c4    9db1a31e3cfe92d3  v2/docs/records/l8p/l8p_c4.out
+   l8p_thguard 544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
    primcfg   6726f23778f48e10  v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md
@@ -1994,6 +1996,40 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      answered; TP-E11-29 NOT EXECUTABLE until L4-E9 restates R-159 and a supplier agrees in writing, and ready to be PUT to a supplier
      for that agreement with the fixture requirement as its scope; the lead treatment's design loop is ended
 
+
+27. ROUND 17: DD-7 ON A BOARD A THAT CARRIES THE THERMAL GUARD (the check V6's V6-m2 on candidate 7a82e82a; record l8p's L8P-R8-F1; C-PROT rev 1)
+   V6 (an AI review; RECORD) found this record's DD-7 netlist check reading FAIL on any board A that carries record l8p's guard (it
+     required RT1 on DOCK_EN_RET and DOCK_EN_OUT), and the guard's C261 and 30 uA counted in no row of 20c or 20f. Record l8p's round 8
+     drafted the guard (apply_gen_sch_a_thguard.py, after DD-7) and its rounds 8 and 9 judged it (l8p_c4.out). Nothing here changes a
+     circuit (RECORD, INFERRED)
+   27a. 20c RESTATED WITH THE GUARD (23g's OWED READINGS TAKEN)
+     the guard's pulled level: tripped, the return 0.0203 V (0.029 V with one of its pair shorted; record l8p 4 (c), at the clamp, the shunt's
+       on-resistance ASSUMED 17.2 ohm) against board A's held reading under 0.7755 V: read held; DOCK_EN_OUT stays powered, so a trip IS DD-7's trigger
+     the pulled loop's DOCK_EN_OUT with the return at 0.029 V, the guard's 30 uA drawn from it, R106 +1 %, the pair -1 %, board A's 984 kOhm:
+       BRK_VIN  7.6 V: 4.328 V against the powered reading's 1.981 V at most: read powered
+       BRK_VIN 10.6 V: 6.103 V against the powered reading's 1.981 V at most: read powered
+       BRK_VIN 16.8 V: 9.771 V against the powered reading's 1.981 V at most: read powered
+     the window with the guard (record l8p 3, on the full count of sinks, its shunt's off leakage among them): the return 0.908 V (0.859 V all
+       doubled) at DOCK_EN_OUT 1.825 V against the closed reading's 0.84 V: a ramping closed loop never reads held (RET/OUT at least 0.4707 with every
+       sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single
+       failure of 10b (Q60's gate on its drain: the return 0.799 V there), which its SESSION decision L8P-D9 tolerates as latent between checks
+     the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a
+       source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release
+       (record l8p 9 (e)); nothing new acts
+   27b. 20f RESTATED WITH THE GUARD (C261 and the 30 uA on DOCK_EN_OUT)
+     a docking: BRK_VIN steps through R106 onto DOCK_EN_OUT, which now carries C261 (1 uF) and, through U61 in dropout, its output's C262
+       (4.7 uF): the rise's time constant about 63 ms (both at +10 %, MODEL), slower than RT1's loop; the return follows DOCK_EN_OUT through
+       the pair resistively, so RET/OUT stays at 0.4707 or more at every instant of the rise: no trigger. The 30 uA lowers DOCK_EN_OUT by at
+       most 0.303 V (R106 +1 %), counted in 27a's pulled readings; at power-up U47 and U48 still hold asserted for tSD (2 ms at most); the
+       breaker's start comes no sooner than the RC hold's least 0.110 s after mating (record l8p 9 (e)), after the rise
+     10 A held, 18 A for 60 s: the guard stays closed on the switch's printed no-trip side (record l8p 9 (a): 38.4, 9.8 and 6.0 K), so
+       board A reads the return closed; 23g's 'whether the guard stays closed in the service is not printed' is read on the guard's
+       printed limits, on record l9stk's junctions (RECORD; L8P-F07 stays OPEN in record l8p until its independent check)
+   27c. THE DD-7 NETLIST CHECK'S LOOP GROUP RESTATED (check_dd7_netlist.py round 17): the loop's element is RT1 or the guard's pair, never
+     both, never neither; with the guard DOCK_EN_RET reaches J_DOCK, R261, Q44, U48 and Q60, DOCK_EN_OUT J_DOCK, R260, R109, U61 and C261,
+     THG_MID R260, R261 and TP62; R260 and R261 7.5k, Q60 a 2N7002 with its drain on the return, U61 a TPS70950 and C261 on DOCK_EN_OUT
+     (test_l4e11 composes board A with the guard after DD-7 and reads DRAWN, and its mutations FAIL)
+   27d. STATUS (SESSION): V6-m2 answered; the guard's reading on DD-7 (23g's OWED READING) taken: its pulled level read held with the loop powered at 7.6, 10.6 and 16.8 V, the window and the docking hold; no circuit changed by this record
 END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py
 (R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three
 battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist
