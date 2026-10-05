@@ -8,10 +8,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    0071fe553548eb5d v2/ecad/tools/intent.py
    359895768625712d v2/ecad/tools/idc_pads.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
-   855bb65bb9744405 v2/docs/records/l8p/check_l8p_netlist.py
+   710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
    c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
-   bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
-   dc84f755eb231bc7 v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
+   cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   bc3fb88bae6a166f v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -25,7 +25,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
    cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-   d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
    98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
    ea95bd293e44676a v2/docs/records/l8r2/apply_gen_sch_a_fb01.py
    4adb13047770eb1c v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py
@@ -113,9 +113,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      l6r2/apply_gen_sch_b_intent.py                 OK
    board B, this record's draft first, then the order: every step OK
    board B, this record's draft after the whole order: every step OK
-   d8dec31's mainpb (the next free R and C at apply time): without this record's draft it takes R248 and C247 on this tree (L4-E9's row 33
+   d8dec31's mainpb (the next free R and C at apply time): without this record's draft it takes R257 and C249 on this tree (L4-E9's row 33
      names R233 and C241: stale already, the later drafts took those);
-     with this record's draft before it, R603 and C607; with this record's draft after it, R248 and C247 (finding L9T5-F02)
+     with this record's draft before it, R603 and C607; with this record's draft after it, R257 and C249 (finding L9T5-F02)
 
    THE DESIGNATORS EACH DRAFT ADDS (the forward order; part calls read with ast, and each draft's declared ADDS)
    board A, this record's: C601, C602, C603, C604, C605, C606, J_5V_IOC, L601, R601, R602, U601
@@ -147,10 +147,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
        A DECL DRAWN
        B DECL DRAWN
    board A composed in L4-E9's order:
-     the generator ran to its end (792 parts, 0 unplaced, intent written: yes)
+     the generator ran to its end (814 parts, 0 unplaced, intent written: yes)
    board B composed in L4-E9's order with record l8r2's round 7 drafts:
      the generator ran to its end (1479 parts, 0 unplaced, intent written: yes)
-     board A composed in L4-E9's order sha256 c1945520154df9da
+     board A composed in L4-E9's order sha256 b63c147100ff1f97
        A BUCK DRAWN
        A LEAD DRAWN
        A EN   DRAWN
@@ -173,21 +173,21 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      O4 both boards composed without record l8r2's return draft (the return as drawn): the dedicated return reads NOT DRAWN on board A and NOT DRAWN on
         board B, so the connected-path row of section 6 takes record l8r2's AS DRAWN figures there: NOT MET (the recheck V3's corner)
    THE MUTATIONS (each must FAIL)
-     mutation 1, board A composed: J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed) sha256 90559e51536ca100
+     mutation 1, board A composed: J_5V_IOC's pins 1 and 2 exchanged on board A (the lead reversed) sha256 b55f4bde9185ec36
        A BUCK DRAWN
        A LEAD FAIL: J_5V_IOC.1 on 'GND', wanted +5V_IOC; J_5V_IOC.2 on '+5V_IOC', wanted GND
        A EN   DRAWN
        A DEV  DRAWN
        A DIV  DRAWN
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 2, board A composed: U601's EN and SS exchanged (the buck no longer on RAIL_EN) sha256 7682ac768546038c
+     mutation 2, board A composed: U601's EN and SS exchanged (the buck no longer on RAIL_EN) sha256 1fd093ea581a9e77
        A BUCK FAIL: U601.2 on 'IOCB_SS', wanted RAIL_EN; U601.7 on 'RAIL_EN', wanted IOCB_SS
        A LEAD DRAWN
        A EN   FAIL: U601's enable 'IOCB_SS' is not U12's 'RAIL_EN'
        A DEV  DRAWN
        A DIV  DRAWN
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation 3, board A composed: R601's +5V_IOC end and R602's ground end exchanged (the divider inverted: 0.95 V out) sha256 aacf8d212a75b392
+     mutation 3, board A composed: R601's +5V_IOC end and R602's ground end exchanged (the divider inverted: 0.95 V out) sha256 8770795e1dae247e
        A BUCK DRAWN
        A LEAD DRAWN
        A EN   DRAWN
@@ -343,7 +343,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 
    FINDINGS FOR OTHER AUTHORS
    L9T5-F01 CLOSED BY RECORD l8r2's ROUND 7 DRAFTS (T5b): board B's composed generator stopped on GND's declared 21.0 A peak (O3 keeps it)
-   L9T5-F02 (d8dec31's mainpb owner, R-194; L4-E9's row 33): with this record's draft before mainpb, mainpb takes R603 and C607, not R248 and C247;
+   L9T5-F02 (d8dec31's mainpb owner, R-194; L4-E9's row 33): with this record's draft before mainpb, mainpb takes R603 and C607, not R257 and C249;
      no collision either way (both orders compose); row 33's text names R233 and C241, which this tree already moves: R-194's fixed
      references would remove the dependency
    L9T5-F03 (board B's generator owner, cosmetic): U40, U50 and U60's value text still reads "its own branch off the device rail"; left

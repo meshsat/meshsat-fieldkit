@@ -16,7 +16,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
    f5b72f55ac5989ac v2/docs/records/l8r2/l8r2_gndret.out
    0460711f0c1ce6cd v2/docs/records/l9t5/l9t5_drafts.py
-   58683de50a613afd v2/docs/records/l9t5/l9t5_drafts.out
+   5a84ad844068b958 v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
 
@@ -196,10 +196,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    apply_gen_sch_a_iocpre.py: without I-03's draft refused; after it: check OK, applied OK (4 edits), second application refused; the tree's gen_sch_a.py refused
    apply_gen_sch_b_iocpre.py: without I-03's draft refused; after it: check OK, applied OK (2 edits), second application refused; the tree's gen_sch_b.py refused
    board A composed in L4-E9's order, this draft straight after I-03's (21 drafts): every step OK
-     the generator ran to its end (792 parts, 0 unplaced, intent written: yes)
+     the generator ran to its end (814 parts, 0 unplaced, intent written: yes)
    board B composed in L4-E9's order, this draft straight after I-03's (13 drafts): every step OK
      the generator ran to its end (1479 parts, 0 unplaced, intent written: yes)
-     board A composed with the T10 draft sha256 84afc6ba59221fb4
+     board A composed with the T10 draft sha256 705bf729c0dba042
        A BUCK DRAWN
        A LEAD DRAWN
        A EN   DRAWN
@@ -215,10 +215,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    the intent: board A +5V_IOC 4.18 V, v_work 4.30 V, 0.36 A typical, 1.3800 A peak; VBAT's entry for U601 0.12 A; board B +5V_IOC 4.18 V,
      1.3800 A peak; the three +3V3_IOCx at efficiency 0.79, 0.79, 0.79
    the divider read on the netlist: 56.2k 0.1% 25ppm over 13.3k 0.1% 25ppm: 4.1805 V nominal by the checker's arithmetic: EQUALS section 8's selection (R602 13.3 k)
-     old state: board A composed WITHOUT the T10 draft, read for the pre-regulator sha256 c1945520154df9da
+     old state: board A composed WITHOUT the T10 draft, read for the pre-regulator sha256 b63c147100ff1f97
        A DIV  FAIL: the divider is 56.2k 0.1% 25ppm over 10.7k 0.1% 25ppm, wanted 56.2k 0.1% over 13.3k 0.1%; the output band 4.872 to 5.133 V leaves 4.05 to 4.31 V
      record l9t5's supervisors' buck and lead on the netlists: FAIL
-     mutation: R601's rail end and R602's ground end exchanged (the divider inverted) sha256 629190f0fd71230b
+     mutation: R601's rail end and R602's ground end exchanged (the divider inverted) sha256 a33461e40f74f204
        A DIV  FAIL: the divider is 13.3k 0.1% 25ppm over 56.2k 0.1% 25ppm, wanted 56.2k 0.1% over 13.3k 0.1%; the output band 0.967 to 1.012 V leaves 4.05 to 4.31 V
      record l9t5's supervisors' buck and lead on the netlists: FAIL
    JUDGED ON C-DEV REV 1 (the device rail's case), with the draft composed:

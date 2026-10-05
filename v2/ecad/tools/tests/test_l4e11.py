@@ -1346,7 +1346,7 @@ def t_round9_the_record_carries_the_outputs_numbers():
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
-L8P3_PTC = ("v2/docs/records/l8p/apply_gen_sch_a_ptc.py", "d9c43966985172876ad1ea7339b417d31ecf10cd85824da1b983c3b1eb8b73d6")
+L8P3_PTC = ("v2/docs/records/l8p/apply_gen_sch_a_ptc.py", "cedae4eb4572a6a5b137dfc151b07d96ac9004e332317dba1c6d703941ce95c0")
 L8P3_GEN = ("v2/docs/records/l8p/gen_netlist.py", "f3339d09604757d370ff5526f1311dbf03bd1685b22c1019d6af506ac0dd5dca")
 DD7_CHECK = os.path.join(REC, "check_dd7_netlist.py")
 
