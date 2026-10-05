@@ -128,15 +128,18 @@ TREE_ONLY = {"a": [("l8r2", "d8v3"), ("l8r2", "vbus20ov")]}
 # Round 6: round 12 at ac72e730. Round 6b: round 13 at 4def5975 (of the eleven copies only section 20c changed).
 L4E11_AT, L4E11_ROUND = "4def5975", 13
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
-               "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-e60a94a8.md",
-               "l4e11pre": "inputs/l4e11-section15c-precharge-e60a94a8.md", "l4e11c": "inputs/l4e11-section20c-%s.md" % L4E11_AT,
+               "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-%s.md" % L4E11_AT,
+               "l4e11pre": "inputs/l4e11-section15c-precharge-%s.md" % L4E11_AT, "l4e11c": "inputs/l4e11-section20c-%s.md" % L4E11_AT,
                "l4e11d": "inputs/l4e11-section20d-%s.md" % L4E11_AT, "l4e11e": "inputs/l4e11-section20e-%s.md" % L4E11_AT,
                "l4e11_22b": "inputs/l4e11-section22b-%s.md" % L4E11_AT, "l4e11_22c": "inputs/l4e11-section22c-%s.md" % L4E11_AT,
                "l4e11_22g": "inputs/l4e11-section22g-%s.md" % L4E11_AT, "l4e11_22h": "inputs/l4e11-section22h-%s.md" % L4E11_AT}
 # the copies of L4-E11's page (INPUT_FILES key, its section heading's start) and of its drafts (the copy, records/l4e11's file):
-# test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (V2-B2: a copy a round behind)
+# test_l8p compares each with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (V2-B2: a copy a round behind).
+# Round 7 (the recheck V2R's V2R-m8): section 19h and the excerpt of 15c, round 9's copies until now and outside this list, are taken
+# again at L4E11_AT and listed (the excerpt by its first words: it is a paragraph of 15c, not a whole section)
 L4E11_SECTIONS = (("l4e11c", "### 20c. "), ("l4e11d", "### 20d. "), ("l4e11e", "### 20e. "), ("l4e11_22b", "### 22b. "),
-                  ("l4e11_22c", "### 22c. "), ("l4e11_22g", "### 22g. "), ("l4e11_22h", "### 22h. "))
+                  ("l4e11_22c", "### 22c. "), ("l4e11_22g", "### 22g. "), ("l4e11_22h", "### 22h. "), ("l4e11", "### 19h. "),
+                  ("l4e11pre", "**The precharge in LDO mode, with R17's tolerance (the review's minor):**"))
 L4E11_DRAFTS = (("inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_a_charger.py"),
                 ("inputs/l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_a_dd7.py"),
                 ("inputs/l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT), "apply_gen_sch_e_aux.py"),
@@ -145,8 +148,8 @@ SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444
                "inputs/l9stk_protection-0d72880b.out.txt": "d97f94a0fa1f25598a26458276334b53505b065f350eb75a4d01cdfd91716eac",
                "inputs/l9stk_protection-constants-0d72880b.txt": "ed559399fd3b2f2d7c502b16e3296b5266ee5f4d1638b0a235342bde4e5f5c3e",
                "inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py": "dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544",
-               "inputs/l4e11-section19h-e60a94a8.md": "270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486",
-               "inputs/l4e11-section15c-precharge-e60a94a8.md": "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146",
+               "inputs/l4e11-section19h-%s.md" % L4E11_AT: "b4bd0832b4f89385a94ddf08db6f8cf482ded968089f1dc3861337d505d8f051",
+               "inputs/l4e11-section15c-precharge-%s.md" % L4E11_AT: "ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146",
                "inputs/l4e11-section20c-%s.md" % L4E11_AT: "b3619bd411f5b64f2ae8efa3580041e2789513ccf5cda147b762df5cc4d2e9dc",
                "inputs/l4e11-section20d-%s.md" % L4E11_AT: "a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241",
                "inputs/l4e11-section20e-%s.md" % L4E11_AT: "9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a",
@@ -376,7 +379,7 @@ def rev_budget(page, l4, pre, W):
     R["t_timer"] = float(need(page, r"The\s+timer\s+falls\s+under\s+its\s+0\.3\s+V\s+re-enable\s+threshold\s+in\s+%s\s+ms\s+at\s+most" % N,
                               "l9stk: the timer's re-enable").group(1)) * 1e-3
     R["rja"] = float(need(page, r"installed\s+RthJA\s+of\s+\*\*%s\s+C/W\s+per\s+FET\*\*" % N, "l9stk: IF-2's RthJA").group(1))
-    # task L4-E11 (e60a94a8), sections 19h and 15c
+    # task L4-E11, sections 19h and 15c (round 9's figures; copied at L4E11_AT since round 7, where 19h carries two later notes)
     R["i_por"] = float(need(l4, r"ChargeCurrent\s+at\s+POR\s+\(TI's\s+E2E\s+answer,\s+D4\),\s+%s\s+A" % N, "L4-E11: the power-on charge").group(1))
     m = need(l4, r"R-b's\s+largest\s+actual\s+current,\s+%s\s+A\s+\|\s+[0-9.]+\s+W\s+\|\s+%s\s+C" % (N, N), "L4-E11: R-b's largest")
     R["i_rb"], R["tj_rb"] = float(m.group(1)), float(m.group(2))
@@ -1170,7 +1173,7 @@ def main():
     # 3b. B-R2's detector
     R = rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
     F = round5(texts, B, R)
-    w("3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c at e60a94a8, the makers' sheets\n")
+    w("3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c (round 9's; copied at %s), the makers' sheets\n" % L4E11_AT)
     w("   the open case (L4-E11 19h): a latch while a source holds VSYS keeps CELL+ tied to it, %.1f V into the %.3f ohm fault, so the\n" % (R["v_fault"], R["r_fault"]))
     w("     inhibit (CELL+ under %.2f V) sets only for faults under %.0f mOhm; the latched FET at %.4f A (R-b's largest) is held at %.1f C, %.3f A is its\n" % (
         R["alive"], R["reach"], R["i_rb"], R["tj_rb"], R["i_safe"]))

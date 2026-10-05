@@ -40,8 +40,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    20c7b0795593d761 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
    2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   ee11d230d11e1298 v2/docs/records/l8p/inputs/l4e11-section15c-precharge-e60a94a8.md
-   2707096383791409 v2/docs/records/l8p/inputs/l4e11-section19h-e60a94a8.md
+   ee11d230d11e1298 v2/docs/records/l8p/inputs/l4e11-section15c-precharge-4def5975.md
+   b4bd0832b4f89385 v2/docs/records/l8p/inputs/l4e11-section19h-4def5975.md
    b3619bd411f5b64f v2/docs/records/l8p/inputs/l4e11-section20c-4def5975.md
    a5b5b306dadd2a14 v2/docs/records/l8p/inputs/l4e11-section20d-4def5975.md
    9f3d4e017226d18f v2/docs/records/l8p/inputs/l4e11-section20e-4def5975.md
@@ -57,7 +57,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    a96099193dd92e8e v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
    d97f94a0fa1f2559 v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
    ed559399fd3b2f2d v2/docs/records/l8p/inputs/l9stk_protection-constants-0d72880b.txt
-   aeb26319d2745730 v2/docs/records/l8p/inputs/SOURCES.txt
+   a7c813beb323b2b3 v2/docs/records/l8p/inputs/SOURCES.txt
    1e3fa195a8f63a9c v2/ecad/meshsat.pretty/LeadLands_1x02.kicad_mod
    171fa629c58b8f1e v2/ecad/meshsat.pretty/PogoPins_2x6.kicad_mod
    94b2f0134ac6ee11 v2/ecad/meshsat.pretty/PogoTargets_2x6.kicad_mod
@@ -73,7 +73,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    596555c33dce1fca v2/vendor/battery/ti-csd17570q5b.pdf
    e16b3a8c0023201f v2/vendor/ti/ti-lm74700-q1.pdf
    a29cd6200c656636 v2/vendor/battery/murata-prf-series.pdf
-   cfe72bbf2e06f6fb v2/docs/records/l8p/fetch_held_back.py
+   4210b38e9c3dafc9 v2/docs/records/l8p/fetch_held_back.py
    2ab8a7e25d5997f0 v2/docs/records/l8p/read_prf_typical.py
    e8f1294bb0f76c75 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    4174af5851fe1be0 v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
@@ -146,7 +146,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    THE LOCKOUT AT THE ALLOW EDGE: a unit tripping at 77.25 C needs its pad within 1.00 K of the 76.25 C inside air before it restarts; at that air the cells' hot stop has already shut the kit down
    E-10 gains: VDS under 1.62 V during current-limit excursions (PGD stays high, so the inhibit stays gated)
 
-3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c at e60a94a8, the makers' sheets
+3b. B-R2, THE CHARGE THROUGH A LATCHED BREAKER (route R1, round 3): task L4-E11 19h and 15c (round 9's; copied at 4def5975), the makers' sheets
    the open case (L4-E11 19h): a latch while a source holds VSYS keeps CELL+ tied to it, 10.4 V into the 0.915 ohm fault, so the
      inhibit (CELL+ under 1.98 V) sets only for faults under 33 mOhm; the latched FET at 1.2567 A (R-b's largest) is held at 142.2 C, 1.405 A is its
      safe level (150 C held from 76.25 C at VSD 1 V and 52.5 C/W); a charge over it rested on the firmware
