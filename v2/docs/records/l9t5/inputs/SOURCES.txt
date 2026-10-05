@@ -28,3 +28,8 @@ apply_gen_sch_b_iocbuck-7c28f9da.py sha256 afb77ab72e0d2d4cc677419900012f05ba072
   +5V_IOC at 1.38 A on both boards (record l8r2's finding L8R2-F35); l9t5_drafts.py and test_l9t5.py run them as the declarations
   that must fail. T5b's report itself is not filed here (it names a private path): its content is record l8r2's round 7 in this
   tree since the merge at 43c9b49d (v2/docs/records/l8r2/l8r2_gndret.out and L8R2-KNOWN-DEFECTS.md section 3g).
+
+cx44-astra-f01-selection-as-received.md sha256 4f1b667dde2b6d36d67259a22f9f3af1231491b6e5dd5bdcd7ddf3822a836187
+  the collaborator's advisory challenge of P0-1's selection (c) (job cx44-f01-selection, run 20261005T134057Z-1974083, at commit
+  8c7c335f on fnd/p0pwr), as the coordinator saved it (_runs/claude/inputs-20261004e/CX44-ASTRA-F01-SELECTION-AS-RECEIVED.md, 15:53 CEST,
+  5 October 2026): F01 SELECTION: NOT SUPPORTED, the first negative of (c), ten blockers; an AI review, read-only, kept as given.

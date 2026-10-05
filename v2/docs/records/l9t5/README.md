@@ -1,4 +1,4 @@
-SELECTION READY: F01 / D-17 selected correction (c), a PA drain-current loop (INA250A2 on the PA feed, a TLV758P set point, a TLV9062 integrator, VGG lowered through U15's feedback on board D; U13's divider to 0.1 %): C-ALLTX rev 3 with the printed bounds needs 15.2019 V, margin 0.2981 V (l9t5_f01.out). DONE: 1a (reproduced, byte-identical), 1b (three compared, one selected, SESSION). NOT DONE: 1c to 1d, parts 2 to 4. NEXT: 1c, the drafts on boards A and D, composed and read on the netlists. F01 / D-17 stays OPEN until then.
+SELECTION CORRECTED: after Astra's cx44 (NOT SUPPORTED, the first negative of (c), kept as given) correction (c) stays first-ranked as a PROVISIONAL choice: the PA drain-current cap 6.3521 to 6.9258 A (printed terms alone 6.3892 to 6.8940 A), U13's BIAS moved ahead of R55, C-ALLTX rev 3 at the cap's top needs 15.1308 V (MODEL margin 0.3692 V), the 30 W service under the cap rests on the maker's 6.0 A EXAMPLE and is the supplier's feasibility task B-PA1; F01 / D-17 PROVISIONAL, never closed on printed limits (l9t5_f01.out sections 4 to 7). DONE: 1a, 1b round 2. NOT DONE: 1c (the drafts and the check are being revised to round 2's design), 1d, parts 2 and 4 (part 3 moved to another author). NEXT: 1c on the corrected design. Carried from round 4 (T10 is Slot C's, on fnd/p0t10): T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN, a DRAFTED CANDIDATE, unchecked; L9T5-F13, F16 and F17 OPEN; no case row is changed.
 
 (Round 4's status line, kept:) **ROUND 4 DONE, PARTS 0 TO 3 (4 October 2026 night):** the collaborator's targeted recheck V3 (an AI review) read round 3 and returned NOT CONFIRMED. **I-03 stays OPEN and is credited only with U7's load relief and the compositions.** Record l8r2's round 8 is merged (`927cdd1e`) and its dedicated-return drafts are composed on both boards. The connected path (the lead's pin 2 and the return between the boards) reads NOT MET as drawn (10.6376 A at 76.25 C, 12.0918 A at -20 C against the VH's printed 10 A) and CONDITIONAL with that return (at most 4.9277 A), on a draft no independent check has read; L8R2-F31 stays OPEN. Round 3's claim that the acceptance does not depend on L8R2-F31 is withdrawn, with its sequencing sentence; the AP2112K's requirement is 3.7674 V; the gauge's bound is 16.0718 V with the offset drift; the case file pinned is rev 3. **T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN.** Its conditions are verified from the sources (the supervisors' state is bounded by no document; the deficit is thermal, the AP2112K's junction passing its 150 C absolute maximum at 0.2187 A from the 5 V rail), three corrections are compared, one is selected as a DRAFTED CANDIDATE, unchecked (SESSION: U601 as a 4.18 V pre-regulator, with Layer 5's row bounding the state as its condition) with the acceptance criterion T10-A1 to A5, and its circuit half is drafted, composed and read on the netlists; no independent check has read it and Layer 5 has not accepted its row. The held-dominant and CAN-fabric-fault rows are judged on their own limits (125 C in a served state, 150 C in any; the typical 160 C shutdown never an acceptance; MODEL junctions) and all FAIL: L9T5-F13, F16 and F17 OPEN, F16 and F17 covered by no requirement (finished on 5 October 2026 in the morning by a fresh author, after the owner's instructions of that morning). **SDR3-F02 (the CM5's 2.5 A): confirmed as a finding;** a supply design figure, assessed as labelled scenarios and a bound on the slot stages (L9T5-F15); no case row is changed. F01 / D-17 stays OPEN; A1 is not drafted. Open `L9T5-CASES.md` sections 0d, 0c and 0b, then the claim table below (C36 onward is new for the next check).
 
@@ -12,26 +12,33 @@ VBAT) and 16.0718 V with the printed uncertainties bounded, against REQ-018's 15
 103.44 W (today's HIGH 113.0 W, the 45 W rating at the 40 % printed minimum): the deficit sits in the one number an open-loop VGG leaves
 unbounded.
 
-**1b, three corrections compared (`l9t5_f01.py`, `l9t5_f01.out`), each on the same case with every term labelled:**
+**1b, round 2 (after Astra's advisory challenge cx44 of 15:53, F01 SELECTION: NOT SUPPORTED, the first negative of (c), kept as given
+in `inputs/cx44-astra-f01-selection-as-received.md`; its ten blockers answered one by one in `l9t5_f01.out` section 7).** The comparison
+is redone on one standard: (a) and (c) each rest on an unprinted transfer of the PA's behaviour, so each is at most a PROVISIONAL choice
+(the owner's part 19, amendment 1 point 2).
 
 | Option | What it bounds | The case with the printed bounds | Verdict |
 |---|---|---|---|
-| (a) A1, the RF loop with a per-unit calibrated detector | RF output | rests on the PA's efficiency at the loop's high end (36.5 % needed at +-0.5 dB, 32.5 % at +-0.25 dB), printed by no row; the calibration leaves the detector's drift curvature and the sampler under mismatch (+0.42 / -0.45 dB at 3:1 with an assumed 20 dB directivity) unbounded | NOT CREDITABLE at the desk; a measurement would decide it |
-| (b) the BQ4050 calibrated per pack, the dock contacts bounded | the gauge's term | residual 0.2940 A: 15.7242 V; a perfect gauge still needs 15.5342 V (15.5162 V on W2's path) | CANNOT CLOSE ALONE; the dock's power pins are Mill-Max (20 mOhm max, printed, already in the bound); the Preci-Dip 813 sheet is the signal contacts |
-| **(c) a PA drain-current loop** | **the case's own quantity (DC watts at a regulated rail)** | **cap 6.4376 to 7.0119 A on printed limits; the PA at most 98.45 W; 15.2019 V, margin 0.2981 V (covers 17.34 mOhm more path or R_cell to 0.0730 Ohm)** | **SELECTED** |
+| (a) A1, the RF loop with a per-unit calibrated detector | RF output | rests on the PA's efficiency at the loop's high end (36.5 % at +-0.5 dB) and on a detector residual no sheet bounds: two supplier tasks, one on the failing case | ranked second |
+| (b) the BQ4050 calibrated per pack | the gauge's term | a perfect gauge still needs 15.5342 V | cannot close alone |
+| **(c) a PA drain-current cap** | **the case's quantity (DC watts at a regulated rail)** | **cap 6.3521 to 6.9258 A (MODEL on PRINTED terms with TYPICAL allowances; printed alone 6.3892 to 6.8940 A); the PA at most 97.24 W; 15.1308 V, MODEL margin 0.3692 V** | **SELECTED, PROVISIONAL on B-PA1 (the 30 W service) and B-PA2 (the dynamics)** |
 
-**Selection (authority: SESSION; ruled_by: Slot A under the owner's standing rule of 26 September 2026 and the ruling of 21 September
-2026; ruled_on: 5 October 2026).** (c): it bounds the case's quantity on printed limits (INA250 SBOS511C system gain error 0.75 %
-and offset rows, TLV758P SBVS351D 1 %, TLV9062 SBOS839N 2 mV, LM5176 SNVSAI1D VREF and VSNS) with no calibration and no RF part; the
-cap's top 7.0119 A is under U13's own loop minimum 7.0569 A, so **L9P-F04 closes with it**; the PA's worst heat falls from 83.0 W to
-68.4 W. Its one physical dependency is the PA's 30 W service at the cap's bottom (6.4376 A): the maker's own 30 W design condition is
-6.00 A at the printed minimum efficiency (12.5 V, 25 C), 7.3 % under it; carrying it to 13.8 V and the hot flange is a MODEL (a class-B
-stage's DC current at a given output does not depend on VDD) that bench row B-PA1 confirms. The open-loop design already owed that
-bench question (gen_sch_d.py's VGG note). **Reversal:** if the challenge shows the service at the cap's bottom unsupported, move the band
-up inside U13's minimum, or keep (c) for the case and add A1's RF loop for the service floor (the lower VGG wins); nothing is applied
-to the tree, so not applying the drafts reverts it.
+Round 2's design changes (cx44): U13's BIAS (its gate drive bounded at 0.1141 A, more than the room under U13's limit) is re-tapped from
++13V8_PA to PA_OUT, ahead of R55; the set point carries a 1 mA preload (R551 2.80k over R552 549 Ohm, the TLV758P's IOUT = 1 mA test
+condition); the set point is held at 0 V while OUTLET_OK is high and ramps at each key (R559 1k, C557 10 uF), so the RF drive (K1, 3 ms
+maximum) arrives under a low set point and the current approaches the cap from below; R560 470k winds the held integrator down; board D's
+VGG gets a 10k bleed (R58), because U15 cannot sink. The 6.0 A at 30 W is the maker's heat-sink EXAMPLE at the printed minimum efficiency
+(25 C, 12.5 V, VGG 5 V, full drive); its transfer to the kit's terminals and envelope is an ASSUMPTION, and B-PA1 decides it.
 
-**Open after 1b:** F01 / D-17 until 1c's draft composes, reads on the regenerated netlists with a failing mutation, holds its electrical
+**Selection (authority: SESSION; ruled_by: Slot A under the owner's standing rule of 26 September 2026, the ruling of 21 September 2026
+and part 19; ruled_on: 5 October 2026).** (c), PROVISIONAL. Why: it bounds the failing case's own quantity on the labelled terms and
+leaves the service on one supplier task; (a) leaves both the case and the service on unprinted behaviour. **L9P-F04** is corrected in the
+steady state on bounded figures (the cap's top and R55's other loads 0.1076 A under U13's least 7.0338 A, the shunt hot at 105.0 C with
+its printed TCR). **Withdrawn:** round 1's "lower-VGG-wins RF loop" fallback. **If B-PA1 fails** the arrangement fails, not a
+requirement: routes R1 (U13's limit and the cap raised, the bounded case allows 7.3674 A) and R2 (the PA rail at 12.5 V with VGG to 5 V).
+**Reversal:** not applying the drafts.
+
+**Open after 1b (round 2):** F01 / D-17 PROVISIONAL on B-PA1 (feasibility of the 30 W service under the cap: specimen three RA30H1317M1, IDD at 30.0 W at most 6.352 A less the lab's expanded uncertainty, terminal VDD 13.17 and 14.04 V, 144 to 146 MHz, flange 25 and 85 C, air -20 C, 50 Ohm and 3:1) and B-PA2 (the loop's settling, excursions under a load step, the pack current against l9stk's E-10); 1c's draft, composition, mutations and acceptance owed; U5 (R-214) MISSING against a MODEL margin of 0.3692 V.
 acceptance on C-ALLTX rev 3, and an independent check reads it; B-PA1 and B-PA2 (physical, confirm); U5 (R-214, the rest voltage's fall
 in the 60 s) MISSING, against which the case has 0.2981 V.
 
@@ -54,7 +61,8 @@ bounds the uncertainties the row names, compares three service-neutral approache
 | `l9t5_t10.py`, `l9t5_t10.out` | Round 4, task T10 (finding L9T5-F06): the supervisors' applicable operating conditions from the sources, the demand as a range, the regulator's thermal limit, three corrections compared, the selection with its acceptance criterion T10-A1 to A5, Layer 5's row text, the T10 drafts composed, read on the netlists and judged on C-DEV rev 1 (1 the pins; 2 the state; 3 ST's rows; 4 the junction; 5 the other parts; 6 the demand; 7 the regulator as drawn; 8 the corrections; 9 the draft; 10 the state and the findings; 11 the predicates) |
 | `apply_gen_sch_a_iocpre.py`, `apply_gen_sch_b_iocpre.py` | T10's drafts (NOT RELEASED: each refuses the tree's generator until a `RELEASE-T10.md` names an accepted check; each applies only after I-03's draft): R602 13.3 k and the declarations at 4.18 V on board A, declarations only on board B |
 | `l9t5_cm5.py`, `l9t5_cm5.out` | Round 4, part 3: finding SDR3-F02 assessed: the CM5 sheet's supply design figure read from the held file, the slot stages, C-ALLTX rev 3 and the budget's states at that figure as labelled scenarios; no case row changed |
-| `l9t5_f01.py`, `l9t5_f01.out` | P0 round (5 October 2026), part 1b: F01 / D-17 reproduced and three corrections compared on C-ALLTX rev 3, (c) selected (1 the case; 2 (a); 3 (b); 4 (c); 5 the selection; 6 what stays open; 7 the predicates) |
+| `l9t5_f01.py`, `l9t5_f01.out`, `l9t5_paloop.py` | P0 round (5 October 2026), part 1b round 2: F01 / D-17 reproduced and three corrections compared on C-ALLTX rev 3, (c) selected PROVISIONAL (1 the case; 2 (a); 3 (b); 4 (c); 4b the connected consequences; 5 the selection; 6 the supplier's tasks; 7 cx44's blockers; 8 the predicates); `l9t5_paloop.py` holds the cap's design values and its labelled band for every script |
+| `apply_gen_sch_a_paloop.py`, `apply_gen_sch_d_paloop.py`, `check_f01_netlist.py` | P0 round, part 1c (IN PROGRESS at this checkpoint: being revised to round 2's design) |
 | `fetch_held_back.py`, `l9t5_a1.py`, `l9t5_a1.out` | Round 2: A1's detector survey over four makers' sheets held back by their terms (fetched and sha256-checked, never committed) |
 
 Test: `v2/ecad/tools/tests/test_l9t5.py` (`env -C v2/ecad/tools python3 tests/run.py test_l9t5`).
