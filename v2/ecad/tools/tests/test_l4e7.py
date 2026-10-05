@@ -1711,7 +1711,8 @@ def t_p0sol_the_selection_verdicts_and_owed_texts_are_written_where_they_belong(
     out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
     page = " ".join(open(os.path.join(REC, "L4E7-P0SOL.md"), encoding="utf-8").read().split())
     for s in ("REPRODUCED: D-16 stands on the base", "REPRODUCED: D-10 stands on the base", "BYTE-IDENTICAL", "THE SELECTION (SESSION",
-              "): (C2).", "D-16 (B6-ENG-2): CORRECTED on the drafted circuit", "D-10 (B6, L4-F01): NARROWED, OPEN", "REJECTED"):
+              "): (C2).", "D-16 (B6-ENG-2): CORRECTED on the drafted circuit",
+              "D-10 (B6, L4-F01): an UNRESOLVED PROTECTION DEFECT in the present model", "REJECTED"):
         assert s in out, s
     for fig in ("0.1174", "-0.3021", "0.3645 A", "2.5378 A", "2.9212 A", "0.1093 A", "16.90 V", "10.05 V", "+1.34 %", "93.5783 W",
                 "1.052 ms", "3.67 uA"):
@@ -1762,5 +1763,26 @@ def t_p0sol_b2_page_carries_the_authority_finding_the_owner_item_and_the_figures
         assert s in page, s
     for fig in ("0.544 ms", "84.62 V", "56.10 V/us", "16.90 V", "12.48 V", "0.33 uH", "0.78 uH", "608 events"):
         assert fig in page and fig in out, fig
-    assert "5. ROUTE B2" in out and "PROPOSAL (route B2" in out
+    assert "5. ROUTE B2" in out and "an unapproved PARTIAL proposal" in out
     assert "–" not in page and "—" not in page
+
+
+def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure():
+    """The owner's review of checkpoint 4 (part 23): D-10 is an unresolved protection defect in the present model, written as the
+    receiving company's remaining engineering item E-1 with its failing cases, requirements, needed correction and the outputs that
+    stay PROVISIONAL; route B2 is an unapproved PARTIAL proposal and no text says adopting or declining it resolves D-10."""
+    import re
+    texts = {nm: " ".join(open(os.path.join(REC, nm), encoding="utf-8").read().split())
+             for nm in ("l4e7_p0sol.out", "L4E7-P0SOL.md", "B2-PRESENCE.md", "SUPPLIER-P1-1-P0SOL.md")}
+    sup = texts["SUPPLIER-P1-1-P0SOL.md"]
+    for s in ("REMAINING ENGINEERING E-1 (D-10)", "UNRESOLVED PROTECTION DEFECT", "(a) The failing cases", "(b) The applicable requirements",
+              "no new exclusion", "(c) The correction or justified model revision needed before any passing claim",
+              "(d) What stays PROVISIONAL, and what is completed independently", "| F1,", "| F2,", "| F3,", "| F4,"):
+        assert s in sup, s
+    for nm, tx in texts.items():
+        assert "UNRESOLVED PROTECTION DEFECT" in tx or "unresolved protection defect" in tx, nm
+        for m in re.finditer(r"(\S+ \S+ \S+) (resolves?|closes?) D-10", tx):
+            assert re.search(r"\b(not|neither|nor|never)\b", m.group(1)), (nm, m.group(0))
+        for m in re.finditer(r"B2[^.]{0,80}\b(closes|resolves|closed|resolved)\b D-10", tx):
+            assert re.search(r"\b(not|neither|nor|never)\b", m.group(0)), (nm, m.group(0))
+    assert "PARTIAL" in texts["B2-PRESENCE.md"] and "does not resolve D-10" in texts["B2-PRESENCE.md"]
