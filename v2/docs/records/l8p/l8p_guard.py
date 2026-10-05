@@ -438,9 +438,15 @@ def main():
     k = r7m / (rfp + r7m)
     i_allow = (R["out_pw_lo"] - R["ret_closed"] / k) / rfp
     w("       the sink the return may carry, the fixed resistor at +1 %% and R107 at -1 %%: %.2f uA (DERIVED)\n" % (i_allow * 1e6))
+    # the same doubling applied to every off FET already on the return, at the air (ASSUMED sites): board A's Q44 (L4-E11's 2N7002,
+    # drain on DOCK_EN_RET) and board P's Q107 over Q108 (two 2N7002 in series, taken as one); 20c counts SENSE1 alone
+    i_n_air = S["n_idss"] * 2 ** ((R["air"] - 25.0) / DOUBLING)
+    i_all_air = R["load_ret"] + 2 * i_n_air
     rows = (("U48's SENSE1 (RECORD 20c) and board P's Q107 (PRINTED, 25 C)", i_ret_base),
             ("those and the shunt at the %.2f C air (ASSUMED doubling)" % R["air"], i_ret_base + i_ao_air),
-            ("those and the shunt at record l9stk's %.2f C site (ASSUMED doubling)" % T_SHUNT, i_ret))
+            ("those and the shunt at record l9stk's %.2f C site (ASSUMED doubling)" % T_SHUNT, i_ret),
+            ("SENSE1, Q44 and Q107 at the air on the same doubling (no guard)", i_all_air),
+            ("those and the AO3400A at the air", i_all_air + i_ao_air))
     win = {}
     for name, i_s in rows:
         rr = ret_at(R["out_pw_lo"], i_s, rfp, r7m)
@@ -452,12 +458,15 @@ def main():
     o_lo = R["out_pw_lo"]
     o_hi = bisect(lambda o: ret_at(o, i_ret, rfp, r7m) >= R["ret_closed"], o_lo, 10.0)
     t_star = S["ao_idss_t"] + DOUBLING * __import__("math").log2((i_allow - i_ret_base) / S["ao_idss55"])
+    t_star_all = S["ao_idss_t"] + DOUBLING * __import__("math").log2((i_allow - i_all_air) / S["ao_idss55"])
     w("       at record l9stk's site the return reads %.3f V even at the most favourable corners (OUT %.3f V, held under %.4f V, every part\n"
       % (rr_fav, R["out_pw_hi"], R["ret_held"]))
     w("       nominal): read HELD. A closed loop ramping through DOCK_EN_OUT %.3f to %.2f V may read held (%.2f V is where the return passes\n"
       % (o_lo, o_hi, o_hi))
-    w("       %.2f V); the shunt's site keeps the window only under %.1f C on the assumed doubling (%.1f K over the %.2f C air)\n"
+    w("       %.2f V); the shunt's site keeps the window only under %.1f C on the assumed doubling (%.1f K over the %.2f C air), and, with\n"
       % (R["ret_closed"], t_star, t_star - R["air"], R["air"]))
+    w("       the same doubling applied to Q44 and Q107 at the air (%.1f uA before the guard), only under %.1f C: under the air itself\n"
+      % (i_all_air * 1e6, t_star_all))
     w("       record l9stk's predicate \"the window ... at every voltage: yes\" and acceptance (c) \"a ramping loop ... is never read held\":\n")
     w("       NOT REPRODUCED on its own leakage figure. Its window check compares the CLOSED loop's ratio (%.3f) with %.4f; the window is a\n"
       % (L["ratio_closed"], L["ratio_window"]))
@@ -487,6 +496,7 @@ def main():
     # ------------------------------------------------------------------ 7. the verdict and the correction scope
     i_n_hot = S["n_idss"] * 2 ** ((T_SHUNT - 25.0) / DOUBLING)
     rf_max = bisect(lambda rf: ret_at(R["out_pw_lo"], i_ret, rf * (1 + TOL), r7m) < R["ret_closed"], 1e3, 30e3)
+    rf_max_all = bisect(lambda rf: ret_at(R["out_pw_lo"], i_all_air + i_ao_hot, rf * (1 + TOL), r7m) < R["ret_closed"], 1e3, 30e3)
     e24 = (1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1)
     rf_e24 = max(m * 10 ** d for m in e24 for d in (3, 4) if m * 10 ** d <= rf_max)
     vt_rf = bisect(lambda v: held(v, GUARD_ALLOW, r6p, rf_e24 * (1 - TOL), R["load_out"]) >= vin_ec, 1.0, 40.0)
@@ -501,15 +511,19 @@ def main():
     w("   first). L8P-F07 stays OPEN.\n")
     w("   The smallest correction scope for the selection's owner (DERIVED, NOT DRAFTED, NOT CHECKED; one of these, each a material change):\n")
     w("     (i)   a shunt of lower leakage: the kit's 2N7002 (Q44's and Q107's part) prints IDSS %.0f nA at 60 V (25 C); on the same doubling\n" % (S["n_idss"] * 1e9))
-    w("           %.2f uA at %.2f C, %.1f uA on the return in all against %.1f uA; its on-resistance is printed at VGS 5 V (%.0f ohm at most) and 10 V\n"
-      % (i_n_hot * 1e6, T_SHUNT, (i_ret_base + i_n_hot) * 1e6, i_allow * 1e6, S["n_r5"]))
+    w("           %.2f uA at %.2f C, %.1f uA on the return in all against %.1f uA (%.1f uA with Q44 and Q107 at the air on that doubling too);\n"
+      % (i_n_hot * 1e6, T_SHUNT, (i_ret_base + i_n_hot) * 1e6, i_allow * 1e6, (i_all_air + i_n_hot) * 1e6))
+    w("           its on-resistance is printed at VGS 5 V (%.0f ohm at most) and 10 V\n" % S["n_r5"])
     w("           only, where the switch drives %.2f V: tripped, the return %.1f mV at %.1f V with %.0f ohm hot (a bound under 5 V, ASSUMED)\n"
       % (vg_on, held(V_CLAMP, 0.0, r6m, rfp, R["load_out"]) / rfm * S["n_r5"] * HOT_RDS * 1e3, V_CLAMP, S["n_r5"] * HOT_RDS))
     w("     (ii)  the fixed resistor at most %.2f kOhm nominal with the AO3400A at %.2f C (DERIVED, +1 %%), %.0f kOhm in E24: tripped, the regulator\n"
       % (rf_max / 1e3, T_SHUNT, rf_e24 / 1e3))
-    w("           then meets the table's condition only from %.2f V, over the pack's %.1f V, so a trip low in the service holds on under 5 V\n" % (vt_rf, R["vmin"]))
-    w("     (iii) the shunt's site bounded under %.1f C (a layout condition, %.1f K over the air), with the leakage's doubling still ASSUMED\n"
+    w("           then meets the table's condition only from %.2f V, over the pack's %.1f V, so a trip low in the service holds on under 5 V;\n" % (vt_rf, R["vmin"]))
+    w("           with Q44 and Q107 counted hot too, at most %.2f kOhm\n" % (rf_max_all / 1e3))
+    w("     (iii) the shunt's site bounded under %.1f C (a layout condition, %.1f K over the air), with the leakage's doubling still ASSUMED;\n"
       % (t_star, t_star - R["air"]))
+    w("           with Q44 and Q107 counted on the same doubling the bound is %.1f C, under the %.2f C air: NOT AVAILABLE on that count\n"
+      % (t_star_all, R["air"]))
     w("   The trip and no-trip sides on the case row (section 6) do not depend on this choice.\n")
 
     # ------------------------------------------------------------------ 8. DELTA-02's class on board P (the recheck V2R's V2R-m9)
@@ -550,6 +564,8 @@ def main():
         ("the shunt's off leakage is record l9stk's figure at its site", abs(i_ao_hot - L["idss_hot"]) < 0.05e-6),
         ("L4-E11 20c's window holds with the return's sinks before the guard", win[rows[0][0]]),
         ("L4-E11 20c's window holds with the AO3400A at record l9stk's site (G2 as selected)", win[rows[2][0]]),
+        ("L4-E11 20c's window holds with Q44 and Q107 at the air on the doubling, no guard", win[rows[3][0]]),
+        ("the 2N7002 shunt at record l9stk's site keeps the window with Q44 and Q107 counted hot too", ret_at(R["out_pw_lo"], i_all_air + i_n_hot, rfp, r7m) >= R["ret_closed"]),
         ("C-PROT's no-trip side is printed at 10 A and in the 18 A service, and at condition C4", m10 > 0 and m18 > 0 and m_c4 > 0),
         ("C-PROT's trip side leaves the gradient record l9stk prints", abs(g_left - L["grad"]) < 0.006 and abs(g_left2 - L["grad2"]) < 0.006),
         ("both TI FETs of board P's paired items print RthJC 0.8 K/W at most", D9["rjc"] == 0.8 and D9["rjc17"] == 0.8),

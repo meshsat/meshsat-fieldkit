@@ -827,9 +827,16 @@ def t_round7_l8p_f08_g2s_window_fails_on_l9stks_own_leakage():
     assert ret(R["out_pw_lo"], base + ao_air, rf, r7) > R["ret_closed"], "at the air the window holds"
     n_site = S["n_idss"] * 2 ** ((L["t_shunt"] - 25.0) / 10.0)
     assert ret(R["out_pw_lo"], base + n_site, rf, r7) > R["ret_closed"], "the 2N7002 correction (12k, 1) keeps the window"
+    # the same doubling on the FETs already on the return (Q44, Q107 over Q108) at the air: the window holds without the guard,
+    # fails with the AO3400A even at the air, and holds with the 2N7002 shunt at record l9stk's site
+    every = R["load_ret"] + 2 * S["n_idss"] * 2 ** ((R["air"] - 25.0) / 10.0)
+    assert ret(R["out_pw_lo"], every, rf, r7) > R["ret_closed"]
+    assert ret(R["out_pw_lo"], every + ao_air, rf, r7) < R["ret_closed"], "with every off FET counted the AO3400A at the air keeps the window"
+    assert ret(R["out_pw_lo"], every + n_site, rf, r7) > R["ret_closed"], "with every off FET counted the 2N7002 correction fails"
     out = open(GUARD_OUT, encoding="utf-8").read()
     for s in ("26.45 uA (DERIVED)", "45.7 uA: RET 0.668 V at OUT 1.825 V  FAILS", "read HELD", "under 77.9 C", "NOT REPRODUCED on its own leakage figure",
-              "the draft STOPS here", "7.7 uA on the return in all against 26.4 uA"):
+              "the draft STOPS here", "7.7 uA on the return in all against 26.4 uA", "only under 74.2 C: under the air itself",
+              "NOT AVAILABLE on that count"):
         assert s in out, s
 
 
