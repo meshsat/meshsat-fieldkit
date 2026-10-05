@@ -1636,3 +1636,44 @@ image 32,980 bytes; real flash stays open. V2R (the targeted recheck on `fnd/v2c
 V2-B2 and V2-B3 CLOSED BY THE CORRECTION; DELTA-02's method CONFIRMED AS CONDITIONAL; TP-E11-29's fixture and pass rules NOT
 CONFIRMED (V2R-B1, V2R-B2; round 14 queued); TP-E11-29 stays NOT EXECUTABLE. Record l8r2's round 8 (`fnd/l8r4` `c935542f`): the
 dedicated return of three XT60 leads drafted and composed, unchecked; L8R2-F31 and I-03 stay OPEN.
+
+### Plan, 5 October 2026 14:48 CEST: P0 power closure under strict layer order (the owner's instruction of 14:20, parts 15 to 17)
+
+**What changed.** The owner's instruction of 14:20 (`handover/OWNER-INSTRUCTION-2026-10-05.md`, part 15; his two plan reviews parts 16
+and 17) supersedes the permission to keep later layers moving and to fill idle slots. Layer 4's power architecture is the ONLY active
+work; Layers 5 to 12 are paused except named prerequisites of its gate; P0 is the execution priority with each finding's severity kept
+apart. The approved plan (14:48, amended on the owner's four points) is the session's plan file; its substance is this entry.
+
+**Stopped and preserved (14:49 to 14:56, record `_runs/STOP-20261005.md` on the runner).** Every assignment outside the power design
+was cancelled: V5FR (the firmware recheck; its box jobs had finished, its outputs archived, no verdict written), T6b (the copper
+comparison; nothing written), the L4-E9 delta round, the procedures refresh, set 30 as scoped on 4 October, T11's continuation. Their
+interim texts are kept as INCOMPLETE; rented box 54310066 stopped with its disk; no compute runs. Nothing reset, deleted or destroyed.
+V6 (the focused independent check of the board A and B power drafts on `7a82e82a`) returned before the instruction: every item
+CONFIRMED AS CONDITIONAL, with blocking V6-B1 (each board's plane resistance in series with the return can take the whole margin),
+V6-B2 (indirect A to B ground paths uncounted) and V6-B3 (CON-004 covers the CAN fault states F16 and F17, so their closure is
+required), and minors m1 to m12; T10's deficit is NOT corrected on that candidate.
+
+**The P0 list.** `records/l4close/P0-POWER-LIST.md`: twelve rows with the failing case, the limit, the correction, the owner, the
+evidence, the dependency, the closure test and the class. Desk-fixable: P0-1 F01 / D-17 (C-ALLTX rev 3 needs 15.5162 V nominal and
+16.0718 V bounded against REQ-018's 15.5 V; A1 selected, undrafted, no detector with a printed accuracy), P0-2 I-03 and the return
+(V6-B1, B2, m1, m8, m12), P0-3 T10 with F13, F16, F17 (V6-B3, m9, m10), P0-4 the eFuse settings (V6-m3 to m6), P0-5 the thermal guard
+(V6-m7, m2), P0-6 the final composition (V6-m11). Boundable at the desk: P0-7 D-10's guard-on case and D-16 (circuit alternatives, not
+the ended method), P0-8 E11-37. External: U-01, U-02, U-04 (architecture-level: Saft's statement or a one-cell qualification; T-H1;
+E11-31 on a BQ25730 build) and E11-29 (a supplier's fixture demonstration, a qualification). A calibration, a test row or a layout bound
+is a means of correction, never evidence: its own uncertainty and realisability are established before it is credited.
+
+**The base and the assignments.** `fnd/p0base` `e132db0e` = V6's candidate with L4-E11 rounds 15 and 16 merged and seven outputs
+re-pinned (digest lines only); affected tests 227 passed, 1 failed (record l8p's copy of L4-E11 a round behind, assigned to Slot C),
+0 skipped. Slot A, the power-design author on `fnd/p0pwr`: P0-1 (reproduce, compare at most three, selection, draft), P0-2, P0-7, the
+merges, the connected re-trace of the complete path, then the FINAL composition. Slot B, the independent checker (Astra): an advisory
+challenge of P0-1's selection before drafting expands, one focused check of the complete candidate, one targeted recheck; it authors
+nothing and every earlier verdict stands. Slot C, the supporting author on `fnd/p0t10`, on its own files: P0-3, P0-4, P0-5. The
+coordinator is the one writer of the shared case rows. The three-worker limit holds; a slot stays empty rather than taking non-P0 work.
+
+**The gate and the order.** Layer 4's power portion closes only on L4-E9 section 8's criteria read without weakening: one composed
+design, every desk-fixable defect corrected and verified against its failure case with its connected consequences, reproducible
+calculations on the candidate, independent acceptance with every negative preserved, no architecture dependency under "conditional" or a
+later layer, the integration gates passed on the accepted revision. Set 30 is the P0 candidate's integration and nothing else. Expected
+honest reading after the desk work: criteria 1 and 5 BLOCKED on U-01, U-02 and U-04 until their external facts exist. Estimate: a
+connected, independently checked DESK candidate in about 14 to 18 h of desk work if no second negative (anchors: set 28's suite 34 min,
+V6 35 min); not a date for Layer 4's closure. Checkpoint 1 was reported at 15:20; then every 45 minutes or at a material result.
