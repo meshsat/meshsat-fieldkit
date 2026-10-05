@@ -32,6 +32,7 @@ Exit 0 when every board given reads DRAWN (and the lead pair holds when both are
 import hashlib
 import math
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -48,9 +49,11 @@ LDOS = (("U40", "R66", "C400"), ("U50", "R78", "C420"), ("U60", "R90", "C440"))
 # task T10's pre-regulator draft composed after it, R602 at 13.3 k (round 4; record l9t5's l9t5_t10.py)
 DIVS = {"i03": (("56.2k 0.1%", "10.7k 0.1%"), (4.8, 5.2)), "t10": (("56.2k 0.1%", "13.3k 0.1%"), (4.05, 4.31)),
         # P0 round (Slot A, 5 October 2026, SESSION L9T5-D9): Slot C's set point delta iocset composed after iocpre, R602 14.0 k. The
-        # band's floor 3.87 V: the least output that keeps T10-A3 (restated at 0.4512 A, SESSION L9T5-D8) with the return as drawn
-        # (3.6652 V + 2 % of 4.01 V + three LDOs' 0.4512 A on 42.52 mOhm + 0.0681 V = 3.871 V); its ceiling 4.18 V: the top that keeps
-        # the babbling supervisor's LDO at 125 C on revision V (l9t5_connected.out section 10)
+        # band's floor 3.87 V: the least output that kept T10-A3 at 0.4512 A (SESSION L9T5-D8) with the return as drawn and no sense
+        # resistor (3.6652 V + 2 % of 4.01 V + three LDOs' 0.4512 A on 42.52 mOhm + 0.0681 V = 3.871 V); after cx45 L9T5-D8 is
+        # superseded by T10-A3 at the rail trip's maximum with the sense resistor's drop (a floor of about 3.78 V): the stricter 3.87 V
+        # is kept, never lowered; its ceiling 4.18 V: the top that keeps the babbling supervisor's LDO at 125 C on revision V without
+        # the containment (l9t5_connected.out section 10)
         "t10s": (("56.2k 0.1%", "14.0k 0.1%"), (3.87, 4.18))}
 
 
@@ -157,20 +160,45 @@ def checks_a(nl, div="auto"):
     return res
 
 
+def _guard_adds():
+    """the designators record l9t5's containment delta (apply_gen_sch_b_iocguard.py, Slot C's T10 round 6) adds, read with ast from its
+    ADDS expression (evaluated on literals only)"""
+    import ast as _ast
+    p = os.path.join(HERE, "apply_gen_sch_b_iocguard.py")
+    if not os.path.isfile(p):
+        return set()
+    for node in _ast.parse(open(p, encoding="utf-8").read()).body:
+        if isinstance(node, _ast.Assign) and any(isinstance(x, _ast.Name) and x.id == "ADDS" for x in node.targets):
+            return set(eval(compile(_ast.Expression(node.value), p, "eval"), {"__builtins__": {"tuple": tuple, "range": range}}))
+    return set()
+
+
+def ldo_in(nl, u):
+    """the LDO's input net: +5V_IOC as I-03 draws it, or behind its rail trip's sense resistor (the containment delta, L9T5-F25)"""
+    n = pin(nl, u, "1")
+    return n if n and re.fullmatch(r"IOC\w*_LDO_IN", n) else None
+
+
 def checks_b(nl):
     if "J_5V_IOC" not in nl["pins"]:
         return {"LDO": ("NOT DRAWN", ["J_5V_IOC absent"])}
     res = {}
-    want = []
-    for u, rr, cc in LDOS:
-        want.append((u, "1", IOC))
-    why = rows(nl, want)
+    guard = all(ldo_in(nl, u) for u, _r, _c in LDOS)      # P0 round after cx45 (L9T5-F25): the containment delta composed
+    why = []
     for u, rr, cc in LDOS:
         en = pin(nl, u, "3")
+        vin = ldo_in(nl, u) if guard else IOC
+        if not guard and pin(nl, u, "1") != IOC:
+            why.append("%s.1 on %r, wanted %s" % (u, pin(nl, u, "1"), IOC))
+        if guard:
+            # the sense resistor alone joins the LDO's input to +5V_IOC
+            rs = [r for r in nl["pins"] if r.startswith("R") and two(nl, r) == sorted([IOC, vin])]
+            if len(rs) != 1:
+                why.append("%s's input %s is joined to %s by %s, wanted one sense resistor" % (u, vin, IOC, rs or "nothing"))
         if two(nl, rr) != sorted([IOC, en or "?"]):
             why.append("%s on %s, wanted %s to %s" % (rr, two(nl, rr), IOC, en))
-        if two(nl, cc) != sorted([IOC, "GND"]):
-            why.append("%s on %s, wanted %s to GND" % (cc, two(nl, cc), IOC))
+        if two(nl, cc) != sorted([vin, "GND"]):
+            why.append("%s on %s, wanted %s to GND" % (cc, two(nl, cc), vin))
     on_dev = [u for u, _r, _c in LDOS if pin(nl, u, "1") == "+5V_DEV"]
     if on_dev:
         why.append("%s still on +5V_DEV" % ", ".join(on_dev))
@@ -178,7 +206,7 @@ def checks_b(nl):
     why = rows(nl, [("J_5V_IOC", "1", IOC), ("J_5V_IOC", "2", "GND"), ("D900", "1", IOC), ("D900", "2", "GND")])
     if two(nl, "C900") != sorted([IOC, "GND"]):
         why.append("C900 on %s" % two(nl, "C900"))
-    allowed = {"J_5V_IOC", "D900", "C900"} | {x for t in LDOS for x in t}
+    allowed = {"J_5V_IOC", "D900", "C900"} | {x for t in LDOS for x in t} | (_guard_adds() if guard else set())
     extra = [m for m in members(nl, IOC) if m.split(".")[0] not in allowed]
     if extra:
         why.append("%s also carries %s" % (IOC, ", ".join(extra)))

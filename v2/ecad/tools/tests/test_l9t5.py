@@ -1103,26 +1103,40 @@ def t_p0_connected_the_re_trace_reads_its_sources():
         assert ("band %s to %s A" % (lo, hi)) in text, (lo, hi)
     # cx45 Q7: the coordination names what it does not establish; the active C-DEV row is rev 2; the CAN service per state
     for s_ in ("NOT COVERED at 76.25 C", "demand the 30 W service: NOT ESTABLISHED", "in its COMPOSED form", "no single failure removes the trip", "L8P-R9-F1, handed over",
-               "the service is NOT ESTABLISHED there", "U7 with I-03 carries C-DEV rev 2 (the active row)"):
+               "NOT ESTABLISHED for", "a TX pin repurposed as a GPIO", "U7 with I-03 carries C-DEV rev 2 (the active row)"):
         assert s_ in text, s_
     assert "U7 with I-03 carries C-DEV rev 1" not in text
     assert "the required service unchanged" in text and "replaced, by the cap's top" in text
     assert "DECISION L9T5-D9 (SESSION" in text and "Slot C's set point delta (R602 14.0 k) is TAKEN" in text and "ADAPTATION REJECTED" in text
-    # L9T5-F22 over the connected circuit: the chain's rows, 13.3 k holding T10-A3 at the printed 600 mA with either return and 14.0 k not
-    rows = re.findall(r"R602 (1\d\.\d) k .*?return (as drawn|with the dedicated return)\s+shift [\d.]+ V, (0\.6000|[\d.]+) A a LDO .*?: (holds|FAILS) ", text)
-    assert len(rows) == 12, rows
-    at600 = {(r[0], r[1]): r[3] for r in rows if r[2] == "0.6000"}
-    assert at600 == {("13.3", "as drawn"): "holds", ("13.3", "with the dedicated return"): "holds",
-                     ("13.8", "as drawn"): "FAILS", ("13.8", "with the dedicated return"): "holds",
-                     ("14.0", "as drawn"): "FAILS", ("14.0", "with the dedicated return"): "FAILS"}, at600
-    held = {(r[0], r[1]): r[3] for r in rows if r[2] != "0.6000"}
-    assert set(held.values()) == {"holds"}, held          # every set point holds at the largest computed current, either return
-    # the babbling row on revision V: Slot C's two computed points, read from l9t5_t10.out, the taken one under 125 C
-    bab = re.search(r"babbling \(nothing ends it\)\s+V\s+[\d.]+ A\s+125 C \(sustained\)\s+([\d.]+) C FAILS\s+([\d.]+) C holds", open(T10_OUT, encoding="utf-8").read())
-    assert bab and ("R602 13.3 k: %s C (Slot C's MODEL): FAILS" % bab.group(1)) in text and ("R602 14.0 k: %s C (Slot C's MODEL): holds" % bab.group(2)) in text
+    # L9T5-F22 over the connected circuit WITH THE CONTAINMENT composed (cx45 Q3, Slot C's round 6): every row carries its LDO's own sense
+    # resistor; three currents a set point and return: the printed 600 mA, the hardware bound (the rail trip's maximum, 10j (d)) and
+    # L9T5-D8's superseded 0.4512 A
+    rows = re.findall(r"R602 (1\d\.\d) k .*?return (as drawn|with the dedicated return)\s+shift [\d.]+ V, ([\d.]+) A a LDO \((the rating|the hardware bound|L9T5-D8, superseded); .*?: (holds|FAILS) ", text)
+    assert len(rows) == 18, rows
+    by = {}
+    for rb, ret, _i, crit, v in rows:
+        by.setdefault(crit, {})[(rb, ret)] = v
+    assert set(by["the rating"].values()) == {"FAILS"}, by        # the sense resistor's drop takes the 600 mA row out at every set point
+    assert set(by["the hardware bound"].values()) == {"holds"}, by  # T10-A3 at the trip's maximum holds everywhere, either return
+    assert by["L9T5-D8, superseded"][("13.3", "as drawn")] == "holds" and by["L9T5-D8, superseded"][("14.0", "as drawn")] == "FAILS", by
     t10 = open(T10_OUT, encoding="utf-8").read()
+    t10j = " ".join(t10.split("10j. THE CHECK cx45's Q3", 1)[1].split())
+    a3 = re.search(r"each LDO's input at the trip's maximum ([\d.]+) A, the sense resistor's drop counted: at least ([\d.]+) V against ([\d.]+) V", t10j)
+    assert a3 and ("input %s V against %s V (Slot C: %s V against" % (a3.group(2), a3.group(3), a3.group(2))) in text   # Slot C's figure reproduced
+    assert "%s V): the same" % a3.group(3) in text
+    assert "0.3R 1% 0805 for U40" in text and "taken at 0.3030 Ohm" in text      # the sense resistor read on the composed board B
+    # the babbling row on revision V without the containment: Slot C's two computed points, read from l9t5_t10.out
+    bab = re.search(r"babbling \(nothing ends it\)\s+V\s+[\d.]+ A\s+125 C \(sustained\)\s+([\d.]+) C FAILS\s+([\d.]+) C holds", t10)
+    assert bab and ("R602 13.3 k %s C (Slot C's MODEL) FAILS" % bab.group(1)) in text and ("R602 14.0 k %s C (Slot C's MODEL) holds" % bab.group(2)) in text
+    # with the containment: the trip's held maximum, Slot C's MODEL at 14.0 k, under 125 C
+    th = re.search(r"the LDO's junction at most ([\d.]+) C at ([\d.]+) C air", t10j)
+    assert th and ("R602 14.0 k: %s C (Slot C's MODEL): holds" % th.group(1)) in text
+    assert "FINDING L9T5-F27" in text and "superseded" in text
     m = re.search(r"14\.0 k: [\d.]+ V nominal, top ([\d.]+) V; the LDOs' input at least ([\d.]+) V", t10)
-    assert m and ("top %s V)" % m.group(1)) in text and ("input %s V against" % m.group(2)) in text   # the same chain as Slot C's scenario
+    assert m and ("top %s V)" % m.group(1)) in text
+    # the same chain as Slot C's part 22 scenario (no containment then): at 14.0 k, as drawn, at 0.4512 A the only difference is the sense drop
+    r14 = re.search(r"R602 14\.0 k .*?return as drawn\s+shift [\d.]+ V, 0\.4512 A a LDO \(L9T5-D8, superseded; .*?\): input ([\d.]+) V", text)
+    assert r14 and abs(float(r14.group(1)) + 0.3030 * 0.4512 - float(m.group(2))) < 2e-4, (r14 and r14.group(1), m.group(2))
     # L8R2-F33a on the placement as drawn, read from record l8r2's output
     p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
     mm = re.search(r"holds every entry within ([\d.]+) mm of its socket on both boards: MET", p0)

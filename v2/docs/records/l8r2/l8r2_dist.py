@@ -571,6 +571,13 @@ def main():
                 f = FP["b"].get(ref)
                 gp = [(x, y) for _n, x, y, net in (f["pads"] if f else []) if net in GND]
                 if not gp:
+                    # a series element (a load with no ground pad on the placed board, a sense resistor or a switch): its current
+                    # returns at the placed parts one net beyond it, their ground pads (one hop on the composed netlist)
+                    rail_ = RAIL_OF[ld]
+                    nets_ = {n for n in net_parts["b"].get(ref, {}).get("nets", {}).values() if n not in (rail_, "GND", "NC")}
+                    beyond = sorted({p_["ref"] for p_ in T["b"]["parts"] if p_["ref"] != ref and nets_ & set(p_["nets"].values())})
+                    gp = [(x, y) for r_ in beyond for _n, x, y, net in (FP["b"][r_]["pads"] if r_ in FP["b"] else []) if net in GND]
+                if not gp:
                     if var == "entry":
                         unplaced.setdefault(ld, []).append(ref)
                     gp = [pad("b", ld, "2") if var == "entry" else tuple(rib_c)]
@@ -582,7 +589,8 @@ def main():
             inj[var][ld] = [(x, y, a_ / tot) for x, y, a_ in pts]
     w("   each lead's return enters board B at its rail's loads' ground pads (the intent's loads as weights) and leaves board A at the lead's")
     w("   pin 2 land (the stage beside its connector: a Layer 10 placement condition, ASSUMPTION); a load not placed on board B yet is taken")
-    w("   at its rail's entry and, as the bound adverse to the ribbons, at J_AB1's ground pins, the larger of the two kept: %s" % (
+    w("   at the placed parts one net beyond it (a series element: a sense resistor, a switch), else at its rail's entry and, as the bound")
+    w("   adverse to the ribbons, at J_AB1's ground pins, the larger of the two kept: %s" % (
         "; ".join("%s: %s" % (k, ", ".join(sorted(v))) for k, v in sorted(unplaced.items())) or "none"))
     # the ground shift the supervisors' LDOs see: their ground pads on board B less J_5V_IOC's pin 2 land on board A (record l9t5's T10-A3)
     ldo_pads = [(x, y) for ref in ("U40", "U50", "U60") for _n, x, y, net in FP["b"][ref]["pads"] if net in GND]
