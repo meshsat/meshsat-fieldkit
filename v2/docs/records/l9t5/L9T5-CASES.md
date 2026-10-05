@@ -9,6 +9,17 @@ PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited 
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
 
+## 0e. Round 5 (5 October 2026): T10 after the independent check V6 (L9T5-F13, F16, F17)
+
+The round's page is `T10-ROUND5.md`; its figures are `l9t5_t10.out` section 10 ("t10 10a" to "t10 10g"). In short: the fault
+rows are covered by CON-004 (round 4's sentence placing them outside every requirement was wrong, V6-B3); T10-A1's row and the fabrics'
+transmit share and fault handling are drafted as `HW-FW-CONTRACT.md` rows FW-B20 and FW-B21 (`apply_hw_fw_contract_t10.py`,
+unapplied); each transceiver's SHDN is drafted onto its controller (`apply_gen_sch_b_canshdn.py`, composed, read, mutated). With
+the enabled peripherals bounded, the share and the response, the regulator holds 125 C at the case's 76.25 C air on both silicon
+revisions in the bounded state and in every credible single fabric fault, and 150 C with both fabrics faulted. F13, F16 and F17
+are DRAFTED CORRECTIONS whose desk acceptance their author met; they stay OPEN in the register until an independent check reads
+them and Layer 5 applies the rows. No case row is changed here: C-DEV's revised supervisor figure is the coordinator's (t10 10g).
+
 ## 0d. Round 4, part 3: finding SDR3-F02, the Compute Module 5's supply design figure
 
 Figures: `l9t5_cm5.out` ("cm5 N"), printed by `l9t5_cm5.py`, which reads the sheet held in the tree
@@ -111,8 +122,8 @@ current), never a measured temperature.
 | Row | Demand | Junction with the pre-regulator (MODEL) | As drawn (MODEL) | Scope and the limit judged | Governing text, and where the case is handled | Verdict and finding |
 |---|---|---|---|---|---|---|
 | (m) both transceivers driving dominant, held | 0.3091 A | 132.6 C | 180.5 C | in T10's scope (normal traffic sets its average); 125 C | FW-B09 bounds the rate (1 Mbps or less), not each supervisor's transmit share; T10-A2 is judged at the DECLARED 0.020 A a transceiver; the TCAN334's driver dominant time-out (SLLSEQ7F, tTXD_DTO 1.2 to 3.8 ms, PRINTED) ends only a held TXD | FAILS at the held figure: **L9T5-F13, OPEN** (Layer 5 for a transmit-share row; board B's generator owner and rv-pwr for the declaration); as drawn FAILS 150 C (L9T5-F06) |
-| (f1) one fabric faulted, its transceiver driving dominant into the fault (the 180 mA row: TXD = 0 V, CANH = -12 V, RL open; SLLSEQ7F 5.5, p.6), the other recessive; on all three regulators | 0.3726 A | 144.2 C | 201.9 C | a fault state outside T10's scope that the design must serve; 125 C (it is under 150 C) | **no requirement covers this fault state**: REQ-073 covers the other direction (a failed supervisor must not take a fabric down) and REQ-004's acceptance does not name test A7; handled functionally in `ARCH-PCB-B-IOHA.md` section 12 row 7 and test A7, which read quorum, not the regulators | FAILS 125 C: **L9T5-F16, OPEN** (Layer 5's owner); as drawn FAILS 150 C |
-| (f2) both fabrics faulted, both transceivers driving into their faults; on all three regulators | 0.5491 A | 176.3 C | 261.4 C | a double fault outside T10's scope; 150 C, in any state | **no requirement covers this fault state**; handled functionally in row 8 and test A7 ("with both broken nothing moves") | FAILS 150 C: **L9T5-F17, OPEN** (Layer 5's owner); as drawn FAILS 150 C |
+| (f1) one fabric faulted, its transceiver driving dominant into the fault (the 180 mA row: TXD = 0 V, CANH = -12 V, RL open; SLLSEQ7F 5.5, p.6), the other recessive; on all three regulators | 0.3726 A | 144.2 C | 201.9 C | a fault state outside T10's scope that the design must serve; 125 C (it is under 150 C) | covered by CON-004 (`REQUIREMENTS-TRACE.md`: constraint, core, BLOCKER, the three supervisors on two independent CAN-FD fabrics, accepted when test A7 passes) through `ARCH-PCB-B-IOHA.md` section 12 row 7 and test A7, so its closure is required for CON-004 (round 5, V6-B3: round 4 read REQ-073 and REQ-004 and missed CON-004); A7 as written cuts a fabric and does not exercise the shorted-bus row (t10 10a, 10e) | FAILS 125 C held: **L9T5-F16, OPEN** (Layer 5's owner and CON-004's, b and fw_ioctrl; round 5's drafted response in t10 10e and 10f); as drawn FAILS 150 C |
+| (f2) both fabrics faulted, both transceivers driving into their faults; on all three regulators | 0.5491 A | 176.3 C | 261.4 C | a double fault outside T10's scope; 150 C, in any state | covered by CON-004 through row 8 and test A7 ("with both broken nothing moves"): nothing moving is the accepted outcome, but the regulators must survive it (round 5, V6-B3) | FAILS 150 C held: **L9T5-F17, OPEN** (owners as F16; round 5's drafted response in t10 10e and 10f); as drawn FAILS 150 C |
 
 What would close them (a supported correction, or a protective response that meets the temperature and states the service then
 lost): for F13, a contract row bounding each supervisor's transmit share so that its transceivers' average stays at or under the
@@ -168,7 +179,7 @@ is not plotted.
 at the hot stop's air; once Layer 5 accepts T10-A1 it is the bounded figure; a case row's input, not changed here), **L9T5-F13, OPEN** (the
 declared 60 mA for a supervisor's other parts against two TCAN334's printed 120 mA dominant and 360 mA bus-fault currents; the
 held dominant row FAILS 125 C; Layer 5, board B's generator owner, rv-pwr), **L9T5-F16, OPEN** and **L9T5-F17, OPEN** (Layer 5's
-owner: the fabric-fault rows, which no requirement covers),
+owner and CON-004's: the fabric-fault rows, covered by CON-004 through IOHA rows 7 and 8; round 5 in section 0e),
 L9T5-F14 (Layer 6: the order code admits silicon revisions Y and V).
 
 ## 0b. Round 4 (4 October 2026 night, from 23:15 CEST): the recheck V3's corrections, the return drafts composed
