@@ -446,7 +446,7 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 17, "the T10 script")
+    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 19, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "Round 4 was the first attempt at this correction",
                "round 5 is the second round on the same correction"):
@@ -670,12 +670,19 @@ def t_round5_t10_the_fault_rows_are_traced_to_con004_and_re_solved():
     hi3 = chk.vout_band(56.2e3, 13.3e3)[2]
     air = P["air"]
 
+    # part 21 (1): the drop at its worst corner, the pre-regulator's top less the LDO's least output (98.5 %); round 4 took 3.3 V
+    assert P["vout_lo"] == 0.985 and P["vout_hi"] == 1.015
+
     def tj(i):
-        return air + P["theta_ldo"] * (hi3 - 3.3) * i
+        return air + P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"]) * i
     for rev in "YV":
         tj_m, i_m = m.mcu_point(P, Q, rev, air)
         assert abs(air + P["theta_mcu"] * 3.3 * i_m - tj_m) < 1e-6
         reg = i_m + i_aux + 2 * i_can
+        if rev == "Y":
+            # the old statement (round 5's first pass, at the nominal drop) held; at the worst corner rev Y's cover does not
+            assert air + P["theta_ldo"] * (hi3 - 3.3) * reg <= m.TJ_GOAL < tj(reg), tj(reg)
+            continue
         assert tj(reg) <= m.TJ_GOAL, (rev, tj(reg))
         # each credible bus fault on one fabric, held: FAILS; with the share: holds 125 C (B4 carries the other nodes' bits too)
         v33 = 3.3 * P["vout_hi"]
@@ -688,9 +695,50 @@ def t_round5_t10_the_fault_rows_are_traced_to_con004_and_re_solved():
     # rev Y's rows have no controller operating point in the exhaust air: the record says so and ties it to the inside air (U-02)
     assert m.mcu_point(P, Q, "Y", P["air_exhaust"]) is None and m.mcu_point(P, Q, "V", P["air_exhaust"]) is not None
     for s_ in ("COVERED BY CON-004", "A7 as written CUTS a fabric", "NO OPERATING POINT at or under 125 C: the H743 itself", "U-02",
+               "PROVISIONAL CHOICE (SESSION L9T5-D7)", "pass limit: at most 0.2318 A", "SESSION decision L9T5-D6", "L9T5-F21", "L9T5-F22",
                "SESSION decision (L9T5-D5): tolerated", "L9T5-F18", "L9T5-F19", "L9T5-F20", "LABELLED SCENARIO until the coordinator issues the row",
                "CONFIRMED on the bench by V-B21, not decided there", "the declaration holds for ANY dominant current up to 828.5 mA"):
         assert s_ in text, s_
+
+
+def t_round5_t10_the_four_answers_of_part_21_are_re_solved():
+    """The owner's review of checkpoint 2 (part 21): (1) the margin and the corner it is lost at, re-solved: rev V's rows keep over 14 K at the
+    drop's worst corner and hold to a local air over the exhaust's; rev Y's (the cover for a rev X part) miss 125 C there, and the controller
+    figure a rev X part must meet is the one printed; (2) the service: at FW-B21's 500 kbit/s floor the share leaves 7 frames a window, the
+    assumed need fits within two windows; (3) the firmware as the faulting party is bounded under 150 C while it keeps the clock bound;
+    (4) the contract draft carries the figures and C-DEV rev 2's copy carries this output's."""
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    m = _mod(T10, "l9t5_test_t10r5c")
+    P = m.figures(); Q = m.figures5(P)
+    text = open(T10_OUT, encoding="utf-8").read()
+    sec = text.split("   10h. THE FOUR QUESTIONS")[1].split("\n11. THE STATE")[0]
+    led = {(r, l): float(x) for r, l, x in re.findall(r"rev ([YV]), (the bounded state|the worst single fault, responded|both fabrics faulted, responded): +[\d.]+ A, ([\d.]+) C", sec)}
+    assert len(led) == 6
+    assert all(v <= m.TJ_GOAL - 14.0 for (r, _l), v in led.items() if r == "V") and all(v > m.TJ_GOAL for (r, _l), v in led.items() if r == "Y")
+    air_v = [float(x) for x in re.findall(r"rev V, [^\n]*?lost at a local air of ([\d.]+) C", sec)]
+    assert len(air_v) == 3 and min(air_v) > P["air_exhaust"]
+    i_aux = float(re.search(r"over its value less 1 % \(ASSUMED\): ([\d.]+) A at most", text).group(1))
+    chk = _mod(CHECK, "l9t5_test_check_t10r5c")
+    hi3 = chk.vout_band(56.2e3, 13.3e3)[2]
+    k = P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"])
+    v33, rl = 3.3 * P["vout_hi"], Q["rl_min"]
+    f_resp = max(P["can_rec"] + (i_f - P["can_rec"]) * m.SHARE + extra for i_f, extra in (
+        (P["can_fault"], 0.0), (Q["ios_dom"], 0.0), (P["can_dom_hi"] + v33 / rl, 2 * m.SHARE * v33 / rl)))
+    i_cap = (m.TJ_GOAL - P["air"]) / k - (i_aux + 2 * f_resp)
+    assert "pass limit: at most %.4f A" % i_cap in sec and m.mcu_point(P, Q, "V", P["air"])[1] < i_cap < m.mcu_point(P, Q, "Y", P["air"])[1]
+    # (2) the service at the contract's rates
+    for rate, n in ((500e3, 7), (1e6, 14)):
+        assert int(m.SHARE * m.WINDOW_MS * 1e-3 * rate // (m.FRAME_BITS + 2)) == n
+    assert "between 500 kbit/s and 1 Mbit/s" in open(CONTRACT_DRAFT, encoding="utf-8").read()
+    # (3) the babbling supervisor at the clock bound, both transceivers held dominant: under 150 C on rev Y's cover
+    i_b = m.mcu_point(P, Q, "Y", P["air"])[1] + i_aux + 2 * P["can_dom_hi"]
+    assert m.TJ_GOAL < P["air"] + k * i_b < P["tj_ldo"]
+    for s_ in ("THE FIRMWARE AS THE FAULTING PARTY", "SYSTEMATIC firmware defect", "an unapplied contract row is no mechanism", "IWDG",
+               "every one equal", "): every one\n"):
+        assert s_ in sec, s_
+    # L9T5-F22's scenario: 14.0 k holds the held current's requirement and brings rev Y's cover under 125 C
+    assert re.search(r"14\.0 k: [\d.]+ V nominal, top [\d.]+ V; the LDOs' input at least [\d.]+ V \(holds\); rev Y's cover, both fabrics faulted, 1[01]\d\.\d C", sec)
 
 
 def t_round5_t10_the_shdn_draft_composes_and_the_contract_draft_applies_once():
@@ -747,10 +795,11 @@ def t_round5_the_page_carries_the_outputs_figures():
     assert len(figs) >= 30
     missing = [f for f in figs if f not in out]
     assert not missing, "the page's figures not in the output: %s" % missing
-    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "SESSION decision L9T5-D5, tolerated", "LABELLED SCENARIO",
-               "covered by CON-004"):
+    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "Residual B7b (L9T5-D5)", "SESSION L9T5-D7", "L9T5-F22",
+               "covered by CON-004", "the drop's worst corner"):
         assert s_ in page, s_
-    for s_ in ("L9T5-F13: A DRAFTED CORRECTION", "L9T5-F16: A DRAFTED CORRECTION", "L9T5-F17: A DRAFTED CORRECTION", "L9T5-F06 STAYS OPEN"):
+    for s_ in ("L9T5-F13: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V", "L9T5-F16: A DRAFTED CORRECTION",
+               "L9T5-F17: A DRAFTED CORRECTION", "L9T5-F06 STAYS OPEN"):
         assert s_ in out, s_
 
 

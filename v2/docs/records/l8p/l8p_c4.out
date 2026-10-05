@@ -15,7 +15,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    e531190bb1b325c1  v2/docs/records/l8p/l8p_guard.py
-   8e0e4f3862f33219  v2/docs/records/l8p/l8p_c4.py
+   5bb73bd4e2e1ebc1  v2/docs/records/l8p/l8p_c4.py
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
@@ -184,8 +184,39 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    C260 open, or R262 shorted                           the gate filter gone: the before-tEN half of the window rests on TI's description alone                          E-13b (b2); LATENT
    R263 open                                            no effect while U60 is powered (its push-pull holds the gate); undocked the gate floats on C260                  LATENT, no service effect named
    TRIP_TEST lifted (contamination, a probe)            the guard trips: the breaker off                                                                                 found at once
+   Q60 gate to drain shorted (round 9, V6-m7)           cold: the window fails (the return 0.799 V, 10b); tripped: no trip can be shown                                  E-13b (a); a stopped precharge; LATENT between checks (L8P-D9)
+   C261 open (round 9, V6-m7)                           U61's response to a docking's step NOT PRINTED; the static guard unchanged (10b)                                 assembly inspection; LATENT (L8P-D9)
+   U60's thermal pad (pin 7) open (round 9, V6-m7)      the coupling to the pour through the leads alone: the gradient budget not shown (10b)                            E-13's heat step; X-ray at assembly; LATENT (L8P-D9)
    so: none disables the breaker's own limit or opens the pack path; a failure that removes the guard is found by E-13b (a), (b), (b2) or (d)
    and is LATENT between checks, the battery FETs' junction limit then resting on E-1's bar (G3's state), as record l9stk names it
+
+10b. ROUND 9 (V6-m7): THE THREE SINGLE FAILURES THE TABLE MISSED, WITH THEIR ARITHMETIC (DERIVED on the draft's values; the window's
+   corner of section 3: DOCK_EN_OUT 1.825 V, the pair at +1 %, R107 at -1 %)
+   Q60's GATE SHORTED TO ITS DRAIN, cold: the gate network (R262 47 kOhm to OVERTEMP, low; R263 1.0 MOhm to ground) loads the return with
+     44.9 kOhm beside the other 13.25 uA of sinks: the return 0.799 V (0.758 V all doubled), 17.8 uA through the network, 31.0 uA of sinks in all
+     against the 26.45 uA allowance and the 0.84 V the window needs: FAILS (before any conduction of the diode-connected Q60 is counted):
+     a dead pack's precharge can be stopped (L4-E11 20c's trigger). Tripped, OVERTEMP high drives the return node through R262 and the
+     diode-connected Q60 conducts only above its own threshold (PRINTED 1.0 to 2.5 V at 250 uA, 25 C): it cannot be shown to pull the return
+     under board P's first inverter's least 1.0 V: the guard cannot be shown to trip. Found by E-13b (a) (TRIP_TEST fails to open the
+     breaker) at commissioning and each service; in service as a stopped precharge; LATENT between checks as a protection
+   C261 OPEN (U61 without its input capacitor): TI asks 0.1 to 2.2 uF at the input for line transients over 10 V (SBVS186H 8.1.1, the draft's
+     reading); without it U61's response to a docking's step through R106 is NOT PRINTED (its 30 V input rating is not reached: the step is
+     at most the 29.2 V clamp); the static guard is unchanged and the hot-docking start of section 9 (e) only quickens (less to charge).
+     E-13b reads no input capacitor: found by the assembly's optical or electrical inspection; LATENT, no protection loss shown on printed
+     figures, U60's VDD over its 6 V on a transient NOT BOUNDED (no figure printed)
+   U60's THERMAL PAD OPEN (pin 7, the pad to ground; pin 2 still grounds the die): the die's coupling to the battery FETs' pour runs through
+     its leads alone; TI prints no thermal figure for the part without its pad, so the 15.68 K gradient budget of section 9 (b) is not shown:
+     the trip may come late. Found by E-13's heat step (the lag read at commissioning) and by an X-ray of the WSON's pad at assembly (a
+     build condition); LATENT between checks (a pad cannot open in service except by fatigue)
+   THE CIRCUIT ANSWER ASKED, A SECOND SENSING PATH, ON THE WINDOW: a second shunt on the same return adds its off leakage, 5.58 uA at 86.25 C:
+     the sinks 24.41 uA on the count and 29.92 uA all doubled (the count section 4 judges the window on) against the allowance 26.45 uA: the
+     window FAILS with it; a gate arrangement in which Q60's gate-to-
+     drain short trips instead would put a part between the gate network and the return that the window's count of section 3 does not
+     carry. NEITHER IS DRAFTED. SESSION decision L8P-D9 (under the owner's standing rule of 26 September 2026): the three failures are
+     TOLERATED as the table's other guard-removing failures are: none disables the breaker's own limit or opens the pack path; each is
+     found at commissioning and at each service (E-13b (a), E-13's heat step, the assembly's inspection); between checks the FETs' junction
+     rests on E-1's bar, as record l9stk names it. To reverse: a redundant guard on its own enable return with its own window (L4-E11 20c
+     restated for two shunts), or the shunt moved into board P's loop
 
 11. VERDICT, WHAT STAYS OPEN, AND E-13b
    the check (item 1): C4 CONFIRMED on the makers' sheets, with the relabellings of sections 2, 5 and 9 (d); no figure fails to reproduce
@@ -225,3 +256,4 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    the draft: a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V                              yes
    the draft: its output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias                                             yes
    C-PROT rev 1 holds on the desk for the draft (the physical conditions apart)                                                     yes
+   round 9: Q60's gate-to-drain short fails the window (V6-m7), and a second shunt on the same return would too                     yes

@@ -1,3 +1,5 @@
+**ROUND 9 (5 October 2026, P0 Slot C on `fnd/p0t10` from `fnd/p0base` `e132db0e`): DONE: V6-m7 (the three missed single failures with their arithmetic, `l8p_c4.out` 10b; the second sensing path assessed and found to fail the window; SESSION decision L8P-D9 tolerates them); V6-m2 (record l4e11's DD-7 check and rows 20c and 20f restated for the guard, and this record's copy of L4-E11 taken again). NOT DONE: no independent check of rounds 8 and 9; nothing physical. NEXT: the independent check.**
+
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
 **Round 8 (5 October 2026, branch `fnd/l8p2` from `bab66e6b`, case row C-PROT rev 1): record l9stk's re-selected guard C4 CHECKED on
