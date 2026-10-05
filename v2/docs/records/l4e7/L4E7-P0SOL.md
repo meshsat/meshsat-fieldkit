@@ -1,4 +1,4 @@
-DONE: round 1 (D-16 CORRECTED in draft); round 2 (route B2, an unapproved PARTIAL interface proposal, drafted and checked); round 3 (the owner's review of checkpoint 4, part 23): D-10 rewritten as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: failing cases F1 to F4, requirements unchanged, the correction needed before any passing claim, PROVISIONAL and independent outputs); round 4 (Astra's check cx45, Q6): B2's cold-connection guarantee WITHDRAWN (the timing a proof needs listed, the .out's 5e) and its fault credit removed (the presence pair's faults solved and tabled, the .out's 5f; P2 and P3 an OPEN defect of the B2 draft); no protection credit for B2. NOT DONE: E-1's correction; B2's monitored detection, INP protection and timing proof; an independent recheck; the owner's ruling on B2; the record's cache re-key (a box recompute). NEXT: the coordinator's merge and the L4-E9 rows of section 5.
+DONE: round 1 (D-16 CORRECTED in draft); round 2 (route B2 drafted and checked; since withdrawn as drafted); round 3 (the owner's review of checkpoint 4, part 23): D-10 rewritten as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: failing cases F1 to F4, requirements unchanged, the correction needed before any passing claim, PROVISIONAL and independent outputs); round 4 (Astra's check cx45, Q6): B2's cold-connection guarantee WITHDRAWN (the timing a proof needs listed, the .out's 5e) and its fault credit removed (the presence pair's faults solved and tabled, the .out's 5f; P2 and P3 an OPEN defect of the B2 draft); no protection credit for B2; round 5 (Astra's recheck cx46 and the owner's part 25): B2 UNSELECTED and WITHDRAWN AS DRAFTED throughout, no owner item, P2 and P3 REMAINING ENGINEERING outside the baseline. NOT DONE: E-1's correction; the presence-pair REMAINING ENGINEERING (P2 and P3, detection, INP protection, timing proof), owed only by a route that takes it up again; the record's cache re-key (a box recompute). NEXT: the coordinator's merge and the L4-E9 rows of section 5.
 
 # P0-7: the solar stage's D-10 (a stiff source with the guard on) and D-16 (the input sense out of range) by circuit alternatives
 
@@ -36,7 +36,7 @@ behind it (D-10) and M1's pulsed draw (D-16).
 | | Alternative | Fault case (D-10) | Normal case (D-16) | M2 (CS101, the accepted model) | Verdict |
 |---|---|---|---|---|---|
 | A | RSENSE1 ahead of every bank (route 3's wider form, R-187) | worse: U5 0.956 V resistive at 3.30 uH (3.2 times its absolute maximum) | meets: the flat input current, 0.045 V | fails: the loop holds the port current and pushes the bulk's CS101 current through the bank, 0.33 A filtered against 0.113 A | rejected |
-| B | the guard-on event bounded or removed at the port: B1 a series choke (XAL1510-103), B2 a presence contact pair on the solar receptacle carrying U21's INP | B1: the cut current 31.1 A exceeds the choke's 26.3 A Isat; B2: would prevent the step only for a source arriving through the loop's mating points (partial) | untouched | B1: a resonance at 2.7 to 3.2 kHz inside M2's decided band | B1 rejected; B2 an unapproved partial interface proposal (section 4); neither resolves D-10 |
+| B | the guard-on event bounded or removed at the port: B1 a series choke (XAL1510-103), B2 a presence contact pair on the solar receptacle carrying U21's INP | B1: the cut current 31.1 A exceeds the choke's 26.3 A Isat; B2: no effect proven (its cold arrival not shown; its pair faults P2 and P3 put INP over its absolute maximum) | untouched | B1: a resonance at 2.7 to 3.2 kHz inside M2's decided band | B1 rejected; B2 UNSELECTED, WITHDRAWN AS DRAFTED (section 4); neither resolves D-10 |
 | C | U5's input sense retired (CSPIN and CSNIN tied to VIN, 8705af p.12, p.29, p.31); the regulation fed into IMON_IN by an INA169 | U5 0 V by construction at every loop | U5 0 V by construction | depends on the sense point: C1 at R87 (U21's IMON) fails like A; C2 on the backstop's bank passes; C3 on RSENSE1 keeps the accepted topology | **C2 selected** |
 
 **The selection (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain
@@ -115,30 +115,31 @@ merely lacks evidence. It is written as the receiving company's remaining engine
   start); no new exclusion is adopted to avoid a failure.
 - **(c) The correction or justified model revision needed before any passing claim:** something must bound the current the source
   drives into the stage's capacitance through the closed guard, or the energy and voltage it delivers to the port when Q12 opens,
-  at every loop. B1 (a series choke) is rejected at the desk on Isat and on its CS101 resonance; route B2 is a PARTIAL proposal
+  at every loop. B1 (a series choke) is rejected at the desk on Isat and on its CS101 resonance; route B2 is withdrawn as drafted
   (below); open to a supplier's investigation: a choke rated over the cut current and damped against CS101, a lower-impedance
   clamp or a snubber sized for the port's energy, a different cut-off element or method (an active current limit faster than the
   loop's di/dt, a rise detector, a precharge path), and a model revision only on measured loops and resistances. S1 and S2 then
   qualify the correction.
 - **(d) PROVISIONAL until then:** IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts
-  and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows, route B2's draft. **Completed
+  and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. **Completed
   independently, on the present port network:** D-16's correction (section 3), the regulation and its correlated margin, the 100 W
   bound re-run, M2 with the selected sensing (to be re-run only if the correction changes the port), INP's divider ratio.
 
-**Route B2** (selected by the coordinator at 17:12 as the bounded PROVISIONAL desk route; `B2-PRESENCE.md`; the .out's section 5)
-is an unapproved PARTIAL interface proposal. Its interface is an owner item (it changes what the kit accepts at its solar input,
-an owner-accepted pick and the cost, with more than one option standing). Its board E draft, `apply_gen_sch_e_p0sol_b2.py`,
-composes after the C2 draft (seventeen drafts, 298 parts; four predicates on top of the nine; four mutations each fail); the
+**Route B2** (drafted on the coordinator's task of 17:12; `B2-PRESENCE.md`; the .out's section 5) is **UNSELECTED and WITHDRAWN
+AS DRAFTED** (Astra's cx45 and cx46, Q6; the owner's reviews, parts 24 and 25). No owner item rests on it: the approved interface
+stands (the panel on the shore plug's second pair). Its board E draft, `apply_gen_sch_e_p0sol_b2.py`, kept as a record,
+composes in its separate check after the C2 draft (seventeen drafts, 298 parts; four predicates on top of the nine; four mutations each fail); the
 withdrawn plug turns Q12 off at most 0.544 ms after the pair opens (the pair intact); IF an arriving source meets Q12 off, the
 model's cold connection holds every absolute rating over the record's whole grid (PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V, EN
-12.48 V; 608 events). **After Astra's check cx45 (Q6) no protection credit is taken for B2:** its cold-connection guarantee is
-WITHDRAWN (no sequenced connector selected; no worst-case contact and control timing proof: 1 mm is 0.50 ms at 2 m/s, under the
+12.48 V; 608 events). **No protection credit is taken for B2:** its cold-connection guarantee is WITHDRAWN (no sequenced
+connector chosen; no worst-case contact and control timing proof: 1 mm is 0.50 ms at 2 m/s, under the
 0.544 ms turn-off; BST stays charged from the back-fed VS, TI SLUSEE5E p.17; bounce unbounded; the enable path not simulated;
 the .out's 5e), and its pair faults are not fail-safe (the .out's 5f: the two cores shorted together defeat it silently, P1; a
 presence core shorted to a positive core of the lead puts INP at PV_F, over its 20 V absolute maximum from PV_F 20 V, P2 and P3,
-an OPEN defect the draft introduces). Monitored or fault-tolerant detection, INP's protection and the timing proof are owed before
-any credit. It does not change the port's response when a step happens, and it leaves a source added in parallel with a
-connected panel and a lower stiff source arriving after a withdrawal; adopting or declining it does not resolve D-10.
+a defect the draft introduces). **P2 and P3 are REMAINING ENGINEERING outside the baseline:** monitored or fault-tolerant
+detection, INP's protection and the timing proof are owed by any presence-pair route taken up again, as a new route with its own
+check. B2 would not change the port's response when a step happens, and it leaves a source added in parallel with a connected
+panel and a lower stiff source arriving after a withdrawal; it does not resolve D-10.
 
 ## 5. Rows for L4-E9 and the register (the coordinator's; nothing of L4-E9's is edited here)
 
@@ -148,9 +149,9 @@ connected panel and a lower stiff source arriving after a withdrawal; adopting o
   passing claim, then S1 and S2). CORRECTED within it by P0-7 (R-NEW): U5's absolute-rating violation (CSPIN and CSNIN tied to VIN,
   0 V at every loop) and INP's margin line (R97 24.9k). Not resolved: the guard's port-level transient (F1, F2 absolute-rating
   violations below about 2.4 uH; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH, L6P-F10; F4 the arriving source's slew
-  over its 54 V/us line under 0.33 uH). Route B2 (not a baseline row) is an unapproved PARTIAL interface proposal and an owner item, with no
-  protection credit (cx45: its cold-arrival guarantee withdrawn, its pair faults P1 to P3 not fail-safe, P2 and P3 an OPEN defect
-  of its draft); adopting or declining it does not resolve D-10; no baseline row depends on it."
+  over its 54 V/us line under 0.33 uH). Route B2 (not a baseline row) is UNSELECTED and WITHDRAWN AS DRAFTED, with no protection
+  credit and no owner item (cx45 and cx46: its cold-arrival guarantee withdrawn; its pair faults P1 to P3 not fail-safe, P2 and P3
+  REMAINING ENGINEERING outside the baseline); it does not resolve D-10; no baseline row depends on it."
 - **D-16** (8a and 8c): "CORRECTED in draft by P0-7 (R-NEW): U5's input sense not used (0 V by construction), the regulation's
   sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's zero-differential output (sourcing
   lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 becomes E-1, the port's remaining engineering.
@@ -164,7 +165,7 @@ connected panel and a lower stiff source arriving after a withdrawal; adopting o
   R97 superseded by R-NEW. **R-187** (route 3): "worked to the circuit by P0-7: alternative A rejected (D-10 worse, M2 fails);
   the sense arrangement changed instead (R-NEW)". **R-189** (B6-ENG-2's bench): replaced by S4 (the regulation at 25 V) and S3.
   **R-186** (a sense-pin filter): obsolete under R-NEW. **R-176 row 3**: U5's +-0.240 V line replaced by U5 under 10 mV (layout
-  check); the port's rows stay. **R-180**: UNCHANGED in the baseline (its present text stands, PROVISIONAL with D-10 under E-1; E-1's correction may need its own R-180). **The baseline does not depend on route B2 (the owner's review, part 24):** no row for B2 enters L4-E9's change list, Layer 6 or the register; the baseline composition (`ORDER_E`) has no B2 step. Filed in this record ONLY, as an unapproved PROPOSAL for the owner item of `B2-PRESENCE.md` section 2: its draft `apply_gen_sch_e_p0sol_b2.py` (4 edits, composed separately after R-NEW for checking), its contact requirement (section 3, which would replace R-180 only if adopted) and its Layer 6 rows (section 4). It has no protection credit (cx45: its pair faults P2 and P3 put INP over its absolute maximum, an OPEN defect of its draft; its cold arrival is not proven) and it does not resolve D-10. **P1-1**:
+  check); the port's rows stay. **R-180**: UNCHANGED in the baseline (its present text stands, PROVISIONAL with D-10 under E-1; E-1's correction may need its own R-180). **The baseline does not depend on route B2 (the owner's review, part 24):** no row for B2 enters L4-E9's change list, Layer 6 or the register; the baseline composition (`ORDER_E`) has no B2 step. Filed in this record ONLY, UNSELECTED and WITHDRAWN AS DRAFTED, with no owner item (part 25): its draft `apply_gen_sch_e_p0sol_b2.py` (4 edits, composed separately after R-NEW for checking), its contact requirement (section 3, a record, never a replacement of R-180) and its Layer 6 rows (section 4, a record). It has no protection credit (cx45: its pair faults P2 and P3 put INP over its absolute maximum, REMAINING ENGINEERING outside the baseline; its cold arrival is not proven) and it does not resolve D-10. **P1-1**:
   narrowed to `SUPPLIER-P1-1-P0SOL.md`.
 - **For other authors:** Layer 8's single-fault table (the record's "defeat" list) gains "a short across the sense bank now
   defeats the regulation as well" and "U23's output stuck high stops the stage (IMON_IN fault), stuck low leaves the regulation
@@ -177,7 +178,7 @@ connected panel and a lower stiff source arriving after a withdrawal; adopting o
 |---|---|
 | `l4e7_p0sol.py`, `l4e7_p0sol.out` | the reproduction, the comparison, the selected circuit on both cases, the composition with its netlist check and mutations, the verdicts (about 70 s; the output through regen_out.py) |
 | `apply_gen_sch_e_p0sol.py` | the DRAFT for board E's generator (13 edits; refuses a generator without the input limit, backstop and solar guard drafts, a second application, and the tree's generator until a RELEASE.md names an accepted check) |
-| `B2-PRESENCE.md` | route B2: the authority finding, the owner item, R-180 as a contact requirement, the Layer 6 rows, the SESSION decisions with their authority fields, what B2 does not cover |
-| `apply_gen_sch_e_p0sol_b2.py` | route B2's DRAFT for board E (4 edits, after the C2 draft; a PROPOSAL) |
+| `B2-PRESENCE.md` | route B2, UNSELECTED and WITHDRAWN AS DRAFTED: why it is withdrawn, the authority as found, what it would have changed, its contact requirement and Layer 6 rows as a record, the draft's checks, the withdrawn guarantee (5a), the pair's faults with P2 and P3 as REMAINING ENGINEERING (5b), the SESSION decisions, what stays open |
+| `apply_gen_sch_e_p0sol_b2.py` | route B2's DRAFT for board E (4 edits, after the C2 draft in its separate check; WITHDRAWN AS DRAFTED) |
 | `SUPPLIER-P1-1-P0SOL.md` | the narrowed supplier request, UNSENT |
 | `clarification/analog-devices-lt8705a-p0sol.txt` | item 8 for Analog Devices, UNSENT |
