@@ -9,18 +9,23 @@ MODEL, ASSUMPTION, MISSING.
    case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 c755448bd06bbe7d
    case_py    v2/docs/records/l9t5/l9t5_case.py  sha256 6a1a50f08917216e
    cases      v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
+   csd18510   v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
+   cx44       v2/docs/records/l9t5/inputs/cx44-astra-f01-selection-as-received.md  sha256 4f1b667dde2b6d36
    gen_a      v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
    gen_d      v2/ecad/tools/gen_sch_d.py  sha256 54f17c8187d3bd19
    held_fetch v2/docs/records/l4e7/fetch_held_back.py  sha256 1718155c8a376d32
    hojlr      v2/vendor/passives/milliohm-hojlr2512-series.pdf  sha256 3224518dbc8bdc85
+   ina226     v2/vendor/ti/ti-ina226.pdf  sha256 c9b67f886d4a5241
    ina250     v2/vendor/ti/held/ti-ina250-sbos511c.pdf  sha256 4690d49c0e10739b
    lcsc_fill  v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5176     v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
    millmax    v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf  sha256 8ef40cd98d95c653
+   paloop     v2/docs/records/l9t5/l9t5_paloop.py  sha256 4cff0e4a9f5d4fd9
    precidip   v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf  sha256 d630c8a92e7f65fc
    ra30       v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    tlv758p    v2/vendor/ti/ti-tlv758p.pdf  sha256 4a86306d6734f1f4
    tlv9062    v2/vendor/ti/ti-tlv9062-op-amp.pdf  sha256 18e67fa48b2a3c2e
+   wsl        v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf  sha256 96c2dc89ae1e3039
    xt60       v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf  sha256 94e4568e3abe8ab5
 
 1. THE FAILING CASE, REPRODUCED (1a): this record's l9t5_case.py imported unchanged on this base
@@ -45,10 +50,10 @@ MODEL, ASSUMPTION, MISSING.
        at +-0.25 dB (Pout at most 33.66 W) the PA must convert at 32.5 % or better at that point
        at +-0.50 dB (Pout at most 37.77 W) the PA must convert at 36.5 % or better at that point
        the sheet prints 40 % only at Tcase 25 C, VDD 12.5 V, VGG 5 V, Pin 50 mW (full drive); at VDD 13.8 V under VGG control, hot, no row: MISSING
-   VERDICT (a): NOT CREDITABLE at the desk. The calibration's residual (drift curvature, the sampler under mismatch) and the PA's efficiency at
-     the controlled point are each bounded by nothing held; a measurement would decide whether the loop holds the case at all (specimen: the
-     loop with three RA30H1317M1 on the plate; quantity: the PA's DC input and RF output at the loop's high end, 144 to 146 MHz, flange -20 to
-     +85 C, load VSWR to 3:1; limit: DC input under 103.44 W at RF over 30 W). A1 stays a direction, as round 2 left it.
+   VERDICT (a): at most a PROVISIONAL choice, as (c) is (section 5 judges both on one standard). The calibration's residual (drift
+     curvature, the sampler under mismatch) and the PA's efficiency at the controlled point are each bounded by nothing held; its supplier
+     tasks would be two (the detector chain's residual over the envelope; the PA's DC input at the loop's high end, limit under 103.44 W at RF
+     over 30 W), and the second sits on the failing case itself. Ranked second.
 
 3. (b) THE GAUGE CALIBRATED PER PACK, THE DOCK CONTACTS BOUNDED FROM A PRINTED FIGURE
    SLUSC67B 6.14 prints no post-calibration gain row: the calibration (bqStudio's routine, the TRM's) replaces the 0.8 % FSR gain error and
@@ -67,97 +72,177 @@ MODEL, ASSUMPTION, MISSING.
    VERDICT (b): CANNOT CLOSE THE CASE ALONE. Even zero gauge error leaves the case's own nominal deficit (+0.0162 V); the calibration is a
      means of shrinking a bound, not a correction of the circuit's demand. Not needed by (c) below, so not proposed as a prerequisite.
 
-4. (c) A PA DRAIN-CURRENT LOOP (the module's drain current on the regulated PA rail is the controlled quantity)
-   the circuit (drafted in 1c): board A: U13's FB divider at 0.1 %; an INA250A2 (2 mOhm integrated shunt, 500 mV/A) in series between +13V8_PA and J_PA pin 1, on
-     +5V_D8IN; a TLV758P as the set-point reference (3.3605 V nominal, 51.1k over 10.0k at 0.1 %); a TLV9062: half A integrates the
-     difference, half B inverts it about half the supply, so the output rests at 0 V while the current is under the set point; out on
-     J_MEZZ1 pin 16 (AB_SPARE, a spare conductor of the drawn harness) to board D, where a resistor into VGG_FB (U15's feedback node) lowers
-     VGG as the output rises. The loop can only LOWER VGG under its open-loop band (4.30 to 4.68 V today): EMCON and the PA's VGG < 5 V
-     ratings are untouched; with PA_KEY low U15 is off and VGG stays at 0 V whatever the line does
-   the cap's band, every term (I = (V_SET - VOS - G x IOS) / (G x (1 + gain error)) at its corners):
-     V_SET (TLV758P SBVS351D): VFB 0.55 V +-1 % PRINTED (-40 to 85 C TJ), line regulation 7.5 mV PRINTED max, IFB 0.1 uA PRINTED max into 51.1k,
-       the divider at +-0.26 % each (0.1 % and 25 ppm/K over 65 K, DECLARED class): 3.2997 to 3.4217 V
-     the INA250A2 (SBOS511C): system gain error +-0.75 % PRINTED (-40 to 125 C; amplifier and shunt), plus the shunt's stress rows 0.05+0.1+0.1+0.15+0.025 % (TYPICAL
-       column, note 6 excludes them from the gain error; added whole): +-1.175 %
-       offset current, PRINTED max (25 C)                                                                           0.0500 A
-       its drift, PRINTED 250 uA/K max over 60 K (board A's air to 85 C)                                            0.0150 A
-       PSR, PRINTED 1 mA/V max, +5V_D8IN's 5.14 V against the 5 V test                                              0.0001 A
-       CMR, PRINTED 97 dB min, the PA rail at its 14.412 V top (as drawn) against the 12 V test                     0.0170 A
-       offset, all terms: +-0.0822 A
-     the integrator (TLV9062 SBOS839N): VOS 2.0 mV PRINTED max (VS 5 V, -40 to 125 C), PSRR 80 uV/V PRINTED max, IB 0.5 pA TYPICAL only (bounded
-       here at 1 nA, ASSUMPTION, into 10k): +-2.021 mV
-     the cap: 6.7210 A nominal, 6.4376 to 7.0119 A over every corner (MODEL on PRINTED limits)
-   against the PA rail's own limits:
-     U13's average current loop (LM5176 VSNS 43 / 50 / 57 mV on R55 6 mOhm 1 %): least 7.0957 A initial, 7.0569 A with the generator's
-       DECLARED 110 ppm/K over 50 K; the cap's top is 0.0450 A under it, so U13 stays in voltage regulation at the cap: L9P-F04 CLOSES
-     U13's output (VREF 0.788 to 0.812 V PRINTED, 162k over 10k, IBIAS 25 nA PRINTED): as drawn at 1 % (100 ppm/K over 65 K, ASSUMPTION)
-       13.135 to 14.412 V; with (c)'s divider at 0.1 % 25 ppm/K (record l8r2's fb01 keyword rfb_tol, values unchanged) 13.483 to 14.040 V
-     the INA250's continuous rating 15 A (PRINTED, -40 to 85 C); its package 4.5 mOhm (TYPICAL) at the cap's top 0.221 W, junction 108.1 C at
-       85 C air with 104.4 K/W (TYPICAL) under its 125 C specified range
-   THE CASE AT THE CAP'S TOP: the PA's DC input at most 14.040 V x 7.0119 A = 98.45 W (it was 113.0 W); with U13's divider left at 1 %
-     (14.412 V x 7.0119 A = 101.05 W) the bounded case needs 15.3577 V, margin 0.1423 V: the divider's tolerance is part of the correction
-     nominal: 226.099 W at VBAT, need 14.6862 V (-0.8138 V)
-     BOUNDED (the gauge's uncalibrated 0.8036 A, the dock contacts at their maximum, R_cell 0.060): need 15.2019 V, MARGIN 0.2981 V UNDER 15.5 V
-     the same bound covers 17.34 mOhm more path, or R_cell to 0.0730 Ohm (the case's 0.060 is an ASSUMPTION; the sheet prints 35 mOhm AC, initial)
-     the rest of the path, outside the dock contacts (U3 of l9t5_case.out: MISSING in the tree), illustrated:
-       the pack lead's XT60, two contacts at the PRINTED 1.0 mOhm maximum (Amass 2021V1)                                2.000 mOhm
+4. (c) A PA DRAIN-CURRENT LOOP, ROUND 2 OF THE SELECTION (after cx44's NOT SUPPORTED, the first negative, kept as given)
+   the circuit (to be drafted in 1c): board A: U551 INA250A2 (2 mOhm integrated shunt, 500 mV/A) in series from +13V8_PA to J_PA, VS on
+     +5V_D8IN; U552 TLV758P set point PA_ISET (R551 2.80k over R552 549 Ohm at 0.1 %: 3.3551 V nominal, a 1.00 mA preload, the sheet's IOUT = 1 mA
+     test condition); R559 1k and C557 10 uF ramp it into PA_ISP, held at 0 V by Q551 (2N7002) while OUTLET_OK is high (the PA not keyed;
+     OUTLET_OK = NOT (TR_APRS AND PA_EN) is U30's, drawn), so at each key the set point rises from zero (3 tau = 30 ms, longer than K1's
+     3 ms operate time: the RF drive arrives under a low set point and the current approaches the cap from below); U553 TLV9062: half A
+     integrates PA_IMON against PA_ISP (R553 10k, C554 47 nF), R560 470k into its summing node winds it down while held, half B inverts it
+     about PA_MID, so PA_ILIM rests at 0 V under the set point; R558 1k into J_MEZZ1 pin 16 (AB_SPARE); U13's FB divider at 0.1 % (fb01's
+     keyword) and U13's BIAS re-tapped from +13V8_PA to PA_OUT, ahead of R55. Board D: R57 110k from PA_ILIM into VGG_FB, R83 to 11.0k
+     (R83 // R57 = 10.0k), C76 1 nF, and R58 10k from VGG_SW to ground: U15 (an LDO) cannot sink, so VGG's fall needs a defined bleed
+   R55 CARRIES MORE THAN THE PA (cx44): U13's BIAS (pin 24) sits on +13V8_PA behind R55 as drawn and takes VCC's power above 8 V (LM5176
+     SNVSAI1D 7.3.2): four CSD18510Q5B at VCC's 7.88 V top, Qg read between the PRINTED 75 nC (4.5 V) and 153 nC (10 V) maxima (MODEL:
+     linear between them) = 122.9 nC, at fSW's PRINTED 225 kHz maximum scaled to RT 40.2k = 223.9 kHz, plus the 4 mA operating current: 0.1141 A,
+     more than the 0.1080 A between the cap's top and U13's limit: BIAS moves to PA_OUT (a node over 8 V ahead of the shunt). R55 then carries
+       U13's FB divider at the rail's top                                                                       0.000082 A
+       U14 VBUS (TYPICAL 830 kOhm)                                                                              0.000017 A
+       U551 VIN+ bias, PRINTED 35 uA max                                                                        0.000035 A
+       U13 ISNS- through R163, 3 uA (generator's note)                                                          0.000003 A
+       C170, C171 leakage, 2 x 0.01 x 470 uF x 25 V (ASSUMPTION)                                                0.000235 A
+       together 0.000372 A beside the PA's feed
+   the cap's band, every term (I = (PA_ISP (1 + R553/R560) - V+ R553/R560 + VOS) / (G (1 + gain error)) - IOS, at the corners together):
+     V_SET (TLV758P SBVS351D): VFB 0.55 V +-1 % PRINTED for TJ -40 to 85 C (the part's own rise at the 1 mA preload is milliwatts over the 76.25 C
+       air, so TJ under 85 C; 1.5 % to 125 C), line regulation 7.5 mV PRINTED max, IFB 0.1 uA PRINTED max into 2.80k, the divider at
+       +-0.2625 % each (0.1 % and 25 ppm/K over 65 K, DECLARED class): 3.2992 to 3.4113 V
+     Q551 and C557 leakage into R559 (2N7002 IDSS 80 nA PRINTED at 25 C, doubled every 10 K to the air: record l8p's ASSUMPTION; C557 at
+       50 Ohm F, ASSUMPTION): 3.82 uA, 3.82 mV off the set point (the bottom only)
+     the INA250A2 (SBOS511C), gain:
+       system gain error, PRINTED max -40 to 125 C (amplifier and shunt)                                        PRINTED    0.7500 %
+       the shunt's five stress rows, TYPICAL column, excluded from the gain error by note 6: carried whole      TYPICAL    0.4250 %
+       nonlinearity, TYPICAL 0.03 %, carried whole                                                              TYPICAL    0.0300 %
+       together +-1.2050 % (the PRINTED part 0.75 %)
+     the INA250A2, offset:
+       offset current, PRINTED max at 25 C (A2)                                                                 PRINTED    0.0500 A
+       its drift, PRINTED 250 uA/K max over 51.25 K (board A's air -20 to 76.25 C)                              PRINTED    0.0128 A
+       PSR, PRINTED 1 mA/V max, +5V_D8IN 4.872 to 5.133 V against the 5 V test                                  PRINTED    0.0001 A
+       CMR, PRINTED 97 dB min, VIN+ up to 14.040 V against the 12 V test                                        PRINTED    0.0144 A
+       together +-0.0774 A
+     the integrator (TLV9062 SBOS839N):
+       VOS, PRINTED 2.0 mV max (VS 5 V, -40 to 125 C)                                                                         PRINTED    2.0000 mV
+       PSRR, PRINTED 80 uV/V max over +5V_D8IN's 0.133 V from the 5 V of the VOS row                                          PRINTED    0.0106 mV
+       CMRR, PRINTED 80 dB min (VS 5.5 V row; ASSUMPTION that it holds at 4.87 to 5.13 V), VCM 3.411 V against VS/2           PRINTED    0.0975 mV
+       IB, TYPICAL 0.5 pA only: bounded at 1 nA into R553 (ASSUMPTION)                                                        ASSUMPTION 0.0100 mV
+       C554's leakage, 50 Ohm F (ASSUMPTION) at 5.13 V into R553                                                              ASSUMPTION 0.0483 mV
+       finite gain, PRINTED AOL 104 dB min: at most the output's travel 5.13 V divided by it                                  PRINTED    0.0324 mV
+       together +-2.1988 mV; R560's offset (V+ - PA_ISP) x R553 / R560 is a deterministic term inside the formula, R560 1 % 100 ppm/K
+     THE CAP: 6.6401 A nominal; 6.3521 to 6.9258 A over every corner (MODEL on the terms above); on the PRINTED terms alone 6.3892 to 6.8940 A
+   against the PA rail's own limit, U13's average loop (VSNS 43 mV PRINTED min on R55, WSL25126L000FEA 6 mOhm 1 %, TCR +-110 ppm/K PRINTED
+     for 5 to 6.9 mOhm): R55 at the cap's top dissipates 0.288 W, 105.0 C on the 76.25 C air with 100 K/W from the WSL2512 derating line (MODEL,
+     not a printed thermal resistance): least 7.0338 A (7.0957 A initial); the cap's top and R55's other loads 6.9262 A: 0.1076 A under it
+     so in the steady state U13 stays in voltage regulation at the cap: L9P-F04 CORRECTED IN THE STEADY STATE on these bounded figures
+     (the dynamics are below and PROVISIONAL)
+   U13's output: VREF 0.788 to 0.812 V PRINTED, 162k over 10k; at 1 % (as drawn, 100 ppm/K over 65 K ASSUMPTION) 13.135 to 14.412 V; at 0.1 % 25
+     ppm/K (fb01's keyword, values unchanged) 13.483 to 14.040 V
+   THE CASE AT THE CAP'S TOP (C-ALLTX rev 3, the PA's DC input at most 14.040 V x 6.9258 A = 97.24 W, it was 113.0 W; the loop's own 3.20 mA on
+     +5V_D8IN added at VBAT as 0.018 W):
+     nominal 224.859 W at VBAT, need 14.6183 V; BOUNDED (the gauge's 0.8036 A, the dock contacts' maximum, R_cell 0.060 Ohm the case's ASSUMPTION):
+     need 15.1308 V, a MODEL margin of 0.3692 V under 15.5 V (with U13's divider left at 1 %: 15.2846 V)
+     the margin covers 21.47 mOhm more path or R_cell to 0.0761 Ohm; the rest of the path outside the dock contacts (MISSING in the tree),
+     illustrated:
+       the pack lead's XT60, two contacts at the PRINTED 1.0 mOhm maximum (Amass 2021V1, new: aged MISSING)             2.000 mOhm
        12 AWG pack lead, 2 x 150 mm at 85 C (ASSUMPTION: length; 5.21 mOhm/m at 20 C, copper)                           1.962 mOhm
        board bands, 2 x 200 mm at record l9stk 14.4's section (MODEL; the layout's lengths are not known)               3.164 mOhm
-       together 7.126 mOhm: need 15.3244 V (inside the 17.34 mOhm the margin covers)
-     labelled scenarios on the bounded row, never the case: R_cell 0.070 Ohm 15.4312 V; 0.080 Ohm 15.6605 V; U4's lower efficiencies (PA 0.95, 5.1 V
-       stages 0.85) 15.7294 V; the compute modules at 8 W 15.8878 V; D-11's basis (rv-pwr's typ_nontx) 15.8989 V; R_cell 0.08 with U4's lower efficiencies 16.1880 V
-   THE SERVICE AT THE CAP'S BOTTOM (6.4376 A): the PA is a 30 W stage (CHO-001). Pout and IDD rise together with VGG (the sheet's description),
-     so the cap keeps 30 W wherever the module's drain current at 30 W is under the cap's bottom. The maker's own 30 W design condition is
-     IDD 6.00 A at VDD 12.5 V and the PRINTED minimum efficiency 40 % (the heat-sink example, Tcase 25 C): 0.4376 A under the cap's bottom (7.3 %)
-     at 13.8 V under VGG control no row is printed: a class-B stage's DC current at a given output does not depend on VDD (MODEL), so 6.0 A
-     carries over; read as efficiency, the cap's bottom needs 34.6 % at U13's lowest 13.483 V, where the model gives 36.3 % at the nominal rail
-     the hot flange (to +85 C, C4) is printed by no row: the bench row below confirms; it is the same bench question gen_sch_d.py already owes
-     for the open-loop VGG ("a module at its 5 V corner may not reach nominal output at 4.30 to 4.68 V"), now with a current limit beside it
-   what else it touches (each traced in 1c): the PA's heat falls from 83.0 W (today's HIGH less 30 W) to 68.4 W at most (REQ-059 reads about
-     45 W); the key-up transient (before the integrator acts the PA draws at most U13's own limit, 9.596 A, for the loop's settling time); the
-     harness conductor AB_SPARE becomes a signal (both boards' generators, the contract IF-AD-HARNESS's row: Layer 5's text); board D's R83
-     re-valued so the open-loop band is unchanged with the injection resistor in place
-   VERDICT (c): CLOSES THE CASE ON PRINTED LIMITS with a 0.298 V margin, no calibration, no new RF part; one physical row confirms the
-     service (narrower obligation: the drain current at 30 W at the cap's conditions is under the cap's bottom, which the maker's design
-     condition supports with 7.3 %)
+       together 7.126 mOhm: need 15.2533 V
+     labelled scenarios, never the case: R_cell 0.070 Ohm 15.3600 V, 0.080 Ohm 15.5893 V; U4's lower efficiencies 15.6561 V; the compute modules at 8 W
+       15.8166 V; D-11's basis 15.8277 V; R_cell 0.08 with U4's lower efficiencies 16.1147 V
+     what the case would allow if U13's limit and J_PA did not bind: 7.3674 A at 14.040 V (the room a redesign route has, see 6)
+   THE 30 W SERVICE AT THE CAP'S LEAST (6.3521 A): THE OVERLAP IS NOT ESTABLISHED BY ANY PRINTED ROW (cx44's crux). Pout and IDD rise
+     together with VGG (the sheet's description), so the cap keeps 30 W only if the module's drain current for 30 W, at its terminals, over
+     the envelope (air -20 to 76.25 C, the flange to +85 C under C4, 144 to 146 MHz, the available VGG band, the feed and return drops),
+     is at most the cap's least. What is held: the maker's heat-sink EXAMPLE, IDD 6.00 A at 30 W, 12.5 V and the PRINTED minimum efficiency
+     40 % (Tcase 25 C, VGG 5 V, full drive): 0.3521 A (5.9 %) under the cap's least. Its transfer to the kit's conditions is an ASSUMPTION
+     (a class-B stage's DC current at a given output does not depend on VDD: MODEL). At the module's terminals (U13's lowest 13.483 V less
+     49.4 mOhm of INA250, J_PA's contacts at 20 mOhm after test and 16 AWG, at the cap's least: 13.169 V) the cap's least needs 35.9 % efficiency,
+     33.6 % at the top rail; the open-loop VGG band (its top under the sheet's 5 V service condition, as drawn today) is part of B-PA1
+     VERDICT: the overlap is a BOUNDED PROVISIONAL CHOICE under the owner's part 19 (amendment 1, point 2), never a printed closure: the
+     cap's band as above, the supplier's validation task B-PA1 (section 6) decides it; F01's row is PROVISIONAL on it
+   the loop's dynamics (cx44): compensation the integrator R553 C554 (0.47 ms), the inverter unity, the injection R82/R57 = 0.65;
+     at a module slope dIDD/dVGG of  3.0 A/V (TYPICAL curves only) the crossover is    330 Hz and the phase margin 89.5 deg against the
+       INA250A2's TYPICAL 50 kHz bandwidth and the 1 us harness filter (MODEL)
+     at a module slope dIDD/dVGG of 10.0 A/V (TYPICAL curves only) the crossover is   1101 Hz and the phase margin 88.3 deg against the
+       INA250A2's TYPICAL 50 kHz bandwidth and the 1 us harness filter (MODEL)
+     at a module slope dIDD/dVGG of 30.0 A/V (TYPICAL curves only) the crossover is   3302 Hz and the phase margin 85.0 deg against the
+       INA250A2's TYPICAL 50 kHz bandwidth and the 1 us harness filter (MODEL)
+     VGG falls only by its loads (U15 cannot sink): with R58 at least 0.19 V/ms at 4.2 V (MODEL, the module's own gate current not counted);
+     saturation: half A rests at its top rail under the set point and leaves it at once, half B's output then rises from 0 V (no dead band);
+     acquisition at each key: the set point ramps from zero (held by OUTLET_OK), so the current approaches the cap from below; settling is
+     milliseconds against the 60 s key-down. NOT BOUNDED at the desk: a disturbance that raises the drain current over the cap mid key-down
+     (a load change at the antenna) is corrected at VGG's fall rate; the excursion is bounded in size by U13's own loop (at most 9.644 A
+     average, cold) and in time only by a measurement: PROVISIONAL, the supplier's task B-PA2 with record l9stk's E-10 (the breaker's
+     timer, 0.282 ms least)
 
-5. THE SELECTION (authority: SESSION, under the owner's standing rule of 26 September 2026 and the ruling of 21 September 2026)
-   SELECTED: (c), the PA drain-current loop. Why (the owner's rule: the simplest supported correction with useful margin and the fewest
-     new uncertain dependencies): it bounds the case's own quantity (DC watts) on printed limits (INA250, TLV758P, TLV9062, LM5176), so
-     F01's bound needs no calibration and no measurement; it closes L9P-F04 in the same move; it lowers the PA's worst heat; it adds three
-     small ICs and passives on board A (and U13's divider to 0.1 %), a resistor pair on board D, and a conductor the harness already carries. (a) leaves the case
-     on an unprinted efficiency and an unbounded calibration residual; (b) cannot close the case's nominal deficit at all.
-   its one physical dependency is the PA's drain current at its 30 W service under the cap (supported by the maker's design condition,
-     confirmed on the bench); it is not new: the open-loop design already owes it.
-   REVERSAL: if the independent challenge shows the service at the cap's bottom unsupported, the cap's band is moved up inside U13's
-     loop minimum (the top may rise to 7.057 A before it meets it) or, failing that, (c) is kept for the case and A1's RF loop is added for the
-     service floor (two loops, the lower VGG wins); the drafts of 1c are reverted by not applying them (nothing is applied to the tree).
+4b. THE CONNECTED CONSEQUENCES (each traced in 1c's acceptance; cx44's checklist)
+   +5V_D8IN (U41): 3.20 mA more (IQ and IGND PRINTED maxima, the preload, the divider, R560); U41's 3 A and the rail's 2.0 A peak unchanged
+   R55 and U13: BIAS off R55; R55's other loads 0.372 mA; the steady cap 6.9258 A under U13's least 7.0338 A
+   INA250 insertion: 4.5 mOhm TYPICAL, 0.216 W at the cap's top, junction 98.8 C at 76.25 C air (RthJA 104.4 K/W TYPICAL, a layout's own figure
+     is Layer 10's); its drop lowers the module's VDD by about 31 mV, inside U13's window's effect above
+   J_PA and its 16 AWG lead: 6.9258 A against the VH's PRINTED 10 A (it carried a declared 6.0 A and the case's 8.19 A before)
+   the PA's ground: unchanged (J_PA pin 2, the plate, the shields); the sense is high-side, nothing enters the return
+   the harness reference: board D's ground up to 0.100 V above board A's (bounded 0.0849 V on the D8 lead, MODEL): VGG at rest 4.202 to 4.743 V
+     (drawn 4.297 to 4.675 V), the top under the module's 5 V; the loop's authority at most 1.483 V
+   EMCON and the key: U15's EN stays PA_KEY; with PA_KEY low U15 is off and VGG held by its discharge and R58; the loop only lowers VGG; with
+     PA_EN low OUTLET_OK is high and the set point held at 0 V (both ways safe); a lost PA_ILIM conductor leaves VGG at R83's 11.0k alone,
+     lower than the band (the cap is lost, the PA runs open loop under VGG's own lower band: a single-failure row for Layer 8)
+   the pack and the protection: steady state as THE CASE above (the pack's true current at 15.5 V rest under the breaker's least 18.32 A);
+     transients PROVISIONAL (B-PA2, E-10)
+   thermal duty: the PA's heat at most 97.24 W less its RF output (67.24 W at 30 W out; today's HIGH less 30 W 83.00 W); with less than 30 W
+     out, more of the 97.24 W is heat: REQ-059's thermal row reads the cap's top as its DC input
+   interfaces: IF-A-PA (J_PA behind U551, the cap) and IF-AD-HARNESS (pin 16 PA_ILIM) are Layer 5 texts owed (named prerequisites)
 
-6. WHAT STAYS OPEN AFTER THE SELECTION (F01 / D-17 is OPEN until 1c's draft composes, reads on the netlists with a failing mutation and
-   its electrical acceptance holds on C-ALLTX rev 3, and an independent check reads it)
-   B-PA1 (physical, confirms the service): specimen three RA30H1317M1 on the plate's heat path with board D's drive; quantity the drain
-     current at Pout 30 W under VGG control, VDD 13.48 and 14.04 V, 144 / 145 / 146 MHz, flange 25 C and 85 C; limit at most 6.438 A (the cap's
-     bottom); capability: a 50 Ohm 50 W load, an RF power meter, a DC supply with current reading; owner: the supplier's bench (unsent)
-   B-PA2 (physical, confirms the loop): the cap's current at the three frequencies and both flange temperatures, inside 6.438 to 7.012 A;
-     the key-up transient on a scope (the loop's settling, the PA rail inside U13's regulation), with the VGG capture gen_sch_d.py owes
-   U5 (the rest voltage's fall during the 60 s, R-214) stays MISSING; the case at the cap has 0.298 V of margin against it
+5. THE SELECTION, ROUND 2 (authority: SESSION; ruled_by: Slot A under the owner's standing rule of 26 September 2026, the ruling of
+   21 September 2026 and part 19 of 5 October 2026; ruled_on: 5 October 2026)
+   (a) and (c) are judged on ONE standard (cx44: rejecting (a) for an unprinted PA transfer while crediting (c)'s was inconsistent): each
+     rests on an unprinted PA transfer, so each is at most a PROVISIONAL choice with a supplier validation task. The difference is WHERE
+     the unprinted transfer sits: (c) bounds the case's own quantity (DC watts) on the terms of section 4 and leaves the 30 W service on
+     one bench row (B-PA1, the module's drain current at 30 W); (a) leaves the case itself on the PA's efficiency at the loop's high end
+     (at least 36.5 % at +-0.5 dB) AND the service on a detector chain whose calibration residual no sheet bounds (two bench tasks, one
+     of them on the failing case). (b) cannot close the case. RANK: (c) first, (a) second.
+   SELECTED: (c), PROVISIONAL: F01 / D-17's row reads PROVISIONAL on B-PA1 (feasibility of the 30 W service under the cap) and B-PA2
+     (the dynamics), never closed on printed limits; L9P-F04 is corrected in the steady state on bounded figures
+   WITHDRAWN (cx44): round 1's fallback "a lower-VGG-wins RF loop for the service floor": an RF loop cannot restore output while the current
+     cap binds. If B-PA1 fails (the module needs more than the cap's least for 30 W), the ARRANGEMENT fails (amendment point 4), not a
+     requirement: the remaining routes are (R1) raise U13's own limit and the cap with it (R55 lower, J_PA's lead and contacts re-rated: the
+     bounded case allows 7.3674 A at the top rail, 0.4416 A more than the cap's top) and (R2) a PA rail at the sheet's 12.5 V with VGG to its 5 V
+     condition (U13's divider, board D's VGG band); each would be checked on the same case before adoption. No requirement changes.
 
-7. PREDICATES
+6. THE SUPPLIER'S VALIDATION TASKS (amendment 1, point 2: UNSENT, nothing bought; each with specimen, quantity and pass limit)
+   B-PA1 (FEASIBILITY of the service under the cap; the PROVISIONAL choice above depends on it):
+     specimen: three RA30H1317M1, each on the plate's heat path, driven by board D's chain (the SA868 through the 10 dB pad, Pin about 50 mW)
+     quantity: the drain current (and gate current) at Pout 30.0 W under VGG control, at module-terminal VDD 13.17 and 14.04 V, 144 / 145 /
+       146 MHz, flange 25 C and +85 C and an air of -20 C, into 50 Ohm and into a 3:1 load at its worst phase, VGG within the drawn band
+     pass limit: IDD at 30.0 W at most 6.352 A less the measurement's own expanded uncertainty (k = 2, stated by the lab), every point;
+       the transfer to other modules is the supplier's to justify (three units establish no population limit)
+     capability: a 50 Ohm 50 W load and a 3:1 mismatch, an RF power meter with stated uncertainty, a DC supply with current reading, a
+       temperature chamber or plate control
+   B-PA2 (the loop's dynamics, PROVISIONAL): on the built loop, the drain current's settling at each key (0 to the cap without overshoot
+     over 6.926 A), the excursion and its duration after a step from 1:1 to 3:1 load mid key-down, the PA rail inside U13's regulation, and
+     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time)
+   U5 (R-214, the rest voltage's fall in the 60 s) MISSING: the case at the cap has 0.3692 V of MODEL margin against it
+
+7. CX44'S TEN BLOCKERS, EACH ANSWERED HERE (as received: inputs-20261004e/CX44-ASTRA-F01-SELECTION-AS-RECEIVED.md)
+    1. the 6 A example: labelled an EXAMPLE and its transfer an ASSUMPTION; the service claim withdrawn; B-PA1 a FEASIBILITY task (4, 6)
+    2. typical stress data: split from the PRINTED terms and carried whole as TYPICAL allowances; the printed-only band shown beside it (4)
+    3. reference loading, junction, supply range, amplifier common mode: a 1 mA preload, TJ under 85 C, +5V_D8IN's band, CMRR, AOL, IB, leakage (4)
+    4. R55's other loads: BIAS's gate drive bounded at 0.1141 A and moved off R55; the rest summed (0.372 mA) against a hot-shunt limit (4)
+    5. the dynamics: compensation, crossover and phase margin on labelled slopes, VGG's bleed, saturation and acquisition stated; B-PA2 (4, 6)
+    6. 0.2981 V was a conditional margin: the new figure 0.3692 V is labelled MODEL with the loop's supply, the path and the scenarios (4)
+    7. the lower-VGG-wins fallback withdrawn; the remaining routes R1 and R2 named (5)
+    8. B-PA1 and B-PA2 rewritten with the cold end, terminal VDD, load mismatch, uncertainty and transfer (6)
+    9. the connected consequences listed with figures (4b)
+   10. the gauge bound's own assumptions kept labelled in 1 and 3; the rejection of (b) alone stands (3)
+
+8. PREDICATES
    1a: the case reproduces at 15.5162 V nominal and 16.0718 V bounded on this base                                                      yes
    1a: both exceed REQ-018's 15.5 V (F01 / D-17 OPEN before any correction)                                                             yes
    (a): A1's case rests on the PA's efficiency at the loop's high end, which no row prints (it needs more than 32 percent)              yes
    (b): a gauge with zero error and the path as inferred still needs more than 15.5 V (b cannot close the case alone)                   yes
    (b): the calibrated residual leaves the case over 15.5 V                                                                             yes
-   (c): the loop's top stays under U13's own loop minimum with its shunt's TCR (L9P-F04 closes)                                         yes
-   (c): the loop's top is under the INA250's 15 A continuous rating                                                                     yes
-   (c): the case at the loop's top meets 15.5 V with the printed gauge bound and the dock contacts' maximum                             yes
+   (c): U13's BIAS (gate drive) would take more than the cap's room under U13's limit if it stayed behind R55                           yes
+   (c): with BIAS on PA_OUT, the cap's top plus R55's other loads stays under U13's own loop minimum (hot shunt, printed TCR)           yes
+   (c): the band on PRINTED terms alone lies inside the band with the TYPICAL allowances                                                yes
+   (c): the cap's top is under the INA250's 15 A continuous rating                                                                      yes
+   (c): the case at the cap's top meets 15.5 V with the gauge bound, the dock contacts' maximum and the loop's own supply               yes
    (c): the margin there is at least 0.2 V                                                                                              yes
-   (c): with U13's divider left at 1 % the bounded case still meets 15.5 V, with less margin                                            yes
    (c): with the rest of the path at its illustrated bound it still meets 15.5 V                                                        yes
-   (c): the loop's bottom is over the maker's 30 W design current (6.0 A at 12.5 V, the printed minimum efficiency)                     yes
-   (c): the PA's DC at the loop's top is under what the bounded case allows                                                             yes
-   (c): the PA's worst heat falls (the loop's top less 30 W, against today's HIGH less 30 W)                                            yes
-   (c): the INA250's junction at 85 C air and the loop's top is under its 125 C specified range                                         yes
-   selection: (c), the only option that bounds the case's own quantity on printed limits                                                yes
+   (c): the overlap rests on the maker's EXAMPLE (6.0 A): the cap's least is over it, and no printed row bounds the transfer            yes
+   (c): the PA's DC at the cap's top is under what the bounded case allows                                                              yes
+   (c): board D's open-loop VGG top stays under 5 V with the ground shift and the loop at rest                                          yes
+   (c): the loop's authority takes VGG under 3.5 V                                                                                      yes
+   (c): the TLV758P's preload meets its 1 mA accuracy test condition                                                                    yes
+   (c): the INA250's junction at the inside air and the cap's top is under its 125 C specified range (TYPICAL RthJA)                    yes
+   (c): the set point's ramp (3 tau) outlasts K1's 3 ms operate time, so the drive arrives under a low set point                        yes
+   selection: (c), PROVISIONAL on B-PA1 (F01's row is PROVISIONAL, never closed on printed limits)                                      yes
 
 l9t5_f01: done
