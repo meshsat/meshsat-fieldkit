@@ -5567,7 +5567,12 @@ def render_fix24(R, p):
       % fmt(sw["t_gate"] * 1e6, 0))
     p("       shunt under 10 mA); samples from %s us to %s ms; then the gate back to -10 V, SW_S closes, SW_B opens; one reading in %s s, so the"
       % (fmt(sw["t_first"] * 1e6, 0), fmt(sw["t_read"] * 1e3, 0), fmt(sw["t_gap"], 0)))
-    p("       heating is off %s %% of the time and each power is averaged over the whole cycle" % fmt(S["duty_lost"] * 100, 2))
+    p("       heating is off %s %% of the time and each power is averaged over the whole cycle; through every step the device under test's channel is"
+      % fmt(S["duty_lost"] * 100, 2))
+    p("       the only one conducting between the pours (its gate stays 10 V under VBAT until SW_S is open); in the %s us between SW_B's closing and"
+      % fmt(sw["t_bypass"] * 1e6, 0))
+    p("       SW_S's opening the current divides between the dummy leg and the coupon by their resistances, SW_S's on-resistance among them: those")
+    p("       microseconds and the switch's own opening enter the early-time correction's term (24f), and t = 0 is SW_S's opening on the shunt")
     p("     SENSING AND CALIBRATION (the same connection): the device under test carries the %s mA; every other conductor across the pours:"
       % fmt(R13_B["i_m"] * 1e3, 0))
     for lab, x, c_ in S["sense_leaks"]:
