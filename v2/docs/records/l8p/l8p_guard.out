@@ -17,7 +17,7 @@ another record's figure, read from its copy.
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
    596555c33dce1fca  v2/vendor/battery/ti-csd17570q5b.pdf
-   969bf40bc7c40727  v2/docs/records/l8p/l8p_guard.py
+   e531190bb1b325c1  v2/docs/records/l8p/l8p_guard.py
 
 1. WHAT RECORD l9stk STATES OF G2 (RECORD: its l9stk_guard.out and page 15.9 at 43da41ca, copied)
    the 130 C preset: no trip under 127.8 C, surely tripped from 132.2 C, resets between 122.3 and 127.7 C
@@ -138,7 +138,7 @@ another record's figure, read from its copy.
    The smallest correction scope for the selection's owner (DERIVED, NOT DRAFTED, NOT CHECKED; one of these, each a material change):
      (i)   a shunt of lower leakage: the kit's 2N7002 (Q44's and Q107's part) prints IDSS 80 nA at 60 V (25 C); on the same doubling
            5.58 uA at 86.25 C, 7.7 uA on the return in all against 26.4 uA (13.2 uA with Q44 and Q107 at the air on that doubling too);
-           its on-resistance is printed at VGS 5 V (7 ohm at most) and 10 V
+           it keeps the window for a shunt site up to 103.8 C on that count; its on-resistance is printed at VGS 5 V (7 ohm at most) and 10 V
            only, where the switch drives 4.75 V: tripped, the return 16.5 mV at 29.2 V with 14 ohm hot (a bound under 5 V, ASSUMED)
      (ii)  the fixed resistor at most 11.57 kOhm nominal with the AO3400A at 86.25 C (DERIVED, +1 %), 11 kOhm in E24: tripped, the regulator
            then meets the table's condition only from 11.93 V, over the pack's 10.6 V, so a trip low in the service holds on under 5 V;
