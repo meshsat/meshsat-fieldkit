@@ -626,16 +626,18 @@ def main():
         sol = text(OUTS["p0sol"])
         e_parts = need(sol, r"gen_netlist: (\d+) parts, 0 unplaced", "record l4e7's board E composition").group(1)
         d16 = "D-16: CORRECTED on the drafted circuit" in sol
-        d10 = re.search(r"D-10 \(B6, L4-F01\): NARROWED, OPEN", sol) is not None
+        d10 = re.search(r"D-10 \(B6, L4-F01\): an UNRESOLVED PROTECTION DEFECT in the present model", sol) is not None
+        b2_not = "adopting or declining it does not resolve D-10" in sol
         w("   the solar entry (P0-7, record l4e7, merged at 66ec67ca; l4e7_p0sol.out pinned): board E composed here (section 2) and there in")
         w("     L4-E9's order with P0-7's sense and route B2 composed as a PROPOSAL (record l4e7's C2 composition %s parts); D-16 %s; D-10 an" % (
             e_parts, "CORRECTED in draft" if d16 else "NOT READ"))
         w("     UNRESOLVED PROTECTION DEFECT in the model (%s: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop" % (
-            "record l4e7 reads it NARROWED, OPEN" if d10 else "NOT READ"))
-        w("     over the 80 V recommended row), the receiving company's engineering item S1; route B2 is an unapproved PARTIAL interface")
+            "record l4e7 reads it so, E-1" if d10 else "NOT READ"))
+        w("     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is an unapproved PARTIAL interface")
         w("     proposal (the owner's item), and neither adopting nor declining it closes D-10; the solar guard's trip against its demand is")
         w("     record l4e7's reading, not re-traced here")
-        P["record l4e7's P0-7 composition is in the candidate (D-16 corrected in draft, D-10 narrowed and open)"] = d16 and d10
+        P["record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve"] = (
+            d16 and d10 and b2_not)
         w("")
 
         # 9. thermal limits
@@ -745,7 +747,7 @@ def main():
         w("   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,")
         w("     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes")
         w("     a 1x4 VH with two contacts a pole (a harness row and a board A land)")
-        w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (S1, the receiving company's engineering item); route")
+        w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route")
         w("     B2 composed as an unapproved PARTIAL interface proposal (the owner's item), which does not close it")
         w("   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's")
         w("     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin")
