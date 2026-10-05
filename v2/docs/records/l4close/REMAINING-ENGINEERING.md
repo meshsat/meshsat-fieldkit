@@ -75,8 +75,8 @@ a path in backticks is a repository path from the root. Line numbers are those o
 ## 0. Where the candidate stands on the tip read
 
 - The candidate cx46 read is `4d0ff8a2` ([CX46:8]); the tip read here, `1c6d56f5`, carries the disposition after cx46 (text and
-  predicates, no new design: [T5R:1], [T5R:107-110]) and is a checkpoint whose own commit subject ends with the words outputs regenerating (the commit `1c6d56f5`, read with `git show`;
-  see section 6, item C).
+  predicates, no new design: [T5R:1], [T5R:107-110]) and is a checkpoint whose own commit subject ends with the words outputs
+  regenerating (the commit `1c6d56f5`, read with `git show`; see section 6, item C).
 - The connected electrical verdict reads ([CON:336]) "REMAINING ENGINEERING. No row of sections 5 to 10 is a positive electrical
   acceptance", on seven open fault rows ([CON:320-335]).
 - The P0 list on this tip is still "revision 2, 5 October 2026, 16:50 CEST" ([P0L:1]); its row states are the coordinator's
@@ -153,7 +153,7 @@ as filed.
 - **Reproduce.** From the repository root `python3 v2/docs/records/l9t5/l9t5_f01.py` (output `v2/docs/records/l9t5/l9t5_f01.out`; the
   band in `v2/docs/records/l9t5/l9t5_paloop.py` cap(), [PAL:186-255]); the composition and mutations
   `python3 v2/docs/records/l9t5/l9t5_f01_drafts.py` with `v2/docs/records/l9t5/check_f01_netlist.py`; the case
-  `python3 v2/docs/records/l9t5/l9t5_case.py` (its section 8, [`v2/docs/records/l9t5/l9t5_case.out`]). The INA250 sheet is held back
+  `python3 v2/docs/records/l9t5/l9t5_case.py` (its section 8 in `v2/docs/records/l9t5/l9t5_case.out`). The INA250 sheet is held back
   and fetched by sha256, never committed ([F01:5]).
 - **State on this tip.** NOT CLOSED: F01 / D-17 PROVISIONAL, the reference's loading REMAINING ENGINEERING ([CON:334-335],
   [CASES:62-64]).
@@ -173,7 +173,7 @@ as filed.
   rating 0.5995 A and a VH pin 2 at 6.4485 A against 5.9948 A, both least ratings INFERRED; every printed row holds and the service
   cases (C-DEV rev 2 20.4746 A, the largest steady state 22.8711 A) hold on the least ratings ([CON:163-176], [DIST:112-123]).
 - **Attempted correction.** Record l8r2's dedicated-return drafts (`v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py`,
-  `v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py`); after cx45, `v2/docs/records/l8r2/l8r2_dist.py` (added in `0fb441b1`) places the
+  `v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py`, round 8, [L8R2:876]); after cx45, `v2/docs/records/l8r2/l8r2_dist.py` (added in `0fb441b1`) places the
   three return sockets and J_5V_IOC on the drawn boards A23 and B19 (SESSION L8R2-D10) and solves the return as a distributed
   network ([DIST:26-45], [DIST:46-55], [L8R2:1076-1086]); the group-centre claim and SESSION L8R2-D9 withdrawn ([T5R:142-143]).
 - **What the recheck said does not stand.** The study as a correction: XT60-M geometry for the XT60-F sockets, uniform fill an
@@ -185,12 +185,12 @@ as filed.
 - **Affected provisional outputs.** The return's rows ([CON:163-176]); T10-A3's shift with the dedicated return ([CON:332-333]); the
   averaged 0.0205 V the T10-A3 chain uses ([CON:224-227], [DIST:123-124]); V6-B2's indirect paths PROVISIONAL on vendor tasks
   (Hirose U.FL, Molex HDMI, UNSENT) ([L8R2:1063], [CON:175], [CON:343-345]); V6-m8, the XT60 board end MISSING ([L8R2:1065]); P0-2's row
-  ([P0L:19]).
+  ([P0L:19]); Layer 10 places from the reserved sites ([DIST:26-27]).
 - **Receiving company's task.** The scope above, with the requirement as the list states it: "every ground branch inside its
   printed rating over every permitted aged-contact corner" ([P0L:19]), on the service cases and the declared upper bound
   ([CON:166-169]); the vendor curves L8R2-F43 (JST VH) and L8R2-F44 (Wurth WR-CAB) ([L8R2:1046], [DIST:117-122]).
 - **Reproduce.** `python3 v2/docs/records/l8r2/l8r2_dist.py` (output [DIST]), with `v2/docs/records/l8r2/l8r2_p0.py` and
-  `v2/docs/records/l8r2/l8r2_gndret.py`; tests `test_l8r2` ([`v2/docs/records/l8r2/README.md`]).
+  `v2/docs/records/l8r2/l8r2_gndret.py`; tests `test_l8r2` (`v2/docs/records/l8r2/README.md`).
 - **State on this tip.** NOT CLOSED: "V6-B1: OPEN, REMAINING ENGINEERING for the receiving company" ([CON:174]).
 
 ### RE-5 (cx46 item 5): the CAN schedule, containment, quorum and recovery
@@ -235,7 +235,8 @@ as filed.
   comparator timing. Smallest correction: withdraw the unsupported response claim and hand over a corrected response mechanism and
   complete network calculation as REMAINING ENGINEERING, without relaxing protection to obtain a pass."
 - **Failed cases.** V-B23's drafted acceptance, EN low within 0.2 s of a 0.30 A load, against the drafted network: cx46's MODEL
-  0.9259 s from 0.1739 A and 1.8888 s from discharged, the 5.76 kohm load resistance in the charging path ([CX46:89]); the record's
+  0.9259 s from 0.1739 A and 1.8888 s from discharged, on the 100 kohm filter resistor alone, cx46 noting that the network's
+  5.76 kohm load resistance also lies in the charging path ([CX46:89]); the record's
   own MODEL, about 0.98 s from the bounded state, the comparator's delay not counted ([T10:584-586]); the comparator's propagation
   and start-up delays are TYPICAL only in SBVS240C ([T10:566-567], [CX46:88]).
 - **Attempted correction.** The rail trip per controller: 0.3 ohm sense, INA169 into 5.76 kOhm, a 1.17 s average, a TPS3701 holding
@@ -246,7 +247,8 @@ as filed.
   network calculation ([T10:584-586], [T10R:220]).
 - **Affected provisional outputs.** V-B23's 0.2 s WITHDRAWN ([HWFW:11], [HWFW:87-90]); the rail trip's response times PROVISIONAL
   ([T10:662-667]); the latent rail-trip row "removes or weakens: T10's thermal bound and T10-A3's hardware bound" ([CON:322-323]);
-  L9T5-D6 reversed onto the rail trip ([T10R:172]).
+  L9T5-D6 reversed onto the rail trip ([T10R:172]); the containment's change-list row R-245 ([T5R:159]) and Layer 5's
+  contract row V-B23 ([HWFW:87-90]).
 - **Receiving company's task.** "a corrected rail-trip response mechanism and the complete network calculation, protection not
   relaxed" ([T10R:220]); acceptance on the record's criteria: "125 C for every sustained state, 150 C only for a transient hardware
   ends" ([T10R:3]); the transient rule needs the LDO's Zth at the trip's time on board B's copper at most 105 C/W, NOT PRINTED by Diodes
@@ -276,7 +278,8 @@ as filed.
 - **Affected provisional outputs.** "the universal sustained bound and its positive margin are WITHDRAWN" ([T10:620]); the worst-case
   margin row "PROVISIONAL/OPEN" ([CON:314-317]); every final T10 figure a MODEL reading, PROVISIONAL/OPEN ([CON:293-312]); T10-A3 at a
   peak PROVISIONAL ([T10:611-613]); L9T5-F13 and the babbling row PROVISIONAL ([T10:678-690]); T10-A5's limits "measurements, NOT an
-  acceptance" ([T10:638]); a rev X part's admission resting on it ([T10R:224]).
+  acceptance" ([T10:638]); a rev X part's admission resting on it ([T10R:224]); Layer 5's contract row V-B20, whose readings are "measurements, NOT an
+  acceptance of a sustained bound" ([HWFW:64-70]).
 - **Receiving company's task.** As [T10:620-621]; acceptance on the unchanged criterion: "125 C for every sustained state, 150 C only for a
   transient hardware ends" ([T10R:3]), "over tolerances and repeated faults, including
   measurement uncertainty where evidence is physical" ([CX46:207]). The first-article measurement (T10-A5 restated) informs it and is
@@ -557,7 +560,7 @@ as filed.
 | CL-11 | "11. Q6 cold-connection guarantee: CLOSED BY THE CORRECTION" ([CX46:166]) | "This closes the unsupported guarantee's disposition, not B2's engineering." ([CX46:168]); [B2:110-129] | HO-G; HO-F |
 | CL-12 | "12. Q6 presence-pair short and protection credit: CLOSED BY THE CORRECTION" ([CX46:171]) | "Protection credit is removed; baseline ORDER_E excludes B2. No claim that B2 closes D-10 survives in those corrected disposition rows." ([CX46:173]); [B2:131-152] | HO-G (P2, P3); HO-F |
 | CL-15 | "15. D-10 retained as remaining engineering: CLOSED BY THE CORRECTION" ([CX46:186]) | "This disposition is correct; D-10 itself remains OPEN REMAINING ENGINEERING." ([CX46:188]); [P11:19-92] | HO-F (D-10 / E-1 itself) |
-| CO-14 | "14. Q7 regeneration and stable bindings: CLOSED AS CONDITIONAL" ([CX46:181]) | Condition: "retain or reproduce successful byte-identical repeated output runs on these inputs. Fresh stability replay was not performed here; the explicitly identified long L4-E7 cache recompute was skipped and remains the box's task." ([CX46:183]); kept in `v2/docs/records/l9t5/stability/` ([T5R:129-132]) | the condition on the tip read: section 6, item C |
+| CO-14 | "14. Q7 regeneration and stable bindings: CLOSED AS CONDITIONAL" ([CX46:181]) | Condition: "retain or reproduce successful byte-identical repeated output runs on these inputs. Fresh stability replay was not performed here; the explicitly identified long L4-E7 cache recompute was skipped and remains the box's task." ([CX46:183]); kept in `v2/docs/records/l9t5/stability/` ([T5R:129-132]); blocker ([CX46:110]): "14. v2/docs/records/l9t5/README.md:130 claims identical second-pass outputs. Input identity is verified, but fresh stability execution is not established by this review. Smallest evidence step: retain the two pinned-run outputs and successful process records or reproduce their byte identity through the coordinator's authorised workflow; the long cache recompute remains separately identified." | the condition on the tip read: section 6, item C |
 | CO-16 | "16. P0-4 eFuse conditions retained: CLOSED AS CONDITIONAL" ([CX46:191]) | "Those conditions must be fulfilled before the affected design claims become unconditional." ([CX46:193]); the conditions: the connector contacts at the inside air PROVISIONAL with the supplier's 76 C chamber task (pass at or under 85 C for J_LIME, 105 C for the IDC socket and cable) ([EFS:150-161], [EFO:425-431]); the RockBLOCK charge pads OPEN as a build condition ([EFS:162-165], [EFO:432-434]); the exact part and value obligations ([EFO:621-622]) | EF-F01 to EF-F03 each read as a DESIGN DEFECT, OPEN, corrected by a DRAFTED change, in the register ([EFO:614-617]); round 2 has no independent check of its own ([EFS:213-214]) |
 
 ## 4. The claims a remaining item weakens, and the state each reads on this tip
@@ -617,7 +620,7 @@ Counts: remaining engineering 19; qualification 1; external architecture fact 3;
 
 - **A. One finding identifier, two findings.** Slot A's L9T5-F26 is J_PA's VH derating ([T5R:194-196], [CON:356-358]); Slot C's
   `T10-ROUND5.md` names "L9T5-F26 (Slot A, its `l9t5_connected.out` 193-199, 282-301, 350-352)" for the connected verdicts inheriting
-  its OPEN claims ([T10R:228-230]). L9T5-F27 settled a similar collision for the decisions D9 and D10 ([T5R:174-176]).
+  its OPEN claims ([T10R:227-229]). L9T5-F27 settled a similar collision for the decisions D9 and D10 ([T5R:174-176]).
 - **B. Two figures for the declared upper bound of the return.** 27.8159 A with J_5V_IOC at 1.3800 A in the study ([DIST:86]) and
   27.9108 A in the one-node model and the README ([P0R:21], [T5R:59]), whose J_5V_IOC term is the declared peak 1.4749 A ([CON:151]).
 - **C. The stability condition on the tip read (CO-14).** `stability/DIGESTS-cr3.txt` records `l9t5_f01.out` at a sha256 that differs
@@ -643,4 +646,4 @@ agree byte for byte ([T5R:129-132], `v2/docs/records/l9t5/stability/regen_cascad
 order in `v2/docs/records/l9t5/stability/regen_cascade.sh`. Makers' sheets held back by their terms are fetched and checked by
 sha256 by each record's `fetch_held_back.py` and never committed ([F01:5]). No KiCad is needed for the netlists
 (`v2/docs/records/l8p/gen_netlist.py`). The record tests run with `env -C v2/ecad/tools/tests python3 run.py <module>`
-([`v2/docs/records/l8r2/README.md`]).
+(`v2/docs/records/l8r2/README.md`).
