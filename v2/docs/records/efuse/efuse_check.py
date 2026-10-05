@@ -55,6 +55,7 @@ MY_DRAFTS = {"b": ["v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "v2/docs/r
 # all eight identical, so each held copy IS the maker's current revision on that date (the README records the readings).
 SHEETS = {
     "tps2596": ("v2/vendor/power/tps2596.pdf", "TI SLVSET8A (TPS2596xx, May 2019, revised August 2019)", False, ""),
+    "tps2595": ("v2/vendor/power/ti-tps2595-efuse.pdf", "TI TPS2595xx datasheet (Rev. C), the 4 A sibling family (not fitted)", False, ""),
     "tps2065c": ("v2/vendor/ti/ti-tps2065c-slvsau6i.pdf", "TI SLVSAU6I (TPS20xxC, June 2011, revised May 2026)", False, ""),
     "tps22810": ("v2/vendor/ti/ti-tps22810-load-switch.pdf", "TI SLVSDH0C (TPS22810, December 2016, revised January 2018)", False, ""),
     "lm5069": ("v2/vendor/ti/ti-lm5069.pdf", "TI SNVS452G (LM5069, September 2006, revised January 2020)", False, ""),
@@ -100,6 +101,9 @@ QUOTES = {
     "T96_RON": ("tps2596", "p.7, 7.5 RON", "VIN > 4 V, IOUT = 0.2 A, TJ = 131 mΩ -40 to 125"),
     "T96_IDVDT": ("tps2596", "p.7, 7.5 DVDT", "IDVDT dVdt Pin Charging Current 1.89 2.11 2.33 µA"),
     "T96_GDVDT": ("tps2596", "p.7, 7.5 DVDT", "GDVDT DVDT gain 20.31 20.93 21.5 V"),
+    # TPS2595xx, the sibling family a 3 A limit would have needed (not fitted; out 8's variant note)
+    "T95_RANGE": ("tps2595", "p.1, 1 Features", "Current Range: 0.5 A to 4 A"),
+    "T95_RILM": ("tps2595", "7.3 Recommended Operating Conditions", "RILM ILM pin resistance (Active Current Limiting Operation) ILM 487 5000 Ω"),
     # TPS2065C (the 1 A rated member, fixed limit)
     "T65_IOS": ("tps2065c", "p.7, 6.7 (TJ -40 to 125 C, VIN 4.5 to 5.5 V), 1-A rated output, TPS20xxC", "TPS20xxC 1.2 1.55 1.9"),
     "T65_IOUT": ("tps2065c", "p.5, 6.3 Recommended Operating Conditions, IOUT", "TPS2061C, TPS2065C and TPS2065C-2 1"),
@@ -130,6 +134,8 @@ QUOTES = {
     # TPS4811-Q1
     "T48_OCP": ("tps4811", "p.10, 7.5 V(SNS_WRN)", "RSET = 100 Ω, RIWRN = 39.7kΩ 29.2 30.6 31.5 mV"),
     "T48_EQ6": ("tps4811", "p.22, Equation 6", "11.9 × RSET"),
+    "T48_IISCP": ("tps4811", "p.10, 7.5 I(ISCP)", "I(ISCP) SCP Input Bias current 13.7 15.6 17.6 µA"),
+    "T48_EQ11": ("tps4811", "p.23, Equation 11 (RISCP = ISC x RSNS / 15.6 uA - 464; the text layer garbles it)", "15.6µSNS − 464"),
     "T48_IWRN": ("tps4811", "p.5, Table 5-1, pin IWRN", "Connect IWRN to GND if overcurrent protection feature is not"),
     # the connectors and the loads
     "C_USB3A": ("usb3a", "p.1, electrical properties", "Rated Current IR 1.8 A max."),
@@ -235,6 +241,8 @@ def figures():
     F["t63_rows"] = rows
     F["t48_ocp"] = tuple(x / 1000.0 for x in nums("T48_OCP")[-3:])
     F["t48_point"] = (nums("T48_OCP")[0], nums("T48_OCP")[1] * 1000.0)        # RSET 100, RIWRN 39.7k
+    F["t48_iiscp"] = tuple(x * 1e-6 for x in nums("T48_IISCP")[-3:])
+    F["t48_off"] = nums("T48_EQ11")[-1]                                         # 464 ohm
     F["c_usb3a"] = nums("C_USB3A")[0]
     F["c_idc16"] = nums("C_IDC16")[0]
     F["c_rib16"] = nums("C_RIB16")[0]
@@ -512,6 +520,7 @@ def instances(table, board):
             inst["rset"] = resistors_between(table, src, cs_p)
             inst["riwrn"] = resistors_between(table, iwrn, n.get("6"))
             inst["ocp_off"] = iwrn == n.get("6") or (iwrn or "").startswith("GND")
+            inst["riscp"] = [r for r in resistors_on(table, n.get("19")) if (ohms(r["value"]) or (0,))[0] >= 1.0]
         out.append(inst)
     return out
 
@@ -628,7 +637,7 @@ def meta(F, L9):
                            demand=[("the maker: 'Maximum Power 4.5 W' at C-DEV's 4.9019 V behind U23's 0.131 Ohm, and the host's "
                                     "'5V, 900 mA' (PRINTED; constant power is the upper reading)", lime(), "PRINTED")],
                            down=[("J_LIME, Wurth 692122030100 VBUS contact", F["c_usb3a"], "C_USB3A")],
-                           start=(0.15, 10e-6, "ASSUMPTION: a USB-compliant device draws at most 150 mA unconfigured and "
+                           start=(0.15, 10e-6, "ASSUMPTION: a device inside the USB standard's limits draws at most 150 mA unconfigured and "
                                                "carries at most 10 uF on VBUS (USB 3.x; the standard is not held here)")),
         ("b", "U24"): dict(case="C-DEV rev 1", load="RockBLOCK 9704 (J_RB9704, IDC 2x8, pin 15 the one 5 V conductor)",
                            demand=[("the maker: DC input 'at a maximum of 500mA' (PRINTED)", F["l_rb_dc"], "PRINTED")],
@@ -827,7 +836,15 @@ def judge(inst, F, M, MF, cat, intent, table, MAP):
             rset = [ohms(r["value"])[0] for r in inst.get("rset", [])]; riw = [ohms(r["value"])[0] for r in inst.get("riwrn", [])]
             at = bool(rset and riw and abs(rset[0] - F["t48_point"][0]) < 0.5 and abs(riw[0] - F["t48_point"][1]) < 50)
             lo, hi = sense_band(F["t48_ocp"][0], F["t48_ocp"][2], rs, tol, tcr)
-            inst.update(nom=F["t48_ocp"][1] / rs, basis="PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5)",
+            sc = ""
+            if inst.get("riscp"):
+                rsc = ohms(inst["riscp"][0]["value"])[0]
+                sc = ("; the short-circuit trip by Equation 11 with I(ISCP) %.1f to %.1f uA over RISCP %s %g Ohm: %.2f to %.2f A (INFERRED: "
+                      "RISCP is not a printed point and the comparator's own offset is not printed apart; not judged here)" % (
+                          F["t48_iiscp"][0] * 1e6, F["t48_iiscp"][2] * 1e6, inst["riscp"][0]["ref"], rsc,
+                          (rsc * (1 - tol) + F["t48_off"]) * F["t48_iiscp"][0] / (rs * (1 + tol)),
+                          (rsc * (1 + tol) + F["t48_off"]) * F["t48_iiscp"][2] / (rs * (1 - tol))))
+            inst.update(nom=F["t48_ocp"][1] / rs, basis="PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5)" + sc,
                         a="PASS (RSET %s Ohm, RIWRN %s Ohm: the printed point)" % (rset[0], riw[0]) if at else
                         "FAIL: RSET %s, RIWRN %s are not the printed point" % (rset, riw))
         inst["band"] = (lo, hi)
@@ -842,7 +859,8 @@ def judge(inst, F, M, MF, cat, intent, table, MAP):
     # (b) the demand, in the states the rail serves
     dem = [x for x in mt.get("demand", []) if x[1] is not None]
     if not dem:
-        dem = [("the generator's declared peak of %s (D)" % n, r.get("amps_peak"), "D") for n, r in rails if r.get("amps_peak") is not None][:1]
+        dem = sorted([("the generator's declared peak of %s (D)" % n, r.get("amps_peak"), "D") for n, r in rails if r.get("amps_peak") is not None],
+                     key=lambda x: -x[1])[:1]
     inst["demand"] = dem
     lo = inst["band"][0] if inst["band"] else None
     need = max(d[1] for d in dem) if dem else None
@@ -999,7 +1017,7 @@ def main():
     P("with its board's pending drafts composed in L4-E9's change-list order (out 2); EFUSE = DRAFTED plus this record's two drafts.")
     P("")
     P("0. INPUTS (sha256/16)")
-    ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py"] + MY_DRAFTS["b"]
+    ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py"] + MY_DRAFTS["b"]
                      + ["v2/docs/records/" + x for b in "abep" for x in ORDER[b]] + [v[0] for v in SHEETS.values()]))
     for p in ins:
         h = sha(p)
@@ -1252,6 +1270,24 @@ def main():
             good = ok == want; okall &= good
             P("   %-46s %-5s %s %s" % (name, "PASS" if ok else "FAIL", "(as required)" if good else "(NOT AS REQUIRED)", why))
         P("   the netlist reading and its mutations: %s" % ("every check reads as required" if okall else "A CHECK DID NOT READ AS REQUIRED"))
+        # the alternatives: every E96 value (1 %, 100 ppm/K) whose printed band holds (b) and (c) for each corrected eFuse
+        e96 = [100, 102, 105, 107, 110, 113, 115, 118, 121, 124, 127, 130, 133, 137, 140, 143, 147, 150, 154, 158, 162, 165, 169, 174,
+               178, 182, 187, 191, 196, 200, 205, 210, 215, 221, 226, 232, 237, 243, 249, 255, 261, 267, 274, 280, 287, 294, 301, 309,
+               316, 324, 332, 340, 348, 357, 365, 374, 383, 392, 402, 412, 422, 432, 442, 453, 464, 475, 487, 499, 511, 523, 536, 549,
+               562, 576, 590, 604, 619, 634, 649, 665, 681, 698, 715, 732, 750, 768, 787, 806, 825, 845, 866, 887, 909, 931, 953, 976]
+        for name, need, cap in (("U23 (R36)", need23, cap23), ("U24 (R43)", need24, cap24)):
+            ok = []
+            for dec in (1, 10, 100):
+                for v in e96:
+                    bb = t96_band(F, v * dec, 0.01, TCR_DEFAULT)
+                    if bb[1] is not None and bb[1] >= need and bb[3] <= cap:
+                        ok.append((v * dec, bb[1], bb[3]))
+            P("   E96 values whose printed band holds %s's (b) %.4f A and (c) %.4f A: %s" % (
+                name, need, cap, ", ".join("%g (%.4f to %.4f A)" % x for x in ok) if ok else "none"))
+        P("   the variant: no TPS2596-family part has a fixed limit or a range above %g A; the sibling TPS2595xx prints %g to %g A with RILM "
+          "%g to %g Ohm (T95_RANGE, T95_RILM) and would be the part for a limit near 3 A; the loads here need at most %.4f A, so the "
+          "TPS259631 stays and only its resistor changes" % (F["t96_range"][1], nums("T95_RANGE")[0], nums("T95_RANGE")[1],
+                                                             nums("T95_RILM")[0], nums("T95_RILM")[1], max(need23, need24)))
         # Layer 6's LCSC table after this record's drafts
         l6 = os.path.join(RECS, "l6r2", "apply_gen_sch_b_lcsc.py")
         p6 = os.path.join(d, "b_l6.py"); shutil.copy(pf, p6)

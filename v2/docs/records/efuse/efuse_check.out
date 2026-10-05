@@ -23,6 +23,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
    ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
    d587db1f0cbda88e v2/docs/records/l4e9/apply_gen_sch_e_q1.py
+   a96c72c07fca8671 v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py
    cab57e0ed5be2f63 v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
    352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
    cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
@@ -59,6 +60,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    df28a01bf0fb46ac v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf
    f1146105a3c09ebc v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
    87b2e5605196b5c5 v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html
+   6a8b67ad925b6fa8 v2/vendor/power/ti-tps2595-efuse.pdf
    66f6bae4494f7bfe v2/vendor/power/tps2596.pdf
    d94f62eee7f2de2e v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt
    8f91a0db2daf2da3 v2/vendor/ti/held/ti-tps1663-slvset9g.pdf
@@ -86,6 +88,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    tps22810   TI SLVSDH0C (TPS22810, December 2016, revised January 2018)
    tps23861   TI SLUSBX9I (TPS23861, March 2014, revised July 2019)
    tps25740   TI SLVSDG8B (TPS25740, TPS25740A, April 2016, revised June 2017)
+   tps2595    TI TPS2595xx datasheet (Rev. C), the 4 A sibling family (not fitted)
    tps2596    TI SLVSET8A (TPS2596xx, May 2019, revised August 2019)
    tps4811    TI SLUSEE5E (TPS4811-Q1, January 2022, revised April 2026) [held back by its notice; fetch: v2/docs/records/l4e11/fetch_held_back.py]
    usb3a      Wurth WR-COM 692122030100 (USB 3.0 type A receptacle)
@@ -108,7 +111,9 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    T40_REC       VERIFIED     tps25740: "Following the recommended implementation of a 5-mΩ sense resistor" (p.31, 8.3.8.2)
    T40_TRIP3A    VERIFIED     tps25740: "HIPWR: 5 A not enabled 19.2 22.6 mV" (p.11, 7.5 VI(TRIP))
    T40_TRIP5A    VERIFIED     tps25740: "HIPWR = DVDD (5 A enabled) 29 34 mV" (p.11, 7.5 VI(TRIP))
+   T48_EQ11      VERIFIED     tps4811: "15.6µSNS − 464" (p.23, Equation 11 (RISCP = ISC x RSNS / 15.6 uA - 464; the text layer garbles it))
    T48_EQ6       VERIFIED     tps4811: "11.9 × RSET" (p.22, Equation 6)
+   T48_IISCP     VERIFIED     tps4811: "I(ISCP) SCP Input Bias current 13.7 15.6 17.6 µA" (p.10, 7.5 I(ISCP))
    T48_IWRN      VERIFIED     tps4811: "Connect IWRN to GND if overcurrent protection feature is not" (p.5, Table 5-1, pin IWRN)
    T48_OCP       VERIFIED     tps4811: "RSET = 100 Ω, RIWRN = 39.7kΩ 29.2 30.6 31.5 mV" (p.10, 7.5 V(SNS_WRN))
    T61_AUTO      VERIFIED     tps23861: "set to 0b110 corresponding to 645 mA" (8.3 Auto mode, Class 4)
@@ -124,6 +129,8 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    T65_IOS       VERIFIED     tps2065c: "TPS20xxC 1.2 1.55 1.9" (p.7, 6.7 (TJ -40 to 125 C, VIN 4.5 to 5.5 V), 1-A rated output, TPS20xxC)
    T65_IOUT      VERIFIED     tps2065c: "TPS2061C, TPS2065C and TPS2065C-2 1" (p.5, 6.3 Recommended Operating Conditions, IOUT)
    T65_VIN       VERIFIED     tps2065c: "4.5 V ≤ VIN ≤ 5.5 V" (p.7, 6.7 conditions)
+   T95_RANGE     VERIFIED     tps2595: "Current Range: 0.5 A to 4 A" (p.1, 1 Features)
+   T95_RILM      VERIFIED     tps2595: "RILM ILM pin resistance (Active Current Limiting Operation) ILM 487 5000 Ω" (7.3 Recommended Operating Conditions)
    T96_ACC       VERIFIED     tps2596: "±10.4 % (maximum) across current range" (p.1, 1 Features)
    T96_EQ        VERIFIED     tps2596: "903 RILM : ILIM A 0.0112" (p.21, 8.3.3.2 Equation 5 (the minus sign is lost in the text layer; Equation 7's worked example, p.28, 903 / (1 - 0.0112) = 913.2, fixes it))
    T96_EQ_EX     VERIFIED     tps2596: "903 903 RILM : 913.2" (p.28, 9.2.3.1 Equation 7)
@@ -140,7 +147,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    T96_ROW_909   VERIFIED     tps2596: "RILM = 909 Ω, VDS = 0.5 V 0.949 1.005 1.051 A" (p.6, 7.5 ILIM)
    T96_VARIANT   VERIFIED     tps2596: "TPS259631 Adjustable OVLO Auto-retry" (p.3, 5 Device Comparison Table)
    T96_VIN       VERIFIED     tps2596: "VIN Input Voltage Range IN 2.7 19" (p.5, 7.3 Recommended Operating Conditions)
-   quotes: 51 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND
+   quotes: 55 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND
    parsed: TPS2596 RILM 453 to 7869 Ohm, 0.125 to 2 A, +-10.4 % across the range, 2 A continuous, VIN 2.7 to 19 V, Equation 5 ILIM = 903 / RILM + 0.0112; rows 7870 Ohm 0.113 / 0.125 / 0.139 A; 3830 Ohm 0.224 / 0.247 / 0.269 A; 909 Ohm 0.949 / 1.005 / 1.051 A; 453 Ohm 1.83 / 2.004 / 2.147 A; RON 0.131 Ohm (VIN > 4 V, TJ to 125 C); IDVDT 1.89e-06/2.11e-06/2.33e-06 A, GDVDT 20.31/20.93/21.5
    parsed: TPS2065C IOS 1.2 / 1.55 / 1.9 A, 1 A continuous; TPS22810 3 A continuous, no limit; LM5069 VCL (0.0485, 0.055, 0.0615) V, VCB (0.08, 0.105, 0.13) V, VIN 9 to 80 V;
            TPS23861 RS (0.255, 0.25) Ohm, ICUT(110) (0.15627000000000002, 0.1645, 0.17272) V, VLIM2X(1 V) (0.26, 0.2703, 0.285) V; TPS25740A VI(TRIP) (0.0192, 0.022600000000000002) / (0.029, 0.034) V; TPS1663 I(OL) = 18 / R(kOhm), 0.6 to 6 A (+-7 %), rows 30000 Ohm 0.54 / 0.6 / 0.66 A; 9000 Ohm 1.84 / 2 / 2.16 A; 4020 Ohm 4.185 / 4.5 / 4.815 A; 3000 Ohm 5.58 / 6 / 6.42 A; TPS4811 V(SNS_WRN) (0.0292, 0.030600000000000002, 0.0315) V at (100.0, 39700.0)
@@ -278,9 +285,9 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
                       setting 1870 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 9.3 % (INFERRED band 0.4412 to 0.5486 A)
    DRAFTED B U762  tps2596   0.4359 / 0.4941 / 0.5541 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
                       setting 1870 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 9.3 % (INFERRED band 0.4412 to 0.5486 A)
-   DRAFTED E U6    tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5)
+   DRAFTED E U6    tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5); the short-circuit trip by Equation 11 with I(ISCP) 13.7 to 17.6 uA over RISCP R81 3010 Ohm: 10.38 to 13.84 A (INFERRED: RISCP is not a printed point and the comparator's own offset is not printed apart; not judged here)
                       setting 0.0045 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
-   DRAFTED E U21   tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5)
+   DRAFTED E U21   tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5); the short-circuit trip by Equation 11 with I(ISCP) 13.7 to 17.6 uA over RISCP R89 3010 Ohm: 10.38 to 13.84 A (INFERRED: RISCP is not a printed point and the comparator's own offset is not printed apart; not judged here)
                       setting 0.0045 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
    DRAFTED P U101  lm5069    18.3525 / 21.0833 / 23.8848 A      PRINTED VCL / RS (7.5); the circuit breaker at VCB: 30.27 to 50.49 A; C-PROT rev 1's band 18.32 to 23.93 A takes the resistors at the band's own temperature (l9stk)
                       setting 0.0026087 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
@@ -323,7 +330,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         demand 0.5100 A  [T] l9pwr's camera row at HIGH, 2.50 W at 4.9019 V (T: a placeholder)
         rating 2.000 A  J_CAM, JST PH (C_PH, VERIFIED)
    D U21   tps22810  case the generator's declaration; load +5V_SA, +5V_TX
-        demand 1.1000 A  [D] the generator's declared peak of +5V_SA (D)
+        demand 1.1500 A  [D] the generator's declared peak of +5V_TX (D)
    E U6    lm5069    case C-SHORE rev 1 (the drawn LM5069; L4-E9 IF-07); load VIN_RAW: the vehicle and shore entry into board A
         demand 4.6290 A  [CITED] L4-E9 IF-07: L4-E5's drawn line at VIN_RAW 9 V, 4.629 A (CITED, record l4e9)
    E U16   tps22810  case the generator's declaration; load +5V_GEIGER
@@ -442,7 +449,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         (own) the 1 A rated member (continuous 1 A); its printed limit sits above the rating by the part's design
    DRAWN   D U21   tps22810  PASS
         (a) n/a (no setting)
-        (b) PASS (continuous): 1.100 A within the switch's 3 A; no limit to judge
+        (b) PASS (continuous): 1.150 A within the switch's 3 A; no limit to judge
         (c) n/a: the part limits nothing; a fault is limited by the feeding rail's own protection
         (d) no label
    DRAWN   E U6    lm5069    PASS
@@ -522,7 +529,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         (b) PASS: 1.072 A >= 0.942 A (margin +0.130 A)
         (c) PASS: 1.363 A <= 1.800 A (J_LIME, Wurth 692122030100 VBUS contact)
         (d) PASS: '1.2 A' is the nominal 1.2152 A rounded
-        (b, start) PASS: at 5.57 V/ms the band's minimum leaves 143.6 uF for the load's own input capacitance beside the board's 22.0 uF, the load drawing 0.150 A during the rise (assumed 10 uF: ASSUMPTION: a USB-compliant device draws at most 150 mA unconfigured and carries at most 10 uF on VBUS (USB 3.x; the standard is not held here))
+        (b, start) PASS: at 5.57 V/ms the band's minimum leaves 143.6 uF for the load's own input capacitance beside the board's 22.0 uF, the load drawing 0.150 A during the rise (assumed 10 uF: ASSUMPTION: a device inside the USB standard's limits draws at most 150 mA unconfigured and carries at most 10 uF on VBUS (USB 3.x; the standard is not held here))
         (own) the switch's continuous 2 A: within
    EFUSE   B U24   tps2596   PASS
         (a) PASS
@@ -564,6 +571,9 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    mutation: R43 to 1.87k (band under 500 mA)     FAIL  (as required) R43 1.87k 1% (ILM: 0.49 A): band 0.4359 to 0.5541 A against 0.5000 to 1.0000 A
    mutation: R36's GND pin onto +5V_LIME          FAIL  (as required) R36's far pin is not on GND
    the netlist reading and its mutations: every check reads as required
+   E96 values whose printed band holds U23 (R36)'s (b) 0.9417 A and (c) 1.8000 A: 576 (1.3925 to 1.7711 A), 590 (1.3597 to 1.7294 A), 604 (1.3284 to 1.6896 A), 619 (1.2965 to 1.6490 A), 634 (1.2660 to 1.6103 A), 649 (1.2370 to 1.5733 A), 665 (1.2075 to 1.5358 A), 681 (1.1793 to 1.5000 A), 698 (1.1509 to 1.4637 A), 715 (1.1237 to 1.4292 A), 732 (1.0979 to 1.3963 A), 750 (1.0718 to 1.3631 A), 768 (1.0469 to 1.3315 A), 787 (1.0219 to 1.2996 A), 806 (0.9980 to 1.2693 A), 825 (0.9752 to 1.2403 A), 845 (0.9524 to 1.2113 A)
+   E96 values whose printed band holds U24 (R43)'s (b) 0.5000 A and (c) 1.0000 A: 1050 (0.7684 to 0.9772 A), 1070 (0.7542 to 0.9592 A), 1100 (0.7339 to 0.9333 A), 1130 (0.7147 to 0.9089 A), 1150 (0.7025 to 0.8933 A), 1180 (0.6849 to 0.8709 A), 1210 (0.6681 to 0.8496 A), 1240 (0.6522 to 0.8293 A), 1270 (0.6370 to 0.8100 A), 1300 (0.6226 to 0.7916 A), 1330 (0.6088 to 0.7741 A), 1370 (0.5913 to 0.7518 A), 1400 (0.5788 to 0.7360 A), 1430 (0.5669 to 0.7208 A), 1470 (0.5517 to 0.7015 A), 1500 (0.5409 to 0.6877 A), 1540 (0.5271 to 0.6702 A), 1580 (0.5140 to 0.6535 A), 1620 (0.5016 to 0.6377 A)
+   the variant: no TPS2596-family part has a fixed limit or a range above 2 A; the sibling TPS2595xx prints 0.5 to 4 A with RILM 487 to 5000 Ohm (T95_RANGE, T95_RILM) and would be the part for a limit near 3 A; the loads here need at most 0.9417 A, so the TPS259631 stays and only its resistor changes
    Layer 6's apply_gen_sch_b_lcsc.py after this record's drafts: OK
 
 9. PREDICATES
