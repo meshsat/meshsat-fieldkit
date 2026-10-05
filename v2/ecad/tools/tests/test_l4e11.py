@@ -66,10 +66,15 @@ independent recheck V2R) adds: round 13's fixture joins the pours in a reading a
 every state, with its margins on the printed rows; each junction is judged at its own row's worst split, which a scan confirms, with the
 baseline in the limit's line, and a search on a fresh seed finds no specimen accepted over 150 C while round 13's lines accept some; the
 minors are answered and the procedure keeps the recheck among its preconditions. Round 15 (section 25, the final recheck V2RF) adds: round 14's
-heavy-lead check and term cannot be met and the guard that replaces them leaves a residual under half a kelvin; a coupon at the design
-target passes at every error edge and one over the limit fails at every edge; no permitted step reaches the clamp and each interlock
+heavy-lead check and term cannot be met and the guard that replaced them was bounded at 14.9 mW a lead (1.22 K at the bar); a coupon
+at the design target passes at every error edge and one over the limit fails at every edge; no permitted step reaches the clamp and each interlock
 rule is needed; the census, the clamp, each line's propagated U, a search with readings drawn from the budget and the pours' allowance
-in the design target and the draft's layout requirement. Nothing here writes into the tree: drafts run on temporary copies.
+in the design target and the draft's layout requirement. Round 16 (section 26, the check V2RG: the lead treatment's loop ended) adds:
+round 15's guard withdrawn as the qualification and the lead heat a requirement on the supplier's fixture (10 mW a lead), demonstrated
+by the supplier and checked by V8 on the measured residual, its bound carried through the reduction into every line; the restated
+target passes at every edge and coupons over the limit fail at every edge; the page's rows read against the script's; line 3's U with
+its power terms; the probability at the limit from the record's own functions. Nothing here writes into the tree: drafts run on
+temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -2173,9 +2178,10 @@ def _leads_guarded(body):
 
 def t_round15_v2rf_b1_the_guard_replaces_the_lead_term_and_a_coupon_at_the_target_passes_under_and_fails_over():
     """V2RF-B1: round 14's V8 holds only within 1.5 to 2 K of the lead and its term costs 6 to 64 K a lead, and its factor 2 reaches 8
-    for two coupled leads (recomputed here); the guard's residual is k A (dT_0 + dT_c) / dx, 5.2 mW a lead, its term under 0.5 K; on a
-    coupon at the design target the lines pass at every error edge within U and over the limit they fail at every edge, where round
-    14's term fails the target coupon; the procedure and the block refuse round 14's statements."""
+    for two coupled leads (recomputed here); round 15's guard residual, the pair's k A (dT_0 + dT_c) / dx and the lagged lug's loss,
+    14.9 mW a lead, its term 1.22 K at the bar (round 16 withdrew the guard as the qualification: V2RG-B1); on a coupon at round 15's
+    design target the lines pass at every error edge within U and over the limit they fail at every edge, where round 14's term fails
+    the target coupon; the procedure and the block refuse round 14's statements."""
     R = _R()
     m = _M()
     S, S21, S23 = R["S25"], R["S21"], R["S23"]
@@ -2203,11 +2209,13 @@ def t_round15_v2rf_b1_the_guard_replaces_the_lead_term_and_a_coupon_at_the_targe
     # the procedure and the block
     text, body = _tp_body()
     assert not _leads_guarded(_R14_V8_TEXT + " " + _R14_LEAD_TERM_TEXT), "the check accepts round 14's lead treatment"
-    assert _leads_guarded(body), "the procedure's heavy leads are not guarded"
+    # round 16 (V2RG-B1, the coordinator's diagnosis) replaced the guard by a requirement on the supplier's fixture: round 14's
+    # statements stay refused, round 15's guard is no longer the qualification (t_round16_* read the requirement)
+    flat_ = " ".join(body.split())
+    assert not any(g in flat_ for g in ("at most 2 % of the heated FET's power", "2 q_out", "the factor taken at 2"))
     page = open(PAGE, encoding="utf-8").read()
     b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
-    assert "times twice the junction's own Zself" not in b29 and "each heating lead guarded by a heater tape" in b29
-    assert "no assumption on the leads' share is needed" in b29
+    assert "times twice the junction's own Zself" not in b29 and "a requirement on the supplier's fixture" in b29
 
 
 def t_round15_v2rf_m1_no_permitted_step_reaches_the_clamp_and_each_rule_is_needed():
@@ -2286,10 +2294,10 @@ def t_round15_v2rf_m2_to_m5_the_census_clamp_propagated_u_search_and_design_targ
         shutil.copy(GEN_A, a_)
         _apply("apply_gen_sch_a_charger.py", a_)
         txt = " ".join(open(a_, encoding="utf-8").read().replace("#", " ").split())
-    assert "summed at most 0.1 mOhm" in txt and "%.2f K/W" % S["target"]["zw"] in txt and "%.3f K/W" % S["z17_t"] in txt
+    assert "summed at most 0.1 mOhm" in txt and "%.2f K/W" % R["S26"]["sel"]["zw"] in txt and "%.3f K/W" % S["z17_t"] in txt
     # the row, the page, the output, the procedure, the README
     row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
-    assert "guarded" in row and "propagated through the reduction" in row and "illustrates: a sum of 39.41" not in row and "0.1 mOhm" in row
+    assert "REQUIREMENT ON THE SUPPLIER'S FIXTURE" in row and "propagated through the reduction" in row and "illustrates: a sum of 39.41" not in row and "0.1 mOhm" in row
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
     p25, o25 = page.split("## 25. Round 15")[1], out.split("25. ROUND 15")[1]
@@ -2300,9 +2308,105 @@ def t_round15_v2rf_m2_to_m5_the_census_clamp_propagated_u_search_and_design_targ
     text, body = _tp_body()
     flat_ = " ".join(text.split())
     assert "**NOT EXECUTABLE.** Two things must happen first" in flat_ and "R-159 restated from it (L4-E9's)" in flat_
-    assert "a supplier's written agreement" in flat_ and "Round 15's guard has had no check yet" in flat_
+    assert "a supplier's written agreement" in flat_ and "V2RG-B1 stays OPEN as that supplier qualification item" in flat_
     for kept in ("APPLIED AS A CORRECTION", "Check V3 again in the chamber", "SW_S's clamp", "no relay", "propagated through the reduction",
                  "one earth point", "channel-to-channel isolation"):
         assert kept in " ".join(body.split()), "the procedure lacks %r" % kept
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
     assert "V2RF's findings answered" in readme and "V2RF-B1" in readme and "ROUND 15" in readme
+
+
+# ---- round 16 (5 October 2026): the check V2RG ends the lead-treatment loop; the lead heat becomes a requirement on the supplier's
+# fixture (the coordinator's diagnosis), and V2RG's minors m1 to m6
+_R15_GUARD_TEXT = ("| V8 | each guard, at every steady endpoint: its controller in control (its heater neither at zero nor at full) and its pair's "
+                   "logged difference | within its 0.05 K band ... q_res,J = k A (|its logged difference| + its offset dT_0) / dx + U_lag A_lug "
+                   "dT_J ... With the guards in control the coupon is the coupon without its leads plus these residuals")
+
+
+def _lead_requirement(body):
+    """A procedure makes the lead heat a requirement on the supplier's fixture: the net heat at each joint at most a stated value a lead,
+    demonstrated on the actual fixture before any coupon run by a measured residual or a reference coupon, V8 judging that measured
+    residual, the bound carried through the reduction, V2RG-B1 open as the supplier qualification item; and none of round 15's guard
+    statements as the qualification."""
+    flat_ = " ".join(body.split())
+    need_ = ("THE FIXTURE REQUIREMENT", "at most 10 mW a lead", "before any coupon run", "k A (3 T0 - 4 Tmid + TL) / L",
+             "reference coupon of known thermal impedance", "| V8 | each heavy lead's net heat at its joint", "SUMMING the changes",
+             "V2RG-B1 stays OPEN")
+    gone = ("| V8 | each guard", "q_res,J = k A", "With the guards in control the coupon is the coupon without its leads", "Switch the guards on")
+    return all(n in flat_ for n in need_) and not any(g in flat_ for g in gone)
+
+
+def t_round16_v2rg_b1_the_lead_heat_is_a_fixture_requirement_and_the_restated_target_passes_under_and_fails_over():
+    """V2RG-B1 (the second negative check of the lead treatment: its loop ends): round 15's guard is withdrawn as the qualification and
+    the lead heat is a requirement on the supplier's fixture, 10 mW a lead, demonstrated before any coupon run, V8 judging the measured
+    residual; the allowance's bound, of either sign, enters the superposition line several times a reading's and the direct line once;
+    the target restated for it passes at every edge and coupons 0.1 K and 1 K over the limit fail at every edge; counting the bound only
+    once in line 2 would pass a coupon over the limit; the procedure refuses round 15's guard statements."""
+    R = _R()
+    m = _M()
+    S, K = R["S26"], R["S25"]["K"]
+    assert m.R16_Q_SEL == 0.01 and abs(S["sel"]["q"] - 0.01) < 1e-15
+    assert S["amplify"] > 4.0 and abs(S["lb3"] - S["sel"]["b1"]) < 1e-12, "the bound does not enter line 2 more than the direct line"
+    zws = [r_["zw"] for r_ in S["trade"]]
+    assert all(a_ > b_ for a_, b_ in zip(zws, zws[1:])), "the target does not fall as the allowance grows"
+    rows = {r_["lab"]: r_ for r_ in S["table"]}
+    tg = rows["the design target"]
+    assert tg["high"] and tg["exact"] and tg["low"]
+    assert abs(tg["true"] + 2 * (tg["u"] + tg["lb"]) - K["rise"]) < 0.05, "the target is not set at twice U and the leads' bound under the limit"
+    for lab in ("0.1 K over the limit", "1 K over the limit"):
+        r_ = rows[lab]
+        assert not (r_["high"] or r_["exact"] or r_["low"]), lab
+        assert r_["low"] == (r_["true"] - r_["lb"] - r_["u"] + r_["u"] + r_["lb"] <= K["rise"])
+    # the mutation: line 2's bound counted once (a reading's) instead of through the reduction passes a coupon 1 K over the limit
+    r_ = rows["1 K over the limit"]
+    assert r_["true"] - r_["lb"] - r_["u"] + r_["u"] + S["sel"]["b1"] <= K["rise"], "counting the bound once does not show the need to propagate it"
+    assert abs(S["demo_u"] - 390.0 * 4e-6 * math.sqrt(26.0) * 0.02 / 0.06) < 1e-15
+    text, body = _tp_body()
+    assert not _lead_requirement(_R15_GUARD_TEXT), "the check accepts round 15's guard as the qualification"
+    assert _lead_requirement(body), "the procedure does not state the lead heat as a requirement on the supplier's fixture"
+    page = open(PAGE, encoding="utf-8").read()
+    p26, o26 = page.split("## 26. Round 16")[1], open(OUT, encoding="utf-8").read().split("26. ROUND 16")[1]
+    for v_ in ("10 mW", "5.51", "37.59", "30.07", "36.08", "62.27", "2.42 K", "3.32 K", "1.94 K", "0.294", "2.65 mW", "OPEN"):
+        assert v_ in p26 and v_ in o26, "%s is not in both section 26 and out 26" % v_
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "Zw at most 37.59 K/W" in b29 and "V2RG-B1 OPEN as that qualification" in b29
+
+
+def t_round16_v2rg_minors_m1_to_m6_the_rows_line3_the_probability_and_the_status():
+    """V2RG-m1: the page's row E11-29 is the script's word for word and every page row carries the figures of the script's row; m2: the
+    direct line's U with the FETs' and R17's 1 % powers and the lot correction, recomputed; m3: a coupon exactly at the limit passes a
+    small fraction of draws from the budget on the record's own functions; m4: the band's leads a recorded boundary; m5: a lead heater's
+    drive and the pickup check; m6: the census ratio and the docstrings; the procedure's status and the README."""
+    R = _R()
+    m = _M()
+    S, K = R["S26"], R["S25"]["K"]
+    page = open(PAGE, encoding="utf-8").read().split("\n")
+    num = re.compile(r"(?<![\w.])\d+(?:\.\d+)?(?![\w.])")
+    for iid, _kind, _owner, acc in m.downstream(R):
+        row = [l for l in page if l.startswith("| %s |" % iid)][0]
+        cell = row.strip().strip("|").split(" | ")[3].strip()
+        assert set(num.findall(acc)) <= set(num.findall(cell)), "%s's page row misses a figure of the script's: %s" % (iid, sorted(set(num.findall(acc)) - set(num.findall(cell))))
+        if iid == "E11-29":
+            assert cell == acc, "the page's row E11-29 is not the script's"
+            assert "Zw at most %.2f K/W (Zself %.2f K/W" % (S["sel"]["zw"], S["sel"]["s"]) in acc and "for three side by side at m 0.1" in acc
+    u = m.R15_U
+    heated = math.sqrt(u["rep"] ** 2 + u["leak"] ** 2 + u["early"] ** 2 + u["c0"] ** 2)
+    t3, zw = S["l3_t"], S["sel"]["zw"]
+    u3 = math.sqrt((0.02 * t3) ** 2 + 1.0 + (0.02 * R["S19"]["band"]) ** 2 + 0.01 + heated ** 2 + 0.52 ** 2 + (0.01 * K["p_even"] * zw) ** 2
+                   + (0.01 * S["z17_t"] * K["p17"]) ** 2 + (0.05 * K["p_hot0"]) ** 2)
+    assert abs(S["u3"] - u3) < 1e-9 and S["u3"] > S["u3_old"]
+    acc_, n_ = S["mc"]
+    assert n_ >= 2000 and 0 <= acc_ <= 0.01 * n_ and abs(S["mc_true"] - K["rise"]) < 0.01 and S["mc_l1"] < K["bar_even"] - 2.0
+    text, body = _tp_body()
+    flat_ = " ".join(body.split())
+    assert "96.6 times the largest other conductor" in flat_ and "100 times the largest other" not in flat_
+    assert "The band supply's leads** (23.93 A) stand for the service's pack conductors" in flat_
+    assert "floating DC (linear) supply or its drive held through each reading window" in flat_ and "included in the pickup check" in flat_
+    tflat = " ".join(text.split())
+    assert "**NOT EXECUTABLE.** Two things must happen first" in tflat and "ready to be PUT to a supplier for agreement" in tflat
+    assert "V2RG-B1 stays OPEN as that supplier qualification item" in tflat
+    src = open(os.path.abspath(__file__), encoding="utf-8").read()
+    assert "a residual under half a kelvin" not in src.split("import hashlib")[0]
+    assert ("5.2 mW a lead, its term " + "under 0.5 K") not in src      # split so this line does not match itself
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2RG answered" in readme and "ROUND 16" in readme and "V2RG-B1" in readme

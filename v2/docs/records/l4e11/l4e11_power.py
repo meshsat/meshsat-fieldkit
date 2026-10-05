@@ -6289,7 +6289,7 @@ def render_fix26(R, p):
     p("       monitor the demonstration validates, stay on the fixture for the runs")
     p("     V8 RESTATED: in every case at its steady endpoint, each heating lead's measured net heat at its joint, plus its uncertainty, at most")
     p("       the requirement; else INCONCLUSIVE (it judges the residual, not a controller's state)")
-    p("   26c. CONSTRUCTION GUIDANCE (recommendations from V2RF and V2RG, NOT the qualification): a heater beyond the pair, the span from the")
+    p("   26c. CONSTRUCTION GUIDANCE (recommendations from V2RF and V2RG, NOT the qualification; SESSION): a heater beyond the pair, the span from the")
     p("     joint unheated and lagged; TC2 on the copper under a thin film; a mid-span thermocouple; the palm's loss with its spread; the crimp's")
     p("     and the palm contact's heat read four-wire; the thermocouple wires routed along the lead; a DC (linear) drive from a floating supply,")
     p("     or the drive held through each reading window (V2RG-m5); a guard long enough (V2RG's model: under 4 mW at 0.5 m); the band supply's")
