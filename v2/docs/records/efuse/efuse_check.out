@@ -5,8 +5,8 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
 0. INPUTS (sha256/16)
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
-   bfdead54766199eb v2/docs/records/l4e11/apply_gen_sch_a_charger.py
-   dc84f755eb231bc7 v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
+   cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   bc3fb88bae6a166f v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
@@ -28,9 +28,9 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    352dcd1100627686 v2/docs/records/l8gnd/apply_gen_sch_a_gnd002.py
    cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
-   d9c4396698517287 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
    c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
-   30ef50af3baf6ce5 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
+   e8f1294bb0f76c75 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
    ea95bd293e44676a v2/docs/records/l8r2/apply_gen_sch_a_fb01.py
@@ -42,7 +42,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
    858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
-   7190699c2f27fdc2 v2/docs/records/l9pwr/l9pwr_budget.out
+   421c32cc2321dfba v2/docs/records/l9pwr/l9pwr_budget.out
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
@@ -203,13 +203,15 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
 
 2b. EVERY apply_gen_sch_*.py UNDER v2/docs/records ON THIS TREE, parsed (ast over its string constants) for a current-limiting part
    l4e11/apply_gen_sch_a_charger.py                 names TPS16630, TPS16630PWPR
-   l4e11/apply_gen_sch_a_dd7.py                     names LM5069-1
+   l4e11/apply_gen_sch_a_dd7.py                     names LM5069, LM5069-1
    l4e11/apply_gen_sch_e_entry.py                   names LM5069, LM5069MM-2, TPS48110, TPS48110AQDGXRQ1
    l4e11/apply_gen_sch_e_timer.py                   names LM5069, TPS48110  (not composed: see the README)
    l4e7/apply_gen_sch_e_solar_guard.py              names TPS48110, TPS48110AQDGXRQ1
    l4e9/apply_gen_sch_e_hotswap.py                  names LM5069MM-2
    l8p/apply_gen_sch_a_ptc.py                       names LM5069-1
+   l8p/apply_gen_sch_a_thguard.py                   names LM5069-1  (not composed: see the README)
    l8p/apply_gen_sch_p_breaker.py                   names LM5069-1, LM5069MM-1
+   l8p/apply_gen_sch_p_idealdiode.py                names LM5069MM-1  (not composed: see the README)
    l8r2/apply_gen_sch_a_d8v3.py                     names TPS259631
    l8r2/apply_gen_sch_a_vbus20ov.py                 names TPS48110, TPS48110AQDGXRQ1
    l8r2/apply_gen_sch_b_fans12.py                   names TPS259631
