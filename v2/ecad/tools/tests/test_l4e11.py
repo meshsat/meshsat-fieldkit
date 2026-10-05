@@ -1939,7 +1939,9 @@ def t_round13_the_procedure_quotes_this_record_and_stays_not_executable():
     body = "\n".join(l for l in text.split("\n") if not l.startswith(">"))       # the procedure's own words, its quotes apart
     for gone in ("heated through its body diode", "body diode VSD", "the VSD sense taps", "gate tied to its source for the whole run"):
         assert gone not in body, "the procedure still instructs %r" % gone
-    for kept in ("gate k on CH_BATQ", "One FET is read per interruption", "V2 | reciprocity", "39.51 K/W", "No temperature coefficient is printed",
+    # round 14 (the recheck V2R's V2R-m4): the pass rule is the reading plus the ACHIEVED U, so round 13's fixed "39.51 K/W" left the
+    # procedure's own words; the rule itself is what stays
+    for kept in ("gate k on CH_BATQ", "One FET is read per interruption", "V2 | reciprocity", "plus its achieved U", "No temperature coefficient is printed",
                  "Neither pour is cut", "RT1's land"):
         assert kept in body, "the procedure lacks %r" % kept
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
