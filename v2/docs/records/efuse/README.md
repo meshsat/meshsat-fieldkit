@@ -1,3 +1,5 @@
+**ROUND 2 (5 October 2026, P0 Slot C on `fnd/p0t10` from `fnd/p0base` `e132db0e`): DONE: V6-m3 (the full composition; board B regenerates whole; R36 and R43 read on it, 301 R and 909 R fail), V6-m6 (EF-F03, board A's U23 at 453 R judged by EF-F01's rule, its draft 511 R composed, read and mutated), V6-m4 (the inside-air rows, PROVISIONAL with the supplier's task), V6-m5 (the RockBLOCK's charge pads, an ASSEMBLY.md draft). NOT DONE: no independent check of round 2; nothing applied; the supplier's measurements. NEXT: the targeted recheck of EF-F03 and the inside-air rows.**
+
 # efuse: every eFuse and current-limit setting checked against its exact part's datasheet (task T12, MESHSAT-1357)
 
 Record `efuse`, 5 October 2026, branch `fnd/efuse` from main `aa32332c`. Driven by finding SDR3-F04 (the three-SDR research,
@@ -21,6 +23,8 @@ owners' items below.
 | `efuse_check.py`, `efuse_check.out` | The check: the generators' own part tables (record l8p's `gen_netlist.py`, main and the boards' pending drafts in L4-E9's order), the makers' figures as quotes found in the sheets' own text, the loads from record l9pwr, the judgement (a) to (d), the findings, this record's drafts on the netlist with mutations, the E96 alternatives. Regenerate with `_bin/regen_out.py <worktree> v2/docs/records/efuse/efuse_check.py v2/docs/records/efuse/efuse_check.out` |
 | `apply_gen_sch_b_u23ilm.py` | DRAFT (EF-F01): board B's R36 301 Ohm to 750 Ohm (1.0718 to 1.3631 A), the call's label and the notes that name it |
 | `apply_gen_sch_b_u24ilm.py` | DRAFT (EF-F02): board B's R43 301 Ohm to 1.21 kOhm (0.6681 to 0.8496 A), the call's label and the note |
+| `apply_gen_sch_a_u23ilm.py` | DRAFT (EF-F03, round 2): board A's R98 453 Ohm to 511 Ohm (1.5684 to 1.9949 A), the call's label and the +5V_D8 note |
+| `apply_assembly_rb_pads.py` | DRAFT apply script on `v2/docs/ASSEMBLY.md` (round 2, V6-m5): the RockBLOCK's charge-current pads stay open; the integrator runs it |
 
 Inputs read from this tree only: the generators, the drafts under `v2/docs/records/*/apply_gen_sch_*.py`, record l9pwr's output,
 Layer 6's catalogue reading, `lcsc_fill.py`, and the sheets under `v2/vendor/` (the TPS1663 and TPS4811-Q1 sheets are held back
@@ -28,5 +32,8 @@ by TI's notice in the ignored `v2/vendor/ti/held/`, fetched and pinned by `v2/do
 drafts named as text only: record l8r2's round 8 on `fnd/l8r4` (`c935542f`, the GND return that restates board B's GND rail),
 record l9t5's I-03 drafts on `fnd/l9t5` (U32's note only), record l8p's round on `fnd/l8p2` and L4-E11's rounds on
 `fnd/l4e11r11` (the same LM5069-1 and TPS16630 instances as main's drafts); none changes a setting judged here.
+
+Round 2 reads, from this tree as well: record l4e12's output (the inside air), record l9t5's iocbuck, iocpre and canshdn drafts, record
+l8p's thguard and record l8r2's rounds 7 and 8 (fandec, gndret, gndrtn), all composed (out 2).
 
 Tests: `v2/ecad/tools/tests/test_efuse.py`. Run `python3 run.py test_efuse test_public_hygiene` from the tests folder.
