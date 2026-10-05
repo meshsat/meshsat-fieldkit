@@ -436,7 +436,7 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "11. THE PREDICATES", 10, "the T10 script")
+    text = _run_script(T10, T10_OUT, "11. THE PREDICATES", 11, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "This is the first attempt at this correction"):
         assert s_ in text, s_
@@ -484,6 +484,23 @@ def t_round4_t10_the_state_and_the_regulators_thermal_limit_are_re_solved():
     assert tj(d_bound, hi5) > P["tj_ldo"] and round(tj(d_bound, hi5), 1) == 153.5
     assert round(tj(d_bound, hi3), 1) == 118.0 and round(tj(P["decl"][1], hi3), 1) == 121.8 and tj(P["decl"][1], hi3) <= m.TJ_GOAL
     assert tj(P["rv"][2] + 0.06, hi3) > m.TJ_GOAL and round(tj(P["rv"][2] + 0.06, hi3), 1) == 160.1      # the case's HIGH is NOT covered
+    # what the criterion does not cover is printed, not hidden: both transceivers dominant (momentary), one and both buses faulted
+    d_mom = i_mcu + 2 * P["can_dom_hi"] + P["decl_loads"][3]
+    d_f1 = i_mcu + P["can_fault"] + P["can_rec"] + P["decl_loads"][3]
+    d_f2 = i_mcu + 2 * P["can_fault"] + P["decl_loads"][3]
+    assert (round(d_mom, 4), round(d_f1, 4), round(d_f2, 4)) == (0.3091, 0.3726, 0.5491)
+    assert (round(tj(d_mom, hi3), 1), round(tj(d_f1, hi3), 1), round(tj(d_f2, hi3), 1)) == (132.6, 144.2, 176.3)
+    assert tj(d_mom, hi3) > m.TJ_GOAL and tj(d_f2, hi3) > P["tj_ldo"]
+    # the owner's rule of 5 October 2026: 125 C (T10's criterion) in a state the design must serve, 150 C (the printed absolute
+    # maximum) in any state; the 160 C shutdown is TYPICAL behaviour with no maximum trip printed and never an acceptance. Each row
+    # with its scope: (m) the held dominant figure, served; (f1) one fabric faulted, served (IOHA row 7); (f2) both, any state.
+    # All six (with and without the pre-regulator) FAIL; no current reaches the 600 mA capability (no foldback in any row)
+    def fails(x, served):
+        return x > P["tj_ldo"] or (served and x > m.TJ_GOAL)
+    six = ((d_mom, hi3, True), (d_f1, hi3, True), (d_f2, hi3, False), (d_mom, hi5, True), (d_f1, hi5, True), (d_f2, hi5, False))
+    assert all(fails(tj(i, v), s) for i, v, s in six)
+    assert m.TJ_GOAL < tj(d_f1, hi3) < P["tj_ldo"] < tj(d_f2, hi3) and d_f1 < d_f2 < P["imax"] and P["tsd"] == 160.0
+    assert P["can_dto"] == (1.2, 2.6, 3.8)          # the driver's time-out ends a held TXD (SLLSEQ7F); it bounds no transmit share
     # the set point: 13.3 k holds the LDOs' input over their 600 mA requirement; the next E96 value up (13.7 k) does not
     G, DP = m.D.gndret(), m.D.figures()
     need600 = 3.3 * (P["vout_hi"] + P["load"] * 0.6) + P["drop"][600]
@@ -494,8 +511,14 @@ def t_round4_t10_the_state_and_the_regulators_thermal_limit_are_re_solved():
     assert round(nom3, 4) == 4.1805 and (round(lo3, 4), round(hi3, 4)) == (4.0711, 4.2907) and P["vin"][0] < at[13.3e3] and hi3 < P["vin"][1]
     text = _C.get("t10_text") or open(T10_OUT, encoding="utf-8").read()
     for s_ in ("junction 150 C at 0.2187 A", "0.2291 A: junction  153.5 C: OVER the absolute maximum", "R602 13.3 k, 4.1805 V nominal, 4.0711 to 4.2907 V",
-               "at least 3.8428 V", "the case's HIGH 160.1 C (still over)"):
+               "at least 3.8428 V", "the case's HIGH 160.1 C (still over)", "NOT INSIDE THE BOUND, each row judged against its own limit",
+               "never to be exceeded and never", "no maximum trip printed", "junction 132.6 C MODEL", "junction 176.3 C MODEL",
+               "OPEN DEFECT L9T5-F13", "OPEN DEFECT L9T5-F16", "OPEN DEFECT L9T5-F17", "NO REQUIREMENT COVERS THIS FAULT STATE",
+               "before the LDO's junction reaches 150 C (the clock read-back's reset or the watchdog)", "is no acceptance: Layer 5's FMEA row", "A DRAFTED CANDIDATE, UNCHECKED"):
         assert s_ in text, s_
+    # the shutdown is never the place a fault ends acceptably (the staged wording, the interim wording and round 4's T10-A5 each did)
+    for bad in ("or its foldback", "only the thermal shutdown", "must end in the LDO's thermal shutdown", "NOT INSIDE THE CRITERION, and stated so"):
+        assert bad not in text, bad
 
 
 def t_round4_t10_the_draft_needs_i03s_and_the_state_before_it_fails_its_check():
@@ -581,15 +604,22 @@ def t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment():
     missing = [f for f in figs if f not in outs]
     assert not missing, "the page's figures not in an output: %s" % missing
     for s_ in ("T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "L9T5-F06 STAYS OPEN", "Selected (SESSION): K3 with K2's row as its condition",
-               "No case row is changed here", "L9T5-F15", "This is the first attempt at this correction"):
+               "No case row is changed here", "L9T5-F15", "This is the first attempt at this correction", "**L9T5-F13, OPEN**",
+               "**L9T5-F16, OPEN**", "**L9T5-F17, OPEN**", "no requirement covers this fault state", "a DRAFTED CANDIDATE, unchecked",
+               "never to be exceeded and never an operating target", "Junction with the pre-regulator (MODEL)"):
         assert s_ in sec, s_
+    for bad in ("or its foldback", "only the thermal shutdown", "must end in the LDO's thermal shutdown"):
+        assert bad not in sec, bad
     readme = open(README, encoding="utf-8").read()
     rows = [l for l in readme.splitlines() if re.match(r"\| C\d\d \|", l)]
-    assert [l[2:5] for l in rows] == ["C%02d" % i for i in range(1, 56)]
+    assert [l[2:5] for l in rows] == ["C%02d" % i for i in range(1, 61)]
     new = {l[2:5]: l for l in rows[35:]}
-    for k, s_ in (("C41", "0.2187 A"), ("C44", "13.3 k"), ("C45", "118.0 C"), ("C51", "OPEN"), ("C53", "-0.3546 A"), ("C54", "17.0148 V")):
+    for k, s_ in (("C41", "0.2187 A"), ("C44", "13.3 k"), ("C45", "118.0 C"), ("C51", "OPEN"), ("C53", "-0.3546 A"), ("C54", "17.0148 V"),
+                  ("C43", "DRAFTED CANDIDATE, unchecked"), ("C57", "L9T5-F13 OPEN"), ("C58", "L9T5-F16 OPEN"), ("C59", "L9T5-F17 OPEN"),
+                  ("C58", "no requirement covers this fault state"), ("C60", "withdrawn")):
         assert s_ in new[k], k
     assert "T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN" in readme.splitlines()[0] and "no case row is changed" in readme.splitlines()[0]
+    assert "DRAFTED CANDIDATE, unchecked" in readme.splitlines()[0] and "L9T5-F13, F16 and F17 OPEN" in readme.splitlines()[0]
 
 
 def t_record_hygiene():
