@@ -20,6 +20,7 @@ qualification and fabrication release as separate gates and the supplier's valid
 | 20. Targeted revision check of the supplier annex: its revised scope accepted (not the circuitry); two follow-throughs (residual owner-role wording; the live plan must show sequential desk-handover gates governing while the design and fabrication gates stay honest) | 5 October 2026, about 15:58 CEST | `0755be17a7931895b431c0d75419d15246c46e1d9e9c88554b31aa58927f539d` |
 | 21. Targeted review of P0 checkpoint 2: continue; the independent check of T10's drafted correction must establish four things (the air and tolerances, the CAN service under the share, enforceability, the match to C-DEV rev 2); F01's next selection record disposes of cx44's ten findings individually; the freed checker slot on P0-7 is within the limit | 5 October 2026, about 16:08 CEST | `9db73b773db19c04c5306dbdaafc885e96a522362adbb2fa7663a252c8f05131` |
 | 22. Targeted review of P0 checkpoint 3: continue; the guard's latent-fault disposition (L8P-D9) needs an engineering basis per fault or the defect stays open with a correction; the 146.4 C babbling-supervisor case needs its applicable criterion named (125 C design criterion kept distinct from the 150 C absolute maximum); revision V tied to the part specification, sourcing and case selection; F01 and the solar alternative provisional until checked | 5 October 2026, about 17:05 CEST | `9dbcee0e973b2401387a7a68e7a2e869c2b1cfa70b861bfb3907c6e91580c275` |
+| 23. Review of P0 checkpoint 4: continue; D-10 and S1 are unresolved protection engineering (the model reports voltage over the 80 V row), carried as a remaining-engineering item with the failing cases, the requirement per case, the correction route and the provisional outputs; B2 an unapproved partial interface proposal whose cold-connection guarantee cx45 verifies; R602's final margins on the connected candidate | 5 October 2026, about 17:50 CEST | `5ec043b65723f51bf0bd1f7923af801abc84f1ba176d3952b83e3f4531197faa` |
 
 
 ---
@@ -661,3 +662,67 @@ Answer these within the existing P0 record and cx45 scope. No new general review
 ```
 
 The next checkpoint is reported due by **17:35 CEST**. It should provide the solar alternative's final record and progress on the return correction, with the guard disposition made checkable.
+
+---
+
+## 23. Review of P0 checkpoint 4: continue; D-10 and S1 are unresolved protection engineering (the model reports voltage over the 80 V row), carried as a remaining-engineering item with the failing cases, the requirement per case, the correction route and the provisional outputs; B2 an unapproved partial interface proposal whose cold-connection guarantee cx45 verifies; R602's final margins on the connected candidate (as received)
+
+# MeshSat V2 — review of P0 checkpoint 4
+
+Reviewed: 5 October 2026. Source: `MESHSAT-P0-CHECKPOINT-4-2026-10-05-1735.md`, SHA-256 `ab2d08df16f044f2683eda1b310e0e8f4e8bcf0ab2223566c3053e837204cb10`.
+
+## Decision
+
+**Continue the current P0 work. The combined desk candidate is not ready for acceptance yet.** The checkpoint correctly separates desk handover, qualification and fabrication release, and says that no power correction has independent acceptance. The earlier thermal-criterion error is corrected in the reported record; the circuit correction still needs the connected analysis and cx45.
+
+One disposition needs tightening: **D-10 remains an unresolved protection defect in the reported model. Supplier item S1 must carry that engineering problem, rather than presenting it solely as an unperformed validation test.** The report already keeps D-10 OPEN; preserve that status.
+
+This is a review of the checkpoint and its internal claims, not a circuit or numerical audit. I read the supplied file and compared it with the preceding checkpoint and owner instructions. The underlying schematics, scripts, waveform assumptions, requirements, B2 proposal and test logs were not supplied for this review. No simulation or circuit test was run.
+
+## Progress against the previous review
+
+| Item | What checkpoint 4 establishes | Remaining work |
+|---|---|---|
+| Sustained thermal criterion | Lines 11–14 explicitly require 125 °C, record 146.4 °C as failing and reject 150 °C as an operating target. This addresses the earlier classification error. | Check the R602 14.0 kΩ draft over the complete circuit: temperature, regulator headroom, return and required service. Report the resulting worst-case margin. |
+| Revision V selection | Lines 15–16 identify part selection, marking and incoming-inspection drafts as prerequisites. | Verify that the final model and component-selection records refer to the same enforceable selection; the drafts are not yet applied. |
+| Latent guard failures | Lines 8–10 adopt the requested per-fault requirement, surviving path, interval, response and exposure analysis. | Still in progress. Unsupported latent-fault dispositions remain open. |
+| Ground return | Lines 20–22 identify the 17 mm placement condition and commission a floor-plan check or an alternative return. | Establish feasible placement before relying on that condition; review the integrated current bounds. |
+| F01 | Line 17 retains PROVISIONAL status and sends the other cx44 dispositions to cx45. | Independent assessment of the desk corrections; B-PA1 remains a supplier dependency with its affected claims identified. |
+| Solar protection | Lines 26–34 report a D-16 correction, an unresolved S3 term, a narrowed but open D-10 and a stale generated output awaiting repair. | Regenerate successfully, integrate the final revision, and check both the corrected sense path and remaining guard exposure. |
+
+## Material finding: distinguish an unresolved defect from qualification
+
+**C4-01 — P1, probable handover-disposition risk. High confidence in the wording issue; the electrical results are not independently verified here.**
+
+Evidence: lines 29–34 report PV_F peaks of **321.9 V at 0.30 µH** and **83.48 V at the reference loop**, against an **80 V** rating. Lines 37–41 then describe declining B2 as leaving the residual to supplier "validation S1."
+
+The distinction matters because these are reported failing model cases, not simply cases for which no evidence exists. A supplier can investigate the model, correct the circuit and qualify the result. A planned measurement alone does not establish that the selected protection works.
+
+**Required disposition:** retain D-10 OPEN and make S1 an explicit remaining-engineering item, with:
+
+- The failing cases and affected parts/claims.
+- The applicable operating or fault requirement for each case; no new exclusion adopted merely to avoid a failure.
+- The correction or justified model revision needed before a passing claim can be made, and the subsequent qualification evidence.
+- Which downstream outputs remain provisional, and which stable outputs can be completed independently.
+
+This does **not** require the owner to buy equipment, run a bench test or contact a vendor before receiving the handover. It also does not authorize deferring desk-fixable defects without doing the bounded engineering work. Where supplier work genuinely remains necessary, label it as such and preserve the defect in the handover.
+
+### B2 is a partial interface proposal
+
+The checkpoint correctly discloses that B2 changes the receptacle and every compatible panel lead, is not approved, and does not cover a second stiff source applied while the lead remains connected. Do not describe its adoption as closing D-10 as a whole.
+
+Have the already-planned cx45 review verify the claimed cold-connection guarantee against the actual connector sequencing, guard reset/enable timing and relevant fault cases in the B2 draft. The checkpoint does not contain that proof; this review does not assert that the underlying draft lacks it. No extra general review is requested.
+
+## Next useful milestone
+
+Finish the guard disposition, R602 connected check, return-placement check and final solar regeneration. Merge those exact results into one candidate and let cx45 judge it. A commit, composition result or mutation-test count is useful evidence but is not independent acceptance of the engineering claims.
+
+The report's 5–7 hour estimate corresponds to approximately **22:35–00:35 CEST** if its assumptions hold. It is an estimate for a reviewed desk candidate, not a promise of qualification or fabrication release. The next scheduled checkpoint is 18:20 or candidate readiness.
+
+## Short feedback to Claude Code
+
+Continue the current P0 work and existing cx45 review; do not restart or add a broad review. Preserve the corrected 125 °C sustained-state criterion and show R602's final temperature and service/headroom margins on the connected candidate. Complete the guard disposition and the 17 mm return-placement check as already assigned.
+
+One clarification: D-10/S1 must remain unresolved protection engineering because the present model reports voltage above the 80 V rating. Keep the failing cases, affected outputs and correction/qualification route explicit. B2 remains an unapproved, partial interface proposal; cx45 must check its cold-connection guarantee and its stated exclusions. Neither adopting nor declining B2 turns the remaining failing case into a solved design.
+
+Physical work belongs to the receiving supplier. It does not become an owner bench prerequisite or a blanket pause on later desk deliverables. After the Layer 4 desk gate is assessed honestly, continue sequentially with stable work and identify dependent outputs as provisional.
