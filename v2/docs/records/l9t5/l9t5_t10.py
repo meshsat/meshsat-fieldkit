@@ -40,11 +40,13 @@ CHK = D.CHK
 PRE = {b: os.path.join(HERE, "apply_gen_sch_%s_iocpre.py" % b) for b in "ab"}
 SHEETS = {"h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "ap632": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
-          "tps62933": "v2/vendor/ti/ti-tps62933.pdf"}
+          "tps62933": "v2/vendor/ti/ti-tps62933.pdf", "rm0433": "v2/vendor/st/st-rm0433-rev8.pdf"}
 DOCS = {"contract": "v2/docs/HW-FW-CONTRACT.md", "panel": "v2/docs/PANEL.md", "arch": "v2/docs/ARCH-PCB-B-IOHA.md", "gen_b": "v2/ecad/tools/gen_sch_b.py",
         "l4e12": "v2/docs/records/l4e12/l4e12_thermal.out", "rvpwr": "v2/docs/records/rv-pwr/pwr_budget.py", "gndret": "v2/docs/records/l8r2/l8r2_gndret.out",
         "drafts": "v2/docs/records/l9t5/l9t5_drafts.py", "drafts_out": "v2/docs/records/l9t5/l9t5_drafts.out",
-        "pre_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py", "pre_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py"}
+        "pre_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py", "pre_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py",
+        "trace": "v2/docs/REQUIREMENTS-TRACE.md", "shdn": "v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py",
+        "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py"}
 # the session's choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 TJ_GOAL = 125.0            # C: the junction this record holds each LDO to at the inside air (25 K under the sheet's 150 C absolute maximum)
 BOUND = ("VOS3", 144)      # the state the proposed contract row bounds each supervisor to: voltage scale 3, HCLK at most 144 MHz, the
@@ -182,6 +184,19 @@ def figures():
     need(c, r"three I/O supervisors \| B, U41, U51, U61 STM32H743VIT6 \| a private AP2112K 3\.3 V each", "the contract's supervisor row")
     P["panel_bound"] = [l[:60] for l in text(DOCS["panel"]).splitlines() if re.search(r"supervisor", l, re.I) and re.search(r"\bVOS\d?\b|\bHCLK\b|run mode", l, re.I)]
     P["arch"] = " ".join(need(text(DOCS["arch"]), r"(roughly 60 mA each at 3\.3 V with the\s+core clocked to what CAN-FD timing needs, not to 480 MHz)", "the architecture's intent").group(1).split())
+    # round 5 (V6-B3): the requirement that covers the fabric faults, read where it is written: CON-004 in the trace, rows 7 and 8 of
+    # the architecture's FMEA (section 12) and its test A7 (section 13)
+    tr = text(DOCS["trace"])
+    m = need(tr, r"^\| CON-004 \| (constraint) \| (core) \| DEFINED \|[^\n]*\| (BLOCKER) \|$", "CON-004's row in the trace's table")
+    P["con004_class"] = m.groups()
+    P["con004"] = need(tr, r"^\*\*CON-004\*\* \(constraint\)\. (.*?)$", "CON-004's statement").group(1)
+    P["con004_acc"] = need(tr, r"\*\*CON-004\*\* \(constraint\)\..*?\n\n\*Accept when:\* (.*?)$", "CON-004's acceptance", re.M | re.S).group(1)
+    P["con004_alloc"] = need(tr, r"\*\*CON-004\*\* \(constraint\)\..*?\n\n\*allocated to ([^;]*);", "CON-004's allocation", re.M | re.S).group(1)
+    at = text(DOCS["arch"])
+    P["row7"] = need(at, r"^\| 7 \| (One CAN fabric breaks or a transceiver fails dominant) \| n/a \| ([^|]*?) \| ([^|]*?) \|", "IOHA FMEA row 7").groups()
+    P["row8"] = need(at, r"^\| 8 \| (Both CAN fabrics break) \| n/a \| ([^|]*?) \| ([^|]*?) \|", "IOHA FMEA row 8").groups()
+    P["a7"] = need(at, r"^\| A7 \| (Heartbeat fabric break) \| ([^|]*?) \| ([^|]*?) \|$", "IOHA test A7").groups()
+    need(at, r"Every row is a failure this design is supposed to survive or is knowingly exposed to", "section 12's scope sentence")
     fw = os.path.join(ROOT, "v2", "firmware")
     P["fw"] = sorted(os.listdir(fw)) if os.path.isdir(fw) else []
     m = need(text(DOCS["rvpwr"]), r"3 \* \(([\d.]+) \+ 0\.06\) \* 3\.3, 3 \* \(([\d.]+) \+ 0\.06\) \* 3\.3, 3 \* \(([\d.]+) \+ 0\.06\) \* 3\.3", "rv-pwr's three supervisor figures")
@@ -214,6 +229,488 @@ def point(row, air, theta, tj_max, vdd=3.3):
         else:
             hi_ = mid
     return hi_, interp(row, hi_)
+
+
+# ------------------------------------------------------------------------------------------------ round 5 (5 October 2026)
+# the session's round-5 choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
+SHARE = 0.02             # each supervisor's own TXD dominant share on a fabric, at most, over every WINDOW (FW-B21): about 20 classic
+                         # frames per 100 ms at 1 Mbit/s, many times what a 2-of-3 heartbeat needs
+WINDOW_MS = 100          # the window the share is held over (short against any package's thermal time constant: none printed)
+PROBE_S, PROBE_MS = 1.0, 100   # a stopped fabric is probed no more than once a second, for at most 100 ms
+F_TX_MHZ, C_IO_PF = 1.0, 20.0  # the two FDCAN TX pins' toggle rate (1 Mbit/s at most, FW-B09) and their ASSUMED load each
+R_TOL = 0.01             # every resistor of the generator taken at 1 % (ASSUMPTION: the value strings carry no tolerance)
+SHDN = os.path.join(HERE, "apply_gen_sch_b_canshdn.py")
+CONTRACT = os.path.join(HERE, "apply_hw_fw_contract_t10.py")
+RM = SHEETS["rm0433"]
+SUBSET = ("FDCAN registers", "FDCAN kernel", "I2C1 registers", "I2C1 kernel", "GPIOA", "GPIOB", "GPIOC", "GPIOD", "GPIOE", "GPIOH", "SYSCFG")
+TWICE = ("FDCAN registers", "FDCAN kernel")   # one clock enable serves both instances; counted twice, a margin for their activity
+
+
+def flat_(s):
+    return " ".join(s.split())
+
+
+def rm_page(p):
+    try:
+        r = subprocess.run(["pdftotext", "-layout", "-f", str(p), "-l", str(p), os.path.join(ROOT, RM), "-"], capture_output=True, check=True)
+    except (OSError, subprocess.CalledProcessError) as e:
+        refuse("pdftotext could not read %s page %d (%s)" % (RM, p, e))
+    t = r.stdout.decode("utf-8", "replace")
+    if not re.search(r"\b%d/3353\b" % p, t):
+        refuse("RM0433 page %d does not carry its own page number" % p)
+    return flat_(t)
+
+
+def figures5(P):
+    """round 5's figures: the enabled peripherals (Table 39, rev Y; Table 137, rev V), the HSE and LSI, the TCAN334's fault rows and
+    modes, the reference manual's reset state and FDCAN behaviour, CON-017."""
+    t = pdf("h743")
+    Q = {}
+    for rev, head, end, ncol in (("Y", r"\n\s*Table 39\. Peripheral current consumption in Run mode\s*\n", r"\n\s*Table 40\. Peripheral current consumption in Stop", 3),
+                                 ("V", r"\n\s*Table 137\. Peripheral current consumption in Run mode\s*\n", r"\n\s*Table 138\. Low-power mode wakeup timings", 4)):
+        blk = need(t, head + r"(.*?)" + end, "the peripheral table of rev %s" % rev, re.S).group(1)
+        s = {}
+        for name in SUBSET:
+            m = need(blk, r"^(?:\s*[A-Z][A-Z0-9]*)?\s+%s\s+((?:[\d.]+\s+){%d}[\d.]+)(?:\s+\S*/MHz)?\s*$" % (re.escape(name), ncol - 1),
+                     "%s in the rev %s peripheral table" % (name, rev))
+            s[name] = float(m.group(1).split()[-1])          # the last column is VOS3
+        Q["S_" + rev] = s
+        Q["s_" + rev] = sum(v * (2 if k in TWICE else 1) for k, v in s.items())
+    need(t, r"frcc_c_ck = 200 MHz \(Scale 3\)", "the peripheral table's VOS3 condition")
+    need(t, r"fPCLK = frcc_c_ck/4, and fHCLK = frcc_c_ck/2", "the peripheral table's bus clocks")
+    hse = [float(x) for x in re.findall(r"-\s+([\d.]+)\s+-\s*\n\s*CL=10 pF at 32 MHz", t)]
+    if len(hse) != 2:
+        refuse("the HSE's 32 MHz consumption row is not read in both revisions' tables")
+    Q["hse"] = max(hse) / 1000.0
+    lsi = [float(x) for x in re.findall(r"IDD\(LSI\)\(\d\)[^\n]*?-\s+-\s+(\d+)\s+(\d+)\s+nA", t) for x in [x[1]]]
+    if not lsi:
+        refuse("the LSI's consumption is not read")
+    Q["lsi"] = max(lsi) * 1e-9
+    m = need(t, r"fHSI\s+HSI frequency\s+VDD=3\.3 V, TJ=30 .C\s+[\d.]+\(2\)\s+(\d+)\s", "the HSI's frequency")
+    Q["hsi"] = float(m.group(1))
+    c = pdf("tcan")
+    Q["ios_dom"] = float(need(c, r"V\(CANL\) = 12V, CANH =\s+(\d+)\s+open, TXD = 0V", "IOS(DOM) at CANL 12 V").group(1)) / 1000.0
+    Q["ios_rec"] = float(need(c, r"Short-circuit steady-state output current, Recessive\s+\S+\s+(\d+)\s+mA", "IOS(REC)").group(1)) / 1000.0
+    Q["vod_canh_min"] = float(need(c, r"CANH\s+See Figure 6-3 and Figure 6-2, TXD =\s+([\d.]+)\s+VCC", "VO(D) CANH's minimum").group(1))
+    Q["vod_canl_max"] = float(need(c, r"CANL\s+CL = open\s+[\d.]+\s+([\d.]+)", "VO(D) CANL's maximum").group(1))
+    Q["vit_max"] = float(need(c, r"^\s*VIT\s+(\d+)\s+(\d+)\s*$", "the receiver's threshold").group(2)) / 1000.0
+    Q["icc_shdn"] = float(need(c, r"SHDN = VCC, RXD floating, TXD at VCC\s+([\d.]+)", "ICC in shutdown").group(1)) * 1e-6
+    Q["vbus_abs"] = float(need(c, r"Voltage at any bus terminal \(CANH or CANL\), V\(BUS\)\s+\S+\s+(\d+)\s+V", "the bus pins' absolute maximum").group(1))
+    need(c, r"HIGH\s+Lowest Current\s+Disabled \(OFF\)\(2\)\s+Disabled \(OFF\)", "Table 6-5, SHDN high: driver and receiver off")
+    need(c, r"The internal bias should not be relied on by design", "6.3.6 on the internal pull-downs")
+    need(c, r"SHDN\s+5\s+.\s+5\s+.\s+I\s+Drive high for shutdown mode\. Internal pull-down\.", "the TCAN334's pin 5 (SHDN)")
+    # the reference manual, held since 27 September 2026 (T10-A1 round 4 took it as not held)
+    Q["rm_vos"] = need(rm_page(279), r"After reset, the system starts on the lowest Run mode voltage scaling \(VOS3\)", "RM0433 p.279").group(0)
+    Q["rm_hsi"] = need(rm_page(349), r"After a system reset, the HSI is selected as system clock and all PLLs are switched OFF", "RM0433 p.349").group(0)
+    Q["rm_init"] = need(rm_page(2464), r"or by going Bus_Off\. While INIT bit in FDCAN_CCCR register is set, message transfer from and to the CAN bus is "
+                                        r"stopped, the status of the CAN bus output FDCAN_TX is recessive \(high\)", "RM0433 p.2464").group(0)
+    Q["rm_dar"] = need(rm_page(2470), r"the automatic retransmission may be disabled via FDCAN_CCCR\.DAR", "RM0433 p.2470").group(0)
+    need(rm_page(2470), r"In DAR mode all transmissions are automatically canceled after they started on the CAN bus", "RM0433 p.2470, DAR mode")
+    need(rm_page(2527), r"Bit 6 DAR: Disable automatic retransmission", "RM0433 p.2527")
+    Q["rm_bo"] = need(rm_page(2534), r"If the device goes Bus_Off, it sets FDCAN_CCCR\.INIT of its own, stopping all bus activities\. Once "
+                                      r"FDCAN_CCCR\.INIT has been cleared by the CPU, the device waits for 129 occurrences of bus Idle", "RM0433 p.2534").group(0)
+    tr = text(DOCS["trace"])
+    Q["c17_5"] = need(tr, r"\(5\) the fitted supervisors are silicon revision V or X", "CON-017 (5)").group(0)
+    Q["c17_4"] = need(tr, r"\(4\) the supervisor firmware builds for the STM32H743 and refuses to run both FDCAN fabrics on revision Y or W", "CON-017 (4)").group(0)
+    gb = text(DOCS["gen_b"])
+    if len(re.findall(r'r\("R(?:47[0-3]|50[4-7])", "60R4 1%"', gb)) != 8:
+        refuse("the two split terminations of each fabric are not eight 60R4 1% resistors")
+    Q["rl_min"] = 2 * 60.4 * (1 - 0.01) / 2.0       # two ends of 2 x 60R4 in parallel, each at -1 %
+    need(gb, r'"5": "NC", "6": "CANL_%s%s" % \(_f, _seg\)', "the transceivers' pin 5 on no net (as drawn)")
+    need(gb, r'"8": "GND"\}, "C2871143"\)', "the transceivers' STB (pin 8) on GND")
+    return Q
+
+
+def kfac(P, rev, tj):
+    """the printed maxima's ratio to the typical for the whole peripheral set (all enabled less all disabled, VOS3 200 MHz, the run
+    table of that revision), interpolated on the junction (MODEL; applied to the subset as an ASSUMPTION)."""
+    on, off = P[rev][("on", 200)], P[rev][("off", 200)]
+    ks = [(on[i + 1] - off[i + 1]) / (on[0] - off[0]) for i in range(4)]
+    pts = list(zip((25.0, 85.0, 105.0, 125.0), ks))
+    for (t0, k0), (t1, k1) in zip(pts, pts[1:]):
+        if tj <= t1:
+            return k0 + (k1 - k0) * (max(tj, t0) - t0) / (t1 - t0)
+    return ks[-1]
+
+
+def mcu_i(P, Q, rev, tj):
+    """a controller's supply at its junction in the bounded state: the disabled row at 144 MHz, the enabled subset (per MHz times the
+    144 MHz CPU clock, an upper bound for every bus or kernel clock at or under it, times the family's max to typical ratio), the
+    HSE (TYPICAL, at 32 MHz), the LSI (its maximum) and the two TX pins' switching (ISW = VDD f C, ASSUMED 20 pF)."""
+    row = interp(P[rev][("off", BOUND[1])], tj)
+    if row is None:
+        return None
+    per = Q["s_" + rev] * BOUND[1] * 1e-6 * kfac(P, rev, tj)
+    io = 2 * 3.3 * F_TX_MHZ * 1e6 * C_IO_PF * 1e-12
+    return row + per + Q["hse"] + Q["lsi"] + io
+
+
+def mcu_point(P, Q, rev, air):
+    lo_, hi_ = air, P["tj_mcu"]
+
+    def g(tj):
+        return air + P["theta_mcu"] * 3.3 * mcu_i(P, Q, rev, tj) - tj
+    if g(hi_) > 0:
+        return None
+    for _ in range(80):
+        mid = 0.5 * (lo_ + hi_)
+        if g(mid) > 0:
+            lo_ = mid
+        else:
+            hi_ = mid
+    return hi_, mcu_i(P, Q, rev, hi_)
+
+
+def aux_from_netlist(nl, tag, vmax):
+    """a controller's other loads on its own 3.3 V, from the composed netlist: every resistor from the rail to another net, and every
+    resistor from a net on one of the controller's pins to GND (driven high, it draws V/R from the rail), each at VMAX over its value
+    less R_TOL. The controller's VDD and its two transceivers are counted apart."""
+    v33, u = "+3V3_IOC%s" % tag, {"A": "U41", "B": "U51", "C": "U61"}[tag]
+    skip = {v33, "GND", "IOC%s_VCAP" % tag, "IOC%s_XI" % tag, "IOC%s_XO" % tag}
+    pins = {n for n in nl["pins"][u].values() if n not in skip}
+    got = []
+    for ref, d_ in sorted(nl["pins"].items()):
+        if not re.fullmatch(r"R\d+", ref) or len(d_) != 2:
+            continue
+        a, b = sorted(d_.values())
+        if (v33 in (a, b) and a != b) or ({a, b} & pins and "GND" in (a, b)):
+            r_ = CHK.kohm(CHK.value(nl, ref))
+            got.append((ref, CHK.value(nl, ref), vmax / (r_ * (1 - R_TOL))))
+    return got
+
+
+def round5(w, P, DP, air, hi3, d_bound):
+    Q = figures5(P)
+    ldo_k = P["theta_ldo"] * (hi3 - 3.3)
+
+    def tj_l(i, a=air):
+        return a + ldo_k * i
+    out = {"Q": Q}
+    w("10. ROUND 5 (5 October 2026): THE INDEPENDENT CHECK V6's ITEM C AND V6-B3; T10-A1's ROW, F13, F16 AND F17 WITH THEIR RESPONSES")
+    w("   V6 (an AI review of candidate 7a82e82a) read T10 CONFIRMED AS CONDITIONAL, not on T10-A1 alone: F13 needs a transmit-share row, F16")
+    w("   and F17 fault responses traced to CON-004, and the case row's supervisor figure revised; round 4's sentence that placed both fault")
+    w("   states outside every requirement was wrong (V6-B3). Labels as above; every junction is a MODEL figure, never a measurement")
+    w("")
+    # 10a
+    w("   10a. THE REQUIREMENT, READ WHERE IT IS WRITTEN (V6-B3; round 4 read REQ-073 and REQ-004 and missed it)")
+    w("   CON-004 (REQUIREMENTS-TRACE.md; %s, %s, %s): '%s'" % (P["con004_class"] + (P["con004"],)))
+    w("     accepted when: '%s'; allocated to %s" % (P["con004_acc"], P["con004_alloc"]))
+    w("   ARCH-PCB-B-IOHA.md section 12 ('Every row is a failure this design is supposed to survive or is knowingly exposed to'):")
+    w("     row 7 '%s': %s; detected by %s" % P["row7"])
+    w("     row 8 '%s': %s; detected by %s" % (P["row8"][0], P["row8"][1], P["row8"][2]))
+    a7p = P["a7"][2].split("; ")
+    w("   section 13, test A7 '%s': method '%s'; pass: the quorum kept through each cut (paraphrased: the source's verb is a word this" % P["a7"][:2])
+    w("     record does not print), '%s', '%s'" % (a7p[1], a7p[2]))
+    w("   So F16 (one fabric faulted, row 7) and F17 (both, row 8) are inside a mandatory core constraint: their closure is REQUIRED for")
+    w("   CON-004. A7 as written CUTS a fabric (the 0 Ohm break links R508 to R513): it exercises an open, not a shorted bus, and not the")
+    w("   TCAN334's %.0f mA bus-fault row (TXD 0 V, CANH -12 V, RL open); the shorted-bus variants are analysed in 10e and named in V-B21" % (P["can_fault"] * 1000))
+    w("   CON-017: '%s'; '%s' (V6-m9). So L9T5-F14's two revisions are" % (Q["c17_5"], Q["c17_4"]))
+    w("     settled at assembly: the fitted part is V or X. DS12110 Rev 10 prints rev Y (section 6) and rev V (section 7) only, no rev X")
+    w("     section; T10 keeps rev Y's larger rows as the cover for a rev X part (CONSERVATIVE for rev V by construction, an ASSUMPTION for")
+    w("     rev X), and rev V's rows as the fitted revision's own figures")
+    w("")
+    # 10b
+    w("   10b. THE REFERENCE MANUAL IS HELD (RM0433 Rev 8, v2/vendor/st/st-rm0433-rev8.pdf, filed 27 September 2026; round 4 took it as not held)")
+    w("   p.279: '%s'; p.349: '%s';" % (Q["rm_vos"], Q["rm_hsi"]))
+    w("   DS12110 Rev 10: fHSI %.0f MHz. So T10-A1's ASSUMPTION is replaced by the printed reset state, HSI at %.0f MHz and VOS3: INSIDE the bound" % (Q["hsi"], Q["hsi"]))
+    w("   (VOS3, at most %d MHz), and the bound stays the least printed row over it" % BOUND[1])
+    w("   p.2464: '...%s'" % Q["rm_init"])
+    w("   p.2534: '%s' (no automatic recovery)" % Q["rm_bo"])
+    w("   p.2470: '...%s'; p.2527: FDCAN_CCCR bit 6 DAR. With DAR = 1 a frame is sent once and" % Q["rm_dar"])
+    w("     never repeated by the controller, so every transmission is one the firmware scheduled")
+    w("")
+    # 10c: the bounded state with its peripherals
+    w("   10c. THE BOUNDED STATE WITH THE ENABLED PERIPHERALS (V6-m10; T10-A2 restated), AND THE AIR EACH FIGURE IS JUDGED AT")
+    for rev, tab in (("Y", "Table 39, p.117 to 122"), ("V", "Table 137, p.224 to 228")):
+        w("   rev %s, %s, VOS3, TYPICAL uA/MHz: %s; sum %.1f uA/MHz (FDCAN twice: one clock enable serves both" % (
+            rev, tab, ", ".join("%s %.1f" % (k, v) for k, v in Q["S_" + rev].items()), Q["s_" + rev]))
+        w("     instances, the second count a margin for their traffic)")
+    k_y = [kfac(P, "Y", t) for t in (25.0, 85.0, 105.0, 125.0)]
+    k_v = [kfac(P, "V", t) for t in (25.0, 85.0, 105.0, 125.0)]
+    w("   the sheet prints these as TYPICAL at 25 C only; taken to a bound here (MODEL): times the CPU clock bound %d MHz (an upper bound for" % BOUND[1])
+    w("     every bus or kernel clock FW-B20 holds at or under it, whichever clock the per-MHz figure refers to), times the ratio the printed")
+    w("     maxima of ALL peripherals enabled less all disabled bear to their typical (VOS3 200 MHz, the run table; rev Y %s, rev V %s at TJ" % (
+        "/".join("%.3f" % k for k in k_y), "/".join("%.3f" % k for k in k_v)))
+    w("     25/85/105/125 C; ASSUMPTION: the subset's spread is no wider than the whole set's); plus the HSE at %.2f mA (TYPICAL, 32 MHz row;" % (Q["hse"] * 1000))
+    w("     the run rows do not say whether their clock source is in them, so it is added), the LSI at %.0f nA (its maximum) and the two TX" % (Q["lsi"] * 1e9))
+    w("     pins' switching %.3f mA (VDD x %.0f MHz x %.0f pF each, the load ASSUMED)" % (2 * 3.3 * F_TX_MHZ * C_IO_PF * 1e-3, F_TX_MHZ, C_IO_PF))
+    out["aux"] = {}
+    return Q, ldo_k, tj_l, out
+
+
+def shdn_check(nl):
+    """the SHDN draft read on a board B netlist: each transceiver's pin 5 on its controller's net, that net on the controller's PD2 or
+    PB14 and on one 100 k to GND, nothing else on it. Returns (verdict, why)."""
+    why = []
+    for tag, base in (("A", 40), ("B", 50), ("C", 60)):
+        for can, (un, mcu_pin, rn) in (("1", (3, "83", 4)), ("2", (4, "53", 5))):
+            net = "IOC%s_CAN%s_SHDN" % (tag, can)
+            u, ref = "U%d" % (base + un), "R%d" % (63 + 12 * (base // 10 - 4) + rn)
+            mem = sorted(CHK.members(nl, net))
+            want = sorted(["%s.5" % u, "U%d.%s" % (base + 1, mcu_pin), "%s.1" % ref])
+            if mem != want:
+                why.append("%s reaches %s, wanted %s" % (net, mem, want))
+            elif CHK.pin(nl, ref, "2") != "GND" or CHK.value(nl, ref) != "100k":
+                why.append("%s is %s to %s, wanted 100k to GND" % (ref, CHK.value(nl, ref), CHK.pin(nl, ref, "2")))
+    return ("FAIL" if why else "DRAWN"), why
+
+
+def round5_rest(w, P, DP, air, hi3, Q, ldo_k, tj_l, out):
+    vmax = 3.3 * P["vout_hi"]          # the LDO's output at its printed +1.5 % band edge
+    with tempfile.TemporaryDirectory(prefix="l9t5_t10r5_") as d:
+        seq = D.seq_of("b", "slot")
+        at = seq.index(D.MINE["b"]) + 1
+        seq5 = seq[:at] + [PRE["b"], SHDN] + seq[at:]
+        p5, res5, ok5 = D.compose("b", seq5, d, "t10r5")
+        rc, net5, tab5 = D.netlist("b", p5, d, "t10r5")
+        if rc or not ok5:
+            refuse("board B with the SHDN draft did not compose or regenerate: %s" % ("; ".join("%s %s" % (s, v) for s, v, _m in res5 if v != "OK") or net5))
+        nl5 = CHK.read(open(net5, "rb").read())
+        seq4 = seq[:at] + [PRE["b"]] + seq[at:]
+        p4, _r4, ok4 = D.compose("b", seq4, d, "t10r4")
+        rc4, net4, _t4 = D.netlist("b", p4, d, "t10r4")
+        if rc4 or not ok4:
+            refuse("board B without the SHDN draft did not regenerate")
+        nl4 = CHK.read(open(net4, "rb").read())
+        v_new, why_new = shdn_check(nl5)
+        v_old, why_old = shdn_check(nl4)
+        mut = D.mutate(net5, d, "t10r5_mut", [(("U43", "5"), ("U43", "8"))])
+        v_mut, why_mut = shdn_check(CHK.read(open(mut, "rb").read()))
+        mut2 = D.mutate(net5, d, "t10r5_mut2", [(("R80", "2"), ("U53", "3"))])
+        v_mut2, why_mut2 = shdn_check(CHK.read(open(mut2, "rb").read()))
+        kit5, _v = CHK.run({"b": net5}, ROOT, io.StringIO(), label=lambda x: "b", div="t10")
+        # the contract draft on a scratch copy of the tree's page
+        cpy = os.path.join(d, "HW-FW-CONTRACT.md")
+        shutil.copy(os.path.join(ROOT, DOCS["contract"]), cpy)
+        before_tree = sha(DOCS["contract"], 64)
+        c1 = subprocess.run([sys.executable, "-B", CONTRACT, cpy], capture_output=True)
+        c2 = subprocess.run([sys.executable, "-B", CONTRACT, cpy, "--write"], capture_output=True)
+        c3 = subprocess.run([sys.executable, "-B", CONTRACT, cpy, "--write"], capture_output=True)
+        page = open(cpy, encoding="utf-8").read()
+        rows_new = [l.split(" | ")[0].lstrip("| ") for l in page.splitlines() if re.match(r"\| (FW-B2[01]|V-B2[01]) \|", l)]
+        contract_ok = (c1.returncode == 0 and b"CHECK OK" in c1.stdout and c2.returncode == 0 and b"WRITTEN" in c2.stdout and c3.returncode == 3
+                       and rows_new == ["FW-B20", "FW-B21", "V-B20", "V-B21"] and sha(DOCS["contract"], 64) == before_tree)
+        # the circuit's own auxiliaries, the fabric's extent, board B's rails
+        aux = {tag: aux_from_netlist(nl5, tag, vmax) for tag in "ABC"}
+        rails = CHK.rails_of(tab5["intent"])
+        can_nets = sorted({n for dd in nl5["pins"].values() for n in dd.values() if re.fullmatch(r"CAN[HL]_[AB]1?", n)})
+        can_parts = sorted({r for r, dd in nl5["pins"].items() if set(dd.values()) & set(can_nets)})
+        n_parts = len(tab5["parts"])
+    out.update(rails=rails, seq5=[os.path.basename(s) for s in seq5], ok5=ok5, n_parts=n_parts, v_new=v_new, v_old=v_old, v_mut=v_mut, v_mut2=v_mut2, kit5=kit5,
+               contract_ok=contract_ok, can_parts=can_parts)
+    i_aux = max(sum(x[2] for x in v) for v in aux.values())
+    out["i_aux"] = i_aux
+    aux_a = aux["A"]
+    w("   the controller's OTHER loads on its own 3.3 V, from the composed board B netlist (section 10f's composition): %s, each at the LDO's" % (
+        ", ".join("%s %s" % (r, v) for r, v, _i in aux_a)))
+    w("     %.4f V (VOUT +%.1f %%, PRINTED) over its value less %.0f %% (ASSUMED): %.4f A at most (the largest of the three controllers), against" % (
+        vmax, (P["vout_hi"] - 1) * 100, R_TOL * 100, i_aux))
+    w("     the generator's DECLARED %.3f A for the third part; the circuit's own figure is used below (MODEL, every resistor at the full rail)" % P["decl_loads"][3])
+    i_rec, i_dom = P["can_rec"], P["can_dom_hi"]
+    i_can = i_rec + (i_dom - i_rec) * SHARE
+    out["i_can"] = i_can
+    B = {}
+    for rev in "YV":
+        for a in (air, P["air_exhaust"]):
+            pt = mcu_point(P, Q, rev, a)
+            if pt is None:
+                B[(rev, a)] = None
+                continue
+            reg = pt[1] + i_aux + 2 * i_can
+            B[(rev, a)] = (pt[0], pt[1], reg, tj_l(reg, a), pt[1] + P["decl_loads"][3] + 2 * i_can, pt[1] + sum(P["decl_loads"][1:]))
+
+    def max_air(rev):
+        lo_, hi_ = 40.0, 100.0
+        for _ in range(60):
+            mid = 0.5 * (lo_ + hi_)
+            pt = mcu_point(P, Q, rev, mid)
+            if pt is not None and tj_l(pt[1] + i_aux + 2 * i_can, mid) <= TJ_GOAL:
+                lo_ = mid
+            else:
+                hi_ = mid
+        return lo_
+    out["B"], out["max_air"] = B, {rev: max_air(rev) for rev in "YV"}
+    w("   the two transceivers at FW-B21's share (10d): %.4f A each. THE BOUNDED STATE, each figure with the air it is judged at:" % i_can)
+    w("     rev  air                       controller (TJ)        regulator   LDO junction  against %.0f C" % TJ_GOAL)
+    for rev in "YV":
+        for a, lab in ((air, "L4-E12 E5 mixed %.2f C" % air), (P["air_exhaust"], "L4-E12 E5 exhaust %.2f C" % P["air_exhaust"])):
+            b_ = B[(rev, a)]
+            if b_ is None:
+                w("     %s    %-25s NO OPERATING POINT at or under %.0f C: the H743 itself is outside its rating in the bounded state" % (rev, lab, P["tj_mcu"]))
+            else:
+                w("     %s    %-25s %.4f A (%.1f C)     %.4f A    %6.1f C      %s" % (rev, lab, b_[1], b_[0], b_[2], b_[3], "holds" if b_[3] <= TJ_GOAL else "FAILS"))
+    w("   the largest local air at which the bounded state holds %.0f C at the LDO with a controller operating point: rev Y %.2f C, rev V %.2f C" % (
+        TJ_GOAL, out["max_air"]["Y"], out["max_air"]["V"]))
+    w("   (V6-m10's 79.4 C was the declared peak's). JUDGED at %.2f C, the case's air (C-DEV rev 1, L4-E12 E5's mixed air, T10-A2 as written):" % air)
+    by, bv = B[("Y", air)], B[("V", air)]
+    w("     both revisions hold (rev Y %.1f C, rev V %.1f C). In the exhaust air rev V holds (%.1f C); rev Y's rows give the controller no" % (
+        by[3], bv[3], B[("V", P["air_exhaust"])][3]))
+    w("     operating point, which matters only for a rev X part (no printed rows) placed in air over %.2f C: which air the pockets see is the" % out["max_air"]["Y"])
+    w("     inside air's question (U-02, the T-H1 mock-up), not settled here. With the generator's DECLARED auxiliaries instead (0.060 A a")
+    w("     supervisor for its three other parts) rev Y reads %.1f C and rev V %.1f C at %.2f C: the declaration over-covers, it does not bound" % (
+        tj_l(by[5], air), tj_l(bv[5], air), air))
+    w("")
+    # 10d: F13
+    i_max_dom = (P["decl_loads"][1] - i_rec) / SHARE + i_rec
+    out["i_max_dom"] = i_max_dom
+    w("   10d. F13: THE TRANSMIT SHARE BOUNDED (FW-B21, drafted)")
+    w("   With FDCAN_CCCR.DAR = 1 every frame is one the firmware scheduled (10b), so the firmware's schedule alone sets how long each TXD is")
+    w("   dominant. FW-B21: each supervisor's own TXD dominant at most %.0f %% of every %d ms window on each fabric, its frames, their error flags" % (SHARE * 100, WINDOW_MS))
+    w("   and its acknowledgements counted. A transceiver then averages ICC_rec + (ICC_dom - ICC_rec) x %.2f = %.1f + (%.0f - %.1f) x %.2f = %.2f mA" % (
+        SHARE, i_rec * 1000, i_dom * 1000, i_rec * 1000, SHARE, i_can * 1000))
+    w("   (PRINTED %.0f mA dominant at RL 50 Ohm: the bus's least RL is %.2f Ohm, two ends of 2 x 60R4 at -1 %%, between the 50 and 60 Ohm rows," % (
+        i_dom * 1000, Q["rl_min"]))
+    w("   the larger taken), under its DECLARED %.3f A; the declaration holds for ANY dominant current up to %.1f mA at that share, which covers" % (
+        P["decl_loads"][1], i_max_dom * 1000))
+    w("   the %.0f mA bus-fault row and the %.0f mA short-circuit row. The function needs far less: the quorum's frames at 1 Mbit/s or less" % (
+        P["can_fault"] * 1000, Q["ios_dom"] * 1000))
+    w("   (FW-B09) are a few per 100 ms; the bound is a firmware property the schedule computes, CONFIRMED on the bench by V-B21, not decided there")
+    w("   The window: the junction follows the window's average when the window is short against the package's thermal time constant, which")
+    w("   Diodes does not print (MISSING); whatever that constant, the junction never passes the held figure of section 8 (m) (%.1f C on rev Y" % (
+        tj_l(by[1] + i_aux + 2 * i_dom, air)))
+    w("   at this air with the enabled set, under the %.0f C absolute maximum)" % P["tj_ldo"])
+    w("   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads %.1f C (rev Y) and %.1f C (rev V) at %.2f C: inside %.0f C" % (
+        by[3], bv[3], air, TJ_GOAL))
+    w("")
+    return out
+
+
+def round5_faults(w, P, air, Q, tj_l, out):
+    """10e to 10g: the credible bus faults inside board B, each regulator's current and junction held, with the DTO and with the
+    response; the response drafted; the case row's figure for the coordinator."""
+    i_rec, i_dom, i_aux, i_can = P["can_rec"], P["can_dom_hi"], out["i_aux"], out["i_can"]
+    rl = Q["rl_min"]
+    v33 = 3.3 * P["vout_hi"]
+    rails = out["rails"]
+    neg = sorted(n for n, r in rails.items() if float(r.get("volts") or 0) < 0)
+    high = sorted(n for n, r in rails.items() if float(r.get("volts") or 0) > Q["vbus_abs"])
+    out["neg"], out["high"] = neg, high
+    w("   10e. THE CREDIBLE BUS FAULTS INSIDE BOARD B (V6-B3, 1a; F16 and F17 restated per fault)")
+    w("   Both fabrics lie wholly on board B: the parts on CANH_*/CANL_* in the composed netlist are %s, no connector among them. Board B's" % ", ".join(out["can_parts"]))
+    w("   rails (the composed intent) include %s below 0 V: so the bus-fault row's -12 V has no source in this kit, and that row (%.0f mA) is" % (
+        "none" if not neg else ", ".join(neg), P["can_fault"] * 1000))
+    w("   used only as the ASSUMED figure for the faults whose current TI does not print (B1, B2). Rails over the bus pins' %.0f V absolute" % Q["vbus_abs"])
+    w("   maximum: %s: a short to one is outside every printed figure (finding L9T5-F19, not credited)" % ", ".join(high))
+    w("   The faulted transceiver's current while its TXD is dominant, I_f (a fault draws on ITS OWN supervisor's regulator):")
+    flt = [
+        ("B1", "CANH to GND (SOIC-8 pins 7 and 8 adjacent; STB is on GND)", "every dominant bit reads recessive: errors, error passive, bus-off",
+         P["can_fault"], "ASSUMED: the %.0f mA row, printed at the larger voltage across the driver (CANH -12 V); at 0 V not printed" % (P["can_fault"] * 1000), "err"),
+        ("B2", "CANH to CANL (pins 6 and 7 adjacent)", "differential zero: every dominant bit reads recessive, as B1",
+         P["can_fault"], "ASSUMED as B1: the driver into its own low side, current-limited (6.3.7), not printed", "err"),
+        ("B3", "CANL to GND", "the bus still works: CANH at %.2f V or more dominant (PRINTED) against the %.1f V threshold" % (Q["vod_canh_min"], Q["vit_max"]),
+         i_dom + Q["vod_canl_max"] / rl, "MODEL: the %.0f mA row plus VO(D) CANL's %.2f V over RL %.2f Ohm" % (i_dom * 1000, Q["vod_canl_max"], rl), "ok"),
+        ("B4", "CANH to a 3.3 V or 5 V net (its own +3V3_IOCx the worst)", "the bus still works; every node's dominant bits draw the termination current from that net",
+         i_dom + v33 / rl, "MODEL: the %.0f mA row plus %.4f V over RL; the other nodes' bits add 2 x %.2f x %.1f mA" % (i_dom * 1000, v33, SHARE, v33 / rl * 1000), "own"),
+        ("B5", "CANL to a 3.3 V or 5 V net (its own +3V3_IOCx the worst)", "dominant reads recessive: errors, as B1",
+         Q["ios_dom"], "ASSUMED: IOS(DOM)'s %.0f mA, printed at CANL 12 V" % (Q["ios_dom"] * 1000), "err"),
+        ("B6", "an open (a cut track or joint; A7's break links removed)", "an isolated node's frames go unacknowledged",
+         P["can_dom"], "MODEL: the %.0f mA row at 60 Ohm (the open segment's RL is 120.8 Ohm, larger)" % (P["can_dom"] * 1000), "ack"),
+        ("B7a", "a transceiver failed dominant: its TXD held low (a pin or a peripheral)", "the DTO frees the bus after %.1f to %.1f ms (PRINTED)" % (
+            P["can_dto"][0], P["can_dto"][2]), i_dom, "PRINTED row into the healthy bus", "dto"),
+        ("B7b", "a transceiver failed dominant: its driver stuck on, the DTO dead with it", "the bus held dominant; no node can send",
+         i_dom, "MODEL: the failed driver taken as the dominant row (a failed part; nothing printed)", "stuck"),
+    ]
+    by_rev = {}
+    for rev in "YV":
+        bm = out["B"][(rev, air)][1]
+        base = bm + i_aux
+        rows_ = []
+        for fid, what, bus, i_f, lab, kind in flt:
+            other = i_can
+            held = base + other + i_f
+            if kind == "dto":
+                dto = base + other + i_rec + Q["ios_rec"]
+            elif kind == "ack":
+                dto = base + other + i_rec + (i_f - i_rec) * 5.0 / 6.0
+            elif kind == "stuck":
+                dto = held
+            else:
+                dto = None
+            if kind == "stuck":
+                resp = base + other + Q["icc_shdn"]
+            elif kind == "own":
+                resp = base + other + i_rec + (i_f - i_rec) * SHARE + 2 * SHARE * v33 / rl
+            else:
+                resp = base + other + i_rec + (i_f - i_rec) * SHARE
+            rows_.append((fid, held, dto, resp))
+        by_rev[rev] = rows_
+    for fid, what, bus, i_f, lab, kind in flt:
+        w("     %-4s %s: %s" % (fid, what, bus))
+        w("          I_f %.4f A, %s" % (i_f, lab))
+    w("   Each regulator's current and LDO junction at %.2f C (one fabric faulted, the other at its share; IOHA row 7, a served state: %.0f C):" % (air, TJ_GOAL))
+    w("     fault  rev  held (no DTO, no row)      the parts alone (DTO, no row)            with the response (FW-B21, SHDN drafted)")
+    worst = {}
+    for rev in "YV":
+        for fid, held, dto, resp in by_rev[rev]:
+            if dto is None:
+                dto_s = "NOT BOUNDED (no row)"
+            else:
+                dto_s = "%.4f A %6.1f C" % (dto, tj_l(dto, air))
+            w("     %-5s  %s    %.4f A %6.1f C %-7s   %-40s %.4f A %6.1f C %s" % (fid, rev, held, tj_l(held, air), "FAILS" if tj_l(held, air) > TJ_GOAL else "",
+                                                                          dto_s, resp, tj_l(resp, air), "holds" if tj_l(resp, air) <= TJ_GOAL else "FAILS"))
+        worst[rev] = max(r[3] for r in by_rev[rev] if r[0] != "B7b")
+    out["fault_rows"], out["worst"] = by_rev, worst
+    # both fabrics (row 8): the two worst responses together
+    both = {}
+    for rev in "YV":
+        bm = out["B"][(rev, air)][1]
+        f_resp = max(i_rec + (i_f - i_rec) * SHARE + (2 * SHARE * v33 / rl if kind == "own" else 0.0) for _f, _w, _b, i_f, _l, kind in flt if kind != "stuck")
+        held2 = bm + i_aux + 2 * max(i_f for _f, _w, _b, i_f, _l, kind in flt)
+        both[rev] = (bm + i_aux + 2 * f_resp, held2)
+    out["both"] = both
+    w("   Both fabrics faulted (IOHA row 8: 'nothing moves' is the accepted outcome, the regulators must survive it: %.0f C in any state;" % P["tj_ldo"])
+    w("   the %.0f C criterion read as well): the worst response figure on both transceivers" % TJ_GOAL)
+    for rev in "YV":
+        w("     rev %s: held %.4f A, %.1f C (%s %.0f C); with the response %.4f A, %.1f C: %s %.0f C, %s %.0f C" % (
+            rev, both[rev][1], tj_l(both[rev][1], air), "OVER" if tj_l(both[rev][1], air) > P["tj_ldo"] else "under", P["tj_ldo"],
+            both[rev][0], tj_l(both[rev][0], air), "holds" if tj_l(both[rev][0], air) <= P["tj_ldo"] else "FAILS", P["tj_ldo"],
+            "inside" if tj_l(both[rev][0], air) <= TJ_GOAL else "over", TJ_GOAL))
+    st = [r for r in by_rev["Y"] if r[0] == "B7b"][0]
+    out["b7b"] = (st[1], tj_l(st[1], air))
+    w("   B7b if the failed part ignores its SHDN too: its own regulator holds %.4f A, %.1f C on rev Y (%.1f C rev V): under the %.0f C absolute" % (
+        st[1], tj_l(st[1], air), tj_l([r for r in by_rev["V"] if r[0] == "B7b"][0][1], air), P["tj_ldo"]))
+    w("     maximum, over the %.0f C criterion. SESSION decision (L9T5-D5): tolerated. Why: it is one part failing three of its own functions at" % TJ_GOAL)
+    w("     once (driver, time-out, mode pin); the regulator stays inside its printed absolute maximum, so its supervisor lives and the quorum")
+    w("     holds on the other fabric (row 7); the fabric's errors detect it. To reverse: a load switch on each transceiver's supply (six parts)")
+    w("   So with the response every credible single fabric fault %s %.0f C (worst %.1f C rev Y, %.1f C rev V) and both fabrics faulted %s %.0f C" % (
+        "holds" if max(tj_l(worst[r], air) for r in "YV") <= TJ_GOAL else "does NOT hold", TJ_GOAL, tj_l(worst["Y"], air), tj_l(worst["V"], air),
+        "hold" if max(tj_l(both[r][0], air) for r in "YV") <= P["tj_ldo"] else "do NOT hold", P["tj_ldo"]))
+    w("   (%.1f C rev Y, %.1f C rev V); WITHOUT a row nothing bounds B1 to B6 (the parts' own bus-off ends a burst, but no row bounds how soon" % (
+        tj_l(both["Y"][0], air), tj_l(both["V"][0], air)))
+    w("   firmware restarts,")
+    w("   and B6's unacknowledged frames repeat without end under automatic retransmission: %.1f C)" % tj_l([r for r in by_rev["Y"] if r[0] == "B6"][0][2], air))
+    w("")
+    # 10f: the response drafted
+    w("   10f. THE RESPONSE, DRAFTED AND COMPOSED")
+    w("   (1) FIRMWARE: apply_hw_fw_contract_t10.py on HW-FW-CONTRACT.md (UNAPPLIED; Layer 5 rows brought forward as a named prerequisite of")
+    w("       the power gate, reason and acceptance in its docstring): FW-B20 (the run state, T10-A1, RM0433's reset state inside it), FW-B21")
+    w("       (DAR = 1, the %.0f %% share per %d ms, a faulted fabric stopped and its transceiver shut down within 100 ms, probed once a second for" % (
+        SHARE * 100, WINDOW_MS))
+    w("       at most %d ms), V-B20, V-B21. On a scratch copy: check OK, written, second application refused, the tree's page untouched: %s" % (
+        PROBE_MS, "yes" if out["contract_ok"] else "NO"))
+    w("   (2) CIRCUIT: apply_gen_sch_b_canshdn.py (board B; release-guarded by RELEASE-T10.md): each TCAN334D's SHDN (pin 5, on no net as")
+    w("       drawn: TI 6.3.6, 'The internal bias should not be relied on by design') to its controller's PD2 (fabric A) or PB14 (fabric B), 100 k")
+    w("       to GND so a controller in reset leaves its transceivers in normal mode; SHDN high is the shutdown mode, driver and receiver off,")
+    w("       %.1f uA at most (SLLSEQ7F 5.5, Table 6-5). Composed straight after T10's iocpre (%d drafts: %s): %s; %d parts" % (
+        Q["icc_shdn"] * 1e6, len(out["seq5"]), "every step OK" if out["ok5"] else "REFUSED", "the generator ran to its end", out["n_parts"]))
+    w("       read on the netlist: SHDN %s; record l9t5's own board B check %s; the state before it (no draft) %s; mutations: U43's pin 5" % (
+        out["v_new"], out["kit5"], out["v_old"]))
+    w("       exchanged with its pin 8 (GND) %s; R80 lifted from GND to +3V3_IOCB (a pull-up) %s" % (out["v_mut"], out["v_mut2"]))
+    w("")
+    # 10g: the case row's figure for the coordinator
+    w("   10g. THE CASE ROW'S SUPERVISOR FIGURE, FOR THE COORDINATOR (C-DEV rev 1 carries rv-pwr's HIGH: 0.400 A a controller plus 0.060 A)")
+    cy, cv = out["B"][("Y", air)], out["B"][("V", air)]
+    out["cdev"] = (cy[1], cy[1] + sum(P["decl_loads"][1:]))
+    w("   derived: the bounded controller with its enabled set at its operating point at %.2f C, rev Y's rows (the cover): %.4f A (TJ %.1f C);" % (air, cy[1], cy[0]))
+    w("   in the budget's own form, 3 x (%.4f + 0.060) x 3.3 = %.3f W at +3V3_IOCx in place of 3 x (0.400 + 0.060) x 3.3 = %.3f W; +5V_IOC then" % (
+        cy[1], 3 * (cy[1] + 0.06) * 3.3, 3 * 0.46 * 3.3))
+    w("   carries %.4f A in place of 1.3800 A (an LDO passes its output current). With FW-B21's share and the circuit's own auxiliaries the" % (3 * (cy[1] + 0.06)))
+    w("   regulator carries %.4f A (rev Y; %.4f A rev V). LABELLED SCENARIO until the coordinator issues the row: section 9's (4) at the" % (cy[2], cv[2]))
+    w("   case's HIGH stays NOT COVERED on rev 1's figure; on this figure the LDO reads %.1f C with the DECLARED auxiliaries and %.1f C with" % (
+        tj_l(cy[5], air), tj_l(cy[2], air)))
+    w("   the share and the circuit's own (rev Y)")
+    w("")
+    return out
 
 
 def main():
@@ -438,9 +935,9 @@ def main():
     w("          (6.3.7, p.20); but the average a supervisor's traffic sets is bounded by no row (FW-B09 bounds the rate, 1 Mbps or less, not the")
     w("          share), and T10-A2 is judged at the DECLARED %.3f A a transceiver. OPEN DEFECT L9T5-F13: it closes when a contract row bounds each" % (
         P["decl_loads"][1]))
-    w("          supervisor's transmit share so that its transceivers' average stays at or under that declaration, or when the regulator holds")
-    w("          %.0f C at the bounded share (owners: Layer 5 for the row; board B's generator owner for the declaration). As drawn: %s, L9T5-F06" % (
-        TJ_GOAL, bound(tj_m5, True)))
+    w("          supervisor's transmit share so that its transceivers' average stays at or under that declaration (round 5: drafted, section 10d)")
+    w("          or when the regulator holds %.0f C at the bounded share (owners: Layer 5 for the row; board B's generator owner for the" % TJ_GOAL)
+    w("          declaration). As drawn: %s, L9T5-F06" % bound(tj_m5, True))
     w("      (f1) one fabric faulted, its transceiver driving dominant into the fault (the %.0f mA row's condition: TXD = 0 V, CANH = -12 V, RL open;" % (
         P["can_fault"] * 1000))
     w("          SLLSEQ7F 5.5, p.6), the other transceiver recessive: %.4f A, junction %.1f C MODEL (%.1f C MODEL as drawn). Each supervisor has a" % (
@@ -449,24 +946,27 @@ def main():
     w("          C-DEV rev 1) which the design must serve: ARCH-PCB-B-IOHA.md section 12 row 7 ('quorum continues on the other fabric') and its test")
     w("          A7. Against %.0f C: %s (%s %.0f C). The driver's time-out ends a held TXD, not the controller's repeated attempts, and the current is" % (
         TJ_GOAL, bound(tj_f1, True), "under" if tj_f1 < P["tj_ldo"] else "OVER", P["tj_ldo"]))
-    w("          %s the %.0f mA capability: no printed limit holds the junction at %.0f C. NO REQUIREMENT COVERS THIS FAULT STATE: REQ-073 covers the" % (
+    w("          %s the %.0f mA capability: no printed limit holds the junction at %.0f C. COVERED BY CON-004 (round 5, V6-B3; round 4 read REQ-073" % (
         "under" if d_f1 < P["imax"] else "OVER", P["imax"] * 1000, TJ_GOAL))
-    w("          other direction (a failed supervisor must not take a fabric down) and REQ-004's acceptance does not name A7; row 7 and A7 read quorum,")
-    w("          not the regulators. OPEN DEFECT L9T5-F16, for Layer 5's owner. A protective response would have to show the dominant drive into the")
-    w("          fault ended (for example the controller's bus-off with no automatic recovery, a firmware row) before the junction passes %.0f C, with" % TJ_GOAL)
-    w("          the service lost stated: that supervisor silent on the faulted fabric, quorum on the other (row 7). As drawn: %s, L9T5-F06 as well" % (
+    w("          and REQ-004 and missed it): REQUIREMENTS-TRACE.md, %s, %s, %s: '%s'; accepted when '%s'" % (P["con004_class"] + (
+        P["con004"].split(", and ")[1] if ", and " in P["con004"] else P["con004"], P["con004_acc"])))
+    w("          Row 7 ('%s') is a failure the design must survive: '%s'; its test A7 '%s'." % (P["row7"][0], P["row7"][1], P["a7"][1]))
+    w("          So this state's closure is REQUIRED for CON-004. A7 as written cuts the bus (the break links): it does not exercise this row's bus")
+    w("          fault, which needs its own analysis (section 10e). OPEN DEFECT L9T5-F16 (owners: Layer 5 for the firmware rows, CON-004's '%s')." % P["con004_alloc"])
+    w("          The response drafted in round 5 (section 10f) ends the dominant drive by the firmware's schedule and a transceiver shutdown, the")
+    w("          service lost stated: that supervisor silent on the faulted fabric, quorum on the other (row 7). As drawn: %s, L9T5-F06 as well" % (
         bound(tj_f15, True)))
     w("      (f2) both fabrics faulted, both transceivers driving into their faults: %.4f A, junction %.1f C MODEL (%.1f C MODEL as drawn), on all three" % (
         d_f2, tj_f2, tj_f25))
     w("          regulators. A double fault outside T10's scope (row 8, and A7's 'with both broken nothing moves'). Against %.0f C, in any state: %s." % (
         P["tj_ldo"], bound(tj_f2, False)))
-    w("          The current is %s the capability, so no printed limit acts, and the typical shutdown is no acceptance. NO REQUIREMENT COVERS THIS" % (
+    w("          The current is %s the capability, so no printed limit acts, and the typical shutdown is no acceptance. COVERED BY CON-004 through" % (
         "under" if d_f2 < P["imax"] else "OVER"))
-    w("          FAULT STATE. OPEN DEFECT L9T5-F17, for Layer 5's owner. A protective response would have to hold each regulator's input off, or")
-    w("          limit its current, before its junction reaches %.0f C, with the service lost stated: both fabrics silent, no majority, the voters at" % (
+    w("          row 8 ('%s': '%s') and A7's '%s': 'nothing moves' is the" % (P["row8"][0], P["row8"][1][:60] + "...", P["a7"][2].split("; ")[-1]))
+    w("          accepted outcome, but the regulators must survive it. OPEN DEFECT L9T5-F17 (owners as F16). The response must hold each regulator")
+    w("          inside %.0f C (or cut the transceivers' current) with the service lost stated: both fabrics silent, no majority, the voters at the" % (
         P["tj_ldo"]))
-    w("          the home assignment (row 8); a correction that holds %.0f C at this current is the other route. As drawn: %s" % (
-        P["tj_ldo"], bound(tj_f25, False)))
+    w("          home assignment (row 8); drafted in round 5 (section 10f). As drawn: %s" % bound(tj_f25, False))
     w("      the foldback (the output short's behaviour) acts in no row")
     FAULT = {"mom": tj_m, "f1": tj_f1, "f2": tj_f2, "d_f1": d_f1, "d_f2": d_f2,
              "fails": [bound(x, s) for x, s in ((tj_m, True), (tj_f1, True), (tj_f2, False), (tj_m5, True), (tj_f15, True), (tj_f25, False))]}
@@ -600,32 +1100,53 @@ def main():
     w("   THE DRAFT ON C-DEV REV 1: %s. T10-A1 (Layer 5's row) and T10-A5 (the bench) are NOT met by" % ("items 1 to 3 hold; item 4 holds only under T10-A1's bound" if acc else "DOES NOT HOLD"))
     w("   anything in this tree; item 4 at the case's HIGH is NOT COVERED")
     w("")
-    # 10. state, findings, predicates
-    w("10. THE STATE OF L9T5-F06 (T10)")
-    w("   L9T5-F06 STAYS OPEN: the conditions are verified from the sources (the state is unbounded), a correction is selected with its acceptance")
-    w("   criterion, and its circuit half is drafted and read by its author only. No independent check has read it; Layer 5 has not accepted the")
-    w("   row; nothing is applied. This is the first attempt at this correction")
+    # 10. round 5
+    Q, _ldo_k, tj_l, R5 = round5(w, P, DP, air, hi3, d_bound)
+    R5 = round5_rest(w, P, DP, air, hi3, Q, _ldo_k, tj_l, R5)
+    R5 = round5_faults(w, P, air, Q, tj_l, R5)
+    # 11. state, findings, predicates
+    w("11. THE STATE OF L9T5-F06 (T10)")
+    by_, bv_ = R5["B"][("Y", air)], R5["B"][("V", air)]
+    f16_ok = max(tj_l(R5["worst"][r], air) for r in "YV") <= TJ_GOAL
+    f17_ok = max(tj_l(R5["both"][r][0], air) for r in "YV") <= P["tj_ldo"]
+    f13_ok = max(by_[3], bv_[3]) <= TJ_GOAL
+    drafted_ok = R5["contract_ok"] and R5["v_new"] == "DRAWN" and R5["v_old"] == "FAIL" and R5["v_mut"] == "FAIL" and R5["v_mut2"] == "FAIL"
+    w("   L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2")
+    w("   is restated with the enabled peripherals and holds at the case's %.2f C air on both revisions (rev Y %.1f C, rev V %.1f C; 10c); T10-A3" % (
+        air, by_[3], bv_[3]))
+    w("   and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;")
+    w("   Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to")
+    w("   %.2f C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check" % R5["max_air"]["Y"])
+    w("   of it read CONFIRMED AS CONDITIONAL, not a negative; round 5 is the second round on the same correction, adding the rows V6 named")
+    w("   L9T5-F13: %s. The row (FW-B21's share) is drafted; with it the regulator reads %.1f C (rev Y) and %.1f C (rev V) at %.2f C" % (
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f13_ok and drafted_ok else "OPEN", by_[3], bv_[3], air))
+    w("     against %.0f C; the bench (V-B20, V-B21) confirms the firmware's implementation and decides no feasibility. Stays OPEN in the" % TJ_GOAL)
+    w("     register until an independent check reads it and Layer 5 applies the row")
+    w("   L9T5-F16: %s. Every credible single fabric fault inside board B holds %.0f C with the response (worst %.1f C rev Y, %.1f C rev V;" % (
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f16_ok and drafted_ok else "OPEN", TJ_GOAL,
+        tj_l(R5["worst"]["Y"], air), tj_l(R5["worst"]["V"], air)))
+    w("     10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by")
+    w("     CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application")
+    w("   L9T5-F17: %s. Both fabrics faulted hold %.0f C with the response (%.1f C rev Y, %.1f C rev V); held, %.1f C (rev Y). Same conditions" % (
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f17_ok and drafted_ok else "OPEN", P["tj_ldo"],
+        tj_l(R5["both"]["Y"][0], air), tj_l(R5["both"]["V"][0], air), tj_l(R5["both"]["Y"][1], air)))
     w("   FINDINGS FOR OTHER AUTHORS")
-    w("   L9T5-F09 (Layer 5, HW-FW-CONTRACT.md 3.3): the supervisors' state is bounded by no row; the row text above (T10-A1); the FMEA row for a")
-    w("     supervisor out of its bound (T10-A5)")
+    w("   L9T5-F09 (Layer 5, HW-FW-CONTRACT.md 3.3): answered by the drafted rows FW-B20 and FW-B21 (apply_hw_fw_contract_t10.py, the integrator's")
+    w("     to apply); the FMEA row for a supervisor out of its bound (T10-A5) stays Layer 5's")
     w("   L9T5-F10 (boards A and B generator owners, cosmetic): the net keeps the name +5V_IOC at 4.18 V; a rename would touch both I-03 drafts")
     w("   L9T5-F11 (Layer 6): R602 13.3 k at 0.1 percent and 25 ppm/K carries no order code (its code is owed)")
-    w("   L9T5-F12 (Layer 9's budget, this author's, and rv-pwr's owner): the supervisors' HIGH (%.0f mA) is a state with no operating point at the" % (P["rv"][2] * 1000))
-    w("     hot stop's air; once Layer 5 accepts T10-A1 the budget's HIGH for them is the bounded state's figure (%.4f A a supervisor with its" % d_bound)
-    w("     auxiliaries), which lowers C-DEV's and every state's device or IOC load; not changed here (a case row's inputs)")
-    w("   L9T5-F13, OPEN DEFECT (Layer 5 for the row; board B's generator owner and rv-pwr for the declaration): the 60 mA declared for a")
-    w("     supervisor's other parts is under two TCAN334's printed dominant current (%.0f mA) and their bus-fault row (%.0f mA); the average a" % (
-        2 * P["can_dom_hi"] * 1000, 2 * P["can_fault"] * 1000))
-    w("     supervisor's traffic sets is bounded by no row, and held at both transceivers' dominant figure the regulator's junction is %.1f C" % FAULT["mom"])
-    w("     MODEL with the pre-regulator, over T10's %.0f C (section 8, (m))" % TJ_GOAL)
-    w("   L9T5-F16, OPEN DEFECT (Layer 5's owner; ARCH-PCB-B-IOHA.md section 12 row 7 and test A7): one CAN fabric faulted puts each of the three")
-    w("     regulators at %.1f C MODEL with the pre-regulator, over the %.0f C criterion in a state the design must serve; no requirement covers" % (
-        FAULT["f1"], TJ_GOAL))
-    w("     this fault state (section 8, (f1))")
-    w("   L9T5-F17, OPEN DEFECT (Layer 5's owner; row 8): both fabrics faulted put each of the three regulators at %.1f C MODEL, over the %.0f C" % (
-        FAULT["f2"], P["tj_ldo"]))
-    w("     absolute maximum; no requirement covers this fault state (section 8, (f2))")
-    w("   L9T5-F14 (Layer 6): the order code STM32H743VIT6 admits silicon revisions Y and V, whose printed currents differ (Tables 30 and 129)")
+    w("   L9T5-F12 (the coordinator, for case row C-DEV, and rv-pwr's owner): the supervisors' HIGH (%.0f mA) is a state with no operating point at" % (P["rv"][2] * 1000))
+    w("     the hot stop's air; the revised figure and its derivation are in 10g (%.4f A a controller, rev Y's rows, in place of 0.400 A); a" % R5["cdev"][0])
+    w("     LABELLED SCENARIO until the coordinator issues the row")
+    w("   L9T5-F14 (Layer 6; V6-m9): CON-017 (5) fits revision V or X only and (4) refuses both fabrics on Y or W, so T10's bound on rev Y's")
+    w("     larger rows is CONSERVATIVE for the fitted rev V; rev X has no printed rows and rests on rev Y's (10a)")
+    w("   L9T5-F18 (board B's generator owner): each TCAN334D's SHDN (pin 5) is on no net, resting on an internal pull-down TI says not to rely")
+    w("     on (SLLSEQ7F 6.3.6); answered by apply_gen_sch_b_canshdn.py (DRAFTED, 10f)")
+    w("   L9T5-F19 (board B's layout owner, Layer 10): %s on board B exceed the TCAN334's +-%.0f V bus pins; a short from one to a CAN" % (
+        ", ".join(R5["high"]), Q["vbus_abs"]))
+    w("     conductor is outside every printed figure: a clearance rule between those nets and the fabrics is a layout means, not credited here")
+    w("   L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and")
+    w("     R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)")
     w("")
     pred = {}
     pred["no contract, panel or firmware text in the tree bounds a supervisor's run mode, clock or voltage scale"] = unbounded
@@ -645,7 +1166,15 @@ def main():
         all(comp.values()) and kit == "DRAWN" and DECL == {"a": "DRAWN", "b": "DRAWN"} and intent_ok and abs(drawn_r602 - r602) < 1e-6)
     pred["the old state (no T10 draft) and the mutated divider both FAIL the pre-regulator's check"] = kit_old == "FAIL" and kit_mut == "FAIL"
     pred["on C-DEV rev 1 U7, U601, the lead's pin 1 and the LDOs' input hold with the draft"] = c1 and c2 and c3
-    w("11. THE PREDICATES")
+    pred["round 5: CON-004, IOHA rows 7 and 8 and test A7 are read; A7's method is a cut"] = (
+        P["con004_class"] == ("constraint", "core", "BLOCKER") and "cut" in P["a7"][1] and "quorum" in P["row7"][1])
+    pred["round 5: the reset state the reference manual prints (HSI at 64 MHz, VOS3) is inside the bound"] = Q["hsi"] <= BOUND[1] and BOUND[0] == "VOS3"
+    pred["round 5: with the enabled set, the share and the circuit's auxiliaries the bounded state holds 125 C at the case's air on both revisions"] = f13_ok
+    pred["round 5: with the response every credible single fabric fault holds 125 C and both fabrics hold 150 C, on both revisions"] = f16_ok and f17_ok
+    pred["round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)"] = all(
+        tj_l(h, air) > TJ_GOAL for rev in "YV" for fid, h, _d, _r in R5["fault_rows"][rev] if fid in ("B1", "B2", "B5"))
+    pred["round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once"] = drafted_ok and R5["ok5"]
+    w("12. THE PREDICATES")
     for k, v in pred.items():
         w("   %-134s %s" % (k, "yes" if v else "NO"))
     w("")
