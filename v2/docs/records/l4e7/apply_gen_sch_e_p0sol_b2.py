@@ -4,20 +4,25 @@ port-level residual, B2-PRESENCE.md). A PROPOSAL: the external interface it rest
 receptacle and at every mating point of the solar lead, make-last and break-first) is an owner item (B2-PRESENCE.md section 2).
 NOT APPLIED to the tree; its author ran it only on scratch copies (the tests also write scratch copies).
 
-Why (B2-PRESENCE.md; l4e7_p0sol.out section 5): a stiff source can step onto the solar port with the guard U21 already on only
+Why (B2-PRESENCE.md; l4e7_p0sol.out section 5): a stiff source can step onto the solar port with the guard U21 already on
 because the guard stays on after the panel's plug is withdrawn: Q12's body diode and channel keep PV_F at the stage's voltage,
-so U21's UVLO and INP stay high for seconds. With INP fed through a presence loop that the plug carries, the plug's withdrawal
-pulls INP low (R97, with C80 as its filter) and U21 turns Q12 off before the power contacts part; a source arriving on the next
-plug meets Q12 off, OV holding it off above the cut-off (and BST until it charges), and INP rises only when the presence pair
-makes, last. The guard-on event is then removed for any source that arrives through a mating point the loop passes.
+so U21's UVLO and INP stay high. With INP fed through a presence loop that the plug carries, the plug's withdrawal pulls INP low
+(R97, with C80 as its filter) and U21 turns Q12 off at most 0.544 ms after the pair opens. The INTENT is that a source arriving
+on the next plug meets Q12 off; that is NOT PROVEN and the cold-connection guarantee is WITHDRAWN (cx45, Q6): no sequenced
+connector is selected, no worst-case contact and control timing is bounded (a 1 mm lead is 0.5 ms at 2 m/s, under the turn-off;
+bounce; BST stays charged from the back-fed VS, TI SLUSEE5E p.17), and the complete enable path is not simulated. The pair's
+faults are NOT fail-safe (l4e7_p0sol.out section 5f): the two cores shorted together defeat the loop silently, and a core
+shorted to a positive core of the lead puts INP over its 20 V absolute maximum. No protection credit is taken for this draft.
 
 What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: R96 (INP's top) from PV_F to PV_PRA, the presence loop's outgoing
 side; J_SOLP, a JST-XH 1x2 (B2B-XH-A, C158012, J_TAMP's part) carrying the loop to the inside lead (pin 1 PV_PRA, pin 2 back to
 INP, PV_INP); C80, 10 nF C0G 100 V 1206 (C184799, C127's part) from INP to GND; U21's value text; the tracker section's list. U21,
 R97 and every other part keep their nets.
 
-ORDER: apply it AFTER apply_gen_sch_e_p0sol.py (it needs R97 24.9k) and so after the solar guard draft it follows; before L4-E11's
-aux draft and d8dec31's input capacitor (it names J_SOLP and C80, which no later draft takes, and adds no capacitor above C148).
+ORDER: NOT in L4-E9's change list and not part of the baseline (the owner's review, part 24: the baseline does not depend on an
+unapproved proposal). Only for the separate check (l4e7_p0sol.py ORDER_E_B2), or if the owner adopts B2 and its open engineering
+is done: AFTER apply_gen_sch_e_p0sol.py (it needs R97 24.9k) and so after the solar guard draft it follows; before L4-E11's aux
+draft and d8dec31's input capacitor (it names J_SOLP and C80, which no later draft takes, and adds no capacitor above C148).
 
 Usage:  apply_gen_sch_e_p0sol_b2.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
@@ -31,13 +36,14 @@ import sys
 NAME = "apply_gen_sch_e_p0sol_b2"
 ADDS = ("J_SOLP", "C80")
 BLOCK = (
-    '# P0-7, ROUTE B2 (MESHSAT-1357, v2/docs/records/l4e7/B2-PRESENCE.md; a PROPOSAL until the owner rules the interface): THE\n'
-    '# PRESENCE LOOP. R96, INP\'s top, feeds the solar receptacle\'s presence pair (J_SOLP pin 1, PV_PRA); the plug bridges the pair and\n'
-    '# it returns on J_SOLP pin 2 to INP (PV_INP), where R97 holds INP low whenever the loop is open. With the plug withdrawn the guard\n'
-    '# turns Q12 off (INP under V(INP_L) within about 0.54 ms, R97 x C80), and a source can only arrive with Q12 off, U21\'s OV holding\n'
-    '# it off above the cut-off and BST until it charges; the pair must make last and break first at every mating point it passes\n'
-    '# (L4-E9 R-180, the contact requirement). C80 filters INP against what the lead picks up; a broken or shorted presence core can\n'
-    '# only hold INP low (the guard off).\n'
+    '# P0-7, ROUTE B2 (MESHSAT-1357, v2/docs/records/l4e7/B2-PRESENCE.md; a PROPOSAL until the owner rules the interface, and no\n'
+    '# protection credit as drawn): THE PRESENCE LOOP. R96, INP\'s top, feeds the solar receptacle\'s presence pair (J_SOLP pin 1,\n'
+    '# PV_PRA); the plug bridges the pair and it returns on J_SOLP pin 2 to INP (PV_INP), where R97 holds INP low whenever the loop\n'
+    '# is open. With the plug withdrawn the guard turns Q12 off (INP under V(INP_L) within about 0.54 ms, R97 x C80). Whether a\n'
+    '# source then arrives with Q12 off is NOT proven (no selected sequenced connector, no contact and control timing proof, BST kept\n'
+    '# charged from the back-fed VS): the cold-connection guarantee is withdrawn (cx45). The pair\'s faults are not fail-safe: the two\n'
+    '# cores shorted together defeat the loop silently (INP about 0.2 x PV_F), and a core shorted to a positive core of the lead puts\n'
+    '# INP at PV_F, over its 20 V absolute maximum; monitored detection and INP\'s protection are owed if B2 is pursued (B2-PRESENCE.md 5b).\n'
     'part("J_SOLP", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 (B2B-XH-A): the solar receptacle\'s presence pair, the inside lead '
     'from the wall receptacle\'s presence contacts; the plug bridges them, make-last and break-first: 1 from R96, 2 to INP", "XH2", '
     '{"1": "PV_PRA", "2": "PV_INP"}, "C158012")\n'

@@ -10,7 +10,7 @@ INPUTS (sha256, the first 16 hex digits)
   2ad2015b0c7aea91 v2/docs/records/l4e7/l4e7_stage_settings.out
   df1a51ad531c2ec9 v2/docs/records/l4e7/l4e7_stage_settings.results.json
   f7547d465e0eb7d2 v2/docs/records/l4e7/apply_gen_sch_e_p0sol.py
-  2fd39813175c4add v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
+  1ed0752601682f42 v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
   f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
   2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
   b7461bc27d5c277c v2/docs/records/l4e11/l4e11_power.out
@@ -83,13 +83,14 @@ INPUTS (sha256, the first 16 hex digits)
       its inductance is no longer the printed one; its resonance with the entry's capacitance (225.8 uF at its largest) and the
       lead falls at 2.71 to 3.15 kHz, inside CS101's 2 to 5 kHz band where the accepted M2 immunity is decided; and it leaves D-16
       as it is. (B2) a presence contact pair in the solar receptacle carrying U21's INP: the plug's withdrawal pulls INP low
-      (V(INP_L) 0.8 V least, PRINTED; turn-off within tPD(INP_L)) before any other source can mate, so a source can only ever
-      arrive cold, the case whose absolute ratings the record shows held; it would prevent the guard-on step only for a source
-      arriving through the loop's mating points (a partial measure), not for a second source on the same lead, and it does not
-      change the port's response when a step happens; it needs the receptacle's contact set and a rule that every plug for it
-      bridges the pair (Layer 7's harness, R-180 rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is
-      not supported on printed figures; B2 is an unapproved PARTIAL interface proposal (section 5), and neither resolves D-10
-      (section 3).
+      (V(INP_L) 0.8 V least, PRINTED; turn-off within tPD(INP_L)), with the INTENT that a source arrives with Q12 off, the case
+      whose absolute ratings the record shows held; that is NOT PROVEN (no sequenced connector selected, no contact and control
+      timing proof, BST kept charged from the back-fed VS; section 5e) and the pair's faults are not fail-safe (section 5f), so no
+      protection credit is taken; at best it would prevent the guard-on step only for a source arriving through the loop's mating
+      points (a partial measure), not for a second source on the same lead, and it does not change the port's response when a step
+      happens; it needs the receptacle's contact set and a rule that every plug for it bridges the pair (Layer 7's harness, R-180
+      rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is not supported on printed figures; B2 is an
+      unapproved PARTIAL interface proposal (section 5), and neither resolves D-10 (section 3).
 
   (C) U5'S OWN INPUT SENSE RETIRED, THE REGULATION'S SENSE AN AMPLIFIER WHOSE PINS TOLERATE THE STEP: CSPIN and CSNIN tied to VIN,
       as the sheet asks when the input sense is not in use (8705af p.12, p.29, p.31), so their differential is zero in every state
@@ -289,10 +290,13 @@ INPUTS (sha256, the first 16 hex digits)
     (INFERRED), is covered by the margin up to 3.67 uA.
   D-10 (B6, L4-F01): an UNRESOLVED PROTECTION DEFECT in the present model, the remaining engineering item E-1 (section 3).
     CORRECTED within it: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line (R97 24.9k).
-    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10.
+    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10. No
+    protection credit is taken for it: its cold-arrival guarantee is WITHDRAWN (5e) and its pair faults are not fail-safe,
+    P2 and P3 putting INP over its absolute maximum, an OPEN defect of the B2 draft (5f).
 
 5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (an unapproved PARTIAL proposal; the coordinator's task of
-   5 October 2026, 17:12; it does not resolve D-10, section 3)
+   5 October 2026, 17:12; it does not resolve D-10, section 3; NOT part of the baseline: the baseline composition ORDER_E has
+   no B2 step and no baseline row depends on it, the owner's review part 24)
   5a AUTHORITY (B2-PRESENCE.md section 1): reserved.json protects no connector or contact arrangement; but B2 changes the kit's
      external interface (BUILD.md and appendix 32.32: the panel, an accessory of the owner's choice, on the shore plug's second
      pair; with B2 a panel charges only through a plug that bridges the presence pair), changes the owner-accepted pick of the
@@ -317,17 +321,16 @@ INPUTS (sha256, the first 16 hex digits)
   5c THE WITHDRAWN PLUG. With the presence pair open INP has no source but R97 to GND (and U21's own pull-down, not credited):
      from its highest while the guard is on, 6.20 V (PV_F at the cut-off's highest 31.06 V), it falls under V(INP_L)'s least 0.8 V
      (PRINTED) in at most 0.543 ms through R97 aged and C80 at its largest (10.51 nF), and U21 then pulls Q12's gate (tPD(INP_L)
-     at most 1 us, PRINTED; the gate's fall, the record's): Q12 is off at most 0.544 ms after the pair opens. A broken or shorted
-     presence core can only hold INP low: the guard off, never on. On the next plug INP rises only when the pair makes, last; at
-     the hold's least it crosses V(INP_H)'s most 2.0 V in at most 0.189 ms, a delay nothing in service sees.
-  5d THE ARRIVING SOURCE (the cold connection recomputed as the case every arrival becomes): a stiff 36 V source meets Q12 off;
-     the power contacts make first (the contact requirement R-180: the pair makes last at every mating point of the loop), so PV_F
-     is at the source when the pair makes and U21's OV, at or under 31.06 V and acting within 4 us (PRINTED), holds Q12 off (and
-     BST until it charges, at least 50 ms from discharged, the record's); a source under the cut-off starts the stage through
-     Q12's gate slew once the pair has made, the record's start (at most 6.109 A, under the breaker's least); the port's own ring
-     is the record's cold connection, re-run here over the record's whole grid (0.30 to 10.20 uH, 38 loops), both fault positions,
-     the port bank at its least and its largest, from a discharged port and from 25 V (608 events; the worst equals the record's
-     cold maxima):
+     at most 1 us, PRINTED; the gate's fall, the record's): Q12 is off at most 0.544 ms after the pair opens, with the pair intact
+     (its faults: 5f). On the next plug INP rises once the pair makes; at the hold's least it crosses V(INP_H)'s most 2.0 V in at
+     most 0.189 ms.
+  5d THE ARRIVING SOURCE IF IT MEETS Q12 OFF (a CONDITION, not a result: the model holds Q12 non-conducting, the record's cold
+     connection with cold=True; it is not derived from the contact sequence or the control timing, and 5e withdraws the guarantee
+     that an arrival meets it). Under that condition a stiff 36 V source over the cut-off finds U21's OV, at or under 31.06 V and
+     acting within 4 us (PRINTED), holding Q12 off, and a source under the cut-off starts the stage through Q12's gate slew once
+     the pair has made, the record's start (at most 6.109 A, under the breaker's least); the port's own ring is the record's cold
+     connection, re-run here over the record's whole grid (0.30 to 10.20 uH, 38 loops), both fault positions, the port bank at its
+     least and its largest, from a discharged port and from 25 V (608 events; the worst equals the record's cold maxima):
        quantity                                            worst      absolute     line     the line holds from
        PV_F at VS, CS+, CS- and ISCP                         84.62 V     100.00 HELD     90.00   everywhere
        PV_F against the recommended operating VS row         84.62 V       n/a          80.00   0.78 uH
@@ -335,12 +338,68 @@ INPUTS (sha256, the first 16 hex digits)
        INP (R96 over R97 24.9k)                              16.90 V      20.00 HELD     18.00   everywhere
        EN/UVLO (R94 over R95)                                12.48 V      20.00 HELD     18.00   everywhere
      PV_F's least 0.00 V (VS, CS+, CS- and ISCP rated -1 V to GND): held; the lead's current in the ring at most 200.1 A and D11
-     at most 17.7 mJ (the record's figures). Every absolute rating holds over the whole envelope. The 54 V/us SESSION margin line
-     on the slew holds only from the loop the table names (at the least loop 56.1 V/us, inside the 60 V/us absolute maximum), and
-     PV_F stays over the recommended 80 V row below the loop the table names: both are carried as PROVISIONAL, validated by S2
-     (the arriving source at 0.30 uH on the specimen).
-  5e WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence loop closed (a
-     parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; and a stiff source
-     BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode (PV_P back-feeds
-     PV_F through it while the guard is off), the reverse of the step, not computed here. Validation: P1-1's S1 (both added to its
-     rows).
+     at most 17.7 mJ (the record's figures). Under the condition, every absolute rating holds over the whole envelope. The 54 V/us
+     SESSION margin line on the slew holds only from the loop the table names (at the least loop 56.1 V/us, inside the 60 V/us
+     absolute maximum), and PV_F stays over the recommended 80 V row below the loop the table names: both are carried as
+     PROVISIONAL, validated by S2 (the arriving source at 0.30 uH on the specimen).
+  5e THE COLD-CONNECTION GUARANTEE, WITHDRAWN (Astra's check cx45, Q6): round 2 claimed that every source arriving through a
+     mating point of the loop meets Q12 off. Nothing in this record proves it, and every claim resting on it stays PROVISIONAL
+     (5d's condition, R-180's reason, the owner item's benefit). What a proof needs, and what this record holds:
+     (i)   THE CONTACT SEQUENCE: no sequenced connector is selected. The held Glenair D38999 sheets print no first-mate-last-break
+           contact, so the wall receptacle cannot sequence the pair; the solar tail's connector is not selected (B2-PRESENCE.md
+           section 4). A selected part with a printed mating sequence is owed.
+     (ii)  THE TIME LEAD, NOT A DISTANCE: Q12 is off at most 0.544 ms after the pair opens (5c), so the pair must open at least
+           that long before either power contact parts (otherwise a power contact re-making in the same movement can find Q12
+           still on). A spatial lead gives time only under a speed bound, and no held sheet prints a mating speed (the speeds
+           below are ASSUMPTIONS): at 0.5 m/s, 1 mm is 2.00 ms and the turn-off needs 0.27 mm; at 1.0 m/s, 1 mm is 1.00 ms and the
+           turn-off needs 0.54 mm; at 2.0 m/s, 1 mm is 0.50 ms and the turn-off needs 1.09 mm. Round 2's 1 mm covers the turn-off
+           only under 1.84 m/s.
+     (iii) BST IS NOT DISCHARGED BY A WITHDRAWAL: "A 12V, 100µA charge pump is derived from VS terminal" and "With VS applied and
+           EN/UVLO pulled high, the charge pump turns ON" (TI SLUSEE5E p.17, PRINTED). After a withdrawal PV_F is back-fed from
+           PV_P through Q12's body diode, so VS stays supplied and EN/UVLO stays high until the back-fed PV_F falls through U21's
+           UVLO falling point (the band's least 7.46 V, the record's); BST therefore stays charged and a remating turns Q12 on
+           within tPU(INP_H), at most 2 us (PRINTED), of INP crossing V(INP_H). No fresh-bootstrap delay may be credited (round
+           2's "at least 50 ms from discharged" is withdrawn); how long the back-fed PV_F stays above the UVLO is not computed
+           here.
+     (iv)  BOUNCE AND INTERRUPTION: a power contact interrupted after the pair has made is not bounded. With a source under the
+           cut-off Q12 is on by then, and the re-make steps the source onto the port with the guard on (E-1's mechanism, by the
+           droop the interruption allowed; not computed). With a source over the cut-off OV holds Q12 off, but an interruption
+           long enough for PV_F to fall through OV's falling point (27.07 to 29.26 V, the record's band) while the pair holds INP
+           high releases OV; with BST charged Q12 turns on, and the re-make is E-1's guard-on case (F1 to F3). PV_F's decay with
+           Q12 off and the contacts' interruption times are not computed or printed here.
+     (v)   THE COMPLETE ENABLE PATH is not simulated: the contact sequence and its bounce, the loop and C80, INP's thresholds and
+           delays, OV, UVLO, the gate drive with BST charged and the port's ring, together, at the timing extremes. Until (i) to
+           (v) are done, B2 claims no cold arrival.
+  5f THE PRESENCE PAIR'S FAULTS (Astra's check cx45, Q6; round 2's "a broken or shorted presence core can only hold INP low" was
+     FALSE and is withdrawn). The loop solved as a circuit (nodal analysis; R96 at its least 99.9 kOhm, R97 at its highest 24.92
+     kOhm, INP's highest; a fault a 10 mOhm short; the bridged pair 50 mOhm; U21's own pull-down not credited). INP in V at PV_F
+     of: U21's turn-on at the most 10.05 V; the hold's least 16.97 V; a 25 V source 25.00 V; the cut-off's highest 31.06 V; the
+     class's 36 V 36.00 V; the arriving ring's worst 84.62 V. V(INP_H) at most 2.0 V turns the guard on; INP's absolute maximum 20
+     V (PRINTED):
+       fault                                                                      INP / PV_F    INP at the six PV_F points (V)            the guard on from   INP over 20 V from
+       none the plug in, the pair bridged                                            0.1997     2.01   3.39   4.99   6.20   7.19  16.90   PV_F  10.02 V   PV_F 100.16 V
+       none the plug withdrawn, the pair open                                        0.0000     0.00   0.00   0.00   0.00   0.00   0.00   not under 1 kV   not under 1 kV
+       P1   the two presence cores shorted together, the plug withdrawn              0.1997     2.01   3.39   4.99   6.20   7.19  16.90   PV_F  10.02 V   PV_F 100.16 V
+       P2   INP's core shorted to a positive core of the lead, the plug withdrawn    1.0000    10.05  16.97  25.00  31.06  36.00  84.62   PV_F   2.00 V   PV_F  20.00 V
+       P3   R96's core shorted to a positive core of the lead, the plug in           1.0000    10.05  16.97  25.00  31.06  36.00  84.62   PV_F   2.00 V   PV_F  20.00 V
+       P4   INP's core shorted to the return, the plug in                            0.0000     0.00   0.00   0.00   0.00   0.00   0.00   not under 1 kV   not under 1 kV
+       P5   R96's core shorted to the return, the plug in                            0.0000     0.00   0.00   0.00   0.00   0.00   0.00   not under 1 kV   not under 1 kV
+       P6   either core open, the plug in (as withdrawn)                             0.0000     0.00   0.00   0.00   0.00   0.00   0.00   not under 1 kV   not under 1 kV
+     Consequences and detection. P1 (the cores shorted together, or the pair's contacts welded): INP is the drawn divider whatever
+     the plug does, the guard on from PV_F 10.02 V at INP's highest corner (by 10.05 V at the most, 2b), so with the plug
+     withdrawn the back-fed PV_F holds the guard on and E-1's guard-on step returns; nothing on board E detects it (a LATENT loss
+     of B2's function). P2 and P3 (a presence core shorted to a positive core of the lead, the solar or the DC pair): INP is PV_F,
+     the guard on from 2.00 V and INP over its 20 V absolute maximum from PV_F 20.00 V, under every source over 20 V and the
+     arriving ring's 84.62 V; a hazard the draft INTRODUCES (without B2, INP's net never leaves board E): an OPEN defect of the B2
+     draft. P4 to P6: the guard held off (the stage loses the solar input; R96 dissipates at most 72 mW in P5); fail-safe for D-10
+     and unmonitored (no charging is the only symptom). NO PROTECTION CREDIT is taken for the loop. If B2 is pursued, owed before
+     any credit: monitored or fault-tolerant presence detection (for example a coded resistance in the plug's bridge read by a
+     window comparator, so that P1 and P2 to P6 read as faults and hold the guard off) and INP held inside its absolute maximum
+     for a core at the lead's highest voltage (a series resistance at J_SOLP pin 2 and a clamp), each drafted, composed and
+     checked like this one, then the timing proof of 5e. Neither is drafted here; the guard-on case stays with E-1.
+  5g WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence loop closed (a
+     parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; a stiff source BELOW
+     the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode (PV_P back-feeds PV_F
+     through it while the guard is off), the reverse of the step, not computed here; the timing proof (5e) and the pair's fault
+     detection and INP's protection (5f). Validation: P1-1's S1 (the first two added to its rows); the last two are engineering,
+     not validation.
