@@ -99,8 +99,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
 
 7. THE REGULATOR AS DRAWN: AP2112K-3.3 (Diodes DS39724 Rev. 2 - 2), one a supervisor, fed from +5V_IOC (I-03's draft: 4.8719 to 5.1329 V)
    PRINTED: output current 600 mA minimum capability; dropout 8 / 200 / 400 mV maximum at 10 / 300 / 600 mA (p.8); input 2.5 to 6.0 V; ambient to
-   85 C (p.3); SOT25 junction to ambient 184 C/W, no heat sink (p.3); junction 150 C (absolute maximum, p.3); thermal shutdown 160 C (TYPICAL);
-   foldback short current 50 mA (TYPICAL). It drops its whole input to 3.3 V: at the 5.1329 V maximum, 1.8329 V times its current
+   85 C (p.3); SOT25 junction to ambient 184 C/W, no heat sink (p.3); junction 150 C (absolute maximum, p.3); thermal shutdown 160 C (TYPICAL
+   behaviour, no maximum trip printed: never an acceptance); foldback short current 50 mA (TYPICAL). It drops its whole input to 3.3 V: at
+   the 5.1329 V maximum, 1.8329 V times its current
    its THERMAL limit at the 76.25 C air: junction 150 C at 0.2187 A; 125 C (this record's criterion, SESSION) at 0.1445 A: it binds far under the 600 mA
      declared typical           0.1200 A: junction  116.7 C: inside the 125 C criterion
      the bounded state          0.2291 A: junction  153.5 C: OVER the absolute maximum
@@ -133,9 +134,38 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
       accuracy between their dropout and 4.3 V (the sheet tests VOUT at 4.3 V and prints line regulation from 4.3 V; the input here is
       3.8428 to 4.2907 V, inside the printed 2.5 to 6.0 V supply range). A shared 3.3 V buck with no LDO was not taken: it removes each
       controller's own regulator, on which the architecture's failure domains rest
-   SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION. Why: the state must be bounded under every option, because the controller itself
-   has no operating point above it (section 4); with the bound the demand is 0.2291 A, which K2 alone does not hold (153.5 C) and K3
-   holds at 118.0 C on a one-resistor change in a draft this record already owns; K1 covers currents the controller cannot draw at this
+      NOT INSIDE THE BOUND, each row judged against its own limit. Three figures kept apart: 125 C, T10's design criterion (SESSION);
+      150 C, the AP2112K's printed absolute maximum junction (DS39724 Rev. 2-2, Absolute Maximum Ratings, p.3), never to be exceeded and never
+      an operating target; 160 C, its thermal shutdown, TYPICAL behaviour only (p.8, no maximum trip printed), which shows no protection below
+      150 C and is no acceptance. A row over 125 C in a state the design must serve, or over 150 C in any state, FAILS its thermal bound.
+      Every junction below is a MODEL figure (the inside air, the printed 184 C/W and the current), never a measured temperature
+      (m) both transceivers driving dominant, held: 0.3091 A, junction 132.6 C MODEL with the pre-regulator (180.5 C MODEL as drawn). IN T10's
+          SCOPE: normal traffic sets its average. Against 125 C: FAILS at the held figure. A held drive is ended by the parts: the TCAN334's
+          driver dominant time-out frees the bus after 1.2 to 3.8 ms (SLLSEQ7F, tTXD_DTO, PRINTED) and the protocol forces recessive bits
+          (6.3.7, p.20); but the average a supervisor's traffic sets is bounded by no row (FW-B09 bounds the rate, 1 Mbps or less, not the
+          share), and T10-A2 is judged at the DECLARED 0.020 A a transceiver. OPEN DEFECT L9T5-F13: it closes when a contract row bounds each
+          supervisor's transmit share so that its transceivers' average stays at or under that declaration, or when the regulator holds
+          125 C at the bounded share (owners: Layer 5 for the row; board B's generator owner for the declaration). As drawn: FAILS, L9T5-F06
+      (f1) one fabric faulted, its transceiver driving dominant into the fault (the 180 mA row's condition: TXD = 0 V, CANH = -12 V, RL open;
+          SLLSEQ7F 5.5, p.6), the other transceiver recessive: 0.3726 A, junction 144.2 C MODEL (201.9 C MODEL as drawn). Each supervisor has a
+          transceiver on each fabric, so the row applies to all three regulators. A FAULT STATE OUTSIDE T10's SCOPE (the steady demand on
+          C-DEV rev 1) which the design must serve: ARCH-PCB-B-IOHA.md section 12 row 7 ('quorum continues on the other fabric') and its test
+          A7. Against 125 C: FAILS (under 150 C). The driver's time-out ends a held TXD, not the controller's repeated attempts, and the current is
+          under the 600 mA capability: no printed limit holds the junction at 125 C. NO REQUIREMENT COVERS THIS FAULT STATE: REQ-073 covers the
+          other direction (a failed supervisor must not take a fabric down) and REQ-004's acceptance does not name A7; row 7 and A7 read quorum,
+          not the regulators. OPEN DEFECT L9T5-F16, for Layer 5's owner. A protective response would have to show the dominant drive into the
+          fault ended (for example the controller's bus-off with no automatic recovery, a firmware row) before the junction passes 125 C, with
+          the service lost stated: that supervisor silent on the faulted fabric, quorum on the other (row 7). As drawn: FAILS, L9T5-F06 as well
+      (f2) both fabrics faulted, both transceivers driving into their faults: 0.5491 A, junction 176.3 C MODEL (261.4 C MODEL as drawn), on all three
+          regulators. A double fault outside T10's scope (row 8, and A7's 'with both broken nothing moves'). Against 150 C, in any state: FAILS.
+          The current is under the capability, so no printed limit acts, and the typical shutdown is no acceptance. NO REQUIREMENT COVERS THIS
+          FAULT STATE. OPEN DEFECT L9T5-F17, for Layer 5's owner. A protective response would have to hold each regulator's input off, or
+          limit its current, before its junction reaches 150 C, with the service lost stated: both fabrics silent, no majority, the voters at
+          the home assignment (row 8); a correction that holds 150 C at this current is the other route. As drawn: FAILS
+      the foldback (the output short's behaviour) acts in no row
+   SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION, A DRAFTED CANDIDATE, UNCHECKED. Why: the state must be bounded under every option,
+   because the controller itself has no operating point above it (section 4); with the bound the demand is 0.2291 A, which K2 alone does not hold (153.5 C)
+   and K3 holds at 118.0 C on a one-resistor change in a draft this record already owns; K1 covers currents the controller cannot draw at this
    air and costs three switching stages in board B's tightest area. To reverse: drop apply_gen_sch_?_iocpre.py (the drafts are separate from
    I-03's) and take K1; it becomes necessary if Layer 5 cannot bound the state or the bench reads the LDOs hotter than the printed figure
    NOT the owner's: no requirement changes and no money beyond a resistor value. Layer 5's row is its owner's to accept (text below)
@@ -152,8 +182,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    T10-A4 the draft composes in L4-E9's order after I-03's, its divider is read in the regenerated netlist with a mutation that fails, and
           the declarations it writes are read in the intent (section 9)
    T10-A5 PHYSICAL, on the first article: each LDO's case temperature at the bounded state in a 76 C chamber, and each supervisor's supply
-          current in that state; a supervisor forced out of the bound (a firmware fault) must end in the LDO's thermal shutdown or the
-          controller's reset with the voters at their default: Layer 5's FMEA row, not shown here
+          current in that state; a supervisor forced out of the bound (a firmware fault) must be returned inside it by a response that acts
+          before the LDO's junction reaches 150 C (the clock read-back's reset or the watchdog), the voters at their default meanwhile and the
+          service lost stated; the LDO's thermal shutdown (160 C, TYPICAL, no maximum trip printed) is no acceptance: Layer 5's FMEA row
    LAYER 5'S ROW, TEXT FOR ITS OWNER (HW-FW-CONTRACT.md section 3.3, a new FW-B row; not applied by this record):
      | FW-Bxx | the supervisors' supply: a private AP2112K-3.3 each from the pre-regulated +5V_IOC (record l9t5 T10) | Run each supervisor at
        VOS3 with HCLK at most 144 MHz (no PLL above it); enable only FDCAN1, FDCAN2, I2C1, the GPIO ports in use and the IWDG; read the clock
@@ -219,8 +250,15 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    L9T5-F12 (Layer 9's budget, this author's, and rv-pwr's owner): the supervisors' HIGH (400 mA) is a state with no operating point at the
      hot stop's air; once Layer 5 accepts T10-A1 the budget's HIGH for them is the bounded state's figure (0.2291 A a supervisor with its
      auxiliaries), which lowers C-DEV's and every state's device or IOC load; not changed here (a case row's inputs)
-   L9T5-F13 (board B's generator owner, rv-pwr): the 60 mA declared for a supervisor's other parts is under two TCAN334's printed dominant
-     current (120 mA) and far under their bus-fault row (360 mA): a momentary and a fault figure the declarations do not carry
+   L9T5-F13, OPEN DEFECT (Layer 5 for the row; board B's generator owner and rv-pwr for the declaration): the 60 mA declared for a
+     supervisor's other parts is under two TCAN334's printed dominant current (120 mA) and their bus-fault row (360 mA); the average a
+     supervisor's traffic sets is bounded by no row, and held at both transceivers' dominant figure the regulator's junction is 132.6 C
+     MODEL with the pre-regulator, over T10's 125 C (section 8, (m))
+   L9T5-F16, OPEN DEFECT (Layer 5's owner; ARCH-PCB-B-IOHA.md section 12 row 7 and test A7): one CAN fabric faulted puts each of the three
+     regulators at 144.2 C MODEL with the pre-regulator, over the 125 C criterion in a state the design must serve; no requirement covers
+     this fault state (section 8, (f1))
+   L9T5-F17, OPEN DEFECT (Layer 5's owner; row 8): both fabrics faulted put each of the three regulators at 176.3 C MODEL, over the 150 C
+     absolute maximum; no requirement covers this fault state (section 8, (f2))
    L9T5-F14 (Layer 6): the order code STM32H743VIT6 admits silicon revisions Y and V, whose printed currents differ (Tables 30 and 129)
 
 11. THE PREDICATES
@@ -230,6 +268,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    as drawn the regulator is over its absolute maximum junction at the case's HIGH and over the criterion at the bounded state            yes
    the selected set point is the least E96 value that keeps the LDOs' input over their 600 mA requirement with the return as drawn        yes
    with the pre-regulator the regulator is inside the criterion at the bounded state and at its declared peak, not at the case's HIGH     yes
+   the held dominant and bus-fault rows are judged on their own limits (125 C served, 150 C any state) and all six FAIL them              yes
    each T10 draft refuses a target without I-03's draft, applies once after it, refuses twice and refuses the tree                        yes
    both boards compose with the T10 drafts and read DRAWN, declarations included; the netlist's divider is the selected one               yes
    the old state (no T10 draft) and the mutated divider both FAIL the pre-regulator's check                                               yes

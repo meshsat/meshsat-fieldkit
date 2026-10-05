@@ -155,6 +155,12 @@ def figures():
     P["can_dom_hi"] = float(need(t, r"CL = open, S, STB and SHDN = 0V\.\s+(\d+)\s*\n\s*Supply current Normal Mode\s+High Bus Load", "ICC dominant, high bus load").group(1)) / 1000.0
     P["can_fault"] = float(need(t, r"SHDN = 0V, CANH = -12V, RL = open,\s+(\d+)", "ICC dominant with a bus fault").group(1)) / 1000.0
     P["can_rec"] = float(need(t, r"ICC\s+Recessive\s+([\d.]+)\s*$", "ICC recessive").group(1)) / 1000.0
+    # the bus-fault row is the current while the driver is DOMINANT into the fault (TXD = 0 V), and the driver's dominant time-out
+    # ends only a held TXD (5.7 and note 1; 6.3.7: the dominant share is limited by that time-out and the protocol)
+    need(t, r"TXD = 0V, S, STB and\s+mA\s+Dominant with\s+SHDN = 0V, CANH = -12V, RL = open,\s+180", "the bus-fault row's condition (TXD = 0 V)")
+    P["can_dto"] = tuple(float(x) for x in need(t, r"tTXD_DTO\s+Driver dominant time out \(1\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+ms",
+                                                  "the driver dominant time-out").groups())
+    need(t, r"percentage dominant is limited by the TXD dominant time out and CAN\s+protocol", "6.3.7's dominant share")
     t = pdf("tps62933")
     need(t, r"0\.8-V to 22-V output voltage range", "the TPS62933's output range")
     m = need(t, r"500\s+(4\.7)\s+40\s+15\s*\n\s*3\.3\s+31\.3\s+10\.0.*?500\s+(6\.8)\s+20\s+10\s*\n\s*5\s+52\.5\s+10\.0", "Table 10-2's 3.3 V and 5 V rows", re.S)
@@ -330,9 +336,11 @@ def main():
     w("7. THE REGULATOR AS DRAWN: AP2112K-3.3 (Diodes %s), one a supervisor, fed from +5V_IOC (I-03's draft: %.4f to %.4f V)" % (P["ap_rev"], lo5, hi5))
     w("   PRINTED: output current %.0f mA minimum capability; dropout %.0f / %.0f / %.0f mV maximum at 10 / 300 / 600 mA (p.8); input %.1f to %.1f V; ambient to" % (
         P["imax"] * 1000, P["drop"][10] * 1000, P["drop"][300] * 1000, P["drop"][600] * 1000, P["vin"][0], P["vin"][1]))
-    w("   %.0f C (p.3); SOT25 junction to ambient %.0f C/W, no heat sink (p.3); junction %.0f C (absolute maximum, p.3); thermal shutdown %.0f C (TYPICAL);" % (
+    w("   %.0f C (p.3); SOT25 junction to ambient %.0f C/W, no heat sink (p.3); junction %.0f C (absolute maximum, p.3); thermal shutdown %.0f C (TYPICAL" % (
         P["ta_ldo"], P["theta_ldo"], P["tj_ldo"], P["tsd"]))
-    w("   foldback short current %.0f mA (TYPICAL). It drops its whole input to 3.3 V: at the %.4f V maximum, %.4f V times its current" % (P["ishort"] * 1000, hi5, hi5 - 3.3))
+    w("   behaviour, no maximum trip printed: never an acceptance); foldback short current %.0f mA (TYPICAL). It drops its whole input to 3.3 V: at" % (
+        P["ishort"] * 1000))
+    w("   the %.4f V maximum, %.4f V times its current" % (hi5, hi5 - 3.3))
     w("   its THERMAL limit at the %.2f C air: junction %.0f C at %.4f A; %.0f C (this record's criterion, SESSION) at %.4f A: it binds far under the 600 mA" % (
         air, P["tj_ldo"], ceil_i(hi5, P["tj_ldo"]), TJ_GOAL, ceil_i(hi5, TJ_GOAL)))
     rows7 = [("declared typical", d_typ), ("the bounded state", d_bound), ("the declared peak", P["decl"][1]), ("the case's HIGH", d_high), ("the worst nothing forbids", d_worst)]
@@ -405,11 +413,68 @@ def main():
     w("      accuracy between their dropout and 4.3 V (the sheet tests VOUT at 4.3 V and prints line regulation from 4.3 V; the input here is")
     w("      %.4f to %.4f V, inside the printed %.1f to %.1f V supply range). A shared 3.3 V buck with no LDO was not taken: it removes each" % (at600, hi3, P["vin"][0], P["vin"][1]))
     w("      controller's own regulator, on which the architecture's failure domains rest")
+    d_f1 = b_mcu + P["can_fault"] + P["can_rec"] + P["decl_loads"][3]
+    d_f2 = b_mcu + 2 * P["can_fault"] + P["decl_loads"][3]
+    tj_m, tj_f1, tj_f2 = tj_ldo(d_bound_mom, hi3), tj_ldo(d_f1, hi3), tj_ldo(d_f2, hi3)
+    tj_m5, tj_f15, tj_f25 = tj_ldo(d_bound_mom, hi5), tj_ldo(d_f1, hi5), tj_ldo(d_f2, hi5)
+
+    def bound(tj, served):
+        """the owner's rule of 5 October 2026: over 125 C in a state the design must serve, or over 150 C in any state, FAILS"""
+        return "FAILS" if (tj > P["tj_ldo"] or (served and tj > TJ_GOAL)) else "holds"
+    # the three figures kept apart (owner, 5 October 2026): 125 C this record's criterion; 150 C the printed absolute maximum, never
+    # exceeded and never a target; 160 C the shutdown, TYPICAL behaviour with no maximum trip printed, never an acceptance
+    w("      NOT INSIDE THE BOUND, each row judged against its own limit. Three figures kept apart: %.0f C, T10's design criterion (SESSION);" % TJ_GOAL)
+    w("      %.0f C, the AP2112K's printed absolute maximum junction (DS39724 Rev. 2-2, Absolute Maximum Ratings, p.3), never to be exceeded and never" % P["tj_ldo"])
+    w("      an operating target; %.0f C, its thermal shutdown, TYPICAL behaviour only (p.8, no maximum trip printed), which shows no protection below" % P["tsd"])
+    w("      %.0f C and is no acceptance. A row over %.0f C in a state the design must serve, or over %.0f C in any state, FAILS its thermal bound." % (
+        P["tj_ldo"], TJ_GOAL, P["tj_ldo"]))
+    w("      Every junction below is a MODEL figure (the inside air, the printed 184 C/W and the current), never a measured temperature")
+    w("      (m) both transceivers driving dominant, held: %.4f A, junction %.1f C MODEL with the pre-regulator (%.1f C MODEL as drawn). IN T10's" % (
+        d_bound_mom, tj_m, tj_m5))
+    w("          SCOPE: normal traffic sets its average. Against %.0f C: %s at the held figure. A held drive is ended by the parts: the TCAN334's" % (
+        TJ_GOAL, bound(tj_m, True)))
+    w("          driver dominant time-out frees the bus after %.1f to %.1f ms (SLLSEQ7F, tTXD_DTO, PRINTED) and the protocol forces recessive bits" % (
+        P["can_dto"][0], P["can_dto"][2]))
+    w("          (6.3.7, p.20); but the average a supervisor's traffic sets is bounded by no row (FW-B09 bounds the rate, 1 Mbps or less, not the")
+    w("          share), and T10-A2 is judged at the DECLARED %.3f A a transceiver. OPEN DEFECT L9T5-F13: it closes when a contract row bounds each" % (
+        P["decl_loads"][1]))
+    w("          supervisor's transmit share so that its transceivers' average stays at or under that declaration, or when the regulator holds")
+    w("          %.0f C at the bounded share (owners: Layer 5 for the row; board B's generator owner for the declaration). As drawn: %s, L9T5-F06" % (
+        TJ_GOAL, bound(tj_m5, True)))
+    w("      (f1) one fabric faulted, its transceiver driving dominant into the fault (the %.0f mA row's condition: TXD = 0 V, CANH = -12 V, RL open;" % (
+        P["can_fault"] * 1000))
+    w("          SLLSEQ7F 5.5, p.6), the other transceiver recessive: %.4f A, junction %.1f C MODEL (%.1f C MODEL as drawn). Each supervisor has a" % (
+        d_f1, tj_f1, tj_f15))
+    w("          transceiver on each fabric, so the row applies to all three regulators. A FAULT STATE OUTSIDE T10's SCOPE (the steady demand on")
+    w("          C-DEV rev 1) which the design must serve: ARCH-PCB-B-IOHA.md section 12 row 7 ('quorum continues on the other fabric') and its test")
+    w("          A7. Against %.0f C: %s (%s %.0f C). The driver's time-out ends a held TXD, not the controller's repeated attempts, and the current is" % (
+        TJ_GOAL, bound(tj_f1, True), "under" if tj_f1 < P["tj_ldo"] else "OVER", P["tj_ldo"]))
+    w("          %s the %.0f mA capability: no printed limit holds the junction at %.0f C. NO REQUIREMENT COVERS THIS FAULT STATE: REQ-073 covers the" % (
+        "under" if d_f1 < P["imax"] else "OVER", P["imax"] * 1000, TJ_GOAL))
+    w("          other direction (a failed supervisor must not take a fabric down) and REQ-004's acceptance does not name A7; row 7 and A7 read quorum,")
+    w("          not the regulators. OPEN DEFECT L9T5-F16, for Layer 5's owner. A protective response would have to show the dominant drive into the")
+    w("          fault ended (for example the controller's bus-off with no automatic recovery, a firmware row) before the junction passes %.0f C, with" % TJ_GOAL)
+    w("          the service lost stated: that supervisor silent on the faulted fabric, quorum on the other (row 7). As drawn: %s, L9T5-F06 as well" % (
+        bound(tj_f15, True)))
+    w("      (f2) both fabrics faulted, both transceivers driving into their faults: %.4f A, junction %.1f C MODEL (%.1f C MODEL as drawn), on all three" % (
+        d_f2, tj_f2, tj_f25))
+    w("          regulators. A double fault outside T10's scope (row 8, and A7's 'with both broken nothing moves'). Against %.0f C, in any state: %s." % (
+        P["tj_ldo"], bound(tj_f2, False)))
+    w("          The current is %s the capability, so no printed limit acts, and the typical shutdown is no acceptance. NO REQUIREMENT COVERS THIS" % (
+        "under" if d_f2 < P["imax"] else "OVER"))
+    w("          FAULT STATE. OPEN DEFECT L9T5-F17, for Layer 5's owner. A protective response would have to hold each regulator's input off, or")
+    w("          limit its current, before its junction reaches %.0f C, with the service lost stated: both fabrics silent, no majority, the voters at" % (
+        P["tj_ldo"]))
+    w("          the home assignment (row 8); a correction that holds %.0f C at this current is the other route. As drawn: %s" % (
+        P["tj_ldo"], bound(tj_f25, False)))
+    w("      the foldback (the output short's behaviour) acts in no row")
+    FAULT = {"mom": tj_m, "f1": tj_f1, "f2": tj_f2, "d_f1": d_f1, "d_f2": d_f2,
+             "fails": [bound(x, s) for x, s in ((tj_m, True), (tj_f1, True), (tj_f2, False), (tj_m5, True), (tj_f15, True), (tj_f25, False))]}
     k3_ok = K3["the bounded state"] <= TJ_GOAL and K3["the declared peak"] <= TJ_GOAL and d_bound <= ceil_i(hi3, TJ_GOAL)
-    w("   SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION. Why: the state must be bounded under every option, because the controller itself")
-    w("   has no operating point above it (section 4); with the bound the demand is %.4f A, which K2 alone %s (%.1f C) and K3" % (
+    w("   SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION, A DRAFTED CANDIDATE, UNCHECKED. Why: the state must be bounded under every option,")
+    w("   because the controller itself has no operating point above it (section 4); with the bound the demand is %.4f A, which K2 alone %s (%.1f C)" % (
         d_bound, "does not hold" if AS["the bounded state"] > P["tj_ldo"] else "holds without margin", AS["the bounded state"]))
-    w("   holds at %.1f C on a one-resistor change in a draft this record already owns; K1 covers currents the controller cannot draw at this" % K3["the bounded state"])
+    w("   and K3 holds at %.1f C on a one-resistor change in a draft this record already owns; K1 covers currents the controller cannot draw at this" % K3["the bounded state"])
     w("   air and costs three switching stages in board B's tightest area. To reverse: drop apply_gen_sch_?_iocpre.py (the drafts are separate from")
     w("   I-03's) and take K1; it becomes necessary if Layer 5 cannot bound the state or the bench reads the LDOs hotter than the printed figure")
     w("   NOT the owner's: no requirement changes and no money beyond a resistor value. Layer 5's row is its owner's to accept (text below)")
@@ -427,8 +492,9 @@ def main():
     w("   T10-A4 the draft composes in L4-E9's order after I-03's, its divider is read in the regenerated netlist with a mutation that fails, and")
     w("          the declarations it writes are read in the intent (section 9)")
     w("   T10-A5 PHYSICAL, on the first article: each LDO's case temperature at the bounded state in a %.0f C chamber, and each supervisor's supply" % air)
-    w("          current in that state; a supervisor forced out of the bound (a firmware fault) must end in the LDO's thermal shutdown or the")
-    w("          controller's reset with the voters at their default: Layer 5's FMEA row, not shown here")
+    w("          current in that state; a supervisor forced out of the bound (a firmware fault) must be returned inside it by a response that acts")
+    w("          before the LDO's junction reaches %.0f C (the clock read-back's reset or the watchdog), the voters at their default meanwhile and the" % P["tj_ldo"])
+    w("          service lost stated; the LDO's thermal shutdown (%.0f C, TYPICAL, no maximum trip printed) is no acceptance: Layer 5's FMEA row" % P["tsd"])
     w("   LAYER 5'S ROW, TEXT FOR ITS OWNER (HW-FW-CONTRACT.md section 3.3, a new FW-B row; not applied by this record):")
     w("     | FW-Bxx | the supervisors' supply: a private AP2112K-3.3 each from the pre-regulated +5V_IOC (record l9t5 T10) | Run each supervisor at")
     w("       %s with HCLK at most %d MHz (no PLL above it); enable only FDCAN1, FDCAN2, I2C1, the GPIO ports in use and the IWDG; read the clock" % BOUND)
@@ -547,8 +613,18 @@ def main():
     w("   L9T5-F12 (Layer 9's budget, this author's, and rv-pwr's owner): the supervisors' HIGH (%.0f mA) is a state with no operating point at the" % (P["rv"][2] * 1000))
     w("     hot stop's air; once Layer 5 accepts T10-A1 the budget's HIGH for them is the bounded state's figure (%.4f A a supervisor with its" % d_bound)
     w("     auxiliaries), which lowers C-DEV's and every state's device or IOC load; not changed here (a case row's inputs)")
-    w("   L9T5-F13 (board B's generator owner, rv-pwr): the 60 mA declared for a supervisor's other parts is under two TCAN334's printed dominant")
-    w("     current (%.0f mA) and far under their bus-fault row (%.0f mA): a momentary and a fault figure the declarations do not carry" % (2 * P["can_dom_hi"] * 1000, 2 * P["can_fault"] * 1000))
+    w("   L9T5-F13, OPEN DEFECT (Layer 5 for the row; board B's generator owner and rv-pwr for the declaration): the 60 mA declared for a")
+    w("     supervisor's other parts is under two TCAN334's printed dominant current (%.0f mA) and their bus-fault row (%.0f mA); the average a" % (
+        2 * P["can_dom_hi"] * 1000, 2 * P["can_fault"] * 1000))
+    w("     supervisor's traffic sets is bounded by no row, and held at both transceivers' dominant figure the regulator's junction is %.1f C" % FAULT["mom"])
+    w("     MODEL with the pre-regulator, over T10's %.0f C (section 8, (m))" % TJ_GOAL)
+    w("   L9T5-F16, OPEN DEFECT (Layer 5's owner; ARCH-PCB-B-IOHA.md section 12 row 7 and test A7): one CAN fabric faulted puts each of the three")
+    w("     regulators at %.1f C MODEL with the pre-regulator, over the %.0f C criterion in a state the design must serve; no requirement covers" % (
+        FAULT["f1"], TJ_GOAL))
+    w("     this fault state (section 8, (f1))")
+    w("   L9T5-F17, OPEN DEFECT (Layer 5's owner; row 8): both fabrics faulted put each of the three regulators at %.1f C MODEL, over the %.0f C" % (
+        FAULT["f2"], P["tj_ldo"]))
+    w("     absolute maximum; no requirement covers this fault state (section 8, (f2))")
     w("   L9T5-F14 (Layer 6): the order code STM32H743VIT6 admits silicon revisions Y and V, whose printed currents differ (Tables 30 and 129)")
     w("")
     pred = {}
@@ -561,6 +637,9 @@ def main():
         abs(r602 - 13.3e3) < 1e-6 and at600 >= need600)
     pred["with the pre-regulator the regulator is inside the criterion at the bounded state and at its declared peak, not at the case's HIGH"] = (
         k3_ok and K3["the case's HIGH"] > TJ_GOAL)
+    pred["the held dominant and bus-fault rows are judged on their own limits (125 C served, 150 C any state) and all six FAIL them"] = (
+        FAULT["fails"] == ["FAILS"] * 6 and TJ_GOAL < FAULT["mom"] < FAULT["f1"] < P["tj_ldo"] < FAULT["f2"]
+        and FAULT["d_f1"] < FAULT["d_f2"] < P["imax"])
     pred["each T10 draft refuses a target without I-03's draft, applies once after it, refuses twice and refuses the tree"] = len(STEP) == 2 and all(STEP)
     pred["both boards compose with the T10 drafts and read DRAWN, declarations included; the netlist's divider is the selected one"] = (
         all(comp.values()) and kit == "DRAWN" and DECL == {"a": "DRAWN", "b": "DRAWN"} and intent_ok and abs(drawn_r602 - r602) < 1e-6)
