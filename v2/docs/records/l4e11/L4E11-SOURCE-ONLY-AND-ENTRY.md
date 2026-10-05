@@ -3070,7 +3070,8 @@ each set of rules (`r15_states`):
 - **R1:** a gate is tied to its drain tap only while SW_S is open by its OWN state (its drive enable, read continuously) AND the shunt
   reads under 10 mA (the second barrier, for a failed switch). **R2:** SW_S closes only with no gate tied and a gate 10 V under VBAT.
   **R3:** while SW_S is closed the last conducting gate stays conducting (make-before-break). **R4:** SW_B opens only while SW_S is closed
-  and a gate conducts. **R5:** SW_S opens only while SW_B is closed. **R6:** the supply starts only with a path.
+  and a gate conducts. **R5:** SW_S opens only while SW_B is closed. **R6:** the supply starts only with a path. Each of R1 to R5 dropped
+  alone reaches a hazard (R1 and R2 the clamp H1, R3 to R5 the open supply H2); R6 is implied by R4 and R5 and kept as a second barrier.
 - A failed-short SW_S with SW_B closed: the dummy leg holds the pours at 0.112 V at most (22.46 A x 5 mOhm), under the threshold's 0.75 V
   at 150 C (Fig. 11's min curve, V2RF's reading, typical, by eye): no FET takes the heating current, and the reading falls outside its
   calibration (INCONCLUSIVE). With SW_S stuck, R4 and R2 keep SW_B closed.

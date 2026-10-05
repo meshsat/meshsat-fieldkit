@@ -1611,7 +1611,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
 
 23. ROUND 13: DELTA-02, E11-29'S METHOD ON THREE PARALLELED BODY DIODES, AND SECTION 20c ON MURATA'S PRINTED POINTS (4 October 2026; C-PROT rev 1)
    23a. THE DEFECT (the owner's supplier-delta review of 4 October 2026, DELTA-02, P1; NETLIST, MAKER, INFERRED)
-     the draft: cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+     the draft: 4d54739f2813d8c5 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
        draws Q39, Q40 and Q42 by one statement: every gate on CH_BATDRV, every drain on CH_BATQ, every source on VBAT: no terminal has a net of its own
      the part (Nexperia BUK6Y10-30P, 17 April 2020): Table 2 (p.2) pins 1 to 3 source, 4 gate, the mounting base the drain, the symbol's diode
        from drain to source of this P-channel part; the source-drain diode rows IS 80 A (p.3) and VSD 0.7 V typical, 1.2 V at most at 80 A
@@ -1878,13 +1878,14 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      the guard's heater supplies what the passive lead would draw, 0.08 to 0.79 W a lead; it can only heat, so each lead is sized so its own
        self-heating stays under its joint's rise (V8 restated: the guard in control, its output never at zero or full, the pair's logged
        difference within the band; else INCONCLUSIVE and a larger lead)
-   25c. V2RF-m1: THE INTERLOCK ON SW_S'S OWN STATE (a search of every state reachable from rest by single permitted steps)
+   25c. V2RF-m1: THE INTERLOCK ON SW_S'S OWN STATE (a search of every state reachable from rest by single permitted steps; INFERRED)
      round 14's rules (a tie with the shunt under 10 mA; SW_S closing with a gate on): 216 states reachable, 104 hazardous
        H1: a gate on its drain tap with SW_S closed (the clamp: the heating current through a diode-connected FET)
          the nearest path: SW_S open, SW_B closed, supply off, gates off/off/off -> SW_S open, SW_B closed, supply off, gates on/off/off -> SW_S closed, SW_B closed, supply off, gates on/off/off -> SW_S closed, SW_B closed, supply off, gates tie/off/off
        H2: the heating supply on with no path (at its compliance)
          the nearest path: SW_S open, SW_B closed, supply off, gates off/off/off -> SW_S open, SW_B open, supply off, gates off/off/off -> SW_S open, SW_B open, supply on, gates off/off/off
      round 15's rules R1 to R6: 82 states reachable, 0 hazardous
+     each rule dropped alone: R1 H1; R2 H1; R3 H2; R4 H2; R5 H2; R6 no hazard; R6 is implied by R4 and R5 and kept as a second barrier
      a failed-short SW_S with SW_B closed: the leg holds the pours at 0.112 V at most (22.46 A x 5 mOhm), under the threshold's 0.75 V (Fig. 11's
        min curve at 150 C, V2RF's reading, T): no FET takes the heating current, and the reading falls outside its calibration (INCONCLUSIVE)
    25d. V2RF-m2: THE GALVANIC BOUNDARY AND THE CENSUS (PROPOSALS for the supplier's parts; MAKER rows as round 14)
@@ -1895,7 +1896,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      SW_S's clamp at the reading's 3.1 V, under its 20 V standoff row: 1 uA
      with round 14's 28 uA: 34.48 uA, 3.45 % of the sense current; check V3 is repeated in the chamber with every supply, dummy, thermocouple and
        instrument connected as in a run, before the cases and after the last
-   25e. V2RF-m3: SW_S's OPENING (V2RF's inductance and current, MINE in its terms)
+   25e. V2RF-m3: SW_S's OPENING (V2RF's inductance and current, MINE in its terms: an ASSUMPTION here; the clamp's figures SESSION proposals)
      0.6 uH, 8.4 A: 21 uJ
      0.6 uH, 17.4 A: 91 uJ
      1.2 uH, 8.4 A: 42 uJ

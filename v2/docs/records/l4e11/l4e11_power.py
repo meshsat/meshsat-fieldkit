@@ -5799,7 +5799,7 @@ def r15_coupon(s, m_, z17, b, p_alone):
     return dict(B=[b] * 3, Z=Z, z17=[z17] * 3, P=[p_alone] * 3, P17=None)
 
 
-def r15_states(rules):
+def r15_states(rules, drop=()):
     """Every state the fixture can reach from rest by single permitted steps (V2RF-m1): SW_S closed (1) or open, SW_B closed or open, the
     heating supply on or off, each gate off (on VBAT), on (10 V under VBAT) or tie (on its drain tap). rules is 'old' (round 14 as
     written: a tie only with the shunt under 10 mA, SW_S closing only with a gate on) or 'new' (round 15). Returns the reachable states,
@@ -5821,17 +5821,17 @@ def r15_states(rules):
             return True
         if ng != g:
             k = [i for i in range(3) if ng[i] != g[i]][0]
-            if ng[k] == "tie" and (sws or shunt(st)):
+            if "R1" not in drop and ng[k] == "tie" and (sws or shunt(st)):
                 return False                      # R1: a tie only with SW_S open by its own state, and the shunt under 10 mA
-            if g[k] == "on" and sws and sum(1 for x in g if x == "on") == 1:
+            if "R3" not in drop and g[k] == "on" and sws and sum(1 for x in g if x == "on") == 1:
                 return False                      # R3: the last conducting gate stays while SW_S is closed
-        if nsws and not sws and ("tie" in g or "on" not in g):
+        if "R2" not in drop and nsws and not sws and ("tie" in g or "on" not in g):
             return False                          # R2: SW_S closes only with no gate tied and a gate on
-        if not nswb and swb and not (sws and "on" in g):
+        if "R4" not in drop and not nswb and swb and not (sws and "on" in g):
             return False                          # R4: SW_B opens only while SW_S is closed and a gate is on
-        if not nsws and sws and not swb:
+        if "R5" not in drop and not nsws and sws and not swb:
             return False                          # R5: SW_S opens only while SW_B is closed
-        if nsup and not sup and not (swb or (sws and "on" in g)):
+        if "R6" not in drop and nsup and not sup and not (swb or (sws and "on" in g)):
             return False                          # R6: the supply starts only with a path
         return True
     def hazard(st):
@@ -5913,6 +5913,7 @@ def fix25_round(R, T):
     # ---- V2RF-m1: the interlock, by a state search
     S["st_old"] = r15_states("old")
     S["st_new"] = r15_states("new")
+    S["st_drop"] = [(r_, sorted(r15_states("new", (r_,))[2])) for r_ in ("R1", "R2", "R3", "R4", "R5", "R6")]
     if "H1" not in S["st_old"][2] or S["st_new"][1]:
         refuse(4, "the old interlock reaches no hazard, or the new one reaches one")
     S["leg_v"] = i_hi * R14_SW["r_leg"]
@@ -6053,7 +6054,7 @@ def render_fix25(R, p):
       % (fmt(S["a_heat"][0], 2), fmt(S["a_heat"][1], 2)))
     p("       self-heating stays under its joint's rise (V8 restated: the guard in control, its output never at zero or full, the pair's logged")
     p("       difference within the band; else INCONCLUSIVE and a larger lead)")
-    p("   25c. V2RF-m1: THE INTERLOCK ON SW_S'S OWN STATE (a search of every state reachable from rest by single permitted steps)")
+    p("   25c. V2RF-m1: THE INTERLOCK ON SW_S'S OWN STATE (a search of every state reachable from rest by single permitted steps; INFERRED)")
     for nm, lab in (("st_old", "round 14's rules (a tie with the shunt under 10 mA; SW_S closing with a gate on)"),
                     ("st_new", "round 15's rules R1 to R6")):
         seen, bad, paths = S[nm]
@@ -6064,6 +6065,8 @@ def render_fix25(R, p):
                 p("       %s" % why)
                 p("         the nearest path: %s" % " -> ".join("SW_S %s, SW_B %s, supply %s, gates %s" % ("closed" if a else "open", "closed" if b else "open",
                                                                                                       "on" if c else "off", "/".join(g)) for a, b, c, g in path))
+    p("     each rule dropped alone: %s; R6 is implied by R4 and R5 and kept as a second barrier"
+      % "; ".join("%s %s" % (r_, ", ".join(h) if h else "no hazard") for r_, h in S["st_drop"]))
     p("     a failed-short SW_S with SW_B closed: the leg holds the pours at %s V at most (22.46 A x 5 mOhm), under the threshold's %s V (Fig. 11's"
       % (fmt(S["leg_v"], 3), fmt(S["vth_hot_min"], 2)))
     p("       min curve at 150 C, V2RF's reading, T): no FET takes the heating current, and the reading falls outside its calibration (INCONCLUSIVE)")
@@ -6073,7 +6076,7 @@ def render_fix25(R, p):
     p("     with round 14's %s uA: %s uA, %s %% of the sense current; check V3 is repeated in the chamber with every supply, dummy, thermocouple and"
       % (fmt(R["S24"]["sense_sum"] * 1e6, 2), fmt(S["m2_sum"] * 1e6, 2), fmt(S["m2_frac"] * 100, 2)))
     p("       instrument connected as in a run, before the cases and after the last")
-    p("   25e. V2RF-m3: SW_S's OPENING (V2RF's inductance and current, MINE in its terms)")
+    p("   25e. V2RF-m3: SW_S's OPENING (V2RF's inductance and current, MINE in its terms: an ASSUMPTION here; the clamp's figures SESSION proposals)")
     for l_, i_, e_ in S["m3_e"]:
         p("     %s uH, %s A: %s uJ" % (fmt(l_ * 1e6, 1), fmt(i_, 1), fmt(e_ * 1e6, 0)))
     p("     SW_S is solid-state (no relay); a clamp across it (a bidirectional TVS, standoff 20 V or more, clamping under 0.8 of the MOSFETs' VDS")
