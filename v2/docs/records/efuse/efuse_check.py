@@ -31,6 +31,7 @@ import hashlib
 import html
 import importlib.util
 import json
+import math
 import os
 import re
 import shutil
@@ -47,7 +48,10 @@ GEN = {b: "v2/ecad/tools/gen_sch_%s.py" % b for b in "abcdep"}
 GEN_NETLIST = "v2/docs/records/l8p/gen_netlist.py"
 L9PWR_OUT = "v2/docs/records/l9pwr/l9pwr_budget.out"
 L6R2_CAT = "v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json"
-MY_DRAFTS = {"b": ["v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py"]}
+MY_DRAFTS = {"b": ["v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py"],
+             "a": ["v2/docs/records/efuse/apply_gen_sch_a_u23ilm.py"]}
+L4E12_OUT = "v2/docs/records/l4e12/l4e12_thermal.out"     # round 2 (V6-m4): the inside air the downstream ratings are read at
+ASSEMBLY_DRAFT = "v2/docs/records/efuse/apply_assembly_rb_pads.py"
 
 # ------------------------------------------------------------------------------------------------------------ the sheets
 # key: (path in the tree, document and revision, held back (not in git), how to get it). TI's current download of every TI
@@ -150,6 +154,13 @@ QUOTES = {
     "L_RB_DC": ("rb9704", "DC power input pin", "It requires a voltage between 4.0V and 5.3VDC, at a maximum of 500mA."),
     "L_LIME_W": ("lime_page", "Power Supply table", "Maximum Power 4.5 W USB 3.0 power limit"),
     "L_LIME_HOST": ("lime_setup", "Hardware Setup", "supply power (5V, 900 mA) via the USB type-A connector"),
+    # round 2 (V6-m4, V6-m5): each downstream part's range, which includes its own rise, and the RockBLOCK's charge-current pads
+    "C_USB3A_T": ("usb3a", "p.1, general information", "Operating Temperature -20 °C up to +85 °C"),
+    "C_IDC16_T": ("idc16", "p.1, general information", "Operating Temperature -40 up to +105 °C"),
+    "C_RIB16_T": ("ribbon16", "p.1, general information", "Operating Temperature -25 °C up to +105 °C"),
+    "C_RIB16_D": ("ribbon16", "cautions", "current rating may decrease due to the derating effect at higher temperatures"),
+    "L_RB_CHG": ("rb9704", "Charge Current", "The default DC input charge current of the supercapacitors is limited to ~460mA"),
+    "L_RB_CHG_UP": ("rb9704", "Charge Current", "the charge current limit can be increased to ~800mA"),
 }
 
 NUM = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)")
@@ -260,6 +271,15 @@ def figures():
     F["l_rb_dc"] = nums("L_RB_DC")[-1] / 1000.0                  # 0.5 A
     F["l_lime_w"] = nums("L_LIME_W")[0]                          # 4.5 W
     F["l_lime_host"] = nums("L_LIME_HOST")[-1] / 1000.0          # 0.9 A
+    F["t_usb3a"] = nums("C_USB3A_T")[-1]                          # 85 C, the range's top, its own rise included
+    F["t_idc16"] = nums("C_IDC16_T")[-1]                          # 105 C
+    F["t_rib16"] = nums("C_RIB16_T")[-1]                          # 105 C
+    F["l_rb_chg"] = nums("L_RB_CHG")[-1] / 1000.0                 # about 0.46 A
+    F["l_rb_chg_up"] = nums("L_RB_CHG_UP")[-1] / 1000.0           # about 0.80 A with the pads bridged
+    m = re.search(r"E5\s+ambient 60\.0 C; mixed air ([\d.]+) C; in the exhaust ([\d.]+) C", open(os.path.join(ROOT, L4E12_OUT), encoding="utf-8").read())
+    if not m:
+        raise SystemExit("efuse_check: L4-E12's inside air at E5 no longer reads in %s" % L4E12_OUT)
+    F["air"], F["air_exhaust"] = float(m.group(1)), float(m.group(2))
     return F
 
 
@@ -267,14 +287,21 @@ def figures():
 # L4-E9's change list (L4-POWER-ARCHITECTURE.md section 3 at main aa32332c), per board, the rows that name a generator draft,
 # with the drafts record l8r2 composes beside it (l8r2_drafts.py's L8_A and L8_B). Drafts that take a netlist (d8dec31's) and
 # Layer 6's tables (l6r2) change no current-limiting part and are not composed; the parser below confirms it on their text.
+# Round 2 (5 October 2026, V6-m3): the composition is the P0 candidate's full one, in the order record l9t5's l9t5_drafts.py and
+# the independent check V6 composed it: board B gains record l8r2's rounds 7 and 8 (fandec, gndret, gndrtn), record l9t5's I-03 and
+# T10 drafts (iocbuck, iocpre) and T10 round 5's canshdn; board A gains record l8p's thguard after L4-E11's dd7 (dd7 refuses after
+# it), record l9t5's iocbuck and iocpre, and record l8r2's gndrtn. Board B's chain then regenerates whole (round 1 ran it without
+# fans12, EF-O02).
 ORDER = {
     "a": ["l4e6/apply_gen_sch_a_r12.py", "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_a_charger.py",
           "l4e4/apply_gen_sch_a_r11.py", "l4e8/apply_gen_sch_a_bank.py", "l4e4/apply_gen_sch_a_r138.py",
           "l4e9/apply_gen_sch_a_u17.py", "l8gnd/apply_gen_sch_a_gnd002.py", "l8gnd/apply_gen_sch_a_hotr1.py",
           "l8r2/apply_gen_sch_a_d8v3.py", "l8r2/apply_gen_sch_a_vbus20ov.py", "l8r2/apply_gen_sch_a_packrtn.py",
-          "l8r2/apply_gen_sch_a_slotlm.py", "l8r2/apply_gen_sch_a_fb01.py", "l8p/apply_gen_sch_a_ptc.py", "l4e11/apply_gen_sch_a_dd7.py"],
-    "b": ["l8gnd/apply_gen_sch_b_gnd002.py", "l8r2/apply_gen_sch_b_fans12.py", "l8r2/apply_gen_sch_b_panel5v.py",
-          "l8r2/apply_gen_sch_b_ph4.py", "l8r2/apply_gen_sch_b_rt500.py"],
+          "l8r2/apply_gen_sch_a_slotlm.py", "l8r2/apply_gen_sch_a_fb01.py", "l8p/apply_gen_sch_a_ptc.py", "l4e11/apply_gen_sch_a_dd7.py",
+          "l8p/apply_gen_sch_a_thguard.py", "l9t5/apply_gen_sch_a_iocbuck.py", "l9t5/apply_gen_sch_a_iocpre.py", "l8r2/apply_gen_sch_a_gndrtn.py"],
+    "b": ["l8gnd/apply_gen_sch_b_gnd002.py", "l8r2/apply_gen_sch_b_fans12.py", "l8r2/apply_gen_sch_b_fandec.py", "l8r2/apply_gen_sch_b_panel5v.py",
+          "l8r2/apply_gen_sch_b_ph4.py", "l8r2/apply_gen_sch_b_rt500.py", "l8r2/apply_gen_sch_b_gndret.py", "l8r2/apply_gen_sch_b_gndrtn.py",
+          "l9t5/apply_gen_sch_b_iocbuck.py", "l9t5/apply_gen_sch_b_iocpre.py", "l9t5/apply_gen_sch_b_canshdn.py"],
     "e": ["l4e9/apply_gen_sch_e_q1.py", "l4e7/apply_gen_sch_e_u5_grade.py", "l4e7/apply_gen_sch_e_hold.py",
           "l4e7/apply_gen_sch_e_input_limit.py", "l4e7/apply_gen_sch_e_backstop.py", "l4e9/apply_gen_sch_e_f1.py",
           "l4e9/apply_gen_sch_e_hotswap.py", "l4e11/apply_gen_sch_e_entry.py", "l4e7/apply_gen_sch_e_solar_guard.py",
@@ -780,8 +807,10 @@ def judge(inst, F, M, MF, cat, intent, table, MAP):
                 r, rmin, rmax, nom, F["t96_range"][0], F["t96_range"][1])
         else:
             r_lo, r_hi = r_corners(r, tol, tcr)
-            inst["a"] = "PASS" + ("" if r_lo >= rmin and r_hi <= rmax else
-                                  " (EDGE: the resistor's corners %.1f to %.1f Ohm reach past %g to %g Ohm)" % (r_lo, r_hi, rmin, rmax))
+            # round 2 (V6-m6): EF-F01's rule applied at the resistor's corners: a setting whose tolerance and drift take it outside the
+            # recommended 453 to 7869 Ohm is outside the range the sheet prints a band for, as 301 Ohm was (round 1 read it EDGE)
+            inst["a"] = ("PASS" if r_lo >= rmin and r_hi <= rmax else
+                         "FAIL: the resistor's corners %.1f to %.1f Ohm reach outside the recommended %g to %g Ohm (7.3), EF-F01's rule" % (r_lo, r_hi, rmin, rmax))
         lab, lab_txt = label_amps(setting[0]["value"])
         if lab is None:
             inst["d"] = "no label"
@@ -930,6 +959,10 @@ FINDINGS = {
     ("DRAFTED", "b", "U24"): ("EF-F02", "DESIGN DEFECT", "OPEN", "the pending drafts of board B leave U24 as drawn"),
     ("DRAWN", "a", "U18"): ("DR-03", "DESIGN DEFECT (known)", "OPEN", "record l4e4: R138 10 mOhm trips under the 3 A contracts; its "
                             "draft apply_gen_sch_a_r138.py (5 mOhm, L4-E9 R-05) corrects it, DRAFTED"),
+    ("DRAWN", "a", "U23"): ("EF-F03", "DESIGN DEFECT", "OPEN", "V6-m6: R98 453 R, the recommended minimum itself, its corners at 445.8 Ohm "
+                            "outside the range and the band's top over the 2 A rating (round 1's EF-O03, read EDGE); corrected by "
+                            "apply_gen_sch_a_u23ilm.py (511 R), DRAFTED"),
+    ("DRAFTED", "a", "U23"): ("EF-F03", "DESIGN DEFECT", "OPEN", "the pending drafts of board A leave U23 as drawn"),
 }
 
 
@@ -1024,7 +1057,8 @@ def main():
     P("with its board's pending drafts composed in L4-E9's change-list order (out 2); EFUSE = DRAFTED plus this record's two drafts.")
     P("")
     P("0. INPUTS (sha256/16)")
-    ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py"] + MY_DRAFTS["b"]
+    ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py",
+                      L4E12_OUT, ASSEMBLY_DRAFT, "v2/docs/ASSEMBLY.md"] + MY_DRAFTS["b"] + MY_DRAFTS["a"]
                      + ["v2/docs/records/" + x for b in "abep" for x in ORDER[b]] + [v[0] for v in SHEETS.values()]))
     for p in ins:
         h = sha(p)
@@ -1086,6 +1120,11 @@ def main():
                                                          "; the generator run without %s, as above" % drop_eb if drop_eb else ""))
         trees[("EFUSE", "b")] = table
         net_eb = os.path.join(d, os.path.splitext(os.path.basename(p_eb))[0] + ("_without.net" if drop_eb else ".net"))
+        table_a, p_ea, res_ea, drop_ea, _why_ea = runnable("a", d, extra=MY_DRAFTS["a"])
+        P("   board A  then this record's draft: %s%s" % ("; ".join("%s %s" % (os.path.basename(r), v) for r, v in res_ea[-1:]),
+                                                       "; the generator run without %s" % drop_ea if drop_ea else ""))
+        trees[("EFUSE", "a")] = table_a
+        net_ea = os.path.join(d, os.path.splitext(os.path.basename(p_ea))[0] + ("_without.net" if drop_ea else ".net"))
         P("")
         P("2c. EFUSE CALLS READ FROM THE TEXT OF A DRAFT THE GENERATOR CANNOT RUN WITH ON THIS TREE")
         for b, insts in sorted(extra_inst.items()):
@@ -1150,6 +1189,43 @@ def main():
                  "cooler fan slot 1")
         for n in names:
             P("   l9pwr %-26s %s" % (n, "; ".join("%s %g/%g/%g W" % ((s,) + v) for s, v in sorted(L9.get(n, {}).items()))))
+        P("")
+        R0 = {(i["tree"], i["board"], i["ref"]): i for i in rows}
+        P("5b. ROUND 2 (V6-m4): THE DOWNSTREAM RATINGS READ AT THE INSIDE AIR, record l8r2's least-rating method (each sheet's range INCLUDES its")
+        P("   own rise and prints no rise at current and no derating curve: the part may add (top - air) K, and the rise at the printed rating is")
+        P("   taken as the whole span from 25 C to the range's top, the most severe reading the sheet allows; heating as the current squared:")
+        P("   I_air = I_printed x sqrt((top - air) / (top - 25)), MODEL on PRINTED figures; the rating's own ambient is not printed, 25 C is")
+        P("   record l8r2's reading, ASSUMPTION). Air: L4-E12 E5's mixed %.2f C (the case's air; %.2f C in the exhaust)" % (F["air"], F["air_exhaust"]))
+        AIR = {}
+        for ref, conds in (("U23", (("J_LIME, Wurth 692122030100 VBUS contact", F["c_usb3a"], F["t_usb3a"], "C_USB3A, C_USB3A_T"),)),
+                           ("U24", (("J_RB9704's IDC socket contact, Wurth 61201623021", F["c_idc16"], F["t_idc16"], "C_IDC16, C_IDC16_T"),
+                                    ("the 16-way flat cable conductor, Wurth 63911615521CAB", F["c_rib16"], F["t_rib16"], "C_RIB16, C_RIB16_T, C_RIB16_D")))):
+            e = R0[("EFUSE", "b", ref)]
+            need_ = max(x[1] for x in e["demand"])
+            for what, ipr, top, q in conds:
+                ia = ipr * math.sqrt(max(0.0, top - F["air"]) / (top - 25.0))
+                ix = ipr * math.sqrt(max(0.0, top - F["air_exhaust"]) / (top - 25.0))
+                t_need = top - (top - 25.0) * (need_ / ipr) ** 2
+                t_top = top - (top - 25.0) * (e["band"][1] / ipr) ** 2
+                AIR[(ref, what)] = (ia, need_, e["band"][1], t_need, t_top)
+                P("   B %s %s: %.3f A PRINTED, range to %.0f C (%s): %.4f A at %.2f C (%.4f A at %.2f C)" % (
+                    ref, what, ipr, top, q, ia, F["air"], ix, F["air_exhaust"]))
+                P("        against the load's own demand %.4f A: %s; against U%s's band top %.4f A (the most the eFuse passes): %s" % (
+                    need_, "covered" if ia >= need_ else "NOT COVERED", ref[1:], e["band"][1], "covered" if ia >= e["band"][1] else "NOT COVERED"))
+                P("        the largest air at which the rating covers the demand: %.1f C; the band's top: %.1f C (MODEL)" % (t_need, t_top))
+        P("   VENDOR CONDITION (both rows): the makers print no rise at current and no derating curve (the cable sheet only 'current rating")
+        P("   may decrease due to the derating effect at higher temperatures'); the full-span reading above is the most severe the sheets allow.")
+        P("   PROVISIONAL (amendment 1): EF-F01's and EF-F02's (c) hold on the printed ratings at 25 C (section 6) and are PROVISIONAL at the inside")
+        P("   air until the supplier's measurement or a design alternative settles them: the receptacle or harness at the band's top current in a")
+        P("   76 C chamber, the contact temperature at or under the range's top (85 C, 105 C); alternatives: a USB receptacle whose printed")
+        P("   rating holds at the inside air (a range to 105 C or a printed derating curve), or J_LIME placed where the local air is bounded")
+        P("   under the largest air above. No eFuse setting answers U23's row: the LimeSDR's own demand is above the rating's full-span reading.")
+        P("   For U24 the module's printed 0.500 A is covered; only the eFuse's band top is not, and no TPS2596 setting can put its top under the")
+        P("   conductor's reading while its foot stays at 0.500 A (the band's ratio of top to foot is %.3f at R43)" % (R0[("EFUSE", "b", "U24")]["band"][1] / R0[("EFUSE", "b", "U24")]["band"][0]))
+        foot24 = R0[("EFUSE", "b", "U24")]["band"][0]
+        P("   V6-m5, THE ROCKBLOCK'S CHARGE PADS: the supercapacitors' default charge current about %.3f A (L_RB_CHG), about %.3f A with two pads" % (F["l_rb_chg"], F["l_rb_chg_up"]))
+        P("   bridged (L_RB_CHG_UP); U24's foot %.4f A holds the default and NOT the bridged figure: a build condition, the pads OPEN (drafted for" % foot24)
+        P("   ASSEMBLY.md in apply_assembly_rb_pads.py, section 8)")
         P("")
         P("6. THE JUDGEMENT: (a) range, (b) the band's minimum against the demand, and its start-up, (c) the band's maximum against the")
         P("   downstream, with the switch's own continuous rating beside, (d) the label")
@@ -1224,12 +1300,6 @@ def main():
         if "b" in dropped:
             P("   EF-O02  OBSERVATION (record l8r2's owner; known to its round 8 on fnd/l8r4, not on this tree): board B's pending chain does "
               "not regenerate on this tree: %s after %s" % (dropped["b"][1][:110], dropped["b"][0]))
-        a23 = R[("DRAWN", "a", "U23")]
-        alt = t96_band(F, 511.0, 0.01, 100.0)
-        P("   EF-O03  OBSERVATION (board A's generator owner): U23's R98 453 R is the recommended minimum itself; its corners reach "
-          "445.8 Ohm and its band's top %.4f A is above the switch's 2 A continuous rating, as the sheet's own 453 Ohm row is. "
-          "The load at HIGH is %.4f A; 511 R would keep the top at %.4f A (minimum %.4f A). Not drafted: (a) to (c) hold (SESSION)" % (
-              a23["band"][1], max(x[1] for x in a23["demand"]), alt[3], alt[1]))
         a21 = R[("DRAWN", "a", "U21")]
         P("   EF-O04  OBSERVATION (board A's generator owner, Layer 9): U21's band minimum %.4f A clears the monitor's 10 W at VBAT's "
           "9.688 V floor (%.4f A) by %.3f A; the monitor's own start current and input capacitance are not printed (start-up CONDITION)" % (
@@ -1244,7 +1314,7 @@ def main():
               "printed band %.4f to %.4f A straddles 6.8 A, so the text is right only if the cut-off may trip on the panel's 6.8 A "
               "(the record's to state); against PV_P's declared 6.25 A (b) holds" % e21["band"])
         P("")
-        P("8. THIS RECORD'S DRAFTS (EF-F01, EF-F02): composition, the netlist, the mutations, the band on the corrected values")
+        P("8. THIS RECORD'S DRAFTS (EF-F01, EF-F02; round 2: EF-F03 and the ASSEMBLY.md row): composition, the netlist, the mutations, the band")
         for order_name, seq in (("forward", MY_DRAFTS["b"]), ("reverse", MY_DRAFTS["b"][::-1])):
             p, res = compose("b", d, extra=seq)
             P("   %-8s %s" % (order_name, "; ".join("%s %s" % (os.path.basename(r), v) for r, v in res[-2:])))
@@ -1291,6 +1361,48 @@ def main():
                         ok.append((v * dec, bb[1], bb[3]))
             P("   E96 values whose printed band holds %s's (b) %.4f A and (c) %.4f A: %s" % (
                 name, need, cap, ", ".join("%g (%.4f to %.4f A)" % x for x in ok) if ok else "none"))
+        # round 2: board A's draft (EF-F03)
+        p0a = os.path.join(d, "a_alone.py"); shutil.copy(os.path.join(ROOT, GEN["a"]), p0a)
+        alone_a = run_apply(os.path.join(ROOT, MY_DRAFTS["a"][0]), p0a)[0]
+        again_a = run_apply(os.path.join(ROOT, MY_DRAFTS["a"][0]), p0a)[0]
+        tree_a = subprocess.run([sys.executable, "-B", os.path.join(ROOT, MY_DRAFTS["a"][0]), os.path.join(ROOT, GEN["a"]), "--write"],
+                                capture_output=True).returncode
+        P("   EF-F03 (board A): after board A's %d pending drafts: %s; on main's generator alone: exit %d, a second run exit %d; --write on the" % (
+            len(ORDER["a"]), "; ".join("%s %s" % (os.path.basename(r), v) for r, v in res_ea[-1:]), alone_a, again_a))
+        P("   repository's own generator: exit %d (refused until RELEASE.md)" % tree_a)
+        txa = open(net_ea, encoding="utf-8").read()
+        base_a = open(nets[("DRAFTED", "a")], encoding="utf-8").read()
+        needa = max(x[1] for x in M[("a", "U23")]["demand"]); capa = min(x[1] for x in M[("a", "U23")]["down"] + [("own", F["t96_imax"], None)])
+        checks_a = [
+            ("EFUSE netlist, board A U23", check_ilm(txa, F, "U23", "R98", needa, capa), True),
+            ("DRAFTED netlist (no correction), A U23", check_ilm(base_a, F, "U23", "R98", needa, capa), False),
+            ("mutation: R98 back to 453R", check_ilm(mutate_value(txa, "R98", "453R 1% (ILM: 2.0 A)"), F, "U23", "R98", needa, capa), False),
+            ("mutation: R98 to 2k (band under the demand)", check_ilm(mutate_value(txa, "R98", "2k 1% (ILM: 0.46 A)"), F, "U23", "R98", needa, capa), False),
+            ("mutation: R98's GND pin onto +5V_D8", check_ilm(mutate_far_pin(txa, "R98", "+5V_D8"), F, "U23", "R98", needa, capa), False),
+        ]
+        oka = True
+        for name, (ok, why), want in checks_a:
+            good = ok == want; oka &= good
+            P("   %-46s %-5s %s %s" % (name, "PASS" if ok else "FAIL", "(as required)" if good else "(NOT AS REQUIRED)", why))
+        ea = R[("EFUSE", "a", "U23")]
+        P("   board A's U23 on R98 511 R: (a) %s; band %.4f to %.4f A; (b) %s; (c) %s; own: %s" % (ea["a"], ea["band"][0], ea["band"][1], ea["b"], ea["c"], ea["own"]))
+        P("   the netlist reading and its mutations (board A): %s" % ("every check reads as required" if oka else "A CHECK DID NOT READ AS REQUIRED"))
+        okall &= oka
+        ok511 = [(v * dec, t96_band(F, v * dec, 0.01, TCR_DEFAULT)) for dec in (1, 10) for v in e96]
+        ok511 = [(r_, b_[1], b_[3]) for r_, b_ in ok511 if b_[1] is not None and r_corners(r_, 0.01, TCR_DEFAULT)[0] >= F["t96_rilm"][0]
+                 and b_[1] >= needa and b_[3] <= capa]
+        P("   E96 values whose corners stay inside the range and whose printed band holds board A U23's (b) %.4f A and (c) %.4f A: %s" % (
+            needa, capa, ", ".join("%g (%.4f to %.4f A)" % x for x in ok511[:6]) + (" ..." if len(ok511) > 6 else "")))
+        # round 2: the ASSEMBLY.md draft (V6-m5) on a scratch copy
+        pas = os.path.join(d, "ASSEMBLY.md"); shutil.copy(os.path.join(ROOT, "v2", "docs", "ASSEMBLY.md"), pas)
+        before_as = sha("v2/docs/ASSEMBLY.md", 64)
+        r1 = subprocess.run([sys.executable, "-B", os.path.join(ROOT, ASSEMBLY_DRAFT), pas], capture_output=True)
+        r2 = subprocess.run([sys.executable, "-B", os.path.join(ROOT, ASSEMBLY_DRAFT), pas, "--write"], capture_output=True)
+        r3 = subprocess.run([sys.executable, "-B", os.path.join(ROOT, ASSEMBLY_DRAFT), pas, "--write"], capture_output=True)
+        as_ok = r1.returncode == 0 and r2.returncode == 0 and r3.returncode == 3 and "charge-current pads stay OPEN" in open(pas, encoding="utf-8").read() \
+            and sha("v2/docs/ASSEMBLY.md", 64) == before_as
+        P("   apply_assembly_rb_pads.py on a scratch copy of ASSEMBLY.md: check exit %d, written exit %d, a second run exit %d, the tree's page "
+          "untouched: %s" % (r1.returncode, r2.returncode, r3.returncode, "yes" if as_ok else "NO"))
         P("   the variant: no TPS2596-family part has a fixed limit or a range above %g A; the sibling TPS2595xx prints %g to %g A with RILM "
           "%g to %g Ohm (T95_RANGE, T95_RILM) and would be the part for a limit near 3 A; the loads here need at most %.4f A, so the "
           "TPS259631 stays and only its resistor changes" % (F["t96_range"][1], nums("T95_RANGE")[0], nums("T95_RANGE")[1],
@@ -1308,6 +1420,10 @@ def main():
                                                                                                 if i["tree"] == "DRAWN" and i["family"] == "tps2596" and not i["band"])))
         P("   every EFUSE TPS2596 setting inside the range: %s" % ("YES" if all(i["band"] for i in rows if i["tree"] == "EFUSE" and i["family"] == "tps2596") else "NO"))
         P("   unregistered defects: %d; this record's netlist checks as required: %s" % (len(unreg), "YES" if okall else "NO"))
+        P("   round 2: board B's full composition regenerates without a dropped draft: %s; the ASSEMBLY.md draft applies once: %s" % (
+            "YES" if "b" not in dropped and drop_eb is None else "NO", "YES" if as_ok else "NO"))
+        P("   round 2: every EFUSE TPS2596 setting's corners inside the range: %s" % (
+            "YES" if all(i["a"] == "PASS" for i in rows if i["tree"] == "EFUSE" and i["family"] == "tps2596") else "NO"))
     return 0
 
 

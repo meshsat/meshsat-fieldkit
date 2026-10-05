@@ -3,6 +3,9 @@ Prototype design, desk arithmetic: nothing built, bought, powered or measured. D
 with its board's pending drafts composed in L4-E9's change-list order (out 2); EFUSE = DRAFTED plus this record's two drafts.
 
 0. INPUTS (sha256/16)
+   29dbe3a0c4938274 v2/docs/ASSEMBLY.md
+   9ab531dfb084dd04 v2/docs/records/efuse/apply_assembly_rb_pads.py
+   dca5375abe156e86 v2/docs/records/efuse/apply_gen_sch_a_u23ilm.py
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
    0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py
@@ -10,6 +13,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
    a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
+   3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
@@ -29,20 +33,30 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    cbc0970ce1540e44 v2/docs/records/l8gnd/apply_gen_sch_a_hotr1.py
    74937ea4717a9556 v2/docs/records/l8gnd/apply_gen_sch_b_gnd002.py
    cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
+   544a462a9031862a v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
    e8f1294bb0f76c75 v2/docs/records/l8p/apply_gen_sch_p_breaker.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    98094838eff5ceea v2/docs/records/l8r2/apply_gen_sch_a_d8v3.py
    ea95bd293e44676a v2/docs/records/l8r2/apply_gen_sch_a_fb01.py
+   4adb13047770eb1c v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py
    da98e9d508d8146d v2/docs/records/l8r2/apply_gen_sch_a_packrtn.py
    fc487ab269d2f758 v2/docs/records/l8r2/apply_gen_sch_a_slotlm.py
    c2d16dba8dc5204f v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py
+   f6381296fc8ad657 v2/docs/records/l8r2/apply_gen_sch_b_fandec.py
    cb03ff040b0ef784 v2/docs/records/l8r2/apply_gen_sch_b_fans12.py
+   8b68f596a809ad54 v2/docs/records/l8r2/apply_gen_sch_b_gndret.py
+   b9048dcbb1ff023f v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py
    3d2750a188913fef v2/docs/records/l8r2/apply_gen_sch_b_panel5v.py
    576eefdf4ce0026a v2/docs/records/l8r2/apply_gen_sch_b_ph4.py
    c81cd7ffa60561fe v2/docs/records/l8r2/apply_gen_sch_b_rt500.py
    858611469545569c v2/docs/records/l8r2/apply_gen_sch_e_packrtn.py
    1a16512cf330900d v2/docs/records/l9pwr/l9pwr_budget.out
+   69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
+   8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
+   72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
+   ac1c6f82805048b0 v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py
+   877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
@@ -93,19 +107,25 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    tps4811    TI SLUSEE5E (TPS4811-Q1, January 2022, revised April 2026) [held back by its notice; fetch: v2/docs/records/l4e11/fetch_held_back.py]
    usb3a      Wurth WR-COM 692122030100 (USB 3.0 type A receptacle)
    C_IDC16       VERIFIED     idc16: "Rated Current IR 1 A max." (p.1, electrical properties)
+   C_IDC16_T     VERIFIED     idc16: "Operating Temperature -40 up to +105 °C" (p.1, general information)
    C_IDC26       VERIFIED     idc26: "Rated Current IR 1 A max." (p.1, electrical properties)
    C_PH          VERIFIED     jst_ph: "Current rating: 2 A AC/DC (AWG #24)" (specifications)
    C_RIB16       VERIFIED     ribbon16: "Rated Current IR 1 A max." (p.1, electrical properties)
+   C_RIB16_D     VERIFIED     ribbon16: "current rating may decrease due to the derating effect at higher temperatures" (cautions)
+   C_RIB16_T     VERIFIED     ribbon16: "Operating Temperature -25 °C up to +105 °C" (p.1, general information)
    C_RIB26       VERIFIED     ribbon26: "Rated Current IR 1 A max." (p.1, electrical properties)
    C_SH          VERIFIED     jst_sh: "Current rating: 1.0 A AC/DC(AWG #28)" (specifications)
    C_USB3A       VERIFIED     usb3a: "Rated Current IR 1.8 A max." (p.1, electrical properties)
    C_USB3A_R     VERIFIED     usb3a: "Contact Resistance R 30 mΩ max." (p.1, electrical properties)
+   C_USB3A_T     VERIFIED     usb3a: "Operating Temperature -20 °C up to +85 °C" (p.1, general information)
    C_VH          VERIFIED     jst_vh: "Current rating: 10 A AC/DC" (specifications)
    L69_VCB       VERIFIED     lm5069: "VCB Threshold voltage VIN to SENSE 80 105 130 mV" (p.6, 7.5 Circuit breaker)
    L69_VCL       VERIFIED     lm5069: "VCL Threshold voltage VIN-SENSE voltage 48.5 55 61.5 mV" (p.6, 7.5 Current limit)
    L69_VIN       VERIFIED     lm5069: "VIN Supply voltage 9 80 V" (p.5, 7.3 Recommended Operating Conditions)
    L_LIME_HOST   VERIFIED     lime_setup: "supply power (5V, 900 mA) via the USB type-A connector" (Hardware Setup)
    L_LIME_W      VERIFIED     lime_page: "Maximum Power 4.5 W USB 3.0 power limit" (Power Supply table)
+   L_RB_CHG      VERIFIED     rb9704: "The default DC input charge current of the supercapacitors is limited to ~460mA" (Charge Current)
+   L_RB_CHG_UP   VERIFIED     rb9704: "the charge current limit can be increased to ~800mA" (Charge Current)
    L_RB_DC       VERIFIED     rb9704: "It requires a voltage between 4.0V and 5.3VDC, at a maximum of 500mA." (DC power input pin)
    T22_IMAX      VERIFIED     tps22810: "Maximum continuous switch current, TA = 65°C (DRV) 3" (p.5, 7.3 Recommended Operating Conditions)
    T22_TITLE     VERIFIED     tps22810: "Load Switch With Thermal Protection" (p.1, title)
@@ -148,7 +168,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    T96_ROW_909   VERIFIED     tps2596: "RILM = 909 Ω, VDS = 0.5 V 0.949 1.005 1.051 A" (p.6, 7.5 ILIM)
    T96_VARIANT   VERIFIED     tps2596: "TPS259631 Adjustable OVLO Auto-retry" (p.3, 5 Device Comparison Table)
    T96_VIN       VERIFIED     tps2596: "VIN Input Voltage Range IN 2.7 19" (p.5, 7.3 Recommended Operating Conditions)
-   quotes: 56 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND
+   quotes: 62 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND
    parsed: TPS2596 RILM 453 to 7869 Ohm, 0.125 to 2 A, +-10.4 % across the range, 2 A continuous, VIN 2.7 to 19 V, Equation 5 ILIM = 903 / RILM + 0.0112; rows 7870 Ohm 0.113 / 0.125 / 0.139 A; 3830 Ohm 0.224 / 0.247 / 0.269 A; 909 Ohm 0.949 / 1.005 / 1.051 A; 453 Ohm 1.83 / 2.004 / 2.147 A; RON 0.131 Ohm (VIN > 4 V, TJ to 125 C); IDVDT 1.89e-06/2.11e-06/2.33e-06 A, GDVDT 20.31/20.93/21.5
    parsed: TPS2065C IOS 1.2 / 1.55 / 1.9 A, 1 A continuous; TPS22810 3 A continuous, no limit; LM5069 VCL (0.0485, 0.055, 0.0615) V, VCB (0.08, 0.105, 0.13) V, VIN 9 to 80 V;
            TPS23861 RS (0.255, 0.25) Ohm, ICUT(110) (0.15627000000000002, 0.1645, 0.17272) V, VLIM2X(1 V) (0.26, 0.2703, 0.285) V; TPS25740A VI(TRIP) (0.0192, 0.022600000000000002) / (0.029, 0.034) V; TPS1663 I(OL) = 18 / R(kOhm), 0.6 to 6 A (+-7 %), rows 30000 Ohm 0.54 / 0.6 / 0.66 A; 9000 Ohm 1.84 / 2 / 2.16 A; 4020 Ohm 4.185 / 4.5 / 4.815 A; 3000 Ohm 5.58 / 6 / 6.42 A; TPS4811 V(SNS_WRN) (0.0292, 0.030600000000000002, 0.0315) V at (100.0, 39700.0)
@@ -172,13 +192,21 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    board A  l8r2/apply_gen_sch_a_fb01.py                 OK
    board A  l8p/apply_gen_sch_a_ptc.py                   OK
    board A  l4e11/apply_gen_sch_a_dd7.py                 OK
+   board A  l8p/apply_gen_sch_a_thguard.py               OK
+   board A  l9t5/apply_gen_sch_a_iocbuck.py              OK
+   board A  l9t5/apply_gen_sch_a_iocpre.py               OK
+   board A  l8r2/apply_gen_sch_a_gndrtn.py               OK
    board B  l8gnd/apply_gen_sch_b_gnd002.py              OK
    board B  l8r2/apply_gen_sch_b_fans12.py               OK
+   board B  l8r2/apply_gen_sch_b_fandec.py               OK
    board B  l8r2/apply_gen_sch_b_panel5v.py              OK
    board B  l8r2/apply_gen_sch_b_ph4.py                  OK
    board B  l8r2/apply_gen_sch_b_rt500.py                OK
-   board B  THE COMPOSED GENERATOR REFUSES: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same current as the peak: correct one of them.
-   board B  it runs without l8r2/apply_gen_sch_b_fans12.py; that draft's eFuse calls are read from its text (2c) and judged on their values
+   board B  l8r2/apply_gen_sch_b_gndret.py               OK
+   board B  l8r2/apply_gen_sch_b_gndrtn.py               OK
+   board B  l9t5/apply_gen_sch_b_iocbuck.py              OK
+   board B  l9t5/apply_gen_sch_b_iocpre.py               OK
+   board B  l9t5/apply_gen_sch_b_canshdn.py              OK
    board C  no pending generator draft names a current-limiting part (section 2b's parse)
    board D  no pending generator draft names a current-limiting part (section 2b's parse)
    board E  l4e9/apply_gen_sch_e_q1.py                   OK
@@ -194,12 +222,11 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    board E  l8r2/apply_gen_sch_e_packrtn.py              OK
    board E  l8p/apply_gen_sch_e_enable.py                OK
    board P  l8p/apply_gen_sch_p_breaker.py               OK
-   board B  then this record's drafts: apply_gen_sch_b_u23ilm.py OK; apply_gen_sch_b_u24ilm.py OK; the generator run without l8r2/apply_gen_sch_b_fans12.py, as above
+   board B  then this record's drafts: apply_gen_sch_b_u23ilm.py OK; apply_gen_sch_b_u24ilm.py OK
+   board A  then this record's draft: apply_gen_sch_a_u23ilm.py OK
 
 2c. EFUSE CALLS READ FROM THE TEXT OF A DRAFT THE GENERATOR CANNOT RUN WITH ON THIS TREE
-   board B  l8r2/apply_gen_sch_b_fans12.py: U702 CFAN1_12V -> CFAN1_V, ILM R706 1.87k 1% (ILM: 0.49 A)
-   board B  l8r2/apply_gen_sch_b_fans12.py: U732 CFAN2_12V -> CFAN2_V, ILM R736 1.87k 1% (ILM: 0.49 A)
-   board B  l8r2/apply_gen_sch_b_fans12.py: U762 CFAN3_12V -> CFAN3_V, ILM R766 1.87k 1% (ILM: 0.49 A)
+   none
 
 2b. EVERY apply_gen_sch_*.py UNDER v2/docs/records ON THIS TREE, parsed (ast over its string constants) for a current-limiting part
    l4e11/apply_gen_sch_a_charger.py                 names TPS16630, TPS16630PWPR
@@ -209,7 +236,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    l4e7/apply_gen_sch_e_solar_guard.py              names TPS48110, TPS48110AQDGXRQ1
    l4e9/apply_gen_sch_e_hotswap.py                  names LM5069MM-2
    l8p/apply_gen_sch_a_ptc.py                       names LM5069-1
-   l8p/apply_gen_sch_a_thguard.py                   names LM5069-1  (not composed: see the README)
+   l8p/apply_gen_sch_a_thguard.py                   names LM5069-1
    l8p/apply_gen_sch_p_breaker.py                   names LM5069-1, LM5069MM-1
    l8p/apply_gen_sch_p_idealdiode.py                names LM5069MM-1  (not composed: see the README)
    l8r2/apply_gen_sch_a_d8v3.py                     names TPS259631
@@ -237,13 +264,14 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    DRAFTED A U42   TPS16630PWPR   tps1663   code none       (none) VBAT -> VSYS_DOCK; setting R228 11k 0.1%; rail VSYS_DOCK (typ 1.32, peak 1.32 A)
    DRAFTED A U18   TPS25740ARGER  tps25740  code C544309    (the generator) PD_SW -> PD_VBUS; setting R138 5mOhm 1% 2512 (ISNS); rail -
    DRAFTED A U44   TPS259631DDAR  tps2596   code C2155778   (the generator) +3V3 -> +3V3_A2D; setting R234 3.83k 1% (ILM: 0.247 A); rail +3V3_A2D (typ 0.06, peak 0.1 A)
+   DRAFTED B U702  TPS259631DDAR  tps2596   code C2155778   (the generator) CFAN1_12V -> CFAN1_V; setting R706 1.87k 1% (ILM: 0.49 A); rail CFAN1_V (typ 0.22, peak 0.54 A)
+   DRAFTED B U732  TPS259631DDAR  tps2596   code C2155778   (the generator) CFAN2_12V -> CFAN2_V; setting R736 1.87k 1% (ILM: 0.49 A); rail CFAN2_V (typ 0.22, peak 0.54 A)
+   DRAFTED B U762  TPS259631DDAR  tps2596   code C2155778   (the generator) CFAN3_12V -> CFAN3_V; setting R766 1.87k 1% (ILM: 0.49 A); rail CFAN3_V (typ 0.22, peak 0.54 A)
    DRAFTED B U901  TPS259631DDAR  tps2596   code C2155778   (the generator) +5V_DEV -> PANEL_5V_EF; setting R901 604R 1% (ILM: 1.506 A); rail PANEL_5V_EF (typ 0.6, peak 1.0 A)
-   DRAFTED B U702  TPS259631DDAR  tps2596   code C2155778   (the draft's helper) CFAN1_12V -> CFAN1_V; setting R706 1.87k 1% (ILM: 0.49 A); rail -
-   DRAFTED B U732  TPS259631DDAR  tps2596   code C2155778   (the draft's helper) CFAN2_12V -> CFAN2_V; setting R736 1.87k 1% (ILM: 0.49 A); rail -
-   DRAFTED B U762  TPS259631DDAR  tps2596   code C2155778   (the draft's helper) CFAN3_12V -> CFAN3_V; setting R766 1.87k 1% (ILM: 0.49 A); rail -
    DRAFTED E U6    TPS48110AQDGXRQ1 tps4811   code C17556513  (the generator) DC_P -> HS_S; setting R19 4.5mOhm 1% 2512 3W 50ppm (entry sense: 30.6 mV at the breaker, L4-E11); rail VIN_RAW (typ 14.1, peak 14.1 A)
    DRAFTED E U21   TPS48110AQDGXRQ1 tps4811   code C17556513  (the generator) PV_F -> PV_SNS; setting R87 4.5mOhm 1% 2512 3W 50ppm (panel cut-off sense: its breaker at 6.36 to 7.14 A, over the panel's 6.8 A); rail PV_P (typ 5.68, peak 6.25 A)
    DRAFTED P U101  LM5069MM-1     lm5069    code none       (none) BRK_VIN -> PACK_P; setting R101 4m 1% 2512 (breaker sense, at most 50 ppm/K; 2 W at the band's temperature, E-6), R102 7.5m 1% 2512 (breaker sense, at most 50 ppm/K; 2 W at the band's temperature, E-6); rail PACK_P (typ 10.0, peak 18.0 A)
+   EFUSE   A U23   TPS259631DDAR  tps2596   code C2155778   (the generator) +5V_D8IN -> +5V_D8; setting R98 511R 1% (ILM: 1.8 A); rail +5V_D8 (typ 1.0, peak 2.0 A)
    EFUSE   B U23   TPS259631DDAR  tps2596   code C2155778   (the generator) +5V_DEV -> +5V_LIME; setting R36 750R 1% (ILM: 1.2 A); rail +5V_LIME (typ 1.2, peak 3.0 A)
    EFUSE   B U24   TPS259631DDAR  tps2596   code C2155778   (the generator) +5V_DEV -> +5V_RB; setting R43 1.21k 1% (ILM: 0.76 A); rail +5V_RB (typ 0.15, peak 2.0 A)
 
@@ -280,20 +308,22 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
                       setting 0.005 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
    DRAFTED A U44   tps2596   0.2206 / 0.2470 / 0.2732 A         PRINTED ROW T96_ROW_3830
                       setting 3830 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the row's min and max scaled by the resistor's corners (proportional scaling INFERRED)
-   DRAFTED B U901  tps2596   1.3284 / 1.5062 / 1.6896 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
-                      setting 604 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 8.7 % (INFERRED band 1.3535 to 1.6637 A)
    DRAFTED B U702  tps2596   0.4359 / 0.4941 / 0.5541 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
                       setting 1870 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 9.3 % (INFERRED band 0.4412 to 0.5486 A)
    DRAFTED B U732  tps2596   0.4359 / 0.4941 / 0.5541 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
                       setting 1870 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 9.3 % (INFERRED band 0.4412 to 0.5486 A)
    DRAFTED B U762  tps2596   0.4359 / 0.4941 / 0.5541 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
                       setting 1870 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 9.3 % (INFERRED band 0.4412 to 0.5486 A)
+   DRAFTED B U901  tps2596   1.3284 / 1.5062 / 1.6896 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
+                      setting 604 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 8.7 % (INFERRED band 1.3535 to 1.6637 A)
    DRAFTED E U6    tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5); the short-circuit trip by Equation 11 with I(ISCP) 13.7 to 17.6 uA over RISCP R81 3010 Ohm: 10.38 to 13.84 A (INFERRED: RISCP is not a printed point and the comparator's own offset is not printed apart; not judged here)
                       setting 0.0045 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
    DRAFTED E U21   tps4811   6.4054 / 6.8000 / 7.0920 A         PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5); the short-circuit trip by Equation 11 with I(ISCP) 13.7 to 17.6 uA over RISCP R89 3010 Ohm: 10.38 to 13.84 A (INFERRED: RISCP is not a printed point and the comparator's own offset is not printed apart; not judged here)
                       setting 0.0045 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
    DRAFTED P U101  lm5069    18.3525 / 21.0833 / 23.8848 A      PRINTED VCL / RS (7.5); the circuit breaker at VCB: 30.27 to 50.49 A; C-PROT rev 1's band 18.32 to 23.93 A takes the resistors at the band's own temperature (l9stk)
                       setting 0.0026087 Ohm, 1.0 %, 50 ppm/K (the value text or SENSE_TCR)
+   EFUSE   A U23   tps2596   1.5684 / 1.7783 / 1.9949 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
+                      setting 511 Ohm, 1.0 %, 100 ppm/K (ASSUMPTION A-TCR); the bracketing rows' worst deviation is 8.7 % (INFERRED band 1.5980 to 1.9643 A)
    EFUSE   B U23   tps2596   1.0718 / 1.2152 / 1.3631 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
                       setting 750 Ohm, 1.0 %, 100 ppm/K (l6r2's catalogue reading of C23241 (±100ppm/℃)); the bracketing rows' worst deviation is 8.7 % (INFERRED band 1.0920 to 1.3422 A)
    EFUSE   B U24   tps2596   0.6681 / 0.7575 / 0.8496 A         PRINTED RANGE-WIDE +-10.4 % (Figure 21: across process, voltage and temperature)
@@ -345,10 +375,6 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         demand 0.1000 A  [D] the generator's declared peak of +3V3_A2D (D)
         rating 1.000 A  J_MEZZ1 pin 13, one IDC contact of the 2x8 harness (Wurth 61201623021) (C_IDC16, VERIFIED)
         rating 1.000 A  one conductor of the 16-way flat cable (Wurth 63911615521CAB) (C_RIB16, VERIFIED)
-   B U901  tps2596   case C-DEV rev 1; load board C's 5 V over the panel ribbon (record l8r2's draft)
-        demand 1.0494 A  [D] l9pwr's 'panel board C' row at HIGH, 5.00 W at 4.9019 V behind U901
-        rating 2.000 A  J_PANEL pins 1 and 2, two IDC contacts (Wurth 61202623021) at 1 A each, sharing ASSUMED even (C_IDC26, VERIFIED)
-        rating 2.000 A  two conductors of the 26-way flat cable (Wurth 63912615521CAB) at 1 A each, sharing ASSUMED even (C_RIB26, VERIFIED)
    B U702  tps2596   case the cooler's 12 V lead; load cooler fan of slot 1 on J_FAN1 (JST SH; record l8r2's draft)
         demand 0.1911 A  [R] l9pwr's cooler row at HIGH (2.75 W at the step-up's input, l8r2's envelope) x 0.80 / 11.51 V
         rating 1.000 A  J_FAN1, JST SH (C_SH, VERIFIED)
@@ -358,6 +384,10 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    B U762  tps2596   case the cooler's 12 V lead; load cooler fan of slot 3 on J_FAN3 (JST SH; record l8r2's draft)
         demand 0.1911 A  [R] l9pwr's cooler row at HIGH (2.75 W at the step-up's input, l8r2's envelope) x 0.80 / 11.51 V
         rating 1.000 A  J_FAN3, JST SH (C_SH, VERIFIED)
+   B U901  tps2596   case C-DEV rev 1; load board C's 5 V over the panel ribbon (record l8r2's draft)
+        demand 1.0494 A  [D] l9pwr's 'panel board C' row at HIGH, 5.00 W at 4.9019 V behind U901
+        rating 2.000 A  J_PANEL pins 1 and 2, two IDC contacts (Wurth 61202623021) at 1 A each, sharing ASSUMED even (C_IDC26, VERIFIED)
+        rating 2.000 A  two conductors of the 26-way flat cable (Wurth 63912615521CAB) at 1 A each, sharing ASSUMED even (C_RIB26, VERIFIED)
    E U6    tps4811   case C-SHORE rev 1 (L4-E11 19e, DD-3); load VIN_RAW: the vehicle and shore entry into board A
         demand 5.9830 A  [CITED] L4-E9 IF-07 with the corrected knee: the in-service maximum 5.983 A from a 9.00 V plug (CITED, record l4e9)
         rating 7.300 A  F1's 80 C column (L4-E11's entry draft's reading of the Littelfuse 997 sheet; CITED, not re-read)
@@ -374,6 +404,33 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    l9pwr board D (SA868 and logic)  PS-ALLTX 3/3.3/3.3 W; PS-BUSY 0.8/0.8/0.8 W; PS-EMCON 0.6/0.6/0.6 W; PS-IDLE 0.6/0.6/0.6 W; PS-IDLE-SPEC 0.6/0.6/0.6 W; PS-RED (slot 3 alone) 0.6/0.6/0.6 W; PS-RED-b 0.6/0.6/0.6 W; PS-RED2 (slots 2 and 3) 0.6/0.6/0.6 W; PS-SURV (slot 2 alone) 0.2/0.2/0.2 W; PS-SURV-R (the heat stage) 0.6/0.6/0.6 W; PS-TYP 0.8/0.8/0.8 W
    l9pwr panel board C              PS-ALLTX 5/5/5 W; PS-BUSY 3/3/5 W; PS-EMCON 3/3/5 W; PS-IDLE 1.5/1.5/5 W; PS-IDLE-SPEC 1.5/1.5/5 W; PS-RED (slot 3 alone) 1.5/1.5/5 W; PS-RED-b 1.5/1.5/5 W; PS-RED2 (slots 2 and 3) 1.5/1.5/5 W; PS-SURV (slot 2 alone) 1.5/1.5/5 W; PS-SURV-R (the heat stage) 1.5/1.5/5 W; PS-TYP 3/3/5 W
    l9pwr cooler fan slot 1          PS-ALLTX 0.36/0.51/2.75 W; PS-BUSY 0.36/0.51/2.75 W; PS-EMCON 0.36/0.51/2.75 W; PS-IDLE 0.36/0.51/2.75 W; PS-IDLE-SPEC 0.36/0.51/2.75 W; PS-RED-b 0.36/0.51/2.75 W; PS-TYP 0.36/0.51/2.75 W
+
+5b. ROUND 2 (V6-m4): THE DOWNSTREAM RATINGS READ AT THE INSIDE AIR, record l8r2's least-rating method (each sheet's range INCLUDES its
+   own rise and prints no rise at current and no derating curve: the part may add (top - air) K, and the rise at the printed rating is
+   taken as the whole span from 25 C to the range's top, the most severe reading the sheet allows; heating as the current squared:
+   I_air = I_printed x sqrt((top - air) / (top - 25)), MODEL on PRINTED figures; the rating's own ambient is not printed, 25 C is
+   record l8r2's reading, ASSUMPTION). Air: L4-E12 E5's mixed 76.25 C (the case's air; 81.89 C in the exhaust)
+   B U23 J_LIME, Wurth 692122030100 VBUS contact: 1.800 A PRINTED, range to 85 C (C_USB3A, C_USB3A_T): 0.6874 A at 76.25 C (0.4098 A at 81.89 C)
+        against the load's own demand 0.9534 A: NOT COVERED; against U23's band top 1.3631 A (the most the eFuse passes): NOT COVERED
+        the largest air at which the rating covers the demand: 68.2 C; the band's top: 50.6 C (MODEL)
+   B U24 J_RB9704's IDC socket contact, Wurth 61201623021: 1.000 A PRINTED, range to 105 C (C_IDC16, C_IDC16_T): 0.5995 A at 76.25 C (0.5375 A at 81.89 C)
+        against the load's own demand 0.5000 A: covered; against U24's band top 0.8496 A (the most the eFuse passes): NOT COVERED
+        the largest air at which the rating covers the demand: 85.0 C; the band's top: 47.3 C (MODEL)
+   B U24 the 16-way flat cable conductor, Wurth 63911615521CAB: 1.000 A PRINTED, range to 105 C (C_RIB16, C_RIB16_T, C_RIB16_D): 0.5995 A at 76.25 C (0.5375 A at 81.89 C)
+        against the load's own demand 0.5000 A: covered; against U24's band top 0.8496 A (the most the eFuse passes): NOT COVERED
+        the largest air at which the rating covers the demand: 85.0 C; the band's top: 47.3 C (MODEL)
+   VENDOR CONDITION (both rows): the makers print no rise at current and no derating curve (the cable sheet only 'current rating
+   may decrease due to the derating effect at higher temperatures'); the full-span reading above is the most severe the sheets allow.
+   PROVISIONAL (amendment 1): EF-F01's and EF-F02's (c) hold on the printed ratings at 25 C (section 6) and are PROVISIONAL at the inside
+   air until the supplier's measurement or a design alternative settles them: the receptacle or harness at the band's top current in a
+   76 C chamber, the contact temperature at or under the range's top (85 C, 105 C); alternatives: a USB receptacle whose printed
+   rating holds at the inside air (a range to 105 C or a printed derating curve), or J_LIME placed where the local air is bounded
+   under the largest air above. No eFuse setting answers U23's row: the LimeSDR's own demand is above the rating's full-span reading.
+   For U24 the module's printed 0.500 A is covered; only the eFuse's band top is not, and no TPS2596 setting can put its top under the
+   conductor's reading while its foot stays at 0.500 A (the band's ratio of top to foot is 1.272 at R43)
+   V6-m5, THE ROCKBLOCK'S CHARGE PADS: the supercapacitors' default charge current about 0.460 A (L_RB_CHG), about 0.800 A with two pads
+   bridged (L_RB_CHG_UP); U24's foot 0.6681 A holds the default and NOT the bridged figure: a build condition, the pads OPEN (drafted for
+   ASSEMBLY.md in apply_assembly_rb_pads.py, section 8)
 
 6. THE JUDGEMENT: (a) range, (b) the band's minimum against the demand, and its start-up, (c) the band's maximum against the
    downstream, with the switch's own continuous rating beside, (d) the label
@@ -396,8 +453,8 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         (d) PASS: '1.0 A' is the nominal 1.0046 A rounded
         (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 41.0 uF for the load's own input capacitance beside the board's 10.1 uF, the load drawing 0.650 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
         (own) the switch's continuous 2 A: within
-   DRAWN   A U23   tps2596   PASS
-        (a) PASS (EDGE: the resistor's corners 445.8 to 460.3 Ohm reach past 453 to 7869 Ohm)
+   DRAWN   A U23   tps2596   DEFECT (a)
+        (a) FAIL: the resistor's corners 445.8 to 460.3 Ohm reach outside the recommended 453 to 7869 Ohm (7.3), EF-F01's rule
         (b) PASS: 1.801 A >= 0.686 A (margin +1.115 A)
         (c) PASS: 2.182 A <= 10.000 A (J_MEZZ_PWR1, JST VH)
         (d) PASS: '2.0 A' is the nominal 2.0046 A rounded
@@ -487,30 +544,33 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         (d) PASS: '0.247 A' is the nominal 0.2470 A rounded
         (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 21.7 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 0.100 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
         (own) the switch's continuous 2 A: within
-   DRAFTED B U901  tps2596   PASS
-        (a) PASS
-        (b) PASS: 1.328 A >= 1.049 A (margin +0.279 A)
-        (c) PASS: 1.690 A <= 2.000 A (J_PANEL pins 1 and 2, two IDC contacts (Wurth 61202623021) at 1 A each, sharing ASSUMED even)
-        (d) PASS: '1.506 A' is the nominal 1.5062 A rounded
-        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 50.1 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 1.049 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
-        (own) the switch's continuous 2 A: within
    DRAFTED B U702  tps2596   PASS
         (a) PASS
         (b) PASS: 0.436 A >= 0.191 A (margin +0.245 A)
         (c) PASS: 0.554 A <= 1.000 A (J_FAN1, JST SH)
         (d) PASS: '0.49 A' is the nominal 0.4941 A rounded
+        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 44.0 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 0.191 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
         (own) the switch's continuous 2 A: within
    DRAFTED B U732  tps2596   PASS
         (a) PASS
         (b) PASS: 0.436 A >= 0.191 A (margin +0.245 A)
         (c) PASS: 0.554 A <= 1.000 A (J_FAN2, JST SH)
         (d) PASS: '0.49 A' is the nominal 0.4941 A rounded
+        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 44.0 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 0.191 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
         (own) the switch's continuous 2 A: within
    DRAFTED B U762  tps2596   PASS
         (a) PASS
         (b) PASS: 0.436 A >= 0.191 A (margin +0.245 A)
         (c) PASS: 0.554 A <= 1.000 A (J_FAN3, JST SH)
         (d) PASS: '0.49 A' is the nominal 0.4941 A rounded
+        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 44.0 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 0.191 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
+        (own) the switch's continuous 2 A: within
+   DRAFTED B U901  tps2596   PASS
+        (a) PASS
+        (b) PASS: 1.328 A >= 1.049 A (margin +0.279 A)
+        (c) PASS: 1.690 A <= 2.000 A (J_PANEL pins 1 and 2, two IDC contacts (Wurth 61202623021) at 1 A each, sharing ASSUMED even)
+        (d) PASS: '1.506 A' is the nominal 1.5062 A rounded
+        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 50.1 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 1.049 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
         (own) the switch's continuous 2 A: within
    DRAFTED E U6    tps4811   PASS
         (a) PASS (RSET 100.0 Ohm, RIWRN 39700.0 Ohm: the printed point)
@@ -527,6 +587,13 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
         (b) PASS: 18.353 A >= 18.000 A (margin +0.353 A)
         (c) PASS: 23.885 A <= 23.930 A (C-PROT rev 1: every series part within its limits below and above the trip, judged by record l9stk 15.1 (CONFIRMED AS CONDITIONAL); the band's top against C-PROT's 23.93 A)
         (d) no label
+   EFUSE   A U23   tps2596   PASS
+        (a) PASS
+        (b) PASS: 1.568 A >= 0.686 A (margin +0.883 A)
+        (c) PASS: 1.995 A <= 10.000 A (J_MEZZ_PWR1, JST VH)
+        (d) PASS: '1.8 A' is the nominal 1.7783 A rounded
+        (b, start) CONDITION: at 5.57 V/ms the band's minimum leaves 158.6 uF for the load's own input capacitance beside the board's 0.0 uF, the load drawing 0.686 A during the rise (no load capacitance printed; above it the start passes through the current limit, the sheet's dVdt-limited start, Figures 48 and 49)
+        (own) the switch's continuous 2 A: within
    EFUSE   B U23   tps2596   PASS
         (a) PASS
         (b) PASS: 1.072 A >= 0.953 A (margin +0.118 A)
@@ -544,6 +611,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
 
 7. FINDINGS
    DR-03   DESIGN DEFECT (known), OPEN: DRAWN A U18; record l4e4: R138 10 mOhm trips under the 3 A contracts; its draft apply_gen_sch_a_r138.py (5 mOhm, L4-E9 R-05) corrects it, DRAFTED
+   EF-F03  DESIGN DEFECT, OPEN: DRAWN A U23; V6-m6: R98 453 R, the recommended minimum itself, its corners at 445.8 Ohm outside the range and the band's top over the 2 A rating (round 1's EF-O03, read EDGE); corrected by apply_gen_sch_a_u23ilm.py (511 R), DRAFTED
    EF-F01  DESIGN DEFECT, OPEN: DRAWN B U23; SDR3-F04 confirmed: R36 301 R, '3.0 A', outside TPS2596's range; corrected by apply_gen_sch_b_u23ilm.py (750 R), DRAFTED
    EF-F02  DESIGN DEFECT, OPEN: DRAWN B U24; R43 301 R, '3.0 A', the same setting on the RockBLOCK's eFuse; corrected by apply_gen_sch_b_u24ilm.py (1.21 k), DRAFTED
    unregistered defects: 0
@@ -553,13 +621,11 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    EF-L04  LABEL, OPEN (Layer 6, part identities): the pending drafts place DRAFTED A U42 (TPS16630PWPR); DRAFTED P U101 (LM5069MM-1) with no LCSC code; the orderable part is the draft's text alone
    EF-L05  LABEL, OPEN (record l8r2's owner): B U702's text says 0.448 to 0.538 A by interpolating between the printed rows (INFERRED); the printed bound across the range gives 0.4359 to 0.5541 A, and (b) and (c) hold on it; B U901's text says 1.375 to 1.614 A by interpolating between the printed rows (INFERRED); the printed bound across the range gives 1.3284 to 1.6896 A, and (b) and (c) hold on it
    EF-O01  OBSERVATION (generator owners, Layers 8 and 9): the TPS22810 load switches B U21 (+5V_DEV -> +5V_LORA); B U22 (+3V3_DEV -> +3V3_ZB); D U21 (+5V_D8 -> +5V_TX); E U16 (+5V_E6 -> +5V_GEIGER) limit no current (the sheet: a load switch 'With Thermal Protection', no current-limit row); a fault behind one is limited only by the stage that feeds its input, and no record may count it as a current limit
-   EF-O02  OBSERVATION (record l8r2's owner; known to its round 8 on fnd/l8r4, not on this tree): board B's pending chain does not regenerate on this tree: intent: rail GND declares a 21.00 A peak and its loads sum to 21.51 A. The loads are a claim about the same cu after l8r2/apply_gen_sch_b_fans12.py
-   EF-O03  OBSERVATION (board A's generator owner): U23's R98 453 R is the recommended minimum itself; its corners reach 445.8 Ohm and its band's top 2.1816 A is above the switch's 2 A continuous rating, as the sheet's own 453 Ohm row is. The load at HIGH is 0.6858 A; 511 R would keep the top at 1.9949 A (minimum 1.5684 A). Not drafted: (a) to (c) hold (SESSION)
    EF-O04  OBSERVATION (board A's generator owner, Layer 9): U21's band minimum 1.0718 A clears the monitor's 10 W at VBAT's 9.688 V floor (1.0470 A) by 0.025 A; the monitor's own start current and input capacitance are not printed (start-up CONDITION)
    EF-O05  OBSERVATION (board B's generator owner): the PoE port's ICUT band 0.6152 to 0.7021 A clears the declared 0.60 A by 0.015 A with R12 at 250 mOhm 1 %; at TI's 255 mOhm the foot would be 0.6031 A
    EF-O06  OBSERVATION (record l4e7's owner): R87's text says 'its breaker at 6.36 to 7.14 A, over the panel's 6.8 A'; the printed band 6.4054 to 7.0920 A straddles 6.8 A, so the text is right only if the cut-off may trip on the panel's 6.8 A (the record's to state); against PV_P's declared 6.25 A (b) holds
 
-8. THIS RECORD'S DRAFTS (EF-F01, EF-F02): composition, the netlist, the mutations, the band on the corrected values
+8. THIS RECORD'S DRAFTS (EF-F01, EF-F02; round 2: EF-F03 and the ASSEMBLY.md row): composition, the netlist, the mutations, the band
    forward  apply_gen_sch_b_u23ilm.py OK; apply_gen_sch_b_u24ilm.py OK
    reverse  apply_gen_sch_b_u24ilm.py OK; apply_gen_sch_b_u23ilm.py OK
    the two orders give the same text: True
@@ -576,6 +642,17 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    the netlist reading and its mutations: every check reads as required
    E96 values whose printed band holds U23 (R36)'s (b) 0.9534 A and (c) 1.8000 A: 576 (1.3925 to 1.7711 A), 590 (1.3597 to 1.7294 A), 604 (1.3284 to 1.6896 A), 619 (1.2965 to 1.6490 A), 634 (1.2660 to 1.6103 A), 649 (1.2370 to 1.5733 A), 665 (1.2075 to 1.5358 A), 681 (1.1793 to 1.5000 A), 698 (1.1509 to 1.4637 A), 715 (1.1237 to 1.4292 A), 732 (1.0979 to 1.3963 A), 750 (1.0718 to 1.3631 A), 768 (1.0469 to 1.3315 A), 787 (1.0219 to 1.2996 A), 806 (0.9980 to 1.2693 A), 825 (0.9752 to 1.2403 A)
    E96 values whose printed band holds U24 (R43)'s (b) 0.5000 A and (c) 1.0000 A: 1050 (0.7684 to 0.9772 A), 1070 (0.7542 to 0.9592 A), 1100 (0.7339 to 0.9333 A), 1130 (0.7147 to 0.9089 A), 1150 (0.7025 to 0.8933 A), 1180 (0.6849 to 0.8709 A), 1210 (0.6681 to 0.8496 A), 1240 (0.6522 to 0.8293 A), 1270 (0.6370 to 0.8100 A), 1300 (0.6226 to 0.7916 A), 1330 (0.6088 to 0.7741 A), 1370 (0.5913 to 0.7518 A), 1400 (0.5788 to 0.7360 A), 1430 (0.5669 to 0.7208 A), 1470 (0.5517 to 0.7015 A), 1500 (0.5409 to 0.6877 A), 1540 (0.5271 to 0.6702 A), 1580 (0.5140 to 0.6535 A), 1620 (0.5016 to 0.6377 A)
+   EF-F03 (board A): after board A's 20 pending drafts: apply_gen_sch_a_u23ilm.py OK; on main's generator alone: exit 0, a second run exit 3; --write on the
+   repository's own generator: exit 3 (refused until RELEASE.md)
+   EFUSE netlist, board A U23                     PASS  (as required) R98 511R 1% (ILM: 1.8 A) on U23 pin 7 to GND: band 1.5684 to 1.9949 A within 0.6858 to 2.0000 A
+   DRAFTED netlist (no correction), A U23         FAIL  (as required) R98 453R 1% (ILM: 2.0 A): band 1.8012 to 2.1816 A against 0.6858 to 2.0000 A
+   mutation: R98 back to 453R                     FAIL  (as required) R98 453R 1% (ILM: 2.0 A): band 1.8012 to 2.1816 A against 0.6858 to 2.0000 A
+   mutation: R98 to 2k (band under the demand)    FAIL  (as required) R98 2k 1% (ILM: 0.46 A): band 0.4082 to 0.5189 A against 0.6858 to 2.0000 A
+   mutation: R98's GND pin onto +5V_D8            FAIL  (as required) R98's far pin is not on GND
+   board A's U23 on R98 511 R: (a) PASS; band 1.5684 to 1.9949 A; (b) PASS: 1.568 A >= 0.686 A (margin +0.883 A); (c) PASS: 1.995 A <= 10.000 A (J_MEZZ_PWR1, JST VH); own: the switch's continuous 2 A: within
+   the netlist reading and its mutations (board A): every check reads as required
+   E96 values whose corners stay inside the range and whose printed band holds board A U23's (b) 0.6858 A and (c) 2.0000 A: 511 (1.5684 to 1.9949 A), 523 (1.5326 to 1.9494 A), 536 (1.4957 to 1.9024 A), 549 (1.4605 to 1.8576 A), 562 (1.4269 to 1.8150 A), 576 (1.3925 to 1.7711 A) ...
+   apply_assembly_rb_pads.py on a scratch copy of ASSEMBLY.md: check exit 0, written exit 0, a second run exit 3, the tree's page untouched: yes
    the variant: no TPS2596-family part has a fixed limit or a range above 2 A; the sibling TPS2595xx prints 0.5 to 4 A with RILM 487 to 5000 Ohm (T95_RANGE, T95_RILM) and would be the part for a limit near 3 A; the loads here need at most 0.9534 A, so the TPS259631 stays and only its resistor changes
    Layer 6's apply_gen_sch_b_lcsc.py after this record's drafts: OK
 
@@ -584,3 +661,5 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    every DRAWN TPS2596 setting inside 453 to 7869 Ohm: NO: B U23, B U24
    every EFUSE TPS2596 setting inside the range: YES
    unregistered defects: 0; this record's netlist checks as required: YES
+   round 2: board B's full composition regenerates without a dropped draft: YES; the ASSEMBLY.md draft applies once: YES
+   round 2: every EFUSE TPS2596 setting's corners inside the range: YES
