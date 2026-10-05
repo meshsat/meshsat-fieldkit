@@ -513,7 +513,9 @@ def main():
     w("     (i)   a shunt of lower leakage: the kit's 2N7002 (Q44's and Q107's part) prints IDSS %.0f nA at 60 V (25 C); on the same doubling\n" % (S["n_idss"] * 1e9))
     w("           %.2f uA at %.2f C, %.1f uA on the return in all against %.1f uA (%.1f uA with Q44 and Q107 at the air on that doubling too);\n"
       % (i_n_hot * 1e6, T_SHUNT, (i_ret_base + i_n_hot) * 1e6, i_allow * 1e6, (i_all_air + i_n_hot) * 1e6))
-    w("           its on-resistance is printed at VGS 5 V (%.0f ohm at most) and 10 V\n" % S["n_r5"])
+    t_n_site = 25.0 + DOUBLING * __import__("math").log2((i_allow - i_all_air) / S["n_idss"])
+    w("           it keeps the window for a shunt site up to %.1f C on that count; its on-resistance is printed at VGS 5 V (%.0f ohm at most) and 10 V\n"
+      % (t_n_site, S["n_r5"]))
     w("           only, where the switch drives %.2f V: tripped, the return %.1f mV at %.1f V with %.0f ohm hot (a bound under 5 V, ASSUMED)\n"
       % (vg_on, held(V_CLAMP, 0.0, r6m, rfp, R["load_out"]) / rfm * S["n_r5"] * HOT_RDS * 1e3, V_CLAMP, S["n_r5"] * HOT_RDS))
     w("     (ii)  the fixed resistor at most %.2f kOhm nominal with the AO3400A at %.2f C (DERIVED, +1 %%), %.0f kOhm in E24: tripped, the regulator\n"
