@@ -953,7 +953,7 @@ def t_p0_f01_the_cap_and_the_case_are_re_solved():
     assert L["bpa1_limit"] == math.floor(L["i_min"] * 1000.0) / 1000.0 and L["bpa1_limit"] <= L["i_min"]
     flat = " ".join(text.split())
     assert ("at most %.3f A (the band's floor %.4f A rounded DOWN, cx46)" % (L["bpa1_limit"], L["i_min"])) in flat
-    assert ("at Q551's held load (up to %.3f mA)" % (L["ref_held"] * 1e3)) in flat and "which is NOT a guaranteed band" in flat
+    assert ("at Q551's held load (up to %.3f mA)" % (L["ref_held"] * 1e3)) in flat and "which is NOT a bound on the cap" in flat
     assert "REMAINING ENGINEERING for the receiving company, never a qualification-only item" in flat
     assert "at most 6.352 A" not in text
 
