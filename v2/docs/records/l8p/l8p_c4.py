@@ -21,6 +21,10 @@ This script prints:
      limits, the trip before any battery FET's 150 C within the gradient budget, the loop's four readings, each source present or
      absent with the back-fed precharge, the docking start, the ground between boards A and P;
   10. each single failure of the new parts: it trips, or E-13b finds it, or it is named latent;
+  10b. round 9 (V6-m7; the owner's part 22 item A): the three failures the table missed, each with its failed path, the function lost,
+     the requirements searched for a permitted latent state (none), the detection left, the interval, the response and the exposure;
+  10c. round 9: the correction drafted (apply_gen_sch_a_thgfs.py) judged on C-PROT rev 1 on its own values, composed in L4-E9's order
+     after this record's drafts, read by check_l8p_fs.py and L4-E11's check_dd7_netlist.py, mutated seven ways;
   11. the verdict, what stays open, and E-13b restated;
   12. the predicates.
 Labels: PRINTED (a maker's printed limit), TYPICAL, ASSUMED, DERIVED (this script's arithmetic), RECORD (another record's figure, read
