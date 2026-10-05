@@ -1722,3 +1722,41 @@ def t_p0sol_the_selection_verdicts_and_owed_texts_are_written_where_they_belong(
     assert "UNSENT" in sup.splitlines()[0] and clar.startswith("DRAFT FOR THE OWNER TO SEND. UNSENT.")
     for s in ("Specimen", "Pass:", "Capability needed", "Acceptance"):
         assert s in sup, s
+
+
+def t_p0sol_b2_composes_after_the_c2_draft_and_its_netlist_check_bites():
+    """Route B2 (the coordinator's task of 5 October 2026, 17:12): the presence-loop draft composed in L4-E9's order after P0-7's C2
+    draft; every draft applies, it refuses a second application, every predicate holds (C2's nine and B2's four), and each of
+    B2's four mutations fails the check."""
+    m = _p0sol()
+    K = m.compose_and_check_b2()
+    assert not K.get("refused"), K.get("refused")
+    assert [s for s, _rc in K["steps"]] == ["%s/%s" % x for x in m.ORDER_E_B2] and all(rc == 0 for _s, rc in K["steps"])
+    assert m.ORDER_E_B2.index(("l4e7", "p0sol_b2")) == m.ORDER_E_B2.index(("l4e7", "p0sol")) + 1
+    assert K["second"] == 3 and len(K["checks"]) == 13 and all(ok for _s, ok in K["checks"]), K["checks"]
+    assert len(K["mutations"]) == 4 and all(r.startswith("FAILS") for _l, r in K["mutations"]), K["mutations"]
+
+
+def t_p0sol_b2_refuses_without_the_c2_draft_and_never_writes_the_tree():
+    draft = os.path.join(REC, "apply_gen_sch_e_p0sol_b2.py")
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "gen_sch_e.py")
+        shutil.copy(GEN_E, p)
+        r = subprocess.run([sys.executable, "-B", draft, p, "--write"], capture_output=True, text=True)
+        assert r.returncode == 3 and "not applied" in r.stderr, r.stderr
+        assert open(p, encoding="utf-8").read() == open(GEN_E, encoding="utf-8").read()
+    r = subprocess.run([sys.executable, "-B", draft, GEN_E, "--write"], capture_output=True, text=True)
+    assert r.returncode == 3 and "NOT RELEASED" in r.stderr, r.stderr
+    assert "J_SOLP" not in open(GEN_E, encoding="utf-8").read()
+
+
+def t_p0sol_b2_page_carries_the_authority_finding_the_owner_item_and_the_figures():
+    page = " ".join(open(os.path.join(REC, "B2-PRESENCE.md"), encoding="utf-8").read().split())
+    out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
+    for s in ("reserved.json", "two-part test", "The owner item", "PROPOSAL", "R-180", "make-last", "Layer 6", "authority", "ruled_by",
+              "What B2 does not cover", "a second stiff source added on the same lead"):
+        assert s in page, s
+    for fig in ("0.544 ms", "84.62 V", "56.10 V/us", "16.90 V", "12.48 V", "0.33 uH", "0.78 uH", "608 events"):
+        assert fig in page and fig in out, fig
+    assert "5. ROUTE B2" in out and "PROPOSAL (route B2" in out
+    assert "–" not in page and "—" not in page
