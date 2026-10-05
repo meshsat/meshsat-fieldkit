@@ -865,3 +865,40 @@ def t_round8_the_page_and_the_readme_carry_the_rounds():
     for l in page.splitlines():
         if "L8R2-F31" in l:
             assert not any(wd in l.split("L8R2-F31", 1)[1][:24] for wd in (" CLOSED", " ACCEPTED", " is closed")), l
+
+
+# ------------------------------------------------------------------------------------------------ P0 round (5 October 2026, Slot A)
+P0 = os.path.join(REC, "l8r2_p0.py")
+P0_OUT = os.path.join(REC, "l8r2_p0.out")
+
+
+def t_p0_the_output_is_reproduced_pinned_and_every_predicate_holds():
+    import subprocess
+    need(P0, "l8r2_p0.py")
+    need(P0_OUT, "l8r2_p0.out")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    r = subprocess.run([sys.executable, "-B", P0], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, r.stderr.decode()[-300:]
+    text = r.stdout.decode("utf-8")
+    assert text == open(P0_OUT, encoding="utf-8").read(), "l8r2_p0.out is not what the script prints"
+    rows = [l for l in text.split("6. PREDICATES")[1].split("l8r2_p0: done")[0].splitlines() if l.strip()]
+    assert len(rows) >= 10 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    pins = re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M)
+    assert len(pins) >= 10
+    for h, rel_ in pins:
+        assert hashlib.sha256(open(os.path.join(ROOT, rel_), "rb").read()).hexdigest().startswith(h), rel_
+
+
+def t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_no_layout_realises_it():
+    text = open(P0_OUT, encoding="utf-8").read()
+    for s_ in ("0.3543 mOhm (declared peak) and 0.7747 mOhm (C-DEV rev 1)", "0.1436 and", "0.4386 mOhm", "V6-B1 is PROVISIONAL, not closed",
+               "STILL OPEN", "L8R2-F33a", "NOT A CORRECTION", "covers the COUNTED branches only", "NO CURRENT RATING PRINTED",
+               "authority: SESSION", "WIRE-TO-WIRE rating"):
+        assert s_ in text, s_
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("## 3h. P0 round")[1].split("## 4. ")[0]
+    for s_ in ("L8R2-F33a", "PROVISIONAL", "STILL OPEN", "authority: SESSION", "UNSENT"):
+        assert s_ in sec, s_
+    figs = sorted(set(re.findall(r"\d+\.\d+ (?:A|mOhm)\b", sec)))
+    assert figs and not [f for f in figs if f not in text], [f for f in figs if f not in text]

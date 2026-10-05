@@ -96,7 +96,16 @@ def vout_band(top, bot, tol=0.001, tcr=25e-6, dt=65.0, ifb=0.15e-6):
     return lo, VFB[1] * (1 + top / bot), hi
 
 
-def checks_a(nl, div="i03"):
+def mode_of(nl):
+    """P0 round (V6-m1, 5 October 2026): the divider mode read from the netlist itself. R602 at T10's 13.3 k means record l9t5's iocpre
+    draft is composed, and the check reads T10's band; any other value is judged against I-03's own (so a wrong value still FAILS)."""
+    v = (nl.get("comps", {}).get("R602", {}).get("value", "") or "").split()
+    return "t10" if v and v[0] == DIVS["t10"][0][1].split()[0] else "i03"
+
+
+def checks_a(nl, div="auto"):
+    if div == "auto":
+        div = mode_of(nl)
     (want_top, want_bot), (v_lo, v_hi) = DIVS[div]
     if "U601" not in nl["pins"]:
         return {"BUCK": ("NOT DRAWN", ["U601 absent"])}
@@ -248,7 +257,7 @@ def check_pair(a, b):
     return ("FAIL" if why else "DRAWN"), why
 
 
-def judge(letter, nl, div="i03"):
+def judge(letter, nl, div="auto"):
     res = checks_a(nl, div) if letter == "a" else checks_b(nl)
     lines = ["%s %-4s %s%s" % (letter.upper(), k, v, (": " + "; ".join(why[:3])) if why else "") for k, (v, why) in res.items()]
     vs = [v for v, _w in res.values()]
@@ -256,7 +265,7 @@ def judge(letter, nl, div="i03"):
     return worst, lines
 
 
-def run(paths, repo=REPO, out=sys.stdout, label=None, div="i03"):
+def run(paths, repo=REPO, out=sys.stdout, label=None, div="auto"):
     verdicts, nls = {}, {}
     for letter in ("a", "b"):
         if letter not in paths:

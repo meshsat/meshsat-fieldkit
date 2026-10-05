@@ -751,6 +751,9 @@ def main():
     v_before = lo - RAIL_BUDGET * 5.0 - ioc_bound * r_sup
     allow = v_before - ldo_need
     b3 = allow > max(shift_drawn, G["shift_ret"], G["shift_drawn_ub"])
+    w("   (B3) SUPERSEDED for the composed design (P0 round, V6-m1, 5 October 2026): with record l9t5's iocpre drafts composed U601 runs at")
+    w("        4.18 V and the LDOs' input is T10-A3's chain (l9t5_t10.out), with a smaller allowed ground shift than the figure below; this")
+    w("        item stays as I-03's own reading at U601's 5 V set point, and check_l9t5_netlist.py reads T10's divider whenever R602 is 13.3 k")
     w("   (B3) the LDOs' input at the least: U601's %.4f V, less the rail's whole %.0f %% copper budget on both boards (%.3f V, DECLARED), less the" % (
         lo, RAIL_BUDGET * 100, RAIL_BUDGET * 5.0))
     w("        lead's supply side at %.4f A (its conductor %.3f mOhm at %.2f C, MODEL, record l8r2 3c for this make of lead; two VH contacts at the" % (

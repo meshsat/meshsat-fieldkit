@@ -1273,6 +1273,9 @@ def main():
         w("    READ: every branch that has a printed rating is inside it at every vertex, at both copper ends, on all three totals: %s; inside the\n"
           "    least rating consistent with its sheet at the inside air: %s. J_54V's pin 2 carries at most %.4f A and has NO printed rating as\n"
           "    drawn (AWG %d on the standard header): its row is NOT covered until its lead is AWG 16 (6e).\n"
+          "    P0 ROUND (V6-B2, 5 October 2026): this READ covers the COUNTED branches only (the leads, the ribbons and the return); the\n"
+          "    indirect paths between the boards (the RF pigtails' shields, the monitor, the QMX, boards C and D) are bounded in l8r2_p0.out\n"
+          "    section 3, PROVISIONAL on their contacts' ratings, which no held sheet prints.\n"
           % ("yes" if acc_printed else "NO", "yes" if acc_least else "NO", worst(ACC, "VH18"), F["poe_awg"]))
         w("6c. THE GROUND SHIFT between the boards, every contact at its maximum: at most %.2f mV (as drawn: %.2f mV) against the %.4f V the LDOs'\n"
           "    input allows (the smaller of Layer 9's %.3f V and the recheck's %.4f V): inside by a factor of %.0f.\n"
@@ -1283,6 +1286,10 @@ def main():
         WF = design(n_ret, poe_awg=F["poe_awg"], wire_floor=WIRE_FLOOR)
         wf_printed = all(r[4] <= r[5] + 1e-12 for r in WF["rows"] if r[5] is not None); wf_least = all(r[4] <= r[6] + 1e-12 for r in WF["rows"] if r[5] is not None)
         w("6d. WHAT THE ROWS REST ON THAT NO MAKER PRINTS, each named with its dependence:\n"
+          "    - the plane copper in series with the return bundle (P0 round, V6-B1, 5 October 2026): every row takes each board as one node;\n"
+          "      the plane resistance between the return sockets' lands and the 5 V entries is a NAMED CONDITION, L8R2-F33a, with the bound\n"
+          "      each case tolerates and the land separation a layout may have on the declared stackups in l8r2_p0.out section 2\n"
+          "      (PROVISIONAL on the routed boards' extraction; the declared upper bound's printed row STILL OPEN).\n"
           "    - the XT60's contact resistance after ageing. Amass prints one limit (%.1f mOhm, 2021V1) with a %d-cycle life and no separate\n"
           "      after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under %s mOhm, and on\n"
           "      the least ratings at or under %s mOhm (%.1f and %.1f times the printed limit). Beyond that a row fails: a four-wire reading of the\n"

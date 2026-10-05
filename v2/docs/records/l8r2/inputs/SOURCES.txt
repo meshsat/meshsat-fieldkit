@@ -67,3 +67,9 @@ The collaborator's targeted recheck V3 is filed as received, byte for byte, in c
 b30615af5e6b45075d26c908dce06e5d9ff03c87b4c7d9ad7f6e9f212b3f6dba (job cx41-t5-recheck, run 20261004T185336Z-805732, an AI review of
 fnd/l9t5 at 841e6c7e; verdict NOT CONFIRMED). Parsed: its ground-shift allowance for the LDOs and its corner's current, each beside
 this record's own figure.
+
+coordinator-cases-2026-10-05-cdev-rev2.md sha256 b2dfb4a643f9f99741d7027dd1fca4f4632d68b639ab21b66685b19c684a6104
+  the coordinator's shared case rows as of 16:30 CEST, 5 October 2026 (_runs/cases/CASES-2026-10-04.md, filed byte for byte by record
+  l8r2's P0 round, Slot A): C-PROT rev 1, C-ALLTX rev 2 and rev 3, C-DEV rev 1, C-DEV rev 2 (16:00, the supervisor term bounded,
+  CONDITIONAL on FW-B20 and FW-B21; with the 16:25 clarification that the fitted supervisor is revision V), C-SHORE rev 1, C-CU rev 1.
+  Parsed by l8r2_p0.py: C-DEV rev 2's +5V_IOC 0.8989 A in the budget's form.

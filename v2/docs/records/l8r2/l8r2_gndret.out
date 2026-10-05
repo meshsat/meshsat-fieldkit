@@ -17,7 +17,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    69e6ac4fc0417d3c v2/docs/records/l8r2/inputs/l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py
    b30615af5e6b4507 v2/docs/records/l8r2/checks/astra-check-t5-recheck-cx41.md
    0be579949c22eab1 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-04-rev3.md
-   585c33b53d88fb8d v2/docs/records/l8r2/inputs/SOURCES.txt
+   9fc459cada3dbad2 v2/docs/records/l8r2/inputs/SOURCES.txt
    3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
@@ -471,9 +471,16 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
     READ: every branch that has a printed rating is inside it at every vertex, at both copper ends, on all three totals: yes; inside the
     least rating consistent with its sheet at the inside air: yes. J_54V's pin 2 carries at most 3.4777 A and has NO printed rating as
     drawn (AWG 18 on the standard header): its row is NOT covered until its lead is AWG 16 (6e).
+    P0 ROUND (V6-B2, 5 October 2026): this READ covers the COUNTED branches only (the leads, the ribbons and the return); the
+    indirect paths between the boards (the RF pigtails' shields, the monitor, the QMX, boards C and D) are bounded in l8r2_p0.out
+    section 3, PROVISIONAL on their contacts' ratings, which no held sheet prints.
 6c. THE GROUND SHIFT between the boards, every contact at its maximum: at most 11.43 mV (as drawn: 68.14 mV) against the 0.9418 V the LDOs'
     input allows (the smaller of Layer 9's 0.960 V and the recheck's 0.9418 V): inside by a factor of 82.
 6d. WHAT THE ROWS REST ON THAT NO MAKER PRINTS, each named with its dependence:
+    - the plane copper in series with the return bundle (P0 round, V6-B1, 5 October 2026): every row takes each board as one node;
+      the plane resistance between the return sockets' lands and the 5 V entries is a NAMED CONDITION, L8R2-F33a, with the bound
+      each case tolerates and the land separation a layout may have on the declared stackups in l8r2_p0.out section 2
+      (PROVISIONAL on the routed boards' extraction; the declared upper bound's printed row STILL OPEN).
     - the XT60's contact resistance after ageing. Amass prints one limit (1.0 mOhm, 2021V1) with a 100-cycle life and no separate
       after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under 2.06 mOhm, and on
       the least ratings at or under 1.43 mOhm (2.1 and 1.4 times the printed limit). Beyond that a row fails: a four-wire reading of the

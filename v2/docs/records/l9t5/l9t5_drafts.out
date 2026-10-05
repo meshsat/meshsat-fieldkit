@@ -47,7 +47,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    ef8d376f2ec356e2 v2/vendor/diodes/diodes-ap2112-ldo.pdf
    98191bec36d43771 v2/vendor/ti/lm5176-datasheet.pdf
    9b27d1d993a8bc5b v2/vendor/st/st-stm32h743xi-datasheet.pdf
-   68087469c7af44b2 v2/docs/records/l9t5/check_l9t5_netlist.py
+   c9948a9b4afd1cc1 v2/docs/records/l9t5/check_l9t5_netlist.py
    69e6ac4fc0417d3c v2/docs/records/l9t5/apply_gen_sch_a_iocbuck.py
    ac1c6f82805048b0 v2/docs/records/l9t5/apply_gen_sch_b_iocbuck.py
    8cd31cfbbca39087 v2/docs/records/l9t5/inputs/apply_gen_sch_b_iocbuck-bdbed9bb.py
@@ -56,9 +56,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    60c807573ff788f5 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   bea1481017da3492 v2/docs/records/l9t5/l9t5_case.out
+   f1e89dc7e3de7e00 v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   6145e2f1b5ef3991 v2/docs/records/l8r2/l8r2_gndret.out
+   9ec3c20ab9d5082d v2/docs/records/l8r2/l8r2_gndret.out
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
@@ -268,6 +268,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
         LDOs still on +5V_DEV: none; still allocated on the device lead: none; so item (1)'s 6.0359 A is U7's case with this board composed: HOLDS
    (B2) the declarations stand on their basis (section 5; L8R2-F35): the device lead 6.0359 A declared against its own 6.035894 A on the case; +5V_IOC
         1.4749 A against 1.474896 A: HOLDS (round 2 declared 6.0 A and 1.38 A: O2 above)
+   (B3) SUPERSEDED for the composed design (P0 round, V6-m1, 5 October 2026): with record l9t5's iocpre drafts composed U601 runs at
+        4.18 V and the LDOs' input is T10-A3's chain (l9t5_t10.out), with a smaller allowed ground shift than the figure below; this
+        item stays as I-03's own reading at U601's 5 V set point, and check_l9t5_netlist.py reads T10's divider whenever R602 is 13.3 k
    (B3) the LDOs' input at the least: U601's 4.8719 V, less the rail's whole 2 % copper budget on both boards (0.100 V, DECLARED), less the
         lead's supply side at 1.4749 A (its conductor 2.520 mOhm at 76.25 C, MODEL, record l8r2 3c for this make of lead; two VH contacts at the
         after-test 20 mOhm, PRINTED): 0.0627 V; that leaves 4.7091 V before the ground shift between the boards

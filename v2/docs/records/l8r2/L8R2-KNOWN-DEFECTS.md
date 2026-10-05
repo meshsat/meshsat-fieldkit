@@ -1051,6 +1051,25 @@ maker's rating at 76.25 C from a printed curve, or bound any contact resistance 
 harness and contract rows into Layer 7's and Layer 5's files (their owners'), or a detect line for the latent faults. Send any
 question to a maker.
 
+## 3h. P0 round (5 October 2026, Slot A): the independent check V6's findings on the dedicated return (`l8r2_p0.py`, `l8r2_p0.out`)
+
+The owner's P0 instruction of 5 October 2026 and its part 19 (a bounded provisional choice with the validation task where a figure
+can only come from a layout, a measurement or a vendor) govern this section. L8R2-F31 stays OPEN in the sense V6 left it: CONFIRMED AS
+CONDITIONAL on the model's figures, now with its conditions named and bounded. Nothing is built, bought, powered or measured.
+
+| V6 item | Failure case | Disposition | Evidence (l8r2_p0.out) |
+|---|---|---|---|
+| V6-B1, the plane copper in series with the return bundle | a ribbon conductor over its printed 1 A once the boards' planes add resistance in series with the six return conductors | PROVISIONAL for the service cases: the named layout condition **L8R2-F33a**, each return socket's land within 17 mm (the largest steady state; 30 mm on C-DEV rev 1, 36 mm on C-DEV rev 2) of the 5 V entries on both boards at 0.5 oz, every ground plane joined solidly; the Layer 10 task, the routed boards' extraction against each case's bound. **STILL OPEN:** the declared upper bound's printed row (0.3543 mOhm, 5.9 mm at 0.5 oz, not realisable; a fourth lead 9.1 mm, not a correction; 1 oz inner 23 to 47 mm, the owner's open copper decision) and every least-rating row at the inside air | section 2: V6's 0.3543 / 0.7747 / 0.1436 / 0.4386 mOhm reproduced |
+| V6-B2, the indirect ground paths | the census counted only the leads, the ribbons and the return | the census completed for the paths V6 named, each bounded at its own worst vertex with the monitor's 1.00 A and the QMX's 2.00 A added to the totals; the counted rows hold with the shares on the printed ratings; the RF pigtails' U.FL outer contacts carry up to 2.1053 A with no printed rating and the HDMI receptacle's sheet is not held: PROVISIONAL, vendor tasks UNSENT (Hirose, Molex) and Layer 7's cable rows; the design change if the U.FL answer is lower: break the DC path at board A's RF jacks | section 3 |
+| V6-m12, F-4b | every source at its bound puts a ribbon at 1.00418 A against 1 A | SESSION decision (authority: SESSION; ruled_by Slot A; ruled_on 5 October 2026): the design need not serve the five-overload coincidence inside the ribbons' printed rating; reverse by carrying the fourth lead (0.7884 A there) | section 4 |
+| V6-m8, the XT60 rows | no XT60 sheet rates a board-soldered end | the rows' 11.0311 A is judged against the printed 30 A as the wire-to-wire rating, a 63 % margin; the board end's rating MISSING, a vendor task to Amass UNSENT; PROVISIONAL with that margin | section 5 |
+| C-DEV rev 2 (conditional on FW-B20/B21) | the supervisors' term bounded | U601 0.9607 A in place of 1.4749 A; U7's device-rail demand unchanged at 6.0359 A; C-DEV rev 2 tolerates 0.8244 mOhm; rev 1's figures stay beside it as the labelled scenario | section 1, 2 |
+
+**L8R2-F33a (new, a named condition of 6d and 6b):** the plane resistance between the return sockets' lands and the 5 V entries (the
+leads' pin 2 lands on board B, the 5 V stages' outputs on board A), both boards together, at most each case's bound in `l8r2_p0.out`
+section 2; the geometry it rests on is the spreading model on record l9stk's stackups (board A two ground planes, board B three, 0.5 oz,
+15 % thin) with the lands solidly joined at L8R2-F33's widths. It is a layout condition, PROVISIONAL until the routed boards' extraction.
+
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7 and 6b)
 
 **Board A.**
