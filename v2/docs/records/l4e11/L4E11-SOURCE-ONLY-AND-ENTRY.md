@@ -2837,7 +2837,11 @@ gate's VGS. The current paths:
 current falls to the sense current); 2 us later gate k leaves its driver's -10 V output and is tied to tap Dk, interlocked so it can only
 happen with the shunt under 10 mA; samples from 100 us to 10 ms; then the gate back to -10 V, SW_S closes, SW_B opens. One reading in
 1 s: the heating is off 1 % of the time, and each power is averaged over the whole cycle. The interlock is the hardware form of the
-safety rule: a gate in the threshold connection never meets a closed SW_S (the clamp state of 24a).
+safety rule: a gate in the threshold connection never meets a closed SW_S (the clamp state of 24a). Through every step the device under
+test's channel is the only one conducting between the pours: its gate stays 10 V under VBAT until SW_S is open. In the 10 us between
+SW_B's closing and SW_S's opening the current divides between the dummy leg and the coupon by their resistances, SW_S's on-resistance
+among them: those microseconds and the switch's own opening enter the early-time correction's term (24f), and t = 0 is SW_S's opening
+as the shunt reads it.
 
 **Each state, the device under test alone, with its margin:**
 

@@ -1759,7 +1759,10 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      the reading's sequence (proposal; times from SW_B's closing): SW_B closes; 10 us later SW_S opens (t = 0, read on the shunt: the coupon's
        current falls to the sense current); 2 us later gate k leaves its driver's -10 V output and is tied to tap Dk (interlocked: only with the
        shunt under 10 mA); samples from 100 us to 10 ms; then the gate back to -10 V, SW_S closes, SW_B opens; one reading in 1 s, so the
-       heating is off 1 % of the time and each power is averaged over the whole cycle
+       heating is off 1 % of the time and each power is averaged over the whole cycle; through every step the device under test's channel is
+       the only one conducting between the pours (its gate stays 10 V under VBAT until SW_S is open); in the 10 us between SW_B's closing and
+       SW_S's opening the current divides between the dummy leg and the coupon by their resistances, SW_S's on-resistance among them: those
+       microseconds and the switch's own opening enter the early-time correction's term (24f), and t = 0 is SW_S's opening on the shunt
      SENSING AND CALIBRATION (the same connection): the device under test carries the 1 mA; every other conductor across the pours:
        the two off FETs, IDSS at 125 C (printed, at VDS -30 V): at most 20 uA (MAKER)
        the device under test's gate on its drain, IGSS at 25 C (printed, at 20 V): at most 0.1 uA (MAKER)

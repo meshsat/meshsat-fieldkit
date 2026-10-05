@@ -61,8 +61,12 @@ without a second fault, the battery FETs' orientation read in the netlist; the m
 owner's supplier-delta review's DELTA-02) adds: the body-diode method heats and reads nothing 'alone' on the common nets the draft and the
 regenerated netlist show, and the round refuses to select it; the selected method addresses one device by its own gate, on a specimen
 whose gates are apart and not on board A as drafted; its budget, powers and currents reproduce in closed form; the procedure TP-E11-29
-quotes this record word for word and stays NOT EXECUTABLE; section 20c is restated on the PTC's printed points. Nothing here writes
-into the tree: drafts run on temporary copies.
+quotes this record word for word and stays NOT EXECUTABLE; section 20c is restated on the PTC's printed points. Round 14 (section 24, the
+independent recheck V2R) adds: round 13's fixture joins the pours in a reading and the redrawn one leaves the device under test alone in
+every state, with its margins on the printed rows; each junction is judged at its own row's worst split, which a scan confirms, with the
+baseline in the limit's line, and a search on a fresh seed finds no specimen accepted over 150 C while round 13's lines accept some; the
+minors are answered and the procedure keeps the recheck among its preconditions. Nothing here writes into the tree: drafts run on
+temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -1946,3 +1950,199 @@ def t_round13_the_procedure_quotes_this_record_and_stays_not_executable():
         assert kept in body, "the procedure lacks %r" % kept
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
     assert "DELTA-02" in readme and "TP-E11-29" in readme and "what the method cannot bound" in readme.lower()
+
+
+# ---- round 14 (5 October 2026): the recheck V2R's V2R-B1 and V2R-B2 on TP-E11-29's fixture and pass rules, and its minors
+# Round 13's statements as they stood at 4def5975, kept here as fixtures so each check is shown to refuse them (no git needed).
+_R13_FIXTURE_TEXT = ("heating supply I_H (+) ---+ ... (one at a time) ... shunt (heating) ... heating supply (-) -------+        bypass switch across "
+                     "the heating supply: closed before the last channel opens. Calibration and sensing: the heating supply bypassed; gate k on "
+                     "CH_BATQ, the other two gates on VBAT")
+_R13_STEP14_TEXT = ("For each FET the sum S_k = Zself,k + the two Zmut into k (the record's \"Zself + 2 Zmut\" with each actual mutual term in place "
+                    "of an assumed equal one). The bar: with m = the largest Zmut over the largest Zself, the bar is the record's formula (section 1's "
+                    "quote): 40.78 K/W at m = 0, rising to 45.88 K/W from m = 1/4; without m, 40.78 K/W.")
+
+
+def _tp_body():
+    text = open(TP29, encoding="utf-8").read()
+    return text, "\n".join(l for l in text.split("\n") if not l.startswith(">"))
+
+
+def _fixture_isolates(body):
+    """A procedure's fixture isolates the heating supply for a reading: a series switch in the supply's lead, a bypass on the supply's
+    side of it, an interlock that ties a gate to its drain only with the series switch open, the gate tied at its own drain tap; and
+    none of round 13's statements (a bypass across the supply with its leads left on the pours, a clamped supply)."""
+    flat_ = " ".join(body.split())
+    need_ = ("series switch SW_S", "SW_B", "interlock", "tied to its own drain tap", "a gate is tied to its drain tap only while the series switch SW_S is open")
+    gone = ("bypass switch across the heating supply", "or the supply is clamped", "the heating supply bypassed")
+    return all(n in flat_ for n in need_) and not any(g in flat_ for g in gone)
+
+
+def _rule_is_per_junction(body):
+    """A procedure's reduction judges each junction at its own row's m_k, judges the baseline in the limit's line, and no longer gives
+    every S_k the bar at the largest Zmut over the largest Zself."""
+    flat_ = " ".join(body.split())
+    return ("m_k = D_k / (2 C_k)" in flat_ and "over step 6's baseline B_k" in flat_ and "T_k = B_k + z17_k" in flat_
+            and "with m = the largest Zmut over the largest Zself, the bar is" not in flat_)
+
+
+def t_round14_v2r_b1_the_old_fixture_joins_the_pours_and_the_redrawn_one_leaves_the_device_alone():
+    """V2R-B1: with round 13's fixture (a bypass across the heating supply, its leads on both pours) the pours are joined outside the FETs
+    in calibration and sensing, so the sense current never reaches a threshold; the redrawn fixture (a series switch in the supply's
+    lead, the bypass on the supply's side) joins them in no state. In each state the device under test is the only conductor of
+    consequence on Nexperia's printed rows and the fixture's proposed limits, recomputed here; a fixture that closes SW_S in a reading,
+    or a procedure that keeps round 13's statements, FAILS."""
+    R = _R()
+    m = _M()
+    S, S23 = R["S24"], R["S23"]
+    for st in ("calibration", "sensing"):
+        joined, path = m.r14_state("old", st)
+        assert joined and path == ["the heating supply's + lead", "the bypass switch across the heating supply", "the shunt and the - lead"], (st, path)
+    assert not m.r14_state("old", "heating")[0]
+    assert not any(m.r14_state("new", st)[0] for st in ("calibration", "heating", "sensing")), "the redrawn fixture joins the pours"
+    # mutation: SW_S left closed in a reading joins the pours again
+    keep = m.R14_FIXTURES["new"]
+    try:
+        m.R14_FIXTURES["new"] = [(n, a, b, k, ("heating", "sensing") if n.startswith("the series switch") else c) for n, a, b, k, c in keep]
+        assert m.r14_state("new", "sensing")[0], "a closed series switch in a reading is not seen joining the pours"
+    finally:
+        m.R14_FIXTURES["new"] = keep
+    # the margins, recomputed from the printed rows and the proposals
+    assert abs(S["idss"][0] - 1e-6) < 1e-15 and abs(S["idss"][1] - 10e-6) < 1e-15 and abs(S["igss"] - 100e-9) < 1e-15
+    assert S["leak_p"] == 6 and S["vgs_abs"] == 20.0
+    tot = 2 * 10e-6 + 100e-9 + 1e-6 + 6 * 1e-6 + 3 * 3.0 / 10e6
+    assert abs(S["sense_sum"] - tot) < 1e-12 and S["sense_frac"] < 0.03 and abs(S["sense_ratio"] - 100.0) < 1e-9
+    assert abs(S["old_v"] - 20e-6) < 1e-12 and S["old_v"] < S23["vth"][1] / 1e4, "the old loop's voltage is not far under the least threshold"
+    assert S["clamp_p"][0] > 20.0 and abs(S["clamp_p"][0] - S23["i_td"][0][0] * 1.5) < 1e-9
+    assert S["heat_ratio"] > 1e5 and abs(S["t_settle"] - (3 * R["L"]["ciss_0"] + 3e-9) * 3.0 / 1e-3) < 1e-12 and S["t_settle"] < 0.5e-4
+    assert S["v_sw_open"] < m.R14_SW["v_block"] and abs(S["duty_lost"] - 0.010012) < 1e-9
+    # the procedure: round 13's statements refused, the redrawn fixture carried
+    text, body = _tp_body()
+    assert not _fixture_isolates(_R13_FIXTURE_TEXT), "the check accepts round 13's fixture"
+    assert _fixture_isolates(body), "the procedure's fixture does not isolate the heating supply"
+    fx = body.split("2. **The fixture, drawn for the supplier's agreement**")[1].split("3. **The states**")[0]
+    assert "SW_S" in fx and "SW_B" in fx and "dummy leg" in fx and "tap Dk's own line" in fx
+    page = open(PAGE, encoding="utf-8").read()
+    p23f = " ".join(page.split("### 23f. ")[1].split("### 23g. ")[0].split())
+    assert "or the supply is clamped" not in p23f and "a series switch isolates the" in p23f
+    out = open(OUT, encoding="utf-8").read()
+    o23f = out.split("   23f. ")[1].split("   23g. ")[0]
+    assert "or the supply is clamped" not in o23f
+
+
+def _scan_row(z, grid):
+    """The largest of sum(z_i x_i) / (sum x_i)^2 times 9 over a grid of conductance ratios for the three FETs (each at least 1)."""
+    best = 0.0
+    for a in grid:
+        for b in grid:
+            for c in grid:
+                s = a + b + c
+                best = max(best, 9.0 * (z[0] * a + z[1] * b + z[2] * c) / (s * s))
+    return best
+
+
+def t_round14_v2r_b2_each_junction_at_its_own_worst_split_and_a_search_proves_the_rule():
+    """V2R-B2: the closed form of each junction's worst split equals a scan of every split of three RDS(on) values (rows physical and
+    not); V2R's example passes every round 13 line at 152.3 C and fails round 14's limit line; on a fresh seed the search finds no
+    specimen accepted over 150 C by round 14's lines (readings perturbed within U, and exact), none refused that meets the limit and both
+    allocations, and round 13's step 14 and its lines together accepting specimens over the limit; a line 2 that takes the band's
+    budgeted 9.16 K instead of the measured baseline, or judges every junction at round 13's fixed split, FAILS; the procedure's
+    reduction is round 14's and refuses round 13's step 14."""
+    import random
+    R = _R()
+    m = _M()
+    S, S21 = R["S24"], R["S21"]
+    K = S["K"]
+    rnd = random.Random(77)
+    grid = [1.0 + k / 12.0 for k in range(0, 25)]
+    for _ in range(30):
+        zs = rnd.uniform(5.0, 50.0)
+        z = [zs, rnd.uniform(0.0, 1.0) * zs, rnd.uniform(0.0, 1.0) * zs] if rnd.random() < 0.8 else [rnd.uniform(1.0, 50.0) for _k in range(3)]
+        zw, x, mk = m.worst_row(z)
+        g = sorted(set(grid + [x]))
+        sc = _scan_row(z, g)
+        assert sc <= zw * (1 + 1e-12) and sc >= zw * (1 - 1e-9) - 1e-9, (z, zw, sc)
+        if z[0] == max(z):
+            assert abs(sum(z) - m.bar_at(mk, zw)) < 1e-9 * zw or mk >= 0.25, "Zw is not S_k at 21b's bar at m_k"
+    # V2R's example
+    e = S["ex"]
+    assert abs(e["case_f"] - 65.3) < 0.05 and abs(e["even"] - 76.03) < 0.05 and abs(e["tj"] - 152.28) < 0.05 and not e["new"][0]
+    Zx = [[20.0 if i == j else 12.0 for j in range(3)] for i in range(3)]
+    assert m.r13_step14(Zx, 0.0, K) and m.r13_direct(Zx, [14.0] * 3, [1.0] * 3, 0.0, K)[0], "round 13's lines no longer pass the example"
+    # the search on a fresh seed
+    sr = m.r14_search(K, S["u"], 4242, 2500)
+    assert sr["new_over"] == 0 and sr["new0_over"] == 0 and sr["new0_miss"] == 0 and sr["rec_over"] == 0, sr
+    assert sr["new_acc"] > 500 and sr["s14_over"] > 0 and sr["old_over"] > 0, "the search does not show round 13's lines failing"
+    # mutations of the rule, each FAILS on the same search
+    keep = m.r14_lines
+
+    def no_baseline(Z, B, z17, u, K_, extra=(0.0, 0.0, 0.0)):
+        return keep(Z, [R["S19"]["band"]] * 3, z17, u, K_, extra)
+
+    def fixed_split(Z, B, z17, u, K_, extra=(0.0, 0.0, 0.0)):
+        # every junction judged at round 13's fixed split (x = 2: 1.513 / 0.756 / 0.756 W), whatever its own row's m_k
+        zw = [9.0 * (2.0 * max(Z[k]) + sum(Z[k]) - max(Z[k])) / 16.0 for k in range(3)]
+        t_ = [B[k] + z17[k] * K_["p17"] + K_["p_even"] * zw[k] + extra[k] for k in range(3)]
+        return (max(zw) * (1 + u) <= K_["bar_even"] and max(t_) * (1 + u) <= K_["rise"] and max(z17) * (1 + u) <= K_["z17"]), 0.0, 0.0, 0.0
+    try:
+        for mut in (no_baseline, fixed_split):
+            m.r14_lines = mut
+            assert m.r14_search(K, S["u"], 4242, 2500)["new_over"] > 0, "%s passes the search" % mut.__name__
+    finally:
+        m.r14_lines = keep
+    # the record's own counts
+    sr0 = S["search"]
+    assert sr0["new_over"] == sr0["new0_over"] == sr0["new0_miss"] == sr0["rec_over"] == 0 and sr0["old_over"] == 2845 and sr0["s14_over"] == 2043
+    # the procedure
+    _text, body = _tp_body()
+    assert not _rule_is_per_junction(_R13_STEP14_TEXT), "the check accepts round 13's step 14"
+    assert _rule_is_per_junction(body), "the procedure's reduction is not round 14's"
+    s8 = body.split("## 8. Pass, fail and inconclusive")[1].split("## 9.")[0]
+    assert "Zw_k" in s8 and "T_k" in s8 and "73.75 K" in s8 and "achieved" in s8 and "cases F39, F40 and F42" in s8
+    for v_ in ("0.333", "45.88", "40.78"):
+        assert v_ in open(PAGE, encoding="utf-8").read().split("## 24. Round 14")[1]
+
+
+def t_round14_the_minors_the_budget_and_the_procedures_status():
+    """V2R-m1 (20g on 22c's set, 21d's mark), m3 (the tie at tap Dk, 2.4 mV), m4 (the budget's nine terms, the control run, the
+    reading plus the achieved U), m5 (the rise over the baseline), m6 (65.9 uF across the node; the first prototype populated as the
+    coupon), m7 (the leads' heat flow and the pours' third); the page and the output carry section 24's figures; TP-E11-29 stays NOT
+    EXECUTABLE with the recheck among its preconditions; the README answers V2R's findings."""
+    R = _R()
+    m = _M()
+    S, S22, S23 = R["S24"], R["S22"], R["S23"]
+    assert S["m1"] == (S22["sel"]["sink"]["run"], S22["sel"]["sink"]["ovp"], S22["sel"]["sink"]["clamp"])
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    p20g = page.split("### 20g. ")[1].split("### 20h. ")[0]
+    o20g = out.split("   20g. ")[1].split("   20h. ")[0]
+    for t_ in (p20g, o20g):
+        assert "3.72 mA" in t_ and "6.45 mA" in t_ and "3.73 mA" not in t_ and "6.39 mA" not in t_
+    row21d = [l for l in page.split("### 21d. ")[1].split("### 21e. ")[0].split("\n") if "R256 6.8 kOhm" in l][0]
+    assert "**SUPERSEDED** by round 12" in row21d
+    assert abs(S["tie_mv"] - 0.1e-3 * 23.93 * 1e3) < 1e-9
+    rise = S23["rise_bar"]
+    terms = [0.02, 0.01, 1.0 / rise, 0.5 / rise, 0.3 / rise, S23["ripple"][0] / 2 / rise, 0.5 / rise, 0.5 / rise, 0.1 / rise]
+    u = math.sqrt(sum(x * x for x in terms))
+    assert abs(S["u"] - u) < 1e-12 and len(S["terms"]) == 9 and "%.2f" % (u * 100) == "3.47"
+    assert "%.2f" % S["pass_bar"] == "39.41" and "%.2f" % S["pass_rise"] == "71.28" and "%.2f" % S["pass_even"] == "44.34"
+    assert abs(S["m6_c"] - 180e-6 * 104e-6 / 284e-6) < 1e-15 and abs(S["m6_dv"] - 1e-3 * 0.2 / S["m6_c"]) < 1e-12
+    assert abs(S["lead_dt"] - 0.02 * S23["p"]["hot"] * 0.02 / (390.0 * 4e-6)) < 1e-12
+    assert abs(S["pour_frac"][0] - (S23["i_td"][0][0] / 23.93) ** 2) < 1e-12 and abs(S["pour_frac"][0] - 1.0 / 3.0) < 0.001
+    p24 = page.split("## 24. Round 14")[1]
+    o24 = out.split("24. ROUND 14")[1]
+    for v_ in ("20 uV", "20.7 W", "97.2 %", "34.8 us", "65.3 K", "152.3 C", "3.47 %", "39.41", "71.28", "44.34", "65.9 uF", "2.4 mV",
+               "0.39 K", "2.17 W/m", "0.881", "11.6 %", "159.9 C", "C-PROT rev 1", "NOT EXECUTABLE"):
+        assert v_ in p24 and v_ in o24, "%s is not in both section 24 and out 24" % v_
+    for v_ in ("2,845", "2,043", "3,455", "20,850"):
+        assert v_ in p24 and v_.replace(",", "") in o24, v_
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "Nothing else joins the two pours" in b29 and "populated as the coupon is" in b29 and "the fixture's heavy leads" in b29
+    assert "ACHIEVED expanded uncertainty" in b29 and "tied to its own drain tap" in b29 and "junction by junction" in b29
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert m.e11_29_method(R) in row and "its OWN m_k" in row and "THE LIMIT" in row and "series switch" in row and "achieved" in row
+    text, body = _tp_body()
+    assert "**NOT EXECUTABLE.**" in text and "the independent recheck of the fixture of section 5 and the pass" in " ".join(text.split())
+    for kept in ("control run C0", "| V8 |", "| V9 |", "| V7 |", "heavy lead", "over step 6's baseline B_k", "populated as the coupon is"):
+        assert kept in body, "the procedure lacks %r" % kept
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2R's findings answered" in readme and "V2R-B1" in readme and "V2R-B2" in readme and "ROUND 14" in readme
