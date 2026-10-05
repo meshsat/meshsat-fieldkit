@@ -143,6 +143,10 @@ def read_l9stk5():
     L["lead"], L["lead2"] = float(m.group(1)), float(m.group(2))
     need(pg, r"\*\*SELECTED \(SESSION\), round 5: C4\.\*\*", "l9stk 15.9: the selection C4")
     need(pg, r"place is two 7\.5 kOhm 1 % in series", "l9stk 15.9: the pair")
+    m = need(pg, r"place is two %s kOhm 1 %% in series" % N, "l9stk 15.9: the pair's value")
+    pr = float(m.group(1)) * 1e3
+    m2 = need(pg, r"\*\*The gate network sized here \(SESSION\):\*\* %s kOhm from OVERTEMP, %s uF and %s MOhm to ground" % (N, N, N), "l9stk 15.9: the gate network")
+    L["c4vals"] = dict(pair=(pr, pr), rg=float(m2.group(1)) * 1e3, cg=float(m2.group(2)) * 1e-6, rpd=float(m2.group(3)) * 1e6)
     m = need(pg, r"- Mutations: (.*?)\n- \*\*\(c\)", "l9stk 15.9 (b): the mutations", re.M | re.S)
     L["mutations"] = [x.strip() for x in re.split(r";", " ".join(m.group(1).split())) if x.strip()]
     return L
@@ -302,82 +306,128 @@ def main():
     w("   the on-resistance: at the drive under 5 V NOT PRINTED; record l9stk's %.1f ohm (the 5 V row scaled by the drive over the highest threshold,\n" % L["rds"])
     w("     x2 hot) is ASSUMED, as it says; the requirement it is held against is DERIVED below\n")
 
+    # ------------------------------------------------------------------ the figures, for C4 as record l9stk states it (sections 3 to 7) and for the
+    # draft's own values (section 9): one function, so the judgement is the check's arithmetic on what is drawn
+    def figures(V):
+        F = {}
+        n7 = lambda t: N7["idss"] * 2.0 ** ((t - 25.0) / DOUBLING)
+        F["n7"] = n7
+        F["sense1"] = sense1 = R["load_ret"]
+        F["others"] = others = sense1 + 2 * n7(T_SITE) + N7["igss"]
+        F["others_all"] = others_all = sense1 + 3 * n7(T_SITE)
+        # the shunt's off leakage by the part drawn (the 2N7002 unless the values name another): the window turns on it (L8P-F08)
+        shunt = (V.get("shunt") or ("", "2N7002"))[1]
+        F["shunt"] = shunt
+        F["leak"] = leak = n7(T_SITE) if shunt.startswith("2N7002") else S["ao_idss55"] * 2.0 ** ((T_SITE - 55.0) / DOUBLING) if shunt.startswith("AO3400A") else float("inf")
+        F["rf"] = rf = sum(V["pair"])
+        rfp, rfm = rf * (1 + TOL), rf * (1 - TOL)
+        r6p, r6m, r7p, r7m = R106 * (1 + TOL), R106 * (1 - TOL), R107 * (1 + TOL), R107 * (1 - TOL)
+        F["alw"] = alw = allowance(R["out_pw_lo"], R["ret_closed"], rfp, r7m)
+        F["sinks"], F["sinks_all"] = sinks, sinks_all = others + leak, others_all + leak
+        F["ret"], F["ret_all"] = ret_ramp(R["out_pw_lo"], sinks, rfp, r7m), ret_ramp(R["out_pw_lo"], sinks_all, rfp, r7m)
+        F["site"] = 25.0 + DOUBLING * math.log2((alw - others) / N7["idss"]) if alw > others else float("-inf")
+        F["site_one"] = bisect(lambda t: sense1 + N7["igss"] + 3 * n7(t) > alw, -50.0, 250.0)
+        F["fav"] = ret_ramp(R["out_pw_hi"], sinks, rf, R107)
+        F["ret_ao"] = ret_ramp(R["out_pw_lo"], others + S["ao_idss55"] * 2.0 ** ((T_SITE - 55.0) / DOUBLING), rfp, r7m)
+        F["ao"] = S["ao_idss55"] * 2.0 ** ((T_SITE - 55.0) / DOUBLING)
+        # the gate network
+        F["k"] = k = V["rpd"] / (V["rg"] + V["rpd"])
+        F["rth"] = rth = V["rg"] * V["rpd"] / (V["rg"] + V["rpd"])
+        F["tau"] = tau = V["cg"] * rth
+        F["voh"] = voh = 5.0 * (1 - S["acc_out"]) - S["voh_drop"]
+        F["vdd_hi"] = vdd_hi = 5.0 * (1 + S["acc_out"])
+        F["t_inv"] = t_inv = S["tstr"] + S["t_en"]
+        F["g_inv"] = gate(vdd_hi, tau, k, t_inv)
+        F["g_on"] = g_on = voh * k - N7["igss"] * rth
+        F["t_on"] = t_on = -tau * math.log(1.0 - N7["vth"][1] / (voh * k)) if voh * k > N7["vth"][1] else float("inf")
+        F["g_off"] = S["vol"] * k + N7["igss"] * rth
+        k_lo = V["rpd"] * (1 - TOL) / (V["rg"] * (1 + TOL) + V["rpd"] * (1 - TOL))
+        k_hi = V["rpd"] * (1 + TOL) / (V["rg"] * (1 - TOL) + V["rpd"] * (1 + TOL))
+        F["tau_lo"] = tau_lo = V["cg"] * (1 - C_TOL) * (V["rg"] * (1 - TOL) * V["rpd"] * (1 - TOL)) / (V["rg"] * (1 - TOL) + V["rpd"] * (1 - TOL))
+        F["tau_hi"] = tau_hi = V["cg"] * (1 + C_TOL) * (V["rg"] * (1 + TOL) * V["rpd"] * (1 + TOL)) / (V["rg"] * (1 + TOL) + V["rpd"] * (1 + TOL))
+        F["g_inv_t"] = gate(vdd_hi, tau_lo, k_hi, t_inv)
+        F["t_on_t"] = -tau_hi * math.log(1.0 - N7["vth"][1] / (voh * k_lo)) if voh * k_lo > N7["vth"][1] else float("inf")
+        F["k_hi"] = k_hi
+        F["dwell"] = -tau * math.log(1.0 - N7["vth"][0] / (VDD_LOW_PR * k))
+        F["dwell_t"] = -tau_lo * math.log(1.0 - N7["vth"][0] / (VDD_LOW_PR * k_hi))
+
+        # the loop's four readings, the pair intact and with its smaller resistor left alone (a short of the other)
+        def readings(r_nom):
+            r_p, r_m = r_nom * (1 + TOL), r_nom * (1 - TOL)
+            gates = [G.closed(v, GUARD_ALLOW, sinks, r6p, r_p, r7m, R["load_out"])[1] for v in (V_HELD, V_LOW, V_HIGH)]
+            g_max = G.closed(V_CLAMP, 0.0, 0.0, r6m, r_m, r7p, 1e18)[1]
+            held = G.held(V_HELD, GUARD_ALLOW, r6p, r_m, R["load_out"])
+            i_t = V_CLAMP / (r6m + r_m)
+            rds = N7["r5"] * (5.0 - N7["vth"][1]) / (g_on - N7["vth"][1]) * HOT_RDS if g_on > N7["vth"][1] else float("inf")
+            reg_c = bisect(lambda v: G.closed(v, GUARD_ALLOW, sinks, r6p, r_p, r7m, R["load_out"])[0] >= 6.0, 1.0, V_CLAMP)
+            reg_t = bisect(lambda v: G.held(v, GUARD_ALLOW, r6p, r_m, R["load_out"]) >= 6.0, 1.0, 60.0)
+            bands = {v: (G.held(v, GUARD_ALLOW, r6p, r_m, R["load_out"]), G.held(v, 0.0, r6m, r_p, R["load_out"])) for v in (V_HELD, V_LOW, V_HIGH)}
+            alw_ = allowance(R["out_pw_lo"], R["ret_closed"], r_p, r7m)
+            return dict(gates=gates, g_max=g_max, held=held, i_t=i_t, rds=rds, ret_trip=i_t * rds, rds_need=min(R["ret_held"], N7["vth"][0]) / i_t,
+                        reg_c=reg_c, reg_t=reg_t, bands=bands, allow=alw_)
+        F["RI"], F["R1"] = RI, R1 = readings(rf), readings(min(V["pair"]))
+        F["four"] = (all(g > N7["vth"][1] for g in RI["gates"] + R1["gates"]) and RI["g_max"] < N7["vgs"] and R1["g_max"] < N7["vgs"]
+                     and RI["held"] > R["out_pw_hi"] and R1["held"] > R["out_pw_hi"] and RI["ret_trip"] < min(R["ret_held"], N7["vth"][0])
+                     and R1["ret_trip"] < min(R["ret_held"], N7["vth"][0]))
+        F["bands_apart"] = all(R1["bands"][v][1] < RI["bands"][v][0] for v in (V_HELD, V_LOW, V_HIGH))
+        F["window"] = F["ret_all"] >= R["ret_closed"] and R1["allow"] >= sinks_all
+        # FM1 with one resistor and FM2
+        r_in = R106 * R107 / (R106 + R107)
+        v_fin = V_HELD * R107 / (R106 + R107)
+        F["per_uf"] = per_uf = -r_in * 1e-6 * math.log(1.0 - S["vin_min"] / v_fin)
+        F["phase"], F["phase_t"] = S["tstr"] + S["t_en"] + t_on, S["tstr"] + S["t_en"] + F["t_on_t"]
+        F["cin_max"], F["cin_max_t"] = (hold[0] - F["phase"]) / per_uf, (hold[0] - F["phase_t"]) / per_uf      # uF
+        F["vdd_over"] = bisect(lambda v: G.closed(v, 0.0, 0.0, r6m, rfm, r7p, 1e18)[0] > S["vdd_abs"], 1.0, V_CLAMP)
+        return F
+
+    C4V = L["c4vals"]
+    F = figures(C4V)
+    n7, sense1 = F["n7"], F["sense1"]
+    RI, R1 = F["RI"], F["R1"]
+
     # ------------------------------------------------------------------ 3. the count and the window
-    n7 = lambda t: N7["idss"] * 2.0 ** ((t - 25.0) / DOUBLING)
-    sense1 = R["load_ret"]
-    others = sense1 + 2 * n7(T_SITE) + N7["igss"]
-    others_all = sense1 + 3 * n7(T_SITE)
-    leak = n7(T_SITE)
-    rf = sum(D["pair"])
-    D["rf"] = rf
-    rfp, rfm, r6p, r6m, r7p, r7m = rf * (1 + TOL), rf * (1 - TOL), R106 * (1 + TOL), R106 * (1 - TOL), R107 * (1 + TOL), R107 * (1 - TOL)
-    alw = allowance(R["out_pw_lo"], R["ret_closed"], rfp, r7m)
-    sinks, sinks_all = others + leak, others_all + leak
-    ret, ret_all = ret_ramp(R["out_pw_lo"], sinks, rfp, r7m), ret_ramp(R["out_pw_lo"], sinks_all, rfp, r7m)
-    site = 25.0 + DOUBLING * math.log2((alw - others) / N7["idss"])
-    site_one = bisect(lambda t: sense1 + N7["igss"] + 3 * n7(t) > alw, -50.0, 250.0)
-    fav = ret_ramp(R["out_pw_hi"], sinks, rf, R107)
-    ao = S["ao_idss55"] * 2.0 ** ((T_SITE - 55.0) / DOUBLING)
-    ret_ao = ret_ramp(R["out_pw_lo"], others + ao, rfp, r7m)
-    w("\n3. THE COUNT ON THE RETURN AND L4-E11 20c's WINDOW AS A RAMP'S READING (DERIVED; R107 at -1 %, the pair's sum at +1 %: the two 7.5 kOhm at\n")
-    w("   their worse sign together read as one 15 kOhm at +1 %%; every off FET on the return on the doubling at %.2f C, ASSUMED)\n" % T_SITE)
+    w("\n3. THE COUNT ON THE RETURN AND L4-E11 20c's WINDOW AS A RAMP'S READING (DERIVED, on C4 as record l9stk states it: the pair %.1f + %.1f kOhm;\n"
+      % (C4V["pair"][0] / 1e3, C4V["pair"][1] / 1e3))
+    w("   R107 at -1 %, the pair's sum at +1 % (two resistors at their worse sign together read as one at +1 %); every off FET on the return on the\n")
+    w("   doubling at %.2f C, ASSUMED)\n" % T_SITE)
     w("   L4-E11 20c (RECORD): board A reads DOCK_EN_OUT powered from %.3f V at least, the return closed over %.2f V at most; \"a trigger there stops a\n"
       % (R["out_pw_lo"], R["ret_closed"]))
     w("     dead pack's precharge\". The return rises with DOCK_EN_OUT (it is DOCK_EN_OUT less a constant drop, scaled), so a ramp is never read\n")
     w("     held exactly when the return is over %.2f V at DOCK_EN_OUT %.3f V: one corner bounds every instant of the ramp\n" % (R["ret_closed"], R["out_pw_lo"]))
-    w("   the sinks: U48's SENSE1 %.2f uA (RECORD 20c); board A's Q44 and board P's Q107 over Q108 (2N7002s, drains on the return) %.2f uA each;\n"
-      % (sense1 * 1e6, n7(T_SITE) * 1e6))
-    w("     the first inverter Q103's gate at its printed IGSS %.2f uA (%.2f uA if it doubled too): %.2f uA (%.2f uA) before the shunt   l9stk %.2f (%.2f)\n"
-      % (N7["igss"] * 1e6, n7(T_SITE) * 1e6, others * 1e6, others_all * 1e6, L["others"], L["others_all"]))
-    w("   the shunt Q60, a 2N7002 at %.2f C: %.2f uA; in all %.2f uA (%.2f uA all doubled)                                     l9stk %.2f (%.2f)\n"
-      % (T_SITE, leak * 1e6, sinks * 1e6, sinks_all * 1e6, L["sinks"], L["sinks_all"]))
-    w("   the allowance with the pair at +1 %%: %.2f uA                                                                         l9stk %.2f\n" % (alw * 1e6, L["allow"]))
+    w("   the sinks (every node the composed netlists put on DOCK_EN_RET, l8p_drafts.out section 7): U48's SENSE1 %.2f uA (RECORD 20c); board A's\n" % (sense1 * 1e6))
+    w("     Q44 and board P's Q107 over Q108 (2N7002s, drains on the return) %.2f uA each; the first inverter Q103's gate at its printed IGSS\n" % (n7(T_SITE) * 1e6))
+    w("     %.2f uA (%.2f uA if it doubled too); test point TP104 and the loop's R107 and R261 no sink: %.2f uA (%.2f uA) before the shunt   l9stk %.2f (%.2f)\n"
+      % (N7["igss"] * 1e6, n7(T_SITE) * 1e6, F["others"] * 1e6, F["others_all"] * 1e6, L["others"], L["others_all"]))
+    w("   the shunt, a 2N7002 at %.2f C: %.2f uA; in all %.2f uA (%.2f uA all doubled)                                       l9stk %.2f (%.2f)\n"
+      % (T_SITE, F["leak"] * 1e6, F["sinks"] * 1e6, F["sinks_all"] * 1e6, L["sinks"], L["sinks_all"]))
+    w("   the allowance with the pair at +1 %%: %.2f uA                                                                         l9stk %.2f\n" % (F["alw"] * 1e6, L["allow"]))
     w("   the return at DOCK_EN_OUT %.3f V: %.3f V (%.3f V all doubled) against %.2f V: %s                                l9stk %.3f (%.3f)\n"
-      % (R["out_pw_lo"], ret, ret_all, R["ret_closed"], "HOLDS" if ret_all >= R["ret_closed"] else "FAILS", L["ret"], L["ret_all"]))
-    w("   the most favourable corner (DOCK_EN_OUT %.3f V, every part nominal): %.3f V, over the held reading's %.4f V\n" % (R["out_pw_hi"], fav, R["ret_held"]))
+      % (R["out_pw_lo"], F["ret"], F["ret_all"], R["ret_closed"], "HOLDS" if F["ret_all"] >= R["ret_closed"] else "FAILS", L["ret"], L["ret_all"]))
+    w("   the most favourable corner (DOCK_EN_OUT %.3f V, every part nominal): %.3f V, over the held reading's %.4f V\n" % (R["out_pw_hi"], F["fav"], R["ret_held"]))
     w("   the shunt's site may run to %.1f C (%.1f C with every FET on the return at one temperature)                                l9stk %.1f (%.1f)\n"
-      % (site, site_one, L["site"], L["site_one"]))
-    w("   for comparison, round 4's AO3400A at the same site (%.1f uA): the return %.3f V: FAILS (L8P-F08, round 7)\n" % (ao * 1e6, ret_ao))
-
-    # the gate network's drive (section 5 prints it): the 2N7002's on-resistance bound in section 4 scales to it
-    k = D["rpd"] / (D["rg"] + D["rpd"])
-    rth = D["rg"] * D["rpd"] / (D["rg"] + D["rpd"])
-    voh = 5.0 * (1 - S["acc_out"]) - S["voh_drop"]
-    g_on = voh * k - N7["igss"] * rth
+      % (F["site"], F["site_one"], L["site"], L["site_one"]))
+    w("   for comparison, round 4's AO3400A at the same site (%.1f uA): the return %.3f V: FAILS (L8P-F08, round 7)\n" % (F["ao"] * 1e6, F["ret_ao"]))
 
     # ------------------------------------------------------------------ 4. the loop's four readings
-    def readings(rf_nom):
-        r_p, r_m = rf_nom * (1 + TOL), rf_nom * (1 - TOL)
-        gates = [G.closed(v, GUARD_ALLOW, sinks, r6p, r_p, r7m, R["load_out"])[1] for v in (V_HELD, V_LOW, V_HIGH)]
-        g_max = G.closed(V_CLAMP, 0.0, 0.0, r6m, r_m, r7p, 1e18)[1]
-        held = G.held(V_HELD, GUARD_ALLOW, r6p, r_m, R["load_out"])
-        i_t = V_CLAMP / (r6m + r_m)
-        rds = N7["r5"] * (5.0 - N7["vth"][1]) / (g_on - N7["vth"][1]) * HOT_RDS
-        reg_c = bisect(lambda v: G.closed(v, GUARD_ALLOW, sinks, r6p, r_p, r7m, R["load_out"])[0] >= 6.0, 1.0, V_CLAMP)
-        reg_t = bisect(lambda v: G.held(v, GUARD_ALLOW, r6p, r_m, R["load_out"]) >= 6.0, 1.0, 60.0)
-        bands = {v: (G.held(v, GUARD_ALLOW, r6p, r_m, R["load_out"]), G.held(v, 0.0, r6m, r_p, R["load_out"])) for v in (V_HELD, V_LOW, V_HIGH)}
-        alw_ = allowance(R["out_pw_lo"], R["ret_closed"], r_p, r7m)
-        return dict(gates=gates, g_max=g_max, held=held, i_t=i_t, rds=rds, ret_trip=i_t * rds, rds_need=min(R["ret_held"], N7["vth"][0]) / i_t,
-                    reg_c=reg_c, reg_t=reg_t, bands=bands, allow=alw_)
-    RI, R1 = readings(rf), readings(rf / 2.0)
+    def print_readings(F_, Lref, ind=""):
+        for lab, X, key in (("the pair intact", F_["RI"], "intact"), ("one of the pair shorted", F_["R1"], "one")):
+            Lx = Lref[key] if Lref else None
+            tail = (lambda s: s) if Lref else (lambda s: "")
+            w(ind + "   %s:\n" % lab)
+            w(ind + "     (a) on: the gate closed at least %.2f / %.2f / %.2f V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most %.2f V at the 29.2 V clamp, under 20 V%s\n"
+              % (X["gates"][0], X["gates"][1], X["gates"][2], X["g_max"], tail("   l9stk %.2f / %.2f / %.2f" % Lx["gates"]) if Lx else ""))
+            w(ind + "     (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT %.2f V, over 1.981 V: read powered%s\n" % (X["held"], tail("                                     l9stk %.2f" % Lx["held"]) if Lx else ""))
+            w(ind + "     (c) tripped: %.2f mA through the shunt at the clamp, the return %.2f mV on the ASSUMED %.1f ohm (needed: at most %.0f ohm)%s\n"
+              % (X["i_t"] * 1e3, X["ret_trip"] * 1e3, X["rds"], X["rds_need"], tail("                l9stk %.2f mV" % Lx["ret_trip"]) if Lx else ""))
+            w(ind + "     (d) the regulator at its table's 6.0 V input from BRK_VIN %.2f V closed (the state that trips), %.2f V tripped%s\n"
+              % (X["reg_c"], X["reg_t"], tail("                     l9stk %.2f / %.2f" % (Lx["reg_closed"], Lx["reg_trip"])) if Lx else ""))
+            w(ind + "     the window's allowance %.2f uA against %.2f uA of sinks: %s\n" % (X["allow"] * 1e6, F_["sinks_all"] * 1e6, "holds" if X["allow"] >= F_["sinks_all"] else "FAILS"))
     w("\n4. THE LOOP'S FOUR READINGS (DERIVED; R106 10 kOhm, R107 22 kOhm, the pair, each at 1 %% at its worse sign; board A's %.0f kOhm and the guard's\n" % (R["load_out"] / 1e3))
     w("   30 uA on DOCK_EN_OUT; the full count on the return; the first inverter's gate PRINTED 1.0 to 2.5 V, VGS 20 V)\n")
-    for lab, X, key in (("C4, the pair intact", RI, "intact"), ("C4, one of the pair shorted", R1, "one")):
-        Lx = L[key]
-        w("   %s:\n" % lab)
-        w("     (a) on: the gate closed at least %.2f / %.2f / %.2f V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most %.2f V at the 29.2 V clamp, under 20 V   l9stk %.2f / %.2f / %.2f\n"
-          % (X["gates"][0], X["gates"][1], X["gates"][2], X["g_max"], Lx["gates"][0], Lx["gates"][1], Lx["gates"][2]))
-        w("     (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT %.2f V, over 1.981 V: read powered                                     l9stk %.2f\n" % (X["held"], Lx["held"]))
-        w("     (c) tripped: %.2f mA through the shunt at the clamp, the return %.2f mV on the ASSUMED %.1f ohm (needed: at most %.0f ohm)                l9stk %.2f mV\n"
-          % (X["i_t"] * 1e3, X["ret_trip"] * 1e3, X["rds"], X["rds_need"], Lx["ret_trip"]))
-        w("     (d) the regulator at its table's 6.0 V input from BRK_VIN %.2f V closed (the state that trips), %.2f V tripped                     l9stk %.2f / %.2f\n"
-          % (X["reg_c"], X["reg_t"], Lx["reg_closed"], Lx["reg_trip"]))
-        w("     the window's allowance %.2f uA against %.2f uA of sinks: %s\n" % (X["allow"] * 1e6, sinks_all * 1e6, "holds" if X["allow"] >= sinks_all else "FAILS"))
+    print_readings(F, L)
     w("   E-13b's tripped DOCK_EN_OUT bands (DERIVED):\n")
-    bands_apart = True
     for v in (V_HELD, V_LOW, V_HIGH):
         a, b = RI["bands"][v], R1["bands"][v]
-        bands_apart &= b[1] < a[0]
         la, lb = L["bands"][v]
         w("     BRK_VIN %4.1f V: intact %5.2f to %5.2f V, one shorted %5.2f to %5.2f V                                                   l9stk %.2f-%.2f, %.2f-%.2f\n"
           % (v, a[0], a[1], b[0], b[1], la[0], la[1], lb[0], lb[1]))
@@ -385,71 +435,46 @@ def main():
     w("     R260 puts it on DOCK_EN_OUT, a short of R261 on the return: it names WHICH resistor is shorted, closed or tripped\n")
 
     # ------------------------------------------------------------------ 5. the gate network
-    tau = D["cg"] * rth
-    vdd_hi = 5.0 * (1 + S["acc_out"])
-    t_inv = S["tstr"] + S["t_en"]
-    g_inv = gate(vdd_hi, tau, k, t_inv)
-    t_on = -tau * math.log(1.0 - N7["vth"][1] / (voh * k))
-    g_off = S["vol"] * k + N7["igss"] * rth
-    # at the parts' tolerances: the least time constant for the before-tEN side, the most for the trip side (1 % resistors, C +-10 %)
-    k_lo = D["rpd"] * (1 - TOL) / (D["rg"] * (1 + TOL) + D["rpd"] * (1 - TOL))
-    k_hi = D["rpd"] * (1 + TOL) / (D["rg"] * (1 - TOL) + D["rpd"] * (1 + TOL))
-    tau_lo = D["cg"] * (1 - C_TOL) * (D["rg"] * (1 - TOL) * D["rpd"] * (1 - TOL)) / (D["rg"] * (1 - TOL) + D["rpd"] * (1 - TOL))
-    tau_hi = D["cg"] * (1 + C_TOL) * (D["rg"] * (1 + TOL) * D["rpd"] * (1 + TOL)) / (D["rg"] * (1 + TOL) + D["rpd"] * (1 + TOL))
-    g_inv_t = gate(vdd_hi, tau_lo, k_hi, t_inv)
-    t_on_t = -tau_hi * math.log(1.0 - N7["vth"][1] / (voh * k_lo))
-    # the slow ramp: OVERTEMP is at most VDD; before VDD passes 1.3 V the gate's source is under 1.3 V; the dwell that lifts the gate to the
-    # least threshold with OVERTEMP held at 1.3 V (then tEN's 2.3 ms at VDD, which a slow ramp keeps near 1.3 V)
-    dwell = -tau * math.log(1.0 - N7["vth"][0] / (VDD_LOW_PR * k))
-    dwell_t = -tau_lo * math.log(1.0 - N7["vth"][0] / (VDD_LOW_PR * k_hi))
-    w("\n5. THE GATE NETWORK AGAINST THE SWITCH'S UNPRINTED OUTPUT BEFORE tEN (DERIVED; R262 %.0f kOhm, C260 %.1f uF, R263 %.1f MOhm as drawn)\n"
-      % (D["rg"] / 1e3, D["cg"] * 1e6, D["rpd"] / 1e6))
+    w("\n5. THE GATE NETWORK AGAINST THE SWITCH'S UNPRINTED OUTPUT BEFORE tEN (DERIVED; %.0f kOhm, %.1f uF, %.1f MOhm as record l9stk sizes it)\n"
+      % (C4V["rg"] / 1e3, C4V["cg"] * 1e6, C4V["rpd"] / 1e6))
     w("   nominal: %.1f ms, a divider of %.3f; OVERTEMP taken at VDD's %.2f V through the regulator's %.1f ms start and tEN's %.1f ms: the gate %.3f V;\n"
-      % (tau * 1e3, k, vdd_hi, S["tstr"] * 1e3, S["t_en"] * 1e3, g_inv))
+      % (F["tau"] * 1e3, F["k"], F["vdd_hi"], S["tstr"] * 1e3, S["t_en"] * 1e3, F["g_inv"]))
     w("     a trip: the drive %.2f V (VOH at least %.2f V, the gate's IGSS through %.1f kOhm), 2.5 V in %.1f ms; off: %.3f V             l9stk %.3f V, %.1f ms, %.2f V, %.3f V\n"
-      % (g_on, voh, rth / 1e3, t_on * 1e3, g_off, L["g_inv"], L["t_on"], L["g_on"], L["g_off"]))
-    w("   at the parts' tolerances (resistors 1 %%, C260 +-%.0f %%, ASSUMED; X7R's fall under 5 V of bias NOT HELD, Layer 6's on the chosen part):\n" % (C_TOL * 100))
+      % (F["g_on"], F["voh"], F["rth"] / 1e3, F["t_on"] * 1e3, F["g_off"], L["g_inv"], L["t_on"], L["g_on"], L["g_off"]))
+    w("   at the parts' tolerances (resistors 1 %%, the capacitor +-%.0f %%, ASSUMED; X7R's fall under 5 V of bias NOT HELD, Layer 6's on the chosen part):\n" % (C_TOL * 100))
     w("     the least time constant %.1f ms: the gate %.3f V after the same %.1f ms (under 1 V); the most %.1f ms: 2.5 V in %.1f ms\n"
-      % (tau_lo * 1e3, g_inv_t, t_inv * 1e3, tau_hi * 1e3, t_on_t * 1e3))
+      % (F["tau_lo"] * 1e3, F["g_inv_t"], F["t_inv"] * 1e3, F["tau_hi"] * 1e3, F["t_on_t"] * 1e3))
     w("     so record l9stk's 0.391 V and 36.0 ms are NOMINAL figures (relabelled); its inequalities hold at the tolerances\n")
     w("   the 3.8 ms premise: TI's start (1.5 ms) is printed for a stiff input and a 47 ohm load; here the input is the loop through 10 kOhm, so\n")
-    w("     VDD rises over milliseconds (section 9 (f)), and OVERTEMP before tEN is at most VDD: under %.1f V until tEN starts, then %.1f ms. The\n" % (VDD_LOW_PR, S["t_en"] * 1e3))
+    w("     VDD rises over milliseconds (section 9 (e)), and OVERTEMP before tEN is at most VDD: under %.1f V until tEN starts, then %.1f ms. The\n" % (VDD_LOW_PR, S["t_en"] * 1e3))
     w("     taken-high bound (5.05 V for 3.8 ms) covers a step start; a slow ramp needs, for the gate to reach the 2N7002's least 1 V with OVERTEMP\n")
     w("     at 1.3 V, a dwell of %.1f ms nominal (%.1f ms at the tolerances) between VDD's %.3f V and 1.3 V before tEN starts: NOT a desk result (TI\n"
-      % (dwell * 1e3, dwell_t * 1e3, N7["vth"][0] / k))
+      % (F["dwell"] * 1e3, F["dwell_t"] * 1e3, N7["vth"][0] / F["k"]))
     w("     prints no output state before tEN and no UVLO threshold for the regulator); E-13b (b2) reads the built loop\n")
 
     # ------------------------------------------------------------------ 6. FM1 and FM2
-    r_in = R106 * R107 / (R106 + R107)
-    v_fin = V_HELD * R107 / (R106 + R107)
-    per_uf = -r_in * 1e-6 * math.log(1.0 - S["vin_min"] / v_fin)
-    phase = S["tstr"] + S["t_en"] + t_on
-    phase_t = S["tstr"] + S["t_en"] + t_on_t
-    cin_max = (hold[0] - phase) / per_uf            # uF (per_uf is seconds per uF)
-    cin_max_t = (hold[0] - phase_t) / per_uf
-    vdd_over = bisect(lambda v: G.closed(v, 0.0, 0.0, r6m, rfm, r7p, 1e18)[0] > S["vdd_abs"], 1.0, V_CLAMP)
     z56, z62 = Z["BZT52C5V6"], Z["BZT52C6V2"]
     w("\n6. THE TWO FAILURE MODES (DERIVED on the printed maxima; record l9stk 5b (4))\n")
     w("   FM1 with ONE resistor (C1, not drawn): each closed phase %.1f ms (start %.1f, tEN %.1f, the gate %.1f), %.2f ms per uF of the regulator's input\n"
-      % (phase * 1e3, S["tstr"] * 1e3, S["t_en"] * 1e3, t_on * 1e3, per_uf * 1e3))
+      % (F["phase"] * 1e3, S["tstr"] * 1e3, S["t_en"] * 1e3, F["t_on"] * 1e3, F["per_uf"] * 1e3))
     w("     capacitor at 7.6 V, under the RC hold's least %.3f s below %.1f uF                                                    l9stk %.1f ms, %.2f ms, %.1f uF\n"
-      % (hold[0], cin_max, L["fm1_phase"], L["fm1_per_uf"], L["fm1_cin"]))
-    w("     at the gate network's tolerances: %.1f ms, below %.1f uF; the draft's C261 is %.1f uF (+-10 %%): FM1's cycle stays under the hold either way\n"
-      % (phase_t * 1e3, cin_max_t, D["cin"] * 1e6))
-    w("   FM1 with the PAIR (C4, drawn): one short leaves %.1f kOhm; section 4's second rows: on, held, tripped and the window all hold (allowance\n" % (rf / 2e3))
+      % (hold[0], F["cin_max"], L["fm1_phase"], L["fm1_per_uf"], L["fm1_cin"]))
+    w("     at the gate network's tolerances: %.1f ms, below %.1f uF\n" % (F["phase_t"] * 1e3, F["cin_max_t"]))
+    w("   FM1 with the PAIR (C4): one short leaves %.1f kOhm; section 4's second rows: on, held, tripped and the window all hold (allowance\n" % (min(C4V["pair"]) / 1e3))
     w("     %.2f uA); tripped, DOCK_EN_OUT at least %.2f V at 7.6 V, over the regulator's %.1f V least input: it holds on its own supply\n" % (R1["allow"] * 1e6, R1["bands"][V_HELD][0], S["vin_min"]))
     w("   FM2, the regulator's pass element shorted: U60's VDD is the closed DOCK_EN_OUT, over its %.0f V absolute rating from BRK_VIN %.2f V        l9stk %.2f V\n"
-      % (S["vdd_abs"], vdd_over, L["fm2_from"]))
+      % (S["vdd_abs"], F["vdd_over"], L["fm2_from"]))
     w("     (the whole service); its state then NOT PRINTED. The clamps of the kit's zener sheet (Diodes DS18004 Rev 38, PRINTED): BZT52C5V6 %.1f to %.1f V\n"
       % (z56["vz"][0], z56["vz"][1]))
     w("     at %.0f mA, IR %.1f uA at %.1f V only (its draw at 5.05 V NOT PRINTED, against the 30 uA allowance); BZT52C6V2 to %.1f V, over 6 V: NOT TAKEN\n"
       % (z56["iz"] * 1e3, z56["ir"] * 1e6, z56["vr"], z62["vz"][1]))
-    w("     round 8's addition: TP63 on U60's VDD lets E-13b read the regulator directly (d below): FM2 is found at the next check, latent between\n")
+    w("     round 8's addition: TP63 on U60's VDD lets E-13b read the regulator directly ((d) below): FM2 is found at the next check, latent between\n")
 
     # ------------------------------------------------------------------ 7. the check's verdict
-    chk = [("the count and the window", abs(sinks * 1e6 - L["sinks"]) < 0.006 and abs(sinks_all * 1e6 - L["sinks_all"]) < 0.006 and abs(alw * 1e6 - L["allow"]) < 0.006
-            and abs(ret - L["ret"]) < 0.0006 and abs(ret_all - L["ret_all"]) < 0.0006 and abs(site - L["site"]) < 0.06 and abs(site_one - L["site_one"]) < 0.06
-            and abs(others * 1e6 - L["others"]) < 0.006 and abs(others_all * 1e6 - L["others_all"]) < 0.006 and abs(leak * 1e6 - L["leak"]) < 0.006),
+    chk = [("the count and the window", abs(F["sinks"] * 1e6 - L["sinks"]) < 0.006 and abs(F["sinks_all"] * 1e6 - L["sinks_all"]) < 0.006
+            and abs(F["alw"] * 1e6 - L["allow"]) < 0.006 and abs(F["ret"] - L["ret"]) < 0.0006 and abs(F["ret_all"] - L["ret_all"]) < 0.0006
+            and abs(F["site"] - L["site"]) < 0.06 and abs(F["site_one"] - L["site_one"]) < 0.06 and abs(F["others"] * 1e6 - L["others"]) < 0.006
+            and abs(F["others_all"] * 1e6 - L["others_all"]) < 0.006 and abs(F["leak"] * 1e6 - L["leak"]) < 0.006),
            ("the loop's readings, intact", all(abs(a - b) < 0.006 for a, b in zip(RI["gates"], L["intact"]["gates"])) and abs(RI["held"] - L["intact"]["held"]) < 0.006
             and abs(RI["ret_trip"] * 1e3 - L["intact"]["ret_trip"]) < 0.006 and abs(RI["reg_c"] - L["intact"]["reg_closed"]) < 0.006 and abs(RI["reg_t"] - L["intact"]["reg_trip"]) < 0.006),
            ("the loop's readings, one shorted", all(abs(a - b) < 0.006 for a, b in zip(R1["gates"], L["one"]["gates"])) and abs(R1["held"] - L["one"]["held"]) < 0.006
@@ -457,21 +482,21 @@ def main():
             and abs(R1["allow"] * 1e6 - L["allow_one"]) < 0.006),
            ("the tripped bands", all(abs(RI["bands"][v][0] - L["bands"][v][0][0]) < 0.006 and abs(RI["bands"][v][1] - L["bands"][v][0][1]) < 0.006
                                      and abs(R1["bands"][v][0] - L["bands"][v][1][0]) < 0.006 and abs(R1["bands"][v][1] - L["bands"][v][1][1]) < 0.006 for v in L["bands"])),
-           ("the gate network (nominal)", abs(tau * 1e3 - L["tau"]) < 0.06 and abs(k - L["div"]) < 0.0006 and abs(g_inv - L["g_inv"]) < 0.0006 and abs(t_on * 1e3 - L["t_on"]) < 0.06
-            and abs(g_on - L["g_on"]) < 0.006 and abs(g_off - L["g_off"]) < 0.0006 and abs(RI["rds"] - L["rds"]) < 0.06 and abs(RI["rds_need"] - L["rds_need"]) < 0.6
-            and abs(RI["i_t"] * 1e3 - L["i_trip"]) < 0.006),
-           ("FM1 and FM2", abs(phase * 1e3 - L["fm1_phase"]) < 0.06 and abs(per_uf * 1e3 - L["fm1_per_uf"]) < 0.006 and abs(cin_max - L["fm1_cin"]) < 0.06
-            and abs(vdd_over - L["fm2_from"]) < 0.006),
-           ("the zener sheet", abs(z56["vz"][0] - L["z56"][0]) < 1e-9 and abs(z56["vz"][1] - L["z56"][1]) < 1e-9 and abs(z56["vz"][0] - vdd_hi - L["z56"][2]) < 0.006
+           ("the gate network (nominal)", abs(F["tau"] * 1e3 - L["tau"]) < 0.06 and abs(F["k"] - L["div"]) < 0.0006 and abs(F["g_inv"] - L["g_inv"]) < 0.0006
+            and abs(F["t_on"] * 1e3 - L["t_on"]) < 0.06 and abs(F["g_on"] - L["g_on"]) < 0.006 and abs(F["g_off"] - L["g_off"]) < 0.0006
+            and abs(RI["rds"] - L["rds"]) < 0.06 and abs(RI["rds_need"] - L["rds_need"]) < 0.6 and abs(RI["i_t"] * 1e3 - L["i_trip"]) < 0.006),
+           ("FM1 and FM2", abs(F["phase"] * 1e3 - L["fm1_phase"]) < 0.06 and abs(F["per_uf"] * 1e3 - L["fm1_per_uf"]) < 0.006 and abs(F["cin_max"] - L["fm1_cin"]) < 0.06
+            and abs(F["vdd_over"] - L["fm2_from"]) < 0.006),
+           ("the zener sheet", abs(z56["vz"][0] - L["z56"][0]) < 1e-9 and abs(z56["vz"][1] - L["z56"][1]) < 1e-9 and abs(z56["vz"][0] - F["vdd_hi"] - L["z56"][2]) < 0.006
             and abs(z56["ir"] * 1e6 - L["z56"][4]) < 1e-9 and abs(z62["vz"][1] - L["z62_hi"]) < 1e-9)]
     reproduced = all(v for _n, v in chk)
     w("\n7. THE CHECK'S VERDICT (the brief's item 1)\n")
     for name, v in chk:
         w("   %-40s %s\n" % (name, "REPRODUCED within its printed rounding" if v else "NOT REPRODUCED"))
     w("   relabelled (none moves a verdict): the gate network's %.3f V and %.1f ms are nominal (at the tolerances %.3f V and %.1f ms); \"under the\n"
-      % (L["g_inv"], L["t_on"], g_inv_t, t_on_t * 1e3))
+      % (L["g_inv"], L["t_on"], F["g_inv_t"], F["t_on_t"] * 1e3))
     w("     2N7002's least 1 V\" is a margin against a 25 C, 250 uA row, hot and sub-threshold NOT PRINTED; the 3.8 ms premise is a step start's (a\n")
-    w("     slow ramp is E-13b (b2)); FM1's 14.1 uF falls to %.1f uF at the tolerances (C4 does not cycle on one short)\n" % cin_max_t)
+    w("     slow ramp is E-13b (b2)); FM1's %.1f uF falls to %.1f uF at the tolerances (C4 does not cycle on one short)\n" % (L["fm1_cin"], F["cin_max_t"]))
     if not reproduced:
         w("   A FIGURE DOES NOT REPRODUCE: the judgement stops here, as the brief orders\n")
         sys.stdout.write("".join(out))
@@ -479,12 +504,17 @@ def main():
     w("   CONFIRMED on the sheets: every figure of record l9stk's C4 this script reads reproduces; the draft is judged below\n")
 
     # ------------------------------------------------------------------ 8. the draft
-    w("\n8. THE DRAFT AS DRAWN (apply_gen_sch_a_thguard.py, read for its values)\n")
-    w("   the pair %s %.1f kOhm in series (%.1f kOhm); the switch %s %s; the regulator %s %s; the shunt %s %s\n"
-      % (" and ".join(D["pair_refs"]), D["pair"][0] / 1e3, rf / 1e3, D["switch"][0], D["switch"][1], D["reg"][0], D["reg"][1], D["shunt"][0], D["shunt"][1]))
+    DF = figures(D)
+    same = (tuple(D["pair"]) == tuple(C4V["pair"]) and D["rg"] == C4V["rg"] and D["cg"] == C4V["cg"] and D["rpd"] == C4V["rpd"]
+            and D["switch"][1].startswith("LM26LVQISDX-130") and D["reg"][1].startswith("TPS70950") and D["shunt"][1] == "2N7002")
+    w("\n8. THE DRAFT AS DRAWN (apply_gen_sch_a_thguard.py, read for its values; section 9 is computed on these, not on C4's)\n")
+    w("   the pair %s %.1f and %.1f kOhm in series (%.1f kOhm); the switch %s %s; the regulator %s %s; the shunt %s %s\n"
+      % (" and ".join(D["pair_refs"]), D["pair"][0] / 1e3, D["pair"][1] / 1e3, DF["rf"] / 1e3, D["switch"][0], D["switch"][1], D["reg"][0], D["reg"][1],
+         D["shunt"][0], D["shunt"][1]))
     w("   the gate network R262 %.0f kOhm, C260 %.1f uF, R263 %.1f MOhm; the regulator's input C261 %s, its output C262 %s; U60's C263 %s\n"
       % (D["rg"] / 1e3, D["cg"] * 1e6, D["rpd"] / 1e6, D["cap_text"]["C261"], D["cap_text"]["C262"], D["cap_text"]["C263"]))
     w("   test points %s\n" % ", ".join("%s %s" % x for x in D["tps"]))
+    w("   the draft draws C4's values (the pair, the switch's preset, the regulator, the shunt, the gate network): %s\n" % ("yes" if same else "NO"))
     cout_ok = D["cout"] * (1 - C_TOL) >= 1.5e-6 and D["cout"] * (1 + C_TOL) <= 47e-6
     w("   TI's output capacitor (SBVS186H 8.1.1, PRINTED): an effective 1.5 to 47 uF, ESR under 0.2 ohm: %.1f uF at -10 %% is %s 1.5 uF before its\n"
       % (D["cout"] * 1e6, "over" if cout_ok else "UNDER"))
@@ -495,54 +525,58 @@ def main():
     lo_trip, hi_trip = 130.0 - S["acc"], 130.0 + S["acc"]
     m10, m18, mc4 = lo_trip - L["j10"], lo_trip - L["j18"], lo_trip - L["c4_j"]
     g_left, g_left2 = 150.0 - hi_trip - L["lead"], 150.0 - hi_trip - L["lead2"]
+    DRI, DR1 = DF["RI"], DF["R1"]
     w("\n9. C-PROT rev 1 ON THE DRAFT (10 A held and 18 A for 60 s never interrupted; every series part within its limits below and above the trip;\n")
     w("   board P's FETs welded, no firmware; start at 76.25 C plus own heating; docking included; each source present or absent)\n")
     w("   (a) NO TRIP, on the switch's PRINTED limits at the case's junction readings (RECORD l9stk 15.5; the junction taken for the switch, the hot\n")
     w("       side): 10 A held %.1f C, %.1f K under %.1f C; the 18 A service read as held %.1f C, %.1f K; the gauge's condition C4 %.1f C, %.1f K\n"
       % (L["j10"], m10, lo_trip, L["j18"], m18, L["c4_j"], mc4))
-    w("       the trip limit is PRINTED at VDD 5 V only: the closed loop puts the regulator at its table's input from BRK_VIN %.2f V, under the pack's\n" % RI["reg_c"])
+    w("       the trip limit is PRINTED at VDD 5 V only: the closed loop puts the regulator at its table's input from BRK_VIN %.2f V, under the pack's\n" % DRI["reg_c"])
     w("       least %.1f V, so the whole service is judged on it; the switch's own heating %.3f K (DERIVED)\n" % (V_LOW, 5.0 * S["is_max"] * S["rja"]))
     w("   (b) THE TRIP: surely tripped from %.1f C at the die; the hottest junction leads its mounting base by %.2f K on the worst split (%.2f K with two FETs\n"
       % (hi_trip, L["lead"], L["lead2"]))
     w("       carrying all): %.2f K (%.2f K) left for the gradient from each FET's mounting base to U60's die, a LAYOUT and PHYSICAL condition (E-13)\n" % (g_left, g_left2))
-    w("       the delay after the die passes the trip: the gate to 2.5 V within %.1f ms at the tolerances, the breaker's turn-off %.2f ms (RECORD l9stk\n" % (t_on_t * 1e3, t_off * 1e3))
+    w("       the delay after the die passes the trip: the gate to 2.5 V within %.1f ms at the tolerances, the breaker's turn-off %.2f ms (RECORD l9stk\n" % (DF["t_on_t"] * 1e3, t_off * 1e3))
     w("       15.4): the junction's rise in that time is NOT BOUNDED here (no thermal impedance curve held by this record); E-13's heat step reads it\n")
-    w("   (c) THE LOOP'S FOUR READINGS: section 4, intact and with one of the pair shorted, every one holds; the window holds on the full count\n")
-    w("       (%.3f V; %.3f V all doubled) with the shunt's site free to %.1f C\n" % (ret, ret_all, site))
+    w("   (c) THE LOOP'S FOUR READINGS on the draft's values:\n")
+    print_readings(DF, None, "    ")
+    w("       the window on the full count: %.3f V (%.3f V all doubled) against %.2f V, the shunt's site free to %.1f C: %s\n"
+      % (DF["ret"], DF["ret_all"], R["ret_closed"], DF["site"], "holds" if DF["window"] else "FAILS"))
+    w("       the gate network on the draft's values: %.3f V before tEN at the tolerances, 2.5 V within %.1f ms of a trip\n" % (DF["g_inv_t"], DF["t_on_t"] * 1e3))
     # (d) sources and the precharge
-    o_pre = G.closed(v_pre, GUARD_ALLOW, sinks, r6p, rfp, r7m, R["load_out"])[0]
+    o_pre = G.closed(v_pre, GUARD_ALLOW, DF["sinks"], R106 * (1 + TOL), DF["rf"] * (1 + TOL), R107 * (1 - TOL), R["load_out"])[0]
     w("   (d) EACH SOURCE PRESENT OR ABSENT: the guard's supply is DOCK_EN_OUT, from BRK_VIN through R106: the pack's side of the breaker, whatever\n")
     w("       shore, solar or vehicle do; a source reaches BRK_VIN only back through the breaker's body diodes (a dead pack's precharge, L4-E11 20c,\n")
     w("       at most %.3f A, the FETs' copper at the air). At the precharge's floor (BRK_VIN %.2f V) DOCK_EN_OUT reads at least %.2f V: the regulator\n"
       % (i_pre, v_pre, o_pre))
-    w("       in dropout, U60 at VDD under 5 V, where its trip point is NOT PRINTED (relabelled: from %.2f V to %.2f V of BRK_VIN the switch runs on less\n" % (v_pre, RI["reg_c"]))
+    w("       in dropout, U60 at VDD under 5 V, where its trip point is NOT PRINTED (relabelled: from %.2f V to %.2f V of BRK_VIN the switch runs on less\n" % (v_pre, DRI["reg_c"]))
     w("       than its printed condition); the FETs sit at the air, %.1f K under the printed no-trip limit at 5 V; E-13b (b2) reads the ramp on the unit\n" % (lo_trip - R["air"]))
     # (e) docking
-    D["sinks"], D["rout"] = sinks, R["load_out"]
-    S2 = dict(vreg_hi=vdd_hi, voh_drop=S["voh_drop"], is_max=S["is_max"], t_en=S["t_en"], vth_hi=N7["vth"][1])
+    D["rf"], D["sinks"], D["rout"] = DF["rf"], DF["sinks"], R["load_out"]
+    S2 = dict(vreg_hi=DF["vdd_hi"], voh_drop=S["voh_drop"], is_max=S["is_max"], t_en=S["t_en"], vth_hi=N7["vth"][1])
     w("   (e) DOCKING (DERIVED on ASSUMED behaviour: the regulator passes its input once it reaches its least rated 2.7 V, TI printing no UVLO; the\n")
     w("       capacitors at +10 %; the gate network at its slowest; the enable's mating is a step of BRK_VIN through R106): a docking starts the\n")
     w("       breaker no sooner than the RC hold's least %.3f s after the enable mates (RECORD l9stk 15.4)\n" % hold[0])
     dk = {}
     for v in (V_HELD, V_LOW, V_HIGH):
-        t13, t25, vdd_end = dock(v, D, S2, hot=True, cg_scale=1 + C_TOL, r_scale=1 + TOL)
+        t13, t25, _vdd = dock(v, D, S2, hot=True, cg_scale=1 + C_TOL, r_scale=1 + TOL)
         dk[v] = (t13, t25)
         w("       BRK_VIN %4.1f V: VDD passes 1.3 V at %5.1f ms; a HOT guard's gate passes 2.5 V at %5.1f ms: %s the hold's least %.3f s\n"
-          % (v, t13 * 1e3, t25 * 1e3, "before" if t25 < hold[0] else "AFTER", hold[0]))
-    w("       a COLD guard: the shunt's gate stays under %.3f V through the start (section 5's before-tEN bound), so a docking is never held off\n" % g_inv_t)
+          % (v, t13 * 1e3, t25 * 1e3 if t25 else float("inf"), "before" if t25 and t25 < hold[0] else "AFTER", hold[0]))
+    w("       a COLD guard: the shunt's gate stays under %.3f V through the start (section 5's before-tEN bound), so a docking is never held off\n" % DF["g_inv_t"])
     w("       so a docking with the FETs over the trip is turned off before the breaker can start, from every pack voltage (7.6 V is the breaker's\n")
     w("       PORIT, under the pack's service); the guard's start and DD-7's reading of DOCK_EN_OUT at a docking are L4-E11's 20f row to restate\n")
     # (f) the ground between the boards
     w("   (f) THE GROUND BETWEEN BOARDS A AND P: Q60 pulls the return to board A's ground, as Q44 does; board P's first inverter reads it against\n")
     w("       board P's return: the tripped %.1f mV plus the ground offset between the two at the current then flowing, under %.1f V while the offset\n"
-      % (RI["ret_trip"] * 1e3, N7["vth"][0]))
-    w("       stays under %.3f V: the offset is the pack return's copper and contacts (record l9stk 14, C-CU rev 1), NOT BOUNDED here, the same\n" % (N7["vth"][0] - RI["ret_trip"]))
+      % (DRI["ret_trip"] * 1e3, N7["vth"][0]))
+    w("       stays under %.3f V: the offset is the pack return's copper and contacts (record l9stk 14, C-CU rev 1), NOT BOUNDED here, the same\n" % (N7["vth"][0] - DRI["ret_trip"]))
     w("       condition Q44's input-return pulse already rests on\n")
-    w("   (g) EVERY SERIES PART WITHIN ITS LIMITS: the guard adds no part to the pack path; its parts on the loop: R260 and R261 carry at most %.2f mA\n"
-      % (V_CLAMP / (R106 * (1 - TOL) + rfm) * 1e3))
+    i_max = V_CLAMP / (R106 * (1 - TOL) + DF["rf"] * (1 - TOL))
+    w("   (g) EVERY SERIES PART WITHIN ITS LIMITS: the guard adds no part to the pack path; its parts on the loop: R260 and R261 carry at most %.2f mA\n" % (i_max * 1e3))
     w("       (%.2f mW each, against the chosen 0603's rating: Layer 6's); the regulator's input at most the 29.2 V clamp against %.0f V PRINTED; Q60 at\n"
-      % ((V_CLAMP / (R106 * (1 - TOL) + rfm)) ** 2 * D["pair"][0] * 1e3, S["vin_max"]))
-    w("       most 17.4 V against %.0f V, its gate %.2f V against +-%.0f V; C261 at most 29.2 V against its 50 V; U61 off the pour (TJ recommended to\n" % (N7["vds"], g_on, N7["vgs"]))
+      % (i_max ** 2 * max(D["pair"]) * 1e3, S["vin_max"]))
+    w("       most 17.4 V against %.0f V, its gate %.2f V against +-%.0f V; C261 at most 29.2 V against its 50 V; U61 off the pour (TJ recommended to\n" % (N7["vds"], DF["g_on"], N7["vgs"]))
     w("       %.0f C), U60 on it (TJ(MAX) %.0f C)\n" % (S["tj_rec"], S["tj_abs"]))
 
     # ------------------------------------------------------------------ 10. single failures
@@ -569,11 +603,11 @@ def main():
     w("   and is LATENT between checks, the battery FETs' junction limit then resting on E-1's bar (G3's state), as record l9stk names it\n")
 
     # ------------------------------------------------------------------ 11. verdict and E-13b
-    holds = (reproduced and m10 > 0 and m18 > 0 and mc4 > 0 and ret_all >= R["ret_closed"] and all(g > N7["vth"][1] for g in RI["gates"] + R1["gates"])
-             and RI["held"] > R["out_pw_hi"] and R1["held"] > R["out_pw_hi"] and RI["ret_trip"] < min(R["ret_held"], N7["vth"][0])
-             and R1["ret_trip"] < min(R["ret_held"], N7["vth"][0]) and RI["reg_c"] < V_LOW and all(dk[v][1] < hold[0] for v in dk) and cout_ok)
+    holds = (reproduced and same and m10 > 0 and m18 > 0 and mc4 > 0 and DF["window"] and DF["four"] and DRI["reg_c"] < V_LOW
+             and all(dk[v][1] is not None and dk[v][1] < hold[0] for v in dk) and cout_ok and DF["g_inv_t"] < N7["vth"][0] and DF["bands_apart"])
     w("\n11. VERDICT, WHAT STAYS OPEN, AND E-13b\n")
     w("   the check (item 1): C4 CONFIRMED on the makers' sheets, with the relabellings of sections 2, 5 and 9 (d); no figure fails to reproduce\n")
+    w("   the draft draws C4's values: %s\n" % ("yes" if same else "NO"))
     w("   the judgement (item 3) on C-PROT rev 1: %s on the desk: the no-trip side on the switch's printed limits (%.1f, %.1f and %.1f K), the trip\n"
       % ("HOLDS" if holds else "DOES NOT HOLD", m10, m18, mc4))
     w("     side within the %.2f K gradient budget (a layout and physical condition), the four readings, the window on the full count, the docking start\n" % g_left)
@@ -586,7 +620,7 @@ def main():
     w("     (b2) the loop ramped slowly with the guard cold: the return never under %.2f V while DOCK_EN_OUT is over %.3f V\n" % (R["ret_closed"], R["out_pw_lo"]))
     w("     (c) VTEMP (TP61) with TRIP_TEST high reads VTRIP, %.3f V for the 130 C preset (SNIS144G Table 1, gain 4)\n" % S["vtrip130_g4"])
     w("     (d) VDD (TP63) reads %.2f to %.2f V with the loop closed at BRK_VIN over %.2f V (a shorted or open regulator; TI's +-1 %% is printed at\n"
-      % (5.0 * (1 - S["acc_out"]), vdd_hi, RI["reg_c"]))
+      % (5.0 * (1 - S["acc_out"]), DF["vdd_hi"], DRI["reg_c"]))
     w("         1 mA of load, ASSUMED at the switch's microamps)\n")
     w("   L8P-F07 and L8P-F08 stay OPEN until an independent check has read this round (the brief); a negative check of C4 ends that loop\n")
 
@@ -594,20 +628,23 @@ def main():
     preds = [
         ("the check: every figure of record l9stk's C4 read here reproduces within its printed rounding", reproduced),
         ("the 2N7002 prints its on-resistance at VGS 5 V and 10 V only, its leakage and threshold at 25 C only", N7["r5"] == 7.0 and N7["r10"] == 5.0),
-        ("the window holds as a ramp's reading on the full count, also with Q103's gate doubled", ret_all >= R["ret_closed"]),
-        ("round 4's AO3400A at the same site fails the same window (L8P-F08)", ret_ao < R["ret_closed"]),
-        ("the four readings hold intact and with one of the pair shorted", all(g > N7["vth"][1] for g in RI["gates"] + R1["gates"]) and RI["g_max"] < N7["vgs"]
-         and R1["g_max"] < N7["vgs"] and RI["held"] > R["out_pw_hi"] and R1["held"] > R["out_pw_hi"] and RI["ret_trip"] < min(R["ret_held"], N7["vth"][0])
-         and R1["ret_trip"] < min(R["ret_held"], N7["vth"][0])),
-        ("E-13b's tripped bands tell a shorted resistor of the pair from the intact pair", bands_apart),
-        ("the gate stays under 1 V through the start and tEN at the tolerances, and passes 2.5 V within 0.1 s of a trip", g_inv_t < N7["vth"][0] and t_on_t < 0.1),
-        ("FM1's single-resistor cycle stays under the hold with the draft's input capacitor, at the tolerances", D["cin"] * (1 + C_TOL) < cin_max_t * 1e-6),
-        ("a shorted regulator puts over 6 V on the switch from the pack's least service voltage (FM2)", vdd_over < V_LOW),
+        ("C4: the window holds as a ramp's reading on the full count, also with Q103's gate doubled", F["ret_all"] >= R["ret_closed"]),
+        ("round 4's AO3400A at the same site fails the same window (L8P-F08)", F["ret_ao"] < R["ret_closed"]),
+        ("C4: the four readings hold intact and with one of the pair shorted", F["four"]),
+        ("C4: E-13b's tripped bands tell a shorted resistor of the pair from the intact pair", F["bands_apart"]),
+        ("C4: the gate stays under 1 V through the start and tEN at the tolerances, and passes 2.5 V within 0.1 s of a trip", F["g_inv_t"] < N7["vth"][0] and F["t_on_t"] < 0.1),
+        ("a shorted regulator puts over 6 V on the switch from the pack's least service voltage (FM2)", F["vdd_over"] < V_LOW),
         ("the no-trip side is printed at 10 A, in the 18 A service and at condition C4", m10 > 0 and m18 > 0 and mc4 > 0),
         ("the trip side leaves the gradient record l9stk prints", abs(g_left - L["grad"]) < 0.006 and abs(g_left2 - L["grad2"]) < 0.006),
-        ("a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V", all(dk[v][1] < hold[0] for v in dk)),
-        ("the draft's output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias", cout_ok),
         ("record l9stk's acceptance (b) names seven mutations", len(L["mutations"]) == 7),
+        ("the draft draws C4's values", same),
+        ("the draft: the window holds on the full count, intact and with one of its pair shorted", DF["window"]),
+        ("the draft: the four readings hold intact and with one of its pair shorted", DF["four"]),
+        ("the draft: E-13b's bands tell a shorted resistor of its pair from the intact pair", DF["bands_apart"]),
+        ("the draft: its gate network keeps the gate under 1 V through the start at the tolerances and on within 0.1 s", DF["g_inv_t"] < N7["vth"][0] and DF["t_on_t"] < 0.1),
+        ("the draft: FM1's single-resistor cycle would stay under the hold with its input capacitor, at the tolerances", D["cin"] * 1e6 * (1 + C_TOL) < DF["cin_max_t"]),
+        ("the draft: a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V", all(dk[v][1] is not None and dk[v][1] < hold[0] for v in dk)),
+        ("the draft: its output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias", cout_ok),
         ("C-PROT rev 1 holds on the desk for the draft (the physical conditions apart)", holds),
     ]
     w("\n12. PREDICATES\n")

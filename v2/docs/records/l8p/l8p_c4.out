@@ -15,7 +15,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    e531190bb1b325c1  v2/docs/records/l8p/l8p_guard.py
-   44fe73ec4d1bda59  v2/docs/records/l8p/l8p_c4.py
+   8e0e4f3862f33219  v2/docs/records/l8p/l8p_c4.py
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
@@ -39,14 +39,16 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    the on-resistance: at the drive under 5 V NOT PRINTED; record l9stk's 17.2 ohm (the 5 V row scaled by the drive over the highest threshold,
      x2 hot) is ASSUMED, as it says; the requirement it is held against is DERIVED below
 
-3. THE COUNT ON THE RETURN AND L4-E11 20c's WINDOW AS A RAMP'S READING (DERIVED; R107 at -1 %, the pair's sum at +1 %: the two 7.5 kOhm at
-   their worse sign together read as one 15 kOhm at +1 %; every off FET on the return on the doubling at 86.25 C, ASSUMED)
+3. THE COUNT ON THE RETURN AND L4-E11 20c's WINDOW AS A RAMP'S READING (DERIVED, on C4 as record l9stk states it: the pair 7.5 + 7.5 kOhm;
+   R107 at -1 %, the pair's sum at +1 % (two resistors at their worse sign together read as one at +1 %); every off FET on the return on the
+   doubling at 86.25 C, ASSUMED)
    L4-E11 20c (RECORD): board A reads DOCK_EN_OUT powered from 1.825 V at least, the return closed over 0.84 V at most; "a trigger there stops a
      dead pack's precharge". The return rises with DOCK_EN_OUT (it is DOCK_EN_OUT less a constant drop, scaled), so a ramp is never read
      held exactly when the return is over 0.84 V at DOCK_EN_OUT 1.825 V: one corner bounds every instant of the ramp
-   the sinks: U48's SENSE1 2.00 uA (RECORD 20c); board A's Q44 and board P's Q107 over Q108 (2N7002s, drains on the return) 5.58 uA each;
-     the first inverter Q103's gate at its printed IGSS 0.08 uA (5.58 uA if it doubled too): 13.25 uA (18.75 uA) before the shunt   l9stk 13.25 (18.75)
-   the shunt Q60, a 2N7002 at 86.25 C: 5.58 uA; in all 18.83 uA (24.33 uA all doubled)                                     l9stk 18.83 (24.33)
+   the sinks (every node the composed netlists put on DOCK_EN_RET, l8p_drafts.out section 7): U48's SENSE1 2.00 uA (RECORD 20c); board A's
+     Q44 and board P's Q107 over Q108 (2N7002s, drains on the return) 5.58 uA each; the first inverter Q103's gate at its printed IGSS
+     0.08 uA (5.58 uA if it doubled too); test point TP104 and the loop's R107 and R261 no sink: 13.25 uA (18.75 uA) before the shunt   l9stk 13.25 (18.75)
+   the shunt, a 2N7002 at 86.25 C: 5.58 uA; in all 18.83 uA (24.33 uA all doubled)                                       l9stk 18.83 (24.33)
    the allowance with the pair at +1 %: 26.45 uA                                                                         l9stk 26.45
    the return at DOCK_EN_OUT 1.825 V: 0.908 V (0.859 V all doubled) against 0.84 V: HOLDS                                l9stk 0.908 (0.859)
    the most favourable corner (DOCK_EN_OUT 1.981 V, every part nominal): 1.010 V, over the held reading's 0.7755 V
@@ -55,13 +57,13 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
 
 4. THE LOOP'S FOUR READINGS (DERIVED; R106 10 kOhm, R107 22 kOhm, the pair, each at 1 % at its worse sign; board A's 984 kOhm and the guard's
    30 uA on DOCK_EN_OUT; the full count on the return; the first inverter's gate PRINTED 1.0 to 2.5 V, VGS 20 V)
-   C4, the pair intact:
+   the pair intact:
      (a) on: the gate closed at least 3.13 / 4.51 / 7.36 V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most 13.81 V at the 29.2 V clamp, under 20 V   l9stk 3.13 / 4.51 / 7.36
      (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT 4.32 V, over 1.981 V: read powered                                     l9stk 4.32
      (c) tripped: 1.18 mA through the shunt at the clamp, the return 20.31 mV on the ASSUMED 17.2 ohm (needed: at most 657 ohm)                l9stk 20.31 mV
      (d) the regulator at its table's 6.0 V input from BRK_VIN 8.12 V closed (the state that trips), 10.45 V tripped                     l9stk 8.12 / 10.45
      the window's allowance 26.45 uA against 24.33 uA of sinks: holds
-   C4, one of the pair shorted:
+   one of the pair shorted:
      (a) on: the gate closed at least 3.81 / 5.46 / 8.85 V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most 16.41 V at the 29.2 V clamp, under 20 V   l9stk 3.81 / 5.46 / 8.85
      (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT 3.08 V, over 1.981 V: read powered                                     l9stk 3.08
      (c) tripped: 1.69 mA through the shunt at the clamp, the return 29.01 mV on the ASSUMED 17.2 ohm (needed: at most 460 ohm)                l9stk 29.01 mV
@@ -74,14 +76,14 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    the midpoint TP62 (round 8's reading for E-13b (b)): the pair intact holds it within 1 % of the mean of DOCK_EN_OUT and the return; a short of
      R260 puts it on DOCK_EN_OUT, a short of R261 on the return: it names WHICH resistor is shorted, closed or tripped
 
-5. THE GATE NETWORK AGAINST THE SWITCH'S UNPRINTED OUTPUT BEFORE tEN (DERIVED; R262 47 kOhm, C260 1.0 uF, R263 1.0 MOhm as drawn)
+5. THE GATE NETWORK AGAINST THE SWITCH'S UNPRINTED OUTPUT BEFORE tEN (DERIVED; 47 kOhm, 1.0 uF, 1.0 MOhm as record l9stk sizes it)
    nominal: 44.9 ms, a divider of 0.955; OVERTEMP taken at VDD's 5.05 V through the regulator's 1.5 ms start and tEN's 2.3 ms: the gate 0.391 V;
      a trip: the drive 4.53 V (VOH at least 4.75 V, the gate's IGSS through 44.9 kOhm), 2.5 V in 36.0 ms; off: 0.195 V             l9stk 0.391 V, 36.0 ms, 4.53 V, 0.195 V
-   at the parts' tolerances (resistors 1 %, C260 +-10 %, ASSUMED; X7R's fall under 5 V of bias NOT HELD, Layer 6's on the chosen part):
+   at the parts' tolerances (resistors 1 %, the capacitor +-10 %, ASSUMED; X7R's fall under 5 V of bias NOT HELD, Layer 6's on the chosen part):
      the least time constant 40.0 ms: the gate 0.438 V after the same 3.8 ms (under 1 V); the most 49.9 ms: 2.5 V in 40.0 ms
      so record l9stk's 0.391 V and 36.0 ms are NOMINAL figures (relabelled); its inequalities hold at the tolerances
    the 3.8 ms premise: TI's start (1.5 ms) is printed for a stiff input and a 47 ohm load; here the input is the loop through 10 kOhm, so
-     VDD rises over milliseconds (section 9 (f)), and OVERTEMP before tEN is at most VDD: under 1.3 V until tEN starts, then 2.3 ms. The
+     VDD rises over milliseconds (section 9 (e)), and OVERTEMP before tEN is at most VDD: under 1.3 V until tEN starts, then 2.3 ms. The
      taken-high bound (5.05 V for 3.8 ms) covers a step start; a slow ramp needs, for the gate to reach the 2N7002's least 1 V with OVERTEMP
      at 1.3 V, a dwell of 73.5 ms nominal (65.3 ms at the tolerances) between VDD's 1.047 V and 1.3 V before tEN starts: NOT a desk result (TI
      prints no output state before tEN and no UVLO threshold for the regulator); E-13b (b2) reads the built loop
@@ -89,13 +91,13 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
 6. THE TWO FAILURE MODES (DERIVED on the printed maxima; record l9stk 5b (4))
    FM1 with ONE resistor (C1, not drawn): each closed phase 39.8 ms (start 1.5, tEN 2.3, the gate 36.0), 5.00 ms per uF of the regulator's input
      capacitor at 7.6 V, under the RC hold's least 0.110 s below 14.1 uF                                                    l9stk 39.8 ms, 5.00 ms, 14.1 uF
-     at the gate network's tolerances: 43.8 ms, below 13.2 uF; the draft's C261 is 1.0 uF (+-10 %): FM1's cycle stays under the hold either way
-   FM1 with the PAIR (C4, drawn): one short leaves 7.5 kOhm; section 4's second rows: on, held, tripped and the window all hold (allowance
+     at the gate network's tolerances: 43.8 ms, below 13.2 uF
+   FM1 with the PAIR (C4): one short leaves 7.5 kOhm; section 4's second rows: on, held, tripped and the window all hold (allowance
      91.47 uA); tripped, DOCK_EN_OUT at least 3.08 V at 7.6 V, over the regulator's 2.7 V least input: it holds on its own supply
    FM2, the regulator's pass element shorted: U60's VDD is the closed DOCK_EN_OUT, over its 6 V absolute rating from BRK_VIN 7.60 V        l9stk 7.60 V
      (the whole service); its state then NOT PRINTED. The clamps of the kit's zener sheet (Diodes DS18004 Rev 38, PRINTED): BZT52C5V6 5.2 to 6.0 V
      at 5 mA, IR 1.0 uA at 2.0 V only (its draw at 5.05 V NOT PRINTED, against the 30 uA allowance); BZT52C6V2 to 6.6 V, over 6 V: NOT TAKEN
-     round 8's addition: TP63 on U60's VDD lets E-13b read the regulator directly (d below): FM2 is found at the next check, latent between
+     round 8's addition: TP63 on U60's VDD lets E-13b read the regulator directly ((d) below): FM2 is found at the next check, latent between
 
 7. THE CHECK'S VERDICT (the brief's item 1)
    the count and the window                 REPRODUCED within its printed rounding
@@ -110,10 +112,11 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
      slow ramp is E-13b (b2)); FM1's 14.1 uF falls to 13.2 uF at the tolerances (C4 does not cycle on one short)
    CONFIRMED on the sheets: every figure of record l9stk's C4 this script reads reproduces; the draft is judged below
 
-8. THE DRAFT AS DRAWN (apply_gen_sch_a_thguard.py, read for its values)
-   the pair R260 and R261 7.5 kOhm in series (15.0 kOhm); the switch U60 LM26LVQISDX-130/NOPB; the regulator U61 TPS70950DBVR; the shunt Q60 2N7002
+8. THE DRAFT AS DRAWN (apply_gen_sch_a_thguard.py, read for its values; section 9 is computed on these, not on C4's)
+   the pair R260 and R261 7.5 and 7.5 kOhm in series (15.0 kOhm); the switch U60 LM26LVQISDX-130/NOPB; the regulator U61 TPS70950DBVR; the shunt Q60 2N7002
    the gate network R262 47 kOhm, C260 1.0 uF, R263 1.0 MOhm; the regulator's input C261 1u 50V X7R, its output C262 4.7u 16V X7R; U60's C263 100n 50V X8R
    test points TP60 THG_TT, TP61 THG_VT, TP62 THG_MID, TP63 THG_VDD
+   the draft draws C4's values (the pair, the switch's preset, the regulator, the shunt, the gate network): yes
    TI's output capacitor (SBVS186H 8.1.1, PRINTED): an effective 1.5 to 47 uF, ESR under 0.2 ohm: 4.7 uF at -10 % is over 1.5 uF before its
      bias; X7R at 5 V of bias on 16 V parts loses a part of that NOT HELD here: Layer 6 confirms the effective 1.5 uF on the chosen part's curve
    the input capacitor 1.0 uF: TI's 0.1 to 2.2 uF, needed for line transients over 10 V (a docking steps DOCK_EN_OUT through 10 kOhm)
@@ -128,8 +131,21 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
        carrying all): 15.68 K (13.56 K) left for the gradient from each FET's mounting base to U60's die, a LAYOUT and PHYSICAL condition (E-13)
        the delay after the die passes the trip: the gate to 2.5 V within 40.0 ms at the tolerances, the breaker's turn-off 0.41 ms (RECORD l9stk
        15.4): the junction's rise in that time is NOT BOUNDED here (no thermal impedance curve held by this record); E-13's heat step reads it
-   (c) THE LOOP'S FOUR READINGS: section 4, intact and with one of the pair shorted, every one holds; the window holds on the full count
-       (0.908 V; 0.859 V all doubled) with the shunt's site free to 98.7 C
+   (c) THE LOOP'S FOUR READINGS on the draft's values:
+       the pair intact:
+         (a) on: the gate closed at least 3.13 / 4.51 / 7.36 V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most 13.81 V at the 29.2 V clamp, under 20 V
+         (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT 4.32 V, over 1.981 V: read powered
+         (c) tripped: 1.18 mA through the shunt at the clamp, the return 20.31 mV on the ASSUMED 17.2 ohm (needed: at most 657 ohm)
+         (d) the regulator at its table's 6.0 V input from BRK_VIN 8.12 V closed (the state that trips), 10.45 V tripped
+         the window's allowance 26.45 uA against 24.33 uA of sinks: holds
+       one of the pair shorted:
+         (a) on: the gate closed at least 3.81 / 5.46 / 8.85 V at 7.6 / 10.6 / 16.8 V, over 2.5 V; at most 16.41 V at the 29.2 V clamp, under 20 V
+         (b) held at 7.6 V (board P's detector or Q44): DOCK_EN_OUT 3.08 V, over 1.981 V: read powered
+         (c) tripped: 1.69 mA through the shunt at the clamp, the return 29.01 mV on the ASSUMED 17.2 ohm (needed: at most 460 ohm)
+         (d) the regulator at its table's 6.0 V input from BRK_VIN 8.57 V closed (the state that trips), 14.53 V tripped
+         the window's allowance 91.47 uA against 24.33 uA of sinks: holds
+       the window on the full count: 0.908 V (0.859 V all doubled) against 0.84 V, the shunt's site free to 98.7 C: holds
+       the gate network on the draft's values: 0.438 V before tEN at the tolerances, 2.5 V within 40.0 ms of a trip
    (d) EACH SOURCE PRESENT OR ABSENT: the guard's supply is DOCK_EN_OUT, from BRK_VIN through R106: the pack's side of the breaker, whatever
        shore, solar or vehicle do; a source reaches BRK_VIN only back through the breaker's body diodes (a dead pack's precharge, L4-E11 20c,
        at most 0.336 A, the FETs' copper at the air). At the precharge's floor (BRK_VIN 4.70 V) DOCK_EN_OUT reads at least 3.34 V: the regulator
@@ -173,6 +189,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
 
 11. VERDICT, WHAT STAYS OPEN, AND E-13b
    the check (item 1): C4 CONFIRMED on the makers' sheets, with the relabellings of sections 2, 5 and 9 (d); no figure fails to reproduce
+   the draft draws C4's values: yes
    the judgement (item 3) on C-PROT rev 1: HOLDS on the desk: the no-trip side on the switch's printed limits (38.4, 9.8 and 6.0 K), the trip
      side within the 15.68 K gradient budget (a layout and physical condition), the four readings, the window on the full count, the docking start
    OPEN, and not closable on the desk: E-13 (the gradient from each FET's mounting base to U60, the heat step's lag); E-13b (b2) (the state
@@ -190,16 +207,21 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
 12. PREDICATES
    the check: every figure of record l9stk's C4 read here reproduces within its printed rounding                                    yes
    the 2N7002 prints its on-resistance at VGS 5 V and 10 V only, its leakage and threshold at 25 C only                             yes
-   the window holds as a ramp's reading on the full count, also with Q103's gate doubled                                            yes
+   C4: the window holds as a ramp's reading on the full count, also with Q103's gate doubled                                        yes
    round 4's AO3400A at the same site fails the same window (L8P-F08)                                                               yes
-   the four readings hold intact and with one of the pair shorted                                                                   yes
-   E-13b's tripped bands tell a shorted resistor of the pair from the intact pair                                                   yes
-   the gate stays under 1 V through the start and tEN at the tolerances, and passes 2.5 V within 0.1 s of a trip                    yes
-   FM1's single-resistor cycle stays under the hold with the draft's input capacitor, at the tolerances                             yes
+   C4: the four readings hold intact and with one of the pair shorted                                                               yes
+   C4: E-13b's tripped bands tell a shorted resistor of the pair from the intact pair                                               yes
+   C4: the gate stays under 1 V through the start and tEN at the tolerances, and passes 2.5 V within 0.1 s of a trip                yes
    a shorted regulator puts over 6 V on the switch from the pack's least service voltage (FM2)                                      yes
    the no-trip side is printed at 10 A, in the 18 A service and at condition C4                                                     yes
    the trip side leaves the gradient record l9stk prints                                                                            yes
-   a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V                                         yes
-   the draft's output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias                                                yes
    record l9stk's acceptance (b) names seven mutations                                                                              yes
+   the draft draws C4's values                                                                                                      yes
+   the draft: the window holds on the full count, intact and with one of its pair shorted                                           yes
+   the draft: the four readings hold intact and with one of its pair shorted                                                        yes
+   the draft: E-13b's bands tell a shorted resistor of its pair from the intact pair                                                yes
+   the draft: its gate network keeps the gate under 1 V through the start at the tolerances and on within 0.1 s                     yes
+   the draft: FM1's single-resistor cycle would stay under the hold with its input capacitor, at the tolerances                     yes
+   the draft: a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V                              yes
+   the draft: its output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias                                             yes
    C-PROT rev 1 holds on the desk for the draft (the physical conditions apart)                                                     yes
