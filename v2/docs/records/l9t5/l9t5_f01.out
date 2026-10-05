@@ -131,7 +131,7 @@ MODEL, ASSUMPTION, MISSING.
        together +-2.1609 mV; R560's offset (V+ - PA_ISP) x R553 / R560 is a deterministic term inside the formula, R560 1 % 100 ppm/K
      THE CAP: 6.6401 A nominal; 6.3518 to 6.9259 A over every corner (MODEL on the terms above); on the PRINTED rows alone (no TYPICAL or
        ASSUMPTION term: the load residual, IB, C554's leakage, the stress rows, the nonlinearity and the hold's leakage out; R559 at the
-       tree's 1 % class, ASSUMPTION) 6.3888 to 6.8945 A, which is NOT a guaranteed band (the TYPICAL and ASSUMPTION terms are real)
+       tree's 1 % class, ASSUMPTION) 6.3888 to 6.8945 A, which is NOT a bound on the cap (the TYPICAL and ASSUMPTION terms are real)
    against the PA rail's own limit, U13's average loop (VSNS 43 mV PRINTED min on R55, WSL25126L000FEA 6 mOhm 1 %, TCR +-110 ppm/K PRINTED
      for 5 to 6.9 mOhm): R55 at the cap's top dissipates 0.288 W, 105.0 C on the 76.25 C air with 100 K/W from the WSL2512 derating line (MODEL,
      not a printed thermal resistance): least 7.0338 A (7.0957 A initial); the cap's top and R55's other loads 6.9263 A: 0.1075 A under it
@@ -248,7 +248,7 @@ MODEL, ASSUMPTION, MISSING.
         A less the lab's uncertainty the arrangement fails and routes R1 or R2 are taken (5)
    2   typical stress data and an assumed bias in a printed band          CORRECTED WITH DESK EVIDENCE
         the terms split by label (l9t5_paloop.py cap(); 4, the INA250A2 gain and offset, the integrator): 6.3518 to 6.9259 A with the
-        TYPICAL allowances carried whole, 6.3888 to 6.8945 A on the PRINTED rows alone (not a guaranteed band); residual GENUINELY
+        TYPICAL allowances carried whole, 6.3888 to 6.8945 A on the PRINTED rows alone (not a bound on the cap); residual GENUINELY
         EXTERNAL: no printed maximum for the shunt's stress rows; effect: the 0.1075 A under U13's least absorbs 1.55 % more gain
         drift
    3   reference loading, junction, supply, common mode, loop residuals   STILL AN OPEN DESIGN DEFECT for the reference's loading (cx46)
