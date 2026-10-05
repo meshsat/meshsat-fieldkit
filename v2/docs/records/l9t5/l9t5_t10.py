@@ -1174,7 +1174,7 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     vt = GS["vtp"]
     i_max = (vt[1] / (GS["gm"][0] * GV["rl"] * 0.99) + GS["vos"]) / (GV["rs"] * 0.99) + GS["iin"] * GV["rf"] * 1.01 / (GS["gm"][0] * GV["rl"] * 0.99 * GV["rs"] * 0.99)
     i_min = (vt[0] / (GS["gm"][2] * GV["rl"] * 1.01) - GS["vos"]) / (GV["rs"] * 1.01) - GS["iin"] * GV["rf"] * 1.01 / (GS["gm"][2] * GV["rl"] * 1.01 * GV["rs"] * 1.01)
-    tau_t = GV["rf"] * 1.01 * GV["cf"] * 1.1
+    tau_t = (GV["rf"] + GV["rl"]) * 1.01 * GV["cf"] * 1.1               # the charging path is RL + RF (the check cx46's finding 6)
     serve = [("the bounded state with the limiters' pull-ups", b_v[2] + i_lim_pu)] + [("%s with the response" % f, fr[f][3] + i_lim_pu) for f in ("B1", "B2", "B3", "B4", "B5", "B6", "B7a")] \
         + [("both fabrics faulted, responded", out["both"][FITTED_REV][0] + i_lim_pu), ("a babbler, the limiters bounding it", i_bab6)]
     serve_max = max(i for _l, i in serve)
@@ -1186,6 +1186,14 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     i_mcu_max = max(v[3] for v in P["V"].values() if v[3] is not None) / 1000.0
     i_any = i_mcu_max + i_aux + 2 * i_dom + i_lim_pu
     t_trip = tau_t * math.log((i_any - b_v[2]) / (i_any - i_max))
+    t_vb23 = tau_t * math.log((0.30 - (b_v[2] + i_lim_pu)) / (0.30 - i_max))   # V-B23's step from the bounded state to 0.30 A (cx46 6)
+    # the check cx46's periodic countermodel, reproduced on its own ASSUMPTIONS (finding 7): 0.50 A for 0.40 s every 1.50 s (0 A between),
+    # a single thermal pole of 184 K/W and 0.25 s, 0.020 V of extra feed and return drop, the drafted 0.30 ohm sense resistor
+    cm_i, cm_on, cm_per, cm_tau, cm_drop = 0.50, 0.40, 1.50, 0.25, 0.020
+    cm_p = (drop14 - cm_drop - GV["rs"] * cm_i) * cm_i
+    cm_tj = air + P["theta_ldo"] * cm_p * (1 - math.exp(-cm_on / cm_tau)) / (1 - math.exp(-cm_per / cm_tau))
+    cm_f = cm_i * (1 - math.exp(-cm_on / 1.0)) / (1 - math.exp(-cm_per / 1.0))
+    cm_z = P["theta_ldo"] * (1 - math.exp(-0.171 / cm_tau))
     p0, pf = drop14 * b_v[2], drop14 * i_any
     tj0 = air + P["theta_ldo"] * p0
     zth_need = (P["tj_ldo"] - tj0) / (pf - p0)
@@ -1199,11 +1207,13 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     # the other controllers' inputs while one draws the worst current until its trip
     i_tot = i_any + 2 * serve_max
     at_other = lo14 - D.RAIL_BUDGET * nom14 - i_tot * r_sup - G["shift_drawn_ub"] - GV["rs"] * 1.01 * serve_max
-    R6 = dict(d=(d_lo, d_hi), rel_ok=rel_ok, t_held=t_held, t_bab=t_bab, sd=(sd_trip, sd_low), win=(i_min, i_max), serve_max=serve_max, tj_hold=tj_hold,
+    R6 = dict(cm=(cm_p, cm_tj, cm_f, cm_z), t_vb23=t_vb23, d=(d_lo, d_hi), rel_ok=rel_ok, t_held=t_held, t_bab=t_bab, sd=(sd_trip, sd_low), win=(i_min, i_max), serve_max=serve_max, tj_hold=tj_hold,
               tj_mcu=tj_mcu, t_trip=t_trip, zth=zth_need, a3=(need_at(i_max), at_trip), other=(need_at(serve_max), at_other), dom=(dom_bound, budget[500e3]),
               i_bab6=i_bab6, air_125=air_125, theta_125=theta_125)
-    w("   10j. THE CHECK cx45's Q3 (focused check of candidate 06077cee, NOT CONFIRMED): THE SCHEDULE, A CONTAINMENT NO FIRMWARE SETS, THE SURVIVING")
-    w("   QUORUM, THE OTHER CONTROLLERS' HEADROOM, THE THERMAL ENVELOPE, AND THE ROWS MADE TO AGREE (DERIVED on the printed rows; labels as above)")
+    w("   10j. THE CHECK cx45's Q3 (focused check of candidate 06077cee, NOT CONFIRMED) AND ITS RECHECK cx46 (of 4d0ff8a2: CORRECTIONS NOT CLOSED,")
+    w("   the second negative: the method ends; this section is the DISPOSITION, text and predicates, no new design): THE SCHEDULE, THE")
+    w("   CONTAINMENT DRAFTED, THE QUORUM, THE HEADROOM, THE THERMAL ENVELOPE, THE ROWS (DERIVED on the printed rows; labels as above). Every")
+    w("   claim below is OPEN or PROVISIONAL; nothing in it is closed; what each handed-over case weakens is said at the claim")
     w("   (a) THE MESSAGE SCHEDULE, FW-B22 (drafted in apply_hw_fw_contract_t10.py): per controller and fabric, in every %d ms window, one state" % WINDOW_MS)
     w("     frame (its view of the assignment, its health, a sequence count) and at most five event frames; classic 8-byte frames at 500 kbit/s")
     w("     or 1 Mbit/s, %d bit-times each with stuffing (MODEL); a larger change spreads over windows. Its dominant bound, every bit counted" % bits)
@@ -1211,12 +1221,16 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
         acks, dom_bound, budget[500e3], budget[1e6]))
     w("     the bus %.1f %% loaded at 500 kbit/s; a state frame waits at most %.1f ms behind every other frame of its window; the quorum's" % (100 * load, lat * 1e3))
     w("     2-of-3 decision reads the three state frames of one window: at most %d ms plus %.1f ms" % (WINDOW_MS, lat * 1e3))
+    w("     PROVISIONAL (cx46 5): this establishes the traffic MODEL, not a fault-contained quorum service: a TX pin toggled as a GPIO under the")
+    w("     limiter's share and a latent stuck comparator are admitted counterexamples (L9T5-F21 weakens FW-B22 and CON-004's quorum)")
     w("   (b) THE CONTAINMENT DRAFTED (apply_gen_sch_b_iocguard.py, after iocbuck, iocpre and canshdn; NOT APPLIED): two bounds that no firmware")
     w("     sets, each acting on one controller only; the rows read (PRINTED): INA169 %.0f to %.0f uA/V, offset at most %.1f mV, specified to %.0f C;" % (
         GS["gm"][0] * 1e6, GS["gm"][2] * 1e6, GS["vos"] * 1e3, GS["ta_hi"]))
     w("     TPS3701 VIT-(INB) %.0f to %.0f mV, VIT+(INB) %.0f to %.0f mV, its inputs at most %.0f nA, OUTB low over VIT+(INB); TCAN334 SHDN VIH %.0f V, VIL" % (
         GS["vtm"][0] * 1e3, GS["vtm"][1] * 1e3, GS["vtp"][0] * 1e3, GS["vtp"][1] * 1e3, GS["iin"] * 1e9, GS["vih"]))
     w("     %.1f V, at most %.0f uA out of the pin at 0 V" % (GS["vil"], GS["iil"] * 1e6))
+    w("     the response times below are MODEL figures without the comparator's own delay (SBVS240C prints its propagation and start-up delays")
+    w("     TYPICAL only), with TXD's high level taken as the rail and the frames' least dominant fraction an ASSUMPTION: not maxima")
     w("     1. THE TRANSMIT-SHARE LIMITER, one per transceiver: TXD through %.0f kOhm over %.0f kOhm with %.0f uF (%.0f ms at its slowest), the" % (
         GV["r1"] / 1e3, GV["r2"] / 1e3, GV["c"] * 1e6, tau_l * 1e3))
     w("        average %.4f of the rail times (1 - the dominant share); the transceiver is silenced when its share passes %.1f to %.1f %% (the" % (k_nom, 100 * d_lo, 100 * d_hi))
@@ -1231,13 +1245,19 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     w("        %.1f ms PRINTED, frees the bus first); a babbler through its FDCAN, whose frames carry at least %.0f %% dominant bits (ASSUMED,"
       % (P["can_dto"][2], 100 * FRAME_D_MIN))
     w("        FRAME_D_MIN: an all-recessive 8-byte frame carries about 24 dominant bits in 130), within %.0f ms; the silence lasts while its" % (t_bab * 1e3))
-    w("        TXD keeps the share over the limit and ends by itself when the share falls")
-    w("     2. THE RAIL TRIP, one per controller: %.1f ohm from +5V_IOC to its LDO, the INA169 into %.2f kOhm, a %.1f s average (%.0f kOhm, %.0f uF," % (
-        GV["rs"], GV["rl"] / 1e3, tau_t, GV["rf"] / 1e3, GV["cf"] * 1e6))
+    w("        TXD keeps the share over the limit and ends by itself when the share falls. A latent stuck comparator (OUTB held low) leaves that")
+    w("        transceiver's share unbounded with nothing to find it in service: it weakens the service's containment (PROVISIONAL)")
+    w("     2. THE RAIL TRIP, one per controller: %.1f ohm from +5V_IOC to its LDO, the INA169 into %.2f kOhm, a %.2f s average (%.2f + %.0f kOhm" % (
+        GV["rs"], GV["rl"] / 1e3, tau_t, GV["rl"] / 1e3, GV["rf"] / 1e3))
+    w("        in the charging path, %.0f uF," % (GV["cf"] * 1e6))
     w("        at its slowest), a TPS3701 holding the LDO's EN low while the average is over the threshold: %.4f to %.4f A at the tolerances;" % (i_min, i_max))
     w("        tripped, the controller is unpowered; the average then falls, the LDO restarts, and a controller still over the threshold is")
-    w("        unpowered again: its supply's average is held at the threshold (DERIVED)")
-    w("   (c) THE SURVIVING QUORUM AND RECOVERY, FAULT BY FAULT (quorum: two of three controllers serving; IOHA rows 3, 7 and 8):")
+    w("        unpowered again: its supply's AVERAGE is held at the threshold (DERIVED); its peak is not (e). A latent rail trip (its monitor")
+    w("        dead, its OUTB released) removes even that average bound with nothing to find it in service (PROVISIONAL)")
+    w("        V-B23's response, as round 6 drafted it (EN low within 0.2 s of a 0.30 A load), is WITHDRAWN (cx46 6): from the bounded state the")
+    w("        drafted network reaches the trip's maximum after %.2f s (MODEL, the comparator's delay not counted); a corrected response mechanism" % t_vb23)
+    w("        and the complete network calculation are REMAINING ENGINEERING, protection not relaxed to obtain a pass")
+    w("   (c) THE QUORUM AND RECOVERY, FAULT BY FAULT (quorum: two of three controllers serving; IOHA rows 3, 7 and 8), PROVISIONAL (cx46 5):")
     rows_q = (("a babbler through its FDCAN (FW-B21 broken), one or both fabrics", "its limiter silences its transceiver within %.0f ms; the bus free; the other two" % (t_bab * 1e3),
                "automatic: the limiter releases when its share falls"),
               ("a held-dominant TXD", "the time-out frees the bus within %.1f ms, the limiter silences it within %.1f ms" % (P["can_dto"][2], t_held * 1e3), "automatic"),
@@ -1257,19 +1277,32 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     w("     the limiter's least %.1f %% share disrupts the bus without tripping it; attributing it needs each controller's TXD read by the other" % (100 * d_lo))
     w("     two and a 2-of-2 vote of the other two on its SHDN or its LDO's EN (twelve observation inputs and six vote outputs, a pin plan for")
     w("     the three H743s): NOT DRAFTED here. And a latent stuck comparator in either bound, found only on the bench (V-B22, V-B23), with")
-    w("     no service interval bounding that: the double faults. Outputs PROVISIONAL on them: L9T5-F21 and this section's quorum rows")
+    w("     no service interval bounding that: the double faults. Outputs OPEN or PROVISIONAL on them: CON-004's quorum verdict (OPEN), FW-B22")
+    w("     (PROVISIONAL), L9T5-F21 (OPEN) and this section's quorum rows. REMAINING ENGINEERING: an independent peer-silence or diagnostic")
+    w("     circuit and the recovery proof. VOS0 under the trip takes the controller past its own 105 C VOS0 limit from %.4f A (MODEL), under" % (
+        (105.0 - air) / (P["theta_mcu"] * 3.3)))
+    w("     the trip's band: it weakens the controller's survival and so FW-B20's and FW-B22's service (PROVISIONAL)")
     w("   (d) THE OTHER CONTROLLERS' HEADROOM DURING A RESPONSE: one controller at the worst current any firmware draws until its trip, %.4f A" % i_any)
     w("     (the sheet's largest rev V row %.3f A, the auxiliaries, both transceivers held dominant), the other two at the largest served %.4f A:" % (i_mcu_max, serve_max))
     w("     U601's load %.4f A, under its declared peak; each other LDO's input at least %.4f V against its %.4f V: %s (the lead at the" % (
         i_tot, at_other, need_at(serve_max), "holds" if at_other >= need_at(serve_max) else "FAILS"))
     w("     total current, the return's shift as drawn, the sense resistor at +1 %)")
-    w("     T10-A3 RESTATED ON A HARDWARE BOUND (L9T5-D8's criterion superseded): each LDO's input at the trip's maximum %.4f A, the sense" % i_max)
+    w("     T10-A3 at the trip's AVERAGE maximum (L9T5-D8's criterion superseded; PROVISIONAL: a periodic load's peak above it is not covered,")
+    w("     (e)): each LDO's input at %.4f A, the sense" % i_max)
     w("     resistor's drop counted: at least %.4f V against %.4f V: %s" % (at_trip, need_at(i_max), "holds" if at_trip >= need_at(i_max) else "FAILS"))
-    w("   (e) THE THERMAL ENVELOPE, PEAK AND SUSTAINED (cx45's averaged-current point):")
-    w("     sustained: the rail trip holds every controller's average at %.4f A or less whatever its firmware or its share does: the LDO's" % i_max)
-    w("       junction at most %.1f C at %.2f C air (the drop's worst corner, %.1f K/A, MODEL), the controller's own at most %.1f C; no average" % (
-        tj_hold, air, k14, tj_mcu))
-    w("       is used to bound a peak: the bound is the held current itself. Every served state is under the trip's least %.4f A (the largest" % i_min)
+    w("   (e) THE THERMAL ENVELOPE, PEAK AND SUSTAINED (cx45's averaged-current point; cx46 7: NOT CLOSED, PROVISIONAL):")
+    w("     a constant current at the trip's average maximum %.4f A reads the LDO's junction %.1f C at %.2f C air (the drop's worst corner, %.1f" % (
+        i_max, tj_hold, air, k14))
+    w("       K/A, MODEL) and the controller's %.1f C; that is a constant-current MODEL, not a bound: the trip holds an AVERAGE, and a periodic" % tj_mcu)
+    w("       load under it heats more. The check cx46's countermodel, reproduced on its ASSUMPTIONS (%.2f A for %.2f s every %.2f s, a single" % (
+        cm_i, cm_on, cm_per))
+    w("       thermal pole of %.0f K/W and %.2f s, %.3f V of extra drop, the 0.3 ohm sense): %.4f W in the pulse, the filtered current's peak" % (
+        P["theta_ldo"], cm_tau, cm_drop, cm_p))
+    w("       %.4f A (under the trip's least %.4f A), Zth(171 ms) %.1f K/W (inside the about 105 K/W proposed below), and the junction's periodic peak" % (
+        cm_f, i_min, cm_z))
+    w("       %.2f C, OVER 125 C: the universal sustained bound and its positive margin are WITHDRAWN; peak-current containment or a complete" % cm_tj)
+    w("       periodic electrothermal solution with uncertainty is REMAINING ENGINEERING. A latent rail trip removes even the average bound")
+    w("     Every served state is under the trip's least %.4f A (the largest" % i_min)
     w("       %.4f A): %s" % (serve_max, "none trips" if serve_max < i_min else "ONE TRIPS"))
     for lab, i in serve:
         w("         %-52s %.4f A   LDO %.1f C" % (lab, i, air + k14 * i))
@@ -1279,17 +1312,19 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
     w("       more than %.0f C/W on board B's copper (its steady %.0f C/W PRINTED for its own board): NOT PRINTED by Diodes, a QUALIFICATION LIMIT" % (
         zth_need, P["theta_ldo"]))
     w("       (first article, below); the controller passes its own rating in that time at VOS0 (a firmware fault, ended by the trip)")
-    w("     qualification limits, with their uncertainty: the LDO's junction-to-air resistance on board B at most %.0f C/W at %.2f C air, or" % (theta_125, air))
+    w("     the qualification limits below are measurements to take, NOT an acceptance of the sustained bound (cx46 7: the countermodel meets")
+    w("     them and passes 125 C): the LDO's junction-to-air resistance on board B at most %.0f C/W at %.2f C air, or" % (theta_125, air))
     w("       the local air at most %.1f C at the printed %.0f C/W (each holds 125 C at the trip's maximum); Zth(%.0f ms) at most %.0f C/W;" % (
         air_125, P["theta_ldo"], t_trip * 1e3, zth_need))
     w("       the INA169's site under its specified %.0f C; measured on the first article of board B in a %.0f C chamber with one controller" % (GS["ta_hi"], air))
     w("       forced to the trip (a load on its rail), not at the bounded state alone (T10-A5 restated, T10-ROUND5.md section 6)")
     w("     residual handed over: VOS0 at a current under the trip takes the H743 past its own %d C VOS0 limit at this air (%.1f C at %.4f A):" % (105, tj_mcu, i_max))
     w("       the LDO is held, the controller is not; a VOS0 entry no hardware prevents (Layer 5 and Layer 6)")
-    w("   (f) THE ROWS MADE TO AGREE: the fitted part is revision V (L9T5-D7), revision X held until its own qualification; the set point R602 14.0k")
-    w("     (4.0114 V nominal); 125 C for every sustained state; the contract draft's FW-B20 row, the part-selection and inspection rows of 10i,")
-    w("     T10-ROUND5.md and this output state the same; a rev X part must now also stay under the rail trip's least %.4f A in its bounded" % i_min)
-    w("     state (V-B20's pass limit min(0.2318, %.4f) A)" % i_min)
+    w("   (f) THE ROWS MADE TO AGREE: every procurement, contract and inspection instruction points to revision V (L9T5-D7), the final set point")
+    w("     R602 14.0k (4.0114 V nominal) and 125 C for every sustained state; revision X is HELD with no admission route (round 5's V-B20 route")
+    w("     at 0.2318 A and L9T5-F22's 'admits any revision' are SUPERSEDED); a rev X part's admission, its own qualification, and the sustained")
+    w("     thermal acceptance it would rest on are REMAINING ENGINEERING ((e)); the rail trip's least %.4f A is a drafted circuit's figure," % i_min)
+    w("     not a qualification limit")
     with tempfile.TemporaryDirectory(prefix="l9t5_t10r6_") as d:
         seq = D.seq_of("b", "slot")
         at = seq.index(D.MINE["b"]) + 1
@@ -1330,8 +1365,13 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
           and at_trip >= need_at(i_max) and at_other >= need_at(serve_max) and dom_bound <= budget[500e3] and v6 == "DRAWN"
           and all(v == "FAIL" for _l, v in vm) and all(R6["refused"]) and ok6)
     R6["ok"] = ok
-    w("   VERDICT (10j): cx45's Q3 (a) to (d) CORRECTED IN DRAFT on revision V at 14.0k, the desk acceptance %s by its author, UNCHECKED; the" % ("MET" if ok else "NOT MET"))
-    w("     qualification limits of (e) and the residuals of (c) and (e) handed over; L9T5-F21 OPEN on the GPIO-toggled TX pin only")
+    w("   DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'")
+    w("     composition (%s). OPEN or PROVISIONAL: CON-004's quorum service (OPEN), FW-B22 (PROVISIONAL), L9T5-F21 (OPEN), the limiter's and" % (
+        "composed, read by pin, mutated" if ok else "NOT as drafted"))
+    w("     the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal")
+    w("     bound (WITHDRAWN as a bound, PROVISIONAL), T10-A3 at a peak (PROVISIONAL). REMAINING ENGINEERING, for the receiving company: the")
+    w("     peer-silence or diagnostic circuit with the recovery proof; the corrected rail-trip response and its network calculation; peak-")
+    w("     current containment or the periodic electrothermal solution; a rev X part's qualification; VOS0 under the trip")
     w("")
     out["r6"] = R6
     return out
@@ -1743,9 +1783,9 @@ def main():
     w("   L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2")
     w("   is restated with the enabled peripherals at the drop's worst corner: at the case's %.2f C air it holds on rev V's rows (%.1f C), the revision" % (
         air, bv_[3]))
-    w("   L9T5-D7 fits, and NOT on rev Y's rows (%.1f C), the cover for a rev X part, which is HELD (round 6: V-B20 at most min(%.4f, %.4f) A, 10j (f)); T10-A3" % (
-        by_[3], R5["i_cap"], R5["r6"]["win"][0]))
-    w("   and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;")
+    w("   L9T5-D7 fits, and NOT on rev Y's rows (%.1f C), the cover for a rev X part, which is HELD with no admission route (10j (f)); T10-A3" % by_[3])
+    w("   as 10j (d) restates it (PROVISIONAL at a peak) and T10-A4 (section 9); T10-A5 is physical, its qualification limits measurements,")
+    w("   not an acceptance (10j (e)). The independent checks cx45 and cx46 read rounds 5 and 6: NOT CONFIRMED, then CORRECTIONS NOT CLOSED;")
     w("   Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to")
     w("   %.2f C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check" % R5["max_air"]["Y"])
     w("   of it read CONFIRMED AS CONDITIONAL, not a negative; round 5 is the second round on the same correction, adding the rows V6 named")
@@ -1753,17 +1793,20 @@ def main():
         "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f13_ok and drafted_ok else "OPEN", bv_[3], by_[3]))
     w("     cover at %.2f C (the drop's worst corner)" % air)
     w("     against %.0f C; the bench (V-B20, V-B21) confirms the firmware's implementation and decides no feasibility. Stays OPEN in the" % TJ_GOAL)
-    w("     register until an independent check reads it and Layer 5 applies the row")
+    w("     register; PROVISIONAL after cx46: a firmware outside the row is bounded only on its AVERAGE by the drafted rail trip (10j (e)),")
+    w("     and a latent rail trip removes even that")
     w("   L9T5-F16: %s. Every credible single fabric fault inside board B holds %.0f C with the response on rev V (worst %.1f C; rev Y's cover %.1f C;" % (
         "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f16_ok and drafted_ok else "OPEN", TJ_GOAL,
         tj_l(R5["worst"]["V"], air), tj_l(R5["worst"]["Y"], air)))
-    w("     10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by")
-    w("     CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application")
+    w("     10e), the circuit half composed, read and mutated (10f); the B7b residual reads 120.0 C on rev V, inside 125 C (L9T5-D5 withdrawn,")
+    w("     round 6). Covered by CON-004 (10a). Stays OPEN in the register; PROVISIONAL: a latent share comparator weakens the response's")
+    w("     containment and the quorum on the other fabric (10j (c))")
     p22 = R5["p22"]
     w("   THE BABBLING ROW (part 22): a SUSTAINED fault state, %.0f C applies: on rev V with iocpre alone %.1f C, FAILS; with the set point" % (
         TJ_GOAL, p22["bab"][FITTED_REV][0]))
     w("     delta (iocset, DRAFTED, composed, read, mutated) %.1f C, holds: a DRAFTED CORRECTION, desk acceptance met by its author on rev V," % p22["bab"][FITTED_REV][1])
-    w("     UNCHECKED. Its quorum effect stays OPEN (L9T5-F21). The hung row is a transient the IWDG ends: %.0f C applies and it holds" % P["tj_ldo"])
+    w("     UNCHECKED, PROVISIONAL (a babbler outside FW-B20's clock is bounded only on its average, 10j (e)). Its quorum effect stays OPEN")
+    w("     (L9T5-F21; 10j (c)). The hung row is a transient the IWDG ends: %.0f C applies and it holds" % P["tj_ldo"])
     w("   L9T5-F17: %s. Both fabrics faulted hold %.0f C with the response (%.1f C rev Y, %.1f C rev V); held, %.1f C (rev Y). Same conditions" % (
         "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f17_ok and drafted_ok else "OPEN", P["tj_ldo"],
         tj_l(R5["both"]["Y"][0], air), tj_l(R5["both"]["V"][0], air), tj_l(R5["both"]["Y"][1], air)))
@@ -1828,13 +1871,16 @@ def main():
         p22["ok"] and p22["v_set"] == "DRAWN" and p22["v_m1"] == "FAIL" and p22["v_m2"] == "FAIL" and p22["decl_ok"] and p22["tree_refused"]
         and p22["a3"][2] >= p22["a3"][1])
     r6 = R5["r6"]
-    pred["round 6 (cx45 Q3): the schedule's dominant bound is inside FW-B21's share at 500 kbit/s"] = r6["dom"][0] <= r6["dom"][1]
-    pred["round 6: the share limiter leaves the legitimate share enabled, trips over it, drives SHDN past VIH and holds it under VIL"] = (
+    pred["round 6 (cx45 Q3): the schedule's dominant bound is inside FW-B21's share at 500 kbit/s (a traffic MODEL, not quorum service)"] = r6["dom"][0] <= r6["dom"][1]
+    pred["round 6: the share limiter's MODEL leaves the legitimate share enabled, trips over it, and drives SHDN past VIH and under VIL"] = (
         r6["rel_ok"] and r6["d"][0] > SHARE and r6["d"][1] < FRAME_D_MIN and r6["sd"][0] > 2.0 and r6["sd"][1] < 0.8)
-    pred["round 6: every served state is under the rail trip's least current, and the trip's maximum holds 125 C"] = r6["serve_max"] < r6["win"][0] and r6["tj_hold"] <= TJ_GOAL
-    pred["round 6: T10-A3 holds at the trip's maximum with the sense drop, and the other LDOs hold during a response"] = (
+    pred["round 6: every served state is under the rail trip's least current (a constant-current MODEL; no sustained bound claimed)"] = r6["serve_max"] < r6["win"][0]
+    pred["round 6 (cx46 7): the countermodel stays under the trip's least filtered current and over 125 C: the sustained bound is not shown"] = (
+        r6["cm"][2] < r6["win"][0] and r6["cm"][1] > TJ_GOAL and r6["cm"][3] < 105.0)
+    pred["round 6 (cx46 6): the drafted network does not meet V-B23's 0.2 s: that response claim is withdrawn"] = r6["t_vb23"] > 0.2
+    pred["round 6: T10-A3 at the trip's average maximum with the sense drop, and the other LDOs during a response (PROVISIONAL at a peak)"] = (
         r6["a3"][1] >= r6["a3"][0] and r6["other"][1] >= r6["other"][0])
-    pred["round 6: the containment delta composes, reads DRAWN by pin, its six mutations FAIL, and it refuses as a draft must"] = (
+    pred["round 6: the containment delta composes, reads DRAWN by pin, its six mutations FAIL, and refuses (a drafted circuit, not closure)"] = (
         r6["v6"] == "DRAWN" and all(v == "FAIL" for _l, v in r6["vm"]) and all(r6["refused"]) and r6["ok6"])
     w("12. THE PREDICATES")
     for k, v in pred.items():

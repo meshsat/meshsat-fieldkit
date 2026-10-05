@@ -9,20 +9,18 @@ PRINTED (a maker's limit), TYPICAL, MODEL, ASSUMPTION, MISSING. Case rows cited 
 AI review and accepts nothing. The owner's standing decisions of 4 October hold: FAN_OK is rejected and not revived; REQ-018's
 15.5 V, the 60 s key-down, the 18 A service, the pack and every protection stay.
 
-## 0f. Round 6 (5 October 2026): T10 after the check cx45's Q3
+## 0f. Round 6 and its disposition (5 October 2026): T10 after the check cx45's Q3 and the recheck cx46
 
-The round's figures are `l9t5_t10.out` 10j and its page `T10-ROUND5.md` section 12. The quorum's schedule is drafted (FW-B22: 822
-dominant bit-times at most against the share's 1000 at 500 kbit/s). A containment no firmware sets is drafted on board B
-(`apply_gen_sch_b_iocguard.py`, composed, read by pin, six mutations FAIL): a transmit-share limiter per transceiver (SHDN raised by
-hardware when the dominant share passes 4.7 to 12.3 %) and a rail trip per supervisor (its supply's 1 s average held at 0.2183 to
-0.2452 A). At the trip's maximum the LDO reads 115.4 C at 76.25 C air; every served state stays under the trip's least; the other
-supervisors' inputs hold during a response; T10-A3 is judged at the trip's maximum with the sense resistor's drop. The rows now agree:
-revision V only (rev X HELD until its own qualification, V-B20 at most 0.2183 A), R602 14.0 k (4.01 V), 125 C for every sustained
-state; round 5's "a rev X part waits on V-B20, unless the set point moves" and round 4's 13.3 k below are SUPERSEDED. Handed over as
-remaining engineering: a TX pin toggled as a GPIO under the limiter's least share (L9T5-F21), the latent stuck comparators, VOS0 under
-the trip. No case row is changed here; for the coordinator: the limiters' two pull-up currents raise each supervisor's bounded
-state to 0.1739 A on revision V (against C-DEV rev 2's 0.1732 A; inside its conservative 0.2558 A), and each rail's monitor and three
-comparators draw from +5V_IOC beside their LDO (the INA169's and the TPS3701s' quiescent currents, microamps).
+Round 6 drafted the quorum's schedule (FW-B22) and a containment on board B (`apply_gen_sch_b_iocguard.py`: a transmit-share limiter
+per transceiver and a rail trip per supervisor, composed, read by pin, six mutations FAIL). The recheck cx46 read it CORRECTIONS NOT
+CLOSED, the second negative; the method ends and T10's Q3 is carried as REMAINING ENGINEERING (`T10-ROUND5.md` section 12, `l9t5_t10.out`
+10j): CON-004's quorum service OPEN; FW-B22 PROVISIONAL (a traffic model; L9T5-F21 OPEN: a TX pin toggled as a GPIO under the
+limiter's share, a latent stuck comparator); the response times PROVISIONAL (no printed maximum for the comparator's delay) and V-B23's 0.2 s
+WITHDRAWN; the universal sustained thermal bound WITHDRAWN (cx46's periodic countermodel, reproduced: 127.54 C with its filtered current
+under the trip; a latent rail trip removes even the average bound); T10-A3 at a peak PROVISIONAL. The rows agree on revision V only
+(revision X HELD with no admission route: round 5's V-B20 route at 0.2318 A and L9T5-F22's shortcut SUPERSEDED), R602 14.0 k and 125 C
+for every sustained state. No case row is changed here; for the coordinator: the limiters' two pull-up currents raise each supervisor's
+bounded state to 0.1739 A on revision V (against C-DEV rev 2's 0.1732 A; inside its conservative 0.2558 A).
 
 ## 0e. Round 5 (5 October 2026): T10 after the independent check V6 (L9T5-F13, F16, F17)
 

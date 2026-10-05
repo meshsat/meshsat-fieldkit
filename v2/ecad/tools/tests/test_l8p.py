@@ -1001,7 +1001,7 @@ def t_round8_the_c4_check_and_judgement_are_what_the_script_prints():
     assert o.count("REPRODUCED within its printed rounding") == 7 and "NOT REPRODUCED" not in o
     preds = o.split("\n12. PREDICATES\n")[1].splitlines()
     assert preds and all(l.rstrip().endswith(" yes") for l in preds if l.strip()), [l for l in preds if l.rstrip().endswith(" NO")]
-    for s in ("CONFIRMED on the sheets", "the draft draws C4's values: yes", "the judgement (item 3) on C-PROT rev 1: HOLDS on the desk",
+    for s in ("CONFIRMED on the sheets", "the draft draws C4's values: yes", "the judgement (item 3) on C-PROT rev 1: the intact round 8 circuit's desk rows HOLD (PROVISIONAL as a protection",
               "0.908 V (0.859 V all doubled) against 0.84 V: HOLDS", "the return 0.568 V: FAILS (L8P-F08, round 7)", "so record l9stk's 0.391 V and 36.0 ms are NOMINAL",
               "a dwell of 73.5 ms nominal", "below 13.2 uF", "L8P-F07 and L8P-F08 stay OPEN", "(d) VDD (TP63) reads 4.95 to 5.05 V", "NOT BOUNDED here, the same"):
         assert s in o, s
@@ -1091,14 +1091,19 @@ def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes
     # path 2 tripped: 29.2 V through R106 at -1 % into Q61 at 17.2 ohm, the return through the pair over R107
     out2 = 29.2 / (10e3 * 0.99) * 17.2
     assert abs(out2 * 1e3 - 50.8) < 0.3 and out2 < 1.825
-    for s_ in ("the return 66.5 mV, HELD", "the fault TRIPS", "no single failure removes the trip", "DD-7 reads the loop dark",
+    for s_ in ("the return 66.5 mV, HELD", "the fault TRIPS", "no single failure removes the trip AT ONCE", "DD-7 reads the loop dark",
+               "So with path 1 lost the protection under those retries is NOT shown (cx46 10)", "L8P-R9-F1 weakens every C-PROT claim for the guard",
+               "an AUTOMATIC diagnostic (with a bounded", "C-PROT rev 1 for the guard is PROVISIONAL at every claim that rests on this",
                "2.5 V within\n       43.8 ms at the tolerances", "path 2 within 40.0 ms", "check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN",
                "reads THG FAIL on it, as it must", "check_dd7_netlist (its round 18 admits C268 and Q61): DRAWN",
                "the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)", "the delta without round 8's guard: REFUSED",
                "15 scripts, every one OK", "HANDED OVER AS REMAINING ENGINEERING", "no latent-fault exception presumed", "(finding L8P-R9-F1)",
-               "VERDICT (10c): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT", "acceptance MET by its author on C-PROT rev 1 and the composition MET"):
+               "DISPOSITION (10c, after the recheck cx46: CORRECTIONS NOT CLOSED, the method ends): V6-m7 and cx45's Q5 NOT CLOSED",
+               "the intact circuit's desk rows hold, the composition reads DRAWN and its mutations FAIL", "both UNRESTATED (L8P-R9-F2"):
         assert s_ in sec, s_
     assert sec.count("     mutated, ") == 7 and sec.count(" THG FAIL: ") == 7
+    for bad in ("CORRECTED IN DRAFT", "desk acceptance MET", "acceptance MET by its author"):
+        assert bad not in sec and bad not in o.split("\n11. VERDICT")[1].split("\n12. PREDICATES")[0], bad
     assert sum(1 for l in sec.splitlines() if "before the hold's least 0.110 s" in l) == 3 and "AFTER the hold" not in sec
     chk = need(os.path.join(REC, "check_l8p_fs.py"), "check_l8p_fs")
     lm = _mod("l8p_drafts_under_test_fs", "l8p_drafts.py")
@@ -1106,7 +1111,8 @@ def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes
     assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, r.stdout[-300:]
     page = open(PAGE, encoding="utf-8").read()
     for s_ in ("### 12o. Round 9, the owner's part 22 item A and the check cx45's Q5", "**L8P-D9 is WITHDRAWN**", "**SESSION decision L8P-D10**",
-               "**L8P-R9-F1", "**L8P-R9-F2", "**L8P-R9-F3", "**E-13b gains (e):**", "two guard\npaths that share only the pour they sense"):
+               "**L8P-R9-F1", "**L8P-R9-F2", "**L8P-R9-F3", "**E-13b gains (e):**", "two guard\npaths that share only the pour they sense", "**DISPOSITION\nafter the recheck cx46",
+               "**The consumers, as drafts for their owners", "**State (DISPOSITION after cx46):** V6-m7 OPEN and NOT CLOSED"):
         assert s_ in page, s_
 
 
@@ -1131,7 +1137,7 @@ def t_round8_the_judgement_fails_drafts_that_draw_other_values():
             no = [l.strip() for l in o.split("\n12. PREDICATES\n")[1].splitlines() if l.rstrip().endswith(" NO")]
             for f in fails:
                 assert any(l.startswith(f) for l in no), (new, f, no)
-            assert any(l.startswith("C-PROT rev 1 holds on the desk for the draft") for l in no), new
+            assert any(l.startswith("the intact round 8 circuit's desk rows of C-PROT rev 1 hold") for l in no), new
             assert not any(l.startswith("C4:") or l.startswith("the check:") for l in no), (new, no)
 
 
