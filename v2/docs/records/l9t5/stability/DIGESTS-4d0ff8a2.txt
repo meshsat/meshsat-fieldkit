@@ -1,0 +1,20 @@
+# RUN-4d0ff8a2: the outputs as committed at 4d0ff8a2, which both passes left byte for byte (pass 2 printed 'already identical'
+# for every one); written in a form no pin reader takes for a current pin (the files have moved on since)
+v2/docs/records/l9stk/l9stk_copper.out at 4d0ff8a2: sha256=6992e1b2fb1a7cc88e6c3423fb5fd1679eba69107eee9060f05d7af04f94525d;
+v2/docs/records/l9stk/l9stk_protection.out at 4d0ff8a2: sha256=65a8ea907633c104a16b7e231471a283d82ce4a362e872745d348af2d1cfe652;
+v2/docs/records/l9pwr/l9pwr_budget.out at 4d0ff8a2: sha256=7b54d7ac587eab815ec1e0ffeefa29f833add7ddda98ea941d18efb408f95d95;
+v2/docs/records/l8r2/l8r2_gndret.out at 4d0ff8a2: sha256=1a1fb4cbcf95ffad1dfe5551203197c10ed6e3e139daa3376e4362f1fbf79519;
+v2/docs/records/l8r2/l8r2_p0.out at 4d0ff8a2: sha256=424e078b5d11f52e47b594ebd99106d5c4d002ee9a7d6b4d0340d8976f40346e;
+v2/docs/records/l8r2/l8r2_dist.out at 4d0ff8a2: sha256=224800bbefe53989bdd42fe205aaac9b5aa6735063eb64cc847bcc3adaf8c605;
+v2/docs/records/l9t5/l9t5_case.out at 4d0ff8a2: sha256=4a4f4ac2e619fbefcdf5ac65cdc4afc7c644a06511f31739d0df8ad8b72a30dc;
+v2/docs/records/l9t5/l9t5_a1.out at 4d0ff8a2: sha256=e627f569ac636b933bfef9d1daced227f48ea8959ebfbabf2c34a59794c51372;
+v2/docs/records/l9t5/l9t5_drafts.out at 4d0ff8a2: sha256=99e0037be8844342eed0232d4d534ec2576c17c391b91b21743cfbe408245895;
+v2/docs/records/l9t5/l9t5_t10.out at 4d0ff8a2: sha256=abe5e22df879707fe6b12bed9beab03330432a19e76aa6d385ebe134e2f1cdb5;
+v2/docs/records/l9t5/l9t5_cm5.out at 4d0ff8a2: sha256=33dbe44ceeb211a88801218808564e4fd3b3a3cfb83169f2c99c1d47aaa51e6f;
+v2/docs/records/l9t5/l9t5_f01.out at 4d0ff8a2: sha256=4b6cfb0ce7f754e6bdb0228a6ff2534f92ec2bc8c5e74e891fbd9f28b797f1ec;
+v2/docs/records/l9t5/l9t5_f01_drafts.out at 4d0ff8a2: sha256=c933f25ae2a1bf6c74c41bbbea1bd9936f38145cbb084bef1dcbf5f2520d0a29;
+v2/docs/records/l8r2/l8r2_drafts.out at 4d0ff8a2: sha256=40a1de51ca309c6b87d6aa0657dfb53cfe8d83117c9672a3d4ca31ffb7a58dc2;
+v2/docs/records/efuse/efuse_check.out at 4d0ff8a2: sha256=7205a24508a1284fbbdfe597fefecbe72cffbe21344002173b1e682bc457db3b;
+v2/docs/records/l6r2/l6r2_passives.out at 4d0ff8a2: sha256=15b2b228b3d63970808258d786810e67205935ff3ac22c4fe6c3bdb6521677e7;
+v2/docs/records/l4e7/l4e7_p0sol.out at 4d0ff8a2: sha256=d02b5d66c46aa81b3d43afdcb25691c06c7d302c42b1dad0a20ec75df79ddeba;
+v2/docs/records/l9t5/l9t5_connected.out at 4d0ff8a2: sha256=2a6c07c5277353e4030e002bcf43df1616053046bb35b0aef9920bb9215bdae5;

@@ -305,7 +305,11 @@ def predicates(R):
     P["(b): the calibrated residual leaves the case over 15.5 V"] = Bc["row_cal"]["need"] > V
     P["(c): U13's BIAS (gate drive) would take more than the cap's room under U13's limit if it stayed behind R55"] = L["bias"][0] > L["u13_min"] - L["i_max"]
     P["(c): with BIAS on PA_OUT, the cap's top plus R55's other loads stays under U13's own loop minimum (hot shunt, printed TCR)"] = L["i_max"] + L["r55_other"] < L["u13_min"]
-    P["(c): the band on PRINTED terms alone lies inside the band with the TYPICAL allowances"] = L["i_min"] < L["i_min_printed_only"] < L["i_max_printed_only"] < L["i_max"]
+    P["(c): the band on the PRINTED rows alone (no ASSUMPTION or TYPICAL term) lies inside the band with them"] = (
+        L["i_min"] < L["i_min_printed_only"] < L["i_max_printed_only"] < L["i_max"] and L["vset_printed"][0] > L["vset"][0])
+    P["(c): B-PA1's pass limit is at or under the band's calculated floor (rounded down, cx46)"] = L["bpa1_limit"] <= L["i_min"]
+    P["(c): Q551's held load is stated apart from the steady load and carried to V-PA-REF and B-PA2, not into the steady band (cx46)"] = (
+        L["ref_held"] > L["ref_load"][1])
     P["(c): the cap's top is under the INA250's 15 A continuous rating"] = L["i_max"] < S["ina_imax"]
     P["(c): the case at the cap's top meets 15.5 V with the gauge bound, the dock contacts' maximum and the loop's own supply"] = L["bnd"]["need"] < V
     P["(c): the margin there is at least 0.2 V"] = V - L["bnd"]["need"] >= 0.2
@@ -415,6 +419,16 @@ def render(R):
     w("       from the test condition; the residual is bounded at %.0f times the TYPICAL row (ASSUMPTION): %.2f uV at PA_ISET, carried in the" % (
         PL.LOADREG_X, L["ref_resid"] * 1e6))
     w("       corners above; PROVISIONAL on the supplier's validation task V-PA-REF (section 6)")
+    w("     Q551'S HOLD AND RELEASE (cx46 item 2): Q551 holding PA_ISP near ground loads the reference through R559 as well: up to %.4f mA" % (
+        L["ref_held"] * 1e3))
+    w("       (PA_ISET's top across R559's low corner plus the divider; Q551's RDS(on) neglected, an upper bound, MODEL), %.1f times the test" % (
+        L["ref_held"] / 1e-3))
+    w("       condition; at ten times the TYPICAL row its residual is %.3f mV while held (ASSUMPTION). It moves no steady band (the cap is" % (
+        L["ref_held_resid"] * 1e3))
+    w("       held at zero), but on release C557 charges through R559 and the load falls to the steady one in about %.1f ms (3 R559 C557): the" % (
+        L["release_t"] * 1e3))
+    w("       reference's recovery is inside the set point's ramp, read by V-PA-REF and B-PA2 (section 6); its load regulation at that load is")
+    w("       TYPICAL only: REMAINING ENGINEERING (the reference's loading through the hold and the release), with the acceptance limits below")
     w("     R553 (0.1 %%, 25 ppm/K) %.4fk to %.4fk and R559 (the tree's 1 %% class, ASSUMPTION) %.4fk to %.4fk at their corners (cx45 Q1; round 2 held" % (
         L["r_int"][0] / 1e3, L["r_int"][1] / 1e3, L["r_ss"][0] / 1e3, L["r_ss"][1] / 1e3))
     w("       them nominal: %.4f to %.4f A)" % (L["i_min_nores"], L["i_max_nores"]))
@@ -432,8 +446,11 @@ def render(R):
     for lab, k, x in L["vos_terms"]:
         w("       %-118s %-10s %.4f mV" % (lab, k, x * 1e3))
     w("       together +-%.4f mV; R560's offset (V+ - PA_ISP) x R553 / R560 is a deterministic term inside the formula, R560 1 %% 100 ppm/K" % (L["vos"] * 1e3))
-    w("     THE CAP: %.4f A nominal; %.4f to %.4f A over every corner (MODEL on the terms above); on the PRINTED terms alone %.4f to %.4f A" % (
-        L["i_nom"], L["i_min"], L["i_max"], L["i_min_printed_only"], L["i_max_printed_only"]))
+    w("     THE CAP: %.4f A nominal; %.4f to %.4f A over every corner (MODEL on the terms above); on the PRINTED rows alone (no TYPICAL or" % (
+        L["i_nom"], L["i_min"], L["i_max"]))
+    w("       ASSUMPTION term: the load residual, IB, C554's leakage, the stress rows, the nonlinearity and the hold's leakage out; R559 at the")
+    w("       tree's 1 %% class, ASSUMPTION) %.4f to %.4f A, which is NOT a guaranteed band (the TYPICAL and ASSUMPTION terms are real)" % (
+        L["i_min_printed_only"], L["i_max_printed_only"]))
     w("   against the PA rail's own limit, U13's average loop (VSNS %.0f mV PRINTED min on R55, WSL25126L000FEA 6 mOhm 1 %%, TCR +-%.0f ppm/K PRINTED" % (
         S["lm_vsns"][0] * 1e3, S["wsl_tcr"] * 1e6))
     w("     for 5 to 6.9 mOhm): R55 at the cap's top dissipates %.3f W, %.1f C on the %.2f C air with %.0f K/W from the WSL2512 derating line (MODEL," % (
@@ -523,6 +540,9 @@ def render(R):
     w("   SELECTED: (c), PROVISIONAL: F01 / D-17's row reads PROVISIONAL on B-PA1 (feasibility of the 30 W service under the cap) and B-PA2")
     w("     (the dynamics), never closed on printed limits; its dependants read PROVISIONAL too: L9P-F04's closure claim, the PA rail's rows")
     w("     (+13V8_PA and +13V8_PAJ at 6.93 A) and board D's loop (R57, R58, R83)")
+    w("   AFTER cx46 (the second negative on the method, which ends it; kept as given): F01 / D-17 and every dependant (C-ALLTX rev 3 at the")
+    w("     cap, U13's room, B-PA1's limit, the PA rail's rows) stay PROVISIONAL; the reference's loading through Q551's hold and release and")
+    w("     the acceptance limits are REMAINING ENGINEERING for the receiving company, never a qualification-only item")
     w("   WITHDRAWN (cx44): round 1's fallback \"a lower-VGG-wins RF loop for the service floor\": an RF loop cannot restore output while the current")
     w("     cap binds. If B-PA1 fails (the module needs more than the cap's least for 30 W), the ARRANGEMENT fails (amendment point 4), not a")
     w("     requirement: the remaining routes are (R1) raise U13's own limit and the cap with it (R55 lower, J_PA's lead and contacts re-rated: the")
@@ -536,17 +556,22 @@ def render(R):
     w("     quantity: the drain current (and gate current) at Pout 30.0 W under VGG control, at module-terminal VDD %.2f and %.2f V, 144 / 145 /" % (
         L["vdd_term"][0], L["vdd_term"][1]))
     w("       146 MHz, flange 25 C and +85 C and an air of -20 C, into 50 Ohm and into a 3:1 load at its worst phase, VGG within the drawn band")
-    w("     pass limit: IDD at 30.0 W at most %.3f A less the measurement's own expanded uncertainty (k = 2, stated by the lab), every point;" % L["i_min"])
+    w("     pass limit: IDD at 30.0 W at most %.3f A (the band's floor %.4f A rounded DOWN, cx46) less the measurement's own expanded" % (
+        L["bpa1_limit"], L["i_min"]))
+    w("       uncertainty (k = 2, stated by the lab), every point;")
     w("       the transfer to other modules is the supplier's to justify (three units establish no population limit)")
     w("     capability: a 50 Ohm 50 W load and a 3:1 mismatch, an RF power meter with stated uncertainty, a DC supply with current reading, a")
     w("       temperature chamber or plate control")
     w("   B-PA2 (the loop's dynamics, PROVISIONAL): on the built loop, the drain current's settling at each key (0 to the cap without overshoot")
     w("     over %.3f A), the excursion and its duration after a step from 1:1 to 3:1 load mid key-down, the PA rail inside U13's regulation, and" % L["i_max"])
-    w("     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time)")
+    w("     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time); and the")
+    w("     release from Q551's hold (cx46): the cap's settling with the reference recovering from its held load, no overshoot over the top")
     w("   V-PA-REF (the reference at its actual load, cx45 Q1; PROVISIONAL until read): three TLV75801P of the fitted lot, each at its drawn")
     w("     load %.3f and %.3f mA, -40, 25 and 85 C, VIN 5.0 V: VFB within %.4f to %.4f V (the sheet's +-%.0f %% at 1 mA, which the cap's band" % (
         L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, S["ref_vfb"] * (1 - S["ref_acc"]), S["ref_vfb"] * (1 + S["ref_acc"]), 100 * S["ref_acc"]))
-    w("     above already carries, widened by the %.2f uV residual); a unit outside it moves the cap's band, B-PA1's pass limit with it" % (L["ref_resid"] * 1e6))
+    w("     above already carries, widened by the %.2f uV residual); a unit outside it moves the cap's band, B-PA1's pass limit with it;" % (L["ref_resid"] * 1e6))
+    w("     and at Q551's held load (up to %.3f mA) and through the release step back to the drawn load (VFB's excursion and recovery" % (L["ref_held"] * 1e3))
+    w("     within the set point's %.1f ms ramp, cx46 item 2)" % (L["release_t"] * 1e3))
     w("   U5 (R-214, the rest voltage's fall in the 60 s) MISSING: the case at the cap has %.4f V of MODEL margin against it" % (V - L["bnd"]["need"]))
     w("")
     w("7. CX44'S TEN FINDINGS, EACH DISPOSED OF (the owner's part 21: CORRECTED WITH DESK EVIDENCE, STILL AN OPEN DESIGN DEFECT, or GENUINELY")
@@ -558,19 +583,21 @@ def render(R):
         ("1", "the 6 A example does not establish 30 W at the cap's least", "GENUINELY EXTERNAL",
          "the module's drain current for 30 W over the kit's envelope is printed nowhere: the 6.00 A is labelled the maker's EXAMPLE and its "
          "transfer an ASSUMPTION (4, THE 30 W SERVICE); effect: F01 / D-17 PROVISIONAL on B-PA1 (6); if B-PA1 reads over %.3f A less the lab's "
-         "uncertainty the arrangement fails and routes R1 or R2 are taken (5)" % L["i_min"]),
+         "uncertainty the arrangement fails and routes R1 or R2 are taken (5)" % L["bpa1_limit"]),
         ("2", "typical stress data and an assumed bias in a printed band", "CORRECTED WITH DESK EVIDENCE",
          "the terms split by label (l9t5_paloop.py cap(); 4, the INA250A2 gain and offset, the integrator): %.4f to %.4f A with the TYPICAL "
-         "allowances carried whole, %.4f to %.4f A on PRINTED terms alone; residual GENUINELY EXTERNAL: no printed maximum for the shunt's "
+         "allowances carried whole, %.4f to %.4f A on the PRINTED rows alone (not a guaranteed band); residual GENUINELY EXTERNAL: no printed maximum for the shunt's "
          "stress rows; effect: the %.4f A under U13's least absorbs %.2f %% more gain drift" % (
              L["i_min"], L["i_max"], L["i_min_printed_only"], L["i_max_printed_only"], L["u13_min"] - L["i_max"] - L["r55_other"],
              100 * (L["u13_min"] - L["i_max"] - L["r55_other"]) / L["i_max"])),
-        ("3", "reference loading, junction, supply, common mode, loop residuals", "CORRECTED WITH DESK EVIDENCE",
-         "R552 549 Ohm gives a %.4f mA preload; the reference's actual load %.4f to %.4f mA against SBVS351D's IOUT = 1 mA test condition, its "
+        ("3", "reference loading, junction, supply, common mode, loop residuals", "STILL AN OPEN DESIGN DEFECT for the reference's loading (cx46)",
+         "the reference's loading through Q551's hold (up to %.3f mA) and release is REMAINING ENGINEERING (4, cx46 item 2); the rest CORRECTED WITH "
+         "DESK EVIDENCE: R552 549 Ohm gives a %.4f mA preload; the reference's steady load %.4f to %.4f mA against SBVS351D's IOUT = 1 mA test condition, its "
          "residual bounded at %.0f times the TYPICAL load regulation (ASSUMPTION, %.2f uV) and PROVISIONAL on V-PA-REF (6, cx45); R553 and R559 at "
          "their corners (cx45); TJ under 85 C at the %.2f C air; +5V_D8IN 4.872 to 5.133 V; "
          "the integrator's terms %.4f mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)" % (
-             L["ref_preload"] * 1e3, L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, PL.LOADREG_X, L["ref_resid"] * 1e6, PL.T_AIR, L["vos"] * 1e3)),
+             L["ref_held"] * 1e3, L["ref_preload"] * 1e3, L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, PL.LOADREG_X, L["ref_resid"] * 1e6, PL.T_AIR,
+             L["vos"] * 1e3)),
         ("4", "R55 carries U13's BIAS and other loads", "CORRECTED WITH DESK EVIDENCE",
          "BIAS bounded at %.4f A (4) and re-tapped to PA_OUT (apply_gen_sch_a_paloop.py edit 1; U13.24 on PA_OUT on the composed netlist; mutation "
          "M06 fails, l9t5_f01_drafts.out 4); R55's other loads %.3f mA; R55 at %.1f C (printed TCR; its thermal resistance a MODEL); the cap's "

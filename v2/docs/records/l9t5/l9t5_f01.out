@@ -3,10 +3,10 @@ DESIGN, DESK ARITHMETIC: nothing has been built, bought, powered or measured. La
 MODEL, ASSUMPTION, MISSING.
 
 0. PINS (path  sha256/16; the INA250 sheet is held back, fetched and checked by record l4e7's fetch_held_back.py, never committed)
-   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 e627f569ac636b93
+   a1_out     v2/docs/records/l9t5/l9t5_a1.out  sha256 89c5bad623280b66
    bq4050     v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
    budget     v2/docs/records/l9pwr/l9pwr_budget.py  sha256 afae23c87c38302b
-   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 4a4f4ac2e619fbef
+   case_out   v2/docs/records/l9t5/l9t5_case.out  sha256 56d3310e81b5b1ca
    case_py    v2/docs/records/l9t5/l9t5_case.py  sha256 2b9fb0459e0cdfd1
    cases      v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    csd18510   v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
@@ -20,7 +20,7 @@ MODEL, ASSUMPTION, MISSING.
    lcsc_fill  v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5176     v2/vendor/ti/lm5176-datasheet.pdf  sha256 98191bec36d43771
    millmax    v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf  sha256 8ef40cd98d95c653
-   paloop     v2/docs/records/l9t5/l9t5_paloop.py  sha256 27c71c191d2352fb
+   paloop     v2/docs/records/l9t5/l9t5_paloop.py  sha256 d1192fcfd0c734ac
    precidip   v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf  sha256 d630c8a92e7f65fc
    ra30       v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf  sha256 9fda757ab1acfb6b
    tlv758p    v2/vendor/ti/ti-tlv758p.pdf  sha256 4a86306d6734f1f4
@@ -100,6 +100,12 @@ MODEL, ASSUMPTION, MISSING.
        0.030 V/A TYPICAL; the drawn load is 0.9891 to 1.0184 mA (VFB's and R552's corners, IFB, the hold's leakage through R559), at most 18.4 uA
        from the test condition; the residual is bounded at 10 times the TYPICAL row (ASSUMPTION): 5.53 uV at PA_ISET, carried in the
        corners above; PROVISIONAL on the supplier's validation task V-PA-REF (section 6)
+     Q551'S HOLD AND RELEASE (cx46 item 2): Q551 holding PA_ISP near ground loads the reference through R559 as well: up to 4.4791 mA
+       (PA_ISET's top across R559's low corner plus the divider; Q551's RDS(on) neglected, an upper bound, MODEL), 4.5 times the test
+       condition; at ten times the TYPICAL row its residual is 1.044 mV while held (ASSUMPTION). It moves no steady band (the cap is
+       held at zero), but on release C557 charges through R559 and the load falls to the steady one in about 30.5 ms (3 R559 C557): the
+       reference's recovery is inside the set point's ramp, read by V-PA-REF and B-PA2 (section 6); its load regulation at that load is
+       TYPICAL only: REMAINING ENGINEERING (the reference's loading through the hold and the release), with the acceptance limits below
      R553 (0.1 %, 25 ppm/K) 9.9738k to 10.0263k and R559 (the tree's 1 % class, ASSUMPTION) 0.9835k to 1.0165k at their corners (cx45 Q1; round 2 held
        them nominal: 6.3522 to 6.9257 A)
      Q551 and C557 leakage into R559 (2N7002 IDSS 80 nA PRINTED at 25 C, doubled every 10 K to the air: record l8p's ASSUMPTION; C557 at
@@ -119,11 +125,13 @@ MODEL, ASSUMPTION, MISSING.
        VOS, PRINTED 2.0 mV max (VS 5 V, -40 to 125 C)                                                                         PRINTED    2.0000 mV
        PSRR, PRINTED 80 uV/V max over +5V_D8IN's 0.133 V from the 5 V of the VOS row                                          PRINTED    0.0106 mV
        CMRR, PRINTED 80 dB min (VS 5.5 V row; ASSUMPTION that it holds at 4.87 to 5.13 V), VCM 3.411 V against VS/2           PRINTED    0.0975 mV
-       IB, TYPICAL 0.5 pA only: bounded at 1 nA into R553 (ASSUMPTION)                                                        ASSUMPTION 0.0100 mV
-       C554's leakage, 50 Ohm F (ASSUMPTION) at 5.13 V into R553                                                              ASSUMPTION 0.0103 mV
+       IB, TYPICAL 0.5 pA only: bounded at 1 nA into R553 at its top corner (ASSUMPTION)                                      ASSUMPTION 0.0100 mV
+       C554's leakage, 50 Ohm F (ASSUMPTION) at 5.13 V into R553 at its top corner                                            ASSUMPTION 0.0103 mV
        finite gain, PRINTED AOL 104 dB min: at most the output's travel 5.13 V divided by it                                  PRINTED    0.0324 mV
-       together +-2.1608 mV; R560's offset (V+ - PA_ISP) x R553 / R560 is a deterministic term inside the formula, R560 1 % 100 ppm/K
-     THE CAP: 6.6401 A nominal; 6.3518 to 6.9259 A over every corner (MODEL on the terms above); on the PRINTED terms alone 6.3890 to 6.8942 A
+       together +-2.1609 mV; R560's offset (V+ - PA_ISP) x R553 / R560 is a deterministic term inside the formula, R560 1 % 100 ppm/K
+     THE CAP: 6.6401 A nominal; 6.3518 to 6.9259 A over every corner (MODEL on the terms above); on the PRINTED rows alone (no TYPICAL or
+       ASSUMPTION term: the load residual, IB, C554's leakage, the stress rows, the nonlinearity and the hold's leakage out; R559 at the
+       tree's 1 % class, ASSUMPTION) 6.3888 to 6.8945 A, which is NOT a guaranteed band (the TYPICAL and ASSUMPTION terms are real)
    against the PA rail's own limit, U13's average loop (VSNS 43 mV PRINTED min on R55, WSL25126L000FEA 6 mOhm 1 %, TCR +-110 ppm/K PRINTED
      for 5 to 6.9 mOhm): R55 at the cap's top dissipates 0.288 W, 105.0 C on the 76.25 C air with 100 K/W from the WSL2512 derating line (MODEL,
      not a printed thermal resistance): least 7.0338 A (7.0957 A initial); the cap's top and R55's other loads 6.9263 A: 0.1075 A under it
@@ -201,6 +209,9 @@ MODEL, ASSUMPTION, MISSING.
    SELECTED: (c), PROVISIONAL: F01 / D-17's row reads PROVISIONAL on B-PA1 (feasibility of the 30 W service under the cap) and B-PA2
      (the dynamics), never closed on printed limits; its dependants read PROVISIONAL too: L9P-F04's closure claim, the PA rail's rows
      (+13V8_PA and +13V8_PAJ at 6.93 A) and board D's loop (R57, R58, R83)
+   AFTER cx46 (the second negative on the method, which ends it; kept as given): F01 / D-17 and every dependant (C-ALLTX rev 3 at the
+     cap, U13's room, B-PA1's limit, the PA rail's rows) stay PROVISIONAL; the reference's loading through Q551's hold and release and
+     the acceptance limits are REMAINING ENGINEERING for the receiving company, never a qualification-only item
    WITHDRAWN (cx44): round 1's fallback "a lower-VGG-wins RF loop for the service floor": an RF loop cannot restore output while the current
      cap binds. If B-PA1 fails (the module needs more than the cap's least for 30 W), the ARRANGEMENT fails (amendment point 4), not a
      requirement: the remaining routes are (R1) raise U13's own limit and the cap with it (R55 lower, J_PA's lead and contacts re-rated: the
@@ -212,16 +223,20 @@ MODEL, ASSUMPTION, MISSING.
      specimen: three RA30H1317M1, each on the plate's heat path, driven by board D's chain (the SA868 through the 10 dB pad, Pin about 50 mW)
      quantity: the drain current (and gate current) at Pout 30.0 W under VGG control, at module-terminal VDD 13.17 and 14.04 V, 144 / 145 /
        146 MHz, flange 25 C and +85 C and an air of -20 C, into 50 Ohm and into a 3:1 load at its worst phase, VGG within the drawn band
-     pass limit: IDD at 30.0 W at most 6.352 A less the measurement's own expanded uncertainty (k = 2, stated by the lab), every point;
+     pass limit: IDD at 30.0 W at most 6.351 A (the band's floor 6.3518 A rounded DOWN, cx46) less the measurement's own expanded
+       uncertainty (k = 2, stated by the lab), every point;
        the transfer to other modules is the supplier's to justify (three units establish no population limit)
      capability: a 50 Ohm 50 W load and a 3:1 mismatch, an RF power meter with stated uncertainty, a DC supply with current reading, a
        temperature chamber or plate control
    B-PA2 (the loop's dynamics, PROVISIONAL): on the built loop, the drain current's settling at each key (0 to the cap without overshoot
      over 6.926 A), the excursion and its duration after a step from 1:1 to 3:1 load mid key-down, the PA rail inside U13's regulation, and
-     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time)
+     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time); and the
+     release from Q551's hold (cx46): the cap's settling with the reference recovering from its held load, no overshoot over the top
    V-PA-REF (the reference at its actual load, cx45 Q1; PROVISIONAL until read): three TLV75801P of the fitted lot, each at its drawn
      load 0.989 and 1.018 mA, -40, 25 and 85 C, VIN 5.0 V: VFB within 0.5445 to 0.5555 V (the sheet's +-1 % at 1 mA, which the cap's band
-     above already carries, widened by the 5.53 uV residual); a unit outside it moves the cap's band, B-PA1's pass limit with it
+     above already carries, widened by the 5.53 uV residual); a unit outside it moves the cap's band, B-PA1's pass limit with it;
+     and at Q551's held load (up to 4.479 mA) and through the release step back to the drawn load (VFB's excursion and recovery
+     within the set point's 30.5 ms ramp, cx46 item 2)
    U5 (R-214, the rest voltage's fall in the 60 s) MISSING: the case at the cap has 0.3692 V of MODEL margin against it
 
 7. CX44'S TEN FINDINGS, EACH DISPOSED OF (the owner's part 21: CORRECTED WITH DESK EVIDENCE, STILL AN OPEN DESIGN DEFECT, or GENUINELY
@@ -229,17 +244,19 @@ MODEL, ASSUMPTION, MISSING.
    section named, l9t5_f01_drafts.out and the drafts)
    1   the 6 A example does not establish 30 W at the cap's least         GENUINELY EXTERNAL
         the module's drain current for 30 W over the kit's envelope is printed nowhere: the 6.00 A is labelled the maker's EXAMPLE
-        and its transfer an ASSUMPTION (4, THE 30 W SERVICE); effect: F01 / D-17 PROVISIONAL on B-PA1 (6); if B-PA1 reads over 6.352
+        and its transfer an ASSUMPTION (4, THE 30 W SERVICE); effect: F01 / D-17 PROVISIONAL on B-PA1 (6); if B-PA1 reads over 6.351
         A less the lab's uncertainty the arrangement fails and routes R1 or R2 are taken (5)
    2   typical stress data and an assumed bias in a printed band          CORRECTED WITH DESK EVIDENCE
         the terms split by label (l9t5_paloop.py cap(); 4, the INA250A2 gain and offset, the integrator): 6.3518 to 6.9259 A with the
-        TYPICAL allowances carried whole, 6.3890 to 6.8942 A on PRINTED terms alone; residual GENUINELY EXTERNAL: no printed maximum
-        for the shunt's stress rows; effect: the 0.1075 A under U13's least absorbs 1.55 % more gain drift
-   3   reference loading, junction, supply, common mode, loop residuals   CORRECTED WITH DESK EVIDENCE
-        R552 549 Ohm gives a 1.0018 mA preload; the reference's actual load 0.9891 to 1.0184 mA against SBVS351D's IOUT = 1 mA test
-        condition, its residual bounded at 10 times the TYPICAL load regulation (ASSUMPTION, 5.53 uV) and PROVISIONAL on V-PA-REF (6,
-        cx45); R553 and R559 at their corners (cx45); TJ under 85 C at the 76.25 C air; +5V_D8IN 4.872 to 5.133 V; the integrator's
-        terms 2.1608 mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)
+        TYPICAL allowances carried whole, 6.3888 to 6.8945 A on the PRINTED rows alone (not a guaranteed band); residual GENUINELY
+        EXTERNAL: no printed maximum for the shunt's stress rows; effect: the 0.1075 A under U13's least absorbs 1.55 % more gain
+        drift
+   3   reference loading, junction, supply, common mode, loop residuals   STILL AN OPEN DESIGN DEFECT for the reference's loading (cx46)
+        the reference's loading through Q551's hold (up to 4.479 mA) and release is REMAINING ENGINEERING (4, cx46 item 2); the rest
+        CORRECTED WITH DESK EVIDENCE: R552 549 Ohm gives a 1.0018 mA preload; the reference's steady load 0.9891 to 1.0184 mA against
+        SBVS351D's IOUT = 1 mA test condition, its residual bounded at 10 times the TYPICAL load regulation (ASSUMPTION, 5.53 uV) and
+        PROVISIONAL on V-PA-REF (6, cx45); R553 and R559 at their corners (cx45); TJ under 85 C at the 76.25 C air; +5V_D8IN 4.872 to
+        5.133 V; the integrator's terms 2.1609 mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)
    4   R55 carries U13's BIAS and other loads                             CORRECTED WITH DESK EVIDENCE
         BIAS bounded at 0.1141 A (4) and re-tapped to PA_OUT (apply_gen_sch_a_paloop.py edit 1; U13.24 on PA_OUT on the composed
         netlist; mutation M06 fails, l9t5_f01_drafts.out 4); R55's other loads 0.372 mA; R55 at 105.0 C (printed TCR; its thermal
@@ -275,7 +292,9 @@ MODEL, ASSUMPTION, MISSING.
    (b): the calibrated residual leaves the case over 15.5 V                                                                             yes
    (c): U13's BIAS (gate drive) would take more than the cap's room under U13's limit if it stayed behind R55                           yes
    (c): with BIAS on PA_OUT, the cap's top plus R55's other loads stays under U13's own loop minimum (hot shunt, printed TCR)           yes
-   (c): the band on PRINTED terms alone lies inside the band with the TYPICAL allowances                                                yes
+   (c): the band on the PRINTED rows alone (no ASSUMPTION or TYPICAL term) lies inside the band with them                               yes
+   (c): B-PA1's pass limit is at or under the band's calculated floor (rounded down, cx46)                                              yes
+   (c): Q551's held load is stated apart from the steady load and carried to V-PA-REF and B-PA2, not into the steady band (cx46)        yes
    (c): the cap's top is under the INA250's 15 A continuous rating                                                                      yes
    (c): the case at the cap's top meets 15.5 V with the gauge bound, the dock contacts' maximum and the loop's own supply               yes
    (c): the margin there is at least 0.2 V                                                                                              yes

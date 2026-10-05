@@ -892,7 +892,7 @@ def t_p0_the_output_is_reproduced_pinned_and_every_predicate_holds():
 
 def t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_no_layout_realises_it():
     text = open(P0_OUT, encoding="utf-8").read()
-    for s_ in ("0.3543 mOhm (declared peak) and 0.7747 mOhm (C-DEV rev 1)", "0.1436 and", "0.4386 mOhm", "V6-B1 is PROVISIONAL, not closed",
+    for s_ in ("0.3543 mOhm (declared peak) and 0.7747 mOhm (C-DEV rev 1)", "0.1436 and", "0.4386 mOhm", "V6-B1 is not closed", "after cx46 OPEN, REMAINING ENGINEERING",
                "STILL OPEN", "L8R2-F33a", "NOT A CORRECTION", "covers the COUNTED branches only", "NO CURRENT RATING PRINTED",
                "authority: SESSION", "WIRE-TO-WIRE rating"):
         assert s_ in text, s_
@@ -915,7 +915,8 @@ def t_p0_the_group_centre_reading_is_withdrawn_as_realisability():
     assert "MET on the" not in text and "realisable on the placement as drawn)" not in text
     page = open(PAGE, encoding="utf-8").read()
     assert "the group-centre reading of `l8r2_p0.out` 2b placed no footprint" in page and "l8r2_dist.py" in page
-    assert "the sockets are PLACED with their" in open(os.path.join(REC, "l8r2_gndret.out"), encoding="utf-8").read()
+    gr = " ".join(open(os.path.join(REC, "l8r2_gndret.out"), encoding="utf-8").read().split())
+    assert "the sockets are PLACED with their" in gr and "a STUDY, not a correction" in gr and "V6-B1 stays OPEN as REMAINING ENGINEERING" in gr
 
 
 DIST = os.path.join(REC, "l8r2_dist.py")
@@ -985,3 +986,10 @@ def t_p0_dist_the_verdict_matches_its_rows_and_the_one_node_model_is_kept_beside
     assert over and all(r_[0] == "+76.25" for r_ in over) and rows.index(over[0]) >= 18      # the declared upper bound only
     assert "5. AGAINST THE ONE-NODE MODEL" in text and "5b. THE ROUTE FOR THE DECLARED UPPER BOUND'S RIBBON ROW" in text
     assert "NOT drafted: no service row needs it" in text and "SESSION decision L8R2-D11" in text
+    # cx46 item 4: the study is labelled as what it is and V6-B1 stays OPEN as REMAINING ENGINEERING
+    flat = " ".join(text.split())
+    for s_ in ("STAND IN for it (ASSUMPTION, cx46 item 4)", "their AVERAGE", "not a global bound over the tolerance box",
+               "DISPOSITION OF V6-B1 AFTER cx46 (kept as given; the second negative ends the method): OPEN, REMAINING ENGINEERING",
+               "a STUDY, not a correction", "the selected female lands, the real source and load sites"):
+        assert s_ in flat, s_
+    assert "CORRECTED IN DRAFT" not in text and "holds on the placed distributed one" not in text

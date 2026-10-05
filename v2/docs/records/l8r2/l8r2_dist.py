@@ -29,6 +29,7 @@ common series resistance. This record:
 Run from the repository root: python3 v2/docs/records/l8r2/l8r2_dist.py (stdlib, numpy, scipy, PyYAML, pdftotext; about two minutes).
 The committed output is regenerated only through _bin/regen_out.py.
 """
+import ast
 import hashlib
 import importlib.util
 import math
@@ -479,10 +480,20 @@ def main():
     xt_local, xt_pins = xt["crt_local"], [(0.0, 0.0), (7.2, 0.0)]
     vh = FP["b"]["J_5V_DEV"]
     vh_local, vh_pins = vh["crt_local"], [(0.0, 0.0), (3.96, 0.0)]
+    # cx46 item 4: the return drafts select the XT60-F land (LAND in apply_gen_sch_b_gndrtn.py, read with ast); the tree draws no XT60-F,
+    # so board E's XT60-M courtyard and the 7.2 mm pitch stand in for it: an ASSUMPTION this study names
+    land = None
+    for node in ast.parse(open(rel("v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py"), encoding="utf-8").read()).body:
+        if isinstance(node, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "LAND" for x in node.targets) and isinstance(node.value, ast.Constant):
+            land = node.value.value
+    if not land:
+        refuse("the return drafts' socket land is not read")
+    stand_in = land.split(":")[-1] != xt["name"].split(":")[-1]
     out = []
     w = out.append
-    w("l8r2_dist: record l8r2, the P0 round's correction set after cx45 (Q2; Slot A, MESHSAT-1357, 5 October 2026): THE DEDICATED RETURN")
-    w("PLACED ON THE DRAWN BOARDS AND SOLVED AS A DISTRIBUTED NETWORK. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or")
+    w("l8r2_dist: record l8r2, the P0 round's correction set after cx45 (Q2; Slot A, MESHSAT-1357, 5 October 2026): A PLACEMENT AND")
+    w("DISTRIBUTED-NETWORK STUDY OF THE DEDICATED RETURN ON ASSUMED GEOMETRY, SITES AND FILL; after cx46 (the second negative, which ends the")
+    w("method) V6-B1 stays OPEN as REMAINING ENGINEERING (section 6). PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or")
     w("measured. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSING, PROVISIONAL.")
     w("")
     w("0. PINS (sha256/16 path)")
@@ -495,6 +506,10 @@ def main():
         w("   board %s: %d footprints, %d with a courtyard; the outline %d segments" % (b.upper(), len(FP[b]), n_crt, len(SEG[b])))
     w("   the XT60's courtyard: board E's placed J_BATT (%s), %.2f x %.2f mm; the VH 1x2's: board B's J_5V_DEV, %.2f x %.2f mm" % (
         xt["name"], xt_local[2] - xt_local[0], xt_local[3] - xt_local[1], vh_local[2] - vh_local[0], vh_local[3] - vh_local[1]))
+    w("   the return drafts select %s (LAND in apply_gen_sch_b_gndrtn.py): %s" % (
+        land.split(":")[-1], "the tree draws no such land," if stand_in else "the same land (cx46 item 4)"))
+    if stand_in:
+        w("     so the XT60-M courtyard and its 7.2 mm pad pitch STAND IN for it (ASSUMPTION, cx46 item 4)")
     w("")
 
     # 2. the placement draft
@@ -594,7 +609,8 @@ def main():
         "; ".join("%s: %s" % (k, ", ".join(sorted(v))) for k, v in sorted(unplaced.items())) or "none"))
     # the ground shift the supervisors' LDOs see: their ground pads on board B less J_5V_IOC's pin 2 land on board A (record l9t5's T10-A3)
     ldo_pads = [(x, y) for ref in ("U40", "U50", "U60") for _n, x, y, net in FP["b"][ref]["pads"] if net in GND]
-    w("   the probe: the supervisors' LDOs' ground pads on board B (U40, U50, U60: %d pads) less J_5V_IOC's pin 2 on board A (T10-A3's shift)" % len(ldo_pads))
+    w("   the probe: the supervisors' LDOs' ground pads on board B (U40, U50, U60: %d pads) less J_5V_IOC's pin 2 on board A (T10-A3's shift);" % len(ldo_pads))
+    w("     their AVERAGE (one unit spread over the pads), which does not establish each LDO's own largest shift (cx46 item 4)")
     w("")
 
     # the solve
@@ -627,8 +643,9 @@ def main():
                 gB = sheet_g(P0.PLANES["b"], Tt, thin, fill)
                 res = solve_family(BA, BB, gA, gB, branches, rhs, probe)
                 results[(Tt, thin, fill)] = (branches, tags, res)
-    w("4. THE RETURN SOLVED (MODEL; per case, the largest current of each kind over the copper and fill corners, both injections and the")
-    w("   contact vertices (each conductor at the vertex its search reaches, and the two uniform vertices), against its ratings)")
+    w("4. THE RETURN SOLVED (MODEL on the assumed geometry, sites and fill of sections 1 to 3; per case, the largest current of each kind")
+    w("   over the copper and fill corners, both injections and the contact vertices (each conductor at the LOCAL vertex its search reaches,")
+    w("   and the two uniform vertices; not a global bound over the tolerance box), against its ratings)")
     worst, shifts, viol, pairs = {}, {}, 0, 0
     for ci, (lab, cur) in enumerate(cases):
         w("   %s: %.4f A (%s)" % (lab, sum(cur.values()), ", ".join("%s %.4f" % (k, v) for k, v in cur.items())))
@@ -712,10 +729,11 @@ def main():
     over = sorted({(cases[ci][0], Tt, k, worst[(ci, Tt, k)][0][0], worst[(ci, Tt, k)][2]) for (ci, Tt, k), v in worst.items() if v[0][0] > v[2]})
     rib_max = max(v[0][0] for (ci, Tt, k), v in worst.items() if k == "RIB")
     sh_max = max(shifts[(ci, Tt)] for ci in act for Tt in (P0.TH, P0.TC))
-    w("6. VERDICT (MODEL; the sockets placed in section 2, the composed netlists, the corners and the vertex family above)")
+    w("6. VERDICT OF THE STUDY (MODEL; the sockets placed in section 2 on the stand-in geometry, the composed netlists, the corners and the")
+    w("   local vertex family above)")
     w("   every case row on the printed ratings: %s (the ribbon's largest %.4f A against 1 A: the declared upper bound's printed row, STILL OPEN" % (
         "HOLDS" if ok_pr else "DOES NOT HOLD", rib_max))
-    w("     on the one-node model, holds on the placed distributed one); on the least ratings at the inside air: %s" % ("HOLDS" if ok_le else "DOES NOT HOLD"))
+    w("     on the one-node model, holds in this study); on the least ratings at the inside air: %s" % ("HOLDS" if ok_le else "DOES NOT HOLD"))
     w("   the service cases (C-DEV rev 2, the active row, and the largest steady state) on the printed ratings: %s; on the least: %s" % (
         "HOLD" if ok_service_pr else "DO NOT HOLD", "HOLD" if ok_service_le else "DO NOT HOLD"))
     for lab, Tt, k, cur_, le_ in over:
@@ -726,25 +744,29 @@ def main():
         else:
             w("       Wurth's WR-CAB derating against ambient is not held: the vendor task L8R2-F44 (Wurth, UNSENT); the route if its curve is")
             w("       lower is a fourth return lead beside the ribbon headers (5b)")
-    w("   the ground shift at the supervisors' LDOs on the service cases: at most %.4f V (the T10-A3 chain took %.4f V with the dedicated" % (sh_max, 0.0114))
-    w("     return and %.4f V as drawn, both from the one-node model)" % 0.0681)
-    w("   DISPOSITION OF V6-B1 (the author's; the targeted recheck decides): the three drafted sockets PLACED (section 2, L8R2-D10) and the return")
-    w("     SOLVED as a distributed network at the copper, temperature, fill and contact corners: %s; no fourth lead or bar is" % (
-        "every printed row holds and the service cases hold on the least ratings too" if (ok_pr and ok_service_le) else "NOT every row holds"))
-    w("     needed by any service row (SESSION decision L8R2-D11: the fourth lead of 5b is a named route, not drafted; reversed if Wurth's")
-    w("     WR-CAB curve or the owner makes the declared upper bound a served state); PROVISIONAL on the plane fill (50 % bounds no drawn")
-    w("     split: Layer 10's routed extraction is the")
-    w("     validation task) and on the stages' placement beside their connectors on board A; L8R2-F33a's 'within 17 mm' is withdrawn as the")
-    w("     condition's form: the placed sites and this solve replace it")
+    w("   the AVERAGED ground shift at the supervisors' LDOs on the service cases: at most %.4f V (each LDO's own not established; the" % sh_max)
+    w("     T10-A3 chain took %.4f V with the dedicated return and %.4f V as drawn, both from the one-node model)" % (0.0114, 0.0681))
+    w("   DISPOSITION OF V6-B1 AFTER cx46 (kept as given; the second negative ends the method): OPEN, REMAINING ENGINEERING for the receiving")
+    w("     company. What this record holds is a STUDY, not a correction: the three drafted sockets placed (section 2, L8R2-D10) on")
+    w("     %s and the return solved as a distributed network at the copper, temperature, fill and" % (
+        "the XT60-M stand-in for the selected XT60-F land" if stand_in else "the drafted land"))
+    w("     local contact corners (%s), with" % (
+        "every printed row and the service cases' least rows holding" if (ok_pr and ok_service_le) else "NOT every row holding"))
+    w("     the sources at the loads' pads where placed and the stages at their connector lands (ASSUMPTION), uniform fill scaling (no bound on")
+    w("     a split or a neck), a local vertex search (no global tolerance bound) and an averaged LDO probe. The receiving company's scope:")
+    w("     the selected female lands, the real source and load sites, a justified distributed resistance with tolerance coverage, each LDO's")
+    w("     own shift; the declared upper bound's least rows with L8R2-F43 and L8R2-F44. SESSION decision L8R2-D11 stands as a route only (the")
+    w("     fourth lead of 5b, not drafted); L8R2-F33a's 'within 17 mm' stays withdrawn as the condition's form")
     w("")
     P = {
         "every placed part's courtyard is clear of every placed courtyard and inside the outline": all(pl["gap"] >= CLEAR - 1e-9 for b in "ab" for pl in PL[b].values()),
         "the conductors read from the composed netlists are the record's six VH, seventeen ribbon and six XT60 contacts": n_kind == {"VH": 6, "RIB": 17, "RET": 6},
-        "every case row holds on the printed ratings in the distributed model": ok_pr,
-        "the service cases hold on the printed and the least ratings in the distributed model": ok_service_pr and ok_service_le,
-        "every search ended at a stable vertex (no single contact's move raises its current or the shift there)": all(
+        "every case row holds on the printed ratings in this study (assumed geometry, sites and fill; MODEL)": ok_pr,
+        "the service cases hold on the printed and the least ratings in this study (MODEL)": ok_service_pr and ok_service_le,
+        "every search ended at a stable LOCAL vertex (no single contact's move raises its current or the shift there)": all(
             r["stable"] for (_b, _tg, rs) in results.values() for r in rs),
-        "the distributed ground shift at the LDOs on the service cases stays under the T10-A3 chain's as-drawn figure": sh_max < 0.0681,
+        "the study's AVERAGED ground shift at the LDOs on the service cases stays under the T10-A3 chain's as-drawn figure": sh_max < 0.0681,
+        "V6-B1 reads OPEN, REMAINING ENGINEERING: the study stands on a stand-in land, assumed sites and fill and an averaged probe (cx46)": stand_in,
     }
     w("7. PREDICATES")
     for k, v in P.items():

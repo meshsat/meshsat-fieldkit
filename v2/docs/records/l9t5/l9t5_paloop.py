@@ -200,6 +200,14 @@ def cap(S, r_top=R_SET_TOP, r_bot=R_SET_BOT):
     L["ref_dI"] = max(abs(L["ref_load"][0] - 1e-3), abs(L["ref_load"][1] - 1e-3))
     L["ref_loadreg_typ"] = S["ref_loadreg"]
     L["ref_resid"] = LOADREG_X * S["ref_loadreg"] * L["ref_dI"]          # V at VOUT, ASSUMPTION (ten times the TYPICAL row)
+    L["r_int"] = (R_INT * (1 - e), R_INT * (1 + e))          # R553, 0.1 % 25 ppm/K over the 65 K span (cx45 Q1)
+    L["r_ss"] = (R_SS * (1 - eb), R_SS * (1 + eb))           # R559 "1k", the tree's 1 % class (ASSUMPTION, as R560)
+    # cx46 item 2: Q551 HOLDING PA_ISP near ground loads the reference through R559 as well (PA_ISET across R559 at its low corner, the
+    # divider at its top; Q551's RDS(on) neglected, an upper bound, MODEL); on release C557 charges through R559 and the load falls back
+    # to the steady one in about 3 R559 C557. The held load moves no steady band (the cap is held at zero) but enters the release.
+    L["ref_held"] = vfb * (1 + acc) / (r_bot * (1 - e)) + S["ref_ifb"] + i_leak + (vfb * (1 + acc) * (1 + r_top * (1 + e) / (r_bot * (1 - e)))) / L["r_ss"][0]
+    L["ref_held_resid"] = LOADREG_X * S["ref_loadreg"] * (L["ref_held"] - 1e-3)      # V at VOUT while held, ASSUMPTION (ten times TYPICAL)
+    L["release_t"] = 3 * L["r_ss"][1] * C_SS
     L["vset"] = (vfb * (1 - acc) * (1 + r_top * (1 - e) / (r_bot * (1 + e))) - S["ref_ifb"] * r_top - S["ref_line"] - L["ref_resid"],
                  vfb * (1 + r_top / r_bot),
                  vfb * (1 + acc) * (1 + r_top * (1 + e) / (r_bot * (1 - e))) + S["ref_ifb"] * r_top + S["ref_line"] + L["ref_resid"])
@@ -221,13 +229,13 @@ def cap(S, r_top=R_SET_TOP, r_bot=R_SET_BOT):
                       ("PSRR, PRINTED %.0f uV/V max over +5V_D8IN's %.3f V from the 5 V of the VOS row" % (S["oa_psrr"] * 1e6, dv5), "PRINTED", S["oa_psrr"] * dv5),
                       ("CMRR, PRINTED %.0f dB min (VS 5.5 V row; ASSUMPTION that it holds at 4.87 to 5.13 V), VCM %.3f V against VS/2" % (S["oa_cmrr"], vcm), "PRINTED",
                        abs(vcm - V5[0] / 2) * 10 ** (-S["oa_cmrr"] / 20.0)),
-                      ("IB, TYPICAL %.1f pA only: bounded at %.0f nA into R553 (ASSUMPTION)" % (S["oa_ib_typ"] * 1e12, IB_BOUND * 1e9), "ASSUMPTION", IB_BOUND * R_INT),
-                      ("C554's leakage, %.0f Ohm F (ASSUMPTION) at %.2f V into R553" % (IR_X7R_OHM_F, V5[2]), "ASSUMPTION", V5[2] / (IR_X7R_OHM_F / C_INT) * R_INT),
+                      ("IB, TYPICAL %.1f pA only: bounded at %.0f nA into R553 at its top corner (ASSUMPTION)" % (S["oa_ib_typ"] * 1e12, IB_BOUND * 1e9), "ASSUMPTION",
+                       IB_BOUND * L["r_int"][1]),
+                      ("C554's leakage, %.0f Ohm F (ASSUMPTION) at %.2f V into R553 at its top corner" % (IR_X7R_OHM_F, V5[2]), "ASSUMPTION",
+                       V5[2] / (IR_X7R_OHM_F / C_INT) * L["r_int"][1]),
                       ("finite gain, PRINTED AOL %.0f dB min: at most the output's travel %.2f V divided by it" % (S["oa_aol"], V5[2]), "PRINTED", V5[2] * 10 ** (-S["oa_aol"] / 20.0))]
     L["vos"] = math.fsum(x for _l, _k, x in L["vos_terms"])
     L["leak"] = i_leak
-    L["r_int"] = (R_INT * (1 - e), R_INT * (1 + e))          # R553, 0.1 % 25 ppm/K over the 65 K span (cx45 Q1)
-    L["r_ss"] = (R_SS * (1 - eb), R_SS * (1 + eb))           # R559 "1k", the tree's 1 % class (ASSUMPTION, as R560)
 
     def I(vset, vp, rb, vos, g, ios, il, rint=R_INT, rss=R_SS):
         visp = vset - il * rss
@@ -239,10 +247,18 @@ def cap(S, r_top=R_SET_TOP, r_bot=R_SET_BOT):
     L["i_min"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -L["vos"], L["gerr"], L["ios"], i_leak, L["r_int"][1], L["r_ss"][1])
     L["i_max_nores"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), L["vos"], -L["gerr"], -L["ios"], 0.0)          # R553, R559 nominal (round 2)
     L["i_min_nores"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -L["vos"], L["gerr"], L["ios"], i_leak)
-    L["i_max_printed_only"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), S["oa_vos"] + S["oa_psrr"] * dv5, -S["ina_gerr"], -L["ios"], 0.0,
+    # cx46 item 2: the band on the PRINTED rows alone: the set point without the ASSUMPTION load residual, every PRINTED offset row of
+    # the integrator and the INA250, the PRINTED gain error; no TYPICAL or ASSUMPTION term (the residual, IB, C554's leakage, the shunt's
+    # stress rows, the nonlinearity, the hold's leakage); R553 at its drawn class and R559 at the tree's 1 % class (ASSUMPTION) at corners
+    L["vset_printed"] = (L["vset"][0] + L["ref_resid"], L["vset"][1], L["vset"][2] - L["ref_resid"])
+    L["vos_printed"] = math.fsum(x for _l, k, x in L["vos_terms"] if k == "PRINTED")
+    L["ios_printed"] = math.fsum(x for _l, k, x in L["ios_terms"] if k == "PRINTED")
+    L["i_max_printed_only"] = I(L["vset_printed"][2], V5[0], R_BIAS * (1 + eb), L["vos_printed"], -S["ina_gerr"], -L["ios_printed"], 0.0,
                                 L["r_int"][0], L["r_ss"][0])
-    L["i_min_printed_only"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -(S["oa_vos"] + S["oa_psrr"] * dv5), S["ina_gerr"], L["ios"], 0.0,
+    L["i_min_printed_only"] = I(L["vset_printed"][0], V5[2], R_BIAS * (1 - eb), -L["vos_printed"], S["ina_gerr"], L["ios_printed"], 0.0,
                                 L["r_int"][1], L["r_ss"][1])
+    # B-PA1's pass limit: the band's floor rounded DOWN to the mA (cx46 item 2: never above the calculated floor)
+    L["bpa1_limit"] = math.floor(L["i_min"] * 1000.0) / 1000.0
     # U13's own loop and R55: the shunt hot at the cap's top, its printed TCR
     vs = S["lm_vsns"]
     L["r55_w"] = (L["i_max"] + R55_OTHER_A) ** 2 * ISNS_R

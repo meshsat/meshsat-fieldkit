@@ -481,8 +481,10 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
       the plane resistance between the return sockets' lands and the 5 V entries is a NAMED CONDITION, L8R2-F33a, with the bound
       each case tolerates and the land separation a layout may have on the declared stackups in l8r2_p0.out section 2
       (PROVISIONAL on the routed boards' extraction). After the focused check cx45 (Q2) the sockets are PLACED with their
-      courtyards on both boards and the return SOLVED as a distributed network (l8r2_dist.out): every printed row holds, the
-      declared upper bound's included, and the service cases hold on the least ratings; PROVISIONAL on the plane fill.
+      courtyards on both boards and the return studied as a distributed network (l8r2_dist.out) on a stand-in XT60-M land,
+      assumed sites and fill and an averaged LDO probe: every printed row holds there and the service cases hold on the least
+      ratings, a STUDY, not a correction; after cx46 V6-B1 stays OPEN as REMAINING ENGINEERING (the selected XT60-F lands, the
+      real source and load sites, a justified distributed resistance with tolerance coverage, each LDO's own shift).
     - the XT60's contact resistance after ageing. Amass prints one limit (1.0 mOhm, 2021V1) with a 100-cycle life and no separate
       after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under 2.06 mOhm, and on
       the least ratings at or under 1.43 mOhm (2.1 and 1.4 times the printed limit). Beyond that a row fails: a four-wire reading of the

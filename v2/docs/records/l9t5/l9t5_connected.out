@@ -1,7 +1,9 @@
 l9t5_connected: the P0 round's parts 4b and 4c, THE CONNECTED P0 CANDIDATE (record l9t5, Slot A, MESHSAT-1357, 5 October 2026).
 PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measured; nothing applied to the tree's generators. A netlist
 reading is not electrical qualification. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSING, PROVISIONAL.
-No completion claim: power-design closure and fabrication release stay BLOCKED (the open items of section 9).
+No completion claim: power-design closure and fabrication release stay BLOCKED. After cx46 (P0 RECHECK: CORRECTIONS NOT CLOSED, the
+second negative, which ends the method) the connected electrical verdict reads REMAINING ENGINEERING (section 11), never a positive
+acceptance: every figure below is a MODEL reading on the composed candidate.
 
 0. PINS (sha256/16 path)
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
@@ -9,24 +11,25 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    3b2374d10186b913 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    63769e7a2d15de1d v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
    7b54d7ac587eab81 v2/docs/records/l9pwr/l9pwr_budget.out
-   99e0037be8844342 v2/docs/records/l9t5/l9t5_drafts.out
+   379c9fc930c15a34 v2/docs/records/l9t5/l9t5_drafts.out
    7205a24508a1284f v2/docs/records/efuse/efuse_check.out
    65a8ea907633c104 v2/docs/records/l9stk/l9stk_protection.out
    eee720dba6702bbf v2/docs/records/l8p/l8p_c4.out
-   abe5e22df879707f v2/docs/records/l9t5/l9t5_t10.out
-   4b6cfb0ce7f754e6 v2/docs/records/l9t5/l9t5_f01.out
-   424e078b5d11f52e v2/docs/records/l8r2/l8r2_p0.out
+   25a1277c5294468f v2/docs/records/l9t5/l9t5_t10.out
+   e5d150a994751551 v2/docs/records/l9t5/l9t5_f01.out
+   4e6fa442cc3f45ee v2/docs/records/l8r2/l8r2_p0.out
    d02b5d66c46aa81b v2/docs/records/l4e7/l4e7_p0sol.out
-   224800bbefe53989 v2/docs/records/l8r2/l8r2_dist.out
-   817abe269b8df90a v2/docs/records/l8r2/l8r2_dist.py
+   ee6475790e780d9d v2/docs/records/l8r2/l8r2_dist.out
+   f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
    42f47948aee200fd v2/docs/records/l4e7/l4e7_p0sol.py
    749a12c45d57b444 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   3fbc2cd9fc2542fa v2/docs/records/l8r2/l8r2_p0.py
-   ce5ecb92335d3a31 v2/docs/records/l8r2/l8r2_gndret.py
-   27c71c191d2352fb v2/docs/records/l9t5/l9t5_paloop.py
+   872cbf961ddd515e v2/docs/records/l8r2/l8r2_p0.py
+   3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
+   d1192fcfd0c734ac v2/docs/records/l9t5/l9t5_paloop.py
    e03d39014a2b679a v2/docs/records/efuse/efuse_check.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
@@ -157,8 +160,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      the cap. Desk route if JST's curve is lower: two contacts a pole (a 1x4 VH), a Layer 7 harness row (finding below)
    J_5V_DEV pin 1 at board B's lead 6.0359 A: the same VH row (5.9948 A INFERRED at 76.25 C), L8R2-F43, PROVISIONAL
    the dock's four Mill-Max pins on the pack path: at their PRINTED maximum contact resistance inside the case's bound (section 5)
-   the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: the sockets PLACED on the drawn boards with their
-     courtyards and the return SOLVED as a distributed network at the copper, temperature, fill and contact corners; the composed
+   the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: a STUDY, the sockets placed on the drawn boards on
+     a stand-in XT60-M land, the return solved as a distributed network on assumed sites and fill at the local contact corners; the composed
      netlists carry 6 lead contacts, 17 ribbon ground conductors and 3 return sockets whole on both boards, the conductors it solves)
      C-DEV rev 2                20.4746 A: +76.25 C VH 4.6150 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4470 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.5836 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.0023 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5505 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.3978 A (printed 35.0000 holds, least 35.0000 holds)
      C-DEV rev 1                20.9888 A: +76.25 C VH 4.6655 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4556 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.6906 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.0634 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5615 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.5257 A (printed 35.0000 holds, least 35.0000 holds)
@@ -166,10 +169,10 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      the declared upper bound   27.8159 A: +76.25 C VH 6.4485 A (printed 10.0000 holds, least 5.9948 OVER); +76.25 C RIB 0.6299 A (printed 1.0000 holds, least 0.5995 OVER); +76.25 C RET 7.5531 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 6.9741 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.7729 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 8.6613 A (printed 35.0000 holds, least 35.0000 holds)
      every printed row holds; the service cases (C-DEV rev 2, the largest steady state) hold on the least ratings too; over the INFERRED
      least only the declared upper bound at 76.25 C (VH pin 2 with its pin 1, L8R2-F43; the ribbon, L8R2-F44, a placed fourth lead its
-     route, not drafted: L8R2-D11); the ground shift at the supervisors' LDOs at most 0.0205 V on the service cases (section 10 uses it)
-     V6-B1: CORRECTED IN DRAFT on the desk model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed
-     extraction) and the stages beside their connectors on board A; the targeted recheck decides. V6-B2's indirect paths bounded with
-     vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL
+     route, not drafted: L8R2-D11); the AVERAGED ground shift at the supervisors' LDOs at most 0.0205 V on the service cases (section 10
+     uses it; each LDO's own is not established)
+     V6-B1: OPEN, REMAINING ENGINEERING for the receiving company (l8r2_dist.out 6; cx46 item 4: NOT CLOSED): the study is evidence toward the route, not a
+     correction. V6-B2's indirect paths bounded with vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL
 
 8. THE PROTECTION COORDINATION, ROW BY ROW (cx45 Q7: each trip's band against its demand below and its downstream ratings above,
    printed and at the inside air; what is NOT established is named in its row)
@@ -192,8 +195,9 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      the loop, path 1 round 8's guard with the cold clamp, path 2 U62 on VBAT through U63 with its own shunt Q61 on DOCK_EN_OUT; drawn by
      the delta, section 2, read by check_l8p_fs.py, section 3): no trip at 10 A held (89.4 C, 38.4 K under 127.8 C), at the 18 A service read
      as held (118.0 C, 9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) on each switch's PRINTED limits (l8p_c4.out 10c (a)); the trip
-     within 43.8 ms on path 1 and 40.0 ms on path 2 (10c (b)), under the RC hold; no single failure removes the trip (10c (2)); the FETs' 150 C behind it (DD-2 with
-     Q42, condition C3). NOT established: the double failure after a latent first one (L8P-R9-F1, handed over as remaining engineering);
+     within 43.8 ms on path 1 and 40.0 ms on path 2 (10c (b)), under the RC hold; the author's reading that no single failure removes the trip (10c (2), UNCHECKED); the
+     FETs' 150 C behind it (DD-2 with Q42, condition C3). NOT established: the double failure after a latent first one and the retry
+     heating after the loss of path 1 (L8P-R9-F1; cx46 item 10 NOT CLOSED): the guard row's C-PROT claim reads REMAINING ENGINEERING (section 11);
      the guard's DOCK_EN_OUT draw at most 36.00 uA cold and 47.02 uA tripped (PRINTED maxima, the worst single fault; the loop's allowances
      40 and 50 uA hold) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;
      L4-E11 section 28 restates 20c and 20f on them, record l9stk's re-take owed); V6-m7 and the common path CORRECTED IN DRAFT, UNCHECKED
@@ -207,7 +211,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
 
 9. THE THERMAL LIMITS (each at the air its record reads)
    the supervisors' LDOs at R602 14.0 k (T10, Slot C's part 22 rows; section 10's decision): on revision V (fitted, L9T5-D7) the bounded
-     state 103.9 C, every row at most 121.5 C (MODEL at 76.25 C, the drop's worst corner): every one holds against each row's criterion (125 C
+     state 103.9 C, every row at most 121.5 C (MODEL at 76.25 C on average currents, the drop's worst corner): every one holds against each row's
+     criterion on the MODEL; the acceptance reads REMAINING ENGINEERING while the sustained peaks and the latent rail trip are open (section 11) (125 C
      sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: 2 over (B7b, SHDN ignored (L9T5-D5) 125.9 C; babbling (nothing ends it) 134.7 C): rev X stays on V-B20
    U551 INA250A2 at the cap's top: junction 98.8 C at 76.25 C air (TYPICAL RthJA; l9t5_f01.out)
    R55 (WSL2512 6 mOhm): 0.288 W at the cap's top with R55's other loads, 105.0 C at 76.25 C air (MODEL, ASSUMPTION 100 K/W); U13's least
@@ -218,8 +223,9 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    CONTAINMENT (Slot C's round 6, composed in section 2; the owner's part 22 item 3) AND SESSION DECISION L9T5-D9
    each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's
    2 % copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: 42.52 mOhm, hot wire and two contacts), the ground shift
-   between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the PLACED distributed
-   model's largest on the service cases, l8r2_dist.out, which replaces the one-node 0.0114 V) and its own rail trip's sense resistor
+   between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the distributed STUDY's
+   AVERAGED probe on the service cases, l8r2_dist.out, PROVISIONAL with V6-B1 OPEN, which replaces the one-node 0.0114 V) and its own
+   rail trip's sense resistor
    (read on the composed board B by topology: R600 0.3R 1% 0805 for U40, R620 0.3R 1% 0805 for U50, R640 0.3R 1% 0805 for U60; taken at 0.3030 Ohm, its printed tolerance's top);
    against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked. The currents:
    the LDO's printed 600 mA (its rating, not a demand); the hardware bound T10-A3 is judged at since Slot C's round 6 (the rail trip's
@@ -257,9 +263,11 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    reversed_by: none; its reasons restated on the containment after cx45): Slot C's set point delta (R602 14.0 k) is TAKEN, composed
    after iocpre on both boards (section 2; a separate draft, one writer a file). Why, over the connected circuit with the containment:
    at 14.0 k every LDO's input holds its need at the hardware bound with the sense resistor's drop, with the return as drawn (+0.1311 V)
-   and with the dedicated return (+0.1787 V), and the trip's held maximum leaves the LDO at 115.4 C (+9.6 K); at 13.3 k that held current
+   and with the dedicated return (+0.1787 V), and the trip's held average leaves the LDO at 115.4 C (+9.6 K); at 13.3 k that held current
    puts it at 123.2 C (INFERRED, +1.8 K: inside the model's own uncertainty, the LDO's 184 C/W with no board copper), and without the
    containment the babbling row there is 130.6 C, a demonstrated defect; the headroom's top 4.1174 V stays under the LDO's input maximum.
+   The ranking stands on any thermal model (the LDO's dissipation falls with its input at every current); the bounds themselves are
+   REMAINING ENGINEERING after cx46 (the sustained peaks, item 7; the latent rail trip, item 6; section 11)
    What it costs: with the sense resistor in the path, T10-A3 at the LDO's printed 600 mA fails at every set point (13.3 k -0.1083 V,
    -0.0607 V; 14.0 k -0.2697 V, -0.2221 V): 600 mA is the regulator's rating, not a demand; L9T5-D8's superseded 0.4512 A (rev Y's held B5
    row, the cover for the held revision X) holds at 13.3 k (+0.0599 V, +0.1075 V) and not at 14.0 k (-0.1015 V, -0.0539 V): no fitted state
@@ -281,7 +289,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    renames it (proposed: L9T5-D10); in this record L9T5-D9 is the set point
    THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k and the containment composed, section 2): each
    regulator's temperature against 125 C per served state on revision V (Slot C's MODEL at 76.25 C air and the drop's worst corner,
-   10j (e), the limiters' pull-ups counted) and the trip's held maximum, which bounds every sustained state whatever the firmware does:
+   10j (e), the limiters' pull-ups counted, AVERAGE currents) and the trip's held average; after cx46 an average bound does not bound a
+   periodic peak (item 7) and a latent rail-trip failure removes it (item 6): every row below is a MODEL reading, PROVISIONAL/OPEN:
      the bounded state with the limiters' pull-ups  0.1739 A  sustained  criterion 125 C: 104.0 C (margin +21.0 K)
      B1 with the response                           0.1763 A  sustained  criterion 125 C: 104.4 C (margin +20.6 K)
      B2 with the response                           0.1763 A  sustained  criterion 125 C: 104.4 C (margin +20.6 K)
@@ -293,19 +302,43 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      both fabrics faulted, responded                0.1806 A  sustained  criterion 125 C: 105.1 C (margin +19.9 K)
      a babbler, the limiters bounding it            0.1855 A  sustained  criterion 125 C: 105.8 C (margin +19.2 K)
      the rail trip's held maximum                   0.2452 A  sustained  criterion 125 C: 115.4 C (margin  +9.6 K)
-   RESULT, R602 14.0 k on the complete candidate: the worst sustained-state margin +9.6 K on revision V (the trip's held maximum; the
-     largest served state +19.2 K); rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on
+   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance REMAINING ENGINEERING, section 11): the sustained-state margin +9.6 K on
+     revision V at the trip's held average (the largest served state +19.2 K); rev Y's rows no longer cover a revision X part (its
+     bounded state over the trip's least; HELD on
      V-B20); the LDO input headroom of T10-A3's chain at the hardware bound +0.1311 V with the return as drawn and +0.1787 V with the
      dedicated return (the return's effect +0.0476 V), the top 4.1174 V under the LDO's 6.0 V maximum; the required service unchanged (only
      U601's set point moves and board B gains the containment: no load, rate, state or transmitter reduced, the supervisors' bounded
-     state and C-DEV rev 2 as issued). The worst-case margins: +9.6 K (thermal, the trip's held maximum, rev V) and +0.1311 V (the LDO's
+     state and C-DEV rev 2 as issued). THE WORST-CASE MARGIN ROW: PROVISIONAL/OPEN (no peak bound established, cx46 item 7; a latent rail-trip
+     failure removes the hardware bound, item 6): +9.6 K (thermal, at the trip's held average, rev V, MODEL) and +0.1311 V (the LDO's
      input, as drawn, at the hardware bound on an INFERRED dropout, PROVISIONAL on V-T10-DROP)
 
-11. WHAT THIS CANDIDATE DOES NOT CLOSE (each with its route; constitution section 2)
-   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it
-   the return: V6-B1 CORRECTED IN DRAFT on the placed distributed model (7), PROVISIONAL on the plane fill (Layer 10's routed
-     extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,
-     L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT
+11. THE CONNECTED VERDICT AND WHAT THIS CANDIDATE DOES NOT CLOSE (cx46 items 13 and 17; constitution section 2)
+   the fault rows the connected verdict depends on, each with the cx46 item that holds it (the filed record, 4d0ff8a2, read as JSON;
+   a row is OPEN while its item is NOT CLOSED: the method ended at cx46, so no later check closes it):
+     OPEN the latent rail-trip failure (its monitor dead or OUTB released; V-B23's response against the drafted RC network)
+          cx46 item 6: NOT CLOSED; it removes or weakens: T10's thermal bound and T10-A3's hardware bound
+     OPEN the sustained peaks (a periodic load under the trip's average over 125 C)
+          cx46 item 7: NOT CLOSED; it removes or weakens: the sustained thermal bound, the worst-case margin row
+     OPEN L8P-R9-F1 (a latent first failure then the other path; the retry heating after the loss of path 1 unbounded)
+          cx46 item 10: NOT CLOSED; it removes or weakens: C-PROT's protection claim (the guard's row)
+     OPEN L9T5-F21 (a TX pin toggled as a GPIO under the limiter's share; a latent share comparator)
+          cx46 item 5: NOT CLOSED; it removes or weakens: CON-004's quorum service, FW-B22
+     OPEN VOS0 under the trip (the controller past its 105 C VOS0 limit below the trip band)
+          cx46 item 17: NOT CLOSED; it removes or weakens: controller survival, FW-B20 and FW-B22 service
+     OPEN V6-B1 (the selected XT60-F lands, the real sites, a justified distributed resistance, each LDO's own shift)
+          cx46 item 4: NOT CLOSED; it removes or weakens: the return's rows, T10-A3's shift with the dedicated return
+     OPEN F01's reference loading through Q551's hold and release, and the acceptance limits
+          cx46 item 2: NOT CLOSED; it removes or weakens: the PA cap's band, C-ALLTX rev 3 at the cap
+   THE CONNECTED ELECTRICAL VERDICT: REMAINING ENGINEERING. No row of sections 5 to 10 is a positive electrical acceptance: each is a MODEL
+     reading on the composed candidate, and every claim that depends on an OPEN row above (the guard's C-PROT row, T10's thermal
+     and headroom rows, the CAN service, the return's rows, the PA cap's band) stays OPEN or PROVISIONAL and passes to the receiving
+     company as remaining engineering with its failed cases, the attempted correction and the affected outputs (never as a
+     qualification-only item)
+   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it; the
+     reference's loading through Q551's hold and release and the acceptance limits REMAINING ENGINEERING (cx46 item 2)
+   the return: V6-B1 OPEN, REMAINING ENGINEERING (7; the distributed study on a stand-in land, assumed sites and fill, an averaged
+     probe); the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43, L8R2-F44); V6-B2 vendor tasks (Hirose
+     U.FL, Molex HDMI) UNSENT
    the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and
      J_PA at the inside air (L9T5-F26), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN
      service for a TX pin toggled as a GPIO and after a latent stuck comparator (5; L9T5-F21, handed over, Slot C's)
@@ -344,11 +377,12 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    U601 stays under its 3 A on both revisions                                                                                    yes
    J_PA's cap-top current is under the VH's printed rating                                                                       yes
    the distributed return's conductors are the composed netlists'                                                                yes
-   the placed distributed return holds every printed row and the service cases' least rows (l8r2_dist.out)                       yes
+   the return STUDY holds every printed row and the service cases' least rows (MODEL); V6-B1 reads OPEN, REMAINING ENGINEERING   yes
    each protective row states its band against its demand and its downstream printed rating, and names what is not established   yes
    record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve yes
-   every revision V T10 row holds its criterion at the taken set point                                                           yes
-   the final R602 figures: every revision V served state and the trip's held maximum keep a positive margin to 125 C             yes
-   L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return, Slot C's figure reproduced yes
+   every revision V T10 row holds its criterion at the taken set point on the MODEL; its acceptance reads REMAINING ENGINEERING while the peaks and the latent rail trip are open yes
+   the final R602 figures keep a positive MODEL margin on average currents; the worst-case margin row reads PROVISIONAL/OPEN while the peaks or the latent rail trip are open yes
+   L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return (MODEL), Slot C's figure reproduced yes
+   the connected electrical verdict reads REMAINING ENGINEERING, never a positive acceptance, while any fault row it depends on is open (cx46 items 13, 17) yes
 
 l9t5_connected: done

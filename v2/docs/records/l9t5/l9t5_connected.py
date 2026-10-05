@@ -22,6 +22,7 @@ import ast
 import copy
 import hashlib
 import importlib.util
+import json
 import os
 import re
 import shutil
@@ -75,6 +76,21 @@ OUTS = {"budget": "v2/docs/records/l9pwr/l9pwr_budget.out", "drafts": "v2/docs/r
         "c4": "v2/docs/records/l8p/l8p_c4.out", "t10": "v2/docs/records/l9t5/l9t5_t10.out", "f01": "v2/docs/records/l9t5/l9t5_f01.out",
         "p0ret": "v2/docs/records/l8r2/l8r2_p0.out", "p0sol": "v2/docs/records/l4e7/l4e7_p0sol.out",
         "dist": "v2/docs/records/l8r2/l8r2_dist.out"}
+CX46 = "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md"   # the one targeted recheck, filed as received (main 0d5f855e)
+# the fault rows the connected verdict depends on (cx46 items 13 and 17): (row, the cx46 classification item that holds it, what it
+# removes or weakens). A row is OPEN while cx46 classifies its item NOT CLOSED: the method ended there, so no later check closes it.
+FAULT_ROWS = (
+    ("the latent rail-trip failure (its monitor dead or OUTB released; V-B23's response against the drafted RC network)", 6,
+     "T10's thermal bound and T10-A3's hardware bound"),
+    ("the sustained peaks (a periodic load under the trip's average over 125 C)", 7, "the sustained thermal bound, the worst-case margin row"),
+    ("L8P-R9-F1 (a latent first failure then the other path; the retry heating after the loss of path 1 unbounded)", 10,
+     "C-PROT's protection claim (the guard's row)"),
+    ("L9T5-F21 (a TX pin toggled as a GPIO under the limiter's share; a latent share comparator)", 5, "CON-004's quorum service, FW-B22"),
+    ("VOS0 under the trip (the controller past its 105 C VOS0 limit below the trip band)", 17, "controller survival, FW-B20 and FW-B22 service"),
+    ("V6-B1 (the selected XT60-F lands, the real sites, a justified distributed resistance, each LDO's own shift)", 4,
+     "the return's rows, T10-A3's shift with the dedicated return"),
+    ("F01's reference loading through Q551's hold and release, and the acceptance limits", 2, "the PA cap's band, C-ALLTX rev 3 at the cap"),
+)
 SCRIPTS = ["v2/docs/records/l8r2/l8r2_dist.py", "v2/docs/records/l4e7/l4e7_p0sol.py", "v2/docs/records/l9t5/l9t5_t10.py", "v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l8r2/l8r2_p0.py", "v2/docs/records/l8r2/l8r2_gndret.py",
            "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/efuse/efuse_check.py", "v2/docs/records/l8p/gen_netlist.py",
            "v2/docs/records/l9t5/check_f01_netlist.py", "v2/docs/records/l9t5/check_l9t5_netlist.py", "v2/docs/records/l8p/check_l8p_netlist.py",
@@ -411,7 +427,8 @@ def f22_chain(nlb):
     d14 = tops[14.0e3][2] - 3.3 * P["vout_lo"]
     tj_trip = {rb: (air + (tj_trip14 - air) * (tops[rb][2] - 3.3 * P["vout_lo"]) / d14,
                     "Slot C's MODEL" if abs(rb - 14.0e3) < 1 else "INFERRED, Slot C's 14.0 k figure scaled by the drop") for rb in tops}
-    sh_dist = float(need(text(OUTS["dist"]), r"the ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V", "the distributed shift").group(1))
+    sh_dist = float(need(text(OUTS["dist"]), r"the AVERAGED ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V",
+                         "the distributed study's averaged shift").group(1))
     rows = []
     for rb, (lo, nom, hi) in tops.items():
         for ret, shift in (("as drawn", G["shift_drawn_ub"]), ("with the dedicated return", sh_dist)):
@@ -430,8 +447,30 @@ def drop_mv(FC):
     return 1000.0 * FC["drop_trip"]
 
 
+def fault_rows():
+    """[(row, cx46 item, its classification, affected claims, OPEN)] read from the filed cx46 record's JSON (parsed, never grepped)"""
+    raw = text(CX46)
+    if "```json" not in raw:
+        refuse("the filed cx46 record carries no JSON block")
+    J = json.loads(raw.split("```json", 1)[1].split("```", 1)[0])
+    if not J.get("summary", "").startswith("P0 RECHECK: CORRECTIONS NOT CLOSED"):
+        refuse("the filed cx46 record's verdict is not read")
+    cls = {}
+    for c in J["classification"]:
+        m = re.match(r"^(\d+)(?: and \d+)?\. .*: (NOT CLOSED|CLOSED BY THE CORRECTION|CLOSED AS CONDITIONAL)$", c["item"])
+        if not m:
+            refuse("a cx46 classification item is not read (%s)" % c["item"][:60])
+        cls[int(m.group(1))] = m.group(2)
+    rows = []
+    for row, item, aff in FAULT_ROWS:
+        if item not in cls:
+            refuse("cx46 has no item %d" % item)
+        rows.append((row, item, cls[item], aff, cls[item] == "NOT CLOSED"))
+    return rows, J["base_commit"][:8]
+
+
 def main():
-    for p in [CASES, L4E9, REG, PAGE, CL_DRAFT] + list(OUTS.values()) + SCRIPTS + GENS + list(NET.values()):
+    for p in [CASES, L4E9, REG, PAGE, CL_DRAFT, CX46] + list(OUTS.values()) + SCRIPTS + GENS + list(NET.values()):
         if not os.path.isfile(rel(p)):
             refuse("%s is missing" % p)
     cs = " ".join(text(CASES).split())
@@ -439,16 +478,21 @@ def main():
         if h not in text(CASES):
             refuse("the case file lacks %s" % h)
     S = PL.read_sheets()
+    FR, cx46_base = fault_rows()
+    OPEN = {item: op for _r, item, _c, _a, op in FR}
+    RE = "REMAINING ENGINEERING"
     tree_sha = {g: sha(g, 64) for g in GENS}
     out = []
     w = out.append
     w("l9t5_connected: the P0 round's parts 4b and 4c, THE CONNECTED P0 CANDIDATE (record l9t5, Slot A, MESHSAT-1357, 5 October 2026).")
     w("PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measured; nothing applied to the tree's generators. A netlist")
     w("reading is not electrical qualification. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSING, PROVISIONAL.")
-    w("No completion claim: power-design closure and fabrication release stay BLOCKED (the open items of section 9).")
+    w("No completion claim: power-design closure and fabrication release stay BLOCKED. After cx46 (P0 RECHECK: CORRECTIONS NOT CLOSED, the")
+    w("second negative, which ends the method) the connected electrical verdict reads REMAINING ENGINEERING (section 11), never a positive")
+    w("acceptance: every figure below is a MODEL reading on the composed candidate.")
     w("")
     w("0. PINS (sha256/16 path)")
-    for p in [CASES, L4E9, REG, PAGE, CL_DRAFT] + list(OUTS.values()) + SCRIPTS + GENS + list(NET.values()):
+    for p in [CASES, L4E9, REG, PAGE, CL_DRAFT, CX46] + list(OUTS.values()) + SCRIPTS + GENS + list(NET.values()):
         w("   %s %s" % (sha(p), p))
     w("")
     w("1. THE CASE ROWS (the coordinator's, the copy above; cited, never restated)")
@@ -595,7 +639,7 @@ def main():
                           r"([\d.]+) ms", "FW-B22's schedule (10j (a))")
         qd = need(t10sj, r"the quorum's 2-of-3 decision reads the three state frames of one window: at most (\d+) ms plus ([\d.]+) ms", "the quorum's decision time (10j (a))")
         t_bab = need(t10sj, r"a CONTROLLER-DRIVEN babbler denies the bus at most for its detection time, (\d+) ms", "the babbler's detection time (10j (c))").group(1)
-        bab_open = re.search(r"L9T5-F21 OPEN on the GPIO-toggled TX pin only", t10sj) is not None
+        bab_open = OPEN[5]          # L9T5-F21: cx46 item 5 NOT CLOSED (the GPIO-toggled TX pin, the latent share comparator)
         w("   the CAN mechanism (the supervisors' quorum; Slot C's T10): round 5's ASSUMED set (l9t5_t10.out 10h: %d frames a window against" % can[500][1])
         w("     FW-B21's %d at 500 kbit/s, %s) is replaced by FW-B22's schedule (Slot C's round 6, 10j (a), drafted in the firmware contract):" % (
             can[500][0], can[500][2]))
@@ -668,8 +712,8 @@ def main():
         vP, _l, whole = GR.judge_pair(nA, nB)
         n_rib = sum(len(v) for v in gcB.values())
         dist = text(OUTS["dist"])
-        w("   the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: the sockets PLACED on the drawn boards with their")
-        w("     courtyards and the return SOLVED as a distributed network at the copper, temperature, fill and contact corners; the composed")
+        w("   the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: a STUDY, the sockets placed on the drawn boards on")
+        w("     a stand-in XT60-M land, the return solved as a distributed network on assumed sites and fill at the local contact corners; the composed")
         w("     netlists carry %d lead contacts, %d ribbon ground conductors and %d return sockets whole on both boards, the conductors it solves)" % (
             len(lds), n_rib, len(whole)))
         P["the distributed return's conductors are the composed netlists'"] = (len(lds), n_rib, len(whole)) == (6, 17, 3)
@@ -684,15 +728,19 @@ def main():
         svc_ok = all(r_[5] == "holds" and r_[7] == "holds" for ci, (lab, _t) in enumerate(cases_d) if lab in ("C-DEV rev 2", "the largest steady state")
                      for r_ in rows_d[6 * ci:6 * ci + 6])
         pr_ok = all(r_[5] == "holds" for r_ in rows_d)
-        sh = need(dist, r"the ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V", "the distributed ground shift")
+        sh = need(dist, r"the AVERAGED ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V", "the distributed ground shift")
         w("     every printed row %s; the service cases (C-DEV rev 2, the largest steady state) %s on the least ratings too; over the INFERRED" % (
             "holds" if pr_ok else "does NOT hold", "hold" if svc_ok else "do NOT hold"))
         w("     least only the declared upper bound at 76.25 C (VH pin 2 with its pin 1, L8R2-F43; the ribbon, L8R2-F44, a placed fourth lead its")
-        w("     route, not drafted: L8R2-D11); the ground shift at the supervisors' LDOs at most %s V on the service cases (section 10 uses it)" % sh.group(1))
-        w("     V6-B1: CORRECTED IN DRAFT on the desk model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed")
-        w("     extraction) and the stages beside their connectors on board A; the targeted recheck decides. V6-B2's indirect paths bounded with")
-        w("     vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL")
-        P["the placed distributed return holds every printed row and the service cases' least rows (l8r2_dist.out)"] = pr_ok and svc_ok
+        w("     route, not drafted: L8R2-D11); the AVERAGED ground shift at the supervisors' LDOs at most %s V on the service cases (section 10" % sh.group(1))
+        w("     uses it; each LDO's own is not established)")
+        v6b1 = need(dist, r"DISPOSITION OF V6-B1 AFTER cx46 \(kept as given; the second negative ends the method\): (OPEN, REMAINING ENGINEERING)",
+                    "V6-B1's disposition after cx46").group(1)
+        w("     V6-B1: %s for the receiving company (l8r2_dist.out 6; cx46 item 4: %s): the study is evidence toward the route, not a" % (
+            v6b1, "NOT CLOSED" if OPEN[4] else "closed"))
+        w("     correction. V6-B2's indirect paths bounded with vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL")
+        P["the return STUDY holds every printed row and the service cases' least rows (MODEL); V6-B1 reads OPEN, REMAINING ENGINEERING"] = (
+            pr_ok and svc_ok and v6b1.startswith("OPEN") and OPEN[4])
         w("")
 
         # 8. protection coordination
@@ -739,9 +787,11 @@ def main():
             nt.group(1), nt.group(2), nt.group(3)))
         w("     as held (%s C, %s K) and at the gauge's condition C4 (%s C, %s K) on each switch's PRINTED limits (l8p_c4.out 10c (a)); the trip" % (
             nt.group(4), nt.group(5), nt.group(6), nt.group(7)))
-        w("     within %s ms on path 1 and %s ms on path 2 (10c (b)), under the RC hold; %s (10c (2)); the FETs' 150 C behind it (DD-2 with" % (
+        w("     within %s ms on path 1 and %s ms on path 2 (10c (b)), under the RC hold; the author's reading that %s (10c (2), UNCHECKED); the" % (
             tp.group(1), tp.group(2), "no single failure removes the trip" if two else "the common path NOT READ"))
-        w("     Q42, condition C3). NOT established: the double failure after a latent first one (L8P-R9-F1, handed over as remaining engineering);")
+        w("     FETs' 150 C behind it (DD-2 with Q42, condition C3). NOT established: the double failure after a latent first one and the retry")
+        w("     heating after the loss of path 1 (L8P-R9-F1; cx46 item 10 %s): the guard row's C-PROT claim reads %s (section 11);" % (
+            "NOT CLOSED" if OPEN[10] else "closed", RE if OPEN[10] else "as the rows show"))
         w("     the guard's DOCK_EN_OUT draw at most %s uA cold and %s uA tripped (PRINTED maxima, the worst single fault; the loop's allowances" % (
             dr.group(1), dr.group(2)))
         w("     %s and %s uA hold) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;" % (al.group(1), al.group(2)))
@@ -780,11 +830,14 @@ def main():
         w("9. THE THERMAL LIMITS (each at the air its record reads)")
         b14 = [r for r in v14 if r[0].startswith("the bounded state")][0]
         w("   the supervisors' LDOs at R602 14.0 k (T10, Slot C's part 22 rows; section 10's decision): on revision V (fitted, L9T5-D7) the bounded")
-        w("     state %.1f C, every row at most %.1f C (MODEL at 76.25 C, the drop's worst corner): %s against each row's criterion (125 C" % (
+        w("     state %.1f C, every row at most %.1f C (MODEL at 76.25 C on average currents, the drop's worst corner): %s against each row's" % (
             b14[3], max(r[3] for r in v14), "every one holds" if all(r[4] == "holds" for r in v14) else "NOT every one holds"))
+        w("     criterion on the MODEL; the acceptance reads %s while the sustained peaks and the latent rail trip are open (section 11) (125 C" % (
+            RE if (OPEN[6] or OPEN[7]) else "as the rows show"))
         w("     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): rev X stays on V-B20" % (
             len(y_fail), "; ".join("%s %.1f C" % (r[0], r[3]) for r in y_fail)))
-        P["every revision V T10 row holds its criterion at the taken set point"] = all(r[4] == "holds" for r in v14)
+        P["every revision V T10 row holds its criterion at the taken set point on the MODEL; its acceptance reads REMAINING ENGINEERING while the peaks and the latent rail trip are open"] = (
+            all(r[4] == "holds" for r in v14) and (OPEN[6] or OPEN[7]))
         w("   U551 INA250A2 at the cap's top: junction %s C at 76.25 C air (TYPICAL RthJA; l9t5_f01.out)" % ina.group(1))
         w("   R55 (WSL2512 6 mOhm): %.3f W at the cap's top with R55's other loads, %.1f C at 76.25 C air (MODEL, ASSUMPTION %.0f K/W); U13's least" % (
             L["r55_w"], L["r55_t"], PL.R55_RTH))
@@ -798,8 +851,9 @@ def main():
         w("   CONTAINMENT (Slot C's round 6, composed in section 2; the owner's part 22 item 3) AND SESSION DECISION L9T5-D9")
         w("   each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's")
         w("   2 %% copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: %.2f mOhm, hot wire and two contacts), the ground shift" % (FC["r_sup"] * 1e3))
-        w("   between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the PLACED distributed")
-        w("   model's largest on the service cases, l8r2_dist.out, which replaces the one-node 0.0114 V) and its own rail trip's sense resistor")
+        w("   between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the distributed STUDY's")
+        w("   AVERAGED probe on the service cases, l8r2_dist.out, PROVISIONAL with V6-B1 OPEN, which replaces the one-node 0.0114 V) and its own")
+        w("   rail trip's sense resistor")
         w("   (read on the composed board B by topology: %s; taken at %.4f Ohm, its printed tolerance's top);" % (
             ", ".join("%s %s for %s" % (s[1], s[2], s[0]) for s in FC["sense"]), FC["r_s"]))
         w("   against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked. The currents:")
@@ -841,12 +895,14 @@ def main():
         w("   after iocpre on both boards (section 2; a separate draft, one writer a file). Why, over the connected circuit with the containment:")
         w("   at 14.0 k every LDO's input holds its need at the hardware bound with the sense resistor's drop, with the return as drawn (%+.4f V)" % (
             t14[0]["at"] - t14[0]["need"]))
-        w("   and with the dedicated return (%+.4f V), and the trip's held maximum leaves the LDO at %.1f C (%+.1f K); at 13.3 k that held current" % (
+        w("   and with the dedicated return (%+.4f V), and the trip's held average leaves the LDO at %.1f C (%+.1f K); at 13.3 k that held current" % (
             t14[1]["at"] - t14[1]["need"], tt[14.0e3][0], 125.0 - tt[14.0e3][0]))
         w("   puts it at %.1f C (INFERRED, %+.1f K: inside the model's own uncertainty, the LDO's 184 C/W with no board copper), and without the" % (
             tt[13.3e3][0], 125.0 - tt[13.3e3][0]))
         w("   containment the babbling row there is %.1f C, a demonstrated defect; the headroom's top %.4f V stays under the LDO's input maximum." % (
             FC["tj"][13.3e3][0], FC["tops"][14.0e3][2]))
+        w("   The ranking stands on any thermal model (the LDO's dissipation falls with its input at every current); the bounds themselves are")
+        w("   %s after cx46 (the sustained peaks, item 7; the latent rail trip, item 6; section 11)" % (RE if (OPEN[6] or OPEN[7]) else "as shown"))
         w("   What it costs: with the sense resistor in the path, T10-A3 at the LDO's printed 600 mA fails at every set point (13.3 k %+.4f V," % (
             s13[0]["at"] - s13[0]["need"]))
         w("   %+.4f V; 14.0 k %+.4f V, %+.4f V): 600 mA is the regulator's rating, not a demand; L9T5-D8's superseded %.4f A (rev Y's held B5" % (
@@ -874,34 +930,54 @@ def main():
         w("   renames it (proposed: L9T5-D10); in this record L9T5-D9 is the set point")
         w("   THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k and the containment composed, section 2): each")
         w("   regulator's temperature against 125 C per served state on revision V (Slot C's MODEL at %.2f C air and the drop's worst corner," % FC["air"])
-        w("   10j (e), the limiters' pull-ups counted) and the trip's held maximum, which bounds every sustained state whatever the firmware does:")
+        w("   10j (e), the limiters' pull-ups counted, AVERAGE currents) and the trip's held average; after cx46 an average bound does not bound a")
+        w("   periodic peak (item 7) and a latent rail-trip failure removes it (item 6): every row below is a MODEL reading, PROVISIONAL/OPEN:")
         for lab, i_, t_ in FC["serve"]:
             w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % (lab, i_, t_, 125.0 - t_))
         w("     %-46s %.4f A  sustained  criterion 125 C: %5.1f C (margin %+5.1f K)" % ("the rail trip's held maximum", FC["i_trip"], tt[14.0e3][0], 125.0 - tt[14.0e3][0]))
         sv_max = max(t_ for _l, _i, t_ in FC["serve"])
-        w("   RESULT, R602 14.0 k on the complete candidate: the worst sustained-state margin %+.1f K on revision V (the trip's held maximum; the" % (
-            125.0 - tt[14.0e3][0]))
-        w("     largest served state %+.1f K); rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on" % (125.0 - sv_max))
+        w("   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance %s, section 11): the sustained-state margin %+.1f K on" % (
+            RE if (OPEN[6] or OPEN[7]) else "as shown", 125.0 - tt[14.0e3][0]))
+        w("     revision V at the trip's held average (the largest served state %+.1f K); rev Y's rows no longer cover a revision X part (its" % (
+            125.0 - sv_max))
+        w("     bounded state over the trip's least; HELD on")
         w("     V-B20); the LDO input headroom of T10-A3's chain at the hardware bound %+.4f V with the return as drawn and %+.4f V with the" % (
             t14[0]["at"] - t14[0]["need"], t14[1]["at"] - t14[1]["need"]))
         w("     dedicated return (the return's effect %+.4f V), the top %.4f V under the LDO's %.1f V maximum; the required service unchanged (only" % (
             (t14[1]["at"] - t14[1]["need"]) - (t14[0]["at"] - t14[0]["need"]), FC["tops"][14.0e3][2], FC["vin_max"]))
         w("     U601's set point moves and board B gains the containment: no load, rate, state or transmitter reduced, the supervisors' bounded")
-        w("     state and C-DEV rev 2 as issued). The worst-case margins: %+.1f K (thermal, the trip's held maximum, rev V) and %+.4f V (the LDO's" % (
+        wc_state = "PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7]) else "PROVISIONAL"
+        w("     state and C-DEV rev 2 as issued). THE WORST-CASE MARGIN ROW: %s (no peak bound established, cx46 item 7; a latent rail-trip" % wc_state)
+        w("     failure removes the hardware bound, item 6): %+.1f K (thermal, at the trip's held average, rev V, MODEL) and %+.4f V (the LDO's" % (
             125.0 - tt[14.0e3][0], t14[0]["at"] - t14[0]["need"]))
         w("     input, as drawn, at the hardware bound on an INFERRED dropout, PROVISIONAL on V-T10-DROP)")
-        P["the final R602 figures: every revision V served state and the trip's held maximum keep a positive margin to 125 C"] = (
-            sv_max < 125.0 and tt[14.0e3][0] < 125.0)
-        P["L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return, Slot C's figure reproduced"] = (
+        P["the final R602 figures keep a positive MODEL margin on average currents; the worst-case margin row reads PROVISIONAL/OPEN while the peaks or the latent rail trip are open"] = (
+            sv_max < 125.0 and tt[14.0e3][0] < 125.0 and wc_state == ("PROVISIONAL/OPEN" if (OPEN[6] or OPEN[7]) else "PROVISIONAL"))
+        P["L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return (MODEL), Slot C's figure reproduced"] = (
             all(r["ok"] for r in t14) and same and tt[14.0e3][0] <= 125.0 < FC["tj"][13.3e3][0] and FC["bab_ok"])
         w("")
 
         # 11. what stays open on this candidate
-        w("11. WHAT THIS CANDIDATE DOES NOT CLOSE (each with its route; constitution section 2)")
-        w("   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it")
-        w("   the return: V6-B1 CORRECTED IN DRAFT on the placed distributed model (7), PROVISIONAL on the plane fill (Layer 10's routed")
-        w("     extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,")
-        w("     L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
+        any_open = any(r[4] for r in FR)
+        verdict = RE if any_open else "THE DESK ROWS AS SHOWN (no independent acceptance)"
+        w("11. THE CONNECTED VERDICT AND WHAT THIS CANDIDATE DOES NOT CLOSE (cx46 items 13 and 17; constitution section 2)")
+        w("   the fault rows the connected verdict depends on, each with the cx46 item that holds it (the filed record, %s, read as JSON;" % cx46_base)
+        w("   a row is OPEN while its item is NOT CLOSED: the method ended at cx46, so no later check closes it):")
+        for row, item, cl, aff, op in FR:
+            w("     %-4s %s" % ("OPEN" if op else "SHUT", row))
+            w("          cx46 item %d: %s; it removes or weakens: %s" % (item, cl, aff))
+        w("   THE CONNECTED ELECTRICAL VERDICT: %s. No row of sections 5 to 10 is a positive electrical acceptance: each is a MODEL" % verdict)
+        w("     reading on the composed candidate, and every claim that depends on an OPEN row above (the guard's C-PROT row, T10's thermal")
+        w("     and headroom rows, the CAN service, the return's rows, the PA cap's band) stays OPEN or PROVISIONAL and passes to the receiving")
+        w("     company as remaining engineering with its failed cases, the attempted correction and the affected outputs (never as a")
+        w("     qualification-only item)")
+        P["the connected electrical verdict reads REMAINING ENGINEERING, never a positive acceptance, while any fault row it depends on is open (cx46 items 13, 17)"] = (
+            (verdict == RE) == any_open and len(FR) == len(FAULT_ROWS))
+        w("   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it; the")
+        w("     reference's loading through Q551's hold and release and the acceptance limits REMAINING ENGINEERING (cx46 item 2)")
+        w("   the return: V6-B1 OPEN, REMAINING ENGINEERING (7; the distributed study on a stand-in land, assumed sites and fill, an averaged")
+        w("     probe); the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43, L8R2-F44); V6-B2 vendor tasks (Hirose")
+        w("     U.FL, Molex HDMI) UNSENT")
         w("   the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and")
         w("     J_PA at the inside air (L9T5-F26), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN")
         w("     service for a TX pin toggled as a GPIO and after a latent stuck comparator (5; L9T5-F21, handed over, Slot C's)")

@@ -3,8 +3,8 @@ of. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measure
 ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional choice with its validation task).
 
 0. PINS (sha256/16  path)
-   ce5ecb92335d3a31 v2/docs/records/l8r2/l8r2_gndret.py
-   1a1fb4cbcf95ffad v2/docs/records/l8r2/l8r2_gndret.out
+   3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
+   6963c627ab37427c v2/docs/records/l8r2/l8r2_gndret.out
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
@@ -79,10 +79,12 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
        construction above (each group's centre at most 8.0 mm from its lands) places no footprint, reads no courtyard and solves no
        current: it is NOT evidence that the condition is realisable, and round 1 of this section's claim to that effect is WITHDRAWN
        (the focused check cx45, Q2; SESSION L8R2-D9 withdrawn with it). The sockets placed with their courtyards on both boards and
-       the return solved as a distributed network: l8r2_dist.out (SESSION L8R2-D10)
-   DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return
+       the return studied as a distributed network on a stand-in land, assumed sites and fill: l8r2_dist.out (SESSION L8R2-D10), a
+       STUDY; after cx46 V6-B1 stays OPEN as REMAINING ENGINEERING
+   DISPOSITION (part 19; after cx46 OPEN, REMAINING ENGINEERING for the receiving company): V6-B1 is not closed. The bounded
+     provisional choice: the layout condition L8R2-F33a, each return
      socket's land within 17 mm (the largest steady state, the tightest service case) of the 5 V entries it serves on both boards
-     (one socket a group; placed and solved as a distributed network in l8r2_dist.out, which replaces this condition's form), every
+     (one socket a group; placed and studied as a distributed network in l8r2_dist.out, which replaces this condition's form), every
      ground plane joined solidly; the Layer 10
      validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and
      stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared
