@@ -4283,11 +4283,15 @@ DEFECTS = [
                 "recomputed 3.062 ms start (34 uF)",
      "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
     {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)",
-     "state": "OPEN for the source arriving with the guard already on (B6): a modelled ABSOLUTE-RATING VIOLATION at a fault at the connector, not a "
-              "missed design target (L4-E7's round 5: round 2's 3.30 uH loop is WITHDRAWN as a passing floor and kept as a reference loop only; "
-              "there the pins read -0.3021 V, past U5's -0.3 V absolute maximum); no loop is claimed to pass and the stage question is the "
-              "engineer's (B6-ENG-1); the over-voltage cut-off and the cold connection drafted (R-173, not applied), the cold connection's 10 % "
-              "margin lines not held at a connector fault near 0.30 uH, inside the absolute ratings",
+     "state": "OPEN: AN UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23; record l4e7's P0-7, L4E7-P0SOL.md section 5), the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4 "
+              "with the parts and claims they hit, the requirements unchanged with no new exclusion, the correction or measured model revision "
+              "needed before any passing claim, then S1 and S2). CORRECTED within it by P0-7 (R-240): U5's absolute-rating violation (CSPIN and "
+              "CSNIN tied to VIN, 0 V at every loop) and INP's margin line (R97 24.9k). Not resolved: the guard's port-level transient (F1, F2 "
+              "absolute-rating violations below about 2.4 uH; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH, L6P-F10; F4 the arriving "
+              "source's slew over its 54 V/us line under 0.33 uH). Route B2 (not a baseline row) is an unapproved PARTIAL interface proposal "
+              "and an owner item, with no protection credit (cx45: its cold-arrival guarantee withdrawn, its pair faults P1 to P3 not "
+              "fail-safe, P2 and P3 an OPEN defect of its draft); adopting or declining it does not resolve D-10; no baseline row "
+              "depends on it",
      "constraint": "without the guard D4, the drafted SMCJ28A, conducts 2.67 to 16.63 A and takes 95.9 to 585.8 W against its 1.17 W on the board at the hot end's air; "
                    "the largest sustained source the drafted entry holds is 29.70 V (L4-E7's D4)",
      "options": "L4-E7's three, each on its held sheet: the TPS48110-Q1 alone on back-to-back FETs (its -1 V input pins on a reversal: not taken); the "
@@ -4382,11 +4386,10 @@ DEFECTS = [
                    "(R-162: the parts' supply)",
      "rows": ["IF-09", "IF-10"]},
     {"id": "D-16", "title": "the drafted input current sense leaves its +-100 mV operating range in normal operation at the 25 V corner (L4-E7's B6-ENG-2, a demonstrated defect of the drafted sense arrangement)",
-     "state": "OPEN (a DEMONSTRATED DEFECT of the drafted sense in normal operation, MODELED on the sheet's operating range, 8705af p.5 and p.31; the "
-              "operating-range exceedance stands after L4-E7's round 5, the error's size and direction rest on an unprinted amplifier model); handed to "
-              "the engineer as B6-ENG-2 (R-189): the current-sense arrangement itself, where the input current is sensed and with what, the wider form of "
-              "B6-ENG-1's route 3; the 100 W backstop bound unaffected; L4-E7R's regulation acceptance row at layer 9 affected; no further desk split "
-              "(the owner's rule: the third compensating change asked of the stage's sense and guard)",
+     "state": "ADDRESSED IN DRAFTS: CORRECTED in draft by P0-7 (R-240; record l4e7's L4E7-P0SOL.md section 5): U5's input sense not used (0 V by "
+              "construction), the regulation's sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's "
+              "zero-differential output (sourcing lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3); "
+              "B6-ENG-2 is answered at the desk; B6-ENG-1 becomes E-1, the port's remaining engineering; not applied, no qualification done",
      "constraint": "at the 25 V corner (REQ-016's open circuit) delivering into a 12.0 V bus at the regulation's highest current, M1's pulsed input current "
                    "flows through RSENSE1 because at 25 V bias the 50 V X7R ceramics hold 8.2 uF of their 24.8 uF nominal behind it and 21.4 uF of 40.0 uF "
                    "ahead: the resistive peak across RSENSE1 is 0.1174 V (0.1421 V at the trip's current), the pins read -0.1866 to +0.1863 V with "
@@ -4454,7 +4457,8 @@ DEFECTS = [
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
           "Layer 8 board E generator owner", "Layer 8 board P generator owner", "Layer 9 pre-layout analysis", "prototype bench",
-          "firmware owner", "TEST-PLAN owner", "Layer 8 board B generator owner", "Layer 8 board C generator owner", "CONOPS owner"]
+          "firmware owner", "TEST-PLAN owner", "Layer 8 board B generator owner", "Layer 8 board C generator owner", "CONOPS owner",
+          "Layer 8 board D generator owner"]   # board D since the P0 round (R-238, the PA cap's board D half, 5 October 2026)
 
 # The owner's items: decisions and outside contacts only, kept apart from the engineering work (the register). Each names the
 # pinned document it rests on; the session contacts no outside party, it prepares the texts.
@@ -5605,6 +5609,9 @@ def cons_classes(F, reg):
             else:
                 nxt = ("TEST (external: the supplier's phase 2 on the first prototype or a coupon): the specification is this row's "
                        "acceptance; it settles %s; unaffected work continues" % _head(item))
+        elif state == "WITHDRAWN":   # the P0 round: FAN_OK rejected by the owner (5 October 2026); D-17's correction is R-227 and R-238
+            cls, nxt = SET, ("DO: nothing: WITHDRAWN by the owner's rejection of FAN_OK (P0 brief, 5 October 2026); D-17's correction is "
+                             "R-227 and R-238; never applied")
         elif state == "CLOSED":   # a review finding kept in the register (the owner's amendment), its closing evidence at hand
             cls, nxt = SET, "DO: nothing further: CLOSED on the evidence its acceptance names"
         elif state == "OPEN":     # a review finding whose defined correction is in progress elsewhere
@@ -5618,12 +5625,12 @@ def cons_classes(F, reg):
 D_CLASS = {"D-01": SET, "D-02": SET, "D-03": SET, "D-04": SET, "D-05": SET, "D-06": PHY, "D-07": SET, "D-08": SET, "D-09": SET,
            "D-10": KED, "D-11": PHY, "D-12": SET, "D-13": PHY, "D-14": UDC, "D-15": PHY, "D-16": KED, "D-17": KED}
 D_NEXT = {"D-06": "TEST: E11-10 to E11-16, its evidence items (R-113, R-115, R-118, R-134)",
-          "D-10": "ASSIGN to the supplier's phase 1, task P1-1 (the guard-on case; acceptance R-176 rows 2 and 3)",
+          "D-10": "ASSIGN to the receiving company's remaining engineering item E-1 (record l4e7's SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4, the correction or measured model revision before any passing claim, then S1 and S2)",
           "D-11": "TEST: Q13's leakage at the hot end (R-176 row 5)",
           "D-13": "TEST: E11-31, the held pack current and the start (R-161)",
           "D-14": "COMPARE: UDC-1 (8f): (S1) selected, its qualification R-159, R-160, R-182, R-183",
           "D-15": "TEST: E11-38, the fault envelope's histories (R-184)",
-          "D-16": "ASSIGN to the supplier's phase 1, task P1-1 (the sense arrangement; acceptance R-189)",
+          "D-16": "VERIFY at layer 9 and on the bench: P0-7's draft (R-240) with S3 (A7's zero-differential output) and S4 (the regulation at 25 V)",
           "D-17": "FIX: the design-out, the five fans' supplies off while the PA keys (R-210 to R-212, R-28; LH-12), verified by R-213"}
 U_CLASS = {"U-01": (UDC, "COMPARE: UDC-2 (8f): an OWNER DECISION, the Saft evidence route (OW-9), then the adoption (OW-3)"),
            "U-02": (PHY, "TEST: T-H1's points (R-104, R-151) and the e-paper's storage soak (R-185), the supplier's phase 2"),
@@ -6379,7 +6386,14 @@ G_L8R2 = "l8r2's RELEASE.md (its rounds 4 to 6 at 89924e40 on fnd/l8r3; each dra
 G_L8P = "l8p's RELEASE.md (one release for its three drafts; each refuses the tree's generator until it names an accepted check)"
 G_L9STK = "a text draft for the integrator (it refuses a second run)"
 G_L4E11_R9 = "L4-E11's RELEASE.md naming an accepted check of its round 9 (R-147; the draft refuses the tree's generator until then)"
-# P0-7 (record l4e7, 5 October 2026), its change-list row R-240 (applied by record l9t5's P0 round: without it the list refuses the tree)
+# the P0 round (record l9t5, Slot A, 5 October 2026; V6-m11): the drafts composed in the P0 candidate that had no row
+GD = "board D, gen_sch_d.py"
+G_L8R2_P0 = "l8r2's RELEASE.md (each draft refuses the tree's generator until it names an accepted check)"
+G_L8P_THG = "l8p's RELEASE.md (the guard refuses the tree's generator until it names an accepted check)"
+G_L9T5 = "l9t5's RELEASE.md (I-03's drafts refuse the tree's generators until it names an accepted check)"
+G_L9T5_T10 = "l9t5's RELEASE-T10.md (T10's drafts refuse the tree's generators until it names an accepted check)"
+G_L9T5_F01 = "l9t5's RELEASE-F01.md (both halves refuse the tree's generators until it names an accepted check)"
+G_EFUSE = "the efuse record's RELEASE.md (each draft refuses the tree's generator until it names an accepted check)"
 G_L4E7_P0 = "L4-E7's RELEASE.md (P0-7's draft refuses the tree's generator until it names an accepted check)"
 CHANGE_ORDER = [
     ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
@@ -6408,12 +6422,22 @@ CHANGE_ORDER = [
     ("3f", "R-10", "board A, the declarations", "with R-04", "no draft yet"),
     ("3g", "R-191", GA, "after board A's power round (3a to 3f); with R-192 in either order (l8gnd's composition proof, its section 4); before d8dec31's R-193", G_L8GND),
     ("3g", "R-192", GA, "with R-191 in either order; before d8dec31's R-193", G_L8GND),
+    ("3g", "R-220", GA, "after board A's power round; before d8dec31's R-193 (l8r2's item 3; the P0 composition's place)", G_L8R2_P0),
+    ("3g", "R-221", GA, "after board A's power round; before d8dec31's R-193 (l8r2's item 2; the P0 composition's place)", G_L8R2_P0),
     ("3g", "R-201", GA, "after board A's power round; in either order with R-199 (l8r2 section 5); before d8dec31's R-193", G_L8R2),
     ("3g", "R-199", GA, "AFTER L4-E11's charger (R-157): its anchor names VBAT's U4, which this draft rewrites (l8r2 round 4); before d8dec31's R-193", G_L8R2),
     ("3g", "R-200", GA, "with or after R-199 (either order composes, l8r2 section 5); before d8dec31's R-193", G_L8R2),
     ("3g", "R-210", GA, "D-17's design-out: FAN_OK beside OUTLET_OK's gates; before d8dec31's R-193; in the release of R-211 and R-212", "no draft yet"),
     ("3g", "R-208", GA, "after 3g's other drafts and before d8dec31's R-193 (l8p section 5); in one release with R-206 and R-207", G_L8P),
     ("3g", "R-217", GA, "AFTER record l8p's PTC draft (R-208: it refuses a target without DOCK_EN_RET) and L4-E11's charger (R-157: CH_BATDRV and the three battery FETs); before d8dec31's R-193; in the release of R-206 to R-208 (L4-E11 19h)", G_L4E11_R9),
+    ("3g", "R-222", GA, "AFTER R-208 (the loop it rewrites: RT1 out, the guard's pair in) and R-217 (DD-7's readers on the loop); before d8dec31's R-193", G_L8P_THG),
+    ("3g", "R-244", GA, "AFTER R-222 (a delta on the guard: it refuses a target without it); before d8dec31's R-193", G_L8P_THG),
+    ("3g", "R-223", GA, "after board A's power round; in one release with R-233; before d8dec31's R-193", G_L9T5),
+    ("3g", "R-224", GA, "AFTER R-223 (it rewrites U601's divider); in one release with R-234; before d8dec31's R-193", G_L9T5_T10),
+    ("3g", "R-242", GA, "AFTER R-224 (a delta on its R602): in one release with R-243; before d8dec31's R-193", G_L9T5_T10),
+    ("3g", "R-225", GA, "after R-224 (l9t5's drafts before it on board A); in one release with R-232; before d8dec31's R-193", G_L8R2_P0),
+    ("3g", "R-226", GA, "after board A's power round; before d8dec31's R-193", G_EFUSE),
+    ("3g", "R-227", GA, "AFTER R-200 (it refuses a generator without fb01's rfb_tol keyword); in one release with R-238; before d8dec31's R-193", G_L9T5_F01),
     ("3h", "R-194", "d8dec31's draft, apply_gen_sch_a_mainpb.py (its owner)", "before R-193 is applied: fixed references above every board A draft's (L8G-F12)", "no draft yet"),
     ("3h", "R-193", GA, "LAST in board A's round, after 3a to 3g, where it takes R233 and C241 (L8G-F12; on the base generator it would take R221 and C236, the bank's and the charger's); its interface change apply_interfaces_mainsw.py (IF-AC-MAINSW) after the regeneration (R-11)",
      "none: d8dec31's draft carries no release guard"),
@@ -6451,8 +6475,22 @@ CHANGE_ORDER = [
     ("B", "R-166", GB, "U-02's +85 C connectors and HX magnetics, after R-165's picks", "no draft yet"),
     ("B", "R-195", GB, "board B's round: GND-002 changes 2 and 3; no other draft targets gen_sch_b.py (l8gnd section 4), so its place in board B's round is free", G_L8GND),
     ("B", "R-190", GB, "board B's round: the coolers' regulated 12.0 V feed (E11-40, Layer 7's F-L7-02), l8r2's per-slot step-up (round 6 at 89924e40)", G_L8R2),
+    ("B", "R-228", GB, "AFTER R-190 (it completes fans12's decoupling entries in board B's table)", G_L8R2_P0),
+    ("B", "R-229", GB, "board B's round, any order (l8r2's item 3)", G_L8R2_P0),
+    ("B", "R-230", GB, "board B's round, any order (l8r2's item 3)", G_L8R2_P0),
     ("B", "R-203", GB, "board B's round, any order (l8r2 section 6)", G_L8R2),
     ("B", "R-211", GB, "D-17's design-out: each cooler step-up's EN from FAN_OK, after R-190's step-ups", "no draft yet"),
+    ("B", "R-231", GB, "board B's round after R-190 and R-228 (l8r2 round 7)", G_L8R2_P0),
+    ("B", "R-232", GB, "AFTER R-231; in one release with R-225", G_L8R2_P0),
+    ("B", "R-233", GB, "AFTER R-232 (l9t5's draft after l8r2's on board B); in one release with R-223", G_L9T5),
+    ("B", "R-234", GB, "AFTER R-233; in one release with R-224", G_L9T5_T10),
+    ("B", "R-243", GB, "AFTER R-234; in one release with R-242", G_L9T5_T10),
+    ("B", "R-235", GB, "AFTER R-234 (order-free against the others, placed after T10's set point)", G_L9T5_T10),
+    ("B", "R-245", GB, "AFTER R-235 and R-243 (it edits their lines: the transceivers' SHDN and the LDOs' inputs); in one release with R-234", G_L9T5_T10),
+    ("B", "R-236", GB, "board B's round, after l9t5's drafts (the efuse record's order)", G_EFUSE),
+    ("B", "R-237", GB, "board B's round, after R-236", G_EFUSE),
+    ("D", "R-239", GD, "first in board D's round: it takes the next free R and D at apply time, above R-238's fixed R57, R58 and C76", "none: d8dec31's drafts carry no release guard"),
+    ("D", "R-238", GD, "board D's round: after d8dec31's PTT draft, before Layer 6's two board D tables; in one release with R-227", G_L9T5_F01),
     ("P", "R-206", GP, "board P's round with l6r2's two board P tables in either order; in one release with R-207 and R-208; board P regenerated on the box after it", G_L8P),
     ("C", "R-145", GC, "board C's round", "no draft yet"),
     ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
@@ -6496,6 +6534,26 @@ ORDER_CONSTRAINTS = [
     ("L4-E11's DD-7 after its charger draft (CH_BATDRV and the three battery FETs)", "R-157", "R-217"),
     ("L4-E11's DD-7 before d8dec31's PB network (LAST in board A's round)", "R-217", "R-193"),
     ("DD-7's firmware (R-218) after its hardware (R-217)", "R-217", "R-218"),
+    ("l8p's guard after the loop it rewrites (R-208)", "R-208", "R-222"),
+    ("l8p's guard after DD-7's readers on the loop (R-217)", "R-217", "R-222"),
+    ("the guard's fail-safe delta after the guard (R-222)", "R-222", "R-244"),
+    ("the guard's fail-safe delta before d8dec31's PB network", "R-244", "R-193"),
+    ("T10's set point after I-03's buck on board A", "R-223", "R-224"),
+    ("l8r2's board A return after l9t5's board A drafts", "R-224", "R-225"),
+    ("the PA cap's board A half after fb01 (its rfb_tol keyword)", "R-200", "R-227"),
+    ("the P0 board A drafts before d8dec31's PB network (LAST in board A's round)", "R-227", "R-193"),
+    ("l8r2's d8v3 and vbus20ov before d8dec31's PB network", "R-221", "R-193"),
+    ("l8r2's fan decoupling after the step-ups (R-190)", "R-190", "R-228"),
+    ("l8r2's board B return after its ground declaration", "R-231", "R-232"),
+    ("I-03's board B draft after l8r2's board B return", "R-232", "R-233"),
+    ("T10's board B set point after I-03's board B draft", "R-233", "R-234"),
+    ("the CAN SHDN draft after T10's board B set point", "R-234", "R-235"),
+    ("the supervisors' containment after the CAN SHDN draft", "R-235", "R-245"),
+    ("the supervisors' containment after T10's board B set point delta", "R-243", "R-245"),
+    ("T10's set point delta after the pre-regulator on board A", "R-224", "R-242"),
+    ("T10's set point delta before l8r2's board A return", "R-242", "R-225"),
+    ("T10's set point delta after the pre-regulator on board B", "R-234", "R-243"),
+    ("d8dec31's PTT draft before the PA cap's board D half (board D's round)", "R-239", "R-238"),
     ("P0-7's solar sense after the solar guard (R-173)", "R-173", "R-240"),
     ("P0-7's solar sense before L4-E11's aux (R-177)", "R-240", "R-177"),
     ("the coolers' EN after their step-ups are drawn (R-190)", "R-190", "R-211"),
@@ -6567,7 +6625,8 @@ def cons_changes(reg):
             script = "none: a missing draft"
         else:
             script = ", ".join(scripts) if scripts else ("none: %s work" % r[6].lower() if r[6] != "DRAFTED" else "a text draft (%s)" % r[3].split(",")[0])
-        state = "%s (not applied)" % r[6] if rid != "R-119" else "DRAFTED, the alternative only (not applied)"
+        state = ("%s (not applied)" % r[6] if r[6] != "WITHDRAWN" else "WITHDRAWN (FAN_OK rejected; never applied)") if rid != "R-119" \
+            else "DRAFTED, the alternative only (not applied)"
         out.append((i, step, rid, bg, script, dep, guard, r[2], state))
     named = " ".join(c[4] for c in out)
     for s in CHANGE_SCRIPTS:
@@ -6815,7 +6874,7 @@ PARTS = [
 ]
 LAYER_OF = {"Layer 4 coordinator": "4 (release records)", "Layer 5 interfaces": "5", "CONOPS owner": "5", "firmware owner": "5 (firmware, by the contract)",
             "Layer 6 components": "6", "Layer 7 mechanical": "7", "Layer 8 board A generator owner": "8", "Layer 8 board B generator owner": "8",
-            "Layer 8 board C generator owner": "8", "Layer 8 board E generator owner": "8", "Layer 8 board P generator owner": "8",
+            "Layer 8 board C generator owner": "8", "Layer 8 board D generator owner": "8", "Layer 8 board E generator owner": "8", "Layer 8 board P generator owner": "8",
             "Layer 9 pre-layout analysis": "9", "prototype bench": "9 (the bench)", "TEST-PLAN owner": "9 (the test plan)"}
 
 
