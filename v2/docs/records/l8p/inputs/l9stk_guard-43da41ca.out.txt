@@ -1,0 +1,171 @@
+l9stk_guard: the battery FETs' thermal guard on case row C-PROT rev 1, its two sides on printed figures (record l9stk round 4, MESHSAT-1357;
+4 October 2026). Desk arithmetic on committed files and makers' sheets; nothing was built, bought or measured. The drafts of a
+selected guard are board P's author's and L4-E11's: this record edits nothing of theirs. Finding L8P-F07 stays OPEN until a checked correction.
+LABELS: PRINTED a maker's printed limit; TYPICAL a maker's typical figure; ASSUMED; DERIVED this record's arithmetic; RECORD another record's figure.
+
+0. PINS (path  sha256/16)
+   protection       v2/docs/records/l9stk/l9stk_protection.py  sha256 f333596d0c95897d
+   protection_out   v2/docs/records/l9stk/l9stk_protection.out  sha256 1e43cddd9102abc1
+   murata_prf       v2/vendor/battery/murata-prf-series.pdf  sha256 a29cd6200c656636
+   tdk_ptc          v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf  sha256 4d87b17891fa933f  (held back, fetch_held_back.py)
+   lm26lv           v2/vendor/ti/held/ti-lm26lv-snis144g.pdf  sha256 e8ce79af19c668cb  (held back, fetch_held_back.py)
+   tps709           v2/vendor/ti/held/ti-tps709-sbvs186h.pdf  sha256 8c14e3efae738a27  (held back, fetch_held_back.py)
+   ao3400a          v2/vendor/power/aos-ao3400a-n-mosfet.pdf  sha256 9c60d0b6c1ddc760
+   jscj_2n7002      v2/vendor/power/jscj-2n7002-c8545.pdf  sha256 7941fb423af7c6c6
+   ntc              v2/vendor/battery/murata-nxrt15xh103fa1b.pdf  sha256 81a99339fb677f38
+   l8p_12j          v2/docs/records/l9stk/inputs/l8p-section12j-69156072.md  sha256 0ab7b40de86a599c
+   l4e11_20c        v2/docs/records/l9stk/inputs/l4e11-section20c-6ca1646e.md  sha256 d225e45692032614
+   l4e11_s21        v2/docs/records/l9stk/inputs/l4e11-section21-6ca1646e.md  sha256 819463413345b3c7
+
+1. THE ROW AS MURATA PRINTS IT (DM-SA16-E056 Rev.1 201608, 3.1 Line up, p.4; PRINTED)
+   PRF15BB103RB6RC: 10 kOhm +-50 % at 25 C; under its group's header, 100 kOhm at a sensing temperature over 110 C (no upper bound) and
+     4.7 MOhm at 130 +-3 C; 32 V; operation -20 to +140 C; the only resistance curve drawn (3.2) is a typical curve
+   the header that carries 47 kOhm (at 4.7 kOhm, at 47 kOhm) stands over the 470 ohm groups only: section 15.5's "47 kOhm at 130 C" was not this
+     part's, and its "9.0 to 15.0 K under the band" does not stand (CORRECTED here and in l9stk_protection.out section 4)
+   read as single crossings (the sensing temperature is where the resistance reaches the value; that it stays under it below is the curve's form,
+     drawn only as typical): under 100 kOhm to 110 C; under 4.7 MOhm to 127 C; over 4.7 MOhm from 133 C; nothing printed between 110 and 127 C
+
+2. THE LOOP'S LEVELS AS DRAWN (DERIVED: 10 kOhm from BRK_VIN, the element, 22 kOhm to the return, each at 1 % ASSUMED and at its worse sign; the
+   first inverter's gate 1 to 2.5 V PRINTED; board A's 984 kOhm on DOCK_EN_OUT and 2.08 uA on the return, RECORD L4-E11 20c and the 2N7002's IDSS)
+   BRK_VIN     no trip while the element is under     surely off from     a held DOCK_EN_OUT reads powered from
+     7.6 V         33.0 kOhm                            136.8 kOhm        3.574 kOhm
+    10.6 V         58.4 kOhm                            203.4 kOhm        2.327 kOhm
+    16.8 V        110.9 kOhm                            341.2 kOhm        1.352 kOhm
+   board A reads the return held under 0.7755 V and closed over 0.84 V, the loop powered over 1.981 V (1.825 V at least); a ramping closed loop is never
+     read held while the element is under 25.8 kOhm (RET/OUT over 0.4603) (RECORD, L4-E11 20c at 6ca1646e)
+   record l8p 12j at 69156072 prints 58.4 and 110.9 kOhm, 203.4 and 341.2 kOhm, 3.57 and 2.33 kOhm: reproduced
+
+3. WHAT THE GUARD MUST HIT (case row C-PROT rev 1: 10 A held and 18 A for 60 s never interrupted; the start at 76.25 C plus own heating)
+   no trip: 10 A held:                   the hottest junction at the allowances 89.4 C (l9stk 15.5; taken for the guard's own temperature, the hot side)
+   no trip: 18 A for 60 s, read as held: the hottest junction at the allowances 118.0 C (l9stk 15.5; taken for the guard's own temperature, the hot side)
+   trip: the breaker off before the hottest battery FET's junction passes 150 C at any current to 23.93 A held
+     on the worst split of three (L4-E11 round 11: one FET at half the others' RDS(on), 1.513 W) its junction leads its mounting base by 2.12 K
+     with two FETs carrying all (E-13's second specimen, one pad unsoldered, 3.027 W each) by 4.24 K (Rth(j-mb) 1.4 K/W PRINTED)
+     the mounting base leads the guard's site by a gradient no record bounds (the check V2's minor m5): a guard surely tripped from T leaves
+     150 - the lead - T for it
+   the window is therefore 118.0 C to (147.88 C less the gradient): 29.87 K in all, to be shared by the guard's own band, both margins and the gradient
+
+4. THE GUARD AS DRAFTED (PRF15BB103 in the loop as drawn) ON ITS PRINTED POINTS
+   the trip        over 4.7 MOhm from 133 C against the 341.2 kOhm sure-off at 16.8 V: PRINTED; left for the gradient 14.88 K (worst split), 12.76 K (two FETs)
+   no trip, 10 A   under 100 kOhm to 110 C, which the loop tolerates only from a pack of 15.51 V: NOT PRINTED under it, PRINTED from it
+   no trip, 18 A   the service reads 118.0 C, over the 110 C bound; nothing is printed between 110 and 127 C: NOT PRINTED at any pack voltage
+   the window and the held reading rest on the element's resistance away from 25 C, where only the 25 C row (5 to 15 kOhm) is printed: NOT PRINTED
+   so C-PROT's "18 A for 60 s never interrupted" is not shown against this guard: finding L8P-F07 (record l8p), OPEN, confirmed real by the check V2
+
+5. THREE APPROACHES, EACH ON PRINTED FIGURES
+   G1. A PTC WHOSE SHEET PRINTS BOTH POINTS, THE TWO-WIRE LOOP RESCALED, A SERIES RESISTOR FOR THE HELD READING (passive; board A: two parts; board P:
+       R106 and R107 change, and every level of L4-E11 20c with them)
+       the scan: every E24 triple (R106, the series resistor, R107) from 1 kOhm to 1 MOhm at 1 %, the first inverter's gate 1 to 2.5 V, the four
+       readings: no trip at 10.6 V to the part's no-trip point; surely off at 16.8 V from its trip point; a held DOCK_EN_OUT read powered at 7.6 V
+       with the PTC's least resistance taken as 0 (not printed away from 25 C); a ramping closed loop never read held (RET/OUT over 0.4603);
+       the last two are board A's readings as L4-E11 20c drafts them, kept as they are
+       Murata PRF15BA102RB6RC: PRINTED at most 10 kOhm to 120 C and at least 100 kOhm from 143 C
+         no-trip margin 30.6 K at 10 A and 2.0 K in the 18 A service; left for the gradient 4.88 K (worst split), 2.76 K (two FETs)
+         loops that keep all four readings with the window on the printed bound (at most 10 kOhm anywhere under 120 C): 0
+         with the window read on the 25 C row's 1.5 kOhm (ASSUMED to hold to the air's 76.25 C; not printed): 1084 loops; the least draw: R106 7.5 kOhm,
+           the series resistor 3.9 kOhm, R107 6.8 kOhm: 0.92 mA at 16.8 V (the drafted loop 0.45 mA), 3.60 mW in the PTC at its no-trip point
+       TDK B59721A0130A062: PRINTED at most 5.5 kOhm to 125 C and at least 40 kOhm from 145 C
+         no-trip margin 35.6 K at 10 A and 7.0 K in the 18 A service; left for the gradient 2.88 K (worst split), 0.76 K (two FETs)
+         loops that keep all four readings with the window on the printed bound (at most 5.5 kOhm anywhere under 125 C): 0
+         with the window read on the 25 C row's 1.02 kOhm (ASSUMED to hold to the air's 76.25 C; not printed): 45 loops; the least draw: R106 1.3 kOhm,
+           the series resistor 0.82 kOhm, R107 2.4 kOhm: 3.72 mA at 16.8 V (the drafted loop 0.45 mA), 15.60 mW in the PTC at its no-trip point
+       TDK's note: the measuring power under 6 mW for the 0805 size; its R-T table is typical, for reference only, and reads 212 ohm least at 100 C,
+         under the 25 C row's 340 ohm; Murata prints no dissipation figure for the PRF15 and measures at 1 mA or less (3.3.2)
+       VERDICT: NOT SELECTED. On the printed points no loop exists for either part; with the cold window assumed, the transition a PTC prints (23 K
+         for Murata's, 20 K for TDK's at the levels this gate needs) fills the 29.87 K window and leaves the gradient under 5 K
+   G2. AN ACTIVE GUARD WITH A PRINTED TRIP ACCURACY, ON THE LOOP'S OWN SUPPLY (board A: the switch, its regulator, a shunt on the return, a fixed
+       resistor in RT1's place; board P: no change)
+       the switch: TI LM26LV (SNIS144G), a factory-set temperature switch. PRINTED: trip point accuracy +-2.2 C over 0 to 150 C at VDD 5 V; hysteresis
+         4.5 to 5.5 C; supply 1.6 to 5.5 V (absolute 6 V), 16 uA at most; specified -50 to 150 C; outputs enabled 2.3 ms after power at most; the thermal
+         pad may float; OVERTEMP active high, push-pull, at least VDD - 0.2 V at 780 uA; TRIP_TEST asserts the outputs for a check in place
+       preset    no trip under   surely tripped from   resets between      margin at 10 A   at 18 A   gradient left (worst split, two FETs)   TI's orderable table
+       125 C      122.8 C         127.2 C              117.3 and 122.7 C    33.4 K           4.8 K    20.68 K, 18.56 K                        LM26LVCISD-125/NOPB Active
+       130 C      127.8 C         132.2 C              122.3 and 127.7 C    38.4 K           9.8 K    15.68 K, 13.56 K                        LM26LVQISD-130/NOPB Obsolete; LM26LVQISDX-130/NOPB Active
+       135 C      132.8 C         137.2 C              127.3 and 132.7 C    43.4 K          14.8 K    10.68 K,  8.56 K                        LM26LVCISD-135/NOPB Active; LM26LVQISDX-135/NOPB Active
+       at the gauge's uncalibrated error (condition C4: an indicated 18 A may be a true 18.80 A) the junction reads 121.8 C held (DERIVED, the rise
+         scaled by the square of the current): 6.0 K under the 130 C preset's least trip, 1.0 K under the 125 C preset's; the breaker's own least
+         limit is what that current meets first (C4), not the guard; under 0 C the trip accuracy is not printed (the trip is 130 K above)
+       its own heating: 5 V x 16 uA x 100.7 C/W = 0.008 K (DERIVED); the accuracy is the die's, so the island's own gradient to the FETs is the
+         gradient of section 3; the trip accuracy is printed at a 5 V supply only (the sensor output's own accuracy, +-2.3 C to 150 C, is printed
+         from 3 V at the gain of the presets from 130 C)
+       the supply: a 5 V regulator from DOCK_EN_OUT, so the guard holds the breaker off while hot with the kit dark (the loop is powered whenever
+         the pack is docked). TI TPS70950 (SBVS186H) PRINTED: input 2.7 to 30 V (absolute 32 V) against the loop's 29.2 V clamp; +-1 %; 2.25 uA
+         ground current at most; EN floats to enable; its table is printed for -40 to +85 C ambient (it sits in the inside air, off the FETs' copper)
+         the guard's draw: 18.25 uA (the switch and the regulator, PRINTED maxima) against the 30 uA this round allows it
+       the shunt: the kit's AO3400A from DOCK_EN_RET to ground, its gate on OVERTEMP (a second pull beside L4-E11's Q44, which already pulls the return
+         for the input-return reset: no new loop state): PRINTED 30 V, VGS +-12 V, 32 mOhm at 4.5 V, threshold 0.65 to 1.45 V;
+         gate drive at least 4.75 V; off leakage 5 uA at 55 C PRINTED, 43.6 uA at 86.25 C ASSUMED (doubling every 10 K), counted on the return
+       the loop with a fixed 15 kOhm +-1 % in RT1's place (DERIVED; the levels of section 2 hold for any element from 3.574 to 25.8 kOhm):
+       BRK_VIN    the first inverter's gate, closed      DOCK_EN_OUT, closed     tripped: the return, DOCK_EN_OUT (the supply's input), the shunt
+         7.6 V     2.82 to  3.60 V                         5.47 to  6.00 V         0.010 mV,  4.32 V, 0.31 mA
+        10.6 V     4.20 to  5.01 V                         7.81 to  8.37 V         0.014 mV,  6.09 V, 0.43 mA
+        16.8 V     7.05 to  7.95 V                        12.64 to 13.26 V         0.022 mV,  9.76 V, 0.68 mA
+        29.2 V    12.74 to 13.81 V                        22.30 to 23.05 V         0.038 mV, 17.09 V, 1.18 mA
+         against: the gate over 2.5 V to stay on (PRINTED threshold) and under 20 V; the return under 0.7755 V read held by board A and under 1 V for the
+         first inverter; DOCK_EN_OUT over 1.981 V read powered; RET/OUT closed 0.590 against 0.4603; the regulator in regulation from BRK_VIN 9.68 V
+         (5 V +1 % plus the 500 mV dropout printed at 50 mA, a bound at microamps); under it the switch runs on less than 5 V, still over its 1.6 V
+         least supply, where its trip accuracy is not printed (the pack's service starts at 10.6 V)
+         static draw at 16.8 V: 0.387 mA closed, 0.702 mA tripped (the drafted loop 0.454 mA with RT1 at its 25 C least)
+       its cost: about nine small parts on board A against the PTC's one (the switch, the regulator and its two capacitors, the shunt, its gate
+         resistor, capacitor and pull-down, the fixed resistor); two new part types for Layer 6; after a trip the breaker restarts when the switch
+         has cooled 4.5 to 5.5 K under its trip; an open shunt, a dead switch or a dead regulator removes the guard unseen, as a shorted PTC would:
+         the check in place (E-13b, TRIP_TEST) finds them at commissioning and at each service
+       the variant, the kit's NTC bridge and zero-drift comparator (C-1c's pattern): the NXRT15XH103 prints operation to 125 C only and its B constants
+         above 25/50 as reference values, so at a trip near 130 C neither side is printed: NOT TAKEN
+       VERDICT: SELECTED, the 130 C preset (section 6)
+   G3. NO ELEMENT IN THE TRIP PATH: a fixed resistor closes the loop; the junction limit rests on E-1's bar alone (40.78 K/W for any split, L4-E11's
+       figure) read on every unit at commissioning by the body diode's VSD method, not on a coupon
+       no trip: nothing can interrupt the service; the trip: none. A unit whose path is not met, or degrades in service, is found only by the test
+       VERDICT: NOT SELECTED. It removes the unit-by-unit protection 15.5 selected; an assigned test is not a protection
+
+6. THE SELECTION (SESSION), ITS ACCEPTANCE AND THE CORRECTION SCOPE
+   SELECTED: G2 with the LM26LV preset at 130 C (TI lists LM26LVQISDX-130/NOPB Active, the -Q1 grade on the large reel; the 125 C preset, LM26LVCISD-125/NOPB, is the reversal).
+     why the 130 C preset and not 125 C: at the gauge's uncalibrated true current the 125 C preset is left 1.0 K, the 130 C preset 6.0 K;
+       both leave the gradient more than the drafted PTC did
+     why: it is the one approach whose two sides are both printed; it restores the margins 15.5 believed it had: 9.8 K over the 18 A service
+       (15.5 read 9.0 to 15.0 K on the misread column) and 15.68 K for the gradient on the worst split (the drafted PTC's printed trip left 14.88 K)
+     authority SESSION: an engineering choice inside the task; no requirement, limit or service is lowered; its parts are small catalogue parts
+       whose order codes are Layer 6's; reversed by E-13 reading a gradient over 15.68 K (then the 125 C preset: 4.8 K and 20.68 K), or by a check
+       of the drafts that refuses the loop's levels
+   ACCEPTANCE on C-PROT rev 1 (for the drafts and their check; every figure above is the basis):
+     (a) composition: the board A draft replaces record l8p's RT1 (apply_gen_sch_a_ptc.py) and composes with L4-E11's DD-7 draft in L4-E9's order;
+         board P's and board E's drafts compose unchanged; the generators run to their end
+     (b) netlist: the fixed resistor between DOCK_EN_OUT and DOCK_EN_RET; the regulator's input on DOCK_EN_OUT and its output on the switch's VDD
+         only; OVERTEMP (the active-high output) to the shunt's gate; the shunt's drain on DOCK_EN_RET, its source on ground; mutations that must
+         fail: the shunt on DOCK_EN_OUT, the open-drain output used, the regulator fed from VBAT, the resistor outside 3.574 to 25.8 kOhm
+     (c) electrical: no trip under 127.8 C and surely tripped from 132.2 C at the switch (PRINTED, VDD 5 V); the gate at least 2.82 V closed and the
+         return under 1 V tripped at every voltage of section 5; the supply in regulation from 9.68 V; the guard's draw at most 30 uA;
+         the shunt's gate filtered over the switch's 2.3 ms and the regulator's 1.5 ms start, so a ramping loop (a docking, the gauge's wake, a
+         back-fed precharge) is never read held; board A's DD-7 reads the guard's trip as it reads board P's own pull (the return held, the loop
+         powered): the charge inhibit sets and releases on CELL+ alive, as L4-E11 20c and 20d state for a held return
+     physical, apart: E-13 on the coupon (no trip through the service; off before 150 C; each FET heated alone, the gradient read through VTEMP)
+   CORRECTION SCOPE (drafted by their owners; nothing of theirs is edited here):
+     board A (L4-E11 with board A's generator; record l8p's apply_gen_sch_a_ptc.py): RT1 becomes the fixed 15 kOhm; the switch on an island on the
+       battery FETs' pour's centroid, its pad on copper tied to nothing else or to ground; the regulator, its two capacitors, the shunt, its gate
+       filter and pull-down; test points on TRIP_TEST and VTEMP; L4-E11 20c's rows restated for the fixed resistor (RT1's 5 to 15 kOhm and its
+       47 kOhm bound point leave the text) and 20f's docking row for the guard's start
+     board P (record l8p): no part changes (R106 10 kOhm, R107 22 kOhm, the inverters and the detector stay); 12j's finding answered by this
+       selection once drafted and checked; its Murata question (UNSENT) is no longer needed for the guard
+     Layer 5: DOCK_EN_OUT's load on board A gains 30 uA; DOCK_EN_RET may be held at ground by board A's guard as by board P's detector
+     Layer 6: the order codes and filed sheets of the switch and the regulator; Layer 9 layout: the switch's island and its distance to each tab
+     this record: E-13 restated (l9stk_protection.out section 6); a commissioning check E-13b: TRIP_TEST pulled high opens the breaker, released
+       it restarts (the switch's output, the shunt, the loop, the first inverter and UVLO in one step)
+   L8P-F07 STAYS OPEN until those drafts compose, read DRAWN with mutations failing and pass an independent check on this acceptance.
+
+7. PREDICATES
+   the PRF15BB103's row reads 100 kOhm over 110 C and 4.7 MOhm at 130 +-3 C; the 47 kOhm header stands over the 470 ohm groups only                       yes
+   the loop's levels reproduce record l8p's (58.4 and 110.9 kOhm on, 203.4 and 341.2 kOhm off, 3.57 kOhm held at 7.6 V)                                   yes
+   as drafted the trip side is printed (off before 133 C; at least 12 K left for the gradient on either lead)                                             yes
+   as drafted the no-trip side at 10 A is printed only from a pack over 15 V                                                                              yes
+   as drafted the no-trip side in the 18 A service is not printed at any pack voltage (L8P-F07 stands)                                                    yes
+   G1: no E24 loop keeps the four readings on the printed points of Murata's PRF15BA102 or of TDK's B59721A0130A062                                       yes
+   G1: even with the window read on the 25 C row, the gradient is left under 5 K (Murata) and under 3 K (TDK) on the worst split                          yes
+   G2: the selected switch's no-trip side is printed over the service at 10 A and through 18 A for 60 s                                                   yes
+   G2: at the gauge's uncalibrated true current the selected preset still does not trip; the 125 C preset would be left about 1 K                         yes
+   G2: its trip side is printed and leaves the gradient over 13 K on either lead, more than the drafted PTC's                                             yes
+   G2: the loop with the fixed resistor keeps the first inverter on, the held reading, the window and the gates at every voltage                          yes
+   G2: the switch's supply is in regulation from under the pack's least voltage with the return held at ground                                            yes
+   G2: the regulator's input covers the loop's clamp and the switch's supply is inside its range                                                          yes
+   G2: the shunt's gate drive is over the row its on-resistance is printed at, inside its VGS; the guard draws under its budget                           yes
+   G2: the switch works to 150 C; the kit's NTC, the variant's sensor, prints operation to 125 C only                                                     yes
+   G2: both presets are listed Active by TI's orderable table                                                                                             yes
