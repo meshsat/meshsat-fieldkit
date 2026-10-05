@@ -1677,3 +1677,16 @@ later layer, the integration gates passed on the accepted revision. Set 30 is th
 honest reading after the desk work: criteria 1 and 5 BLOCKED on U-01, U-02 and U-04 until their external facts exist. Estimate: a
 connected, independently checked DESK candidate in about 14 to 18 h of desk work if no second negative (anchors: set 28's suite 34 min,
 V6 35 min); not a date for Layer 4's closure. Checkpoint 1 was reported at 15:20; then every 45 minutes or at a material result.
+
+**Amendment of 15:45 and 15:58 CEST (the owner's parts 19 and 20), governing from here.** The deliverable is the most complete,
+internally consistent DESK engineering package for a receiving company to complete, physically validate and manufacture; the owner funds
+and runs no physical validation now and no supplier is engaged. The blanket pause of Layers 5 to 12 "until measurements or vendor replies
+arrive" is superseded: **sequential DESK-handover gates govern progression** (each layer's coherent editable sources, calculations and
+simulations, review evidence and clearly scoped outstanding supplier work; then the next layer), while the existing design and
+qualification state and the fabrication release remain separate gates, honest and BLOCKED where their criteria are unmet; no old failing
+technical gate is turned to PASS to represent the new scope. For an unresolved measurement or vendor fact: the claim it supports, the
+affected files and decisions, a bounded provisional choice where possible, and the supplier's validation or redesign task; dependent
+portions marked PROVISIONAL; no desk-solvable defect parked in the supplier list. The external packet is reframed as
+`records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md` (its revised scope accepted by part 20, not its circuitry). P0 and the three
+assignments are unchanged; Slot B's first run (cx44, Astra) returned NOT SUPPORTED on the F01 selection (c) and is kept as given.
+
