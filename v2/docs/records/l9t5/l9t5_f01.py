@@ -449,7 +449,7 @@ def render(R):
     w("     THE CAP: %.4f A nominal; %.4f to %.4f A over every corner (MODEL on the terms above); on the PRINTED rows alone (no TYPICAL or" % (
         L["i_nom"], L["i_min"], L["i_max"]))
     w("       ASSUMPTION term: the load residual, IB, C554's leakage, the stress rows, the nonlinearity and the hold's leakage out; R559 at the")
-    w("       tree's 1 %% class, ASSUMPTION) %.4f to %.4f A, which is NOT a guaranteed band (the TYPICAL and ASSUMPTION terms are real)" % (
+    w("       tree's 1 %% class, ASSUMPTION) %.4f to %.4f A, which is NOT a bound on the cap (the TYPICAL and ASSUMPTION terms are real)" % (
         L["i_min_printed_only"], L["i_max_printed_only"]))
     w("   against the PA rail's own limit, U13's average loop (VSNS %.0f mV PRINTED min on R55, WSL25126L000FEA 6 mOhm 1 %%, TCR +-%.0f ppm/K PRINTED" % (
         S["lm_vsns"][0] * 1e3, S["wsl_tcr"] * 1e6))
@@ -586,7 +586,7 @@ def render(R):
          "uncertainty the arrangement fails and routes R1 or R2 are taken (5)" % L["bpa1_limit"]),
         ("2", "typical stress data and an assumed bias in a printed band", "CORRECTED WITH DESK EVIDENCE",
          "the terms split by label (l9t5_paloop.py cap(); 4, the INA250A2 gain and offset, the integrator): %.4f to %.4f A with the TYPICAL "
-         "allowances carried whole, %.4f to %.4f A on the PRINTED rows alone (not a guaranteed band); residual GENUINELY EXTERNAL: no printed maximum for the shunt's "
+         "allowances carried whole, %.4f to %.4f A on the PRINTED rows alone (not a bound on the cap); residual GENUINELY EXTERNAL: no printed maximum for the shunt's "
          "stress rows; effect: the %.4f A under U13's least absorbs %.2f %% more gain drift" % (
              L["i_min"], L["i_max"], L["i_min_printed_only"], L["i_max_printed_only"], L["u13_min"] - L["i_max"] - L["r55_other"],
              100 * (L["u13_min"] - L["i_max"] - L["r55_other"]) / L["i_max"])),

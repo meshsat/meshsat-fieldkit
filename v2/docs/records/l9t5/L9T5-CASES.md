@@ -38,7 +38,7 @@ PA's behaviour. (c) bounds the failing case's own quantity and leaves the 30 W s
 the PA's efficiency at the loop's high end (36.5 % at +-0.5 dB) and the service on a detector residual no sheet bounds. (b) cannot close
 the case: a perfect gauge still needs 15.5342 V. **Selected (SESSION): (c), PROVISIONAL.** The cap is 6.3518 to 6.9259 A (MODEL on
 PRINTED terms with TYPICAL allowances, R553 and R559 at their corners and the reference's load residual an ASSUMPTION, cx45; 6.3888 to
-6.8945 A on the PRINTED rows alone, which is not a guaranteed band, cx46); U13's BIAS (its gate drive up to 0.1141 A) moves
+6.8945 A on the PRINTED rows alone, which is not a bound on the cap, cx46); U13's BIAS (its gate drive up to 0.1141 A) moves
 ahead of R55; the cap's top and R55's other loads stay 0.1075 A under U13's own loop minimum 7.0338 A with R55 hot; the PA draws at most
 97.24 W and the case needs 15.1308 V with the printed bounds, a MODEL margin of 0.3692 V.
 
@@ -46,8 +46,8 @@ ahead of R55; the cap's top and R55's other loads stay 0.1075 A under U13's own 
 
 | # | Finding | State | Evidence or effect |
 |---|---|---|---|
-| 1 | the 6 A example does not establish 30 W at the cap's least | GENUINELY EXTERNAL | the module's drain current for 30 W over the envelope is printed nowhere; the 6.00 A is labelled the maker's EXAMPLE and its transfer an ASSUMPTION; F01 / D-17 PROVISIONAL on B-PA1; if B-PA1 reads over 6.352 A less the lab's uncertainty the arrangement fails and routes R1 or R2 are taken |
-| 2 | typical stress data and an assumed bias in a printed band | CORRECTED WITH DESK EVIDENCE | terms split by label (`l9t5_paloop.py` cap(), out 4): 6.3518 to 6.9259 A with TYPICAL allowances and R553's and R559's corners (cx45), 6.3888 to 6.8945 A on the PRINTED rows alone (not a guaranteed band, cx46); residual external: no printed maximum for the shunt's stress rows, absorbed to 1.55 % more drift |
+| 1 | the 6 A example does not establish 30 W at the cap's least | GENUINELY EXTERNAL | the module's drain current for 30 W over the envelope is printed nowhere; the 6.00 A is labelled the maker's EXAMPLE and its transfer an ASSUMPTION; F01 / D-17 PROVISIONAL on B-PA1; if B-PA1 reads over 6.351 A less the lab's uncertainty the arrangement fails and routes R1 or R2 are taken |
+| 2 | typical stress data and an assumed bias in a printed band | CORRECTED WITH DESK EVIDENCE | terms split by label (`l9t5_paloop.py` cap(), out 4): 6.3518 to 6.9259 A with TYPICAL allowances and R553's and R559's corners (cx45), 6.3888 to 6.8945 A on the PRINTED rows alone (not a bound on the cap, cx46); residual external: no printed maximum for the shunt's stress rows, absorbed to 1.55 % more drift |
 | 3 | reference loading, junction, supply, common mode, loop residuals | STILL AN OPEN DESIGN DEFECT for the reference's loading (cx46) | the reference's loading through Q551's hold (up to 4.479 mA) and release is REMAINING ENGINEERING (cx46 item 2); the rest corrected: R552 549 Ohm, a 1.0018 mA preload; the reference's steady load 0.9891 to 1.0184 mA against the sheet's IOUT = 1 mA condition, its residual bounded at 10 times the TYPICAL load regulation (ASSUMPTION, 5.53 uV) and PROVISIONAL on V-PA-REF (cx45); TJ under 85 C; +5V_D8IN 4.872 to 5.133 V; the integrator's terms 2.1609 mV in all |
 | 4 | R55 carries U13's BIAS and other loads | CORRECTED WITH DESK EVIDENCE | BIAS 0.1141 A bounded and re-tapped to PA_OUT (U13.24 on PA_OUT on the composed netlist; mutation M06 fails); R55's other loads 0.372 mA; 0.1075 A under 7.0338 A; L9P-F04's closure claim PROVISIONAL |
 | 5 | no compensation, settling or excursion bound | CORRECTED WITH DESK EVIDENCE (MODEL) | integrator 0.1 ms, phase margin 67.2 to 87.7 deg on TYPICAL slopes; R58 470 Ohm, VGG falls about 4.06 V/ms; the set point held and ramped (30 ms); an excursion at most 0.222 ms against the breaker's 0.282 ms on the model; the plant's own dynamics external (B-PA2, l9stk E-10) |
