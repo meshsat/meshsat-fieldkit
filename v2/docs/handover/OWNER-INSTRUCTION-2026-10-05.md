@@ -15,6 +15,7 @@ named prerequisites of its gate. Prototype framing: nothing is built, bought or 
 | 15. P0 power closure and strict layer-by-layer execution (supersedes the permission to keep later layers moving; stop and preserve; one connected power correction with three workers; the Layer 4 exit gate; convergence; layer order; checkpoints) | 5 October 2026, 14:20 CEST | `91c55cc21c8152c33213b2938330d8ebd874a08b035b0f55de7f381a909c5bee` |
 | 16. Review of the P0 execution plan: proceed after four targeted amendments (calibration and layout bounds need a feasibility basis; the integration order and one combined base; preserve work and start engineering beside the clerical work; the external closure path made actionable) | 5 October 2026, about 14:45 CEST | `a80ab901ae447f789bc74ec0cfbfc0103725c44d73c4282764908d02c489f726` |
 | 17. Second review of the revised plan: READY to approve for execution; the baseline watchpoint; 14 to 18 h is a desk candidate, not Layer 4's closure | 5 October 2026, about 14:55 CEST | `14f5dcc8fc2aacc4a5a9e33a06b321021651889cf5d7b6dfeee12bc3776d8b8d` |
+| 18. Review of P0 checkpoint 1: continue the authors; finish the external decision packet (U-02's per-mode reconciliation and the mock-up's sum, U-04's evidence route apart from the whole-kit release, U-01's two kinds of evidence) | 5 October 2026, about 15:30 CEST | `62351f9c8ca4a11b1328b5fcfb161c680b17701335242d8a3d505b5c900085a2` |
 
 
 ---
@@ -311,3 +312,74 @@ Full Layer 4 closure has no supported completion date in the plan: U-01, U-02 an
 The report says the firmware box jobs finished, but their review remains incomplete. Saving those results preserves work; it does not produce a firmware verdict or justify restarting that cancelled task now.
 
 The next useful evidence is execution and a corrected circuit candidate, rather than another revision of this plan.
+
+---
+
+## 18. Review of P0 checkpoint 1: continue the authors; finish the external decision packet (U-02's per-mode reconciliation and the mock-up's sum, U-04's evidence route apart from the whole-kit release, U-01's two kinds of evidence) (as received)
+
+# MeshSat P0 checkpoint 1 — review
+
+## Decision
+
+**Continue the current P0 authors. No new plan or worker restart is needed.** The checkpoint reports the intended change in allocation: previous work preserved, rented compute stopped, a common power baseline established, and two authors on F01/all-transmit and CAN fault corrections. Astra is correctly shown as queued until there is a selection to assess.
+
+No new power correction is yet reported as independently accepted. Power-design closure and fabrication release remain BLOCKED.
+
+## Evidence and scope
+
+Source: `MESHSAT-P0-CHECKPOINT-1-2026-10-05-1530.md`.
+
+SHA-256: `270de3a1e12283bd057d61dc2b7653497aa7da4b41888856942170385bcbc846`.
+
+I reviewed the checkpoint against the approved execution plan. I did not inspect the remote processes, backups, repository, V6 report, datasheets or test procedures. Process states and test results below are the coordinator's reported evidence, not independently observed execution.
+
+## Execution follow-through
+
+| Commitment | Checkpoint evidence | Assessment |
+|---|---|---|
+| Stop and preserve previous work | Lines 6–15 report saved outputs, worktree snapshots, dirty-worktree diffs/untracked files, no remaining jobs or relaunches, and the box stopped with its disk retained. | Reported complete. |
+| Use a common power baseline | Lines 19–21 identify `e132db0e`, the merged inputs and 227 passing tests with one known failure. | Suitable as an explicitly imperfect working baseline; it is not an accepted release. The assigned failure must be corrected before the applicable acceptance gate. |
+| Prioritise actual power corrections | Lines 27–42 assign F01 first to Slot A and CAN faults first to Slot C. Both are reported active from 15:20. | Matches the approved priority. |
+| Preserve independent review | Slot B is not launched because it awaits a committed selection. | Matches the plan; no reason to create unrelated work to fill the slot. |
+| Separate desk progress from closure | Lines 44–50 retain external blockers and distinguish the 14–18-hour desk estimate. | Honest distinction; the estimate is not a Layer 4 completion date. |
+
+The next substantive artifacts are the F01 comparison/selection and CAN fault analysis. The reported two-to-three-hour estimates place those around **17:20–18:20 CEST on 5 October**, subject to actual progress.
+
+## Finish the external decision packet alongside the engineering
+
+### Thermal: show what the proposed measurement can resolve
+
+**Verification gap in the decision packet; not a new confirmed circuit defect.** U-02 reports a modelled conductance range of 1.22–2.85 W/K, mode thresholds up to 2.905 W/K, a 7.758 W/K e-paper line, and four lines above modelled capacity (line 57).
+
+A measurement can test that model, but the packet does not demonstrate that the proposed case will pass every required mode. The model's upper estimate is not a proven physical maximum, so these figures also do not establish impossibility.
+
+Before asking the owner to fund the mock-up, point to the existing per-mode reconciliation: the applicable requirement and component limit, the assumed heat path, the predicted result, what T-H1 would decide, and the next action if it fails. Distinguish a missing storage specification from a heat-rejection design problem. Reuse the existing analysis; do not reopen an already resolved row without evidence.
+
+**Decision check:** the owner understands whether the spend confirms a supported route, screens an uncertain route, or measures a design currently predicted to miss a limit.
+
+### Charger: separate a controlled evidence build from whole-kit release
+
+**P1 completion risk.** U-04 says a prototype board A could supply the required evidence, while also saying its fabrication is blocked by the gate that evidence supports (line 58). The evaluation-module alternative is named but not yet costed or established as representative in this checkpoint.
+
+Select and specify a suitable evaluation-module arrangement or limited prototype/coupon route. State what it represents, what evidence transfers to the final circuit, what remains layout-specific, and what supplier capability and owner authorisation are needed. A limited evidence build needs its own engineering review and controlled test plan; it does not authorise whole-kit fabrication or energising an unresolved hazardous path.
+
+**Decision check:** at least one concrete evidence route can be authorised without first requiring the whole-kit release it is intended to inform. Procurement and physical work remain unauthorised until the owner approves them.
+
+### Costs and the cell experiment still need decision preparation
+
+**P2 preparation gap.** The U-02 parts are not summed and the text offers a desk quote "on request"; the U-04 evaluation-module price has not been read. Preparing those figures was already part of the approved checkpoint. The coordinator should finish the public-source estimates without another owner prompt, marking estimates and unknown lab costs explicitly. Requests to outside organisations remain unsent.
+
+Keep the U-01 routes distinct: a manufacturer's warranted operating envelope and an experiment on one cell provide different evidence. A single-cell result is scoped to that specimen and its tested conditions. It does not by itself establish pack-level behaviour, fit, production variation or a manufacturer guarantee. State exactly which architecture decision the limited sample run can support and which conditions remain.
+
+## Optional short message to the coordinator
+
+```text
+Continue Slots A and C unchanged; keep Astra queued for the committed selection. Do not restart the plan or the cancelled work.
+
+Alongside the engineering, finish the external decision packet already requested:
+- U-02: cite the existing per-mode thermal reconciliation. Explain what T-H1 can establish and what happens if it fails, especially for the four lines above modelled capacity. Sum the mock-up parts and give a dated estimate without waiting for another request.
+- U-04: specify and cost a representative evaluation-module or controlled prototype/coupon route. Separate its authorisation from whole-kit fabrication release so the test does not depend on the release it is intended to support. Keep the required engineering review, test controls and owner approval explicit.
+- U-01: distinguish manufacturer-guaranteed limits from evidence on one tested cell, and state what remains unproven at pack level.
+
+These are coordinator follow-ups within the existing P0 scope. No purchase or external contact is authorised. The next engineering milestone remains F01's selection and the corrected CAN fault analysis.
+```
