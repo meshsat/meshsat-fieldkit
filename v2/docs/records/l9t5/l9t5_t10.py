@@ -18,11 +18,15 @@ return does not address that separate deficit." It prints, deterministically and
      selection (SESSION, with its reversal) and its ACCEPTANCE CRITERION as numbered conditions; Layer 5's row text;
   9. the selected circuit change drafted for boards A and B (apply_gen_sch_a_iocpre.py, apply_gen_sch_b_iocpre.py, after I-03's
      drafts): composed in L4-E9's order, regenerated, read in the netlist and the intent, mutated, and judged on C-DEV rev 1;
+  10j (round 6, the check cx45's Q3): the quorum's schedule, the containment no firmware sets (apply_gen_sch_b_iocguard.py: a
+     transmit-share limiter per transceiver and a rail trip per supervisor) composed, read and mutated, the surviving quorum per fault,
+     the other supervisors' headroom, the thermal envelope with its qualification limits, and the rows on revision V and 14.0k;
  10. the state of L9T5-F06, the findings for other authors, and the predicates test_l9t5.py holds.
 Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_t10.py  (l9t5_t10.out is its output, regenerated with
 _bin/regen_out.py after l9t5_drafts.out). Labels: PRINTED (a maker's limit), TYPICAL, DECLARED, MODEL, ASSUMPTION, SESSION."""
 import hashlib
 import importlib.util
+import math
 import io
 import os
 import re
@@ -41,14 +45,17 @@ CHK = D.CHK
 PRE = {b: os.path.join(HERE, "apply_gen_sch_%s_iocpre.py" % b) for b in "ab"}
 SHEETS = {"h743": "v2/vendor/st/st-stm32h743xi-datasheet.pdf", "ap2112": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
           "ap632": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf", "tcan": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
-          "tps62933": "v2/vendor/ti/ti-tps62933.pdf", "rm0433": "v2/vendor/st/st-rm0433-rev8.pdf"}
+          "tps62933": "v2/vendor/ti/ti-tps62933.pdf", "rm0433": "v2/vendor/st/st-rm0433-rev8.pdf",
+          # T10 round 6 (cx45 Q3): both held back (v2/docs/records/l4e7/fetch_held_back.py), the kit's parts already (L4-E7's backstop)
+          "ina169": "v2/vendor/ti/held/ti-ina169-sbos181f.pdf", "tps3701": "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"}
 DOCS = {"contract": "v2/docs/HW-FW-CONTRACT.md", "panel": "v2/docs/PANEL.md", "arch": "v2/docs/ARCH-PCB-B-IOHA.md", "gen_b": "v2/ecad/tools/gen_sch_b.py",
         "l4e12": "v2/docs/records/l4e12/l4e12_thermal.out", "rvpwr": "v2/docs/records/rv-pwr/pwr_budget.py", "gndret": "v2/docs/records/l8r2/l8r2_gndret.out",
         "drafts": "v2/docs/records/l9t5/l9t5_drafts.py", "drafts_out": "v2/docs/records/l9t5/l9t5_drafts.out",
         "pre_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py", "pre_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py",
         "trace": "v2/docs/REQUIREMENTS-TRACE.md", "shdn": "v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py",
         "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py", "cdev2": "v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md",
-        "set_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocset.py", "set_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocset.py"}
+        "set_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocset.py", "set_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocset.py",
+        "guard_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocguard.py"}
 # the session's choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 TJ_GOAL = 125.0            # C: the junction this record holds each LDO to at the inside air (25 K under the sheet's 150 C absolute maximum)
 BOUND = ("VOS3", 144)      # the state the proposed contract row bounds each supervisor to: voltage scale 3, HCLK at most 144 MHz, the
@@ -583,7 +590,7 @@ def round5_rest(w, P, DP, air, hi3, Q, ldo_k, tj_l, out):
     w("   at this air with the enabled set, under the %.0f C absolute maximum)" % P["tj_ldo"])
     w("   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads %.1f C on rev V (%s %.0f C) and %.1f C on rev Y's cover" % (
         bv[3], "inside" if bv[3] <= TJ_GOAL else "OVER", TJ_GOAL, by[3]))
-    w("     (%s; a rev X part waits on V-B20 under L9T5-D7) at %.2f C, the worst drop's corner" % ("inside" if by[3] <= TJ_GOAL else "OVER by %.1f K" % (by[3] - TJ_GOAL), air))
+    w("     (%s; a rev X part HELD under L9T5-D7) at %.2f C, the worst drop's corner" % ("inside" if by[3] <= TJ_GOAL else "OVER by %.1f K" % (by[3] - TJ_GOAL), air))
     w("")
     return out
 
@@ -1048,6 +1055,288 @@ def round5_part22(w, P, DP, air, hi3, Q, tj_l, out):
     return out
 
 
+EN_DASH = chr(0x2013)       # the sheets' minus sign, written by its code point (no long dash in this file)
+GUARD_B = os.path.join(HERE, "apply_gen_sch_b_iocguard.py")   # T10 round 6 (the check cx45's Q3): the share limiters and the rail trips
+RS_TRIP, RL_TRIP, RF_TRIP, CF_TRIP = 0.3, 5.76e3, 100e3, 10e-6   # read back from the draft below, never used unread
+FRAME_D_MIN = 0.15         # ASSUMED: the least dominant fraction of back-to-back classic frames from a CAN controller (SOF, the reserved and
+                           # stuff bits; an all-recessive 8-byte frame carries about 26 dominant bits in 133): a babbler through its FDCAN
+                           # holds the limiter's input at or under 1 - 0.15 of the rail
+
+
+def guard_values():
+    """The draft's values, read from its module (never typed): the rail trip and the limiter."""
+    sp = importlib.util.spec_from_file_location("t10_guard_values", GUARD_B)
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    rt, lm = dict(m.RAIL_TRIP), dict(m.LIMITER)
+    f = lambda v: float(re.match(r"([\d.]+)", v).group(1)) * {"k": 1e3, "M": 1e6, "R": 1.0, "u": 1e-6, "n": 1e-9}[re.match(r"[\d.]+([kMRun])", v).group(1)]
+    return dict(rs=f(rt["rs"]), rl=f(rt["rl"]), rf=f(rt["rf"]), cf=f(rt["cf"]), r1=f(lm["r1"]), r2=f(lm["r2"]), c=f(lm["c"]), rpu=f(lm["rpu"]),
+                rsd=f(lm["rsd"]), amp=rt["amp"], cmp=rt["cmp"], edits=len(m.EDITS), tol_l=0.001 if "0.1%" in lm["r2"] else 0.01)
+
+
+def guard_sheets():
+    """INA169 (SBOS181F) and TPS3701 (SBVS240C), both held back (v2/docs/records/l4e7/fetch_held_back.py), and the TCAN334's SHDN rows."""
+    a, t, c = pdf("ina169"), pdf("tps3701"), pdf("tcan")
+    S = {}
+    m = need(a, r"VSENSE = 10 mV %s 150 mV\s+(\d+)\s+(\d+)\s+(\d+)\s+µA/V" % EN_DASH, "INA169: the transconductance")
+    S["gm"] = tuple(float(m.group(k)) * 1e-6 for k in (1, 2, 3))
+    S["vos"] = float(need(a, r"INA169\s+±0\.2\s+±(\d+(?:\.\d+)?)\s*\n\s*vs\. temperature", "INA169: the offset").group(1)) * 1e-3
+    S["ta_hi"] = float(need(a, r"INA169: all other characteristics at TA = %s40°C to \+(\d+)°C" % EN_DASH, "INA169: its temperature range").group(1))
+    m = need(t, r"VIT%s\(INB\)\s+INB pin negative input threshold voltage VDD = 1\.8 V to 36 V\s+(\d+)\s+([\d.]+)\s+(\d+)\s+mV" % EN_DASH, "TPS3701: VIT-(INB)")
+    S["vtm"] = (float(m.group(1)) * 1e-3, float(m.group(3)) * 1e-3)
+    m = need(t, r"VIT\+\(INB\)\s+INB pin positive input threshold voltage\s+VDD = 1\.8 V to 36 V\s+(\d+)\s+([\d.]+)\s+(\d+)\s+mV", "TPS3701: VIT+(INB)")
+    S["vtp"] = (float(m.group(1)) * 1e-3, float(m.group(3)) * 1e-3)
+    m = need(t, r"VDD = 1\.8 V and 36 V, VINA, VINB = 6\.5 V\s+%s(\d+)\s+\+1\s+\+(\d+)\s+nA" % EN_DASH, "TPS3701: IIN")
+    S["iin"] = float(m.group(2)) * 1e-9
+    need(t, r"exceeds the threshold voltage\s*\n\s*VIT\+\(INB\), OUTB is driven low\.", "TPS3701: OUTB's polarity")
+    S["vih"] = float(need(c, r"VIH\s+HIGH level input voltage\s+(\d+(?:\.\d+)?)\s+V", "TCAN334: VIH").group(1))
+    S["iil"] = float(need(c, r"IIL\s+LOW level input leakage current\s+STB, S, SHDN = 0V, VCC = 3\.6V\s+%s(\d+)" % EN_DASH, "TCAN334: SHDN's IIL").group(1)) * 1e-6
+    S["vil"] = float(need(c, r"VIL\s+LOW level input voltage\s+(\d+(?:\.\d+)?)\s+V", "TCAN334: VIL").group(1))
+    return S
+
+
+def guard_check(nl):
+    """The containment delta read on a board B netlist by pin. Returns (verdict, why)."""
+    why = []
+    for tag, k in (("A", 0), ("B", 1), ("C", 2)):
+        b = 40 + 10 * k
+        U = lambda n: "U%d" % (b + n)
+        GR = lambda n: "R%d" % (600 + 20 * k + n)
+        GC = lambda n: "C%d" % (940 + 10 * k + n)
+        GD = lambda n: "D%d" % (400 + 10 * k + n)
+        ldo_in, en, isns, isf, v33 = "IOC%s_LDO_IN" % tag, "IOC%s_LDO_EN" % tag, "IOC%s_ISNS" % tag, "IOC%s_ISF" % tag, "+3V3_IOC%s" % tag
+        why += CHK.rows(nl, [(U(0), "1", ldo_in), (U(0), "3", en), (GR(0), "1", "+5V_IOC"), (GR(0), "2", ldo_in),
+                             (U(5), "1", isns), (U(5), "2", "GND"), (U(5), "3", "+5V_IOC"), (U(5), "4", ldo_in), (U(5), "5", "+5V_IOC"),
+                             (GR(1), "1", isns), (GR(1), "2", "GND"), (GR(2), "1", isns), (GR(2), "2", isf), (GC(1), "1", isf), (GC(1), "2", "GND"),
+                             (U(6), "2", "GND"), (U(6), "4", isf), (U(6), "5", "+5V_IOC"), (U(6), "6", en)])
+        if not CHK.value(nl, U(5)).startswith("INA169") or not CHK.value(nl, U(6)).startswith("TPS3701"):
+            why.append("%s/%s are %r/%r, not the INA169 and the TPS3701" % (U(5), U(6), CHK.value(nl, U(5))[:20], CHK.value(nl, U(6))[:20]))
+        if not CHK.value(nl, GR(0)).startswith("0.3R") or not CHK.value(nl, GR(1)).startswith("5.76k"):
+            why.append("%s %r and %s %r are not the 0.3 ohm sense and 5.76 kOhm output resistors" % (GR(0), CHK.value(nl, GR(0)), GR(1), CHK.value(nl, GR(1))))
+        if set(r.split(".")[0] for r in CHK.members(nl, ldo_in)) != {U(0), GR(0), U(5), "C%d" % (400 + 20 * k)}:
+            why.append("%s reaches %s, not the LDO, the sense resistor, the monitor and the LDO's input capacitor" % (ldo_in, CHK.members(nl, ldo_in)))
+        if "%s.6" % U(6) not in CHK.members(nl, en):
+            why.append("the rail trip's OUTB is not on %s" % en)
+        for j, (can, un) in enumerate((("1", 3), ("2", 4))):
+            sd, lim, lo = "IOC%s_CAN%s_SD" % (tag, can), "IOC%s_CAN%s_LIM" % (tag, can), "IOC%s_CAN%s_LIMO" % (tag, can)
+            tx, gpio = "IOC%s_CAN%s_TX" % (tag, can), "IOC%s_CAN%s_SHDN" % (tag, can)
+            why += CHK.rows(nl, [(U(un), "5", sd), (GD(2 * j), "1", sd), (GD(2 * j), "2", gpio), (GD(2 * j + 1), "1", sd), (GD(2 * j + 1), "2", lo),
+                                 (GR(3 + 4 * j), "1", sd), (GR(3 + 4 * j), "2", "GND"), (GR(4 + 4 * j), "1", tx), (GR(4 + 4 * j), "2", lim),
+                                 (GR(5 + 4 * j), "1", lim), (GR(5 + 4 * j), "2", "GND"), (GC(3 + 2 * j), "1", lim), (GC(3 + 2 * j), "2", "GND"),
+                                 (U(7 + j), "2", "GND"), (U(7 + j), "4", lim), (U(7 + j), "5", "+5V_IOC"), (U(7 + j), "6", lo),
+                                 (GR(6 + 4 * j), "1", v33), (GR(6 + 4 * j), "2", lo)])
+            if sorted(CHK.members(nl, sd)) != sorted(["%s.5" % U(un), "%s.1" % GD(2 * j), "%s.1" % GD(2 * j + 1), "%s.1" % GR(3 + 4 * j)]):
+                why.append("%s reaches %s" % (sd, CHK.members(nl, sd)))
+            if not CHK.value(nl, U(7 + j)).startswith("TPS3701") or not CHK.value(nl, GR(5 + 4 * j)).startswith("150k 0.1%"):
+                why.append("controller %s fabric %s's limiter is %r with %r" % (tag, can, CHK.value(nl, U(7 + j))[:16], CHK.value(nl, GR(5 + 4 * j))))
+    return ("FAIL" if why else "DRAWN"), why
+
+
+def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
+    """10j: the check cx45's Q3 (a) to (d) on T10: the message schedule, the containment drafted (the transmit-share limiter and the rail
+    trip, apply_gen_sch_b_iocguard.py), the surviving quorum per fault, the other controllers' headroom, the thermal envelope with its
+    qualification limits, and every row made to agree on revision V and the 14.0k set point."""
+    GV, GS = guard_values(), guard_sheets()
+    i_aux, p22 = out["i_aux"], out["p22"]
+    lo14, nom14, hi14 = CHK.vout_band(R601, R602_SET)
+    k14 = p22["k14"]                                                    # K/A at the drop's worst corner (14.0k)
+    drop14 = hi14 - 3.3 * P["vout_lo"]
+    b_v = out["B"][(FITTED_REV, air)]
+    fr = {r[0]: r for r in out["fault_rows"][FITTED_REV]}
+    i_rec, i_dom = P["can_rec"], P["can_dom_hi"]
+    # (a) the schedule: per controller and fabric in each 100 ms window one state frame and at most five event frames
+    bits, n_frames, acks = FRAME_BITS, 6, 2 * 6
+    dom_bound = n_frames * bits + acks
+    budget = {r: SHARE * WINDOW_MS * 1e-3 * r for r in (500e3, 1e6)}
+    load = 3 * n_frames * bits / (500e3 * WINDOW_MS * 1e-3)
+    lat = (3 * n_frames - 1) * bits / 500e3
+    # the share limiter: its threshold in dominant share, its detection and its release
+    k_nom = GV["r2"] / (GV["r1"] + GV["r2"])
+    tl = GV["tol_l"]
+    k_lo = GV["r2"] * (1 - tl) / (GV["r1"] * (1 + tl) + GV["r2"] * (1 - tl))
+    k_hi = GV["r2"] * (1 + tl) / (GV["r1"] * (1 - tl) + GV["r2"] * (1 + tl))
+    rpar_hi = GV["r1"] * (1 + tl) * GV["r2"] * (1 + tl) / (GV["r1"] * (1 + tl) + GV["r2"] * (1 + tl))
+    v33 = (3.3 * P["vout_lo"], 3.3 * P["vout_hi"])
+    e_iin = GS["iin"] * rpar_hi
+    d_lo = 1.0 - (GS["vtm"][1] + e_iin) / (v33[0] * k_lo)               # the earliest trip
+    d_hi = 1.0 - (GS["vtm"][0] - e_iin) / (v33[1] * k_hi)               # the latest
+    rel_ok = (1.0 - SHARE) * v33[0] * k_lo - e_iin > GS["vtp"][1]       # the legitimate 2 % share leaves the transceiver enabled
+    tau_l = GV["c"] * 1.1 * rpar_hi
+    v0 = (1.0 - SHARE) * v33[1] * k_hi
+    t_held = tau_l * math.log(v0 / (GS["vtm"][0] - e_iin))              # a held-dominant TXD from the legitimate share
+    # a controller-driven babbler (back-to-back frames, at least FRAME_D_MIN dominant): its average falls toward (1 - FRAME_D_MIN)
+    t_bab = tau_l * math.log((FRAME_D_MIN - SHARE) / (FRAME_D_MIN - d_hi)) if FRAME_D_MIN > d_hi else float("inf")
+    sd_trip = (v33[0] - GV["rpu"] * GS["iil"] - 0.715) * GV["rsd"] / (GV["rsd"] + GV["rpu"])    # LIMO pulled up through the diode into 100k
+    sd_low = GS["iil"] * GV["rsd"]                                       # the pin's own leakage into 100k with nothing driving it
+    i_lim_pu = 2 * v33[1] / (GV["rpu"] * 0.99)                           # two LIMO pull-ups sunk by OUTB in normal service, from the rail
+    i_tx_lim = i_rec + (i_dom - i_rec) * d_hi                            # a transceiver's average at the limiter's latest share
+    i_bab6 = b_v[2] + i_lim_pu + 2 * (i_tx_lim - (i_rec + (i_dom - i_rec) * SHARE))   # the babbler bounded by the limiters
+    # the rail trip: the trip current's window from the printed rows (resistors 1 %)
+    vt = GS["vtp"]
+    i_max = (vt[1] / (GS["gm"][0] * GV["rl"] * 0.99) + GS["vos"]) / (GV["rs"] * 0.99) + GS["iin"] * GV["rf"] * 1.01 / (GS["gm"][0] * GV["rl"] * 0.99 * GV["rs"] * 0.99)
+    i_min = (vt[0] / (GS["gm"][2] * GV["rl"] * 1.01) - GS["vos"]) / (GV["rs"] * 1.01) - GS["iin"] * GV["rf"] * 1.01 / (GS["gm"][2] * GV["rl"] * 1.01 * GV["rs"] * 1.01)
+    tau_t = GV["rf"] * 1.01 * GV["cf"] * 1.1
+    serve = [("the bounded state with the limiters' pull-ups", b_v[2] + i_lim_pu)] + [("%s with the response" % f, fr[f][3] + i_lim_pu) for f in ("B1", "B2", "B3", "B4", "B5", "B6", "B7a")] \
+        + [("both fabrics faulted, responded", out["both"][FITTED_REV][0] + i_lim_pu), ("a babbler, the limiters bounding it", i_bab6)]
+    serve_max = max(i for _l, i in serve)
+    tj_hold = air + k14 * i_max
+    tj_mcu = air + P["theta_mcu"] * 3.3 * i_max
+    air_125 = TJ_GOAL - k14 * i_max
+    theta_125 = (TJ_GOAL - air) / (drop14 * i_max)
+    # the worst current any firmware can draw: the sheet's largest rev V row, the auxiliaries and both transceivers held dominant
+    i_mcu_max = max(v[3] for v in P["V"].values() if v[3] is not None) / 1000.0
+    i_any = i_mcu_max + i_aux + 2 * i_dom + i_lim_pu
+    t_trip = tau_t * math.log((i_any - b_v[2]) / (i_any - i_max))
+    p0, pf = drop14 * b_v[2], drop14 * i_any
+    tj0 = air + P["theta_ldo"] * p0
+    zth_need = (P["tj_ldo"] - tj0) / (pf - p0)
+    # T10-A3 at the trip's maximum, the sense resistor's drop counted
+    G = D.gndret()
+    r_sup = G["rhot"] + 2 * DP["vh_r"][1]
+    def need_at(i):
+        drop_i = P["drop"][10] + (P["drop"][300] - P["drop"][10]) * (i - 0.01) / 0.29 if i <= 0.3 else P["drop"][300] + (P["drop"][600] - P["drop"][300]) * (i - 0.3) / 0.3
+        return 3.3 * (P["vout_hi"] + P["load"] * i) + drop_i
+    at_trip = lo14 - D.RAIL_BUDGET * nom14 - 3 * i_max * r_sup - G["shift_drawn_ub"] - GV["rs"] * 1.01 * i_max
+    # the other controllers' inputs while one draws the worst current until its trip
+    i_tot = i_any + 2 * serve_max
+    at_other = lo14 - D.RAIL_BUDGET * nom14 - i_tot * r_sup - G["shift_drawn_ub"] - GV["rs"] * 1.01 * serve_max
+    R6 = dict(d=(d_lo, d_hi), rel_ok=rel_ok, t_held=t_held, t_bab=t_bab, sd=(sd_trip, sd_low), win=(i_min, i_max), serve_max=serve_max, tj_hold=tj_hold,
+              tj_mcu=tj_mcu, t_trip=t_trip, zth=zth_need, a3=(need_at(i_max), at_trip), other=(need_at(serve_max), at_other), dom=(dom_bound, budget[500e3]),
+              i_bab6=i_bab6, air_125=air_125, theta_125=theta_125)
+    w("   10j. THE CHECK cx45's Q3 (focused check of candidate 06077cee, NOT CONFIRMED): THE SCHEDULE, A CONTAINMENT NO FIRMWARE SETS, THE SURVIVING")
+    w("   QUORUM, THE OTHER CONTROLLERS' HEADROOM, THE THERMAL ENVELOPE, AND THE ROWS MADE TO AGREE (DERIVED on the printed rows; labels as above)")
+    w("   (a) THE MESSAGE SCHEDULE, FW-B22 (drafted in apply_hw_fw_contract_t10.py): per controller and fabric, in every %d ms window, one state" % WINDOW_MS)
+    w("     frame (its view of the assignment, its health, a sequence count) and at most five event frames; classic 8-byte frames at 500 kbit/s")
+    w("     or 1 Mbit/s, %d bit-times each with stuffing (MODEL); a larger change spreads over windows. Its dominant bound, every bit counted" % bits)
+    w("     dominant plus %d acknowledgements: %d bit-times against FW-B21's %.0f (2 %% of the window at 500 kbit/s; %.0f at 1 Mbit/s): inside;" % (
+        acks, dom_bound, budget[500e3], budget[1e6]))
+    w("     the bus %.1f %% loaded at 500 kbit/s; a state frame waits at most %.1f ms behind every other frame of its window; the quorum's" % (100 * load, lat * 1e3))
+    w("     2-of-3 decision reads the three state frames of one window: at most %d ms plus %.1f ms" % (WINDOW_MS, lat * 1e3))
+    w("   (b) THE CONTAINMENT DRAFTED (apply_gen_sch_b_iocguard.py, after iocbuck, iocpre and canshdn; NOT APPLIED): two bounds that no firmware")
+    w("     sets, each acting on one controller only; the rows read (PRINTED): INA169 %.0f to %.0f uA/V, offset at most %.1f mV, specified to %.0f C;" % (
+        GS["gm"][0] * 1e6, GS["gm"][2] * 1e6, GS["vos"] * 1e3, GS["ta_hi"]))
+    w("     TPS3701 VIT-(INB) %.0f to %.0f mV, VIT+(INB) %.0f to %.0f mV, its inputs at most %.0f nA, OUTB low over VIT+(INB); TCAN334 SHDN VIH %.0f V, VIL" % (
+        GS["vtm"][0] * 1e3, GS["vtm"][1] * 1e3, GS["vtp"][0] * 1e3, GS["vtp"][1] * 1e3, GS["iin"] * 1e9, GS["vih"]))
+    w("     %.1f V, at most %.0f uA out of the pin at 0 V" % (GS["vil"], GS["iil"] * 1e6))
+    w("     1. THE TRANSMIT-SHARE LIMITER, one per transceiver: TXD through %.0f kOhm over %.0f kOhm with %.0f uF (%.0f ms at its slowest), the" % (
+        GV["r1"] / 1e3, GV["r2"] / 1e3, GV["c"] * 1e6, tau_l * 1e3))
+    w("        average %.4f of the rail times (1 - the dominant share); the transceiver is silenced when its share passes %.1f to %.1f %% (the" % (k_nom, 100 * d_lo, 100 * d_hi))
+    w("        rail at +-1.5 %%, the resistors at %.1f %%, the threshold and the input current printed); at the legitimate 2 %% it stays enabled: %s;" % (
+        100 * GV["tol_l"], "yes" if rel_ok else "NO"))
+    w("        SHDN driven to at least %.2f V (VIH %.0f V) by LIMO's %.0f kOhm through a 1N4148W (0.715 V PRINTED at 1 mA, taken as the bound) into %.0f kOhm," % (
+        sd_trip, GS["vih"], GV["rpu"] / 1e3, GV["rsd"] / 1e3))
+    w("        and held at %.2f V (VIL %.1f V) by that %.0f kOhm against the pin's own %.0f uA when nothing drives it; the controller's own SHDN" % (
+        sd_low, GS["vil"], GV["rsd"] / 1e3, GS["iil"] * 1e6))
+    w("        request reaches the pin through the other diode. A held-dominant TXD is silenced within %.1f ms (the driver's own time-out, %.1f to" % (
+        t_held * 1e3, P["can_dto"][0]))
+    w("        %.1f ms PRINTED, frees the bus first); a babbler through its FDCAN, whose frames carry at least %.0f %% dominant bits (ASSUMED,"
+      % (P["can_dto"][2], 100 * FRAME_D_MIN))
+    w("        FRAME_D_MIN: an all-recessive 8-byte frame carries about 24 dominant bits in 130), within %.0f ms; the silence lasts while its" % (t_bab * 1e3))
+    w("        TXD keeps the share over the limit and ends by itself when the share falls")
+    w("     2. THE RAIL TRIP, one per controller: %.1f ohm from +5V_IOC to its LDO, the INA169 into %.2f kOhm, a %.1f s average (%.0f kOhm, %.0f uF," % (
+        GV["rs"], GV["rl"] / 1e3, tau_t, GV["rf"] / 1e3, GV["cf"] * 1e6))
+    w("        at its slowest), a TPS3701 holding the LDO's EN low while the average is over the threshold: %.4f to %.4f A at the tolerances;" % (i_min, i_max))
+    w("        tripped, the controller is unpowered; the average then falls, the LDO restarts, and a controller still over the threshold is")
+    w("        unpowered again: its supply's average is held at the threshold (DERIVED)")
+    w("   (c) THE SURVIVING QUORUM AND RECOVERY, FAULT BY FAULT (quorum: two of three controllers serving; IOHA rows 3, 7 and 8):")
+    rows_q = (("a babbler through its FDCAN (FW-B21 broken), one or both fabrics", "its limiter silences its transceiver within %.0f ms; the bus free; the other two" % (t_bab * 1e3),
+               "automatic: the limiter releases when its share falls"),
+              ("a held-dominant TXD", "the time-out frees the bus within %.1f ms, the limiter silences it within %.1f ms" % (P["can_dto"][2], t_held * 1e3), "automatic"),
+              ("a clock or load outside FW-B20 (any firmware)", "the rail trip unpowers it, its average held at %.4f A or less; the other two" % i_max,
+               "automatic: it restarts while its average is under the trip"),
+              ("a fabric shorted, the firmware's response absent", "its transceivers' share bounded by the limiter, the rail under the trip; the other fabric", "the fabric's repair"),
+              ("a limiter's comparator dead, or its OUTB released", "that transceiver silent: the controller on its other fabric; the quorum holds", "found at once (its frames absent)"),
+              ("a limiter's OUTB stuck low", "that transceiver's share no longer bounded: LATENT, a second fault (a babbler) needed", "bench V-B22; handed over (below)"),
+              ("the rail trip's OUTB stuck low, or its monitor's output high", "the controller unpowered: the other two", "found at once"),
+              ("the rail trip's monitor dead or its OUTB released", "no current bound for that controller: LATENT, a second fault needed", "bench V-B23; handed over (below)"),
+              ("one firmware fault in all three (a systematic fault)", "each rail and each transceiver bounded on its own; the service may stop: the voters hold the home assignment (row 8)", "the firmware's V-B20 to V-B22"))
+    for a_, b_, c_ in rows_q:
+        w("     %-62s %-118s %s" % (a_, b_, c_))
+    w("     a CONTROLLER-DRIVEN babbler denies the bus at most for its detection time, %.0f ms, the voters holding their assignment meanwhile" % (t_bab * 1e3))
+    w("     (row 8), because its frames' dominant bits keep its share over the limit;")
+    w("     WHAT IS NOT CLOSED (handed over as remaining engineering, no exception presumed): a TX pin repurposed as a GPIO and toggled under")
+    w("     the limiter's least %.1f %% share disrupts the bus without tripping it; attributing it needs each controller's TXD read by the other" % (100 * d_lo))
+    w("     two and a 2-of-2 vote of the other two on its SHDN or its LDO's EN (twelve observation inputs and six vote outputs, a pin plan for")
+    w("     the three H743s): NOT DRAFTED here. And a latent stuck comparator in either bound, found only on the bench (V-B22, V-B23), with")
+    w("     no service interval bounding that: the double faults. Outputs PROVISIONAL on them: L9T5-F21 and this section's quorum rows")
+    w("   (d) THE OTHER CONTROLLERS' HEADROOM DURING A RESPONSE: one controller at the worst current any firmware draws until its trip, %.4f A" % i_any)
+    w("     (the sheet's largest rev V row %.3f A, the auxiliaries, both transceivers held dominant), the other two at the largest served %.4f A:" % (i_mcu_max, serve_max))
+    w("     U601's load %.4f A, under its declared peak; each other LDO's input at least %.4f V against its %.4f V: %s (the lead at the" % (
+        i_tot, at_other, need_at(serve_max), "holds" if at_other >= need_at(serve_max) else "FAILS"))
+    w("     total current, the return's shift as drawn, the sense resistor at +1 %)")
+    w("     T10-A3 RESTATED ON A HARDWARE BOUND (L9T5-D8's criterion superseded): each LDO's input at the trip's maximum %.4f A, the sense" % i_max)
+    w("     resistor's drop counted: at least %.4f V against %.4f V: %s" % (at_trip, need_at(i_max), "holds" if at_trip >= need_at(i_max) else "FAILS"))
+    w("   (e) THE THERMAL ENVELOPE, PEAK AND SUSTAINED (cx45's averaged-current point):")
+    w("     sustained: the rail trip holds every controller's average at %.4f A or less whatever its firmware or its share does: the LDO's" % i_max)
+    w("       junction at most %.1f C at %.2f C air (the drop's worst corner, %.1f K/A, MODEL), the controller's own at most %.1f C; no average" % (
+        tj_hold, air, k14, tj_mcu))
+    w("       is used to bound a peak: the bound is the held current itself. Every served state is under the trip's least %.4f A (the largest" % i_min)
+    w("       %.4f A): %s" % (serve_max, "none trips" if serve_max < i_min else "ONE TRIPS"))
+    for lab, i in serve:
+        w("         %-52s %.4f A   LDO %.1f C" % (lab, i, air + k14 * i))
+    w("     transient: from the bounded state to the worst current, the trip acts within %.0f ms (the average's slowest time constant); the" % (t_trip * 1e3))
+    w("       steady figure at that current is %.1f C, so the 150 C transient rule needs the LDO's transient thermal impedance at %.0f ms no" % (
+        air + P["theta_ldo"] * pf, t_trip * 1e3))
+    w("       more than %.0f C/W on board B's copper (its steady %.0f C/W PRINTED for its own board): NOT PRINTED by Diodes, a QUALIFICATION LIMIT" % (
+        zth_need, P["theta_ldo"]))
+    w("       (first article, below); the controller passes its own rating in that time at VOS0 (a firmware fault, ended by the trip)")
+    w("     qualification limits, with their uncertainty: the LDO's junction-to-air resistance on board B at most %.0f C/W at %.2f C air, or" % (theta_125, air))
+    w("       the local air at most %.1f C at the printed %.0f C/W (each holds 125 C at the trip's maximum); Zth(%.0f ms) at most %.0f C/W;" % (
+        air_125, P["theta_ldo"], t_trip * 1e3, zth_need))
+    w("       the INA169's site under its specified %.0f C; measured on the first article of board B in a %.0f C chamber with one controller" % (GS["ta_hi"], air))
+    w("       forced to the trip (a load on its rail), not at the bounded state alone (T10-A5 restated, T10-ROUND5.md section 6)")
+    w("     residual handed over: VOS0 at a current under the trip takes the H743 past its own %d C VOS0 limit at this air (%.1f C at %.4f A):" % (105, tj_mcu, i_max))
+    w("       the LDO is held, the controller is not; a VOS0 entry no hardware prevents (Layer 5 and Layer 6)")
+    w("   (f) THE ROWS MADE TO AGREE: the fitted part is revision V (L9T5-D7), revision X held until its own qualification; the set point R602 14.0k")
+    w("     (4.0114 V nominal); 125 C for every sustained state; the contract draft's FW-B20 row, the part-selection and inspection rows of 10i,")
+    w("     T10-ROUND5.md and this output state the same; a rev X part must now also stay under the rail trip's least %.4f A in its bounded" % i_min)
+    w("     state (V-B20's pass limit min(0.2318, %.4f) A)" % i_min)
+    with tempfile.TemporaryDirectory(prefix="l9t5_t10r6_") as d:
+        seq = D.seq_of("b", "slot")
+        at = seq.index(D.MINE["b"]) + 1
+        seq6 = seq[:at] + [PRE["b"], SHDN, SET % "b", GUARD_B] + seq[at:]
+        p6, res6, ok6 = D.compose("b", seq6, d, "t10r6")
+        rc6, net6, _t6 = D.netlist("b", p6, d, "t10r6")
+        if rc6 or not ok6:
+            refuse("board B with the containment delta did not compose or regenerate: %s" % net6)
+        nl6 = CHK.read(open(net6, "rb").read())
+        v6, why6 = guard_check(nl6)
+        muts = (("the limiter reading RXD, not TXD", [(("R604", "1"), ("U43", "4"))]),
+                ("the rail trip's EN and its input exchanged", [(("U46", "6"), ("U46", "4"))]),
+                ("the LDO before the sense resistor", [(("U40", "1"), ("R600", "1"))]),
+                ("the limiter's pull-up from +5V_IOC", [(("R606", "1"), ("U47", "5"))]),
+                ("the controller's SHDN diode reversed", [(("D400", "1"), ("D400", "2"))]),
+                ("the filter capacitor reversed onto ground", [(("C941", "1"), ("C941", "2"))]))
+        vm = []
+        for i, (lab, sw) in enumerate(muts):
+            q = D.mutate(net6, d, "r6m%d" % i, sw)
+            vm.append((lab, guard_check(CHK.read(open(q, "rb").read()))[0]))
+        bare = os.path.join(d, "bare_gen_sch_b.py")
+        shutil.copy(D.GEN["b"], bare)
+        r_bare = subprocess.run([sys.executable, "-B", GUARD_B, bare, "--write"], capture_output=True)
+        r_tree = subprocess.run([sys.executable, "-B", GUARD_B, D.GEN["b"], "--write"], capture_output=True)
+        r_twice = subprocess.run([sys.executable, "-B", GUARD_B, p6, "--write"], capture_output=True)
+    R6.update(v6=v6, why6=why6, vm=vm, ok6=ok6, refused=(r_bare.returncode == 3, r_tree.returncode == 3 and b"NOT RELEASED" in r_tree.stderr, r_twice.returncode == 3))
+    w("   COMPOSED: board B in L4-E9's order with I-03's draft, iocpre, canshdn, iocset and the containment delta (%d drafts): %s; the generator" % (
+        len(seq6), "every step OK" if ok6 else "REFUSED"))
+    w("     ran to its end; read by pin (each rail's sense, monitor, filter and trip on its EN; each transceiver's SD, diodes, average and")
+    w("     limiter): %s%s" % (v6, (": " + "; ".join(why6[:3])) if why6 else ""))
+    for lab, v in vm:
+        w("     mutated, %-48s %s" % (lab + ":", v))
+    w("     the delta on a generator without record l9t5's drafts: %s; a second time: %s; on the tree's own generator: %s" % (
+        "refused" if R6["refused"][0] else "NOT REFUSED", "refused" if R6["refused"][2] else "NOT REFUSED", "refused (NOT RELEASED)" if R6["refused"][1] else "NOT REFUSED"))
+    w("     record l9t5's own I-03 check (Slot A's check_l9t5_netlist.py) holds the LDOs' VIN on +5V_IOC: its entry is Slot A's to restate when")
+    w("     it takes this delta (L9T5-F25)")
+    ok = (rel_ok and d_lo > SHARE and d_hi < FRAME_D_MIN and t_held < 0.1 and sd_trip > GS["vih"] and sd_low < GS["vil"] and serve_max < i_min and tj_hold <= TJ_GOAL
+          and at_trip >= need_at(i_max) and at_other >= need_at(serve_max) and dom_bound <= budget[500e3] and v6 == "DRAWN"
+          and all(v == "FAIL" for _l, v in vm) and all(R6["refused"]) and ok6)
+    R6["ok"] = ok
+    w("   VERDICT (10j): cx45's Q3 (a) to (d) CORRECTED IN DRAFT on revision V at 14.0k, the desk acceptance %s by its author, UNCHECKED; the" % ("MET" if ok else "NOT MET"))
+    w("     qualification limits of (e) and the residuals of (c) and (e) handed over; L9T5-F21 OPEN on the GPIO-toggled TX pin only")
+    w("")
+    out["r6"] = R6
+    return out
+
+
 def main():
     out = []
     w = out.append
@@ -1441,6 +1730,7 @@ def main():
     R5 = round5_faults(w, P, air, Q, tj_l, R5)
     R5 = round5_answers(w, P, DP, air, hi3, Q, tj_l, R5)
     R5 = round5_part22(w, P, DP, air, hi3, Q, tj_l, R5)
+    R5 = round6_cx45(w, P, DP, air, hi3, Q, tj_l, R5)
     # 11. state, findings, predicates
     w("11. THE STATE OF L9T5-F06 (T10)")
     by_, bv_ = R5["B"][("Y", air)], R5["B"][("V", air)]
@@ -1453,8 +1743,8 @@ def main():
     w("   L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2")
     w("   is restated with the enabled peripherals at the drop's worst corner: at the case's %.2f C air it holds on rev V's rows (%.1f C), the revision" % (
         air, bv_[3]))
-    w("   L9T5-D7 fits, and NOT on rev Y's rows (%.1f C), the cover for a rev X part, which is PROVISIONAL on V-B20 (pass limit %.4f A; 10h (1)); T10-A3" % (
-        by_[3], R5["i_cap"]))
+    w("   L9T5-D7 fits, and NOT on rev Y's rows (%.1f C), the cover for a rev X part, which is HELD (round 6: V-B20 at most min(%.4f, %.4f) A, 10j (f)); T10-A3" % (
+        by_[3], R5["i_cap"], R5["r6"]["win"][0]))
     w("   and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;")
     w("   Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to")
     w("   %.2f C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check" % R5["max_air"]["Y"])
@@ -1493,10 +1783,12 @@ def main():
         ", ".join(R5["high"]), Q["vbus_abs"]))
     w("     conductor is outside every printed figure: a clearance rule between those nets and the fabrics is a layout means, not credited here")
     w("   L9T5-F21 (Layer 5, IOHA section 12's owner): a supervisor whose firmware babbles on both fabrics (a running firmware that breaks FW-B21)")
-    w("     is in no FMEA row; thermally it is bounded (10h (3)), but it can deny the quorum both fabrics: the FMEA row and its detection are owed")
-    w("   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the")
-    w("     pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without")
-    w("     V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)")
+    w("     is in no FMEA row; round 6 (10j) bounds a babbler through its FDCAN in hardware (the transmit-share limiters, 0.23 s); OPEN for a TX")
+    w("     pin toggled as a GPIO under the limiter's least share (the peers' TXD observation and 2-of-2 vote, not drafted) and the FMEA row")
+    w("   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): DRAFTED in part 22 (apply_gen_sch_?_iocset.py, R602 14.0k, taken);")
+    w("     revision X stays HELD until its own qualification (10j (f))")
+    w("   L9T5-F25 (Slot A, record l9t5's I-03 check): check_l9t5_netlist.py reads the LDOs' VIN on +5V_IOC; with the containment delta")
+    w("     (apply_gen_sch_b_iocguard.py, round 6) each sits behind its sense resistor on IOC{t}_LDO_IN: to restate when the delta is taken")
     w("   L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when")
     w("     the set point delta (apply_gen_sch_?_iocset.py, part 22) is taken; and the delta folded into iocpre (one writer per file)")
     w("   L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and")
@@ -1535,6 +1827,15 @@ def main():
     pred["round 5 (part 22): the delta composes, reads 14.0k, refuses without iocpre and the tree; both mutations FAIL; T10-A3 holds restated"] = (
         p22["ok"] and p22["v_set"] == "DRAWN" and p22["v_m1"] == "FAIL" and p22["v_m2"] == "FAIL" and p22["decl_ok"] and p22["tree_refused"]
         and p22["a3"][2] >= p22["a3"][1])
+    r6 = R5["r6"]
+    pred["round 6 (cx45 Q3): the schedule's dominant bound is inside FW-B21's share at 500 kbit/s"] = r6["dom"][0] <= r6["dom"][1]
+    pred["round 6: the share limiter leaves the legitimate share enabled, trips over it, drives SHDN past VIH and holds it under VIL"] = (
+        r6["rel_ok"] and r6["d"][0] > SHARE and r6["d"][1] < FRAME_D_MIN and r6["sd"][0] > 2.0 and r6["sd"][1] < 0.8)
+    pred["round 6: every served state is under the rail trip's least current, and the trip's maximum holds 125 C"] = r6["serve_max"] < r6["win"][0] and r6["tj_hold"] <= TJ_GOAL
+    pred["round 6: T10-A3 holds at the trip's maximum with the sense drop, and the other LDOs hold during a response"] = (
+        r6["a3"][1] >= r6["a3"][0] and r6["other"][1] >= r6["other"][0])
+    pred["round 6: the containment delta composes, reads DRAWN by pin, its six mutations FAIL, and it refuses as a draft must"] = (
+        r6["v6"] == "DRAWN" and all(v == "FAIL" for _l, v in r6["vm"]) and all(r6["refused"]) and r6["ok6"])
     w("12. THE PREDICATES")
     for k, v in pred.items():
         w("   %-134s %s" % (k, "yes" if v else "NO"))
