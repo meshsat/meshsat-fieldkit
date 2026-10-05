@@ -5688,7 +5688,11 @@ R15_LEAD = dict(hp=(0.15, 0.25),   # W/(m K): h times perimeter of a 4 mm2 insul
                 dt0=0.05,          # K: the pair's offset left after its isothermal reading in the oven (proposal)
                 dtc=0.05,          # K: the guard's control band, logged (proposal)
                 rises=(5.0, 10.0, 20.0, 40.0),   # K: joints over the lead's own temperature, V2RF's cases
-                rho=1.72e-8, n=2)  # ohm m: copper at 20 C (handbook, ASSUMPTION); the heavy leads of the heating supply
+                rho=1.72e-8, n=2,  # ohm m: copper at 20 C (handbook, ASSUMPTION); the heavy leads of the heating supply
+                lug_area=0.5e-4,   # m2: each lead's lug, its surface left outside the heater tape (the palm on the joint's pad), proposal
+                lag=(0.01, 0.04),  # m and W/(m K): the lagging over the lug and the guarded length, closed-cell (proposal; k a handbook order)
+                h_out=17.0,        # W/(m2 K): still air outside the lagging, the top of V2RF's order (ASSUMPTION)
+                dt_joint=60.0)     # K: a joint's rise over the chamber's air, at most (under the limit's 73.75 K; the run reads it)
 R15_PAIR_OLD = dict(dt=0.05)       # K: an unguarded pair's resolution, for option (b)'s reading
 R15_U = dict(k=0.02, p=0.01, p17=0.01, air=1.0, band=0.02, pick=0.1, unit=0.05, rep=0.5, leak=0.3, early=0.5, c0=0.25, rip=0.52)
 # the budget's sources, expanded (k = 2), each with its kind (round 15, V2RF-m4): k the K-factor, common to every reading of one junction
@@ -5905,10 +5909,13 @@ def fix25_round(R, T):
     S["b_curv"] = tuple(h * ld["dx"] * r_ / 2.0 for h in ld["hp"] for r_ in (ld["rises"][0], ld["rises"][-1]))
     S["b_res"] = ka * R15_PAIR_OLD["dt"] / ld["dx"]
     S["b_err"] = (S["b_res"] + min(S["b_curv"]), S["b_res"] + max(S["b_curv"]))
-    S["a_res"] = ka * (ld["dt0"] + ld["dtc"]) / ld["dx"]
+    S["a_pair"] = ka * (ld["dt0"] + ld["dtc"]) / ld["dx"]
+    S["u_lag"] = 1.0 / (ld["lag"][0] / ld["lag"][1] + 1.0 / ld["h_out"])
+    S["a_lug"] = S["u_lag"] * ld["lug_area"] * ld["dt_joint"]          # the lagged lug's own loss, which the joint supplies
+    S["a_res"] = S["a_pair"] + S["a_lug"]
     S["a_term"] = K["n_lead"] * S["a_res"] * S21["bar_new"]
     S["a_heat"] = (S["q_at"][0][1], S["q_at"][-1][2])          # the guard's heater must supply what the passive lead would draw
-    if not (S["a_res"] < 0.01 and S["a_term"] < 1.0 and S["b_err"][1] > 5 * S["a_res"]):
+    if not (S["a_res"] < 0.02 and S["a_term"] < 1.5 and S["b_err"][1] > 5 * S["a_res"]):
         refuse(4, "the guard does not leave a residual smaller than the measured correction's own error")
     # ---- V2RF-m1: the interlock, by a state search
     S["st_old"] = r15_states("old")
@@ -6041,11 +6048,14 @@ def render_fix25(R, p):
     p("       %s to %s mW at joints %s to %s K over the lead, plus the pair's %s mW; the correction Z0 q then needs (I - F)^-1 measured too, F up to"
       % (fmt(min(S["b_curv"]) * 1e3, 1), fmt(max(S["b_curv"]) * 1e3, 0), fmt(ld["rises"][0], 0), fmt(ld["rises"][-1], 0), fmt(S["b_res"] * 1e3, 1)))
     p("       a half or more: an error of the order of the whole of round 14's V8 on each lead")
-    p("     (a) GUARD each lead (SELECTED): a heater tape over the lead from its joint, the pair under it %s mm apart, an integral controller"
+    p("     (a) GUARD each lead (SELECTED): a heater tape over the lug's barrel and the lead from it (no bare lead), the pair under it %s mm"
       % fmt(ld["dx"] * 1e3, 0))
-    p("       holding the pair's difference at zero: with the lead held at its joint's temperature along the heated length, its flux at the")
-    p("       joint is the pair's offset and the control band only, %s K and %s K: %s mW a lead (k A dT / dx), whatever the joint's temperature;"
-      % (fmt(ld["dt0"], 2), fmt(ld["dtc"], 2), fmt(S["a_res"] * 1e3, 1)))
+    p("       apart, the first on the lug at the joint, an integral controller holding the pair's difference at zero, the lug and the guarded")
+    p("       length lagged: with the lead held at its joint's temperature along the heated length, the joint supplies only the pair's offset and")
+    p("       control band, %s K and %s K, %s mW a lead (k A dT / dx), and the lagged lug's own loss, %s mW (U %s W/(m2 K) through %s mm of"
+      % (fmt(ld["dt0"], 2), fmt(ld["dtc"], 2), fmt(S["a_pair"] * 1e3, 1), fmt(S["a_lug"] * 1e3, 1), fmt(S["u_lag"], 2), fmt(ld["lag"][0] * 1e3, 0)))
+    p("       lagging, %s cm2, a joint %s K over the air): %s mW a lead at most, whatever the joint's temperature within that;"
+      % (fmt(ld["lug_area"] * 1e4, 1), fmt(ld["dt_joint"], 0), fmt(S["a_res"] * 1e3, 1)))
     p("       at steady state the guarded coupon IS the coupon without its leads plus a fixed source of at most that flux, so no factor and no")
     p("       assumption on the leads' share is needed; its effect on junction k is at most Z_kJ times it, Z_kJ read by reciprocity from the joint's")
     p("       thermocouple in cases A to C (Z_kJ = Z_Jk), at most Zself,k: both leads together %s K at the bar's %s K/W"

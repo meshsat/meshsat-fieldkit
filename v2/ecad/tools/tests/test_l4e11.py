@@ -2187,7 +2187,9 @@ def t_round15_v2rf_b1_the_guard_replaces_the_lead_term_and_a_coupon_at_the_targe
     zjj, zjk = 20.0, 15.0
     g = 0.5 / zjj
     assert abs(S["factor"][0] - 1.0 / ((1 - g * zjj) - g * zjk)) < 1e-12 and abs(S["factor"][0] - 8.0) < 1e-9
-    assert abs(S["a_res"] - ka * 0.1 / 0.03) < 1e-15 and S["a_res"] < 0.006 and S["a_term"] < 0.5
+    u_lag = 1.0 / (0.01 / 0.04 + 1.0 / 17.0)
+    assert abs(S["a_pair"] - ka * 0.1 / 0.03) < 1e-15 and abs(S["a_lug"] - u_lag * 0.5e-4 * 60.0) < 1e-15
+    assert abs(S["a_res"] - S["a_pair"] - S["a_lug"]) < 1e-15 and S["a_res"] < 0.016 and S["a_term"] < 1.25
     assert S["b_err"][1] > 0.1, "the measured correction's error is not of the order of round 14's V8"
     # the verdict table: the target passes at every edge, over the limit fails at every edge (recomputed from each row)
     K = S["K"]
@@ -2291,8 +2293,9 @@ def t_round15_v2rf_m2_to_m5_the_census_clamp_propagated_u_search_and_design_targ
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
     p25, o25 = page.split("## 25. Round 15")[1], out.split("25. ROUND 15")[1]
-    for v_ in ("0.0153", "0.0197", "1.53", "1.98", "6.2", "64.4", "5.2 mW", "0.42 K", "0.112 V", "34.48 uA", "3.45 %", "182 uJ", "0.7 us",
-               "41.98", "2.51 K", "3.65 %", "0.353", "1.96 K", "33.58", "0.294", "40.62", "1.92 K", "0.35 K", "C-PROT rev 1", "NOT EXECUTABLE"):
+    for v_ in ("0.0153", "0.0197", "1.53", "1.98", "6.2", "64.4", "5.2 mW", "9.7 mW", "14.9 mW", "1.22 K", "0.112 V", "34.48 uA", "3.45 %",
+               "182 uJ", "0.7 us", "41.51", "2.52 K", "3.66 %", "0.353", "1.96 K", "33.21", "0.294", "40.18", "1.9", "0.99 K", "C-PROT rev 1",
+               "NOT EXECUTABLE"):
         assert v_ in p25 and v_ in o25, "%s is not in both section 25 and out 25" % v_
     text, body = _tp_body()
     flat_ = " ".join(text.split())
