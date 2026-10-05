@@ -9,7 +9,7 @@ measured. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSI
    424e078b5d11f52e v2/docs/records/l8r2/l8r2_p0.out
    4adb13047770eb1c v2/docs/records/l8r2/apply_gen_sch_a_gndrtn.py
    b9048dcbb1ff023f v2/docs/records/l8r2/apply_gen_sch_b_gndrtn.py
-   a98d742ccdbee053 v2/docs/records/l9t5/l9t5_connected.py
+   11e9cd21849c209c v2/docs/records/l9t5/l9t5_connected.py
    7b54d7ac587eab81 v2/docs/records/l9pwr/l9pwr_budget.out
    58e26c67987b1daa v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
    2e64b5bf2d9cd3bc v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
@@ -45,75 +45,76 @@ measured. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSI
    6 VH lead pin 2s, 17 ribbon ground conductors (J_AB1 pins 3,4,5,6,7,8,22,23,24; J_AB2 pins 3,4,5,6,7,8,9,10), 6 XT60 return contacts (J_GR1 to J_GR3 pins 1 and 2)
    each lead's return enters board B at its rail's loads' ground pads (the intent's loads as weights) and leaves board A at the lead's
    pin 2 land (the stage beside its connector: a Layer 10 placement condition, ASSUMPTION); a load not placed on board B yet is taken
-   at its rail's entry and, as the bound adverse to the ribbons, at J_AB1's ground pins, the larger of the two kept: J_54V: R13; J_5V_DEV: F2, F3, U901; J_5V_S1: U116, U701; J_5V_S2: U216, U731; J_5V_S3: U316, U761
+   at the placed parts one net beyond it (a series element: a sense resistor, a switch), else at its rail's entry and, as the bound
+   adverse to the ribbons, at J_AB1's ground pins, the larger of the two kept: J_54V: R13; J_5V_DEV: U901; J_5V_S1: U701; J_5V_S2: U731; J_5V_S3: U761
    the probe: the supervisors' LDOs' ground pads on board B (U40, U50, U60: 3 pads) less J_5V_IOC's pin 2 on board A (T10-A3's shift)
 
 4. THE RETURN SOLVED (MODEL; per case, the largest current of each kind over the copper and fill corners, both injections and the
    contact vertices (each conductor at the vertex its search reaches, and the two uniform vertices), against its ratings)
    C-DEV rev 2 (the active row; conditional on FW-B20/B21): 20.4746 A (J_5V_S1 5.4340, J_5V_S2 4.6480, J_5V_S3 3.3960, J_5V_DEV 6.0359, J_54V 0.0000, J_5V_IOC 0.9607)
-     +76.25 C VH  J_5V_DEV   4.6140 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
-     +76.25 C RIB J_AB1.23   0.4543 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
-     +76.25 C RET J_GR1.2    5.5712 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
+     +76.25 C VH  J_5V_S2    4.6150 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
+     +76.25 C RIB J_AB1.23   0.4470 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
+     +76.25 C RET J_GR1.2    5.5836 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
      +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0180 V
-     -20.00 C VH  J_5V_S2    4.9921 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
-     -20.00 C RIB J_AB1.23   0.5584 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
-     -20.00 C RET J_GR1.2    6.3856 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
+     -20.00 C VH  J_5V_S2    5.0023 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
+     -20.00 C RIB J_AB1.23   0.5505 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
+     -20.00 C RET J_GR1.2    6.3978 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
      -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0144 V
    C-DEV rev 1 (the labelled scenario): 20.9888 A (J_5V_S1 5.4340, J_5V_S2 4.6480, J_5V_S3 3.3960, J_5V_DEV 6.0359, J_54V 0.0000, J_5V_IOC 1.4749)
-     +76.25 C VH  J_5V_DEV   4.7273 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
-     +76.25 C RIB J_AB1.23   0.4628 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
-     +76.25 C RET J_GR1.2    5.6783 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
-     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0192 V
-     -20.00 C VH  J_5V_DEV   5.1042 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
-     -20.00 C RIB J_AB1.23   0.5692 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
-     -20.00 C RET J_GR1.2    6.5135 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
-     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0153 V
+     +76.25 C VH  J_5V_S2    4.6655 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
+     +76.25 C RIB J_AB1.23   0.4556 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
+     +76.25 C RET J_GR1.2    5.6906 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
+     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0191 V
+     -20.00 C VH  J_5V_S2    5.0634 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
+     -20.00 C RIB J_AB1.23   0.5615 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
+     -20.00 C RET J_GR1.2    6.5257 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
+     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0152 V
    the largest steady state (PS-BUSY, HIGH, the least load voltage): 22.8711 A (J_5V_S1 5.4340, J_5V_S2 4.6480, J_5V_S3 5.4340, J_5V_DEV 5.8802, J_5V_IOC 1.4749, J_54V 0.0000)
-     +76.25 C VH  J_5V_S3    5.2651 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
-     +76.25 C RIB J_AB1.23   0.5124 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
-     +76.25 C RET J_GR1.2    6.1226 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
-     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0206 V
-     -20.00 C VH  J_5V_S3    5.6977 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
-     -20.00 C RIB J_AB1.23   0.6292 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
-     -20.00 C RET J_GR1.2    7.0344 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
-     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0165 V
+     +76.25 C VH  J_5V_S3    5.2787 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A holds
+     +76.25 C RIB J_AB1.23   0.5054 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A holds
+     +76.25 C RET J_GR1.2    6.1346 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
+     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0205 V
+     -20.00 C VH  J_5V_S3    5.7119 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
+     -20.00 C RIB J_AB1.23   0.6217 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
+     -20.00 C RET J_GR1.2    7.0463 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
+     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0164 V
    the declared upper bound (every lead at its declared peak, the composed intent): 27.8159 A (J_5V_S1 6.6000, J_5V_S2 6.6000, J_5V_S3 6.6000, J_5V_DEV 6.0359, J_5V_IOC 1.3800, J_54V 0.6000)
-     +76.25 C VH  J_5V_S2    6.4392 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A OVER
-     +76.25 C RIB J_AB1.23   0.6371 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A OVER
-     +76.25 C RET J_GR1.2    7.5408 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
-     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0238 V
-     -20.00 C VH  J_5V_S2    6.9638 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
-     -20.00 C RIB J_AB1.23   0.7806 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
-     -20.00 C RET J_GR1.2    8.6491 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
-     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0191 V
+     +76.25 C VH  J_5V_S2    6.4485 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 5.9948 A OVER
+     +76.25 C RIB J_AB1.23   0.6299 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 0.5995 A OVER
+     +76.25 C RET J_GR1.2    7.5531 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 25.1101 A holds
+     +76.25 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0237 V
+     -20.00 C VH  J_5V_S2    6.9741 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, entry): printed 10.0000 A holds; least 10.0000 A holds
+     -20.00 C RIB J_AB1.23   0.7729 A (searched vertex, 0 other contacts low, copper thin, fill 50 %, ribbon): printed 1.0000 A holds; least 1.0000 A holds
+     -20.00 C RET J_GR1.2    8.6613 A (searched vertex, 0 other contacts low, copper nominal, fill 100 %, entry): printed 35.0000 A holds; least 35.0000 A holds
+     -20.00 C the ground shift at the supervisors' LDOs, every vertex evaluated: at most 0.0190 V
    the vertex search (from each conductor's own contacts low and every other high, every contact whose move raises its current set
    low in turn until no single move raises it): 0 searches ended away from the own-low vertex, at most 0 other contacts low
 
 5. AGAINST THE ONE-NODE MODEL OF l8r2_p0.py (Rs = 0, the same totals; MODEL)
-   C-DEV rev 2 (the active row; conditional on FW-B20/B21)      +76.25 C: one node VH 2.8847, RIB 0.3580, RET 6.8187 A; distributed VH 4.6140, RIB 0.4543, RET 5.5712 A
-   C-DEV rev 2 (the active row; conditional on FW-B20/B21)      -20.00 C: one node VH 3.6143, RIB 0.4659, RET 8.0922 A; distributed VH 4.9921, RIB 0.5584, RET 6.3856 A
-   C-DEV rev 1 (the labelled scenario)                          +76.25 C: one node VH 2.9571, RIB 0.3670, RET 6.9900 A; distributed VH 4.7273, RIB 0.4628, RET 5.6783 A
-   C-DEV rev 1 (the labelled scenario)                          -20.00 C: one node VH 3.7050, RIB 0.4776, RET 8.2954 A; distributed VH 5.1042, RIB 0.5692, RET 6.5135 A
-   the largest steady state (PS-BUSY, HIGH, the least load volt +76.25 C: one node VH 3.2223, RIB 0.3999, RET 7.6168 A; distributed VH 5.2651, RIB 0.5124, RET 6.1226 A
-   the largest steady state (PS-BUSY, HIGH, the least load volt -20.00 C: one node VH 4.0373, RIB 0.5204, RET 9.0393 A; distributed VH 5.6977, RIB 0.6292, RET 7.0344 A
-   the declared upper bound (every lead at its declared peak, t +76.25 C: one node VH 3.9190, RIB 0.4864, RET 9.2636 A; distributed VH 6.4392, RIB 0.6371, RET 7.5408 A
-   the declared upper bound (every lead at its declared peak, t -20.00 C: one node VH 4.9102, RIB 0.6329, RET 10.9936 A; distributed VH 6.9638, RIB 0.7806, RET 8.6491 A
+   C-DEV rev 2 (the active row; conditional on FW-B20/B21)      +76.25 C: one node VH 2.8847, RIB 0.3580, RET 6.8187 A; distributed VH 4.6150, RIB 0.4470, RET 5.5836 A
+   C-DEV rev 2 (the active row; conditional on FW-B20/B21)      -20.00 C: one node VH 3.6143, RIB 0.4659, RET 8.0922 A; distributed VH 5.0023, RIB 0.5505, RET 6.3978 A
+   C-DEV rev 1 (the labelled scenario)                          +76.25 C: one node VH 2.9571, RIB 0.3670, RET 6.9900 A; distributed VH 4.6655, RIB 0.4556, RET 5.6906 A
+   C-DEV rev 1 (the labelled scenario)                          -20.00 C: one node VH 3.7050, RIB 0.4776, RET 8.2954 A; distributed VH 5.0634, RIB 0.5615, RET 6.5257 A
+   the largest steady state (PS-BUSY, HIGH, the least load volt +76.25 C: one node VH 3.2223, RIB 0.3999, RET 7.6168 A; distributed VH 5.2787, RIB 0.5054, RET 6.1346 A
+   the largest steady state (PS-BUSY, HIGH, the least load volt -20.00 C: one node VH 4.0373, RIB 0.5204, RET 9.0393 A; distributed VH 5.7119, RIB 0.6217, RET 7.0463 A
+   the declared upper bound (every lead at its declared peak, t +76.25 C: one node VH 3.9190, RIB 0.4864, RET 9.2636 A; distributed VH 6.4485, RIB 0.6299, RET 7.5531 A
+   the declared upper bound (every lead at its declared peak, t -20.00 C: one node VH 4.9102, RIB 0.6329, RET 10.9936 A; distributed VH 6.9741, RIB 0.7729, RET 8.6613 A
 
 5b. THE ROUTE FOR THE DECLARED UPPER BOUND'S RIBBON ROW (a what-if on the same model, NOT drafted: no service row needs it): a fourth
    return lead J_GR4 placed beside J_AB1 (board B at (280.66, 154.82), 20.3 mm from its ground pins; board A at (253.66, 149.18), 19.4 mm), the
-   declared upper bound at +76.25 C over every corner: the ribbon's largest 0.4150 A against the least 0.5995 A (holds)
+   declared upper bound at +76.25 C over every corner: the ribbon's largest 0.4107 A against the least 0.5995 A (holds)
 
 6. VERDICT (MODEL; the sockets placed in section 2, the composed netlists, the corners and the vertex family above)
-   every case row on the printed ratings: HOLDS (the ribbon's largest 0.7806 A against 1 A: the declared upper bound's printed row, STILL OPEN
+   every case row on the printed ratings: HOLDS (the ribbon's largest 0.7729 A against 1 A: the declared upper bound's printed row, STILL OPEN
      on the one-node model, holds on the placed distributed one); on the least ratings at the inside air: DOES NOT HOLD
    the service cases (C-DEV rev 2, the active row, and the largest steady state) on the printed ratings: HOLD; on the least: HOLD
-     over the least rating: the declared upper bound at +76.25 C, RIB: 0.6371 A against 0.5995 A, the least rating the sheet allows (INFERRED)
+     over the least rating: the declared upper bound at +76.25 C, RIB: 0.6299 A against 0.5995 A, the least rating the sheet allows (INFERRED)
        Wurth's WR-CAB derating against ambient is not held: the vendor task L8R2-F44 (Wurth, UNSENT); the route if its curve is
        lower is a fourth return lead beside the ribbon headers (5b)
-     over the least rating: the declared upper bound at +76.25 C, VH: 6.4392 A against 5.9948 A, the least rating the sheet allows (INFERRED)
+     over the least rating: the declared upper bound at +76.25 C, VH: 6.4485 A against 5.9948 A, the least rating the sheet allows (INFERRED)
        the same lead's pin 1 carries its rail's whole declared peak on the same derating: L8R2-F43's vendor task (JST's curve)
        decides both pins; a return design cannot remove a pin 1 row
-   the ground shift at the supervisors' LDOs on the service cases: at most 0.0206 V (the T10-A3 chain took 0.0114 V with the dedicated
+   the ground shift at the supervisors' LDOs on the service cases: at most 0.0205 V (the T10-A3 chain took 0.0114 V with the dedicated
      return and 0.0681 V as drawn, both from the one-node model)
    DISPOSITION OF V6-B1 (the author's; the targeted recheck decides): the three drafted sockets PLACED (section 2, L8R2-D10) and the return
      SOLVED as a distributed network at the copper, temperature, fill and contact corners: every printed row holds and the service cases hold on the least ratings too; no fourth lead or bar is

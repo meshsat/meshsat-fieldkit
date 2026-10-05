@@ -1137,10 +1137,11 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     # the same chain as Slot C's part 22 scenario (no containment then): at 14.0 k, as drawn, at 0.4512 A the only difference is the sense drop
     r14 = re.search(r"R602 14\.0 k .*?return as drawn\s+shift [\d.]+ V, 0\.4512 A a LDO \(L9T5-D8, superseded; .*?\): input ([\d.]+) V", text)
     assert r14 and abs(float(r14.group(1)) + 0.3030 * 0.4512 - float(m.group(2))) < 2e-4, (r14 and r14.group(1), m.group(2))
-    # L8R2-F33a on the placement as drawn, read from record l8r2's output
+    # L8R2-F33a after cx45's Q2: record l8r2 withdraws the group-centre claim, and the re-trace cites the PLACED distributed model instead
     p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
-    mm = re.search(r"holds every entry within ([\d.]+) mm of its socket on both boards: MET", p0)
-    assert mm and ("within %s mm of its socket on both" % mm.group(1)) in text
+    assert "claim to that effect is WITHDRAWN" in " ".join(p0.split()) and not re.search(r"holds every entry within [\d.]+ mm of its socket on both boards: MET", p0)
+    assert not re.search(r"within [\d.]+ mm of its socket on both", text)
+    assert "the sockets PLACED on the drawn boards" in text and "CORRECTED IN DRAFT on the placed distributed model" in text
     assert "J_PA and its 16 AWG lead" in text and "PROVISIONAL with L8R2-F43's vendor task" in text
 
 

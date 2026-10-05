@@ -900,8 +900,11 @@ def t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_n
     sec = page.split("## 3h. P0 round")[1].split("## 4. ")[0]
     for s_ in ("L8R2-F33a", "PROVISIONAL", "STILL OPEN", "authority: SESSION", "UNSENT"):
         assert s_ in sec, s_
-    figs = sorted(set(re.findall(r"\d+\.\d+ (?:A|mOhm)\b", sec)))
-    assert figs and not [f for f in figs if f not in text], [f for f in figs if f not in text]
+    # every figure the section quotes is printed by an output: l8r2_p0.out, or l8r2_dist.out for the cx45 correction paragraph (the placed
+    # distributed model)
+    dist = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_dist.out"), encoding="utf-8").read()
+    figs = sorted(set(re.findall(r"\d+\.\d+ (?:A|V|mOhm)\b", sec)))
+    assert figs and not [f for f in figs if f not in text + dist], [f for f in figs if f not in text + dist]
 
 
 def t_p0_the_group_centre_reading_is_withdrawn_as_realisability():
