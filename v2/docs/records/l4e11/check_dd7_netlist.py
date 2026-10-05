@@ -10,6 +10,12 @@ apply_gen_sch_a_dd7.py draws is read against the draft's map, each value against
 single pin row does not show:
   LOOP  the return DOCK_EN_RET reaches J_DOCK, RT1, Q44's drain and U48's SENSE1 and nothing else (no load under 1 MOhm on it);
         DOCK_EN_OUT reaches J_DOCK, RT1 and R109 alone; U48's SENSE2 sits on R109 / R144's tap;
+        round 17 (the check V6's V6-m2; record l8p's L8P-R8-F1): on a board A that carries record l8p's thermal guard in RT1's place
+        (apply_gen_sch_a_thguard.py, after this record's DD-7) the loop's element is the guard's pair: R260 7.5k from DOCK_EN_OUT to
+        THG_MID, R261 7.5k from THG_MID to DOCK_EN_RET, the midpoint carrying TP62 alone; DOCK_EN_RET then reaches J_DOCK, R261, Q44,
+        U48 and the guard's shunt Q60's drain (an off 2N7002, the leakage record l8p counts in L4-E11 20c's window); DOCK_EN_OUT reaches
+        J_DOCK, R260, R109, the guard's regulator U61's input and its capacitor C261. A board with both RT1 and the guard, or with
+        neither, FAILS;
   TRIG  U48's RESET1 is DD7_T, pulled up only from DD7_LP (R250), which is U48's RESET2; Q50's gate is DD7_T;
   HOLD  Q51 from VBAT to DD7_K, R253 from DD7_K to ground, R84 and D26 (cathode on DD7_H) into DD7_H, C241 and R85 to ground,
         U47's SENSE1 on DD7_H and its CTS1 on C248;
@@ -80,6 +86,20 @@ EXCLUSIVE = {
     "SYS_INH_P": {"R82", "R83", "Q49"},
     "DD7_BL": {"Q48", "R256"},
 }
+
+# round 17: the same nets when record l8p's thermal guard is drawn in RT1's place (its pair, its shunt's drain, its regulator's input)
+GUARD_EXCLUSIVE = {
+    "DOCK_EN_RET": {"J_DOCK", "R261", "Q44", "U48", "Q60"},
+    "DOCK_EN_OUT": {"J_DOCK", "R260", "R109", "U61", "C261"},
+    "THG_MID": {"R260", "R261", "TP62"},
+}
+GUARD_MAP = [
+    ("R260", "7.5k", {"1": "DOCK_EN_OUT", "2": "THG_MID"}),
+    ("R261", "7.5k", {"1": "THG_MID", "2": "DOCK_EN_RET"}),
+    ("Q60", "2N7002", {"2": "GND", "3": "DOCK_EN_RET"}),
+    ("U61", "TPS70950", {"1": "DOCK_EN_OUT", "2": "GND"}),
+    ("C261", "1u", {"1": "DOCK_EN_OUT", "2": "GND"}),
+]
 
 
 def sexp(text):
@@ -157,7 +177,24 @@ def judge(raw):
         for p in ("6", "8", "9") + (("7",) if ref == "U48" else ()):
             if pins.get(ref, {}).get(p) not in (None, "NC"):
                 bad.append("%s.%s on %r, wanted open (its delay pin unused)" % (ref, p, pins[ref][p]))
-    for net, members in EXCLUSIVE.items():
+    # round 17: the loop's element, RT1 (record l8p's PTC) or the guard's pair (record l8p's round 8), never both and never neither
+    guard = comps.get("U60", "").startswith("LM26LV")
+    ptc = "RT1" in comps
+    excl = dict(EXCLUSIVE)
+    if guard and ptc:
+        bad.append("both RT1 and the thermal guard are drawn: the loop has one element")
+    elif not guard and not ptc:
+        bad.append("neither RT1 nor the thermal guard is drawn: the loop has no element")
+    elif guard:
+        excl.update(GUARD_EXCLUSIVE)
+        for ref, pre, want in GUARD_MAP:
+            got = pins.get(ref, {})
+            if not comps.get(ref, "").startswith(pre):
+                bad.append("%s's value %r does not start with %r (the guard's loop part)" % (ref, comps.get(ref, "absent")[:40], pre))
+            for p_, n_ in want.items():
+                if got.get(p_) != n_:
+                    bad.append("%s.%s on %r, wanted %s (the guard's loop)" % (ref, p_, got.get(p_), n_))
+    for net, members in excl.items():
         if on.get(net, set()) != members:
             bad.append("%s reaches %s, wanted %s" % (net, sorted(on.get(net, set())), sorted(members)))
     for ref in BATFETS:
@@ -183,6 +220,9 @@ def main(argv):
     print("board A netlist sha256 %s" % hashlib.sha256(raw).hexdigest()[:16])
     for w in why:
         print("  %s" % w)
+    comps, _p, _o = read_netlist(raw)
+    print("the loop's element: %s" % ("the thermal guard's pair R260 and R261 (record l8p round 8; this check's round 17)" if comps.get("U60", "").startswith("LM26LV")
+                                       else "RT1 (record l8p's PTC)" if "RT1" in comps else "none"))
     print("DD-7 on board A (L4-E11 round 10): %s" % v)
     return {"DRAWN": 0, "FAIL": 4, "NOT DRAWN": 3}[v]
 
