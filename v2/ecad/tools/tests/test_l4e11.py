@@ -46,8 +46,27 @@ the rail and the four-wire fans and no flyback, and board B's feed is read as no
 corrected, and board A composed in L4-E9's order runs to its end (board E too, with L4-E7's defect stood in); the third battery FET Q42 sits
 on record l9stk's junction limit, reproduced, and E11-29 carries it; E11-37 is bound to the three-device network and stays open; DD-3's
 one design-out attempt fails on L2 and stays open with its condition, J_DCIN drafted as the XT60-F; IF-1's hold outlasts the breaker's
-start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Nothing here writes
-into the tree: drafts run on temporary copies.
+start, its levels clear every threshold they meet, and the defect it answers is shown on the drafts as they stood. Round 10 (section 20)
+adds: DD-7's board A side redrawn against record l8p's L8P-F04 and L8P-F05 composes in L4-E9's order, reads DRAWN in the regenerated
+netlist and FAIL on five mutations, and holds on C-PROT (the held return sets the inhibit within 1 ms, the hold outlasts the restart,
+the latch keeps CELL+ dead whatever the LM5069's resistor); T2's 9/8 is read in closed form. Round 11 (section 21) adds: E-1 holds at its
+case on C-PROT rev 1 over a scan of every split of the three FETs' RDS(on) under the allowance, at the charger's printed least drive, with
+the bar 40.78 K/W, and fails with the even split's bar, a bar 1 % looser, the split read as even or the drive read at 10 V; unequal
+coupling is bounded by the largest of each impedance; E11-37 stays open with Q-TI-17 (e) and (f) and its fallback conditional on a
+typical figure; V1's minors (R84 pulse-rated; R256's 6.8k superseded) read in the netlist with more mutations failing. Round 12 (section
+22, the independent check V2's V2-B1) adds: the bleed of CELL+ counts the sources into the node (the round refuses the no-source bleed, and the
+no-source figure is shown to pass where the sourced one fails); V2's figures reproduce; of V2's three corrections the selected one, R256
+back at 4.7 kOhm, keeps the bleed at the hot bound inside the hold's least and U47's RESET within TI's recommended current in every state
+without a second fault, the battery FETs' orientation read in the netlist; the minors V2-m1 to m5 are carried. Round 13 (section 23, the
+owner's supplier-delta review's DELTA-02) adds: the body-diode method heats and reads nothing 'alone' on the common nets the draft and the
+regenerated netlist show, and the round refuses to select it; the selected method addresses one device by its own gate, on a specimen
+whose gates are apart and not on board A as drafted; its budget, powers and currents reproduce in closed form; the procedure TP-E11-29
+quotes this record word for word and stays NOT EXECUTABLE; section 20c is restated on the PTC's printed points. Round 14 (section 24, the
+independent recheck V2R) adds: round 13's fixture joins the pours in a reading and the redrawn one leaves the device under test alone in
+every state, with its margins on the printed rows; each junction is judged at its own row's worst split, which a scan confirms, with the
+baseline in the limit's line, and a search on a fresh seed finds no specimen accepted over 150 C while round 13's lines accept some; the
+minors are answered and the procedure keeps the recheck among its preconditions. Nothing here writes into the tree: drafts run on
+temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -1010,7 +1029,9 @@ def t_the_board_a_drafts_add_disjoint_designators():
             assert r.returncode == 0, "%s: %s" % (os.path.relpath(d, ROOT), r.stderr.decode()[-200:])
             added[os.path.relpath(d, ROOT)] = set(pat.findall(open(a, encoding="utf-8").read())) - before
     dd7 = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_dd7.py"), ROOT)]
-    assert {"Q44", "Q45", "Q46", "Q47", "Q48", "Q49", "R82", "R83", "R106", "R107", "R108", "R109", "R144", "D25"} <= dd7, sorted(dd7)
+    assert {"Q44", "Q45", "Q46", "Q47", "Q48", "Q49", "R82", "R83", "R106", "R107", "R108", "R109", "R144", "D25",
+            "U47", "U48", "Q50", "Q51", "Q52", "D26", "D27", "R84", "R85", "R233", "R249", "R250", "R251", "R252", "R253", "R254", "R255",
+            "R256", "C241", "C248"} <= dd7, sorted(dd7)
     mine = added[os.path.relpath(os.path.join(REC, "apply_gen_sch_a_charger.py"), ROOT)]
     assert {"R228", "U42", "C236", "C237", "C238", "C239", "D23", "Q39", "Q40", "Q42", "Q43", "U46", "R86", "R87", "R88", "R89", "R105", "C105", "D24"} <= mine
     assert "R221" not in mine and not ({"Q41", "U44", "U45", "RT1"} & mine), sorted(mine)
@@ -1162,7 +1183,13 @@ _m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m); sys.modul
 sys.argv = sys.argv[1:]
 runpy.run_path(sys.argv[0], run_name="__main__")
 '''
-# L4-E9's change list per board (records/l4e9/L4-POWER-ARCHITECTURE.md section 3), the drafts on main
+# L4-E9's change list per board (records/l4e9/L4-POWER-ARCHITECTURE.md section 3), the drafts on main.
+# Round 12 (the independent check V2's V2-m9): on the candidate's line (fnd/v2cand at dfa1eef2) the list's rows 24 to 33 name record
+# l8r2's packrtn (R-201), slotlm (R-199) and fb01 (R-200) where this order has l8r2's d8v3 and vbus20ov. Those three drafts are NOT in
+# this branch's tree (fnd/l8r3 at 89924e40), so board A is composed here in main's order, the one this tree can show. The list's order is
+# r12, guard, charger, r11, bank, r138, u17, gnd002, hotr1, packrtn, slotlm, fb01, then record l8p's ptc and this record's dd7
+# (_compose10), mainpb, lcsc; V2 composed it on the candidate (778 parts, DRAWN). In that order slotlm sets the references higher, so
+# the round 10 test's reading of mainpb's references (R257 and C249) is main's order's and moves with it (the integrator's change).
 _ORDER9 = {"a": [("l4e6", "r12"), ("l4e11", "guard"), ("l4e11", "charger"), ("l4e4", "r11"), ("l4e8", "bank"), ("l4e4", "r138"), ("l4e9", "u17"),
                  ("l8gnd", "gnd002"), ("l8gnd", "hotr1"), ("l8r2", "d8v3"), ("l8r2", "vbus20ov"), ("d8dec31", "mainpb"), ("l6r2", "lcsc")],
            "e": [("l4e9", "q1"), ("l4e7", "u5_grade"), ("l4e7", "hold"), ("l4e7", "input_limit"), ("l4e7", "backstop"), ("l4e9", "f1"),
@@ -1319,36 +1346,158 @@ def t_round9_the_record_carries_the_outputs_numbers():
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
-def t_round9_dd7_composes_after_l8ps_ptc_and_the_generator_runs_to_its_end():
-    """DD-7's draft: refused without record l8p's loop, applied once after it, refused a second time and on the tree; board A composed in
-    L4-E9's order with l8p's PTC and this draft before d8dec31's mainpb runs to its end; the reset pulls the loop's return, the inhibit
-    holds the battery FETs' gates, and mainpb still takes R248 and C247."""
+L8P3_PTC = ("v2/docs/records/l8p/apply_gen_sch_a_ptc.py", "d9c43966985172876ad1ea7339b417d31ecf10cd85824da1b983c3b1eb8b73d6")
+L8P3_GEN = ("v2/docs/records/l8p/gen_netlist.py", "f3339d09604757d370ff5526f1311dbf03bd1685b22c1019d6af506ac0dd5dca")
+DD7_CHECK = os.path.join(REC, "check_dd7_netlist.py")
+
+
+def _l8p3(pin):
+    """A file of record l8p's round 3 (fnd/l8p2 at a46597e2, merged into this branch), by sha256."""
+    path = os.path.join(ROOT, pin[0])
+    need(path, "record l8p's round 3 (%s)" % pin[0])
+    assert _sha(path) == pin[1], "%s is not the one this record composed with" % pin[0]
+    return path
+
+
+def _compose10(d):
+    """Board A in L4-E9's order with record l8p's PTC (round 3, the tree's) and this record's DD-7 draft before d8dec31's mainpb."""
+    ptc = _l8p3(L8P3_PTC)
+    dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
+    g = os.path.join(d, "gen_sch_a.py")
+    shutil.copy(GEN_A, g)
+    for rec, name in _ORDER9["a"]:
+        if (rec, name) == ("d8dec31", "mainpb"):
+            for s in (ptc, dd7):
+                r = _run([s, g, "--write"])
+                assert r.returncode == 0, "%s: %s" % (s, r.stderr.decode()[-300:])
+            assert _run([dd7, g, "--write"]).returncode == 3, "a second application was not refused"
+        s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
+        r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
+        assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+    return g
+
+
+def _netlist10(g, d, tag):
+    """The composed generator run to its end by record l8p's gen_netlist.py; the regenerated netlist's path."""
+    out = os.path.join(d, "a-%s.net" % tag)
+    r = _run([_l8p3(L8P3_GEN), g, out, "pcb-a-power"])
+    assert r.returncode == 0 and b"intent written" in r.stdout, "the composed generator refused: %s" % (r.stdout + r.stderr).decode()[-400:]
+    return out
+
+
+def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fail():
+    """Closure credit (a) and (b) for L8P-F04 and L8P-F05: DD-7's redrawn draft is refused without record l8p's loop and on the tree,
+    composes in L4-E9's order after l8p's PTC (round 3) and before d8dec31's mainpb, the generator runs to its end, and the regenerated
+    netlist reads DRAWN in check_dd7_netlist.py; eight circuit mutations (two for V1's minors and the check V2's V2-B1, one for the
+    battery FETs' orientation, round 12), each a defect the correction removes or the interface forbids, read FAIL; the committed netlist reads NOT DRAWN; mainpb takes the references after DD-7's highest."""
     _M()
     dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
     with tempfile.TemporaryDirectory() as d:
         bare = os.path.join(d, "bare.py")
         shutil.copy(GEN_A, bare)
         r = _run([dd7, bare, "--write"])
-        assert r.returncode == 3 and b"apply l8p's PTC draft first" in r.stderr, r.stderr.decode()[-200:]
+        assert r.returncode == 3 and b"apply l8p's PTC draft" in r.stderr, r.stderr.decode()[-200:]
         r = _run([dd7, GEN_A, "--write"])
         assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
-        ptc = _l8p_ptc(d)
-        g = os.path.join(d, "gen_sch_a.py")
-        shutil.copy(GEN_A, g)
-        for rec, name in _ORDER9["a"]:
-            if (rec, name) == ("d8dec31", "mainpb"):
-                for s in (ptc, dd7):
-                    assert _run([s, g, "--write"]).returncode == 0, s
-                assert _run([dd7, g, "--write"]).returncode == 3, "a second application was not refused"
-            s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
-            r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
-            assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
-        parts, it = _run_generator9(g, "pcb-a-power", d)
-    assert parts["Q44"]["nets"] == {"1": "DD7_G", "2": "GND", "3": "DOCK_EN_RET"} and parts["RT1"]["nets"]["2"] == "DOCK_EN_RET"
-    assert parts["Q45"]["nets"]["1"] == "FE_RUN" and parts["Q46"]["nets"]["1"] == "DD7_ALIVE" and parts["R107"]["nets"]["1"] == "CELL+"
-    assert parts["Q49"]["nets"] == {"1": "SYS_INH_P", "2": "VBAT", "3": "CH_BATDRV"} and parts["R109"]["nets"]["1"] == "DOCK_EN_OUT"
-    assert parts["Q47"]["nets"]["1"] == "SYS_INH_G" and parts["Q48"]["nets"]["3"] == "SYS_INH_G"
-    assert "R248" in parts and "C247" in parts and "R249" not in parts and "C248" not in parts, "d8dec31's next-free references moved"
+        g = _compose10(d)
+        net = _netlist10(g, d, "drawn")
+        r = _run([DD7_CHECK, net])
+        assert r.returncode == 0 and b"DD-7 on board A (L4-E11 round 10): DRAWN" in r.stdout, r.stdout.decode()[-600:]
+        raw = open(net, encoding="utf-8").read()
+        refs = set(re.findall(r'\(comp \(ref "([^"]+)"\)', raw))
+        dd7_r = [int(x[1:]) for x in refs if re.match(r"R\d+$", x) and x in ("R252", "R256", "R233", "R254", "R85", "R84", "R253", "R251", "R250", "R249", "R255")]
+        assert "R%d" % (max(dd7_r) + 1) in refs and "C249" in refs, "d8dec31's mainpb did not take the next free references after DD-7's"
+        text = open(g, encoding="utf-8").read()
+        mutations = [
+            ("U48's SENSE1 on DOCK_EN_OUT (the trigger reads the wrong conductor)", '"2": "DOCK_EN_RET", "3": "DD7_OS"', '"2": "DOCK_EN_OUT", "3": "DD7_OS"'),
+            ("Q47's gate on DD7_T (the inhibit no longer gated by the powered loop)",
+             'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_LP"', 'reaches the charge inhibit (1 G, 2 S, 3 D)", "SOT23", {"1": "DD7_T"'),
+            ("R108's foot on ground (a dead CELL+ sets the inhibit again: L8P-F05)", 'r("R108", "100k 1%", "DD7_CS", "DD7_REF"', 'r("R108", "100k 1%", "DD7_CS", "GND"'),
+            ("R256 removed (the latch reads the LM5069's leak again)", 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'pass'),
+            ("a 100 kOhm load on DOCK_EN_RET (the interface's 1 MOhm)", 'tp("TP1", "DD7_H")', 'r("R260", "100k", "DOCK_EN_RET", "GND", lcsc="C25803"); tp("TP1", "DD7_H")'),
+            # rounds 11 and 12 (V1's minors of round 10, the check V2's V2-B1): the values the check reads
+            ("R256 at round 11's 6.8k (the bleed of CELL+ inside the hold only for sources under 87 uA: V2-B1)",
+             'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")', 'r("R256", "6.8k 1%", "CELL+", "DD7_BL", fp="RS")'),
+            ("R84 without its pulse rating (the 71 us arm pulse on a part with no printed pulse curve)", 'r("R84", "56R 1% pulse-rated", "DD7_K"',
+             'r("R84", "56R 1%", "DD7_K"'),
+            # round 12: the states in which U47's RESET sinks rest on the battery FETs' body diodes pointing from CELL+ to VBAT
+            ("a battery FET drawn reversed (its body diode from VBAT to CELL+: VBAT could lift CELL+ with the inhibit set)",
+             '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56"', '"CH_BATDRV", "VBAT", "CH_BATQ", fp="LFPAK56"'),
+        ]
+        for k, (why, old, rep) in enumerate(mutations):
+            assert text.count(old) == 1, why
+            gm = os.path.join(d, "gen_sch_a_m%d.py" % k)
+            open(gm, "w", encoding="utf-8").write(text.replace(old, rep))
+            r = _run([DD7_CHECK, _netlist10(gm, d, "m%d" % k)])
+            assert r.returncode == 4 and b"FAIL" in r.stdout, "%s: the check did not fail: %s" % (why, r.stdout.decode()[-400:])
+    r = _run([DD7_CHECK, _NET9["a"]])
+    assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, "the committed netlist does not read NOT DRAWN"
+
+
+def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_dead():
+    """Closure credit (c) on C-PROT: the failure reproduced on round 9's draft, then the redrawn circuit against the same cases, from the
+    makers' printed figures: the held return at 7.6 and 10.6 V sets the inhibit within the interface's 1 ms, the hold outlasts 1.0 s and
+    the restart, CELL+ with the breaker off at 16.8 V and 29.2 V stays dead under the latch, the service never triggers, the parts stay
+    within their limits."""
+    R = _R()
+    m = _M()
+    S, S9 = R["S20"], R["S19"]
+    # the failure, as record l8p found it (round 9's readings) and as this record recomputes it
+    assert S["f04"][0] < S["f04"][2] and S["f04"][1] < S["f04"][2], "L8P-F04 is not reproduced"
+    assert S["f05"]["v"] > S["f05"]["dead"] and S["f05"]["v_clamp"] > S["f05"]["dead"], "L8P-F05 is not reproduced"
+    held = dict(S["out_held"])
+    assert held[7.6] / 2 < S9["vth"][2] and held[10.6] / 2 < S9["vth"][2], "round 9's sense would read the held loop"
+    # the correction on the same cases
+    assert held[7.6] > S["out_rel"][1] + 0.5 and held[10.6] > S["out_rel"][1] + 1.5, "the held loop is not read powered"
+    assert S["out_rel"][1] <= S["if_out"] and S["out_ast"][0] > 0.5, "the powered reading leaves the interface's 2.0 V"
+    assert S["held"] < S["ret_low"] - 0.7 and S["ret_low"] < S["if_ret_lo"] and S["ret_high"] < S["if_ret_hi"]
+    assert S["t_set"] < 1e-3 and S["t_set_min"] > 4.5 * S["tau_arm"], "the set is late or the arm may not complete before it"
+    assert S["hold_min"] > S["if_hold"] + 0.3 and S["hold_min"] > S["restart"] + 0.35 and S["leak_x"] > 2.5
+    assert S["rest_margin"] > 0.3, "the hold may never end"
+    for (vin, vc), (_v, rmin) in zip(S["latch_cell"], S["rint_min"]):
+        assert vc < S["dead"] - 3.5 and rmin < 0.05 * S["r_int"], "the latch leans on the LM5069's resistor at %s V" % vin
+    assert S["dead"] < S["alive"] < 9.0, "the release on CELL+ alive is not where the breaker drives it"
+    S22 = R["S22"]
+    assert S22["sel"]["t_hot"] < S["hold_min"], "the bleed with the sources at their hot bound outlasts the hold's least (V2-B1)"
+    assert S["charge_end"] < 10e-3, "the charge through the off breaker outlasts E-14's 10 ms"
+    # the service: no trigger at the bound point, none on a back-fed ramp while RT1 is in its printed 25 C band, none before the guard
+    assert S["bound"][1] > 2.5 + 0.35 and S["bound_margin"] > 2.0, "the loads move l9stk's bound point or the service reads held"
+    assert S["window_rt1"] > 1.5 * S9["rt1"][1] and S["ldo_ret"] > S["ret_high"] + 1.0
+    assert all(g > i_[2] for (_v, g), i_ in zip(S["guard_rt1"], S["inv_rt1"])), "board A reads held before board P's guard"
+    # the interface's literal box contains a closed loop: the reason board A's reading is narrower
+    assert abs(S["box_rt1"] - S9["r_ret"]) < 1.0 and all(v < 4.0 for _rt, v in S["box_vin"])
+    # the parts within their limits
+    assert S["vgs_p"][1] < S["p_vgs"] and S9["vbat_clamp"] < S["p_vds"] and S["arm_peak"] < S["ifsm"][1] and S["arm_i2t"] < S["ifsm"][1] ** 2 * 1e-3
+    assert S["n_sink"][0] < S["i_rec"] and S22["sel"]["need2"] and S["n_sink"][1] < S22["i_abs"], "U47's RESET over TI's recommended current in a state without a second fault, or over its absolute maximum"
+    assert S["bleed_w"][1] < S["r1206_hot"], "R256 over its rating"
+    assert S["static_frac"] < 0.01
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("## 20. Round 10")[1]
+    out = open(OUT, encoding="utf-8").read()
+    for s in ("0.7755", "1.981", "0.85 ms", "1.341", "0.846", "19.9", "34.5", "4.076", "4.774", "2.894", "25.8", "1.41 ms", "11.145", "0.807",
+              "2.545", "3.535", "157.7", "61.3", "269", "4.08"):
+        assert s in sec and s in out, "%s is not in both section 20 and the output" % s
+    for f_ in ("L4E11-R10-F1", "L4E11-R10-F2", "L4E11-R10-F3", "C-PROT", "NOT\nSETTLED"):
+        assert re.search(f_.replace(" ", r"\s+"), sec), f_
+    row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
+    assert "(c2)" in row and "route R1" in row and "(e) L8P-F04" in row and "(f) L8P-F05" in row and "(h) the hold timed" in row
+
+
+def t_round10_t2_one_fet_of_three_may_take_nine_eighths():
+    """T2, recorded: with one FET at r and two at R the one dissipates I^2 R^2 r / (R + 2 r)^2, largest at r = R / 2, 9/8 of the even
+    split; with two FETs the even split is the largest; read in closed form and by a scan."""
+    R = _R()
+    S = R["S20"]
+    p3 = lambda r, rr=1.0: rr * rr * r / (rr + 2 * r) ** 2
+    p2 = lambda r, rr=1.0: rr * rr * r / (rr + r) ** 2
+    scan3 = max(p3(k / 1000.0) for k in range(1, 5000))
+    scan2 = max(p2(k / 1000.0) for k in range(1, 5000))
+    assert abs(scan3 / p3(1.0) - 9.0 / 8.0) < 1e-4 and abs(p3(0.5) / p3(1.0) - 9.0 / 8.0) < 1e-12
+    assert abs(scan2 - p2(1.0)) < 1e-6, "with two FETs the even split is not the worst case"
+    assert abs(S["t2"] - 9.0 / 8.0) < 1e-12 and S["t2_tj"] > 150.0
+    row = [x for x in _M().downstream(R) if x[0] == "E11-29"][0][3]
+    # round 11 (section 21d) restated the row: round 10's OPEN is kept as its history, the 9/8 as its reason
+    assert "recorded OPEN in round 10 (section 20i)" in row and "9/8" in row
 
 
 def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_latch():
@@ -1382,3 +1531,618 @@ def t_round9_dd7_the_pulse_resets_the_latch_and_the_inhibit_holds_every_later_la
     assert "**No firmware.**" in sec and "**the signal**" in sec and "**the threshold**" in sec and "**where it acts**" in sec
     for s in ("78.6", "1.149", "0.948", "3.829", "7.735", "4.07", "9.86", "3.83 mA", "2.939", "142.2", "89.7", "5.05", "1.98", "154.6", "C-1c"):
         assert s in sec and s in open(OUT, encoding="utf-8").read(), s
+
+
+# ---- round 11 (section 21, task T2): E-1 on C-PROT rev 1 with the worst sharing, and E11-37
+
+def _hottest(rs, zs, zm):
+    """The hottest of three paralleled FETs' junction rise per unit I^2 for RDS(on) values rs, self impedance zs and mutual zm (a
+    number for equal coupling, or a 3x3 table of the mutual impedances): each FET takes the current share of its conductance."""
+    g = [1.0 / r for r in rs]
+    gs = sum(g)
+    pw = [gi / gs ** 2 for gi in g]                     # I^2 g_k / G^2 = I_k^2 r_k
+    zmt = zm if isinstance(zm, (list, tuple)) else [[zm] * 3 for _ in range(3)]
+    return max(pw[k] * zs + sum(pw[j] * zmt[k][j] for j in range(3) if j != k) for k in range(3))
+
+
+_M_GRID = (0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.4)
+
+
+def _e1_worst_tj(R, bar, ra=None):
+    """E-1 on C-PROT rev 1, recomputed apart from the script: the hottest junction held at the breaker's 23.93 A from L4-E12's 76.25 C
+    with the band and R17 in place, each FET's installed (Zself + 2 Zmut) at bar, over every split of the three RDS(on) values under the
+    allowance (a 24-step grid on each, plus the closed form's worst point) and the coupling ratios of _M_GRID. ra is the RDS(on) the FETs
+    actually reach (the allowance at the charger's printed least drive unless a mutation passes another)."""
+    m = _M()
+    S9 = R["S19"]
+    ra = m.F16_RA if ra is None else ra
+    i_ = S9["i"]
+    base = S9["t0"] + S9["band"] + S9["r17_allow"] * S9["pr17"]
+    worst = (None, -1.0)
+    for mm in _M_GRID:
+        zs = bar / (1.0 + 2.0 * mm)
+        zm = mm * zs
+        ks = sorted(set([k / 24.0 for k in range(1, 25)] + [1.0 / max(1.0, 2.0 - 4.0 * mm)]))
+        for a in ks:
+            for b in ks:
+                for c in ks:
+                    tj = base + i_ ** 2 * ra * _hottest((a, b, c), zs, zm) * 1.0
+                    if tj > worst[1]:
+                        worst = ((mm, a, b, c), tj)
+    return worst
+
+
+def t_round11_e1_holds_on_c_prot_over_every_split_and_its_mutations_fail():
+    """T2's correction against the same failure case (C-PROT rev 1, record l9stk's E-1): with the installed bar 40.78 K/W the hottest
+    junction stays at most 150 C held at 23.93 A from 76.25 C for every split of the three RDS(on) values under the allowance, at the
+    charger's printed least gate drive (SLUSE65A's VBATDRV_ON minimum); the even split's 45.88 K/W, a bar 1 % looser, the script's split
+    replaced by the even one, and the allowance read at a 10 V drive each FAIL; unequal coupling is bounded by the largest impedance."""
+    R = _R()
+    m = _M()
+    S, S9, H = R["S21"], R["S19"], R["H"]
+    # the drive: the allowance is section 15c's figure at TI's printed least VBATDRV_ON, not at the typical 10 V
+    assert S["vg"] == H["drv"][0] == 8.5 and abs(S["ra"] - m.F16_RA) < 1e-15
+    assert S["ra_10v"] < S["ra"] / 1.3, "the 10 V figure is not the looser one"
+    # the closed form against a scan, and the failure on round 10's bar (the defect reproduced)
+    for mm in _M_GRID:
+        f_, x_ = m.worst_share(mm)
+        scan = max(m.split_share(1.0 + k / 400.0, mm) for k in range(0, 1201))
+        assert abs(scan - max(f_, 1.0)) < 2e-5 and (mm >= 0.25 or abs(x_ - (2.0 - 4.0 * mm)) < 1e-12), mm
+    (pt, tj_old) = _e1_worst_tj(R, S["bar_old"])
+    assert tj_old > 157.0 and abs(tj_old - S["tj_old_worst"]) < 0.05, "the even split's bar does not fail at its case (%.2f C)" % tj_old
+    # the correction on the same case
+    (pt, tj_new) = _e1_worst_tj(R, S["bar_new"])
+    assert tj_new <= 150.0 + 1e-9, "E-1 fails at 40.78 K/W: %.3f C at %s" % (tj_new, pt)
+    assert tj_new > 149.9, "the bar is looser than the case needs (not the worst split's)"
+    assert abs(S["bar_new"] - S["bar_old"] / 1.125) < 1e-12 and "%.2f" % S["bar_new"] == "40.78"
+    # mutations: each FAILS the same acceptance
+    assert _e1_worst_tj(R, S["bar_new"] * 1.01)[1] > 150.0, "a bar 1 % looser still passes: the acceptance does not bind"
+    assert _e1_worst_tj(R, S["bar_new"] * S["ra"] / S["ra_10v"])[1] > 150.0, "the bar sized at a 10 V drive passes at the least drive"
+    keep = m.worst_share
+    try:
+        m.worst_share = lambda mm: (1.0, 1.0)                     # the split read as even (round 10's defect)
+        Sm = m.fix21_round(R, None)
+    finally:
+        m.worst_share = keep
+    assert abs(Sm["bar_new"] - S["bar_old"]) < 1e-12 and _e1_worst_tj(R, Sm["bar_new"])[1] > 150.0, "the even split's mutation passes"
+    # unequal coupling (the middle FET has two neighbours): the hottest rise over every split stays under the bound taken with the
+    # largest mutual impedance, as the record's block E11-29 states
+    zs = 1.0
+    for z12, z13, z23 in ((0.2, 0.05, 0.2), (0.1, 0.0, 0.1), (0.24, 0.12, 0.24), (0.3, 0.1, 0.3)):
+        zt = [[0, z12, z13], [z12, 0, z23], [z13, z23, 0]]
+        zmax = max(z12, z13, z23)
+        ks = [k / 24.0 for k in range(1, 25)]
+        asym = max(_hottest((a, b, c), zs, zt) for a in ks for b in ks for c in ks)
+        sym = max(m.worst_share(zmax / zs)[0], 1.0) * (zs + 2 * zmax) / 9.0
+        assert asym <= sym + 1e-12, (z12, z13, z23)
+    # the record and the drafts carry it
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert ("%.2f K/W" % S["bar_new"]) in row and "ANY split" in row and "the largest of each" in row and "CONDITIONAL" in row
+    with tempfile.TemporaryDirectory() as d:
+        a = os.path.join(d, "gen_sch_a.py")
+        shutil.copy(GEN_A, a)
+        _apply("apply_gen_sch_a_charger.py", a)
+        txt = open(a, encoding="utf-8").read()
+    assert "(Zself + 2 Zmut) at most\n# 40.78 K/W" in txt and "for ANY split of the RDS(on) spread" in txt
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    b29 = page.split("#### Block E11-29")[1].split("#### Block E11-30")[0]
+    assert "**40.78 K/W**" in b29 and "for any split of the RDS(on) spread" in b29.replace("\n  ", " ")
+    s20i = out.split("   20i. ")[1].split("   20j. ")[0]
+    assert "Zself / 4" in s20i and "Zself / 4" in page.split("### 20i. ")[1].split("### 20j. ")[0]
+    sec = page.split("## 21. Round 11")[1]
+    o21 = out.split("21. ROUND 11")[1]
+    for v in ("157.7", "40.78", "1.125", "1.5129", "32.85", "20.39", "4.72", "5.74", "1.0045", "0.9643", "15 mOhm", "8.5 V", "1.0651",
+              "42.62", "44.04", "45.06", "45.68", "4.47 mA", "6.39 mA", "0.597", "1.228", "0.112", "87.4 uA", "WITHDRAWN", "14.6 W", "11.1 %"):
+        assert v in sec and v in o21, "%s is not in both section 21 and out 21" % v
+    assert "C-PROT rev 1" in sec and "C-PROT rev 1" in o21
+
+
+def t_round11_e11_37_stays_open_with_q_ti_17_e_and_f_and_the_fallback_rests_on_a_typical_figure():
+    """E11-37 is not closed by this round: three FETs stay over TI's 5 nF on typical figures; the fallback pair is under it only at the
+    sheet's -15 V and on a typical figure, so it is CONDITIONAL and Q-TI-17 (e) names it; (iii) has no printed basis (SLUSE65A names
+    no buffer on BATDRV) and Q-TI-17 (f) asks; the questions are drafted, not sent."""
+    R = _R()
+    m = _M()
+    S, S9, H, L = R["S21"], R["S19"], R["H"], R["L"]
+    assert S9["ciss_ratio"][0] > 1.0, "the three are not over TI's 5 nF"
+    under = [lab for lab, _c, _c2, ok in S["two"] if ok]
+    assert under == ["BUK6Y10-30P (Nexperia)"], under
+    assert S["pair_ciss"][0] < H["bf_ciss"] < S["pair_ciss"][1], "the pair's near-0 V typical is not shown over 5 nF"
+    assert abs(S["pair_ciss"][0] - 2 * L["ciss_t"]) < 1e-15 and S["buffer_mentions"] == 0
+    assert abs(S["pair_vs_three"] - S["pair_bar"] / S["bar_new"]) < 1e-12 and S["pair_vs_three"] < 0.55
+    o21 = open(OUT, encoding="utf-8").read().split("21. ROUND 11")[1]
+    assert "E11-37 STAYS OPEN" in o21 and "E11-37 OPEN" in o21 and "on a TYPICAL figure" in o21 and "NOT SENT" in o21
+    row = [x for x in m.downstream(R) if x[0] == "E11-37"][0][3]
+    assert "Q-TI-17 (e) and (f)" in row and "round 11's (ii)" in row and "a result with the pair does not transfer" in row
+    ti = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    r11 = ti.split("## Round 11")[1]
+    assert "**Q-TI-17 (e)" in r11 and "**Q-TI-17 (f)" in r11 and "Drafted, not sent." in r11
+    for v in ("4.72 nF", "5.74 nF", "2.36 nF", "2.87 nF", "192 nC"):
+        assert v in r11, v
+
+
+# ---- round 12 (section 22): the independent check V2's V2-B1 (the bleed of CELL+ with the sources into it) and its minors
+
+def _bleed12(r, c, v0, vdead, vinf):
+    """The test's own bleed: CELL+ from v0 under vdead through r into c, falling towards vinf; None when it never gets there."""
+    return None if vinf >= vdead else r * c * math.log((v0 - vinf) / (vdead - vinf))
+
+
+def t_round12_v2b1_the_bleed_counts_the_sources_and_the_selected_correction_meets_both_needs():
+    """V2-B1 on C-PROT rev 1: round 11 gave the bleed with no source beside a static limit. Here the sources at their hot bound come from
+    the makers' printed rows (Nexperia's 125 C row, TI's one 25 C row with record l8p's ASSUMED doubling, the LM5069's 1 MOhm); the bleed
+    is recomputed apart from the script; round 11's 6.8 kOhm fails it where the no-source figure passed; the round refuses a no-source
+    bleed; the selected 4.7 kOhm holds it and keeps U47's RESET within TI's recommended current in every state without a second fault."""
+    R = _R()
+    m = _M()
+    S, S20, S9 = R["S22"], R["S20"], R["S19"]
+    assert abs(S["bat"][0] - 3e-6) < 1e-12 and abs(S["bat"][1] - 30e-6) < 1e-12 and abs(S["brk25"] - 2e-6) < 1e-12, "the printed IDSS rows"
+    hot = 16.8 / 1e6 + 30e-6 + 2e-6 * 2 ** ((101.0 - 25.0) / 10.0)
+    assert abs(S["src"]["hot"] - hot) < 1e-10 and abs(hot - 434.8e-6) < 0.05e-6
+    hold, vs, c = S20["hold_min"], S20["vs_max"], S20["c_cell"] * 1.2
+    sel, a, cc = S["sel"], S["opts"]["a"], S["opts"]["c"]
+    assert sel["key"] == m.R12_SELECT == "b" and sel["v"]["rbl"] == m.R10_RBL == 4.7e3 and a["v"]["rbl"] == 6.8e3
+    # the selected correction, on the same failure case
+    r = sel["v"]["rbl"] * 1.01
+    t = _bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + hot * r)
+    assert abs(t - sel["t_hot"]) < 1e-9 and t < hold - 0.1, "the bleed at the hot bound is not 0.1 s inside the hold's least: %.3f s" % t
+    assert abs(_bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + sel["lim"] * r) - hold) < 1e-6, "the coupled limit is not where the bleed takes the hold"
+    assert _bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + 1.05 * sel["lim"] * r) > hold, "sources over the coupled limit still pass"
+    assert _bleed12(r, c * 1.15, vs, sel["v"]["dead"], sel["v"]["v_ref"] + hot * r) > hold, "a capacitance 15 % over the assumed most still passes"
+    assert hot < sel["lim"] < sel["v"]["isrc_max"], "the coupled limit is not between the hot bound and the static limit"
+    # round 11's 6.8 kOhm: the failure, and the no-source bleed that hid it
+    ra = a["v"]["rbl"] * 1.01
+    ta = _bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + hot * ra)
+    assert abs(ta - a["t_hot"]) < 1e-9 and ta > hold and not a["need1"], "6.8 kOhm does not fail at the hot bound"
+    assert a["t_air"] > hold and a["lim"] < S["src"]["air"] < S["src"]["hot"], "6.8 kOhm does not fail at the air's sources"
+    t0 = _bleed12(ra, c, vs, a["v"]["dead"], 0.0)
+    assert abs(t0 - a["v"]["bleed_zero"]) < 1e-9 and t0 < hold, "the no-source figure is not the one that passed at 6.8 kOhm"
+    keep = m.bleed_time
+    try:
+        m.bleed_time = lambda r_, c_, v0_, vd_, vinf_: r_ * c_ * math.log(v0_ / vd_)        # the no-source bleed of rounds 10 and 11
+        try:
+            m.fix22_round(R, None)
+            raise AssertionError("the round accepts a bleed that does not count the sources")
+        except SystemExit as e:
+            assert e.code == 4
+    finally:
+        m.bleed_time = keep
+    # V2's figures, reproduced by the script and here for three of them
+    for lab, mine, theirs, _unit in S["rep"]:
+        assert abs(mine - theirs) <= 0.012 * theirs, lab
+    assert abs(_bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + 19.8e-6 * ra) - 1.257) < 0.002
+    assert abs(_bleed12(ra, c, vs, a["v"]["dead"], a["v"]["v_ref"] + 404.8e-6 * ra) - 2.06) < 0.01
+    assert abs(_bleed12(r, c, vs, sel["v"]["dead"], sel["v"]["v_ref"] + 404.8e-6 * r) - 1.18) < 0.005
+    # need 2: the sink by state, recomputed (R256 at -1 %; R82 with R83 300 kOhm from VBAT, R254 and R255 1 MOhm from 12.7 V, R107 with R108)
+    sink = lambda vc, vb, rr: vc / (rr * 0.99) + vb / 300e3 + 2 * 12.7 / 1e6 + vc / 564e3
+    vst = S["v_states"]
+    for k_, vc, vb in (("set", vs, vs), ("run", S9["vpk"], vs), ("ovp", vst["sysovp"], vst["sysovp"]), ("clamp", S9["vbat_clamp"], S9["vbat_clamp"])):
+        assert abs(sink(vc, vb, 4.7e3) - sel["sink"][k_]) < 1e-9 and abs(sink(vc, vb, 6.8e3) - a["sink"][k_]) < 1e-9, k_
+    assert max(sel["sink"]["set"], sel["sink"]["run"], sel["sink"]["ovp"]) < S20["i_rec"] - 0.5e-3 and sel["need2"] and not sel["need2_all"]
+    assert S20["i_rec"] < sel["sink"]["clamp"] < S["i_abs"] and S["i_abs"] == 10e-3 and S20["i_rec"] == 5e-3
+    assert sel["v_5ma"] > vst["sysovp"] + 2.5 and sel["v_5ma"] > vst["pack_diode"] + 4.0 and sel["t_over"] < 0.2
+    assert a["need2_all"] and a["sink"]["clamp"] < S20["i_rec"], "6.8 kOhm's side of the trade is not shown"
+    # (c): it holds need 1 too, by moving the hold's readers; R85 alone does not
+    assert cc["need1"] and cc["v"]["hold_max"] > 2 * S20["hold_max"] and cc["v"]["arm_frac"] < 0.95 and not S["opts"]["c2"]["need1"]
+    # the selection: the widest allowance for the unprinted leakage, and no correction holds without it
+    assert sel["pair_allow"] > cc["pair_allow"] > S["brk"][1] > a["pair_allow"]
+    assert 101.0 < sel["pair_t"] < 106.0, "the margin on the assumed doubling is misstated"
+    # the record carries it: the output, the page, the row, the draft
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o22, p22 = out.split("22. ROUND 12")[1], page.split("## 22. Round 12")[1]
+    for v_ in ("434.8", "520.7", "87.4", "1.218", "2.189", "0.123", "473.9", "103.9", "3.85 mA", "3.72 mA", "4.32 mA", "6.45 mA", "22.51",
+               "0.846", "0.597", "12.8 s", "451.2", "C-PROT rev 1", "E-14c", "9.63", "2.312", "1.248", "1.381", "0.934", "0.396", "0.155"):
+        assert v_ in o22 and v_ in p22, "%s is not in both section 22 and out 22" % v_
+    assert "SELECTED: (b)" in o22 and "OPEN" in o22.split("22g. ")[1].split("22h. ")[0] and "ASSUMED" in o22
+    o20e = out.split("   20e. ")[1].split("   20f. ")[0]
+    assert "with the sources at their hot bound" in o20e and "under the hold's least" not in o20e
+    row = [x for x in m.downstream(R) if x[0] == "E11-45"][0][3]
+    assert "(f2, round 12" in row and "at most 521 uA" in row and "0.1 s longer than (f2)'s bleed" in row
+    dd7 = open(os.path.join(REC, "apply_gen_sch_a_dd7.py"), encoding="utf-8").read()
+    assert 'r("R256", "4.7k 1%", "CELL+", "DD7_BL", fp="RS")' in dd7 and '"6.8k 1%"' not in dd7
+
+
+def t_round12_the_minors_v2_m1_to_m5_are_carried():
+    """V2-m1: Vishay's printed Ciss maxima are the figures judged; V2-m2: Nexperia's hot IDSS row is quoted where the record said 'not
+    printed'; V2-m3: the dd7 draft's comment carries the script's sink figures; V2-m4: V1's two unowned minors are named with an owner and
+    a next action, the hysteresis reading's figures reproduced; V2-m5: E11-29's coupon reads the PTC's site with one FET heated alone."""
+    R = _R()
+    m = _M()
+    S, S21, S20 = R["S22"], R["S21"], R["S20"]
+    two = {lab: (c_, ok) for lab, c_, _c2, ok in S21["two"]}
+    assert abs(two["SQJ403EP (Vishay)"][0] - 4500e-12) < 1e-15 and abs(two["SQJ407EP (Vishay)"][0] - 10700e-12) < 1e-15, "Vishay's maxima are not the figures judged"
+    assert S21["two_note"]["SQJ403EP (Vishay)"] == (3400e-12, "maximum") and S21["two_note"]["SQJ407EP (Vishay)"] == (8200e-12, "maximum")
+    assert [lab for lab, (_c, ok) in two.items() if ok] == ["BUK6Y10-30P (Nexperia)"], "the verdict moved"
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o21 = out.split("21. ROUND 11")[1].split("22. ROUND 12")[0]
+    assert "4.5 nF maximum (3.4 nF typical), two 9 nF" in o21 and "10.7 nF maximum (8.2 nF typical), two 21.4 nF" in o21
+    p21 = page.split("## 21. Round 11")[1].split("## 22. Round 12")[0]
+    assert "4.5 nF maximum" in p21 and "10.7 nF maximum" in p21 and "except SQJ403EP's and SQJ407EP's printed maxima" not in p21
+    for text_ in (out.split("   20e. ")[1].split("   20f. ")[0], page.split("### 20e. ")[1].split("### 20f. ")[0]):
+        assert "10 uA at Tj 125 C" in " ".join(text_.split()) and "hot off leakage (not printed)" not in text_, "Nexperia's hot row is not quoted in 20e"
+    dd7 = open(os.path.join(REC, "apply_gen_sch_a_dd7.py"), encoding="utf-8").read()
+    sel = S["sel"]
+    for k_, lab in (("set", "%s mA at the set"), ("ovp", "%s mA with CELL+ at SYSOVP"), ("clamp", "%s mA only with CELL+ at VBAT")):
+        assert (lab % m.fmt(sel["sink"][k_] * 1e3, 2)) in dd7, "the dd7 draft's comment does not carry %s" % k_
+    assert "4.4 mA at the clamp" not in dd7
+    h = S["hys_alt"]
+    assert abs(h["ret_low"] - 0.7643) < 0.0006 and abs(h["out_hi"] - 2.008) < 0.001 and abs(h["window"] - 25.1e3) < 60.0
+    o22h = out.split("   22h. ")[1].split("   22i. ")[0]
+    assert o22h.count("OWNER") == 2 and o22h.count("NEXT") == 2 and "Q-TI-19" in o22h and "CONOPS" in o22h
+    p22h = page.split("### 22h. ")[1].split("### 22i. ")[0]
+    assert "**Owner:**" in p22h and p22h.count("**Next action:**") == 2 and "Q-TI-19" in p22h and "CONOPS" in p22h
+    ti = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    assert "**Q-TI-19" in ti.split("## Round 12")[1] and "Drafted, not sent." in ti.split("## Round 12")[1]
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert "the PTC's site" in row and "one FET heated alone" in row and "V2-m5" in row
+    b29 = page.split("#### Block E11-29")[1].split("#### Block E11-30")[0]
+    assert "the PTC's site" in " ".join(b29.split()) and "1.513 W" in b29
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2's findings answered" in readme and "V2-B1" in readme and "V2-m9" in readme
+    # V2-m9: L4-E9's change-list order as the candidate lists it. Where record l8r2's packrtn, slotlm and fb01 are in the tree (the
+    # candidate's line) the list's order composes, the generator runs to its end, the netlist reads DRAWN and three mutations FAIL;
+    # where they are not (this branch's own tree) the script says so and the tests above compose main's order
+    lo = os.path.join(REC, "compose_in_list_order.py")
+    have = all(os.path.isfile(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "apply_gen_sch_a_%s.py" % n_)) for n_ in ("packrtn", "slotlm", "fb01"))
+    with tempfile.TemporaryDirectory() as d:
+        r = _run([lo, ROOT, d])
+    if have:
+        assert r.returncode == 0 and b"intent written; DD-7 on board A (L4-E11 round 10): DRAWN" in r.stdout and r.stdout.count(b": FAIL") == 3, \
+            "board A does not compose in L4-E9's list order: %s" % r.stdout.decode()[-400:]
+    else:
+        assert r.returncode == 1 and b"l8r2/packrtn is not in this tree" in r.stdout, r.stdout.decode()[-300:]
+        assert "NOT in this branch's tree" in open(OUT, encoding="utf-8").read().split("   22h. ")[1]
+
+
+# ---- round 13 (section 23): the owner's supplier-delta review, DELTA-02: E11-29's method on three body diodes in parallel
+
+TP29 = os.path.join(ROOT, "v2", "docs", "test-procedures", "TP-E11-29.md")
+
+
+def t_round13_delta02_the_body_diode_method_is_refused_and_the_selected_method_addresses_one_device():
+    """DELTA-02: Q39, Q40 and Q42 have common gate, drain and source nets in the draft (read by ast) and in the regenerated netlist (read
+    by the S-expression reader), so a body-diode step addresses no single device; the rule says so for the old method on the drafted nets
+    and with the gates apart; the selected method (B) addresses one device where the gates are apart and not on board A as drafted; the
+    round refuses to select the old method or (C); E11-29's row is the selected method's text and no longer states the body-diode one."""
+    R = _R()
+    m = _M()
+    S = R["S23"]
+    f_ = S["fets"]
+    assert f_["refs"] == ["Q39", "Q40", "Q42"] and (f_["G"], f_["D"], f_["S"]) == ("CH_BATDRV", "CH_BATQ", "VBAT") and "P-FET" in f_["value"]
+    assert f_["sha"] == _sha(os.path.join(REC, "apply_gen_sch_a_charger.py")), "the topology is not read from the draft's present bytes"
+    # the same topology in the regenerated netlist of board A, composed as round 10's test composes it
+    spec = importlib.util.spec_from_file_location("check_dd7_netlist_under_test", DD7_CHECK)
+    chk = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(chk)
+    with tempfile.TemporaryDirectory() as d:
+        g = _compose10(d)
+        _comps, pins, _on = chk.read_netlist(open(_netlist10(g, d, "r13"), "rb").read())
+    term = {"S": ("1", "2", "3"), "G": ("4",), "D": ("5",)}
+    nets = {t: {tuple(pins[q][x] for x in px) for q in ("Q39", "Q40", "Q42")} for t, px in term.items()}
+    private = tuple(t for t in ("S", "G", "D") if len(nets[t]) == 3)
+    assert private == () == S["board_private"], "a battery FET has a terminal on a net of its own: %s" % nets
+    assert nets["S"] == {("VBAT",) * 3} and nets["G"] == {("CH_BATDRV",)} and nets["D"] == {("CH_BATQ",)}
+    # the rule on the old method: not per-device on the drafted nets, nor with the gates apart (a diode has no selecting terminal)
+    old, a_, b_, c_ = (m.R13_METHODS[k] for k in ("old", "A", "B", "C"))
+    for step in ("heat", "sense"):
+        assert not m.per_device(old[step], private)[0] and not m.per_device(old[step], ("G",))[0], "the body-diode %s step reads as per-device" % step
+        assert not m.per_device(c_[step], c_["private"])[0] and c_["private"] == ()
+        assert m.per_device(a_[step], a_["private"])[0] and "S" in a_["private"]
+        assert m.per_device(b_[step], b_["private"])[0] and b_["private"] == ("G",), "method (B) does not address one device with the gates apart"
+        assert not m.per_device(b_[step], private)[0], "method (B) reads as per-device on board A as drafted (its gates share one net)"
+        # mutations of the selected method's statement: current entering at the drain (the unselected body diodes conduct), no selecting gate
+        assert not m.per_device(dict(b_[step], direction="drain to source"), ("G",))[0]
+        assert not m.per_device(dict(b_[step], select=None), ("G",))[0]
+        assert not m.per_device(dict(b_[step], path="body diode"), ("G",))[0]
+    assert m.R13_SELECT == "B" and S["judge"]["B"]["heat"][0] and S["judge"]["B"]["sense"][0] and not S["judge"]["B"]["heat_board"][0]
+    # the round refuses a selected method that heats or senses 'alone' on common nets
+    keep = m.R13_SELECT
+    for bad in ("old", "C"):
+        try:
+            m.R13_SELECT = bad
+            try:
+                m.fix23_round(R, None)
+                raise AssertionError("the round accepts %r as the selected method" % bad)
+            except SystemExit as e:
+                assert e.code == 4
+        finally:
+            m.R13_SELECT = keep
+    # the maker's sheet: the pinning, the diode rows, the threshold row
+    assert S["pin_p"] == 2 and S["vsd"] == (80.0, 0.7, 1.2) and S["is"] == 80.0 and S["vth"] == (250e-6, 1.5, 2.0, 3.0) and S["id100"] == 57.0
+    # E11-29's row and block
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert m.e11_29_method(R) in row and "by the body diode's VSD method" not in row and "its three gates can be driven apart" in row
+    assert "WITHDRAWN" in m.e11_29_method(R) and "selected by its gate" in m.e11_29_method(R) and "threshold voltage" in m.e11_29_method(R)
+    page = open(PAGE, encoding="utf-8").read()
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "the three gate traces brought out apart" in b29 and "is **withdrawn**" in b29 and "selected by its gate" in b29
+    assert "each FET heated through its body diode at the held limit" not in b29 and "junction read by VSD at a small sense current" not in b29
+
+
+def t_round13_method_b_powers_currents_and_budget_reproduce():
+    """The figures E11-29 now carries, in closed form: the worst split's powers, method (B)'s heating currents under the part's ID, the
+    ripple bound, the budget's six terms and the reading that passes the 40.78 K/W bar; (A)'s budget; (C)'s bracket wider than the gap
+    between the bar's two forms."""
+    R = _R()
+    m = _M()
+    S, S9, S21, L = R["S23"], R["S19"], R["S21"], R["L"]
+    i_, ra = S9["i"], m.F16_RA
+    assert abs(S["p"]["even"] - i_ ** 2 * ra / 9) < 1e-12 and abs(S["p"]["hot"] - i_ ** 2 * ra / 8) < 1e-12 and abs(S["p"]["other"] - i_ ** 2 * ra / 16) < 1e-12
+    assert abs(S["p"]["hot"] + 2 * S["p"]["other"] - S["slot_w"][1]) < 1e-12 and abs(3 * S["p"]["even"] - S["slot_w"][0]) < 1e-12
+    for got, p_ in ((S["i_single"], S["p"]["hot"]), (S["i_td"][0], S["slot_w"][0]), (S["i_td"][1], S["slot_w"][1])):
+        assert abs(got[0] - math.sqrt(p_ / ra)) < 1e-12 and abs(got[1] - math.sqrt(p_ / 8e-3)) < 1e-12 and got[1] < S["id100"]
+    assert abs(S["ripple"][0] - S["slot_w"][0] * L["z"][2.44e-4]) < 1e-12 and m.R13_B["slot"] == 2.44e-4
+    rise = S21["bar_new"] * S["p"]["even"]
+    assert abs(rise - S["rise_bar"]) < 1e-12 and abs(S["rise_total"] - (150.0 - S9["t0"])) < 1e-12
+    u_b = math.sqrt(0.02 ** 2 + 0.01 ** 2 + (1.0 / rise) ** 2 + (0.5 / rise) ** 2 + (0.3 / rise) ** 2 + (S["ripple"][0] / 2 / rise) ** 2)
+    u_a = math.sqrt(0.02 ** 2 + 0.01 ** 2 + (1.0 / rise) ** 2)
+    assert abs(S["u"]["B"] - u_b) < 1e-12 and abs(S["u"]["A"] - u_a) < 1e-12 and len(S["terms"]["B"]) == 6
+    assert abs(S["pass"]["B"] - S21["bar_new"] / (1 + u_b)) < 1e-12 and "%.2f" % S["pass"]["B"] == "39.51" and "%.2f" % (u_b * 100) == "3.22"
+    assert abs(S["pass_even"] - S21["bar_old"] / (1 + u_b)) < 1e-12 and abs(S["pass_rise"] - S["rise_total"] / (1 + u_b)) < 1e-12
+    assert S["u"]["B"] < S["bar_gap"] / 2 < S["c_frac"], "(B) does not resolve the bar's two forms, or (C) does"
+    assert abs(S["c_bracket"] - 8.617333e-5 * 423.15 * math.log(3.0) / 2e-3) < 1e-9
+    assert abs(S["leak_frac"] - 2 * 10e-6 / 1e-3) < 1e-12 and S["sense_k"] < 0.2
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o23, p23 = out.split("23. ROUND 13")[1], page.split("## 23. Round 13")[1]
+    for v_ in ("39.51", "3.22 %", "54.84", "40.78", "45.88", "44.45", "71.45", "73.75", "1.513", "0.756", "8.46", "13.75", "13.82", "22.46",
+               "11.96", "19.45", "1.04 K", "0.2589", "2.89 %", "39.64", "20 K", "11.1 %", "DELTA-02", "C-PROT rev 1", "NOT EXECUTABLE"):
+        assert v_ in o23 and v_ in p23, "%s is not in both section 23 and out 23" % v_
+    assert "SELECTED: (B)" in o23 and "no coefficient is printed" in o23 and "No temperature coefficient is printed" in p23
+
+
+def t_round13_section_20c_stands_on_the_ptcs_printed_points():
+    """Record l9stk's round 4 corrected its reading of Murata's sheet: 47 kOhm is not a point of the PRF15BB103. 20c and 20f no longer
+    use it as a bound; on the printed points the first inverter is not defined at 100 kOhm and 10.6 V, and a tripped PTC is read held
+    with the loop powered (a guard trip sets DD-7's inhibit); the selected switch's reading on DD-7 is named as owed."""
+    R = _R()
+    S, S20, S9 = R["S23"], R["S20"], R["S19"]
+    by = {(r_["rt"], r_["vin"]): r_ for r_ in S["ptc_rows"]}
+    assert len(by) == 8 and by[(100e3, 10.6)]["inv"] == "not defined" and by[(100e3, 16.8)]["inv"] == "on"
+    assert all(by[(rt, v)]["a"] == "closed" and by[(rt, v)]["inv"] == "on" for rt in (5e3, 15e3) for v in (10.6, 16.8))
+    assert all(by[(4.7e6, v)]["a"] == "held" and by[(4.7e6, v)]["inv"] == "off" and by[(4.7e6, v)]["powered"] for v in (10.6, 16.8))
+    assert abs(by[(100e3, 10.6)]["ret"] - (10.6 * 22e3 / 132e3)) < 0.06, "the return at 100 kOhm is not the divider's reading less the loads"
+    assert S["switch"] == (127.8, 132.2) and all(o > S20["out_rel"][1] and r_ > S20["ret_high"] for _v, o, r_ in S["sw_rows"])
+    mine = (S["inv_loaded"][0][1], S["inv_loaded"][1][1], S["inv_loaded"][0][2], S["inv_loaded"][1][2])
+    assert all(abs(a_ / 1e3 - b_) <= 0.10 * b_ for a_, b_ in zip(mine, S["l9_inv"])) and S["l9_inv"] == (58.4, 110.9, 203.4, 341.2)
+    assert abs(S9["rt1"][2] - 47e3) < 1e-6 and abs(S["withdrawn"][1] - S20["bound"][1]) < 1e-12
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    o20c = out.split("   20c. ")[1].split("   20d. ")[0]
+    o20f = out.split("   20f. ")[1].split("   20g. ")[0]
+    assert "WITHDRAWN as a bound by round 13" in o20c and "the bound point (l9stk" not in o20c
+    assert "which bounds nothing" in o20f and "read closed with" not in o20f
+    p20 = " ".join(page.split("## 20. Round 10")[1].split("## 21. Round 11")[0].split())
+    assert "withdrawn as a bound by round 13" in p20 and "which bounds nothing" in p20 and "**The bound point** (record l9stk" not in p20
+    o23g = out.split("   23g. ")[1].split("   23h. ")[0]
+    assert "WHAT NO LONGER STANDS" in o23g and "OWED READING" in o23g and "NOT DRAFTED" in o23g and "L8P-F07" in o23g
+    for v_ in ("1.714", "2.737", "59.2", "112.3", "190.2", "319.5", "4.532", "127.8", "132.2"):
+        assert v_ in o23g and v_ in page.split("### 23g. ")[1], v_
+
+
+def t_round13_the_procedure_quotes_this_record_and_stays_not_executable():
+    """TP-E11-29 is rewritten on method (B) in this round: every quote it makes of THIS record is the record's text (the procedures'
+    own verifier), it carries the proposal mark and the NOT EXECUTABLE status with what must happen first, and it no longer instructs a
+    body-diode heating or a VSD reading. Its quotes of L4-E9's cells are that record's, on the line it is integrated on."""
+    need(TP29, "the procedure TP-E11-29")
+    tpdir = os.path.dirname(TP29)
+    spec = importlib.util.spec_from_file_location("tp_check_for_l4e11", os.path.join(tpdir, "tp_check.py"))
+    tp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tp)
+    text = open(TP29, encoding="utf-8").read()
+    _tq, n_table, n_text, fails = tp.verify_quotes(tp.Sources(ROOT), "v2/docs/test-procedures/TP-E11-29.md", text)
+    mine = [f_ for f_ in fails if "records/l4e11/" in f_ or "well-formed" in f_]
+    assert not mine, "the procedure misquotes this record: %s" % mine
+    quotes = [(dict(tp.ATTR_RX.findall(a)), b) for a, b in tp.Q_RX.findall(text)]
+    own = [q for q, _b in quotes if q.get("src") == "v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md"]
+    assert len(own) >= 10 and any(q.get("row") == "E11-29" and q.get("col") == "Acceptance" for q in own), "the row's acceptance is not quoted"
+    assert tp.MARK in text and "**NOT EXECUTABLE.**" in text and "the independent check" in text and "a supplier's written agreement" in text
+    body = "\n".join(l for l in text.split("\n") if not l.startswith(">"))       # the procedure's own words, its quotes apart
+    for gone in ("heated through its body diode", "body diode VSD", "the VSD sense taps", "gate tied to its source for the whole run"):
+        assert gone not in body, "the procedure still instructs %r" % gone
+    # round 14 (the recheck V2R's V2R-m4): the pass rule is the reading plus the ACHIEVED U, so round 13's fixed "39.51 K/W" left the
+    # procedure's own words; the rule itself is what stays
+    for kept in ("gate k on CH_BATQ", "One FET is read per interruption", "V2 | reciprocity", "plus its achieved U", "No temperature coefficient is printed",
+                 "Neither pour is cut", "RT1's land"):
+        assert kept in body, "the procedure lacks %r" % kept
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "DELTA-02" in readme and "TP-E11-29" in readme and "what the method cannot bound" in readme.lower()
+
+
+# ---- round 14 (5 October 2026): the recheck V2R's V2R-B1 and V2R-B2 on TP-E11-29's fixture and pass rules, and its minors
+# Round 13's statements as they stood at 4def5975, kept here as fixtures so each check is shown to refuse them (no git needed).
+_R13_FIXTURE_TEXT = ("heating supply I_H (+) ---+ ... (one at a time) ... shunt (heating) ... heating supply (-) -------+        bypass switch across "
+                     "the heating supply: closed before the last channel opens. Calibration and sensing: the heating supply bypassed; gate k on "
+                     "CH_BATQ, the other two gates on VBAT")
+_R13_STEP14_TEXT = ("For each FET the sum S_k = Zself,k + the two Zmut into k (the record's \"Zself + 2 Zmut\" with each actual mutual term in place "
+                    "of an assumed equal one). The bar: with m = the largest Zmut over the largest Zself, the bar is the record's formula (section 1's "
+                    "quote): 40.78 K/W at m = 0, rising to 45.88 K/W from m = 1/4; without m, 40.78 K/W.")
+
+
+def _tp_body():
+    text = open(TP29, encoding="utf-8").read()
+    return text, "\n".join(l for l in text.split("\n") if not l.startswith(">"))
+
+
+def _fixture_isolates(body):
+    """A procedure's fixture isolates the heating supply for a reading: a series switch in the supply's lead, a bypass on the supply's
+    side of it, an interlock that ties a gate to its drain only with the series switch open, the gate tied at its own drain tap; and
+    none of round 13's statements (a bypass across the supply with its leads left on the pours, a clamped supply)."""
+    flat_ = " ".join(body.split())
+    need_ = ("series switch SW_S", "SW_B", "interlock", "tied to its own drain tap", "a gate is tied to its drain tap only while the series switch SW_S is open")
+    gone = ("bypass switch across the heating supply", "or the supply is clamped", "the heating supply bypassed")
+    return all(n in flat_ for n in need_) and not any(g in flat_ for g in gone)
+
+
+def _rule_is_per_junction(body):
+    """A procedure's reduction judges each junction at its own row's m_k, judges the baseline in the limit's line, and no longer gives
+    every S_k the bar at the largest Zmut over the largest Zself."""
+    flat_ = " ".join(body.split())
+    return ("m_k = D_k / (2 C_k)" in flat_ and "over step 6's baseline B_k" in flat_ and "T_k = B_k + z17_k" in flat_
+            and "with m = the largest Zmut over the largest Zself, the bar is" not in flat_)
+
+
+def t_round14_v2r_b1_the_old_fixture_joins_the_pours_and_the_redrawn_one_leaves_the_device_alone():
+    """V2R-B1: with round 13's fixture (a bypass across the heating supply, its leads on both pours) the pours are joined outside the FETs
+    in calibration and sensing, so the sense current never reaches a threshold; the redrawn fixture (a series switch in the supply's
+    lead, the bypass on the supply's side) joins them in no state. In each state the device under test is the only conductor of
+    consequence on Nexperia's printed rows and the fixture's proposed limits, recomputed here; a fixture that closes SW_S in a reading,
+    or a procedure that keeps round 13's statements, FAILS."""
+    R = _R()
+    m = _M()
+    S, S23 = R["S24"], R["S23"]
+    for st in ("calibration", "sensing"):
+        joined, path = m.r14_state("old", st)
+        assert joined and path == ["the heating supply's + lead", "the bypass switch across the heating supply", "the shunt and the - lead"], (st, path)
+    assert not m.r14_state("old", "heating")[0]
+    assert not any(m.r14_state("new", st)[0] for st in ("calibration", "heating", "sensing")), "the redrawn fixture joins the pours"
+    # mutation: SW_S left closed in a reading joins the pours again
+    keep = m.R14_FIXTURES["new"]
+    try:
+        m.R14_FIXTURES["new"] = [(n, a, b, k, ("heating", "sensing") if n.startswith("the series switch") else c) for n, a, b, k, c in keep]
+        assert m.r14_state("new", "sensing")[0], "a closed series switch in a reading is not seen joining the pours"
+    finally:
+        m.R14_FIXTURES["new"] = keep
+    # the margins, recomputed from the printed rows and the proposals
+    assert abs(S["idss"][0] - 1e-6) < 1e-15 and abs(S["idss"][1] - 10e-6) < 1e-15 and abs(S["igss"] - 100e-9) < 1e-15
+    assert S["leak_p"] == 6 and S["vgs_abs"] == 20.0
+    tot = 2 * 10e-6 + 100e-9 + 1e-6 + 6 * 1e-6 + 3 * 3.0 / 10e6
+    assert abs(S["sense_sum"] - tot) < 1e-12 and S["sense_frac"] < 0.03 and abs(S["sense_ratio"] - 100.0) < 1e-9
+    assert abs(S["old_v"] - 20e-6) < 1e-12 and S["old_v"] < S23["vth"][1] / 1e4, "the old loop's voltage is not far under the least threshold"
+    assert S["clamp_p"][0] > 20.0 and abs(S["clamp_p"][0] - S23["i_td"][0][0] * 1.5) < 1e-9
+    assert S["heat_ratio"] > 1e5 and abs(S["t_settle"] - (3 * R["L"]["ciss_0"] + 3e-9) * 3.0 / 1e-3) < 1e-12 and S["t_settle"] < 0.5e-4
+    assert S["v_sw_open"] < m.R14_SW["v_block"] and abs(S["duty_lost"] - 0.010012) < 1e-9
+    # the procedure: round 13's statements refused, the redrawn fixture carried
+    text, body = _tp_body()
+    assert not _fixture_isolates(_R13_FIXTURE_TEXT), "the check accepts round 13's fixture"
+    assert _fixture_isolates(body), "the procedure's fixture does not isolate the heating supply"
+    fx = body.split("2. **The fixture, drawn for the supplier's agreement**")[1].split("3. **The states**")[0]
+    assert "SW_S" in fx and "SW_B" in fx and "dummy leg" in fx and "tap Dk's own line" in fx
+    page = open(PAGE, encoding="utf-8").read()
+    p23f = " ".join(page.split("### 23f. ")[1].split("### 23g. ")[0].split())
+    assert "or the supply is clamped" not in p23f and "a series switch isolates the" in p23f
+    out = open(OUT, encoding="utf-8").read()
+    o23f = out.split("   23f. ")[1].split("   23g. ")[0]
+    assert "or the supply is clamped" not in o23f
+
+
+def _scan_row(z, grid):
+    """The largest of sum(z_i x_i) / (sum x_i)^2 times 9 over a grid of conductance ratios for the three FETs (each at least 1)."""
+    best = 0.0
+    for a in grid:
+        for b in grid:
+            for c in grid:
+                s = a + b + c
+                best = max(best, 9.0 * (z[0] * a + z[1] * b + z[2] * c) / (s * s))
+    return best
+
+
+def t_round14_v2r_b2_each_junction_at_its_own_worst_split_and_a_search_proves_the_rule():
+    """V2R-B2: the closed form of each junction's worst split equals a scan of every split of three RDS(on) values (rows physical and
+    not); V2R's example passes every round 13 line at 152.3 C and fails round 14's limit line; on a fresh seed the search finds no
+    specimen accepted over 150 C by round 14's lines (readings perturbed within U, and exact), none refused that meets the limit and both
+    allocations, and round 13's step 14 and its lines together accepting specimens over the limit; a line 2 that takes the band's
+    budgeted 9.16 K instead of the measured baseline, or judges every junction at round 13's fixed split, FAILS; the procedure's
+    reduction is round 14's and refuses round 13's step 14."""
+    import random
+    R = _R()
+    m = _M()
+    S, S21 = R["S24"], R["S21"]
+    K = S["K"]
+    rnd = random.Random(77)
+    grid = [1.0 + k / 12.0 for k in range(0, 25)]
+    for _ in range(30):
+        zs = rnd.uniform(5.0, 50.0)
+        z = [zs, rnd.uniform(0.0, 1.0) * zs, rnd.uniform(0.0, 1.0) * zs] if rnd.random() < 0.8 else [rnd.uniform(1.0, 50.0) for _k in range(3)]
+        zw, x, mk = m.worst_row(z)
+        g = sorted(set(grid + [x]))
+        sc = _scan_row(z, g)
+        assert sc <= zw * (1 + 1e-12) and sc >= zw * (1 - 1e-9) - 1e-9, (z, zw, sc)
+        if z[0] == max(z):
+            assert abs(sum(z) - m.bar_at(mk, zw)) < 1e-9 * zw or mk >= 0.25, "Zw is not S_k at 21b's bar at m_k"
+    # V2R's example
+    e = S["ex"]
+    assert abs(e["case_f"] - 65.3) < 0.05 and abs(e["even"] - 76.03) < 0.05 and abs(e["tj"] - 152.28) < 0.05 and not e["new"][0]
+    Zx = [[20.0 if i == j else 12.0 for j in range(3)] for i in range(3)]
+    assert m.r13_step14(Zx, 0.0, K) and m.r13_direct(Zx, [14.0] * 3, [1.0] * 3, 0.0, K)[0], "round 13's lines no longer pass the example"
+    # the search on a fresh seed
+    sr = m.r14_search(K, S["u"], 4242, 2500)
+    assert sr["new_over"] == 0 and sr["new0_over"] == 0 and sr["new0_miss"] == 0 and sr["rec_over"] == 0, sr
+    assert sr["new_acc"] > 500 and sr["s14_over"] > 0 and sr["old_over"] > 0, "the search does not show round 13's lines failing"
+    # mutations of the rule, each FAILS on the same search
+    keep = m.r14_lines
+
+    def no_baseline(Z, B, z17, u, K_, extra=(0.0, 0.0, 0.0)):
+        return keep(Z, [R["S19"]["band"]] * 3, z17, u, K_, extra)
+
+    def fixed_split(Z, B, z17, u, K_, extra=(0.0, 0.0, 0.0)):
+        # every junction judged at round 13's fixed split (x = 2: 1.513 / 0.756 / 0.756 W), whatever its own row's m_k
+        zw = [9.0 * (2.0 * max(Z[k]) + sum(Z[k]) - max(Z[k])) / 16.0 for k in range(3)]
+        t_ = [B[k] + z17[k] * K_["p17"] + K_["p_even"] * zw[k] + extra[k] for k in range(3)]
+        return (max(zw) * (1 + u) <= K_["bar_even"] and max(t_) * (1 + u) <= K_["rise"] and max(z17) * (1 + u) <= K_["z17"]), 0.0, 0.0, 0.0
+    try:
+        for mut in (no_baseline, fixed_split):
+            m.r14_lines = mut
+            assert m.r14_search(K, S["u"], 4242, 2500)["new_over"] > 0, "%s passes the search" % mut.__name__
+    finally:
+        m.r14_lines = keep
+    # the record's own counts
+    sr0 = S["search"]
+    assert sr0["new_over"] == sr0["new0_over"] == sr0["new0_miss"] == sr0["rec_over"] == 0 and sr0["old_over"] == 2845 and sr0["s14_over"] == 2043
+    # the procedure
+    _text, body = _tp_body()
+    assert not _rule_is_per_junction(_R13_STEP14_TEXT), "the check accepts round 13's step 14"
+    assert _rule_is_per_junction(body), "the procedure's reduction is not round 14's"
+    s8 = body.split("## 8. Pass, fail and inconclusive")[1].split("## 9.")[0]
+    assert "Zw_k" in s8 and "T_k" in s8 and "73.75 K" in s8 and "achieved" in s8 and "cases F39, F40 and F42" in s8
+    for v_ in ("0.333", "45.88", "40.78"):
+        assert v_ in open(PAGE, encoding="utf-8").read().split("## 24. Round 14")[1]
+
+
+def t_round14_the_minors_the_budget_and_the_procedures_status():
+    """V2R-m1 (20g on 22c's set, 21d's mark), m3 (the tie at tap Dk, 2.4 mV), m4 (the budget's nine terms, the control run, the
+    reading plus the achieved U), m5 (the rise over the baseline), m6 (65.9 uF across the node; the first prototype populated as the
+    coupon), m7 (the leads' heat flow and the pours' third); the page and the output carry section 24's figures; TP-E11-29 stays NOT
+    EXECUTABLE with the recheck among its preconditions; the README answers V2R's findings."""
+    R = _R()
+    m = _M()
+    S, S22, S23 = R["S24"], R["S22"], R["S23"]
+    assert S["m1"] == (S22["sel"]["sink"]["run"], S22["sel"]["sink"]["ovp"], S22["sel"]["sink"]["clamp"])
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    p20g = page.split("### 20g. ")[1].split("### 20h. ")[0]
+    o20g = out.split("   20g. ")[1].split("   20h. ")[0]
+    for t_ in (p20g, o20g):
+        assert "3.72 mA" in t_ and "6.45 mA" in t_ and "3.73 mA" not in t_ and "6.39 mA" not in t_
+    row21d = [l for l in page.split("### 21d. ")[1].split("### 21e. ")[0].split("\n") if "R256 6.8 kOhm" in l][0]
+    assert "**SUPERSEDED** by round 12" in row21d
+    assert abs(S["tie_mv"] - 0.1e-3 * 23.93 * 1e3) < 1e-9
+    rise = S23["rise_bar"]
+    terms = [0.02, 0.01, 1.0 / rise, 0.5 / rise, 0.3 / rise, S23["ripple"][0] / 2 / rise, 0.5 / rise, 0.5 / rise, 0.1 / rise]
+    u = math.sqrt(sum(x * x for x in terms))
+    assert abs(S["u"] - u) < 1e-12 and len(S["terms"]) == 9 and "%.2f" % (u * 100) == "3.47"
+    assert "%.2f" % S["pass_bar"] == "39.41" and "%.2f" % S["pass_rise"] == "71.28" and "%.2f" % S["pass_even"] == "44.34"
+    assert abs(S["m6_c"] - 180e-6 * 104e-6 / 284e-6) < 1e-15 and abs(S["m6_dv"] - 1e-3 * 0.2 / S["m6_c"]) < 1e-12
+    assert abs(S["lead_dt"] - 0.02 * S23["p"]["hot"] * 0.02 / (390.0 * 4e-6)) < 1e-12
+    assert abs(S["pour_frac"][0] - (S23["i_td"][0][0] / 23.93) ** 2) < 1e-12 and abs(S["pour_frac"][0] - 1.0 / 3.0) < 0.001
+    p24 = page.split("## 24. Round 14")[1]
+    o24 = out.split("24. ROUND 14")[1]
+    for v_ in ("20 uV", "20.7 W", "97.2 %", "34.8 us", "65.3 K", "152.3 C", "3.47 %", "39.41", "71.28", "44.34", "65.9 uF", "2.4 mV",
+               "0.39 K", "2.17 W/m", "0.881", "11.6 %", "159.9 C", "C-PROT rev 1", "NOT EXECUTABLE"):
+        assert v_ in p24 and v_ in o24, "%s is not in both section 24 and out 24" % v_
+    for v_ in ("2,845", "2,043", "3,455", "20,850"):
+        assert v_ in p24 and v_.replace(",", "") in o24, v_
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "Nothing else joins the two pours" in b29 and "populated as the coupon is" in b29 and "the fixture's heavy leads" in b29
+    assert "ACHIEVED expanded uncertainty" in b29 and "tied to its own drain tap" in b29 and "junction by junction" in b29
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert m.e11_29_method(R) in row and "its OWN m_k" in row and "THE LIMIT" in row and "series switch" in row and "achieved" in row
+    text, body = _tp_body()
+    assert "**NOT EXECUTABLE.**" in text and "the independent recheck of the fixture of section 5 and the pass" in " ".join(text.split())
+    for kept in ("control run C0", "| V8 |", "| V9 |", "| V7 |", "heavy lead", "over step 6's baseline B_k", "populated as the coupon is"):
+        assert kept in body, "the procedure lacks %r" % kept
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2R's findings answered" in readme and "V2R-B1" in readme and "V2R-B2" in readme and "ROUND 14" in readme

@@ -123,6 +123,9 @@ PINS = {
     "bzt52c": ("v2/vendor/diodes/diodes-bzt52c-ds18004.pdf", "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f"),
     "tps2596": ("v2/vendor/power/tps2596.pdf", "66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9"),
     "ap64500": ("v2/vendor/diodes/diodes-ap64500.pdf", "d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8"),
+    # round 10 (4 October 2026, section 20): the arm's P-FET and diode
+    "ao3401": ("v2/vendor/power/aos-ao3401a-p-mosfet.pdf", "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"),
+    "n4148w": ("v2/vendor/power/st-semtech-1n4148w-c81598.pdf", "54de8e4089bb8221cf6cf191ee3acc2bdb20c9933cf59e7b5de3ef4ee291ce3f"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
@@ -840,6 +843,11 @@ def compute():
     R["M"] = fix17_round(R, T)
     R["N18"] = fix18_round(R, T)
     R["S19"] = fix19_round(R, T)
+    R["S20"] = fix20_round(R, T)
+    R["S21"] = fix21_round(R, T)
+    R["S22"] = fix22_round(R, T)
+    R["S23"] = fix23_round(R, T)
+    R["S24"] = fix24_round(R, T)
     return R
 
 
@@ -3774,6 +3782,1932 @@ def render_fix19(R, p):
     p("       owner's (SESSION)")
     p("")
 
+# ---- round 10 (4 October 2026): record l8p's round 3 (fnd/l8p2 at a46597e2) and its findings L8P-F04 and L8P-F05 for DD-7's board A side
+R9_COMMITS["l8p2"] = "a46597e2257018bb4fdb749a57902bd7b78663a3"
+R9_GIT["l8p2_page"] = ("l8p2", "v2/docs/records/l8p/L8P-BREAKER.md", "6b6cd75ca947c8df065c9a2dd3a61b9a9225a32174b5caa804634ed911986a30")
+R9_GIT["l8p2_out"] = ("l8p2", "v2/docs/records/l8p/l8p_drafts.out", "4bed261029cdcabb85b96b8882e51fdc2710b536e00a0350641c3db304948145")
+R10_OUT = (562e3, 422e3)       # ohm, SESSION: R109 over R144 (0.1 %), U48's SENSE2 on DOCK_EN_OUT
+R10_OUT_TOL = 0.001
+R10_CS = (464e3, 100e3)        # ohm, SESSION: R107 over R108 (1 %), U47's SENSE2 on CELL+
+R10_CS_TOL = 0.01
+R10_RH, R10_RH_TOL = 1.2e6, 0.01           # ohm, SESSION: R85, the hold's discharge
+R10_CH = 1e-6                  # F, SESSION: C241, FS32X105K101EFG (C382212, the part of C207), 1 uF 100 V X7R 1210, K
+R10_CH_TOL = (0.10, 0.15)      # ASSUMPTION: K (+-10 %) and X7R's +-15 % over temperature (the record's C105 basis)
+R10_CH_BIAS = 0.15             # ASSUMPTION: C241's loss under DC bias at 12 V or less on its 100 V rating (no curve held); E11-45 times the hold
+R10_CH_IR = 100e6 * 1e-6       # ohm F, ASSUMPTION: insulation resistance 100 MOhm uF (a fifth of the usual 500 MOhm uF)
+R10_CTS, R10_CTS_TOL = 3.9e-9, 0.05        # F, SESSION: C248, C0G J on U47's CTS1
+R10_RA, R10_RK, R10_RBL = 56.0, 10e3, 4.7e3  # ohm, SESSION: R84 (1206, pulse-rated), R253, R256 (1206; 4.7k in round 10, 6.8k in round 11 on V1's minor, 4.7k again in round 12 on V2-B1: section 22)
+R10_RAG = (100e3, 200e3)       # ohm, SESSION: R251 over R252 (1 %), Q51's VGS
+R10_RPU = (100e3, 1e6, 1e6, 1e6)           # ohm, SESSION: R249 (DD7_LP), R250 (DD7_T), R255 (DD7_N), R254 (DD7_REF), from DD7_VC
+R10_RVC = 100e3                # ohm, SESSION: R233, VBAT to DD7_VC (D27 BZT52C12)
+R10_T_SMALL = 10.0             # K, ASSUMPTION: the small parts' leakage read 10 K over L4-E12's air (R19's band basis)
+R10_C_T = 2 * 50e-12 + 10e-12  # F, ASSUMPTION: DD7_T's node, Q50's Ciss (50 pF typical, JSCJ prints no maximum) doubled, and U48's pin
+R10_CISS_X = 1.5               # ASSUMPTION: an AO3401A's typical Ciss (645 pF) taken 1.5 times (no maximum printed)
+R10_VOL_R = None               # set in the round from the sheet: RESET's VOL at most over its 5 mA row, an on-resistance bound
+R10_T2 = 9.0 / 8.0             # the most one of three paralleled FETs dissipates against the even split (r / (R + 2 r)^2 at r = R/2)
+
+
+def fix20_round(R, T):
+    """Round 10 (record l8p's round 3, route R1): board A's side of the breaker's latch redrawn against L8P-F04 and L8P-F05 on the same
+    failure cases (C-PROT): the return held at BRK_VIN 7.6 and 10.6 V, CELL+ with the breaker off at 16.8 V and the 29.2 V clamp, the breaker
+    latched into a resistive fault with a source present; thresholds, tolerances and delays from the makers' printed figures."""
+    S9, H = R["S19"], R["H"]
+    S = {}
+    o8 = git_at("l8p2_out")
+    p8 = flat(git_at("l8p2_page"))
+    # ---- what board P drives, and the interface it asks (record l8p 12c and 12f; its output 3b)
+    S["held"] = f(need(o8, r"DOCK_EN_RET held at ([\d.]+) V at most", "the pull's level"))
+    m = need(o8, r"DOCK_EN_OUT falls to ([\d.]+) V at BRK_VIN 7\.6 V and ([\d.]+) V at\s+10\.6 V", "the held DOCK_EN_OUT")
+    S["out_held_rec"] = (f(m, 1), f(m, 2))
+    m = need(o8, r"reads ([\d.]+) and ([\d.]+) V, under the 2N7002's ([\d.]+) V: L8P-F04", "L8P-F04's readings")
+    S["f04"] = (f(m, 1), f(m, 2), f(m, 3))
+    S["pull_t"] = f(need(o8, r"([\d.]+) ms at most to the pull", "the pull's delay")) * 1e-3
+    S["restart"] = f(need(o8, r"the breaker restarts within ([\d.]+) s", "the restart"))
+    m = need(o8, r"least ([\d.]+) A against the LDO-mode precharge's ([\d.]+) A at most", "the threshold's least")
+    S["thr_lo"], S["ldo"] = f(m, 1), f(m, 2)
+    m = need(o8, r"most ([\d.]+) A against the latched FET's ([\d.]+) A", "the threshold's most")
+    S["thr_hi"], S["fet_safe"] = f(m, 1), f(m, 2)
+    S["under_thr_tj"] = f(need(o8, r"a charge the detector lets pass holds the FET at ([\d.]+) C at most", "the detector's floor"))
+    S["pulse_k"] = f(need(o8, r"raises its\s+junction ([\d.]+) K over the case", "10 ms at 23.93 A"))
+    m = need(o8, r"with board A's (\d+) kOhm \(R107, R108\) alone CELL\+ reads ([\d.]+) V at BRK_VIN ([\d.]+) V, over L4-E11's ([\d.]+) V 'dead' point", "L8P-F05")
+    S["f05"] = dict(r_a=f(m, 1) * 1e3, v=f(m, 2), vin=f(m, 3), dead=f(m, 4))
+    m = need(o8, r"with U104's divider\s+\(([\d.]+) kOhm\) also on PACK_P, ([\d.]+) V \(([\d.]+) V at the 29\.2 V clamp\)", "L8P-F05 with U104")
+    S["u104"], S["f05"]["v_u104"], S["f05"]["v_clamp"] = f(m, 1) * 1e3, f(m, 2), f(m, 3)
+    S["r_int"] = f(need(o8, r"the LM5069's internal (\d+) MOhm from SENSE to OUT", "the LM5069's internal resistor")) * 1e6
+    need(p8, r"Set its charge inhibit \(the battery FETs held off, BATDRV at VBAT\) while DOCK_EN_RET is under 1\.0 V and DOCK_EN_OUT is at 2\.0 V or over, whatever CELL\+ reads", "12f's set")
+    need(p8, r"Set it within 1 ms of the return falling", "12f's 1 ms")
+    need(p8, r"Hold it at least 1\.0 s after DOCK_EN_RET rises over 2\.5 V", "12f's hold")
+    need(p8, r"Load DOCK_EN_RET with 1 MOhm or more", "12f's load")
+    S["if_ret_lo"], S["if_out"], S["if_hold"], S["if_ret_hi"], S["if_load"] = 1.0, 2.0, 1.0, 2.5, 1e6
+    r_feed, r_ret = S9["r_feed"], S9["r_ret"]
+    # ---- the parts (makers' sheets)
+    m = find("tps37", r"\(Overvoltage\)\s+VIT\s+= 800 mV \(3\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "VITP at 800 mV", layout=True)[1]
+    vitp = (f(m, 1), f(m, 2), f(m, 3))
+    m = find("tps37", r"\(Undervoltage\)\s+VIT = 800 mV \(3\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "VITN at 800 mV", layout=True)[1]
+    vitn = (f(m, 1), f(m, 2), f(m, 3))
+    hys = f(find("tps37", r"typically meant to monitor a 0\.8 V rail with ±(\d+)% voltage threshold\s+hysteresis", "the variant's hysteresis")[1]) / 100.0
+    hacc = f(find("tps37", r"VHYS Range = 2% to 13% \(1% step\) -([\d.]+) ([\d.]+) %", "the hysteresis accuracy")[1]) / 100.0
+    i_s = f(find("tps37", r"Input current\s+ISENSE\s+VIT = 800 mV\s+(\d+)\s+nA", "ISENSE at 800 mV", layout=True)[1]) * 1e-9
+    i_s_hi = f(find("tps37", r"Input current\s+VIT > 26 V\s+ISENSE\s+(\d+)\s+µA", "ISENSE's largest row", layout=True)[1]) * 1e-6
+    m = find("tps37", r"RCTS\s+(\d+)\s+(\d+)\s+(\d+)\s+Kohms", "RCTS", layout=True)[1]
+    rcts = (f(m, 1) * 1e3, f(m, 2) * 1e3, f(m, 3) * 1e3)
+    k5 = f(find("tps37", r"tCTSx \(min\) = -ln \(([\d.]+)\) x RCTSx \(min\)", "Equation 5")[1])
+    k6 = f(find("tps37", r"tCTSx \(max\) = -ln \(([\d.]+)\) x RCTSx \(max\)", "Equation 6")[1])
+    vol = f(find("tps37", r"VOL \(5\)\s+Low level output voltage\s+(\d+)\s+mV", "RESET's VOL", layout=True)[1]) * 1e-3
+    S["i_rec"] = f(find("tps37", r"Current\s+IRESET1, IRESET2, IRESET1, IRESET2\s+0\s+±(\d+)\s+mA", "RESET's recommended current", layout=True)[1]) * 1e-3
+    i_vol = f(find("tps37", r"IRESET = (\d+) mA", "VOL's current", layout=True)[1]) * 1e-3
+    find("tps37", r"SENSE and RESET pins are 65 V graded", "the 65 V pins")
+    S["vol_r"] = vol / i_vol
+    S["tps"] = dict(vitp=vitp, vitn=vitn, hys=hys, hacc=hacc, i_s=i_s, i_s_hi=i_s_hi, rcts=rcts, k5=k5, k6=k6, vol=vol, i_vol=i_vol)
+    ov_rel = (vitp[0] - hys * (1 + hacc) * vitp[2], vitp[2] - hys * (1 - hacc) * vitp[0])     # OV release (VITP - VHYS)
+    uv_rel = (vitn[0] + hys * (1 - hacc) * vitn[0], vitn[2] + hys * (1 + hacc) * vitn[2])     # UV release (VITN + VHYS)
+    S["ov_rel"], S["uv_rel"] = ov_rel, uv_rel
+    L = lambda key, pat, what: find(key, pat, what, layout=True)[1]
+    m = L("ao3401", r"VGS\(th\)\s+Gate Threshold Voltage\s+VDS=VGS ID=-250mA\s+-([\d.]+)\s+-([\d.]+)\s+-([\d.]+)\s+V", "the AO3401A's threshold")
+    S["p_vth"] = (f(m, 1), f(m, 3))
+    S["p_vgs"] = f(L("ao3401", r"Gate-Source Voltage\s+VGS\s+±(\d+)\s+V", "the AO3401A's VGS"))
+    S["p_vds"] = f(L("ao3401", r"Drain-Source Voltage\s+VDS\s+-(\d+)\s+V", "the AO3401A's VDS"))
+    S["p_idm"] = f(L("ao3401", r"Pulsed Drain Current\s+IDM\s+-(\d+)", "the AO3401A's IDM"))
+    m = L("ao3401", r"VDS=-30V, VGS=0V\s+-(\d+)\s+IDSS\s+Zero Gate Voltage Drain Current\s+mA\s+TJ=55°C\s+-(\d+)", "the AO3401A's IDSS")
+    S["p_idss"] = (f(m, 1) * 1e-6, f(m, 2) * 1e-6)                # uA: the sheet's micro sign prints as "m" in its text layer (its ID=-250mA row is 250 uA too)
+    S["p_ciss"] = f(L("ao3401", r"Ciss\s+Input Capacitance\s+(\d+)\s+pF", "the AO3401A's Ciss")) * 1e-12
+    m = L("n4148w", r"at IF = 1 mA\s+-\s+([\d.]+)\s+at IF = 10 mA\s+VF\s+-\s+([\d.]+)\s+V\s+at IF = 50 mA\s+-\s+([\d.]+)\s+at IF = 150 mA\s+-\s+([\d.]+)", "1N4148W's VF")
+    S["vf"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
+    m = L("n4148w", r"at VR = 20 V\s+IR\s+-\s+(\d+)\s+nA\s+at VR = 75 V, TJ = 150℃\s+-\s+(\d+)\s+µA\s+at VR = 25 V, TJ = 150℃\s+-\s+(\d+)\s+µA", "1N4148W's IR")
+    S["ir"] = (f(m, 1) * 1e-9, f(m, 3) * 1e-6)
+    m = L("n4148w", r"at t = 1 s\s+([\d.]+)\s+at t = 1 ms\s+IFSM\s+(\d+)\s+A\s+at t = 1 μs\s+(\d+)", "1N4148W's surge")
+    S["ifsm"] = (f(m, 1), f(m, 2), f(m, 3))
+    nn = flat("".join(pdf_pages("n2n7002")))
+    S["n_id"] = f(need(nn, r"Continuous Drain Current ID ([\d.]+) A", "the 2N7002's ID"))
+    S["n_vds"] = f(need(nn, r"Drain-Source Voltage VDS (\d+) V", "the 2N7002's VDS"))
+    S["n_rds5"] = f(need(nn, r"VGS=5 V, ID=50mA ([\d.]+) (\d+)", "the 2N7002's RDS(on) at 5 V"), 2)
+    S["n_ciss"] = f(L("n2n7002", r"Input Capacitance \*\s+Ciss\s+(\d+)", "the 2N7002's Ciss")) * 1e-12
+    S["n_igss"] = f(need(nn, r"VGS=±20 V ±(\d+) nA", "the 2N7002's IGSS")) * 1e-9
+    m = L("bzt52c", r"BZT52C12\s+WH\s+12\s+11\.4\s+12\.7\s+5\s+25\s+150\s+1\.0\s+([\d.]+)\s+([\d.]+)", "the BZT52C12's leakage")
+    S["z_ir"], S["z_ir_v"] = f(m, 1) * 1e-6, f(m, 2)
+    yr = "\n".join(pdf_pages("yageo_rc", True))
+    need(yr, r"1/4 W\s+-55℃ to 155℃", "RC1206's rating")
+    S["r1206"] = (0.25, 70.0, 155.0)      # W, C, C: the rated power to its knee, then linear to 155 C (Yageo's derating figure; the knee read as 70 C)
+    vb_lo, vb_hi = H["floor"], S9["vbat_clamp"]
+    t_hot = S9["t0"] + R10_T_SMALL
+    S["t_hot"] = t_hot
+    # ---- the loop with board A's loads: OUT and RET by nodal analysis (R106 on board P at +-1 %, R107 22 kOhm)
+    k_lo = R10_OUT[1] * (1 - R10_OUT_TOL) / (R10_OUT[0] * (1 + R10_OUT_TOL) + R10_OUT[1] * (1 - R10_OUT_TOL))
+    k_hi = R10_OUT[1] * (1 + R10_OUT_TOL) / (R10_OUT[0] * (1 - R10_OUT_TOL) + R10_OUT[1] * (1 + R10_OUT_TOL))
+    r_oload = R10_OUT[0] + R10_OUT[1]
+    rth_o = R10_OUT[0] * R10_OUT[1] / r_oload
+    def loop(vin, rt1, held=None, i_ret=0.0, rfeed=r_feed):
+        go = 1 / rfeed + 1 / r_oload
+        if held is not None:          # the return held at `held`
+            vout = (vin / rfeed + held / rt1) / (go + 1 / rt1)
+            return vout, held
+        # two nodes: OUT (R106 from VIN, RT1 to RET, the divider to ground) and RET (RT1 from OUT, R107 to ground, i_ret drawn)
+        a11, a12, b1 = go + 1 / rt1, -1 / rt1, vin / rfeed
+        a21, a22, b2 = -1 / rt1, 1 / rt1 + 1 / r_ret, -i_ret
+        det = a11 * a22 - a12 * a21
+        return (b1 * a22 - a12 * b2) / det, (a11 * b2 - a21 * b1) / det
+    S["loop"] = loop
+    S["out_held"] = [(vin, loop(vin, S9["rt1"][0], S["held"], rfeed=r_feed * 1.01)[0]) for vin in (7.6, 10.6, 16.8)]
+    S["out_rel"] = ((uv_rel[0] - i_s * rth_o) / k_hi, (uv_rel[1] + i_s * rth_o) / k_lo)       # the loop read powered over (rising)
+    S["out_ast"] = ((vitn[0] - i_s * rth_o) / k_hi, (vitn[2] + i_s * rth_o) / k_lo)           # the loop read unpowered under (falling)
+    S["out_k"] = (k_lo, k_hi)
+    i_ret = i_s_hi
+    S["ret_low"] = ov_rel[0] - i_ret * 50.0          # the return read held under (falling); the held node's source 50 ohm at most (2 x 7 x 2 hot, l8p)
+    S["ret_high"] = vitp[2] + i_ret * 16e3           # the return read closed over (rising); the closed node's Thevenin under 16 kOhm
+    S["ret_low_margin"] = S["ret_low"] - S["held"]
+    out_b, ret_b = loop(S9["pack_lo"], S9["rt1"][2], i_ret=i_ret)
+    out_0, ret_0 = loop(S9["pack_lo"], S9["rt1"][2], i_ret=0.0)
+    S["bound"] = (S9["ret_bound"][0], ret_b, out_b)
+    S["bound_margin"] = ret_b - S["ret_high"]
+    # the window: a closed loop ramping (a docking, the gauge's wake, a back-fed precharge) reads held only if OUT is read powered while RET
+    # is still under the closed reading, RET/OUT = 22 / (22 + RT1): none for RT1 up to this bound
+    r_need = S["ret_high"] / S["out_rel"][0]
+    S["window_rt1"] = r_ret * (1 / r_need - 1)
+    # the interface's literal box (RET under 1.0 V with OUT at 2.0 V or over) reached by a closed loop: RT1 over 22 kOhm
+    S["box_rt1"] = r_ret * (S["if_out"] / S["if_ret_lo"] - 1)
+    S["box_vin"] = [(rt, S["if_ret_lo"] * (r_feed + rt + r_ret) / r_ret) for rt in (30e3, S9["rt1"][2])]
+    ldo_vin = (5.7 - 1.0)
+    S["ldo_vin"] = ldo_vin
+    S["ldo_ret"] = ldo_vin * r_ret / (r_feed + S9["rt1"][1] * 1.5 + r_ret)        # RT1 at its printed 25 C most, 15 kOhm
+    S["ldo_rt1_max"] = r_ret * (ldo_vin / S["ret_high"]) - r_feed - r_ret
+    S["guard_rt1"] = [(vin, vin * r_ret / S["ret_low"] - r_feed - r_ret) for vin in (S9["pack_lo"], S9["vpk"])]   # board A reads held past these
+    S["inv_rt1"] = [(vin, vin * r_ret / 2.5 - r_feed - r_ret, vin * r_ret / 1.0 - r_feed - r_ret) for vin in (S9["pack_lo"], S9["vpk"])]
+    # ---- the trigger's set (from the return falling) and its parts
+    tctr_open = S9["tctr_open"]
+    vc_lo = 8.0                                          # DD7_VC at its least: the zener leaks under 0.1 uA at 8 V (ten times hot through R233)
+    vlp = vc_lo * R10_RPU[1] / (R10_RPU[0] + R10_RPU[1])
+    tau_t = R10_RPU[1] * R10_C_T
+    S["t_trig"] = tau_t * math.log(vc_lo / (vc_lo - S9["vth"][2]))
+    rag = R10_RAG[0] * R10_RAG[1] / (R10_RAG[0] + R10_RAG[1])
+    vgs_a = vb_lo * R10_RAG[0] / (R10_RAG[0] + R10_RAG[1])
+    tau_g = rag * S["p_ciss"] * R10_CISS_X
+    S["t_qa"] = tau_g * math.log(vgs_a / (vgs_a - S["p_vth"][1]))
+    c_hi = R10_CH * (1 + R10_CH_TOL[0]) * (1 + R10_CH_TOL[1])
+    c_lo = R10_CH * (1 - R10_CH_TOL[0]) * (1 - R10_CH_TOL[1]) * (1 - R10_CH_BIAS)
+    S["c_h"] = (c_lo, c_hi)
+    S["tau_arm"] = R10_RA * 1.01 * c_hi
+    S["arm_peak"] = (vb_hi - S["vf"][0]) / (R10_RA * 0.99)
+    S["arm_peak_168"] = (S9["vpk"] - S["vf"][0]) / (R10_RA * 0.99)
+    S["arm_i2t"] = S["arm_peak"] ** 2 * S["tau_arm"] / 2
+    S["t_cross"] = S["tau_arm"] * math.log((vb_lo - S["vf"][3]) / (vb_lo - S["vf"][3] - vitp[2]))
+    c_cts = (R10_CTS * (1 - R10_CTS_TOL), R10_CTS * (1 + R10_CTS_TOL))
+    S["tcts1"] = (-math.log(k5) * rcts[0] * c_cts[0], -math.log(k6) * rcts[2] * c_cts[1] + S9["tcts"][1])
+    rinh = 100e3 * 200e3 / 300e3
+    vgs_i = (vb_lo - vol) * 100e3 / 300e3
+    S["t_q49"] = rinh * S["p_ciss"] * R10_CISS_X * math.log(vgs_i / (vgs_i - S["p_vth"][1]))
+    S["t_set"] = tctr_open + S["t_trig"] + S["t_qa"] + S["t_cross"] + S["tcts1"][1] + 1e-6 + S["t_q49"] + 1e-6
+    S["t_set_min"] = S["tcts1"][0]
+    S["arm_frac"] = 1 - math.exp(-S["t_set_min"] / S["tau_arm"])
+    S["v0"] = (vb_lo - S["vf"][1]) * S["arm_frac"]           # the hold's start at its least: VSYS_MIN less D26 at 10 mA, the arm's fraction
+    S["v0_hi"] = vb_hi
+    S["charge_end"] = S["pull_t"] + S["t_set"]
+    # ---- the hold: DD7_H from V0 through R85 to U47's OV release, against every sink on the node
+    def ir_diode(t):          # 1N4148W reverse leakage, log-linear between the sheet's 25 C (20 V) and 150 C (25 V) rows: INFERRED
+        return S["ir"][0] * (S["ir"][1] / S["ir"][0]) ** ((t - 25.0) / 125.0)
+    S["ir_hot"] = ir_diode(t_hot)
+    i_cap = vb_hi / (R10_CH_IR / R10_CH)
+    S["i_x"] = (S["ir_hot"] + i_s, S["ir_hot"], i_s, i_cap)
+    rh_lo, rh_hi = R10_RH * (1 - R10_RH_TOL), R10_RH * (1 + R10_RH_TOL)
+    def hold(v0, vrel, ix, r, c):
+        return r * c * math.log((v0 + ix * r) / (vrel + ix * r))
+    ixm = S["i_x"][0] + i_cap
+    S["hold_min"] = hold(S["v0"], ov_rel[1], ixm, rh_lo, c_lo)
+    S["hold_max"] = hold(S["v0_hi"], ov_rel[0], -i_s, rh_hi, c_hi) + tctr_open
+    lo, hi_ = 1.0, 200.0
+    for _ in range(80):
+        mid = (lo + hi_) / 2
+        if hold(S["v0"], ov_rel[1], S["ir_hot"] * mid + i_s + i_cap, rh_lo, c_lo) > S["if_hold"]:
+            lo = mid
+        else:
+            hi_ = mid
+    S["leak_x"] = lo                # the factor on D26's inferred hot leakage at which the hold falls to 1.0 s
+    S["hold_margin"] = S["hold_min"] - S["if_hold"]
+    S["hold_vs_restart"] = S["hold_min"] - S["restart"]
+    idss_hot = S["p_idss"][1] * 2 ** ((t_hot - 55.0) / 10.0)       # INFERRED: the 55 C row doubled every 10 K
+    S["k_rest"] = (idss_hot, idss_hot * R10_RK)
+    S["rest_margin"] = ov_rel[0] - S["k_rest"][1]
+    # ---- the release on CELL+ alive (U47 channel 2), the latch and the bleeder (L8P-F05)
+    a_, b_ = R10_CS
+    kc_lo = b_ * (1 - R10_CS_TOL) / (a_ * (1 + R10_CS_TOL) + b_ * (1 - R10_CS_TOL))
+    kc_hi = b_ * (1 + R10_CS_TOL) / (a_ * (1 - R10_CS_TOL) + b_ * (1 + R10_CS_TOL))
+    rth_c = a_ * b_ / (a_ + b_)
+    S["cs_k"] = (kc_lo, kc_hi)
+    i_n = lambda vcell: vcell / R10_RBL + vb_hi / 300e3 + 12.7 / R10_RPU[2] + vcell / (a_ + b_) + 12.7 / R10_RPU[3]
+    def dead_at(vref):          # CELL+ under which channel 2 asserts (dead) with the foot at vref, at its least
+        return (vitn[0] - i_s * rth_c - (1 - kc_hi) * vref) / kc_hi
+    v_ref = S["vol_r"] * i_n(dead_at(0.0))
+    for _ in range(5):
+        v_ref = S["vol_r"] * i_n(dead_at(v_ref))
+    S["latch_vref"] = v_ref
+    S["dead"] = dead_at(v_ref)
+    S["alive"] = (uv_rel[1] + i_s * rth_c) / kc_lo                # CELL+ over which channel 2 releases (alive), at its most (the foot at 0 V)
+    S["isrc_max"] = (S["dead"] - v_ref) / (R10_RBL * 1.01)        # the most current anything may push into CELL+ while the latch still reads dead
+    S["rint_min"] = [(vin, vin / S["isrc_max"]) for vin in (S["f05"]["vin"], vb_hi)]
+    S["known_src"] = [(vin, vin / S["r_int"] + 3 * S9["idss"]) for vin in (S["f05"]["vin"], vb_hi)]
+    S["latch_cell"] = [(vin, v_ref + (vin / S["r_int"] + 3 * S9["idss"]) * R10_RBL * 1.01) for vin in (S["f05"]["vin"], vb_hi)]
+    S["fet_idss_allow"] = (S["isrc_max"] - vb_hi / S["r_int"]) / 3
+    vs_max = 17.375                                               # VSYS's top (the record's system node, 9.688 to 17.375 V)
+    S["vs_max"] = vs_max
+    c_cell = S9["start"]["cout"] - S9["start"]["c_vsys"]
+    S["c_cell"] = c_cell
+    S["bleed_t"] = R10_RBL * 1.01 * c_cell * 1.2 * math.log(vs_max / S["dead"])
+    S["bleed_w"] = ((S9["vpk"] - v_ref) ** 2 / R10_RBL, (vb_hi - v_ref) ** 2 / R10_RBL)
+    S["r1206_hot"] = S["r1206"][0] * (S["r1206"][2] - t_hot) / (S["r1206"][2] - S["r1206"][1])
+    S["n_sink"] = (i_n(S9["vpk"]), i_n(vb_hi))
+    S["start_room"] = S9["if1_room"]
+    S["bleed_start"] = S9["vpk"] / R10_RBL
+    # round 9's readings, the failure reproduced on the same cases
+    S["r9_out_gate"] = [(vin, o / 2.0) for vin, o in S["out_held"]]
+    # ---- the parts within their limits
+    S["vgs_n_max"] = 12.7
+    S["vgs_p"] = (vb_lo * R10_RAG[0] / (R10_RAG[0] + R10_RAG[1]), vb_hi * R10_RAG[0] * 1.01 / (R10_RAG[0] * 1.01 + R10_RAG[1] * 0.99))
+    S["z_i"] = (vb_hi - S9["vz"][0]) / (R10_RVC * 0.99)
+    S["z_w"] = S["z_i"] * S9["vz"][1]
+    S["ra_w"] = 0.5 * c_hi * vb_hi ** 2
+    S["ra_pk"] = (vb_hi - S["vf"][0]) ** 2 / (R10_RA * 0.99)
+    S["ra_pk_168"] = (S9["vpk"] - S["vf"][0]) ** 2 / (R10_RA * 0.99)
+    need(yr, r"2\.5 times RCWV or maximum overload voltage\s+[^\n]*\n\s*Overload\s+which is less for 5 seconds", "RC's short-time overload")
+    S["ra_sto"] = (2.5 * math.sqrt(S["r1206"][0] * R10_RA)) ** 2 / R10_RA * 5.0
+    # ---- IF-1's static draw restated with round 10's parts (round 9's 19f table, its R107 and R108 row replaced)
+    vb = S9["vpk"]
+    S["static_add"] = [("U47 and U48 TPS37A, two (IDD at 800 mV)", 2 * S9["static"][3][1], "MAKER"),
+                       ("R233 into D27 (DD7_VC), its bound VBAT / R233", vb / R10_RVC, "SESSION"),
+                       ("Q51's off leakage into R253 (the 55 C row)", S["p_idss"][1], "MAKER"),
+                       ("R107 and R108 on CELL+ into DD7_VC through R254 (bound: CELL+ over the three)", vb / (a_ + b_ + R10_RPU[3]), "SESSION")]
+    S["static_drop"] = vb / 200e3
+    S["static_sum"] = S9["static_sum"] - S["static_drop"] + sum(x for _l, x, _c in S["static_add"])
+    S["static_frac"] = S["static_sum"] / S9["if1_room"]
+    # ---- T2, recorded now: E-1's even split (record l9stk 15.5) against an uneven one
+    S["t2"] = R10_T2
+    S["t2_tj"] = S9["t0"] + S9["band"] + (S9["budget"] - S9["r17_allow"] * S9["pr17"]) * R10_T2 + S9["r17_allow"] * S9["pr17"]
+    return S
+
+
+def render_fix20(R, p):
+    S, S9, H = R["S20"], R["S19"], R["H"]
+    T = S["tps"]
+    p("20. ROUND 10: BOARD A'S SIDE OF THE BREAKER'S LATCH AGAINST RECORD l8p'S ROUTE R1 (L8P-F04, L8P-F05; record l8p at %s, 4 October 2026)" % R9_COMMITS["l8p2"][:8])
+    p("   20a. THE FAILURE CASES (C-PROT), REPRODUCED ON ROUND 9'S DRAFT (RECORD, l8p; INFERRED)")
+    p("     L8P-F04: with the return held at %s V, DOCK_EN_OUT %s V at BRK_VIN 7.6 V and %s V at 10.6 V (record l8p); round 9's Q47 read half of it,"
+      % (fmt(S["held"], 3), fmt(S["f04"][0] * 2, 2), fmt(S["f04"][1] * 2, 2)))
+    p("       %s and %s V against the 2N7002's %s V: the inhibit did not set with the return held" % (fmt(S["f04"][0], 2), fmt(S["f04"][1], 2), fmt(S["f04"][2], 1)))
+    p("     L8P-F05: with the breaker off the LM5069's internal %s MOhm holds CELL+ at %s V at BRK_VIN %s V against board A's %s kOhm (%s V with"
+      % (fmt(S["r_int"] / 1e6, 0), fmt(S["f05"]["v"], 2), fmt(S["f05"]["vin"], 1), fmt(S["f05"]["r_a"] / 1e3, 0), fmt(S["f05"]["v_u104"], 2)))
+    p("       U104's %s kOhm, %s V at the 29.2 V clamp), over round 9's %s V dead point: the inhibit could release with the breaker off"
+      % (fmt(S["u104"] / 1e3, 1), fmt(S["f05"]["v_clamp"], 2), fmt(S["f05"]["dead"], 2)))
+    p("   20b. THE REDRAWN CIRCUIT (SESSION, apply_gen_sch_a_dd7.py; the makers' figures: TI SNVSBJ1E, AOS AO3401A, ST/Semtech 1N4148W, JSCJ 2N7002,")
+    p("     Diodes DS18004)")
+    p("     U48 TPS37A010122 on VBAT: SENSE1 (OV) on DOCK_EN_RET directly; SENSE2 (UV) on DOCK_EN_OUT over R109 562k / R144 422k (0.1 %); RESET1 is")
+    p("       DD7_T, pulled up from RESET2 (DD7_LP) through R250: DD7_T high = the return held AND the loop powered (the trigger)")
+    p("     the arm: Q50 (2N7002, gate DD7_T) turns Q51 (AO3401A) on through R251 100k / R252 200k; Q51 charges DD7_H from VBAT through R84 56R and")
+    p("       D26 (1N4148W); R253 10k bleeds Q51's off leakage; C241 1 uF 100 V X7R and R85 1.2 MOhm hold DD7_H")
+    p("     U47 TPS37A010122 on VBAT: SENSE1 (OV) on DD7_H, CTS1 on C248 3.9 nF C0G (the set delay); SENSE2 (UV) on CELL+ over R107 464k / R108 100k,")
+    p("       the divider's foot DD7_REF on Q52 to DD7_N while the loop is powered, else lifted by R254; RESET1 and RESET2 on DD7_N (the inhibit asked)")
+    p("     the inhibit: Q47 (gate DD7_LP) passes DD7_N to SYS_INH_D, Q49 holds CH_BATDRV at VBAT (R82 / R83 as round 9); the bleeder Q48 (gate DD7_LP)")
+    p("       loads CELL+ with R256 4.7k into DD7_N; Q46's gate moves to DD7_N; DD7_VC is VBAT through R233 100k under D27 (BZT52C12)")
+    p("   20c. THE THRESHOLDS AND THEIR TOLERANCES (MAKER: VITP and VITN %s / %s / %s V, hysteresis %s %% +-%s %%, ISENSE %s nA at 800 mV, %s uA"
+      % (fmt(T["vitp"][0], 3), fmt(T["vitp"][1], 3), fmt(T["vitp"][2], 3), fmt(T["hys"] * 100, 0), fmt(T["hacc"] * 100, 1), fmt(T["i_s"] * 1e9, 0), fmt(T["i_s_hi"] * 1e6, 0)))
+    p("     its largest row; resistors at their tolerances, each at its worst sign; INFERRED)")
+    p("     the return (U48 channel 1): read held under %s V at least, closed over %s V at most (OV release %s to %s V, assert under %s V); board"
+      % (fmt(S["ret_low"], 4), fmt(S["ret_high"], 4), fmt(S["ov_rel"][0], 4), fmt(S["ov_rel"][1], 4), fmt(T["vitp"][2], 3)))
+    p("       P's pull holds %s V: %s V of margin; its load on DOCK_EN_RET is SENSE1 alone, at most %s uA (over %s MOhm at the 17.4 V clamp of the"
+      % (fmt(S["held"], 3), fmt(S["ret_low_margin"], 3), fmt(T["i_s_hi"] * 1e6, 0), fmt(17.4 / T["i_s_hi"] / 1e6, 1)))
+    p("       return), against the interface's 1 MOhm or more")
+    p("     the loop (U48 channel 2): read powered over %s V at most (%s V at least), unpowered under %s V at least (UV release %s to %s V, R109 / R144"
+      % (fmt(S["out_rel"][1], 3), fmt(S["out_rel"][0], 3), fmt(S["out_ast"][0], 3), fmt(S["uv_rel"][0], 4), fmt(S["uv_rel"][1], 4)))
+    p("       %s to %s, ISENSE through %s kOhm); with the return held, DOCK_EN_OUT (RT1 at %s kOhm, R106 +1 %%, board A's %s kOhm on it):"
+      % (fmt(S["out_k"][0], 5), fmt(S["out_k"][1], 5), fmt(R10_OUT[0] * R10_OUT[1] / (R10_OUT[0] + R10_OUT[1]) / 1e3, 1), fmt(S9["rt1"][0] / 1e3, 0),
+         fmt((R10_OUT[0] + R10_OUT[1]) / 1e3, 0)))
+    for vin, o in S["out_held"]:
+        p("         BRK_VIN %5s V: %s V, %s V over the powered reading's most (half of it, which round 9's Q47 read, %s V against its 2.5 V)" % (fmt(vin, 1), fmt(o, 3), fmt(o - S["out_rel"][1], 3), fmt(o / 2.0, 2)))
+    p("     the interface's literal box (RET under %s V, OUT at %s V or over) holds every state board P produces (the return at %s V); board A reads"
+      % (fmt(S["if_ret_lo"], 1), fmt(S["if_out"], 1), fmt(S["held"], 3)))
+    p("       the return as held under %s V, not up to %s V, because the box also holds a CLOSED loop: RET/OUT is 22 / (22 + RT1), under 0.5 for RT1"
+      % (fmt(S["ret_low"], 3), fmt(S["if_ret_lo"], 1)))
+    p("       over %s kOhm, at BRK_VIN under %s V (RT1 30 kOhm) or %s V (RT1 47 kOhm); every ramp of a closed loop (a docking, the gauge's wake, a back-fed"
+      % (fmt(S["box_rt1"] / 1e3, 0), fmt(S["box_vin"][0][1], 2), fmt(S["box_vin"][1][1], 2)))
+    p("       precharge through the breaker's body diodes) passes through it, and a trigger there stops a dead pack's precharge (SESSION, the reason)")
+    p("     no window: a ramping closed loop never reads held while RT1 is under %s kOhm (RET/OUT over %s); RT1 is at most %s kOhm at 25 C and"
+      % (fmt(S["window_rt1"] / 1e3, 1), fmt(S["ret_high"] / S["out_rel"][0], 4), fmt(S9["rt1"][1] * 1.5 / 1e3, 0)))
+    p("       reaches 100 kOhm only above 110 C (Murata DM-SA16-E056, MAKER); a back-fed precharge carries at most %s A, so the FETs' copper sits at"
+      % fmt(S["ldo"], 5))
+    p("       the air; the precharge's floor (BRK_VIN %s V, RT1 at 15 kOhm) puts the return at %s V, %s V over the closed reading; it would read"
+      % (fmt(S["ldo_vin"], 2), fmt(S["ldo_ret"], 3), fmt(S["ldo_ret"] - S["ret_high"], 3)))
+    p("       held there only past RT1 %s kOhm (INFERRED)" % fmt(S["ldo_rt1_max"] / 1e3, 1))
+    p("     against board P's guard: board A reads the closed return as held only past RT1 %s kOhm at %s V and %s kOhm at %s V; board P's first"
+      % (fmt(S["guard_rt1"][0][1] / 1e3, 0), fmt(S["guard_rt1"][0][0], 1), fmt(S["guard_rt1"][1][1] / 1e3, 0), fmt(S["guard_rt1"][1][0], 1)))
+    p("       inverter turns off (RET 2.5 to 1.0 V) from %s to %s kOhm at %s V: board A never reads held before the guard's own trip (INFERRED)"
+      % (fmt(S["inv_rt1"][0][1] / 1e3, 1), fmt(S["inv_rt1"][0][2] / 1e3, 1), fmt(S["inv_rt1"][0][0], 1)))
+    p("     the loop at %s V and RT1 %s kOhm (record l9stk's former 'bound point'; WITHDRAWN as a bound by round 13, section 23g: 47 kOhm is not a"
+      % (fmt(S9["pack_lo"], 1), fmt(S9["rt1"][2] / 1e3, 0)))
+    p("       point of this part): the first inverter's gate %s V unloaded (%s V with round 9's 2 MOhm), %s V with round 10's (R109 + R144 on"
+      % ("%.3f" % S["bound"][0], "%.3f" % S9["ret_bound"][1], "%.3f" % S["bound"][1]))
+    p("       DOCK_EN_OUT, %s uA on the return), against its 2.5 V; board A reads it closed with %s V to spare: board A's loads move the loop's"
+      % (fmt(T["i_s_hi"] * 1e6, 0), fmt(S["bound_margin"], 3)))
+    p("       levels by %s V there, and no more is claimed of it (INFERRED)" % fmt(S["bound"][0] - S["bound"][1], 3))
+    p("     CELL+ (U47 channel 2, read only while an inhibit is asked and the loop is powered): dead under %s V at least, alive over %s V at most"
+      % (fmt(S["dead"], 3), fmt(S["alive"], 3)))
+    p("       (k %s to %s, the foot at RESET's %s V at its sink, VOL %s mV at %s mA read as %s ohm)"
+      % (fmt(S["cs_k"][0], 5), fmt(S["cs_k"][1], 5), fmt(S["latch_vref"], 4), fmt(T["vol"] * 1e3, 0), fmt(T["i_vol"] * 1e3, 0), fmt(S["vol_r"], 0)))
+    p("   20d. THE DELAYS (INFERRED; each element's bound named)")
+    p("     the set, from the return falling under %s V: U48's release %s us (tCTR, no capacitor, MAKER) + DD7_T to Q50's %s V %s us (R250 1 MOhm into"
+      % (fmt(S["ret_low"], 3), fmt(S9["tctr_open"] * 1e6, 0), fmt(S9["vth"][2], 1), fmt(S["t_trig"] * 1e6, 1)))
+    p("       %s pF, ASSUMPTION) + Q51 on %s us (R251 || R252 into 1.5 x its typical %s pF) + DD7_H over %s V %s us + CTS1 %s to %s ms (Equations 5 and 6,"
+      % (fmt(R10_C_T * 1e12, 0), fmt(S["t_qa"] * 1e6, 1), fmt(S["p_ciss"] * 1e12, 0), fmt(T["vitp"][2], 3), fmt(S["t_cross"] * 1e6, 1),
+         fmt(S["tcts1"][0] * 1e3, 3), fmt(S["tcts1"][1] * 1e3, 3)))
+    p("       C248 +-5 %%, RCTS %s to %s kOhm) + Q49 on %s us: at most %s ms, under the interface's 1 ms" % (fmt(T["rcts"][0] / 1e3, 0), fmt(T["rcts"][2] / 1e3, 0),
+      fmt(S["t_q49"] * 1e6, 1), fmt(S["t_set"] * 1e3, 3)))
+    p("     the arm completes before the set: the set comes at least %s ms after DD7_H passes %s V, while board P's pull holds the trigger (the"
+      % (fmt(S["t_set_min"] * 1e3, 3), fmt(T["vitp"][2], 3)))
+    p("       charge flows until the inhibit stops it); the arm's time constant at most %s us (R84 into C241's %s uF most): %s of the way, so the hold"
+      % (fmt(S["tau_arm"] * 1e6, 1), fmt(S["c_h"][1] * 1e6, 3), "%.5f" % S["arm_frac"]))
+    p("       starts from at least %s V (VSYS_MIN's %s V less D26's %s V at 10 mA)" % (fmt(S["v0"], 3), fmt(H["floor"], 3), fmt(S["vf"][1], 3)))
+    p("     the charge through the off breaker ends within %s ms of passing the threshold (board P's pull %s ms and board A's set), against E-14's 10 ms"
+      % (fmt(S["charge_end"] * 1e3, 3), fmt(S["pull_t"] * 1e3, 2)))
+    p("     the hold: DD7_H from %s V through R85 (1 %%) and C241 (%s uF least: K, X7R's 15 %% and 15 %% DC bias, ASSUMPTION) to U47's OV release, %s V"
+      % (fmt(S["v0"], 3), fmt(S["c_h"][0] * 1e6, 4), fmt(S["ov_rel"][1], 4)))
+    p("       at most, against every sink on the node: D26's reverse leakage %s uA at %s C (INFERRED: log-linear between the sheet's %s nA at 25 C and %s uA"
+      % (fmt(S["ir_hot"] * 1e6, 3), fmt(S["t_hot"], 2), fmt(S["ir"][0] * 1e9, 0), fmt(S["ir"][1] * 1e6, 0)))
+    p("       at 150 C), SENSE1's %s nA (MAKER), C241's insulation %s uA (ASSUMPTION): at least %s s after the return rises, %s s over the interface's"
+      % (fmt(T["i_s"] * 1e9, 0), fmt(S["i_x"][3] * 1e6, 3), fmt(S["hold_min"], 3), fmt(S["hold_margin"], 3)))
+    p("       %s s and %s s over the breaker's restart (%s s, record l8p); at most %s s (the clamp's VBAT, the sinks reversed); the hold reaches 1.0 s with"
+      % (fmt(S["if_hold"], 1), fmt(S["hold_vs_restart"], 3), fmt(S["restart"], 4), fmt(S["hold_max"], 2)))
+    p("       D26's leakage %s times the inferred figure" % fmt(S["leak_x"], 2))
+    p("     the hold always ends: Q51's off leakage %s uA at %s C (the 55 C row doubled every 10 K, INFERRED) into R253 holds DD7_K at %s V, under the"
+      % (fmt(S["k_rest"][0] * 1e6, 1), fmt(S["t_hot"], 2), fmt(S["k_rest"][1], 3)))
+    p("       OV release's least %s V by %s V" % (fmt(S["ov_rel"][0], 4), fmt(S["rest_margin"], 3)))
+    p("   20e. L8P-F05 CORRECTED: THE RELEASE ON CELL+ ALIVE (INFERRED)")
+    p("     a dead CELL+ never sets the inhibit (U47's channel 2 reads alive while R254 lifts its foot, i.e. while no inhibit is asked); it keeps one")
+    p("       that is set, and Q48 then loads CELL+ through R256 into DD7_N, so CELL+ reads alive only when the breaker drives it")
+    p("     the latch reads dead while every source into CELL+ stays under %s mA (CELL+ under %s V less the foot's %s V, through R256 at +1 %%):"
+      % (fmt(S["isrc_max"] * 1e3, 3), fmt(S["dead"], 3), fmt(S["latch_vref"], 4)))
+    for (vin, rmin), (_v, ks), (_v2, vc) in zip(S["rint_min"], S["known_src"], S["latch_cell"]):
+        p("         BRK_VIN %4s V: the LM5069's internal resistor may be as low as %s kOhm (%s of its 1 MOhm); at 1 MOhm with the three FETs' %s uA"
+          % (fmt(vin, 1), fmt(rmin / 1e3, 1), "%.3f" % (rmin / S["r_int"]), fmt(3 * S9["idss"] * 1e6, 0)))
+        p("           (25 C) CELL+ sits at %s V, %s V under the dead reading (was %s V against %s V)" % (fmt(vc, 3), fmt(S["dead"] - vc, 3),
+          fmt(S["f05"]["v"] if vin < 20 else S["f05"]["v_clamp"], 2), fmt(S["f05"]["dead"], 2)))
+    S22 = R["S22"]
+    p("       the battery FETs' off leakage (Nexperia prints at most %s uA each at 25 C and %s uA at Tj 125 C, nothing over 125 C: MAKER) may reach"
+      % (fmt(S22["bat"][0] / 3 * 1e6, 0), fmt(S22["bat"][1] / 3 * 1e6, 0)))
+    p("       %s uA each before this static limit; the breaker pair's leakage enters CELL+ too (record l8p's L8P-F06): section 22b counts all five"
+      % fmt(S["fet_idss_allow"] * 1e6, 0))
+    p("     by the hold's end CELL+ has fallen under the dead reading unless the breaker drives it: from VSYS's %s V through R256 into CELL_FUSED's %s uF"
+      % (fmt(S["vs_max"], 3), fmt(S["c_cell"] * 1e6, 0)))
+    p("       (+20 %%, ASSUMPTION) within %s s with the sources at their hot bound (%s uA, section 22b), inside the hold's least %s s while the"
+      % (fmt(S22["sel"]["t_hot"], 3), fmt(S22["src"]["hot"] * 1e6, 1), fmt(S["hold_min"], 3)))
+    p("       sources total under %s uA (the coupled limit, round 12; %s s is the figure with no source, which rounds 10 and 11 printed alone)"
+      % (fmt(S22["sel"]["lim"] * 1e6, 1), fmt(S["bleed_t"], 3)))
+    p("     the release: the breaker's restart drives CELL+ over %s V against R256's %s mA at %s V, inside IF-1's %s A room"
+      % (fmt(S["alive"], 3), fmt(S["bleed_start"] * 1e3, 2), fmt(S9["vpk"], 1), fmt(S["start_room"], 2)))
+    p("   20f. THE SERVICE UNTOUCHED (INFERRED)")
+    p("     10 A held, 18 A for 60 s and every current-limit excursion: while the breaker is on, board A reads the return closed for any RT1 under"
+      % ())
+    p("       %s kOhm at the pack's %s V (%s kOhm at %s V), past the guard's own trip (20c): %s V at RT1 %s kOhm, which bounds nothing (round 13, 23g:"
+      % (fmt(S["guard_rt1"][0][1] / 1e3, 0), fmt(S9["pack_lo"], 1), fmt(S["guard_rt1"][1][1] / 1e3, 0), fmt(S["guard_rt1"][1][0], 1), fmt(S["bound"][1], 3),
+         fmt(S9["rt1"][2] / 1e3, 0)))
+    p("       whether the guard itself stays closed in the service is not printed, record l8p's L8P-F07); board P's detector never pulls a running")
+    p("       breaker (record l8p 12e): no trigger, no hold, no request;")
+    p("       Q47, Q48 and Q52 idle; Q46 blocks the input-return pulse (DD7_N high): no board A part acts on a running breaker or its loop")
+    p("     the precharge and the gauge's wake (a closed loop back-fed through the body diodes): never read held while RT1 is under %s kOhm; CELL+ never"
+      % fmt(S["window_rt1"] / 1e3, 1))
+    p("       sets the inhibit: a dead pack's precharge passes (round 9's inhibit set on CELL+ under its dead point whenever the loop read powered,")
+    p("       which a back-fed precharge reaches on the way up: at its threshold corners it could stop the precharge; withdrawn)")
+    p("     a docking: OUT and RET rise together at RET/OUT of %s or more (RT1 under %s kOhm): no trigger; with no source board A is unpowered until"
+      % (fmt(S["ret_high"] / S["out_rel"][0], 4), fmt(S["window_rt1"] / 1e3, 1)))
+    p("       the breaker's start feeds VBAT, and at power-up U47 and U48 hold their outputs asserted for tSD, %s ms at most (the inhibit at most"
+      % fmt(S9["tsd"] * 1e3, 0))
+    p("       that long, then on CELL+ as read)")
+    p("   20g. THE PARTS WITHIN THEIR LIMITS (MAKER limits; INFERRED readings)")
+    p("     U47, U48: VDD %s to %s V against VBAT %s to %s V; SENSE and RESET 65 V graded against %s V; RESET sinks at most %s mA (the breaker restarted, %s V)"
+      % (fmt(S9["vdd"][0], 1), fmt(S9["vdd"][1], 0), fmt(H["floor"], 3), fmt(S9["vbat_clamp"], 1), fmt(S9["vbat_clamp"], 1), fmt(R["S22"]["sel"]["sink"]["run"] * 1e3, 2), fmt(S9["vpk"], 1)))
+    p("       and %s mA with CELL+ following VBAT at SYSOVP (R256 at -1 %%), against VOL's %s mA row and TI's recommended %s mA at most; %s mA only"
+      % (fmt(R["S22"]["sel"]["sink"]["ovp"] * 1e3, 2), fmt(T["i_vol"] * 1e3, 0), fmt(S["i_rec"] * 1e3, 0), fmt(R["S22"]["sel"]["sink"]["clamp"] * 1e3, 2)))
+    p("       with CELL+ at the 29.2 V clamp, under the absolute %s mA: a state that needs a second fault (V1's minor; the states in section 22d)"
+      % fmt(R["S22"]["i_abs"] * 1e3, 0))
+    p("     2N7002 (Q44 to Q48, Q50, Q52): VGS at most %s V (DD7_VC) against %s V; VDS at most %s V against %s V; currents at most %s mA against %s A"
+      % (fmt(S["vgs_n_max"], 1), fmt(S9["vgs_max"], 0), fmt(S9["vbat_clamp"], 1), fmt(S["n_vds"], 0), fmt(R["S22"]["sel"]["sink"]["clamp"] * 1e3, 2), fmt(S["n_id"], 3)))
+    p("     AO3401A (Q49, Q51): VGS %s to %s V against +-%s V; VDS %s V against %s V; Q51's arm peak %s A (%s A at %s V) against IDM %s A"
+      % (fmt(S["vgs_p"][0], 2), fmt(S["vgs_p"][1], 2), fmt(S["p_vgs"], 0), fmt(S9["vbat_clamp"], 1), fmt(S["p_vds"], 0), fmt(S["arm_peak"], 3),
+         fmt(S["arm_peak_168"], 3), fmt(S9["vpk"], 1), fmt(S["p_idm"], 0)))
+    p("     D26 (1N4148W): the arm's peak %s A decaying in %s us, I2t %s A2s, against its surge rows %s A for 1 us and %s A for 1 ms (I2t %s A2s);"
+      % (fmt(S["arm_peak"], 3), fmt(S["tau_arm"] * 1e6, 1), "%.2e" % S["arm_i2t"], fmt(S["ifsm"][2], 0), fmt(S["ifsm"][1], 0), "%.0e" % (S["ifsm"][1] ** 2 * 1e-3)))
+    p("       at most once a hold, so at least 1.0 s apart")
+    p("     R84 (56R 1206): the arm's %s mJ at the clamp, %s W peak decaying in %s us (%s W at %s V): no held sheet prints a pulse rating for it"
+      % (fmt(S["ra_w"] * 1e3, 3), fmt(S["ra_pk"], 1), fmt(S["tau_arm"] * 1e6, 1), fmt(S["ra_pk_168"], 1), fmt(S9["vpk"], 1)))
+    p("       (Yageo's short-time overload is a 5 s test, no basis for a 71 us pulse: V1's minor, the comparison withdrawn); R84 is SPECIFIED as a")
+    p("       pulse-rated part whose maker prints a single-pulse curve covering %s W for %s us once a second, its code owed to Layer 6 (CONDITIONAL)"
+      % (fmt(S["ra_pk"], 1), fmt(S["tau_arm"] * 1e6, 0)))
+    p("     R256 (4.7k 1206; 6.8k in round 11 only, section 22): %s W at %s V while the inhibit holds after a restart," % (fmt(S["bleed_w"][0], 4), fmt(S9["vpk"], 1)))
+    p("       %s W at the 29.2 V clamp, against RC1206's %s W derated to %s W at %s C (Yageo, the knee read as 70 C)"
+      % (fmt(S["bleed_w"][1], 4), fmt(S["r1206"][0], 2), fmt(S["r1206_hot"], 3), fmt(S["t_hot"], 2)))
+    p("     D27 (BZT52C12): at most %s mA, %s mW, from the 29.2 V clamp through R233" % (fmt(S["z_i"] * 1e3, 3), fmt(S["z_w"] * 1e3, 2)))
+    p("   20h. IF-1'S STATIC DRAW RESTATED (19f's table; R107 and R108's %s mA row replaced)" % fmt(S["static_drop"] * 1e3, 4))
+    for lab, x, cl in S["static_add"]:
+        p("     %s: %s mA (%s)" % (lab, fmt(x * 1e3, 4), cl))
+    p("     in all %s mA, %s %% of the %s A room (round 9's %s mA)" % (fmt(S["static_sum"] * 1e3, 2), fmt(S["static_frac"] * 100, 2), fmt(S9["if1_room"], 2), fmt(S9["static_sum"] * 1e3, 2)))
+    p("   20i. T2 RECORDED (OPEN against E-1's acceptance; its comparison is the next task): record l9stk's E-1 limit (%s K/W, %s W a FET at %s A)"
+      % (fmt(S9["rec"][3][2], 2), fmt(S9["rec"][3][0], 3), fmt(S9["i"], 2)))
+    p("     assumes the current splits evenly between Q39, Q40 and Q42. With one FET at r and two at R, the one carries I R / (R + 2 r) and dissipates")
+    p("       I^2 R^2 r / (R + 2 r)^2; over r this is largest at r = R / 2, I^2 R / 8, which is 9/8 of the even split's I^2 R / 9: an uneven split")
+    p("       can put %s times the even loss in one FET (with two FETs the even split is the worst case; with three it is not). The other two then"
+      % fmt(S["t2"], 3))
+    p("       carry I / 4 each (9/16 of the even loss), so that FET's rise is (9/8) (Zself + Zmut) against E-1's (Zself + 2 Zmut): over E-1's figure")
+    p("       at that split wherever Zmut is under Zself / 7, and at the worst split, one FET at R / (2 - 4 m) for m = Zmut / Zself, wherever Zmut")
+    p("       is under Zself / 4 (round 11's correction of this line, section 21a: %s at m = 0.2, where R / 2 gives %s); with the coupling"
+      % (fmt(worst_share(0.2)[0], 4), fmt(split_share(2.0, 0.2), 4)))
+    p("       negligible, the allowance's 45.88 K/W puts that junction at %s C held at %s A where" % (fmt(S["t2_tj"], 1), fmt(S9["i"], 2)))
+    p("       E-1 states 150 C (INFERRED; the spread of RDS(on) between parts is not printed). 45.88 K/W is NOT SETTLED: OPEN against E-1's acceptance")
+    p("   20j. E-14 AND E11-45 AS THEY NOW READ (record l9stk's E-14 with record l8p's 12g; this record's E11-45, section 8; RECORD, INFERRED)")
+    p("     E-14 (b), board A's part: with the return held the inhibit sets within %s ms, so the charge through the off breaker ends within %s ms of"
+      % (fmt(S["t_set"] * 1e3, 2), fmt(S["charge_end"] * 1e3, 2)))
+    p("       passing board P's threshold (%s to %s A), under E-14's 10 ms, the junction's rise inside record l8p's %s K for 10 ms; (c), board A's part:"
+      % (fmt(S["thr_lo"], 3), fmt(S["thr_hi"], 3), fmt(S["pulse_k"], 1)))
+    p("       the battery FETs stay off at least %s s after the return rises (the breaker restarts within %s s), then are released once CELL+ reads alive"
+      % (fmt(S["hold_min"], 3), fmt(S["restart"], 3)))
+    p("     E11-45 rows (c2), (e), (f), (g) and (h) carry round 10's acceptances; (c2) is B-R2's case with route R1 (no longer open on board A's side)")
+    p("   20k. FINDINGS FOR OTHER RECORDS (each is its owner's; nothing of theirs is edited here)")
+    p("     L4E11-R10-F1, record l8p (12f, the interface): the box 'RET under 1.0 V with OUT at 2.0 V or over' also contains a closed loop, RET/OUT")
+    p("       22 / (22 + RT1) under 0.5 for RT1 over 22 kOhm at BRK_VIN under about 3.6 V, which every back-fed ramp passes; board A reads the return")
+    p("       held under %s V (board P holds %s V); the interface's figure is a 2N7002's least threshold, and the state board P produces is 'held'"
+      % (fmt(S["ret_low"], 3), fmt(S["held"], 3)))
+    p("     L4E11-R10-F2, record l8p (check_l8p_netlist.py, its EN group on board A): it wants DOCK_EN_OUT and DOCK_EN_RET to reach J_DOCK and RT1")
+    p("       alone, so it reads FAIL on any board A that carries DD-7 (round 9's Q44 and R109 already, round 10's U48 and R109): the group should")
+    p("       allow DD-7's loads (this record's check_dd7_netlist.py reads them)")
+    p("     L4E11-R10-F3, record l9stk (15.5, the thermal guard) with record l8p (RT1): Murata's PRF15BB103RB6RC prints 10 kOhm +-50 %% at 25 C, 100 kOhm"
+      % ())
+    p("       at a sensing temperature over 110 C (no upper bound) and 4.7 MOhm at 130 +-3 C (DM-SA16-E056 Rev.1 p.4); '47 kOhm at 130 C' is the 470 ohm")
+    p("       group's column. The guard's trip lies under 133 C (4.7 MOhm far over 338 kOhm), but its no-trip side in the 18 A service (the FETs at")
+    p("       118.0 C) rests on no printed point: RT1 may pass the first inverter's 61.3 kOhm (2.5 V at 10.6 V) anywhere over 110 C (MAKER, INFERRED)")
+    p("   20l. WHAT STAYS OPEN (MAKER, INFERRED, ASSUMPTION as named in 20c to 20e)")
+    p("     physical: the hold's capacitor under DC bias and D26's hot leakage (E11-45 h); U47's and U48's thresholds as the lot reads them; the")
+    p("       latch with the breaker held off (E11-45 f); board P's own conditions (record l8p: E-14b, R10's tolerance, E-12c)")
+    p("     T2 (20i): E-1's even split, OPEN against its acceptance; E11-37 OPEN (Q-TI-17 or the bench with three)")
+    p("     the -1 latched with a source present and no charge over board P's threshold stays latched (nothing asks an inhibit and Q46 blocks the")
+    p("       pulse): it restarts on board P's detector at a charge over %s to %s A, on a redocking, or on the input's return to a dark kit (record"
+      % (fmt(S["thr_lo"], 3), fmt(S["thr_hi"], 3)))
+    p("       l9stk's DD-7 reach, unchanged; RECORD)")
+    p("     the window's bound (RT1 under %s kOhm) rests on RT1 staying under it while the FETs' copper sits at the air: Murata prints no point"
+      % fmt(S["window_rt1"] / 1e3, 1))
+    p("       between 25 C and 110 C (its curve is typical)")
+    p("   20m. STATUS (SESSION): L8P-F04 CORRECTED IN THE DRAFT (U48 reads the held return and the powered loop; set within %s ms; held at least %s s;"
+      % (fmt(S["t_set"] * 1e3, 2), fmt(S["hold_min"], 3)))
+    p("     released on CELL+ alive); L8P-F05 CORRECTED IN THE DRAFT (a dead CELL+ never sets the inhibit; the bleeder holds the latch for any source")
+    p("     under %s mA, the LM5069's resistor down to %s of its value at 16.8 V); B-R2 with route R1 DRAFTED on both boards; composes in L4-E9's"
+      % (fmt(S["isrc_max"] * 1e3, 3), "%.3f" % (S["rint_min"][0][1] / S["r_int"])))
+    p("     order and reads DRAWN on the regenerated netlist; nothing measured")
+    p("")
+
+
+# ---- round 11 (4 October 2026, task T2): E-1 under an uneven split of the RDS(on) spread, and E11-37, compared over three approaches
+R11_PINS = {"pxp9r1": ("v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf", "88a7b67bfcec9ba7dbf4619be60cfaa883f61b7c9a93a19affc3a5278d91513f"),
+            "sqj407": ("v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf", "1c1038b032b5bf378878473ba170cdbbd640ce1597fbb9c23be20adeaea663e8")}
+PINS.update(R11_PINS)
+R11_DERATE = 25.0              # K, the record's convention (15c): a part's junction limit 25 K under its rated maximum (the BUK6Y10-30P's 150 C under 175 C)
+
+
+def worst_share(m):
+    """The factor by which the hottest of three paralleled FETs' junction rise can exceed the even split's, over every split of their
+    RDS(on) with each at most the allowance R (two at R, one at r = R / x, x >= 1), for m = Zmut / Zself: the rise of the one at r is
+    I^2 R (Zself x + 2 Zmut) / (x + 2)^2, largest at x = 2 - 4 m while m < 1/4; the even split's is I^2 R (Zself + 2 Zmut) / 9."""
+    if m >= 0.25:
+        return 1.0, 1.0
+    x = 2.0 - 4.0 * m
+    return split_share(x, m), x
+
+
+def split_share(x, m):
+    """The hottest of three FETs' junction rise over the even split's, two at R and one at R / x, for m = Zmut / Zself."""
+    return 9.0 * (x + 2.0 * m) / ((x + 2.0) ** 2 * (1.0 + 2.0 * m))
+
+
+def fix21_round(R, T):
+    """T2 of the approved plan: E-1 (record l9stk 15.5) at its own case with the sharing NOT assumed even, and E11-37 (the three FETs'
+    Ciss against TI's 5 nF), over three approaches: (i) three FETs kept, (ii) two FETs under 5 nF, (iii) a buffer on BATDRV."""
+    S9, L, H, S20 = R["S19"], R["L"], R["H"], R["S20"]
+    S = {}
+    i_, t0, band = S9["i"], S9["t0"], S9["band"]
+    r17k = S9["r17_allow"] * S9["pr17"]
+    S["fet_budget"] = 150.0 - t0 - band - r17k                     # K the three FETs' own rise may take, R17 placed apart
+    ra = F16_RA
+    S["ra"] = ra
+    # the allowance is taken at the charger's printed least gate drive (SLUSE65A VBATDRV_ON's minimum) and E-1's 150 C: section 15c's
+    # two-chord figure for the BUK6Y10-30P, reproduced here; at the typical 10 V drive the figure (and so the loss) would be lower
+    S["vg"] = H["drv"][0]
+    cbk = R["K"]["cands"][2]
+    if "BUK6Y10-30P" not in cbk["lab"] or abs(cbk["rb"] - ra) > 0.0005e-3 or abs(cbk["tjlim"] - 150.0) > 1e-9:
+        refuse(4, "the RDS(on) allowance is not section 15c's figure at the charger's least drive and 150 C")
+    rd = cbk["rdef"]
+    S["ra_10v"] = fet_bound(rd["r10_25"], rd["r10_hot"], rd["t_hot"], rd["r45_25"], 10.0, 150.0)[1] * 1e-3
+    S["p_even"] = (i_ / 3.0) ** 2 * ra
+    S["p_worst"] = i_ ** 2 * ra / 8.0                               # m = 0: the one at R / 2 carries I / 2
+    S["bar_old"] = S9["rec"][3][2]                                  # record l9stk's 45.88 K/W, the even split's
+    S["tj_old_worst"] = t0 + band + r17k + S["bar_old"] * S["p_even"] * worst_share(0.0)[0]
+    S["bar_new"] = S["bar_old"] / worst_share(0.0)[0]               # on record l9stk's printed 45.88 K/W, the even split's bar
+    S["bar_m"] = [(m_, S["bar_old"] / worst_share(m_)[0], worst_share(m_)[1]) for m_ in (0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.4)]
+    S["bar_check"] = S["fet_budget"] / (S["p_even"] * worst_share(0.0)[0])  # the same from this record's rounding (within 0.1 %)
+    if abs(S["bar_check"] - S["bar_new"]) > 0.001 * S["bar_new"] + 0.02:
+        refuse(4, "the worst-split bar does not reproduce from the budget")
+    # the service rows at the corrected bar with the worst split, as round 9 printed them at the even split (identical by construction)
+    S["tj_rows"] = S9["tj_rec"]
+    # a bounded spread, for information only: the sheet's typical is no printed minimum
+    bk = flat(text_pdf("buk6y10"))
+    m = need(bk, r"RDSon drain-source on-state VGS = -10 V; ID = -13\.5 A; Tj = 25 °C - (\d+) (\d+) mΩ", "the BUK6Y10-30P's RDS(on) at 25 C")
+    S["bk_typ_max"] = f(m, 1) / f(m, 2)
+    xb = 1.0 / S["bk_typ_max"]
+    S["bounded"] = split_share(xb, 0.0)
+    S["bk_qg"] = f(need(bk, r"QG\(tot\) total gate charge VDS = -15 V; ID = -12 A; VGS = -10 V; - ([\d.]+) (\d+) nC", "the BUK6Y10-30P's QG(tot)"), 2) * 1e-9
+    # ---- (i)-b: three of another part of the class, PXP9R1-30QL (Nexperia, held), by the record's own bound and convention
+    Lp = lambda pat, what: find("pxp9r1", pat, what, layout=True)[1]
+    m = Lp(r"VGS = -10 V; ID = -10\.8 A; Tj = 25 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ\s+resistance\s+VGS = -10 V; ID = -10\.8 A; Tj = 150 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ\s+VGS = -4\.5 V; ID = -9\.1 A; Tj = 25 °C\s+-\s+([\d.]+)\s+([\d.]+)\s+mΩ", "PXP9R1-30QL's RDS(on)")
+    px = dict(r10_25=f(m, 2), r10_hot=f(m, 4), t_hot=150.0, r45_25=f(m, 6))
+    px["tj_rated"] = f(Lp(r"Tj\s+junction temperature\s+-55\s+(\d+)\s+°C", "PXP9R1-30QL's junction rating"))
+    px["tj_lim"] = px["tj_rated"] - R11_DERATE
+    px["kg"], px["r"] = fet_bound(px["r10_25"], px["r10_hot"], px["t_hot"], px["r45_25"], S["vg"], px["tj_lim"])
+    px["r"] *= 1e-3
+    px["ciss"] = f(Lp(r"Ciss\s+input capacitance\s+VDS = -15 V; f = 1 MHz; VGS = 0 V;\s+-\s+(\d+)", "PXP9R1-30QL's Ciss")) * 1e-12
+    find("pxp9r1", r"MLPAK33 \(SOT8002\)", "PXP9R1-30QL's package")
+    px["budget"] = px["tj_lim"] - t0 - band - r17k
+    px["p_even"] = (i_ / 3.0) ** 2 * px["r"]
+    px["bar"] = px["budget"] / (px["p_even"] * worst_share(0.0)[0])
+    px["ciss3"] = 3 * px["ciss"]
+    S["px"] = px
+    # ---- (ii) two FETs under TI's 5 nF: each part's Ciss from its held sheet against 2.5 nF; the pair's bar (two: the even split is the worst)
+    two = []
+    for lab, key, pat, k in (("BUK6Y10-30P (Nexperia)", None, None, None),
+                             ("PXP9R1-30QL (Nexperia)", None, None, None),
+                             ("AONS21357 (AOS)", "aons21357", r"Ciss\s+Input Capacitance\s+(\d+)\s+pF", 1),
+                             ("SQJ403EP (Vishay)", "sqj403", r"Input Capacitance\s+Ciss\s+-\s+(\d+)\s+(\d+)", 2),
+                             ("SQJ407EP (Vishay)", "sqj407", r"Input capacitance\s+Ciss\s+-\s+(\d+)\s+(\d+ \d+)", 2)):
+        # the figure judged is the sheet's MAXIMUM where it prints one (Vishay's two, group 2; V2-m1: round 11 took their typical column and
+        # called it the maximum), the typical figure where the sheet prints no maximum (Nexperia, AOS)
+        if key is None:
+            c = L["ciss_t"] if lab.startswith("BUK") else px["ciss"]
+            typ, kind = c, "typical, no maximum printed"
+        else:
+            mm = find(key, pat, lab + "'s Ciss", layout=True)[1]
+            c = float(mm.group(k).replace(" ", "")) * 1e-12
+            typ, kind = (c, "typical, no maximum printed") if k == 1 else (float(mm.group(1).replace(" ", "")) * 1e-12, "maximum")
+            if k == 2 and not c > typ:
+                refuse(4, "%s's Ciss maximum is not over its typical figure" % lab)
+        two.append((lab, c, 2 * c, 2 * c < H["bf_ciss"]))
+        S.setdefault("two_note", {})[lab] = (typ, kind)
+    S["two"] = two
+    S["pair_bar"] = S9["rec"][2][2]                                 # record l9stk's 20.39 K/W for the BUK6Y10-30P pair (Zself + Zmut)
+    S["pair_ciss"] = (2 * L["ciss_t"], 2 * L["ciss_0"])
+    S["pair_tau"] = (H["rdrv"][1] * 2 * L["ciss_t"], H["rdrv"][1] * 2 * L["ciss_0"], L["roff"][1] * 2 * L["ciss_0"])
+    S["pair_vs_three"] = S["pair_bar"] / S["bar_new"]
+    # the class's figure of merit: RDS(on) maximum at -10 V and 25 C times Ciss, per held part (MAKER rows), against the pair's need
+    S["fom_bk"] = 10e-3 * L["ciss_t"]
+    # ---- (iii) a buffer between BATDRV and the FETs: what TI prints about BATDRV
+    tb = flat("".join(pdf_pages("bq25730")))
+    need(tb, r"BATDRV 21 O P-channel battery FET \(BATFET\) gate driver output\. It is shorted to VSYS to turn off the BATFET\. It goes 10 V below VSYS to fully turn on BATFET\. BATFET is in linear mode to regulate VSYS at minimum system voltage when battery is depleted\. BATFET is fully on during fast charge and works as an ideal-diode in supplement mode\.", "BATDRV's pin text")
+    need(tb, r"P-channel MOSFETs is used for battery charging BATFET\. The gate drivers are internally integrated into the IC with 10 V of gate drive voltage\.", "the BATFET's driver text")
+    need(tb, r"the Ciss of P-channel MOSFET should be chosen less than 5 nF", "TI's 5 nF")
+    S["buffer_mentions"] = len([s_ for s_ in tb.split(". ") if "BATDRV" in s_ and ("buffer" in s_ or "external driver" in s_)])
+    if S["buffer_mentions"]:
+        refuse(4, "SLUSE65A names a buffer or an external driver on BATDRV: read it before rejecting approach (iii)")
+    # ---- the connected path of the selected approach (unchanged parts)
+    S["tau3"] = (S9["tau3_on"][0], S9["tau3_on"][1], S9["tau3_off"])
+    S["q49_q"] = 3 * S["bk_qg"]
+    return S
+
+
+def render_fix21(R, p):
+    S, S9, H, L = R["S21"], R["S19"], R["H"], R["L"]
+    px = S["px"]
+    p("21. ROUND 11 (TASK T2): E-1 WITH THE SHARING NOT ASSUMED EVEN, AND E11-37, OVER THREE APPROACHES (4 October 2026)")
+    p("   21a. THE DEFECT ON C-PROT rev 1 (record l9stk's E-1 at 23.93 A held from L4-E12's 76.25 C, MODELED; the band %s K, R17's %s K apart; INFERRED)"
+      % (fmt(S9["band"], 2), fmt(S9["r17_allow"] * S9["pr17"], 2)))
+    p("     E-1 sized each FET at the even split, %s W at the RDS(on) allowance %s mOhm, and set (Zself + 2 Zmut) at most %s K/W. Every FET's"
+      % (fmt(S["p_even"], 4), fmt(S["ra"] * 1e3, 3), fmt(S["bar_old"], 2)))
+    p("     RDS(on) is at most the allowance; Nexperia prints no minimum. With two at R and one at R / x the hottest one's rise is I^2 R (Zself x")
+    p("     + 2 Zmut) / (x + 2)^2: largest at x = 2 - 4 m (m = Zmut / Zself) while m is under 1/4, the even split's otherwise; over the even")
+    p("     split it is 9 (x + 2 m) / ((x + 2)^2 (1 + 2 m)): %s at m = 0 (one FET at R / 2 takes I / 2 and %s W). At record l9stk's %s K/W the"
+      % (fmt(worst_share(0.0)[0], 4), fmt(S["p_worst"], 4), fmt(S["bar_old"], 2)))
+    p("     hottest junction reads %s C held at %s A where E-1 states 150 C: E-1 fails at its own case (round 10's 20i, corrected in place: at the"
+      % (fmt(S["tj_old_worst"], 1), fmt(S9["i"], 2)))
+    p("     split R / 2 the even split's figure is exceeded wherever Zmut is under Zself / 7, at the worst split wherever it is under Zself / 4:")
+    p("     at m = 0.2 the worst split gives %s where R / 2 gives %s)" % (fmt(worst_share(0.2)[0], 4), fmt(split_share(2.0, 0.2), 4)))
+    p("     the allowance is section 15c's two-chord figure at the charger's printed least gate drive, VBATDRV_ON %s V (SLUSE65A p.%s), and 150 C;"
+      % (fmt(S["vg"], 1), H["drv_p"]))
+    p("       at a 10 V drive it would read %s mOhm and the bar would loosen by that ratio: the printed least drive is the one taken (MAKER, INFERRED)"
+      % fmt(S["ra_10v"] * 1e3, 3))
+    p("     with the spread bounded at the sheet's typical over its maximum (%s at -10 V and 25 C, no printed minimum: INFERRED, information only)"
+      % fmt(S["bk_typ_max"], 2))
+    p("     the factor would be %s" % fmt(S["bounded"], 4))
+    p("   21b. THE THREE APPROACHES (MAKER rows; the bars are installed per-FET figures at E-1's limit; INFERRED)")
+    p("     (i) THREE FETS KEPT. (a) The BUK6Y10-30P, E-1's installed acceptance taken over the worst split: (Zself + 2 Zmut) at most %s K/W"
+      % fmt(S["bar_new"], 2))
+    p("       for any m (the even split's %s K/W times 8 (1 - m)(1 + 2 m) / 9 for a measured m under 1/4):" % fmt(S["bar_old"], 2))
+    for m_, b_, x_ in S["bar_m"]:
+        p("         m %4s: (Zself + 2 Zmut) at most %s K/W (the worst one at R / %s)" % (fmt(m_, 2), fmt(b_, 2), fmt(x_, 3)))
+    p("       Ciss %s nF typical (%s near 0 V), %s times TI's 5 nF: E11-37 stays on TI's answer or the bench; no land, net or part changes"
+      % (fmt(S9["ciss3"][0] * 1e9, 2), fmt(S9["ciss3"][1] * 1e9, 2), fmt(S9["ciss_ratio"][0], 2)))
+    p("       (b) another part of the class, PXP9R1-30QL (MLPAK33, rated %s C, so the record's convention puts its limit at %s C): RDS(on) %s"
+      % (fmt(px["tj_rated"], 0), fmt(px["tj_lim"], 0), fmt(px["r"] * 1e3, 3)))
+    p("       mOhm at %s V and %s C (printed %s mOhm at -10 V and 150 C, the gate chord x%s); the worst-split bar %s K/W, under (a)'s; Ciss"
+      % (fmt(S["vg"], 1), fmt(px["tj_lim"], 0), fmt(px["r10_hot"], 1), fmt(px["kg"], 4), fmt(px["bar"], 2)))
+    p("       %s nF typical for three, %s times TI's 5 nF; a new land: worse on its bar (printed maxima) and on Ciss (typical)"
+      % (fmt(px["ciss3"] * 1e9, 2), fmt(px["ciss3"] / H["bf_ciss"], 2)))
+    p("     (ii) TWO FETS UNDER TI'S 5 nF (two: the even split is the worst split for any coupling): each part's Ciss against 2.5 nF, at each")
+    p("       sheet's own VDS: the printed maximum where the sheet prints one (Vishay's two), the typical figure where it prints none (MAKER):")
+    for lab, c, c2, ok in S["two"]:
+        typ, kind = S["two_note"][lab]
+        p("         %s: %s nF %s%s, two %s nF: %s" % (lab, fmt(c * 1e9, 2), kind, " (%s nF typical)" % fmt(typ * 1e9, 2) if kind == "maximum" else "",
+                                                    fmt(c2 * 1e9, 2), "under 5 nF" if ok else "over 5 nF"))
+    p("       only the BUK6Y10-30P pair stays under 5 nF, on a TYPICAL figure (%s nF at the sheet's -15 V; about %s near 0 V, over it; no maximum"
+      % (fmt(S["pair_ciss"][0] * 1e9, 2), fmt(S["pair_ciss"][1] * 1e9, 2)))
+    p("       printed: CONDITIONAL, Q-TI-17 (e)); its E-1 bar is record l9stk's (Zself +")
+    p("       Zmut) at most %s K/W, %s of (i)'s; BATDRV's time constants %s / %s us on and %s us off; Q42 and its land leave the draft"
+      % (fmt(S["pair_bar"], 2), fmt(S["pair_vs_three"], 3), fmt(S["pair_tau"][0] * 1e6, 2), fmt(S["pair_tau"][1] * 1e6, 2), fmt(S["pair_tau"][2] * 1e6, 2)))
+    p("     (iii) A BUFFER BETWEEN BATDRV AND THE FETS: SLUSE65A prints BATDRV as the gate driver of linear-mode regulation of VSYS_MIN and of the")
+    p("       ideal diode in supplement ('BATFET is in linear mode to regulate VSYS at minimum system voltage when battery is depleted ... works as")
+    p("       an ideal-diode in supplement mode'), the driver 'internally integrated into the IC', and names no external driver or buffer on")
+    p("       BATDRV in any sentence: a buffer would sit inside loops whose gain and compensation TI does not print, and a follower loses")
+    p("       its own drop from BATDRV's least %s V drive (raising every RDS(on) bound); no printed figure supports it (MAKER, INFERRED;"
+      % fmt(S["vg"], 1))
+    p("       Q-TI-17 (f) asks)")
+    p("   21c. THE CONNECTED PATH (INFERRED)")
+    p("     the charger's gate drive: (i) BATDRV into the three, %s / %s us on and %s us off (round 9); (ii) %s / %s us and %s us; (iii) not bounded"
+      % (fmt(S["tau3"][0] * 1e6, 2), fmt(S["tau3"][1] * 1e6, 2), fmt(S["tau3"][2] * 1e6, 2), fmt(S["pair_tau"][0] * 1e6, 2), fmt(S["pair_tau"][1] * 1e6, 2),
+         fmt(S["pair_tau"][2] * 1e6, 2)))
+    p("     IF-1 (U46's hold) and DD-7 (Q49 on CH_BATDRV) do not depend on the count: Q49 moves at most %s nC (three QG(tot) maxima) and BATDRV"
+      % fmt(S["q49_q"] * 1e9, 0))
+    p("       sinks at most %s mA while it holds; the breaker's band (%s A) and R17 are untouched; (i)(a) keeps the land, the pour and RT1 at the"
+      % (fmt(S9["batdrv_sink"] * 1e3, 2), fmt(S9["i"], 2)))
+    p("       three's centroid; (ii) removes Q42 and moves RT1 to the pair's centroid; (iii) adds a supply below VSYS less 10 V, which board A has not")
+    p("   21d. THE SELECTION (SESSION, on printed figures)")
+    p("     (i)(a): the three BUK6Y10-30P stay; E-1's installed acceptance becomes the worst split's, (Zself + 2 Zmut) at most %s K/W (or the"
+      % fmt(S["bar_new"], 2))
+    p("       measured pair (Zself, Zmut) by the formula of 21b), so the hottest junction is at most 150 C held at %s A for any split of the"
+      % fmt(S9["i"], 2))
+    p("       RDS(on) spread under the allowance, the service rows unchanged (%s C at 10 A, %s C in the 18 A service, %s C held at %s A); E-1's"
+      % (fmt(S["tj_rows"][0], 1), fmt(S["tj_rows"][1], 1), fmt(S["tj_rows"][2], 1), fmt(S9["i"], 2)))
+    p("       limit, the 23.93 A, the 18 A for 60 s and 76.25 C are not lowered. Why: (ii)'s bar is %s of (i)'s and (iii) has no printed basis;"
+      % fmt(S["pair_vs_three"], 3))
+    p("       (i)(b) is worse on its bar and on Ciss. No circuit change: the charger draft's layout requirement carries the corrected bar")
+    p("     E11-37 STAYS OPEN: no printed figure decides a three-device gate load against TI's 5 nF; Q-TI-17 (clarification/TI-QUESTIONS.md,")
+    p("       drafted, NOT SENT) gains (e), the 5 nF's VDS and the pair's %s / %s nF typical (the fallback rests on that typical figure), and"
+      % (fmt(S["pair_ciss"][0] * 1e9, 2), fmt(S["pair_ciss"][1] * 1e9, 2)))
+    p("       (f), the gate load TI does accept on BATDRV (Ciss or QG(tot), over -20 to 70 C) and whether any buffer is supported; the bench row")
+    p("       E11-37 stands; on a negative answer the supplier's correction scope is (ii): the pair, its bar %s K/W measured on the coupon, Q42"
+      % fmt(S["pair_bar"], 2))
+    p("       removed (a draft then owed)")
+    p("   21e. STATUS: E-1's defect CORRECTED IN THE ACCEPTANCE (the bar %s K/W; CONDITIONAL on E11-29 at that bar and E11-36's allowance);"
+      % fmt(S["bar_new"], 2))
+    p("     E11-37 OPEN (TI or the bench); no net changed, so a netlist reading does not apply to this correction; no printed figure shows")
+    p("     %s K/W achievable: E11-29's coupon decides (the bar %s %% under the even split's) (INFERRED)"
+      % (fmt(S["bar_new"], 2), fmt((1.0 - S["bar_new"] / S["bar_old"]) * 100.0, 1)))
+    S20 = R["S20"]
+    a68 = R["S22"]["opts"]["a"]
+    p("   21f. V1'S MINORS OF ROUND 10 (R84 stands; R256's part is SUPERSEDED by round 12, section 22)")
+    p("     R256: round 11 moved it from 4.7k to 6.8k so that U47's RESET stayed under TI's recommended %s mA at the 29.2 V clamp (%s mA against"
+      % (fmt(S20["i_rec"] * 1e3, 0), fmt(a68["v"]["sink"](R["S19"]["vbat_clamp"]) * 1e3, 2)))
+    p("       %s mA), and printed its cost as a static limit of %s mA beside a bleed of %s s, %s s inside the hold. The check V2 (V2-B1) showed"
+      % (fmt(S20["n_sink"][1] * 1e3, 2), fmt(a68["v"]["isrc_max"] * 1e3, 3), fmt(a68["v"]["bleed_zero"], 3), fmt(a68["v"]["hold_min"] - a68["v"]["bleed_zero"], 3)))
+    p("       that bleed counted no source: at 6.8k it ends inside the hold only for sources under %s uA. Those figures are WITHDRAWN; round 12"
+      % fmt(a68["lim"] * 1e6, 1))
+    p("       compares V2's three corrections and selects 4.7k again (section 22), so section 20 prints round 10's values (INFERRED)")
+    p("     R84 56R: SPECIFIED pulse-rated (its value text carries it; a part whose maker prints a single-pulse curve covering %s W for %s us,"
+      % (fmt(S20["ra_pk"], 1), fmt(S20["tau_arm"] * 1e6, 0)))
+    p("       its code owed to Layer 6: CONDITIONAL); the 5 s overload comparison is withdrawn (MAKER, INFERRED)")
+    p("")
+
+
+# ---- round 12 (4 October 2026): the independent check V2 of round 11 (an AI review, as the coordinator received it): V2-B1, the cost of
+# R256, as an unresolved design choice over V2's three corrections, and the minors that are this record's (V2-m1 to m5, m9)
+R12_PINS = {"csd18510": ("v2/vendor/battery/ti-csd18510q5b.pdf", "cb747de812f6685995917335ec78c663fbf1cee0942db9a3e5b1c375147a601a"),
+            "l8p_f06": ("v2/docs/records/l4e11/inputs/l8p-section12j-f06-69156072.md", "aa4e1fe9a3ec164c03cd2be06d77d6c7433e7005149ae67f9c17879ddccafcd0")}
+PINS.update(R12_PINS)
+R12_DBL = 10.0                 # K, ASSUMPTION (record l8p's L8P-F06, OPEN): the breaker FETs' off leakage doubles every 10 K from TI's one printed row
+R12_RBL = {"a": 6.8e3, "b": 4.7e3, "c": 6.8e3}   # ohm, R256 in V2's three corrections: (a) round 11's value kept, (b) round 10's value back, (c) round 11's kept
+R12_C_CH = 2.2e-6              # F, (c)'s lever on C241: a 2.2 uF 100 V X7R of the same case (the comparison's value; no part read)
+R12_C_RH = 2.4e6               # ohm, (c)'s other lever: R85 doubled
+R12_SELECT = "b"               # SESSION (round 12): the correction selected; fix22_round refuses unless it meets both needs and R10_RBL is its value
+# the check V2's figures as received (CHECK-V2-AS-RECEIVED.md section 2, V2-B1, and 4.2): what this script must reproduce, never an input
+R12_V2 = dict(zero68=1.228, t25_68=1.257, lim68=88e-6, lim68_loads=122e-6, air68=1.339, air68_loads=1.295, held68=2.06, held68_loads=1.95,
+              foot47=0.866, lim47=521e-6, held47=1.18, sink68=(4.47e-3, 4.51e-3), sink47=6.39e-3, sink47_off=(3.7e-3, 3.9e-3))
+
+
+def bleed_time(r, c, v0, vdead, vinf):
+    """The time CELL+ takes to fall from v0 under vdead through r into c, the sources into the node holding the level it falls towards at
+    vinf (the check V2's V2-B1: t = R C ln((V0 - Vinf) / (Vdead - Vinf))); None when the node never gets under vdead."""
+    if vinf >= vdead:
+        return None
+    return r * c * math.log((v0 - vinf) / (vdead - vinf))
+
+
+def dd7_variant(R, rbl, rh=None, ch=None, ra=None):
+    """DD-7's hold and latch for a bleeder rbl (R256), a hold resistor rh (R85), a hold capacitor ch (C241) and an arm resistor ra (R84):
+    section 20's own arithmetic as a function of those four, so the three corrections are judged on one basis."""
+    S9, H, S20 = R["S19"], R["H"], R["S20"]
+    T = S20["tps"]
+    rh, ch, ra = R10_RH if rh is None else rh, R10_CH if ch is None else ch, R10_RA if ra is None else ra
+    vb_lo, vb_hi = H["floor"], S9["vbat_clamp"]
+    V = dict(rbl=rbl, rh=rh, ch=ch, ra=ra)
+    c_hi = ch * (1 + R10_CH_TOL[0]) * (1 + R10_CH_TOL[1])
+    c_lo = ch * (1 - R10_CH_TOL[0]) * (1 - R10_CH_TOL[1]) * (1 - R10_CH_BIAS)
+    V["tau_arm"] = ra * 1.01 * c_hi
+    t_cross = V["tau_arm"] * math.log((vb_lo - S20["vf"][3]) / (vb_lo - S20["vf"][3] - T["vitp"][2]))
+    V["t_set"] = S9["tctr_open"] + S20["t_trig"] + S20["t_qa"] + t_cross + S20["tcts1"][1] + 1e-6 + S20["t_q49"] + 1e-6
+    V["arm_frac"] = 1 - math.exp(-S20["tcts1"][0] / V["tau_arm"])
+    V["v0"] = (vb_lo - S20["vf"][1]) * V["arm_frac"]
+    i_cap = vb_hi / (R10_CH_IR / ch)
+    ixm = S20["ir_hot"] + T["i_s"] + i_cap
+    hold = lambda v0, vrel, ix, r, c: r * c * math.log((v0 + ix * r) / (vrel + ix * r))
+    V["hold_min"] = hold(V["v0"], S20["ov_rel"][1], ixm, rh * (1 - R10_RH_TOL), c_lo)
+    V["hold_max"] = hold(vb_hi, S20["ov_rel"][0], -T["i_s"], rh * (1 + R10_RH_TOL), c_hi) + S9["tctr_open"]
+    V["ra_w"] = 0.5 * c_hi * vb_hi ** 2
+    V["arm_peak"] = (vb_hi - S20["vf"][0]) / (ra * 0.99)
+    V["arm_i2t"] = V["arm_peak"] ** 2 * V["tau_arm"] / 2
+    # the latch: every pull into DD7_N while U47 holds it low (R256 from CELL+ through Q48, R82 and R83 from VBAT through Q47, R255, R107
+    # and R108 from CELL+ and R254 through Q52)
+    a_, b_ = R10_CS
+    kc_hi = b_ * (1 + R10_CS_TOL) / (a_ * (1 - R10_CS_TOL) + b_ * (1 + R10_CS_TOL))
+    rth_c = a_ * b_ / (a_ + b_)
+    sink = lambda vcell, vbat=vb_hi, tol=0.0: vcell / (rbl * (1 + tol)) + vbat / 300e3 + 12.7 / R10_RPU[2] + vcell / (a_ + b_) + 12.7 / R10_RPU[3]
+    dead_at = lambda vref: (T["vitn"][0] - T["i_s"] * rth_c - (1 - kc_hi) * vref) / kc_hi
+    v_ref = S20["vol_r"] * sink(dead_at(0.0))
+    for _ in range(5):
+        v_ref = S20["vol_r"] * sink(dead_at(v_ref))
+    V["v_ref"], V["dead"], V["sink"] = v_ref, dead_at(v_ref), sink
+    V["isrc_max"] = (V["dead"] - v_ref) / (rbl * 1.01)
+    r, c, v0 = rbl * 1.01, S20["c_cell"] * 1.2, S20["vs_max"]
+    g = 1 / r + 1 / (a_ + b_) + 1 / S20["u104"]                    # with board P's U104 divider and R107 with R108 credited as loads
+
+    def bleed(i_src, credit=False, v_start=v0):
+        if credit:
+            return bleed_time(1 / g, c, v_start, V["dead"], (i_src + v_ref / r + v_ref / (a_ + b_)) / g)
+        return bleed_time(r, c, v_start, V["dead"], v_ref + i_src * r)
+
+    def limit(t, credit=False):                                   # the sources' total at which the bleed takes t
+        e = math.exp(t / ((1 / g if credit else r) * c))
+        vinf = (e * V["dead"] - v0) / (e - 1)
+        return vinf * g - v_ref / r - v_ref / (a_ + b_) if credit else (vinf - v_ref) / r
+    V["bleed"], V["limit"] = bleed, limit
+    V["bleed_zero"] = r * c * math.log(v0 / V["dead"])             # rounds 10 and 11's figure: CELL+ taken to fall towards 0 V (no source)
+    V["tau_bleed"] = r * c
+    return V
+
+
+def fix22_round(R, T):
+    """Round 12: the check V2's blocking finding V2-B1 (round 11 gave the bleed of CELL+ as if no source fed the node, beside a static limit
+    of 0.597 mA), reproduced, then V2's three corrections compared on C-PROT rev 1 against both needs: the bleed inside the hold's least
+    value with the sources at their hot bound, and U47's RESET sink within TI's recommended current in every state where it sinks."""
+    S9, H, S20, B = R["S19"], R["H"], R["S20"], R["B"]
+    S = {}
+    if not bleed_time(1.0, 1.0, 10.0, 5.0, 4.0) > bleed_time(1.0, 1.0, 10.0, 5.0, 0.0) or bleed_time(1.0, 1.0, 10.0, 5.0, 5.0) is not None:
+        refuse(4, "the bleed does not count the sources into CELL+ (V2-B1)")
+    base = dd7_variant(R, R10_RBL)
+    for k_, want in (("hold_min", S20["hold_min"]), ("hold_max", S20["hold_max"]), ("dead", S20["dead"]), ("isrc_max", S20["isrc_max"]),
+                     ("t_set", S20["t_set"]), ("v_ref", S20["latch_vref"]), ("bleed_zero", S20["bleed_t"])):
+        if abs(base[k_] - want) > 1e-9 * abs(want):
+            refuse(4, "dd7_variant does not reproduce section 20's %s" % k_)
+    # ---- the sources into CELL+ with the breaker off and the inhibit held (the battery FETs off)
+    vin, vb_hi = S20["f05"]["vin"], S9["vbat_clamp"]
+    S["lm"] = (vin / S20["r_int"], vb_hi / S20["r_int"])              # the LM5069's internal 1 MOhm, SENSE to OUT (its tolerance not printed)
+    m = need(flat(text_pdf("buk6y10")), r"IDSS drain leakage current VDS = -30 V; VGS = 0 V; Tj = 25 °C - - -(\d+) µA VDS = -30 V; VGS = 0 V; Tj = 125 °C - - -(\d+) µA",
+             "the BUK6Y10-30P's two IDSS rows")
+    S["bat"] = (3 * f(m, 1) * 1e-6, 3 * f(m, 2) * 1e-6)              # the three battery FETs: Nexperia's printed maxima at 25 C and at 125 C
+    if abs(f(m, 1) * 1e-6 - S9["idss"]) > 1e-12:
+        refuse(4, "the BUK6Y10-30P's 25 C row is not round 9's")
+    S["bat_t"] = (25.0, 125.0)
+    S["bat_150"] = S["bat"][1] * (S["bat"][1] / S["bat"][0]) ** (25.0 / 100.0)   # INFERRED: the sheet's own two rows' slope carried to E-1's 150 C
+    pg, m = find("csd18510", r"IDSS\s+Drain-to-source leakage current\s+VGS = 0 V, VDS = (\d+) V\s+(\d+)\s+[µμ]A", "the CSD18510Q5B's IDSS", layout=True)
+    S["brk_p"], S["brk_vds"], S["brk25"] = pg, f(m, 1), 2 * f(m, 2) * 1e-6
+    if len(re.findall(r"\bIDSS\b", "\n".join(pdf_pages("csd18510", True)))) != 1:
+        refuse(4, "SLPS632 prints more than one IDSS row: read the hot one")
+    brk = lambda t: S["brk25"] * 2 ** ((t - 25.0) / R12_DBL)
+    f06 = text("l8p_f06")
+    m1 = need(f06, r"\| ([\d.]+) C, the inside air \| ([\d.]+) uA \|", "L8P-F06's air row")
+    m2 = need(f06, r"\| ([\d.]+) C, the held case \(record l9stk 15\.4\) \| ([\d.]+) uA \|", "L8P-F06's held row")
+    need(f06, r"\*\*ASSUMED:\*\* the off leakage doubles every 10 K from the 25 C row", "L8P-F06's assumption")
+    need(f06, r"\*\*Verdict: OPEN\.\*\*", "L8P-F06's verdict")
+    S["t_air"], S["t_held"] = f(m1, 1), f(m2, 1)
+    S["brk"] = (brk(S["t_air"]), brk(S["t_held"]))
+    if abs(S["t_air"] - S9["t0"]) > 1e-9 or abs(S["brk"][0] * 1e6 - f(m1, 2)) > 0.05 or abs(S["brk"][1] * 1e6 - f(m2, 2)) > 0.05:
+        refuse(4, "record l8p's L8P-F06 rows do not reproduce from TI's printed row and its assumed doubling")
+    S["src"] = dict(v2_25=S["lm"][0] + S["bat"][0], v2_air=S["lm"][0] + S["brk"][0], v2_held=S["lm"][0] + S["brk"][1],
+                    air=S["lm"][0] + S["bat"][1] + S["brk"][0], hot=S["lm"][0] + S["bat"][1] + S["brk"][1],
+                    hot_clamp=S["lm"][1] + S["bat"][1] + S["brk"][1], hot150=S["lm"][0] + S["bat_150"] + S["brk"][1])
+    # ---- V2's arithmetic reproduced (6.8 kOhm as round 11 left it, 4.7 kOhm as round 10 drew it)
+    v68, v47 = dd7_variant(R, R12_RBL["a"]), dd7_variant(R, R12_RBL["b"])
+    hm = v68["hold_min"]
+    S["hold_min"] = hm
+    rep = [("6.8 kOhm, no source, CELL+ taken to fall towards 0 V (round 11's figure)", v68["bleed_zero"], R12_V2["zero68"], "s"),
+           ("6.8 kOhm, the record's 25 C sources, %s uA" % fmt(S["src"]["v2_25"] * 1e6, 1), v68["bleed"](S["src"]["v2_25"]), R12_V2["t25_68"], "s"),
+           ("6.8 kOhm, the sources at which the bleed takes the hold's least %s s" % fmt(hm, 3), v68["limit"](hm), R12_V2["lim68"], "uA"),
+           ("6.8 kOhm, the same with U104's divider and R107 with R108 credited as loads", v68["limit"](hm, True), R12_V2["lim68_loads"], "uA"),
+           ("6.8 kOhm, the breaker pair at the %s C air on L8P-F06 and the 1 MOhm, %s uA" % (fmt(S["t_air"], 2), fmt(S["src"]["v2_air"] * 1e6, 1)),
+            v68["bleed"](S["src"]["v2_air"]), R12_V2["air68"], "s"),
+           ("6.8 kOhm, the same with the loads credited", v68["bleed"](S["src"]["v2_air"], True), R12_V2["air68_loads"], "s"),
+           ("6.8 kOhm, the breaker pair at the held %s C case and the 1 MOhm, %s uA" % (fmt(S["t_held"], 1), fmt(S["src"]["v2_held"] * 1e6, 1)),
+            v68["bleed"](S["src"]["v2_held"]), R12_V2["held68"], "s"),
+           ("6.8 kOhm, the same with the loads credited", v68["bleed"](S["src"]["v2_held"], True), R12_V2["held68_loads"], "s"),
+           ("4.7 kOhm, no source, towards the foot (round 10 printed %s s towards 0 V)" % fmt(v47["bleed_zero"], 3), v47["bleed"](0.0), R12_V2["foot47"], "s"),
+           ("4.7 kOhm, the sources at which the bleed takes %s s" % fmt(hm, 3), v47["limit"](hm), R12_V2["lim47"], "uA"),
+           ("4.7 kOhm, the breaker pair at the held case and the 1 MOhm", v47["bleed"](S["src"]["v2_held"]), R12_V2["held47"], "s")]
+    for lab, mine, theirs, unit in rep:
+        if mine is None or abs(mine - theirs) > 0.012 * theirs:
+            refuse(4, "V2's figure is not reproduced: %s" % lab)
+    S["rep"] = rep
+    for (lo, hi), val in ((R12_V2["sink68"], (v68["sink"](vb_hi), v68["sink"](vb_hi, tol=-0.01))),):
+        if abs(val[0] - lo) > 0.005e-3 or abs(val[1] - hi) > 0.005e-3:
+            refuse(4, "V2's RESET sink at the clamp is not reproduced")
+    if abs(v47["sink"](vb_hi) - R12_V2["sink47"]) > 0.005e-3:
+        refuse(4, "V1's 6.39 mA is not reproduced")
+    # ---- the three corrections, each a full variant, against both needs
+    i_rec = S20["i_rec"]
+    S["i_abs"] = f(find("tps37", r"7\.1 Absolute Maximum Ratings.*?Current\s+IRESET1, IRESET2, IRESET1, IRESET2\s+(\d+)\s+mA", "RESET's absolute maximum",
+                        layout=True, flags=re.S)[1]) * 1e-3
+    vs, vpk, sysovp = S20["vs_max"], S9["vpk"], B["sysovp4s"]
+    S["v_states"] = dict(vs=vs, vpk=vpk, sysovp=sysovp, clamp=vb_hi, pack_diode=vpk + S9["vsd"])
+    opts = []
+    for key, lab, kw in (("a", "(a) text only: R256 6.8 kOhm, the hold as drawn", {}),
+                         ("b", "(b) R256 back to 4.7 kOhm, the hold as drawn", {}),
+                         ("c", "(c) R256 6.8 kOhm, the hold lengthened by C241 %s uF" % fmt(R12_C_CH * 1e6, 1), dict(ch=R12_C_CH)),
+                         ("c2", "(c) with R85 %s MOhm instead" % fmt(R12_C_RH / 1e6, 1), dict(rh=R12_C_RH))):
+        v = dd7_variant(R, R12_RBL[key[0]], **kw)
+        o = dict(key=key, lab=lab, v=v)
+        o["t_hot"], o["t_air"], o["t_hot150"] = v["bleed"](S["src"]["hot"]), v["bleed"](S["src"]["air"]), v["bleed"](S["src"]["hot150"])
+        o["t_hot_loads"] = v["bleed"](S["src"]["hot"], True)
+        o["lim"] = v["limit"](v["hold_min"])
+        o["pair_allow"] = o["lim"] - S["lm"][0] - S["bat"][1]
+        o["pair_t"] = 25.0 + R12_DBL * math.log(o["pair_allow"] / S["brk25"], 2) if o["pair_allow"] > S["brk25"] else None
+        o["pair_dbl"] = (S["t_held"] - 25.0) / math.log(o["pair_allow"] / S["brk25"], 2) if o["pair_allow"] > S["brk25"] else None
+        o["need1"] = o["t_hot"] is not None and o["t_hot"] < v["hold_min"]
+        o["margin"] = None if o["t_hot"] is None else v["hold_min"] - o["t_hot"]
+        # RESET's sink, R256 at -1 %: the instant of setting (CELL+ follows VBAT to VSYS's top), the breaker restarted while the hold runs
+        # (the pack's most), VBAT at the charger's SYSOVP with CELL+ following it, and the state that needs more than one fault
+        o["sink"] = dict(set=v["sink"](vs, vs, -0.01), run=v["sink"](vpk, vs, -0.01), ovp=v["sink"](sysovp, sysovp, -0.01), clamp=v["sink"](vb_hi, vb_hi, -0.01))
+        o["need2"] = max(o["sink"]["set"], o["sink"]["run"], o["sink"]["ovp"]) <= i_rec
+        o["need2_all"] = o["sink"]["clamp"] <= i_rec
+        a_, b_ = R10_CS
+        o["v_5ma"] = (i_rec - vb_hi / 300e3 - 12.7 / R10_RPU[2] - 12.7 / R10_RPU[3]) / (1 / (v["rbl"] * 0.99) + 1 / (a_ + b_))
+        o["t_over"] = 0.0 if o["v_5ma"] >= vb_hi else v["tau_bleed"] * math.log((vb_hi - v["v_ref"]) / (o["v_5ma"] - v["v_ref"]))
+        opts.append(o)
+    S["opts"] = {o["key"]: o for o in opts}
+    S["order"] = [o["key"] for o in opts]
+    # (c)'s reach: a still longer hold (C241 3.3 uF) moves its coupled limit towards its static limit, never past it
+    v3 = dd7_variant(R, R12_RBL["c"], ch=3.3e-6)
+    S["c_reach"] = dict(ch=3.3e-6, hold=(v3["hold_min"], v3["hold_max"]), lim=v3["limit"](v3["hold_min"]), static=v3["isrc_max"],
+                        t_hot=v3["bleed"](S["src"]["hot"]))
+    S["c_reach"]["pair_allow"] = S["c_reach"]["lim"] - S["lm"][0] - S["bat"][1]
+    S["c_reach"]["pair_t"] = 25.0 + R12_DBL * math.log(S["c_reach"]["pair_allow"] / S["brk25"], 2)
+    if not S["c_reach"]["lim"] < S["c_reach"]["static"] < S["opts"]["b"]["v"]["isrc_max"]:
+        refuse(4, "(c)'s coupled limit is not under its static limit, or its static limit is not under (b)'s")
+    sel = S["opts"][R12_SELECT]
+    if not (sel["need1"] and sel["need2"]):
+        refuse(4, "the selected correction does not meet both needs")
+    if abs(sel["v"]["rbl"] - R10_RBL) > 1e-9 or abs(sel["v"]["ch"] - R10_CH) > 1e-15 or abs(sel["v"]["rh"] - R10_RH) > 1e-9:
+        refuse(4, "section 20 is not drawn with the selected correction's values")
+    if sel["sink"]["clamp"] >= S["i_abs"]:
+        refuse(4, "the selected correction passes RESET's absolute maximum at the clamp")
+    S["sel"] = sel
+    # what the hold's readers would see under (c): the hold's most, the arm, R84's pulse
+    S["base_hold_max"], S["base_arm"] = v68["hold_max"], v68["arm_frac"]
+    # ---- V1's minor that no record carried (V2-m4): the TPS37's hysteresis accuracy read as +-1.5 percentage points, not relative
+    tp = S20["tps"]
+    hpt = tp["hacc"]
+    k_lo, k_hi = S20["out_k"]
+    rth_o = R10_OUT[0] * R10_OUT[1] / (R10_OUT[0] + R10_OUT[1])
+    S["hys_alt"] = dict(ret_low=tp["vitp"][0] * (1 - (tp["hys"] + hpt)) - tp["i_s_hi"] * 50.0,
+                        out_hi=(tp["vitn"][2] * (1 + tp["hys"] + hpt) + tp["i_s"] * rth_o) / k_lo)
+    out_lo = (tp["vitn"][0] * (1 + tp["hys"] - hpt) - tp["i_s"] * rth_o) / k_hi
+    S["hys_alt"]["window"] = S9["r_ret"] * (out_lo / S20["ret_high"] - 1)
+    S["hys_alt"]["held_margin"] = dict(S20["out_held"])[7.6] - S["hys_alt"]["out_hi"]
+    for k_, want, tol in (("ret_low", 0.7643, 0.0006), ("out_hi", 2.008, 0.001), ("window", 25.1e3, 60.0)):
+        if abs(S["hys_alt"][k_] - want) > tol:
+            refuse(4, "V1's hysteresis-accuracy figure %s is not reproduced" % k_)
+    if not (S["hys_alt"]["ret_low"] - S20["held"] > 0.7 and S["hys_alt"]["held_margin"] > 0.5 and S["hys_alt"]["window"] > 1.5 * S9["rt1"][1]):
+        refuse(4, "a margin does not survive the percentage-point reading of the hysteresis accuracy")
+    return S
+
+
+def render_fix22(R, p):
+    S, S9, S20, H = R["S22"], R["S19"], R["S20"], R["H"]
+    ua = lambda x, nd=1: fmt(x * 1e6, nd)
+    ma = lambda x, nd=2: fmt(x * 1e3, nd)
+    sec = lambda x: "never" if x is None else fmt(x, 3)
+    sel, O = S["sel"], S["opts"]
+    vst = S["v_states"]
+    p("22. ROUND 12: THE CHECK V2'S FINDING V2-B1 (THE COST OF R256) AS A DESIGN CHOICE, AND ITS MINORS FOR THIS RECORD (4 October 2026; C-PROT rev 1)")
+    p("   22a. THE CLAIM THAT DID NOT STAND, AND V2'S ARITHMETIC REPRODUCED (V2 is an AI review, as received; INFERRED)")
+    p("     round 11 (21f) gave CELL+'s bleed with the breaker off as %s s, inside the hold's least %s s, beside a static limit of %s mA for the"
+      % (fmt(O["a"]["v"]["bleed_zero"], 3), fmt(S["hold_min"], 3), fmt(O["a"]["v"]["isrc_max"] * 1e3, 3)))
+    p("       sources into CELL+: the bleed was taken towards 0 V, as if no source fed the node. A source I lifts the level CELL+ falls towards to")
+    p("       the foot plus I x R256, so t = R C ln((V0 - Vinf) / (Vdead - Vinf)), from VSYS's %s V into CELL_FUSED's %s uF at +20 %% (ASSUMPTION):"
+      % (fmt(S20["vs_max"], 3), fmt(S20["c_cell"] * 1e6, 0)))
+    for lab, mine, theirs, unit in S["rep"]:
+        p("         %s: %s %s (V2: %s)" % (lab, fmt(mine * 1e6, 1) if unit == "uA" else fmt(mine, 3), unit, fmt(theirs * 1e6, 0) if unit == "uA" else fmt(theirs, 3)))
+    p("     so the two limits of 21f could not both be used: with R256 at 6.8 kOhm the bleed ends inside the hold only while the sources total under")
+    p("       %s uA, and V1's minor was applied by spending that margin (V2-B1, reproduced)" % ua(O["a"]["lim"]))
+    p("   22b. THE SOURCES INTO CELL+ WITH THE BREAKER OFF AND THE INHIBIT HELD (each labelled)")
+    p("     the LM5069's internal %s MOhm, SENSE to OUT: %s uA at BRK_VIN %s V, %s uA at the %s V clamp (MAKER value; its tolerance not printed)"
+      % (fmt(S20["r_int"] / 1e6, 0), ua(S["lm"][0]), fmt(S20["f05"]["vin"], 1), ua(S["lm"][1]), fmt(S9["vbat_clamp"], 1)))
+    p("     the three battery FETs: Nexperia prints IDSS at most %s uA at 25 C and %s uA at Tj 125 C, VDS -30 V (BUK6Y10-30P, 17 April 2020, Table 7"
+      % (ua(S["bat"][0] / 3, 0), ua(S["bat"][1] / 3, 0)))
+    p("       p.6): %s and %s uA for the three (MAKER, printed maxima; V2-m2: rounds 10 and 11 called the hot figure 'not printed'); over 125 C"
+      % (ua(S["bat"][0], 0), ua(S["bat"][1], 0)))
+    p("       nothing is printed: on the sheet's own two rows' slope E-1's 150 C would read %s uA for the three (INFERRED, information only)" % ua(S["bat_150"]))
+    p("     the breaker pair Q101 and Q102 (CSD18510Q5B): TI SLPS632 (March 2017) p.%d prints IDSS %s uA at VGS 0 V, VDS %s V, TA 25 C, its only"
+      % (S["brk_p"], ua(S["brk25"] / 2, 0), fmt(S["brk_vds"], 0)))
+    p("       row (MAKER); record l8p's L8P-F06 (OPEN; fnd/l8p2 at 69156072, 12j, copied in inputs/) ASSUMES a doubling every %s K: %s uA at the"
+      % (fmt(R12_DBL, 0), ua(S["brk"][0])))
+    p("       %s C air, %s uA at the held %s C case (ASSUMPTION, not a printed figure)" % (fmt(S["t_air"], 2), ua(S["brk"][1]), fmt(S["t_held"], 1)))
+    p("     THE HOT BOUND on C-PROT rev 1 (the pack at %s V, the battery FETs on their printed 125 C row, the breaker pair at its held case):"
+      % fmt(S20["f05"]["vin"], 1))
+    p("       %s + %s + %s = %s uA (%s uA at the air; %s uA with BRK_VIN at the clamp; %s uA with the battery FETs at 150 C, INFERRED)"
+      % (ua(S["lm"][0]), ua(S["bat"][1], 0), ua(S["brk"][1]), ua(S["src"]["hot"]), ua(S["src"]["air"]), ua(S["src"]["hot_clamp"]), ua(S["src"]["hot150"])))
+    p("   22c. V2'S THREE CORRECTIONS ON ONE BASIS (need 1: the bleed at the hot bound inside the hold's least; need 2: U47's RESET sink within")
+    p("     TI's recommended %s mA, SNVSBJ1E 7.3 p.6, in every state where it sinks; the absolute maximum %s mA, 7.1 p.6; R256 at -1 %% for the sink)"
+      % (ma(S20["i_rec"], 0), ma(S["i_abs"], 0)))
+    for k in S["order"]:
+        o = O[k]
+        v = o["v"]
+        p("     %s: R256 %s kOhm, R85 %s MOhm, C241 %s uF" % (o["lab"], fmt(v["rbl"] / 1e3, 1), fmt(v["rh"] / 1e6, 1), fmt(v["ch"] * 1e6, 1)))
+        p("       the hold %s s at least, %s s at most; the latch reads dead (static) for sources under %s mA; the dead reading %s V"
+          % (fmt(v["hold_min"], 3), fmt(v["hold_max"], 2), fmt(v["isrc_max"] * 1e3, 3), fmt(v["dead"], 3)))
+        p("       the bleed: %s s with no source (towards 0 V), %s s at the air's %s uA, %s s at the hot bound's %s uA (%s s with the loads credited;"
+          % (fmt(v["bleed_zero"], 3), sec(o["t_air"]), ua(S["src"]["air"]), sec(o["t_hot"]), ua(S["src"]["hot"]), sec(o["t_hot_loads"])))
+        p("         %s s with the battery FETs at 150 C, INFERRED)" % sec(o["t_hot150"]))
+        p("       the coupled limit: the bleed ends inside the hold's least while the sources total under %s uA, which leaves the breaker pair %s uA:"
+          % (ua(o["lim"]), ua(o["pair_allow"])))
+        p("         on the ASSUMED doubling a case of %s C (the held case %s C), or a doubling no faster than every %s K at the held case"
+          % (fmt(o["pair_t"], 1), fmt(S["t_held"], 1), fmt(o["pair_dbl"], 2)))
+        p("       NEED 1: %s" % ("HOLDS at the hot bound, %s s inside the hold (on the ASSUMED leakage of the breaker pair: no printed hot figure)" % fmt(o["margin"], 3)
+                               if o["need1"] else "FAILS at the hot bound (%s s against the hold's %s s)%s"
+                               % (sec(o["t_hot"]), fmt(v["hold_min"], 3), "; it fails at the air too" if o["t_air"] is None or o["t_air"] > v["hold_min"] else "")))
+        p("       RESET sinks %s mA at the instant of setting (CELL+ at VSYS's %s V), %s mA with the breaker restarted while the hold runs (the pack's"
+          % (ma(o["sink"]["set"]), fmt(vst["vs"], 3), ma(o["sink"]["run"])))
+        p("         %s V), %s mA with CELL+ following VBAT at the charger's SYSOVP %s V, %s mA at VBAT's %s V clamp; it reaches %s mA at CELL+ %s V"
+          % (fmt(vst["vpk"], 1), ma(o["sink"]["ovp"]), fmt(vst["sysovp"], 1), ma(o["sink"]["clamp"]), fmt(vst["clamp"], 1), ma(S20["i_rec"], 0),
+             fmt(o["v_5ma"], 2) if o["v_5ma"] < 40 else "over 40"))
+        p("       NEED 2: %s" % ("HOLDS in every state, the clamp included" if o["need2_all"] else
+                               ("HOLDS in every state without a second fault (22d); over %s mA only with CELL+ over %s V, at most %s mA, under the absolute %s mA"
+                                % (ma(S20["i_rec"], 0), fmt(o["v_5ma"], 2), ma(o["sink"]["clamp"]), ma(S["i_abs"], 0))) if o["need2"] else "FAILS"))
+    c, c2 = O["c"], O["c2"]
+    p("     what (c) moves for the hold's readers (20d, 20g, E-14 (c), E11-45 (h)): the hold's most %s s (from %s s: the battery FETs held off that long"
+      % (fmt(c["v"]["hold_max"], 2), fmt(S["base_hold_max"], 2)))
+    p("       after every set, a false set at a docking included); the arm completes %s of the way before the set (from %s), so the hold starts"
+      % ("%.4f" % c["v"]["arm_frac"], "%.5f" % S["base_arm"]))
+    p("       from %s V; R84's pulse %s mJ and D26's I2t %s A2s (from %s mJ and %s A2s); a 2.2 uF 100 V part and its DC bias not read. With R85"
+      % (fmt(c["v"]["v0"], 3), fmt(c["v"]["ra_w"] * 1e3, 3), "%.2e" % c["v"]["arm_i2t"], fmt(S20["ra_w"] * 1e3, 3), "%.2e" % S20["arm_i2t"]))
+    p("       %s MOhm instead the hold's least is only %s s (D26's leakage and C241's insulation take more of it): %s"
+      % (fmt(R12_C_RH / 1e6, 1), fmt(c2["v"]["hold_min"], 3), "need 1 fails" if not c2["need1"] else "need 1 holds by %s s" % fmt(c2["margin"], 3)))
+    cr = S["c_reach"]
+    p("     (c)'s reach: with C241 %s uF the hold is %s to %s s and the coupled limit %s uA (the pair %s uA, a case of %s C on the ASSUMED"
+      % (fmt(cr["ch"] * 1e6, 1), fmt(cr["hold"][0], 2), fmt(cr["hold"][1], 1), ua(cr["lim"]), ua(cr["pair_allow"]), fmt(cr["pair_t"], 1)))
+    p("       doubling): wider than (b)'s by %s uA, never past its static %s mA, where (b)'s static room is %s mA (INFERRED)"
+      % (ua(cr["pair_allow"] - O["b"]["pair_allow"]), fmt(cr["static"] * 1e3, 3), fmt(O["b"]["v"]["isrc_max"] * 1e3, 3)))
+    p("   22d. THE STATES IN WHICH U47'S RESET SINKS, FROM THE DRAFT'S NETLIST (INFERRED from the netlist; TI's limits MAKER)")
+    p("     DD7_N is pulled low by U47's RESET1 and RESET2 alone. Into it, while the loop reads powered (Q47, Q48 and Q52 on): R256 from CELL+ (Q48),")
+    p("       R107 with R108 from CELL+ (Q52), R82 with R83 from VBAT (Q47), R254 and R255 from DD7_VC; with the loop unpowered only R255 (%s uA)"
+      % ua(12.7 / R10_RPU[2]))
+    p("     the battery FETs Q39, Q40 and Q42 have their source on VBAT and their drain on CH_BATQ (check_dd7_netlist.py's BODY group reads it; a")
+    p("       reversed FET reads FAIL): a P-channel FET's body diode conducts from drain to source, here from CELL+ towards VBAT, so once the inhibit")
+    p("       holds their gates at VBAT nothing on VBAT can lift CELL+; it only bleeds, or is driven by the pack through the breaker")
+    p("     state 1, the instant of setting: the FETs were on, a charge passing the off breaker's body diodes into the cells; CELL+ is at most VBAT,")
+    p("       regulated to VSYS's %s V (and held within the breaker FETs' VSD of the cells, %s V at most): %s mA, falling with the bleed"
+      % (fmt(vst["vs"], 3), fmt(vst["pack_diode"], 1), ma(sel["sink"]["set"])))
+    p("     state 2, the breaker restarted while the hold runs (%s s at most): CELL+ at the pack's %s V at most: %s mA" % (fmt(sel["v"]["hold_max"], 2), fmt(vst["vpk"], 1), ma(sel["sink"]["run"])))
+    p("     state 3, a charger regulating high: CELL+ following VBAT up to SYSOVP's %s V (SLUSE65A, the 4S row): %s mA, still under %s mA"
+      % (fmt(vst["sysovp"], 1), ma(sel["sink"]["ovp"]), ma(S20["i_rec"], 0)))
+    p("     the states over %s mA need CELL+ over %s V, %s V over SYSOVP: (i) a surge: VBAT at the SMCJ18A's %s V clamp at the very instant of a set,"
+      % (ma(S20["i_rec"], 0), fmt(sel["v_5ma"], 2), fmt(sel["v_5ma"] - vst["sysovp"], 2), fmt(vst["clamp"], 1)))
+    p("       with CELL+ lifted %s V over the cells and their body-diode drop while the charge that set it flows: at most %s mA, under the"
+      % (fmt(sel["v_5ma"] - vst["pack_diode"], 2), ma(sel["sink"]["clamp"])))
+    p("       absolute %s mA, and over %s mA for at most %s s of the bleed (a surge coinciding with the set: a second condition, V1's 'transient"
+      % (ma(S["i_abs"], 0), ma(S20["i_rec"], 0), fmt(sel["t_over"], 3)))
+    p("       only'), or board P's BRK_VIN at its own %s V clamp with the breaker restarted while a hold runs (the same bound, the pack pulling"
+      % fmt(vst["clamp"], 1))
+    p("       CELL+ back at once); (ii) sustained: a battery FET failed short AND VBAT held over")
+    p("       %s V, which SYSOVP stops: two faults. At %s mA VOL on the 60 ohm reading is about %s V: the inhibit still holds (Q49's VGS under -9 V)"
+      % (fmt(sel["v_5ma"], 2), ma(sel["sink"]["clamp"]), fmt(S20["vol_r"] * sel["sink"]["clamp"], 2)))
+    p("   22e. THE SELECTION (SESSION) AND WHAT IT COSTS")
+    a, b = O["a"], O["b"]
+    p("     no correction holds need 1 on printed figures alone: the breaker pair's hot leakage has no printed row, so each depends on record l8p's")
+    p("       L8P-F06 (E-14c). (a) fails need 1 at the hot bound and at the air; (c) holds it by %s s with a pair allowance of %s uA, at the cost of"
+      % (fmt(c["margin"], 3), ua(c["pair_allow"])))
+    p("       a new part, an arm that reaches %s of the way and a hold of up to %s s; (b) holds it by %s s with a pair allowance of %s uA and the"
+      % ("%.2f" % c["v"]["arm_frac"], fmt(c["v"]["hold_max"], 2), fmt(b["margin"], 3), ua(b["pair_allow"])))
+    p("       larger static room (%s mA against %s mA), with no part beyond round 10's checked circuit" % (fmt(b["v"]["isrc_max"] * 1e3, 3), fmt(a["v"]["isrc_max"] * 1e3, 3)))
+    p("     SELECTED: (b), R256 back to 4.7 kOhm: at the hold as drawn it has the widest allowance for the unprinted leakage, and the higher")
+    p("       ceiling if the hold is ever lengthened; (c) buys %s uA more only with a hold of up to %s s, about %s K of case temperature on an"
+      % (ua(S["c_reach"]["pair_allow"] - b["pair_allow"]), fmt(S["c_reach"]["hold"][1], 0), fmt(S["c_reach"]["pair_t"] - b["pair_t"], 1)))
+    p("       assumed rate, which does not remove the dependence on E-14c; need 2 holds on TI's printed rows in every state without a second")
+    p("       fault. It costs: U47's RESET over TI's recommended %s mA in the named states of 22d" % ma(S20["i_rec"], 0))
+    p("       (never over the absolute %s mA), where 6.8 kOhm kept it under %s mA in every state; and a margin of %s s on an ASSUMED leakage"
+      % (ma(S["i_abs"], 0), ma(S20["i_rec"], 0), fmt(b["margin"], 3)))
+    p("     reversed by: E-14c reading the breaker pair over %s uA at its held case, or E11-45 (f2) reading the bleed outside the unit's hold; the next"
+      % ua(b["pair_allow"]))
+    p("       lever is then the hold on top of 4.7 kOhm (the static %s mA is its ceiling), a new round with both checks' arithmetic beside it"
+      % fmt(b["v"]["isrc_max"] * 1e3, 3))
+    p("   22f. V1'S AND V2'S ARITHMETIC SIDE BY SIDE (R256 has moved twice: 4.7 kOhm in round 10, 6.8 kOhm on V1's minor in round 11, 4.7 kOhm now; INFERRED)")
+    p("     V1 (round 10's check, the sink at the clamp): 4.7 kOhm %s mA, over TI's recommended %s mA, 'transient only'; 6.8 kOhm %s mA"
+      % (ma(b["v"]["sink"](vst["clamp"])), ma(S20["i_rec"], 0), ma(a["v"]["sink"](vst["clamp"]))))
+    p("     V2 (round 11's check, the bleed with the sources): 4.7 kOhm ends inside the hold for sources under %s uA (%s s at the hot bound); 6.8 kOhm"
+      % (ua(b["lim"]), sec(b["t_hot"])))
+    p("       only under %s uA (%s s at the hot bound, %s s at the air)" % (ua(a["lim"]), sec(a["t_hot"]), sec(a["t_air"])))
+    p("     this round (the sink by state): 4.7 kOhm %s mA at the most without a second fault; 6.8 kOhm %s mA"
+      % (ma(max(b["sink"]["set"], b["sink"]["run"], b["sink"]["ovp"])), ma(max(a["sink"]["set"], a["sink"]["run"], a["sink"]["ovp"]))))
+    p("   22g. WHAT STAYS OPEN, AND E11-45 (f) AND (h) (the rows in section 8 carry the acceptances)")
+    p("     V2-B1's claim is CORRECTED (the bleed counts the sources; one coupled limit, %s uA, beside the static %s mA); the latch's timing with the"
+      % (ua(b["lim"]), fmt(b["v"]["isrc_max"] * 1e3, 3)))
+    p("       breaker off at the hot bound stays OPEN on record l8p's E-14c (the breaker pair's IDSS hot; TI's question drafted there, unsent) and on")
+    p("       E11-45 (f) (the bleed timed against the unit's own hold, the leakage into CELL+ read hot); CELL_FUSED's %s uF at +20 %% is an ASSUMPTION"
+      % fmt(S20["c_cell"] * 1e6, 0))
+    p("     between %s uA and %s mA (not reached at the hot bound): the hold may end with CELL+ still read alive and the breaker off, the inhibit"
+      % (ua(b["lim"]), fmt(b["v"]["isrc_max"] * 1e3, 3)))
+    p("       releases, and a charge over board P's threshold (%s to %s A) sets it again within %s ms, once a hold; under the threshold it is the"
+      % (fmt(S20["thr_lo"], 3), fmt(S20["thr_hi"], 3), fmt(S20["charge_end"] * 1e3, 2)))
+    p("       named residual of 20l (the latched FET at most %s C, record l8p); that repeated cycle is not analysed further (INFERRED)" % fmt(S20["under_thr_tj"], 1))
+    p("     FOR RECORD l8p (L8P-F06 and E-14c; nothing of its is edited here): the latch's budget is two limits, the static %s mA (round 10's"
+      % fmt(b["v"]["isrc_max"] * 1e3, 3))
+    p("       again, so its 12j figures stand for the static room) and the timing %s uA, which the pair alone fills from a %s C case, %s K over"
+      % (ua(b["lim"]), fmt(b["pair_t"], 1), fmt(b["pair_t"] - S["t_held"], 1)))
+    p("       its held case; E-14c's acceptance (the pair at most %s uA at %s C) keeps the timing with %s uA in hand; its copies of 20c to 20e"
+      % (ua(S["brk"][1], 0), fmt(S["t_held"], 0), ua(b["lim"] - S["src"]["hot"])))
+    p("       and of this record's drafts are round 10's and are taken again at this round (the check V2's V2-B2, its owner's) (RECORD, INFERRED)")
+    h = S["hys_alt"]
+    p("   22h. THE MINORS (V2-m1 to m5 and m9, this record's part; RECORD, INFERRED)")
+    p("     V2-m1: 21b (ii) now takes Vishay's printed MAXIMA for the SQJ403EP and SQJ407EP and prints the typical figures beside them")
+    p("     V2-m2: Nexperia's hot IDSS row quoted in 20e and 22b; V2-m3: the dd7 draft's comment restated from 22c's figures")
+    p("     V2-m4, V1's two minors that no record carried: (1) the TPS37's hysteresis accuracy (+-%s %%) read as percentage points, not relative: the"
+      % fmt(S20["tps"]["hacc"] * 100, 1))
+    p("       return read held under %s V (board P holds %s V), the loop read powered over %s V at most (%s mV over the interface's 2.0 V; the"
+      % (fmt(h["ret_low"], 4), fmt(S20["held"], 3), fmt(h["out_hi"], 3), fmt((h["out_hi"] - S20["if_out"]) * 1e3, 0)))
+    p("       held loop reads %s V over it at 7.6 V), the window's bound %s kOhm: every margin still holds (V1's figures reproduced); OWNER this record,"
+      % (fmt(h["held_margin"], 3), fmt(h["window"] / 1e3, 1)))
+    p("       NEXT Q-TI-19 (drafted, NOT SENT) and E11-45 (e); (2) the CONOPS wording of the named residual (a breaker latched with a source present")
+    p("       and no charge over board P's threshold stays latched: the pack stays isolated while the source carries the kit): OWNER the CONOPS")
+    p("       owner with record l9stk, NEXT the sentence drafted in the record's 22h goes to L4-E9's next round as a register row (a controlled")
+    p("       amendment of an accepted Layer 2 page is the coordinator's)")
+    p("     V2-m5: E11-29's coupon reads the PTC's site against each junction with one FET heated alone (the row and block 17d)")
+    p("     V2-m9: the tests compose board A in main's order, with record l8r2's d8v3 and vbus20ov; the candidate's change list (L4-E9 rows 24 to 33)")
+    p("       names l8r2's packrtn, slotlm and fb01 instead, which are NOT in this branch's tree (fnd/l8r3 at 89924e40): the tests keep the order")
+    p("       this tree can show. On a scratch copy of the candidate's files (fnd/v2cand at dfa1eef2) with this round's drafts laid over them,")
+    p("       compose_in_list_order.py composed the list's order (16 drafts, each exit 0), the generator ran to its end (778 parts, intent")
+    p("       written), check_dd7_netlist.py read DRAWN and three mutations read FAIL (a scratch run of 4 October 2026, not a committed test)")
+    p("   22i. STATUS (SESSION): V2-B1 answered by correction (b); need 1 CONDITIONAL on E-14c and E11-45 (f2), OPEN until one reads; need 2 holds")
+    p("     on TI's printed rows without a second fault; R84 stays specified pulse-rated (CONDITIONAL, Layer 6); the netlist reads DRAWN at 4.7 kOhm;")
+    p("     the round is the author's answer to V2's first negative check of the 6.8 kOhm value and is UNVERIFIED until its targeted recheck")
+    p("")
+
+
+# ---- round 13 (4 October 2026): the owner's supplier-delta review of that day, finding DELTA-02 (P1): E11-29 heats "each FET alone"
+# through its body diode and reads each junction by its own VSD, on three devices whose drains share one pour and whose sources share
+# another: the three body diodes are in parallel, so neither is defined. Three executable methods compared, one selected, E11-29 restated;
+# and section 20c restated on Murata's printed points (record l9stk's round 4)
+R13_PINS = {"l9stk_guard": ("v2/docs/records/l4e11/inputs/l9stk-section15.5-guard-43da41ca.md", "90ae3c25377af1177634164e94badbdd42daf01fce1786a7f3d39d52f83164c5")}
+PINS.update(R13_PINS)
+R13_CHARGER = "v2/docs/records/l4e11/apply_gen_sch_a_charger.py"
+R13_SELECT = "B"               # SESSION (round 13): the method selected; fix23_round refuses a method that does not address one device
+R13_TERMS = dict(k=0.02, p=0.01, air=1.0)   # RECORD (block E11-29, round 9): the K-factor, the heating power (relative) and the air (K), as expanded limits
+R13_B = dict(i_m=1e-3, rep=0.5, leak=0.3, slot=2.44e-4)   # SESSION proposals for method B, the supplier's to confirm: the sense current (A), the
+                               # threshold reading's repeatability between two calibrations (K), the off devices' leakage in the sense current (K), the slot (s)
+R13_C = dict(n=1.0, k=2.0e-3)  # ASSUMPTION for method C's bracket only: a diode ideality of at least 1 and a K-factor of about 2 mV/K (not printed)
+# each method as data: the path a step drives through a device, the terminal that selects one device (None: a diode has none), the
+# direction, and the terminals the specimen gives a net of its own per device
+R13_METHODS = {
+    "old": dict(lab="rounds 9 to 12 and TP-E11-29: each FET heated through its body diode alone, each junction by its own VSD, on the pours as drafted",
+                heat=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"),
+                sense=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"), private=()),
+    "A": dict(lab="(A) a coupon whose three sources sit on islands of their own behind links, each gate on its own island: body-diode heating, VSD sensing",
+              heat=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"),
+              sense=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"), private=("S", "G")),
+    "B": dict(lab="(B) the pours as board A's, the three gates brought out apart: one channel at a time selected by its gate, heated source to drain, its threshold read with the gate on the drain",
+              heat=dict(path="channel", terminals=("S", "D"), select="G", direction="source to drain"),
+              sense=dict(path="channel at threshold", terminals=("S", "D"), select="G", direction="source to drain"), private=("G",)),
+    "C": dict(lab="(C) the three body diodes heated and read together on the pours as drafted: the total power and one voltage",
+              heat=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"),
+              sense=dict(path="body diode", terminals=("D", "S"), select=None, direction="drain to source"), private=()),
+}
+
+
+def per_device(step, private):
+    """Whether a heating or sensing step addresses ONE of several devices: (a) a terminal of the path it drives sits on a net of the
+    device's own; or (b) the path is a channel that a terminal on a net of the device's own selects, and the current enters at the
+    source of this P-channel part, so every unselected device is off and its body diode reverse-biased. A body diode has no selecting
+    terminal: with both its terminals on common nets the diodes are in parallel and no source sets one diode's current (DELTA-02)."""
+    if any(t in private for t in step["terminals"]):
+        return True, "a terminal of the path is on a net of the device's own"
+    if step["select"] is not None and step["select"] in private and step["path"].startswith("channel") and step["direction"] == "source to drain":
+        return True, "the channel is selected by a gate of the device's own, the unselected body diodes reverse-biased"
+    return False, "both terminals of the path are common and nothing selects one device: the three are in parallel"
+
+
+def charger_fets():
+    """The battery FETs as apply_gen_sch_a_charger.py draws them, read by ast from the statement the draft writes into the generator:
+    the references, the value text and the gate, drain and source nets; and the draft's sha256 (the reading is bound to its bytes)."""
+    import ast
+    path = os.path.join(TOP, R13_CHARGER)
+    src = open(path, encoding="utf-8").read()
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and "nfet(_qb" in node.value:
+            for line in node.value.split("\n"):
+                if line.startswith("for _qb in"):
+                    st = ast.parse(line).body[0]
+                    call = st.body[0].value
+                    if not (isinstance(st, ast.For) and isinstance(call, ast.Call) and call.func.id == "nfet" and call.args[0].id == "_qb"):
+                        refuse(4, "the charger draft's battery FET statement is not the one this record reads")
+                    val, g, d, s = [a.value for a in call.args[1:5]]
+                    return dict(refs=[e.value for e in st.iter.elts], value=val, G=g, D=d, S=s, sha=sha_file(path))
+    refuse(4, "the charger draft draws no battery FET statement")
+
+
+def fix23_round(R, T):
+    """Round 13: DELTA-02. The topology read from the charger draft and Nexperia's sheet; the old method shown undefined on it; three
+    executable methods judged for per-device heating power and junction temperature; the selection; E11-29's acceptance and its
+    uncertainty budget on the selected method; section 20c restated on the PTC's printed points."""
+    S9, S20, S21, S22, L = R["S19"], R["S20"], R["S21"], R["S22"], R["L"]
+    S = {}
+    # ---- the topology: the draft's statement and the maker's sheet
+    fets = charger_fets()
+    if fets["refs"] != ["Q39", "Q40", "Q42"] or "P-FET" not in fets["value"] or (fets["G"], fets["D"], fets["S"]) != ("CH_BATDRV", "CH_BATQ", "VBAT"):
+        refuse(4, "the charger draft's battery FETs are not the three P-channel devices on CH_BATDRV, CH_BATQ and VBAT")
+    S["fets"] = fets
+    S["board_private"] = ()        # one statement draws the three on the same gate, drain and source nets: no terminal has a net of its own
+    pg, _m = find("buk6y10", r"Table 2\. Pinning information", "Table 2")
+    t2 = flat(pdf_pages("buk6y10")[pg - 1])
+    need(t2, r"1 S source 2 S source 3 S source 4 G gate mb D mounting base; connected to drain", "the LFPAK56's pinning")
+    S["pin_p"] = pg
+    pg, m = find("buk6y10", r"IS source current Tmb = 25 °C - -(\d+) A", "the source-drain diode's IS")
+    S["is_p"], S["is"] = pg, f(m, 1)
+    S["id100"] = f(find("buk6y10", r"VGS = -10 V; Tmb = 100 °C - -(\d+) A", "ID at a 100 C mounting base")[1])
+    pg, m = find("buk6y10", r"VSD source-drain voltage IS = -(\d+) A; VGS = 0 V; Tj = 25 °C - -([\d.]+) -([\d.]+) V", "the body diode's VSD row")
+    S["vsd_p"], S["vsd"] = pg, (f(m, 1), f(m, 2), f(m, 3))
+    pg, m = find("buk6y10", r"VGSth gate-source threshold voltage ID = -(\d+) µA; VDS=VGS; Tj = 25 °C -([\d.]+) -([\d.]+) -([\d.]+) V", "the threshold row")
+    S["vth_p"], S["vth"] = pg, (f(m, 1) * 1e-6, f(m, 2), f(m, 3), f(m, 4))
+    S["fig11_p"] = find("buk6y10", r"Fig\. 11\. Gate-source threshold voltage as a function of junction temperature", "Fig. 11")[0]
+    m = need(flat(text_pdf("buk6y10")), r"RDSon drain-source on-state VGS = -10 V; ID = -13\.5 A; Tj = 25 °C - (\d+) (\d+) mΩ", "RDS(on) at 25 C")
+    r_typ = f(m, 1) * 1e-3
+    # ---- the defect, reproduced on the drafted topology (and with the gates alone brought out: a diode has no selecting terminal)
+    old = R13_METHODS["old"]
+    S["defect"] = dict(heat=per_device(old["heat"], S["board_private"]), sense=per_device(old["sense"], S["board_private"]),
+                       heat_gates=per_device(old["heat"], ("G",)), sense_gates=per_device(old["sense"], ("G",)))
+    if any(v[0] for v in S["defect"].values()):
+        refuse(4, "DELTA-02 is not reproduced: the body-diode method reads as per-device on common nets")
+    # ---- the three methods, each on its own specimen's nets and on board A's as drafted
+    S["judge"] = {}
+    for key in ("A", "B", "C"):
+        mth = R13_METHODS[key]
+        S["judge"][key] = dict(heat=per_device(mth["heat"], mth["private"]), sense=per_device(mth["sense"], mth["private"]),
+                               heat_board=per_device(mth["heat"], S["board_private"]), sense_board=per_device(mth["sense"], S["board_private"]))
+    if R13_SELECT not in S["judge"]:
+        refuse(4, "the selected method is not one of the three compared: the body-diode method on common nets is the defect")
+    sel = S["judge"][R13_SELECT]
+    if not (sel["heat"][0] and sel["sense"][0]):
+        refuse(4, "the selected method does not address one device: it heats or senses 'alone' on common nets")
+    # ---- the powers E11-29 imposes (C-PROT rev 1, record l9stk's E-1 at the breaker's largest limit), and the rises at the bar
+    i_, ra = S9["i"], S21["ra"]
+    S["p"] = dict(even=S21["p_even"], hot=S21["p_worst"], other=i_ ** 2 * ra / 16.0)
+    if abs(S["p"]["hot"] + 2 * S["p"]["other"] - i_ ** 2 * ra / 4.0) > 1e-12:
+        refuse(4, "the worst split's powers do not add to a quarter of I^2 R")
+    S["bar"], S["bar_even"] = S21["bar_new"], S21["bar_old"]
+    S["rise_bar"] = S["bar"] * S["p"]["even"]                     # the rise at the bar with the three heated evenly
+    S["budget"] = S21["fet_budget"]                               # the FETs' own rise E-1 leaves, R17 apart
+    S["rise_total"] = 150.0 - S9["t0"]                            # with the band carrying its current and R17 dissipating in place
+    S["bar_gap"] = 1.0 - S["bar"] / S["bar_even"]
+    # ---- method B's heating currents (one channel conducting at a time, so each device's power is the supply's current times its own VDS)
+    cur = lambda p_: (math.sqrt(p_ / ra), math.sqrt(p_ / r_typ))  # at the allowance (hot, least drive) and at the typical 25 C figure
+    S["r_typ"] = r_typ
+    S["i_single"] = cur(S["p"]["hot"])
+    S["slot_w"] = (3 * S["p"]["even"], S["p"]["hot"] + 2 * S["p"]["other"])
+    S["i_td"] = (cur(S["slot_w"][0]), cur(S["slot_w"][1]))
+    if max(S["i_single"][1], S["i_td"][0][1], S["i_td"][1][1]) >= S["id100"]:
+        refuse(4, "method B's heating current passes the part's ID at a 100 C mounting base")
+    zslot = L["z"][R13_B["slot"]]
+    S["zslot"] = zslot
+    S["ripple"] = (S["slot_w"][0] * zslot, S["slot_w"][1] * zslot)  # at most: the device's Zth(j-mb) at the slot's width (16b's reading) times the slot's power
+    S["duty_worst"] = (S["p"]["hot"] / S["slot_w"][1], S["p"]["other"] / S["slot_w"][1])
+    S["leak_frac"] = 2 * (S22["bat"][1] / 3) / R13_B["i_m"]         # the two off devices' printed IDSS at 125 C against the sense current
+    S["sense_k"] = R13_B["i_m"] * S["vth"][3] * S["bar"]            # the sense current's own heating, at the threshold's largest row
+    # ---- the uncertainty budgets on (Zself + 2 Zmut) at the bar: expanded terms combined in quadrature, as the block states its own three
+    rise = S["rise_bar"]
+    comb = lambda terms: math.sqrt(sum(x * x for _l, x in terms))
+    base = [("the K-factor", R13_TERMS["k"]), ("the heating power", R13_TERMS["p"]), ("the air within %s K" % fmt(R13_TERMS["air"], 0), R13_TERMS["air"] / rise)]
+    S["terms"] = {"A": base,
+                  "B": base + [("the threshold reading repeated between two calibrations, %s K" % fmt(R13_B["rep"], 1), R13_B["rep"] / rise),
+                               ("the off devices' leakage in the sense current, %s K" % fmt(R13_B["leak"], 1), R13_B["leak"] / rise),
+                               ("half the time-division ripple, %s K" % fmt(S["ripple"][0] / 2, 2), S["ripple"][0] / 2 / rise)]}
+    S["u"] = {k_: comb(v) for k_, v in S["terms"].items()}
+    S["pass"] = {k_: S["bar"] / (1 + u_) for k_, u_ in S["u"].items()}
+    S["pass_even"] = S["bar_even"] / (1 + S["u"]["B"])
+    S["pass_rise"] = S["rise_total"] / (1 + S["u"]["B"])
+    # method C: one voltage across three diodes in parallel reads between the mean and the hottest; the bracket on the hottest junction
+    vt = 8.617333e-5 * (150.0 + 273.15)
+    S["c_bracket"] = R13_C["n"] * vt * math.log(3.0) / R13_C["k"]
+    S["c_frac"] = S["c_bracket"] / rise
+    if not (S["u"]["B"] < S["bar_gap"] / 2 < S["c_frac"]):
+        refuse(4, "method B's budget does not resolve the bar's two forms, or method C's bracket does")
+    # ---- section 20c on the PTC's printed points (record l9stk's round 4, its reading of Murata's DM-SA16-E056 Rev.1 p.4, copied to inputs/)
+    g = flat(text("l9stk_guard"))
+    need(g, r"The kit's PRF15BB103 chip PTC, 10 kOhm plus or minus 50 %", "the PTC's 25 C row")
+    need(g, r"\*\*100 kOhm at a sensing temperature over 110 C\*\* \(no upper bound\) and \*\*4\.7 MOhm at 130 plus or minus 3 C\*\*", "the PTC's printed points")
+    need(g, r"The 47 kOhm column stands over the 470 ohm groups only", "the misread's correction")
+    need(g, r"\*\*Finding L8P-F07, OPEN\.\*\*", "L8P-F07's state")
+    m = need(g, r"a factory-set temperature switch \(no trip under ([\d.]+) C, tripped from ([\d.]+) C\) that pulls the loop's return, with a fixed resistor in RT1's place", "l9stk's selected guard")
+    S["switch"] = (f(m, 1), f(m, 2))
+    if abs(S9["rt1"][2] - 47e3) > 1e-6:
+        refuse(4, "round 9's reading of l9stk's page is not the 47 kOhm this round withdraws")
+    loop, i_ret = S20["loop"], S20["tps"]["i_s_hi"]
+    rows = []
+    for lab, rt in (("25 C, at least 5 kOhm", 5e3), ("25 C, at most 15 kOhm", 15e3), ("100 kOhm, reached somewhere over 110 C", 100e3), ("4.7 MOhm at 130 +-3 C", 4.7e6)):
+        for vin in (S9["pack_lo"], S9["vpk"]):
+            out, ret = loop(vin, rt, i_ret=i_ret)
+            inv = "on" if ret > 2.5 else ("off" if ret < 1.0 else "not defined")
+            a = "closed" if ret > S20["ret_high"] else ("held" if ret < S20["ret_low"] else "between")
+            rows.append(dict(lab=lab, rt=rt, vin=vin, out=out, ret=ret, inv=inv, a=a, powered=out > S20["out_rel"][1]))
+    S["ptc_rows"] = rows
+    by = {(r_["rt"], r_["vin"]): r_ for r_ in rows}
+    if not (by[(15e3, S9["pack_lo"])]["inv"] == "on" and by[(15e3, S9["pack_lo"])]["a"] == "closed" and by[(4.7e6, S9["vpk"])]["inv"] == "off"
+            and by[(4.7e6, S9["vpk"])]["a"] == "held" and by[(4.7e6, S9["pack_lo"])]["powered"] and by[(100e3, S9["pack_lo"])]["inv"] == "not defined"):
+        refuse(4, "section 20c's readings on the PTC's printed points are not the ones this round states")
+
+    def rt_at(vin, level):                                        # the RT1 at which the loaded return reads `level`
+        lo, hi = 1e3, 1e7
+        for _ in range(80):
+            mid = math.sqrt(lo * hi)
+            if loop(vin, mid, i_ret=i_ret)[1] > level:
+                lo = mid
+            else:
+                hi = mid
+        return lo
+    S["inv_loaded"] = [(vin, rt_at(vin, 2.5), rt_at(vin, 1.0)) for vin in (S9["pack_lo"], S9["vpk"])]
+    m = need(g, r"With the tolerances and board A's loads: ([\d.]+) and ([\d.]+) kOhm, ([\d.]+) and ([\d.]+) kOhm", "l9stk's loop levels")
+    S["l9_inv"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
+    mine = (S["inv_loaded"][0][1], S["inv_loaded"][1][1], S["inv_loaded"][0][2], S["inv_loaded"][1][2])
+    if any(abs(a_ / 1e3 - b_) > 0.10 * b_ for a_, b_ in zip(mine, S["l9_inv"])):
+        refuse(4, "the first inverter's levels are not within a tenth of record l9stk's")
+    S["withdrawn"] = (S20["bound"][0], S20["bound"][1], S20["bound_margin"])
+    # what the selected guard (not drafted here) would hand DD-7: the return pulled low with a fixed 15 kOhm in RT1's place
+    S["sw_rows"] = [(vin, loop(vin, 15e3, held=0.0)[0], loop(vin, 15e3, i_ret=i_ret)[1]) for vin in (7.6, S9["pack_lo"], S9["vpk"])]
+    if not all(o > S20["out_rel"][1] and r_ > S20["ret_high"] for _v, o, r_ in S["sw_rows"]):
+        refuse(4, "with a fixed 15 kOhm the pulled loop does not read powered or the closed loop does not read closed")
+    return S
+
+
+def e11_29_method13(R):
+    """E11-29's method and acceptance as round 13 stated them (printed in 23e as its history; round 14 restates the lines, e11_29_method)."""
+    S, S9 = R["S23"], R["S19"]
+    return ("the method (round 13, section 23, after the owner's supplier-delta review's DELTA-02: the three body diodes are in parallel, so "
+            "the earlier 'each FET heated through its body diode alone, each junction by its own VSD' is WITHDRAWN): on a coupon with board A's "
+            "drain and source pours unchanged and the three gates brought out apart, one channel conducts at a time, selected by its gate, the "
+            "current entering at the source so the other two are off and their body diodes reverse-biased; each device's heating power is the "
+            "supply's current times that device's own source-to-drain voltage on four-wire taps; each junction is read by that device's "
+            "threshold voltage at %s mA with its gate switched to the drain, the other gates on the source, against a K-factor calibrated in "
+            "an oven in the same connection; cases: each FET alone at %s W and at %s W (the 3 x 3 matrix of Zself and Zmut, its reciprocity "
+            "checked), the three evenly at %s W each and the worst split (%s W in one, %s W in each other, each FET in turn) by time division "
+            "in slots of at most %s us, the band carrying %s A and R17 dissipating in place; acceptance: each FET's (Zself + 2 Zmut) at most "
+            "%s K/W less the budget's %s %% (a reading of %s K/W or under), or by the measured m as section 21b; the worst split's hottest "
+            "junction at most %s K over the air (%s K less the budget); R17's coupling at most %s K/W; the PTC's site (RT1's land at the drain "
+            "tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard"
+            % (fmt(R13_B["i_m"] * 1e3, 0), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["other"], 3),
+               fmt(R13_B["slot"] * 1e6, 0), fmt(S9["i"], 2), "%.2f" % S["bar"], fmt(S["u"]["B"] * 100, 2), "%.2f" % S["pass"]["B"], fmt(S["pass_rise"], 2),
+               fmt(S["rise_total"], 2), fmt(S9["r17_allow"], 1)))
+
+
+def render_fix23(R, p):
+    S, S9, S20, S21 = R["S23"], R["S19"], R["S20"], R["S21"]
+    J = S["judge"]
+    yn = lambda v: ("YES: " if v[0] else "NO: ") + v[1]
+    ft = S["fets"]
+    p("23. ROUND 13: DELTA-02, E11-29'S METHOD ON THREE PARALLELED BODY DIODES, AND SECTION 20c ON MURATA'S PRINTED POINTS (4 October 2026; C-PROT rev 1)")
+    p("   23a. THE DEFECT (the owner's supplier-delta review of 4 October 2026, DELTA-02, P1; NETLIST, MAKER, INFERRED)")
+    p("     the draft: %s %s" % (ft["sha"][:16], R13_CHARGER))
+    p("       draws %s, %s and %s by one statement: every gate on %s, every drain on %s, every source on %s: no terminal has a net of its own"
+      % (ft["refs"][0], ft["refs"][1], ft["refs"][2], ft["G"], ft["D"], ft["S"]))
+    p("     the part (Nexperia BUK6Y10-30P, 17 April 2020): Table 2 (p.%d) pins 1 to 3 source, 4 gate, the mounting base the drain, the symbol's diode"
+      % S["pin_p"])
+    p("       from drain to source of this P-channel part; the source-drain diode rows IS %s A (p.%d) and VSD %s V typical, %s V at most at %s A"
+      % (fmt(S["is"], 0), S["is_p"], fmt(S["vsd"][1], 1), fmt(S["vsd"][2], 1), fmt(S["vsd"][0], 0)))
+    p("       (p.%d): so the three body diodes are in parallel between CH_BATQ and VBAT (MAKER, INFERRED)" % S["vsd_p"])
+    p("     E11-29 as rounds 9 to 12 wrote it, and TP-E11-29 after it: heating one diode alone: %s" % yn(S["defect"]["heat"]))
+    p("       reading one junction by its own VSD: %s" % yn(S["defect"]["sense"]))
+    p("       three sources on the same two nets do not set one diode's current, and four-wire taps remove lead drops, they isolate nothing;")
+    p("       rounds 11 and 12 moved the limit to %s K/W and kept this method: the limit was not the defect (DELTA-02, reproduced; INFERRED)" % ("%.2f" % S["bar"]))
+    p("   23b. THREE METHODS: THE CURRENT PATHS IN CALIBRATION, HEATING AND SENSING (SESSION; INFERRED)")
+    p("     (A) a coupon whose three sources sit on islands of their own, island k joined to the VBAT pour by a link Lk, gate k on island k")
+    p("       calibration (oven; links open):  source k (+) -> CH_BATQ pour (the common anode) -> body diode k -> island k -> source k (-), at the sense current")
+    p("       heating (links open):            the same path at the heating current, one source a device; P_k = I_k x V(drain tab k, island k)")
+    p("       sensing (links open):            source k back to the sense current; VSD_k read on its own taps, the three at once")
+    p("       the coupon's electrical test:    links closed (the three in parallel, as board A)")
+    p("     (B) the pours as board A's; only the gates apart: gate k to a driver, the other gates on VBAT (off)")
+    p("       calibration (oven):   I_M %s mA (+) -> VBAT pour (the common source) -> channel k at threshold, GATE k ON CH_BATQ -> CH_BATQ pour -> (-)"
+      % fmt(R13_B["i_m"] * 1e3, 0))
+    p("                             (VDS = VGS, the connection of the sheet's own threshold row);")
+    p("                             the other two off, their body diodes reverse-biased (the source positive); V(source tap k, drain tap k) is device k's threshold")
+    p("       heating:              I_H (+) -> VBAT pour -> channel k, gate k driven 10 V under VBAT -> CH_BATQ pour -> shunt -> (-); P_k = I_H x V(source tap k, drain tap k)")
+    p("       sensing:              I_H off, gate k switched to CH_BATQ, I_M as in calibration; then gate j, then gate l in turn (one device read at a time)")
+    p("       several heated:       time division: the channels conduct in turn in slots of at most %s us, so each device's power is still I_H x its own VDS over its slots"
+      % fmt(R13_B["slot"] * 1e6, 0))
+    p("     (C) the pours as board A's, the gates on VBAT")
+    p("       calibration, heating, sensing:  one source (+) -> CH_BATQ pour -> THREE body diodes in parallel -> VBAT pour -> (-): the total power and one voltage")
+    p("   23c. EACH METHOD JUDGED (per-device heating power and junction temperature; MAKER rows, INFERRED, ASSUMPTION as named)")
+    for key in ("A", "B", "C"):
+        p("     %s" % R13_METHODS[key]["lab"])
+        p("       heating one device, on its specimen: %s" % yn(J[key]["heat"]))
+        p("       reading one junction, on its specimen: %s" % yn(J[key]["sense"]))
+        p("       on board A as drafted (no gate, drain or source of a device's own): heating %s, reading %s (INFERRED)"
+          % ("YES" if J[key]["heat_board"][0] else "NO", "YES" if J[key]["sense_board"][0] else "NO"))
+        if key == "A":
+            p("       power: each source's current times its own VSD, within the block's %s %% (INFERRED); temperature: VSD at a fixed sense current, the K-factor within %s %%"
+              % (fmt(R13_TERMS["p"] * 100, 0), fmt(R13_TERMS["k"] * 100, 0)))
+            p("       budget on (Zself + 2 Zmut): %s %% (the block's three terms), a reading of %s K/W or under; Zself and Zmut separable electrically"
+              % (fmt(S["u"]["A"] * 100, 2), "%.2f" % S["pass"]["A"]))
+            p("       the copper: the VBAT source pour is cut into three islands behind links, and each gate leaves the common node: the source leads' heat")
+            p("         path and the coupling through the source pour are not board A's. Transfer: joining the islands again adds conductance between the three")
+            p("         and to the pour, which lowers the hottest junction for the FETs' own heat (the coupon is the safe side there), but Zmut reads LOW, so")
+            p("         section 21b's relaxed bar cannot be fed, and heat reaching the FETs through the VBAT copper from its neighbours reads LOW: an allowance")
+            p("         a second specimen would have to give (INFERRED; not a measurement uncertainty, so not in the %s %%)" % fmt(S["u"]["A"] * 100, 2))
+        elif key == "B":
+            p("       power: one channel conducts at a time, so P_k is the supply's current times device k's own VDS; the two off devices carry their leakage")
+            p("         (Nexperia: IDSS at most %s uA each at 125 C); alone at %s W: %s to %s A (the allowance to the typical 25 C %s mOhm); the three evenly"
+              % (fmt(R["S22"]["bat"][1] / 3 * 1e6, 0), fmt(S["p"]["hot"], 3), fmt(S["i_single"][0], 2), fmt(S["i_single"][1], 2), fmt(S["r_typ"] * 1e3, 0)))
+            p("         by time division %s to %s A (%s W in the conducting one), the worst split %s to %s A (%s W; duties %s and %s), all under ID's %s A"
+              % (fmt(S["i_td"][0][0], 2), fmt(S["i_td"][0][1], 2), fmt(S["slot_w"][0], 3), fmt(S["i_td"][1][0], 2), fmt(S["i_td"][1][1], 2), fmt(S["slot_w"][1], 3),
+                 fmt(S["duty_worst"][0], 2), fmt(S["duty_worst"][1], 2), fmt(S["id100"], 0)))
+            p("         at a 100 C mounting base (MAKER, p.3); the junction's ripple at most %s K (the device's %s K/W at %s us, section 16b's reading)"
+              % (fmt(S["ripple"][0], 2), fmt(S["zslot"], 4), fmt(R13_B["slot"] * 1e6, 0)))
+            p("       temperature: device k's threshold at %s mA with its gate on its drain (Table 7, p.%d: %s / %s / %s V at %s uA and 25 C; Fig. 11, p.%d, prints it"
+              % (fmt(R13_B["i_m"] * 1e3, 0), S["vth_p"], fmt(S["vth"][1], 1), fmt(S["vth"][2], 0), fmt(S["vth"][3], 0), fmt(S["vth"][0] * 1e6, 0), S["fig11_p"]))
+            p("         against junction temperature; no coefficient is printed: the K-factor is calibrated per device, as VSD's was); the sense current heats")
+            p("         the junction by at most %s K; the two off devices divert at most %s %% of it at 125 C (MAKER, INFERRED)" % (fmt(S["sense_k"], 2), fmt(S["leak_frac"] * 100, 0)))
+            p("       budget on (Zself + 2 Zmut), expanded terms in quadrature on the %s K rise at the bar:" % fmt(S["rise_bar"], 2))
+            for lab, x in S["terms"]["B"]:
+                p("         %s: %s %%" % (lab, fmt(x * 100, 2)))
+            p("         in all %s %%: a reading of %s K/W or under passes the %s K/W bar (the last three terms are SESSION proposals, the supplier's to confirm)"
+              % (fmt(S["u"]["B"] * 100, 2), "%.2f" % S["pass"]["B"], "%.2f" % S["bar"]))
+            p("       Zself and Zmut: separable, device by device: k alone gives Zself k and the two Zmut into the others; the matrix's reciprocity (Zjk against")
+            p("         Zkj) checks the method on the specimen; section 21b's formula is fed by the largest Zself and the largest Zmut (INFERRED)")
+            p("       the copper: the drain pour, the source pour, R17, the band and RT1's land are board A's; only the three gate traces differ, which carry")
+            p("         no heat of consequence. Transfer: block E11-29's comparison rule, unchanged (INFERRED)")
+        else:
+            p("       power: the total only, within %s %%; the split between the three follows each diode's own forward voltage, and the hotter diode takes"
+              % fmt(R13_TERMS["p"] * 100, 0))
+            p("         more: no device's power is known (INFERRED)")
+            p("       temperature: one voltage; at the sense current it lies between the three evenly sharing and the hottest carrying it all, a bracket of")
+            p("         n (kT/q) ln 3 over the K-factor = %s K at 150 C (ASSUMPTION: n %s, %s mV/K), %s %% of the %s K rise at the bar, against the %s %%"
+              % (fmt(S["c_bracket"], 1), fmt(R13_C["n"], 0), fmt(R13_C["k"] * 1e3, 0), fmt(S["c_frac"] * 100, 0), fmt(S["rise_bar"], 2), fmt(S["bar_gap"] * 100, 1)))
+            p("         between the bar's two forms (%s and %s K/W): it cannot decide the acceptance" % ("%.2f" % S["bar"], "%.2f" % S["bar_even"]))
+            p("       Zself and Zmut: not separable; no split can be imposed, the worst split least of all. The copper is board A's. It can bound: the")
+            p("         region's total power against one bracketed junction, a cross-check of (A) or (B), never the acceptance (INFERRED)")
+    p("   23d. THE SELECTION (SESSION)")
+    p("     SELECTED: (B). It is the only one of the three that leaves the copper as board A's, gives each device's power and junction with no")
+    p("       assumption about sharing, and can impose the worst split itself; it costs a gate driver per device, a sequencer and a threshold")
+    p("       calibration whose repeatability the specimen must show")
+    p("     reversed by: the two threshold calibrations (before and after the runs) differing by more than %s K, or the matrix failing reciprocity"
+      % fmt(R13_B["rep"], 1))
+    p("       beyond the budget, or no supplier agreeing to the setup: then (A), judged on the %s K/W bar alone with the VBAT copper's allowance" % ("%.2f" % S["bar"]))
+    p("       named as owed; (C) only as a cross-check (INFERRED)")
+    p("     the first prototype of board A is NOT a specimen for (B) as drafted: its three gates share %s (heating %s); it becomes one only with"
+      % (ft["G"], "YES" if J["B"]["heat_board"][0] else "NO"))
+    p("       a removable link in each gate branch, a change to the charger draft and the layout NOT DRAFTED here (owed before the prototype's layout; RECORD)")
+    p("   23e. E11-29'S ACCEPTANCE ON (B) (C-PROT rev 1: 23.93 A held from 76.25 C; the row of section 8 carries this text; RECORD, INFERRED)")
+    p("     %s" % e11_29_method13(R))
+    p("     (round 14: these lines are SUPERSEDED by section 24d, the recheck V2R's V2R-B2; the fixture by 24b, V2R-B1)")
+    p("     the bar by form: %s K/W for any coupling (a reading of %s or under); %s K/W for m at or over 1/4 (%s or under); the direct case: the worst"
+      % ("%.2f" % S["bar"], "%.2f" % S["pass"]["B"], "%.2f" % S["bar_even"], "%.2f" % S["pass_even"]))
+    p("       split's hottest junction, the band and R17 on, at most %s K over the air less the budget, %s K (INFERRED)" % (fmt(S["rise_total"], 2), fmt(S["pass_rise"], 2)))
+    p("   23f. THE CORRECTION SCOPE FOR TP-E11-29 (rewritten on it in this round, by the coordinator's instruction; it stays NOT EXECUTABLE; RECORD)")
+    p("     1. replace the body-diode excitation and the VSD reading (its sections 2, 4, 5 and 6: 'each FET heated alone', 'the VSD sense taps', the")
+    p("        K-factor by VSD) by method (B)'s three connections of 23b, with a fixture schematic showing the supply, the shunt, the three gate")
+    p("        drivers, the sense source and each device's four-wire taps in calibration, heating and sensing; the gates switch make-before-break,")
+    p("        so the heating supply never meets three channels off (round 14: a series switch isolates the supply for every reading, 24b; V2R-B1)")
+    p("     2. the coupon: board A's region as before, with the three gate traces brought to the fixture apart and a tap pair at each device's source")
+    p("        leads and drain tab; no source island, no cut in either pour")
+    p("     3. the cases of 23e (each alone at two powers, the three evenly, the worst split with each FET in turn, R17 alone, the band on) and the")
+    p("        thermocouple on RT1's land in every case")
+    p("     4. the validity checks: two threshold calibrations within %s K; reciprocity; the off devices' leakage read at the run's temperature and under"
+      % fmt(R13_B["rep"], 1))
+    p("        1 % of the sense current, else a larger sense current with its own heating restated; the ripple at the slot chosen")
+    p("     5. the limits of 23e with the uncertainty budget recomputed for the supplier's instruments; the register's R-159, which still carries")
+    p("        round 9's 45.88 K/W, is L4-E9's to restate from E11-29's row")
+    p("     6. it stays NOT EXECUTABLE until the method and the limits are independently checked and a supplier agrees to the setup")
+    p("   23g. SECTION 20c RESTATED ON MURATA'S PRINTED POINTS (record l9stk's round 4, fnd/l9stk2 at 43da41ca, its 15.5 copied to inputs/; RECORD, INFERRED)")
+    p("     the PRF15BB103 prints 10 kOhm +-50 % at 25 C, 100 kOhm at a sensing temperature over 110 C (no upper bound) and 4.7 MOhm at 130 +-3 C;")
+    p("       '47 kOhm at 130 C' is the 470 ohm groups' column (this record's own finding L4E11-R10-F3; record l8p's L8P-F07, OPEN). With board A's loads:")
+    for r_ in S["ptc_rows"]:
+        p("         RT1 %-40s BRK_VIN %4s V: DOCK_EN_RET %s V, board P's first inverter %s, board A reads the return %s%s"
+          % (r_["lab"] + ",", fmt(r_["vin"], 1), fmt(r_["ret"], 3), r_["inv"], r_["a"], " and the loop powered" if r_["a"] == "held" and r_["powered"] else ""))
+    p("     the first inverter with board A's loads: on while RT1 is under %s kOhm at %s V (%s kOhm at %s V), off from %s kOhm (%s kOhm) (nominal resistors,"
+      % (fmt(S["inv_loaded"][0][1] / 1e3, 1), fmt(S["inv_loaded"][0][0], 1), fmt(S["inv_loaded"][1][1] / 1e3, 1), fmt(S["inv_loaded"][1][0], 1),
+         fmt(S["inv_loaded"][0][2] / 1e3, 1), fmt(S["inv_loaded"][1][2] / 1e3, 1)))
+    p("       the return's %s uA drawn; record l9stk reads %s and %s kOhm, %s and %s kOhm with its tolerances: a consistency check, not an input)"
+      % (fmt(S20["tps"]["i_s_hi"] * 1e6, 0), fmt(S["l9_inv"][0], 1), fmt(S["l9_inv"][1], 1), fmt(S["l9_inv"][2], 1), fmt(S["l9_inv"][3], 1)))
+    p("     WHAT NO LONGER STANDS: 20c's 'bound point (l9stk, %s V, RT1 47 kOhm)' and the %s / %s V read on it, and 20f's 'the return at least %s V"
+      % (fmt(S9["pack_lo"], 1), "%.3f" % S["withdrawn"][0], "%.3f" % S["withdrawn"][1], "%.3f" % S["withdrawn"][1]))
+    p("       ... with RT1 to its 47 kOhm, read closed with %s V to spare': 47 kOhm is not a point of this part, so they bound nothing in service; they"
+      % fmt(S["withdrawn"][2], 3))
+    p("       stay only as the loop's reading at one resistance. Between 25 C and 110 C the part prints only 'under 100 kOhm', where the first")
+    p("       inverter at %s V is not defined: whether the guard stays closed in the 10 A and 18 A service is not printed (L8P-F07)" % fmt(S9["pack_lo"], 1))
+    p("     WHAT STANDS: board A's own thresholds; board A reads the closed return as held only past %s kOhm at %s V (%s kOhm at %s V), after the guard's"
+      % (fmt(S20["guard_rt1"][0][1] / 1e3, 0), fmt(S20["guard_rt1"][0][0], 1), fmt(S20["guard_rt1"][1][1] / 1e3, 0), fmt(S20["guard_rt1"][1][0], 1)))
+    p("       own trip; the window's bound (%s kOhm) with its condition of 20l; and a tripped PTC (4.7 MOhm) holds the return low with the loop powered,"
+      % fmt(S20["window_rt1"] / 1e3, 1))
+    p("       so a guard trip already sets DD-7's inhibit")
+    p("     THE GUARD RECORD l9stk SELECTED (a factory-set temperature switch, no trip under %s C, tripped from %s C, pulling the return, a fixed"
+      % (fmt(S["switch"][0], 1), fmt(S["switch"][1], 1)))
+    p("       15 kOhm in RT1's place; NOT DRAFTED, its draft record l8p's with this record): a trip pulls DOCK_EN_RET low while DOCK_EN_OUT stays")
+    p("       powered, which is DD-7's trigger: the inhibit sets at the trip itself (within %s ms), holds at least %s s after the return rises and"
+      % (fmt(S20["t_set"] * 1e3, 2), fmt(S20["hold_min"], 3)))
+    p("       keeps until CELL+ reads alive: a thermal trip takes the breaker AND the battery FETs off. With the fixed 15 kOhm this record's loop reads:")
+    for vin, o, r_ in S["sw_rows"]:
+        p("         BRK_VIN %4s V: the pulled loop's DOCK_EN_OUT %s V (powered over %s V at most), the closed return %s V (closed over %s V)"
+          % (fmt(vin, 1), fmt(o, 3), fmt(S20["out_rel"][1], 3), fmt(r_, 3), fmt(S20["ret_high"], 2)))
+    p("       OWED READING, once the guard is drafted (this record with record l8p; nothing drafted or checked here): the switch's pulled level against")
+    p("       %s V; the release against the hold and section 22's bleed, a trip being the hot bound itself; the kit's state through a trip with a"
+      % fmt(S20["ret_low"], 4))
+    p("       source present; the 30 uA the switch adds on DOCK_EN_OUT against U48's divider (INFERRED)")
+    p("   23h. STATUS (SESSION): DELTA-02 answered in the record and in the procedure: the method selected, E11-29 restated on it, TP-E11-29 rewritten on")
+    p("     it and NOT EXECUTABLE until independently checked and a supplier agrees; E11-29 stays CONDITIONAL on its measurement; nothing is built or measured;")
+    p("     no circuit changed, so no netlist reading applies; 20c restated; the guard's reading on DD-7 OWED (RECORD)")
+    p("")
+
+
+# ---- round 14 (5 October 2026): the independent recheck V2R's findings on TP-E11-29 (C-PROT rev 1): V2R-B1, the fixture never isolated the
+# heating supply; V2R-B2, two pass rules could pass a specimen over the limit; and the minors m1 and m3 to m7
+R14_SW = dict(v_block=20.0,     # V: the series switch blocks the heating supply's open-circuit limit (the procedure's section 3) in either polarity
+              leak_s=1e-6,      # A: the series switch's off-state leakage at v_block, either polarity, at the laboratory's temperature
+              r_s=5e-3,         # ohm: the series switch's on-resistance
+              c_s=2e-9,         # F: the series switch's off-state capacitance
+              leak_drv=1e-6,    # A: each gate driver's open switch at 15 V
+              n_drv_open=6,     # the drivers' open switches that span the pours during a reading (two a driver)
+              r_dig=10e6,       # ohm: each digitiser input pair, at least
+              c_fix=1e-9,       # F: the fixture's own capacitance across the pours besides the series switch (cables, digitiser, drivers)
+              r_leg=5e-3,       # ohm: the dummy leg with SW_B closed
+              r_loop_old=20e-3, # ohm: the old bypass loop (the supply's leads and the shunt), V2R's example, for the defect's reading only
+              t_bypass=10e-6, t_gate=2e-6, t_first=1e-4, t_read=1e-2, t_gap=1.0)   # s: the reading's sequence (the procedure's step 7)
+# SESSION proposals, the supplier's to meet with parts whose makers print these limits; none is selected here
+R14_TERMS = dict(bias=0.5, early=0.5, pickup=0.1)   # K, SESSION proposals (V2R-m4, V2R-m3): the control run's bound on a bias-induced
+                                                    # threshold shift, the early-time correction's own U, the pickup step's subtraction
+R14_LEAD = dict(k_cu=390.0, area=4e-6, dx=0.02, frac=0.02)  # the heavy leads (V2R-m7): copper's conductivity, W/(m K) (a handbook value,
+                                                    # ASSUMPTION); the cross-section (m2) and the thermocouples' spacing (m) proposed; the
+                                                    # validity limit on a lead's heat flow, a fraction of the heated FET's power (SESSION)
+R14_POUR_EX = 0.2e-3           # ohm: an ILLUSTRATION only of the pours' path resistance (no layout exists); the procedure measures it
+R14_SEARCH = dict(seed=20261005, n=20000)           # the search: its seed and the matrices in each of its four families
+R14_LIMIT = 150.0              # C, E-1's junction limit
+
+
+def bar_at(m_, bar_even):
+    """Section 21b's bar on (Zself + 2 Zmut) at the coupling ratio m: the even split's bar times 8 (1 - m)(1 + 2 m) / 9 under 1/4,
+    the even split's own at or over it."""
+    return bar_even * 8.0 * (1.0 - m_) * (1.0 + 2.0 * m_) / 9.0 if m_ < 0.25 else bar_even
+
+
+def worst_row(z):
+    """The exact worst-split figure of ONE junction from its own row of the measured matrix (round 14, V2R-B2): z holds the junction's rise per
+    watt in each of the three FETs (its own Zself and the two Zmut into it). With each RDS(on) at most the allowance R (conductances x_i / R,
+    x_i at least 1), the FETs' share of the junction's rise is I^2 R sum(z_i x_i) / (sum x_i)^2. For a fixed sum s the numerator is linear on
+    a simplex whose vertices put all of s - 2 on one FET, so the largest coefficient C takes it and the other two (their sum D) stay at R;
+    (C (s - 2) + D) / s^2 is then largest at s = 4 - 2 D / C while D < C / 2 (so s > 3), else at the even split s = 3. Returned as 9 times
+    the rise over I^2 R, the figure the even-split bar judges: 9 C^2 / (4 (2 C - D)) while D < C / 2, else C + D. With C = Zself this is
+    9 Zself / (8 (1 - m_k)) for m_k = D / (2 Zself) under 1/4: S_k against 21b's bar at the junction's OWN m_k, exactly. Also returns x, the
+    hot FET's conductance over 1 / R at the worst split, and m_k."""
+    c = max(z)
+    d = sum(z) - c
+    m_ = d / (2.0 * c) if c > 0 else 0.0
+    if 2.0 * d < c:
+        return 9.0 * c * c / (4.0 * (2.0 * c - d)), 2.0 - 2.0 * d / c, m_
+    return c + d, 1.0, m_
+
+
+def r14_lines(Z, B, z17, u, K, extra=(0.0, 0.0, 0.0)):
+    """Round 14's pass lines on one specimen's readings. Z[k][j]: junction k's rise over step 6's baseline per watt in FET j; B[k]: junction
+    k's baseline rise over the air (the band and the neighbours' dummies on); z17[k]: R17's coupling into junction k; u: the achieved expanded
+    uncertainty as a fraction of each figure; extra[k]: the bounded additions of V2R-m7 (the pours' service loss and the leads), K. Line 1, the
+    FETs' allocation: each junction's worst-split figure at its own m_k, plus U, at most the even-split bar. Line 2, the limit itself: the
+    baseline, R17's coupling at its power, the matrix's worst-split rise and the additions, plus U, at most 150 C less the air. Line R17: the
+    coupling plus U at most its limit. Returns (pass, line 1's figure, line 2's hottest rise, R17's largest coupling)."""
+    zw = [worst_row(Z[k])[0] for k in range(3)]
+    t = [B[k] + z17[k] * K["p17"] + K["p_even"] * zw[k] + extra[k] for k in range(3)]
+    l1, l2, l3 = max(zw) * (1.0 + u), max(t) * (1.0 + u), max(z17) * (1.0 + u)
+    return (l1 <= K["bar_even"] and l2 <= K["rise"] and l3 <= K["z17"]), l1, l2, l3
+
+
+def r13_step14(Z, u, K):
+    """TP-E11-29's step 14 as round 13 wrote it (V2R-B2 (b)): each S_k with its actual mutual terms against the bar at m = the largest Zmut
+    over the largest Zself."""
+    zs = max(Z[k][k] for k in range(3))
+    zm = max(Z[k][j] for k in range(3) for j in range(3) if j != k)
+    bar = bar_at(zm / zs, K["bar_even"])
+    return all(sum(Z[k]) * (1.0 + u) <= bar for k in range(3))
+
+
+def r11_record_rule(Z, u, K):
+    """The record's rule as round 11 wrote it (21b, block E11-29): the largest Zself plus twice the largest Zmut into any junction against the
+    bar at their ratio."""
+    zs = max(Z[k][k] for k in range(3))
+    zm = max(Z[k][j] for k in range(3) for j in range(3) if j != k)
+    return (zs + 2.0 * zm) * (1.0 + u) <= bar_at(zm / zs, K["bar_even"])
+
+
+def r13_direct(Z, B, z17, u, K):
+    """Round 13's direct line (V2R-B2 (a)): the split imposed at m = 0 (1.513 W in one, 0.756 W in each other, each FET hot in turn) with R17,
+    the band and the dummies on, the hottest junction plus U at most 150 C less the air."""
+    ph, po = K["p_hot0"], K["p_oth0"]
+    worst = 0.0
+    for h in range(3):
+        p_ = [ph if j == h else po for j in range(3)]
+        worst = max(worst, max(B[k] + z17[k] * K["p17"] + sum(Z[k][j] * p_[j] for j in range(3)) for k in range(3)))
+    return worst * (1.0 + u) <= K["rise"], worst
+
+
+def tj_exact(Z, B, z17, K):
+    """The exact worst-split hottest junction (C) of a specimen whose TRUE matrix, baseline and coupling are given."""
+    return K["t0"] + max(B[k] + z17[k] * K["p17"] + K["p_even"] * worst_row(Z[k])[0] for k in range(3))
+
+
+def inv3(a):
+    d = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]) - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0])
+         + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]))
+    c = [[a[1][1] * a[2][2] - a[1][2] * a[2][1], a[0][2] * a[2][1] - a[0][1] * a[2][2], a[0][1] * a[1][2] - a[0][2] * a[1][1]],
+         [a[1][2] * a[2][0] - a[1][0] * a[2][2], a[0][0] * a[2][2] - a[0][2] * a[2][0], a[0][2] * a[1][0] - a[0][0] * a[1][2]],
+         [a[1][0] * a[2][1] - a[1][1] * a[2][0], a[0][1] * a[2][0] - a[0][0] * a[2][1], a[0][0] * a[1][1] - a[0][1] * a[1][0]]]
+    return [[c[i][j] / d for j in range(3)] for i in range(3)]
+
+
+def r14_matrix(rnd, fam):
+    """One random thermal matrix of a family: "net", a passive network of three nodes, each to the air and to each other, conductances drawn
+    log-uniform (the Kron reduction of any linear conduction network onto three junctions is of this form, so these are the physical
+    matrices: symmetric, positive, each mutual under both selfs); "row", three side by side, the ends joined only through the middle;
+    "sym", V2R's kind, symmetric with each self 5 to 50 K/W and each mutual up to the smaller self; "free", NOT physical (asymmetric, a
+    mutual up to 1.5 times its junction's self), for the rule's robustness only (check V2's reciprocity would refuse it)."""
+    lu = lambda a, b: 10.0 ** rnd.uniform(a, b)
+    if fam in ("net", "row"):
+        ga = [lu(-2.0, -0.6) for _ in range(3)]
+        g12, g23 = lu(-3.0, 0.3), lu(-3.0, 0.3)
+        g13 = 0.0 if fam == "row" else (lu(-3.0, 0.3) if rnd.random() > 0.1 else 0.0)
+        G = [[ga[0] + g12 + g13, -g12, -g13], [-g12, ga[1] + g12 + g23, -g23], [-g13, -g23, ga[2] + g13 + g23]]
+        return inv3(G)
+    zs = [rnd.uniform(5.0, 50.0) for _ in range(3)]
+    if fam == "sym":
+        z = [[zs[i] if i == j else 0.0 for j in range(3)] for i in range(3)]
+        for i, j in ((0, 1), (0, 2), (1, 2)):
+            z[i][j] = z[j][i] = rnd.uniform(0.0, 1.0) * min(zs[i], zs[j])
+        return z
+    return [[zs[i] if i == j else rnd.uniform(0.0, 1.5) * zs[i] for j in range(3)] for i in range(3)]
+
+
+def r14_search(K, u, seed, n):
+    """The proof by search of round 14's pass rule (V2R-B2): over n random thermal matrices in each of four families, each scaled so that its
+    worst-split figure lies near the even-split bar, with a baseline of 0 to 20 K and R17's coupling 0 to 1.2 K/W per junction, the
+    readings perturbed within the achieved uncertainty (each reading the truth over 1 + d, |d| at most u), the rule accepts NONE whose exact
+    worst-split hottest junction exceeds 150 C. Round 13's step 14 and its direct line are counted on exact readings, as V2R counted them,
+    against the FETs' allocation and against the limit; the record's own rule as written (round 11) the same."""
+    import random
+    rnd = random.Random(seed)
+    c = dict(n=0, new_acc=0, new_over=0, new0_acc=0, new0_over=0, new0_miss=0, s14_acc=0, s14_over=0, s14_worst=0.0, rec_acc=0, rec_over=0,
+             old_acc=0, old_over=0, old_worst=0.0, fam={})
+    for fam in ("net", "row", "sym", "free"):
+        cf = dict(n=0, new_acc=0, new_over=0, s14_acc=0, s14_over=0)
+        for _ in range(n):
+            Z = r14_matrix(rnd, fam)
+            zw = max(worst_row(Z[k])[0] for k in range(3))
+            sc = rnd.uniform(0.80, 1.15) * K["bar_even"] / zw
+            Z = [[x * sc for x in r_] for r_ in Z]
+            B = [rnd.uniform(0.0, 20.0) for _ in range(3)]
+            z17 = [rnd.uniform(0.0, 1.2) for _ in range(3)]
+            tj = tj_exact(Z, B, z17, K)
+            over = tj > R14_LIMIT + 1e-9
+            alloc_over = max(worst_row(Z[k])[0] for k in range(3)) > K["bar_even"] * (1 + 1e-12)
+            per = lambda v: v / (1.0 + rnd.uniform(-u, u))
+            Zr = [[per(x) for x in r_] for r_ in Z]
+            ok = r14_lines(Zr, [per(b) for b in B], [per(z) for z in z17], u, K)[0]
+            c["n"] += 1
+            cf["n"] += 1
+            if ok:
+                c["new_acc"] += 1
+                cf["new_acc"] += 1
+                if over:
+                    c["new_over"] += 1
+                    cf["new_over"] += 1
+            ok0 = r14_lines(Z, B, z17, 0.0, K)[0]
+            if ok0:
+                c["new0_acc"] += 1
+                c["new0_over"] += over
+            elif not over and not alloc_over and max(z17) <= K["z17"]:
+                c["new0_miss"] += 1                 # meets the limit and both allocations, yet refused: the rule would be more than exact
+            if fam == "free":
+                continue
+            if r13_step14(Z, 0.0, K):
+                c["s14_acc"] += 1
+                cf["s14_acc"] += 1
+                if alloc_over:
+                    c["s14_over"] += 1
+                    cf["s14_over"] += 1
+                    c["s14_worst"] = max(c["s14_worst"], max(worst_row(Z[k])[0] for k in range(3)) / K["bar_even"] - 1.0)
+            if r11_record_rule(Z, 0.0, K):
+                c["rec_acc"] += 1
+                c["rec_over"] += alloc_over
+            if r13_step14(Z, 0.0, K) and r13_direct(Z, B, z17, 0.0, K)[0] and max(z17) <= K["z17"]:
+                c["old_acc"] += 1
+                if over:
+                    c["old_over"] += 1
+                    c["old_worst"] = max(c["old_worst"], tj)
+        c["fam"][fam] = cf
+    return c
+
+
+# the fixture as drawn (round 13) and as redrawn (round 14): each element (name, node, node, what it is, the states in which it is CLOSED);
+# nodes: VB the VBAT pour (the three sources), CQ the CH_BATQ pour (the three drains), HP and HN the heating supply's terminals, CF CELL_FUSED
+# (R17's far end); an element that is not closed in a state is open and carries at most its leakage. FET k is the device under test.
+R14_FIXTURES = {
+    "old": [("the heating supply's + lead", "HP", "VB", "lead", ("calibration", "heating", "sensing")),
+            ("the shunt and the - lead", "CQ", "HN", "lead", ("calibration", "heating", "sensing")),
+            ("the bypass switch across the heating supply", "HP", "HN", "switch", ("calibration", "sensing")),
+            ("R17 with its own floating supply", "CQ", "CF", "lead", ("calibration", "heating", "sensing"))],
+    "new": [("the series switch SW_S in the heating supply's + lead", "HP", "VB", "switch", ("heating",)),
+            ("the shunt and the - lead", "CQ", "HN", "lead", ("calibration", "heating", "sensing")),
+            ("the bypass SW_B onto the dummy leg, on the supply's side of SW_S", "HP", "HN", "switch", ("calibration", "sensing")),
+            ("R17 with its own floating supply", "CQ", "CF", "lead", ("calibration", "heating", "sensing"))],
+}
+
+
+def r14_state(fix, state):
+    """Whether, in a state, closed elements join the VBAT pour to the CH_BATQ pour outside the three FETs (a search over the closed elements'
+    nodes); the elements of that path if so, else every closed element."""
+    edges = [(name, a, b) for name, a, b, _kind, closed in R14_FIXTURES[fix] if state in closed]
+    seen, todo = {"VB": []}, ["VB"]
+    while todo:
+        n = todo.pop(0)
+        for name, a, b in edges:
+            for x, y in ((a, b), (b, a)):
+                if x == n and y not in seen:
+                    seen[y] = seen[n] + [name]
+                    todo.append(y)
+    if "CQ" in seen:
+        return True, seen["CQ"]
+    return False, [name for name, _a, _b in edges]
+
+
+def fix24_round(R, T):
+    """Round 14: the recheck V2R's V2R-B1 (the fixture: the heating supply isolated by a series switch, the sequence, each state's current
+    paths with their margins on the maker's printed figures), V2R-B2 (the pass lines at the worst split for the measured matrix, judged
+    with the baseline; step 14 replaced by each junction's own m_k; the replacement proved by a search), the budget with V2R-m4's terms, the
+    leads and the pours of V2R-m7, and the minors' figures."""
+    S9, S21, S22, S23, L = R["S19"], R["S21"], R["S22"], R["S23"], R["L"]
+    S = {}
+    i_, ra = S9["i"], S21["ra"]
+    i2r = i_ ** 2 * ra
+    K = dict(bar_even=S21["bar_old"], p_even=S23["p"]["even"], p17=S9["pr17"], z17=S9["r17_allow"], rise=S23["rise_total"], t0=S9["t0"],
+             p_hot0=S23["p"]["hot"], p_oth0=S23["p"]["other"], i2r=i2r)
+    S["K"] = K
+    # ---- the maker's rows this round reads (Nexperia BUK6Y10-30P, 17 April 2020, Table 7 p.6 and Table 5 p.3)
+    pg, m = find("buk6y10", r"IDSS drain leakage current VDS = -30 V; VGS = 0 V; Tj = 25 °C - - -(\d+) µA VDS = -30 V; VGS = 0 V; Tj = 125 °C - - -(\d+) µA VGS = -20 V; VDS = 0 V; Tj = 25 °C - - -(\d+) nA",
+                 "IDSS and IGSS")
+    S["leak_p"], S["idss"], S["igss"] = pg, (f(m, 1) * 1e-6, f(m, 2) * 1e-6), f(m, 3) * 1e-9
+    if abs(3 * S["idss"][1] - S22["bat"][1]) > 1e-12:
+        refuse(4, "the IDSS row read here is not round 12's")
+    S["vgs_abs"] = f(find("buk6y10", r"VGS gate-source voltage -(\d+) \d+ V", "VGS's limit")[1])
+    vth_min, vth_max = S23["vth"][1], S23["vth"][3]
+    i_m = R13_B["i_m"]
+    # ---- V2R-B1: the old fixture reproduced, the new one in each state
+    S["old"] = {st: r14_state("old", st) for st in ("calibration", "heating", "sensing")}
+    S["new"] = {st: r14_state("new", st) for st in ("calibration", "heating", "sensing")}
+    if not (S["old"]["sensing"][0] and S["old"]["calibration"][0]):
+        refuse(4, "V2R-B1 is not reproduced: the old fixture's sensing state shows no path joining the pours")
+    if S["new"]["sensing"][0] or S["new"]["calibration"][0] or S["new"]["heating"][0]:
+        refuse(4, "the redrawn fixture joins the pours outside the FETs in a state: %s" % {k: v for k, v in S["new"].items() if v[0]})
+    S["old_v"] = i_m * R14_SW["r_loop_old"]                       # the pours' voltage with the sense current in the old bypass loop
+    S["clamp_p"] = (S23["i_td"][0][0] * vth_min, 13.8 * 3.5)       # the clamp: the whole heating current through a diode-connected FET
+    # the sensing (and calibration) state: every conductor across the pours but the device under test, each with its bound
+    lk = [("the two off FETs, IDSS at 125 C (printed, at VDS -30 V)", 2 * S["idss"][1], "MAKER"),
+          ("the device under test's gate on its drain, IGSS at 25 C (printed, at 20 V)", S["igss"], "MAKER"),
+          ("the series switch SW_S open", R14_SW["leak_s"], "PROPOSAL"),
+          ("the gate drivers' open switches (%d)" % R14_SW["n_drv_open"], R14_SW["n_drv_open"] * R14_SW["leak_drv"], "PROPOSAL"),
+          ("the three digitiser inputs at the threshold's largest 25 C row", 3 * vth_max / R14_SW["r_dig"], "PROPOSAL")]
+    S["sense_leaks"] = lk
+    S["sense_sum"] = sum(x for _l, x, _c in lk)
+    S["sense_frac"] = S["sense_sum"] / i_m
+    S["sense_ratio"] = i_m / max([S["idss"][1]] + [x for _l, x, _c in lk[1:]])   # against the largest single other conductor
+    S["fixture_frac"] = sum(x for _l, x, c_ in lk if c_ == "PROPOSAL") / i_m
+    # the heating state: the device under test fully on; the others
+    S["vds_heat"] = (math.sqrt(S23["p"]["hot"] * S23["r_typ"]), math.sqrt(S23["slot_w"][0] * ra))   # the heated FET's VDS: the least and the most
+    hk = [("the two off FETs, IDSS at 125 C", 2 * S["idss"][1]), ("the gate drivers' open switches", R14_SW["n_drv_open"] * R14_SW["leak_drv"]),
+          ("the digitiser inputs at the largest heating VDS", 3 * S["vds_heat"][1] / R14_SW["r_dig"])]
+    S["heat_leaks"] = hk
+    S["heat_min_i"] = S23["i_single"][0]                           # the least heating current (one FET alone at the worst split's power)
+    S["heat_ratio"] = S["heat_min_i"] / sum(x for _l, x in hk)
+    S["sense_in_power"] = i_m / S["heat_min_i"]                    # the sense current's share of the conducting FET's current, so of its power
+    S["v_sw_open"] = vth_max + S23["i_td"][0][1] * R14_SW["r_leg"]  # the most across SW_S open in a reading: the threshold and the dummy leg's drop
+    # the settling before the first sample: the pours' node moved by the sense current alone
+    S["c_node"] = 3 * L["ciss_0"] + R14_SW["c_s"] + R14_SW["c_fix"]
+    S["t_settle"] = S["c_node"] * vth_max / i_m
+    S["settle_margin"] = R14_SW["t_first"] / S["t_settle"]
+    S["duty_lost"] = (R14_SW["t_bypass"] + R14_SW["t_gate"] + R14_SW["t_read"]) / R14_SW["t_gap"]
+    if not (S["sense_frac"] < 0.05 and S["heat_ratio"] > 1e4 and S["settle_margin"] > 1.5 and S["v_sw_open"] < R14_SW["v_block"]):
+        refuse(4, "the redrawn fixture does not leave the device under test alone in a state, or its reading does not settle")
+    # ---- V2R-B2 (a): the imposed split against the worst split for the measured m; V2R's example
+    S["imposed_short"] = [(m_, 1.0 - split_share(2.0, m_) / max(worst_share(m_)[0], 1.0)) for m_ in (0.0, 0.25, 0.5, 0.8)]
+    ex = dict(zs=20.0, zm=12.0, z17=1.0, b=14.0)
+    Zx = [[ex["zs"] if i == j else ex["zm"] for j in range(3)] for i in range(3)]
+    S["ex"] = dict(ex, S=ex["zs"] + 2 * ex["zm"], case_f=r13_direct(Zx, [ex["b"]] * 3, [ex["z17"]] * 3, 0.0, K)[1],
+                   even=ex["b"] + ex["z17"] * K["p17"] + K["p_even"] * (ex["zs"] + 2 * ex["zm"]),
+                   tj=tj_exact(Zx, [ex["b"]] * 3, [ex["z17"]] * 3, K), new=r14_lines(Zx, [ex["b"]] * 3, [ex["z17"]] * 3, 0.0, K))
+    if not (r13_step14(Zx, 0.0, K) and r13_direct(Zx, [ex["b"]] * 3, [ex["z17"]] * 3, 0.0, K)[0] and S["ex"]["tj"] > R14_LIMIT and not S["ex"]["new"][0]):
+        refuse(4, "V2R's example is not reproduced (round 13's lines pass it over the limit) or round 14's lines pass it")
+    # ---- the budget with V2R-m4's terms (the reading plus the achieved U is the rule; the figures below illustrate the record's proposal)
+    rise = S23["rise_bar"]
+    S["terms"] = S23["terms"]["B"] + [("a bias-induced threshold shift, bounded by the control run, %s K" % fmt(R14_TERMS["bias"], 1), R14_TERMS["bias"] / rise),
+                                      ("the early-time correction's own uncertainty, %s K" % fmt(R14_TERMS["early"], 1), R14_TERMS["early"] / rise),
+                                      ("the pickup step's subtraction, %s K" % fmt(R14_TERMS["pickup"], 1), R14_TERMS["pickup"] / rise)]
+    S["u"] = math.sqrt(sum(x * x for _l, x in S["terms"]))
+    S["pass_bar"] = S21["bar_new"] / (1 + S["u"])
+    S["pass_even"] = K["bar_even"] / (1 + S["u"])
+    S["pass_rise"] = K["rise"] / (1 + S["u"])
+    # ---- the search (V2R-B2 (b)), at the budget's U with perturbed readings, and exact
+    S["search"] = r14_search(K, S["u"], R14_SEARCH["seed"], R14_SEARCH["n"])
+    sr = S["search"]
+    if sr["new_over"] or sr["new0_over"] or sr["new0_miss"] or sr["rec_over"] or not sr["s14_over"] or not sr["old_over"]:
+        refuse(4, "the search does not prove round 14's rule, or does not show round 13's lines failing: %s" % {k: v for k, v in sr.items() if k != "fam"})
+    # ---- V2R-m7: the heavy leads and the pours
+    ld = R14_LEAD
+    S["lead_q"] = ld["frac"] * S23["p"]["hot"]
+    S["lead_dt"] = S["lead_q"] * ld["dx"] / (ld["k_cu"] * ld["area"])
+    S["lead_loss"] = S23["i_td"][0][1] ** 2 * 1.72e-8 / ld["area"]   # W/m in the lead at the largest heating current (copper at 20 C, ASSUMPTION)
+    S["pour_service"] = i_ ** 2 * R14_POUR_EX                         # an illustration only: the pours' service loss at 0.2 mOhm
+    S["pour_test"] = (S23["i_td"][0][0] ** 2 * R14_POUR_EX, S23["i_td"][0][1] ** 2 * R14_POUR_EX)
+    S["pour_frac"] = ((S23["i_td"][0][0] / i_) ** 2, (S23["i_td"][0][1] / i_) ** 2)
+    S["pour_term"] = S21["bar_new"] * S["pour_service"]                # its bound at a Zself of the bar, for scale (INFERRED)
+    # ---- V2R-m3: a gate tie away from tap Dk
+    S["tie_mv"] = 0.1e-3 * i_ * 1e3
+    # ---- V2R-m6: what joins the pours on board A as drafted
+    S["m6_c"] = 180e-6 * 104e-6 / (180e-6 + 104e-6)
+    S["m6_dv"] = i_m * 0.2 / S["m6_c"]
+    # ---- V2R-m1: one set of figures (R256 at -1 %, section 22c)
+    S["m1"] = (S22["sel"]["sink"]["run"], S22["sel"]["sink"]["ovp"], S22["sel"]["sink"]["clamp"])
+    return S
+
+
+def render_fix24(R, p):
+    S, S9, S21, S23 = R["S24"], R["S19"], R["S21"], R["S23"]
+    K, sr = S["K"], S["search"]
+    sw = R14_SW
+    p("24. ROUND 14: THE RECHECK V2R'S FINDINGS ON TP-E11-29'S FIXTURE AND PASS RULES (5 October 2026; C-PROT rev 1; the first negative check of both)")
+    p("   24a. V2R-B1 REPRODUCED: THE FIXTURE AS ROUND 13 DREW IT NEVER ISOLATES THE HEATING SUPPLY (INFERRED; MAKER rows)")
+    for st in ("calibration", "heating", "sensing"):
+        j, used = S["old"][st]
+        p("     %-11s %s" % (st + ":", ("the pours JOINED outside the FETs through: %s" % "; ".join(used)) if j else "the pours apart outside the FETs"))
+    p("     in sensing the %s mA sense current takes the bypass loop: %s uV across the pours (V2R's %s mOhm loop), where the threshold connection needs"
+      % (fmt(R13_B["i_m"] * 1e3, 0), fmt(S["old_v"] * 1e6, 0), fmt(sw["r_loop_old"] * 1e3, 0)))
+    p("       %s to %s V at 25 C (Table 7, p.%d): no FET reaches it, in sensing or calibration; 'or the supply is clamped' (23f) puts the whole heating"
+      % (fmt(S23["vth"][1], 1), fmt(S23["vth"][3], 0), S23["vth_p"]))
+    p("       current through the diode-connected FET: at least %s W at %s A over the threshold's least printed row (V2R reads Fig. 9: about 3.5 V,"
+      % (fmt(S["clamp_p"][0], 1), fmt(S23["i_td"][0][0], 2)))
+    p("       %s W at 13.8 A, typical, by eye). Both WITHDRAWN" % fmt(S["clamp_p"][1], 0))
+    p("   24b. THE FIXTURE REDRAWN (SESSION): a series switch SW_S in the heating supply's + lead, the bypass SW_B onto a dummy leg on the supply's side")
+    for st in ("calibration", "heating", "sensing"):
+        j, used = S["new"][st]
+        p("     %-11s %s; closed: %s" % (st + ":", "JOINED" if j else "the pours apart outside the FETs", "; ".join(used)))
+    p("     the reading's sequence (proposal; times from SW_B's closing): SW_B closes; %s us later SW_S opens (t = 0, read on the shunt: the coupon's"
+      % fmt(sw["t_bypass"] * 1e6, 0))
+    p("       current falls to the sense current); %s us later gate k leaves its driver's -10 V output and is tied to tap Dk (interlocked: only with the"
+      % fmt(sw["t_gate"] * 1e6, 0))
+    p("       shunt under 10 mA); samples from %s us to %s ms; then the gate back to -10 V, SW_S closes, SW_B opens; one reading in %s s, so the"
+      % (fmt(sw["t_first"] * 1e6, 0), fmt(sw["t_read"] * 1e3, 0), fmt(sw["t_gap"], 0)))
+    p("       heating is off %s %% of the time and each power is averaged over the whole cycle; through every step the device under test's channel is"
+      % fmt(S["duty_lost"] * 100, 2))
+    p("       the only one conducting between the pours (its gate stays 10 V under VBAT until SW_S is open); in the %s us between SW_B's closing and"
+      % fmt(sw["t_bypass"] * 1e6, 0))
+    p("       SW_S's opening the current divides between the dummy leg and the coupon by their resistances, SW_S's on-resistance among them: those")
+    p("       microseconds and the switch's own opening enter the early-time correction's term (24f), and t = 0 is SW_S's opening on the shunt")
+    p("     SENSING AND CALIBRATION (the same connection): the device under test carries the %s mA; every other conductor across the pours:"
+      % fmt(R13_B["i_m"] * 1e3, 0))
+    for lab, x, c_ in S["sense_leaks"]:
+        p("       %s: at most %s uA (%s)" % (lab, fmt(x * 1e6, 2), c_))
+    p("       in all at most %s uA, %s %% of the sense current: the device under test carries at least %s %% of it, %s times the largest other"
+      % (fmt(S["sense_sum"] * 1e6, 2), fmt(S["sense_frac"] * 100, 2), fmt(100 - S["sense_frac"] * 100, 2), fmt(S["sense_ratio"], 0)))
+    p("       (Nexperia BUK6Y10-30P, 17 April 2020, Table 7 p.%d: IDSS %s uA at 25 C and %s uA at 125 C, IGSS %s nA; nothing printed over 125 C: check V3"
+      % (S["leak_p"], fmt(S["idss"][0] * 1e6, 0), fmt(S["idss"][1] * 1e6, 0), fmt(S["igss"] * 1e9, 0)))
+    p("       reads it). The fixture's part, %s %%, sits outside the chamber and the oven at the laboratory's temperature, the same in calibration and in a"
+      % fmt(S["fixture_frac"] * 100, 2))
+    p("       reading: it moves both alike (V3 reads it before and after the runs). The open SW_S sees at most %s V (the threshold's largest row and the"
+      % fmt(S["v_sw_open"], 2))
+    p("       dummy leg's drop) against its %s V; its body diode or any one-way element would conduct, so SW_S blocks both polarities (two MOSFETs"
+      % fmt(sw["v_block"], 0))
+    p("       source to source, or a relay; proposal)")
+    p("     HEATING: the device under test carries %s to %s A at %s to %s V; the two off FETs see VGS 0 and VDS of that sign, their body diodes reverse-"
+      % (fmt(S["heat_min_i"], 2), fmt(S23["i_td"][0][1], 2), fmt(S["vds_heat"][0], 3), fmt(S["vds_heat"][1], 3)))
+    p("       biased; every other conductor at most %s uA: the device under test carries %s times the rest at the least heating current; the sense"
+      % (fmt(sum(x for _l, x in S["heat_leaks"]) * 1e6, 2), "%.1e" % S["heat_ratio"]))
+    p("       current flows in the conducting channel too, %s %% of its power (counted); the shunt and the taps sit inside SW_S, so its on-resistance"
+      % fmt(S["sense_in_power"] * 100, 3))
+    p("       is not in any power: it enters the supply's compliance only, logged (validity check V7)")
+    p("     the settling before the first sample: the pours' node moves on the sense current alone across %s nF (three Ciss near 0 V, typical, %s nF each;"
+      % (fmt(S["c_node"] * 1e9, 2), fmt(R["L"]["ciss_0"] * 1e9, 2)))
+    p("       SW_S open %s nF and the fixture's %s nF, proposals): %s us to the threshold's largest row, %s times inside the first sample at %s us; the"
+      % (fmt(sw["c_s"] * 1e9, 0), fmt(sw["c_fix"] * 1e9, 0), fmt(S["t_settle"] * 1e6, 1), fmt(S["settle_margin"], 2), fmt(sw["t_first"] * 1e6, 0)))
+    p("       control run (V2R-m4) reads it on the specimen")
+    p("     the gates: VGS within +-%s V (Table 5); the drivers clamped inside +-15 V (proposal); a gate is never left floating" % fmt(S["vgs_abs"], 0))
+    p("   24c. V2R-B2 (a) REPRODUCED: THE IMPOSED SPLIT IS THE WORST ONLY AT m = 0, AND NOTHING JUDGED THE BASELINE (INFERRED)")
+    for m_, sh in S["imposed_short"]:
+        p("     m %s: the imposed split (x = 2) reads %s %% under the worst split's FET rise" % (fmt(m_, 2), fmt(sh * 100, 1)))
+    e = S["ex"]
+    p("     V2R's example: Zself %s, Zmut %s K/W (m %s, S %s), R17 %s K/W, the baseline %s K: round 13's case F reads %s K and passes; the even split,"
+      % (fmt(e["zs"], 0), fmt(e["zm"], 0), fmt(e["zm"] / e["zs"], 1), fmt(e["S"], 1), fmt(e["z17"], 0), fmt(e["b"], 0), fmt(e["case_f"], 1)))
+    p("       which is the worst split at that m, reads %s K: %s C, every round 13 line passed; round 14's line 2 reads %s K and FAILS"
+      % (fmt(e["even"], 1), fmt(e["tj"], 1), fmt(e["new"][2], 1)))
+    p("   24d. THE PASS LINES RESTATED (SESSION; INFERRED): each junction judged at the split worst for its OWN measured row, the baseline with it")
+    p("     the matrix: Z[k][j] = junction k's rise over step 6's baseline per watt in FET j (cases A to C); in junction k's row C_k is the largest term")
+    p("       (Zself,k in any physical reading) and D_k the sum of the other two; m_k = D_k / (2 C_k); the worst-split figure Zw_k = 9 C_k^2 / (4 (2 C_k")
+    p("       - D_k)) while m_k is under 1/4, else C_k + D_k; the hot FET's share at that split x_k = 2 - 4 m_k (the even split from 1/4): P_hot =")
+    p("       I^2 R x / (x + 2)^2, each other I^2 R / (x + 2)^2, I^2 R = %s W (23.93 A at the %s mOhm allowance). Zw_k at most %s K/W is S_k at most"
+      % (fmt(K["i2r"], 3), fmt(S21["ra"] * 1e3, 3), "%.2f" % K["bar_even"]))
+    p("       21b's bar at the junction's own m_k, exactly (the closed form is checked against a scan of every split in test_l4e11)")
+    p("     line 1 (the FETs' allocation): the largest Zw_k plus its U at most %s K/W (without m: each S_k plus U at most %s K/W, safe as it stands)"
+      % ("%.2f" % K["bar_even"], "%.2f" % S21["bar_new"]))
+    p("     line 2 (THE LIMIT, by superposition): for each junction B_k + R17's coupling x %s W + %s W x Zw_k + the pours' and the leads' bounds"
+      % (fmt(K["p17"], 2), fmt(K["p_even"], 4)))
+    p("       (24f), plus U, at most %s K over the air (150 C from %s C)" % (fmt(K["rise"], 2), fmt(K["t0"], 2)))
+    p("     line 3 (direct): case F for each FET hot in turn at its own row's worst split, R17, the band and the dummies on: the hottest junction plus U")
+    p("       at most %s K; round 13's fixed split 1.513 / 0.756 / 0.756 W stays as cases W (m = 0) for the linearity check V4" % fmt(K["rise"], 2))
+    p("     line R17: the largest coupling plus U at most %s K/W; the pair's fallback and RT1's land as before" % fmt(K["z17"], 0))
+    p("     step 14's bar at m = the largest Zmut over the largest Zself is WITHDRAWN (V2R-B2 (b)); the record's own rule (the largest Zself plus twice")
+    p("       the largest Zmut at their ratio) is safe and looser than needed; each line is the reading plus the achieved U, never a fixed figure")
+    p("   24e. THE PROOF BY SEARCH (seed %d, %d matrices in each of four families; the readings perturbed within U = %s %%; INFERRED)"
+      % (R14_SEARCH["seed"], R14_SEARCH["n"], fmt(S["u"] * 100, 2)))
+    for fam in ("net", "row", "sym", "free"):
+        cf = sr["fam"][fam]
+        p("     %-5s %d: round 14 accepts %d, of which over 150 C: %d%s" % (fam, cf["n"], cf["new_acc"], cf["new_over"],
+                                                                         "" if fam == "free" else "; round 13's step 14 accepts %d, over the allocation %d" % (cf["s14_acc"], cf["s14_over"])))
+    p("     round 14's lines with the readings exact and U 0: accept %d, over 150 C %d; refused while meeting the limit and both allocations: %d"
+      % (sr["new0_acc"], sr["new0_over"], sr["new0_miss"]))
+    p("     round 13's step 14 (exact readings): accepts %d, of which %d exceed the FETs' allocation at the exact worst split, by up to %s %%"
+      % (sr["s14_acc"], sr["s14_over"], fmt(sr["s14_worst"] * 100, 1)))
+    p("     round 13's lines together (step 14, the direct line at m = 0, R17): accept %d, of which %d exceed 150 C, the hottest %s C"
+      % (sr["old_acc"], sr["old_over"], fmt(sr["old_worst"], 1)))
+    p("     the record's own rule as written (round 11): accepts %d, of which over the allocation %d" % (sr["rec_acc"], sr["rec_over"]))
+    p("   24f. THE BUDGET, THE LEADS AND THE POURS (V2R-m4, V2R-m7; SESSION proposals; INFERRED)")
+    for lab, x in S["terms"]:
+        p("     %s: %s %%" % (lab, fmt(x * 100, 2)))
+    p("     in all %s %% on the %s K rise at the bar: as an illustration, a reading of %s K/W or under passes %s K/W, %s against %s K/W, and line 2 at"
+      % (fmt(S["u"] * 100, 2), fmt(S23["rise_bar"], 2), "%.2f" % S["pass_bar"], "%.2f" % S21["bar_new"], "%.2f" % S["pass_even"], "%.2f" % K["bar_even"]))
+    p("       %s K or under against %s K; the rule is the reading plus the supplier's ACHIEVED U" % (fmt(S["pass_rise"], 2), fmt(K["rise"], 2)))
+    ld = R14_LEAD
+    p("     the heavy leads: each heating lead at least %s mm2 (proposal), joined where board A's own current joins its pour, two insulated thermocouples"
+      % fmt(ld["area"] * 1e6, 0))
+    p("       %s mm apart near its joint: the heat it carries q = k A dT / dx; at %s %% of the hot FET's %s W, %s W, dT reads %s K; a lead over that is"
+      % (fmt(ld["dx"] * 1e3, 0), fmt(ld["frac"] * 100, 0), fmt(S23["p"]["hot"], 3), fmt(S["lead_q"], 3), fmt(S["lead_dt"], 2)))
+    p("       redone (validity check V8), and the heat leaving through any heavy lead, times TWICE the junction's own Zself, is added to lines 2 and")
+    p("       3: removing a lead that carries q from its joint raises junction k by q times the joint-to-junction impedance of the coupon without")
+    p("       the lead, at most Zself,k / (1 - g Z_jj) by reciprocity and the maximum principle (g the lead's conductance, Z_jj the joint's own")
+    p("       impedance); the factor is taken at 2, an ASSUMPTION that a lead takes at most half of any heat put in at its joint; the lead's own")
+    p("       loss %s W/m at %s A" % (fmt(S["lead_loss"], 2), fmt(S23["i_td"][0][1], 2)))
+    p("     the pours: the heating cases carry %s to %s of the service's loss in the pours' shared copper (V2R's third); line 2 adds the pours' service"
+      % (fmt(S["pour_frac"][0], 3), fmt(S["pour_frac"][1], 3)))
+    p("       loss, at most (23.93 A)^2 times the sum of the two pours' largest path resistances (each pour read four-wire from its heavy lead's")
+    p("       joint to each FET's tap on it), times the junction's own Zself, crediting nothing for the share the cases already carry; for scale, at an")
+    p("       ASSUMED %s mOhm path: %s W, %s K at a Zself of %s K/W" % (fmt(R14_POUR_EX * 1e3, 1), fmt(S["pour_service"], 3), fmt(S["pour_term"], 2), "%.2f" % S21["bar_new"]))
+    p("   24g. THE MINORS (RECORD, INFERRED)")
+    p("     m1: 20g now prints section 22c's set (R256 at -1 %%): %s mA with the breaker restarted, %s mA at SYSOVP, %s mA at the clamp; 21d's row"
+      % (fmt(S["m1"][0] * 1e3, 2), fmt(S["m1"][1] * 1e3, 2), fmt(S["m1"][2] * 1e3, 2)))
+    p("       'R256 6.8 kOhm' marked SUPERSEDED by round 12")
+    p("     m3: gate k is tied at tap Dk's own line and the reading is V(tap Sk, tap Dk), the gate's VGS: a tie elsewhere on the pour adds its drop,")
+    p("       0.1 mOhm x %s A = %s mV; the pickup step of step 6 is subtracted, its %s K in the budget" % (fmt(S9["i"], 2), fmt(S["tie_mv"], 1), fmt(R14_TERMS["pickup"], 1)))
+    p("     m4: the control run C0 (the gate driven as in a run, SW_S open, the coupon isothermal in the oven at the top temperature, read in the same")
+    p("       window) bounds a bias-induced shift and the settling; the early-time correction gets its own term; the row keeps the reading plus U")
+    p("     m5: step 14's rise is the rise over step 6's baseline")
+    p("     m6: on board A as drafted C236 and CELL_FUSED's 104 uF are %s uF in series across the sensed node: 1 mA moves it %s V in 0.2 s; the first"
+      % (fmt(S["m6_c"] * 1e6, 1), fmt(S["m6_dv"], 2)))
+    p("       prototype is a specimen only with its gate links AND populated as the coupon is (no part with a terminal on VBAT, CH_BATQ or CELL_FUSED")
+    p("       but the three FETs and R17; the neighbours as insulated dummies), V3 passing; the coupon: no capacitor, load or dummy on either pour")
+    p("     m7: the leads and the pours, 24f")
+    p("   24h. STATUS (SESSION): V2R-B1 and V2R-B2 CORRECTED on the desk; TP-E11-29 NOT EXECUTABLE until the recheck of this fixture and these pass")
+    p("     rules, the limits agreed and a supplier's agreement; a second negative check of either correction ends that loop; nothing built or measured")
+    p("")
+
+
+def e11_29_method(R):
+    """E11-29's method and acceptance as they now stand (round 13's method, round 14's fixture and pass lines): one text, for the row of
+    section 8 and the page's row."""
+    S, S9, S24, S21 = R["S23"], R["S19"], R["S24"], R["S21"]
+    return ("the method (round 13, section 23, after the owner's supplier-delta review's DELTA-02: the three body diodes are in parallel, so "
+            "the earlier 'each FET heated through its body diode alone, each junction by its own VSD' is WITHDRAWN): on a coupon with board A's "
+            "drain and source pours unchanged and the three gates brought out apart, one channel conducts at a time, selected by its gate, the "
+            "current entering at the source so the other two are off and their body diodes reverse-biased; each device's heating power is the "
+            "supply's current times that device's own source-to-drain voltage on four-wire taps; each junction is read by that device's "
+            "threshold voltage at %s mA with its gate tied to its own drain tap, the other gates on the source, against a K-factor calibrated in "
+            "an oven in the same connection, the heating supply isolated from the pours by a series switch for every reading (round 14, section "
+            "24b, the recheck V2R's V2R-B1: a bypass across the supply joined the pours and is WITHDRAWN); cases: each FET alone at %s W and at "
+            "%s W (the 3 x 3 matrix of Zself and Zmut over step 6's baseline, its reciprocity checked), the three evenly, the worst split for "
+            "each row of the measured matrix (each FET in turn) and the fixed split %s / %s / %s W by time division in slots of at most %s us, "
+            "the band carrying %s A and R17 dissipating in place; acceptance (round 14, section 24d, V2R-B2), each line the reading plus its "
+            "achieved expanded uncertainty: each junction's worst-split figure at its OWN m_k (C_k the largest term of its row, D_k the sum of "
+            "the other two, m_k = D_k / (2 C_k): 9 C_k^2 / (4 (2 C_k - D_k)) under m_k 1/4, else C_k + D_k; that is, its S_k against section "
+            "21b's bar at m_k) at most %s K/W, so each (Zself + 2 Zmut) at most %s K/W without m; THE LIMIT, each junction's baseline rise "
+            "(the band and the neighbours' dummies on) plus R17's coupling times %s W plus %s W times its worst-split figure plus the bounds for "
+            "the pours' service loss and the heavy leads, at most %s K over the air, and the same read directly at each row's worst split; "
+            "R17's coupling at most %s K/W; step 14's bar at the largest Zmut over the largest Zself WITHDRAWN (the record's proposed budget, "
+            "%s %%, illustrates: a sum of %s K/W or under against %s K/W, %s K or under against %s K); the PTC's site (RT1's land at the drain "
+            "tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard"
+            % (fmt(R13_B["i_m"] * 1e3, 0), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["other"], 3),
+               fmt(S["p"]["other"], 3), fmt(R13_B["slot"] * 1e6, 0), fmt(S9["i"], 2), "%.2f" % S24["K"]["bar_even"], "%.2f" % S21["bar_new"],
+               fmt(S24["K"]["p17"], 2), fmt(S24["K"]["p_even"], 3), fmt(S24["K"]["rise"], 2), fmt(S9["r17_allow"], 1), fmt(S24["u"] * 100, 2),
+               "%.2f" % S24["pass_bar"], "%.2f" % S21["bar_new"], fmt(S24["pass_rise"], 2), fmt(S24["K"]["rise"], 2)))
+
+
 # ============================================================================================ the output
 def render(R):
     out = []
@@ -4260,9 +6194,15 @@ def render(R):
     render_fix17(R, p)
     render_fix18(R, p)
     render_fix19(R, p)
+    render_fix20(R, p)
+    render_fix21(R, p)
+    render_fix22(R, p)
+    render_fix23(R, p)
+    render_fix24(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py")
     p("(R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three")
-    p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the")
+    p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist")
+    p("check check_dd7_netlist.py), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the")
     p("first round's apply_gen_sch_e_uvlo.py is withdrawn; the knee is a specification (3f); the interface and firmware texts are drafts for Layer 5")
     p("in the record. Software tests establish this record's own behaviour only.")
     return "\n".join(out) + "\n"
@@ -4301,7 +6241,7 @@ def downstream(R):
     ("E11-26", "TEST", "prototype bench", "the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most %s ms against the bank's %s ms assumption gives the engineering margin the record names" % (fmt(T_RESP * 1e3 / 5, 1), fmt(T_RESP * 1e3, 1))),
     ("E11-27", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (%s) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (%s) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R228 %sk 0.1 %%, C237 %s nF, MODE to GND, C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C from GND to OUT, within 20 nH of C236, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each" % (R["H"]["cat"]["BQ25730RSNR"][0], R["K"]["cat"]["BUK6Y10-30PX"][0], fmt(F16_RILIM_K, 1), fmt(F16_CDVDT * 1e9, 0))),
     ("E11-28", "FIRMWARE", "firmware owner", "the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's %s s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID %sh checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under %s V on SRN (section 15c)" % (fmt(R["H"]["wd_s"], 0), R["H"]["devid"], fmt(R["K"]["rb_floor"], 1))),
-    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the junction limit of record l9stk 15.5 (E-1; round 9, section 19c), sized before layout and measured on the specimen of section 17d (a coupon or the controlled first prototype; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most %.2f K/W steady by the body diode's VSD method with the band carrying %s A and R17 dissipating in place, R17's coupling into each junction at most %s K/W (heat R17 alone), so the hottest junction stays at most 150 C held at %s A from %s C (the pair's fallback, its Zself + Zmut at most %.2f K/W); the pair's former %s K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it" % (R["S19"]["rec"][3][2], fmt(R["S19"]["i"], 2), fmt(R["S19"]["r17_allow"], 1), fmt(R["S19"]["i"], 2), fmt(R["S19"]["t0"], 2), R["S19"]["rec"][2][2], fmt(R["L"]["plan"]["zsum"], 2))),
+    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the junction limit of record l9stk 15.5 (E-1; round 9, section 19c), sized before layout and measured on the specimen of section 17d (a coupon; the first prototype only once its three gates can be driven apart, section 23d; it blocks only the final release): the installed three Q39, Q40 and Q42 on one pour with R17 placed apart, each FET's (Zself + 2 Zmut) at most %.2f K/W steady with the band carrying %s A and R17 dissipating in place, R17's coupling into each junction at most %s K/W (heat R17 alone), so the hottest junction stays at most 150 C held at %s A from %s C for ANY split of the RDS(on) spread under the allowance (round 11, section 21: one FET at R / 2 takes 9/8 of the even split's loss, so record l9stk's even-split %.2f K/W is taken times 8/9; with Zself and Zmut read apart, the largest of each into any junction, (Zself + 2 Zmut) at most %.2f x 8 (1 - m)(1 + 2 m) / 9 for m = Zmut / Zself under 1/4, %.2f at or over it) (the pair's fallback, its Zself + Zmut at most %.2f K/W, the even split its worst); the pair's former %s K/W target and its 1 s, 20 ms and 244 us targets withdrawn with record l8p's breaker; the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it; recorded OPEN in round 10 (section 20i) on the even split, corrected in this acceptance by round 11 (section 21d), CONDITIONAL on this measurement; the coupon also reads the PTC's site (RT1 at the drain tabs' centroid) against each junction with one FET heated alone at the worst split's %s W, so the thermal guard's trip side is judged on the hottest FET and not on the even split (round 12, the check V2's V2-m5; record l8p's guard); %s" % (R["S21"]["bar_new"], fmt(R["S19"]["i"], 2), fmt(R["S19"]["r17_allow"], 1), fmt(R["S19"]["i"], 2), fmt(R["S19"]["t0"], 2), R["S21"]["bar_old"], R["S21"]["bar_old"], R["S21"]["bar_old"], R["S19"]["rec"][2][2], fmt(R["L"]["plan"]["zsum"], 2), fmt(R["S21"]["p_worst"], 3), e11_29_method(R))),
     ("E11-30", "EVIDENCE", "Layer 6 components", "the WHOLE hot docking waveform accepted (sections 16d and 17b): %s A peak, time constant %s us, from a +%s C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: %d parts, each %d pulses %s s apart at %s A peak and %s us (x%s), mounting base %s C, every part passing VSD at 80 A pulsed within +5 %% of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 %% and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown)" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), F17_DOCK_N[1], F17_DOCK_N[0], fmt(F17_DOCK_N[2], 0), fmt(R["M"]["dock_q"][0], 1), fmt(R["M"]["dock_q"][1] * 1e6, 1), fmt(F17_DOCK_MARGIN, 1), fmt(F17_TMB, 0))),
     ("E11-31", "TEST", "prototype bench", "the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least %s V; CHRG_INHIBIT 1 with SRN over %s V, VSRN plus 150 mV within 2 percent, under %s V at least %s V, between at least %s V; the held pack current at most %s mA with board E on VSYS_E; the start from cold at VBUS20 %s and %s V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and %s C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, %s V of margin), the outlets held by R-c where a step uses more" % (fmt(R["H"]["floor"], 3), fmt(R["K"]["hi_v"], 3), fmt(R["K"]["lo_v"], 3), fmt(R["H"]["floor"], 3), fmt(R["K"]["inh_floor"], 3), fmt(FIX_HELD_ACC * 1e3, 1), fmt(R["E"]["vb_low"], 2), fmt(R["E"]["vb_top"], 2), fmt(R["F"]["air_hot"], 1), fmt(R["H"]["margin_floor"], 3))),
     ("E11-32", "EVIDENCE", "Layer 6 components", "the BQ25730RSNR's supply for the build quantity (five boards) from an authorised source, filed: LCSC read stock %d on 2 October 2026 (the Layer 6 author's L6P-F05: a procurement fact for the owner's list, not a reselection; TI and its distributors are the next sources to read), and the two battery FETs' (BUK6Y10-30PX, LCSC stock %d)" % (R["H"]["cat"]["BQ25730RSNR"][1], R["K"]["cat"]["BUK6Y10-30PX"][1])),
@@ -4309,15 +6249,15 @@ def downstream(R):
     ("E11-34", "INTERFACE", "Layer 4 coordinator", "apply_pcb_interfaces_dock.py applied (IF-AE-DOCK: pin 1 VSYS_DOCK and VSYS_E behind U42's eFuse, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (%s to %s V)" % (fmt(R["K"]["vsys_sup"], 3), fmt(R["H"]["vsys_top"], 3))),
     ("E11-35", "EVIDENCE", "Layer 6 components", "the mixers %s (Layer 7's %s at %s, 2e): their starting current, PWM input level and hole pattern from the maker's manual M0011876C or the bench (Layer 7's F-L7-11); against the rail: the start on a 12.0 V bench channel recorded, and against U42's room %s A at the floor (section 18b: %s W at the rail, %s times one fan's running power); the supply range %s to %s V is met by the rail's %s to %s V (section 18a), no longer by VSYS_E" % (L7_FAN["mpn_mixer"], L7_FAN["rec"], L7_FAN["commit"], fmt(R["N18"]["room"], 4), fmt(R["N18"]["start_room_w"], 2), fmt(R["N18"]["start_mult"], 2), fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1), fmt(R["N18"]["vout"][0], 3), fmt(R["N18"]["vout"][2], 3))),
     ("E11-36", "EVIDENCE", "Layer 6 components", "the battery FETs' RDS(on) at VGS -8.5 V and a 150 C junction at most %s mOhm (the allowance of section 16a): Nexperia's maximum at that point filed, or a pulsed Kelvin reading on parts from the build lot in an oven at 150 C (a sample, not a production limit: only the maker's maximum closes it for every part); a reading over it reverses the allowance and E11-29 is re-sized before layout" % fmt(F16_RA * 1e3, 3)),
-    ("E11-37", "EVIDENCE", "Layer 6 components", "BATDRV with the three-device network Q39, Q40 and Q42 (round 9, section 19d; record l9stk's C3): TI's statement of what the BATFET's 5 nF bounds for three P-channel FETs on one BATDRV (Ciss at which VDS, or a gate charge; Q-TI-17 extended to three, drafted in clarification/TI-QUESTIONS.md, not sent), or the bench's BATDRV behaviour with the three (Ciss %s nF typical at -15 V, about %s nF near 0 V) at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation, LDO mode at VSYS_MIN within its printed band, each FET's share of the current in LDO mode and as an ideal diode, and each junction on the shared pour; a result with the pair does not transfer; on a negative answer the engineer chooses between the pair at its fallback and one FET with a heat path through the case (sections 16c and 19d)" % (fmt(R["S19"]["ciss3"][0] * 1e9, 2), fmt(R["S19"]["ciss3"][1] * 1e9, 2))),
+    ("E11-37", "EVIDENCE", "Layer 6 components", "BATDRV with the three-device network Q39, Q40 and Q42 (round 9, section 19d; record l9stk's C3): TI's statement of what the BATFET's 5 nF bounds for three P-channel FETs on one BATDRV (Ciss at which VDS, or a gate charge; Q-TI-17 extended to three, drafted in clarification/TI-QUESTIONS.md, not sent), or the bench's BATDRV behaviour with the three (Ciss %s nF typical at -15 V, about %s nF near 0 V) at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation, LDO mode at VSYS_MIN within its printed band, each FET's share of the current in LDO mode and as an ideal diode, and each junction on the shared pour; a result with the pair does not transfer; Q-TI-17 (e) and (f) (round 11, section 21d) ask the 5 nF's drain-source voltage, the pair's typical figure and the gate load TI accepts; on a negative answer the supplier's correction scope is round 11's (ii): the pair at its fallback, its bar measured on the coupon, Q42 removed (a draft then owed; sections 16c, 19d and 21d)" % (fmt(R["S19"]["ciss3"][0] * 1e9, 2), fmt(R["S19"]["ciss3"][1] * 1e9, 2))),
     ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch, the whole fault envelope (sections 16e, 17a and 18), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between %s and %s A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under %s A within 1 ms, off within %s ms, retry after %s to %s ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 recorded against the %s A extrapolation (a target: a reading over it revises 17a) and over %s A for at most %s us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most %s A after the first 100 us, the time to thermal regulation and the regulated current recorded, off within %s s of regulation's start, the total on-time recorded; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; (h) an intermittent short applied and removed at 10 Hz, 1 Hz and 0.1 Hz for ten minutes each at 70 C, and removed once during limiting and once during the retry's off-time: the recovery of VSYS_E and U22's rail recorded, the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 %% of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's body at or under the rating its maker states (F-L7-08; 85 C until one is named) and its insulation unmarked, board A's and board E's copper at the contact lands and under U42 unmarked and at or under 85 C, D23 (VF at 5 A within +5 %%) unchanged; (f) with the fans %s on the 12.0 V rail (section 18): U12, U22 and both fans started one at a time by the PWM-duty ramp, and both fans' duty stepped 0 to 100 percent together, at VSYS 9.688 V: U42 never limits (FLT high), VSYS_E at least %s V, U22 never disables (the rail never under %s V), the branch's current at full speed recorded against the declared %s A; (g) one fan stalled and the 12 V rail shorted at the header, each at 70 C: U22 limits or disables and recovers, VSYS_E never under U12's 3.8 V, the controller keeps running, U42's retry seen or not and recorded" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["tcl"][1] * 1e3, 0), fmt(R["L"]["tretry"][0] * 1e3, 0), fmt(R["L"]["tretry"][1] * 1e3, 0), fmt(R["M"]["i_pk"], 0), fmt(R["M"]["fast_typ"], 1), fmt(R["L"]["tsoft"] * 1e6, 1), fmt(R["L"]["ilim"][1], 3), fmt(R["M"]["treg"][1], 1), L7_FAN["mpn_mixer"], fmt(R["N18"]["vsys_e_at_lim"], 3), fmt(L7_FAN["v_lo"], 1), fmt(R["N18"]["i_decl"], 4))),
     ("E11-39", "FIRMWARE", "firmware owner", "board E's mixer fans (four-wire, on the 12.0 V rail) started one at a time, each by a PWM-duty ramp into the fan's PWM input, never both within 1 s and never while U12 or U22 starts (sections 17a and 18c; Layer 7's F-L7-05): U22's %s ms soft start covers the rail's rise only, and the fans' start current is NOT READ, so the ramp is what keeps the start near the running current under U42's least limit %s A" % (fmt(R["N18"]["tss"] * 1e3, 0), fmt(R["L"]["ilim"][0], 3))),
     ("E11-40", "IMPLEMENTATION", "Layer 8 board B generator owner", "a FINDING, not a draft (section 18d; Layer 7's F-L7-02): board B's J_FAN1 to J_FAN3 carry +5V_Sn (%s V) on pin 1 and declare the fan at %s A, and no 12 V net exists on the board; the coolers %s print %s to %s V: a regulated 12.0 V feed per slot (a step-up from +5V_Sn, Layer 7's 0.436 A each at full speed, keeping an empty slot off) or a 12 V feed from board A over the bay harness; the header's pin 1 becomes 12 V, the slot budget's fan row 2.0 W at 12 V, the module's Fan_PWM and Fan_Tacho kept" % (fmt(R["N18"]["b_slot_v"], 1), fmt(R["N18"]["b_fan_a"], 1), L7_FAN["mpn_cooler"], fmt(L7_FAN["v_lo"], 1), fmt(L7_FAN["v_hi"], 1))),
     ("E11-41", "TEST", "prototype bench", "DD-3's condition (round 9, section 19e; record l9stk's DD-3): L2 (SRF1260-1R0Y) on board E's land at the TPS48110 breaker's highest held current, %s A, its winding's hot spot read by resistance or a thermocouple in still air at %s C (or referred to it), three samples: at most %s C including the rise; or Bourns's statement of the rise in this connection; or a choke rated at least %s A at a %s K rise with board E's input filter shown again to its attenuation; a reading over it returns to L4-E11 for the choke, and the second pass FET of section 19e is drafted with the choke in one board E change" % (fmt(R["N"]["ioc"][2], 3), fmt(R["S19"]["t0"], 2), fmt(R["S19"]["l2_tmax"], 0), fmt(R["S19"]["l2_irms_need"], 2), fmt(R["S19"]["l2_rise_rated"], 0))),
     ("E11-42", "TEST", "prototype bench", "IF-1's hold (round 9, section 19f) on board A's first prototype docked onto a board P carrying record l8p's breaker, with no source: (a) twenty dockings, U42's output and RAIL_EN low until at least %s ms after VBAT passes %s V, and the breaker's start ending with its TIMER under the fault threshold, each recorded; (b) an undocking and redocking after 0.5, 1 and 2 s with VBAT held up by board A's capacitance: U46 asserting as VBAT falls under %s V and the following start held the same way; (c) MAIN held through a docking: the release to KILL recorded, at least %s ms of U1's blanking left; (d) with a source present at the plan load, the breaker's start completing, or the -1 latching while the source keeps the kit up, as section 19f bounds; (e) the static draw from VBAT while U46 holds at most %s mA at 16.8 V" % ( fmt(R["S19"]["hold"][0] * 1e3, 1), fmt(R["S19"]["rise"][2], 3), fmt(R["S19"]["fall"][2], 3), fmt(R["S19"]["kill_left"] * 1e3, 1), "%.0f" % (10 * R["S19"]["static_sum"] * 1e3))),
-    ("E11-43", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_dd7.py applied after record l8p's apply_gen_sch_a_ptc.py and this record's charger draft, released with l8p's three drafts (round 9, section 19h; record l9stk's DD-7 and the checker's B-R2): the input-return reset Q44 to Q46, R106 to R108, D25 on DOCK_EN_RET, and the hardware charge inhibit Q47 to Q49, R82, R83, R109, R144 on CH_BATDRV; the layout keeps Q49 within 10 mm of the battery FETs' gate node and the 2 MOhm sense at J_DOCK pin 5; L4-E9's change list gains the draft (the integrator's)"),
+    ("E11-43", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_dd7.py applied after record l8p's apply_gen_sch_a_ptc.py and this record's charger draft, released with l8p's three drafts (rounds 9 and 10, sections 19h and 20; record l9stk's DD-7, record l8p's route R1 and its L8P-F04 and L8P-F05): the input-return reset Q44 to Q46, R106 and D25 on DOCK_EN_RET (Q46's gate on DD7_N); the loop reader U48 with R109, R144, R249 and R250; the hold and the release on CELL+ alive U47 with C241, R85, C248, R107, R108, Q52, R254 and R255, the arm Q50, Q51, R251, R252, R253, R84 and D26; the charge inhibit Q47, Q49, R82 and R83 on CH_BATDRV and the bleeder Q48 and R256 on CELL+; DD7_VC from R233 and D27; TP1 and TP2; the layout keeps Q49 within 10 mm of the battery FETs' gate node and U47 and U48 beside C238, their VDD bypass; R249 to R256 and C248 sit above the main-based order's highest, so d8dec31's mainpb takes the next ones; check_dd7_netlist.py reads DRAWN on the regenerated netlist; L4-E9's change list keeps the draft after l8p's PTC and before mainpb (the integrator's)"),
     ("E11-44", "FIRMWARE", "firmware owner", "record l9stk's IF-7 with section 19h's hardware: the bridge reports a tripped breaker (the BQ25730's ADC reads SRN dead while the gauge reports its FETs on, or the charge inhibit holding) and writes ChargeCurrent only after the terminal reads alive; R-b's bound kept; the hardware inhibit holds the charge whether or not this rule runs"),
-    ("E11-45", "TEST", "prototype bench", "DD-7 and E-14 (round 9, section 19h) on board A's first prototype with board P's -1 breaker: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least %s ms and the breaker restarting within %s s of VIN_RAW passing U34's threshold (the pad under C-1c's trip); (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: a hard short kept on VSYS, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (c2) the same with a %s ohm fault removed after the latch: the charge into PACK_P and the FET's junction recorded (the reach's open case, section 19h; acceptance with route R1 or R2); (d) Q49's gate opened, then Q48's: the inhibit lost, then never released, each found by (c) and by a docking on battery" % (fmt(R["S19"]["pulse"][0] * 1e3, 1), fmt(R["S19"]["dd7_total"], 3), fmt(R["S19"]["r_fault"], 3))),
+    ("E11-45", "TEST", "prototype bench", "DD-7 and E-14 (rounds 9 and 10, sections 19h and 20) on board A's first prototype with board P's -1 breaker and record l8p's reverse-charge detector: (a) the -1 latched by a fault, no source, then an input applied as a step and as a 1 V/ms ramp at 9, 12, 24 and 36 V: DOCK_EN_RET low for at least %s ms and the breaker restarting within %s s of VIN_RAW passing U34's threshold (the pad under C-1c's trip); (b) with the pack alive, an input's arrival leaves DOCK_EN_RET unchanged and the kit up; (c) E-14 extended: a hard short kept on VSYS, so the -1 latches again with the input present, and ChargeCurrent forced to its register maximum by the host: the current into PACK_P at most 1 mA and the breaker FET's junction (VSD method) within 2 K of its case for 10 minutes; (c2) the same with a %s ohm fault removed after the latch (B-R2, route R1): the charge into PACK_P ends within %s ms of passing board P's threshold, TP2 (DD7_N) low within %s ms of DOCK_EN_RET falling, the battery FETs held off at least %s s after DOCK_EN_RET rises (TP1 over 0.79 V), then released once CELL+ reads alive, the breaker restarted within %s s; (d) failures, each found by its row: U47's RESET1 held high (the hold lost, (c2)), Q48 opened (the latch reads the leak, (f)), Q49's gate opened (the inhibit lost, (c)); (e) L8P-F04's interface alone: DOCK_EN_RET pulled under 0.06 V by a stand-in at BRK_VIN 7.6, 10.6 and 16.8 V with RT1 replaced by 5 kOhm: CH_BATDRV at VBAT within 1 ms whatever CELL+ reads, released no earlier than 1.0 s after the release; the loop closed at RET 0.9 V and DOCK_EN_OUT 2.0 V: nothing inhibited (section 20c); (f) L8P-F05: the breaker held off with BRK_VIN at 16.8 V and, from a bench supply through 10 mA, at 29.2 V: CELL+ under %s V while the inhibit holds and the inhibit kept until the breaker is enabled; (f2, round 12, the check V2's V2-B1) the bleed timed: CELL_FUSED charged to %s V, the inhibit set and the breaker held off, the battery FETs' pour at 125 C and the breaker FETs' case at %s C (or %s uA injected into CELL+ on a cold board): CELL+ under %s V at least 0.1 s before the same unit's hold ends as (h) times it; the current into CELL+ with both FET groups hot read, at most %s uA; U47's RESET current read at the set and with the breaker restarted, at most %s mA; (g) a back-fed precharge (the gauge's FETs off, the charger in LDO mode) at 25 and 70 C: CH_BATDRV follows BATDRV and nothing is inhibited; (h) the hold timed from five triggers at -20, 25 and 85 C: at least 1.0 s each, and each at least 0.1 s longer than (f2)'s bleed on the same unit" % (fmt(R["S19"]["pulse"][0] * 1e3, 1), fmt(R["S19"]["dd7_total"], 3), fmt(R["S19"]["r_fault"], 3), fmt(R["S20"]["charge_end"] * 1e3, 2), fmt(R["S20"]["t_set"] * 1e3, 2), fmt(R["S20"]["hold_min"], 3), fmt(R["S20"]["restart"], 3), fmt(R["S20"]["dead"] - 0.5, 2), fmt(R["S20"]["vs_max"], 1), fmt(R["S22"]["t_held"], 0), fmt(R["S22"]["src"]["hot"] * 1e6, 0), fmt(R["S20"]["dead"], 3), fmt(R["S22"]["sel"]["lim"] * 1e6, 0), fmt(R["S20"]["i_rec"] * 1e3, 0))),
 ]
 
 

@@ -1,4 +1,4 @@
-Record l8p's inputs from other branches (MESHSAT-1357, 4 October 2026, round 2)
+Record l8p's inputs from other branches (MESHSAT-1357, 4 October 2026, rounds 2 and 3)
 
 Record l9stk is on branch fnd/l9stk, not merged into this record's base (main 64cd25ee). Its design of W4DP-F2's element (section
 15) moved after round 1: the latch-off LM5069-1 (15.4b), the hold through a diode (15.4) and the restart inhibit C-1c (15.4b,
@@ -24,6 +24,21 @@ L4-E7's backstop draft, which closes this record's finding L8P-F01 (C66, C67 and
 fnd/l4e7r6 at 914a2f5a, not on main. Board E's composition in l8p_drafts.py uses this copy in place of main's draft:
   l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py  dc560d0de51ac782800eb1be0cc18d8c506b047fc7891ad5efe432b2d72fa544
       v2/docs/records/l4e7/apply_gen_sch_e_backstop.py at 914a2f5a, byte for byte (the same sha256)
+
+Round 3 (branch fnd/l8p2, B-R2's route R1): task L4-E11's round 9 is on branch fnd/l4e11r9 at e60a94a8, not on main. Its section
+19h names B-R2's open case and the routes R1 and R2; its section 15c bounds the LDO-mode precharge the detector must let pass.
+These copies are taken from e60a94a8 with `git show e60a94a8:<path>` and are not edited; l8p_drafts.py reads its figures from them
+and refuses when a phrase no longer matches.
+
+Full files at e60a94a8 (sha256):
+  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34
+  v2/docs/records/l4e11/apply_gen_sch_a_dd7.py           dc84f755eb231bc7e40f9d992116c9338cd2d2a4deef0f5919d5802895b0277d
+
+Copies here (sha256):
+  l4e11-section19h-e60a94a8.md               270709638379140943eb0efcc1e8111b763294de9fe09da1ca7af3d026bfe486
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 1915 to 2001: section 19h whole (DD-7, the hardware charge inhibit, E-14 and B-R2)
+  l4e11-section15c-precharge-e60a94a8.md     ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 1173 to 1177: the LDO-mode precharge with R17's tolerance (0.33616 A at most) and R-b'
 
 Held back, not committed: TI's OPA187 sheet (SBOS807E), fetched by ../fetch_held_back.py into v2/vendor/ti/held/ and checked
 there by sha256 62bd7b52851715978aa52511ad946b1d725850b4d2e8672a901627ed65585c32.
