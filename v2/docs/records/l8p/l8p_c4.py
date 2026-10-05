@@ -595,12 +595,62 @@ def main():
         ("C260 open, or R262 shorted", "the gate filter gone: the before-tEN half of the window rests on TI's description alone", "E-13b (b2); LATENT"),
         ("R263 open", "no effect while U60 is powered (its push-pull holds the gate); undocked the gate floats on C260", "LATENT, no service effect named"),
         ("TRIP_TEST lifted (contamination, a probe)", "the guard trips: the breaker off", "found at once"),
+        ("Q60 gate to drain shorted (round 9, V6-m7)", "cold: the window fails (the return 0.799 V, 10b); tripped: no trip can be shown", "E-13b (a); a stopped precharge; LATENT between checks (L8P-D9)"),
+        ("C261 open (round 9, V6-m7)", "U61's response to a docking's step NOT PRINTED; the static guard unchanged (10b)", "assembly inspection; LATENT (L8P-D9)"),
+        ("U60's thermal pad (pin 7) open (round 9, V6-m7)", "the coupling to the pour through the leads alone: the gradient budget not shown (10b)", "E-13's heat step; X-ray at assembly; LATENT (L8P-D9)"),
     ]
     w("\n10. EACH SINGLE FAILURE OF THE NEW PARTS (INFERRED from the circuit as drawn; the brief's five first)\n")
     for a, b, c in FAIL:
         w("   %-52s %-112s %s\n" % (a, b, c))
     w("   so: none disables the breaker's own limit or opens the pack path; a failure that removes the guard is found by E-13b (a), (b), (b2) or (d)\n")
     w("   and is LATENT between checks, the battery FETs' junction limit then resting on E-1's bar (G3's state), as record l9stk names it\n")
+
+    # ------------------------------------------------------------------ 10b. round 9: the three failures the table missed (V6-m7)
+    rfp_, r7m_ = DF["rf"] * (1 + TOL), R107 * (1 - TOL)
+    rth_ = rfp_ * r7m_ / (rfp_ + r7m_)
+    rx = DF["rth"]                                  # Q60's gate on its drain: R262 to OVERTEMP (low, cold) beside R263 to ground
+    gd = {}
+    for lab, i_s in (("the count", DF["others"]), ("all doubled", DF["others_all"])):
+        v_open = ret_ramp(R["out_pw_lo"], i_s, rfp_, r7m_)
+        v = v_open * rx / (rx + rth_)
+        gd[lab] = (v, v / rx, i_s + v / rx)
+    alw_ = DF["alw"]
+    two = DF["sinks_all"] + DF["n7"](T_SITE)        # a second shunt (a second sensing path) on the same return, every sink doubled
+    two_one = DF["sinks"] + DF["n7"](T_SITE)
+    w("\n10b. ROUND 9 (V6-m7): THE THREE SINGLE FAILURES THE TABLE MISSED, WITH THEIR ARITHMETIC (DERIVED on the draft's values; the window's\n")
+    w("   corner of section 3: DOCK_EN_OUT %.3f V, the pair at +1 %%, R107 at -1 %%)\n" % R["out_pw_lo"])
+    w("   Q60's GATE SHORTED TO ITS DRAIN, cold: the gate network (R262 %.0f kOhm to OVERTEMP, low; R263 %.1f MOhm to ground) loads the return with\n"
+      % (D["rg"] / 1e3, D["rpd"] / 1e6))
+    w("     %.1f kOhm beside the other %.2f uA of sinks: the return %.3f V (%.3f V all doubled), %.1f uA through the network, %.1f uA of sinks in all\n"
+      % (rx / 1e3, DF["others"] * 1e6, gd["the count"][0], gd["all doubled"][0], gd["the count"][1] * 1e6, gd["the count"][2] * 1e6))
+    w("     against the %.2f uA allowance and the %.2f V the window needs: FAILS (before any conduction of the diode-connected Q60 is counted):\n"
+      % (alw_ * 1e6, R["ret_closed"]))
+    w("     a dead pack's precharge can be stopped (L4-E11 20c's trigger). Tripped, OVERTEMP high drives the return node through R262 and the\n")
+    w("     diode-connected Q60 conducts only above its own threshold (PRINTED %.1f to %.1f V at 250 uA, 25 C): it cannot be shown to pull the return\n"
+      % N7["vth"])
+    w("     under board P's first inverter's least %.1f V: the guard cannot be shown to trip. Found by E-13b (a) (TRIP_TEST fails to open the\n" % N7["vth"][0])
+    w("     breaker) at commissioning and each service; in service as a stopped precharge; LATENT between checks as a protection\n")
+    w("   C261 OPEN (U61 without its input capacitor): TI asks 0.1 to 2.2 uF at the input for line transients over 10 V (SBVS186H 8.1.1, the draft's\n")
+    w("     reading); without it U61's response to a docking's step through R106 is NOT PRINTED (its 30 V input rating is not reached: the step is\n")
+    w("     at most the %.1f V clamp); the static guard is unchanged and the hot-docking start of section 9 (e) only quickens (less to charge).\n" % V_CLAMP)
+    w("     E-13b reads no input capacitor: found by the assembly's optical or electrical inspection; LATENT, no protection loss shown on printed\n")
+    w("     figures, U60's VDD over its 6 V on a transient NOT BOUNDED (no figure printed)\n")
+    w("   U60's THERMAL PAD OPEN (pin 7, the pad to ground; pin 2 still grounds the die): the die's coupling to the battery FETs' pour runs through\n")
+    w("     its leads alone; TI prints no thermal figure for the part without its pad, so the %.2f K gradient budget of section 9 (b) is not shown:\n" % g_left)
+    w("     the trip may come late. Found by E-13's heat step (the lag read at commissioning) and by an X-ray of the WSON's pad at assembly (a\n")
+    w("     build condition); LATENT between checks (a pad cannot open in service except by fatigue)\n")
+    w("   THE CIRCUIT ANSWER ASKED, A SECOND SENSING PATH, ON THE WINDOW: a second shunt on the same return adds its off leakage, %.2f uA at %.2f C:\n"
+      % (DF["n7"](T_SITE) * 1e6, T_SITE))
+    w("     the sinks %.2f uA on the count and %.2f uA all doubled (the count section 4 judges the window on) against the allowance %.2f uA: the\n"
+      % (two_one * 1e6, two * 1e6, alw_ * 1e6))
+    w("     window FAILS with it; a gate arrangement in which Q60's gate-to-\n")
+    w("     drain short trips instead would put a part between the gate network and the return that the window's count of section 3 does not\n")
+    w("     carry. NEITHER IS DRAFTED. SESSION decision L8P-D9 (under the owner's standing rule of 26 September 2026): the three failures are\n")
+    w("     TOLERATED as the table's other guard-removing failures are: none disables the breaker's own limit or opens the pack path; each is\n")
+    w("     found at commissioning and at each service (E-13b (a), E-13's heat step, the assembly's inspection); between checks the FETs' junction\n")
+    w("     rests on E-1's bar, as record l9stk names it. To reverse: a redundant guard on its own enable return with its own window (L4-E11 20c\n")
+    w("     restated for two shunts), or the shunt moved into board P's loop\n")
+    R9 = {"gd": gd["the count"][0], "gd_all": gd["all doubled"][0], "two": two, "two_one": two_one, "alw": alw_}
 
     # ------------------------------------------------------------------ 11. verdict and E-13b
     holds = (reproduced and same and m10 > 0 and m18 > 0 and mc4 > 0 and DF["window"] and DF["four"] and DRI["reg_c"] < V_LOW
@@ -646,6 +696,7 @@ def main():
         ("the draft: a hot docking reaches the shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V", all(dk[v][1] is not None and dk[v][1] < hold[0] for v in dk)),
         ("the draft: its output capacitor at -10 % is inside TI's 1.5 to 47 uF before its bias", cout_ok),
         ("C-PROT rev 1 holds on the desk for the draft (the physical conditions apart)", holds),
+        ("round 9: Q60's gate-to-drain short fails the window (V6-m7), and a second shunt on the same return would too", R9["gd"] < R["ret_closed"] and R9["two"] > R9["alw"]),
     ]
     w("\n12. PREDICATES\n")
     for text, val in preds:

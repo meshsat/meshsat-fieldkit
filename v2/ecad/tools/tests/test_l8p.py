@@ -1004,6 +1004,29 @@ def t_round8_the_c4_check_and_judgement_are_what_the_script_prints():
         assert s in o, s
 
 
+def t_round9_v6_m7_the_missed_single_failures_are_read_and_the_second_path_fails_the_window():
+    """V6-m7: the single-failure table missed Q60's gate-to-drain short, C261 open and U60's pad open. Re-solved here from the window's
+    own corner (DOCK_EN_OUT 1.825 V, the pair at +1 %, R107 at -1 %): with Q60's gate on its drain the gate network (47 k beside 1 M,
+    44.9 kOhm) loads the return to 0.799 V with 13.25 uA of other sinks, under the 0.84 V the window needs (V6's own arithmetic); and the
+    circuit answer the brief names, a second shunt on the same return, takes the all-doubled sinks from 24.33 to 29.92 uA against the
+    26.45 uA allowance: the window fails with it too. The decision that tolerates the three is printed with its reason and reversal."""
+    rpair, r107 = 15e3 * 1.01, 22e3 * 0.99
+    k = r107 / (rpair + r107)
+    rth = rpair * r107 / (rpair + r107)
+    rx = 47e3 * 1e6 / (47e3 + 1e6)
+    v = k * (1.825 - 13.25e-6 * rpair) * rx / (rx + rth)
+    assert round(v, 3) == 0.799 and v < 0.84
+    leak = 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0)
+    assert round(leak * 1e6, 2) == 5.58 and round((24.33e-6 + leak) * 1e6, 1) == 29.9 and 24.33e-6 + leak > 26.45e-6
+    o = open(C4_OUT, encoding="utf-8").read()
+    sec = o.split("\n10b. ROUND 9 (V6-m7)")[1].split("\n11. VERDICT")[0]
+    for s in ("the return 0.799 V", "FAILS (before any conduction of the diode-connected Q60 is counted)", "C261 OPEN", "U60's THERMAL PAD OPEN",
+              "window FAILS with it", "SESSION decision L8P-D9", "TOLERATED", "To reverse:"):
+        assert s in sec, s
+    for s in ("Q60 gate to drain shorted (round 9, V6-m7)", "C261 open (round 9, V6-m7)", "U60's thermal pad (pin 7) open (round 9, V6-m7)"):
+        assert s in o.split("\n10. EACH SINGLE FAILURE")[1].split("\n10b.")[0], s
+
+
 def t_round8_the_judgement_fails_drafts_that_draw_other_values():
     """The judgement is computed on the draft's own values, so a draft that draws something else fails it while the check (on C4 as
     record l9stk states it) still reproduces: G2's AO3400A shunt fails the window (L8P-F08); a 30 kOhm pair fails the window and
