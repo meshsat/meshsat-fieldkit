@@ -398,8 +398,8 @@ is, and 69 passed with that one pin moved. Round 6b, on a scratch merge with `4d
   - L8P-F08 and its three corrections.
   - Three relabellings: the switch's trip accuracy is printed at VDD 5 V only; the regulator's 2.25 uA ground current at VIN 6.0 V
     only; its accuracy from 100 uA of load.
-  - TI asks the switch's thermal pad on the circuit's ground "for improved noise immunity" (SNIS144G, the pin table), where 15.9
-    leaves it "tied to nothing else or to ground".
+  - TI asks the switch's thermal pad on the circuit's ground "for improved noise immunity" (SNIS144G, the pin table), where
+    l9stk_guard.out section 6 leaves "its pad on copper tied to nothing else or to ground".
   - Two single failures for E-13b: a shorted fixed resistor and a shorted regulator (12k).
 - **L4-E11:**
   - 20c's load on DOCK_EN_RET counts SENSE1 alone. Board A's Q44 and board P's Q107 over Q108 also sit there (7.6 uA in all at the
