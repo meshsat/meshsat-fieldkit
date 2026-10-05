@@ -393,6 +393,21 @@ one L4-E11 test stops at that pin; on a scratch merge with `ac72e730`, `test_l4e
 is, and 69 passed with that one pin moved. Round 6b, on a scratch merge with `4def5975`, whose test still carries the old pin:
 71 passed and 2 failed, and 73 passed, 0 failed once the draft had moved the pin on the scratch copy. `apply_test_l4e11_ptc_pin.py` drafts the one-line change; it is not applied here.
 
+**Round 7's findings for other authors** (none edited here; 12k, 12l):
+- **Record l9stk (G2, 15.9):**
+  - L8P-F08 and its three corrections.
+  - Three relabellings: the switch's trip accuracy is printed at VDD 5 V only; the regulator's 2.25 uA ground current at VIN 6.0 V
+    only; its accuracy from 100 uA of load.
+  - TI asks the switch's thermal pad on the circuit's ground "for improved noise immunity" (SNIS144G, the pin table), where 15.9
+    leaves it "tied to nothing else or to ground".
+  - Two single failures for E-13b: a shorted fixed resistor and a shorted regulator (12k).
+- **L4-E11:**
+  - 20c's load on DOCK_EN_RET counts SENSE1 alone. Board A's Q44 and board P's Q107 over Q108 also sit there (7.6 uA in all at the
+    air on the doubling); the window still holds without the guard.
+  - 20c's 25.8 kOhm is a ratio bound that counts no sink: any part that adds one must be judged at DOCK_EN_OUT 1.825 V.
+  - E11-45 (c)'s junction clause (12l).
+  - 20f's docking row, for the guard's start, once G2 is drafted.
+
 ## 10. Residuals of the drawing (for the record's owner; no new defect)
 
 - **A short of DOCK_EN_RET to a neighbour.**
