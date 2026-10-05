@@ -480,7 +480,10 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
     - the plane copper in series with the return bundle (P0 round, V6-B1, 5 October 2026): every row takes each board as one node;
       the plane resistance between the return sockets' lands and the 5 V entries is a NAMED CONDITION, L8R2-F33a, with the bound
       each case tolerates and the land separation a layout may have on the declared stackups in l8r2_p0.out section 2
-      (PROVISIONAL on the routed boards' extraction; the declared upper bound's printed row STILL OPEN).
+      (PROVISIONAL on the routed boards' extraction; the declared upper bound's printed row STILL OPEN). On the placement as
+      drawn (l8r2_p0.out 2b) one cluster of sockets cannot reach board B's entries; one socket a group (J_GR1 beside J_5V_S1,
+      J_GR2 by J_5V_S2 and J_5V_S3, J_GR3 by J_5V_DEV with J_5V_IOC placed beside it) holds every entry within 8.0 mm of its
+      socket on both boards: the condition's form, realisable without moving a drawn part (the sites' free area is Layer 10's).
     - the XT60's contact resistance after ageing. Amass prints one limit (1.0 mOhm, 2021V1) with a 100-cycle life and no separate
       after-test figure. Every row still holds on the printed ratings while each XT60 contact stays at or under 2.06 mOhm, and on
       the least ratings at or under 1.43 mOhm (2.1 and 1.4 times the printed limit). Beyond that a row fails: a four-wire reading of the

@@ -902,3 +902,34 @@ def t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_n
         assert s_ in sec, s_
     figs = sorted(set(re.findall(r"\d+\.\d+ (?:A|mOhm)\b", sec)))
     assert figs and not [f for f in figs if f not in text], [f for f in figs if f not in text]
+
+
+def t_p0_f33a_is_read_on_the_placement_as_drawn():
+    """the owner's amendment 1: L8R2-F33a against the boards' placement: each 5 V lead's ground land read from the placed board files
+    (a parse), one cluster NOT within reach on board B, one socket a group within reach on both boards; the page states the result"""
+    import importlib.util
+    import math
+    need(P0, "l8r2_p0.py")
+    sp = importlib.util.spec_from_file_location("l8r2_p0_under_test", P0)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    text = open(P0_OUT, encoding="utf-8").read()
+    d_need = float(re.search(r"the distance a return socket may have: ([\d.]+) mm", text).group(1))
+    pl = m.placement(d_need)
+    assert not pl["met_one"] and pl["met_split"]
+    for b in "ab":
+        land = pl[b]["land"]
+        assert sorted(land) == ["J_5V_DEV", "J_5V_S1", "J_5V_S2", "J_5V_S3"], sorted(land)   # J_5V_IOC is not placed yet
+        for ref, (x, y) in land.items():
+            assert ("%s (%.2f, %.2f)" % (ref, x, y)) in text, (b, ref)
+        # the pair's half distance, recomputed here, is the group's radius the output prints
+        s2, s3 = land["J_5V_S2"], land["J_5V_S3"]
+        half = math.hypot(s2[0] - s3[0], s2[1] - s3[1]) / 2
+        assert abs(half - [g for g in pl[b]["groups"] if g[0] == ("J_5V_S2", "J_5V_S3")][0][1]) < 1e-6
+        # no point is farther than the printed enclosing radius from that circle's centre, and the radius is at least half the widest pair
+        r1 = pl[b]["one"]
+        widest = max(math.hypot(p[0] - q[0], p[1] - q[1]) for p in land.values() for q in land.values())
+        assert widest / 2 - 1e-9 <= r1 <= widest / math.sqrt(3) + 1e-9
+    assert "MET on the" in text and "SESSION decision L8R2-D9" in text
+    page = open(PAGE, encoding="utf-8").read()
+    assert "On the placement as drawn" in page and "J_GR2 by J_5V_S2 and J_5V_S3" in page

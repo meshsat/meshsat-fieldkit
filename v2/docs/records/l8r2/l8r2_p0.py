@@ -34,6 +34,11 @@ PINS = ["v2/docs/records/l8r2/l8r2_gndret.py", "v2/docs/records/l8r2/l8r2_gndret
         "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", "v2/vendor/connectors/jst-ph-catalogue.pdf",
         "v2/vendor/battery/amass-xt60-spec-tme.pdf", "v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf",
         "v2/ecad/tools/gen_sch_a.py", "v2/ecad/tools/pcb_interfaces.yaml"]
+# the owner's amendment 1 on L8R2-F33a (INBOX 11, 5 October 2026): the condition read against the boards' placement as drawn
+BOARD_PCB = {"a": "v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb", "b": "v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb"}
+PINS += list(BOARD_PCB.values())
+ENTRIES = ("J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV", "J_5V_IOC")      # the 5 V leads; J_5V_IOC is record l9t5's I-03 lead
+GROUPS = (("J_5V_S1",), ("J_5V_S2", "J_5V_S3"), ("J_5V_DEV", "J_5V_IOC"))   # one return socket a group (SESSION, section 2b)
 TH, TC = 76.25, -20.0
 CU_ALPHA = 0.00393
 OZ = {0.5: 17.5e-6, 1.0: 35.0e-6}          # m: nominal copper thickness per weight (ASSUMPTION: no fabricator's finished thickness held)
@@ -127,6 +132,115 @@ def d_max(bound, a, T, oz, thin=True):
     """the largest land separation (mm) at which boards A and B together stay under bound (mOhm), the same separation on both"""
     k = r_plane(math.e * a, a, PLANES["a"], T, oz, thin) + r_plane(math.e * a, a, PLANES["b"], T, oz, thin)     # mOhm per unit of ln(d/a)
     return a * math.exp(bound / k) * 1e3
+
+
+_TOK = re.compile(r'\(|\)|"(?:[^"\\]|\\.)*"|[^\s()]+')
+
+
+def _tree(text_):
+    stack = [[]]
+    for tok in _TOK.findall(text_):
+        if tok == "(":
+            stack.append([])
+        elif tok == ")":
+            n = stack.pop()
+            stack[-1].append(n)
+        else:
+            stack[-1].append(tok[1:-1] if tok.startswith('"') else tok)
+    return stack[0][0]
+
+
+def _at(node):
+    for x in node:
+        if isinstance(x, list) and x and x[0] == "at":
+            return float(x[1]), float(x[2]), float(x[3]) if len(x) > 3 else 0.0
+    return None
+
+
+def pad_positions(path, refs):
+    """{ref: {pad: (x, y, net)}} of the named footprints on a placed board, read by parsing each footprint block (not a grep)"""
+    t_ = open(path, encoding="utf-8").read()
+    out = {}
+    for m in re.finditer(r'\(footprint "', t_):
+        i, j, depth = m.start(), m.start(), 0
+        while True:
+            c = t_[j]
+            if c == '"':
+                j += 1
+                while t_[j] != '"':
+                    j += 2 if t_[j] == "\\" else 1
+            elif c == "(":
+                depth += 1
+            elif c == ")":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        blk = t_[i:j + 1]
+        ref = re.search(r'\(property "Reference" "([^"]+)"', blk)
+        if not ref or ref.group(1) not in refs:
+            continue
+        fp = _tree(blk)
+        x0, y0, rot = _at(fp)
+        a = math.radians(-rot)
+        pads = {}
+        for x in fp:
+            if isinstance(x, list) and x and x[0] == "pad":
+                px, py, _r = _at(x)
+                net = [y for y in x if isinstance(y, list) and y and y[0] == "net"]
+                pads[x[1]] = (x0 + px * math.cos(a) - py * math.sin(a), y0 + px * math.sin(a) + py * math.cos(a), net[0][-1] if net else "")
+        out[ref.group(1)] = pads
+    return out
+
+
+def enclosing_radius(pts):
+    """the smallest circle containing every point (mm): exact for a few points, over every pair's and triple's circle"""
+    if len(pts) <= 1:
+        return 0.0, pts[0] if pts else None
+    best = None
+    cands = []
+    for i in range(len(pts)):
+        for j in range(i + 1, len(pts)):
+            cx, cy = (pts[i][0] + pts[j][0]) / 2, (pts[i][1] + pts[j][1]) / 2
+            cands.append((cx, cy))
+            for k in range(j + 1, len(pts)):
+                (ax, ay), (bx, by), (qx, qy) = pts[i], pts[j], pts[k]
+                d = 2 * (ax * (by - qy) + bx * (qy - ay) + qx * (ay - by))
+                if abs(d) > 1e-9:
+                    ux = ((ax * ax + ay * ay) * (by - qy) + (bx * bx + by * by) * (qy - ay) + (qx * qx + qy * qy) * (ay - by)) / d
+                    uy = ((ax * ax + ay * ay) * (qx - bx) + (bx * bx + by * by) * (ax - qx) + (qx * qx + qy * qy) * (bx - ax)) / d
+                    cands.append((ux, uy))
+    for cx, cy in cands:
+        r = max(math.hypot(px - cx, py - cy) for px, py in pts)
+        if best is None or r < best[0] - 1e-12:
+            best = (r, (cx, cy))
+    return best
+
+
+def placement(d_need):
+    """L8R2-F33a against the placement as drawn: each 5 V lead's ground land (pin 2) per board, one cluster against the split
+    arrangement (one socket a group)"""
+    res = {}
+    for b, p in BOARD_PCB.items():
+        pads = pad_positions(os.path.join(ROOT, p), set(ENTRIES))
+        land = {}
+        for ref in ENTRIES:
+            if ref in pads:
+                g = [(x, y) for _k, (x, y, n) in pads[ref].items() if n in ("GND", "/GND")]
+                if len(g) != 1:
+                    refuse("%s on board %s has %d ground pads" % (ref, b, len(g)))
+                land[ref] = g[0]
+        one = enclosing_radius(list(land.values()))
+        groups = []
+        for grp in GROUPS:
+            pts = [land[r] for r in grp if r in land]
+            missing = [r for r in grp if r not in land]
+            groups.append((grp, enclosing_radius(pts)[0] if pts else 0.0, missing,
+                           max((math.hypot(a[0] - c[0], a[1] - c[1]) for a in pts for c in pts), default=0.0)))
+        res[b] = dict(land=land, one=one[0], groups=groups, need=d_need)
+    res["met_one"] = all(res[b]["one"] <= d_need for b in BOARD_PCB)
+    res["met_split"] = all(g[1] <= d_need for b in BOARD_PCB for g in res[b]["groups"])
+    return res
 
 
 def compute():
@@ -235,6 +349,8 @@ def compute():
     x12 = os.popen("pdftotext -layout %s -" % rel(PINS[6])).read() + os.popen("pdftotext -layout %s -" % rel(PINS[7])).read()
     R["xt_pcb_rating"] = bool(re.search(r"(?i)pcb|solder(ed)? (to|on) (a |the )?board|printed circuit", x12))
     R["xt_row"] = max(rows(F, totals["the declared upper bound (i)"], T)["RET"] for T in (TC, TH))
+    ls_ = [b for b in B1 if b["case"].startswith("the largest steady") and b["which"] == "printed" and b["kind"] == "RIB" and b["T"] == TC][0]
+    R["place"] = placement(ls_["d05"][0])
     R["pred"] = predicates(R)
     return R
 
@@ -258,6 +374,9 @@ def predicates(R):
     P["V6-B2: with the monitor's and the QMX's shares added the counted rows hold on the printed ratings at Rs = 0"] = all(r["ok_pr"] for r in R["B2_rows"])
     P["V6-m12: F-4b puts a ribbon over its printed 1 A by under 1 percent; the fourth lead would hold it"] = 1.0 < R["f4b"][1] < 1.01 and R["f4b"][2] < 1.0
     P["V6-m8: neither XT60 sheet names a board-soldered end"] = not R["xt_pcb_rating"]
+    pl = R["place"]
+    P["L8R2-F33a on the placement as drawn: one cluster of sockets is NOT within reach of every 5 V entry on board B"] = not pl["met_one"]
+    P["L8R2-F33a on the placement as drawn: one socket a group (S1; S2 with S3; DEV with IOC) is within reach on both boards"] = pl["met_split"]
     return P
 
 
@@ -317,9 +436,28 @@ def render(R):
     w("       %.0f to %.0f mm (a = 1.5 to 3 mm; still a placement question): the copper weight is the owner's open decision (record l9stk 14.7;" % (dp["d10"][0], dp["d10"][1]))
     w("       the surcharge NOT READ); it is a DECLARATION bound (every lead at its declared peak at once), above every state of the budget")
     w("     the least ratings at the inside air (INFERRED derating): not realisable at 0.5 oz for any case (see the table)")
+    pl = R["place"]
+    w("   2b. L8R2-F33a ON THE PLACEMENT AS DRAWN (the owner's amendment 1, the coordinator's INBOX 11): each 5 V lead's ground land (pin 2)")
+    w("     read from the placed boards (pinned above; footprint blocks parsed), the distance a return socket may have: %.1f mm (the largest" % pl["a"]["need"])
+    w("     steady state, 0.5 oz, a 1.5 mm land group)")
+    for b in ("a", "b"):
+        q = pl[b]
+        w("     board %s: %s; %s" % (b.upper(), "; ".join("%s (%.2f, %.2f)" % (r, x, y) for r, (x, y) in sorted(q["land"].items())),
+                                     "J_5V_IOC not placed (record l9t5's I-03 lead, Layer 10's placement)" if "J_5V_IOC" not in q["land"] else "J_5V_IOC placed"))
+        w("       ONE CLUSTER for every entry: the smallest circle holding them has radius %.1f mm: %s" % (q["one"], "within reach" if q["one"] <= q["need"] else "NOT within reach"))
+        w("       ONE SOCKET A GROUP: " + "; ".join("%s %.1f mm from a socket at the group's centre (lands %.1f mm apart)%s" % (
+            " with ".join(g[0]), g[1], g[3], (", %s to be placed beside it" % ", ".join(g[2])) if g[2] else "") for g in q["groups"]))
+    w("     READ: the three sockets as one cluster cannot serve board B's entries (they sit %.0f mm apart at most); one socket a group" % (
+        2 * pl["b"]["one"]))
+    w("       (J_GR1 beside J_5V_S1; J_GR2 between J_5V_S2 and J_5V_S3; J_GR3 beside J_5V_DEV with J_5V_IOC placed beside it, on both boards,")
+    w("       the same lead serving the same group on each) holds every entry within %.1f mm of its socket on both boards: %s on the" % (
+        max(g[1] for b in ("a", "b") for g in pl[b]["groups"]), "MET" if pl["met_split"] else "NOT MET"))
+    w("       placement as drawn, by a placement of the three new sockets and J_5V_IOC only (no drawn part moves). MODEL: each lead's return")
+    w("       taken to its nearest socket; the free area at each site (courtyards) and each lead's 150 mm reach between its two groups are")
+    w("       Layer 10's placement facts, not read here (SESSION decision L8R2-D9: the split arrangement is the condition's form)")
     w("   DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return")
-    w("     socket's land within %.0f mm (the largest steady state, the tightest service case) of the 5 V entries on both boards, every" % ls["d05"][0])
-    w("     ground plane joined solidly; the Layer 10")
+    w("     socket's land within %.0f mm (the largest steady state, the tightest service case) of the 5 V entries it serves on both boards" % ls["d05"][0])
+    w("     (one socket a group, 2b: realisable on the placement as drawn), every ground plane joined solidly; the Layer 10")
     w("     validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and")
     w("     stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared")
     w("     upper bound's printed row and every least-rating row at 0.5 oz, which no placement realises; the smallest decision that removes")

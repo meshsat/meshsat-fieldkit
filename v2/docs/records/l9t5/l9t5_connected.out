@@ -1,0 +1,230 @@
+l9t5_connected: the P0 round's parts 4b and 4c, THE CONNECTED P0 CANDIDATE (record l9t5, Slot A, MESHSAT-1357, 5 October 2026).
+PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measured; nothing applied to the tree's generators. A netlist
+reading is not electrical qualification. Labels: PRINTED, TYPICAL, DECLARED, MODEL, ASSUMPTION, INFERRED, MISSING, PROVISIONAL.
+No completion claim: power-design closure and fabrication release stay BLOCKED (the open items of section 9).
+
+0. PINS (sha256/16 path)
+   b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
+   b2a8bb02817ebf95 v2/docs/records/l4e9/l4e9_power_path.py
+   4fd441be8098ff27 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   fc0968125a64d60d v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   736f9c314f36d555 v2/docs/records/l9pwr/l9pwr_budget.out
+   d7c654257a383712 v2/docs/records/l9t5/l9t5_drafts.out
+   9f8842094908b4de v2/docs/records/efuse/efuse_check.out
+   28ad9d6d9e9111cd v2/docs/records/l9stk/l9stk_protection.out
+   acd07c17bcc4e3cf v2/docs/records/l8p/l8p_c4.out
+   b704ca5b9e412773 v2/docs/records/l9t5/l9t5_t10.out
+   461dd33119ce5dd7 v2/docs/records/l9t5/l9t5_f01.out
+   8d4f3a6cb7c123d9 v2/docs/records/l8r2/l8r2_p0.out
+   9613a80236d4fdf1 v2/docs/records/l4e7/l4e7_p0sol.out
+   a0fb03a203b6ee47 v2/docs/records/l9t5/l9t5_t10.py
+   aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
+   2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
+   c1112a0c35baaa6a v2/docs/records/l8r2/l8r2_p0.py
+   feff4b7c56598cc0 v2/docs/records/l8r2/l8r2_gndret.py
+   a35a16c1cb39e2be v2/docs/records/l9t5/l9t5_paloop.py
+   e03d39014a2b679a v2/docs/records/efuse/efuse_check.py
+   f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
+   9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
+   c9948a9b4afd1cc1 v2/docs/records/l9t5/check_l9t5_netlist.py
+   710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
+   a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
+   fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
+   fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
+   d5bcd5a7634ea1f9 v2/docs/records/l4e11/check_dd7_netlist.py
+   6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
+   6c40250c47195ebb v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   3ef9b8c49a01b728 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+   a2d48972d171aad1 v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+
+1. THE CASE ROWS (the coordinator's, the copy above; cited, never restated)
+   C-ALLTX rev 3: REQ-018 with CONOPS 4a, every transmitter keyed, fans running, the standby WiFi card off, the other loads typical, a
+     60 s key-down from a 15.5 V rest, cells at most +55 C; the pack at the gauge's indicated 18 A
+   C-DEV rev 1 and rev 2: the device rail U7 at the least load voltage on PS-ALLTX (rev 2: the supervisors' bounded term, CONDITIONAL on
+     FW-B20 and FW-B21)
+   C-PROT rev 1: 10 A held and 18 A for 60 s never interrupted; the breaker's band 18.32 to 23.93 A; start at L4-E12's 76.25 C air
+   C-SHORE rev 1: 7.136 A held by the input breaker from 76.25 C air (DD-3, a source present): NOT stacked with C-ALLTX (the pack alone
+     at rest), which is a different state; each figure below names its row
+
+2. THE COMPOSITION (4c, P0-6): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and
+   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-240 for the drafts
+   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 113 changes, every
+   order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: yes; WITHDRAWN: R-210, R-212, R-211
+   board A: 24 drafts, every one applied; regenerated rc 0: 820 parts, 0 unplaced, intent written True, designators unique
+     l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l9t5/iocbuck R-223; l9t5/iocpre R-224; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
+     the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
+   board B: 16 drafts, every one applied; regenerated rc 0: 1437 parts, 0 unplaced, intent written True, designators unique
+     l8gnd/gnd002 R-195; l8r2/fans12 R-190; l8r2/fandec R-228; l8r2/panel5v R-229; l8r2/ph4 R-230; l8r2/rt500 R-203; l8r2/gndret R-231; l8r2/gndrtn R-232; l9t5/iocbuck R-233; l9t5/iocpre R-234; l9t5/canshdn R-235; efuse/u23ilm R-236; efuse/u24ilm R-237; l6r2/xal_land order-free; l6r2/lcsc order-free; l6r2/intent order-free
+     the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
+   board D: 4 drafts, every one applied; regenerated rc 0: 254 parts, 0 unplaced, intent written True, designators unique
+     d8dec31/ptt R-239; l9t5/paloop R-238; l6r2/intent order-free; l6r2/lcsc order-free
+     the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
+   record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap and the
+     last taker: yes, both boards (V6-m3 answered)
+   d8dec31's mainpb, the last next-free taker: R603, C607 on MAIN_PB (V6 read R603 and C607; the register's R-193 text names R233 and C241
+     for the round without the later drafts: R-194, its fixed references, stays a MISSING DRAFT for d8dec31's owner)
+   d8dec31's ptt on board D: its next-free picks (the 1 k series parts and the BAT46W) D15, D16, D17, D18, R96, R97; the PA cap's fixed R57, R58, C76: True
+
+3. EVERY RECORD NETLIST CHECK IN ITS COMPOSED MODE (the regenerated netlists; V6's two breaking checks first)
+   l8gnd GND-002, board A                                         DRAWN  A: CHASSIS on H1.1 (meshsat:ChassisLug_M4_CHASSIS) and R229.1; R229 0R 2512 (CHASSIS bond link) to GND is the one bridge; changes 1 and 4 DRAWN
+   l8gnd GND-002, board B                                         DRAWN  B: CHASSIS on C33.2 (1n 2kV) and J_ETH.SH; no part bridges it to GND; changes 2 and 3 DRAWN
+   l8r2 rounds 1 to 6, board A                                    DRAWN  A VCO DRAWN
+   l8r2 rounds 1 to 7, board B                                    DRAWN  B FANS DRAWN
+   l8p the loop and the guard, board A                            DRAWN  A EN DRAWN
+   L4-E11 DD-7 (round 17, with the guard), board A                DRAWN  
+   l8r2 the ground return, board B                                DRAWN  leads read from the netlist and the intent: J_54V (+54V_POE), J_5V_DEV (+5V_DEV), J_5V_IOC (+5V_IOC), J_5V_S1 (+5V_S1), J_5V_S2 (+5V_S2), J_5V_S3 (+5V
+   l8r2 the dedicated return, boards A and B                      DRAWN  return sockets whole on both boards: J_GR1, J_GR2, J_GR3
+   l9t5 I-03 / T10, board A (automatic mode)                      DRAWN  A BUCK DRAWN
+   l9t5 I-03, board B                                             DRAWN  B LDO DRAWN
+   l9t5 J_5V_IOC pair                                             DRAWN  
+   l9t5 F01 the PA cap, board A                                   DRAWN  U551, U552, U553 and the harness conductor as drafted; set point 6.7102 A
+   l9t5 F01 the PA cap, board D                                   DRAWN  J_HARN1 pin 16, R57, C76, R58 and R83 as drafted
+   l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16              DRAWN  PA_ILIM / PA_ILIM
+   not netlist checks, read from their records' outputs on this candidate (pinned above): the efuse record (section 6), T10's
+     SHDN nets (l9t5_t10.out 10f), the breaker on board P (record l8p; board P is outside this composition, R-206)
+
+4. ONE MUTATION PER CHECK, ON THE COMPOSED TABLES (each must not read DRAWN)
+   l8gnd GND-002, board A                                         R229's ground pin moved to CHASSIS (the one bond lost): FAIL  A: CHASSIS carries [('H1', '1'), ('R229', '1'), ('R229', '2')], the strategy asks exactly 
+   l8gnd GND-002, board B                                         C33's cold end back on GND: FAIL  B: C33 sits on ['BOB', 'GND'], the clause asks BOB to CHASSIS
+   l8r2 rounds 1 to 6, board A                                    U44's input (pin 4) on GND: FAIL  A D8V3 FAIL: U44.4 on 'GND', wanted +3V3
+   l8r2 rounds 1 to 7, board B                                    U901's input (pin 4) on GND: FAIL  B PNL FAIL: U901.4 on 'GND', wanted +5V_DEV
+   l8p the loop and the guard, board A                            R260's DOCK_EN_OUT end on GND: FAIL  A EN FAIL: the loop is not closed by the guard's pair: R260 on ['GND', 'THG_MID'], R261 on
+   L4-E11 DD-7 (round 17, with the guard), board A                Q44.1 moved off DD7_G: FAIL  Q44.1 on 'GND', wanted DD7_G
+   l8r2 the ground return, board B                                J_GR1 pin 2 on +5V_DEV (V6's): FAIL  leads read from the netlist and the intent: J_54V (+54V_POE), J_5V_DEV (+5V_DEV), J_5V_IOC
+   l8r2 the dedicated return, boards A and B                      J_GR2 removed from board A (V6's): FAIL  return sockets whole on both boards: J_GR1, J_GR3
+   l9t5 I-03 / T10, board A (automatic mode)                      R602 at 12.0k (neither I-03's nor T10's divider): FAIL  A DIV FAIL: the divider is 56.2k 0.1% 25ppm over 12.0k 0.1%, wanted 56.2k 0.1% over 10.7k 
+   l9t5 I-03, board B                                             C900 from +5V_IOC to +5V_DEV: FAIL  B LEAD FAIL: C900 on ['+5V_DEV', 'GND']
+   l9t5 J_5V_IOC pair                                             board B's J_5V_IOC pin 1 on +5V_DEV: FAIL  pin 1: A '+5V_IOC', B '+5V_DEV'
+   l9t5 F01 the PA cap, board A                                   J_PA back on +13V8_PA (the sense bypassed): FAIL  J_PA.1 on '+13V8_PA', wanted +13V8_PAJ
+   l9t5 F01 the PA cap, board D                                   R57 into VGG_SW (U15's output, not its feedback): FAIL  R57 is not between PA_ILIM and VGG_FB: ['PA_ILIM', 'VGG_SW']
+   l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16              J_HARN1 pin 16 back on AB_SPARE: FAIL  PA_ILIM / AB_SPARE
+   14 of 14 mutations do not read DRAWN
+
+5. THE PACK AND THE CASE AT THE CAP (C-ALLTX rev 3; l9t5_case.py section 8, the PA's row the only one changed)
+   the need at the indicated 18 A with the gauge's uncalibrated bound and the dock contacts at their maximum: 15.1307 V (MODEL on PRINTED
+     bounds; nominal 14.6183 V) against REQ-018's 15.5 V rest: MEETS, margin 0.3693 V; F01 / D-17 PROVISIONAL (B-PA1, B-PA2)
+   the pack's true current at the indicated 18 A: 17.1964 A (MODEL: the gauge's uncalibrated 0.8036 A); C-PROT rev 1's breaker band 18.32 /
+     21.08 / 23.93 A (PRINTED, record l9stk): the least limit 1.1236 A over the true current and 0.32 A over the indicated 18 A service;
+     excursions over the least limit only under the fault timer's least 0.282 ms (E-10, the supplier's bring-up bench)
+   the required service unchanged: the case's load set copied whole (v8 = dict(vals)) and only 'VHF PA 30 W' replaced, by the cap's top 97.24 W
+     (no transmitter, fan or load reduced; the loop's own 0.018 W added): yes (read with ast)
+
+6. EVERY CONVERTER ON THE CONNECTED PATH (its input or loop current against its limit; the case each row is read on)
+   U13 (the PA rail, LM5176 average loop on R55): the cap's top 6.9257 A plus R55's other loads 0.0004 A against U13's least 7.0338 A with R55
+     hot (MODEL on PRINTED: VSNS 43 mV, WSL2512 TCR): 0.1077 A of room; C-ALLTX rev 3
+   S1 U501 (a slot's 5.1 V stage): HIGH 5.222 A, at the least load voltage 5.434 A, against its loop's 7.0957 A (record l9pwr 5b, PS-ALLTX)
+   S2 U5 (a slot's 5.1 V stage): HIGH 4.468 A, at the least load voltage 4.648 A, against its loop's 7.0957 A (record l9pwr 5b, PS-ALLTX)
+   S3 U531 (a slot's 5.1 V stage): HIGH 3.264 A, at the least load voltage 3.396 A, against its loop's 7.0957 A (record l9pwr 5b, PS-ALLTX)
+   U7 (the device rail): before I-03 7.472 A at the least load voltage against 7.0957 A (C-DEV rev 1's demand, OVER); with I-03 (U601 takes
+     +5V_IOC off U7) board B's lead 6.0359 A (C-DEV rev 1, l9t5_drafts.out), under the loop by 1.0598 A
+   U601 (+5V_IOC, TPS62933, 3 A PRINTED): 1.4749 A on C-DEV rev 1 (+5V_IOC 1.3800 A), 0.9607 A on rev 2 (+5V_IOC 0.8989 A; CONDITIONAL on
+     FW-B20 and FW-B21); its declared peak 1.4749 A (DECLARED, the unbounded supervisors)
+   every other converter: the case's own load set (section 5), unchanged by this round
+
+7. THE FEED AND RETURN CONDUCTORS AGAINST THEIR PRINTED RATINGS
+   J_PA and its 16 AWG lead (JST VH) at the cap's top 6.9257 A: under the PRINTED 10 A; against the least rating the sheet allows at
+     C-PROT's 76.25 C air, 5.9948 A (INFERRED: the whole span to the 105 C range top, l8r2's reading), OVER by 0.9309 A; it holds to a
+     local air of 66.63 C. PROVISIONAL with L8R2-F43's vendor task (JST's derating for VH at 16 AWG); it was the case's 8.19 A before
+     the cap. Desk route if JST's curve is lower: two contacts a pole (a 1x4 VH), a Layer 7 harness row (finding below)
+   J_5V_DEV pin 1 at board B's lead 6.0359 A: the same VH row (5.9948 A INFERRED at 76.25 C), L8R2-F43, PROVISIONAL
+   the dock's four Mill-Max pins on the pack path: at their PRINTED maximum contact resistance inside the case's bound (section 5)
+   the return between boards A and B (record l8r2, l8r2_p0.out; the solver on the composed design: the conductors the composed netlists
+     carry: 6 lead contacts, 17 ribbon ground conductors, 3 return sockets whole on both boards, the solver's 6 lead, 17 ribbon and 3
+     socket conductors: the same)
+     L8R2-F33a on the placement as drawn (l8r2_p0.out 2b): one socket a group holds every 5 V entry within 8.0 mm of its socket on both
+     boards: MET (one cluster cannot reach board B's entries); J_5V_IOC placed beside J_5V_DEV; the sites' free area is Layer 10's
+     C-DEV rev 1                                    20.9888 A at +76.25 C: VH 2.9571 A (printed 10.0, least 5.9948), ribbon 0.3670 A (printed 1.00, least 0.5995), XT60 6.9900 A (35)
+     C-DEV rev 1                                    20.9888 A at -20.00 C: VH 3.7050 A (printed 10.0, least 10.0000), ribbon 0.4776 A (printed 1.00, least 1.0000), XT60 8.2954 A (35)
+     the largest steady state (PS-BUSY, HIGH)       22.8711 A at +76.25 C: VH 3.2223 A (printed 10.0, least 5.9948), ribbon 0.3999 A (printed 1.00, least 0.5995), XT60 7.6168 A (35)
+     the largest steady state (PS-BUSY, HIGH)       22.8711 A at -20.00 C: VH 4.0373 A (printed 10.0, least 10.0000), ribbon 0.5204 A (printed 1.00, least 1.0000), XT60 9.0393 A (35)
+     the declared upper bound (i)                   27.9108 A at +76.25 C: VH 3.9324 A (printed 10.0, least 5.9948), ribbon 0.4880 A (printed 1.00, least 0.5995), XT60 9.2952 A (35)
+     the declared upper bound (i)                   27.9108 A at -20.00 C: VH 4.9269 A (printed 10.0, least 10.0000), ribbon 0.6351 A (printed 1.00, least 1.0000), XT60 11.0311 A (35)
+     C-DEV rev 2 (conditional on FW-B20/B21)        20.4746 A at +76.25 C: VH 2.8847 A (printed 10.0, least 5.9948), ribbon 0.3580 A (printed 1.00, least 0.5995), XT60 6.8187 A (35)
+     C-DEV rev 2 (conditional on FW-B20/B21)        20.4746 A at -20.00 C: VH 3.6143 A (printed 10.0, least 10.0000), ribbon 0.4659 A (printed 1.00, least 1.0000), XT60 8.0922 A (35)
+     on the one-node model (MODEL): every row under its printed rating; V6-B1's plane term PROVISIONAL on layout condition L8R2-F33a (the
+     return's lands within 17 mm at 0.5 oz on the largest steady state; l8r2_p0.out), the declared upper bound's printed row and the
+     least rows STILL OPEN; V6-B2's indirect paths bounded with vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL
+
+8. THE PROTECTION COORDINATION (each trip over its demand and under its downstream rating, with tolerances)
+   eFuse A U23 (+5V_D8, R98 511R 1%): band 1.5684 / 1.7783 / 1.9949 A (PRINTED, range-wide), efuse_check.out: PASS
+   eFuse B U23 (+5V_LIME, R36 750R 1%): band 1.0718 / 1.2152 / 1.3631 A (PRINTED, range-wide), efuse_check.out: PASS
+   eFuse B U24 (+5V_RB, R43 1.21k 1%): band 0.6681 / 0.7575 / 0.8496 A (PRINTED, range-wide), efuse_check.out: PASS
+   board P's breaker C-1 (LM5069, record l9stk; C-PROT rev 1): 18.32 to 23.93 A against the 18 A service and the true 17.1964 A (section 5);
+     its top 23.93 A under the cells' 24 A (record l9stk E-9, the supplier's bench)
+   the PA cap against U13's own loop: the cap acts first (its top 6.9257 A under U13's least 7.0338 A), so U13's loop is not the PA's limiter
+   the thermal guard on the battery FETs (record l8p round 9, C-PROT rev 1): no trip at 10 A held (89.4 C, 38.4 K under 127.8 C), at the 18 A
+     service read as held (118.0 C, 9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) (PRINTED switch limits; l8p_c4.out)
+   the solar entry (P0-7, record l4e7, merged at 2f40efb6; l4e7_p0sol.out pinned): board E composed there in L4-E9's order with its
+     own drafts and P0-7's (296 parts, 0 unplaced); D-16 CORRECTED in draft; D-10 NARROWED, OPEN (the guard-on event's port-level residual;
+     route B2, the receptacle's presence contact, being drafted by the P0-7 author, not yet in this candidate); board E is outside
+     P0-6's boards A and B, so the solar guard's trip against its demand is record l4e7's reading, not re-traced here
+
+9. THE THERMAL LIMITS (each at the air its record reads)
+   the supervisors' LDOs (T10, Slot C's round 5): 109.4 C at the bounded state on rev V's rows at 76.25 C (MODEL; rev V fitted, L9T5-D7),
+     under 125 C; rev Y's cover for a rev X part 125.2 C, PROVISIONAL on V-B20 (0.2318 A)
+   U551 INA250A2 at the cap's top: junction 98.8 C at 76.25 C air (TYPICAL RthJA; l9t5_f01.out)
+   R55 (WSL2512 6 mOhm): 0.288 W at the cap's top with R55's other loads, 105.0 C at 76.25 C air (MODEL, ASSUMPTION 100 K/W); U13's least
+     limit is taken at that temperature (printed TCR), so the coordination of section 8 carries R55's own heating
+   the battery FETs at the 18 A service: 118.0 C with the guard 9.0 to 15.0 K above (record l9stk; DD-2 with Q42, condition C3)
+
+10. L9T5-F22 OVER THE CONNECTED CIRCUIT (the owner's part 22 item 3) AND SESSION DECISION L9T5-D8
+   each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's
+   2 % copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: 42.52 mOhm, hot wire and two contacts) and the ground shift
+   between the boards; against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (dropout PRINTED): input 3.8428 V against 3.7693 V: holds +0.0735 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.8618 V against 3.6652 V: holds +0.1966 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0114 V, 0.6000 A a LDO (dropout PRINTED): input 3.8995 V against 3.7693 V: holds +0.1302 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0114 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.9185 V against 3.6652 V: holds +0.2533 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (dropout PRINTED): input 3.6814 V against 3.7693 V: FAILS -0.0879 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7004 V against 3.6652 V: holds +0.0352 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0114 V, 0.6000 A a LDO (dropout PRINTED): input 3.7381 V against 3.7693 V: FAILS -0.0312 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0114 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7571 V against 3.6652 V: holds +0.0919 V
+   the headroom's other side: the pre-regulator's top 4.2907 V (13.3 k) and 4.1174 V (14.0 k), under the AP2112K's 6.0 V input maximum
+   the thermal side (Slot C's T10 rows, rev Y's cover, both fabrics faulted, responded): 126.5 C at 13.3 k, 118.1 C at 14.0 k
+   DECISION L9T5-D8 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;
+   reversed_by: none): L9T5-F22 (R602 at 14.0 k) is NOT taken; R602 stays 13.3 k and L9T5-D7 (rev V fitted) stays the PROVISIONAL
+   choice with V-B20 for a rev X lot. Why, over the connected circuit: at the LDO's printed full current 14.0 k FAILS with the return as
+   drawn AND with the dedicated return (-0.0879 V, -0.0312 V), while 13.3 k holds both (+0.0735 V, +0.1302 V); 14.0 k holds only at the T10 record's
+   0.4512 A with a dropout INFERRED between two printed points, which restates T10-A3 downward: it trades a vendor reading of the
+   controller (V-B20) for an unprinted dropout and a narrowed acceptance. To reverse: if the lots are rev X only (L9T5-F23), draft
+   R602 14.0 k with T10-A3 on a printed dropout at the held current (TI's) and re-take T10
+
+11. WHAT THIS CANDIDATE DOES NOT CLOSE (each with its route; constitution section 2)
+   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it
+   the return: V6-B1 PROVISIONAL on L8R2-F33a (its form realisable on the drawn placement, 7; Layer 10's extraction), the declared bound's
+     printed row and the least rows OPEN; V6-B2
+     vendor tasks (Hirose U.FL, Molex HDMI) UNSENT
+   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20
+   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F24 (Layer 7, Layer 6): J_PA carries up to the cap's top,
+     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
+     a 1x4 VH with two contacts a pole (a harness row and a board A land)
+   the solar entry (P0-7): D-10 NARROWED, OPEN; route B2's draft (the receptacle's presence contact) not yet merged
+   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's
+     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
+
+12. THE PREDICATES
+   the drafted change list carries rows R-220 to R-240, holds every order constraint, its page table is its list, FAN_OK withdrawn yes
+   board A composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
+   board B composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
+   board D composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
+   record efuse composes boards A and B in the same order                                                                        yes
+   mainpb takes R603 and C607 on the full composition (V6's reading)                                                             yes
+   every record check reads DRAWN on the composed candidate (DD-7 with the guard, V6-m2; l9t5 in its automatic mode, V6-m1)      yes
+   every mutation fails its check                                                                                                yes
+   the case at the cap meets 15.5 V (MODEL, PROVISIONAL) and the breaker's least limit stays over the 18 A service               yes
+   the required service is unchanged: only the PA's value differs (read with ast)                                                yes
+   U13 carries the cap's top and R55's other loads under its own least limit                                                     yes
+   the slot stages carry PS-ALLTX under their loops                                                                              yes
+   U7 with I-03 carries C-DEV rev 1 under its loop                                                                               yes
+   U601 stays under its 3 A on both revisions                                                                                    yes
+   J_PA's cap-top current is under the VH's printed rating                                                                       yes
+   the return solver's conductors are the composed netlists'                                                                     yes
+   L8R2-F33a is realisable on the placement as drawn (one socket a group)                                                        yes
+   the eFuse settings read PASS on the candidate (record efuse)                                                                  yes
+   record l4e7's P0-7 composition is in the candidate (D-16 corrected in draft, D-10 narrowed and open)                          yes
+   L9T5-F22 judged over the connected circuit: 13.3 k holds T10-A3 at 600 mA with either return, 14.0 k does not                 yes
+
+l9t5_connected: done

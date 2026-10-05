@@ -3,8 +3,8 @@ of. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measure
 ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional choice with its validation task).
 
 0. PINS (sha256/16  path)
-   6bd6b2039d02bca3 v2/docs/records/l8r2/l8r2_gndret.py
-   9ec3c20ab9d5082d v2/docs/records/l8r2/l8r2_gndret.out
+   feff4b7c56598cc0 v2/docs/records/l8r2/l8r2_gndret.py
+   d6d86506bdfe7291 v2/docs/records/l8r2/l8r2_gndret.out
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
@@ -13,6 +13,8 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
    94e4568e3abe8ab5 v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
+   58e26c67987b1daa v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
+   2e64b5bf2d9cd3bc v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
 
 1. THE SOLVER: l8r2_gndret.py's conductors, contact box and monotone vertex, imported unchanged; ONE term added, Rs in series with
    the dedicated return's bundle. At Rs = 0 it reproduces the record's enumerated extremes on every case and both copper ends: yes
@@ -64,9 +66,24 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
        23 to 47 mm (a = 1.5 to 3 mm; still a placement question): the copper weight is the owner's open decision (record l9stk 14.7;
        the surcharge NOT READ); it is a DECLARATION bound (every lead at its declared peak at once), above every state of the budget
      the least ratings at the inside air (INFERRED derating): not realisable at 0.5 oz for any case (see the table)
+   2b. L8R2-F33a ON THE PLACEMENT AS DRAWN (the owner's amendment 1, the coordinator's INBOX 11): each 5 V lead's ground land (pin 2)
+     read from the placed boards (pinned above; footprint blocks parsed), the distance a return socket may have: 16.6 mm (the largest
+     steady state, 0.5 oz, a 1.5 mm land group)
+     board A: J_5V_DEV (149.20, 34.45); J_5V_S1 (101.20, 34.45); J_5V_S2 (117.20, 34.45); J_5V_S3 (133.20, 34.45); J_5V_IOC not placed (record l9t5's I-03 lead, Layer 10's placement)
+       ONE CLUSTER for every entry: the smallest circle holding them has radius 24.0 mm: NOT within reach
+       ONE SOCKET A GROUP: J_5V_S1 0.0 mm from a socket at the group's centre (lands 0.0 mm apart); J_5V_S2 with J_5V_S3 8.0 mm from a socket at the group's centre (lands 16.0 mm apart); J_5V_DEV with J_5V_IOC 0.0 mm from a socket at the group's centre (lands 0.0 mm apart), J_5V_IOC to be placed beside it
+     board B: J_5V_DEV (36.48, 51.65); J_5V_S1 (59.70, 193.95); J_5V_S2 (179.20, 193.45); J_5V_S3 (191.70, 193.95); J_5V_IOC not placed (record l9t5's I-03 lead, Layer 10's placement)
+       ONE CLUSTER for every entry: the smallest circle holding them has radius 105.3 mm: NOT within reach
+       ONE SOCKET A GROUP: J_5V_S1 0.0 mm from a socket at the group's centre (lands 0.0 mm apart); J_5V_S2 with J_5V_S3 6.3 mm from a socket at the group's centre (lands 12.5 mm apart); J_5V_DEV with J_5V_IOC 0.0 mm from a socket at the group's centre (lands 0.0 mm apart), J_5V_IOC to be placed beside it
+     READ: the three sockets as one cluster cannot serve board B's entries (they sit 211 mm apart at most); one socket a group
+       (J_GR1 beside J_5V_S1; J_GR2 between J_5V_S2 and J_5V_S3; J_GR3 beside J_5V_DEV with J_5V_IOC placed beside it, on both boards,
+       the same lead serving the same group on each) holds every entry within 8.0 mm of its socket on both boards: MET on the
+       placement as drawn, by a placement of the three new sockets and J_5V_IOC only (no drawn part moves). MODEL: each lead's return
+       taken to its nearest socket; the free area at each site (courtyards) and each lead's 150 mm reach between its two groups are
+       Layer 10's placement facts, not read here (SESSION decision L8R2-D9: the split arrangement is the condition's form)
    DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return
-     socket's land within 17 mm (the largest steady state, the tightest service case) of the 5 V entries on both boards, every
-     ground plane joined solidly; the Layer 10
+     socket's land within 17 mm (the largest steady state, the tightest service case) of the 5 V entries it serves on both boards
+     (one socket a group, 2b: realisable on the placement as drawn), every ground plane joined solidly; the Layer 10
      validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and
      stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared
      upper bound's printed row and every least-rating row at 0.5 oz, which no placement realises; the smallest decision that removes
@@ -163,5 +180,7 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
    V6-B2: with the monitor's and the QMX's shares added the counted rows hold on the printed ratings at Rs = 0                          yes
    V6-m12: F-4b puts a ribbon over its printed 1 A by under 1 percent; the fourth lead would hold it                                    yes
    V6-m8: neither XT60 sheet names a board-soldered end                                                                                 yes
+   L8R2-F33a on the placement as drawn: one cluster of sockets is NOT within reach of every 5 V entry on board B                        yes
+   L8R2-F33a on the placement as drawn: one socket a group (S1; S2 with S3; DEV with IOC) is within reach on both boards                yes
 
 l8r2_p0: done

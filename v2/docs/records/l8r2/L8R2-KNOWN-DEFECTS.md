@@ -1069,6 +1069,14 @@ CONDITIONAL on the model's figures, now with its conditions named and bounded. N
 leads' pin 2 lands on board B, the 5 V stages' outputs on board A), both boards together, at most each case's bound in `l8r2_p0.out`
 section 2; the geometry it rests on is the spreading model on record l9stk's stackups (board A two ground planes, board B three, 0.5 oz,
 15 % thin) with the lands solidly joined at L8R2-F33's widths. It is a layout condition, PROVISIONAL until the routed boards' extraction.
+**On the placement as drawn (the owner's amendment 1; `l8r2_p0.out` 2b):** the 5 V entries' ground lands read from the placed boards
+(board A's four at y 34.45 mm, x 101.2 to 149.2 mm; board B's J_5V_DEV at (36.48, 51.65) and J_5V_S1 to S3 along y 194 mm, 211 mm
+apart at most; J_5V_IOC not yet placed on either board) cannot be reached by the three sockets as one cluster (the smallest circle
+holding board B's has radius 105.3 mm, board A's 24.0 mm, against 16.6 mm). One socket a group, the same lead serving the same group on
+both boards, holds every entry within 8.0 mm of its socket: J_GR1 beside J_5V_S1, J_GR2 by J_5V_S2 and J_5V_S3, J_GR3 by J_5V_DEV with
+J_5V_IOC placed beside it. That is the condition's form (SESSION decision L8R2-D9: realisable on the drawn floor plans by placing
+only the new parts; the sites' free area and each lead's 150 mm reach are Layer 10's placement facts). The fourth lead or a bar is
+therefore not needed as the correction for the service cases; the declared upper bound's printed row stays STILL OPEN as before.
 
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7 and 6b)
 
