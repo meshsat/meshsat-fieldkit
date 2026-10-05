@@ -19,7 +19,7 @@ closed, the cold connection's slew margin, and two bench rows that confirm the n
 |---|---|---|---|
 | S1, the guard-on step | D-10 closed for the port (PV_F, Q12's VDS, INP, EN, D4, TRK_VS, U18 and U23) | `apply_gen_sch_e_solar_guard.py` (R-173), R-176 rows 2 and 3, R-180, IF-01 | the port's ratings hold their lines from the source loops the record prints (PV_F's 90 V line from 2.44 uH, the 80 V recommended row from 4.03 uH; on the selected circuit U18 and U23 hold their 1.8 V line at 1.04 uH, 1.16 V, and fail at the envelope's least 0.30 uH, 2.57 V); below them the guard-on event must be removed (route B2, a presence contact on the solar receptacle, Layer 7) or the source's loop bounded by the kit's rules (R-180) |
 | S2, the cold connection | D-10's cold-connection margin line | R-176 row 2 | the absolute 60 V/us holds over the whole envelope (at most 56.1 V/us, MODELED); the 54 V/us SESSION line holds from 0.53 uH |
-| S3, A7 at zero differential | the regulation's lower band (energy only) | `apply_gen_sch_e_p0sol.py`, IF-02 | the regulation's band is computed with A7 sourcing 0 uA; any current A7 sources only lowers the regulated input current (8705af p.31) |
+| S3, A7 at zero differential | the regulation's lower band (energy) and, for a sink the sheet's text excludes, its margin to the trip | `apply_gen_sch_e_p0sol.py`, IF-02 | the regulation's band is computed with A7 at 0 uA; any current A7 sources lowers the regulated input current (8705af p.31); a sink (INFERRED absent) is covered by the margin up to 3.67 uA |
 | S4, the regulation at 25 V | D-16's regulation row (R-189 as rewritten) | IF-02, R-20 | the computed band, nominal 2.538 A, at most 2.921 A, at least 2.184 A with A7 at 0 uA |
 
 ## Specimen, quantities and pass limits
@@ -46,7 +46,7 @@ INP under 18 V, PV_F under 85 V.
 
 **S3, A7's output at zero differential.** Five LT8705AIUHF#PBF on a test fixture, CSPIN = CSNIN = VIN at 16 V and 25 V,
 IMON_IN held at 1.20 V by a source-measure unit, the current out of IMON_IN measured at -20 C, +25 C and +62 C (case).
-**Pass:** at most 1.0 uA at every point (the regulation then within 3 % of its computed setting).
+**Pass:** from -0.5 uA (sinking) to +1.0 uA (sourcing) at every point (the regulation then within 3 % of its computed setting, and its margin to the trip at least 0.33 A).
 
 **S4, the regulation at REQ-016's 25 V corner.** A PV emulator set to the panel's curve with 25 V open circuit, the stage into
 a 12.0 V bus and into a 15.1 V bus, cold-soaked at -20 C and in 62.1 C air. **Pass:** the regulated input current inside 2.18

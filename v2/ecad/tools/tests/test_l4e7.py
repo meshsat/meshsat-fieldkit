@@ -1709,7 +1709,8 @@ def t_p0sol_the_selection_verdicts_and_owed_texts_are_written_where_they_belong(
     for s in ("REPRODUCED: D-16 stands on the base", "REPRODUCED: D-10 stands on the base", "BYTE-IDENTICAL", "THE SELECTION (SESSION",
               "): (C2).", "D-16 (B6-ENG-2): CORRECTED on the drafted circuit", "D-10 (B6, L4-F01): NARROWED, OPEN", "REJECTED"):
         assert s in out, s
-    for fig in ("0.1174", "-0.3021", "0.3645 A", "2.5378 A", "2.9212 A", "0.1093 A", "16.90 V", "10.05 V", "+1.34 %"):
+    for fig in ("0.1174", "-0.3021", "0.3645 A", "2.5378 A", "2.9212 A", "0.1093 A", "16.90 V", "10.05 V", "+1.34 %", "93.5783 W",
+                "1.052 ms", "3.67 uA"):
         assert fig in out and fig in page, fig
     assert page.startswith("DONE:") and "NOT DONE:" in page and "NEXT:" in page
     assert "–" not in page and "—" not in page

@@ -59,7 +59,9 @@ the declared envelope.
   output on IMON_IN with only R16 and C65; R16 34.0k and R97 24.9k; C79; M1's drain and every input ceramic on U5's input; U18
   and the trip unchanged). Four mutations (CSNIN on its own net, U23's VIN- off the bank, R59 restored, U23's output elsewhere)
   each fail the check. d8dec31's input capacitor still takes C149.
-- **The fault case, D-10 (2b, 2c).** U5's CSPIN to CSNIN is 0 V in every state (NETLIST). On the record's model with RSENSE1's
+- **The fault case, D-10 (2b, 2c).** U5's CSPIN to CSNIN is 0 V in every state (NETLIST; a layout obligation for board E's
+  constraints: pins 32 and 33 joined to pin 34 at the package by a trace that carries only their bias current, U23's Kelvin pair
+  from the bank's pad centres beside U18's). On the record's model with RSENSE1's
   branch tied, at the reference loop every listed rating holds its line except PV_F against the TPS4811-Q1's recommended 80 V
   row (83.48 V; L6P-F10, unchanged): the bank's differential 0.483 V (corner search 0.548 V) of U18's and U23's 1.8 V line, INP
   16.67 V with R97 24.9k, Q12's VDS 74.85 V, TRK_VS 29.14 V, D4 no current. INP with R97 24.9k stays under 18 V for every PV_F up
@@ -82,13 +84,17 @@ the declared envelope.
   2.51). HOLDS, CONDITIONAL on the typical loop rows as before.
 - **The start, ratings, window (2g).** The start puts at most 1.762 A through the bank; U23 then holds IMON_IN at most 0.93 V,
   under its 1.55 V fault threshold. U23 sits on U18's nets pin for pin, so every rating the record gives for U18 holds for U23.
-  RSENSE1's 0.133 W is gone. The hold, the cut-off's band, the backstop and its 100 W bound (93.5521 W static), REQ-016's window
-  and D4 are unchanged.
+  RSENSE1's 0.133 W is gone. The 100 W bound, re-run: U23's VIN+ pin takes its output current and its input bias (the record's
+  SESSION 1 mA) from ahead of the bank, as U18's does, so the static bound rises from 93.5521 W to 93.5783 W, and check (b)'s
+  response allowance (C79's charge added) falls from 1.087 ms to 1.052 ms, still over the required 0.401 ms. The hold, the
+  cut-off's band, the trip itself, REQ-016's window and D4 are unchanged.
 - **The one new unprinted term (2h), PROVISIONAL under the scope amendment.** A7's own output with CSPIN = CSNIN: the sheet
-  prints no current for a negative differential and none at zero; A7 never sinks, so any current it sources only lowers the
-  regulation (about 3 % per uA), never raises it toward the trip. Bounded provisional choice: the band above with A7 at 0 uA.
-  Validation: item S3 of `SUPPLIER-P1-1-P0SOL.md` (five parts, -20, +25, +62 C, pass at or under 1 uA); the question to Analog
-  Devices is drafted, `clarification/analog-devices-lt8705a-p0sol.txt` (item 8), UNSENT.
+  prints no current out of IMON_IN for a negative differential and no figure at zero; any current A7 sources lowers the
+  regulation (about 3 % per uA), away from the trip. That it cannot sink is read from that text (INFERRED); a sink would raise the
+  regulation, and the correlated margin falls to the accepted design's 0.1130 A only at 3.67 uA. Bounded provisional choice: the
+  band above with A7 at 0 uA. Validation: item S3 of `SUPPLIER-P1-1-P0SOL.md` (five parts, 16 V and 25 V, -20, +25, +62 C, pass
+  from -0.5 uA sinking to +1.0 uA sourcing); the question to Analog Devices is drafted,
+  `clarification/analog-devices-lt8705a-p0sol.txt` (item 8), UNSENT.
 
 ## 4. What stays open, exactly
 
@@ -117,10 +123,11 @@ scope amendment, with the exact next actions:
   port-level residual (PV_F, Q12's VDS, EN, D4, TRK_VS, U18 and U23 below the port's floors; PV_F over the recommended 80 V row
   at 3.30 uH, L6P-F10) and the cold connection's slew margin line under 0.53 uH; next: route B2 at Layer 7, or P1-1 narrowed."
 - **D-16** (8a and 8c): "CORRECTED in draft by P0-7 (R-NEW): U5's input sense not used (0 V by construction), the regulation's
-  sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's zero-differential output (energy
-  only, S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 narrows to the port.
+  sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's zero-differential output (sourcing
+  lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 narrows to the port.
 - **IF-01:** the D-10 text above; "U5's pins" leaves the NOT MET list. **IF-02:** "the regulation 2.5378 A nominal, 2.9212 A
-  highest (U23 on the bank, R16 34.0k); the margin to the trip 0.3645 A, correlated; A7 at zero differential PROVISIONAL".
+  highest (U23 on the bank, R16 34.0k); the margin to the trip 0.3645 A, correlated; the static bound 93.5783 W (U23's VIN+
+  currents added) and check (b)'s allowance 1.052 ms; A7 at zero differential PROVISIONAL".
 - **The change list (section 3), a new row R-NEW** after R-173 and before R-177: "board E, gen_sch_e.py,
   `apply_gen_sch_e_p0sol.py` (13 edits): R59 and TRK_VIN removed, U5's pins 32 to 34 on TRK_VS, U23 INA169 (C44322) on the bank
   into IMON_IN with C79, R16 34.0k (C705770), R97 24.9k (C136967); AFTER the input limit, the backstop and the solar guard;

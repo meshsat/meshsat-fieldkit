@@ -546,10 +546,10 @@ def compute():
         return ina_out(v, base, sgn) + sgn * base * abs(rr - 25e3) / ro169
     vgrid = [lo_h + (v_oc - lo_h) * k_ / 40.0 for k_ in range(41)]
 
-    def margin_c(rm_):
+    def margin_c(rm_, a7z=0.0):
         """The correlated margin, A: the trip's least sense voltage less the regulation's highest, over the bank at its highest
-        resistance (the same bank under both), the least over the regulation's input range."""
-        return min((vs_trip(v, -1, True) - vreg_c(v, 1, rm_)) / rb_hi for v in vgrid)
+        resistance (the same bank under both), the least over the regulation's input range; a7z < 0: A7 sinking (A)."""
+        return min((vs_trip(v, -1, True) - vreg_c(v, 1, rm_, a7z=a7z)) / rb_hi for v in vgrid)
     cands = sorted(v_ for v_ in RT if 30e3 <= v_ <= 36e3 and RT[v_][2] >= LS.STOCK_MIN)
     sp_C = {rm_: spectrum(lambda f_, v_, rm_=rm_: s1_bank(f_, rm_, C65v, max(vreg_c(vv_, 1, rm_) / rb_lo for vv_ in (lo_h, v_oc)), v_))
             for rm_ in (R16v,)}
@@ -576,7 +576,30 @@ def compute():
     acc = dict(nom=cdec["inom"], hi=cdec["reg_hi25"], m=best["m"], loop=best["loop_be"])
     # A7's output at zero differential: one-sided (8705af p.31), unprinted; its break-even against the accepted nominal
     a7z_rows = [(a_, vreg_c(v_oc, -1, R16v, a7z=a_ * 1e-6) / rb_hi) for a_ in (0.0, 0.5, 1.0, 2.0, 5.0)]
+
+    def sink_be(target_):
+        """The sink of A7 (uA) at which the correlated margin falls to target_ (A); A7 is not expected to sink (p.31), INFERRED."""
+        lo_, hi_ = 0.0, 50.0
+        for _ in range(60):
+            mid_ = 0.5 * (lo_ + hi_)
+            lo_, hi_ = (mid_, hi_) if margin_c(R16v, a7z=-mid_ * 1e-6) > target_ else (lo_, mid_)
+        return lo_
+    sink_rows = [(a_, margin_c(R16v, a7z=-a_ * 1e-6)) for a_ in (0.5, 1.0, 2.0)]
+    # the static bound and check (b)'s allowance with U23 added: U23's VIN+ pin on PV_P ahead of the bank carries its output current
+    # (at the trip's highest sense voltage, its highest transconductance) and its input bias (the record's SESSION assumption, 1 mA),
+    # both bypassing the bank as U18's do; C79 adds to the capacitor input energy
+    i_b169 = cdec["i_b"]
+    pb23 = max(v * (gm169[1] * (1 + nl169) * vs_trip(v, 1, True) + i_b169) for v in vgrid)
+    p_static_new = cdec["p_static"] + pb23
+    e_cap_new = cdec["e_cap"] + 0.1e-6 * 1.10 * v_oc ** 2
+    W_AVG = R["decision"]["w_avg"]
+    t_allow_new = ((100.0 - p_static_new) * W_AVG - e_cap_new - cdec["e_f"]) / (cdec["p_src"] - p_static_new)
+    t_allow_rep = ((100.0 - cdec["p_static"]) * W_AVG - cdec["e_cap"] - cdec["e_f"]) / (cdec["p_src"] - cdec["p_static"])
+    if abs(t_allow_rep - cdec["t_allow"]) > 1e-12:
+        refuse(4, "check (b)'s allowance does not reproduce the record's (%.9f against %.9f)" % (t_allow_rep, cdec["t_allow"]))
     O["C"] = dict(R16=R16v, R16code=draft.R16_NEW[1], R97=R97v, R97code=draft.R97_NEW[1], reg=reg, sel=reg_sel, room=room_sel, acc=acc,
+                  sink=sink_rows, sink_be_acc=sink_be(best["m"]), pb23=pb23, p_static=(cdec["p_static"], p_static_new),
+                  t_allow=(cdec["t_allow"], t_allow_new), t_need=cdec["t_fac"] * cdec["t_resp_typ"], i_b169=i_b169,
                   worst=wC, sp=sp_C[R16v], a7z=a7z_rows, lc169=(lc169.get("model"), lc169.get("stock")), cands=cands,
                   f_amp=bw169 * 20e3 / R16v)
     # (C1) the same alternative with its sense at the port's R87 (U21's IMON), for the record: the regulation would hold the port
@@ -881,14 +904,15 @@ def render(O, K, R, b6, r3):
          "dependencies): ", "  ", "(C2). It removes U5's absolute-rating violation of D-10 and D-16's operating-range exceedance by "
          "construction, at every source loop, with no new loop dependency; it adds one part the design already carries (an INA169) and "
          "one 100 nF, removes one (RSENSE1, whose inductance no maker prints) and changes two values; its one new unprinted term (A7's "
-         "own output at zero differential) can only lower the regulation, never raise it (section 2h). Over (C3): C2's averaging does "
+         "own output at zero differential) lowers the regulation if A7 sources, and a sink, which p.31's text excludes (INFERRED), "
+         "would have to reach %.2f uA to bring the margin to the accepted design's (section 2h). Over (C3): C2's averaging does "
          "not depend on the amplifier's unprinted bandwidth and its CS101 margin is %.1f times C3's; C3 keeps the regulation "
          "independent of the trip and holds U23's rating at the envelope's least loop, where the port itself fails (section 3). The "
          "price of C2, stated: the regulation and the 100 W trip share the bank, so a short across the bank, which already defeats the "
          "trip (the record's single-fault list), now also defeats the regulation (never credited for the 100 W bound); Layer 8's fault "
          "table carries it. Reversal: to (C3), the same draft with U23 on R59's pads and R59 kept, if Layer 8's fault analysis rules the "
          "shared shunt out; the drafted RSENSE1 with A7 returns only with a measured or maker-stated bound that keeps U5's pins inside "
-         "+-0.3 V for the declared envelope." % (C_["sel"]["m"] / O["C3"]["m"]))
+         "+-0.3 V for the declared envelope." % (C_["sink_be_acc"], C_["sel"]["m"] / O["C3"]["m"]))
     P("")
     # ---------------------------------------------------------------- 2
     P("2. THE SELECTED CIRCUIT (C2) ON BOTH CASES")
@@ -994,18 +1018,27 @@ def render(O, K, R, b6, r3):
     wrap("  2g ", "     ", "THE START, THE RATINGS AND THE WINDOW. The start through Q12 puts at most %.3f A through the bank (the record's "
          "figure with C79 added): U23 then holds IMON_IN at most %.3f V even with no filter, under the IMON_IN fault's least %.2f V, "
          "so the start never trips U5. U23 sits on U18's nets pin for pin, so every rating check (c) and the surge rounds give for U18 "
-         "holds for U23 (NETLIST); its supply draw at most %.1f mW. RSENSE1's loss (%.3f W at the regulation's highest) is gone. "
+         "holds for U23 (NETLIST); its supply draw at most %.1f mW. RSENSE1's loss (%.3f W at the regulation's highest) is gone. The "
+         "100 W bound, re-run: U23's VIN+ pin, like U18's, takes its output current and its input bias (the record's SESSION "
+         "assumption, %.0f mA) from ahead of the bank, so the static bound rises by at most %.4f W, from %.4f W to %.4f W, and check "
+         "(b)'s response allowance, with C79's charge added, falls from %.3f ms to %.3f ms, still over the ten typical sums' %.3f ms. "
          "Unchanged: the hold (R8, R9; FBIN on PV_P), the cut-off's band (28.55 to 31.06 V rising, 27.07 V or more falling), the "
-         "backstop and its 100 W bound (93.5521 W static; check (b)'s 1.087 ms), REQ-016's window, D4, the guard's start." % (
-             st["i"], st["v_im"], st["ovt_lo"], 1e3 * st["p23"], st["r59_loss"]))
-    wrap("  2h ", "     ", "THE ONE NEW UNPRINTED TERM: A7's own output with CSPIN = CSNIN. The sheet prints no current for a negative "
-         "differential and none at zero (p.31); A7 never sinks, so whatever it sources at zero ADDS to U23's current and lowers the "
-         "regulated input current; it cannot raise it toward the trip. The regulation's lowest at 25 V with A7 sourcing (ASSUMPTION, "
-         "a sensitivity): %s. A bounded PROVISIONAL choice (the scope amendment, point 2): the regulation's band above holds with A7 at "
-         "0 uA, the protection holds whatever it is; the energy at the limit falls by about 3 %% per uA. Supplier validation: the IMON_IN "
-         "pin current of five LT8705AIUHF parts with CSPIN = CSNIN = VIN = 25 V and IMON_IN held at 1.2 V, at -20, +25 and +62 C; pass "
-         "at or under 1 uA (the regulation within 3 %% of its setting); the clarification to Analog Devices is drafted, item 8, UNSENT."
-         % ", ".join("%.1f uA %.4f A" % (a_, i_) for a_, i_ in C_["a7z"]))
+         "trip itself, REQ-016's window, D4, the guard's start." % (
+             st["i"], st["v_im"], st["ovt_lo"], 1e3 * st["p23"], st["r59_loss"], 1e3 * C_["i_b169"], C_["pb23"], C_["p_static"][0],
+             C_["p_static"][1], 1e3 * C_["t_allow"][0], 1e3 * C_["t_allow"][1], 1e3 * C_["t_need"]))
+    wrap("  2h ", "     ", "THE ONE NEW UNPRINTED TERM: A7's own output with CSPIN = CSNIN. The sheet prints no current out of IMON_IN for a "
+         "negative differential and no figure at zero (p.31); whatever A7 sources at zero ADDS to U23's current and lowers the "
+         "regulated input current, away from the trip. The regulation's lowest at 25 V with A7 sourcing (ASSUMPTION, "
+         "a sensitivity): %s. That A7 cannot sink is read from p.31's statement that a negative differential drives no current out of "
+         "the pin (INFERRED, asked of Analog Devices); were it to sink, the regulation would rise toward the trip: the correlated "
+         "margin with A7 sinking %s, and it falls to the accepted design's %.4f A only at a sink of %.2f uA. A bounded PROVISIONAL "
+         "choice (the scope amendment, point 2): the regulation's band above holds with A7 at 0 uA; the energy at the limit falls by "
+         "about 3 %% per uA sourced. Supplier validation: the IMON_IN pin current of five LT8705AIUHF parts with CSPIN = CSNIN = VIN = "
+         "16 V and 25 V and IMON_IN held at 1.20 V, at -20, +25 and +62 C; pass from -0.5 uA (sinking) to +1.0 uA (sourcing): the "
+         "regulation within 3 %% of its setting and the margin to the trip at least %.4f A; the clarification to Analog Devices is "
+         "drafted, item 8, UNSENT." % (", ".join("%.1f uA %.4f A" % (a_, i_) for a_, i_ in C_["a7z"]),
+                                       ", ".join("%.1f uA %.4f A" % (a_, m_) for a_, m_ in C_["sink"]), C_["acc"]["m"], C_["sink_be_acc"],
+                                       C_["sink"][0][1]))
     P("")
     # ---------------------------------------------------------------- 3
     P("3. WHAT STAYS OPEN, EXACTLY")
@@ -1023,7 +1056,8 @@ def render(O, K, R, b6, r3):
     P("")
     P("4. VERDICTS")
     P("  D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in")
-    P("    one energy term (A7's zero-differential output, 2h), which cannot move the regulation toward the trip.")
+    P("    one term (A7's zero-differential output, 2h): sourcing lowers the regulation (energy only); a sink, excluded by p.31's text")
+    P("    (INFERRED), is covered by the margin up to %.2f uA." % C_["sink_be_acc"])
     P("  D-10 (B6, L4-F01): NARROWED, OPEN. CORRECTED: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line")
     P("    (R97 24.9k). OPEN: the guard-on event's port-level residual below the port's own floors and PV_F over the recommended 80 V row at the")
     P("    reference loop (L6P-F10); the cold connection's slew margin line at the least loop. Next: B2 at Layer 7, or P1-1 (narrowed).")
