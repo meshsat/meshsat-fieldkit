@@ -1,6 +1,6 @@
 # MeshSat Field Kit hardware
 
-Hardware for the MeshSat field kits: the portable go-boxes that carry a MeshSat Bridge (a Raspberry Pi 5 in V1, three Compute Module 5 in V2) with its radios, satellite modem, cellular modem, GPS and power into the field. The software lives in the [meshsat](https://github.com/meshsat/meshsat) repository. This repository holds the mechanical and electronic design, the build records and the manufacturing files.
+Hardware for the MeshSat field kits, the portable go-boxes that carry a MeshSat Bridge (a Raspberry Pi 5 in V1, three Compute Module 5 in V2) with its radios, satellite modem, cellular modem, GPS and power into the field. Since October 2026 it also holds the compact kit, the pocket-sized node (`compact/`). The software lives in the [meshsat](https://github.com/meshsat/meshsat) repository. This repository holds the mechanical and electronic design, the build records and the manufacturing files.
 
 MeshSat is a prototype. Nothing here has been through a field deployment yet. The V1 kits are bench and demo units. The V2 boards are designed and generated, and the engineering foundations beneath them are still being completed: no V2 board is ready for layout, no layout of boards A, B, C, D, E or P carries its board's corrected schematic (E5 has none), and none has been fabricated or ordered ([`v2/docs/CURRENT-EVIDENCE.md`](v2/docs/CURRENT-EVIDENCE.md): "Foundations incomplete; 0 boards ready for layout; 0 physically verified").
 
@@ -8,6 +8,7 @@ MeshSat is a prototype. Nothing here has been through a field deployment yet. Th
 |---|---|---|
 | `v1/` | tesseract and parallax as built: IP67 case, HDPE plates on M3 rods, UV-K5 + AIOC APRS chain, per-kit BOM and GPIO pinouts, FreeCAD plate model | built April 2026, in use |
 | `v2/` | the Peli 1450 go-box of the MESHSAT-830 generation: seven carrier PCBs around three Compute Module 5 slots, an aluminium control face on the 1450PF panel frame with a sealed monitor in it and a backer board under it, a removable stack on a floor dock, a 4S pack built for the kit (about 145 Wh) in the east pocket | first generated 7 September 2026; circuits corrected on 26 September 2026 in the schematics only; foundations incomplete, 0 boards ready for layout, nothing built or ordered |
+| `compact/` | the compact kit, the pocket-sized node: the version table for v0 (XIAO ESP32-S3 + Wio-SX1262 + RockBLOCK 9603 bench unit), v1 (LILYGO T-Beam Supreme + RockBLOCK 9603 for a Peli 1020) and v2 (T-Beam Supreme over a RockBLOCK 9704-SMA in a 3D-printed stacked enclosure, OpenSCAD, in `compact/v2/`) | v0 and v1 are bench units running since September 2026 (the v1 Peli build is not finished); v2 designed 5 October 2026, cleared by its own audit response for prototype printing only, nothing printed or fitted |
 
 ## V1: tesseract and parallax
 
@@ -56,6 +57,10 @@ Concept renders of the assembled kit as designed (not built; `v2/cad/render/` ho
 | the switch corner | closed for transport |
 
 **The V2 build guide, [`v2/BUILD.md`](v2/BUILD.md), is the 7 September generation's guide, kept as the assembly narrative and not to be used to order boards:** no board is ready for layout, and the order folder is rebuilt and quarantined with nothing ordered from it (owner decision 41 of 25 September 2026). Sources, generators, vendor references, the release and the order record are described in [`v2/README.md`](v2/README.md). The design record is [`v2/docs/MESHSAT-709-geometry-appendix.md`](v2/docs/MESHSAT-709-geometry-appendix.md), the build procedure [`v2/docs/ASSEMBLY.md`](v2/docs/ASSEMBLY.md), the panel controller contract [`v2/docs/PANEL.md`](v2/docs/PANEL.md).
+
+## Compact kit: the pocket-sized node (compact v0, v1, v2)
+
+The compact kit is the small MeshSat node: a Meshtastic LoRa radio and an Iridium modem in a case that fits a pocket, running the MeshSat fork of the Meshtastic firmware and talking to the MeshSat phone apps over one Bluetooth link. It is a kit in its own right beside the field kits, with its own version line: **v0** is the Seeed XIAO ESP32-S3 + Wio-SX1262 + RockBLOCK 9603 bench unit in a Peli 1050; **v1** the LILYGO T-Beam Supreme + RockBLOCK 9603 with one 18650 cell, meant for a Peli 1020 (running on the bench since 21 September 2026, the Peli build not finished); **v2** the T-Beam Supreme over a RockBLOCK 9704-SMA in a 3D-printed stacked enclosure (ASA, a TPU button membrane, an O-ring cord, a polycarbonate window over the OLED), designed in OpenSCAD as `meshsat-enclosure` v0.6 on 5 October 2026 and cleared by its own audit response for prototype printing only. [`compact/README.md`](compact/README.md) holds the version table; [`compact/v2/`](compact/v2/README.md) the enclosure source, print files, test coupons, renders and the validation chain (clash check against the makers' STEP models, mesh report). Nothing of v2 has been printed or fitted: the first test coupons are being printed in October 2026. The firmware, the wiring tables and the Bluetooth contract live in [meshsat-esp32](https://github.com/meshsat/meshsat-esp32) and [meshsat-firmware](https://github.com/meshsat/meshsat-firmware).
 
 ## How to build one
 

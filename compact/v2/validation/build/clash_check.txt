@@ -1,0 +1,31 @@
+body         vs Supreme STEP                          :     0.000 mm3
+body         vs RockBLOCK 9704 STEP                   :     0.000 mm3
+body         vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+a_separator  vs Supreme STEP                          :     0.000 mm3
+a_separator  vs RockBLOCK 9704 STEP                   :     0.000 mm3
+a_separator  vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+a_lid        vs Supreme STEP                          :     0.000 mm3
+a_lid        vs RockBLOCK 9704 STEP                   :     0.000 mm3
+a_lid        vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+a_membrane   vs Supreme STEP                          :     0.000 mm3
+a_membrane   vs RockBLOCK 9704 STEP                   :     0.000 mm3
+a_membrane   vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+a_plungers   vs Supreme STEP                          :     0.000 mm3
+a_plungers   vs RockBLOCK 9704 STEP                   :     0.000 mm3
+a_plungers   vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+a_retainer   vs Supreme STEP                          :     0.000 mm3
+a_retainer   vs RockBLOCK 9704 STEP                   :     0.000 mm3
+a_retainer   vs 18650 holder envelope (LilyGO shell)  :     0.000 mm3
+body         x a_separator :    -0.000 mm3 
+body         x a_lid       :    -0.000 mm3 
+body         x a_membrane  :    -0.000 mm3 flange seated in pocket (contact only expected)
+body         x a_plungers  :     0.000 mm3 
+body         x a_retainer  :    -0.000 mm3 
+a_separator  x a_plungers  :     0.000 mm3 
+a_separator  x a_retainer  :     0.000 mm3 
+a_lid        x a_membrane  :     0.000 mm3 
+a_lid        x a_retainer  :     0.000 mm3 
+a_membrane   x a_plungers  :    17.599 mm3 membrane drawn uncompressed: 0.3 mm onto plunger heads (intended)
+a_membrane   x a_retainer  :   116.910 mm3 flange compression 0.3 mm (intended)
+a_plungers   x a_retainer  :     0.000 mm3 
+STATUS: PASS
