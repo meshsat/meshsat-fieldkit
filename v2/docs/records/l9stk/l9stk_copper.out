@@ -8,7 +8,7 @@ E11-29 as its section 19c restates it; no width, limit, split, field or barrel f
    board_a         v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb  sha256 58e26c67987b1daa
    board_e         v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb  sha256 a462ac2620b9b8d3
    chain           v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c
-   charger_draft   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 bfdead54766199eb
+   charger_draft   v2/docs/records/l4e11/apply_gen_sch_a_charger.py  sha256 0e215988ba2a929b
    dc_drop         v2/ecad/tools/dc_drop.py  sha256 0b28f57e0a09a385
    decisions       v2/ecad/tools/pcb_decisions.yaml  sha256 823a6b32baf41481
    ecss_70_12c     v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md  sha256 6a8ae167b317221c
@@ -16,7 +16,7 @@ E11-29 as its section 19c restates it; no width, limit, split, field or barrel f
    gauge_image     v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md  sha256 6726f23778f48e10
    gen_sch_a       v2/ecad/tools/gen_sch_a.py  sha256 6a136feec6c9cf4e
    gen_sch_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
-   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
+   l4e11_out       v2/docs/records/l4e11/l4e11_power.out  sha256 d0aa86fe88e03eee
    l4e12_out       v2/docs/records/l4e12/l4e12_thermal.out  sha256 3bdd5e3ebba68b07
    l9pwr_out       v2/docs/records/l8r2/inputs/l9pwr_budget-38ef774c.txt  sha256 a2fe27d3f2cf1ddf
    lcsc_fill       v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae

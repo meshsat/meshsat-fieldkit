@@ -10,7 +10,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
    c27ebbe0e5987043 v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py
-   cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py
    bc3fb88bae6a166f v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
@@ -58,7 +58,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    6a1a50f08917216e v2/docs/records/l9t5/l9t5_case.py
    c755448bd06bbe7d v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   14afaa1583f17743 v2/docs/records/l8r2/l8r2_gndret.out
+   6145e2f1b5ef3991 v2/docs/records/l8r2/l8r2_gndret.out
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml

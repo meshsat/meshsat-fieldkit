@@ -5,7 +5,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
 0. INPUTS (sha256/16)
    cf216d4c1162798b v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py
    ea3b0cb6d96b12b9 v2/docs/records/efuse/apply_gen_sch_b_u24ilm.py
-   cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py
    bc3fb88bae6a166f v2/docs/records/l4e11/apply_gen_sch_a_dd7.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
    3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py

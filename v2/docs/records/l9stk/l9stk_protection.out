@@ -8,7 +8,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
 0. PINS (path  sha256/16)
    board_p          v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb  sha256 d79865e7b1aceb95
    copper           v2/docs/records/l9stk/l9stk_copper.py  sha256 896a14dc5b4df123
-   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 9eddb1ef271e0333
+   copper_out       v2/docs/records/l9stk/l9stk_copper.out  sha256 c7205c6368bca231
    csd17570         v2/vendor/battery/ti-csd17570q5b.pdf  sha256 596555c33dce1fca
    csd18510         v2/vendor/battery/ti-csd18510q5b.pdf  sha256 cb747de812f66859
    d4148            v2/vendor/power/st-semtech-1n4148w-c81598.pdf  sha256 54de8e4089bb8221
@@ -17,7 +17,7 @@ Desk arithmetic on committed files and makers' sheets; nothing was built, bought
    gen_sch_e        v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    gen_sch_p        v2/ecad/tools/gen_sch_p.py  sha256 740817ada5c8e14a
    jscj_2n7002      v2/vendor/power/jscj-2n7002-c8545.pdf  sha256 7941fb423af7c6c6
-   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
+   l4e11_out        v2/docs/records/l4e11/l4e11_power.out  sha256 d0aa86fe88e03eee
    l8r2_vbus20ov    v2/docs/records/l8r2/apply_gen_sch_a_vbus20ov.py  sha256 c2d16dba8dc5204f
    lcsc_fill        v2/ecad/tools/lcsc_fill.py  sha256 eb1f5e9f5e1ca9ae
    lm5069           v2/vendor/ti/ti-lm5069.pdf  sha256 d60d8106a6e81139
