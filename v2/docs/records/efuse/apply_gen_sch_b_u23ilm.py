@@ -11,7 +11,7 @@ The correction, one component's value: R36 750 Ohm 1 %, the value and code board
 C23241, +-100 ppm/K by Layer 6's catalogue reading). Equation 5 gives 1.2152 A nominal; with the sheet's +-10.4 % across
 process, voltage and temperature (Features and Figure 21) and the resistor's 1 % and 100 ppm/K over -20 to +85 C, the band is
 1.0718 to 1.3631 A (efuse_check.py out 4): at or above the LimeSDR's printed demand (4.5 W at C-DEV rev 1's 4.9019 V behind
-the eFuse's 0.131 Ohm, 0.9417 A; the host's 900 mA) and at or below the receptacle's 1.8 A and the switch's 2 A. The label
+the eFuse's 0.131 Ohm and J_LIME's two 30 mOhm contacts, 0.9534 A; the host's 900 mA) and at or below the receptacle's 1.8 A and the switch's 2 A. The label
 in the call follows the value; the +5V_LIME note and the _DEV_LOADS comment, which name the old resistor and its 3.0 A, are
 restated. The rail's declared 1.2 A typical and 3.0 A peak are NOT changed here (finding EF-L01: the generator owner's).
 
