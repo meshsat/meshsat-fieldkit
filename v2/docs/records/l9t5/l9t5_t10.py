@@ -47,7 +47,8 @@ DOCS = {"contract": "v2/docs/HW-FW-CONTRACT.md", "panel": "v2/docs/PANEL.md", "a
         "drafts": "v2/docs/records/l9t5/l9t5_drafts.py", "drafts_out": "v2/docs/records/l9t5/l9t5_drafts.out",
         "pre_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py", "pre_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py",
         "trace": "v2/docs/REQUIREMENTS-TRACE.md", "shdn": "v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py",
-        "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py", "cdev2": "v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md"}
+        "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py", "cdev2": "v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md",
+        "set_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocset.py", "set_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocset.py"}
 # the session's choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 TJ_GOAL = 125.0            # C: the junction this record holds each LDO to at the inside air (25 K under the sheet's 150 C absolute maximum)
 BOUND = ("VOS3", 144)      # the state the proposed contract row bounds each supervisor to: voltage scale 3, HCLK at most 144 MHz, the
@@ -662,6 +663,9 @@ def round5_faults(w, P, air, Q, tj_l, out):
                                                                           dto_s, resp, tj_l(resp, air), "holds" if tj_l(resp, air) <= TJ_GOAL else "FAILS"))
         worst[rev] = max(r[3] for r in by_rev[rev] if r[0] != "B7b")
     out["fault_rows"], out["worst"] = by_rev, worst
+    w("   the criterion per row (the owner's part 22; 10i reads every row again on both set points): every response and held row above is a")
+    w("     SUSTAINED state (a fault on the bus stays until repaired), so %.0f C applies, %.0f C being the absolute maximum and never an operating" % (TJ_GOAL, P["tj_ldo"]))
+    w("     target; the parts-alone column's B7a is a TRANSIENT the DTO ends in %.1f ms (its row is then the recessive figure)" % P["can_dto"][2])
     # both fabrics (row 8): the two worst responses together
     both = {}
     for rev in "YV":
@@ -913,6 +917,135 @@ def round5_answers(w, P, DP, air, hi3, Q, tj_l, out):
 
 def i_dom_of(P):
     return P["can_dom_hi"]
+
+
+FITTED_REV, COVER_REV = "V", "Y"   # SESSION L9T5-D7: the fitted revision's printed rows judge the design; rev Y's are the cover for rev X
+SET = os.path.join(HERE, "apply_gen_sch_%s_iocset.py")   # T10 round 5, part 22: the set point delta (L9T5-F22 drafted)
+R602_SET = 14.0e3
+
+
+def set_check(nl):
+    """the set point delta read on a board A netlist: R601 over R602 is 56.2k over 14.0k (0.1 %), its band 3.9063 to 4.1174 V."""
+    dv = CHK.divider(nl)
+    if not dv:
+        return "FAIL", ["no divider on U601's FB"]
+    why = []
+    if abs(dv[0] - R601) > 1e-6 or abs(dv[1] - R602_SET) > 1e-6:
+        why.append("the divider is %s over %s, wanted 56.2k over 14.0k" % (CHK.value(nl, dv[2]), CHK.value(nl, dv[3])))
+    if "0.1%" not in CHK.value(nl, dv[3]):
+        why.append("R602 is not a 0.1 % part")
+    return ("FAIL" if why else "DRAWN"), why
+
+
+def round5_part22(w, P, DP, air, hi3, Q, tj_l, out):
+    """10i: the owner's review of checkpoint 3 (part 22), items B and C: the criterion per state, the babbling and hung rows, the
+    set point delta drafted (L9T5-F22), the fitted revision made the model's case selection, the Layer 6 and Layer 12 rows drafted."""
+    i_aux, i_can = out["i_aux"], out["i_can"]
+    lo14, nom14, hi14 = CHK.vout_band(R601, R602_SET)
+    k13 = P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"])
+    k14 = P["theta_ldo"] * (hi14 - 3.3 * P["vout_lo"])
+    rows = []
+    for rev in (FITTED_REV, COVER_REV):
+        b_ = out["B"][(rev, air)]
+        fr = {r[0]: r for r in out["fault_rows"][rev]}
+        st = [("the bounded state (FW-B20, FW-B21)", b_[2], "sustained, served", TJ_GOAL)]
+        for fid in ("B1", "B2", "B3", "B4", "B5", "B6", "B7a"):
+            st.append(("%s with the response" % fid, fr[fid][3], "sustained, served (row 7)", TJ_GOAL))
+        st.append(("B7b, SHDN obeyed", fr["B7b"][3], "sustained, served (row 7)", TJ_GOAL))
+        st.append(("B7b, SHDN ignored (L9T5-D5)", fr["B7b"][1], "sustained, a failed part", TJ_GOAL))
+        st.append(("both fabrics faulted, responded", out["both"][rev][0], "sustained, row 8", TJ_GOAL))
+        st.append(("hung, DAR mis-set (the IWDG ends it)", fr["B6"][2], "transient, ended by the IWDG", P["tj_ldo"]))
+        st.append(("babbling (nothing ends it)", b_[1] + i_aux + 2 * P["can_dom_hi"], "sustained, a firmware fault", TJ_GOAL))
+        for lab, i, kind, lim in st:
+            rows.append((rev, lab, i, kind, lim, air + k13 * i, air + k14 * i))
+    out["p22_rows"] = rows
+    w("   10i. THE OWNER'S REVIEW OF CHECKPOINT 3 (part 22): THE CRITERION PER STATE, AND THE SET POINT THAT BOUNDS THE BABBLING ROW")
+    w("   the rule (the owner's part 22; T10's criterion since round 4): a SUSTAINED state, served or a fault the design must survive, is judged")
+    w("   at %.0f C, because %.0f C is the absolute maximum and never an operating target; a TRANSIENT that hardware ends within a bound is" % (TJ_GOAL, P["tj_ldo"]))
+    w("   judged at %.0f C on its steady-state figure (an upper bound of any transient), and %.0f C is read beside it. Hung: the FDCAN" % (P["tj_ldo"], TJ_GOAL))
+    w("   retransmits with the CPU hung only until the IWDG resets it (hardware-started under FW-B10; its timeout the firmware's to set); a")
+    w("   babbler: a running firmware that breaks FW-B21 and still serves its watchdog is ended by nothing: SUSTAINED. The service in it: the")
+    w("   babbler can deny both fabrics by arbitration, so the quorum may stop and the voters hold the home assignment (row 8's safe state);")
+    w("   that a single supervisor's firmware can stop CON-004's quorum is L9T5-F21 (OPEN, Layer 5 and IOHA section 12: a voted silence of")
+    w("   the babbler, its transceivers' SHDN or its LDO's EN by the other two, is the circuit direction; NOT drafted here)")
+    w("   the set point delta (apply_gen_sch_a_iocset.py, apply_gen_sch_b_iocset.py, after T10's iocpre; L9T5-F22 drafted): R602 14.0k, %.4f V" % nom14)
+    w("     nominal, %.4f to %.4f V; the drop at its worst corner %.4f V, %.1f K/A (13.3k: %.4f V, %.1f K/A)" % (
+        lo14, hi14, hi14 - 3.3 * P["vout_lo"], k14, hi3 - 3.3 * P["vout_lo"], k13))
+    w("     state at %.2f C (MODEL)                     rev  current    criterion        13.3k (iocpre)   14.0k (iocset)" % air)
+    for rev, lab, i, kind, lim, t13, t14 in rows:
+        w("     %-44s %s   %.4f A   %-16s %6.1f C %-6s  %6.1f C %s" % (lab, rev, i, "%.0f C (%s)" % (lim, kind.split(",")[0]), t13,
+                                                                     "holds" if t13 <= lim else "FAILS", t14, "holds" if t14 <= lim else "FAILS"))
+    fit13 = all(t13 <= lim for rev, lab, i, kind, lim, t13, t14 in rows if rev == FITTED_REV)
+    fit14 = all(t14 <= lim for rev, lab, i, kind, lim, t13, t14 in rows if rev == FITTED_REV)
+    bab = {rev: (t13, t14) for rev, lab, i, kind, lim, t13, t14 in rows if lab.startswith("babbling")}
+    out["p22"] = dict(fit13=fit13, fit14=fit14, bab=bab, k14=k14, hi14=hi14, lo14=lo14)
+    w("     so on revision %s (fitted, L9T5-D7): with iocpre alone the babbling row FAILS %.0f C (%.1f C); with iocset every row %s %.0f C (the" % (
+        FITTED_REV, TJ_GOAL, bab[FITTED_REV][0], "holds" if fit14 else "does NOT hold", TJ_GOAL))
+    w("     babbler %.1f C). On rev Y's rows, the cover for rev X, the babbler stays over 125 C at 14.0k (%.1f C): a rev X part is still" % (
+        bab[FITTED_REV][1], bab[COVER_REV][1]))
+    w("     admitted only by V-B20 (10h (1)); the proof above is revision V's and is never applied to revisions X or Y")
+    # T10-A3 restated at the record's largest current, and the composition of the delta
+    G = D.gndret()
+    r_sup = G["rhot"] + 2 * DP["vh_r"][1]
+    i_hold = max(r[1] for r in out["fault_rows"][COVER_REV])
+    drop_i = P["drop"][300] + (P["drop"][600] - P["drop"][300]) * (i_hold - 0.3) / 0.3
+    need_i = 3.3 * (P["vout_hi"] + P["load"] * i_hold) + drop_i
+    at_i = lo14 - D.RAIL_BUDGET * nom14 - 3 * i_hold * r_sup - G["shift_drawn_ub"]
+    out["p22"]["a3"] = (i_hold, need_i, at_i)
+    w("   T10-A3 RESTATED (SESSION L9T5-D8): each LDO's input over its requirement at the largest current this record computes for a regulator")
+    w("     (%.4f A, the held B5 row on rev Y's rows; dropout %.0f mV INFERRED between the printed 300 and 600 mA points): at least %.4f V against" % (
+        i_hold, drop_i * 1000, at_i))
+    w("     %.4f V: %s. Round 4 held it at the LDO's full 600 mA; at 14.0k that criterion fails, and a supervisor drawing more than the record's" % (
+        need_i, "holds" if at_i >= need_i else "FAILS"))
+    w("     largest current is a supervisor fault its own BOR ends (it browns out alone; the other two hold the quorum, IOHA row 3)")
+    with tempfile.TemporaryDirectory(prefix="l9t5_t10p22_") as d:
+        res = {}
+        for b in "ab":
+            seq = D.seq_of(b, "slot")
+            at = seq.index(D.MINE[b]) + 1
+            seq = seq[:at] + [PRE[b], SET % b] + seq[at:]
+            p_, r_, ok_ = D.compose(b, seq, d, "p22")
+            rc, net, tab = D.netlist(b, p_, d, "p22")
+            if rc or not ok_:
+                refuse("board %s with the set point delta did not compose or regenerate: %s" % (b, net))
+            res[b] = (ok_, net, tab, len(seq))
+        nla = CHK.read(open(res["a"][1], "rb").read())
+        v_set, why_set = set_check(nla)
+        m1 = D.mutate(res["a"][1], d, "p22_mut", [(("R601", "1"), ("R602", "2"))])
+        v_m1, _w = set_check(CHK.read(open(m1, "rb").read()))
+        raw = open(res["a"][1], encoding="utf-8").read().replace('(value "14.0k 0.1% 25ppm")', '(value "13.3k 0.1% 25ppm")')
+        m2 = os.path.join(d, "p22_mut2.net")
+        open(m2, "w", encoding="utf-8").write(raw)
+        v_m2, _w = set_check(CHK.read(open(m2, "rb").read()))
+        ra_, rb_ = CHK.rails_of(res["a"][2]["intent"]), CHK.rails_of(res["b"][2]["intent"])
+        decl_ok = (abs(ra_["+5V_IOC"]["volts"] - 4.01) < 1e-9 and ra_["+5V_IOC"]["v_work"] >= hi14 and abs(rb_["+5V_IOC"]["volts"] - 4.01) < 1e-9
+                   and all(abs(rb_[n]["efficiency"] - 0.82) < 1e-9 for n in ("+3V3_IOCA", "+3V3_IOCB", "+3V3_IOCC")))
+        bare = os.path.join(d, "bare_gen_sch_a.py")
+        shutil.copy(D.GEN["a"], bare)
+        r_bare = subprocess.run([sys.executable, "-B", SET % "a", bare, "--write"], capture_output=True)
+        r_again = subprocess.run([sys.executable, "-B", SET % "a", D.GEN["a"], "--write"], capture_output=True)
+    out["p22"].update(v_set=v_set, v_m1=v_m1, v_m2=v_m2, decl_ok=decl_ok, ok=res["a"][0] and res["b"][0],
+                      tree_refused=r_again.returncode == 3 and r_bare.returncode == 3)
+    w("   the delta composed straight after iocpre (board A %d drafts, board B %d): %s; the generators ran to their end; a generator without" % (
+        res["a"][3], res["b"][3], "every step OK" if out["p22"]["ok"] else "REFUSED"))
+    w("     iocpre %s, the tree's generator %s" % ("refused" if r_bare.returncode == 3 else "NOT REFUSED", "refused" if r_again.returncode == 3 else "NOT REFUSED"))
+    w("     read on board A's netlist: the set point %s; mutations: the divider inverted %s, R602 back to 13.3k %s; the declarations read +5V_IOC" % (
+        v_set, v_m1, v_m2))
+    w("     4.01 V on both boards (v_work %.2f V) and each +3V3_IOCx at efficiency 0.82: %s. Record l9t5's own pre-regulator check (Slot A's" % (
+        ra_["+5V_IOC"]["v_work"], "yes" if decl_ok else "NO"))
+    w("     check_l9t5_netlist.py) holds the 13.3k divider: its 't10' entry is Slot A's to restate when it takes this delta (L9T5-F24)")
+    # C: the revision made enforceable
+    w("   THE FITTED REVISION MADE ENFORCEABLE (part 22, C): three rows drafted for their owners, none applied (T10-ROUND5.md section 3):")
+    w("     Layer 6 (part identity, STM32H743-COMPATIBILITY.md F1 and the BOM line of U41, U51, U61): STM32H743VIT6, LCSC C114409, SILICON REVISION")
+    w("       V ONLY (package marking revision code 'V', DBGMCU_IDC REV_ID 0x2003; ES0392 Rev 15 Table 2); X and Y not accepted; reason L9T5-D7")
+    w("       (this record's 10h and 10i); acceptance: the BOM line and the compatibility page name revision V")
+    w("     Layer 12 (incoming inspection and first article): every supervisor's package read for revision code 'V' before assembly, a lot with")
+    w("       any other code held; at first power each supervisor's REV_ID read over SWD equal to 0x2003; reason and acceptance as above")
+    w("     the model's case selection (this script): the verdicts of F13, F16, F17 and the rows above read revision %s's printed rows only;" % FITTED_REV)
+    w("       revision %s's rows are printed as the cover for a rev X part and decide nothing; no figure of revision %s is applied to X or Y" % (
+        COVER_REV, FITTED_REV))
+    w("")
+    return out
 
 
 def main():
@@ -1307,6 +1440,7 @@ def main():
     R5 = round5_rest(w, P, DP, air, hi3, Q, _ldo_k, tj_l, R5)
     R5 = round5_faults(w, P, air, Q, tj_l, R5)
     R5 = round5_answers(w, P, DP, air, hi3, Q, tj_l, R5)
+    R5 = round5_part22(w, P, DP, air, hi3, Q, tj_l, R5)
     # 11. state, findings, predicates
     w("11. THE STATE OF L9T5-F06 (T10)")
     by_, bv_ = R5["B"][("Y", air)], R5["B"][("V", air)]
@@ -1335,6 +1469,11 @@ def main():
         tj_l(R5["worst"]["V"], air), tj_l(R5["worst"]["Y"], air)))
     w("     10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by")
     w("     CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application")
+    p22 = R5["p22"]
+    w("   THE BABBLING ROW (part 22): a SUSTAINED fault state, %.0f C applies: on rev V with iocpre alone %.1f C, FAILS; with the set point" % (
+        TJ_GOAL, p22["bab"][FITTED_REV][0]))
+    w("     delta (iocset, DRAFTED, composed, read, mutated) %.1f C, holds: a DRAFTED CORRECTION, desk acceptance met by its author on rev V," % p22["bab"][FITTED_REV][1])
+    w("     UNCHECKED. Its quorum effect stays OPEN (L9T5-F21). The hung row is a transient the IWDG ends: %.0f C applies and it holds" % P["tj_ldo"])
     w("   L9T5-F17: %s. Both fabrics faulted hold %.0f C with the response (%.1f C rev Y, %.1f C rev V); held, %.1f C (rev Y). Same conditions" % (
         "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f17_ok and drafted_ok else "OPEN", P["tj_ldo"],
         tj_l(R5["both"]["Y"][0], air), tj_l(R5["both"]["V"][0], air), tj_l(R5["both"]["Y"][1], air)))
@@ -1358,6 +1497,8 @@ def main():
     w("   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the")
     w("     pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without")
     w("     V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)")
+    w("   L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when")
+    w("     the set point delta (apply_gen_sch_?_iocset.py, part 22) is taken; and the delta folded into iocpre (one writer per file)")
     w("   L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and")
     w("     R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)")
     w("")
@@ -1389,6 +1530,11 @@ def main():
         tj_l(h, air) > TJ_GOAL for rev in "YV" for fid, h, _d, _r in R5["fault_rows"][rev] if fid in ("B1", "B2", "B5"))
     pred["round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once"] = drafted_ok and R5["ok5"]
     pred["round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's"] = all(R5["match"])
+    pred["round 5 (part 22): the babbling row FAILS 125 C on rev V with iocpre alone and every rev V row holds with the set point delta"] = (
+        p22["bab"][FITTED_REV][0] > TJ_GOAL and p22["fit14"] and not p22["fit13"])
+    pred["round 5 (part 22): the delta composes, reads 14.0k, refuses without iocpre and the tree; both mutations FAIL; T10-A3 holds restated"] = (
+        p22["ok"] and p22["v_set"] == "DRAWN" and p22["v_m1"] == "FAIL" and p22["v_m2"] == "FAIL" and p22["decl_ok"] and p22["tree_refused"]
+        and p22["a3"][2] >= p22["a3"][1])
     w("12. THE PREDICATES")
     for k, v in pred.items():
         w("   %-134s %s" % (k, "yes" if v else "NO"))
