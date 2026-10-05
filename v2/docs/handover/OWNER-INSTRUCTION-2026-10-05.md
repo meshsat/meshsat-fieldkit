@@ -21,6 +21,8 @@ qualification and fabrication release as separate gates and the supplier's valid
 | 21. Targeted review of P0 checkpoint 2: continue; the independent check of T10's drafted correction must establish four things (the air and tolerances, the CAN service under the share, enforceability, the match to C-DEV rev 2); F01's next selection record disposes of cx44's ten findings individually; the freed checker slot on P0-7 is within the limit | 5 October 2026, about 16:08 CEST | `9db73b773db19c04c5306dbdaafc885e96a522362adbb2fa7663a252c8f05131` |
 | 22. Targeted review of P0 checkpoint 3: continue; the guard's latent-fault disposition (L8P-D9) needs an engineering basis per fault or the defect stays open with a correction; the 146.4 C babbling-supervisor case needs its applicable criterion named (125 C design criterion kept distinct from the 150 C absolute maximum); revision V tied to the part specification, sourcing and case selection; F01 and the solar alternative provisional until checked | 5 October 2026, about 17:05 CEST | `9dbcee0e973b2401387a7a68e7a2e869c2b1cfa70b861bfb3907c6e91580c275` |
 | 23. Review of P0 checkpoint 4: continue; D-10 and S1 are unresolved protection engineering (the model reports voltage over the 80 V row), carried as a remaining-engineering item with the failing cases, the requirement per case, the correction route and the provisional outputs; B2 an unapproved partial interface proposal whose cold-connection guarantee cx45 verifies; R602's final margins on the connected candidate | 5 October 2026, about 17:50 CEST | `5ec043b65723f51bf0bd1f7923af801abc84f1ba176d3952b83e3f4531197faa` |
+| 24. Review of P0 checkpoints 5 and 6: the candidate NOT CONFIRMED; finish the bounded correction round and cx46 (cx45's findings the before/after checklist; a diagnostic's bounded interval covers faults after start-up and in the diagnostic itself; the governing inputs in the candidate); the latent-guard owner question superseded; B2 optional; an unsupported correction is handed over as remaining engineering, never as qualification-only; desk-handover readiness assessed apart from power closure and fabrication release | 5 October 2026, about 19:15 CEST | `1872d381fa5a9acc22da3049331cc9a052a51cd8eb4a90ecfac29ecc14d28bfe` |
+| 25. Review of P0 checkpoint 7: continue to cx46; B2 unselected and withdrawn as drafted, no longer an owner action, the approved interface retained; cx46 to judge whether the handed-over guard and CAN cases weaken any protection, thermal or service bound; the integration gate binds the reviewed and the integrated revisions with the intervening changes classified | 5 October 2026, about 20:10 CEST | `3d7a893368c91aec176f57b7e4dbc39a24e4710c378d7d26a6e5f2cb6c9417a0` |
 
 
 ---
@@ -726,3 +728,133 @@ Continue the current P0 work and existing cx45 review; do not restart or add a b
 One clarification: D-10/S1 must remain unresolved protection engineering because the present model reports voltage above the 80 V rating. Keep the failing cases, affected outputs and correction/qualification route explicit. B2 remains an unapproved, partial interface proposal; cx45 must check its cold-connection guarantee and its stated exclusions. Neither adopting nor declining B2 turns the remaining failing case into a solved design.
 
 Physical work belongs to the receiving supplier. It does not become an owner bench prerequisite or a blanket pause on later desk deliverables. After the Layer 4 desk gate is assessed honestly, continue sequentially with stable work and identify dependent outputs as provisional.
+
+---
+
+## 24. Review of P0 checkpoints 5 and 6: the candidate NOT CONFIRMED; finish the bounded correction round and cx46 (cx45's findings the before/after checklist; a diagnostic's bounded interval covers faults after start-up and in the diagnostic itself; the governing inputs in the candidate); the latent-guard owner question superseded; B2 optional; an unsupported correction is handed over as remaining engineering, never as qualification-only; desk-handover readiness assessed apart from power closure and fabrication release (as received)
+
+# MeshSat V2 — checkpoints 5 and 6 review
+
+Reviewed 5 October 2026. Checkpoint 6 at 19:10 supersedes checkpoint 5 at 18:20 for current status and assignments.
+
+## Verdict
+
+**The combined power candidate is NOT CONFIRMED. Continue the existing bounded correction round and cx46; do not restart the programme or add another general review.**
+
+The project reached a meaningful milestone: a combined candidate, `06077cee`, was reviewed. The result exposes substantive engineering gaps, so the 302 passing tests cannot establish acceptance of the power design. Most of these gaps require desk corrections, rather than a physical test alone.
+
+There is also useful progress: the solar defect is now explicitly remaining engineering for the receiving company; the eFuse assessment is reported as confirmed conditionally; D-16's correction is reported as supported. These limited positive results must be preserved without turning them into acceptance of the complete candidate.
+
+**Scope:** I read both checkpoints and compared them with checkpoint 4 and the previous review. I did not receive cx45's original report, the candidate repository, circuit models or raw test results. The findings below are attributed to the supplied reports. This review confirms no additional circuit defect independently and adds no new acceptance gate.
+
+## What changed
+
+| Item | Checkpoint 5 claim | Checkpoint 6 / reported cx45 result |
+|---|---|---|
+| PA current cap, P0-1 | Draft integrated; service provisional. | Accuracy across reference loading and resistor corners is incomplete; draft values are stale. Service B-PA1 and dynamics B-PA2 remain provisional. |
+| Ground return, P0-2 | The 17 mm placement condition was called realisable. | Actual socket lands, clearances and a distributed electrical model do not establish that claim. A placed correction and network calculation are required. |
+| CAN and thermal, P0-3 | R602 14.0 kΩ taken; 121.5 °C modelled, with 35.2 mV headroom at the computed load. | Quorum service, independent containment and peak temperature are not established. Some records still permit the superseded revision or set point. The numerical result is not accepted as the complete bound. |
+| eFuse, P0-4 | Part of the combined candidate. | Confirmed as conditional on connector qualification and the stated RockBLOCK build condition. |
+| Thermal guard, P0-5 | Three faults corrected in a draft; additional common-path faults presented partly as an owner decision. | Changes are not propagated through 20c/20f. Common-path faults need a surviving arrangement or justified automatic diagnostic. No owner exception is presumed. |
+| Composition, P0-6 | Connected script and tests pass. | Service/protection claims are overstated, an old C-DEV predicate remains and outputs are not stable. Governing owner instructions and the P0 list were absent from the reviewed candidate. |
+| Solar, P0-7 | D-16 corrected in draft; D-10 open; B2 partial proposal. | D-16 and D-10's engineering classification are supported. B2's cold-connection guarantee and pair-short claim are not supported. |
+
+Evidence: checkpoint 5 lines 9–45; checkpoint 6 lines 8–27.
+
+## Prior feedback: disposition
+
+- **D-10 classification: addressed in the reported documents.** Checkpoint 5 lines 9–19 identify failing cases, affected parts and outputs, possible corrective routes and subsequent qualification. Checkpoint 6 reports Astra support for that classification. This closes the earlier wording issue, not D-10 itself.
+- **125 °C criterion: retained, but its engineering proof remains incomplete.** The corrected limit does not establish a peak-temperature bound or fault containment. Current Slot C work explicitly addresses those gaps.
+- **Latent guard faults: the earlier owner question is superseded.** Checkpoint 5 proposed a new proof-test requirement or a redesign decision. Checkpoint 6 lines 27 and 45–46 correctly return the work to engineering. The owner need not accept a latent-fault exception to keep work moving.
+- **B2: still optional and unapproved.** The current assignment explicitly allows withdrawing the unsupported guarantee instead of proving it. No adoption is authorized by this review.
+
+## What the correction round must demonstrate
+
+Use the existing cx45 findings as the before/after checklist. Each claimed correction needs its actual draft, model inputs and applicable acceptance condition on the integrated revision. No new reporting framework is needed.
+
+1. **Slot A:** complete the PA accuracy budget at its actual loading; place the chosen return solution and solve its distributed network; correct coordination and service claims; include the governing instructions and P0 list.
+2. **Slot C:** establish required service during CAN faults, containment independent of the faulting firmware, and peak rather than merely averaged junction temperature. Carry the chosen revision and set point consistently. Recompute the guard equations after the circuit change. Any automatic diagnostic needs a bounded detection/response interval, including faults that arise after startup and faults affecting the diagnostic itself.
+3. **Solar author:** either substantiate B2 using the selected connector, timing and pair-short case, or withdraw those guarantees. Do not make the baseline depend on an unapproved proposal. D-10 remains open either way unless its remaining failing cases are actually resolved.
+4. **Coordinator:** run cx46 on the corrected, consistent candidate with its governing inputs included. Subsequent changes affecting reviewed claims need corresponding targeted verification; review and suite evidence must identify their actual revisions.
+
+These actions are substantially already assigned in checkpoint 6. They are a reason to finish the current round, not launch another round of planning.
+
+## Handover and stopping rule
+
+Stopping an unsuccessful method after cx46 is reasonable. A review-count limit does not establish that a defect is fixed, unfixable at the desk, or dependent only on physical evidence.
+
+If a correction remains unsupported, hand it over as **remaining engineering**, with the failed cases, attempted correction, unresolved fact or design decision, and affected provisional outputs. Preserve the receiving company's ability to reproduce and change the design. Qualification-only items remain separately identified.
+
+The Layer 4 desk-handover gate can then be assessed against the agreed supplier-takeover scope. It must not claim technical closure of open defects. Later stable desk deliverables should proceed sequentially when that gate permits, with unresolved dependencies carried explicitly. No owner bench, purchase or vendor contact is introduced as a blanket prerequisite.
+
+## Timing
+
+The checkpoint's revised 5–7 hour estimate from 19:10 means approximately **00:10–02:10 CEST on 6 October**, conditional on cx46 and integration. This is the coordinator's estimate, not an independently substantiated completion promise. The next reported checkpoint is 19:55 or CANDIDATE READY 2.
+
+## Short feedback for Claude Code
+
+Continue the assigned correction round and cx46. No broad restart or additional general review. The reported negative verdict concerns real desk-engineering gaps, so demonstrate each correction on the connected candidate rather than relying on test totals. Include the governing instructions and P0 list before review, and preserve the eFuse/D-16 positive dispositions within their stated scope.
+
+The former latent-guard owner question is superseded: solve or explicitly hand over the engineering issue without presuming a requirement exception. B2 remains optional and unapproved; withdraw unsupported guarantees if they cannot be established in this bounded round. If cx46 remains negative, retain the affected defects and transfer them as remaining engineering, not as qualification-only tasks or accepted corrections. Assess desk-handover readiness separately from power-design closure and fabrication release.
+
+## Source fingerprints
+
+- `MESHSAT-P0-CHECKPOINT-5-2026-10-05-1820.md`: `9a82e960e00e6760eccb6770342a64988b56be7c6f29bf120a8cada90b0f6af7`
+- `MESHSAT-P0-CHECKPOINT-6-2026-10-05-1910.md`: `001d3666aa174bdb7eea7b4620cd35f730b347bde819abb7b69d9ce055ccc4af`
+
+---
+
+## 25. Review of P0 checkpoint 7: continue to cx46; B2 unselected and withdrawn as drafted, no longer an owner action, the approved interface retained; cx46 to judge whether the handed-over guard and CAN cases weaken any protection, thermal or service bound; the integration gate binds the reviewed and the integrated revisions with the intervening changes classified (as received)
+
+# MeshSat V2 — checkpoint 7 review
+
+Source: `MESHSAT-P0-CHECKPOINT-7-2026-10-05-2000.md`, dated 5 October 2026, 20:00 CEST.
+
+## Assessment
+
+**Continue to the planned cx46 targeted recheck. The reported correction round has made concrete progress, but its engineering outcome is not yet independently accepted.** No broad restart or additional general review is warranted by this checkpoint.
+
+The report describes hardware corrections for the thermal guard and CAN containment, a revised PA accuracy calculation and a placed return correction. It also withdraws the unsupported B2 guarantee instead of counting it as working protection. These are substantive changes, not just new status wording.
+
+This review inspected the checkpoint and compared it with checkpoints 5–6. The underlying circuit drafts, calculations, layouts and original review results were not supplied. I have not reproduced their numerical claims or confirmed that the corrections work.
+
+## Progress and acceptance boundary
+
+| Area | Reported progress | What remains |
+|---|---|---|
+| Solar B2 | Its cold-connection guarantee is withdrawn; two proposed presence-pair fault cases exceed INP's rating. B2 is outside the baseline and gets no protection credit. | Keep its draft defects explicit if retained as historical/proposal material. D-10 remains receiving-company engineering item E-1. |
+| Thermal guard | A separate second path is drafted, with its own supply arrangement and shunt; 20c/20f are updated. | cx46 must judge the actual single-fault coverage and the effect of the handed-over latent-first/double-failure case on each protection claim. |
+| CAN and supervisor thermal limits | Hardware transmit-share limiting and supervisor rail trips are drafted; schedule, quorum and revision/set-point rows are updated. | cx46 must assess containment, required service and the thermal bound. The GPIO-toggled TX and stuck-comparator cases cannot be excluded from affected claims merely because they are handed over. |
+| PA, return and integration | Accuracy terms, return placement and connected claims are reported corrected; governing files are merged. | Complete the last merge and let cx46 inspect the actual placed return/network model and connected candidate. |
+
+Evidence: checkpoint lines 9–26. These are reported corrections and review targets, not newly confirmed circuit findings from this review.
+
+## Two focused clarifications
+
+### B2 need not remain an outstanding owner action
+
+Lines 9–13 say B2 is an unapproved proposal, outside the baseline, with its guarantee withdrawn and its own open defects. Line 40 nevertheless lists it as the owner's outstanding decision.
+
+**Disposition:** retain the approved interface and mark B2 unselected/withdrawn as drafted. On the supplied record, no owner decision is needed to continue with that unchanged baseline. A future supported proposal to change the interface would still need owner authorization. This is a coordinator status correction, not another engineering round.
+
+### Bind the review outcome to what is integrated
+
+Lines 28–33 schedule cx46 against CANDIDATE READY 2 while integration changes the change-list rows, bindings and generated outputs in parallel. That overlap can be useful, but the checkpoint alone does not establish how the final revision inherits the review.
+
+Use the existing integration gate to record the reviewed and integrated revisions and the intervening changes. If changes are only verified bindings or presentation, record that equivalence. If they change a circuit, assumption, model, limit or substantive claim, the affected result needs targeted verification before being credited. Passing the software suite alone cannot transfer an engineering verdict to altered claims. No extra general review is requested.
+
+## Handover scope
+
+The receiving company can take over genuinely unresolved engineering. Keep each affected guarantee open or provisional and identify the downstream dependency. In particular, the reported handover of latent guard and CAN cases must preserve any resulting limits on protection, thermal and service claims.
+
+The owner is not being asked to provide a bench or purchase test equipment. Desk-handover readiness remains distinct from design qualification and fabrication release. A review limit stops an unsuccessful method; it does not make an unresolved defect disappear.
+
+## Next milestone
+
+The useful next evidence is cx46's result on the completed candidate, followed by the final integration disposition. The checkpoint estimates candidate readiness around 20:30 and a rechecked candidate or explicit handover state around 23:00–00:30 CEST. These remain the coordinator's conditional estimates.
+
+## Short feedback for Claude Code
+
+Continue the current merges and cx46; do not add a broad review. B2 is already outside the baseline and unsupported as drafted, so remove it from required owner actions and retain the approved interface. Keep its defects and D-10 visible in the handover.
+
+Have cx46 explicitly judge whether the handed-over guard and CAN cases weaken any claimed protection, thermal or service bound. Keep those affected claims open where necessary. Before promotion, use the existing integration gate to bind the review to the final revision and account for substantive changes made during parallel integration. Report the actual recheck outcome next.
