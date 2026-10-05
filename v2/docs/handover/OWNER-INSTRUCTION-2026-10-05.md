@@ -18,6 +18,7 @@ qualification and fabrication release as separate gates and the supplier's valid
 | 18. Review of P0 checkpoint 1: continue the authors; finish the external decision packet (U-02's per-mode reconciliation and the mock-up's sum, U-04's evidence route apart from the whole-kit release, U-01's two kinds of evidence) | 5 October 2026, about 15:30 CEST | `62351f9c8ca4a11b1328b5fcfb161c680b17701335242d8a3d505b5c900085a2` |
 | 19. Handover scope amendment and review of the external packet: the deliverable is the desk engineering package for a receiving company; sequential DESK acceptance per layer; the packet reframed as the supplier validation annex with three corrections (a failed arrangement is not a requirements conflict; the mock-up sum; investigating the Saft option apart from adopting it) | 5 October 2026, about 15:45 CEST | `d448616ce3607d9653fe47efea771aa9a68e31198ec943bf52a9f4bf8262b02a` |
 | 20. Targeted revision check of the supplier annex: its revised scope accepted (not the circuitry); two follow-throughs (residual owner-role wording; the live plan must show sequential desk-handover gates governing while the design and fabrication gates stay honest) | 5 October 2026, about 15:58 CEST | `0755be17a7931895b431c0d75419d15246c46e1d9e9c88554b31aa58927f539d` |
+| 21. Targeted review of P0 checkpoint 2: continue; the independent check of T10's drafted correction must establish four things (the air and tolerances, the CAN service under the share, enforceability, the match to C-DEV rev 2); F01's next selection record disposes of cx44's ten findings individually; the freed checker slot on P0-7 is within the limit | 5 October 2026, about 16:08 CEST | `9db73b773db19c04c5306dbdaafc885e96a522362adbb2fa7663a252c8f05131` |
 
 
 ---
@@ -520,3 +521,68 @@ Method: read the complete annex and compared it with the previous review's four 
 2. **Apply the same distinction to the actual execution plan.** The previous plan paused all later layers while U-01/U-02/U-04 lacked physical evidence. This annex cannot, by itself, prove that the old blanket pause has been superseded in task allocation and status reporting. At the next ordinary checkpoint, report that sequential desk-handover gates govern progression, while the existing unresolved design/qualification and fabrication gates remain honest. Do not turn an old failing technical gate into PASS merely to represent the new handover scope.
 
 Keep the current power corrections and their independent check on the critical path. Known desk-fixable failures still require correction. Physical unknowns belong in the supplier scope with affected outputs explicitly provisional.
+
+---
+
+## 21. Targeted review of P0 checkpoint 2: continue; the independent check of T10's drafted correction must establish four things (the air and tolerances, the CAN service under the share, enforceability, the match to C-DEV rev 2); F01's next selection record disposes of cx44's ten findings individually; the freed checker slot on P0-7 is within the limit (as received)
+
+# MeshSat P0 checkpoint 2 — targeted review
+
+## Decision
+
+**Continue the P0 work under the current plan. The checkpoint reports the intended desk-handover progression rule, and the annex cleanup is complete. No further plan rewrite is needed.**
+
+There is now a drafted CAN correction and an early independent rejection of the first all-transmit selection. No power correction is independently accepted yet. These are engineering results, with their status appropriately distinguished from closure.
+
+## Evidence and limits
+
+Read the complete checkpoint and compared the revised annex against its preceding version.
+
+| Source | SHA-256 |
+|---|---|
+| `MESHSAT-P0-CHECKPOINT-2-2026-10-05-1605.md` | `04fca4ff1587bd36631d46eeb3ff4fccb182c4ce5b6e4846bcc4cd5882128649` |
+| `MESHSAT-SUPPLIER-VALIDATION-ANNEX-2026-10-05(1).md` | `61ae22ca9048ffe726d3d6016f4cad06dcfea618f8c634f7dead1ea004ae8a57` |
+
+The referenced code, calculations, source documents, review reports and repository commits were not supplied. Their engineering results and live execution state have not been independently verified here.
+
+## Previous follow-through items
+
+| Item | Evidence | Assessment |
+|---|---|---|
+| Apply the handover distinction to execution, not just the annex. | Checkpoint lines 3–5 explicitly state that sequential desk-handover gates govern progression, with qualification and fabrication separate. Lines 37–39 repeat how the Layer 4 desk gate will be judged. | Addressed in the reported governing rule at main `b539b1b4`; repository implementation not independently inspected. |
+| Remove residual owner bench/contact/printing assignments. | Annex diff replaces the owner role in the charger bench, Saft request, laboratory work and fit mock-up rows with the receiving company or nominated provider. | Addressed in the supplied file. |
+
+## Engineering progress and existing review targets
+
+### CAN / T10
+
+Slot C reports draft `5d772b24`, 33 author tests passing, and modelled junction temperatures of 123.5 °C for the worst single fault and 124.1 °C for both fabrics against 125 °C. The draft introduces firmware contracts FW-B20/B21 and transceiver shutdown changes. It remains OPEN pending checking.
+
+The smallest stated thermal margin is **0.9 °C**. That is neither a measurement nor, by itself, a reason to reject the design. The already-planned independent check needs to establish:
+
+- Whether the 76.25 °C local-air assumption and the remaining thermal/current inputs cover the actual required conditions and tolerances.
+- Whether the proposed clock and transmit-duty restrictions preserve the required CAN service.
+- Whether the restrictions and shutdown response can actually be enforced in the fault cases used by the calculation; an unapplied contract alone is not a protective mechanism.
+- Whether the composed firmware/interface/circuit changes match the calculation and the newly issued C-DEV rev 2.
+
+These are targeted checks of the proposed correction, not newly confirmed defects or a request for another broad review.
+
+### F01 / all-transmit
+
+Astra's advisory rejection was obtained before expanding the rejected route into a circuit draft. That is the intended use of the early check. The checkpoint reports ten blockers, including omitted loads, unsupported accuracy terms, unbounded loop dynamics and insufficient evidence that the current cap preserves the required RF service.
+
+The revised handover scope permits a clearly identified unproven candidate and a supplier experiment. It does not resolve calculation omissions or allow an unsupported route to be reported as a corrected defect.
+
+The next selection record should dispose of the ten findings individually: corrected with desk evidence, still an open design defect, or a genuinely external fact with its effect on the candidate stated. A provisional RF-transfer assumption must remain provisional. Calling B-PA1 a supplier task does not establish the missing service guarantee.
+
+The complete Astra report and corrected selection would be needed for an independent assessment beyond this status review.
+
+### Solar protection
+
+Using the freed checker slot for a bounded P0-7 design task is consistent with the three-worker limit. Preserve that limit when Astra runs again. The final connected candidate must include the selected solar correction before final composition and acceptance, as already planned.
+
+## Next milestone
+
+The reported next checkpoint is **by 16:50 CEST**, or sooner for a material result. The useful outputs are F01's corrected selection, the eFuse correction and the P0-7 comparison, followed by their combined effect on the power path.
+
+The revised 15–19-hour desk-candidate estimate is a forecast, not evidence of completion. No new owner purchase, laboratory action, worker restart or `/plan` cycle is needed on the basis of these two files.
