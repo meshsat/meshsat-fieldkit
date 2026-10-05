@@ -502,6 +502,9 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        A EN   FAIL: R109 on DOCK_EN_OUT is '562k 0.1%' to 'GND', not a sense divider of 470 kOhm or more
        A THG  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
+   board P composed, the nodes on DOCK_EN_RET: J_SMB.5, Q103.1, Q107.3, R107.1, TP104.1
+   board E composed, the nodes on DOCK_EN_RET: J_BLK.3, J_SMB.5
+   board A composed, the nodes on DOCK_EN_RET: J_DOCK.3, Q44.3, Q60.3, R261.2, U48.2
      mutated composed board A, the guard: the shunt on DOCK_EN_OUT sha256 a6df8223c5045b62
        A EN   FAIL: DOCK_EN_OUT reaches [('Q60', '3')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('C261', '1'), ('C261', '2'), ('R260', '1'), ('R260', '2'), ('U61', '1')], [('R109', '1'), ('R109', '2')])
        A THG  FAIL: Q60.3 on 'DOCK_EN_OUT', wanted DOCK_EN_RET
