@@ -1075,14 +1075,15 @@ J_5V_IOC on the drawn boards A23 and B19 (each courtyard 0.25 mm clear of every 
 outline; SESSION L8R2-D10, the placement draft) and SOLVES the return as a distributed network: each board's declared ground planes as
 a 1.5 mm resistive grid (A two, B three, 0.5 oz, 15 % thin at one corner, a fill of 100 % and 50 % as ASSUMPTION), every ground
 conductor of the composed netlists between the boards with its wire and both contacts in the record's box, each lead's return
-injected at its rail's loads' ground pads on board B and taken out at its land on board A, at -20 C and 76.25 C, and every contact
+injected at its rail's loads' ground pads on board B (one hop through a series element such as a supervisor's sense
+resistor to the load behind it) and taken out at its land on board A, at -20 C and 76.25 C, and every contact
 vertex a local search reaches (no single contact's move raises a conductor's current there). Result (MODEL): every printed row holds,
-the declared upper bound's included (the ribbon's largest 0.7806 A against 1 A, STILL OPEN on the one-node model); the service cases
+the declared upper bound's included (the ribbon's largest 0.7729 A against 1 A, STILL OPEN on the one-node model); the service cases
 (C-DEV rev 2, the active row, and the largest steady state) hold on the least ratings too; over the least rating only the declared
-upper bound at 76.25 C (the ribbon 0.6371 A against 0.5995 A, and a VH pin 2 6.4392 A against 5.9948 A, both INFERRED deratings: the
+upper bound at 76.25 C (the ribbon 0.6299 A against 0.5995 A, and a VH pin 2 6.4485 A against 5.9948 A, both INFERRED deratings: the
 VH row is the same as its pin 1's, L8R2-F43; the ribbon row is L8R2-F44, Wurth's WR-CAB derating, UNSENT, with a fourth lead beside
-the ribbon headers as the placed and solved route, 0.4150 A, NOT drafted: SESSION L8R2-D11). The ground shift at the supervisors'
-LDOs on the service cases is at most 0.0206 V (the one-node model's 0.0114 V with the return). V6-B1: CORRECTED IN DRAFT on the desk
+the ribbon headers as the placed and solved route, 0.4107 A, NOT drafted: SESSION L8R2-D11). The ground shift at the supervisors'
+LDOs on the service cases is at most 0.0205 V (the one-node model's 0.0114 V with the return). V6-B1: CORRECTED IN DRAFT on the desk
 model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed extraction) and on each stage sitting beside
 its connector on board A; the targeted recheck decides.
 
