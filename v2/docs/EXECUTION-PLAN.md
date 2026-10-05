@@ -1446,3 +1446,193 @@ CONDITIONAL on C4-1 to C4-6); the pack path's copper (stacked faces and returns 
 an owner decision, money) and W4DP-F2's protection (an LM5069-2 breaker on board P with a make-last enable at the dock and a third
 battery FET, CONFIRMED AS CONDITIONAL by the independent check; DD-3 and DD-5 open defects); L9P-F01 (the all-transmit floor);
 Layer 9's power budget; Layer 5's slot-fault rule; the firmware's round 4; the proposed LAYER-STATUS rows of Layers 5, 6, 7, 8 and 12.
+
+### Plan, 4 October 2026 14:25 CEST: the execution constitution adopted; set 29 finished from one candidate; the set 30 closures (the owner's instruction of that day and his review of the plan)
+
+The instruction is filed as received at `v2/docs/handover/OWNER-INSTRUCTION-2026-10-04.md` with the owner's review of the plan
+as its part 2 and his later instructions and reviews of that day as parts 3 to 6; Part A of the instruction is `v2/docs/EXECUTION-CONSTITUTION.md`, the one
+authoritative process text. This entry applies both once. Where the plan of 2 October 23:42 conflicts on process it is superseded:
+THREE author or reviewer workers (Claude and the collaborator together) plus the coordinator, one writer per branch, a checker
+takes a slot; the closure contract per task type replaces "one design-out attempt, then an experiment". Product requirements,
+technical rulings and filed reviews stand. Promotion of an integration set is not power-design closure and releases nothing.
+
+**The owner brief** is the section "Current owner brief" of `v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md` (ruling
+D-31), read with the later owner rulings and instructions; no second interpretation is written from another page. Every worker
+brief and every collaborator job names the constitution, that brief and its task's case rows.
+
+**Order of an integration set:** intended merges and input changes complete; matching evidence installed; regeneration in
+dependency order; stability verified; the candidate committed; its manifest bound (`candidate_guard.py`); the required checks on
+that commit; promotion of that commit. A later change is impact-checked and only the affected readers are refreshed.
+
+**The shared case rows (the review's PLAN-01), fixed before dependent work and cited by id; a change is a new revision:**
+
+| Case | Authoritative source | Fixed | Labelled unsettled |
+|---|---|---|---|
+| C-PROT rev 1 | record l9stk 15.1 (the owner's criterion), 15.6, 15.7; L4-E11 section 19 | 10 A held and 18 A for 60 s never interrupted; every series part within its limits below and above the trip; board P's FETs welded, no firmware; the breaker's band; the start at L4-E12's inside air plus own heating; docking included; each source present or absent | the sharing between the battery FETs; the LM5069's internal resistor's tolerance |
+| C-ALLTX rev 3 | REQ-018's acceptance; CONOPS 4a's row PS-ALLTX | every transmitter keyed at its HIGH figure, monitor full, fans running, outlets off, heater and standby card off, every other load at typical; 60 s from 15.5 V rest; cells at most +55 C; K2's gates; K1's repeat; 18 A indicated. Computed from its own text by Layer 9's T5 round: 15.5162 V needed nominal, 16.0684 V with the printed bounds | the compute modules' hold at typical (K4 has no numerical ceiling); the cells' resistance; the gauge's current error; the path's tolerance; the rest voltage's fall in the 60 s (R-214). LABELLED SCENARIOS, never the case: D-11's basis as rv-pwr models it (some non-transmit loads at HIGH: 16.214 V, L9P-F01's figure), the modules at 8 W. Rev 1 ("the loads at HIGH") was the coordinator's error; rev 2 quoted D-11's figure for the case's text |
+| C-DEV rev 1 | Layer 9's budget, the device rail at the least load voltage | the demand against the stage's loop minimum, with the PA rail (L9P-F04) and the lead's rating on the same path | none |
+| C-SHORE rev 1 | L4-E11 19e (DD-3) | the input breaker's held current from the inside air | none |
+| C-CU rev 1 | record l9stk 14.6 | continuous, transient and fault current until protection clears, per conductor | the fabricator's stackups and prices |
+
+**The task register (the constitution's section 4; each row's detail is in its record):**
+
+| Task | Kind | Smallest deliverable | Case and acceptance | Author | Check | Escalation |
+|---|---|---|---|---|---|---|
+| T0 envelope | basis | L4-E9's power-state table cites the case rows (presentation only) | no value differs from the rows | L4-E9's author | inside V1 and V3 | none |
+| T1 B-R2, IF-1, latch-off and restart | defect | board P's route R1 with board A's side (L8P-F04, L8P-F05) | C-PROT: the breaker latched into a resistive fault with a source present; the return held low; CELL+ with the breaker off; thresholds, tolerances, delays | L4-E11's author (round 10) | V1: the independent checker, focused, on the completed correction | two negative checks end the loop: coordinator diagnosis, then a simpler design or a supplier correction scope; the finding stays open |
+| T2 E11-37 and E-1's sharing | choice | at most three approaches (three FETs with the maker's answer or a bench run; two lower-resistance FETs; a gate buffer) | C-PROT with the worst sharing; the charger's printed gate-drive limit | L4-E11's author | V2 | vendor question or experiment, the row OPEN |
+| T3 DD-3 | defect | a choke rated for the held current at the case's temperature, on its maker's sheet | C-SHORE | Layer 6's author; L4-E11 applies | V2 | input limit or topology option, or supplier scope |
+| T4 DD-5 | defect | board P's Q1 never carries service current in its body diode, or a path that may | C-PROT with the charge inhibit set, in discharge | board P's author | V2 | as T1 |
+| T5 I-03 and F01 | defect, choice | the case corrected in the budget (the standby card off in PS-ALLTX); the loss budget against the allowance at 15.5 V rest and 18 A with its uncertainties; at most three approaches compared; the device rail's and the PA rail's limits with their conductor protection | C-ALLTX rev 3 and C-DEV; approved service kept; REQ-018 unchanged | Layer 9's power author | W3 (advisory, done: FAN_OK as proposed NOT SUPPORTED; the owner kept it REJECTED); V3: the collaborator's targeted recheck on the completed correction | a correction that needs a requirement's text changed goes to the owner as one decision |
+| T5b board B's ground basis (the evening review's RSM-01) | defect | board B's GND return reconciled: the load sum after l8r2's fans12 and T5's I-03 lead against the conductors' actual current capacity (pins, leads, copper); the declaration changed only to what that basis supports, never raised to let the generator pass | C-DEV with the composed drafts of board B | record l8r2's author, in the next free slot and before V3 | inside V3, composed with T5 | a capacity short of the load: a draft change of the return path, or the finding stays OPEN |
+| T6 copper | choice, the owner's adoption | the options costed at the real outlines from public calculators (no contact) | C-CU; W4DP-F2 open until its criterion | l9stk's author | none (a costing) | one concise owner decision |
+| T7 composition | final combined check | the change list applied in order on scratch generators for A, B, E, P; refusals listed; combined netlists checked | the combined composition | Layer 8's author | none | each refusal to its draft's owner |
+| T8 B6 (D-10, D-16) | defect, loop ended | the supplier correction scope and experiments confirmed in the supplier delta | no desk rerun without a changed design | coordinator | none | supplier |
+
+**The owner's continuation of 15:00 (filed as part 3 of the instruction):** FAN_OK stays rejected; the corrected REQ-018/CONOPS case is used
+consistently and any other load scenario is labelled separately; F-L7-12's mixed thermal basis is traced to the claims it could
+affect and corrected before any of them is accepted (done in set 29: no acceptance claim read the mixed sums; Layer 7 now sums the
+fans' heat on one basis per use, reproduced by Layer 9); set 29's final checks run on its final candidate; T1, T4 and the revised T5
+continue without another review from the owner.
+
+**The owner's resume amendments of 18:45 (parts 4 and 5 of the instruction):** T5b above is scheduled in the next free slot
+and before V3 reviews T5; V2's scope includes C4's changed technical claims on board P (F06's hot leakage, F07's PTC limits, any
+alternative part), while the coordinator verifies only genuinely editorial changes; the box suite's forecast is read from the
+matching logged run, with setup and test execution apart.
+
+**The review of the 19:15 status report (part 6, STATUS-01):** each external dependency (a vendor's answer, a bench or coupon
+measurement, an owner decision) stays attached to the criterion and claim it holds, in the existing register; a test that establishes
+feasibility is told apart from the qualification of a supported design; no collective sentence stops independent deliverables; Layer
+12's desk work (firmware, procedures, documents) and its physical testing are reported apart. A weighted item score is a reporting
+convention on desk documents, never an estimate of effort, feasibility or time.
+
+**Closure credit (the review's PLAN-03).** A changed draft is credited as verified only when it composes with the relevant
+pending drafts of its board in change-list order and the generator runs, its changed nets are read in the netlist with a mutation
+that fails, AND its electrical acceptance holds on its case (current, voltage, timing, thermal, fault, on the makers' printed
+figures). A netlist check is not electrical qualification; physical conditions stay open where required.
+
+**Verification (the review's PLAN-02).** An early challenge is advisory and accepts nothing; each completed correction gets its
+own check on its exact revision, and a check covers only the changes present in its candidate. Every closure names the checked
+revision, its case row, the actual checker and the evidence. Where a check is unavailable the item stays UNVERIFIED or
+CONDITIONAL with its release hold; a coordinator's verification never reads as acceptance beside an independent rejection.
+
+**Each process failure seen, and its control:** a change after the freeze: `candidate_guard.py` before every suite pass and
+`suite_gate.py`'s identity check. Stale exported documents: the supplier delta's current statements are quoted from their records
+and checked by the procedures' quote check, never typed. Inconsistent assumptions: the case rows above. Cache and evidence
+cycles: L4-E7's compute and render split and the guard's cache check; if a rebind forces a chain re-pin again, the binding to
+CURRENT-EVIDENCE moves out of the registry's bytes. Paper-only fixes: the closure credit above, and T7. Exhausted reviews:
+the verification rule above.
+
+**Layers, next deliverables (documents and drafts; nothing built or qualified):** 4: T1 to T6 with their verdicts. 5: the owed
+contract rows (fan PWM, slot leads, monitor recalibration, J_SMB, the dock enable contacts, K4's hold) and finding L5-F13. 6: the
+identities of the protection parts and T3's choke. 7: the dock's make-last contact and mating order; F-L7-12. 8: per-correction
+composition, then T7. 9: the budget after T5; T6's costing. 10: no board passes layout entry; no routing. 11: no credit: the
+manufacturing package waits on layout and release. 12: the panel firmware's target build; the panel protocol's wire format as a
+proposal. Across layers: the supplier delta from the promoted set, an engineering handover and not a Layer 11 deliverable.
+
+**Reporting:** at milestones and about every two hours while active, about 300 words, Europe/Amsterdam time: layer artifacts
+accepted; defects corrected and verified; new or regressed defects; external dependencies; active jobs with progress evidence; the
+next critical-path milestones; resource use, compute and storage apart. A workday without a verified closure or a usable
+engineering deliverable on the critical path (T1, T5) changes the scope or the method, and that change is reported.
+
+### Milestone, 4 October 2026 20:01 CEST: integration set 29 promoted (Layers 4, 5, 8, 9 and 12's rounds onto set 28)
+
+**Promoted:** main `aa76c894` (`aa76c89448ec943e3a37357ebc11ce3322fa4020`), the commit that was frozen and gated, by fast-forward.
+Gated by `_bin/suite_gate.py` on three passes of that exact commit (the box on Python 3.12, the box on 3.11 for test_l4e10 and
+test_l4e12, the runner for test_l4e7): 2937 passed, 0 failed, 15 skipped, 232 of 232 modules, the tree unchanged after each pass;
+`v2/ecad/tools/candidate_guard.py` checked the candidate and its 990 evidence files before each pass and on main after the
+fast-forward. The record: `v2/docs/records/int29/RESULT.md`. A first box run was not gated: sixty tests of three records had
+skipped there for six held makers' sheets missing from the evidence list; the manifest was recorded again at the same commit with
+the complete list, the passes were run again, and the gate now refuses an unexplained skip (its condition G7).
+
+**What set 29 carries:** `v2/docs/records/int29/README.md` lists it commit by commit: Layer 5's slot-fault rule, the panel
+firmware's round 4, L4-E7's round 6, Layer 9's power budget and its stackups with the pack path's copper and protection, Layer 8's
+round 3 and breaker drafts, L4-E9's round 8 and rows A to A3, L4-E11's round 9, the refreshed test procedures, the reviews of the
+supplier package filed as received, `LAYER-STATUS.md` brought to sets 28 and 29, and finding F-L7-12 corrected.
+
+**Five claims, apart:** documents and editable artifacts of these rounds on main as drafts; design reviewed and accepted: NO beyond
+the named checks; circuit changes implemented: NONE; physical qualification: NONE; fabrication release: BLOCKED. Promotion of this
+set closes no power item and is not power-design closure or layer completion.
+
+**Measured:** the two box passes together 34 min 8 s on a resumed, already prepared instance (no host setup in that figure); the
+runner pass about one minute.
+
+**Next set (30), on branches, not in this commit:** T1 (B-R2's board A side, the independent check V1 CONFIRMED AS CONDITIONAL),
+T2 (E-1's sharing: the bar restated at 40.78 K/W for any split; E11-37 OPEN), T3 (DD-3's choke), T4 (DD-5's ideal diode) and board
+P's round 5 (findings L8P-F06 and L8P-F07, both OPEN), all under the independent check V2; T5 (I-03's correction: board A composes
+and holds on C-DEV rev 1, board B waits for T5b; F01 / D-17 OPEN, the selected direction A1 not drafted because no detector sheet
+prints its accuracy as a limit); T5b (board B's ground return, its load and capacity basis); L4-E9's round 9. The supplier delta is
+issued from this promoted revision and recorded when built; the quotation and every vendor question stay unsent.
+
+### Register additions, 4 October 2026 21:05 CEST: the supplier-delta review's two findings, and the checks V2 and V3 as given
+
+**The review of the supplier delta** (`MESHSAT-SUPPLIER-DELTA-aa76c894-over-d834e6a7.zip`, sha256 `1bda2d70...fe16`) is filed as
+received at `v2/docs/records/l4close/REVIEW-SUPPLIER-DELTA-AA76C894-AS-RECEIVED.md` and designated in `ARCHIVED-REVIEWS.yaml`. It reads
+the delta READY for a supplier's engineering review and quotation with the review attached; power-design closure and fabrication
+release stay BLOCKED. Its two findings are mapped once, here; neither reopens Layers 1 to 3 or blocks unrelated deliverables.
+
+| Task | Kind | Finding | Checked against newer work | Owner and branch | Acceptance | Check |
+|---|---|---|---|---|---|---|
+| T9 | software defect (P1) | DELTA-01: a failed flash program or an interrupted rollover of the panel firmware's slot store loses a committed slot lockout across a reset that is not a power-on reset (`v2/firmware/panel/src/slotstore.c`, `panel_core.c`); Layer 5's FW-C02 and FW-C05 persistence | reproduced on main `dfea910c` with the review's own probe: both controls PASS, both fault cases FAIL; no newer commit addresses it | the panel firmware's owner, `fnd/fw-r5` | regressions that fail on the old code; a failure injected at every erase and program boundary and after a successful retry; a committed lockout survives; rollover, the intended re-arming and the wipe journal's independence still hold; the conservative behaviour stated for a store that cannot be trusted | the firmware's host tests and `test_fw_panel`; the probe unmodified; the target build and real flash stay physical |
+| T2 (extended) | procedure defect (P1) | DELTA-02: TP-E11-29 and E11-29 heat and sense "each FET alone" through its body diode while Q39, Q40 and Q42 share one drain pour and one source pour, so the three diodes are in parallel and neither the heating power nor the junction reading is per device | L4-E11's rounds 11 and 12 (on a branch) restate the limit at 40.78 K/W and keep the same method: not addressed | L4-E11's author, then the procedures' author | a fixture or another method with the current paths in calibration, heating and sensing shown, each heating power and each temperature with its uncertainty, the self and mutual readings and the coupon's transfer rule reconciled; TP-E11-29 stays NOT EXECUTABLE until the method and the limits are reviewed and a supplier agrees to the setup | inside V2's targeted recheck |
+
+**The independent check V2** (an AI review of the combined candidate `fnd/v2cand` `dfa1eef2`, filed with set 30): T2, T3 and T4
+CONFIRMED AS CONDITIONAL; V1's corrections NOT CONFIRMED for one claim (V2-B1, the cost of R256 at 6.8 kOhm; answered in L4-E11's
+round 12 by returning it to 4.7 kOhm, the timing need left OPEN on an assumed leakage); board P's findings L8P-F06 and L8P-F07
+CONFIRMED real and OPEN, NOT CONFIRMED for two statements (V2-B2, V2-B3; board P's round 6 in progress). Its targeted recheck
+follows the corrections.
+
+**The collaborator's targeted recheck V3** (cx41, an AI review of `fnd/l9t5` `841e6c7e`, filed with set 30): **NOT CONFIRMED.** The
+U7 load relief and both compositions reproduce; an aged-contact combination the return calculation omitted puts 10.64 A through
+J_5V_IOC's ground contact on C-DEV rev 1 against the contact's 10 A, so I-03's acceptance on the connected path depends on
+L8R2-F31 (the return between boards A and B), which is OPEN. I-03 / L9P-F03 stays OPEN and is credited only with the load relief
+and the composition. This issue's focused check and targeted recheck are both used: the next check needs the changed design that
+corrects L8R2-F31, and the reason is recorded with that task.
+
+### Register addition, 4 October 2026 21:11 CEST: the supervisors' regulator deficit (T10), by the owner's instruction (part 7)
+
+The collaborator's recheck V3 and Layer 9's own finding L9T5-F06 report that each supervisor's 3.3 V regulator on board B (an
+AP2112K, 600 mA) is under the supervisor's printed demand at a hot junction (ST's row: 840 mA at TJ 125 C, 400 mA at TJ 85 C, for
+the 400 MHz workload; 0.900 A with the declared auxiliaries). I-03's draft moves those regulators' inputs and does not change
+their capacity, and a dedicated ground return does not address it. It is a separate finding with its own owner:
+
+| Task | Kind | Smallest deliverable | Case and acceptance | Owner | Check |
+|---|---|---|---|---|---|
+| T10 the supervisors' 3.3 V regulators (L9T5-F06) | missing evidence first, then a defect or a bounded condition | (1) the applicable operating conditions verified: the supervisor's clock and voltage-scale state as the contract and the firmware define it, its junction temperature from the inside air of L4-E12 and its own dissipation, and the maker's row for THAT state; (2) a named correction: either a regulator whose printed output capability covers the demand at the bounded junction temperature with margin, or a contract row that bounds the operating state with a firmware acceptance, never an unstated assumption; (3) its acceptance criterion | C-DEV rev 1 for the rail; the regulator's printed current, dropout and thermal limits against the demand at the bounded state and temperature; the draft composes, its nets are read with a mutation that fails, and the 3.3 V rail's regulation holds | Layer 9's power author with board B's generator owner (Layer 5 for a contract row) | with I-03's next check, on the changed design |
+
+**The affected supply path is not claimed complete** until the dedicated return (L8R2-F31) is verified over every permitted
+aged-contact combination of the VH contacts and the ribbon conductors, and T10 is resolved.
+
+### Register addition, 4 October 2026 21:39 CEST: the three-SDR research and integration plan (T11), by the owner's instruction (part 8)
+
+A bounded research task, added beside the current corrections: **a proposal to investigate, not an adopted change.** The selected
+baseline (one LimeSDR Mini 2.4 on board B's bank 1) is unchanged until the owner approves an adoption; no purchase, no supplier
+contact and no fabrication are authorised by it. The power corrections (DELTA-01, DELTA-02, I-03, L8R2-F31, T10 and the others)
+stay in their own tasks; the research names which of their results it depends on or would supersede, and no finding leaves the
+register because radios are added.
+
+| Task | Kind | Smallest deliverable | Acceptance | Owner | Check |
+|---|---|---|---|---|---|
+| T11 three SDRs, one per compute module | research and integration plan | `v2/docs/research/SDR-EXPANSION-PLAN.md`: the four configurations compared on one set of assumptions (the held LimeSDR alone, three of it, three USRP B205mini-i, three USRP B206mini-i) from the makers' current documents and this repository; the role matrix; the four connected budgets (power and endurance on the existing energy boundary, thermal and fit in the held case arrangement, board B's real USB topology and the network, RF coexistence and fault behaviour); one recommended configuration with its conditions, or the demonstrated constraint and the smallest change; the change-impact table per layer; a staged validation route; supplier responsibilities; effort apart from lead times; only the adoption decisions that are the owner's | every figure labelled documented, inferred or demonstrated, with its source and date; battery, solar, internal storage, the Peli 1450, HF and the tablet kept, the 48 to 72 hour runtime objective kept, any exception explicit and costed; missing evidence named, never filled in | one research author on `fnd/sdr3`, at the next suitable free slot | one focused challenge by the collaborator of the recommendation and its consequential budgets, a bounded correction, one targeted recheck if warranted; the verdict kept as given |
+
+### Register note, 4 October 2026 23:43 CEST: T11 clarified by the owner (part 11), and the evening's checks as given
+
+**T11 (the three-SDR research), clarified.** The intended final configuration stays three SDRs, one per compute module; a first
+enclosed radio on a bench is a validation stage and never approval to reduce the count. Before any purchase is recommended the
+task delivers ONE bounded fit result: three enclosed radios in the existing Peli arrangement with the battery, HF, the tablet and
+the other required equipment kept; the connectors, cable bends, mounting, lid closure, service access and cooling space counted;
+at most three credible rearrangements examined from the makers' drawings and this repository's mechanical model; the enclosure
+and thermal assumptions explicit (a geometric fit is not thermal feasibility; a radio out of its enclosure needs its own
+supported thermal arrangement); a confirmed dimensional conflict told apart from missing dimensions or an unfinished study; the
+smallest trade-off with its consequences. A reduced radio count, a lost function or an enclosure change is the owner's decision.
+No purchase and no baseline change is authorised. The collaborator's challenge (cx42) was running when this arrived and cannot
+take new input: the fit result and the corrections reach its review through the one targeted recheck.
+
+**Checks of the evening, as given (reports filed with set 30):** V5 (the independent check of DELTA-01's firmware correction,
+`fnd/fw-r5` `593d8ef6`): the reproduction on the old code and the wipe-journal separation CONFIRMED; the correction, the
+conservative state, the re-arming, the target adapter and the tests CONFIRMED AS CONDITIONAL; one blocking finding at the 32-bit
+sequence number's wrap (V5-B1; round 6 in progress). The first RP2040 target build of that commit: configure and build exit 0,
+image 32,980 bytes; real flash stays open. V2R (the targeted recheck on `fnd/v2cand2` `8ce0441e`): V2-B1 CLOSED AS CONDITIONAL,
+V2-B2 and V2-B3 CLOSED BY THE CORRECTION; DELTA-02's method CONFIRMED AS CONDITIONAL; TP-E11-29's fixture and pass rules NOT
+CONFIRMED (V2R-B1, V2R-B2; round 14 queued); TP-E11-29 stays NOT EXECUTABLE. Record l8r2's round 8 (`fnd/l8r4` `c935542f`): the
+dedicated return of three XT60 leads drafted and composed, unchecked; L8R2-F31 and I-03 stay OPEN.
