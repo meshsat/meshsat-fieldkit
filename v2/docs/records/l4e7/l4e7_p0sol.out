@@ -112,14 +112,15 @@ INPUTS (sha256, the first 16 hex digits)
   THE SELECTION (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain dependencies): (C2).
   It removes U5's absolute-rating violation of D-10 and D-16's operating-range exceedance by construction, at every source loop,
   with no new loop dependency; it adds one part the design already carries (an INA169) and one 100 nF, removes one (RSENSE1, whose
-  inductance no maker prints) and changes two values; its one new unprinted term (A7's own output at zero differential) can only
-  lower the regulation, never raise it (section 2h). Over (C3): C2's averaging does not depend on the amplifier's unprinted
-  bandwidth and its CS101 margin is 2.3 times C3's; C3 keeps the regulation independent of the trip and holds U23's rating at the
-  envelope's least loop, where the port itself fails (section 3). The price of C2, stated: the regulation and the 100 W trip share
-  the bank, so a short across the bank, which already defeats the trip (the record's single-fault list), now also defeats the
-  regulation (never credited for the 100 W bound); Layer 8's fault table carries it. Reversal: to (C3), the same draft with U23 on
-  R59's pads and R59 kept, if Layer 8's fault analysis rules the shared shunt out; the drafted RSENSE1 with A7 returns only with a
-  measured or maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.
+  inductance no maker prints) and changes two values; its one new unprinted term (A7's own output at zero differential) lowers the
+  regulation if A7 sources, and a sink, which p.31's text excludes (INFERRED), would have to reach 3.67 uA to bring the margin to
+  the accepted design's (section 2h). Over (C3): C2's averaging does not depend on the amplifier's unprinted bandwidth and its
+  CS101 margin is 2.3 times C3's; C3 keeps the regulation independent of the trip and holds U23's rating at the envelope's least
+  loop, where the port itself fails (section 3). The price of C2, stated: the regulation and the 100 W trip share the bank, so a
+  short across the bank, which already defeats the trip (the record's single-fault list), now also defeats the regulation (never
+  credited for the 100 W bound); Layer 8's fault table carries it. Reversal: to (C3), the same draft with U23 on R59's pads and
+  R59 kept, if Layer 8's fault analysis rules the shared shunt out; the drafted RSENSE1 with A7 returns only with a measured or
+  maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.
 
 2. THE SELECTED CIRCUIT (C2) ON BOTH CASES
   2a COMPOSITION, NETLIST AND MUTATIONS. Board E's generator composed in L4-E9's change-list order with the draft after the solar
@@ -232,17 +233,23 @@ INPUTS (sha256, the first 16 hex digits)
   2g THE START, THE RATINGS AND THE WINDOW. The start through Q12 puts at most 1.762 A through the bank (the record's figure with
      C79 added): U23 then holds IMON_IN at most 0.930 V even with no filter, under the IMON_IN fault's least 1.55 V, so the start
      never trips U5. U23 sits on U18's nets pin for pin, so every rating check (c) and the surge rounds give for U18 holds for U23
-     (NETLIST); its supply draw at most 4.0 mW. RSENSE1's loss (0.133 W at the regulation's highest) is gone. Unchanged: the hold
-     (R8, R9; FBIN on PV_P), the cut-off's band (28.55 to 31.06 V rising, 27.07 V or more falling), the backstop and its 100 W
-     bound (93.5521 W static; check (b)'s 1.087 ms), REQ-016's window, D4, the guard's start.
-  2h THE ONE NEW UNPRINTED TERM: A7's own output with CSPIN = CSNIN. The sheet prints no current for a negative differential and
-     none at zero (p.31); A7 never sinks, so whatever it sources at zero ADDS to U23's current and lowers the regulated input
-     current; it cannot raise it toward the trip. The regulation's lowest at 25 V with A7 sourcing (ASSUMPTION, a sensitivity):
-     0.0 uA 2.1839 A, 0.5 uA 2.1497 A, 1.0 uA 2.1155 A, 2.0 uA 2.0472 A, 5.0 uA 1.8420 A. A bounded PROVISIONAL choice (the scope
-     amendment, point 2): the regulation's band above holds with A7 at 0 uA, the protection holds whatever it is; the energy at
-     the limit falls by about 3 % per uA. Supplier validation: the IMON_IN pin current of five LT8705AIUHF parts with CSPIN =
-     CSNIN = VIN = 25 V and IMON_IN held at 1.2 V, at -20, +25 and +62 C; pass at or under 1 uA (the regulation within 3 % of its
-     setting); the clarification to Analog Devices is drafted, item 8, UNSENT.
+     (NETLIST); its supply draw at most 4.0 mW. RSENSE1's loss (0.133 W at the regulation's highest) is gone. The 100 W bound,
+     re-run: U23's VIN+ pin, like U18's, takes its output current and its input bias (the record's SESSION assumption, 1 mA) from
+     ahead of the bank, so the static bound rises by at most 0.0263 W, from 93.5521 W to 93.5783 W, and check (b)'s response
+     allowance, with C79's charge added, falls from 1.087 ms to 1.052 ms, still over the ten typical sums' 0.401 ms. Unchanged:
+     the hold (R8, R9; FBIN on PV_P), the cut-off's band (28.55 to 31.06 V rising, 27.07 V or more falling), the trip itself,
+     REQ-016's window, D4, the guard's start.
+  2h THE ONE NEW UNPRINTED TERM: A7's own output with CSPIN = CSNIN. The sheet prints no current out of IMON_IN for a negative
+     differential and no figure at zero (p.31); whatever A7 sources at zero ADDS to U23's current and lowers the regulated input
+     current, away from the trip. The regulation's lowest at 25 V with A7 sourcing (ASSUMPTION, a sensitivity): 0.0 uA 2.1839 A,
+     0.5 uA 2.1497 A, 1.0 uA 2.1155 A, 2.0 uA 2.0472 A, 5.0 uA 1.8420 A. That A7 cannot sink is read from p.31's statement that a
+     negative differential drives no current out of the pin (INFERRED, asked of Analog Devices); were it to sink, the regulation
+     would rise toward the trip: the correlated margin with A7 sinking 0.5 uA 0.3302 A, 1.0 uA 0.2960 A, 2.0 uA 0.2274 A, and it
+     falls to the accepted design's 0.1130 A only at a sink of 3.67 uA. A bounded PROVISIONAL choice (the scope amendment, point
+     2): the regulation's band above holds with A7 at 0 uA; the energy at the limit falls by about 3 % per uA sourced. Supplier
+     validation: the IMON_IN pin current of five LT8705AIUHF parts with CSPIN = CSNIN = VIN = 16 V and 25 V and IMON_IN held at
+     1.20 V, at -20, +25 and +62 C; pass from -0.5 uA (sinking) to +1.0 uA (sourcing): the regulation within 3 % of its setting
+     and the margin to the trip at least 0.3302 A; the clarification to Analog Devices is drafted, item 8, UNSENT.
 
 3. WHAT STAYS OPEN, EXACTLY
   D-10's port-level residual (the guard's own transient, not U5): a stiff source stepping onto the port with the guard on charges
@@ -258,7 +265,8 @@ INPUTS (sha256, the first 16 hex digits)
 
 4. VERDICTS
   D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in
-    one energy term (A7's zero-differential output, 2h), which cannot move the regulation toward the trip.
+    one term (A7's zero-differential output, 2h): sourcing lowers the regulation (energy only); a sink, excluded by p.31's text
+    (INFERRED), is covered by the margin up to 3.67 uA.
   D-10 (B6, L4-F01): NARROWED, OPEN. CORRECTED: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line
     (R97 24.9k). OPEN: the guard-on event's port-level residual below the port's own floors and PV_F over the recommended 80 V row at the
     reference loop (L6P-F10); the cold connection's slew margin line at the least loop. Next: B2 at Layer 7, or P1-1 (narrowed).
