@@ -109,7 +109,7 @@ PINS = {
     "l8p_breaker": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt", "ddc7258038c86b6ad03416dafcaab68bb8133cb25540b7fb2cba1263874ff541"),
     "l8p_enable": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf2.txt", "3323d1831fd1dc46664b739f51d981ab0c9c84f49838e7c8f62053782fc0caa9"),
     "l8p_ptc": ("v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt", "c8e4eeb499491eab773332b090ef1ebb8f0d14975ffedf9e750f5c64ff89d92f"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "bbacc459552e22c520ed92846b38e7abe88fab69eb1be81d56691589cdf91317"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "aab5ae6b3b9ef0d10ad24b9af6d1dca5661125cdcfdbb16066407ad53bef86c4"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "8c8e26858293d6f76a2988ebf9a3a8396cb067314bf0808e82785e91256b7f31"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -119,10 +119,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "3a46198439d54bfb11fd8a0a25b236793eb4a088af36127cd1cbcb431fcfe04f"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "1938c400d1404eae57cb05cfe4460829f5c2799f0332770ee75ad1e1c1ebb6f6"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "3bdd5e3ebba68b077710ca11d1c5a31f3e5d759edc2270e664b0c36cc3468289"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "31883eca9d5309b533bbbc6e204a8cebf1a8efc509b6a804f906da2c5dcc05cb"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "b0e303a557e38898dc2755db0c8ff25186ca38c65e439d2fe572899d433eefc9"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -152,14 +152,14 @@ PINS = {
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
     "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
-    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "a7f90fe48aeeadf6ab6d7d50a5f7c159231454226a561568861e360bc574546f"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "71c51f348b2887e79e460532f65ef955a3f3c25deba9036a62b408f67274cd40"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
     # the consolidation's results: L4-E11's charger selection (B1), check 5 at 5aa18a69, and L4-E12's thermal verdict (T-H1
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "0e215988ba2a929bd2eb91b7eb80fa20040da28d10c08a9c36e1022e81a789c0"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -176,6 +176,8 @@ PINS = {
     "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "8f6b173d8329c5dd6003fc026bf7606f769d83c87b39a808c0b295e533c0c754"),
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
+    # set 30 (6 October 2026): the P0 round's solar record output, read by the D-10 / D-16 citation check (the applied change-list text cites its figures)
+    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "28a5b9fd93dd7b50a54f7f92e3c3246b8c57c6ec0f03bb880168129da3c0f180"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
@@ -2413,7 +2415,7 @@ def surge_inputs(F, T):
     if "no loop is claimed to pass (round 5)" not in b6["r176"][2] or "their 10 % margin lines are not held at a connector fault" not in b6["r176"][1]:
         refuse(3, "R-176's rows 2 and 3 after round 5")
     rm["b6"] = b6
-    src7 = one(T["l4e7r"]) + " " + one(T["l4e7md"])
+    src7 = one(T["l4e7r"]) + " " + one(T["l4e7md"]) + " " + one(T["l4e7p0"])   # set 30: L4-E7's P0 output too (D-10's applied text cites its cases)
     for d in DEFECTS + [{"id": "RESERVE_NOTE", "options": RESERVE_NOTE, "state": "", "resolution": ""}]:
         if d["id"] in ("D-10", "D-11", "D-16", "RESERVE_NOTE"):
             for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["options"], d["state"], d["resolution"]])):

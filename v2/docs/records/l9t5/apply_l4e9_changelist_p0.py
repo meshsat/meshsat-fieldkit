@@ -104,8 +104,33 @@ def patch_page(text, m, reg_text):
     return "\n".join(lines[:i] + [NOTE, ""] + table + lines[j:]), ch
 
 
+def applied_state(root):
+    """The APPLIED tree (set 30's integration commit 7070f106 wrote the three files): {path: current text} and the change list read from
+    them, or None when the register does not yet carry R-220. The applied texts must hold every added row, every edited row, every script
+    edit and the page's note verbatim; anything else refuses (a half-applied or edited tree is neither state)."""
+    p_reg, p_py, p_page = (os.path.join(root, L4, f) for f in ("DOWNSTREAM-REGISTER.md", "l4e9_power_path.py", "L4-POWER-ARCHITECTURE.md"))
+    reg = open(p_reg, encoding="utf-8").read()
+    if "| R-220 |" not in reg:
+        return None
+    py = open(p_py, encoding="utf-8").read()
+    page = open(p_page, encoding="utf-8").read()
+    missing = [r[:40] for _a, rows in REG_ADD for r in rows if r not in reg]
+    missing += [rep[:40] for _o, rep in REG_EDITS if rep not in reg]
+    missing += [rep[:40] for _o, rep in PY_EDITS if rep not in py]
+    if missing or not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\n")):
+        refuse("the register carries R-220 but the applied texts are not this draft's: %r" % missing[:3])
+    m = module_of(py, p_py)
+    ch = m.cons_changes(m.md_table(reg, "| ID | Kind |"))
+    m.ALREADY_APPLIED = True
+    return {p_reg: reg, p_py: py, p_page: page}, ch, m
+
+
 def patch_all(root):
-    """{relative path: new text} and the patched change list, all in memory"""
+    """{relative path: new text} and the patched change list, all in memory; on the APPLIED tree (after the integrator wrote the files)
+    the tree's own texts and their change list (applied_state), so readers of the list work before and after the integration"""
+    done = applied_state(root)
+    if done is not None:
+        return done
     p_reg, p_py, p_page = (os.path.join(root, L4, f) for f in ("DOWNSTREAM-REGISTER.md", "l4e9_power_path.py", "L4-POWER-ARCHITECTURE.md"))
     reg = patch_register(open(p_reg, encoding="utf-8").read())
     py = patch_script(open(p_py, encoding="utf-8").read())
@@ -126,8 +151,14 @@ def main(argv):
     root = os.path.abspath(args[0]) if args else REPO
     files, ch, _m = patch_all(root)
     new = [c for c in ch if re.match(r"R-\d+$", c[2]) and 220 <= int(c[2][2:]) <= 245]
-    print("%s: %d changes in the patched list (%d rows R-220 to R-245, R-240 already in the tree, no R-241: route B2 out of the baseline), FAN_OK's three WITHDRAWN, every order constraint holds" % (
-        NAME, len(ch), len(new)))
+    applied = getattr(_m, "ALREADY_APPLIED", False)
+    print("%s: %d changes in the %s list (%d rows R-220 to R-245, R-240 already in the tree, no R-241: route B2 out of the baseline), FAN_OK's three WITHDRAWN, every order constraint holds" % (
+        NAME, len(ch), "applied" if applied else "patched", len(new)))
+    if applied:
+        if flags == ["--write"]:
+            refuse("the register already carries R-220: applied before")
+        print("%s: APPLIED BEFORE (the tree carries this draft's rows verbatim), nothing to write" % NAME)
+        return 0
     if flags != ["--write"]:
         print("%s: CHECK OK, nothing written" % NAME)
         return 0
