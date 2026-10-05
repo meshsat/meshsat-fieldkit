@@ -2012,7 +2012,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      the window with the guard (record l8p 3, on the full count of sinks, its shunt's off leakage among them): the return 0.908 V (0.859 V all
        doubled) at DOCK_EN_OUT 1.825 V against the closed reading's 0.84 V: a ramping closed loop never reads held (RET/OUT at least 0.4707 with every
        sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single
-       failure of 10b (Q60's gate on its drain: the return 0.799 V there); record l8p withdrew its label L8P-D9 (the owner's part 22) and
+       failure of 10b (Q60's gate on its drain: the return 0.799 V there, RECORD); record l8p withdrew its label L8P-D9 (part 22) and
        drafts a cold clamp under which that short holds the return low and trips (its 10c); check_dd7_netlist.py's round 18 admits its C268
      the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a
        source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release
