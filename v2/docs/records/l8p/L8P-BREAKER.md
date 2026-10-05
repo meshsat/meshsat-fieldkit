@@ -1191,7 +1191,8 @@ three capacitors' pins with their classes (C261 and C263 class D, C262 class L w
 - **The old guard fails too:** board A with round 7's PTC draft alone reads EN FAIL (RT1 withdrawn) and THG NOT DRAWN.
 
 **Item 3, the judgement on C-PROT rev 1 (`l8p_c4.out` sections 8 to 12, computed on the draft's own values).** On the desk the case
-row HOLDS for the draft; the physical conditions stay apart.
+row's rows hold for the intact circuit; the physical conditions stay apart. **PROVISIONAL as a protection (the recheck cx46, items 10
+and 17):** a latent single failure of section 10 removes the trip (V6-m7, 12o), so no C-PROT verdict for the guard is closed.
 
 | C-PROT rev 1 | Reading | Label |
 |---|---|---|
@@ -1342,20 +1343,25 @@ paths that share only the pour they sense and the loop they open.**
 - Designators clear of d8dec31's next-free picks (R264 and C264 on this composition). Round 9's first form (a diode OR of the two
   switches into one gate network, R262 at 22 kOhm) is superseded: it kept a common path.
 
-Judged on C-PROT rev 1 (`l8p_c4.out` 10c, DERIVED on the printed rows; on-resistance ASSUMED by section 4's convention):
+Judged on C-PROT rev 1 (`l8p_c4.out` 10c, DERIVED on the printed rows; on-resistance ASSUMED by section 4's convention). **DISPOSITION
+after the recheck cx46 (CORRECTIONS NOT CLOSED, the second negative; the method ends): every claim below is OPEN or PROVISIONAL, none
+closed; what each handed-over case weakens is said at the claim.**
 - **Q60's short trips:** the clamp's gates at least 3.74 V (VDD 4.26 V held at 7.6 V, the open drain's 1 uA and the gates' printed
   0.16 uA through 444.4 kOhm); 28.2 ohm each against at most 329 ohm; the return 66.5 mV under 0.7755 V. The clamp needs each gate's
   leakage at most 1.36 uA (printed 0.08 uA at 25 C, hot not printed): a Layer 6 or bench condition; with the gates at the off
   leakage's doubling it is not shown, and Q60's short then leaves path 2 holding the protection.
 - **The common path:** each single failure of path 1 (U61, U60, R262, C260, R263, Q60, FM2) leaves path 2, and each of path 2 leaves
-  path 1: no single failure removes the trip. Path 2 tripped holds DOCK_EN_OUT at 50.8 mV and the return at 30.4 mV (the 29.2 V
-  clamp): the breaker off, DD-7 reading the loop dark (L4-E11 28b).
+  path 1: no single failure removes the trip AT ONCE. Path 2 tripped holds DOCK_EN_OUT at 50.8 mV and the return at 30.4 mV (the
+  29.2 V clamp): the breaker off, DD-7 reading the loop dark (L4-E11 28b). PROVISIONAL: with path 1 lost, path 2's retries leave the
+  junction's rise unbounded, and a latent first failure followed by a second removes the trip (L8P-R9-F1).
 - **The rest of C-PROT rev 1:** the no-trip side unchanged (38.4, 9.8, 6.0 K per switch); path 1 trips to 2.5 V within 43.8 ms,
   path 2 within 40.0 ms; the window unchanged (0.908 V, 0.859 V all doubled, against 0.84 V); both gates under 1 V before tEN
   (0.438 V); a hot docking reaches path 1's shunt at 104.0 / 72.0 / 57.0 ms at 7.6 / 10.6 / 16.8 V, before 0.110 s; with path 1 lost
   and VBAT from the pack alone, path 2 acts at most 43.8 ms after a breaker start, a relaxation whose on-time's junction rise is not
-  bounded here (as section 9 (b)'s delay); every new part within its rating.
-- **The delta's own single failures:** none removes the trip (`l8p_c4.out` 10c's table).
+  bounded here (as section 9 (b)'s delay): with path 1 lost the protection under those retries is NOT shown (cx46 item 10, the
+  retry-energy analysis REMAINING ENGINEERING); every new part within its rating.
+- **The delta's own single failures:** none removes the trip at once (`l8p_c4.out` 10c's table); each leaves one path, under which
+  L8P-R9-F1 and the retry heating apply (PROVISIONAL).
 - **Composed** in L4-E9's order with this record's drafts then the delta (15 scripts OK, 731 parts): `check_l8p_fs.py` reads A EN and
   A THG DRAWN (paths 1 and 2 by pin and their separation), L4-E11's `check_dd7_netlist.py` (its round 18 admits C268 and Q61) DRAWN;
   seven mutations each FAIL; the delta refuses without the round 8 guard, a second time and on the tree's own generator.
@@ -1371,18 +1377,27 @@ finds the separation, the clamp's drive or the 7.6 V docking corner not supporte
   silently removes ONE path is found only by E-13b, each path on its own, and no service interval bounds that; a second failure in the
   other path before it is found removes the trip (the exposure of 10b). No automatic diagnostic is drafted: one that tests a shunt opens
   the breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts. The cases:
-  the double failures; the attempted correction: this delta (single failures survived); the outputs PROVISIONAL on it: 10c's verdict,
-  C-PROT rev 1 for the guard, L4-E11 section 28.
+  the double failures; the attempted correction: this delta (single failures survived at once); the outputs PROVISIONAL on it: 10c's
+  disposition, C-PROT rev 1 for the guard (every claim), L4-E11 section 28. **After the recheck cx46 (items 10 and 17), also REMAINING
+  ENGINEERING:** the bounded retry-energy analysis of path 2 alone after path 1 is lost, and an AUTOMATIC diagnostic with a bounded
+  detection and response interval covering faults after start-up and faults of the diagnostic itself (the owner's part 24), or a
+  fault-tolerant redesign. L8P-R9-F1 weakens every C-PROT claim for the guard.
 - **L8P-R9-F2 (Layer 5's row, record l9stk 15.9; OPEN):** the guard's draw on DOCK_EN_OUT rises from 18.25 uA to at most 36.00 uA cold
   and 47.02 uA tripped (printed maxima, the off leakage at the doubling, the worst single fault); the loop's readings hold at allowances
-  of 40 uA and 50 uA (10c), and L4-E11 section 28 restates 20c and 20f on them. The 30 uA allowance is a named prerequisite to restate.
+  of 40 uA and 50 uA (10c), and L4-E11 section 28 restates 20c and 20f on them and on the first form's 50 uA and 180 uA (the case the
+  P0 list named). **The consumers, as drafts for their owners (not applied, the owners' to take):** Layer 5's row, "the thermal guard's
+  allowance on DOCK_EN_OUT: 40 uA with the guard cold, 50 uA tripped (record l8p 10c, the delta's printed maxima with the off leakage at
+  the doubling)"; record l9stk 15.9, "the guard's draw on DOCK_EN_OUT, 30 uA (round 8's single path) becomes 40 uA cold and 50 uA
+  tripped with record l8p's delta". Until the owners apply them, every row resting on the allowance is PROVISIONAL; the replay of the
+  dependent start-up and protection rows at the owners' figure is REMAINING ENGINEERING (L4-E11 28e).
 - **L8P-R9-F3 (this record and Slot A, when the delta is released):** `check_l8p_netlist.py`'s THG group knows no delta and reads it
   FAIL; it stays untouched here because `l9t5_drafts.out` and `l8p_drafts.out` print its digest. `check_l8p_fs.py` reads the delta.
 - **E-13b gains (e):** TRIP_TEST on each switch alone (TP60 with TP63, then TP64 with TP67) opens the breaker; THG_ODN (TP66) within
   0.52 V of VDD cold and low with TP60 high; TP67 reads 4.95 to 5.05 V with VBAT over U63's dropout.
 
-**State:** V6-m7 OPEN until an independent check reads 10b and 10c; its three failures and cx45's common path CORRECTED IN DRAFT, the
-desk acceptance met by its author, unchecked. L8P-F07 and L8P-F08 stay OPEN.
+**State (DISPOSITION after cx46):** V6-m7 OPEN and NOT CLOSED; the two-path delta DRAFTED (its intact circuit's desk rows hold,
+composed, mutated); C-PROT rev 1 for the guard PROVISIONAL; L8P-R9-F1, F2 and F3 OPEN; REMAINING ENGINEERING as listed above.
+L8P-F07 and L8P-F08 stay OPEN.
 
 ## 13. DD-5: the charge switch's body diode in discharge (round 4; `l8p_drafts.out` section 3c)
 

@@ -440,7 +440,7 @@ def _run_script(path, out, head, n_pred, what):
 
 
 def t_round4_t10_output_reproduced_and_every_predicate_holds():
-    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 26, "the T10 script")
+    text = _run_script(T10, T10_OUT, "12. THE PREDICATES", 28, "the T10 script")
     for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
                "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "Round 4 was the first attempt at this correction",
                "round 5 is the second round on the same correction"):
@@ -842,48 +842,53 @@ def t_round5_the_page_carries_the_outputs_figures():
 
 
 def t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved():
-    """The check cx45's Q3, round 6 (l9t5_t10.out 10j), re-solved from the drafts' own values and the printed rows: the schedule's dominant
-    bound inside the share; the transmit-share limiter's threshold window (4.7 to 12.3 % of dominant share) clear of the legitimate 2 % and
-    under a controller babbler's least 15 %; the rail trip's window (0.2183 to 0.2452 A) over every served state; the LDO at the trip's
-    maximum inside 125 C; the contract draft carrying FW-B22 and revision V only at 4.01 V; the containment delta's checks in the output."""
+    """The check cx45's Q3, round 6, and its recheck cx46 (l9t5_t10.out 10j), re-solved from the drafts' own values and the printed rows,
+    as a DISPOSITION: the schedule's dominant bound inside the share (a traffic model); the limiter's threshold window and the rail trip's
+    window reproduce; the rail trip's charging path is RL + RF, so V-B23's 0.2 s does not follow and is withdrawn; cx46's periodic
+    countermodel stays under the trip and passes 125 C, so the sustained bound is withdrawn; no positive closure is printed, every item is
+    OPEN, PROVISIONAL or REMAINING ENGINEERING; the contract draft carries the withdrawals; revision X has no admission route."""
     m = _mod(T10, "l9t5_test_t10r6")
     gv = m.guard_values()
-    # the schedule: six 135-bit frames counted dominant, twelve acknowledgement bits, against 2 % of 100 ms at 500 kbit/s
     assert 6 * 135 + 12 == 822 <= 0.02 * 0.1 * 500e3
-    # the limiter: TXD over R1 and R2 (0.1 %) into the TPS3701's 387 to 400 mV falling threshold; the rail 3.3 V +-1.5 %; 25 nA at the input
     r1, r2 = gv["r1"], gv["r2"]
     k_lo, k_hi = r2 * 0.999 / (r1 * 1.001 + r2 * 0.999), r2 * 1.001 / (r1 * 0.999 + r2 * 1.001)
     e = 25e-9 * r1 * 1.001 * r2 * 1.001 / (r1 * 1.001 + r2 * 1.001)
     d_lo, d_hi = 1 - (0.400 + e) / (3.3 * 0.985 * k_lo), 1 - (0.387 - e) / (3.3 * 1.015 * k_hi)
     assert round(100 * d_lo, 1) == 4.7 and round(100 * d_hi, 1) == 12.3 and 0.02 < d_lo and d_hi < m.FRAME_D_MIN
-    assert (1 - 0.02) * 3.3 * 0.985 * k_lo - e > 0.403, "the legitimate share must leave the transceiver enabled"
-    # the rail trip: (VIT+ / (gm RL) +- Vos) / Rs, gm 990 to 1010 uA/V, Vos 1 mV, VIT+(INB) 397 to 403 mV, resistors 1 %, 25 nA into 100 kOhm
-    rs, rl, rf = gv["rs"], gv["rl"], gv["rf"]
+    rs, rl, rf, cf = gv["rs"], gv["rl"], gv["rf"], gv["cf"]
     i_max = (0.403 / (990e-6 * rl * 0.99) + 1e-3) / (rs * 0.99) + 25e-9 * rf * 1.01 / (990e-6 * rl * 0.99 * rs * 0.99)
     i_min = (0.397 / (1010e-6 * rl * 1.01) - 1e-3) / (rs * 1.01) - 25e-9 * rf * 1.01 / (1010e-6 * rl * 1.01 * rs * 1.01)
     assert round(i_min, 4) == 0.2183 and round(i_max, 4) == 0.2452
-    # the LDO at the trip's maximum: 76.25 C + 184 C/W x (4.1174 - 3.3 x 0.985) V x I
-    tj = 76.25 + 184.0 * (4.1174 - 3.3 * 0.985) * i_max
-    assert round(tj, 1) == 115.4 and tj <= m.TJ_GOAL
+    # V-B23 (cx46 6): the charging path is RL + RF; from the bounded state (with the pull-ups) to 0.30 A the average passes i_max late
+    tau = (rf + rl) * 1.01 * cf * 1.1
+    t = tau * math.log((0.30 - 0.1739) / (0.30 - i_max))
+    assert t > 0.2 and abs(t - 0.98) < 0.02
+    # cx46's countermodel (7): 0.50 A for 0.40 s every 1.50 s, one pole of 184 K/W and 0.25 s, 0.020 V extra drop, the 0.30 ohm sense
+    p_on = (4.1174 - 3.3 * 0.985 - 0.020 - rs * 0.50) * 0.50
+    tj = 76.25 + 184.0 * p_on * (1 - math.exp(-0.40 / 0.25)) / (1 - math.exp(-1.50 / 0.25))
+    f = 0.50 * (1 - math.exp(-0.40)) / (1 - math.exp(-1.50))
+    assert round(p_on, 5) == 0.34845 and abs(tj - 127.54) < 0.02 and f < i_min and tj > m.TJ_GOAL
     out = open(T10_OUT, encoding="utf-8").read()
     sec = out.split("   10j. THE CHECK cx45's Q3")[1].split("\n11. THE STATE OF L9T5-F06")[0]
-    for s_ in ("822 bit-times against FW-B21's 1000", "silenced when its share passes 4.7 to 12.3 %", "0.2183 to 0.2452 A at the tolerances",
-               "junction at most 115.4 C at 76.25 C air", "none trips", "Zth(171 ms) at most 105 C/W", "at most 229 C/W at 76.25 C air",
-               "each other LDO's input at least 3.6571 V against its 3.4798 V: holds", "at least 3.6524 V against 3.5213 V: holds",
-               "read by pin (each rail's sense", "limiter): DRAWN", "refused; a second time: refused; on the tree's own generator: refused (NOT RELEASED)",
-               "WHAT IS NOT CLOSED (handed over as remaining engineering, no exception presumed)", "L9T5-F25",
-               "VERDICT (10j): cx45's Q3 (a) to (d) CORRECTED IN DRAFT on revision V at 14.0k, the desk acceptance MET"):
+    for s_ in ("this section is the DISPOSITION", "822 bit-times against FW-B21's 1000", "PROVISIONAL (cx46 5): this establishes the traffic MODEL",
+               "silenced when its share passes 4.7 to 12.3 %", "0.2183 to 0.2452 A at the tolerances", "is WITHDRAWN (cx46 6)",
+               "127.54 C, OVER 125 C: the universal sustained bound and its positive margin are WITHDRAWN",
+               "NOT an acceptance of the sustained bound", "revision X is HELD with no admission route", "CON-004's quorum verdict (OPEN)",
+               "DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED", "REMAINING ENGINEERING, for the receiving company", "L9T5-F25"):
         assert s_ in sec, s_
-    assert sec.count("     mutated, ") == 6 and sec.count(": ") and all(l.rstrip().endswith("FAIL") for l in sec.splitlines() if l.startswith("     mutated, "))
+    for bad in ("desk acceptance MET", "CORRECTED IN DRAFT", "the trip's maximum holds 125 C", "within 0.2 s and the supervisor"):
+        assert bad not in sec, bad
+    preds = out.split("12. THE PREDICATES")[1]
+    assert "the countermodel stays under the trip's least filtered current and over 125 C" in preds and "V-B23's 0.2 s" in preds
     cd = _mod(CONTRACT_DRAFT, "l9t5_test_contract_r6")
     assert "silicon revision V only" in cd.FW_B20 and "4.01 V" in cd.FW_B20 and "4.18 V" not in cd.FW_B20 and " or X" not in cd.FW_B20
-    assert "| FW-B22 |" in cd.FW_B22 and "| V-B22 |" in cd.V_B22 and "| V-B23 |" in cd.V_B23
+    assert "| FW-B22 |" in cd.FW_B22 and "PROVISIONAL" in cd.FW_B22 and "REMAINING ENGINEERING" in cd.FW_B22
+    assert "WITHDRAWN" in cd.V_B23 and "within 0.2 s and the supervisor is unpowered" not in cd.V_B23 and "NOT an acceptance" in cd.V_B20
     page = open(ROUND5, encoding="utf-8").read()
-    for s_ in ("## 12. Round 6: the check cx45's Q3", "| L9T5-D5 | WITHDRAWN (round 6)", "| L9T5-D8 | SUPERSEDED (round 6)", "| L9T5-D9 (round 6)",
-               "- **Revision X: HELD**"):
+    for s_ in ("## 12. Round 6 and its disposition", "| L9T5-D5 | WITHDRAWN (round 6)", "| L9T5-D8 | SUPERSEDED (round 6)", "| L9T5-D10 (round 6; renamed from D9",
+               "- **Revision X: HELD**", "**SUPERSEDED (round 6, and the recheck cx46's item 8)", "Consequence (SUPERSEDED in its admission clauses"):
         assert s_ in page, s_
-    assert "For a rev X part: PROVISIONAL" not in page and "or L9T5-F22's set point |" not in page
-
+    assert "For a rev X part: PROVISIONAL" not in page and "L9T5-D9 (round 6)" not in page
 
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
