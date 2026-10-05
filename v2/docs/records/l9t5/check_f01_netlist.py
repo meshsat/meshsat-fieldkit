@@ -7,13 +7,16 @@ cap (P0-1, MESHSAT-1357, 5 October 2026). It PARSES the netlists (record l8p's s
            FEED   J_PA pin 1 on +13V8_PAJ, and nothing else on +13V8_PAJ but U551's IN- pins: no path to the PA bypasses the sense
            SET    U552 (TLV758P) OUT 1 PA_ISET, FB 2 PA_ISFB, EN 4 and IN 6 on +5V_D8IN; R551 PA_ISET to PA_ISFB over R552 PA_ISFB to GND;
                   the set point from their values: 0.55 V x (1 + R551 / R552) / 0.5 V/A, equal to l9t5_paloop.py's to 0.1 percent
-           LOOP   U553 half A: IN1+ 3 on PA_ISET, IN1- 2 on PA_INTN, OUT1 1 on PA_INTO, R553 PA_IMON to PA_INTN, C554 PA_INTN to PA_INTO
+           HOLD   R559 PA_ISET to PA_ISP, C557 PA_ISP to GND, Q551 (2N7002) gate OUTLET_OK, source GND, drain PA_ISP (the set point held at
+                  0 V while the PA is not keyed and ramped at each key); R560 from +5V_D8IN into PA_INTN
+           LOOP   U553 half A: IN1+ 3 on PA_ISP, IN1- 2 on PA_INTN, OUT1 1 on PA_INTO, R553 PA_IMON to PA_INTN, C554 PA_INTN to PA_INTO
                   (the sense on the INVERTING input: the integrator falls when the current is over); half B: IN2+ 5 PA_MID, IN2- 6
                   PA_INVN, OUT2 7 PA_ILIM_A, R554 PA_INTO to PA_INVN, R555 PA_INVN to PA_ILIM_A, R556 and R557 the midpoint; V+ 8 on
                   +5V_D8IN; R558 PA_ILIM_A to PA_ILIM; J_MEZZ1 pin 16 on PA_ILIM
-           U13    its FB divider R50 and R51 at 0.1 percent (the case's margin rests on it)
+           U13    its FB divider R50 and R51 at 0.1 percent (the case's margin rests on it); its BIAS (pin 24) and C195 on PA_OUT, ahead of
+                  R55, and nothing of U13 but its FB divider, VOUT sense and ISNS filter behind R55
   board D  INJ    J_HARN1 pin 16 on PA_ILIM; R57 PA_ILIM to VGG_FB; C76 PA_ILIM to GND; R82 VGG_SW to VGG_FB, R83 VGG_FB to GND; U15
-                  FB 2 on VGG_FB, OUT 1 on VGG_SW, EN 4 on PA_KEY; nothing else on VGG_FB
+                  FB 2 on VGG_FB, OUT 1 on VGG_SW, EN 4 on PA_KEY; nothing else on VGG_FB; R58 VGG_SW to GND (the bleed)
            BAND   the band from R82, R83 and R57's values (l9t5_paloop.vgg_band): nominal 4.4825 V to 0.5 percent, top under 5 V, the
                   loop's authority under 3.5 V
   SIGN     the loop's sign read from the topology: PA_ILIM rises with the current (two inverting stages) and lowers VGG (R57 into the
@@ -71,8 +74,9 @@ def check_a(nl, S=None):
                + [("U551", p, "GND") for p in ("6", "7", "8", "11")] + [("U551", "9", "PA_IMON"), ("U551", "10", SUPPLY),
                ("J_PA", "1", "+13V8_PAJ"), ("J_PA", "2", "GND"),
                ("U552", "1", "PA_ISET"), ("U552", "2", "PA_ISFB"), ("U552", "3", "GND"), ("U552", "4", SUPPLY), ("U552", "6", SUPPLY),
-               ("U553", "1", "PA_INTO"), ("U553", "2", "PA_INTN"), ("U553", "3", "PA_ISET"), ("U553", "4", "GND"), ("U553", "5", "PA_MID"),
-               ("U553", "6", "PA_INVN"), ("U553", "7", "PA_ILIM_A"), ("U553", "8", SUPPLY), ("J_MEZZ1", "16", "PA_ILIM")])
+               ("U553", "1", "PA_INTO"), ("U553", "2", "PA_INTN"), ("U553", "3", "PA_ISP"), ("U553", "4", "GND"), ("U553", "5", "PA_MID"),
+               ("U553", "6", "PA_INVN"), ("U553", "7", "PA_ILIM_A"), ("U553", "8", SUPPLY), ("J_MEZZ1", "16", "PA_ILIM"),
+               ("Q551", "1", "OUTLET_OK"), ("Q551", "2", "GND"), ("Q551", "3", "PA_ISP"), ("U13", "24", "PA_OUT")])
     for a_, b_ in (("12", "13"), ("4", "5")):
         n1, n2 = pin(nl, "U551", a_), pin(nl, "U551", b_)
         if n1 != n2 or members(nl, n1) != sorted(["U551.%s" % a_, "U551.%s" % b_]):
@@ -82,9 +86,13 @@ def check_a(nl, S=None):
         bad.append("+13V8_PAJ carries more than the sense's load side and J_PA: %s" % feed)
     for ref, a_, b_ in (("R551", "PA_ISET", "PA_ISFB"), ("R552", "PA_ISFB", "GND"), ("R553", "PA_IMON", "PA_INTN"), ("C554", "PA_INTN", "PA_INTO"),
                         ("R554", "PA_INTO", "PA_INVN"), ("R555", "PA_INVN", "PA_ILIM_A"), ("R556", SUPPLY, "PA_MID"), ("R557", "PA_MID", "GND"),
-                        ("R558", "PA_ILIM_A", "PA_ILIM")):
+                        ("R558", "PA_ILIM_A", "PA_ILIM"), ("R559", "PA_ISET", "PA_ISP"), ("C557", "PA_ISP", "GND"), ("R560", SUPPLY, "PA_INTN"),
+                        ("C195", "PA_OUT", "GND")):
         if not between(nl, ref, a_, b_):
             bad.append("%s is not between %s and %s: %s" % (ref, a_, b_, sorted(set(nl["pins"].get(ref, {}).values()))))
+    behind = [m for m in members(nl, "+13V8_PA") if m.startswith("U13.") and m not in ("U13.12",)]
+    if behind:
+        bad.append("U13 pins behind R55 other than its VOUT sense: %s (BIAS belongs on PA_OUT)" % behind)
     for ref in ("R50", "R51"):
         if "0.1%" not in value(nl, ref):
             bad.append("%s (U13's FB divider) is %r, not 0.1 percent" % (ref, value(nl, ref)))
@@ -95,14 +103,16 @@ def check_a(nl, S=None):
         if abs(info["i_set"] / (0.55 * (1 + PL.R_SET_TOP / PL.R_SET_BOT) / PL.G_SENSE) - 1) > 0.001:
             bad.append("the set point from R551 %s and R552 %s is %.4f A, not l9t5_paloop.py's" % (value(nl, "R551"), value(nl, "R552"), info["i_set"]))
         if S is not None:
-            L = PL.cap(S, 110e-6, 50.0, r_top=rt, r_bot=rb)
+            L = PL.cap(S, r_top=rt, r_bot=rb)
             info.update(i_min=L["i_min"], i_max=L["i_max"], u13_min=L["u13_min"])
-            if L["i_max"] >= L["u13_min"]:
-                bad.append("the cap's top %.4f A is not under U13's loop minimum %.4f A" % (L["i_max"], L["u13_min"]))
+            if L["i_max"] + L["r55_other"] >= L["u13_min"]:
+                bad.append("the cap's top %.4f A and R55's other loads are not under U13's loop minimum %.4f A" % (L["i_max"], L["u13_min"]))
+            if L["ref_preload"] < 1e-3:
+                bad.append("U552's preload %.3f mA is under the 1 mA of its accuracy test condition" % (L["ref_preload"] * 1e3))
     except (ValueError, ZeroDivisionError) as e:
         bad.append("the set point's values do not parse: %s" % e)
     # the sign: half A takes the sense on its inverting input (R553 to IN1-) and the set point on IN1+; half B takes A's output on IN2-
-    sign_a = -1 if (pin(nl, "U553", "2") == "PA_INTN" and pin(nl, "U553", "3") == "PA_ISET" and between(nl, "R553", "PA_IMON", "PA_INTN")) else +1
+    sign_a = -1 if (pin(nl, "U553", "2") == "PA_INTN" and pin(nl, "U553", "3") == "PA_ISP" and between(nl, "R553", "PA_IMON", "PA_INTN")) else +1
     sign_b = -1 if (pin(nl, "U553", "6") == "PA_INVN" and between(nl, "R554", "PA_INTO", "PA_INVN")) else +1
     info["sign_a_to_ilim"] = sign_a * sign_b
     if sign_a * sign_b != +1:
@@ -114,7 +124,7 @@ def check_d(nl, S=None):
     if "R57" not in nl["comps"]:
         return "NOT DRAWN", ["R57 is absent (the drawn state: VGG open loop at 4.30 to 4.68 V)"], {}
     bad = rows(nl, [("J_HARN1", "16", "PA_ILIM"), ("U15", "1", "VGG_SW"), ("U15", "2", "VGG_FB"), ("U15", "4", "PA_KEY")])
-    for ref, a_, b_ in (("R57", "PA_ILIM", "VGG_FB"), ("C76", "PA_ILIM", "GND"), ("R82", "VGG_SW", "VGG_FB"), ("R83", "VGG_FB", "GND")):
+    for ref, a_, b_ in (("R57", "PA_ILIM", "VGG_FB"), ("C76", "PA_ILIM", "GND"), ("R82", "VGG_SW", "VGG_FB"), ("R83", "VGG_FB", "GND"), ("R58", "VGG_SW", "GND")):
         if not between(nl, ref, a_, b_):
             bad.append("%s is not between %s and %s: %s" % (ref, a_, b_, sorted(set(nl["pins"].get(ref, {}).values()))))
     extra = [m for m in members(nl, "VGG_FB") if m not in ("U15.2", "R82.1", "R82.2", "R83.1", "R83.2", "R57.1", "R57.2")]
@@ -137,7 +147,7 @@ def check_d(nl, S=None):
     # the injection's sign: R57 feeds U15's FEEDBACK node (VGG falls as PA_ILIM rises); on VGG_SW it would drive the output itself
     if not between(nl, "R57", "PA_ILIM", "VGG_FB"):
         bad.append("R57 does not enter U15's feedback node, so PA_ILIM does not lower VGG through the regulator")
-    return ("FAIL" if bad else "DRAWN"), (bad or ["J_HARN1 pin 16, R57, C76 and R83 as drafted"]), info
+    return ("FAIL" if bad else "DRAWN"), (bad or ["J_HARN1 pin 16, R57, C76, R58 and R83 as drafted"]), info
 
 
 def main(argv):
