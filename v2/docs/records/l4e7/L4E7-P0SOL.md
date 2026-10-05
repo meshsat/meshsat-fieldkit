@@ -1,4 +1,4 @@
-DONE: round 1 (D-16 CORRECTED in draft; D-10 NARROWED). Round 2 (the coordinator's B2 task, 17:12): apply_gen_sch_e_p0sol_b2.py drafted and composed after the C2 draft (298 parts). NOT DONE: the authority finding and owner item, the B2 checks and the arriving-source case in the script, R-180 and the Layer 6 row, the tests. NEXT: those.
+DONE: round 1 (D-16 CORRECTED in draft; D-10 NARROWED); round 2 (the coordinator's B2 task of 17:12): the authority finding (an owner item: B2 is a PROPOSAL), apply_gen_sch_e_p0sol_b2.py composed and netlist-checked with four failing mutations, the withdrawn-plug turn-off and the arriving-source case recomputed (absolute ratings held), R-180 as a contact requirement and the Layer 6 row drafted (B2-PRESENCE.md), what B2 does not cover OPEN with S1. NOT DONE: an independent check; the owner's ruling; the record's cache re-key (a box recompute). NEXT: the coordinator's merge, the L4-E9 rows of section 5, the focused check.
 
 # P0-7: the solar stage's D-10 (a stiff source with the guard on) and D-16 (the input sense out of range) by circuit alternatives
 
@@ -96,32 +96,42 @@ the declared envelope.
   from -0.5 uA sinking to +1.0 uA sourcing); the question to Analog Devices is drafted,
   `clarification/analog-devices-lt8705a-p0sol.txt` (item 8), UNSENT.
 
-## 4. What stays open, exactly
+## 4. What stays open, exactly, and route B2
 
 **D-10's port-level residual** (the guard's own transient, not U5): a stiff source stepping onto the port with the guard on
 charges every capacitor behind Q12 at a rate only the source's loop sets. At the envelope's least loop PV_F, Q12's VDS, INP, EN,
 D4, TRK_VS and the bank's two INA169s exceed their ratings; at the reference loop PV_F stays over the recommended 80 V row (under
 it from 4.03 uH, L6P-F10). No arrangement with the guard closed bounds that charge without a series element (B1, not supported
-on printed figures) or the event's removal (B2). **The cold connection** keeps 56.1 V/us at a connector fault on the least loop,
-inside its 60 V/us absolute maximum, over the 54 V/us SESSION margin line (held from 0.53 uH). Both are PROVISIONAL under the
-scope amendment, with the exact next actions:
+on printed figures) or the event's removal (B2).
 
-1. **Route B2 (a desk route needing a Layer 7 decision):** the solar receptacle gains a presence contact pair that every plug
-   for it bridges (the panel lead and any lead made for the receptacle); U21's INP divider is fed through it, so the plug's
-   withdrawal pulls INP low and any arriving source is a cold connection (BST and OV hold Q12 off; the record shows the cold
-   connection's absolute ratings held). The coordinator brings it forward as a named prerequisite of Layer 4's power gate (a
-   Layer 7 decision on the receptacle; R-180 rewritten from a loop bound into a contact requirement), then a board E draft moves R96's top onto the contact. It does not cover a
-   second stiff source added on the same lead while a panel is connected.
-2. **The narrowed supplier request** `SUPPLIER-P1-1-P0SOL.md` (UNSENT): S1 the guard-on step (three specimens, 0.30, 1.0 and
-   3.3 uH measured loops, three start voltages, two loads, five steps; PV_F under 80 V, INP under 18 V, slews under 54 V/us, the
-   bank under 1.8 V, U5 under 10 mV), S2 the cold connection, S3 A7 at zero differential, S4 the regulation at 25 V.
+**Route B2, selected by the coordinator (5 October 2026, 17:12) as the bounded PROVISIONAL desk route, stands as a PROPOSAL**
+(`B2-PRESENCE.md`; the .out's section 5). reserved.json protects no connector; but B2 changes the kit's external interface (a panel
+then charges only through a plug that bridges the presence pair), an owner-accepted pick (32.21's insert 13-4) and the cost, with
+more than one option standing, so by the owner's two-part test of 21 September the interface is the owner's: the owner item is
+written (`B2-PRESENCE.md` section 2, recommendation: adopt). The board E side is drafted, `apply_gen_sch_e_p0sol_b2.py`: R96 feeds
+the presence loop (J_SOLP, an XH 1x2), which returns to INP, held low by R97 when the loop opens and filtered by C80. Composed after
+the C2 draft (seventeen drafts, 298 parts); four predicates hold on top of the nine; four mutations each fail. The withdrawn plug
+turns Q12 off at most 0.544 ms after the pair opens; a damaged presence core can only hold the guard off. Every arrival is then the
+cold connection, recomputed over the record's whole grid (608 events, the worst equal to the record's): every absolute rating held
+(PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V, EN 12.48 V); the 54 V/us SESSION line holds from 0.33 uH and the recommended 80 V VS
+row from 0.78 uH (PROVISIONAL, S2). R-180 is rewritten as the contact requirement (the pair makes last at every mating point of the
+loop; the wall receptacle declared not a field mating point where it cannot sequence) and the Layer 6 rows are drafted
+(`B2-PRESENCE.md` sections 3 and 4).
+
+**What B2 does not cover, OPEN:** a second stiff source added on the same lead while a panel holds the loop closed (section 3's
+guard-on case), and a stiff source below the stage's voltage arriving after a withdrawal (PV_P back-feeds PV_F through Q12's body
+diode). Validation: the narrowed supplier request `SUPPLIER-P1-1-P0SOL.md` (UNSENT), S1 with both rows added, S2 with the
+arriving source, the make-last stagger and CS114 on the presence pair added, S3 A7 at zero differential, S4 the regulation.
 
 ## 5. Rows for L4-E9 and the register (the coordinator's; nothing of L4-E9's is edited here)
 
 - **D-10** (8a and 8c): "NARROWED. U5's absolute-rating violation CORRECTED by P0-7's draft (R-NEW): CSPIN and CSNIN tied to VIN,
   0 V at every loop; INP's margin line CORRECTED by R97 24.9k (INP under 18 V for PV_F to 90.1 V). OPEN: the guard-on event's
   port-level residual (PV_F, Q12's VDS, EN, D4, TRK_VS, U18 and U23 below the port's floors; PV_F over the recommended 80 V row
-  at 3.30 uH, L6P-F10) and the cold connection's slew margin line under 0.53 uH; next: route B2 at Layer 7, or P1-1 narrowed."
+  at 3.30 uH, L6P-F10). PROPOSAL, route B2 (R-NEW2, an owner item on the interface): the guard-on event removed for every source
+  arriving through a mating point of the presence loop, every arrival the cold connection inside its absolute ratings; OPEN under B2:
+  a second source added on a lead whose loop a panel holds closed, a lower stiff source after a withdrawal, and the arriving
+  source's slew margin line under 0.33 uH and the 80 V row under 0.78 uH (S1, S2)."
 - **D-16** (8a and 8c): "CORRECTED in draft by P0-7 (R-NEW): U5's input sense not used (0 V by construction), the regulation's
   sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's zero-differential output (sourcing
   lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 narrows to the port.
@@ -135,7 +145,7 @@ scope amendment, with the exact next actions:
   R97 superseded by R-NEW. **R-187** (route 3): "worked to the circuit by P0-7: alternative A rejected (D-10 worse, M2 fails);
   the sense arrangement changed instead (R-NEW)". **R-189** (B6-ENG-2's bench): replaced by S4 (the regulation at 25 V) and S3.
   **R-186** (a sense-pin filter): obsolete under R-NEW. **R-176 row 3**: U5's +-0.240 V line replaced by U5 under 10 mV (layout
-  check); the port's rows stay. **R-180**: rewritten to route B2's contact requirement if the coordinator selects it. **P1-1**:
+  check); the port's rows stay. **R-180**: rewritten as route B2's contact requirement, the text in `B2-PRESENCE.md` section 3 (PROPOSAL until the owner rules). **R-NEW2** after R-NEW: "board E, gen_sch_e.py, `apply_gen_sch_e_p0sol_b2.py` (4 edits): R96 to PV_PRA, J_SOLP (C158012) the presence loop to INP, C80 10 nF (C184799); AFTER R-NEW; PROPOSAL (the owner item of B2-PRESENCE.md section 2)". **Layer 6**: the receptacle, plug, contacts, cable, tail connector and adapter rows of `B2-PRESENCE.md` section 4. **P1-1**:
   narrowed to `SUPPLIER-P1-1-P0SOL.md`.
 - **For other authors:** Layer 8's single-fault table (the record's "defeat" list) gains "a short across the sense bank now
   defeats the regulation as well" and "U23's output stuck high stops the stage (IMON_IN fault), stuck low leaves the regulation
@@ -148,5 +158,7 @@ scope amendment, with the exact next actions:
 |---|---|
 | `l4e7_p0sol.py`, `l4e7_p0sol.out` | the reproduction, the comparison, the selected circuit on both cases, the composition with its netlist check and mutations, the verdicts (about 70 s; the output through regen_out.py) |
 | `apply_gen_sch_e_p0sol.py` | the DRAFT for board E's generator (13 edits; refuses a generator without the input limit, backstop and solar guard drafts, a second application, and the tree's generator until a RELEASE.md names an accepted check) |
+| `B2-PRESENCE.md` | route B2: the authority finding, the owner item, R-180 as a contact requirement, the Layer 6 rows, the SESSION decisions with their authority fields, what B2 does not cover |
+| `apply_gen_sch_e_p0sol_b2.py` | route B2's DRAFT for board E (4 edits, after the C2 draft; a PROPOSAL) |
 | `SUPPLIER-P1-1-P0SOL.md` | the narrowed supplier request, UNSENT |
 | `clarification/analog-devices-lt8705a-p0sol.txt` | item 8 for Analog Devices, UNSENT |
