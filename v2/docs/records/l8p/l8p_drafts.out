@@ -54,10 +54,13 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    3d0a7b1d7d0bd8bf v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_aux-4def5975.py
    a859aa4a63339f3a v2/docs/records/l8p/inputs/l4e11r13-apply_gen_sch_e_entry-4def5975.py
    dc560d0de51ac782 v2/docs/records/l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py
+   03274200411401fe v2/docs/records/l8p/inputs/l9stk-readme-round5-bb6d2c8f.md
    a96099193dd92e8e v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
+   08a656ab0230986d v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
+   d84dcb3bab2f1f60 v2/docs/records/l8p/inputs/l9stk_guard-bb6d2c8f.out.txt
    d97f94a0fa1f2559 v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
    ed559399fd3b2f2d v2/docs/records/l8p/inputs/l9stk_protection-constants-0d72880b.txt
-   a7c813beb323b2b3 v2/docs/records/l8p/inputs/SOURCES.txt
+   2ac5b5dd385c6332 v2/docs/records/l8p/inputs/SOURCES.txt
    1e3fa195a8f63a9c v2/ecad/meshsat.pretty/LeadLands_1x02.kicad_mod
    171fa629c58b8f1e v2/ecad/meshsat.pretty/PogoPins_2x6.kicad_mod
    94b2f0134ac6ee11 v2/ecad/meshsat.pretty/PogoTargets_2x6.kicad_mod
@@ -79,7 +82,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    4174af5851fe1be0 v2/docs/records/l8p/apply_gen_sch_p_idealdiode.py
    c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
    cedae4eb4572a6a5 v2/docs/records/l8p/apply_gen_sch_a_ptc.py
-   835d00d5a67583ad v2/docs/records/l8p/check_l8p_netlist.py
+   544a462a9031862a v2/docs/records/l8p/apply_gen_sch_a_thguard.py
+   710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 13) equal the sha256 SOURCES.txt pins: yes
 
@@ -105,7 +109,14 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    P R109  1M               l9stk l9stk_protection.py R_G (prot 3a)
    P RT101 NXRT15XH103FA1B  l9stk 15.4b C-1c, the sensor: Murata NXRT15XH103FA1B
    P R110  150k 0.1%        l9stk 15.4b C-1c: 150 kOhm over the NTC
-   A RT1   PRF15BB103RB6RC  l9stk 15.5 THE THERMAL GUARD: the kit's PRF15BB103 chip PTC, in the enable loop on the battery FETs' copper
+   A U60   LM26LVQISDX-130  l9stk 15.9 round 5, C4: the LM26LV 130 C preset
+   A U61   TPS70950         l9stk 15.9 round 5, C4: supplied by a TPS70950 from DOCK_EN_OUT
+   A Q60   2N7002           l9stk 15.9 round 5, C4: the shunt on DOCK_EN_RET is a 2N7002
+   A R260  7.5k 1%          l9stk 15.9 round 5, C4: the fixed resistor two 7.5 kOhm 1 % in series
+   A R261  7.5k 1%          l9stk 15.9 round 5, C4: two 7.5 kOhm 1 % in series
+   A R262  47k              l9stk 15.9 round 5, the gate network: 47 kOhm from OVERTEMP
+   A C260  1u               l9stk 15.9 round 5, the gate network: 1 uF to ground
+   A R263  1M               l9stk 15.9 round 5, the gate network: 1 MOhm to ground
    l9stk reads: IF-6
    l9stk reads: the controller row: OVLO to ground
    l9stk reads: 15.4b: the -1, latch-off, selected
@@ -360,6 +371,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    apply_gen_sch_e_enable.py: check OK; applied OK; second application refused; the tree's gen_sch_e.py refused (NOT RELEASED)
    apply_gen_sch_a_ptc.py: check OK; applied OK; second application refused; the tree's gen_sch_a.py refused (NOT RELEASED)
    apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused; the tree's gen_sch_p.py refused
+   apply_gen_sch_a_thguard.py (after apply_gen_sch_a_ptc.py): without it refused; check OK; applied OK; second application refused; the tree's gen_sch_a.py refused
    the tree's generators are unchanged: yes
 
 5. COMPOSITION IN L4-E9'S CHANGE-LIST ORDER (records/l4e9/L4-POWER-ARCHITECTURE.md section 3; board A as the candidate's list carries it,
@@ -404,7 +416,8 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      l8gnd/apply_gen_sch_a_hotr1.py               OK
      l8p/apply_gen_sch_a_ptc.py                   OK
      l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py OK
-     d8dec31/apply_gen_sch_a_mainpb.py            OK (apply_gen_sch_a_mainpb (R257, C249): fwd_gen_sch_a.py, 10 line(s) added)
+     l8p/apply_gen_sch_a_thguard.py               OK
+     d8dec31/apply_gen_sch_a_mainpb.py            OK (apply_gen_sch_a_mainpb (R264, C264): fwd_gen_sch_a.py, 10 line(s) added)
      l6r2/apply_gen_sch_a_lcsc.py                 OK
    board A, this record's draft first, then the order: every step OK
    board A, the order, then this record's draft last: every step OK
@@ -419,7 +432,7 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    board E, this record's: none (nets only)
    board E, this record's against every other draft's: DISJOINT
    board E, literal part calls drawn twice in the composed generator: none
-   board A, this record's: RT1
+   board A, this record's: C260, C261, C262, C263, Q60, R260, R261, R262, R263, RT1, TP60, TP61, TP62, TP63, U60, U61
    board A, this record's against every other draft's: DISJOINT
    board A, literal part calls drawn twice in the composed generator: none
 
@@ -437,11 +450,12 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
      v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256 2ed95a0e8069ebf8
        E EN   NOT DRAWN: J_SMB has no pin 7
      v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 6c40250c47195ebb
-       A EN   NOT DRAWN: RT1 is absent
+       A EN   NOT DRAWN: RT1 and R260 are absent
+       A THG  NOT DRAWN: U60 is absent
      record l8p's breaker and enable loop on the netlists: NOT DRAWN
    board P with this record's draft alone: the generator ran to its end (169 parts, 0 unplaced, intent written: yes)
    board E with this record's draft alone: the generator ran to its end (206 parts, 0 unplaced, intent written: yes)
-   board A with this record's draft alone: the generator ran to its end (657 parts, 0 unplaced, intent written: yes)
+   board A with this record's draft alone: the generator ran to its end (671 parts, 0 unplaced, intent written: yes)
      regenerated board P, this record's draft alone sha256 c69857dfeff01e47
        P BRK  DRAWN
        P EN   DRAWN
@@ -450,13 +464,14 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P DIO  DRAWN
      regenerated board E, this record's draft alone sha256 d53d54144ec24324
        E EN   DRAWN
-     regenerated board A, this record's draft alone sha256 c3ba460894515491
+     regenerated board A, this record's draft alone sha256 b62fbca61e8bb560
        A EN   DRAWN
+       A THG  DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
    board P composed in L4-E9's order: the generator ran to its end (169 parts, intent written: yes)
    board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)
-   board A composed in L4-E9's order: the generator ran to its end (728 parts, intent written: yes)
+   board A composed in L4-E9's order: the generator ran to its end (742 parts, intent written: yes)
      regenerated board P, composed in L4-E9's order sha256 f980a46e938137b1
        P BRK  DRAWN
        P EN   DRAWN
@@ -465,22 +480,59 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P DIO  DRAWN
      regenerated board E, composed in L4-E9's order sha256 ce5b27b5b8d1ad3f
        E EN   DRAWN
-     regenerated board A, composed in L4-E9's order sha256 467d5ee2ad22fd2f
+     regenerated board A, composed in L4-E9's order sha256 d57e67d8189e7a64
        A EN   DRAWN
+       A THG  DRAWN
        LOOP DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-   board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (750 parts, intent written: yes)
-     regenerated board A, the list's order with those drafts sha256 b3eaea0660509ada
+   board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (764 parts, intent written: yes)
+     regenerated board A, the list's order with those drafts sha256 6b5f73396afdf8de
        A EN   DRAWN
+       A THG  DRAWN
      record l8p's breaker and enable loop on the netlists: DRAWN
-     mutated composed board A (U48's SENSE1 and VDD exchanged: VBAT's pin on the return) sha256 29a5f08c5a67377a
-       A EN   FAIL: DOCK_EN_RET reaches [('U48', '1')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
+     mutated composed board A (U48's SENSE1 and VDD exchanged: VBAT's pin on the return) sha256 759f825e3c21da40
+       A EN   FAIL: DOCK_EN_RET reaches [('U48', '1')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('Q60', '3'), ('R261', '1'), ('R261', '2')], [('Q44', '3'), ('U48', '2')])
+       A THG  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated composed board A (Q44's drain and source exchanged: the source on the return) sha256 5e7dbe5dd858ca46
-       A EN   FAIL: DOCK_EN_RET reaches [('Q44', '2')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
+     mutated composed board A (Q44's drain and source exchanged: the source on the return) sha256 1a1380953d66ca99
+       A EN   FAIL: DOCK_EN_RET reaches [('Q44', '2')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('Q60', '3'), ('R261', '1'), ('R261', '2')], [('Q44', '3'), ('U48', '2')])
+       A THG  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated composed board A (R109 from DOCK_EN_OUT to the ground: U48's SENSE2 reads nothing) sha256 ae782b443da5a2f8
+     mutated composed board A (R109 from DOCK_EN_OUT to the ground: U48's SENSE2 reads nothing) sha256 4db07571c52b8cc5
        A EN   FAIL: R109 on DOCK_EN_OUT is '562k 0.1%' to 'GND', not a sense divider of 470 kOhm or more
+       A THG  DRAWN
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the shunt on DOCK_EN_OUT sha256 a6df8223c5045b62
+       A EN   FAIL: DOCK_EN_OUT reaches [('Q60', '3')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('C261', '1'), ('C261', '2'), ('R260', '1'), ('R260', '2'), ('U61', '1')], [('R109', '1'), ('R109', '2')])
+       A THG  FAIL: Q60.3 on 'DOCK_EN_OUT', wanted DOCK_EN_RET
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the open-drain output used sha256 ca09cfe01bb7a4b3
+       A EN   DRAWN
+       A THG  FAIL: U60's open-drain output (pin 3) is on 'THG_OT': the push-pull OVERTEMP (pin 5) is the one used; U60's push-pull OVERTEMP (pin 5) on None does not reach R262 (['THG_G', 'THG_OT']); R262 on ['THG_G', 'THG_OT'], not from OVERTEMP None to Q60's gate 'THG_G'
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the regulator fed from VBAT sha256 7c0b018a032dbdfc
+       A EN   DRAWN
+       A THG  FAIL: U61.1 on 'VBAT', wanted DOCK_EN_OUT
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the pair's sum outside 3.574 to 25.8 kOhm (two 15 kOhm) sha256 1dde83a458254197
+       A EN   FAIL: R260 value '15k 1%' does not start '7.5k 1%' (l9stk 15.9 round 5, C4: the fixed resistor two 7.5 kOhm 1 % in series); R261 value '15k 1%' does not start '7.5k 1%' (l9stk 15.9 round 5, C4: two 7.5 kOhm 1 % in series)
+       A THG  FAIL: the pair 15000 + 15000 ohm: each must be at least 3574 ohm (a short of the other keeps the held reading) and the sum at most 25800 ohm; R260 value '15k 1%' does not start '7.5k 1%' (record l9stk 15.9 round 5, and record l8p's SESSION choices); R261 value '15k 1%' does not start '7.5k 1%' (record l9stk 15.9 round 5, and record l8p's SESSION choices)
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: one resistor in place of the pair (R260 at 15 kOhm from DOCK_EN_OUT to DOCK_EN_RET, R261 gone) sha256 3b7bdf4e8dec9771
+       A EN   FAIL: the loop is not closed by the guard's pair: R260 on ['DOCK_EN_OUT', 'DOCK_EN_RET'], R261 on []; DOCK_EN_RET reaches [('R260', '2')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('Q60', '3'), ('R261', '1'), ('R261', '2')], [('Q44', '3'), ('U48', '2')]); R260 value '15k 1%' does not start '7.5k 1%' (l9stk 15.9 round 5, C4: the fixed resistor two 7.5 kOhm 1 % in series)
+       A THG  FAIL: the pair R260 and R261 is not drawn as two resistors; the pair is not in series from DOCK_EN_OUT through THG_MID to DOCK_EN_RET: R260 on ['DOCK_EN_OUT', 'DOCK_EN_RET'], R261 on []; the pair 0 + 0 ohm: each must be at least 3574 ohm (a short of the other keeps the held reading) and the sum at most 25800 ohm
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the shunt drawn as an AO3400A sha256 1fc01f5e974e8e4d
+       A EN   FAIL: Q60 value 'AO3400A: THG_G high = the thermal guard tripped, DOCK_EN_RET held low (1 G, 2 S, 3 D)' does not start '2N7002' (l9stk 15.9 round 5, C4: the shunt on DOCK_EN_RET is a 2N7002)
+       A THG  FAIL: the shunt Q60 is 'AO3400A: THG_G high = the thermal guard tripped, DOCK_EN_RET held low (1 G, 2 S, 3 D)', not the kit's 2N7002 (an AO3400A's leakage broke the window: L8P-F08); Q60 value 'AO3400A: THG_G high = the thermal guard tripped, DOCK_EN_RET held low (1 G, 2 S, 3 D)' does not start '2N7002' (record l9stk 15.9 round 5, and record l8p's SESSION choices)
+     record l8p's breaker and enable loop on the netlists: FAIL
+     mutated composed board A, the guard: the gate capacitor removed sha256 bd31ab6170564734
+       A EN   FAIL: C260 value None does not start '1u' (l9stk 15.9 round 5, the gate network: 1 uF to ground)
+       A THG  FAIL: C260 on [], not from Q60's gate 'THG_G' to the ground; Q60's gate net THG_G reaches ['Q60', 'R262', 'R263'], not R262, C260, R263 and Q60 alone; C260 value None does not start '1u' (record l9stk 15.9 round 5, and record l8p's SESSION choices)
+     record l8p's breaker and enable loop on the netlists: FAIL
+     regenerated board A, round 7's RT1 without the guard (the withdrawn PTC) sha256 c3ba460894515491
+       A EN   FAIL: RT1 ("PRF15BB103RB6RC chip PTC 10k, 100k over 110 C, 4.7M at 130 C (Murata): the pack breaker's thermal guard in the dock enable loop, on the battery FETs' copper (record l8p; l9stk 15.5)"), round 7's PTC, is drawn: it is withdrawn (L8P-F07), the guard's pair closes the loop; the loop is not closed by the guard's pair: R260 on [], R261 on []; DOCK_EN_OUT reaches [('RT1', '1')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('C261', '1'), ('C261', '2'), ('R260', '1'), ('R260', '2'), ('U61', '1')], [('R109', '1'), ('R109', '2')])
+       A THG  NOT DRAWN: U60 is absent
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board P (J_SMB pins 6 and 7 exchanged) sha256 c067d42edad3d21e
        P BRK  DRAWN
@@ -489,8 +541,9 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
        P REV  DRAWN
        P DIO  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
-     mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 34db381d8d38da2c
-       A EN   FAIL: J_DOCK.3 on 'GND', wanted DOCK_EN_RET; J_DOCK.4 on 'DOCK_EN_RET', wanted GND; DOCK_EN_RET reaches [('J_DOCK', '4')] beyond J_DOCK, RT1 and DD-7's readers (by pin: [('Q44', '3'), ('U48', '2')])
+     mutated board A (J_DOCK pins 3 and 4 exchanged) sha256 89faa591dd2f39c9
+       A EN   FAIL: J_DOCK.3 on 'GND', wanted DOCK_EN_RET; J_DOCK.4 on 'DOCK_EN_RET', wanted GND; DOCK_EN_RET reaches [('J_DOCK', '4')] beyond J_DOCK, the guard's pins and DD-7's readers (by pin: [('Q60', '3'), ('R261', '1'), ('R261', '2')], [('Q44', '3'), ('U48', '2')])
+       A THG  DRAWN
      record l8p's breaker and enable loop on the netlists: FAIL
      mutated board P (Q105's and Q106's gates exchanged: the inhibit no longer gated by PGD) sha256 39db5324ddd360e7
        P BRK  DRAWN
@@ -577,6 +630,18 @@ prototype design; nothing built, bought or measured; nothing applied to the tree
    decoupling C111: class L at U105.1 on IDL_VCAP
    decoupling C112: class D at U105.6 on SCP_OUT
    decoupling C114: class B2 at U105.4 on SW
+   board A (round 8, the thermal guard):
+   node DOCK_EN_OUT v_max 29.2 V
+   node DOCK_EN_RET v_max 17.4 V
+   node THG_MID     v_max 29.2 V
+   node THG_VDD     v_max 5.05 V
+   node THG_OT      v_max 5.05 V
+   node THG_G       v_max 4.83 V
+   node THG_TT      v_max 5.05 V
+   node THG_VT      v_max 5.05 V
+   decoupling C261: class D at U61.1 on DOCK_EN_OUT
+   decoupling C262: class L at U61.5 on THG_VDD, value_floor 1.5u, value_ceiling 47u, esr_max 0.2
+   decoupling C263: class D at U60.4 on THG_VDD
 
 9. FINDINGS FOR OTHER AUTHORS (run-time refusals of the composed generators that no text-level composition test reads; and B-R2's interface)
    L8P-F01 board E: l4e7's backstop draft: C66, C67 and C68 carried no G14 decoupling class: CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a
