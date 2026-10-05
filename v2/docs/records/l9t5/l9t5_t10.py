@@ -22,6 +22,7 @@ return does not address that separate deficit." It prints, deterministically and
 Run from the repository root:  python3 v2/docs/records/l9t5/l9t5_t10.py  (l9t5_t10.out is its output, regenerated with
 _bin/regen_out.py after l9t5_drafts.out). Labels: PRINTED (a maker's limit), TYPICAL, DECLARED, MODEL, ASSUMPTION, SESSION."""
 import hashlib
+import importlib.util
 import io
 import os
 import re
@@ -46,7 +47,7 @@ DOCS = {"contract": "v2/docs/HW-FW-CONTRACT.md", "panel": "v2/docs/PANEL.md", "a
         "drafts": "v2/docs/records/l9t5/l9t5_drafts.py", "drafts_out": "v2/docs/records/l9t5/l9t5_drafts.out",
         "pre_a": "v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py", "pre_b": "v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py",
         "trace": "v2/docs/REQUIREMENTS-TRACE.md", "shdn": "v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py",
-        "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py"}
+        "contract_draft": "v2/docs/records/l9t5/apply_hw_fw_contract_t10.py", "cdev2": "v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md"}
 # the session's choices (SESSION under the owner's standing rule of 26 September 2026), each printed with its reason
 TJ_GOAL = 125.0            # C: the junction this record holds each LDO to at the inside air (25 K under the sheet's 150 C absolute maximum)
 BOUND = ("VOS3", 144)      # the state the proposed contract row bounds each supervisor to: voltage scale 3, HCLK at most 144 MHz, the
@@ -137,7 +138,9 @@ def figures():
     P["ishort"] = float(sec.group(1)) / 1000.0
     sec = sec.group(0)
     P["imax"] = float(need(sec, r"IOUT\(MAX\)\s+Maximum Output Current\s+VIN = 4\.3V, VOUT = [\d.]+V to [\d.]+V\s+(\d+)", "IOUT(MAX)").group(1)) / 1000.0
-    P["vout_hi"] = float(need(sec, r"VOUT\s+VOUT\s*\n.*?\n.*?\*([\d.]+)%\s+\*([\d.]+)%", "VOUT's band", re.S).group(2)) / 100.0
+    m_vo = need(sec, r"VOUT\s+VOUT\s*\n.*?\n.*?\*([\d.]+)%\s+\*([\d.]+)%", "VOUT's band", re.S)
+    P["vout_hi"] = float(m_vo.group(2)) / 100.0
+    P["vout_lo"] = float(m_vo.group(1)) / 100.0      # round 5 (part 21): the LDO's least output, the corner of its largest drop
     P["load"] = float(need(sec, r"Load Regulation\s+VIN = 4\.3V, 1mA \S IOUT \S 600mA\s+-1\s+0\.2\s+([\d.]+)\s+%/A", "the load regulation maximum").group(1)) / 100.0
     P["drop"] = {i: float(need(sec, r"IOUT = %dmA\s+\S\s+\d+\s+(\d+)" % i, "the dropout at %d mA" % i).group(1)) / 1000.0 for i in (10, 300, 600)}
     need(sec, r"Line Regulation\s+4\.3V\S VIN \S 6V, IOUT = 30mA", "the line regulation's range (from 4.3 V)")
@@ -381,7 +384,10 @@ def aux_from_netlist(nl, tag, vmax):
 
 def round5(w, P, DP, air, hi3, d_bound):
     Q = figures5(P)
-    ldo_k = P["theta_ldo"] * (hi3 - 3.3)
+    # round 5 (part 21, (1)): the LDO's drop at its WORST corner, the pre-regulator's top less the LDO's least output (98.5 %, PRINTED);
+    # round 4 took the nominal 3.3 V. The drop falls as the output rises faster than the controller's current does, so the least output
+    # is the corner of the largest dissipation; the run tables' currents are kept at their 3.3 V figures (not scaled down: conservative)
+    ldo_k = P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"])
 
     def tj_l(i, a=air):
         return a + ldo_k * i
@@ -530,6 +536,10 @@ def round5_rest(w, P, DP, air, hi3, Q, ldo_k, tj_l, out):
                 hi_ = mid
         return lo_
     out["B"], out["max_air"] = B, {rev: max_air(rev) for rev in "YV"}
+    w("   the LDO's drop at its worst corner (part 21): the pre-regulator's top %.4f V less the LDO's least output %.4f V (%.1f %%, PRINTED): %.4f V," % (
+        hi3, 3.3 * P["vout_lo"], P["vout_lo"] * 100, hi3 - 3.3 * P["vout_lo"]))
+    w("     %.1f K/A at 184 C/W (round 4 and section 8 used the nominal 3.3 V: %.4f V, %.1f K/A); every junction of section 10 is at this corner" % (
+        P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"]), hi3 - 3.3, P["theta_ldo"] * (hi3 - 3.3)))
     w("   the two transceivers at FW-B21's share (10d): %.4f A each. THE BOUNDED STATE, each figure with the air it is judged at:" % i_can)
     w("     rev  air                       controller (TJ)        regulator   LDO junction  against %.0f C" % TJ_GOAL)
     for rev in "YV":
@@ -543,8 +553,9 @@ def round5_rest(w, P, DP, air, hi3, Q, ldo_k, tj_l, out):
         TJ_GOAL, out["max_air"]["Y"], out["max_air"]["V"]))
     w("   (V6-m10's 79.4 C was the declared peak's). JUDGED at %.2f C, the case's air (C-DEV rev 1, L4-E12 E5's mixed air, T10-A2 as written):" % air)
     by, bv = B[("Y", air)], B[("V", air)]
-    w("     both revisions hold (rev Y %.1f C, rev V %.1f C). In the exhaust air rev V holds (%.1f C); rev Y's rows give the controller no" % (
-        by[3], bv[3], B[("V", P["air_exhaust"])][3]))
+    w("     rev V %s (%.1f C); rev Y's rows, the cover for a rev X part, %s (%.1f C) at this corner (10h (1), SESSION L9T5-D7: rev V fitted)." % (
+        "holds" if bv[3] <= TJ_GOAL else "FAILS", bv[3], "hold" if by[3] <= TJ_GOAL else "do NOT hold", by[3]))
+    w("     In the exhaust air rev V holds (%.1f C); rev Y's rows give the controller no" % B[("V", P["air_exhaust"])][3])
     w("     operating point, which matters only for a rev X part (no printed rows) placed in air over %.2f C: which air the pockets see is the" % out["max_air"]["Y"])
     w("     inside air's question (U-02, the T-H1 mock-up), not settled here. With the generator's DECLARED auxiliaries instead (0.060 A a")
     w("     supervisor for its three other parts) rev Y reads %.1f C and rev V %.1f C at %.2f C: the declaration over-covers, it does not bound" % (
@@ -569,8 +580,9 @@ def round5_rest(w, P, DP, air, hi3, Q, ldo_k, tj_l, out):
     w("   Diodes does not print (MISSING); whatever that constant, the junction never passes the held figure of section 8 (m) (%.1f C on rev Y" % (
         tj_l(by[1] + i_aux + 2 * i_dom, air)))
     w("   at this air with the enabled set, under the %.0f C absolute maximum)" % P["tj_ldo"])
-    w("   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads %.1f C (rev Y) and %.1f C (rev V) at %.2f C: inside %.0f C" % (
-        by[3], bv[3], air, TJ_GOAL))
+    w("   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads %.1f C on rev V (%s %.0f C) and %.1f C on rev Y's cover" % (
+        bv[3], "inside" if bv[3] <= TJ_GOAL else "OVER", TJ_GOAL, by[3]))
+    w("     (%s; a rev X part waits on V-B20 under L9T5-D7) at %.2f C, the worst drop's corner" % ("inside" if by[3] <= TJ_GOAL else "OVER by %.1f K" % (by[3] - TJ_GOAL), air))
     w("")
     return out
 
@@ -658,6 +670,8 @@ def round5_faults(w, P, air, Q, tj_l, out):
         held2 = bm + i_aux + 2 * max(i_f for _f, _w, _b, i_f, _l, kind in flt)
         both[rev] = (bm + i_aux + 2 * f_resp, held2)
     out["both"] = both
+    out["f_resp"] = max(i_rec + (i_f - i_rec) * SHARE + (2 * SHARE * v33 / rl if kind == "own" else 0.0) for _f, _w, _b, i_f, _l, kind in flt if kind != "stuck")
+    out["flt"] = flt
     w("   Both fabrics faulted (IOHA row 8: 'nothing moves' is the accepted outcome, the regulators must survive it: %.0f C in any state;" % P["tj_ldo"])
     w("   the %.0f C criterion read as well): the worst response figure on both transceivers" % TJ_GOAL)
     for rev in "YV":
@@ -669,12 +683,16 @@ def round5_faults(w, P, air, Q, tj_l, out):
     out["b7b"] = (st[1], tj_l(st[1], air))
     w("   B7b if the failed part ignores its SHDN too: its own regulator holds %.4f A, %.1f C on rev Y (%.1f C rev V): under the %.0f C absolute" % (
         st[1], tj_l(st[1], air), tj_l([r for r in by_rev["V"] if r[0] == "B7b"][0][1], air), P["tj_ldo"]))
-    w("     maximum, over the %.0f C criterion. SESSION decision (L9T5-D5): tolerated. Why: it is one part failing three of its own functions at" % TJ_GOAL)
+    b7v = tj_l([r for r in by_rev["V"] if r[0] == "B7b"][0][1], air)
+    w("     maximum; %s the %.0f C criterion on rev V's rows (fitted, L9T5-D7), over it on rev Y's cover. SESSION decision (L9T5-D5): tolerated where" % (
+        "inside" if b7v <= TJ_GOAL else "over", TJ_GOAL))
+    w("     it is over. Why: it is one part failing three of its own functions at")
     w("     once (driver, time-out, mode pin); the regulator stays inside its printed absolute maximum, so its supervisor lives and the quorum")
     w("     holds on the other fabric (row 7); the fabric's errors detect it. To reverse: a load switch on each transceiver's supply (six parts)")
-    w("   So with the response every credible single fabric fault %s %.0f C (worst %.1f C rev Y, %.1f C rev V) and both fabrics faulted %s %.0f C" % (
-        "holds" if max(tj_l(worst[r], air) for r in "YV") <= TJ_GOAL else "does NOT hold", TJ_GOAL, tj_l(worst["Y"], air), tj_l(worst["V"], air),
-        "hold" if max(tj_l(both[r][0], air) for r in "YV") <= P["tj_ldo"] else "do NOT hold", P["tj_ldo"]))
+    w("   So with the response, on rev V's rows (fitted, L9T5-D7) every credible single fabric fault %s %.0f C (worst %.1f C; rev Y's cover %.1f C, %s)" % (
+        "holds" if tj_l(worst["V"], air) <= TJ_GOAL else "does NOT hold", TJ_GOAL, tj_l(worst["V"], air), tj_l(worst["Y"], air),
+        "inside" if tj_l(worst["Y"], air) <= TJ_GOAL else "over"))
+    w("   and both fabrics faulted %s %.0f C" % ("hold" if max(tj_l(both[r][0], air) for r in "YV") <= P["tj_ldo"] else "do NOT hold", P["tj_ldo"]))
     w("   (%.1f C rev Y, %.1f C rev V); WITHOUT a row nothing bounds B1 to B6 (the parts' own bus-off ends a burst, but no row bounds how soon" % (
         tj_l(both["Y"][0], air), tj_l(both["V"][0], air)))
     w("   firmware restarts,")
@@ -711,6 +729,190 @@ def round5_faults(w, P, air, Q, tj_l, out):
     w("   the share and the circuit's own (rev Y)")
     w("")
     return out
+
+
+
+FRAME_BITS = 135          # a classic CAN frame with 8 data bytes at its most stuffing, every bit counted dominant (ASSUMPTION: the
+                          # standard ISO 11898-1 is not held; 111 bits before stuffing and 24 stuff bits, the textbook figure)
+NEED = (1, 8)             # the service the record assumes (ASSUMPTION: the tree defines no CAN message rate): one state frame per
+                          # supervisor per fabric per 100 ms, and a burst of 8 event frames in a window when ownership moves
+VDD_TOL = 0.015           # the LDO's VOUT band (+1.5 %, PRINTED); the run tables are at VDD 3.3 V: the current taken up in proportion (MODEL)
+
+
+def round5_answers(w, P, DP, air, hi3, Q, tj_l, out):
+    """10h: the four questions the owner's review of 5 October 2026 (part 21) says the independent check will ask."""
+    ldo_k = P["theta_ldo"] * (hi3 - 3.3 * P["vout_lo"])
+    k_top = P["theta_ldo"] * (hi3 - 3.3 * P["vout_hi"])
+    i_aux, i_can, f_resp = out["i_aux"], out["i_can"], out["f_resp"]
+    w("   10h. THE FOUR QUESTIONS THE INDEPENDENT CHECK WILL ASK (the owner's review of checkpoint 2, 5 October 2026, part 21)")
+    # (1) the thermal and current inputs, the margin and where it is lost
+    w("   (1) WHAT THE 125 C RESULT RESTS ON, WHAT CONSUMES ITS MARGIN, AND AT WHICH CORNER IT IS LOST (MODEL; each state at its own worst)")
+    w("     the inputs: the air (L4-E12 E5's mixed %.2f C, the case's; %.2f C in the exhaust); the LDO's 184 C/W 'no heat sink' (Diodes prints no" % (
+        air, P["air_exhaust"]))
+    w("     board for it: the layout must give each LDO at least that board's copper, a Layer 10 means, read by T10-A5); the pre-regulator's top")
+    w("     %.4f V (the divider at 0.1 %% and 25 ppm/K over 65 K, VFB's printed band and IFB: every tolerance at its worst); the controller's" % hi3)
+    w("     printed maxima at its own junction; the enabled set's bound; the circuit's auxiliaries at the full rail; the share fully used")
+    states = {}
+    for rev in "YV":
+        b_ = out["B"][(rev, air)]
+        states[(rev, "the bounded state")] = (b_[1], i_aux + 2 * i_can)
+        states[(rev, "the worst single fault, responded")] = (b_[1], i_aux + i_can + f_resp)
+        states[(rev, "both fabrics faulted, responded")] = (b_[1], i_aux + 2 * f_resp)
+
+    def tj_at(rev, extra, a):
+        pt = mcu_point(P, Q, rev, a)
+        return None if pt is None else (a + ldo_k * (pt[1] + extra), pt[1])
+    ledger = {}
+    for (rev, lab), (i_m, extra) in states.items():
+        tj = tj_l(i_m + extra, air)
+        m = TJ_GOAL - tj
+        lo_, hi_ = air - 20.0, air + 20.0
+        for _ in range(60):
+            mid = 0.5 * (lo_ + hi_)
+            r_ = tj_at(rev, extra, mid)
+            if r_ is not None and r_[0] <= TJ_GOAL:
+                lo_ = mid
+            else:
+                hi_ = mid
+        th = (TJ_GOAL - air) / ((hi3 - 3.3) * (i_m + extra))
+        th = (TJ_GOAL - air) / ((hi3 - 3.3 * P["vout_lo"]) * (i_m + extra))
+        tj_top = air + k_top * (i_m * (1 + VDD_TOL) + extra)
+        ledger[(rev, lab)] = (tj, m, lo_, th, m / ldo_k, tj_top)
+        w("     rev %s, %-34s %.4f A, %.1f C: margin %+.2f K = %+.1f mA at the LDO; lost at a local air of %.2f C, or at %.0f C/W in place of 184;"
+          % (rev, lab + ":", i_m + extra, tj, m, m / ldo_k * 1000, lo_, th))
+        w("       at the LDO's top output (the controller's current up %.1f %%, MODEL; the drop smaller) it reads %.1f C, under the corner above" % (
+            VDD_TOL * 100, tj_top))
+    yv = {k: v for k, v in ledger.items() if k[0] == "Y"}
+    vv = {k: v for k, v in ledger.items() if k[0] == "V"}
+    out["ledger"] = ledger
+    i_cap = (TJ_GOAL - air) / ldo_k - (i_aux + 2 * f_resp)
+    out["i_cap"] = i_cap
+    w("     so at the worst corner (the LDO's least output, the case's air): rev V's own rows keep %.1f K or more in every state and hold to a local air" % min(
+        v[1] for v in vv.values()))
+    w("     of %.2f C, over the %.2f C exhaust; rev Y's rows, the COVER this record takes for a rev X part (DS12110 prints no rev X rows), read %.1f to"
+      % (min(v[2] for v in vv.values()), P["air_exhaust"], min(v[0] for v in yv.values())))
+    w("     %.1f C: they DO NOT hold 125 C at this corner (round 4 and the first pass of round 5 judged the nominal drop). What consumes the margin:" % max(
+        v[0] for v in yv.values()))
+    w("     the controller's leakage at its own junction (rev Y's 144 MHz row climbs from %.0f mA at 85 C to %.0f mA at 105 C), the enabled set's bound and" % (
+        P["Y"][("off", 144)][2], P["Y"][("off", 144)][3]))
+    sens = {}
+    for rev in "YV":
+        hi_, lo_ = tj_at(rev, i_aux + 2 * f_resp, air + 0.25), tj_at(rev, i_aux + 2 * f_resp, air - 0.25)
+        sens[rev] = (hi_[0] - lo_[0]) / 0.5 if hi_ and lo_ else None
+    w("     the drop's corner; each kelvin of local air costs %.2f K at the LDO on rev V's rows and %.2f K on rev Y's (the controller's own" % (sens["V"], sens["Y"]))
+    w("     operating point rises with the air, steeply on rev Y's rows near their runaway)")
+    w("     THE CONTROLLER FIGURE A FITTED PART MUST MEET for the worst state (both fabrics faulted, responded) to hold 125 C at this corner: at most")
+    w("     %.4f A at its own operating point at %.2f C air (rev V's rows: %.4f A; rev Y's: %.4f A). PROVISIONAL CHOICE (SESSION L9T5-D7): the" % (
+        i_cap, air, out["B"][("V", air)][1], out["B"][("Y", air)][1]))
+    w("     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; a rev X part is")
+    w("     accepted only after the supplier's V-B20 reads its supply current at the bound, at a junction of 105 C or more, at most that figure")
+    w("     (specimen: three rev X STM32H743VIT6 on the first-article board B; quantity: each supervisor's supply current at FW-B20's bound and")
+    w("     FW-B21's share, at its operating junction; pass limit: at most %.4f A); the inside air at the pockets is U-02's (the T-H1 mock-up)" % i_cap)
+    # (2) the service budget
+    w("   (2) THE CAN SERVICE UNDER THE BOUND (VOS3, at most 144 MHz, 2 % of every 100 ms per fabric)")
+    w("     what the fabrics carry: the supervisors' quorum (state, leases, epochs, the votes' agreement; FW-B09, IOHA sections 6 and 7). Not on")
+    w("     them: the modules' heartbeats (GPIO lines HB1 to HB3, FW-B01), the voted outputs (GPIO into the voters, FW-B12), FW-E07's stopped-fan")
+    w("     report (board E's sensor controller, the kit bus, FW-E07 and V-E07's 5 s). The tree defines no CAN message rate; the record ASSUMES")
+    w("     %d state frame per supervisor per fabric per 100 ms and a burst of %d event frames in a window when ownership moves" % NEED)
+    svc = {}
+    for rate in (125e3, 500e3, 1e6):          # 125 kbit/s shown as the case FW-B21 excludes (its range is 500 kbit/s to 1 Mbit/s)
+        bits = SHARE * WINDOW_MS * 1e-3 * rate
+        n = int(bits // (FRAME_BITS + 2))          # each own frame, and the acknowledgements of the other two's frames
+        svc[rate] = n
+        w("     at %4.0f kbit/s: %5.0f dominant bit times a window: %2d frames of %d bits (every bit counted dominant) with two acknowledgements each;"
+          % (rate / 1e3, bits, n, FRAME_BITS))
+        w("       the need %d (%s)" % (sum(NEED), "inside" if n >= sum(NEED) else "NOT inside: a state frame per window only, the event burst spread over %d windows" % (
+            -(-NEED[1] // max(1, n - NEED[0])) if n > NEED[0] else 0)))
+    w("     REQ-004's 30 s for a moved bank (ownership plus re-enumeration) is %d windows; at 125 kbit/s the event burst spreads over at most %d of" % (
+        int(30.0 / (WINDOW_MS * 1e-3)), -(-NEED[1] // max(1, svc[125e3] - NEED[0]))))
+    w("     them; at 500 kbit/s and over it fits one window. A7: with one fabric cut the other carries the same traffic under the same share (the")
+    w("     share is per fabric, not shared). CON-004's quorum needs two of three state frames inside the loss timeout the firmware sets: the")
+    w("     share allows %d to %d a window at FW-B21's 500 kbit/s to 1 Mbit/s (%d at 125 kbit/s, which FW-B21 therefore excludes). So the bound keeps" % (
+        svc[500e3], svc[1e6], svc[125e3]))
+    w("     the service the tree requires, on the assumed message set (the firmware's to confirm")
+    w("     against its real one, V-B21)")
+    # (3) enforceability
+    w("   (3) WHAT ENFORCES THE BOUND AND THE RESPONSE IN THE FAULTS THE CALCULATION USES (an unapplied contract row is no mechanism)")
+    w("     HARDWARE, whatever the firmware does: the TCAN334's driver time-out frees a held TXD in %.1f to %.1f ms (PRINTED); the FDCAN's own bus-off" % (
+        P["can_dto"][0], P["can_dto"][2]))
+    w("     sets INIT and holds TX recessive with no automatic restart (RM0433 p.2464 and p.2534; the count to bus-off is the CAN standard's, not")
+    w("     held); any reset (the IWDG, started by option byte under FW-B10, on its own LSI) returns the reset state, inside the bound, with the TX")
+    w("     pins high-impedance and each TXD on the transceiver's pull-up, recessive; SHDN rests on its 100 k in normal mode (the draft)")
+    w("     FIRMWARE (FW-B20, FW-B21, enforceable only once applied and built): the clock and VOS read back at start; DAR = 1; the share; a fabric")
+    w("     at error passive, bus-off or with no valid frame for 100 ms stopped and its transceiver shut down; probing once a second for 100 ms")
+    w("     per fault, what acts and when (each window carries at most %.0f ms of own dominant drive by the schedule, so a fault's current is" % (SHARE * WINDOW_MS))
+    w("     averaged over the window whatever the detection time):")
+    rows3 = (("B1, B2, B5 (bits read wrong)", "each scheduled frame errs once (DAR); EP or BO stops the fabric and SHDN; the device's own bus-off backs it", "the schedule's 2 ms a window; the stop within 100 ms"),
+             ("B3, B4 (the bus still works)", "nothing detects them: the share alone bounds the current, which the result above already counts", "every window"),
+             ("B6 (an open: no acknowledgement)", "each frame errs once (DAR, ACK errors); the no-valid-frame rule stops the fabric", "within 100 ms; 2 ms a window before"),
+             ("B7a (TXD held low)", "the DTO (hardware) frees the drive; the FDCAN errs; the firmware stops the fabric", "%.1f ms" % P["can_dto"][2]),
+             ("B7b (driver stuck on, DTO dead)", "every supervisor sees no valid frame; each stops the fabric and drives its SHDN; the failed part may ignore it (L9T5-D5)", "within 100 ms"))
+    for a, b, c in rows3:
+        w("       %-34s %-118s %s" % (a, b, c))
+    i_babble = out["B"][("Y", air)][1] + i_aux + 2 * i_dom_of(P)
+    w("     THE FIRMWARE AS THE FAULTING PARTY: a hang is ended by the IWDG (hardware-started, FW-B10) and leaves nothing new transmitted (DAR); with DAR")
+    w("     mis-set and the CPU hung, B6's endless retransmission is the worst (%.1f C on rev Y, the parts-alone column), under the %.0f C absolute" % (
+        tj_l([r for r in out["fault_rows"]["Y"] if r[0] == "B6"][0][2], air), P["tj_ldo"]))
+    w("     maximum. A running firmware that breaks the share (a babbling supervisor) is bounded by both transceivers held dominant: %.4f A, %.1f C on" % (
+        i_babble, tj_l(i_babble, air)))
+    w("     rev Y, under %.0f C, over %.0f C (it costs margin, not the regulator; its own fabric traffic is then the quorum's problem, an FMEA row" % (
+        P["tj_ldo"], TJ_GOAL))
+    w("     IOHA section 12 does not carry: finding L9T5-F21). A running firmware that breaks the CLOCK bound (FW-B20) takes the controller")
+    w("     itself outside its rating (section 4: no operating point over 200 MHz with the peripherals on) and can take the LDO over 150 C:")
+    w("     nothing in hardware prevents it. That is a SYSTEMATIC firmware defect, closed by the firmware's verification (FW-B20's read-back,")
+    w("     V-B20, CON-017 (4)'s firmware stage), not by a protective mechanism: an OPEN implementation obligation, not a desk-fixable circuit")
+    w("     defect. Round 4's K1 (a buck per supervisor) would let the regulator survive it, but not the controller (SESSION decision L9T5-D6:")
+    w("     K1 not taken for it; to reverse, round 4's K1)")
+    # L9T5-F22's lever, as a labelled SCENARIO for the drafts' owner: the set point held at the largest current this record computes for a
+    # regulator (the held B5 row on rev Y), the dropout INFERRED linear between its printed 300 and 600 mA points
+    G = D.gndret()
+    r_sup = G["rhot"] + 2 * DP["vh_r"][1]
+    i_hold = max(r[1] for r in out["fault_rows"]["Y"])
+    drop_i = P["drop"][300] + (P["drop"][600] - P["drop"][300]) * (i_hold - 0.3) / 0.3
+    need_i = 3.3 * (P["vout_hi"] + P["load"] * i_hold) + drop_i
+    sc = []
+    for rb in (13.7e3, 14.0e3, 14.3e3):
+        lo_, nom_, hi_ = CHK.vout_band(R601, rb)
+        at_ = lo_ - D.RAIL_BUDGET * nom_ - 3 * i_hold * r_sup - G["shift_drawn_ub"]
+        k_ = P["theta_ldo"] * (hi_ - 3.3 * P["vout_lo"])
+        sc.append((rb, nom_, hi_, at_, at_ >= need_i, air + k_ * (out["B"][("Y", air)][1] + i_aux + 2 * f_resp)))
+    out["f22"] = (i_hold, need_i, sc)
+    w("   L9T5-F22's lever (SCENARIO for the T10 drafts' owner, not drafted): the LDOs' input held over its requirement at the largest current this")
+    w("     record computes for a regulator (%.4f A, the held B5 row on rev Y; dropout %.0f mV INFERRED between the printed 300 and 600 mA points):" % (
+        i_hold, drop_i * 1000))
+    w("     %.4f V. R602 at:" % need_i)
+    for rb, nom_, hi_, at_, ok_, tjy in sc:
+        w("       %.1f k: %.4f V nominal, top %.4f V; the LDOs' input at least %.4f V (%s); rev Y's cover, both fabrics faulted, %.1f C" % (
+            rb / 1e3, nom_, hi_, at_, "holds" if ok_ else "FAILS", tjy))
+    w("     (T10-A3 as round 4 wrote it, at the full 600 mA, fails with any of them: that criterion is the drafts' owner's to restate)")
+    # (4) the composed changes against the calculation and C-DEV rev 2
+    c = importlib.util.spec_from_file_location("l9t5_contract_draft", CONTRACT)
+    cm = importlib.util.module_from_spec(c)
+    c.loader.exec_module(cm)
+    rows = cm.FW_B20 + cm.FW_B21
+    want = ("VOS3", "at most 144 MHz", "at most %d %% of every %d ms window" % (round(SHARE * 100), WINDOW_MS), "no more than once a second",
+            "for at most %d ms" % PROBE_MS, "no valid frame for %d ms" % WINDOW_MS, "FDCAN_CCCR.DAR = 1", "PD2 (fabric A) and PB14 (fabric B) with 100 k",
+            "between 500 kbit/s and 1 Mbit/s")
+    miss = [x for x in want if x not in rows]
+    cd = text(DOCS["cdev2"])
+    nums = {"reg_y": "%.4f A a regulator" % out["B"][("Y", air)][2], "reg_v": "%.4f A rev V" % out["B"][("V", air)][2],
+            "mcu": "%.4f A at TJ %.1f C" % (out["B"][("Y", air)][1], out["B"][("Y", air)][0]),
+            "w": "%.3f W at +3V3_IOCx" % (3 * (out["cdev"][0] + 0.06) * 3.3), "ioc": "+5V_IOC %.4f A" % (3 * (out["cdev"][0] + 0.06)),
+            "aux": "%.4f A at most" % i_aux}
+    cd_flat = " ".join(cd.replace("*", "").split())
+    cmiss = [k for k, v in nums.items() if v not in cd_flat]
+    out["match"] = (not miss, not cmiss, out["v_new"] == "DRAWN")
+    w("   (4) THE COMPOSED CHANGES AGAINST THE CALCULATION AND THE ISSUED CASE ROW")
+    w("     the contract draft's rows carry this record's figures (%s): %s" % ("; ".join(want), "every one" if not miss else "MISSING: %s" % miss))
+    w("     the SHDN draft's nets in the regenerated board B netlist: %s (10f); the pre-regulator's divider: section 9's reading" % out["v_new"])
+    w("     C-DEV rev 2 as the coordinator issued it (the copy inputs/cases-cdev-rev2-20261005.md, sha256 %s, of _runs/cases/CASES-2026-10-04.md):" % sha(DOCS["cdev2"]))
+    w("     its figures against this output's (%s): %s" % ("; ".join(nums.values()), "every one equal" if not cmiss else "DIFFER: %s" % cmiss))
+    w("")
+    return out
+
+
+def i_dom_of(P):
+    return P["can_dom_hi"]
 
 
 def main():
@@ -1104,31 +1306,37 @@ def main():
     Q, _ldo_k, tj_l, R5 = round5(w, P, DP, air, hi3, d_bound)
     R5 = round5_rest(w, P, DP, air, hi3, Q, _ldo_k, tj_l, R5)
     R5 = round5_faults(w, P, air, Q, tj_l, R5)
+    R5 = round5_answers(w, P, DP, air, hi3, Q, tj_l, R5)
     # 11. state, findings, predicates
     w("11. THE STATE OF L9T5-F06 (T10)")
     by_, bv_ = R5["B"][("Y", air)], R5["B"][("V", air)]
-    f16_ok = max(tj_l(R5["worst"][r], air) for r in "YV") <= TJ_GOAL
-    f17_ok = max(tj_l(R5["both"][r][0], air) for r in "YV") <= P["tj_ldo"]
-    f13_ok = max(by_[3], bv_[3]) <= TJ_GOAL
+    # judged on rev V's rows, the revision L9T5-D7 fits (inside CON-017 (5)); rev Y's rows, the cover for a rev X part, are printed apart
+    f16_ok = tj_l(R5["worst"]["V"], air) <= TJ_GOAL
+    f17_ok = max(tj_l(R5["both"][r][0], air) for r in "YV") <= P["tj_ldo"] and tj_l(R5["both"]["V"][0], air) <= TJ_GOAL
+    f13_ok = bv_[3] <= TJ_GOAL
+    cover_fails = by_[3] > TJ_GOAL
     drafted_ok = R5["contract_ok"] and R5["v_new"] == "DRAWN" and R5["v_old"] == "FAIL" and R5["v_mut"] == "FAIL" and R5["v_mut2"] == "FAIL"
     w("   L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2")
-    w("   is restated with the enabled peripherals and holds at the case's %.2f C air on both revisions (rev Y %.1f C, rev V %.1f C; 10c); T10-A3" % (
-        air, by_[3], bv_[3]))
+    w("   is restated with the enabled peripherals at the drop's worst corner: at the case's %.2f C air it holds on rev V's rows (%.1f C), the revision" % (
+        air, bv_[3]))
+    w("   L9T5-D7 fits, and NOT on rev Y's rows (%.1f C), the cover for a rev X part, which is PROVISIONAL on V-B20 (pass limit %.4f A; 10h (1)); T10-A3" % (
+        by_[3], R5["i_cap"]))
     w("   and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;")
     w("   Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to")
     w("   %.2f C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check" % R5["max_air"]["Y"])
     w("   of it read CONFIRMED AS CONDITIONAL, not a negative; round 5 is the second round on the same correction, adding the rows V6 named")
-    w("   L9T5-F13: %s. The row (FW-B21's share) is drafted; with it the regulator reads %.1f C (rev Y) and %.1f C (rev V) at %.2f C" % (
-        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f13_ok and drafted_ok else "OPEN", by_[3], bv_[3], air))
+    w("   L9T5-F13: %s. The row (FW-B21's share) is drafted; with it the regulator reads %.1f C on rev V (fitted, L9T5-D7) and %.1f C on rev Y's" % (
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f13_ok and drafted_ok else "OPEN", bv_[3], by_[3]))
+    w("     cover at %.2f C (the drop's worst corner)" % air)
     w("     against %.0f C; the bench (V-B20, V-B21) confirms the firmware's implementation and decides no feasibility. Stays OPEN in the" % TJ_GOAL)
     w("     register until an independent check reads it and Layer 5 applies the row")
-    w("   L9T5-F16: %s. Every credible single fabric fault inside board B holds %.0f C with the response (worst %.1f C rev Y, %.1f C rev V;" % (
-        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f16_ok and drafted_ok else "OPEN", TJ_GOAL,
-        tj_l(R5["worst"]["Y"], air), tj_l(R5["worst"]["V"], air)))
+    w("   L9T5-F16: %s. Every credible single fabric fault inside board B holds %.0f C with the response on rev V (worst %.1f C; rev Y's cover %.1f C;" % (
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f16_ok and drafted_ok else "OPEN", TJ_GOAL,
+        tj_l(R5["worst"]["V"], air), tj_l(R5["worst"]["Y"], air)))
     w("     10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by")
     w("     CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application")
     w("   L9T5-F17: %s. Both fabrics faulted hold %.0f C with the response (%.1f C rev Y, %.1f C rev V); held, %.1f C (rev Y). Same conditions" % (
-        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED" if f17_ok and drafted_ok else "OPEN", P["tj_ldo"],
+        "A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED" if f17_ok and drafted_ok else "OPEN", P["tj_ldo"],
         tj_l(R5["both"]["Y"][0], air), tj_l(R5["both"]["V"][0], air), tj_l(R5["both"]["Y"][1], air)))
     w("   FINDINGS FOR OTHER AUTHORS")
     w("   L9T5-F09 (Layer 5, HW-FW-CONTRACT.md 3.3): answered by the drafted rows FW-B20 and FW-B21 (apply_hw_fw_contract_t10.py, the integrator's")
@@ -1145,6 +1353,11 @@ def main():
     w("   L9T5-F19 (board B's layout owner, Layer 10): %s on board B exceed the TCAN334's +-%.0f V bus pins; a short from one to a CAN" % (
         ", ".join(R5["high"]), Q["vbus_abs"]))
     w("     conductor is outside every printed figure: a clearance rule between those nets and the fabrics is a layout means, not credited here")
+    w("   L9T5-F21 (Layer 5, IOHA section 12's owner): a supervisor whose firmware babbles on both fabrics (a running firmware that breaks FW-B21)")
+    w("     is in no FMEA row; thermally it is bounded (10h (3)), but it can deny the quorum both fabrics: the FMEA row and its detection are owed")
+    w("   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the")
+    w("     pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without")
+    w("     V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)")
     w("   L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and")
     w("     R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)")
     w("")
@@ -1169,11 +1382,13 @@ def main():
     pred["round 5: CON-004, IOHA rows 7 and 8 and test A7 are read; A7's method is a cut"] = (
         P["con004_class"] == ("constraint", "core", "BLOCKER") and "cut" in P["a7"][1] and "quorum" in P["row7"][1])
     pred["round 5: the reset state the reference manual prints (HSI at 64 MHz, VOS3) is inside the bound"] = Q["hsi"] <= BOUND[1] and BOUND[0] == "VOS3"
-    pred["round 5: with the enabled set, the share and the circuit's auxiliaries the bounded state holds 125 C at the case's air on both revisions"] = f13_ok
-    pred["round 5: with the response every credible single fabric fault holds 125 C and both fabrics hold 150 C, on both revisions"] = f16_ok and f17_ok
+    pred["round 5: at the drop's worst corner the bounded state holds 125 C at the case's air on rev V's rows (fitted, L9T5-D7)"] = f13_ok
+    pred["round 5: with the response every credible single fabric fault holds 125 C on rev V's rows and both fabrics hold 150 C on both"] = f16_ok and f17_ok
+    pred["round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20)"] = cover_fails
     pred["round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)"] = all(
         tj_l(h, air) > TJ_GOAL for rev in "YV" for fid, h, _d, _r in R5["fault_rows"][rev] if fid in ("B1", "B2", "B5"))
     pred["round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once"] = drafted_ok and R5["ok5"]
+    pred["round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's"] = all(R5["match"])
     w("12. THE PREDICATES")
     for k, v in pred.items():
         w("   %-134s %s" % (k, "yes" if v else "NO"))
