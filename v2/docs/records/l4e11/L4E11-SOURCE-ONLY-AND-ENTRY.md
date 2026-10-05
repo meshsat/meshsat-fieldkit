@@ -3303,7 +3303,10 @@ owed the guard's reading on DD-7. Nothing here changes a circuit.
   under board A's held reading of 0.7755 V while DOCK_EN_OUT stays powered (4.328, 6.103 and 9.771 V at BRK_VIN 7.6, 10.6 and 16.8 V
   with the guard's 30 uA drawn): a trip is DD-7's trigger. The window: the return 0.908 V (0.859 V all doubled) at DOCK_EN_OUT 1.825 V,
   RET/OUT at least 0.4707, so a ramping closed loop never reads held; record l8p's single failure of 10b (Q60's gate on its drain) is the
-  one that would, tolerated there as latent (L8P-D9).
+  one that would. Record l8p labelled it tolerated (L8P-D9) and withdrew the label under the owner's part 22: its fail-safe delta
+  (`apply_gen_sch_a_thgfs.py`, record l8p 12o) clamps Q60's gate cold so that short holds the return low and trips; `check_dd7_netlist.py`
+  round 18 admits the delta's second input capacitor C268 on DOCK_EN_OUT (C261 and C268 at 330 nF each). The guard's draw on
+  DOCK_EN_OUT rises with the delta (record l8p's L8P-R9-F2): 27a and 27b are restated at the delta's adoption.
 - **20f with the guard (out 27b):** a docking's rise is slowed by C261 and, through U61 in dropout, C262 (about 63 ms, MODEL), but the
   return follows DOCK_EN_OUT resistively: no trigger. The 30 uA lowers DOCK_EN_OUT by at most 0.303 V, counted in 27a.
 - **State (SESSION):** V6-m2 answered; record l8p's copy of this record is taken again at this round (record l8p's round 9).

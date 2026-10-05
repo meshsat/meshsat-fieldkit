@@ -15,7 +15,9 @@ single pin row does not show:
         THG_MID, R261 7.5k from THG_MID to DOCK_EN_RET, the midpoint carrying TP62 alone; DOCK_EN_RET then reaches J_DOCK, R261, Q44,
         U48 and the guard's shunt Q60's drain (an off 2N7002, the leakage record l8p counts in L4-E11 20c's window); DOCK_EN_OUT reaches
         J_DOCK, R260, R109, the guard's regulator U61's input and its capacitor C261. A board with both RT1 and the guard, or with
-        neither, FAILS;
+        neither, FAILS; round 18 (record l8p's round 9, the owner's part 22 item A): on a board A that also carries record l8p's
+        fail-safe delta (apply_gen_sch_a_thgfs.py: a second switch U62, the cold clamp Q62 and Q63) U61's input capacitor is two,
+        C261 and C268 at 330 nF each, and DOCK_EN_OUT reaches C268 as well; a board with U62 but not C268 (or the reverse) FAILS;
   TRIG  U48's RESET1 is DD7_T, pulled up only from DD7_LP (R250), which is U48's RESET2; Q50's gate is DD7_T;
   HOLD  Q51 from VBAT to DD7_K, R253 from DD7_K to ground, R84 and D26 (cathode on DD7_H) into DD7_H, C241 and R85 to ground,
         U47's SENSE1 on DD7_H and its CTS1 on C248;
@@ -93,6 +95,12 @@ GUARD_EXCLUSIVE = {
     "DOCK_EN_OUT": {"J_DOCK", "R260", "R109", "U61", "C261"},
     "THG_MID": {"R260", "R261", "TP62"},
 }
+# round 18: record l8p's round 9 delta (apply_gen_sch_a_thgfs.py) splits U61's input capacitor in two (C261 and C268, 330 nF each)
+FS_DOCK_EN_OUT = {"J_DOCK", "R260", "R109", "U61", "C261", "C268"}
+FS_CAPS = [
+    ("C261", "330n", {"1": "DOCK_EN_OUT", "2": "GND"}),
+    ("C268", "330n", {"1": "DOCK_EN_OUT", "2": "GND"}),
+]
 GUARD_MAP = [
     ("R260", "7.5k", {"1": "DOCK_EN_OUT", "2": "THG_MID"}),
     ("R261", "7.5k", {"1": "THG_MID", "2": "DOCK_EN_RET"}),
@@ -187,7 +195,12 @@ def judge(raw):
         bad.append("neither RT1 nor the thermal guard is drawn: the loop has no element")
     elif guard:
         excl.update(GUARD_EXCLUSIVE)
-        for ref, pre, want in GUARD_MAP:
+        fs = comps.get("U62", "").startswith("LM26LV")
+        gmap = GUARD_MAP
+        if fs:
+            excl["DOCK_EN_OUT"] = FS_DOCK_EN_OUT
+            gmap = [row for row in GUARD_MAP if row[0] != "C261"] + FS_CAPS
+        for ref, pre, want in gmap:
             got = pins.get(ref, {})
             if not comps.get(ref, "").startswith(pre):
                 bad.append("%s's value %r does not start with %r (the guard's loop part)" % (ref, comps.get(ref, "absent")[:40], pre))
@@ -221,7 +234,9 @@ def main(argv):
     for w in why:
         print("  %s" % w)
     comps, _p, _o = read_netlist(raw)
-    print("the loop's element: %s" % ("the thermal guard's pair R260 and R261 (record l8p round 8; this check's round 17)" if comps.get("U60", "").startswith("LM26LV")
+    print("the loop's element: %s" % (("the thermal guard's pair R260 and R261 (record l8p round 8; this check's round 17)"
+                                        + (", with record l8p's round 9 fail-safe delta (this check's round 18)" if comps.get("U62", "").startswith("LM26LV") else ""))
+                                       if comps.get("U60", "").startswith("LM26LV")
                                        else "RT1 (record l8p's PTC)" if "RT1" in comps else "none"))
     print("DD-7 on board A (L4-E11 round 10): %s" % v)
     return {"DRAWN": 0, "FAIL": 4, "NOT DRAWN": 3}[v]

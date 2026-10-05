@@ -898,9 +898,12 @@ def t_round7_the_stop_stands_and_round8_draws_c4_not_g2():
     assert 'r("R260", "7.5k 1%", "DOCK_EN_OUT", "THG_MID"); r("R261", "7.5k 1%", "THG_MID", "DOCK_EN_RET")' in g._NEW_LOOP
     assert '"RT1"' not in g._NEW_LOOP, "RT1 is drawn by the guard draft"
     for f in os.listdir(REC):
-        if f.startswith("apply_") and f.endswith(".py") and f != "apply_gen_sch_a_thguard.py":
+        if f.startswith("apply_") and f.endswith(".py") and f not in ("apply_gen_sch_a_thguard.py", "apply_gen_sch_a_thgfs.py"):
             body = open(os.path.join(REC, f), encoding="utf-8").read()
             assert "LM26LV" not in body and "TPS70950" not in body, "%s draws the guard: only apply_gen_sch_a_thguard.py does" % f
+    # round 9: the fail-safe delta draws a second switch, only on top of the round 8 guard (its first old text is the guard's Q60 line)
+    fs = _mod("l8p_thgfs_under_test", "apply_gen_sch_a_thgfs.py")
+    assert fs._OLD_0 in g._NEW_LOOP and all('ic("U61"' not in new for _old, new in fs.EDITS), "the delta redraws the guard's regulator"
     assert 'part("RT1", "Device", "Thermistor_PTC"' in open(os.path.join(REC, "apply_gen_sch_a_ptc.py"), encoding="utf-8").read()
     k = page.split("### 12k.")[1].split("### 12l.")[0]
     for s in ("**What does not reproduce: L4-E11 20c's window", "Finding L8P-F08, OPEN", "**The stop.**", "the first negative check of G2 as",
@@ -1007,9 +1010,10 @@ def t_round8_the_c4_check_and_judgement_are_what_the_script_prints():
 def t_round9_v6_m7_the_missed_single_failures_are_read_and_the_second_path_fails_the_window():
     """V6-m7: the single-failure table missed Q60's gate-to-drain short, C261 open and U60's pad open. Re-solved here from the window's
     own corner (DOCK_EN_OUT 1.825 V, the pair at +1 %, R107 at -1 %): with Q60's gate on its drain the gate network (47 k beside 1 M,
-    44.9 kOhm) loads the return to 0.799 V with 13.25 uA of other sinks, under the 0.84 V the window needs (V6's own arithmetic); and the
-    circuit answer the brief names, a second shunt on the same return, takes the all-doubled sinks from 24.33 to 29.92 uA against the
-    26.45 uA allowance: the window fails with it too. The decision that tolerates the three is printed with its reason and reversal."""
+    44.9 kOhm) loads the return to 0.799 V with 13.25 uA of other sinks, under the 0.84 V the window needs (V6's own arithmetic); and a
+    second shunt on the same return takes the all-doubled sinks from 24.33 to 29.92 uA against the 26.45 uA allowance: the window fails
+    with it too. Part 22 item A: each failure is stated with the requirement searched, the detection left, the interval and the
+    exposure; the label L8P-D9 is withdrawn."""
     rpair, r107 = 15e3 * 1.01, 22e3 * 0.99
     k = r107 / (rpair + r107)
     rth = rpair * r107 / (rpair + r107)
@@ -1019,12 +1023,83 @@ def t_round9_v6_m7_the_missed_single_failures_are_read_and_the_second_path_fails
     leak = 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0)
     assert round(leak * 1e6, 2) == 5.58 and round((24.33e-6 + leak) * 1e6, 1) == 29.9 and 24.33e-6 + leak > 26.45e-6
     o = open(C4_OUT, encoding="utf-8").read()
-    sec = o.split("\n10b. ROUND 9 (V6-m7)")[1].split("\n11. VERDICT")[0]
-    for s in ("the return 0.799 V", "FAILS (before any conduction of the diode-connected Q60 is counted)", "C261 OPEN", "U60's THERMAL PAD OPEN",
-              "window FAILS with it", "SESSION decision L8P-D9", "TOLERATED", "To reverse:"):
+    sec = o.split("\n10b. ROUND 9 (V6-m7;")[1].split("\n10c. ROUND 9")[0]
+    for s in ("the return reads 0.799 V (0.758 V all", "the trip is LOST", "(L8P-D9); that label is WITHDRAWN", "0 matches", "C261 OPEN",
+              "U60's THERMAL PAD (pin 7) OPEN", "L4-E11 20c's window FAILS", "so NO approved requirement permits a latent state of the guard"):
         assert s in sec, s
+    assert sec.count("UNBOUNDED") >= 3 and sec.count("so a correction is required: 10c") == 3 and "TOLERATED" not in sec
+    tab = o.split("\n10. EACH SINGLE FAILURE")[1].split("\n10b.")[0]
     for s in ("Q60 gate to drain shorted (round 9, V6-m7)", "C261 open (round 9, V6-m7)", "U60's thermal pad (pin 7) open (round 9, V6-m7)"):
-        assert s in o.split("\n10. EACH SINGLE FAILURE")[1].split("\n10b.")[0], s
+        assert s in tab, s
+    assert "(L8P-D9)" not in tab and "the three V6-m7 rows are corrected in draft (10c)" in tab
+
+
+def t_round9_part22_the_requirements_hold_no_latent_state_and_the_exposure_is_a_c_prot_condition():
+    """Part 22 item A asks which approved requirement permits a latent state: the requirement file, read here, names none (no
+    "latent", "proof test", "test interval" or "diagnostic coverage"), and nothing defines a service interval, so E-13b's interval is
+    unbounded. The exposure is record l9stk's own figure: without the guard the battery FETs reach 150 C at 20.53 A held, under the
+    breaker's most current limit of 23.93 A."""
+    y = open(os.path.join(ROOT, "v2", "ecad", "tools", "pcb_requirements.yaml"), encoding="utf-8").read()
+    assert not re.search(r"latent|proof.test|test interval|diagnostic coverage", y, re.I)
+    env = open(os.path.join(ROOT, "v2", "docs", "OPERATING-ENVELOPE.md"), encoding="utf-8").read()
+    assert not re.search(r"service interval|maintenance interval|between services", env + y, re.I)
+    po = open(os.path.join(REC, "inputs", "l9stk_protection-0d72880b.out.txt"), encoding="utf-8").read()
+    m = re.search(r"150 C held at ([0-9.]+) A from the \+70 C line and ([0-9.]+) A from 76\.25 C", po)
+    lim = re.search(r"current limit ([0-9.]+) / ([0-9.]+) / ([0-9.]+) A", po)
+    assert m and lim and float(m.group(2)) < float(lim.group(3)), (m and m.groups(), lim and lim.groups())
+    o = open(C4_OUT, encoding="utf-8").read()
+    assert "without any guard the battery FETs reach 150 C held at %s A" % m.group(2) in o
+    for s in ("round 9: no requirement file names a latent state, a proof test or a service interval",
+              "round 9: without the guard the FETs pass 150 C held under the breaker's most current limit (the exposure)"):
+        assert any(l.strip().startswith(s) and l.rstrip().endswith(" yes") for l in o.splitlines()), s
+
+
+def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes():
+    """The correction drafted (apply_gen_sch_a_thgfs.py) re-solved here from its own values and the printed rows: the cold clamp holds
+    the return under the held reading with Q60's gate shorted to its drain (the fault trips), the trip reaches 2.5 V within 0.1 s
+    after the diode's drop, the gate stays under 1 V before tEN; its old texts are the round 8 guard's own lines; it composes, reads
+    DRAWN on check_l8p_fs and L4-E11's DD-7 check, its seven mutations fail, and it refuses as a draft must. check_l8p_fs reads the
+    committed board A (no delta) as NOT DRAWN."""
+    fs = _mod("l8p_thgfs_under_test", "apply_gen_sch_a_thgfs.py")
+    thg = _mod("l8p_thguard_under_test", "apply_gen_sch_a_thguard.py")
+    for i, (old, new) in enumerate(fs.EDITS):
+        assert old != new and (thg._NEW_LOOP.count(old) + thg._NEW_SEC.count(old)) == 1, i
+    g, c = dict(fs.GATE), dict(fs.CAPS)
+    assert (g["R262"], g["C260"], g["R263"]) == ("22k 1%", "1u 16V X7R", "1M 1%") and c["C261"] == c["C268"] == "330n 50V X7R"
+    assert [r for r, _v in fs.CLAMP] == ["Q62", "Q63"] and [v for _r, v in fs.PULLUP] == ["47k 1%", "47k 1%"]
+    # the trip and the state before tEN (resistors 1 %, capacitors 10 %; VOH 4.75 V, the diode 0.715 V, the leakage 5.66 uA)
+    rg_p, rg_m, rp_p, rp_m = 22e3 * 1.01, 22e3 * 0.99, 1e6 * 1.01, 1e6 * 0.99
+    k_lo, k_hi = rp_m / (rg_p + rp_m), rp_p / (rg_m + rp_p)
+    rth_hi = rg_p * rp_p / (rg_p + rp_p)
+    leak = 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0) + 80e-9
+    fin = (4.75 - 0.715) * k_lo - leak * rth_hi
+    t_on = -1e-6 * 1.1 * rth_hi * math.log(1.0 - 2.5 / fin)
+    g_inv = 5.05 * k_hi * (1.0 - math.exp(-3.8e-3 / (1e-6 * 0.9 * rg_m * rp_m / (rg_m + rp_m))))
+    assert round(fin, 2) == 3.82 and round(t_on * 1e3, 1) == 25.4 and t_on < 0.1 and round(g_inv, 3) == 0.888 and g_inv < 1.0
+    o = open(C4_OUT, encoding="utf-8").read()
+    sec = o.split("\n10c. ROUND 9")[1].split("\n11. VERDICT")[0]
+    vdd = float(re.search(r"VDD ([0-9.]+) V \(the regulator in dropout", sec).group(1))
+    for lk, want in ((2 * 1e-6 + 2 * 80e-9, 55.3), (2 * 1e-6 + 2 * 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0), 184.7)):
+        vgs = vdd - lk * 94e3 * 1.01
+        ret = 1.18e-3 * 2 * 7.0 * 2.5 / (vgs - 2.5) * 2.0
+        assert ret < 0.7755 and abs(ret * 1e3 - want) < 0.6 * want / 55.3 + 0.6, (ret, want)
+    for s in ("the return 55.3 mV (184.7 mV): HELD", "the fault TRIPS", "2.5 V within 25.4 ms at the tolerances", "the gate 0.888 V at the tolerances",
+              "check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN", "reads THG FAIL on it, as it must",
+              "check_dd7_netlist (its round 18 admits C268): DRAWN", "the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)",
+              "the delta without round 8's guard: REFUSED", "15 scripts, every one OK", "THE COMMON PATH STAYS (finding L8P-R9-F1)",
+              "a NAMED PREREQUISITE (finding L8P-R9-F2)",
+              "VERDICT (10c): the three V6-m7 failures CORRECTED IN DRAFT, the desk acceptance MET by its author on C-PROT rev 1 and the composition MET"):
+        assert s in sec, s
+    assert sec.count("     mutated, ") == 7 and sec.count(" THG FAIL: ") == 7
+    assert sum(1 for l in sec.splitlines() if "before the hold's least 0.110 s" in l) == 3 and "AFTER the hold" not in sec
+    chk = need(os.path.join(REC, "check_l8p_fs.py"), "check_l8p_fs")
+    lm = _mod("l8p_drafts_under_test_fs", "l8p_drafts.py")
+    r = subprocess.run([sys.executable, "-B", chk, lm.NET["a"]], capture_output=True)
+    assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, r.stdout[-300:]
+    page = open(PAGE, encoding="utf-8").read()
+    for s in ("### 12o. Round 9, the owner's part 22 item A", "**L8P-D9 is WITHDRAWN**", "**SESSION decision L8P-D10**", "**L8P-R9-F1", "**L8P-R9-F2",
+              "**L8P-R9-F3", "**E-13b gains (e):**"):
+        assert s in page, s
 
 
 def t_round8_the_judgement_fails_drafts_that_draw_other_values():
