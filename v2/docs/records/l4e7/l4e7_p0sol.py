@@ -999,15 +999,13 @@ def render(O, K, R, b6, r3, K2):
          "Isat, where its inductance is no longer the printed one; its resonance with the entry's capacitance (%.1f uF at its largest) "
          "and the lead falls at %.2f to %.2f kHz, inside CS101's 2 to 5 kHz band where the accepted M2 immunity is decided; and it "
          "leaves D-16 as it is. (B2) a presence contact pair in the solar receptacle carrying U21's INP: the plug's withdrawal pulls "
-         "INP low (V(INP_L) %.1f V least, PRINTED; turn-off within tPD(INP_L)), with the INTENT that a source arrives with Q12 off, the "
-         "case whose absolute ratings the record shows held; that is NOT PROVEN (no sequenced connector selected, no contact and "
-         "control timing proof, BST kept charged from the back-fed VS; section 5e) and the pair's faults are not fail-safe (section "
-         "5f), so no protection credit is taken; at best it would prevent the guard-on step only for a source "
-         "arriving through the loop's mating points (a partial measure), not for a second source on the same lead, and it does not "
-         "change the port's response when a step happens; it needs the receptacle's contact set and a rule that every plug for it "
-         "bridges the pair (Layer 7's harness, R-180 rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is not "
-         "supported on printed figures; B2 is an unapproved PARTIAL interface proposal (section 5), and neither resolves D-10 "
-         "(section 3)." % (B_["isat"], 1e6 * B_["l_ch"], B_["isc"], B_["dv"], 1e6 * B_["t_sc"], B_["i_cut"], 1e6 * B_["c_entry"],
+         "INP low (V(INP_L) %.1f V least, PRINTED; turn-off within tPD(INP_L)), with the INTENT that a source arrives with Q12 off; "
+         "that is NOT PROVEN (no sequenced connector chosen, no contact and control timing proof, BST kept charged from the back-fed "
+         "VS; section 5e) and the pair's faults are not fail-safe (section 5f, P2 and P3 putting INP over its absolute maximum), so no "
+         "protection credit is taken; it could only ever have concerned a source arriving through the loop's mating points, not a "
+         "second source on the same lead, it does not change the port's response when a step happens, it needs a contact set the "
+         "approved interface does not have, and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is not supported on "
+         "printed figures; B2 is UNSELECTED and WITHDRAWN AS DRAFTED (section 5), and neither resolves D-10 (section 3)." % (B_["isat"], 1e6 * B_["l_ch"], B_["isc"], B_["dv"], 1e6 * B_["t_sc"], B_["i_cut"], 1e6 * B_["c_entry"],
                                             1e-3 * B_["f_res"][1], 1e-3 * B_["f_res"][0], B_["inp_l"]))
     P("")
     sel = C_["sel"]
@@ -1205,13 +1203,13 @@ def render(O, K, R, b6, r3, K2):
          "exclusion is adopted to avoid a failure.")
     wrap("    (c) ", "        ", "THE CORRECTION OR JUSTIFIED MODEL REVISION NEEDED BEFORE ANY PASSING CLAIM: something must bound the "
          "current the source drives into the stage's capacitance through the closed guard, or the energy and voltage it delivers to "
-         "the port when Q12 opens, at every loop. B1 is rejected at the desk (section 1); B2 is a PARTIAL proposal (section 5); a "
+         "the port when Q12 opens, at every loop. B1 is rejected at the desk (section 1); B2 is withdrawn as drafted (section 5); a "
          "supplier may investigate a choke rated over the cut current and damped against CS101, a lower-impedance clamp or a snubber "
          "sized for the port's energy, a different cut-off element or method, or a model revision on measured loops and "
          "resistances only. S1 and S2 then qualify the correction; M2 and M3 are re-run wherever it changes the port.")
     wrap("    (d) ", "        ", "PROVISIONAL until then: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, "
-         "R-180, the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows, "
-         "route B2's draft. Completed independently on the present port network: D-16's correction (section 2), the regulation and "
+         "R-180, the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows. "
+         "Completed independently on the present port network: D-16's correction (section 2), the regulation and "
          "its correlated margin, the 100 W bound re-run, M2 with the selected sensing (re-run only if the correction changes the "
          "port), INP's divider ratio.")
     P("")
@@ -1221,24 +1219,24 @@ def render(O, K, R, b6, r3, K2):
     P("    (INFERRED), is covered by the margin up to %.2f uA." % C_["sink_be_acc"])
     P("  D-10 (B6, L4-F01): an UNRESOLVED PROTECTION DEFECT in the present model, the remaining engineering item E-1 (section 3).")
     P("    CORRECTED within it: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line (R97 24.9k).")
-    P("    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10. No")
-    P("    protection credit is taken for it: its cold-arrival guarantee is WITHDRAWN (5e) and its pair faults are not fail-safe,")
-    P("    P2 and P3 putting INP over its absolute maximum, an OPEN defect of the B2 draft (5f).")
+    P("    Route B2 (section 5) is UNSELECTED and WITHDRAWN AS DRAFTED, with no protection credit and no owner item; it does not")
+    P("    resolve D-10. Its cold-arrival guarantee is withdrawn (5e), and its pair faults are not fail-safe: P2 and P3 put INP over")
+    P("    its absolute maximum, a defect of the withdrawn draft, REMAINING ENGINEERING outside the baseline (5f).")
     P("")
     # ---------------------------------------------------------------- 5
     b2 = O["B2"]
     K2_ = K2
-    P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (an unapproved PARTIAL proposal; the coordinator's task of")
-    P("   5 October 2026, 17:12; it does not resolve D-10, section 3; NOT part of the baseline: the baseline composition ORDER_E has")
-    P("   no B2 step and no baseline row depends on it, the owner's review part 24)")
+    P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (UNSELECTED, WITHDRAWN AS DRAFTED: Astra's cx45 and")
+    P("   cx46, the owner's parts 24 and 25; drafted on the coordinator's task of 5 October 2026, 17:12; it does not resolve D-10,")
+    P("   section 3; NOT part of the baseline: the baseline composition ORDER_E has no B2 step and no baseline row depends on it)")
     wrap("  5a ", "     ", "AUTHORITY (B2-PRESENCE.md section 1): reserved.json protects no connector or contact arrangement; but B2 "
          "changes the kit's external interface (BUILD.md and appendix 32.32: the panel, an accessory of the owner's choice, on the "
          "shore plug's second pair; with B2 a panel charges only through a plug that bridges the presence pair), changes the "
          "owner-accepted pick of the wall receptacle (appendix 32.21: D38999/20FC4PN, insert 13-4, four size 16 contacts) and adds "
-         "cost, and more than one option stands after the measurement (B2; the drawn interface with the residual measured by S1). By "
-         "the owner's two-part test of 21 September 2026 it is the owner's: the owner item is written, and B2 is an unapproved PARTIAL "
-         "proposal.")
-    wrap("  5b ", "     ", "THE DRAFT (apply_gen_sch_e_p0sol_b2.py, 4 edits): R96, INP's top, from PV_F to the loop's outgoing net PV_PRA; "
+         "cost, so by the owner's two-part test of 21 September 2026 its interface could only be the owner's. NO OWNER ITEM is "
+         "pending: the owner's review part 25 rests no owner action on B2 and the approved interface stands; round 2's owner item is "
+         "withdrawn.")
+    wrap("  5b ", "     ", "THE WITHDRAWN DRAFT (apply_gen_sch_e_p0sol_b2.py, 4 edits, composed only in its separate check): R96, INP's top, from PV_F to the loop's outgoing net PV_PRA; "
          "J_SOLP (JST-XH 1x2, C158012) takes the loop to the inside lead and back to INP (PV_INP); C80 10 nF C0G 100 V (C184799) filters "
          "INP. Composed in L4-E9's order after the C2 draft: %s. The draft refuses a second application (exit %d); the generator runs "
          "(%s). The netlist (NETLIST):" % (", ".join("%s %s" % (s_, "OK" if rc_ == 0 else "REFUSED") for s_, rc_ in K2_["steps"][8:11]),
@@ -1280,10 +1278,11 @@ def render(O, K, R, b6, r3, K2):
     tm = O["B2f"]["timing"]
     wrap("  5e ", "     ", "THE COLD-CONNECTION GUARANTEE, WITHDRAWN (Astra's check cx45, Q6): round 2 claimed that every source "
          "arriving through a mating point of the loop meets Q12 off. Nothing in this record proves it, and every claim resting on it "
-         "stays PROVISIONAL (5d's condition, R-180's reason, the owner item's benefit). What a proof needs, and what this record holds:")
-    wrap("     (i)   ", "           ", "THE CONTACT SEQUENCE: no sequenced connector is selected. The held Glenair D38999 sheets print no "
+         "is withdrawn with it (5d's condition, the contact requirement's reason). What a proof would need, and what this record "
+         "holds:")
+    wrap("     (i)   ", "           ", "THE CONTACT SEQUENCE: no sequenced connector is chosen. The held Glenair D38999 sheets print no "
          "first-mate-last-break contact, so the wall receptacle cannot sequence the pair; the solar tail's connector is not selected "
-         "(B2-PRESENCE.md section 4). A selected part with a printed mating sequence is owed.")
+         "(B2-PRESENCE.md section 4). A chosen part with a printed mating sequence would be owed.")
     wrap("     (ii)  ", "           ", "THE TIME LEAD, NOT A DISTANCE: Q12 is off at most %.3f ms after the pair opens (5c), so the pair "
          "must open at least that long before either power contact parts (otherwise a power contact re-making in the same movement can "
          "find Q12 still on). A spatial lead gives time only under a speed bound, and no held sheet prints a mating speed (the speeds "
@@ -1323,21 +1322,23 @@ def render(O, K, R, b6, r3, K2):
          "guard on and E-1's guard-on step returns; nothing on board E detects it (a LATENT loss of B2's function). P2 and P3 (a "
          "presence core shorted to a positive core of the lead, the solar or the DC pair): INP is PV_F, the guard on from %.2f V and INP "
          "over its %.0f V absolute maximum from PV_F %.2f V, under every source over 20 V and the arriving ring's %.2f V; a hazard the "
-         "draft INTRODUCES (without B2, INP's net never leaves board E): an OPEN defect of the B2 draft. P4 to P6: the guard held off "
+         "draft INTRODUCES (without B2, INP's net never leaves board E): a defect of the withdrawn draft, REMAINING ENGINEERING "
+         "outside the baseline. P4 to P6: the guard held off "
          "(the stage loses the solar input; R96 dissipates at most %.0f mW in P5); fail-safe for D-10 and unmonitored (no charging is "
-         "the only symptom). NO PROTECTION CREDIT is taken for the loop. If B2 is pursued, owed before any credit: monitored or "
+         "the only symptom). NO PROTECTION CREDIT is taken for the loop. Any presence-pair route taken up again, as a new route with its "
+         "own check, owes before any credit: monitored or "
          "fault-tolerant presence detection (for example a coded resistance in the plug's bridge read by a window comparator, so that "
          "P1 and P2 to P6 read as faults and hold the guard off) and INP held inside its absolute maximum for a core at the lead's "
          "highest voltage (a series resistance at J_SOLP pin 2 and a clamp), each drafted, composed and checked like this one, then "
          "the timing proof of 5e. Neither is drafted here; the guard-on case stays with E-1." % (
              fr["P1"]["on_from"], O["Cfault"]["on97"], fr["P2"]["on_from"], f2["pin_abs"], fr["P2"]["abs_from"], b2["rows"][0]["worst"],
              1e3 * f2["p_r96"]))
-    wrap("  5g ", "     ", "WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence "
+    wrap("  5g ", "     ", "WHAT STAYS OPEN WHATEVER BECOMES OF B2: a second stiff source added on the same lead while a panel holds the presence "
          "loop closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; a "
          "stiff source BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode "
          "(PV_P back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here; the timing proof (5e) "
          "and the pair's fault detection and INP's protection (5f). Validation: P1-1's S1 (the first two added to its rows); the "
-         "last two are engineering, not validation.")
+         "last two are REMAINING ENGINEERING outside the baseline, not validation.")
     return lines
 
 

@@ -1754,12 +1754,12 @@ def t_p0sol_b2_refuses_without_the_c2_draft_and_never_writes_the_tree():
 def t_p0sol_b2_page_carries_the_authority_finding_the_owner_item_and_the_figures():
     page = " ".join(open(os.path.join(REC, "B2-PRESENCE.md"), encoding="utf-8").read().split())
     out = " ".join(open(P0SOL_OUT, encoding="utf-8").read().split())
-    for s in ("reserved.json", "two-part test", "The owner item", "PROPOSAL", "R-180", "make-last", "Layer 6", "authority", "ruled_by",
-              "What B2 does not cover", "a second stiff source added on the same lead"):
+    for s in ("reserved.json", "two-part test", "No owner item", "WITHDRAWN AS DRAFTED", "R-180", "make-last", "Layer 6", "authority",
+              "ruled_by", "What stays OPEN whatever becomes of B2", "second stiff source added on the same lead"):
         assert s in page, s
     for fig in ("0.544 ms", "84.62 V", "56.10 V/us", "16.90 V", "12.48 V", "0.33 uH", "0.78 uH", "608 events"):
         assert fig in page and fig in out, fig
-    assert "5. ROUTE B2" in out and "an unapproved PARTIAL proposal" in out
+    assert "5. ROUTE B2" in out and "UNSELECTED, WITHDRAWN AS DRAFTED" in out
     assert "–" not in page and "—" not in page
 
 
@@ -1781,7 +1781,7 @@ def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure()
             assert re.search(r"\b(not|neither|nor|never)\b", m.group(1)), (nm, m.group(0))
         for m in re.finditer(r"B2[^.]{0,80}\b(closes|resolves|closed|resolved)\b D-10", tx):
             assert re.search(r"\b(not|neither|nor|never)\b", m.group(0)), (nm, m.group(0))
-    assert "PARTIAL" in texts["B2-PRESENCE.md"] and "does not resolve D-10" in texts["B2-PRESENCE.md"]
+    assert "UNSELECTED" in texts["B2-PRESENCE.md"] and "D-10 stays open either way" in texts["B2-PRESENCE.md"]
 
 
 def t_p0sol_b2_cold_guarantee_withdrawn_and_pair_faults_tabled():
@@ -1794,7 +1794,8 @@ def t_p0sol_b2_cold_guarantee_withdrawn_and_pair_faults_tabled():
     for s in ("5d THE ARRIVING SOURCE IF IT MEETS Q12 OFF (a CONDITION, not a result", "5e THE COLD-CONNECTION GUARANTEE, WITHDRAWN",
               "THE TIME LEAD, NOT A DISTANCE", "BST IS NOT DISCHARGED BY A WITHDRAWAL", "charge pump is derived from VS terminal",
               "BOUNCE AND INTERRUPTION", "THE COMPLETE ENABLE PATH is not simulated", "5f THE PRESENCE PAIR'S FAULTS",
-              "NO PROTECTION CREDIT", "an OPEN defect of the B2 draft", "a LATENT loss of B2's function"):
+              "NO PROTECTION CREDIT", "a defect of the withdrawn draft, REMAINING ENGINEERING outside the baseline",
+              "a LATENT loss of B2's function"):
         assert s in out, s
     rows = {}
     for line in open(P0SOL_OUT, encoding="utf-8").read().split("5f THE PRESENCE PAIR'S FAULTS", 1)[1].splitlines():
@@ -1824,7 +1825,7 @@ def t_p0sol_b2_cold_guarantee_withdrawn_and_pair_faults_tabled():
                 assert "withdrawn" in tx[max(0, m.start() - 160):m.end() + 60], (nm, bad)
     page = texts["B2-PRESENCE.md"]
     for s in ("NO PROTECTION CREDIT", "GUARANTEE is WITHDRAWN", "5a. The cold-connection guarantee, WITHDRAWN",
-              "5b. The presence pair's faults", "| P1,", "| P2,", "| P3,", "| P4,", "| P5,", "| P6,", "Recommendation (revised after cx45): NOT (a) as drafted"):
+              "5b. The presence pair's faults", "| P1,", "| P2,", "| P3,", "| P4,", "| P5,", "| P6,"):
         assert s in page, s
     draft = texts["apply_gen_sch_e_p0sol_b2.py"]
     assert "WITHDRAWN" in draft and "not fail-safe" in draft and "No protection credit" in draft
@@ -1846,3 +1847,28 @@ def t_p0sol_the_baseline_does_not_depend_on_b2():
     assert "The baseline does not depend on B2" in b2 and "NOT entered in L4-E9's change list" in b2 and "NOT entered in Layer 6" in b2
     assert "NOT in L4-E9's change list and not part of the baseline" in draft
     assert "NOT part of the baseline: the baseline composition ORDER_E has no B2 step" in out
+
+
+def t_p0sol_b2_is_unselected_and_withdrawn_as_drafted_with_no_owner_request():
+    """Astra's recheck cx46 (item 18) and the owner's review part 25: route B2 is UNSELECTED and WITHDRAWN AS DRAFTED throughout; no
+    text calls it selected, describes a prevention it achieves, asks a decision or recommends adoption; no owner action rests on it
+    (the approved interface stands); its defects P2 and P3 stay explicit REMAINING ENGINEERING outside the baseline."""
+    import re
+    names = ("l4e7_p0sol.out", "L4E7-P0SOL.md", "B2-PRESENCE.md", "SUPPLIER-P1-1-P0SOL.md", "apply_gen_sch_e_p0sol_b2.py", "README.md")
+    texts = {nm: " ".join(open(os.path.join(REC, nm), encoding="utf-8").read().split()) for nm in names}
+    for nm, tx in texts.items():
+        assert "WITHDRAWN AS DRAFTED" in tx, nm
+        for bad in ("Decision asked", "Adopt the presence pair", "Recommendation", "selected by the coordinator", "B2 selected", "would prevent",
+                    "unapproved PARTIAL", "PARTIAL proposal", "PARTIAL interface proposal", "if the owner adopts", "owner adopts",
+                    "if B2 is adopted", "if B2 is pursued", "a PROPOSAL until the owner"):
+            assert bad not in tx, (nm, bad)
+        for m in re.finditer(r"owner item", tx):
+            pre = tx[max(0, m.start() - 12):m.start()]
+            assert re.search(r"(\bno |\bNo |NO |[Rr]ound 2's )$", pre), (nm, tx[max(0, m.start() - 60):m.end() + 30])
+    for nm in ("B2-PRESENCE.md", "l4e7_p0sol.out", "L4E7-P0SOL.md", "SUPPLIER-P1-1-P0SOL.md"):
+        tx = texts[nm]
+        assert any("REMAINING ENGINEERING" in tx[m.start():m.start() + 400] for m in re.finditer(r"P2 and P3", tx)), nm
+    page = texts["B2-PRESENCE.md"]
+    assert "No owner item (the owner's review, part 25)" in page and "the approved interface stands" in page
+    assert "(recommended)" not in page and "(recommended)" not in texts["apply_gen_sch_e_p0sol_b2.py"]
+    assert "UNSELECTED, WITHDRAWN AS DRAFTED" in page.split("Prepared", 1)[0]

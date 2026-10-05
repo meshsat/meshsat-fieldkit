@@ -20,7 +20,7 @@ terms (S3, S4).
 
 Owner's review of checkpoint 4 (part 23), 5 October 2026: D-10 is an UNRESOLVED PROTECTION DEFECT in the present model, not a case
 that merely lacks evidence. This item is the receiving company's remaining engineering; no measurement listed below closes it by
-itself, and route B2 (`B2-PRESENCE.md`, an unapproved PARTIAL interface proposal) does not resolve it whether adopted or declined.
+itself, and route B2 (`B2-PRESENCE.md`, UNSELECTED and WITHDRAWN AS DRAFTED) does not resolve it.
 
 **(a) The failing cases, the parts and the claims each hits** (MODELED, record l4e7's own transient model, `l4e7_p0sol.out`
 sections 0d, 2b and 5d; the selected sense arrangement C2 composed; a stiff 36 V source, no source resistance credited at a fault
@@ -59,14 +59,15 @@ What the desk found and what a supplier may investigate (none selected; each mus
    current 31.1 A over its 26.3 A Isat; its resonance with the entry at 2.7 to 3.2 kHz inside CS101's band where M2 is decided).
    A choke rated over the cut current, damped against CS101 and against the converter's negative input resistance, is open to
    investigation, with M2 re-run on it.
-2. **Route B2, the presence pair (PARTIAL, unapproved, no protection credit):** it is intended to prevent the step only for a
-   source that arrives through a mating point of the presence loop, and even that is NOT PROVEN: its cold-connection guarantee is
-   withdrawn after Astra's check cx45 (no sequenced connector selected, no worst-case contact and control timing proof, BST kept
-   charged from the back-fed VS; `B2-PRESENCE.md` section 5a), and its pair faults are not fail-safe (the two cores shorted
-   together defeat it silently; a presence core shorted to a positive core of the lead puts INP over its 20 V absolute maximum,
-   an OPEN defect of its draft; section 5b). It leaves a source added in parallel with a connected panel and a lower stiff source
-   arriving after a withdrawal, and it does not change the port's response when the step happens. Adopting or declining it does
-   not resolve D-10.
+2. **Route B2, the presence pair (UNSELECTED, WITHDRAWN AS DRAFTED, no protection credit; no owner item, the approved interface
+   stands):** its cold-connection guarantee is withdrawn after Astra's check cx45 (no sequenced connector chosen, no worst-case
+   contact and control timing proof, BST kept charged from the back-fed VS; `B2-PRESENCE.md` section 5a), and its pair faults are
+   not fail-safe (the two cores shorted together defeat it silently; a presence core shorted to a positive core of the lead puts
+   INP over its 20 V absolute maximum; section 5b). **P2 and P3 are REMAINING ENGINEERING outside the baseline:** a supplier who
+   takes up any presence-pair route does so as a new route with its own check, and owes monitored or fault-tolerant detection,
+   INP's protection and the timing proof first. It would leave a source added in parallel with a connected panel and a lower
+   stiff source arriving after a withdrawal, and it would not change the port's response when the step happens. It does not
+   resolve D-10.
 3. **The port's energy absorption:** a clamp with a lower dynamic resistance than D11, or an RC snubber or absorber at PV_F sized
    for the energy the loop holds at Q12's turn-off, keeping PV_F under 80 V (recommended) and 100 V (absolute) at every loop, with
    the port bank's own energy and its parts' pulse ratings shown.
@@ -83,9 +84,9 @@ The qualification evidence follows the correction, not before it: S1 below on th
 
 **(d) What stays PROVISIONAL, and what is completed independently.** PROVISIONAL until E-1's correction and S1: IF-01's protection
 claim for D-10; R-173's solar guard as a protection (its cut-off band and the cold connection's absolute ratings stand as
-computed); R-176 rows 2 and 3; R-180 (a loop bound; route B2's contact requirement only if B2 is adopted); the port's parts (D11, the port bank, Q12,
+computed); R-176 rows 2 and 3; R-180 (a loop bound); the port's parts (D11, the port bank, Q12,
 C126, R96 and R97 as protection) and their Layer 6 rows; board E's port layout and its Layer 8 fault table; the guard's Layer 9
-bench rows; route B2's draft. Completed independently of E-1, on the present port network: D-16's correction (U5's input sense
+bench rows. Completed independently of E-1, on the present port network: D-16's correction (U5's input sense
 retired, 0 V on its pins by construction; U23 on the bank; R16 34.0k; the regulation's band; the correlated margin to the trip;
 the 100 W static bound 93.5783 W and check (b)'s 1.052 ms); M2 with the selected sensing (to be re-run only if E-1's correction
 changes the port or the bulk); the INP divider's ratio (INP under 18 V wherever PV_F is under 90 V).
@@ -95,7 +96,7 @@ changes the port or the bulk); the INP divider's ratio (INP under 18 V wherever 
 | Item | Claim it supports | Affected files and decisions | Bounded provisional choice (scope amendment, point 2) |
 |---|---|---|---|
 | S1, the guard-on step, on E-1's corrected circuit | the qualification of E-1's correction (no S1 run on the present circuit can make a passing claim: the model fails it, cases F1 to F3) | `apply_gen_sch_e_solar_guard.py` (R-173), E-1's correction, R-176 rows 2 and 3, R-180, IF-01 | none for D-10: it is an unresolved protection defect (E-1); the outputs E-1 (d) lists stay PROVISIONAL |
-| S2, the cold connection; if B2 is adopted, the arriving source IF it meets Q12 off (not proven, cx45) | D-10's arriving-source case; B2's contact requirement only if adopted (necessary, not shown sufficient) | R-176 row 2; R-180 and `apply_gen_sch_e_p0sol_b2.py` only if B2 is adopted | under the condition that the arrival meets Q12 off (MODELED, cold=True; the condition itself NOT proven and no protection credit taken for B2, cx45): every absolute rating held over the whole envelope (PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V with R97 24.9k); the 54 V/us SESSION line holds from 0.33 uH and the recommended 80 V VS row from 0.78 uH |
+| S2, the cold connection (a source arriving with the guard off) | D-10's arriving-source case | R-176 row 2 | the cold connection (MODELED, cold=True; no route B2 credit, B2 withdrawn as drafted): every absolute rating held over the whole envelope (PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V with R97 24.9k); the 54 V/us SESSION line holds from 0.33 uH and the recommended 80 V VS row from 0.78 uH |
 | S3, A7 at zero differential | the regulation's lower band (energy) and, for a sink the sheet's text excludes, its margin to the trip | `apply_gen_sch_e_p0sol.py`, IF-02 | the regulation's band is computed with A7 at 0 uA; any current A7 sources lowers the regulated input current (8705af p.31); a sink (INFERRED absent) is covered by the margin up to 3.67 uA |
 | S4, the regulation at 25 V | D-16's regulation row (R-189 as rewritten) | IF-02, R-20 | the computed band, nominal 2.538 A, at most 2.921 A, at least 2.184 A with A7 at 0 uA |
 
@@ -123,13 +124,9 @@ back-feeding PV_F through Q12's body diode): Q12's body-diode current inside its
 
 **S2, the cold connection.** The same rig with the guard off and its CBST discharged; the 36 V source stepped onto J_SOLAR from
 0 V and from 25 V through the 0.30 uH loop, five steps per specimen. **Pass:** the slew at CS+, CS- and ISCP under 54 V/us,
-INP under 18 V, PV_F under 85 V. **Only if the owner adopts route B2 (the baseline does not depend on it), added:** the same 36 V source mated at the solar tail through its sequenced
-connector, once one is selected and section 5a's timing proof and section 5b's detection and INP protection are drafted (no
-validation can supply that engineering; fifty matings and fifty unmatings per specimen at the fastest hand speed, the speed
-measured, the presence pair's closure at least 1 ms after both power contacts and its opening at least 0.6 ms before either parts,
-every bounce recorded; a remating within 1 s of a withdrawal with BST charged; each presence fault P1 to P6 applied), and the panel's plug withdrawn while the stage draws 3.74 A (Q12's gate below its threshold at most
-0.6 ms after the pair opens); INP and Q12's gate recorded during M3 (CS114 on the lead with the presence pair in it): Q12's state
-unchanged.
+INP under 18 V, PV_F under 85 V. No route B2 rows: B2 is withdrawn as drafted, and a presence-pair route taken up again would
+bring its own engineering (P2 and P3, detection, INP protection, the timing proof; `B2-PRESENCE.md` sections 5a and 5b) before any
+validation row.
 
 **S3, A7's output at zero differential.** Five LT8705AIUHF#PBF on a test fixture, CSPIN = CSNIN = VIN at 16 V and 25 V,
 IMON_IN held at 1.20 V by a source-measure unit, the current out of IMON_IN measured at -20 C, +25 C and +62 C (case).
