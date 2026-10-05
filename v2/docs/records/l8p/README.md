@@ -171,8 +171,7 @@ accepted check of this record; none exists.
 | `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; since round 6b: L4-E11's round 13 drafts and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h at `4def5975` (round 5's copies of `a09e9a60` and round 6's of `ac72e730` removed).; since round 8: record l9stk's round 5 at `bb6d2c8f` (its page 15.9, `l9stk_guard.out` and README's round 5 section), the C4 the guard draft draws; L4-E11's DD-7 and charger drafts at `08f7e38a` are the bytes of the `4def5975` copies |
 
 Tests: `v2/ecad/tools/tests/test_l8p.py`. Run `python3 run.py test_l8p`, `test_l8r2` and `test_public_hygiene` from the tests folder, one module a run.
-Round 9, part 22 item A (on `fnd/p0t10`): `test_l8p.` 33 passed, `test_l9t5.` 31 passed, `test_public_hygiene.` 4 passed; `test_l4e11` not run
-(the coordinator's instruction limits this round to those three; record l4e11's `check_dd7_netlist.py` round 18, `l4e11_power.py`'s pin and
-its page line changed with it).
+Round 9, part 22 item A (on `fnd/p0t10`): `test_l8p.` 33 passed, `test_l9t5.` 31 passed, `test_public_hygiene.` 4 passed, `test_l4e11.` 82
+passed (record l4e11's `check_dd7_netlist.py` round 18, `l4e11_power.py`'s pin of `l8p_c4.out` and its 27a line, and its page line changed with it).
 Round 8: `test_l8p` 30 passed, `test_public_hygiene` 4 passed, `test_l8r2` 13 passed, `test_l4e11` (this tree's, main's round) 9 passed and
 46 skipped.

@@ -6450,7 +6450,7 @@ def render_fix27(R, p):
     p("       doubled) at DOCK_EN_OUT %s V against the closed reading's %s V: a ramping closed loop never reads held (RET/OUT at least %s with every" % (
         fmt(S["win"][0], 3), fmt(S20["ret_high"], 2), fmt(S["ratio"], 4)))
     p("       sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single")
-    p("       failure of 10b (Q60's gate on its drain: the return 0.799 V there); record l8p withdrew its label L8P-D9 (the owner's part 22) and")
+    p("       failure of 10b (Q60's gate on its drain: the return 0.799 V there, RECORD); record l8p withdrew its label L8P-D9 (part 22) and")
     p("       drafts a cold clamp under which that short holds the return low and trips (its 10c); check_dd7_netlist.py's round 18 admits its C268")
     p("     the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a")
     p("       source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release")
