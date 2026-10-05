@@ -943,6 +943,19 @@ def t_p0_f01_the_cap_and_the_case_are_re_solved():
     m = re.search(r"contacts' maximum: need ([\d.]+) V: MEETS against REQ-018's 15\.5 V, margin ([\d.]+) V", case_out)
     assert m and ("need %s V, a MODEL margin of %s V" % (m.group(1), m.group(2))) in text
     assert float(m.group(1)) < 15.5
+    # cx46 item 2: Q551's held load (cx46's own nominal reading 0.55/549 + 3.3551/1000 = 4.3569 mA lies under the module's upper bound),
+    # the IB and C554 terms at R553's top corner, the PRINTED-rows band free of the ASSUMPTION residual, B-PA1 rounded down
+    nominal_held = 0.55 / 549.0 + 3.3551 / 1000.0
+    assert nominal_held < L["ref_held"] < 1.05 * nominal_held and L["ref_held"] > load_hi
+    ib = [x for lab, k, x in L["vos_terms"] if lab.startswith("IB")][0]
+    assert abs(ib - P.IB_BOUND * P.R_INT * (1 + e)) < 1e-15
+    assert abs(L["vset_printed"][2] - (L["vset"][2] - L["ref_resid"])) < 1e-15
+    assert L["bpa1_limit"] == math.floor(L["i_min"] * 1000.0) / 1000.0 and L["bpa1_limit"] <= L["i_min"]
+    flat = " ".join(text.split())
+    assert ("at most %.3f A (the band's floor %.4f A rounded DOWN, cx46)" % (L["bpa1_limit"], L["i_min"])) in flat
+    assert ("at Q551's held load (up to %.3f mA)" % (L["ref_held"] * 1e3)) in flat and "which is NOT a guaranteed band" in flat
+    assert "REMAINING ENGINEERING for the receiving company, never a qualification-only item" in flat
+    assert "at most 6.352 A" not in text
 
 
 def t_p0_f01_drafts_compose_read_drawn_and_every_mutation_fails():
@@ -1095,7 +1108,8 @@ def t_p0_connected_the_re_trace_reads_its_sources():
         assert re.search(r"^     %s\s+%s A: " % (re.escape(lab), re.escape(tot)), text, re.M), lab
     for r_ in re.findall(r"^     ([+-]\d+\.\d\d C (?:VH|RIB|RET))\s+\S+\s+([\d.]+) A \(", dist, re.M):
         assert ("%s %s A" % r_) in text, r_
-    assert "L8R2-F33a is realisable" not in text and "CORRECTED IN DRAFT on the desk model (placement and distributed solve)" in text
+    assert "L8R2-F33a is realisable" not in text and "CORRECTED IN DRAFT on the desk model (placement and distributed solve)" not in text
+    assert "V6-B1: OPEN, REMAINING ENGINEERING for the receiving company" in " ".join(text.split())   # cx46 item 4
     ef = open(os.path.join(ROOT, "v2", "docs", "records", "efuse", "efuse_check.out"), encoding="utf-8").read()
     bands = re.findall(r"^   EFUSE   [AB] U\d+\s+tps2596\s+([\d.]+) / [\d.]+ / ([\d.]+) A", ef, re.M)
     assert len(bands) == 3
@@ -1141,8 +1155,36 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
     assert "claim to that effect is WITHDRAWN" in " ".join(p0.split()) and not re.search(r"holds every entry within [\d.]+ mm of its socket on both boards: MET", p0)
     assert not re.search(r"within [\d.]+ mm of its socket on both", text)
-    assert "the sockets PLACED on the drawn boards" in text and "CORRECTED IN DRAFT on the placed distributed model" in text
+    flat = " ".join(text.split())
+    assert "a STUDY, the sockets placed on the drawn boards on a stand-in XT60-M land" in flat
+    assert "V6-B1 OPEN, REMAINING ENGINEERING (7; the distributed study" in flat and "CORRECTED IN DRAFT on the placed distributed model" not in text
     assert "J_PA and its 16 AWG lead" in text and "PROVISIONAL with L8R2-F43's vendor task" in text
+
+
+def t_p0_connected_the_verdict_depends_on_the_open_fault_rows():
+    """cx46 items 13 and 17: the connected verdict reads REMAINING ENGINEERING while any fault row it depends on is open; the rows are
+    read here from the filed cx46 record's JSON independently of the script; no positive thermal or guard acceptance survives"""
+    import json as _json
+    text = open(CONN_OUT, encoding="utf-8").read()
+    flat = " ".join(text.split())
+    raw = open(os.path.join(ROOT, "v2", "docs", "records", "l4close", "CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md"), encoding="utf-8").read()
+    J = _json.loads(raw.split("```json", 1)[1].split("```", 1)[0])
+    state = {int(c["item"].split(".")[0].split(" ")[0]): c["item"].rsplit(": ", 1)[1] for c in J["classification"]}
+    m = _mod(CONN, "l9t5_test_conn_faults")
+    assert [r[1] for r in m.FAULT_ROWS] == [6, 7, 10, 5, 17, 4, 2]
+    rows = re.findall(r"^     (OPEN|SHUT) (.+)\n          cx46 item (\d+): (NOT CLOSED|CLOSED BY THE CORRECTION|CLOSED AS CONDITIONAL);", text, re.M)
+    assert len(rows) == len(m.FAULT_ROWS), rows
+    for op, _row, item, cl in rows:
+        assert state[int(item)] == cl and (op == "OPEN") == (cl == "NOT CLOSED"), (item, cl)
+    any_open = any(op == "OPEN" for op, _r, _i, _c in rows)
+    assert ("THE CONNECTED ELECTRICAL VERDICT: REMAINING ENGINEERING." in flat) == any_open and any_open
+    assert "THE WORST-CASE MARGIN ROW: PROVISIONAL/OPEN" in flat
+    assert "the guard row's C-PROT claim reads REMAINING ENGINEERING" in flat and "UNCHECKED" in flat
+    preds = text.split("12. THE PREDICATES")[1]
+    for bad in ("every revision V T10 row holds its criterion at the taken set point   ", "the final R602 figures: every revision V served state",
+                "the placed distributed return holds every printed row"):
+        assert bad not in preds, bad
+    assert "the connected electrical verdict reads REMAINING ENGINEERING, never a positive acceptance" in preds
 
 
 def t_round6_t10_cx45_q3_the_containment_and_the_envelope_are_re_solved():

@@ -7,8 +7,8 @@ supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).
    baaaa1c23f3a58ff v2/docs/records/l9t5/apply_gen_sch_a_paloop.py
    e6ca6b232769706d v2/docs/records/l9t5/apply_gen_sch_d_paloop.py
    9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
-   27c71c191d2352fb v2/docs/records/l9t5/l9t5_paloop.py
-   f9a7bab163cfdaf2 v2/docs/records/l9t5/l9t5_f01.py
+   d1192fcfd0c734ac v2/docs/records/l9t5/l9t5_paloop.py
+   a0dc5df14a4b92f2 v2/docs/records/l9t5/l9t5_f01.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
