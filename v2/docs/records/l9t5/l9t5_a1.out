@@ -1,0 +1,69 @@
+l9t5_a1: Layer 9 record l9t5, task T5 round 2: A1's detector from the makers' sheets (MESHSAT-1357)
+prototype design; nothing built, bought, powered or measured; the sheets are held back (fetch_held_back.py), read here, never committed
+
+1. INPUTS, pinned by sha256
+   f79f5a6b04e30e9e v2/vendor/adi/held/adi-adl5902-revb.pdf
+   e51b849b75f81bed v2/vendor/adi/held/adi-adl5513-revb.pdf
+   cf1382cf45de07bb v2/vendor/adi/held/adi-ltc5582-revd.pdf
+   b504ef25b74ca6f6 v2/vendor/ti/held/ti-lmh2110-snws022d.pdf
+   fa9c4ece6d2584dc v2/docs/records/l9t5/fetch_held_back.py
+   24d8a027f9367137 v2/docs/records/s99a/codec_floor.out
+   54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
+   098930931103136b v2/docs/records/l9t5/l9t5_case.out
+   9fda757ab1acfb6b v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
+
+2. THE PRINTED TEMPERATURE ROW NEAREST THE KIT'S 144 TO 146 MHz, PER DETECTOR (deviation from the 25 C output; the column it is printed in)
+   ADI ADL5902 TruPwr (Rev. B)        100 MHz -45: -0.22/+0.15 dB; 100 MHz 0: -0.11/+0.25 dB; 700 MHz -45: -0.10/+0.00 dB; 700 MHz 0: -0.20/+0.30 dB; supply 4.5 to 5.5 V
+                                      at 0 dBm, -40 to +85 C; column: Typ (one value, no Min or Max)
+   ADI ADL5513 log detector (Rev. B)  100 MHz -40 to 25 C: -0.43/+0.23 dB; 100 MHz -40 to 85 C, the two rows' union: -0.43/+0.23 dB; 100 MHz 25 to 85 C: -0.33/+0.15 dB; supply 2.7 to 5.5 V
+                                      at -10 dBm, -40 to +85 C (two printed rows); column: Typ (one value, no Min or Max)
+   TI LMH2110 log RMS (SNWS022D)      50 MHz : -0.50/+0.50 dB; supply 2.7 to 5.0 V
+                                      at a 42 dB range from PMIN, -40 to +85 C; column: Typ (a dynamic range of 42 dB within +-0.5 dB, typical)
+   ADI LTC5582 RMS (Rev. D)           450 MHz : -0.50/+0.50 dB; supply 3.3 V its test condition, 3.8 V its absolute maximum
+                                      at -50 to 0 dBm, -40 to +105 C; column: Typ (one value; the bullet marks the full temperature range)
+   NO SHEET PRINTS THE ROW AS A LIMIT: every temperature deviation above sits in the Typ column (TYPICAL); none is printed at 144 to 146 MHz
+
+3. EACH AGAINST A1'S ACCEPTANCE (the loop's half-tolerance, of which the detector is one term; the sampler, the set point and the
+   error amplifier take the rest) AND AGAINST BOARD D'S RAILS (+5V_D8's floor 4.3408 V at board D, record s99a's codec floor, its worst row;
+   +3V3_D8 from the TLV75533 U1)
+   ADI ADL5902 TruPwr (Rev. B)        the detector alone takes 0.30 dB TYPICAL (the worse of the rows bracketing the band, an ASSUMPTION that it holds between them) of the 0.50 dB tier, 0.20 dB left for the rest of the loop; the 0.25 dB tier: the detector alone exceeds it
+                                      its rail on board D: +5V_D8, whose floor 4.3408 V is UNDER its 4.5 V minimum
+   ADI ADL5513 log detector (Rev. B)  the detector alone takes 0.43 dB TYPICAL of the 0.50 dB tier, 0.07 dB left for the rest of the loop; the 0.25 dB tier: the detector alone exceeds it
+                                      its rail on board D: +3V3_D8 (3.3 V), inside its 2.7 to 5.5 V
+   TI LMH2110 log RMS (SNWS022D)      the detector alone takes 0.50 dB TYPICAL of the 0.50 dB tier, 0.00 dB left for the rest of the loop; the 0.25 dB tier: the detector alone exceeds it
+                                      its rail on board D: +3V3_D8 (3.3 V), inside its 2.7 to 5.0 V
+   ADI LTC5582 RMS (Rev. D)           no row below 450 MHz: nothing printed near the band; the 0.25 dB tier: the detector alone exceeds it
+                                      its rail on board D: +3V3_D8 (3.3 V), 3.3 V its test condition, 3.8 V its absolute maximum
+
+4. THE RESULT
+   a detector whose PRINTED LIMIT supports A1's tolerance: NONE (every sheet prints its temperature row as typical data)
+   on TYPICAL data, room under the 0.50 dB tier: ADI ADL5902 TruPwr (Rev. B), ADI ADL5513 log detector (Rev. B); under the 0.25 dB tier: none
+   of those, the ADL5902 runs from 4.5 V, over board D's +5V_D8 floor (4.3408 V), and the ADL5513 leaves 0.07 dB for the sampler, the set
+   point and the amplifier together, on typical data
+   SESSION DECISION (under the owner's standing rule of 26 September 2026): "a printed accuracy that supports the tolerance" is read as a
+   printed LIMIT. Why: a typical figure says nothing of a unit's spread, and the loop exists to bound the case's power, which a typical
+   drift does not bound; a correction accepted on it could not tell a passing unit from a failing one. How to reverse: if the coordinator
+   or the checker reads typical data as enough, the ADL5513 on +3V3_D8 (or the ADL5902 with D-A1's supply) is drafted, TYPICAL and
+   CONDITIONAL on P-A1
+   A1 STAYS A SELECTED DIRECTION, NOT DRAFTED (the brief's rule): no loop is drawn on board D, no figure is assumed
+   the named items that would let it be drafted (one is enough to restart the draft; none is sent or bought here):
+     V-A1 (vendor, drafted, UNSENT): Analog Devices: the ADL5902's deviation vs temperature at 144 to 146 MHz and about 0 dBm as a
+          limit or a characterized distribution (the sheet prints -0.11/+0.25 dB typical at 100 MHz and -0.20/+0.30 dB at 700 MHz), and its
+          operation at 4.34 V (board D's +5V_D8 floor); or a part ADI prints with such a limit
+     P-A1 (physical): the loop's specimen over the kit's temperature range, its output deviation measured against a reference power
+          meter, and the detector's drift tabulated per unit if it is to be compensated in firmware (board D already reads the flange
+          temperature, U22); with the bench row already owed: the module's drain current at the loop's high end at 13.8 V
+     D-A1 (design, after V-A1 or P-A1): a supply of at least 4.5 V for a 5 V detector on board D, or a 3.3 V part with the margin
+   for the coordinator (not drafted, materially different): the loop's sensed variable could be the PA's DC input on board A, where
+   U14 is an INA226 on +13V8_PA (0x46), whose sheet (held, v2/vendor/ti/ti-ina226.pdf, not read here) gives its gain error and offset
+   Max columns; it bounds the case's own quantity (watts at VBAT), needs a path from board A to VGG on board D, and leaves the RF output
+   to the module's efficiency (its printed minimum 40 %)
+   what does not move: VGG today is open loop at 4.30 to 4.68 V (board D's U15); A1's own figures stay record l9t5 out 4's
+
+5. THE PREDICATES
+   every sheet's temperature row near the band is read and none is printed as a limit                             yes
+   on typical data the ADL5902 and the ADL5513 leave room under 0.5 dB and none under 0.25 dB                     yes
+   the ADL5902's supply minimum is over board D's +5V_D8 floor                                                    yes
+   A1 stays a selected direction: this record holds no board D draft                                              yes
+
+l9t5_a1: done

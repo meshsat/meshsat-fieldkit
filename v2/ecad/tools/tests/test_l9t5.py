@@ -1,0 +1,651 @@
+"""Layer 9 task T5, record l9t5 (MESHSAT-1357, 4 October 2026; v2/docs/records/l9t5/): C-ALLTX rev 3 and C-DEV rev 1, held as
+predicates on what l9t5_case.py computes.
+
+The predicates: the committed .out is what the script prints and every pinned input is present at the sha256 the output names; the
+copies in inputs/ carry the sha256 SOURCES.txt names; every predicate the script states holds; the case row's parts sum to the cells'
+EMF plus the deficit and its allowance is re-solved here; the gauge's terms are re-solved here from the figures the script read;
+A1's PA figures are the loop's high end over the maker's efficiency; C-DEV's two options are re-solved from VSNS and R43; the page
+carries the output's figures; the record carries no long dash, no claim word outside the copies and no private path. These are
+software predicates on the record's arithmetic: they establish no property of any board, converter, PA or pack.
+"""
+import hashlib
+import importlib.util
+import math
+import os
+import re
+import shutil
+import sys
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
+REC = os.path.join(ROOT, "v2", "docs", "records", "l9t5")
+SCRIPT = os.path.join(REC, "l9t5_case.py")
+OUT = os.path.join(REC, "l9t5_case.out")
+PAGE = os.path.join(REC, "L9T5-CASES.md")
+README = os.path.join(REC, "README.md")
+sys.dont_write_bytecode = True
+sys.path.insert(0, TOOLS)
+from harness import need, Skip  # noqa: E402
+
+_C = {}
+CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
+
+
+def _M():
+    if "M" not in _C:
+        need(SCRIPT, "the l9t5 record")
+        if shutil.which("pdftotext") is None:
+            raise Skip("pdftotext is needed")
+        sp = importlib.util.spec_from_file_location("l9t5_case_under_test", SCRIPT)
+        m = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(m)
+        for rel in m.PINS.values():
+            need(os.path.join(ROOT, rel), "a pinned input of the l9t5 record")
+        try:
+            R = m.compute()
+        except SystemExit as e:
+            raise AssertionError("l9t5_case.py refused (exit %s)" % e.code)
+        _C.update(M=m, R=R, text=m.render(R))
+    return _C["M"]
+
+
+def t_output_reproduced_byte_for_byte():
+    _M()
+    need(OUT, "the committed output")
+    assert _C["text"] == open(OUT, encoding="utf-8").read(), "l9t5_case.out is not what the script prints"
+
+
+def t_every_input_is_pinned_and_present():
+    m = _M()
+    for key, rel in m.PINS.items():
+        sha = hashlib.sha256(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()
+        assert ("%s  sha256 %s" % (rel, sha[:16])) in _C["text"], "%s is not pinned at its current sha256" % rel
+    src = open(os.path.join(ROOT, m.PINS["sources"]), encoding="utf-8").read()
+    for k in m.COPIES:
+        full = hashlib.sha256(open(os.path.join(ROOT, m.PINS[k]), "rb").read()).hexdigest()
+        assert "%s sha256 %s" % (os.path.basename(m.PINS[k]), full) in src, k
+
+
+def t_every_predicate_holds():
+    _M()
+    P = _C["R"]["pred"]
+    assert len(P) >= 16
+    bad = [k for k, v in P.items() if not v]
+    assert not bad, "false: %s" % "; ".join(bad)
+    assert all(("   %s" % k) in _C["text"] for k in P)
+
+
+def t_the_case_row_closes_and_its_allowance_is_re_solved():
+    _M()
+    c, R = _C["R"]["case"], _C["R"]
+    assert abs(c["load"] + c["conv"] + c["path_w"] + c["cell_w"] - c["emf_w"] - c["deficit"]) < 1e-9
+    i, v = R["I"], R["V"]
+    assert abs(c["allow"] - i * (v - i * (c["r_path"] + 4 * 0.06 / 3.0))) < 1e-9 and round(c["allow"], 3) == 240.747
+    assert abs(c["need"] - (c["p"] / i + i * (c["r_path"] + c["r_cells"]))) < 1e-9
+    assert abs(c["vbat"] * i - c["p"]) < 1e-6, "the converters are evaluated at the VBAT the case sets"
+    assert abs(sum(x for _l, x in R["conv_parts"]) - c["conv"]) < 1e-9
+    q = R["case_quote_row"]
+    assert round(q["V_rest"]["hi"], 3) == 16.214 and round(c["need"], 4) == 15.5162
+
+
+def t_the_gauge_terms_are_re_solved_from_the_read_figures():
+    _M()
+    I, U = _C["R"]["in"], _C["R"]["U"]
+    fsr = I["g_vref1"] / I["g_fsr_div"]
+    terms = dict((lab.split(",")[0], x) for lab, x in U["gauge_terms"])
+    assert abs(terms["gain error"] - I["g_gain"] * fsr / I["r10"]) < 1e-12 and round(terms["gain error"], 3) == 0.486
+    assert abs(terms["integral nonlinearity"] - I["g_inl"] * I["g_lsb"] / I["r10"]) < 1e-12
+    assert abs(U["gauge_uncal"] - sum(x for _l, x in U["gauge_terms"])) < 1e-12
+    assert U["gauge_uncal_row"]["i"] == 18.0 - U["gauge_uncal"] and U["gauge_uncal_row"]["need"] > U["gauge_cal_row"]["need"] > _C["R"]["case"]["need"]
+
+
+def t_a1_is_the_loops_high_end_over_the_makers_efficiency():
+    m = _M()
+    I, A = _C["R"]["in"], _C["R"]["A"]
+    assert abs(A["a1_ex_w"] - I["pa_ex_vdd"] * sum(I["pa_ex_idd"])) < 1e-12 and round(A["a1_ex_w"], 1) == 75.0
+    assert A["a1_pa_now"] == 113.0 and abs(I["pa_pout_max"] / I["pa_eta_min"] - 112.5) < 1e-9
+    for a in A["a1"]:
+        assert abs(a["p_hi"] - m.PA_SERVICE_W * 10 ** (2 * a["db"] / 10.0)) < 1e-12
+        assert abs(a["p_dc"] - a["p_hi"] / I["pa_ex_eta"]) < 1e-12
+        assert a["unc"]["i"] < 18.0
+        # the loop's high end at +-0.25 and +-0.5 dB is under today's 113 W; at +-1 dB it passes the 45 W rating and the PA draws more
+        assert (a["nom"]["p"] < _C["R"]["case"]["p"]) == (a["db"] < 1.0), a["db"]
+        assert (a["p_hi"] > I["pa_pout_max"]) == (a["db"] == 1.0), a["db"]
+
+
+def t_cdev_options_are_re_solved():
+    _M()
+    C = _C["R"]["C"]
+    lo, hi = C["vsns"][0], C["vsns"][2]
+    assert abs(C["lim_min"] - lo / (C["rs"] * (1 + C["tol"]))) < 1e-12
+    assert abs(C["a_need_max"] - lo / (C["i_least"] * (1 + C["tol"]))) < 1e-12
+    assert abs(C["a_need_min"] - hi / (10.0 * (1 - C["tol"]))) < 1e-12 and C["a_need_max"] < C["a_need_min"]
+    assert abs(C["b_i_least"] - (C["i_least"] - C["ioc_in_w"] / C["v_least"])) < 1e-12 and C["b_margin"] > 1.0
+
+
+def t_the_page_carries_the_outputs_figures():
+    _M()
+    R = _C["R"]
+    need(PAGE, "the page")
+    page = open(PAGE, encoding="utf-8").read()
+    c, U, A, C = R["case"], R["U"], R["A"], R["C"]
+    by = {a["db"]: a for a in A["a1"]}
+    for s in ("%.4f V" % c["need"], "%.3f" % c["allow"], "%.3f" % c["p"], "%+.3f W" % c["deficit"], "%.4f V" % U["gauge_uncal_row"]["need"],
+              "%.4f A" % U["gauge_uncal"], "%.4f V" % U["comb_printed"]["need"], "%.4f V" % by[0.5]["unc"]["need"], "%.4f V" % by[0.25]["m8"]["need"],
+              "%.4f A against %.4f A" % (C["b_i_least"], C["lim_min"]), "%.4f mOhm" % (C["a_need_max"] * 1000), "%.4f mOhm" % (C["a_need_min"] * 1000),
+              "%.3f mOhm" % (A["a2_band"][2] * 1000), "%.4f V" % A["a3_unc"]["need"], "16.214", "C-ALLTX rev 3", "C-DEV rev 1"):
+        assert s in page, "the page does not carry %r" % s
+    need(README, "the README")
+    assert "%.4f V" % c["need"] in open(README, encoding="utf-8").read()
+
+
+# ---------------------------------------------------------------------------------------------- round 2: I-03's drafts (l9t5_drafts.py)
+DRAFTS = os.path.join(REC, "l9t5_drafts.py")
+DRAFTS_OUT = os.path.join(REC, "l9t5_drafts.out")
+CHECK = os.path.join(REC, "check_l9t5_netlist.py")
+OLD_B = os.path.join(REC, "inputs", "apply_gen_sch_b_iocbuck-bdbed9bb.py")
+NEW = {b: os.path.join(REC, "apply_gen_sch_%s_iocbuck.py" % b) for b in "ab"}
+GENS = {b: os.path.join(TOOLS, "gen_sch_%s.py" % b) for b in "ab"}
+
+
+def _mod(path, name):
+    sp = importlib.util.spec_from_file_location(name, path)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def _regen(board, script, d, tag):
+    """the generator with one draft (or a tuple of drafts, in order) on a scratch copy, regenerated by record l8p's gen_netlist.py:
+    (rc, netlist path or last line)."""
+    import subprocess
+    gn = _mod(os.path.join(ROOT, "v2", "docs", "records", "l8p", "gen_netlist.py"), "l9t5_test_gen_netlist")
+    t = os.path.join(d, "%s_gen_sch_%s.py" % (tag, board))
+    shutil.copy(GENS[board], t)
+    for one in (script if isinstance(script, tuple) else (script,)):
+        r = subprocess.run([sys.executable, "-B", one, t, "--write"], capture_output=True)
+        assert r.returncode == 0, "the draft %s refused a clean copy: %s" % (os.path.basename(one), r.stderr.decode()[-300:])
+    out = os.path.join(d, "%s_%s.net" % (tag, board))
+    rc, log, _t = gn.run(t, out, {"a": "pcb-a-power", "b": "pcb-b-compute"}[board])
+    return rc, (out if rc == 0 else (log.strip().splitlines() or [""])[-1])
+
+
+def t_round2_drafts_output_reproduced_and_every_predicate_holds():
+    import subprocess
+    need(DRAFTS, "the drafts script")
+    need(DRAFTS_OUT, "the drafts output")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    r = subprocess.run([sys.executable, "-B", DRAFTS], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, "l9t5_drafts.py exited %d: %s" % (r.returncode, r.stderr.decode()[-300:])
+    text = r.stdout.decode("utf-8")
+    assert text == open(DRAFTS_OUT, encoding="utf-8").read(), "l9t5_drafts.out is not what the script prints"
+    pred = text.split("9. THE PREDICATES")[1].split("l9t5_drafts: done")[0]
+    rows = [l for l in pred.splitlines() if l.strip()]
+    assert len(rows) == 15 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    for p in re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M):
+        assert hashlib.sha256(open(os.path.join(ROOT, p[1]), "rb").read()).hexdigest().startswith(p[0]), p[1]
+
+
+def t_round2_board_b_old_text_fails_and_the_correction_passes():
+    """the regression: board B's round 1 draft (fnd/l9t5 at bdbed9bb, kept in inputs/) makes the generator refuse on the LDO input
+    capacitor's bypass entry; round 2's draft runs and its nets read DRAWN; the committed netlists read NOT DRAWN (today's state)."""
+    import tempfile
+    need(OLD_B, "the round 1 copy")
+    chk = _mod(CHECK, "l9t5_test_check")
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        rc, line = _regen("b", OLD_B, d, "old")
+        assert rc != 0 and "bypass C400 -> U40.1" in line and "+5V_DEV" in line, (rc, line)
+        rc, path = _regen("b", NEW["b"], d, "new")
+        assert rc == 0, path
+        rca, patha = _regen("a", NEW["a"], d, "new")
+        assert rca == 0, patha
+        import io
+        kit, v = chk.run({"a": patha, "b": path}, ROOT, io.StringIO())
+        assert kit == "DRAWN" and v.get("pair") == "DRAWN", v
+        kit0, _v0 = chk.run({b: os.path.join(ROOT, p) for b, p in chk.COMMITTED.items()}, ROOT, io.StringIO())
+        assert kit0 == "NOT DRAWN"
+        # a mutation: controller B's LDO back on the device rail must FAIL
+        raw = open(path, encoding="utf-8").read()
+        a_, b_ = '(node (ref "U50") (pin "1"))', '(node (ref "D1") (pin "1"))'
+        assert raw.count(a_) == 1 and raw.count(b_) == 1
+        mp = os.path.join(d, "mut.net")
+        open(mp, "w", encoding="utf-8").write(raw.replace(a_, "\0").replace(b_, a_).replace("\0", b_))
+        kitm, vm = chk.run({"b": mp}, ROOT, io.StringIO())
+        assert kitm == "FAIL" and vm["b"] == "FAIL"
+
+
+def t_round2_cdev_acceptance_is_re_solved():
+    """board A's half on C-DEV rev 1 from the figures the script read: U7's margin, U601's rating and limit against the lead, the set
+    point against the LDOs' need (the s99a band 4.872 to 5.133 V)."""
+    _M()
+    chk = _mod(CHECK, "l9t5_test_check2")
+    C = _C["R"]["C"]
+    assert abs(C["b_i_least"] - 6.0359) < 5e-5 and abs(C["lim_min"] - 7.0957) < 5e-5 and C["b_margin"] > 1.0
+    assert C["b_buck_a"] < 3.0 and (5.8 + 4.5) / 2.0 < 10.0
+    lo, nom, hi = chk.vout_band(56.2e3, 10.7e3)
+    assert round(lo, 3) == 4.872 and round(hi, 3) == 5.133 and round(nom, 3) == 5.002
+    assert lo * (1 - 0.035) > 3.3 * 1.015 + 0.400 and hi < 6.0
+    txt = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "BOARD A'S HALF: HOLDS" in txt and "BOARD B'S HALF, ITS OWN PARTS: HOLDS" in txt
+    # round 4: the connected path is never a pass on this record's evidence; I-03 stays open
+    assert "THE CONNECTED PATH: CONDITIONAL" in txt and "L8R2-F31 stays OPEN until its independent check" in txt and "I-03 STAYS OPEN" in txt
+
+
+def _basis(m):
+    """the declarations' basis, re-solved here from the case script (never read from the drafts or the output)."""
+    _M()
+    chk = _mod(CHECK, "l9t5_test_check3")
+    C = _C["R"]["C"]
+    lo, _nom, _hi = chk.vout_band(56.2e3, 10.7e3)
+    return chk, {"dev_lead": (C["i_least"] * C["v_least"] - C["ioc_in_w"]) / C["v_least"], "ioc": C["ioc_in_w"] / (lo - 0.02 * 5.0), "wall": 0.9142}
+
+
+def t_round3_board_b_composes_with_l8r2s_round7_drafts_and_the_tree_before_them_stops():
+    """Round 3: board B's composition in L4-E9's order with record l8r2's fandec and gndret runs to its end and reads DRAWN on the
+    netlist and on its declarations; without those two drafts (the tree before T5b) the generator stops on GND's declared peak."""
+    import io
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts")
+    assert ("l8r2", "fandec") in m.ORDER["b"] and ("l8r2", "gndret") in m.ORDER["b"]
+    chk, basis = _basis(m)
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        p, _res, ok = m.compose("b", m.seq_of("b", "slot"), d, "t_fwd")
+        assert ok
+        rc, path, table = m.netlist("b", p, d, "t_fwd")
+        assert rc == 0, path
+        kit, v = chk.run({"b": path}, ROOT, io.StringIO())
+        assert kit == "DRAWN", v
+        assert chk.decl("b", table["intent"], basis)[0] == "DRAWN", chk.decl("b", table["intent"], basis)
+        gnd = chk.rails_of(table["intent"])["GND"]
+        assert "J_5V_IOC" in gnd["source"] and "J_54V" in gnd["source"] and gnd["amps_peak"] > 27.0   # derived by record l8r2's gndret
+        q, _res, ok = m.compose("b", m.seq_of("b", "slot", skip=m.ROUND7), d, "t_old")
+        assert ok
+        rc, line, _t = m.netlist("b", q, d, "t_old")
+        assert rc != 0 and "rail GND declares a 21.00 A peak" in line, (rc, line)
+
+
+def t_round3_the_declarations_stand_on_their_basis_and_round2s_fail():
+    """L8R2-F35: round 2's drafts (kept in inputs/) declare the device lead at a typed 6.0 A, under its own 6.0359 A on C-DEV rev 1,
+    and +5V_IOC at 1.38 A: the declaration check FAILS on them and reads DRAWN on round 3's; a typed figure that merely passes
+    (6.04 A) is refused as well, because the check holds the declaration to its basis, not to an inequality."""
+    import subprocess
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts2")
+    chk, basis = _basis(m)
+    assert chk.ceil4(basis["dev_lead"]) == 6.0359 and chk.ceil4(basis["ioc"]) == 1.4749 and basis["dev_lead"] > 6.0
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        for b in "ab":
+            for tag, script, want in (("old", m.OLD_R2[b], "FAIL"), ("new", NEW[b], "DRAWN")):
+                t = os.path.join(d, "%s_gen_sch_%s.py" % (tag, b))
+                shutil.copy(GENS[b], t)
+                assert subprocess.run([sys.executable, "-B", script, t, "--write"], capture_output=True).returncode == 0
+                rc, path, table = m.netlist(b, t, d, tag)
+                assert rc == 0, path
+                got, why = chk.decl(b, table["intent"], basis)
+                assert got == want, (b, tag, why)
+                if tag == "old" and b == "b":
+                    assert any("6.0000 A peak" in x for x in why), why
+        # a number that merely passes
+        src = open(NEW["b"], encoding="utf-8").read()
+        assert src.count("DEV_LEAD_PEAK = 6.0359") == 1
+        typed = os.path.join(d, "apply_typed.py")
+        open(typed, "w", encoding="utf-8").write(src.replace("DEV_LEAD_PEAK = 6.0359", "DEV_LEAD_PEAK = 6.0400"))
+        t = os.path.join(d, "typed_gen_sch_b.py")
+        shutil.copy(GENS["b"], t)
+        assert subprocess.run([sys.executable, "-B", typed, t, "--write"], capture_output=True).returncode == 0
+        rc, path, table = m.netlist("b", t, d, "typed")
+        assert rc == 0, path
+        assert chk.decl("b", table["intent"], basis)[0] == "FAIL"
+
+
+def t_round3_l8r2_f35_is_answered_in_the_drafts_and_the_readme():
+    """the lead is named in both drafts, the return sentence is withdrawn for pin 2, and the README carries V3's claim table."""
+    for b in "ab":
+        t = open(NEW[b], encoding="utf-8").read()
+        assert "16 AWG, 150 mm" in t and "ASSEMBLY.md section 4" in t, b
+    tb = open(NEW["b"], encoding="utf-8").read()
+    assert "now through J_5V_IOC's pin 2" not in tb and "L8R2-F31" in tb
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "WITHDRAWN for pin 2" in out and "It holds for pin 1 only" in out
+    readme = open(README, encoding="utf-8").read()
+    assert "## The claim table for the independent recheck V3" in readme
+    rows = [l for l in readme.split("## The claim table for the independent recheck V3")[1].splitlines() if l.startswith("| C")]
+    assert len(rows) >= 20 and all(l.count("|") >= 7 for l in rows), len(rows)
+    for lab in ("guaranteed", "typical", "declared", "model", "assumed"):
+        assert any(("| %s" % lab) in l for l in rows), lab
+
+
+A1 = os.path.join(REC, "l9t5_a1.py")
+A1_OUT = os.path.join(REC, "l9t5_a1.out")
+
+
+def t_round2_a1_detector_survey_reproduced_and_a1_stays_a_direction():
+    """A1's detector from the makers' sheets (held back: python3 v2/docs/records/l9t5/fetch_held_back.py): the survey reproduces, no
+    sheet prints its temperature row as a limit, and so record l9t5 holds no board D draft (the brief: never assume a figure)."""
+    import subprocess
+    need(A1, "the A1 survey script")
+    need(A1_OUT, "the A1 survey output")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    m = _mod(A1, "l9t5_test_a1")
+    for rel in m.SHEETS.values():
+        need(os.path.join(ROOT, rel), "a held detector sheet (python3 v2/docs/records/l9t5/fetch_held_back.py)")
+    r = subprocess.run([sys.executable, "-B", A1], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, "l9t5_a1.py exited %d: %s" % (r.returncode, r.stderr.decode()[-300:])
+    text = r.stdout.decode("utf-8")
+    assert text == open(A1_OUT, encoding="utf-8").read(), "l9t5_a1.out is not what the script prints"
+    assert "a detector whose PRINTED LIMIT supports A1's tolerance: NONE" in text and "A1 STAYS A SELECTED DIRECTION, NOT DRAFTED" in text
+    assert not [f for f in os.listdir(REC) if f.startswith("apply_gen_sch_d_")]
+
+
+def t_round4_the_connected_path_consumes_l8r2s_worst_vertex_and_is_never_a_pass():
+    """V3's material blocker (1a). Round 3 accepted the lead's pin 2 on a sampled maximum (9.404 A) and said the acceptance did not
+    depend on L8R2-F31. Now: the as-drawn figure is record l8r2's worst vertex and is OVER the VH's printed 10 A on the case (the row
+    reads NOT MET there); with that record's return drafts composed the row is CONDITIONAL; which one applies is read from the
+    composed netlists (the return sockets), never typed; the independence claim is gone from the output and the README."""
+    import io
+    import tempfile
+    m = _mod(DRAFTS, "l9t5_test_drafts4")
+    chk = _mod(CHECK, "l9t5_test_check4")
+    G = m.gndret()
+    assert G["ioc"]["drawn_hot"] > 10.0 and G["ioc"]["drawn_cold"] > G["ioc"]["drawn_hot"], G["ioc"]           # the old statement: 9.404 A, "within it"
+    assert abs(G["ioc"]["drawn_hot"] - 10.6376) < 5e-4                                                          # V3's corner, 10.6375 A
+    assert G["ret"][(G["ub_total"], -20.0)]["lead"] < 10.0 and G["shift_ret"] < G["shift_drawn_ub"]
+    assert ("l8r2", "gndrtn") in m.ORDER["a"] and m.ORDER["a"].index(("l8r2", "gndrtn")) < m.ORDER["a"].index(("d8dec31", "mainpb"))
+    assert m.ORDER["b"].index(("l8r2", "gndrtn")) == m.ORDER["b"].index(("l8r2", "gndret")) + 1
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        for b in "ab":
+            for tag, skip, want in (("ret", (), "DRAWN"), ("noret", m.RETURN, "NOT DRAWN")):
+                p, _res, ok = m.compose(b, m.seq_of(b, "slot", skip=skip), d, "t4_%s" % tag)
+                assert ok, (b, tag)
+                rc, path, _t = m.netlist(b, p, d, "t4_%s" % tag)
+                assert rc == 0, path
+                assert chk.return_drawn(chk.read(open(path, "rb").read()))[0] == want, (b, tag)
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "AS DRAWN (no dedicated return)" in out and "NOT MET (the recheck's corner, 10.6375 A)" in out
+    assert "THE CONNECTED PATH: CONDITIONAL. It holds ONLY WITH that return correction" in out
+    assert "does NOT depend on, and does not close" not in out and "is WITHDRAWN: the draft adds a VH contact" in out
+    readme = open(README, encoding="utf-8").read()
+    assert "does not depend on" not in readme.split("## The claim table")[1].split("## Round 2 in short")[0].replace("does not depend on L8R2-F31 is withdrawn", "")
+
+
+def t_round4_the_ldo_requirement_carries_its_regulation_terms():
+    """V3's blocker 2 (1b): 3.7495 V was the output tolerance (printed at 1 to 30 mA) and the dropout alone; with the printed load
+    and line regulation maxima the requirement is 3.7674 V and the ground shift the LDOs allow 0.9417 V."""
+    m = _mod(DRAFTS, "l9t5_test_drafts5")
+    P = m.figures()
+    chk = _mod(CHECK, "l9t5_test_check5")
+    lo, _n, hi = chk.vout_band(56.2e3, 10.7e3)
+    need = 3.3 * (P["ap_vout_hi"] + P["ap_load"] * 0.46 + P["ap_line"] * (hi - 4.3)) + P["ap_drop"]
+    assert P["ap_load"] == 0.01 and P["ap_line"] == 0.001 and abs(need - 3.7674) < 5e-5 and need > 3.7495
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "3.7674 V (round 3's 3.7495 V was the simplified figure" in out and "The ground shift the LDOs allow: 0.9417 V" in out
+
+
+def t_round4_sequencing_is_stated_as_an_enable_relation():
+    """V3's blocker 3 (1c): shared enable connectivity is not evidence that the supervisors' rail is valid whenever the device rail
+    is; the old sentence is gone and the timing stays an unverified bench item."""
+    out = open(DRAFTS_OUT, encoding="utf-8").read()
+    assert "the supervisors are up whenever the device rail is (record l9t5 out 5's condition)" not in out
+    assert "the enable RELATION" in out and "That is connectivity, not timing" in out and "UNVERIFIED: a bench item" in out
+
+
+def t_round4_the_gauge_bound_has_its_offset_drift_and_the_case_file_is_rev_3():
+    """V3's blockers 4 and 5 (1d, 1e): the BQ4050's printed offset drift is in the gauge's sum (0.0048 A over the assumed 32 K; the
+    bound 16.0684 V becomes 16.0718 V; F01 stays open on either), and the case script pins and labels the rev 3 case file."""
+    m = _M()
+    R = _C["R"]
+    I, U = R["in"], R["U"]
+    assert abs(I["g_off_drift"] - 0.3e-6) < 1e-12 and abs(U["off_drift"] - 0.3e-6 * 32.0 / 0.002) < 1e-9 and round(U["off_drift"], 4) == 0.0048
+    assert any(lab.startswith("offset drift") for lab, _x in U["gauge_terms"])
+    assert round(U["comb_before_r4"]["need"], 4) == 16.0684 and round(U["comb_printed"]["need"], 4) == 16.0718 and U["comb_printed"]["need"] > 15.5
+    assert m.PINS["cases"].endswith("coordinator-cases-2026-10-04-rev3.md")
+    first = _C["text"].splitlines()[0]
+    assert first.startswith("l9t5_case: C-ALLTX rev 3 and C-DEV rev 1") and "1. THE CASE ROW, C-ALLTX REV 3" in _C["text"]
+    assert abs(I["rev3_case"][1] - R["case"]["need"]) < 5e-5 and I["rev3_bound"] == 16.0684
+
+
+# ------------------------------------------------------------------------- round 4 part 2: T10, the supervisors' regulators (l9t5_t10.py)
+T10 = os.path.join(REC, "l9t5_t10.py")
+T10_OUT = os.path.join(REC, "l9t5_t10.out")
+PRE = {b: os.path.join(REC, "apply_gen_sch_%s_iocpre.py" % b) for b in "ab"}
+CM5 = os.path.join(REC, "l9t5_cm5.py")
+CM5_OUT = os.path.join(REC, "l9t5_cm5.out")
+
+
+def _run_script(path, out, head, n_pred, what):
+    """a record script run from the repository root: its output is the committed one, its inputs are at the sha256 it names, and its
+    predicate section carries n_pred rows that all read yes. Returns the text."""
+    import subprocess
+    need(path, what)
+    need(out, what + "'s output")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    r = subprocess.run([sys.executable, "-B", path], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, "%s exited %d: %s" % (os.path.basename(path), r.returncode, r.stderr.decode()[-300:])
+    text = r.stdout.decode("utf-8")
+    assert text == open(out, encoding="utf-8").read(), "%s is not what the script prints" % os.path.basename(out)
+    rows = [l for l in text.split(head)[1].split("\nl9t5_")[0].splitlines() if l.strip()]
+    assert len(rows) == n_pred and all(l.rstrip().endswith(" yes") for l in rows), rows
+    pins = re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M)
+    assert pins
+    for h, rel_ in pins:
+        assert hashlib.sha256(open(os.path.join(ROOT, rel_), "rb").read()).hexdigest().startswith(h), rel_
+    return text
+
+
+def t_round4_t10_output_reproduced_and_every_predicate_holds():
+    text = _run_script(T10, T10_OUT, "11. THE PREDICATES", 11, "the T10 script")
+    for s_ in ("FINDING: THE STATE IS UNBOUNDED", "SELECTED (SESSION): K3 WITH K2's ROW AS ITS CONDITION", "L9T5-F06 STAYS OPEN",
+               "T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "NOT the owner's", "This is the first attempt at this correction"):
+        assert s_ in text, s_
+    _C["t10_text"] = text
+
+
+def t_round4_t10_the_state_and_the_regulators_thermal_limit_are_re_solved():
+    """the owner's part 7: the applicable operating conditions verified from the sources. Round 3 stated L9T5-F06 as a current deficit
+    only (0.900 A asked of a 600 mA part in the TJ 125 C state). Re-solved here from the figures the script read: no document bounds
+    the state; the controller itself has no operating point in that state at the inside air; and the regulator's limit is thermal,
+    0.2187 A at its 150 C from the 5 V rail, so the old statement (a 600 mA limit) fails as the binding one."""
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    m = _mod(T10, "l9t5_test_t10")
+    for rel_ in list(m.SHEETS.values()) + list(m.DOCS.values()):
+        need(os.path.join(ROOT, rel_), "a pinned input of T10")
+    P = m.figures()
+    chk = _mod(CHECK, "l9t5_test_check_t10a")
+    assert P["Y"][("on", 400)] == (165.0, 220.0, 400.0, 500.0, 840.0) and P["V"][("on", 400)] == (167.0, 256.0, 327.0, 416.0, 536.0)
+    assert (P["theta_mcu"], P["tj_mcu"], P["theta_ldo"], P["tj_ldo"], P["imax"]) == (45.0, 125.0, 184.0, 150.0, 0.6)
+    assert P["contract_rows"] >= 1 and not P["contract_bound"] and not P["panel_bound"] and P["fw"] == ["panel"]
+    air = P["air"]
+    assert abs(air - 76.25) < 0.005
+    # the controller: its ceiling at this air, and no operating point in the worst printed state on either revision
+    assert round((P["tj_mcu"] - air) / P["theta_mcu"] / 3.3, 3) == 0.328
+    assert m.point(P["Y"][("on", 400)], air, P["theta_mcu"], P["tj_mcu"]) is None and m.point(P["V"][("on", 400)], air, P["theta_mcu"], P["tj_mcu"]) is None
+    assert air + P["theta_mcu"] * 3.3 * 0.840 > 190.0
+    # the bound: the operating point is a fixed point of the printed maxima (checked by substitution), the larger revision taken
+    pts = {rev: m.point(P[rev][("off", m.BOUND[1])], air, P["theta_mcu"], P["tj_mcu"]) for rev in "YV"}
+    for rev, (tj, i) in pts.items():
+        assert abs(air + P["theta_mcu"] * 3.3 * i - tj) < 1e-6 and abs(m.interp(P[rev][("off", m.BOUND[1])], tj) - i) < 1e-12, rev
+    i_mcu = max(v[1] for v in pts.values())
+    d_bound = i_mcu + sum(P["decl_loads"][1:])
+    assert round(i_mcu, 4) == 0.1691 and round(d_bound, 4) == 0.2291
+    # the regulator as drawn (from +5V_IOC at I-03's band) and with the pre-regulator
+    _lo5, _n5, hi5 = chk.vout_band(56.2e3, 10.7e3)
+    lo3, nom3, hi3 = chk.vout_band(56.2e3, 13.3e3)
+
+    def tj(i, vin):
+        return air + P["theta_ldo"] * (vin - 3.3) * i
+
+    def ceil_i(vin, t):
+        return (t - air) / P["theta_ldo"] / (vin - 3.3)
+    assert round(ceil_i(hi5, 150.0), 4) == 0.2187 and round(ceil_i(hi5, 125.0), 4) == 0.1445 and ceil_i(hi5, 150.0) < P["imax"]
+    assert tj(d_bound, hi5) > P["tj_ldo"] and round(tj(d_bound, hi5), 1) == 153.5
+    assert round(tj(d_bound, hi3), 1) == 118.0 and round(tj(P["decl"][1], hi3), 1) == 121.8 and tj(P["decl"][1], hi3) <= m.TJ_GOAL
+    assert tj(P["rv"][2] + 0.06, hi3) > m.TJ_GOAL and round(tj(P["rv"][2] + 0.06, hi3), 1) == 160.1      # the case's HIGH is NOT covered
+    # what the criterion does not cover is printed, not hidden: both transceivers dominant (momentary), one and both buses faulted
+    d_mom = i_mcu + 2 * P["can_dom_hi"] + P["decl_loads"][3]
+    d_f1 = i_mcu + P["can_fault"] + P["can_rec"] + P["decl_loads"][3]
+    d_f2 = i_mcu + 2 * P["can_fault"] + P["decl_loads"][3]
+    assert (round(d_mom, 4), round(d_f1, 4), round(d_f2, 4)) == (0.3091, 0.3726, 0.5491)
+    assert (round(tj(d_mom, hi3), 1), round(tj(d_f1, hi3), 1), round(tj(d_f2, hi3), 1)) == (132.6, 144.2, 176.3)
+    assert tj(d_mom, hi3) > m.TJ_GOAL and tj(d_f2, hi3) > P["tj_ldo"]
+    # the owner's rule of 5 October 2026: 125 C (T10's criterion) in a state the design must serve, 150 C (the printed absolute
+    # maximum) in any state; the 160 C shutdown is TYPICAL behaviour with no maximum trip printed and never an acceptance. Each row
+    # with its scope: (m) the held dominant figure, served; (f1) one fabric faulted, served (IOHA row 7); (f2) both, any state.
+    # All six (with and without the pre-regulator) FAIL; no current reaches the 600 mA capability (no foldback in any row)
+    def fails(x, served):
+        return x > P["tj_ldo"] or (served and x > m.TJ_GOAL)
+    six = ((d_mom, hi3, True), (d_f1, hi3, True), (d_f2, hi3, False), (d_mom, hi5, True), (d_f1, hi5, True), (d_f2, hi5, False))
+    assert all(fails(tj(i, v), s) for i, v, s in six)
+    assert m.TJ_GOAL < tj(d_f1, hi3) < P["tj_ldo"] < tj(d_f2, hi3) and d_f1 < d_f2 < P["imax"] and P["tsd"] == 160.0
+    assert P["can_dto"] == (1.2, 2.6, 3.8)          # the driver's time-out ends a held TXD (SLLSEQ7F); it bounds no transmit share
+    # the set point: 13.3 k holds the LDOs' input over their 600 mA requirement; the next E96 value up (13.7 k) does not
+    G, DP = m.D.gndret(), m.D.figures()
+    need600 = 3.3 * (P["vout_hi"] + P["load"] * 0.6) + P["drop"][600]
+    assert round(need600, 4) == 3.7693
+    drop = 3 * 0.6 * (G["rhot"] + 2 * DP["vh_r"][1]) + G["shift_drawn_ub"]
+    at = {rb: chk.vout_band(56.2e3, rb)[0] - m.D.RAIL_BUDGET * chk.vout_band(56.2e3, rb)[1] - drop for rb in (13.3e3, 13.7e3)}
+    assert round(at[13.3e3], 4) == 3.8428 and at[13.3e3] >= need600 > at[13.7e3], at
+    assert round(nom3, 4) == 4.1805 and (round(lo3, 4), round(hi3, 4)) == (4.0711, 4.2907) and P["vin"][0] < at[13.3e3] and hi3 < P["vin"][1]
+    text = _C.get("t10_text") or open(T10_OUT, encoding="utf-8").read()
+    for s_ in ("junction 150 C at 0.2187 A", "0.2291 A: junction  153.5 C: OVER the absolute maximum", "R602 13.3 k, 4.1805 V nominal, 4.0711 to 4.2907 V",
+               "at least 3.8428 V", "the case's HIGH 160.1 C (still over)", "NOT INSIDE THE BOUND, each row judged against its own limit",
+               "never to be exceeded and never", "no maximum trip printed", "junction 132.6 C MODEL", "junction 176.3 C MODEL",
+               "OPEN DEFECT L9T5-F13", "OPEN DEFECT L9T5-F16", "OPEN DEFECT L9T5-F17", "NO REQUIREMENT COVERS THIS FAULT STATE",
+               "before the LDO's junction reaches 150 C (the clock read-back's reset or the watchdog)", "is no acceptance: Layer 5's FMEA row", "A DRAFTED CANDIDATE, UNCHECKED"):
+        assert s_ in text, s_
+    # the shutdown is never the place a fault ends acceptably (the staged wording, the interim wording and round 4's T10-A5 each did)
+    for bad in ("or its foldback", "only the thermal shutdown", "must end in the LDO's thermal shutdown", "NOT INSIDE THE CRITERION, and stated so"):
+        assert bad not in text, bad
+
+
+def t_round4_t10_the_draft_needs_i03s_and_the_state_before_it_fails_its_check():
+    """T10-A4, and the regression: with I-03's draft alone (the state before T10) board A's divider reads 56.2k over 10.7k and the
+    pre-regulator's check FAILS; with the T10 draft after it the check reads DRAWN and I-03's own 5 V check FAILS; each T10 draft
+    refuses a generator without I-03's draft (leaving it untouched) and refuses the tree's generator."""
+    import io
+    import subprocess
+    import tempfile
+    chk = _mod(CHECK, "l9t5_test_check_t10b")
+    with tempfile.TemporaryDirectory(prefix="l9t5_test_") as d:
+        for b in "ab":
+            need(PRE[b], "the T10 draft for board %s" % b.upper())
+            t = os.path.join(d, "bare_gen_sch_%s.py" % b)
+            shutil.copy(GENS[b], t)
+            r = subprocess.run([sys.executable, "-B", PRE[b], t, "--write"], capture_output=True)
+            assert r.returncode == 3 and open(t, "rb").read() == open(GENS[b], "rb").read(), (b, r.returncode)
+            before = open(GENS[b], "rb").read()
+            r = subprocess.run([sys.executable, "-B", PRE[b], GENS[b], "--check"], capture_output=True)
+            assert r.returncode == 3 and open(GENS[b], "rb").read() == before, (b, r.returncode)
+        rc, old = _regen("a", NEW["a"], d, "i03")
+        assert rc == 0, old
+        rc, new = _regen("a", (NEW["a"], PRE["a"]), d, "t10")
+        assert rc == 0, new
+        assert chk.run({"a": old}, ROOT, io.StringIO(), div="i03")[0] == "DRAWN" and chk.run({"a": old}, ROOT, io.StringIO(), div="t10")[0] == "FAIL"
+        assert chk.run({"a": new}, ROOT, io.StringIO(), div="t10")[0] == "DRAWN" and chk.run({"a": new}, ROOT, io.StringIO(), div="i03")[0] == "FAIL"
+        # board B's draft changes declarations only: the netlist with it is the netlist without it
+        rc, b_old = _regen("b", NEW["b"], d, "i03")
+        assert rc == 0, b_old
+        rc, b_new = _regen("b", (NEW["b"], PRE["b"]), d, "t10")
+        assert rc == 0, b_new
+
+        def nets(path):
+            return sorted(re.findall(r'\(node \(ref "[^"]+"\) \(pin "[^"]+"\)', open(path, encoding="utf-8").read()))
+        assert len(nets(b_old)) > 1000 and nets(b_old) == nets(b_new)
+        assert chk.run({"a": new, "b": b_new}, ROOT, io.StringIO(), div="t10")[0] == "DRAWN"
+
+
+# ------------------------------------------------------------------------- round 4 part 3: SDR3-F02, the CM5's supply design figure
+def t_round4_cm5_output_reproduced_and_every_predicate_holds():
+    text = _run_script(CM5, CM5_OUT, "7. THE PREDICATES", 6, "the CM5 assessment")
+    for s_ in ("Power supply designs should accommodate 5 V at up to 2.5 A", "a SUPPLY DESIGN FIGURE", "LABELLED SCENARIO", "L9T5-F15",
+               "a case row's change is the coordinator's and none is made here", "SDR3-F02 is CONFIRMED as a finding"):
+        assert s_ in text, s_
+    _C["cm5_text"] = text
+
+
+def t_round4_cm5_the_scenario_is_re_solved_and_no_case_row_moves():
+    """SDR3-F02. The old statement: the generator's comment reads 'no maximum given' and every budget takes a module's HIGH at the
+    declared 1.6 A, with nothing beside it. Re-solved here from the budget's own stage rows: at the maker's 2.5 A (12.5 W) the slot
+    stages hold their steady load and pass the loop's least when a cooler's bounded start coincides; C-ALLTX at that figure is a
+    scenario beside the row, and the row itself (15.5162 V at the modules' typical) is what the case script still prints."""
+    _M()
+    if "bm" not in _C:
+        bm = _mod(os.path.join(ROOT, "v2", "docs", "records", "l9pwr", "l9pwr_budget.py"), "l9t5_test_budget")
+        _C["bm"], _C["B"] = bm, bm.compute()
+    bm, B = _C["bm"], _C["B"]
+    d_i = (12.5 - 8.0) / B["stages"][("DRAFTED", "ALLTX", "S1")]["v_least"]
+    assert round(d_i, 4) == 0.9180
+    steady, start, deg = (bm.slot_least(B, k, rails=("S1", "S2", "S3"))[0] - d_i for k in ("i_least", "start", "degraded"))
+    assert steady > 0 > start and deg > 0
+    text = _C.get("cm5_text") or open(CM5_OUT, encoding="utf-8").read()
+    for s_ in ("%+.4f A" % steady, "%+.4f A" % start, "%+.4f A" % deg):
+        assert s_ in text, s_
+    # the old statement holds only with the module at the budget's 8 W: there the start row is inside the loop's least
+    assert bm.slot_least(B, "start", rails=("S1", "S2", "S3"))[0] > 0
+    Dc = B["cfgs"]["DRAFTED"]
+    row = bm.case_row(B["d11_rv_record"], B["F"], Dc, bm.case_vals(Dc, cm5=12.5)[0])
+    assert ("%.4f V" % row["need"]) in text and row["need"] > B["calltx"]["cm5_8"]["need"] > B["calltx"]["new"]["need"]
+    assert abs(_C["R"]["case"]["need"] - B["calltx"]["new"]["need"]) < 1e-12 and bm.CASE_CM5 == 4.5      # the case row is not moved
+    gb = open(GENS["b"], encoding="utf-8").read()
+    assert '"U3%dA" % (s - 1): 1.6,' in gb and "no maximum given" in gb       # the tree's generator is not edited by this record
+
+
+def t_round4_the_page_and_the_readme_carry_t10_and_the_cm5_assessment():
+    """the page's sections 0c and 0d and the README's rows C36 onward carry what the two outputs print: every figure with a unit in
+    those sections is in an output, the criterion's five conditions are numbered, L9T5-F06 is OPEN and no case row is changed."""
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page.split("## 0d. Round 4, part 3")[1].split("## 0b. Round 4")[0]
+    outs = open(T10_OUT, encoding="utf-8").read() + open(CM5_OUT, encoding="utf-8").read()
+    figs = sorted(set(re.findall(r"[+-]?\d+\.\d+ (?:A|V|C|W)\b", sec)))
+    assert len(figs) >= 50
+    missing = [f for f in figs if f not in outs]
+    assert not missing, "the page's figures not in an output: %s" % missing
+    for s_ in ("T10-A1", "T10-A2", "T10-A3", "T10-A4", "T10-A5", "L9T5-F06 STAYS OPEN", "Selected (SESSION): K3 with K2's row as its condition",
+               "No case row is changed here", "L9T5-F15", "This is the first attempt at this correction", "**L9T5-F13, OPEN**",
+               "**L9T5-F16, OPEN**", "**L9T5-F17, OPEN**", "no requirement covers this fault state", "a DRAFTED CANDIDATE, unchecked",
+               "never to be exceeded and never an operating target", "Junction with the pre-regulator (MODEL)"):
+        assert s_ in sec, s_
+    for bad in ("or its foldback", "only the thermal shutdown", "must end in the LDO's thermal shutdown"):
+        assert bad not in sec, bad
+    readme = open(README, encoding="utf-8").read()
+    rows = [l for l in readme.splitlines() if re.match(r"\| C\d\d \|", l)]
+    assert [l[2:5] for l in rows] == ["C%02d" % i for i in range(1, 61)]
+    new = {l[2:5]: l for l in rows[35:]}
+    for k, s_ in (("C41", "0.2187 A"), ("C44", "13.3 k"), ("C45", "118.0 C"), ("C51", "OPEN"), ("C53", "-0.3546 A"), ("C54", "17.0148 V"),
+                  ("C43", "DRAFTED CANDIDATE, unchecked"), ("C57", "L9T5-F13 OPEN"), ("C58", "L9T5-F16 OPEN"), ("C59", "L9T5-F17 OPEN"),
+                  ("C58", "no requirement covers this fault state"), ("C60", "withdrawn")):
+        assert s_ in new[k], k
+    assert "T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN" in readme.splitlines()[0] and "no case row is changed" in readme.splitlines()[0]
+    assert "DRAFTED CANDIDATE, unchecked" in readme.splitlines()[0] and "L9T5-F13, F16 and F17 OPEN" in readme.splitlines()[0]
+
+
+def t_record_hygiene():
+    files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
+             os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT]
+    inputs = os.path.join(REC, "inputs")
+    copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
+    for p in files + copies:
+        need(p, os.path.basename(p))
+        t = open(p, encoding="utf-8").read()
+        assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in %s" % os.path.basename(p)
+        for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
+            assert bad not in t, "a private path in %s" % os.path.basename(p)
+        if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT, T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT):
+            if p == README:
+                # round 3: the claim table for the recheck V3 labels a maker's printed limit with the round 3 brief's own word. That
+                # word is taken out of the table's LABEL cell (the fifth), and of nothing else, before the claim-word scan: the other
+                # cells and the prose around the table are still scanned
+                kept = []
+                for line in t.splitlines():
+                    if re.match(r"\| C\d\d \|", line):
+                        cells = line.split(" | ")
+                        assert len(cells) == 6, "a claim row without six cells: %s" % line[:60]
+                        cells[4] = cells[4].replace("guaranteed", "")
+                        line = " | ".join(cells)
+                    kept.append(line)
+                t = "\n".join(kept)
+            mm = CLAIM.search(t)
+            assert not mm, "a claim word %r in %s" % (mm.group(0), os.path.basename(p))

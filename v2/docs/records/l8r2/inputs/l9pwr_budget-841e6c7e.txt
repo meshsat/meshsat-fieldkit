@@ -1476,7 +1476,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    the same DRAFTED tree with the coolers at round 1's HIGH (the maker's 2.0 W at 12 V over 0.85), the other end should l8r2's C4-3 read the coolers
    there: VBAT 249.99 W, stack 14.574 V, needs 16.014 V (+0.086 V against 16.1 V); round 7's rule gives 16.2 V
 
-7b. C-ALLTX REV 3, THE CASE ROW (the coordinator's row of 4 October 2026, plan section 4a; rev 2's definition, which rev 3 keeps), FROM ITS TEXT, ON DRAFTED: every transmitter at
+7b. C-ALLTX REV 2, THE CASE ROW (the coordinator's row of 4 October 2026, plan section 4a), FROM ITS TEXT, ON DRAFTED: every transmitter at
    its HIGH figure, the monitor full, the fans running at full speed, the outlets, the heater and the standby card off, every other load at its
    PS-ALLTX PLAN figure, the compute modules at their typical 4.5 W; 18 A from a 15.5 V rest, R_cell 0.060 Ohm (an ASSUMPTION; rv-pwr's high)
    each load's figure and the rule that set it (W at its pins; HIGH and PLAN are its PS-ALLTX figures):
@@ -1566,7 +1566,7 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
      the same row after C1 (the standby card 0.0 W): 265.274 W, needs 16.8626 V
      old, D-11's basis on rv-pwr's typ_nontx (section 7: the compute modules and the NVMe at PS-TYP, the standby card off, every other load at
        HIGH, converters at 16.8 V): 253.608 W, needs 16.2145 V; at the case's VBAT 14.057 V: 253.032 W, needs 16.1825 V
-     NEW, C-ALLTX rev 3 from its text at the case's VBAT: 241.039 W, needs 15.5162 V; the loads D-11's basis keeps at HIGH and the row's text takes at
+     NEW, C-ALLTX rev 2 from its text at the case's VBAT: 241.039 W, needs 15.5162 V; the loads D-11's basis keeps at HIGH and the row's text takes at
        typical: Geiger module 0.500 to 0.300 W; QMX USB and HDMI 5 V 2.500 to 0.300 W; board E controller and sensors 1.000 to 0.500 W; three STM32H743 supervisors and their parts 4.554 to 1.297 W; three TUSB8041 hubs VDD 1.1 V 2.568 to 0.625 W; three TUSB8041 hubs VDD33 0.981 to 0.783 W
      on DRAWN (the generators as they are, no draft): 228.120 W, needs 14.6083 V
    SENSITIVITIES (labelled scenarios, not the case): the compute modules at 8 W (the budget's HIGH; K4 holds no numerical ceiling): 252.840 W,
@@ -1916,8 +1916,8 @@ its maximum at once (an upper bound, not a scenario). Watts at the pack side are
    tree, which is why the rule holds the heater off during any key-down (rv-pwr 7.2), so they are not a finding
 
 11. PREDICATES
-   C-ALLTX rev 3's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit yes
-   C-ALLTX rev 3's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W yes
+   C-ALLTX rev 2's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit yes
+   C-ALLTX rev 2's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W yes
    C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state              yes
    D-11's PA-alone floor holds on every tree                                                                              yes
    D-11's all-transmit floor holds on RV and DRAWN and fails on DRAFTED                                                   yes

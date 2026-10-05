@@ -17,6 +17,33 @@ drafts of Layers 4, 8 and 9 it models are printed DRAFTED and none is applied.
 
 Test: `v2/ecad/tools/tests/test_l9pwr.py`, run isolated with `env -C v2/ecad/tools/tests python3 run.py test_l9pwr test_public_hygiene`.
 
+## Round 6 (4 October 2026 night, task T5 round 4 on `fnd/l9t5`): labels only
+
+The case file's current revision is rev 3 (the recheck V3's item 1e). Out 7b's heading, two predicate names and one line of the
+restated L9P-F01 now read "C-ALLTX rev 3"; **no figure moved** (the case 15.5162 V, 241.039 W). Round 4 of record l9t5 adds two
+scenarios BESIDE this budget, in its own files and without editing this one: the supervisors' bounded state (T10, finding L9T5-F12:
+the budget's HIGH for the supervisors, 400 mA a controller, is a state with no operating point at the hot stop's air) and the
+Compute Module 5's supply design figure (SDR3-F02, finding L9T5-F15: 12.5 W a module against this budget's 8.0 W HIGH). Both are
+owed to this budget's next round as labelled rows; neither changes a case row here.
+
+## Round 5 (4 October 2026 evening, task T5 round 2 on `fnd/l9t5`): L9P-F01 on C-ALLTX rev 3
+
+- **L9P-F01 restated (out 10):** OPEN on the case row C-ALLTX rev 3, 15.5162 V needed at 18 A against REQ-018's 15.5 V; D-11's basis
+  (16.214 V) printed as a labelled scenario, not the case; L4-E9 round 7's 16.1 V floor, its rule's 16.4 V and FAN_OK printed as
+  withdrawn. Its action is record l9t5's A1. No other figure or finding moved. Test: `t_round5_l9pf01_is_judged_on_the_case_and_d11_is_a_labelled_scenario`.
+
+## Round 4 (4 October 2026, task T5 on `fnd/l9t5`): C1 and the case row C-ALLTX rev 2
+
+- **C1 (CORRECTED, the last step of out 1):** PS-ALLTX carries the standby WiFi card off in every scenario, as REQ-018's acceptance
+  and CONOPS 4a define the state; DRAWN and round 1's tree keep rv-pwr's state. On DRAFTED, PS-ALLTX at the pack moves from
+  174.23 / 209.89 / 292.03 W to 174.23 / 208.47 / 279.63 W; its raw HIGH row at VBAT from 276.373 W (17.4792 V) to 265.274 W (16.8626 V).
+- **Out 7b:** C-ALLTX rev 2 computed from the row's text at the VBAT the case sets: 241.039 W at VBAT, **needs 15.5162 V** at 18 A,
+  **deficit +0.292 W** against the 240.747 W allowance. The row's quoted 16.214 V is D-11's basis (out 7), printed beside it.
+- **Did not move:** L9P-F01's 16.214 V (D-11's basis), L9P-F03's 7.181 A and 7.472 A, every state but PS-ALLTX, every converter's
+  margin but slot 3's in PS-ALLTX at HIGH (3.2639 A, the standby card off). One predicate restated: PS-ALLTX joins PS-SURV below round
+  1's PLAN.
+- The uncertainty, the approaches and the corrections are record l9t5's (`v2/docs/records/l9t5/`).
+
 ## Round 3 (4 October 2026, the integration of set 29): a tool correction, what moved and what did not
 
 The script refused on set 29's tree at its read of +12V_FAN's efficiency in L4-E11's `apply_gen_sch_e_aux.py` (L4-E11's round 9

@@ -219,11 +219,14 @@ def t_drafts_are_drafted_and_the_trees_are_ordered():
     assert _pred("DRAFTED's PLAN is above DRAWN's in every state")
     assert _pred("DRAWN's PLAN is above RV's in every state but PS-EMCON, where the link cards are unpowered")
     m = _M()
-    assert _pred("DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off")
+    # round 4: C1 takes the standby card's 1.0 W PLAN placeholder out of PS-ALLTX (REQ-018, CONOPS 4a), so PS-ALLTX joins PS-SURV
+    assert _pred("DRAFTED's PLAN is above round 1's DRAFTED in every state but PS-SURV, where slots 1 and 3 are off, and PS-ALLTX, where C1 removes the standby card's 1.0 W")
     st = [s[1] for s in m.STEP_TEXT]
-    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:]) == {"DRAFTED"} and len(st) == 16
-    for sid, status, tx in m.STEP_TEXT[6:]:
+    # round 4: C1, the state's definition corrected (no drawing, no draft), is the last step
+    assert st[0] == "RV" and set(st[1:6]) == {"ON MAIN"} and set(st[6:16]) == {"DRAFTED"} and st[16:] == ["CORRECTED"] and len(st) == 17
+    for sid, status, tx in m.STEP_TEXT[6:16]:
         assert "not applied" in tx, "%s does not say it is not applied" % sid
+    assert m.STEP_TEXT[16][0] == "C1" and "no drawing and no draft" in m.STEP_TEXT[16][2]
 
 
 def t_margins_and_findings():
@@ -244,6 +247,44 @@ def t_margins_and_findings():
     assert F["L9P-F04"]["class"] == "PHYSICAL QUESTION" and "specimen" in F["L9P-F04"]["action"]
     for k in ("L9P-F02", "L9P-F03", "L9P-F05", "L9P-F06"):
         assert F[k]["class"] == "ASSUMPTION TO BOUND", k
+
+
+def t_round4_c1_and_the_case_row():
+    """Round 4 (T5): C1 takes the standby card out of PS-ALLTX on DRAFTED and leaves DRAWN as rv-pwr's state; out 7b computes
+    C-ALLTX (rev 2's definition; labelled rev 3 since round 6) from the row's text at the VBAT the case sets, and its parts close on the
+    cells' EMF."""
+    m = _M()
+    for k in ("C1: PS-ALLTX on DRAFTED carries the standby card at 0 W in every scenario, and DRAWN keeps rv-pwr's state",
+              "C-ALLTX rev 3's row: every transmitter at its HIGH, the outlets, the heater and the standby card at 0 W, the compute modules at 4.5 W",
+              "C-ALLTX rev 3's row closes on itself: load pins, conversion, path and cells sum to the cell EMF at 18 A plus the deficit"):
+        assert _pred(k), k
+    ca = _C["R"]["calltx"]
+    nw = ca["new"]
+    assert abs(nw["vbat"] * 18.0 - nw["p"]) < 1e-6 and nw["vbat"] < 14.4
+    assert abs(nw["allow"] - 18.0 * (15.5 - 18.0 * (nw["r_path"] + 4 * 0.06 / 3.0))) < 1e-9
+    assert ca["old_raw"]["standby"] == 9.1 and ca["raw_fixed"]["standby"] == 0.0 and ca["old_raw"]["p"] - ca["raw_fixed"]["p"] > 9.1
+    # the row's text against D-11's basis: only non-transmit loads differ, and each is taken at its PS-ALLTX PLAN in the row
+    D = _C["R"]["cfgs"]["DRAFTED"]
+    for n, v in ca["vals"].items():
+        if abs(v - ca["basis_vals"][n]) > 1e-9 and not n.startswith("CM5"):
+            assert n not in m.CASE_TX and v == D.load(n)["d"]["ALLTX"][1], n
+    assert nw["need"] < ca["old_basis"]["V_rest"]["hi"] and round(ca["old_basis"]["V_rest"]["hi"], 3) == 16.214
+    assert ca["cm5_8"]["need"] > nw["need"] > ca["fans_plan"]["need"]
+
+
+def t_round5_l9pf01_is_judged_on_the_case_and_d11_is_a_labelled_scenario():
+    """Round 5 (T5 round 2, record l9t5): L9P-F01 is restated on C-ALLTX rev 3. Its status reads the case's need against REQ-018's
+    15.5 V; its figure carries D-11's 16.214 V only under LABELLED SCENARIO; round 7's 16.1 V floor and its rule's figure are
+    WITHDRAWN (the owner's positions of 4 October 2026). It fails against round 2's text, which judged the basis against 16.1 V."""
+    _M()
+    F = {x["id"]: x for x in _C["R"]["classified"]}
+    f1 = F["L9P-F01"]
+    nw = _C["R"]["calltx"]["new"]
+    assert f1["status"].startswith("OPEN on the case: C-ALLTX rev 3 needs %.4f V" % nw["need"]) and nw["need"] > 15.5
+    assert "16.1 V does not cover" not in f1["status"]
+    fig = f1["figure"]
+    assert fig.index("THE CASE (C-ALLTX rev 3") < fig.index("LABELLED SCENARIO, NOT THE CASE") < fig.index("16.214 V") < fig.index("WITHDRAWN")
+    assert "REQ-018's acceptance" in f1["rule"] and "record l9t5" in f1["owner"] and "never on a scenario" in f1["action"]
 
 
 def t_sensitivities_cover_every_state():
