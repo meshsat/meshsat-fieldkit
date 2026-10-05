@@ -5,7 +5,7 @@
 It prints, deterministically and without touching the tree:
   1. the inputs, each pinned by sha256 (the generators and the engine, every other draft it composes with, record l9stk's copies
      of 0d72880b, L4-E7's backstop draft of fnd/l4e7r6 at 914a2f5a, L4-E11's drafts and sections 20c to 20e and 22b, 22c, 22g and
-     22h of fnd/l4e11r11 at 4def5975 (its round 13; round 6 copied round 12 at ac72e730), the committed netlists, the lands, the makers' sheets read, the held OPA187 sheet,
+     22h of fnd/p0t10 at ecb598c5 (its round 17; round 6b copied round 13 at 4def5975, round 6 round 12 at ac72e730), the committed netlists, the lands, the makers' sheets read, the held OPA187 sheet,
      this record's own files);
   2. the values: each value the drafts draw found in record l9stk's own text by its section (refused when a phrase no longer
      matches), and this record's SESSION choices;
@@ -14,8 +14,8 @@ It prints, deterministically and without touching the tree:
      the NTC's own heating and the hysteresis computed for the drawn values, and the remainder left for the pad's gradient;
   3b. B-R2's detector (round 3, route R1): why no existing element tells board A a latched breaker passing a charge, the charge
      threshold and the reverse threshold with every tolerance, the delays, the protector's own limits, what board A must read
-     (L4-E11's DD-7 interface, as its section 20c reads it at 4def5975) and E-14 as it now reads, from task L4-E11's copies
-     (fnd/l4e11r9 at e60a94a8, fnd/l4e11r11 at 4def5975) and the makers' sheets;
+     (L4-E11's DD-7 interface, as its section 20c reads it at ecb598c5) and E-14 as it now reads, from task L4-E11's copies
+     (fnd/l4e11r9 at e60a94a8, fnd/p0t10 at ecb598c5) and the makers' sheets;
   3c. DD-5 (round 4): the charge switch's body diode in discharge under CHGIN = 1, the three approaches, the ideal diode beside
      Q1 (apply_gen_sch_p_idealdiode.py) and its acceptance on case row C-PROT, from the BQ4050's, the CSD17570Q5B's and the
      LM74700-Q1's sheets;
@@ -138,8 +138,10 @@ LIST_ABSENT = {"a": [("l8r2", "packrtn", "R-201"), ("l8r2", "slotlm", "R-199"), 
 TREE_ONLY = {"a": [("l8r2", "d8v3"), ("l8r2", "vbus20ov")]}
 # Task L4-E11's round copied here, branch fnd/l4e11r11: every copy of its text and drafts is this commit's, and their file names
 # are built from these two values, so taking the copies again is these two lines, SOURCES_SHA and inputs/SOURCES.txt.
-# Round 6: round 12 at ac72e730. Round 6b: round 13 at 4def5975 (of the eleven copies only section 20c changed).
-L4E11_AT, L4E11_ROUND = "4def5975", 13
+# Round 6: round 12 at ac72e730. Round 6b: round 13 at 4def5975 (of the eleven copies only section 20c changed). Round 9 (P0 Slot C,
+# the check V6's V6-m2): round 17 at ecb598c5 on fnd/p0t10 (of the thirteen copies only the charger draft changed, in L4-E11's
+# rounds 15 and 16: its layout comment at Zw 37.59 K/W; the sections and the other three drafts are byte for byte round 13's)
+L4E11_AT, L4E11_ROUND = "ecb598c5", 17
 INPUT_FILES = {"page": "inputs/l9stk-section15-0d72880b.md", "out": "inputs/l9stk_protection-0d72880b.out.txt",
                "constants": "inputs/l9stk_protection-constants-0d72880b.txt", "l4e11": "inputs/l4e11-section19h-%s.md" % L4E11_AT,
                "l4e11pre": "inputs/l4e11-section15c-precharge-%s.md" % L4E11_AT, "l4e11c": "inputs/l4e11-section20c-%s.md" % L4E11_AT,
@@ -171,7 +173,7 @@ SOURCES_SHA = {"inputs/l9stk-section15-0d72880b.md": "a96099193dd92e8eecbb4ea444
                "inputs/l4e11-section22c-%s.md" % L4E11_AT: "a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec",
                "inputs/l4e11-section22g-%s.md" % L4E11_AT: "0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704",
                "inputs/l4e11-section22h-%s.md" % L4E11_AT: "b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f",
-               "inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT): "cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f",
+               "inputs/l4e11r%d-apply_gen_sch_a_charger-%s.py" % (L4E11_ROUND, L4E11_AT): "0e215988ba2a929bd2eb91b7eb80fa20040da28d10c08a9c36e1022e81a789c0",
                "inputs/l4e11r%d-apply_gen_sch_a_dd7-%s.py" % (L4E11_ROUND, L4E11_AT): "bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034",
                "inputs/l4e11r%d-apply_gen_sch_e_aux-%s.py" % (L4E11_ROUND, L4E11_AT): "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47",
                "inputs/l4e11r%d-apply_gen_sch_e_entry-%s.py" % (L4E11_ROUND, L4E11_AT): "a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1",

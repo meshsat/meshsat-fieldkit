@@ -13,7 +13,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   l8p_c4    9db1a31e3cfe92d3  v2/docs/records/l8p/l8p_c4.out
+   l8p_c4    acd07c17bcc4e3cf  v2/docs/records/l8p/l8p_c4.out
    l8p_thguard 544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml

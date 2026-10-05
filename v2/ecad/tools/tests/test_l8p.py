@@ -16,8 +16,8 @@ ideal diode draft refuses a target without the breaker draft; round 5 (the check
 use L4-E11's round 10 drafts with no stand-in, the interface of 12f is quoted from L4-E11's copied sections 20c and 20d, L8P-F06's
 leakage budget and L8P-F07's printed and typical points recompute from the sheets and the copies, and the alternative part's typed
 figures read against TDK's held sheet when it is present; round 6 (the independent check V2's V2-B2, V2-B3 and its minors): every
-copy of L4-E11 is the round's that l8p_drafts.L4E11_AT names (round 12 at ac72e730 in round 6; round 13 at 4def5975 since round 6b,
-where only section 20c changed and no figure this record reads of it moved) and a copy that is not a tree's records/l4e11/ fails, L8P-F06 stands
+copy of L4-E11 is the round's that l8p_drafts.L4E11_AT names (round 12 at ac72e730 in round 6; round 13 at 4def5975 in round 6b; round 17 at ecb598c5 since round 9,
+where only the charger draft changed; in round 6b only section 20c changed and no figure this record reads of it moved) and a copy that is not a tree's records/l4e11/ fails, L8P-F06 stands
 against BOTH limits of L4-E11's latch (the timing limit reproduced), TDK's window takes the sure-off as a lower bound and a
 mutation of that direction fails, the trip side's junction is on the worst split and named not bounded, board A composes in L4-E9's
 list order and the whole list composes wherever a tree holds its drafts, the PTC draft quotes what Murata prints; the netlist
@@ -97,7 +97,7 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "l8p_drafts.out is not what l8p_drafts.py prints; regenerate it with _bin/regen_out.py"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 13) equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+    for s in ("record l9stk's, L4-E7's and L4-E11's copies (rounds 9 and 17) equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
               "+-1.95 K left: consistent", "the split closes", "is ASSUMED from the product search sheet", "THE LOCKOUT AT THE ALLOW EDGE",
               "E-10 gains: VDS under 1.62 V during current-limit excursions", "CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a",
               "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
@@ -106,19 +106,19 @@ def t_the_committed_output_is_what_the_script_prints():
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R264, C264)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
-              "l8p/inputs/l4e11-section19h-4def5975.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
+              "l8p/inputs/l4e11-section19h-ecb598c5.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
               "DD-5 BY THE CASE ROW: CORRECTED IN THE DRAFT", "'body diode' occurs 0 times in SLUUAQ3A and SLUSC67B",
               "apply_gen_sch_p_idealdiode.py (after apply_gen_sch_p_breaker.py): without it refused; check OK; applied OK; second application refused",
               "l8p/apply_gen_sch_p_idealdiode.py            OK", "decoupling C111: class L at U105.1 on IDL_VCAP",
               "decoupling C112: class D at U105.6 on SCP_OUT", "decoupling C114: class B2 at U105.4 on SW",
               "rail SW       source ['Q1', 'Q109']", "the breaker draft without the ideal diode (DD-5 uncorrected)",
               # rounds 5 and 6
-              "l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py OK", "l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py OK",
+              "l8p/inputs/l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py OK", "l8p/inputs/l4e11r17-apply_gen_sch_a_charger-ecb598c5.py OK",
               "board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)",
               "board A composed in L4-E9's order: the generator ran to its end (742 parts, intent written: yes)",
               "board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (764 parts",
               "packrtn (R-201), slotlm (R-199), fb01 (R-200)", "it is refused, mainpb having taken its R233 and C241 as the next free",
-              "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at 4def5975, quoted)", "board A's set 0.85 ms: the sum agrees",
+              "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at ecb598c5, quoted)", "board A's set 0.85 ms: the sum agrees",
               "20c AS L4-E11's ROUND 13 RESTATES IT ON MURATA'S PRINTED POINTS", "2.894 V) is WITHDRAWN as a bound",
               "the closed return reads closed for any RT1 under 269 kOhm at 10.6 V", "is unchanged from its round 12",
               "breaker's restart (0.9477 s, this record's 0.9477 s: the same)",
@@ -510,8 +510,8 @@ def t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree():
     assert all(m.L4E11_AT in v for k, v in m.INPUT_FILES.items() if k.startswith("l4e11"))
     assert all(m.L4E11_AT in c for c, _n in m.L4E11_DRAFTS) and all(m.L4E11_AT in f for f, _a in m.FOLLOW["a"])
     assert all(m.L4E11_AT in v for k, v in m.REPLACED.items() if k[0] == "l4e11"), "a composition still uses an older copy of L4-E11's drafts"
-    assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "a09e9a60" in f or "ac72e730" in f], "round 10's or round 12's copies are still in inputs/"
-    assert (m.L4E11_AT, m.L4E11_ROUND) == ("4def5975", 13), "the round copied moved: read every quote of a changed section again (the brief of round 6b)"
+    assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "a09e9a60" in f or "ac72e730" in f or "4def5975" in f], "round 10's, 12's or 13's copies are still in inputs/"
+    assert (m.L4E11_AT, m.L4E11_ROUND) == ("ecb598c5", 17), "the round copied moved: read every quote of a changed section again (the brief of round 6b)"
     assert m.stale_copies(os.path.join(ROOT, "v2", "docs", "records", "l4e11")) == [], "a copy of L4-E11 is not the tree's: take it again (V2-B2)"
     with tempfile.TemporaryDirectory() as d:
         page = "## 20. Round 10\n\n" + "".join(open(os.path.join(REC, m.INPUT_FILES[k]), encoding="utf-8").read() for k, _h in m.L4E11_SECTIONS)

@@ -260,7 +260,7 @@ def main():
     m = need(po, r"which the RC\s+hold makes ([0-9.]+) to ([0-9.]+) s after the enable mates", "l9stk protection: the RC hold")
     hold = (float(m.group(1)), float(m.group(2)))
     t_off = float(need(po, r"\(UVLODEL 11 us typical, no maximum printed\): ([0-9.]+) ms in all", "l9stk protection: the turn-off").group(1)) * 1e-3
-    pre = open(os.path.join(HERE, "inputs", "l4e11-section20c-4def5975.md"), encoding="utf-8").read()
+    pre = open(os.path.join(HERE, "inputs", "l4e11-section20c-ecb598c5.md"), encoding="utf-8").read()
     v_pre = float(need(pre, r"At the precharge's floor \(BRK_VIN %s V" % N, "L4-E11 20c: the precharge's floor").group(1))
     i_pre = float(need(pre, r"a back-fed precharge\s+carries at most %s A" % N, "L4-E11 20c: the precharge's current", re.M | re.S).group(1))
 
@@ -270,7 +270,7 @@ def main():
     w("MESHSAT-1357, 5 October 2026). Desk arithmetic on the makers' sheets, the records' copies and the draft's own values; nothing was built, bought\n")
     w("or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED this script's arithmetic; RECORD another record's figure.\n\n")
     w("0. PINS (sha256/16)\n")
-    for p in (L9_OUT5, L9_PAGE5, PROT_OUT, os.path.join(HERE, "inputs", "l4e11-section20c-4def5975.md"), G.LM26LV, G.TPS709, G.N7002, G.AO3400A, BZT,
+    for p in (L9_OUT5, L9_PAGE5, PROT_OUT, os.path.join(HERE, "inputs", "l4e11-section20c-ecb598c5.md"), G.LM26LV, G.TPS709, G.N7002, G.AO3400A, BZT,
               G.LM5069, DRAFT, os.path.join(HERE, "l8p_guard.py"), os.path.abspath(__file__)):
         w("   %s  %s%s\n" % (sha(p, 16), rel(p), "  (held back, fetch_held_back.py)" if "/held/" in p else ""))
 

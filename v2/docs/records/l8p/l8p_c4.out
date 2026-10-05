@@ -6,7 +6,7 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    d84dcb3bab2f1f60  v2/docs/records/l8p/inputs/l9stk_guard-bb6d2c8f.out.txt
    08a656ab0230986d  v2/docs/records/l8p/inputs/l9stk-section15.9-bb6d2c8f.md
    d97f94a0fa1f2559  v2/docs/records/l8p/inputs/l9stk_protection-0d72880b.out.txt
-   b3619bd411f5b64f  v2/docs/records/l8p/inputs/l4e11-section20c-4def5975.md
+   b3619bd411f5b64f  v2/docs/records/l8p/inputs/l4e11-section20c-ecb598c5.md
    e8ce79af19c668cb  v2/vendor/ti/held/ti-lm26lv-snis144g.pdf  (held back, fetch_held_back.py)
    8c14e3efae738a27  v2/vendor/ti/held/ti-tps709-sbvs186h.pdf  (held back, fetch_held_back.py)
    7941fb423af7c6c6  v2/vendor/power/jscj-2n7002-c8545.pdf
@@ -14,8 +14,8 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    0fbd7d137524820f  v2/vendor/diodes/diodes-bzt52c-ds18004.pdf
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
-   e531190bb1b325c1  v2/docs/records/l8p/l8p_guard.py
-   5bb73bd4e2e1ebc1  v2/docs/records/l8p/l8p_c4.py
+   768836365237c831  v2/docs/records/l8p/l8p_guard.py
+   61bab67da6e4a0b4  v2/docs/records/l8p/l8p_c4.py
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
