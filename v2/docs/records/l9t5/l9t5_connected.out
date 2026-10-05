@@ -10,21 +10,21 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    d4f7fa953a9541fe v2/docs/records/l4e9/l4e9_power_path.py
    3b2374d10186b913 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   63769e7a2d15de1d v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   ed78bb63a5c0d31b v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    336934f49cadf414 v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md
-   7b54d7ac587eab81 v2/docs/records/l9pwr/l9pwr_budget.out
-   379c9fc930c15a34 v2/docs/records/l9t5/l9t5_drafts.out
-   7205a24508a1284f v2/docs/records/efuse/efuse_check.out
-   65a8ea907633c104 v2/docs/records/l9stk/l9stk_protection.out
-   eee720dba6702bbf v2/docs/records/l8p/l8p_c4.out
-   25a1277c5294468f v2/docs/records/l9t5/l9t5_t10.out
-   e5d150a994751551 v2/docs/records/l9t5/l9t5_f01.out
+   39b34accbd29b4fd v2/docs/records/l9pwr/l9pwr_budget.out
+   3fb9f1c34d865e50 v2/docs/records/l9t5/l9t5_drafts.out
+   bb631b8dafdbd5de v2/docs/records/efuse/efuse_check.out
+   f76dac5a2cc7cc24 v2/docs/records/l9stk/l9stk_protection.out
+   3dbd9bda6bce760d v2/docs/records/l8p/l8p_c4.out
+   94071bc12ccf5389 v2/docs/records/l9t5/l9t5_t10.out
+   2c590640a2f7322b v2/docs/records/l9t5/l9t5_f01.out
    4e6fa442cc3f45ee v2/docs/records/l8r2/l8r2_p0.out
-   d02b5d66c46aa81b v2/docs/records/l4e7/l4e7_p0sol.out
-   ee6475790e780d9d v2/docs/records/l8r2/l8r2_dist.out
+   a343ccfe29ba9a60 v2/docs/records/l4e7/l4e7_p0sol.out
+   64d7d7021d64d23f v2/docs/records/l8r2/l8r2_dist.out
    f8960d36a62b8ee9 v2/docs/records/l8r2/l8r2_dist.py
-   42f47948aee200fd v2/docs/records/l4e7/l4e7_p0sol.py
-   749a12c45d57b444 v2/docs/records/l9t5/l9t5_t10.py
+   7e2ff7f92aa518f9 v2/docs/records/l4e7/l4e7_p0sol.py
+   e91265091bfd67b0 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
    872cbf961ddd515e v2/docs/records/l8r2/l8r2_p0.py
@@ -204,9 +204,9 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    the solar entry (P0-7, record l4e7, merged at 5cc9cb9d; l4e7_p0sol.out pinned): board E composed here (section 2) and there in
      L4-E9's order with P0-7's sense, route B2 out of the baseline (record l4e7's C2 composition 296 parts); D-16 CORRECTED in draft; D-10 an
      UNRESOLVED PROTECTION DEFECT in the model (record l4e7 reads it so, E-1: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop
-     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2, out of the baseline, is an
-     unapproved PARTIAL interface proposal with no protection credit (the owner's item), and neither adopting nor declining it closes
-     D-10; the solar guard's trip against its demand is
+     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is UNSELECTED and WITHDRAWN AS
+     DRAFTED (record l4e7 reads it so), out of the baseline, with no protection credit and no owner item; it does not resolve D-10, and its P2/P3
+     defects are remaining engineering outside the baseline; the solar guard's trip against its demand is
      record l4e7's reading, not re-traced here
 
 9. THE THERMAL LIMITS (each at the air its record reads)
@@ -228,8 +228,9 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    rail trip's sense resistor
    (read on the composed board B by topology: R600 0.3R 1% 0805 for U40, R620 0.3R 1% 0805 for U50, R640 0.3R 1% 0805 for U60; taken at 0.3030 Ohm, its printed tolerance's top);
    against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked. The currents:
-   the LDO's printed 600 mA (its rating, not a demand); the hardware bound T10-A3 is judged at since Slot C's round 6 (the rail trip's
-   maximum 0.2452 A, l9t5_t10.out 10j (d): the trip holds a controller's average at 0.2183 to 0.2452 A whatever its firmware does); and L9T5-D8's
+   the LDO's printed 600 mA (its rating, not a demand); the bound T10-A3 is judged at since Slot C's round 6, the rail trip's AVERAGE
+   maximum 0.2452 A (l9t5_t10.out 10j (d): the trip holds a controller's average at 0.2183 to 0.2452 A; PROVISIONAL after cx46: a periodic
+   peak above it is not covered, and a latent rail-trip failure removes it); and L9T5-D8's
    0.4512 A (rev Y's held B5 row, SUPERSEDED in round 6; shown for the record)
    R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.6610 V against 3.7693 V: FAILS -0.1083 V
    R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.8138 V against 3.5213 V: holds +0.2925 V
@@ -254,15 +255,18 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    the headroom's other side: the pre-regulator's top under the AP2112K's 6.0 V input maximum at every set point (4.2907, 4.1651, 4.1174 V)
    the thermal side on revision V, criterion 125 C (a sustained state):
      without the containment, the babbling supervisor (0.2839 A; Slot C's part 22 rows, l9t5_t10.out 10i): R602 13.3 k 130.6 C (Slot C's MODEL) FAILS; R602 13.8 k 124.0 C (INFERRED, linear in the top) holds; R602 14.0 k 121.5 C (Slot C's MODEL) holds
-     with the containment composed, the rail trip's held maximum 0.2452 A, which bounds every sustained state whatever the firmware does
-     (10j (e), 76.25 C air):
+     with the containment composed, a constant current at the trip's average maximum 0.2452 A (10j (e), 76.25 C air; a constant-current
+     MODEL, not a bound: the trip holds an average):
        R602 13.3 k: 123.2 C (INFERRED, Slot C's 14.0 k figure scaled by the drop): holds, margin +1.8 K
        R602 13.8 k: 117.6 C (INFERRED, Slot C's 14.0 k figure scaled by the drop): holds, margin +7.4 K
        R602 14.0 k: 115.4 C (Slot C's MODEL): holds, margin +9.6 K
+     cx46's periodic countermodel under the trip (0.50 A for 0.40 s every 1.50 s; Slot C's reproduction, 10j (e)) at 14.0 k: 127.54 C,
+     OVER 125 C: the sustained thermal bound WITHDRAWN (Slot C), peak-current containment or a periodic electrothermal solution
+     REMAINING ENGINEERING
    DECISION L9T5-D9 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;
    reversed_by: none; its reasons restated on the containment after cx45): Slot C's set point delta (R602 14.0 k) is TAKEN, composed
    after iocpre on both boards (section 2; a separate draft, one writer a file). Why, over the connected circuit with the containment:
-   at 14.0 k every LDO's input holds its need at the hardware bound with the sense resistor's drop, with the return as drawn (+0.1311 V)
+   at 14.0 k every LDO's input holds its need at the trip's average maximum with the sense resistor's drop, as drawn (+0.1311 V)
    and with the dedicated return (+0.1787 V), and the trip's held average leaves the LDO at 115.4 C (+9.6 K); at 13.3 k that held current
    puts it at 123.2 C (INFERRED, +1.8 K: inside the model's own uncertainty, the LDO's 184 C/W with no board copper), and without the
    containment the babbling row there is 130.6 C, a demonstrated defect; the headroom's top 4.1174 V stays under the LDO's input maximum.
@@ -284,9 +288,8 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k; the band 3.87 to 4.18 V, its floor from the superseded
    L9T5-D8 row as drawn without the sense resistor, stricter than the hardware bound's, kept) and its guard mode (each LDO behind one
    sense resistor, L9T5-F25 restated)
-   FINDING L9T5-F27 (for the coordinator and Slot C; an identifier, no circuit): Slot C's T10-ROUND5.md section 12 names its containment
-   decision "L9T5-D9 (round 6)", the identifier of this SESSION decision on the set point (taken at 06077cee); the containment's writer
-   renames it (proposed: L9T5-D10); in this record L9T5-D9 is the set point
+   FINDING L9T5-F27 (an identifier, no circuit): Slot C's T10-ROUND5.md section 12 had named its containment decision "L9T5-D9
+   (round 6)", the identifier of this SESSION decision on the set point (taken at 06077cee): ANSWERED, Slot C renamed it L9T5-D10 (6b768b1e); in this record L9T5-D9 is the set point
    THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k and the containment composed, section 2): each
    regulator's temperature against 125 C per served state on revision V (Slot C's MODEL at 76.25 C air and the drop's worst corner,
    10j (e), the limiters' pull-ups counted, AVERAGE currents) and the trip's held average; after cx46 an average bound does not bound a
@@ -301,15 +304,16 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      B7a with the response                          0.1739 A  sustained  criterion 125 C: 104.0 C (margin +21.0 K)
      both fabrics faulted, responded                0.1806 A  sustained  criterion 125 C: 105.1 C (margin +19.9 K)
      a babbler, the limiters bounding it            0.1855 A  sustained  criterion 125 C: 105.8 C (margin +19.2 K)
-     the rail trip's held maximum                   0.2452 A  sustained  criterion 125 C: 115.4 C (margin  +9.6 K)
-   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance REMAINING ENGINEERING, section 11): the sustained-state margin +9.6 K on
-     revision V at the trip's held average (the largest served state +19.2 K); rev Y's rows no longer cover a revision X part (its
-     bounded state over the trip's least; HELD on
-     V-B20); the LDO input headroom of T10-A3's chain at the hardware bound +0.1311 V with the return as drawn and +0.1787 V with the
+     a constant current at the trip's average maximum 0.2452 A  sustained  criterion 125 C: 115.4 C (margin  +9.6 K)
+     cx46's countermodel under the trip                       periodic   criterion 125 C: 127.54 C (margin  -2.5 K)
+   RESULT, R602 14.0 k on the complete candidate (MODEL; the acceptance REMAINING ENGINEERING, section 11): on revision V +9.6 K at a
+     constant current at the trip's average maximum, -2.5 K under cx46's periodic countermodel (the largest served state +19.2 K);
+     rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on V-B20); the LDO input headroom of T10-A3's chain at the hardware bound +0.1311 V with the return as drawn and +0.1787 V with the
      dedicated return (the return's effect +0.0476 V), the top 4.1174 V under the LDO's 6.0 V maximum; the required service unchanged (only
      U601's set point moves and board B gains the containment: no load, rate, state or transmitter reduced, the supervisors' bounded
      state and C-DEV rev 2 as issued). THE WORST-CASE MARGIN ROW: PROVISIONAL/OPEN (no peak bound established, cx46 item 7; a latent rail-trip
-     failure removes the hardware bound, item 6): +9.6 K (thermal, at the trip's held average, rev V, MODEL) and +0.1311 V (the LDO's
+     failure removes the hardware bound, item 6): +9.6 K at a constant current at the trip's average maximum (rev V, MODEL), -2.5 K
+     under cx46's periodic countermodel, and +0.1311 V (the LDO's
      input, as drawn, at the hardware bound on an INFERRED dropout, PROVISIONAL on V-T10-DROP)
 
 11. THE CONNECTED VERDICT AND WHAT THIS CANDIDATE DOES NOT CLOSE (cx46 items 13 and 17; constitution section 2)
@@ -353,7 +357,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
      over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
    the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route
-     B2 out of the baseline (an unapproved PARTIAL interface proposal, the owner's item, with no protection credit), which does not close it
+     B2 UNSELECTED and WITHDRAWN AS DRAFTED, out of the baseline, no protection credit and no owner item; it does not close D-10
    L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's
      and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
 
@@ -382,6 +386,7 @@ acceptance: every figure below is a MODEL reading on the composed candidate.
    record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve yes
    every revision V T10 row holds its criterion at the taken set point on the MODEL; its acceptance reads REMAINING ENGINEERING while the peaks and the latent rail trip are open yes
    the final R602 figures keep a positive MODEL margin on average currents; the worst-case margin row reads PROVISIONAL/OPEN while the peaks or the latent rail trip are open yes
+   L9T5-F27 answered: Slot C's containment decision is L9T5-D10 and L9T5-D9 is this record's set point                           yes
    L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return (MODEL), Slot C's figure reproduced yes
    the connected electrical verdict reads REMAINING ENGINEERING, never a positive acceptance, while any fault row it depends on is open (cx46 items 13, 17) yes
 
