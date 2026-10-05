@@ -77,7 +77,7 @@ for it, because it would keep the regulator alive in a state the controller itse
 **(4) The composed changes against the calculation and the case row.** The contract draft's rows carry the record's figures (VOS3, at
 most 144 MHz, 2 % of every 100 ms, the 100 ms stop and the once-a-second probe, DAR = 1, PD2 and PB14 with 100 k, 500 kbit/s to
 1 Mbit/s): every one. The SHDN draft's nets read DRAWN in the regenerated board B netlist. C-DEV rev 2 as issued (copied verbatim
-into `inputs/cases-cdev-rev2-20261005.md` from `_runs/cases/CASES-2026-10-04.md` at sha256 349504b1...) carries this output's 0.2558 A,
+into `inputs/cases-cdev-rev2-20261005.md` from `_runs/cases/CASES-2026-10-04.md` at sha256 b2dfb4a6..., with its 16:25 clarification) carries this output's 0.2558 A,
 0.1732 A, 0.2396 A at TJ 111.8 C, 2.966 W, +5V_IOC 0.8989 A and 0.0069 A: every one equal. Its regulator figures are currents and stand;
 at the worst drop corner rev Y's 0.2558 A reads 125.2 C, which L9T5-D7 answers.
 
@@ -156,7 +156,7 @@ fitted figure; 0.2558 A stays the conservative one for power.
   independent check; L9T5-F22 (R602 14.0 k) offered".
 - The composition order (`l9t5_drafts.py`): `apply_gen_sch_b_canshdn.py` after `apply_gen_sch_b_iocpre.py`, and a row for it in L4-E9's
   change list (L9T5-F20). `inputs/SOURCES.txt`: one line for `inputs/cases-cdev-rev2-20261005.md` (the C-DEV rev 2 section of
-  `_runs/cases/CASES-2026-10-04.md` at sha256 349504b1152681fa..., copied verbatim, 5 October 2026).
+  `_runs/cases/CASES-2026-10-04.md` at sha256 b2dfb4a643f9f997..., copied verbatim with its 16:25 clarification, 5 October 2026).
 
 ## 10. Findings for other authors
 
@@ -164,6 +164,11 @@ L9T5-F18 (board B's generator owner): SHDN on no net, answered by the draft. L9T
 exceed the transceivers' 14 V bus pins; a clearance is a layout means, not credited. L9T5-F20 (Layer 6 and L4-E9): PD2 and PB14 become
 outputs; R67, R68, R79, R80, R91, R92 need order codes; the draft needs its change-list row. L9T5-F21 (Layer 5, IOHA section 12): a
 babbling supervisor is in no FMEA row. L9T5-F22 (Slot A, the T10 drafts' owner): the set point at 14.0 k, section 3 (1).
+L9T5-F23 (Layer 6, part identities and procurement): L9T5-D7 fits silicon revision V. The order code STM32H743VIT6 fixes no
+revision (L9T5-F14); CON-017 (5) already reads the marking (V or X) and REV_ID at goods-in, so D7 narrows the accepted lots to V.
+Consequence: if the distributor's stock is rev X only, the lot is held until the supplier's V-B20 reads a rev X part at or under
+0.2318 A, or until L9T5-F22's set point (R602 14.0 k) is drafted and checked, which admits either revision on printed rows. No
+purchase is made and no supplier is asked here; lot availability of rev V against rev X is not read (no distributor query sent).
 
 ## 11. Reproduce
 
