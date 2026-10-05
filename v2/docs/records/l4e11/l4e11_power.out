@@ -1611,7 +1611,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
 
 23. ROUND 13: DELTA-02, E11-29'S METHOD ON THREE PARALLELED BODY DIODES, AND SECTION 20c ON MURATA'S PRINTED POINTS (4 October 2026; C-PROT rev 1)
    23a. THE DEFECT (the owner's supplier-delta review of 4 October 2026, DELTA-02, P1; NETLIST, MAKER, INFERRED)
-     the draft: af182bdda59d060a v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+     the draft: 0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py
        draws Q39, Q40 and Q42 by one statement: every gate on CH_BATDRV, every drain on CH_BATQ, every source on VBAT: no terminal has a net of its own
      the part (Nexperia BUK6Y10-30P, 17 April 2020): Table 2 (p.2) pins 1 to 3 source, 4 gate, the mounting base the drain, the symbol's diode
        from drain to source of this P-channel part; the source-drain diode rows IS 80 A (p.3) and VSD 0.7 V typical, 1.2 V at most at 80 A
@@ -1954,7 +1954,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
        monitor the demonstration validates, stay on the fixture for the runs
      V8 RESTATED: in every case at its steady endpoint, each heating lead's measured net heat at its joint, plus its uncertainty, at most
        the requirement; else INCONCLUSIVE (it judges the residual, not a controller's state)
-   26c. CONSTRUCTION GUIDANCE (recommendations from V2RF and V2RG, NOT the qualification): a heater beyond the pair, the span from the
+   26c. CONSTRUCTION GUIDANCE (recommendations from V2RF and V2RG, NOT the qualification; SESSION): a heater beyond the pair, the span from the
      joint unheated and lagged; TC2 on the copper under a thin film; a mid-span thermocouple; the palm's loss with its spread; the crimp's
      and the palm contact's heat read four-wire; the thermocouple wires routed along the lead; a DC (linear) drive from a floating supply,
      or the drive held through each reading window (V2RG-m5); a guard long enough (V2RG's model: under 4 mW at 0.5 m); the band supply's
