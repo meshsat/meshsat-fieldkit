@@ -8,20 +8,20 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    d4f7fa953a9541fe v2/docs/records/l4e9/l4e9_power_path.py
    3b2374d10186b913 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   38879f3ac22cf773 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   63769e7a2d15de1d v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    7b54d7ac587eab81 v2/docs/records/l9pwr/l9pwr_budget.out
-   094ba05fa7d0237a v2/docs/records/l9t5/l9t5_drafts.out
+   99e0037be8844342 v2/docs/records/l9t5/l9t5_drafts.out
    7205a24508a1284f v2/docs/records/efuse/efuse_check.out
    65a8ea907633c104 v2/docs/records/l9stk/l9stk_protection.out
    eee720dba6702bbf v2/docs/records/l8p/l8p_c4.out
-   8d876c565646d8d8 v2/docs/records/l9t5/l9t5_t10.out
+   abe5e22df879707f v2/docs/records/l9t5/l9t5_t10.out
    4b6cfb0ce7f754e6 v2/docs/records/l9t5/l9t5_f01.out
    424e078b5d11f52e v2/docs/records/l8r2/l8r2_p0.out
    d02b5d66c46aa81b v2/docs/records/l4e7/l4e7_p0sol.out
-   09744f640513a59d v2/docs/records/l8r2/l8r2_dist.out
-   20bc65b077167ea8 v2/docs/records/l8r2/l8r2_dist.py
+   224800bbefe53989 v2/docs/records/l8r2/l8r2_dist.out
+   817abe269b8df90a v2/docs/records/l8r2/l8r2_dist.py
    42f47948aee200fd v2/docs/records/l4e7/l4e7_p0sol.py
-   0041a749eb1f84c7 v2/docs/records/l9t5/l9t5_t10.py
+   749a12c45d57b444 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
    3fbc2cd9fc2542fa v2/docs/records/l8r2/l8r2_p0.py
@@ -30,7 +30,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    e03d39014a2b679a v2/docs/records/efuse/efuse_check.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
-   aaf029ca2dda67b3 v2/docs/records/l9t5/check_l9t5_netlist.py
+   b320ec96d2bfabcd v2/docs/records/l9t5/check_l9t5_netlist.py
    710c23941383419c v2/docs/records/l8p/check_l8p_netlist.py
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
@@ -55,14 +55,14 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      at rest), which is a different state; each figure below names its row
 
 2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and
-   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-244 for the drafts
-   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 116 changes, every
+   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-245 for the drafts
+   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 117 changes, every
    order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: yes; WITHDRAWN: R-210, R-212, R-211
    board A: 26 drafts, every one applied; regenerated rc 0: 838 parts, 0 unplaced, intent written True, designators unique
      l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l8p/thgfs R-244; l9t5/iocbuck R-223; l9t5/iocpre R-224; l9t5/iocset R-242; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
-   board B: 17 drafts, every one applied; regenerated rc 0: 1437 parts, 0 unplaced, intent written True, designators unique
-     l8gnd/gnd002 R-195; l8r2/fans12 R-190; l8r2/fandec R-228; l8r2/panel5v R-229; l8r2/ph4 R-230; l8r2/rt500 R-203; l8r2/gndret R-231; l8r2/gndrtn R-232; l9t5/iocbuck R-233; l9t5/iocpre R-234; l9t5/iocset R-243; l9t5/canshdn R-235; efuse/u23ilm R-236; efuse/u24ilm R-237; l6r2/xal_land order-free; l6r2/lcsc order-free; l6r2/intent order-free
+   board B: 18 drafts, every one applied; regenerated rc 0: 1515 parts, 0 unplaced, intent written True, designators unique
+     l8gnd/gnd002 R-195; l8r2/fans12 R-190; l8r2/fandec R-228; l8r2/panel5v R-229; l8r2/ph4 R-230; l8r2/rt500 R-203; l8r2/gndret R-231; l8r2/gndrtn R-232; l9t5/iocbuck R-233; l9t5/iocpre R-234; l9t5/iocset R-243; l9t5/canshdn R-235; l9t5/iocguard R-245; efuse/u23ilm R-236; efuse/u24ilm R-237; l6r2/xal_land order-free; l6r2/lcsc order-free; l6r2/intent order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
    board D: 4 drafts, every one applied; regenerated rc 0: 254 parts, 0 unplaced, intent written True, designators unique
      d8dec31/ptt R-239; l9t5/paloop R-238; l6r2/intent order-free; l6r2/lcsc order-free
@@ -72,7 +72,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
    board E is record l4e7's own baseline composition (ORDER_E, imported; no route B2 step: it is out of the baseline): the same order
    record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap, T10's
-     set point delta and record l8p's fail-safe delta (both later than its round 2) and the last taker: yes, both boards (V6-m3 answered)
+     set point delta, record l8p's fail-safe delta and the supervisors' containment (later than its round 2) and the last taker: yes, both boards (V6-m3 answered)
    d8dec31's mainpb, the last next-free taker: R603, C607 on MAIN_PB (V6 read R603 and C607; the register's R-193 text names R233 and C241
      for the round without the later drafts: R-194, its fixed references, stays a MISSING DRAFT for d8dec31's owner)
    d8dec31's ptt on board D: its next-free picks (the 1 k series parts and the BAT46W) D15, D16, D17, D18, R96, R97; the PA cap's fixed R57, R58, C76: True
@@ -124,12 +124,16 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      excursions over the least limit only under the fault timer's least 0.282 ms (E-10, the supplier's bring-up bench)
    the required service unchanged: the case's load set copied whole (v8 = dict(vals)) and only 'VHF PA 30 W' replaced, by the cap's top 97.24 W
      (no transmitter, fan or load reduced; the loop's own 0.018 W added): yes (read with ast)
-   the CAN mechanism (the supervisors' quorum; Slot C's T10, l9t5_t10.out 10h): FW-B21's 2 % share leaves 7 frames a 100 ms window at
-     500 kbit/s and 14 at 1 Mbit/s against the need of 9 (NOT inside at 500 kbit/s: the state frames fit, the event burst spreads over two
-     windows, inside REQ-004's 30 s; 125 kbit/s excluded by FW-B21) on an ASSUMED message set (the tree defines no CAN rate: V-B21,
-     the firmware's to confirm): the quorum's service under the bound PROVISIONAL; under a BABBLING supervisor (a sustained fault no
-     hardware ends) the quorum may stop and the voters hold the home assignment: the service is NOT ESTABLISHED there (L9T5-F21 OPEN,
-     the containment Slot C's question Q3 of cx45). The R602 change moves no CAN rate, share or state; it changes the LDOs' heat only
+   the CAN mechanism (the supervisors' quorum; Slot C's T10): round 5's ASSUMED set (l9t5_t10.out 10h: 9 frames a window against
+     FW-B21's 7 at 500 kbit/s, NOT inside) is replaced by FW-B22's schedule (Slot C's round 6, 10j (a), drafted in the firmware contract):
+     per supervisor and fabric one state frame and at most five event frames a 100 ms window, 822 dominant bit-times with 12
+     acknowledgements against FW-B21's 1000 at 500 kbit/s (2000 at 1 Mbit/s): inside; the bus 4.9 % loaded; a state frame waits at most 4.6 ms;
+     the quorum's decision within 100 ms plus 4.6 ms: the service under the bound PROVISIONAL (a drafted schedule; V-B21, V-B22 the
+     firmware's to confirm); under a BABBLING supervisor through its FDCAN, with the containment composed here (Slot C's round 6, 10j;
+     CORRECTED IN DRAFT, UNCHECKED): its transceivers silenced in hardware within 227 ms, the voters holding the home assignment
+     meanwhile (row 8) and the other two serving after: PROVISIONAL; NOT ESTABLISHED for a TX pin repurposed as a GPIO and toggled
+     under the limiter's least share, and after a latent stuck comparator (V-B22, V-B23): L9T5-F21 OPEN on those, handed over as
+     remaining engineering. The R602 change moves no CAN rate, share or state; it changes the LDOs' heat only
 
 6. EVERY CONVERTER ON THE CONNECTED PATH (its input or loop current against its limit; the case each row is read on)
    U13 (the PA rail, LM5176 average loop on R55): the cap's top 6.9259 A plus R55's other loads 0.0004 A against U13's least 7.0338 A with R55
@@ -142,6 +146,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      only, which I-03 has taken off U7; l9t5_drafts.out, l8r2_p0.out), under the loop by 1.0598 A
    U601 (+5V_IOC, TPS62933, 3 A PRINTED): 1.4749 A on C-DEV rev 1 (+5V_IOC 1.3800 A), 0.9607 A on rev 2 (+5V_IOC 0.8989 A; CONDITIONAL on
      FW-B20 and FW-B21); its declared peak 1.4749 A (DECLARED, the unbounded supervisors)
+     the containment composed (Slot C's round 6): the limiters' pull-ups raise each supervisor's bounded state to 0.1739 A on rev V against
+     rev 2's 0.1732 A, inside the 0.2558 A cover the rev 2 row carries (rev Y's bounded state): no case row changes (10j (e))
    every other converter: the case's own load set (section 5), unchanged by this round
 
 7. THE FEED AND RETURN CONDUCTORS AGAINST THEIR PRINTED RATINGS
@@ -154,13 +160,13 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: the sockets PLACED on the drawn boards with their
      courtyards and the return SOLVED as a distributed network at the copper, temperature, fill and contact corners; the composed
      netlists carry 6 lead contacts, 17 ribbon ground conductors and 3 return sockets whole on both boards, the conductors it solves)
-     C-DEV rev 2                20.4746 A: +76.25 C VH 4.6140 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4543 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.5712 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 4.9921 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5584 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.3856 A (printed 35.0000 holds, least 35.0000 holds)
-     C-DEV rev 1                20.9888 A: +76.25 C VH 4.7273 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4628 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.6783 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.1042 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5692 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.5135 A (printed 35.0000 holds, least 35.0000 holds)
-     the largest steady state   22.8711 A: +76.25 C VH 5.2651 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.5124 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 6.1226 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.6977 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.6292 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 7.0344 A (printed 35.0000 holds, least 35.0000 holds)
-     the declared upper bound   27.8159 A: +76.25 C VH 6.4392 A (printed 10.0000 holds, least 5.9948 OVER); +76.25 C RIB 0.6371 A (printed 1.0000 holds, least 0.5995 OVER); +76.25 C RET 7.5408 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 6.9638 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.7806 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 8.6491 A (printed 35.0000 holds, least 35.0000 holds)
+     C-DEV rev 2                20.4746 A: +76.25 C VH 4.6150 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4470 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.5836 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.0023 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5505 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.3978 A (printed 35.0000 holds, least 35.0000 holds)
+     C-DEV rev 1                20.9888 A: +76.25 C VH 4.6655 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.4556 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 5.6906 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.0634 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.5615 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 6.5257 A (printed 35.0000 holds, least 35.0000 holds)
+     the largest steady state   22.8711 A: +76.25 C VH 5.2787 A (printed 10.0000 holds, least 5.9948 holds); +76.25 C RIB 0.5054 A (printed 1.0000 holds, least 0.5995 holds); +76.25 C RET 6.1346 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 5.7119 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.6217 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 7.0463 A (printed 35.0000 holds, least 35.0000 holds)
+     the declared upper bound   27.8159 A: +76.25 C VH 6.4485 A (printed 10.0000 holds, least 5.9948 OVER); +76.25 C RIB 0.6299 A (printed 1.0000 holds, least 0.5995 OVER); +76.25 C RET 7.5531 A (printed 35.0000 holds, least 25.1101 holds); -20.00 C VH 6.9741 A (printed 10.0000 holds, least 10.0000 holds); -20.00 C RIB 0.7729 A (printed 1.0000 holds, least 1.0000 holds); -20.00 C RET 8.6613 A (printed 35.0000 holds, least 35.0000 holds)
      every printed row holds; the service cases (C-DEV rev 2, the largest steady state) hold on the least ratings too; over the INFERRED
      least only the declared upper bound at 76.25 C (VH pin 2 with its pin 1, L8R2-F43; the ribbon, L8R2-F44, a placed fourth lead its
-     route, not drafted: L8R2-D11); the ground shift at the supervisors' LDOs at most 0.0206 V on the service cases (section 10 uses it)
+     route, not drafted: L8R2-D11); the ground shift at the supervisors' LDOs at most 0.0205 V on the service cases (section 10 uses it)
      V6-B1: CORRECTED IN DRAFT on the desk model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed
      extraction) and the stages beside their connectors on board A; the targeted recheck decides. V6-B2's indirect paths bounded with
      vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL
@@ -180,7 +186,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      CONDITIONAL) and the cells' 24 A: yes; excursions over its least only under the fault timer's least (E-10, the supplier's bench)
    the PA cap (U553, PROVISIONAL): band 6.3518 to 6.9259 A; demand the 30 W service: NOT ESTABLISHED (B-PA1; the maker's 6.0 A is an
      EXAMPLE); its top under the PRINTED ratings downstream: J_PA's VH 10 A yes, U551's 15 A continuous yes; under J_PA's least at
-     76.25 C (5.9948 A, INFERRED): NO (L9T5-F25, L8R2-F43's vendor task); under U13's own least loop 7.0338 A with R55's other loads: yes,
+     76.25 C (5.9948 A, INFERRED): NO (L9T5-F26, L8R2-F43's vendor task); under U13's own least loop 7.0338 A with R55's other loads: yes,
      so the cap acts first and U13's loop is the backstop
    the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9 after cx45 Q5: TWO PATHS sharing only the pour and
      the loop, path 1 round 8's guard with the cold clamp, path 2 U62 on VBAT through U63 with its own shunt Q61 on DOCK_EN_OUT; drawn by
@@ -188,7 +194,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      as held (118.0 C, 9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) on each switch's PRINTED limits (l8p_c4.out 10c (a)); the trip
      within 43.8 ms on path 1 and 40.0 ms on path 2 (10c (b)), under the RC hold; no single failure removes the trip (10c (2)); the FETs' 150 C behind it (DD-2 with
      Q42, condition C3). NOT established: the double failure after a latent first one (L8P-R9-F1, handed over as remaining engineering);
-     the guard's DOCK_EN_OUT draw at 40 uA cold and 50 uA tripped against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;
+     the guard's DOCK_EN_OUT draw at most 36.00 uA cold and 47.02 uA tripped (PRINTED maxima, the worst single fault; the loop's allowances
+     40 and 50 uA hold) against the 30 uA row of Layer 5 and record l9stk 15.9 (L8P-R9-F2;
      L4-E11 section 28 restates 20c and 20f on them, record l9stk's re-take owed); V6-m7 and the common path CORRECTED IN DRAFT, UNCHECKED
    the solar entry (P0-7, record l4e7, merged at 5cc9cb9d; l4e7_p0sol.out pinned): board E composed here (section 2) and there in
      L4-E9's order with P0-7's sense, route B2 out of the baseline (record l4e7's C2 composition 296 parts); D-16 CORRECTED in draft; D-10 an
@@ -207,67 +214,92 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      limit is taken at that temperature (printed TCR), so the coordination of section 8 carries R55's own heating
    the battery FETs at the 18 A service: 118.0 C with the guard 9.0 to 15.0 K above (record l9stk; DD-2 with Q42, condition C3)
 
-10. L9T5-F22, SLOT C'S SET POINT DELTA (R602 14.0 k, apply_gen_sch_?_iocset.py), JUDGED OVER THE CONNECTED CIRCUIT (the owner's
-   part 22 item 3) AND SESSION DECISION L9T5-D9
+10. L9T5-F22, SLOT C'S SET POINT DELTA (R602 14.0 k, apply_gen_sch_?_iocset.py), JUDGED OVER THE CONNECTED CIRCUIT WITH THE
+   CONTAINMENT (Slot C's round 6, composed in section 2; the owner's part 22 item 3) AND SESSION DECISION L9T5-D9
    each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's
-   2 % copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: 42.52 mOhm, hot wire and two contacts) and the ground shift
+   2 % copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: 42.52 mOhm, hot wire and two contacts), the ground shift
    between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the PLACED distributed
-   model's largest on the service cases, l8r2_dist.out, which replaces the one-node 0.0114 V); against the AP2112K's need (its VOUT
-   maximum, load regulation and dropout); MODEL on PRINTED terms except where marked
-   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (dropout PRINTED): input 3.8428 V against 3.7693 V: holds +0.0735 V
-   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.8618 V against 3.6652 V: holds +0.1966 V
-   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0206 V, 0.6000 A a LDO (dropout PRINTED): input 3.8903 V against 3.7693 V: holds +0.1210 V
-   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0206 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.9093 V against 3.6652 V: holds +0.2441 V
-   R602 13.8 k (least 3.9517 V, top 4.1651 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (dropout PRINTED): input 3.7258 V against 3.7693 V: FAILS -0.0435 V
-   R602 13.8 k (least 3.9517 V, top 4.1651 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7448 V against 3.6652 V: holds +0.0796 V
-   R602 13.8 k (least 3.9517 V, top 4.1651 V), return with the dedicated return shift 0.0206 V, 0.6000 A a LDO (dropout PRINTED): input 3.7734 V against 3.7693 V: holds +0.0041 V
-   R602 13.8 k (least 3.9517 V, top 4.1651 V), return with the dedicated return shift 0.0206 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7924 V against 3.6652 V: holds +0.1272 V
-   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (dropout PRINTED): input 3.6814 V against 3.7693 V: FAILS -0.0879 V
-   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7004 V against 3.6652 V: holds +0.0352 V
-   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0206 V, 0.6000 A a LDO (dropout PRINTED): input 3.7289 V against 3.7693 V: FAILS -0.0404 V
-   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0206 V, 0.4512 A a LDO (dropout INFERRED between the printed 300 and 600 mA): input 3.7479 V against 3.6652 V: holds +0.0827 V
-   the headroom's other side: the pre-regulator's top under the AP2112K's 6.0 V input maximum at every set point (4.2907, 4.1174 V)
-   the thermal side, the babbling supervisor on revision V (a SUSTAINED state, 125 C; 0.2839 A; Slot C's part 22 rows, l9t5_t10.out 10i):
-     R602 13.3 k: 130.6 C (Slot C's MODEL): FAILS
-     R602 13.8 k: 124.0 C (INFERRED, linear in the top): holds
-     R602 14.0 k: 121.5 C (Slot C's MODEL): holds
-     every revision V sustained row at 14.0 k at most 121.5 C (Slot C)
+   model's largest on the service cases, l8r2_dist.out, which replaces the one-node 0.0114 V) and its own rail trip's sense resistor
+   (read on the composed board B by topology: R600 0.3R 1% 0805 for U40, R620 0.3R 1% 0805 for U50, R640 0.3R 1% 0805 for U60; taken at 0.3030 Ohm, its printed tolerance's top);
+   against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked. The currents:
+   the LDO's printed 600 mA (its rating, not a demand); the hardware bound T10-A3 is judged at since Slot C's round 6 (the rail trip's
+   maximum 0.2452 A, l9t5_t10.out 10j (d): the trip holds a controller's average at 0.2183 to 0.2452 A whatever its firmware does); and L9T5-D8's
+   0.4512 A (rev Y's held B5 row, SUPERSEDED in round 6; shown for the record)
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.6610 V against 3.7693 V: FAILS -0.1083 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.8138 V against 3.5213 V: holds +0.2925 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.7251 V against 3.6652 V: holds +0.0599 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0205 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.7086 V against 3.7693 V: FAILS -0.0607 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0205 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.8614 V against 3.5213 V: holds +0.3401 V
+   R602 13.3 k (least 4.0711 V, top 4.2907 V), return with the dedicated return shift 0.0205 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.7727 V against 3.6652 V: holds +0.1075 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.5440 V against 3.7693 V: FAILS -0.2253 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return as drawn                  shift 0.0681 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.6968 V against 3.5213 V: holds +0.1755 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.6081 V against 3.6652 V: FAILS -0.0571 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return with the dedicated return shift 0.0205 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.5917 V against 3.7693 V: FAILS -0.1776 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return with the dedicated return shift 0.0205 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.7445 V against 3.5213 V: holds +0.2231 V
+   R602 13.8 k (least 3.9517 V, top 4.1651 V), return with the dedicated return shift 0.0205 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.6558 V against 3.6652 V: FAILS -0.0094 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.4996 V against 3.7693 V: FAILS -0.2697 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.6524 V against 3.5213 V: holds +0.1311 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return as drawn                  shift 0.0681 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.5637 V against 3.6652 V: FAILS -0.1015 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0205 V, 0.6000 A a LDO (the rating; dropout PRINTED): input 3.5472 V against 3.7693 V: FAILS -0.2221 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0205 V, 0.2452 A a LDO (the hardware bound; dropout INFERRED between the printed 10 and 300 mA): input 3.7000 V against 3.5213 V: holds +0.1787 V
+   R602 14.0 k (least 3.9063 V, top 4.1174 V), return with the dedicated return shift 0.0205 V, 0.4512 A a LDO (L9T5-D8, superseded; dropout INFERRED between the printed 300 and 600 mA): input 3.6113 V against 3.6652 V: FAILS -0.0539 V
+   the composed chain against Slot C's 10j (d) at 14.0 k with the return as drawn: input 3.6524 V against 3.5213 V (Slot C: 3.6524 V against
+     3.5213 V): the same
+   the headroom's other side: the pre-regulator's top under the AP2112K's 6.0 V input maximum at every set point (4.2907, 4.1651, 4.1174 V)
+   the thermal side on revision V, criterion 125 C (a sustained state):
+     without the containment, the babbling supervisor (0.2839 A; Slot C's part 22 rows, l9t5_t10.out 10i): R602 13.3 k 130.6 C (Slot C's MODEL) FAILS; R602 13.8 k 124.0 C (INFERRED, linear in the top) holds; R602 14.0 k 121.5 C (Slot C's MODEL) holds
+     with the containment composed, the rail trip's held maximum 0.2452 A, which bounds every sustained state whatever the firmware does
+     (10j (e), 76.25 C air):
+       R602 13.3 k: 123.2 C (INFERRED, Slot C's 14.0 k figure scaled by the drop): holds, margin +1.8 K
+       R602 13.8 k: 117.6 C (INFERRED, Slot C's 14.0 k figure scaled by the drop): holds, margin +7.4 K
+       R602 14.0 k: 115.4 C (Slot C's MODEL): holds, margin +9.6 K
    DECISION L9T5-D9 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;
-   reversed_by: none): Slot C's set point delta (R602 14.0 k) is TAKEN, composed after iocpre on both boards (section 2; a separate
-   draft, one writer a file). Why, over the connected circuit: at 13.3 k the babbling row is a sustained state over 125 C (130.6 C), a
-   demonstrated defect on the model that the desk corrects; at 14.0 k it holds (121.5 C) and every LDO's input stays over its need at
-   every current the record computes, with the return as drawn (+0.0352 V) and with the dedicated return (+0.0827 V); the headroom's top
-   4.1174 V stays under the LDO's input maximum. What it costs: T10-A3 at the LDO's printed full 600 mA, which 13.3 k met (+0.0735 V, +0.1210 V),
-   fails at 14.0 k (-0.0879 V, -0.0404 V): 600 mA is the regulator's rating, not a demand; a supervisor drawing more than 0.4512 A is in a
-   fault its own brown-out reset ends while the other two hold the quorum (Slot C's T10-A3 restatement, SESSION L9T5-D8, taken with it)
-   ADAPTATION REJECTED: R602 13.8 k (E192 at 0.1 %) would hold the 600 mA row only with the dedicated return (+0.0041 V; as drawn -0.0435 V)
-   and the babbler at 124.0 C (INFERRED): both margins inside the model's own uncertainty (the LDO's 184 C/W with no board copper)
-   PROVISIONAL (amendment 1): the dropout at 0.4512 A is INFERRED between two printed points: the supplier's validation task V-T10-DROP:
-   three AP2112K-3.3 specimens of the fitted lot, dropout at 0.45 A and TJ 125 C at most 301 mV (or Diodes' printed statement)
-   L9T5-D7 (revision V fitted) STAYS a constraint, not a fallback: on rev Y's rows the babbler is over 125 C at 14.0 k too (Slot C, 10i);
-   check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k, the band 3.87 to 4.18 V from the two criteria above)
-   THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k composed, section 2): each regulator's
-   temperature against its criterion per state (Slot C's MODEL at 76.25 C and the drop's worst corner), revision V fitted and rev Y's
-   rows as the cover for a rev X part:
-     the bounded state (FW-B20, FW-B21)     sustained  criterion 125 C: rev V 103.9 C (margin +21.1 K); rev Y 117.1 C (margin  +7.9 K)
-     B1 with the response                   sustained  criterion 125 C: rev V 104.3 C (margin +20.7 K); rev Y 117.4 C (margin  +7.6 K)
-     B2 with the response                   sustained  criterion 125 C: rev V 104.3 C (margin +20.7 K); rev Y 117.4 C (margin  +7.6 K)
-     B3 with the response                   sustained  criterion 125 C: rev V 103.9 C (margin +21.1 K); rev Y 117.1 C (margin  +7.9 K)
-     B4 with the response                   sustained  criterion 125 C: rev V 104.4 C (margin +20.6 K); rev Y 117.6 C (margin  +7.4 K)
-     B5 with the response                   sustained  criterion 125 C: rev V 104.3 C (margin +20.7 K); rev Y 117.5 C (margin  +7.5 K)
-     B6 with the response                   sustained  criterion 125 C: rev V 103.9 C (margin +21.1 K); rev Y 117.0 C (margin  +8.0 K)
-     B7a with the response                  sustained  criterion 125 C: rev V 103.9 C (margin +21.1 K); rev Y 117.1 C (margin  +7.9 K)
-     B7b, SHDN obeyed                       sustained  criterion 125 C: rev V 103.1 C (margin +21.9 K); rev Y 116.3 C (margin  +8.7 K)
-     B7b, SHDN ignored (L9T5-D5)            sustained  criterion 125 C: rev V 112.7 C (margin +12.3 K); rev Y 125.9 C (margin  -0.9 K)
-     both fabrics faulted, responded        sustained  criterion 125 C: rev V 104.9 C (margin +20.1 K); rev Y 118.1 C (margin  +6.9 K)
-     hung, DAR mis-set (the IWDG ends it)   transient  criterion 150 C: rev V 110.5 C (margin +39.5 K); rev Y 123.7 C (margin +26.3 K)
-     babbling (nothing ends it)             sustained  criterion 125 C: rev V 121.5 C (margin  +3.5 K); rev Y 134.7 C (margin  -9.7 K)
-   RESULT, R602 14.0 k on the complete candidate: the worst sustained-state margin +3.5 K on revision V (the babbling supervisor)
-     and -9.7 K on rev Y's cover (rev X stays held on V-B20); the LDO input headroom of T10-A3's chain at the largest computed current
-     +0.0352 V with the return as drawn and +0.0827 V with the dedicated return (the return's effect +0.0475 V), the top 4.1174 V under the
-     LDO's 6.0 V maximum; the required service unchanged (only U601's set point moves: no load, rate, state or transmitter reduced,
-     the supervisors' bounded state and C-DEV rev 2 as issued). The worst-case margins: +3.5 K (thermal, the babbling state, rev V)
-     and +0.0352 V (the LDO's input, as drawn, at the largest computed current on an INFERRED dropout, PROVISIONAL on V-T10-DROP)
+   reversed_by: none; its reasons restated on the containment after cx45): Slot C's set point delta (R602 14.0 k) is TAKEN, composed
+   after iocpre on both boards (section 2; a separate draft, one writer a file). Why, over the connected circuit with the containment:
+   at 14.0 k every LDO's input holds its need at the hardware bound with the sense resistor's drop, with the return as drawn (+0.1311 V)
+   and with the dedicated return (+0.1787 V), and the trip's held maximum leaves the LDO at 115.4 C (+9.6 K); at 13.3 k that held current
+   puts it at 123.2 C (INFERRED, +1.8 K: inside the model's own uncertainty, the LDO's 184 C/W with no board copper), and without the
+   containment the babbling row there is 130.6 C, a demonstrated defect; the headroom's top 4.1174 V stays under the LDO's input maximum.
+   What it costs: with the sense resistor in the path, T10-A3 at the LDO's printed 600 mA fails at every set point (13.3 k -0.1083 V,
+   -0.0607 V; 14.0 k -0.2697 V, -0.2221 V): 600 mA is the regulator's rating, not a demand; L9T5-D8's superseded 0.4512 A (rev Y's held B5
+   row, the cover for the held revision X) holds at 13.3 k (+0.0599 V, +0.1075 V) and not at 14.0 k (-0.1015 V, -0.0539 V): no fitted state
+   reaches it, because a revision X part must stay under the trip's least 0.2183 A in its bounded state (V-B20, 10j (f)), and a draw over
+   the hardware bound is a fault the trip ends while the other two hold the quorum (Slot C's round 6 restatement, which supersedes
+   SESSION L9T5-D8)
+   ADAPTATION REJECTED: R602 13.8 k was to keep the 600 mA row; with the sense resistor that row fails there too (-0.2253 V as drawn,
+   -0.1776 V with the dedicated return), so 13.8 k only gives up thermal margin (the trip's held maximum at 117.6 C, INFERRED)
+   PROVISIONAL (amendment 1): the dropout at the hardware bound 0.2452 A is INFERRED between the printed 10 and 300 mA points (164 mV):
+   the supplier's validation task V-T10-DROP, restated on the hardware bound: three AP2112K-3.3 specimens of the fitted lot, dropout at
+   0.2452 A and TJ 125 C at most 164 mV (or Diodes' printed statement)
+   L9T5-D7 (revision V fitted) STAYS a constraint, not a fallback: with the containment rev Y's bounded state is over the trip's least
+   current, so revision X stays HELD on V-B20 (Slot C, 10j (f));
+   check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k; the band 3.87 to 4.18 V, its floor from the superseded
+   L9T5-D8 row as drawn without the sense resistor, stricter than the hardware bound's, kept) and its guard mode (each LDO behind one
+   sense resistor, L9T5-F25 restated)
+   FINDING L9T5-F27 (for the coordinator and Slot C; an identifier, no circuit): Slot C's T10-ROUND5.md section 12 names its containment
+   decision "L9T5-D9 (round 6)", the identifier of this SESSION decision on the set point (taken at 06077cee); the containment's writer
+   renames it (proposed: L9T5-D10); in this record L9T5-D9 is the set point
+   THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k and the containment composed, section 2): each
+   regulator's temperature against 125 C per served state on revision V (Slot C's MODEL at 76.25 C air and the drop's worst corner,
+   10j (e), the limiters' pull-ups counted) and the trip's held maximum, which bounds every sustained state whatever the firmware does:
+     the bounded state with the limiters' pull-ups  0.1739 A  sustained  criterion 125 C: 104.0 C (margin +21.0 K)
+     B1 with the response                           0.1763 A  sustained  criterion 125 C: 104.4 C (margin +20.6 K)
+     B2 with the response                           0.1763 A  sustained  criterion 125 C: 104.4 C (margin +20.6 K)
+     B3 with the response                           0.1743 A  sustained  criterion 125 C: 104.1 C (margin +20.9 K)
+     B4 with the response                           0.1772 A  sustained  criterion 125 C: 104.5 C (margin +20.5 K)
+     B5 with the response                           0.1767 A  sustained  criterion 125 C: 104.4 C (margin +20.6 K)
+     B6 with the response                           0.1738 A  sustained  criterion 125 C: 104.0 C (margin +21.0 K)
+     B7a with the response                          0.1739 A  sustained  criterion 125 C: 104.0 C (margin +21.0 K)
+     both fabrics faulted, responded                0.1806 A  sustained  criterion 125 C: 105.1 C (margin +19.9 K)
+     a babbler, the limiters bounding it            0.1855 A  sustained  criterion 125 C: 105.8 C (margin +19.2 K)
+     the rail trip's held maximum                   0.2452 A  sustained  criterion 125 C: 115.4 C (margin  +9.6 K)
+   RESULT, R602 14.0 k on the complete candidate: the worst sustained-state margin +9.6 K on revision V (the trip's held maximum; the
+     largest served state +19.2 K); rev Y's rows no longer cover a revision X part (its bounded state over the trip's least; HELD on
+     V-B20); the LDO input headroom of T10-A3's chain at the hardware bound +0.1311 V with the return as drawn and +0.1787 V with the
+     dedicated return (the return's effect +0.0476 V), the top 4.1174 V under the LDO's 6.0 V maximum; the required service unchanged (only
+     U601's set point moves and board B gains the containment: no load, rate, state or transmitter reduced, the supervisors' bounded
+     state and C-DEV rev 2 as issued). The worst-case margins: +9.6 K (thermal, the trip's held maximum, rev V) and +0.1311 V (the LDO's
+     input, as drawn, at the hardware bound on an INFERRED dropout, PROVISIONAL on V-T10-DROP)
 
 11. WHAT THIS CANDIDATE DOES NOT CLOSE (each with its route; constitution section 2)
    F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it
@@ -275,14 +307,16 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,
      L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT
    the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and
-     J_PA at the inside air (L9T5-F25), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN
-     service under a babbling supervisor (5; L9T5-F21, cx45 Q3, Slot C's)
+     J_PA at the inside air (L9T5-F26), the guard's double failure and its draw (L8P-R9-F1, L8P-R9-F2; Slot C's); the CAN
+     service for a TX pin toggled as a GPIO and after a latent stuck comparator (5; L9T5-F21, handed over, Slot C's)
    the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2
-   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20
+   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20; the containment (Slot C's round 6, composed here) CORRECTED IN
+     DRAFT, UNCHECKED, its qualification limits (the LDO's resistance and Zth on board B) and the VOS0 residual handed over (10j (e));
+     L9T5-F27, the decision identifier both records use (10)
    the guard's two paths (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance against the 30 uA row (L8P-R9-F2: L4-E11
      section 28 restated, record l9stk 15.9's re-take owed); the double failure after a latent first one (L8P-R9-F1, handed over);
      check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by check_l8p_fs.py (3)
-   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,
+   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F26 (Layer 7, Layer 6): J_PA carries up to the cap's top,
      over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
    the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route
@@ -291,7 +325,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
 
 12. THE PREDICATES
-   the drafted change list carries rows R-220 to R-244 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn yes
+   the drafted change list carries rows R-220 to R-245 (no R-241: route B2 out), holds every order constraint, its page table is its list, FAN_OK withdrawn yes
    board A composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board B composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board D composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
@@ -303,7 +337,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    every mutation fails its check                                                                                                yes
    the case at the cap meets 15.5 V (MODEL, PROVISIONAL) and the breaker's least limit stays over the 18 A service               yes
    the case's power load set is unchanged: only the PA's value differs (read with ast)                                           yes
-   the CAN service is stated per state: PROVISIONAL under the bound, NOT ESTABLISHED under a babbling supervisor                 yes
+   the CAN service is stated per state: PROVISIONAL under the bound and under a babbler the containment silences, NOT ESTABLISHED for the toggled TX pin yes
    U13 carries the cap's top and R55's other loads under its own least limit                                                     yes
    the slot stages carry PS-ALLTX under their loops                                                                              yes
    U7 with I-03 carries C-DEV rev 2 (the active row) under its loop                                                              yes
@@ -314,7 +348,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    each protective row states its band against its demand and its downstream printed rating, and names what is not established   yes
    record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve yes
    every revision V T10 row holds its criterion at the taken set point                                                           yes
-   the final R602 figures: every revision V sustained state keeps a positive margin to 125 C                                     yes
-   L9T5-F22 judged over the connected circuit: 14.0 k holds the babbler at 125 C and T10-A3 at every computed current on either return yes
+   the final R602 figures: every revision V served state and the trip's held maximum keep a positive margin to 125 C             yes
+   L9T5-F22 judged over the connected circuit with the containment: 14.0 k holds T10-A3 at the hardware bound on either return, Slot C's figure reproduced yes
 
 l9t5_connected: done
