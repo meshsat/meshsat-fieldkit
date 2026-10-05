@@ -4,11 +4,11 @@ A netlist reading is not electrical qualification; the electrical acceptance is 
 supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).
 
 0. PINS (sha256/16  path)
-   86fb99427e51e2ed v2/docs/records/l9t5/apply_gen_sch_a_paloop.py
-   06a2cdb0d008d275 v2/docs/records/l9t5/apply_gen_sch_d_paloop.py
+   baaaa1c23f3a58ff v2/docs/records/l9t5/apply_gen_sch_a_paloop.py
+   e6ca6b232769706d v2/docs/records/l9t5/apply_gen_sch_d_paloop.py
    9774d28415da3733 v2/docs/records/l9t5/check_f01_netlist.py
-   a35a16c1cb39e2be v2/docs/records/l9t5/l9t5_paloop.py
-   a0157062e5d8f460 v2/docs/records/l9t5/l9t5_f01.py
+   27c71c191d2352fb v2/docs/records/l9t5/l9t5_paloop.py
+   f9a7bab163cfdaf2 v2/docs/records/l9t5/l9t5_f01.py
    f3339d09604757d3 v2/docs/records/l8p/gen_netlist.py
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
@@ -49,12 +49,12 @@ supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).
    11 of 11 mutations fail
 
 5. THE ELECTRICAL ACCEPTANCE ON C-ALLTX REV 3 (the values read from the composed netlists; labels as l9t5_f01.out section 4)
-   the set point from R551 and R552 on the netlist: 6.7102 A nominal (no R560 term) ; the cap 6.3522 to 6.9257 A (MODEL on PRINTED terms with
-     TYPICAL allowances); U13's average loop least 7.0338 A with R55 hot: the cap's top and R55's other loads 0.1077 A under it (BIAS on
+   the set point from R551 and R552 on the netlist: 6.7102 A nominal (no R560 term) ; the cap 6.3518 to 6.9259 A (MODEL on PRINTED terms with
+     TYPICAL allowances); U13's average loop least 7.0338 A with R55 hot: the cap's top and R55's other loads 0.1075 A under it (BIAS on
      PA_OUT on the netlist)
    THE CASE at 15.5 V rest and the indicated 18 A, every transmitter keyed, fans running, the standby card off, the other loads typical,
-     the gauge's uncalibrated 0.8036 A and the dock contacts' maximum, the PA at the cap's top 97.24 W and the loop's own 0.018 W: need 15.1307 V:
-     MEETS 15.5 V on the MODEL, margin 0.3693 V (nominal 14.6183 V); no other load reduced (the budget's loads unchanged but the PA's);
+     the gauge's uncalibrated 0.8036 A and the dock contacts' maximum, the PA at the cap's top 97.24 W and the loop's own 0.018 W: need 15.1308 V:
+     MEETS 15.5 V on the MODEL, margin 0.3692 V (nominal 14.6184 V); no other load reduced (the budget's loads unchanged but the PA's);
      F01 / D-17 PROVISIONAL (below), never closed on printed limits
    the rails in regulation through the 60 s: U13 (the PA rail) at the cap stays under its own current loop's least (above); every
      other rail carries the case's own load (the budget's model: unchanged); +5V_D8IN carries 3.20 mA more, under its 2.0 A declared peak
@@ -62,12 +62,12 @@ supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).
      the module's VGG<5V; the loop's authority 1.483 V
    EMCON and the key, read on the netlists: U15's EN on PA_KEY; PA_ILIM's only source U553 through R558 (its supply +5V_D8IN); R57 enters
      U15's feedback node only; Q551's gate on OUTLET_OK (the set point held while the PA is not keyed)
-   PROVISIONAL (the owner's part 19): the 30 W service under the cap's least 6.3522 A (B-PA1, a feasibility task); the dynamics (B-PA2 and
+   PROVISIONAL (the owner's part 19): the 30 W service under the cap's least 6.3518 A (B-PA1, a feasibility task); the dynamics (B-PA2 and
      record l9stk's E-10); the case's own assumptions (R_cell 0.060 Ohm, the converters' declared and extrapolated efficiencies, U5)
 
 6. THE DECLARATIONS THE DRAFT WRITES, HELD TO THEIR BASIS
-   +13V8_PA: peak 6.93 A (the cap's top 6.9257 A rounded up to 0.01 A: HOLDS)
-   +13V8_PAJ: peak 6.93 A (the cap's top 6.9257 A rounded up to 0.01 A: HOLDS)
+   +13V8_PA: peak 6.93 A (the cap's top 6.9259 A rounded up to 0.01 A: HOLDS)
+   +13V8_PAJ: peak 6.93 A (the cap's top 6.9259 A rounded up to 0.01 A: HOLDS)
 
 7. THE PREDICATES
    the tree's netlists read NOT DRAWN on both boards                                                                        yes

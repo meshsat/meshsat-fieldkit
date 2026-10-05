@@ -920,10 +920,18 @@ def t_p0_f01_the_cap_and_the_case_are_re_solved():
     S = P.read_sheets()
     L = P.cap(S)
     e = P.DIV_TOL + P.DIV_TCR * P.DIV_DT
-    vs_hi = S["ref_vfb"] * (1 + S["ref_acc"]) * (1 + P.R_SET_TOP * (1 + e) / (P.R_SET_BOT * (1 - e))) + S["ref_ifb"] * P.R_SET_TOP + S["ref_line"]
+    # cx45 Q1: the reference's load residual (10 x the TYPICAL load regulation over the load's distance from 1 mA) and R553 at its low corner
+    leak = P.IDSS_25 * 2 ** ((P.T_AIR - P.T_REF) / P.IDSS_DOUBLE_K) + P.V5[2] / (P.IR_X7R_OHM_F / P.C_SS)
+    load_hi = S["ref_vfb"] * (1 + S["ref_acc"]) / (P.R_SET_BOT * (1 - e)) + S["ref_ifb"] + leak
+    load_lo = S["ref_vfb"] * (1 - S["ref_acc"]) / (P.R_SET_BOT * (1 + e)) - S["ref_ifb"]
+    resid = P.LOADREG_X * S["ref_loadreg"] * max(abs(load_hi - 1e-3), abs(load_lo - 1e-3))
+    assert abs(S["ref_loadreg"] - 0.030) < 1e-12 and 0.98e-3 < load_lo < 1e-3 < load_hi < 1.02e-3
+    vs_hi = S["ref_vfb"] * (1 + S["ref_acc"]) * (1 + P.R_SET_TOP * (1 + e) / (P.R_SET_BOT * (1 - e))) + S["ref_ifb"] * P.R_SET_TOP + S["ref_line"] + resid
     rb = P.R_BIAS * (1 + P.R1PC_TOL + P.R1PC_TCR * 65.0)
-    i_max = (vs_hi * (1 + P.R_INT / rb) - P.V5[0] * P.R_INT / rb + L["vos"]) / (P.G_SENSE * (1 - L["gerr"])) + L["ios"]
+    rint = P.R_INT * (1 - e)
+    i_max = (vs_hi * (1 + rint / rb) - P.V5[0] * rint / rb + L["vos"]) / (P.G_SENSE * (1 - L["gerr"])) + L["ios"]
     assert abs(i_max - L["i_max"]) < 1e-9
+    assert L["i_max"] > L["i_max_nores"] and L["i_min"] < L["i_min_nores"]          # R553's and R559's corners widen the band
     assert abs(S["ina_gerr"] - 0.0075) < 1e-12 and abs(S["ref_acc"] - 0.01) < 1e-12 and abs(S["oa_vos"] - 0.002) < 1e-12
     text = open(F01_OUT, encoding="utf-8").read()
     assert ("%.4f to %.4f A over every corner" % (L["i_min"], L["i_max"])) in text
@@ -1079,14 +1087,23 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     stk = open(os.path.join(ROOT, "v2", "docs", "records", "l9stk", "l9stk_protection.out"), encoding="utf-8").read()
     b = re.search(r"current limit ([\d.]+) / ([\d.]+) / ([\d.]+) A \(VCL", stk)
     assert b and ("breaker band %s /" % b.group(1)) in text
-    p0 = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_p0.out"), encoding="utf-8").read()
-    for tot in ("20.9888", "22.8711", "27.9108", "20.4746"):
-        assert tot in p0 and ("%s A at +76.25 C" % tot) in text, tot
+    dist = open(os.path.join(ROOT, "v2", "docs", "records", "l8r2", "l8r2_dist.out"), encoding="utf-8").read()
+    # cx45 Q2: the return is the PLACED distributed model's; every row the connected output prints is l8r2_dist.out's
+    for lab, tot in re.findall(r"^   (C-DEV rev 2|C-DEV rev 1|the largest steady state|the declared upper bound)[^:]*: ([\d.]+) A \(", dist, re.M):
+        assert re.search(r"^     %s\s+%s A: " % (re.escape(lab), re.escape(tot)), text, re.M), lab
+    for r_ in re.findall(r"^     ([+-]\d+\.\d\d C (?:VH|RIB|RET))\s+\S+\s+([\d.]+) A \(", dist, re.M):
+        assert ("%s %s A" % r_) in text, r_
+    assert "L8R2-F33a is realisable" not in text and "CORRECTED IN DRAFT on the desk model (placement and distributed solve)" in text
     ef = open(os.path.join(ROOT, "v2", "docs", "records", "efuse", "efuse_check.out"), encoding="utf-8").read()
-    bands = re.findall(r"^   EFUSE   [AB] U\d+\s+tps2596\s+([\d.]+ / [\d.]+ / [\d.]+) A", ef, re.M)
+    bands = re.findall(r"^   EFUSE   [AB] U\d+\s+tps2596\s+([\d.]+) / [\d.]+ / ([\d.]+) A", ef, re.M)
     assert len(bands) == 3
-    for band in bands:
-        assert ("band %s A" % band) in text, band
+    for lo, hi in bands:
+        assert ("band %s to %s A" % (lo, hi)) in text, (lo, hi)
+    # cx45 Q7: the coordination names what it does not establish; the active C-DEV row is rev 2; the CAN service per state
+    for s_ in ("NOT COVERED at 76.25 C", "demand the 30 W service: NOT ESTABLISHED", "in its COMPOSED form", "L8P-R9-F1, OPEN",
+               "the service is NOT ESTABLISHED there", "U7 with I-03 carries C-DEV rev 2 (the active row)"):
+        assert s_ in text, s_
+    assert "U7 with I-03 carries C-DEV rev 1" not in text
     assert "the required service unchanged" in text and "replaced, by the cap's top" in text
     assert "DECISION L9T5-D9 (SESSION" in text and "Slot C's set point delta (R602 14.0 k) is TAKEN" in text and "ADAPTATION REJECTED" in text
     # L9T5-F22 over the connected circuit: the chain's rows, 13.3 k holding T10-A3 at the printed 600 mA with either return and 14.0 k not

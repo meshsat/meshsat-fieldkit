@@ -29,9 +29,11 @@ tasks B-PA1 and B-PA2): the PA's drain current is the controlled quantity.
   U13    its FB divider R50 162k over R51 10k at 0.1 % (record l8r2's fb01 keyword rfb_tol; values unchanged): 13.483 to 14.040 V;
          its BIAS (pin 24, VCC's supply above 8 V, the gate drive: up to 0.1141 A, l9t5_f01.out section 4) and C195 move from +13V8_PA to
          PA_OUT, ahead of R55, so U13's own average loop reads the PA's feed and microamperes
-The cap over every corner (l9t5_paloop.py; MODEL on PRINTED terms with TYPICAL allowances): 6.3521 to 6.9258 A, 0.1076 A under U13's own
-loop minimum 7.0338 A with R55 hot (L9P-F04 corrected in the steady state); the PA at most 97.24 W; C-ALLTX rev 3 with the printed
-bounds 15.1308 V. The 30 W service under the cap's least is PROVISIONAL on B-PA1 (l9t5_f01.out section 6).
+The cap over every corner (l9t5_paloop.py; MODEL on PRINTED terms with TYPICAL allowances, R553 and R559 at their corners and the
+reference's load residual an ASSUMPTION, cx45): 6.3518 to 6.9259 A, 0.1075 A under U13's own loop minimum 7.0338 A with R55 hot
+(L9P-F04 PROVISIONAL with the selection); the PA at most 97.24 W; C-ALLTX rev 3 with the printed bounds 15.1308 V on the MODEL.
+F01 / D-17 is PROVISIONAL: the 30 W service under the cap's least on B-PA1, the loop's dynamics on B-PA2, the reference at its load on
+V-PA-REF (l9t5_f01.out section 6).
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   1. U13's call: rfb_val="10k 0.1%", rfb_tol="0.1%" (needs fb01's keyword: refused without it) and bias="PA_OUT";
   2. J_PA's pin 1 to +13V8_PAJ and the block above after it (two land keys, TSSOP16 and VSSOP8, the KiCad 9 library's);
@@ -55,7 +57,7 @@ NAME = "apply_gen_sch_a_paloop"
 ADDS = ("U551", "U552", "U553", "Q551", "R551", "R552", "R553", "R554", "R555", "R556", "R557", "R558", "R559", "R560",
         "C551", "C552", "C553", "C554", "C555", "C556", "C557")
 NETS = ("+13V8_PAJ", "PA_SHP", "PA_SHN", "PA_IMON", "PA_ISET", "PA_ISFB", "PA_INTN", "PA_INTO", "PA_MID", "PA_INVN", "PA_ILIM_A", "PA_ILIM", "PA_ISP")
-CAP_TOP = 6.93            # A: the cap's top 6.9258 A (l9t5_paloop.py, round 2) rounded up; the PA rail's declared peak
+CAP_TOP = 6.93            # A: the cap's top 6.9259 A (l9t5_paloop.py, cx45's corners, MODEL) rounded up; the PA rail's declared peak
 VPA_TOP = 14.04           # V: U13's output top with the 0.1 % divider, 14.0397 V rounded up (l9t5_paloop.py)
 V5_TOP = 5.14             # V: +5V_D8IN's declared v_work
 SUPPLY = {"U551": 0.0003, "U552": 0.0011, "U553": 0.0019}   # A on +5V_D8IN: IQ 300 uA; IGND 35 uA + the 1.0 mA preload; 2 x 800 uA + 257 uA + R560
@@ -96,12 +98,12 @@ _CLS = ('_cls("C551", "R", "TI SBOS511C (INA250) p.1 and the application figures
 _DECL = ('_intent.rail("+13V8_PAJ", 13.8, 5.0, %.2f, "U551", loads={"J_PA": %.2f}, series_of="+13V8_PA", converted=False, budget=0.02,\n'
          '             source_ic="U551 is an INA250A2: its IN+ to IN- pins ARE the power path (the 2 mOhm shunt and 4.5 mOhm of package, typical)",\n'
          '             note="the PA\'s feed behind the current-sense amplifier U551 to J_PA (record l9t5 P0-1, F01): the peak is the drain-current '
-         'cap\'s top, 7.0119 A over every printed corner (l9t5_paloop.py), rounded up")\n' % (CAP_TOP, CAP_TOP))
+         'cap\'s top, 6.9259 A on the MODEL band (l9t5_paloop.py: PRINTED terms with TYPICAL allowances and ASSUMPTION residuals), rounded up; F01 / D-17 PROVISIONAL on B-PA1 and B-PA2")\n' % (CAP_TOP, CAP_TOP))
 for _n, _b in (("PA_SHP", "U551's VIN+ and SH+ (pins 12, 13), the Kelvin tap at the shunt's supply side: +13V8_PA's top with the 0.1 % divider"),
                ("PA_SHN", "U551's VIN- and SH- (pins 4, 5), the Kelvin tap at the shunt's load side: +13V8_PA's top less the shunt's drop")):
     _DECL += '_intent.node("%s", %.2f, "%s")\n' % (_n, VPA_TOP, _b)
 for _n, _v, _b in (("PA_IMON", V5_TOP, "U551's OUT: 500 mV/A, swinging within its supply +5V_D8IN (5.14 V v_work)"),
-                   ("PA_ISET", 3.42, "U552's output, 0.55 V x (1 + 2.80k / 549) = 3.3551 V, 3.4113 V at every printed corner (l9t5_paloop.py)"),
+                   ("PA_ISET", 3.42, "U552's output, 0.55 V x (1 + 2.80k / 549) = 3.3551 V nominal, 3.4114 V at its top corner (MODEL: VFB +1 % at 1 mA, the divider, IFB, line regulation and the load residual, l9t5_paloop.py)"),
                    ("PA_ISP", 3.42, "the integrator's set point: PA_ISET through R559, held at 0 V by Q551 while OUTLET_OK is high, ramped by C557 at each key"),
                    ("PA_ISFB", 0.56, "U552's FB pin, 0.55 V +-1 percent (TI SBVS351D)"),
                    ("PA_INTN", V5_TOP, "U553A's inverting input: at PA_ISP in regulation, within its supply +5V_D8IN while the integrator rests"),

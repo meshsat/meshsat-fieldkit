@@ -1069,14 +1069,22 @@ CONDITIONAL on the model's figures, now with its conditions named and bounded. N
 leads' pin 2 lands on board B, the 5 V stages' outputs on board A), both boards together, at most each case's bound in `l8r2_p0.out`
 section 2; the geometry it rests on is the spreading model on record l9stk's stackups (board A two ground planes, board B three, 0.5 oz,
 15 % thin) with the lands solidly joined at L8R2-F33's widths. It is a layout condition, PROVISIONAL until the routed boards' extraction.
-**On the placement as drawn (the owner's amendment 1; `l8r2_p0.out` 2b):** the 5 V entries' ground lands read from the placed boards
-(board A's four at y 34.45 mm, x 101.2 to 149.2 mm; board B's J_5V_DEV at (36.48, 51.65) and J_5V_S1 to S3 along y 194 mm, 211 mm
-apart at most; J_5V_IOC not yet placed on either board) cannot be reached by the three sockets as one cluster (the smallest circle
-holding board B's has radius 105.3 mm, board A's 24.0 mm, against 16.6 mm). One socket a group, the same lead serving the same group on
-both boards, holds every entry within 8.0 mm of its socket: J_GR1 beside J_5V_S1, J_GR2 by J_5V_S2 and J_5V_S3, J_GR3 by J_5V_DEV with
-J_5V_IOC placed beside it. That is the condition's form (SESSION decision L8R2-D9: realisable on the drawn floor plans by placing
-only the new parts; the sites' free area and each lead's 150 mm reach are Layer 10's placement facts). The fourth lead or a bar is
-therefore not needed as the correction for the service cases; the declared upper bound's printed row stays STILL OPEN as before.
+**After the focused check cx45 (Q2, NOT CONFIRMED: the group-centre reading of `l8r2_p0.out` 2b placed no footprint and solved no
+distributed current; that claim is WITHDRAWN with SESSION L8R2-D9):** `l8r2_dist.py` / `.out` PLACES the three drafted sockets and
+J_5V_IOC on the drawn boards A23 and B19 (each courtyard 0.25 mm clear of every placed courtyard on either side and 0.5 mm inside the
+outline; SESSION L8R2-D10, the placement draft) and SOLVES the return as a distributed network: each board's declared ground planes as
+a 1.5 mm resistive grid (A two, B three, 0.5 oz, 15 % thin at one corner, a fill of 100 % and 50 % as ASSUMPTION), every ground
+conductor of the composed netlists between the boards with its wire and both contacts in the record's box, each lead's return
+injected at its rail's loads' ground pads on board B and taken out at its land on board A, at -20 C and 76.25 C, and every contact
+vertex a local search reaches (no single contact's move raises a conductor's current there). Result (MODEL): every printed row holds,
+the declared upper bound's included (the ribbon's largest 0.7806 A against 1 A, STILL OPEN on the one-node model); the service cases
+(C-DEV rev 2, the active row, and the largest steady state) hold on the least ratings too; over the least rating only the declared
+upper bound at 76.25 C (the ribbon 0.6371 A against 0.5995 A, and a VH pin 2 6.4392 A against 5.9948 A, both INFERRED deratings: the
+VH row is the same as its pin 1's, L8R2-F43; the ribbon row is L8R2-F44, Wurth's WR-CAB derating, UNSENT, with a fourth lead beside
+the ribbon headers as the placed and solved route, 0.4150 A, NOT drafted: SESSION L8R2-D11). The ground shift at the supervisors'
+LDOs on the service cases is at most 0.0206 V (the one-node model's 0.0114 V with the return). V6-B1: CORRECTED IN DRAFT on the desk
+model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed extraction) and on each stage sitting beside
+its connector on board A; the targeted recheck decides.
 
 ## 4. The composition proof and the designators (`l8r2_drafts.out` sections 5 to 7 and 6b)
 

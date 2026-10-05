@@ -376,7 +376,7 @@ def predicates(R):
     P["V6-m8: neither XT60 sheet names a board-soldered end"] = not R["xt_pcb_rating"]
     pl = R["place"]
     P["L8R2-F33a on the placement as drawn: one cluster of sockets is NOT within reach of every 5 V entry on board B"] = not pl["met_one"]
-    P["L8R2-F33a on the placement as drawn: one socket a group (S1; S2 with S3; DEV with IOC) is within reach on both boards"] = pl["met_split"]
+    P["the group-centre construction is a geometric reading only: each group's centre lies within the reach of its own lands"] = pl["met_split"]
     return P
 
 
@@ -447,17 +447,16 @@ def render(R):
         w("       ONE CLUSTER for every entry: the smallest circle holding them has radius %.1f mm: %s" % (q["one"], "within reach" if q["one"] <= q["need"] else "NOT within reach"))
         w("       ONE SOCKET A GROUP: " + "; ".join("%s %.1f mm from a socket at the group's centre (lands %.1f mm apart)%s" % (
             " with ".join(g[0]), g[1], g[3], (", %s to be placed beside it" % ", ".join(g[2])) if g[2] else "") for g in q["groups"]))
-    w("     READ: the three sockets as one cluster cannot serve board B's entries (they sit %.0f mm apart at most); one socket a group" % (
-        2 * pl["b"]["one"]))
-    w("       (J_GR1 beside J_5V_S1; J_GR2 between J_5V_S2 and J_5V_S3; J_GR3 beside J_5V_DEV with J_5V_IOC placed beside it, on both boards,")
-    w("       the same lead serving the same group on each) holds every entry within %.1f mm of its socket on both boards: %s on the" % (
-        max(g[1] for b in ("a", "b") for g in pl[b]["groups"]), "MET" if pl["met_split"] else "NOT MET"))
-    w("       placement as drawn, by a placement of the three new sockets and J_5V_IOC only (no drawn part moves). MODEL: each lead's return")
-    w("       taken to its nearest socket; the free area at each site (courtyards) and each lead's 150 mm reach between its two groups are")
-    w("       Layer 10's placement facts, not read here (SESSION decision L8R2-D9: the split arrangement is the condition's form)")
+    w("     READ: the three sockets as one cluster cannot serve board B's entries (they sit %.0f mm apart at most). The group-centre" % (2 * pl["b"]["one"]))
+    w("       construction above (each group's centre at most %.1f mm from its lands) places no footprint, reads no courtyard and solves no" % (
+        max(g[1] for b in ("a", "b") for g in pl[b]["groups"])))
+    w("       current: it is NOT evidence that the condition is realisable, and round 1 of this section's claim to that effect is WITHDRAWN")
+    w("       (the focused check cx45, Q2; SESSION L8R2-D9 withdrawn with it). The sockets placed with their courtyards on both boards and")
+    w("       the return solved as a distributed network: l8r2_dist.out (SESSION L8R2-D10)")
     w("   DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return")
     w("     socket's land within %.0f mm (the largest steady state, the tightest service case) of the 5 V entries it serves on both boards" % ls["d05"][0])
-    w("     (one socket a group, 2b: realisable on the placement as drawn), every ground plane joined solidly; the Layer 10")
+    w("     (one socket a group; placed and solved as a distributed network in l8r2_dist.out, which replaces this condition's form), every")
+    w("     ground plane joined solidly; the Layer 10")
     w("     validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and")
     w("     stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared")
     w("     upper bound's printed row and every least-rating row at 0.5 oz, which no placement realises; the smallest decision that removes")
