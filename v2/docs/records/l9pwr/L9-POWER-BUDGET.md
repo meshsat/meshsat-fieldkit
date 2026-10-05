@@ -6,6 +6,43 @@ measured, and no figure on this page is a measurement. Every figure is printed b
 `v2/ecad/tools/tests/test_l9pwr.py` holds the page to the output. The drafts of Layers 4, 8 and 9 are modelled as drafts: they
 are printed DRAFTED, none is applied to a generator, and their release guards stand.
 
+## Round 5 in short (4 October 2026 evening, task T5 round 2, case row C-ALLTX rev 3)
+
+- **L9P-F01 is restated on the case row C-ALLTX rev 3** (rev 2's definition, its quoted figure withdrawn): out 10 now judges the
+  case computed from its own text (out 7b) against REQ-018's 15.5 V. **OPEN on the case: 15.5162 V needed at 18 A** (241.039 W at
+  VBAT 13.391 V, R_cell 0.06 Ohm an ASSUMPTION), +0.0162 V; record l9t5 bounds the printed uncertainties (16.0718 V since its round 4; 16.0684 V before the gauge's offset drift). D-11's basis
+  as rv-pwr models it (16.214 V, the figure round 2 carried) is printed in the same finding as a **LABELLED SCENARIO, NOT THE CASE**.
+  **WITHDRAWN** by the owner's positions of 4 October 2026 and printed as such: L4-E9 round 7's 16.1 V floor, the 16.4 V its rule gives
+  on these drafts, FAN_OK. The finding's action is the case's correction, record l9t5's A1, never a scenario; its owner is record
+  l9t5 with L4-E9, l8r2 and Layer 5.
+- **Nothing else moved:** every figure of out 0 to out 9 and every other finding; the round 2 table row below is history (round 5
+  restates it, the output carries the current text).
+
+## Round 4 in short (4 October 2026, task T5, case rows C-ALLTX rev 2 and C-DEV rev 1)
+
+- **C1, a budget defect corrected.** rv-pwr's PS-ALLTX powered the standby WiFi card at its placeholder (1.0 W PLAN, 9.1 W
+  HIGH); REQ-018's acceptance and CONOPS 4a's PS-ALLTX row define the state with that card off (the challenge cx40's Q1). C1 is
+  the last step of out 1 (a correction of the state's definition, no drawing and no draft): PS-ALLTX on DRAFTED is now
+  174.23 / 208.47 / 279.63 W at the pack (was 174.23 / 209.89 / 292.03), its raw HIGH row at VBAT 265.274 W, needing 16.8626 V
+  (was 276.373 W and 17.4792 V). DRAWN and round 1's tree keep rv-pwr's state so that their reproductions stand.
+- **Out 7b computes the case row C-ALLTX rev 2 from its own text** on DRAFTED: every transmitter at its HIGH figure, the
+  monitor full, the fans running at full speed, the outlets, the heater and the standby card off, every other load at its
+  PS-ALLTX PLAN figure, the compute modules at their typical 4.5 W; each pack-fed converter at the VBAT the case itself sets.
+  **It needs 15.5162 V rest at 18 A**: load pins 220.741 W, conversion 20.298 W, 241.039 W at VBAT 13.391 V; the allowance at
+  15.5 V and 18 A is 240.747 W (279.0 W of cell EMF less the cells' 25.920 W at R_cell 0.06 Ohm and the path's 12.333 W);
+  **deficit +0.292 W, +0.0162 V** (with the converters at rv-pwr's 16.8 V: 241.744 W, 15.5554 V).
+- **The row's quoted figure is not its text.** C-ALLTX rev 2 says "On Layer 9's final drafts this case needs 16.214 V rest
+  (253.61 W at VBAT)"; that is D-11's basis on rv-pwr's `typ_nontx`, which puts only the compute modules and the NVMe at
+  typical and keeps every other non-transmit load at HIGH (the STM32 supervisors 4.554 against 1.297 W, the hubs' cores 2.568
+  against 0.625 W, the QMX's USB and HDMI 2.5 against 0.3 W, board E's controller 1.0 against 0.5 W, the Geiger 0.5 against
+  0.3 W). Out 7b prints both; which reading the case means is the coordinator's to fix as a revision of the row.
+- **Labelled sensitivities, not the case** (out 7b): the compute modules at 8 W, 252.840 W and 16.1718 V; the fans at their
+  PLAN duty, 228.433 W and 14.8159 V. The uncertainties the row names (R_cell, the gauge's current error, the path's tolerance)
+  and the comparison of corrections are record l9t5's.
+- Nothing else moved but L9P-F03's beside-line (slot 3's PS-ALLTX HIGH current 3.2639 A, the standby card off) and one
+  predicate restated (PS-ALLTX joins PS-SURV below round 1's PLAN). L9P-F01 (16.214 V on D-11's basis) and L9P-F03 (7.181 A,
+  7.472 A at 4.9019 V) stand as printed.
+
 ## Round 3 in short (4 October 2026, the integration of set 29): a tool correction, no figure moved
 
 - **The defect.** `l9pwr_budget.py` refused on set 29's tree ("the +12V_FAN efficiency in the draft"). L4-E11's round 9 corrected
@@ -72,7 +109,7 @@ load at its maximum at once: an upper bound, not a scenario. DRAFTED-R1 is round
 | PS-RED (slot 3 alone) | 12.66 / 22.21 / 45.86 | 12.82 / 22.61 / 45.94 | 13.24 / 23.24 / 50.26 | 13.30 / 23.40 / 51.71 | 23.30 |
 | PS-RED-b | 26.91 / 35.70 / 71.50 | 27.18 / 36.16 / 71.70 | 27.77 / 37.04 / 80.43 | 28.20 / 37.41 / 84.91 | 37.15 |
 | PS-EMCON | 37.33 / 53.06 / 103.27 | 37.85 / 47.78 / 81.04 | 38.52 / 48.75 / 89.79 | 38.98 / 49.11 / 94.18 | 48.67 |
-| PS-ALLTX | 168.93 / 203.82 / 272.03 | 170.87 / 205.65 / 274.29 | 173.20 / 209.01 / 287.91 | 174.23 / 209.89 / 292.03 | 201.80 |
+| PS-ALLTX (C1: the standby card off, round 4) | 168.93 / 203.82 / 272.03 | 170.87 / 205.65 / 274.29 | 173.20 / 209.01 / 287.91 | 174.23 / 208.47 / 279.63 | 200.49 |
 | PS-RED2 (the reduced mode) | 17.62 / 31.38 / 55.56 | 17.86 / 31.98 / 55.80 | 18.36 / 32.74 / 62.23 | 18.42 / 32.90 / 64.92 | 32.71 |
 | PS-SURV (slot 2 alone) | 12.45 / 21.73 / 42.00 | 12.66 / 22.29 / 42.26 | 13.08 / 22.92 / 46.66 | 13.08 / 22.92 / 47.89 | 22.83 |
 | PS-SURV-R (the heat stage) | 12.78 / 23.27 / 46.94 | 12.94 / 23.68 / 47.03 | 13.36 / 24.31 / 51.36 | 13.42 / 24.47 / 52.81 | 24.36 |
@@ -160,8 +197,8 @@ mOhm in parallel), a breaker FET 1.728 mOhm and 0.247 W, a battery FET 1.345 W w
 
 | Line | Their figure | Reproduced from their inputs | DRAWN | DRAFTED (round 2) | The difference |
 |---|---|---|---|---|---|
-| R1 L4-E9 1d's modes | 42.8, 203.8, 272.0, 162.3 W | equal | 43.301, 205.652, 274.291, 163.465 | 44.576, 209.89, 292.027, 166.149 | the steps of section 2 |
-| R1c L4-E9 round 7's restated modes | 44.205, 209.007, 287.912, 165.76 W | equal, on DRAFTED-R1 | | 44.576, 209.89, 292.027, 166.149 | D4's envelope at HIGH and D6 to D10 |
+| R1 L4-E9 1d's modes | 42.8, 203.8, 272.0, 162.3 W | equal | 43.301, 205.652, 274.291, 163.465 | 44.576, 208.467, 279.628, 166.149 (round 2: 209.89 and 292.027 before C1) | the steps of section 2 |
+| R1c L4-E9 round 7's restated modes | 44.205, 209.007, 287.912, 165.76 W | equal, on DRAFTED-R1 | | 44.576, 208.467, 279.628, 166.149 | D4's envelope at HIGH, D6 to D10 and C1 |
 | R2 B4, the charging heat | 50.043663 W (52.133663 with the ballasts) | equal, and L4-E12's 3.17382 and 3.44629 W | 50.5563 W (52.6463) | 51.9264 W (54.0164) | dP of the profile over 0.931 |
 | R3 B7, battery-only to C1 | 43.413 W, 2.06349 h, 54.467 C unshed at 2.52 h | equal (the unrounded 43.41314 W gives 2.06348 h) | 2.03164 h | 1.95127 h, 55.898 C at 2.52 h | the energy-only run on L4-E10's 107.9 Wh becomes 2.421 h, a consequence for item 9.2 and L4-E12 |
 | R4 L4-E11 18b, VSYS_E | 1.3208 A at the floor, 0.9942 A at the plan's duty, 89.8 % of U42 | equal | | 0.2139 A (PLAN), 0.4323 A (HIGH), 0.7402 A at 9.688 V | unchanged by this round |
@@ -206,7 +243,7 @@ record's reading (SESSION).
 
 | Id | Class | Status | Finding | Owner |
 |---|---|---|---|---|
-| L9P-F01 | DEMONSTRATED ANALYSIS DEFECT | **OPEN** (carried, moved) | D-11's all-transmit basis needs **16.214 V** rest at the worst cell resistance on this round's drafts, 0.114 V over L4-E9 round 7's 16.1 V (round 1's drafts: 15.986 V). From round 1: the coolers' envelope at HIGH +0.2019 V, slots 1 and 3 on the LM5176 +0.0264 V, the breaker +0.0633 V, the third FET -0.0634 V. By round 7's rule the floor becomes **16.4 V** (4.100 V a cell), the window to 16.884 V 0.484 V; at 16.1 V the basis is covered to R_cell 0.0552 Ohm, under rv-pwr's HIGH 0.06. With the coolers at the maker's 2.0 W: 16.014 V, the rule gives 16.2 V. A Fan_PWM cap during a key-down is not available (l8r2 round 4: the fan runs full whenever its PWM lead is not driven) | L4-E9 (D-17, R-28, LH-12: FW-A05's floor), with l8r2 (C4-3, the envelope) and Layer 5 (FW-A05's text) |
+| L9P-F01 | DEMONSTRATED ANALYSIS DEFECT | **OPEN** (carried, moved; **restated in round 5**: OPEN on C-ALLTX rev 3, 15.5162 V against 15.5 V, D-11's basis below a labelled scenario, 16.1 V and 16.4 V withdrawn) | Round 2's text: D-11's all-transmit basis needs **16.214 V** rest at the worst cell resistance on this round's drafts, 0.114 V over L4-E9 round 7's 16.1 V (round 1's drafts: 15.986 V). From round 1: the coolers' envelope at HIGH +0.2019 V, slots 1 and 3 on the LM5176 +0.0264 V, the breaker +0.0633 V, the third FET -0.0634 V. By round 7's rule the floor becomes **16.4 V** (4.100 V a cell), the window to 16.884 V 0.484 V; at 16.1 V the basis is covered to R_cell 0.0552 Ohm, under rv-pwr's HIGH 0.06. With the coolers at the maker's 2.0 W: 16.014 V, the rule gives 16.2 V. A Fan_PWM cap during a key-down is not available (l8r2 round 4: the fan runs full whenever its PWM lead is not driven) | L4-E9 (D-17, R-28, LH-12: FW-A05's floor), with l8r2 (C4-3, the envelope) and Layer 5 (FW-A05's text) |
 | L9P-F02 | ASSUMPTION TO BOUND | **RESOLVED IN THE DRAFTS**, CONDITIONAL on l8r2's C4-1 to C4-6 | round 1: the AP64500 at 5.010 A against 5 A (PS-BUSY, PS-ALLTX). Now slots 1 and 3 on the LM5176, least margins over every state +1.8732 A (5.1 V), +1.6621 A (4.9019 V), +0.5634 A (bounded start), +0.9432 A (degraded cooler) | l8r2 (C4-1 to C4-6), with board A's and board B's generator owners |
 | L9P-F03 | ASSUMPTION TO BOUND | OPEN (carried, I-03) | the device rail's LM5176 at 7.181 A DRAFTED, 7.154 A DRAWN, against 7.0957 A in PS-ALLTX at HIGH; at fb01's least load voltage 4.9019 V with every load at constant power 7.472 A (-0.376 A), and PS-TYP and PS-BUSY at HIGH 7.316 A (-0.220 A); the slot stages beside it +1.87 to +2.63 A | board A's generator owner under I-03, with the TEST-PLAN power rows |
 | L9P-F04 | PHYSICAL QUESTION | OPEN (carried, F-PR-01) | the PA rail at the PA's 113 W bound, 8.188 A against 7.0957 A. Specimen: one RA30H1317M1 at 13.8 V with the design's VGG into 50 Ohm at 144 to 146 MHz; measure the drain current at 30 W out; accept at most 7.10 A; on failure the rail limits and the PA gives less than 30 W (no damage) | the TEST-PLAN power rows, with board A's F-PR-01 and POWER-THERMAL 7.2 |

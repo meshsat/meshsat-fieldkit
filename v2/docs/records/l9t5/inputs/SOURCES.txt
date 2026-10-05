@@ -1,0 +1,30 @@
+Inputs copied into record l9t5 so that it reads them from its own tree (4 October 2026). Each is filed as received, byte for
+byte; neither is an instruction to this record beyond the coordinator's case rows, and the challenge is an advisory AI review
+that accepts and closes nothing.
+
+coordinator-cases-2026-10-04.md sha256 cb8b0961e4b1ea67664706caa0e20309a18583f0a6625e4bec1a2e099efd2505
+  the coordinator's shared case rows of 4 October 2026 (plan section 4a, PLAN-01): C-PROT rev 1, C-ALLTX rev 2 (14:50 CEST, rev 1
+  withdrawn), C-DEV rev 1, C-SHORE rev 1, C-CU rev 1; the coordinator's local working copy, received with task T5.
+
+astra-challenge-f01-1.md sha256 806c116b88d3a90fd9bdea15e9c095f131bec6f6a94ed2ff1238775166cb1bc8
+  the collaborator's advisory challenge of D-17 / L9P-F01 with L9P-F03 (job cx40-f01-challenge, run 20261004T122353Z-295848, at
+  commit 8c484b04 on fnd/l4e9s29), filed as received by the coordinator; an AI review, read-only.
+
+coordinator-cases-2026-10-04-rev3.md sha256 0be579949c22eab11821cba696422e8ece36125f85c4eacaf541bc31814c4809
+  the coordinator's shared case rows as revised the same afternoon (_runs/cases/CASES-2026-10-04.md as received with task T5's round 2
+  at 18:50 CEST): C-PROT rev 1, C-ALLTX rev 2 and rev 3 (15:45 CEST: rev 2's definition stands, its quoted 16.214 V withdrawn as D-11's
+  basis; the case computed from its own text is this record's 15.5162 V, 16.0684 V with the printed bounds), C-DEV rev 1, C-SHORE rev 1,
+  C-CU rev 1.
+
+apply_gen_sch_b_iocbuck-bdbed9bb.py sha256 8cd31cfbbca390875df06a67e1677c15c1930d5921e80b0c08b5c5ab842c2667
+  this record's own board B draft as round 1 committed it (fnd/l9t5 at bdbed9bb), kept byte for byte as the old text: alone on board
+  B's generator it refuses ("intent: bypass C400 -> U40.1: the capacitor is not on that pin's net +5V_DEV"), the defect round 2
+  corrects; l9t5_drafts.py and test_l9t5.py run it as the case that must fail.
+
+apply_gen_sch_a_iocbuck-7c28f9da.py sha256 23dae9bc1c461f84322f781578d4616cfe010b4cb3d0f5452b49826e4a09709f
+apply_gen_sch_b_iocbuck-7c28f9da.py sha256 afb77ab72e0d2d4cc677419900012f05ba0722f3d7afd090c417a06e37b14bd0
+  this record's own two drafts as round 2 committed them (fnd/l9t5 at 7c28f9da), kept byte for byte as the old text of round 3:
+  board B's declares the device lead at a typed 6.0 A peak, under its own 6.0359 A on C-DEV rev 1 with the draft composed, and
+  +5V_IOC at 1.38 A on both boards (record l8r2's finding L8R2-F35); l9t5_drafts.py and test_l9t5.py run them as the declarations
+  that must fail. T5b's report itself is not filed here (it names a private path): its content is record l8r2's round 7 in this
+  tree since the merge at 43c9b49d (v2/docs/records/l8r2/l8r2_gndret.out and L8R2-KNOWN-DEFECTS.md section 3g).

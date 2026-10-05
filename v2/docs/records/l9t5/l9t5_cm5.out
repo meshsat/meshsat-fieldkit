@@ -1,0 +1,73 @@
+l9t5_cm5: Layer 9 record l9t5, round 4 part 3: finding SDR3-F02, the Compute Module 5's supply design figure (MESHSAT-1357)
+prototype design; nothing built, bought, powered or measured; a case row's change is the coordinator's and none is made here
+
+1. INPUTS, pinned by sha256
+   80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
+   3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
+   469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
+   afae23c87c38302b v2/docs/records/l9pwr/l9pwr_budget.py
+   421c32cc2321dfba v2/docs/records/l9pwr/l9pwr_budget.out
+   0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
+
+2. WHAT THE SHEET PRINTS (Raspberry Pi Compute Module 5 datasheet, Release 3)
+   appendix B, 'CM4 and CM5 differences', B.3 'Power budget': 'CM5 delivers significantly more performance than CM4, and therefore consumes more power. Power supply designs should accommodate 5 V at up to 2.5 A. If this creates an issue with an existing board design, lowering the CPU clock rate can reduce the peak power consumption.'
+   section 4.3.3, Table 9: idle 400 mA and operation 900 mA, TYPICAL; its Minimum and Maximum columns are empty; section 3.3: 'Operating
+   power consumption is typically around 900 mA, but this depends on the operating system and running tasks'
+   WHAT KIND OF FIGURE 2.5 A IS: a SUPPLY DESIGN FIGURE, the maker's advice to a carrier's designer in a migration appendix, tied by its
+   own next sentence to the module's PEAK power consumption. It is not a row of the consumption table, not a printed maximum and not a
+   typical; the sheet prints no consumption limit at all. So it is the nearest figure the maker gives to an upper bound of a module's
+   draw, and a supply sized under it is sized under the maker's own advice
+   the tree: gen_sch_b.py declares a module at 1.6 A ('the typical with headroom') and says 'no maximum given', which is true of Table 9 and
+   silent on B.3; rv-pwr takes 4.5 W typical and 8.0 W HIGH (1.6 A at 5 V); the maker's figure is 12.5 W, 4.5 W over the budget's HIGH
+
+3. THE SLOT STAGES (L9P-F02: slots 1 and 3 on board A's LM5176 stages in record l8r2's draft; slot 2 on U5), each module at 12.5 W
+   a LABELLED SCENARIO beside L9P-F02's rows, not a change of them: the stage's current at HIGH at the least load voltage with the module's
+   HIGH figure (8.0 W, or the state's own where the budget puts less) replaced by 12.5 W in every state the module is on, every other
+   load as the budget has it, against the loop's least (PRINTED VSNS, DECLARED shunt):
+   S1  worst state ALLTX  steady 5.4336 A as budgeted, 6.3516 A at the maker's figure (+0.9180 A), against 7.0957 A: +0.7441 A
+       with a cooler's bounded start (record l8r2, a 100 us average) 7.4503 A: -0.3546 A; with a degraded cooler 7.0706 A: +0.0251 A
+   S2  worst state ALLTX  steady 4.6485 A as budgeted, 5.5665 A at the maker's figure (+0.9180 A), against 7.0957 A: +1.5292 A
+       with a cooler's bounded start (record l8r2, a 100 us average) 6.6652 A: +0.4305 A; with a degraded cooler 6.2855 A: +0.8103 A
+   S3  worst state BUSY   steady 5.4336 A as budgeted, 6.3516 A at the maker's figure (+0.9180 A), against 7.0957 A: +0.7441 A
+       with a cooler's bounded start (record l8r2, a 100 us average) 7.4503 A: -0.3546 A; with a degraded cooler 7.0706 A: +0.0251 A
+   READ: at the maker's supply design figure every slot stage still carries its steady load (yes, least +0.7441 A). With a cooler's bounded
+   start coinciding the stages of S1, S3 pass the loop's least (PRINTED VSNS over the DECLARED shunt); with a degraded cooler the least margin is +0.0251 A.
+   What the slot stages owe to it is a BOUND, and it is a finding: L9T5-F15 for record l8r2 (L9P-F02's conditions on the coolers' start
+   are stated with the module at 8.0 W) and for board B's generator owner (the declared 1.6 A against the maker's 2.5 A). The slot rail's
+   branches, as drawn in the tree's generator, sum to 4.751 A against a declared peak of 5.00 A (slot 2: 5.63 A); with the module at the maker's
+   figure they sum to 5.651 A: over the 5.100 A that the 5.00 A declaration of slots 1 and 3 may carry (1.02 times the peak), inside slot 2's 5.7426 A.
+   No draft is written here: neither the declaration nor L9P-F02's rows are this record's to change
+
+4. THE CASE ROW C-ALLTX REV 3 (its definition unchanged: the compute modules at typical, 4.5 W, CONOPS 4a)
+   the case:                                   241.039 W at VBAT, 15.5162 V rest needed at 18 A (F01 / D-17 OPEN)
+   LABELLED SCENARIO, the budget's HIGH (8.0 W):  252.840 W, 16.1718 V (the row's own sensitivity)
+   LABELLED SCENARIO, the maker's figure (12.5 W): 268.014 W, 17.0148 V (+1.5148 V over REQ-018's 15.5 V rest)
+   what the case owes to it: nothing in its definition (typical is CONOPS's word). Its UNSETTLED item on the modules ('nothing drawn holds
+   them there'; K4's 'no compute stress' has no numerical ceiling) gains an upper figure from the maker: unless firmware holds the modules'
+   load, the all-transmit state can need 17.0148 V, not 15.5162 V. Whether the row quotes that scenario is the coordinator's
+
+5. THE BUDGET'S STATES
+   rv-pwr's HIGH for a module (8.0 W) is the generator's allowance, not a maker's bound. Record l9pwr's HIGH totals are sums of maxima where
+   makers print them and of declared figures where they do not; for the modules the maker's design figure is 4.5 W higher each, 13.5 W for
+   three at the loads. What the states owe: a labelled scenario row ('modules at the maker's supply design figure') beside HIGH, in the
+   budget's next round; HIGH itself is not changed here, because L9P-F02's rows and D-11's scenario are stated on it
+
+6. THE ASSESSMENT
+   SDR3-F02 is CONFIRMED as a finding: the figure exists, is the maker's, and is above every figure the tree uses for a module.
+   - a supply design figure, not a consumption limit: it bounds what the SUPPLY should carry, and the slot stages do carry it steadily
+   - C-ALLTX rev 3: a labelled scenario only (17.0148 V); no change of the row is decided here
+   - the slot stages (L9P-F02): a bound: steady inside (least +0.7441 A), a cooler's start coinciding outside on S1, S3 (least -0.3546 A),
+     a degraded cooler at +0.0251 A: L9T5-F15
+   - the generator's comment and declaration: a finding for board B's generator owner (the comment cites Table 9 only)
+   - what would settle it: the modules' measured peak input current under the kit's own workload (a bench row), or a firmware ceiling on
+     the CPU clock, which the maker's own sentence names as the lever ('lowering the CPU clock rate can reduce the peak power consumption')
+
+7. THE PREDICATES
+   the sheet's B.3 sentence and Table 9's typical-only rows are read from the held file                             yes
+   the maker's figure is over the budget's HIGH and over the generator's declared allowance                         yes
+   every slot stage holds its steady load at the maker's figure                                                     yes
+   with a cooler's bounded start coinciding at least one slot stage passes its loop's least                         yes
+   board B's slot loads with the module at the maker's figure pass what slots 1 and 3's declared peak may carry     yes
+   C-ALLTX rev 3 at the maker's figure needs more than at the budget's HIGH, which needs more than the case         yes
+
+l9t5_cm5: done

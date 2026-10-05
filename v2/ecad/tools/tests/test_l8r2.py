@@ -531,3 +531,337 @@ def t_closing_check_c4_3_names_the_measured_steady_current():
     assert abs(V["fan_env"] / V["eta_lo"] / o["v"]["load_lm"] - 0.7013) < 5e-5
     out = open(OUT, encoding="utf-8").read()
     assert "0.7013 A at 4.9019 V" in out and "expected values, not the threshold" in out
+
+
+# ---------------------------------------------------------------------------------------------------------------- rounds 7 and 8
+GNDRET = os.path.join(REC, "l8r2_gndret.py")
+GNDRET_OUT = os.path.join(REC, "l8r2_gndret.out")
+GNDCHK = os.path.join(REC, "check_gndret_netlist.py")
+L9_DRAFT = os.path.join(REC, "inputs", "l9t5-apply_gen_sch_b_iocbuck-841e6c7e.py")
+L9_DRAFT_A = os.path.join(REC, "inputs", "l9t5-apply_gen_sch_a_iocbuck-841e6c7e.py")
+R7 = {n: os.path.join(REC, "apply_gen_sch_b_%s.py" % n) for n in ("gndret", "fandec")}
+R8 = {"b": os.path.join(REC, "apply_gen_sch_b_gndrtn.py"), "a": os.path.join(REC, "apply_gen_sch_a_gndrtn.py")}
+B_ROUND = [os.path.join(RECS, "l8gnd", "apply_gen_sch_b_gnd002.py")] + [os.path.join(REC, "apply_gen_sch_b_%s.py" % n) for n in ("fans12", "panel5v", "ph4", "rt500")]
+B_FULL = B_ROUND + [R7["fandec"], R7["gndret"], R8["b"], L9_DRAFT]
+_R8 = {}
+
+
+def _gn():
+    return _mod(os.path.join(RECS, "l8p", "gen_netlist.py"), "l8p_gen_netlist_under_test")
+
+
+def _b_copy(d, tag, seq, edit=None):
+    p = os.path.join(d, tag + ".py"); shutil.copy(GEN_B, p)
+    for x in seq:
+        r = _run([x, p, "--write"]); assert r.returncode == 0, (os.path.basename(x), r.stderr.decode()[-300:])
+    if edit:
+        t0 = open(p, encoding="utf-8").read(); t1 = edit(t0); assert t1 != t0, "the mutation changed nothing"
+        open(p, "w", encoding="utf-8").write(t1)
+    return p
+
+
+def _b_run(d, tag, seq, edit=None):
+    """(return code, the generator's log, the recorded table or None, the netlist bytes or None) of a composed scratch generator"""
+    p = _b_copy(d, tag, seq, edit); net = os.path.join(d, tag + ".net")
+    rc, log, table = _gn().run(p, net, "pcb-b-compute")
+    return rc, log, table, (open(net, "rb").read() if rc == 0 else None)
+
+
+def _a_run(d, tag, with_return=True, first=False):
+    """board A composed in L4-E9's order with Layer 9's draft, the return draft last or first, mainpb LAST, then Layer 6's table"""
+    m = _mod(GNDRET, "l8r2_gndret_under_test")
+    seq = [os.path.join(ROOT, "v2", "docs", "records", r, "apply_gen_sch_a_%s.py" % n) for r, n in m.ROUND_A] + [L9_DRAFT_A]
+    if with_return:
+        seq = ([R8["a"]] + seq) if first else (seq + [R8["a"]])
+    p, err = m.compose_a(seq, d, tag); assert err is None, err
+    net = os.path.join(d, tag + ".net")
+    rc, log, table = _gn().run(p, net, "pcb-a-power")
+    assert rc == 0 and table["intent_written"] and not table["unplaced"], log[-300:]
+    return table, open(net, "rb").read()
+
+
+def _composed():
+    """both boards composed once with every draft (cached): the board B table and netlist, the board A netlist, the figures, the totals"""
+    if not _R8:
+        for p in list(R7.values()) + list(R8.values()) + [GNDCHK, GNDRET, L9_DRAFT, L9_DRAFT_A] + B_ROUND:
+            need(p, "a file of record l8r2's rounds 7 and 8")
+        m = _mod(GNDRET, "l8r2_gndret_under_test")
+        for p in list(m.SHEETS.values()) + [m.BUDGET, m.L9T5_OUT, m.V3, m.CASES, m.L4E12_OUT, m.L9STK_PAGE, m.ENVELOPE, m.CHAIN]:
+            need(os.path.join(ROOT, p), "an input of rounds 7 and 8")
+        with tempfile.TemporaryDirectory() as d:
+            rc, log, tb, nb = _b_run(d, "b_full", B_FULL)
+            assert rc == 0 and tb["intent_written"] and not tb["unplaced"], log[-300:]
+            _ta, na = _a_run(d, "a_full")
+        F = m.figures(); rows = m.budget(m.BUDGET)["PS-ALLTX"]
+        cdev = rows["S1"]["least"] + rows["S2"]["least"] + rows["S3"]["least"] + F["cdev_u7"] + F["cdev_u601"]
+        _R8.update(tb=tb, nb=nb, na=na, F=F, cdev=cdev, upper=tb["intent"]["rails"]["GND"]["amps_peak"])
+    return _R8
+
+
+def t_round7_the_old_state_stops_on_the_typed_return_and_the_correction_runs_to_its_end():
+    """RSM-01, reproduced and corrected: board B's round in L4-E9's order stops on GND's typed 21.0 A after fans12 (21.51 A of loads),
+    without Layer 9's draft and with it; with the gndret draft alone it stops on fans12's unclassed capacitors (the second stop);
+    with both of round 7's drafts it runs to its end and the return's figures are the leads' sums."""
+    for p in list(R7.values()) + [GNDCHK, L9_DRAFT] + B_ROUND:
+        need(p, "a file of record l8r2's round 7")
+    chk = _mod(GNDCHK, "l8r2_gndchk_under_test")
+    with tempfile.TemporaryDirectory() as d:
+        for tag, seq in (("old", B_ROUND), ("old_l9", B_ROUND + [L9_DRAFT])):
+            rc, log, _t, _n = _b_run(d, tag, seq)
+            assert rc != 0 and "rail GND declares a 21.00 A peak and its loads sum to 21.51 A" in log, (tag, log[-300:])
+        rc, log, _t, _n = _b_run(d, "half", B_ROUND + [R7["gndret"]])
+        assert rc != 0 and "C704 -> U701.9" in log and "carries no class" in log, log[-300:]
+        rc, log, table, net = _b_run(d, "new", B_ROUND + [R7["fandec"], R7["gndret"]])
+        assert rc == 0 and table["intent_written"], log[-300:]
+        g = table["intent"]["rails"]["GND"]
+        assert (g["amps_typ"], g["amps_peak"]) == (13.3, 26.4) and g["source"] == ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV", "J_54V"], g
+        assert abs(sum(g["loads"].values()) - 22.113) < 1e-9 and g["loads"]["R12"] == 0.6 and "UPPER BOUND" in g["note"], g
+        assert chk.judge(chk.read_netlist(net), table["intent"])[0] == "DRAWN"
+        rc, log, table, net = _b_run(d, "new_l9", B_ROUND + [R7["fandec"], R7["gndret"], L9_DRAFT])
+        g = table["intent"]["rails"]["GND"]
+        assert rc == 0 and g["amps_peak"] == 27.9108 and g["amps_typ"] == 13.3 and g["source"][-2:] == ["J_5V_IOC", "J_54V"], (rc, g)
+        assert chk.judge(chk.read_netlist(net), table["intent"])[0] == "DRAWN"
+
+
+def t_round7_each_draft_is_guarded_and_composes_with_layer_9s_draft_in_any_order():
+    for name, s in R7.items():
+        need(s, "a draft of round 7")
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "b.py"); shutil.copy(GEN_B, p); before = _sha(p)
+            assert _run([s, p]).returncode == 0 and _sha(p) == before, "%s --check wrote or refused" % name
+            assert _run([s, p, "--write"]).returncode == 0 and _sha(p) != before
+            compile(open(p, encoding="utf-8").read(), p, "exec")
+            r = _run([s, p, "--write"]); assert r.returncode == 3 and b"already applied" in r.stderr, r.stderr
+            before = _sha(GEN_B); r = _run([s, GEN_B, "--write"])
+            assert r.returncode == 3 and b"NOT RELEASED" in r.stderr and _sha(GEN_B) == before, "%s wrote the tree's generator" % name
+    with tempfile.TemporaryDirectory() as d:
+        a, b = R7["fandec"], R7["gndret"]
+        orders = [B_ROUND + [a, b, L9_DRAFT], B_ROUND + [L9_DRAFT, a, b], [b, a] + B_ROUND + [L9_DRAFT], [b] + B_ROUND[::-1] + [a, L9_DRAFT]]
+        outs = [open(_b_copy(d, "o%d" % i, seq), "rb").read() for i, seq in enumerate(orders)]
+        assert len(set(outs)) == 1, "the order of board B's drafts changes the generator"
+        t = outs[0].decode()
+        assert t.count('["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV", "J_5V_IOC"], loads=_GND_LOADS') == 1 and t.count("def _gnd_return(") == 1
+        assert '_intent.rail("GND", 0.0, 10.0, 21.0' not in t and t.count('_intent.rail("GND"') == 1
+
+
+def t_round7_the_return_is_derived_and_a_typed_figure_or_a_missed_lead_is_refused():
+    """Not a larger typed number: the same draft on the committed generator gives 22.23 A; the old text with 21.0 simply raised runs
+    and FAILS the check; a lead left off the return, a lead reversed on the netlist and a lead whose rail is elsewhere are refused."""
+    chk = _mod(GNDCHK, "l8r2_gndchk_under_test")
+    full = B_ROUND + [R7["fandec"], R7["gndret"], L9_DRAFT]
+
+    def sub1(old, new):
+        def f(t):
+            assert t.count(old) == 1, (t.count(old), old)
+            return t.replace(old, new)
+        return f
+    with tempfile.TemporaryDirectory() as d:
+        rc, _log, table, net = _b_run(d, "alone", [R7["gndret"]])
+        g = table["intent"]["rails"]["GND"]
+        assert rc == 0 and (g["amps_typ"], g["amps_peak"]) == (13.3, 22.23) and abs(sum(g["loads"].values()) - 20.343) < 1e-9, g
+        nl0 = chk.read_netlist(open(os.path.join(ROOT, "v2", "ecad", "pcb-b-compute-b19", "out", "pcb-b-compute.net"), "rb").read())
+        import json as _json
+        it0 = _json.load(open(os.path.join(ROOT, "v2", "ecad", "pcb-b-compute-b19", "out", "pcb-b-compute-intent.json"), encoding="utf-8"))
+        assert chk.judge(nl0, it0)[0] == "NOT DRAWN", "the committed board does not read NOT DRAWN"
+        rc, _log, table, net = _b_run(d, "raised", B_ROUND + [R7["fandec"], L9_DRAFT],
+                                      sub1('_intent.rail("GND", 0.0, 10.0, 21.0, ', '_intent.rail("GND", 0.0, 10.0, 30.0, '))
+        v, lines = chk.judge(chk.read_netlist(net), table["intent"])
+        assert rc == 0 and v == "FAIL" and any(l.startswith("R2 ") for l in lines) and any("J_54V" in l for l in lines), (rc, v, lines)
+        rc, _log, table, net = _b_run(d, "no54", full, sub1('_srcs = list(leads) + ["J_54V"]', "_srcs = list(leads)"))
+        v, lines = chk.judge(chk.read_netlist(net), table["intent"])
+        assert rc == 0 and v == "FAIL" and any(l.startswith("R1 J_54V") for l in lines), (v, lines)
+        rc, log, _t, _n = _b_run(d, "s9", full, sub1('6.6, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n)', '6.6, "J_5V_S%d" % (9 if _n == 2 else _n), loads=_SLOT_LOADS(_n)'))
+        assert rc != 0 and "do not each carry exactly one arriving rail" in log, log[-300:]
+        rc, log, _t, _n = _b_run(d, "over", full, sub1('    "U%d03" % s: 2.2, ', '    "U%d03" % s: 4.2, '))
+        assert rc != 0 and "rail +5V_S1 declares a 6.60 A peak and its loads sum to 7.34 A" in log, log[-300:]
+        rc, _log, table, net = _b_run(d, "good", full)
+        assert rc == 0 and chk.judge(chk.read_netlist(net), table["intent"])[0] == "DRAWN"
+        a, b = b'(node (ref "J_5V_S2") (pin "1"))', b'(node (ref "J_5V_S2") (pin "2"))'
+        assert net.count(a) == 1 and net.count(b) == 1
+        swapped = net.replace(a, b"\x00").replace(b, a).replace(b"\x00", b)
+        v, lines = chk.judge(chk.read_netlist(swapped), table["intent"])
+        assert v == "FAIL" and any(l.startswith("R1 J_5V_S2 is named a return lead and is none") for l in lines), (v, lines)
+        v, lines = chk.judge(chk.read_netlist(net.replace(b' (node (ref "R12") (pin "2"))', b"", 1)), table["intent"])
+        assert v == "FAIL" and any(l.startswith("R3 ") and "R12" in l for l in lines), (v, lines)
+
+
+def t_round8_the_worst_case_is_found_not_sampled():
+    """The recheck V3's blocker. On C-DEV rev 1 as drawn, round 7's six sampled cases put a 5 V lead's pin 2 under its printed 10 A;
+    the maximum over every vertex of the contact-resistance box is over it. A judgment on the sampled figure passes and is wrong:
+    this test fails on that old state. The enumeration is held to an independent sum for the recheck's corner and, on a small
+    network, to a brute-force walk of every raw vertex."""
+    import itertools
+    c = _composed(); m = _mod(GNDRET, "l8r2_gndret_under_test"); F = c["F"]
+    TH = F["t_e5"]; conds = m.conductors(F, TH, True); bx = m.box(F)
+    assert abs(c["cdev"] - F["v3_total"]) < 2e-3, (c["cdev"], F["v3_total"])
+    old = m.sampled_round7(c["cdev"], conds, F)
+    ext, shift, nst, raw = m.extremes(c["cdev"], conds, bx)
+    assert old["VH"] <= F["vh_a16"] < ext["VH"][0], "the sampled figure (%.4f A) is not the state the recheck refused, or the enumeration (%.4f A) misses its corner" % (old["VH"], ext["VH"][0])
+    assert old["RIB"] < ext["RIB"][0] and ext["RIB"][0] > F["cab_a"], (old["RIB"], ext["RIB"][0])
+    assert raw == 4 ** 23 and nst == 21 * 3 * 171, (raw, nst)
+    # the recheck's corner by an independent sum: J_5V_IOC's contacts at 0, every other VH contact at 20 mOhm, every IDC contact at 20 mOhm
+    r16 = 1.72e-8 * 0.15 / 1.25e-6 * (1 + 0.00393 * (TH - 20)) * 1e3; r18 = 1.72e-8 * 0.15 / 0.83e-6 * (1 + 0.00393 * (TH - 20)) * 1e3
+    rr = 237.0 * 0.08 * (1 + 0.00393 * (TH - 20))
+    G = 1 / r16 + 4 / (r16 + 40.0) + 1 / (r18 + 40.0) + 17 / (rr + 40.0)
+    corner = c["cdev"] / G / r16
+    assert abs(corner - ext["VH"][0]) < 1e-9 and abs(corner - F["v3_ioc"]) < 2e-3, (corner, ext["VH"][0], F["v3_ioc"])
+    assert "J_5V_IOC" in ext["VH"][1], ext["VH"][1]
+    # a small network, every raw vertex walked: two leads of one make, one odd lead, two ribbon conductors
+    small = [("A", "VH", 1, 2.0), ("B", "VH", 1, 2.0), ("C", "VH18", 1, 3.0), ("R", "RIB", 2, 20.0)]
+    lohi = {"VH": (0.0, 20.0), "VH18": (0.0, 20.0), "RIB": (0.0, 20.0)}
+    flat = [(n, k, wr) for n, k, cnt, wr in small for _ in range(cnt)]
+    best = {}
+    for combo in itertools.product(*[[(a, b) for a in lohi[k] for b in lohi[k]] for _n, k, _w in flat]):
+        g = [1.0 / (wr + a + b) for (_n, _k, wr), (a, b) in zip(flat, combo)]
+        for (n_, k_, _wr), gi in zip(flat, g):
+            best[k_] = max(best.get(k_, 0.0), 10.0 * gi / sum(g))
+    e2, _s2, _n2, raw2 = m.extremes(10.0, small, lohi)
+    assert raw2 == 4 ** 5 and all(abs(e2[k][0] - best[k]) < 1e-12 for k in best), (e2, best)
+    C = m.classes_of(small, lohi); an, _sh = m.analytic(10.0, C)
+    assert all(abs(a - e2[cl["kind"]][0]) < 1e-12 for a, cl in zip(an, C))
+
+
+def t_round8_the_return_drafts_are_guarded_and_compose_on_both_boards():
+    chk = _mod(GNDCHK, "l8r2_gndchk_under_test"); c = _composed()
+    for board, gen in (("b", GEN_B), ("a", GEN_A)):
+        s = R8[board]
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "g.py"); shutil.copy(gen, p)
+            if board == "b":
+                r = _run([s, p, "--write"]); assert r.returncode == 3 and b"apply_gen_sch_b_gndret.py is not applied" in r.stderr, r.stderr
+                assert _run([R7["gndret"], p, "--write"]).returncode == 0
+            before = _sha(p)
+            assert _run([s, p]).returncode == 0 and _sha(p) == before
+            assert _run([s, p, "--write"]).returncode == 0 and _sha(p) != before
+            compile(open(p, encoding="utf-8").read(), p, "exec")
+            r = _run([s, p, "--write"]); assert r.returncode == 3 and b"already applied" in r.stderr, r.stderr
+            before = _sha(gen); r = _run([s, gen, "--write"])
+            assert r.returncode == 3 and b"NOT RELEASED" in r.stderr and _sha(gen) == before, "the return draft wrote the tree's generator"
+    with tempfile.TemporaryDirectory() as d:
+        o1 = open(_b_copy(d, "o1", B_FULL), "rb").read()
+        o2 = open(_b_copy(d, "o2", [R7["gndret"], R8["b"], R7["fandec"]] + B_ROUND[::-1] + [L9_DRAFT]), "rb").read()
+        assert o1 == o2, "the order of board B's drafts changes the generator"
+        _t1, n1 = _a_run(d, "a_last"); _t2, n2 = _a_run(d, "a_first", first=True)
+        assert n1 == n2 == c["na"], "board A's netlist depends on where the return draft is applied"
+    nB, nA = chk.read_netlist(c["nb"]), chk.read_netlist(c["na"])
+    g = c["tb"]["intent"]["rails"]["GND"]
+    assert g["source"] == ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV", "J_5V_IOC", "J_54V", "J_GR1", "J_GR2", "J_GR3"] and g["amps_peak"] == 27.9108, g
+    assert chk.judge(nB, c["tb"]["intent"])[0] == "DRAWN"
+    v, _lines, whole = chk.judge_pair(nA, nB)
+    assert v == "DRAWN" and whole == ["J_GR1", "J_GR2", "J_GR3"], (v, whole)
+    for nl in (nA, nB):
+        for ref in whole:
+            assert nl["pins"][ref] == {"1": "GND", "2": "GND"} and "XT60-F" in nl["value"][ref], (ref, nl["pins"][ref])
+    l8 = _mod(CHECK, "l8r2_check_under_test")
+    assert l8.judge("b", l8.read_netlist(c["nb"]))[0] == "DRAWN" and l8.judge("a", l8.read_netlist(c["na"]))[0] == "DRAWN"
+
+
+def t_round8_the_return_removed_misplaced_or_half_terminated_is_refused():
+    chk = _mod(GNDCHK, "l8r2_gndchk_under_test"); c = _composed()
+    nB, nA = chk.read_netlist(c["nb"]), chk.read_netlist(c["na"])
+    nl0a = chk.read_netlist(open(os.path.join(ROOT, "v2", "ecad", "pcb-a-power-a23", "out", "pcb-a-power.net"), "rb").read())
+    nl0b = chk.read_netlist(open(os.path.join(ROOT, "v2", "ecad", "pcb-b-compute-b19", "out", "pcb-b-compute.net"), "rb").read())
+    assert chk.judge_pair(nl0a, nl0b)[0] == "NOT DRAWN"                     # the return removed: the committed boards
+    v, lines, whole = chk.judge_pair(nl0a, nB)                              # drawn on board B alone
+    assert v == "FAIL" and whole == [] and all("absent on board A" in l for l in lines[1:]), (v, lines)
+    raw = c["nb"]
+    wrong = raw.replace(b' (node (ref "J_GR2") (pin "1"))', b"", 1)         # landed on the wrong net: pin 1 moved onto +5V_DEV
+    wrong = wrong.replace(b'(name "/+5V_DEV")', b'(name "/+5V_DEV") (node (ref "J_GR2") (pin "1"))', 1)
+    nw = chk.read_netlist(wrong)
+    assert wrong != raw and nw["pins"]["J_GR2"] == {"1": "+5V_DEV", "2": "GND"}, nw["pins"]["J_GR2"]
+    v, lines = chk.judge(nw, c["tb"]["intent"]); vp, lp, whole = chk.judge_pair(nA, nw)
+    assert v == "FAIL" and any("J_GR2 is not whole on GND" in l for l in lines) and vp == "FAIL" and whole == ["J_GR1", "J_GR3"], (v, lines, vp, lp)
+    keep = [l for l in raw.split(b"\n") if b'(comp (ref "J_GR3")' not in l]
+    drop = b"\n".join(keep).replace(b' (node (ref "J_GR3") (pin "1"))', b"").replace(b' (node (ref "J_GR3") (pin "2"))', b"")
+    nd = chk.read_netlist(drop)                                             # one termination dropped: J_GR3 absent on board B
+    assert "J_GR3" not in nd["pins"]
+    v, lines = chk.judge(nd, c["tb"]["intent"]); vp, lp, whole = chk.judge_pair(nA, nd)
+    assert v == "FAIL" and vp == "FAIL" and whole == ["J_GR1", "J_GR2"] and any("J_GR3 is absent on board B" in l for l in lp), (v, vp, lp)
+    half = chk.read_netlist(c["na"].replace(b' (node (ref "J_GR1") (pin "2"))', b"", 1))
+    vp, lp, whole = chk.judge_pair(half, nB)                                # one contact of a socket missing on board A
+    assert vp == "FAIL" and whole == ["J_GR2", "J_GR3"], (vp, lp)
+    with tempfile.TemporaryDirectory() as d:                                # a socket the declaration does not name
+        rc, _log, table, net = _b_run(d, "unnamed", B_FULL, lambda t: t.replace('_rets = ["J_GR1", "J_GR2", "J_GR3"]', '_rets = ["J_GR1", "J_GR2"]'))
+        v, lines = chk.judge(chk.read_netlist(net), table["intent"])
+        assert rc == 0 and v == "FAIL" and any("J_GR3 has both pins on GND and is not named" in l for l in lines), (v, lines)
+
+
+def t_round8_every_branch_is_inside_its_printed_rating_at_every_vertex_with_the_return():
+    """The closure criterion, on the census of the composed netlists: C-DEV rev 1 and the declared upper bound, both copper ends,
+    every vertex. Without the return it does not hold; with one lead a ribbon conductor is over; with two it holds on the printed
+    ratings only; with the three drawn it holds on the least ratings too, the XT60 terminations at their printed limit included."""
+    chk = _mod(GNDCHK, "l8r2_gndchk_under_test"); c = _composed(); m = _mod(GNDRET, "l8r2_gndret_under_test"); F = c["F"]
+    nB, nA = chk.read_netlist(c["nb"]), chk.read_netlist(c["na"])
+    whole = chk.judge_pair(nA, nB)[2]; n_ret = 2 * len(whole)
+    assert n_ret == 6 and len(chk.leads(nB, c["tb"]["intent"])) == 6 and sum(len(v) for v in chk.ground_conductors(nB).values()) == 17
+    assert (F["xt_a_old"], F["xt_a_new"], F["xt_rise"], F["xt_r_old"], F["xt_r_new"], F["xt_awg"], F["xt_tmin"], F["xt_tmax"]) == (30.0, 35.0, 85.0, 0.55, 1.0, 12, -20.0, 120.0), F
+    assert (F["vh_a16"], F["vh_rc1"], F["cab_a"], F["cab_tmax"], F["sock_rc"], F["t_e5"], F["t_cold"], F["mm2_12"]) == (10.0, 20.0, 1.0, 105.0, 20.0, 76.25, -20.0, 3.31), F
+    assert m.box(F)["RET"] == (0.0, 1.0) and m.box(F)["VH"] == (0.0, 20.0) and m.box(F)["RIB"] == (0.0, 20.0)
+    allow = min(F["l9_shift_allow"], F["v3_shift_allow"]); assert 0.9 < allow < 0.96
+    least = {"VH": lambda T: m.least_rating(F["vh_a16"], F["vh_tmax"], T), "RIB": lambda T: m.least_rating(F["cab_a"], F["cab_tmax"], T),
+             "RET": lambda T: min(30.0, m.least_rating(F["xt_a_new"], F["xt_tmax"], T, F["xt_rise"]))}
+    printed = {"VH": 10.0, "RIB": 1.0, "RET": 30.0}
+    assert abs(least["RIB"](76.25) - 0.59948) < 1e-4 and abs(least["RET"](76.25) - 25.1101) < 1e-3 and least["RIB"](-20.0) == 1.0
+
+    def rows(n, total):
+        out = []
+        for T in (F["t_e5"], F["t_cold"]):
+            ext, shift, _n, _raw = m.extremes(total, m.conductors(F, T, True, n), m.box(F))
+            assert shift <= allow * 1e3
+            out += [(k, T, ext[k][0]) for k in ("VH", "RIB", "RET") if k in ext]
+        return out
+    for total in (c["cdev"], c["upper"]):
+        r6 = rows(n_ret, total)
+        assert all(cur <= printed[k] and cur <= least[k](T) for k, T, cur in r6), r6
+        r0 = rows(0, total)
+        assert any(k == "VH" and cur > 10.0 for k, _T, cur in r0) and any(k == "RIB" and cur > 1.0 for k, _T, cur in r0), r0
+    r4 = rows(4, c["upper"])
+    assert all(cur <= printed[k] for k, _T, cur in r4) and any(cur > least[k](T) for k, T, cur in r4), "two leads no longer sit between the printed and the least ratings"
+    r2 = rows(2, c["cdev"])
+    assert any(k == "RIB" and cur > 1.0 for k, _T, cur in r2), "one lead holds: the selection is no longer the least"
+    xt = max(cur for k, _T, cur in rows(n_ret, c["upper"]) if k == "RET")
+    assert 10.5 < xt < 11.5 and xt < least["RET"](76.25) < 30.0, xt
+
+
+def t_round8_the_committed_output_is_what_the_script_prints_and_its_predicates_hold():
+    need(GNDRET, "the rounds 7 and 8 script"); need(GNDRET_OUT, "its output")
+    _composed()
+    before = (_sha(GEN_B), _sha(GEN_A))
+    r = subprocess.run([sys.executable, "-B", GNDRET], capture_output=True, cwd=ROOT)
+    assert r.returncode == 0, r.stderr.decode()[-400:]
+    assert r.stdout == open(GNDRET_OUT, "rb").read(), "l8r2_gndret.out is not what l8r2_gndret.py prints; regenerate it with _bin/regen_out.py"
+    assert (_sha(GEN_B), _sha(GEN_A)) == before, "the script wrote into the tree"
+    t = r.stdout.decode()
+    preds = [l.rsplit(None, 1) for l in t.split("\n9. PREDICATES\n")[1].splitlines() if l.startswith("   ") and l.strip()]
+    assert len(preds) == 27 and all(v == "yes" for _p, v in preds), (len(preds), [p for p, v in preds if v != "yes"])
+    for s in ("the stop is reproduced after fans12 and at every later stage, without Layer 9's draft (rt500's line) and with it (iocbuck's line): yes",
+              "WHICH DRAFT MOVES THE SUM: fans12 alone, by +1.770 A", "an UPPER BOUND", "the four orders give one generator, byte for byte: yes; every order runs to its end: yes",
+              "every mutation stops or fails: yes (13 of 13)", "L8R2-F31 OPEN", "THE RECHECK'S CORNER, REPRODUCED", "10.6376 A in its pin 2 (V3: 10.6375 A)",
+              "WHAT ROUND 7'S SAMPLING MISSED", "SELECTED (authority SESSION): D1 with 6 conductors, 3 leads", "THE RETURN PATH AS DRAWN DOES NOT HOLD",
+              "THE CORRECTION IS DRAFTED, NOT ACCEPTED", "NOT RAISED TO MAKE THE GENERATOR PASS", "C-DEV rev 1", "C-ALLTX rev 3",
+              "PRINTED 30 A (V1.2, no condition) and 35 A MAX with 12 AWG at a rise under 85 C (2021V1)", "NO RATING PRINTED for AWG 18 on the standard header",
+              "F-1 one return lead absent or open", "F-2 one XT60 contact of one return lead open", "F-3 one 5 V lead's pin 2 open", "F-4a one 5.1 V stage in its current limit",
+              "F-4b the sources' deliverable bound", "F-5 every return lead absent", "TOLERATED inside every printed rating: F-0, F-1, F-2, F-3, F-4a",
+              "NOT tolerated: F-4b, F-5", "LATENT (nothing protects against it and nothing reveals it in service): F-1, F-2, F-3 and F-5",
+              "NOT CLOSED: L8R2-F31 is OPEN until an independent check has read this", "no independent check has read round 8",
+              "check_l8r2_netlist.py (rounds 1 to 6) board B DRAWN", "record l8gnd's check_gnd002_netlist.py board B DRAWN, board A DRAWN"):
+        assert s in t, s
+    for l in t.splitlines():
+        if "L8R2-F31" in l:
+            assert not any(wd in l.split("L8R2-F31", 1)[1][:24] for wd in (" CLOSED", " ACCEPTED", " CORRECTED BY")), l
+
+
+def t_round8_the_page_and_the_readme_carry_the_rounds():
+    page = open(PAGE, encoding="utf-8").read(); readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    for s in ("## 3g. Item 7 (rounds 7 and 8)", "RSM-01", "L8R2-F30", "L8R2-F31", "L8R2-F32", "L8R2-F33", "L8R2-F38", "L8R2-F39", "apply_gen_sch_b_gndret.py",
+              "apply_gen_sch_b_fandec.py", "apply_gen_sch_a_gndrtn.py", "apply_gen_sch_b_gndrtn.py", "UPPER BOUND", "C-DEV rev 1", "27.9108 A", "22.23 A", "OPEN",
+              "authority: SESSION", "IF-AB-POWER", "NOT CONFIRMED", "10.6376 A", "every vertex", "XT60", "UNSENT", "LATENT", "WITHDRAWN"):
+        assert s in page, s
+    for s in ("l8r2_gndret.py", "l8r2_gndret.out", "check_gndret_netlist.py", "apply_gen_sch_b_gndret.py", "apply_gen_sch_b_fandec.py", "apply_gen_sch_a_gndrtn.py",
+              "apply_gen_sch_b_gndrtn.py", "round 8", "astra-check-t5-recheck-cx41.md"):
+        assert s in readme, s
+    first = next(l for l in page.splitlines() if "L8R2-F31" in l)
+    assert "OPEN" in first, "the page does not carry the capacity finding as OPEN where it names it first"
+    for l in page.splitlines():
+        if "L8R2-F31" in l:
+            assert not any(wd in l.split("L8R2-F31", 1)[1][:24] for wd in (" CLOSED", " ACCEPTED", " is closed")), l
