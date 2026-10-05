@@ -3939,7 +3939,8 @@ GATE = [
      'overturn': "on named evidence only, as set 29's row says for U-01, U-02 and U-04 ([PAGE:966], column 5), now carried as the annex's ARCHITECTURE-LEVEL rows ([ANX:21], [ANX:62], [ANX:81]); the P0 list classes only U-01, U-02 and U-04 as 3 ARCH ([P0L:26-28]), P0-1's overlap as 3 without ARCH ([P0L:18]) and E11-29 as a qualification, not ARCH ([P0L:29]); the remaining engineering items are design tasks inside their boards' circuits as the ledger states them ([REM:589-607]); no record read here states that one of them can overturn the architecture"},
     {'n': 2, 'criterion': 'material power-path defects have engineering resolutions and bounded supporting calculations',
      'rows': ["IF-01", "IF-02", "IF-04", "IF-05", "IF-06", "IF-09", "IF-10", "IF-13"], 'choices': [], 'verdict': 'FAIL',
-     'constraint': 'material defects OPEN: D-10 (E-1) and D-17 (RE-2); the P0 round\'s power-path findings OPEN as REMAINING ENGINEERING after cx46: the ledger\'s RE-2, RE-4, RE-5, RE-6, RE-7, RE-9, RE-10, RE-13, RE-17 ([REM:589-607]); on the set 30 candidate the records read: D-10 an unresolved protection defect with failing cases F1 to F4 ([P0SOL:104-110], [P11:19-49]); D-17 OPEN, its correction PROVISIONAL with REMAINING ENGINEERING ([CON:341-342]); twelve cx46 findings NOT CLOSED and seven handed-over cases carried as REMAINING ENGINEERING ([REM:585]), among them V6-B1 (the return), the T10 bounds, the guard\'s latent double failure and retry heating, the CAN service ([CON:322-335]); the eFuse conditions CLOSED AS CONDITIONAL ([CX46:191-194]); no correction of the P0 round reads independently confirmed: cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED." ([CX46:10]); the gate\'s rule above refuses PASS on criterion 2 while a material defect is open',
+     'constraint': 'two material defects are open: D-10 (E-1) and D-17 (RE-2); the P0 round\'s power-path findings OPEN as REMAINING ENGINEERING after cx46: the ledger\'s RE-2, RE-4, RE-5, RE-6, RE-7, RE-9, RE-10, RE-13, RE-17 ([REM:589-607]); on the set 30 candidate the records read: D-10 an unresolved protection defect with failing cases F1 to F4 ([P0SOL:104-110], [P11:19-49]); D-17 OPEN, its correction PROVISIONAL with REMAINING ENGINEERING ([CON:341-342]); twelve cx46 findings NOT CLOSED and seven handed-over cases carried as REMAINING ENGINEERING ([REM:585]), among them V6-B1 (the return), the T10 bounds, the guard\'s latent double failure and retry heating, the CAN service ([CON:322-335]); the eFuse conditions CLOSED AS CONDITIONAL ([CX46:191-194]); no correction of the P0 round reads independently confirmed: cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED." ([CX46:10]); the gate\'s rule above refuses PASS on criterion 2 while a material defect is open' + ("; set 29's other rows stand ([PAGE:967]): D-13 and D-14 addressed in drafts, D-14 CONDITIONAL on E11-29, "
+                  "E11-30 and E11-36 with E11-37 OPEN; D-15 " + L4F03_STATUS + " (E11-38); D-11 CONDITIONAL on Q13's leakage above +25 C; the band between 25 V and the cut-off a residual for layer 8 (R-175)"),
      'overturn': "set 29's answer for D-01 to D-17 stands ([PAGE:967], column 5); the P0 list classes P0-1 to P0-7 as 1 or 2 (desk-fixable or boundable at the desk; P0-1's overlap 3), none 3 ARCH ([P0L:18-24]); D-10's correction candidates stay at the solar entry (a choke rated over the cut current and damped against CS101, a lower-impedance clamp or a snubber, a different cut-off element or method, a model revision on measured loops, [P0SOL:116-122])"},
     {'n': 3, 'criterion': 'remaining assumptions explicit, with their impact and verification method',
      'rows': [], 'choices': [], 'verdict': 'PASS',
@@ -4231,7 +4232,8 @@ DEFECTS = [
     {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)",
      "state": ("OPEN (REMAINING ENGINEERING): D-10 is an UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23; "
               "record l4e7's P0-7, L4E7-P0SOL.md sections 4 and 5), the receiving company's remaining engineering item E-1 (set 29's B6-ENG-1 as "
-              "P0-7 restates it; SUPPLIER-P1-1-P0SOL.md, UNSENT; the ledger's HO-F): with the guard on, F1 at the envelope's least loop 0.30 uH "
+              "P0-7 restates it; SUPPLIER-P1-1-P0SOL.md, UNSENT; the ledger's HO-F; round 2's 3.30 uH loop stays WITHDRAWN as a passing floor, "
+              "F3 reading at it as a reference loop): with the guard on, F1 at the envelope's least loop 0.30 uH "
               "PV_F 321.9 V, Q12's VDS 307.4 V, INP 64.3 V, and F2 at about 1.04 uH PV_F 118.5 V, ABSOLUTE-RATING VIOLATIONS below about 2.4 uH; "
               "F3 at the 3.30 uH reference loop PV_F 83.48 V over the TPS4811-Q1's recommended 80 V row (L6P-F10); F4, a source arriving with "
               "the guard off at the least loop, slew 56.10 V/us over the 54 V/us SESSION line, inside the 60 V/us absolute maximum (MODELED); "
@@ -4252,7 +4254,30 @@ DEFECTS = [
                 "absolute-rating violation (0 V by construction) and INP's margin line (R97 24.9k) and leaves the guard's port-level transient; "
                 "open to the receiving company's engineering: a choke rated over the cut current and damped against CS101, a lower-impedance "
                 "clamp or a snubber sized for the port's energy, a different cut-off element or method, a model revision only on measured loops "
-                "and resistances"),
+                "and resistances"
+                "; set 29's options, kept as history (L4-E7's rounds 2 to 5 on the drafted RSENSE1 sense): " "L4-E7's three, each on its held sheet: the TPS48110-Q1 alone on back-to-back FETs (its -1 V input pins on a reversal: not taken); the "
+                "LM74700-Q1 ahead of the TPS48110-Q1 (76.21 V across CATHODE to ANODE under CS116 against 75 V: not taken); SELECTED, U21 TPS48110-Q1 "
+                "with Q12 CSD19532Q5B as an over-voltage cut-off, rising at 28.55 to 31.06 V and falling at 27.07 V or more, with D4 the SMCJ30A: the "
+                "block never turns on and Q12 holds 36 of 100 V (the TVS-only change, SMCJ36A with the 63 V class, evaluated and not taken). The "
+                "cold connection by fault position (round 5): at the connector, no lead resistance credited, the ring near 0.30 uH takes PV_F's slew "
+                "to 56.1 V/us against its 54 V/us margin line and INP to 18.54 V against 18 V, inside the 60 V/us and 20 V absolute ratings (the "
+                "margin lines hold from 0.53 uH); at the lead's far end 74.4 V, 45.7 V/us and 16.30 V. With the guard already on (the review's B6; "
+                "the external review's L4-F01; L4-E7's rounds 2 to 5): the margin chosen first, U5's CSPIN to CSNIN within +-0.240 V with the "
+                "numerical error 0.000781 V added on top, a DESIGN TARGET; each ceramic bank bounded on its own from Samsung's curves (the port bank "
+                "four CL32B225KCJSNNE, PV_P and TRK_VS CL32B106KBJNNNE, TRK_VIN the drawn CL31B106KBHNNNE), 7 of the 16 corners holding every rating "
+                "with its margin; R96 100k and R97 28.0k at 0.1 % 25 ppm/K, C126 330 pF; both fault positions evaluated: at round 2's 3.30 uH "
+                "reference loop (two conductors 6.09 mm apart over 5 m; WITHDRAWN as a passing floor) U5's resistive peak with the numerical error "
+                "reads 0.2493 V at the connector and 0.2395 V at the far end, and the pins' complete budget (RSENSE1 5 nH, the Kelvin pair 1 nH) "
+                "-0.3021 to +0.2591 V and -0.2884 to +0.2486 V: outside +-0.240 V in both polarities at both positions, the connector's -0.3021 V "
+                "past the -0.3 V absolute maximum; INP 18.29 V over its 18 V margin line, inside its 20 V absolute maximum (from 3.58 uH); PV_F "
+                "83.47 V over the TPS4811-Q1's RECOMMENDED 80 V VS row, OPEN (under it from 4.03 uH); no inductance tried (0.5 to 5.0 nH) brings "
+                "both polarities inside, round 4's 3.0 nH bound withdrawn; at 1.00 uH U5 0.5858 V and at 0.30 uH 1.4059 V, over its absolute "
+                "maximum; a pin-level limiter (B) not taken (8705af p.30 forbids series resistors on the CSxIN and CSxOUT pins; Analog Devices' "
+                "question 6 drafted); the TPS48111-Q1 (D) not taken (its resistive peak alone meets the line from 1.64 uH, no floor claimed; at "
+                "1.00 uH U5 still 0.3262 V); route (3), the sense moved off the stage's input capacitance, worked to the circuit in round 3 as seven "
+                "splits of the input ceramics, does NOT hold (result (ii)): the splits that hold the transient at 0.30 uH leave the sense's +-100 "
+                "mV operating range in normal operation (resistive peaks 0.1212 to 0.1297 V), the splits that keep more behind RSENSE1 bring the "
+                "transient back"),
      "resolution": ("R-173 (apply_gen_sch_e_solar_guard.py, 8 edits, release-guarded, drafted, not applied; PROVISIONAL as a protection until E-1's "
                    "correction); R-240 (P0-7's sense arrangement C2, apply_gen_sch_e_p0sol.py, drafted, not applied); E-1 (record l4e7's "
                    "SUPPLIER-P1-1-P0SOL.md, UNSENT: the correction or a measured model revision before any passing claim, then S1 and S2); "
@@ -4324,18 +4349,17 @@ DEFECTS = [
               "port's remaining engineering; board E composes with it in L4-E9's order, every record check DRAWN and every mutation failing on "
               "the composed candidate; cx45: \"although D-16's correction and D-10's remaining-engineering classification are supported\"; "
               "not applied, no qualification done, and no check accepts it as closing D-16"),
-     "constraint": "at the 25 V corner (REQ-016's open circuit) delivering into a 12.0 V bus at the regulation's highest current, M1's pulsed input current "
-                   "flows through RSENSE1 because at 25 V bias the 50 V X7R ceramics hold 8.2 uF of their 24.8 uF nominal behind it and 21.4 uF of 40.0 uF "
-                   "ahead: the resistive peak across RSENSE1 is 0.1174 V (0.1421 V at the trip's current), the pins read -0.1866 to +0.1863 V with "
-                   "RSENSE1's 5 nH, and the amplifier, limited to 100 mV and producing no current for a negative differential (8705af p.31), reads "
-                   "the average +7.9 % at the regulation's highest current (-10.2 % at the trip's), so the input limit regulates BELOW its setting "
-                   "there (MODELED on a clipping model, 100 uA above 100 mV, which the sheet does not print: Analog Devices' item 7; L4-E7's round "
-                   "5 after the recheck; round 3's 5.7 % low, which averaged the negative half-cycles as negative monitor current, withdrawn); at "
-                   "M1's 10 ns edges the pins reach -0.4329 V, beyond the -0.3 V absolute maximum, a possible stress (the earlier 'no damage' "
-                   "withdrawn); at the hold (16.97 V in) the sense stays inside the range (0.0585 V)",
+     "constraint": "at the 25 V corner RSENSE1's resistive peak is 0.1174 V at the regulation's highest current, the pins -0.1866 to +0.1863 V, and M1's 10 ns edges put -0.4329 V on them, past the -0.3 V absolute maximum (reproduced by P0-7 on the base, [P0SOL:22-24])",
      "options": ("P0-7's alternative C2 (D-10's row): U5's input sense not used, so its pins see 0 V by construction; the regulation's sense U23 on "
                 "the backstop's bank, its average at most 1.34 % high, the safe side; B6-ENG-2 answered at the desk; R-189 replaced by S4 and S3; "
-                "R-186 obsolete under R-240 (L4E7-P0SOL.md section 5)"),
+                "R-186 obsolete under R-240 (L4E7-P0SOL.md section 5)"
+                "; set 29's options, kept as history (L4-E7's rounds 2 to 5 on the drafted RSENSE1 sense): " "measured at the desk by L4-E7's round 3 (seven splits of the input ceramics): the sheet's Figure 1 arrangement (nothing ahead of RSENSE1 "
+                "but the bank, everything behind) reads 0.0983 V resistive, the monitor's average +0.7 %, but fails U5's transient at every loop on the grid; the "
+                "splits that hold the transient at 0.30 uH (C64 alone, one 2.2 uF behind) leave the operating range by more (0.1297 and 0.1280 V); no "
+                "split measured holds both duties (route 3, result (ii)). What resolves it: the pins' waveform in operation at 25 V in and the lowest bus "
+                "(the regulation's error against its setting, R-189); Analog Devices' statement of what the amplifier reads above 100 mV (clarification "
+                "item 7); enough low-derating capacitance behind RSENSE1 (which raises B6's floor); or the current-sense arrangement itself reconsidered "
+                "by the engineer"),
      "resolution": ("R-240 (P0-7's C2: apply_gen_sch_e_p0sol.py, drafted, not applied); S3 and S4 (SUPPLIER-P1-1-P0SOL.md, UNSENT) in place of "
                    "R-189's bench (R-189 restated); R-186 WITHDRAWN (obsolete under R-240); Analog Devices' item 8 drafted (OW-4), UNSENT; "
                    "L4-E7R's regulation acceptance row re-run on R-240 (R-20, R-52), the backstop and the 100 W bound (R-21, R-98)"),
@@ -7382,8 +7406,8 @@ def cons_exit_defects(F):
          "the draft applied with R-157 (R-181)", "the limit read at -20, 25 and 70 C, the overload and a hard short at VSYS_E, the contact's resistance after (R-184)",
          "nothing of the topology: a branch protection inside (B1)"),
         ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]),
-         "OPEN: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's 100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240); the cut-off (rising at %s to %s V, falling back at %s V or more) and the cold connection drafted, not applied (the cold connection's margin lines not held at a connector fault near %s uH, inside the absolute ratings)"
-         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["cold_conn"]["near"])),
+         "OPEN: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's 100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240); the cut-off (rising at %s to %s V, falling back at %s V or more) and the cold connection drafted, not applied (the cold connection's margin lines not held at a connector fault near %s uH, inside the absolute ratings); set 29's guard-on reading at the reference loop (round 2's %.2f uH WITHDRAWN as a passing floor, the margin %s) is history (8a)"
+         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["cold_conn"]["near"]), rm["b6"]["l_uh"], RESERVE_NOTE),
          "E-1's correction or a measured model revision (record l4e7's SUPPLIER-P1-1-P0SOL.md, UNSENT; the ledger's HO-F), then the drafts applied after their release records",
          owed + "; E-1, then S1 and S2 on the correction (R-180 and R-187 inputs, no passing route; R-186 WITHDRAWN under R-240)", topo),
         ("D-11", "a reversed panel (E-N1, a single fault)", adr + "; CONDITIONAL on Q13's leakage above +25 C", "the same draft", "Q13's leakage at the hot end (R-176)", topo),
@@ -8048,8 +8072,8 @@ def cons_in_short(F, D, st, reg):
         "U21 with Q12, the return switch Q13, the port bank C131, C132, C135 and C136, C133 and C134, C71 to C74, C126, R96 and R97 at "
         "0.1 %%; R-173, apply_gen_sch_e_solar_guard.py, not applied), D-11 CONDITIONAL on Q13's leakage above +25 C, D-10's cut-off holding "
         "and its cold connection inside the absolute ratings at both fault positions but over its margin lines at a connector fault; D-10 "
-        "is OPEN, an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: "
-        "the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's "
+        "is OPEN, an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (set 29's B6-ENG-1 as P0-7 restates it; round 2's 3.30 uH loop stays "
+        "WITHDRAWN as a passing floor): the guard's port-level transient (F1 and F2 absolute-rating violations below about 2.4 uH, F1 PV_F 321.9 V MODEL against the port's "
         "100 V; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH; F4 the arriving source's slew over its 54 V/us line) and the "
         "lower-source back-feed (S1's row (b)); U5's absolute-rating violation corrected in draft by P0-7 (R-240). D-16 is ADDRESSED IN "
         "DRAFTS: corrected in draft by P0-7 (R-240, not applied; U5's input sense not used, 0 V by construction; the regulation's sense U23 "

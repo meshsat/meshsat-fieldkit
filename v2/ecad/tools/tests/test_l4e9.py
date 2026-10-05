@@ -210,6 +210,11 @@ def t_every_downstream_item_has_an_owner_and_an_acceptance():
         if state in ("OPEN", "CLOSED"):
             # a review finding kept in the active register (the owner's amendment): it names the finding and what closes it
             assert "review finding" in item and re.search(r"\bL4-[A-Z]{2}\d{2}\b", item) and "CLOSE" in acc.upper(), "%s: an OPEN or CLOSED row that is not a review finding" % rid
+        elif state == "WITHDRAWN":
+            # set 31: a decided row withdrawn by a ruling stays in the register, naming the withdrawal (DOWNSTREAM-REGISTER.md R-210 to
+            # R-212: "WITHDRAWN 5 October 2026: FAN_OK is rejected", the owner's rejection of FAN_OK in the P0 brief; R-213 with them;
+            # R-186 obsolete under R-240, record l4e7's L4E7-P0SOL.md section 5)
+            assert "WITHDRAWN" in acc + item, "%s is WITHDRAWN without naming the withdrawal" % rid
         else:
             assert state in ("DRAFTED", "MISSING DRAFT", "PENDING", "OWED"), "%s state %s" % (rid, state)
     kinds = {r[1] for r in rows}
@@ -245,7 +250,10 @@ def t_every_draft_of_l4e4_to_l4e8_is_registered_and_the_missing_ones_are_marked(
     text = open(REG, encoding="utf-8").read()
     drafts = _drafts()
     assert len(drafts) >= 9, drafts
-    for n in sorted(drafts):
+    # set 31: route B2's draft stays in record l4e7 outside the baseline with no register row (B2-PRESENCE.md and L4E7-P0SOL.md section 4:
+    # UNSELECTED and WITHDRAWN AS DRAFTED; record l9t5's apply_l4e9_changelist_p0.py leaves R-241 unused); the script names it OUT_OF_BASELINE
+    out_ = {os.path.basename(x) for x in _M().OUT_OF_BASELINE}
+    for n in sorted(drafts - out_):
         assert "`%s`" % n in text, "the register misses %s" % n
     rows = _md_rows(REG, "| ID | Kind |")
     miss = [r for r in rows if r[6] == "MISSING DRAFT"]
@@ -675,7 +683,11 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     # the open material defects: D-10's guard-on case (L4-E7's round 5: an absolute-rating violation at a connector fault) and D-16
     # (B6-ENG-2), each handed to the engineer with a register row; D-11 addressed in drafts since L4-E7's remedies (check 5)
     opn = {d["id"]: d for d in m.DEFECTS if d["state"].startswith("OPEN")}
-    assert {"D-10", "D-16"} <= set(opn) and "B6-ENG-2" in opn["D-16"]["state"] and "R-189" in opn["D-16"]["resolution"]
+    # set 31: D-16 is ADDRESSED IN DRAFTS, not open: record l4e7's L4E7-P0SOL.md section 5 corrects it in draft by P0-7 (R-240), cx45 as
+    # received: "although D-16's correction and D-10's remaining-engineering classification are supported"; no check reopens it
+    # (cx46 as received, items 1 to 18); D-17 stays OPEN: cx46 item 2 NOT CLOSED, the ledger's RE-2 (REMAINING-ENGINEERING.md)
+    d16_ = [d for d in m.DEFECTS if d["id"] == "D-16"][0]
+    assert {"D-10", "D-17"} <= set(opn) and d16_["state"].startswith("ADDRESSED IN DRAFTS") and "R-240" in d16_["state"] and "B6-ENG-2" in d16_["state"]
     # round 8: an open defect beyond those two is D-17, decision D-11's basis over REQ-018's pass line, with its design-out's rows named
     assert set(opn) - {"D-10", "D-16"} <= {"D-17"} and ("D-17" not in opn or ("REQ-018" in opn["D-17"]["constraint"] and "R-210" in opn["D-17"]["resolution"]))
     assert "ABSOLUTE-RATING VIOLATION" in opn["D-10"]["state"] and "B6-ENG-1" in opn["D-10"]["state"] and "R-176" in opn["D-10"]["resolution"]
@@ -1145,6 +1157,8 @@ def t_consolidation_the_change_list_covers_every_apply_script_in_order():
     assert impl <= {c[2] for c in ch} and len({c[2] for c in ch}) == len(ch), "every implementation row once"
     scripts = " ".join(c[4] for c in ch)
     for p in glob.glob(os.path.join(ROOT, "v2", "docs", "records", "l4e*", "apply_*.py")) + [os.path.join(ROOT, "v2", "docs", "records", "d8dec31", "apply_gen_sch_e_cin.py")]:
+        if os.path.relpath(p, os.path.join(ROOT, "v2", "docs", "records")) in m.OUT_OF_BASELINE:
+            continue   # set 31: route B2, UNSELECTED and WITHDRAWN AS DRAFTED outside the baseline (B2-PRESENCE.md; L4E7-P0SOL.md section 4)
         assert os.path.basename(p) in scripts, "%s is not in the change list" % os.path.relpath(p, ROOT)
     assert not any("APPLIED" == c[8].split(" ")[0] for c in ch), "nothing is applied"
     pos = {c[2]: c[0] for c in ch}
@@ -1400,7 +1414,10 @@ def t_consolidation_the_panel_lead_surge():
     assert any(c.met is False for c in absol) and any(c.met for c in absol), "one absolute rating violated, the others held, kept apart"
     # the defects: D-10 OPEN for its guard-on case, the remedy drafted; D-11 addressed in drafts and conditional; D-12 with the SMCJ30A
     de = {d["id"]: d for d in m.DEFECTS}
-    assert de["D-10"]["state"].startswith("OPEN for the source arriving with the guard already on") and "R-173" in de["D-10"]["resolution"]
+    # set 31: D-10 is restated by record l4e7's P0-7 (L4E7-P0SOL.md section 4, SUPPLIER-P1-1-P0SOL.md) as an unresolved protection defect,
+    # the receiving company's E-1, over F1 to F4 (the guard on and the source arriving with it off); cx46 item 15: "D-10 retained as
+    # remaining engineering"; it stays OPEN and the drafted guard R-173 stays its starting point
+    assert de["D-10"]["state"].startswith("OPEN") and "E-1" in de["D-10"]["state"] and "F1" in de["D-10"]["state"] and "R-173" in de["D-10"]["resolution"]
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
     assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
@@ -1452,7 +1469,8 @@ def t_consolidation_the_panel_lead_surge():
     parts = {p_[0]: p_ for p_ in m.cons_parts(F)}
     assert "U21, Q12 (board E)" in parts and "Q13 (board E)" in parts and "D4 (board E)" in parts
     exd = {d[0]: d for d in m.cons_exit_defects(F)}
-    assert exd["D-10"][2].startswith("OPEN for the guard-on case") and "CONDITIONAL" in exd["D-11"][2] and "residual" in exd
+    # set 31: the exit row reads D-10 as P0-7 restates it (L4E7-P0SOL.md section 4: E-1, F1 to F4), still OPEN
+    assert exd["D-10"][2].startswith("OPEN") and "E-1" in exd["D-10"][2] and "CONDITIONAL" in exd["D-11"][2] and "residual" in exd
     assert m.md_table(page, "| Defect | Its fault |") == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in m.cons_exit_table(F, D, st)["| Defect | Its fault |"][2:]]
     assert "addressed in drafts" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
@@ -1505,7 +1523,10 @@ def t_fix_round_the_layer4_review_integrated():
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
     opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
-    assert {"D-10", "D-16"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
+    # set 31: D-16 is ADDRESSED IN DRAFTS, not open: record l4e7's L4E7-P0SOL.md section 5 corrects it in draft by P0-7 (R-240), cx45 as
+    # received: "although D-16's correction and D-10's remaining-engineering classification are supported"; no check reopens it
+    # (cx46 as received, items 1 to 18); D-17 stays OPEN: cx46 item 2 NOT CLOSED, the ledger's RE-2 (REMAINING-ENGINEERING.md)
+    assert {"D-10", "D-17"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
@@ -1777,7 +1798,10 @@ def t_the_decisions_are_kept_apart():
     assert b6["mon"][0] > 0 > b6["mon"][1] and b6["sens10"] < -b6["u5_abs"], "the monitor rectified (the limit below its setting) and the 10 ns stress named"
     assert b6["budget"][0] > 0.24 and b6["budget"][1] < -0.24 and b6["pvf80"][0] > 80.0 and b6["pvf80"][2] > b6["l_uh"]
     assert [k for k, _ in b6["eng2"]][0] == "Affected circuit" and len(b6["eng2"]) == 8
-    assert de["D-16"]["state"].startswith("OPEN") and "B6-ENG-2" in de["D-16"]["state"] and de["D-16"]["rows"] == ["IF-01", "IF-02"]
+    # set 31: D-16 is ADDRESSED IN DRAFTS, not open: record l4e7's L4E7-P0SOL.md section 5 corrects it in draft by P0-7 (R-240), cx45 as
+    # received: "although D-16's correction and D-10's remaining-engineering classification are supported"; no check reopens it
+    # (cx46 as received, items 1 to 18); D-17 stays OPEN: cx46 item 2 NOT CLOSED, the ledger's RE-2 (REMAINING-ENGINEERING.md)
+    assert de["D-16"]["state"].startswith("ADDRESSED IN DRAFTS") and "B6-ENG-2" in de["D-16"]["state"] and de["D-16"]["rows"] == ["IF-01", "IF-02"]
     assert fmt_(b6["sense"][0]) in de["D-16"]["constraint"] and fmt_(b6["fig1"]) in de["D-16"]["options"]
     assert reg["R-189"][1] == "TEST" and "B6-ENG-2" in reg["R-189"][2] and "result (ii)" in reg["R-187"][2] and "R228" in reg["R-181"][2]
     page = open(PAGE, encoding="utf-8").read()
@@ -1798,7 +1822,10 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
     de = {d["id"]: d for d in m.DEFECTS}
     opn_ = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
-    assert {"D-10", "D-16"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
+    # set 31: D-16 is ADDRESSED IN DRAFTS, not open: record l4e7's L4E7-P0SOL.md section 5 corrects it in draft by P0-7 (R-240), cx45 as
+    # received: "although D-16's correction and D-10's remaining-engineering classification are supported"; no check reopens it
+    # (cx46 as received, items 1 to 18); D-17 stays OPEN: cx46 item 2 NOT CLOSED, the ledger's RE-2 (REMAINING-ENGINEERING.md)
+    assert {"D-10", "D-17"} <= set(opn_) and all(x in [g for g in m.GATE if g["n"] == 2][0]["constraint"] for x in opn_)
     s14 = de["D-14"]["state"]
     assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
@@ -1926,7 +1953,10 @@ def t_the_collaborators_recheck_is_cited_not_accepted():
     dec = m.cons_decisions(F)
     cov = [l_ for l_ in dec if l_.startswith("**What stands where, exactly**")][0]
     kd = cov.split("**known design defects, open**")[1].split("**defects with a drafted correction")[0]
-    assert "D-10" in kd and "D-16" in kd and "E11-40" in kd and "addressed in drafts" not in cov.split("**Open:**")[0].lower()
+    # set 31: D-16 is ADDRESSED IN DRAFTS, not open: record l4e7's L4E7-P0SOL.md section 5 corrects it in draft by P0-7 (R-240), cx45 as
+    # received: "although D-16's correction and D-10's remaining-engineering classification are supported"; no check reopens it
+    # (cx46 as received, items 1 to 18); D-17 stays OPEN: cx46 item 2 NOT CLOSED, the ledger's RE-2 (REMAINING-ENGINEERING.md)
+    assert "D-10" in kd and "D-17" in kd and "E11-40" in kd and "addressed in drafts" not in cov.split("**Open:**")[0].lower()
     opn = [d["id"] for d in m.DEFECTS if d["state"].startswith("OPEN")]
     adr = [d["id"] for d in m.DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
     assert all(x in cov.split("**Open:**")[1] for x in opn) and all(x in cov.split("**Drafts corrected")[0].split("**defects with a drafted correction")[1] for x in adr)
@@ -1960,7 +1990,9 @@ def t_the_open_items_are_classified():
             assert c == m.KED, "an open defect is a known engineering defect: %s" % d["id"]
     for u, (c, n) in m.U_CLASS.items():
         assert c in m.CLASSES and n.startswith(m.VERB[c]), u
-    assert m.D_CLASS["D-10"] == m.KED and m.D_CLASS["D-16"] == m.KED and cl["R-190"][0] == m.KED and "E11-40" in [r for r in reg if r[0] == "R-190"][0][3]
+    # set 31: D-16's open items are the receiving company's bench rows S3 and S4 (SUPPLIER-P1-1-P0SOL.md; L4E7-P0SOL.md section 5:
+    # "R-189 (B6-ENG-2's bench): replaced by S4 (the regulation at 25 V) and S3"), a physical uncertainty; D-17 a known defect (RE-2)
+    assert m.D_CLASS["D-10"] == m.KED and m.D_CLASS["D-16"] == m.PHY and m.D_CLASS["D-17"] == m.KED and cl["R-190"][0] == m.KED and "E11-40" in [r for r in reg if r[0] == "R-190"][0][3]
     route = {rid: q for q in m.cons_qual(F) for rid in re.findall(r"R-\d+", q[0])}
     for rid in m.PHY_NAMED:
         assert cl[rid][0] == m.PHY and rid in route and all(x.strip() for x in route[rid]) and len(route[rid]) == 10, rid
@@ -2314,7 +2346,9 @@ def t_decision_d11s_all_transmit_floor_on_the_final_drafts_is_open_and_its_desig
     # the defect and its one design-out attempt
     d17 = [d for d in m.DEFECTS if d["id"] == "D-17"][0]
     if L9["drafted"] > L9["req_floor"]:
-        assert d17["state"].startswith("OPEN") and m.D_CLASS["D-17"] == m.KED and m.D_NEXT["D-17"].startswith("FIX")
+        # set 31: after cx46 (item 2, "Q1 reference loading, resistor corners and propagation: NOT CLOSED", the second negative that
+        # ends the method) the cap's open part is the receiving company's remaining engineering RE-2 (REMAINING-ENGINEERING.md): ASSIGN
+        assert d17["state"].startswith("OPEN") and m.D_CLASS["D-17"] == m.KED and m.D_NEXT["D-17"].startswith(("FIX", "ASSIGN"))
     off = [c for c in ch if "design-out" in c.what][0]
     assert abs(L9["off_need"] - (L9["drafted"] - L9["fans_conv_hi"] / I)) < 1e-12 and off.cls == "CONDITIONAL" and "R-213" in off.src
     assert L9["fans_conv_hi"] > L9["fans_conv_mk"] > 0 and L9["off_margin"] == L9["req_floor"] - L9["off_need"]
