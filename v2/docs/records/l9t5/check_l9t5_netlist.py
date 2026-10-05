@@ -46,7 +46,12 @@ VFB = (0.784, 0.800, 0.816)           # V, TPS62933 VFB over TJ -40 to 150 C (TI
 LDOS = (("U40", "R66", "C400"), ("U50", "R78", "C420"), ("U60", "R90", "C440"))
 # the divider a board A netlist must carry and the band its set point must stay in: I-03's draft (U601 at 5 V, as U41) and, with
 # task T10's pre-regulator draft composed after it, R602 at 13.3 k (round 4; record l9t5's l9t5_t10.py)
-DIVS = {"i03": (("56.2k 0.1%", "10.7k 0.1%"), (4.8, 5.2)), "t10": (("56.2k 0.1%", "13.3k 0.1%"), (4.05, 4.31))}
+DIVS = {"i03": (("56.2k 0.1%", "10.7k 0.1%"), (4.8, 5.2)), "t10": (("56.2k 0.1%", "13.3k 0.1%"), (4.05, 4.31)),
+        # P0 round (Slot A, 5 October 2026, SESSION L9T5-D9): Slot C's set point delta iocset composed after iocpre, R602 14.0 k. The
+        # band's floor 3.87 V: the least output that keeps T10-A3 (restated at 0.4512 A, SESSION L9T5-D8) with the return as drawn
+        # (3.6652 V + 2 % of 4.01 V + three LDOs' 0.4512 A on 42.52 mOhm + 0.0681 V = 3.871 V); its ceiling 4.18 V: the top that keeps
+        # the babbling supervisor's LDO at 125 C on revision V (l9t5_connected.out section 10)
+        "t10s": (("56.2k 0.1%", "14.0k 0.1%"), (3.87, 4.18))}
 
 
 def read(raw):
@@ -100,7 +105,10 @@ def mode_of(nl):
     """P0 round (V6-m1, 5 October 2026): the divider mode read from the netlist itself. R602 at T10's 13.3 k means record l9t5's iocpre
     draft is composed, and the check reads T10's band; any other value is judged against I-03's own (so a wrong value still FAILS)."""
     v = (nl.get("comps", {}).get("R602", {}).get("value", "") or "").split()
-    return "t10" if v and v[0] == DIVS["t10"][0][1].split()[0] else "i03"
+    for mode in ("t10", "t10s"):           # t10s: Slot C's iocset delta composed after iocpre (R602 14.0 k, SESSION L9T5-D9)
+        if v and v[0] == DIVS[mode][0][1].split()[0]:
+            return mode
+    return "i03"
 
 
 def checks_a(nl, div="auto"):

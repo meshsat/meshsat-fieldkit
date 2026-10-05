@@ -233,6 +233,7 @@ with its board's pending drafts composed in L4-E9's change-list order (out 2); E
    l4e11/apply_gen_sch_a_dd7.py                     names LM5069, LM5069-1
    l4e11/apply_gen_sch_e_entry.py                   names LM5069, LM5069MM-2, TPS48110, TPS48110AQDGXRQ1
    l4e11/apply_gen_sch_e_timer.py                   names LM5069, TPS48110  (not composed: see the README)
+   l4e7/apply_gen_sch_e_p0sol_b2.py                 names TPS48110AQDGXRQ1  (not composed: see the README)
    l4e7/apply_gen_sch_e_solar_guard.py              names TPS48110, TPS48110AQDGXRQ1
    l4e9/apply_gen_sch_e_hotswap.py                  names LM5069MM-2
    l8p/apply_gen_sch_a_ptc.py                       names LM5069-1

@@ -1,4 +1,4 @@
-CANDIDATE NOT YET READY (the coordinator's INBOX 11: written only after P0-7's B2 draft and Slot C's part-22 round are merged and the outputs are stable; the composition and the re-trace are re-run after each merge). DONE: 1a, 1b round 2, 1c, 1d; part 2 (P0-2 on C-DEV rev 2: V6-B1 PROVISIONAL on layout condition L8R2-F33a, V6-B2 bounded with vendor tasks, V6-m1, m8 and m12); 4a (Slot C's final tip ed021fac and P0-7's 2f40efb6 merged, C-DEV rev 2 pinned); 4b and 4c (`l9t5_connected.py`: boards A, B and D composed with every pending draft in L4-E9's change-list order, 14 record checks DRAWN, 14 of 14 mutations fail, the connected re-trace on the case rows; L8R2-F33a realisable on the drawn placement with one return socket a group, every 5 V entry within 8.0 mm; L9T5-F22 judged over the connected circuit and not taken, SESSION L9T5-D8). F01 / D-17 PROVISIONAL: correction (c), the PA drain-current cap 6.3522 to 6.9257 A, C-ALLTX rev 3 at 15.1307 V on the MODEL (margin 0.3693 V), the 30 W service under the cap GENUINELY EXTERNAL (B-PA1), the dynamics B-PA2; 1c DRAFTED (11 of 11 mutations fail). NOT DONE: no independent check of the candidate; L4-E9's change-list rows R-220 to R-240 drafted (`apply_l4e9_changelist_p0.py`, checked in memory), not applied (the integrator's, with the re-takes it names); P0-7's route B2 (D-10's residual) not yet merged; part 3 moved to another author. NEXT: the two merges INBOX 11 names, then the re-run and CANDIDATE READY. Power-design closure and fabrication release stay BLOCKED. Carried from round 4 (T10 is Slot C's): T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN, a DRAFTED CANDIDATE, unchecked; L9T5-F13, F16 and F17 OPEN; no case row is changed. Round 5 (T10, Slot C): `T10-ROUND5.md`; F13, F16, F17 drafted corrections on rev V (L9T5-D7), OPEN pending the independent check; L9T5-F22 (R602 14.0 k) offered and not taken (SESSION L9T5-D8).
+CANDIDATE NOT YET READY (the coordinator's INBOX 11 to 13: written only after Slot C's guard item A and the P0-7 author's S1 rewrite are merged and the outputs are stable; the composition and the re-trace are re-run after each merge). DONE: 1a, 1b round 2, 1c, 1d; part 2 (P0-2 on C-DEV rev 2: V6-B1 PROVISIONAL on layout condition L8R2-F33a, V6-B2 bounded with vendor tasks, V6-m1, m8 and m12); 4a (Slot C's ed021fac and 78606fcc, P0-7's 66ec67ca merged, C-DEV rev 2 pinned; P0-7's rows R-240 and R-241 applied in L4-E9's list, which refused the tree without them); 4b and 4c (`l9t5_connected.py`: boards A, B and D (and board E with P0-7) composed with every pending draft in L4-E9's change-list order, 16 record checks DRAWN, 16 of 16 mutations fail, the connected re-trace on the case rows; L8R2-F33a realisable on the drawn placement with one return socket a group, every 5 V entry within 8.0 mm; L9T5-F22: Slot C's set point delta R602 14.0 k judged over the connected circuit and TAKEN, SESSION L9T5-D9). F01 / D-17 PROVISIONAL: correction (c), the PA drain-current cap 6.3522 to 6.9257 A, C-ALLTX rev 3 at 15.1307 V on the MODEL (margin 0.3693 V), the 30 W service under the cap GENUINELY EXTERNAL (B-PA1), the dynamics B-PA2; 1c DRAFTED (11 of 11 mutations fail). NOT DONE: no independent check of the candidate; L4-E9's change-list rows R-220 to R-239, R-242 and R-243 drafted (`apply_l4e9_changelist_p0.py`, checked in memory), not applied (the integrator's, with the re-takes it names); D-10 an UNRESOLVED PROTECTION DEFECT in the model (S1, the receiving company's engineering item; route B2 an unapproved PARTIAL interface proposal, composed as such, which does not close it); part 3 moved to another author. NEXT: Slot C's guard item A and P0-7's S1 rewrite, then the re-run and CANDIDATE READY. Power-design closure and fabrication release stay BLOCKED. Carried from round 4 (T10 is Slot C's): T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN, a DRAFTED CANDIDATE, unchecked; L9T5-F13, F16 and F17 OPEN; no case row is changed. Round 5 (T10, Slot C): `T10-ROUND5.md`; F13, F16, F17 drafted corrections on rev V (L9T5-D7), OPEN pending the independent check; L9T5-F22 (R602 14.0 k) drafted by Slot C in part 22 and taken (SESSION L9T5-D9).
 
 (Round 4's status line, kept:) **ROUND 4 DONE, PARTS 0 TO 3 (4 October 2026 night):** the collaborator's targeted recheck V3 (an AI review) read round 3 and returned NOT CONFIRMED. **I-03 stays OPEN and is credited only with U7's load relief and the compositions.** Record l8r2's round 8 is merged (`927cdd1e`) and its dedicated-return drafts are composed on both boards. The connected path (the lead's pin 2 and the return between the boards) reads NOT MET as drawn (10.6376 A at 76.25 C, 12.0918 A at -20 C against the VH's printed 10 A) and CONDITIONAL with that return (at most 4.9277 A), on a draft no independent check has read; L8R2-F31 stays OPEN. Round 3's claim that the acceptance does not depend on L8R2-F31 is withdrawn, with its sequencing sentence; the AP2112K's requirement is 3.7674 V; the gauge's bound is 16.0718 V with the offset drift; the case file pinned is rev 3. **T10 (L9T5-F06, the supervisors' regulators): STAYS OPEN.** Its conditions are verified from the sources (the supervisors' state is bounded by no document; the deficit is thermal, the AP2112K's junction passing its 150 C absolute maximum at 0.2187 A from the 5 V rail), three corrections are compared, one is selected as a DRAFTED CANDIDATE, unchecked (SESSION: U601 as a 4.18 V pre-regulator, with Layer 5's row bounding the state as its condition) with the acceptance criterion T10-A1 to A5, and its circuit half is drafted, composed and read on the netlists; no independent check has read it and Layer 5 has not accepted its row. The held-dominant and CAN-fabric-fault rows are judged on their own limits (125 C in a served state, 150 C in any; the typical 160 C shutdown never an acceptance; MODEL junctions) and all FAIL: L9T5-F13, F16 and F17 OPEN, F16 and F17 covered by no requirement (finished on 5 October 2026 in the morning by a fresh author, after the owner's instructions of that morning). **SDR3-F02 (the CM5's 2.5 A): confirmed as a finding;** a supply design figure, assessed as labelled scenarios and a bound on the slot stages (L9T5-F15); no case row is changed. F01 / D-17 stays OPEN; A1 is not drafted. Open `L9T5-CASES.md` sections 0d, 0c and 0b, then the claim table below (C36 onward is new for the next check).
 
@@ -69,30 +69,36 @@ ed021fac (record l8p round 9, L4-E11 round 17: DD-7's check restated for the gua
 `inputs/cases-cdev-rev2-20261005.md` with its SOURCES line; record l8r2 holds the whole case file); record l9stk's two outputs
 re-taken on L4-E11's new digest (digest lines only).
 
-**4b and 4c (`l9t5_connected.py`, `l9t5_connected.out`).** Boards A (24 drafts, 820 parts), B (16 drafts, 1437 parts) and D (4
-drafts, 254 parts) composed with every pending draft in L4-E9's change-list order and regenerated without KiCad: every draft applies,
+**4b and 4c (`l9t5_connected.py`, `l9t5_connected.out`).** Boards A (25 drafts, 820 parts), B (17 drafts, 1437 parts), D (4
+drafts, 254 parts) and E (17 drafts with P0-7's and route B2 as a PROPOSAL, 280 parts) composed with every pending draft in L4-E9's change-list order and regenerated without KiCad: every draft applies,
 none unplaced, every designator unique; record efuse's own order is the same (V6-m3). The change list carries the drafts through this
-record's text draft `apply_l4e9_changelist_p0.py` (V6-m11: rows R-220 to R-240, FAN_OK's R-210 to R-212 WITHDRAWN), applied in memory
+record's text draft `apply_l4e9_changelist_p0.py` (V6-m11: rows R-220 to R-239, R-242 and R-243 (R-240 and R-241, P0-7's, applied in the tree), FAN_OK's R-210 to R-212 WITHDRAWN), applied in memory
 and checked by L4-E9's own `cons_changes`; it is the integrator's to apply, because records L4-E11 and L4-E10 pin the page by sha256 and
 Layer 6's `l6r2_passives.py` composes from the list (each a re-take the draft names). Every record netlist check reads DRAWN on the
-composed boards (14, among them L4-E11's DD-7 check with the guard and record l9t5's check in its automatic mode, V6's two breaking
-checks), and one mutation per check fails it (14 of 14). The connected re-trace: C-ALLTX rev 3 at the cap 15.1307 V (MODEL, PROVISIONAL);
+composed boards (16, among them L4-E11's DD-7 check with the guard, record l9t5's check in its automatic mode, V6's two breaking
+checks, and record l4e7's C2 and B2 check on board E), and one mutation per check fails it (16 of 16). The connected re-trace: C-ALLTX rev 3 at the cap 15.1307 V (MODEL, PROVISIONAL);
 the pack's true 17.1964 A at the indicated 18 A under the breaker's least 18.32 A; U13 0.1077 A under its least limit with R55 hot;
 the slot stages and U7 (with I-03) under their loops; U601 under its 3 A on both revisions; the return's rows under their printed
 ratings on the one-node model (V6-B1 above); the three eFuse settings PASS; the guard's no-trip margins 38.4, 9.8 and 6.0 K; T10's
 LDOs at 109.4 C on rev V; the service unchanged (only the PA's value differs, read with ast). New: J_PA's VH lead at the cap's top
 6.9257 A is under the printed 10 A and over the least rating the sheet allows at 76.25 C (5.9948 A, INFERRED; it holds to 66.63 C
-local air): PROVISIONAL with L8R2-F43's vendor task (JST's derating), the desk route two contacts a pole (finding L9T5-F24 below).
+local air): PROVISIONAL with L8R2-F43's vendor task (JST's derating), the desk route two contacts a pole (finding L9T5-F25 below).
 
-**SESSION decision L9T5-D8, over the connected circuit (the owner's part 22 item 3; authority SESSION, under the owner's standing rule
-of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026; reversed_by none).** L9T5-F22 (R602 at 14.0 k) is not taken; R602 stays
-13.3 k and L9T5-D7 (rev V fitted) stays the PROVISIONAL choice with V-B20. The chain (`l9t5_connected.out` section 10): each LDO's input
-is the pre-regulator's least output less the rail's 2 % copper budget, the lead (42.52 mOhm, three LDOs' current) and the ground shift
-between the boards. At the AP2112K's printed full 600 mA, 13.3 k holds with the return as drawn (+0.0735 V) and with the dedicated return
-(+0.1302 V); 14.0 k fails both (-0.0879 V, -0.0312 V) and holds only at the T10 record's 0.4512 A on a dropout INFERRED between two printed
-points (+0.0352 V as drawn). The headroom's top (4.2907 V at 13.3 k) stays under the LDO's 6.0 V input maximum; the thermal gain of 14.0 k
-(rev Y's cover 118.1 C against 126.5 C, both fabrics faulted) is bought with an unprinted dropout and a narrowed acceptance. To reverse: if
-the lots are rev X only (L9T5-F23), draft R602 14.0 k with T10-A3 on a printed dropout at the held current and re-take T10.
+**SESSION decision L9T5-D9: Slot C's set point delta TAKEN over the connected circuit (the owner's part 22 item 3; authority SESSION,
+under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026; reversed_by none).** R602 14.0 k
+(`apply_gen_sch_?_iocset.py`, Slot C's draft, composed after iocpre on both boards; change-list rows R-242 and R-243). The chain
+(`l9t5_connected.out` section 10): each LDO's input is the pre-regulator's least output less the rail's 2 % copper budget, the lead
+(42.52 mOhm, three LDOs' current) and the ground shift between the boards. At 13.3 k the babbling supervisor, a sustained state, puts its
+LDO at 130.6 C on revision V, over 125 C: a demonstrated defect on the model, corrected at the desk; at 14.0 k it is 121.5 C and every
+LDO's input stays over its need at every current the record computes (0.4512 A: +0.0352 V with the return as drawn, +0.0919 V with the
+dedicated return), the top 4.1174 V under the LDO's 6.0 V input maximum. The cost: T10-A3 at the LDO's printed 600 mA, which 13.3 k met,
+fails at 14.0 k (-0.0879 V, -0.0312 V); 600 mA is the regulator's rating, not a demand, and a supervisor drawing more than 0.4512 A is in
+a fault its own brown-out reset ends while the other two hold the quorum (Slot C's restatement, SESSION L9T5-D8, taken with it). The
+adaptation R602 13.8 k was REJECTED: its 600 mA row holds only with the dedicated return (+0.0133 V) and its babbler is 124.0 C
+(INFERRED), both inside the model's own uncertainty. PROVISIONAL (amendment 1): the dropout at 0.4512 A is INFERRED between two printed
+points; the supplier's validation task V-T10-DROP reads three AP2112K-3.3 of the fitted lot at 0.45 A and TJ 125 C, at most 301 mV.
+L9T5-D7 (revision V fitted) stays a constraint, not a fallback (rev Y's babbler is over 125 C at 14.0 k too). `check_l9t5_netlist.py`
+gains the t10s mode (R602 14.0 k, the band 3.87 to 4.18 V from the two criteria): Slot C's L9T5-F24 answered.
 
 **L8R2-F33a on the placement as drawn (the owner's amendment 1; record l8r2's `l8r2_p0.out` 2b).** The 5 V entries' ground lands read from
 the placed boards: one cluster of the three return sockets cannot reach board B's entries (211 mm apart at most); one socket a group
@@ -101,13 +107,20 @@ within 8.0 mm of its socket, under the 16.6 mm the largest steady state allows: 
 decision L8R2-D9); the sites' free area and each lead's reach are Layer 10's. The fourth lead or a bar is not needed for the service
 cases; the declared upper bound's printed row stays STILL OPEN.
 
-**P0-7 merged (2f40efb6, INBOX 10).** Record l4e7's board E solar sense on the backstop's bank (D-16 corrected in draft, D-10 narrowed and
-OPEN); its change-list row R-240 (after the solar guard R-173, before L4-E11's aux R-177), R-20's, R-173's and R-187's notes and P0-7's
-script in L4-E9's CHANGE_SCRIPTS are in `apply_l4e9_changelist_p0.py` (without that last entry L4-E9's change list refuses this tree since
-the merge, so record l6r2's compositions and L4-E9's own list wait on the integrator's application). L4E7-P0SOL.md section 5's D-10, D-16,
-IF-01, IF-02, R-176, R-186, R-189 and P1-1 texts are L4-E9's generated sections, applied with L4-E9's own regeneration.
+**P0-7 merged (66ec67ca, INBOX 10 to 13).** Record l4e7's board E solar sense on the backstop's bank (D-16 corrected in draft; D-10 an
+UNRESOLVED PROTECTION DEFECT in the model, PV_F 321.9 V at 0.30 uH on the 2 V bank parts and 83.48 V at the reference loop over the 80 V
+recommended row, the receiving company's engineering item S1; route B2 an unapproved PARTIAL interface proposal, the owner's item,
+which does not close D-10). Its change-list rows are in the tree: R-240 (the sense, after the solar guard R-173, before L4-E11's aux
+R-177) and R-241 (route B2's PROPOSAL, step ALT, outside every board round), with both drafts in L4-E9's CHANGE_SCRIPTS and two order
+constraints, because L4-E9's change list refused the tree without them since the merge (record l6r2, which composes from the list,
+stopped the test run with it); record l6r2's output re-taken (pins only: its chains skip ALT, and P0-7's sense joins board E's chain),
+record l4e7's output re-pinned on L4-E11's round 17 digest, and test_l4e7's board E order helper told that its earlier rounds' compositions
+predate P0-7 (its t_p0sol_ tests compose both drafts). The page was not touched for them (L4-E11 and L4-E10 pin it): the draft
+`apply_l4e9_changelist_p0.py` regenerates its section 3 with them and notes R-20's, R-173's, R-187's and R-180's items. L4E7-P0SOL.md
+section 5's D-10, D-16, IF-01, IF-02, R-176, R-186, R-189 and P1-1 texts are L4-E9's generated sections, applied with L4-E9's own
+regeneration; the D-10 row text waits on the P0-7 author's S1 rewrite (INBOX 14).
 
-**Finding L9T5-F24 (Layer 7, the harness; Layer 6):** J_PA (JST VH, 16 AWG) carries up to 6.9257 A at the cap's top, over the VH's
+**Finding L9T5-F25 (Layer 7, the harness; Layer 6):** J_PA (JST VH, 16 AWG) carries up to 6.9257 A at the cap's top, over the VH's
 least rating at 76.25 C inside air as record l8r2 infers it (5.9948 A); JST's derating curve is the vendor task of L8R2-F43; if it is
 lower than the cap's top at the PA lead's local air, J_PA becomes a 1x4 VH with two contacts a pole (a harness row and a board A land).
 
@@ -133,7 +146,7 @@ bounds the uncertainties the row names, compares three service-neutral approache
 | `l9t5_f01.py`, `l9t5_f01.out`, `l9t5_paloop.py` | P0 round (5 October 2026), part 1b round 2: F01 / D-17 reproduced and three corrections compared on C-ALLTX rev 3, (c) selected PROVISIONAL (1 the case; 2 (a); 3 (b); 4 (c); 4b the connected consequences; 5 the selection; 6 the supplier's tasks; 7 cx44's blockers; 8 the predicates); `l9t5_paloop.py` holds the cap's design values and its labelled band for every script |
 | `apply_gen_sch_a_paloop.py`, `apply_gen_sch_d_paloop.py`, `check_f01_netlist.py`, `l9t5_f01_drafts.py`, `l9t5_f01_drafts.out` | P0 round, part 1c: the PA cap's two halves (NOT RELEASED: each refuses the tree's generator until `RELEASE-F01.md` names an accepted check), the netlist check, the composition with every pending draft of boards A and D, 11 mutations, the electrical acceptance |
 | `l9t5_connected.py`, `l9t5_connected.out` | P0 round, parts 4b and 4c: boards A, B and D with every draft in L4-E9's change-list order, every record netlist check composed, one mutation per check, the connected re-trace on the case rows, SESSION decision L9T5-D8 |
-| `apply_l4e9_changelist_p0.py` | P0 round, part 4c: a text draft for the integrator, L4-E9's change-list rows R-220 to R-240 and FAN_OK's three withdrawn (`--check` writes nothing; it refuses a second run) |
+| `apply_l4e9_changelist_p0.py` | P0 round, part 4c: a text draft for the integrator, L4-E9's change-list rows R-220 to R-239, R-242 and R-243, and FAN_OK's three withdrawn (`--check` writes nothing; it refuses a second run) |
 | `fetch_held_back.py`, `l9t5_a1.py`, `l9t5_a1.out` | Round 2: A1's detector survey over four makers' sheets held back by their terms (fetched and sha256-checked, never committed) |
 
 Test: `v2/ecad/tools/tests/test_l9t5.py` (`env -C v2/ecad/tools python3 tests/run.py test_l9t5`).

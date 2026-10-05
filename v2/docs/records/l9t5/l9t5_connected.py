@@ -2,7 +2,7 @@
 """Record l9t5, the P0 round's parts 4b and 4c (Slot A, MESHSAT-1357, 5 October 2026): THE CONNECTED P0 CANDIDATE.
 
 4c (P0-6): boards A, B and D composed with EVERY pending draft in L4-E9's change-list order (records/l4e9/L4-POWER-ARCHITECTURE.md
-section 3, with this record's text draft apply_l4e9_changelist_p0.py applied in memory: rows R-220 to R-240 for the drafts V6's
+section 3, with this record's text draft apply_l4e9_changelist_p0.py applied in memory: rows R-220 to R-243 for the drafts V6's
 V6-m11 found without a row), regenerated without KiCad (record
 l8p's gen_netlist.py), every record netlist check read in its composed mode, and one mutation per check that must not read DRAWN.
 4b: the connected re-trace on that candidate: the case rows' loads, every converter's input current, the feed and return conductors
@@ -46,17 +46,23 @@ import check_dd7_netlist as DD7  # noqa: E402
 import l9t5_paloop as PL  # noqa: E402
 
 NET = {"a": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "b": "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net",
-       "d": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net"}
-PRJ = {"a": "pcb-a-power", "b": "pcb-b-compute", "d": "pcb-d-aprs"}
+       "d": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net", "e": "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net"}
+PRJ = {"a": "pcb-a-power", "b": "pcb-b-compute", "d": "pcb-d-aprs", "e": "pcb-e1-dock"}
 # the P0 candidate's composition: L4-E9's change list (rows R-01 to R-239, section 3) board by board, then Layer 6's order-free tables
 ORDER = {
     "a": ["l4e6/r12", "l4e11/guard", "l4e11/charger", "l4e4/r11", "l4e8/bank", "l4e4/r138", "l4e9/u17", "l8gnd/gnd002", "l8gnd/hotr1",
           "l8r2/d8v3", "l8r2/vbus20ov", "l8r2/packrtn", "l8r2/slotlm", "l8r2/fb01", "l8p/ptc", "l4e11/dd7", "l8p/thguard",
-          "l9t5/iocbuck", "l9t5/iocpre", "l8r2/gndrtn", "efuse/u23ilm", "l9t5/paloop", "d8dec31/mainpb", "l6r2/lcsc"],
+          "l9t5/iocbuck", "l9t5/iocpre", "l9t5/iocset", "l8r2/gndrtn", "efuse/u23ilm", "l9t5/paloop", "d8dec31/mainpb", "l6r2/lcsc"],
     "b": ["l8gnd/gnd002", "l8r2/fans12", "l8r2/fandec", "l8r2/panel5v", "l8r2/ph4", "l8r2/rt500", "l8r2/gndret", "l8r2/gndrtn",
-          "l9t5/iocbuck", "l9t5/iocpre", "l9t5/canshdn", "efuse/u23ilm", "efuse/u24ilm", "l6r2/xal_land", "l6r2/lcsc", "l6r2/intent"],
+          "l9t5/iocbuck", "l9t5/iocpre", "l9t5/iocset", "l9t5/canshdn", "efuse/u23ilm", "efuse/u24ilm", "l6r2/xal_land", "l6r2/lcsc", "l6r2/intent"],
     "d": ["d8dec31/ptt", "l9t5/paloop", "l6r2/intent", "l6r2/lcsc"],
+    # board E (P0-7's round; route B2 composed as the PROPOSAL it is, after P0-7's sense, so the check reads it: INBOX 12 and 13)
+    "e": ["l4e9/q1", "l4e7/u5_grade", "l4e7/hold", "l4e7/input_limit", "l4e7/backstop", "l4e9/f1", "l4e9/hotswap", "l4e11/entry",
+          "l4e7/solar_guard", "l4e7/p0sol", "l4e7/p0sol_b2", "l4e11/aux", "l8r2/packrtn", "l8p/enable", "d8dec31/cin", "l6r2/xal_land",
+          "l6r2/lcsc"],
 }
+PROPOSAL = ("l4e7/p0sol_b2",)  # composed as a PROPOSAL: its row is step ALT (R-241), the owner's item of record l4e7's B2-PRESENCE.md
+P0SOL_PY = "v2/docs/records/l4e7/l4e7_p0sol.py"
 ORDER_FREE = ("l6r2",)          # Layer 6's tables: order-free, after every circuit draft (no change-list row; L4-E9 section 3)
 L4E9 = "v2/docs/records/l4e9/l4e9_power_path.py"
 REG = "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"
@@ -67,12 +73,12 @@ OUTS = {"budget": "v2/docs/records/l9pwr/l9pwr_budget.out", "drafts": "v2/docs/r
         "efuse": "v2/docs/records/efuse/efuse_check.out", "stk": "v2/docs/records/l9stk/l9stk_protection.out",
         "c4": "v2/docs/records/l8p/l8p_c4.out", "t10": "v2/docs/records/l9t5/l9t5_t10.out", "f01": "v2/docs/records/l9t5/l9t5_f01.out",
         "p0ret": "v2/docs/records/l8r2/l8r2_p0.out", "p0sol": "v2/docs/records/l4e7/l4e7_p0sol.out"}
-SCRIPTS = ["v2/docs/records/l9t5/l9t5_t10.py", "v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l8r2/l8r2_p0.py", "v2/docs/records/l8r2/l8r2_gndret.py",
+SCRIPTS = ["v2/docs/records/l4e7/l4e7_p0sol.py", "v2/docs/records/l9t5/l9t5_t10.py", "v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l8r2/l8r2_p0.py", "v2/docs/records/l8r2/l8r2_gndret.py",
            "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/efuse/efuse_check.py", "v2/docs/records/l8p/gen_netlist.py",
            "v2/docs/records/l9t5/check_f01_netlist.py", "v2/docs/records/l9t5/check_l9t5_netlist.py", "v2/docs/records/l8p/check_l8p_netlist.py",
            "v2/docs/records/l8r2/check_l8r2_netlist.py", "v2/docs/records/l8r2/check_gndret_netlist.py",
            "v2/docs/records/l8gnd/check_gnd002_netlist.py", "v2/docs/records/l4e11/check_dd7_netlist.py"]
-GENS = ["v2/ecad/tools/gen_sch_%s.py" % b for b in "abd"]
+GENS = ["v2/ecad/tools/gen_sch_%s.py" % b for b in "abde"]
 T10_PY = "v2/docs/records/l9t5/l9t5_t10.py"     # Slot C's T10 record: its sheets' figures and chain terms, imported for L9T5-F22
 
 
@@ -108,6 +114,7 @@ def need(t, pat, what, flags=re.M):
 
 
 GN = load(os.path.join(REC, "l8p", "gen_netlist.py"), "gn_for_connected")
+P0SOL = load(os.path.join(ROOT, "v2", "docs", "records", "l4e7", "l4e7_p0sol.py"), "l4e7_p0sol_for_connected")   # its B2 judge, imported
 
 
 # ------------------------------------------------------------------------------------------------ composition
@@ -146,7 +153,7 @@ def regen(board, gen, d, tag):
 
 def change_list_order():
     """{apply script basename: (row, position in L4-E9's change list)}: L4-E9's register and script with this record's text draft
-    apply_l4e9_changelist_p0.py applied IN MEMORY (rows R-220 to R-240; the tree's files are not written), its change list from L4-E9's
+    apply_l4e9_changelist_p0.py applied IN MEMORY (rows R-220 to R-243; the tree's files are not written), its change list from L4-E9's
     own cons_changes, which refuses a list that misses an implementation row or breaks an order constraint"""
     dr = load(rel(CL_DRAFT), "l4e9_changelist_draft_for_connected")
     tree_before = {p: sha(p, 64) for p in (L4E9, REG, PAGE)}
@@ -249,6 +256,11 @@ def checks(raws, intents, S):
     out["l9t5 F01 the PA cap, board D"] = (st, msgs)
     pa, pd = F01.pin(L8P.read_netlist(A), "J_MEZZ1", "16"), F01.pin(L8P.read_netlist(D), "J_HARN1", "16")
     out["l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16"] = ("DRAWN" if pa == pd == "PA_ILIM" else "FAIL", ["%s / %s" % (pa, pd)])
+    if "e" in raws:
+        E = raws["e"]
+        out["l8p the loop's board E half (J_SMB, J_BLK)"] = L8P.judge("e", L8P.read_netlist(E))
+        bad = [s for s, ok in P0SOL.judge_b2(L8P.read_netlist(E)) if not ok]
+        out["l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)"] = ("FAIL" if bad else "DRAWN", bad or ["every predicate of C2 and B2 holds"])
     return out
 
 
@@ -274,6 +286,9 @@ def mutations(T):
         ("l9t5 F01 the PA cap, board A", "J_PA back on +13V8_PA (the sense bypassed)", "a", mut_pin_on(a, "J_PA", "+13V8_PAJ", "+13V8_PA")),
         ("l9t5 F01 the PA cap, board D", "R57 into VGG_SW (U15's output, not its feedback)", "d", mut_pin_on(d, "R57", "VGG_FB", "VGG_SW")),
         ("l9t5 F01 the harness pair J_MEZZ1.16 / J_HARN1.16", "J_HARN1 pin 16 back on AB_SPARE", "d", mut_pin(d, "J_HARN1", "16", "AB_SPARE")),
+        ("l8p the loop's board E half (J_SMB, J_BLK)", "J_SMB pin 7 on GND", "e", mut_pin(T["e"], "J_SMB", "7", "GND")),
+        ("l4e7 P0-7 the sense on the bank and route B2 (PROPOSAL)", "J_SOLP pin 2 off INP (the loop open on the board)", "e",
+         mut_pin(T["e"], "J_SOLP", "2", "PV_INPX")),
     ]
 
 
@@ -337,27 +352,38 @@ def service_unchanged(tree):
 def f22_chain():
     """L9T5-F22 judged over the connected circuit (the owner's part 22 item 3): each LDO's input at the least set point after the rail's
     copper budget, the lead (three LDOs' current on J_5V_IOC's pin 1, hot wire and two contacts) and the ground shift between the boards,
-    as drawn and with the dedicated return, at the LDO's printed full current and at the largest current the T10 record computes"""
+    as drawn and with the dedicated return, at the LDO's printed full current and at the largest current the T10 record computes; the
+    sustained babbling row on revision V at each set point (Slot C's two computed points; between them INFERRED, linear in the top)"""
     T = load(rel(T10_PY), "l9t5_t10_for_connected")
     D = T.D
     P, DP, G = T.figures(), D.figures(), D.gndret()
     r_sup = G["rhot"] + 2 * DP["vh_r"][1]
     t10 = text(OUTS["t10"])
     i_hold = float(need(t10, r"computes for a regulator \(([\d.]+) A, the held B5 row on rev Y", "T10's held current").group(1))
-    tj = {m.group(1): float(m.group(2)) for m in re.finditer(r"^\s+(\d+\.\d) k: [\d.]+ V nominal, top [\d.]+ V; the LDOs' input at least [\d.]+ V "
-                                                            r"\((?:holds|FAILS)\); rev Y's cover, both fabrics faulted, ([\d.]+) C", t10, re.M)}
-    tj["13.3"] = float(need(t10, r"rev Y, both fabrics faulted, responded:\s+[\d.]+ A, ([\d.]+) C", "rev Y's worst state at 13.3 k").group(1))
+    bab = need(t10, r"^\s+babbling \(nothing ends it\)\s+V\s+([\d.]+) A\s+125 C \(sustained\)\s+([\d.]+) C (?:FAILS|holds)\s+([\d.]+) C (holds|FAILS)",
+               "the babbling row on revision V (part 22)")
+    worst14 = max(float(m.group(2)) for m in re.finditer(r"^\s+(.+?)\s+V\s+[\d.]+ A\s+125 C \(sustained\)\s+[\d.]+ C (?:FAILS|holds)\s+([\d.]+) C (?:holds|FAILS)",
+                                                         t10, re.M))
     drop = {0.6: (P["drop"][600], "PRINTED"),
             i_hold: (P["drop"][300] + (P["drop"][600] - P["drop"][300]) * (i_hold - 0.3) / 0.3, "INFERRED between the printed 300 and 600 mA")}
+    tops = {rb: T.CHK.vout_band(T.R601, rb) for rb in (13.3e3, 13.8e3, 14.0e3)}
+    tj = {13.3e3: (float(bab.group(2)), "Slot C's MODEL"), 14.0e3: (float(bab.group(3)), "Slot C's MODEL")}
+    h0, h1 = tops[13.3e3][2], tops[14.0e3][2]
+    tj[13.8e3] = (tj[13.3e3][0] + (tj[14.0e3][0] - tj[13.3e3][0]) * (tops[13.8e3][2] - h0) / (h1 - h0), "INFERRED, linear in the top")
     rows = []
-    for rb in (13.3e3, 14.0e3):
-        lo, nom, hi = T.CHK.vout_band(T.R601, rb)
+    for rb, (lo, nom, hi) in tops.items():
         for ret, shift in (("as drawn", G["shift_drawn_ub"]), ("with the dedicated return", G["shift_ret"])):
             for i, (dr, lab) in drop.items():
                 need_ = 3.3 * (P["vout_hi"] + P["load"] * i) + dr
                 at = lo - D.RAIL_BUDGET * nom - 3 * i * r_sup - shift
                 rows.append(dict(rb=rb, lo=lo, nom=nom, hi=hi, ret=ret, shift=shift, i=i, need=need_, at=at, lab=lab, ok=at >= need_))
-    return dict(rows=rows, i_hold=i_hold, tj=tj, r_sup=r_sup, vin_max=P["vin"][1])
+    return dict(rows=rows, i_hold=i_hold, tj=tj, r_sup=r_sup, vin_max=P["vin"][1], i_bab=float(bab.group(1)), worst14=worst14,
+                bab_ok=bab.group(4) == "holds", drop_i=drop[i_hold][0])
+
+
+def drop_mv(FC):
+    """the INFERRED dropout at the held current, mV"""
+    return 1000.0 * FC["drop_i"]
 
 
 def main():
@@ -395,16 +421,16 @@ def main():
     try:
         # 2. composition
         pos, n_ch, L4m, page_ok, wd = change_list_order()
-        w("2. THE COMPOSITION (4c, P0-6): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and")
-        w("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-240 for the drafts")
+        w("2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and")
+        w("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-243 for the drafts")
         w("   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): %d changes, every" % n_ch)
         w("   order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: %s; WITHDRAWN: %s" % (
             "yes" if page_ok else "NO", ", ".join(wd) or "none"))
-        P0_ = {"the drafted change list carries rows R-220 to R-240, holds every order constraint, its page table is its list, FAN_OK withdrawn":
-               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 241))}
+        P0_ = {"the drafted change list carries rows R-220 to R-243, holds every order constraint, its page table is its list, FAN_OK withdrawn":
+               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 244))}
         P = dict(P0_)
         T, raws, intents, ok_all = {}, {}, {}, True
-        for b in "abd":
+        for b in "abde":
             gen, steps = compose(b, tmp, ORDER[b], "full")
             raw, rc, tail, table = regen(b, gen, tmp, "full")
             ok = all(s[1] == 0 for s in steps) and len(steps) == len(ORDER[b]) and raw is not None
@@ -418,7 +444,8 @@ def main():
             rows_ = []
             for k in ORDER[b]:
                 s = os.path.basename(script_of(b, k))
-                rows_.append("%s %s" % (k, pos[s][0] if s in pos else ("order-free" if k.split("/")[0] in ORDER_FREE else "NO ROW")))
+                rows_.append("%s %s%s" % (k, pos[s][0] if s in pos else ("order-free" if k.split("/")[0] in ORDER_FREE else "NO ROW"),
+                                          " (PROPOSAL)" if k in PROPOSAL else ""))
             w("     " + "; ".join(rows_))
             seq = [pos[os.path.basename(script_of(b, k))][1] for k in ORDER[b] if os.path.basename(script_of(b, k)) in pos]
             in_order = seq == sorted(seq)
@@ -429,13 +456,16 @@ def main():
             P["board %s composes in L4-E9's change-list order with every draft, every one with a row, and regenerates" % b.upper()] = (
                 ok and in_order and not no_row and tail_free and not dup and table and not table["unplaced"] and table.get("intent_written"))
             T[b], raws[b], intents[b] = table, raw, (table or {}).get("intent")
+        e_same = [tuple(k.split("/")) for k in ORDER["e"]] == [tuple(x) for x in P0SOL.ORDER_E_B2]
+        w("   board E is record l4e7's own composition with route B2 (ORDER_E_B2, imported): %s" % ("the same order" if e_same else "A DIFFERENT ORDER"))
+        P["board E composes as record l4e7 composes it, route B2 as a PROPOSAL"] = e_same
         eo = efuse_orders()
-        circ = {b: [k for k in ORDER[b] if k.split("/")[0] not in ORDER_FREE and k.split("/")[0] != "efuse" and k not in ("l9t5/paloop", "d8dec31/mainpb")]
-                for b in "ab"}
+        circ = {b: [k for k in ORDER[b] if k.split("/")[0] not in ORDER_FREE and k.split("/")[0] != "efuse"
+                    and k not in ("l9t5/paloop", "d8dec31/mainpb", "l9t5/iocset")] for b in "ab"}
         eo_k = {b: [s.replace("apply_gen_sch_%s_" % b, "").replace(".py", "") for s in eo[b]] for b in "ab"}
         same = all(circ[b] == eo_k[b] for b in "ab")
-        w("   record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap and the")
-        w("     last taker: %s" % ("yes, both boards (V6-m3 answered)" if same else "NO: A %s / B %s" % (eo_k["a"], eo_k["b"])))
+        w("   record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap, T10's")
+        w("     set point delta (later than its round 2) and the last taker: %s" % ("yes, both boards (V6-m3 answered)" if same else "NO: A %s / B %s" % (eo_k["a"], eo_k["b"])))
         P["record efuse composes boards A and B in the same order"] = same
         if T["a"]:
             mp = [r for r in ("R603", "C607") if part(T["a"], r) and "MAIN_PB" in " ".join(part(T["a"], r)["nets"].values())]
@@ -597,23 +627,37 @@ def main():
         e_parts = need(sol, r"gen_netlist: (\d+) parts, 0 unplaced", "record l4e7's board E composition").group(1)
         d16 = "D-16: CORRECTED on the drafted circuit" in sol
         d10 = re.search(r"D-10 \(B6, L4-F01\): NARROWED, OPEN", sol) is not None
-        w("   the solar entry (P0-7, record l4e7, merged at 2f40efb6; l4e7_p0sol.out pinned): board E composed there in L4-E9's order with its")
-        w("     own drafts and P0-7's (%s parts, 0 unplaced); D-16 %s; D-10 %s (the guard-on event's port-level residual;" % (
-            e_parts, "CORRECTED in draft" if d16 else "NOT READ", "NARROWED, OPEN" if d10 else "NOT READ"))
-        w("     route B2, the receptacle's presence contact, being drafted by the P0-7 author, not yet in this candidate); board E is outside")
-        w("     P0-6's boards A and B, so the solar guard's trip against its demand is record l4e7's reading, not re-traced here")
+        w("   the solar entry (P0-7, record l4e7, merged at 66ec67ca; l4e7_p0sol.out pinned): board E composed here (section 2) and there in")
+        w("     L4-E9's order with P0-7's sense and route B2 composed as a PROPOSAL (record l4e7's C2 composition %s parts); D-16 %s; D-10 an" % (
+            e_parts, "CORRECTED in draft" if d16 else "NOT READ"))
+        w("     UNRESOLVED PROTECTION DEFECT in the model (%s: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop" % (
+            "record l4e7 reads it NARROWED, OPEN" if d10 else "NOT READ"))
+        w("     over the 80 V recommended row), the receiving company's engineering item S1; route B2 is an unapproved PARTIAL interface")
+        w("     proposal (the owner's item), and neither adopting nor declining it closes D-10; the solar guard's trip against its demand is")
+        w("     record l4e7's reading, not re-traced here")
         P["record l4e7's P0-7 composition is in the candidate (D-16 corrected in draft, D-10 narrowed and open)"] = d16 and d10
         w("")
 
         # 9. thermal limits
         t10 = text(OUTS["t10"])
-        rv = need(t10, r"^\s+V\s+L4-E12 E5 mixed 76\.25 C\s+([\d.]+) A \(([\d.]+) C\)\s+([\d.]+) A\s+([\d.]+) C\s+holds", "T10's rev V row")
+        rows22 = [(m.group(1).strip(), m.group(2), int(m.group(3)), float(m.group(4)), m.group(5)) for m in re.finditer(
+            r"^     (\S.*?)\s+(V|Y)\s+[\d.]+ A\s+(125|150) C \((?:sustained|transient)\)\s+[\d.]+ C (?:FAILS|holds)\s+([\d.]+) C (holds|FAILS)$",
+            t10, re.M)]                                       # (row, revision, criterion C, TJ at 14.0 k, verdict at 14.0 k)
+        if not rows22:
+            refuse("T10's part 22 rows are not read")
+        v14 = [r for r in rows22 if r[1] == "V"]
+        y_fail = [r for r in rows22 if r[1] == "Y" and r[4] == "FAILS"]
         f01 = text(OUTS["f01"])
         ina = need(f01, r"junction ([\d.]+) C at 76\.25 C air", "the INA250's junction")
         fet = need(stk, r"the battery FETs at ([\d.]+) C \(the guard ([\d.]+) to ([\d.]+) K above\)", "the battery FETs at the 18 A service")
         w("9. THE THERMAL LIMITS (each at the air its record reads)")
-        w("   the supervisors' LDOs (T10, Slot C's round 5): %s C at the bounded state on rev V's rows at 76.25 C (MODEL; rev V fitted, L9T5-D7)," % rv.group(4))
-        w("     under 125 C; rev Y's cover for a rev X part 125.2 C, PROVISIONAL on V-B20 (0.2318 A)")
+        b14 = [r for r in v14 if r[0].startswith("the bounded state")][0]
+        w("   the supervisors' LDOs at R602 14.0 k (T10, Slot C's part 22 rows; section 10's decision): on revision V (fitted, L9T5-D7) the bounded")
+        w("     state %.1f C, every row at most %.1f C (MODEL at 76.25 C, the drop's worst corner): %s against each row's criterion (125 C" % (
+            b14[3], max(r[3] for r in v14), "every one holds" if all(r[4] == "holds" for r in v14) else "NOT every one holds"))
+        w("     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): rev X stays on V-B20" % (
+            len(y_fail), "; ".join("%s %.1f C" % (r[0], r[3]) for r in y_fail)))
+        P["every revision V T10 row holds its criterion at the taken set point"] = all(r[4] == "holds" for r in v14)
         w("   U551 INA250A2 at the cap's top: junction %s C at 76.25 C air (TYPICAL RthJA; l9t5_f01.out)" % ina.group(1))
         w("   R55 (WSL2512 6 mOhm): %.3f W at the cap's top with R55's other loads, %.1f C at 76.25 C air (MODEL, ASSUMPTION %.0f K/W); U13's least" % (
             L["r55_w"], L["r55_t"], PL.R55_RTH))
@@ -623,29 +667,72 @@ def main():
 
         # 10. the session decision on L9T5-F22
         FC = f22_chain()
-        w("10. L9T5-F22 OVER THE CONNECTED CIRCUIT (the owner's part 22 item 3) AND SESSION DECISION L9T5-D8")
+        w("10. L9T5-F22, SLOT C'S SET POINT DELTA (R602 14.0 k, apply_gen_sch_?_iocset.py), JUDGED OVER THE CONNECTED CIRCUIT (the owner's")
+        w("   part 22 item 3) AND SESSION DECISION L9T5-D9")
         w("   each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's")
         w("   2 %% copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: %.2f mOhm, hot wire and two contacts) and the ground shift" % (FC["r_sup"] * 1e3))
         w("   between the boards; against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked")
         for r in FC["rows"]:
             w("   R602 %.1f k (least %.4f V, top %.4f V), return %-25s shift %.4f V, %.4f A a LDO (dropout %s): input %.4f V against %.4f V: %s %+.4f V" % (
                 r["rb"] / 1e3, r["lo"], r["hi"], r["ret"], r["shift"], r["i"], r["lab"], r["at"], r["need"], "holds" if r["ok"] else "FAILS", r["at"] - r["need"]))
-        f22_600 = [r for r in FC["rows"] if abs(r["rb"] - 14.0e3) < 1 and abs(r["i"] - 0.6) < 1e-9]
-        f33_600 = [r for r in FC["rows"] if abs(r["rb"] - 13.3e3) < 1 and abs(r["i"] - 0.6) < 1e-9]
-        w("   the headroom's other side: the pre-regulator's top %.4f V (13.3 k) and %.4f V (14.0 k), under the AP2112K's %.1f V input maximum" % (
-            f33_600[0]["hi"], f22_600[0]["hi"], FC["vin_max"]))
-        w("   the thermal side (Slot C's T10 rows, rev Y's cover, both fabrics faulted, responded): %.1f C at 13.3 k, %.1f C at 14.0 k" % (FC["tj"]["13.3"], FC["tj"]["14.0"]))
-        w("   DECISION L9T5-D8 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;")
-        w("   reversed_by: none): L9T5-F22 (R602 at 14.0 k) is NOT taken; R602 stays 13.3 k and L9T5-D7 (rev V fitted) stays the PROVISIONAL")
-        w("   choice with V-B20 for a rev X lot. Why, over the connected circuit: at the LDO's printed full current 14.0 k %s with the return as" % (
-            "FAILS" if not all(r["ok"] for r in f22_600) else "holds"))
-        w("   drawn AND with the dedicated return (%s), while 13.3 k holds both (%s); 14.0 k holds only at the T10 record's" % (
-            ", ".join("%+.4f V" % (r["at"] - r["need"]) for r in f22_600), ", ".join("%+.4f V" % (r["at"] - r["need"]) for r in f33_600)))
-        w("   %.4f A with a dropout INFERRED between two printed points, which restates T10-A3 downward: it trades a vendor reading of the" % FC["i_hold"])
-        w("   controller (V-B20) for an unprinted dropout and a narrowed acceptance. To reverse: if the lots are rev X only (L9T5-F23), draft")
-        w("   R602 14.0 k with T10-A3 on a printed dropout at the held current (TI's) and re-take T10")
-        P["L9T5-F22 judged over the connected circuit: 13.3 k holds T10-A3 at 600 mA with either return, 14.0 k does not"] = (
-            all(r["ok"] for r in f33_600) and not any(r["ok"] for r in f22_600))
+        w("   the headroom's other side: the pre-regulator's top under the AP2112K's %.1f V input maximum at every set point (%s V)" % (
+            FC["vin_max"], ", ".join("%.4f" % r["hi"] for r in FC["rows"][::8])))
+        w("   the thermal side, the babbling supervisor on revision V (a SUSTAINED state, 125 C; %.4f A; Slot C's part 22 rows, l9t5_t10.out 10i):" % FC["i_bab"])
+        for rb in sorted(FC["tj"]):
+            w("     R602 %.1f k: %.1f C (%s): %s" % (rb / 1e3, FC["tj"][rb][0], FC["tj"][rb][1], "holds" if FC["tj"][rb][0] <= 125.0 else "FAILS"))
+        w("     every revision V sustained row at 14.0 k at most %.1f C (Slot C)" % FC["worst14"])
+
+        def row_(rb, ret, i):
+            return [r for r in FC["rows"] if abs(r["rb"] - rb) < 1 and r["ret"] == ret and abs(r["i"] - i) < 1e-9][0]
+        dr, rt = "as drawn", "with the dedicated return"
+        a14 = [row_(14.0e3, x, FC["i_hold"]) for x in (dr, rt)]
+        s14 = [row_(14.0e3, x, 0.6) for x in (dr, rt)]
+        a13 = [row_(13.3e3, x, 0.6) for x in (dr, rt)]
+        b13 = [row_(13.8e3, x, 0.6) for x in (dr, rt)]
+        w("   DECISION L9T5-D9 (SESSION, under the owner's standing rule of 26 September 2026; ruled_by Slot A; ruled_on 5 October 2026;")
+        w("   reversed_by: none): Slot C's set point delta (R602 14.0 k) is TAKEN, composed after iocpre on both boards (section 2; a separate")
+        w("   draft, one writer a file). Why, over the connected circuit: at 13.3 k the babbling row is a sustained state over 125 C (%.1f C), a" % FC["tj"][13.3e3][0])
+        w("   demonstrated defect on the model that the desk corrects; at 14.0 k it holds (%.1f C) and every LDO's input stays over its need at" % FC["tj"][14.0e3][0])
+        w("   every current the record computes, with the return as drawn (%+.4f V) and with the dedicated return (%+.4f V); the headroom's top" % (
+            a14[0]["at"] - a14[0]["need"], a14[1]["at"] - a14[1]["need"]))
+        w("   %.4f V stays under the LDO's input maximum. What it costs: T10-A3 at the LDO's printed full 600 mA, which 13.3 k met (%+.4f V, %+.4f V)," % (
+            s14[0]["hi"], a13[0]["at"] - a13[0]["need"], a13[1]["at"] - a13[1]["need"]))
+        w("   fails at 14.0 k (%+.4f V, %+.4f V): 600 mA is the regulator's rating, not a demand; a supervisor drawing more than %.4f A is in a" % (
+            s14[0]["at"] - s14[0]["need"], s14[1]["at"] - s14[1]["need"], FC["i_hold"]))
+        w("   fault its own brown-out reset ends while the other two hold the quorum (Slot C's T10-A3 restatement, SESSION L9T5-D8, taken with it)")
+        w("   ADAPTATION REJECTED: R602 13.8 k (E192 at 0.1 %%) would hold the 600 mA row only with the dedicated return (%+.4f V; as drawn %+.4f V)" % (
+            b13[1]["at"] - b13[1]["need"], b13[0]["at"] - b13[0]["need"]))
+        w("   and the babbler at %.1f C (INFERRED): both margins inside the model's own uncertainty (the LDO's 184 C/W with no board copper)" % FC["tj"][13.8e3][0])
+        w("   PROVISIONAL (amendment 1): the dropout at %.4f A is INFERRED between two printed points: the supplier's validation task V-T10-DROP:" % FC["i_hold"])
+        w("   three AP2112K-3.3 specimens of the fitted lot, dropout at %.2f A and TJ 125 C at most %.0f mV (or Diodes' printed statement)" % (
+            FC["i_hold"], drop_mv(FC)))
+        w("   L9T5-D7 (revision V fitted) STAYS a constraint, not a fallback: on rev Y's rows the babbler is over 125 C at 14.0 k too (Slot C, 10i);")
+        w("   check_l9t5_netlist.py reads the composed design in its t10s mode (R602 14.0 k, the band 3.87 to 4.18 V from the two criteria above)")
+        t10b = text(OUTS["t10"])
+        st = {}
+        for m in re.finditer(r"^     (\S.*?)\s+(V|Y)\s+([\d.]+) A\s+(125|150) C \((sustained|transient)\)\s+[\d.]+ C (?:FAILS|holds)\s+([\d.]+) C (holds|FAILS)$",
+                             t10b, re.M):
+            st.setdefault(m.group(1).strip(), {})[m.group(2)] = (float(m.group(6)), int(m.group(4)), m.group(5))
+        w("   THE FINAL FIGURES ON THE COMPLETE CANDIDATE (the owner's part 23 item 1; R602 14.0 k composed, section 2): each regulator's")
+        w("   temperature against its criterion per state (Slot C's MODEL at 76.25 C and the drop's worst corner), revision V fitted and rev Y's")
+        w("   rows as the cover for a rev X part:")
+        for lab in st:
+            v_, y_ = st[lab].get("V"), st[lab].get("Y")
+            w("     %-38s %-10s criterion %3d C: rev V %5.1f C (margin %+5.1f K); rev Y %5.1f C (margin %+5.1f K)" % (
+                lab[:38], v_[2], v_[1], v_[0], v_[1] - v_[0], y_[0], y_[1] - y_[0]))
+        sus_v = min(v_[1] - v_[0] for v_ in (st[l]["V"] for l in st) if v_[2] == "sustained")
+        sus_y = min(y_[1] - y_[0] for y_ in (st[l]["Y"] for l in st) if y_[2] == "sustained")
+        w("   RESULT, R602 14.0 k on the complete candidate: the worst sustained-state margin %+.1f K on revision V (the babbling supervisor)" % sus_v)
+        w("     and %+.1f K on rev Y's cover (rev X stays held on V-B20); the LDO input headroom of T10-A3's chain at the largest computed current" % sus_y)
+        w("     %+.4f V with the return as drawn and %+.4f V with the dedicated return (the return's effect %+.4f V), the top %.4f V under the" % (
+            a14[0]["at"] - a14[0]["need"], a14[1]["at"] - a14[1]["need"], (a14[1]["at"] - a14[1]["need"]) - (a14[0]["at"] - a14[0]["need"]), s14[0]["hi"]))
+        w("     LDO's %.1f V maximum; the required service unchanged (only U601's set point moves: no load, rate, state or transmitter reduced," % FC["vin_max"])
+        w("     the supervisors' bounded state and C-DEV rev 2 as issued). The worst-case margins: %+.1f K (thermal, the babbling state, rev V)" % sus_v)
+        w("     and %+.4f V (the LDO's input, as drawn, at the largest computed current on an INFERRED dropout, PROVISIONAL on V-T10-DROP)" % (
+            a14[0]["at"] - a14[0]["need"]))
+        P["the final R602 figures: every revision V sustained state keeps a positive margin to 125 C"] = sus_v > 0
+        P["L9T5-F22 judged over the connected circuit: 14.0 k holds the babbler at 125 C and T10-A3 at every computed current on either return"] = (
+            FC["tj"][14.0e3][0] <= 125.0 < FC["tj"][13.3e3][0] and all(r["ok"] for r in a14) and FC["bab_ok"])
         w("")
 
         # 11. what stays open on this candidate
@@ -655,10 +742,11 @@ def main():
         w("     printed row and the least rows OPEN; V6-B2")
         w("     vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
         w("   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20")
-        w("   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F24 (Layer 7, Layer 6): J_PA carries up to the cap's top,")
+        w("   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,")
         w("     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes")
         w("     a 1x4 VH with two contacts a pole (a harness row and a board A land)")
-        w("   the solar entry (P0-7): D-10 NARROWED, OPEN; route B2's draft (the receptacle's presence contact) not yet merged")
+        w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (S1, the receiving company's engineering item); route")
+        w("     B2 composed as an unapproved PARTIAL interface proposal (the owner's item), which does not close it")
         w("   L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's")
         w("     and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin")
         w("")

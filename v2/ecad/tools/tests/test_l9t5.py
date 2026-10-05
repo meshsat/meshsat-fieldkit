@@ -1031,7 +1031,7 @@ def t_p0_connected_the_change_list_carries_every_composed_draft():
         assert seq == sorted(seq), "board %s composes out of the change list's order" % b
     for rid in ("R-210", "R-211", "R-212"):
         row = [r for r in reg if r[0] == rid][0]
-        assert row[6] == "WITHDRAWN" and "FAN_OK is rejected" in row[2], rid
+        assert row[6] == "WITHDRAWN" and "FAN_OK is rejected" in " | ".join(row[2:6]), rid
         assert [c for c in ch if c[2] == rid][0][8].startswith("WITHDRAWN")
     page = m.md_table(files[os.path.join(L4E9_DIR, "L4-POWER-ARCHITECTURE.md")], "| # | Step | Row |")
     assert page == [["%d" % c[0]] + [str(x) for x in c[1:]] for c in ch], "the patched page's change list is the patched script's"
@@ -1084,13 +1084,19 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     for band in bands:
         assert ("band %s A" % band) in text, band
     assert "the required service unchanged" in text and "replaced, by the cap's top" in text
-    assert "DECISION L9T5-D8 (SESSION" in text and "L9T5-F22 (R602 at 14.0 k) is NOT taken" in text
+    assert "DECISION L9T5-D9 (SESSION" in text and "Slot C's set point delta (R602 14.0 k) is TAKEN" in text and "ADAPTATION REJECTED" in text
     # L9T5-F22 over the connected circuit: the chain's rows, 13.3 k holding T10-A3 at the printed 600 mA with either return and 14.0 k not
     rows = re.findall(r"R602 (1\d\.\d) k .*?return (as drawn|with the dedicated return)\s+shift [\d.]+ V, (0\.6000|[\d.]+) A a LDO .*?: (holds|FAILS) ", text)
-    assert len(rows) == 8, rows
+    assert len(rows) == 12, rows
     at600 = {(r[0], r[1]): r[3] for r in rows if r[2] == "0.6000"}
     assert at600 == {("13.3", "as drawn"): "holds", ("13.3", "with the dedicated return"): "holds",
+                     ("13.8", "as drawn"): "FAILS", ("13.8", "with the dedicated return"): "holds",
                      ("14.0", "as drawn"): "FAILS", ("14.0", "with the dedicated return"): "FAILS"}, at600
+    held = {(r[0], r[1]): r[3] for r in rows if r[2] != "0.6000"}
+    assert set(held.values()) == {"holds"}, held          # every set point holds at the largest computed current, either return
+    # the babbling row on revision V: Slot C's two computed points, read from l9t5_t10.out, the taken one under 125 C
+    bab = re.search(r"babbling \(nothing ends it\)\s+V\s+[\d.]+ A\s+125 C \(sustained\)\s+([\d.]+) C FAILS\s+([\d.]+) C holds", open(T10_OUT, encoding="utf-8").read())
+    assert bab and ("R602 13.3 k: %s C (Slot C's MODEL): FAILS" % bab.group(1)) in text and ("R602 14.0 k: %s C (Slot C's MODEL): holds" % bab.group(2)) in text
     t10 = open(T10_OUT, encoding="utf-8").read()
     m = re.search(r"14\.0 k: [\d.]+ V nominal, top ([\d.]+) V; the LDOs' input at least ([\d.]+) V", t10)
     assert m and ("top %s V)" % m.group(1)) in text and ("input %s V against" % m.group(2)) in text   # the same chain as Slot C's scenario
