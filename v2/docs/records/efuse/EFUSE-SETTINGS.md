@@ -5,7 +5,9 @@
 reviewed.** Round 2 in one paragraph: the composition is the P0 candidate's full one and board B regenerates whole (V6-m3; R36 750 R
 on U23 pin 7 and R43 1.21 k on U24 pin 7 read on it, 301 R and 909 R fail); board A's U23 is a defect by EF-F01's rule, EF-F03, with
 its draft (V6-m6); the downstream ratings are read at the inside air as well, two rows PROVISIONAL with the supplier's task (V6-m4);
-the RockBLOCK's charge pads are a build condition drafted for ASSEMBLY.md (V6-m5). Prototype
+the RockBLOCK's charge pads are a build condition drafted for ASSEMBLY.md (V6-m5). C-DEV rev 2 (issued 5 October 2026, 16:00,
+conditional on FW-B20/B21) replaces only the supervisors' term; no eFuse load here is on +5V_IOC, and the demands stay at the device
+rail's least voltage 4.9019 V, which rev 2 keeps. Prototype
 design: nothing in this kit has been built, bought, powered or measured, and no figure here is a measurement. Every figure is
 printed by `efuse_check.py` into `efuse_check.out` ("out N" is its section); this page restates them, and the test
 `v2/ecad/tools/tests/test_efuse.py` holds the page to the output. Labels: PRINTED is a limit the maker prints; TYPICAL a

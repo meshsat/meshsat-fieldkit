@@ -1283,6 +1283,35 @@ Q60's leakage is counted at 86.25 C, its site free to 98.7 C); the land is TI's 
 **Status: L8P-F07 and L8P-F08 stay OPEN** until an independent check has read this round on 15.9's acceptance. The draft is NOT
 applied anywhere; nothing is built, bought or measured. A negative check of C4 ends this loop (constitution section 5).
 
+### 12n. Round 9 (5 October 2026, P0 Slot C on `fnd/p0t10`): the check V6's minors m7 and m2
+
+V6 (an AI review of candidate `7a82e82a`) read C4 CONFIRMED AS CONDITIONAL (not a negative check) and named two minors.
+
+**V6-m7, the single failures the table missed (`l8p_c4.out` section 10b, rows added to section 10).** All DERIVED on the draft's
+values at the window's own corner (DOCK_EN_OUT 1.825 V, the pair at +1 %, R107 at -1 %):
+- **Q60's gate shorted to its drain:** cold, the gate network (47 kOhm beside 1 MOhm, 44.9 kOhm) loads the return to 0.799 V (0.758 V
+  all doubled) beside the other 13.25 uA of sinks, 31.0 uA in all against the 26.45 uA allowance and the 0.84 V the window needs: FAILS,
+  so a dead pack's precharge can be stopped; tripped, the diode-connected Q60 conducts only above its own threshold (1.0 to 2.5 V
+  PRINTED at 250 uA, 25 C), so the guard cannot be shown to trip. Found by E-13b (a); LATENT between checks.
+- **C261 open:** U61's response to a docking's step is not printed without its input capacitor; the static guard is unchanged. Found
+  by the assembly's inspection; LATENT.
+- **U60's thermal pad (pin 7) open:** pin 2 still grounds the die, but its coupling to the FETs' pour runs through its leads alone and
+  TI prints no thermal figure for it, so the 15.68 K gradient budget is not shown. Found by E-13's heat step and an X-ray of the pad at
+  assembly; LATENT.
+- **The circuit answer, assessed:** a second sensing path (a second shunt on the same return) adds 5.58 uA of off leakage at 86.25 C,
+  taking the all-doubled sinks to 29.92 uA against the 26.45 uA allowance: the window fails with it. **SESSION decision L8P-D9
+  (authority: SESSION, under the owner's standing rule of 26 September 2026): the three failures are tolerated** as the table's other
+  guard-removing failures are: none disables the breaker's own limit or opens the pack path, each is found at commissioning and at each
+  service, and between checks the FETs' junction rests on E-1's bar (record l9stk). To reverse: a redundant guard on its own enable
+  return with its own window, or the shunt moved into board P's loop.
+
+**V6-m2, L4-E11's DD-7 check and its rows 20c and 20f on a board A that carries the guard:** answered in record l4e11 (its round 17 on
+this branch) and record l8p's copy of L4-E11 taken again at that round (section 12f's inputs); record l4e11's README carries the
+round.
+
+**State:** L8P-F07 and L8P-F08 stay OPEN until an independent check reads rounds 8 and 9 (the brief); this round changes no figure of
+the judgement on C-PROT rev 1.
+
 ## 13. DD-5: the charge switch's body diode in discharge (round 4; `l8p_drafts.out` section 3c)
 
 **The case row: C-PROT**, record l9stk 15.1's criterion at set 29's line `e58e906a` (l9stk at `0d72880b`, copied in `inputs/`):
