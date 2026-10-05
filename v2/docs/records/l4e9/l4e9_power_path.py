@@ -6438,7 +6438,6 @@ CHANGE_ORDER = [
     ("4e", "R-173", GE, "AFTER L4-E7's three drafts (R-19, R-20, R-21), L4-E9's hot swap (R-94) and L4-E11's entry draft (R-123): it uses their texts and the DGX19 land, and refuses a generator without them",
      G_L4E7 + " and its check 5 at 573fd5b8"),
     ("4e", "R-240", GE, "AFTER L4-E7's input limit (R-20), backstop (R-21) and the solar guard (R-173): it refuses a generator without them; before L4-E11's aux (R-177)", G_L4E7_P0),
-    ("ALT", "R-241", GE, "the PROPOSAL only (route B2, the owner item of record l4e7's B2-PRESENCE.md section 2): AFTER R-240; outside every board round until the owner rules", G_L4E7_P0),
     ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12 and C31 off CELL_F; the aux draft rewritten by L4-E11 18: U22 LTC3115-1 and its TA04 network (R103 to R109, C142 to C148, L4) on +12V_FAN, four-wire fan headers, Q9 and Q10 as PWM drivers, D7 and D8 removed; the designators renumbered after the recheck (U18, R59 to R65 and C65 to C71 were the solar drafts'), a disjointness test over every board E draft composed in this list's order in test_l4e11", G_L4E11 + " and its fan-feed round at af4672f4, corrected at b929d8be"),
     ("4e", "R-202", GE, "any position in board E's round (l8r2 section 6b), before d8dec31's input capacitor (R-16)", G_L8R2),
     ("4e", "R-207", GE, "after L4-E11's aux (R-177), before d8dec31's input capacitor (R-16); in one release with R-206 and R-208", G_L8P),
@@ -6499,7 +6498,6 @@ ORDER_CONSTRAINTS = [
     ("DD-7's firmware (R-218) after its hardware (R-217)", "R-217", "R-218"),
     ("P0-7's solar sense after the solar guard (R-173)", "R-173", "R-240"),
     ("P0-7's solar sense before L4-E11's aux (R-177)", "R-240", "R-177"),
-    ("route B2's PROPOSAL after P0-7's sense (R-240)", "R-240", "R-241"),
     ("the coolers' EN after their step-ups are drawn (R-190)", "R-190", "R-211"),
     ("U22's RUN after L4-E11's aux draws U22 (R-177)", "R-177", "R-212"),
     ("U22's RUN before d8dec31's input capacitor (LAST in board E's round)", "R-212", "R-16"),
@@ -6547,7 +6545,10 @@ CHANGE_SCRIPTS = ["d8dec31/apply_gen_sch_a_mainpb.py", "l4e4/apply_gen_sch_a_r11
                   "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
                   "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_e_entry.py", "l4e11/apply_gen_sch_e_timer.py", "l4e11/apply_gen_sch_a_charger.py",
                   "l4e11/apply_gen_sch_e_aux.py", "l4e11/apply_pcb_interfaces_dock.py", "l4e11/apply_gen_sch_a_dd7.py",
-                  "d8dec31/apply_gen_sch_e_cin.py", "l4e7/apply_gen_sch_e_p0sol.py", "l4e7/apply_gen_sch_e_p0sol_b2.py"]
+                  "d8dec31/apply_gen_sch_e_cin.py", "l4e7/apply_gen_sch_e_p0sol.py"]
+# route B2 is OUT of the baseline (record l4e7 after cx45 Q6 and the owner's part 24): its draft stays in its record as an
+# unapproved partial interface proposal, the owner's item, with no change-list row; the change list does not read it
+OUT_OF_BASELINE = {"l4e7/apply_gen_sch_e_p0sol_b2.py"}
 
 
 def cons_changes(reg):
@@ -6572,7 +6573,7 @@ def cons_changes(reg):
     for s in CHANGE_SCRIPTS:
         if os.path.basename(s) not in named:
             refuse(4, "the change list misses %s" % s)
-    have = set(re.sub(r"^.*/records/", "", p) for p in glob.glob(os.path.join(TOP, "v2/docs/records/l4e*/apply_*.py")))
+    have = set(re.sub(r"^.*/records/", "", p) for p in glob.glob(os.path.join(TOP, "v2/docs/records/l4e*/apply_*.py"))) - OUT_OF_BASELINE
     if sorted(have - set(CHANGE_SCRIPTS)):
         refuse(4, "an apply script of L4-E4 to L4-E13 is not in the change list: %s" % sorted(have - set(CHANGE_SCRIPTS)))
     pos = {c[2]: c[0] for c in out}

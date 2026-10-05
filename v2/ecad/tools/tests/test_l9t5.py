@@ -1100,7 +1100,7 @@ def t_p0_connected_the_re_trace_reads_its_sources():
     for lo, hi in bands:
         assert ("band %s to %s A" % (lo, hi)) in text, (lo, hi)
     # cx45 Q7: the coordination names what it does not establish; the active C-DEV row is rev 2; the CAN service per state
-    for s_ in ("NOT COVERED at 76.25 C", "demand the 30 W service: NOT ESTABLISHED", "in its COMPOSED form", "L8P-R9-F1, OPEN",
+    for s_ in ("NOT COVERED at 76.25 C", "demand the 30 W service: NOT ESTABLISHED", "in its COMPOSED form", "no single failure removes the trip", "L8P-R9-F1, handed over",
                "the service is NOT ESTABLISHED there", "U7 with I-03 carries C-DEV rev 2 (the active row)"):
         assert s_ in text, s_
     assert "U7 with I-03 carries C-DEV rev 1" not in text

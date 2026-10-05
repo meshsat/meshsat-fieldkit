@@ -1098,9 +1098,9 @@ def _l4e9_board_e_order():
     lst = [n for n in tree if isinstance(n, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "CHANGE_SCRIPTS" for x in n.targets)]
     assert len(lst) == 1, "L4-E9's CHANGE_SCRIPTS"
     have = {(s_.split("/")[0], s_.split("/")[1][len("apply_gen_sch_e_"):-3]) for s_ in ast.literal_eval(lst[0].value) if "/apply_gen_sch_e_" in s_}
-    # P0 round (record l9t5, Slot A, 5 October 2026): L4-E9's list carries P0-7's sense draft (R-240) and route B2's PROPOSAL (R-241,
-    # step ALT) since P0-7's merge, without which L4-E9's change list refuses the tree; the compositions of this record's earlier rounds
-    # predate P0-7 and stay as they were; P0-7's own tests (t_p0sol_) compose both drafts in their places
+    # P0 round (record l9t5, Slot A, 5 October 2026): L4-E9's list carries P0-7's sense draft (R-240) since P0-7's merge, without which
+    # L4-E9's change list refuses the tree; route B2 is out of the baseline (no row, after cx45 Q6); the compositions of this record's
+    # earlier rounds predate P0-7 and stay as they were; P0-7's own tests (t_p0sol_) compose its drafts in their places
     assert have - set(seq) <= {("l4e11", "timer"), ("l4e7", "p0sol"), ("l4e7", "p0sol_b2")}, \
         "a board E draft of L4-E9's list outside the composition: %s" % sorted(have - set(seq))
     return seq + [("l6r2", "xal_land"), ("l6r2", "lcsc")]
