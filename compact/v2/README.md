@@ -1,7 +1,7 @@
 # MeshSat enclosure v0.6: LilyGO T-Beam Supreme + RockBLOCK 9704-SMA
 
 **Status: cleared for PROTOTYPE printing. Not a final production release.**
-See `AUDIT-RESPONSE.md` for how each audit finding (F01–F15) was handled and what remains open.
+See `AUDIT-RESPONSE.md` for how each audit finding (F01 to F15) was handled and what remains open.
 
 Envelope (body + lid): **62.5 × 146.0 × 62.7 mm**; 154.0 mm long including the SOS guard.
 With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
@@ -13,14 +13,14 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 | 2 | `coupons/meshsat-coupon_rimlid.stl` | ASA | Inserts set flush; M3×8 screws close the lid onto the rim without bottoming; cord seats in the groove. |
 | 3 | `coupons/meshsat-coupon_board.stl` + `print-stl/meshsat-separator.stl` + `print-stl/meshsat-lid.stl` | PLA ok | Real Supreme + 18650 seat on the separator. Lid closes without force. Buttons line up. OLED is centred in the window. |
 | 4 | full set in `print-stl/` | PLA/PETG | Full prototype: assembly, wiring, dunk test |
-| 5 | full set in `print-stl/` | **ASA** (orange) + TPU 95A | Only after steps 1–4 pass and the open items are closed |
+| 5 | full set in `print-stl/` | **ASA** (orange) + TPU 95A | Only after steps 1 to 4 pass and the open items are closed |
 
 | Part | Material | Orientation (already exported this way) | Notes |
 |---|---|---|---|
 | meshsat-body | ASA | open side up | 5 perimeters, ≥40 % infill; horizontal port holes may sag slightly, so deburr |
 | meshsat-lid | ASA | outer face down | groove, pane pocket and hold-downs face up |
 | meshsat-separator | ASA | flat underside down | 100 % infill |
-| meshsat-membrane | TPU 95A | flange down, caps up | slow (20–30 mm/s) |
+| meshsat-membrane | TPU 95A | flange down, caps up | slow (20 to 30 mm/s) |
 | meshsat-plungers ×3 | ASA/PETG | head down | |
 | meshsat-retainer | ASA | flat | |
 | meshsat-molle / -belt | ASA | body face down | tunnel roofs are 26.5 / 40 mm bridges: enable bridge settings or supports |
@@ -42,14 +42,14 @@ With the MOLLE plate: 69.6 × 160.0 × 71.7 mm.
 
 ## Assembly notes
 1. RockBLOCK goes **component side down**. Slide it along the rails from the USB end until it hits the stop, then fit the two M3×16 lock screws.
-2. Solder the harness wires directly to the 9704 header pins. There is ~3.9 mm under the pin tips, so Dupont housings won't fit. Anchor the bundle (adhesive tie mount in the free lower-bay area, y ≈ 25–55) so the solder joints carry no strain.
+2. Solder the harness wires directly to the 9704 header pins. There is ~3.9 mm under the pin tips, so Dupont housings won't fit. Anchor the bundle (adhesive tie mount in the free lower-bay area, y ≈ 25 to 55) so the solder joints carry no strain.
 3. Fit the separator, then the foam strip, then the Supreme. Seat the PCB edges in the lips.
 4. Fit the button membrane, plungers and retainer (6× M2×6) before closing.
 5. Close the lid with even torque until it touches the rim. The rim is the hard stop, so don't overtighten.
 
 ## Electrical: open decisions (not designed here)
-- **9704 power (F12):** Ground Control requires a battery supply to stay within 3.6–4.5 V on V_BATT. An 18650 drops below 3.6 V well before empty. Options:
-  - (a) a 5 V boost converter feeding **V_IN+** (pin 15, 4.0–5.3 V, 500 mA); the lower bay has free space for one, y ≈ 22–56
+- **9704 power (F12):** Ground Control requires a battery supply to stay within 3.6 to 4.5 V on V_BATT. An 18650 drops below 3.6 V well before empty. Options:
+  - (a) a 5 V boost converter feeding **V_IN+** (pin 15, 4.0 to 5.3 V, 500 mA); the lower bay has free space for one, y ≈ 22 to 56
   - (b) direct V_BATT with a firmware cutoff at about 3.7 V, accepting shorter runtime
   
   Use I_EN/I_BTD for start-up and shutdown. Connect all four 9704 grounds. Don't use the 9704's USB and header at the same time.
