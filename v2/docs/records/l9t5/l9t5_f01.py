@@ -314,7 +314,9 @@ def predicates(R):
     P["(c): the PA's DC at the cap's top is under what the bounded case allows"] = L["p_max"] < R["pa_allow_bnd"]
     P["(c): board D's open-loop VGG top stays under 5 V with the ground shift and the loop at rest"] = L["band"][2] < 5.0 and L["gshift"] < PL.GND_SHIFT
     P["(c): the loop's authority takes VGG under 3.5 V"] = L["band"][3] < 3.5
-    P["(c): the TLV758P's preload meets its 1 mA accuracy test condition"] = L["ref_preload"] >= 1e-3
+    P["(c): the reference's load lies within 2 % of its 1 mA test condition and its residual (10 x TYPICAL, ASSUMPTION) under 0.01 % of PA_ISET"] = (
+        L["ref_dI"] < 2e-5 and L["ref_resid"] < 1e-4 * L["vset"][1])
+    P["(c): R553's and R559's corners widen the band (cx45 Q1)"] = L["i_min"] < L["i_min_nores"] and L["i_max"] > L["i_max_nores"]
     P["(c): the INA250's junction at the inside air and the cap's top is under its 125 C specified range (TYPICAL RthJA)"] = L["ina_tj"] < 125.0
     P["(c): the set point's ramp (3 tau) outlasts K1's 3 ms operate time, so the drive arrives under a low set point"] = L["ramp_t"] > 0.003
     P["selection: (c), PROVISIONAL on B-PA1 (F01's row is PROVISIONAL, never closed on printed limits)"] = R["sel"] == "c"
@@ -407,6 +409,15 @@ def render(R):
     w("       air, so TJ under 85 C; %.1f %% to 125 C), line regulation %.1f mV PRINTED max, IFB %.1f uA PRINTED max into %.2fk, the divider at" % (
         100 * S["ref_acc125"], S["ref_line"] * 1e3, S["ref_ifb"] * 1e6, PL.R_SET_TOP / 1e3))
     w("       +-%.4f %% each (0.1 %% and 25 ppm/K over 65 K, DECLARED class): %.4f to %.4f V" % (100 * (PL.DIV_TOL + PL.DIV_TCR * PL.DIV_DT), L["vset"][0], L["vset"][2]))
+    w("     THE REFERENCE'S ACTUAL LOAD (cx45 Q1): the sheet prints the accuracy at IOUT = 1 mA only and its load regulation (0.1 to 500 mA) as")
+    w("       %.3f V/A TYPICAL; the drawn load is %.4f to %.4f mA (VFB's and R552's corners, IFB, the hold's leakage through R559), at most %.1f uA" % (
+        L["ref_loadreg_typ"], L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, L["ref_dI"] * 1e6))
+    w("       from the test condition; the residual is bounded at %.0f times the TYPICAL row (ASSUMPTION): %.2f uV at PA_ISET, carried in the" % (
+        PL.LOADREG_X, L["ref_resid"] * 1e6))
+    w("       corners above; PROVISIONAL on the supplier's validation task V-PA-REF (section 6)")
+    w("     R553 (0.1 %%, 25 ppm/K) %.4fk to %.4fk and R559 (the tree's 1 %% class, ASSUMPTION) %.4fk to %.4fk at their corners (cx45 Q1; round 2 held" % (
+        L["r_int"][0] / 1e3, L["r_int"][1] / 1e3, L["r_ss"][0] / 1e3, L["r_ss"][1] / 1e3))
+    w("       them nominal: %.4f to %.4f A)" % (L["i_min_nores"], L["i_max_nores"]))
     w("     Q551 and C557 leakage into R559 (2N7002 IDSS 80 nA PRINTED at 25 C, doubled every 10 K to the air: record l8p's ASSUMPTION; C557 at")
     w("       %.0f Ohm F, ASSUMPTION): %.2f uA, %.2f mV off the set point (the bottom only)" % (PL.IR_X7R_OHM_F, L["leak"] * 1e6, L["leak"] * PL.R_SS * 1e3))
     w("     the INA250A2 (%s), gain:" % S["ina_rev"])
@@ -532,6 +543,10 @@ def render(R):
     w("   B-PA2 (the loop's dynamics, PROVISIONAL): on the built loop, the drain current's settling at each key (0 to the cap without overshoot")
     w("     over %.3f A), the excursion and its duration after a step from 1:1 to 3:1 load mid key-down, the PA rail inside U13's regulation, and" % L["i_max"])
     w("     the pack current against record l9stk's E-10 (under 18.32 A, or excursions under 0.282 ms each and 1.03 % of the time)")
+    w("   V-PA-REF (the reference at its actual load, cx45 Q1; PROVISIONAL until read): three TLV75801P of the fitted lot, each at its drawn")
+    w("     load %.3f and %.3f mA, -40, 25 and 85 C, VIN 5.0 V: VFB within %.4f to %.4f V (the sheet's +-%.0f %% at 1 mA, which the cap's band" % (
+        L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, S["ref_vfb"] * (1 - S["ref_acc"]), S["ref_vfb"] * (1 + S["ref_acc"]), 100 * S["ref_acc"]))
+    w("     above already carries, widened by the %.2f uV residual); a unit outside it moves the cap's band, B-PA1's pass limit with it" % (L["ref_resid"] * 1e6))
     w("   U5 (R-214, the rest voltage's fall in the 60 s) MISSING: the case at the cap has %.4f V of MODEL margin against it" % (V - L["bnd"]["need"]))
     w("")
     w("7. CX44'S TEN FINDINGS, EACH DISPOSED OF (the owner's part 21: CORRECTED WITH DESK EVIDENCE, STILL AN OPEN DESIGN DEFECT, or GENUINELY")
@@ -551,8 +566,11 @@ def render(R):
              L["i_min"], L["i_max"], L["i_min_printed_only"], L["i_max_printed_only"], L["u13_min"] - L["i_max"] - L["r55_other"],
              100 * (L["u13_min"] - L["i_max"] - L["r55_other"]) / L["i_max"])),
         ("3", "reference loading, junction, supply, common mode, loop residuals", "CORRECTED WITH DESK EVIDENCE",
-         "R552 549 Ohm gives a %.4f mA preload (SBVS351D's IOUT = 1 mA test condition); TJ under 85 C at the %.2f C air; +5V_D8IN 4.872 to 5.133 V; "
-         "the integrator's terms %.4f mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)" % (L["ref_preload"] * 1e3, PL.T_AIR, L["vos"] * 1e3)),
+         "R552 549 Ohm gives a %.4f mA preload; the reference's actual load %.4f to %.4f mA against SBVS351D's IOUT = 1 mA test condition, its "
+         "residual bounded at %.0f times the TYPICAL load regulation (ASSUMPTION, %.2f uV) and PROVISIONAL on V-PA-REF (6, cx45); R553 and R559 at "
+         "their corners (cx45); TJ under 85 C at the %.2f C air; +5V_D8IN 4.872 to 5.133 V; "
+         "the integrator's terms %.4f mV in all, IB and C554's leakage carried as ASSUMPTION allowances (4)" % (
+             L["ref_preload"] * 1e3, L["ref_load"][0] * 1e3, L["ref_load"][1] * 1e3, PL.LOADREG_X, L["ref_resid"] * 1e6, PL.T_AIR, L["vos"] * 1e3)),
         ("4", "R55 carries U13's BIAS and other loads", "CORRECTED WITH DESK EVIDENCE",
          "BIAS bounded at %.4f A (4) and re-tapped to PA_OUT (apply_gen_sch_a_paloop.py edit 1; U13.24 on PA_OUT on the composed netlist; mutation "
          "M06 fails, l9t5_f01_drafts.out 4); R55's other loads %.3f mA; R55 at %.1f C (printed TCR; its thermal resistance a MODEL); the cap's "

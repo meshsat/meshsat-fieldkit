@@ -66,6 +66,10 @@ ISNS_R, ISNS_TOL = 0.006, 0.01     # R55: WSL25126L000FEA, 6 mOhm 1 %
 R55_RTH = 100.0                    # K/W: WSL2512's derating line (1.0 W to 70 C, zero at 170 C): MODEL, not a printed resistance
 R55_OTHER_A = 0.0010               # A: R55's loads beside the PA feed, bounded in r55_other() (MODEL on printed and typical rows)
 NONLIN = 0.0003                    # INA250 nonlinearity, TYPICAL 0.03 %, carried as an allowance
+# cx45 Q1 (5 October 2026): the reference's accuracy is printed at IOUT = 1 mA only and its load regulation (0.1 mA to 500 mA) as a
+# TYPICAL 0.030 V/A: the drawn load differs from 1 mA by the divider's and the hold's corners; the residual is bounded at TEN TIMES the
+# typical row (ASSUMPTION, the supplier's validation task V-PA-REF), and R553 and R559 take their own tolerance corners
+LOADREG_X = 10.0
 
 
 def _pdf(key):
@@ -118,6 +122,7 @@ def read_sheets():
     _need(t, r"VIN = VOUT\(NOM\) \+ 0\.5 V or 1\.5 V \(whichever is greater\), IOUT = 1 mA,", "TLV758P test condition IOUT = 1 mA")
     S["ref_line"] = float(_need(t, r"Line regulation\s+VOUT\(NOM\) \+ 0\.5 V\(2\) ≤ VI N ≤ 6\.0 V\s+(\d+)\s+([\d.]+)\s+mV", "TLV758P line regulation").group(2)) * 1e-3
     S["ref_ifb"] = float(_need(t, r"IFB\s+Feedback pin current\s+([\d.]+)\s+([\d.]+)\s+µA", "TLV758P IFB").group(2)) * 1e-6
+    S["ref_loadreg"] = float(_need(t, r"Load regulation\s+0\.1 mA ≤ IOUT ≤ 500 mA, VIN ≥ 2\.0 V\s+([\d.]+)\s+V/A", "TLV758P load regulation (TYPICAL)").group(1))
     S["ref_ignd"] = float(_need(t, r"IGND\s+Ground current\s+\u201340°C ≤ TJ ≤ \+125°C\s+(\d+)\s+µA", "TLV758P IGND").group(1)) * 1e-6
     S["ref_cout_min"] = float(_need(t, r"COUT\s+Output capacitor\(1\)\s+(\d+)\s+(\d+)\s+µF", "TLV758P COUT").group(1)) * 1e-6
     t = _pdf("tlv9062")
@@ -188,9 +193,16 @@ def cap(S, r_top=R_SET_TOP, r_bot=R_SET_BOT):
     e = DIV_TOL + DIV_TCR * DIV_DT
     vfb, acc = S["ref_vfb"], S["ref_acc"]
     L["ref_preload"] = vfb / r_bot
-    L["vset"] = (vfb * (1 - acc) * (1 + r_top * (1 - e) / (r_bot * (1 + e))) - S["ref_ifb"] * r_top - S["ref_line"],
+    eb = R1PC_TOL + R1PC_TCR * 65.0
+    i_leak = IDSS_25 * 2 ** ((T_AIR - T_REF) / IDSS_DOUBLE_K) + V5[2] / (IR_X7R_OHM_F / C_SS)
+    # the reference's actual load: the divider at VFB's corners and R552's, IFB, and the hold's leakage drawn through R559
+    L["ref_load"] = (vfb * (1 - acc) / (r_bot * (1 + e)) - S["ref_ifb"], vfb * (1 + acc) / (r_bot * (1 - e)) + S["ref_ifb"] + i_leak)
+    L["ref_dI"] = max(abs(L["ref_load"][0] - 1e-3), abs(L["ref_load"][1] - 1e-3))
+    L["ref_loadreg_typ"] = S["ref_loadreg"]
+    L["ref_resid"] = LOADREG_X * S["ref_loadreg"] * L["ref_dI"]          # V at VOUT, ASSUMPTION (ten times the TYPICAL row)
+    L["vset"] = (vfb * (1 - acc) * (1 + r_top * (1 - e) / (r_bot * (1 + e))) - S["ref_ifb"] * r_top - S["ref_line"] - L["ref_resid"],
                  vfb * (1 + r_top / r_bot),
-                 vfb * (1 + acc) * (1 + r_top * (1 + e) / (r_bot * (1 - e))) + S["ref_ifb"] * r_top + S["ref_line"])
+                 vfb * (1 + acc) * (1 + r_top * (1 + e) / (r_bot * (1 - e))) + S["ref_ifb"] * r_top + S["ref_line"] + L["ref_resid"])
     dT = max(T_AIR - T_REF, T_REF - T_COLD)
     dv5 = max(abs(V5[0] - 5.0), abs(V5[2] - 5.0))
     L["ios_terms"] = [("offset current, PRINTED max at 25 C (A2)", "PRINTED", S["ina_ios"]),
@@ -213,18 +225,24 @@ def cap(S, r_top=R_SET_TOP, r_bot=R_SET_BOT):
                       ("C554's leakage, %.0f Ohm F (ASSUMPTION) at %.2f V into R553" % (IR_X7R_OHM_F, V5[2]), "ASSUMPTION", V5[2] / (IR_X7R_OHM_F / C_INT) * R_INT),
                       ("finite gain, PRINTED AOL %.0f dB min: at most the output's travel %.2f V divided by it" % (S["oa_aol"], V5[2]), "PRINTED", V5[2] * 10 ** (-S["oa_aol"] / 20.0))]
     L["vos"] = math.fsum(x for _l, _k, x in L["vos_terms"])
-    i_leak = IDSS_25 * 2 ** ((T_AIR - T_REF) / IDSS_DOUBLE_K) + V5[2] / (IR_X7R_OHM_F / C_SS)
     L["leak"] = i_leak
-    eb = R1PC_TOL + R1PC_TCR * 65.0
+    L["r_int"] = (R_INT * (1 - e), R_INT * (1 + e))          # R553, 0.1 % 25 ppm/K over the 65 K span (cx45 Q1)
+    L["r_ss"] = (R_SS * (1 - eb), R_SS * (1 + eb))           # R559 "1k", the tree's 1 % class (ASSUMPTION, as R560)
 
-    def I(vset, vp, rb, vos, g, ios, il):
-        visp = vset - il * R_SS
-        return (visp * (1 + R_INT / rb) - vp * R_INT / rb + vos) / (G_SENSE * (1 + g)) - ios
+    def I(vset, vp, rb, vos, g, ios, il, rint=R_INT, rss=R_SS):
+        visp = vset - il * rss
+        return (visp * (1 + rint / rb) - vp * rint / rb + vos) / (G_SENSE * (1 + g)) - ios
+    # dI/dR553 = (PA_ISP - V+) / R560 / (G (1 + g)) < 0 (PA_ISP under V+): the top takes R553 low, the bottom R553 high; R559 only
+    # carries the leakage: the bottom takes it high. Every corner taken together (worst case, linear)
     L["i_nom"] = I(L["vset"][1], V5[1], R_BIAS, 0.0, 0.0, 0.0, 0.0)
-    L["i_max"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), L["vos"], -L["gerr"], -L["ios"], 0.0)
-    L["i_min"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -L["vos"], L["gerr"], L["ios"], i_leak)
-    L["i_max_printed_only"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), S["oa_vos"] + S["oa_psrr"] * dv5, -S["ina_gerr"], -L["ios"], 0.0)
-    L["i_min_printed_only"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -(S["oa_vos"] + S["oa_psrr"] * dv5), S["ina_gerr"], L["ios"], 0.0)
+    L["i_max"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), L["vos"], -L["gerr"], -L["ios"], 0.0, L["r_int"][0], L["r_ss"][0])
+    L["i_min"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -L["vos"], L["gerr"], L["ios"], i_leak, L["r_int"][1], L["r_ss"][1])
+    L["i_max_nores"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), L["vos"], -L["gerr"], -L["ios"], 0.0)          # R553, R559 nominal (round 2)
+    L["i_min_nores"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -L["vos"], L["gerr"], L["ios"], i_leak)
+    L["i_max_printed_only"] = I(L["vset"][2], V5[0], R_BIAS * (1 + eb), S["oa_vos"] + S["oa_psrr"] * dv5, -S["ina_gerr"], -L["ios"], 0.0,
+                                L["r_int"][0], L["r_ss"][0])
+    L["i_min_printed_only"] = I(L["vset"][0], V5[2], R_BIAS * (1 - eb), -(S["oa_vos"] + S["oa_psrr"] * dv5), S["ina_gerr"], L["ios"], 0.0,
+                                L["r_int"][1], L["r_ss"][1])
     # U13's own loop and R55: the shunt hot at the cap's top, its printed TCR
     vs = S["lm_vsns"]
     L["r55_w"] = (L["i_max"] + R55_OTHER_A) ** 2 * ISNS_R

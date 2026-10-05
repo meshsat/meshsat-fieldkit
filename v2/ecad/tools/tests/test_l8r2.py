@@ -904,32 +904,81 @@ def t_p0_v6_b1_reproduces_v6_and_the_disposition_is_provisional_and_open_where_n
     assert figs and not [f for f in figs if f not in text], [f for f in figs if f not in text]
 
 
-def t_p0_f33a_is_read_on_the_placement_as_drawn():
-    """the owner's amendment 1: L8R2-F33a against the boards' placement: each 5 V lead's ground land read from the placed board files
-    (a parse), one cluster NOT within reach on board B, one socket a group within reach on both boards; the page states the result"""
+def t_p0_the_group_centre_reading_is_withdrawn_as_realisability():
+    """cx45 Q2: the group-centre construction of l8r2_p0.out 2b places no footprint and solves no current; its claim of realisability
+    is withdrawn there, in 6d and on the page, and the placed distributed model replaces it"""
+    text = open(P0_OUT, encoding="utf-8").read()
+    assert "it is NOT evidence that the condition is realisable" in text and "SESSION L8R2-D9 withdrawn with it" in text
+    assert "MET on the" not in text and "realisable on the placement as drawn)" not in text
+    page = open(PAGE, encoding="utf-8").read()
+    assert "the group-centre reading of `l8r2_p0.out` 2b placed no footprint" in page and "l8r2_dist.py" in page
+    assert "the sockets are PLACED with their" in open(os.path.join(REC, "l8r2_gndret.out"), encoding="utf-8").read()
+
+
+DIST = os.path.join(REC, "l8r2_dist.py")
+DIST_OUT = os.path.join(REC, "l8r2_dist.out")
+
+
+def _dist_module():
     import importlib.util
-    import math
-    need(P0, "l8r2_p0.py")
-    sp = importlib.util.spec_from_file_location("l8r2_p0_under_test", P0)
+    try:
+        import numpy  # noqa: F401
+        import scipy  # noqa: F401
+    except ImportError:
+        raise Skip("numpy and scipy are needed")
+    need(DIST, "l8r2_dist.py")
+    sp = importlib.util.spec_from_file_location("l8r2_dist_under_test", DIST)
     m = importlib.util.module_from_spec(sp)
     sp.loader.exec_module(m)
-    text = open(P0_OUT, encoding="utf-8").read()
-    d_need = float(re.search(r"the distance a return socket may have: ([\d.]+) mm", text).group(1))
-    pl = m.placement(d_need)
-    assert not pl["met_one"] and pl["met_split"]
+    return m
+
+
+def t_p0_dist_output_reproduced_pinned_and_every_predicate_holds():
+    import subprocess
+    _dist_module()
+    need(DIST_OUT, "l8r2_dist.out")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    r = subprocess.run([sys.executable, "-B", DIST], cwd=ROOT, capture_output=True)
+    assert r.returncode == 0, r.stderr.decode()[-300:]
+    text = r.stdout.decode("utf-8")
+    assert text == open(DIST_OUT, encoding="utf-8").read(), "l8r2_dist.out is not what the script prints"
+    rows = [l for l in text.split("7. PREDICATES")[1].split("l8r2_dist: done")[0].splitlines() if l.strip()]
+    assert len(rows) >= 6 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    for h, rel_ in re.findall(r"^\s{3}([0-9a-f]{16}) (v2/\S+)$", text, re.M):
+        assert hashlib.sha256(open(os.path.join(ROOT, rel_), "rb").read()).hexdigest().startswith(h), rel_
+
+
+def t_p0_dist_the_placement_is_clear_and_the_network_is_the_composed_one():
+    """the placement draft re-read independently: each site's courtyard against every placed courtyard (a separate loop), inside the
+    outline; the conductors are the composed netlists' (six VH, seventeen ribbon pins, six XT60 contacts)"""
+    m = _dist_module()
+    text = open(DIST_OUT, encoding="utf-8").read()
     for b in "ab":
-        land = pl[b]["land"]
-        assert sorted(land) == ["J_5V_DEV", "J_5V_S1", "J_5V_S2", "J_5V_S3"], sorted(land)   # J_5V_IOC is not placed yet
-        for ref, (x, y) in land.items():
-            assert ("%s (%.2f, %.2f)" % (ref, x, y)) in text, (b, ref)
-        # the pair's half distance, recomputed here, is the group's radius the output prints
-        s2, s3 = land["J_5V_S2"], land["J_5V_S3"]
-        half = math.hypot(s2[0] - s3[0], s2[1] - s3[1]) / 2
-        assert abs(half - [g for g in pl[b]["groups"] if g[0] == ("J_5V_S2", "J_5V_S3")][0][1]) < 1e-6
-        # no point is farther than the printed enclosing radius from that circle's centre, and the radius is at least half the widest pair
-        r1 = pl[b]["one"]
-        widest = max(math.hypot(p[0] - q[0], p[1] - q[1]) for p in land.values() for q in land.values())
-        assert widest / 2 - 1e-9 <= r1 <= widest / math.sqrt(3) + 1e-9
-    assert "MET on the" in text and "SESSION decision L8R2-D9" in text
-    page = open(PAGE, encoding="utf-8").read()
-    assert "On the placement as drawn" in page and "J_GR2 by J_5V_S2 and J_5V_S3" in page
+        fps = m.footprints(m.PCB[b])
+        segs = m.outline(m.PCB[b])
+        for ref, x0, y0, x1, y1 in re.findall(r"^   board %s (\S+)\s+at \([\d.]+, [\d.]+\) rotated\s+\d+: courtyard \(([\d.]+), ([\d.]+)\)-\(([\d.]+), ([\d.]+)\)" % b.upper(), text, re.M):
+            box = tuple(float(v) for v in (x0, y0, x1, y1))
+            for f in fps.values():
+                c = f["crt"]
+                if c is None:
+                    continue
+                apart = c[0] >= box[2] + m.CLEAR - 1e-6 or c[2] <= box[0] - m.CLEAR + 1e-6 or c[1] >= box[3] + m.CLEAR - 1e-6 or c[3] <= box[1] - m.CLEAR + 1e-6
+                assert apart, (b, ref, f["name"])
+            assert all(m.inside(segs, [px], [py])[0] for px, py in ((box[0], box[1]), (box[2], box[1]), (box[2], box[3]), (box[0], box[3]))), (b, ref)
+    assert "6 VH lead pin 2s, 17 ribbon ground conductors" in text and "6 XT60 return contacts" in text
+
+
+def t_p0_dist_the_verdict_matches_its_rows_and_the_one_node_model_is_kept_beside_it():
+    text = open(DIST_OUT, encoding="utf-8").read()
+    rows = re.findall(r"^     ([+-]\d+\.\d\d) C (VH|RIB|RET)\s+\S+\s+([\d.]+) A \(.*?\): printed ([\d.]+) A (holds|OVER); least ([\d.]+) A (holds|OVER)$", text, re.M)
+    assert len(rows) == 24
+    for T_, k, cur, pr, vp, le, vl in rows:
+        assert (float(cur) <= float(pr)) == (vp == "holds") and (float(cur) <= float(le)) == (vl == "holds"), (T_, k, cur)
+    assert all(r_[4] == "holds" for r_ in rows), "a printed row over its rating"
+    svc = rows[:6] + rows[12:18]                       # C-DEV rev 2 and the largest steady state
+    assert all(r_[6] == "holds" for r_ in svc)
+    over = [r_ for r_ in rows if r_[6] == "OVER"]
+    assert over and all(r_[0] == "+76.25" for r_ in over) and rows.index(over[0]) >= 18      # the declared upper bound only
+    assert "5. AGAINST THE ONE-NODE MODEL" in text and "5b. THE ROUTE FOR THE DECLARED UPPER BOUND'S RIBBON ROW" in text
+    assert "NOT drafted: no service row needs it" in text and "SESSION decision L8R2-D11" in text

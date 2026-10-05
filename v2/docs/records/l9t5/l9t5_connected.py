@@ -73,8 +73,9 @@ CASES = "v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md"
 OUTS = {"budget": "v2/docs/records/l9pwr/l9pwr_budget.out", "drafts": "v2/docs/records/l9t5/l9t5_drafts.out",
         "efuse": "v2/docs/records/efuse/efuse_check.out", "stk": "v2/docs/records/l9stk/l9stk_protection.out",
         "c4": "v2/docs/records/l8p/l8p_c4.out", "t10": "v2/docs/records/l9t5/l9t5_t10.out", "f01": "v2/docs/records/l9t5/l9t5_f01.out",
-        "p0ret": "v2/docs/records/l8r2/l8r2_p0.out", "p0sol": "v2/docs/records/l4e7/l4e7_p0sol.out"}
-SCRIPTS = ["v2/docs/records/l4e7/l4e7_p0sol.py", "v2/docs/records/l9t5/l9t5_t10.py", "v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l8r2/l8r2_p0.py", "v2/docs/records/l8r2/l8r2_gndret.py",
+        "p0ret": "v2/docs/records/l8r2/l8r2_p0.out", "p0sol": "v2/docs/records/l4e7/l4e7_p0sol.out",
+        "dist": "v2/docs/records/l8r2/l8r2_dist.out"}
+SCRIPTS = ["v2/docs/records/l8r2/l8r2_dist.py", "v2/docs/records/l4e7/l4e7_p0sol.py", "v2/docs/records/l9t5/l9t5_t10.py", "v2/docs/records/l9t5/l9t5_drafts.py", "v2/docs/records/l9t5/l9t5_case.py", "v2/docs/records/l8r2/l8r2_p0.py", "v2/docs/records/l8r2/l8r2_gndret.py",
            "v2/docs/records/l9t5/l9t5_paloop.py", "v2/docs/records/efuse/efuse_check.py", "v2/docs/records/l8p/gen_netlist.py",
            "v2/docs/records/l9t5/check_f01_netlist.py", "v2/docs/records/l9t5/check_l9t5_netlist.py", "v2/docs/records/l8p/check_l8p_netlist.py",
            "v2/docs/records/l8r2/check_l8r2_netlist.py", "v2/docs/records/l8r2/check_gndret_netlist.py",
@@ -379,7 +380,8 @@ def f22_chain():
     tj[13.8e3] = (tj[13.3e3][0] + (tj[14.0e3][0] - tj[13.3e3][0]) * (tops[13.8e3][2] - h0) / (h1 - h0), "INFERRED, linear in the top")
     rows = []
     for rb, (lo, nom, hi) in tops.items():
-        for ret, shift in (("as drawn", G["shift_drawn_ub"]), ("with the dedicated return", G["shift_ret"])):
+        sh_dist = float(need(text(OUTS["dist"]), r"the ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V", "the distributed shift").group(1))
+        for ret, shift in (("as drawn", G["shift_drawn_ub"]), ("with the dedicated return", sh_dist)):
             for i, (dr, lab) in drop.items():
                 need_ = 3.3 * (P["vout_hi"] + P["load"] * i) + dr
                 at = lo - D.RAIL_BUDGET * nom - 3 * i * r_sup - shift
@@ -542,7 +544,24 @@ def main():
         w("   the required service unchanged: the case's load set copied whole (v8 = dict(vals)) and only %s replaced, by the cap's top %.2f W" % (
             ", ".join(repr(k) for k in keys8), L["p_max"]))
         w("     (no transmitter, fan or load reduced; the loop's own %.3f W added): %s" % (Q["loop_w"], "yes (read with ast)" if same_set else "NO"))
-        P["the required service is unchanged: only the PA's value differs (read with ast)"] = same_set
+        P["the case's power load set is unchanged: only the PA's value differs (read with ast)"] = same_set
+        # the CAN mechanism the supervisors' quorum runs on (cx45 Q7): its service under FW-B21's share and under a babbling supervisor
+        t10s = text(OUTS["t10"])
+        can = {int(m.group(1)): (int(m.group(2)), int(m.group(3)), m.group(4)) for m in re.finditer(
+            r"^     at\s+(\d+) kbit/s:\s+\d+ dominant bit times a window:\s+(\d+) frames of 135 bits.*?\n\s+the need (\d+) \((inside|NOT inside)", t10s, re.M)}
+        if sorted(can) != [125, 500, 1000]:
+            refuse("T10's CAN service rows are not read (%s)" % sorted(can))
+        assum = need(t10s, r"The tree defines no CAN message rate; the record ASSUMES\s+1 state frame per supervisor per fabric per 100 ms", "T10's assumed message set")
+        bab_open = re.search(r"that a single supervisor's firmware can stop CON-004's quorum is L9T5-F21 \(OPEN", " ".join(t10s.split())) is not None
+        w("   the CAN mechanism (the supervisors' quorum; Slot C's T10, l9t5_t10.out 10h): FW-B21's 2 %% share leaves %d frames a 100 ms window at" % can[500][0])
+        w("     500 kbit/s and %d at 1 Mbit/s against the need of %d (%s at 500 kbit/s: the state frames fit, the event burst spreads over two" % (
+            can[1000][0], can[500][1], can[500][2]))
+        w("     windows, inside REQ-004's 30 s; 125 kbit/s excluded by FW-B21) on an ASSUMED message set (the tree defines no CAN rate: V-B21,")
+        w("     the firmware's to confirm): the quorum's service under the bound PROVISIONAL; under a BABBLING supervisor (a sustained fault no")
+        w("     hardware ends) the quorum may stop and the voters hold the home assignment: the service is NOT ESTABLISHED there (L9T5-F21 %s," % (
+            "OPEN" if bab_open else "NOT READ"))
+        w("     the containment Slot C's question Q3 of cx45). The R602 change moves no CAN rate, share or state; it changes the LDOs' heat only")
+        P["the CAN service is stated per state: PROVISIONAL under the bound, NOT ESTABLISHED under a babbling supervisor"] = bab_open and assum is not None
         w("")
         bud = budget_alltx()
         dr = text(OUTS["drafts"])
@@ -563,8 +582,9 @@ def main():
         r = bud["DEV"]
         w("   U7 (the device rail): before I-03 %.3f A at the least load voltage against %.4f A (C-DEV rev 1's demand, OVER); with I-03 (U601 takes" % (
             r["least"], r["lim"]))
-        w("     +5V_IOC off U7) board B's lead %.4f A (C-DEV rev 1, l9t5_drafts.out), under the loop by %.4f A" % (u7, r["lim"] - u7))
-        P["U7 with I-03 carries C-DEV rev 1 under its loop"] = u7 < r["lim"]
+        w("     +5V_IOC off U7) board B's lead %.4f A on C-DEV rev 2, the active row (U7's demand is rev 1's: rev 2 changes the supervisors' term" % u7)
+        w("     only, which I-03 has taken off U7; l9t5_drafts.out, l8r2_p0.out), under the loop by %.4f A" % (r["lim"] - u7))
+        P["U7 with I-03 carries C-DEV rev 2 (the active row) under its loop"] = u7 < r["lim"]
         w("   U601 (+5V_IOC, TPS62933, 3 A PRINTED): %.4f A on C-DEV rev 1 (+5V_IOC %.4f A), %.4f A on rev 2 (+5V_IOC %.4f A; CONDITIONAL on" % (
             u601_1, ioc1, u601_2, ioc2))
         w("     FW-B20 and FW-B21); its declared peak 1.4749 A (DECLARED, the unbounded supervisors)")
@@ -586,30 +606,37 @@ def main():
         P["J_PA's cap-top current is under the VH's printed rating"] = L["i_max"] < F["vh_a16"]
         w("   J_5V_DEV pin 1 at board B's lead %.4f A: the same VH row (%.4f A INFERRED at 76.25 C), L8R2-F43, PROVISIONAL" % (u7, least_th))
         w("   the dock's four Mill-Max pins on the pack path: at their PRINTED maximum contact resistance inside the case's bound (section 5)")
-        w("   the return between boards A and B (record l8r2, l8r2_p0.out; the solver on the composed design: the conductors the composed netlists")
         nA, nB = GR.read_netlist(raws["a"]), GR.read_netlist(raws["b"])
         lds = GR.leads(nB, intents["b"])
         gcB = GR.ground_conductors(nB)
         vP, _l, whole = GR.judge_pair(nA, nB)
         n_rib = sum(len(v) for v in gcB.values())
-        w("     carry: %d lead contacts, %d ribbon ground conductors, %d return sockets whole on both boards, the solver's 6 lead, 17 ribbon and 3" % (
+        dist = text(OUTS["dist"])
+        w("   the return between boards A and B (record l8r2, l8r2_dist.out after cx45's Q2: the sockets PLACED on the drawn boards with their")
+        w("     courtyards and the return SOLVED as a distributed network at the copper, temperature, fill and contact corners; the composed")
+        w("     netlists carry %d lead contacts, %d ribbon ground conductors and %d return sockets whole on both boards, the conductors it solves)" % (
             len(lds), n_rib, len(whole)))
-        w("     socket conductors: %s)" % ("the same" if (len(lds), n_rib, len(whole)) == (6, 17, 3) else "DIFFERENT"))
-        P["the return solver's conductors are the composed netlists'"] = (len(lds), n_rib, len(whole)) == (6, 17, 3)
-        p0 = text(OUTS["p0ret"])
-        pl = need(p0, r"holds every entry within ([\d.]+) mm of its socket on both boards: (MET|NOT MET) on the", "L8R2-F33a on the placement")
-        w("     L8R2-F33a on the placement as drawn (l8r2_p0.out 2b): one socket a group holds every 5 V entry within %s mm of its socket on both" % pl.group(1))
-        w("     boards: %s (one cluster cannot reach board B's entries); J_5V_IOC placed beside J_5V_DEV; the sites' free area is Layer 10's" % pl.group(2))
-        P["L8R2-F33a is realisable on the placement as drawn (one socket a group)"] = pl.group(2) == "MET"
-        for lab, tot in RR["totals"].items():
-            for Tt in (P0R.TH, P0R.TC):
-                rr = P0R.rows(F, tot, Tt)
-                rt = P0R.ratings(F, Tt)
-                w("     %-46s %7.4f A at %+6.2f C: VH %.4f A (printed %.1f, least %.4f), ribbon %.4f A (printed %.2f, least %.4f), XT60 %.4f A (%.0f)" % (
-                    lab, tot, Tt, rr["VH"], rt["VH"][0], rt["VH"][1], rr["RIB"], rt["RIB"][0], rt["RIB"][1], rr["RET"], rt["RET"][0]))
-        w("     on the one-node model (MODEL): every row under its printed rating; V6-B1's plane term PROVISIONAL on layout condition L8R2-F33a (the")
-        w("     return's lands within 17 mm at 0.5 oz on the largest steady state; l8r2_p0.out), the declared upper bound's printed row and the")
-        w("     least rows STILL OPEN; V6-B2's indirect paths bounded with vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL")
+        P["the distributed return's conductors are the composed netlists'"] = (len(lds), n_rib, len(whole)) == (6, 17, 3)
+        rows_d = re.findall(r"^     ([+-]\d+\.\d\d) C (VH|RIB|RET)\s+(\S+)\s+([\d.]+) A \(.*?\): printed ([\d.]+) A (holds|OVER); least ([\d.]+) A (holds|OVER)$", dist, re.M)
+        cases_d = re.findall(r"^   (C-DEV rev 2|C-DEV rev 1|the largest steady state|the declared upper bound)[^:]*: ([\d.]+) A \(", dist, re.M)
+        if len(rows_d) != 6 * len(cases_d) or len(cases_d) != 4:
+            refuse("l8r2_dist.out's rows are not read (%d rows, %d cases)" % (len(rows_d), len(cases_d)))
+        for ci, (lab, tot) in enumerate(cases_d):
+            rr_ = rows_d[6 * ci:6 * ci + 6]
+            w("     %-26s %s A: %s" % (lab, tot, "; ".join("%s C %s %s A (printed %s %s, least %s %s)" % (
+                r_[0], r_[1], r_[3], r_[4], r_[5], r_[6], r_[7]) for r_ in rr_)))
+        svc_ok = all(r_[5] == "holds" and r_[7] == "holds" for ci, (lab, _t) in enumerate(cases_d) if lab in ("C-DEV rev 2", "the largest steady state")
+                     for r_ in rows_d[6 * ci:6 * ci + 6])
+        pr_ok = all(r_[5] == "holds" for r_ in rows_d)
+        sh = need(dist, r"the ground shift at the supervisors' LDOs on the service cases: at most ([\d.]+) V", "the distributed ground shift")
+        w("     every printed row %s; the service cases (C-DEV rev 2, the largest steady state) %s on the least ratings too; over the INFERRED" % (
+            "holds" if pr_ok else "does NOT hold", "hold" if svc_ok else "do NOT hold"))
+        w("     least only the declared upper bound at 76.25 C (VH pin 2 with its pin 1, L8R2-F43; the ribbon, L8R2-F44, a placed fourth lead its")
+        w("     route, not drafted: L8R2-D11); the ground shift at the supervisors' LDOs at most %s V on the service cases (section 10 uses it)" % sh.group(1))
+        w("     V6-B1: CORRECTED IN DRAFT on the desk model (placement and distributed solve), PROVISIONAL on the plane fill (Layer 10's routed")
+        w("     extraction) and the stages beside their connectors on board A; the targeted recheck decides. V6-B2's indirect paths bounded with")
+        w("     vendor tasks (U.FL, HDMI: MISSING ratings), PROVISIONAL")
+        P["the placed distributed return holds every printed row and the service cases' least rows (l8r2_dist.out)"] = pr_ok and svc_ok
         w("")
 
         # 8. protection coordination
@@ -617,19 +644,45 @@ def main():
         c4 = text(OUTS["c4"])
         nt = need(c4, r"10 A held ([\d.]+) C, ([\d.]+) K under ([\d.]+) C; the 18 A service read as held ([\d.]+) C, ([\d.]+) K; the gauge's condition C4 ([\d.]+) C, ([\d.]+) K",
                   "the guard's no-trip margins")
-        w("8. THE PROTECTION COORDINATION (each trip over its demand and under its downstream rating, with tolerances)")
+        w("8. THE PROTECTION COORDINATION, ROW BY ROW (cx45 Q7: each trip's band against its demand below and its downstream ratings above,")
+        w("   printed and at the inside air; what is NOT established is named in its row)")
+        efo = text(OUTS["efuse"])
+        coord_ok = True
         for k in sorted(bands):
             lo, nom, hi = bands[k]
             net, setting = rail.get(k, ("?", "?"))
-            w("   eFuse %s %s (%s, %s): band %.4f / %.4f / %.4f A (PRINTED, range-wide), efuse_check.out: %s" % (k[0], k[1], net, setting, lo, nom, hi, verdict.get(k, "NOT READ")))
-        for l in lime:
-            w("     " + l[:150])
-        P["the eFuse settings read PASS on the candidate (record efuse)"] = sorted(verdict) == sorted(bands) and all(v == "PASS" for v in verdict.values())
-        w("   board P's breaker C-1 (LM5069, record l9stk; C-PROT rev 1): %.2f to %.2f A against the 18 A service and the true %.4f A (section 5);" % (b_lo, b_hi, Q["i_true"]))
-        w("     its top %.2f A under the cells' 24 A (record l9stk E-9, the supplier's bench)" % b_hi)
-        w("   the PA cap against U13's own loop: the cap acts first (its top %.4f A under U13's least %.4f A), so U13's loop is not the PA's limiter" % (L["i_max"], L["u13_min"]))
-        w("   the thermal guard on the battery FETs (record l8p round 9, C-PROT rev 1): no trip at 10 A held (%s C, %s K under %s C), at the 18 A" % (nt.group(1), nt.group(2), nt.group(3)))
-        w("     service read as held (%s C, %s K) and at the gauge's condition C4 (%s C, %s K) (PRINTED switch limits; l8p_c4.out)" % (nt.group(4), nt.group(5), nt.group(6), nt.group(7)))
+            blk = efo.split("   EFUSE   %s %s   tps2596   %s" % (k[0], k[1], verdict.get(k, "")), 1)[1].split("\n   EFUSE", 1)[0] if verdict.get(k) else ""
+            bm = re.search(r"\(b\) PASS: ([\d.]+) A >= ([\d.]+) A", blk)
+            cm = re.search(r"\(c\) PASS: ([\d.]+) A <= ([\d.]+) A \(([^)]*)\)", blk)
+            air = [l.strip() for l in efo.split("5b. ROUND 2 (V6-m4)", 1)[1].split("\n\n", 1)[0].splitlines() if l.strip().startswith("%s %s " % k)]
+            nc = [l.strip() for l in efo.split("5b. ROUND 2 (V6-m4)", 1)[1].split("\n\n", 1)[0].splitlines() if "NOT COVERED" in l]
+            w("   eFuse %s %s (%s, %s): band %.4f to %.4f A (PRINTED, range-wide); demand %s A under its least: %s; its top under the printed %s A (%s): %s" % (
+                k[0], k[1], net, setting, lo, hi, bm.group(2) if bm else "NOT READ", "yes" if bm else "NOT READ",
+                cm.group(2) if cm else "?", (cm.group(3)[:46] if cm else "NOT READ"), "yes" if cm else "NOT READ"))
+            coord_ok &= bool(bm and cm)
+            for l_ in air:
+                w("     at the inside air (efuse_check.out 5b, INFERRED): %s" % l_[len("%s %s " % k):][:160])
+        w("     NOT COVERED at 76.25 C (INFERRED deratings, the makers print no curve): J_LIME's VBUS contact against the LimeSDR's demand and")
+        w("     U23's top, the RockBLOCK's IDC contact and conductor against U24's top: PROVISIONAL on the efuse record's vendor tasks (V6-m4)")
+        w("   board P's breaker C-1 (LM5069, record l9stk; C-PROT rev 1): band %.2f to %.2f A; demand the 18 A service (the true %.4f A, section 5)" % (b_lo, b_hi, Q["i_true"]))
+        w("     under its least: yes; its top under C-PROT's 23.93 A, every series part within its limits (record l9stk 15.1, CONFIRMED AS")
+        w("     CONDITIONAL) and the cells' 24 A: yes; excursions over its least only under the fault timer's least (E-10, the supplier's bench)")
+        w("   the PA cap (U553, PROVISIONAL): band %.4f to %.4f A; demand the 30 W service: NOT ESTABLISHED (B-PA1; the maker's 6.0 A is an" % (L["i_min"], L["i_max"]))
+        w("     EXAMPLE); its top under the PRINTED ratings downstream: J_PA's VH 10 A yes, U551's 15 A continuous yes; under J_PA's least at")
+        w("     76.25 C (%.4f A, INFERRED): NO (L9T5-F25, L8R2-F43's vendor task); under U13's own least loop %.4f A with R55's other loads: yes," % (
+            least_th, L["u13_min"]))
+        w("     so the cap acts first and U13's loop is the backstop")
+        w("   the thermal guard on the battery FETs, in its COMPOSED form (record l8p round 9: the fail-safe delta after round 8's guard, section")
+        w("     2; its reader check_l8p_fs.py, section 3): no trip at 10 A held (%s C, %s K under %s C), at the 18 A service read as held (%s C," % (
+            nt.group(1), nt.group(2), nt.group(3), nt.group(4)))
+        w("     %s K) and at the gauge's condition C4 (%s C, %s K) on the switches' PRINTED limits (each switch, l8p_c4.out 10c (a)); the trip" % (
+            nt.group(5), nt.group(6), nt.group(7)))
+        fsx = need(c4.split("10c. ROUND 9", 1)[-1], r"2\.5 V within ([\d.]+) ms at the tolerances", "the delta's trip time (10c)")
+        w("     within %s ms (10c (b)), under the RC hold; the FETs' 150 C behind it (DD-2 with Q42, condition C3). NOT established: the common" % fsx.group(1))
+        w("     path's single failures that remove both switches' trip (L8P-R9-F1, OPEN: cx45 Q5, Slot C's); the guard's DOCK_EN_OUT draw at 50 uA")
+        w("     cold and 180 uA tripped against the 30 uA of L4-E11 20c and 20f and record l9stk 15.9 (L8P-R9-F2, a prerequisite before adoption,")
+        w("     its owners' re-take: cx45 Q5); V6-m7 CORRECTED IN DRAFT, UNCHECKED")
+        P["each protective row states its band against its demand and its downstream printed rating, and names what is not established"] = coord_ok
         sol = text(OUTS["p0sol"])
         e_parts = need(sol, r"gen_netlist: (\d+) parts, 0 unplaced", "record l4e7's board E composition").group(1)
         d16 = "D-16: CORRECTED on the drafted circuit" in sol
@@ -680,7 +733,9 @@ def main():
         w("   part 22 item 3) AND SESSION DECISION L9T5-D9")
         w("   each LDO's input = the pre-regulator's least output (VFB's printed band, R601 56.2k and R602 at 0.1 % and 25 ppm/K) less the rail's")
         w("   2 %% copper budget, the lead (three LDOs' current through J_5V_IOC pin 1: %.2f mOhm, hot wire and two contacts) and the ground shift" % (FC["r_sup"] * 1e3))
-        w("   between the boards; against the AP2112K's need (its VOUT maximum, load regulation and dropout); MODEL on PRINTED terms except where marked")
+        w("   between the boards (as drawn: the one-node model without the return, record l8r2; with the dedicated return: the PLACED distributed")
+        w("   model's largest on the service cases, l8r2_dist.out, which replaces the one-node 0.0114 V); against the AP2112K's need (its VOUT")
+        w("   maximum, load regulation and dropout); MODEL on PRINTED terms except where marked")
         for r in FC["rows"]:
             w("   R602 %.1f k (least %.4f V, top %.4f V), return %-25s shift %.4f V, %.4f A a LDO (dropout %s): input %.4f V against %.4f V: %s %+.4f V" % (
                 r["rb"] / 1e3, r["lo"], r["hi"], r["ret"], r["shift"], r["i"], r["lab"], r["at"], r["need"], "holds" if r["ok"] else "FAILS", r["at"] - r["need"]))
@@ -747,9 +802,13 @@ def main():
         # 11. what stays open on this candidate
         w("11. WHAT THIS CANDIDATE DOES NOT CLOSE (each with its route; constitution section 2)")
         w("   F01 / D-17: PROVISIONAL (B-PA1 the 30 W service under the cap's least; B-PA2 the loop's dynamics with E-10); L9P-F04 with it")
-        w("   the return: V6-B1 PROVISIONAL on L8R2-F33a (its form realisable on the drawn placement, 7; Layer 10's extraction), the declared bound's")
-        w("     printed row and the least rows OPEN; V6-B2")
-        w("     vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
+        w("   the return: V6-B1 CORRECTED IN DRAFT on the placed distributed model (7), PROVISIONAL on the plane fill (Layer 10's routed")
+        w("     extraction) and the stages beside their connectors; the declared upper bound's INFERRED least rows OPEN on vendor curves (L8R2-F43,")
+        w("     L8R2-F44); V6-B2 vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
+        w("   the protection rows NOT established (8): the eFuses' downstream contacts at the inside air (V6-m4), the PA cap's demand (B-PA1) and")
+        w("     J_PA at the inside air (L9T5-F25), the guard's common path and its draw (L8P-R9-F1, L8P-R9-F2; cx45 Q5, Slot C's); the CAN")
+        w("     service under a babbling supervisor (5; L9T5-F21, cx45 Q3, Slot C's)")
+        w("   the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2")
         w("   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20")
         w("   the guard's fail-safe delta (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance restated from 30 uA to 50 uA cold and")
         w("     180 uA tripped in L4-E11 20c and 20f and record l9stk 15.9 before the delta is adopted (L8P-R9-F2, a named prerequisite, their")

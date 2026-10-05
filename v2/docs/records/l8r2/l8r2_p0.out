@@ -3,8 +3,8 @@ of. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measure
 ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional choice with its validation task).
 
 0. PINS (sha256/16  path)
-   feff4b7c56598cc0 v2/docs/records/l8r2/l8r2_gndret.py
-   d6d86506bdfe7291 v2/docs/records/l8r2/l8r2_gndret.out
+   ce5ecb92335d3a31 v2/docs/records/l8r2/l8r2_gndret.py
+   1a1fb4cbcf95ffad v2/docs/records/l8r2/l8r2_gndret.out
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
@@ -75,15 +75,15 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
      board B: J_5V_DEV (36.48, 51.65); J_5V_S1 (59.70, 193.95); J_5V_S2 (179.20, 193.45); J_5V_S3 (191.70, 193.95); J_5V_IOC not placed (record l9t5's I-03 lead, Layer 10's placement)
        ONE CLUSTER for every entry: the smallest circle holding them has radius 105.3 mm: NOT within reach
        ONE SOCKET A GROUP: J_5V_S1 0.0 mm from a socket at the group's centre (lands 0.0 mm apart); J_5V_S2 with J_5V_S3 6.3 mm from a socket at the group's centre (lands 12.5 mm apart); J_5V_DEV with J_5V_IOC 0.0 mm from a socket at the group's centre (lands 0.0 mm apart), J_5V_IOC to be placed beside it
-     READ: the three sockets as one cluster cannot serve board B's entries (they sit 211 mm apart at most); one socket a group
-       (J_GR1 beside J_5V_S1; J_GR2 between J_5V_S2 and J_5V_S3; J_GR3 beside J_5V_DEV with J_5V_IOC placed beside it, on both boards,
-       the same lead serving the same group on each) holds every entry within 8.0 mm of its socket on both boards: MET on the
-       placement as drawn, by a placement of the three new sockets and J_5V_IOC only (no drawn part moves). MODEL: each lead's return
-       taken to its nearest socket; the free area at each site (courtyards) and each lead's 150 mm reach between its two groups are
-       Layer 10's placement facts, not read here (SESSION decision L8R2-D9: the split arrangement is the condition's form)
+     READ: the three sockets as one cluster cannot serve board B's entries (they sit 211 mm apart at most). The group-centre
+       construction above (each group's centre at most 8.0 mm from its lands) places no footprint, reads no courtyard and solves no
+       current: it is NOT evidence that the condition is realisable, and round 1 of this section's claim to that effect is WITHDRAWN
+       (the focused check cx45, Q2; SESSION L8R2-D9 withdrawn with it). The sockets placed with their courtyards on both boards and
+       the return solved as a distributed network: l8r2_dist.out (SESSION L8R2-D10)
    DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return
      socket's land within 17 mm (the largest steady state, the tightest service case) of the 5 V entries it serves on both boards
-     (one socket a group, 2b: realisable on the placement as drawn), every ground plane joined solidly; the Layer 10
+     (one socket a group; placed and solved as a distributed network in l8r2_dist.out, which replaces this condition's form), every
+     ground plane joined solidly; the Layer 10
      validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and
      stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared
      upper bound's printed row and every least-rating row at 0.5 oz, which no placement realises; the smallest decision that removes
@@ -181,6 +181,6 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
    V6-m12: F-4b puts a ribbon over its printed 1 A by under 1 percent; the fourth lead would hold it                                    yes
    V6-m8: neither XT60 sheet names a board-soldered end                                                                                 yes
    L8R2-F33a on the placement as drawn: one cluster of sockets is NOT within reach of every 5 V entry on board B                        yes
-   L8R2-F33a on the placement as drawn: one socket a group (S1; S2 with S3; DEV with IOC) is within reach on both boards                yes
+   the group-centre construction is a geometric reading only: each group's centre lies within the reach of its own lands                yes
 
 l8r2_p0: done

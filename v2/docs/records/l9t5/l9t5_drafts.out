@@ -56,9 +56,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    ab05b829283594c0 v2/docs/records/l9t5/inputs/SOURCES.txt
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
-   405c64e060b8e533 v2/docs/records/l9t5/l9t5_case.out
+   d9e7a7b6468febfc v2/docs/records/l9t5/l9t5_case.out
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   d6d86506bdfe7291 v2/docs/records/l8r2/l8r2_gndret.out
+   1a1fb4cbcf95ffad v2/docs/records/l8r2/l8r2_gndret.out
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    29dbe3a0c4938274 v2/docs/ASSEMBLY.md
    393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
