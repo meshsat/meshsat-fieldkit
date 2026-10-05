@@ -849,6 +849,7 @@ def compute():
     R["S23"] = fix23_round(R, T)
     R["S24"] = fix24_round(R, T)
     R["S25"] = fix25_round(R, T)
+    R["S26"] = fix26_round(R, T)
     return R
 
 
@@ -6130,6 +6131,209 @@ def render_fix25(R, p):
     p("")
 
 
+# ---- round 16 (5 October 2026): the check V2RG's V2RG-B1 ends the heavy-lead correction loop (two negative checks); the coordinator's
+# diagnosis makes the lead heat an EXTERNAL QUALIFICATION task: a requirement on the supplier's fixture, demonstrated by the supplier;
+# and V2RG's minors m1 to m6 (C-PROT rev 1)
+R16_Q = (0.005, 0.01, 0.02, 0.03)  # W a lead: the allowances compared for the net heat at each heating lead's joint
+R16_Q_SEL = 0.01                   # W a lead: SELECTED (SESSION)
+R16_ZJ_PLAN = 1.0                  # the joint-to-junction impedance for PLANNING as a fraction of Zself: its bound (a run reads its own)
+R16_DEMO = dict(dt=0.02, l=0.06)   # the three-thermocouple reading's match after an isothermal reading (K) and its span (m), proposals
+R16_MC = dict(seed=20261016, n=2000)
+
+
+def r16_lead_bounds(tr, K, rp, bk):
+    """Each line's bound from the leads' net heat (V2RG-B1's allowance, a bound of EITHER sign): every reading of junction k may carry
+    the leads' effect up to bk[k] = (the leads' net heat) x (the joint-to-junction impedance) in either direction, independently from
+    reading to reading (no sign is known); each reading moved by it in turn and the absolute changes of each line SUMMED (a worst case,
+    not a quadrature: the effect is a bound, not a random error). Returns the bounds of line 1, line 2 and R17's line."""
+    rd = r15_readings(tr, {})
+    base = r15_reduce(rd, K, rp, 0.0)[:3]
+    acc = [0.0, 0.0, 0.0]
+    keys = [("b", k) for k in range(3)] + [("r", k) for k in range(3)] + [("a", k, j) for k in range(3) for j in range(3)]
+    for key in keys:
+        new = r15_reduce(r15_readings(tr, {key: bk[key[1]]}), K, rp, 0.0)[:3]
+        acc = [acc[i] + abs(new[i] - base[i]) for i in range(3)]
+    return acc
+
+
+def r16_u3(K, t3, b, zw, z17):
+    """The direct line's U (V2RG-m2): one reading over the air of the hottest junction in a case F, with the FETs' and R17's 1 % powers
+    and each Zself's lot correction, besides the K-factor, the air, the band, the pickup, the heated reading's terms and the ripple."""
+    u = R15_U
+    heated = math.sqrt(u["rep"] ** 2 + u["leak"] ** 2 + u["early"] ** 2 + u["c0"] ** 2)
+    return math.sqrt((u["k"] * t3) ** 2 + u["air"] ** 2 + (u["band"] * b) ** 2 + u["pick"] ** 2 + heated ** 2 + u["rip"] ** 2
+                     + (u["p"] * K["p_even"] * zw) ** 2 + (u["p17"] * z17 * K["p17"]) ** 2 + (u["unit"] * K["p_hot0"]) ** 2)
+
+
+def fix26_round(R, T):
+    """Round 16: the lead treatment as an external qualification (the fixture requirement, its demonstration, V8 on the measured
+    residual, the targets restated for the allowance, the verdict table with the allowance a bound of either sign), and V2RG-m1 to m6."""
+    S9, S21, S23, S25 = R["S19"], R["S21"], R["S23"], R["S25"]
+    S = {}
+    K = S25["K"]
+    p_alone = S23["p"]["hot"]
+    ka = R15_LEAD["k_cu"] * R15_LEAD["area"]
+    # ---- the guard withdrawn as the qualification: V2RG-B1's mechanism, the curvature the record wrote for option (b) and not for (a)
+    S["v2rg"] = dict(q_005=(0.031, 0.426), q_01=(0.010, 0.132), q_02=(0.002, 0.038), floor=(0.018, 0.054))   # W a lead, V2RG's fin model (as received)
+    # ---- the demonstration's own reading: three thermocouples on the lead's copper over an unheated span, q0 = k A (3 T0 - 4 Tmid + TL) / L
+    d = R16_DEMO
+    S["demo_u"] = ka * math.sqrt(3 ** 2 + 4 ** 2 + 1 ** 2) * d["dt"] / d["l"]
+    # ---- the allowance's cost: targets for each allowance (the joint-to-junction impedance at its bound, Zself, for planning)
+    def coupon(s, z17):
+        tr = r15_coupon(s, 0.1, z17, S9["band"], p_alone)
+        tr["P17"] = K["p17"]
+        return tr
+    def lines(s, q, z17):
+        tr = coupon(s, z17)
+        rd = r15_readings(tr, {})
+        red = r15_reduce(rd, K, R15_RP, 0.0)
+        u = r15_u(rd, K, R15_RP, 0.0)
+        bk = [K["n_lead"] * q * R16_ZJ_PLAN * tr["Z"][k][k] for k in range(3)]
+        lb = r16_lead_bounds(tr, K, R15_RP, bk)
+        return tr, red, u, lb, bk
+    def solve(f, lo, hi):
+        for _ in range(48):
+            mid = 0.5 * (lo + hi)
+            if f(mid):
+                lo = mid
+            else:
+                hi = mid
+        return lo
+    z17_t = S25["z17_t"]
+    def ok(s, q):
+        _tr, red, u, lb, _bk = lines(s, q, z17_t)
+        return red[1] + 2 * u[1] + 2 * lb[1] <= K["rise"] and red[0] + 2 * u[0] + 2 * lb[0] <= K["bar_even"]
+    S["trade"] = []
+    for q in (0.0,) + R16_Q:
+        s = solve(lambda s_: ok(s_, q), 10.0, 60.0)
+        tr, red, u, lb, bk = lines(s, q, z17_t)
+        S["trade"].append(dict(q=q, s=s, zw=red[0], l2=red[1], u=u, lb=lb, b1=bk[1]))
+    sel = [r_ for r_ in S["trade"] if r_["q"] == R16_Q_SEL][0]
+    S["sel"] = sel
+    S["amplify"] = sel["lb"][1] / sel["b1"]
+    tr, red, u, lb, bk = lines(sel["s"], R16_Q_SEL, z17_t)
+    S["l3_t"] = red[1]                                        # the direct reading at the target sits at line 2's figure (superposition)
+    S["u3"] = r16_u3(K, red[1], S9["band"], red[0], z17_t)
+    uu = R15_U
+    heated = math.sqrt(uu["rep"] ** 2 + uu["leak"] ** 2 + uu["early"] ** 2 + uu["c0"] ** 2)
+    S["u3_old"] = math.sqrt((uu["k"] * red[1]) ** 2 + uu["air"] ** 2 + (uu["band"] * S9["band"]) ** 2 + uu["pick"] ** 2 + heated ** 2
+                            + uu["rip"] ** 2)                 # round 15's form at the same reading, without the power terms
+    S["lb3"] = max(bk)                                        # one reading: the leads' bound enters once
+    S["pours_t"] = sel["s"] * K["i2"] * R15_RP
+    S["z17_t"] = z17_t
+    if not (sel["lb"][1] > 3 * sel["b1"] and S["u3"] > S["u3_old"]):
+        refuse(4, "the superposition line does not amplify the leads' bound, or line 3's U did not grow with its power terms")
+    # ---- the verdict table: the TRUE line-2 figure (the pours at their bound, no lead effect) at chosen points; the reading's error at
+    # its edges, the leads' effect at its bound of either sign with it
+    S["table"] = []
+    for lab, lev in (("the design target", None), ("the target's U + L under the limit", "UL"), ("0.1 K under the limit", -0.1),
+                     ("0.1 K over the limit", 0.1), ("1 K over the limit", 1.0)):
+        if lev is None:
+            s = sel["s"]
+        else:
+            tgt = K["rise"] - (sel["u"][1] + sel["lb"][1]) if lev == "UL" else K["rise"] + lev
+            s = solve(lambda s_: lines(s_, R16_Q_SEL, z17_t)[1][1] <= tgt, 10.0, 60.0)
+        tr, red, u, lb, bk = lines(s, R16_Q_SEL, z17_t)
+        row = dict(lab=lab, s=s, true=red[1], u=u[1], lb=lb[1])
+        row["high"] = red[1] + lb[1] + u[1] + u[1] + lb[1] <= K["rise"] and red[0] + 2 * (u[0] + lb[0]) <= K["bar_even"]
+        row["exact"] = red[1] + u[1] + lb[1] <= K["rise"] and red[0] + u[0] + lb[0] <= K["bar_even"]
+        row["low"] = red[1] - lb[1] - u[1] + u[1] + lb[1] <= K["rise"] and red[0] <= K["bar_even"]
+        S["table"].append(row)
+    # ---- V2RG-m3: the probability that a coupon exactly at the limit passes, from the record's own functions
+    import random
+    rnd = random.Random(R16_MC["seed"])
+    srcs = r15_sources()
+    def coupon_lim(s):                                         # V2RG-m3's setting: lines 1 and R17 with room (a 20 K baseline, R17 at 0.1 K/W)
+        tr_ = r15_coupon(s, 0.1, 0.1, 20.0, p_alone)
+        tr_["P17"] = K["p17"]
+        return tr_
+    s_lim = solve(lambda s_: r15_reduce(r15_readings(coupon_lim(s_), {}), K, R15_RP, 0.0)[1] <= K["rise"], 10.0, 60.0)
+    trl = coupon_lim(s_lim)
+    S["mc_l1"] = r15_reduce(r15_readings(trl, {}), K, R15_RP, 0.0)[0]
+    S["mc_true"] = r15_reduce(r15_readings(trl, {}), K, R15_RP, 0.0)[1]
+    acc0 = 0
+    for _ in range(R16_MC["n"]):
+        rd = r15_readings(trl, {src: rnd.gauss(0.0, a / 2.0) for src, a in srcs})
+        acc0 += r15_verdict(rd, K, R15_RP, 0.0)[0]
+    S["mc"] = (acc0, R16_MC["n"])
+    # ---- V2RG-m6: the census ratio at 34.48 uA
+    i_m = R13_B["i_m"]
+    S["ratio_m6"] = (i_m - S25["m2_sum"]) / R["S24"]["idss"][1]
+    return S
+
+
+def render_fix26(R, p):
+    S, S25 = R["S26"], R["S25"]
+    K = S25["K"]
+    sel = S["sel"]
+    p("26. ROUND 16: THE HEAVY LEADS AS AN EXTERNAL QUALIFICATION, AND THE CHECK V2RG'S MINORS (5 October 2026; C-PROT rev 1)")
+    p("   26a. THE GUARD WITHDRAWN AS THE QUALIFICATION (V2RG-B1, the SECOND negative check of the lead treatment: the loop ENDS; RECORD)")
+    p("     holding the pair's two thermocouples equal across a heated span does not null the flux at the joint: with equal ends the joint gives")
+    p("       or takes half the span's net source, the curvature this record wrote for option (b) and left out of (a); V2RG's fin model (as")
+    p("       received, its own orders): %s to %s mW a lead at a 0.05 m guard, %s to %s at 0.1 m, %s to %s at 0.2 m, against round 15's 14.9 mW;"
+      % tuple(fmt(x * 1e3, 0) for x in S["v2rg"]["q_005"] + S["v2rg"]["q_01"] + S["v2rg"]["q_02"]))
+    p("       further terms of the order of 10 to 70 mW of either sign (the span's heater density, TC2's placement, the crimp and the palm's")
+    p("       contact heat, the palm's spread, the wires); round 15's V8 judged the controller's state, not the joint's heat flow. The guard")
+    p("       stays only as construction guidance (26c); V2RG-B1 stays OPEN as a SUPPLIER QUALIFICATION item (the coordinator's diagnosis)")
+    p("   26b. THE FIXTURE REQUIREMENT AND ITS DEMONSTRATION (SESSION; the requirement is the supplier's scope)")
+    p("     REQUIREMENT: the net heat flow at each heating lead's joint into or out of the coupon, in calibration, heating and sensing, at most")
+    p("       %s mW a lead, its measurement's own uncertainty included (SELECTED, SESSION; reversed by the supplier's demonstration: a smaller"
+      % fmt(R16_Q_SEL * 1e3, 0))
+    p("       demonstrated residual relaxes the target, a larger one re-trades the allowance against it)")
+    p("     DEMONSTRATION, on the actual fixture before any coupon run, the supplier's choice of method with its uncertainty counted: (i) a")
+    p("       measured residual, three thermocouples on each lead's copper over an unheated, lagged span, the joint's flux k A (3 T0 - 4 Tmid +")
+    p("       TL) / L (with the ends equal V2RG's 4 k A (T0 - Tmid) / L), its resolution %s mW at a %s K match over %s mm (proposal); or (ii) a"
+      % (fmt(S["demo_u"] * 1e3, 2), fmt(R16_DEMO["dt"], 2), fmt(R16_DEMO["l"] * 1e3, 0)))
+    p("       reference coupon of known thermal impedance run in the fixture, the leads' effect read on it directly; at the run's currents (0 to")
+    p("       22.46 A), its joint temperatures (up to 60 K over the air) and every state; the demonstration's instruments, or a run-time")
+    p("       monitor the demonstration validates, stay on the fixture for the runs")
+    p("     V8 RESTATED: in every case at its steady endpoint, each heating lead's measured net heat at its joint, plus its uncertainty, at most")
+    p("       the requirement; else INCONCLUSIVE (it judges the residual, not a controller's state)")
+    p("   26c. CONSTRUCTION GUIDANCE (recommendations from V2RF and V2RG, NOT the qualification): a heater beyond the pair, the span from the")
+    p("     joint unheated and lagged; TC2 on the copper under a thin film; a mid-span thermocouple; the palm's loss with its spread; the crimp's")
+    p("     and the palm contact's heat read four-wire; the thermocouple wires routed along the lead; a DC (linear) drive from a floating supply,")
+    p("     or the drive held through each reading window (V2RG-m5); a guard long enough (V2RG's model: under 4 mW at 0.5 m); the band supply's")
+    p("     leads the service's pack conductors' stand-in (V2RG-m4)")
+    p("   26d. THE ALLOWANCE'S COST: each reading may carry the leads' effect of either sign, (2 leads) x (the allowance) x Z_kJ, Z_kJ at")
+    p("     its bound Zself for PLANNING (a run reads its own by reciprocity); line 2 takes differences against the baseline, so the bound")
+    p("     enters it %s times a reading's; the direct line takes it once (INFERRED). Two levers relax the target, neither adopted here: a run's"
+      % fmt(S["amplify"], 2))
+    p("     own Z_kJ (read by reciprocity, likely well under Zself), and a supplier who reads the residual in every case and corrects each")
+    p("     reading by it, leaving only that reading's uncertainty (the supplier's to propose)")
+    for r_ in S["trade"]:
+        p("     the allowance %s mW a lead: each junction's Zw at most %s K/W (Zself %s, S %s K/W at m 0.1); line 2 %s K, U %s K, the leads' bound %s K"
+          % (fmt(r_["q"] * 1e3, 0), fmt(r_["zw"], 2), fmt(r_["s"], 2), fmt(r_["s"] * 1.2, 2), fmt(r_["l2"], 2), fmt(r_["u"][1], 2), fmt(r_["lb"][1], 2)))
+    p("     SELECTED %s mW: the target Zw %s K/W (Zself %s, S %s K/W at m 0.1), R17 at most %s K/W, the pours %s mOhm (term %s K); line 2 at it"
+      % (fmt(R16_Q_SEL * 1e3, 0), fmt(sel["zw"], 2), fmt(sel["s"], 2), fmt(sel["s"] * 1.2, 2), fmt(S["z17_t"], 3), fmt(R15_RP * 1e3, 2), fmt(S["pours_t"], 2)))
+    p("       %s K, U %s K, the leads' bound %s K; line 1 U %s K/W, its bound %s K/W; the direct line U %s K (round 15's %s K without the power"
+      % (fmt(sel["l2"], 2), fmt(sel["u"][1], 2), fmt(sel["lb"][1], 2), fmt(sel["u"][0], 2), fmt(sel["lb"][0], 2), fmt(S["u3"], 2), fmt(S["u3_old"], 2)))
+    p("       terms at the same reading, V2RG-m2), its leads' bound %s K" % fmt(S["lb3"], 2))
+    p("     the verdict, the TRUE line-2 figure at chosen points, each line read at its edges with the leads' effect at its bound (+, 0, -):")
+    for r_ in S["table"]:
+        yn = lambda v: "PASS" if v else "FAIL"
+        p("       %-40s true %s K (U %s K, leads %s K): high %s, exact %s, low %s"
+          % (r_["lab"] + ":", fmt(r_["true"], 2), fmt(r_["u"], 2), fmt(r_["lb"], 2), yn(r_["high"]), yn(r_["exact"]), yn(r_["low"])))
+    p("   26e. THE MINORS (RECORD, INFERRED)")
+    p("     m1: the page's row E11-29 written from e11_29_method; the target stated as Zw (Zself only for three side by side at m 0.1); a test")
+    p("       compares every page row's figures with the script's")
+    p("     m2: the direct line's U %s K with the FETs' and R17's 1 %% powers and the lot correction (%s K without them at the same reading;"
+      % (fmt(S["u3"], 2), fmt(S["u3_old"], 2)))
+    p("       round 15 printed %s K at its own target)" % fmt(R["S25"]["u3"], 2))
+    p("     m3: a coupon exactly at the limit (line 2's true figure %s K) passes %d of %d draws from the budget (%s %%), from the record's own"
+      % (fmt(S["mc_true"], 2), S["mc"][0], S["mc"][1], fmt(100.0 * S["mc"][0] / S["mc"][1], 2)))
+    p("       functions with lines 1 and R17 passing with room; round 15's 'about 2.5 %' was a conservative misstatement")
+    p("     m4: the band supply's leads stand for the service's pack conductors: their cross-section, insulation, length and termination a")
+    p("       recorded boundary of the comparison rule (SESSION)")
+    p("     m5: any heater on a lead driven by a floating DC supply, or its drive held through each reading window; any such heater in the")
+    p("       pickup check of step 6, in the census and in V3")
+    p("     m6: at 34.48 uA the device under test carries 965.5 uA, %s times the largest other conductor; the test docstrings restated"
+      % fmt(S["ratio_m6"], 1))
+    p("   26f. STATUS (SESSION): V2RG-B1 OPEN as a supplier qualification item (the fixture requirement, the supplier's scope); the minors")
+    p("     answered; TP-E11-29 NOT EXECUTABLE until L4-E9 restates R-159 and a supplier agrees in writing, and ready to be PUT to a supplier")
+    p("     for that agreement with the fixture requirement as its scope; the lead treatment's design loop is ended")
+    p("")
+
+
 def e11_29_method(R):
     """E11-29's method and acceptance as they now stand (round 13's method, round 14's fixture and pass lines): one text, for the row of
     section 8 and the page's row."""
@@ -6142,8 +6346,10 @@ def e11_29_method(R):
             "threshold voltage at %s mA with its gate tied to its own drain tap, the other gates on the source, against a K-factor calibrated in "
             "an oven in the same connection, the heating supply isolated from the pours by a series switch for every reading (round 14, section "
             "24b, the recheck V2R's V2R-B1: a bypass across the supply joined the pours and is WITHDRAWN), a gate tied only while that switch is "
-            "open by its own state (round 15, section 25c), each heavy lead of the heating supply guarded so its flux at its joint is zero "
-            "within its residual (round 15, section 25b, the final recheck V2RF's V2RF-B1); cases: each FET alone at %s W and at "
+            "open by its own state (round 15, section 25c), the net heat flow at each heating lead's joint at most %s mW a lead in "
+            "calibration, heating and sensing, a REQUIREMENT ON THE SUPPLIER'S FIXTURE that the supplier demonstrates on the actual "
+            "fixture before any coupon run (round 16, section 26b; the check V2RG's V2RG-B1 stays OPEN as that qualification; round 15's "
+            "guard is construction guidance only); cases: each FET alone at %s W and at "
             "%s W (the 3 x 3 matrix of Zself and Zmut over step 6's baseline, its reciprocity checked), the three evenly, the worst split for "
             "each row of the measured matrix (each FET in turn) and the fixed split %s / %s / %s W by time division in slots of at most %s us, "
             "the band carrying %s A and R17 dissipating in place; acceptance (round 14, section 24d, V2R-B2), each line the reading plus its "
@@ -6151,18 +6357,23 @@ def e11_29_method(R):
             "the other two, m_k = D_k / (2 C_k): 9 C_k^2 / (4 (2 C_k - D_k)) under m_k 1/4, else C_k + D_k; that is, its S_k against section "
             "21b's bar at m_k) at most %s K/W, so each (Zself + 2 Zmut) at most %s K/W without m; THE LIMIT, each junction's baseline rise "
             "(the band and the neighbours' dummies on) plus R17's coupling times %s W plus %s W times its worst-split figure plus the bounds for "
-            "the pours' service loss (Zself times (23.93 A)^2 times the pours' measured largest paths) and the guarded leads' residual, at most "
+            "the pours' service loss (Zself times (23.93 A)^2 times the pours' measured largest paths) and the leads' bound (each reading's "
+            "net heat at the joints, of either sign, times the joint-to-junction impedance read by reciprocity, carried through the "
+            "reduction), at most "
             "%s K over the air, and the same read directly at each row's worst split; R17's coupling at most %s K/W; step 14's bar at the "
             "largest Zmut over the largest Zself WITHDRAWN; each line's U propagated through the reduction from the budget's sources (round 15, "
-            "section 25f; on a coupon at the design target %s %% on line 1, %s %% on line 2, %s K/W on R17's line; round 14's single 3.47 %% "
-            "withdrawn); the design target (round 15, section 25g, V2RF-m5): the two pours' largest paths summed at most %s mOhm (a layout "
-            "requirement), each Zself at most %s K/W, R17's coupling at most %s K/W, so line 2 passes with twice its U; the PTC's site (RT1's land at the drain "
+            "section 25f; on a coupon at the design target %s %% on line 1, %s %% on line 2, %s K/W on R17's line, %s K on the direct line; "
+            "round 14's single 3.47 %% withdrawn); the design target (round 16, section 26d, with the leads' allowance): the two pours' "
+            "largest paths summed at most %s mOhm (a layout requirement), each junction's worst-split figure Zw at most %s K/W (Zself %s K/W "
+            "for three side by side at m 0.1), R17's coupling at most %s K/W, so lines 1 and 2 pass with twice their U and twice the leads' "
+            "bound; the PTC's site (RT1's land at the drain "
             "tabs' centroid) read by a thermocouple in every case and its gradient to the hottest junction RECORDED for record l9stk's guard"
-            % (fmt(R13_B["i_m"] * 1e3, 0), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["other"], 3),
+            % (fmt(R13_B["i_m"] * 1e3, 0), fmt(R16_Q_SEL * 1e3, 0), fmt(S["p"]["even"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["hot"], 3), fmt(S["p"]["other"], 3),
                fmt(S["p"]["other"], 3), fmt(R13_B["slot"] * 1e6, 0), fmt(S9["i"], 2), "%.2f" % S24["K"]["bar_even"], "%.2f" % S21["bar_new"],
                fmt(S24["K"]["p17"], 2), fmt(S24["K"]["p_even"], 3), fmt(S24["K"]["rise"], 2), fmt(S9["r17_allow"], 1),
-               fmt(R["S25"]["u_illus"][0] * 100, 1), fmt(R["S25"]["u_illus"][1] * 100, 1), fmt(R["S25"]["target"]["u"][2], 2),
-               fmt(R15_RP * 1e3, 2), fmt(R["S25"]["target"]["s"], 2), fmt(R["S25"]["z17_t"], 2)))
+               fmt(R["S26"]["sel"]["u"][0] / R["S26"]["sel"]["zw"] * 100, 1), fmt(R["S26"]["sel"]["u"][1] / R["S26"]["sel"]["l2"] * 100, 1),
+               fmt(R["S26"]["sel"]["u"][2], 2), fmt(R["S26"]["u3"], 2), fmt(R15_RP * 1e3, 2), fmt(R["S26"]["sel"]["zw"], 2),
+               fmt(R["S26"]["sel"]["s"], 2), fmt(R["S26"]["z17_t"], 2)))
 
 
 # ============================================================================================ the output
@@ -6657,6 +6868,7 @@ def render(R):
     render_fix23(R, p)
     render_fix24(R, p)
     render_fix25(R, p)
+    render_fix26(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c; J_DCIN's XT60-F, 19), apply_gen_sch_a_guard.py")
     p("(R14, 3f), apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its three")
     p("battery FETs, the dock's VSYS contact and the VSYS hold U46, 14, 15 and 19), apply_gen_sch_a_dd7.py (DD-7 on board A, 19h and 20; its netlist")
