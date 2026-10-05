@@ -24,6 +24,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
    8e374670868696ba v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
    85156e936ce21bcc v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
+   4f8831c8b21e2ca1 v2/docs/records/l9t5/apply_gen_sch_a_iocset.py
+   ca218c9ed2f267ed v2/docs/records/l9t5/apply_gen_sch_b_iocset.py
 
 2. THE APPLICABLE OPERATING STATE OF A SUPERVISOR (U41, U51, U61, STM32H743VIT6), AS THE TREE DEFINES IT
    v2/docs/HW-FW-CONTRACT.md: 11 rows name the supervisors (their I2C target addresses, CAN FD at 1 Mbps or less, the quorum, the vote rate);
@@ -361,6 +363,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      B6     V    0.2236 A  119.0 C           0.2150 A  117.4 C                        0.1731 A  109.4 C holds
      B7a    V    0.2286 A  120.0 C           0.1771 A  110.1 C                        0.1732 A  109.4 C holds
      B7b    V    0.2286 A  120.0 C           0.2286 A  120.0 C                        0.1686 A  108.5 C holds
+   the criterion per row (the owner's part 22; 10i reads every row again on both set points): every response and held row above is a
+     SUSTAINED state (a fault on the bus stays until repaired), so 125 C applies, 150 C being the absolute maximum and never an operating
+     target; the parts-alone column's B7a is a TRANSIENT the DTO ends in 3.8 ms (its row is then the recessive figure)
    Both fabrics faulted (IOHA row 8: 'nothing moves' is the accepted outcome, the regulators must survive it: 150 C in any state;
    the 125 C criterion read as well): the worst response figure on both transceivers
      rev Y: held 0.6466 A, 200.0 C (OVER 150 C); with the response 0.2626 A, 126.5 C: holds 150 C, over 125 C
@@ -480,6 +485,65 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      C-DEV rev 2 as the coordinator issued it (the copy inputs/cases-cdev-rev2-20261005.md, sha256 85156e936ce21bcc, of _runs/cases/CASES-2026-10-04.md):
      its figures against this output's (0.2558 A a regulator; 0.1732 A rev V; 0.2396 A at TJ 111.8 C; 2.966 W at +3V3_IOCx; +5V_IOC 0.8989 A; 0.0069 A at most): every one equal
 
+   10i. THE OWNER'S REVIEW OF CHECKPOINT 3 (part 22): THE CRITERION PER STATE, AND THE SET POINT THAT BOUNDS THE BABBLING ROW
+   the rule (the owner's part 22; T10's criterion since round 4): a SUSTAINED state, served or a fault the design must survive, is judged
+   at 125 C, because 150 C is the absolute maximum and never an operating target; a TRANSIENT that hardware ends within a bound is
+   judged at 150 C on its steady-state figure (an upper bound of any transient), and 125 C is read beside it. Hung: the FDCAN
+   retransmits with the CPU hung only until the IWDG resets it (hardware-started under FW-B10; its timeout the firmware's to set); a
+   babbler: a running firmware that breaks FW-B21 and still serves its watchdog is ended by nothing: SUSTAINED. The service in it: the
+   babbler can deny both fabrics by arbitration, so the quorum may stop and the voters hold the home assignment (row 8's safe state);
+   that a single supervisor's firmware can stop CON-004's quorum is L9T5-F21 (OPEN, Layer 5 and IOHA section 12: a voted silence of
+   the babbler, its transceivers' SHDN or its LDO's EN by the other two, is the circuit direction; NOT drafted here)
+   the set point delta (apply_gen_sch_a_iocset.py, apply_gen_sch_b_iocset.py, after T10's iocpre; L9T5-F22 drafted): R602 14.0k, 4.0114 V
+     nominal, 3.9063 to 4.1174 V; the drop at its worst corner 0.8669 V, 159.5 K/A (13.3k: 1.0402 V, 191.4 K/A)
+     state at 76.25 C (MODEL)                     rev  current    criterion        13.3k (iocpre)   14.0k (iocset)
+     the bounded state (FW-B20, FW-B21)           V   0.1732 A   125 C (sustained)  109.4 C holds    103.9 C holds
+     B1 with the response                         V   0.1756 A   125 C (sustained)  109.9 C holds    104.3 C holds
+     B2 with the response                         V   0.1756 A   125 C (sustained)  109.9 C holds    104.3 C holds
+     B3 with the response                         V   0.1736 A   125 C (sustained)  109.5 C holds    103.9 C holds
+     B4 with the response                         V   0.1766 A   125 C (sustained)  110.0 C holds    104.4 C holds
+     B5 with the response                         V   0.1760 A   125 C (sustained)  109.9 C holds    104.3 C holds
+     B6 with the response                         V   0.1731 A   125 C (sustained)  109.4 C holds    103.9 C holds
+     B7a with the response                        V   0.1732 A   125 C (sustained)  109.4 C holds    103.9 C holds
+     B7b, SHDN obeyed                             V   0.1686 A   125 C (sustained)  108.5 C holds    103.1 C holds
+     B7b, SHDN ignored (L9T5-D5)                  V   0.2286 A   125 C (sustained)  120.0 C holds    112.7 C holds
+     both fabrics faulted, responded              V   0.1799 A   125 C (sustained)  110.7 C holds    104.9 C holds
+     hung, DAR mis-set (the IWDG ends it)         V   0.2150 A   150 C (transient)  117.4 C holds    110.5 C holds
+     babbling (nothing ends it)                   V   0.2839 A   125 C (sustained)  130.6 C FAILS    121.5 C holds
+     the bounded state (FW-B20, FW-B21)           Y   0.2558 A   125 C (sustained)  125.2 C FAILS    117.1 C holds
+     B1 with the response                         Y   0.2582 A   125 C (sustained)  125.7 C FAILS    117.4 C holds
+     B2 with the response                         Y   0.2582 A   125 C (sustained)  125.7 C FAILS    117.4 C holds
+     B3 with the response                         Y   0.2563 A   125 C (sustained)  125.3 C FAILS    117.1 C holds
+     B4 with the response                         Y   0.2592 A   125 C (sustained)  125.9 C FAILS    117.6 C holds
+     B5 with the response                         Y   0.2586 A   125 C (sustained)  125.8 C FAILS    117.5 C holds
+     B6 with the response                         Y   0.2557 A   125 C (sustained)  125.2 C FAILS    117.0 C holds
+     B7a with the response                        Y   0.2558 A   125 C (sustained)  125.2 C FAILS    117.1 C holds
+     B7b, SHDN obeyed                             Y   0.2512 A   125 C (sustained)  124.3 C holds    116.3 C holds
+     B7b, SHDN ignored (L9T5-D5)                  Y   0.3112 A   125 C (sustained)  135.8 C FAILS    125.9 C FAILS
+     both fabrics faulted, responded              Y   0.2626 A   125 C (sustained)  126.5 C FAILS    118.1 C holds
+     hung, DAR mis-set (the IWDG ends it)         Y   0.2976 A   150 C (transient)  133.2 C holds    123.7 C holds
+     babbling (nothing ends it)                   Y   0.3666 A   125 C (sustained)  146.4 C FAILS    134.7 C FAILS
+     so on revision V (fitted, L9T5-D7): with iocpre alone the babbling row FAILS 125 C (130.6 C); with iocset every row holds 125 C (the
+     babbler 121.5 C). On rev Y's rows, the cover for rev X, the babbler stays over 125 C at 14.0k (134.7 C): a rev X part is still
+     admitted only by V-B20 (10h (1)); the proof above is revision V's and is never applied to revisions X or Y
+   T10-A3 RESTATED (SESSION L9T5-D8): each LDO's input over its requirement at the largest current this record computes for a regulator
+     (0.4512 A, the held B5 row on rev Y's rows; dropout 301 mV INFERRED between the printed 300 and 600 mA points): at least 3.7004 V against
+     3.6652 V: holds. Round 4 held it at the LDO's full 600 mA; at 14.0k that criterion fails, and a supervisor drawing more than the record's
+     largest current is a supervisor fault its own BOR ends (it browns out alone; the other two hold the quorum, IOHA row 3)
+   the delta composed straight after iocpre (board A 22 drafts, board B 14): every step OK; the generators ran to their end; a generator without
+     iocpre refused, the tree's generator refused
+     read on board A's netlist: the set point DRAWN; mutations: the divider inverted FAIL, R602 back to 13.3k FAIL; the declarations read +5V_IOC
+     4.01 V on both boards (v_work 4.12 V) and each +3V3_IOCx at efficiency 0.82: yes. Record l9t5's own pre-regulator check (Slot A's
+     check_l9t5_netlist.py) holds the 13.3k divider: its 't10' entry is Slot A's to restate when it takes this delta (L9T5-F24)
+   THE FITTED REVISION MADE ENFORCEABLE (part 22, C): three rows drafted for their owners, none applied (T10-ROUND5.md section 3):
+     Layer 6 (part identity, STM32H743-COMPATIBILITY.md F1 and the BOM line of U41, U51, U61): STM32H743VIT6, LCSC C114409, SILICON REVISION
+       V ONLY (package marking revision code 'V', DBGMCU_IDC REV_ID 0x2003; ES0392 Rev 15 Table 2); X and Y not accepted; reason L9T5-D7
+       (this record's 10h and 10i); acceptance: the BOM line and the compatibility page name revision V
+     Layer 12 (incoming inspection and first article): every supervisor's package read for revision code 'V' before assembly, a lot with
+       any other code held; at first power each supervisor's REV_ID read over SWD equal to 0x2003; reason and acceptance as above
+     the model's case selection (this script): the verdicts of F13, F16, F17 and the rows above read revision V's printed rows only;
+       revision Y's rows are printed as the cover for a rev X part and decide nothing; no figure of revision V is applied to X or Y
+
 11. THE STATE OF L9T5-F06 (T10)
    L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2
    is restated with the enabled peripherals at the drop's worst corner: at the case's 76.25 C air it holds on rev V's rows (109.4 C), the revision
@@ -495,6 +559,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    L9T5-F16: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED. Every credible single fabric fault inside board B holds 125 C with the response on rev V (worst 110.0 C; rev Y's cover 125.9 C;
      10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by
      CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application
+   THE BABBLING ROW (part 22): a SUSTAINED fault state, 125 C applies: on rev V with iocpre alone 130.6 C, FAILS; with the set point
+     delta (iocset, DRAFTED, composed, read, mutated) 121.5 C, holds: a DRAFTED CORRECTION, desk acceptance met by its author on rev V,
+     UNCHECKED. Its quorum effect stays OPEN (L9T5-F21). The hung row is a transient the IWDG ends: 150 C applies and it holds
    L9T5-F17: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED. Both fabrics faulted hold 150 C with the response (126.5 C rev Y, 110.7 C rev V); held, 200.0 C (rev Y). Same conditions
    FINDINGS FOR OTHER AUTHORS
    L9T5-F09 (Layer 5, HW-FW-CONTRACT.md 3.3): answered by the drafted rows FW-B20 and FW-B21 (apply_hw_fw_contract_t10.py, the integrator's
@@ -515,6 +582,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the
      pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without
      V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)
+   L9T5-F24 (Slot A, record l9t5's pre-regulator check): check_l9t5_netlist.py's 't10' divider (13.3k) is to be restated to 14.0k when
+     the set point delta (apply_gen_sch_?_iocset.py, part 22) is taken; and the delta folded into iocpre (one writer per file)
    L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and
      R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)
 
@@ -538,5 +607,7 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)                                   yes
    round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once         yes
    round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's               yes
+   round 5 (part 22): the babbling row FAILS 125 C on rev V with iocpre alone and every rev V row holds with the set point delta          yes
+   round 5 (part 22): the delta composes, reads 14.0k, refuses without iocpre and the tree; both mutations FAIL; T10-A3 holds restated    yes
 
 l9t5_t10: done

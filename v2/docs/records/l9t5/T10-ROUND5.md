@@ -1,4 +1,4 @@
-**ROUND 5 (T10, 5 October 2026), Slot C: DONE: V6-B3 corrected (CON-004 traced); T10-A1's row and the fabrics' share and fault handling drafted (FW-B20, FW-B21); SHDN drafted, composed, read and mutated; the credible bus faults re-solved; C-DEV's figure derived (issued as C-DEV rev 2); the owner's four questions of part 21 answered (section 3), which moved every junction to the LDO's worst drop corner: rev V's rows hold with 14 K or more, rev Y's rows (the cover for a rev X part) miss 125 C by 0.2 to 1.5 K, so SESSION L9T5-D7 fits rev V and a rev X part waits on V-B20; the lever that would admit any revision is L9T5-F22 (Slot A's draft). NOT DONE: no independent check; the rows unapplied; nothing physical. NEXT: the README lines of section 9 (Slot A applies them); Part 3 (records l8p, l4e11).**
+**ROUND 5 (T10, 5 October 2026), Slot C: DONE: V6-B3 corrected (CON-004 traced); FW-B20 and FW-B21 drafted; SHDN drafted, composed, read and mutated; the credible bus faults re-solved; C-DEV rev 2 issued from it; the owner's four questions of part 21 answered (every junction at the LDO's worst drop corner; rev V fitted, L9T5-D7); and the owner's part 22: the criterion per state (125 C for every sustained state, 150 C only for a transient hardware ends), the babbling supervisor a SUSTAINED state that FAILED 125 C on rev V (130.6 C) and holds with the set point delta drafted (R602 14.0k, apply_gen_sch_?_iocset.py: 121.5 C), revision V made enforceable by three drafted rows (Layer 6 identity, Layer 12 inspection, the model's selection). NOT DONE: no independent check; the rows unapplied; the babbler's quorum effect (L9T5-F21) not drafted; nothing physical. NEXT: Slot A takes the canshdn and iocset drafts and restates its pre-regulator check (L9T5-F24).**
 
 # T10 round 5: the supervisors' regulators after the independent check V6 (L9T5-F06, F13, F16, F17)
 
@@ -74,6 +74,32 @@ firmware defect, closed by the firmware's verification (FW-B20's read-back, V-B2
 implementation obligation, not a desk-fixable circuit defect. **SESSION L9T5-D6:** round 4's K1 (a buck per supervisor) is not taken
 for it, because it would keep the regulator alive in a state the controller itself cannot hold; to reverse, K1.
 
+**(5) The owner's review of checkpoint 3 (part 22): the criterion per state, the babbling and hung rows (t10 10i).** A SUSTAINED state,
+served or a fault the design must survive, is judged at 125 C: 150 C is the absolute maximum and never an operating target. A TRANSIENT
+that hardware ends within a bound is judged at 150 C on its steady-state figure (an upper bound of any transient). Every row of 10e is
+sustained (a bus fault stays until repaired). The hung row (the CPU hung with DAR mis-set) is a transient the IWDG ends (hardware-started
+under FW-B10). The babbling row (a running firmware that breaks FW-B21 and still serves its watchdog) is ended by nothing: SUSTAINED, so
+125 C applies, and on revision V with iocpre's 13.3k it reads 130.6 C: it FAILED. The response drafted: the set point delta
+`apply_gen_sch_a_iocset.py` and `apply_gen_sch_b_iocset.py` (after iocpre; L9T5-F22 drafted): R602 14.0k, 4.0114 V nominal, 3.9063 to
+4.1174 V, the drop at its worst corner 0.8669 V (159.5 K/A). On revision V every row then holds 125 C (bounded 103.9 C, the worst fault
+104.4 C, both fabrics 104.9 C, B7b with SHDN ignored 112.7 C, hung 110.5 C, babbling 121.5 C). It composes (board A 22 drafts, board B
+14), reads 14.0k, refuses a generator without iocpre and the tree's, and its two mutations (the divider inverted, R602 back to 13.3k)
+FAIL. T10-A3 is restated at the largest current the record computes for a regulator (0.4512 A): the LDOs' input at least 3.7004 V
+against 3.6652 V (SESSION L9T5-D8; round 4's 600 mA criterion fails at 14.0k, and a supervisor drawing more browns out alone under its
+BOR). On rev Y's rows (the cover for rev X) every served row holds at 14.0k except the babbler (134.7 C) and B7b with SHDN ignored
+(125.9 C): a rev X part still waits on V-B20. The service in the babbling state: the babbler can deny both fabrics by arbitration, so
+the quorum may stop and the voters hold the home assignment (row 8's safe state); that one supervisor's firmware can stop CON-004's
+quorum stays OPEN (L9T5-F21: a voted silence of the babbler by the other two is the circuit direction, not drafted).
+
+**(6) Revision V made enforceable (part 22, C; drafted rows, not applied; named prerequisites of the Layer 4 power gate, reason L9T5-D7
+and t10 10h, 10i):**
+
+| Layer | Row (drafted) | Acceptance |
+|---|---|---|
+| 6, part identity (`STM32H743-COMPATIBILITY.md` F1 and the BOM line of U41, U51, U61) | STM32H743VIT6, LCSC C114409, SILICON REVISION V ONLY: package marking revision code "V", DBGMCU_IDC REV_ID 0x2003 (ES0392 Rev 15 Table 2); revisions X and Y not accepted | the BOM line and the compatibility page name revision V |
+| 12, incoming inspection and first article | every supervisor's package read for revision code "V" before assembly, a lot with any other code held; at first power each supervisor's REV_ID read over SWD equal to 0x2003 | the inspection record names each part's code; no other code fitted |
+| the model (`l9t5_t10.py`) | the verdicts of F13, F16, F17 and the part 22 rows read revision V's printed rows only (`FITTED_REV`); revision Y's rows are printed as the cover for rev X and decide nothing | the test keys the verdicts to `FITTED_REV` |
+
 **(4) The composed changes against the calculation and the case row.** The contract draft's rows carry the record's figures (VOS3, at
 most 144 MHz, 2 % of every 100 ms, the 100 ms stop and the once-a-second probe, DAR = 1, PD2 and PB14 with 100 k, 500 kbit/s to
 1 Mbit/s): every one. The SHDN draft's nets read DRAWN in the regenerated board B netlist. C-DEV rev 2 as issued (copied verbatim
@@ -140,6 +166,7 @@ fitted figure; 0.2558 A stays the conservative one for power.
 | L9T5-D4 | judged at 76.25 C at the drop's worst corner; FDCAN's peripheral current counted twice; the circuit's own auxiliaries instead of the 0.020 A declaration | the case's air; one clock enable serves both instances; the declaration is not a bound | read at the exhaust air (t10 10c prints it) |
 | L9T5-D5 | the B7b residual tolerated where it is over 125 C | one part failing three of its own functions; inside 150 C; the quorum holds on the other fabric | a load switch per transceiver |
 | L9T5-D6 | K1 not taken for a firmware that breaks the clock bound | the controller itself has no operating point there; the enforcement must be the firmware's verification | round 4's K1 |
+| L9T5-D8 | T10-A3 restated at the largest current the record computes for a regulator (0.4512 A) in place of the LDO's 600 mA | at 14.0k it holds there; a supervisor drawing more is a fault its own BOR ends, the other two holding the quorum | round 4's 600 mA with R602 13.3k (the babbler then FAILS 125 C) |
 | L9T5-D7 | the supervisors fitted in revision V | rev V's printed rows hold with 14 K or more; rev Y's (the cover for rev X) miss 125 C; inside CON-017 (5) | a rev X part after V-B20 (0.2318 A), or L9T5-F22's set point |
 
 ## 9. The README lines for Slot A to apply (the README is Slot A's)
@@ -163,7 +190,9 @@ fitted figure; 0.2558 A stays the conservative one for power.
 L9T5-F18 (board B's generator owner): SHDN on no net, answered by the draft. L9T5-F19 (Layer 10): +54V_POE, POE_P and the PoE pairs
 exceed the transceivers' 14 V bus pins; a clearance is a layout means, not credited. L9T5-F20 (Layer 6 and L4-E9): PD2 and PB14 become
 outputs; R67, R68, R79, R80, R91, R92 need order codes; the draft needs its change-list row. L9T5-F21 (Layer 5, IOHA section 12): a
-babbling supervisor is in no FMEA row. L9T5-F22 (Slot A, the T10 drafts' owner): the set point at 14.0 k, section 3 (1).
+babbling supervisor is in no FMEA row and can stop the quorum (part 22: OPEN, its voted silence not drafted). L9T5-F22: DRAFTED in
+part 22 as `apply_gen_sch_?_iocset.py` (Slot A folds it into iocpre). L9T5-F24 (Slot A): `check_l9t5_netlist.py`'s 't10' divider
+restated to 14.0k when the delta is taken.
 L9T5-F23 (Layer 6, part identities and procurement): L9T5-D7 fits silicon revision V. The order code STM32H743VIT6 fixes no
 revision (L9T5-F14); CON-017 (5) already reads the marking (V or X) and REV_ID at goods-in, so D7 narrows the accepted lots to V.
 Consequence: if the distributor's stock is rev X only, the lot is held until the supplier's V-B20 reads a rev X part at or under
