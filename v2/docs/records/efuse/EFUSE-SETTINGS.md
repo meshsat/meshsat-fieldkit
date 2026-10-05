@@ -11,7 +11,7 @@ figure of another record, not re-derived here.
 
 | Id | Kind | Instance (tree) | What fails | Correction | State |
 |---|---|---|---|---|---|
-| EF-F01 | DESIGN DEFECT (SDR3-F04 confirmed) | board B U23, TPS259631DDAR, +5V_DEV to +5V_LIME (the LimeSDR Mini 2.4), DRAWN and DRAFTED | (a) R36 301 Ohm is outside the recommended 453 to 7869 Ohm and its 3.011 A outside the 0.125 to 2 A range, so (b) is UNDEFINED (the sheet prints no limit there) and (c) fails on the extrapolated 3.011 A against J_LIME's 1.8 A; (d) the label "3.0 A" states a limit the sheet does not print | `apply_gen_sch_b_u23ilm.py`: R36 750 Ohm 1 % (the code board A's U21 carries): 1.0718 / 1.2152 / 1.3631 A against the demand 0.9417 A and the receptacle's 1.8 A | OPEN; correction DRAFTED, composed, netlist read with mutations; electrical acceptance holds on C-DEV rev 1 on printed figures (below); not reviewed |
+| EF-F01 | DESIGN DEFECT (SDR3-F04 confirmed) | board B U23, TPS259631DDAR, +5V_DEV to +5V_LIME (the LimeSDR Mini 2.4), DRAWN and DRAFTED | (a) R36 301 Ohm is outside the recommended 453 to 7869 Ohm and its 3.011 A outside the 0.125 to 2 A range, so (b) is UNDEFINED (the sheet prints no limit there) and (c) fails on the extrapolated 3.011 A against J_LIME's 1.8 A; (d) the label "3.0 A" states a limit the sheet does not print | `apply_gen_sch_b_u23ilm.py`: R36 750 Ohm 1 % (the code board A's U21 carries): 1.0718 / 1.2152 / 1.3631 A against the demand 0.9534 A and the receptacle's 1.8 A | OPEN; correction DRAFTED, composed, netlist read with mutations; electrical acceptance holds on C-DEV rev 1 on printed figures (below); not reviewed |
 | EF-F02 | DESIGN DEFECT (new, the same setting) | board B U24, TPS259631DDAR, +5V_DEV to +5V_RB (the RockBLOCK 9704), DRAWN and DRAFTED | the same (a), (b), (d); (c) fails on the extrapolated 3.011 A against the one 5 V conductor's 1 A (IDC socket and flat cable) | `apply_gen_sch_b_u24ilm.py`: R43 1.21 kOhm 1 %: 0.6681 / 0.7575 / 0.8496 A against the maker's 500 mA and the conductor's 1 A | OPEN; as EF-F01 |
 | DR-03 | DESIGN DEFECT (known, record l4e4) | board A U18, TPS25740A, the USB-C outlet's OCP through R138, DRAWN | (b) R138 10 mOhm trips at 1.8953 to 2.2897 A, under every 3 A PDO | record l4e4's `apply_gen_sch_a_r138.py` (5 mOhm, L4-E9 R-05): 3.7906 to 4.5794 A in the DRAFTED tree | OPEN on main; its draft DRAFTED (l4e4's) |
 
@@ -61,7 +61,7 @@ part.
 ## The sheets (out 0, out 1)
 
 Each figure is written once, as the sentence or row the maker prints, its numbers parsed from it and the quote found in the
-sheet's own text layer: 55 quotes, every one VERIFIED on this host. TI's current download of each of the eight TI sheets
+sheet's own text layer: 56 quotes, every one VERIFIED on this host. TI's current download of each of the eight TI sheets
 (plain GET of `www.ti.com/lit/ds/symlink/<part>.pdf`, 5 October 2026) is byte for byte the held copy: TPS2596 SLVSET8A (the
 TPS259631 is its adjustable-OVLO, auto-retry variant, the device comparison table p.3), TPS2065C SLVSAU6I, TPS22810 SLVSDH0C,
 LM5069 SNVS452G, TPS23861 SLUSBX9I, TPS25740A SLVSDG8B, TPS1663 SLVSET9G and TPS4811-Q1 SLUSEE5E (the last two held back
@@ -73,12 +73,13 @@ row's minimum and maximum are used, scaled to the resistor's corners (the scalin
 equation at the resistor's corners times the Features' "+-10.4 % (maximum) across current range" (p.1), which Figure 21 draws
 "Across Process, Voltage and Temperature Corners": a printed bound for any setting in the range, at the input voltages these
 boards use (5.1 V and 3.3 V, outside the electrical table's 12 V test condition). The bracketing rows' worst deviation (8.7 to
-9.3 %) is printed beside it as INFERRED and is not used to judge.
+9.3 %) is printed beside it as INFERRED and is not used to judge. The 7.87 kOhm row is printed for TA at most 80 C only; U39's
+4.7 kOhm lies between it and the 3.83 kOhm row, and U39's load is 2 mA against a 0.18 A foot, so nothing turns on it.
 
 **The variant (brief item 2):** no TPS2596-family part has a fixed limit or a range above 2 A (the TPS25962x and TPS25963x
 differ in their over-voltage response and the x0 and x1 in latch-off or auto-retry). The sibling TPS2595xx (held,
 `v2/vendor/power/ti-tps2595-efuse.pdf`, Rev. C) prints 0.5 to 4 A with RILM 487 to 5000 Ohm and would be the part for a limit near
-3 A; the loads here need at most 0.9417 A, so the TPS259631 stays and only its resistor changes (out 8).
+3 A; the loads here need at most 0.9534 A, so the TPS259631 stays and only its resistor changes (out 8).
 
 **The resistor's corners:** the value text's tolerance (1 % unless written), its TCR from Layer 6's catalogue reading of the
 code where one is read (+-100 ppm/K for the UNI-ROYAL codes), else +-100 ppm/K (ASSUMPTION A-TCR), the sense resistors
@@ -89,7 +90,8 @@ code where one is read (+-100 ppm/K for the UNI-ROYAL codes), else +-100 ppm/K (
 Each eFuse's load is taken from record l9pwr's committed budget (section 5, every state, the HIGH column, which puts every load at
 its maximum at once) or from the maker's printed maximum, the larger, and converted to current at the case's least voltage:
 C-DEV rev 1's 4.9019 V for the device rail, behind the eFuse's own 0.131 Ohm (PRINTED, VIN above 4 V, TJ to 125 C), at constant
-power (the upper reading). The LimeSDR Mini 2.4: "Maximum Power 4.5 W" and the host's "5V, 900 mA" (PRINTED), 0.9417 A; the
+power (the upper reading). The LimeSDR Mini 2.4: "Maximum Power 4.5 W" and the host's "5V, 900 mA" (PRINTED), behind U23 and
+J_LIME's two contacts at their printed 30 mOhm maximum each, 0.9534 A; the
 RockBLOCK 9704's DC input "at a maximum of 500mA" (PRINTED); the monitor 10 W at VBAT's 9.688 V floor (l9pwr, S); board D 3.30 W
 (PS-ALLTX); the panel 5.00 W (D); the camera 2.50 W (T, a placeholder). Board E's entry: L4-E9 IF-07's figures (CITED): 4.629 A
 on the drawn LM5069's line, 5.983 A with the corrected knee for L4-E11's TPS48110; board P's breaker: C-PROT rev 1's "18 A for
@@ -109,11 +111,11 @@ failure.
   order with the other (the same text); a second run is refused; the repository's own generator is refused for writing until a
   `RELEASE.md` here names an accepted check (none exists).
 - **Netlist:** the EFUSE generator (board B's runnable chain, then both drafts) run through `gen_netlist.py`; the check parses the
-  netlist and finds U23 pin 7 on a net with R36 alone, R36's other pin on GND, and its value's band 1.0718 to 1.3631 A inside 0.9417
+  netlist and finds U23 pin 7 on a net with R36 alone, R36's other pin on GND, and its value's band 1.0718 to 1.3631 A inside 0.9534
   to 1.8 A; U24 pin 7 with R43 alone, 0.6681 to 0.8496 A inside 0.5 to 1.0 A.
 - **Mutations that fail:** the DRAFTED netlists without the corrections; R36 back to 301 Ohm; R43 at 909 Ohm (the band's top over
   1 A); R43 at 1.87 kOhm (the band's foot under 500 mA); R36's ground pin moved onto +5V_LIME. Every one reads as required.
-- **Electrical acceptance on C-DEV rev 1, on printed figures:** EF-F01 (b) 1.0718 A at or above 0.9417 A, margin +0.130 A; (c)
+- **Electrical acceptance on C-DEV rev 1, on printed figures:** EF-F01 (b) 1.0718 A at or above 0.9534 A, margin +0.118 A; (c)
   1.3631 A at or below the receptacle's 1.8 A and the switch's 2 A. EF-F02 (b) 0.6681 A at or above 0.5 A, margin +0.168 A; (c)
   0.8496 A at or below 1 A. Physical conditions stay open: no part is bought or measured, the even sharing is not an issue here
   (one conductor each), and the RockBLOCK's start is a CONDITION (above).
@@ -142,7 +144,7 @@ C2155778 on every eFuse; R36's 750 Ohm is C23241, already read by Layer 6).
 1. **R36 = 750 Ohm for EF-F01.** Why: the maker's printed demand (4.5 W, 900 mA) governs, the band 1.0718 to 1.3631 A sits between
    it and the receptacle's 1.8 A with margin on both sides, and the value and code are the tree's own (board A's R90, C23241), so
    no new part identity is needed. The generator's unsourced 1.2 A typical is not a requirement (EF-L01). Reverse: any E96 value
-   from 576 to 845 Ohm holds (b) and (c) (out 8); should the owner source the 1.2 A, 649 Ohm (1.2370 to 1.5733 A) clears it.
+   from 576 to 825 Ohm holds (b) and (c) (out 8); should the owner source the 1.2 A, 649 Ohm (1.2370 to 1.5733 A) clears it.
 2. **R43 = 1.21 kOhm for EF-F02.** Why: the only constraint pair is the module's printed 500 mA and the conductor's 1 A; 909 Ohm
    and 1 kOhm put the top over 1 A and 1.87 kOhm the foot under 500 mA (out 8's mutations); 1.21 kOhm leaves +0.168 A and
    -0.150 A. Reverse: any E96 value from 1.05 to 1.62 kOhm holds both (out 8); 1.21 kOhm sits nearest the middle.

@@ -140,6 +140,7 @@ QUOTES = {
     # the connectors and the loads
     "C_USB3A": ("usb3a", "p.1, electrical properties", "Rated Current IR 1.8 A max."),
     "C_IDC16": ("idc16", "p.1, electrical properties", "Rated Current IR 1 A max."),
+    "C_USB3A_R": ("usb3a", "p.1, electrical properties", "Contact Resistance R 30 mΩ max."),
     "C_RIB16": ("ribbon16", "p.1, electrical properties", "Rated Current IR 1 A max."),
     "C_IDC26": ("idc26", "p.1, electrical properties", "Rated Current IR 1 A max."),
     "C_RIB26": ("ribbon26", "p.1, electrical properties", "Rated Current IR 1 A max."),
@@ -244,6 +245,7 @@ def figures():
     F["t48_iiscp"] = tuple(x * 1e-6 for x in nums("T48_IISCP")[-3:])
     F["t48_off"] = nums("T48_EQ11")[-1]                                         # 464 ohm
     F["c_usb3a"] = nums("C_USB3A")[0]
+    F["c_usb3a_r"] = nums("C_USB3A_R")[0] / 1000.0             # 0.030 ohm a contact
     F["c_idc16"] = nums("C_IDC16")[0]
     F["c_rib16"] = nums("C_RIB16")[0]
     F["c_idc26"] = nums("C_IDC26")[0]
@@ -630,12 +632,13 @@ def cp_current(watts, v, r_on):
 # the judgement's inputs per instance, typed once with their sources. demand: list of (label, amps or callable, tier);
 # down: list of (conductor, rating in A, quote id); start: (draw at start A, load capacitance F or None, basis)
 def meta(F, L9):
-    lime = lambda: max(F["l_lime_host"], cp_current(F["l_lime_w"], C_DEV_V, F["t96_ron"]))
+    lime = lambda: max(F["l_lime_host"], cp_current(F["l_lime_w"], C_DEV_V, F["t96_ron"] + 2 * F["c_usb3a_r"]))
     W = lambda name: max(h for (_l, _p, h) in L9.get(name, {}).values()) if L9.get(name) else None
     M = {
         ("b", "U23"): dict(case="C-DEV rev 1", load="LimeSDR Mini 2.4 (J_LIME, USB 3.0 type A)",
-                           demand=[("the maker: 'Maximum Power 4.5 W' at C-DEV's 4.9019 V behind U23's 0.131 Ohm, and the host's "
-                                    "'5V, 900 mA' (PRINTED; constant power is the upper reading)", lime(), "PRINTED")],
+                           demand=[("the maker: 'Maximum Power 4.5 W' at C-DEV's 4.9019 V behind U23's 0.131 Ohm and J_LIME's two "
+                                    "30 mOhm contacts (VBUS and GND), and the host's '5V, 900 mA' (PRINTED; constant power is the "
+                                    "upper reading)", lime(), "PRINTED")],
                            down=[("J_LIME, Wurth 692122030100 VBUS contact", F["c_usb3a"], "C_USB3A")],
                            start=(0.15, 10e-6, "ASSUMPTION: a device inside the USB standard's limits draws at most 150 mA unconfigured and "
                                                "carries at most 10 uF on VBUS (USB 3.x; the standard is not held here)")),

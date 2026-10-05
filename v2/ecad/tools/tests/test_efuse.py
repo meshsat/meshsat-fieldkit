@@ -64,7 +64,7 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "efuse_check.out is not what efuse_check.py prints; regenerate it with _bin/regen_out.py"
     assert _sha(GEN_B) == before, "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("quotes: 55 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND", "unregistered defects: 0",
+    for s in ("quotes: 56 VERIFIED, 0 SHEET ABSENT, 0 NOT FOUND", "unregistered defects: 0",
               "the netlist reading and its mutations: every check reads as required",
               "every EFUSE TPS2596 setting inside the range: YES", "EF-F01  DESIGN DEFECT, OPEN", "EF-F02  DESIGN DEFECT, OPEN"):
         assert s in t, s
@@ -165,7 +165,7 @@ def t_the_corrected_values_hold_b_and_c_on_their_printed_bands():
         need_ = max(x[1] for x in M[("b", ref)]["demand"])
         cap = min([x[1] for x in M[("b", ref)]["down"]] + [F["t96_imax"]])
         assert basis.startswith("PRINTED") and lo >= need_ and hi <= cap, (ref, lo, hi, need_, cap)
-    assert abs(max(x[1] for x in M[("b", "U23")]["demand"]) - 0.9417) < 5e-5
+    assert abs(max(x[1] for x in M[("b", "U23")]["demand"]) - 0.9534) < 5e-5
 
 
 def t_the_netlist_check_reads_the_correction_and_fails_its_mutations():
@@ -191,5 +191,5 @@ def t_the_page_is_plain_and_carries_the_outputs_figures():
     for s in ("EF-F01", "EF-F02", "DR-03", "EF-L01", "EF-L03", "EF-O01", "authority: SESSION", "C-DEV rev 1"):
         assert s in page, s
     for s in ("1.0718 / 1.2152 / 1.3631 A", "0.6681 / 0.7575 / 0.8496 A", "1.8953 / - / 2.2897 A", "0.4359 / 0.4941 / 0.5541 A",
-              "18.3525 / 21.0833 / 23.8848 A", "6.4054 / 6.8000 / 7.0920 A", "0.9417", "143.6 uF", "8.2 uF"):
+              "18.3525 / 21.0833 / 23.8848 A", "6.4054 / 6.8000 / 7.0920 A", "0.9534", "143.6 uF", "8.2 uF"):
         assert s in page and s in out, s
