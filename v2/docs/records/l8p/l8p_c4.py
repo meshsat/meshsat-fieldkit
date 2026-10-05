@@ -52,7 +52,6 @@ PROT_OUT = os.path.join(HERE, "inputs", "l9stk_protection-0d72880b.out.txt")
 BZT = os.path.join(ROOT, "v2", "vendor", "diodes", "diodes-bzt52c-ds18004.pdf")
 DRAFT = os.path.join(HERE, "apply_gen_sch_a_thguard.py")
 THGFS = os.path.join(HERE, "apply_gen_sch_a_thgfs.py")      # round 9: the fail-safe delta (the owner's part 22 item A, V6-m7)
-D4148 = os.path.join(ROOT, "v2", "vendor", "power", "st-semtech-1n4148w-c81598.pdf")
 REQS = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_requirements.yaml")
 ENVELOPE = os.path.join(ROOT, "v2", "docs", "OPERATING-ENVELOPE.md")
 PLAN = os.path.join(ROOT, "v2", "docs", "EXECUTION-PLAN.md")
@@ -69,7 +68,7 @@ HOT_RDS = 2.0                           # ASSUMED: on-resistance hot at twice th
 C_TOL = 0.10                            # ASSUMED: the draft's capacitors at +-10 % (an X7R K grade; the value text prints none)
 V_HELD, V_LOW, V_HIGH = 7.6, 10.6, 16.8  # the breaker's PORIT, the pack's least and most (record l9stk 15)
 VDD_LOW_PR = 1.3                        # LM26LV: tEN is counted from VDD passing 1.3 V (SNIS144G Figure 1)
-FS_ALLOW_COLD, FS_ALLOW_TRIP = 50e-6, 180e-6   # round 9: the guard's draw on DOCK_EN_OUT as the delta restates it (a prerequisite, 10c)
+FS_ALLOW_COLD, FS_ALLOW_TRIP = 40e-6, 50e-6    # round 9: the guard's draw on DOCK_EN_OUT as the delta restates it (a prerequisite, 10c)
 U = "\u00b5"
 
 
@@ -225,12 +224,13 @@ def gate(v_src, tau, k, t):
     return v_src * k * (1.0 - math.exp(-t / tau))
 
 
-def dock(v, D, S, hot=True, cg_scale=1.0, r_scale=1.0, uvlo=2.7, dt=2e-6, tmax=0.4, leak=0.0):
+def dock(v, D, S, hot=True, cg_scale=1.0, r_scale=1.0, uvlo=2.7, dt=2e-6, tmax=0.4, leak=0.0, i_out=0.0):
     """The docking start with the drawn capacitors (DERIVED on ASSUMED behaviour: the regulator passes its input to its output once
     the input reaches its least rated 2.7 V, TI printing no UVLO threshold, with no dropout at microamps, through a 50 ohm stand-in
     for its pass element; the switch's outputs enabled tEN after VDD passes 1.3 V; OVERTEMP then at VDD - 0.2 V if hot): the time
     VDD passes 1.3 V and the time the shunt's gate passes the 2N7002's highest threshold. Round 9: leak, a constant current off the
-    gate (the cold clamp's off leakage and Q60's IGSS on the delta; zero for round 8's draft)."""
+    gate (the cold clamp's off leakage and Q60's IGSS on the delta), i_out a constant draw on DOCK_EN_OUT (path 2's shunt's off
+    leakage on the delta); both zero for round 8's draft."""
     r6, rf, r7 = R106 * (1 + TOL), D["rf"] * (1 + TOL), R107 * (1 - TOL)
     rg, rpd, cg = D["rg"] * r_scale, D["rpd"] * r_scale, D["cg"] * cg_scale
     cin, cv = D["cin"] * (1 + C_TOL), (D["cout"] + D["cvdd"]) * (1 + C_TOL)
@@ -239,7 +239,7 @@ def dock(v, D, S, hot=True, cg_scale=1.0, r_scale=1.0, uvlo=2.7, dt=2e-6, tmax=0
     ten = None
     while t < tmax:
         ret = max(0.0, (out / rf - D["sinks"]) / (1.0 / rf + 1.0 / r7))
-        i_in = (v - out) / r6 - out / D["rout"] - (out - ret) / rf
+        i_in = (v - out) / r6 - out / D["rout"] - (out - ret) / rf - (i_out if out > 0.0 else 0.0)
         i_reg = (min(out, S["vreg_hi"]) - vdd) / 50.0 if out >= uvlo and vdd < min(out, S["vreg_hi"]) else 0.0
         vot = max(0.0, vdd - S["voh_drop"]) if (hot and ten is not None and t >= ten) else 0.0
         out += (i_in - i_reg) / cin * dt
@@ -257,21 +257,11 @@ def read_fs():
     """Round 9: the fail-safe delta's values, read from apply_gen_sch_a_thgfs.py (never typed here)."""
     sp = importlib.util.spec_from_file_location("l8p_thgfs_values", THGFS)
     m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
-    g, c = dict(m.GATE), dict(m.CAPS)
-    return dict(clamp=m.CLAMP, pullup=tuple(ohms(v) for _r, v in m.PULLUP), pullup_refs=tuple(r for r, _v in m.PULLUP), diodes=m.DIODES,
-                switch2=m.SWITCH2, rg=ohms(g["R262"]), cg=farads(g["C260"]), rpd=ohms(g["R263"]),
-                cin=(farads(c["C261"]), farads(c["C268"])), cout=farads(c["C262"]), cvdd=farads(c["C263"]) + farads(c["C269"]),
-                caps=c, gate=g, tps=m.TPS)
-
-
-def read_1n4148w():
-    t = G.pdftext(D4148)
-    S = {}
-    S["vr"] = float(need(t, r"Reverse Voltage\s+VR\s+%s" % N, "1N4148W: VR").group(1))
-    S["vf1"] = float(need(t, r"at IF = 1 mA\s+-\s+%s" % N, "1N4148W: VF at 1 mA").group(1))
-    S["ir20"] = float(need(t, r"at VR = 20 V\s+IR\s+-\s+%s\s+nA" % N, "1N4148W: IR at 20 V").group(1)) * 1e-9
-    S["ir150"] = float(need(t, r"at VR = 25 V, TJ = 150.\s+-\s+%s\s+µA" % N, "1N4148W: IR at 25 V, 150 C").group(1)) * 1e-6
-    return S
+    g, g2, c = dict(m.GATE), dict(m.GATE2), dict(m.CAPS)
+    return dict(clamp=m.CLAMP, pullup=tuple(ohms(v) for _r, v in m.PULLUP), pullup_refs=tuple(r for r, _v in m.PULLUP), switch2=m.SWITCH2,
+                reg2=m.REG2, shunt2=m.SHUNT2, rg=ohms(g["R262"]), cg=farads(g["C260"]), rpd=ohms(g["R263"]), rg2=ohms(g2["R270"]),
+                cg2=farads(g2["C272"]), rpd2=ohms(g2["R271"]), cin=(farads(c["C261"]), farads(c["C268"])), cout=farads(c["C262"]),
+                cvdd=farads(c["C263"]), cin2=farads(c["C270"]), cout2=farads(c["C271"]), caps=c, gate=g, gate2=g2, tps=m.TPS)
 
 
 def read_lm26lv_od():
@@ -315,15 +305,15 @@ def read_unguarded():
     return U
 
 
-# Round 9: the mutations of the composed board A with the delta, each read on check_l8p_netlist's THG group (checks_fs)
+# Round 9: the mutations of the composed board A with the delta, each read on check_l8p_fs's THG group
 FS_MUTATIONS = (
     ("the clamp as one FET (Q63 gone, Q62's source on the ground)", [("drop", "Q63"), ("move", "Q62", "2", "GND")]),
     ("the pull-up as one resistor (R269 gone, R268 onto THG_ODN)", [("drop", "R269"), ("move", "R268", "2", "THG_ODN")]),
-    ("U62's OVERTEMP not ORed (D61 gone)", [("drop", "D61")]),
+    ("path 2's supply from DOCK_EN_OUT", [("move", "U63", "1", "DOCK_EN_OUT")]),
+    ("path 2's shunt on the return", [("move", "Q61", "3", "DOCK_EN_RET")]),
+    ("path 2's switch on path 1's supply", [("move", "U62", "4", "THG_VDD")]),
     ("U61's input as one capacitor (C268 gone)", [("drop", "C268")]),
-    ("U62's open drain off THG_ODN", [("move", "U62", "3", "THG_NC9")]),
-    ("the clamp on the return, not on Q60's gate", [("move", "Q62", "3", "DOCK_EN_RET")]),
-    ("R262 left at 47 kOhm", [("value", "R262", "47k 1%")]),
+    ("path 2's gate capacitor removed", [("drop", "C272")]),
 )
 
 
@@ -399,7 +389,7 @@ def main():
     w("or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED this script's arithmetic; RECORD another record's figure.\n\n")
     w("0. PINS (sha256/16)\n")
     for p in (L9_OUT5, L9_PAGE5, PROT_OUT, os.path.join(HERE, "inputs", "l4e11-section20c-ecb598c5.md"), G.LM26LV, G.TPS709, G.N7002, G.AO3400A, BZT,
-              G.LM5069, DRAFT, os.path.join(HERE, "l8p_guard.py"), THGFS, D4148, os.path.join(HERE, "check_l8p_fs.py"), DD7_CHECK,
+              G.LM5069, DRAFT, os.path.join(HERE, "l8p_guard.py"), THGFS, os.path.join(HERE, "check_l8p_fs.py"), DD7_CHECK,
               os.path.abspath(__file__)):
         w("   %s  %s%s\n" % (sha(p, 16), rel(p), "  (held back, fetch_held_back.py)" if "/held/" in p else ""))
 
@@ -821,7 +811,7 @@ def main():
     w("     the maximum interval: from commissioning, UNBOUNDED (a pad cracked in service by thermal fatigue is never looked for); response: none\n")
     w("     the exposure: a held current from %.2f A to the breaker's limit, or a fast-rising overload: a FET over 150 C before the trip, NOT\n" % UG["i76"])
     w("       BOUNDED\n")
-    w("     so a correction is required: 10c, a second switch U62 on its own pad, ORed\n")
+    w("     so a correction is required: 10c, path 2: a second switch U62 on its own pad, with its own supply and its own shunt\n")
     w("   A SECOND SHUNT ON THE SAME RETURN (round 9's first pass, recorded): its off leakage, %.2f uA at %.2f C, makes the sinks %.2f uA on the\n"
       % (DF["n7"](T_SITE) * 1e6, T_SITE, two_one * 1e6))
     w("     count and %.2f uA all doubled against the %.2f uA allowance: L4-E11 20c's window FAILS, so the correction keeps one shunt\n" % (two * 1e6, alw_ * 1e6))
@@ -829,17 +819,16 @@ def main():
 
     # ------------------------------------------------------------------ 10c. round 9: the correction drafted (apply_gen_sch_a_thgfs.py)
     FS = read_fs()
-    DI = read_1n4148w()
     OD = read_lm26lv_od()
-    vf = DI["vf1"]
+    n7t = DF["n7"](T_SITE)
     rpu = sum(FS["pullup"])
     rpu_p, rpu_m, r_one = rpu * (1 + TOL), rpu * (1 - TOL), min(FS["pullup"]) * (1 - TOL)
-    leak_pu = 2 * OD["ioh150"] + 2 * N7["igss"]                  # the two open drains' printed IOH and the clamp's two gates (printed IGSS)
-    leak_pu_all = 2 * OD["ioh150"] + 2 * DF["n7"](T_SITE)        # the gates taken at the off leakage's doubling (section 3's variant)
-    draw0 = 2 * S["is_max"] + S["ignd"]
-    cold, cold_all = draw0 + leak_pu, draw0 + leak_pu_all
-    trip, trip_one = draw0 + DF["vdd_hi"] / rpu_m + DI["ir150"], draw0 + DF["vdd_hi"] / r_one + DI["ir150"]
-    # (1) Q60's gate to drain short with the clamp: the clamp's gates in the held state at BRK_VIN 7.6 V
+    leak_pu = OD["ioh150"] + 2 * N7["igss"]                      # U60's open drain (printed IOH) and the clamp's two gates (printed IGSS)
+    leak_pu_all = OD["ioh150"] + 2 * n7t                          # the gates taken at the off leakage's doubling (section 3's variant)
+    draw0 = S["is_max"] + S["ignd"]                               # path 1's switch and regulator (path 2's are on VBAT)
+    cold, cold_all = draw0 + leak_pu + n7t, draw0 + leak_pu_all + n7t       # Q61 off on DOCK_EN_OUT, at the doubling (ASSUMED)
+    trip, trip_one = draw0 + DF["vdd_hi"] / rpu_m + n7t, draw0 + DF["vdd_hi"] / r_one + n7t
+    # path 1: Q60's gate to drain short with the clamp, the clamp's gates in the held state at BRK_VIN 7.6 V
     held_c = G.held(V_HELD, FS_ALLOW_COLD, R106 * (1 + TOL), DF["rf"] * (1 - TOL), R["load_out"])
     vdd_h = min(5.0 * (1 - S["acc_out"]), held_c)
     vgs, vgs_all = vdd_h - leak_pu * rpu_p, vdd_h - leak_pu_all * rpu_p
@@ -847,22 +836,37 @@ def main():
     def rds(v):
         return N7["r5"] * (5.0 - N7["vth"][1]) / (v - N7["vth"][1]) * HOT_RDS if v > N7["vth"][1] else float("inf")
     i_cl = DRI["i_t"]
-    need_each = min(R["ret_held"], N7["vth"][0]) / i_cl / 2.0
+    lim_ret = min(R["ret_held"], N7["vth"][0])
+    need_each = lim_ret / i_cl / 2.0
     ret_cl, ret_cl_all = i_cl * 2 * rds(vgs), i_cl * 2 * rds(vgs_all)
+    v_need = N7["vth"][1] + N7["r5"] * (5.0 - N7["vth"][1]) * HOT_RDS / need_each
+    gate_bound = ((vdd_h - v_need) / rpu_p - OD["ioh150"]) / 2.0
     ret_open = G.closed(V_CLAMP, 0.0, 0.0, R106 * (1 - TOL), DF["rf"] * (1 - TOL), R107 * (1 + TOL), 1e18)[1]
-    # the trip and the cold start on the delta's gate network
-    rg_p, rg_m, rpd_p, rpd_m = FS["rg"] * (1 + TOL), FS["rg"] * (1 - TOL), FS["rpd"] * (1 + TOL), FS["rpd"] * (1 - TOL)
-    k_lo, k_hi = rpd_m / (rg_p + rpd_m), rpd_p / (rg_m + rpd_p)
-    rth_hi = rg_p * rpd_p / (rg_p + rpd_p)
-    tau_hi, tau_lo = FS["cg"] * (1 + C_TOL) * rth_hi, FS["cg"] * (1 - C_TOL) * rg_m * rpd_m / (rg_m + rpd_m)
-    leak_g = DF["n7"](T_SITE) + N7["igss"]                       # the clamp off (the stack's leakage bounded by one FET's, ASSUMED) and Q60's IGSS
-    fin = (DF["voh"] - vf) * k_lo - leak_g * rth_hi
-    t_on_fs = -tau_hi * math.log(1.0 - N7["vth"][1] / fin) if fin > N7["vth"][1] else float("inf")
-    g_inv_fs = DF["vdd_hi"] * k_hi * (1.0 - math.exp(-(S["tstr"] + S["t_en"]) / tau_lo))
+    # path 1's trip with the clamp's off leakage on its gate; path 2's on round 8's network alone
+    rg_p, rg_m, rp_p, rp_m = FS["rg"] * (1 + TOL), FS["rg"] * (1 - TOL), FS["rpd"] * (1 + TOL), FS["rpd"] * (1 - TOL)
+    k_lo = rp_m / (rg_p + rp_m)
+    rth_hi = rg_p * rp_p / (rg_p + rp_p)
+    tau_hi = FS["cg"] * (1 + C_TOL) * rth_hi
+    leak_g = n7t + N7["igss"]                                     # the clamp off (the stack's leakage bounded by one FET's, ASSUMED) and Q60's IGSS
+    fin = DF["voh"] * k_lo - leak_g * rth_hi
+    t_on1 = -tau_hi * math.log(1.0 - N7["vth"][1] / fin) if fin > N7["vth"][1] else float("inf")
+    g_inv1 = DF["g_inv_t"]                                        # the network is round 8's: its before-tEN bound unchanged
+    r2_p, r2_m, rp2_p, rp2_m = FS["rg2"] * (1 + TOL), FS["rg2"] * (1 - TOL), FS["rpd2"] * (1 + TOL), FS["rpd2"] * (1 - TOL)
+    k2_lo, k2_hi = rp2_m / (r2_p + rp2_m), rp2_p / (r2_m + rp2_p)
+    rth2_hi, rth2_lo = r2_p * rp2_p / (r2_p + rp2_p), r2_m * rp2_m / (r2_m + rp2_m)
+    tau2_hi, tau2_lo = FS["cg2"] * (1 + C_TOL) * rth2_hi, FS["cg2"] * (1 - C_TOL) * rth2_lo
+    fin2 = DF["voh"] * k2_lo - N7["igss"] * rth2_hi
+    t_on2 = -tau2_hi * math.log(1.0 - N7["vth"][1] / fin2) if fin2 > N7["vth"][1] else float("inf")
+    g_inv2 = DF["vdd_hi"] * k2_hi * (1.0 - math.exp(-(S["tstr"] + S["t_en"]) / tau2_lo))
+    # path 2 tripped: Q61 pulls DOCK_EN_OUT, the return follows; its on-resistance as Q60's (section 4's ASSUMED figure)
+    i_q61 = V_CLAMP / (R106 * (1 - TOL))
+    out_q61 = i_q61 * DRI["rds"]
+    ret_q61 = out_q61 * (R107 * (1 + TOL)) / (DF["rf"] * (1 - TOL) + R107 * (1 + TOL))
+    # the loop's readings at the restated allowances
     cin_fs = sum(FS["cin"])
     r_in = R106 * R107 / (R106 + R107)
     per_uf_fs = -r_in * 1e-6 * math.log(1.0 - S["vin_min"] / (V_HELD * R107 / (R106 + R107)))
-    cin_max_fs = (hold[0] - (S["tstr"] + S["t_en"] + t_on_fs)) / per_uf_fs
+    cin_max_fs = (hold[0] - (S["tstr"] + S["t_en"] + t_on1)) / per_uf_fs
 
     def fs_readings(r_nom):
         r_p, r_m = r_nom * (1 + TOL), r_nom * (1 - TOL)
@@ -871,104 +875,134 @@ def main():
         reg_c = bisect(lambda v: G.closed(v, FS_ALLOW_COLD, DF["sinks"], R106 * (1 + TOL), r_p, R107 * (1 - TOL), R["load_out"])[0] >= 6.0, 1.0, V_CLAMP)
         return gates, held, reg_c
     FRI, FR1 = fs_readings(DF["rf"]), fs_readings(min(D["pair"]))
+    # docking, path 1 (path 2's regulator is on VBAT, so its start loads no docking): the delta's capacitors, the pull-up drawn from VDD
+    # from the start (the open drain's state before tEN is not printed), the clamp's leakage on the gate, Q61's on DOCK_EN_OUT
     D2 = dict(D)
     D2.update(cin=cin_fs, cout=FS["cout"], cvdd=FS["cvdd"], cg=FS["cg"], rg=FS["rg"], rpd=FS["rpd"])
     S3 = dict(S2)
-    S3.update(voh_drop=S["voh_drop"] + vf, is_max=2 * S["is_max"] + DF["vdd_hi"] / rpu_m)
-    dk_fs = {v: dock(v, D2, S3, hot=True, cg_scale=1 + C_TOL, r_scale=1 + TOL, leak=leak_g)[:2] for v in (V_HELD, V_LOW, V_HIGH)}
+    S3.update(is_max=S["is_max"] + DF["vdd_hi"] / rpu_m)
+    dk_fs = {v: dock(v, D2, S3, hot=True, cg_scale=1 + C_TOL, r_scale=1 + TOL, leak=leak_g, i_out=n7t)[:2] for v in (V_HELD, V_LOW, V_HIGH)}
+    # path 2 alone after a breaker start (path 1 failed; VBAT from the pack): its supply's start, tEN, its gate to 2.5 V
+    t_p2 = S["tstr"] + S["t_en"] + t_on2
     X = compose_fs()
-    fs_ok = (ret_cl < min(R["ret_held"], N7["vth"][0]) and ret_cl_all < min(R["ret_held"], N7["vth"][0]) and t_on_fs < 0.1
-             and g_inv_fs < N7["vth"][0] and cold_all <= FS_ALLOW_COLD and trip_one <= FS_ALLOW_TRIP
+    fs_ok = (ret_cl < lim_ret and t_on1 < 0.1 and t_on2 < 0.1 and g_inv1 < N7["vth"][0] and g_inv2 < N7["vth"][0]
+             and cold_all <= FS_ALLOW_COLD and trip_one <= FS_ALLOW_TRIP and ret_q61 < lim_ret and out_q61 < R["out_pw_lo"]
              and all(g > N7["vth"][1] for g in FRI[0] + FR1[0]) and FRI[1] > R["out_pw_hi"] and FR1[1] > R["out_pw_hi"] and FRI[2] < V_LOW
              and all(dk_fs[v][1] is not None and dk_fs[v][1] < hold[0] for v in dk_fs) and cin_fs * 1e6 * (1 + C_TOL) < cin_max_fs
-             and min(FS["cin"]) * (1 - C_TOL) >= 0.1e-6 and cin_fs * (1 + C_TOL) <= 2.2e-6 + 1e-12 and ret_open < 16.0)
-    comp_ok = (X.get("gen_rc") == 0 and all(v.startswith("OK") for _n, v in X["res"]) and X.get("en", ("",))[0] == "DRAWN" and X.get("thg", ("",))[0] == "DRAWN"
-               and X.get("dd7") == "DRAWN" and X.get("round8") == "FAIL" and all(v == "FAIL" for _l, v, _w in X.get("mut", [])) and len(X.get("mut", [])) == len(FS_MUTATIONS)
+             and min(FS["cin"]) * (1 - C_TOL) >= 0.1e-6 and cin_fs * (1 + C_TOL) <= 2.2e-6 + 1e-12 and FS["cout2"] * (1 - C_TOL) >= 1.5e-6
+             and ret_open < 16.0 and t_p2 < hold[0])
+    comp_ok = (X.get("gen_rc") == 0 and all(v.startswith("OK") for _n, v in X["res"]) and X.get("en", ("",))[0] == "DRAWN"
+               and X.get("thg", ("",))[0] == "DRAWN" and X.get("dd7") == "DRAWN" and X.get("round8") == "FAIL"
+               and all(v == "FAIL" for _l, v, _w in X.get("mut", [])) and len(X.get("mut", [])) == len(FS_MUTATIONS)
                and X["twice"] == "refused" and X["tree"].startswith("refused") and "REFUSED" in X["without"])
     w("\n10c. ROUND 9: THE CORRECTION DRAFTED, apply_gen_sch_a_thgfs.py (after apply_gen_sch_a_thguard.py), ITS VALUES READ FROM THE DRAFT AND\n")
-    w("   JUDGED ON C-PROT rev 1 (labels as above). NOT APPLIED to the tree; V6-m7 stays OPEN until an independent check has read it\n")
-    w("   the draft: the cold clamp %s in series from Q60's gate to ground, gates on THG_ODN;\n     the pull-up %s %.0f + %.0f kOhm in series;"
+    w("   JUDGED ON C-PROT rev 1 (labels as above; the owner's part 22 item A and the check cx45's Q5). NOT APPLIED; V6-m7 OPEN until an independent\n")
+    w("   check has read it. TWO GUARD PATHS that share only the pour they sense and the loop they open:\n")
+    w("   path 1, round 8's guard kept (U60, U61 from DOCK_EN_OUT, R262 %s, C260 %s, R263 %s, Q60 on DOCK_EN_RET) with a cold clamp:\n"
+      % (FS["gate"]["R262"], FS["gate"]["C260"], FS["gate"]["R263"]))
+    w("     %s in series from Q60's gate to ground, gated by U60's open drain (THG_ODN) pulled up by %s %.0f + %.0f kOhm;\n"
       % (" and ".join("%s %s" % c for c in FS["clamp"]), " and ".join(FS["pullup_refs"]), FS["pullup"][0] / 1e3, FS["pullup"][1] / 1e3))
-    w(" the OR %s; the second switch %s %s with C269 %s;\n     the gate network R262 %s, C260 %s, R263 %s; U61's input C261 %s and C268 %s; %s\n"
-      % (" and ".join("%s %s" % d_ for d_ in FS["diodes"]), FS["switch2"][0], FS["switch2"][1], FS["caps"]["C269"], FS["gate"]["R262"], FS["gate"]["C260"],
-         FS["gate"]["R263"], FS["caps"]["C261"], FS["caps"]["C268"], ", ".join("%s %s" % t_ for t_ in FS["tps"])))
-    w("   the rows read (PRINTED): LM26LV open drain IOH at most %.0f uA at 30 C and %.0f uA at 150 C (TI: a testing limit), VOL at most %.1f V to 730 uA;\n"
-      % (OD["ioh30"] * 1e6, OD["ioh150"] * 1e6, OD["vol"]))
-    w("     1N4148W VF at most %.3f V at 1 mA (the OR carries about 0.1 mA: under it), IR at most %.0f nA at 20 V (25 C) and %.0f uA at 25 V and 150 C,\n"
-      % (vf, DI["ir20"] * 1e9, DI["ir150"] * 1e6))
-    w("     VR %.0f V; the 2N7002 as section 2\n" % DI["vr"])
-    w("   (1) Q60's GATE TO DRAIN SHORT WITH THE CLAMP: cold, the return is THG_G, which Q62 and Q63 hold at ground\n")
-    w("       the clamp's gates: VDD less the pull-up's drop. In the held state at BRK_VIN %.1f V DOCK_EN_OUT reads %.2f V (the cold draw at %.0f uA,\n"
-      % (V_HELD, held_c, FS_ALLOW_COLD * 1e6))
-    w("       R106 at +1 %%, the pair at -1 %%), VDD %.2f V (the regulator in dropout, no drop at microamps ASSUMED); the leakage through %.1f kOhm\n"
-      % (vdd_h, rpu_p / 1e3))
-    w("       %.2f uA (two open drains, two gates at the printed IGSS) or %.2f uA (the gates doubled): VGS at least %.2f V (%.2f V)\n"
-      % (leak_pu * 1e6, leak_pu_all * 1e6, vgs, vgs_all))
-    w("       each FET's on-resistance ASSUMED by section 4's convention (the 5 V row scaled by the drive over the highest threshold, x2 hot):\n")
-    w("       %.1f ohm (%.1f ohm), against at most %.0f ohm each so that the %.2f mA of the 29.2 V clamp leave the return under %.4f V\n"
-      % (rds(vgs), rds(vgs_all), need_each, i_cl * 1e3, min(R["ret_held"], N7["vth"][0])))
-    w("       the return %.1f mV (%.1f mV): HELD. The breaker is off and DD-7 reads board P's own pull: the fault TRIPS and is found at once (the\n"
-      % (ret_cl * 1e3, ret_cl_all * 1e3))
-    w("       kit does not start, or stops); at a docking the clamp holds from VDD over the clamp's threshold, at the latest tEN after VDD's 1.3 V\n")
-    w("       (section 9 (e): %.1f ms at 7.6 V), before the RC hold's least %.3f s. Hot with the short (the pour over the trip with the breaker\n"
-      % ((dk_fs[V_HELD][0] + S["t_en"]) * 1e3, hold[0]))
-    w("       off: only from an outside heat over the envelope's %.2f C air) the clamp lets go and the return follows the network\n" % R["air"])
-    w("       THG_G carries the return only with this short: at most %.2f V (the closed return at the 29.2 V clamp), under C260's 16 V\n" % ret_open)
-    w("   (2) C261 OPEN: C268 stays, %.0f nF (%.0f nF at -10 %%), inside TI's 0.1 to 2.2 uF; the two give %.2f uF (%.2f uF at +10 %%), still inside\n"
+    w("     U61's input C261 %s and C268 %s\n" % (FS["caps"]["C261"], FS["caps"]["C268"]))
+    w("   path 2, new: %s %s on the same pour, supplied by %s %s from VBAT (C270 %s in, C271 %s out), C269 %s; its OVERTEMP through\n"
+      % (FS["switch2"][0], FS["switch2"][1], FS["reg2"][0], FS["reg2"][1], FS["caps"]["C270"], FS["caps"]["C271"], FS["caps"]["C269"]))
+    w("     R270 %s with C272 %s and R271 %s to %s %s from DOCK_EN_OUT to ground; %s\n"
+      % (FS["gate2"]["R270"], FS["gate2"]["C272"], FS["gate2"]["R271"], FS["shunt2"][0], FS["shunt2"][1], ", ".join("%s %s" % t_ for t_ in FS["tps"])))
+    w("   the rows read (PRINTED): LM26LV open drain IOH at most %.0f uA at 30 C and %.0f uA at 150 C (TI: a testing limit); the 2N7002 as section 2\n"
+      % (OD["ioh30"] * 1e6, OD["ioh150"] * 1e6))
+    w("   (1) Q60's GATE TO DRAIN SHORT (V6-m7) WITH THE CLAMP: cold, the return is THG_G, which Q62 and Q63 hold at ground\n")
+    w("       in the held state at BRK_VIN %.1f V DOCK_EN_OUT reads %.2f V (the cold draw at %.0f uA, R106 at +1 %%, the pair at -1 %%), VDD %.2f V (the\n"
+      % (V_HELD, held_c, FS_ALLOW_COLD * 1e6, vdd_h))
+    w("       regulator in dropout, no drop at microamps ASSUMED); through %.1f kOhm the open drain's %.0f uA and the gates' printed %.2f uA: VGS at\n"
+      % (rpu_p / 1e3, OD["ioh150"] * 1e6, 2 * N7["igss"] * 1e6))
+    w("       least %.2f V; each FET %.1f ohm ASSUMED by section 4's convention against at most %.0f ohm each for the %.2f mA of the 29.2 V clamp\n"
+      % (vgs, rds(vgs), need_each, i_cl * 1e3))
+    w("       to leave the return under %.4f V: the return %.1f mV, HELD: the breaker off, DD-7 reads board P's own pull: the fault TRIPS, found at\n"
+      % (lim_ret, ret_cl * 1e3))
+    w("       once. The clamp needs each gate's leakage at most %.2f uA (PRINTED %.2f uA at 25 C, hot NOT PRINTED; a Layer 6 or bench condition):\n"
+      % (gate_bound * 1e6, N7["igss"] * 1e6))
+    w("       with the gates at the off leakage's doubling (%.2f uA each) VGS falls to %.2f V and the clamp is NOT shown; Q60's short then leaves\n"
+      % (n7t * 1e6, vgs_all))
+    w("       path 1 lost and path 2 holding the protection (2). THG_G carries the return only with this short: at most %.2f V, under C260's 16 V\n" % ret_open)
+    w("   (2) THE COMMON PATH (cx45 Q5): each single failure of path 1 (U61 open or its pass element shorted, U60 dead or stuck cold or its pad\n")
+    w("       open, R262 open, C260 or R263 shorted, Q60 open or its gate to drain shorted with the clamp not shown) leaves path 2, and each of path 2\n")
+    w("       (U63, U62, R270, C272, R271, Q61) leaves path 1: no single failure removes the trip\n")
+    w("       path 2 tripped: Q61 pulls DOCK_EN_OUT; at the 29.2 V clamp %.2f mA through R106 at -1 %%, on Q60's ASSUMED %.1f ohm, DOCK_EN_OUT %.1f mV\n"
+      % (i_q61 * 1e3, DRI["rds"], out_q61 * 1e3))
+    w("       and the return %.1f mV: under board P's least %.1f V and the held reading's %.4f V: the breaker off; DOCK_EN_OUT under the powered\n"
+      % (ret_q61 * 1e3, N7["vth"][0], R["ret_held"]))
+    w("       reading's least %.3f V, so DD-7 reads the loop dark (no trigger, L4-E11 28). A sink on DOCK_EN_OUT does not move the return against\n"
+      % R["out_pw_lo"])
+    w("       DOCK_EN_OUT: L4-E11 20c's window is unchanged by path 2 (its off leakage counts in the draw, (c))\n")
+    w("       path 2's gate: 2.5 V within %.1f ms of a trip at the tolerances, under 1 V before tEN (%.3f V); after a breaker start with path 1 lost\n"
+      % (t_on2 * 1e3, g_inv2))
+    w("       and VBAT from the pack alone, U63's start, tEN and the gate take at most %.1f ms (the regulator's printed start), under the RC hold's\n"
+      % (t_p2 * 1e3))
+    w("       least %.3f s; tripping opens the breaker, VBAT may fall, the gate holds on C272 and releases, and the breaker restarts no sooner than\n" % hold[0])
+    w("       the hold: a relaxation in which the FETs carry current at most %.1f ms in every %.3f s or more (DERIVED; the junction's rise in each\n"
+      % (t_p2 * 1e3, hold[0] + t_p2))
+    w("       on-time NOT BOUNDED here, as section 9 (b)'s delay); with VBAT held up by another source, Q61 holds the loop open until the pour cools\n")
+    w("   (3) C261 OPEN (V6-m7): C268 stays, %.0f nF (%.0f nF at -10 %%), inside TI's 0.1 to 2.2 uF; the two %.2f uF (%.2f uF at +10 %%)\n"
       % (FS["cin"][1] * 1e9, FS["cin"][1] * (1 - C_TOL) * 1e9, cin_fs * 1e6, cin_fs * (1 + C_TOL) * 1e6))
-    w("   (3) U60's PAD OPEN: U62 on its own pad on the same pour trips on the same printed limits, drives the shunt through D61 and releases the\n")
-    w("       clamp through its open drain; the trip is the earlier switch's, the no-trip side holds for each; E-13's gradient is read per switch\n")
+    w("   (4) U60's PAD OPEN (V6-m7): path 2's U62 on its own pad trips on the same printed limits and opens the loop through Q61\n")
     w("   C-PROT rev 1 ON THE DELTA:\n")
     w("   (a) no trip: each switch on its printed limits, as section 9 (a): %.1f, %.1f and %.1f K\n" % (m10, m18, mc4))
-    w("   (b) the trip: the drive is the higher OVERTEMP less a diode, (%.2f - %.3f) V x %.3f, less the clamp's off leakage and Q60's IGSS, %.2f uA,\n"
-      % (DF["voh"], vf, k_lo, leak_g * 1e6))
-    w("       through %.1f kOhm: %.2f V; 2.5 V within %.1f ms at the tolerances (round 8's draft: %.1f ms), under 0.1 s; the gradient budget per switch\n"
-      % (rth_hi / 1e3, fin, t_on_fs * 1e3, DF["t_on_t"] * 1e3))
-    w("   (c) the window: the count on the return is unchanged (the clamp sits on THG_G): %.3f V (%.3f V all doubled) against %.2f V: holds\n"
-      % (DF["ret"], DF["ret_all"], R["ret_closed"]))
-    w("       the guard's draw on DOCK_EN_OUT restated (PRINTED maxima): cold at most %.2f uA (two switches %.0f, the regulator %.2f, the pull-up's\n"
-      % (cold * 1e6, 2 * S["is_max"] * 1e6, S["ignd"] * 1e6))
-    w("       leakage %.2f), %.2f uA with the gates doubled; tripped at most %.2f uA (the pull-up across %.1f kOhm, a reverse-biased diode's %.0f uA),\n"
-      % (leak_pu * 1e6, cold_all * 1e6, trip * 1e6, rpu_m / 1e3, DI["ir150"] * 1e6))
-    w("       %.2f uA with one resistor of the pull-up shorted. Allowances taken: %.0f uA cold and %.0f uA tripped, against the 30 uA of Layer 5's\n"
-      % (trip_one * 1e6, FS_ALLOW_COLD * 1e6, FS_ALLOW_TRIP * 1e6))
-    w("       row and record l9stk 15.9: a NAMED PREREQUISITE (finding L8P-R9-F2), the loop's readings recomputed at them:\n")
+    w("   (b) the trip: path 1's drive %.2f V x %.3f less the clamp's off leakage and Q60's IGSS, %.2f uA, through %.1f kOhm: %.2f V, 2.5 V within\n"
+      % (DF["voh"], k_lo, leak_g * 1e6, rth_hi / 1e3, fin))
+    w("       %.1f ms at the tolerances (round 8: %.1f ms); path 2 within %.1f ms; under 0.1 s; the gradient budget per switch (E-13)\n"
+      % (t_on1 * 1e3, DF["t_on_t"] * 1e3, t_on2 * 1e3))
+    w("   (c) the window: the count on the return is unchanged (the clamp sits on THG_G, path 2 on DOCK_EN_OUT): %.3f V (%.3f V all doubled)\n"
+      % (DF["ret"], DF["ret_all"]))
+    w("       against %.2f V: holds. The guard's draw on DOCK_EN_OUT restated (PRINTED maxima, the off leakage at the doubling): cold at most\n" % R["ret_closed"])
+    w("       %.2f uA (U60 %.0f, U61 %.2f, the pull-up's leakage %.2f, Q61 off %.2f), %.2f uA with the clamp's gates doubled; path 1 tripped at\n"
+      % (cold * 1e6, S["is_max"] * 1e6, S["ignd"] * 1e6, leak_pu * 1e6, n7t * 1e6, cold_all * 1e6))
+    w("       most %.2f uA (the pull-up across %.1f kOhm), %.2f uA with one of its resistors shorted. Allowances taken: %.0f uA cold, %.0f uA\n"
+      % (trip * 1e6, rpu_m / 1e3, trip_one * 1e6, FS_ALLOW_COLD * 1e6, FS_ALLOW_TRIP * 1e6))
+    w("       tripped, against the 30 uA of Layer 5's row and record l9stk 15.9 (L8P-R9-F2; L4-E11 section 28 restates 20c and 20f on them):\n")
     for lab, X_ in (("the pair intact", FRI), ("one of the pair shorted", FR1)):
-        w("         %s: on %.2f / %.2f / %.2f V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V, DOCK_EN_OUT %.2f V (over %.3f V); the regulator at\n"
+        w("         %s: on %.2f / %.2f / %.2f V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V DOCK_EN_OUT %.2f V (over %.3f V);\n"
           % (lab, X_[0][0], X_[0][1], X_[0][2], X_[1], R["out_pw_hi"]))
-        w("           its 6.0 V input from BRK_VIN %.2f V closed\n" % X_[2])
-    w("   (d) each source present or absent: unchanged (the guard's supply is DOCK_EN_OUT)\n")
-    w("   (e) docking, the model of section 9 (e) with the delta's capacitors at +10 %, the diode's drop, the clamp's leakage and the pull-up's draw:\n")
+        w("           the regulator at its 6.0 V input from BRK_VIN %.2f V closed\n" % X_[2])
+    w("   (d) each source present or absent: path 1 as section 9 (d); path 2 lives while VBAT does, from the pack after a breaker start or from\n")
+    w("       any source that holds VBAT up\n")
+    w("   (e) docking, path 1 (U63 on VBAT loads no docking), the model of section 9 (e) with the delta's capacitors at +10 %, the pull-up's draw\n")
+    w("       from the start, the clamp's leakage on the gate and Q61's on DOCK_EN_OUT:\n")
     for v in (V_HELD, V_LOW, V_HIGH):
         t13, t25 = dk_fs[v]
         w("       BRK_VIN %4.1f V: VDD passes 1.3 V at %5.1f ms; a HOT guard's gate passes 2.5 V at %5.1f ms: %s the hold's least %.3f s\n"
           % (v, t13 * 1e3, t25 * 1e3 if t25 else float("inf"), "before" if t25 and t25 < hold[0] else "AFTER", hold[0]))
-    w("       a COLD guard before tEN, OVERTEMP taken at VDD's 5.05 V (the diode's drop not counted) and the clamp taken off (the open drain's state\n")
-    w("       before tEN NOT PRINTED): the gate %.3f V at the tolerances, under the 2N7002's least 1 V; after tEN the clamp holds it at ground\n" % g_inv_fs)
-    w("       FM1 with one resistor: the input capacitors at +10 %% %.2f uF, under the %.1f uF the delta's slower phase allows\n" % (cin_fs * 1e6 * (1 + C_TOL), cin_max_fs))
-    w("   (f) the ground between the boards: unchanged\n")
-    w("   (g) parts within limits: D60, D61 at most %.2f V reverse (%.2f V with Q60's short) against %.0f V; Q62 and Q63 at most %.2f V across the two\n"
-      % (DF["vdd_hi"], ret_open, DI["vr"], ret_open))
-    w("       against %.0f V each; R268, R269 at most %.2f mW; the open drains at most VDD against 6 V; C268 at most 29.2 V against 50 V\n"
-      % (N7["vds"], DF["vdd_hi"] ** 2 / r_one * 1e3))
-    w("   THE DELTA'S OWN SINGLE FAILURES (INFERRED from the circuit as drawn; none removes the guard):\n")
+    w("       a COLD guard before tEN: path 1's gate %.3f V and path 2's %.3f V at the tolerances, under the 2N7002's least 1 V; FM1 with one\n"
+      % (g_inv1, g_inv2))
+    w("       resistor: the input capacitors at +10 %% %.2f uF, under the %.1f uF path 1's slower phase allows\n" % (cin_fs * 1e6 * (1 + C_TOL), cin_max_fs))
+    w("   (f) the ground between the boards: unchanged for Q60; Q61 pulls DOCK_EN_OUT to board A's ground, read by board P through the same\n")
+    w("       return: the offset of section 9 (f) applies alike\n")
+    w("   (g) parts within limits: Q61 at most %.1f V on DOCK_EN_OUT against %.0f V; U63's input VBAT at most 18 V (its rail's peak) against\n"
+      % (V_CLAMP, N7["vds"]))
+    w("       %.0f V PRINTED; Q62 and Q63 at most %.2f V across the two (the return, with Q60's short, the clamp off) against %.0f V each;\n"
+      % (S["vin_max"], ret_open, N7["vds"]))
+    w("       R268, R269 at most %.3f mW; U60's open drain at most VDD against 6 V; C268 and C270 at most 29.2 V against 50 V\n"
+      % (DF["vdd_hi"] ** 2 / r_one * 1e3))
+    w("   THE DELTA'S OWN SINGLE FAILURES (INFERRED from the circuit as drawn; none removes the trip):\n")
     for a_, b_ in (("Q62 or Q63 drain to source shorted", "the other holds the clamp"),
-                   ("Q62 or Q63 open, or its gate to source shorted", "the clamp lost, round 8's guard remains (Q60's short then needs this second fault)"),
-                   ("R268 or R269 shorted", "%.1f kOhm left, the clamp kept; the tripped draw %.2f uA, counted" % (min(FS["pullup"]) / 1e3, trip_one * 1e6)),
-                   ("R268 or R269 open", "the clamp off, round 8's guard remains"),
-                   ("Q62's gate to drain shorted", "THG_ODN on THG_G: cold, the pull-up lifts Q60's gate: the guard trips, found at once"),
-                   ("Q63's gate to drain shorted", "Q62's gate on its source: the clamp off, round 8's guard remains"),
-                   ("D60 or D61 open", "one switch's drive lost, the other remains"),
-                   ("D60 or D61 shorted", "a cold switch's low output holds THG_OR until it trips too: the trip at the later of two, inside the band"),
-                   ("U62 stuck tripped, or THG_ODN to ground", "the guard trips (found at once), or the clamp off (round 8's guard)"),
-                   ("U62 dead, stuck cold or its pad open", "U60 remains"),
-                   ("C268 or C269 shorted", "as C261 or C263 shorted: the loop collapses or VDD falls, found at once")):
+                   ("Q62 or Q63 open, or its gate to source shorted", "the clamp lost: path 1 as round 8, path 2 intact"),
+                   ("R268 or R269 shorted", "%.0f kOhm left, the clamp kept; the tripped draw %.2f uA, counted" % (min(FS["pullup"]) / 1e3, trip_one * 1e6)),
+                   ("R268 or R269 open", "the clamp off: path 1 as round 8, path 2 intact"),
+                   ("Q62's gate to drain shorted", "THG_ODN on THG_G: cold, the pull-up lifts Q60's gate: path 1 trips, found at once"),
+                   ("U63 open, or C271 open or shorted", "path 2 lost (its behaviour without its output capacitor NOT PRINTED): path 1 remains"),
+                   ("U63's pass element shorted", "U62's VDD at VBAT, over its 6 V: its state NOT PRINTED: trips (found) or path 2 lost (path 1)"),
+                   ("U62 dead, stuck cold or its pad open", "path 2 lost: path 1 remains"),
+                   ("U62 stuck tripped", "Q61 holds the loop open: found at once"),
+                   ("R270 open, C272 or R271 shorted, Q61 open", "path 2 lost: path 1 remains"),
+                   ("Q61 drain to source shorted", "DOCK_EN_OUT held low: the breaker never starts, found at once"),
+                   ("Q61 gate to drain shorted", "its network loads DOCK_EN_OUT (the window untouched); its trip not shown: path 1 remains"),
+                   ("C268, C270 shorted", "DOCK_EN_OUT or VBAT to ground: the loop collapses (found) or VBAT's fuse acts; neither path is needed")):
         w("     %-48s %s\n" % (a_, b_))
-    w("   THE COMMON PATH STAYS (finding L8P-R9-F1): U61 open, Q60 open, R262 open, C260 or R263 shorted, and FM2 each remove the trip of both\n")
-    w("     switches as in section 10's table: found only by E-13b, the interval UNBOUNDED, the exposure that of 10b (1); no requirement permits\n")
-    w("     them either. Removing them needs a second shunt path (on this loop it fails L4-E11 20c's window, 10b), a loop whose window admits two\n")
-    w("     shunts, or an automatic check that bounds the interval (a requirement for the latent-fault interval of a protective function): NOT\n")
-    w("     DRAFTED here; the choice is the owner's or Layer 3's (it adds a requirement or reopens DD-7's loop)\n")
+    w("   WHAT IS NOT CLOSED HERE, HANDED OVER AS REMAINING ENGINEERING (the owner's part 24; no latent-fault exception presumed): a first\n")
+    w("     failure that silently removes ONE path (the rows above marked 'path 1 remains' or 'path 2 lost', and section 10's latent rows on\n")
+    w("     path 1) is found only by E-13b, each path on its own (TP60 and TP64), and no service interval bounds that; a second failure in the\n")
+    w("     other path before it is found removes the trip (the exposure of 10b). No automatic diagnostic is drafted: one that tests a shunt\n")
+    w("     opens the breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts.\n")
+    w("     The cases: the double failures above; the attempted correction: this delta (single failures survived); the outputs PROVISIONAL on\n")
+    w("     it: this section's verdict, C-PROT rev 1 for the guard, L4-E11 section 28 (finding L8P-R9-F1)\n")
     w("   COMPOSED (L4-E9's order with this record's drafts, then the delta; scratch, removed after): %d scripts, %s\n"
       % (X["n_seq"], "every one OK" if all(v.startswith("OK") for _n, v in X["res"]) else "; ".join("%s %s" % r_ for r_ in X["res"] if not r_[1].startswith("OK"))))
     w("     the delta without round 8's guard: %s\n" % X["without"])
@@ -977,14 +1011,15 @@ def main():
         w("     the generator ran to its end (%d parts); check_l8p_fs (this round's reader): A EN %s, A THG %s; round 8's check_l8p_netlist\n"
           % (X["parts"], X["en"][0], X["thg"][0]))
         w("     reads THG %s on it, as it must (it knows no delta: its THG group is to admit the delta when the delta is released, L8P-R9-F3)\n" % X["round8"])
-        w("     L4-E11's check_dd7_netlist (its round 18 admits C268): %s\n" % X["dd7"])
+        w("     L4-E11's check_dd7_netlist (its round 18 admits C268 and Q61): %s\n" % X["dd7"])
         for lab, v, why in X["mut"]:
             w("     mutated, %-62s THG %s: %s\n" % (lab + ":", v, why[:90]))
     else:
         w("     the generator FAILED (%r)\n" % X.get("gen_rc"))
-    w("   VERDICT (10c): the three V6-m7 failures CORRECTED IN DRAFT, the desk acceptance %s by its author on C-PROT rev 1 and the composition %s,\n"
+    w("   VERDICT (10c): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT (no single failure removes the trip), the desk\n")
+    w("     acceptance %s by its author on C-PROT rev 1 and the composition %s, UNCHECKED; V6-m7 OPEN until the independent check; L8P-R9-F1\n"
       % ("MET" if fs_ok else "NOT MET", "MET" if comp_ok else "NOT MET"))
-    w("     UNCHECKED; V6-m7 OPEN until the independent check; L8P-R9-F1 (the common path) and L8P-R9-F2 (the draw) OPEN\n")
+    w("     (the double failure, handed over), L8P-R9-F2 (the draw) and L8P-R9-F3 (check_l8p_netlist at release) OPEN\n")
 
     # ------------------------------------------------------------------ 11. verdict and E-13b
     holds = (reproduced and same and m10 > 0 and m18 > 0 and mc4 > 0 and DF["window"] and DF["four"] and DRI["reg_c"] < V_LOW
@@ -1007,11 +1042,12 @@ def main():
       % (5.0 * (1 - S["acc_out"]), DF["vdd_hi"], DRI["reg_c"]))
     w("         1 mA of load, ASSUMED at the switch's microamps)\n")
     w("   L8P-F07 and L8P-F08 stay OPEN until an independent check has read this round (the brief); a negative check of C4 ends that loop\n")
-    w("   ROUND 9 (part 22 item A): V6-m7 OPEN; its three failures CORRECTED IN DRAFT (10c, apply_gen_sch_a_thgfs.py, desk acceptance %s by\n"
+    w("   ROUND 9 (part 22 item A, cx45 Q5): V6-m7 OPEN; its three failures and the common path CORRECTED IN DRAFT (10c, apply_gen_sch_a_thgfs.py:\n")
+    w("     two paths, desk acceptance %s by its author, unchecked); L8P-R9-F1 (a double failure after a latent first one, handed over as\n"
       % ("MET" if fs_ok and comp_ok else "NOT MET"))
-    w("     its author, unchecked); L8P-R9-F1 (the common path's latent failures, no requirement permits them) and L8P-R9-F2 (the guard's draw\n")
-    w("     over Layer 5's 30 uA) OPEN; E-13b gains (e): TRIP_TEST on each switch alone (TP60, then TP64) opens the breaker, and THG_ODN (TP66)\n")
-    w("     reads within %.2f V of VDD cold and low with either TRIP_TEST high (the clamp's gate)\n" % (leak_pu * rpu_p))
+    w("     remaining engineering), L8P-R9-F2 (the guard's draw over Layer 5's 30 uA) and L8P-R9-F3 OPEN; E-13b gains (e): TRIP_TEST on each\n")
+    w("     switch alone (TP60 with TP63, then TP64 with TP67) opens the breaker; THG_ODN (TP66) reads within %.2f V of VDD cold and low with\n" % (leak_pu * rpu_p))
+    w("     TP60 high (the clamp's gate); TP67 reads 4.95 to 5.05 V with VBAT over U63's dropout\n")
 
     # ------------------------------------------------------------------ 12. predicates
     preds = [
@@ -1038,11 +1074,12 @@ def main():
         ("round 9: Q60's gate-to-drain short fails the window (V6-m7), and a second shunt on the same return would too", R9["gd"] < R["ret_closed"] and R9["two"] > R9["alw"]),
         ("round 9: no requirement file names a latent state, a proof test or a service interval", Q["latent"] == 0 and Q["interval"] == 0),
         ("round 9: without the guard the FETs pass 150 C held under the breaker's most current limit (the exposure)", UG["i76"] < UG["lim"][2]),
-        ("round 9: the delta's clamp holds the return under the held reading with Q60's short, the gates at IGSS and doubled", ret_cl < min(R["ret_held"], N7["vth"][0]) and ret_cl_all < min(R["ret_held"], N7["vth"][0])),
-        ("round 9: the delta trips within 0.1 s and keeps the gate under 1 V before tEN at the tolerances", t_on_fs < 0.1 and g_inv_fs < N7["vth"][0]),
+        ("round 9: the delta's clamp holds the return under the held reading with Q60's short at the printed gate leakage", ret_cl < lim_ret),
+        ("round 9: path 2 alone holds the return under the held reading and leaves DOCK_EN_OUT dark (DD-7 no trigger)", ret_q61 < lim_ret and out_q61 < R["out_pw_lo"]),
+        ("round 9: each path trips within 0.1 s and keeps its gate under 1 V before tEN at the tolerances", t_on1 < 0.1 and t_on2 < 0.1 and g_inv1 < N7["vth"][0] and g_inv2 < N7["vth"][0]),
         ("round 9: the delta's draw is inside the restated allowances, and the loop's readings hold at them", cold_all <= FS_ALLOW_COLD and trip_one <= FS_ALLOW_TRIP
          and all(g > N7["vth"][1] for g in FRI[0] + FR1[0]) and FRI[1] > R["out_pw_hi"] and FR1[1] > R["out_pw_hi"]),
-        ("round 9: a hot docking reaches the shunt before the RC hold's least start on the delta at 7.6, 10.6 and 16.8 V", all(dk_fs[v][1] is not None and dk_fs[v][1] < hold[0] for v in dk_fs)),
+        ("round 9: a hot docking reaches path 1's shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V", all(dk_fs[v][1] is not None and dk_fs[v][1] < hold[0] for v in dk_fs)),
         ("round 9: C-PROT rev 1 holds on the desk for the delta (the physical conditions apart)", fs_ok),
         ("round 9: the delta composes in L4-E9's order, reads DRAWN on both checks, refuses as it must, and its seven mutations fail", comp_ok),
     ]
