@@ -1,0 +1,167 @@
+l8r2_p0: record l8r2, P0 round (Slot A, MESHSAT-1357, 5 October 2026): V6's findings on the dedicated return, corrected or disposed
+of. PROTOTYPE DESIGN, DESK ARITHMETIC: nothing built, bought, powered or measured. Labels: PRINTED, TYPICAL, DECLARED, MODEL,
+ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional choice with its validation task).
+
+0. PINS (sha256/16  path)
+   6bd6b2039d02bca3 v2/docs/records/l8r2/l8r2_gndret.py
+   9ec3c20ab9d5082d v2/docs/records/l8r2/l8r2_gndret.out
+   b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
+   3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
+   6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
+   447624f4f2f7d37c v2/vendor/connectors/jst-ph-catalogue.pdf
+   c2cbb5962c1f37da v2/vendor/battery/amass-xt60-spec-tme.pdf
+   94e4568e3abe8ab5 v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf
+   6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
+   393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
+
+1. THE SOLVER: l8r2_gndret.py's conductors, contact box and monotone vertex, imported unchanged; ONE term added, Rs in series with
+   the dedicated return's bundle. At Rs = 0 it reproduces the record's enumerated extremes on every case and both copper ends: yes
+   the totals (A): C-DEV rev 1 20.9888; the largest steady state (PS-BUSY, HIGH) 22.8711; the declared upper bound (i) 27.9108; C-DEV rev 2 (conditional on FW-B20/B21) 20.4746
+   C-DEV rev 2 (conditional on FW-B20/B21, the coordinator's row of 16:00 with its 16:25 clarification): +5V_IOC 0.8989 A in place of 1.3800 A,
+     read by the record's constant-power method as U601 0.9607 A in place of 1.4749 A; U7's device-rail demand is unchanged (6.0359 A: the
+     supervisors left +5V_DEV with record l9t5's I-03 drafts); rev 1's figures stay beside it as the labelled scenario
+
+2. V6-B1: THE PLANE COPPER IN SERIES WITH THE RETURN BUNDLE
+   the largest series Rs (mOhm, both boards together) each row tolerates (printed: the maker's rating; least: the least rating
+   consistent with its sheet at the inside air, INFERRED in l8r2_gndret 3b), and the land separation (mm) a layout may have on the
+   declared stackups at the corner's copper temperature, both boards at the same separation, inner copper 15 % thin (ASSUMPTION),
+   for a land group of radius 1.5 and 3.0 mm (spreading MODEL: R = rho / t / (n pi) x ln(d / a) a board; A n = 2, B n = 3)
+   case                                         copper  row  rating    limit A   Rs mOhm        d 0.5 oz mm          d 1 oz mm  4 leads d
+   C-DEV rev 1                                  -20.00C RIB  printed    1.0000    0.7747     30.0 /    60.1    601.4 /   >1000       46.1
+   C-DEV rev 1                                  -20.00C VH   printed   10.0000    4.3595    >1000 /   >1000    >1000 /   >1000      >1000
+   C-DEV rev 1                                  +76.25C RIB  printed    1.0000    1.6406    119.8 /   239.6    >1000 /   >1000      166.4
+   C-DEV rev 1                                  +76.25C RIB  least      0.5995    0.4386      4.8 /     9.7     15.6 /    31.2        6.7
+   C-DEV rev 1                                  +76.25C VH   printed   10.0000   19.8206    >1000 /   >1000    >1000 /   >1000      >1000
+   C-DEV rev 1                                  +76.25C VH   least      5.9948    1.1592     33.1 /    66.3    732.0 /   >1000       46.0
+   the largest steady state (PS-BUSY, HIGH)     -20.00C RIB  printed    1.0000    0.6220     16.6 /    33.3    184.5 /   369.0       25.5
+   the largest steady state (PS-BUSY, HIGH)     -20.00C VH   printed   10.0000    2.7173    >1000 /   >1000    >1000 /   >1000      >1000
+   the largest steady state (PS-BUSY, HIGH)     +76.25C RIB  printed    1.0000    1.3255     51.7 /   103.3    >1000 /   >1000       71.7
+   the largest steady state (PS-BUSY, HIGH)     +76.25C RIB  least      0.5995    0.3343      3.7 /     7.3      8.9 /    17.9        5.1
+   the largest steady state (PS-BUSY, HIGH)     +76.25C VH   printed   10.0000    7.5780    >1000 /   >1000    >1000 /   >1000      >1000
+   the largest steady state (PS-BUSY, HIGH)     +76.25C VH   least      5.9948    0.8775     15.6 /    31.2    162.6 /   325.2       21.7
+   the declared upper bound (i)                 -20.00C RIB  printed    1.0000    0.3543      5.9 /    11.8     23.3 /    46.5        9.1
+   the declared upper bound (i)                 -20.00C VH   printed   10.0000    1.2069    159.9 /   319.7    >1000 /   >1000      245.3
+   the declared upper bound (i)                 +76.25C RIB  printed    1.0000    0.8103     13.1 /    26.1    113.6 /   227.1       18.1
+   the declared upper bound (i)                 +76.25C RIB  least      0.5995    0.1436      2.2 /     4.4      3.2 /     6.5        3.1
+   the declared upper bound (i)                 +76.25C VH   printed   10.0000    2.5956    >1000 /   >1000    >1000 /   >1000      >1000
+   the declared upper bound (i)                 +76.25C VH   least      5.9948    0.4481      5.0 /     9.9     16.4 /    32.8        6.9
+   C-DEV rev 2 (conditional on FW-B20/B21)      -20.00C RIB  printed    1.0000    0.8244     36.4 /    72.8    883.0 /   >1000       55.9
+   C-DEV rev 2 (conditional on FW-B20/B21)      -20.00C VH   printed   10.0000    5.1539    >1000 /   >1000    >1000 /   >1000      >1000
+   C-DEV rev 2 (conditional on FW-B20/B21)      +76.25C RIB  printed    1.0000    1.7466    159.0 /   318.0    >1000 /   >1000      220.8
+   C-DEV rev 2 (conditional on FW-B20/B21)      +76.25C RIB  least      0.5995    0.4718      5.3 /    10.6     18.6 /    37.3        7.3
+   C-DEV rev 2 (conditional on FW-B20/B21)      +76.25C VH   printed   10.0000   34.1956    >1000 /   >1000    >1000 /   >1000      >1000
+   C-DEV rev 2 (conditional on FW-B20/B21)      +76.25C VH   least      5.9948    1.2575     43.1 /    86.2    >1000 /   >1000       59.8
+   V6's figures reproduced: the ribbon's printed row 0.3543 mOhm (declared peak) and 0.7747 mOhm (C-DEV rev 1) cold; the least rows 0.1436 and
+     0.4386 mOhm hot; a VH pin 2's printed 1.2069 and 4.3595 mOhm; V6's scale, 50 mm between 3 mm lands at 0.5 oz: board B 0.247 / 0.358 and
+     board A 0.371 / 0.537 mOhm (cold / hot; nominal thickness)
+   READ (the binding row is the ribbon at the cold end on the printed rating, the least rating at the hot end):
+     the service cases on the printed ratings: C-DEV rev 1 tolerates 0.7747 mOhm, 30 to 60 mm at 0.5 oz; C-DEV rev 2 0.8244 mOhm, 36 to
+       73 mm; the largest steady state 0.6220 mOhm, 17 to 33 mm: realisable ON THE MODEL only as a TIGHT CLUSTER, the three return
+       sockets beside the 5 V leads' entries on board B and beside the 5 V stages' outputs on board A, joined solidly (L8R2-F33's
+       widths) on every ground plane; whether the floor plans allow it is a placement question no board here answers yet
+     the declared upper bound (every lead at its declared peak at once) on the printed ratings: 0.3543 mOhm, 5.9 mm at 0.5 oz: NOT
+       realisable with XT60 and VH bodies (each wider than that); a fourth lead gives 9.1 mm (NOT A CORRECTION); 1 oz inner copper gives
+       23 to 47 mm (a = 1.5 to 3 mm; still a placement question): the copper weight is the owner's open decision (record l9stk 14.7;
+       the surcharge NOT READ); it is a DECLARATION bound (every lead at its declared peak at once), above every state of the budget
+     the least ratings at the inside air (INFERRED derating): not realisable at 0.5 oz for any case (see the table)
+   DISPOSITION (part 19): V6-B1 is PROVISIONAL, not closed. The bounded provisional choice: the layout condition L8R2-F33a, each return
+     socket's land within 17 mm (the largest steady state, the tightest service case) of the 5 V entries on both boards, every
+     ground plane joined solidly; the Layer 10
+     validation task: extract on the routed boards A and B the plane resistance between the return sockets' lands and each lead's and
+     stage's land (a field solver; specimen: the routed board files; limit: the table's Rs for each case). STILL OPEN: the declared
+     upper bound's printed row and every least-rating row at 0.5 oz, which no placement realises; the smallest decision that removes
+     them is not available inside engineering: the owner's copper weight (1 oz inner on boards A and B, cost not read) only shortens
+     the gap, and re-deriving the leads' declared peaks from the budget is Layer 5's and Layer 9's text; the declared upper bound's
+     printed row reads STILL OPEN (a declaration bound, not a service case) and the service cases PROVISIONAL on the layout condition
+
+3. V6-B2: THE INDIRECT GROUND PATHS BETWEEN THE BOARDS (each at its own worst vertex: total / (1 + R_min x G), G the counted network
+   at every contact high; the totals carry the monitor's 1.00 A (VMON's declared peak) and the QMX's 2.00 A (+12V_HF's) as if every ampere
+   of their return came back through board B: the conservative share)
+   C-DEV rev 1 (total with the shares 23.9888 A):
+     each RF pigtail's shield, board B's U.FL to board A's SMA jack (9 pigtails, RG-178, 150 mm: IF-BA-RF)                           
+       R_min 5.06 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 1.6339 A; the U.FL outer contact: NO CURRENT RATING PRINTED (Hirose catalogue: 10 mOhm max at a 10 mA test)
+     the monitor: board A's J_MON pin 2, the monitor's ground, its HDMI cable's grounds to board B's J_HDMI (IF-MON)                 
+       R_min 20.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.4353 A; the HDMI receptacle's contacts: Molex 208658's sheet NOT HELD (SOURCES.yaml's owed list)
+     the QMX: board A's J_HF pin 2, the QMX's ground, its USB cable's ground to board B's J_QMX pin 4 (IF-LID-HF)                    
+       R_min 106.30 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0831 A; J_QMX, JST PH: PRINTED 2 A with AWG 24
+     board C: board A's J_MAINSW pin 2 (JST XH) and board B's J_PANEL ground pins through board C's ground (IF-AC-MAINSW)            
+       R_min 15.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.5769 A; J_MAINSW (XH) and J_PANEL: their ratings to be read with Layer 7's harness rows (not judged here)
+     board D: board A's J_MEZZ1 grounds and J_MEZZ_PWR1 pin 2, board D's touch USB to the monitor, the monitor's HDMI to board B     
+       R_min 100.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0883 A; the chain's weakest: the HDMI receptacle (as the monitor's path)
+   the largest steady state (PS-BUSY, HIGH) (total with the shares 25.8711 A):
+     each RF pigtail's shield, board B's U.FL to board A's SMA jack (9 pigtails, RG-178, 150 mm: IF-BA-RF)                           
+       R_min 5.06 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 1.7621 A; the U.FL outer contact: NO CURRENT RATING PRINTED (Hirose catalogue: 10 mOhm max at a 10 mA test)
+     the monitor: board A's J_MON pin 2, the monitor's ground, its HDMI cable's grounds to board B's J_HDMI (IF-MON)                 
+       R_min 20.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.4694 A; the HDMI receptacle's contacts: Molex 208658's sheet NOT HELD (SOURCES.yaml's owed list)
+     the QMX: board A's J_HF pin 2, the QMX's ground, its USB cable's ground to board B's J_QMX pin 4 (IF-LID-HF)                    
+       R_min 106.30 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0896 A; J_QMX, JST PH: PRINTED 2 A with AWG 24
+     board C: board A's J_MAINSW pin 2 (JST XH) and board B's J_PANEL ground pins through board C's ground (IF-AC-MAINSW)            
+       R_min 15.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.6221 A; J_MAINSW (XH) and J_PANEL: their ratings to be read with Layer 7's harness rows (not judged here)
+     board D: board A's J_MEZZ1 grounds and J_MEZZ_PWR1 pin 2, board D's touch USB to the monitor, the monitor's HDMI to board B     
+       R_min 100.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0953 A; the chain's weakest: the HDMI receptacle (as the monitor's path)
+   the declared upper bound (i) (total with the shares 30.9108 A):
+     each RF pigtail's shield, board B's U.FL to board A's SMA jack (9 pigtails, RG-178, 150 mm: IF-BA-RF)                           
+       R_min 5.06 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 2.1053 A; the U.FL outer contact: NO CURRENT RATING PRINTED (Hirose catalogue: 10 mOhm max at a 10 mA test)
+     the monitor: board A's J_MON pin 2, the monitor's ground, its HDMI cable's grounds to board B's J_HDMI (IF-MON)                 
+       R_min 20.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.5609 A; the HDMI receptacle's contacts: Molex 208658's sheet NOT HELD (SOURCES.yaml's owed list)
+     the QMX: board A's J_HF pin 2, the QMX's ground, its USB cable's ground to board B's J_QMX pin 4 (IF-LID-HF)                    
+       R_min 106.30 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.1071 A; J_QMX, JST PH: PRINTED 2 A with AWG 24
+     board C: board A's J_MAINSW pin 2 (JST XH) and board B's J_PANEL ground pins through board C's ground (IF-AC-MAINSW)            
+       R_min 15.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.7433 A; J_MAINSW (XH) and J_PANEL: their ratings to be read with Layer 7's harness rows (not judged here)
+     board D: board A's J_MEZZ1 grounds and J_MEZZ_PWR1 pin 2, board D's touch USB to the monitor, the monitor's HDMI to board B     
+       R_min 100.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.1138 A; the chain's weakest: the HDMI receptacle (as the monitor's path)
+   C-DEV rev 2 (conditional on FW-B20/B21) (total with the shares 23.4746 A):
+     each RF pigtail's shield, board B's U.FL to board A's SMA jack (9 pigtails, RG-178, 150 mm: IF-BA-RF)                           
+       R_min 5.06 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 1.5989 A; the U.FL outer contact: NO CURRENT RATING PRINTED (Hirose catalogue: 10 mOhm max at a 10 mA test)
+     the monitor: board A's J_MON pin 2, the monitor's ground, its HDMI cable's grounds to board B's J_HDMI (IF-MON)                 
+       R_min 20.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.4259 A; the HDMI receptacle's contacts: Molex 208658's sheet NOT HELD (SOURCES.yaml's owed list)
+     the QMX: board A's J_HF pin 2, the QMX's ground, its USB cable's ground to board B's J_QMX pin 4 (IF-LID-HF)                    
+       R_min 106.30 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0813 A; J_QMX, JST PH: PRINTED 2 A with AWG 24
+     board C: board A's J_MAINSW pin 2 (JST XH) and board B's J_PANEL ground pins through board C's ground (IF-AC-MAINSW)            
+       R_min 15.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.5645 A; J_MAINSW (XH) and J_PANEL: their ratings to be read with Layer 7's harness rows (not judged here)
+     board D: board A's J_MEZZ1 grounds and J_MEZZ_PWR1 pin 2, board D's touch USB to the monitor, the monitor's HDMI to board B     
+       R_min 100.00 mOhm (ASSUMPTION, no cable sheet held; contacts at 0, none prints a minimum): at most 0.0864 A; the chain's weakest: the HDMI receptacle (as the monitor's path)
+   the counted rows with the shares added, at Rs = 0:
+     C-DEV rev 1                                  -20.00C total 23.9888 A: a ribbon 0.5458 A, a VH pin 2 4.2346 A, an XT60 contact 9.4811 A; printed yes, least yes
+     C-DEV rev 1                                  +76.25C total 23.9888 A: a ribbon 0.4194 A, a VH pin 2 3.3798 A, an XT60 contact 7.9891 A; printed yes, least yes
+     the largest steady state (PS-BUSY, HIGH)     -20.00C total 25.8711 A: a ribbon 0.5886 A, a VH pin 2 4.5669 A, an XT60 contact 10.2250 A; printed yes, least yes
+     the largest steady state (PS-BUSY, HIGH)     +76.25C total 25.8711 A: a ribbon 0.4524 A, a VH pin 2 3.6450 A, an XT60 contact 8.6159 A; printed yes, least yes
+     the declared upper bound (i)                 -20.00C total 30.9108 A: a ribbon 0.7033 A, a VH pin 2 5.4565 A, an XT60 contact 12.2168 A; printed yes, least yes
+     the declared upper bound (i)                 +76.25C total 30.9108 A: a ribbon 0.5405 A, a VH pin 2 4.3550 A, an XT60 contact 10.2943 A; printed yes, least yes
+     C-DEV rev 2 (conditional on FW-B20/B21)      -20.00C total 23.4746 A: a ribbon 0.5341 A, a VH pin 2 4.1438 A, an XT60 contact 9.2778 A; printed yes, least yes
+     C-DEV rev 2 (conditional on FW-B20/B21)      +76.25C total 23.4746 A: a ribbon 0.4105 A, a VH pin 2 3.3073 A, an XT60 contact 7.8178 A; printed yes, least yes
+   DISPOSITION: the census is complete for the paths V6 named; the counted rows hold with the shares on the printed ratings. The claim
+     'every branch with a printed rating is inside it' covers the COUNTED branches only. The indirect branches are PROVISIONAL: the
+     RF pigtails' U.FL outer contacts carry up to the figures above with NO printed current rating (vendor task, UNSENT: Hirose, the U.FL
+     outer contact's DC current rating at 85 C), the HDMI receptacle's sheet is NOT HELD (vendor task: Molex 208658), and every R_min is
+     an ASSUMPTION until Layer 7's harness rows name the cables (Layer 7 task: each cable's conductor resistance). If the U.FL rating
+     comes back under the bound, the design change is to break the DC path at board A's RF jacks (an RF ground coupled by capacitors),
+     an RF and EMC design task with the antennas' bias returns traced; it is not drafted here
+
+4. V6-m12: F-4b, EVERY SOURCE AT ITS BOUND AT ONCE (44.1338 A): a ribbon conductor 1.00418 A at -20 C against its printed 1 A (with a fourth lead 0.7884 A)
+   DECISION (authority: SESSION; authority_why: a fault-set definition inside engineering, no requirement, money or claim changes;
+   ruled_by: Slot A under the owner's standing rule of 26 September 2026; ruled_on: 5 October 2026; reversed_by: none): the design need
+   not serve F-4b inside the ribbons' printed rating. Reason: F-4b is five independent overloads at once (four stage current limits and
+   U601's), outside the single-failure set the architecture's failure table names (ARCH-PCB-B-IOHA section 12: every row one failure);
+   each single overload (F-4a) holds; the excess is 0.42 % at the cold end at the extreme contact vertex only. Reverse: carry the fourth
+   return lead (0.7884 A there).
+
+5. V6-m8: THE XT60 ROWS. Neither held XT60 sheet (V1.2: 30 A, no condition; 2021V1: 35 A with 12 AWG, rise under 85 C) names a
+   board-soldered end: none is named. The rows' largest XT60 contact current 11.0311 A is judged against the printed 30 A as the WIRE-TO-WIRE rating, a
+   63 % margin; the board-soldered end's rating is MISSING (vendor task, UNSENT: Amass, the XT60-F's rating soldered into a board, its
+   land and the board's copper), PROVISIONAL with that margin
+
+6. PREDICATES
+   the solver with Rs = 0 reproduces l8r2_gndret's extremes on every case and both copper ends                                          yes
+   V6-B1 reproduced: the ribbon's printed row allows 0.354 mOhm at the declared peak and 0.774 mOhm on C-DEV rev 1 (cold)               yes
+   V6-B1 reproduced: the least ratings at the inside air allow 0.143 and 0.438 mOhm                                                     yes
+   the service cases' printed bounds need the return within 15 to 60 mm of the entries at 0.5 oz (spreading MODEL): a tight cluster     yes
+   the declared peak's printed bound is NOT realisable at 0.5 oz within 20 mm (spreading MODEL): the finding stays open there           yes
+   a fourth return lead does not make the declared peak's printed bound realisable at 0.5 oz                                            yes
+   1 oz inner copper lifts the declared peak's printed bound past 20 mm but not past 50 mm (still a layout question)                    yes
+   V6-B2: no indirect branch has a held printed current rating at the RF and HDMI contacts (the branches stay PROVISIONAL)              yes
+   V6-B2: with the monitor's and the QMX's shares added the counted rows hold on the printed ratings at Rs = 0                          yes
+   V6-m12: F-4b puts a ribbon over its printed 1 A by under 1 percent; the fourth lead would hold it                                    yes
+   V6-m8: neither XT60 sheet names a board-soldered end                                                                                 yes
+
+l8r2_p0: done
