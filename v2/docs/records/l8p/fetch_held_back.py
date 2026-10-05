@@ -12,6 +12,12 @@ publication and dissemination of this publication ... without TDK Electronics' p
 lands in v2/vendor/battery/held/, which .gitignore excludes. l8p_drafts.py does not read it (its figures are typed there with
 this sheet's page, and test_l8p reads them against it when it is present).
 
+Round 7 (5 October 2026, the check of record l9stk's guard selection G2 for finding L8P-F07): TI's LM26LV data sheet (SNIS144G,
+revised September 2016: the factory-set temperature switch l9stk selected) and TI's TPS709 data sheet (SBVS186H, revised July
+2021: the 5 V regulator named for its supply) carry TI's IMPORTANT NOTICE ("Other reproduction and display of these resources is
+prohibited"). They land in v2/vendor/ti/held/, the same bytes record l9stk's fetch script pins (its round 4 at 43da41ca).
+l8p_guard.py reads both and refuses without them.
+
 Usage (repository root):  python3 v2/docs/records/l8p/fetch_held_back.py      exit 0: present and checked; 3: a mismatch."""
 import hashlib
 import os
@@ -26,6 +32,10 @@ SHEETS = [
     ("v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf",
      "https://www.tdk-electronics.tdk.com/inf/55/db/PTC/PTC_Sensors_SMD_chips_superior.pdf",
      "4d87b17891fa933f90d833e9cf8211e5ca2cc70911f43ea7bc513af7d8936955"),
+    ("v2/vendor/ti/held/ti-lm26lv-snis144g.pdf", "https://www.ti.com/lit/ds/symlink/lm26lv.pdf",
+     "e8ce79af19c668cbbaa964f78fff3eaae5d0f8b09e97d373efe0666d42885d2d"),
+    ("v2/vendor/ti/held/ti-tps709-sbvs186h.pdf", "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+     "8c14e3efae738a27b857b789aa87369de9037a8ef3616a9f71a423587cdc6949"),
 ]
 
 

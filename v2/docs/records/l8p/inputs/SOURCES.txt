@@ -106,3 +106,15 @@ TI's CSD18510Q5B sheet v2/vendor/battery/ti-csd18510q5b.pdf (SLPS632, March 2017
 Held back, not committed (round 5): TDK's superior-series PTC sheet (B59421, B59641, B59721; August 2019), fetched by
 ../fetch_held_back.py into v2/vendor/battery/held/ and checked there by sha256
 4d87b17891fa933f90d833e9cf8211e5ca2cc70911f43ea7bc513af7d8936955; round 6 reads its p.4 table and its p.29 reference table.
+
+Round 7 (5 October 2026, the check of record l9stk's guard selection G2 for finding L8P-F07; branch fnd/l9stk2 at 43da41ca, its
+round 4; read there with git show, copied here byte for byte, cited by commit as text only):
+  l9stk-section15.9-43da41ca.md                  fabaf09e34ff7ea1d3632d9148d7b033f245fe937ed289801d656bc527df1184
+      v2/docs/records/l9stk/L9-STACKUPS.md at 43da41ca, from the heading "### 15.9 The guard round" to the end of the page
+      (lines 1222 to 1341): the three approaches, G2's detail, the selection, the acceptance (a) to (c) and the correction scope
+  l9stk_guard-43da41ca.out.txt                   66ee65bd07ef3fc17aba3fcf790464240aebc46a1cc455867e0283b474ca6bab
+      v2/docs/records/l9stk/l9stk_guard.out at 43da41ca, whole (its sections 0 to 7; section 6 the selection and its acceptance)
+Held back, not committed (round 7): TI's LM26LV (SNIS144G) and TPS709 (SBVS186H) sheets, fetched by ../fetch_held_back.py into
+v2/vendor/ti/held/ and checked there by sha256 (e8ce79af... and 8c14e3ef..., the bytes record l9stk pins). Read from this tree
+(committed): AOS AO3400A v2/vendor/power/aos-ao3400a-n-mosfet.pdf (Rev 3.1, July 2023) and JSCJ 2N7002
+v2/vendor/power/jscj-2n7002-c8545.pdf.
