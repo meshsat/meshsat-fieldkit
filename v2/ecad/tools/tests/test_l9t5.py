@@ -1049,6 +1049,10 @@ def t_p0_connected_the_change_list_carries_every_composed_draft():
                 "DO: step %s (%s), no open question; it continues while the open items are worked" % (r[7], r[6]))
             assert r[1] == "IMPLEMENTATION" and r[8] == "SETTLED WORK" and r[9] == want, r[0]
             assert r[4] in m.OWNERS, r[0]
+    # D-10 restated from record l4e7's S1 rewrite (the owner's part 23): an unresolved protection defect; B2 never its resolution
+    dd = {x["id"]: x for x in m.DEFECTS}
+    assert dd["D-10"]["state"].startswith("OPEN: AN UNRESOLVED PROTECTION DEFECT") and "does not resolve D-10" in dd["D-10"]["state"]
+    assert dd["D-16"]["state"].startswith("ADDRESSED IN DRAFTS")
     # a broken order is refused: the PA cap's board A half before fb01
     saved = list(m.CHANGE_ORDER)
     try:

@@ -8,7 +8,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    264c4127cfc9a105 v2/docs/records/l4e9/l4e9_power_path.py
    82aaa92548e8c22d v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   5a2a348f0267c3a1 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   0c069e574533d2f1 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
    736f9c314f36d555 v2/docs/records/l9pwr/l9pwr_budget.out
    88009a1e6be84bd4 v2/docs/records/l9t5/l9t5_drafts.out
    423b5b8ddfd9215c v2/docs/records/efuse/efuse_check.out
@@ -17,8 +17,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    894242d7348ff762 v2/docs/records/l9t5/l9t5_t10.out
    461dd33119ce5dd7 v2/docs/records/l9t5/l9t5_f01.out
    8d4f3a6cb7c123d9 v2/docs/records/l8r2/l8r2_p0.out
-   42313e7cf57bbf59 v2/docs/records/l4e7/l4e7_p0sol.out
-   e918df2fb425f44b v2/docs/records/l4e7/l4e7_p0sol.py
+   4584888423eaf5f3 v2/docs/records/l4e7/l4e7_p0sol.out
+   0c59ff81884862e9 v2/docs/records/l4e7/l4e7_p0sol.py
    0041a749eb1f84c7 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
    2b9fb0459e0cdfd1 v2/docs/records/l9t5/l9t5_case.py
@@ -170,8 +170,8 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      service read as held (118.0 C, 9.8 K) and at the gauge's condition C4 (121.8 C, 6.0 K) (PRINTED switch limits; l8p_c4.out)
    the solar entry (P0-7, record l4e7, merged at 66ec67ca; l4e7_p0sol.out pinned): board E composed here (section 2) and there in
      L4-E9's order with P0-7's sense and route B2 composed as a PROPOSAL (record l4e7's C2 composition 296 parts); D-16 CORRECTED in draft; D-10 an
-     UNRESOLVED PROTECTION DEFECT in the model (record l4e7 reads it NARROWED, OPEN: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop
-     over the 80 V recommended row), the receiving company's engineering item S1; route B2 is an unapproved PARTIAL interface
+     UNRESOLVED PROTECTION DEFECT in the model (record l4e7 reads it so, E-1: PV_F 321.9 V at 0.30 uH on the 2 V bank parts, 83.48 V at the reference loop
+     over the 80 V recommended row), the receiving company's remaining engineering item E-1; route B2 is an unapproved PARTIAL interface
      proposal (the owner's item), and neither adopting nor declining it closes D-10; the solar guard's trip against its demand is
      record l4e7's reading, not re-traced here
 
@@ -253,7 +253,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,
      over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
-   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (S1, the receiving company's engineering item); route
+   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route
      B2 composed as an unapproved PARTIAL interface proposal (the owner's item), which does not close it
    L4-E9's change-list rows: drafted (apply_l4e9_changelist_p0.py), applied by the integrator with the re-takes it names (L4-E11's
      and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
@@ -279,7 +279,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    the return solver's conductors are the composed netlists'                                                                     yes
    L8R2-F33a is realisable on the placement as drawn (one socket a group)                                                        yes
    the eFuse settings read PASS on the candidate (record efuse)                                                                  yes
-   record l4e7's P0-7 composition is in the candidate (D-16 corrected in draft, D-10 narrowed and open)                          yes
+   record l4e7's P0-7 is in the candidate: D-16 corrected in draft, D-10 an unresolved protection defect that B2 does not resolve yes
    every revision V T10 row holds its criterion at the taken set point                                                           yes
    the final R602 figures: every revision V sustained state keeps a positive margin to 125 C                                     yes
    L9T5-F22 judged over the connected circuit: 14.0 k holds the babbler at 125 C and T10-A3 at every computed current on either return yes
