@@ -8,16 +8,16 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    264c4127cfc9a105 v2/docs/records/l4e9/l4e9_power_path.py
    82aaa92548e8c22d v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
-   0c069e574533d2f1 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
-   736f9c314f36d555 v2/docs/records/l9pwr/l9pwr_budget.out
-   88009a1e6be84bd4 v2/docs/records/l9t5/l9t5_drafts.out
-   423b5b8ddfd9215c v2/docs/records/efuse/efuse_check.out
-   28ad9d6d9e9111cd v2/docs/records/l9stk/l9stk_protection.out
-   acd07c17bcc4e3cf v2/docs/records/l8p/l8p_c4.out
-   894242d7348ff762 v2/docs/records/l9t5/l9t5_t10.out
-   461dd33119ce5dd7 v2/docs/records/l9t5/l9t5_f01.out
+   0256db75457b61b0 v2/docs/records/l9t5/apply_l4e9_changelist_p0.py
+   7b586acfa021e2b1 v2/docs/records/l9pwr/l9pwr_budget.out
+   a0c801af83a9dcb6 v2/docs/records/l9t5/l9t5_drafts.out
+   4025887b32d83ea8 v2/docs/records/efuse/efuse_check.out
+   9df1a664742cdfe8 v2/docs/records/l9stk/l9stk_protection.out
+   74742ed4236f3e36 v2/docs/records/l8p/l8p_c4.out
+   ce08f3e57bd51f75 v2/docs/records/l9t5/l9t5_t10.out
+   d2453f448898cccc v2/docs/records/l9t5/l9t5_f01.out
    8d4f3a6cb7c123d9 v2/docs/records/l8r2/l8r2_p0.out
-   4584888423eaf5f3 v2/docs/records/l4e7/l4e7_p0sol.out
+   f493307bcb73225c v2/docs/records/l4e7/l4e7_p0sol.out
    0c59ff81884862e9 v2/docs/records/l4e7/l4e7_p0sol.py
    0041a749eb1f84c7 v2/docs/records/l9t5/l9t5_t10.py
    aef8ea1d9bd568c6 v2/docs/records/l9t5/l9t5_drafts.py
@@ -33,7 +33,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    a533c3262b835db7 v2/docs/records/l8r2/check_l8r2_netlist.py
    fcbc13c977bebe2d v2/docs/records/l8r2/check_gndret_netlist.py
    fe9e3979b8a18d33 v2/docs/records/l8gnd/check_gnd002_netlist.py
-   d5bcd5a7634ea1f9 v2/docs/records/l4e11/check_dd7_netlist.py
+   66c246df3f3029ab v2/docs/records/l4e11/check_dd7_netlist.py
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
@@ -53,11 +53,11 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      at rest), which is a different state; each figure below names its row
 
 2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and
-   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-243 for the drafts
-   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 116 changes, every
+   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-244 for the drafts
+   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): 117 changes, every
    order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: yes; WITHDRAWN: R-210, R-212, R-211
-   board A: 25 drafts, every one applied; regenerated rc 0: 820 parts, 0 unplaced, intent written True, designators unique
-     l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l9t5/iocbuck R-223; l9t5/iocpre R-224; l9t5/iocset R-242; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
+   board A: 26 drafts, every one applied; regenerated rc 0: 832 parts, 0 unplaced, intent written True, designators unique
+     l4e6/r12 R-01; l4e11/guard R-124; l4e11/charger R-209; l4e4/r11 R-04; l4e8/bank R-07; l4e4/r138 R-05; l4e9/u17 R-06; l8gnd/gnd002 R-191; l8gnd/hotr1 R-192; l8r2/d8v3 R-220; l8r2/vbus20ov R-221; l8r2/packrtn R-201; l8r2/slotlm R-199; l8r2/fb01 R-200; l8p/ptc R-208; l4e11/dd7 R-217; l8p/thguard R-222; l8p/thgfs R-244; l9t5/iocbuck R-223; l9t5/iocpre R-224; l9t5/iocset R-242; l8r2/gndrtn R-225; efuse/u23ilm R-226; l9t5/paloop R-227; d8dec31/mainpb R-193; l6r2/lcsc order-free
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
    board B: 17 drafts, every one applied; regenerated rc 0: 1437 parts, 0 unplaced, intent written True, designators unique
      l8gnd/gnd002 R-195; l8r2/fans12 R-190; l8r2/fandec R-228; l8r2/panel5v R-229; l8r2/ph4 R-230; l8r2/rt500 R-203; l8r2/gndret R-231; l8r2/gndrtn R-232; l9t5/iocbuck R-233; l9t5/iocpre R-234; l9t5/iocset R-243; l9t5/canshdn R-235; efuse/u23ilm R-236; efuse/u24ilm R-237; l6r2/xal_land order-free; l6r2/lcsc order-free; l6r2/intent order-free
@@ -70,7 +70,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      the composition follows the change list's positions: yes; every circuit draft has a row: yes; Layer 6's tables last: yes
    board E is record l4e7's own composition with route B2 (ORDER_E_B2, imported): the same order
    record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap, T10's
-     set point delta (later than its round 2) and the last taker: yes, both boards (V6-m3 answered)
+     set point delta and record l8p's fail-safe delta (both later than its round 2) and the last taker: yes, both boards (V6-m3 answered)
    d8dec31's mainpb, the last next-free taker: R603, C607 on MAIN_PB (V6 read R603 and C607; the register's R-193 text names R233 and C241
      for the round without the later drafts: R-194, its fixed references, stays a MISSING DRAFT for d8dec31's owner)
    d8dec31's ptt on board D: its next-free picks (the 1 k series parts and the BAT46W) D15, D16, D17, D18, R96, R97; the PA cap's fixed R57, R58, C76: True
@@ -80,7 +80,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    l8gnd GND-002, board B                                         DRAWN  B: CHASSIS on C33.2 (1n 2kV) and J_ETH.SH; no part bridges it to GND; changes 2 and 3 DRAWN
    l8r2 rounds 1 to 6, board A                                    DRAWN  A VCO DRAWN
    l8r2 rounds 1 to 7, board B                                    DRAWN  B FANS DRAWN
-   l8p the loop and the guard, board A                            DRAWN  A EN DRAWN
+   l8p the loop and the guard with the fail-safe delta, board A   DRAWN  A EN DRAWN
    L4-E11 DD-7 (round 17, with the guard), board A                DRAWN  
    l8r2 the ground return, board B                                DRAWN  leads read from the netlist and the intent: J_54V (+54V_POE), J_5V_DEV (+5V_DEV), J_5V_IOC (+5V_IOC), J_5V_S1 (+5V_S1), J_5V_S2 (+5V_S2), J_5V_S3 (+5V
    l8r2 the dedicated return, boards A and B                      DRAWN  return sockets whole on both boards: J_GR1, J_GR2, J_GR3
@@ -100,7 +100,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
    l8gnd GND-002, board B                                         C33's cold end back on GND: FAIL  B: C33 sits on ['BOB', 'GND'], the clause asks BOB to CHASSIS
    l8r2 rounds 1 to 6, board A                                    U44's input (pin 4) on GND: FAIL  A D8V3 FAIL: U44.4 on 'GND', wanted +3V3
    l8r2 rounds 1 to 7, board B                                    U901's input (pin 4) on GND: FAIL  B PNL FAIL: U901.4 on 'GND', wanted +5V_DEV
-   l8p the loop and the guard, board A                            R260's DOCK_EN_OUT end on GND: FAIL  A EN FAIL: the loop is not closed by the guard's pair: R260 on ['GND', 'THG_MID'], R261 on
+   l8p the loop and the guard with the fail-safe delta, board A   R260's DOCK_EN_OUT end on GND: FAIL  A EN FAIL: the loop is not closed by the guard's pair: R260 on ['GND', 'THG_MID'], R261 on
    L4-E11 DD-7 (round 17, with the guard), board A                Q44.1 moved off DD7_G: FAIL  Q44.1 on 'GND', wanted DD7_G
    l8r2 the ground return, board B                                J_GR1 pin 2 on +5V_DEV (V6's): FAIL  leads read from the netlist and the intent: J_54V (+54V_POE), J_5V_DEV (+5V_DEV), J_5V_IOC
    l8r2 the dedicated return, boards A and B                      J_GR2 removed from board A (V6's): FAIL  return sockets whole on both boards: J_GR1, J_GR3
@@ -250,6 +250,10 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      printed row and the least rows OPEN; V6-B2
      vendor tasks (Hirose U.FL, Molex HDMI) UNSENT
    T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20
+   the guard's fail-safe delta (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance restated from 30 uA to 50 uA cold and
+     180 uA tripped in L4-E11 20c and 20f and record l9stk 15.9 before the delta is adopted (L8P-R9-F2, a named prerequisite, their
+     owners'); check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by record l8p's
+     check_l8p_fs.py (section 3)
    VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,
      over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes
      a 1x4 VH with two contacts a pole (a harness row and a board A land)
@@ -259,7 +263,7 @@ No completion claim: power-design closure and fabrication release stay BLOCKED (
      and L4-E10's pins of the page, Layer 6's l6r2_passives compositions); L4-E9's own output refuses on this tree at its L4-E11 pin
 
 12. THE PREDICATES
-   the drafted change list carries rows R-220 to R-243, holds every order constraint, its page table is its list, FAN_OK withdrawn yes
+   the drafted change list carries rows R-220 to R-244, holds every order constraint, its page table is its list, FAN_OK withdrawn yes
    board A composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board B composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes
    board D composes in L4-E9's change-list order with every draft, every one with a row, and regenerates                         yes

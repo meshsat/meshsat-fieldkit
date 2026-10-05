@@ -2,7 +2,7 @@
 """Record l9t5, the P0 round's parts 4b and 4c (Slot A, MESHSAT-1357, 5 October 2026): THE CONNECTED P0 CANDIDATE.
 
 4c (P0-6): boards A, B and D composed with EVERY pending draft in L4-E9's change-list order (records/l4e9/L4-POWER-ARCHITECTURE.md
-section 3, with this record's text draft apply_l4e9_changelist_p0.py applied in memory: rows R-220 to R-243 for the drafts V6's
+section 3, with this record's text draft apply_l4e9_changelist_p0.py applied in memory: rows R-220 to R-244 for the drafts V6's
 V6-m11 found without a row), regenerated without KiCad (record
 l8p's gen_netlist.py), every record netlist check read in its composed mode, and one mutation per check that must not read DRAWN.
 4b: the connected re-trace on that candidate: the case rows' loads, every converter's input current, the feed and return conductors
@@ -43,6 +43,7 @@ import check_l8r2_netlist as L8R2  # noqa: E402
 import check_gndret_netlist as GR  # noqa: E402
 import check_gnd002_netlist as GND  # noqa: E402
 import check_dd7_netlist as DD7  # noqa: E402
+import check_l8p_fs as L8PFS  # noqa: E402  (record l8p round 9: board A read by pin with the fail-safe delta, L8P-R9-F3)
 import l9t5_paloop as PL  # noqa: E402
 
 NET = {"a": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "b": "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net",
@@ -51,7 +52,7 @@ PRJ = {"a": "pcb-a-power", "b": "pcb-b-compute", "d": "pcb-d-aprs", "e": "pcb-e1
 # the P0 candidate's composition: L4-E9's change list (rows R-01 to R-239, section 3) board by board, then Layer 6's order-free tables
 ORDER = {
     "a": ["l4e6/r12", "l4e11/guard", "l4e11/charger", "l4e4/r11", "l4e8/bank", "l4e4/r138", "l4e9/u17", "l8gnd/gnd002", "l8gnd/hotr1",
-          "l8r2/d8v3", "l8r2/vbus20ov", "l8r2/packrtn", "l8r2/slotlm", "l8r2/fb01", "l8p/ptc", "l4e11/dd7", "l8p/thguard",
+          "l8r2/d8v3", "l8r2/vbus20ov", "l8r2/packrtn", "l8r2/slotlm", "l8r2/fb01", "l8p/ptc", "l4e11/dd7", "l8p/thguard", "l8p/thgfs",
           "l9t5/iocbuck", "l9t5/iocpre", "l9t5/iocset", "l8r2/gndrtn", "efuse/u23ilm", "l9t5/paloop", "d8dec31/mainpb", "l6r2/lcsc"],
     "b": ["l8gnd/gnd002", "l8r2/fans12", "l8r2/fandec", "l8r2/panel5v", "l8r2/ph4", "l8r2/rt500", "l8r2/gndret", "l8r2/gndrtn",
           "l9t5/iocbuck", "l9t5/iocpre", "l9t5/iocset", "l9t5/canshdn", "efuse/u23ilm", "efuse/u24ilm", "l6r2/xal_land", "l6r2/lcsc", "l6r2/intent"],
@@ -153,7 +154,7 @@ def regen(board, gen, d, tag):
 
 def change_list_order():
     """{apply script basename: (row, position in L4-E9's change list)}: L4-E9's register and script with this record's text draft
-    apply_l4e9_changelist_p0.py applied IN MEMORY (rows R-220 to R-243; the tree's files are not written), its change list from L4-E9's
+    apply_l4e9_changelist_p0.py applied IN MEMORY (rows R-220 to R-244; the tree's files are not written), its change list from L4-E9's
     own cons_changes, which refuses a list that misses an implementation row or breaks an order constraint"""
     dr = load(rel(CL_DRAFT), "l4e9_changelist_draft_for_connected")
     tree_before = {p: sha(p, 64) for p in (L4E9, REG, PAGE)}
@@ -242,7 +243,13 @@ def checks(raws, intents, S):
     out["l8gnd GND-002, board B"] = GND.judge("b", GND.read_netlist(B))
     out["l8r2 rounds 1 to 6, board A"] = L8R2.judge("a", L8R2.read_netlist(A))
     out["l8r2 rounds 1 to 7, board B"] = L8R2.judge("b", L8R2.read_netlist(B))
-    out["l8p the loop and the guard, board A"] = L8P.judge("a", L8P.read_netlist(A))
+    # board A carries record l8p's fail-safe delta (round 9): its own reader check_l8p_fs.py reads the loop and the guard (L8P-R9-F3;
+    # check_l8p_netlist.py's round 8 reader stays as its owner left it, its digest printed by other records)
+    fs = L8PFS.judge(L8P.read_netlist(A))
+    vs = [v for v, _w in fs.values()]
+    out["l8p the loop and the guard with the fail-safe delta, board A"] = (
+        "DRAWN" if all(v == "DRAWN" for v in vs) else ("FAIL" if "FAIL" in vs else "NOT DRAWN"),
+        ["A %s %s%s" % (k, v, (": " + "; ".join(w_[:2])) if w_ else "") for k, (v, w_) in fs.items()])
     out["L4-E11 DD-7 (round 17, with the guard), board A"] = DD7.judge(A)
     out["l8r2 the ground return, board B"] = GR.judge(GR.read_netlist(B), intents["b"])
     v, lines, _w = GR.judge_pair(GR.read_netlist(A), GR.read_netlist(B))
@@ -275,7 +282,7 @@ def mutations(T):
         ("l8gnd GND-002, board B", "C33's cold end back on GND", "b", mut_pin(b, "C33", c33[0], "GND") if c33 else None),
         ("l8r2 rounds 1 to 6, board A", "U44's input (pin 4) on GND", "a", mut_pin(a, "U44", "4", "GND")),
         ("l8r2 rounds 1 to 7, board B", "U901's input (pin 4) on GND", "b", mut_pin(b, "U901", "4", "GND")),
-        ("l8p the loop and the guard, board A", "R260's DOCK_EN_OUT end on GND", "a", mut_pin_on(a, "R260", "DOCK_EN_OUT", "GND")),
+        ("l8p the loop and the guard with the fail-safe delta, board A", "R260's DOCK_EN_OUT end on GND", "a", mut_pin_on(a, "R260", "DOCK_EN_OUT", "GND")),
         ("L4-E11 DD-7 (round 17, with the guard), board A", "%s.%s moved off %s" % (m0[0], p0, m0[2][p0]), "a",
          mut_pin(a, m0[0], p0, "GND" if m0[2][p0] != "GND" else "+3V3")),
         ("l8r2 the ground return, board B", "J_GR1 pin 2 on +5V_DEV (V6's)", "b", mut_pin(b, "J_GR1", "2", "+5V_DEV")),
@@ -422,12 +429,12 @@ def main():
         # 2. composition
         pos, n_ch, L4m, page_ok, wd = change_list_order()
         w("2. THE COMPOSITION (4c, P0-6, boards A, B and D; board E with P0-7): L4-E9'S CHANGE-LIST ORDER, then Layer 6's order-free tables. The list is L4-E9's register and")
-        w("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-243 for the drafts")
+        w("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-244 for the drafts")
         w("   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): %d changes, every" % n_ch)
         w("   order constraint held by L4-E9's own cons_changes; the patched page's section 3 is the patched list: %s; WITHDRAWN: %s" % (
             "yes" if page_ok else "NO", ", ".join(wd) or "none"))
-        P0_ = {"the drafted change list carries rows R-220 to R-243, holds every order constraint, its page table is its list, FAN_OK withdrawn":
-               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 244))}
+        P0_ = {"the drafted change list carries rows R-220 to R-244, holds every order constraint, its page table is its list, FAN_OK withdrawn":
+               page_ok and sorted(wd) == ["R-210", "R-211", "R-212"] and all(("R-%d" % n) in [v[0] for v in pos.values()] for n in range(220, 245))}
         P = dict(P0_)
         T, raws, intents, ok_all = {}, {}, {}, True
         for b in "abde":
@@ -461,11 +468,11 @@ def main():
         P["board E composes as record l4e7 composes it, route B2 as a PROPOSAL"] = e_same
         eo = efuse_orders()
         circ = {b: [k for k in ORDER[b] if k.split("/")[0] not in ORDER_FREE and k.split("/")[0] != "efuse"
-                    and k not in ("l9t5/paloop", "d8dec31/mainpb", "l9t5/iocset")] for b in "ab"}
+                    and k not in ("l9t5/paloop", "d8dec31/mainpb", "l9t5/iocset", "l8p/thgfs")] for b in "ab"}
         eo_k = {b: [s.replace("apply_gen_sch_%s_" % b, "").replace(".py", "") for s in eo[b]] for b in "ab"}
         same = all(circ[b] == eo_k[b] for b in "ab")
         w("   record efuse's own composition (efuse_check.py ORDER, read with ast) is this order without its own drafts, the PA cap, T10's")
-        w("     set point delta (later than its round 2) and the last taker: %s" % ("yes, both boards (V6-m3 answered)" if same else "NO: A %s / B %s" % (eo_k["a"], eo_k["b"])))
+        w("     set point delta and record l8p's fail-safe delta (both later than its round 2) and the last taker: %s" % ("yes, both boards (V6-m3 answered)" if same else "NO: A %s / B %s" % (eo_k["a"], eo_k["b"])))
         P["record efuse composes boards A and B in the same order"] = same
         if T["a"]:
             mp = [r for r in ("R603", "C607") if part(T["a"], r) and "MAIN_PB" in " ".join(part(T["a"], r)["nets"].values())]
@@ -744,6 +751,10 @@ def main():
         w("     printed row and the least rows OPEN; V6-B2")
         w("     vendor tasks (Hirose U.FL, Molex HDMI) UNSENT")
         w("   T10: L9T5-F06 OPEN pending its independent check; rev X on V-B20")
+        w("   the guard's fail-safe delta (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance restated from 30 uA to 50 uA cold and")
+        w("     180 uA tripped in L4-E11 20c and 20f and record l9stk 15.9 before the delta is adopted (L8P-R9-F2, a named prerequisite, their")
+        w("     owners'); check_l8p_netlist.py's round 8 reader does not admit the delta (L8P-R9-F3): the composed board A is read by record l8p's")
+        w("     check_l8p_fs.py (section 3)")
         w("   VH derating (J_PA, J_5V_DEV): L8R2-F43, JST's curve MISSING; finding L9T5-F25 (Layer 7, Layer 6): J_PA carries up to the cap's top,")
         w("     over the VH's least rating at 76.25 C as record l8r2 infers it; if JST's curve is lower at the PA lead's local air, J_PA becomes")
         w("     a 1x4 VH with two contacts a pole (a harness row and a board A land)")
