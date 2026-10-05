@@ -5,8 +5,8 @@ in ONE release. NOT APPLIED to the tree by this record; its author ran it only o
 
 What it changes in v2/ecad/tools/gen_sch_d.py, and nothing else:
   1. J_HARN1 pin 16 from AB_SPARE to PA_ILIM (the loop's output from board A's U553 through R558), and TP10 with it;
-  2. R57 110k 1 % from PA_ILIM into VGG_FB, U15's feedback node: PA_ILIM at V lowers VGG by V x R82 / R57 = 0.65 V a volt; R58 10k
-     from VGG_SW to ground, the bleed (U15 cannot sink: round 2, cx44); C76 1 nF
+  2. R57 110k 1 % from PA_ILIM into VGG_FB, U15's feedback node: PA_ILIM at V lowers VGG by V x R82 / R57 = 0.65 V a volt; R58 470 Ohm
+     from VGG_SW to ground, the bleed (U15 cannot sink: round 2, cx44; 10.1 mA and 48 mW at 4.75 V, about 4.1 V/ms with C62); C76 1 nF
      C0G from PA_ILIM to ground with board A's R558 (1k) a 1 us filter on the harness conductor;
   3. R83 10.0k to 11.0k 1 %: R83 in parallel with R57 is 10.0k, so with PA_ILIM at rest (0 V) VGG's band is the drawn one, 4.4825 V
      nominal; R83's LCSC code (C25804, a 10.0k part) is removed, Layer 6 owes the 11.0k code;
@@ -37,7 +37,7 @@ _NEW_HARN = '"15": "ZEROIZE_HW", "16": "PA_ILIM"})'
 _OLD_TPS = '"ZEROIZE_HW", "AB_SPARE", "SA_TXD"'
 _NEW_TPS = '"ZEROIZE_HW", "PA_ILIM", "SA_TXD"'
 _OLD_R83 = 'r("R83", "10.0k 1%", "VGG_FB", "GND", lcsc="C25804")'
-_NEW_R83 = ('r("R83", "11.0k 1%", "VGG_FB", "GND"); r("R57", "110k 1%", "PA_ILIM", "VGG_FB"); c("C76", "1n 50V C0G", "PA_ILIM", "GND"); r("R58", "10k 1%", "VGG_SW", "GND")'
+_NEW_R83 = ('r("R83", "11.0k 1%", "VGG_FB", "GND"); r("R57", "110k 1%", "PA_ILIM", "VGG_FB"); c("C76", "1n 50V C0G", "PA_ILIM", "GND"); r("R58", "470 1%", "VGG_SW", "GND")'
             '   # record l9t5 P0-1 (F01): see the note below')
 _OLD_DECL = ('_intent.node("VGG_SW", 4.68, "the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 10.0k: 0.55 V x "')
 _NEW_DECL = ('# F01 / D-17, RECORD l9t5 P0-1 (MESHSAT-1357, 5 October 2026; v2/docs/records/l9t5/l9t5_f01.out): THE PA\'S DRAIN CURRENT IS\n'
@@ -46,14 +46,14 @@ _NEW_DECL = ('# F01 / D-17, RECORD l9t5 P0-1 (MESHSAT-1357, 5 October 2026; v2/d
              '# volt of PA_ILIM (R82 / R57) and the loop holds the drain current at 6.4376 to 7.0119 A over every printed corner. R83 goes to\n'
              '# 11.0k so R83 // R57 = 10.0k and the band at rest is the drawn one, 4.4825 V nominal; its top with board D\'s ground up to\n'
              '# 0.1 V above board A\'s is 4.743 V (l9t5_paloop.py), under the module\'s VGG<5V. R83\'s code C25804 (10.0k) is removed: Layer 6\n'
-             '# owes the 11.0k code. C76 with board A\'s R558 filters the harness conductor (1 us). R58 10k from VGG_SW to ground (round 2,\n'
-             '# Astra\'s cx44): U15 is an LDO and cannot sink, so VGG falls only by its loads; R58 gives it at least 0.19 V/ms at 4.2 V with C62\n'
+             '# owes the 11.0k code. C76 with board A\'s R558 filters the harness conductor (1 us). R58 470 Ohm from VGG_SW to ground (round 2,\n'
+             '# Astra\'s cx44): U15 is an LDO and cannot sink, so VGG falls only by its loads; R58 gives it about 4.1 V/ms at 4.2 V with C62\n'
              '# (the module\'s own gate current not counted). DRAFTED, not applied; PROVISIONAL with board A\'s half on the supplier\'s B-PA1, B-PA2.\n'
              '_intent.node("PA_ILIM", 5.14, "the PA current loop\'s output from board A (U553B through R558 on J_MEZZ1 pin 16): 0 V at rest, '
              'up to board A\'s +5V_D8IN (5.14 V v_work) while the loop lowers VGG")\n'
              '_intent.node("VGG_SW", %.2f, "the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 (11.0k since record l9t5 P0-1, in '
              'parallel with R57 110k from PA_ILIM: 10.0k at rest): 4.4825 V nominal, 4.202 to 4.743 V with every term, PA_ILIM at rest and '
-             'the boards\' grounds up to 0.1 V apart (l9t5_paloop.py); R58 10k bleeds it; the drawn note follows. "\n             '
+             'the boards\' grounds up to 0.1 V apart (l9t5_paloop.py); R58 470 Ohm bleeds it; the drawn note follows. "\n             '
              '"the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 10.0k: 0.55 V x "' % VGG_TOP)
 _OLD_SEC = '"U15", "C61", "C62", "R82", "R83", "J_VGG"]'
 _NEW_SEC = '"U15", "C61", "C62", "R82", "R83", "R57", "C76", "R58", "J_VGG"]'

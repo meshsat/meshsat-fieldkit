@@ -55,6 +55,15 @@ PINS = {
     "lcsc_fill": "v2/ecad/tools/lcsc_fill.py",
     "chain": "v2/ecad/tools/pcb_energy_chain.yaml",
     "reqs": "v2/ecad/tools/pcb_requirements.yaml",
+    # P0-1 (5 October 2026): correction (c)'s design values and band, and the sheets they are read from (section 8)
+    "paloop": "v2/docs/records/l9t5/l9t5_paloop.py",
+    "ina250": "v2/vendor/ti/held/ti-ina250-sbos511c.pdf",
+    "tlv758p": "v2/vendor/ti/ti-tlv758p.pdf",
+    "tlv9062": "v2/vendor/ti/ti-tlv9062-op-amp.pdf",
+    "lm5176": "v2/vendor/ti/lm5176-datasheet.pdf",
+    "wsl": "v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf",
+    "csd18510": "v2/vendor/battery/ti-csd18510q5b.pdf",
+    "ina226": "v2/vendor/ti/ti-ina226.pdf",
 }
 COPIES = ("cases", "challenge")          # filed as received from outside the tree; SOURCES.txt names each with its sha256
 
@@ -363,6 +372,21 @@ def compute():
     pa_hi = ev_hi["PA"][2]
     Cd["f04"] = (pa_hi, D.limits["PA"][1])
     R["C"] = Cd
+
+    # ---- 8. P0-1 (5 October 2026, record l9t5 Slot A): the case with correction (c), the PA drain-current cap, PROVISIONAL
+    sp = importlib.util.spec_from_file_location("l9t5_paloop_for_case", rel(PINS["paloop"]))
+    PLm = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(PLm)
+    S8 = PLm.read_sheets()
+    L8 = PLm.cap(S8)
+    loop_w = L8["supply_a"] * PLm.V5[1] / 0.90
+    v8 = dict(vals)
+    v8["VHF PA 30 W"] = L8["p_max"]
+    rx8 = max(0.0, pins_rt - I["w2"][4])
+    r8n = row(v8)
+    r8b = row(v8, i=I_CASE - U["gauge_uncal"], r_extra=rx8)
+    R["P01"] = {"L": L8, "loop_w": loop_w, "pa": L8["p_max"], "nom": r8n["need"] + loop_w / r8n["i"],
+                "bnd": r8b["need"] + loop_w / r8b["i"], "i_true": r8b["i"]}
     R["pred"] = predicates(R)
     return R
 
@@ -399,6 +423,9 @@ def predicates(R):
         C["b_buck_a"] < I["tps_a"] and I["tps_ihs"][2] < I["vh_a"])
     P["the PA rail at its present HIGH is over U13's loop minimum (L9P-F04, as the case row quotes)"] = abs(C["f04"][0] - I["f04_quote"]) < 0.001 and C["f04"][0] > C["f04"][1]
     P["C-DEV's quoted 7.472 A and 7.0957 A are the budget's"] = abs(C["i_least"] - I["cdev_quote"][0]) < 0.0005 and abs(C["lim_min"] - I["cdev_quote"][3]) < 0.0001
+    Q = R["P01"]
+    P["P0-1: with the PA at the cap's top the case meets 15.5 V on the printed gauge bound and the dock contacts' maximum (MODEL, PROVISIONAL)"] = Q["bnd"] < R["V"]
+    P["P0-1: the cap's top and R55's other loads stay under U13's own loop minimum with R55 hot (L9P-F04, PROVISIONAL)"] = Q["L"]["i_max"] + Q["L"]["r55_other"] < Q["L"]["u13_min"]
     return P
 
 
@@ -544,7 +571,7 @@ def render(R):
     w("     must stay up whenever +5V_DEV's must (the slots off, the hot stop, the recovery): the buck follows RAIL_EN as U7 does (L4-E11's U46 hold)")
     w("   L9P-F04: the PA rail at HIGH %.4f A against U13's %.4f A; with A1 it is the PA's capped figure (section 4), no shunt or lead change" % C["f04"])
     w("")
-    w("6. THE SELECTION")
+    w("6. THE SELECTION (rounds 1 to 4; SUPERSEDED for F01 / D-17 by P0-1's correction (c), section 8)")
     w("   F01 / D-17 on C-ALLTX rev 3: A1, the PA held to its 30 W service by a VGG loop on board D (SESSION, within authority: no requirement,")
     w("     money or claim changes; the kit's VHF stage is a 30 W stage). It is the only approach that closes the case with the printed gauge")
     w("     bound; A2 and A3 close only the nominal deficit. Its acceptance: the loop's half-tolerance at most 0.5 dB over temperature (the case")
@@ -561,6 +588,21 @@ def render(R):
     w("7. PREDICATES")
     for k, v in R["pred"].items():
         w("   %-128s %s" % (k, "yes" if v else "NO"))
+    Q = R["P01"]
+    LQ = Q["L"]
+    w("")
+    w("8. P0-1 (5 October 2026, record l9t5 Slot A): THE CASE WITH CORRECTION (c), THE PA DRAIN-CURRENT CAP, PROVISIONAL (l9t5_f01.out; it")
+    w("   supersedes section 6's A1 selection; Astra's cx44 read round 1 NOT SUPPORTED, round 2 answers it; the 30 W service under the cap is")
+    w("   the supplier's feasibility task B-PA1 and the dynamics B-PA2, so F01 / D-17 reads PROVISIONAL, never closed on printed limits)")
+    w("   the cap (l9t5_paloop.py, MODEL on PRINTED terms with TYPICAL allowances): %.4f to %.4f A; U13's BIAS on PA_OUT; U13's own loop least" % (
+        LQ["i_min"], LQ["i_max"]))
+    w("     %.4f A with R55 hot: %.4f A of room (L9P-F04 PROVISIONAL with the selection)" % (LQ["u13_min"], LQ["u13_min"] - LQ["i_max"] - LQ["r55_other"]))
+    w("   the PA's DC input at most %.3f V x %.4f A = %.2f W (it was %.1f W); the loop's own supply %.3f W at VBAT" % (
+        LQ["vpa"][2], LQ["i_max"], Q["pa"], A["a1_pa_now"], Q["loop_w"]))
+    w("   C-ALLTX rev 3 at 15.5 V rest, 18 A indicated: nominal need %.4f V; with the gauge's uncalibrated %.4f A (true %.4f A) and the dock" % (
+        Q["nom"], U["gauge_uncal"], Q["i_true"]))
+    w("     contacts' maximum: need %.4f V: %s against REQ-018's 15.5 V, margin %.4f V (MODEL; R_cell %.3f Ohm the case's ASSUMPTION; PROVISIONAL)" % (
+        Q["bnd"], "MEETS" if Q["bnd"] < V else "NOT MET", V - Q["bnd"], case["r_cell"]))
     return "\n".join(L) + "\n"
 
 

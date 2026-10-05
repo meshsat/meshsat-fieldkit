@@ -30,10 +30,11 @@ import l9t5_paloop as PL  # noqa: E402
 NET = {"a": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "d": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net"}
 PRJ = {"a": "pcb-a-power", "d": "pcb-d-aprs"}
 # L4-E9's change-list order with each author's placement (V6's composition, the check of 5 October 2026): board A's round 3a to 3g,
-# record l9t5's I-03 and T10 drafts, record l8r2's gndrtn, THIS draft, d8dec31's mainpb (the last next-free taker), Layer 6's table
+# record l9t5's I-03 and T10 drafts, record l8r2's gndrtn, record efuse's u23ilm (round 2, EF-F03), THIS draft, d8dec31's mainpb (the
+# last next-free taker), Layer 6's table
 ORDER = {"a": ["l4e6/r12", "l4e11/guard", "l4e11/charger", "l4e4/r11", "l4e8/bank", "l4e4/r138", "l4e9/u17", "l8gnd/gnd002",
                "l8gnd/hotr1", "l8r2/d8v3", "l8r2/vbus20ov", "l8r2/packrtn", "l8r2/slotlm", "l8r2/fb01", "l8p/ptc", "l4e11/dd7",
-               "l8p/thguard", "l9t5/iocbuck", "l9t5/iocpre", "l8r2/gndrtn", "l9t5/paloop", "d8dec31/mainpb", "l6r2/lcsc"],
+               "l8p/thguard", "l9t5/iocbuck", "l9t5/iocpre", "l8r2/gndrtn", "efuse/u23ilm", "l9t5/paloop", "d8dec31/mainpb", "l6r2/lcsc"],
          "d": ["d8dec31/ptt", "l9t5/paloop", "l6r2/intent", "l6r2/lcsc"]}
 OWN = {"a": "apply_gen_sch_a_paloop.py", "d": "apply_gen_sch_d_paloop.py"}
 PINS = ["v2/docs/records/l9t5/apply_gen_sch_a_paloop.py", "v2/docs/records/l9t5/apply_gen_sch_d_paloop.py",
@@ -52,7 +53,7 @@ MUT = [
     ("a", "the hold lost: Q551's gate on ground", '{"1": "OUTLET_OK", "2": "GND", "3": "PA_ISP"}', '{"1": "GND", "2": "GND", "3": "PA_ISP"}'),
     ("d", "the injection on U15's output: R57 to VGG_SW", 'r("R57", "110k 1%", "PA_ILIM", "VGG_FB")', 'r("R57", "110k 1%", "PA_ILIM", "VGG_SW")'),
     ("d", "R83 left at 10.0k (the band moves up)", 'r("R83", "11.0k 1%", "VGG_FB", "GND")', 'r("R83", "10.0k 1%", "VGG_FB", "GND")'),
-    ("d", "the bleed lost: R58 to PA_ILIM", 'r("R58", "10k 1%", "VGG_SW", "GND")', 'r("R58", "10k 1%", "VGG_SW", "PA_ILIM")'),
+    ("d", "the bleed lost: R58 to PA_ILIM", 'r("R58", "470 1%", "VGG_SW", "GND")', 'r("R58", "470 1%", "VGG_SW", "PA_ILIM")'),
     ("d", "the harness pin left on AB_SPARE", '"15": "ZEROIZE_HW", "16": "PA_ILIM"})', '"15": "ZEROIZE_HW", "16": "AB_SPARE"})'),
 ]
 
@@ -121,9 +122,9 @@ def main():
     w("A netlist reading is not electrical qualification; the electrical acceptance is section 5, and F01 / D-17 stays PROVISIONAL on the")
     w("supplier's tasks B-PA1 and B-PA2 (l9t5_f01.out section 6).")
     w("")
-    w("0. PINS (path  sha256/16)")
+    w("0. PINS (sha256/16  path)")
     for p in PINS:
-        w("   %s  sha256 %s" % (p, sha(p)))
+        w("   %s %s" % (sha(p), p))
     w("")
     tmp = tempfile.mkdtemp(prefix="l9t5_f01_")
     try:
@@ -208,8 +209,9 @@ def main():
         w("   THE CASE at 15.5 V rest and the indicated 18 A, every transmitter keyed, fans running, the standby card off, the other loads typical,")
         w("     the gauge's uncalibrated %.4f A and the dock contacts' maximum, the PA at the cap's top %.2f W and the loop's own %.3f W: need %.4f V:" % (
             R["gu"], L["p_max"], L["loop_w"], L["bnd"]["need"]))
-        w("     %s against 15.5 V, MODEL margin %.4f V (nominal %.4f V); no other load reduced (the budget's loads unchanged but the PA's)" % (
-            "PASS" if L["bnd"]["need"] < V else "NOT MET", V - L["bnd"]["need"], L["nom"]["need"]))
+        w("     %s 15.5 V on the MODEL, margin %.4f V (nominal %.4f V); no other load reduced (the budget's loads unchanged but the PA's);" % (
+            "MEETS" if L["bnd"]["need"] < V else "NOT MET", V - L["bnd"]["need"], L["nom"]["need"]))
+        w("     F01 / D-17 PROVISIONAL (below), never closed on printed limits")
         w("   the rails in regulation through the 60 s: U13 (the PA rail) at the cap stays under its own current loop's least (above); every")
         w("     other rail carries the case's own load (the budget's model: unchanged); +5V_D8IN carries %.2f mA more, under its 2.0 A declared peak" % (
             L["supply_a"] * 1e3))

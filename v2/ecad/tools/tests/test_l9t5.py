@@ -336,7 +336,14 @@ def t_round2_a1_detector_survey_reproduced_and_a1_stays_a_direction():
     text = r.stdout.decode("utf-8")
     assert text == open(A1_OUT, encoding="utf-8").read(), "l9t5_a1.out is not what the script prints"
     assert "a detector whose PRINTED LIMIT supports A1's tolerance: NONE" in text and "A1 STAYS A SELECTED DIRECTION, NOT DRAFTED" in text
-    assert not [f for f in os.listdir(REC) if f.startswith("apply_gen_sch_d_")]
+    # P0-1 (5 October 2026): the record holds correction (c)'s board D draft (resistors and a capacitor); A1 stays undrafted: no board D
+    # draft of this record adds an IC (A1 would add a detector), read from each draft's ADDS with ast
+    import ast as _ast
+    for f in sorted(os.listdir(REC)):
+        if f.startswith("apply_gen_sch_d_"):
+            for node in _ast.parse(open(os.path.join(REC, f), encoding="utf-8").read()).body:
+                if isinstance(node, _ast.Assign) and any(getattr(t, "id", None) == "ADDS" for t in node.targets):
+                    assert not [e.value for e in node.value.elts if e.value.startswith("U")], f
 
 
 def t_round4_the_connected_path_consumes_l8r2s_worst_vertex_and_is_never_a_pass():
@@ -747,9 +754,128 @@ def t_round5_the_page_carries_the_outputs_figures():
         assert s_ in out, s_
 
 
+# ------------------------------------------------------------------------------------------------ P0-1 (5 October 2026, Slot A)
+F01 = os.path.join(REC, "l9t5_f01.py")
+F01_OUT = os.path.join(REC, "l9t5_f01.out")
+F01D = os.path.join(REC, "l9t5_f01_drafts.py")
+F01D_OUT = os.path.join(REC, "l9t5_f01_drafts.out")
+PALOOP = os.path.join(REC, "l9t5_paloop.py")
+F01_CHECK = os.path.join(REC, "check_f01_netlist.py")
+F01_NEW = {b: os.path.join(REC, "apply_gen_sch_%s_paloop.py" % b) for b in "ad"}
+_F01 = {}
+
+
+def _run_plain(path, out):
+    """a record script run from the repository root, its output the committed one byte for byte"""
+    import subprocess
+    need(path, os.path.basename(path))
+    need(out, os.path.basename(out))
+    need(os.path.join(ROOT, "v2", "vendor", "ti", "held", "ti-ina250-sbos511c.pdf"), "the held INA250 sheet (record l4e7's fetch_held_back.py)")
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    if path not in _F01:
+        r = subprocess.run([sys.executable, "-B", path], cwd=ROOT, capture_output=True)
+        assert r.returncode == 0, "%s exited %d: %s" % (os.path.basename(path), r.returncode, r.stderr.decode()[-300:])
+        _F01[path] = r.stdout.decode("utf-8")
+    text = _F01[path]
+    assert text == open(out, encoding="utf-8").read(), "%s is not what the script prints" % os.path.basename(out)
+    return text
+
+
+def t_p0_f01_output_reproduced_pinned_and_every_predicate_holds():
+    text = _run_plain(F01, F01_OUT)
+    rows = [l for l in text.split("8. PREDICATES")[1].split("l9t5_f01: done")[0].splitlines() if l.strip()]
+    assert len(rows) >= 20 and all(l.rstrip().endswith(" yes") for l in rows), rows
+    pins = re.findall(r"^\s{3}\S+\s+(v2/\S+)\s+sha256 ([0-9a-f]{16})$", text, re.M)
+    assert len(pins) >= 20
+    for rel_, h in pins:
+        assert hashlib.sha256(open(os.path.join(ROOT, rel_), "rb").read()).hexdigest().startswith(h), rel_
+
+
+def t_p0_f01_the_ten_findings_are_disposed_of_and_f01_reads_provisional():
+    """the owner's part 21: each of cx44's ten findings in one of three states; F01 / D-17 and its dependants PROVISIONAL, never
+    closed on printed limits; round 1's closure words gone"""
+    text = open(F01_OUT, encoding="utf-8").read()
+    sec = text.split("7. CX44'S TEN FINDINGS")[1].split("8. PREDICATES")[0]
+    states = ("CORRECTED WITH DESK EVIDENCE", "STILL AN OPEN DESIGN DEFECT", "GENUINELY EXTERNAL")
+    for i in range(1, 11):
+        line = [l for l in sec.splitlines() if re.match(r"^   %d\s" % i, l)]
+        assert len(line) == 1 and any(st in line[0] for st in states), i
+    assert "GENUINELY EXTERNAL" in [l for l in sec.splitlines() if re.match(r"^   1\s", l)][0]   # the service transfer
+    for s_ in ("F01 / D-17's row reads PROVISIONAL on B-PA1", "never closed on printed limits", "L9P-F04 PROVISIONAL with the selection",
+               "its dependants read PROVISIONAL too", "WITHDRAWN (cx44)"):
+        assert s_ in text, s_
+    for bad in ("L9P-F04 CLOSES", "CORRECTED IN THE STEADY STATE", "CLOSES THE CASE ON PRINTED LIMITS"):
+        assert bad not in text, bad
+    page = open(PAGE, encoding="utf-8").read()
+    p0 = page.split("## 0f. P0-1")[1].split("## 0e.")[0]
+    assert [l.split("|")[1].strip() for l in p0.splitlines() if re.match(r"^\| \d+ \|", l)] == [str(i) for i in range(1, 11)]
+    figs = sorted(set(re.findall(r"\d+\.\d+ (?:A|V|W|mA|mV|Ohm|mOhm|ms|deg)\b", p0)))
+    outs = text + open(F01D_OUT, encoding="utf-8").read()
+    missing = [f for f in figs if f not in outs]
+    assert not missing, "the page's figures not in an output: %s" % missing
+    first = open(README, encoding="utf-8").read().splitlines()[0]
+    assert "F01 / D-17 PROVISIONAL" in first and "1c DRAFTED" in first
+
+
+def t_p0_f01_the_cap_and_the_case_are_re_solved():
+    """the cap's band recomputed here from the module's own read rows by a separate formula, the BIAS bound against the room, the case
+    at the cap's top as l9t5_case.py's section 8 prints it"""
+    _run_plain(F01, F01_OUT)
+    sp = importlib.util.spec_from_file_location("paloop_under_test", PALOOP)
+    P = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(P)
+    S = P.read_sheets()
+    L = P.cap(S)
+    e = P.DIV_TOL + P.DIV_TCR * P.DIV_DT
+    vs_hi = S["ref_vfb"] * (1 + S["ref_acc"]) * (1 + P.R_SET_TOP * (1 + e) / (P.R_SET_BOT * (1 - e))) + S["ref_ifb"] * P.R_SET_TOP + S["ref_line"]
+    rb = P.R_BIAS * (1 + P.R1PC_TOL + P.R1PC_TCR * 65.0)
+    i_max = (vs_hi * (1 + P.R_INT / rb) - P.V5[0] * P.R_INT / rb + L["vos"]) / (P.G_SENSE * (1 - L["gerr"])) + L["ios"]
+    assert abs(i_max - L["i_max"]) < 1e-9
+    assert abs(S["ina_gerr"] - 0.0075) < 1e-12 and abs(S["ref_acc"] - 0.01) < 1e-12 and abs(S["oa_vos"] - 0.002) < 1e-12
+    text = open(F01_OUT, encoding="utf-8").read()
+    assert ("%.4f to %.4f A over every corner" % (L["i_min"], L["i_max"])) in text
+    assert L["bias"][0] > L["u13_min"] - L["i_max"] > 0.1                   # BIAS would not fit; with it moved the room is 0.1 A
+    assert L["ref_preload"] >= 1e-3
+    case_out = open(OUT, encoding="utf-8").read()
+    m = re.search(r"contacts' maximum: need ([\d.]+) V: MEETS against REQ-018's 15\.5 V, margin ([\d.]+) V", case_out)
+    assert m and ("need %s V, a MODEL margin of %s V" % (m.group(1), m.group(2))) in text
+    assert float(m.group(1)) < 15.5
+
+
+def t_p0_f01_drafts_compose_read_drawn_and_every_mutation_fails():
+    text = _run_plain(F01D, F01D_OUT)
+    assert text.count("F01 check: DRAWN") == 2 and "HOLDS (PA_ILIM / PA_ILIM)" in text
+    m = re.search(r"(\d+) of (\d+) mutations fail", text)
+    assert m and m.group(1) == m.group(2) and int(m.group(2)) >= 10
+    assert "board A without this draft" in text and "regenerated rc 0: NOT DRAWN" in text
+    assert "REFUSED as it must: it needs record l8r2's fb01 keyword" in text
+    rows = [l for l in text.split("7. THE PREDICATES")[1].split("l9t5_f01_drafts: done")[0].splitlines() if l.strip()]
+    assert len(rows) == 8 and all(l.rstrip().endswith(" yes") for l in rows), rows
+
+
+def t_p0_f01_the_drafts_refuse_the_tree_and_a_second_application():
+    import subprocess
+    import tempfile
+    for b in "ad":
+        need(F01_NEW[b], "the F01 draft of board %s" % b)
+        tree = os.path.join(TOOLS, "gen_sch_%s.py" % b)
+        before = hashlib.sha256(open(tree, "rb").read()).hexdigest()
+        r = subprocess.run([sys.executable, "-B", F01_NEW[b], tree, "--write"], capture_output=True)
+        assert r.returncode == 3 and (b"NOT RELEASED" in r.stderr or b"fb01" in r.stderr), r.stderr[-200:]
+        assert hashlib.sha256(open(tree, "rb").read()).hexdigest() == before
+    with tempfile.TemporaryDirectory() as d:
+        g = os.path.join(d, "gen_sch_d.py")
+        shutil.copy(os.path.join(TOOLS, "gen_sch_d.py"), g)
+        assert subprocess.run([sys.executable, "-B", F01_NEW["d"], g, "--write"], capture_output=True).returncode == 0
+        r = subprocess.run([sys.executable, "-B", F01_NEW["d"], g, "--write"], capture_output=True)
+        assert r.returncode == 3, "a second application was not refused"
+
+
 def t_record_hygiene():
     files = [SCRIPT, OUT, PAGE, README, os.path.abspath(__file__), DRAFTS, DRAFTS_OUT, CHECK, NEW["a"], NEW["b"], A1, A1_OUT,
-             os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5]
+             os.path.join(REC, "fetch_held_back.py"), T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
+             F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"]]
     inputs = os.path.join(REC, "inputs")
     copies = [os.path.join(inputs, f) for f in sorted(os.listdir(inputs))] if os.path.isdir(inputs) else []
     for p in files + copies:
@@ -758,7 +884,8 @@ def t_record_hygiene():
         assert chr(0x2014) not in t and chr(0x2013) not in t, "a long dash in %s" % os.path.basename(p)
         for bad in ("/" + "home" + "/", "/" + "tmp" + "/"):
             assert bad not in t, "a private path in %s" % os.path.basename(p)
-        if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT, T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5):
+        if p in (SCRIPT, OUT, PAGE, README, DRAFTS, DRAFTS_OUT, CHECK, A1, A1_OUT, T10, T10_OUT, PRE["a"], PRE["b"], CM5, CM5_OUT, SHDN, CONTRACT_DRAFT, ROUND5,
+                 F01, F01_OUT, F01D, F01D_OUT, PALOOP, F01_CHECK, F01_NEW["a"], F01_NEW["d"]):
             if p == README:
                 # round 3: the claim table for the recheck V3 labels a maker's printed limit with the round 3 brief's own word. That
                 # word is taken out of the table's LABEL cell (the fifth), and of nothing else, before the claim-word scan: the other

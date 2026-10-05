@@ -31,6 +31,15 @@ BAND = (144.0, 146.0)          # MHz: the EU amateur 2 m band the SA868 and the 
 TOL = (0.5, 0.25)              # dB: A1's two acceptance tiers (record l9t5 out 4)
 
 
+
+def _adds(path):
+    """the designators a draft's ADDS tuple names, read with ast (P0-1, 5 October 2026: board D now carries correction (c)'s draft)"""
+    import ast
+    for node in ast.parse(open(path, encoding="utf-8").read()).body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "ADDS" for t in node.targets):
+            return [e.value for e in node.value.elts]
+    return []
+
 def refuse(msg):
     sys.stderr.write("l9t5_a1: REFUSED: %s\n" % msg)
     sys.exit(2)
@@ -217,7 +226,8 @@ def main():
         "on typical data the ADL5902 and the ADL5513 leave room under 0.5 dB and none under 0.25 dB": typ_room == ["adl5902", "adl5513"] and all(
             res[k]["worst"] >= TOL[1] for k in ("adl5902", "adl5513", "lmh2110")),
         "the ADL5902's supply minimum is over board D's +5V_D8 floor": D["adl5902"]["supply"][0] > D["v5_floor"],
-        "A1 stays a selected direction: this record holds no board D draft": not [f for f in os.listdir(HERE) if f.startswith("apply_gen_sch_d_")],
+        "A1 stays a direction: no board D draft of this record adds an IC (P0-1's apply_gen_sch_d_paloop.py adds resistors and a capacitor)": not [
+            r for f in sorted(os.listdir(HERE)) if f.startswith("apply_gen_sch_d_") for r in _adds(os.path.join(HERE, f)) if r.startswith("U")],
     }
     w("5. THE PREDICATES")
     for k, v in pred.items():
