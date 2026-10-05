@@ -1,5 +1,29 @@
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
+**Round 8 (5 October 2026, branch `fnd/l8p2` from `bab66e6b`, case row C-PROT rev 1): record l9stk's re-selected guard C4 CHECKED on
+the makers' sheets (every figure reproduces), DRAFTED for board A (`apply_gen_sch_a_thguard.py`) and JUDGED (`l8p_c4.py`,
+`l8p_c4.out`, page 12m); L8P-F07 and L8P-F08 stay OPEN until the independent check.** Done: the check (four relabellings, none moving
+a verdict); the draft, composed in every order after L4-E11's DD-7, read DRAWN by pin (the new THG group), the seven mutations of
+L9S5-F1 each FAIL, round 7's RT1 alone FAIL; the judgement on the draft's own values (C-PROT holds on the desk: 38.4, 9.8 and 6.0 K
+of no-trip margin, 15.68 K for the gradient, the window at 0.908 V on the full count, a hot docking turned off before the RC hold
+ends); E-13 and E-13b restated; tests that fail on the old guard. Not done: anything physical (E-13's gradient, E-13b (b2)'s slow
+ramp, the ground offset between boards A and P); Layer 6's land and capacitor bias; the KiCad export on the box; the independent
+check. Next action: the independent check of round 8 on record l9stk 15.9's acceptance (the table below); a negative check of C4
+ends this loop.
+
+### For the next independent check (round 8)
+
+| Item | Where | What to read |
+|---|---|---|
+| C4 checked before the draft | `l8p_c4.py` sections 1 to 7, `l8p_c4.out`; page 12m item 1 | each figure of record l9stk's round 5 (`inputs/l9stk_guard-bb6d2c8f.out.txt`, page 15.9 copy) against the JSCJ 2N7002, TI LM26LV (SNIS144G) and TPS709 (SBVS186H, both held back, `fetch_held_back.py`), Diodes BZT52C (DS18004 Rev 38) and the loop at 1 %; the relabellings (the gate network nominal, the 2N7002's threshold a 25 C margin, the 3.8 ms premise a step start's, the switch under 5 V in a precharge) |
+| The window as a ramp's reading | `l8p_c4.out` 3; `l8p_drafts.out` 7 (the nodes on DOCK_EN_RET across the composed boards) | 18.83 uA (24.33 uA all doubled) against 26.45 uA; the return 0.908 V (0.859 V) at DOCK_EN_OUT 1.825 V; the shunt's site free to 98.7 C; the AO3400A on the same count 0.568 V |
+| The draft | `apply_gen_sch_a_thguard.py`; page 12m item 2 | the old texts the PTC draft's own (`test_l8p` holds them equal); R260, R261, U60, C263, U61, C261, C262, R262, C260, R263, Q60, TP60 to TP63 by pin; EN of U61 open; U60's open drain unused; the intent's nodes and bypass classes |
+| Composition | `l8p_drafts.out` 4 to 6 | after L4-E11's DD-7 (`inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py`, the same bytes at `08f7e38a`) and before mainpb, in every order; DD-7 after the guard refused; designators DISJOINT; 742 parts |
+| Netlist and mutations | `check_l8p_netlist.py` (`checks_a`, `checks_thg`); `l8p_drafts.out` 7 | A EN and A THG DRAWN; the seven mutations of L9S5-F1 each FAIL on THG; round 7's RT1 alone FAIL |
+| The judgement on C-PROT rev 1 | `l8p_c4.out` 8 to 12; page 12m item 3 | computed on the draft's own values: no trip (10 A, 18 A, condition C4) on the switch's printed limits; the trip within the gradient budget; the four readings intact and one shorted; each source; the precharge; docking (the start simulated on ASSUMED regulator behaviour); the ground between the boards; the series parts; fourteen single failures |
+| Tests that fail on the old guard | `test_l8p.t_round8_*`, `t_the_netlist_check_reads_not_drawn_drawn_and_fail` | a draft with G2's AO3400A, a 30 kOhm pair, a 1 uF output capacitor, a 22 uF input capacitor or a 10 nF gate capacitor fails the judgement while the check reproduces; RT1 alone reads FAIL |
+| What stays open | page 12m (the status and the findings L8P-R8-F1 to F6) | E-13's gradient and lag; E-13b (b2); the ground offset; X7R's bias; the NGF0006A land; FM2 latent between checks |
+
 **Round 7 (5 October 2026, branch `fnd/l8p2` from `2c258cf9`): record l9stk's guard selection G2 CHECKED before any draft; NOT
 CONFIRMED on one figure, so NO G2 draft; L8P-F07 stays OPEN and L8P-F08 is new and OPEN.** Done: the check (`l8p_guard.py`,
 `l8p_guard.out`, page 12k), the recheck V2R's V2R-m8 (19h and 15c under the stale-copies guard) and V2R-m9 (E-8 and E-14 (a)
@@ -122,13 +146,18 @@ accepted check of this record; none exists.
 | `apply_gen_sch_p_breaker.py` | DRAFT, board P: U101 LM5069-1, R101 and R102 (4 and 7.5 mOhm), Q101 and Q102 CSD18510Q5B, R103 8.45 k, C101 10 nF, C102 22 nF, D101 SMCJ18A, C104 and C105. The enable inverters Q103 and Q104 with R106 to R109, and the hold: R104, C103, R105 and D102 1N4148W. The restart inhibit: RT101 NXRT15 on the pad, R110 to R113, U102 OPA187, Q105 and Q106 gated by PGD (R114 to R117), C106. TP101 to TP106. Round 3, the reverse-charge detector: U103 and U104 OPA187, D103 BZT52C12, R118 to R129, C107 to C110, Q107 and Q108 on DOCK_EN_RET, TP107 and TP108. J_SMB as a 1x7 (5 DOCK_EN_RET, 6 ground, 7 DOCK_EN_OUT). R6, R7, R19 and Q2's source on BRK_VIN. |
 | `apply_gen_sch_p_idealdiode.py` | DRAFT, board P, round 4 (DD-5), after the breaker draft: Q109 CSD17570Q5B beside Q1 under U105 LM74700-Q1, C111, R130, D104, R131, C112 to C115, TP109. |
 | `apply_gen_sch_e_enable.py` | DRAFT, board E: J_SMB as a 1x7 pin for pin; J_BLK pins 3 and 5 on the loop with 4 ground between. |
-| `apply_gen_sch_a_ptc.py` | DRAFT, board A: J_DOCK pins 3 and 5 on the loop with 4 ground between; RT1 PRF15BB103 on the battery FETs' copper. |
-| `check_l8p_netlist.py` | What the regenerated netlists must show, parsed: the breaker, the loop on each board, the hold, the restart inhibit and its PGD gate, the reverse-charge detector (REV), the ideal diode beside Q1 (DIO), the ground contact between the loop conductors, and the loop's continuity across the boards. It reads NOT DRAWN on the committed netlists. |
+| `apply_gen_sch_a_ptc.py` | DRAFT, board A: J_DOCK pins 3 and 5 on the loop with 4 ground between; RT1 PRF15BB103 on the battery FETs' copper (round 8: its block is replaced by the guard draft below; the draft itself unchanged). |
+| `apply_gen_sch_a_thguard.py` | DRAFT, board A, round 8, after the PTC draft and L4-E11's DD-7: the thermal guard as record l9stk's round 5 re-selected it (C4): R260 and R261 7.5 kOhm in series in RT1's place, U60 LM26LV 130 C with C263, U61 TPS70950 with C261 and C262, Q60 2N7002 on DOCK_EN_RET through R262, C260 and R263, TP60 to TP63. |
+| `l8p_c4.py`, `l8p_c4.out` | Round 8: record l9stk's C4 checked on the makers' sheets, then the guard draft judged on C-PROT rev 1 on its own values (page 12m). Regenerated with `_bin/regen_out.py` after `l8p_drafts.out` and `l8p_guard.out`. |
+| `l8p_guard.py`, `l8p_guard.out` | Round 7: record l9stk's G2 checked before any draft (L8P-F08; page 12k); history, its output's pin of `l8p_drafts.out` retaken in round 8. |
+| `check_l8p_netlist.py` | What the regenerated netlists must show, parsed (round 8: board A's loop closed by the guard's pair, RT1 withdrawn, and the guard by pin in the THG group, with its seven mutations): the breaker, the loop on each board, the hold, the restart inhibit and its PGD gate, the reverse-charge detector (REV), the ideal diode beside Q1 (DIO), the ground contact between the loop conductors, and the loop's continuity across the boards. It reads NOT DRAWN on the committed netlists. |
 | `gen_netlist.py` | A generator's own part table written as a KiCad-form netlist on a host without KiCad: a stand-in layout step, with `intent.write` run. |
 | `fetch_held_back.py` | TI's OPA187 sheet (SBOS807E) into `v2/vendor/ti/held/` and, round 5, TDK's superior-series PTC sheet into `v2/vendor/battery/held/`, each checked by sha256 (held back by their notices). |
 | `read_prf_typical.py` | Round 5: the reading of Murata's typical BB curve (DM-SA16-E056 Rev.1, 3.2) that `l8p_drafts.py` carries as `PRF_BB_TYP`, INFERRED; a reading aid, not a gate. |
 | `apply_test_l4e11_ptc_pin.py` | Round 6: a one-line draft for the integrator and L4-E11's author, the sha256 by which `test_l4e11.py` pins this record's PTC draft. Not applied here. |
 | `l8p_drafts.py`, `l8p_drafts.out` | The inputs pinned by sha256, the values found in l9stk's text, C-1c's budget read from the makers' sheets, B-R2's detector (section 3b), DD-5's acceptance (section 3c), each draft on a scratch copy, the composition in L4-E9's order, the designators, the regeneration and the netlist check, the intent, and the findings. Regenerated with `_bin/regen_out.py`. |
-| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; since round 6b: L4-E11's round 13 drafts and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h at `4def5975` (round 5's copies of `a09e9a60` and round 6's of `ac72e730` removed). |
+| `inputs/` | Record l9stk's section 15, its protection output and its design constants at `0d72880b`, L4-E7's backstop draft of `fnd/l4e7r6` at `914a2f5a`, and task L4-E11's sections 19h and 15c (the LDO-mode precharge) at `e60a94a8`, byte for byte, with `inputs/SOURCES.txt`; since round 6b: L4-E11's round 13 drafts and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h at `4def5975` (round 5's copies of `a09e9a60` and round 6's of `ac72e730` removed).; since round 8: record l9stk's round 5 at `bb6d2c8f` (its page 15.9, `l9stk_guard.out` and README's round 5 section), the C4 the guard draft draws; L4-E11's DD-7 and charger drafts at `08f7e38a` are the bytes of the `4def5975` copies |
 
 Tests: `v2/ecad/tools/tests/test_l8p.py`. Run `python3 run.py test_l8p`, `test_l8r2` and `test_public_hygiene` from the tests folder, one module a run.
+Round 8: `test_l8p` 30 passed, `test_public_hygiene` 4 passed, `test_l8r2` 13 passed, `test_l4e11` (this tree's, main's round) 9 passed and
+46 skipped.
