@@ -4285,50 +4285,35 @@ DEFECTS = [
                 "recomputed 3.062 ms start (34 uF)",
      "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
     {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)",
-     "state": "OPEN: AN UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23; record l4e7's P0-7, L4E7-P0SOL.md section 5), the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4 "
-              "with the parts and claims they hit, the requirements unchanged with no new exclusion, the correction or measured model revision "
-              "needed before any passing claim, then S1 and S2). CORRECTED within it by P0-7 (R-240): U5's absolute-rating violation (CSPIN and "
-              "CSNIN tied to VIN, 0 V at every loop) and INP's margin line (R97 24.9k). Not resolved: the guard's port-level transient (F1, F2 "
-              "absolute-rating violations below about 2.4 uH; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH, L6P-F10; F4 the arriving "
-              "source's slew over its 54 V/us line under 0.33 uH). Route B2 (not a baseline row) is an unapproved PARTIAL interface proposal "
-              "and an owner item, with no protection credit (cx45: its cold-arrival guarantee withdrawn, its pair faults P1 to P3 not "
-              "fail-safe, P2 and P3 an OPEN defect of its draft); adopting or declining it does not resolve D-10; no baseline row "
-              "depends on it",
+     "state": ("OPEN (REMAINING ENGINEERING): D-10 is an UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23; "
+              "record l4e7's P0-7, L4E7-P0SOL.md sections 4 and 5), the receiving company's remaining engineering item E-1 (set 29's B6-ENG-1 as "
+              "P0-7 restates it; SUPPLIER-P1-1-P0SOL.md, UNSENT; the ledger's HO-F): with the guard on, F1 at the envelope's least loop 0.30 uH "
+              "PV_F 321.9 V, Q12's VDS 307.4 V, INP 64.3 V, and F2 at about 1.04 uH PV_F 118.5 V, ABSOLUTE-RATING VIOLATIONS below about 2.4 uH; "
+              "F3 at the 3.30 uH reference loop PV_F 83.48 V over the TPS4811-Q1's recommended 80 V row (L6P-F10); F4, a source arriving with "
+              "the guard off at the least loop, slew 56.10 V/us over the 54 V/us SESSION line, inside the 60 V/us absolute maximum (MODELED); "
+              "and the lower-source back-feed (S1's row (b)); the requirements unchanged, no new exclusion. CORRECTED within it by P0-7 (R-240, "
+              "drafted, not applied): U5's absolute-rating violation (CSPIN and CSNIN tied to VIN, 0 V at every loop) and INP's margin line "
+              "(R97 24.9k). PROVISIONAL until E-1's correction: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, "
+              "the port's parts and layout; S1 and S2 qualify the correction once it exists. Route B2 (not a baseline row) is UNSELECTED and "
+              "WITHDRAWN AS DRAFTED, with no protection credit and no owner item. cx46: \"D-10 itself remains OPEN REMAINING ENGINEERING.\""),
      "constraint": "without the guard D4, the drafted SMCJ28A, conducts 2.67 to 16.63 A and takes 95.9 to 585.8 W against its 1.17 W on the board at the hot end's air; "
                    "the largest sustained source the drafted entry holds is 29.70 V (L4-E7's D4)",
-     "options": "L4-E7's three, each on its held sheet: the TPS48110-Q1 alone on back-to-back FETs (its -1 V input pins on a reversal: not taken); the "
-                "LM74700-Q1 ahead of the TPS48110-Q1 (76.21 V across CATHODE to ANODE under CS116 against 75 V: not taken); SELECTED, U21 TPS48110-Q1 "
-                "with Q12 CSD19532Q5B as an over-voltage cut-off, rising at 28.55 to 31.06 V and falling at 27.07 V or more, with D4 the SMCJ30A: the "
-                "block never turns on and Q12 holds 36 of 100 V (the TVS-only change, SMCJ36A with the 63 V class, evaluated and not taken). The "
-                "cold connection by fault position (round 5): at the connector, no lead resistance credited, the ring near 0.30 uH takes PV_F's slew "
-                "to 56.1 V/us against its 54 V/us margin line and INP to 18.54 V against 18 V, inside the 60 V/us and 20 V absolute ratings (the "
-                "margin lines hold from 0.53 uH); at the lead's far end 74.4 V, 45.7 V/us and 16.30 V. With the guard already on (the review's B6; "
-                "the external review's L4-F01; L4-E7's rounds 2 to 5): the margin chosen first, U5's CSPIN to CSNIN within +-0.240 V with the "
-                "numerical error 0.000781 V added on top, a DESIGN TARGET; each ceramic bank bounded on its own from Samsung's curves (the port bank "
-                "four CL32B225KCJSNNE, PV_P and TRK_VS CL32B106KBJNNNE, TRK_VIN the drawn CL31B106KBHNNNE), 7 of the 16 corners holding every rating "
-                "with its margin; R96 100k and R97 28.0k at 0.1 % 25 ppm/K, C126 330 pF; both fault positions evaluated: at round 2's 3.30 uH "
-                "reference loop (two conductors 6.09 mm apart over 5 m; WITHDRAWN as a passing floor) U5's resistive peak with the numerical error "
-                "reads 0.2493 V at the connector and 0.2395 V at the far end, and the pins' complete budget (RSENSE1 5 nH, the Kelvin pair 1 nH) "
-                "-0.3021 to +0.2591 V and -0.2884 to +0.2486 V: outside +-0.240 V in both polarities at both positions, the connector's -0.3021 V "
-                "past the -0.3 V absolute maximum; INP 18.29 V over its 18 V margin line, inside its 20 V absolute maximum (from 3.58 uH); PV_F "
-                "83.47 V over the TPS4811-Q1's RECOMMENDED 80 V VS row, OPEN (under it from 4.03 uH); no inductance tried (0.5 to 5.0 nH) brings "
-                "both polarities inside, round 4's 3.0 nH bound withdrawn; at 1.00 uH U5 0.5858 V and at 0.30 uH 1.4059 V, over its absolute "
-                "maximum; a pin-level limiter (B) not taken (8705af p.30 forbids series resistors on the CSxIN and CSxOUT pins; Analog Devices' "
-                "question 6 drafted); the TPS48111-Q1 (D) not taken (its resistive peak alone meets the line from 1.64 uH, no floor claimed; at "
-                "1.00 uH U5 still 0.3262 V); route (3), the sense moved off the stage's input capacitance, worked to the circuit in round 3 as seven "
-                "splits of the input ceramics, does NOT hold (result (ii)): the splits that hold the transient at 0.30 uH leave the sense's +-100 "
-                "mV operating range in normal operation (resistive peaks 0.1212 to 0.1297 V), the splits that keep more behind RSENSE1 bring the "
-                "transient back",
-     "resolution": "R-173: apply_gen_sch_e_solar_guard.py (8 edits, release-guarded; R96 and R97 at 0.1 % since rounds 4 and 5), drafted, not applied "
-                   "(L4-E7, check 5 at 573fd5b8; rounds 2 to 5 at 1a73f5b4); owed: the LCSC codes of D4 and of the Samsung parts, U21's DGX-19 land, "
-                   "the regeneration and its gates, R-176's six bench rows (row 2 the cold connection inside the absolute ratings, its margin lines "
-                   "not held at a connector fault; row 3 the layer 9 acceptance at +-0.240 V at the IC pins, both fault positions, with no loop "
-                   "claimed to pass); the guard-on case closes only by the engineer's B6-ENG-1: the stage's current-sense arrangement itself (where "
-                   "the input current is sensed and with what), with RSENSE1's inductance and the source's loop and resistance bounded by the kit's "
-                   "rules and measured; its earlier routes kept as register rows, none a passing route: R-186 a sense-pin filter only if Analog "
-                   "Devices permits it with a bounded error, R-180 the source's loop bounded and measured as one input (no longer a floor), R-187 "
-                   "route 3 (result (ii)), its wider form B6-ENG-2 (R-189); PV_F over the recommended 80 V row OPEN (R-176 row 3); the band 25 V to "
-                   "the cut-off a layer 8 row (R-175)",
+     "options": ("the selected guard, U21 TPS48110-Q1 with Q12 CSD19532Q5B as an over-voltage cut-off and D4 the SMCJ30A (R-173, drafted, not applied; "
+                "set 29's row, this page at 7070f106); with the guard already on, P0-7 compared three circuit alternatives on both failing cases "
+                "(L4E7-P0SOL.md section 2): A, RSENSE1 ahead of every bank, rejected (U5 over its absolute maximum at 3.30 uH; M2 fails); B1, a "
+                "series choke, rejected (the cut current 31.1 A over the choke's 26.3 A Isat; a resonance inside M2's band); B2, a presence pair "
+                "on the solar receptacle, UNSELECTED and WITHDRAWN AS DRAFTED, outside the baseline, no protection credit and no owner item "
+                "(B2-PRESENCE.md); C2 selected: U5's own input sense retired (CSPIN and CSNIN tied to VIN), the regulation fed into IMON_IN by U23 "
+                "INA169 on the backstop's bank (R-240, apply_gen_sch_e_p0sol.py, 13 edits, drafted, not applied), which corrects U5's "
+                "absolute-rating violation (0 V by construction) and INP's margin line (R97 24.9k) and leaves the guard's port-level transient; "
+                "open to the receiving company's engineering: a choke rated over the cut current and damped against CS101, a lower-impedance "
+                "clamp or a snubber sized for the port's energy, a different cut-off element or method, a model revision only on measured loops "
+                "and resistances"),
+     "resolution": ("R-173 (apply_gen_sch_e_solar_guard.py, 8 edits, release-guarded, drafted, not applied; PROVISIONAL as a protection until E-1's "
+                   "correction); R-240 (P0-7's sense arrangement C2, apply_gen_sch_e_p0sol.py, drafted, not applied); E-1 (record l4e7's "
+                   "SUPPLIER-P1-1-P0SOL.md, UNSENT: the correction or a measured model revision before any passing claim, then S1 and S2); "
+                   "R-176 rows 2 and 3 and R-180 PROVISIONAL; R-186 WITHDRAWN (obsolete under R-240); R-187 route 3 (result (ii)) kept as an "
+                   "input, not a passing route; the band 25 V to the cut-off a layer 8 row (R-175)"),
      "rows": ["IF-01"]},
     {"id": "D-11", "title": "a reversed panel (DECISION-31's E-N1, a single fault)",
      "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied), CONDITIONAL on Q13's leakage above +25 C",
@@ -4388,10 +4373,13 @@ DEFECTS = [
                    "(R-162: the parts' supply)",
      "rows": ["IF-09", "IF-10"]},
     {"id": "D-16", "title": "the drafted input current sense leaves its +-100 mV operating range in normal operation at the 25 V corner (L4-E7's B6-ENG-2, a demonstrated defect of the drafted sense arrangement)",
-     "state": "ADDRESSED IN DRAFTS: CORRECTED in draft by P0-7 (R-240; record l4e7's L4E7-P0SOL.md section 5): U5's input sense not used (0 V by "
-              "construction), the regulation's sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's "
-              "zero-differential output (sourcing lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3); "
-              "B6-ENG-2 is answered at the desk; B6-ENG-1 becomes E-1, the port's remaining engineering; not applied, no qualification done",
+     "state": ("ADDRESSED IN DRAFTS (P0-7, R-240, not applied): CORRECTED in draft by P0-7 (record l4e7's L4E7-P0SOL.md section 5): U5's input "
+              "sense not used (0 V by construction), the regulation's sense U23 on the bank, its average at most 1.34 % high (the safe side); "
+              "PROVISIONAL in A7's zero-differential output (sourcing lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered "
+              "up to 3.67 uA; the supplier's S3) and in the regulation at 25 V (S4); B6-ENG-2 is answered at the desk; B6-ENG-1 becomes E-1, the "
+              "port's remaining engineering; board E composes with it in L4-E9's order, every record check DRAWN and every mutation failing on "
+              "the composed candidate; cx45: \"although D-16's correction and D-10's remaining-engineering classification are supported\"; "
+              "not applied, no qualification done, and no check accepts it as closing D-16"),
      "constraint": "at the 25 V corner (REQ-016's open circuit) delivering into a 12.0 V bus at the regulation's highest current, M1's pulsed input current "
                    "flows through RSENSE1 because at 25 V bias the 50 V X7R ceramics hold 8.2 uF of their 24.8 uF nominal behind it and 21.4 uF of 40.0 uF "
                    "ahead: the resistive peak across RSENSE1 is 0.1174 V (0.1421 V at the trip's current), the pins read -0.1866 to +0.1863 V with "
@@ -4401,16 +4389,12 @@ DEFECTS = [
                    "5 after the recheck; round 3's 5.7 % low, which averaged the negative half-cycles as negative monitor current, withdrawn); at "
                    "M1's 10 ns edges the pins reach -0.4329 V, beyond the -0.3 V absolute maximum, a possible stress (the earlier 'no damage' "
                    "withdrawn); at the hold (16.97 V in) the sense stays inside the range (0.0585 V)",
-     "options": "measured at the desk by L4-E7's round 3 (seven splits of the input ceramics): the sheet's Figure 1 arrangement (nothing ahead of RSENSE1 "
-                "but the bank, everything behind) reads 0.0983 V resistive, the monitor's average +0.7 %, but fails U5's transient at every loop on the grid; the "
-                "splits that hold the transient at 0.30 uH (C64 alone, one 2.2 uF behind) leave the operating range by more (0.1297 and 0.1280 V); no "
-                "split measured holds both duties (route 3, result (ii)). What resolves it: the pins' waveform in operation at 25 V in and the lowest bus "
-                "(the regulation's error against its setting, R-189); Analog Devices' statement of what the amplifier reads above 100 mV (clarification "
-                "item 7); enough low-derating capacitance behind RSENSE1 (which raises B6's floor); or the current-sense arrangement itself reconsidered "
-                "by the engineer",
-     "resolution": "R-189 (B6-ENG-2, the engineer's row with its bench at layer 9); L4-E7R's regulation acceptance row affected (R-20, R-52), the backstop "
-                   "and the 100 W bound (R-21, R-98) unaffected; Analog Devices' item 7 (OW-4, the draft of R-186); no draft here: the owner's rule stops "
-                   "the desk at the third compensating change",
+     "options": ("P0-7's alternative C2 (D-10's row): U5's input sense not used, so its pins see 0 V by construction; the regulation's sense U23 on "
+                "the backstop's bank, its average at most 1.34 % high, the safe side; B6-ENG-2 answered at the desk; R-189 replaced by S4 and S3; "
+                "R-186 obsolete under R-240 (L4E7-P0SOL.md section 5)"),
+     "resolution": ("R-240 (P0-7's C2: apply_gen_sch_e_p0sol.py, drafted, not applied); S3 and S4 (SUPPLIER-P1-1-P0SOL.md, UNSENT) in place of "
+                   "R-189's bench (R-189 restated); R-186 WITHDRAWN (obsolete under R-240); Analog Devices' item 8 drafted (OW-4), UNSENT; "
+                   "L4-E7R's regulation acceptance row re-run on R-240 (R-20, R-52), the backstop and the 100 W bound (R-21, R-98)"),
      "rows": ["IF-01", "IF-02"]},
     {"id": "D-15", "title": "the dock's new VSYS contact without branch protection (the review of the provisional fixes, L4-F03)",
      "state": "ADDRESSED IN DRAFTS (L4-E11's fix round for L4-F03, drafted, not applied): %s (E11-38)" % L4F03_STATUS,
@@ -4441,20 +4425,33 @@ DEFECTS = [
                    "one at a time with a PWM-duty ramp)",
      "rows": ["IF-06", "IF-11"]},
     {"id": "D-17", "title": "decision D-11's all-transmit basis is not supplied from REQ-018's 15.5 V pass line on the final drafts (Layer 9's L9P-F01, a demonstrated analysis defect)",
-     "state": "OPEN (round 8: the floor raise of round 7 withdrawn as a correction, it narrowed REQ-018's pass line; one design-out attempt, the fans' supplies off while the PA keys, registered as R-210 to R-212, MISSING DRAFT, CONDITIONAL on R-213)",
+     "state": ("OPEN (REMAINING ENGINEERING, RE-2): a correction DRAFTED and PROVISIONAL, the PA drain-current cap (record l9t5's F01 selection "
+              "(c): U551 INA250A2 on the PA rail, the set point U552, the integrator and inverter U553, the hold Q551 on OUTLET_OK, PA_ILIM to "
+              "board D; R-227 on board A and R-238 on board D's VGG loop, drafted, not applied): the cap 6.3518 to 6.9259 A over every corner "
+              "(MODEL); C-ALLTX rev 3 at the cap's top needs 15.1308 V (MODEL on PRINTED bounds) against REQ-018's 15.5 V rest, a margin of "
+              "0.3692 V; \"THE OVERLAP IS NOT ESTABLISHED BY ANY PRINTED ROW\": the 30 W service under the cap's least is the supplier's B-PA1, "
+              "the loop's dynamics B-PA2, the reference at its actual load V-PA-REF; cx46 item 2 NOT CLOSED: the reference's loading through "
+              "Q551's hold and release and the acceptance limits REMAINING ENGINEERING (RE-2); cx44: F01 SELECTION NOT SUPPORTED; cx45 and "
+              "cx46 read P0-1 NOT CONFIRMED; round 8's design-out (the five fans' supplies off while the PA keys, R-210 to R-212) WITHDRAWN by "
+              "the owner's rejection of FAN_OK, never drafted"),
      "constraint": "the basis (every transmitter keyed, non-transmit loads typical, the standby card off, every other load at HIGH) at the gauge's 18 A "
                    "needs 16.214 V rest at R_cell 0.06 Ohm on the final drafts (Layer 9's round 2), 0.714 V over REQ-018's 15.5 V pass line (D-11's "
                    "declared value, SC-35): the drawn 15.338 V, the battery FET pair 0.1902 V, the mixers on U22, the coolers at full speed through "
                    "their step-ups (their envelope alone 0.2019 V over round 1's), slots 1 and 3 on the LM5176 0.0264 V, board P's breaker and the "
                    "third battery FET cancelling (0.0633 V and -0.0634 V); round 7's 15.986 V on round 1's drafts reproduces; a PWM cap is impossible "
                    "(the fans run at full speed whenever their PWM lead is not driven)",
-     "options": "not a correction: the floor raised (round 7's rule now gives 16.4 V, the window 0.484 V; 16.2 V if the coolers read the maker's "
-                "2.0 W), which removes all-transmit between 15.5 V and the floor that REQ-018 requires; the one design-out attempt: the five fans' "
-                "supplies off while the PA keys (FAN_OK like OUTLET_OK, to the coolers' step-up EN and U22's RUN; K4's off-list), the need at "
-                "most 15.374 V (a bound), at least +0.126 V under 15.5 V, CONDITIONAL on the 60 s fan-stop thermal test; not taken: the pack "
-                "path (all of it 0.685 V at 18 A), the PA's share (a weaker required service)",
-     "resolution": "register R-210 to R-212 (FAN_OK and the two enables, MISSING DRAFT), R-28 (K4 with the fans, the floors REQ-018's), "
-                   "R-213 (the fan-stop thermal test), R-214 (the cell's rest-voltage curve); LH-12 (FW-A05's text); out 30",
+     "options": ("not a correction: the floor raised (round 7's rule now gives 16.4 V, the window 0.484 V; 16.2 V if the coolers read the maker's "
+                "2.0 W), which removes all-transmit between 15.5 V and the floor that REQ-018 requires; round 8's one design-out attempt, "
+                "WITHDRAWN 5 October 2026 (the owner's rejection of FAN_OK; R-210 to R-212 WITHDRAWN): the five fans' supplies off while the PA "
+                "keys (FAN_OK like OUTLET_OK, to the coolers' step-up EN and U22's RUN; K4's off-list), the need at most 15.374 V (a bound), at "
+                "least +0.126 V under 15.5 V, CONDITIONAL on the 60 s fan-stop thermal test; not taken: the pack path (all of it 0.685 V at 18 "
+                "A), the PA's share (a weaker required service); the P0 round (record l9t5's F01): no floor or service change; three corrections "
+                "compared on one standard, each resting on an unprinted transfer of the PA's behaviour, so each at most a PROVISIONAL choice; "
+                "selected: (c) a PA drain-current cap, U551 INA250A2 on the PA rail, the set point U552, the integrator and inverter U553, the "
+                "hold Q551 on OUTLET_OK, PA_ILIM to board D (R-227) and board D's VGG loop (R-238), drafted, not applied"),
+     "resolution": ("R-227 and R-238 (the cap, DRAFTED, PROVISIONAL); R-28 (the D-11 rules at REQ-018's pass lines, K4 without the fans); R-214 "
+                   "(the cell's rest-voltage curve); RE-2 of the remaining-engineering ledger (records/l4close/REMAINING-ENGINEERING.md); B-PA1, "
+                   "B-PA2 and V-PA-REF (record l9t5's F01 validation rows, UNSENT); R-210 to R-213 WITHDRAWN (FAN_OK rejected); out 30"),
      "rows": ["IF-10"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
