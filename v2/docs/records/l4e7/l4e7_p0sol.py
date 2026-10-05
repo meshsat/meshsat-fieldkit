@@ -581,6 +581,39 @@ def compute():
                   f_amp=bw169 * 20e3 / R16v)
     # (C1) the same alternative with its sense at the port's R87 (U21's IMON), for the record: the regulation would hold the port
     # current, and the loop would push the bulk's CS101 current through the bank (sp_C1 above)
+    # (C3) the same alternative with its sense on the drafted RSENSE1 (R59 kept, read by a second INA169 instead of A7; R16 31.6k):
+    # the accepted split and M2 topology kept, the regulation independent of the trip; evaluated on both cases, not selected
+    tol_h, tcr_h, life_h, sold_h = R["tol_h"], R["tcr_h"], R["life_h"], R["sold_h"]
+    r59_lo3 = R["rs"] * (1 - tol_h) * (1 - 2.0 * tcr_h * dt_end) * (1 - life_h) * (1 - sold_h)   # the record's cold-end TCR at twice the printed (ASSUMPTION, as L4-E7's qualification)
+    reg3_hi = max(vreg_c(v, 1, 31600.0) / r59_lo3 for v in vgrid)
+    m3 = min(vs_trip(v, -1, True) / rb_hi - vreg_c(v, 1, 31600.0) / r59_lo3 for v in vgrid)
+    sp3 = spectrum(lambda f_, v_: V101(f_) * math.sqrt(2) / abs(rbank + 1.0 / (1j * 2 * math.pi * f_ * (c_a + c66_ + 0.11e-6) + (1j * 2 * math.pi * f_ * c_b - reg3_hi / v_)
+                                                                              / (1 + loop_t(f_, 1e-3 * R["rs"], 31600.0, 100e-9, v_, f_amp=bw169 * 20e3 / 31600.0)))))
+    clip3 = {}
+    for mult_ in (1.0, 3.0, 10.0, None):
+        w3_ = 0.0
+        for vo_ in r3["V_OUTS"]:
+            for ii_ in (i_reg_hi, i_op):
+                l3_ = ladder(row0["cu"], row0["cd"], ii_, v_oc, vo_, F_LO, L1_LO, T_RF, rb_lo, 0.0, r59_hi, L59, bulk_op)
+                x_ = l3_["v59"] if mult_ is None else lowpass(l3_["v59"], 1.0 / (2 * math.pi * mult_ * bw169 * 20e3 / 31600.0), 1e-9)
+                w3_ = max(w3_, clip_avg(x_) / (sum(l3_["v59"]) / len(l3_["v59"])) - 1.0)
+        clip3[mult_] = w3_
+    W3l = {L_: evalR(L_, dict(GA, l59=L59)) for L_ in (grid6[0], grid6[-1])}
+    pins3 = {L_: budget(w_) for L_, w_ in W3l.items()}
+    pins3[L_REF] = (min(rep10["pins0"][0], rep10["pinsr"][0]), max(rep10["pins0"][1], rep10["pinsr"][1]))
+    O["C3"] = dict(r59_lo=r59_lo3, hi=reg3_hi, nom=vreg[1] / (1e-3 * 31600.0 * R["rs"]), m=m3, worst=worst(sp3), clip=clip3, pins=pins3,
+                   line=abs169[1] * 0.9)
+    # C2's own averaging against the INA169's bandwidth (the same multiples)
+    clip2 = {}
+    for mult_ in (1.0, 3.0, 10.0, None):
+        w2_ = 0.0
+        for vo_ in r3["V_OUTS"]:
+            for ii_ in (reg_sel["hi"], i_op):
+                l2_ = ladder(None, cd_all, ii_, v_oc, vo_, F_LO, L1_LO, T_RF, rb_lo, wsl_l[1], None, None, bulk_op)
+                x_ = l2_["vbank"] if mult_ is None else lowpass(l2_["vbank"], 1.0 / (2 * math.pi * mult_ * bw169 * 20e3 / R16v), 1e-9)
+                w2_ = max(w2_, clip_avg(x_) / (sum(l2_["vbank"]) / len(l2_["vbank"])) - 1.0)
+        clip2[mult_] = w2_
+    O["C"]["clip"] = clip2
 
     # --- the fault case on the selected circuit: the record's model with RSENSE1's branch tied (1 uOhm, no inductance)
     GC = dict(GA, r59=L_TIE, l59=0.0)
@@ -597,7 +630,7 @@ def compute():
     off97 = inp_l * (100e3 * (1 - tol_y) + R97v * (1 + tol_y)) / (R97v * (1 + tol_y))
     # IMON_IN under the fault: the charge U23 can put on C65 over the whole event (60 us), its sense at the event's highest, linear
     imon_q = {L_: gm169[1] * (1 + nl169) * WC[L_]["u18"] * 60e-6 / (C65v * 0.90) for L_ in loops}
-    O["Cfault"] = dict(W=WC, WA=WA_l, cnr=cnr, k97=k97, on97=on97, off97=off97, kinp_old=b6["kinp"], imon_q=imon_q, loops=loops,
+    O["Cfault"] = dict(W=WC, WA=WA_l, cnr=cnr, k97=k97, on97=on97, off97=off97, kinp_old=b6["kinp"], imon_q=imon_q, loops=loops, ken=b6["ken"],
                        u18_lim=abs169[1] * 0.9, abs169=abs169, hold_lo=r3["lo_h"], cold=cold, d4=G6["d4"][0], L_TIE=L_TIE)
 
     # --- the normal case on the selected circuit: the ladder verified against the record's sense_ripple, then the bank's sense
@@ -829,13 +862,33 @@ def render(O, K, R, b6, r3):
                                                                                                m2["C1"][2], m2["C1"][0], rw["abs169"][1], 40.0,
                                                                                                1e6 * rw["gm169"][0], 1e6 * rw["gm169"][1],
                                                                                                1e3 * rw["vos169"], 100 * rw["nl169"]))
+    c3 = O["C3"]
+    wrap("      ", "      ", "(C3) the same INA169 reading the drafted RSENSE1 instead of A7 (R59 and the accepted split kept, R16 31.6k): "
+         "the regulation stays independent of the trip and the accepted M2 topology is kept (filtered peak %.4f A at %.0f Hz against its "
+         "own independent margin %.4f A); in the fault case U23's differential is the record's U5 budget, %+.3f to %+.3f V at the "
+         "envelope's least loop, %+.3f to %+.3f V at the reference loop, inside the INA169's +2 V / -40 V at every loop (its 1.8 V line "
+         "held); in normal operation RSENSE1's own current never reverses, but its 5 nH puts negative spikes across the pins, and the "
+         "average U23 regulates on reads high by %+.2f %% at the INA169's typical bandwidth, %+.2f %% at three times it, %+.2f %% at ten "
+         "times it and %+.2f %% if it followed every edge: the regulation's accuracy then rests on a bandwidth printed only as typical. "
+         "C2's own average, the same way (the bank at 5 nH, no sharing credited): %+.2f / %+.2f / %+.2f / %+.2f %% (the bank's current is "
+         "smooth at the 25 V corner)." % (
+             c3["worst"][2], c3["worst"][0], c3["m"], c3["pins"][O["d10"]["grid"][0]][0], c3["pins"][O["d10"]["grid"][0]][1],
+             c3["pins"][O["d10"]["L_REF"]][0], c3["pins"][O["d10"]["L_REF"]][1], 100 * c3["clip"][1.0], 100 * c3["clip"][3.0],
+             100 * c3["clip"][10.0], 100 * c3["clip"][None], 100 * C_["clip"][1.0], 100 * C_["clip"][3.0], 100 * C_["clip"][10.0],
+             100 * C_["clip"][None]))
     P("")
     wrap("  THE SELECTION (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain "
          "dependencies): ", "  ", "(C2). It removes U5's absolute-rating violation of D-10 and D-16's operating-range exceedance by "
          "construction, at every source loop, with no new loop dependency; it adds one part the design already carries (an INA169) and "
          "one 100 nF, removes one (RSENSE1, whose inductance no maker prints) and changes two values; its one new unprinted term (A7's "
-         "own output at zero differential) can only lower the regulation, never raise it (section 2h). Reversal: the drafted RSENSE1 "
-         "arrangement returns only with a measured or maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.")
+         "own output at zero differential) can only lower the regulation, never raise it (section 2h). Over (C3): C2's averaging does "
+         "not depend on the amplifier's unprinted bandwidth and its CS101 margin is %.1f times C3's; C3 keeps the regulation "
+         "independent of the trip and holds U23's rating at the envelope's least loop, where the port itself fails (section 3). The "
+         "price of C2, stated: the regulation and the 100 W trip share the bank, so a short across the bank, which already defeats the "
+         "trip (the record's single-fault list), now also defeats the regulation (never credited for the 100 W bound); Layer 8's fault "
+         "table carries it. Reversal: to (C3), the same draft with U23 on R59's pads and R59 kept, if Layer 8's fault analysis rules the "
+         "shared shunt out; the drafted RSENSE1 with A7 returns only with a measured or maker-stated bound that keeps U5's pins inside "
+         "+-0.3 V for the declared envelope." % (C_["sel"]["m"] / O["C3"]["m"]))
     P("")
     # ---------------------------------------------------------------- 2
     P("2. THE SELECTED CIRCUIT (C2) ON BOTH CASES")
@@ -873,6 +926,10 @@ def render(O, K, R, b6, r3):
          "ratings fail as they did (PV_F %.1f V; the bank %.2f V, over U18's and U23's +2 V): that is the guard-on event's port-level "
          "residual, section 3." % (cf["u18_lim"], cf["abs169"][1], cf["d4"], cw_[1], "/".join(cw_[0]), cw_[2], cw_[3],
                                    cf["W"][cf["loops"][2]]["vF"], cf["W"][cf["loops"][0]]["vF"], cf["W"][cf["loops"][0]]["u18"]))
+    w3r_ = cf["W"][cf["loops"][2]]
+    wrap("     ", "     ", "The other ratings at the reference loop on the selected circuit: PV_F's slew %.1f V/us (54), EN/UVLO %.2f V (18), "
+         "PV_P %.2f V (45: the bulk's 50 V, U18's and U23's common mode), PV_F's least %.2f V (-1): all inside their lines." % (
+             1e-6 * w3r_["slew"], w3r_["vF"] * cf["ken"], w3r_["vP"], w3r_["vFmin"]))
     wrap("     ", "     ", "INP with R97 24.9k (0.1 %%, 25 ppm/K): its divider's highest ratio %.5f (was %.5f), so INP stays at or under 18 V "
          "for every PV_F up to %.1f V, past PV_F's own 90 V exclusion line: INP no longer fails anywhere PV_F holds. The cold connection's "
          "INP at its worst (PV_F %.2f V): %.2f V (was %.2f V). U21 turns on by %.2f V at the most (V(INP_H) %.1f V, PRINTED; was 9.16 "
