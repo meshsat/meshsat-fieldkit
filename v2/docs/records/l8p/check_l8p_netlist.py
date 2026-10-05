@@ -27,16 +27,42 @@ reader, never a grep) and the project's own 2 x 6 dock lands, and judges:
                  return: the two in series, so the return is held low only while both comparators are high; C107 and C108 on
                  the comparators' supply pins; the values; and U104's threshold sits on the right side (its -IN divider's ratio
                  above its +IN's, so PACK_P must exceed BRK_SNS)
+           DIO   the ideal diode beside the charge switch (DD-5, round 4; apply_gen_sch_p_idealdiode.py): Q109 (CSD17570Q5B) source
+                 pins on Q1's source net and its drain on Q1's drain net, which is Q2's drain (in parallel with Q1, the same way
+                 round); U105 (LM74700) ANODE on that source net, CATHODE on that drain net, GATE on Q109's gate and on nothing of
+                 the gauge's (Q1's gate stays on the gauge's CHG drive), GND on the cells' side of R10; C111 from VCAP to the anode;
+                 R130 from the gate to the anode; EN on D104's cathode with its anode on U101's VIN (Q2's source), R131 to the
+                 cells' negative; the anode pair C112 and C113 and the cathode pair C114 and C115, each in series to the cells'
+                 negative; the values
   board E  EN    J_SMB pins 1 to 4 SMBC, SMBD, GND, PRES_LEAD, 5 DOCK_EN_RET, 6 GND, 7 DOCK_EN_OUT; J_BLK pin 3 DOCK_EN_RET, 4 GND,
                  5 DOCK_EN_OUT; nothing else on board E on the loop's nets (a pass-through)
-  board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; RT1 (PRF15BB103) from DOCK_EN_OUT to DOCK_EN_RET, and nothing else
-                 on the loop's nets
+  board A  EN    J_DOCK pin 3 DOCK_EN_RET, 4 GND, 5 DOCK_EN_OUT; the loop closed on board A by the thermal guard's pair (round 8,
+                 apply_gen_sch_a_thguard.py: R260 from DOCK_EN_OUT to THG_MID, R261 from THG_MID to DOCK_EN_RET); RT1, round 7's
+                 PRF15BB103, is WITHDRAWN (L8P-F07): a netlist that still draws it FAILS; on the loop's nets nothing else but DD-7's
+                 readers as task L4-E11 draws them (apply_gen_sch_a_dd7.py, round 10 on; finding L4E11-R10-F2) and the guard's own
+                 pins, each admitted by its PIN and not by its reference: on DOCK_EN_OUT one pin of R109, a resistor of at least
+                 470 kOhm whose other end is on neither loop net nor the ground (U48's SENSE2 divider, either way round), R260's pin,
+                 U61's IN (pin 1) and one pin of C261 (its input capacitor, the other on the ground); on DOCK_EN_RET pin 3 of Q44 (its
+                 drain) with its pin 2 (source) on the ground, pin 2 of U48 (SENSE1, a sense input), R261's pin and pin 3 of Q60 (the
+                 guard's shunt, its drain). No other resistor and no capacitor reaches DOCK_EN_RET, so its load stays the FETs'
+                 leakage and a sense input
+           THG   the thermal guard (record l9stk 15.9 round 5, C4; round 8): the pair R260 and R261 in series, each at least 3.574
+                 kOhm and their sum at most 25.8 kOhm (l9stk's acceptance (b)), their midpoint THG_MID on nothing but the two and a test
+                 point; U60 (an LM26LV) pin 4 VDD on THG_VDD, pins 2 and 7 (its pad) on the ground, pin 5 (OVERTEMP, the push-pull)
+                 on R262, pin 3 (the open drain) on nothing, pins 1 (TRIP_TEST) and 6 (VTEMP) on a test point alone; U61 (a TPS70950)
+                 pin 1 IN on DOCK_EN_OUT, pin 5 OUT on THG_VDD, pin 2 on the ground, pin 3 (EN) on nothing (never on IN); THG_VDD on
+                 U61's OUT, U60's VDD, capacitors to the ground and a test point only; R262 from OVERTEMP to THG_G, C260 and R263 from
+                 THG_G to the ground, THG_G on nothing else but Q60's gate; Q60 (a 2N7002, the kit's C8545) gate on THG_G, source on the
+                 ground, drain on DOCK_EN_RET; the values. Mutations that must fail (L9S5-F1): the shunt on DOCK_EN_OUT, the open-drain
+                 output used, the regulator fed from VBAT, the pair's sum outside 3.574 to 25.8 kOhm, one resistor in place of the pair,
+                 the shunt drawn as an AO3400A, the gate capacitor removed
   GROUND BETWEEN (condition C2), on every board present: on J_SMB (a 1x7 row, circuits numbered in order along it) the two loop
                  pins are not neighbours and every pin between them is the board's return; on J_BLK and J_DOCK (the 2 x 6 fields,
                  positions read from meshsat.pretty's PogoTargets_2x6 and PogoPins_2x6) a ground pad sits at the midpoint of the two
                  loop pads and the two are not neighbours
   LOOP     with all three: P's J_SMB pins 7 and 5, E's J_SMB pins 7 and 5, E's J_BLK pins and A's J_DOCK pins of the same numbers
-                 carry the same two nets, and RT1 closes them on board A: BRK_VIN, R106, the lead, the dock, RT1 and back to Q103
+                 carry the same two nets, and the guard's pair closes them on board A: BRK_VIN, R106, the lead, the dock, R260 and R261
+                 and back to Q103 (until round 7, RT1)
 Each board reads DRAWN (every property holds), NOT DRAWN (the draft's marker part is absent: today's state) or FAIL (present and
 wrong). Nothing has been built or measured: the statements are about netlists.
 
@@ -82,7 +108,16 @@ VALUES = [
     ("p", "R109", "1M", "l9stk_protection.py R_G (prot 3a)", "R_G = 1e6 # the second inverter's gate divider, each half", "constants"),
     ("p", "RT101", "NXRT15XH103FA1B", "15.4b C-1c, the sensor: Murata NXRT15XH103FA1B", "The kit's NTC sheet part, Murata NXRT15XH103FA1B (10 kOhm plus or minus 1 %, B25/85 3434 K, B plus or minus 1 %),", "page"),
     ("p", "R110", "150k 0.1%", "15.4b C-1c: 150 kOhm over the NTC", "The bridge has 150 kOhm over the NTC: 0.111 mA at most, against its 0.12 mA.", "page"),
-    ("a", "RT1", "PRF15BB103RB6RC", "15.5 THE THERMAL GUARD: the kit's PRF15BB103 chip PTC, in the enable loop on the battery FETs' copper", "**The part.** The kit's PRF15BB103 chip PTC", "page"),
+    # round 8: board A's guard as record l9stk's round 5 re-selected it (C4; page 15.9 at bb6d2c8f, copied); round 7's RT1 row
+    # (PRF15BB103, 15.5 at 0d72880b) is withdrawn with the part (L8P-F07)
+    ("a", "U60", "LM26LVQISDX-130", "15.9 round 5, C4: the LM26LV 130 C preset", "G2 with the LM26LV 130 C preset (LM26LVQISDX-130/NOPB), supplied by a TPS70950 from DOCK_EN_OUT.", "l9g"),
+    ("a", "U61", "TPS70950", "15.9 round 5, C4: supplied by a TPS70950 from DOCK_EN_OUT", "supplied by a TPS70950 from DOCK_EN_OUT. The shunt", "l9g"),
+    ("a", "Q60", "2N7002", "15.9 round 5, C4: the shunt on DOCK_EN_RET is a 2N7002", "The shunt on DOCK_EN_RET is a 2N7002 (the kit's part, Q44's and Q107's)", "l9g"),
+    ("a", "R260", "7.5k 1%", "15.9 round 5, C4: the fixed resistor two 7.5 kOhm 1 % in series", "The fixed resistor in RT1's place is two 7.5 kOhm 1 % in series.", "l9g"),
+    ("a", "R261", "7.5k 1%", "15.9 round 5, C4: two 7.5 kOhm 1 % in series", "The fixed resistor in RT1's place is two 7.5 kOhm 1 % in series.", "l9g"),
+    ("a", "R262", "47k", "15.9 round 5, the gate network: 47 kOhm from OVERTEMP", "The gate network sized here (SESSION):** 47 kOhm from OVERTEMP, 1 uF and 1 MOhm to ground", "l9g"),
+    ("a", "C260", "1u", "15.9 round 5, the gate network: 1 uF to ground", "47 kOhm from OVERTEMP, 1 uF and 1 MOhm to ground", "l9g"),
+    ("a", "R263", "1M", "15.9 round 5, the gate network: 1 MOhm to ground", "47 kOhm from OVERTEMP, 1 uF and 1 MOhm to ground", "l9g"),
 ]
 
 
@@ -215,6 +250,9 @@ REV_SESSION = (("U103", "OPA187"), ("U104", "OPA187"), ("R118", "1.15M 0.1%"), (
                ("R121", "332k 0.05% 10ppm"), ("R122", "33.2k 0.05% 10ppm"), ("R123", "328k 0.05% 10ppm"), ("R124", "33.2k 0.05% 10ppm"),
                ("C110", "1n"), ("C107", "100n"), ("C108", "100n"), ("R125", "100k"), ("R126", "100k"), ("R127", "100k"), ("R128", "100k"),
                ("Q107", "2N7002"), ("Q108", "2N7002"))
+# the ideal diode beside the charge switch (DD-5, round 4): record l8p's SESSION choices, each value's prefix
+DIO_SESSION = (("Q109", "CSD17570Q5B"), ("U105", "LM74700"), ("C111", "220n 50V"), ("R130", "10M"), ("D104", "1N4148W"), ("R131", "1M"),
+               ("C112", "100n 50V"), ("C113", "100n 50V"), ("C114", "470n 50V"), ("C115", "470n 50V"))
 
 
 def _pairs(nl, rows):
@@ -224,7 +262,7 @@ def _pairs(nl, rows):
 def checks_p(nl):
     if "U101" not in nl["comps"] and _pin(nl, "J_SMB", "7") is None and "DOCK_EN_OUT" not in nl["on"]:
         return {"BRK": ("NOT DRAWN", ["U101 is absent"]), "EN": ("NOT DRAWN", ["J_SMB has no pin 7"]), "INH": ("NOT DRAWN", ["U102 is absent"]),
-                "REV": ("NOT DRAWN", ["U103 is absent"])}
+                "REV": ("NOT DRAWN", ["U103 is absent"]), "DIO": ("NOT DRAWN", ["U105 is absent"])}
     ret = _pin(nl, "W_N", "1")
     vin, sns, uvlo, pgd = "BRK_VIN", "BRK_SNS", "BRK_UVLO", "BRK_PGD"
     rows = [("U101", "1", sns), ("U101", "2", vin), ("U101", "3", uvlo), ("U101", "4", ret), ("U101", "5", ret),
@@ -300,7 +338,32 @@ def checks_p(nl):
     if len(ratio) != 2 or not ratio["R123"] > ratio["R121"]:
         bad.append("U104's threshold is not on the reverse side (the -IN divider's ratio %s, the +IN's %s)" % (ratio.get("R123"), ratio.get("R121")))
     out["REV"] = ("FAIL", bad) if bad else ("DRAWN", [])
+    out["DIO"] = checks_dio(nl, ret, cell)
     return out
+
+
+def checks_dio(nl, ret, cell):
+    """DD-5: Q109 in parallel with the charge switch Q1, the same way round, driven by U105 alone; the gauge's drive of Q1 untouched."""
+    if "U105" not in nl["comps"] and "Q109" not in nl["comps"]:
+        return ("NOT DRAWN", ["U105 is absent"])
+    anode, sw, chg = _pin(nl, "Q1", "1"), _pin(nl, "Q1", "5"), _pin(nl, "Q1", "4")
+    vin_u = _pin(nl, "U101", "2")
+    rows = [("Q109", "1", anode), ("Q109", "2", anode), ("Q109", "3", anode), ("Q109", "4", "IDL_GATE"), ("Q109", "5", sw),
+            ("Q1", "2", anode), ("Q1", "3", anode), ("Q2", "5", sw),
+            ("U105", "1", "IDL_VCAP"), ("U105", "2", cell), ("U105", "3", "IDL_EN"), ("U105", "4", sw), ("U105", "5", "IDL_GATE"),
+            ("U105", "6", anode), ("D104", "1", "IDL_EN"), ("D104", "2", vin_u), ("Q2", "1", vin_u), ("TP109", "1", "IDL_GATE")]
+    bad = props(nl, rows)
+    if anode is None or sw is None or anode == sw or cell is None or cell in (anode, sw, ret):
+        bad.append("Q1's source %r and drain %r and the cells' negative %r are not three nets apart from the return" % (anode, sw, cell))
+    if chg is None or chg == "IDL_GATE" or "U105" in nl["on"].get(chg, set()) or "Q109" in nl["on"].get(chg, set()):
+        bad.append("Q1's gate %r is not the gauge's own drive apart from the ideal diode" % chg)
+    if nl["on"].get("IDL_GATE", set()) != {"U105", "Q109", "R130", "TP109"}:
+        bad.append("IDL_GATE reaches %s, wanted U105, Q109, R130 and TP109 alone" % sorted(nl["on"].get("IDL_GATE", set())))
+    bad += _pairs(nl, (("C111", "IDL_VCAP", anode), ("R130", "IDL_GATE", anode), ("R131", "IDL_EN", cell),
+                       ("C112", anode, "IDL_AMID"), ("C113", "IDL_AMID", cell), ("C114", sw, "IDL_CMID"), ("C115", "IDL_CMID", cell)))
+    bad += ["%s value %r does not start %r (record l8p, SESSION)" % (r_, nl["comps"].get(r_, {}).get("value"), pre)
+            for r_, pre in DIO_SESSION if not str(nl["comps"].get(r_, {}).get("value", "")).startswith(pre)]
+    return ("FAIL", bad) if bad else ("DRAWN", [])
 
 
 def _ohms(value):
@@ -331,22 +394,118 @@ def checks_e(nl):
     return {"EN": ("FAIL", bad) if bad else ("DRAWN", [])}
 
 
+# DD-7's readers on the loop (task L4-E11, apply_gen_sch_a_dd7.py at a09e9a60, round 10; finding L4E11-R10-F2): (ref, pin) on
+# each loop net, admitted by pin, not by reference: a rule that admitted U48 or Q44 whole would pass U48's VDD or Q44's source
+# on the return. R109 is a resistor, so either of its pins may be the one on DOCK_EN_OUT; its other end is judged below.
+DD7_ON = {OUT: {("R109", "1"), ("R109", "2")}, RET: {("Q44", "3"), ("U48", "2")}}
+R109_LEAST = 470e3      # a sense divider on DOCK_EN_OUT, not a load on the loop (L4-E11 draws 562k over 422k)
+# Round 8: the thermal guard's pins on the loop (apply_gen_sch_a_thguard.py; record l9stk 15.9 round 5, C4), admitted by pin the
+# same way: on DOCK_EN_OUT the pair's R260 (either pin), U61's IN and one pin of C261; on DOCK_EN_RET the pair's R261 (either pin)
+# and Q60's drain. RT1 (round 7's PRF15BB103) is withdrawn (L8P-F07).
+THG_ON = {OUT: {("R260", "1"), ("R260", "2"), ("U61", "1"), ("C261", "1"), ("C261", "2")}, RET: {("R261", "1"), ("R261", "2"), ("Q60", "3")}}
+PAIR_LEAST, PAIR_MOST = 3.574e3, 25.8e3     # record l9stk 15.9 (b): the held reading from 3.574 kOhm (7.6 V), the window's ratio bound
+THG_VALUES = (("U60", "LM26LVQISDX-130"), ("U61", "TPS70950"), ("Q60", "2N7002"), ("R260", "7.5k 1%"), ("R261", "7.5k 1%"), ("R262", "47k"),
+              ("C260", "1u"), ("R263", "1M"), ("C261", "1u 50V"), ("C262", "4.7u"), ("C263", "100n"))
+N7002_LCSC = "C8545"    # the kit's 2N7002 (Q44's and Q107's part); an AO3400A is C20917, and its leakage broke the window (L8P-F08)
+
+
+def _nodes(nl, net):
+    return {(r, p) for r, d in nl["pins"].items() for p, n in d.items() if n == net}
+
+
+def _is_tp(nl, ref):
+    return ref.startswith("TP") and "TestPoint" in str(nl["comps"].get(ref, {}).get("footprint", ""))
+
+
 def checks_a(nl):
-    if "RT1" not in nl["comps"] and "DOCK_EN_OUT" not in nl["on"]:
-        return {"EN": ("NOT DRAWN", ["RT1 is absent"])}
+    if "RT1" not in nl["comps"] and "R260" not in nl["comps"] and "DOCK_EN_OUT" not in nl["on"]:
+        return {"EN": ("NOT DRAWN", ["RT1 and R260 are absent"]), "THG": ("NOT DRAWN", ["U60 is absent"])}
     bad = props(nl, [("J_DOCK", "3", RET), ("J_DOCK", "4", "GND"), ("J_DOCK", "5", OUT)])
-    if _two(nl, "RT1") != sorted({OUT, RET}):
-        bad.append("RT1 on %s, wanted %s to %s" % (_two(nl, "RT1"), OUT, RET))
+    if "RT1" in nl["comps"]:
+        bad.append("RT1 (%r), round 7's PTC, is drawn: it is withdrawn (L8P-F07), the guard's pair closes the loop" % nl["comps"]["RT1"].get("value"))
+    if _two(nl, "R260") != sorted({OUT, "THG_MID"}) or _two(nl, "R261") != sorted({"THG_MID", RET}):
+        bad.append("the loop is not closed by the guard's pair: R260 on %s, R261 on %s" % (_two(nl, "R260"), _two(nl, "R261")))
     for n in (OUT, RET):
-        if nl["on"].get(n, set()) != {"J_DOCK", "RT1"}:
-            bad.append("%s reaches %s, wanted J_DOCK and RT1 alone" % (n, sorted(nl["on"].get(n, set()))))
+        base = {("J_DOCK", "5" if n == OUT else "3")}
+        extra = sorted(_nodes(nl, n) - base - DD7_ON[n] - THG_ON[n])
+        if extra:
+            bad.append("%s reaches %s beyond J_DOCK, the guard's pins and DD-7's readers (by pin: %s, %s)" % (n, extra, sorted(THG_ON[n]), sorted(DD7_ON[n])))
+    if _pin(nl, "Q44", "3") == RET and _pin(nl, "Q44", "2") != "GND":
+        bad.append("Q44's drain is on the return and its source on %r, not the ground" % _pin(nl, "Q44", "2"))
+    on = [k for k, v in nl["pins"].get("R109", {}).items() if v == OUT]
+    if on:
+        other = _pin(nl, "R109", "2" if on == ["1"] else "1")
+        try:
+            ohms = _ohms(nl["comps"]["R109"]["value"])
+        except (KeyError, ValueError):
+            ohms = 0.0
+        if other in (OUT, RET, "GND") or ohms < R109_LEAST:
+            bad.append("R109 on DOCK_EN_OUT is %r to %r, not a sense divider of %.0f kOhm or more" % (nl["comps"].get("R109", {}).get("value"), other, R109_LEAST / 1e3))
     bad += values(nl, "a")
     o, r = loop_pins(nl, "J_DOCK")
     if len(o) == 1 and len(r) == 1:
         bad += between(nl, o[0], r[0], "GND", "J_DOCK", nl["pins"].get("J_DOCK", {}))
     else:
         bad.append("J_DOCK carries the loop on %s and %s" % (o, r))
-    return {"EN": ("FAIL", bad) if bad else ("DRAWN", [])}
+    return {"EN": ("FAIL", bad) if bad else ("DRAWN", []), "THG": checks_thg(nl)}
+
+
+def checks_thg(nl):
+    """The thermal guard on board A by pin (round 8; record l9stk 15.9 round 5, C4, and its acceptance (b))."""
+    if "U60" not in nl["comps"]:
+        return ("NOT DRAWN", ["U60 is absent"])
+    bad = []
+    # the pair: two resistors in series, OUT to THG_MID to RET, the midpoint on nothing else but a test point
+    try:
+        r1, r2 = _ohms(nl["comps"]["R260"]["value"]), _ohms(nl["comps"]["R261"]["value"])
+    except (KeyError, ValueError):
+        r1 = r2 = 0.0
+        bad.append("the pair R260 and R261 is not drawn as two resistors")
+    if _two(nl, "R260") != sorted({OUT, "THG_MID"}) or _two(nl, "R261") != sorted({"THG_MID", RET}):
+        bad.append("the pair is not in series from %s through THG_MID to %s: R260 on %s, R261 on %s" % (OUT, RET, _two(nl, "R260"), _two(nl, "R261")))
+    mid = {r for r, _p in _nodes(nl, "THG_MID")}
+    if mid - {"R260", "R261"} and not all(_is_tp(nl, x) for x in mid - {"R260", "R261"}):
+        bad.append("THG_MID reaches %s beyond the pair and a test point" % sorted(mid - {"R260", "R261"}))
+    if min(r1, r2) < PAIR_LEAST or r1 + r2 > PAIR_MOST:
+        bad.append("the pair %.0f + %.0f ohm: each must be at least %.0f ohm (a short of the other keeps the held reading) and the sum at most %.0f ohm"
+                   % (r1, r2, PAIR_LEAST, PAIR_MOST))
+    # the switch: VDD from the regulator, its pad and GND on the ground, the push-pull OVERTEMP on the gate network, the open drain on nothing
+    vdd, ot = _pin(nl, "U60", "4"), _pin(nl, "U60", "5")
+    bad += props(nl, [("U60", "2", "GND"), ("U60", "7", "GND"), ("U61", "1", OUT), ("U61", "2", "GND")])
+    if vdd is None or vdd != _pin(nl, "U61", "5"):
+        bad.append("U60's VDD (pin 4) on %r and U61's OUT (pin 5) on %r: the switch is not on the regulator's output" % (vdd, _pin(nl, "U61", "5")))
+    if _pin(nl, "U60", "3") is not None:
+        bad.append("U60's open-drain output (pin 3) is on %r: the push-pull OVERTEMP (pin 5) is the one used" % _pin(nl, "U60", "3"))
+    if ot is None or ot != _pin(nl, "R262", "1") and ot != _pin(nl, "R262", "2"):
+        bad.append("U60's push-pull OVERTEMP (pin 5) on %r does not reach R262 (%s)" % (ot, _two(nl, "R262")))
+    for pin, what in (("1", "TRIP_TEST"), ("6", "VTEMP")):
+        n = _pin(nl, "U60", pin)
+        others = {r for r, _p in _nodes(nl, n)} - {"U60"} if n else set()
+        if n is None or not others or not all(_is_tp(nl, x) for x in others):
+            bad.append("U60's %s (pin %s) on %r reaches %s, not a test point alone" % (what, pin, n, sorted(others)))
+    if _pin(nl, "U61", "3") is not None and _pin(nl, "U61", "3") in (OUT, _pin(nl, "U61", "1")):
+        bad.append("U61's EN (pin 3) on its IN's net %r: TI forbids it (the 6.5 V clamp)" % _pin(nl, "U61", "3"))
+    if vdd:
+        for r, p in _nodes(nl, vdd):
+            if (r, p) in (("U61", "5"), ("U60", "4")) or _is_tp(nl, r):
+                continue
+            if not (r.startswith("C") and sorted(set(nl["pins"].get(r, {}).values())) == sorted({vdd, "GND"})):
+                bad.append("the switch's supply %s reaches %s.%s: the regulator's output feeds the switch only" % (vdd, r, p))
+    # the gate network and the shunt
+    g = _pin(nl, "Q60", "1")
+    if g is None or ot is None or sorted({ot, g}) != _two(nl, "R262"):
+        bad.append("R262 on %s, not from OVERTEMP %r to Q60's gate %r" % (_two(nl, "R262"), ot, g))
+    for ref in ("C260", "R263"):
+        if _two(nl, ref) != sorted({g, "GND"}) if g else True:
+            bad.append("%s on %s, not from Q60's gate %r to the ground" % (ref, _two(nl, ref), g))
+    if g and {r for r, _p in _nodes(nl, g)} != {"R262", "C260", "R263", "Q60"}:
+        bad.append("Q60's gate net %s reaches %s, not R262, C260, R263 and Q60 alone" % (g, sorted({r for r, _p in _nodes(nl, g)})))
+    bad += props(nl, [("Q60", "3", RET), ("Q60", "2", "GND")])
+    if str(nl["comps"].get("Q60", {}).get("value", "")).split(":")[0].strip() != "2N7002":
+        bad.append("the shunt Q60 is %r, not the kit's 2N7002 (an AO3400A's leakage broke the window: L8P-F08)" % nl["comps"].get("Q60", {}).get("value"))
+    bad += ["%s value %r does not start %r (record l9stk 15.9 round 5, and record l8p's SESSION choices)" % (r_, nl["comps"].get(r_, {}).get("value"), pre)
+            for r_, pre in THG_VALUES if not str(nl["comps"].get(r_, {}).get("value", "")).startswith(pre)]
+    return ("FAIL", bad) if bad else ("DRAWN", [])
 
 
 def check_loop(nls):
@@ -361,8 +520,8 @@ def check_loop(nls):
         ka = [k for k, v in a["pins"].get("J_DOCK", {}).items() if v == n]
         if not ke or ke != ka:
             bad.append("%s on J_BLK %s and on J_DOCK %s" % (n, ke, ka))
-    if _two(a, "RT1") != sorted({OUT, RET}):
-        bad.append("RT1 does not close the loop on board A: %s" % _two(a, "RT1"))
+    if _two(a, "R260") != sorted({OUT, "THG_MID"}) or _two(a, "R261") != sorted({"THG_MID", RET}):
+        bad.append("the guard's pair does not close the loop on board A: R260 %s, R261 %s" % (_two(a, "R260"), _two(a, "R261")))
     if _pin(p, "U101", "2") not in _two(p, "R106") or OUT not in _two(p, "R106") or _pin(p, "Q103", "1") != RET:
         bad.append("board P: R106 %s, U101.2 %r, Q103.1 %r" % (_two(p, "R106"), _pin(p, "U101", "2"), _pin(p, "Q103", "1")))
     return ("FAIL", bad) if bad else ("DRAWN", [])
