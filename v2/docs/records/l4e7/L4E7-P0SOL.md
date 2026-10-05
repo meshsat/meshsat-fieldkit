@@ -1,4 +1,4 @@
-DONE: brief read, base e132db0e, board E's drafts composed in L4-E9's order (all 15 apply, the generator runs); the record's cache KEY differs from the base only by l4e11_power.out. NOT DONE: the reproduction script, the comparison, the draft, its checks. NEXT: l4e7_p0sol.py section 0 (both failing cases recomputed).
+DONE: brief read; board E's drafts compose in L4-E9's order; the selected circuit (C: U5's input sense retired, U23 INA169 on the bank into IMON_IN, R16 34.0k, R97 24.9k) drafted as apply_gen_sch_e_p0sol.py and composed after the solar guard (296 parts, the generator runs). NOT DONE: the reproduction and comparison script, the netlist check with mutations, the page, the tests. NEXT: l4e7_p0sol.py.
 
 # P0-7: the solar stage's D-10 (guard on) and D-16 (the sense out of range) by circuit alternatives (MESHSAT-1357)
 
