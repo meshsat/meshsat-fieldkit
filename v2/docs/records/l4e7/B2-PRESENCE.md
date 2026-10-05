@@ -1,9 +1,14 @@
-# Route B2: the solar receptacle's presence pair feeding U21's INP (P0-7, MESHSAT-1357; a PROPOSAL)
+# Route B2: the solar receptacle's presence pair feeding U21's INP (P0-7, MESHSAT-1357; an unapproved PARTIAL proposal)
 
 Prepared 5 October 2026 by task P0-7 at the coordinator's instruction of 17:12 CEST (route B2 selected by the coordinator as the
 bounded PROVISIONAL desk route for D-10's port-level residual, under the owner's rules of 21 September and 5 October part 19, with
 `SUPPLIER-P1-1-P0SOL.md` as its validation). Prototype design: nothing is built, bought, mated or measured. Every figure below is
 printed by `l4e7_p0sol.py` (section 5 of `l4e7_p0sol.out`). Correspondence and orders: none; this page is drafts only.
+
+**Standing of this route (the owner's review of checkpoint 4, part 23):** D-10 is an UNRESOLVED PROTECTION DEFECT in the present
+model, carried as the receiving company's remaining engineering item E-1 (`SUPPLIER-P1-1-P0SOL.md`). Route B2 is an unapproved
+PARTIAL interface proposal: it would prevent the guard-on step only for a source that arrives through a mating point of the
+presence loop, it does not change the port's response when a step happens, and adopting or declining it does not resolve D-10.
 
 ## 1. Authority: is the receptacle's contact arrangement protected?
 
@@ -24,18 +29,19 @@ printed by `l4e7_p0sol.py` (section 5 of `l4e7_p0sol.out`). Correspondence and o
 
 ## 2. The owner item (the smallest concrete decision, with its consequences)
 
-**Decision asked:** may the kit's solar input carry a presence contact pair, so that a source can only ever arrive at the solar port
-with the guard off?
+**Decision asked:** may the kit's solar input carry a presence contact pair, so that a source arriving through the solar lead's
+mating points arrives with the guard off? (A partial measure: D-10 stays an unresolved protection defect either way, E-1.)
 
 | | (a) Adopt the presence pair (recommended) | (b) Keep the drawn interface |
 |---|---|---|
 | What changes | The wall receptacle's insert gains two contacts: with R-129's size 12 DC pair, insert 17-6 (six size 12 contacts, Amphenol's insert table, MAKER) carries DC A/B, solar C/D and the presence pair E/F with no further count change; the DC lead's cable goes from four to six cores; the solar tail ends in a connector whose presence contacts make last; the panel connects through a kit-supplied adapter lead that bridges the pair; board E gains J_SOLP and C80 and moves R96 (section 6) | nothing |
-| What it removes | D-10's guard-on event for every source that arrives through a mating point of the loop: every arrival becomes the cold connection, whose absolute ratings hold over the whole envelope (0.30 to 10.20 uH, section 5d of the .out) | nothing; the guard-on step stays a modelled absolute-rating violation below the port's floors (PV_F over 100 V below about 2.4 uH) |
-| What stays | a second stiff source added on the same lead while a panel holds the loop closed (OPEN, S1); the arriving source's slew margin line under 0.33 uH and PV_F over the recommended 80 V row under 0.78 uH (inside the absolute ratings; S2) | everything of D-10's port residual (S1) |
+| What it would prevent | the guard-on step for a source that arrives through a mating point of the loop: such an arrival meets the cold connection, whose absolute ratings hold over the whole envelope (0.30 to 10.20 uH, section 5d of the .out); D-10 is not resolved by it (E-1) | nothing; the guard-on step stays a modelled absolute-rating violation below the port's floors (PV_F over 100 V below about 2.4 uH), E-1 |
+| What stays | D-10 as an unresolved protection defect (E-1): the port's response to any step that still happens, a second stiff source added on the same lead while a panel holds the loop closed (OPEN, S1); the arriving source's slew margin line under 0.33 uH and PV_F over the recommended 80 V row under 0.78 uH (inside the absolute ratings; S2) | everything of D-10's port residual (S1) |
 | Cost | not quoted: one insert size up (shell 13 to 17 is already R-129's question), two crimp contacts, two cable cores, a 4-pole sequenced connector at the solar tail and an adapter lead per panel, an XH socket, a capacitor and a lead on board E (ASSUMPTION: tens of euros a kit) | none now; the residual's validation (S1) stays |
 | Claim change | "a panel through the kit's adapter lead" instead of "a panel of the owner's choice on the plug's second pair" | none |
 
-Recommendation: (a). Until the owner rules, the board E draft is a PROPOSAL and nothing of it is released.
+Recommendation: (a), as a partial measure beside E-1's correction, never in place of it. Until the owner rules, the board E draft
+is a PROPOSAL and nothing of it is released.
 
 ## 3. R-180 rewritten: the contact requirement (Layer 7, a named prerequisite of Layer 4's power gate)
 
@@ -52,7 +58,7 @@ Recommendation: (a). Until the owner rules, the board E draft is a PROPOSAL and 
 > connection to either power conductor or the shell; the panel adapter lead bridges it inside its plug.
 > **Reason:** with the pair making last, the source is on PV_F before INP can rise, so U21's OV (at most 31.06 V, within 4 us)
 > holds Q12 off for any source above the cut-off, and a source under it starts the stage through the gate slew; the guard is never
-> closed when a stiff source arrives (D-10, B6, L4-F01).
+> closed when a stiff source arrives through a mating point of the loop (part of D-10, B6, L4-F01; D-10 itself stays E-1's).
 > **Acceptance:** on three specimens of each mating point, fifty mating cycles each at the fastest hand speed: the presence pair's
 > closure measured at least 1 ms after both power contacts (a four-channel continuity recorder), and on the assembled kit (S2) a
 > 36 V source mated at the solar tail through a 0.30 uH loop leaves Q12's gate below its threshold and PV_F inside its absolute
