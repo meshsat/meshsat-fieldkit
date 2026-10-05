@@ -1,13 +1,15 @@
-"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 and 2; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
-release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, and
-the restart inhibit C-1c gated by PGD), board E (the loop through J_SMB to the dock) and board A (the loop's thermal guard RT1), from
-record l9stk section 15 (fnd/l9stk at 0d72880b).
+"""Layer 8 record l8p (MESHSAT-1357, 4 October 2026, rounds 1 to 3; v2/docs/records/l8p/): W4DP-F2's breaker drawn as
+release-guarded drafts for board P (the latch-off LM5069-1, the make-last enable loop's inverters, the RC hold through a diode, the
+restart inhibit C-1c gated by PGD, and in round 3 B-R2's reverse-charge detector on the loop's return), board E (the loop through
+J_SMB to the dock) and board A (the loop's thermal guard RT1), from record l9stk section 15 (fnd/l9stk at 0d72880b) and task
+L4-E11's section 19h (fnd/l4e11r9 at e60a94a8).
 
 The predicates: the committed .out is what the script prints; each draft checks, applies once on a scratch copy, refuses twice and
 refuses the tree's own generator; each board composes in L4-E9's change-list order with this record's draft in its place, first
 and last (board E with L4-E7's backstop draft of fnd/l4e7r6, which closes L8P-F01); the designators are this record's sets and
 disjoint from every other draft's; every value is found in record l9stk's copied text and the copies are the bytes SOURCES.txt
-pins; C-1c's budget closes on figures read from TI's held OPA187 sheet and Murata's NTC sheet; the netlist check reads NOT DRAWN
+pins; C-1c's budget closes on figures read from TI's held OPA187 sheet and Murata's NTC sheet; B-R2's detector closes on figures
+read from L4-E11's copies and the LM5069, CSD18510Q5B, 2N7002 and BZT52C sheets; the netlist check reads NOT DRAWN
 on the committed netlists, DRAWN on the netlists regenerated from the patched generators (the loop across the three boards and
 the inhibit included) and FAIL on mutated ones; the page carries no em or en dash and no claim word, and names the conditions
 and the interface rows owed. No KiCad: generator text, the generators' own part tables and netlist text, on scratch copies; the
@@ -82,17 +84,19 @@ def t_the_committed_output_is_what_the_script_prints():
     assert r.stdout == open(OUT, "rb").read(), "l8p_drafts.out is not what l8p_drafts.py prints; regenerate it with _bin/regen_out.py"
     assert all(_sha(GEN[b]) == s for b, s in before.items()), "the script wrote into the tree"
     t = r.stdout.decode()
-    for s in ("record l9stk's and L4-E7's copies equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
+    for s in ("record l9stk's, L4-E7's and L4-E11's copies equal the sha256 SOURCES.txt pins: yes", "the tree's generators are unchanged: yes",
               "+-1.95 K left: consistent", "the split closes", "is ASSUMED from the product search sheet", "THE LOCKOUT AT THE ALLOW EDGE",
               "E-10 gains: VDS under 1.62 V during current-limit excursions", "CLOSED by L4-E7's fnd/l4e7r6 at 914a2f5a",
               "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
               "board P, this record's against every other draft's: DISJOINT", "board E, this record's against every other draft's: DISJOINT",
               "board A, this record's against every other draft's: DISJOINT", "record l8p's breaker and enable loop on the netlists: NOT DRAWN",
               "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R248, C247)",
-              "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E"):
+              "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
+              "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
+              "l8p/inputs/l4e11-section19h-e60a94a8.md", "only the return held LOW is distinct"):
         assert s in t, s
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 2, "the alone and the composed readings"
-    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 3, "the three mutations"
+    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 5, "the five mutations"
     assert "REFUSED" not in t.split("5. COMPOSITION")[1].split("6. DESIGNATORS")[0], "a composition step refused"
     for seg in t.split("with scratch stand-ins for ")[1:]:      # none at all since L4-E11's round 9 corrected L8P-F02 and L8P-F03
         assert "L8P-F01" not in seg.split("\n")[0], "a stand-in for the closed L8P-F01 is still used"
@@ -128,8 +132,9 @@ def t_each_board_composes_in_l4e9s_order_in_its_place_first_and_last():
 
 def t_the_designators_are_this_records_sets_and_disjoint():
     m = _need_inputs()
-    want = {"p": {"U101", "U102", "D101", "D102", "RT101"} | {"Q%d" % k for k in range(101, 107)} | {"R%d" % k for k in range(101, 118)}
-            | {"C%d" % k for k in range(101, 107)} | {"TP%d" % k for k in range(101, 107)}, "e": set(), "a": {"RT1"}}
+    want = {"p": {"U101", "U102", "U103", "U104", "D101", "D102", "D103", "RT101"} | {"Q%d" % k for k in range(101, 109)}
+            | {"R%d" % k for k in range(101, 130)} | {"C%d" % k for k in range(101, 111)} | {"TP%d" % k for k in range(101, 109)},
+            "e": set(), "a": {"RT1"}}
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
             seq = [m.draft(r, n, b) for r, n in m.ORDER[b]]
@@ -184,7 +189,11 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
         kit, v = chk.run({"p": os.path.join(d, "mut_p.net")}, ROOT, io.StringIO())
         assert kit == "FAIL", "the input clamp left BRK_VIN and the check did not fail"
         for swap, what in (([("Q106", "1"), ("R117", "2")], "Q106's gate left PGD"), ([("Q104", "3"), ("R105", "1")], "Q104 no longer pulls UVLO directly"),
-                           ([("U102", "3"), ("U102", "4")], "the comparator's inputs exchanged")):
+                           ([("U102", "3"), ("U102", "4")], "the comparator's inputs exchanged"),
+                           ([("U104", "3"), ("U104", "4")], "the reverse comparator's inputs exchanged"),
+                           ([("Q107", "3"), ("Q105", "3")], "the detector's pull moved off the loop's return onto UVLO"),
+                           ([("R120", "1"), ("R119", "2")], "the charge comparator no longer on R10's cell side"),
+                           ([("D103", "1"), ("D103", "2")], "the reference's zener reversed")):
             bad = m.mutate(paths["p"], d, "mut_%s" % swap[0][0], [tuple(swap)])
             buf = io.StringIO(); kit, v = chk.run({"p": bad}, ROOT, buf)
             assert kit == "FAIL", "%s and the check did not fail: %s" % (what, buf.getvalue())
@@ -221,6 +230,33 @@ def t_the_restart_inhibits_budget_closes_on_read_figures():
     assert abs(B["lockout"] - 1.0) < 1e-9, "the allow edge is the inside air plus 1 K"
 
 
+def t_b_r2s_detector_closes_on_read_figures():
+    """B-R2, route R1 (round 3): the open case is L4-E11's, the threshold's floor is over the LDO-mode precharge and its top under
+    the latched FET's safe level, the reverse threshold sits between a running breaker's channel drop and the body diodes' typical
+    VSD, the pull and the interface's levels hold at PORIT, the restart fits board A's least hold, and the copies are pinned."""
+    m = _need_inputs()
+    for f in ("inputs/l4e11-section19h-e60a94a8.md", "inputs/l4e11-section15c-precharge-e60a94a8.md"):
+        assert _sha(os.path.join(REC, f)) == m.SOURCES_SHA[f], f
+    for sheet in (m.CSD_SHEET, m.N7002_SHEET, m.BZT_SHEET, m.LM5069_SHEET):
+        need(sheet, "a maker's sheet the detector reads")
+    texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
+    B = m.budget(texts["page"])
+    R = m.rev_budget(texts["page"], texts["l4e11"], texts["l4e11pre"], B)
+    assert R["ok"], {k: R[k] for k in ("m_lo", "m_hi", "vt_min", "vt_max", "v_chan", "vsd_150", "tj_at_max")}
+    assert (R["i_safe"], R["i_rb"], R["i_ldo"], R["r10"], R["i_lim"]) == (1.405, 1.2567, 0.33616, 2e-3, 23.93), R
+    assert R["i_th_min"] > R["i_ldo"] * 1.05 and R["i_th_max"] < R["i_safe"] / 1.10, (R["i_th_min"], R["i_th_max"])
+    assert R["tj_at_max"] < 145.0, R["tj_at_max"]
+    assert R["vt_min"] > 2 * R["v_chan"] and R["vt_max"] < R["vsd_150"] - 0.05, (R["vt_min"], R["v_chan"], R["vt_max"], R["vsd_150"])
+    assert R["gate_run"] > R["n_vth"][1] + 1.0 and m.V_CLAMP / 2 < R["n_vgs"], (R["gate_run"], R["n_vth"])
+    assert R["out_run"] >= m.OUT_POWERED + 0.5 and R["v_ret"] < m.RET_LOW / 10, (R["out_run"], R["v_ret"])
+    assert R["t_restart"] < m.STRETCH_MIN and R["t_d"] < 1e-3, (R["t_restart"], R["t_d"])
+    assert R["out_run"] / 2 < R["n_vth"][1], "L8P-F04's premise: Q47 at half of DOCK_EN_OUT no longer reads the loop powered"
+    drafts = open(m.MINE["p"], encoding="utf-8").read()
+    for frag in ('"OPA187IDBVR zero-drift amplifier as the reverse-charge detector', '"BZT52C12-7-F zener', '"1.15M 0.1% 25ppm', '"328k 0.05% 10ppm',
+                 'nfet("Q107", "REV_IG", "REV_MID", "DOCK_EN_RET"', 'nfet("Q108", "REV_VG", "PACK_N", "REV_MID"'):
+        assert frag in drafts, frag
+
+
 def t_the_page_is_clean_and_names_the_rows_owed():
     page = open(need(PAGE, "the l8p record page"), encoding="utf-8").read()
     for p in [PAGE, os.path.join(REC, "README.md")] + [os.path.join(REC, f) for f in os.listdir(REC) if f.endswith(".py")]:
@@ -232,7 +268,11 @@ def t_the_page_is_clean_and_names_the_rows_owed():
               "**The third battery FET's designator**", "**IF-1, critical to the service under the -1:**", "**IF-2:**", "L8P-F01", "L8P-F02", "L8P-F03",
               "**The NTC's tolerance at 80 C is ASSUMED.**", "**E-12b, a commissioning check like E-12**", "**E-10's line gains:**",
               "**The lockout at the allow edge.**", "**The NTC is bonded to the pad.**", "**DD-7, the input-return pulse:**", "**IF-7:**",
-              "**CLOSED** by L4-E7's `fnd/l4e7r6` at `914a2f5a`", "**Order codes owed:**"):
+              "**CLOSED** by L4-E7's `fnd/l4e7r6` at `914a2f5a`", "**Order codes owed:**",
+              "## 12. B-R2: the charge through a latched breaker", "**The criterion, item by item:**", "### 12a. What exists, and why none of it tells board A",
+              "**B-R2's interface, route R1 (section 12f, finding L8P-F04):**", "| L8P-F04 | A |", "| L8P-F05 | A |", "### 12h. Not taken",
+              "**E-14 (record l9stk's, with route R1)**", "**E-12c, a commissioning check like E-12**", "**R10's tolerance and temperature coefficient**",
+              "**B-R2's route R1 DRAFTED on board P**", "no new contact"):
         assert s in page, s
     for ref in ("U101", "R101", "R102", "Q101, Q102", "R103", "C101", "C102", "D101", "R104", "C103", "R105", "D102", "R106", "R107", "Q103",
                 "Q104", "R108, R109", "RT101", "R110", "RT1 (board A)"):
