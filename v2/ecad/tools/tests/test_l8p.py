@@ -103,7 +103,7 @@ def t_the_committed_output_is_what_the_script_prints():
               "l8p/inputs/l4e7r6-apply_gen_sch_e_backstop-914a2f5a.py OK", "       P INH  DRAWN", "decoupling C106: class D at U102.5 on BRK_VIN",
               "board P, this record's against every other draft's: DISJOINT", "board E, this record's against every other draft's: DISJOINT",
               "board A, this record's against every other draft's: DISJOINT", "record l8p's breaker and enable loop on the netlists: NOT DRAWN",
-              "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R257, C249)",
+              "       LOOP DRAWN", "all KiCad's names for open pins: yes; footprints differing: 0", "(R264, C264)",
               "L8P-F01 board E", "L8P-F02 board A", "L8P-F03 board E", "L8P-F04 board A", "L8P-F05 board A", "       P REV  DRAWN",
               "B-R2 BY THE CRITERION: MEETS ON PAPER", "decoupling C107: class D at U103.5 on BRK_VIN", "decoupling C108: class D at U104.5 on BRK_VIN",
               "l8p/inputs/l4e11-section19h-4def5975.md", "only the return held LOW is distinct", "       P DIO  DRAWN",
@@ -115,8 +115,8 @@ def t_the_committed_output_is_what_the_script_prints():
               # rounds 5 and 6
               "l8p/inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py OK", "l8p/inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py OK",
               "board E composed in L4-E9's order: the generator ran to its end (295 parts, intent written: yes)",
-              "board A composed in L4-E9's order: the generator ran to its end (728 parts, intent written: yes)",
-              "board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (750 parts",
+              "board A composed in L4-E9's order: the generator ran to its end (742 parts, intent written: yes)",
+              "board A, the list's order with the tree's drafts it does not name (l8r2's d8v3, l8r2's vbus20ov): the generator ran to its end (764 parts",
               "packrtn (R-201), slotlm (R-199), fb01 (R-200)", "it is refused, mainpb having taken its R233 and C241 as the next free",
               "THE DELAYS AS BOARD A DRAWS THEM (L4-E11 20d at 4def5975, quoted)", "board A's set 0.85 ms: the sum agrees",
               "20c AS L4-E11's ROUND 13 RESTATES IT ON MURATA'S PRINTED POINTS", "2.894 V) is WITHDRAWN as a bound",
@@ -131,12 +131,27 @@ def t_the_committed_output_is_what_the_script_prints():
               "NOT PRINTED at any pack voltage", "it does NOT keep C-PROT's 18 A for 60 s uninterrupted there",
               "inside the window: HOLDS", "the window 10.51 to 10.62, 1.0 % wide: A k EXISTS", "the window 8.53 to 10.62, 24.5 % wide: A k EXISTS",
               "on that table no k exists at either voltage", "NOT SELECTED", "THE JOINT CASE (the check V2's V2-m8): at 23.93 A held the board dissipates 4.57 W",
-              "L8P-F06 board P with L4-E11", "L8P-F07 board A with record l9stk"):
+              "L8P-F06 board P with L4-E11", "L8P-F07 board A with record l9stk",
+              # round 8: the guard as record l9stk's round 5 re-selected it (C4), drafted after L4-E11's DD-7
+              "apply_gen_sch_a_thguard.py (after apply_gen_sch_a_ptc.py): without it refused; check OK; applied OK; second application refused",
+              "l8p/apply_gen_sch_a_thguard.py               OK", "       A THG  DRAWN", "       A THG  NOT DRAWN: U60 is absent",
+              "board A, this record's: C260, C261, C262, C263, Q60, R260, R261, R262, R263, RT1, TP60, TP61, TP62, TP63, U60, U61",
+              "board A composed, the nodes on DOCK_EN_RET: J_DOCK.3, Q44.3, Q60.3, R261.2, U48.2",
+              "board P composed, the nodes on DOCK_EN_RET: J_SMB.5, Q103.1, Q107.3, R107.1, TP104.1",
+              "regenerated board A, round 7's RT1 without the guard (the withdrawn PTC)", "round 7's PTC, is drawn: it is withdrawn (L8P-F07)",
+              "decoupling C262: class L at U61.5 on THG_VDD, value_floor 1.5u, value_ceiling 47u, esr_max 0.2",
+              "decoupling C263: class D at U60.4 on THG_VDD", "decoupling C261: class D at U61.1 on DOCK_EN_OUT", "node THG_VDD     v_max 5.05 V",
+              "A U60   LM26LVQISDX-130  l9stk 15.9 round 5, C4: the LM26LV 130 C preset"):
         assert s in t, s
+    guard = t.split("mutated composed board A, the guard: ")[1:]
+    assert len(guard) == 7 and all("       A THG  FAIL: " in g.split("record l8p's")[0] for g in guard), "the seven mutations of L9S5-F1 each read FAIL on THG"
+    assert "       A THG  FAIL" in t.split("round 7's RT1 without the guard")[1].split("record l8p's")[0] or \
+        "       A EN   FAIL" in t.split("round 7's RT1 without the guard")[1].split("record l8p's")[0], "round 7's RT1 alone does not read FAIL"
     for old in ("NO k EXISTS", "a09e9a60", "ac72e730", "the junction at most 134.88 C against 150 C: PRINTED", "the pair alone fills the clamp's room from a 111.7 C case"):
         assert old not in t, "round 5's statement is back in the output: %s" % old
     assert t.count("record l8p's breaker and enable loop on the netlists: DRAWN") == 3, "the alone, the composed and the tree-order readings"
-    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 11, "the ten mutations and the breaker without the ideal diode"
+    assert t.count("record l8p's breaker and enable loop on the netlists: FAIL") == 19, \
+        "the ten mutations, the breaker without the ideal diode, the guard's seven mutations (round 8) and round 7's RT1 alone"
     assert t.count("       P DIO  FAIL") == 2 and t.count("       P DIO  NOT DRAWN") == 2, "DIO's two mutations; NOT DRAWN on the tree and without the draft"
     comp_a = t.split("mutated composed board A (")[1:]
     assert len(comp_a) == 3 and all("       A EN   FAIL: " in c.split("record l8p's")[0] for c in comp_a), "the three mutations of the composed board A"
@@ -157,9 +172,12 @@ def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
             assert _run([s, tgt, "--write"]).returncode == 3, "a second application was not refused"
             r = _run([s, GEN[b], "--write"]); assert r.returncode == 3 and b"NOT RELEASED" in r.stderr, "the tree's own generator was not refused"
             compile(open(tgt, encoding="utf-8").read(), tgt, "exec")
-            for s2 in m.MINE2.get(b, []):       # round 4: the second draft needs the first, and is guarded as it is
+            # round 4: the second draft needs the first, and is guarded as it is; round 8: the guard needs the PTC draft's block, likewise
+            for s2 in m.MINE2.get(b, []) + m.MINE_AFTER.get(b, []):
                 bare = os.path.join(d, os.path.basename(s2) + ".bare.py"); shutil.copy(GEN[b], bare); pre2 = _sha(bare)
-                r = _run([s2, bare, "--write"]); assert r.returncode == 3 and b"breaker draft is not applied" in r.stderr and _sha(bare) == pre2, "applied without the breaker draft"
+                r = _run([s2, bare, "--write"])
+                assert r.returncode == 3 and (b"breaker draft is not applied" in r.stderr or b"PTC block (apply_gen_sch_a_ptc.py) is not in the target" in r.stderr) \
+                    and _sha(bare) == pre2, "applied without the draft it requires"
                 pre2 = _sha(tgt)
                 r = _run([s2, tgt]); assert r.returncode == 0 and b"CHECK OK" in r.stdout and _sha(tgt) == pre2, r.stderr.decode()[-300:]
                 r = _run([s2, tgt, "--write"]); assert r.returncode == 0 and b"WRITTEN" in r.stdout, r.stderr.decode()[-300:]
@@ -174,9 +192,14 @@ def t_each_board_composes_in_l4e9s_order_in_its_place_first_and_last():
     m = _need_inputs()
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
-            seq = [m.draft(r, n, b) for r, n in m.ORDER[b]]
-            mine = m.mine_seq(b)
-            for tag, order in (("fwd", seq[:m.SLOT[b]] + mine + seq[m.SLOT[b]:]), ("first", mine + seq), ("last", seq + mine)):
+            # round 8: l8p_drafts.order() places L4-E11's DD-7 (FOLLOW) and this record's guard after it (MINE_AFTER) in each order
+            for tag in ("fwd", "first", "last"):
+                order = m.order(b, tag)
+                assert all(x in order for x in m.mine_all(b)), (b, tag)
+                if b == "a":
+                    g = m.MINE_AFTER["a"][0]
+                    assert all(order.index(x) < order.index(g) for x in m.mine_seq("a") + [f for f, _a in m.FOLLOW["a"] if f in order]), \
+                        "the guard draft is not after the PTC draft and DD-7 (%s)" % tag
                 p, res = m.compose(b, order, d, tag)
                 assert len(res) == len(order) and all(v.startswith("OK") for _s, v in res), (b, tag, res)
                 compile(open(p, encoding="utf-8").read(), p, "exec")
@@ -186,8 +209,10 @@ def t_the_designators_are_this_records_sets_and_disjoint():
     m = _need_inputs()
     want = {"p": {"U101", "U102", "U103", "U104", "U105", "D101", "D102", "D103", "D104", "RT101"} | {"Q%d" % k for k in range(101, 110)}
             | {"R%d" % k for k in range(101, 132)} | {"C%d" % k for k in range(101, 116)} | {"TP%d" % k for k in range(101, 110)},
-            "e": set(), "a": {"RT1"}}
+            "e": set(), "a": {"RT1", "U60", "U61", "Q60"} | {"R%d" % k for k in range(260, 264)} | {"C%d" % k for k in range(260, 264)}
+            | {"TP%d" % k for k in range(60, 64)}}
     second = {"Q109", "U105", "D104", "R130", "R131", "C111", "C112", "C113", "C114", "C115", "TP109"}
+    guard = want["a"] - {"RT1"}         # round 8: the guard draft's own (RT1 is the PTC draft's, retired by the guard)
     with tempfile.TemporaryDirectory() as d:
         for b in "pea":
             fwd = m.order(b, "tree")        # the list's order with the tree's drafts it does not name and L4-E11's DD-7
@@ -196,11 +221,13 @@ def t_the_designators_are_this_records_sets_and_disjoint():
             for s in fwd:
                 assert m.run(s, p, b)[0] == 0, s
                 after = open(p, encoding="utf-8").read(); adds[s] = m.added(before, after, s); before = after
-            own = m.mine_seq(b)
+            own = m.mine_all(b)
             mine = set().union(*[adds[x] for x in own])
             assert mine == want[b], (b, sorted(mine ^ want[b]))
             if b == "p":
                 assert adds[own[1]] == second and not (adds[own[0]] & second), "the two board P drafts' designators"
+            if b == "a":
+                assert adds[m.MINE_AFTER["a"][0]] - {"RT1"} == guard and '"RT1"' not in m.strip_comments(before), "the guard draft's designators, RT1 retired"
             for s, a in adds.items():
                 assert s in own or not (a & mine), "%s meets this record's %s" % (s, sorted(a & mine))
             assert not m.duplicates(before), (b, m.duplicates(before))
@@ -212,7 +239,7 @@ def t_every_value_is_the_records_and_the_copies_are_pinned():
         assert _sha(os.path.join(REC, f)) == full, f
         assert full in open(os.path.join(REC, "inputs", "SOURCES.txt"), encoding="utf-8").read(), "SOURCES.txt does not pin %s" % f
     texts = {k: open(os.path.join(REC, v), encoding="utf-8").read() for k, v in m.INPUT_FILES.items()}
-    drafts = {b: "".join(open(x, encoding="utf-8").read() for x in m.mine_seq(b)) for b in "pea"}
+    drafts = {b: "".join(open(x, encoding="utf-8").read() for x in m.mine_all(b)) for b in "pea"}
     for b, ref, pre, src, pat, key in chk.VALUES:
         assert re.search(chk.phrase_rx(pat), texts[key]), "l9stk no longer reads %s's value (%s)" % (ref, src)
         call = re.search(r'(?:ic|r|c|part|pfet5|nfet)\(\\?"%s\\?", ' % re.escape(ref), drafts[b])
@@ -230,7 +257,7 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
         paths = {}
         for b in "pea":
             t = os.path.join(d, "gen_sch_%s.py" % b); shutil.copy(GEN[b], t)
-            assert all(m.run(x, t, b)[0] == 0 for x in m.mine_seq(b))
+            assert all(m.run(x, t, b)[0] == 0 for x in m.mine_all(b))
             rc, path, table = m.netlist_text(b, t, d, "t")
             assert rc == 0 and table["intent_written"] and not table["unplaced"], (b, path)
             paths[b] = path
@@ -267,6 +294,20 @@ def t_the_netlist_check_reads_not_drawn_drawn_and_fail():
         rc, path, _tb = m.netlist_text("p", t, d, "bo")
         buf = io.StringIO(); kit, v = chk.run({"p": path}, ROOT, buf)
         assert rc == 0 and kit == "FAIL" and "P DIO  NOT DRAWN" in buf.getvalue(), "the breaker without the ideal diode did not read FAIL"
+        # round 8: the guard (THG) reads DRAWN on board A alone, and each of the seven mutations of L9S5-F1 FAILS on THG itself
+        buf = io.StringIO(); chk.run({"a": paths["a"]}, ROOT, buf)
+        assert "A THG  DRAWN" in buf.getvalue() and "A EN   DRAWN" in buf.getvalue(), buf.getvalue()
+        assert len(m.GUARD_MUTATIONS) == 7
+        for k, (what, ops) in enumerate(m.GUARD_MUTATIONS):
+            bad = m.mutate_ops(paths["a"], d, "mut_thg%d" % k, ops)
+            buf = io.StringIO(); kit, v = chk.run({"a": bad}, ROOT, buf)
+            assert kit == "FAIL" and "A THG  FAIL" in buf.getvalue(), "%s and the THG group did not fail: %s" % (what, buf.getvalue())
+        # round 8: the old guard, round 7's RT1 without the guard draft, is no longer DRAWN
+        t = os.path.join(d, "ptc_only.py"); shutil.copy(GEN["a"], t)
+        assert m.run(m.MINE["a"], t, "a")[0] == 0
+        rc, path, _tb = m.netlist_text("a", t, d, "ptc")
+        buf = io.StringIO(); kit, v = chk.run({"a": path}, ROOT, buf)
+        assert rc == 0 and kit == "FAIL" and "RT1" in buf.getvalue() and "A THG  NOT DRAWN" in buf.getvalue(), buf.getvalue()
 
 
 def t_the_unpatched_generators_reproduce_the_committed_netlists():
@@ -662,8 +703,8 @@ def t_round6_the_lists_whole_order_composes_wherever_its_drafts_are():
                     ["apply_gen_sch_%s_%s.py" % (b, n) for _r, n, _row in m.LIST_ABSENT[b]]]
             assert len(held) == len(m.LIST_ABSENT[b]) - len(missing) and all(seq.index(x) < seq.index(mine) for x in held)
             if b == "a":
-                dd7, mainpb = m.FOLLOW["a"][0][0], m.draft("d8dec31", "mainpb", "a")
-                assert seq.index(mine) < seq.index(dd7) < seq.index(mainpb), "the list's 3g and 3h: ptc, dd7, then mainpb"
+                dd7, mainpb, thg = m.FOLLOW["a"][0][0], m.draft("d8dec31", "mainpb", "a"), m.MINE_AFTER["a"][0]
+                assert seq.index(mine) < seq.index(dd7) < seq.index(thg) < seq.index(mainpb), "the list's 3g and 3h: ptc, dd7, the guard (round 8), then mainpb"
                 assert not any("d8v3" in x or "vbus20ov" in x for x in seq), "the list does not name l8r2's d8v3 and vbus20ov"
             p, res = m.compose(b, seq, d, "list")
             assert len(res) == len(seq) and all(v.startswith("OK") for _s, v in res), (b, res)
@@ -675,10 +716,16 @@ def t_round6_the_lists_whole_order_composes_wherever_its_drafts_are():
                 bad = m.mutate(path, d, "mut_list", [(("U48", "2"), ("U48", "1"))])
                 kit, v = chk.run({"a": bad}, ROOT, io.StringIO())
                 assert kit == "FAIL", "U48's VDD on the return and the list-order board A did not fail"
-    # the DD-7 draft after mainpb is refused (mainpb then holds R233 and C241): the order constraint the page states
+    # the DD-7 draft after mainpb is refused (mainpb then holds R233 and C241): the order constraint the page states (on the order
+    # without the round 8 guard, which removes RT1 and would be refused first for that)
     with tempfile.TemporaryDirectory() as d:
-        p, res = m.compose("a", m.order("a", "last") + [m.FOLLOW["a"][0][0]], d, "late")
+        late = [x for x in m.order("a", "last") if x not in m.MINE_AFTER["a"]] + [m.FOLLOW["a"][0][0]]
+        p, res = m.compose("a", late, d, "late")
         assert res[-1][1].startswith("REFUSED") and "R233" in res[-1][1] and all(v.startswith("OK") for _s, v in res[:-1]), res[-2:]
+        # round 8: DD-7 after the guard is refused for RT1, which the guard has removed: the guard goes after DD-7, never before
+        early = m.order("a", "last") + [m.FOLLOW["a"][0][0]]
+        p, res = m.compose("a", early, d, "early")
+        assert res[-1][1].startswith("REFUSED") and "RT1" in res[-1][1], res[-1:]
 
 
 def t_round6_the_ptc_draft_quotes_what_murata_prints():
@@ -840,24 +887,32 @@ def t_round7_l8p_f08_g2s_window_fails_on_l9stks_own_leakage():
         assert s in out, s
 
 
-def t_round7_the_page_states_the_stop_and_no_g2_draft_exists():
-    """The brief stops the draft at a figure that does not reproduce: no apply script of this record draws an LM26LV, the board A
-    draft still draws RT1, L8P-F07 and L8P-F08 read OPEN, and the page says why, with the correction scope."""
+def t_round7_the_stop_stands_and_round8_draws_c4_not_g2():
+    """Round 7's stop stands as history: G2 (an AO3400A shunt, one 15 kOhm) was never drafted. Round 8 drafts record l9stk's C4: the
+    guard draft draws the kit's 2N7002 as the shunt and the pair of 7.5 kOhm, read from its own generator text; the PTC draft is
+    unchanged (L4-E11 pins it); L8P-F07 and L8P-F08 read OPEN; 12k keeps round 7's text and points to 12m."""
     page = open(PAGE, encoding="utf-8").read()
+    g = _mod("l8p_thguard_under_test", "apply_gen_sch_a_thguard.py")
+    assert 'part("Q60", "Transistor_FET", "2N7002", ' in g._NEW_LOOP and '"C8545")' in g._NEW_LOOP, "the shunt is not the kit's 2N7002"
+    assert "AO3400A" not in g._NEW_LOOP and "C20917" not in g._NEW_LOOP, "the guard draft draws G2's AO3400A"
+    assert 'r("R260", "7.5k 1%", "DOCK_EN_OUT", "THG_MID"); r("R261", "7.5k 1%", "THG_MID", "DOCK_EN_RET")' in g._NEW_LOOP
+    assert '"RT1"' not in g._NEW_LOOP, "RT1 is drawn by the guard draft"
     for f in os.listdir(REC):
-        if f.startswith("apply_") and f.endswith(".py"):
-            t = open(os.path.join(REC, f), encoding="utf-8").read()
-            assert "LM26LV" not in t and "TPS70950" not in t, "%s draws G2: the brief stopped the draft" % f
+        if f.startswith("apply_") and f.endswith(".py") and f != "apply_gen_sch_a_thguard.py":
+            body = open(os.path.join(REC, f), encoding="utf-8").read()
+            assert "LM26LV" not in body and "TPS70950" not in body, "%s draws the guard: only apply_gen_sch_a_thguard.py does" % f
     assert 'part("RT1", "Device", "Thermistor_PTC"' in open(os.path.join(REC, "apply_gen_sch_a_ptc.py"), encoding="utf-8").read()
     k = page.split("### 12k.")[1].split("### 12l.")[0]
     for s in ("**What does not reproduce: L4-E11 20c's window", "Finding L8P-F08, OPEN", "**The stop.**", "the first negative check of G2 as",
               "**A shunt of lower leakage: the kit's 2N7002**", "**The fixed resistor at most 11.57 kOhm (11 kOhm in E24)**", "under **77.9 C**",
-              "stops a dead pack's precharge", "RET/OUT closed 0.590", "| REPRODUCED |"):
+              "stops a dead pack's precharge", "RET/OUT closed 0.590", "| REPRODUCED |", "**Round 8.** G2 was never drafted"):
         assert s in k, s
     nine = page.split("## 9. Findings")[1].split("## 10.")[0]
     assert "| L8P-F08 |" in nine and "| **OPEN**: the first negative check of G2 as selected" in nine
     f07 = [l for l in nine.splitlines() if l.startswith("| L8P-F07 |")][0]
-    assert "| **OPEN**" in f07 and "no draft of G2 yet, RT1 still drawn" in f07
+    f08 = [l for l in nine.splitlines() if l.startswith("| L8P-F08 |")][0]
+    assert "| **OPEN**" in f07 and "DRAFTED in `apply_gen_sch_a_thguard.py`" in f07 and "OPEN until the independent check" in f07
+    assert "OPEN until the independent check" in f08
 
 
 def t_round7_v2r_m8_19h_and_15c_are_under_the_guard():
@@ -911,3 +966,95 @@ def t_round7_v2r_m9_the_paired_bench_items_are_judged_per_device():
     assert "within 0.8 mK of its own mounting base" in l12
     copy = open(os.path.join(REC, "inputs", "l4e11-sections23d-24b-08f7e38a.md"), "rb").read()
     assert hashlib.sha256(copy).hexdigest() == "fb6624bfc910198af156a8b549f1c0b3d1f39674784ce813115ebcd887e18f74"
+
+
+# ------------------------------------------------------------------------------------------------ round 8: the guard as C4
+C4_SCRIPT = os.path.join(REC, "l8p_c4.py")
+C4_OUT = os.path.join(REC, "l8p_c4.out")
+
+
+def _c4_run(draft=None):
+    """l8p_c4.py's main() in this process, its DRAFT pointed at `draft` when given; (exit code, stdout)."""
+    _G()
+    import contextlib
+    sp = importlib.util.spec_from_file_location("l8p_c4_run_%d" % len(_C), C4_SCRIPT)
+    mm = importlib.util.module_from_spec(sp); sp.loader.exec_module(mm)
+    if draft:
+        mm.DRAFT = draft
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = mm.main()
+    return rc, buf.getvalue()
+
+
+def t_round8_the_c4_check_and_judgement_are_what_the_script_prints():
+    """l8p_c4.out is byte for byte what l8p_c4.py prints: record l9stk's C4 checked on the makers' sheets (every figure it reads
+    reproduces) and the guard draft judged on C-PROT rev 1 on its own values; every predicate yes."""
+    _G()
+    r = _run([C4_SCRIPT])
+    assert r.returncode == 0, r.stderr.decode()[-400:]
+    assert r.stdout == open(C4_OUT, "rb").read(), "l8p_c4.out is not what l8p_c4.py prints: regenerate it with _bin/regen_out.py"
+    o = r.stdout.decode()
+    assert o.count("REPRODUCED within its printed rounding") == 7 and "NOT REPRODUCED" not in o
+    preds = o.split("\n12. PREDICATES\n")[1].splitlines()
+    assert preds and all(l.rstrip().endswith(" yes") for l in preds if l.strip()), [l for l in preds if l.rstrip().endswith(" NO")]
+    for s in ("CONFIRMED on the sheets", "the draft draws C4's values: yes", "the judgement (item 3) on C-PROT rev 1: HOLDS on the desk",
+              "0.908 V (0.859 V all doubled) against 0.84 V: HOLDS", "the return 0.568 V: FAILS (L8P-F08, round 7)", "so record l9stk's 0.391 V and 36.0 ms are NOMINAL",
+              "a dwell of 73.5 ms nominal", "below 13.2 uF", "L8P-F07 and L8P-F08 stay OPEN", "(d) VDD (TP63) reads 4.95 to 5.05 V", "NOT BOUNDED here, the same"):
+        assert s in o, s
+
+
+def t_round8_the_judgement_fails_drafts_that_draw_other_values():
+    """The judgement is computed on the draft's own values, so a draft that draws something else fails it while the check (on C4 as
+    record l9stk states it) still reproduces: G2's AO3400A shunt fails the window (L8P-F08); a 30 kOhm pair fails the window and
+    the readings; a 1 uF output capacitor fails TI's floor; a 22 uF input capacitor fails FM1's cycle and the docking start; a
+    10 nF gate capacitor fails the state before tEN."""
+    src = open(os.path.join(REC, "apply_gen_sch_a_thguard.py"), encoding="utf-8").read()
+    cases = ((('SHUNT = ("Q60", "2N7002")', 'SHUNT = ("Q60", "AO3400A")'), ("the draft: the window holds",)),
+             (('PAIR = (("R260", "7.5k 1%"), ("R261", "7.5k 1%"))', 'PAIR = (("R260", "15k 1%"), ("R261", "15k 1%"))'),
+              ("the draft: the window holds", "the draft: the four readings hold")),
+             (('("C262", "4.7u 16V X7R")', '("C262", "1u 16V X7R")'), ("the draft: its output capacitor",)),
+             (('("C261", "1u 50V X7R")', '("C261", "22u 50V X7R")'), ("the draft: FM1's single-resistor cycle", "the draft: a hot docking")),
+             (('("C260", "1u 16V X7R")', '("C260", "10n 16V X7R")'), ("the draft: its gate network keeps the gate",)))
+    with tempfile.TemporaryDirectory() as d:
+        for (old, new), fails in cases:
+            assert src.count(old) == 1, old
+            q = os.path.join(d, "thg.py"); open(q, "w", encoding="utf-8").write(src.replace(old, new))
+            rc, o = _c4_run(q)
+            assert rc == 0 and "CONFIRMED on the sheets" in o, "the check moved with the draft's values"
+            no = [l.strip() for l in o.split("\n12. PREDICATES\n")[1].splitlines() if l.rstrip().endswith(" NO")]
+            for f in fails:
+                assert any(l.startswith(f) for l in no), (new, f, no)
+            assert any(l.startswith("C-PROT rev 1 holds on the desk for the draft") for l in no), new
+            assert not any(l.startswith("C4:") or l.startswith("the check:") for l in no), (new, no)
+
+
+def t_round8_the_guard_draft_replaces_the_ptc_block_after_dd7():
+    """apply_gen_sch_a_thguard.py asserts the PTC draft's own block and section word for word (its old texts are the PTC draft's
+    constants), refuses a generator without them, replaces them once (RT1 gone, the guard's fifteen parts in), refuses a second run
+    and the tree's generator; L4-E11's DD-7 refuses a generator the guard has patched, so the guard goes after DD-7."""
+    m = _need_inputs()
+    ptc = _mod("l8p_ptc_under_test", "apply_gen_sch_a_ptc.py")
+    g = _mod("l8p_thguard_under_test2", "apply_gen_sch_a_thguard.py")
+    assert g._OLD_LOOP == ptc._LOOP and g._OLD_SEC == ptc._SEC, "the guard's old texts are not the PTC draft's block"
+    assert len(g.ADDS) == 15 and set(g.ADDS) == {"U60", "U61", "Q60", "R260", "R261", "R262", "R263", "C260", "C261", "C262", "C263",
+                                                 "TP60", "TP61", "TP62", "TP63"}
+    s = os.path.join(REC, "apply_gen_sch_a_thguard.py")
+    dd7 = m.FOLLOW["a"][0][0]
+    with tempfile.TemporaryDirectory() as d:
+        tgt = os.path.join(d, "g.py"); shutil.copy(GEN["a"], tgt)
+        r = _run([s, tgt, "--write"]); assert r.returncode == 3 and b"PTC block" in r.stderr, "applied without the PTC draft"
+        seq = m.order("a", "fwd")
+        i = seq.index(s)
+        for x in seq[:i]:
+            assert m.run(x, tgt, "a")[0] == 0, x
+        before = open(tgt, encoding="utf-8").read()
+        assert 'part("RT1", "Device", "Thermistor_PTC"' in before and '"U48"' in before, "the PTC draft and DD-7 are not applied before the guard"
+        r = _run([s, tgt, "--write"]); assert r.returncode == 0 and b"WRITTEN" in r.stdout, r.stderr.decode()[-300:]
+        after = open(tgt, encoding="utf-8").read()
+        assert '"RT1"' not in m.strip_comments(after) and after.count(g._NEW_LOOP) == 1 and after.count(g._NEW_SEC) == 1
+        assert all(re.search(r'\b(?:ic|part|r|c|tp)\("%s"' % x, after) for x in g.ADDS), "a guard part is not drawn"
+        assert _run([s, tgt, "--write"]).returncode == 3, "a second application was not refused"
+        r = m.run(dd7, tgt, "a"); assert r[0] == 3 and "RT1" in r[1], "L4-E11's DD-7 applied after the guard: %r" % (r,)
+        r = _run([s, GEN["a"], "--write"]); assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
+
