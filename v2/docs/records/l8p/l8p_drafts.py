@@ -1761,6 +1761,11 @@ def main():
             m = mutate(comp["a"], d, tag, swaps)
             buf = io.StringIO(); CHK.run({"a": m}, ROOT, buf, label=lambda x, what=what: "mutated composed board A (%s)" % what)
             w("".join("     " + l + "\n" for l in buf.getvalue().splitlines()))
+        # Round 8: every node the composed boards put on the loop's return, the count the guard's window rests on (l8p_c4.out section 3)
+        for b in "pea":
+            if b in comp:
+                nl_ = CHK.read_netlist(open(comp[b], "rb").read())
+                w("   board %s composed, the nodes on DOCK_EN_RET: %s\n" % (b.upper(), ", ".join("%s.%s" % x for x in sorted(CHK._nodes(nl_, "DOCK_EN_RET")))))
         # Round 8: the guard's seven mutations (record l9stk 15.9 round 5 (b), L9S5-F1), each on the composed board A, each read on THG
         for k_, (what, ops) in enumerate(GUARD_MUTATIONS, 1):
             m = mutate_ops(comp["a"], d, "mut_thg%d" % k_, ops)
