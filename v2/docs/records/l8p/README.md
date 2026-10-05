@@ -24,6 +24,14 @@ ends this loop.
 | Tests that fail on the old guard | `test_l8p.t_round8_*`, `t_the_netlist_check_reads_not_drawn_drawn_and_fail` | a draft with G2's AO3400A, a 30 kOhm pair, a 1 uF output capacitor, a 22 uF input capacitor or a 10 nF gate capacitor fails the judgement while the check reproduces; RT1 alone reads FAIL |
 | What stays open | page 12m (the status and the findings L8P-R8-F1 to F6) | E-13's gradient and lag; E-13b (b2); the ground offset; X7R's bias; the NGF0006A land; FM2 latent between checks |
 
+**Scratch checks of round 8** (read-only; nothing written in any worktree; the scratch copies deleted with the session):
+- `git merge-tree` of this tip with L4-E11's `08f7e38a`: CLEAN. With record l9stk's `bb6d2c8f` and with main's `aa32332c`: conflicts in
+  `l8p_drafts.out` (regenerated on a merged tree) and in `test_l8p.py`, where set 29's reader change (`records/int29/`) edits a line this
+  branch replaced in round 5; both predate round 8.
+- Board A composed in L4-E9's whole list order with record l8r2's packrtn, slotlm and fb01 of `fnd/l8r3` at `89924e40` laid in before the
+  PTC draft (as `list_order_full()` places them): 17 steps OK, the generator to its end (792 parts; 814 with the tree's d8v3 and
+  vbus20ov), A EN and A THG DRAWN, no part drawn twice; mainpb takes R264 and C264 there too.
+
 **Round 7 (5 October 2026, branch `fnd/l8p2` from `2c258cf9`): record l9stk's guard selection G2 CHECKED before any draft; NOT
 CONFIRMED on one figure, so NO G2 draft; L8P-F07 stays OPEN and L8P-F08 is new and OPEN.** Done: the check (`l8p_guard.py`,
 `l8p_guard.out`, page 12k), the recheck V2R's V2R-m8 (19h and 15c under the stale-copies guard) and V2R-m9 (E-8 and E-14 (a)
