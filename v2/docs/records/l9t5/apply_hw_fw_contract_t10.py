@@ -45,7 +45,7 @@ FW_B20 = ("| FW-B20 | the three supervisors `B:U41`, U51, U61 (STM32H743VIT6, si
 FW_B21 = ("| FW-B21 | the six TCAN334D `B:U43`, U44, U53, U54, U63, U64 on fabrics A and B, each fed from its supervisor's `+3V3_IOCx`; "
           "SHDN (pin 5) from PD2 (fabric A) and PB14 (fabric B) with 100 k to GND (record l9t5 `apply_gen_sch_b_canshdn.py`, DRAFTED; as "
           "drawn pin 5 rests on the part's internal pull-down) | FDCAN_CCCR.DAR = 1 on both fabrics, so every transmission is a "
-          "scheduled one (RM0433 Rev 8 p.2470 and p.2527); nominal and data rates between 125 kbit/s and 1 Mbit/s (FW-B09's ceiling "
+          "scheduled one (RM0433 Rev 8 p.2470 and p.2527); nominal and data rates between 500 kbit/s and 1 Mbit/s (record l9t5 10h (2): 7 frames a window or more under the share; FW-B09's ceiling "
           "kept); each supervisor's own TXD dominant at most 2 % of every 100 ms window on each fabric, its frames, their error flags and "
           "its acknowledgements counted; a fabric at error passive or bus-off (FDCAN_PSR.EP, PSR.BO; on bus-off the device sets INIT "
           "itself, p.2464 and p.2534), or with a frame pending and no valid frame for 100 ms, is stopped at once (INIT kept set) and its "

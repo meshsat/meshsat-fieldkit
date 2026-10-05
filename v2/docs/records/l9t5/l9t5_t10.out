@@ -22,7 +22,8 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
    653635f4a67e8caa v2/docs/REQUIREMENTS-TRACE.md
    72c306adf529de13 v2/docs/records/l9t5/apply_gen_sch_b_canshdn.py
-   9de7a867ace46e2b v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   8e374670868696ba v2/docs/records/l9t5/apply_hw_fw_contract_t10.py
+   a4a079e321cb165b v2/docs/records/l9t5/inputs/cases-cdev-rev2-20261005.md
 
 2. THE APPLICABLE OPERATING STATE OF A SUPERVISOR (U41, U51, U61, STM32H743VIT6), AS THE TREE DEFINES IT
    v2/docs/HW-FW-CONTRACT.md: 11 rows name the supervisors (their I2C target addresses, CAN FD at 1 Mbps or less, the quorum, the vote rate);
@@ -290,18 +291,21 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    the controller's OTHER loads on its own 3.3 V, from the composed board B netlist (section 10f's composition): R160 100k, R260 100k, R360 100k, R480 10k, R483 10k, R486 10k, R489 10k, R492 10k, R495 10k, R498 10k, R518 10k, R63 10k, R64 10k, R65 1k, R67 100k, R68 100k, each at the LDO's
      3.3495 V (VOUT +1.5 %, PRINTED) over its value less 1 % (ASSUMED): 0.0069 A at most (the largest of the three controllers), against
      the generator's DECLARED 0.020 A for the third part; the circuit's own figure is used below (MODEL, every resistor at the full rail)
+   the LDO's drop at its worst corner (part 21): the pre-regulator's top 4.2907 V less the LDO's least output 3.2505 V (98.5 %, PRINTED): 1.0402 V,
+     191.4 K/A at 184 C/W (round 4 and section 8 used the nominal 3.3 V: 0.9907 V, 182.3 K/A); every junction of section 10 is at this corner
    the two transceivers at FW-B21's share (10d): 0.0046 A each. THE BOUNDED STATE, each figure with the air it is judged at:
      rev  air                       controller (TJ)        regulator   LDO junction  against 125 C
-     Y    L4-E12 E5 mixed 76.25 C   0.2396 A (111.8 C)     0.2558 A     122.9 C      holds
+     Y    L4-E12 E5 mixed 76.25 C   0.2396 A (111.8 C)     0.2558 A     125.2 C      FAILS
      Y    L4-E12 E5 exhaust 81.89 C NO OPERATING POINT at or under 125 C: the H743 itself is outside its rating in the bounded state
-     V    L4-E12 E5 mixed 76.25 C   0.1570 A (99.6 C)     0.1732 A     107.8 C      holds
-     V    L4-E12 E5 exhaust 81.89 C 0.1830 A (109.1 C)     0.1992 A     118.2 C      holds
-   the largest local air at which the bounded state holds 125 C at the LDO with a controller operating point: rev Y 76.44 C, rev V 85.12 C
+     V    L4-E12 E5 mixed 76.25 C   0.1570 A (99.6 C)     0.1732 A     109.4 C      holds
+     V    L4-E12 E5 exhaust 81.89 C 0.1830 A (109.1 C)     0.1992 A     120.0 C      holds
+   the largest local air at which the bounded state holds 125 C at the LDO with a controller operating point: rev Y 76.23 C, rev V 84.20 C
    (V6-m10's 79.4 C was the declared peak's). JUDGED at 76.25 C, the case's air (C-DEV rev 1, L4-E12 E5's mixed air, T10-A2 as written):
-     both revisions hold (rev Y 122.9 C, rev V 107.8 C). In the exhaust air rev V holds (118.2 C); rev Y's rows give the controller no
-     operating point, which matters only for a rev X part (no printed rows) placed in air over 76.44 C: which air the pockets see is the
+     rev V holds (109.4 C); rev Y's rows, the cover for a rev X part, do NOT hold (125.2 C) at this corner (10h (1), SESSION L9T5-D7: rev V fitted).
+     In the exhaust air rev V holds (120.0 C); rev Y's rows give the controller no
+     operating point, which matters only for a rev X part (no printed rows) placed in air over 76.23 C: which air the pockets see is the
      inside air's question (U-02, the T-H1 mock-up), not settled here. With the generator's DECLARED auxiliaries instead (0.060 A a
-     supervisor for its three other parts) rev Y reads 130.9 C and rev V 115.8 C at 76.25 C: the declaration over-covers, it does not bound
+     supervisor for its three other parts) rev Y reads 133.6 C and rev V 117.8 C at 76.25 C: the declaration over-covers, it does not bound
 
    10d. F13: THE TRANSMIT SHARE BOUNDED (FW-B21, drafted)
    With FDCAN_CCCR.DAR = 1 every frame is one the firmware scheduled (10b), so the firmware's schedule alone sets how long each TXD is
@@ -312,9 +316,10 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    the 180 mA bus-fault row and the 200 mA short-circuit row. The function needs far less: the quorum's frames at 1 Mbit/s or less
    (FW-B09) are a few per 100 ms; the bound is a firmware property the schedule computes, CONFIRMED on the bench by V-B21, not decided there
    The window: the junction follows the window's average when the window is short against the package's thermal time constant, which
-   Diodes does not print (MISSING); whatever that constant, the junction never passes the held figure of section 8 (m) (143.1 C on rev Y
+   Diodes does not print (MISSING); whatever that constant, the junction never passes the held figure of section 8 (m) (146.4 C on rev Y
    at this air with the enabled set, under the 150 C absolute maximum)
-   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads 122.9 C (rev Y) and 107.8 C (rev V) at 76.25 C: inside 125 C
+   F13: the held row (m) stays the no-row bound; WITH THE ROW the regulator reads 109.4 C on rev V (inside 125 C) and 125.2 C on rev Y's cover
+     (OVER by 0.2 K; a rev X part waits on V-B20 under L9T5-D7) at 76.25 C, the worst drop's corner
 
    10e. THE CREDIBLE BUS FAULTS INSIDE BOARD B (V6-B3, 1a; F16 and F17 restated per fault)
    Both fabrics lie wholly on board B: the parts on CANH_*/CANL_* in the composed netlist are R470, R471, R472, R473, R504, R505, R506, R507, R508, R509, R511, R512, TP535, TP536, TP537, TP538, U43, U44, U53, U54, U63, U64, no connector among them. Board B's
@@ -340,34 +345,36 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
           I_f 0.0600 A, MODEL: the failed driver taken as the dominant row (a failed part; nothing printed)
    Each regulator's current and LDO junction at 76.25 C (one fabric faulted, the other at its share; IOHA row 7, a served state: 125 C):
      fault  rev  held (no DTO, no row)      the parts alone (DTO, no row)            with the response (FW-B21, SHDN drafted)
-     B1     Y    0.4312 A  154.9 C FAILS     NOT BOUNDED (no row)                     0.2582 A  123.3 C holds
-     B2     Y    0.4312 A  154.9 C FAILS     NOT BOUNDED (no row)                     0.2582 A  123.3 C holds
-     B3     Y    0.3321 A  136.8 C FAILS     NOT BOUNDED (no row)                     0.2563 A  123.0 C holds
-     B4     Y    0.3672 A  143.2 C FAILS     NOT BOUNDED (no row)                     0.2592 A  123.5 C holds
-     B5     Y    0.4512 A  158.5 C FAILS     NOT BOUNDED (no row)                     0.2586 A  123.4 C holds
-     B6     Y    0.3062 A  132.1 C FAILS     0.2976 A  130.5 C                        0.2557 A  122.9 C holds
-     B7a    Y    0.3112 A  133.0 C FAILS     0.2597 A  123.6 C                        0.2558 A  122.9 C holds
-     B7b    Y    0.3112 A  133.0 C FAILS     0.3112 A  133.0 C                        0.2512 A  122.0 C holds
-     B1     V    0.3486 A  139.8 C FAILS     NOT BOUNDED (no row)                     0.1756 A  108.3 C holds
-     B2     V    0.3486 A  139.8 C FAILS     NOT BOUNDED (no row)                     0.1756 A  108.3 C holds
-     B3     V    0.2495 A  121.7 C           NOT BOUNDED (no row)                     0.1736 A  107.9 C holds
-     B4     V    0.2846 A  128.1 C FAILS     NOT BOUNDED (no row)                     0.1766 A  108.4 C holds
-     B5     V    0.3686 A  143.4 C FAILS     NOT BOUNDED (no row)                     0.1760 A  108.3 C holds
-     B6     V    0.2236 A  117.0 C           0.2150 A  115.4 C                        0.1731 A  107.8 C holds
-     B7a    V    0.2286 A  117.9 C           0.1771 A  108.5 C                        0.1732 A  107.8 C holds
-     B7b    V    0.2286 A  117.9 C           0.2286 A  117.9 C                        0.1686 A  107.0 C holds
+     B1     Y    0.4312 A  158.8 C FAILS     NOT BOUNDED (no row)                     0.2582 A  125.7 C FAILS
+     B2     Y    0.4312 A  158.8 C FAILS     NOT BOUNDED (no row)                     0.2582 A  125.7 C FAILS
+     B3     Y    0.3321 A  139.8 C FAILS     NOT BOUNDED (no row)                     0.2563 A  125.3 C FAILS
+     B4     Y    0.3672 A  146.5 C FAILS     NOT BOUNDED (no row)                     0.2592 A  125.9 C FAILS
+     B5     Y    0.4512 A  162.6 C FAILS     NOT BOUNDED (no row)                     0.2586 A  125.8 C FAILS
+     B6     Y    0.3062 A  134.9 C FAILS     0.2976 A  133.2 C                        0.2557 A  125.2 C FAILS
+     B7a    Y    0.3112 A  135.8 C FAILS     0.2597 A  126.0 C                        0.2558 A  125.2 C FAILS
+     B7b    Y    0.3112 A  135.8 C FAILS     0.3112 A  135.8 C                        0.2512 A  124.3 C holds
+     B1     V    0.3486 A  143.0 C FAILS     NOT BOUNDED (no row)                     0.1756 A  109.9 C holds
+     B2     V    0.3486 A  143.0 C FAILS     NOT BOUNDED (no row)                     0.1756 A  109.9 C holds
+     B3     V    0.2495 A  124.0 C           NOT BOUNDED (no row)                     0.1736 A  109.5 C holds
+     B4     V    0.2846 A  130.7 C FAILS     NOT BOUNDED (no row)                     0.1766 A  110.0 C holds
+     B5     V    0.3686 A  146.8 C FAILS     NOT BOUNDED (no row)                     0.1760 A  109.9 C holds
+     B6     V    0.2236 A  119.0 C           0.2150 A  117.4 C                        0.1731 A  109.4 C holds
+     B7a    V    0.2286 A  120.0 C           0.1771 A  110.1 C                        0.1732 A  109.4 C holds
+     B7b    V    0.2286 A  120.0 C           0.2286 A  120.0 C                        0.1686 A  108.5 C holds
    Both fabrics faulted (IOHA row 8: 'nothing moves' is the accepted outcome, the regulators must survive it: 150 C in any state;
    the 125 C criterion read as well): the worst response figure on both transceivers
-     rev Y: held 0.6466 A, 194.1 C (OVER 150 C); with the response 0.2626 A, 124.1 C: holds 150 C, inside 125 C
-     rev V: held 0.5639 A, 179.0 C (OVER 150 C); with the response 0.1799 A, 109.0 C: holds 150 C, inside 125 C
-   B7b if the failed part ignores its SHDN too: its own regulator holds 0.3112 A, 133.0 C on rev Y (117.9 C rev V): under the 150 C absolute
-     maximum, over the 125 C criterion. SESSION decision (L9T5-D5): tolerated. Why: it is one part failing three of its own functions at
+     rev Y: held 0.6466 A, 200.0 C (OVER 150 C); with the response 0.2626 A, 126.5 C: holds 150 C, over 125 C
+     rev V: held 0.5639 A, 184.2 C (OVER 150 C); with the response 0.1799 A, 110.7 C: holds 150 C, inside 125 C
+   B7b if the failed part ignores its SHDN too: its own regulator holds 0.3112 A, 135.8 C on rev Y (120.0 C rev V): under the 150 C absolute
+     maximum; inside the 125 C criterion on rev V's rows (fitted, L9T5-D7), over it on rev Y's cover. SESSION decision (L9T5-D5): tolerated where
+     it is over. Why: it is one part failing three of its own functions at
      once (driver, time-out, mode pin); the regulator stays inside its printed absolute maximum, so its supervisor lives and the quorum
      holds on the other fabric (row 7); the fabric's errors detect it. To reverse: a load switch on each transceiver's supply (six parts)
-   So with the response every credible single fabric fault holds 125 C (worst 123.5 C rev Y, 108.4 C rev V) and both fabrics faulted hold 150 C
-   (124.1 C rev Y, 109.0 C rev V); WITHOUT a row nothing bounds B1 to B6 (the parts' own bus-off ends a burst, but no row bounds how soon
+   So with the response, on rev V's rows (fitted, L9T5-D7) every credible single fabric fault holds 125 C (worst 110.0 C; rev Y's cover 125.9 C, over)
+   and both fabrics faulted hold 150 C
+   (126.5 C rev Y, 110.7 C rev V); WITHOUT a row nothing bounds B1 to B6 (the parts' own bus-off ends a burst, but no row bounds how soon
    firmware restarts,
-   and B6's unacknowledged frames repeat without end under automatic retransmission: 130.5 C)
+   and B6's unacknowledged frames repeat without end under automatic retransmission: 133.2 C)
 
    10f. THE RESPONSE, DRAFTED AND COMPOSED
    (1) FIRMWARE: apply_hw_fw_contract_t10.py on HW-FW-CONTRACT.md (UNAPPLIED; Layer 5 rows brought forward as a named prerequisite of
@@ -386,23 +393,109 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    in the budget's own form, 3 x (0.2396 + 0.060) x 3.3 = 2.966 W at +3V3_IOCx in place of 3 x (0.400 + 0.060) x 3.3 = 4.554 W; +5V_IOC then
    carries 0.8989 A in place of 1.3800 A (an LDO passes its output current). With FW-B21's share and the circuit's own auxiliaries the
    regulator carries 0.2558 A (rev Y; 0.1732 A rev V). LABELLED SCENARIO until the coordinator issues the row: section 9's (4) at the
-   case's HIGH stays NOT COVERED on rev 1's figure; on this figure the LDO reads 130.9 C with the DECLARED auxiliaries and 122.9 C with
+   case's HIGH stays NOT COVERED on rev 1's figure; on this figure the LDO reads 133.6 C with the DECLARED auxiliaries and 125.2 C with
    the share and the circuit's own (rev Y)
+
+   10h. THE FOUR QUESTIONS THE INDEPENDENT CHECK WILL ASK (the owner's review of checkpoint 2, 5 October 2026, part 21)
+   (1) WHAT THE 125 C RESULT RESTS ON, WHAT CONSUMES ITS MARGIN, AND AT WHICH CORNER IT IS LOST (MODEL; each state at its own worst)
+     the inputs: the air (L4-E12 E5's mixed 76.25 C, the case's; 81.89 C in the exhaust); the LDO's 184 C/W 'no heat sink' (Diodes prints no
+     board for it: the layout must give each LDO at least that board's copper, a Layer 10 means, read by T10-A5); the pre-regulator's top
+     4.2907 V (the divider at 0.1 % and 25 ppm/K over 65 K, VFB's printed band and IFB: every tolerance at its worst); the controller's
+     printed maxima at its own junction; the enabled set's bound; the circuit's auxiliaries at the full rail; the share fully used
+     rev Y, the bounded state:                 0.2558 A, 125.2 C: margin -0.22 K = -1.1 mA at the LDO; lost at a local air of 76.23 C, or at 183 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 121.2 C, under the corner above
+     rev Y, the worst single fault, responded: 0.2592 A, 125.9 C: margin -0.86 K = -4.5 mA at the LDO; lost at a local air of 76.17 C, or at 181 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 121.8 C, under the corner above
+     rev Y, both fabrics faulted, responded:   0.2626 A, 126.5 C: margin -1.50 K = -7.8 mA at the LDO; lost at a local air of 76.12 C, or at 179 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 122.3 C, under the corner above
+     rev V, the bounded state:                 0.1732 A, 109.4 C: margin +15.60 K = +81.5 mA at the LDO; lost at a local air of 84.20 C, or at 271 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 106.7 C, under the corner above
+     rev V, the worst single fault, responded: 0.1766 A, 110.0 C: margin +14.96 K = +78.1 mA at the LDO; lost at a local air of 83.90 C, or at 265 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 107.2 C, under the corner above
+     rev V, both fabrics faulted, responded:   0.1799 A, 110.7 C: margin +14.31 K = +74.8 mA at the LDO; lost at a local air of 83.60 C, or at 260 C/W in place of 184;
+       at the LDO's top output (the controller's current up 1.5 %, MODEL; the drop smaller) it reads 107.8 C, under the corner above
+     so at the worst corner (the LDO's least output, the case's air): rev V's own rows keep 14.3 K or more in every state and hold to a local air
+     of 83.60 C, over the 81.89 C exhaust; rev Y's rows, the COVER this record takes for a rev X part (DS12110 prints no rev X rows), read 125.2 to
+     126.5 C: they DO NOT hold 125 C at this corner (round 4 and the first pass of round 5 judged the nominal drop). What consumes the margin:
+     the controller's leakage at its own junction (rev Y's 144 MHz row climbs from 120 mA at 85 C to 180 mA at 105 C), the enabled set's bound and
+     the drop's corner; each kelvin of local air costs 1.71 K at the LDO on rev V's rows and 11.36 K on rev Y's (the controller's own
+     operating point rises with the air, steeply on rev Y's rows near their runaway)
+     THE CONTROLLER FIGURE A FITTED PART MUST MEET for the worst state (both fabrics faulted, responded) to hold 125 C at this corner: at most
+     0.2318 A at its own operating point at 76.25 C air (rev V's rows: 0.1570 A; rev Y's: 0.2396 A). PROVISIONAL CHOICE (SESSION L9T5-D7): the
+     supervisors are fitted in revision V (inside CON-017 (5), which admits V or X), the revision whose printed rows hold; a rev X part is
+     accepted only after the supplier's V-B20 reads its supply current at the bound, at a junction of 105 C or more, at most that figure
+     (specimen: three rev X STM32H743VIT6 on the first-article board B; quantity: each supervisor's supply current at FW-B20's bound and
+     FW-B21's share, at its operating junction; pass limit: at most 0.2318 A); the inside air at the pockets is U-02's (the T-H1 mock-up)
+   (2) THE CAN SERVICE UNDER THE BOUND (VOS3, at most 144 MHz, 2 % of every 100 ms per fabric)
+     what the fabrics carry: the supervisors' quorum (state, leases, epochs, the votes' agreement; FW-B09, IOHA sections 6 and 7). Not on
+     them: the modules' heartbeats (GPIO lines HB1 to HB3, FW-B01), the voted outputs (GPIO into the voters, FW-B12), FW-E07's stopped-fan
+     report (board E's sensor controller, the kit bus, FW-E07 and V-E07's 5 s). The tree defines no CAN message rate; the record ASSUMES
+     1 state frame per supervisor per fabric per 100 ms and a burst of 8 event frames in a window when ownership moves
+     at  125 kbit/s:   250 dominant bit times a window:  1 frames of 135 bits (every bit counted dominant) with two acknowledgements each;
+       the need 9 (NOT inside: a state frame per window only, the event burst spread over 0 windows)
+     at  500 kbit/s:  1000 dominant bit times a window:  7 frames of 135 bits (every bit counted dominant) with two acknowledgements each;
+       the need 9 (NOT inside: a state frame per window only, the event burst spread over 2 windows)
+     at 1000 kbit/s:  2000 dominant bit times a window: 14 frames of 135 bits (every bit counted dominant) with two acknowledgements each;
+       the need 9 (inside)
+     REQ-004's 30 s for a moved bank (ownership plus re-enumeration) is 300 windows; at 125 kbit/s the event burst spreads over at most 8 of
+     them; at 500 kbit/s and over it fits one window. A7: with one fabric cut the other carries the same traffic under the same share (the
+     share is per fabric, not shared). CON-004's quorum needs two of three state frames inside the loss timeout the firmware sets: the
+     share allows 7 to 14 a window at FW-B21's 500 kbit/s to 1 Mbit/s (1 at 125 kbit/s, which FW-B21 therefore excludes). So the bound keeps
+     the service the tree requires, on the assumed message set (the firmware's to confirm
+     against its real one, V-B21)
+   (3) WHAT ENFORCES THE BOUND AND THE RESPONSE IN THE FAULTS THE CALCULATION USES (an unapplied contract row is no mechanism)
+     HARDWARE, whatever the firmware does: the TCAN334's driver time-out frees a held TXD in 1.2 to 3.8 ms (PRINTED); the FDCAN's own bus-off
+     sets INIT and holds TX recessive with no automatic restart (RM0433 p.2464 and p.2534; the count to bus-off is the CAN standard's, not
+     held); any reset (the IWDG, started by option byte under FW-B10, on its own LSI) returns the reset state, inside the bound, with the TX
+     pins high-impedance and each TXD on the transceiver's pull-up, recessive; SHDN rests on its 100 k in normal mode (the draft)
+     FIRMWARE (FW-B20, FW-B21, enforceable only once applied and built): the clock and VOS read back at start; DAR = 1; the share; a fabric
+     at error passive, bus-off or with no valid frame for 100 ms stopped and its transceiver shut down; probing once a second for 100 ms
+     per fault, what acts and when (each window carries at most 2 ms of own dominant drive by the schedule, so a fault's current is
+     averaged over the window whatever the detection time):
+       B1, B2, B5 (bits read wrong)       each scheduled frame errs once (DAR); EP or BO stops the fabric and SHDN; the device's own bus-off backs it            the schedule's 2 ms a window; the stop within 100 ms
+       B3, B4 (the bus still works)       nothing detects them: the share alone bounds the current, which the result above already counts                        every window
+       B6 (an open: no acknowledgement)   each frame errs once (DAR, ACK errors); the no-valid-frame rule stops the fabric                                       within 100 ms; 2 ms a window before
+       B7a (TXD held low)                 the DTO (hardware) frees the drive; the FDCAN errs; the firmware stops the fabric                                      3.8 ms
+       B7b (driver stuck on, DTO dead)    every supervisor sees no valid frame; each stops the fabric and drives its SHDN; the failed part may ignore it (L9T5-D5) within 100 ms
+     THE FIRMWARE AS THE FAULTING PARTY: a hang is ended by the IWDG (hardware-started, FW-B10) and leaves nothing new transmitted (DAR); with DAR
+     mis-set and the CPU hung, B6's endless retransmission is the worst (133.2 C on rev Y, the parts-alone column), under the 150 C absolute
+     maximum. A running firmware that breaks the share (a babbling supervisor) is bounded by both transceivers held dominant: 0.3666 A, 146.4 C on
+     rev Y, under 150 C, over 125 C (it costs margin, not the regulator; its own fabric traffic is then the quorum's problem, an FMEA row
+     IOHA section 12 does not carry: finding L9T5-F21). A running firmware that breaks the CLOCK bound (FW-B20) takes the controller
+     itself outside its rating (section 4: no operating point over 200 MHz with the peripherals on) and can take the LDO over 150 C:
+     nothing in hardware prevents it. That is a SYSTEMATIC firmware defect, closed by the firmware's verification (FW-B20's read-back,
+     V-B20, CON-017 (4)'s firmware stage), not by a protective mechanism: an OPEN implementation obligation, not a desk-fixable circuit
+     defect. Round 4's K1 (a buck per supervisor) would let the regulator survive it, but not the controller (SESSION decision L9T5-D6:
+     K1 not taken for it; to reverse, round 4's K1)
+   L9T5-F22's lever (SCENARIO for the T10 drafts' owner, not drafted): the LDOs' input held over its requirement at the largest current this
+     record computes for a regulator (0.4512 A, the held B5 row on rev Y; dropout 301 mV INFERRED between the printed 300 and 600 mA points):
+     3.6652 V. R602 at:
+       13.7 k: 4.0818 V nominal, top 4.1895 V; the LDOs' input at least 3.7675 V (holds); rev Y's cover, both fabrics faulted, 121.6 C
+       14.0 k: 4.0114 V nominal, top 4.1174 V; the LDOs' input at least 3.7004 V (holds); rev Y's cover, both fabrics faulted, 118.1 C
+       14.3 k: 3.9441 V nominal, top 4.0483 V; the LDOs' input at least 3.6361 V (FAILS); rev Y's cover, both fabrics faulted, 114.8 C
+     (T10-A3 as round 4 wrote it, at the full 600 mA, fails with any of them: that criterion is the drafts' owner's to restate)
+   (4) THE COMPOSED CHANGES AGAINST THE CALCULATION AND THE ISSUED CASE ROW
+     the contract draft's rows carry this record's figures (VOS3; at most 144 MHz; at most 2 % of every 100 ms window; no more than once a second; for at most 100 ms; no valid frame for 100 ms; FDCAN_CCCR.DAR = 1; PD2 (fabric A) and PB14 (fabric B) with 100 k; between 500 kbit/s and 1 Mbit/s): every one
+     the SHDN draft's nets in the regenerated board B netlist: DRAWN (10f); the pre-regulator's divider: section 9's reading
+     C-DEV rev 2 as the coordinator issued it (the copy inputs/cases-cdev-rev2-20261005.md, sha256 a4a079e321cb165b, of _runs/cases/CASES-2026-10-04.md):
+     its figures against this output's (0.2558 A a regulator; 0.1732 A rev V; 0.2396 A at TJ 111.8 C; 2.966 W at +3V3_IOCx; +5V_IOC 0.8989 A; 0.0069 A at most): every one equal
 
 11. THE STATE OF L9T5-F06 (T10)
    L9T5-F06 STAYS OPEN, round 5's state: T10-A1's row is DRAFTED (FW-B20, unapplied) with the reset state now printed inside it; T10-A2
-   is restated with the enabled peripherals and holds at the case's 76.25 C air on both revisions (rev Y 122.9 C, rev V 107.8 C; 10c); T10-A3
+   is restated with the enabled peripherals at the drop's worst corner: at the case's 76.25 C air it holds on rev V's rows (109.4 C), the revision
+   L9T5-D7 fits, and NOT on rev Y's rows (125.2 C), the cover for a rev X part, which is PROVISIONAL on V-B20 (pass limit 0.2318 A; 10h (1)); T10-A3
    and T10-A4 stand (sections 8 and 9); T10-A5 is physical. Read by its author only; no independent check has read round 4 or 5;
    Layer 5 has not accepted the rows; nothing is applied. In the exhaust air a rev X part rests on rev Y's rows, which hold only to
-   76.44 C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check
+   76.23 C local air (10c): that air is U-02's question. Round 4 was the first attempt at this correction (K3 with K2's row); V6's check
    of it read CONFIRMED AS CONDITIONAL, not a negative; round 5 is the second round on the same correction, adding the rows V6 named
-   L9T5-F13: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED. The row (FW-B21's share) is drafted; with it the regulator reads 122.9 C (rev Y) and 107.8 C (rev V) at 76.25 C
+   L9T5-F13: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED. The row (FW-B21's share) is drafted; with it the regulator reads 109.4 C on rev V (fitted, L9T5-D7) and 125.2 C on rev Y's
+     cover at 76.25 C (the drop's worst corner)
      against 125 C; the bench (V-B20, V-B21) confirms the firmware's implementation and decides no feasibility. Stays OPEN in the
      register until an independent check reads it and Layer 5 applies the row
-   L9T5-F16: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED. Every credible single fabric fault inside board B holds 125 C with the response (worst 123.5 C rev Y, 108.4 C rev V;
+   L9T5-F16: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED. Every credible single fabric fault inside board B holds 125 C with the response on rev V (worst 110.0 C; rev Y's cover 125.9 C;
      10e), the circuit half composed, read and mutated (10f); the B7b residual is tolerated by SESSION decision L9T5-D5. Covered by
      CON-004 (10a). Stays OPEN in the register until the independent check and the rows' application
-   L9T5-F17: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR, UNCHECKED. Both fabrics faulted hold 150 C with the response (124.1 C rev Y, 109.0 C rev V); held, 194.1 C (rev Y). Same conditions
+   L9T5-F17: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V, UNCHECKED. Both fabrics faulted hold 150 C with the response (126.5 C rev Y, 110.7 C rev V); held, 200.0 C (rev Y). Same conditions
    FINDINGS FOR OTHER AUTHORS
    L9T5-F09 (Layer 5, HW-FW-CONTRACT.md 3.3): answered by the drafted rows FW-B20 and FW-B21 (apply_hw_fw_contract_t10.py, the integrator's
      to apply); the FMEA row for a supervisor out of its bound (T10-A5) stays Layer 5's
@@ -417,6 +510,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
      on (SLLSEQ7F 6.3.6); answered by apply_gen_sch_b_canshdn.py (DRAFTED, 10f)
    L9T5-F19 (board B's layout owner, Layer 10): +54V_POE, MDI_A_N, MDI_A_P, POE_P on board B exceed the TCAN334's +-14 V bus pins; a short from one to a CAN
      conductor is outside every printed figure: a clearance rule between those nets and the fabrics is a layout means, not credited here
+   L9T5-F21 (Layer 5, IOHA section 12's owner): a supervisor whose firmware babbles on both fabrics (a running firmware that breaks FW-B21)
+     is in no FMEA row; thermally it is bounded (10h (3)), but it can deny the quorum both fabrics: the FMEA row and its detection are owed
+   L9T5-F22 (record l9t5's T10 drafts' owner, Slot A, and Layer 6): at the drop's worst corner rev Y's rows miss 125 C by 0.2 to 1.5 K; the
+     pre-regulator's set point (R602 13.3 k, held at the LDO's full 600 mA by T10-A3) is the lever if a rev X part is to be admitted without
+     V-B20: a set point held at the bounded currents instead would lower every drop; not drafted here (the draft is Slot A's)
    L9T5-F20 (Layer 6; L4-E9's change list): PD2 and PB14 become outputs on each supervisor (STM32H743-COMPATIBILITY.md's matrix) and
      R67, R68, R79, R80, R91, R92 (100 k) need order codes; the draft needs a row in L4-E9's change list after T10's iocpre (V6-m11)
 
@@ -434,9 +532,11 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    on C-DEV rev 1 U7, U601, the lead's pin 1 and the LDOs' input hold with the draft                                                      yes
    round 5: CON-004, IOHA rows 7 and 8 and test A7 are read; A7's method is a cut                                                         yes
    round 5: the reset state the reference manual prints (HSI at 64 MHz, VOS3) is inside the bound                                         yes
-   round 5: with the enabled set, the share and the circuit's auxiliaries the bounded state holds 125 C at the case's air on both revisions yes
-   round 5: with the response every credible single fabric fault holds 125 C and both fabrics hold 150 C, on both revisions               yes
+   round 5: at the drop's worst corner the bounded state holds 125 C at the case's air on rev V's rows (fitted, L9T5-D7)                  yes
+   round 5: with the response every credible single fabric fault holds 125 C on rev V's rows and both fabrics hold 150 C on both          yes
+   round 5 (part 21, (1)): rev Y's rows, the cover for a rev X part, do not hold 125 C at that corner (a rev X part waits on V-B20)       yes
    round 5: without a row the held bus-fault rows still FAIL (the response, not the parts, closes them)                                   yes
    round 5: the SHDN draft composes and reads DRAWN; the state before it and both mutations FAIL; the contract draft applies once         yes
+   round 5 (part 21, (4)): the contract draft carries this record's figures and C-DEV rev 2 as issued carries this output's               yes
 
 l9t5_t10: done

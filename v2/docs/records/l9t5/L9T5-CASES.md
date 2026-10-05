@@ -65,10 +65,12 @@ The round's page is `T10-ROUND5.md`; its figures are `l9t5_t10.out` section 10 (
 rows are covered by CON-004 (round 4's sentence placing them outside every requirement was wrong, V6-B3); T10-A1's row and the fabrics'
 transmit share and fault handling are drafted as `HW-FW-CONTRACT.md` rows FW-B20 and FW-B21 (`apply_hw_fw_contract_t10.py`,
 unapplied); each transceiver's SHDN is drafted onto its controller (`apply_gen_sch_b_canshdn.py`, composed, read, mutated). With
-the enabled peripherals bounded, the share and the response, the regulator holds 125 C at the case's 76.25 C air on both silicon
-revisions in the bounded state and in every credible single fabric fault, and 150 C with both fabrics faulted. F13, F16 and F17
-are DRAFTED CORRECTIONS whose desk acceptance their author met; they stay OPEN in the register until an independent check reads
-them and Layer 5 applies the rows. No case row is changed here: C-DEV's revised supervisor figure is the coordinator's (t10 10g).
+the enabled peripherals bounded, the share and the response, at the LDO's worst drop corner and the case's 76.25 C air, the regulator
+holds 125 C on revision V's rows in the bounded state and in every credible single fabric fault, and 150 C with both fabrics faulted;
+rev Y's rows, the cover for a rev X part, miss 125 C by 0.2 to 1.5 K, so the supervisors are fitted in revision V (SESSION L9T5-D7)
+and a rev X part waits on V-B20, unless the set point moves (L9T5-F22, R602 14.0 k, Slot A's draft). F13, F16 and F17 are DRAFTED
+CORRECTIONS whose desk acceptance their author met on rev V; they stay OPEN in the register until an independent check reads them
+and Layer 5 applies the rows. The owner's four questions of part 21 are answered in `T10-ROUND5.md` section 3. No case row is changed here: C-DEV's revised supervisor figure is the coordinator's (t10 10g).
 
 ## 0d. Round 4, part 3: finding SDR3-F02, the Compute Module 5's supply design figure
 
