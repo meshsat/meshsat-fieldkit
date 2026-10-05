@@ -832,7 +832,8 @@ def t_round5_the_page_carries_the_outputs_figures():
     assert len(figs) >= 30
     missing = [f for f in figs if f not in out]
     assert not missing, "the page's figures not in the output: %s" % missing
-    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "Residual B7b (L9T5-D5)", "SESSION L9T5-D7", "L9T5-F22",
+    # round 6 (cx45 Q3 (d)): L9T5-D5 is withdrawn, so the page states the residual and the withdrawal, not the tolerance
+    for s_ in ("they stay OPEN in the register", "L9T5-F06: STAYS OPEN", "**Residual B7b:**", "(round 6: L9T5-D5 WITHDRAWN", "SESSION L9T5-D7", "L9T5-F22",
                "covered by CON-004", "the drop's worst corner"):
         assert s_ in page, s_
     for s_ in ("L9T5-F13: A DRAFTED CORRECTION, DESK ACCEPTANCE MET BY ITS AUTHOR ON REV V", "L9T5-F16: A DRAFTED CORRECTION",
