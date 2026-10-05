@@ -1,4 +1,4 @@
-DONE: both failing cases reproduced on e132db0e; three alternatives compared; (C2) selected, drafted, composed in L4-E9's order, netlist-checked with four failing mutations; D-16 CORRECTED (one PROVISIONAL energy term); D-10 NARROWED and OPEN (U5 and INP corrected, the guard's port-level residual left with route B2 and the narrowed P1-1). NOT DONE: an independent check; the record's cache re-key (a box recompute). NEXT: the coordinator's merge, the L4-E9 rows below, the focused check.
+DONE: round 1 (D-16 CORRECTED in draft; D-10 NARROWED). Round 2 (the coordinator's B2 task, 17:12): apply_gen_sch_e_p0sol_b2.py drafted and composed after the C2 draft (298 parts). NOT DONE: the authority finding and owner item, the B2 checks and the arriving-source case in the script, R-180 and the Layer 6 row, the tests. NEXT: those.
 
 # P0-7: the solar stage's D-10 (a stiff source with the guard on) and D-16 (the input sense out of range) by circuit alternatives
 
