@@ -14,9 +14,9 @@ prototype design; nothing built, bought, powered or measured; nothing applied to
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
-   14afaa1583f17743 v2/docs/records/l8r2/l8r2_gndret.out
+   6145e2f1b5ef3991 v2/docs/records/l8r2/l8r2_gndret.out
    0460711f0c1ce6cd v2/docs/records/l9t5/l9t5_drafts.py
-   e58bda9e79ad8425 v2/docs/records/l9t5/l9t5_drafts.out
+   1d83c7c65d36c26f v2/docs/records/l9t5/l9t5_drafts.out
    8b0aab5cdd912493 v2/docs/records/l9t5/apply_gen_sch_a_iocpre.py
    877342cb9144ec48 v2/docs/records/l9t5/apply_gen_sch_b_iocpre.py
 

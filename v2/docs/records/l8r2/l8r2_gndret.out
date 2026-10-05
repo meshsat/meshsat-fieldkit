@@ -61,7 +61,7 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
    fdee657377aed9ac v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf
    7a722a674d00c448 v2/docs/records/l4e6/apply_gen_sch_a_r12.py
    af44e991efdc0908 v2/docs/records/l4e11/apply_gen_sch_a_guard.py
-   cc4aab01c30bd3c8 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   0e215988ba2a929b v2/docs/records/l4e11/apply_gen_sch_a_charger.py
    bbc9a12c20a8a272 v2/docs/records/l4e4/apply_gen_sch_a_r11.py
    0d9abf89d3675d55 v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    347387f6c4fbf48d v2/docs/records/l4e4/apply_gen_sch_a_r138.py
@@ -365,9 +365,9 @@ C-DEV rev 1 for the device rail; C-ALLTX rev 3 where a state of it applies; the 
      the gndret draft alone on the committed generator: RUNS, GND 13.30 A typical and 22.23 A peak, loads 20.343 A: the same text, a smaller figure (nothing typed)
    BOARD A COMPOSED in L4-E9's change-list order (r12, guard, charger, r11, bank, r138, u17; record l8gnd's two; this record's five
    of rounds 1 to 6; record l8p's ptc; L4-E11's dd7), Layer 9's draft (the copy at 841e6c7e), d8dec31's mainpb LAST, then Layer 6's table:
-     the return draft after Layer 9's (the round's order)     generator sha256 49ef190a83dfd71c: RUNS to its end, 814 parts, 0 unplaced, netlist sha256 b63c147100ff1f97
-     the return draft first                                   generator sha256 04333af7ef20f659: RUNS to its end, 814 parts, 0 unplaced, netlist sha256 b63c147100ff1f97
-     round 7's state (without the return draft)               generator sha256 01da4323e82d3660: RUNS to its end, 811 parts, 0 unplaced, netlist sha256 a304043f9e408f9e
+     the return draft after Layer 9's (the round's order)     generator sha256 d5464cc5dfcfff4c: RUNS to its end, 814 parts, 0 unplaced, netlist sha256 b63c147100ff1f97
+     the return draft first                                   generator sha256 2f57cccc2ffd12d6: RUNS to its end, 814 parts, 0 unplaced, netlist sha256 b63c147100ff1f97
+     round 7's state (without the return draft)               generator sha256 7de244a88e7fe3c8: RUNS to its end, 811 parts, 0 unplaced, netlist sha256 a304043f9e408f9e
      the return draft first or last gives the same netlist: yes (the generator text differs in the order of two SECTIONS.insert
      lines, this draft's and another's: a schematic page's order, no net)
    THE NETLIST CHECKS (check_gndret_netlist.py; the regenerated netlists are the generators' own part tables, no KiCad: the box
