@@ -65,8 +65,11 @@ quotes this record word for word and stays NOT EXECUTABLE; section 20c is restat
 independent recheck V2R) adds: round 13's fixture joins the pours in a reading and the redrawn one leaves the device under test alone in
 every state, with its margins on the printed rows; each junction is judged at its own row's worst split, which a scan confirms, with the
 baseline in the limit's line, and a search on a fresh seed finds no specimen accepted over 150 C while round 13's lines accept some; the
-minors are answered and the procedure keeps the recheck among its preconditions. Nothing here writes into the tree: drafts run on
-temporary copies.
+minors are answered and the procedure keeps the recheck among its preconditions. Round 15 (section 25, the final recheck V2RF) adds: round 14's
+heavy-lead check and term cannot be met and the guard that replaces them leaves a residual under half a kelvin; a coupon at the design
+target passes at every error edge and one over the limit fails at every edge; no permitted step reaches the clamp and each interlock
+rule is needed; the census, the clamp, each line's propagated U, a search with readings drawn from the budget and the pours' allowance
+in the design target and the draft's layout requirement. Nothing here writes into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -2141,8 +2144,162 @@ def t_round14_the_minors_the_budget_and_the_procedures_status():
     row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
     assert m.e11_29_method(R) in row and "its OWN m_k" in row and "THE LIMIT" in row and "series switch" in row and "achieved" in row
     text, body = _tp_body()
-    assert "**NOT EXECUTABLE.**" in text and "the independent recheck of the fixture of section 5 and the pass" in " ".join(text.split())
+    # round 15 (the final recheck V2RF closed the fixture and the pass rules as conditional; the brief's preconditions are now R-159 and
+    # the supplier's agreement): the recheck is no longer a precondition, and the guard's own check is named as owed
+    assert "**NOT EXECUTABLE.**" in text and "V2RF closed the fixture and the pass rules (V2R-B1, V2R-B2) AS CONDITIONAL" in " ".join(text.split())
     for kept in ("control run C0", "| V8 |", "| V9 |", "| V7 |", "heavy lead", "over step 6's baseline B_k", "populated as the coupon is"):
         assert kept in body, "the procedure lacks %r" % kept
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
     assert "V2R's findings answered" in readme and "V2R-B1" in readme and "V2R-B2" in readme and "ROUND 14" in readme
+
+
+# ---- round 15 (5 October 2026): the final recheck V2RF's V2RF-B1 (the heavy leads) and its minors m1 to m5
+# Round 14's heavy-lead statements as they stood at 08f7e38a, kept as fixtures so each check is shown to refuse them.
+_R14_V8_TEXT = ("| V8 | each heavy lead's heat flow at its joint, in every case | at most 2 % of the heated FET's power (proposal); else the lead "
+                "is redone |")
+_R14_LEAD_TERM_TEXT = ("The limit by superposition: for each junction, T_k = B_k + z17_k x 2.86 W + 1.3448 W x Zw_k + Zself,k x ((23.93 A)^2 x "
+                       "R_pour,max + 2 q_out): ... the factor taken at 2, an ASSUMPTION that a lead takes at most half of any heat put in at its joint")
+
+
+def _leads_guarded(body):
+    """A procedure guards its heavy leads instead of bounding their heat: each lead guarded by a heater held by an integral controller,
+    the residual from the guard's logged difference and offset, its coupling read by reciprocity, V8 the guard's control; and none of
+    round 14's statements (V8 at 2 % of the heated power, the term 2 q_out, the factor 2)."""
+    flat_ = " ".join(body.split())
+    need_ = ("GUARDED", "integral controller", "q_res,J", "Z_kJ = Z_Jk", "| V8 | each guard", "no factor and no assumption")
+    gone = ("at most 2 % of the heated FET's power", "2 q_out", "the factor taken at 2", "times twice the junction's own Zself")
+    return all(n in flat_ for n in need_) and not any(g in flat_ for g in gone)
+
+
+def t_round15_v2rf_b1_the_guard_replaces_the_lead_term_and_a_coupon_at_the_target_passes_under_and_fails_over():
+    """V2RF-B1: round 14's V8 holds only within 1.5 to 2 K of the lead and its term costs 6 to 64 K a lead, and its factor 2 reaches 8
+    for two coupled leads (recomputed here); the guard's residual is k A (dT_0 + dT_c) / dx, 5.2 mW a lead, its term under 0.5 K; on a
+    coupon at the design target the lines pass at every error edge within U and over the limit they fail at every edge, where round
+    14's term fails the target coupon; the procedure and the block refuse round 14's statements."""
+    R = _R()
+    m = _M()
+    S, S21, S23 = R["S25"], R["S21"], R["S23"]
+    ka = 390.0 * 4e-6
+    assert abs(S["g_fin"][0] - math.sqrt(0.15 * ka)) < 1e-12 and abs(S["g_fin"][1] - math.sqrt(0.25 * ka)) < 1e-12
+    v8 = 0.02 * S23["p"]["hot"]
+    assert abs(S["v8_dt"][0] - v8 / S["g_fin"][0]) < 1e-12 and S["v8_dt"][0] < 2.0 and S["v8_dt"][1] > 1.5
+    assert 6.0 < S["old_term"][0] < 6.5 and 64.0 < S["old_term"][1] < 65.0
+    zjj, zjk = 20.0, 15.0
+    g = 0.5 / zjj
+    assert abs(S["factor"][0] - 1.0 / ((1 - g * zjj) - g * zjk)) < 1e-12 and abs(S["factor"][0] - 8.0) < 1e-9
+    assert abs(S["a_res"] - ka * 0.1 / 0.03) < 1e-15 and S["a_res"] < 0.006 and S["a_term"] < 0.5
+    assert S["b_err"][1] > 0.1, "the measured correction's error is not of the order of round 14's V8"
+    # the verdict table: the target passes at every edge, over the limit fails at every edge (recomputed from each row)
+    K = S["K"]
+    for r_ in S["table"]:
+        assert r_["high"] == (r_["true"] + 2 * r_["u"] <= K["rise"] + 1e-9 or r_["lab"] == "the design target")
+        assert r_["low"] == (r_["true"] <= K["rise"])
+    tg = [r_ for r_ in S["table"] if r_["lab"] == "the design target"][0]
+    assert tg["high"] and tg["exact"] and tg["low"], "a coupon at the design target does not pass"
+    assert all(not (r_["high"] or r_["exact"] or r_["low"]) for r_ in S["table"] if "over the limit" in r_["lab"]), "a coupon over the limit passes"
+    assert S["old_at_target"][0] > K["rise"], "round 14's lead term passes the target coupon"
+    # the procedure and the block
+    text, body = _tp_body()
+    assert not _leads_guarded(_R14_V8_TEXT + " " + _R14_LEAD_TERM_TEXT), "the check accepts round 14's lead treatment"
+    assert _leads_guarded(body), "the procedure's heavy leads are not guarded"
+    page = open(PAGE, encoding="utf-8").read()
+    b29 = " ".join(page.split("#### Block E11-29")[1].split("#### Block E11-30")[0].split())
+    assert "times twice the junction's own Zself" not in b29 and "each heating lead guarded by a heater tape" in b29
+    assert "no assumption on the leads' share is needed" in b29
+
+
+def t_round15_v2rf_m1_no_permitted_step_reaches_the_clamp_and_each_rule_is_needed():
+    """V2RF-m1: under round 14's rules (a tie with the shunt under 10 mA) the clamp H1 and the open supply H2 are reachable from rest;
+    under round 15's R1 to R6 no hazard is reachable; dropping R1 or R2 reaches H1 and dropping R3, R4 or R5 reaches H2; a failed-short
+    SW_S leaves the pours under the hot threshold through the dummy leg."""
+    m = _M()
+    seen, bad, paths = m.r15_states("old")
+    assert "H1" in paths and "H2" in paths and len(bad) > 0
+    path, why = paths["H1"]
+    assert path[-1][0] == 1 and "tie" in path[-1][3], "the old rules' H1 path does not end on a tied gate with SW_S closed"
+    seen, bad, paths = m.r15_states("new")
+    assert not bad and not paths and len(seen) > 20
+    for r_, kind in (("R1", "H1"), ("R2", "H1"), ("R3", "H2"), ("R4", "H2"), ("R5", "H2")):
+        assert kind in m.r15_states("new", (r_,))[2], "%s dropped reaches no %s" % (r_, kind)
+    assert not m.r15_states("new", ("R6",))[2]
+    R = _R()
+    assert abs(R["S25"]["leg_v"] - R["S23"]["i_td"][0][1] * 5e-3) < 1e-12 and R["S25"]["leg_v"] < R["S25"]["vth_hot_min"] / 5
+    _text, body = _tp_body()
+    flat_ = " ".join(body.split())
+    assert "reads SW_S's OWN state continuously" in flat_ and "| V10 |" in flat_
+    assert "the interlock allows it only with the shunt under 10 mA)" not in flat_
+
+
+def t_round15_v2rf_m2_to_m5_the_census_clamp_propagated_u_search_and_design_target():
+    """V2RF-m2 (the census with the galvanic boundary, V3 in the chamber), m3 (a solid-state SW_S with a clamp, the energy), m4 (each
+    line's U propagated through the reduction, the C0 difference a correction, a search with readings drawn from the budget), m5 (the
+    pours' allowance in the design target and in the charger draft's layout requirement); the procedure's status and the README."""
+    import random
+    R = _R()
+    m = _M()
+    S, S24 = R["S25"], R["S24"]
+    assert abs(S["m2_sum"] - (S24["sense_sum"] + 12 * 3.0 / 100e6 + 2 * 3.0 / 100e6 + 5e-6 + 4 * 15.0 / 1e9 + 1e-6)) < 1e-12
+    assert S["m2_frac"] < 0.05
+    assert all(abs(e_ - 0.5 * l_ * i_ ** 2) < 1e-15 for l_, i_, e_ in S["m3_e"]) and max(e_ for _l, _i, e_ in S["m3_e"]) < 0.2e-3
+    # m4: the propagated U recomputed by moving each source in the TRUE specimen's error set (the readings built afresh)
+    K = S["K"]
+    tr = m.r15_coupon(S["target"]["s"], 0.1, S["z17_t"], R["S19"]["band"], R["S23"]["p"]["hot"])
+    tr["P17"] = K["p17"]
+    nominal = m.r15_reduce(m.r15_readings(tr, {}), K, m.R15_RP, S["a_res"])
+    acc = [0.0, 0.0, 0.0]
+    for src, a in m.r15_sources():
+        e = {src: a}
+        if src == "band":
+            e = {src: a}
+        new = m.r15_reduce(m.r15_readings(tr, e), K, m.R15_RP, S["a_res"])
+        acc = [acc[i] + (new[i] - nominal[i]) ** 2 for i in range(3)]
+    u_here = [math.sqrt(x) for x in acc]
+    assert all(abs(a_ - b_) < 0.02 * b_ + 1e-6 for a_, b_ in zip(u_here, S["target"]["u"])), (u_here, S["target"]["u"])
+    assert S["target"]["u"][2] > 0.2 and abs(S["u_illus"][1] - S["target"]["u"][1] / S["target"]["l2"]) < 1e-12
+    # the search on a fresh seed, readings drawn from the budget: over the limit, the acceptance stays within the k = 2 consumer's risk
+    sr = S["search"]
+    assert sr["acc_over"] == 0 and sr["near"] > 100 and sr["n"] == 3 * m.R15_SEARCH["n"]
+    rnd = random.Random(5)
+    srcs = m.r15_sources()
+    over = acc_over = 0
+    for fam in ("net", "row", "sym"):
+        for _ in range(150):
+            Zt = m.r14_matrix(rnd, fam)
+            zw = max(m.worst_row(Zt[k])[0] for k in range(3))
+            sc = rnd.uniform(0.95, 1.05) * K["bar_even"] / zw
+            Zt = [[x * sc for x in r_] for r_ in Zt]
+            trs = dict(B=[rnd.uniform(8.0, 12.0) for _k in range(3)], Z=Zt, z17=[rnd.uniform(0.0, 0.3) for _k in range(3)],
+                       P=[R["S23"]["p"]["hot"]] * 3, P17=K["p17"])
+            true_t = m.r15_true_t(trs, K, [Zt[k][k] * K["i2"] * m.R15_RP for k in range(3)], [0.0] * 3)
+            ok = m.r15_verdict(m.r15_readings(trs, {s_: rnd.gauss(0.0, a_ / 2.0) for s_, a_ in srcs}), K, m.R15_RP, S["a_res"])[0]
+            if true_t > K["rise"]:
+                over += 1
+                acc_over += ok
+    assert over > 50 and acc_over <= 0.05 * over, (over, acc_over)
+    # m5: the targets fall as the pours' allowance grows; the selected one is in the draft's layout requirement
+    zws = [zw for _rp, _s, zw in S["m5"]]
+    assert all(a_ >= b_ for a_, b_ in zip(zws, zws[1:])) and m.R15_RP == 0.1e-3 and abs(S["target"]["zw"] - S["zw_t"][0.1e-3]) < 1e-12
+    with tempfile.TemporaryDirectory() as d:
+        a_ = os.path.join(d, "gen_sch_a.py")
+        shutil.copy(GEN_A, a_)
+        _apply("apply_gen_sch_a_charger.py", a_)
+        txt = " ".join(open(a_, encoding="utf-8").read().replace("#", " ").split())
+    assert "summed at most 0.1 mOhm" in txt and "%.2f K/W" % S["target"]["zw"] in txt and "%.3f K/W" % S["z17_t"] in txt
+    # the row, the page, the output, the procedure, the README
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert "guarded" in row and "propagated through the reduction" in row and "illustrates: a sum of 39.41" not in row and "0.1 mOhm" in row
+    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    p25, o25 = page.split("## 25. Round 15")[1], out.split("25. ROUND 15")[1]
+    for v_ in ("0.0153", "0.0197", "1.53", "1.98", "6.2", "64.4", "5.2 mW", "0.42 K", "0.112 V", "34.48 uA", "3.45 %", "182 uJ", "0.7 us",
+               "41.98", "2.51 K", "3.65 %", "0.353", "1.96 K", "33.58", "0.294", "40.62", "1.92 K", "0.35 K", "C-PROT rev 1", "NOT EXECUTABLE"):
+        assert v_ in p25 and v_ in o25, "%s is not in both section 25 and out 25" % v_
+    text, body = _tp_body()
+    flat_ = " ".join(text.split())
+    assert "**NOT EXECUTABLE.** Two things must happen first" in flat_ and "R-159 restated from it (L4-E9's)" in flat_
+    assert "a supplier's written agreement" in flat_ and "Round 15's guard has had no check yet" in flat_
+    for kept in ("APPLIED AS A CORRECTION", "Check V3 again in the chamber", "SW_S's clamp", "no relay", "propagated through the reduction",
+                 "one earth point", "channel-to-channel isolation"):
+        assert kept in " ".join(body.split()), "the procedure lacks %r" % kept
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "V2RF's findings answered" in readme and "V2RF-B1" in readme and "ROUND 15" in readme
