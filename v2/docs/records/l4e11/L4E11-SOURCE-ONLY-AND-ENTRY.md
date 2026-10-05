@@ -161,9 +161,10 @@ section 20c is restated on Murata's printed points (record l9stk's round 4).
   its heavy-lead treatment unworkable (V2RF-B1): a 4 mm2 lead draws 0.08 to 0.79 W from a joint 5 to 40 K above it, so round 14's 30 mW
   check failed nearly every run and its lead term (2 x Zself x q) cost 6 to 64 K a lead. **Corrected:** each heavy lead is guarded
   (a heater tape held by an integral controller so the lead's gradient at its joint reads zero), which removes the leads from the network;
-  the residual, 5.2 mW a lead, costs at most 0.42 K. The interlock now reads SW_S's own state (a search finds no hazard reachable); the
+  the residual, 14.9 mW a lead with the lagged lug, costs at most 1.22 K. The interlock now reads SW_S's own state (a search finds no
+  hazard reachable); the
   galvanic boundary is stated and V3 repeated in the chamber; SW_S is solid-state with a clamp; each line's U is propagated through the
-  reduction (line 2 3.65 %, R17's line 0.35 K/W); the design target carries a 0.1 mOhm pours allowance (Zw at most 41.98 K/W, R17 at most
+  reduction (line 2 3.66 %, R17's line 0.35 K/W); the design target carries a 0.1 mOhm pours allowance (Zw at most 41.51 K/W, R17 at most
   0.294 K/W), and a coupon at it passes whatever its errors while one over the limit fails.
 - **D-06** stays resolved in design with the corrected envelope and floor; **D-09** keeps its reproduced margin (4.927 to 14.653
   ms against 4.593 ms) and its conditional chart (0.71 A against 0.675 A), as the resolution while the LM5069 stays.
@@ -802,16 +803,16 @@ the window (only the gauge's window acts until the firmware writes the flag's bi
 
 | Row | The missing statement (the held sheet, its page) | The claim it affects (this record) | What a maker's answer would establish | What one bench sample could establish, and what it cannot | The bench method | If the answer is negative |
 |---|---|---|---|---|---|---|
-| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 236: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
-| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 490: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
-| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 457: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
-| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 223: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
-| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 689: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
-| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 494: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
-| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 481: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
-| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 480: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
-| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 294: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
-| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 312: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
+| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 237: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
+| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 491: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
+| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 458: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
+| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 224: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
+| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 690: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
+| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 495: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
+| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 482: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
+| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 481: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
+| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 295: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
+| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 313: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
 
 ### 11a. The bounded fallback: VSYS's hold-up with no battery that does not lean on the charger's transient response (out 10)
 
@@ -1591,8 +1592,9 @@ any final-board comparison and what requires a re-test. The first version's word
   their declared heat and positions); **airflow** (still air, or the mixers' flow where they reach the region, as installed);
   **enclosure coupling** (the plate section and its attachment; the air at 76.25 C in a chamber, or the rise referred to it);
   **the fixture's heavy leads** (round 15, 25b, the final recheck V2RF's V2RF-B1: each heating lead guarded by a heater tape from its
-  joint, held by an integral controller so the gradient at the joint reads zero; at steady state the guarded coupon is the coupon without
-  its leads plus a residual of at most 5.2 mW a lead, whose effect, at most Z_kJ times it with Z_kJ read by reciprocity from the joint's
+  joint (over the lug's barrel and the lead, the lug and the guarded length lagged), held by an integral controller so the gradient at
+  the joint reads zero; at steady state the guarded coupon is the coupon without its leads plus a residual of at most 14.9 mW a lead
+  (the pair's 5.2 mW and the lagged lug's own 9.7 mW), whose effect, at most Z_kJ times it with Z_kJ read by reciprocity from the joint's
   thermocouple, is added to the limit's line; round 14's factor 2 and its term are withdrawn, and no assumption on the leads' share is
   needed).
 - **Measurement uncertainty:** the K-factor within 2 %, the heating power within 1 %, the air within 1 K, stated as an expanded uncertainty
@@ -1602,10 +1604,10 @@ any final-board comparison and what requires a re-test. The first version's word
   time-division ripple, 0.52 K; round 14 adds the early-time correction's own uncertainty, 0.5 K, and the pickup step's subtraction,
   0.1 K, and round 15 applies the control run's measured difference as a correction, its own 0.25 K left. **Each line's U is propagated
   through the reduction** from these sources, absolute terms as absolute and common terms common (round 15, 25f, V2RF-m4): on a coupon at
-  the design target, line 1 3.61 %, line 2 3.65 % (2.51 K), R17's line 0.35 K/W; round 14's single 3.47 % is withdrawn.
+  the design target, line 1 3.63 %, line 2 3.66 % (2.52 K), R17's line 0.35 K/W; round 14's single 3.47 % is withdrawn.
 - **Design target and layout requirement** (round 15, 25g, V2RF-m5; the acceptance bars unchanged): the two pours' largest paths, each
   from its current's joint to the FET lands, summed at most 0.1 mOhm at the operating temperature; each junction's worst-split figure Zw at
-  most 41.98 K/W (three side by side at m 0.1: Zself 33.58, S 40.30 K/W) and R17's coupling at most 0.294 K/W, so that line 2 and R17's line
+  most 41.51 K/W (three side by side at m 0.1: Zself 33.21, S 39.85 K/W) and R17's coupling at most 0.294 K/W, so that line 2 and R17's line
   pass with twice their propagated U, the pours' service loss at the allowance and the guard's residual included.
 - **Permitted extrapolation and the comparison rule:** the steady figures transfer to the final board only when each boundary is no worse
   by this rule: the three FETs' spacing is at least the coupon's; the pour inside the region is the coupon's or a superset joined only to the
@@ -3037,18 +3039,18 @@ nothing is bought, built or measured.
 - Round 14's term 2 x Zself x q at 40.78 K/W is **6.2 to 64.4 K a lead**. Its factor 2 was derived for one lead and applied to two: for
   two equal leads each taking half the heat at its own joint, the column sum of (I - G Z_JJ)^-1 is **8** with the joints coupled at 15
   of 20 K/W, 2.22 at 2 K/W (V2RF's examples, reproduced).
-- At the design target of 25g, both leads passive at joints 5 to 40 K over them, line 2 would read 85 to 181 K: every coupon fails.
+- At the design target of 25g, both leads passive at joints 5 to 40 K over them, line 2 would read 85 to 180 K: every coupon fails.
   **V8 and the lead term are WITHDRAWN.**
 
 ### 25b. Two corrections compared, and the guard selected (SESSION; INFERRED)
 
 | | (b) MEASURE the correction on passive leads | **(a) GUARD each lead** |
 |---|---|---|
-| what it does | each lead stays passive; its flux q read by a thermocouple pair; the joint-to-junction impedance Z0 measured (reciprocity from the joint's thermocouple, and a heater at each joint for the leads' share F); the correction Z0 q added | a heater tape over each lead from its joint, the pair under the tape, an integral controller holding the pair's difference at zero: the lead held at its joint's temperature along the heated length |
-| the error left | the pair over an unheated section reads q biased by that section's own loss, h P dx dT / 2: **11.2 to 150 mW** at joints 5 to 40 K over the lead, plus the pair's 2.6 mW; Z0 = Z (I - F)^-1 with F a half or more amplifies every error of Z and F | the flux at the joint is the pair's offset and the control band only, 0.05 K and 0.05 K over 30 mm: **5.2 mW a lead**, whatever the joint's temperature |
-| the network measured | the coupon with two leads as conductances; the correction must undo them | at steady state (integral action: no standing error) the guarded coupon IS the coupon without its leads, plus a fixed source of at most 5.2 mW at each joint: **no factor and no assumption on the leads' share** |
-| the term in lines 2 and 3 | Z0 q, of the order of 1 to 30 K, with an error of the order of round 14's whole V8 | the residual's effect, at most Z_kJ x 5.2 mW a lead, Z_kJ read by reciprocity from the joint's thermocouple in cases A to C (Z_kJ = Z_Jk), and at most Zself,k: **0.42 K for both leads at 40.78 K/W, 0.35 K at the design target** |
-| what it needs | a heater at each joint and a calibration step | a heater tape and a controller per lead; the lead sized so its own self-heating stays under its joint's rise (a heater only heats) |
+| what it does | each lead stays passive; its flux q read by a thermocouple pair; the joint-to-junction impedance Z0 measured (reciprocity from the joint's thermocouple, and a heater at each joint for the leads' share F); the correction Z0 q added | a heater tape over each lead's lug barrel and the lead from it (no bare lead), the pair under the tape with its first thermocouple on the lug at the joint, an integral controller holding the pair's difference at zero, the lug and the guarded length lagged (10 mm closed-cell): the lead held at its joint's temperature along the heated length |
+| the error left | the pair over an unheated section reads q biased by that section's own loss, h P dx dT / 2: **11.2 to 150 mW** at joints 5 to 40 K over the lead, plus the pair's 2.6 mW; Z0 = Z (I - F)^-1 with F a half or more amplifies every error of Z and F | the joint supplies only the pair's offset and control band, 0.05 K and 0.05 K over 30 mm, 5.2 mW, and the lagged lug's own loss, 9.7 mW (U 3.24 W/(m2 K) through the lagging, 0.5 cm2 left outside the tape, a joint 60 K over the air): **14.9 mW a lead**, whatever the joint's temperature within that |
+| the network measured | the coupon with two leads as conductances; the correction must undo them | at steady state (integral action: no standing error) the guarded coupon IS the coupon without its leads, plus a source of at most 14.9 mW at each joint: **no factor and no assumption on the leads' share** |
+| the term in lines 2 and 3 | Z0 q, of the order of 1 to 30 K, with an error of the order of round 14's whole V8 | the residual's effect, at most Z_kJ x 14.9 mW a lead, Z_kJ read by reciprocity from the joint's thermocouple in cases A to C (Z_kJ = Z_Jk), and at most Zself,k: **1.22 K for both leads at 40.78 K/W, 0.99 K at the design target** (with the measured Z_kJ, less) |
+| what it needs | a heater at each joint and a calibration step | a heater tape, lagging and a controller per lead; the lead sized so its own self-heating stays under its joint's rise (a heater only heats) |
 
 **SELECTED (SESSION): (a), the guard.** It removes the leads from the network instead of correcting for them, so the term left is small
 and needs no assumption about how the leads share the heat. **Reversed by:** a guard that cannot hold its lead (V8 below) on a supplier's
@@ -3115,15 +3117,15 @@ takes differences.
 
 | Line, on a coupon at the design target (25g) | Reading | Propagated U | As a fraction |
 |---|---|---|---|
-| 1, the FETs' allocation | 41.98 K/W | 1.52 K/W | 3.61 % |
-| 2, the limit | 68.73 K | 2.51 K | 3.65 % |
+| 1, the FETs' allocation | 41.51 K/W | 1.51 K/W | 3.63 % |
+| 2, the limit | 68.71 K | 2.52 K | 3.66 % |
 | R17's coupling | 0.294 K/W | 0.353 K/W | 119.9 % |
 | 3, a direct reading (one reading over the air, with the ripple) | | 1.96 K | |
 
 Round 14's single 3.47 % on every line is withdrawn. **The search with readings drawn from the budget** (`r15_search` in section 25 of
 the script; seed 20261015, 1,200 matrices in each of three physical families; every source drawn normal with its expanded amplitude two
-standard deviations; each line's U propagated from the readings): 1,108 accepted of 3,600; 597 over 150 C; **none accepted over 150 C**,
-and of the 368 within 3 K over the limit none accepted. **The claim, restated to its model:** a specimen exactly at the limit passes
+standard deviations; each line's U propagated from the readings): 1,071 accepted of 3,600; 599 over 150 C; **none accepted over 150 C**,
+and of the 365 within 3 K over the limit none accepted. **The claim, restated to its model:** a specimen exactly at the limit passes
 with a probability of about 2.5 % (a guarded rule at k = 2, the procedures' README section 3), one over it with less. Round 14's "none
 over 150 C" followed from the lines' monotony with each reading's error bounded by the U the rule adds, which is not the budget's model.
 
@@ -3136,26 +3138,26 @@ their allowance included (the band 9.16 K, R17 at its target):
 | The pours' allowance (each pour's largest path, joint to FET lands, summed) | Each junction's worst-split figure Zw at most | Three side by side at m 0.1: Zself, S |
 |---|---|---|
 | 0 | 42.83 K/W | 34.26, 41.11 K/W |
-| 0.05 mOhm | 42.69 K/W | 34.15, 40.99 K/W |
-| **0.1 mOhm (SELECTED)** | **41.98 K/W** | **33.58, 40.30 K/W** |
-| 0.15 mOhm | 41.29 K/W | 33.03, 39.64 K/W |
-| 0.2 mOhm (round 14's illustration) | 40.62 K/W | 32.49, 38.99 K/W |
+| 0.05 mOhm | 42.21 K/W | 33.76, 40.52 K/W |
+| **0.1 mOhm (SELECTED)** | **41.51 K/W** | **33.21, 39.85 K/W** |
+| 0.15 mOhm | 40.83 K/W | 32.66, 39.20 K/W |
+| 0.2 mOhm (round 14's illustration) | 40.18 K/W | 32.14, 38.57 K/W |
 
 - **The layout requirement (Layer 9 and board A's PCB generator), restated:** the two pours' largest paths, each from its current's joint
-  to the FET lands, summed at most **0.1 mOhm** at the operating temperature; each junction's worst-split figure Zw at most **41.98
-  K/W** (for three side by side at m 0.1, Zself 33.58 and S 40.30 K/W); **R17's coupling at most 0.294 K/W** (R17's line passes with
-  twice its 0.35 K/W). At the target the pours' term is 1.92 K and the guard's 0.35 K. SELECTED (SESSION): the middle of the trade;
+  to the FET lands, summed at most **0.1 mOhm** at the operating temperature; each junction's worst-split figure Zw at most **41.51
+  K/W** (for three side by side at m 0.1, Zself 33.21 and S 39.85 K/W); **R17's coupling at most 0.294 K/W** (R17's line passes with
+  twice its 0.35 K/W). At the target the pours' term is 1.90 K and the guard's 0.99 K. SELECTED (SESSION): the middle of the trade;
   reversed by board A's first layout extraction of the pours' resistance.
 - **The verdict on a coupon whose true line-2 figure sits at a chosen point**, each line read at its error's edges (+U, exact, -U), the
   pours and the guard at their bounds:
 
 | True line 2 | U | Read high | Exact | Read low |
 |---|---|---|---|---|
-| the design target, 68.73 K | 2.51 K | PASS | PASS | PASS |
-| the target's U under the limit, 71.24 K | 2.54 K | FAIL | FAIL | PASS |
+| the design target, 68.71 K | 2.52 K | PASS | PASS | PASS |
+| the target's U under the limit, 71.23 K | 2.55 K | FAIL | FAIL | PASS |
 | 0.1 K under the limit, 73.65 K | 2.58 K | FAIL | FAIL | PASS |
-| 0.1 K over the limit, 73.85 K | 2.58 K | FAIL | FAIL | FAIL |
-| 1 K over the limit, 74.75 K | 2.59 K | FAIL | FAIL | FAIL |
+| 0.1 K over the limit, 73.85 K | 2.59 K | FAIL | FAIL | FAIL |
+| 1 K over the limit, 74.75 K | 2.60 K | FAIL | FAIL | FAIL |
 
 A coupon built to the target passes whatever its errors within U, and one over the limit fails whatever its errors within U. Between
 them the verdict depends on the errors, which is what any rule with a measurement uncertainty does.
@@ -3164,7 +3166,7 @@ them the verdict depends on the errors, which is what any rule with a measuremen
 
 | Item | Status |
 |---|---|
-| V2RF-B1 | **CORRECTED on the desk**: V8 and the lead term withdrawn; each heavy lead guarded (25b), its residual 5.2 mW a lead and its term at most 0.42 K; V8 restated as the guard's control |
+| V2RF-B1 | **CORRECTED on the desk**: V8 and the lead term withdrawn; each heavy lead guarded (25b), its residual 14.9 mW a lead (the pair's 5.2 mW and the lagged lug's 9.7 mW) and its term at most 1.22 K at the bar; V8 restated as the guard's control |
 | V2RF-m1 to m5 | answered (25c to 25g); m6 is record l8p's |
 | TP-E11-29 | **NOT EXECUTABLE** until R-159 is restated (L4-E9's) and a supplier agrees in writing |
 | the loop | the answer to the FIRST negative check of the lead treatment; a second ends that loop |

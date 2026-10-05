@@ -79,7 +79,7 @@ _PAIR = ("# L4-E11 (MESHSAT-1357, the U-04 question for the consolidation and it
          "# node by equal branches; R17 off that pour (its coupling into each junction at most 1 K/W, read by heating R17 alone); record\n"
          "# l8p's enable-loop PTC at the three drain tabs' centroid, within 3 mm of each tab's edge; the two pours' largest paths, each from\n"
          "# its current's joint to the FET lands, summed at most 0.1 mOhm at the operating temperature, each junction's worst-split figure\n"
-         "# at most 41.98 K/W and R17's coupling at most 0.294 K/W (round 15, V2RF-m5: the design target, so the limit's line passes with\n"
+         "# at most 41.51 K/W and R17's coupling at most 0.294 K/W (round 15, V2RF-m5: the design target, so the limit's line passes with\n"
          "# its uncertainty; the acceptance bars unchanged). The docking pulse is taken whole in\n"
          "# ONE body diode, no sharing credited, and its whole hot waveform is E11-30's (L4-E11 sections 16, 17, 19 and 21).\n"
          "# L4-E11 (the review of the provisional fixes, L4-F03, 2 October 2026): THE DOCK'S VSYS BRANCH. J_DOCK pin 1 carries VSYS to\n"
