@@ -16,8 +16,9 @@ single pin row does not show:
         U48 and the guard's shunt Q60's drain (an off 2N7002, the leakage record l8p counts in L4-E11 20c's window); DOCK_EN_OUT reaches
         J_DOCK, R260, R109, the guard's regulator U61's input and its capacitor C261. A board with both RT1 and the guard, or with
         neither, FAILS; round 18 (record l8p's round 9, the owner's part 22 item A): on a board A that also carries record l8p's
-        fail-safe delta (apply_gen_sch_a_thgfs.py: a second switch U62, the cold clamp Q62 and Q63) U61's input capacitor is two,
-        C261 and C268 at 330 nF each, and DOCK_EN_OUT reaches C268 as well; a board with U62 but not C268 (or the reverse) FAILS;
+        fail-safe delta (apply_gen_sch_a_thgfs.py: path 1's cold clamp Q62 and Q63, path 2's switch U62 and shunt Q61) U61's input
+        capacitor is two, C261 and C268 at 330 nF each, and DOCK_EN_OUT reaches C268 and path 2's shunt Q61's drain as well (Q61 an
+        off 2N7002 whose leakage record l8p counts in the guard's draw, not on the return); a board with U62 but not C268 or Q61 FAILS;
   TRIG  U48's RESET1 is DD7_T, pulled up only from DD7_LP (R250), which is U48's RESET2; Q50's gate is DD7_T;
   HOLD  Q51 from VBAT to DD7_K, R253 from DD7_K to ground, R84 and D26 (cathode on DD7_H) into DD7_H, C241 and R85 to ground,
         U47's SENSE1 on DD7_H and its CTS1 on C248;
@@ -96,10 +97,11 @@ GUARD_EXCLUSIVE = {
     "THG_MID": {"R260", "R261", "TP62"},
 }
 # round 18: record l8p's round 9 delta (apply_gen_sch_a_thgfs.py) splits U61's input capacitor in two (C261 and C268, 330 nF each)
-FS_DOCK_EN_OUT = {"J_DOCK", "R260", "R109", "U61", "C261", "C268"}
+FS_DOCK_EN_OUT = {"J_DOCK", "R260", "R109", "U61", "C261", "C268", "Q61"}
 FS_CAPS = [
     ("C261", "330n", {"1": "DOCK_EN_OUT", "2": "GND"}),
     ("C268", "330n", {"1": "DOCK_EN_OUT", "2": "GND"}),
+    ("Q61", "2N7002", {"2": "GND", "3": "DOCK_EN_OUT"}),
 ]
 GUARD_MAP = [
     ("R260", "7.5k", {"1": "DOCK_EN_OUT", "2": "THG_MID"}),

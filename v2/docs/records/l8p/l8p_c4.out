@@ -15,11 +15,10 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
    544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    768836365237c831  v2/docs/records/l8p/l8p_guard.py
-   3b76e21ce15cd8e6  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
-   54de8e4089bb8221  v2/vendor/power/st-semtech-1n4148w-c81598.pdf
-   e96e76df5ddf8b4f  v2/docs/records/l8p/check_l8p_fs.py
-   66c246df3f3029ab  v2/docs/records/l4e11/check_dd7_netlist.py
-   12ae16d82b88bf5c  v2/docs/records/l8p/l8p_c4.py
+   19af759a934be6cc  v2/docs/records/l8p/apply_gen_sch_a_thgfs.py
+   326e861f9d4d36ce  v2/docs/records/l8p/check_l8p_fs.py
+   625f5f0065abbba6  v2/docs/records/l4e11/check_dd7_netlist.py
+   fd13c820f4bbeb1e  v2/docs/records/l8p/l8p_c4.py
 
 1. WHAT RECORD l9stk STATES OF C4 (RECORD: its l9stk_guard.out and page 15.9 at bb6d2c8f, copied; SESSION, unchecked)
    the shunt a 2N7002 at 5.58 uA (86.25 C), the allowance 26.45 uA, the sinks 18.83 (24.33 all doubled) uA, the return at DOCK_EN_OUT 1.825 V 0.908 (0.859) V,
@@ -248,88 +247,105 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
      the maximum interval: from commissioning, UNBOUNDED (a pad cracked in service by thermal fatigue is never looked for); response: none
      the exposure: a held current from 20.53 A to the breaker's limit, or a fast-rising overload: a FET over 150 C before the trip, NOT
        BOUNDED
-     so a correction is required: 10c, a second switch U62 on its own pad, ORed
+     so a correction is required: 10c, path 2: a second switch U62 on its own pad, with its own supply and its own shunt
    A SECOND SHUNT ON THE SAME RETURN (round 9's first pass, recorded): its off leakage, 5.58 uA at 86.25 C, makes the sinks 24.41 uA on the
      count and 29.92 uA all doubled against the 26.45 uA allowance: L4-E11 20c's window FAILS, so the correction keeps one shunt
 
 10c. ROUND 9: THE CORRECTION DRAFTED, apply_gen_sch_a_thgfs.py (after apply_gen_sch_a_thguard.py), ITS VALUES READ FROM THE DRAFT AND
-   JUDGED ON C-PROT rev 1 (labels as above). NOT APPLIED to the tree; V6-m7 stays OPEN until an independent check has read it
-   the draft: the cold clamp Q62 2N7002 and Q63 2N7002 in series from Q60's gate to ground, gates on THG_ODN;
-     the pull-up R268 and R269 47 + 47 kOhm in series; the OR D60 1N4148W and D61 1N4148W; the second switch U62 LM26LVQISDX-130/NOPB with C269 100n 50V X8R;
-     the gate network R262 22k 1%, C260 1u 16V X7R, R263 1M 1%; U61's input C261 330n 50V X7R and C268 330n 50V X7R; TP64 THG_TT2, TP65 THG_VT2, TP66 THG_ODN
-   the rows read (PRINTED): LM26LV open drain IOH at most 1 uA at 30 C and 1 uA at 150 C (TI: a testing limit), VOL at most 0.2 V to 730 uA;
-     1N4148W VF at most 0.715 V at 1 mA (the OR carries about 0.1 mA: under it), IR at most 25 nA at 20 V (25 C) and 30 uA at 25 V and 150 C,
-     VR 75 V; the 2N7002 as section 2
-   (1) Q60's GATE TO DRAIN SHORT WITH THE CLAMP: cold, the return is THG_G, which Q62 and Q63 hold at ground
-       the clamp's gates: VDD less the pull-up's drop. In the held state at BRK_VIN 7.6 V DOCK_EN_OUT reads 4.20 V (the cold draw at 50 uA,
-       R106 at +1 %, the pair at -1 %), VDD 4.20 V (the regulator in dropout, no drop at microamps ASSUMED); the leakage through 94.9 kOhm
-       2.16 uA (two open drains, two gates at the printed IGSS) or 13.17 uA (the gates doubled): VGS at least 3.99 V (2.95 V)
-       each FET's on-resistance ASSUMED by section 4's convention (the 5 V row scaled by the drive over the highest threshold, x2 hot):
-       23.5 ohm (78.3 ohm), against at most 329 ohm each so that the 1.18 mA of the 29.2 V clamp leave the return under 0.7755 V
-       the return 55.3 mV (184.7 mV): HELD. The breaker is off and DD-7 reads board P's own pull: the fault TRIPS and is found at once (the
-       kit does not start, or stops); at a docking the clamp holds from VDD over the clamp's threshold, at the latest tEN after VDD's 1.3 V
-       (section 9 (e): 25.9 ms at 7.6 V), before the RC hold's least 0.110 s. Hot with the short (the pour over the trip with the breaker
-       off: only from an outside heat over the envelope's 76.25 C air) the clamp lets go and the return follows the network
-       THG_G carries the return only with this short: at most 13.81 V (the closed return at the 29.2 V clamp), under C260's 16 V
-   (2) C261 OPEN: C268 stays, 330 nF (297 nF at -10 %), inside TI's 0.1 to 2.2 uF; the two give 0.66 uF (0.73 uF at +10 %), still inside
-   (3) U60's PAD OPEN: U62 on its own pad on the same pour trips on the same printed limits, drives the shunt through D61 and releases the
-       clamp through its open drain; the trip is the earlier switch's, the no-trip side holds for each; E-13's gradient is read per switch
+   JUDGED ON C-PROT rev 1 (labels as above; the owner's part 22 item A and the check cx45's Q5). NOT APPLIED; V6-m7 OPEN until an independent
+   check has read it. TWO GUARD PATHS that share only the pour they sense and the loop they open:
+   path 1, round 8's guard kept (U60, U61 from DOCK_EN_OUT, R262 47k 1%, C260 1u 16V X7R, R263 1M 1%, Q60 on DOCK_EN_RET) with a cold clamp:
+     Q62 2N7002 and Q63 2N7002 in series from Q60's gate to ground, gated by U60's open drain (THG_ODN) pulled up by R268 and R269 220 + 220 kOhm;
+     U61's input C261 330n 50V X7R and C268 330n 50V X7R
+   path 2, new: U62 LM26LVQISDX-130/NOPB on the same pour, supplied by U63 TPS70950DBVR from VBAT (C270 330n 50V X7R in, C271 4.7u 16V X7R out), C269 100n 50V X8R; its OVERTEMP through
+     R270 47k 1% with C272 1u 16V X7R and R271 1M 1% to Q61 2N7002 from DOCK_EN_OUT to ground; TP64 THG_TT2, TP65 THG_VT2, TP66 THG_ODN, TP67 THG_VDD2
+   the rows read (PRINTED): LM26LV open drain IOH at most 1 uA at 30 C and 1 uA at 150 C (TI: a testing limit); the 2N7002 as section 2
+   (1) Q60's GATE TO DRAIN SHORT (V6-m7) WITH THE CLAMP: cold, the return is THG_G, which Q62 and Q63 hold at ground
+       in the held state at BRK_VIN 7.6 V DOCK_EN_OUT reads 4.26 V (the cold draw at 40 uA, R106 at +1 %, the pair at -1 %), VDD 4.26 V (the
+       regulator in dropout, no drop at microamps ASSUMED); through 444.4 kOhm the open drain's 1 uA and the gates' printed 0.16 uA: VGS at
+       least 3.74 V; each FET 28.2 ohm ASSUMED by section 4's convention against at most 329 ohm each for the 1.18 mA of the 29.2 V clamp
+       to leave the return under 0.7755 V: the return 66.5 mV, HELD: the breaker off, DD-7 reads board P's own pull: the fault TRIPS, found at
+       once. The clamp needs each gate's leakage at most 1.36 uA (PRINTED 0.08 uA at 25 C, hot NOT PRINTED; a Layer 6 or bench condition):
+       with the gates at the off leakage's doubling (5.58 uA each) VGS falls to -1.15 V and the clamp is NOT shown; Q60's short then leaves
+       path 1 lost and path 2 holding the protection (2). THG_G carries the return only with this short: at most 13.81 V, under C260's 16 V
+   (2) THE COMMON PATH (cx45 Q5): each single failure of path 1 (U61 open or its pass element shorted, U60 dead or stuck cold or its pad
+       open, R262 open, C260 or R263 shorted, Q60 open or its gate to drain shorted with the clamp not shown) leaves path 2, and each of path 2
+       (U63, U62, R270, C272, R271, Q61) leaves path 1: no single failure removes the trip
+       path 2 tripped: Q61 pulls DOCK_EN_OUT; at the 29.2 V clamp 2.95 mA through R106 at -1 %, on Q60's ASSUMED 17.2 ohm, DOCK_EN_OUT 50.8 mV
+       and the return 30.4 mV: under board P's least 1.0 V and the held reading's 0.7755 V: the breaker off; DOCK_EN_OUT under the powered
+       reading's least 1.825 V, so DD-7 reads the loop dark (no trigger, L4-E11 28). A sink on DOCK_EN_OUT does not move the return against
+       DOCK_EN_OUT: L4-E11 20c's window is unchanged by path 2 (its off leakage counts in the draw, (c))
+       path 2's gate: 2.5 V within 40.0 ms of a trip at the tolerances, under 1 V before tEN (0.438 V); after a breaker start with path 1 lost
+       and VBAT from the pack alone, U63's start, tEN and the gate take at most 43.8 ms (the regulator's printed start), under the RC hold's
+       least 0.110 s; tripping opens the breaker, VBAT may fall, the gate holds on C272 and releases, and the breaker restarts no sooner than
+       the hold: a relaxation in which the FETs carry current at most 43.8 ms in every 0.154 s or more (DERIVED; the junction's rise in each
+       on-time NOT BOUNDED here, as section 9 (b)'s delay); with VBAT held up by another source, Q61 holds the loop open until the pour cools
+   (3) C261 OPEN (V6-m7): C268 stays, 330 nF (297 nF at -10 %), inside TI's 0.1 to 2.2 uF; the two 0.66 uF (0.73 uF at +10 %)
+   (4) U60's PAD OPEN (V6-m7): path 2's U62 on its own pad trips on the same printed limits and opens the loop through Q61
    C-PROT rev 1 ON THE DELTA:
    (a) no trip: each switch on its printed limits, as section 9 (a): 38.4, 9.8 and 6.0 K
-   (b) the trip: the drive is the higher OVERTEMP less a diode, (4.75 - 0.715) V x 0.978, less the clamp's off leakage and Q60's IGSS, 5.66 uA,
-       through 21.7 kOhm: 3.82 V; 2.5 V within 25.4 ms at the tolerances (round 8's draft: 40.0 ms), under 0.1 s; the gradient budget per switch
-   (c) the window: the count on the return is unchanged (the clamp sits on THG_G): 0.908 V (0.859 V all doubled) against 0.84 V: holds
-       the guard's draw on DOCK_EN_OUT restated (PRINTED maxima): cold at most 36.41 uA (two switches 32, the regulator 2.25, the pull-up's
-       leakage 2.16), 47.42 uA with the gates doubled; tripped at most 118.52 uA (the pull-up across 93.1 kOhm, a reverse-biased diode's 30 uA),
-       172.78 uA with one resistor of the pull-up shorted. Allowances taken: 50 uA cold and 180 uA tripped, against the 30 uA of Layer 5's
-       row and record l9stk 15.9: a NAMED PREREQUISITE (finding L8P-R9-F2), the loop's readings recomputed at them:
-         the pair intact: on 3.04 / 4.42 / 7.27 V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V, DOCK_EN_OUT 3.42 V (over 1.981 V); the regulator at
-           its 6.0 V input from BRK_VIN 8.32 V closed
-         one of the pair shorted: on 3.70 / 5.35 / 8.74 V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V, DOCK_EN_OUT 2.44 V (over 1.981 V); the regulator at
-           its 6.0 V input from BRK_VIN 8.77 V closed
-   (d) each source present or absent: unchanged (the guard's supply is DOCK_EN_OUT)
-   (e) docking, the model of section 9 (e) with the delta's capacitors at +10 %, the diode's drop, the clamp's leakage and the pull-up's draw:
-       BRK_VIN  7.6 V: VDD passes 1.3 V at  23.6 ms; a HOT guard's gate passes 2.5 V at 106.4 ms: before the hold's least 0.110 s
-       BRK_VIN 10.6 V: VDD passes 1.3 V at  13.1 ms; a HOT guard's gate passes 2.5 V at  62.4 ms: before the hold's least 0.110 s
-       BRK_VIN 16.8 V: VDD passes 1.3 V at   6.9 ms; a HOT guard's gate passes 2.5 V at  41.3 ms: before the hold's least 0.110 s
-       a COLD guard before tEN, OVERTEMP taken at VDD's 5.05 V (the diode's drop not counted) and the clamp taken off (the open drain's state
-       before tEN NOT PRINTED): the gate 0.888 V at the tolerances, under the 2N7002's least 1 V; after tEN the clamp holds it at ground
-       FM1 with one resistor: the input capacitors at +10 % 0.73 uF, under the 16.2 uF the delta's slower phase allows
-   (f) the ground between the boards: unchanged
-   (g) parts within limits: D60, D61 at most 5.05 V reverse (13.81 V with Q60's short) against 75 V; Q62 and Q63 at most 13.81 V across the two
-       against 60 V each; R268, R269 at most 0.55 mW; the open drains at most VDD against 6 V; C268 at most 29.2 V against 50 V
-   THE DELTA'S OWN SINGLE FAILURES (INFERRED from the circuit as drawn; none removes the guard):
+   (b) the trip: path 1's drive 4.75 V x 0.954 less the clamp's off leakage and Q60's IGSS, 5.66 uA, through 45.3 kOhm: 4.28 V, 2.5 V within
+       43.8 ms at the tolerances (round 8: 40.0 ms); path 2 within 40.0 ms; under 0.1 s; the gradient budget per switch (E-13)
+   (c) the window: the count on the return is unchanged (the clamp sits on THG_G, path 2 on DOCK_EN_OUT): 0.908 V (0.859 V all doubled)
+       against 0.84 V: holds. The guard's draw on DOCK_EN_OUT restated (PRINTED maxima, the off leakage at the doubling): cold at most
+       24.99 uA (U60 16, U61 2.25, the pull-up's leakage 1.16, Q61 off 5.58), 36.00 uA with the clamp's gates doubled; path 1 tripped at
+       most 35.43 uA (the pull-up across 435.6 kOhm), 47.02 uA with one of its resistors shorted. Allowances taken: 40 uA cold, 50 uA
+       tripped, against the 30 uA of Layer 5's row and record l9stk 15.9 (L8P-R9-F2; L4-E11 section 28 restates 20c and 20f on them):
+         the pair intact: on 3.09 / 4.46 / 7.31 V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V DOCK_EN_OUT 4.20 V (over 1.981 V);
+           the regulator at its 6.0 V input from BRK_VIN 8.22 V closed
+         one of the pair shorted: on 3.76 / 5.40 / 8.80 V at 7.6 / 10.6 / 16.8 V (over 2.5 V); held at 7.6 V DOCK_EN_OUT 2.99 V (over 1.981 V);
+           the regulator at its 6.0 V input from BRK_VIN 8.67 V closed
+   (d) each source present or absent: path 1 as section 9 (d); path 2 lives while VBAT does, from the pack after a breaker start or from
+       any source that holds VBAT up
+   (e) docking, path 1 (U63 on VBAT loads no docking), the model of section 9 (e) with the delta's capacitors at +10 %, the pull-up's draw
+       from the start, the clamp's leakage on the gate and Q61's on DOCK_EN_OUT:
+       BRK_VIN  7.6 V: VDD passes 1.3 V at  21.4 ms; a HOT guard's gate passes 2.5 V at 104.0 ms: before the hold's least 0.110 s
+       BRK_VIN 10.6 V: VDD passes 1.3 V at  12.3 ms; a HOT guard's gate passes 2.5 V at  72.0 ms: before the hold's least 0.110 s
+       BRK_VIN 16.8 V: VDD passes 1.3 V at   6.6 ms; a HOT guard's gate passes 2.5 V at  57.0 ms: before the hold's least 0.110 s
+       a COLD guard before tEN: path 1's gate 0.438 V and path 2's 0.438 V at the tolerances, under the 2N7002's least 1 V; FM1 with one
+       resistor: the input capacitors at +10 % 0.73 uF, under the 12.5 uF path 1's slower phase allows
+   (f) the ground between the boards: unchanged for Q60; Q61 pulls DOCK_EN_OUT to board A's ground, read by board P through the same
+       return: the offset of section 9 (f) applies alike
+   (g) parts within limits: Q61 at most 29.2 V on DOCK_EN_OUT against 60 V; U63's input VBAT at most 18 V (its rail's peak) against
+       30 V PRINTED; Q62 and Q63 at most 13.81 V across the two (the return, with Q60's short, the clamp off) against 60 V each;
+       R268, R269 at most 0.117 mW; U60's open drain at most VDD against 6 V; C268 and C270 at most 29.2 V against 50 V
+   THE DELTA'S OWN SINGLE FAILURES (INFERRED from the circuit as drawn; none removes the trip):
      Q62 or Q63 drain to source shorted               the other holds the clamp
-     Q62 or Q63 open, or its gate to source shorted   the clamp lost, round 8's guard remains (Q60's short then needs this second fault)
-     R268 or R269 shorted                             47.0 kOhm left, the clamp kept; the tripped draw 172.78 uA, counted
-     R268 or R269 open                                the clamp off, round 8's guard remains
-     Q62's gate to drain shorted                      THG_ODN on THG_G: cold, the pull-up lifts Q60's gate: the guard trips, found at once
-     Q63's gate to drain shorted                      Q62's gate on its source: the clamp off, round 8's guard remains
-     D60 or D61 open                                  one switch's drive lost, the other remains
-     D60 or D61 shorted                               a cold switch's low output holds THG_OR until it trips too: the trip at the later of two, inside the band
-     U62 stuck tripped, or THG_ODN to ground          the guard trips (found at once), or the clamp off (round 8's guard)
-     U62 dead, stuck cold or its pad open             U60 remains
-     C268 or C269 shorted                             as C261 or C263 shorted: the loop collapses or VDD falls, found at once
-   THE COMMON PATH STAYS (finding L8P-R9-F1): U61 open, Q60 open, R262 open, C260 or R263 shorted, and FM2 each remove the trip of both
-     switches as in section 10's table: found only by E-13b, the interval UNBOUNDED, the exposure that of 10b (1); no requirement permits
-     them either. Removing them needs a second shunt path (on this loop it fails L4-E11 20c's window, 10b), a loop whose window admits two
-     shunts, or an automatic check that bounds the interval (a requirement for the latent-fault interval of a protective function): NOT
-     DRAFTED here; the choice is the owner's or Layer 3's (it adds a requirement or reopens DD-7's loop)
+     Q62 or Q63 open, or its gate to source shorted   the clamp lost: path 1 as round 8, path 2 intact
+     R268 or R269 shorted                             220 kOhm left, the clamp kept; the tripped draw 47.02 uA, counted
+     R268 or R269 open                                the clamp off: path 1 as round 8, path 2 intact
+     Q62's gate to drain shorted                      THG_ODN on THG_G: cold, the pull-up lifts Q60's gate: path 1 trips, found at once
+     U63 open, or C271 open or shorted                path 2 lost (its behaviour without its output capacitor NOT PRINTED): path 1 remains
+     U63's pass element shorted                       U62's VDD at VBAT, over its 6 V: its state NOT PRINTED: trips (found) or path 2 lost (path 1)
+     U62 dead, stuck cold or its pad open             path 2 lost: path 1 remains
+     U62 stuck tripped                                Q61 holds the loop open: found at once
+     R270 open, C272 or R271 shorted, Q61 open        path 2 lost: path 1 remains
+     Q61 drain to source shorted                      DOCK_EN_OUT held low: the breaker never starts, found at once
+     Q61 gate to drain shorted                        its network loads DOCK_EN_OUT (the window untouched); its trip not shown: path 1 remains
+     C268, C270 shorted                               DOCK_EN_OUT or VBAT to ground: the loop collapses (found) or VBAT's fuse acts; neither path is needed
+   WHAT IS NOT CLOSED HERE, HANDED OVER AS REMAINING ENGINEERING (the owner's part 24; no latent-fault exception presumed): a first
+     failure that silently removes ONE path (the rows above marked 'path 1 remains' or 'path 2 lost', and section 10's latent rows on
+     path 1) is found only by E-13b, each path on its own (TP60 and TP64), and no service interval bounds that; a second failure in the
+     other path before it is found removes the trip (the exposure of 10b). No automatic diagnostic is drafted: one that tests a shunt
+     opens the breaker in service, and a cross-check of the two VTEMP outputs sees the switches, not the gate networks or the shunts.
+     The cases: the double failures above; the attempted correction: this delta (single failures survived); the outputs PROVISIONAL on
+     it: this section's verdict, C-PROT rev 1 for the guard, L4-E11 section 28 (finding L8P-R9-F1)
    COMPOSED (L4-E9's order with this record's drafts, then the delta; scratch, removed after): 15 scripts, every one OK
      the delta without round 8's guard: REFUSED (apply_gen_sch_a_thgfs: record l8p's round 8 guard (apply_gen_sch_a_thguard.py) is not in the target: apply it first; refusing)
      the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)
-     the generator ran to its end (725 parts); check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN; round 8's check_l8p_netlist
+     the generator ran to its end (731 parts); check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN; round 8's check_l8p_netlist
      reads THG FAIL on it, as it must (it knows no delta: its THG group is to admit the delta when the delta is released, L8P-R9-F3)
-     L4-E11's check_dd7_netlist (its round 18 admits C268): DRAWN
+     L4-E11's check_dd7_netlist (its round 18 admits C268 and Q61): DRAWN
      mutated, the clamp as one FET (Q63 gone, Q62's source on the ground):   THG FAIL: Q63.1 on None, wanted THG_ODN
-     mutated, the pull-up as one resistor (R269 gone, R268 onto THG_ODN):    THG FAIL: THG_ODN reaches ['Q62', 'Q63', 'R268', 'TP66', 'U60', 'U62'], not the two open drains, the
-     mutated, U62's OVERTEMP not ORed (D61 gone):                            THG FAIL: U62's push-pull OVERTEMP (pin 5) on 'THG_OT2' does not reach D61's anode alone
-     mutated, U61's input as one capacitor (C268 gone):                      THG FAIL: C268.1 on None, wanted DOCK_EN_OUT
-     mutated, U62's open drain off THG_ODN:                                  THG FAIL: the open drains U60.3 ('THG_ODN') and U62.3 ('THG_NC9') are not one net
-     mutated, the clamp on the return, not on Q60's gate:                    THG FAIL: Q60's gate net THG_G reaches ['C260', 'Q60', 'R262', 'R263'], not C260, Q60, Q62, R262, R2
-     mutated, R262 left at 47 kOhm:                                          THG FAIL: R262 value '47k 1%' does not start '22k' (record l9stk 15.9 round 5, and record l8p's SESS
-   VERDICT (10c): the three V6-m7 failures CORRECTED IN DRAFT, the desk acceptance MET by its author on C-PROT rev 1 and the composition MET,
-     UNCHECKED; V6-m7 OPEN until the independent check; L8P-R9-F1 (the common path) and L8P-R9-F2 (the draw) OPEN
+     mutated, the pull-up as one resistor (R269 gone, R268 onto THG_ODN):    THG FAIL: THG_ODN reaches ['Q62', 'Q63', 'R268', 'TP66', 'U60'], not U60's open drain, the clamp's g
+     mutated, path 2's supply from DOCK_EN_OUT:                              THG FAIL: U63.1 on 'DOCK_EN_OUT', wanted VBAT
+     mutated, path 2's shunt on the return:                                  THG FAIL: Q61.3 on 'DOCK_EN_RET', wanted DOCK_EN_OUT
+     mutated, path 2's switch on path 1's supply:                            THG FAIL: path 1's supply THG_VDD reaches U62.4: the regulator's output feeds the switch only
+     mutated, U61's input as one capacitor (C268 gone):                      THG FAIL: C268 value None does not start '330n 50V' (record l9stk 15.9 round 5, and record l8p's SES
+     mutated, path 2's gate capacitor removed:                               THG FAIL: C272 on [], not from Q61's gate 'THG_G2' to the ground
+   VERDICT (10c): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT (no single failure removes the trip), the desk
+     acceptance MET by its author on C-PROT rev 1 and the composition MET, UNCHECKED; V6-m7 OPEN until the independent check; L8P-R9-F1
+     (the double failure, handed over), L8P-R9-F2 (the draw) and L8P-R9-F3 (check_l8p_netlist at release) OPEN
 
 11. VERDICT, WHAT STAYS OPEN, AND E-13b
    the check (item 1): C4 CONFIRMED on the makers' sheets, with the relabellings of sections 2, 5 and 9 (d); no figure fails to reproduce
@@ -347,10 +363,11 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
      (d) VDD (TP63) reads 4.95 to 5.05 V with the loop closed at BRK_VIN over 8.12 V (a shorted or open regulator; TI's +-1 % is printed at
          1 mA of load, ASSUMED at the switch's microamps)
    L8P-F07 and L8P-F08 stay OPEN until an independent check has read this round (the brief); a negative check of C4 ends that loop
-   ROUND 9 (part 22 item A): V6-m7 OPEN; its three failures CORRECTED IN DRAFT (10c, apply_gen_sch_a_thgfs.py, desk acceptance MET by
-     its author, unchecked); L8P-R9-F1 (the common path's latent failures, no requirement permits them) and L8P-R9-F2 (the guard's draw
-     over Layer 5's 30 uA) OPEN; E-13b gains (e): TRIP_TEST on each switch alone (TP60, then TP64) opens the breaker, and THG_ODN (TP66)
-     reads within 0.21 V of VDD cold and low with either TRIP_TEST high (the clamp's gate)
+   ROUND 9 (part 22 item A, cx45 Q5): V6-m7 OPEN; its three failures and the common path CORRECTED IN DRAFT (10c, apply_gen_sch_a_thgfs.py:
+     two paths, desk acceptance MET by its author, unchecked); L8P-R9-F1 (a double failure after a latent first one, handed over as
+     remaining engineering), L8P-R9-F2 (the guard's draw over Layer 5's 30 uA) and L8P-R9-F3 OPEN; E-13b gains (e): TRIP_TEST on each
+     switch alone (TP60 with TP63, then TP64 with TP67) opens the breaker; THG_ODN (TP66) reads within 0.52 V of VDD cold and low with
+     TP60 high (the clamp's gate); TP67 reads 4.95 to 5.05 V with VBAT over U63's dropout
 
 12. PREDICATES
    the check: every figure of record l9stk's C4 read here reproduces within its printed rounding                                    yes
@@ -376,9 +393,10 @@ or measured. LABELS: PRINTED a maker's printed limit; TYPICAL; ASSUMED; DERIVED 
    round 9: Q60's gate-to-drain short fails the window (V6-m7), and a second shunt on the same return would too                     yes
    round 9: no requirement file names a latent state, a proof test or a service interval                                            yes
    round 9: without the guard the FETs pass 150 C held under the breaker's most current limit (the exposure)                        yes
-   round 9: the delta's clamp holds the return under the held reading with Q60's short, the gates at IGSS and doubled               yes
-   round 9: the delta trips within 0.1 s and keeps the gate under 1 V before tEN at the tolerances                                  yes
+   round 9: the delta's clamp holds the return under the held reading with Q60's short at the printed gate leakage                  yes
+   round 9: path 2 alone holds the return under the held reading and leaves DOCK_EN_OUT dark (DD-7 no trigger)                      yes
+   round 9: each path trips within 0.1 s and keeps its gate under 1 V before tEN at the tolerances                                  yes
    round 9: the delta's draw is inside the restated allowances, and the loop's readings hold at them                                yes
-   round 9: a hot docking reaches the shunt before the RC hold's least start on the delta at 7.6, 10.6 and 16.8 V                   yes
+   round 9: a hot docking reaches path 1's shunt before the RC hold's least start at 7.6, 10.6 and 16.8 V                           yes
    round 9: C-PROT rev 1 holds on the desk for the delta (the physical conditions apart)                                            yes
    round 9: the delta composes in L4-E9's order, reads DRAWN on both checks, refuses as it must, and its seven mutations fail       yes
