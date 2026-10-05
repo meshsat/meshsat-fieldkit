@@ -160,3 +160,29 @@ above; so those copies ARE the 08f7e38a drafts, and are used as they are (no sec
 also word for word in its page at 08f7e38a (checked in round 8 as in round 7).
 Read in round 8 from this tree (committed): Diodes' BZT52C sheet v2/vendor/diodes/diodes-bzt52c-ds18004.pdf (DS18004 Rev 38), for
 FM2's clamps, and JSCJ's 2N7002 sheet as in round 7. Held back as in round 7: TI's LM26LV and TPS709 sheets.
+
+Round 9 (P0 Slot C, branch fnd/p0t10 from fnd/p0base e132db0e, 5 October 2026; the check V6's V6-m2): task L4-E11's round 17 is
+this branch's commit ecb598c5a54e7f74134bcb2e2775c66433a87743 (L4-E11's rounds 15 and 16 merged into the base, then its round 17,
+DD-7's check restated for the guard). Every copy is taken again at ecb598c5 from the tree at that commit and is not edited; the
+round 13 copies (4def5975) are removed (git history keeps them). Of the thirteen copies ONE changed, the charger draft (its layout
+comment at Zw 37.59 K/W, L4-E11's rounds 15 and 16); the nine section copies and the three other drafts are byte for byte round
+13's (the same sha256).
+
+Full files at ecb598c5 (sha256):
+  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   6701ef690fb08aba9c942bcee42caa48e9c58881cc9f8dfd320342ab4029747b
+  v2/docs/records/l4e11/apply_gen_sch_a_charger.py       0e215988ba2a929bd2eb91b7eb80fa20040da28d10c08a9c36e1022e81a789c0
+
+Copies here (sha256):
+  l4e11r17-apply_gen_sch_a_charger-ecb598c5.py   0e215988ba2a929bd2eb91b7eb80fa20040da28d10c08a9c36e1022e81a789c0  (CHANGED)
+  l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py       bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034
+  l4e11r17-apply_gen_sch_e_aux-ecb598c5.py       3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+  l4e11r17-apply_gen_sch_e_entry-ecb598c5.py     a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+  l4e11-section20c-ecb598c5.md                   b3619bd411f5b64f2ae8efa3580041e2789513ccf5cda147b762df5cc4d2e9dc
+  l4e11-section20d-ecb598c5.md                   a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241
+  l4e11-section20e-ecb598c5.md                   9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a
+  l4e11-section22b-ecb598c5.md                   583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45
+  l4e11-section22c-ecb598c5.md                   a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec
+  l4e11-section22g-ecb598c5.md                   0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704
+  l4e11-section22h-ecb598c5.md                   b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f
+  l4e11-section19h-ecb598c5.md                   b4bd0832b4f89385a94ddf08db6f8cf482ded968089f1dc3861337d505d8f051
+  l4e11-section15c-precharge-ecb598c5.md         ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146
