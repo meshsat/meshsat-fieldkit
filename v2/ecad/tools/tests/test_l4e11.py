@@ -1442,6 +1442,58 @@ def t_round10_dd7_composes_runs_to_its_end_and_reads_drawn_and_its_mutations_fai
     assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, "the committed netlist does not read NOT DRAWN"
 
 
+def _compose17(d):
+    """Board A as _compose10 composes it, with record l8p's thermal guard (round 8) straight after this record's DD-7 draft."""
+    ptc = _l8p3(L8P3_PTC)
+    dd7 = os.path.join(REC, "apply_gen_sch_a_dd7.py")
+    thg = os.path.join(ROOT, "v2", "docs", "records", "l8p", "apply_gen_sch_a_thguard.py")
+    need(thg, "record l8p's thermal guard draft")
+    g = os.path.join(d, "gen_sch_a_thg.py")
+    shutil.copy(GEN_A, g)
+    for rec, name in _ORDER9["a"]:
+        if (rec, name) == ("d8dec31", "mainpb"):
+            for s in (ptc, dd7, thg):
+                r = _run([s, g, "--write"])
+                assert r.returncode == 0, "%s: %s" % (s, r.stderr.decode()[-300:])
+        s = os.path.join(ROOT, "v2", "docs", "records", rec, "apply_gen_sch_a_%s.py" % name)
+        r = _run([s, g, _NET9["a"]] if rec == "d8dec31" else [s, g, "--write"])
+        assert r.returncode == 0, "%s/%s refused: %s" % (rec, name, r.stderr.decode()[-200:])
+    return g
+
+
+def t_round17_v6_m2_dd7s_check_reads_the_guards_pair_and_its_mutations_fail():
+    """The check V6's V6-m2: check_dd7_netlist.py required RT1 on DOCK_EN_RET and DOCK_EN_OUT, so it read FAIL on every board A carrying
+    record l8p's thermal guard, and this test file never composed the guard. Round 17 restates the LOOP group: the loop's element is RT1
+    or the guard's pair, never both, never neither. Composed with the guard after DD-7 the board reads DRAWN; RT1 put back beside the
+    guard, R261's far end moved off the return, and a 100 kOhm load on the return each read FAIL; the section 27 rows are the output's."""
+    _M()
+    with tempfile.TemporaryDirectory() as d:
+        g = _compose17(d)
+        net = _netlist10(g, d, "thg")
+        r = _run([DD7_CHECK, net])
+        assert r.returncode == 0 and b"DD-7 on board A (L4-E11 round 10): DRAWN" in r.stdout and b"the thermal guard's pair" in r.stdout, r.stdout.decode()[-600:]
+        text = open(g, encoding="utf-8").read()
+        mutations = [
+            ("RT1 drawn beside the guard (two loop elements)", 'tp("TP60", "THG_TT")',
+             'part("RT1", "Device", "Thermistor_PTC", "PTC", "R0603", {"1": "DOCK_EN_OUT", "2": "DOCK_EN_RET"}); tp("TP60", "THG_TT")'),
+            ("R261's far end on GND (the pair no longer reaches the return)", 'r("R261", "7.5k 1%", "THG_MID", "DOCK_EN_RET")',
+             'r("R261", "7.5k 1%", "THG_MID", "GND")'),
+            ("a 100 kOhm load on DOCK_EN_RET beside the guard", 'tp("TP60", "THG_TT")',
+             'r("R299", "100k", "DOCK_EN_RET", "GND"); tp("TP60", "THG_TT")'),
+        ]
+        for k, (why, old, rep) in enumerate(mutations):
+            assert text.count(old) == 1, why
+            gm = os.path.join(d, "gen_sch_a_t%d.py" % k)
+            open(gm, "w", encoding="utf-8").write(text.replace(old, rep))
+            r = _run([DD7_CHECK, _netlist10(gm, d, "t%d" % k)])
+            assert r.returncode == 4 and b"FAIL" in r.stdout, "%s: the check did not fail: %s" % (why, r.stdout.decode()[-400:])
+    out = open(OUT, encoding="utf-8").read()
+    sec = out.split("27. ROUND 17:")[1]
+    for s in ("read held; DOCK_EN_OUT stays powered, so a trip IS DD-7's trigger", "BRK_VIN  7.6 V: 4.328 V", "read powered",
+              "RET/OUT at least 0.4707", "the rise's time constant about 63 ms", "the window and the docking hold"):
+        assert s in sec, s
+
+
 def t_round10_c_prot_the_held_return_sets_the_inhibit_and_the_latch_holds_cell_dead():
     """Closure credit (c) on C-PROT: the failure reproduced on round 9's draft, then the redrawn circuit against the same cases, from the
     makers' printed figures: the held return at 7.6 and 10.6 V sets the inhibit within the interface's 1 ms, the hold outlasts 1.0 s and
