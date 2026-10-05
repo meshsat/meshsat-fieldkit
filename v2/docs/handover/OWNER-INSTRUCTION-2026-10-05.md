@@ -17,6 +17,7 @@ qualification and fabrication release as separate gates and the supplier's valid
 | 17. Second review of the revised plan: READY to approve for execution; the baseline watchpoint; 14 to 18 h is a desk candidate, not Layer 4's closure | 5 October 2026, about 14:55 CEST | `14f5dcc8fc2aacc4a5a9e33a06b321021651889cf5d7b6dfeee12bc3776d8b8d` |
 | 18. Review of P0 checkpoint 1: continue the authors; finish the external decision packet (U-02's per-mode reconciliation and the mock-up's sum, U-04's evidence route apart from the whole-kit release, U-01's two kinds of evidence) | 5 October 2026, about 15:30 CEST | `62351f9c8ca4a11b1328b5fcfb161c680b17701335242d8a3d505b5c900085a2` |
 | 19. Handover scope amendment and review of the external packet: the deliverable is the desk engineering package for a receiving company; sequential DESK acceptance per layer; the packet reframed as the supplier validation annex with three corrections (a failed arrangement is not a requirements conflict; the mock-up sum; investigating the Saft option apart from adopting it) | 5 October 2026, about 15:45 CEST | `d448616ce3607d9653fe47efea771aa9a68e31198ec943bf52a9f4bf8262b02a` |
+| 20. Targeted revision check of the supplier annex: its revised scope accepted (not the circuitry); two follow-throughs (residual owner-role wording; the live plan must show sequential desk-handover gates governing while the design and fabrication gates stay honest) | 5 October 2026, about 15:58 CEST | `0755be17a7931895b431c0d75419d15246c46e1d9e9c88554b31aa58927f539d` |
 
 
 ---
@@ -480,3 +481,42 @@ Correct these specific points in the normal coordinator update:
 
 Apply this as a narrow scope amendment in the existing plan, records and worker briefs. No new constitution, general review round or laboratory procurement workstream. The next engineering deliverables remain the F01 correction and CAN fault analysis.
 ```
+
+---
+
+## 20. Targeted revision check of the supplier annex: its revised scope accepted (not the circuitry); two follow-throughs (residual owner-role wording; the live plan must show sequential desk-handover gates governing while the design and fabrication gates stay honest) (as received)
+
+# MeshSat supplier annex — targeted revision check
+
+## Decision
+
+**The revised annex now fits the clarified engineering-handover purpose. Continue the current P0 work. No new plan or broad review is needed for these corrections.**
+
+The receiving company is assigned physical validation and remaining engineering. The owner is not required to supply a bench, buy equipment or run experiments before handover. The annex preserves provisional design outputs and separates desk deliverables from qualification and fabrication release.
+
+This is acceptance of the document's revised scope and dispositions, not independent approval of the circuitry, component specifications, numerical engineering limits or executable test procedures.
+
+## Evidence
+
+Source: `MESHSAT-SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`.
+
+SHA-256: `eceacf6335cadb1e0f7b247cd96147d8ca852108525d4cab10aa3aa5f602938b`.
+
+Method: read the complete annex and compared it with the previous review's four corrections. No repository, live execution state, market prices, datasheets, simulations or test hardware were independently checked.
+
+## Previous corrections
+
+| Item | Current evidence | Result |
+|---|---|---|
+| Replace owner procurement/test prerequisites with receiving-company scope. | Lines 3–16 and 111–121 expressly do this and retain three distinct completion states. | Addressed in the annex. Application to the live execution plan is not shown by this file. |
+| A failed thermal arrangement does not automatically establish incompatible requirements. | M1/M2 and the decision paragraph at lines 30–43 now require rejecting/revising the arrangement and considering permitted alternatives. | Addressed. |
+| Correct the mock-up arithmetic. | Line 58 gives EUR 1,191.08–1,326.08 for two loggers and EUR 781.08–916.08 for one, matching the previous calculation from the listed rounded EUR values. | Addressed; prices and exchange rates remain unverified here. |
+| Separate Saft investigation/testing from pack adoption. | Lines 91 and 96 explicitly make adoption a separate owner decision, retain a proposal state, and distinguish limited specimen evidence from a guarantee. | Addressed as decision wording. The original pack ruling was not independently re-audited. |
+
+## Two small follow-through items
+
+1. **Clean up residual owner-role wording during the normal coordinator update.** Route R1 still offers "the owner's bench" at line 73; the cell table still says the owner sends the request, arranges outside contact or prints the mock-up at lines 91–93. Make these receiving-company or nominated-laboratory activities, with engagement unconfirmed. The controlling purpose and final section already remove the owner's obligation, so these remnants do not justify stopping the authors or another review round.
+
+2. **Apply the same distinction to the actual execution plan.** The previous plan paused all later layers while U-01/U-02/U-04 lacked physical evidence. This annex cannot, by itself, prove that the old blanket pause has been superseded in task allocation and status reporting. At the next ordinary checkpoint, report that sequential desk-handover gates govern progression, while the existing unresolved design/qualification and fabrication gates remain honest. Do not turn an old failing technical gate into PASS merely to represent the new handover scope.
+
+Keep the current power corrections and their independent check on the critical path. Known desk-fixable failures still require correction. Physical unknowns belong in the supplier scope with affected outputs explicitly provisional.
