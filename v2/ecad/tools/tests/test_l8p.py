@@ -1055,41 +1055,49 @@ def t_round9_part22_the_requirements_hold_no_latent_state_and_the_exposure_is_a_
 
 
 def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes():
-    """The correction drafted (apply_gen_sch_a_thgfs.py) re-solved here from its own values and the printed rows: the cold clamp holds
-    the return under the held reading with Q60's gate shorted to its drain (the fault trips), the trip reaches 2.5 V within 0.1 s
-    after the diode's drop, the gate stays under 1 V before tEN; its old texts are the round 8 guard's own lines; it composes, reads
-    DRAWN on check_l8p_fs and L4-E11's DD-7 check, its seven mutations fail, and it refuses as a draft must. check_l8p_fs reads the
-    committed board A (no delta) as NOT DRAWN."""
+    """The correction drafted (apply_gen_sch_a_thgfs.py), as cx45's Q5 revised it into two guard paths, re-solved here from its own
+    values and the printed rows: path 1's cold clamp holds the return under the held reading with Q60's gate shorted to its drain (the
+    fault trips); path 2 (a second switch on VBAT, its shunt on DOCK_EN_OUT) shares no net with path 1 and holds the loop dark when it
+    trips; each path reaches 2.5 V within 0.1 s; its old texts are the round 8 guard's own lines; it composes, reads DRAWN on
+    check_l8p_fs and L4-E11's DD-7 check, its seven mutations fail, and it refuses as a draft must. check_l8p_fs reads the committed
+    board A (no delta) as NOT DRAWN."""
     fs = _mod("l8p_thgfs_under_test", "apply_gen_sch_a_thgfs.py")
     thg = _mod("l8p_thguard_under_test", "apply_gen_sch_a_thguard.py")
     for i, (old, new) in enumerate(fs.EDITS):
         assert old != new and (thg._NEW_LOOP.count(old) + thg._NEW_SEC.count(old)) == 1, i
-    g, c = dict(fs.GATE), dict(fs.CAPS)
-    assert (g["R262"], g["C260"], g["R263"]) == ("22k 1%", "1u 16V X7R", "1M 1%") and c["C261"] == c["C268"] == "330n 50V X7R"
-    assert [r for r, _v in fs.CLAMP] == ["Q62", "Q63"] and [v for _r, v in fs.PULLUP] == ["47k 1%", "47k 1%"]
-    # the trip and the state before tEN (resistors 1 %, capacitors 10 %; VOH 4.75 V, the diode 0.715 V, the leakage 5.66 uA)
-    rg_p, rg_m, rp_p, rp_m = 22e3 * 1.01, 22e3 * 0.99, 1e6 * 1.01, 1e6 * 0.99
-    k_lo, k_hi = rp_m / (rg_p + rp_m), rp_p / (rg_m + rp_p)
-    rth_hi = rg_p * rp_p / (rg_p + rp_p)
-    leak = 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0) + 80e-9
-    fin = (4.75 - 0.715) * k_lo - leak * rth_hi
-    t_on = -1e-6 * 1.1 * rth_hi * math.log(1.0 - 2.5 / fin)
-    g_inv = 5.05 * k_hi * (1.0 - math.exp(-3.8e-3 / (1e-6 * 0.9 * rg_m * rp_m / (rg_m + rp_m))))
-    assert round(fin, 2) == 3.82 and round(t_on * 1e3, 1) == 25.4 and t_on < 0.1 and round(g_inv, 3) == 0.888 and g_inv < 1.0
+    g, g2, c = dict(fs.GATE), dict(fs.GATE2), dict(fs.CAPS)
+    assert (g["R262"], g["C260"], g["R263"]) == ("47k 1%", "1u 16V X7R", "1M 1%") == (g2["R270"], g2["C272"], g2["R271"])
+    assert c["C261"] == c["C268"] == "330n 50V X7R" and [v for _r, v in fs.PULLUP] == ["220k 1%", "220k 1%"]
+    assert [r for r, _v in fs.CLAMP] == ["Q62", "Q63"] and fs.SHUNT2 == ("Q61", "2N7002") and fs.REG2 == ("U63", "TPS70950DBVR")
+    new_text = "".join(n for _o, n in fs.EDITS)
+    assert '"1": "VBAT", "2": "GND", "3": "NC", "4": "NC", "5": "THG_VDD2"' in new_text, "path 2's regulator is not on VBAT"
+    assert '{"1": "THG_G2", "2": "GND", "3": "DOCK_EN_OUT"}' in new_text and "D60" not in new_text and "THG_OR" not in new_text
+    # path 1's trip with the clamp's leakage, path 2's on round 8's network (resistors 1 %, capacitors 10 %; VOH 4.75 V)
+    def t_on(leak):
+        rg_p, rp_m, rp_p = 47e3 * 1.01, 1e6 * 0.99, 1e6 * 1.01
+        k_lo = rp_m / (rg_p + rp_m)
+        rth = rg_p * rp_p / (rg_p + rp_p)
+        fin = 4.75 * k_lo - leak * rth
+        return -1e-6 * 1.1 * rth * math.log(1.0 - 2.5 / fin)
+    n7 = 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0)
+    assert round(t_on(n7 + 80e-9) * 1e3, 1) == 43.8 and round(t_on(80e-9) * 1e3, 1) == 40.0
+    # the clamp: VDD held, the open drain's 1 uA and two printed gates through 2 x 220 kOhm at +1 %
     o = open(C4_OUT, encoding="utf-8").read()
     sec = o.split("\n10c. ROUND 9")[1].split("\n11. VERDICT")[0]
-    vdd = float(re.search(r"VDD ([0-9.]+) V \(the regulator in dropout", sec).group(1))
-    for lk, want in ((2 * 1e-6 + 2 * 80e-9, 55.3), (2 * 1e-6 + 2 * 80e-9 * 2.0 ** ((86.25 - 25.0) / 10.0), 184.7)):
-        vgs = vdd - lk * 94e3 * 1.01
-        ret = 1.18e-3 * 2 * 7.0 * 2.5 / (vgs - 2.5) * 2.0
-        assert ret < 0.7755 and abs(ret * 1e3 - want) < 0.6 * want / 55.3 + 0.6, (ret, want)
-    for s in ("the return 55.3 mV (184.7 mV): HELD", "the fault TRIPS", "2.5 V within 25.4 ms at the tolerances", "the gate 0.888 V at the tolerances",
-              "check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN", "reads THG FAIL on it, as it must",
-              "check_dd7_netlist (its round 18 admits C268): DRAWN", "the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)",
-              "the delta without round 8's guard: REFUSED", "15 scripts, every one OK", "THE COMMON PATH STAYS (finding L8P-R9-F1)",
-              "a NAMED PREREQUISITE (finding L8P-R9-F2)",
-              "VERDICT (10c): the three V6-m7 failures CORRECTED IN DRAFT, the desk acceptance MET by its author on C-PROT rev 1 and the composition MET"):
-        assert s in sec, s
+    vdd = float(re.search(r"VDD ([0-9.]+) V \(the\s+regulator in dropout", sec).group(1))
+    vgs = vdd - (1e-6 + 2 * 80e-9) * 440e3 * 1.01
+    ret = 1.18e-3 * 2 * 7.0 * 2.5 / (vgs - 2.5) * 2.0
+    assert ret < 0.7755 and abs(ret * 1e3 - 66.5) < 1.5, ret
+    # path 2 tripped: 29.2 V through R106 at -1 % into Q61 at 17.2 ohm, the return through the pair over R107
+    out2 = 29.2 / (10e3 * 0.99) * 17.2
+    assert abs(out2 * 1e3 - 50.8) < 0.3 and out2 < 1.825
+    for s_ in ("the return 66.5 mV, HELD", "the fault TRIPS", "no single failure removes the trip", "DD-7 reads the loop dark",
+               "2.5 V within\n       43.8 ms at the tolerances", "path 2 within 40.0 ms", "check_l8p_fs (this round's reader): A EN DRAWN, A THG DRAWN",
+               "reads THG FAIL on it, as it must", "check_dd7_netlist (its round 18 admits C268 and Q61): DRAWN",
+               "the delta a second time: refused; on the tree's own generator: refused (NOT RELEASED)", "the delta without round 8's guard: REFUSED",
+               "15 scripts, every one OK", "HANDED OVER AS REMAINING ENGINEERING", "no latent-fault exception presumed", "(finding L8P-R9-F1)",
+               "VERDICT (10c): the three V6-m7 failures and cx45's common path CORRECTED IN DRAFT", "acceptance MET by its author on C-PROT rev 1 and the composition MET"):
+        assert s_ in sec, s_
     assert sec.count("     mutated, ") == 7 and sec.count(" THG FAIL: ") == 7
     assert sum(1 for l in sec.splitlines() if "before the hold's least 0.110 s" in l) == 3 and "AFTER the hold" not in sec
     chk = need(os.path.join(REC, "check_l8p_fs.py"), "check_l8p_fs")
@@ -1097,9 +1105,9 @@ def t_round9_part22_the_delta_corrects_the_three_failures_on_c_prot_and_composes
     r = subprocess.run([sys.executable, "-B", chk, lm.NET["a"]], capture_output=True)
     assert r.returncode == 3 and b"NOT DRAWN" in r.stdout, r.stdout[-300:]
     page = open(PAGE, encoding="utf-8").read()
-    for s in ("### 12o. Round 9, the owner's part 22 item A", "**L8P-D9 is WITHDRAWN**", "**SESSION decision L8P-D10**", "**L8P-R9-F1", "**L8P-R9-F2",
-              "**L8P-R9-F3", "**E-13b gains (e):**"):
-        assert s in page, s
+    for s_ in ("### 12o. Round 9, the owner's part 22 item A and the check cx45's Q5", "**L8P-D9 is WITHDRAWN**", "**SESSION decision L8P-D10**",
+               "**L8P-R9-F1", "**L8P-R9-F2", "**L8P-R9-F3", "**E-13b gains (e):**", "two guard\npaths that share only the pour they sense"):
+        assert s_ in page, s_
 
 
 def t_round8_the_judgement_fails_drafts_that_draw_other_values():
