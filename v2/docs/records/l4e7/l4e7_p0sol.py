@@ -952,11 +952,12 @@ def render(O, K, R, b6, r3, K2):
          "and the lead falls at %.2f to %.2f kHz, inside CS101's 2 to 5 kHz band where the accepted M2 immunity is decided; and it "
          "leaves D-16 as it is. (B2) a presence contact pair in the solar receptacle carrying U21's INP: the plug's withdrawal pulls "
          "INP low (V(INP_L) %.1f V least, PRINTED; turn-off within tPD(INP_L)) before any other source can mate, so a source can only "
-         "ever arrive cold, the case whose absolute ratings the record shows held; it removes D-10's guard-on event for a source in the "
-         "receptacle, not for a second source on the same lead; it needs the receptacle's contact set and a rule that every plug for it "
+         "ever arrive cold, the case whose absolute ratings the record shows held; it would prevent the guard-on step only for a source "
+         "arriving through the loop's mating points (a partial measure), not for a second source on the same lead, and it does not "
+         "change the port's response when a step happens; it needs the receptacle's contact set and a rule that every plug for it "
          "bridges the pair (Layer 7's harness, R-180 rewritten), and it leaves D-16 as it is. NOT SELECTED as the correction: B1 is not "
-         "supported on printed figures; B2 is the route for D-10's port-level residual (section 3) and depends on a Layer 7 "
-         "decision outside this record." % (B_["isat"], 1e6 * B_["l_ch"], B_["isc"], B_["dv"], 1e6 * B_["t_sc"], B_["i_cut"], 1e6 * B_["c_entry"],
+         "supported on printed figures; B2 is an unapproved PARTIAL interface proposal (section 5), and neither resolves D-10 "
+         "(section 3)." % (B_["isat"], 1e6 * B_["l_ch"], B_["isc"], B_["dv"], 1e6 * B_["t_sc"], B_["i_cut"], 1e6 * B_["c_entry"],
                                             1e-3 * B_["f_res"][1], 1e-3 * B_["f_res"][0], B_["inp_l"]))
     P("")
     sel = C_["sel"]
@@ -1129,37 +1130,61 @@ def render(O, K, R, b6, r3, K2):
                                        C_["sink"][0][1]))
     P("")
     # ---------------------------------------------------------------- 3
-    P("3. WHAT STAYS OPEN, EXACTLY")
-    wrap("  ", "  ", "D-10's port-level residual (the guard's own transient, not U5): a stiff source stepping onto the port with the guard "
-         "on charges every capacitor behind Q12 at a rate only the source's loop sets; at the envelope's least loop PV_F, Q12's VDS, "
-         "INP, EN, D4, TRK_VS and the bank's INA169s exceed their ratings (section 2b), and at the reference loop PV_F stays over the "
-         "TPS4811-Q1's recommended 80 V row (under it from %.2f uH; L6P-F10). No circuit with the guard closed bounds that charge "
-         "without a series element (B1, not supported) or the event's removal (B2). The coordinator selected route B2 (5 October 2026, "
-         "17:12) as the bounded PROVISIONAL desk route with the narrowed P1-1 (SUPPLIER-P1-1-P0SOL.md, UNSENT) as its validation; its "
-         "draft and checks are section 5, and the interface it needs is an owner item (B2-PRESENCE.md), so B2 stands as a PROPOSAL. "
-         "What B2 does not cover stays OPEN: a second stiff source added on the same lead while a panel holds the presence loop closed "
-         "steps onto the port with the guard on exactly as section 2b computes, validated by P1-1's S1." % (1e6 * d10["pvf80"],))
+    P("3. D-10: AN UNRESOLVED PROTECTION DEFECT IN THE PRESENT MODEL (the owner's review of checkpoint 4, part 23)")
+    cf_ = O["Cfault"]
+    w0_, w1_, w3_ = (cf_["W"][L_] for L_ in cf_["loops"][:3])
+    wrap("  ", "  ", "D-10 is not a case that merely lacks evidence: the record's own model, on the circuit as now drafted (C2 composed), "
+         "puts parts outside their printed limits. It is written as the receiving company's remaining engineering item E-1 "
+         "(SUPPLIER-P1-1-P0SOL.md), with the failing cases, the requirements, the correction needed before any passing claim, and the "
+         "outputs that stay PROVISIONAL:")
+    wrap("    (a) ", "        ", "THE FAILING CASES (MODELED, a stiff 36 V source, a fault at the connector, no source resistance credited): "
+         "F1, stepping onto the port with the guard on at the envelope's least loop %.2f uH: PV_F %.1f V, Q12's VDS %.1f V, INP %.1f V, "
+         "TRK_VS %.2f V with D4 carrying %.1f A, the sense bank %.2f V (U21's 100 V and 20 V, the port bank's 100 V, Q12's 100 V, D4, "
+         "U18's and U23's +2 V); F2, the same at %.2f uH: PV_F %.1f V, VDS %.1f V, INP %.1f V; F3, at the reference loop %.2f uH: PV_F "
+         "%.2f V over the TPS4811-Q1's recommended operating %.0f V VS row (L6P-F10), every other rating inside its line; F4, a source "
+         "arriving with the guard off at the least loop: the slew %.2f V/us over the 54 V/us SESSION line (inside %.0f V/us absolute). "
+         "Claims hit: IF-01's protection of the solar entry against D-10, R-173's guard as a protection, the backstop's sensing "
+         "through the event." % (1e6 * cf_["loops"][0], w0_["vF"], w0_["vds"], w0_["vF"] * cf_["k97"], w0_["vS"], w0_["i4"], w0_["u18"],
+                                 1e6 * cf_["loops"][1], w1_["vF"], w1_["vds"], w1_["vF"] * cf_["k97"], 1e6 * cf_["loops"][2], w3_["vF"],
+                                 d10["vs_rec"], O["B2"]["rows"][2]["worst"], 1e-6 * d10["slew_abs"]))
+    wrap("    (b) ", "        ", "THE REQUIREMENTS, UNCHANGED: L4-E9's single fault D-10 from REQ-015's declared 9 to 36 V source "
+         "class; the owner's amendment of 2 October 2026, item 3 (a bounded analysis against the approved fault exposure and "
+         "component ratings; REQ-016's window kept; fault protection does not extend the operating range); every part inside its "
+         "absolute maximum ratings, the controller inside its recommended conditions while it must act, the record's SESSION 10 % "
+         "lines. The envelope stays the record's (0.30 to 10.20 uH, both fault positions, every start the guard is on in); no new "
+         "exclusion is adopted to avoid a failure.")
+    wrap("    (c) ", "        ", "THE CORRECTION OR JUSTIFIED MODEL REVISION NEEDED BEFORE ANY PASSING CLAIM: something must bound the "
+         "current the source drives into the stage's capacitance through the closed guard, or the energy and voltage it delivers to "
+         "the port when Q12 opens, at every loop. B1 is rejected at the desk (section 1); B2 is a PARTIAL proposal (section 5); a "
+         "supplier may investigate a choke rated over the cut current and damped against CS101, a lower-impedance clamp or a snubber "
+         "sized for the port's energy, a different cut-off element or method, or a model revision on measured loops and "
+         "resistances only. S1 and S2 then qualify the correction; M2 and M3 are re-run wherever it changes the port.")
+    wrap("    (d) ", "        ", "PROVISIONAL until then: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, "
+         "R-180, the port's parts and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows, "
+         "route B2's draft. Completed independently on the present port network: D-16's correction (section 2), the regulation and "
+         "its correlated margin, the 100 W bound re-run, M2 with the selected sensing (re-run only if the correction changes the "
+         "port), INP's divider ratio.")
     P("")
     P("4. VERDICTS")
     P("  D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in")
     P("    one term (A7's zero-differential output, 2h): sourcing lowers the regulation (energy only); a sink, excluded by p.31's text")
     P("    (INFERRED), is covered by the margin up to %.2f uA." % C_["sink_be_acc"])
-    P("  D-10 (B6, L4-F01): NARROWED, OPEN. CORRECTED: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line")
-    P("    (R97 24.9k). PROPOSAL (route B2, section 5, an owner item on the interface): the guard-on event removed for every source that")
-    P("    arrives through a mating point of the presence loop; every arrival is then the cold connection, inside its absolute ratings.")
-    P("    OPEN: a second source added on a lead whose loop a panel holds closed (S1); PV_F over the recommended 80 V row (L6P-F10); the")
-    P("    arriving source's slew margin line at the least loops (section 5).")
+    P("  D-10 (B6, L4-F01): an UNRESOLVED PROTECTION DEFECT in the present model, the remaining engineering item E-1 (section 3).")
+    P("    CORRECTED within it: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line (R97 24.9k).")
+    P("    Route B2 (section 5) is an unapproved PARTIAL interface proposal; adopting or declining it does not resolve D-10.")
     P("")
     # ---------------------------------------------------------------- 5
     b2 = O["B2"]
     K2_ = K2
-    P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (PROPOSAL; the coordinator's task of 5 October 2026, 17:12)")
+    P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (an unapproved PARTIAL proposal; the coordinator's task of")
+    P("   5 October 2026, 17:12; it does not resolve D-10, section 3)")
     wrap("  5a ", "     ", "AUTHORITY (B2-PRESENCE.md section 1): reserved.json protects no connector or contact arrangement; but B2 "
          "changes the kit's external interface (BUILD.md and appendix 32.32: the panel, an accessory of the owner's choice, on the "
          "shore plug's second pair; with B2 a panel charges only through a plug that bridges the presence pair), changes the "
          "owner-accepted pick of the wall receptacle (appendix 32.21: D38999/20FC4PN, insert 13-4, four size 16 contacts) and adds "
          "cost, and more than one option stands after the measurement (B2; the drawn interface with the residual measured by S1). By "
-         "the owner's two-part test of 21 September 2026 it is the owner's: the owner item is written, and B2 is a PROPOSAL.")
+         "the owner's two-part test of 21 September 2026 it is the owner's: the owner item is written, and B2 is an unapproved PARTIAL "
+         "proposal.")
     wrap("  5b ", "     ", "THE DRAFT (apply_gen_sch_e_p0sol_b2.py, 4 edits): R96, INP's top, from PV_F to the loop's outgoing net PV_PRA; "
          "J_SOLP (JST-XH 1x2, C158012) takes the loop to the inside lead and back to INP (PV_INP); C80 10 nF C0G 100 V (C184799) filters "
          "INP. Composed in L4-E9's order after the C2 draft: %s. The draft refuses a second application (exit %d); the generator runs "
