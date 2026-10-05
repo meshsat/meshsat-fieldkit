@@ -776,3 +776,131 @@ def t_round6b_l4e11s_round_13_moved_no_figure_this_record_reads():
     e12 = page.split("### 12e.")[1].split("### 12f.")[0]
     assert "so the detector moves no level of the loop." in e12 and "is withdrawn as a bound: 12f, round 6b" in e12
     assert "and nothing on DOCK_EN_OUT, so l9stk's bound point" not in page, "12e still leans on the withdrawn bound point"
+
+
+# ------------------------------------------------------------------ round 7 (5 October 2026): record l9stk's G2 checked before any draft
+GUARD_SCRIPT = os.path.join(REC, "l8p_guard.py")
+GUARD_OUT = os.path.join(REC, "l8p_guard.out")
+
+
+def _G():
+    g = _mod("l8p_guard_under_test", "l8p_guard.py")
+    for p in (g.LM26LV, g.TPS709):
+        need(p, "TI's held sheet (python3 v2/docs/records/l8p/fetch_held_back.py)")
+    return g
+
+
+def t_round7_the_guard_check_is_what_the_script_prints():
+    """l8p_guard.out is byte for byte what l8p_guard.py prints from the pinned copies and the makers' sheets, and it ends on its
+    predicates with exactly one NO: G2's window at record l9stk's own site."""
+    _G()
+    r = _run([GUARD_SCRIPT])
+    assert r.returncode == 0, r.stderr.decode()[-400:]
+    assert r.stdout == open(GUARD_OUT, "rb").read(), "l8p_guard.out is not what l8p_guard.py prints: regenerate it with _bin/regen_out.py"
+    preds = r.stdout.decode().split("\n9. PREDICATES\n")[1].splitlines()
+    no = [l for l in preds if l.rstrip().endswith(" NO")]
+    assert len(no) == 1 and "the AO3400A at record l9stk's site (G2 as selected)" in no[0], no
+    assert sum(1 for l in preds if l.rstrip().endswith(" yes")) == len([l for l in preds if l.strip()]) - 1
+
+
+def t_round7_l8p_f08_g2s_window_fails_on_l9stks_own_leakage():
+    """L8P-F08: L4-E11 20c's window (a ramping closed loop never read held) with the sinks on the return. The ratio bound alone
+    (record l9stk's check: the closed ratio 0.590 against 0.4603) passes; the same loop with the AO3400A's 43.6 uA at record l9stk's
+    86.25 C site fails at the powered reading's least, and still reads held at the most favourable corners; at the air, or with the
+    kit's 2N7002 as the shunt, it holds. So the test fails on record l9stk's statement and passes on the correction scope."""
+    g = _G()
+    L, S, R = g.read_l9stk(), g.read_sheets(), g.read_records()
+    assert (R["out_pw_lo"], R["out_pw_hi"], R["ret_held"], R["ret_closed"]) == (1.825, 1.981, 0.7755, 0.84)
+    rf, r7 = g.R_FIX * (1 + g.TOL), g.R107 * (1 - g.TOL)
+    k = r7 / (rf + r7)
+    allow = (R["out_pw_lo"] - R["ret_closed"] / k) / rf
+    assert abs(allow - 26.45e-6) < 0.01e-6, allow
+    assert L["ratio_closed"] > L["ratio_window"], "record l9stk's own check (the closed ratio) passes"
+    base = R["load_ret"] + S["n_idss"]
+    ao_site = S["ao_idss55"] * 2 ** ((L["t_shunt"] - 55.0) / 10.0)
+    assert abs(ao_site - L["idss_hot"]) < 0.05e-6, "record l9stk's leakage figure reproduces"
+    ret = lambda o, i, a, b: (o - i * a) * b / (a + b)
+    assert ret(R["out_pw_lo"], base, rf, r7) > R["ret_closed"], "before the guard the window holds"
+    assert ret(R["out_pw_lo"], base + ao_site, rf, r7) < R["ret_closed"], "G2 as selected keeps the window: L8P-F08 would not stand"
+    assert ret(R["out_pw_hi"], base + ao_site, g.R_FIX, g.R107) < R["ret_held"], "at the most favourable corners the ramp is no longer read held"
+    ao_air = S["ao_idss55"] * 2 ** ((R["air"] - 55.0) / 10.0)
+    assert ret(R["out_pw_lo"], base + ao_air, rf, r7) > R["ret_closed"], "at the air the window holds"
+    n_site = S["n_idss"] * 2 ** ((L["t_shunt"] - 25.0) / 10.0)
+    assert ret(R["out_pw_lo"], base + n_site, rf, r7) > R["ret_closed"], "the 2N7002 correction (12k, 1) keeps the window"
+    out = open(GUARD_OUT, encoding="utf-8").read()
+    for s in ("26.45 uA (DERIVED)", "45.7 uA: RET 0.668 V at OUT 1.825 V  FAILS", "read HELD", "under 77.9 C", "NOT REPRODUCED on its own leakage figure",
+              "the draft STOPS here", "7.7 uA on the return in all against 26.4 uA"):
+        assert s in out, s
+
+
+def t_round7_the_page_states_the_stop_and_no_g2_draft_exists():
+    """The brief stops the draft at a figure that does not reproduce: no apply script of this record draws an LM26LV, the board A
+    draft still draws RT1, L8P-F07 and L8P-F08 read OPEN, and the page says why, with the correction scope."""
+    page = open(PAGE, encoding="utf-8").read()
+    for f in os.listdir(REC):
+        if f.startswith("apply_") and f.endswith(".py"):
+            t = open(os.path.join(REC, f), encoding="utf-8").read()
+            assert "LM26LV" not in t and "TPS70950" not in t, "%s draws G2: the brief stopped the draft" % f
+    assert 'part("RT1", "Device", "Thermistor_PTC"' in open(os.path.join(REC, "apply_gen_sch_a_ptc.py"), encoding="utf-8").read()
+    k = page.split("### 12k.")[1].split("### 12l.")[0]
+    for s in ("**What does not reproduce: L4-E11 20c's window", "Finding L8P-F08, OPEN", "**The stop.**", "the first negative check of G2 as",
+              "**A shunt of lower leakage: the kit's 2N7002**", "**The fixed resistor at most 11.57 kOhm (11 kOhm in E24)**", "under **77.9 C**",
+              "stops a dead pack's precharge", "RET/OUT closed 0.590", "| REPRODUCED |"):
+        assert s in k, s
+    nine = page.split("## 9. Findings")[1].split("## 10.")[0]
+    assert "| L8P-F08 |" in nine and "| **OPEN**: the first negative check of G2 as selected" in nine
+    f07 = [l for l in nine.splitlines() if l.startswith("| L8P-F07 |")][0]
+    assert "| **OPEN**" in f07 and "no draft of G2 yet, RT1 still drawn" in f07
+
+
+def t_round7_v2r_m8_19h_and_15c_are_under_the_guard():
+    """The recheck V2R's V2R-m8: section 19h and the excerpt of 15c were round 9's copies outside the stale-copies guard. They are
+    now copied at L4E11_AT and listed: on a scratch tree made of the copies the guard is silent, and it reports 19h when 19h loses
+    its round 10 note and 15c when the excerpt's current changes."""
+    m = _M()
+    keys = [k for k, _h in m.L4E11_SECTIONS]
+    assert "l4e11" in keys and "l4e11pre" in keys
+    assert not [f for f in os.listdir(os.path.join(REC, "inputs")) if "e60a94a8" in f], "round 9's copies are still in inputs/"
+    with tempfile.TemporaryDirectory() as d:
+        page = "## 20. Round 10\n\n" + "".join(open(os.path.join(REC, m.INPUT_FILES[k]), encoding="utf-8").read() for k in keys)
+        open(os.path.join(d, "L4E11-SOURCE-ONLY-AND-ENTRY.md"), "w", encoding="utf-8").write(page)
+        for c, n in m.L4E11_DRAFTS:
+            shutil.copy(os.path.join(REC, c), os.path.join(d, n))
+        assert m.stale_copies(d) == []
+        for old, new, sec in (("**Superseded in its board A sensing by round 10 (section 20):** ", "", "### 19h."),
+                              ("0.256 x 1.30 / 0.99 = **0.33616", "0.256 x 1.30 / 0.99 = **0.34000", "**The precharge in LDO mode")):
+            mut = page.replace(old, new)
+            assert mut != page, old
+            open(os.path.join(d, "L4E11-SOURCE-ONLY-AND-ENTRY.md"), "w", encoding="utf-8").write(mut)
+            bad = m.stale_copies(d)
+            assert len(bad) == 1 and sec in bad[0], (sec, bad)
+
+
+def _per_device(text):
+    """The page's paired bench items judged per device (V2R-m9): E-14 (a) and E-8 no longer name a junction method on a paralleled
+    pair alone, and each names the power term and the mounting bases' difference."""
+    g12 = text.split("### 12g.")[1].split("### 12h.")[0]
+    a = g12.split("- (a) **The threshold.**")[1].split("- (b)")[0]
+    e8 = [l for l in text.splitlines() if l.startswith("| **E-8, restated** |")][0]
+    return ("the FET's junction (VSD method)" not in a and "Judged per device" in a and "0.97 K" in a and "mounting bases" in a
+            and "(the body diode's VSD method)" not in e8 and "Per device" in e8 and "0.58 K" in e8 and "mounting" in e8 and "section 12l" in e8)
+
+
+def t_round7_v2r_m9_the_paired_bench_items_are_judged_per_device():
+    """The recheck V2R's V2R-m9 (DELTA-02's class on board P): the restated E-14 (a) and E-8 pass, the round 6b text fails; the power
+    terms the page quotes are the ones l8p_guard.py computes from the printed RthJC and VSD rows; E11-45 (c)'s note for L4-E11 rests on
+    the 1 mA clause; L4-E11's method is quoted from its copy and marked unchecked."""
+    page = open(PAGE, encoding="utf-8").read()
+    assert _per_device(page)
+    old = page.replace("Under it, the hotter of Q101 and Q102 settles at most 150 C (139.9 C predicted at 1.213 A, all of\n  it in one FET).",
+                       "Under it, the FET's junction (VSD method) settles at most 150 C (139.9 C predicted at 1.213 A).")
+    assert old != page and not _per_device(old), "the round 6b wording of E-14 (a) passes"
+    g = _G()
+    D = g.delta02()
+    assert (D["rjc"], D["rjc17"], D["vsd"]) == (0.8, 0.8, 1.0)
+    assert abs(D["i_top"] * D["vsd"] * D["rjc"] - 0.97) < 0.005 and abs(D["p109"] * D["rjc17"] - 0.58) < 0.005
+    l12 = page.split("### 12l.")[1].split("## 13.")[0]
+    assert "**UNCHECKED:**" in l12 and "inputs/l4e11-sections23d-24b-08f7e38a.md" in l12 and "No third fixture is written here." in l12
+    assert "within 0.8 mK of its own mounting base" in l12
+    copy = open(os.path.join(REC, "inputs", "l4e11-sections23d-24b-08f7e38a.md"), "rb").read()
+    assert hashlib.sha256(copy).hexdigest() == "fb6624bfc910198af156a8b549f1c0b3d1f39674784ce813115ebcd887e18f74"

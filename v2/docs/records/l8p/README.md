@@ -1,5 +1,32 @@
 # l8p: W4DP-F2's breaker drawn for boards P, E and A (Layer 8, MESHSAT-1357)
 
+**Round 7 (5 October 2026, branch `fnd/l8p2` from `2c258cf9`): record l9stk's guard selection G2 CHECKED before any draft; NOT
+CONFIRMED on one figure, so NO G2 draft; L8P-F07 stays OPEN and L8P-F08 is new and OPEN.** Done: the check (`l8p_guard.py`,
+`l8p_guard.out`, page 12k), the recheck V2R's V2R-m8 (19h and 15c under the stale-copies guard) and V2R-m9 (E-8 and E-14 (a)
+restated per device, page 12l, 12g, 13g). Not done: the G2 apply script, its composition, netlist and mutations, and its
+judgement on C-PROT (the brief stops the draft at a figure that does not reproduce). Next action: the selection's owner (record
+l9stk) or the coordinator picks one of 12k's three corrections (this record recommends the 2N7002 shunt), then this record drafts G2.
+- **The finding, L8P-F08.** G2's AO3400A on DOCK_EN_RET leaks, by record l9stk's own count, 43.6 uA at its assumed 86.25 C site.
+  With it, L4-E11 20c's window fails: a ramping closed loop reads held between DOCK_EN_OUT 1.825 and 2.12 V (45.7 uA on the return
+  against the 26.45 uA allowed). 20c says such a reading "stops a dead pack's precharge". Record l9stk's own window check compared
+  the closed loop's ratio, 0.590, not a ramp's reading.
+- **Everything else reproduces** on the makers' sheets (12k's table), with three relabellings:
+  - the switch's trip accuracy is printed at VDD 5 V only;
+  - the regulator's 2.25 uA ground current is printed at VIN 6.0 V only;
+  - its accuracy is printed from 100 uA of load.
+
+### For the next independent check (round 7)
+
+| Item | Where | What to read |
+|---|---|---|
+| G2 checked on the sheets | `l8p_guard.py` sections 1 to 6; `l8p_guard.out`; page 12k | each PRINTED figure against TI SNIS144G, SBVS186H (held back, `fetch_held_back.py`), AOS AO3400A Rev 3.1, JSCJ 2N7002; the loop's readings at tolerance |
+| L8P-F08, the window with the shunt's leakage | `l8p_guard.out` 5 (e); page 12k and section 9 | 26.45 uA allowed, 45.7 uA at l9stk's site; 0.770 V at the most favourable corners; 77.9 C as the site limit |
+| The stop | page 12k "The stop"; `apply_gen_sch_a_ptc.py` unchanged | no G2 draft exists; this is the first negative check of G2 as selected |
+| The correction scope | `l8p_guard.out` 7; page 12k | the 2N7002 (7.7 uA), 11 kOhm (tripped VIN condition from 11.93 V), the site under 77.9 C; DERIVED, not drafted |
+| V2R-m8 | `l8p_drafts.py` `L4E11_SECTIONS`, `inputs/l4e11-section19h-4def5975.md`, `inputs/l4e11-section15c-precharge-4def5975.md`, `inputs/SOURCES.txt` | both under the guard; a scratch mutation of each fails (`test_l8p.t_round7_v2r_m8_19h_and_15c_are_under_the_guard`) |
+| V2R-m9 | page 12l, 12g (E-14 (a)), 13g (E-8); `l8p_guard.out` 8; `inputs/l4e11-sections23d-24b-08f7e38a.md` | the pair's reading lies between its junctions; RthJC 0.8 K/W times the pair's power plus the mounting bases' difference; L4-E11's method (B) quoted, unchecked |
+| E11-45 (c), for L4-E11 | page 12l | the 1 mA clause bounds each junction within 0.8 mK of its base; the VSD clause reads nothing per device |
+
 **Round 6b (4 October 2026 late evening, branch `fnd/l8p2` from `053901ea`): the copies of L4-E11 taken again at its round 13.**
 L4-E11 moved one more round after round 6 (`fnd/l4e11r11` at `4def5975`), and on the coordinator's merged candidate this
 record's own guard fired, as round 6 built it to (`test_l8p.t_round6_no_copy_of_l4e11_is_a_round_behind_the_tree`).
