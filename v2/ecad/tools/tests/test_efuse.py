@@ -186,7 +186,7 @@ def t_the_netlist_check_reads_the_correction_and_fails_its_mutations():
 def t_the_page_is_plain_and_carries_the_outputs_figures():
     page = open(need(PAGE, "record efuse's page"), encoding="utf-8").read()
     out = open(need(OUT, "record efuse's output"), encoding="utf-8").read()
-    assert "—" not in page and "–" not in page, "an em or en dash on the page"
+    assert "\u2014" not in page and "\u2013" not in page, "an em or en dash on the page"
     assert not CLAIM.search(page), CLAIM.search(page).group(0)
     for s in ("EF-F01", "EF-F02", "DR-03", "EF-L01", "EF-L03", "EF-O01", "authority: SESSION", "C-DEV rev 1"):
         assert s in page, s

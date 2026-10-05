@@ -90,7 +90,7 @@ QUOTES = {
     "T96_RILM": ("tps2596", "p.5, 7.3 Recommended Operating Conditions", "RILM ILM Pin Resistance ILM 453 7869 Ω"),
     "T96_IMAX": ("tps2596", "p.5, 7.3 Recommended Operating Conditions", "IMAX Continuous Switch Current IN to OUT 2 A"),
     "T96_VIN": ("tps2596", "p.5, 7.3 Recommended Operating Conditions", "VIN Input Voltage Range IN 2.7 19"),
-    "T96_ROW_7870": ("tps2596", "p.6, 7.5 ILIM (TA at most 80 C)", "RILM = 7.87 KΩ, VDS = 0.5 0.113 0.125 0.139 A V, –40°C ≤ TA ≤ 80°C"),
+    "T96_ROW_7870": ("tps2596", "p.6, 7.5 ILIM (TA at most 80 C)", "RILM = 7.87 KΩ, VDS = 0.5 0.113 0.125 0.139 A V, -40°C ≤ TA ≤ 80°C"),
     "T96_ROW_3830": ("tps2596", "p.6, 7.5 ILIM", "RILM = 3.83 KΩ, VDS = 0.5 V 0.224 0.247 0.269 A"),
     "T96_ROW_909": ("tps2596", "p.6, 7.5 ILIM", "RILM = 909 Ω, VDS = 0.5 V 0.949 1.005 1.051 A"),
     "T96_ROW_453": ("tps2596", "p.6, 7.5 ILIM", "RILM = 453 Ω, VDS = 0.5 V 1.83 2.004 2.147 A"),
@@ -127,15 +127,15 @@ QUOTES = {
     # TPS1663x
     "T63_RANGE": ("tps1663", "p.1, 1 Features", "Adjustable current limit: 0.6A to 6A (±7%)"),
     "T63_EQ": ("tps1663", "p.20, Equation 6 (I(OL) = 18 / R(ILIM), R in kOhm)", "IOL = R 18"),
-    "T63_ROW_30k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 30kΩ, V(IN) – V(OUT) = 1V 0.54 0.6 0.66 A"),
-    "T63_ROW_9k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 9kΩ, V(IN) – V(OUT) = 1V 1.84 2 2.16 A"),
-    "T63_ROW_4k02": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 4.02kΩ, V(IN) – V(OUT) = 1V 4.185 4.5 4.815 A"),
-    "T63_ROW_3k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 3kΩ, V(IN) – V(OUT) = 1V 5.58 6 6.42 A"),
+    "T63_ROW_30k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 30kΩ, V(IN) - V(OUT) = 1V 0.54 0.6 0.66 A"),
+    "T63_ROW_9k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 9kΩ, V(IN) - V(OUT) = 1V 1.84 2 2.16 A"),
+    "T63_ROW_4k02": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 4.02kΩ, V(IN) - V(OUT) = 1V 4.185 4.5 4.815 A"),
+    "T63_ROW_3k": ("tps1663", "p.8, 7.5 I(OL)", "R(ILIM) = 3kΩ, V(IN) - V(OUT) = 1V 5.58 6 6.42 A"),
     # TPS4811-Q1
     "T48_OCP": ("tps4811", "p.10, 7.5 V(SNS_WRN)", "RSET = 100 Ω, RIWRN = 39.7kΩ 29.2 30.6 31.5 mV"),
     "T48_EQ6": ("tps4811", "p.22, Equation 6", "11.9 × RSET"),
     "T48_IISCP": ("tps4811", "p.10, 7.5 I(ISCP)", "I(ISCP) SCP Input Bias current 13.7 15.6 17.6 µA"),
-    "T48_EQ11": ("tps4811", "p.23, Equation 11 (RISCP = ISC x RSNS / 15.6 uA - 464; the text layer garbles it)", "15.6µSNS − 464"),
+    "T48_EQ11": ("tps4811", "p.23, Equation 11 (RISCP = ISC x RSNS / 15.6 uA - 464; the text layer garbles it)", "15.6µSNS - 464"),
     "T48_IWRN": ("tps4811", "p.5, Table 5-1, pin IWRN", "Connect IWRN to GND if overcurrent protection feature is not"),
     # the connectors and the loads
     "C_USB3A": ("usb3a", "p.1, electrical properties", "Rated Current IR 1.8 A max."),
@@ -160,8 +160,12 @@ def nums(qid):
     return [float(x) for x in NUM.findall(unicodedata.normalize("NFKC", QUOTES[qid][2]))]
 
 
+DASHES = {0x2010: "-", 0x2011: "-", 0x2012: "-", 0x2013: "-", 0x2014: "-", 0x2212: "-"}
+
+
 def norm(t):
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", t))
+    """NFKC, the makers' dashes and minus signs as a hyphen, white space collapsed"""
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", t).translate(DASHES))
 
 
 _TEXT = {}
