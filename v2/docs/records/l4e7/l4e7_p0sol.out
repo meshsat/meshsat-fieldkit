@@ -10,6 +10,7 @@ INPUTS (sha256, the first 16 hex digits)
   2ad2015b0c7aea91 v2/docs/records/l4e7/l4e7_stage_settings.out
   df1a51ad531c2ec9 v2/docs/records/l4e7/l4e7_stage_settings.results.json
   f7547d465e0eb7d2 v2/docs/records/l4e7/apply_gen_sch_e_p0sol.py
+  2fd39813175c4add v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
   f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
   2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
   d0aa86fe88e03eee v2/docs/records/l4e11/l4e11_power.out

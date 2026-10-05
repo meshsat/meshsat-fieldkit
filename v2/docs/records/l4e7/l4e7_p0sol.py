@@ -197,7 +197,7 @@ def compute():
     for rel in (I169, TPS, WSL):
         if not os.path.isfile(os.path.join(TOP, rel)):
             refuse(3, "%s is not held (the L4-E7 record's fetch_held_back.py)" % rel)
-    O["pins"] = [(sha(rel), rel) for rel in (LS_PY, LS_OUT, LS_CACHE, DRAFT, GEN_E, NET_E, L4E11_OUT, LT, I169, TPS, T48, WSL, XAL)
+    O["pins"] = [(sha(rel), rel) for rel in (LS_PY, LS_OUT, LS_CACHE, DRAFT, REC + "/apply_gen_sch_e_p0sol_b2.py", GEN_E, NET_E, L4E11_OUT, LT, I169, TPS, T48, WSL, XAL)
                  + tuple(SAMH % pn for pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN")) + RTJ + (LC44322,)]
     data = json.load(open(os.path.join(TOP, LS_CACHE), encoding="utf-8"))
     R = LS._dec(data["R"])
