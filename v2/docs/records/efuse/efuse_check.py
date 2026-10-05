@@ -67,6 +67,8 @@ SHEETS = {
     "usb3a": ("v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf", "Wurth WR-COM 692122030100 (USB 3.0 type A receptacle)", False, ""),
     "idc16": ("v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf", "Wurth WR-BHD 61201623021 (IDC socket, 16 pins)", False, ""),
     "ribbon16": ("v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf", "Wurth WR-CAB 63911615521CAB (flat cable, 16 ways)", False, ""),
+    "idc26": ("v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf", "Wurth WR-BHD 61202623021 (IDC socket, 26 pins)", False, ""),
+    "ribbon26": ("v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf", "Wurth WR-CAB 63912615521CAB (flat cable, 26 ways)", False, ""),
     "jst_ph": ("v2/vendor/connectors/jst-ph-catalogue.pdf", "JST PH connector catalogue", False, ""),
     "jst_vh": ("v2/vendor/connectors/jst-vh-catalogue.pdf", "JST VH connector catalogue", False, ""),
     "jst_sh": ("v2/vendor/connectors/jst-sh-catalogue.pdf", "JST SH connector catalogue", False, ""),
@@ -128,10 +130,13 @@ QUOTES = {
     # TPS4811-Q1
     "T48_OCP": ("tps4811", "p.10, 7.5 V(SNS_WRN)", "RSET = 100 Ω, RIWRN = 39.7kΩ 29.2 30.6 31.5 mV"),
     "T48_EQ6": ("tps4811", "p.22, Equation 6", "11.9 × RSET"),
+    "T48_IWRN": ("tps4811", "p.5, Table 5-1, pin IWRN", "Connect IWRN to GND if overcurrent protection feature is not"),
     # the connectors and the loads
     "C_USB3A": ("usb3a", "p.1, electrical properties", "Rated Current IR 1.8 A max."),
     "C_IDC16": ("idc16", "p.1, electrical properties", "Rated Current IR 1 A max."),
     "C_RIB16": ("ribbon16", "p.1, electrical properties", "Rated Current IR 1 A max."),
+    "C_IDC26": ("idc26", "p.1, electrical properties", "Rated Current IR 1 A max."),
+    "C_RIB26": ("ribbon26", "p.1, electrical properties", "Rated Current IR 1 A max."),
     "C_PH": ("jst_ph", "specifications", "Current rating: 2 A AC/DC (AWG #24)"),
     "C_VH": ("jst_vh", "specifications", "Current rating: 10 A AC/DC"),
     "C_SH": ("jst_sh", "specifications", "Current rating: 1.0 A AC/DC(AWG #28)"),
@@ -202,10 +207,10 @@ def figures():
     rows = []
     for qid, r in (("T96_ROW_7870", 7870.0), ("T96_ROW_3830", 3830.0), ("T96_ROW_909", 909.0), ("T96_ROW_453", 453.0)):
         n = nums(qid)
-        lo, ty, hi = n[-6:-3] if qid == "T96_ROW_7870" else n[-3:]
+        lo, ty, hi = n[2:5]          # [R, 0.5 (VDS), min, typ, max, ...]
         rows.append((r, lo, ty, hi, qid))
     F["t96_rows"] = rows
-    F["t96_ron"] = nums("T96_RON")[3] / 1000.0                   # 0.131 ohm, VIN > 4 V, TJ to 125 C
+    F["t96_ron"] = nums("T96_RON")[2] / 1000.0                   # 0.131 ohm, VIN > 4 V, TJ to 125 C ([4, 0.2, 131, 40, 125])
     F["t96_idvdt"] = tuple(x * 1e-6 for x in nums("T96_IDVDT")[:3])
     F["t96_gdvdt"] = tuple(nums("T96_GDVDT")[:3])
     F["t65_ios"] = tuple(nums("T65_IOS")[-3:])                   # 1.2 / 1.55 / 1.9 A
@@ -215,7 +220,7 @@ def figures():
     F["l69_vcl"] = tuple(x / 1000.0 for x in nums("L69_VCL")[:3])
     F["l69_vcb"] = tuple(x / 1000.0 for x in nums("L69_VCB")[:3])
     F["l69_vin"] = tuple(nums("L69_VIN")[:2])
-    F["t61_rs"] = (nums("T61_RS")[0] / 1000.0, nums("T61_RS")[3] / 1000.0)     # 0.255, 0.250 ohm
+    F["t61_rs"] = (nums("T61_RS")[0] / 1000.0, nums("T61_RS")[2] / 1000.0)     # 0.255, 0.250 ohm
     F["t61_icut110"] = tuple(x / 1000.0 for x in nums("T61_ICUT110"))
     F["t61_vlim2x"] = tuple(x / 1000.0 for x in nums("T61_VLIM2X")[-3:])
     F["t40_trip3a"] = tuple(x / 1000.0 for x in nums("T40_TRIP3A")[-2:])
@@ -233,6 +238,8 @@ def figures():
     F["c_usb3a"] = nums("C_USB3A")[0]
     F["c_idc16"] = nums("C_IDC16")[0]
     F["c_rib16"] = nums("C_RIB16")[0]
+    F["c_idc26"] = nums("C_IDC26")[0]
+    F["c_rib26"] = nums("C_RIB26")[0]
     F["c_ph"] = nums("C_PH")[0]
     F["c_vh"] = nums("C_VH")[0]
     F["c_sh"] = nums("C_SH")[0]
@@ -297,6 +304,96 @@ def gen_netlist_mod():
         _GN = importlib.util.module_from_spec(sp)
         sp.loader.exec_module(_GN)
     return _GN
+
+
+def try_table(gen_path, net_path):
+    """(table or None, the generator's last line when it refused)"""
+    rc, log, table = gen_netlist_mod().run(gen_path, net_path)
+    if rc or table is None:
+        return None, (log.strip().splitlines() or [""])[-1]
+    return table, ""
+
+
+def runnable(board, d, extra=()):
+    """the board's composed generator run through gen_netlist; when the full chain's generator refuses, the chain without the
+    one draft whose removal lets it run (the first such draft in the order): (table, composed path, results, dropped, why)"""
+    p, res = compose(board, d, extra)
+    tag = os.path.splitext(os.path.basename(p))[0]
+    table, why = try_table(p, os.path.join(d, tag + ".net"))
+    if table is not None or any(v != "OK" for _r, v in res):
+        return table, p, res, None, why
+    chain = ORDER[board]
+    for drop in chain:
+        keep = [x for x in chain if x != drop]
+        saved = ORDER[board]
+        ORDER[board] = keep
+        try:
+            p2, res2 = compose(board, d, extra)
+        finally:
+            ORDER[board] = saved
+        if any(v != "OK" for _r, v in res2):
+            continue
+        t2, _w = try_table(p2, os.path.join(d, tag + "_without.net"))
+        if t2 is not None:
+            return t2, p2, res, drop, why
+    return None, p, res, None, why
+
+
+def text_instances(draft_rel, board):
+    """the eFuse calls a draft writes, read from its string constants (ast) for a draft that cannot run in its generator on this
+    tree. A call inside a loop the target generator already has (the draft's text is the loop's body) is evaluated once per pass:
+    its free loop variable takes the literal values the draft's own comprehension or loop over that name gives (fans12's ADDS
+    over s in (1, 2, 3)), and only the body's assignments are executed. [instance dicts as instances() makes them]"""
+    import builtins
+    import textwrap
+    out = []
+    src = open(os.path.join(RECS, draft_rel), encoding="utf-8").read()
+    whole = ast.parse(src)
+    domains = {}
+    for n in ast.walk(whole):
+        gens = n.generators if isinstance(n, (ast.GeneratorExp, ast.ListComp, ast.SetComp)) else []
+        for g in gens:
+            if isinstance(g.target, ast.Name):
+                try:
+                    domains.setdefault(g.target.id, ast.literal_eval(g.iter))
+                except ValueError:
+                    pass
+        if isinstance(n, ast.For) and isinstance(n.target, ast.Name):
+            try:
+                domains.setdefault(n.target.id, ast.literal_eval(n.iter))
+            except ValueError:
+                pass
+    for c in ast.walk(whole):
+        if not (isinstance(c, ast.Constant) and isinstance(c.value, str) and "efuse(" in c.value):
+            continue
+        try:
+            mod = ast.parse(textwrap.dedent(c.value))
+        except SyntaxError:
+            continue
+        calls = [n for n in ast.walk(mod) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "efuse"]
+        if not calls:
+            continue
+        assigns = [st for st in mod.body if isinstance(st, ast.Assign)]
+        bound = {t.id for st in assigns for t in ast.walk(st) if isinstance(t, ast.Name) and isinstance(t.ctx, ast.Store)}
+        used = {n.id for st in assigns + calls for n in ast.walk(st) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
+        free = sorted(x for x in used - bound if not hasattr(builtins, x) and x in domains)
+        passes = [dict()] if not free else [{free[0]: v} for v in domains[free[0]]]
+        for ns0 in passes:
+            ns = dict(ns0)
+            for st in assigns:
+                try:
+                    exec(compile(ast.Module(body=[st], type_ignores=[]), "<draft>", "exec"), ns)   # one namespace: the lambdas read it
+                except Exception:
+                    pass
+            for call in calls:
+                try:
+                    a = [eval(compile(ast.Expression(body=x), "<draft>", "eval"), ns) for x in call.args[:7]]
+                except Exception:
+                    continue
+                out.append(dict(board=board, ref=a[0], family="tps2596", mpn="TPS259631DDAR", lcsc="C2155778", vin=a[1], vout=a[2],
+                                value="TPS259631DDAR eFuse %s -> %s (%s)" % (a[1], a[2], a[6]), dvdt=[], from_text=draft_rel,
+                                setting=[dict(ref=a[5][1], value=a[6], nets={"1": a[0] + "_ILM", "2": "GND"}, lcsc="", fp="", sym="R")]))
+    return out
 
 
 def table_of(gen_path, net_path):
@@ -414,6 +511,7 @@ def instances(table, board):
             inst["setting"] = rs
             inst["rset"] = resistors_between(table, src, cs_p)
             inst["riwrn"] = resistors_between(table, iwrn, n.get("6"))
+            inst["ocp_off"] = iwrn == n.get("6") or (iwrn or "").startswith("GND")
         out.append(inst)
     return out
 
@@ -444,7 +542,7 @@ def t96_band(F, r, tol, tcr):
     k, off = F["t96_eq"]; f = lambda x: k / x + off
     nom = f(r)
     rmin, rmax = F["t96_rilm"]
-    if not (rmin <= r <= rmax) or not (F["t96_range"][0] <= nom <= F["t96_range"][1]):
+    if not (rmin <= r <= rmax):
         return ("NONE: outside the printed range", None, nom, None,
                 "Equation 5 extrapolated to %.4f A; the sheet prints no limit, tolerance or behaviour there" % nom)
     r_lo, r_hi = r_corners(r, tol, tcr)
@@ -559,11 +657,16 @@ def meta(F, L9):
         ("a", "U39"): dict(case="+3V3", load="the EMCON gates (four 74AUP1G08 and U40)",
                            demand=[("the generator's declaration (EQ-17)", None, "D")], down=[], start=None),
         ("a", "U44"): dict(case="+3V3", load="board D's 3.3 V on J_MEZZ1 pin 13 (record l8r2's draft)",
-                           demand=[("the draft's declaration", None, "D")], down=[], start=None),
+                           demand=[("the draft's declaration", None, "D")],
+                           down=[("J_MEZZ1 pin 13, one IDC contact of the 2x8 harness (Wurth 61201623021)", F["c_idc16"], "C_IDC16"),
+                                 ("one conductor of the 16-way flat cable (Wurth 63911615521CAB)", F["c_rib16"], "C_RIB16")], start=None),
         ("b", "U901"): dict(case="C-DEV rev 1", load="board C's 5 V over the panel ribbon (record l8r2's draft)",
                             demand=[("l9pwr's 'panel board C' row at HIGH, %.2f W at 4.9019 V behind U901" % (W("panel board C") or 0),
                                      cp_current(W("panel board C") or 0, C_DEV_V, F["t96_ron"]), "D")],
-                            down=[], start=None),
+                            down=[("J_PANEL pins 1 and 2, two IDC contacts (Wurth 61202623021) at 1 A each, sharing ASSUMED even",
+                                   2 * F["c_idc26"], "C_IDC26"),
+                                  ("two conductors of the 26-way flat cable (Wurth 63912615521CAB) at 1 A each, sharing ASSUMED even",
+                                   2 * F["c_rib26"], "C_RIB26")], start=None),
         ("a", "U42"): dict(case="VBAT", load="board E's auxiliary domain VSYS_E (L4-E11's draft)",
                            demand=[("the draft's VSYS_DOCK declaration", None, "D")], down=[], start=None),
     }
@@ -576,132 +679,594 @@ def meta(F, L9):
     return M
 
 
-# --------------------------------------------------------------------------------------------------------------- the judge
-def judge(inst, F, M, cat, intent):
-    """fill inst with band, demand, ratings and the four verdicts"""
-    fam = inst["family"]; key = (inst["board"], inst["ref"]); mt = M.get(key, {})
+
+
+def meta_family(F):
+    """the instances whose judgement inputs depend on the part drawn (board E's entry changes part between the trees)"""
+    return {
+        ("e", "U6", "lm5069"): dict(
+            case="C-SHORE rev 1 (the drawn LM5069; L4-E9 IF-07)", load="VIN_RAW: the vehicle and shore entry into board A",
+            demand=[("L4-E9 IF-07: L4-E5's drawn line at VIN_RAW 9 V, 4.629 A (CITED, record l4e9)", 4.629, "CITED")],
+            down=[], start=None),
+        ("e", "U6", "tps4811"): dict(
+            case="C-SHORE rev 1 (L4-E11 19e, DD-3)", load="VIN_RAW: the vehicle and shore entry into board A",
+            demand=[("L4-E9 IF-07 with the corrected knee: the in-service maximum 5.983 A from a 9.00 V plug (CITED, record l4e9)", 5.983, "CITED")],
+            down=[("F1's 80 C column (L4-E11's entry draft's reading of the Littelfuse 997 sheet; CITED, not re-read)", 7.3, None),
+                  ("L2 SRF1260-1R0Y (L4-E11's entry draft; CITED, not re-read)", 7.51, None)], start=None),
+        ("p", "U101", "lm5069"): dict(
+            case="C-PROT rev 1", load="the pack path through the breaker (record l8p's draft)",
+            demand=[("C-PROT rev 1: 18 A for 60 s never interrupted (the owner's criterion, l9stk 15.1)", 18.0, "CASE")],
+            down=[("C-PROT rev 1: every series part within its limits below and above the trip, judged by record l9stk 15.1 "
+                   "(CONFIRMED AS CONDITIONAL); the band's top against C-PROT's 23.93 A", 23.93, None)], start=None),
+        ("a", "U18", "tps25740"): dict(
+            case="the outlet's PDO contracts (L4-E9 IF-12)", load="the USB-C PD outlet J_USBC_OUT",
+            demand=[("every PDO 3.0 A (5, 9 and 15 V; the generator's _PD_A from Table 2 and Equation 2, record l4e4)", 3.0, "D")],
+            down=[("the receptacle's 5 A (L4-E9 IF-12; CITED)", 5.0, None)], start=None),
+        ("b", "U5", "tps23861"): dict(
+            case="the PoE port (802.3at Class 4 at the PSE)", load="the wall RJ45's PoE port 1",
+            demand=[("the generator's POE_SEN declared peak 0.60 A (802.3at Class 4 at the PSE; the standard is not held here)", 0.60, "D")],
+            down=[], start=None),
+    }
+
+
+CAP = re.compile(r"^\s*(\d+(?:\.\d+)?)\s*(p|n|u|µ|m)")
+
+
+def farads(value):
+    m = CAP.match(unicodedata.normalize("NFKC", value or ""))
+    return float(m.group(1)) * {"p": 1e-12, "n": 1e-9, "u": 1e-6, "µ": 1e-6, "m": 1e-3}[m.group(2)] if m else None
+
+
+def lcsc_map():
+    t = ast.parse(open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read())
+    for n in t.body:
+        if isinstance(n, ast.Assign) and any(getattr(x, "id", None) == "MAP" for x in n.targets):
+            return ast.literal_eval(n.value)
+    return {}
+
+
+def code_of(part, MAP):
+    if part.get("lcsc"):
+        return part["lcsc"], "the generator"
+    for (rx, fp), code in MAP.items():
+        if re.match(rx, part["value"]) and fp in part["fp"]:
+            return code, "lcsc_fill.py's MAP"
+    return "", "none"
+
+
+def judge(inst, F, M, MF, cat, intent, table, MAP):
+    """fill inst with its band, demand, start-up, ratings and the four verdicts"""
+    fam = inst["family"]; key = (inst["board"], inst["ref"])
+    mt = MF.get(key + (fam,)) or M.get(key, {})
     rails = rail_from(intent, inst["ref"])
-    inst["rails"] = rails
-    inst["band"] = None; inst["basis"] = ""; inst["note"] = ""; inst["a"] = inst["b"] = inst["c"] = inst["d"] = "n/a"
-    inst["imax"] = None
+    inst.update(rails=rails, band=None, basis="", note="", a="n/a", b="n/a", c="n/a", d="n/a", imax=None, nom=None, demand=[],
+                down=[], own="", verdict="DEFECT (a: no setting read)",
+                start_v="n/a", case=mt.get("case", "the generator's declaration"), load=mt.get("load", ", ".join(n for n, _r in rails) or "-"))
+    me = next((p for p in table["parts"] if p["ref"] == inst["ref"]), None)
+    inst["code"], inst["code_src"] = (inst["lcsc"], "the generator" if me else "the draft's helper") if inst["lcsc"] or not me else code_of(me, MAP)
     setting = inst["setting"]
-    inst["set_text"] = ", ".join("%s %s" % (r["ref"], r["value"]) for r in setting) or "none"
+    inst["set_text"] = ", ".join("%s %s" % (r["ref"], r["value"]) for r in setting) or "none (no setting component)"
     if fam == "tps2596":
         if len(setting) != 1:
-            inst["a"] = "FAIL: %d resistors on ILM" % len(setting); return
-        rv = ohms(setting[0]["value"]); r, tol, tcr = rv[0], rv[1] if rv[1] is not None else 0.01, rv[2]
+            inst["a"] = "FAIL: %d resistors from ILM to GND" % len(setting); return
+        rv = ohms(setting[0]["value"]); r, tol, tcr = rv[0], (rv[1] if rv[1] is not None else 0.01), rv[2]
+        code, _src = code_of(setting[0], MAP)
         if tcr is None:
-            tcr, tsrc = (cat[setting[0]["lcsc"]] if setting[0].get("lcsc") in cat else (TCR_DEFAULT, "ASSUMPTION A-TCR"))
+            tcr, tsrc = cat[code] if code in cat else (TCR_DEFAULT, "ASSUMPTION A-TCR")
         else:
             tsrc = "the value text"
-        inst["r"], inst["tol"], inst["tcr"], inst["tcr_src"] = r, tol, tcr, tsrc
+        inst.update(r=r, tol=tol, tcr=tcr, tcr_src=tsrc, set_code=code or "none")
         basis, lo, nom, hi, note = t96_band(F, r, tol, tcr)
-        inst["basis"], inst["note"], inst["nom"] = basis, note, nom
-        inst["band"] = (lo, hi) if lo is not None else None
+        inst.update(basis=basis, note=note, nom=nom, band=(lo, hi) if lo is not None else None, imax=F["t96_imax"])
         rmin, rmax = F["t96_rilm"]
         if inst["band"] is None:
-            inst["a"] = "FAIL: %.0f Ohm outside %g to %g Ohm (ROC) and %.3f A outside %g to %g A" % (r, rmin, rmax, nom, F["t96_range"][0], F["t96_range"][1])
+            inst["a"] = "FAIL: %.0f Ohm is outside %g to %g Ohm (7.3) and %.3f A outside %g to %g A (Features)" % (
+                r, rmin, rmax, nom, F["t96_range"][0], F["t96_range"][1])
         else:
             r_lo, r_hi = r_corners(r, tol, tcr)
             inst["a"] = "PASS" + ("" if r_lo >= rmin and r_hi <= rmax else
-                                  " (EDGE: the resistor's corners %.1f to %.1f Ohm reach outside %g to %g Ohm)" % (r_lo, r_hi, rmin, rmax))
-        inst["imax"] = F["t96_imax"]
+                                  " (EDGE: the resistor's corners %.1f to %.1f Ohm reach past %g to %g Ohm)" % (r_lo, r_hi, rmin, rmax))
         lab, lab_txt = label_amps(setting[0]["value"])
         if lab is None:
             inst["d"] = "no label"
         else:
             dec = len(lab_txt.split(".")[1]) if "." in lab_txt else 0
-            ok = abs(round(nom, dec) - lab) < 1e-9
-            inst["d"] = ("PASS: '%s A' is the nominal %.4f A" % (lab_txt, nom) if ok and inst["band"] else
-                         "FAIL: '%s A' against the nominal %.4f A" % (lab_txt, nom) if not ok else
-                         "FAIL: '%s A' states a limit the sheet does not print (extrapolation)" % lab_txt)
-        # start-up: the dVdt slew rate's highest (IDVDT max x GDVDT max over the 10 nF at -10 %, ASSUMPTION on the capacitor)
-        cd = inst.get("dvdt") or []
-        cdv = (ohms(cd[0]["value"].replace("n", "R")) or (None,))[0] if cd else None
-        cdv = cdv * 1e-9 if cdv else None
-        inst["sr_max"] = (F["t96_idvdt"][2] * F["t96_gdvdt"][2] / (cdv * 0.9)) if cdv else None
+            same = abs(round(nom, dec) - lab) < 1e-9
+            inst["d"] = ("PASS: '%s A' is the nominal %.4f A rounded" % (lab_txt, nom) if same and inst["band"] else
+                         "FAIL: '%s A' states a limit the sheet does not print (Equation 5 extrapolated)" % lab_txt if same else
+                         "FAIL: '%s A' against the nominal %.4f A" % (lab_txt, nom))
+        cd = [farads(c["value"]) for c in inst.get("dvdt") or []]
+        if cd and cd[0]:
+            # the output's fastest rise: IDVDT max x GDVDT max over CdVdt at -10 % (ASSUMPTION A-C: an X7R 10 nF at +-10 %)
+            inst["sr_max"] = F["t96_idvdt"][2] * F["t96_gdvdt"][2] / (cd[0] * 0.9)
+        inst["c_board"] = sum(farads(p["value"]) or 0 for p in table["parts"] if p["sym"] == "C" and inst["vout"] in p["nets"].values()
+                              and "GND" in p["nets"].values())
     elif fam == "tps2065c":
-        inst["band"] = (F["t65_ios"][0], F["t65_ios"][2]); inst["nom"] = F["t65_ios"][1]
-        inst["basis"] = "PRINTED (fixed limit, 6.7, TJ -40 to 125 C)"; inst["a"] = "PASS (fixed; VIN %g to %g V)" % F["t65_vin"]
-        inst["imax"] = F["t65_iout"]; inst["d"] = "no label"
+        inst.update(band=(F["t65_ios"][0], F["t65_ios"][2]), nom=F["t65_ios"][1], imax=F["t65_iout"],
+                    basis="PRINTED fixed limit IOS (6.7, TJ -40 to 125 C, VIN 4.5 to 5.5 V), the 1 A rated member",
+                    a="PASS (fixed limit; +5V_DEV 4.9019 to 5.1744 V inside %g to %g V)" % F["t65_vin"], d="no label")
     elif fam == "tps22810":
-        inst["basis"] = "NO CURRENT LIMIT on the part (the sheet: thermal protection only)"; inst["imax"] = F["t22_imax"]
-        inst["a"] = "n/a (no setting)"
+        inst.update(basis="NO CURRENT LIMIT: the sheet's device is a load switch 'With Thermal Protection'; no current-limit row",
+                    imax=F["t22_imax"], a="n/a (no setting)", d="no label")
+    elif fam == "tps4811" and inst.get("ocp_off"):
+        inst.update(basis="OVERCURRENT NOT USED: IWRN on the controller's GND (Table 5-1: 'Connect IWRN to GND if overcurrent protection "
+                          "feature is not required'); the part is an over-voltage cut-off here", a="n/a (no current setting)", d="no label",
+                    b="n/a (no limit)", c="n/a (no limit)", verdict="PASS (no current limit drawn)")
+        return
     elif fam in ("lm5069", "tps25740", "tps23861", "tps4811"):
         vals = [ohms(r["value"]) for r in setting]
         if not vals or None in vals:
             inst["a"] = "FAIL: no sense resistor read"; return
-        rs = parallel([v[0] for v in vals]); tol = max(v[1] or 0.01 for v in vals)
-        tcr = max((v[2] if v[2] is not None else SENSE_TCR.get(r.get("lcsc", ""), TCR_DEFAULT)) for v, r in zip(vals, setting))
-        inst["r"], inst["tol"], inst["tcr"] = rs, tol, tcr
+        rs = parallel([v[0] for v in vals]); tol = max((v[1] if v[1] is not None else 0.01) for v in vals)
+        tcrs = []
+        for v, rp in zip(vals, setting):
+            code, _s = code_of(rp, MAP)
+            tcrs.append(v[2] if v[2] is not None else SENSE_TCR.get(code, TCR_DEFAULT))
+        tcr = max(tcrs)
+        inst.update(r=rs, tol=tol, tcr=tcr, d="no label")
         if fam == "lm5069":
-            lo, hi = sense_band(F["l69_vcl"][0], F["l69_vcl"][2], rs, tol, tcr); inst["nom"] = F["l69_vcl"][1] / rs
-            inst["basis"] = "PRINTED VCL / RS (7.5); circuit breaker at VCB %.0f to %.0f mV: %.2f to %.2f A" % (
-                F["l69_vcb"][0] * 1e3, F["l69_vcb"][2] * 1e3, *sense_band(F["l69_vcb"][0], F["l69_vcb"][2], rs, tol, tcr))
-            inst["a"] = "PASS (no printed RS range; VIN %g to %g V)" % F["l69_vin"]
+            lo, hi = sense_band(F["l69_vcl"][0], F["l69_vcl"][2], rs, tol, tcr)
+            cb = sense_band(F["l69_vcb"][0], F["l69_vcb"][2], rs, tol, tcr)
+            inst.update(nom=F["l69_vcl"][1] / rs, basis="PRINTED VCL / RS (7.5); the circuit breaker at VCB: %.2f to %.2f A%s" % (cb + (
+                            "; C-PROT rev 1's band 18.32 to 23.93 A takes the resistors at the band's own temperature (l9stk)" if inst["board"] == "p" else "",)),
+                        a="PASS (the sheet prints no RS range; VIN %g to %g V)" % F["l69_vin"])
         elif fam == "tps25740":
-            lo, hi = sense_band(F["t40_trip3a"][0], F["t40_trip3a"][1], rs, tol, tcr); inst["nom"] = None
+            lo, hi = sense_band(F["t40_trip3a"][0], F["t40_trip3a"][1], rs, tol, tcr)
             lo5, hi5 = sense_band(F["t40_trip5a"][0], F["t40_trip5a"][1], rs, tol, tcr)
-            inst["basis"] = ("PRINTED VI(TRIP) 19.2 to 22.6 mV (the 3 A row, record l4e4's reading of Tables 4 and 5; the p.11 label's "
-                             "29 to 34 mV row would give %.2f to %.2f A)" % (lo5, hi5))
-            inst["a"] = "PASS (R138 is the sheet's 'may be tuned' sense; TI recommends 5 mOhm)"
+            inst.update(basis="PRINTED VI(TRIP) 19.2 to 22.6 mV, the 3 A row by record l4e4's reading of Tables 4 and 5 (the p.11 "
+                              "label's 29 to 34 mV row would give %.3f to %.3f A: l4e4's bench (a) settles which)" % (lo5, hi5),
+                        a="PASS (the sense 'may be tuned', 8.3.8.2; TI recommends 5 mOhm)")
         elif fam == "tps23861":
-            lo, hi = sense_band(F["t61_icut110"][0], F["t61_icut110"][2], rs, tol, tcr); inst["nom"] = F["t61_icut110"][1] / rs
+            lo, hi = sense_band(F["t61_icut110"][0], F["t61_icut110"][2], rs, tol, tcr)
             lim = sense_band(F["t61_vlim2x"][0], F["t61_vlim2x"][2], rs, tol, tcr)
-            inst["basis"] = "PRINTED ICUT 0b110 (Class 4, auto mode); ILIM 2x at VDRAIN 1 V %.3f to %.3f A" % lim
-            inst["a"] = "PASS (%.3f Ohm: the sheet permits 0.255 or 0.250 Ohm)" % rs if any(abs(rs - x) < 1e-4 for x in F["t61_rs"]) else "FAIL: RS %.4f Ohm" % rs
+            ok = any(abs(rs - x) < 1e-4 for x in F["t61_rs"])
+            inst.update(nom=F["t61_icut110"][1] / rs,
+                        basis="PRINTED ICUT at 0b110 (Class 4 in auto mode, 645 mA by the sheet's 255 mOhm); ILIM 2x at VDRAIN 1 V %.3f to %.3f A" % lim,
+                        a=("PASS (%.3f Ohm: the sheet names 0.255 or 0.250 Ohm)" % rs) if ok else "FAIL: RS %.4f Ohm is neither" % rs)
         else:
             rset = [ohms(r["value"])[0] for r in inst.get("rset", [])]; riw = [ohms(r["value"])[0] for r in inst.get("riwrn", [])]
-            at = rset and riw and abs(rset[0] - F["t48_point"][0]) < 0.5 and abs(riw[0] - F["t48_point"][1]) < 50
-            lo, hi = sense_band(F["t48_ocp"][0], F["t48_ocp"][2], rs, tol, tcr); inst["nom"] = F["t48_ocp"][1] / rs
-            inst["basis"] = "PRINTED V(SNS_WRN) at RSET %s, RIWRN %s (%s)" % (rset, riw, "the characterised point" if at else "NOT the printed point")
-            inst["a"] = "PASS (the printed point)" if at else "FAIL: off the printed point"
-        inst["band"] = (lo, hi); inst["d"] = "no label"
+            at = bool(rset and riw and abs(rset[0] - F["t48_point"][0]) < 0.5 and abs(riw[0] - F["t48_point"][1]) < 50)
+            lo, hi = sense_band(F["t48_ocp"][0], F["t48_ocp"][2], rs, tol, tcr)
+            inst.update(nom=F["t48_ocp"][1] / rs, basis="PRINTED V(SNS_WRN) 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm, RIWRN 39.7 kOhm (7.5)",
+                        a="PASS (RSET %s Ohm, RIWRN %s Ohm: the printed point)" % (rset[0], riw[0]) if at else
+                        "FAIL: RSET %s, RIWRN %s are not the printed point" % (rset, riw))
+        inst["band"] = (lo, hi)
     elif fam == "tps1663":
         rv = ohms(setting[0]["value"]) if setting else None
         if not rv:
             inst["a"] = "FAIL: no ILIM resistor"; return
-        r, tol, tcr = rv[0], rv[1] or 0.01, rv[2] if rv[2] is not None else TCR_DEFAULT
-        inst["r"], inst["tol"], inst["tcr"] = r, tol, tcr
+        r, tol, tcr = rv[0], (rv[1] if rv[1] is not None else 0.01), (rv[2] if rv[2] is not None else TCR_DEFAULT)
         basis, lo, nom, hi, _n = t63_band(F, r, tol, tcr)
-        inst["basis"], inst["nom"] = basis, nom
-        inst["band"] = (lo, hi) if lo is not None else None
-        inst["a"] = "PASS (R(ILIM) %.1f kOhm in 3 to 30 kOhm)" % (r / 1e3) if inst["band"] else "FAIL"
-        inst["d"] = "no label"
-    # (b) the demand
+        inst.update(r=r, tol=tol, tcr=tcr, basis=basis, nom=nom, band=(lo, hi) if lo is not None else None, d="no label",
+                    a="PASS (R(ILIM) %.2f kOhm inside the 3 to 30 kOhm rows)" % (r / 1e3) if lo is not None else "FAIL: outside the rows")
+    # (b) the demand, in the states the rail serves
     dem = [x for x in mt.get("demand", []) if x[1] is not None]
     if not dem:
-        decl = [(n, r.get("amps_peak")) for n, r in rails]
-        dem = [("the generator's declared peak of %s (D)" % n, a, "D") for n, a in decl if a is not None][:1]
+        dem = [("the generator's declared peak of %s (D)" % n, r.get("amps_peak"), "D") for n, r in rails if r.get("amps_peak") is not None][:1]
     inst["demand"] = dem
     lo = inst["band"][0] if inst["band"] else None
+    need = max(d[1] for d in dem) if dem else None
     if fam == "tps22810":
-        inst["b"] = "n/a (no limit); continuous %g A against %s" % (F["t22_imax"], ", ".join("%.3f" % d[1] for d in dem) or "-")
+        inst["b"] = ("PASS (continuous): %.3f A within the switch's %g A; no limit to judge" % (need, F["t22_imax"]) if need is not None and need <= F["t22_imax"]
+                     else "NOT JUDGED")
     elif inst["band"] is None:
         inst["b"] = "UNDEFINED: the sheet prints no limit for this setting"
-    elif dem:
-        need = max(d[1] for d in dem)
-        inst["b"] = ("PASS: %.3f A >= %.3f A (margin %+.3f A)" % (lo, need, lo - need)) if lo >= need else \
-                    ("FAIL: %.3f A < %.3f A" % (lo, need))
+    elif need is not None:
+        inst["b"] = ("PASS: %.3f A >= %.3f A (margin %+.3f A)" % (lo, need, lo - need)) if lo >= need else ("FAIL: %.3f A < %.3f A" % (lo, need))
     else:
         inst["b"] = "NOT JUDGED: no demand read"
+    # (b) start-up (eFuses with a dVdt capacitor): the allowance for the load's own capacitance at the band's minimum
     st = mt.get("start")
-    inst["start"] = None
-    if st and inst.get("sr_max") and inst["band"]:
-        c_board = sum((ohms(c["value"].split()[0].replace("u", "R")) or (0,))[0] * 1e-6 for c in [] )
-        inst["start"] = st
-    # (c) the downstream
+    if fam == "tps2596" and inst.get("sr_max") and inst["band"]:
+        draw = st[0] if st else (need or 0.0)
+        allow = (lo - draw) / inst["sr_max"] - inst["c_board"]
+        known = st[1] if st else None
+        inst["start_v"] = ("%s: at %.2f V/ms the band's minimum leaves %.1f uF for the load's own input capacitance beside the board's "
+                           "%.1f uF, the load drawing %.3f A during the rise" % (
+                               ("PASS" if known is not None and allow >= known else "CONDITION" if known is None else "FAIL"),
+                               inst["sr_max"] / 1e3, allow * 1e6, inst["c_board"] * 1e6, draw)
+                           + (" (assumed %.0f uF: %s)" % (known * 1e6, st[2]) if known is not None else
+                              (" (%s)" % st[2] if st else " (no load capacitance printed; above it the start passes through the "
+                                                          "current limit, the sheet's dVdt-limited start, Figures 48 and 49)")))
+    # (c) the downstream, with the switch's own continuous rating beside
     down = mt.get("down", [])
     inst["down"] = down
-    hi = inst["band"][1] if inst["band"] else (inst.get("nom") if fam == "tps2596" else None)
+    hi = inst["band"][1] if inst["band"] else (inst["nom"] if fam == "tps2596" else None)
     if fam == "tps22810":
-        inst["c"] = "n/a (no limit on the part; the feeding rail's protection governs a fault)"
-    elif not down:
-        inst["c"] = "NOT RATED HERE: no conductor rating read for this branch"
+        inst["c"] = "n/a: the part limits nothing; a fault is limited by the feeding rail's own protection"
     elif hi is None:
         inst["c"] = "NOT JUDGED"
+    elif not down:
+        inst["c"] = "NOT RATED HERE: no record rates this branch's conductor (top of band %.3f A)" % hi
     else:
-        cap = min(x[1] for x in down)
-        tag = "" if inst["band"] else " (on the EXTRAPOLATED nominal: the printed band does not exist)"
-        inst["c"] = ("PASS: %.3f A <= %.3f A (%s)" % (hi, cap, min(down, key=lambda x: x[1])[0]) if hi <= cap else
-                     "FAIL: %.3f A > %.3f A (%s)%s" % (hi, cap, min(down, key=lambda x: x[1])[0], tag))
+        cap, what = min((x[1], x[0]) for x in down)
+        tag = "" if inst["band"] else " (on Equation 5's EXTRAPOLATED nominal: no printed band exists)"
+        inst["c"] = ("PASS: %.3f A <= %.3f A (%s)" % (hi, cap, what)) if hi <= cap else ("FAIL: %.3f A > %.3f A (%s)%s" % (hi, cap, what, tag))
+    if fam == "tps2065c":
+        inst["own"] = ("the 1 A rated member (continuous %g A); its printed limit sits above the rating by the part's design" % inst["imax"])
+    elif inst["imax"] is not None and hi is not None:
+        inst["own"] = ("the switch's continuous %g A: %s" % (inst["imax"], "within" if hi <= inst["imax"] else
+                       "the band's top %.3f A is above it (EDGE: a load between them is carried until the part's thermal shutdown)" % hi))
+    else:
+        inst["own"] = ""
+    # the verdict
+    fails = [k for k in "abc" if str(inst[k]).startswith(("FAIL", "UNDEFINED"))]
+    inst["verdict"] = "DEFECT (%s)" % ",".join(fails) if fails else ("LABEL" if str(inst["d"]).startswith("FAIL") else "PASS")
+
+
+# the findings this record registers, by instance and tree: a computed DEFECT without an entry here is printed UNREGISTERED and the
+# test fails; an entry whose instance no longer fails is printed RESOLVED IN THIS TREE (the record's text is then restated)
+FINDINGS = {
+    ("DRAWN", "b", "U23"): ("EF-F01", "DESIGN DEFECT", "OPEN", "SDR3-F04 confirmed: R36 301 R, '3.0 A', outside TPS2596's range; corrected by "
+                            "apply_gen_sch_b_u23ilm.py (750 R), DRAFTED"),
+    ("DRAWN", "b", "U24"): ("EF-F02", "DESIGN DEFECT", "OPEN", "R43 301 R, '3.0 A', the same setting on the RockBLOCK's eFuse; corrected by "
+                            "apply_gen_sch_b_u24ilm.py (1.21 k), DRAFTED"),
+    ("DRAFTED", "b", "U23"): ("EF-F01", "DESIGN DEFECT", "OPEN", "the pending drafts of board B leave U23 as drawn"),
+    ("DRAFTED", "b", "U24"): ("EF-F02", "DESIGN DEFECT", "OPEN", "the pending drafts of board B leave U24 as drawn"),
+    ("DRAWN", "a", "U18"): ("DR-03", "DESIGN DEFECT (known)", "OPEN", "record l4e4: R138 10 mOhm trips under the 3 A contracts; its "
+                            "draft apply_gen_sch_a_r138.py (5 mOhm, L4-E9 R-05) corrects it, DRAFTED"),
+}
+
+
+# --------------------------------------------------------------------------------------------------------- the netlist check
+def sexp(text):
+    """a minimal s-expression reader for the export form E that gen_netlist writes"""
+    tok = re.findall(r'\(|\)|"(?:\\.|[^"\\])*"|[^\s()]+', text)
+    stack = [[]]
+    for t in tok:
+        if t == "(":
+            stack.append([])
+        elif t == ")":
+            x = stack.pop(); stack[-1].append(x)
+        else:
+            stack[-1].append(t[1:-1].replace('\\"', '"').replace("\\\\", "\\") if t.startswith('"') else t)
+    return stack[0][0]
+
+
+def read_net(text):
+    e = sexp(text); comps, nets = {}, {}
+    for sec in e[1:]:
+        if sec[0] == "components":
+            for c in sec[1:]:
+                d = {x[0]: x[1] for x in c[1:] if isinstance(x, list) and len(x) == 2 and not isinstance(x[1], list)}
+                comps[d["ref"]] = d.get("value", "")
+        elif sec[0] == "nets":
+            for n in sec[1:]:
+                name = next(x[1] for x in n[1:] if x[0] == "name").lstrip("/")
+                nets[name] = sorted((next(y[1] for y in x[1:] if y[0] == "ref"), next(y[1] for y in x[1:] if y[0] == "pin"))
+                                    for x in n[1:] if x[0] == "node")
+    return comps, nets
+
+
+def check_ilm(text, F, eref, rref, need, cap):
+    """the eFuse's ILM pin carries exactly one resistor, the expected one, to GND, and its band (read from the value in the
+    netlist) is inside the sheet's range, at or above need and at or below cap: (ok, reason)"""
+    comps, nets = read_net(text)
+    pin7 = [n for n, nodes in nets.items() if (eref, "7") in nodes]
+    if len(pin7) != 1:
+        return False, "%s pin 7 is on %d nets" % (eref, len(pin7))
+    others = [x for x in nets[pin7[0]] if x != (eref, "7")]
+    if others != [(rref, "1")] and others != [(rref, "2")]:
+        return False, "%s's ILM net carries %s, not %s alone" % (eref, others, rref)
+    far = "2" if others[0][1] == "1" else "1"
+    if (rref, far) not in nets.get("GND", []):
+        return False, "%s's far pin is not on GND" % rref
+    rv = ohms(comps.get(rref, ""))
+    if not rv:
+        return False, "%s's value %r is not a resistance" % (rref, comps.get(rref))
+    basis, lo, nom, hi, _n = t96_band(F, rv[0], rv[1] if rv[1] is not None else 0.01, TCR_DEFAULT)
+    if lo is None:
+        return False, "%s %s: %s" % (rref, comps[rref], basis)
+    if lo < need or hi > cap:
+        return False, "%s %s: band %.4f to %.4f A against %.4f to %.4f A" % (rref, comps[rref], lo, hi, need, cap)
+    return True, "%s %s on %s pin 7 to GND: band %.4f to %.4f A within %.4f to %.4f A" % (rref, comps[rref], eref, lo, hi, need, cap)
+
+
+def mutate_value(text, ref, new_value):
+    old = re.search(r'\(comp \(ref "%s"\) \(value "([^"]*)"\)' % re.escape(ref), text)
+    return text.replace(old.group(0), '(comp (ref "%s") (value "%s")' % (ref, new_value), 1)
+
+
+def mutate_far_pin(text, ref, net_to):
+    """move the resistor's GND pin onto another net"""
+    m = re.search(r'\(net \(code "\d+"\) \(name "GND"\)[^\n]*', text)
+    line = m.group(0)
+    for pin in ("2", "1"):
+        node = ' (node (ref "%s") (pin "%s"))' % (ref, pin)
+        if node in line:
+            text = text.replace(line, line.replace(node, ""), 1)
+            m2 = re.search(r'\(net \(code "\d+"\) \(name "/?%s"\)' % re.escape(net_to), text)
+            return text.replace(m2.group(0), m2.group(0) + node, 1)
+    return text
+
+
+# ------------------------------------------------------------------------------------------------------------------- output
+def fmt_band(inst):
+    if inst["band"] is None:
+        return "none printed" + (" (Equation 5: %.4f A, EXTRAPOLATED)" % inst["nom"] if inst.get("nom") else "")
+    return "%.4f / %s / %.4f A" % (inst["band"][0], ("%.4f" % inst["nom"]) if inst.get("nom") else "-", inst["band"][1])
+
+
+def main():
+    P = print
+    missing = [p for p in list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT] if not os.path.isfile(os.path.join(ROOT, p))]
+    if missing:
+        sys.stderr.write("efuse_check: missing inputs %s\n" % missing); return 2
+    F = figures(); L9 = l9_loads(); M = meta(F, L9); MF = meta_family(F); cat = catalogue(); MAP = lcsc_map()
+    VQ = verify_quotes()
+    P("EFUSE (MESHSAT-1357, TASK T12): EVERY EFUSE AND CURRENT-LIMIT SETTING IN THE GENERATORS AGAINST ITS EXACT PART'S SHEET.")
+    P("Prototype design, desk arithmetic: nothing built, bought, powered or measured. DRAWN = main's generators; DRAFTED = each generator")
+    P("with its board's pending drafts composed in L4-E9's change-list order (out 2); EFUSE = DRAFTED plus this record's two drafts.")
+    P("")
+    P("0. INPUTS (sha256/16)")
+    ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py"] + MY_DRAFTS["b"]
+                     + ["v2/docs/records/" + x for b in "abep" for x in ORDER[b]] + [v[0] for v in SHEETS.values()]))
+    for p in ins:
+        h = sha(p)
+        P("   %s %s" % (h, p) if h else "   ABSENT          %s (held back: %s)" % (p, next((v[3] for v in SHEETS.values() if v[0] == p), "")))
+    P("")
+    P("1. THE SHEETS AND THE PRINTED FIGURES: every quote searched for in its sheet's own text layer (NFKC, white space collapsed)")
+    for k, (path, doc, held, fetch) in sorted(SHEETS.items()):
+        P("   %-10s %s%s" % (k, doc, " [held back by its notice; fetch: %s]" % fetch if held else ""))
+    for qid, (key, where, q) in sorted(QUOTES.items()):
+        P("   %-13s %-12s %s: \"%s\" (%s)" % (qid, VQ[qid], key, q, where))
+    bad = [q for q, v in VQ.items() if v == "NOT FOUND"]
+    absent = [q for q, v in VQ.items() if v == "SHEET ABSENT"]
+    P("   quotes: %d VERIFIED, %d SHEET ABSENT, %d NOT FOUND" % (len(VQ) - len(bad) - len(absent), len(absent), len(bad)))
+    if bad:
+        sys.stderr.write("efuse_check: quotes not in their sheets: %s\n" % bad); return 2
+    P("   parsed: TPS2596 RILM %g to %g Ohm, %g to %g A, +-%.1f %% across the range, %g A continuous, VIN %g to %g V, Equation 5 "
+      "ILIM = %g / RILM + %g; rows %s; RON %.3f Ohm (VIN > 4 V, TJ to 125 C); IDVDT %s A, GDVDT %s" % (
+          F["t96_rilm"][0], F["t96_rilm"][1], F["t96_range"][0], F["t96_range"][1], F["t96_acc"] * 100, F["t96_imax"],
+          F["t96_vin"][0], F["t96_vin"][1], F["t96_eq"][0], F["t96_eq"][1],
+          "; ".join("%g Ohm %g / %g / %g A" % r[:4] for r in F["t96_rows"]), F["t96_ron"],
+          "/".join("%.2e" % x for x in F["t96_idvdt"]), "/".join("%g" % x for x in F["t96_gdvdt"])))
+    P("   parsed: TPS2065C IOS %g / %g / %g A, %g A continuous; TPS22810 %g A continuous, no limit; LM5069 VCL %s V, VCB %s V, VIN %g to %g V;" % (
+        F["t65_ios"] + (F["t65_iout"], F["t22_imax"], F["l69_vcl"], F["l69_vcb"]) + F["l69_vin"]))
+    P("           TPS23861 RS %s Ohm, ICUT(110) %s V, VLIM2X(1 V) %s V; TPS25740A VI(TRIP) %s / %s V; TPS1663 I(OL) = %g / R(kOhm), %g to %g A "
+      "(+-%.0f %%), rows %s; TPS4811 V(SNS_WRN) %s V at %s" % (
+          F["t61_rs"], F["t61_icut110"], F["t61_vlim2x"], F["t40_trip3a"], F["t40_trip5a"], F["t63_k"], F["t63_range"][0], F["t63_range"][1],
+          F["t63_acc"] * 100, "; ".join("%g Ohm %g / %g / %g A" % r[:4] for r in F["t63_rows"]), F["t48_ocp"], F["t48_point"]))
+    P("           ratings: USB 3.0 A receptacle %g A, IDC socket %g A, flat cable %g A, JST PH %g A, VH %g A, SH %g A; RockBLOCK DC input "
+      "%g A; LimeSDR %g W, host %g A" % (F["c_usb3a"], F["c_idc16"], F["c_rib16"], F["c_ph"], F["c_vh"], F["c_sh"], F["l_rb_dc"],
+                                           F["l_lime_w"], F["l_lime_host"]))
+    P("")
+    with tempfile.TemporaryDirectory(prefix="efuse_") as d:
+        P("2. THE PENDING DRAFTS, composed per board in L4-E9's change-list order (section 3 at aa32332c) on scratch copies, then the")
+        P("   generator run through gen_netlist (its own intent checks included)")
+        trees = {}; nets = {}; extra_inst = {}; dropped = {}
+        for b in "abcdep":
+            base = os.path.join(ROOT, GEN[b])
+            nets[("DRAWN", b)] = os.path.join(d, "%s_drawn.net" % b)
+            trees[("DRAWN", b)] = table_of(base, nets[("DRAWN", b)])
+            if not ORDER[b]:
+                P("   board %s  no pending generator draft names a current-limiting part (section 2b's parse)" % b.upper())
+                trees[("DRAFTED", b)] = trees[("DRAWN", b)]; nets[("DRAFTED", b)] = nets[("DRAWN", b)]
+                continue
+            table, p, res, drop, why = runnable(b, d)
+            for rel, v in res:
+                P("   board %s  %-44s %s" % (b.upper(), rel, v))
+            if drop:
+                P("   board %s  THE COMPOSED GENERATOR REFUSES: %s" % (b.upper(), why[:200]))
+                P("   board %s  it runs without %s; that draft's eFuse calls are read from its text (2c) and judged on their values" % (b.upper(), drop))
+                dropped[b] = (drop, why)
+                extra_inst[b] = text_instances(drop, b)
+            elif table is None:
+                P("   board %s  THE COMPOSED GENERATOR REFUSES and no single omission lets it run: %s" % (b.upper(), why[:200]))
+                table = trees[("DRAWN", b)]
+            trees[("DRAFTED", b)] = table
+            nets[("DRAFTED", b)] = os.path.join(d, os.path.splitext(os.path.basename(p))[0] + ("_without.net" if drop else ".net"))
+        table, p_eb, res_eb, drop_eb, why_eb = runnable("b", d, extra=MY_DRAFTS["b"])
+        P("   board B  then this record's drafts: %s%s" % ("; ".join("%s %s" % (os.path.basename(r), v) for r, v in res_eb[-2:]),
+                                                         "; the generator run without %s, as above" % drop_eb if drop_eb else ""))
+        trees[("EFUSE", "b")] = table
+        net_eb = os.path.join(d, os.path.splitext(os.path.basename(p_eb))[0] + ("_without.net" if drop_eb else ".net"))
+        P("")
+        P("2c. EFUSE CALLS READ FROM THE TEXT OF A DRAFT THE GENERATOR CANNOT RUN WITH ON THIS TREE")
+        for b, insts in sorted(extra_inst.items()):
+            for i in insts:
+                P("   board %s  %s: %s %s -> %s, ILM %s %s" % (b.upper(), i["from_text"], i["ref"], i["vin"], i["vout"], i["setting"][0]["ref"], i["setting"][0]["value"]))
+        if not extra_inst:
+            P("   none")
+        P("")
+        P("2b. EVERY apply_gen_sch_*.py UNDER v2/docs/records ON THIS TREE, parsed (ast over its string constants) for a current-limiting part")
+        for rel in sorted(os.path.relpath(os.path.join(dp, f), RECS) for dp, _dn, fs in os.walk(RECS) for f in fs
+                          if f.startswith("apply_gen_sch_") and f.endswith(".py") and os.path.relpath(dp, RECS) != "efuse"):
+            hits = sorted(set(m.group(1) for c in ast.walk(ast.parse(open(os.path.join(RECS, rel), encoding="utf-8").read()))
+                              if isinstance(c, ast.Constant) and isinstance(c.value, str) for m in FAMILY_RE.finditer(c.value)))
+            if hits:
+                P("   %-48s names %s%s" % (rel, ", ".join(hits), "" if any(rel == x for b in "abep" for x in ORDER[b]) else "  (not composed: see the README)"))
+        P("")
+        # the inventory and the judgement
+        rows = []
+        for (tree, b), table in sorted(trees.items(), key=lambda kv: ("DRAWN DRAFTED EFUSE".split().index(kv[0][0]), kv[0][1])):
+            for inst in instances(table, b) + (extra_inst.get(b, []) if tree == "DRAFTED" else []):
+                judge(inst, F, M, MF, cat, table.get("intent"), table, MAP)
+                inst["tree"] = tree
+                rows.append(inst)
+        drawn = {(i["board"], i["ref"]): i for i in rows if i["tree"] == "DRAWN"}
+        P("3. THE INVENTORY: every current-limiting part, DRAWN on main, and what the pending drafts add or change (DRAFTED), and EFUSE")
+        for i in rows:
+            if i["tree"] != "DRAWN":
+                base = drawn.get((i["board"], i["ref"]))
+                if base and base["value"] == i["value"] and base["set_text"] == i["set_text"] and i["tree"] == "DRAFTED":
+                    continue
+                if i["tree"] == "EFUSE" and i["ref"] not in ("U23", "U24"):
+                    continue
+            P("   %-7s %s %-5s %-14s %-9s code %-10s (%s) %s -> %s; setting %s; rail %s" % (
+                i["tree"], i["board"].upper(), i["ref"], i["mpn"], i["family"], i["code"] or "none", i["code_src"], i["vin"], i["vout"],
+                i["set_text"], ", ".join("%s (typ %s, peak %s A)" % (n, r.get("amps_typ"), r.get("amps_peak")) for n, r in i["rails"]) or "-"))
+        P("")
+        P("4. THE BANDS (min / nominal / max), the basis of each, and the resistor's corners (tolerance, TCR over %g to %g C, ASSUMPTION A-T)" % (TJ_LO, TJ_HI))
+        shown = set()
+        for i in rows:
+            k = (i["board"], i["ref"], i["value"], i["set_text"])
+            if k in shown:
+                continue
+            shown.add(k)
+            P("   %-7s %s %-5s %-9s %-34s %s" % (i["tree"], i["board"].upper(), i["ref"], i["family"], fmt_band(i), i["basis"]))
+            if i.get("r") is not None:
+                P("%s setting %.6g Ohm, %.1f %%, %g ppm/K (%s)%s" % (" " * 21, i["r"], i["tol"] * 100, i["tcr"], i.get("tcr_src", "the value text or SENSE_TCR"),
+                                                                 ("; " + i["note"]) if i.get("note") else ""))
+        P("")
+        P("5. THE LOADS (record l9pwr section 5 at HIGH, every state the rail serves; the cases by id) AND THE DOWNSTREAM RATINGS")
+        shown = set()
+        for i in rows:
+            k = (i["board"], i["ref"], i["family"])
+            if k in shown:
+                continue
+            shown.add(k)
+            P("   %s %-5s %-9s case %s; load %s" % (i["board"].upper(), i["ref"], i["family"], i["case"], i["load"]))
+            for lab, amps, tier in i["demand"]:
+                P("        demand %.4f A  [%s] %s" % (amps, tier, lab))
+            for what, amps, qid in i["down"]:
+                P("        rating %.3f A  %s%s" % (amps, what, " (%s, %s)" % (qid, VQ.get(qid, "")) if qid else ""))
+        names = ("LimeSDR Mini 2.4", "RockBLOCK 9704", "camera (part TBD)", "Xenarc 709GNK", "board D (SA868 and logic)", "panel board C",
+                 "cooler fan slot 1")
+        for n in names:
+            P("   l9pwr %-26s %s" % (n, "; ".join("%s %g/%g/%g W" % ((s,) + v) for s, v in sorted(L9.get(n, {}).items()))))
+        P("")
+        P("6. THE JUDGEMENT: (a) range, (b) the band's minimum against the demand, and its start-up, (c) the band's maximum against the")
+        P("   downstream, with the switch's own continuous rating beside, (d) the label")
+        shown = set()
+        for i in rows:
+            k = (i["board"], i["ref"], i["value"], i["set_text"])
+            if k in shown:
+                continue
+            shown.add(k)
+            P("   %-7s %s %-5s %-9s %s" % (i["tree"], i["board"].upper(), i["ref"], i["family"], i["verdict"]))
+            for x in "abcd":
+                P("        (%s) %s" % (x, i[x]))
+            if i["start_v"] != "n/a":
+                P("        (b, start) %s" % i["start_v"])
+            if i["own"]:
+                P("        (own) %s" % i["own"])
+        P("")
+        P("7. FINDINGS")
+        seen = set(); unreg = []
+        for i in rows:
+            if i["tree"] == "EFUSE":
+                continue
+            k = (i["tree"], i["board"], i["ref"])
+            f = FINDINGS.get(k)
+            if i["verdict"].startswith("DEFECT"):
+                if not f:
+                    unreg.append(k)
+                    P("   UNREGISTERED DEFECT %s %s %s: %s" % (k + (i["verdict"],)))
+                elif f[0] not in seen:
+                    seen.add(f[0])
+                    P("   %-7s %s, %s: %s %s %s; %s" % (f[0], f[1], f[2], i["tree"], i["board"].upper(), i["ref"], f[3]))
+            elif f:
+                P("   %-7s RESOLVED IN THIS TREE (%s %s %s reads %s): the record's text is to be restated" % (f[0], k[0], k[1].upper(), k[2], i["verdict"]))
+        P("   unregistered defects: %d" % len(unreg))
+        # labelling findings and observations, each computed from the rows above
+        R = {(i["tree"], i["board"], i["ref"]): i for i in rows}
+        b23, b24 = R[("DRAWN", "b", "U23")], R[("DRAWN", "b", "U24")]
+        lime = dict(b23["rails"]).get("+5V_LIME", {}); rb = dict(b24["rails"]).get("+5V_RB", {})
+        need23 = max(x[1] for x in M[("b", "U23")]["demand"]); need24 = max(x[1] for x in M[("b", "U24")]["demand"])
+        if lime.get("amps_typ", 0) > need23:
+            P("   EF-L01  LABEL, OPEN (board B's generator owner): +5V_LIME declares %.2f A typical and %.2f A peak (J_LIME %.2f A) and "
+              "_DEV_LOADS gives U23 %.2f A, with no source; the maker prints 4.5 W at most (%.4f A at C-DEV rev 1's least voltage) and a "
+              "5 V, 900 mA host supply. The note's 'peaks higher while its FPGA configures' has no printed figure. EF-F01's draft "
+              "restates the note's resistor and leaves the declared figures to the owner (they are conservative for the copper)" % (
+                  lime["amps_typ"], lime["amps_peak"], lime["loads"].get("J_LIME", 0), lime["amps_typ"], need23))
+        if rb.get("amps_peak", 0) > min(x[1] for x in M[("b", "U24")]["down"]):
+            P("   EF-L02  LABEL, OPEN (board B's generator owner): +5V_RB declares a %.2f A peak (J_RB9704 %.2f A, 'the burst current on a "
+              "transmit attempt') against the maker's DC input maximum %.3f A and the one 5 V conductor's %.1f A; after EF-F02 the "
+              "eFuse passes at most %.4f A" % (rb["amps_peak"], rb["loads"].get("J_RB9704", 0), need24,
+                                                min(x[1] for x in M[("b", "U24")]["down"]), R[("EFUSE", "b", "U24")]["band"][1]))
+        e23, e24 = R[("EFUSE", "b", "U23")], R[("EFUSE", "b", "U24")]
+        P("   EF-L03  LABEL, OPEN (Layer 6, part identities): Layer 6's board B table keys R36 and R43 on '301R 1%% (ILM: 3.0 A)' "
+          "(C25192); after EF-F01 and EF-F02 R36 reads %r (code %s by lcsc_fill.py's map, the code Layer 6 read for board A's R90) and R43 %r "
+          "(no code read: a 1.21 kOhm 1 %% 0603 is owed). Layer 6's draft applies after this record's drafts (out 8) and its value "
+          "key then no longer matches R36 or R43" % (e23["setting"][0]["value"], e23.get("set_code"), e24["setting"][0]["value"]))
+        nocode = sorted("%s %s %s (%s)" % (i["tree"], i["board"].upper(), i["ref"], i["mpn"]) for i in rows
+                        if i["tree"] == "DRAFTED" and not i["code"] and not i.get("from_text"))
+        if nocode:
+            P("   EF-L04  LABEL, OPEN (Layer 6, part identities): the pending drafts place %s with no LCSC code; the "
+              "orderable part is the draft's text alone" % "; ".join(nocode))
+        lab5 = []
+        for k, said in ((("DRAFTED", "b", "U702"), "0.448 to 0.538 A"), (("DRAFTED", "b", "U901"), "1.375 to 1.614 A")):
+            if k in R and R[k]["band"]:
+                lab5.append("%s %s's text says %s by interpolating between the printed rows (INFERRED); the printed bound across "
+                            "the range gives %.4f to %.4f A, and (b) and (c) hold on it" % (k[1].upper(), k[2], said, R[k]["band"][0], R[k]["band"][1]))
+        if lab5:
+            P("   EF-L05  LABEL, OPEN (record l8r2's owner): " + "; ".join(lab5))
+        sw = sorted("%s %s (%s -> %s)" % (i["board"].upper(), i["ref"], i["vin"], i["vout"]) for i in rows if i["tree"] == "DRAWN" and i["family"] == "tps22810")
+        P("   EF-O01  OBSERVATION (generator owners, Layers 8 and 9): the TPS22810 load switches %s limit no current (the sheet: a "
+          "load switch 'With Thermal Protection', no current-limit row); a fault behind one is limited only by the stage that feeds "
+          "its input, and no record may count it as a current limit" % "; ".join(sw))
+        if "b" in dropped:
+            P("   EF-O02  OBSERVATION (record l8r2's owner; known to its round 8 on fnd/l8r4, not on this tree): board B's pending chain does "
+              "not regenerate on this tree: %s after %s" % (dropped["b"][1][:110], dropped["b"][0]))
+        a23 = R[("DRAWN", "a", "U23")]
+        alt = t96_band(F, 511.0, 0.01, 100.0)
+        P("   EF-O03  OBSERVATION (board A's generator owner): U23's R98 453 R is the recommended minimum itself; its corners reach "
+          "445.8 Ohm and its band's top %.4f A is above the switch's 2 A continuous rating, as the sheet's own 453 Ohm row is. "
+          "The load at HIGH is %.4f A; 511 R would keep the top at %.4f A (minimum %.4f A). Not drafted: (a) to (c) hold (SESSION)" % (
+              a23["band"][1], max(x[1] for x in a23["demand"]), alt[3], alt[1]))
+        a21 = R[("DRAWN", "a", "U21")]
+        P("   EF-O04  OBSERVATION (board A's generator owner, Layer 9): U21's band minimum %.4f A clears the monitor's 10 W at VBAT's "
+          "9.688 V floor (%.4f A) by %.3f A; the monitor's own start current and input capacitance are not printed (start-up CONDITION)" % (
+              a21["band"][0], max(x[1] for x in a21["demand"]), a21["band"][0] - max(x[1] for x in a21["demand"])))
+        b5 = R[("DRAWN", "b", "U5")]
+        P("   EF-O05  OBSERVATION (board B's generator owner): the PoE port's ICUT band %.4f to %.4f A clears the declared 0.60 A by "
+          "%.3f A with R12 at 250 mOhm 1 %%; at TI's 255 mOhm the foot would be %.4f A" % (
+              b5["band"][0], b5["band"][1], b5["band"][0] - 0.60, F["t61_icut110"][0] / (0.255 * 1.01 * (1 + 100e-6 * 60))))
+        e21 = R.get(("DRAFTED", "e", "U21"))
+        if e21 and e21["band"]:
+            P("   EF-O06  OBSERVATION (record l4e7's owner): R87's text says 'its breaker at 6.36 to 7.14 A, over the panel's 6.8 A'; the "
+              "printed band %.4f to %.4f A straddles 6.8 A, so the text is right only if the cut-off may trip on the panel's 6.8 A "
+              "(the record's to state); against PV_P's declared 6.25 A (b) holds" % e21["band"])
+        P("")
+        P("8. THIS RECORD'S DRAFTS (EF-F01, EF-F02): composition, the netlist, the mutations, the band on the corrected values")
+        for order_name, seq in (("forward", MY_DRAFTS["b"]), ("reverse", MY_DRAFTS["b"][::-1])):
+            p, res = compose("b", d, extra=seq)
+            P("   %-8s %s" % (order_name, "; ".join("%s %s" % (os.path.basename(r), v) for r, v in res[-2:])))
+        pf = compose("b", d, extra=MY_DRAFTS["b"])[0]; pr = compose("b", d, extra=MY_DRAFTS["b"][::-1])[0]
+        P("   the two orders give the same text: %s" % (open(pf, "rb").read() == open(pr, "rb").read()))
+        # the drafts alone on main's generator, and each on the composed generator a second time (refused)
+        p0 = os.path.join(d, "b_alone.py"); shutil.copy(os.path.join(ROOT, GEN["b"]), p0)
+        alone = [(os.path.basename(s), run_apply(os.path.join(ROOT, s), p0)[0]) for s in MY_DRAFTS["b"]]
+        again = [(os.path.basename(s), run_apply(os.path.join(ROOT, s), p0)[0]) for s in MY_DRAFTS["b"]]
+        P("   on main's generator alone: %s; a second run: %s" % (alone, again))
+        tree_rc = subprocess.run([sys.executable, "-B", os.path.join(ROOT, MY_DRAFTS["b"][0]), os.path.join(ROOT, GEN["b"]), "--check"],
+                                 capture_output=True).returncode
+        P("   --check on the repository's own generator: exit %d (a check writes nothing; --write is refused until RELEASE.md)" % tree_rc)
+        txt = open(net_eb, encoding="utf-8").read()
+        need23 = max(x[1] for x in M[("b", "U23")]["demand"]); cap23 = min(x[1] for x in M[("b", "U23")]["down"] + [("own", F["t96_imax"], None)])
+        need24 = max(x[1] for x in M[("b", "U24")]["demand"]); cap24 = min(x[1] for x in M[("b", "U24")]["down"] + [("own", F["t96_imax"], None)])
+        base_txt = open(nets[("DRAFTED", "b")], encoding="utf-8").read()
+        checks = [
+            ("EFUSE netlist, U23", check_ilm(txt, F, "U23", "R36", need23, cap23), True),
+            ("EFUSE netlist, U24", check_ilm(txt, F, "U24", "R43", need24, cap24), True),
+            ("DRAFTED netlist (no correction), U23", check_ilm(base_txt, F, "U23", "R36", need23, cap23), False),
+            ("DRAFTED netlist (no correction), U24", check_ilm(base_txt, F, "U24", "R43", need24, cap24), False),
+            ("mutation: R36 back to 301R", check_ilm(mutate_value(txt, "R36", "301R 1% (ILM: 3.0 A)"), F, "U23", "R36", need23, cap23), False),
+            ("mutation: R43 to 909R (band top over 1 A)", check_ilm(mutate_value(txt, "R43", "909R 1% (ILM: 1.0 A)"), F, "U24", "R43", need24, cap24), False),
+            ("mutation: R43 to 1.87k (band under 500 mA)", check_ilm(mutate_value(txt, "R43", "1.87k 1% (ILM: 0.49 A)"), F, "U24", "R43", need24, cap24), False),
+            ("mutation: R36's GND pin onto +5V_LIME", check_ilm(mutate_far_pin(txt, "R36", "+5V_LIME"), F, "U23", "R36", need23, cap23), False),
+        ]
+        okall = True
+        for name, (ok, why), want in checks:
+            good = ok == want; okall &= good
+            P("   %-46s %-5s %s %s" % (name, "PASS" if ok else "FAIL", "(as required)" if good else "(NOT AS REQUIRED)", why))
+        P("   the netlist reading and its mutations: %s" % ("every check reads as required" if okall else "A CHECK DID NOT READ AS REQUIRED"))
+        # Layer 6's LCSC table after this record's drafts
+        l6 = os.path.join(RECS, "l6r2", "apply_gen_sch_b_lcsc.py")
+        p6 = os.path.join(d, "b_l6.py"); shutil.copy(pf, p6)
+        rc6, msg6 = run_apply(l6, p6)
+        P("   Layer 6's apply_gen_sch_b_lcsc.py after this record's drafts: %s" % ("OK" if rc6 == 0 else "REFUSED (%s)" % msg6[:160]))
+        P("")
+        P("9. PREDICATES")
+        P("   every quote in its sheet: %s" % ("YES" if not bad else "NO"))
+        P("   every DRAWN TPS2596 setting inside 453 to 7869 Ohm: %s" % ("YES" if all(i["band"] for i in rows if i["tree"] == "DRAWN" and i["family"] == "tps2596")
+                                                                        else "NO: " + ", ".join("%s %s" % (i["board"].upper(), i["ref"]) for i in rows
+                                                                                                if i["tree"] == "DRAWN" and i["family"] == "tps2596" and not i["band"])))
+        P("   every EFUSE TPS2596 setting inside the range: %s" % ("YES" if all(i["band"] for i in rows if i["tree"] == "EFUSE" and i["family"] == "tps2596") else "NO"))
+        P("   unregistered defects: %d; this record's netlist checks as required: %s" % (len(unreg), "YES" if okall else "NO"))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
