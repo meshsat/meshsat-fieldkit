@@ -1,4 +1,4 @@
-DONE: round 1 (D-16 CORRECTED in draft; D-10 NARROWED); round 2 (the coordinator's B2 task of 17:12): the authority finding (an owner item: B2 is a PROPOSAL), apply_gen_sch_e_p0sol_b2.py composed and netlist-checked with four failing mutations, the withdrawn-plug turn-off and the arriving-source case recomputed (absolute ratings held), R-180 as a contact requirement and the Layer 6 row drafted (B2-PRESENCE.md), what B2 does not cover OPEN with S1. NOT DONE: an independent check; the owner's ruling; the record's cache re-key (a box recompute). NEXT: the coordinator's merge, the L4-E9 rows of section 5, the focused check.
+DONE: round 1 (D-16 CORRECTED in draft); round 2 (route B2, an unapproved PARTIAL interface proposal, drafted and checked); round 3 (the owner's review of checkpoint 4, part 23): D-10 rewritten as an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: failing cases F1 to F4, requirements unchanged, the correction needed before any passing claim, PROVISIONAL and independent outputs). NOT DONE: E-1's correction; an independent check; the owner's ruling on B2; the record's cache re-key (a box recompute). NEXT: the coordinator's merge and the L4-E9 rows of section 5.
 
 # P0-7: the solar stage's D-10 (a stiff source with the guard on) and D-16 (the input sense out of range) by circuit alternatives
 
@@ -36,7 +36,7 @@ behind it (D-10) and M1's pulsed draw (D-16).
 | | Alternative | Fault case (D-10) | Normal case (D-16) | M2 (CS101, the accepted model) | Verdict |
 |---|---|---|---|---|---|
 | A | RSENSE1 ahead of every bank (route 3's wider form, R-187) | worse: U5 0.956 V resistive at 3.30 uH (3.2 times its absolute maximum) | meets: the flat input current, 0.045 V | fails: the loop holds the port current and pushes the bulk's CS101 current through the bank, 0.33 A filtered against 0.113 A | rejected |
-| B | the guard-on event bounded or removed at the port: B1 a series choke (XAL1510-103), B2 a presence contact pair on the solar receptacle carrying U21's INP | B1: the cut current 31.1 A exceeds the choke's 26.3 A Isat; B2: removes the event for a source in the receptacle (any arrival is a cold connection) | untouched | B1: a resonance at 2.7 to 3.2 kHz inside M2's decided band | B1 rejected; B2 the route for D-10's port residual (needs Layer 7) |
+| B | the guard-on event bounded or removed at the port: B1 a series choke (XAL1510-103), B2 a presence contact pair on the solar receptacle carrying U21's INP | B1: the cut current 31.1 A exceeds the choke's 26.3 A Isat; B2: would prevent the step only for a source arriving through the loop's mating points (partial) | untouched | B1: a resonance at 2.7 to 3.2 kHz inside M2's decided band | B1 rejected; B2 an unapproved partial interface proposal (section 4); neither resolves D-10 |
 | C | U5's input sense retired (CSPIN and CSNIN tied to VIN, 8705af p.12, p.29, p.31); the regulation fed into IMON_IN by an INA169 | U5 0 V by construction at every loop | U5 0 V by construction | depends on the sense point: C1 at R87 (U21's IMON) fails like A; C2 on the backstop's bank passes; C3 on RSENSE1 keeps the accepted topology | **C2 selected** |
 
 **The selection (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain
@@ -96,46 +96,58 @@ the declared envelope.
   from -0.5 uA sinking to +1.0 uA sourcing); the question to Analog Devices is drafted,
   `clarification/analog-devices-lt8705a-p0sol.txt` (item 8), UNSENT.
 
-## 4. What stays open, exactly, and route B2
+## 4. D-10: an unresolved protection defect, the remaining engineering item E-1, and route B2 (a partial proposal)
 
-**D-10's port-level residual** (the guard's own transient, not U5): a stiff source stepping onto the port with the guard on
-charges every capacitor behind Q12 at a rate only the source's loop sets. At the envelope's least loop PV_F, Q12's VDS, INP, EN,
-D4, TRK_VS and the bank's two INA169s exceed their ratings; at the reference loop PV_F stays over the recommended 80 V row (under
-it from 4.03 uH, L6P-F10). No arrangement with the guard closed bounds that charge without a series element (B1, not supported
-on printed figures) or the event's removal (B2).
+**D-10 is an UNRESOLVED PROTECTION DEFECT in the present model** (the owner's review of checkpoint 4, part 23), not a case that
+merely lacks evidence. It is written as the receiving company's remaining engineering item E-1 in `SUPPLIER-P1-1-P0SOL.md`:
 
-**Route B2, selected by the coordinator (5 October 2026, 17:12) as the bounded PROVISIONAL desk route, stands as a PROPOSAL**
-(`B2-PRESENCE.md`; the .out's section 5). reserved.json protects no connector; but B2 changes the kit's external interface (a panel
-then charges only through a plug that bridges the presence pair), an owner-accepted pick (32.21's insert 13-4) and the cost, with
-more than one option standing, so by the owner's two-part test of 21 September the interface is the owner's: the owner item is
-written (`B2-PRESENCE.md` section 2, recommendation: adopt). The board E side is drafted, `apply_gen_sch_e_p0sol_b2.py`: R96 feeds
-the presence loop (J_SOLP, an XH 1x2), which returns to INP, held low by R97 when the loop opens and filtered by C80. Composed after
-the C2 draft (seventeen drafts, 298 parts); four predicates hold on top of the nine; four mutations each fail. The withdrawn plug
-turns Q12 off at most 0.544 ms after the pair opens; a damaged presence core can only hold the guard off. Every arrival is then the
-cold connection, recomputed over the record's whole grid (608 events, the worst equal to the record's): every absolute rating held
-(PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V, EN 12.48 V); the 54 V/us SESSION line holds from 0.33 uH and the recommended 80 V VS
-row from 0.78 uH (PROVISIONAL, S2). R-180 is rewritten as the contact requirement (the pair makes last at every mating point of the
-loop; the wall receptacle declared not a field mating point where it cannot sequence) and the Layer 6 rows are drafted
-(`B2-PRESENCE.md` sections 3 and 4).
+- **(a) The failing cases** (MODELED, the record's own transient model on the C2 circuit): F1, a stiff 36 V source stepping onto
+  the port with the guard on at the envelope's least loop 0.30 uH: PV_F 321.9 V, Q12's VDS 307.4 V, INP 64.3 V, TRK_VS 37.83 V
+  with D4 conducting 16.1 A, the sense bank 2.57 V, hitting U21 (100 V and 20 V absolute), the port bank (100 V), Q12 (100 V), D4,
+  U18 and U23 (+2 V); F2, the same at about 1.04 uH: PV_F 118.5 V, VDS 108.5 V, INP 23.7 V; F3, at the 3.30 uH reference loop: PV_F
+  83.48 V over the TPS4811-Q1's recommended operating 80 V row (L6P-F10); F4, a source arriving with the guard off at the least
+  loop: slew 56.10 V/us over the 54 V/us SESSION line (inside the 60 V/us absolute maximum). Claims hit: IF-01's protection of the
+  solar entry against D-10, R-173's guard as a protection, the backstop's sensing through the event.
+- **(b) The requirements, unchanged:** L4-E9's single fault D-10 from REQ-015's 9 to 36 V source class; the owner's amendment of
+  2 October 2026, item 3 (a bounded analysis against the approved fault exposure and component ratings, REQ-016's window kept);
+  every part inside its absolute maximum ratings, the controller inside its recommended conditions while it must act, the SESSION
+  10 % lines. The record's envelope stands (0.30 to 10.20 uH, a connector fault with no lead resistance credited, every guard-on
+  start); no new exclusion is adopted to avoid a failure.
+- **(c) The correction or justified model revision needed before any passing claim:** something must bound the current the source
+  drives into the stage's capacitance through the closed guard, or the energy and voltage it delivers to the port when Q12 opens,
+  at every loop. B1 (a series choke) is rejected at the desk on Isat and on its CS101 resonance; route B2 is a PARTIAL proposal
+  (below); open to a supplier's investigation: a choke rated over the cut current and damped against CS101, a lower-impedance
+  clamp or a snubber sized for the port's energy, a different cut-off element or method (an active current limit faster than the
+  loop's di/dt, a rise detector, a precharge path), and a model revision only on measured loops and resistances. S1 and S2 then
+  qualify the correction.
+- **(d) PROVISIONAL until then:** IF-01's D-10 protection claim, R-173 as a protection, R-176 rows 2 and 3, R-180, the port's parts
+  and their Layer 6 rows, board E's port layout and Layer 8 fault table, the guard's Layer 9 rows, route B2's draft. **Completed
+  independently, on the present port network:** D-16's correction (section 3), the regulation and its correlated margin, the 100 W
+  bound re-run, M2 with the selected sensing (to be re-run only if the correction changes the port), INP's divider ratio.
 
-**What B2 does not cover, OPEN:** a second stiff source added on the same lead while a panel holds the loop closed (section 3's
-guard-on case), and a stiff source below the stage's voltage arriving after a withdrawal (PV_P back-feeds PV_F through Q12's body
-diode). Validation: the narrowed supplier request `SUPPLIER-P1-1-P0SOL.md` (UNSENT), S1 with both rows added, S2 with the
-arriving source, the make-last stagger and CS114 on the presence pair added, S3 A7 at zero differential, S4 the regulation.
+**Route B2** (selected by the coordinator at 17:12 as the bounded PROVISIONAL desk route; `B2-PRESENCE.md`; the .out's section 5)
+is an unapproved PARTIAL interface proposal. Its interface is an owner item (it changes what the kit accepts at its solar input,
+an owner-accepted pick and the cost, with more than one option standing). Its board E draft, `apply_gen_sch_e_p0sol_b2.py`,
+composes after the C2 draft (seventeen drafts, 298 parts; four predicates on top of the nine; four mutations each fail); the
+withdrawn plug turns Q12 off at most 0.544 ms after the pair opens; a source arriving through a mating point of the loop meets
+the cold connection, whose absolute ratings hold over the record's whole grid (PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V, EN
+12.48 V; 608 events). It does not change the port's response when a step happens, and it leaves a source added in parallel with a
+connected panel and a lower stiff source arriving after a withdrawal; adopting or declining it does not resolve D-10.
 
 ## 5. Rows for L4-E9 and the register (the coordinator's; nothing of L4-E9's is edited here)
 
-- **D-10** (8a and 8c): "NARROWED. U5's absolute-rating violation CORRECTED by P0-7's draft (R-NEW): CSPIN and CSNIN tied to VIN,
-  0 V at every loop; INP's margin line CORRECTED by R97 24.9k (INP under 18 V for PV_F to 90.1 V). OPEN: the guard-on event's
-  port-level residual (PV_F, Q12's VDS, EN, D4, TRK_VS, U18 and U23 below the port's floors; PV_F over the recommended 80 V row
-  at 3.30 uH, L6P-F10). PROPOSAL, route B2 (R-NEW2, an owner item on the interface): the guard-on event removed for every source
-  arriving through a mating point of the presence loop, every arrival the cold connection inside its absolute ratings; OPEN under B2:
-  a second source added on a lead whose loop a panel holds closed, a lower stiff source after a withdrawal, and the arriving
-  source's slew margin line under 0.33 uH and the 80 V row under 0.78 uH (S1, S2)."
+- **D-10** (8a and 8c): "AN UNRESOLVED PROTECTION DEFECT in the present model (the owner's review of checkpoint 4, part 23),
+  the receiving company's remaining engineering item E-1 (SUPPLIER-P1-1-P0SOL.md: the failing cases F1 to F4 with the parts and
+  claims they hit, the requirements unchanged with no new exclusion, the correction or measured model revision needed before any
+  passing claim, then S1 and S2). CORRECTED within it by P0-7 (R-NEW): U5's absolute-rating violation (CSPIN and CSNIN tied to VIN,
+  0 V at every loop) and INP's margin line (R97 24.9k). Not resolved: the guard's port-level transient (F1, F2 absolute-rating
+  violations below about 2.4 uH; F3 PV_F 83.48 V over the recommended 80 V row at 3.30 uH, L6P-F10; F4 the arriving source's slew
+  over its 54 V/us line under 0.33 uH). Route B2 (R-NEW2) is an unapproved PARTIAL interface proposal and an owner item; adopting
+  or declining it does not resolve D-10."
 - **D-16** (8a and 8c): "CORRECTED in draft by P0-7 (R-NEW): U5's input sense not used (0 V by construction), the regulation's
   sense U23 on the bank, its average at most 1.34 % high (the safe side); PROVISIONAL in A7's zero-differential output (sourcing
-  lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 narrows to the port.
-- **IF-01:** the D-10 text above; "U5's pins" leaves the NOT MET list. **IF-02:** "the regulation 2.5378 A nominal, 2.9212 A
+  lowers the regulation; a sink, excluded by p.31's text, INFERRED, is covered up to 3.67 uA; S3)." B6-ENG-2 is answered at the desk; B6-ENG-1 becomes E-1, the port's remaining engineering.
+- **IF-01:** NOT MET stays, on D-10's port-level defect (the text above); "U5's pins" leaves the NOT MET list. **IF-02:** "the regulation 2.5378 A nominal, 2.9212 A
   highest (U23 on the bank, R16 34.0k); the margin to the trip 0.3645 A, correlated; the static bound 93.5783 W (U23's VIN+
   currents added) and check (b)'s allowance 1.052 ms; A7 at zero differential PROVISIONAL".
 - **The change list (section 3), a new row R-NEW** after R-173 and before R-177: "board E, gen_sch_e.py,
@@ -145,7 +157,7 @@ arriving source, the make-last stagger and CS114 on the presence pair added, S3 
   R97 superseded by R-NEW. **R-187** (route 3): "worked to the circuit by P0-7: alternative A rejected (D-10 worse, M2 fails);
   the sense arrangement changed instead (R-NEW)". **R-189** (B6-ENG-2's bench): replaced by S4 (the regulation at 25 V) and S3.
   **R-186** (a sense-pin filter): obsolete under R-NEW. **R-176 row 3**: U5's +-0.240 V line replaced by U5 under 10 mV (layout
-  check); the port's rows stay. **R-180**: rewritten as route B2's contact requirement, the text in `B2-PRESENCE.md` section 3 (PROPOSAL until the owner rules). **R-NEW2** after R-NEW: "board E, gen_sch_e.py, `apply_gen_sch_e_p0sol_b2.py` (4 edits): R96 to PV_PRA, J_SOLP (C158012) the presence loop to INP, C80 10 nF (C184799); AFTER R-NEW; PROPOSAL (the owner item of B2-PRESENCE.md section 2)". **Layer 6**: the receptacle, plug, contacts, cable, tail connector and adapter rows of `B2-PRESENCE.md` section 4. **P1-1**:
+  check); the port's rows stay. **R-180**: route B2's contact requirement drafted in `B2-PRESENCE.md` section 3 (PROPOSAL until the owner rules; E-1's correction may need its own R-180 instead). **R-NEW2** after R-NEW: "board E, gen_sch_e.py, `apply_gen_sch_e_p0sol_b2.py` (4 edits): R96 to PV_PRA, J_SOLP (C158012) the presence loop to INP, C80 10 nF (C184799); AFTER R-NEW; an unapproved PARTIAL PROPOSAL (the owner item of B2-PRESENCE.md section 2); it does not resolve D-10". **Layer 6**: the receptacle, plug, contacts, cable, tail connector and adapter rows of `B2-PRESENCE.md` section 4. **P1-1**:
   narrowed to `SUPPLIER-P1-1-P0SOL.md`.
 - **For other authors:** Layer 8's single-fault table (the record's "defeat" list) gains "a short across the sense bank now
   defeats the regulation as well" and "U23's output stuck high stops the stage (IMON_IN fault), stuck low leaves the regulation
