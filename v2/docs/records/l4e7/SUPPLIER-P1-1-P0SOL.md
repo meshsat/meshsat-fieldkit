@@ -17,8 +17,8 @@ closed, the cold connection's slew margin, and two bench rows that confirm the n
 
 | Item | Claim it supports | Affected files and decisions | Bounded provisional choice (scope amendment, point 2) |
 |---|---|---|---|
-| S1, the guard-on step | D-10 closed for the port (PV_F, Q12's VDS, INP, EN, D4, TRK_VS, U18 and U23) | `apply_gen_sch_e_solar_guard.py` (R-173), R-176 rows 2 and 3, R-180, IF-01 | the port's ratings hold their lines from the source loops the record prints (PV_F's 90 V line from 2.44 uH, the 80 V recommended row from 4.03 uH; on the selected circuit U18 and U23 hold their 1.8 V line at 1.04 uH, 1.16 V, and fail at the envelope's least 0.30 uH, 2.57 V); below them the guard-on event must be removed (route B2, a presence contact on the solar receptacle, Layer 7) or the source's loop bounded by the kit's rules (R-180) |
-| S2, the cold connection | D-10's cold-connection margin line | R-176 row 2 | the absolute 60 V/us holds over the whole envelope (at most 56.1 V/us, MODELED); the 54 V/us SESSION line holds from 0.53 uH |
+| S1, the guard-on step | D-10 closed for the port (PV_F, Q12's VDS, INP, EN, D4, TRK_VS, U18 and U23); under route B2 (B2-PRESENCE.md, a PROPOSAL) only for what B2 does not cover: a second source added on a lead whose presence loop a panel holds closed, and a stiff source below the stage's voltage arriving after a withdrawal | `apply_gen_sch_e_solar_guard.py` (R-173), R-176 rows 2 and 3, R-180, IF-01 | the port's ratings hold their lines from the source loops the record prints (PV_F's 90 V line from 2.44 uH, the 80 V recommended row from 4.03 uH; on the selected circuit U18 and U23 hold their 1.8 V line at 1.04 uH, 1.16 V, and fail at the envelope's least 0.30 uH, 2.57 V); below them the guard-on event must be removed (route B2, a presence contact on the solar receptacle, Layer 7) or the source's loop bounded by the kit's rules (R-180) |
+| S2, the cold connection, under B2 the arriving source | D-10's arriving-source case and R-180's make-last requirement | R-176 row 2, R-180, `apply_gen_sch_e_p0sol_b2.py` | every absolute rating held over the whole envelope (PV_F 84.62 V, slew 56.10 V/us, INP 16.90 V with R97 24.9k; MODELED); the 54 V/us SESSION line holds from 0.33 uH and the recommended 80 V VS row from 0.78 uH |
 | S3, A7 at zero differential | the regulation's lower band (energy) and, for a sink the sheet's text excludes, its margin to the trip | `apply_gen_sch_e_p0sol.py`, IF-02 | the regulation's band is computed with A7 at 0 uA; any current A7 sources lowers the regulated input current (8705af p.31); a sink (INFERRED absent) is covered by the margin up to 3.67 uA |
 | S4, the regulation at 25 V | D-16's regulation row (R-189 as rewritten) | IF-02, R-20 | the computed band, nominal 2.538 A, at most 2.921 A, at least 2.184 A with A7 at 0 uA |
 
@@ -38,11 +38,18 @@ EN/UVLO; Q12's VDS and current (a Rogowski probe of at least 500 A); TRK_VS; D4'
 U23's pins; U5's CSPIN to CSNIN. **Pass:** PV_F under 80 V (the TPS4811-Q1's recommended operating VS row) and under 90 V
 always; INP under 18 V; CS+, CS- and ISCP slew under 54 V/us; Q12's VDS under 90 V and its current inside its derated safe
 operating area for the measured time; TRK_VS under 31.8 V and D4 carrying no current; the bank's differential under 1.8 V;
-U5's CSPIN to CSNIN under 10 mV in magnitude (0 V by construction; the reading checks the layout).
+U5's CSPIN to CSNIN under 10 mV in magnitude (0 V by construction; the reading checks the layout). **Under route B2, added:**
+(a) the 36 V source added at the solar tail in parallel with a connected bench panel (the presence loop held closed), the same
+loops and pass limits; (b) the panel withdrawn with the stage at 17 V and a 12 V source of the same capability mated at once (PV_P
+back-feeding PV_F through Q12's body diode): Q12's body-diode current inside its pulsed rating and PV_P's fall recorded.
 
 **S2, the cold connection.** The same rig with the guard off and its CBST discharged; the 36 V source stepped onto J_SOLAR from
 0 V and from 25 V through the 0.30 uH loop, five steps per specimen. **Pass:** the slew at CS+, CS- and ISCP under 54 V/us,
-INP under 18 V, PV_F under 85 V.
+INP under 18 V, PV_F under 85 V. **Under route B2, added:** the same 36 V source mated at the solar tail through its sequenced
+connector (fifty matings per specimen at the fastest hand speed, the presence pair's closure recorded against both power contacts:
+at least 1 ms after them), and the panel's plug withdrawn while the stage draws 3.74 A (Q12's gate below its threshold at most
+0.6 ms after the pair opens); INP and Q12's gate recorded during M3 (CS114 on the lead with the presence pair in it): Q12's state
+unchanged.
 
 **S3, A7's output at zero differential.** Five LT8705AIUHF#PBF on a test fixture, CSPIN = CSNIN = VIN at 16 V and 25 V,
 IMON_IN held at 1.20 V by a source-measure unit, the current out of IMON_IN measured at -20 C, +25 C and +62 C (case).

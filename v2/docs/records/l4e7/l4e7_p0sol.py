@@ -197,7 +197,7 @@ def compute():
     for rel in (I169, TPS, WSL):
         if not os.path.isfile(os.path.join(TOP, rel)):
             refuse(3, "%s is not held (the L4-E7 record's fetch_held_back.py)" % rel)
-    O["pins"] = [(sha(rel), rel) for rel in (LS_PY, LS_OUT, LS_CACHE, DRAFT, GEN_E, NET_E, L4E11_OUT, LT, I169, TPS, T48, WSL, XAL)
+    O["pins"] = [(sha(rel), rel) for rel in (LS_PY, LS_OUT, LS_CACHE, DRAFT, REC + "/apply_gen_sch_e_p0sol_b2.py", GEN_E, NET_E, L4E11_OUT, LT, I169, TPS, T48, WSL, XAL)
                  + tuple(SAMH % pn for pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN")) + RTJ + (LC44322,)]
     data = json.load(open(os.path.join(TOP, LS_CACHE), encoding="utf-8"))
     R = LS._dec(data["R"])
@@ -681,19 +681,90 @@ def compute():
     i_start_bank = R["remedy"]["i_bank_slew"] * (c_a + c66_ + c_b + 0.11e-6) / (c_a + c66_ + c_b)
     v_im_start = gm169[1] * (1 + nl169) * (i_start_bank * rb_hi + vos169) * R16v * rtf(R16v, 1, True)
     O["Cstart"] = dict(i=i_start_bank, v_im=v_im_start, ovt_lo=ovt[0], p23=iq169 * 31.8, r59_loss=r59_hi * i_reg_hi ** 2)
+
+    # ================================================================== 5. ROUTE B2 (the coordinator's task of 5 October 2026, 17:12)
+    # the withdrawn plug: INP from its highest while the guard is on (PV_F at the cut-off's highest, the divider's highest ratio) falls
+    # through R97 (aged, at its highest) and C80 (C0G, +5 % and its 30 ppm/K) under V(INP_L)'s least, then U21's INP turn-off delay and
+    # Q12's gate fall (the record's); on the next plug INP rises through R96 || R97 with C80 only once the presence pair has made
+    c80 = 10e-9 * 1.05 * (1 + 30e-6 * dt_end)
+    v_inp0 = G6["ov"] * k97
+    tau_off = R97v * rtf(R97v, 1, True) * c80
+    t_inp_off = tau_off * math.log(v_inp0 / inp_l)
+    t_off = t_inp_off + b6["tinp"] * 1e-6 + G6["t_f"]
+    r_par = 1.0 / (1.0 / (100e3 * rtf(100e3, 1, True)) + 1.0 / (R97v * rtf(R97v, 1, True)))
+    t_on_hold = r_par * c80 * math.log((lo_h * k97) / (lo_h * k97 - inp_h)) if lo_h * k97 > inp_h else None
+    # the arriving source: the record's cold connection (Q12 never conducts; the port's own network) over the record's whole grid of
+    # source loops, both fault positions, the port bank at its least and its largest, from a discharged port and from 25 V (a
+    # back-fed PV_F after a withdrawal lies between), D11 at both ends; INP read through R97 24.9k and EN through R94 over R95
+    arr = []
+    for L_ in grid6:
+        W_ = [evalR(L_, dict(GA, bF=bf_), starts=cold_st, cases=R_CASES, cold=True) for bf_ in (GA["bF"], bF_hi)]
+        arr.append(dict(L=L_, vF=max(w_["vF"] for w_ in W_), slew=max(w_["slew"] for w_ in W_), vFmin=min(w_["vFmin"] for w_ in W_),
+                        iL=max(w_["iL"] for w_ in W_), e11=max(w_["e11"] for w_ in W_)))
+    ken = b6["ken"]
+    lines_b2 = (("PV_F at VS, CS+, CS- and ISCP", lambda a_: a_["vF"], 100.0, 90.0, "V"),
+                ("PV_F against the recommended operating VS row", lambda a_: a_["vF"], None, rw_vs_rec(R), "V"),
+                ("the slew at CS+, CS- and ISCP", lambda a_: 1e-6 * a_["slew"], 1e-6 * b6["slew_abs"], 0.9e-6 * b6["slew_abs"], "V/us"),
+                ("INP (R96 over R97 24.9k)", lambda a_: a_["vF"] * k97, rw_pin_abs(R), 0.9 * rw_pin_abs(R), "V"),
+                ("EN/UVLO (R94 over R95)", lambda a_: a_["vF"] * ken, rw_pin_abs(R), 0.9 * rw_pin_abs(R), "V"))
+
+    def holds_from(f_, lim_):
+        j_ = len(arr)
+        while j_ > 0 and f_(arr[j_ - 1]) <= lim_:
+            j_ -= 1
+        return None if j_ == len(arr) else (arr[j_]["L"] if j_ > 0 else 0.0)
+    b2rows = []
+    for lab_, f_, abs_, line_, unit_ in lines_b2:
+        worst_ = max(f_(a_) for a_ in arr)
+        b2rows.append(dict(lab=lab_, worst=worst_, abs=abs_, line=line_, unit=unit_, abs_ok=(abs_ is None or worst_ <= abs_),
+                           line_ok=worst_ <= line_, from_=holds_from(f_, line_)))
+    O["B2"] = dict(c80=c80, v_inp0=v_inp0, tau_off=tau_off, t_inp_off=t_inp_off, t_off=t_off, t_on_hold=t_on_hold, rows=b2rows,
+                   floor=min(a_["vFmin"] for a_ in arr), grid=(grid6[0], grid6[-1], len(grid6)), n=len(arr) * 2 * len(cold_st) * len(R_CASES) * 2,
+                   t_ov=G6["t_ov"], tinp=b6["tinp"], ov_hi=G6["ov"], inp_l=inp_l, inp_h=inp_h, i_l=max(a_["iL"] for a_ in arr),
+                   e11=max(a_["e11"] for a_ in arr), cold_rep=(max(a_["vF"] for a_ in arr), max(a_["slew"] for a_ in arr)),
+                   i_start=b6["i_start"])
+    if abs(O["B2"]["cold_rep"][0] - b6["cold"]["vF"]) > 1e-9 or abs(O["B2"]["cold_rep"][1] - b6["cold"]["slew"]) > 1e-3:
+        refuse(4, "the arriving-source case does not reproduce the record's cold connection over its grid")
     return O, R, b6, r3
 
 
+def rw_vs_rec(R):
+    """The TPS4811-Q1's recommended operating maximum for VS, CS+ and CS- (SLUSEE5E 6.2), as the record read it."""
+    return R["remedy"]["b6"]["vs_rec"]
+
+
+def rw_pin_abs(R):
+    """The TPS4811-Q1's absolute maximum for its input pins (OV, EN/UVLO, INP; SLUSEE5E 6.1), as the record read it."""
+    return R["remedy"]["T48"]["pin_abs"]
+
+
 # ------------------------------------------------------------------------------------------------------------------------ composition
-def compose_and_check():
-    """Board E's generator composed in L4-E9's change-list order with this record's draft after the solar guard, on a scratch copy;
-    the netlist written by record l8p's gen_netlist.py (no KiCad); the changed nets read and judged; four mutations, each must fail."""
+MUTS_C2 = (("U5's CSNIN on a net of its own", '"32": "TRK_VS", "33": "TRK_VS", "34": "TRK_VS"', '"32": "TRK_VIN", "33": "TRK_VS", "34": "TRK_VS"'),
+           ("U23's VIN- off the bank's pad", '"3": "PV_P", "4": "TRK_VS", "5": "TRK_VS"}, "C44322")\nc("C79"',
+            '"3": "PV_P", "4": "TRK_SHDN", "5": "TRK_VS"}, "C44322")\nc("C79"'),
+           ("R59 back between TRK_VS and U5's CSNIN", 'ic("U23", 5,',
+            'r("R59", "15mOhm 1% 2512 (RSENSE1)", "TRK_VS", "TRK_CSNX", "RS2512", "C2903494"); ic("U23", 5,'),
+           ("U23's output off IMON_IN", '{"1": "TRK_IMONI", "2": "GND", "3": "PV_P"', '{"1": "TRK_ISO", "2": "GND", "3": "PV_P"'))
+# route B2 (the coordinator's task of 5 October 2026, 17:12): the presence loop composed after the C2 draft; its own mutations
+DRAFT_B2 = REC + "/apply_gen_sch_e_p0sol_b2.py"
+ORDER_E_B2 = tuple(x for y in ORDER_E for x in ((y, ("l4e7", "p0sol_b2")) if y == ("l4e7", "p0sol") else (y,)))
+MUTS_B2 = (("R96 straight onto INP (the loop bypassed)", '"PV_F", "PV_PRA", "R"); ', '"PV_F", "PV_INP", "R"); '),
+           ("the loop bridged on the board (J_SOLP pin 1 on INP)", '{"1": "PV_PRA", "2": "PV_INP"}, "C158012")', '{"1": "PV_INP", "2": "PV_INP"}, "C158012")'),
+           ("R97 off INP (no pull-down when the loop opens)", '"PV_INP", "GND", "R", "C136967")', '"PV_INPX", "GND", "R", "C136967")'),
+           ("C80 off INP (the filter gone)", '"PV_INP", "GND", "C10u50", lcsc="C184799")', '"PV_UVLO", "GND", "C10u50", lcsc="C184799")'))
+
+
+def compose_and_check(order=ORDER_E, judge_fn=None, muts=MUTS_C2, draft=DRAFT, tag="p0sol"):
+    """Board E's generator composed in L4-E9's change-list order with this record's draft(s), on a scratch copy; the netlist written
+    by record l8p's gen_netlist.py (no KiCad); the changed nets read and judged; each mutation applied to the composed text and
+    regenerated must fail the judge."""
+    judge_fn = judge_fn or judge
     nr = load("netread_for_p0sol", NETREAD)
     res = dict(steps=[], checks=None, mutations=[])
     with tempfile.TemporaryDirectory() as td:
         gp = os.path.join(td, "gen_sch_e.py")
         shutil.copy(os.path.join(TOP, GEN_E), gp)
-        for rec_, nm_ in ORDER_E:
+        for rec_, nm_ in order:
             s_ = os.path.join(TOP, "v2/docs/records", rec_, "apply_gen_sch_e_%s.py" % nm_)
             args_ = [s_, gp, os.path.join(TOP, NET_E)] if rec_ == "d8dec31" else [s_, gp, "--write"]
             r_ = subprocess.run([sys.executable, "-B"] + args_, capture_output=True, text=True)
@@ -702,7 +773,7 @@ def compose_and_check():
                 res["refused"] = (rec_, nm_, (r_.stderr.strip().splitlines() or [""])[-1].replace(td, "<scratch>"))
                 return res
         composed = open(gp, encoding="utf-8").read()
-        res["second"] = subprocess.run([sys.executable, "-B", os.path.join(TOP, DRAFT), gp, "--check"], capture_output=True, text=True).returncode
+        res["second"] = subprocess.run([sys.executable, "-B", os.path.join(TOP, draft), gp, "--check"], capture_output=True, text=True).returncode
 
         def netlist(text_, tag_):
             p_ = os.path.join(td, tag_ + "_gen.py")
@@ -712,17 +783,11 @@ def compose_and_check():
             if r_.returncode != 0:
                 return None, (r_.stderr.strip().splitlines() or [""])[-1].replace(td, "<scratch>")
             return nr.read_netlist(open(o_, "rb").read()), (r_.stdout.strip().splitlines() or [""])[-1].replace(td, "<scratch>")
-        nl, msg = netlist(composed, "p0sol")
+        nl, msg = netlist(composed, tag)
         res["gen"] = msg
         if nl is None:
             return res
-        res["checks"] = judge(nl)
-        muts = (("U5's CSNIN on a net of its own", '"32": "TRK_VS", "33": "TRK_VS", "34": "TRK_VS"', '"32": "TRK_VIN", "33": "TRK_VS", "34": "TRK_VS"'),
-                ("U23's VIN- off the bank's pad", '"3": "PV_P", "4": "TRK_VS", "5": "TRK_VS"}, "C44322")\nc("C79"',
-                 '"3": "PV_P", "4": "TRK_SHDN", "5": "TRK_VS"}, "C44322")\nc("C79"'),
-                ("R59 back between TRK_VS and U5's CSNIN", 'ic("U23", 5,',
-                 'r("R59", "15mOhm 1% 2512 (RSENSE1)", "TRK_VS", "TRK_CSNX", "RS2512", "C2903494"); ic("U23", 5,'),
-                ("U23's output off IMON_IN", '{"1": "TRK_IMONI", "2": "GND", "3": "PV_P"', '{"1": "TRK_ISO", "2": "GND", "3": "PV_P"'))
+        res["checks"] = judge_fn(nl)
         for lab_, old_, new_ in muts:
             if composed.count(old_) != 1:
                 res["mutations"].append((lab_, "NOT APPLICABLE (the text occurs %d times)" % composed.count(old_)))
@@ -734,9 +799,32 @@ def compose_and_check():
             if nlm_ is None:
                 res["mutations"].append((lab_, "the generator refused: %s" % m_))
                 continue
-            fails_ = [c_ for c_, ok_ in judge(nlm_) if not ok_]
+            fails_ = [c_ for c_, ok_ in judge_fn(nlm_) if not ok_]
             res["mutations"].append((lab_, ("FAILS: " + "; ".join(fails_)) if fails_ else "PASSES (the check is blind to it)"))
     return res
+
+
+def compose_and_check_b2():
+    return compose_and_check(order=ORDER_E_B2, judge_fn=judge_b2, muts=MUTS_B2, draft=DRAFT_B2, tag="p0sol_b2")
+
+
+def judge_b2(nl):
+    """Route B2's predicates on top of C2's: INP fed only through the presence loop, held low by R97 when it opens, filtered by C80;
+    U21's OV and UVLO dividers as drafted."""
+    pin = lambda r_, p_: nl["pins"].get(r_, {}).get(p_)
+    out = list(judge(nl))
+    inp = pin("U21", "3")
+    pra = [n_ for n_ in nl["pins"].get("R96", {}).values() if n_ != "PV_F"]
+    out.append(("R96 from PV_F to the presence loop's outgoing net, not to INP (%s)" % inp,
+                sorted(nl["pins"].get("R96", {}).values()) == sorted(["PV_F"] + pra) and len(pra) == 1 and pra[0] != inp))
+    out.append(("J_SOLP pin 1 on R96's loop net and pin 2 on U21's INP (pin 3), the loop's only path to INP",
+                bool(pra) and pin("J_SOLP", "1") == pra[0] and pin("J_SOLP", "2") == inp and sorted(nl["on"].get(pra[0], ())) == ["J_SOLP", "R96"]))
+    out.append(("INP's net holds U21, R97, C80 and J_SOLP only, R97 and C80 to GND",
+                inp is not None and sorted(nl["on"].get(inp, ())) == ["C80", "J_SOLP", "R97", "U21"]
+                and sorted(nl["pins"].get("R97", {}).values()) == sorted([inp, "GND"]) and sorted(nl["pins"].get("C80", {}).values()) == sorted([inp, "GND"])))
+    out.append(("U21's OV (pin 2) on R98 to R100's divider and UVLO (pin 1) on R94 over R95, as drafted",
+                pin("U21", "2") == "PV_OVLO" and pin("U21", "1") == "PV_UVLO" and pin("R100", "1") in ("PV_OVLO",) and "PV_UVLO" in nl["pins"].get("R95", {}).values()))
+    return out
 
 
 def judge(nl):
@@ -766,7 +854,7 @@ def judge(nl):
 
 
 # ------------------------------------------------------------------------------------------------------------------------ render
-def render(O, K, R, b6, r3):
+def render(O, K, R, b6, r3, K2):
     lines = []
     P = lines.append
 
@@ -1046,34 +1134,92 @@ def render(O, K, R, b6, r3):
          "on charges every capacitor behind Q12 at a rate only the source's loop sets; at the envelope's least loop PV_F, Q12's VDS, "
          "INP, EN, D4, TRK_VS and the bank's INA169s exceed their ratings (section 2b), and at the reference loop PV_F stays over the "
          "TPS4811-Q1's recommended 80 V row (under it from %.2f uH; L6P-F10). No circuit with the guard closed bounds that charge "
-         "without a series element (B1, not supported) or the event's removal (B2). The cold connection's slew stays at %.1f V/us at a "
-         "connector fault on the least loop, inside its %.0f V/us absolute maximum and over the 54 V/us SESSION margin line (the margin "
-         "line holds from %.2f uH). Both are carried as PROVISIONAL under the scope amendment with the exact actions: (i) the "
-         "coordinator brings B2 forward as a named Layer 7 prerequisite (the solar receptacle's presence pair, every plug bridging it; "
-         "then a draft moves U21's INP divider onto it), which removes the guard-on event for a source in the receptacle; (ii) the "
-         "narrowed supplier request P1-1 (SUPPLIER-P1-1-P0SOL.md, UNSENT) for what remains." % (1e6 * d10["pvf80"], 1e-6 * d10["cold"]["slew"],
-                                                                                              1e-6 * d10["slew_abs"], 1e6 * d10["cold_from"]))
+         "without a series element (B1, not supported) or the event's removal (B2). The coordinator selected route B2 (5 October 2026, "
+         "17:12) as the bounded PROVISIONAL desk route with the narrowed P1-1 (SUPPLIER-P1-1-P0SOL.md, UNSENT) as its validation; its "
+         "draft and checks are section 5, and the interface it needs is an owner item (B2-PRESENCE.md), so B2 stands as a PROPOSAL. "
+         "What B2 does not cover stays OPEN: a second stiff source added on the same lead while a panel holds the presence loop closed "
+         "steps onto the port with the guard on exactly as section 2b computes, validated by P1-1's S1." % (1e6 * d10["pvf80"],))
     P("")
     P("4. VERDICTS")
     P("  D-16 (B6-ENG-2): CORRECTED on the drafted circuit (composition, netlist and mutations in 2a; electrical acceptance in 2d to 2f), PROVISIONAL in")
     P("    one term (A7's zero-differential output, 2h): sourcing lowers the regulation (energy only); a sink, excluded by p.31's text")
     P("    (INFERRED), is covered by the margin up to %.2f uA." % C_["sink_be_acc"])
     P("  D-10 (B6, L4-F01): NARROWED, OPEN. CORRECTED: U5's absolute-rating violation (0 V by construction, every loop) and INP's margin line")
-    P("    (R97 24.9k). OPEN: the guard-on event's port-level residual below the port's own floors and PV_F over the recommended 80 V row at the")
-    P("    reference loop (L6P-F10); the cold connection's slew margin line at the least loop. Next: B2 at Layer 7, or P1-1 (narrowed).")
+    P("    (R97 24.9k). PROPOSAL (route B2, section 5, an owner item on the interface): the guard-on event removed for every source that")
+    P("    arrives through a mating point of the presence loop; every arrival is then the cold connection, inside its absolute ratings.")
+    P("    OPEN: a second source added on a lead whose loop a panel holds closed (S1); PV_F over the recommended 80 V row (L6P-F10); the")
+    P("    arriving source's slew margin line at the least loops (section 5).")
+    P("")
+    # ---------------------------------------------------------------- 5
+    b2 = O["B2"]
+    K2_ = K2
+    P("5. ROUTE B2: THE SOLAR RECEPTACLE'S PRESENCE PAIR FEEDING U21'S INP (PROPOSAL; the coordinator's task of 5 October 2026, 17:12)")
+    wrap("  5a ", "     ", "AUTHORITY (B2-PRESENCE.md section 1): reserved.json protects no connector or contact arrangement; but B2 "
+         "changes the kit's external interface (BUILD.md and appendix 32.32: the panel, an accessory of the owner's choice, on the "
+         "shore plug's second pair; with B2 a panel charges only through a plug that bridges the presence pair), changes the "
+         "owner-accepted pick of the wall receptacle (appendix 32.21: D38999/20FC4PN, insert 13-4, four size 16 contacts) and adds "
+         "cost, and more than one option stands after the measurement (B2; the drawn interface with the residual measured by S1). By "
+         "the owner's two-part test of 21 September 2026 it is the owner's: the owner item is written, and B2 is a PROPOSAL.")
+    wrap("  5b ", "     ", "THE DRAFT (apply_gen_sch_e_p0sol_b2.py, 4 edits): R96, INP's top, from PV_F to the loop's outgoing net PV_PRA; "
+         "J_SOLP (JST-XH 1x2, C158012) takes the loop to the inside lead and back to INP (PV_INP); C80 10 nF C0G 100 V (C184799) filters "
+         "INP. Composed in L4-E9's order after the C2 draft: %s. The draft refuses a second application (exit %d); the generator runs "
+         "(%s). The netlist (NETLIST):" % (", ".join("%s %s" % (s_, "OK" if rc_ == 0 else "REFUSED") for s_, rc_ in K2_["steps"][8:11]),
+                                           K2_.get("second", -1), K2_.get("gen", "?")))
+    for st_, ok_ in (K2_["checks"] or [])[-4:]:
+        P("       %s: %s" % ("holds" if ok_ else "FAILS", st_))
+    P("       (and the nine predicates of section 2a, each holds: %s)" % ("yes" if all(ok_ for _s, ok_ in (K2_["checks"] or [])[:-4]) else "NO"))
+    P("     Mutations (each must fail the check):")
+    for lab_, res_ in K2_["mutations"]:
+        P("       %s: %s" % (lab_, res_))
+    wrap("  5c ", "     ", "THE WITHDRAWN PLUG. With the presence pair open INP has no source but R97 to GND (and U21's own pull-down, not "
+         "credited): from its highest while the guard is on, %.2f V (PV_F at the cut-off's highest %.2f V), it falls under V(INP_L)'s "
+         "least %.1f V (PRINTED) in at most %.3f ms through R97 aged and C80 at its largest (%.2f nF), and U21 then pulls Q12's gate "
+         "(tPD(INP_L) at most %.0f us, PRINTED; the gate's fall, the record's): Q12 is off at most %.3f ms after the pair opens. A "
+         "broken or shorted presence core can only hold INP low: the guard off, never on. On the next plug INP rises only when the "
+         "pair makes, last; at the hold's least it crosses V(INP_H)'s most %.1f V in at most %.3f ms, a delay nothing in service sees." % (
+             b2["v_inp0"], b2["ov_hi"], b2["inp_l"], 1e3 * b2["t_inp_off"], 1e9 * b2["c80"], b2["tinp"], 1e3 * b2["t_off"], b2["inp_h"],
+             1e3 * (b2["t_on_hold"] or 0.0)))
+    wrap("  5d ", "     ", "THE ARRIVING SOURCE (the cold connection recomputed as the case every arrival becomes): a stiff 36 V source "
+         "meets Q12 off; the power contacts make first (the contact requirement R-180: the pair makes last at every mating point of "
+         "the loop), so PV_F is at the source when the pair makes and U21's OV, at or under %.2f V and acting within %.0f us "
+         "(PRINTED), holds Q12 off (and BST until it charges, at least 50 ms from discharged, the record's); a source under the "
+         "cut-off starts the stage through Q12's gate slew once the pair has made, the record's start (at most %.3f A, under the "
+         "breaker's least); "
+         "the port's own ring is the record's cold connection, re-run here over the record's whole grid (%.2f to %.2f uH, %d loops), "
+         "both fault positions, the port bank at its least and its largest, from a discharged port and from 25 V (%d events; the "
+         "worst equals the record's cold maxima):" % (b2["ov_hi"], 1e6 * b2["t_ov"], b2["i_start"], 1e6 * b2["grid"][0], 1e6 * b2["grid"][1],
+                                                  b2["grid"][2], b2["n"]))
+    P("       quantity                                            worst      absolute     line     the line holds from")
+    for r_ in b2["rows"]:
+        P("       %-50s  %7.2f %-4s %s   %7.2f   %s" % (r_["lab"], r_["worst"], r_["unit"], ("%7.2f HELD" % r_["abs"]) if r_["abs"] is not None else "   n/a     ",
+                                                         r_["line"], "everywhere" if r_["from_"] in (None, 0.0) and r_["line_ok"] else
+                                                         ("%.2f uH" % (1e6 * r_["from_"]) if r_["from_"] else "nowhere")))
+    wrap("     ", "     ", "PV_F's least %.2f V (VS, CS+, CS- and ISCP rated -1 V to GND): held; the lead's current in the ring at most "
+         "%.1f A and D11 at most %.1f mJ (the record's figures). Every absolute rating holds over the whole envelope. The 54 V/us "
+         "SESSION margin line on the slew holds only from the loop the table names (at the least loop %.1f V/us, inside the 60 V/us "
+         "absolute maximum), and PV_F stays over the recommended 80 V row below the loop the table names: both are carried as "
+         "PROVISIONAL, validated by S2 (the arriving source at 0.30 uH on the specimen)." % (
+             b2["floor"], b2["i_l"], 1e3 * b2["e11"], b2["rows"][2]["worst"]))
+    wrap("  5e ", "     ", "WHAT B2 DOES NOT COVER, OPEN: a second stiff source added on the same lead while a panel holds the presence "
+         "loop closed (a parallel connection behind the plug) steps onto the port with the guard on, exactly section 2b's case; and a "
+         "stiff source BELOW the stage's voltage arriving after a withdrawal draws the stage's charge back through Q12's body diode "
+         "(PV_P back-feeds PV_F through it while the guard is off), the reverse of the step, not computed here. Validation: P1-1's S1 "
+         "(both added to its rows).")
     return lines
 
 
 def main():
     O, R, b6, r3 = compute()
     K = compose_and_check()
-    if K.get("refused") or K.get("checks") is None:
-        refuse(4, "the composition does not run: %s %s" % (K.get("refused"), K.get("gen")))
-    if not all(ok_ for _s, ok_ in K["checks"]) or not all(r_.startswith("FAILS") or r_.startswith("the generator refused") for _l, r_ in K["mutations"]):
-        refuse(4, "the netlist check does not hold or a mutation passes: %s %s" % (K["checks"], K["mutations"]))
-    if K.get("second") != 3:
-        refuse(4, "the draft does not refuse a second application")
-    sys.stdout.write("\n".join(render(O, K, R, b6, r3)) + "\n")
+    K2 = compose_and_check_b2()
+    for k_ in (K, K2):
+        if k_.get("refused") or k_.get("checks") is None:
+            refuse(4, "the composition does not run: %s %s" % (k_.get("refused"), k_.get("gen")))
+        if not all(ok_ for _s, ok_ in k_["checks"]) or not all(r_.startswith("FAILS") or r_.startswith("the generator refused") for _l, r_ in k_["mutations"]):
+            refuse(4, "the netlist check does not hold or a mutation passes: %s %s" % (k_["checks"], k_["mutations"]))
+        if k_.get("second") != 3:
+            refuse(4, "a draft does not refuse a second application")
+    sys.stdout.write("\n".join(render(O, K, R, b6, r3, K2)) + "\n")
     return 0
 
 
