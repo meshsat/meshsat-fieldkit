@@ -5650,13 +5650,15 @@ def render_fix24(R, p):
       % fmt(ld["area"] * 1e6, 0))
     p("       %s mm apart near its joint: the heat it carries q = k A dT / dx; at %s %% of the hot FET's %s W, %s W, dT reads %s K; a lead over that is"
       % (fmt(ld["dx"] * 1e3, 0), fmt(ld["frac"] * 100, 0), fmt(S23["p"]["hot"], 3), fmt(S["lead_q"], 3), fmt(S["lead_dt"], 2)))
-    p("       redone (validity check V8), and the heat leaving through any heavy lead, times the junction's own Zself, is added to lines 2 and 3 (an")
-    p("       upper bound: in a passive network no source raises junction k more per watt than FET k itself); the lead's own loss %s W/m at %s A"
-      % (fmt(S["lead_loss"], 2), fmt(S23["i_td"][0][1], 2)))
+    p("       redone (validity check V8), and the heat leaving through any heavy lead, times TWICE the junction's own Zself, is added to lines 2 and")
+    p("       3: removing a lead that carries q from its joint raises junction k by q times the joint-to-junction impedance of the coupon without")
+    p("       the lead, at most Zself,k / (1 - g Z_jj) by reciprocity and the maximum principle (g the lead's conductance, Z_jj the joint's own")
+    p("       impedance); the factor is taken at 2, an ASSUMPTION that a lead takes at most half of any heat put in at its joint; the lead's own")
+    p("       loss %s W/m at %s A" % (fmt(S["lead_loss"], 2), fmt(S23["i_td"][0][1], 2)))
     p("     the pours: the heating cases carry %s to %s of the service's loss in the pours' shared copper (V2R's third); line 2 adds the pours' service"
       % (fmt(S["pour_frac"][0], 3), fmt(S["pour_frac"][1], 3)))
-    p("       loss, at most (23.93 A)^2 times the largest of the three pour paths' resistance (measured four-wire from each heavy lead's joint to")
-    p("       each FET's taps), times the junction's own Zself, crediting nothing for the share the cases already carry; for scale only, at an")
+    p("       loss, at most (23.93 A)^2 times the sum of the two pours' largest path resistances (each pour read four-wire from its heavy lead's")
+    p("       joint to each FET's tap on it), times the junction's own Zself, crediting nothing for the share the cases already carry; for scale, at an")
     p("       ASSUMED %s mOhm path: %s W, %s K at a Zself of %s K/W" % (fmt(R14_POUR_EX * 1e3, 1), fmt(S["pour_service"], 3), fmt(S["pour_term"], 2), "%.2f" % S21["bar_new"]))
     p("   24g. THE MINORS (RECORD, INFERRED)")
     p("     m1: 20g now prints section 22c's set (R256 at -1 %%): %s mA with the breaker restarted, %s mA at SYSOVP, %s mA at the clamp; 21d's row"
