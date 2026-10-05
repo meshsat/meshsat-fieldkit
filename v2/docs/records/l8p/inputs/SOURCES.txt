@@ -138,3 +138,25 @@ rules, which round 14 answers and no check has read), copied for the restatement
       L4E11-SOURCE-ONLY-AND-ENTRY.md at 08f7e38a: section 23d whole (the selection of method (B), SESSION, and the note that board
       A's first prototype is no specimen until each gate branch has a removable link) then section 24b whole (the fixture as round
       14 redrew it: SW_S, SW_B, each gate tied to its own drain tap, the interlock, the states and their margins)
+
+Round 8 (5 October 2026, board P round 8: the thermal guard's draft as record l9stk re-selected it, C4, for L8P-F07 and L8P-F08;
+branch fnd/l9stk2 at bb6d2c8f, its round 5; read there with git show, copied here byte for byte, cited by commit as text only):
+  l9stk-section15.9-bb6d2c8f.md                  08a656ab0230986dbac4ec0c33c7f6c00f876eecb5792cf0343591796093cb9b
+      v2/docs/records/l9stk/L9-STACKUPS.md at bb6d2c8f, from the heading "### 15.9 The guard round" to the end of the page
+      (lines 1224 to 1500): round 5's restatement after L8P-F08, the corrections C1 to C4 judged on one count, the two failure
+      modes, the state before tEN, the selection C4 (SESSION, unchecked), the acceptance (a) to (c) with the seven mutations of
+      L9S5-F1 and the correction scope
+  l9stk_guard-bb6d2c8f.out.txt                   d84dcb3bab2f1f6009eafa5aec98533d59ee9513e89f574595d7080020ffa79c
+      v2/docs/records/l9stk/l9stk_guard.out at bb6d2c8f, whole (its sections 0 to 7; 5b round 5's, 6 the selection restated)
+  l9stk-readme-round5-bb6d2c8f.md                03274200411401fe5cc48a3a75d4e2f51a9b8908c08e6dc84f34d174d37822c5
+      v2/docs/records/l9stk/README.md at bb6d2c8f, the section "Round 5" (lines 84 to 149): the status line, the table "L8P-F08
+      answered", the SESSION decisions and the findings for other authors (L9S5-F1 to L9S5-F5)
+The round 7 copies of 43da41ca stay: l8p_guard.py's sections 1 to 9 (round 7's check of G2) read them, and are history.
+Task L4-E11 at its round 14 (fnd/l4e11r11 at 08f7e38a), the drafts the brief names for the composition: apply_gen_sch_a_dd7.py
+(R256 at 4.7 kOhm, its round 12's value) and apply_gen_sch_a_charger.py, read with git show at 08f7e38a: sha256
+bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034 and cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f,
+the same bytes as the copies inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py and inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py
+above; so those copies ARE the 08f7e38a drafts, and are used as they are (no second copy). Every copied section of L4-E11 above is
+also word for word in its page at 08f7e38a (checked in round 8 as in round 7).
+Read in round 8 from this tree (committed): Diodes' BZT52C sheet v2/vendor/diodes/diodes-bzt52c-ds18004.pdf (DS18004 Rev 38), for
+FM2's clamps, and JSCJ's 2N7002 sheet as in round 7. Held back as in round 7: TI's LM26LV and TPS709 sheets.
