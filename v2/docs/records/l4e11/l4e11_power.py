@@ -59,7 +59,7 @@ PINS = {
     "gen_p": ("v2/ecad/tools/gen_sch_p.py", "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3"),
     "net_a": ("v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5"),
     # round 17 (the check V6's V6-m2): record l8p's thermal guard, drafted in its round 8 and judged in its rounds 8 and 9
-    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "acd07c17bcc4e3cf3c47dc382e9da3e42493fcb04e53081a438cab6bd17e14e5"),
+    "l8p_c4": ("v2/docs/records/l8p/l8p_c4.out", "74742ed4236f3e362755a784496a29d06a308f0d59c3d02b12846d5643f3c891"),
     "l8p_thguard": ("v2/docs/records/l8p/apply_gen_sch_a_thguard.py", "544a462a9031862a953748a631023f59491203198aa4810321baed121606ecab"),
     "net_e": ("v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4"),
     "packprot": ("v2/ecad/tools/pcb_pack_protection.yaml", "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b"),
@@ -6398,7 +6398,8 @@ def fix27_round(R, T):
     S["win"] = tuple(float(x) for x in m.groups())
     m = need(c4, r"board A's (\d+) kOhm and the guard's\s+(\d+) uA on DOCK_EN_OUT", "the guard's draw on DOCK_EN_OUT (l8p 4)")
     S["i_guard"] = float(m.group(2)) * 1e-6
-    need(c4, r"SESSION decision L8P-D9", "record l8p's round 9 (V6-m7)")
+    need(c4, r"\(L8P-D9\); that label is WITHDRAWN", "record l8p's round 9 (V6-m7, the owner's part 22)")
+    need(c4, r"VERDICT \(10c\): the three V6-m7 failures CORRECTED IN DRAFT", "record l8p's round 9 delta (part 22)")
     g = flat(text("l8p_thguard"))
     need(g, r'r\("R260", "7\.5k 1%", "DOCK_EN_OUT", "THG_MID"\); r\("R261", "7\.5k 1%", "THG_MID", "DOCK_EN_RET"\)', "the guard's pair")
     m = need(g, r'c\("C261", "(\d+(?:\.\d+)?)u 50V X7R", "DOCK_EN_OUT", "GND"\); c\("C262", "(\d+(?:\.\d+)?)u 16V X7R", "THG_VDD", "GND"\)', "the guard's capacitors")
@@ -6449,7 +6450,8 @@ def render_fix27(R, p):
     p("       doubled) at DOCK_EN_OUT %s V against the closed reading's %s V: a ramping closed loop never reads held (RET/OUT at least %s with every" % (
         fmt(S["win"][0], 3), fmt(S20["ret_high"], 2), fmt(S["ratio"], 4)))
     p("       sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single")
-    p("       failure of 10b (Q60's gate on its drain: the return 0.799 V there), which its SESSION decision L8P-D9 tolerates as latent between checks")
+    p("       failure of 10b (Q60's gate on its drain: the return 0.799 V there, RECORD); record l8p withdrew its label L8P-D9 (part 22) and")
+    p("       drafts a cold clamp under which that short holds the return low and trips (its 10c); check_dd7_netlist.py's round 18 admits its C268")
     p("     the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a")
     p("       source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release")
     p("       (record l8p 9 (e)); nothing new acts")

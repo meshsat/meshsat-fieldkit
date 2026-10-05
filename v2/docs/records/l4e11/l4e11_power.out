@@ -13,7 +13,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
    gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
    net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
-   l8p_c4    acd07c17bcc4e3cf  v2/docs/records/l8p/l8p_c4.out
+   l8p_c4    74742ed4236f3e36  v2/docs/records/l8p/l8p_c4.out
    l8p_thguard 544a462a9031862a  v2/docs/records/l8p/apply_gen_sch_a_thguard.py
    net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
    packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
@@ -2012,7 +2012,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      the window with the guard (record l8p 3, on the full count of sinks, its shunt's off leakage among them): the return 0.908 V (0.859 V all
        doubled) at DOCK_EN_OUT 1.825 V against the closed reading's 0.84 V: a ramping closed loop never reads held (RET/OUT at least 0.4707 with every
        sink doubled, over RT1's 0.4603 bound); the trigger at 20c's corner stops a dead pack's precharge only on record l8p's single
-       failure of 10b (Q60's gate on its drain: the return 0.799 V there), which its SESSION decision L8P-D9 tolerates as latent between checks
+       failure of 10b (Q60's gate on its drain: the return 0.799 V there, RECORD); record l8p withdrew its label L8P-D9 (part 22) and
+       drafts a cold clamp under which that short holds the return low and trips (its 10c); check_dd7_netlist.py's round 18 admits its C268
      the release against the hold and section 22's bleed: a trip is the hot bound itself, already 22's case; the kit through a trip with a
        source present: the breaker off and the battery FETs inhibited until CELL+ reads alive and the guard cools under its release
        (record l8p 9 (e)); nothing new acts
