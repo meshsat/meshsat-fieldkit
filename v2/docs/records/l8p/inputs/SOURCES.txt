@@ -42,3 +42,121 @@ Copies here (sha256):
 
 Held back, not committed: TI's OPA187 sheet (SBOS807E), fetched by ../fetch_held_back.py into v2/vendor/ti/held/ and checked
 there by sha256 62bd7b52851715978aa52511ad946b1d725850b4d2e8672a901627ed65585c32.
+
+Round 5 (branch fnd/l8p2, the check V1's condition C4 and its minors): task L4-E11's round 10 was on branch fnd/l4e11r10 at a09e9a60.
+Round 5 copied its four drafts (charger bfdead54..., dd7 725e4f89..., aux 3d0a7b1d..., entry a859aa4a...) and its sections 20c, 20d
+and 20e (c860006f..., a5b5b306..., b02cbebc...). THOSE COPIES ARE REMOVED IN ROUND 6 (git history keeps them: commits 32c8bcf5 and
+8dba7755): the independent check V2 found the record a round behind the candidate it sat in (V2-B2), and round 6 takes every copy
+again at L4-E11's round 12.
+
+Round 6 (branch fnd/l8p2, the check V2's findings V2-B2 and V2-B3): task L4-E11's round 12 was on branch fnd/l4e11r11 at
+ac72e730855eea41f8b0e60deb4ffa4a3a90b617. Round 6 copied its four drafts (charger cc4aab01..., dd7 bc3fb88b..., aux 3d0a7b1d...,
+entry a859aa4a...) and its sections 20c, 20d, 20e, 22b, 22c, 22g and 22h (c860006f..., a5b5b306..., 9f3d4e01..., 583a346a...,
+a90a69fa..., 0595a5a2..., b65f1dcd...). THOSE COPIES ARE REMOVED IN ROUND 6b (git history keeps them: commit 8e6a938c): L4-E11
+moved one more round, and on the coordinator's merged candidate this record's own guard (stale_copies) fired.
+
+Round 6b (branch fnd/l8p2): task L4-E11's round 13 is on branch fnd/l4e11r11 at 4def597552c2039ccce1af5be111236948f4902b, not on
+main. Round 13 adds its section 23 (E11-29's measurement method; its 23g restates section 20c on Murata's printed points) and
+changes nothing else this record reads: of the eleven copies, ONE changed, section 20c; the four drafts and sections 20d, 20e,
+22b, 22c, 22g and 22h are byte for byte what they were at ac72e730 (the same sha256). Every copy is taken again at 4def5975 with
+`git show 4def5975:<path>` (the sections with `sed -n`) and is not edited; l8p_drafts.py refuses when a phrase no longer matches,
+and test_l8p compares every copy with records/l4e11/ wherever the tree holds L4-E11's round 10 or later (a copy that is not that
+tree's then fails).
+
+Full files at 4def5975 (sha256):
+  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md   e38a047cecf3d39e04a786255310ec0bab36054277c8c341235a091fa1a8ee75
+  v2/docs/records/l4e11/apply_gen_sch_a_charger.py       cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f
+  v2/docs/records/l4e11/apply_gen_sch_a_dd7.py           bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034
+  v2/docs/records/l4e11/apply_gen_sch_e_aux.py           3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+  v2/docs/records/l4e11/apply_gen_sch_e_entry.py         a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+
+Copies here (sha256):
+  l4e11r13-apply_gen_sch_a_charger-4def5975.py   cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f
+      v2/docs/records/l4e11/apply_gen_sch_a_charger.py at 4def5975, byte for byte (R-157; the same bytes as at ac72e730)
+  l4e11r13-apply_gen_sch_a_dd7-4def5975.py       bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034
+      v2/docs/records/l4e11/apply_gen_sch_a_dd7.py at 4def5975, byte for byte (R-217; R256 4.7 kOhm; the same bytes as at ac72e730)
+  l4e11r13-apply_gen_sch_e_aux-4def5975.py       3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47
+      v2/docs/records/l4e11/apply_gen_sch_e_aux.py at 4def5975, byte for byte (R-177; the same bytes as at a09e9a60 and ac72e730)
+  l4e11r13-apply_gen_sch_e_entry-4def5975.py     a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1
+      v2/docs/records/l4e11/apply_gen_sch_e_entry.py at 4def5975, byte for byte (R-123; the same bytes as at a09e9a60 and ac72e730)
+  l4e11-section20c-4def5975.md                   b3619bd411f5b64f2ae8efa3580041e2789513ccf5cda147b762df5cc4d2e9dc
+      L4E11-SOURCE-ONLY-AND-ENTRY.md lines 2124 to 2154: section 20c whole. CHANGED in round 13 (c860006f... at ac72e730): the
+      loop's reading at RT1 47 kOhm is withdrawn as a bound; board A's thresholds, the load on the return, the window and the
+      first inverter's band read as before
+  l4e11-section20d-4def5975.md                   a5b5b306dadd2a147dfc18acc3fc9f31f0ba97ec00f25859054507b45bf96241
+      lines 2155 to 2180: section 20d whole (the delays; unchanged since a09e9a60)
+  l4e11-section20e-4def5975.md                   9f3d4e017226d18f9579599137c132521094f976a48c01bd83e23b8dd61f9e3a
+      lines 2181 to 2201: section 20e whole (the static limit 0.846 mA, the bleed 1.218 s at the hot bound, the timing limit
+      520.7 uA; unchanged since ac72e730)
+  l4e11-section22b-4def5975.md                   583a346a0d2fa2119790f637ceb40bb90fb5cd9b05b806433fc5e960e66f9a45
+      lines 2442 to 2453: section 22b whole (the sources into CELL+, each labelled; the hot bound 434.8 uA; unchanged)
+  l4e11-section22c-4def5975.md                   a90a69fa982e8db857efc37aa00fc54063740f660061c9c60840eeffe41278ec
+      lines 2454 to 2485: section 22c whole (V2's three corrections on one basis; what the timing limit leaves the breaker pair;
+      unchanged)
+  l4e11-section22g-4def5975.md                   0595a5a24a5bbc34c1bb49fb5f464cf5e553f129fbf06dee098d0d145e3ee704
+      lines 2531 to 2548: section 22g whole (what stays open; E11-45 (f2) and (h); the paragraph for record l8p; unchanged)
+  l4e11-section22h-4def5975.md                   b65f1dcdb0f61d3cbceb955c4d4e14e82827ec0c596c3b3b6b85866f9652c15f
+      lines 2549 to 2575: section 22h whole (the minors; V2-m5: E11-29's coupon reads the PTC's site with one FET heated alone at
+      the worst split's 1.513 W; unchanged)
+  Not copied: section 23 (round 13's own; this record quotes nothing of it and names 23g by reference only).
+
+Read in rounds 5, 6 and 6b from this tree (no copy needed): Murata's PRF series sheet v2/vendor/battery/murata-prf-series.pdf (DM-SA16-E056
+Rev.1 201608, sha256 a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a, SOURCES.yaml entry pack-ptc-element) and
+TI's CSD18510Q5B sheet v2/vendor/battery/ti-csd18510q5b.pdf (SLPS632, March 2017), both committed.
+Held back, not committed (round 5): TDK's superior-series PTC sheet (B59421, B59641, B59721; August 2019), fetched by
+../fetch_held_back.py into v2/vendor/battery/held/ and checked there by sha256
+4d87b17891fa933f90d833e9cf8211e5ca2cc70911f43ea7bc513af7d8936955; round 6 reads its p.4 table and its p.29 reference table.
+
+Round 7 (5 October 2026, the check of record l9stk's guard selection G2 for finding L8P-F07; branch fnd/l9stk2 at 43da41ca, its
+round 4; read there with git show, copied here byte for byte, cited by commit as text only):
+  l9stk-section15.9-43da41ca.md                  fabaf09e34ff7ea1d3632d9148d7b033f245fe937ed289801d656bc527df1184
+      v2/docs/records/l9stk/L9-STACKUPS.md at 43da41ca, from the heading "### 15.9 The guard round" to the end of the page
+      (lines 1222 to 1341): the three approaches, G2's detail, the selection, the acceptance (a) to (c) and the correction scope
+  l9stk_guard-43da41ca.out.txt                   66ee65bd07ef3fc17aba3fcf790464240aebc46a1cc455867e0283b474ca6bab
+      v2/docs/records/l9stk/l9stk_guard.out at 43da41ca, whole (its sections 0 to 7; section 6 the selection and its acceptance)
+Held back, not committed (round 7): TI's LM26LV (SNIS144G) and TPS709 (SBVS186H) sheets, fetched by ../fetch_held_back.py into
+v2/vendor/ti/held/ and checked there by sha256 (e8ce79af... and 8c14e3ef..., the bytes record l9stk pins). Read from this tree
+(committed): AOS AO3400A v2/vendor/power/aos-ao3400a-n-mosfet.pdf (Rev 3.1, July 2023) and JSCJ 2N7002
+v2/vendor/power/jscj-2n7002-c8545.pdf.
+Round 7, the recheck V2R's V2R-m8 (the two copies of L4-E11 still at its round 9, outside the stale-copies guard): taken again
+at 4def5975 (L4E11_AT, the commit of every other copy) and listed in l8p_drafts.L4E11_SECTIONS, so the guard compares them with
+the tree's records/l4e11/ as it does the others. Round 9's copies (l4e11-section19h-e60a94a8.md, 270709638379...;
+l4e11-section15c-precharge-e60a94a8.md, ee11d230d11e...) are removed.
+  l4e11-section19h-4def5975.md                   b4bd0832b4f89385a94ddf08db6f8cf482ded968089f1dc3861337d505d8f051
+      L4E11-SOURCE-ONLY-AND-ENTRY.md at 4def5975, lines 1981 to 2073: section 19h whole. Against round 9's copy two notes were
+      added (the board A sensing superseded by round 10's section 20; the 47 kOhm point withdrawn as a bound by round 13, 23g);
+      every phrase l8p_drafts.py reads of it reads as before, so no figure of section 3b moved. The same bytes at 08f7e38a
+  l4e11-section15c-precharge-4def5975.md         ee11d230d11e1298e6ec49782e8890c669df1d7b1b573874b2e7b56b33d32146
+      the excerpt of section 15c (the precharge in LDO mode), word for word in the page at 4def5975 and at 08f7e38a: the same
+      bytes as round 9's copy, renamed to the commit it is now compared at
+Round 7 also read, for the tree's L4-E11 at round 14 (fnd/l4e11r11 at 08f7e38a, through git show into scratch, nothing copied
+for it): the eleven copies above and these two equal that page's sections and drafts (stale_copies() returns nothing there).
+Round 7, the recheck V2R's V2R-m9 (DELTA-02's defect class on board P): task L4-E11's method for paralleled FETs, read at its round
+14 (fnd/l4e11r11 at 08f7e38a; UNCHECKED: V2R confirmed method (B) as conditional and did not confirm round 13's fixture and pass
+rules, which round 14 answers and no check has read), copied for the restatement of E-8 and E-14 (a):
+  l4e11-sections23d-24b-08f7e38a.md              fb6624bfc910198af156a8b549f1c0b3d1f39674784ce813115ebcd887e18f74
+      L4E11-SOURCE-ONLY-AND-ENTRY.md at 08f7e38a: section 23d whole (the selection of method (B), SESSION, and the note that board
+      A's first prototype is no specimen until each gate branch has a removable link) then section 24b whole (the fixture as round
+      14 redrew it: SW_S, SW_B, each gate tied to its own drain tap, the interlock, the states and their margins)
+
+Round 8 (5 October 2026, board P round 8: the thermal guard's draft as record l9stk re-selected it, C4, for L8P-F07 and L8P-F08;
+branch fnd/l9stk2 at bb6d2c8f, its round 5; read there with git show, copied here byte for byte, cited by commit as text only):
+  l9stk-section15.9-bb6d2c8f.md                  08a656ab0230986dbac4ec0c33c7f6c00f876eecb5792cf0343591796093cb9b
+      v2/docs/records/l9stk/L9-STACKUPS.md at bb6d2c8f, from the heading "### 15.9 The guard round" to the end of the page
+      (lines 1224 to 1500): round 5's restatement after L8P-F08, the corrections C1 to C4 judged on one count, the two failure
+      modes, the state before tEN, the selection C4 (SESSION, unchecked), the acceptance (a) to (c) with the seven mutations of
+      L9S5-F1 and the correction scope
+  l9stk_guard-bb6d2c8f.out.txt                   d84dcb3bab2f1f6009eafa5aec98533d59ee9513e89f574595d7080020ffa79c
+      v2/docs/records/l9stk/l9stk_guard.out at bb6d2c8f, whole (its sections 0 to 7; 5b round 5's, 6 the selection restated)
+  l9stk-readme-round5-bb6d2c8f.md                03274200411401fe5cc48a3a75d4e2f51a9b8908c08e6dc84f34d174d37822c5
+      v2/docs/records/l9stk/README.md at bb6d2c8f, the section "Round 5" (lines 84 to 149): the status line, the table "L8P-F08
+      answered", the SESSION decisions and the findings for other authors (L9S5-F1 to L9S5-F5)
+The round 7 copies of 43da41ca stay: l8p_guard.py's sections 1 to 9 (round 7's check of G2) read them, and are history.
+Task L4-E11 at its round 14 (fnd/l4e11r11 at 08f7e38a), the drafts the brief names for the composition: apply_gen_sch_a_dd7.py
+(R256 at 4.7 kOhm, its round 12's value) and apply_gen_sch_a_charger.py, read with git show at 08f7e38a: sha256
+bc3fb88bae6a166fe1b15919410cace441806419f8e10c6711d03eddc9613034 and cc4aab01c30bd3c8a19bc51ab6d9ce4c5c477ced6bdd07ee063ff686b29e2a1f,
+the same bytes as the copies inputs/l4e11r13-apply_gen_sch_a_dd7-4def5975.py and inputs/l4e11r13-apply_gen_sch_a_charger-4def5975.py
+above; so those copies ARE the 08f7e38a drafts, and are used as they are (no second copy). Every copied section of L4-E11 above is
+also word for word in its page at 08f7e38a (checked in round 8 as in round 7).
+Read in round 8 from this tree (committed): Diodes' BZT52C sheet v2/vendor/diodes/diodes-bzt52c-ds18004.pdf (DS18004 Rev 38), for
+FM2's clamps, and JSCJ's 2N7002 sheet as in round 7. Held back as in round 7: TI's LM26LV and TPS709 sheets.

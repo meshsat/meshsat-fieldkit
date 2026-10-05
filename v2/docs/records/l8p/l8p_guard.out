@@ -1,0 +1,185 @@
+l8p_guard: record l9stk's guard selection G2 CHECKED before any draft (record l8p round 7, MESHSAT-1357, 5 October 2026;
+case row C-PROT rev 1). Desk arithmetic on the makers' sheets and the records' copies; nothing was built, bought or measured.
+LABELS: PRINTED a maker's printed limit; TYPICAL a maker's typical figure or curve; ASSUMED; DERIVED this script's arithmetic; RECORD
+another record's figure, read from its copy.
+
+0. PINS (sha256/16)
+   66ee65bd07ef3fc1  v2/docs/records/l8p/inputs/l9stk_guard-43da41ca.out.txt
+   fabaf09e34ff7ea1  v2/docs/records/l8p/inputs/l9stk-section15.9-43da41ca.md
+   b3619bd411f5b64f  v2/docs/records/l8p/inputs/l4e11-section20c-4def5975.md
+   a96099193dd92e8e  v2/docs/records/l8p/inputs/l9stk-section15-0d72880b.md
+   fb6624bfc910198a  v2/docs/records/l8p/inputs/l4e11-sections23d-24b-08f7e38a.md
+   a8dde54ce6970d68  v2/docs/records/l8p/l8p_drafts.out
+   e8ce79af19c668cb  v2/vendor/ti/held/ti-lm26lv-snis144g.pdf  (held back, fetch_held_back.py)
+   8c14e3efae738a27  v2/vendor/ti/held/ti-tps709-sbvs186h.pdf  (held back, fetch_held_back.py)
+   9c60d0b6c1ddc760  v2/vendor/power/aos-ao3400a-n-mosfet.pdf
+   7941fb423af7c6c6  v2/vendor/power/jscj-2n7002-c8545.pdf
+   d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
+   cb747de812f66859  v2/vendor/battery/ti-csd18510q5b.pdf
+   596555c33dce1fca  v2/vendor/battery/ti-csd17570q5b.pdf
+   e531190bb1b325c1  v2/docs/records/l8p/l8p_guard.py
+
+1. WHAT RECORD l9stk STATES OF G2 (RECORD: its l9stk_guard.out and page 15.9 at 43da41ca, copied)
+   the 130 C preset: no trip under 127.8 C, surely tripped from 132.2 C, resets between 122.3 and 127.7 C
+   margins: 38.4 K at 10 A (junction 89.4 C), 9.8 K in the 18 A service (118.0 C); at the gauge's condition C4 (121.8 C) 6.0 K
+   the gradient left on the worst split 15.68 K (two FETs carrying all 13.56 K); the junction's lead 2.12 K (4.24 K), Rth(j-mb) 1.4 K/W
+   the guard's draw 18.25 uA against 30 uA; the regulator in regulation from BRK_VIN 9.68 V; the shunt's off leakage 5 uA at 55 C
+     PRINTED, 43.6 uA at 86.25 C ASSUMED, counted on the return
+   its predicate: "the loop with the fixed resistor keeps the first inverter on, the held reading, the window and the gates at
+     every voltage: yes"; its acceptance (c): "so a ramping loop (a docking, the gauge's wake, a back-fed precharge) is never
+     read held"; its window check: "RET/OUT closed 0.590 against 0.4603" (the closed loop's ratio)
+
+2. THE SWITCH ON ITS SHEET: TI LM26LV, SNIS144G (July 2007, revised September 2016); held back
+   PRINTED: trip point accuracy -2.2 to +2.2 C at TA 0 to 150 C and VDD = 5 V (6.8; the only condition it is printed at)
+     the 130 C preset: no trip under 127.8 C, surely tripped from 132.2 C; hysteresis 4.5 to 5.5 C (6.6, over VDD 1.6 to 5.5 V and -50 to
+     150 C): resets between 122.3 and 127.7 C                                                     record l9stk's figures: REPRODUCED
+   PRINTED: supply 1.6 to 5.5 V recommended, 6 V absolute; IS 16 uA at most over -50 to 150 C and 1.6 to 5.5 V; TJ(MAX) 155 C
+   PRINTED: OVERTEMP (pin 5) active high, push-pull: VOH at least VDD - 0.2 V sourcing up to 780 uA (VDD 3.3 V or more); VOL at most
+     0.2 V sinking up to 385 uA; the open-drain output (pin 3) is active LOW and needs a pull-up: it is not the one to use
+   PRINTED: outputs enabled 2.3 ms at most after VDD passes 1.3 V (tEN); their state before that is NOT PRINTED (taken as high, the
+     worse side for a false hold); TRIP_TEST asserts both outputs, read high from VDD - 0.5 V, 2.5 uA at most into it, and puts VTRIP
+     on VTEMP: 0.958 V for a 130 C preset (Table 1, gain 4: a check in place that the part is the 130 C preset)
+   PRINTED: the thermal pad may float (for noise, to ground); RthJA 100.7 C/W: its own heating at 5 V and 16 uA 0.008 K (DERIVED)
+   orderable table: LM26LVQISDX-130/NOPB Active; LM26LVQISD-130/NOPB Obsolete; LM26LVCISD-125/NOPB Active                REPRODUCED
+   NOT PRINTED: the trip point at any VDD but 5 V; record l9stk writes "at a 5 V supply", which is the condition, not a range
+
+3. THE REGULATOR ON ITS SHEET: TI TPS70950 (TPS709 family, SBVS186H, March 2012, revised July 2021); held back
+   PRINTED: input 2.7 to 30 V recommended, 32 V absolute, against the loop's 29.2 V clamp: holds; TJ recommended to 125 C
+   PRINTED: the table's conditions are TA -40 to +85 C, VIN = VOUT(typ) + 1 V (6.0 V here), IOUT = 1 mA "unless otherwise noted"
+     DC accuracy +-1 % (VOUT 3.3 V or more): 4.95 to 5.05 V; line regulation 10 mV at most from 6.0 to 30 V; load regulation 50 mV
+     at most from 100 uA to 150 mA; dropout 500 mV at most at 50 mA (TPS70950); start 1.5 ms at most (VOUT over 3.3 V, 47 ohm load)
+     ground current 2.25 uA at most at IOUT = 0 (VOUT over 3.3 V), at the table's VIN of 6.0 V: NOT PRINTED at 7.6 V (in dropout),
+     10.6, 16.8 or 29.2 V. TYPICAL: Figure 6-15 (the TPS70933, EN open) draws it flat at about 1.3, 1.75 and 2.25 uA (-40, 25,
+     85 C) from about 8 V to 30 V; Figure 6-16 rises by microamps per milliampere of load; the dropout's ground current is described
+     ("limits the increase") and not printed (read on the page image by this record; TYPICAL, not a limit)
+   PRINTED: EN may float (a 300 nA pull-up; never tied to IN, its 6.5 V clamp); COUT 1.5 uF effective or more, ESR 0.2 ohm or less;
+     an input capacitor is needed for line transients over 10 V (DOCK_EN_OUT steps from 0 to the loop's level at every docking)
+   the guard's input current at the switch's 16 uA: 18.25 uA PRINTED at VIN 6.0 V and IOUT 1 mA's table (record l9stk's 18.25 uA:
+     REPRODUCED as a figure; its conditions are the table's, so at the loop's voltages it is the TYPICAL curve's, inside the 30 uA
+     allowance with 11.75 uA to spare); the output at 16 uA is under the load regulation's printed 100 uA: its accuracy there NOT PRINTED
+   the dropout at the guard's microamps: not printed; 7.3.2 says it "approximately scales with the output current" (a description, not a
+     limit), so the printed 500 mV at 50 mA is a bound there (record l9stk takes it so)
+   the regulation threshold: record l9stk takes VOUT + 1 % + the dropout bound, 5.55 V on DOCK_EN_OUT; the table's own condition for
+     the printed accuracy is VIN at least 6.0 V
+
+4. THE SHUNT ON ITS SHEET: AOS AO3400A, Rev 3.1 (July 2023), committed
+   PRINTED: VDS 30 V (the return's clamp 17.4 V: holds); VGS +-12 V against the switch's 6.0 V: holds; threshold 0.65 to 1.45 V at
+     250 uA and 25 C only; RDS(on) 32 mOhm at most at VGS 4.5 V, 48 mOhm at 2.5 V; IDSS 5 uA at most at 55 C and VDS 30 V
+   on: the switch's VOH at least 4.75 V with VDD at its least 4.95 V (DERIVED), over the 4.5 V row and inside VGS: holds (a gate
+     filter's divider must keep it over 4.5 V, or over 2.5 V for the 2.5 V row)                          record l9stk: REPRODUCED
+   off: the switch's VOL at most 0.2 V against the least threshold 0.65 V at 25 C: holds at 25 C; hot NOT PRINTED (the threshold falls
+     with temperature); the subthreshold current at VGS 0.2 V NOT PRINTED (IDSS is printed at VGS 0 only)
+   off leakage on DOCK_EN_RET: 43.6 uA at 86.25 C (record l9stk's site, ASSUMED doubling every 10 K from 55 C), 21.8 uA at the 76.25 C air
+     (DERIVED); record l9stk's 43.6 uA: REPRODUCED
+
+5. THE LOOP WITH G2 (DERIVED; R106 10 kOhm, R107 22 kOhm and the fixed 15 kOhm each 1 % at its worse sign, ASSUMED for R106 and R107;
+   board A's 984 kOhm on DOCK_EN_OUT and 2 uA on DOCK_EN_RET, RECORD L4-E11 20c; board P's Q107 80 nA, the 2N7002's printed IDSS;
+   the guard at its 30 uA allowance on DOCK_EN_OUT; the shunt's 43.6 uA on DOCK_EN_RET (5 below at the air); the first inverter Q103's
+   gate on DOCK_EN_RET, 1.0 to 2.5 V, PRINTED; the breaker runs from PORIT 7.6 V, PRINTED)
+   (a) ON: the first inverter's gate, closed, at its least, against 2.5 V
+       BRK_VIN   7.6 V: the gate  2.82 to  3.60 V; DOCK_EN_OUT closed  5.47 to  6.00 V  (l9stk: 2.82 to 3.60 V)  holds
+       BRK_VIN  10.6 V: the gate  4.20 to  5.01 V; DOCK_EN_OUT closed  7.81 to  8.37 V  (l9stk: 4.20 to 5.01 V)  holds
+       BRK_VIN  16.8 V: the gate  7.05 to  7.95 V; DOCK_EN_OUT closed 12.64 to 13.26 V  (l9stk: 7.05 to 7.95 V)  holds
+       BRK_VIN  29.2 V: the gate 12.74 to 13.81 V; DOCK_EN_OUT closed 22.30 to 23.05 V  (l9stk: 12.74 to 13.81 V)  holds
+   (b) HELD at 7.6 V: board P's detector (or board A's Q44) holds DOCK_EN_RET at 0 to 0.055 V; DOCK_EN_OUT must read powered (over 1.981 V)
+       at the 30 uA allowance: 4.317 V, holds; any draw under 421 uA holds it (DERIVED): the regulator is in dropout there (DOCK_EN_OUT
+       4.32 V), where its ground current is not printed; TI describes it as limited                                    holds
+   (c) OFF, TRIPPED: the shunt carries DOCK_EN_OUT's current through the fixed resistor; the return, against 1.0 V (the first inverter)
+       and 0.7755 V (board A reads held)
+       BRK_VIN   7.6 V: the return 0.020 mV, DOCK_EN_OUT  4.32 V (read powered: DD-7 reads held + powered), the shunt 0.31 mA  (l9stk: 0.010 mV, 4.32 V, 0.31 mA)  holds
+       BRK_VIN  10.6 V: the return 0.027 mV, DOCK_EN_OUT  6.09 V (read powered: DD-7 reads held + powered), the shunt 0.43 mA  (l9stk: 0.014 mV, 6.09 V, 0.43 mA)  holds
+       BRK_VIN  16.8 V: the return 0.044 mV, DOCK_EN_OUT  9.76 V (read powered: DD-7 reads held + powered), the shunt 0.68 mA  (l9stk: 0.022 mV, 9.76 V, 0.68 mA)  holds
+       BRK_VIN  29.2 V: the return 0.076 mV, DOCK_EN_OUT 17.09 V (read powered: DD-7 reads held + powered), the shunt 1.18 mA  (l9stk: 0.038 mV, 17.09 V, 1.18 mA)  holds
+   (d) THE SUPPLY: the least BRK_VIN at which DOCK_EN_OUT reaches the regulator's input condition
+       record l9stk's (VOUT + 1 % + 500 mV), 5.55 V: closed from 7.70 V, tripped from 9.68 V
+       the table's (VOUT(typ) + 1 V), 6.0 V: closed from 8.28 V, tripped from 10.45 V
+       record l9stk's 9.68 V is the tripped figure on its criterion (this record: 9.68 V): REPRODUCED. Closed (the state that trips) the
+       regulator meets the table's condition from 8.28 V, under the pack's 10.6 V: every trip in the service is judged at VDD 5 V.
+       Tripped, it meets it from 10.45 V; under that the switch holds its output on less than 5 V (it runs from 1.6 V), so the RESET
+       point after a trip below 10.45 V is not printed; the next trip, with the loop closed again, is (a restart point, not the protection)
+   (e) THE WINDOW (L4-E11 20c: "A ramping closed loop never reads held while RT1 is under 25.8 kOhm (RET/OUT over 0.4603 when OUT
+       reads powered)"; "a trigger there stops a dead pack's precharge"). Board A reads OUT powered from 1.825 V at least (1.981 V at most)
+       and RET held under 0.7755 V at least (closed over 0.84 V at most); a ramp is never read held only if RET stays over 0.84 V
+       wherever OUT reaches 1.825 V. 25.8 kOhm is a ratio bound (22 / (22 + RT1) at 0.4603): it counts no sink on the return.
+       the sink the return may carry, the fixed resistor at +1 % and R107 at -1 %: 26.45 uA (DERIVED)
+       U48's SENSE1 (RECORD 20c) and board P's Q107 (PRINTED, 25 C)             2.1 uA: RET 1.058 V at OUT 1.825 V  holds
+       those and the shunt at the 76.25 C air (ASSUMED doubling)               23.9 uA: RET 0.863 V at OUT 1.825 V  holds
+       those and the shunt at record l9stk's 86.25 C site (ASSUMED doubling)   45.7 uA: RET 0.668 V at OUT 1.825 V  FAILS
+       SENSE1, Q44 and Q107 at the air on the same doubling (no guard)          7.6 uA: RET 1.009 V at OUT 1.825 V  holds
+       those and the AO3400A at the air                                        29.4 uA: RET 0.814 V at OUT 1.825 V  FAILS
+       at record l9stk's site the return reads 0.770 V even at the most favourable corners (OUT 1.981 V, held under 0.7755 V, every part
+       nominal): read HELD. A closed loop ramping through DOCK_EN_OUT 1.825 to 2.12 V may read held (2.12 V is where the return passes
+       0.84 V); the shunt's site keeps the window only under 77.9 C on the assumed doubling (1.6 K over the 76.25 C air), and, with
+       the same doubling applied to Q44 and Q107 at the air (7.6 uA before the guard), only under 74.2 C: under the air itself
+       record l9stk's predicate "the window ... at every voltage: yes" and acceptance (c) "a ramping loop ... is never read held":
+       NOT REPRODUCED on its own leakage figure. Its window check compares the CLOSED loop's ratio (0.590) with 0.4603; the window is a
+       ramp's reading at OUT 1.825 V, where a constant sink on the return weighs most. The gate filter it names keeps the shunt OFF in a
+       ramp; the shunt's OFF leakage is what moves the return. The leakage at the ramp's VDS of about 0.84 V is NOT PRINTED (AOS prints
+       IDSS at VDS 30 V): the 30 V row is taken as the bound, as record l9stk counts it; a lower figure there is a physical question
+
+6. C-PROT rev 1 ON THE SWITCH'S PRINTED LIMITS (independent of section 5's finding; the junction's reading taken for the switch's
+   temperature, the hot side for the no-trip judgement, RECORD l9stk 15.5)
+   no trip at 10 A held: 89.4 C against 127.8 C, 38.4 K; in the 18 A service read as held: 118.0 C, 9.8 K                 REPRODUCED
+   the gauge's condition C4 (an indicated 18 A a true 18.80 A, the rise scaled by the current's square): 121.8 C, 6.0 K       REPRODUCED
+     that scaling holds RDS(on) at its 118.0 C value; the resistance rises with the junction, so the reading is somewhat higher
+     (not bounded here: Nexperia's sheet is not held by this record)
+   the trip: surely tripped from 132.2 C at the die; the hottest junction leads its mounting base by 2.12 K (worst split), 4.24 K (two
+     FETs carrying all): the mounting base may lead the switch's die by 15.68 K (13.56 K) before a junction passes 150 C       REPRODUCED
+     that gradient is a LAYOUT and physical condition (E-13), unbounded on the desk
+
+7. VERDICT AND THE STOP
+   NOT CONFIRMED, one figure: G2 as selected (the AO3400A on DOCK_EN_RET, the fixed 15 kOhm) keeps L4-E11 20c's window only while the
+   shunt's site stays under 77.9 C on the assumed doubling; at record l9stk's own 86.25 C site the sinks on the return are 45.7 uA against
+   the 26.4 uA the window allows, and a ramping closed loop reads held (finding L8P-F08, OPEN). Every other figure of record l9stk this
+   script reads REPRODUCES (sections 2 to 6), with three relabellings: the trip accuracy is printed at VDD 5 V only; the regulator's
+   ground current is printed at the table's VIN 6.0 V only (TYPICAL elsewhere); its accuracy is printed from 100 uA of load.
+   As the brief orders, the draft STOPS here: no apply script is written for G2 in this round (a negative check of this solution, the
+   first). L8P-F07 stays OPEN.
+   The smallest correction scope for the selection's owner (DERIVED, NOT DRAFTED, NOT CHECKED; one of these, each a material change):
+     (i)   a shunt of lower leakage: the kit's 2N7002 (Q44's and Q107's part) prints IDSS 80 nA at 60 V (25 C); on the same doubling
+           5.58 uA at 86.25 C, 7.7 uA on the return in all against 26.4 uA (13.2 uA with Q44 and Q107 at the air on that doubling too);
+           it keeps the window for a shunt site up to 103.8 C on that count; its on-resistance is printed at VGS 5 V (7 ohm at most) and 10 V
+           only, where the switch drives 4.75 V: tripped, the return 16.5 mV at 29.2 V with 14 ohm hot (a bound under 5 V, ASSUMED)
+     (ii)  the fixed resistor at most 11.57 kOhm nominal with the AO3400A at 86.25 C (DERIVED, +1 %), 11 kOhm in E24: tripped, the regulator
+           then meets the table's condition only from 11.93 V, over the pack's 10.6 V, so a trip low in the service holds on under 5 V;
+           with Q44 and Q107 counted hot too, at most 10.86 kOhm
+     (iii) the shunt's site bounded under 77.9 C (a layout condition, 1.6 K over the air), with the leakage's doubling still ASSUMED;
+           with Q44 and Q107 counted on the same doubling the bound is 74.2 C, under the 76.25 C air: NOT AVAILABLE on that count
+   The trip and no-trip sides on the case row (section 6) do not depend on this choice.
+
+8. DELTA-02'S CLASS ON BOARD P (the recheck V2R's V2R-m9; INFERRED unless labelled): three bench items name the body diode's VSD
+   method on FETs that share drain and source, where neither a per-device power nor a per-device junction reading is defined
+   E-14 (a): Q101 and Q102 (CSD18510Q5B) share BRK_SNS, PACK_P and BRK_GATE; E-8: Q1 and Q109 (CSD17570Q5B) share SCP_OUT and SW,
+     their gates apart (the gauge's CHG, U105); Q2, alone between SW and BRK_VIN, is a device of its own; E11-45 (c): L4-E11's item
+   what such an item reads as written: the pair's own drop at a common voltage (a pair calibrated as a pair in an isothermal oven
+     reads a temperature BETWEEN its two junctions, since at one voltage the hotter diode carries more: a lower bound for the hotter);
+     and the pair's total power exactly (the current times the common drop); never either device's power or junction
+   what it can bound if the item adds a reading of the two mounting bases' difference dT_mb: the hotter junction at most the pair's
+     reading + RthJC x the pair's total power + dT_mb, RthJC 0.8 K/W at most (PRINTED, CSD18510Q5B SLPS632 and CSD17570Q5B, each 0.8)
+     E-14 (a) below the band's top 1.213 A, VSD at most 1.0 V (PRINTED at 32 A, a bound at an ampere): 1.213 W, 0.97 K + dT_mb
+     E-8 at 23.93 A held, Q109's 0.724 W (RECORD, this record's section 3c; with CHG on the pair shares it): 0.58 K + dT_mb
+   the per-device method that bounds each without dT_mb: L4-E11's method (B) (round 13 23d, its fixture as round 14 redrew it, 24b;
+     fnd/l4e11r11 at 08f7e38a, copied; UNCHECKED: the recheck V2R confirmed (B) as conditional and found round 13's fixture and pass
+     rules not ready, which round 14 answers and no check has read): each gate apart, one channel heated at a time, each junction read
+     by that FET's own threshold; written for Nexperia's P-channel BUK6Y10-30P on board A. Board P's pairs are TI N-channel parts:
+     Q1 and Q109 have their gates apart already, Q101 and Q102 share BRK_GATE, so a specimen with a link in each gate branch (not
+     drafted). No third fixture is written here
+
+9. PREDICATES
+   the 130 C preset's printed band is 127.8 to 132.2 C and its resets 122.3 to 127.7 C, as record l9stk prints                      yes
+   the trip accuracy is printed at VDD 5 V only                                                                                     yes
+   the switch and the regulator draw 18.25 uA at their printed maxima, under the 30 uA allowance                                    yes
+   the regulator's input range covers the 29.2 V clamp                                                                              yes
+   the switch's least VOH is over the AO3400A's 4.5 V row and inside its VGS                                                        yes
+   the first inverter is on at 7.6, 10.6, 16.8 and 29.2 V, closed                                                                   yes
+   a held DOCK_EN_OUT reads powered at 7.6 V                                                                                        yes
+   tripped, the return is under 1 V and board A's held reading, and DOCK_EN_OUT reads powered, at every voltage                     yes
+   closed, the regulator meets its table's VIN condition under the pack's least 10.6 V                                              yes
+   the shunt's off leakage is record l9stk's figure at its site                                                                     yes
+   L4-E11 20c's window holds with the return's sinks before the guard                                                               yes
+   L4-E11 20c's window holds with the AO3400A at record l9stk's site (G2 as selected)                                               NO
+   L4-E11 20c's window holds with Q44 and Q107 at the air on the doubling, no guard                                                 yes
+   the 2N7002 shunt at record l9stk's site keeps the window with Q44 and Q107 counted hot too                                       yes
+   C-PROT's no-trip side is printed at 10 A and in the 18 A service, and at condition C4                                            yes
+   C-PROT's trip side leaves the gradient record l9stk prints                                                                       yes
+   both TI FETs of board P's paired items print RthJC 0.8 K/W at most                                                               yes

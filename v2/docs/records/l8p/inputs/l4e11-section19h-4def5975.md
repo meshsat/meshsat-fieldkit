@@ -1,5 +1,9 @@
 ### 19h. DD-7: the latch-off breaker, the input-return reset and the hardware charge inhibit
 
+**Superseded in its board A sensing by round 10 (section 20):** the loop's sense (Q47 on half of DOCK_EN_OUT) and the dead point
+(Q48 on half of CELL+) below are round 9's; record l8p's L8P-F04 and L8P-F05 found them failing, and section 20 redraws them. The
+input-return reset and Q49 stand.
+
 **The change** (record l9stk 15.4b, read at `0d72880b`, the coordinator's addition): the automatic-retry LM5069-2 fails its own breaker FET under
 a persistent fault (0.79 of the derated SOA in a hard short; over 150 C in a resistive fault on VSYS), so board P's breaker is now the
 **latch-off LM5069-1**. After a trip it stays off until its UVLO or its VIN cycles; on battery the kit goes dark. **DD-7** (owners board
@@ -43,7 +47,8 @@ FETs off, the pack absent, undocked) a pack's wake and precharge pass the breake
 charge direction), and source-only operation (U-04) is untouched.
 
 **The loop's load** (an interface effect for records l9stk and l8p): the 2 MOhm sense at DOCK_EN_OUT moves the first inverter's gate at
-l9stk's bound point (10.6 V, RT1 at 47 kOhm) from 2.952 V to 2.939 V against its 2.5 V threshold.
+l9stk's bound point (10.6 V, RT1 at 47 kOhm) from 2.952 V to 2.939 V against its 2.5 V threshold (47 kOhm is not a point of this
+part: withdrawn as a bound by round 13, 23g).
 
 **E-14, extended to a second latch with the input present.** With the inhibit, the charge into a latched breaker is the battery FETs' off
 leakage (IDSS 1 uA at 25 C each; the hot value not printed). Without it, at the breaker FET's VSD 1 V and IF-2's 52.5 C/W, held:
@@ -85,3 +90,4 @@ resistive fault (route R1, owner board P's generator with record l9stk; R2 this 
 draft is a new apply script in this record: L4-E9's change list gains it after record l8p's PTC draft (the integrator's).
 
 Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only.
+
