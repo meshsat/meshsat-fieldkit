@@ -99,13 +99,27 @@ INPUTS (sha256, the first 16 hex digits)
       current and the trip reads the same bank: SELECTED (below). The INA169's differential is rated +2 V / -40 V (SBOS181F p.4,
       PRINTED), seven times U5's, and its rows are printed over VSENSE 10 to 150 mV (gm 990 to 1010 uA/V, offset +-1 mV,
       nonlinearity +-0.1 %), where A7's are printed only at 50 mV.
+      (C3) the same INA169 reading the drafted RSENSE1 instead of A7 (R59 and the accepted split kept, R16 31.6k): the regulation
+      stays independent of the trip and the accepted M2 topology is kept (filtered peak 0.0593 A at 2121 Hz against its own
+      independent margin 0.1615 A); in the fault case U23's differential is the record's U5 budget, -3.463 to +1.447 V at the
+      envelope's least loop, -0.302 to +0.259 V at the reference loop, inside the INA169's +2 V / -40 V at every loop (its 1.8 V
+      line held); in normal operation RSENSE1's own current never reverses, but its 5 nH puts negative spikes across the pins, and
+      the average U23 regulates on reads high by +0.09 % at the INA169's typical bandwidth, +0.78 % at three times it, +7.14 % at
+      ten times it and +10.06 % if it followed every edge: the regulation's accuracy then rests on a bandwidth printed only as
+      typical. C2's own average, the same way (the bank at 5 nH, no sharing credited): +0.11 / +0.00 / +0.02 / +1.34 % (the bank's
+      current is smooth at the 25 V corner).
 
   THE SELECTION (SESSION, the owner's rule: the simplest supported correction with useful margin and the fewest new uncertain dependencies): (C2).
   It removes U5's absolute-rating violation of D-10 and D-16's operating-range exceedance by construction, at every source loop,
   with no new loop dependency; it adds one part the design already carries (an INA169) and one 100 nF, removes one (RSENSE1, whose
   inductance no maker prints) and changes two values; its one new unprinted term (A7's own output at zero differential) can only
-  lower the regulation, never raise it (section 2h). Reversal: the drafted RSENSE1 arrangement returns only with a measured or
-  maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.
+  lower the regulation, never raise it (section 2h). Over (C3): C2's averaging does not depend on the amplifier's unprinted
+  bandwidth and its CS101 margin is 2.3 times C3's; C3 keeps the regulation independent of the trip and holds U23's rating at the
+  envelope's least loop, where the port itself fails (section 3). The price of C2, stated: the regulation and the 100 W trip share
+  the bank, so a short across the bank, which already defeats the trip (the record's single-fault list), now also defeats the
+  regulation (never credited for the 100 W bound); Layer 8's fault table carries it. Reversal: to (C3), the same draft with U23 on
+  R59's pads and R59 kept, if Layer 8's fault analysis rules the shared shunt out; the drafted RSENSE1 with A7 returns only with a
+  measured or maker-stated bound that keeps U5's pins inside +-0.3 V for the declared envelope.
 
 2. THE SELECTED CIRCUIT (C2) ON BOTH CASES
   2a COMPOSITION, NETLIST AND MUTATIONS. Board E's generator composed in L4-E9's change-list order with the draft after the solar
@@ -146,6 +160,8 @@ INPUTS (sha256, the first 16 hex digits)
      stays over the recommended 80 V row (L6P-F10, OPEN, unchanged by this round). At the envelope's least loop the port's own
      ratings fail as they did (PV_F 321.9 V; the bank 2.57 V, over U18's and U23's +2 V): that is the guard-on event's port-level
      residual, section 3.
+     The other ratings at the reference loop on the selected circuit: PV_F's slew 26.6 V/us (54), EN/UVLO 12.31 V (18), PV_P 29.25
+     V (45: the bulk's 50 V, U18's and U23's common mode), PV_F's least 7.46 V (-1): all inside their lines.
      INP with R97 24.9k (0.1 %, 25 ppm/K): its divider's highest ratio 0.19968 (was 0.21909), so INP stays at or under 18 V for
      every PV_F up to 90.1 V, past PV_F's own 90 V exclusion line: INP no longer fails anywhere PV_F holds. The cold connection's
      INP at its worst (PV_F 84.62 V): 16.90 V (was 18.54 V). U21 turns on by 10.05 V at the most (V(INP_H) 2.0 V, PRINTED; was
