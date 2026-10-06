@@ -81,6 +81,30 @@ two modules read 24 passed before the fill and after each run; with the four pag
 (stand-in values for set 31's ADOPTION and GATE) `test_patch32` read 9 passed, and with these rows applied to them 9 passed. AI
 work, not a qualified review; no page of the tree was edited.
 
+**How the rows were checked again (W102, 7 October 2026, from 00:18 CEST).** On this branch `test_patch32` reads main's pages at
+`ad757edb` with the pins and step a5 in memory; those four pages equal, byte for byte, the pages of a scratch clone of W102's own
+built as set 32's chain builds them (set 31's promoted `5f25daf3`, main `ad757edb` merged as step a1, the five pins with this
+branch's checkpoint `57634a8e` for fnd/res32, fnd/w34pdftext's one conflict in the annex taken as ours in the clone only, step a5
+run), where U-16's old text stands on line 414. In that clone, with stand-in commits for the re-key, the candidate and the
+adoption: before the fill `test_patch32`, `test_res32` and `test_public_hygiene` read 11, 15 and 4 passed; the fill tool's template
+read 97 rows, and its dry run with a one-part value for P-01's candidate_guard line printed the three-host NOTE for that line; the
+first run applied 79 lines with 3 ADOPTION occurrences deferred, and the three modules read 30 passed; with the 38 rows applied the
+three modules read 30 passed and set 31's page tests failed as the next paragraph lists; the second run applied 3 lines, after which
+`test_patch32` refused S-07 and U-05 (the pages' two ADOPTION cells, W99's B2) until those two cells were filled by hand with the
+second run's value, then 30 passed; a third run refused (exit 2). AI work, not a qualified review; no page of the tree was edited.
+
+**The tests the rows break (W99's C6).** Applied to the integrated tree, the rows break these tests of set 31's pages, each to be
+restated at the adoption with the row that moves the line it pins as its basis (as W65 restated set 30's for set 31): test_adopt31,
+5 (`t_every_dated_citation_resolves_and_its_quote_is_found`, `t_the_checkers_refuse_their_defects`,
+`t_the_claims_are_the_assessments_lines_verbatim`, `t_the_plan_entry_is_one_and_last`,
+`t_the_set_31_blocks_sit_first_under_their_headings`); test_entrypage, 3
+(`t_a_filled_placeholder_names_one_promoted_commit_and_the_adopted_files`, `t_every_section_a_page_points_to_exists`,
+`t_the_six_states_stand_apart_in_each_page`); test_w30entry, 2 (`t_every_placeholder_is_filled_with_the_promoted_commit`,
+`t_the_revision_rows_name_the_promoted_commit`); test_lstat31, 1
+(`t_each_block_sits_between_its_heading_and_its_set_29_block_and_no_other_layer_has_one`). test_lstat32 and test_res31 hold. A sixth
+of test_adopt31's, `t_the_entry_pages_are_the_copies_with_every_row_applied`, already fails on the integrated tree before any row of
+set 32 (W99's N1, the coordinator's queue item Q-123) and is not counted among the five.
+
 ## START-HERE.md
 
 ### S-01. `v2/docs/handover/START-HERE.md`, line 3: the current revision
@@ -503,8 +527,8 @@ New text:
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.
 - **Set 32, the revision `__CANDIDATE__`, dated by its adoption commit** (section 0). An adoption of record text and record tooling
   over set 31: the makers' PDF text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the
-  sheet and re-taken after the fetch: 57 texts), the verdict words attributed to their checks,
-  the ZIP's cap, N1a's phrase in V-E16 row 3, record l4e7's cache KEY on the sixteen numbers it reads, ONE re-key, regenerated
+  sheet and re-taken after the fetch: 57 texts), the verdict words attributed to their checks, the ZIP's cap, N1a's phrase in V-E16
+  row 3, record l4e7's cache KEY on the sixteen numbers it reads, ONE re-key, regenerated
   (`v2/docs/records/int32/RESULT.md`). No circuit change is applied, and nothing in it accepts, closes or promotes a design claim;
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.
 ```
