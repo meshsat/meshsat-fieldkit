@@ -7,11 +7,13 @@ verdicts as given (W36, W52, W64, W70: AI reviews, not qualified ones), the coor
 re-key set 32 is planned to carry and why one, the dry runs as logged, the compute already spent that set 32 does not reuse, the three
 claims as the assessment gives them, the classification bound; W75's independent read of it answered by W78 (row 15 `REVIEWED-INPUT
 CHANGED` by the coordinator's ruling on W75's F2); W79's recheck answered by W80 (`test_res32.py` holds through the fill); W81's four commits on fnd/w34pdftext added by W85 (rows 13.1
-to 13.4, none `REVIEWED-INPUT CHANGED`, read by no independent reader). **NOT DONE:** everything the integration will give: set 31's promoted
+to 13.4, none `REVIEWED-INPUT CHANGED`, read by no independent reader); W95's rows that bring the four adoption pages to set 32,
+`v2/docs/records/int32/ENTRY-PAGES.patch.md` (held by `test_patch32.py` against the pages as set 31's adoption leaves them, section 7). **NOT DONE:** everything the integration will give: set 31's promoted
 revision (set 32's base), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
 promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
-**NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files (`<worktrees>/_bin/fill_res.py --set 32`:
-template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), writes
+**NEXT:** at the adoption, in this order: the coordinator runs the fill tool on both files and the patch file they name (`<worktrees>/_bin/fill_res.py --set 32`:
+template, values, apply; ADOPTION in its second run; `test_res32.py` holds this file before the fill and after each run, W80), applies
+the patch file's rows to the four pages (W95; restating the tests that pin the replaced lines), writes
 the classification's row 31 in full (it carries no token) and its rows 32 and 33's other cells from git by hand, recomputes its section
 2, extends the ranges of `test_res32.py` over the integration's commits, and adopts this file with `CLASSIFICATION.md`.
 
@@ -421,6 +423,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 | W36's, W52's, W64's and W70's reports as received; W37's plan draft; the chain, its README and W66's dry run logs | `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w52rev32b/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w64revkey/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/int32/PLAN.draft.md`, `<worktrees>/_runs/int32/README.md`, `<worktrees>/_runs/int32/chain.sh`, `<worktrees>/_runs/int32/dryfull-1955-wpb.log` | outside the repository; cited, never copied (they carry host paths) |
 | Set 31's records | `v2/docs/records/int31/RESULT.md` and `CLASSIFICATION.md` on fnd/res31 `4196e9df` and later | adopted at set 31's promotion; not in this record's branch history |
 | The assessment and the three claims | `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` | in this branch's history since main's adoption was merged into set 31's lineage (`d5d9c252`) |
+| The rows for the four adoption pages (W95) | `v2/docs/records/int32/ENTRY-PAGES.patch.md` | 38 rows (START-HERE.md 15, SUPPLIER-HANDOVER.md 16, LAYER-STATUS.md 6, EXECUTION-PLAN.md 1), written against the pages as set 31's adoption leaves them; applied at set 32's adoption; the fill tool fills its tokens because this file names it; `test_patch32.py` holds the rows |
 
 ## 8. Left out, and why
 
@@ -442,9 +445,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 - **The fill tool for set 32** (W73's third finding, W75's F11) exists since 20:59 CEST: `<worktrees>/_bin/fill_res.py --set 32`
   (W76) lists `v2/docs/records/int32/RESULT.md` and `CLASSIFICATION.md` and fills the same five tokens; `test_res32` reads its pattern
   and its set 32 file list in the runner pass. Its template on W73's revision, as W76 read it: `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W76 at about 20:59 CEST", `Set 32's template at ab0cdd9e: 72 rows (RESULT 69, CLASSIFICATION 3; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1)`.
-  On this revision, by `test_res32`'s count and by W78's run of the template on its corrected tree before its commit: before the fill, the tool's
-  template rows are 72 (RESULT.md 70, CLASSIFICATION.md 2; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1; no KEEP row). The
-  fill's first run leaves ADOPTION's one token and its second run none; after the fill `test_res32` compares this count with the newest
+  On this revision, by `test_res32`'s count (W95's restatement, with the patch file this record names since W95; W78's run of the
+  template read 72 rows on the two files alone): before the fill, the tool's
+  template rows are 97 (RESULT.md 70, CLASSIFICATION.md 2, ENTRY-PAGES.patch.md 25; GATE 66, REKEY 6, PROMOTED 4, CANDIDATE 18, ADOPTION 3; no KEEP row). The
+  fill's first run leaves the ADOPTION token's three occurrences (RESULT.md 1, ENTRY-PAGES.patch.md 2) and its second run none; after the fill `test_res32` compares this count with the newest
   committed revision of this file that still holds the tokens (W80, on W79's N4). W85 repeated W80's three stages on its revision of
   the three files in a scratch clone, with stand-in commits on set 31's lineage tip that hold the five pinned tips (`62300318` among
   them): `test_res32` printed 15 passed, 0 failed before the fill, after the first run (57 lines applied, ADOPTION deferred) and after
