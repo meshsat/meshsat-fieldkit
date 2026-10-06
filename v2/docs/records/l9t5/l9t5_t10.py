@@ -1375,7 +1375,7 @@ def round6_cx45(w, P, DP, air, hi3, Q, tj_l, out):
           and at_trip >= need_at(i_max) and at_other >= need_at(serve_max) and dom_bound <= budget[500e3] and v6 == "DRAWN"
           and all(v == "FAIL" for _l, v in vm) and all(R6["refused"]) and ok6)
     R6["ok"] = ok
-    w("   DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'")
+    w("   DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'. Drafted and reproducible: FW-B22's traffic MODEL and the containment circuits'")
     w("     composition (%s). OPEN or PROVISIONAL: CON-004's quorum service (OPEN), FW-B22 (PROVISIONAL), L9T5-F21 (OPEN), the limiter's and" % (
         "composed, read by pin, mutated" if ok else "NOT as drafted"))
     w("     the rail trip's response times (PROVISIONAL, no printed maximum for the comparator's delay), V-B23's response (WITHDRAWN), the sustained thermal")
