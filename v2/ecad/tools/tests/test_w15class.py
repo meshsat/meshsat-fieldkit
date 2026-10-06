@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-"""Set 30's commit classification after cx46 (MESHSAT-1357, 6 October 2026): the draft covers every commit between the reviewed
-candidate and the integration's tip, its columns are git's, its classes are the fixed set, its quotes are on their cited lines.
+"""Set 30's commit classification after cx46 (MESHSAT-1357, 6 October 2026): the record covers every commit between the reviewed
+candidate and the promoted revision, its columns are git's, its classes are the fixed set, its quotes are on their cited lines.
 
-The draft is `v2/docs/records/int30/CLASSIFICATION.draft.md`: one row per commit of `git rev-list 4d0ff8a2..6bc4424e` (merges and
-their second parents' commits included), the class of each from the brief's fixed set, a summary, and two placeholder rows for
-commit 2b and the candidate commit, which do not exist yet. A citation `<sha>:path:N` followed by a code span quotes line N of that
-file at that revision (a `\\|` in the span is a `|` of the file); `cx46:N` is line N of the filed check of cx46.
+The record is `v2/docs/records/int30/CLASSIFICATION.md`, W15's draft (`CLASSIFICATION.draft.md` at fnd/w15class 57bcdbfc, rows 1 to
+38 over `git rev-list 4d0ff8a2..6bc4424e`) renamed at the adoption, its two placeholder rows (commit 2b and the candidate commit)
+replaced by rows 39 to 45 (the seven commits after 6bc4424e) and its summary recomputed: one row per commit of
+`git rev-list 4d0ff8a2..dd1aed00` (merges and their second parents' commits included), the class of each from the brief's fixed set,
+and a summary. A citation `<sha>:path:N` followed by a code span quotes line N of that file at that revision (a `\\|` in the span is
+a `|` of the file); `cx46:N` is line N of the filed check of cx46.
+
+Restated at the adoption (W26, fnd/adopt30a): the draft-stage predicates "both placeholder rows kept, each 'not determined'" and "the
+first line is the DONE / NOT DONE / NEXT line" became "no placeholder and no 'not determined' cell remains, the record opens with its
+title" and "the rows of commit 2b, the candidate, the re-key, the l6r2 correction and W19's merge stand and carry the shas the
+coordinator saved in `<worktrees>/_runs/int30/ADOPTION-VALUES.md`" (that file is outside the tree: without it that predicate raises
+Skip, the git ones still run). The range's tip moved from 6bc4424e to the promoted dd1aed00; every other predicate is unchanged.
 
 What fails here: a commit of the range missing, doubled or out of order, or a sha that is not in the range; a short sha that is not
 its full sha's prefix; a date, subject or file count that is not git's; a class word outside the fixed set; a merge not classed MERGE
 or a commit classed MERGE that is not a merge; an OUTSIDE P0 row touching v2/docs/records or v2/ecad; a REVIEWED-INPUT CHANGED row
 without an old and a new quote; a quote that is not on its cited line at its revision; a `cx46:N` the test does not know, or one whose
 line does not carry the item it is cited for; summary counts that differ from the table; a placeholder filled or dropped; an em or en
-dash. Each predicate is also run on a mutant of the draft that it must refuse.
+dash. Each predicate is also run on a mutant of the record that it must refuse.
 
 Read-only: git is read with `git show`, `git log`, `git diff` and `git rev-list`; nothing is written. A checkout without git or without
 the two bounds' commits raises Skip. No pytest is needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect
@@ -26,13 +34,16 @@ from harness import Skip
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
-DRAFT = "v2/docs/records/int30/CLASSIFICATION.draft.md"
+RUNS = os.path.join(os.path.dirname(os.path.dirname(REPO)), "meshsat-fieldkit", "_runs")
+VALUES = os.path.join(RUNS, "int30", "ADOPTION-VALUES.md")
+DRAFT = "v2/docs/records/int30/CLASSIFICATION.md"
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
-TIP = "6bc4424ec64592e1a501af5db2246f3391c525a0"           # the integration's committed tip when the draft was written
+TIP = "dd1aed00d0a0a521063b5792550bc510c4707c59"           # the promoted revision (INTEGRATED = CANDIDATE = PROMOTED)
+W15_TIP = "6bc4424ec64592e1a501af5db2246f3391c525a0"       # the integration's committed tip when W15 wrote rows 1 to 38
 CX46 = "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md"
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT (restatement)", "GENERATOR DATA (text)", "TEST / FIXTURE",
          "DIGEST RE-PIN / REGENERATED OUTPUT", "MERGE", "OUTSIDE P0")
-PLACEHOLDERS = ("__2B__", "__CANDIDATE__")
+PLACEHOLDERS = ("__2B__", "__CANDIDATE__", "__REKEY__")
 
 # Every `cx46:N` the draft may cite, with words that must be on that line of the filed check.
 CX46_LINES = {
@@ -141,17 +152,61 @@ def _classes(cells):
 
 def p_hygiene(text):
     bad = []
-    if "—" in text or "–" in text:
+    if "\u2014" in text or "\u2013" in text:
         bad.append("an em or en dash")
-    if not text.startswith("**DONE:**"):
-        bad.append("the first line is not the DONE / NOT DONE / NEXT line")
-    rows = _rows(text)
+    if not text.startswith("# Set 30: every commit between the REVIEWED candidate and the PROMOTED revision, classified"):
+        bad.append("the record does not open with its title")
+    if "**DONE:**" in text or "**NOT DONE:**" in text:
+        bad.append("a draft's DONE / NOT DONE / NEXT line is left in the record")
     for ph in PLACEHOLDERS:
-        r = [c for c in rows if c[1] == "`%s`" % ph]
-        if len(r) != 1:
-            bad.append("the placeholder row %s is missing or doubled" % ph)
-        elif r[0][6] != "not determined":
-            bad.append("the placeholder row %s carries a class" % ph)
+        if ph in text:
+            bad.append("the placeholder %s is left in the record" % ph)
+    for c in _rows(text):
+        if len(c) < 8 or c[6] == "not determined" or c[2] == "pending":
+            bad.append("row %s is not determined" % c[0])
+    return bad
+
+
+def _values():
+    """The coordinator's saved values: {name: sha} read from ADOPTION-VALUES.md (Skip when the file is not on this host)."""
+    if not os.path.isfile(VALUES):
+        raise Skip("the coordinator's values file is not on this host")
+    v = open(VALUES, encoding="utf-8").read()
+    out = {}
+    pats = {"CANDIDATE": r"INTEGRATED = CANDIDATE = PROMOTED = MIRROR \(GitHub main\): ([0-9a-f]{40})",
+            "2B": r"2b ([0-9a-f]{40})", "L6R2": r"the l6r2 correction ([0-9a-f]{8})",
+            "W19": r"W19's regression ([0-9a-f]{8}) merged at", "W19M": r"merged at ([0-9a-f]{8})",
+            "REKEY": r"the re-keyed l4e7 cache ([0-9a-f]{40})", "DEPS": r"the re-key's dependents ([0-9a-f]{40})"}
+    for k, pat in pats.items():
+        m = re.search(pat, v)
+        if not m:
+            raise AssertionError("the values file carries no %s" % k)
+        out[k] = m.group(1)
+    return out
+
+
+def p_values(text, vals):
+    """Rows 39 to 45 stand and carry the coordinator's saved shas: 2b first, the candidate last, the re-key, its dependents, the l6r2
+    correction and W19's regression with its merge each in a row of its own, classed."""
+    bad = []
+    rows = [c for c in _rows(text) if _row_sha(c)]
+    full = [_row_sha(c)[1] for c in rows]
+    short = [_row_sha(c)[0] for c in rows]
+    if len(rows) < 45:
+        return ["only %d rows" % len(rows)]
+    if full[38] != vals["2B"]:
+        bad.append("row 39 is %s, not commit 2b %s" % (full[38][:8], vals["2B"][:8]))
+    if full[-1] != vals["CANDIDATE"]:
+        bad.append("the last row is %s, not the candidate %s" % (full[-1][:8], vals["CANDIDATE"][:8]))
+    for k in ("REKEY", "DEPS"):
+        if vals[k] not in full[38:]:
+            bad.append("no row after 6bc4424e for %s %s" % (k, vals[k][:8]))
+    for k in ("L6R2", "W19", "W19M"):
+        if vals[k] not in short[38:]:
+            bad.append("no row after 6bc4424e for %s %s" % (k, vals[k]))
+    for c in rows[38:]:
+        if not _classes(c) or _classes(c)[0] not in FIXED:
+            bad.append("row %s carries no class of the fixed set" % c[0])
     return bad
 
 
@@ -286,7 +341,7 @@ def p_summary(text):
         bad.append("the statement for RESULT.md is missing")
     else:
         s = st.group(0)
-        want = "the %d commits of `git rev-list 4d0ff8a2..6bc4424e` (%d commits, %d merges)" % (len(rows), len(rows) - merges, merges)
+        want = "the %d commits of `git rev-list 4d0ff8a2..%s` (%d commits, %d merges)" % (len(rows), TIP[:8], len(rows) - merges, merges)
         if want not in s:
             bad.append("the statement does not read %r" % want)
         if "change what cx46 read in %d commits" % len(ric) not in s:
@@ -296,11 +351,28 @@ def p_summary(text):
 
 # ---- the tests ----
 
-def t_the_draft_carries_no_dash_keeps_both_placeholders_and_opens_with_its_state_line():
+def t_the_record_carries_no_dash_no_placeholder_and_opens_with_its_title():
     text = _draft()
     assert p_hygiene(text) == [], p_hygiene(text)
-    assert p_hygiene(text.replace("not determined", "MERGE", 2)), "a filled placeholder passed"
-    assert p_hygiene(text + "\nx — y\n"), "an em dash passed"
+    row39 = [l for l in text.split("\n") if l.startswith("| 39 | `")][0]
+    cls39 = "| REVIEWED-INPUT CHANGED + DIGEST RE-PIN / REGENERATED OUTPUT + RECORD TEXT (restatement) + TEST / FIXTURE |"
+    assert cls39 in row39, "the mutation's anchor is not in row 39"
+    assert p_hygiene(text.replace(row39, row39.replace(cls39, "| not determined |", 1), 1)), "a row left not determined passed"
+    assert p_hygiene(text.replace("`d83d9f2d` / ", "`__2B__` / ", 1)), "a placeholder left in passed"
+    assert p_hygiene("**DONE:** x; **NOT DONE:** y; **NEXT:** z\n\n" + text), "a draft state line passed"
+    assert p_hygiene(text + "\nx \u2014 y\n"), "an em dash passed"
+
+
+def t_the_rows_after_6bc4424e_carry_the_coordinators_saved_shas():
+    _need_git()
+    text = _draft()
+    vals = _values()
+    assert p_values(text, vals) == [], p_values(text, vals)
+    rows = [l for l in text.split("\n") if re.match(r"\| 4[0-5] \| `", l)]
+    assert p_values(text.replace(rows[-1] + "\n", "", 1), vals), "a dropped candidate row passed"
+    swapped = dict(vals, CANDIDATE=vals["DEPS"])
+    assert p_values(text, swapped), "a candidate sha other than the saved one passed"
+    assert p_values(text, dict(vals, L6R2="00000000")), "a missing l6r2 correction row passed"
 
 
 def t_the_table_covers_exactly_the_commits_between_the_bounds_in_gits_order():
@@ -381,8 +453,9 @@ def _pytest(fn):
     return run
 
 
-test_the_draft_carries_no_dash_keeps_both_placeholders_and_opens_with_its_state_line = _pytest(
-    t_the_draft_carries_no_dash_keeps_both_placeholders_and_opens_with_its_state_line)
+test_the_record_carries_no_dash_no_placeholder_and_opens_with_its_title = _pytest(
+    t_the_record_carries_no_dash_no_placeholder_and_opens_with_its_title)
+test_the_rows_after_6bc4424e_carry_the_coordinators_saved_shas = _pytest(t_the_rows_after_6bc4424e_carry_the_coordinators_saved_shas)
 test_the_table_covers_exactly_the_commits_between_the_bounds_in_gits_order = _pytest(
     t_the_table_covers_exactly_the_commits_between_the_bounds_in_gits_order)
 test_dates_subjects_and_file_counts_are_gits = _pytest(t_dates_subjects_and_file_counts_are_gits)
