@@ -465,6 +465,11 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   W95 repeated the three stages after naming the patch file (stand-ins on set 31's candidate holding the five tips): the template 97 rows,
   the first run 79 lines applied with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32` and
   `test_patch32` read 24 passed at each stage.
+  W102 repeated them on the tree set 32's chain builds (set 31's promoted revision, main `ad757edb` as step a1, the five pins, step
+  a5; the patch file's paragraph "How the rows were checked again"): the template 97 rows (this count unchanged), the first run 79
+  lines with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32`, `test_patch32` and
+  `test_public_hygiene` read 30 passed before the fill, after the first run and with the rows applied, and after the second run once
+  the pages' two ADOPTION cells were filled by hand (before that `test_patch32` refused S-07 and U-05, W99's B2).
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
