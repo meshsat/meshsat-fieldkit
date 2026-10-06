@@ -46,8 +46,8 @@ every commit named, every count and every placeholder.
 pattern TOK; W73's restatement, so the same tool can be pointed at set 32's files): REKEY (the re-key's cache commit), CANDIDATE (the
 candidate commit), GATE (a log line, written as text), PROMOTED and ADOPTION, each written between two pairs of underscores. The tool
 fills each occurrence by its file, line and place, so one name can stand for two commits: PROMOTED stands for set 31's promoted revision
-where its line names set 31 (set 32's base, section 1 and the targeted pass's base) and for set 32's promotion where its line names
-set 32. ADOPTION is the adoption commit, which cannot name itself: it is left for the tool's second run (its DEFER value), as set 31's.
+where its line names set 31 (set 32's base: one occurrence, section 1's BASE row) and for set 32's promotion where its line names
+set 32 (three occurrences). ADOPTION is the adoption commit, which cannot name itself: it is left for the tool's second run (its DEFER value), as set 31's.
 Taken under the owner's standing rule of 26 September 2026 (authority SESSION, W73): reversed by giving set 31's promoted revision a
 token of its own, which needs the fill tool's pattern widened first (a token the tool does not know is left in the file silently).
 
@@ -216,7 +216,7 @@ since re-keyed on box rekey10, its cache commit `aa332280`). Set 32 therefore ca
 WP-B in the same set makes the second one the first. The expected consequence for later sets, that a change of `l4e11_power.out` which
 moves none of the sixteen numbers no longer forces a re-key, rests on W64's reading of the history (seven past re-keys on this
 boundary) and on the chain's expectation in step f; no set has yet run under the new KEY, so no saving is measured here. The re-key's
-own result and the KEY on the candidate are `__REKEY__`.
+cache commit is `__REKEY__`; the KEY-only check's line on it is `__GATE__`.
 
 ## 3. The integration, measured
 
@@ -295,8 +295,8 @@ any `--key-expect` naming `src` (W70's conditions 2 and 3). After it, `l4e7_stag
 `<worktrees>/_runs/int32/chain.sh` `LABEL_GIVEN=meshsat-1357-rekey10`, and set 31's re-key rented a box under that label
 (`<worktrees>/_runs/vast/LOG-20261006.md` `RENTED 54507159 meshsat-1357-rekey10`); W43's README asks for a NEW label so that the rental
 script does not match a stopped box (`<worktrees>/_runs/int32/README.md` `NEW label, so vast_wait does not match a stopped box`),
-written before set 31 used that label, so set 32's re-key needs another one. The KEY on the candidate after the
-re-key and the dependents: `__REKEY__`.
+written before set 31 used that label, so set 32's re-key needs another one. The re-key's cache commit is `__REKEY__`; the KEY-only
+check's line after the re-key and the dependents is `__GATE__`.
 
 ### 3d. The tests
 
@@ -352,7 +352,8 @@ re-key and the dependents: `__REKEY__`.
 
 **Set 32's own** (none rented for set 32 when this record was written):
 
-- the ONE re-key box (debian:12, under a label no earlier box carries, section 3c): `__REKEY__`;
+- the ONE re-key box (debian:12, under a label no earlier box carries, section 3c), its instance, label and hours from the vast log:
+  `__GATE__`;
 - the suite boxes of the freeze, and the records box with pdftotext 22.12.0, poppler-data and the held tar cut after the chain's step b
   (W37's plan, section 1): `__GATE__`.
 
@@ -420,6 +421,9 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   regeneration and, for `[SOLO:n]`, after the re-key's dependents (W43's step h, item 2; W70's R-1); they cannot be read before the
   outputs exist.
 - **The independent read of set 32's lineage** is a later queue item, after the chain; this record names no finding of it.
+- **After the fill**, `test_res32`'s placeholder predicates and the mutations anchored on a token (the placeholder rows' "not
+  determined" cells, the GATE token in this file) no longer find their anchors, as W68's F1 found for `test_res31`; the coordinator
+  restates them with the rows written in full (W69's method for set 31: anchors that survive the fill, the tip moved to the candidate).
 - **A note for the freeze:** `test_res32`'s predicates that read the coordinator's files (the cited logs, the fill tool, the chain's
   pins) raise Skip where `_runs` is absent, which is every rented box; run them in the runner pass, as W39 recommended for `test_res31`
   (taken as this record's recommendation under the owner's standing rule of 26 September 2026; the coordinator applies or reverses it).

@@ -6,7 +6,7 @@ The basis of each predicate (W73's restatement): every row's sha, date, subject 
 ranges in the chain's merge order (each range's base is its merge base with set 31's lineage tip aa332280, or for fnd/s32attr with
 fnd/w34pdftext's tip, which the chain merges first); the declared tokens are fill_res31.py's (`_runs/int31/freeze/fill_res31.py`, its
 TOK pattern without the name INTEGRATED, which it fills only inside quoted subjects), so the same fill tool can be pointed at set 32 (the
-runner pass reads the tool and compares); the class counts are recomputed from the table; row 14's carried change names a source row
+runner pass reads the tool and compares), and set 31's promoted revision is the PROMOTED token in section 1's BASE row alone; the class counts are recomputed from the table; row 14's carried change names a source row
 that set 30's adopted record classes REVIEWED-INPUT CHANGED; the chain's pinned merges are the five ranges' branches, each pin inside
 its range (fnd/res32's own later commits are placeholder row 31's).
 
@@ -197,6 +197,11 @@ def p_placeholders(texts):
     for c in _rows(texts[CLASS]):
         if _placeholder_row(c) and (c[6] != "not determined" or c[2] != "not determined"):
             bad.append("the placeholder row %s carries a class or a date" % c[1])
+    # PROMOTED stands for set 31's promoted revision only in section 1's BASE row (the fill tool fills it there by its line)
+    base = [l for l in texts[RESULT].split("\n") if l.startswith("| BASE ")]
+    s31 = [l for l in texts[RESULT].split("\n") if "__PROMOTED__" in l and "set 31's promoted revision" in l]
+    if len(base) != 1 or "`__PROMOTED__`" not in base[0] or s31 != base:
+        bad.append("set 31's promoted revision is not section 1's BASE row alone as the PROMOTED token")
     return bad
 
 
@@ -624,6 +629,7 @@ def t_every_placeholder_is_a_declared_token():
     assert not p_placeholders(texts), p_placeholders(texts)
     _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
     _mutant_refused(p_placeholders, texts, CLASS, "`__REKEY__` | not determined", "`__REKEY__` | 2026-10-06 18:00:00")
+    _mutant_refused(p_placeholders, texts, RESULT, "set 31's promoted revision | `__PROMOTED__`", "set 31's promoted revision | `__GATE__`")
 
 
 def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
