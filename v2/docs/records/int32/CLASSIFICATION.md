@@ -277,8 +277,9 @@ them, each named in its row (17 distinct files).
 - The rows after the five tips (placeholder rows 31 to 33, and any commit a branch gains after `62300318`, `9210ab54`, `7b7219a7`,
   `7ae61758` or `5ee1e66e`); this table's counts are over the 34 rows only.
 - Whether a second reader classes the same rows: W75 read this table independently (an AI review, not a qualified one; its F2 moved
-  row 15, as the coordinator ruled; it read rows 1 to 33 before W81's rows existed, so no reader read rows 13.1 to 13.4), and no second
-  independent table of these ranges exists; set 32's lineage read is a later queue item.
+  row 15, as the coordinator ruled; it read rows 1 to 33 before W81's rows existed); W87 read rows 13.1 to 13.4 with W81's four
+  commits afterwards (an AI review, not a qualified one; its condition 2: the rows are not upgraded and stay UNREVIEWED since cx46;
+  `RESULT.md`, section 2b), and no second independent table of these ranges exists; set 32's lineage read is a later queue item.
 - The 352 vendor files (176 texts, 176 sidecars) were counted and grouped, not read line by line; W36 compared the 171 texts of W34's
   rows with this host's pdftotext (RESULT.md, section 2); W81's five (row 13.2) were re-taken twice by W81, written and then unchanged,
-  and read by no independent reader.
+  and W87 compared them, their sidecars and the RP2040 files with the pdftext worktree's (an AI review; `RESULT.md`, section 2b).
