@@ -1,0 +1,58 @@
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                                                www.ti.com
+
+6.4 Thermal Information
+                                                                                             LM5176
+                               THERMAL METRIC(1)                                PWP (HTSSOP)           RHF (QFN)                  UNIT
+                                                                                             28 PINS
+    RθJA         Junction-to-ambient thermal resistance                               32.6               34.7                     °C/W
+    RθJC(top)    Junction-to-case (top) thermal resistance                            21.4               26.6                     °C/W
+    RθJB         Junction-to-board thermal resistance                                  8.2                6.3                     °C/W
+    ψJT          Junction-to-top characterization parameter                            0.3                0.3                     °C/W
+    ψJB          Junction-to-board characterization parameter                          8.3                6.2                     °C/W
+    RθJC(bot)    Junction-to-case (bottom) thermal resistance                           1                 2.0                     °C/W
+
+(1)        For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+           report.
+
+6.5 Electrical Characteristics
+Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature
+range unless otherwise stated. VIN = 24 V unless otherwise stated.(1)
+                            PARAMETER                                       TEST CONDITION                      MIN     TYP       MAX       UNIT
+    SUPPLY VOLTAGE (VIN)
+    IQ                VIN shutdown current                        VEN/UVLO = 0 V                                          2.6        10      µA
+                      VIN operating current                       VEN/UVLO = 2 V, VFB = 0.9 V                               2         4      mA
+    VCC
+    VVCC(VIN)         Regulation voltage                          VBIAS = 0 V, VCC open                         6.95    7.35       7.88       V
+    VUV(VCC)          VCC undervoltage lockout                    VCC increasing                                3.11    3.27       3.43       V
+                      Undervoltage hysteresis                                                                            176                 mV
+    IVCC              VCC current limit                           VVCC = 0 V                                     65                          mA
+    ROUT(VCC)         VCC regulator output impedance              IVCC = 30 mA, VIN = 4 V                                   8        16       Ω
+    BIAS
+    VBIAS(SW)         BIAS switchover voltage                     VIN = 24 V                                    7.25        8      8.75       V
+    EN/UVLO
+    VEN(STBY)         Standby threshold                           EN/UVLO rising                                0.55    0.82       0.97       V
+    IEN(STBY)         Standby source current                      VEN/UVLO = 1.1 V                                1         2         3      µA
+    VEN(OP)           Operating threshold                         EN/UVLO rising                                1.17    1.22       1.29       V
+    ΔIHYS(OP)         Operating hysteresis current                VEN/UVLO = 1.5 V                              2.15    3.15       4.25      µA
+    SS
+    ISS               Soft-start pullup current                   VSS = 0 V                                     3.75        5      6.35      µA
+    VSS(CL)           SS clamp voltage                            SS open                                               1.21                  V
+    VFB - VSS         FB to SS offset                             VSS = 0 V                                              –18                 mV
+    EA (ERROR AMPLIFIER)
+    VREF              Feedback reference voltage                  FB = COMP                                 0.788      0.800      0.812       V
+    gmEA              Error amplifier gm                                                                                1.31                 mS
+    ISINK/ISOURCE     COMP sink/source current                    VFB=VREF ± 300 mV                                      280                 µA
+    ROUT              Amplifier output resistance                                                                         20                 MΩ
+    BW                Unity gain bandwidth                                                                                  2               MHz
+    IBIAS(FB)         Feedback pin input bias current             FB in regulation                                                   25      nA
+    FREQUENCY
+    fSW(1)            Switching frequency 1                       RT = 40 kΩ                                    175      200        225
+                                                                                                                                             kHz
+    fSW(2)            Switching frequency 2                       RT = 20 kΩ                                    350      390        430
+
+
+6            Submit Document Feedback                                                                    Copyright © 2021 Texas Instruments Incorporated
+
+                                                              Product Folder Links: LM5176
+

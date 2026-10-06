@@ -1,0 +1,64 @@
+LM5176
+SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021                                                                         www.ti.com
+
+
+                               §   VIN(MIN) ·
+                        IOUT u ¨ 1          ¸
+                               ©    VOUT ¹
+     'VRIPPLE(COUT)
+                            COUT u Fsw                                                                               (21)
+
+Typically, a combination of ceramic and bulk capacitors is needed to provide low ESR and high ripple current
+capacity. The complete schematic in Figure 8-1 shows a good starting point for COUT for typical applications.
+8.2.2.6 Input Capacitor
+In buck mode, the input capacitor supplies high ripple current. The RMS current in the input capacitor is given
+by:
+
+     ICIN(RMS)   IOUT D u (1 D)                                                                                      (22)
+
+The maximum RMS current occurs at D = 0.5, which gives ICIN(RMS) = IOUT / 2 = 3 A. A combination of ceramic
+and bulk capacitors should be used to provide a short path for high di/dt current and to reduce the output voltage
+ripple. The complete schematic in Figure 8-1 is a good starting point for CIN for typical applications.
+8.2.2.7 Sense Resistor (RSENSE)
+The current sense resistor between the CS and CSG pins should be selected to ensure that current limit is set
+high enough for both buck and boost modes of operation. For the buck operation, the current limit resistor is
+given by:
+
+                        80 mV
+     RSENSE(BUCK)                      13 m:
+                      IOUT(MAX)                                                                                      (23)
+
+For the boost mode of operation, the current limit resistor is given by:
+
+                        120 mV
+     RSENSE(BOOST)                     8.3 m:
+                        IL(PEAK)                                                                                     (24)
+
+The closest standard value of RSENSE = 8 mΩ is selected based on the boost mode operation.
+The maximum power dissipation in RSENSE happens at VIN(MIN):
+
+                                   2
+                      § 120mV ·             §   VIN(MIN) ·
+     PRSENSE(MAX)     ¨        ¸ ˜ RSENSE ˜ ¨ 1          ¸      0.9 W
+                      © RSENSE ¹            ©    VOUT ¹                                                              (25)
+
+Therefore, a sense resistor with 2-W power rating will be sufficient for this application.
+For some application circuits, it can be required to add a filter network to attenuate noise in the CS and CSG
+sense lines. See Figure 8-1 for typical values. The filter resistance should not exceed 100 Ω.
+8.2.2.8 Slope Compensation
+For stable current loop operation and to avoid subharmonic oscillations, the slope capacitor should be selected
+based on Equation 26:
+
+                                  L1                      4.7 PH
+     CSLOPE      gmSLOPE u                      2 PS u              235 pF
+                             RSENSE u ACS                8 m: u 5                                                    (26)
+
+This slope compensation results in “dead-beat” operation, in which the current loop disturbances die out in one
+switching cycle. Theoretically, a current mode loop is stable with half the “dead-beat” slope (twice the calculated
+slope capacitor value in Equation 26). A smaller slope capacitor results in larger slope signal which is better for
+noise immunity in the transition region (VIN~VOUT). A larger slope signal, however, restricts the achievable input
+
+24    Submit Document Feedback                                                      Copyright © 2021 Texas Instruments Incorporated
+
+                                                  Product Folder Links: LM5176
+

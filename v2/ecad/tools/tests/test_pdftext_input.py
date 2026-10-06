@@ -38,7 +38,7 @@ CONVERTED = ("efuse/efuse_check.py", "l5r2/l5r2_interfaces.py", "l8r2/l8r2_draft
              "l4e10/l4e10_cell_thermal.py", "l4e12/l4e12_thermal.py", "l7pwr/l7pwr_fans_th1.py", "l7r2/l7r2_items.py",
              "l8p/l8p_drafts.py", "l8p/l8p_guard.py", "l9pwr/l9pwr_budget.py", "l9stk/l9stk_copper.py", "l9stk/l9stk_protection.py",
              "l9t5/l9t5_a1.py", "l9t5/l9t5_case.py", "l9t5/l9t5_cm5.py", "l9t5/l9t5_drafts.py", "l9t5/l9t5_f01.py",
-             "l9t5/l9t5_paloop.py", "l9t5/l9t5_t10.py")
+             "l9t5/l9t5_paloop.py", "l9t5/l9t5_t10.py", "l4e8/ripple_dense.py")
 PDF = "v2/vendor/fix/fixture.pdf"
 HELD = "v2/vendor/fix/held/sheet.pdf"
 TEXT = "MESHSAT FIXTURE PAGE ONE  Current rating: 10 A\n\nline two, °C and Ω\n\f  PAGE TWO 7.5 A\n\f".encode("utf-8")

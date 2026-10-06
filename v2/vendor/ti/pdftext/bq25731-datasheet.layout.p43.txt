@@ -1,0 +1,58 @@
+                                                                                                                                 BQ25731
+www.ti.com                                                                                   SLUSE66A – JUNE 2020 – REVISED JANUARY 2021
+
+               Table 9-8. ChargeOption0 Register (I2C address = 01h) Field Descriptions (continued)
+     BIT     FIELD                        TYPE    RESET      DESCRIPTION
+      2      EN_OOA                       R/W     1b         Out-of-Audio Enable
+                                                             In both forward mode and OTG mode, switching frequency reduces with
+                                                             diminishing load, under extreme light load condition the switching frequency
+                                                             could be lower than 25 kHz which is already in audible frequency range. By
+                                                             configuring EN_OOA=1b, the minimum PFM burst frequency is clamped at
+                                                             around 25 kHz to avoid any audible noise.
+                                                             0b: No limit of PFM burst frequency
+                                                             1b: Set minimum PFM burst frequency to above 25 kHz to avoid audio noise
+                                                             <default at POR>
+      1      PWM_FREQ                     R/W     1b         Switching Frequency Selection: Recommend 800 kHz with 2.2 µH, and 400
+                                                             kHz with 4.7 µH.
+                                                             0b: 800kHz
+                                                             1b: 400 kHz<default at POR>
+      0      LOW_PTM_RIPPLE               R/W     1b         PTM mode input voltage and current ripple reduction
+                                                             0b: Disable
+                                                             1b: Enable <default at POR>
+
+                        Table 9-9. ChargeOption0 Register (I2C address = 00h) Field Descriptions
+     BIT     FIELD                        TYPE    RESET      DESCRIPTION
+      7      EN_CMP_LATCH                 R/W     0b         The EN_CMP_LATCH bit, will latch the independent comparator output after
+                                                             it is triggered at low state. If enabled in PROCHOT profile REG34H[6]=1 ,
+                                                             STAT_COMP bit REG0x21[6] keep 1b after triggered until read by host and
+                                                             clear
+                                                             0b: Independent comparator output will not latch when it is low<default at
+                                                             POR>
+                                                             1b: Independent comparator output will latch when it is low, host can clear
+                                                             CMPOUT pin by toggling this REG0x12[7] bit.
+      6      VSYS_UVP_ENZ                 R/W     0b         To disable system under voltage protection.
+                                                             0b: VSYS under voltage protection is enabled <default at POR>
+                                                             1b: VSYS under voltage protection is disabled
+      5      EN_LEARN                     R/W     0b         LEARN mode allows the battery to discharge and converter to shut off while
+                                                             the adapter is present . It calibrates the battery gas gauge over a complete
+                                                             discharge/charge cycle. When the host determines the battery voltage is
+                                                             below battery depletion threshold, the host switch the system back to adapter
+                                                             input by writing this bit back to 0b.
+                                                             0b: Disable LEARN Mode <default at POR>
+                                                             1b: Enable LEARN Mode
+      4      IADPT_GAIN                   R/W     0b         IADPT Amplifier Ratio
+                                                             The ratio of voltage on IADPT and voltage across ACP and ACN.
+                                                             0b: 20× <default at POR>
+                                                             1b: 40×
+      3      IBAT_GAIN                    R/W     1b         IBAT Amplifier Ratio
+                                                             The ratio of voltage on IBAT and voltage across SRP and SRN
+                                                             0b: 8×
+                                                             1b: 16× <default at POR>
+      2      Reserved                     R/W     1b         Reserved
+
+
+
+
+Copyright © 2022 Texas Instruments Incorporated                                                           Submit Document Feedback           43
+                                                       Product Folder Links: BQ25731
+
