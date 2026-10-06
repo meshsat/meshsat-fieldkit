@@ -177,7 +177,7 @@ PINS = {
     "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "eda720a68db60cd314547a8552c09952a6a7a8803de9e07b63af9a0d09b5851f"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # set 30 (6 October 2026): the P0 round's solar record output, read by the D-10 / D-16 citation check (the applied change-list text cites its figures)
-    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "d99b3b7f414cb41fc4065742274595f33a28efb326886273cacf67e3db1a32d6"),
+    "l4e7p0": ("v2/docs/records/l4e7/l4e7_p0sol.out", "430d1591714b49deb0819ef64dedcd2eff13ee932ac4445a932521b60e5d07f5"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "3d0a7b1d7d0bd8bfc417351d2efe6c469e31dd6e873119ea2a4d591dba68cf47"),
     "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "04025bca610844ddc0910c7cd96528cb2345a8d9d3cf2c979ac1d8c87214bc4d"),
