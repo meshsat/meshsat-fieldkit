@@ -1,6 +1,6 @@
 # Set 32: the result of the integration (MESHSAT-1357)
 
-**DONE:** the record of set 32 drafted before its integration: what set 32 adopts and from whom (the two branches as last read, twelve
+**DONE:** the record of set 32 drafted before its integration: what set 32 adopts and from whom (the two branches as last read, fourteen
 commits), W36's independent read and its twelve findings with how each is met or carried, the coordinator's two decisions it applies
 (Q-53, Q-55), the re-key they force, W43's dry run as logged, the compute already spent on set 31 that set 32 does not reuse, the three
 claims as the assessment gives them, the classification bound. **NOT DONE:** everything the integration will give: set 31's promoted
@@ -19,7 +19,8 @@ engineering result.
 
 **What set 32 is.** The adoption of (a) the makers' PDF text as committed verbatim inputs of 25 record generators (fnd/w34pdftext: W34,
 W37, W42), read independently by W36 with twelve findings; (b) Q-53, the handover ZIP's cap raised to 100 MiB with its reason
-(fnd/s32small, W40); (c) Q-55, N1a's phrase carried into V-E16 row 3 by W40's apply script; (d) the l4e7 re-key that (a) and (c) force,
+(fnd/s32small, W40); (c) Q-55, N1a's phrase carried into V-E16 row 3 by W40's apply script, with W47's change-record row and
+`TP-SOLAR.md`'s quote of the annotated line (Q-65); (d) the l4e7 re-key that (a) and (c) force,
 and the regeneration of every output they move. It closes NO power item, is not power-design closure and releases nothing; Layer 4's DESK
 gate stays NOT PASSED as the coordinator judged it (section 6).
 
@@ -40,7 +41,7 @@ every commit named, every count and every placeholder.
 | BASE (the REVIEWED role of the brief's form): set 31's promoted revision | `__S31_PROMOTED__` | not yet promoted when this record was written; once promoted, a DESK candidate, not an accepted power design, and no independent check read it. The last independent check of the power candidate is cx46 on `4d0ff8a2`, "P0 RECHECK: CORRECTIONS NOT CLOSED." | `3057ae43:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `"summary": "P0 RECHECK: CORRECTIONS NOT CLOSED.` |
 | The lineage this record's branch was cut from | `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929` (fnd/int31regen, W41's checkpoint) | set 31's lineage before its re-key, candidate and promotion; set 32's branches merge onto set 31's promoted revision, never onto this commit | the INBOX line above |
 | Branch A: fnd/w34pdftext | `5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac` | 10 commits over `aed4bd234644c80fa494299b21099acf6d2454c1` (its merge base with set 31's lineage), no merge, no output committed; W36 read its commit `6dc69ad2` (section 2b) | `git rev-list --count aed4bd23..5b3153aa`; `git merge-base 3057ae43 5b3153aa` |
-| Branch B: fnd/s32small | `a7a485abf19875055c60f7438e8d3fe24cdeb344` | 2 commits over `eff28be3b80f882db545a849b0da1def0217f63d` (main's follow-up after set 30's adoption), no merge, no output committed; no independent reader | `git rev-list --count eff28be3..a7a485ab` |
+| Branch B: fnd/s32small | `7b7219a7d0a695b6b866435116905964a68f5578` | 4 commits over `eff28be3b80f882db545a849b0da1def0217f63d` (main's follow-up after set 30's adoption), no merge, no output committed; no independent reader; W40's two commits to `a7a485ab`, then W47's two | `git rev-list --count eff28be3..7b7219a7` |
 | The re-key's cache commit | `__REKEY__` | record l4e7's results cache re-keyed on a fresh debian:12 box after the converged commit and its independent read (section 3c) | the coordinator's commit on set 32's integration branch |
 | INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on set 32's integration branch |
 | PROMOTED: main after the fast-forward | `__PROMOTED__` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
@@ -48,9 +49,9 @@ every commit named, every count and every placeholder.
 ## 2. What changes (each branch, its finding, W36's conditions, the coordinator's decisions)
 
 **The classification is bound by its path:** `v2/docs/records/int32/CLASSIFICATION.md`, adopted with this file. It classes each of the
-12 commits of the two branches over their bases (fnd/w34pdftext 10, fnd/s32small 2; no merge) into W39's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 0; RECORD TEXT 5; GENERATOR DATA (text) 0; TEST 0; DIGEST RE-PIN 0; MERGE 0; TOOLING 7; total 12.
-4 of the 12 touch a file cx46 read (8 files: seven generators' input route and the annex's citation line numbers); each is **UNREVIEWED
+14 commits of the two branches over their bases (fnd/w34pdftext 10, fnd/s32small 4; no merge) into W39's fixed set, and counts, first
+class per row: REVIEWED-INPUT CHANGED 0; RECORD TEXT 7; GENERATOR DATA (text) 0; TEST 0; DIGEST RE-PIN 0; MERGE 0; TOOLING 7; total 14.
+4 of the 14 touch a file cx46 read (8 files: seven generators' input route and the annex's citation line numbers); each is **UNREVIEWED
 since cx46**, never credited. None is classed REVIEWED-INPUT CHANGED, because none changes a figure, state word, composition, case,
 requirement or limit in a reviewed file (a SESSION decision under the owner's standing rule of 26 September 2026, stated with its wider
 alternative, four rows, in that file). The integration's own commits (the merges, the converged outputs, the re-key, the candidate) are
@@ -65,6 +66,7 @@ placeholder rows there; the outputs they regenerate include files cx46 read.
 | fnd/w34pdftext | 9, 10 | W42, Q-61 | W36's F-K4 in the live pages | six citations into the edited generators re-pointed (the annex's five `[E11PY:n]` by 62 lines, the ledger's `[PAL:186-255]` to `[PAL:201-270]`), the citations bound to a commit and the filed checks left; the supplier page's section 0e sentence as `w42cite/apply_supplier_0e_pointer.py`; TP-E11-29's two prose citations left as a row for the chain (it pins `tp_check.out`) |
 | fnd/s32small | 11 | W40, Q-59 (Q-53) | W36's F-S1, decided by the coordinator (section 2d) | `pack.yaml`'s `max_zip_bytes` from 52,428,800 to 104,857,600 with its reason, the old comments dated, a test of the cap and of the estimate's positive margin |
 | fnd/s32small | 12 | W40, Q-59 (Q-55) | the record's own invariant, V-E16 mirrors the register (section 2d) | `s32small/apply_q55_ve16.py`, run on the merged tree only: N1a's phrase into V-E16 row 3 of `HW-FW-CONTRACT.md`, `test_w8l5`'s tree check, `test_l5pwr`'s L5-F09 d reading; the README with Q-53's estimator readings |
+| fnd/s32small | 13, 14 | W47, Q-65 | W40's and W43's left-outs: Q-55's change-record row and `TP-SOLAR.md` line 297's quote of V-E16 row 3 | the same script's edits 5 and 6 (one change-record row in `HW-FW-CONTRACT.md`; the register's annotated U5 line as `TP-SOLAR.md`'s own quote beside line 297, with a dated lead-in) and `test_w8l5`'s check of both; the README with the scratch-clone check and the added step (regenerate `tp_check.out`) |
 
 Q-41 item 1, as the queue states it: `<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-41 |", `pin the EXTRACTED TEXT as a verbatim input beside the PDF`.
 Neither branch commits a `.out`, a baseline circuit draft, a board generator or a netlist (`CLASSIFICATION.md`, its preamble).
@@ -77,7 +79,7 @@ evidence on the computation, as received: `<worktrees>/_runs/claude/w36rev/REPOR
 (batch 1) and the texts `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md:56` `223 checked; 223 byte-identical; 0 differ; 52 held`;
 what it did not run: `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md:127` `ripple_dense was not run`. Its verdict:
 `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md:135` `The branch is fit for set 32's adoption on conditions.` The five commits
-after `6dc69ad2` (rows 6 to 10: W37's three and W42's two) and fnd/s32small's two were read by no independent reader; set 32's lineage
+after `6dc69ad2` (rows 6 to 10: W37's three and W42's two) and fnd/s32small's four were read by no independent reader; set 32's lineage
 read is a later queue item, after the chain (section 8).
 
 ### 2c. W36's twelve findings and how each is met or carried
@@ -116,8 +118,11 @@ poppler-data on the box (`<worktrees>/_runs/int32/README.md:75` `converted recor
   12's script on the merged tree, where the dry run read `<worktrees>/_runs/int32/dryrun-1632.log:25` `apply_q55_ve16: v2/docs/HW-FW-CONTRACT.md f26757c7c5004cdd -> c52eaa5f4ba501ab`;
   the two typed `hwfw` pins follow at step e1 (`<worktrees>/_runs/int32/dryrun-1632.log:94` `would re-pin l4e9_power_path.py hwfw`,
   `<worktrees>/_runs/int32/dryrun-1632.log:95` `would re-pin l4e11_power.py hwfw`). The change-record row for Q-55 and `TP-SOLAR.md`
-  line 297's quote of V-E16 row 3 are the coordinator's pre-regeneration items (the chain's step a6), given to fnd/s32small by W47's brief
-  (`<worktrees>/_runs/claude/w47s32txt/BRIEF.md:1` `set 32's two residual record-text items on fnd/s32small`), not in this record's reading (section 8).
+  line 297's quote of V-E16 row 3, W43's step a6 items, are now the same script's edits 5 and 6 (rows 13 and 14; W47's brief:
+  `<worktrees>/_runs/claude/w47s32txt/BRIEF.md:1` `set 32's two residual record-text items on fnd/s32small`); once applied, `TP-SOLAR.md`
+  moves `tp_check.out`, which the chain regenerates (step d14). W47 found the second item's premise wrong and took a narrower edit:
+  `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W47 at about 16:56 CEST", `the brief's premise was WRONG (line 297 quotes L4E7-CONTROL-DECISION.md, which has no N1a words, so the quote is already verbatim)`.
+  Whether step a6 is then acknowledged without a further hook is the coordinator's (`__GATE__`).
 
 ### 2e. The re-key that (a) and (c) force
 
@@ -133,7 +138,7 @@ KEY MISMATCH on that file alone; the re-key follows the converged commit and its
 
 - **Its base** was set 31's lineage tip, not set 31's promoted revision (which did not exist):
   `<worktrees>/_runs/int32/dryrun-1632.log:1` `== set 32 chain at 2026-10-06 16:32:57 CEST: base 3057ae43`; scratch clone, branches
-  fnd/w34pdftext `5b3153aa` and fnd/s32small `a7a485ab`.
+  fnd/w34pdftext `5b3153aa` and fnd/s32small `a7a485ab` (W47's two commits came after it).
 - **a1:** `<worktrees>/_runs/int32/dryrun-1632.log:6` `main (eff28be3) is in the lineage: yes, no merge`.
 - **a2, one conflict predicted:** `<worktrees>/_runs/int32/dryrun-1632.log:10` `pdftext: CONFLICTS predicted (git merge-tree), 1 file(s):`,
   `<worktrees>/_runs/int32/dryrun-1632.log:11` `v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md`; set to ours in the
@@ -240,9 +245,9 @@ re-key and the dependents: `__REKEY__`.
 ## 6. What set 32 closes and what it does not
 
 **Set 32 closes NO power item.** It adopts a change of how 25 record generators read their makers' PDF text (W36 read the computation
-unchanged on the runs it made, section 2b), a packaging cap, one phrase carried into a contract row, and the regenerated outputs and
-pins they move. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, its preamble). None of its
-12 branch commits is classed REVIEWED-INPUT CHANGED; the 4 that touch files cx46 read are UNREVIEWED since cx46 and none is credited.
+unchanged on the runs it made, section 2b), a packaging cap, one phrase carried into a contract row with its change-record row and a
+procedure's quote, and the regenerated outputs and pins they move. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, its preamble). None of its
+14 branch commits is classed REVIEWED-INPUT CHANGED; the 4 that touch files cx46 read are UNREVIEWED since cx46 and none is credited.
 
 **Layer 4's DESK gate stays NOT PASSED** as the coordinator judged it on set 30, in the assessment's words (set 32 changes no line of it):
 
@@ -265,9 +270,9 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 12 branch commits classified; 4 UNREVIEWED since cx46; three placeholder rows for the integration's commits |
+| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 14 branch commits classified; 4 UNREVIEWED since cx46; three placeholder rows for the integration's commits |
 | W34's inventory, with W37's restatements | `v2/docs/records/_lib/PDFTEXT-INVENTORY.md` on fnd/w34pdftext | in the tree from the merge |
-| W40's record | `v2/docs/records/s32small/README.md` on fnd/s32small | in the tree from the merge |
+| W40's and W47's record | `v2/docs/records/s32small/README.md` on fnd/s32small | in the tree from the merge |
 | W42's record | `v2/docs/records/w42cite/README.md` on fnd/w34pdftext | in the tree from the merge |
 | W36's report, W37's plan draft, W43's chain and README | `<worktrees>/_runs/claude/w36rev/REPORT-AS-RECEIVED.md`, `<worktrees>/_runs/int32/PLAN.draft.md`, `<worktrees>/_runs/int32/README.md`, `<worktrees>/_runs/int32/chain.sh` | outside the repository; cited, never copied (they carry host paths) |
 | Set 31's records | `v2/docs/records/int31/RESULT.md` and `CLASSIFICATION.md` on fnd/res31 `4196e9df` | adopted at set 31's promotion; not in this record's branch history |
@@ -275,9 +280,8 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 ## 8. Left out, and why
 
-- **Commits after the tips as last read:** the residual record text on fnd/s32small (the Q-55 change-record row in `HW-FW-CONTRACT.md`
-  and `TP-SOLAR.md` line 297's quote of V-E16 row 3; queue entry "16:36 (clock) W44 LAUNCHED" names them) is not classified here; the
-  coordinator adds its rows at the adoption.
+- **Commits after the tips as last read** (fnd/w34pdftext `5b3153aa`, fnd/s32small `7b7219a7`) are not classified here; the coordinator
+  adds their rows at the adoption.
 - **The coordinator's items outside the tree:** `_bin/pack_supplier.py`'s INCLUDE rule for `_lib` (F-S2); the base typed in
   `_runs/int31/dependents.sh` and the wording of `_runs/int31/cache_commit.sh` before their reuse (W43's README section 3);
   `<worktrees>/_runs/int32/placeholders-deferred.tsv` needs a row for each of this record's three files before the chain's step c reads

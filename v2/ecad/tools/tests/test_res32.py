@@ -29,7 +29,7 @@ RESULT = REC + "/RESULT.md"
 CLASS = REC + "/CLASSIFICATION.md"
 LINEAGE = "3057ae43f4fb7fc5e3d6282ce52d448c8ee27929"         # set 31's lineage, this record's base (the coordinator's INBOX)
 BRANCHES = (("fnd/w34pdftext", "aed4bd234644c80fa494299b21099acf6d2454c1", "5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac"),
-            ("fnd/s32small", "eff28be3b80f882db545a849b0da1def0217f63d", "a7a485abf19875055c60f7438e8d3fe24cdeb344"))
+            ("fnd/s32small", "eff28be3b80f882db545a849b0da1def0217f63d", "7b7219a7d0a695b6b866435116905964a68f5578"))
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
@@ -48,7 +48,7 @@ RUN_PATH = re.compile(r"`(?:<worktrees>/)?_runs/([\w./-]+\.(?:log|md|txt|sh|tsv)
 HEXTOK = re.compile(r"`([0-9a-f]{7,40})`")
 PH = re.compile(r"__[A-Z0-9]+(?:_[A-Z0-9]+)*__")
 CELL_SPLIT = re.compile(r"(?<!\\)\|")
-DASHES = ("—", "–")
+DASHES = ("\u2014", "\u2013")
 
 
 def _git(*args):
@@ -294,11 +294,11 @@ def p_counts(texts, order):
     kinds = [f for f in fa | fb if f.endswith(".out") or f.endswith(".net") or "/apply_gen_sch_" in f or "/gen_sch_" in f]
     if kinds:
         bad.append("the branches change an output, a netlist, a circuit draft or a board generator: %s" % sorted(kinds)[:5])
-    want_c = ["`git rev-list --count aed4bd23..5b3153aa` prints %d" % ca, "`git rev-list --count eff28be3..a7a485ab` prints %d" % cb,
+    want_c = ["`git rev-list --count aed4bd23..5b3153aa` prints %d" % ca, "`git rev-list --count eff28be3..7b7219a7` prints %d" % cb,
               "the %d files of `git diff --name-only 06077cee 4d0ff8a2`" % delta,
               "%d of the two ranges' %d changed files are in that set" % (len(rv), len(fa | fb)),
               "**DONE:** the %d commits of set 32's two branches" % (ca + cb),
-              "fnd/w34pdftext `5b3153aa`, %d commits over `aed4bd23`; fnd/s32small `a7a485ab`, %d commits over `eff28be3`" % (ca, cb),
+              "fnd/w34pdftext `5b3153aa`, %d commits over `aed4bd23`; fnd/s32small `7b7219a7`, %d commits over `eff28be3`" % (ca, cb),
               "(%d texts, %d sidecars)" % (len(texts_), len(side)), "The %d vendor files" % len(vend)]
     for w in want_c:
         if w not in t:
@@ -335,7 +335,10 @@ def p_counts(texts, order):
 ROW_NUMSTAT = (("82e1e1c6", "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md", "(+%d -%d)"),
                ("886704ea", "v2/docs/records/_lib/PDFTEXT-INVENTORY.md", "(+%d -%d)"),
                ("a7a485ab", "v2/docs/records/s32small/apply_q55_ve16.py", "(%d lines)"),
-               ("a7a485ab", "v2/docs/records/s32small/README.md", "(%d lines)"))
+               ("a7a485ab", "v2/docs/records/s32small/README.md", "(%d lines)"),
+               ("44891f15", "v2/docs/records/s32small/apply_q55_ve16.py", "(+%d -%d)"),
+               ("44891f15", "v2/docs/records/s32small/README.md", "(+%d -%d)"),
+               ("7b7219a7", "v2/docs/records/s32small/README.md", "(+%d -%d)"))
 
 
 def p_row_numbers(text):
@@ -453,7 +456,7 @@ def _mutant_refused(pred, texts, name, old, new, *extra):
 def t_the_records_carry_no_dash_and_open_with_their_state_lines():
     texts = _texts()
     assert not p_hygiene(texts), p_hygiene(texts)
-    _mutant_refused(p_hygiene, texts, RESULT, "Set 32 closes NO power item", "Set 32 closes NO power item —")
+    _mutant_refused(p_hygiene, texts, RESULT, "Set 32 closes NO power item", "Set 32 closes NO power item \u2014")
     _mutant_refused(p_hygiene, texts, CLASS, "**NOT DONE:**", "**NOT YET:**")
 
 
@@ -486,10 +489,10 @@ def t_the_table_is_the_two_ranges_in_order_with_gits_columns_and_classes():
 def t_the_summary_and_the_bound_statement_are_the_tables():
     t = _read(CLASS)
     assert not p_summary(t), p_summary(t)
-    assert p_summary(t.replace("| `TOOLING` | 7 | 9 |", "| `TOOLING` | 6 | 9 |", 1)), "a wrong summary count passed"
-    assert p_summary(t.replace("fnd/s32small, 2 rows: RECORD TEXT 1, TOOLING 1", "fnd/s32small, 2 rows: TOOLING 2", 1)), \
+    assert p_summary(t.replace("| `TOOLING` | 7 | 10 |", "| `TOOLING` | 6 | 10 |", 1)), "a wrong summary count passed"
+    assert p_summary(t.replace("fnd/s32small, 4 rows: RECORD TEXT 3, TOOLING 1", "fnd/s32small, 4 rows: RECORD TEXT 2, TOOLING 2", 1)), \
         "a wrong per-branch count passed"
-    assert p_summary(t.replace("4 of the 12 touch a file cx46 read", "3 of the 12 touch a file cx46 read", 1)), \
+    assert p_summary(t.replace("and 7 RECORD TEXT first", "and 6 RECORD TEXT first", 1)), \
         "a wrong statement count passed"
     r = [l for l in t.split("\n") if l.startswith("| 8 |")][0]
     assert p_summary(t.replace(r, r.replace("| RECORD TEXT |", "| TOOLING |"), 1)), "a re-classed row with the old counts passed"
