@@ -3,7 +3,7 @@
 Record `l8p`, MESHSAT-1357, 4 October 2026, branch `fnd/l8p` from main `64cd25ee`; round 3 on branch `fnd/l8p2` from
 `fnd/l8p` at `e1bc3cba`. The author is board P's generator author for this one correction and, since round 2, DD-8's owner.
 
-**Status: DRAFTED, not applied.** Four release-guarded apply scripts, a netlist check and their proof on scratch copies.
+**Status: DRAFTED, not applied.** Six release-guarded apply scripts under one `RELEASE.md` (section 6 item 1 names them; this line read "Three" in round 1 and "Four" from round 4 until set 30, section 14), a netlist check and their proof on scratch copies.
 Nothing in this kit has been built, bought, powered or measured. Every apply script refuses the repository's own generator
 until a `RELEASE.md` beside it reads `released: yes` and names an accepted check of this record; none exists.
 
@@ -124,7 +124,7 @@ Every value comes from the record by its section (section 2). Where the record l
 here as SESSION under the owner's standing rule of 26 September 2026 (section 3). The record's own copies are in `inputs/`,
 pinned by `inputs/SOURCES.txt`.
 
-## 1. The three drafts
+## 1. The drafts (three in round 1, six since round 9; one release for all six, section 6 item 1; restated in set 30, section 14)
 
 | Draft | Board | What it draws |
 |---|---|---|
@@ -133,6 +133,7 @@ pinned by `inputs/SOURCES.txt`.
 | `apply_gen_sch_p_idealdiode.py` | P | Round 4, DD-5 (section 13), applied after the breaker draft, which it requires: Q109 beside Q1 on SCP_OUT and SW, its controller U105, the charge pump's C111, R130 from gate to source, EN from BRK_VIN through D104 with R131, the anode pair C112 and C113, the cathode pair C114 and C115, TP109. SCP_OUT's loads and SW's sources re-declared with Q109. One schematic section. |
 | `apply_gen_sch_a_ptc.py` | A | J_DOCK pins 3 and 5 carry the loop, with pin 4 ground between them. RT1, the PRF15BB103, closes the loop on the battery FETs' copper. The loop's two nets declared. Round 2 changed only its comment (the -1). Round 8: its block is replaced by the guard draft below (RT1 withdrawn, L8P-F07); the draft itself is unchanged, so its sha256 stays the one `test_l4e11.py` pins. |
 | `apply_gen_sch_a_thguard.py` | A | Round 8 (section 12m), applied after the PTC draft and after L4-E11's DD-7 draft, which requires RT1: the thermal guard as record l9stk's round 5 re-selected it (C4). R260 and R261 (7.5 kOhm 1 % in series) close the loop in RT1's place; U60 (LM26LV, 130 C) with C263 on the battery FETs' pour; U61 (TPS70950) from DOCK_EN_OUT with C261 and C262; Q60 (2N7002) from DOCK_EN_RET to ground through R262, C260 and R263; TP60 to TP63. One schematic section in place of RT1's. |
+| `apply_gen_sch_a_thgfs.py` | A | Round 9 (section 12o; row added in set 30, section 14), applied after the guard draft, which it requires: the fail-safe delta as two guard paths. Path 1, round 8's guard, gains the cold clamp Q62 over Q63 on Q60's gate, gated by U60's open drain pulled up by R268 and R269, and U61's input as C261 and C268; path 2 is U62, a second LM26LV-130 on the same pour on its own pad (C269), supplied by U63, a second TPS70950, from VBAT (C270, C271), its OVERTEMP through R270, C272 and R271 driving Q61 from DOCK_EN_OUT to ground; TP64 to TP67. As 12o's DISPOSITION after cx46 states it: DRAFTED, C-PROT rev 1 for the guard PROVISIONAL, L8P-R9-F1, F2 and F3 OPEN. |
 
 Each draft:
 - checks by default and writes only with `--write`;
@@ -262,8 +263,29 @@ l8r2's VIN_RAW cut-off FET.
 
 ## 6. Order constraints for L4-E9's change list
 
-1. **One release for the five drafts.** P (the breaker, then the ideal diode), E and A (the PTC draft, then, after L4-E11's DD-7,
-   the guard draft) are released and applied together, never one alone. The netlist check reads FAIL on a board P that carries the breaker without the ideal diode (DD-5 uncorrected).
+1. **One release for the six drafts that read this folder's one `RELEASE.md`.** Each of the six sets
+   `RELEASE = os.path.join(HERE, "RELEASE.md")` beside itself and carries the same `released()` check, so one file, when it reads
+   `released: yes` and names an accepted check of this record, releases all six at once, and until then none (none exists). By name,
+   with the register row that applies each (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md`, read at set 30's integration commit 2c
+   `53a68c7c`, lines 302 to 304, 318, 339 and 341):
+
+   | Draft | Board | Register row |
+   |---|---|---|
+   | `apply_gen_sch_p_breaker.py` | P | R-206 |
+   | `apply_gen_sch_p_idealdiode.py` | P | R-246 |
+   | `apply_gen_sch_e_enable.py` | E | R-207 |
+   | `apply_gen_sch_a_ptc.py` | A | R-208 |
+   | `apply_gen_sch_a_thguard.py` | A | R-222 |
+   | `apply_gen_sch_a_thgfs.py` | A | R-244 |
+
+   P (the breaker, then the ideal diode), E and A (the PTC draft, then, after L4-E11's DD-7, the guard draft, then its fail-safe
+   delta) are released and applied together, never one alone. The netlist check reads FAIL on a board P that carries the breaker without the ideal diode (DD-5 uncorrected).
+   - **Not covered by this `RELEASE.md`:** `apply_test_l4e11_ptc_pin.py` (a text draft of one pin in L4-E11's `test_l4e11.py`; it
+     reads no `RELEASE.md` and is the integrator's and L4-E11's author's to apply); L4-E11's DD-7 draft (R-217), which the guard
+     draft follows and which reads record l4e11's own `RELEASE.md` (item 4 gives the order); this folder's checks and readers.
+   - **History, dated:** this item read "One release for the three drafts" from round 1 (4 October 2026, `515f6cf2`), "One
+     release for the four drafts" from round 4 (4 October 2026, `1816a96a`) and "One release for the five drafts" from round 8
+     (5 October 2026, `430c8c61`); round 9 (12o) added the sixth, the delta, without restating it. Restated in set 30 (section 14).
    - `check_contracts.py` section 15c compares J_SMB at both ends: family, pitch, pin count and roles.
    - Section 4 compares the dock's 2 x 6 map on J_DOCK and J_BLK.
    - Either check fails when only one end has changed.
@@ -1566,3 +1588,78 @@ measured.
 | R131 open | EN is pulled low by U105's own sink alone (3 uA typical; no minimum printed) | not found |
 | One capacitor of a series pair shorted | Its partner holds the voltage (50 V parts) | not found |
 | A short inside U105 from ANODE to GND | Behind F1 and F2 only, as section 13g names for the battery stream | |
+
+## 14. Set 30 note (6 October 2026): the release statement and U101's part number copies (record text only)
+
+**What this is.** Worker W5 of MESHSAT-1357 on branch `fnd/w5l8p`, from set 30's integration commit 2c `53a68c7c` on `fnd/p0pwr`.
+**Adopted in the NEXT set, not in set 30's promoted candidate `__INTEGRATED__`** (the coordinator binds that sha at promotion). It
+answers three filed findings, read with `git show` as text: Slot H's not-reconciled item (`fnd/l4e9s31` at `17ce29d5`,
+`v2/docs/records/l4e9/SET31-CHANGES.md` lines 107 to 108: "**Record l8p's one release:** "five drafts" ([BRK:265]) against the
+register's R-206, R-207, R-208, R-222, R-244 and R-246; the exact membership is record l8p's (PC C-5)."); Slot G's PC-04, PC-13 and
+C-5 (`fnd/l4e9pc` at `8282895e`, `v2/docs/records/l4e9/L4E9-PAGE-CONSISTENCY-SET30.draft.md` lines 151 to 158, 236 to 242 and 296);
+and Slot L's K-14 and K-19 (`fnd/dgate` at `249e9e47`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md` lines 324 and
+329). It designs nothing: no circuit, value, figure, verdict or state of this record moves, no draft's bytes change, and nothing is
+accepted, released or applied. Prototype framing: nothing in the kit has been built, bought, powered or measured.
+
+**What moved since round 9 (each a restatement to what this record and the register already hold).**
+- (a) The Status line: "Four release-guarded apply scripts" (round 4's count) reads six, named in section 6 item 1.
+- (b) Section 1: the heading "The three drafts" (round 1's) is restated, and the table gains round 9's delta,
+  `apply_gen_sch_a_thgfs.py`, as section 12o and R-244 describe it.
+- (c) Section 6 item 1: "**One release for the five drafts.**" (line 265 at `53a68c7c`) names the one `RELEASE.md`, the six
+  drafts it covers with their register rows, and what it does not cover; the item's earlier counts are kept there, dated.
+- (d) This section, and one dated line at the head of the record's README.
+
+**U101's part number (PC-04, K-19): no file of this folder names the automatic-retry variant for U101, so none is corrected
+here.** Read on `53a68c7c`, every file of `v2/docs/records/l8p/`: U101 is the -1 in `apply_gen_sch_p_breaker.py` line 11 ("U101
+LM5069MM-1, the latch-off variant") and line 162 (its call `ic("U101", 10, "LM5069MM-1 circuit breaker, latch-off, ...`), in
+`apply_gen_sch_p_idealdiode.py` line 51 (its `REQUIRES` reads that call), in `check_l8p_netlist.py` line 90, in section 2's value
+table and in round 2's item 1 (line 13). Elsewhere in this folder the -2 appears only as the variant rejected (line 13; the breaker
+draft's lines 11 and 114), as board E's U6 part and its code C111822 (section 2's U101 row, section 7's Layer 6 row, the breaker
+draft's line 121), and in the input copies of records l9stk and l4e11, byte for byte
+under `inputs/SOURCES.txt`, which state its rejection (`inputs/l9stk-section15-0d72880b.md` lines 21 to 24,
+`inputs/l4e11-section19h-ecb598c5.md` lines 7 to 9) or draw board E's U6 (`inputs/l4e11r17-apply_gen_sch_e_entry-ecb598c5.py`
+line 46). **The copies that name the -2 for U101 are L4-E9's, not this folder's:** `v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_p_breaker-515f6cf2.txt`
+(round 1's bytes: U101 as the -2 at its lines 10, 61, 65, 90, 113 and 175) and `.../l8p-apply_gen_sch_a_ptc-515f6cf2.txt` (line
+45); the third, `.../l8p-apply_gen_sch_e_enable-515f6cf2.txt`, names no LM5069. They are verbatim copies pinned by L4-E9's
+generator (`l4e9_power_path.py` lines 109 to 111): rewriting one would falsify a copy, so they stay as they are; R-206's From calls
+them superseded (the register's line 302) and their re-take is the coordinator's (PC-04; SET31-CHANGES.md lines 118 to 119). The
+ruling the -1 rests on: the owner's instruction of 4 October 2026 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-04.md` line 140:
+"The protection candidate now selects latch-off LM5069-1."); this record's round 2 item 1 (line 13: "**The breaker is the latch-off
+LM5069-1**, not the -2: the -2's retry overheats its own FET under a persistent fault (15.4b)."); record l9stk 15.4b as copied
+(`inputs/l9stk-section15-0d72880b.md` line 24: "**The -2 does not meet the criterion.**").
+
+**SESSION decision W5-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): **the release sentences in
+the drafts' own docstrings are left byte for byte; section 6 item 1 governs over each.** `apply_gen_sch_p_breaker.py` lines 55 to
+56 read "Order (L8P-BREAKER.md section 5): released together with apply_gen_sch_e_enable.py and apply_gen_sch_a_ptc.py (never alone:
+J_SMB's two ends and the dock's two ends must change together), with l6r2's two board P drafts in either order.": its companions
+are round 1's (two of the five), and its section number points at the designators (section 5), not the order constraints (section
+6). `apply_gen_sch_p_idealdiode.py` line 37 ("released with it") is true and names one companion. Reason: the breaker draft's
+sha256 is printed by `l8p_drafts.out` (line 81) and `efuse_check.out` (line 38); `l8p_guard.out` pins the first's digest, and
+`l9t5/l9t5_connected.out` and `l9t5/stability/DIGESTS-cr3.txt` pin the second's; a docstring edit would move that cascade for no change of
+circuit, and the A and E drafts carry the same round 1 sentence where this worker may not write (`apply_gen_sch_a_ptc.py` line 29,
+whose sha256 `test_l4e11.py` also pins as `L8P3_PTC`). To reverse: at the draft's next change of bytes, replace the breaker draft's
+two lines by "Order (L8P-BREAKER.md section 6 item 1): released with the five other drafts that read the same RELEASE.md
+(apply_gen_sch_p_idealdiode.py, apply_gen_sch_e_enable.py, apply_gen_sch_a_ptc.py, apply_gen_sch_a_thguard.py and
+apply_gen_sch_a_thgfs.py), never alone, with l6r2's two board P drafts in either order." and regenerate those outputs in dependency
+order.
+
+**Findings for other owners (not applied here; each names fewer companions than section 6 item 1, none a wrong companion).**
+- **W5-F1, L4-E9's change list and register (the coordinator's):** `l4e9_power_path.py`'s CHANGE_ORDER at `53a68c7c` gives R-208
+  (line 6468) "in one release with R-206 and R-207" and cites "(l8p section 5)", round 1's number of what is now section 6 item 4,
+  R-207 (line 6504) "in one release with R-206 and R-208", R-206 (line 6531) "in one release with R-207 and R-208", R-246 (line
+  6532) "in one release with R-206, R-207 and R-208", and R-222 and R-244 (lines 6470 and 6471) no companion; the page's section 3
+  renders them (L4-POWER-ARCHITECTURE.md lines 457, 459, 460, 491, 517 and 518). In the register, R-206 to R-208's Acceptance names
+  all six (lines 302 to 304); R-246's reads "released with R-206, R-207 and R-208 and record l8p's guard (L8P-BREAKER.md section 6
+  item 1)" (line 341), and R-222's and R-244's name no release (lines 318 and 339). The reading that agrees with section 6 item 1, for each: "in one
+  release with the other five rows of record l8p's drafts (R-206, R-207, R-208, R-222, R-244 and R-246; L8P-BREAKER.md section 6 item 1)".
+- **W5-F2, the A and E drafts' docstrings (record l8p's next round with a change of bytes):** `apply_gen_sch_e_enable.py` line 23
+  and `apply_gen_sch_a_ptc.py` line 29 name round 1's two companions; `apply_gen_sch_a_thguard.py` line 39 reads "Released with the
+  board P and board E drafts of record l8p, never alone." (without the delta). Left for W5-D1's reason.
+- **W5-F3, record l4e11:** `v2/docs/records/l4e11/apply_gen_sch_a_dd7.py` line 50 reads "released with l8p's three drafts and this
+  record's charger draft"; the change list's row for R-217 (L4-POWER-ARCHITECTURE.md line 458) reads "in the release of R-206 to
+  R-208 (L4-E11 19h)". DD-7 reads record l4e11's own `RELEASE.md`, a separate file from this record's.
+
+**Slot L's K items (section 5 of its draft, K-01 to K-28).** K-14 is this record's: answered by (c) above (its exact membership,
+"record l8p's" in SET31-CHANGES.md line 108). K-19 names this folder's breaker draft as the correct side ("U101 LM5069MM-1, the
+latch-off variant" [BRKP:11]); set 31 restated R-206, and nothing in this folder changes. The other twenty-six (K-01 to K-13, K-15
+to K-18 and K-20 to K-28) concern files outside `v2/docs/records/l8p/` and are untouched here.
