@@ -53,8 +53,9 @@ set 31's classification numbered its rows 3.4 and 3.5: the coordinator's ruling 
 to 33 by number; reversed by renumbering the table 1 to 37 and restating those references). Their classes are the rule's as this
 table applies it (reading A, the paragraph "Applied to the five branches"): none is `REVIEWED-INPUT CHANGED`; rows 13.2 and 13.3 touch
 two files of the delta cx46 read and say UNREVIEWED since cx46. Section 2 is recomputed: 34 rows, 12 touching rows, 24 file touches, 17
-distinct files; the wider readings count 12 rows and 6 rows. The dated paragraphs above keep the counts and row lists their authors
-wrote. No verdict, figure or claim of any file was changed.
+distinct files; the wider readings count 12 rows and 6 rows. `test_res32.py` reads fnd/w34pdftext's range to `62300318` with the
+dotted rows and holds before the fill and after each of the fill tool's runs (RESULT.md section 8). The dated paragraphs above keep the
+counts and row lists their authors wrote. No verdict, figure or claim of any file was changed.
 
 **The bounds.** Set 32's base is set 31's promoted revision (RESULT.md section 1; it does not exist when this table is written).
 Each branch is read over the commit where it leaves set 31's lineage, main or a branch merged before it in the chain's order, so that
