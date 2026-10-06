@@ -291,6 +291,9 @@ def p_counts(texts, order):
         bad.append("a branch's base is not its merge base with the lineage (%s, %s)" % (mb_a[:8], mb_b[:8]))
     if merges:
         bad.append("a branch holds %d merge(s); the records say none" % merges)
+    kinds = [f for f in fa | fb if f.endswith(".out") or f.endswith(".net") or "/apply_gen_sch_" in f or "/gen_sch_" in f]
+    if kinds:
+        bad.append("the branches change an output, a netlist, a circuit draft or a board generator: %s" % sorted(kinds)[:5])
     want_c = ["`git rev-list --count aed4bd23..5b3153aa` prints %d" % ca, "`git rev-list --count eff28be3..a7a485ab` prints %d" % cb,
               "the %d files of `git diff --name-only 06077cee 4d0ff8a2`" % delta,
               "%d of the two ranges' %d changed files are in that set" % (len(rv), len(fa | fb)),
@@ -380,6 +383,8 @@ def p_quotes(texts):
         for sha, path, n, q in GIT_ANCHOR.findall(t):
             q = q.replace("\\|", "|")
             if not _has(sha):
+                if any(o.startswith(sha) for o in OUTSIDE):
+                    continue                   # a declared commit outside this branch's history, absent on this host
                 bad.append("%s: %s is not in this repository" % (name, sha))
                 continue
             lines = _show(sha, path)
