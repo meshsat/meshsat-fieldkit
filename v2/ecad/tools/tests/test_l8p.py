@@ -662,7 +662,10 @@ def t_round5_the_alternative_parts_typed_figures_are_tdks():
     back by its notice; skipped when absent)."""
     m = _M()
     need(m.TDK_SHEET, "TDK's held sheet (python3 v2/docs/records/l8p/fetch_held_back.py)")
-    t = m.pdftext(m.TDK_SHEET)
+    # W81: the committed extraction record l8p declares for this test (l8p_pdftext.py; held back with the sheet), never a table of a
+    # generator that does not read the sheet (W66's dry run: l8p_drafts' table refused it here)
+    t = m.PT.pdf_text(ROOT, os.path.relpath(m.TDK_SHEET, ROOT), ["-layout"], m.PT.declared_in(os.path.join(REC, "l8p_pdftext.py")),
+                      "v2/docs/records/l8p")
     T = m.TDK_B59721
     assert "Reproduction, publication and dissemination of this publication" in t, "the notice the sheet is held back by"
     page4 = t.split("Page 3 of 35")[1].split("Page 4 of 35")[0]

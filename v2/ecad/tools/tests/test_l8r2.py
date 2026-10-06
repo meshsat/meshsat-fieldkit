@@ -452,8 +452,10 @@ def t_round4_the_catalogue_figures_read_from_the_held_pages():
     for p in HELD_FAN.values():
         need(p, "a held San Ace catalogue page (fetch_held_back.py)")
     m = _M(); (r100, r25) = m.V["fan_rows"]
-    # W81: the committed extraction the record declares (l8r2_drafts' PDFTEXT, re-taken by retake_pdf_text.py), never this host's pdftotext
-    txt = {k: " ".join(m.pdf_text(os.path.relpath(p, ROOT)).split()) for k, p in HELD_FAN.items()}
+    # W81: the committed extractions record l8r2 declares for this test (l8r2_pdftext.py; held back with the pages), never this host's
+    # pdftotext
+    txt = {k: " ".join(m.PT.pdf_text(ROOT, os.path.relpath(p, ROOT), ["-layout"], m.PT.declared_in(os.path.join(REC, "l8r2_pdftext.py")),
+                                     "v2/docs/records/l8r2").split()) for k, p in HELD_FAN.items()}
     assert re.search(r"100 0\.17 2\.0 13700 0\.38 13\.4 210 0\.84 44 9WPA0412P6G001 12 10\.8 to 13\.2 25 0\.03 0\.36 3000 0\.07 2\.5 9\.8", txt["0362"]), "p.362's rows"
     assert r100 == (100, 0.17, 2.0, 13700, 0.38, 210.0) and r25 == (25, 0.03, 0.36, 3000, 0.07, 9.8)
     assert "When control terminal is open, speed is the same as at 100% duty cycle" in txt["0362"]
