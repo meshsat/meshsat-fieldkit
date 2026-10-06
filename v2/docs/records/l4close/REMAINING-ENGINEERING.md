@@ -47,7 +47,7 @@ a path in backticks is a repository path from the root. Line numbers are those o
 amendment of 6 October 2026 added (HO-L, its rows in sections 4 and 5, HO-F's back-feed reading, section 6's items E and G) are at
 `6fe398e9`: under the aliases CX46, P0L, ANX, OWN, E11, E11P, TIQ, P11, B2 and SOLO the files are byte-identical at `1c6d56f5` and
 `6fe398e9`, so either revision reads the same lines; under L4E9 and REG (both changed by set 31 between the two) the line numbers
-are those of `6fe398e9` only. On set 31 (6 October 2026) the citations under BRK, B2, P11 and P0SOL are re-cited to their lines at `a6e3a066`, where set 31's merges of records l8p and l4e7 moved them, apart from [P11:89-92], which still names the lines of `1c6d56f5` (the passage it cited is rewritten at `a6e3a066`; on set 31's Q-40, 6 October 2026, HO-F's line is restated to W4's passage, [P11:119-126], and keeps the old citation only to mark the pre-W4 reading). The module
+are those of `6fe398e9` only. On set 31 (6 October 2026) the citations under BRK, B2, P11 and P0SOL are re-cited to their lines at `a6e3a066`, where set 31's merges of records l8p and l4e7 moved them, apart from [P11:89-92], which still names the lines of `1c6d56f5` (the passage it cited is rewritten at `a6e3a066`; on set 31's Q-40, 6 October 2026, HO-F's line is restated to W4's passage, [P11:119-126], and keeps the old citation only to mark the pre-W4 reading). On set 32 (6 October 2026) the citation under PAL is re-cited to its lines on `fnd/w34pdftext`, where W34's edit of the generator moved them by 15 lines, the cited words unchanged; the line numbers inside cx46's quoted words (RE-2, RE-6 and RE-7) are cx46's own, of the candidate it read, `4d0ff8a2`, and stay as quoted. The module
 `v2/ecad/tools/tests/test_remeng.py` holds every citation to an existing file and range and every quoted verdict to its filed text.
 
 | Alias | File |
@@ -166,7 +166,7 @@ as filed.
   ([F01:231-234]). If B-PA1 fails the arrangement fails, not a requirement: routes R1 and R2 ([F01:215-220]). U5 (R-214) is MISSING
   against the 0.3692 V MODEL margin ([F01:240]).
 - **Reproduce.** From the repository root `python3 v2/docs/records/l9t5/l9t5_f01.py` (output `v2/docs/records/l9t5/l9t5_f01.out`; the
-  band in `v2/docs/records/l9t5/l9t5_paloop.py` cap(), [PAL:186-255]); the composition and mutations
+  band in `v2/docs/records/l9t5/l9t5_paloop.py` cap(), [PAL:201-270]); the composition and mutations
   `python3 v2/docs/records/l9t5/l9t5_f01_drafts.py` with `v2/docs/records/l9t5/check_f01_netlist.py`; the case
   `python3 v2/docs/records/l9t5/l9t5_case.py` (its section 8 in `v2/docs/records/l9t5/l9t5_case.out`). The INA250 sheet is held back
   and fetched by sha256, never committed ([F01:5]).

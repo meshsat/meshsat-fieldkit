@@ -132,7 +132,7 @@ Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
 verdict. Prototype framing: nothing in the kit is built, bought, powered or measured; a MODEL figure is desk arithmetic.
 
 **Citation form.** `[ALIAS:N]` is line N and `[ALIAS:N-M]` lines N to M of the file the alias names, as it reads in this branch's
-tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads; on set 31, 6 October 2026, the citations under REM, B2, P11 and OWN that later revisions of those files moved are re-cited to their lines on `fnd/int31cite`, the ledger included as it reads there). A
+tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads; on set 31, 6 October 2026, the citations under REM, B2, P11 and OWN that later revisions of those files moved are re-cited to their lines on `fnd/int31cite`, the ledger included as it reads there; on set 32, 6 October 2026, the five citations under E11PY, which W34's edit of record l4e11's generator on `fnd/w34pdftext` moved by 62 lines, are re-cited to their lines there, the cited words unchanged). A
 file on another branch is cited as text only, by commit, path and line, read with `git show` (the worker rule that a record reads its
 inputs from its own tree): Slot L's DESK-gate draft `fnd/dgate` `249e9e47`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md`
 ("DGA" below), and Slot M's ledger amendment `fnd/ledgerfix` `99bbc0c6`, `v2/docs/records/l4close/REMAINING-ENGINEERING.md` ("REM-M"
@@ -180,12 +180,12 @@ of the owner, nothing [ANX:113].
 ### 6.2 R17's design target: one computed figure, two prints (K-12)
 
 - **What the record computes.** One design target for R17's coupling into a junction: the largest coupling at which R17's line plus
-  twice its propagated U stays at or under R17's limit, 1 K/W ("R17's design target: its line passes with twice its U" [E11PY:5957];
-  the solve [E11PY:5967]; "R17's coupling at most 1 K/W" in the row [E11:500]).
+  twice its propagated U stays at or under R17's limit, 1 K/W ("R17's design target: its line passes with twice its U" [E11PY:6019];
+  the solve [E11PY:6029]; "R17's coupling at most 1 K/W" in the row [E11:500]).
 - **How it prints it.** To three places: "R17's coupling target: at most 0.294 K/W (its line passes with twice its U)" [E11:1922]
-  (`fmt(S["z17_t"], 3)`, [E11PY:6120]), "R17 at most 0.294 K/W" in round 16's selection [E11:1975] ([E11PY:6313]), and the reading on
+  (`fmt(S["z17_t"], 3)`, [E11PY:6182]), "R17 at most 0.294 K/W" in round 16's selection [E11:1975] ([E11PY:6375]), and the reading on
   a coupon at the design target, "R17 0.294 K/W, U 0.353 K/W (119.9 %)" [E11:1913]. To two places: "R17's coupling at most 0.29 K/W"
-  in the row E11-29 [E11:500] (`fmt(R["S26"]["z17_t"], 2)`, [E11PY:6382]), the row R-159 restates word for word [REG:255] and
+  in the row E11-29 [E11:500] (`fmt(R["S26"]["z17_t"], 2)`, [E11PY:6444]), the row R-159 restates word for word [REG:255] and
   TP-E11-29 quotes [TP29:713]. 0.294 + 2 x 0.353 = 1.000 K/W, the limit (DERIVED from the printed figures).
 - **The reading here.** The same computed figure at two roundings, not two targets, and neither is a pass line: R17's pass line is
   "the largest coupling plus U" at most "1 K/W" [E11P:2929], quoted by TP-E11-29 [TP29:738]. This annex's 0.294 K/W [ANX:105] and
