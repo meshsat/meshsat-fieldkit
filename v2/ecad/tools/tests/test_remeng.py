@@ -245,8 +245,11 @@ AMENDMENT_CITES = (
     ("ANX", 73, 73, "E11-37"), ("L4E9", 1134, 1134, "with E11-37 OPEN"), ("L4E9", 1401, 1401, "R-183"),
     ("REG", 279, 279, "| R-183 |"),
     ("CX46", 95, 95, "lower-source back-feed"), ("CX46", 188, 188, "lower-source back-feed"),
-    ("B2", 168, 170, "below the stage's voltage"), ("SOLO", 399, 404, "BELOW the stage's voltage"),
-    ("P11", 120, 123, "back-feeding PV_F through Q12's body diode"),
+    # B2 and P11 re-cited by W23 (fnd/int31cite 1b2d5123; the ledger at 92b754c5) after W4's rewrite of record l4e7's pages (786aed2f,
+    # adopted in set 31): B2-PRESENCE.md 168 to 170 moved to 181 to 190, SUPPLIER-P1-1-P0SOL.md 120 to 123 to 154 to 160 (W20-N3a and
+    # N3b, candidate A, the coordinator's N3 decision; the end and start lines as W23 re-cited them, read at this tree by W25)
+    ("B2", 181, 190, "below the stage's voltage"), ("SOLO", 399, 404, "BELOW the stage's voltage"),
+    ("P11", 154, 160, "back-feeding PV_F through Q12's body diode"),
     # the owner file's lines moved by one at 6bc4424e (origin/main's b0a67a45 filed part 26 with a table row at line 26); the ledger's
     # citations were shifted the same way in commit 2b; the phrases are unchanged (lines 681 and 826 of the file at that merge)
     ("OWN", 681, 681, "Supplier item S1 must carry that engineering problem"),
@@ -294,7 +297,7 @@ def t_the_back_feed_reads_as_engineering_inside_e1():
     row = [r for r in _rows("## 5. Summary", "HO-F") if r.startswith("| HO-F |")]
     assert len(row) == 1 and "back-feed" in row[0] and "not a substitute" in row[0], row
     e = _norm(_section("## 6.").split("- **E.", 1)[1].split("- **F.", 1)[0])
-    for w in ("[CX46:95]", "[P11:120-123]", "is the narrower one", "Record l4e7's own text stands as written"):
+    for w in ("[CX46:95]", "[P11:154-160]", "is the narrower one", "Record l4e7's own text stands as written"):   # W23's re-cite, 1b2d5123
         assert w in e, "section 6, item E lacks: %s" % w
 
 
