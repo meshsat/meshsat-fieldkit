@@ -28,7 +28,7 @@ The literal placeholders are the fixed set `__CANDIDATE__`, `__PROMOTED__`, `__M
 | Role | Revision | State as given | Source |
 |---|---|---|---|
 | REVIEWED: the one targeted recheck, cx46 | `4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e` | CORRECTIONS NOT CLOSED; the second negative on this candidate, so the review method ended | `d83d9f2d:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.` (its base_commit at line 8; the filed check's path is this one) |
-| Commit 2b: the integration's regenerated outputs, the last committed revision when this was written | `d83d9f2d720878ca5267dbf59bdc571c6890fd92` | no check has read it; W16's review is section 3f | section 3 |
+| Commit 2b: the integration's regenerated outputs, the last committed revision when this was written | `d83d9f2d720878ca5267dbf59bdc571c6890fd92` | no independent check of its engineering; W16's AI review of its diff is section 3f | section 3 |
 | INTEGRATED: the candidate commit (the re-keyed record l4e7 cache installed) | `__CANDIDATE__` | none | section 4 |
 | PROMOTED: main after the fast-forward | `__PROMOTED__` (mirror `__MIRROR__`) | a DESK candidate, not an accepted power design (section 6) | section 4 |
 
@@ -47,7 +47,7 @@ Europe/Amsterdam). The disposition round between `4d0ff8a2` and `d5abed7c` is in
 | I8 | `5c414310` | 2026-10-06 03:54:08 | pre-freeze merge 3 of 4: fnd/ledgerfix `99bbc0c6` (the ledger's HO-L for E11-37, the back-feed's narrower reading) |
 | I9 | `2ccf0f20` | 2026-10-06 03:54:08 | pre-freeze merge 4 of 4: fnd/w6tp `9802dfde` (the test procedures' quotes re-taken on set 31's cells) |
 | I10 | `6bc4424e` | 2026-10-06 03:58:43 | merge of origin/main `24708af3` (MESHSAT-1500's compact folder and README; the owner's part 26 filing `b0a67a45`) |
-| I11 | `d83d9f2d` | 2026-10-06 04:42:16 | integration 2b: the regenerated outputs, the four cascade generators' pins, the applier's reader deciding on every added row, the ledger's owner-file citations moved by one, two test modules restated to set 31 (34 files, 178 insertions, 139 deletions: `git show --stat`) |
+| I11 | `d83d9f2d` | 2026-10-06 04:42:16 | integration 2b: the regenerated outputs, the four cascade generators' pins, the applier's reader deciding on every added row, the ledger's owner-file citations moved by one, three test modules changed (`test_applier_state.py`, `test_l9t5.py`, `test_remeng.py`; its subject names two restated to set 31) (34 files, 178 insertions, 139 deletions: `git show --stat`) |
 | I12 | `__L6R2_FIX__` | pending | the coordinator's correction of record l6r2's generator and its regenerated output (W16's finding 1, section 3f) |
 | I13 | `__W19__` | pending | the merge of fnd/w19applier: the applier's D1 regression test (W16's finding 3, section 3f) |
 | I14 | `__CANDIDATE__` | pending | the candidate commit: record l4e7's results cache re-keyed on the integrated tree (section 3e) |
@@ -131,9 +131,9 @@ The passes before integrate7 (integrate3 to integrate6b, 23:06:30 to 01:53:09) a
 - **integrate7, base `3d2746c9`** (`<worktrees>/_runs/int30/integrate7b-0221.log:1` `at 2026-10-06 02:21:24 CEST; base 3d2746c9`):
   the L4 pin chain read already identical; L4-E9's own stale pin re-pinned and its output regenerated
   (`<worktrees>/_runs/int30/integrate7b-0221.log:25` `l4e9_power_path.py: 1 pins re-pinned`); record l9t5's dependency-ordered
-  cascade twice, pass 2 changing no byte (every pass-2 line reads "already identical", lines 48 to 66). Targeted passes from 02:49:45
+  cascade twice, pass 2 changing no byte (every pass-2 line reads "already identical", lines 48 to 65; pass 1 replaced `l6r2_passives.out` and `l9t5_connected.out`, lines 43 and 45). Targeted passes from 02:49:45
   (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:2` `round 1: 31 pairs selected (43 changed files)`): round 1 replaced 10
-  (`:15` `round 1: 10 replaced`), round 2 replaced 5 (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:24` `round 2: 5 replaced`),
+  (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:15` `round 1: 10 replaced`), round 2 replaced 5 (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:24` `round 2: 5 replaced`),
   round 3 replaced 1 (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:29` `round 3: 1 replaced`), round 4 replaced 0
   (`<worktrees>/_runs/int30/integrate7b-0221.log.targeted:33` `round 4: 0 replaced`): converged. Ended
   `<worktrees>/_runs/int30/integrate7b-0221.log:199` `== integrate7 done at 2026-10-06 03:48:29 CEST`.
@@ -177,7 +177,7 @@ The passes before integrate7 (integrate3 to integrate6b, 23:06:30 to 01:53:09) a
 | 03:54 | the merges' modules and the applier | `<worktrees>/_runs/int30/post-0354.log:27` `tests: 64 passed, 5 failed, 0 skipped` | W2's fixture anchors: `<worktrees>/_runs/int30/QUEUE.md`, entry "03:48 to 03:54 CEST", `W2's mutation fixtures M1, M3, M4, M5 anchored on the reader's PRE-D1 lines`; anchors moved to the corrected reader's lines, no predicate weakened |
 | 03:57 | the whole affected set relaunched | `<worktrees>/_runs/int30/post-tests-0357.log:80` `tests: 68 passed, 1 failed, 0 skipped; failed: test_l5pwr.t_output_reproduced_byte_for_byte` | l5pwr's output: W1's committed output against the merged tree; regenerated by the targeted pass (3a) |
 | 04:37 | the targeted pass's affected tests | `<worktrees>/_runs/int30/targeted8-0401.log:82` `tests: 364 passed, 1 failed, 0 skipped; failed: test_remeng.t_the_amendments_citations_read_what_they_cite` | the owner file's part 26 shift: `b0a67a45` inserted a table row and every later line moved by one; the ledger's owner-file citations moved by one and the test's two numbers to 681 and 826 (`<worktrees>/_runs/int30/QUEUE.md`, entry "04:38 to 04:43 CEST (Q-01)", `the test's two typed numbers moved to 681 and 826`) |
-| 04:42 | the merges' modules and test_remeng after the fix | `<worktrees>/_runs/int30/QUEUE.md`, entry "04:38 to 04:43 CEST (Q-01)", `63 passed then 17 passed, 0 failed` | none failing; no log file of this run is in `<worktrees>/_runs/int30` (the queue's entry is the source) |
+| 04:38 to 04:43 | the merges' modules and test_remeng after the fix | `<worktrees>/_runs/int30/QUEUE.md`, entry "04:38 to 04:43 CEST (Q-01)", `63 passed then 17 passed, 0 failed` | none failing; no log file of this run is in `<worktrees>/_runs/int30` (the queue's entry is the source) |
 
 Left in the candidate, named for the next set: L4-E9's generator's three and the page's four owner-file citations are off by one the
 same way and are NOT corrected in this freeze, because a generator text change forces the cascade (the same queue entry).
@@ -230,7 +230,7 @@ of the 13 unreviewed changes of section 2. Its FINDINGS list, verbatim (its line
 > Per section: 1: findings 1 and 2. 2: no finding. 3: finding 3. 4: findings 3, 4, 5, 6. 5: no finding. 6: no finding.
 > Nothing here blocks the freeze on what was read: no figure with a unit moved, no pin mismatches, h3 unchanged, nothing outside the two folders.
 
-**What follows from it for this set (the coordinator's message of about 05:00 CEST, recorded here as given):** none of the seven blocks
+**What follows from it for this set (the coordinator's message, received by this worker at about 04:58 CEST, recorded here as given):** none of the seven blocks
 the freeze; two are fixed before the candidate commit, both as PENDING CORRECTIONS:
 
 - Finding 1: the coordinator corrects record l6r2's generator (board D's ptt draft no longer applied twice in the commutation reading)
@@ -269,11 +269,11 @@ queue's estimate for the present re-key's end, an ESTIMATE: `<worktrees>/_runs/i
 - **suite4 (instance 54347953) stopped by the idle watchdog at 01:30**: `<worktrees>/_runs/vast/watchdog.log:1847` `idle_h 2.00`, then
   `<worktrees>/_runs/vast/watchdog.log:1849` `54347953 STOPPED after 2.00 h idle` (a backup at line 1848). A checkpoint had said it was
   running; corrected and relayed at 04:10 (`<worktrees>/_runs/int30/QUEUE.md`, entry "04:06 to 04:10 CEST (Q-01, Q-10)", `was STOPPED by the watchdog at 01:30:06 after 2.00 h idle`).
-- **Its restart refused twice**: the resume from 04:09 and the start answered `<worktrees>/_runs/int30/QUEUE.md`, entry "04:24 to 04:29 CEST (Q-10, compute)", `"resources_unavailable, state change queued", twice`;
-  **the queued start cancelled at 04:27** (`its queued start CANCELLED with a stop PUT at 04:27`, the same entry;
+- **Its restart refused twice**: the resume from 04:09 could not start the instance, `<worktrees>/_runs/int30/QUEUE.md`, entry "04:24 to 04:29 CEST (Q-10, compute)", `"resources_unavailable, state change queued", twice`;
+  **the queued start cancelled at 04:27** (`<worktrees>/_runs/int30/QUEUE.md`, entry "04:24 to 04:29 CEST (Q-10, compute)", `its queued start CANCELLED with a stop PUT at 04:27`;
   `<worktrees>/_runs/vast/LOG-20261006.md:1` `the queued start CANCELLED by a stop PUT at 04:27 (success true) so no unattended late start; disk kept`).
 - **suite5 (instance 54417830) rented at 04:28**: `<worktrees>/_runs/vast/LOG-20261006.md:2` `RENTED 54417830 meshsat-1357-suite5 on offer 50747392`,
-  the offer `50747392 EPYC 7B13 32 threads 63 GB Estonia 0.1223 USD/h` (the same line). The watchdog prints a higher hourly figure for
+  the offer `<worktrees>/_runs/vast/LOG-20261006.md:2` `50747392 EPYC 7B13 32 threads 63 GB Estonia 0.1223 USD/h`. The watchdog prints a higher hourly figure for
   the running instance, `<worktrees>/_runs/vast/watchdog.log:1958` `54417830 meshsat-1357-suite5 running dph 0.1663`; the difference is
   not explained in the logs read here (both are copied, neither is a measured cost).
 - **SETUP-DONE at 04:31:34** (`<worktrees>/_runs/vast/LOG-20261006.md:3` `SETUP-DONE at 04:31:34 (3 min)`, measured: 3 min after the rental).
@@ -294,8 +294,10 @@ generator (W15's summary, line 90; 2b's diff, section 2). As the candidate's rec
   the ledger's counts (`d83d9f2d:v2/docs/records/l4close/REMAINING-ENGINEERING.md:669` `Counts: remaining engineering 20; qualification 1; external architecture fact 3; closed 4; conditional 2.`).
 - D-10 stays OPEN as E-1 and D-17 as RE-2 (`d83d9f2d:v2/docs/records/l4e9/l4e9_power_path.out:560` `two material defects are open: D-10 (E-1) and D-17 (RE-2)`;
   `d83d9f2d:v2/docs/records/l4e9/l4e9_power_path.out:1017` `criterion 2 FAIL with 2 defects open`).
-- The connected verdict (`d83d9f2d:v2/docs/records/l9t5/l9t5_connected.out:336` `THE CONNECTED ELECTRICAL VERDICT: REMAINING ENGINEERING.`) and every OPEN and
-  PROVISIONAL claim of the records are unchanged by the integration's own commits.
+- The connected verdict stands (`d83d9f2d:v2/docs/records/l9t5/l9t5_connected.out:336` `THE CONNECTED ELECTRICAL VERDICT: REMAINING ENGINEERING.`).
+  No OPEN or PROVISIONAL claim is closed, accepted or released by the integration. One state did move off OPEN inside it: D-16, to
+  ADDRESSED IN DRAFTS (PROVISIONAL on S3 by draft 2's row 17), applied by `7070f106` and carried by `bbba3e53` and `17ce29d5`; it is one
+  of the unreviewed changes of section 2, not a closure. Criterion 2's move from CONDITIONAL to FAIL (`17ce29d5`) narrows.
 
 **The three completion claims, each with its own state** (the constitution's section 2, cited above; never blended):
 
@@ -331,7 +333,7 @@ and the coordinator items the queue lists as Q-27.
 
 | Record | Revision bound | State |
 |---|---|---|
-| The P0 power list, revision 3 | W17's draft 3 has not landed (fnd/w17p0list at its base `c79ae84f` when this was written); so Slot K's draft 2, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md` (in this branch's history), with W7's nine patch rows R-01 to R-09 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md` on fnd/w7rem `3e566c55` | a draft; the coordinator adopts revision 3 at Q-04a |
+| The P0 power list, revision 3 | W17's draft 3, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft3.md`, at its checkpoint fnd/w17p0list `ec5d818d` (read at 05:02 CEST; a checkpoint commit, W17 still working; the coordinator binds W17's final tip). Its inputs: Slot K's draft 2, `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md` (in this branch's history), with W7's nine patch rows R-01 to R-09 in `v2/docs/records/l4close/P0-POWER-LIST.rev3.patch.md` on fnd/w7rem `3e566c55` | a draft; the coordinator adopts revision 3 at Q-04a |
 | LAYER-STATUS, the set 30 fold | fnd/lstat31 `87c5fb08` (`v2/docs/handover/LAYER-STATUS.md`, +90 lines, and `test_lstat31.py`) | a draft fold with the verdict placeholder; adopted after the promotion |
 | Layer 4's DESK-gate assessment | fnd/dgate2 `150e908b` (`v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft2.md`) | draft 2; the verdict word is the coordinator's (Q-05) |
 | The part 25 classification | fnd/w15class `57bcdbfc` (`v2/docs/records/int30/CLASSIFICATION.draft.md`) | 38 commits classified; 2b read in section 2 here; the candidate commit's row owed |
