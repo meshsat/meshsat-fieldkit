@@ -206,7 +206,12 @@ def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_num
     m = _CACHE["M"]
     committed = open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()
     data = json.load(open(m.CACHE, encoding="utf-8"))
-    assert set(data) == {"key", "parts", "R"} and set(data["parts"]) == {"src", "files", "scans", "solver", "python", "pdftotext"}
+    assert set(data) == {"key", "parts", "evidence", "R"} and set(data["parts"]) == {"src", "files", "l4e11_numbers", "scans", "solver", "python", "pdftotext"}
+    # W61 (6 October 2026): of L4-E11's output the KEY holds the numbers compute() reads; its whole sha256 is the evidence beside the
+    # KEY (the bytes the results were computed on, which a later prose change of the file may differ from without moving the KEY)
+    ev = data["evidence"]
+    assert m.L4E11_OUT not in data["parts"]["files"] and set(ev["files"]) == {m.L4E11_OUT} and len(ev["files"][m.L4E11_OUT]) == 64
+    assert ev["l4e11_numbers"] == m.l4e11_numbers() and data["parts"]["l4e11_numbers"] == hashlib.sha256(m.l4e11_canonical(m.l4e11_numbers()).encode("utf-8")).hexdigest()
     assert data["key"] == m.key_of(data["parts"]) == m.key_of(m.key_parts(data["parts"]["files"])), "the committed cache's KEY does not hold for this tree"
     Rc = m.load_cache()
     assert Rc is not None and "\n".join(m.render(Rc)) + "\n" == committed, "the committed output is not render(cache)"
@@ -231,7 +236,7 @@ def t_the_results_cache_renders_the_committed_output_and_its_key_follows_the_num
         p = os.path.join(td, "stale.results.json")
         open(p, "w", encoding="utf-8").write(json.dumps(bad))
         assert m.load_cache(p) is None
-    for part in ("src", "files", "scans", "solver", "python", "pdftotext"):
+    for part in ("src", "files", "l4e11_numbers", "scans", "solver", "python", "pdftotext"):
         moved = json.loads(json.dumps(data["parts"]))
         moved[part] = {"changed": True}
         assert m.key_of(moved) != data["key"], part
@@ -351,8 +356,9 @@ def _main_on(m, td):
 
 def _link_key_inputs(td, data):
     """Symlink into td every input the committed results cache's KEY records that td does not already hold (read, never written), so
-    a run on td checks the KEY on the same bytes; the documents a test edits are copies made before this."""
-    for rel in data["parts"]["files"]:
+    a run on td checks the KEY on the same bytes; the documents a test edits are copies made before this. The files whose whole
+    digest is evidence beside the KEY (L4-E11's output since W61) are linked too: the KEY reads their numbers."""
+    for rel in list(data["parts"]["files"]) + sorted(data.get("evidence", {}).get("files", {})):
         if not os.path.lexists(os.path.join(td, rel)):
             os.makedirs(os.path.dirname(os.path.join(td, rel)), exist_ok=True)
             os.symlink(os.path.join(ROOT, rel), os.path.join(td, rel))

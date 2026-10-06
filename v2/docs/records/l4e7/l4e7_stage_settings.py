@@ -23,7 +23,8 @@ Run from the repository root:  python3 v2/docs/records/l4e7/l4e7_stage_settings.
 (regenerate the committed output only through the integration's regen_out.py). compute() is the solver, render() the
 presentation: a run renders from l4e7_stage_settings.results.json beside this file when the cache's KEY equals the KEY of the
 present tree (seconds), and otherwise computes, writes the cache (a temporary file, renamed only after the rendering
-succeeded) and renders from what the cache holds; --recompute forces compute(). The KEY is described at key_parts() below.
+succeeded) and renders from what the cache holds; --recompute forces compute(). The KEY is described at key_parts() below;
+of L4-E11's l4e11_power.out it holds only the numbers compute() reads (l4e11_numbers()), the file's sha256 kept as evidence.
 Needs pdftotext and pdftocairo (poppler), PyYAML and the held documents (fetch_held_back.py beside this file, the Samsung
 excerpts by fetch_maker_curves.py beside it, and the ones the imported records name). A computing run takes about 30 to 50
 minutes on a loaded host, most of it section 0 and the guard's transients (B6, rounds 2 to 5).
@@ -147,6 +148,76 @@ def load(name, rel):
     m = importlib.util.module_from_spec(sp)
     exec(compile(src, path, "exec"), m.__dict__)
     return m
+
+
+# ===================================================================================== L4-E11's numbers (the results cache's KEY)
+# What compute() reads of L4-E11's printed output, and nothing else of that file (W61, 6 October 2026: the owner's workflow request
+# MESHSAT-WORKFLOW-IMPROVE-20261006-1829-01, item 2). The results cache's KEY holds these numbers as its part l4e11_numbers (the
+# sha256 of their canonical JSON) in place of the file's whole digest, which is kept beside the KEY as evidence (evidence_part()). A
+# change of the file's prose (an input digest it prints, a sentence) leaves the KEY; a changed number moves it; a missing or malformed
+# number refuses. Each row: the name, the pattern compute() reads it with on the whitespace-flattened text (the patterns compute()
+# used before this boundary, verbatim), the number of values, and what it is. The declared form of every value is a plain decimal
+# (NUM_FORM); a triple is the printed least / typical / greatest and never descends.
+L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.out"
+L4E11_NUMBERS = (
+    ("uv", r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", 3, "L4-E11's UVLO"),
+    ("uvf", r"UVLO: on at [\d.]+ / [\d.]+ / [\d.]+ V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P", 3, "L4-E11's UVLO falling"),
+    ("slew", r"the start: slew ([\d.]+) / ([\d.]+) / ([\d.]+) V/ms", 3, "L4-E11's slew"),
+    ("inp", r"INP high from DC_P ([\d.]+) V", 1, "L4-E11's INP"),
+    ("scp", r"short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", 3, "L4-E11's short-circuit threshold"),
+    ("ocp", r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row", 3, "L4-E11's overcurrent threshold"))
+NUM_FORM = r"\d+(?:\.\d+)?"
+EVIDENCE_ONLY = (L4E11_OUT,)     # the inputs whose KEY part is a structured extract; their whole sha256 is evidence beside the KEY
+
+
+def l4e11_numbers(text=None, top=None):
+    """{name: [values]} of L4E11_NUMBERS, read from L4E11_OUT in the tree top (default TOP), or from text (the file's text, for a
+    test or a reading at a commit). Strict, never a default: refuses (exit 3, naming the value and the file) when the file is missing
+    or unreadable, or a value is missing, duplicated (its sentence printed more than once), unparsable or out of its declared form. A
+    sentence is found by its pattern with every number widened to any token, so a malformed number refuses as malformed instead of
+    leaving another sentence to be read in its place."""
+    if text is None:
+        p_ = os.path.join(top or TOP, L4E11_OUT)
+        if not os.path.isfile(p_):
+            refuse(3, "l4e11_numbers: %s is missing" % L4E11_OUT)
+        try:
+            text = open(p_, "rb").read().decode("utf-8")
+        except (OSError, UnicodeDecodeError) as e_:
+            refuse(3, "l4e11_numbers: %s is unreadable (%s)" % (L4E11_OUT, type(e_).__name__))
+    t_ = flat(text)
+    out_ = {}
+    for name_, pat_, n_, what_ in L4E11_NUMBERS:
+        wide_ = pat_.replace(r"([\d.]+)", r"(\S+)").replace(r"[\d.]+", r"\S+")
+        if re.compile(pat_).groups != n_ or re.compile(wide_).groups != n_:
+            refuse(3, "l4e11_numbers: %s (%s) is declared with %d values and its pattern reads another count" % (what_, name_, n_))
+        hits_ = list(re.finditer(wide_, t_))
+        if not hits_:
+            refuse(3, "l4e11_numbers: %s (%s) missing in %s" % (what_, name_, L4E11_OUT))
+        if len(hits_) > 1:
+            refuse(3, "l4e11_numbers: %s (%s) duplicated in %s: %d sentences (%s)" % (
+                what_, name_, L4E11_OUT, len(hits_), "; ".join(" / ".join(h_.groups()) for h_ in hits_)))
+        vals_ = []
+        for tok_ in hits_[0].groups():
+            try:
+                v_ = float(tok_)
+            except ValueError:
+                refuse(3, "l4e11_numbers: %s (%s) unparsable in %s: %r" % (what_, name_, L4E11_OUT, tok_))
+            if not re.fullmatch(NUM_FORM, tok_):
+                refuse(3, "l4e11_numbers: %s (%s) out of its declared form in %s: %r is not a plain decimal" % (what_, name_, L4E11_OUT, tok_))
+            vals_.append(v_)
+        if n_ == 3 and not vals_[0] <= vals_[1] <= vals_[2]:
+            refuse(3, "l4e11_numbers: %s (%s) out of its declared form in %s: %s descends (a least / typical / greatest triple)" % (
+                what_, name_, L4E11_OUT, " / ".join(hits_[0].groups())))
+        m_ = re.search(pat_, t_)
+        if m_ is None or m_.span() != hits_[0].span() or m_.groups() != hits_[0].groups():
+            refuse(3, "l4e11_numbers: %s (%s): compute()'s pattern reads another sentence of %s" % (what_, name_, L4E11_OUT))
+        out_[name_] = vals_
+    return out_
+
+
+def l4e11_canonical(nums):
+    """The canonical JSON of l4e11_numbers(): names sorted, compact separators, each value its float's repr."""
+    return json.dumps(nums, sort_keys=True, separators=(",", ":"))
 
 
 def catalogue(code):
@@ -2620,11 +2691,8 @@ def compute():
                         (r'"1u 25V X7R \(CBST', "CBST")):
         if not re.search(pat_, e11, re.S):
             refuse(3, "L4-E11's entry draft no longer carries %s" % what_)
-    o11 = flat(open(os.path.join(TOP, "v2/docs/records/l4e11/l4e11_power.out"), encoding="utf-8").read())
-    L11 = dict(uv=g3(o11, r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", "L4-E11's UVLO"),
-               uvf=g3(o11, r"UVLO: on at [\d.]+ / [\d.]+ / [\d.]+ V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P", "L4-E11's UVLO falling"),
-               slew=g3(o11, r"the start: slew ([\d.]+) / ([\d.]+) / ([\d.]+) V/ms", "L4-E11's slew"),
-               inp=g3(o11, r"INP high from DC_P ([\d.]+) V", "L4-E11's INP")[0],
+    nums11 = l4e11_numbers()      # what this record reads of L4-E11's output, strictly (L4E11_NUMBERS; the results cache's KEY part l4e11_numbers)
+    L11 = dict(uv=tuple(nums11["uv"]), uvf=tuple(nums11["uvf"]), slew=tuple(nums11["slew"]), inp=nums11["inp"][0],
                cin_uv=(59.0e3, 10.0e3), inp_div=(100e3, 39e3), rsns=4.5e-3, rsns_tol=0.01, rsns_tcr=50e-6, cbst=1e-6, cbst_tol=0.10, ctmr=22e-9, ctmr_tol=0.05,
                riscp=3.01e3, cscp=1e-9, rvs=100.0, cvs=100e-9)
     # the stage's own enable (R14 and R15 on TRK_VS), as the generator draws it
@@ -2777,9 +2845,9 @@ def compute():
                floor_c=-D11["vc"] * QF["coss"] / (c_in * 0.9))
     # CS116 and CS115 with the block on (in the path) and off (night, after a cut)
     t_rc = L11["riscp"] * 0.99 * GD["cscp"] * 0.95     # B6: the guard's CSCP, at its least (the least attenuation of CS116's lobes)
-    scp3 = g3(o11, r"short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", "L4-E11's short-circuit threshold")   # the same RISCP and RSNS
+    scp3 = tuple(nums11["scp"])        # L4-E11's short-circuit threshold: the same RISCP and RSNS
     scp_lo = scp3[0]
-    ocp11 = g3(o11, r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row", "L4-E11's overcurrent threshold")
+    ocp11 = tuple(nums11["ocp"])       # L4-E11's overcurrent threshold
     scp_f = max(i_op + r_["ip"] * min(1.0, 1.0 / (math.pi * r_["f"] * t_rc)) for r_ in r116)
     ocp_lo = ocp11[0]
     t_over = max((max(Q116) / (math.pi * r_["f"])) * math.log(r_["ip"] / (ocp_lo - i_op)) for r_ in r116 if r_["ip"] > ocp_lo - i_op)
@@ -4806,6 +4874,9 @@ def render(R):
 # ===================================================================================== the results cache
 # The owner's review of the supplier handover ("Execution efficiency"): a wording change must not cost the solver. compute()'s
 # results R are kept in CACHE with the KEY of the tree they were computed on; a run renders from the cache when the KEY still holds.
+# Beside the KEY the cache keeps its evidence (evidence_part()): the whole sha256 of each input whose KEY part is a structured
+# extract of what compute() reads (L4-E11's output since W61, 6 October 2026), so a prose change of that input reuses the results
+# while the cache still names the exact bytes they were computed on.
 CACHE = os.path.join(HERE, "l4e7_stage_settings.results.json")
 
 
@@ -4839,17 +4910,22 @@ def src_part(text):
 
 def key_parts(files):
     """The KEY's parts: (1) src, src_part() of this script; (2) files, the sha256 of every file under the repository that compute()
-    opened or handed to a subprocess on the run that wrote the cache (recorded while it ran; the tree scans excepted); (3) scans,
-    what the two tree scans compute() makes establish (scan_part(): the panel lead's input and iec_held()), re-run at every check;
-    the lead guard itself runs at every run, before the cache is read, and a differing length refuses there; (4)
-    solver, the defaults of the solvers' own parameters (timestep, horizon); (5) python, its major.minor; (6) pdftotext, its version."""
+    opened or handed to a subprocess on the run that wrote the cache (recorded while it ran; the tree scans excepted), except the
+    files of EVIDENCE_ONLY; (3) l4e11_numbers, for L4E11_OUT (whatever files holds), the sha256 of the canonical JSON of exactly the
+    numbers compute() reads of it (l4e11_numbers(), which refuses on a missing or malformed number); its whole sha256 is kept beside
+    the KEY as evidence (evidence_part()); (4) scans, what the two tree scans compute() makes establish (scan_part(): the panel
+    lead's input and iec_held()), re-run at every check; the lead guard itself runs at every run, before the cache is read, and a
+    differing length refuses there; (5) solver, the defaults of the solvers' own parameters (timestep, horizon); (6) python, its
+    major.minor; (7) pdftotext, its version."""
     def dig(rel_):
         try:
             return sha(rel_)
         except OSError:
             return "missing"
     pv_ = subprocess.run(["pdftotext", "-v"], capture_output=True, text=True)
-    return dict(src=src_part(open(os.path.abspath(__file__), encoding="utf-8").read()), files={f_: dig(f_) for f_ in sorted(files)},
+    return dict(src=src_part(open(os.path.abspath(__file__), encoding="utf-8").read()),
+                files={f_: dig(f_) for f_ in sorted(files) if f_ not in EVIDENCE_ONLY},
+                l4e11_numbers=hashlib.sha256(l4e11_canonical(l4e11_numbers()).encode("utf-8")).hexdigest(),
                 scans=scan_part(),
                 solver={f_.__name__: [[p_.name, repr(p_.default)] for p_ in inspect.signature(f_).parameters.values() if p_.default is not inspect.Parameter.empty]
                         for f_ in (guard_event, guard_event_b, sense_ripple)},
@@ -4862,6 +4938,14 @@ def scan_part(top=None):
     For IEC 61000-4-5: whether a file of v2/vendor names it."""
     return dict(lead_input=lead_input(top),
                 iec61000_4_5=iec_held())
+
+
+def evidence_part(top=None):
+    """Beside the KEY, never in it: the whole sha256 of every file of EVIDENCE_ONLY and the numbers read of it, so the cache names
+    the exact bytes its results were computed on. Written with the cache; a cache without it is never rendered from (load_cache)."""
+    nums_ = l4e11_numbers(top=top)
+    return dict(files={rel_: hashlib.sha256(open(os.path.join(top or TOP, rel_), "rb").read()).hexdigest() for rel_ in EVIDENCE_ONLY},
+                l4e11_numbers=nums_)
 
 
 def key_of(parts):
@@ -4936,10 +5020,14 @@ def run_recorded():
 
 
 def load_cache(path=CACHE):
-    """R from a cache file whose KEY equals the present tree's, else None (a cache whose KEY differs is never rendered from)."""
+    """R from a cache file whose KEY equals the present tree's and which carries its evidence digests, else None (a cache whose KEY
+    differs, or without the whole sha256 of each file of EVIDENCE_ONLY beside its KEY, is never rendered from)."""
     try:
         data = json.load(open(path, encoding="utf-8"))
         if key_of(key_parts(data["parts"]["files"])) != data["key"]:
+            return None
+        ev_ = data["evidence"]["files"]
+        if set(ev_) != set(EVIDENCE_ONLY) or not all(re.fullmatch(r"[0-9a-f]{64}", str(v_)) for v_ in ev_.values()):
             return None
         return _dec(data["R"])
     except (OSError, ValueError, KeyError, TypeError):
@@ -4955,6 +5043,7 @@ def results(recompute=False):
 
 def main(argv=()):
     lead_guard(report=True)          # every run, cache or not: a differing panel lead length refuses; the citations go to stderr
+    l4e11_numbers()                  # every run, cache or not: a missing or malformed L4-E11 number refuses before the cache or the solver
     R = None if "--recompute" in argv else load_cache()
     tmp = None
     if R is None:
@@ -4962,7 +5051,8 @@ def main(argv=()):
         parts = key_parts(files)
         tmp = CACHE + ".tmp"
         with open(tmp, "w", encoding="utf-8") as fh:
-            fh.write(json.dumps(dict(key=key_of(parts), parts=parts, R=_enc(R0)), sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")
+            fh.write(json.dumps(dict(key=key_of(parts), parts=parts, evidence=evidence_part(), R=_enc(R0)), sort_keys=True, separators=(",", ":"),
+                                ensure_ascii=False) + "\n")
         R = _dec(json.load(open(tmp, encoding="utf-8"))["R"])      # render from what the cache holds, never from memory
     try:
         text = "\n".join(render(R)) + "\n"
