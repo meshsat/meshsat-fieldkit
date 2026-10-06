@@ -1,0 +1,267 @@
+                                                                                    PRODUCT INFORMATION
+
+ÖLFLEX® ROBUST 210
+
+Proven all-weather control cable – resistant to a wide range of chemical media
+
+ÖLFLEX® ROBUST 210 - Control cable, weather, bio oil, detergent and hot water resistant for use in food & beverage industry and
+composting plants
+
+Info
+Good weather resistance
+Good chemical resistance please see Appendix T1
+Reduced outer diameter
+
+
+
+
+          Suitable for outdoor use
+
+
+          Good chemical resistance
+
+
+          Halogen-free
+
+
+          Cold-resistant
+
+
+          UV-resistant
+
+
+
+
+Benefits
+Outstanding weather, ozone and UV resistance together with the wide temperature range enable versatile use for indoor and
+outdoor applications
+Resistant to contact with organic oils and the related emulsions as well as a multitude of plant, animal or synthetic-based greases
+and waxes
+Good resistance to ammonia compounds and bio-gases
+
+
+Last Update (23.01.2026)
+©2026 Lapp Group - Technical changes reserved
+Product Management www.lappkabel.de
+You can find the current technical data in the corresponding data sheet.
+PN 0456 / 02_03.16
+                                                                                         PRODUCT INFORMATION
+
+ÖLFLEX® ROBUST 210
+
+Good resistance to cold and hot water as well as water-soluble cleaning and cooling agents
+Well-suited to steam cleaning
+
+
+Application range
+Machine tool building, medical technology, laundries, car washing equipment, chemical industry, composting plants, sewage works
+Food and beverage industry, especially for production and processing equipment of milk and meat products
+Agricultural equipment
+For indoor and outdoor use
+
+
+Product features
+Good chemical resistance to ester-based hydraulic fluids
+Ozone, UV and weather-resistant according to EN 50396 and HD 605 S2
+Flexible down to -40°C
+Low-capacitance design
+Number-coded cores
+
+
+Norm references / Approvals
+Based on VDE 0250 / 0285
+Certified resistance to disinfection and cleaning solutions used in food and beverage industry
+Suitable for use in fresh water down to 10 m depth at max. water temperature of +40 °C according to EN 50565-2
+
+
+Product Make-up
+Fine-wire, bare copper conductor
+Core insulation made of modified PP
+Cores twisted in layers
+Outer sheath made of special TPE
+Sheath colour: black
+
+
+Technical Data
+Classification ETIM 5:                                           ETIM 5.0 Class-ID: EC000104
+                                                                 ETIM 5.0 Class-Description: Control cable
+Classification ETIM 6:                                           ETIM 6.0 Class-ID: EC000104
+                                                                 ETIM 6.0 Class-Description: Control cable
+Core identification code:                                        Black with white numbers acc. to VDE 0293-334
+Conductor stranding:                                             Fine wire according to VDE 0295,
+                                                                 class 5/IEC 60228 class 5
+Minimum bending radius:                                          Occasional flexing: 15 x outer diameter
+                                                                 Fixed installation: 4 x outer diameter
+Nominal voltage:                                                 U0/U: 300/500 V
+Test voltage:                                                    4000 V
+Protective conductor:                                            G = with GN-YE protective conductor
+                                                                 X = without protective conductor
+Temperature range:                                               Occasional flexing: -40°C to +80°C
+                                                                 Fixed installation: -50°C to +80°C
+
+
+
+Note
+Unless specified otherwise, the shown product values are nominal values. Detailed values (e.g. tolerances) are available upon
+request.
+
+Last Update (23.01.2026)
+©2026 Lapp Group - Technical changes reserved
+Product Management www.lappkabel.de
+You can find the current technical data in the corresponding data sheet.
+PN 0456 / 02_03.16
+                                                                                    PRODUCT INFORMATION
+
+ÖLFLEX® ROBUST 210
+
+Copper price basis: EUR 150/100 kg. Refer to catalogue appendix T17 for the definition and calculation of copper-related
+surcharges.
+Please find our standard lengths at: www.lappkabel.de/en/cable-standardlengths
+Packaging size: coil ≤ 30 kg or ≤ 250 m, otherwise drum
+Please specify the preferred type of packaging (e.g. 1 x 500 m drum or 5 x 100 m coils).
+Single lengths for sizes: ≥ 4G16 max. 600 m; ≥ 4G25 max. 300 m; ≥ 4G50 max. 250 m
+Photographs and graphics are not to scale and do not represent detailed images of the respective products.
+Prices are net prices without VAT and surcharges. Sale to business customers only.
+The final resistance of the cable to the effects of chemicals and their compounds can only be assessed in real-life conditions, taking
+into account the totality of factors affecting the cable. Relevant factors can affect the performance and lifespan of the cable.
+
+
+
+
+Last Update (23.01.2026)
+©2026 Lapp Group - Technical changes reserved
+Product Management www.lappkabel.de
+You can find the current technical data in the corresponding data sheet.
+PN 0456 / 02_03.16
+Powered by TCPDF (www.tcpdf.org)
+
+
+
+
+                                                                                                                                                                                                                               ÖLFLEX® ROBUST 210
+                                   PN 0456 / 02_03.16
+                                   You can find the current technical data in the corresponding data sheet.
+                                   Product Management www.lappkabel.de
+                                   ©2026 Lapp Group - Technical changes reserved
+                                   Last Update (23.01.2026)
+                                                                                                              Article number       Number of cores and mm² per   Outer diameter [mm]   Copper index (kg/km)   Weight (kg/km)
+                                                                                                                                   conductor
+                                                                                                              ÖLFLEX® ROBUST 210
+                                                                                                              0021880              2 X 0.5                       4.9                   10                     27
+                                                                                                              0021881              3 G 0.5                       5.2                   15                     33
+                                                                                                              0021882              3 X 0.5                       5.2                   15                     33
+                                                                                                              0021883              4 G 0.5                       5.8                   19.2                   41
+                                                                                                              0021884              4 X 0.5                       5.8                   19.2                   41
+                                                                                                              0021885              5 G 0.5                       6.3                   24                     49
+                                                                                                              0021886              5 X 0.5                       6.3                   24                     49
+                                                                                                              0021888              7 G 0.5                       6.9                   33.6                   64
+                                                                                                              0021889              7 X 0.5                       6.9                   33.6                   64
+                                                                                                              0021890              10 G 0.5                      8.8                   48                     92
+                                                                                                              0021891              12 G 0.5                      9.1                   58                     106
+                                                                                                              0021892              18 G 0.5                      10.8                  86.4                   151
+                                                                                                              0021893              25 G 0.5                      12.7                  120                    210
+                                                                                                              0021897              2 X 0.75                      5.5                   14.4                   35
+                                                                                                              0021898              3 G 0.75                      5.8                   21.6                   43
+                                                                                                              0021899              3 X 0.75                      5.8                   21.6                   43
+                                                                                                              0021900              4 G 0.75                      6.3                   28.8                   49
+                                                                                                              0021901              4 X 0.75                      6.3                   28.8                   49
+                                                                                                              0021902              5 G 0.75                      6.9                   36                     66
+                                                                                                              0021903              5 X 0.75                      6.9                   36                     66
+                                                                                                              0021904              7 G 0.75                      7.5                   50                     85
+
+
+
+
+                                                                                                                                                                                                                                                    PRODUCT INFORMATION
+                                                                                                              0021905              7 X 0.75                      7.5                   50                     85
+                                                                                                              0021907              12 G 0.75                     10.1                  86                     144
+                                                                                                              0021908              18 G 0.75                     12                    130                    208
+                                                                                                              0021909              25 G 0.75                     14.1                  180                    288
+                                                                                                              0021910              34 G 0.75                     16.3                  245                    386
+                                                                                                              0021911              41 G 0.75                     17.8                  296                    464
+                                                                                                              0021912              50 G 0.75                     19.6                  360                    560
+                                                                                                              0021913              2 X 1.0                       5.8                   19.2                   42
+                                                                                                              0021914              3 G 1.0                       6.1                   28.8                   49
+                                                                                                              0021915              3 X 1.0                       6.1                   28.8                   49
+                                                                                                              0021916              4 G 1.0                       6.6                   38.4                   63
+                                                                                                              0021917              4 X 1.0                       6.6                   38.4                   63
+Powered by TCPDF (www.tcpdf.org)
+
+
+
+
+                                                                                                                                                                                                                           ÖLFLEX® ROBUST 210
+                                   PN 0456 / 02_03.16
+                                   You can find the current technical data in the corresponding data sheet.
+                                   Product Management www.lappkabel.de
+                                   ©2026 Lapp Group - Technical changes reserved
+                                   Last Update (23.01.2026)
+                                                                                                              Article number   Number of cores and mm² per   Outer diameter [mm]   Copper index (kg/km)   Weight (kg/km)
+                                                                                                                               conductor
+                                                                                                              0021918          5 G 1.0                       7.3                   48                     78
+                                                                                                              0021919          5 X 1.0                       7.3                   48                     78
+                                                                                                              0021920          7 G 1.0                       8.1                   67                     107
+                                                                                                              0021921          10 G 1.0                      10.4                  96                     154
+                                                                                                              0021922          12 G 1.0                      10.7                  115                    178
+                                                                                                              0021923          18 G 1.0                      12.9                  173                    262
+                                                                                                              0021924          25 G 1.0                      15                    240                    357
+                                                                                                              0021925          34 G 1.0                      17.5                  326                    484
+                                                                                                              0021926          41 G 1.0                      19.2                  394                    582
+                                                                                                              0021927          50 G 1.0                      21                    480                    703
+                                                                                                              0021928          2 X 1.5                       6.4                   29                     56
+                                                                                                              0021929          3 G 1.5                       6.8                   43                     72
+                                                                                                              0021930          3 X 1.5                       6.8                   43                     72
+                                                                                                              0021931          4 G 1.5                       7.4                   58                     91
+                                                                                                              0021932          4 X 1.5                       7.4                   58                     91
+                                                                                                              0021933          5 G 1.5                       8.3                   72                     108
+                                                                                                              0021934          5 X 1.5                       8.3                   72                     108
+                                                                                                              0021936          7 G 1.5                       9                     101                    149
+                                                                                                              0021937          7 X 1.5                       9                     101                    149
+                                                                                                              0021938          10 G 1.5                      11.8                  143                    215
+                                                                                                              0021940          12 G 1.5                      12.2                  173                    234
+                                                                                                              0021941          18 G 1.5                      14.6                  259                    369
+
+
+
+
+                                                                                                                                                                                                                                                PRODUCT INFORMATION
+                                                                                                              0021942          25 G 1.5                      17.2                  360                    510
+                                                                                                              0021943          34 G 1.5                      19.8                  490                    683
+                                                                                                              0021945          50 G 1.5                      24                    720                    999
+                                                                                                              0021946          2 X 2.5                       7.6                   48                     86
+                                                                                                              0021947          3 G 2.5                       8.3                   72                     115
+                                                                                                              0021949          4 G 2.5                       9                     96                     131
+                                                                                                              0021951          5 G 2.5                       10.1                  120                    178
+                                                                                                              0021953          7 G 2.5                       11.2                  168                    241
+                                                                                                              0021954          12 G 2.5                      15.1                  288                    405
+                                                                                                              0021963          3 G 4.0                       10.1                  115                    180
+                                                                                                              0021964          4 G 4.0                       11.1                  157                    228
+                                                                                                              0021965          5 G 4.0                       12.4                  192                    280
+  Powered by TCPDF (www.tcpdf.org)
+
+
+
+
+                                                                                                                                                                                                                             ÖLFLEX® ROBUST 210
+                                     PN 0456 / 02_03.16
+                                     You can find the current technical data in the corresponding data sheet.
+                                     Product Management www.lappkabel.de
+                                     ©2026 Lapp Group - Technical changes reserved
+                                     Last Update (23.01.2026)
+                                                                                                                Article number   Number of cores and mm² per   Outer diameter [mm]   Copper index (kg/km)   Weight (kg/km)
+                                                                                                                                 conductor
+                                                                                                                0021966          7 G 4.0                       13.6                  269                    377
+                                                                                                                0021967          4 G 6.0                       13.3                  230                    332
+                                                                                                                0021968          5 G 6.0                       14.8                  288                    407
+                                                                                                                0021969          4 G 10.0                      16.5                  384                    541
+                                                                                                                0021970          5 G 10.0                      18.4                  480                    620
+                                                                                                                0021971          4 G 16.0                      18.8                  614.4                  806
+                                                                                                                0021972          4 G 25.0                      23.5                  960                    1218
+                                                                                                                0021973          4 G 35.0                      26.4                  1344                   1658
+
+
+
+
+                                                                                                                                                                                                                                                  PRODUCT INFORMATION
+Powered by TCPDF (www.tcpdf.org)
+

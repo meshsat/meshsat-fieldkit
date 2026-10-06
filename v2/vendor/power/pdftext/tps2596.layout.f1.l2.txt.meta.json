@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 1 -l 2 v2/vendor/power/tps2596.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "1",
+  "-l",
+  "2"
+ ],
+ "pdf": "v2/vendor/power/tps2596.pdf",
+ "pdf_sha256": "66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/tps2596.layout.f1.l2.txt",
+ "text_bytes": 11674,
+ "text_sha256": "29a1664ffcb96fe8bb35d33b2202c76e5c6d158362e83caea0b6a6e543041522"
+}

@@ -1,0 +1,847 @@
+                           SAMSUNG SDI Confidential Proprietary
+
+Spec. No.   INR18650-35E       Version No.     Ver. 1.1
+
+
+
+
+    SPECIFICATION OF PRODUCT
+
+              for Lithium-ion rechargeable cell
+                 Model name : INR18650-35E
+
+
+
+
+                                 July, 9th, 2015
+
+
+                           Samsung SDI Co., Ltd.
+                           Cell Business Division
+                                  SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.       INR18650-35E         Version No.       Ver. 1.1
+
+
+
+Revision history
+Revision                                                                                Changes
+           Date(‘yr-m-d)   Page   Item                      Description
+  No.                                                                                   / Author
+Ver. 1.0     ‘15-03-10      19           Ver. 1.0                                    Yunwoong Kim
+
+Ver. 1.1     ‘15-07-09      19           Cycle life condition change                 Yunwoong Kim
+
+
+
+
+                                                    1    Samsung SDI., Battery Business Division.
+                               SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E        Version No.       Ver. 1.1
+
+
+1. Scope
+  This product specification has been prepared to specify the rechargeable lithium-ion cell
+  ('cell') to be supplied to the customer by Samsung SDI Co., Ltd.
+
+
+2. Description and Model
+ 2.1 Description          Cell (lithium-ion rechargeable cell)
+ 2.2 Model                 INR18650-35E
+ 2.3 Site                   Manufactured in Korea
+
+
+3. Nominal Specifications
+                   Item                                           Specification
+                                         Min 3,350mAh
+                                          - Charge : 0.5C(1,700mA), 4.2V, 0.02C(68mA) cut-off @RT
+   3.1 Standard discharge Capacity
+                                          - Discharge : 0.2C(680mA), 2.65V cut-off @RT
+                                             *1C=3,400mA
+   3.2 Charging Voltage                  4.2V
+   3.3 Nominal Voltage                   3.60V
+                                         CC-CV
+   3.4 Charging Method
+                                         (constant voltage with limited current)
+                                         Standard charge: 1,700mA
+   3.5 Charging Current
+                                         For cycle life : 1,020mA
+   3.6 Charging Time                     Standard charge: 4hours
+   3.7 Max. Charge Current               2,000mA (not for cycle life)
+                                         8,000mA (for continuous discharge)
+   3.8 Max. Discharge Current
+                                         13,000mA (not for continuous discharge)
+   3.9 Discharge Cut-off Voltage         2.65V
+
+   3.10 Cell Weight                      50 g max
+                                         Height : Max. 65.25 mm
+   3.11 Cell Dimension
+                                         Diameter: Max. Φ 18.55 mm
+   3.12 Operating Temperature            Charge : 0 to 45°C
+       (Cell Surface Temperature)        Discharge : -10 to 60°C
+                                         1 year :   -20~25°C (1*)
+   3.13 Storage Temperature              3 months : -20~45°C (1*)
+                                         1 month : -20~60°C (1*)
+      Note (1): If the cell is kept as ex-factory status (30% of charge),
+               The capacity recovery rate is more than 80%.
+
+
+                                                 2    Samsung SDI., Battery Business Division.
+                           SAMSUNG SDI Confidential Proprietary
+
+Spec. No.   INR18650-35E       Version No.       Ver. 1.1
+
+
+4. Outline Dimensions
+   See the Fig. 1
+
+
+
+
+                                   Max. 18.55
+
+
+
+
+                                                                   Max. 65.25
+
+
+
+
+                                                                  Unit : mm
+
+
+
+
+                 Fig. 1 Outline Dimensions of INR18650-35E
+
+
+
+
+                                             3    Samsung SDI., Battery Business Division.
+                                SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E         Version No.       Ver. 1.1
+
+5. Appearance
+
+    There shall be no such defects as scratch, rust, discoloration, leakage which
+    may adversely affect commercial value of the cell.
+
+
+6. Standard Test Conditions
+
+  6.1 Environmental Conditions
+       Unless otherwise specified, all tests stated in this specification are
+       conducted at temperature 23±3°C and humidity 65%.
+
+  6.2 Measuring Equipment
+       (1) Amp-meter and Volt-meter
+             The amp-meter and volt-meter should have an accuracy of the grade 0.5mA and
+            mV or higher.
+       (2) Slide caliper
+             The slide caliper should have 0.01 mm scale.
+       (3) Impedance meter
+             The impedance meter with AC 1kHz should be used.
+
+
+7. Characteristics
+
+7.1 Standard Charge
+      This "Standard Charge" means charging the cell with charge current of
+       1,700mA and constant voltage 4.2V at 23°C, 0.02C(68mA) cut-off.
+
+7.2 Standard Discharge Capacity
+      The standard discharge capacity is the initial discharge capacity of the cell, which is
+      measured with discharge current of 0.2C(680mA) with 2.65V cut-off at 23°C
+      within 1 hour after the Standard charge.
+                Standard Discharge Capacity ≥ 3,350mAh
+
+7.3 Rated Discharge Capacity
+      The rated discharge capacity is the initial discharge capacity of the cell, which is
+     measured with discharge current of 1C(3,400mA) with 2.65V cut-off at 23°C
+     within 1 hour after the Standard charge.
+               Rated Discharge Capacity ≥ 3,250mAh (97% of 3,350mAh)
+
+7.4 Initial internal impedance
+      Initial internal impedance measured at AC 1kHz after Standard charge.
+                     Initial internal impedance   ≤ 35mΩ
+
+
+
+
+                                                  4    Samsung SDI., Battery Business Division.
+                             SAMSUNG SDI Confidential Proprietary
+
+Spec. No.     INR18650-35E       Version No.       Ver. 1.1
+
+
+ 7.5 Temperature Dependence of Discharge Capacity
+      Discharge capacity comparison at each temperature, measured with discharge
+     constant current 3,400mA and 2.65V cut-off with follow temperature after the Standard
+     charging at 23°C.
+       Charge Temperature                Discharge temperature
+              23°C                 -10°C           23°C          40°C
+
+        Relative Capacity          40%             97%              97%
+
+
+      Note: If charge temperature and discharge temperature is not the same,
+             the interval for temperature change is 3 hours.
+          Percentage as an index of the Standard discharge capacity (=3,350mAh) is 100%.
+
+7.6 Temperature Dependence of Charge Capacity
+    Capacity comparison at each temperature, measured with discharge constant current
+    680mA and 2.65V cut-off at 23°C after the Standard charge is as follow temperature.
+
+                                 Charge temperature             Discharge temperature
+                             0°C           23°C       45°C
+                                                                          23°C
+      Relative Capacity      60%           100%       100%
+
+      Note: If charge temperature and discharge temperature is not the same,
+             the interval for temperature change is 3 hours.
+          Percentage as an index of the Standard discharge capacity (=3,350mAh) is 100%.
+
+7.7 Charge Rate Capabilities
+     Discharge capacity is measured with constant current 680mA and 2.65V cut-off
+     after the cell is charged with 4.2V at 23°C as follows.
+
+                                             Charge Condition
+        Current                  0.5C                                  1.0C
+                              (1,700mA)                             (3,400mA)
+        Cut-off              3h or 0.02C                        2.5h or 0.02C
+       Relative
+                                 100%                                 97%
+       Capacity
+
+   Note: Percentage as an index of the Standard discharge capacity (=3,350mAh) is 100%.
+
+
+
+
+                                               5    Samsung SDI., Battery Business Division.
+
+
+                                                                                        GO BACK
+                              SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E       Version No.       Ver. 1.1
+
+  7.8 Discharge Rate Capabilities
+      Discharge capacity is measured with the various currents in under table and 2.65V
+      cut-off after the Standard charge at 23°C.
+
+                                             Discharge Condition
+                           0.2C               1C             2C
+        Current                                                             8000mA
+                         (680mA)          (3,400mA)      (6,800mA)
+        Relative
+        Capacity           100%              97%               95%            92%
+
+      Note: Percentage as an index of the Standard discharge capacity (=3,350mAh)
+            is 100%.
+
+
+ 7.9 Cycle Life
+          Each cycle is an interval between the charge (charge current 1,020mA) with
+         100mA cut-off and the discharge (discharge current 3,400mA) with 2.65V cut-off.
+         Capacity after 500cycles.
+
+                       Capacity ≥ 2,010mAh (60% of Standard Capacity)
+
+  7.10 Storage Characteristics
+       Capacity after storage for 20days at 60°C after the Standard charged at 23°C,
+      measured with discharge current 680mA with 2.65V cut-off at 23 ℃ .
+
+    Capacity recovery(after the storage) ≥ 3,183mAh (95% of Standard Discharge Capacity)
+
+  7.11 Status of the cell as of ex-factory
+       The cell should be shipped in 3.49V ~ 3.69V Charging voltage range.
+
+
+8. Mechanical Characteristics
+
+  8.1 Drop Test
+       Test method: Each fully charged cell or battery is dropped three times from a height of
+                     1.0 m onto a concrete floor. The cells or batteries are dropped so as to
+                     obtain impacts in random orientations. After the test, the sample shall be
+                     put on rest for a minimum of one hour and then a visual inspection shall
+                     be performed.
+       Criteria: No fire, no explosion
+               (Test shall be performed with the following criteria IEC 62133)
+
+  8.2 Vibration Test
+      Test method: As to the UN transportation regulation(UN38.3), for each axis (X and Y
+                     axis with cylindrical cells) 7Hz→ 200Hz→ 7Hz for 15min,
+                     repetition 12 times totally 3hours, the acceleration 1g during 7 to 18Hz
+                     and 8g (amplitude 1.6mm) up to 200Hz.
+      Criteria: No leakage, with less than 10mV of OCV drop
+                                                6    Samsung SDI., Battery Business Division.
+                              SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E       Version No.       Ver. 1.1
+
+
+9. Safety
+
+  9.1 Overcharge Test
+       Test method: To charge the standard charged cell with 12V and 3C(10.2A) at 23°C
+                        for 7 hours.
+       Criteria: No fire, and no explosion.
+       Overcharge test shall be performed with the UL1642 standard
+
+  9.2 External Short-circuit Test
+       Test method: To short-circuit the standard charged cell by connecting positive and
+                        negative terminal by less than ±
+                                                       8020mΩ wire for 3 hours.
+       Criteria: No fire, and no explosion.
+
+  9.3 Reverse Charge Test
+      Test method: To charge reversely the standard discharged cell with charge current
+                     3,400mA for 1.5 hours.
+       Criteria: No fire, and no explosion.
+
+  9.4 Heating Test
+       Test method: To heat the standard charged cell at heating rate of 5°C per minute up to
+                        130°C and keep the cell in oven for 10 minutes.
+       Criteria: No fire, and no explosion.
+
+
+10. Warranty
+
+   Samsung SDI will be responsible for replacing the cell against defects or poor workmanship
+  for 15month from the date of shipping. Any other problems caused by malfunction of the
+  equipment or unsuitable use of the cell are not under this warranty.
+  The warranty set forth in proper use, handling conditions described above,
+  and excludes in the case of a defect which is not related to manufacturing of the cell.
+
+
+11. Others
+
+  11.1 Storage for a long time
+         If the cell is kept for a long time (3months or more), It is strongly recommended
+         that the cell is preserved at dry and low-temperature.
+
+  11.2 Other
+         Any matters that specifications does not have, should be conferred with
+         between the both parties.
+
+
+
+
+                                                7    Samsung SDI., Battery Business Division.
+                            SAMSUNG SDI Confidential Proprietary
+
+Spec. No.    INR18650-35E        Version No.       Ver. 1.1
+
+
+12. Packaging
+    See Fig.2, Package Drawing
+
+
+
+
+                          Fig 2.     Package Drawing
+
+
+                                               8    Samsung SDI., Battery Business Division.
+                               SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E         Version No.       Ver. 1.1
+
+Proper Use and Handling of Lithium Ion Cells
+See before using lithium-ion cell
+Supplied by
+Samsung SDI Co., Ltd.
+
+1. General
+     This document has been prepared to describe the appropriate cautions and
+   prohibitions, which the customer should take or employ when the customer uses
+   and handles the lithium ion cell to be manufactured and supplied by Samsung SDI Co.,
+   Ltd., in order to obtain optimum performance and safety.
+
+
+2. Charging
+
+  2.1. Charging current
+       Charging current should be less than maximum charge current specified in
+       the product specification.
+
+  2.2. Charging voltage
+       Charging should be done by voltage less than that specified in
+       the product specification.
+
+  2.3. Charging time
+       Continuous charging under appropriate voltage does not cause any loss of
+       characteristics. However, the charge timer is recommended to be installed
+       from a safety consideration, which shuts off further charging at time specified
+       in the product specification.
+
+  2.4. Charging temperature
+       The cell should be charged within a range of specified temperatures in
+       the product specification.
+
+  2.5. Reverse charging
+       The cell should be connected, confirming that its poles are correctly aligned.
+       Inverse charging should be strictly prohibited. If the cell is connected
+       improperly, it may be damaged.
+
+
+3. Discharging
+
+  3.1. Discharging
+       3.1.1. The cell should be discharged at less than maximum discharge current
+              specified in the product specification.
+
+  3.2. Discharging temperature
+       3.2.1. The cell should be discharged within a range of temperatures specified in
+             the product specification.
+        3.2.2. Otherwise, it may cause loss of characteristics.
+
+
+                                                  9    Samsung SDI., Battery Business Division.
+                               SAMSUNG SDI Confidential Proprietary
+
+  Spec. No.     INR18650-35E       Version No.        Ver. 1.1
+
+  3.3. Over-discharging
+       3.3.1. The system should be equipped with a device to prevent further discharging
+              exceeding discharging cut-off voltage specified in the product
+              specification.(over-discharging)
+       3.3.2. Over-discharging may cause loss of performance, characteristics, of
+              battery function.
+       3.3.3. Over-discharging may occur by self-discharge if the battery is left for
+              a very long time without any use.
+       3.3.4. The charger should be equipped with a device to detect cell voltage and to
+              determine recharging procedures.
+
+
+4. Storage
+
+  4.1. Storage conditions
+       4.1.1. The cell should be stored within a range of temperatures specified
+              in the product specification.
+       4.1.2. Otherwise, it may cause loss of characteristics, leakage and/or rust.
+
+  4.2. Long-term storage
+        4.2.1. The cell should be used within a short period after charging because
+               long-term storage may cause loss of capacity by self-discharging.
+        4.2.2. If long-term storage is necessary, the cell should be stored at lower
+               voltage within a range specified in the product specification, because
+               storage at higher voltage may cause loss of characteristics.
+
+
+5. Cycle life
+
+  5.1. Cycle life performance
+       5.1.1. The cell can be charged/discharged repeatedly up to times specified in
+               the produce specification with a certain level of capacity also specified
+               in the product specification.
+       5.1.2. Cycle life may be determined by conditions of charging, discharging,
+               operating temperature and/or storage.
+
+
+6. Design of System
+
+  6.1. Connection between the cell and the battery
+       6.1.1. The cell should not be soldered directly with leads. Namely, the cell
+              should be welded with leads on its terminal and then be soldered with
+              wire or leads to soldered lead.
+       6.1.2. Otherwise, it may cause damage of component, such as separator and
+              insulator, by heat generation.
+
+
+
+
+                                                 10    Samsung SDI., Battery Business Division.
+                               SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.     INR18650-35E        Version No.        Ver. 1.1
+
+
+  6.2 Positioning the battery in the System
+       6.2.1. The battery should be positioned as possible as far from heat sources
+              and high temperature components.
+       6.2.2. Otherwise, it may cause loss of characteristics.
+
+  6.3. Mechanical shock protection of the battery
+       6.3.1. The battery should be equipped with appropriate shock absorbers in order to
+              minimize shock.
+       6.3.2. Otherwise, it may cause shape distortion, leakage, heat generation
+              and/or rupture.
+
+  6.4. Short-circuit protection of the cell
+       6.4.1. The cell is equipped with an insulating sleeve to protect short-circuit which
+              may occur during transportation, battery assembly and /or system
+              operation.
+       6.4.2. If the cell sleeve is damaged by some causes such as outside impact,
+              it may cause short-circuit with some wiring inside the battery.
+
+  6.5. Connection between the battery and charger/system
+       6.5.1. The battery should be designed to be connected only to the specified
+              charger and system.
+       6.5.2. A reverse connection of the battery, even in the specified system,
+              should be avoided by employing special battery design such as
+              a special terminals.
+
+
+7. Battery Pack Assembly
+
+  7.1. Prohibition of usage of damaged cell
+       7.1.1. The cell should be inspected visually before battery assembly.
+       7.1.2. The cell should not be used if sleeve-damage, can-distortion and/or
+              electrolyte-smell is detected.
+
+  7.2. Transportation
+        7.2.1. If the cell is necessary to transport to order place, such as the
+               battery manufacturer, careful precautions should be taken to avoid
+               damage of cell.
+
+
+8. Others
+
+  8.1. Disassembly
+       8.1.1. The cell should not be dismantled from the battery pack.
+       8.1.2. Internal short-circuit caused by disassembly may lead to heat generation
+              and/or venting.
+       8.1.3. When the electrolyte is coming in contact with the skin or eyes,
+              wash immediately with fresh water and seek medical advice.
+
+
+                                                 11    Samsung SDI., Battery Business Division.
+                              SAMSUNG SDI Confidential Proprietary
+
+Spec. No.     INR18650-35E        Version No.        Ver. 1.1
+
+8.2. Short-circuiting
+     8.2.1. Short-circuit results in very high current which leads to heat generation.
+     8.2.2. An appropriate circuitry should be employed to protect accidental
+            short-circuiting.
+
+8.3. Incineration
+      8.3.1 Incinerating and disposing of the cell in fire are strictly prohibited,
+             because it may cause rupture.
+
+8.4. Immersion
+      8.4.1 Soaking the cell in water is strictly prohibited, because it may cause
+            melt of components to damaged to functions.
+
+8.5. Mixing use
+     8.5.1. Different types of cell, or same types but different manufacturer's cell
+          may lead to cell rupture or damage to system due to the different
+          characteristics of cell.
+
+8.6. Battery disposal
+     8.6.1. Although the cell contains no environmentally hazardous component,
+            such as lead or cadmium. the battery should be disposed according to
+            the local regulations when it is disposed.
+     8.6.2. The cell should be disposed with a discharged state to avoid heat generation
+            by an inadvertent short-circuit.
+
+8.7. Caution - The Battery used in this device may present a risk of fire or chemical burn if
+             mistreated. Do not disassemble, heat above 100°C or incinerate. Replace
+           battery with Samsung SDI battery only. Use of another battery may present a risk
+           of fire or explosion. Dispose of used battery promptly. Keep away from children.
+           Do not disassemble and do not dispose of in fire.
+
+8.8. Warning – Attached
+
+
+
+
+                                                12    Samsung SDI., Battery Business Division.
+                                        SAMSUNG SDI Confidential Proprietary
+
+  Spec. No.       INR18650-35E              Version No.             Ver. 1.1
+
+  ▣ Pack Design Guideline (For electrical design)
+
+                  Item                      Portable IT Power-Tool     Medical       E-Bike      E-Scooter     EV/LEV       ESS/UPS
+
+                                                                                                                              4.00V
+□ Standard charging voltage (4.20V cell)      4.20V         4.20V        4.10V        4.10V        4.10V        4.10V
+                                                                                                                             (4.05V)
+                                                                                                                              4.00V
+□ Standard charging voltage (4.35V cell)      4.35V         4.35V        4.20V        4.20V        4.20V        4.20V
+                                                                                                                             (4.05V)
+
+□ Charging method                             CC-CV        CC-CV        CC-CV         CC-CV        CC-CV        CC-CV        CC-CV
+
+                                                                                                                            0.025C
+□ Full-charging cut-off current*              0.05C         0.05C       0.025C       0.025C        0.025C       0.025C
+                                                                                                                          (Continous)
+                                                                                                                              4.00V
+□ Voltage of Re-charging (4.20V cell)         4.10V         4.10V        4.05V        4.05V        4.05V        4.05V
+                                                                                                                             (4.05V)
+                                                                                                                              4.00V
+□ Voltage of Re-charging (4.35V cell)         4.25V         4.25V        4.10V        4.10V        4.10V        4.10V
+                                                                                                                             (4.05V)
+     □ Min. voltage of
+                                              3.00V         2.50V        3.00V        3.00V        3.00V        3.00V        3.00V
+ LCO   terminate discharging
+ LMO □ Min. voltage of
+                                              2.50V         2.00V        2.50V        2.50V        2.50V        2.50V        2.50V
+       over-discharging protection
+     □ Min. voltage of
+                                              2.50V         2.50V        2.50V        2.50V        2.50V        2.50V        2.50V
+ NCA   terminate discharging
+ NCM □ Min. voltage of
+                                              2.30V         2.00V        2.50V        2.50V        2.50V        2.50V        2.50V
+       over-discharging protection
+□ BMS Shut Down Voltage**                     2.00V         2.00V        2.00V        2.00V        2.00V        2.00V        2.00V
+
+□ Max. consumption current of BMS
+                                            10㎂ /Cell     10㎂ /Cell    10㎂ /Cell    10㎂ /Cell    10㎂ /Cell    10㎂ /Cell    10㎂ /Cell
+  after shut down
+□ Do not charge***                           ↓ 1.00V      ↓ 1.00V       ↓ 1.00V      ↓ 1.00V      ↓ 1.00V      ↓ 1.00V      ↓ 1.00V
+
+
+□ Pre-charging voltage range****            1.0V ~ 3.0V 1.0V ~ 3.0V 1.0V ~ 3.0V 1.0V ~ 3.0V 1.0V ~ 3.0V 1.0V ~ 3.0V 1.0V ~ 3.0V
+
+
+□ Current range of Pre-charging             0.1C ~ 0.5C 0.1C ~ 0.5C 0.1C ~ 0.5C 0.1C ~ 0.5C 0.1C ~ 0.5C 0.1C ~ 0.5C 0.1C ~ 0.5C
+
+
+
+Remark:
+* Current of cell which full-charging shall be terminated.
+** Voltage condition of BMS which shall be shut down.
+*** Under 1.0V voltage, do not charge the cell.
+**** Voltage range of cell which shall be charged by Pre-charging.
+
+
+
+        If a customer’s battery pack cannot meet the requirements above,
+        SDI cannot take responsibility for a quality issue about a battery cell.
+
+
+
+
+                                                              13      Samsung SDI., Battery Business Division.
+                                      SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.         INR18650-35E            Version No.          Ver. 1.1
+
+▣ Pack Design Guideline (For mechanical design)
+
+                   Item                    Portable IT Power-Tool    Medical   E-Bike   E-Scooter   EV/LEV   ESS/UPS
+
+□ Need partitions(separator) between
+  BMS and a Cell                               ◎           ◎           ◎        ◎          ◎         ◎         ◎
+
+
+□ Need to check if the pack is designed
+  to be able to avoid thermal runaway                                                      ◎         ◎         ◎
+  (1KWh↑ )
+□ Need to analyze the battery pack's
+  thermal distribution and its effect                                                      ◎         ◎         ◎
+  on the pack's life cycle
+□ Need to use a non-flammable
+  (VO level) case                              ◎           ◎           ◎        ◎          ◎         ◎         ◎
+
+
+□ Need to apply improved material
+  (Steel) to the case                                                                                ◎         ◎
+
+
+□ Need to analyze the battery pack's
+  structure, system, installation status                                                             ◎         ◎
+  and use environment
+
+
+
+        If a customer’s battery pack cannot meet the requirements above,
+        SDI cannot take responsibility for a quality issue about a battery cell.
+
+
+
+
+                                                           14       Samsung SDI., Battery Business Division.
+                                     SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.          INR18650-35E          Version No.        Ver. 1.1
+
+Handling precaution and prohibitions of lithium ion rechargeable cells and
+batteries
+
+
+   Inaccurate handling of lithium ion and lithium ion polymer rechargeable battery may cause leakage, heat,
+   smoke, an explosion, or fire.
+   This could cause deterioration of performance or failure. Please be sure to follow instructions carefully.
+
+
+ 1.1. Storage
+      Store the battery at low temperature (below 20°C is recommended), low humidity, no dust and no
+     corrosive gas atmosphere.
+
+
+ 1.2. Safety precaution and prohibitions
+      To assure product safety, describe the following precautions in the instruction manual of the
+     application.
+
+
+     [ Danger!]
+    ■ Electrical misusage
+         Use dedicated charger.
+         Use or charge the battery only in the dedicated application.
+         Don't charge the battery by an electric outlet directly or a cigarette lighter charger.
+         Don't charge the battery reversely.
+
+
+    ■ Environmental misusage
+         Don't leave the battery near the fire or a heated source.
+         Don't throw the battery into the fire.
+       Don't leave, charge or use the battery in a car or similar place where inside of temperature may be
+                over 60°C.
+         Don't immerse, throw, wet the battery in water / seawater.
+
+
+    ■ others
+         Don't fold the battery cased with laminated film such as pouch and Polymer.
+       Don't store the battery in a pocket or a bag together with metallic objects such as keys, necklaces,
+                hairpins, coins, or screws.
+         Don't short circuit (+) and (-) terminals with metallic object intentionally.
+         Don't pierce the battery with a sharp object such as a needle, screw drivers.
+         Don't heat partial area of the battery with heated objects such as soldering iron.
+         Don't hit with heavy objects such as a hammer, weight.
+
+                                                        15    Samsung SDI., Battery Business Division.
+                                 SAMSUNG SDI Confidential Proprietary
+
+Spec. No.      INR18650-35E          Version No.         Ver. 1.1
+
+
+      Don't step on the battery and throw or drop the battery on the hard floor to avoid mechanical shock.
+      Don't disassemble the battery or modify the battery design including electric circuit.
+      Don't solder on the battery directly.
+      Don't use seriously scared or deformed battery.
+      Don't put the battery into a microwave oven, dryer ,or high-pressure container.
+     Don't use or assemble the battery with other makers' batteries, different types and/or models of
+            batteries such as dry batteries, nickel-metal hydride batteries, or nickel-cadmium batteries.
+      Don't use or assemble old and new batteries together.
+
+
+   [ Warning! ]
+      Stop charging the battery if charging isn't completed within the specified time.
+    Stop using the battery if the battery becomes abnormally hot, order, discoloration, deformation, or
+    abnormal conditions is detected during use, charge, or storage.
+     Keep away from fire immediately when leakage or foul odors are detected. If liquid leaks onto your
+    skin or cloths, wash well with fresh water immediately.
+     If liquid leaking from the battery gets into your eyes, don't rub your eyes and wash them with clean
+    water and go to see a doctor immediately.
+      If the terminals of the battery become dirty, wipe with a dry cloth before using the battery.
+      The battery can be used within the following temperature ranges. Don't exceed these ranges.
+             Charge temperature ranges          : 0°C ~ 45°C
+             Discharge Temperature ranges      : -10°C ~ 60°C
+      Store the battery at temperature below 60°C
+      Cover terminals with proper insulating tape before disposal.
+
+
+  [ Caution! ]
+ ■ Electrical misusage
+      Battery must be charge with constant current-constant voltage (CC/CV).
+      Charge current must be controlled by specified value in Cell specification.
+      Cut-off Voltage of charging must be 4.20V
+    Charger must stop charging battery by detecting either charging time or current specified in Cell’s
+    specification.
+      Discharge current must be controlled by specified value in Cell’s specification.
+      Cut-off Voltage of discharging must be over 2.65V.
+
+
+
+
+                                                    16    Samsung SDI., Battery Business Division.
+                                  SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.        INR18650-35E        Version No.         Ver. 1.1
+
+
+   ■ others
+        Keep the battery away from babies and children to avoid any accidents such as swallow.
+      If younger children use the battery, their guardians should explain the proper handling method and
+      precaution before using.
+        Before using the battery, be sure to read the user's manual and precaution of it's handling.
+        Before using charger, be sure to read the user's manual of the charger.
+      Before installing and removing the battery from application, be sure to read user's manual of the
+      application.
+        Replace the battery when using time of battery becomes much shorter than usual.
+        Cover terminals with insulating tape before proper disposal.
+      If the battery is needed to be stored for an long period, battery should be removed from the
+      application and stored in a place where humidity and temperature are low.
+      While the battery is charged, used and stored, keep it away from object materials with static electric
+      chargers.
+
+
+
+
+Safety handling procedure for the transporter
+  ■ Quarantine
+      Packages that are crushed, punctured or torn open to reveal contents should not be transported.
+      Such packages should be isolated until the shipper has been consulted, provided instructions and, if
+      appropriate, arranged to have the product inspected and repacked.
+   ■ Spilled Product
+       In the event that damage to packaging results in the release of cells or batteries, the spilled
+       products should be promptly collected and segregated and the shipper should be contacted for
+       instructions.
+
+
+
+
+Design of positioning the battery pack in application and charger
+      To prevent the deterioration of the battery performance caused by heat, battery shall be positioned
+      away from the area where heat is generated in the application and the charger.
+
+
+
+
+                                                     17    Samsung SDI., Battery Business Division.
+                                  SAMSUNG SDI Confidential Proprietary
+
+ Spec. No.       INR18650-35E         Version No.          Ver. 1.1
+
+
+Design of the battery pack
+       Be sure adopting proper safe device such as PTC specified type or model in Cell Specification. If you
+     intend to adopt different safety device which is not specified in Cell Specification, please contact
+     Samsung SDI to investigate any potential safety problem.
+     Be sure designing 2nd protective devices such as PTC & PCM at the same time to protect Cell just in
+     case one protective device is fault.
+       Please contact following offices when you need any help including safety concerns.
+
+
+
+
+Samsung SDI emergency contact information
+
+      ■       Samsung SDI Headquarter.
+             428-5, Gongsae-dong, Kiheung-gu, Yongin, Kyunggi-do, Korea
+             Tel: +82-31-8006-3100, Fax : +82-31-210-7887
+
+
+      ■       Samsung SDI Cheonan Factory.
+             508, Sungsung-Dong, Cheonan, Chungchongnam-Do, Korea
+             Tel: +82-41-560-3114, Fax : +82-41-550-3399
+
+
+      ■       Samsung SDI America Subsidiary
+             3655 North First St. San Jose CA 95134
+             Tel: +1-408-544-4541, Fax : +1-949-260-2221
+
+
+      ■       Samsung SDI Taiwan Office.
+             9F-1,399 Ruey Kuang Road, Neihu, Taipei Taiwan
+             Tel: +886-2-2656-8300, Fax : +886-2-2656-8329
+
+
+      ■      Samsung SDI Malaysia factory.
+             Lot 635 & 660, Kawasan Perindustrian, Tuanku Jaafar, 71450
+             Sungai Gadut, Negeri Sembilan Darul Khusus, Malaysia
+             Tel: (+60)6-677-6160, 6153
+
+
+
+
+                                                      18    Samsung SDI., Battery Business Division.
+

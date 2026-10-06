@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/bourns-srf1260-common-mode-choke.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/bourns-srf1260-common-mode-choke.pdf",
+ "pdf_sha256": "93b2dc7565d07e727adb658843b52ec227a2c05f1ee21e117d7057d03ba1aea6",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/bourns-srf1260-common-mode-choke.layout.txt",
+ "text_bytes": 23140,
+ "text_sha256": "55c3adad0b6df44477eb61d8f3478cc34914b5dfc3abbeb5d754bdc0b267c0c8"
+}

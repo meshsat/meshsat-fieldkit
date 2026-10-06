@@ -1,0 +1,139 @@
+                               Product            Order          Technical                Tools &                Support &
+                               Folder             Now            Documents                Software               Community
+
+
+
+                                                                                                                                               LM5069
+                                                                                           SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020
+
+
+                LM5069 Positive High-Voltage Hot Swap and In-Rush Current Controller
+                                         with Power Limiting
+1 Features                                                                    2 Applications
+•
+1   Wide operating range: 9 V to 80 V                                         •    Server backplane systems
+•   In-rush current limit for safe board insertion into                       •    Base station power distribution systems
+    live power sources                                                        •    Solid state circuit breaker
+•   Programmable maximum power dissipation in the                             •    24-V and 48-V Industrial systems
+    external pass device
+•   Adjustable current limit                                                  3 Description
+•   Circuit breaker function for severe overcurrent                           The LM5069 positive hot swap controller provides
+    events                                                                    intelligent control of the power supply connections
+                                                                              during insertion and removal of circuit cards from a
+•   Internal high side charge pump and gate driver for
+                                                                              live system backplane or other hot power sources.
+    external N-channel MOSFET                                                 The LM5069 provides in-rush current control to limit
+•   Adjustable undervoltage lockout (UVLO) and                                system voltage droop and transients. The current limit
+    hysteresis                                                                and power dissipation in the external series pass N-
+•   Adjustable overvoltage lockout (OVLO) and                                 Channel MOSFET are programmable, ensuring
+    hysteresis                                                                operation within the Safe Operating Area (SOA). The
+                                                                              POWER GOOD output indicates when the output
+•   Initial insertion timer allows ringing and transients                     voltage is within 1.25 V of the input voltage. The input
+    to subside after system connection                                        undervoltage and overvoltage lockout levels and
+•   Programmable fault timer avoids nuisance trips                            hysteresis are programmable, as well as the initial
+•   Active high open drain POWER GOOD output                                  insertion delay time and fault detection time. The
+                                                                              LM5069-1 latches off after a fault detection, while the
+•   Available in latched fault and automatic restart                          LM5069-2 automatically restarts at a fixed duty cycle.
+    versions                                                                  LM5069 is available in a 10-pin VSSOP package.
+•   10-Pin VSSOP package
+                                                                                                       Device Information(1)
+                                                                                  PART NUMBER                    PACKAGE           BODY SIZE (NOM)
+                                                                                LM5069                     VSSOP (10)              3.00 mm × 3.00 mm
+                                                                                (1) For all available packages, see the orderable addendum at
+                                                                                    the end of the data sheet.
+
+                                                   Typical Application Diagram
+        VIN                              RSNS                                                             VOUT
+                                                          Q1
+                                                                                          D1              COUT
+          CIN         Z1
+
+
+
+                                                                                               VDD
+                                                                                                                        Only required when
+                                                  SENSE         GATE      OUT
+                                                                                                                        using dv/dt start-up
+                                                                                                  100kŸ
+                       R1     R3            VIN                                                                         D2
+                                                                                    PGD
+                                           UVLO/EN
+                                                          LM5069
+                                           OVLO                                                             1kŸ
+                                           GND                                                                                      Cdv/dt
+                              R4                          PWR         TIMER
+                       R2
+                                                                                                                        Q2
+
+                                                               RPWR       CTIMER
+
+
+
+                                                                                               Copyright © 2016, Texas Instruments Incorporated
+
+
+1
+
+
+
+
+      An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+      intellectual property matters and other important disclaimers. PRODUCTION DATA.
+LM5069
+SNVS452G – SEPTEMBER 2006 – REVISED JAUNUARY 2020                                                                                                                        www.ti.com
+
+
+                                                                           Table of Contents
+    1   Features .................................................................. 1                 8.4 Device Functional Modes........................................ 13
+    2   Applications ........................................................... 1              9     Application and Implementation ........................ 17
+    3   Description ............................................................. 1                   9.1 Application Information............................................ 17
+    4   Revision History..................................................... 2                       9.2 Typical Application .................................................. 17
+    5   Device Comparison ............................................... 3                     10 Power Supply Recommendations ..................... 27
+    6   Pin Configuration and Functions ......................... 3                             11 Layout................................................................... 28
+                                                                                                      11.1 Layout Guidelines ................................................. 28
+    7   Specifications......................................................... 4
+                                                                                                      11.2 Layout Example .................................................... 29
+         7.1    Absolute Maximum Ratings ...................................... 4
+         7.2    ESD Ratings.............................................................. 4     12 Device and Documentation Support ................. 31
+         7.3    Recommended Operating Conditions....................... 4                             12.1     Device Support...................................................... 31
+         7.4    Thermal Information .................................................. 4              12.2     Documentation Support ........................................ 31
+         7.5    Electrical Characteristics........................................... 5               12.3     Receiving Notification of Documentation Updates 31
+         7.6    Typical Characteristics .............................................. 7              12.4     Community Resources.......................................... 31
+                                                                                                      12.5     Trademarks ........................................................... 31
+    8   Detailed Description ............................................ 11
+                                                                                                      12.6     Electrostatic Discharge Caution ............................ 31
+         8.1 Overview ................................................................. 11
+                                                                                                      12.7     Glossary ................................................................ 31
+         8.2 Functional Block Diagram ....................................... 11
+         8.3 Feature Description................................................. 12            13 Mechanical, Packaging, and Orderable
+                                                                                                   Information ........................................................... 31
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision F (February 2019) to Revision G                                                                                                                             Page
+
+•   Added Device Comparison table ............................................................................................................................................ 3
+
+
+Changes from Revision E (November 2016) to Revision F                                                                                                                             Page
+
+•   Updated the Absolute Maximum Ratings section................................................................................................................... 4
+
+
+Changes from Revision D (May 2013) to Revision E                                                                                                                                  Page
+
+•   Added ESD Ratings table, Feature Description section, Device Functional Modes, Application and Implementation
+    section, Power Supply Recommendations section, Layout section, Device and Documentation Support section, and
+    Mechanical, Packaging, and Orderable Information section ................................................................................................. 1
+•   Added Thermal Information table ........................................................................................................................................... 4
+
+
+
+
+2        Submit Documentation Feedback                                                                            Copyright © 2006–2020, Texas Instruments Incorporated
+
+                                                                          Product Folder Links: LM5069
+

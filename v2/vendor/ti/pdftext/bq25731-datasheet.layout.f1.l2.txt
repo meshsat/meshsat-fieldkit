@@ -1,0 +1,130 @@
+                                                                                                                                                                                                     BQ25731
+                                                                                               SLUSE66A – JUNE 2020 – REVISED JANUARY 2021
+
+    BQ25731 I2C 1- to 5-Cell Buck-Boost Battery Charge Controller with USB-C PD 3.0
+                                     OTG Output
+                                                                             – Input, MOSFET, inductor overcurrent protection
+1 Features                                                             •     Package: 32-Pin 4.0 mm × 4.0 mm WQFN
+•   No battery MOSFET for saving cost and high
+    efficiency
+                                                                       2 Applications
+•   400-kHz/800-kHz programmable switching                             •     Cordless power tool
+    frequency for high efficiency/high power density                   •     Battery pack: cordless power tool
+•   Buck-boost charger for USB-C Power Delivery                        •     Appliances: battery charger, power bank
+    (PD) interface platform
+                                                                       3 Description
+    – 3.5-V to 26-V input range to charge 1- to 5-cell
+        battery                                                        The BQ25731 is a synchronous buck-boost battery
+    – Charge current up to 16.2 A/8.1 A with 128-                      charge controller to charge a 1- to 5-cell battery from
+        mA/64-mA resolution based on 5-mΩ/10-mΩ                        a wide range of input sources including USB adapter,
+        sensing resistor                                               high voltage USB-C Power Delivery (PD) sources,
+    – Input current limit up to 10 A/6.35 A with 100-                  and traditional adapters. It offers a low component
+        mA/50-mA resolution based on 5-mΩ/10-mΩ                        count, high efficiency solution for space constrained,
+        sensing resistor                                               1- to 5-cell battery charging applications.
+    – Support USB 2.0, USB 3.0, USB 3.1 and USB                        During power up, the charger sets the converter to
+        Power Delivery (PD)                                            a buck, boost, or buck-boost configuration based on
+    – Input Current Optimizer (ICO) to extract max                     the input source and battery conditions. The charger
+        input power without overloading the adapter                    seamlessly transits between the buck, boost, and
+    – Seamless transition between buck, buck-boost,                    buck-boost operation modes without host control.
+        and boost operations
+    – Input current and voltage regulation (IINDPM                                                 Device Information
+        and VINDPM) against source overload                                    PART NUMBER                     PACKAGE(1)                                                                   BODY SIZE (NOM)
+•   TI patented switching frequency dithering pattern                  BQ25731                                 WQFN (32)                                                               4.00 mm × 4.00 mm
+    for EMI noise reduction
+•   TI patented Pass Through Mode (PTM) for system                     (1)      For all available packages, see the orderable addendum at
+                                                                                the end of the data sheet.
+    power efficiency improvement and battery fast
+    charging achieving 99% efficiency.                                                                    Q2
+
+•   Input and battery current monitor through                                                      Q1                                                                             Q3       Q4
+                                                                              VBUS
+                                                                           3.5V-26V
+    dedicated pins                                                                           HIDRV1     LODRV1 SW1                                  SW2                       LODRV2   HIDRV2            BATT
+
+•   Integrated 8-bit ADC to monitor voltage, current
+                                                                                             VBUS                                                                                         SYS            (1S-5S)
+                                                                                             ACN
+                                                                                                           BQ25731
+    and power                                                                                ACP                                                                                          SRP
+                                                                                                                                                                                          SRN
+
+
+•   Support independent comparator logic with
+                                                                                                               IIN/VIN, VBAT/ ICHG,IOTG/
+
+
+
+
+                                                                                                                                                        CHRG_OK,IBAT, IADPT
+
+
+
+
+    dedicated pins
+                                                                                                                         VOTG
+
+
+
+
+•   Power up USB port from battery (USB OTG)
+    – 3-V to 24-V OTG with 8-mV resolution
+    – Output current limit up to 12.7 A/6.35 A with
+                                                                                                                                           Host (I2C)
+
+
+
+        100-mA/50-mA resolution based on 5-mΩ/10-                                             Application Diagram
+        mΩ sensing resistor
+•   I2C host control interface for flexible system
+    configuration
+•   High accuracy for the regulation and monitor
+    – ±0.5% Charge voltage regulation
+    – ±3% Charge current regulation
+    – ±2.5% Input current regulation
+    – ±2% Input/charge current monitor
+•   Safety
+    – Thermal shutdown
+    – Input, system, battery overvoltage protection
+
+     An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+     intellectual property matters and other important disclaimers. PRODUCTION DATA.
+BQ25731
+SLUSE66A – JUNE 2020 – REVISED JANUARY 2021                                                                                                                      www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1     9.4 Device Functional Modes..........................................35
+2 Applications..................................................................... 1       9.5 Programming............................................................ 35
+3 Description.......................................................................1       9.6 Register Map.............................................................40
+4 Revision History.............................................................. 2        10 Application and Implementation................................ 83
+5 Description (continued).................................................. 3               10.1 Application Information........................................... 83
+6 Device Comparison Table...............................................4                   10.2 Typical Application.................................................. 83
+7 Pin Configuration and Functions...................................5                     11 Power Supply Recommendations..............................92
+8 Specifications.................................................................. 8      12 Layout...........................................................................93
+  8.1 Absolute Maximum Ratings........................................ 8                    12.1 Layout Guidelines................................................... 93
+  8.2 ESD Ratings............................................................... 8          12.2 Layout Example...................................................... 94
+  8.3 Recommended Operating Conditions.........................8                          13 Device and Documentation Support..........................96
+  8.4 Thermal Information....................................................9              13.1 Device Support....................................................... 96
+  8.5 Electrical Characteristics(BQ25731)........................... 9                      13.2 Documentation Support.......................................... 96
+  8.6 Timing Requirements................................................ 18                13.3 Support Resources................................................. 96
+  8.7 Typical Characteristics.............................................. 19              13.4 Trademarks............................................................. 96
+9 Detailed Description......................................................22              13.5 Electrostatic Discharge Caution..............................96
+  9.1 Overview................................................................... 22        13.6 Glossary..................................................................96
+  9.2 Functional Block Diagram......................................... 23                14 Mechanical, Packaging, and Orderable
+  9.3 Feature Description...................................................24              Information.................................................................... 97
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision * (June 2020) to Revision A (January 2021)                                                                   Page
+• Changed from Advance Information to Production Data.................................................................................... 1
+
+
+
+
+2       Submit Document Feedback                                                                                           Copyright © 2022 Texas Instruments Incorporated
+
+                                                                      Product Folder Links: BQ25731
+

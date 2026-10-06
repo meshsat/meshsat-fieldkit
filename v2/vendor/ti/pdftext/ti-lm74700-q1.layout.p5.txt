@@ -1,0 +1,64 @@
+                                                                                                                                LM74700-Q1
+www.ti.com                                                                             SNOSD17G – OCTOBER 2017 – REVISED DECEMBER 2020
+
+
+6 Specifications
+6.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                          MIN                  MAX             UNIT
+                       ANODE to GND                                                        –65                   65             V
+ Input Pins            EN to GND, V(ANODE) > 0 V                                          –0.3                   65             V
+                       EN to GND, V(ANODE) ≤ 0 V                                      V(ANODE)       (65 + V(ANODE))            V
+                       GATE to ANODE                                                      –0.3                   15             V
+ Output Pins
+                       VCAP to ANODE                                                      –0.3                   15             V
+ Output to Input
+                       CATHODE to ANODE                                                       –5                 75             V
+ Pins
+ Operating junction temperature(2)                                                         –40                  150             °C
+ Storage temperature, Tstg                                                                 –40                  150             °C
+
+(1)    Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+       only, which do not imply functional operation of the device at these or any other conditions beyond those indicated under
+       Recommended Operating Conditions. Exposure to absolute-maximum-rated conditions for extended periods may affect device
+       reliability.
+(2)    High junction temperatures degrade operating lifetimes. Operating lifetime is de-rated for junction temperatures greater than 125°C.
+
+6.2 ESD Ratings
+                                                                                                                       VALUE            UNIT
+                                                  Human body model (HBM), per AEC Q100-002(1)                          ±2000
+                                                                                 Corner pins (VCAP, EN,
+ V(ESD)        Electrostatic discharge            Charged device model (CDM),                                           ±750             V
+                                                                                 ANODE, CATHODE)
+                                                  per AEC Q100-011
+                                                                                 Other pins                             ±500
+
+(1)    JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+
+6.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)(1)
+                                                                                MIN                NOM            MAX           UNIT
+                    ANODE to GND                                                –60                                    60
+ Input Pins         CATHODE to GND                                                                                     60           V
+                    EN to GND                                                   –60                                    60
+ Input to Output
+                    ANODE to CATHODE                                            –70                                                 V
+ pins
+
+ External           ANODE                                                        22                                              nF
+ capacitance        CATHODE, VCAP to ANODE                                      0.1                                              µF
+ External
+ MOSFET max         GATE to ANODE                                                15                                                 V
+ VGS rating
+ TJ                 Operating junction temperature range(2)                     –40                                150           °C
+
+(1)    Recommended Operating Conditions are conditions under which the device is intended to be functional. For specifications and test
+       conditions, see Electrical Characteristics.
+(2)    High junction temperatures degrade operating lifetimes. Operating lifetime is de-rated for junction temperatures greater than 125°C.
+
+
+
+
+Copyright © 2020 Texas Instruments Incorporated                                                               Submit Document Feedback         5
+                                                       Product Folder Links: LM74700-Q1
+

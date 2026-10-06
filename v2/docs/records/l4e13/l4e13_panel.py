@@ -83,6 +83,23 @@ PINS = {
             "e33b0a05c27f67635f7537ad6ba4b9b85623427e99550c4e9343c24bb91903a5"),
 }
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDF pages this script reads as text, each with its pdftotext options. Each text is
+# a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF (a held-back sheet's text is held
+# back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is absent, so this script's own reads never
+# run pdftotext (section 0 prints each text's sha256 after the pins). l4e_replay.main(), run here in-process, still extracts its own
+# pages at run time: it is in the l4e7 KEY's group, not converted by W34 (v2/docs/records/_lib/PDFTEXT-INVENTORY.md).
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e13
+PDFTEXT = {
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"], ["-layout", "-f", "3", "-l", "3"], ["-layout", "-f", "4", "-l", "4"], ["-layout", "-f", "5", "-l", "5"], ["-layout", "-f", "6", "-l", "6"]],
+    "v2/vendor/power/littelfuse-smcj-series-tvs.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"]],
+    "v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf": [["-layout", "-f", "1", "-l", "1"], ["-layout", "-f", "2", "-l", "2"]],
+    "v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf": [["-layout", "-f", "2", "-l", "2"], ["-layout", "-f", "3", "-l", "3"], ["-layout", "-f", "4", "-l", "4"]],
+    "v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf": [["-layout", "-f", "1", "-l", "1"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
+
 # The few figures and readings this record sets itself (each named where it is used)
 G_STC = 1000.0        # STC irradiance, W/m2: the makers' rated Voc row is defined at it, and so is THE WINDOW (REQ-016's rated
                       # quantity: the open-circuit voltage at 1000 W/m2, moved to the coldest operating temperature, -20 C)
@@ -142,10 +159,7 @@ def need(text, pat, what, flags=re.M):
 
 
 def pdf_page(rel, n):
-    r = subprocess.run(["pdftotext", "-layout", "-f", str(n), "-l", str(n), os.path.join(TOP, rel), "-"], capture_output=True, text=True)
-    if r.returncode != 0:
-        refuse(3, "pdftotext could not read %s p.%d" % (rel, n))
-    return r.stdout
+    return PT.pdf_text(TOP, rel, ["-layout", "-f", str(n), "-l", str(n)], PDFTEXT, "v2/docs/records/l4e13", universal_newlines=True)
 
 
 def flat(s):
@@ -878,6 +892,8 @@ def render(R):
     P("0. INPUTS AND REPRODUCTIONS")
     for key, (rel, want) in PINS.items():
         P("   %-10s %s  sha256 %s" % (key, rel, want[:16]))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        P("   %-10s %s  sha256 %s" % ("pdftext", t, (h or "ABSENT")[:16]))
     P("   l4e_replay.main() in-process, its locals captured, prints l4e_replay.out byte for byte: %s" % ("yes" if R["r0"] else "NO"))
     P("   this record's trace equals the replay's trace hour for hour on the SunPower panel at its three holds: yes")
     P("   the SunPower day (Wh, no limit) against the replay's section 12 (legacy band): %s" % "; ".join(

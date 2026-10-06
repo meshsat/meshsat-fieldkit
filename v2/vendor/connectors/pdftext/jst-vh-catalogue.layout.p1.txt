@@ -1,0 +1,74 @@
+                    VH CONNECTOR
+                    3.96 mm pitch/Wire-to-Board connectors/Crimp style and Mating style
+
+
+
+                                                           ■ Specifications
+                                                               Current rating: 10 A          AC/DC
+                           6                                                       ＊When using AWG #16 with the standard type header.
+                               5
+                                                                                   7A     AC/DC
+                                    4
+                                        3
+                                                                                   ＊When using AWG #18 with the shrouded type header.
+
+                                            2
+                                                1
+                          6
+
+
+
+
+                                                               Note: Do not branch in parallel current which exceeds the rated current.
+                               T
+                               JS
+
+
+
+
+                                                                     If branched in parallel, current imbalance or other problems may occur.
+                                                                      If it is absolutely necessary to branch such a large current in parallel,
+                                                                      design the circuits without causing any imbalance and provide extra
+                                                                      margin for each circuit.
+                                                               Voltage rating: 250 V AC/DC
+                                                               Temperature range: ‑40℃ to +105℃
+                                                                                   (including temperature rise in
+                                                                                     applying electrical current)
+                                                               Contact resistance: Initial value/ 10 mΩ max.
+                                                                                    After test/ 20 mΩ max.
+                                                               Insulation resistance: 1,000 MΩ min.
+                                                               Withstanding voltage:
+                                                                 There shall be no breakdown or flashover while
+                                                                 applying 1,500 VAC for one minute.
+                                                               Applicable wire range:
+This wire-to-board connector with a 3.96 mm                      Conductor size/ AWG #22 to AWG #16
+pitch is commonly used in power supply                           Insulation O.D./ φ 1.7 mm to φ 3.0 mm
+circuits for a wide variety of electrical and                  Applicable PC board thickness: 1.6 mm
+electronic devices. It supports currents up to
+10 A.                                                      * Please refer to the "Handling Precautions for Terminals
+                                                             and Connectors" on our website (listed in the “Technical
+ Compact size, high current capability                       Documents” column on the Product Information page)
+ Compact design with a mounting height of 16.5 mm            before use.
+ and a depth of 10.5 mm (for top-entry type),              * RoHS2 compliance
+ combined with a high current rating of 10 A               * Dimensional unit: mm
+ (when using AWG #16 wire).                                * Contact JST for details.
+
+ Box-shaped leaf spring contact
+ The contact is highly reliable, featuring a leaf-
+                                                           ■ Standards
+                                                           For information on overseas standard registrations,
+ shaped design with excellent spring characteristics
+                                                           please refer to the "List of Registered Overseas
+ housed within a box.
+                                                           Standards" on our website (listed in the “Technical
+ Secure lock mechanism                                     Documents” column on the Product Information page).
+ The large, highly visible outer-type housing with         * Specifications registered to overseas standards may
+ a strong lock ensures easy and secure insertion and         differ from the general specifications listed above.
+ removal. Additionally, it offers excellent mechanical
+ reliability in the mated condition.
+
+
+
+
+                                                         ‑1‑
+

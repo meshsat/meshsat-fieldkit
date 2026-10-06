@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/ti-bq4050.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/ti-bq4050.pdf",
+ "pdf_sha256": "2664e33fe6d6ebed3a0f58153d8ba8ce66cb84f07741f6708ae11a224f443f5e",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/ti-bq4050.layout.txt",
+ "text_bytes": 329497,
+ "text_sha256": "f83f141c39e09df295b6196c4b02c03f85e49329aad9f763ae65c4aac197fa3f"
+}
