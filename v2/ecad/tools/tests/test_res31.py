@@ -16,8 +16,10 @@ assessment; a placeholder outside the declared tokens; a patch row whose old tex
 dash. Each predicate is also run on a mutant it must refuse.
 
 The coordinator's logs (`<worktrees>/_runs`, outside the repository) are read by ONE test, which raises Skip where they are absent
-(a rented box): run it in the runner pass (the record's section 8). When the coordinator adds the rows after `f0748b49` at the
-adoption, TIP below moves with them (the record last read the lineage at the merge of main, `d5d9c252`).
+(a rented box): run it in the runner pass (the record's section 8). When the coordinator adds the rows after `31928583` at the
+adoption, TIP below moves with them (the record last read the lineage at W41's converged commit, `31928583`; W56 added its rows 32 and
+33, 6 October 2026, and the checks of the counts those rows move: the later rows' split, the W51 reversal's numbers, RESULT's sections
+2d, 4, 6 and 7, the third chain run's and the spent re-keys' elapsed times, each recomputed from the table, git or the logged stamps).
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -37,18 +39,19 @@ CLASS = REC + "/CLASSIFICATION.md"
 PATCH = REC + "/ENTRY-PAGES.patch.md"
 SOURCES = REC + "/inputs/SOURCES.txt"
 BASE = "dd1aed00d0a0a521063b5792550bc510c4707c59"          # set 30's promoted revision, set 31's base
-TIP = "d5d9c252db128bc71db42d068477e1b370e750b4"           # set 31's lineage as the record last read it (the merge of main eff28be3)
+TIP = "31928583c612ea43df17df5d7e0cbb2f66090f8e"           # set 31's lineage as the record last read it (W41's converged commit)
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2 (its line 17)
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
-DECLARED = ("__ROUND2__", "__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")
+DECLARED = ("__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")     # W41's round filled: rows 32 and 33
 PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
            "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main",
            "4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31 at W39's last commit, the counts before W50's reconciliation",
-           "353b41dd2144dba237f2df9616dadd452f62569f": "fnd/res31 at W50's last commit, the counts before W51's five rows"}
+           "353b41dd2144dba237f2df9616dadd452f62569f": "fnd/res31 at W50's last commit, the counts before W51's five rows",
+           "7155b626a6ef2036de8843de2f1d1d94b2d01d71": "fnd/res31 at W51's last commit, the counts over the 101 before rows 32 and 33"}
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
 RIC = "REVIEWED-INPUT CHANGED"
@@ -307,6 +310,21 @@ def p_summary(text):
             ("RECORD TEXT %d, TEST %d, DIGEST RE-PIN %d" % (f31["RECORD TEXT"], f31["TEST"], f31["DIGEST RE-PIN"])) not in flat or \
             ("MERGE %d." % f31["MERGE"]) not in flat:
         bad.append("row 31's split is not the table's")
+    later = [c for c in rows if int(c[0].split(".")[0]) > 31]
+    fl = Counter(_classes(c)[0] for c in later)
+    if later:
+        bits = []
+        for k in FIXED:
+            if fl[k]:
+                rr = [c[0] for c in later if _classes(c)[0] == k]
+                bits.append("%s %d" % (k, fl[k]) + (" (rows %s)" % _and(rr) if k == RIC else ""))
+        wantl = "Rows %s (W41's two commits after `d5d9c252`) add: %s." % (_and([c[0] for c in later]), "; ".join(bits))
+        if wantl not in flat:
+            bad.append("the later rows' split does not read %r" % wantl)
+    rt = Counter(_classes(c)[0] for c in rows)["RECORD TEXT"]
+    rev = "the count moves from %d to %d of the %d (RECORD TEXT from %d to %d;" % (len(ri), len(ri) + 3, len(rows), rt, rt - 3)
+    if rev not in flat:
+        bad.append("W51's reversal does not read %r (rows 31.14, 31.21 and 31.25 moved)" % rev)
     # the three kinds: each REVIEWED-INPUT CHANGED row in exactly one, each count the number of rows named in it
     kinds = (("narrow", r"- \*\*They narrow, tighten or restate a state to a weaker claim \((\d+)\):\*\*(.*?)(?=\n- \*\*)"),
              ("not only", r"- \*\*They do not only narrow \((\d+)\):\*\*(.*?)(?=\n- \*\*)"),
@@ -428,7 +446,11 @@ def p_counts(texts, order):
     r73 = sum(1 for c in rows if int(c[0].split(".")[0]) <= 30 and _classes(c)[0] == RIC)
     for w in ("over the %d commits to `f0748b49` alone, REVIEWED-INPUT CHANGED %d)" % (sum(1 for c in rows if int(c[0].split(".")[0]) <= 30), r73),
               "**None of the %d REVIEWED-INPUT CHANGED commits" % ri, "Its %d REVIEWED-INPUT CHANGED commits" % ri,
-              "; %d REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46;" % ri):
+              "; %d REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46;" % ri,
+              "%d commits classified over `dd1aed00..%s`; %d REVIEWED-INPUT CHANGED" % (len(rows), TIP[:8], ri),
+              "Targeted verification of the %d unreviewed changes of section 2" % ri, "and this set's %d);" % ri,
+              "REVIEWED-INPUT CHANGED %d of %d." % (ri, len(rows)), "over the %d to `%s`, %d)" % (len(rows), TIP[:8], ri + 3),
+              "It classes each of the %d commits" % len(rows)):
         if w not in r:
             bad.append("RESULT.md does not read %r (the table's count)" % w)
     pt = " ".join(texts[PATCH].split())
@@ -436,16 +458,20 @@ def p_counts(texts, order):
                  ("Set 31 adds its own: %d commits that change what cx46 read or carry another row's change" % ri, 2)):
         if pt.count(w) != k:
             bad.append("ENTRY-PAGES.patch.md does not read %r %d times (the table's count)" % (w, k))
-    for sha, label in (("aed4bd23", "The commit** `aed4bd23` (%d files"), ("562edf6a", "The commit** `562edf6a` (%d files")):
+    for sha, label in (("aed4bd23", "The commit** `aed4bd23` (%d files"), ("562edf6a", "The commit** `562edf6a` (%d files"),
+                       ("31928583", "The commit** `31928583` (%d files")):
         k = len(_git("show", "--name-only", "--format=", sha).split())
         if label % k not in r:
             bad.append("RESULT.md's file count of %s is not git's %d" % (sha, k))
     for a, b, span in (("10:59:11", "12:30:22", "1 h 31 min 11 s"), ("12:41:57", "15:09:03", "2 h 27 min 6 s"),
-                       ("12:24:18", "15:10:11", "2 h 45 min 53 s")):
+                       ("12:24:18", "15:10:11", "2 h 45 min 53 s"), ("16:14:39", "18:02:33", "1 h 47 min 54 s"),
+                       ("16:14:39", "18:10:37", "1 h 55 min 58 s"), ("15:22:20", "15:57:50", "35 min 30 s"),
+                       ("15:15:17", "15:58:12", "42 min 55 s")):
         s = [int(x) for x in a.split(":")]
         e = [int(x) for x in b.split(":")]
         d = (e[0] - s[0]) * 3600 + (e[1] - s[1]) * 60 + e[2] - s[2]
-        if "%d h %d min %d s" % (d // 3600, d % 3600 // 60, d % 60) != span or span not in r:
+        got = ("%d h " % (d // 3600) if d >= 3600 else "") + "%d min %d s" % (d % 3600 // 60, d % 60)
+        if got != span or span not in r:
             bad.append("the elapsed time %s to %s is not %s" % (a, b, span))
     return bad
 
@@ -647,7 +673,13 @@ def t_the_summary_and_the_bound_statement_are_the_tables():
     r = [l for l in t.split("\n") if l.startswith("| 31.3 |")][0]
     assert p_summary(t.replace(r, r.replace("| REVIEWED-INPUT CHANGED + RECORD TEXT |", "| RECORD TEXT |"), 1)), \
         "a re-classed row with the old counts passed"
-    assert p_summary(t.replace("(8):** `bf44eb8c`", "(7):** `bf44eb8c`", 1)), "a wrong kind count passed"
+    k = re.search(r"weaker claim \((\d+)\):\*\* `bf44eb8c`", t)
+    assert k, "the mutation's anchor (the first kind's count) is not in the summary"
+    assert p_summary(t.replace(k.group(0), k.group(0).replace("(%s)" % k.group(1), "(%d)" % (int(k.group(1)) - 1)), 1)), \
+        "a wrong kind count passed"
+    r = [l for l in t.split("\n") if l.startswith("| 33 |")][0]
+    assert p_summary(t.replace(r, r.replace("| REVIEWED-INPUT CHANGED + RECORD TEXT + DIGEST RE-PIN + TEST |", "| DIGEST RE-PIN + TEST |"), 1)), \
+        "row 33 re-classed with the old counts passed"
 
 
 def t_the_merge_list_is_gits():
@@ -670,7 +702,9 @@ def t_every_count_typed_is_gits():
     texts = _texts()
     order = _order()
     assert not p_counts(texts, order), p_counts(texts, order)
-    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints 101: 76 commits", "prints 101: 75 commits", order)
+    n, m = len(order), sum(1 for o in order if len(o[2]) > 1)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "prints %d: %d commits" % (n, n - m), "prints %d: %d commits" % (n, n - m - 1), order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "35 min 30 s", "35 min 31 s", order)
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "1 h 31 min 11 s", "1 h 31 min 12 s", order)
     ri = Counter(_classes(c)[0] for c in _rows(texts[CLASS]) if not _placeholder_row(c))[RIC]
     _mutant_refused(lambda tx, o: p_counts(tx, o), texts, RESULT, "**None of the %d REVIEWED-INPUT" % ri,
@@ -722,6 +756,8 @@ def t_every_cited_log_exists_and_carries_its_quote():
     texts = _texts()
     assert not p_logs(texts, runs), p_logs(texts, runs)
     _mutant_refused(p_logs, texts, RESULT, "`round 1: 18 replaced`", "`round 1: 19 replaced`", runs)
+    _mutant_refused(p_logs, texts, RESULT, "targeted-w41-1623.log:22` `round 1: 15 replaced`", "targeted-w41-1623.log:22` `round 1: 16 replaced`", runs)
+    _mutant_refused(p_logs, texts, RESULT, "tests-w41-1802-f8.log:127` `tests: 124 passed", "tests-w41-1802-f8.log:127` `tests: 125 passed", runs)
 
 
 def _pytest(fn):
