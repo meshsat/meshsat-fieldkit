@@ -1,13 +1,13 @@
-# The supplier validation and remaining engineering annex: U-01, U-02, U-04 and E11-29 (5 October 2026; written 15:30 to 15:34 CEST, reframed 15:55 under the owner's amendment of 15:45, part 19)
+# The supplier validation and remaining engineering annex: U-01, U-02, U-04 and E11-29 (5 October 2026; written 15:30 to 15:34 CEST, reframed 15:55 under the owner's amendment of 15:45, part 19; amended 6 October 2026 for the NEXT set, sections 6 to 8)
 
 **Purpose (the owner's clarification, `handover/OWNER-INSTRUCTION-2026-10-05.md` part 19).** The project's deliverable is the most complete,
 internally consistent engineering package that desk engineering, modelling, simulation and review can produce, for a RECEIVING COMPANY
 to complete, physically validate and manufacture. This annex is that company's validation and remaining-engineering scope for the four
-items the desk cannot close: for each, the claim the missing fact supports, why the held evidence does not establish it, the specimen,
+items the desk cannot close (a fifth, E11-37, added on 6 October 2026 in section 7): for each, the claim the missing fact supports, why the held evidence does not establish it, the specimen,
 measured quantity and pass limit, the capability needed, the affected outputs that stay PROVISIONAL until it is known, and a labelled
 cost as supporting information. **The owner is NOT asked to supply a bench, buy equipment, book a test, answer a procurement question
 or authorise an experiment before the handover.** No supplier is assumed engaged; its engineering and laboratory capability remain to
-be confirmed. Nothing here is a request for a requirement change, a purchase, an outside contact, fabrication or energisation.
+be confirmed. Nothing here is a request for a requirement change, a purchase, an outside contact, fabrication or energisation. **Amendment of 6 October 2026** (branch `fnd/w3annex` from set 30's integration commit 2c, `53a68c7c`): written for the NEXT set and NOT merged into set 30's freeze; the coordinator adopts it there, re-pins and regenerates what reads this page, and fills the promoted sha where section 6 reads `__INTEGRATED__`. It adds E11-37 (section 7), states R17's design target as record l4e11 prints it, R-159's restatement, the lower-source back-feed's placement and D-06's two meanings (section 6), and keeps every line of sections 1 to 5 where it was (words are added inside lines only). It accepts nothing.
 
 Three states are kept apart throughout: the LAYER DESK PACKAGE (editable design, analysis, internal consistency, reviews and the scoped
 supplier work: complete or not within the declared scope); DESIGN AND QUALIFICATION (open defects, provisional choices, unverified
@@ -70,7 +70,7 @@ release it informs). Both are limited evidence builds under the constitution's s
 
 | Route | Specimen | What it represents | What transfers to the final circuit | What stays layout- or part-specific (open after it) | Capability and who | Cost |
 |---|---|---|---|---|---|---|
-| (R1) TI's evaluation module BQ25730EVM, as sold, with its own FETs | the controller on TI's reference layout | the controller's mode behaviour: VSYS regulation in each mode (D1, D3, D4), the CHRG_INHIBIT behaviour and sequencing, the start from cold, the VSYS_MIN accuracy (A11-18) | the controller's behaviour and register settings; the piecewise mode table of E11-31 (section 15d) | the held pack current through OUR pair's body diodes and its drive (E11-29, E11-37); D2's step response with OUR inductor and capacitors (TI's parts differ); R17's sense layout; thermal | a bench with a programmable source (9 to 25 V, 100 W class), an electronic load and a 4S pack or a pack simulator; the receiving company's or a nominated laboratory's bench (engagement unconfirmed; nobody in house) | the module's price NOT READ (TI's page renders it by script); ESTIMATE from TI's EVM class: USD 100 to 200; the bench instruments assumed at hand |
+| (R1) TI's evaluation module BQ25730EVM, as sold, with its own FETs | the controller on TI's reference layout | the controller's mode behaviour: VSYS regulation in each mode (D1, D3, D4), the CHRG_INHIBIT behaviour and sequencing, the start from cold, the VSYS_MIN accuracy (A11-18) | the controller's behaviour and register settings; the piecewise mode table of E11-31 (section 15d) | the held pack current through OUR pair's body diodes and its drive (E11-29, E11-37; E11-37's own row is section 7); D2's step response with OUR inductor and capacitors (TI's parts differ); R17's sense layout; thermal | a bench with a programmable source (9 to 25 V, 100 W class), an electronic load and a 4S pack or a pack simulator; the receiving company's or a nominated laboratory's bench (engagement unconfirmed; nobody in house) | the module's price NOT READ (TI's page renders it by script); ESTIMATE from TI's EVM class: USD 100 to 200; the bench instruments assumed at hand |
 | (R2) a controlled coupon of the drafted charger block | a small 4-layer coupon carrying exactly `apply_gen_sch_a_charger.py`'s block as drafted (the BQ25730, Q39, Q40, Q42, R17, the inductor, the capacitors, the sense and the FET drive), with test points | OUR circuit as drawn, apart from board A's planes | everything (R1) transfers plus the held pack current through our pair, D2 with our parts, R17's layout; the same coupon can carry TP-E11-29's FET fixture (section 3 below), one build for two qualifications | board A's plane resistance and thermal environment; the composed return (V6-B1) | fabrication and assembly by a board house (JLCPCB or NextPCB, five pieces) and the same bench as (R1); the coupon's design review before ordering (its own gate, not the kit's) | ESTIMATE EUR 150 to 300 for five assembled coupons, from the September 2026 JLC lines in `release/revA/order/ORDER-LOG.md` (a small 4-layer board EUR 20 to 60, assembly EUR 50 to 150, parts about EUR 40); NOT QUOTED |
 
 **Recommendation to the receiving company (SESSION):** (R2) answers U-04's question for our circuit; (R1) answers the controller's part sooner and cheaper and can run first. Neither requires the whole-kit fabrication release; each is a scoped validation task with its own review. OW-7's questions to TI (Q-TI-15 to Q-TI-18) stay drafted and UNSENT and would sharpen (R1). Until one runs, (B1)'s mode table (E11-31), D2's step margin and the held pack current stay PROVISIONAL in L4-E11's page and L4-E9's rows IF-10 and U-04.
@@ -84,7 +84,7 @@ step within 2.054 V).
 to +85 C, storage allowable -40 to +85 C), the 2.5 V cut-off, the capacity rows. **Recommended, not guaranteed at temperature:** 11 A
 continuous and 22 A pulses, which "Can vary depending on temperatures" (footnote 2). The kit needs 10 A continuous, 18 A for 60 s and
 20 A for 2 s at the modelled cells, -20 to +80 C, plus the storage dwell and recovery of LO-01e to LO-01g. The ruled 35E is unsuitable on
-its own published rows (LO-01d to LO-01g).
+its own published rows (LO-01d to LO-01g). D-06 in this section is the foundation decision of the pack, not L4-E9's defect D-06 (section 6.5).
 
 | Route | What it proves | What it does NOT prove | Decision it supports | Cost and capability |
 |---|---|---|---|---|
@@ -102,7 +102,7 @@ follows; adoption needs (a) or a lot qualification, and the fit needs (c).
 
 TP-E11-29 (`test-procedures/TP-E11-29.md`, L4-E11 round 16) is written and NOT EXECUTABLE until L4-E9 restates R-159 and a supplier
 agrees in writing to the fixture requirement: the net heat at each heating lead's joint at most 10 mW in every state (the supplier
-demonstrates it by three thermocouples or a reference coupon). Targets: Zw at most 37.59 K/W, R17 at most 0.294 K/W, the pours 0.1 mOhm.
+demonstrates it by three thermocouples or a reference coupon). Targets: Zw at most 37.59 K/W, R17 at most 0.294 K/W, the pours 0.1 mOhm (R17's 0.294 K/W is record l4e11's three-place print of the one computed target its row E11-29 prints as 0.29 K/W, section 6.2; R-159 is restated on the set 30 candidate and the procedure stays NOT EXECUTABLE on the supplier's written agreement, section 6.3).
 Specimen: the FET pair and Q42 on a coupon with the record's pours (route (R2) above can carry it). Capability: a supplier's or
 laboratory bench with the heating leads, thermocouples and the record's method (none secured). Cost: NOT QUOTED; folded into (R2)'s
 estimate if the same coupon carries both. Its fallback if the sharing fails: lower-resistance FETs or a fourth, a design change inside
@@ -115,7 +115,7 @@ letters, UNSENT and unexecuted; none is a condition of the handover. No requirem
 
 Handed to the receiving company, as its validation and remaining-engineering scope, each with specimen, quantity, pass limit and the
 outputs it keeps provisional: T-H1 (section 1), U-04's route (R1) and/or (R2) with E11-29's fixture on the same coupon if (R2)
-(sections 2 and 4), the Saft route's evidence (section 3: Saft's statement and/or the one-cell screen, with adoption apart). Its
+(sections 2 and 4), the Saft route's evidence (section 3: Saft's statement and/or the one-cell screen, with adoption apart), E11-37's statement or bench (section 7). Its
 engineering and laboratory capability are to be confirmed; no supplier is engaged.
 
 The desk work of P0-1 to P0-8 does not wait for any of it, and a desk-solvable defect is never moved into this annex.
