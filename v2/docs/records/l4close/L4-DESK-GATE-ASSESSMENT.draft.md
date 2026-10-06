@@ -82,9 +82,14 @@ names, every count this file states, and each other-branch citation where that c
 - The base `bbba3e53` is the P0 candidate after cx46 ("CANDIDATE READY 3: ac8efbca (the claim-and-handover disposition after cx46"
   [T5R:1]) with the remaining-engineering ledger merged and L4-E9's change-list rows R-220 to R-245 applied to the change list
   ("the drafted change list carries rows R-220 to R-245 (no R-241: route B2 out)" [CON:365]).
-- After the base, on `fnd/p0pwr`: the merge `6fe398e9` of Slot H's set 31 (`17ce29d5`) (read with `git log`); the coordinator's
-  commit 2b (the regenerated cascade outputs) is not committed at the base (Slot H: "commit 2b (the cascade outputs this branch's output
-  pins)" [H31:1]). Where set 31 changes a statement below, both readings are given.
+- After the base, on `fnd/p0pwr`: the merge `6fe398e9` of Slot H's set 31 (`fnd/l4e9s31`: `bca7b0dc`, `14082416`, `17ce29d5`; read
+  with `git log`). The coordinator's note of 01:56 CEST (`<worktrees>/_runs/claude/dgate/INBOX.md`, outside the repository) says the
+  candidate merged it because the release suite on the applied change list needs its page, generator data and `test_l4e9`
+  expectations, so set 31 is part of THIS candidate and its commits are intervening commits to classify (class (b), claim-narrowing
+  record text). The coordinator's commit 2b (the regenerated cascade outputs) is not committed at the base (Slot H: "commit 2b (the
+  cascade outputs this branch's output pins)" [H31:1]); the final integrated sha is not known when this is written (the cascade
+  regenerates again and a re-key follows, the same note). Citations stay at the base; where the merge `6fe398e9` changes a statement,
+  both readings are given, at the base and on the candidate.
 - The reviewed revision is `4d0ff8a2` (cx46, [CX46:8]); no check has read the base or anything after `4d0ff8a2` ([P0L3:11-12]).
 
 ## 1. Part one: coherent editable sources
@@ -99,7 +104,7 @@ names, every count this file states, and each other-branch citation where that c
 - F1.3 The independent checks read the composition as passing in their stated scope: cx45, "Boards A, B, D and E composed. All 16
   connected netlist checks read DRAWN." with "This checks connectivity and intent, not routed layout or KiCad ERC." [CX45:28]; cx46,
   "Board E baseline orders agree and exclude B2." [CX46:60].
-- F1.4 Set 31 brings L4-E9's page, register and generator data to the candidate's state (27 changes, each with its source item and
+- F1.4 Set 31, merged on the candidate at `6fe398e9`, brings L4-E9's page, register and generator data to the candidate's state (27 changes, each with its source item and
   class [H31:28-58]) and takes the narrower claim where its two input drafts overlap [H31:68-98]; it states the design gate apart from
   this gate [PAGE31:965].
 - F1.5 The withdrawn items are withdrawn in the records that a receiving company reads first: route B2 "is UNSELECTED and WITHDRAWN
@@ -115,9 +120,10 @@ names, every count this file states, and each other-branch citation where that c
 - A1.2 The P0 list in the tree is "revision 2, 5 October 2026, 16:50 CEST" [P0L:1] with superseded row states [P0L:18-24], which cx46
   named ("lines 18 to 24 do not reflect the corrected candidate" [CX46:81]); revision 3 is a draft on another branch [P0L3:1-12].
 - A1.3 At the base, L4-E9's section 8 is set 29's text and contradicts itself on criterion 2 ("three material defects are open"
-  [PAGE:967] against "criterion 2 has no open defect" [PAGE:979]); set 31 corrects it [PAGE31:1007], merged after the base.
-- A1.4 Seventeen of the twenty-eight contradictions of section 5 would still stop a receiving company as set 31 leaves the package
-  (the column "Stumble" of section 5).
+  [PAGE:967] against "criterion 2 has no open defect" [PAGE:979]); set 31 corrects it [PAGE31:1007], merged on the candidate at
+  `6fe398e9`.
+- A1.4 Seventeen of the twenty-eight contradictions of section 5 would still stop a receiving company in the candidate as the merge
+  `6fe398e9` leaves it (the column Stumble of section 5).
 - A1.5 Two drafts carry text the records withdrew: route B2 called "an unapproved PARTIAL interface proposal" and "an owner item"
   [L4PY:4293-4294] against "no owner action rests on B2" [B2:27]; Layer 5's handover row LH-12 still puts "the fans' supplies through
   FAN_OK, R-210 to R-212" [LH:28], left by set 31 ("LAYER5-HANDOVER.md is not this author's file" [H31:117]).
@@ -151,7 +157,8 @@ names, every count this file states, and each other-branch citation where that c
   fetch_held_back.py, never committed" [F01:5].
 - A2.2 Record l4e7's results cache KEY does not hold on the tree [SOLO:31]; its recompute is "30 to 50 core-minutes" on a rented box
   [SOLO:36]. The re-key is a box job in the coordinator's runbook (`<worktrees>/_runs/int30/PLAN.md` section 0) and is not
-  committed at the base: the cache file's last commit is `69921ce8`, set 29's freeze (read with `git log`).
+  committed at the base: the results file's last commit is `69921ce8`, set 29's freeze, and the rendered output's `914a2f5a`,
+  earlier the same day (read with `git log`).
 - A2.3 L4-E9's own output does not reproduce from the base: it pins four cascade outputs at digests that are not the base's files
   [L4O:55], [L4O:64], [L4O:67], [L4O:106] (the coordinator's 2b bytes; Slot H: "The generator on this branch alone refuses at its
   pins of four cascade outputs" [H31:20]), while the connected output still reads "L4-E9's own output refuses on this tree at its
@@ -193,8 +200,9 @@ names, every count this file states, and each other-branch citation where that c
 - A3.2 The disposition after cx46 was read by no check ("no disposition below has been read by an independent check" [P0L3:12]), and
   the substantive changes after `4d0ff8a2` owe a targeted verification before any credit [I30:124], as part 25 says: "the affected
   result needs targeted verification before being credited" [OWN:844].
-- A3.3 Integration 2a (`bbba3e53`) and set 31's claim changes [H31:32-55] come after Slot D's classification, which binds `1c6d56f5`
-  only [I30:25]; their classification is the coordinator's.
+- A3.3 Integration 1 and 2a (`7070f106`, `bbba3e53`) and set 31's claim changes [H31:32-55], merged at `6fe398e9`, come after Slot
+  D's classification, which binds `1c6d56f5` only [I30:25]; the coordinator's note classes set 31's commits (b), claim-narrowing record
+  text (`<worktrees>/_runs/claude/dgate/INBOX.md`), and part 25 owes each substantive change its targeted verification before credit.
 - A3.4 Five checks the records cite are not filed in the tree: V2RG, V2RF and V2R are "the integrator's" to file [E11R:7], [E11R:23],
   [E11R:38]; record l8p's V1 and V2 are read only through its own text [BRK:778-779].
 - A3.5 The eFuse record's round 2 says it has no independent check ("round 2 has none" [EFS:213]) while the P0 row that carries round 2
@@ -255,13 +263,13 @@ disagreements, which no committed file holds (section 5, left out).
 
 ## 5. The contradictions still standing between records (K-01 to K-28)
 
-The list has 28 entries; 17 read YES in the column Stumble (would a receiving company stumble on it in the package as set 31 leaves
-it: an instruction, a state, a limit or an identifier that two records give differently). This draft settles none. Sources: Slot F's
+The list has 28 entries; 17 read YES in the column Stumble (would a receiving company stumble on it in the candidate as the merge
+`6fe398e9` of set 31 leaves it: an instruction, a state, a limit or an identifier that two records give differently). This draft settles none. Sources: Slot F's
 C1 to C9 [S8:466-488]; Slot G's C-1 to C-5 [PC:292-296] (its PC-01 to PC-16 are in the table after this one); Slot H's
 not-reconciled list, which holds five bullets [H31:105-113] (the brief counted four); Slot D's four [I30:94-109]; the draft Slot I
 folded [LS30:135-169]; the ledger's section 6, A to F [REM:621-639].
 
-| Id | Sources | The contradiction (both citations) | At the base | After set 31 | Stumble |
+| Id | Sources | The contradiction (both citations) | At the base | On the candidate (set 31 merged, `6fe398e9`) | Stumble |
 |---|---|---|---|---|---|
 | K-01 | S8 C1; I30 4; LS30 2 | criterion 2: "three material defects are open" [PAGE:967] against "criterion 2 has no open defect" [PAGE:979] | stands | corrected in the text [PAGE31:1007] | NO |
 | K-02 | S8 C2 | the register's count: 209 items [REG:59] and 186 [PAGE:969] against its rows | stands | recounted, 235 items [H31:46] | NO |
@@ -272,7 +280,7 @@ folded [LS30:135-169]; the ledger's section 6, A to F [REM:621-639].
 | K-07 | S8 C7; PC-16 | set 29's P1-2 and P1-3 corrected at the desk [L8R2:10-12] against R-48 and R-190 assigned to the supplier [REG:152], [REG:284] | stands | restated to the check of record l8r2's drafts [H31:55] | NO |
 | K-08 | S8 C8; PC-12; H31 C | E-1 is record l9stk's junction limit [PAGE:1097], [REG:253] and D-10's remaining engineering [P0SOL:101-102] | stands | named where PC-12 names its places [H31:51]; not reconciled [H31:111-112] | YES (one identifier, two items) |
 | K-09 | S8 C9; H31 C | D-06 the decision ("D-06's pocket" [ANX:81]) and D-06 the defect [PAGE:1003] | stands | kept, not renamed [H31:111-112] | YES (one identifier, two items) |
-| K-10 | PC C-1; LS30 1 | D-16 reads OPEN [PAGE:1012] against "D-16 corrected in draft" in R-240 | stands | ADDRESSED IN DRAFTS, PROVISIONAL [H31:70-72] | NO |
+| K-10 | PC C-1; LS30 1 | D-16 reads OPEN [PAGE:1012] against "D-16 corrected in draft" [PAGE:488] in R-240 | stands | ADDRESSED IN DRAFTS, PROVISIONAL [H31:70-72] | NO |
 | K-11 | PC C-2 | `test_l4e9.py` holds D-16 OPEN against the generator's data [PC:293] | stands | test expectations changed with their basis [H31:60-66] | NO |
 | K-12 | PC C-3; H31 C | R17's design target "R17's coupling at most 0.29 K/W" [E11:500] against "R17 at most 0.294 K/W" [ANX:105] and [TP29:729] | stands | not reconciled [H31:105-106] | YES (a pass limit) |
 | K-13 | PC C-4; H31 C | "Completed independently of E-1" for D-16's correction [P11:89] against the crediting rule (composition, mutation and electrical acceptance) | stands | read as ADDRESSED IN DRAFTS, PROVISIONAL; not reconciled [H31:113] | YES (the supplier-facing request) |
@@ -292,7 +300,8 @@ folded [LS30:135-169]; the ledger's section 6, A to F [REM:621-639].
 | K-27 | S8 head; PAGE31 | Slot F frames criteria 1 to 5 as "the Layer 4 DESK gate assessed in record l4e9" [S8:12-14] against "The DESIGN gate (criteria 1 to 5 below) is not the DESK handover gate" [PAGE31:965] | not in the tree | set 31's text governs | NO (S8 is not merged; the coordinator keeps the gates apart) |
 | K-28 | this draft | the connected output: "L4-E9's own output refuses on this tree at its L4-E11 pin" [CON:362] against L4-E9's output regenerated at the base with four pins at bytes not in the tree [L4O:55], [L4O:64], [L4O:67], [L4O:106] | stands | unchanged until 2b | YES (a reproduction instruction) |
 
-**Slot G's PC-01 to PC-16 as Slot H applied or left them** (set 31's table [H31:40-56], its left-out list [H31:115-125]):
+**Slot G's PC-01 to PC-16 as Slot H applied or left them** (set 31's table [H31:40-56], its left-out list [H31:115-125]; on the
+candidate since the merge `6fe398e9`):
 
 | Item | Applied in set 31 | Left |
 |---|---|---|
@@ -317,19 +326,20 @@ folded [LS30:135-169]; the ledger's section 6, A to F [REM:621-639].
 
 **Layer 4's DESK gate (the owner's part 19 [OWN:476]), assessed on `<INTEGRATED-SHA>`: [COORDINATOR: DESK-gate verdict].**
 
-**What "accepted at the desk gate with every dependant PROVISIONAL" would require to be true** (each condition with its source; the
-state at the base in brackets):
+**What acceptance at the desk gate with every dependant PROVISIONAL would require to be true** (each condition with its source; the
+state at the base or on the candidate in brackets):
 
 - Y1. The editable sources compose and regenerate on the integrated revision as on the base [CON:365-374] (true at the base; owed on
   `<INTEGRATED-SHA>`).
 - Y2. Each contradiction of section 5 that reads YES is either resolved or carried in the package with both citations, so that a
-  receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES; none is carried in a page a
-  receiving company reads first).
+  receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES on the candidate; none is
+  carried in a page a receiving company reads first).
 - Y3. The calculations reproduce from the repository plus the named fetches and the named box jobs, with every pin current: L4-E9's
   four pins [L4O:55] and record l4e7's key [SOLO:31] (both owed at the base).
 - Y4. The review evidence is complete as given: the four checks filed, their negative verdicts kept [CX46:10], the method ended
   [CX46:206], every change after `4d0ff8a2` classified, and every substantive one verified or not credited [OWN:844] (Slot D's
-  classification binds `1c6d56f5` only [I30:25]; the later changes are unclassified).
+  classification binds `1c6d56f5` only [I30:25]; integration 1 and 2a and the set 31 merge `6fe398e9` are not yet in a classification
+  record).
 - Y5. The outstanding work is clearly scoped: the annex's four items [ANX:111-119] and the ledger's nineteen remaining-engineering
   items, one qualification and three external architecture facts [REM:585], with E11-37 placed (A4.4) and the back-feed placed
   (A4.5) (both unplaced at the base).
@@ -363,14 +373,15 @@ state at the base in brackets):
 
 ## 7. The DESIGN gate, the coordinator's words (not this gate's)
 
-As the brief gives them, and as set 31's page writes them [PAGE31:1003]: criterion 1 CONDITIONAL, criterion 2 FAIL (open material
+As the brief gives them, and as set 31's page writes them [PAGE31:1003] (on the candidate since the merge `6fe398e9`): criterion 1 CONDITIONAL, criterion 2 FAIL (open material
 defects after cx46, carried as REMAINING ENGINEERING), criterion 3 PASS, criterion 4 PASS, criterion 5 CONDITIONAL. Set 31's page
 says a PASS there is "the DESIGN gate's reading of that criterion on the desk package, never a closure, a qualification or a release"
 [PAGE31:1003]. None of these words is the DESK gate's verdict, and none is restated in sections 1 to 6.
 
 ## 8. What Layer 5's first task would inherit as PROVISIONAL inputs
 
-Layers 5 to 12 stay paused until Layer 4's DESK gate passes ("After that scoped desk gate passes, advance to the next layer." [OWN:476];
+Layers 5 to 12 stay paused until the coordinator's DESK-gate verdict lets them advance ("After that scoped desk gate passes, advance to
+the next layer." [OWN:476];
 part 15 keeps Layers 5 to 12 paused except its named prerequisites [OWN:169]). Its first task would inherit, PROVISIONAL or OPEN:
 
 - the PA interface texts IF-A-PA and IF-AD-HARNESS and the firmware row of the cap [T5R:51-56], on F01 / D-17 "PROVISIONAL" [F01:212-214];
