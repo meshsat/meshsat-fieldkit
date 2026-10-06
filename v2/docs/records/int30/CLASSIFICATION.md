@@ -100,7 +100,7 @@ Over W15's 38 rows alone (its draft at `57bcdbfc`, history): REVIEWED-INPUT CHAN
 
 - Record l8r2's outputs after row 23's composition change: regenerated in commit 2b (row 39); its board E round reads 14 drafts, its GND figures did not move, and its gndret order check is a reading on the record's own order (W16's finding 2, a note for the next set); whether that order or the change list's is the one to reproduce is not decided here.
 - Which composition orders cx46's check "Draft syntax and baseline composition membership" extracted (`cx46:55`; its evidence `cx46:60` names board E's orders without saying from which files), so whether it read record l8r2's board E round is not known.
-- Large outputs were classified by counts and figure sets, not line by line: rows 18 (228 changed lines), 21 (166), 26 (94) and 10's `l9t5_connected.out` (65); the digest-only outputs by checking that every changed line carries a 16-hex digest.
+- Large outputs were classified by counts and figure sets, not line by line: rows 18 (228 changed lines), 21 (166), 26 (94) and 10's `l9t5_connected.out` (65), and row 39's 25 outputs (210 changed lines, 154 of them carrying a digest, W18's count in `RESULT.md` section 2); the digest-only outputs by checking that every changed line carries a 16-hex digest.
 
 ## 3. Found while reading (nothing edited; for their writers through the coordinator)
 
