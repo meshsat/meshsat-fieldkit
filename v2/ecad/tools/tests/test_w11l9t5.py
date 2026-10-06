@@ -58,7 +58,10 @@ OLD_T10 = [
 ]
 NEW_T10 = [
     "   T10: L9T5-F06 OPEN pending its independent check; revision X HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f));",
-    "     the containment (Slot C's round 6, composed here) drafted, composed, read by pin and mutated, cx45's Q3 NOT CLOSED (10j, after cx46);",
+    # restated by W41 (6 October 2026; basis: W38's F10, the checks as received: cx45 reads "P0-3: NOT CONFIRMED" [CX45:10], "NOT
+    # CLOSED" is cx46's word for items 5 to 8 [CX46:136-151]): each word attributed to its check
+    "     the containment (Slot C's round 6, composed here) drafted, composed, read by pin and mutated; Q3: cx45 'P0-3: NOT CONFIRMED',"
+    " cx46's items 5 to 8 'NOT CLOSED' (10j, after cx46);",
     "     its qualification limits (the LDO's resistance and Zth on board B) and the VOS0 residual handed over (10j (e)); L9T5-F27, the decision"
     " identifier both records use (10)",
 ]
@@ -70,9 +73,26 @@ NEW_CL = [
     "   L4-E9's change-list rows: drafted here (apply_l4e9_changelist_p0.py), APPLIED by the integrator at set 30's integration commit"
     " 7070f106 to L4-E9's",
     "     register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims read OPEN or PROVISIONAL as"
-    " above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 with its four cascade pins (l4e10, l4e11,"
-    " l4e12, L4-E7's P0) at commit 2b's digests, refusing at those pins on a tree without them",
+    # restated by W41 (6 October 2026; basis: W38's F4): the four pins are the cascade's current digests, named by their PINS keys in
+    # l4e9_power_path.py (re-pinned by the chain, refused when an output differs: its load_inputs), not 2b's; "set 31" is this lineage,
+    # and record l4e9's own SET31-CHANGES.md (merged at 6fe398e9) is named apart
+    " above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 (this lineage, fnd/int31regen) with its"
+    " four cascade pins (PINS l4e10, l4e11, l4e12, l4e7p0) at those outputs' current digests, which the chain re-pins, refusing at a"
+    " pin whose output differs (first regenerated at commit 2b's digests by record l4e9's SET31-CHANGES.md, merged at 6fe398e9)",
 ]
+# W20's three generator literals of section 11, applied verbatim by f08dbb97 (set 31, W20's rows) after W11's tip; the generator
+# check below swaps them too (restated by W41, 6 October 2026; basis: f08dbb97's diff of l9t5_connected.py, the filed change).
+W20_LITS = [
+    ("   script with this record's text draft apply_l4e9_changelist_p0.py applied in memory (V6-m11: rows R-220 to R-245 for the drafts",
+     "   script, which carry this record's text draft apply_l4e9_changelist_p0.py (V6-m11: rows R-220 to R-245 for the drafts that had none)"),
+    ("   that had none; the tree's files unchanged until the integrator applies it with the re-takes the draft names): %d changes, every",
+     "   as the integrator applied it at 7070f106, read from the tree (the draft's applied state), set 31's R-246 with them: %d changes, every"),
+    ("     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): rev X stays on V-B20",
+     "     sustained, 150 C transient); rev Y's rows, the cover for a rev X part, at 14.0 k: %s over (%s): revision X stays HELD with no"
+     " admission route (round 5's V-B20 route SUPERSEDED, 10j (f))"),
+]
+# W11's tip: the W11 section of the README says its line numbers are this branch's (restated by W41, see t_every_cited_source_line_holds)
+W11_TIP = "85b6f25836f8a4e8312181efbad89976f212672c"
 STALE_CON = ("rev X on V-B20", "CORRECTED IN", "own output refuses on this tree", "applied by the integrator with the re-takes")
 _C = {}
 
@@ -237,7 +257,10 @@ def t_the_generator_prints_the_restated_rows():
         for o, n in zip(old, new):
             assert swapped.count('w("%s")' % o) == 1, o[:40]
             swapped = swapped.replace('w("%s")' % o, 'w("%s")' % n)
-    assert swapped == src, "the generator differs from the base in more than the two rows' literals"
+    for o, n in W20_LITS:
+        assert swapped.count('w("%s"' % o) == 1, o[:40]
+        swapped = swapped.replace('w("%s"' % o, 'w("%s"' % n)
+    assert swapped == src, "the generator differs from the base in more than the two rows' literals and W20's three"
     ast.parse(src)
     assert not CLAIM.search("\n".join(NEW_T10 + NEW_CL)) and not any(d in "".join(NEW_T10 + NEW_CL) for d in DASHES)
 
@@ -301,30 +324,45 @@ def t_the_ledgers_quotations_in_the_output_stay_found():
 
 # --------------------------------------------------------------------------------------------------------------- the cited sources
 def t_every_cited_source_line_holds():
-    reg = tree(REG)
+    # Restated by W41 (6 October 2026). Basis: the W11 section of the README says "line numbers are this branch's" (W11's tip
+    # 85b6f258), and filed set 31 changes moved the cited lines since: the ledger (99bbc0c6, 92b754c5, b76c1480 and main's 836f711b
+    # through d5d9c252: section 1 at 103, section 4 at 652, section 5 at 670) and the draft (f08dbb97). So the cited lines are read
+    # at W11's tip, where they were cited, and the tree is held to carry the same headings and the twelve OPEN or PROVISIONAL states.
+    tree_led = tree(LEDGER)
+    for h in ("## 1. The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item", "## 4. The claims a remaining item weakens",
+              "## 5. Summary"):
+        assert ("\n" + h) in tree_led, h
+    s4 = tree_led.split("\n## 4. The claims a remaining item weakens", 1)[1].split("\n## 5. Summary", 1)[0]
+    rows = [l.split(" | ")[3] for l in s4.splitlines() if l.startswith("| ") and not l.startswith("| Claim") and "---" not in l]
+    # thirteen on the tree: W11's twelve and the ledger's HO-L row for E11-37 (99bbc0c6), every one OPEN or PROVISIONAL
+    assert len(rows) == 13 and all(("OPEN" in s or "PROVISIONAL" in s) for s in rows), rows
+
+    def cited(p):    # the cited lines at W11's tip (Skip without that commit)
+        return at(W11_TIP, p)
+    reg = cited(REG)
     ids = [line(reg, n).split(" | ")[0][2:] for n in range(316, 341)]
     assert ids == ["R-%d" % n for n in range(220, 246) if n != 241], ids
-    assert line(tree(PAGE), 422).startswith("**The P0 round (record l9t5, Slot A, 5 October 2026;")
-    dr = tree(DRAFT)
+    assert line(cited(PAGE), 422).startswith("**The P0 round (record l9t5, Slot A, 5 October 2026;")
+    dr = cited(DRAFT)
     assert line(dr, 107) == "def applied_state(root):" and "set 30's integration commit 7070f106 wrote the three files" in line(dr, 108)
     assert line(dr, 127) == "    return {p_reg: reg, p_py: py, p_page: page}, ch, m"
     assert "NOT APPLIED to the tree by this record" in line(dr, 3)
-    s31 = tree(S31)
+    s31 = cited(S31)
     assert "refuses at its pins of four cascade outputs (l4e10, l4e11, l4e12 and L4-E7's" in line(s31, 20)
     assert "2a pinned at the bytes of the coordinator's commit 2b" in line(s31, 21)
     assert "The committed `l4e9_power_path.out` (regen_out: replaced, twice byte-identical, every printed pin current)" in line(s31, 24)
-    l4o = tree(L4O)
+    l4o = cited(L4O)
     for n, k, p in ((55, "l4e10", "l4e10_cell_thermal.out"), (64, "l4e11", "l4e11_power.out"), (67, "l4e12", "l4e12_thermal.out"),
                     (106, "l4e7p0", "l4e7_p0sol.out")):
         f = line(l4o, n).split()
         assert f[0] == k and f[2].endswith(p), (n, f)
-    assert '"summary": "P0 RECHECK: CORRECTIONS NOT CLOSED.' in line(tree(CX46), 10)
-    led = tree(LEDGER)
+    assert '"summary": "P0 RECHECK: CORRECTIONS NOT CLOSED.' in line(cited(CX46), 10)
+    led = cited(LEDGER)
     assert line(led, 85).startswith("## 1. The twelve cx46 findings NOT CLOSED, each a REMAINING ENGINEERING item")
     assert line(led, 566).startswith("## 4. The claims a remaining item weakens") and line(led, 583) == "## 5. Summary"
     states = [l.split(" | ")[3] for l in led.splitlines()[569:581]]
     assert len(states) == 12 and all(("OPEN" in s or "PROVISIONAL" in s) for s in states), states
-    t10 = tree(T10)
+    t10 = cited(T10)
     assert "revision X is HELD with no admission route (round 5's V-B20 route" in line(t10, 646) and "SUPERSEDED" in line(t10, 647)
     assert "DISPOSITION (10j, after cx46): cx45's Q3 NOT CLOSED" in line(t10, 662)
 

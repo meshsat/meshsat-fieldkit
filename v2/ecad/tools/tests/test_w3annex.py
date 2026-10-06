@@ -21,7 +21,8 @@ base revision 53a68c7c is in the object store):
   task and acceptance), each figure found on the record line the section cites;
 - the lower-source back-feed is placed as the ledger's HO-F places it (remaining engineering inside E-1; S1's row (b) its later
   validation, not a substitute), with the owner's part 23 quoted;
-- the set 30 note is dated and carries the placeholder __INTEGRATED__ for the coordinator;
+- the set 30 note is dated and carries set 30's promoted sha, filled in set 31 where W3 left the placeholder for the coordinator
+  (restated by W41 on 6 October 2026; basis: W10's plan R0, `_runs/int31/PLAN.draft.md` lines 206 to 212, and W38's finding F2);
 - TP-E11-29's quotes all hold against their sources (the procedures' own verifier), R-159's cell is E11-29's row word for word as
   the page now says, and the procedure stays NOT EXECUTABLE;
 - no em or en dash in the two pages or this module.
@@ -52,6 +53,13 @@ REM_M = ("99bbc0c6059aff0bf780f2cd6b0b102092f54f37", "v2/docs/records/l4close/RE
 CITE = re.compile(r"\[([A-Z][A-Z0-9]*):(\d+)(?:-(\d+))?\]")
 QCITE = re.compile(r"\"([^\"]{4,600}?)\"[^\"\[\]]{0,40}?\[([A-Z][A-Z0-9]*):(\d+)(?:-(\d+))?\]")  # a short gap allowed
 DASHES = (chr(0x2013), chr(0x2014))
+# W3 left the literal placeholder `__INTEGRATED__` for the coordinator. Restated by W41 (6 October 2026; basis: W10's plan R0,
+# `_runs/int31/PLAN.draft.md` lines 206 to 212, "the `__INTEGRATED__` placeholders filled with set 30's integrated sha", and W38's
+# finding F2): the placeholder is filled with set 30's promoted sha (`_runs/int30/ADOPTION-VALUES.md`: INTEGRATED = CANDIDATE =
+# PROMOTED = MIRROR), short where the sentence names its neighbours short, full in section 6.1's "the promoted revision:" line.
+PROMOTED = "dd1aed00d0a0a521063b5792550bc510c4707c59"
+FILLED = re.compile(r"`dd1aed00(?:d0a0a521063b5792550bc510c4707c59)?`")
+PLACEHOLDER = "`__INTEGRATED__`"
 _C = {}
 
 
@@ -147,7 +155,8 @@ ANCHORS = {  # every citation of sections 6 to 8 that no quotation checks: the t
     # five keys moved with W23's re-cite of the annex (fnd/int31cite 1b2d5123; the ledger re-cited at 92b754c5, W4's rewrite of
     # record l4e7's pages at 786aed2f): REM 520 to 552 to 549 to 581, P11 44 to 72, 110 to 144, 120 to 123 to 154 to 160, whose words W4
     # rewrote ("(b) the panel withdrawn" is now "(b) the lower-source back-feed"); every range read at this tree by W25
-    "[REM:549-581]": ("### HO-H: E11-29", "### HO-K: U-04"),
+    # W41 (6 October 2026; W38's F1): after the merge of main d5d9c252, 836f711b's three ledger lines move it to 552 to 584
+    "[REM:552-584]": ("### HO-H: E11-29", "### HO-K: U-04"),
     "[ANX:73]": ("E11-37's own row is section 7",),
     "[ANX:87]": ("D-06 in this section is the foundation decision of the pack",),
     "[ANX:93]": ("D-06's pocket (58 x 160 x 48 mm under B16's overhang)",),
@@ -295,11 +304,13 @@ def backfeed_fails(annex):
 
 
 def note_fails(annex, tp):
-    """The set 30 note: dated, the placeholder for the coordinator, and both pages saying they are for the next set."""
+    """The set 30 note: dated, the promoted sha filled where the placeholder stood, and both pages saying they are for the next set."""
     fails = []
     s61 = _section(annex, "### 6.1 The set 30 note", "\n### ")
-    if "`__INTEGRATED__`" not in s61 or "(dated 6 October 2026)" not in s61:
-        fails.append("section 6.1 lacks the dated note or the __INTEGRATED__ placeholder")
+    if ("- the promoted revision: `%s`" % PROMOTED) not in s61 or "(dated 6 October 2026)" not in s61:
+        fails.append("section 6.1 lacks the dated note or the promoted revision %s" % PROMOTED)
+    if PLACEHOLDER in annex:
+        fails.append("the annex still carries the placeholder __INTEGRATED__")
     if "NOT merged into set 30's freeze" not in annex.split("\n")[9]:
         fails.append("the annex's header (line 10) does not say it is for the next set")
     head = tp[:tp.find("## 1. Purpose")]
@@ -445,7 +456,7 @@ def t_the_back_feed_is_placed_as_the_ledger_places_it():
 def t_the_set_30_note_is_dated_and_carries_the_placeholder():
     annex, tp = _pages()
     assert not note_fails(annex, tp), note_fails(annex, tp)
-    assert _amendment(annex).count("`__INTEGRATED__`") >= 2
+    assert len(FILLED.findall(_amendment(annex))) >= 2 and PLACEHOLDER not in annex
 
 
 def t_tp_e11_29_quotes_hold_and_it_stays_not_executable():
@@ -477,7 +488,8 @@ def t_the_predicates_refuse_broken_pages():
         ("e1137", e1137_fails, (annex.replace("7.08 nF typical at -15 V and about", "6.08 nF typical at -15 V and about", 1),)),
         ("e1137", e1137_fails, (annex.replace(", E11-37's statement or bench (section 7)", "", 1),)),
         ("backfeed", backfeed_fails, (re.sub(r"not a substitute\s+for it", "a substitute for it", annex, count=1),)),
-        ("note", note_fails, (annex.replace("`__INTEGRATED__`", "`deadbeef`"), tp)),
+        ("note", note_fails, (FILLED.sub("`deadbeef`", annex), tp)),
+        ("note", note_fails, (annex.replace("`%s`" % PROMOTED, PLACEHOLDER, 1), tp)),
         ("kept", kept_fails, (annex.replace("A desk-fixable defect is never parked here.", "", 1),)),
         ("kept", kept_fails, ("\n" + annex,)),
         ("tp", tp_fails, (tp.replace("at most 40.78 K/W steady with the band carrying 23.93 A", "at most 41.78 K/W steady with the band "

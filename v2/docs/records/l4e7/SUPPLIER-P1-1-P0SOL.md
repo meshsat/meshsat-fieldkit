@@ -5,7 +5,7 @@ engaged, nothing is ordered, and no outside party has been contacted; the owner 
 Prototype design: nothing of board E has been built, bought, powered or measured.
 
 **Set 30 note (6 October 2026; record text only, on branch `fnd/w4l4e7` from set 30's integration commit 2c `53a68c7c`; adopted in
-the NEXT set, where the coordinator regenerates; the promoted sha `__INTEGRATED__`).** What moved since this draft was written: the
+the NEXT set, where the coordinator regenerates; the promoted sha `dd1aed00`).** What moved since this draft was written: the
 candidate merged set 31 (`6fe398e9`; `v2/docs/records/l4e9/SET31-CHANGES.md`), whose register row R-240 keeps D-16's correction
 PROVISIONAL ("A7's zero-differential output PROVISIONAL (the supplier's S3)", `v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`) and
 whose page reads D-16 "PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4)"

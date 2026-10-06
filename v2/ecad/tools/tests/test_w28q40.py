@@ -208,8 +208,10 @@ def counts_fails(led, anx):
     if bl is None or ba is None:
         return None
     fails = []
-    if led.count("\n") != bl.count("\n"):
-        fails.append("the ledger has %d lines, the base %d" % (led.count("\n"), bl.count("\n")))
+    # Restated by W41 (6 October 2026; basis: W38's F1): the coordinator's merge d5d9c252 brought main's adoption 836f711b, which put
+    # three lines into the ledger (746 to 749 on main), so the ledger is its base plus those three; the annex keeps its count.
+    if led.count("\n") != bl.count("\n") + 3:
+        fails.append("the ledger has %d lines, the base %d plus 836f711b's three" % (led.count("\n"), bl.count("\n")))
     if anx.count("\n") != ba.count("\n"):
         fails.append("the annex has %d lines, the base %d" % (anx.count("\n"), ba.count("\n")))
     return fails

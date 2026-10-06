@@ -6,7 +6,7 @@ git from the branches named, cited as text only): set 30's records pack, item 1 
 the remaining-engineering ledger's HO-F and its section 6, item E (fnd/ledgerfix 99bbc0c6); the DESK-gate draft's K-08, K-13, K-23
 and K-24 (fnd/dgate 249e9e47, section 5); set 31's change record (SET31-CHANGES.md, in this tree since the merge 6fe398e9).
 
-The predicates: each page carries a dated set 30 note with the placeholder for the promoted sha and says it is adopted in the NEXT
+The predicates: each page carries a dated set 30 note with the promoted sha (W4's placeholder, filled in set 31) and says it is adopted in the NEXT
 set; route B2 has one wording (UNSELECTED and WITHDRAWN AS DRAFTED), never "partial proposal" in any case; no page says outside a
 quotation that D-16's correction or anything else is "completed independently" (the owner's part 23 words "can be completed
 independently" excepted), and D-16 reads CORRECTED IN DRAFT and PROVISIONAL with R-240 cited; the lower-source back-feed is
@@ -84,7 +84,11 @@ def t_each_page_carries_a_dated_set30_note_for_the_next_set():
         i = p.find("Set 30 note (6 October 2026")
         assert i >= 0, "%s: no dated set 30 note" % nm
         note = p[i:i + 1200]
-        for w in ("__INTEGRATED__", "NEXT set", "fnd/w4l4e7", "6fe398e9", "HO-F"):
+        # W4 wrote the placeholder `__INTEGRATED__`. Restated by W41 (6 October 2026; basis: W10's plan R0, `_runs/int31/PLAN.draft.md`
+        # lines 206 to 212, and W38's finding F2): it is filled with set 30's promoted sha, dd1aed00 (`_runs/int30/ADOPTION-VALUES.md`),
+        # short as the note names its other commits, and the placeholder is gone from the page (the page is read without backticks).
+        assert "__INTEGRATED__" not in p, "%s: the placeholder is not filled" % nm
+        for w in ("the promoted sha dd1aed00", "NEXT set", "fnd/w4l4e7", "6fe398e9", "HO-F"):
             assert w in note, "%s: the set 30 note lacks %s" % (nm, w)
     assert _raw("L4E7-P0SOL.md").startswith("DONE:") and "NOT DONE:" in _raw("L4E7-P0SOL.md").splitlines()[0]
     assert "NEXT set" in _raw("L4E7-P0SOL.md").splitlines()[0]

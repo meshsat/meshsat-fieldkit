@@ -1592,7 +1592,7 @@ measured.
 ## 14. Set 30 note (6 October 2026): the release statement and U101's part number copies (record text only)
 
 **What this is.** Worker W5 of MESHSAT-1357 on branch `fnd/w5l8p`, from set 30's integration commit 2c `53a68c7c` on `fnd/p0pwr`.
-**Adopted in the NEXT set, not in set 30's promoted candidate `__INTEGRATED__`** (the coordinator binds that sha at promotion). It
+**Adopted in the NEXT set, not in set 30's promoted candidate `dd1aed00`** (the coordinator binds that sha at promotion). It
 answers three filed findings, read with `git show` as text: Slot H's not-reconciled item (`fnd/l4e9s31` at `17ce29d5`,
 `v2/docs/records/l4e9/SET31-CHANGES.md` lines 107 to 108: "**Record l8p's one release:** "five drafts" ([BRK:265]) against the
 register's R-206, R-207, R-208, R-222, R-244 and R-246; the exact membership is record l8p's (PC C-5)."); Slot G's PC-04, PC-13 and

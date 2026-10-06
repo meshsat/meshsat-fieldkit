@@ -1000,7 +1000,7 @@ def main():
         w("     service for a TX pin toggled as a GPIO and after a latent stuck comparator (5; L9T5-F21, handed over, Slot C's)")
         w("   the reference at its actual load (V-PA-REF, l9t5_f01.out 6) beside B-PA1 and B-PA2")
         w("   T10: L9T5-F06 OPEN pending its independent check; revision X HELD with no admission route (round 5's V-B20 route SUPERSEDED, 10j (f));")
-        w("     the containment (Slot C's round 6, composed here) drafted, composed, read by pin and mutated, cx45's Q3 NOT CLOSED (10j, after cx46);")
+        w("     the containment (Slot C's round 6, composed here) drafted, composed, read by pin and mutated; Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED' (10j, after cx46);")
         w("     its qualification limits (the LDO's resistance and Zth on board B) and the VOS0 residual handed over (10j (e)); L9T5-F27, the decision identifier both records use (10)")
         w("   the guard's two paths (record l8p round 9, composed): the loop's DOCK_EN_OUT allowance against the 30 uA row (L8P-R9-F2: L4-E11")
         w("     section 28 restated, record l9stk 15.9's re-take owed); the double failure after a latent first one (L8P-R9-F1, handed over);")
@@ -1011,7 +1011,7 @@ def main():
         w("   the solar entry (P0-7): D-10 an UNRESOLVED PROTECTION DEFECT in the model (E-1, the receiving company's remaining engineering item); route")
         w("     B2 UNSELECTED and WITHDRAWN AS DRAFTED, out of the baseline, no protection credit and no owner item; it does not close D-10")
         w("   L4-E9's change-list rows: drafted here (apply_l4e9_changelist_p0.py), APPLIED by the integrator at set 30's integration commit 7070f106 to L4-E9's")
-        w("     register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims read OPEN or PROVISIONAL as above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 with its four cascade pins (l4e10, l4e11, l4e12, L4-E7's P0) at commit 2b's digests, refusing at those pins on a tree without them")
+        w("     register, script and page; applying them accepts no draft (cx46: CORRECTIONS NOT CLOSED; the claims read OPEN or PROVISIONAL as above); L4-E9's generator re-pinned at 2a (bbba3e53), its output regenerated in set 31 (this lineage, fnd/int31regen) with its four cascade pins (PINS l4e10, l4e11, l4e12, l4e7p0) at those outputs' current digests, which the chain re-pins, refusing at a pin whose output differs (first regenerated at commit 2b's digests by record l4e9's SET31-CHANGES.md, merged at 6fe398e9)")
         w("")
         w("12. THE PREDICATES")
         for k, v in P.items():
