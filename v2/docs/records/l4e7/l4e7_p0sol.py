@@ -51,7 +51,8 @@ NET_E = "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net"
 GEN_NETLIST = "v2/docs/records/l8p/gen_netlist.py"
 NETREAD = "v2/docs/records/l8p/check_l8p_netlist.py"
 L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.out"
-CACHE_AT = "69921ce8"          # set 29's freeze: the commit whose l4e11_power.out the record's cache KEY holds (in this branch's history)
+CACHE_AT = "69921ce8"          # set 29's freeze: the commit whose l4e11_power.out the figure comparison of 0a reads (in this branch's history)
+KEY_AT = "c2a532a9"            # set 30's re-key of the cache (6 October 2026): the commit whose l4e11_power.out the cache KEY holds (git log -- the cache)
 LT = "v2/vendor/power/lt8705a.pdf"
 I169 = "v2/vendor/ti/held/ti-ina169-sbos181f.pdf"
 TPS = "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"
@@ -937,10 +938,10 @@ def render(O, K, R, b6, r3, K2):
     if O["key_diff"]:
         d_ = O["key_diff"][0]
         wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
-             "is the file %s (%s at %s, set 29's freeze, against %s here: L4-E11's rounds 12 to 16). The figures compute() reads from it, "
+             "is the file %s (%s at %s, set 30's re-key of this cache, against %s here). The figures compute() reads from it, "
              "with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's results; the cache is "
              "not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
-             "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % ("does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], CACHE_AT, (d_[3] or "missing")[:16],
+             "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % ("does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], KEY_AT, (d_[3] or "missing")[:16],
                                     "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
     else:
         wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree: no part differs, the cache "
