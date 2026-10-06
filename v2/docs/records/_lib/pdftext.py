@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""pdftext.py: the extracted text of a maker's PDF as a committed verbatim input (MESHSAT-1357, Q-41 item 1, W34, 6 October 2026).
+
+THE DEFECT (a tool/integration defect under the constitution's section 4). The records' generators ran `pdftotext` on the makers'
+PDFs WHEN THEY RAN, so a record's output depended on the host's poppler build and data: on 6 October 2026 the JST VH catalogue
+(CID Type 0C fonts, Identity-H) extracted to 184 bytes on a box image without the `poppler-data` package against the runner's 39318,
+151 tests failed on the first suite box of set 30, and six records had to run on a second box. The outputs pinned the PDFs' digests,
+not the text that was actually read.
+
+THE CORRECTION (the coordinator's ruling, authority SESSION). A generator never runs pdftotext. Each one declares, in a module-level
+literal `PDFTEXT = {<pdf, repository-relative>: [<pdftotext options>, ...]}`, every extraction it reads; the re-take script
+(`retake_pdf_text.py <record dir> [<pdf> ...]`, beside this file) runs the runner's pdftotext once per declared extraction and writes
+the text and a sidecar; this module returns that text byte for byte and REFUSES (exit 2, naming the re-take command) when it is
+absent. The generator prints each text's sha256 as an input line, beside the PDF's own pin, which it keeps.
+
+WHERE THE TEXT LIVES (a SESSION decision under the owner's standing rule of 26 September 2026, taken against the brief's
+`<record>/inputs/pdftext/`; reason and reversal in PDFTEXT-INVENTORY.md, section 3): beside the PDF it was taken from, in a
+`pdftext/` folder, named `<pdf stem>.<options tag>.txt`, with the sidecar `<that name>.meta.json` (the PDF's sha256, the text's
+sha256 and length, the options, `pdftotext -v`'s first line, the poppler-data version, the date). A held-back PDF's text is itself
+held back: it lands under the PDF's `held/` folder, which .gitignore already excludes, because every held sheet's terms (each
+record's fetch_held_back.py header) grant no redistribution, and the full text of a sheet is a copy of it. It is refused when absent
+exactly as the PDF is, and the route is the record's fetch_held_back.py, then the re-take.
+
+THE INVENTORY (every .py under v2/docs/records/ that mentions pdftotext on the base aed4bd23, classified; the table with the PDFs
+each reads, committed or held back, is PDFTEXT-INVENTORY.md beside this file):
+  RUN-TIME EXTRACTION, CONVERTED (the record's generator reads the committed text through this module):
+    efuse/efuse_check.py; l5r2/l5r2_interfaces.py; l8r2/l8r2_drafts.py, l8r2_gndret.py, l8r2_p0.py; l4e13/l4e13_panel.py;
+    l4e11/l4e11_power.py; l4e9/l4e9_power_path.py
+  RUN-TIME EXTRACTION, NOT CONVERTED HERE (each with its reason in PDFTEXT-INVENTORY.md section 2):
+    the l4e7 KEY's own inputs (l4e7/l4e7_stage_settings.py, l4e/l4e_replay.py, l4e4 through r11dep/r11_dep.py, l4e5/
+    l4e5_source_control.py, l3plane/energy_basis.py, l3plane/vbus20_range.py) and the records that pin their sources by sha
+    (l4e6, l4e8/ripple_dense.py); the accepted Layer 3 records (l3batt/tablet.py, l3feas/hf_wab.py, l3feas/solar_interface.py,
+    l3plane/curve_readings.py, l3plane/weather_basis.py); the remaining Layer 4 to 9 generators (l4e10, l4e12, l4close/
+    verify_risks.py, l7pwr, l7r2, l8p/l8p_drafts.py, l8p/l8p_guard.py, l9pwr, l9stk/l9stk_copper.py, l9stk/l9stk_protection.py,
+    l9t5/l9t5_a1.py, l9t5_case.py, l9t5_cm5.py, l9t5_drafts.py, l9t5_f01.py, l9t5_paloop.py, l9t5_t10.py) and a1elec/gauge_scale.py,
+    rv-dec/dec_mmscan.py, s122/verdicts.py
+  FETCH, SCAN, APPLY OR RE-TAKE SCRIPT (untouched): d6dec/box/basis_check.py, d6rel/revision_scan.py, d8dec31/ledger_pages.py,
+    int16/apply_hold_back_panjit.py, w5identc/scan_vendor.py, w5si/apply/apply_board_c_declarations.py, w5si/tools/cite_fill.py,
+    w5si/tools/edge_search.py, and retake_pdf_text.py beside this file
+  MENTION ONLY, no call (untouched): cx1/checks/check-1-phase1.py, d6dec/make_basis_md.py, l4e7/l4e7_p0sol.py (a sentence on the
+    re-key host), l6pwr/l6pwr_parts.py and l6r2/l6r2_passives.py (through v2/ecad/tools/part_identities.py), l8r2/l8r2_dist.py,
+    l9t5/l9t5_connected.py, l9t5/l9t5_f01_drafts.py (through the l9t5 modules they import), r4b/pin_parity.py (a usage line),
+    s122/apply_docs_s122_r4.py, s122/judgements.py, w4dp/patch_vendor_index.py, w5identc/build_table.py
+
+Use, from a generator (the records import their siblings by path):
+    _sp = importlib.util.spec_from_file_location("records_pdftext", os.path.join(<records dir>, "_lib", "pdftext.py"))
+    PT = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(PT)
+    text = PT.pdf_text(TOP, "v2/vendor/connectors/jst-vh-catalogue.pdf", ["-layout"], PDFTEXT, "v2/docs/records/l4e11")
+Stdlib only. It never runs pdftotext, on any path."""
+import hashlib
+import json
+import os
+import sys
+
+RETAKE = "v2/docs/records/_lib/retake_pdf_text.py"
+FOLDER = "pdftext"
+_SHA = {}
+
+
+def refuse(msg):
+    sys.stderr.write("pdftext: %s; refusing\n" % msg)
+    sys.exit(2)
+
+
+def canon(options):
+    """(mode, first, last) of a pdftotext option list, mode "layout" (-layout), "raw" (-raw) or "plain" (neither: pdftotext's
+    reading order); an option this module does not know is refused, never guessed."""
+    mode, first, last = "plain", None, None
+    o = list(options)
+    i = 0
+    while i < len(o):
+        a = str(o[i])
+        if a in ("-layout", "-raw"):
+            if mode != "plain":
+                refuse("the pdftotext options %s name two text modes" % " ".join(map(str, o)))
+            mode = a[1:]
+            i += 1
+        elif a in ("-f", "-l") and i + 1 < len(o) and str(o[i + 1]).isdigit():
+            if a == "-f":
+                first = int(o[i + 1])
+            else:
+                last = int(o[i + 1])
+            i += 2
+        else:
+            refuse("the pdftotext option %r is not one this module knows (-layout, -raw, -f N, -l N)" % a)
+    return mode, first, last
+
+
+def run_args(options):
+    """The options in the one order the re-take script runs them (pdftotext's output does not depend on the order)."""
+    mode, first, last = canon(options)
+    return (["-" + mode] if mode != "plain" else []) + (["-f", str(first)] if first else []) + (["-l", str(last)] if last else [])
+
+
+def tag(options):
+    """layout / raw / plain, then .pN for one page, .fN / .lN for a range end: the name part that keeps two extractions apart."""
+    t, first, last = canon(options)
+    if first and last and first == last:
+        return t + ".p%d" % first
+    return t + (".f%d" % first if first else "") + (".l%d" % last if last else "")
+
+
+def held(pdf_rel):
+    return "/held/" in "/" + pdf_rel.replace(os.sep, "/")
+
+
+def text_path(pdf_rel, options):
+    """The extraction's repository-relative path: beside the PDF, in pdftext/ (under held/ when the PDF is held back)."""
+    d, b = os.path.split(pdf_rel)
+    return "/".join(x for x in (d, FOLDER, "%s.%s.txt" % (os.path.splitext(b)[0], tag(options))) if x)
+
+
+def meta_path(txt_rel):
+    return txt_rel + ".meta.json"
+
+
+def retake_command(record):
+    return "python3 %s %s" % (RETAKE, record or "<record dir>")
+
+
+def _sha_file(p):
+    st = os.stat(p)
+    k = (p, st.st_size, st.st_mtime_ns)
+    if k not in _SHA:
+        _SHA[k] = hashlib.sha256(open(p, "rb").read()).hexdigest()
+    return _SHA[k]
+
+
+def read_pdf_text(pdf_path, txt_path, retake=None, universal_newlines=False):
+    """The text at txt_path, as pdftotext wrote it at the re-take (decoded UTF-8, errors replaced, as the generators decoded their
+    pipe). Refuses (exit 2) when the text or its sidecar is absent, when the text is not the bytes the sidecar records, or when the PDF
+    is present and is not the file the text was taken from. universal_newlines=True gives what subprocess's text=True gave."""
+    route = retake or retake_command(None)
+    if held(_rel(pdf_path)):
+        route = "fetch the held-back sheet with the record's fetch_held_back.py, then %s" % route
+    if not os.path.isfile(txt_path):
+        refuse("the extracted text %s of %s is absent; take it with: %s" % (_rel(txt_path), _rel(pdf_path), route))
+    mp = txt_path + ".meta.json"
+    if not os.path.isfile(mp):
+        refuse("the sidecar %s is absent; take the text again with: %s" % (_rel(mp), route))
+    try:
+        meta = json.load(open(mp, encoding="utf-8"))
+    except ValueError as e:
+        refuse("the sidecar %s does not parse (%s)" % (_rel(mp), e))
+    data = open(txt_path, "rb").read()
+    if hashlib.sha256(data).hexdigest() != meta.get("text_sha256"):
+        refuse("%s is not the text its sidecar records (changed after the re-take); take it again with: %s" % (_rel(txt_path), route))
+    if os.path.isfile(pdf_path) and _sha_file(pdf_path) != meta.get("pdf_sha256"):
+        refuse("%s was taken from another file than the present %s; take it again with: %s" % (_rel(txt_path), _rel(pdf_path), route))
+    t = data.decode("utf-8", "replace")
+    if universal_newlines:
+        t = t.replace("\r\n", "\n").replace("\r", "\n")
+    return t
+
+
+def _declared(declared, pdf_rel, options):
+    want = tag(options)
+    return any(tag(o) == want for o in (declared or {}).get(pdf_rel, ()))
+
+
+def pdf_text(top, pdf_rel, options, declared, record, universal_newlines=False):
+    """The committed extraction of pdf_rel under options, which the record's PDFTEXT table must declare (so the re-take takes it)."""
+    if not _declared(declared, pdf_rel, options):
+        refuse("%s with %s is not declared in %s's PDFTEXT table; declare it, then %s" % (
+            pdf_rel, " ".join(map(str, options)) or "(no options)", record, retake_command(record)))
+    return read_pdf_text(os.path.join(top, pdf_rel), os.path.join(top, text_path(pdf_rel, options)), retake_command(record),
+                         universal_newlines)
+
+
+def inputs(top, declared):
+    """[(text path, its sha256 or None when absent, held back?)] for every declared extraction, sorted by path: the input lines."""
+    rows = []
+    for pdf_rel in sorted(declared or {}):
+        for o in declared[pdf_rel]:
+            t = text_path(pdf_rel, o)
+            p = os.path.join(top, t)
+            rows.append((t, hashlib.sha256(open(p, "rb").read()).hexdigest() if os.path.isfile(p) else None, held(pdf_rel)))
+    return sorted(set(rows))
+
+
+def _rel(p):
+    """A path as the messages print it: repository-relative where it can be (no host path reaches an output)."""
+    p = os.path.abspath(p)
+    parts = p.replace(os.sep, "/").split("/")
+    return "/".join(parts[parts.index("v2"):]) if "v2" in parts else os.path.basename(p)
