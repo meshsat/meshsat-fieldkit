@@ -54,8 +54,8 @@ every commit named, every count and every placeholder.
 | The re-key's cache commit, the lineage as W69 last read it | `aa3322806da156d12f2b23dbe9fc98a8805926f0` (fnd/int31regen, 19:00:45; `git rev-parse` at 19:54 CEST) | record l4e7's results cache re-keyed on `31928583` on a fresh box (rekey10, rented 18:11:26, section 5), the KEY MATCH after it (section 3e); 104 commits over the base, classified (section 2, row 34); the re-keys on `aed4bd23` and `562edf6a` are spent (section 3g); the lineage moved twice after it, to the two candidates below | `git rev-list --count dd1aed00..aa332280`; `<worktrees>/_runs/int30/QUEUE.md`, entry "18:58 to 19:00 (clock) SET 31'S RE-KEY DONE", `the coordinator committed the one staged file with the script's message: CACHE COMMIT` |
 | The first candidate: the re-key's dependents regenerated; SUPERSEDED | `d0e283aa52ceb7f303358862b539161b721475e5` (fnd/int31regen, 20:41:35) | 105 commits over the base (row 35 of the classification); its four-log gate FAILED and it was not promoted (section 4a) | `git rev-list --count dd1aed00..d0e283aa`; `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite_gate.txt:7` `suite_gate: FAIL` |
 | The coordinator's test correction, set 31's second candidate, the lineage as last read by this record | `5f25daf3762ecd69c8764bf60de81a80f4119eab` (fnd/int31regen, 21:48:00; `git rev-parse` at 22:05 CEST) | four fixed-size source windows converted in two test modules (section 4a); 106 commits over the base, classified (section 2, row 36); in its freeze when this record was last written | `git rev-list --count dd1aed00..5f25daf3`; `git log -1 5f25daf3` |
-| INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on fnd/int31regen |
-| PROMOTED: main after the fast-forward | `__PROMOTED__` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
+| INTEGRATED = CANDIDATE: the candidate commit | `5f25daf3` | no independent check of its engineering | the coordinator's commit on fnd/int31regen |
+| PROMOTED: main after the fast-forward | `5f25daf3` | a DESK candidate, not an accepted power design (section 6) | the promotion's log |
 
 **The lineage's first-parent line** (`git log --first-parent dd1aed00..5f25daf3`; the 36 numbered rows of `CLASSIFICATION.md`, each
 merge's branch commits listed under it there):
@@ -105,7 +105,7 @@ what it restated):
 | `ec85131c` | fnd/w4l4e7 (W4, Q-15) | record l4e7's P0 text read "completed" for D-16 against R-240 PROVISIONAL, and the back-feed sentence against the ledger's HO-F | the three P0 pages: D-16 ADDRESSED IN DRAFTS and PROVISIONAL, route B2 in one wording, the back-feed inside E-1 | 1.1, 1.2 (REVIEWED-INPUT CHANGED) |
 | `7992b2b0` | fnd/w5l8p (W5, Q-14) | record l8p's "one release for five drafts" against the register's six rows | one RELEASE.md for six drafts by register row; U101 the LM5069MM-1 in every file of the record; findings W5-F1 to W5-F3 for their owners | 2.1 (REVIEWED-INPUT CHANGED) to 2.3 |
 | `16afba29` | fnd/w14l5 (W14, Q-30; with fnd/w8l5, W8, Q-18) | W1's finding L5-F14: the Layer 5 contract files carried set 28's D-10 reading | `pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` restated to D-10 as set 31 left it; W1's two test_l5pwr tests restated to that tree | 3.1 (REVIEWED-INPUT CHANGED) to 3.5 |
-| `0ed29a78` | fnd/w11l9t5 (W11, Q-26; with fnd/w9l9t5, W9, Q-24) | Slot L's K items on records l9t5's and l8r2's hand pages; K-26 and K-28 in the connected generator | twelve restatements (L9T5-F28, the two declared upper bounds, 15.1308 V, E-1 named, B2 with no owner item, l8r2's drafts as DRAFT); the generator's T10 and change-list rows | 4.1 and 4.4 (REVIEWED-INPUT CHANGED), 4.2, 4.3, 4.5 |
+| `0ed29a78` | fnd/w11l9t5 (W11, Q-26; with fnd/w9l9t5, W9, Q-24) | Slot L's K items on records l9t5's and l8r2's hand pages; K-26 and K-28 in the connected generator | twelve restatements (L9T5-F28 renamed from the second L9T5-F26, the two declared upper bounds, 15.1308 V, E-1 named, B2 with no owner item, l8r2's drafts as DRAFT); the generator's T10 and change-list rows | 4.1 and 4.4 (REVIEWED-INPUT CHANGED), 4.2, 4.3, 4.5 |
 | `b7fa4bd9` | fnd/w13l4e9 (W13, Q-29; with fnd/w7rem, W7, Q-16) | the 45.88 K/W remnants; W5's findings on L4-E9's side | patch files only (P-01 to P-12, R-01 to R-09, WP-01 to WP-27), applied later by W24 | 5.1 to 5.5 |
 | `99bd0af9` | fnd/w17p0list (W17, Q-32; with fnd/recpack, Slot K) | the P0 list revision 3 for set 30's adoption | drafts (RESULT draft 2, the P0 list drafts 2 and 3) as files | 6.1 to 6.6 |
 | `6dbbddac` | fnd/w18result (W18, Q-33; with fnd/w15class, W15, Q-31) | set 30's RESULT and part 25's classification | drafts (RESULT draft 3, CLASSIFICATION draft) as files | 7.1 to 7.4 |
@@ -219,7 +219,7 @@ The constitution's one targeted recheck of W38's findings (an AI review, not a q
 
 W48's conditions for the re-key (`<worktrees>/_runs/claude/w48rechk31/REPORT-AS-RECEIVED.md:137` `conditionally on the converged commit. The conditions:`), as the coordinator
 recorded them: `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W41 at about 18:12 CEST", `W48's four conditions for the re-key: MET (1 to 3)`;
-condition (4), the 47 `test_l4e7` tests that reach the solver, runs after the re-key (section 4, `__GATE__`). W48 did not read
+condition (4), the 47 `test_l4e7` tests that reach the solver, runs after the re-key (section 4, `the runner pass on 5f25daf3 (_runs/int31s1/runner/suite-runner.log): test_l4e7 64 passed, 1 skipped (t_recompute_reproduces_the_committed_output, explained), its 47 solver-backed tests served from the re-keyed cache (l4e7 KEY MATCH b8fc6fe2d285112c)`). W48 did not read
 `31928583`: its KEY line is the chain's, verified by the coordinator (the same entry, `verified by the coordinator`), and its tests are
 W41's (section 3d); no independent reader has read row 33.
 
@@ -394,18 +394,18 @@ The re-key that counts ran on `31928583` (section 3e; its cache commit `aa332280
 |---|---|---|
 | W41's second corrections round and the chain to convergence (F2, F4 to F8, F10; W48's N1 and N2) | W41's commits and chain log | `3057ae43` and `31928583`, converged at pass 1 with the KEY MISMATCH on `l4e11_power.out` alone (section 3f) |
 | The re-key's cache commit and its KEY (rekey10 on `31928583`, rented 18:11:26) | the cache commit on fnd/int31regen; the KEY-only check's line | `aa332280`; `<worktrees>/_runs/int31/cache-commit-1859.log:42` `l4e7 KEY MATCH b8fc6fe2d285112c` (section 3e) |
-| W48's condition (4): the 47 `test_l4e7` tests that reach the solver, after the re-key | the box's or the runner pass's log | `__GATE__` |
+| W48's condition (4): the 47 `test_l4e7` tests that reach the solver, after the re-key | the box's or the runner pass's log | `the runner pass on 5f25daf3 (_runs/int31s1/runner/suite-runner.log): test_l4e7 64 passed, 1 skipped (t_recompute_reproduces_the_committed_output, explained), its 47 solver-backed tests served from the re-keyed cache (l4e7 KEY MATCH b8fc6fe2d285112c)` |
 | The re-key's dependents regenerated (record l4e7's P0 output, L4-E9's l4e7p0 pin, the connected output) | the dependents' log | `d0e283aa`, the first candidate (section 4a): `<worktrees>/_runs/int31/dependents-1929.log:189` `l4e7 KEY MATCH b8fc6fe2d285112c`; `<worktrees>/_runs/int31/dependents-1929.log:198` `== d6: ADDED ABSENT rows? 0` |
-| Set 30's evidence archive installed before the manifest (W31's C5) | the freeze's log | `__GATE__` |
-| The candidate commit | `git log` on fnd/int31regen | `__CANDIDATE__` |
-| The manifest (candidate_guard record) and the evidence tar | `__GATE__` | `__GATE__` |
-| candidate_guard check, every host | `__GATE__` | `__GATE__` |
-| Box pass A (every module but the runner's and the records box's) | `__GATE__` | `__GATE__` |
-| Box pass B, Python 3.11 | `__GATE__` | `__GATE__` |
-| Records box pass (debian:12, poppler-data) | `__GATE__` | `__GATE__` |
-| Runner pass (`test_l4e7`, and the modules that read `_runs`, section 8) | `__GATE__` | `__GATE__` |
-| suite_gate with G7 over the logs | `__GATE__` | `__GATE__` |
-| Promotion: fast-forward of main, push, the mirror, the guard on main | `__GATE__` | `__PROMOTED__` |
+| Set 30's evidence archive installed before the manifest (W31's C5) | the freeze's log | `candidate_guard: PASS evidence of dd1aed00d0a0a521063b5792550bc510c4707c59: 997 evidence file(s) present and unchanged (FREEZE-PLAN step 2; the queue's entry at 20:41; the second candidate's tar carries the same 997 paths with the re-taken INT-001 readings)` |
+| The candidate commit | `git log` on fnd/int31regen | `5f25daf3` |
+| The manifest (candidate_guard record) and the evidence tar | `_runs/candidates/5f25daf3762ecd69c8764bf60de81a80f4119eab.json (candidate_guard record) and _runs/int31/freeze/int31-evidence.tar` | `candidate_guard: recorded 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s), 4 declared unbound output(s), 1 results cache(s); the evidence tar 191877120 bytes` |
+| candidate_guard check, every host | `_runs/int31s1/guard.log, rec-guard.log and runner/guard.log` | `candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen` |
+| Box pass A (every module but the runner's and the records box's) | `_runs/int31s1/suite-box.log` | `tests: 2953 passed, 0 failed, 2 skipped; EXIT 0` |
+| Box pass B, Python 3.11 | `_runs/int31s1/suite-box-py311.log` | `tests: 26 passed, 0 failed, 0 skipped; EXIT 0 (Python 3.11.17)` |
+| Records box pass (debian:12, poppler-data) | `_runs/int31s1/rec-records-box.log` | `tests: 234 passed, 0 failed, 0 skipped; EXIT 0 (Python 3.11.2, pdftotext 22.12.0)` |
+| Runner pass (`test_l4e7`, and the modules that read `_runs`, section 8) | `_runs/int31s1/runner/suite-runner.log` | `tests: 150 passed, 0 failed, 1 skipped; EXIT 0` |
+| suite_gate with G7 over the logs | `_runs/int31s1/suite_gate.txt` | `suite_gate: candidate 5f25daf3762e; result lines 3366 (3363 PASS, 3 SKIP, 0 FAIL); modules 261 of 261 ran; suite_gate: PASS` |
+| Promotion: fast-forward of main, push, the mirror, the guard on main | `_runs/int31/promote-2257.log: GitHub main at 5f25daf3762ecd69c8764bf60de81a80f4119eab` | `5f25daf3` |
 | Targeted verification of the 25 unreviewed changes of section 2 | the coordinator's choice of verifier, not the ended review method: W90's read (queue item Q-111; an AI review, not a qualified one), `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md` | performed by W90 (read 23:04:21 to 23:16:00 CEST), each of the 25 classed by its most material change: FIGURE or CLAIM 20 (13 carrying a FIGURE, 7 CLAIM without a FIGURE), STATE 2, PIN 1, CITATION 1, TEXT 1; four of the 20 (rows 3.1, 31.3, 31.5 and 31.16) change only files outside the 62 cx46 read. Its first re-check items: D-16 moved off OPEN, record l4e7's paragraph 0a at the tip, the figures of the P0 list's revision 3 and the stability claim "met for `4d0ff8a2`". In its words, `<worktrees>/_runs/claude/w90ric31/REPORT-AS-RECEIVED.md:54` `this is one bounded AI read. No verdict is changed and nothing is credited; every change above stays UNREVIEWED since cx46 until a qualified check reads it.` The 25 stay UNREVIEWED since cx46: no verdict changes and nothing is credited; section 2's classes are unchanged by it |
 
 ### 4a. The first candidate `d0e283aa`: its gate FAILED; the correction, the re-take and the known item
@@ -537,7 +537,7 @@ copy of `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main `eff28be3`;
 | Power-design closure | BLOCKED | `v2/docs/records/int31/inputs/L4-DESK-GATE-ASSESSMENT-eff28be3.md:500` `### Power-design closure: BLOCKED. Fabrication release: BLOCKED.` |
 | Fabrication release | BLOCKED | the same line |
 
-Kept apart from all three: documents and editable artifacts (a DESK candidate once promoted, `__PROMOTED__`); design reviewed and
+Kept apart from all three: documents and editable artifacts (a DESK candidate once promoted, `5f25daf3`); design reviewed and
 accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, set 30's 14 unreviewed changes and this set's 25); circuit changes
 implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself.
 
@@ -559,7 +559,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   Q-53, the handover ZIP's cap raised to 100 MiB, applied at set 32 (`<worktrees>/_runs/int30/QUEUE.md`, entry "13:35 (clock) Q-53 DECIDED", `applied at set 32's integration, not now`);
   Q-55, N1a's phrase carried into V-E16 of `HW-FW-CONTRACT.md`, in set 32 with its re-key (`<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-55 |", `in set 32 with its re-key`);
   W36's conditions F-K1 to F-K3, F-S2 and F-R1 (W37's branch, Q-56).
-- **Open in this lineage when this record was written:** W48's condition (4) after the re-key (`__GATE__`); the coordinator's
+- **Open in this lineage when this record was written:** W48's condition (4) after the re-key (`the runner pass on 5f25daf3 (_runs/int31s1/runner/suite-runner.log): test_l4e7 64 passed, 1 skipped (t_recompute_reproduces_the_committed_output, explained), its 47 solver-backed tests served from the re-keyed cache (l4e7 KEY MATCH b8fc6fe2d285112c)`); the coordinator's
   known item, record l4e7's paragraph 0a's history sentence (section 4a), set 32's with its re-key; the ledger's `[CON:21]` re-cite after the regeneration (section 2); the coordinator's N2, R-217's release words, waiting
   for record l4e11's E11-43 restatement; W13's WP-23 to WP-27 (with the next circuit change); the exclusion of s122's self-writing
   scripts from the targeted pass (W29's F1; the third run restored them again, section 3c); W48's residuals of F4 and F10, set 32's

@@ -17,7 +17,7 @@ named at `eff28be3`, exactly once on that line; every "New text" differs from it
 inserts the lines after it. `test_res31.py` reads each row against the copies.
 
 **The revision rows, as set 30's pages define them.** Tested: the promoted revision, the commit the gated release suite and the
-promotion gate ran on (set 31's `__CANDIDATE__`, the candidate commit, which main is fast-forwarded to, as on set 30). Adopted: the adoption
+promotion gate ran on (set 31's `5f25daf3`, the candidate commit, which main is fast-forwarded to, as on set 30). Adopted: the adoption
 commit to which main is fast-forwarded after the promotion (`__ADOPTION__`). Packaged: the commit the next supplier delta's README names
 in its header, unchanged as a definition, so no row changes it. Reviewed: the candidate the last independent check read, `4d0ff8a2`
 (cx46), unchanged because no independent check of the engineering read a later revision. The two placeholders are the only ones; the coordinator fills
@@ -46,7 +46,7 @@ Old text:
 ```
 New text:
 ```text
-**Current revision: set 31 (6 October 2026), the revision `__CANDIDATE__`, an adoption of record text over set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`. Read section 0 first.**
+**Current revision: set 31 (6 October 2026), the revision `5f25daf3`, an adoption of record text over set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`. Read section 0 first.**
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, section 1 (the PROMOTED row) and its paragraph "What set 31 is".
 
@@ -72,7 +72,7 @@ New text:
 ```text
 accepts, closes or promotes a design claim.
 
-**Set 31** (6 October 2026; the revision `__CANDIDATE__`). An adoption of record text over set 30: the restatements its authors wrote
+**Set 31** (6 October 2026; the revision `5f25daf3`). An adoption of record text over set 30: the restatements its authors wrote
 during set 30's integration (record l4e7's P0 pages, record l8p's release page, records l9t5's and l8r2's hand pages, the supplier
 validation annex, Layer 5's contract restatement, the filed patch rows applied to L4-E9's page, register and generator, the citation
 re-takes), regenerated to convergence, with the coordinator's items and two tooling corrections. "Set 31 closes NO power item."
@@ -105,7 +105,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history):
+| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history):
 ```
 Basis: the Tested row's definition on this page; `v2/docs/records/int31/RESULT.md`, section 1.
 
@@ -153,7 +153,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, section 6 (kept apart from the three claims).
 
@@ -179,7 +179,7 @@ From a full git checkout at `dd1aed00d0a0a521063b5792550bc510c4707c59`:
 ```
 New text:
 ```text
-From a full git checkout at `__CANDIDATE__`:
+From a full git checkout at `5f25daf3`:
 ```
 Basis: the Tested row (S-05).
 
@@ -235,7 +235,7 @@ Old text:
 ```
 New text:
 ```text
-| Tested | `__CANDIDATE__` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history):
+| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history):
 ```
 Basis: as S-05.
 
@@ -283,7 +283,7 @@ Old text:
 ```
 New text:
 ```text
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
 ```
 Basis: as S-09.
 
@@ -308,7 +308,7 @@ From a full git checkout at `dd1aed00d0a0a521063b5792550bc510c4707c59`
 ```
 New text:
 ```text
-From a full git checkout at `__CANDIDATE__`
+From a full git checkout at `5f25daf3`
 ```
 Basis: as S-11.
 
@@ -320,7 +320,7 @@ The gated release suite's line for `dd1aed00d0a0a521063b5792550bc510c4707c59` is
 ```
 New text:
 ```text
-The gated release suite's line for `__CANDIDATE__` is in the package's `README.md` and in
+The gated release suite's line for `5f25daf3` is in the package's `README.md` and in
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, section 4 (the gate lines).
 
@@ -345,7 +345,7 @@ Old text:
 New text:
 ```text
   `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`) and the DESK-gate assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.
-- **6 October 2026: set 31, the revision `__CANDIDATE__`** (section 0). An adoption of record text over set 30: the authors'
+- **6 October 2026: set 31, the revision `5f25daf3`** (section 0). An adoption of record text over set 30: the authors'
   restatements written during set 30's integration, the filed patch rows applied, the citations re-taken, regenerated to convergence
   (`v2/docs/records/int31/RESULT.md`). No circuit change is applied, and nothing in it accepts, closes or promotes a design claim;
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.

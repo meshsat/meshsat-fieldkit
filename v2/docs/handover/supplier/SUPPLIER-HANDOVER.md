@@ -39,7 +39,7 @@ counts 25 commits that change what cx46 read or carry another row's change into 
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `__CANDIDATE__` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
+| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
 | Adopted | `__ADOPTION__` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 | Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`records/int31/RESULT.md`, section 1) |
@@ -60,7 +60,7 @@ as applying to the revision its checker read.
 
 | What | State |
 |---|---|
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
 | Design reviewed and accepted | NO |
 | Implemented | NONE |
 | Physical qualification | NONE |
@@ -139,7 +139,7 @@ We do NOT ask you:
 
 ### 0e. How to reproduce set 31's figures
 
-From a full git checkout at `__CANDIDATE__` (section 7, item 2 says why the ZIP alone does not suffice):
+From a full git checkout at `5f25daf3` (section 7, item 2 says why the ZIP alone does not suffice):
 
 1. **The makers' sheets held back by their terms.** A record that reads one fetches it with its own script (`fetch_held_back.py`, or
    a `fetch_*.py`, section 7 item 2), run from the repository root, for example `python3 v2/docs/records/l9t5/fetch_held_back.py` ("exit 0: present and checked; 3: a mismatch",
@@ -154,7 +154,7 @@ From a full git checkout at `__CANDIDATE__` (section 7, item 2 says why the ZIP 
    generator's part table as a KiCad-form netlist; "It is not KiCad's netlist" (`:15`), and KiCad's own export is the reading of record
    (`:17`). A schematic regenerates with KiCad 9.0.9 (`v2/docs/handover/REGENERATE.md`).
 4. **Tests.** `python3 v2/ecad/tools/tests/run.py <name substring>` runs the house fixtures; a test that needs `pcbnew` reports SKIP on a
-   host without KiCad. The gated release suite's line for `__CANDIDATE__` is in the package's `README.md` and in
+   host without KiCad. The gated release suite's line for `5f25daf3` is in the package's `README.md` and in
    `records/int31/RESULT.md` (set 30's, for `dd1aed00`, in `records/int30/RESULT.md`).
 
 ## 1. The product
@@ -401,7 +401,7 @@ minimum (`v2/docs/handover/supplier/CURRENT-STATE-ADDENDUM-d834e6a7.md:44`).
   CLOSED and the cases the authors handed over carried as remaining engineering (`v2/docs/records/l4close/REMAINING-ENGINEERING.md`),
   U-01, U-02, U-04 and E11-29 in the supplier validation annex, the P0 list, the DESIGN gate's reading ("closes: NO",
   `v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:1005`) and the DESK-gate assessment kept apart from it. No circuit change is applied, and nothing in it accepts, closes or promotes a design claim.
-- **6 October 2026: set 31, the revision `__CANDIDATE__`** (section 0). An adoption of record text over set 30: the authors'
+- **6 October 2026: set 31, the revision `5f25daf3`** (section 0). An adoption of record text over set 30: the authors'
   restatements written during set 30's integration, the filed patch rows applied, the citations re-taken, regenerated to convergence
   (`v2/docs/records/int31/RESULT.md`). No circuit change is applied, and nothing in it accepts, closes or promotes a design claim;
   Layer 4's DESK gate and the three completion claims stand as set 30's assessment gives them.

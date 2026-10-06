@@ -127,7 +127,10 @@ def t_item_a_the_second_l9t5_f26_is_l9t5_f28():
                     p = os.path.normpath(os.path.join(d, f))
                     if p not in mine:
                         try:
-                            if "L9T5-F28" in open(p, encoding="utf-8", errors="replace").read():
+                            # A line naming both identifiers describes the rename (a set record or a page quoting it) and is a
+                            # reference to this finding, not a reuse (restated by the coordinator, 6 Oct 2026, at set 31's adoption:
+                            # set 31's RESULT, CLASSIFICATION and LAYER-STATUS describe the rename; the preflight caught it).
+                            if any("L9T5-F28" in ln and "L9T5-F26" not in ln for ln in open(p, encoding="utf-8", errors="replace").read().splitlines()):
                                 hits.append(os.path.relpath(p, ROOT))
                         except OSError:
                             pass

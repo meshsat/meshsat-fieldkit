@@ -361,9 +361,9 @@ stands; the notes here name what set 31's records restate.
   merges)`, with record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base; the re-key's dependents
   regenerated in `d0e283aa`, set 31's first candidate, whose four-log gate FAILED (four fixed-size source windows added in two of the lineage's test modules, `test_w11l9t5.py` and `test_w4l4e7.py`, so that `test_rule_windows` read "fixed-size source windows in the suite: 87 against the declared 83",
   and a tracked page the suite rewrote from a stale INT-001 reading; `v2/docs/records/int31/RESULT.md`, section 4a), and the
-  coordinator's test correction `5f25daf3`, 106 commits over the base. CANDIDATE: `__CANDIDATE__`,
+  coordinator's test correction `5f25daf3`, 106 commits over the base. CANDIDATE: `5f25daf3`,
   the commit the gated release suite and the promotion gate ran on, to which main was fast-forwarded (written at the adoption). The
-  gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
+  gate, suite_gate's verdict line over the four pass logs: `suite_gate: candidate 5f25daf3762e; result lines 3366 (3363 PASS, 3 SKIP, 0 FAIL); modules 261 of 261 ran; suite_gate: PASS`.
 - Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 106
   commits of `dd1aed00..5f25daf3` (the second candidate's row last) under set 30's rule as the coordinator ruled it (reading A): 25
   REVIEWED-INPUT CHANGED, the 24 to `aa332280` and the first candidate's regeneration (row 35: record l4e7's paragraph 0a, with the
