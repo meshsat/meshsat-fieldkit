@@ -355,13 +355,14 @@ FAIL with six; r8b: second check with no blocking finding).
 not power-design closure and releases nothing; Layer 4's DESK gate stays NOT PASSED as the coordinator`. The set 30 block below
 stands; the notes here name what set 31's records restate.
 
-- The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check read a later revision, and cx46's verdict stands as filed,
+- The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision, and cx46's verdict stands as filed,
   `31928583:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `P0 RECHECK: CORRECTIONS NOT CLOSED.`. The base:
   set 30's promoted revision `dd1aed00`. The lineage: `31928583`, 103 commits over the base, `5f910eb5:v2/docs/records/int31/RESULT.md:72` `(78 commits and 25
-  merges)`, with record l4e7's results cache re-keyed on it in `aa332280`. CANDIDATE: `__CANDIDATE__`, the commit the gated release
-  suite and the promotion gate run on, to which main is fast-forwarded. The gate: `__GATE__`.
-- Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 103
-  commits of `dd1aed00..31928583` under set 30's rule as the coordinator ruled it (reading A): `5f910eb5:v2/docs/records/int31/RESULT.md:78` `None of the 24
+  merges)`, with record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base. CANDIDATE: `__CANDIDATE__`,
+  the commit the gated release suite and the promotion gate ran on, to which main was fast-forwarded (written at the adoption). The
+  gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
+- Unreviewed changes after cx46. Set 31's classification (`v2/docs/records/int31/CLASSIFICATION.md`, section 2) classes the 104
+  commits of `dd1aed00..aa332280` (the candidate commit's row after them) under set 30's rule as the coordinator ruled it (reading A): `5f910eb5:v2/docs/records/int31/RESULT.md:78` `None of the 24
   REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,`, and `5f910eb5:v2/docs/records/int31/RESULT.md:79`
   `never credited, and owes its own targeted verification before any credit.`. They come beside set 30's 14 over
   `4d0ff8a2..dd1aed00` (the set 30 block below).
@@ -374,8 +375,8 @@ stands; the notes here name what set 31's records restate.
   note and four reconciliations (record text for the NEXT set)`, and its section on E11-37,
   `31928583:v2/docs/records/l4close/SUPPLIER-VALIDATION-ANNEX-2026-10-05.md:237` `## 7. E11-37, the charger's gate drive into the
   three battery FETs (REMAINING ENGINEERING; the P0 list's row P0-8; added 6 October 2026)`.
-- The contradictions between records (the assessment's K-01 to K-28). The eight branches the set 30 notes below name as prepared
-  for the next set (fnd/w4l4e7 `786aed2f` to fnd/w3annex `686de0a2`) are merged into the lineage, each tip an ancestor of
+- The contradictions between records (the assessment's K-01 to K-28). The eight branches this page names as the next set's inputs
+  (lines 33 to 36, in W21's paragraph above; fnd/w4l4e7 `786aed2f` to fnd/w3annex `686de0a2`) are merged into the lineage, each tip an ancestor of
   `31928583`; no K row is re-read in set 31, so the K table's counts stand as W12 gave them on `6bc4424e` (the set 30 block below).
 - The DESK gate and the three completion claims, unchanged, in the assessment's words (set 31 changes no line of it):
   `31928583:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:492` `### Layer 4's DESK gate: NOT PASSED`;
@@ -796,7 +797,7 @@ composed candidate, and nothing was routed, built or measured.
   finding renamed, `31928583:v2/docs/records/l9t5/T10-ROUND5.md:227` `L9T5-F28 (Slot A; renamed from L9T5-F26`.
 - 9.20 (NOT MOVED, as the set 30 row below): set 31's third chain ran record l9t5's cascade twice on W41's items,
   `5f910eb5:v2/docs/records/int31/RESULT.md:327` `cascade pass 2 exit 0 at 16:45:05`, and its stability checks converged, `5f910eb5:v2/docs/records/int31/RESULT.md:339`
-  `== converged at pass 1`; the coordinator's run on the integration, not a recipient's re-run.
+  `== converged at pass 1`; W41's chain on the integration (its third run), not a recipient's re-run.
 
 **After set 30 (6 October 2026): IN_PROGRESS.** T5 (the all-transmit case), T10 (the supervisors' regulators), the return between
 boards A and B and the battery FETs' guard were analysed on the drafted, composed circuit; every figure is a MODEL reading on the

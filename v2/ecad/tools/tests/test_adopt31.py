@@ -18,8 +18,8 @@ declared tokens and none carries __PROMOTED__ or __REKEY__; fill_res31.py (where
 the set 31 blocks sit first under their headings, one per layer named and none elsewhere, the head paragraph between W21's
 paragraph and the reading guide; every dated citation of set 31's text resolves at its commit (the lineage 31928583 or fnd/res31's
 5f910eb5, both in this branch's history) and its quote is on the cited lines; the three claims and the DESK gate are the
-assessment's lines verbatim at the lineage and in the tree; the counts typed (103 commits, 24 REVIEWED-INPUT CHANGED) are the
-classification's and git's; the eight next-set branches are in the lineage and the cache commit follows it; the plan's entry is
+assessment's lines verbatim at the lineage and in the tree; the counts typed (103 commits to the lineage, 104 classified to the cache
+commit, 24 REVIEWED-INPUT CHANGED) are the classification's and git's; the eight next-set branches are in the lineage and the cache commit follows it; the plan's entry is
 one, last, and states the three claims and the gate apart; set 31's text carries no em or en dash, no acceptance word outside a
 quotation and no percentage. Fixtures show that each checker refuses the defect it is for. These are software predicates on
 record text: they establish no electrical or thermal property and accept, close or promote nothing.
@@ -69,6 +69,19 @@ EXTRA = (
     (START, 187, "**since set 30** the blocks headed \"After set 30\" before them)",
      "**since set 30** the blocks headed \"After set 30\" before them, and **since set 31** the blocks headed \"After set 31\" "
      "before those)", "the reading guide names the layer-status page's set 31 blocks, which this branch adds"),
+    # W69, 6 October 2026, from W68's finding F2: section 0 was written for set 30; once set 31's paragraph and revision rows are in
+    # it, its heading and the sentences naming the tested and the promoted revision say whose they are (set 30's), so that no
+    # sentence calls set 30 the current revision
+    (START, 91, "## 0. Set 30 (6 October 2026): what this revision hands over",
+     "## 0. Set 30's revision (6 October 2026): what it hands over, and set 31 over it", "W68's F2: the heading named set 30 as this revision"),
+    (START, 97, "line N at the tested revision `dd1aed00`", "line N at set 30's tested revision `dd1aed00`", "W68's F2"),
+    (START, 99, "is the promoted commit (main was", "is set 30's promoted commit (main was", "W68's F2"),
+    (START, 116, "What the promoted revision is, and is not,", "What set 30's promoted revision is, and is not,", "W68's F2"),
+    (START, 132, "which records the coordinator's judgement on the", "which records the coordinator's judgement on set 30's", "W68's F2"),
+    (SUPPLIER, 27, "line N at the tested revision `dd1aed00`", "line N at set 30's tested revision `dd1aed00`", "W68's F2"),
+    (SUPPLIER, 28, "`dd1aed00d0a0a521063b5792550bc510c4707c59` is the", "`dd1aed00d0a0a521063b5792550bc510c4707c59` is set 30's", "W68's F2"),
+    (SUPPLIER, 50, "**What the promoted revision is, and is not**", "**What set 30's promoted revision is, and is not**", "W68's F2"),
+    (SUPPLIER, 68, "which records the coordinator's judgement on the", "which records the coordinator's judgement on set 30's", "W68's F2"),
 )
 L31 = {"4": "## Layer 4. System architecture\n", "5": "## Layer 5. Partitioning and interfaces\n", "8": "## Layer 8. Schematics\n",
        "9": "## Layer 9. Pre-layout design analysis\n",
@@ -315,7 +328,9 @@ def t_the_pages_carry_only_their_declared_tokens():
     res = open(os.path.join(TOOLS, "tests", "test_res31.py"), encoding="utf-8").read()
     m = re.search(r"^PATCH_TOKENS = \(([^)]*)\)", res, re.M)
     assert m and set(re.findall(r"\"(__[A-Z]+__)\"", m.group(1))) == TOKENS[PATCH], "test_res31's PATCH_TOKENS differ"
-    fill = os.path.join(os.path.dirname(os.path.dirname(ROOT)), "_runs", "int31", "freeze", "fill_res31.py")
+    # W69 (W68's F9): the run folder is beside the worktrees, one level above this tree (it read two levels up, so never ran)
+    runs = os.environ.get("MESHSAT_RUNS") or os.path.join(os.path.dirname(ROOT), "_runs")
+    fill = os.path.join(runs, "int31", "freeze", "fill_res31.py")
     if os.path.isfile(fill):   # the coordinator's fill script, read where the run folder exists
         src = open(fill, encoding="utf-8").read()
         names = set(re.search(r"TOK = re\.compile\(r\"__\(([A-Z|]+)\)__\"\)", src).group(1).split("|"))
@@ -351,18 +366,23 @@ def t_the_claims_are_the_assessments_lines_verbatim():
 
 
 def t_the_counts_are_the_classifications_and_gits():
+    # restated by W69 (6 October 2026, from W68's finding F1; basis: the classification gained row 34, the re-key's cache commit
+    # aa332280, classed DIGEST RE-PIN, so it counts 104 commits to the cache commit; the lineage's 103 to 31928583 stand as typed)
     c = _read(CLASS)
-    assert "| `REVIEWED-INPUT CHANGED` | 24 | 24 |" in c and re.search(r"^\| total \| 103 \| \|$", c, re.M), "the classification's counts"
+    assert "| `REVIEWED-INPUT CHANGED` | 24 | 24 |" in c and re.search(r"^\| total \| 104 \| \|$", c, re.M), "the classification's counts"
     k = _git("rev-list", "--count", "%s..%s" % (BASE, LINEAGE))
-    if k.returncode != 0:
+    kc = _git("rev-list", "--count", "%s..%s" % (BASE, CACHE))
+    if k.returncode != 0 or kc.returncode != 0:
         raise Skip("the lineage is not in this object store")
-    assert k.stdout.decode().strip() == "103"
+    assert k.stdout.decode().strip() == "103" and kc.stdout.decode().strip() == "104"
     l4 = _norm(block31(_read(LS), "4"))
     assert "None of the 24 REVIEWED-INPUT CHANGED commits" in l4 and "103 commits over the base" in l4
-    assert "counts 24 REVIEWED-INPUT CHANGED commits over `dd1aed00..31928583`" in _norm(_plan_entry(_read(PLAN)))
+    assert "104 commits over the base" in l4 and "classes the 104 commits of `dd1aed00..aa332280`" in l4
+    assert "counts 24 REVIEWED-INPUT CHANGED commits over `dd1aed00..aa332280`" in _norm(_plan_entry(_read(PLAN)))
     for p in COPIES:
         t = _norm(_read(p))
-        assert t.count("24 commits that change what cx46 read") == 2 and "over the 103 commits of `dd1aed00..31928583`" in t, p
+        assert t.count("24 commits that change what cx46 read") == 2 and "over the 104 commits of `dd1aed00..aa332280`" in t, p
+        assert "31928583" not in t, "%s names the lineage 31928583 where the classification reads to aa332280" % p
 
 
 def t_the_merged_branches_the_cache_commit_and_the_contract():

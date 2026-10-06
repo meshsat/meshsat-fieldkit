@@ -161,7 +161,8 @@ def _placeholder_errors(name, text, n):
 
 def _claims_block(text):
     """The list of the four claims: the paragraph naming the assessment and the date, then the four bullets."""
-    m = re.search(r"`(?:v2/docs/)?records/l4close/L4-DESK-GATE-ASSESSMENT\.md`, which records the coordinator's judgement on the\n"
+    # W69 (W68's F2): the sentence names whose promoted revision the judgement was on, set 30's; the block it holds is unchanged
+    m = re.search(r"`(?:v2/docs/)?records/l4close/L4-DESK-GATE-ASSESSMENT\.md`, which records the coordinator's judgement on set 30's\n"
                   r"promoted revision, %s:[^\n]*\n[^\n]*\n\n((?:- \"[^\n]+\"\n){4})" % re.escape(DATED), text)
     return [ln[3:-1] for ln in m.group(1).strip("\n").split("\n")] if m else None
 
@@ -280,7 +281,7 @@ def t_the_checkers_refuse_their_defects():
     assert "does not carry it" in landing_error(RESULT, exists=no, show=lambda c, q: None, landed=False)
     assert "is in this tree" in landing_error(RESULT, exists=no, show=lambda c, q: "x", landed=True)
     # the claims: the real block passes, a changed word, a dropped claim and a missing date each fail
-    block = ("`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which records the coordinator's judgement on the\npromoted revision, "
+    block = ("`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which records the coordinator's judgement on set 30's\npromoted revision, "
              "%s: the gate\nand more:\n\n%s\n" % (DATED, "\n".join('- "%s"' % c for c in CLAIMS)))
     assert not _claims_errors(block)
     assert _claims_errors(block.replace("NOT PASSED", "PASSED"))
