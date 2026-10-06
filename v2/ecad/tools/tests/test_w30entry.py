@@ -9,7 +9,8 @@ revision is and is not in the integration record's words (`v2/docs/records/int30
 Layer 4's DESK gate and the three completion claims in the coordinator's words (`<worktrees>/_runs/int30/Q05-verdict.final.md`,
 6 October 2026, 10:45 CEST), citing the DESK-gate assessment.
 
-The predicates: no placeholder and no "(at adoption)" mark is left, and the promoted commit stands at each of the 15 places;
+The predicates: no placeholder and no "(at adoption)" mark is left, and the promoted commit stands at each of the 13 places (15
+until W33's restatement below, which took it out of the two Packaged rows);
 every repository path either page names exists (or is the readings folder git ignores), or is one of the records that land with the other two adoption branches (W26's
 fnd/adopt30a, W27's fnd/adopt30b), held by the branch commit that carries it and refused once that commit is in the tree; no
 draft path of the adopted records is cited; the four claims stand on each page in the coordinator's exact words, beside the
@@ -36,7 +37,14 @@ START = "v2/docs/handover/START-HERE.md"
 SUPPLIER = "v2/docs/handover/supplier/SUPPLIER-HANDOVER.md"
 PAGES = (START, SUPPLIER)
 PROMOTED = "dd1aed00d0a0a521063b5792550bc510c4707c59"     # ADOPTION-VALUES.md: INTEGRATED = CANDIDATE = PROMOTED = MIRROR
-FILLED = {START: 7, SUPPLIER: 8}                           # Slot N's placeholders per page at fnd/entrypage 1b82c61b
+# Slot N's placeholders per page at fnd/entrypage 1b82c61b were 7 and 8. Restated by W33 (6 October 2026; basis: W32's read of the
+# adoption, finding 2, `<worktrees>/_runs/claude/w32read/REPORT-AS-RECEIVED.md`: RESULT.md and both pages' section 0 are absent at
+# dd1aed00, so it is not the packaged commit; the coordinator's ruling 2 in W33's brief): the Packaged row of each page names the
+# commit by the supplier delta's README, which carries it, so the promoted commit stands once less on each page.
+FILLED = {START: 6, SUPPLIER: 7}
+ADOPTED = "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec"      # the adoption commit (main after the adoption), ruling 2's Adopted row
+PACKAGED = ("| Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its "
+            "difference from the tested revision and which checks cover it |")
 PLACEHOLDER = "__INTEGRATED__"
 DASHES = (chr(0x2013), chr(0x2014))                        # the en dash and the em dash, by code point
 
@@ -167,11 +175,14 @@ def t_every_placeholder_is_filled_with_the_promoted_commit():
 
 
 def t_the_revision_rows_name_the_promoted_commit():
+    # restated by W33 (basis above FILLED): Tested is the promoted commit; Adopted the adoption commit, after it; Packaged the README's
     for p in PAGES:
         t = _page(p)
-        for label in ("Tested", "Packaged"):
-            assert re.search(r"^\| %s \| `%s` \|" % (label, PROMOTED), t, re.M), "%s: the %s row is not the promoted commit" % (p, label)
+        assert re.search(r"^\| Tested \| `%s` \|" % PROMOTED, t, re.M), "%s: the Tested row is not the promoted commit" % p
+        assert re.search(r"^\| Adopted \| `%s` \(`%s`\) \|" % (ADOPTED[:8], ADOPTED), t, re.M), "%s: the Adopted row" % p
+        assert len([ln for ln in t.split("\n") if ln.startswith("| Packaged |")]) == 1 and PACKAGED in t, "%s: the Packaged row" % p
         assert "| Documents and editable artifacts | on main as a DESK candidate (`%s`) |" % PROMOTED in t, p
+    assert _git("merge-base", "--is-ancestor", PROMOTED, ADOPTED).returncode == 0, "the adoption commit does not follow the promoted one"
 
 
 # ------------------------------------------------------------------------------------------------------------ the paths
