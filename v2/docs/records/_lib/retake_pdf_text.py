@@ -17,8 +17,11 @@ text, the PDF and the tool are unchanged nothing is written (the date of an unch
 line: UNCHANGED, WRITTEN (new) or CHANGED (old and new sha256/16 and lengths), and whether it is to be committed or held back.
 
 The runner is the host of record (Debian 12, pdftotext 22.12.0, poppler-data present): the text it takes is the text every host then
-reads. A sheet that is absent is refused with its route (the record's fetch_held_back.py for a held-back one). Exit 0: every
-declared extraction is present and current; 2: a declared PDF is absent, a table does not parse, or pdftotext failed.
+reads. A sheet that is absent is refused with its route (for a held-back one, the fetch script pdftext.FETCH lists for THAT sheet,
+the record's own when it is listed: W36's finding F-P2, W37). Where a text is to land is checked BEFORE it is written: a held-back
+sheet's text that .gitignore would not exclude, or a committed sheet's text it would, is refused and nothing is written (W37). Exit 0:
+every declared extraction is present and current; 2: a declared PDF is absent, a table does not parse, a text would land where
+.gitignore disagrees with its sheet, or pdftotext failed.
 Stdlib; pdftotext, git and dpkg-query on PATH."""
 import ast
 import datetime
@@ -113,13 +116,19 @@ def main(argv):
     for pdf in sorted(decl):
         src = os.path.join(top, pdf)
         if not os.path.isfile(src):
-            route = "fetch it with %s/fetch_held_back.py" % rec_rel if PT.held(pdf) else "it is not in this tree"
+            route = PT.fetch_route(pdf, rec_rel) if PT.held(pdf) else "it is not in this tree"
             refuse("%s is absent (%s)" % (pdf, route))
         pdf_sha = sha(open(src, "rb").read())
         for o in decl[pdf]:
             args = PT.run_args(o)
             txt_rel = PT.text_path(pdf, o)
             dst = os.path.join(top, txt_rel)
+            # where it lands is checked before anything is written (check-ignore matches a path that does not exist yet)
+            ign = subprocess.run(["git", "-C", top, "check-ignore", "-q", txt_rel]).returncode == 0
+            if PT.held(pdf) and not ign:
+                refuse("%s is a held-back sheet's text but .gitignore does not exclude it (nothing written)" % txt_rel)
+            if not PT.held(pdf) and ign:
+                refuse("%s is a committed sheet's text but .gitignore excludes it (nothing written)" % txt_rel)
             r = subprocess.run(["pdftotext"] + args + [src, "-"], capture_output=True)
             if r.returncode != 0 or not r.stdout:
                 refuse("pdftotext %s %s exited %d with %d bytes (%s)" % (" ".join(args), pdf, r.returncode, len(r.stdout),
@@ -148,12 +157,7 @@ def main(argv):
                 _write(dst, body)
                 _write(mp, (json.dumps(meta, indent=1, sort_keys=True) + "\n").encode("utf-8"))
             counts[st] += 1
-            ign = subprocess.run(["git", "-C", top, "check-ignore", "-q", txt_rel]).returncode == 0
             where = "held back (ignored by .gitignore)" if ign else "to commit"
-            if PT.held(pdf) and not ign:
-                refuse("%s is a held-back sheet's text but .gitignore does not exclude it" % txt_rel)
-            if not PT.held(pdf) and ign:
-                refuse("%s is a committed sheet's text but .gitignore excludes it" % txt_rel)
             chg = "" if st != "CHANGED" else " (was %s, %d bytes)" % (sha(old)[:16], len(old))
             print("   %-9s %s %7d bytes %s [%s]%s%s%s" % (st, meta["text_sha256"][:16], len(body), txt_rel, where, chg, enc, cr))
     print("retake_pdf_text: %d extraction(s): %d unchanged, %d written, %d changed" % (
