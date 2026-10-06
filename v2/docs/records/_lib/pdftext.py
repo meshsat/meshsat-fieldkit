@@ -78,8 +78,8 @@ FETCH = {
     "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf": ("l4e10",),
     "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf": ("l4e10",),
     "v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf": ("l4e10",),
-    "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": ("l8p",),   # W81: l8p_drafts' table (test_l8p's read)
-    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0362.pdf": ("l8r2",),   # W81: l8r2_drafts' table (test_l8r2's read)
+    "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf": ("l8p",),   # W81: l8p_pdftext.py's table (test_l8p's read)
+    "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0362.pdf": ("l8r2",),   # W81: l8r2_pdftext.py's table (test_l8r2's reads)
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0616.pdf": ("l8r2",),
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pdf": ("l8r2",),
     "v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0633.pdf": ("l8r2",),

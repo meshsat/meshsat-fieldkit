@@ -36,7 +36,19 @@ l8p_guard.pdftext(), whose table did not declare it, and neither a test nor W36'
     an outside caller is found); (k) the mutation: with l8p_c4.py as it was at 5b3153aa the check names l8p_guard.py:102 with the
     BZT52C sheet, and only that; (l) every extraction ANY PDFTEXT table under v2/docs/records declares has its text and sidecar from
     the present PDF, committed exactly when the sheet is; (m) l8p_c4.py runs with pdftotext and pdftocairo refused: exit 0, no call,
-    its three text lines printed, its folder unchanged."""
+    its three text lines printed, its folder unchanged.
+
+Added by W81 on 6 October 2026, closing W66's finding (set 32's full dry run stopped on a TEST: test_l8p.py:665 read TDK's held sheet
+through l8p_drafts.pdftext(), whose table did not declare it; the check (j) walked the generators and never the tests):
+(n) the walk of (j) with every test module as a caller (a test's name standing for a records script through the test's own loaders,
+    its arguments carried into the wrappers, each pair recorded with the test line that asked; the helper called by a test with a
+    table named PDFTEXT, X.PDFTEXT or PT.declared_in(<script>)), shown on fixtures: declared reads pass, an undeclared sheet through a
+    wrapper and an undeclared mode through the helper fail naming the site and the test line, and W55's walk alone misses both;
+(o) on this tree every pair a test asks for is declared and no helper call in a test is unreached (the tests' own reads are declared
+    in their records' l8p_pdftext.py, l8r2_pdftext.py and l5r4_pdftext.py); the mutation without l8p_pdftext.py's TDK line names
+    test_l8p's read of TDK's sheet; (p) the census of the test modules' other
+    routes (their own process calls of pdftotext or pdftocairo, their calls of a v2/ecad/tools or records function that runs one) is
+    KNOWN_DIRECT and KNOWN_TOOLVIA with reasons, and the records functions a test calls run only l4e9's and l4e11's pinned pdftocairo."""
 import ast
 import hashlib
 import importlib.util
@@ -1394,3 +1406,518 @@ def t_l8p_c4_runs_with_pdftotext_and_pdftocairo_refused():
 def _declared_inputs(rel):
     PT = _pt()
     return PT.inputs(ROOT, PT.declared_in(os.path.join(ROOT, "v2", "docs", "records", rel)))
+
+
+# ----------------------------------------------------------------------- W81: the test modules' extraction routes, read statically
+# W66's full dry run of set 32 (6 October 2026, `_runs/int32/README.md` 9b) stopped on a TEST: test_l8p.py:665 read TDK's held sheet
+# through l8p_drafts.pdftext(), whose table did not declare it, and the helper refused (exit 2). W55's check above walked the generators
+# and their readers, never the tests. The check below walks the test modules too, as callers: a test's name standing for a records
+# script (its own loader: a function holding spec_from_file_location, read with the call's arguments, or a function returning such a
+# function's result) carries the test's arguments into the records script's wrappers, so each site records the pairs a test asks for
+# and the test line that asked. A test calling the helper itself names its table (a script's PDFTEXT, or PT.declared_in(<script>)).
+# Beside it, a census of the other extraction routes a test module holds: a process call of pdftotext or pdftocairo in its own code,
+# and a call of a function of a v2/ecad/tools module or of a records script that runs one; each must be a KNOWN route with its reason.
+TPFX = "@tests/"
+PROC = ("subprocess.run", "subprocess.call", "subprocess.check_call", "subprocess.check_output", "subprocess.Popen", "os.system",
+        "os.popen")
+TOOLS_RUN = ("pdftotext", "pdftocairo")
+# the test modules' own process calls of a tool, each module with its count and reason (W81's census of 6 October 2026, after W81
+# moved test_l3r5's, test_l5r4's and test_l8r2's reads to committed extractions)
+KNOWN_DIRECT = {
+    "test_pdftext_input.py": (3, "the helper's and the re-take's own fixtures: the control call proving the fake pdftotext is first on "
+                                 "PATH, and the fixture PDF read back against the re-take's text in a temporary directory (W34)"),
+    "test_energy_chain.py": (1, "TOOL LAYER: energy_chain.py's transcription guard re-reads the ATOF table of v2/vendor/battery/"
+                                "littelfuse-287-atof.pdf (-layout); v2/ecad/tools has no PDFTEXT table and the records' helper is not its "
+                                "reader; it moves with the tools layer's own conversion (KNOWN_TOOLVIA)"),
+    "test_rails_census.py": (1, "TOOL LAYER: the rails census reads intent_checks.PIN_ROLES' documents (-layout), as edge_length.py and "
+                                "pack_protection.py read theirs; it moves with the tools layer's own conversion"),
+}
+# test modules calling a v2/ecad/tools module's function that runs a tool itself (the tools layer: outside W34's conversion of the
+# records, PDFTEXT-INVENTORY.md section 1 covers v2/docs/records only)
+KNOWN_TOOLVIA = {
+    ("test_edge_length.py", "edge_length.py"): "TOOL LAYER: edge_length's held documents' words (pdftotext -layout, one page or all)",
+    ("test_l6pwr.py", "part_identities.py"): "TOOL LAYER: part_identities' bound document page (pdftotext -f N -l N -layout), "
+                                              "the inventory's DRY-RUN class for l6pwr_parts.py",
+    ("test_l6r2.py", "part_identities.py"): "TOOL LAYER: part_identities' bound document page, the inventory's DRY-RUN class for "
+                                             "l6r2_passives.py",
+    ("test_part_identities.py", "part_identities.py"): "TOOL LAYER: part_identities' own tests, on fixture PDFs written in a temporary "
+                                                       "directory and on the bound documents",
+    ("test_pack_protection.py", "pack_protection.py"): "TOOL LAYER: pack_protection's judge reads the pack's held documents (-layout)",
+}
+
+# test modules calling a records function that runs a tool itself, beyond l4e9's and l4e11's pinned pdftocairo sites (PDFTOCAIRO_SITES)
+KNOWN_RECVIA = {
+    ("test_l4e7.py", "l4e7/l4e7_stage_settings.py"): "the l4e7 KEY group, not converted by design (PDFTEXT-INVENTORY.md: its KEY "
+                                                      "records the host's pdftotext); the test reads results() in-process",
+}
+
+
+class _TestWorld(_World):
+    """_World with the test modules as callers (`@tests/<name>` scripts, read from the tests folder; never imported or run)."""
+
+    def __init__(self, records, tests, sources=None):
+        super().__init__(records, sources)
+        self.tests, self.origin, self.origin_of, self.calls, self._quiet, self._refs = tests, None, {}, [], 0, {}
+        for n in sorted(os.listdir(tests)):
+            if n.startswith("test_") and n.endswith(".py") and TPFX + n not in self.sources:
+                self.sources[TPFX + n] = open(os.path.join(tests, n), encoding="utf-8").read()
+
+    def test_scripts(self):
+        return sorted(k for k in self.sources if k.startswith(TPFX))
+
+    def mod(self, rel):
+        new = rel not in self.mods
+        m = super().mod(rel)
+        if new and rel.startswith(TPFX):
+            m.alias = lambda name: None          # a test's names are read by refs(), per function, never module-wide
+        return m
+
+    def is_test(self, m):
+        return m.rel.startswith(TPFX)
+
+    def _fn(self, m):
+        return self.cur[1] if self.cur and self.cur[0] == m.rel and self.cur[1] in m.funcs else None
+
+    def _assigned(self, m, name, fn):
+        """The calls a name is assigned from in the function being read, else at the module's level."""
+        calls = []
+        if fn:
+            calls = [a.value for a in ast.walk(m.funcs[fn]) if isinstance(a, ast.Assign) and isinstance(a.value, ast.Call)
+                     and any(isinstance(t, ast.Name) and t.id == name for t in a.targets)]
+        return calls or [v for v in m.assigns.get(name, []) if isinstance(v, ast.Call)]
+
+    def eval(self, m, e, env, depth=0):
+        if self.is_test(m):
+            if isinstance(e, ast.Name) and e.id == "__file__" and e.id not in env:
+                return ["v2/ecad/tools/tests/" + m.rel[len(TPFX):]]
+            if isinstance(e, ast.Call) and isinstance(e.func, ast.Name) and e.func.id == "need" and e.args:
+                return self.eval(m, e.args[0], env, depth + 1)            # harness.need returns the path it checked
+            if isinstance(e, (ast.ListComp, ast.SetComp, ast.GeneratorExp, ast.DictComp)):
+                return self._comprehension(m, e, env, depth)
+            if isinstance(e, ast.Attribute) and isinstance(e.value, ast.Name) and env.get(e.value.id) is None:
+                refs = [r for r in self.refs(m, e.value.id) if not r.startswith("_lib/")]
+                if refs:
+                    return _uniq([v for r in refs for v in self.mod(r).value(e.attr)])
+        return super().eval(m, e, env, depth)
+
+    def _comprehension(self, m, e, env, depth):
+        """A test's comprehension as one value (a dict, or a tuple for the others), each element read per binding of its loops; a
+        filter is not read, so the value holds every element a filter could keep (HELD_FAN, test_l8r2's pages, is one)."""
+        envs = [dict(env)]
+        for g in e.generators:
+            nxt = []
+            for en in envs:
+                for it in self.elements(m, g.iter, en):
+                    e2 = dict(en)
+                    self.bind(g.target, [it], e2)
+                    nxt.append(e2)
+            envs = nxt[:_CAP]
+        out = {} if isinstance(e, ast.DictComp) else []
+        for en in envs:
+            parts = [e.key, e.value] if isinstance(e, ast.DictComp) else [e.elt]
+            vals = [self.eval(m, x, en, depth + 1) for x in parts]
+            if any(len(v) != 1 for v in vals):
+                raise _Unknown("a comprehension element of several values")
+            if isinstance(e, ast.DictComp):
+                out[vals[0][0]] = vals[1][0]
+            else:
+                out.append(vals[0][0])
+        return [out if isinstance(e, ast.DictComp) else tuple(out)]
+
+    def refs(self, m, name):
+        """The records scripts a test's name stands for in the function being read."""
+        fn = self._fn(m)
+        key = (m.rel, fn, name)
+        if key not in self._refs:
+            self._refs[key] = ()
+            out = set()
+            for c in self._assigned(m, name, fn):
+                out |= self.loaded(m, c, {}, 0, fn)
+            self._refs[key] = tuple(sorted(out))
+        return self._refs[key]
+
+    def _spec_paths(self, m, s, env):
+        try:
+            vals = self.eval(m, s.args[1], env)
+        except _Unknown:
+            return set()
+        out = set()
+        for v in vals:
+            q = posixpath.normpath(v) if isinstance(v, str) else ""
+            if q.startswith("v2/docs/records/") and q.endswith(".py"):
+                out.add(q[len("v2/docs/records/"):])
+        return out
+
+    def loaded(self, m, call, env, depth, fn=None):
+        """The records scripts a test's loader call loads: spec_from_file_location's path under the call's binding, through a function
+        returning another loader's result, or importlib.util.module_from_spec(<a spec assigned in the same function>)."""
+        out = set()
+        if depth > 6:
+            return out
+        if getattr(call.func, "attr", "") == "module_from_spec" and call.args and isinstance(call.args[0], ast.Name):
+            for s in self._assigned(m, call.args[0].id, fn):
+                if getattr(s.func, "attr", "") == "spec_from_file_location" and len(s.args) > 1:
+                    out |= self._spec_paths(m, s, {})
+            return out
+        if not (isinstance(call.func, ast.Name) and call.func.id in m.funcs):
+            return out
+        fd = m.funcs[call.func.id]
+        for b in self.bindings(m, fd, call, m, env):
+            self._quiet += 1
+            try:
+                env2 = self.run(m, fd.body, dict(b))
+            finally:
+                self._quiet -= 1
+            specs = [s for s in ast.walk(fd) if isinstance(s, ast.Call) and getattr(s.func, "attr", "") == "spec_from_file_location"
+                     and len(s.args) > 1]
+            for s in specs:
+                out |= self._spec_paths(m, s, env2)
+            if specs:
+                continue
+            for r in ast.walk(fd):
+                if isinstance(r, ast.Return) and isinstance(r.value, ast.Call):
+                    out |= self.loaded(m, r.value, env2, depth + 1, fd.name)
+                elif isinstance(r, ast.Return) and isinstance(r.value, ast.Name):
+                    for a in self._assigned(m, r.value.id, fd.name):
+                        out |= self.loaded(m, a, env2, depth + 1, fd.name)
+        return out
+
+    def visit(self, m, x, env):
+        if not self._quiet:
+            super().visit(m, x, env)
+
+    def call_site(self, m, c, env):
+        f = c.func
+        if self.is_test(m) and isinstance(f, ast.Attribute):
+            recv = f.value
+            if isinstance(recv, ast.Attribute) and recv.attr == "PT" and isinstance(recv.value, ast.Name) and \
+                    self.refs(m, recv.value.id) and f.attr == "pdf_text" and len(c.args) >= 4:
+                self.site(m, c, env)                                         # m.PT.pdf_text(...): the helper a records script loaded
+                return True
+            if isinstance(recv, ast.Name) and env.get(recv.id) is None and self.refs(m, recv.id):
+                for r in self.refs(m, recv.id):
+                    if r == "_lib/pdftext.py":
+                        if f.attr == "pdf_text" and len(c.args) >= 4:
+                            self.site(m, c, env)                              # PT.pdf_text(...) with the helper the test loaded
+                            return True
+                        continue
+                    callee = self.mod(r)
+                    if f.attr in callee.funcs:
+                        self.calls.append((m.rel, c.lineno, r, f.attr))
+                        self.edges.add((self.cur, (r, f.attr)))
+                        self.queue(callee, callee.funcs[f.attr], c, m, env)
+                return False
+        return super().call_site(m, c, env)
+
+    def _key(self, callee, fd, b):
+        return (callee.rel, fd.name, repr(sorted(b.items(), key=lambda kv: kv[0])))
+
+    def queue(self, callee, fd, call, caller, env):
+        org = self.origin or ((caller.rel, call.lineno) if self.is_test(caller) else None)
+        if org:
+            for b in self.bindings(callee, fd, call, caller, env):
+                self.origin_of.setdefault(self._key(callee, fd, b), org)
+        super().queue(callee, fd, call, caller, env)
+
+    def _table(self, m, t, depth=0):
+        """The records script whose PDFTEXT a helper call's table argument is: PDFTEXT, X.PDFTEXT, PT.declared_in(<script>), or a
+        name assigned from one of those in the function being read."""
+        if depth > 3:
+            return None
+        if isinstance(t, ast.Name) and t.id == "PDFTEXT" and not self.is_test(m):
+            return m.rel
+        if isinstance(t, ast.Attribute) and t.attr == "PDFTEXT" and isinstance(t.value, ast.Name):
+            r = self.refs(m, t.value.id) if self.is_test(m) else ((m.alias(t.value.id),) if m.alias(t.value.id) else ())
+            return r[0] if len(r) == 1 else None
+        if isinstance(t, ast.Call) and getattr(t.func, "attr", "") == "declared_in" and len(t.args) == 1:
+            r = self._spec_paths(m, ast.Call(func=t.func, args=[t.args[0], t.args[0]], keywords=[]), {})
+            return next(iter(r)) if len(r) == 1 else None
+        if isinstance(t, ast.Name):
+            vals = self._assigned(m, t.id, self._fn(m))
+            return self._table(m, vals[0], depth + 1) if len(vals) == 1 else None
+        return None
+
+    def site(self, m, c, env):
+        key = (m.rel, c.lineno)
+        rec = self.sites.setdefault(key, {"table": None, "pairs": set(), "why": set()})
+        rec.setdefault("from", {})
+        self.home[key] = self.cur
+        tab = self._table(m, c.args[3])
+        if tab:
+            rec["table"] = tab
+        else:
+            rec["why"].add("the table %s is not a script's PDFTEXT" % ast.unparse(c.args[3]))
+        try:
+            pdfs, opts = self.eval(m, c.args[1], env), self.eval(m, c.args[2], env)
+        except _Unknown as ex:
+            rec["why"].add("unresolved: %s" % ex)
+            return
+        org = self.origin or (key if self.is_test(m) else None)
+        for p in pdfs:
+            for o in opts:
+                if isinstance(p, str) and isinstance(o, tuple):
+                    pair = (posixpath.normpath(p), tuple(str(x) for x in o))
+                    rec["pairs"].add(pair)
+                    if org:
+                        rec["from"].setdefault(pair, set()).add(org)
+                else:
+                    rec["why"].add("not a path and an option list: %r %r" % (p, o))
+
+    def walk(self, scripts):
+        """_World.walk with each reading's origin carried (the test line whose call queued it, through every call after it), then
+        every helper call in a test module that no walk reached (a nested function, an unread call) recorded as unresolved."""
+        for rel in scripts:
+            m = self.mod(rel)
+            self.cur, self.origin = (rel, "<module>"), None
+            self.run(m, m.tree.body, {})
+            for fd in m.funcs.values():
+                if not fd.args.args and (rel, fd.name, "[]") not in self.done:
+                    self.done.add((rel, fd.name, "[]"))
+                    self.todo.append((m, fd, {}))
+        while self.todo:
+            self.steps += 1
+            assert self.steps <= 4 * _STEPS, "the walk took more than %d function readings" % (4 * _STEPS)
+            m, fd, b = self.todo.pop()
+            self.cur, self.origin = (m.rel, fd.name), self.origin_of.get(self._key(m, fd, b))
+            self.run(m, fd.body, dict(b))
+        for rel, m in list(self.mods.items()):
+            nodes = ast.walk(m.tree) if self.is_test(m) else (n for fd in m.funcs.values() for n in ast.walk(fd))
+            for n in nodes:
+                if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "pdf_text" \
+                        and len(n.args) >= 4 and (rel, n.lineno) not in self.sites:
+                    self.sites[(rel, n.lineno)] = {"table": None, "pairs": set(), "why": {"no walk reaches this helper call"}}
+        return self.sites
+
+
+def _undeclared_with_origin(world, PT):
+    """_undeclared's findings, each with the test lines whose calls asked for the undeclared pair (empty for a generator's own)."""
+    out = []
+    for where, why in _undeclared(world, PT):
+        rel, line = where.rsplit(":", 1)
+        r = world.sites[(rel, int(line))]
+        fr = r.get("from", {})
+        org = set()
+        for pair, o in fr.items():
+            if why == "%s with %s is not declared in %s's PDFTEXT" % (pair[0], " ".join(pair[1]) or "(no options)", r["table"]):
+                org |= o
+        if not isinstance(why, str) or why == "no PDF reaches it":
+            org = set().union(*fr.values()) if fr else set()
+        out.append((where, why, sorted("%s:%d" % (r[len(TPFX):] if r.startswith(TPFX) else r, l) for r, l in org)))
+    return out
+
+
+def _proc_tool_lines(tree):
+    """{line: tool} for each process call (subprocess.*, os.system, os.popen) whose command names pdftotext or pdftocairo: an argument
+    list's first element, a shell string, or a list kept in a variable. Parsed; shutil.which's argument and a message are not commands."""
+    def tool_of(node):
+        for n in ast.walk(node):
+            if isinstance(n, ast.Constant) and isinstance(n.value, str):
+                for t in TOKEN.split(n.value):
+                    if t and os.path.basename(t) in TOOLS_RUN:
+                        return os.path.basename(t)
+        return None
+    named = {}
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Assign) and isinstance(n.value, (ast.List, ast.Tuple)):
+            for t in n.targets:
+                if isinstance(t, ast.Name):
+                    named.setdefault(t.id, []).append(n.value)
+    out = {}
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Call) and ast.unparse(n.func) in PROC and n.args:
+            a = n.args[0]
+            t = tool_of(a.elts[0] if isinstance(a, (ast.List, ast.Tuple)) and a.elts and not isinstance(a.elts[0], ast.Starred) else a)
+            for x in ([] if t else [x for x in ast.walk(a) if isinstance(x, ast.Name)]):     # a list kept in a variable
+                t = next((tool_of(v.elts[0]) for v in named.get(x.id, []) if v.elts and tool_of(v.elts[0])), None)
+                if t:
+                    break
+            if t:
+                out[n.lineno] = t
+    return out
+
+
+def _tool_functions(src):
+    """{function: tools} of one module: the functions that run pdftotext or pdftocairo, directly or through another of its functions."""
+    funcs = {n.name: n for n in ast.walk(ast.parse(src)) if isinstance(n, ast.FunctionDef)}
+    runs = {f: set(_proc_tool_lines(fd).values()) for f, fd in funcs.items()}
+    runs = {f: t for f, t in runs.items() if t}
+    grew = True
+    while grew:
+        grew = False
+        for f, fd in funcs.items():
+            got = set().union(*[runs[c.func.id] for c in ast.walk(fd) if isinstance(c, ast.Call) and isinstance(c.func, ast.Name)
+                                and c.func.id in runs and c.func.id != f] or [set()])
+            if got - runs.get(f, set()):
+                runs[f] = runs.get(f, set()) | got
+                grew = True
+    return runs
+
+
+def _test_routes(tests_dir, tools_dir, world=None):
+    """The census: {"direct": {module: [(line, tool)]}, "toolvia": {(module, tools module): [(line, function, tools)]}, "recvia":
+    [(module, line, records script, function, tools)]} (recvia from a walked _TestWorld's calls)."""
+    out = {"direct": {}, "toolvia": {}, "recvia": []}
+    for n in sorted(os.listdir(tests_dir)):
+        if not (n.startswith("test_") and n.endswith(".py")):
+            continue
+        tree = ast.parse(open(os.path.join(tests_dir, n), encoding="utf-8").read())
+        d = sorted(_proc_tool_lines(tree).items())
+        if d:
+            out["direct"][n] = d
+        imps = {}
+        for x in ast.walk(tree):
+            if isinstance(x, ast.Import):
+                for a in x.names:
+                    if os.path.isfile(os.path.join(tools_dir, a.name + ".py")):
+                        imps[a.asname or a.name] = a.name + ".py"
+        tf = {k: _tool_functions(open(os.path.join(tools_dir, v), encoding="utf-8").read()) for k, v in imps.items()}
+        for c in ast.walk(tree):
+            if isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute) and isinstance(c.func.value, ast.Name) \
+                    and c.func.value.id in tf and c.func.attr in tf[c.func.value.id]:
+                out["toolvia"].setdefault((n, imps[c.func.value.id]), []).append(
+                    (c.lineno, c.func.attr, tuple(sorted(tf[c.func.value.id][c.func.attr]))))
+    if world is not None:
+        tf = {}
+        for tm, line, r, f in sorted(set(world.calls)):
+            if r not in tf:
+                tf[r] = _tool_functions(open(os.path.join(world.records, r), encoding="utf-8").read()) \
+                    if r not in world.sources else _tool_functions(world.sources[r])
+            if f in tf[r]:
+                out["recvia"].append((tm[len(TPFX):], line, r, f, tuple(sorted(tf[r][f]))))
+    return out
+
+
+FIX_T = '''import importlib.util, os, subprocess, shutil, sys
+TESTS = os.path.dirname(os.path.abspath(__file__))
+TOOLS = os.path.dirname(TESTS)
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
+REC = os.path.join(ROOT, "v2", "docs", "records", "fa")
+sys.path.insert(0, TESTS)
+from harness import need, Skip
+_C = {}
+def _mod(name, fname):
+    if name not in _C:
+        p = need(os.path.join(REC, fname), "a fixture record's script")
+        sp = importlib.util.spec_from_file_location(name, p)
+        m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+        _C[name] = m
+    return _C[name]
+def _M():
+    return _mod("a_under_test", "a.py")
+def t_reads_through_the_records_wrapper():
+    m = _M()
+    t = m.pdftext(os.path.join(ROOT, "v2", "vendor", "fx", "%s.pdf"))
+def t_reads_through_the_helper():
+    sp = importlib.util.spec_from_file_location("fx_pt", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+    PT = importlib.util.module_from_spec(sp)
+    table = PT.declared_in(os.path.join(ROOT, "v2", "docs", "records", "fa", "a.py"))
+    t = PT.pdf_text(ROOT, "v2/vendor/fx/two.pdf", %s, table, "v2/docs/records/fa")
+def t_the_host_tool():
+    if shutil.which("pdftotext") is None:
+        raise Skip("pdftotext is needed")
+    CMD = ["pdftotext", "-layout"]
+    a = subprocess.run(["pdftotext", "-layout", "x.pdf", "-"], capture_output=True)
+    b = subprocess.run("cd /tmp && /usr/bin/pdftotext x.pdf -", shell=True)
+    c = subprocess.run(CMD + ["x.pdf", "-"])
+'''
+
+
+def _fixture_tests(d, sheet="one", opts='["-layout", "-f", "4", "-l", "4"]'):
+    rec = os.path.join(d, "v2", "docs", "records")
+    _put(d, "v2/docs/records/fa/a.py", FIX_A.encode())
+    _put(d, "v2/ecad/tools/tests/test_fx.py", (FIX_T % (sheet, opts)).encode())
+    return rec, os.path.join(d, "v2", "ecad", "tools", "tests")
+
+
+def t_the_test_side_check_finds_an_undeclared_read_on_fixtures():
+    """W81 (W66's finding): a fixture test module reading through a records script's wrapper and through the helper with a table named
+    by PT.declared_in(): declared reads pass; an undeclared sheet through the wrapper (test_l8p.py:665's gap) and an undeclared mode
+    through the helper fail, each naming the site and the test line that asked; the census finds the three process calls of
+    pdftotext (an argument list, a shell string, a list kept in a variable) and not shutil.which's argument or the Skip message."""
+    PT = _pt()
+    d = tempfile.mkdtemp(prefix="w81-t-")
+    try:
+        rec, tests = _fixture_tests(d)
+        w = _TestWorld(rec, tests)
+        w.walk(["fa/a.py"] + w.test_scripts())
+        assert _undeclared_with_origin(w, PT) == [], _undeclared_with_origin(w, PT)
+        assert ("@tests/test_fx.py", 20, "fa/a.py", "pdftext") in w.calls, w.calls
+        assert w.sites[("@tests/test_fx.py", 25)]["table"] == "fa/a.py"
+        rec, tests = _fixture_tests(d, "three", '["-layout"]')
+        w = _TestWorld(rec, tests)
+        w.walk(["fa/a.py"] + w.test_scripts())
+        got = _undeclared_with_origin(w, PT)
+        assert got == [("@tests/test_fx.py:25", "v2/vendor/fx/two.pdf with -layout is not declared in fa/a.py's PDFTEXT",
+                        ["test_fx.py:25"]),
+                       ("fa/a.py:11", "v2/vendor/fx/three.pdf with -layout is not declared in fa/a.py's PDFTEXT", ["test_fx.py:20"])], got
+        w = _World(rec)                                   # W55's walk alone does not see the test's reads: the gap W66 met
+        w.walk(["fa/a.py"])
+        assert _undeclared(w, PT) == [], _undeclared(w, PT)
+        r = _test_routes(tests, os.path.join(d, "v2", "ecad", "tools"))
+        assert r["direct"] == {"test_fx.py": [(30, "pdftotext"), (31, "pdftotext"), (32, "pdftotext")]}, r["direct"]
+    finally:
+        shutil.rmtree(d)
+
+
+_TREE = {}
+
+
+def _tree_world():
+    """One walk of this tree's converted generators, READERS and test modules, shared by (o) and (p) (about 15 s on the runner)."""
+    if "w" not in _TREE:
+        w = _TestWorld(os.path.join(ROOT, "v2", "docs", "records"), TESTS)
+        w.walk(list(CONVERTED) + list(READERS) + w.test_scripts())
+        _TREE["w"] = w
+    return _TREE["w"]
+
+
+def t_every_extraction_a_test_reaches_is_declared():
+    """W81: the converted generators, the READERS and every test module walked together: every pair a test asks for (through a
+    records script's wrapper, its PT or the helper with a named table) is declared in the table its site names, and no helper call
+    in a test is unreached; test_l8r2 reads its four San Ace pages through l8r2_pdftext.py's table. The mutation: without
+    l8p_pdftext.py's TDK line the check names test_l8p's read of TDK's held sheet (W66's refusal at test_l8p.py:665)."""
+    need(HELPER, "the helper")
+    PT = _pt()
+    rec = os.path.join(ROOT, "v2", "docs", "records")
+    w = _tree_world()
+    bad = _undeclared_with_origin(w, PT)
+    assert not bad, "extraction sites a test reaches that their table does not declare (%d): %s" % (len(bad), bad[:6])
+    readers = w.readers()
+    asked = {(tm, line) for tm, line, r, f in w.calls if (r, f) in readers}
+    assert len(asked) >= 40, "%d test calls of a reader function (46 on 6 October 2026)" % len(asked)
+    fan = {pair for (r, _l), rec_ in w.sites.items() if r == TPFX + "test_l8r2.py" and rec_["table"] == "l8r2/l8r2_pdftext.py"
+           for pair in rec_["pairs"] if "/held/sanyo-denki-san-ace-" in pair[0]}
+    assert len(fan) == 4, "test_l8r2's four San Ace pages are not read through l8r2_pdftext.py's table: %s" % sorted(fan)
+    tdk = "v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf"
+    src = open(os.path.join(rec, "l8p", "l8p_pdftext.py"), encoding="utf-8").read()
+    line = '    "%s": [["-layout"]],\n' % tdk
+    assert src.count(line) == 1, "l8p_pdftext.py's TDK declaration is not one line as this test expects"
+    w2 = _TestWorld(rec, TESTS, {"l8p/l8p_pdftext.py": src.replace(line, "")})
+    w2.walk(list(CONVERTED) + list(READERS) + w2.test_scripts())
+    got = _undeclared_with_origin(w2, PT)
+    assert len(got) == 1 and got[0][0].startswith("@tests/test_l8p.py:") and got[0][1] == \
+        "%s with -layout is not declared in l8p/l8p_pdftext.py's PDFTEXT" % tdk and got[0][2] == [got[0][0][len(TPFX):]], got
+
+
+def t_every_other_extraction_route_of_a_test_module_is_known():
+    """W81: the census of the test modules' other routes: their own process calls of pdftotext or pdftocairo are KNOWN_DIRECT (by
+    module, with the count and the reason); their calls of a v2/ecad/tools function that runs one are KNOWN_TOOLVIA; their calls of a
+    records function that runs one reach only the pinned pdftocairo sites of l4e9 and l4e11 (no pdftotext: W37's predicate (d)) or
+    are KNOWN_RECVIA (the l4e7 KEY group)."""
+    need(HELPER, "the helper")
+    r = _test_routes(TESTS, TOOLS, _tree_world())
+    direct = {n: len(v) for n, v in r["direct"].items()}
+    want = {n: c for n, (c, _why) in KNOWN_DIRECT.items()}
+    assert direct == want, "test modules' own tool calls differ from KNOWN_DIRECT: %s against %s (%s)" % (
+        direct, want, {n: v for n, v in r["direct"].items() if direct.get(n) != want.get(n)})
+    assert all(t == "pdftotext" for v in r["direct"].values() for _l, t in v), r["direct"]
+    assert set(r["toolvia"]) == set(KNOWN_TOOLVIA), "tools-layer routes differ: new %s, gone %s" % (
+        sorted(set(r["toolvia"]) - set(KNOWN_TOOLVIA)), sorted(set(KNOWN_TOOLVIA) - set(r["toolvia"])))
+    seen = set()
+    for tm, line, script, f, tools in r["recvia"]:
+        if (tm, script) in KNOWN_RECVIA:
+            seen.add((tm, script))
+            continue
+        assert tools == ("pdftocairo",) and script in PDFTOCAIRO_SITES, \
+            "%s:%d calls %s.%s(), which runs %s" % (tm, line, script, f, "/".join(tools))
+    assert seen == set(KNOWN_RECVIA), "KNOWN_RECVIA entries no test reaches any more: %s" % sorted(set(KNOWN_RECVIA) - seen)
