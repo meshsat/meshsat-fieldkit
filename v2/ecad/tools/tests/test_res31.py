@@ -16,10 +16,18 @@ assessment; a placeholder outside the declared tokens; a patch row whose old tex
 dash. Each predicate is also run on a mutant it must refuse.
 
 The coordinator's logs (`<worktrees>/_runs`, outside the repository) are read by ONE test, which raises Skip where they are absent
-(a rented box): run it in the runner pass (the record's section 8). When the coordinator adds the rows after `31928583` at the
-adoption, TIP below moves with them (the record last read the lineage at W41's converged commit, `31928583`; W56 added its rows 32 and
-33, 6 October 2026, and the checks of the counts those rows move: the later rows' split, the W51 reversal's numbers, RESULT's sections
-2d, 4, 6 and 7, the third chain run's and the spent re-keys' elapsed times, each recomputed from the table, git or the logged stamps).
+(a rented box): run it in the runner pass (the record's section 8). When the coordinator classes the candidate's row after the
+adoption's fill, TIP below moves with it (the record last read the lineage at the re-key's cache commit, `aa332280`; W56 added rows 32
+and 33, 6 October 2026, and the checks of the counts those rows move: the later rows' split, the W51 reversal's numbers, RESULT's
+sections 2d, 4, 6 and 7, the third chain run's and the spent re-keys' elapsed times, each recomputed from the table, git or the logged
+stamps; W69 added row 34 and the re-key's elapsed times, 6 October 2026, from W68's finding F1).
+
+The candidate's row (35) is the one row the table does not classify (W69, 6 October 2026, from W68's F1: after a simulated fill the
+earlier `_placeholder_row`, keyed on the token alone, read the filled row as an unclassified full row and failed five tests). It is a
+placeholder row before the fill (its sha cell `__CANDIDATE__`) and after it (its sha cell the candidate commit, which must follow TIP on
+the first-parent line); either way its date and class read "not determined", it is not counted, and it is the only such row. Every
+other predicate is unchanged in what it refuses; the mutations whose anchor was a token that the fill removes now insert an
+undeclared token beside a sentence that stays.
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
@@ -39,19 +47,20 @@ CLASS = REC + "/CLASSIFICATION.md"
 PATCH = REC + "/ENTRY-PAGES.patch.md"
 SOURCES = REC + "/inputs/SOURCES.txt"
 BASE = "dd1aed00d0a0a521063b5792550bc510c4707c59"          # set 30's promoted revision, set 31's base
-TIP = "31928583c612ea43df17df5d7e0cbb2f66090f8e"           # set 31's lineage as the record last read it (W41's converged commit)
+TIP = "aa3322806da156d12f2b23dbe9fc98a8805926f0"           # set 31's lineage as the record last read it (the re-key's cache commit, row 34)
 REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2 (its line 17)
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
-DECLARED = ("__CANDIDATE__", "__REKEY__", "__PROMOTED__", "__GATE__", "__ADOPTION__")     # W41's round filled: rows 32 and 33
+DECLARED = ("__CANDIDATE__", "__PROMOTED__", "__GATE__", "__ADOPTION__")     # W41's round filled (rows 32, 33); the re-key written (row 34)
 PATCH_TOKENS = ("__PROMOTED__", "__ADOPTION__")
 # main's commits named by the record, not in this branch's history until main is merged into set 31's lineage
 OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after set 30's adoption, the copies' source",
            "836f711b406be48d9eb58c9cf6f7491fbcf7c5ec": "set 30's adoption commit on main",
            "4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31 at W39's last commit, the counts before W50's reconciliation",
            "353b41dd2144dba237f2df9616dadd452f62569f": "fnd/res31 at W50's last commit, the counts before W51's five rows",
-           "7155b626a6ef2036de8843de2f1d1d94b2d01d71": "fnd/res31 at W51's last commit, the counts over the 101 before rows 32 and 33"}
+           "7155b626a6ef2036de8843de2f1d1d94b2d01d71": "fnd/res31 at W51's last commit, the counts over the 101 before rows 32 and 33",
+           "5f910eb53c753bd1f3f12b4ce7b174d2c36d33e5": "fnd/res31 at W56's last commit, the counts over the 103 before row 34"}
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
 RIC = "REVIEWED-INPUT CHANGED"
@@ -170,8 +179,51 @@ def _classes(cells):
     return [c.strip() for c in cells[6].split(" + ")]
 
 
+PH_CELL = re.compile(r"`(__[A-Z0-9]+__|[0-9a-f]{8,40})`$")
+
+
 def _placeholder_row(cells):
-    return bool(re.match(r"`__[A-Z0-9]+__`$", cells[1]))
+    """A row the table does not classify: its sha cell is ONE code span holding a token, or the commit the fill wrote there (a
+    classified row's sha cell is `short` / `full`). Its date and class must read "not determined" (p_placeholders) and it must be the
+    candidate's row after TIP (p_candidate_row)."""
+    return bool(PH_CELL.match(cells[1]))
+
+
+def _candidate(text):
+    """The candidate commit the fill named in the placeholder row, or None before the fill (the token) or when the row is malformed."""
+    rows = [c for c in _rows(text) if _placeholder_row(c)]
+    if len(rows) != 1:
+        return None
+    m = PH_CELL.match(rows[0][1])
+    sha = m.group(1)
+    if sha.startswith("__") or not _has(sha):
+        return None
+    return _git("rev-parse", sha + "^{commit}").strip()
+
+
+def p_candidate_row(text):
+    """Exactly one unclassified row: the candidate's, numbered one past the last first-parent row, its sha cell `__CANDIDATE__`
+    before the fill, or after it a commit that follows TIP on the first-parent line (never TIP itself or an earlier commit)."""
+    bad = []
+    full = [c for c in _rows(text) if not _placeholder_row(c)]
+    ph = [c for c in _rows(text) if _placeholder_row(c)]
+    if len(ph) != 1:
+        return ["%d unclassified rows, not the candidate's one" % len(ph)]
+    c = ph[0]
+    last = max(int(r[0]) for r in full if "." not in r[0])
+    if c[0] != str(last + 1):
+        bad.append("the unclassified row is numbered %s, not %d (after the last first-parent row)" % (c[0], last + 1))
+    sha = PH_CELL.match(c[1]).group(1)
+    if sha.startswith("__"):
+        if sha != "__CANDIDATE__":
+            bad.append("the unclassified row's token is %s, not __CANDIDATE__" % sha)
+        return bad
+    if not _has(sha):
+        return bad + ["the unclassified row names %s, not a commit of this repository" % sha]
+    full_sha = _git("rev-parse", sha + "^{commit}").strip()
+    if full_sha == TIP or TIP not in _git("rev-list", "--first-parent", full_sha).split():
+        bad.append("the unclassified row names %s, which does not follow TIP %s on the first-parent line" % (sha[:12], TIP[:8]))
+    return bad
 
 
 # ---- predicates: each returns a list of problems (empty when the record holds) ----
@@ -318,7 +370,7 @@ def p_summary(text):
             if fl[k]:
                 rr = [c[0] for c in later if _classes(c)[0] == k]
                 bits.append("%s %d" % (k, fl[k]) + (" (rows %s)" % _and(rr) if k == RIC else ""))
-        wantl = "Rows %s (W41's two commits after `d5d9c252`) add: %s." % (_and([c[0] for c in later]), "; ".join(bits))
+        wantl = "Rows %s (after `d5d9c252`: W41's two commits and the re-key's cache commit) add: %s." % (_and([c[0] for c in later]), "; ".join(bits))
         if wantl not in flat:
             bad.append("the later rows' split does not read %r" % wantl)
     rt = Counter(_classes(c)[0] for c in rows)["RECORD TEXT"]
@@ -466,7 +518,8 @@ def p_counts(texts, order):
     for a, b, span in (("10:59:11", "12:30:22", "1 h 31 min 11 s"), ("12:41:57", "15:09:03", "2 h 27 min 6 s"),
                        ("12:24:18", "15:10:11", "2 h 45 min 53 s"), ("16:14:39", "18:02:33", "1 h 47 min 54 s"),
                        ("16:14:39", "18:10:37", "1 h 55 min 58 s"), ("15:22:20", "15:57:50", "35 min 30 s"),
-                       ("15:15:17", "15:58:12", "42 min 55 s")):
+                       ("15:15:17", "15:58:12", "42 min 55 s"), ("18:25:14", "18:58:29", "33 min 15 s"),
+                       ("18:11:26", "18:59:12", "47 min 46 s")):
         s = [int(x) for x in a.split(":")]
         e = [int(x) for x in b.split(":")]
         d = (e[0] - s[0]) * 3600 + (e[1] - s[1]) * 60 + e[2] - s[2]
@@ -479,6 +532,9 @@ def p_counts(texts, order):
 def p_commits_named(texts):
     bad = []
     hist = set(_git("rev-list", TIP).split())
+    cand = _candidate(texts[CLASS])
+    if cand and not p_candidate_row(texts[CLASS]):
+        hist.add(cand)                         # the candidate the fill named (main is fast-forwarded to it: PROMOTED too)
     for name, t in texts.items():
         if "/inputs/" in name:
             continue
@@ -632,8 +688,24 @@ def t_the_records_carry_no_dash_and_open_with_their_state_lines():
 def t_every_placeholder_is_a_declared_token():
     texts = _texts()
     assert not p_placeholders(texts), p_placeholders(texts)
-    _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
-    _mutant_refused(p_placeholders, texts, PATCH, "`__ADOPTION__`", "`__GATE__`")
+    # anchors that stay after the fill (W69: the earlier anchors were tokens the fill removes); the refused value is unchanged
+    _mutant_refused(p_placeholders, texts, RESULT, "**Set 31 closes NO power item.**", "**Set 31 closes NO power item.** `__GATE_LINE__`")
+    first = texts[PATCH].split("\n", 1)[0]
+    _mutant_refused(p_placeholders, texts, PATCH, first, first + " `__GATE__`")
+    r = [l for l in texts[CLASS].split("\n") if l.startswith("| 35 |")][0]
+    _mutant_refused(p_placeholders, texts, CLASS, r, r.replace("| not determined | not determined |", "| 1: v2/ (1) | DIGEST RE-PIN |", 1))
+
+
+def t_the_candidates_row_is_its_placeholder_or_the_filled_candidate():
+    _need_git()
+    t = _read(CLASS)
+    assert not p_candidate_row(t), p_candidate_row(t)
+    r = [l for l in t.split("\n") if l.startswith("| 35 |")][0]
+    cell = r.split(" | ", 2)[1]
+    assert p_candidate_row(t.replace(r, r.replace(cell, "`31928583`", 1), 1)), "a filled row naming an earlier commit passed"
+    assert p_candidate_row(t.replace(r, r.replace(cell, "`%s`" % TIP, 1), 1)), "a filled row naming TIP itself passed"
+    assert p_candidate_row(t.replace(r, r.replace(cell, "`__PROMOTED__`", 1), 1)), "a placeholder row with another token passed"
+    assert p_candidate_row(t.replace(r, r + "\n" + r.replace("| 35 |", "| 36 |", 1), 1)), "a second unclassified row passed"
 
 
 def t_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes():
@@ -774,6 +846,7 @@ def _pytest(fn):
 
 test_the_records_carry_no_dash_and_open_with_their_state_lines = _pytest(t_the_records_carry_no_dash_and_open_with_their_state_lines)
 test_every_placeholder_is_a_declared_token = _pytest(t_every_placeholder_is_a_declared_token)
+test_the_candidates_row_is_its_placeholder_or_the_filled_candidate = _pytest(t_the_candidates_row_is_its_placeholder_or_the_filled_candidate)
 test_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes = _pytest(
     t_the_table_is_the_range_in_first_parent_order_with_gits_columns_and_classes)
 test_the_summary_and_the_bound_statement_are_the_tables = _pytest(t_the_summary_and_the_bound_statement_are_the_tables)
