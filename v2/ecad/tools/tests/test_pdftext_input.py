@@ -24,12 +24,25 @@ Added by W37 on 6 October 2026, each closing a finding of W36's review of W34's 
     aed4bd23 caught; (g) F-R2: the re-take's CHANGED path on a fixture, and its refusal, with nothing written, of a held-back sheet's
     text that .gitignore would not exclude (and of a committed sheet's text it would); (h) F-R2: an orphan text, one no PDFTEXT table
     declares, detected on a fixture and absent from this tree; (i) F-P2: every held-back sheet a table declares names the fetch script
-    that fetches THAT sheet, re-derived from the fetch scripts' own document lists, and the refusal names it."""
+    that fetches THAT sheet, re-derived from the fetch scripts' own document lists, and the refusal names it.
+
+Added by W55 on 6 October 2026, closing W53's finding (l8p_c4.py refused on this branch: its BZT52C read went through
+l8p_guard.pdftext(), whose table did not declare it, and neither a test nor W36's run reached it):
+(j) a static check, never a run: every helper call the converted generators and READERS reach (l8p_c4.py and the four scripts that
+    call into a converted generator's reader), its PDF and options resolved with ast through the wrappers and every call reaching
+    them (from another script too, as l8p_c4 called l8p_guard's), is declared in the PDFTEXT table the call names; every helper call
+    of theirs is reached; no records script outside the two lists calls one of their reader functions; shown on fixtures first (a
+    declared read passes; an undeclared sheet through another script's wrapper, an undeclared page and an unreadable argument fail;
+    an outside caller is found); (k) the mutation: with l8p_c4.py as it was at 5b3153aa the check names l8p_guard.py:102 with the
+    BZT52C sheet, and only that; (l) every extraction ANY PDFTEXT table under v2/docs/records declares has its text and sidecar from
+    the present PDF, committed exactly when the sheet is; (m) l8p_c4.py runs with pdftotext and pdftocairo refused: exit 0, no call,
+    its three text lines printed, its folder unchanged."""
 import ast
 import hashlib
 import importlib.util
 import json
 import os
+import posixpath
 import re
 import shutil
 import subprocess
@@ -691,3 +704,693 @@ def t_every_held_sheet_names_the_script_that_fetches_it():
             "v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l4e12" in err, err
     finally:
         shutil.rmtree(d)
+
+
+# ----------------------------------------------------------------------- W55: every extraction site declared, read statically
+# W53 found (6 October 2026, 18:09 CEST) that l8p_c4.py refused on this branch: it read the BZT52C sheet through l8p_guard.pdftext(),
+# whose table did not declare it, and no test or run had reached that call (W36 ran 23 of the 25 converted generators; l8p_c4 is not
+# one of them and names no pdftotext). The check below finds that class of gap without running anything: every call of the helper's
+# pdf_text() that the converted generators and their readers reach, its PDF and options resolved with ast through the wrappers and
+# the calls that reach them (also from another script, as l8p_c4 called l8p_guard's), against the PDFTEXT table the call names.
+# READERS: the records scripts that are not converted generators but reach one's reader: l8p_c4.py (its own table since W55) and the
+# four the scan below finds calling into a converted script (each also ran with both tools refused, W55's run of 6 October 2026).
+READERS = ("l8p/l8p_c4.py", "l8r2/l8r2_dist.py", "l9t5/check_f01_netlist.py", "l9t5/l9t5_connected.py", "l9t5/l9t5_f01_drafts.py")
+GAP_BASE = "5b3153aa"   # fnd/w34pdftext before W55: l8p_c4.py's BZT52C read was in no table (the mutation the check must catch)
+_CAP = 400              # values one expression may take before it counts as unresolved
+_STEPS = 20000          # function readings per walk
+
+
+class _Unknown(Exception):
+    pass
+
+
+def _uniq(vals):
+    out, seen = [], set()
+    for v in vals:
+        k = repr(v)
+        if k not in seen:
+            seen.add(k)
+            out.append(v)
+            if len(out) > _CAP:
+                raise _Unknown("more than %d values" % _CAP)
+    return out
+
+
+def _product(lists):
+    acc = [()]
+    for lst in lists:
+        acc = _uniq([a + (b,) for a in acc for b in lst])
+    return acc
+
+
+class _Script:
+    """One records script read with ast (never imported or run): its module-level bindings, its functions, the scripts its names
+    stand for (an import from its own folder, a spec_from_file_location loader, or a function of it that hands a parameter to one)."""
+
+    def __init__(self, world, rel):
+        self.world, self.rel = world, rel
+        src = world.sources[rel] if rel in world.sources else open(os.path.join(world.records, rel), encoding="utf-8").read()
+        self.tree = ast.parse(src, rel)
+        self.assigns, self.funcs, self.imports = {}, {}, {}
+        for n in self.tree.body:
+            if isinstance(n, ast.Assign):
+                for t in n.targets:
+                    if isinstance(t, ast.Name):
+                        self.assigns.setdefault(t.id, []).append(n.value)
+            elif isinstance(n, ast.FunctionDef):
+                self.funcs[n.name] = n
+        for n in ast.walk(self.tree):
+            if isinstance(n, ast.Import):
+                for a in n.names:
+                    self.imports[a.asname or a.name] = a.name
+            elif isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
+                self.assigns.setdefault("\0" + n.targets[0].id, []).append(n.value)   # any level: the loaders' names
+        self._mod, self._busy, self._alias = {}, set(), {}
+
+    def value(self, name):
+        if name in self._mod:
+            return self._mod[name]
+        if name in self._busy or name not in self.assigns:
+            raise _Unknown("the name %s" % name)
+        self._busy.add(name)
+        try:
+            vals = _uniq([v for e in self.assigns[name] for v in self.world.eval(self, e, {})])
+        except _Unknown:
+            if name not in ("TOP", "ROOT", "REPO"):
+                raise
+            vals = [""]          # the repository's root (git rev-parse or a dirname chain): paths stay relative to it
+        finally:
+            self._busy.discard(name)
+        self._mod[name] = vals
+        return vals
+
+    def alias(self, name):
+        if name not in self._alias:
+            self._alias[name] = self._find(name)
+        return self._alias[name]
+
+    def _records_rel(self, expr):
+        try:
+            paths = self.world.eval(self, expr, {})
+        except _Unknown:
+            return None
+        for p in paths:
+            q = posixpath.normpath(p) if isinstance(p, str) else ""
+            if q.startswith("v2/docs/records/"):
+                return q[len("v2/docs/records/"):]
+        return None
+
+    def _find(self, name):
+        if name in self.imports:
+            cand = posixpath.join(posixpath.dirname(self.rel), self.imports[name] + ".py")
+            if os.path.isfile(os.path.join(self.world.records, cand)) or cand in self.world.sources:
+                return cand
+        for e in self.assigns.get("\0" + name, []):
+            if not isinstance(e, ast.Call):
+                continue
+            if isinstance(e.func, ast.Name) and e.func.id in self.funcs:          # NAME = load(PATH, ...)
+                fd = self.funcs[e.func.id]
+                params = [x.arg for x in fd.args.args]
+                for s in ast.walk(fd):
+                    if isinstance(s, ast.Call) and getattr(s.func, "attr", "") == "spec_from_file_location" and len(s.args) > 1 \
+                            and isinstance(s.args[1], ast.Name) and s.args[1].id in params and params.index(s.args[1].id) < len(e.args):
+                        r = self._records_rel(e.args[params.index(s.args[1].id)])
+                        if r:
+                            return r
+            if getattr(e.func, "attr", "") == "module_from_spec" and e.args and isinstance(e.args[0], ast.Name):
+                for s in self.assigns.get("\0" + e.args[0].id, []):
+                    if isinstance(s, ast.Call) and getattr(s.func, "attr", "") == "spec_from_file_location" and len(s.args) > 1:
+                        r = self._records_rel(s.args[1])
+                        if r:
+                            return r
+        return None
+
+
+class _World:
+    """The extraction sites reached from some records scripts: {(script, line): {"table": script, "pairs": {(pdf, options)}, "why":
+    {reason it is unresolved}}}. Arguments are read through the wrappers per call (a For loop per element, an If by its test where
+    the test reads, both branches where it does not), so a site's candidates are the extractions its calls can ask for."""
+
+    def __init__(self, records, sources=None):
+        self.records, self.sources = records, dict(sources or {})
+        self.mods, self.sites, self.todo, self.done, self.steps = {}, {}, [], set(), 0
+        self.cur, self.edges, self.home = None, set(), {}
+
+    def mod(self, rel):
+        if rel not in self.mods:
+            self.mods[rel] = _Script(self, rel)
+        return self.mods[rel]
+
+    def eval(self, m, e, env, depth=0):
+        if depth > 16:
+            raise _Unknown("too deep")
+        ev = lambda x: self.eval(m, x, env, depth + 1)   # noqa: E731
+        if isinstance(e, ast.Constant):
+            return [e.value]
+        if isinstance(e, ast.Name):
+            if e.id in env:
+                if env[e.id] is None:
+                    raise _Unknown("the local %s" % e.id)
+                return env[e.id]
+            if e.id == "__file__":
+                return ["v2/docs/records/" + m.rel]
+            return m.value(e.id)
+        if isinstance(e, (ast.List, ast.Tuple)):
+            if any(isinstance(x, ast.Starred) for x in e.elts):
+                raise _Unknown("a starred element")
+            return _product([ev(x) for x in e.elts])
+        if isinstance(e, ast.Dict):
+            d = {}
+            for k, v in zip(e.keys, e.values):
+                if k is None:
+                    raise _Unknown("a dict unpacking")
+                ks, vs = ev(k), ev(v)
+                if len(ks) != 1 or len(vs) != 1:
+                    raise _Unknown("a dict entry of several values")
+                d[ks[0]] = vs[0]
+            return [d]
+        if isinstance(e, ast.Attribute):
+            if ast.unparse(e) == "os.sep":
+                return ["/"]
+            if isinstance(e.value, ast.Name):
+                a = m.alias(e.value.id)
+                if a and not a.startswith("_lib/"):
+                    return self.mod(a).value(e.attr)
+            raise _Unknown("the attribute %s" % ast.unparse(e))
+        if isinstance(e, ast.Subscript):
+            out = []
+            for v in ev(e.value):
+                for k in ev(e.slice):
+                    try:
+                        out.append(v[k])
+                    except (KeyError, IndexError, TypeError):
+                        pass
+            return _uniq(out)
+        if isinstance(e, ast.BoolOp):
+            out = [None]
+            for i, x in enumerate(e.values):
+                nxt = []
+                for v in (out if i else [None]):
+                    if i and (bool(v) if isinstance(e.op, ast.Or) else not bool(v)):
+                        nxt.append(v)
+                    else:
+                        nxt += ev(x)
+                out = _uniq(nxt)
+            return out
+        if isinstance(e, ast.IfExp):
+            tv = self.truth(m, e.test, env)
+            return _uniq((ev(e.body) if True in tv else []) + (ev(e.orelse) if False in tv else []))
+        if isinstance(e, ast.BinOp) and isinstance(e.op, (ast.Add, ast.Mod)):
+            out = []
+            for a in ev(e.left):
+                for b in ev(e.right):
+                    try:
+                        out.append(a + b if isinstance(e.op, ast.Add) else a % b)
+                    except TypeError:
+                        raise _Unknown("the operands of %s" % ast.unparse(e))
+            return _uniq(out)
+        if isinstance(e, ast.Call):
+            return self.call(m, e, env, depth)
+        raise _Unknown("a %s" % type(e).__name__)
+
+    def call(self, m, e, env, depth):
+        ev = lambda x: self.eval(m, x, env, depth + 1)   # noqa: E731
+        f, args = ast.unparse(e.func), e.args
+        if f == "os.path.join":
+            return _uniq([posixpath.join(*p) for p in _product([ev(a) for a in args])])
+        if f in ("os.path.dirname", "os.path.basename", "os.path.normpath", "os.path.abspath", "os.path.realpath"):
+            fn = {"os.path.dirname": posixpath.dirname, "os.path.basename": posixpath.basename}.get(f, posixpath.normpath)
+            return _uniq([fn(v) for v in ev(args[0])])
+        if f == "os.path.relpath":
+            base = ev(args[1]) if len(args) > 1 else [""]
+            return _uniq([posixpath.normpath(v) if b in ("", ".") else posixpath.relpath(v, b) for v in ev(args[0]) for b in base])
+        if f == "str" and len(args) == 1:
+            return _uniq([str(v) for v in ev(args[0])])
+        if f == "range" and 1 <= len(args) <= 2:
+            return _uniq([tuple(range(*p)) for p in _product([ev(x) for x in args])])
+        if f in ("sorted", "list", "tuple") and len(args) == 1 and not e.keywords:
+            out = []
+            for v in ev(args[0]):
+                try:
+                    out.append(tuple(sorted(v)) if f == "sorted" else tuple(v))
+                except TypeError:
+                    raise _Unknown("the call %s" % ast.unparse(e))
+            return _uniq(out)
+        if isinstance(e.func, ast.Attribute) and e.func.attr in ("items", "keys", "values") and not args:
+            out = []
+            for v in ev(e.func.value):
+                if not isinstance(v, dict):
+                    raise _Unknown("%s of a %s" % (e.func.attr, type(v).__name__))
+                out.append(tuple(getattr(v, e.func.attr)()))
+            return _uniq(out)
+        if isinstance(e.func, ast.Name) and e.func.id in m.funcs:      # a one-line function of the script (rel, path, ...)
+            fd = m.funcs[e.func.id]
+            body = [s for s in fd.body if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Constant))]
+            if len(body) == 1 and isinstance(body[0], ast.Return) and body[0].value is not None:
+                return _uniq([v for b in self.bindings(m, fd, e, m, env) for v in self.eval(m, body[0].value, b, depth + 1)])
+        raise _Unknown("the call %s" % f)
+
+    def truth(self, m, test, env):
+        try:
+            return {bool(v) for v in self.eval(m, test, env)}
+        except _Unknown:
+            return {True, False}
+
+    def bindings(self, callee, fd, call, caller, env):
+        """Each parameter read from one call (an argument in the caller's scope, a default in the callee's; None when unread)."""
+        params = [a.arg for a in fd.args.args]
+        defaults = dict(zip(params[len(params) - len(fd.args.defaults):], fd.args.defaults))
+        kw = {k.arg: k.value for k in call.keywords if k.arg}
+        vals = {}
+        for i, p in enumerate(params):
+            if i < len(call.args):
+                x, where, scope = call.args[i], caller, env
+            elif p in kw:
+                x, where, scope = kw[p], caller, env
+            else:
+                x, where, scope = defaults.get(p), callee, {}
+            try:
+                vals[p] = None if x is None or isinstance(x, ast.Starred) else self.eval(where, x, scope)
+            except _Unknown:
+                vals[p] = None
+        known = [p for p in params if vals[p] is not None]
+        out = []
+        for combo in _product([vals[p] for p in known]):
+            b = {p: None for p in params}
+            b.update({p: [v] for p, v in zip(known, combo)})
+            out.append(b)
+        return out
+
+    def run(self, m, stmts, env):
+        for s in stmts:
+            env = self.step(m, s, env)
+        return env
+
+    def merge(self, *envs):
+        out = {}
+        for k in set().union(*envs):
+            vs = [e.get(k) for e in envs if k in e]
+            try:
+                out[k] = None if any(v is None for v in vs) else _uniq([x for v in vs for x in v])
+            except _Unknown:
+                out[k] = None
+        return out
+
+    def bind(self, target, vals, env):
+        if isinstance(target, ast.Name):
+            env[target.id] = vals
+        elif isinstance(target, (ast.Tuple, ast.List)):
+            for i, t in enumerate(target.elts):
+                try:
+                    sub = None if vals is None else _uniq([v[i] for v in vals])
+                except (TypeError, IndexError, KeyError, _Unknown):
+                    sub = None
+                self.bind(t, sub, env)
+
+    def elements(self, m, it, env):
+        out = []
+        for v in self.eval(m, it, env):
+            if not isinstance(v, (dict, list, tuple)):
+                raise _Unknown("iteration over a %s" % type(v).__name__)
+            out += list(v)
+        return _uniq(out)
+
+    def step(self, m, s, env):
+        if isinstance(s, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            return env
+        own = {ast.If: lambda: [s.test], ast.While: lambda: [s.test], ast.For: lambda: [s.iter],
+               ast.With: lambda: [i.context_expr for i in s.items], ast.Try: lambda: []}.get(type(s))
+        for x in (own() if own else [c for c in ast.iter_child_nodes(s) if isinstance(c, ast.expr)]):
+            self.visit(m, x, env)
+        env = dict(env)
+        if isinstance(s, (ast.Assign, ast.AnnAssign)) and s.value is not None:
+            try:
+                vals = self.eval(m, s.value, env)
+            except _Unknown:
+                vals = None
+            for t in (s.targets if isinstance(s, ast.Assign) else [s.target]):
+                self.bind(t, vals, env)
+        elif isinstance(s, ast.AugAssign) and isinstance(s.target, ast.Name):
+            try:
+                old = env[s.target.id] if s.target.id in env else m.value(s.target.id)
+                env[s.target.id] = None if old is None else _uniq([a + b for a in old for b in self.eval(m, s.value, env)])
+            except (_Unknown, TypeError):
+                env[s.target.id] = None
+        elif isinstance(s, ast.If):
+            tv = self.truth(m, s.test, env)
+            env = self.merge(*(([self.run(m, s.body, dict(env))] if True in tv else []) +
+                               ([self.run(m, s.orelse, dict(env))] if False in tv else [])))
+        elif isinstance(s, ast.For):
+            try:
+                items = self.elements(m, s.iter, env)
+            except _Unknown:
+                items = None
+            outs = [env]
+            for it in (items if items is not None else [None]):
+                e2 = dict(env)
+                self.bind(s.target, None if it is None else [it], e2)
+                outs.append(self.run(m, s.body, e2))
+            env = self.run(m, s.orelse, self.merge(*outs))
+        elif isinstance(s, ast.While):
+            env = self.merge(env, self.run(m, s.body, dict(env)))
+        elif isinstance(s, ast.With):
+            env = self.run(m, s.body, env)
+        elif isinstance(s, ast.Try):
+            outs = [self.run(m, s.body, dict(env))] + [self.run(m, h.body, dict(env)) for h in s.handlers]
+            env = self.run(m, s.finalbody, self.run(m, s.orelse, self.merge(*outs)))
+        return env
+
+    def visit(self, m, x, env):
+        """The calls in one expression: a helper call is a site; a call of a function (the script's own, or another records
+        script's through a name standing for it) queues that function with the binding the call gives."""
+        if isinstance(x, ast.Lambda):
+            return
+        if isinstance(x, (ast.ListComp, ast.SetComp, ast.GeneratorExp, ast.DictComp)):
+            envs = [env]
+            for g in x.generators:
+                nxt = []
+                for e in envs:
+                    self.visit(m, g.iter, e)
+                    try:
+                        items = self.elements(m, g.iter, e)
+                    except _Unknown:
+                        items = None
+                    for it in (items if items is not None else [None]):
+                        e2 = dict(e)
+                        self.bind(g.target, None if it is None else [it], e2)
+                        nxt.append(e2)
+                envs = nxt[:_CAP]
+            for e in envs:
+                for part in ([x.key, x.value] if isinstance(x, ast.DictComp) else [x.elt]):
+                    self.visit(m, part, e)
+            return
+        if isinstance(x, ast.Call) and self.call_site(m, x, env):
+            return
+        for c in ast.iter_child_nodes(x):
+            if isinstance(c, ast.expr):
+                self.visit(m, c, env)
+            elif isinstance(c, ast.keyword):
+                self.visit(m, c.value, env)
+
+    def call_site(self, m, c, env):
+        """True when c is a helper call (recorded as a site, its arguments not walked further)."""
+        f = c.func
+        base = m.alias(f.value.id) if isinstance(f, ast.Attribute) and isinstance(f.value, ast.Name) else None
+        if isinstance(f, ast.Attribute) and isinstance(f.value, ast.Attribute) and f.value.attr == "PT" \
+                and isinstance(f.value.value, ast.Name) and m.alias(f.value.value.id):
+            base = "_lib/pdftext.py"                                   # G.PT.pdf_text: the helper another script loaded
+        if isinstance(f, ast.Attribute) and f.attr == "pdf_text" and base in (None, "_lib/pdftext.py") and len(c.args) >= 4:
+            self.site(m, c, env)
+            return True
+        if isinstance(f, ast.Name) and f.id in m.funcs:
+            self.edges.add((self.cur, (m.rel, f.id)))
+            self.queue(m, m.funcs[f.id], c, m, env)
+        elif base and not base.startswith("_lib/") and isinstance(f, ast.Attribute):
+            callee = self.mod(base)
+            if f.attr in callee.funcs:
+                self.edges.add((self.cur, (base, f.attr)))
+                self.queue(callee, callee.funcs[f.attr], c, m, env)
+        return False
+
+    def queue(self, callee, fd, call, caller, env):
+        for b in self.bindings(callee, fd, call, caller, env):
+            key = (callee.rel, fd.name, repr(sorted(b.items(), key=lambda kv: kv[0])))
+            if key not in self.done:
+                self.done.add(key)
+                self.todo.append((callee, fd, b))
+
+    def site(self, m, c, env):
+        rec = self.sites.setdefault((m.rel, c.lineno), {"table": None, "pairs": set(), "why": set()})
+        self.home[(m.rel, c.lineno)] = self.cur
+        t = c.args[3]
+        if isinstance(t, ast.Name) and t.id == "PDFTEXT":
+            rec["table"] = m.rel
+        elif isinstance(t, ast.Attribute) and t.attr == "PDFTEXT" and isinstance(t.value, ast.Name) and m.alias(t.value.id):
+            rec["table"] = m.alias(t.value.id)
+        else:
+            rec["why"].add("the table %s is not a script's PDFTEXT" % ast.unparse(t))
+        try:
+            pdfs, opts = self.eval(m, c.args[1], env), self.eval(m, c.args[2], env)
+        except _Unknown as ex:
+            rec["why"].add("unresolved: %s" % ex)
+            return
+        for p in pdfs:
+            for o in opts:
+                if isinstance(p, str) and isinstance(o, tuple):
+                    rec["pairs"].add((posixpath.normpath(p), tuple(str(x) for x in o)))
+                else:
+                    rec["why"].add("not a path and an option list: %r %r" % (p, o))
+
+    def walk(self, scripts):
+        for rel in scripts:
+            m = self.mod(rel)
+            self.cur = (rel, "<module>")
+            self.run(m, m.tree.body, {})
+            for fd in m.funcs.values():
+                if not fd.args.args and (rel, fd.name, "[]") not in self.done:
+                    self.done.add((rel, fd.name, "[]"))
+                    self.todo.append((m, fd, {}))
+        while self.todo:
+            self.steps += 1
+            assert self.steps <= _STEPS, "the walk took more than %d function readings" % _STEPS
+            m, fd, b = self.todo.pop()
+            self.cur = (m.rel, fd.name)
+            self.run(m, fd.body, dict(b))
+        for rel, m in list(self.mods.items()):          # a helper call in a function no call reached is unresolved
+            for fd in m.funcs.values():
+                for n in ast.walk(fd):
+                    if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "pdf_text" \
+                            and len(n.args) >= 4 and (rel, n.lineno) not in self.sites:
+                        self.sites[(rel, n.lineno)] = {"table": None, "pairs": set(), "why": {"no call of %s() reaches it" % fd.name}}
+        return self.sites
+
+    def readers(self):
+        """The functions that reach a site: those holding one and, transitively, those calling one of them."""
+        out = {h for h in self.home.values() if h}
+        grew = True
+        while grew:
+            grew = False
+            for a, b in self.edges:
+                if b in out and a and a not in out:
+                    out.add(a)
+                    grew = True
+        return out
+
+
+def _undeclared(world, PT):
+    """[(site, reason)] for every site with a reason, no PDF candidate, or a candidate its table does not declare. A candidate
+    that is not a .pdf is a branch the walk could not prune (l4e9's `pdf_text(key, 1, 2) if PINS[key][0].endswith(".pdf")`)."""
+    bad = []
+    for (rel, line), r in sorted(world.sites.items()):
+        where = "%s:%d" % (rel, line)
+        if r["why"]:
+            bad.append((where, sorted(r["why"])))
+            continue
+        decl = PT.declared_in(os.path.join(world.records, r["table"])) if r["table"] not in world.sources else \
+            ast.literal_eval(next(n.value for n in ast.parse(world.sources[r["table"]]).body if isinstance(n, ast.Assign)
+                                  and any(getattr(t, "id", "") == "PDFTEXT" for t in n.targets)))
+        pdfs = [(p, o) for p, o in sorted(r["pairs"]) if p.endswith(".pdf")]
+        if not pdfs:
+            bad.append((where, "no PDF reaches it"))
+        for p, o in pdfs:
+            if PT.tag(list(o)) not in {PT.tag(x) for x in decl.get(p, [])}:
+                bad.append((where, "%s with %s is not declared in %s's PDFTEXT" % (p, " ".join(o) or "(no options)", r["table"])))
+    return bad
+
+
+def _outside_callers(world, listed):
+    """{script: [calls]} for every records script outside `listed` that calls a reader function of a listed script through a name
+    standing for it (the scripts naming a listed script's stem are parsed; the decision is by the parse)."""
+    readers = world.readers()
+    stems = {os.path.splitext(os.path.basename(x))[0] for x in listed}
+    found = {}
+    for dp, _dn, fn in os.walk(world.records):
+        rd = os.path.relpath(dp, world.records).replace(os.sep, "/")
+        if rd.split("/")[0] == "_lib" or "inputs" in rd.split("/"):
+            continue
+        for f in sorted(fn):
+            rel = posixpath.normpath(posixpath.join(rd, f))
+            if not f.endswith(".py") or rel in listed:
+                continue
+            src = open(os.path.join(dp, f), encoding="utf-8", errors="replace").read()
+            if not any(s in src for s in stems):
+                continue
+            try:
+                m = _Script(world, rel)
+            except SyntaxError:
+                continue
+            for n in ast.walk(m.tree):
+                if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and isinstance(n.func.value, ast.Name):
+                    a = m.alias(n.func.value.id)
+                    if a in listed and (a, n.func.attr) in readers:
+                        found.setdefault(rel, []).append("%s.%s() at line %d" % (a, n.func.attr, n.lineno))
+    return found
+
+
+FIX_A = '''import importlib.util, os
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
+PDFTEXT = {"v2/vendor/fx/one.pdf": [["-layout"]], "v2/vendor/fx/two.pdf": [["-layout", "-f", "4", "-l", "4"]]}
+_S = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_S)
+SHEETS = {"one": "v2/vendor/fx/one.pdf", "two": "v2/vendor/fx/two.pdf"}
+def rel(p):
+    return os.path.relpath(p, ROOT)
+def pdftext(path):
+    return PT.pdf_text(ROOT, rel(path), ["-layout"], PDFTEXT, "v2/docs/records/fa")
+def page(key, n=None):
+    cmd = ["-layout"]
+    if n:
+        cmd += ["-f", str(n), "-l", str(n)]
+    return PT.pdf_text(ROOT, SHEETS[key], cmd, PDFTEXT, "v2/docs/records/fa")
+def main():
+    pdftext(os.path.join(ROOT, "v2", "vendor", "fx", "one.pdf"))
+    for n in (4,):
+        page("two", n)
+'''
+FIX_B = '''import os, sys
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
+sys.path.insert(0, HERE)
+import a as G
+def main():
+    return G.pdftext(os.path.join(ROOT, "v2", "vendor", "fx", "%s.pdf"))
+'''
+
+
+def t_the_static_check_finds_an_undeclared_extraction_on_fixtures():
+    """W55: the static check on a fixture records tree: a script whose own reads are declared passes; another script calling the
+    first one's wrapper with a sheet its table lacks (l8p_c4's gap) fails, and so does a page its table lacks; a script outside the
+    walked list calling that wrapper is found by the scan."""
+    PT = _pt()
+    d = tempfile.mkdtemp(prefix="w55-s-")
+    try:
+        rec = os.path.join(d, "v2", "docs", "records")
+        _put(d, "v2/docs/records/fa/a.py", FIX_A.encode())
+        w = _World(rec)
+        w.walk(["fa/a.py"])
+        assert sorted(w.sites) == [("fa/a.py", 11), ("fa/a.py", 16)], sorted(w.sites)
+        assert _undeclared(w, PT) == [], _undeclared(w, PT)
+        assert w.sites[("fa/a.py", 16)]["pairs"] == {("v2/vendor/fx/two.pdf", ("-layout", "-f", "4", "-l", "4"))}
+        _put(d, "v2/docs/records/fa/b.py", (FIX_B % "one").encode())         # through a's wrapper, declared: passes
+        w = _World(rec)
+        w.walk(["fa/a.py", "fa/b.py"])
+        assert _undeclared(w, PT) == [], _undeclared(w, PT)
+        _put(d, "v2/docs/records/fa/b.py", (FIX_B % "three").encode())       # through a's wrapper, undeclared: l8p_c4's gap
+        w = _World(rec)
+        w.walk(["fa/a.py", "fa/b.py"])
+        assert _undeclared(w, PT) == [("fa/a.py:11", "v2/vendor/fx/three.pdf with -layout is not declared in fa/a.py's PDFTEXT")], \
+            _undeclared(w, PT)
+        w = _World(rec)
+        w.walk(["fa/a.py"])
+        assert _outside_callers(w, ["fa/a.py"]) == {"fa/b.py": ["fa/a.py.pdftext() at line 7"]}, _outside_callers(w, ["fa/a.py"])
+        os.remove(os.path.join(rec, "fa", "b.py"))
+        w = _World(rec, {"fa/a.py": FIX_A.replace('page("two", n)', 'page("two", n + 1)')})
+        w.walk(["fa/a.py"])                                                    # page 5 asked, page 4 declared
+        assert _undeclared(w, PT) == [("fa/a.py:16", "v2/vendor/fx/two.pdf with -layout -f 5 -l 5 is not declared in fa/a.py's "
+                                                     "PDFTEXT")], _undeclared(w, PT)
+        w = _World(rec, {"fa/a.py": FIX_A.replace('page("two", n)', 'page("two", UNBOUND)')})
+        w.walk(["fa/a.py"])                                                    # an argument the walk cannot read: unresolved
+        assert [b[0] for b in _undeclared(w, PT)] == ["fa/a.py:16"], _undeclared(w, PT)
+    finally:
+        shutil.rmtree(d)
+
+
+def t_every_extraction_site_the_converted_generators_reach_is_declared():
+    """W55 (W53's finding): every helper call the converted generators and READERS reach, its PDF and options resolved statically,
+    is declared in the PDFTEXT table it names; every helper call of theirs is reached; no records script outside the two lists calls
+    a reader function of theirs; each READER still reaches one and runs neither tool itself."""
+    need(HELPER, "the helper")
+    PT = _pt()
+    rec = os.path.join(ROOT, "v2", "docs", "records")
+    listed = list(CONVERTED) + list(READERS)
+    for rel in READERS:
+        tree = ast.parse(open(need(os.path.join(rec, rel), "a reader"), encoding="utf-8").read())
+        assert not _pdftotext_calls(tree) and not _tool_calls(tree, "pdftocairo"), "%s runs pdftotext or pdftocairo" % rel
+    w = _World(rec)
+    sites = w.walk(listed)
+    bad = _undeclared(w, PT)
+    assert not bad, "extraction sites not declared in the table they name (%d): %s" % (len(bad), bad[:6])
+    holding = {r for (r, _l) in sites}
+    assert set(CONVERTED) <= holding, "converted generators holding no extraction site: %s" % sorted(set(CONVERTED) - holding)
+    assert len(sites) >= 37, "%d sites read (37 on 6 October 2026)" % len(sites)
+    out = _outside_callers(w, listed)
+    assert not out, "records scripts that reach a converted generator's reader and are in neither list: %s" % out
+    readers = w.readers()
+    for rel in READERS:
+        assert any(r == rel for r, _f in readers), "%s no longer reaches a reader (drop it from READERS)" % rel
+
+
+def t_the_static_check_catches_the_l8p_c4_gap_at_its_base():
+    """W55: the mutation. With fnd/w34pdftext's l8p_c4.py before W55 (it read the BZT52C sheet through l8p_guard.pdftext()), the
+    check names that site as undeclared in l8p_guard's table, as the run refused it (W53)."""
+    PT = _pt()
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/records/l8p/l8p_c4.py" % GAP_BASE], capture_output=True)
+    if r.returncode != 0:
+        raise Skip("the commit %s is not in this checkout" % GAP_BASE)
+    w = _World(os.path.join(ROOT, "v2", "docs", "records"), {"l8p/l8p_c4.py": r.stdout.decode("utf-8")})
+    w.walk(list(CONVERTED) + list(READERS))
+    bad = _undeclared(w, PT)
+    assert ("l8p/l8p_guard.py:102", "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf with -layout is not declared in "
+            "l8p/l8p_guard.py's PDFTEXT") in bad, bad
+    assert len(bad) == 1, bad
+
+
+def t_every_pdftext_declaration_has_its_text():
+    """W55: every extraction any PDFTEXT table under v2/docs/records declares (not only the converted generators' folders) has its
+    text and sidecar beside the PDF, taken from the PDF present: committed for a committed sheet; for a held-back sheet when the
+    sheet is installed on this host (its text is ignored by .gitignore, as the sheet is)."""
+    need(RETAKE, "the re-take script")
+    PT = _pt()
+    RT = _load("t_pdftext_retake_w55", RETAKE)
+    rec_root = os.path.join(ROOT, "v2", "docs", "records")
+    tracked = None
+    r = subprocess.run(["git", "-C", ROOT, "ls-files", "v2/vendor"], capture_output=True, text=True)
+    if r.returncode == 0:
+        tracked = set(r.stdout.splitlines())
+    seen = held_absent = 0
+    for x in sorted(os.listdir(rec_root)):
+        rd = os.path.join(rec_root, x)
+        if not os.path.isdir(rd) or not any(n.endswith(".py") for n in os.listdir(rd)):
+            continue
+        for pdf, opts in sorted(RT.tables(rd).items()):
+            if not os.path.isfile(os.path.join(ROOT, pdf)):
+                assert PT.held(pdf), "%s (declared in %s) is a committed sheet and is absent" % (pdf, x)
+                held_absent += 1
+                continue
+            for o in opts:
+                t = PT.text_path(pdf, o)
+                assert os.path.isfile(os.path.join(ROOT, t)) and os.path.isfile(os.path.join(ROOT, PT.meta_path(t))), \
+                    "%s, declared in %s, is absent: %s" % (t, x, PT.retake_command("v2/docs/records/" + x))
+                m = json.load(open(os.path.join(ROOT, PT.meta_path(t)), encoding="utf-8"))
+                assert m["pdf_sha256"] == _sha(open(os.path.join(ROOT, pdf), "rb").read()), "%s is not from the present %s" % (t, pdf)
+                if tracked is not None:
+                    assert (t in tracked) == (not PT.held(pdf)), "%s: committed %s, held back %s" % (t, t in tracked, PT.held(pdf))
+                seen += 1
+    assert seen, "no declaration checked"
+
+
+def t_l8p_c4_runs_with_pdftotext_and_pdftocairo_refused():
+    """W55: the generator W53 saw refuse, run with both tools refusing first on PATH: exit 0, no call, its three text lines
+    printed, its record folder unchanged (the output into a temporary file, never l8p_c4.out)."""
+    rel = "l8p/l8p_c4.py"
+    need(os.path.join(ROOT, "v2", "docs", "records", rel), "l8p_c4.py")
+    why = _held_ready(rel)
+    if why:
+        raise Skip("%s: %s" % (rel, why))
+    d = tempfile.mkdtemp(prefix="w55-r-")
+    try:
+        env, log = _tools_bin(d)
+        before = _status(rel)
+        rc, out, err = _run_generator(rel, env, d)
+        assert rc == 0, "%s exited %d with both tools refused: %s" % (rel, rc, err.strip()[-400:])
+        assert _calls(log) == [], "%s called %s" % (rel, _calls(log))
+        assert not _text_lines_printed(rel, out) and len(_declared_inputs(rel)) == 3, "%s does not print its three text lines" % rel
+        assert _status(rel) == before, "%s changed its record folder" % rel
+    finally:
+        shutil.rmtree(d)
+
+
+def _declared_inputs(rel):
+    PT = _pt()
+    return PT.inputs(ROOT, PT.declared_in(os.path.join(ROOT, "v2", "docs", "records", rel)))

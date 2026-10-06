@@ -24,12 +24,15 @@ record's, W36's finding F-P2, restated by W37 on 6 October 2026), then the re-ta
 
 THE INVENTORY (every .py under v2/docs/records/ that mentions pdftotext on the base aed4bd23: 63 files, classified; the table with the
 PDFs each reads, committed or held back, and the reasons is PDFTEXT-INVENTORY.md beside this file):
-  RUN-TIME EXTRACTION, CONVERTED (25; the generator reads the committed text through this module):
+  RUN-TIME EXTRACTION, CONVERTED (25 by W34, 1 by W55; the generator reads the committed text through this module):
     the brief's six records: efuse/efuse_check.py; l5r2/l5r2_interfaces.py; l8r2/l8r2_drafts.py, l8r2_gndret.py, l8r2_p0.py;
     l4e13/l4e13_panel.py (its own pages; the replay it runs still extracts); l4e11/l4e11_power.py; l4e9/l4e9_power_path.py;
     then l4e10/l4e10_cell_thermal.py, l4e12/l4e12_thermal.py, l7pwr/l7pwr_fans_th1.py, l7r2/l7r2_items.py, l8p/l8p_drafts.py,
     l8p/l8p_guard.py, l9pwr/l9pwr_budget.py, l9stk/l9stk_copper.py, l9stk/l9stk_protection.py, l9t5/l9t5_a1.py, l9t5_case.py,
     l9t5_cm5.py, l9t5_drafts.py, l9t5_f01.py, l9t5_paloop.py, l9t5_t10.py, l4e8/ripple_dense.py (its own pages; r11dep still extracts)
+    W55 (6 October 2026): l8p/l8p_c4.py, which named no pdftotext at the base but ran it through l8p_guard.pdftext(), so the census
+    by name missed it; it now declares and reads its three sheets with its own table (test_pdftext_input's static check finds such
+    a read, W53's finding)
   RUN-TIME EXTRACTION, NOT CONVERTED (15): the l4e7 KEY group (l4e7/l4e7_stage_settings.py, l4e/l4e_replay.py, l4e5/
     l4e5_source_control.py, r11dep/r11_dep.py, l3plane/energy_basis.py, l3plane/vbus20_range.py); the accepted Layer 3 records
     (l3batt/tablet.py, l3feas/hf_wab.py, l3feas/solar_interface.py, l3plane/curve_readings.py, l3plane/weather_basis.py); the
