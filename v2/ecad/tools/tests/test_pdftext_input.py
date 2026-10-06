@@ -1884,7 +1884,8 @@ def t_every_extraction_a_test_reaches_is_declared():
     assert not bad, "extraction sites a test reaches that their table does not declare (%d): %s" % (len(bad), bad[:6])
     readers = w.readers()
     asked = {(tm, line) for tm, line, r, f in w.calls if (r, f) in readers}
-    assert len(asked) >= 40, "%d test calls of a reader function (46 on 6 October 2026)" % len(asked)
+    assert len(asked) >= 50, "%d test calls of a reader function (54 on 6 October 2026)" % len(asked)
+    assert len(w.sites) >= 41, "%d sites read (41 on 6 October 2026: section 8's 37 and the four test-side reads)" % len(w.sites)
     fan = {pair for (r, _l), rec_ in w.sites.items() if r == TPFX + "test_l8r2.py" and rec_["table"] == "l8r2/l8r2_pdftext.py"
            for pair in rec_["pairs"] if "/held/sanyo-denki-san-ace-" in pair[0]}
     assert len(fan) == 4, "test_l8r2's four San Ace pages are not read through l8r2_pdftext.py's table: %s" % sorted(fan)

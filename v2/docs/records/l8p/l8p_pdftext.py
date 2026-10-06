@@ -7,7 +7,8 @@ A module's table holds its own reads (PDFTEXT-INVENTORY.md section 2; W55 declin
 it, because that script's output would then print an input it never reads), so these reads are declared here, apart from the
 generators' tables: the record's outputs and its generators are unchanged. The test reads each text through
 v2/docs/records/_lib/pdftext.py with this table (PT.declared_in), so the reading no longer depends on the host's poppler, the defect
-W34 corrected in the generators (pdftext.py's header). The sheet is held back by its notice (l8p's fetch_held_back.py), so its text is held back beside it, under held/pdftext/. Re-take after a sheet changes:
+W34 corrected in the generators (pdftext.py's header). The sheet is held back by its notice (l8p's fetch_held_back.py), so its text is
+held back beside it, under held/pdftext/. Re-take after a sheet changes:
     python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p
 """
 PDFTEXT = {

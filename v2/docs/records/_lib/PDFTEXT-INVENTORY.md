@@ -4,8 +4,9 @@ DONE: the enumeration (section 2), the location decision (section 3), the helper
 converted (section 4: the brief's six records, then every remaining run-time caller outside section 5); W36's findings applied by W37
 (section 7: F-P1, F-P2, F-R1, F-R2, F-K5 corrected; F-C1 stated; the integration order of F-K1 to F-K3 in section 6); W53's finding
 closed by W55 (section 8: l8p_c4.py's undeclared read declared, every converted generator and reader run with the tools refused, the
-static declaration check). NOT DONE: section 5's 15 scripts, each for its stated reason. NEXT: the coordinator's adoption in set 32
-(sections 6 and 8).
+static declaration check); W66's finding closed by W81 (section 9: the tests' own reads declared in declaration-only tables, the census of
+every test module's extraction routes, the static check extended to the tests). NOT DONE: section 5's 15 scripts, each for its stated
+reason; the tools layer's own pdftotext (section 9, D-W81-3). NEXT: the coordinator's adoption in set 32 (sections 6, 8 and 9).
 
 Author W34 (tooling, inside the records), 6 October 2026 (Europe/Amsterdam), branch `fnd/w34pdftext` from `aed4bd23` (set 31's
 regenerated lineage). This branch changes HOW a generator obtains a maker's PDF text, never WHAT it computes from it: no verdict, figure,
@@ -372,3 +373,68 @@ is), and l8p_c4 run with both tools refused.
   re-pin, so `l8p_c4` is regenerated and that pin moved BEFORE the L4 pin chain (with W53's fnd/s32attr merged first, since its text
   edit moves the same output).
 - `test_l8p`'s comparison of `l8p_c4.out` with a fresh run fails on this branch until that regeneration (the adoption boundary).
+
+## 9. W81's correction: the reads the TESTS make (6 October 2026; W66's full dry run of set 32, `_runs/int32/README.md` 9b)
+
+**The gap.** Set 32's full dry run stopped on a test, not a generator: `test_l8p.py:665` `t = m.pdftext(m.TDK_SHEET)` refused,
+"pdftext: v2/vendor/battery/held/tdk-ptc-limit-sensors-smd-superior-2019-08.pdf with -layout is not declared in
+v2/docs/records/l8p's PDFTEXT table; declare it, then python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l8p; refusing"
+(SystemExit 2). The test read TDK's held sheet through l8p_drafts' wrapper, whose table does not declare it because l8p_drafts does
+not read it. Section 8's static check walked the 37 extraction sites of the generators and READERS and never a test.
+
+**The census of every test module (`v2/ecad/tools/tests/test_*.py`, read with ast, never imported or run; tip `b397aada` plus
+W81's changes).** (1) Calls of a records reader: the walk of section 8 with each test module as a caller (a test's name standing for
+a records script through its own loaders, its arguments carried into the wrappers, each pair kept with the test line that asked):
+54 test calls of a reader function (main and compute among them) in 15 test modules, reaching 27 of section 8's 37 sites; every pair
+a test asks for was declared but TDK's at test_l8p.py:665. With W81's changes the walk reads 41 sites: the 37 and the four test-side
+reads W81 wrote (test_l3r5.py:481, test_l5r4.py:131, test_l8p.py:667, test_l8r2.py:457), each against the table it names. (2) The tests' own process calls of pdftotext: test_l3r5.py:475 (two Samsung 35E sheets,
+-layout), test_l5r4.py:126 (five RP2040 datasheet pages, plain mode, one page each), test_l8r2.py:454 (four held San Ace pages,
+-layout), test_energy_chain.py:256 and test_rails_census.py:98 (the tools layer), and three in test_pdftext_input.py (its own
+fixtures). (3) Calls of a function that runs a tool itself: in v2/ecad/tools (edge_length.py from test_edge_length, part_identities.py
+from test_l6pwr, test_l6r2 and test_part_identities, pack_protection.py from test_pack_protection); in the records, l4e9's and l4e11's
+pinned pdftocairo sites (test_l4e9, test_l4e11) and the l4e7 KEY group's `l4e7_stage_settings.results()` (test_l4e7.py:74).
+
+**The correction (each a SESSION decision under the owner's standing rule of 26 September 2026).**
+- *D-W81-1, where a test's read is declared.* In a declaration-only module of the test's record, `<record>/<record>_pdftext.py`
+  (a docstring and a `PDFTEXT` literal; nothing runs): `l8p/l8p_pdftext.py` (TDK's held sheet, -layout), `l8r2/l8r2_pdftext.py` (the
+  four held San Ace pages, -layout), `l5r4/l5r4_pdftext.py` (the RP2040 datasheet's pages 160, 164, 169, 545 and 549, one each). The
+  re-take merges every table of a record's folder, so these are record l8p's, l8r2's and l5r4's PDFTEXT tables; the test reads through
+  the helper with `PT.declared_in(<that module>)`. Reason: a module's table holds its own reads (section 2), the rule section 8 took
+  when it declined to put l8p_c4's read in l8p_guard's table; the generators and their outputs stay exactly as at `b397aada`
+  (`git diff b397aada` is empty for every generator), so W81 owes no regeneration. W81's first checkpoints (2184a968, 877d81c5) took
+  the other route, the sheets in l8p_drafts' and l8r2_drafts' tables, and da81447d reverted it: those outputs would print inputs the
+  generators never read, and l8r2_drafts' input loop (`h[:16]` of `PT.inputs`) would fail with a TypeError where a held text is
+  absent, while today it runs without the San Ace pages, which it pins by typed sha only. Reversal: move the entries into the
+  generator's table and point the test at the generator's wrapper (the outputs then gain the text lines).
+- *D-W81-2, the tests' own pdftotext reads of the records.* test_l8r2's four pages and test_l5r4's five pages read their committed
+  extractions through the new tables; test_l3r5 reads the two Samsung 35E texts record l4e10 already declares (`l4e10_cell_thermal.py`,
+  no new text); none of the three skips for a missing pdftotext any more. Reason: the same host dependence W34 corrected in the
+  generators. Reversal: the subprocess lines as at `b397aada`.
+- *D-W81-3, left as KNOWN with their reasons (test_pdftext_input's KNOWN_DIRECT, KNOWN_TOOLVIA, KNOWN_RECVIA).* The tools layer
+  (v2/ecad/tools: energy_chain's ATOF guard, the rails census, edge_length, part_identities, pack_protection) runs pdftotext in its own
+  code; it has no PDFTEXT table and this helper is the records' reader, so its conversion is a tooling task of its own, not widened into
+  here (the next action: the coordinator's queue). The l4e7 KEY group is not converted by design (section 5). test_pdftext_input's
+  three calls are its fixtures.
+
+**The texts.** Held back with their sheets, never committed (`.gitignore`): `v2/vendor/battery/held/pdftext/tdk-ptc-limit-sensors-
+smd-superior-2019-08.layout.txt` (da34b56f8b3724cc, 68740 bytes) and `v2/vendor/fans/held/pdftext/sanyo-denki-san-ace-c1152b001-2510-
+p0362.layout.txt`, `-p0616`, `-p0623`, `-p0633` (f8e32f5d96c8e8e0 11602, a69f35dc9ad99406 1911, f31254f30266afb1 6289, f0a8bf52c7d7a652
+4800 bytes). Committed with their sidecars: `v2/vendor/rp2040/pdftext/rpi-rp2040-datasheet.plain.p160.txt`, `.p164`, `.p169`, `.p545`,
+`.p549` (6ec066f2e5c703eb, ebe0618549a5e398, 4571d3998f6224d5, ee060001b01fbe9d, ac446711149ec8ea). Each re-take printed WRITTEN, then
+UNCHANGED on a second run (pdftotext 22.12.0, poppler-data 0.4.12-1, the runner). This worktree now holds 57 held texts (52 before)
+and 176 committed (171 before). `pdftext.FETCH` names l8p's and l8r2's fetch scripts for the five held sheets.
+
+**The check (`test_pdftext_input`, predicates (n) to (p)).** (n) On fixtures: a test module reading through a records wrapper and
+through the helper with a table named by `PT.declared_in()`; declared reads pass; an undeclared sheet through the wrapper and an
+undeclared mode through the helper fail, each naming the site and the test line; section 8's walk alone sees neither; the census finds
+an argument list, a shell string and a list kept in a variable, not `shutil.which`'s argument. (o) On this tree: no undeclared pair, no
+unreached helper call in a test, test_l8r2's four pages read through l8r2_pdftext.py's table; the mutation without l8p_pdftext.py's TDK
+line names test_l8p's read with TDK's sheet. (p) The census equals KNOWN_DIRECT, KNOWN_TOOLVIA and KNOWN_RECVIA, and every other
+records function a test calls runs only l4e9's and l4e11's pinned pdftocairo. What it cannot see: a reader called from a function
+nested inside a test (a helper call there is reported unreached; a wrapper call is not), a module bound through another shape
+(`importlib.import_module`, `from X import f`), and a generator run as a child process (its own reads, section 8's check).
+
+**For the coordinator at set 32.** No output changes and no line of `l4e11_power.out` or its citations is touched. `chain.sh` step b
+counts held texts: pass `EXPECT_TEXTS=57` with this branch's new tip, and add `l8r2` (and `l5r4`, whose texts are committed) to its
+fallback re-take list beside l8p. `test_l8p`'s comparisons of its outputs with fresh runs still fail on this branch until the
+regeneration (the adoption boundary of sections 6 and 8).
