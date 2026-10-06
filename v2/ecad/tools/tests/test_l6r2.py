@@ -223,6 +223,25 @@ def t_each_draft_commutes_with_every_other_pending_draft_of_its_generator():
     assert m.change_chain("a") and m.change_chain("e"), "the change list names no draft of boards A and E"
 
 
+def t_the_together_composition_names_each_draft_once_and_every_declaration_draft_commutes_with_all_the_others():
+    """Regression for W16's review of set 30's commit 2b, finding 1: board D's ptt draft is in STANDALONE and, since R-239, in the change
+    list's chain, so the together list applied it twice and the commutation read "refused: already applied" for a draft that commutes.
+    The composition list names each draft once (first occurrence kept), and no "the other drafts alone" row of the output reads refused."""
+    m = _M()
+    assert m._once(["x", "y", "x", "z", "y"]) == ["x", "y", "z"]
+    for b, standalone in m.STANDALONE.items():
+        together = m._once(m.change_chain(b) + standalone)
+        assert len(together) == len(set(together)), b
+        # the defect's shape: a draft in both lists appears once in the composition
+        assert all(together.count(d) == 1 for d in standalone), (b, standalone)
+    out = open(os.path.join(REC, "l6r2_passives.out"), encoding="utf-8").read().split("\n")
+    rows = [l for l in out if " then " in l and "commutes with this draft" in l]
+    assert rows, "the output carries no together row"
+    # the defect's rendering: "the other drafts alone: <draft> refused: ... already applied" in place of the together row
+    bad = [l.strip()[:160] for l in out if "the other drafts alone" in l and "refused" in l]
+    assert not bad, bad
+
+
 def t_the_identity_block_is_the_records_render_and_its_decoded_bindings_hold():
     import yaml
     m = _M()

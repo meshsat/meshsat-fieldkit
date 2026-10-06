@@ -95,6 +95,16 @@ KICAD_XAL = REC + "/inputs/kicad-xal-footprints-9.0.9.json"
 XAL_DOC = {"XAL40": "v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf", "XAL60": "v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf"}
 SERIES_LAND = {"XAL40": ("0,98", "3,4", "2,37"), "XAL60": ("1,43", "5,50", "4,04")}
 STANDALONE = {"a": [D8 + "/apply_gen_sch_a_mainpb.py"], "e": [D8 + "/apply_gen_sch_e_pod.py"], "d": [D8 + "/apply_gen_sch_d_ptt.py"]}
+
+
+def _once(paths):
+    """The composition list with each draft once, first occurrence kept (set 30, W16's review of 2b, finding 1: board D's ptt draft is in
+    STANDALONE and in the change list's chain since R-239, so the together list applied it twice and the commutation read 'refused:
+    already applied' for a draft that commutes)."""
+    seen = set(); out = []
+    for p in paths:
+        if p not in seen: seen.add(p); out.append(p)
+    return out
 D8_STYLE = (D8 + "/",)    # these take <generator> <netlist> and write unless --check
 
 GENERIC_SEMI = re.compile(r"^(BAT54[A-Z]*|1N4148W?|SMBJ\d+(?:\.\d+)?C?A|SMAJ\d+(?:\.\d+)?C?A|BZT52C\d+(?:V\d)?)\b")
@@ -724,7 +734,7 @@ def compose_land(board):
         return new if st == "OK" else None
     own = REC + "/apply_gen_sch_%s_lcsc.py" % board
     chain = change_chain(board)
-    together = chain + STANDALONE.get(board, []) + [own]
+    together = _once(chain + STANDALONE.get(board, []) + [own])
     return commute(board, mine, extra=[[own]] + ([together] if together != [own] else []))
 
 
@@ -739,7 +749,7 @@ def compose_intent(board):
         return new if st == "OK" else None
     own = [REC + "/apply_gen_sch_%s_lcsc.py" % board] + ([REC + "/apply_gen_sch_%s_xal_land.py" % board] if os.path.exists(os.path.join(HERE, "apply_gen_sch_%s_xal_land.py" % board)) else [])
     chain = change_chain(board)
-    together = chain + STANDALONE.get(board, []) + own
+    together = _once(chain + STANDALONE.get(board, []) + own)
     return commute(board, mine, extra=[[x] for x in own] + ([together] if together != own[:1] else []))
 
 
