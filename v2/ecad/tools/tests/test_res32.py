@@ -10,6 +10,14 @@ runner pass reads the tool and compares), and set 31's promoted revision is the 
 that set 30's adopted record classes REVIEWED-INPUT CHANGED; the chain's pinned merges are the five ranges' branches, each pin inside
 its range (fnd/res32's own later commits are placeholder row 31's).
 
+W78's restatement (6 October 2026, from 21:03 CEST, on W75's independent read and the coordinator's ruling on its F2): the dates are
+git's AUTHOR dates (`%ad`, the one that matches git on all 30 rows; row 2's committer date differs, W75's F5) and the record says so;
+row 15 is REVIEWED-INPUT CHANGED by the ruling (it quotes row 14's restated words into two test files of cx46's delta), so a carried
+change may name this table's own REVIEWED-INPUT CHANGED row as its source (row 15: row 14) as well as set 30's; the two wider readings'
+totals are recomputed from the table and the rows they name (W75's F3); every PROMOTED line but the BASE row names set 32 (F9); row 31
+carries no token (F11); the record's statement of the fill tool's template counts equals the tokens in the two files; the 21 are file
+touches and the 16 distinct files (F8); the fill tool read is `_bin/fill_res.py` (W76), its TOK and its set 32 file list read with ast.
+
 What fails here: a commit of set 32's five branch ranges missing, doubled or out of order; a short sha that is not its full sha's prefix; a
 date, subject or file count that is not git's; a class outside W39's fixed set; a row that touches a file cx46 read without the words
 "UNREVIEWED since cx46"; a REVIEWED-INPUT CHANGED row that touches no file of the reviewed tree (present at 4d0ff8a2), or one that
@@ -18,15 +26,18 @@ set 30's line 11 verbatim (`eff28be3:v2/docs/records/int30/CLASSIFICATION.md:11`
 reading A), or that drops set 30's row 44 as the precedent, the wider reading's answer or the placeholder rows' note; summary counts, per-branch counts or the bound statement's
 numbers that are not the table's; a count typed in the records that is not git's; a commit named that is in no history this record
 reads; a quote that is not on its cited line at its revision; the three claims not quoted verbatim from the assessment; a placeholder
-outside the five tokens fill_res31.py fills; an em or en dash. Each predicate is also run on a mutant it must refuse.
+outside the five tokens fill_res.py fills; a PROMOTED line other than the BASE row that does not name set 32; a token in row 31; a
+template count that is not the files'; a wider reading's totals that are not the table's; an em or en dash. Each predicate is also run on
+a mutant it must refuse.
 
 The coordinator's files (`<worktrees>/_runs`, outside the repository) are read by ONE test, which raises Skip where they are absent (a
-rented box): run it in the runner pass (the record's section 8); so does the fill tool's test. The five branch tips below are the ones
+rented box): run it in the runner pass (the record's section 8); so does the fill tool's test (`<worktrees>/_bin/fill_res.py`). The five branch tips below are the ones
 the record read; a commit a branch gains later is outside these ranges, so the coordinator adds its row and moves the tip here at the
 adoption.
 
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list`, `git merge-base`, `git ls-tree` and `git cat-file`;
 nothing is written. No pytest is needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
+import ast
 import os
 import re
 import subprocess
@@ -54,9 +65,12 @@ REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
-DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res31.py's TOK, INTEGRATED apart
+DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res.py's TOK (W76), INTEGRATED apart
 # set 31's record draft, named by the record, on fnd/res31: in this branch's history only after set 31's adoption
-OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)"}
+OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)",
+           # W78 (W75's F2 and F4): set 31's classification at W75's read and set 31's candidate, after this record's lineage tip
+           "f535bbcabab190f2489e168c09caa45fcc6e6d31": "fnd/res31 at W75's read, set 31's CLASSIFICATION with its caveat on row 44",
+           "d0e283aa52ceb7f303358862b539161b721475e5": "set 31's candidate, l4e7_p0sol.out's paragraph 0a and its KNOWN ITEM"}
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
@@ -167,7 +181,9 @@ def _classes(cells):
 
 
 def _placeholder_row(cells):
-    return bool(re.match(r"`__[A-Z0-9_]+__`$", cells[1]))
+    """A row of the integration's commits: its sha cell a token the fill fills, or (row 31, several commits; W75's F11) the words
+    'not determined'."""
+    return bool(re.match(r"`__[A-Z0-9_]+__`$", cells[1])) or cells[1] == "not determined"
 
 
 def _real(text):
@@ -202,6 +218,23 @@ def p_placeholders(texts):
     s31 = [l for l in texts[RESULT].split("\n") if "__PROMOTED__" in l and "set 31's promoted revision" in l]
     if len(base) != 1 or "`__PROMOTED__`" not in base[0] or s31 != base:
         bad.append("set 31's promoted revision is not section 1's BASE row alone as the PROMOTED token")
+    # W78 (W75's F9): every other PROMOTED line names set 32, the rule RESULT's paragraph "Placeholders" states for the fill by its line
+    for l in texts[RESULT].split("\n"):
+        if "__PROMOTED__" in l and not l.startswith("| BASE ") and "set 32" not in l:
+            bad.append("a PROMOTED line other than the BASE row does not name set 32: %r" % l[:80])
+    # W78 (W75's F11): row 31 stands for several commits that do not exist yet, so no single value a fill could type: no token in it
+    for c in _rows(texts[CLASS]):
+        if c[0] == "31" and any(PH.search(x) for x in c):
+            bad.append("row 31 carries a token")
+    # W78: section 8's statement of the fill tool's template rows equals the tokens in the two files (one row per occurrence, no KEEP)
+    flat = " ".join(texts[RESULT].split())
+    m = re.search(r"template rows are (\d+) \(RESULT\.md (\d+), CLASSIFICATION\.md (\d+); GATE (\d+), REKEY (\d+), PROMOTED (\d+), "
+                  r"CANDIDATE (\d+), ADOPTION (\d+); no KEEP row\)", flat)
+    cr, cc = Counter(PH.findall(texts[RESULT])), Counter(PH.findall(texts[CLASS]))
+    al = cr + cc
+    want = (sum(al.values()), sum(cr.values()), sum(cc.values())) + tuple(al["__%s__" % k] for k in ("GATE", "REKEY", "PROMOTED", "CANDIDATE", "ADOPTION"))
+    if not m or tuple(int(x) for x in m.groups()) != want:
+        bad.append("section 8's template rows are not the files' tokens %s" % (want,))
     return bad
 
 
@@ -309,7 +342,8 @@ def p_summary(text):
         if want not in flat:
             bad.append("the per-branch line does not read %r" % want)
     touch = [c for c in rows if "UNREVIEWED since cx46" in c[7]]
-    m = re.search(r"\*\*The rows that touch a file cx46 read: (\d+), all UNREVIEWED since cx46\.\*\* In table order: (.*?); (\d+) files", flat)
+    # W78 (W75's F8): the 21 are file touches (one per reviewed file per row), the 16 distinct files are p_counts' (git's)
+    m = re.search(r"\*\*The rows that touch a file cx46 read: (\d+), all UNREVIEWED since cx46\.\*\* In table order: (.*?); (\d+) file touches ", flat)
     nfiles = 0
     if not m or int(m.group(1)) != len(touch):
         bad.append("the touching-rows line is not the table's %d" % len(touch))
@@ -333,14 +367,18 @@ def p_summary(text):
         bad.append("the bound statement does not say that none is REVIEWED-INPUT CHANGED")
     if len(ri) == 1 and ("The one REVIEWED-INPUT CHANGED row is" not in flat or "(row %s," % ri[0][0] not in flat):
         bad.append("the bound statement does not name the one REVIEWED-INPUT CHANGED row %s" % ri[0][0])
-    if "%d of the %d touch a file cx46 read (%d files:" % (len(touch), len(rows), nfiles) not in flat:
-        bad.append("the bound statement's touch counts are not the table's (%d of %d, %d files)" % (len(touch), len(rows), nfiles))
+    words = {2: "two", 3: "three", 4: "four"}
+    if len(ri) > 1 and ("The %s REVIEWED-INPUT CHANGED rows are" % words.get(len(ri), str(len(ri))) not in flat
+                        or any("(row %s," % c[0] not in flat for c in ri)):
+        bad.append("the bound statement does not name the REVIEWED-INPUT CHANGED rows %s" % [c[0] for c in ri])
+    if "%d of the %d touch a file cx46 read (%d file touches," % (len(touch), len(rows), nfiles) not in flat:
+        bad.append("the bound statement's touch counts are not the table's (%d of %d, %d file touches)" % (len(touch), len(rows), nfiles))
     return bad
 
 def p_counts(texts, order):
     """Every count both records type about git, recomputed from git over the five ranges."""
     bad = []
-    t = " ".join(texts[CLASS].split())
+    t = " ".join(texts[CLASS].replace("\n> ", "\n").split())    # the bound statement's quote markers dropped (W78)
     r = " ".join(texts[RESULT].split())
     cnt, allf = [], set()
     merges = 0
@@ -374,7 +412,10 @@ def p_counts(texts, order):
                "%d of the five ranges' %d changed files are in that set" % (len(rv), len(allf)),
                "**DONE:** the %d commits of the five branches" % sum(cnt),
                "(%d texts, %d sidecars)" % (len(texts_), len(side)), "The %d vendor files" % len(vend),
-               "each named in its row (%d distinct)" % len(rv)]
+               "each named in its row (%d distinct files)" % len(rv),
+               "(%d file touches, %d distinct files:" % (sum(int(re.search(r"reviewed files it touches \((\d+)\)", c[7]).group(1))
+                                                         for c in touch), len(rv)),
+               "Dates are the author dates (git's `%ad`)"]      # W78 (W75's F5): _order() reads %ad, the date matching git on all 30
     for w in want_c:
         if w not in t:
             bad.append("CLASSIFICATION.md does not read %r (git's numbers)" % w)
@@ -522,20 +563,29 @@ def p_logs(texts, runs):
 
 
 def p_carried(text, s30_lines):
-    """A row classed REVIEWED-INPUT CHANGED for a carried change names set 30's source row, and set 30's adopted record classes that
-    row REVIEWED-INPUT CHANGED (W51's method: a carried word is looked up in the reasons of the REVIEWED-INPUT CHANGED rows)."""
+    """A row classed REVIEWED-INPUT CHANGED for a carried change names its source row, and that row is classed REVIEWED-INPUT CHANGED
+    (W51's method: a carried word is looked up in the reasons of the REVIEWED-INPUT CHANGED rows): set 30's row in set 30's adopted
+    record, or (W78, on the coordinator's ruling on W75's F2: row 15 quotes row 14's words) an earlier row of this table."""
     bad = []
     s30 = {}
     for l in s30_lines:
         m = re.match(r"\| (\d+) \| `([0-9a-f]{8})` / `[0-9a-f]{40}` \|", l)
         if m:
             s30[m.group(1)] = (m.group(2), [c.strip() for c in CELL_SPLIT.split(l.strip())[1:-1]][6])
+    own = {c[0]: c for c in _real(text)}
     for c in _real(text):
         if _classes(c)[0] != RIC or "second sentence" not in c[7]:
             continue
+        m = re.search(r"this table's row (\d+)'s change \(`([0-9a-f]{8})`", c[7])
+        if m:
+            n, sha = m.groups()
+            src = own.get(n)
+            if not src or _sha_cell(src)[0] != sha or _classes(src)[0] != RIC or int(n) >= int(c[0]):
+                bad.append("row %s: this table's row %s (%s) is not an earlier REVIEWED-INPUT CHANGED row of this table" % (c[0], n, sha))
+            continue
         m = re.search(r"set 30's row (\d+)'s change \(`([0-9a-f]{8})`", c[7])
         if not m:
-            bad.append("row %s: no set 30 source row named as `set 30's row N's change (`sha``" % c[0])
+            bad.append("row %s: no source row named as `set 30's row N's change (`sha`` or `this table's row N's change (`sha``" % c[0])
             continue
         n, sha = m.groups()
         if n not in s30 or s30[n][0] != sha or not s30[n][1].startswith(RIC):
@@ -543,10 +593,67 @@ def p_carried(text, s30_lines):
     return bad
 
 
-def _fill_tokens(src):
-    """The names fill_res31.py's TOK pattern fills, read with ast (the re.compile call assigned to TOK)."""
-    import ast
-    for node in ast.walk(ast.parse(src)):
+def _nums(s):
+    """'2, 3, 4, 9, 11, 25, 27 and 29' or '2 to 5, 7, 14 to 16 and 29' as a list of row numbers."""
+    out = []
+    for part in re.split(r",\s*|\s+and\s+", s.strip()):
+        m = re.fullmatch(r"(\d+) to (\d+)", part.strip())
+        if m:
+            out += list(range(int(m.group(1)), int(m.group(2)) + 1))
+        elif re.fullmatch(r"\d+", part.strip()):
+            out.append(int(part))
+        else:
+            raise AssertionError("not a row list: %r" % s)
+    return out
+
+
+def _totals(s):
+    return {k: int(v) for k, v in re.findall(r"(REVIEWED-INPUT CHANGED|RECORD TEXT|GENERATOR DATA \(text\)|TEST|DIGEST RE-PIN|MERGE|TOOLING) (\d+)", s)}
+
+
+def p_alternatives(text, order):
+    """W78 (W75's F3): the two wider readings the rule paragraph states, recomputed from the table: (1) a touched file of cx46's delta
+    alone (the rows saying UNREVIEWED since cx46), (2) any row's change carried into a file present at 4d0ff8a2 (the rows it names, each
+    touching such a file, git's names); each reading's totals by first class are the table's with the named rows moved."""
+    bad = []
+    flat = " ".join(text.split("## 1. ", 1)[0].split())
+    rows = _real(text)
+    first = {int(c[0]): _classes(c)[0] for c in rows}
+    ric = {n for n, k in first.items() if k == RIC}
+
+    def moved(to):
+        f = Counter(RIC if n in to else k for n, k in first.items())
+        return {k: v for k, v in f.items() if v}
+    m = re.search(r"rows ([\d, and]+?) would be REVIEWED-INPUT CHANGED too \((\d+) rows with rows ([\d, and]+?); by first class ([^)]+)\)", flat)
+    touch = {int(c[0]) for c in rows if "UNREVIEWED since cx46" in c[7]}
+    if not m:
+        bad.append("the first wider reading (a touched file of the delta alone) is not stated with its rows and totals")
+    else:
+        added, withr = set(_nums(m.group(1))), set(_nums(m.group(3)))
+        if withr != ric or added & ric or added | ric != touch or int(m.group(2)) != len(touch):
+            bad.append("the first wider reading's rows are not the touching rows %s" % sorted(touch))
+        if _totals(m.group(4)) != moved(touch):
+            bad.append("the first wider reading's totals are not the table's %s" % moved(touch))
+    m = re.search(r"present at `4d0ff8a2` \(rows ([^)]+)\) finds the same (\d+) rows, ([\d, and]+?):", flat)
+    m2 = re.search(r"By first class under that reading: ([^.]+)\.", flat)
+    if not m or not m2:
+        bad.append("the second wider reading (any row's change) is not stated with its rows and totals")
+        return bad
+    by = {int(o[0]): o for o in order}
+    intree = sorted(n for n, o in by.items() if [x for x in o[6] if x in _tree()])
+    named = set(_nums(m.group(3)))
+    if _nums(m.group(1)) != intree:
+        bad.append("the rows touching a file present at 4d0ff8a2 are git's %s, not %s" % (intree, m.group(1)))
+    if int(m.group(2)) != len(named) or not named <= set(intree) or not ric <= named:
+        bad.append("the second wider reading's rows %s are not a set of rows touching the reviewed tree holding the table's %s" % (sorted(named), sorted(ric)))
+    if _totals(m2.group(1)) != moved(named):
+        bad.append("the second wider reading's totals are not the table's %s" % moved(named))
+    return bad
+
+
+def _fill_tokens(tree):
+    """The names fill_res.py's TOK pattern fills, read with ast (the re.compile call assigned to TOK)."""
+    for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "TOK" for x in node.targets):
             pat = node.value.args[0].value
             m = re.fullmatch(r"__\(([A-Z|]+)\)__", pat)
@@ -554,14 +661,57 @@ def _fill_tokens(src):
     return None
 
 
+def _strval(e, consts):
+    if isinstance(e, ast.Constant) and isinstance(e.value, str):
+        return e.value
+    if isinstance(e, ast.Name):
+        return consts.get(e.id)
+    if isinstance(e, ast.BinOp) and isinstance(e.op, ast.Add):
+        a, b = _strval(e.left, consts), _strval(e.right, consts)
+        return a + b if a is not None and b is not None else None
+    return None
+
+
+def _fill_files(tree, key):
+    """fill_res.py's SETS[key]["files"], each entry resolved through the module's string constants (R31, R32 = "...", "...")."""
+    consts = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            tg, v = node.targets[0], node.value
+            if isinstance(tg, ast.Tuple) and isinstance(v, ast.Tuple):
+                for n, x in zip(tg.elts, v.elts):
+                    if isinstance(n, ast.Name) and _strval(x, consts) is not None:
+                        consts[n.id] = _strval(x, consts)
+            elif isinstance(tg, ast.Name) and _strval(v, consts) is not None:
+                consts[tg.id] = _strval(v, consts)
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(isinstance(x, ast.Name) and x.id == "SETS" for x in node.targets) \
+                and isinstance(node.value, ast.Dict):
+            for k, v in zip(node.value.keys, node.value.values):
+                if isinstance(k, ast.Constant) and k.value == key and isinstance(v, ast.Dict):
+                    for k2, v2 in zip(v.keys, v.values):
+                        if isinstance(k2, ast.Constant) and k2.value == "files" and isinstance(v2, ast.List):
+                            return [_strval(e, consts) for e in v2.elts]
+    return None
+
+
 def p_fill(src):
-    names = _fill_tokens(src)
+    """W78 (W75's F11): the fill tool is _bin/fill_res.py (W76); its TOK fills the declared tokens and its set 32 files are this record's."""
+    try:
+        tree = ast.parse(src)
+    except SyntaxError as e:
+        return ["fill_res.py does not parse: %s" % e]
+    names = _fill_tokens(tree)
     if names is None:
-        return ["fill_res31.py has no TOK pattern of the form __(A|B)__"]
+        return ["fill_res.py has no TOK pattern of the form __(A|B)__"]
+    bad = []
     want = set(d.strip("_") for d in DECLARED)
     if names - {"INTEGRATED"} != want:
-        return ["the declared tokens %s are not fill_res31.py's %s (without INTEGRATED)" % (sorted(want), sorted(names))]
-    return []
+        bad.append("the declared tokens %s are not fill_res.py's %s (without INTEGRATED)" % (sorted(want), sorted(names)))
+    files = _fill_files(tree, "32")
+    if files != [RESULT, CLASS]:
+        bad.append("fill_res.py's set 32 files are %s, not %s" % (files, [RESULT, CLASS]))
+    return bad
 
 
 def p_chain(sh):
@@ -630,6 +780,11 @@ def t_every_placeholder_is_a_declared_token():
     _mutant_refused(p_placeholders, texts, RESULT, "`__GATE__`", "`__GATE_LINE__`")
     _mutant_refused(p_placeholders, texts, CLASS, "`__REKEY__` | not determined", "`__REKEY__` | 2026-10-06 18:00:00")
     _mutant_refused(p_placeholders, texts, RESULT, "set 31's promoted revision | `__PROMOTED__`", "set 31's promoted revision | `__GATE__`")
+    # W78: a PROMOTED line that does not name set 32 (W75's F9), a token back in row 31 (F11), a template count not the files' (section 8)
+    _mutant_refused(p_placeholders, texts, RESULT, "(a DESK candidate once set 32 is promoted, `__PROMOTED__`)",
+                    "(a DESK candidate once promoted, `__PROMOTED__`)")
+    _mutant_refused(p_placeholders, texts, CLASS, "| 31 | not determined |", "| 31 | `__GATE__` |")
+    _mutant_refused(p_placeholders, texts, RESULT, "CLASSIFICATION.md 2; GATE 58,", "CLASSIFICATION.md 2; GATE 57,")
 
 
 def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
@@ -649,6 +804,9 @@ def t_the_table_is_the_five_ranges_in_order_with_gits_columns_and_classes():
     assert p_columns(t.replace(r8, r8.replace("| RECORD TEXT |", "| REVIEWED-INPUT CHANGED |"), 1), order), \
         "a REVIEWED-INPUT CHANGED row touching no reviewed file passed"
     assert p_columns(t.replace(r8, r8.replace("| 2026-10-06 15:42:51 |", "| 2026-10-06 15:42:52 |"), 1), order), "a wrong date passed"
+    r2 = [l for l in t.split("\n") if l.startswith("| 2 |")][0]     # W78 (W75's F5): row 2's committer date is not its author date
+    assert p_columns(t.replace(r2, r2.replace("| 2026-10-06 12:41:26 |", "| 2026-10-06 12:41:33 |"), 1), order), \
+        "a committer date in place of the author date passed"
 
 
 def t_the_summary_and_the_bound_statement_are_the_tables():
@@ -659,6 +817,8 @@ def t_the_summary_and_the_bound_statement_are_the_tables():
         "a wrong per-branch count passed"
     assert p_summary(t.replace("15 RECORD TEXT first", "14 RECORD TEXT first", 1)), \
         "a wrong statement count passed"
+    assert p_summary(t.replace("(21 file touches, 16", "(20 file touches, 16", 1)), "a wrong file-touch count passed"
+    assert p_summary(t.replace("(row 15, carrying row 14)", "(carrying row 14)", 1)), "an unnamed REVIEWED-INPUT CHANGED row passed"
     r = [l for l in t.split("\n") if l.startswith("| 8 |")][0]
     assert p_summary(t.replace(r, r.replace("| RECORD TEXT |", "| TOOLING |"), 1)), "a re-classed row with the old counts passed"
 
@@ -676,6 +836,8 @@ def t_every_count_typed_is_gits():
     assert p_row_numbers(t.replace("68 committed extractions with their sidecars (136 files)",
                                    "68 committed extractions with their sidecars (138 files)", 1)), "a wrong file count in a reason passed"
     assert p_row_numbers(t.replace("(+69 -21)", "(+69 -20)", 1)), "a wrong line count in a reason passed"
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "Dates are the author dates", "Dates are the committer dates", order)
+    _mutant_refused(lambda tx, o: p_counts(tx, o), texts, CLASS, "(16 distinct files)", "(15 distinct files)", order)
 
 
 def t_every_commit_named_is_in_the_histories_read_or_declared_outside_them():
@@ -721,19 +883,36 @@ def t_a_carried_change_names_a_reviewed_input_row_of_set_30():
     t = _read(CLASS)
     s30 = _show(S30, S30C)
     assert not p_carried(t, s30), p_carried(t, s30)
-    assert [c[0] for c in _real(t) if _classes(c)[0] == RIC] == ["14"], "the REVIEWED-INPUT CHANGED rows are not row 14 alone"
+    # the basis (W78): the coordinator's ruling on W75's F2 (queue, 21:03, reading A as ruled for set 31) classes row 15, whose tests quote
+    # row 14's restated words into test_l9t5.py and test_l8p.py (files of cx46's delta), REVIEWED-INPUT CHANGED beside row 14
+    assert [c[0] for c in _real(t) if _classes(c)[0] == RIC] == ["14", "15"], "the REVIEWED-INPUT CHANGED rows are not rows 14 and 15"
     assert p_carried(t.replace("set 30's row 8's change (`6b768b1e`", "set 30's row 9's change (`9cf3982a`", 1), s30), \
         "a source row that is a merge passed"
+    assert p_carried(t.replace("this table's row 14's change (`4d07a401`", "this table's row 13's change (`b397aada`", 1), s30), \
+        "a source row of this table that is not REVIEWED-INPUT CHANGED passed"
+
+
+def t_the_wider_readings_are_the_tables():
+    _need_git()
+    t = _read(CLASS)
+    order = _order()
+    assert not p_alternatives(t, order), p_alternatives(t, order)
+    assert p_alternatives(t.replace("TEST 1, TOOLING 5)", "TEST 1, TOOLING 6)", 1), order), "a wrong first reading's total passed"
+    assert p_alternatives(t.replace("REVIEWED-INPUT CHANGED 6, RECORD TEXT 13,", "REVIEWED-INPUT CHANGED 6, RECORD TEXT 14,", 1), order), \
+        "a wrong second reading's total passed"
+    assert p_alternatives(t.replace("(rows 2 to 5, 7, 9, 11, 14", "(rows 2 to 5, 9, 11, 14", 1), order), \
+        "a wrong list of rows touching the reviewed tree passed"
 
 
 def t_the_declared_tokens_are_the_fill_tools():
     runs = os.environ.get("MESHSAT_RUNS") or os.path.join(os.path.dirname(REPO), "_runs")
-    tool = os.path.join(runs, "int31", "freeze", "fill_res31.py")
+    tool = os.path.join(os.environ.get("MESHSAT_BIN") or os.path.join(os.path.dirname(runs), "_bin"), "fill_res.py")
     if not os.path.isfile(tool):
-        raise Skip("the coordinator's fill tool (_runs/int31/freeze/fill_res31.py) is not on this host")
+        raise Skip("the coordinator's fill tool (_bin/fill_res.py) is not on this host")
     src = open(tool, encoding="utf-8").read()
     assert not p_fill(src), p_fill(src)
     assert p_fill(src.replace("|ADOPTION|", "|", 1)), "a tool that fills one token fewer passed"
+    assert p_fill(src.replace('R32 + "CLASSIFICATION.md"', 'R32 + "CLASS.md"', 1)), "a tool whose set 32 files are not this record's passed"
 
 
 def t_the_chain_merges_the_five_branches_pinned_inside_their_ranges():
@@ -775,6 +954,7 @@ test_the_three_claims_are_quoted_verbatim_from_the_assessment = _pytest(t_the_th
 test_every_cited_file_of_the_coordinator_exists_and_carries_its_quote = _pytest(
     t_every_cited_file_of_the_coordinator_exists_and_carries_its_quote)
 test_a_carried_change_names_a_reviewed_input_row_of_set_30 = _pytest(t_a_carried_change_names_a_reviewed_input_row_of_set_30)
+test_the_wider_readings_are_the_tables = _pytest(t_the_wider_readings_are_the_tables)
 test_the_declared_tokens_are_the_fill_tools = _pytest(t_the_declared_tokens_are_the_fill_tools)
 test_the_chain_merges_the_five_branches_pinned_inside_their_ranges = _pytest(
     t_the_chain_merges_the_five_branches_pinned_inside_their_ranges)

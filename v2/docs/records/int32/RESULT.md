@@ -4,10 +4,13 @@
 from whom (five branches, thirty commits, among them WP-B's six on record l4e7's results cache), the independent reads of them and their
 verdicts as given (W36, W52, W64, W70: AI reviews, not qualified ones), the coordinator's decisions it applies (Q-53, Q-55), the ONE
 re-key set 32 is planned to carry and why one, the dry runs as logged, the compute already spent that set 32 does not reuse, the three
-claims as the assessment gives them, the classification bound. **NOT DONE:** everything the integration will give: set 31's promoted
+claims as the assessment gives them, the classification bound; W75's independent read of it answered by W78 (row 15 `REVIEWED-INPUT
+CHANGED` by the coordinator's ruling on W75's F2). **NOT DONE:** everything the integration will give: set 31's promoted
 revision (set 32's base), the chain's counts and the freeze's and the gate's lines, the re-key's cache commit, the candidate, the
 promotion and the adoption commit, each a placeholder that the coordinator's fill tool fills (the paragraph "Placeholders" below).
-**NEXT:** the coordinator fills them from git and the logs at the adoption, writes the classification's integration rows in full, and
+**NEXT:** at the adoption, in this order: the coordinator writes the classification's row 31 in full by hand (it carries no token), runs
+the fill tool on both files (`<worktrees>/_bin/fill_res.py --set 32`: template, values, apply; ADOPTION in its second run), writes
+the classification's rows 32 and 33's other cells from git by hand, restates the anchors of `test_res32.py` that the fill removes, and
 adopts this file with `CLASSIFICATION.md`.
 
 **Status: a draft for adoption** at set 32's promotion (queue item Q-64), written by worker W44 on branch fnd/res32 (base
@@ -16,6 +19,7 @@ on 6 October 2026 from 16:36 CEST, in the form of set 31's draft (`records/int31
 record (`records/int30/RESULT.md`). The coordinator lifted the brief's wait for set 31's candidate (`<worktrees>/_runs/int30/QUEUE.md`, entry "16:36 (clock) W44 LAUNCHED", `the coordinator lifted its own "after set 31's candidate" condition`).
 Worker W50 restated its classification rule under the coordinator's ruling of 17:13 (reading A). Worker W73 brought it to every branch
 the chain pins from 20:23 CEST (`<worktrees>/_runs/int30/QUEUE.md`, entry "20:23:00 (clock) W73 LAUNCHED", `set 32's record skeleton on fnd/res32 brought up to every branch chain.sh pins`).
+Worker W78 answered W75's independent read of it from 21:03 CEST (`<worktrees>/_runs/int30/QUEUE.md`, entry "21:03:40 (clock) W78 LAUNCHED", `W75's F1 to F10 corrected on fnd/res32 with the F2 ruling`).
 It is record text: its authors ran no generator, suite, gate, chain or box job; it accepts nothing, closes nothing, promotes nothing and
 changes no verdict. Prototype framing: nothing in the kit has been built, bought, powered or measured; every figure below is a time, a
 count, a size or a digest copied from a log or a commit (elapsed times computed from logged stamps say so), and no figure is an
@@ -42,14 +46,19 @@ in the file; the growing queue file is quoted by its dated entry (`<worktrees>/_
 in the file). A log path written with `<HHMM>` is one the chain will write; it does not exist yet. `test_res32.py` reads every quote,
 every commit named, every count and every placeholder.
 
-**Placeholders.** Only the five token names the coordinator's fill tool fills appear (`<worktrees>/_runs/int31/freeze/fill_res31.py`, its
-pattern TOK; W73's restatement, so the same tool can be pointed at set 32's files): REKEY (the re-key's cache commit), CANDIDATE (the
-candidate commit), GATE (a log line, written as text), PROMOTED and ADOPTION, each written between two pairs of underscores. The tool
-fills each occurrence by its file, line and place, so one name can stand for two commits: PROMOTED stands for set 31's promoted revision
-where its line names set 31 (set 32's base: one occurrence, section 1's BASE row) and for set 32's promotion where its line names
-set 32 (three occurrences). ADOPTION is the adoption commit, which cannot name itself: it is left for the tool's second run (its DEFER value), as set 31's.
-Taken under the owner's standing rule of 26 September 2026 (authority SESSION, W73): reversed by giving set 31's promoted revision a
-token of its own, which needs the fill tool's pattern widened first (a token the tool does not know is left in the file silently).
+**Placeholders.** Only the five token names the coordinator's fill tool fills appear: set 31's tool (`<worktrees>/_runs/int31/freeze/fill_res31.py`, its
+pattern TOK; W73's restatement) and, since 20:59 CEST, its generalisation for any set, `<worktrees>/_bin/fill_res.py --set 32` (W76,
+queue item Q-96, the same pattern; `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W76 at about 20:59 CEST", `set 32: int32 RESULT and CLASSIFICATION plus any int32/*.patch.md they name`):
+REKEY (the re-key's cache commit), CANDIDATE (the candidate commit), GATE (a log line, written as text), PROMOTED and ADOPTION (a
+commit each), each written between two pairs of underscores. The tool fills each occurrence by its file, line and place, so one name
+can stand for two commits: PROMOTED stands for set 31's promoted revision where its line names set 31 (set 32's base: one occurrence,
+section 1's BASE row) and for set 32's promotion where its line names set 32 (three occurrences, each line naming set 32; W75's F9).
+ADOPTION is the adoption commit, which cannot name itself: it is left for the tool's second run (its DEFER value), as set 31's. A value
+that only text can give is never a commit token: section 4's re-key row and the KEY check's line on it are two rows (W75's F6), and the
+classification's row 31, several commits that do not exist yet, carries no token (W75's F11). Taken under the owner's standing rule of
+26 September 2026 (authority SESSION, W73): reversed by giving set 31's promoted revision a token of its own, which needs the fill
+tool's pattern widened first (fill_res.py refuses an upper-case token it does not know, W76) and `test_res32`'s token check restated
+with it (W75's N3).
 
 ## 1. The candidate
 
@@ -61,7 +70,7 @@ token of its own, which needs the fill tool's pattern widened first (a token the
 | Branch A: fnd/w34pdftext (chain step a2) | `b397aada17befd8c6ee8be09550a785139c45066` | 13 commits over `aed4bd234644c80fa494299b21099acf6d2454c1` (its merge base with set 31's lineage), no merge, no output committed; W36 read its commit `6dc69ad2` (section 2b) | `git rev-list --count aed4bd23..b397aada`; `git merge-base aa332280 b397aada` |
 | Branch B: fnd/s32attr (step a2b) | `9210ab541e8144af530f928c1da98b96f90c89fd` | 2 commits over `5b3153aa4136f08ab186a2b5da53c1c4f0c3ecac` (W53 cut it from branch A's commit 5b3153aa, which step a2 merges first), no merge, no output committed; no independent reader | `git rev-list --count 5b3153aa..9210ab54` |
 | Branch C: fnd/s32small (step a3) | `7b7219a7d0a695b6b866435116905964a68f5578` | 4 commits over `eff28be3b80f882db545a849b0da1def0217f63d` (main's follow-up after set 30's adoption), no merge, no output committed; W52 read it at this tip (section 2b) | `git rev-list --count eff28be3..7b7219a7` |
-| Branch D: fnd/res32 (step a3b), this record | `7ae6175814b7824b3a9f69357ec75e9810a41da4` as the chain pinned it when W73 began | 5 commits over `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929`, new files only (this record and `test_res32.py`); W73's commits after it are the integration's placeholder row | `git rev-list --count 3057ae43..7ae61758` |
+| Branch D: fnd/res32 (step a3b), this record | `7ae6175814b7824b3a9f69357ec75e9810a41da4` as the chain pinned it when W73 began | 5 commits over `3057ae43f4fb7fc5e3d6282ce52d448c8ee27929`, new files only (this record and `test_res32.py`); W73's and W78's commits after it are the integration's placeholder row 31 | `git rev-list --count 3057ae43..7ae61758` |
 | Branch E: fnd/l4e7cache (step a3c), WP-B | `5ee1e66eb8787a788647305509ae6c2700144d9a` | 6 commits over `31928583c612ea43df17df5d7e0cbb2f66090f8e` (its merge base with set 31's lineage, W41's converged commit), no merge, no output and no results cache committed; W64 read `849e66c7`, W70 rechecked `849e66c7..2d81d8b2` (section 2g) | `git rev-list --count 31928583..5ee1e66e`; `git merge-base aa332280 5ee1e66e` |
 | The re-key's cache commit | `__REKEY__` | record l4e7's results cache re-keyed ONCE on a fresh debian:12 box at the lineage tip that holds `5ee1e66e`, after the converged commit and its independent read (section 3c) | the coordinator's commit on set 32's integration branch |
 | INTEGRATED = CANDIDATE: the candidate commit | `__CANDIDATE__` | no independent check of its engineering | the coordinator's commit on set 32's integration branch |
@@ -72,14 +81,16 @@ token of its own, which needs the fill tool's pattern widened first (a token the
 
 **The classification is bound by its path:** `v2/docs/records/int32/CLASSIFICATION.md`, adopted with this file. It classes each of the
 30 commits of the five branches over their bases (fnd/w34pdftext 13, fnd/s32attr 2, fnd/s32small 4, fnd/res32 5, fnd/l4e7cache 6; no merge) into W39's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 1; RECORD TEXT 15; GENERATOR DATA (text) 0; TEST 2; DIGEST RE-PIN 0; MERGE 0; TOOLING 12; total 30.
-The one REVIEWED-INPUT CHANGED row is W53's attribution (row 14, `4d07a401`): under set 30's rule's second sentence as the coordinator
-ruled it (reading A), it carries set 30's row 8's verdict words with each check's own word into four files of the delta cx46 read, as set
-31's row 32 classed the same restatement at another site. 10 of the 30 touch a file cx46 read (16 distinct files: eight generators' input
+class per row: REVIEWED-INPUT CHANGED 2; RECORD TEXT 15; GENERATOR DATA (text) 0; TEST 1; DIGEST RE-PIN 0; MERGE 0; TOOLING 12; total 30.
+The two REVIEWED-INPUT CHANGED rows are W53's attribution (row 14, `4d07a401`) and its tests (row 15, `9210ab54`): under set 30's
+rule's second sentence as the coordinator ruled it (reading A), row 14 carries set 30's row 8's verdict words with each check's own word
+into four files of the delta cx46 read, as set 31's row 32 classed the same restatement at another site, and row 15 quotes row 14's words
+into two test files of that delta (the coordinator's ruling on W75's F2, `<worktrees>/_runs/int30/QUEUE.md`, entry "21:03 (clock) F2 RULED", `row 15 = REVIEWED-INPUT CHANGED`). 10 of the 30 touch a file cx46 read (16 distinct files: eight generators' input
 route, the annex's citation line numbers, W53's attribution and the two tests that pin it, record l4e7's paragraph 0a logic and its
 test); each is **UNREVIEWED since cx46**, never credited. The rows that change a reviewed generator without a figure, state word,
-composition, case, requirement or limit are not REVIEWED-INPUT CHANGED (set 30's row 44 the precedent; the wider readings and their
-counts, 10 rows and 3 rows, are stated in that file with the SESSION decisions of W44 and W73). The integration's own commits (the
+composition, case, requirement or limit are not REVIEWED-INPUT CHANGED (set 30's row 44 the precedent, with set 31's caveat on it; the
+wider readings and their counts, 10 rows and 6 rows, are stated in that file with the SESSION decisions of W44 and W73 and W78's
+recount of the second, W75's F3). The integration's own commits (the
 merges, the converged outputs, this record's later commits, the re-key, the candidate) are placeholder rows there; the outputs they
 regenerate include files cx46 read.
 
@@ -96,7 +107,7 @@ regenerate include files cx46 read.
 | fnd/s32small | 17 | W40, Q-59 (Q-55) | the record's own invariant, V-E16 mirrors the register (section 2d) | `s32small/apply_q55_ve16.py`, run on the merged tree only: N1a's phrase into V-E16 row 3 of `HW-FW-CONTRACT.md`, `test_w8l5`'s tree check, `test_l5pwr`'s L5-F09 d reading; the README with Q-53's estimator readings |
 | fnd/s32small | 18, 19 | W47, Q-65 | W40's and W43's left-outs: Q-55's change-record row and `TP-SOLAR.md` line 297's quote of V-E16 row 3 | the same script's edits 5 and 6 (one change-record row in `HW-FW-CONTRACT.md`; the register's annotated U5 line as `TP-SOLAR.md`'s own quote beside line 297, with a dated lead-in) and `test_w8l5`'s check of both; the README with the scratch-clone check and the added step (regenerate `tp_check.out`) |
 | fnd/res32 | 20 to 24 | W44, Q-64; W50, Q-69 | set 32's adoption needs its record | this record's first draft and its rule restated under reading A (W73's commits after `7ae61758` are row 31's) |
-| fnd/l4e7cache | 25 to 30 | W61, Q-80; W67, Q-86; W71, Q-91 | the owner's workflow request of 18:29, item 2, and the constitution's section 8 (a cache key covers model code, relevant inputs and material tool versions; unrelated prose need not invalidate) | WP-B: record l4e7's results cache KEY holds the sixteen numbers the record reads of `l4e11_power.out` (part `l4e11_numbers`, a strict extractor), the file's whole digest kept as evidence; W64's F-1 and F-4 and W70's R-2 to R-6 corrected; nothing re-keyed and no output regenerated on the branch (section 2g) |
+| fnd/l4e7cache | 25 to 30 | W61, Q-80; W67, Q-86; W71, Q-91 | the owner's workflow request of 18:29, item 2, and the constitution's section 8 (a cache key covers model code, relevant inputs and material tool versions; unrelated prose need not invalidate) | WP-B: record l4e7's results cache KEY holds the sixteen numbers the record reads of `l4e11_power.out` (part `l4e11_numbers`, a strict extractor), the file's whole digest kept as evidence; W64's F-1 and F-4 corrected by W67 (in W70's words, `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md:7` `W67's corrections answer W64's F-1 and F-4`), W70's R-2 to R-6 answered by W71 (no independent reader after it, section 2g); nothing re-keyed and no output regenerated on the branch (section 2g) |
 
 Q-41 item 1, as the queue states it: `<worktrees>/_runs/int30/QUEUE.md`, entry "| Q-41 |", `pin the EXTRACTED TEXT as a verbatim input beside the PDF`.
 No branch commits a `.out`, a baseline circuit draft, a board generator or a netlist (`CLASSIFICATION.md`, its bounds).
@@ -177,7 +188,8 @@ cx45. W53 prints each word as its check's at the generator lines and keeps the p
 `4d07a401:v2/docs/records/l9t5/l9t5_t10.py:1378` `DISPOSITION (10j, after cx46): Q3: cx45 'P0-3: NOT CONFIRMED', cx46's items 5 to 8 'NOT CLOSED'.`
 The check words are the checks' own: `3057ae43:v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:10` `"summary": "P0 RECHECK: CORRECTIONS NOT CLOSED.`
 No figure changed and no state moved off OPEN; the classification classes the commit REVIEWED-INPUT CHANGED under reading A because it
-carries set 30's row 8's verdict words into files of the delta cx46 read (row 14), and the two outputs move at the integration (row 31).
+carries set 30's row 8's verdict words into files of the delta cx46 read (row 14), and its tests' commit too, because it quotes row 14's
+words into two test files of that delta (row 15, the coordinator's ruling on W75's F2); the two outputs move at the integration (row 31).
 No independent reader read the branch.
 
 ### 2g. WP-B (fnd/l4e7cache): what it changes, and the independent checks with their verdicts as given
@@ -197,7 +209,7 @@ output regenerated on the branch.
 | Check | Revision read | Verdict as given | Conditions or findings, and where each is carried |
 |---|---|---|---|
 | W64, the focused read (queue item Q-83) | `849e66c7` | `<worktrees>/_runs/claude/w64revkey/REPORT-AS-RECEIVED.md:11` `Fit for adoption: yes (AI review, not a qualified one; prototype framing), on these conditions:` | four conditions (one re-key on a rented box; `l4e11_numbers` in the KEY check; `l4e7_p0sol.out` and its dependents regenerated with 0a restated; the preflight's blind spot noted) and F-1 to F-4: F-1 and F-4 corrected by W67 (rows 26, 27), F-2 by W60's preflight and the KEY check's new version beside the old (`_runs/int30/l4e7_key_check.py.new`, the coordinator swaps it in), F-3 checked with no change; the re-key and the regeneration are the integration's (section 3c) |
-| W70, the one targeted recheck (Q-90) | `849e66c7..2d81d8b2` | `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md:9` `**Fit for the re-key: yes, on these conditions:**` | five conditions: the re-key on set 32's tree holding WP-B; the KEY check swapped in first; a `--key-expect` names `src` too (R-7); `l4e7_stage_settings.out` byte-identical after the re-key (2ad2015b0c7aea91), then W67's list plus R-1 (the supplier annex's two `[SOLO]` citations re-cited after reading) with test_w3annex, test_w8l5, test_l5pwr and test_w11l9t5 among the dependents' tests; R-2 to R-6 optional outside the KEY. R-2 to R-6 corrected by W71 (rows 29, 30); R-1, R-7 and condition 4 are chain items (section 4) |
+| W70, the one targeted recheck (Q-90) | `849e66c7..2d81d8b2` | `<worktrees>/_runs/claude/w70rechkkey/REPORT-AS-RECEIVED.md:9` `**Fit for the re-key: yes, on these conditions:**` | five conditions: the re-key on set 32's tree holding WP-B; the KEY check swapped in first; a `--key-expect` names `src` too (R-7); `l4e7_stage_settings.out` byte-identical after the re-key (2ad2015b0c7aea91), then W67's list plus R-1 (the supplier annex's two `[SOLO]` citations re-cited after reading) with test_w3annex, test_w8l5, test_l5pwr and test_w11l9t5 among the dependents' tests; R-2 to R-6 optional outside the KEY. R-2 to R-6 answered by W71 (rows 29, 30; answered, not a verdict: no independent reader read them, below); R-1, R-7 and condition 4 are chain items (section 4) |
 
 W71's change after W70's recheck was read by no independent checker. The constitution's default of one focused check and one targeted
 recheck is spent on WP-B (`<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W71 at about 20:21 CEST", `No further independent check of WP-B is scheduled`);
@@ -291,12 +303,16 @@ citations into outputs and the independent read, never before (set 31's rekey9 w
 `<worktrees>/_runs/int31/rekey9/SPENT.txt:1` `SPENT: the re-key of 562edf6a`), with the KEY check's new version swapped in first and
 any `--key-expect` naming `src` (W70's conditions 2 and 3). After it, `l4e7_stage_settings.out` must read byte-identical:
 `<worktrees>/_runs/int32/chain.sh` `W70's condition 4: l4e7_stage_settings.out byte-identical, 2ad2015b0c7aea91, else STOP: five pins move`.
-**A finding for the chain's writer (W73, not edited here):** the chain's stop line prints the re-key's box label as set 31 used it,
-`<worktrees>/_runs/int32/chain.sh` `LABEL_GIVEN=meshsat-1357-rekey10`, and set 31's re-key rented a box under that label
-(`<worktrees>/_runs/vast/LOG-20261006.md` `RENTED 54507159 meshsat-1357-rekey10`); W43's README asks for a NEW label so that the rental
-script does not match a stopped box (`<worktrees>/_runs/int32/README.md` `NEW label, so vast_wait does not match a stopped box`),
-written before set 31 used that label, so set 32's re-key needs another one. The re-key's cache commit is `__REKEY__`; the KEY-only
-check's line after the re-key and the dependents is `__GATE__`.
+**W73's finding on the re-key's box label, answered by W66, the chain's writer (W75's F1 and F10):** W73 found that the chain's stop
+line printed the re-key's box label as set 31 used it (`meshsat-1357-rekey10`), a label set 31's re-key had rented a box under
+(`<worktrees>/_runs/vast/LOG-20261006.md` `RENTED 54507159 meshsat-1357-rekey10`), while W43's README, written before set 31 used that
+label, asks for a NEW one so that the rental script does not match a stopped box (`<worktrees>/_runs/int32/README.md` `NEW label, so vast_wait does not match a stopped box`).
+W66 changed the chain's lines at 20:56 (W75's reading of the file's time); W78 read them at 21:04 and at 21:17 (the file's time then
+21:06, these lines unchanged), and again before its commit; the chain now derives the
+label when the re-key is run: `<worktrees>/_runs/int32/chain.sh` `the re-key on a fresh debian:12 box with a NEW label derived when it is run`,
+`<worktrees>/_runs/int32/chain.sh` `R32=rekey32-\$(date +%H%M); LABEL_GIVEN=meshsat-1357-\$R32`, with its reason
+`<worktrees>/_runs/int32/chain.sh` `rekey10 was set 31's, box 54507159; W73's finding`. The re-key's cache commit is `__REKEY__`; the
+KEY-only check's line after the re-key and the dependents is `__GATE__`.
 
 ### 3d. The tests
 
@@ -314,7 +330,8 @@ check's line after the re-key and the dependents is `__GATE__`.
 | The KEY check's new version swapped in before the chain (W70's condition 2) | `_runs/int30/l4e7_key_check.py` against its `.new` | `__GATE__` |
 | The converged commit and the re-take of the citations into outputs | `git log` on set 32's integration branch | `__GATE__` |
 | The independent read of set 32's lineage, its findings corrected | the reader's report | `__GATE__` |
-| The ONE re-key's cache commit and the KEY on it (a new box label, section 3c; `--key-expect` naming `src`) | the cache commit; the KEY check's line | `__REKEY__` |
+| The ONE re-key's cache commit (a new box label, section 3c; `--key-expect` naming `src`) | the cache commit | `__REKEY__` |
+| The KEY on the re-key's cache commit (W75's F6: a line, so a row of its own) | the KEY-only check's line on the cache commit | `__GATE__` |
 | `l4e7_stage_settings.out` byte-identical after the re-key (W70's condition 4, 2ad2015b0c7aea91) | the post-re-key log | `__GATE__` |
 | The re-key's dependents regenerated (l4e7_p0sol with its 0a, L4-E9's `l4e7p0` pin, l4e9, l5pwr_contracts, l9t5_connected, l6r2_passives; W36's F-K3, W67's list) and the annex's two `[SOLO]` citations re-cited from the regenerated output (W70's R-1) | the dependents' log | `__GATE__` |
 | The evidence archive installed before the manifest | the freeze's log | `__GATE__` |
@@ -364,8 +381,9 @@ unchanged on the runs it made, section 2b), the attribution of verdict words to 
 contract row with its change-record row and a procedure's quote, a change of record l4e7's cache KEY that moves no computed figure (in
 its own words, `5ee1e66e:v2/docs/records/l4e7/CACHE-BOUNDARY-L4E11.md:6` `record's cache tooling, not of any computed figure.`), one
 re-key, and the regenerated outputs and pins they move. It changes no baseline circuit draft, no board generator and no netlist
-(`CLASSIFICATION.md`, its bounds). One of its 30 branch commits is classed REVIEWED-INPUT CHANGED (row 14, a restatement of verdict
-words with no state moved off OPEN); the 10 that touch files cx46 read are UNREVIEWED since cx46 and none is credited. No branch's
+(`CLASSIFICATION.md`, its bounds). Two of its 30 branch commits are classed REVIEWED-INPUT CHANGED (row 14, a restatement of verdict
+words with no state moved off OPEN, and row 15, its tests' quotation of those words); the 10 that touch files cx46 read are UNREVIEWED
+since cx46 and none is credited. No branch's
 record says that it closes a power item.
 
 **Layer 4's DESK gate stays NOT PASSED** as the coordinator judged it on set 30, in the assessment's words (set 32 changes no line of it):
@@ -381,7 +399,7 @@ record says that it closes a power item.
 | Power-design closure | BLOCKED | `3057ae43:v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md:500` `### Power-design closure: BLOCKED. Fabrication release: BLOCKED.` |
 | Fabrication release | BLOCKED | the same line |
 
-Kept apart from all three: documents and editable artifacts (a DESK candidate once promoted, `__PROMOTED__`); design reviewed and
+Kept apart from all three: documents and editable artifacts (a DESK candidate once set 32 is promoted, `__PROMOTED__`); design reviewed and
 accepted (NO: cx45 NOT CONFIRMED, cx46 CORRECTIONS NOT CLOSED, and the unreviewed changes of sets 30, 31 and 32); circuit changes
 implemented (NONE); physical qualification (NONE). A promoted integration set is none of the three claims by itself.
 
@@ -389,7 +407,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 30 branch commits classified; 1 REVIEWED-INPUT CHANGED; 10 UNREVIEWED since cx46; three placeholder rows for the integration's commits |
+| The classification of set 32 | `v2/docs/records/int32/CLASSIFICATION.md` | 30 branch commits classified; 2 REVIEWED-INPUT CHANGED; 10 UNREVIEWED since cx46; three placeholder rows for the integration's commits |
 | W34's inventory, with W37's restatements and W55's section 8 | `v2/docs/records/_lib/PDFTEXT-INVENTORY.md` on fnd/w34pdftext | in the tree from the merge |
 | W40's and W47's record | `v2/docs/records/s32small/README.md` on fnd/s32small | in the tree from the merge |
 | W42's record | `v2/docs/records/w42cite/README.md` on fnd/w34pdftext | in the tree from the merge |
@@ -402,14 +420,24 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 - **Commits after the tips as last read** (fnd/w34pdftext `b397aada`, fnd/s32attr `9210ab54`, fnd/s32small `7b7219a7`, fnd/l4e7cache
   `5ee1e66e`) are not classified here; the coordinator adds their rows at the adoption. This record's own commits after `7ae61758`
-  (W73's) are the integration's placeholder row 31: a record cannot carry its own last commit's row.
+  (W73's and W78's) are the integration's placeholder row 31: a record cannot carry its own last commit's row. The chain's pin of
+  fnd/res32 moves to this record's corrected tip (W75's condition; `<worktrees>/_runs/int30/QUEUE.md`, entry "21:03:40 (clock) W78 LAUNCHED", `SRC_RES pin moves to W78's tip`).
 - **The coordinator's items outside the tree:** the base typed in `_runs/int31/dependents.sh` and the wording of
-  `_runs/int31/cache_commit.sh` before their reuse (W43's README section 3); the KEY check's swap (`l4e7_key_check.py.new`); a new box
-  label for set 32's re-key (section 3c, W73's finding); the counts in `<worktrees>/_runs/int32/placeholders-deferred.tsv` for this
-  record's files (rows written at W44's revision; this revision carries the candidate's token twice in `RESULT.md`, once in
-  `CLASSIFICATION.md` and once in `test_res32.py`, and the name INTEGRATED as a token nowhere).
-- **The fill tool's file list** names set 31's files; pointed at set 32 it needs `v2/docs/records/int32/RESULT.md` and
-  `CLASSIFICATION.md` in its list (the tokens are already its own; `test_res32` checks that in the runner pass).
+  `_runs/int31/cache_commit.sh` before their reuse (W43's README section 3); the KEY check's swap (`l4e7_key_check.py.new`).
+- **W73's two findings on the chain, answered by W66** (W75's F1): the re-key's box label (section 3c); and the deferral counts of this
+  record's files, which `placeholders-deferred.tsv` typed at W44's revision: its two RECORD-DRAFT rows now carry "*", recounted from
+  the file at every run, `<worktrees>/_runs/int32/placeholders-deferred.tsv` `count recounted from the file since W66, 6 October 2026: never typed; W73 found 2 at ab0cdd9e where this row typed 4`,
+  by the checker's rule `<worktrees>/_runs/int32/placeholders_check.py:10` `their count field is "*": RECOUNTED from the file at every run, never typed`.
+  The row for `test_res32.py` stays typed (1, TEST-PREDICATE), and this revision keeps the candidate's token once in that file, twice in
+  `RESULT.md` and once in `CLASSIFICATION.md` (W78's count with `grep -c` before its commit), the name INTEGRATED as a token nowhere.
+  W75's residual on the CLASSIFICATION row's reason (its check 4: rows 15 to 17, row 33 since W73) was answered by W66 at 21:06 (the
+  file's time, read by W78 at 21:16, the newest): `<worktrees>/_runs/int32/placeholders-deferred.tsv` `(rows 15 to 17 at 838fd265; row 33 at ab0cdd9e, W75's read)`;
+  row 33 is still the one row carrying the candidate's token after W78.
+- **The fill tool for set 32** (W73's third finding, W75's F11) exists since 20:59 CEST: `<worktrees>/_bin/fill_res.py --set 32`
+  (W76) lists `v2/docs/records/int32/RESULT.md` and `CLASSIFICATION.md` and fills the same five tokens; `test_res32` reads its pattern
+  and its set 32 file list in the runner pass. Its template on W73's revision, as W76 read it: `<worktrees>/_runs/int30/QUEUE.md`, entry "native completion of W76 at about 20:59 CEST", `Set 32's template at ab0cdd9e: 72 rows (RESULT 69, CLASSIFICATION 3; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1)`.
+  On this revision, by `test_res32`'s count and by W78's run of the template on its corrected tree before its commit, the tool's
+  template rows are 72 (RESULT.md 70, CLASSIFICATION.md 2; GATE 58, REKEY 6, PROMOTED 4, CANDIDATE 3, ADOPTION 1; no KEEP row).
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
