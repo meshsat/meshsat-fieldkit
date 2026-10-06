@@ -45,6 +45,9 @@ PDFs each reads, committed or held back, and the reasons is PDFTEXT-INVENTORY.md
     l6pwr/l6pwr_parts.py and l6r2/l6r2_passives.py (through v2/ecad/tools/part_identities.py), l8r2/l8r2_dist.py,
     l9t5/l9t5_connected.py, l9t5/l9t5_f01_drafts.py (through converted modules), r4b/pin_parity.py (a usage line),
     s122/apply_docs_s122_r4.py, s122/judgements.py, w4dp/patch_vendor_index.py, w5identc/build_table.py
+  DECLARATION ONLY (3, W81, 6 October 2026; a docstring and a PDFTEXT literal, nothing runs): l5r4/l5r4_pdftext.py,
+    l8p/l8p_pdftext.py, l8r2/l8r2_pdftext.py, the TESTS' own reads (test_l5r4, test_l8p, test_l8r2), kept apart from the generators'
+    tables so that no output prints an input its generator never reads (PDFTEXT-INVENTORY.md section 9)
 
 Use, from a generator (the records import their siblings by path):
     _sp = importlib.util.spec_from_file_location("records_pdftext", os.path.join(<records dir>, "_lib", "pdftext.py"))
