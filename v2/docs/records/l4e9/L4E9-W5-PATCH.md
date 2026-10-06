@@ -31,7 +31,7 @@ git -C <wt> rm -q v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_e_enable-515f6cf
 git -C <wt> rm -q v2/docs/records/l4e9/inputs/l8p-apply_gen_sch_a_ptc-515f6cf2.txt
 ```
 
-then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): each new copy is named after the commit that last changed its draft's bytes (`git log -1` on the draft: `6eeb6cfe`, `69b8c3bb`, `8e6a938c`, each an ancestor of `6bc4424e` and of `cd19df59`, where the bytes are the same), as round 8 named its copies after the commit they came from. Reason: the name then says where the bytes can be read again. To reverse: name all three after the integration commit of the re-take and change WP-01 to WP-03's paths to match.
+then WP-01 to WP-06 and the regeneration of section 1. **SESSION decision W13-D1** (authority: SESSION, under the owner's standing rule of 26 September 2026): each new copy is named after the commit that last changed its draft's bytes (`git log -1` on the draft: `6eeb6cfe`, `69b8c3bb`, `8e6a938c`, each an ancestor of `6bc4424e` and of `cd19df59`, where the bytes are the same), as round 8 named its copies after a commit of record l8p, `515f6cf2`, whose bytes they are. Reason: the name then says where the bytes can be read again. To reverse: name all three after the integration commit of the re-take and change WP-01 to WP-03's paths to match.
 
 **What pins the copies.** By digest, only the generator's PINS lines 109 to 111 (WP-01 to WP-03), printed again by its output at lines 52 to 54 and 2299 to 2301 on regeneration. The page names neither the copies nor their digests. The register names them by commit, not digest, in the From cells of R-206 to R-208 (WP-04 to WP-06). No test pins them: `test_l4e11.py` line 1056 pins `c8e4eeb499491eab...` for `v2/docs/records/l8p/apply_gen_sch_a_ptc.py` read at record l8p's commit `b1295c1e` that L4-E11's round 9 names (`R9_COMMITS`, `l4e11_power.py` line 3228), the same bytes as the PTC copy, and is untouched by the re-take; `test_l4e9.py` line 418 accepts a copy under `inputs/` only for a board E draft that is not in the tree, and the tree holds record l8p's. **What the generator reads from a copy** (lines 5309 to 5315): a draft marker in its first 3000 characters (`NOT\s+APPLIED|DRAFT\s+for\s+the\s+integrator`) and its target's name; W5's bytes carry both (the test reads them), so the re-take adds no refusal and moves no figure.
 
@@ -623,7 +623,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 457
 - Kind: fragment
 - Pairs with: WP-07
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `515f6cf2` line 106: finding 3); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); section 6 item 4, line 303 (the order constraint once round 1's section 5, `515f6cf2` line 106: finding 3); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-07)
 - Old:
 
@@ -663,7 +663,7 @@ Record l8p's one `RELEASE.md` covers six drafts, named with their register rows 
 - Line: 491
 - Kind: fragment
 - Pairs with: WP-09
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-09)
 - Old:
 
@@ -703,7 +703,7 @@ in one release with R-206, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 517
 - Kind: fragment
 - Pairs with: WP-11
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-11)
 - Old:
 
@@ -743,7 +743,7 @@ in one release with R-207, R-208, R-222, R-244 and R-246 (record l8p's drafts, L
 - Line: 518
 - Kind: fragment
 - Pairs with: WP-13
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-13)
 - Old:
 
@@ -783,7 +783,7 @@ in one release with R-206, R-207, R-208, R-222 and R-244 (record l8p's drafts, L
 - Line: 459
 - Kind: fragment
 - Pairs with: WP-15
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-15)
 - Old:
 
@@ -823,7 +823,7 @@ and R-217 (DD-7's readers on the loop); before d8dec31's R-193; in one release w
 - Line: 460
 - Kind: fragment
 - Pairs with: WP-17
-- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation (line 1169: the page's change list is the script's)
+- Source: fnd/w5l8p at `cd19df59`, `v2/docs/records/l8p/L8P-BREAKER.md` section 6 item 1, lines 266 to 280 (the six drafts by register row); test_l4e9's t_consolidation_the_change_list_covers_every_apply_script_in_order (line 1169: the page's change list is the script's)
 - Class: BINDING (the page cell of WP-17)
 - Old:
 
@@ -923,7 +923,7 @@ which takes the next free R and C at apply time (l8p section 6 item 4, which rea
 
 ## 6. ONLY WITH THE NEXT CIRCUIT CHANGE TO THESE DRAFTS (W5-F2, W5-F3, W5-D1; Q-23)
 
-Each row changes one docstring sentence and nothing the draft executes (the test parses each draft before and after and finds the same syntax tree once the module docstring is set aside). Each draft's sha256 is printed by records' outputs, and those outputs are pinned in turn down to record l9t5's stability digests, so a docstring edit alone would move the whole cascade below for no change of circuit (W5-D1's reason, kept here). Apply a row only in the commit that changes that draft's bytes for a circuit reason, then regenerate the cascade in dependency order. The tables list every pin found by searching the tree at the base for the 64-hex and 16-hex sha256 of the draft and, level by level, of each file that pins it (a level-n file pins a file of level n - 1, or the draft at level 1). Readers by name with no digest (`v2/docs/records/l6r2/l6r2_passives.out` prints the sha256 of each composed generator, not of the draft; `test_l8p.py`, `test_l4e7.py` line 1074 and `test_l4e11.py` read the drafts by path) change only when a draft's drawn text changes (INFERRED from what they print; not run).
+Each row changes one docstring sentence and nothing the draft executes (the test parses each draft before and after and finds the same syntax tree once the module docstring is set aside). Each draft's sha256 is printed by records' outputs, and those outputs are pinned in turn down to record l9t5's stability digests, so a docstring edit alone would move the whole cascade below for no change of circuit (W5-D1's reason, kept here). Apply a row only in the commit that changes that draft's bytes for a circuit reason, then regenerate the cascade in dependency order. The tables list every pin found by searching the tree at the base for the 64-hex and 16-hex sha256 of the draft and, level by level, of each file that pins it (a level-n file pins a file of level n - 1, or the draft at level 1). Readers by name with no digest (`v2/docs/records/l6r2/l6r2_passives.out` prints the sha256 of each composed generator, not of the draft; `test_l8p.py` and `test_l4e7.py` line 1074 read the drafts by path, and `test_l4e11.py` too beside its pin in the PTC table) change only when a draft's drawn text changes (INFERRED from what they print; not run).
 
 #### The pins of `v2/docs/records/l8p/apply_gen_sch_p_breaker.py` (sha256/16 `e8f1294bb0f76c75`): 2 files at level 1, 6 files in the cascade
 
@@ -1072,7 +1072,7 @@ Each row changes one docstring sentence and nothing the draft executes (the test
 | 3 | `v2/docs/records/l9t5/l9t5_connected.out` | 20 | `v2/docs/records/l9t5/l9t5_t10.out` | `94071bc12ccf5389` |
 | 3 | `v2/docs/records/l9t5/stability/DIGESTS-cr3.txt` | 13 | `v2/docs/records/l9t5/l9t5_t10.out` | `94071bc12ccf5389` |
 
-Beside the table of `apply_gen_sch_a_ptc.py`: `v2/docs/records/l8p/apply_test_l4e11_ptc_pin.py` names the same digest by its first eight characters in its text at lines 7 and 58, and record l4e11's copy `v2/docs/records/l8p/inputs/l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py` line 50 is a verbatim copy of DD-7's line 50 (pinned by `inputs/SOURCES.txt`): it stays as it is, as every verbatim copy does.
+Beside the table of `apply_gen_sch_a_ptc.py`: `v2/docs/records/l8p/apply_test_l4e11_ptc_pin.py` names the same digest by its first eight characters in its text at lines 7 and 58, and record l8p's verbatim copy of DD-7 at `ecb598c5`, `v2/docs/records/l8p/inputs/l4e11r17-apply_gen_sch_a_dd7-ecb598c5.py`, reads DD-7's line 50 at its own line 50 (pinned by `inputs/SOURCES.txt`): it stays as it is, as every verbatim copy does.
 
 ### WP-23. The breaker draft's Order sentence (W5-D1's reversal, word for word)
 
