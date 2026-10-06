@@ -1,0 +1,77 @@
+BQ25731
+SLUSE66A – JUNE 2020 – REVISED JANUARY 2021                                                                                 www.ti.com
+
+8.5 Electrical Characteristics(BQ25731) (continued)
+VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)
+                 PARAMETER                                     TEST CONDITIONS                      MIN        TYP        MAX UNIT
+                      IDCHG threshold1
+ IDCHG_DEG1                                   Reg0x39h[1:0]=01b                                                1.25                sec
+                      deglitch time
+                      IDCHG threshold2 for                                                                  24.567                  A
+                                            Reg0x39[7:2]=010000b 3C[5:3]=001b,with 5mΩ
+ IDCHG_TH2            throttling for IDSCHG
+                                            SRP/SRN current sensing resistor                       96%                   103%
+                      of 6 A
+                      IDCHG threshold2
+ tDCHG_DEG2                                   Reg0x3C[7:6]=01b                                                   1.6               ms
+                      deglitch time
+ INDEPENDENT COMPARATOR
+
+                      Independent          Reg0x30h[7]= 1, CMPIN falling                           1.17          1.2       1.23     V
+ VINDEP_CMP
+                      comparator threshold Reg0x30h[7]= 0, CMPIN falling                           2.27          2.3       2.33     V
+                      Independent
+ VINDEP_CMP_HYS       comparator              CMPIN falling                                                     100                mV
+                      hysteresis
+ POWER MOSFET DRIVER
+ PWM OSCILLATOR AND RAMP
+
+                      PWM switching           Reg0x01[1] = 0                                        680         800         920   kHz
+ FSW
+                      frequency               Reg0x01[1] = 1                                        340         400         460   kHz
+ PWM HIGH SIDE DRIVER (HIDRV Q1)
+                      The resistance of the
+ RDS_HI_ON_Q1         gate driver loop for    VBTST1 - VSW1 = 5 V                                                  6                Ω
+                      turning on Q1
+                      The resistance of the
+ RDS_HI_OFF_Q1        gate driver loop for    VBTST1 - VSW1 = 5 V                                                1.3        2.2     Ω
+                      turning off Q1
+                      Bootstrap refresh
+                                              VBTST1 - VSW1 when low-side refresh pulse is
+ VBTST1_REFRESH       comparator falling                                                             3.2         3.7        4.6     V
+                                              requested
+                      threshold voltage
+ PWM HIGH SIDE DRIVER (HIDRV Q4)
+                      The resistance of the
+ RDS_HI_ON_Q4         gate driver loop for    VBTST2 - VSW2 = 5 V                                                  6                Ω
+                      turning on Q4
+                      The resistance of the
+ RDS_HI_OFF_Q4        gate driver loop for    VBTST2 - VSW2 = 5 V                                                1.5        2.4     Ω
+                      turning off Q4
+                      Bootstrap refresh
+                                              VBTST2 - VSW2 when low-side refresh pulse is
+ VBTST2_REFRESH       comparator falling                                                             3.3         3.7        4.6     V
+                                              requested
+                      threshold voltage
+ PWM LOW SIDE DRIVER (LODRV Q2)
+                      The resistance of the
+ RDS_LO_ON_Q2         gate driver loop for    VBTST1 - VSW1 = 5.5 V                                                6                Ω
+                      turning on Q2
+                      The resistance of the
+ RDS_LO_OFF_Q2        gate driver loop for    VBTST1 - VSW1 = 5.5 V                                              1.7        2.6     Ω
+                      turning off Q2
+ PWM LOW SIDE DRIVER (LODRV Q3)
+                      The resistance of the
+ RDS_LO_ON_Q3         gate driver loop for    VBTST2 - VSW2 = 5.5 V                                              6.8                Ω
+                      turning on Q3
+                      The resistance of the
+ RDS_LO_OFF_Q3        gate driver loop for    VBTST2 - VSW2 = 5.5 V                                              2.2        4.6     Ω
+                      turning off Q3
+ INTERNAL SOFT START During Charge Enable
+
+
+
+16     Submit Document Feedback                                                              Copyright © 2022 Texas Instruments Incorporated
+
+                                                     Product Folder Links: BQ25731
+

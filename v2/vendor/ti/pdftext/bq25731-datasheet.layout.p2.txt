@@ -1,0 +1,40 @@
+BQ25731
+SLUSE66A – JUNE 2020 – REVISED JANUARY 2021                                                                                                                      www.ti.com
+
+
+                                                                        Table of Contents
+1 Features............................................................................1     9.4 Device Functional Modes..........................................35
+2 Applications..................................................................... 1       9.5 Programming............................................................ 35
+3 Description.......................................................................1       9.6 Register Map.............................................................40
+4 Revision History.............................................................. 2        10 Application and Implementation................................ 83
+5 Description (continued).................................................. 3               10.1 Application Information........................................... 83
+6 Device Comparison Table...............................................4                   10.2 Typical Application.................................................. 83
+7 Pin Configuration and Functions...................................5                     11 Power Supply Recommendations..............................92
+8 Specifications.................................................................. 8      12 Layout...........................................................................93
+  8.1 Absolute Maximum Ratings........................................ 8                    12.1 Layout Guidelines................................................... 93
+  8.2 ESD Ratings............................................................... 8          12.2 Layout Example...................................................... 94
+  8.3 Recommended Operating Conditions.........................8                          13 Device and Documentation Support..........................96
+  8.4 Thermal Information....................................................9              13.1 Device Support....................................................... 96
+  8.5 Electrical Characteristics(BQ25731)........................... 9                      13.2 Documentation Support.......................................... 96
+  8.6 Timing Requirements................................................ 18                13.3 Support Resources................................................. 96
+  8.7 Typical Characteristics.............................................. 19              13.4 Trademarks............................................................. 96
+9 Detailed Description......................................................22              13.5 Electrostatic Discharge Caution..............................96
+  9.1 Overview................................................................... 22        13.6 Glossary..................................................................96
+  9.2 Functional Block Diagram......................................... 23                14 Mechanical, Packaging, and Orderable
+  9.3 Feature Description...................................................24              Information.................................................................... 97
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision * (June 2020) to Revision A (January 2021)                                                                   Page
+• Changed from Advance Information to Production Data.................................................................................... 1
+
+
+
+
+2       Submit Document Feedback                                                                                           Copyright © 2022 Texas Instruments Incorporated
+
+                                                                      Product Folder Links: BQ25731
+

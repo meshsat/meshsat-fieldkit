@@ -1,0 +1,20 @@
+{
+ "command": "pdftotext -layout -f 2 -l 2 v2/vendor/passives/milliohm-hojlr2512-series.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout",
+  "-f",
+  "2",
+  "-l",
+  "2"
+ ],
+ "pdf": "v2/vendor/passives/milliohm-hojlr2512-series.pdf",
+ "pdf_sha256": "3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/passives/pdftext/milliohm-hojlr2512-series.layout.p2.txt",
+ "text_bytes": 1676,
+ "text_sha256": "c0d6940eb6aefc675bfba5e1eb10267acb70bddcdb16140b9c4f572234677559"
+}

@@ -1,0 +1,68 @@
+                                                                                                                             LM5176
+www.ti.com                                                                                  SNVSAI1D – JUNE 2017 – REVISED AUGUST 2021
+
+
+                      2
+                    VIN(MIN) u (VOUT        VIN(MIN) )
+      LBOOST                                2
+                                                         2.8 PH
+                   0.3 u IOUT(MAX) u Fsw u VOUT                                                                             (14)
+
+In this particular application, the buck inductance is larger. Choosing a larger inductance reduces the ripple
+current but also increases the size of the inductor. A larger inductor also reduces the achievable bandwidth of
+the converter by moving the right half plane zero to lower frequencies. Therefore, a judicious compromise should
+be made based on the application requirements. For this design a 4.7-µH inductor is selected. With this inductor
+selection, the inductor current ripple is 6.5 A, 4.3 A, and 2.1 A, at VIN of 50 V, 24 V, and 6 V, respectively.
+The maximum average inductor current occurs at the minimum input voltage and maximum load current:
+
+                  VOUT u IOUT(MAX)
+      IL(MAX)                              13.3 A
+                    0.9 u VIN(MIN)                                                                                          (15)
+
+where a 90% efficiency is assumed. The peak inductor current occurs at minimum input voltage and is given by:
+
+                                VIN(MIN) u (VOUT VIN(MIN) )
+     IL(PEAK)      IL(MAX)                                          14.4 A
+                                    2 u L1u Fsw u VOUT                                                                      (16)
+
+To ensure sufficient output current, the current limit threshold must be set to allow the maximum load current in
+boost operation. The inductor peak current during overload depends on the current limit resistor, RSENSE, (refer
+to the subsection on selecting RSENSE). The peak inductor current in current limit when in boost mode is given
+by:
+
+                                   120 mV
+     IL(PEAK, ILIMIT, BOOST)
+                                   RSENSE                                                                                   (17)
+
+The peak inductor current in current limit when in buck mode happens at high input voltage and is given by:
+
+                                  80 mV           VIN(MAX)     VOUT      § V        ·
+      IL(PEAK, ILIMIT, BUCK)                                           u ¨ OUT ¸
+                                  RSENSE              L1u Fsw            ¨ VIN(MAX) ¸
+                                                                         ©          ¹                                       (18)
+
+The peak inductor current in current limit is 15 A and 16.5 A in boost mode and buck mode, respectively. The
+inductor should be selected to handle this current.
+8.2.2.5 Output Capacitor
+In the boost mode, the output capacitor conducts high ripple current. The output capacitor RMS ripple current is
+given by Equation 19 where the minimum VIN corresponds to the maximum capacitor current.
+
+                                  VOUT
+     ICOUT(RMS)        IOUT u               1
+                                   VIN                                                                                      (19)
+
+In this example, the maximum output ripple RMS current is ICOUT(RMS) = 6 A. A 5-mΩ output capacitor ESR
+causes an output ripple voltage of 60 mV as given by:
+
+                             IOUT u VOUT
+      'VRIPPLE(ESR)                      u ESR
+                               VIN(MIN)                                                                                     (20)
+
+A 400-µF output capacitor causes a capacitive ripple voltage of 25 mV as given by:
+
+
+
+
+Copyright © 2021 Texas Instruments Incorporated                                                        Submit Document Feedback      23
+                                                             Product Folder Links: LM5176
+

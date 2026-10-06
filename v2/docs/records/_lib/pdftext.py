@@ -21,25 +21,25 @@ held back: it lands under the PDF's `held/` folder, which .gitignore already exc
 record's fetch_held_back.py header) grant no redistribution, and the full text of a sheet is a copy of it. It is refused when absent
 exactly as the PDF is, and the route is the record's fetch_held_back.py, then the re-take.
 
-THE INVENTORY (every .py under v2/docs/records/ that mentions pdftotext on the base aed4bd23, classified; the table with the PDFs
-each reads, committed or held back, is PDFTEXT-INVENTORY.md beside this file):
-  RUN-TIME EXTRACTION, CONVERTED (the record's generator reads the committed text through this module):
-    efuse/efuse_check.py; l5r2/l5r2_interfaces.py; l8r2/l8r2_drafts.py, l8r2_gndret.py, l8r2_p0.py; l4e13/l4e13_panel.py;
-    l4e11/l4e11_power.py; l4e9/l4e9_power_path.py
-  RUN-TIME EXTRACTION, NOT CONVERTED HERE (each with its reason in PDFTEXT-INVENTORY.md section 2):
-    the l4e7 KEY's own inputs (l4e7/l4e7_stage_settings.py, l4e/l4e_replay.py, l4e4 through r11dep/r11_dep.py, l4e5/
-    l4e5_source_control.py, l3plane/energy_basis.py, l3plane/vbus20_range.py) and the records that pin their sources by sha
-    (l4e6, l4e8/ripple_dense.py); the accepted Layer 3 records (l3batt/tablet.py, l3feas/hf_wab.py, l3feas/solar_interface.py,
-    l3plane/curve_readings.py, l3plane/weather_basis.py); the remaining Layer 4 to 9 generators (l4e10, l4e12, l4close/
-    verify_risks.py, l7pwr, l7r2, l8p/l8p_drafts.py, l8p/l8p_guard.py, l9pwr, l9stk/l9stk_copper.py, l9stk/l9stk_protection.py,
-    l9t5/l9t5_a1.py, l9t5_case.py, l9t5_cm5.py, l9t5_drafts.py, l9t5_f01.py, l9t5_paloop.py, l9t5_t10.py) and a1elec/gauge_scale.py,
-    rv-dec/dec_mmscan.py, s122/verdicts.py
-  FETCH, SCAN, APPLY OR RE-TAKE SCRIPT (untouched): d6dec/box/basis_check.py, d6rel/revision_scan.py, d8dec31/ledger_pages.py,
+THE INVENTORY (every .py under v2/docs/records/ that mentions pdftotext on the base aed4bd23: 63 files, classified; the table with the
+PDFs each reads, committed or held back, and the reasons is PDFTEXT-INVENTORY.md beside this file):
+  RUN-TIME EXTRACTION, CONVERTED (25; the generator reads the committed text through this module):
+    the brief's six records: efuse/efuse_check.py; l5r2/l5r2_interfaces.py; l8r2/l8r2_drafts.py, l8r2_gndret.py, l8r2_p0.py;
+    l4e13/l4e13_panel.py (its own pages; the replay it runs still extracts); l4e11/l4e11_power.py; l4e9/l4e9_power_path.py;
+    then l4e10/l4e10_cell_thermal.py, l4e12/l4e12_thermal.py, l7pwr/l7pwr_fans_th1.py, l7r2/l7r2_items.py, l8p/l8p_drafts.py,
+    l8p/l8p_guard.py, l9pwr/l9pwr_budget.py, l9stk/l9stk_copper.py, l9stk/l9stk_protection.py, l9t5/l9t5_a1.py, l9t5_case.py,
+    l9t5_cm5.py, l9t5_drafts.py, l9t5_f01.py, l9t5_paloop.py, l9t5_t10.py, l4e8/ripple_dense.py (its own pages; r11dep still extracts)
+  RUN-TIME EXTRACTION, NOT CONVERTED (15): the l4e7 KEY group (l4e7/l4e7_stage_settings.py, l4e/l4e_replay.py, l4e5/
+    l4e5_source_control.py, r11dep/r11_dep.py, l3plane/energy_basis.py, l3plane/vbus20_range.py); the accepted Layer 3 records
+    (l3batt/tablet.py, l3feas/hf_wab.py, l3feas/solar_interface.py, l3plane/curve_readings.py, l3plane/weather_basis.py); the
+    coordinator's checker l4close/verify_risks.py; historical a1elec/gauge_scale.py, rv-dec/dec_mmscan.py, s122/verdicts.py
+  FETCH, SCAN, APPLY OR RE-TAKE SCRIPT (8, untouched): d6dec/box/basis_check.py, d6rel/revision_scan.py, d8dec31/ledger_pages.py,
     int16/apply_hold_back_panjit.py, w5identc/scan_vendor.py, w5si/apply/apply_board_c_declarations.py, w5si/tools/cite_fill.py,
-    w5si/tools/edge_search.py, and retake_pdf_text.py beside this file
-  MENTION ONLY, no call (untouched): cx1/checks/check-1-phase1.py, d6dec/make_basis_md.py, l4e7/l4e7_p0sol.py (a sentence on the
-    re-key host), l6pwr/l6pwr_parts.py and l6r2/l6r2_passives.py (through v2/ecad/tools/part_identities.py), l8r2/l8r2_dist.py,
-    l9t5/l9t5_connected.py, l9t5/l9t5_f01_drafts.py (through the l9t5 modules they import), r4b/pin_parity.py (a usage line),
+    w5si/tools/edge_search.py (retake_pdf_text.py beside this file is the re-take itself)
+  DRY-RUN OR TRANSCRIPT, no call of its own (15, untouched): cx1/checks/check-1-phase1.py, d6dec/make_basis_md.py,
+    l4e4/l4e4_limits.py and l4e6/l4e6_fault_handling.py (through r11dep), l4e7/l4e7_p0sol.py (a sentence on the re-key host),
+    l6pwr/l6pwr_parts.py and l6r2/l6r2_passives.py (through v2/ecad/tools/part_identities.py), l8r2/l8r2_dist.py,
+    l9t5/l9t5_connected.py, l9t5/l9t5_f01_drafts.py (through converted modules), r4b/pin_parity.py (a usage line),
     s122/apply_docs_s122_r4.py, s122/judgements.py, w4dp/patch_vendor_index.py, w5identc/build_table.py
 
 Use, from a generator (the records import their siblings by path):
