@@ -3396,7 +3396,7 @@ def fx_u04_expect(F):
             "%s mA is the quantified subset of its drains" % fmt(F["f02"]["held"][0]), "the bench acceptance at most %s mA" % fmt(F["f02"]["held"][1]),
             "a latch within %s s" % fmt(fx["latch_s"]), "an RDS(on) allowance of %s mOhm per FET" % fmt(F["f02"]["allow"]),
             "held at %s A, the pack breaker's largest limit, from %s C" % tuple(fmt(x) for x in F["f02"]["held_lim"]),
-            "(Zself + 2 Zmut) at most %s K/W steady with R17 placed apart" % fmt(F["f02"]["z3"]),
+            "(Zself + 2 Zmut) at most %s K/W steady with R17 placed apart" % fmt(F["f02"]["z3"]), "(Zself + 2 Zmut) at most %s K/W without m" % fmt(F["f02"]["z3m"]),
             "(Zself + Zmut) at most %s K/W the fallback" % fmt(F["f02"]["z2_fb"]), "at the allowances %.1f C in the 18 A service, kept" % F["f02"]["at_allow"][1],
             "Ciss %s nF typical at -15 V and about %s nF near 0 V for the three" % tuple(fmt(x) for x in F["f02"]["ciss3"]),
             "the docking pulse %s A whole in one FET, TJ %s C" % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock_tj"][1])),
@@ -4126,8 +4126,11 @@ CHOICES = [
                    "delivered current). Since L4-E11's round 9 (19b to 19d, on record l9stk's E-1 and C3) the "
                    "battery switch is three BUK6Y10-30P (Q39, Q40 and Q42), each sized to an RDS(on) allowance of 21.136 mOhm per FET that no "
                    "printed point bounds at -8.5 V hot (E11-36): the hottest junction at most 150 C held at 23.93 A, the pack breaker's "
-                   "largest limit, from 76.25 C with the band and R17 in place, for each FET's installed (Zself + 2 Zmut) at most 45.88 K/W "
-                   "steady with R17 placed apart (E11-29; the pair's (Zself + Zmut) at most 20.39 K/W the fallback; the pair's earlier "
+                   "largest limit, from 76.25 C with the band and R17 in place, for each FET's installed (Zself + 2 Zmut) at most 40.78 K/W "
+                   "without m (E11-29 as L4-E11's row restates it, its rounds 11 to 16; each junction's worst-split figure at its own m at most "
+                   "45.88 K/W; the design target Zw at most 37.59 K/W) with R17 placed apart (set 29's per-FET bar of 4 October 2026, each FET's "
+                   "(Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart (L4-E11's round 9, 19c), SUPERSEDED as the per-FET bar by "
+                   "that row; E11-29; the pair's (Zself + Zmut) at most 20.39 K/W the fallback; the pair's earlier "
                    "targets withdrawn with record l8p's breaker); at the allowances 118.0 C in the 18 A service, kept (R-159's fallback, "
                    "which lowered it, withdrawn); Ciss 7.08 nF typical at -15 V and about 8.61 nF near 0 V for the three, not shown under "
                    "TI's 5 nF, their current sharing and each junction read (E11-37, OPEN); the docking pulse 242.9 A whole in one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and "
@@ -4326,7 +4329,7 @@ DEFECTS = [
                 "a third (Q42) added by L4-E11's round 9 on record l9stk's selection (19b); after L4-F02 (L4-E11 16): sized to an RDS(on) "
                 "ALLOWANCE of 21.136 mOhm per FET, no printed point bounding -8.5 V hot (E11-36); since round 9 (19c) record l9stk's junction "
                 "limit: the hottest junction at most 150 C held at 23.93 A from 76.25 C with the band and R17 in place, each FET's installed "
-                "(Zself + 2 Zmut) at most 45.88 K/W steady with R17 placed apart, the pair's 20.39 K/W the fallback (the pair's earlier "
+                "(Zself + 2 Zmut) at most 40.78 K/W without m (E11-29 as L4-E11's row restates it, its rounds 11 to 16; each junction's worst-split figure at its own m at most 45.88 K/W) with R17 placed apart, the design target Zw at most 37.59 K/W (set 29's per-FET bar of 4 October 2026, 45.88 K/W steady with R17 placed apart (L4-E11's round 9, 19c), SUPERSEDED as the per-FET bar by that row), the pair's 20.39 K/W the fallback (the pair's earlier "
                 "steady and transient targets withdrawn with record l8p's breaker) (E11-29); 18 A for 60 s kept, 118.0 C at the "
                 "allowances; Ciss of the three 7.08 nF typical at -15 V and about 8.61 nF near 0 V, not shown under TI's 5 nF (E11-37, "
                 "OPEN, their current sharing and each junction read; on a negative answer the pair at its fallback or one FET with a heat "
@@ -5531,10 +5534,10 @@ def cons_comparisons(F):
     return [
         {"id": "UDC-1", "what": "the battery switch (D-14; R-157's pair with Q42, R-209, since L4-E11's round 9; its evidence R-159, R-160, R-182, R-183)",
          "current": "(S1) the pair Q39 and Q40 with a third BUK6Y10-30P, Q42 (L4-E11 round 9 on record l9stk's selection), with its qualification: each "
-                    "FET's installed (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart, the hottest junction at most 150 C held at %s A "
+                    "FET's installed (Zself + 2 Zmut) at most %s K/W without m (E11-29 as L4-E11's row restates it; each junction's worst-split figure at its own m at most %s K/W) with R17 placed apart, the design target Zw at most %s K/W (set 29's %s K/W per FET of 4 October 2026, L4-E11's round 9, SUPERSEDED as the per-FET bar), the hottest junction at most 150 C held at %s A "
                     "from %s C (E11-29; the pair's %s K/W the fallback), the whole hot docking pulse (E11-30), RDS(on) at -8.5 V and 150 C at "
                     "most %s mOhm (E11-36), BATDRV with the three's Ciss and their current sharing (E11-37; %s nF typical at -15 V, about %s nF "
-                    "near 0 V, against TI's below 5 nF)" % (fmt(g["z3"]), fmt(g["held_lim"][0]), fmt(g["held_lim"][1]), fmt(g["z2_fb"]), fmt(g["allow"]),
+                    "near 0 V, against TI's below 5 nF)" % (fmt(g["z3m"]), fmt(g["z3"]), fmt(g["zw"]), fmt(g["z3"]), fmt(g["held_lim"][0]), fmt(g["held_lim"][1]), fmt(g["z2_fb"]), fmt(g["allow"]),
                                                            fmt(g["ciss3"][0]), fmt(g["ciss3"][1])),
          "alternative": "(S2) one BUK6Y10-30P: Ciss about %s nF near 0 V, %s %% of TI's figure (typical), but a junction to air of at most %s "
                         "K/W for 20 A held, a heat path through the case, and still no printed hot RDS(on) or Ciss maximum; (S3) a P-FET whose "
@@ -7396,8 +7399,8 @@ def cons_exit_defects(F):
          "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the mixers' start on U22's %s V rail (R-179; VSYS_E %s to %s V no longer reaches them)" % (fmt(F["f02"]["held"][1]), fmt(F["cp"]["rail"]["vout"][0]), fmt(F["cp"]["rail"]["drop"][2]), fmt(fx["vsys_rng"][1])),
          "nothing of the topology: a feed inside (B1)"),
         ("D-14", "(B1)'s battery FET bounded at an unprinted corner and a fallback lowering 18 A for 60 s (the review's B2)",
-         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157) and the third, Q42, since L4-E11's round 9 (19b; R-209), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (the three's Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's installed (Zself + 2 Zmut) at most %s K/W steady with R17 placed apart (the pair's %s K/W the fallback), %.1f C in the 18 A service, the docking pulse whole in one FET at TJ %s C"
-         % (fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3"]), fmt(F["f02"]["z2_fb"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1])),
+         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157) and the third, Q42, since L4-E11's round 9 (19b; R-209), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (the three's Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, the hottest junction at most 150 C held at %s A from %s C for each FET's installed (Zself + 2 Zmut) at most %s K/W without m (E11-29 as L4-E11's row restates it; each junction's worst-split figure at its own m at most %s K/W) with R17 placed apart, the design target Zw at most %s K/W (set 29's %s K/W per FET of 4 October 2026, L4-E11's round 9, SUPERSEDED as the per-FET bar) (the pair's %s K/W the fallback), %.1f C in the 18 A service, the docking pulse whole in one FET at TJ %s C"
+         % (fmt(F["f02"]["allow"]), fmt(F["f02"]["held_lim"][0]), fmt(F["f02"]["held_lim"][1]), fmt(F["f02"]["z3m"]), fmt(F["f02"]["z3"]), fmt(F["f02"]["zw"]), fmt(F["f02"]["z3"]), fmt(F["f02"]["z2_fb"]), F["f02"]["at_allow"][1], fmt(F["f02"]["dock_tj"][1])),
          "the draft applied (R-157, with R-209)", "Zself and Zmut of the three on the coupon or the first prototype (R-159); RDS(on) at -8.5 V and 150 C at most %s mOhm (R-182); TI's answer on Ciss or BATDRV with the three on the bench (R-183); VF and ISM hot (R-160)" % fmt(F["f02"]["allow"]),
          "nothing of the topology: a part inside (B1); on a negative Ciss answer the engineer chooses the pair at its fallback or one FET with a heat path through the case"),
         ("D-15", "the dock's new VSYS contact without branch protection (L4-F03)",
