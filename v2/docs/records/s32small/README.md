@@ -1,4 +1,4 @@
-DONE: Q-53 (the cap, committed dabfe4ca) and Q-55 (as apply_q55_ve16.py for set 32's merged tree). NOT DONE: nothing of the brief. NEXT: set 32's integrator runs apply_q55_ve16.py after set 31's promotion, re-pins, re-keys.
+DONE: Q-53 (the cap, committed dabfe4ca), Q-55 (as apply_q55_ve16.py for set 32's merged tree) and Q-65 (W47: Q-55's change record row and TP-SOLAR.md's quote, edits 5 and 6 of the same script). NOT DONE: nothing of either brief. NEXT: set 32's integrator runs apply_q55_ve16.py after set 31's promotion, re-pins, re-keys, regenerates tp_check.out.
 
 # Record s32small: set 32's two decided small items (MESHSAT-1357, W40, 6 October 2026)
 
@@ -72,17 +72,63 @@ pass. The heavy modules test_l4e5, test_l4e9, test_l4e11 and test_l9t5 were read
 page); one dependency pass re-pinning l4e11_power.out, l4e9_power_path.out, l5r2_interfaces.out, l5r3_panel.out,
 l8gnd_drafts.out and l9t5_t10.out.
 
+## Q-65: Q-55's change record row and TP-SOLAR.md's quote (W47, edits 5 and 6 of apply_q55_ve16.py)
+
+W47's brief (`_runs/claude/w47s32txt/BRIEF.md`, QUEUE line Q-65): the two record texts W40 left (its decision 2 below and its
+first finding), written as rows the same script applies, so V-E16's edit, its change record row and the procedure's quote are
+applied together once and refused together on a second run. Read at set 31's lineage `3057ae43` (fnd/int31regen), where the
+page's change record ends with W8's row and TP-SOLAR.md is as on main.
+
+| File | Old | New | Basis |
+|---|---|---|---|
+| `v2/docs/HW-FW-CONTRACT.md`, section 10 (the change record, the page's last section) | W8's row "\| 2 (W8, L5-F14) \|" is the last row | one row appended after the V-E16 edit, `CR_ROW`: "\| 2 (Q-55, set 32) \| 6 October 2026 \| By record s32small for set 32 ...", in W8's form (three cells; the change, its basis, the wording before as dated history): V-E16's row 3 carries N1a's words at the place the register's R-176 row 3 carries them since set 31 (`b2564b59`), so rows 2 and 3 again equal the register's verbatim (L5-F09 d's invariant); nothing else in the row; R-240 drafted and not applied, no pass line changed, no claim widened; the wording before "U5's CSPIN to CSNIN within +-0.240 V, U21 turning Q12 off" | Q-55 (the coordinator's decision of 6 October 2026 15:22 CEST) and Q-65 |
+| `v2/docs/test-procedures/TP-SOLAR.md`, section 8, after the quote that holds line 297 | (nothing: a pure insertion) | a dated lead-in "**Added 6 October 2026 (set 32, Q-55, quotes only):** ..." and a text quote of the register (`<!-- q src="v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md" -->`): "U5's CSPIN to CSNIN within +-0.240 V (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check, L4E7-P0SOL.md section 5)"; the lead-in says L4-E7's list does not carry the words and that R-240 is not applied, so row 3 and the Row 3 pass line are unchanged | Q-65; tp_check.py's C3 (a text quote is found verbatim in its source) |
+| `v2/ecad/tools/tests/test_w8l5.py` (through W40's `TEST_ADD`) | W40's Q-55 tree check of V-E16 | the same, then: Q-55's change record row once, after W8's, three cells, dated 6 October 2026, N1a's words once and the wording before quoted; TP-SOLAR.md quotes the register's annotated U5 line once as a text quote | a test of both rows |
+
+**Line 297 is not a quote of V-E16 or of the register (the brief's premise, corrected; authority SESSION, W47, under the owner's
+standing rule of 26 September 2026).** At `3057ae43` the line sits inside a TEXT quote of record l4e7's
+`v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md` (R-176's acceptance, round 2, its line 742), which carries no N1a words; the
+procedure's register quotes take the Acceptance cells of R-176, R-189 and R-174, and N1a annotated R-176's Item cell. So the quote is
+verbatim now and stays verbatim after Q-55 (which does not touch record l4e7); adding the words inside it would fail
+`tp_check.py`'s C3 (a text quote must be found verbatim in its source). Taken: the recommended option, the register's annotated
+line as the procedure's own text quote right after it, with a dated lead-in, so the procedure carries the words V-E16 carries
+after Q-55 without paraphrasing either source. Not taken: (a) leave the procedure as it is (it would not show the annotation
+the register and V-E16 carry, the brief's intent); (b) re-point line 297's quote to the register (its six rows are L4-E7's
+list; R-176's Acceptance quote already holds C4). Reversed by deleting the inserted lead-in and quote block (edit 6).
+
+**The record that pins TP-SOLAR.md** is `v2/docs/test-procedures/tp_check.out` (its line 102, the sha256/16
+`18325bbf0e24cf1d` at `3057ae43`, and the procedure's quote count line, "19 table, 3 text"); the brief's grep
+`v2/docs/records/*/*.out` finds none, and no other file of the tree prints TP-SOLAR.md's sha256. It is NOT regenerated here;
+set 32's chain regenerates it through `_bin/regen_out.py` after the script runs.
+
+**The test that pins the change record's form.** test_w8l5's last assertion, `l1[-2].startswith("| 2 (W8, L5-F14) |")`, reads
+the page at `W8_COMMIT` (8840adda) through `git_show`, not the tree, so it accepts the appended row unchanged (were W8_COMMIT
+set to None it would read the tree and fail on Q-55's moved V-E16 line already, before this row). W40's script inserts its
+Q-55 block above that assertion; W47's lines extend that block (the third row of the table above).
+
+TESTS: see the section "Checked on a scratch clone (W47)" below.
+
 ## Session decisions (authority SESSION, W40)
 
 1. Q-55 as an apply script for set 32's merged tree (above).
 2. No change record row added to HW-FW-CONTRACT.md section 10 for Q-55: the brief says nothing else in the row, N1a added none to
    the register, and the annotation carries its own provenance; the integrator may add one at set 32 (the tests that read the
-   page do not require it).
+   page do not require it). SUPERSEDED 6 October 2026 by the coordinator's Q-65: W47 added the row as edit 5 (above).
 3. `h3/zip_size_estimate.py`'s docstring left as H3's dated record (above).
 
 ## Findings for other authors (not changed here)
 
 - `v2/docs/test-procedures/TP-SOLAR.md:297` quotes row 3's U5 line without N1a's words; whether the procedure follows the
-  register is record tp's question.
+  register is record tp's question. ANSWERED 6 October 2026 by Q-65 (W47, edit 6): the line quotes record l4e7, verbatim; the
+  register's annotated line is added as its own quote.
 - `pack.yaml`'s reference rule for the H1.1 patches keeps the reason "moved out in H2 to keep the ZIP under max_zip_bytes", a
   dated statement about H2 that reaches REFERENCED-SOURCES.tsv; left as it is.
+
+## Session decisions (authority SESSION, W47, under the owner's standing rule of 26 September 2026)
+
+1. Both texts as edits 5 and 6 of W40's `apply_q55_ve16.py`, not a sibling script: the change record row belongs with V-E16's
+   edit and the procedure's quote with both; one script gives one applied state and one refusal, where two would allow a half
+   applied pair. Reversed by moving edits 5 and 6 into a sibling script that requires this one applied.
+2. TP-SOLAR.md's line 297 left verbatim and the register's line added as its own quote (the section above).
+3. The test of both rows added to W40's `TEST_ADD` block in test_w8l5 (no new module): the block already reads the page and
+   the register for Q-55.
