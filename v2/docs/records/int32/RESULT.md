@@ -473,7 +473,10 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   the pages' two ADOPTION cells were filled by hand (before that `test_patch32` refused S-07 and U-05, W99's B2). That hand fill
   described the tool before W103's extension (queue item Q-124): the second run now fills both cells (W106's N-a). With the rows
   applied to the four pages on fnd/adopt32 (W105), the tool's template also counts the pages' tokens, 25 more rows (START-HERE.md 8,
-  SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), each the token of a row of the patch file.
+  SUPPLIER-HANDOVER.md 8, LAYER-STATUS.md 3, EXECUTION-PLAN.md 6), each the token of a row of the patch file. W105 repeated
+  the three stages on that tree with fnd/adopt32 merged (the patch file's paragraph "The rows applied and the tests restated"): the
+  template 122 rows, the first run 101 lines with 5 ADOPTION occurrences deferred, the second 5 lines, a third refused (exit 2);
+  ten modules, `test_res32` and `test_patch32` among them, read 113 passed, 0 failed, 0 skipped at each stage.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
