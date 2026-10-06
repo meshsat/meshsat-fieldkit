@@ -12,7 +12,10 @@ each test below names as its evidence basis:
   - commit 53a68c7c (integration 2c) made that reader test the PRESENCE of every row the draft adds (by id) and of the page's P0
     note, not the verbatim texts, because set 31 edited the applied texts;
   - the owner's part 25 of 5 October 2026 (v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md): the integration gate binds the
-    reviewed and the integrated revisions with the intervening changes classified; test 8 binds the draft to what 7070f106 wrote.
+    reviewed and the integrated revisions with the intervening changes classified; test 8 binds the draft to what 7070f106 wrote;
+  - commit d83d9f2d (integration 2b, D1) made the reader decide on the presence of EVERY added id (none = pristine, all = applied,
+    some = refused naming the missing ids) where its parent 6bc4424e decided on R-220 alone; the tests t_d1_* hold that case,
+    which W16's review of 2b (finding 3) found untested, with a mutant and the parent's draft read from history.
 
 Every fixture is a minimal repository root in a temporary directory: the three files under v2/docs/records/l4e9/ (the tree's own,
 or the committed ones at 3d2746c9 read from this repository's history) and `git init`, because L4-E9's generator finds its tree
@@ -462,3 +465,135 @@ def t_m8_binding_predicate_fails_on_a_changed_row_text():
     """Mutant: one added row's text changed in the draft (R-221's item). Predicate (8) fails: the register differs from 7070f106's
     outside R-240. Evidence basis: 7070f106 and the owner's part 25 (an intervening change is classified, never silent)."""
     _fails(p8_binds_the_integration, "over-voltage cut-off on VIN_RAW (R-48", "overvoltage cut-off on VIN_RAW (R-48")
+
+
+# ---- the D1 correction of integration 2b (d83d9f2d): the reader decides on EVERY added id ----
+# W16's independent review of 2b (REVIEW-2B finding 3): no predicate above discriminates D1 itself. Predicate (4) removes R-220 from
+# the APPLIED tree, which the parent's reader refused as well; the case the fix exists for, a register carrying some of the added rows
+# beside a page and script that may be pristine, was exercised nowhere. On it the parent's reader (6bc4424e: `"| R-220 |" not in reg`
+# alone) took the pristine path, and its register guard (R-220 alone too) inserted every added row again.
+
+PARENT_2B = "6bc4424e"     # the parent of 2b: the reader and the register guard both decided on R-220 alone
+DRAFT_PATH = "v2/docs/records/l9t5/apply_l4e9_changelist_p0.py"
+ROWS_AFTER = (("R-219", [r for r in ADDED if int(r[2:]) < 240]), ("R-240", [r for r in ADDED if int(r[2:]) > 240]))
+#                            where 7070f106 put the added rows, typed here apart from the draft's REG_ADD
+D1_OLD = ('    if not present:\n        return None\n    if len(present) != len(ids):\n'
+          '        refuse("the register is PARTIALLY applied: it carries %d of the %d rows this draft adds; missing %r" % (\n'
+          '            len(present), len(ids), [i for i in ids if i not in present][:6]))\n')
+D1_PARENT = '    if "| R-220 |" not in reg:\n        return None\n'
+
+
+def _row_ids(text):
+    return re.findall(r"^\| (R-\d+) \|", text, re.M)
+
+
+def _dups(text):
+    """the row ids that open more than one line of a register text"""
+    ids = _row_ids(text)
+    return sorted({i for i in ids if ids.count(i) > 1})
+
+
+def _with_rows(base, rows_from, keep):
+    """`base` (a register without the added rows) with the added rows `keep` copied from `rows_from`, each in 7070f106's place"""
+    src = {re.match(r"\| (R-\d+) \|", l).group(1): l for l in rows_from.split("\n") if re.match(r"\| R-\d+ \|", l)}
+    lines = base.split("\n")
+    for anchor, ids in ROWS_AFTER:
+        k = [i for i, l in enumerate(lines) if l.startswith("| %s |" % anchor)]
+        assert len(k) == 1, "%d rows %s in the base register" % (len(k), anchor)
+        lines[k[0] + 1:k[0] + 1] = [src[r] for r in ids if r in keep]
+    out = "\n".join(lines)
+    back = out
+    for r in keep:
+        back = _drop_line(back, "| %s |" % r)
+    assert back == base, "the fixture register is not the base with the kept rows inserted"
+    return out
+
+
+def _d1_registers():
+    """the partially applied registers: (label, text, the added ids it lacks); the first is the parent's duplicating case"""
+    pristine, applied, tree = _at(PRISTINE)[REG], _at(APPLIED_AT)[REG], _tree()[REG]
+    assert not set(_row_ids(pristine)) & set(ADDED), "the pristine register carries an added row"
+    out = []
+    for label, keep in (("every added row but R-220", ADDED[1:]), ("R-220 alone of the added rows", ADDED[:1])):
+        missing = [r for r in ADDED if r not in keep]
+        out.append(("the pristine register (%s, FAN_OK rows unedited) with %s" % (PRISTINE, label), _with_rows(pristine, applied, keep),
+                    missing))
+        t = tree
+        for r in missing:
+            t = _drop_line(t, "| %s |" % r)
+        out.append(("this tree's register with %s" % label, t, missing))
+    for label, reg, missing in out:
+        assert [r for r in ADDED if r in _row_ids(reg)] == [r for r in ADDED if r not in missing] and not _dups(reg), label
+    return out
+
+
+def pd1_partial(draft):
+    pages = (("the pristine page and script (%s)" % PRISTINE, _at(PRISTINE)), ("this tree's page and script", _tree()))
+    for rlabel, reg, missing in _d1_registers():
+        named = ["'%s'" % r for r in missing[:6]]    # the refusal names the first six missing ids
+        for plabel, texts in pages:
+            case = "%s, %s" % (rlabel, plabel)
+            with tempfile.TemporaryDirectory() as td:
+                root = _root(td, {REG: reg, PY: texts[PY], PAGE: texts[PAGE]})
+                before = _snap(root)
+                got, ref = _patch_all(draft, root)
+                if got is not None:
+                    d = _dups(got[0][_path(root, REG)])
+                    assert not d, "%s: the reader let it through and the register it would write duplicates %s" % (case, d[:6])
+                assert got is None, "%s: read as %s" % (case, "applied" if getattr(got[2], "ALREADY_APPLIED", False) else "pristine")
+                assert ref[0] == 3 and "PARTIALLY" in ref[1] and all(n in ref[1] for n in named), \
+                    "%s: exit %s, %s" % (case, ref[0], ref[1][-300:])
+                assert _snap(root) == before, "%s: patch_all wrote the fixture" % case
+                for flag in ("--check", "--write"):
+                    rc, out, err = _cli(draft, root, flag)
+                    on_disk = _dups(open(_path(root, REG), encoding="utf-8").read())
+                    assert not on_disk, "%s, %s: the register on disk duplicates %s" % (case, flag, on_disk[:6])
+                    assert rc == 3 and "PARTIALLY" in err and all(n in err for n in named), (case, flag, rc, out[-300:], err[-300:])
+                    assert "WRITTEN" not in out and "APPLIED BEFORE" not in out and "CHECK OK" not in out, (case, flag, out[-300:])
+                    assert _snap(root) == before, "%s, %s: a file of the fixture changed" % (case, flag)
+
+
+def _fails_at(pred, commit, must):
+    """the predicate fails by its own assertion, with `must` in the assertion's text, on the draft as committed at `commit`"""
+    r = _git("show", "%s:%s" % (commit, DRAFT_PATH))
+    if r.returncode != 0:
+        raise Skip("commit %s is not in this repository's history (the draft is read from it)" % commit)
+    before = _repo_state()
+    with tempfile.TemporaryDirectory() as td:
+        old = os.path.join(td, "apply_l4e9_changelist_p0_at_%s.py" % commit)
+        with open(old, "wb") as fh:
+            fh.write(r.stdout)
+        try:
+            pred(old)
+        except AssertionError as e:
+            assert _repo_state() == before, "the draft at %s changed the repository" % commit
+            assert must in str(e), "the predicate failed on the draft at %s, but not by %r: %s" % (commit, must, str(e)[:300])
+            return
+    raise AssertionError("the predicate passed on the draft as committed at %s" % commit)
+
+
+def t_d1_partially_applied_register_refused_naming_the_missing_ids():
+    """(D1) A PARTIALLY applied register, in four variants: the pristine register (3d2746c9, its FAN_OK rows unedited) and this
+    tree's register, each carrying every added row but R-220, and each carrying R-220 alone of the added rows; each beside the
+    pristine page and script (3d2746c9) and beside this tree's. On all eight: patch_all() refuses with exit 3 as PARTIALLY applied,
+    naming the missing ids (the first six), and writes nothing; `--check` and `--write` exit 3 the same way and write nothing; no
+    path leaves a register with a duplicated row (in memory or on disk). Evidence basis: commit d83d9f2d (integration 2b, W2's D1:
+    the reader decides on the presence of every added id) and REVIEW-2B finding 3 (W16, 6 October 2026)."""
+    _held(pd1_partial)
+
+
+def t_d1_m_partial_predicate_fails_on_the_parents_r220_test():
+    """Mutant: the reader with the parent's test restored (`if "| R-220 |" not in reg: return None` in place of the presence test,
+    the count of present ids against every added id removed); the register guard of 2b kept. Predicate (D1) fails on its first
+    variant: the pristine register lacking R-220 enters the pristine path and is refused there by 2b's register guard as "applied
+    before", not by the reader as partially applied naming R-220. Evidence basis: 6bc4424e (the parent's reader) and REVIEW-2B
+    finding 3. Anchor: applied_state()'s five lines from `if not present:` to the PARTIALLY refusal (D1_OLD, once in the draft)."""
+    _fails(pd1_partial, D1_OLD, D1_PARENT)
+
+
+def t_d1_parent_draft_fails_the_partial_predicate_by_duplicating_rows():
+    """The parent's draft itself (6bc4424e, read from this repository's history: the reader and the register guard both decide on
+    R-220 alone): predicate (D1) fails on its first variant by duplicating rows, the pristine register carrying every added row but
+    R-220 beside the pristine page and script taking the pristine path and receiving every added row a second time. Evidence basis:
+    6bc4424e and REVIEW-2B finding 3 ("on the parent's reader it duplicates rows")."""
+    _fails_at(pd1_partial, PARENT_2B, "duplicates")
