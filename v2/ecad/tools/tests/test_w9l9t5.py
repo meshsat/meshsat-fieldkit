@@ -96,6 +96,20 @@ def _outside_w9(text):
 
 
 # ------------------------------------------------------------------------------------------- item A: one identifier, two findings
+# Restated by W94 (6 October 2026). Basis: W90's read of set 31's 25 REVIEWED-INPUT CHANGED commits, filed verbatim as
+# v2/docs/records/int31/RIC-READ-W90-AS-RECEIVED.md, quotes this rename in its row 4.1 ("L9T5-F26 -> L9T5-F28 (CITATION)"); a filed
+# read that quotes the rename does not use the identifier for anything else. A file listed here may name L9T5-F28 only on lines that
+# also name L9T5-F26 (the rename, the same finding); a listed file present in the tree that no longer names it fails, so the list
+# holds only files that need it. Every other file outside the two pages and this module is held as before.
+QUOTES_RENAME = ("v2/docs/records/int31/RIC-READ-W90-AS-RECEIVED.md",)
+
+
+def _quotes_the_rename_only(text):
+    """True when every line of text that names L9T5-F28 also names L9T5-F26, and at least one line names L9T5-F28"""
+    named = [ln for ln in text.split("\n") if "L9T5-F28" in ln]
+    return bool(named) and all("L9T5-F26" in ln for ln in named)
+
+
 def _f26_collision(t10, readme):
     """True while T10-ROUND5.md names a finding of its own L9T5-F26 (outside the quoted first text) or L9T5-F28 is missing or
     README's L9T5-F26 is not J_PA's finding"""
@@ -119,6 +133,7 @@ def t_item_a_the_second_l9t5_f26_is_l9t5_f28():
         assert s_ in _norm(f26), "README's L9T5-F26 lacks %r" % s_
     # the identifier is new: no other record, test or generator in the tree uses L9T5-F28 (this module and the two pages aside)
     mine = {os.path.normpath(os.path.join(ROOT, p)) for p in (README, T10R)} | {os.path.abspath(__file__)}
+    quoting = {os.path.normpath(os.path.join(ROOT, p)) for p in QUOTES_RENAME}
     hits = []
     for top in ("v2/docs", "v2/ecad/tools"):
         for d, _s, fs in os.walk(os.path.join(ROOT, top)):
@@ -127,11 +142,17 @@ def t_item_a_the_second_l9t5_f26_is_l9t5_f28():
                     p = os.path.normpath(os.path.join(d, f))
                     if p not in mine:
                         try:
-                            if "L9T5-F28" in open(p, encoding="utf-8", errors="replace").read():
-                                hits.append(os.path.relpath(p, ROOT))
+                            text_ = open(p, encoding="utf-8", errors="replace").read()
                         except OSError:
-                            pass
+                            continue
+                        if "L9T5-F28" in text_ and not (p in quoting and _quotes_the_rename_only(text_)):
+                            hits.append(os.path.relpath(p, ROOT))
     assert not hits, "L9T5-F28 is used elsewhere: %s" % hits[:5]
+    for q in QUOTES_RENAME:     # listed only while it quotes the rename (W94's restatement above)
+        if os.path.exists(os.path.join(ROOT, q)):
+            assert _quotes_the_rename_only(tree(q)), "%s is listed as quoting the rename but does not (or no longer) quote it" % q
+    assert not _quotes_the_rename_only("row 4.1: L9T5-F28 (CITATION)\n"), "a line naming L9T5-F28 alone passed as the rename"
+    assert not _quotes_the_rename_only("no identifier here\n"), "a file without the identifier passed as quoting it"
     assert all("L9T5-F28" not in at(BASE, p) for p in PAGES), "L9T5-F28 already existed at the base"
 
 
