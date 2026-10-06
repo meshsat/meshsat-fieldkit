@@ -1728,16 +1728,16 @@ sentences while drafting); `records/l4close/REMAINING-ENGINEERING.md` (the ledge
 54423482 about 0.5 h and rekey7 54433045 about 0.25 h (unused) at 0.068; the records box 54444804 about 2 h at 0.068; suite4
 54347953 stopped by the watchdog at 01:30 and never restarted; every instance stopped, disks kept, none destroyed.
 
-### Milestone, 6 October 2026: integration set 31 promoted as a DESK candidate (main `__CANDIDATE__`)
+### Milestone, 6 October 2026: integration set 31 promoted as a DESK candidate (main `5f25daf3`)
 
-**Promoted:** main `__CANDIDATE__`, the candidate on fnd/int31regen, by fast-forward, the promotion log's line: `__GATE__`.
+**Promoted:** main `5f25daf3`, the candidate on fnd/int31regen, by fast-forward, the promotion log's line: `GitHub main at 5f25daf3762ecd69c8764bf60de81a80f4119eab (_runs/int31/promote-2257.log)`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
 check of the engineering read a later revision. The base: set 30's promoted `dd1aed00`; the lineage `31928583`, 103 commits over the
 base; record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base; the re-key's dependents regenerated in
 `d0e283aa`, the first candidate, whose four-log gate FAILED (`records/int31/RESULT.md`, section 4a: four fixed-size source windows
 added in two of the lineage's test modules, `test_w11l9t5.py` and `test_w4l4e7.py`, so that `test_rule_windows` read "fixed-size source windows in the suite: 87 against the declared 83", and a tracked page the suite rewrote from a stale INT-001 reading); the coordinator's test correction `5f25daf3`,
 106 commits over the base. Gated by `_bin/suite_gate.py`, its verdict
-line over the four pass logs: `__GATE__`. `candidate_guard`, its check line on every host: `__GATE__`.
+line over the four pass logs: `suite_gate: candidate 5f25daf3762e; result lines 3366 (3363 PASS, 3 SKIP, 0 FAIL); modules 261 of 261 ran; suite_gate: PASS`. `candidate_guard`, its check line on every host: `candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen; candidate_guard: PASS candidate 5f25daf3762ecd69c8764bf60de81a80f4119eab: 997 evidence file(s) present and unchanged, every output binds but the 4 declared, 1 results cache(s) frozen`.
 
 **What it closes:** no power item. "Set 31 closes NO power item." (`records/int31/RESULT.md`, section 6). Set 31 adopts the record
 text set 30's integration prepared (the authors' restatements, the filed patch rows applied, the citations re-taken), regenerated to

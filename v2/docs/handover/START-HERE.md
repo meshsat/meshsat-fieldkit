@@ -1,6 +1,6 @@
 # MeshSat field kit V2: start here
 
-**Current revision: set 31 (6 October 2026), the revision `__CANDIDATE__`, an adoption of record text over set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`. Read section 0 first.** The paragraphs from here to
+**Current revision: set 31 (6 October 2026), the revision `5f25daf3`, an adoption of record text over set 30's `dd1aed00d0a0a521063b5792550bc510c4707c59`. Read section 0 first.** The paragraphs from here to
 section 0 are edition H3's opening and this page's edition history, oldest first (H1 to H3 of 27 September 2026, the supplier packages of 3 and 4 October
 2026, set 30, set 31); sections 1 to 9 are edition H3's text of 27 September 2026 with its later edits, kept as history where section 0
 differs.
@@ -88,7 +88,7 @@ authors handed over are carried as remaining engineering, with the supplier vali
 and the DESK-gate assessment apart from it. Section 0 states what it hands over; no circuit change is applied and nothing in it
 accepts, closes or promotes a design claim.
 
-**Set 31** (6 October 2026; the revision `__CANDIDATE__`). An adoption of record text over set 30: the restatements its authors wrote
+**Set 31** (6 October 2026; the revision `5f25daf3`). An adoption of record text over set 30: the restatements its authors wrote
 during set 30's integration (record l4e7's P0 pages, record l8p's release page, records l9t5's and l8r2's hand pages, the supplier
 validation annex, Layer 5's contract restatement, the filed patch rows applied to L4-E9's page, register and generator, the citation
 re-takes), regenerated to convergence, with the coordinator's items and two tooling corrections. "Set 31 closes NO power item."
@@ -114,7 +114,7 @@ carry another row's change into a file of the reviewed tree (set 30's rule, read
 
 | Revision | Commit | What it is |
 |---|---|---|
-| Tested | `__CANDIDATE__` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on (the package's `README.md`, section "What was tested, and how") |
+| Tested | `5f25daf3` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on (the package's `README.md`, section "What was tested, and how") |
 | Adopted | `__ADOPTION__` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 | Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
 | Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate cx46 read (`v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`v2/docs/records/int31/RESULT.md`, section 1) |
@@ -131,7 +131,7 @@ every commit between them. What set 30's promoted revision is, and is not, in th
 
 | What | State |
 |---|---|
-| Documents and editable artifacts | on main as a DESK candidate (`__CANDIDATE__`, set 31) |
+| Documents and editable artifacts | on main as a DESK candidate (`5f25daf3`, set 31) |
 | Design reviewed and accepted | NO |
 | Implemented | NONE |
 | Physical qualification | NONE |
@@ -180,7 +180,7 @@ desk check, an AI review or a passing suite as sign-off or qualification; to run
 engineering as qualification-only; to change a requirement or adopt the Saft MP 176065 xtd PROPOSAL without the owner's ruling.
 
 **How to reproduce** (the entry page's section 0e; section 6 below and `v2/docs/handover/REGENERATE.md` for the September formats).
-From a full git checkout at `__CANDIDATE__`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
+From a full git checkout at `5f25daf3`: a record's fetch script (`fetch_held_back.py`) fetches and checks the makers' sheets held
 back by their terms; `python3 v2/docs/records/<record>/<script>.py` prints a record's output, compared byte for byte with its committed `.out`, in the
 order of `v2/docs/records/l9t5/stability/regen_cascade.sh` for the P0 cascade; `python3 v2/docs/records/l8p/gen_netlist.py GENERATOR
 OUT.net` writes a generator's netlist without KiCad ("It is not KiCad's netlist", `v2/docs/records/l8p/gen_netlist.py:15`); and
