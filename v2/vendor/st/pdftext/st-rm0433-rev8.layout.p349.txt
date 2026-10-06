@@ -1,0 +1,42 @@
+RM0433                                                                Reset and Clock Control (RCC)
+
+
+8.5.6    System clock (sys_ck)
+         System clock selection
+         After a system reset, the HSI is selected as system clock and all PLLs are switched OFF.
+         When a clock source is used for the system clock, it is not possible for the software to
+         disable the selected source via the xxxON bits.
+         Of course, the system clock can be stopped by the hardware when the System enters Stop
+         or Standby mode.
+         When the system is running, the user application can select the system clock (sys_ck)
+         among the 4 following sources:
+         •    HSE
+         •    HSI
+         •    CSI
+         •    or pll1_p_ck
+         This function is controlled by programming the RCC clock configuration register
+         (RCC_CFGR). A switch from one clock source to another occurs only if the target clock
+         source is ready (clock stable after startup delay or PLL locked). If a clock source that is not
+         yet ready is selected, the switch occurs when the clock source is ready.
+         The SWS status bits in the RCC clock configuration register (RCC_CFGR) indicate which
+         clock is currently used as system clock. The other status bits in the RCC_CR register
+         indicate which clock(s) is (are) ready.
+
+         System clock generation
+         Figure 49 shows a simplified view of the clock distribution for the CPU and busses. All the
+         dividers shown in the block diagram can be changed on-the-fly without generating timing
+         violations. This feature is a very simply solution to adapt the busses frequencies to the
+         application needs, thus optimizing the power consumption.
+         The D1CPRE divider can be used to adjust the CPU clock. However this also impacts the
+         clock frequency of all bus matrix and HRTIM.
+         In the same way, HPRE divider can be used to adjust the clock for D1 domain bus matrix,
+         but this also impacts the clock frequency of bus matrix of D2 and D3 domains.
+         Most of the prescalers are controlled via RCC_D1CFGR, RCC_D2CFGR and
+         RCC_D3CFGR registers.
+
+
+
+
+                                           RM0433 Rev 8                                         349/3353
+                                                                                                           504
+

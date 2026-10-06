@@ -58,6 +58,23 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
 
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l9pwr
+PDFTEXT = {
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf": [["-l", "1"]],
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf": [["-l", "1"]],
+    "v2/vendor/diodes/diodes-ap64500.pdf": [["-l", "1"]],
+    "v2/vendor/power/ti-tlv755p-ldo.pdf": [["-l", "1"]],
+    "v2/vendor/power/tps2596.pdf": [[]],
+    "v2/vendor/ti/lm5176-datasheet.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps62933.pdf": [["-l", "1"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "rvpwr": "v2/docs/records/rv-pwr/pwr_budget.py",
     "rvpwr_out": "v2/docs/records/rv-pwr/pwr_budget.out",
@@ -151,12 +168,8 @@ _PDF = {}
 def pdf(key, layout=False, last=None):
     k = (key, layout, last)
     if k not in _PDF:
-        cmd = ["pdftotext"] + (["-layout"] if layout else []) + (["-l", str(last)] if last else []) + [path(key), "-"]
-        try:
-            r = subprocess.run(cmd, capture_output=True, check=True)
-        except (OSError, subprocess.CalledProcessError) as e:
-            die("pdftotext could not read %s (%s)" % (PINS[key], e))
-        _PDF[k] = r.stdout.decode("utf-8", "replace")
+        cmd = (["-layout"] if layout else []) + (["-l", str(last)] if last else [])
+        _PDF[k] = PT.pdf_text(ROOT, PINS[key], cmd, PDFTEXT, "v2/docs/records/l9pwr")
     return _PDF[k]
 
 
@@ -1020,7 +1033,7 @@ def compute():
     pb = load_rvpwr()
     F = parse_inputs(pb)
     hc = hc2_states(pb)
-    R = {"pins": [(k, PINS[k], sha16(k)) for k in PINS], "F": F, "pred": {}, "hc": hc}
+    R = {"pins": [(k, PINS[k], sha16(k)) for k in PINS] + [("pdftext", t, (h or "ABSENT")[:16]) for t, h, _held in PT.inputs(ROOT, PDFTEXT)], "F": F, "pred": {}, "hc": hc}
     cfgs = [build(pb, F, hc, i) for i in range(len(STEP_TEXT))]
     RV, DRAWN, DRAFTED = cfgs[0], cfgs[5], cfgs[-1]
     R1T = build(pb, F, hc, 10, cooler="maker")   # round 1's DRAFTED tree (38ef774c): D1 to D5 with l8r2's round 2 cooler

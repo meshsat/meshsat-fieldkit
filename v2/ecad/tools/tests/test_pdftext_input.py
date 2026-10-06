@@ -31,9 +31,14 @@ RETAKE = os.path.join(LIB, "retake_pdf_text.py")
 sys.path.insert(0, TESTS)
 from harness import need, Skip  # noqa: E402
 
-# the generators converted by W34; each record directory's PDFTEXT tables are what the re-take reads
+# the generators converted by W34 (the brief's six records first, then the remaining run-time callers outside the l4e7 KEY's group
+# and the accepted Layer 3 records); each record directory's PDFTEXT tables are what the re-take reads
 CONVERTED = ("efuse/efuse_check.py", "l5r2/l5r2_interfaces.py", "l8r2/l8r2_drafts.py", "l8r2/l8r2_gndret.py", "l8r2/l8r2_p0.py",
-             "l4e13/l4e13_panel.py", "l4e11/l4e11_power.py", "l4e9/l4e9_power_path.py")
+             "l4e13/l4e13_panel.py", "l4e11/l4e11_power.py", "l4e9/l4e9_power_path.py",
+             "l4e10/l4e10_cell_thermal.py", "l4e12/l4e12_thermal.py", "l7pwr/l7pwr_fans_th1.py", "l7r2/l7r2_items.py",
+             "l8p/l8p_drafts.py", "l8p/l8p_guard.py", "l9pwr/l9pwr_budget.py", "l9stk/l9stk_copper.py", "l9stk/l9stk_protection.py",
+             "l9t5/l9t5_a1.py", "l9t5/l9t5_case.py", "l9t5/l9t5_cm5.py", "l9t5/l9t5_drafts.py", "l9t5/l9t5_f01.py",
+             "l9t5/l9t5_paloop.py", "l9t5/l9t5_t10.py")
 PDF = "v2/vendor/fix/fixture.pdf"
 HELD = "v2/vendor/fix/held/sheet.pdf"
 TEXT = "MESHSAT FIXTURE PAGE ONE  Current rating: 10 A\n\nline two, °C and Ω\n\f  PAGE TWO 7.5 A\n\f".encode("utf-8")

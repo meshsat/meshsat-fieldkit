@@ -22,6 +22,19 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options ([] is pdftotext's
+# plain reading order). Each text is a verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its
+# PDF (a held-back sheet's text is held back with it, under held/); _lib/pdftext.py returns it byte for byte and refuses when it is
+# absent, so this script never runs pdftotext; section 0 prints each text's sha256 after the pins.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l7r2
+PDFTEXT = {
+    "v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf": [["-layout"]],
+    "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf": [["-layout"]],
+    "v2/vendor/d38999/glenair-series-iii-iv-panel-cutouts.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(TOP, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 PINS = {
     "drawings": "v2/docs/records/l7r2/inputs/makers-drawings-r2-2026-10-03.md",
     "prices": "v2/docs/records/l7r2/inputs/findchips-r2-2026-10-03.json",
@@ -84,11 +97,7 @@ def load(name, rel):
 
 
 def pdf(rel):
-    import subprocess
-    r = subprocess.run(["pdftotext", "-layout", os.path.join(TOP, rel), "-"], capture_output=True, text=True)
-    if r.returncode:
-        refuse("pdftotext could not read %s" % rel)
-    return r.stdout
+    return PT.pdf_text(TOP, rel, ["-layout"], PDFTEXT, "v2/docs/records/l7r2", universal_newlines=True)
 
 
 # ---------------------------------------------------------------- the readings
@@ -364,6 +373,8 @@ def render(R):
     P("0. INPUTS (sha256/16)")
     for k, v in PINS.items():
         P("   %-11s %s  sha256 %s" % (k, v, R["pins"][k][:16]))
+    for t, h, _held in PT.inputs(TOP, PDFTEXT):
+        P("   %-11s %s  sha256 %s" % ("pdftext", t, (h or "ABSENT")[:16]))
     P("")
     P("1. THE SEALED RJ45 AND ITS SHIELD PATH (record l8gnd F01; IF-EXT-ETH)")
     P("   the need: a coupler whose body or backshell carries the patch cable's shield to the connector plate (GND-002 point 3), rated for the PoE feed")

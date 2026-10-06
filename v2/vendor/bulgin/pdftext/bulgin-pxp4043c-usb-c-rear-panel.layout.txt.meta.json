@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf",
+ "pdf_sha256": "cce556227a71f8956420e5deb3a72ed99d639d376ac75bd612d36d23fa6d1532",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/bulgin/pdftext/bulgin-pxp4043c-usb-c-rear-panel.layout.txt",
+ "text_bytes": 2490,
+ "text_sha256": "07f6b13235498e5692047c7c31f529be9523e997e96f9bda3f71db7bcc5be2ee"
+}

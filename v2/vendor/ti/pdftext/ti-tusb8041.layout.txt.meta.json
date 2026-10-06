@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/ti/ti-tusb8041.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/ti/ti-tusb8041.pdf",
+ "pdf_sha256": "b715bce72e988310d18dbc8eb041a05b5f15e4a0b690843a873abdc373a1ad87",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tusb8041.layout.txt",
+ "text_bytes": 223953,
+ "text_sha256": "d557360fdc73b1c07b4f5454d223d08651edd39c9592259cc1a095dbaa881348"
+}

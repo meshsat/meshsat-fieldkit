@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/mdd-smbj-series-tvs.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/mdd-smbj-series-tvs.pdf",
+ "pdf_sha256": "95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/mdd-smbj-series-tvs.layout.txt",
+ "text_bytes": 28307,
+ "text_sha256": "bde264cad0d137ed3f7f65982ebcd8dfa83b637607db66dec6bdc69308ae107b"
+}

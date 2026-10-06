@@ -1,0 +1,215 @@
+                                                       系列号       HoJLR
+
+                      HoJLR2512封体合金系列规格书 修订日期                    2020-04-13
+
+                                                       版本号       Ho-A0
+
+
+
+
+规格书 Specification
+制造商:深圳市毫欧电子有限公司
+
+适用：本规格书适用于深圳市毫欧电子有限公司封体合金电阻 HoJLR2512系列产品选型。
+
+
+   产品特点 Features
+
+    合金芯片，封体工艺，焊接性能良好             
+
+    高可靠性，高过载能力，产品精度高 
+
+    使用温度范围较宽无感型设计
+
+    符合 ROHS 要求和无卤要求
+
+   产品名称Product Name
+
+    封体合金电阻
+
+   产品型号Product number
+
+       Ho       JLR      2512      3W       100mR        1%
+
+
+     制造商     产品类别        封装      额定功率         阻值        精度
+
+                                   2W      0.5~10mR    D=±0.5%
+    毫欧电子      封体合金      2512                           F=±1%
+
+                                   3W      0.5~500mR   J=±5%
+
+
+    具体参数请查看下页详情
+
+
+
+
+              地址：深圳市龙华新区观澜大布头路南通邦高新产业园 A 栋 8 楼
+
+深圳市毫欧电子有限公司 | 电话: 0755-81488408 | 传真: 0755-22630181 | 网址: www.moolee.com.cn
+                                                             系列号           HoJLR
+
+                          HoJLR2512封体合金系列规格书 修订日期                          2019-04-13
+
+                                                             版本号           Ho-A0
+
+
+   产品尺寸 Product size (Unit:mm)
+
+
+
+
+    封装          阻值            功率           L           W       C            T
+             0.5~10mR         2W        6.4±0.2    3.2±0.2   0.9±0.2   0.6±0.2
+    2512
+             0.5~500mR        3W        6.4±0.2    3.2±0.2   0.9±0.2   0.7±0.2
+
+   电气参数 Electrical parameter
+
+额定功率 Rated power                        2W、3W
+
+阻值范围 Resistance range                   0.5mR~500mR
+最大额定电流 Max.Rated Current                2.45A~77.45A
+准确度等级 AccuracyClass                     0.5%、1%、5%
+电阻温度系数 T.C.R ( ppm / ℃ )                ±50 (2mR~500mR)、±100 (0.5mR~1mR)
+工作温度范围 Operating Temperature Range -50℃~+170℃
+
+   功率曲线 Power curve
+    操作温度范围 - 50 ～+170 ℃电阻温度达到 70℃时降功率 示意图
+              100
+                                   70
+            负 80
+            载
+            功 60
+            率
+            比 40
+           (%)
+               20
+
+                0
+                    -50   0   25 50 75 100 125 150 170
+                                   环境温度
+
+
+                地址：深圳市龙华新区观澜大布头路南通邦高新产业园 A 栋 8 楼
+
+深圳市毫欧电子有限公司 | 电话: 0755-81488408 | 传真: 0755-22630181 | 网址: www.moolee.com.cn
+                                                                           系列号                 HoJLR
+
+                             HoJLR2512封体合金系列规格书 修订日期                                           2019-04-13
+
+                                                                           版本号                 Ho-A0
+
+    额定电流计算公式 The rated current is calculated by the following Formu
+
+                                  I :Rated Current (A)
+            I = 𝐏/𝐑               P:Rated Power (W)
+                                  R:Resistance Value (Ω)
+
+    建议焊盘尺寸 Recommended Solder Pad Dimension (Unit:mm)
+
+                  L     B
+
+
+
+
+                                      A         封装        阻值mR                 A           L           B
+
+                                               2512       0.5~500          4.0          4.1            2.1
+
+Cu Trace                 Sensing Trace
+
+
+     建议焊接参数 / Recommended Customer Soldering Parameters
+    预热: 150 to 180 ℃, 90±30秒 ， 焊接区 : 230℃ 或更高 , 30±10 秒 峰值: 260±5℃,5秒.
+
+
+
+
+                                                             Time (sec)
+
+
+
+
+                 回流焊曲线图                                   波峰焊曲线图
+
+     彩带尺寸 Ribbon size(Unit:mm)
+
+
+
+
+        A        B       W        F        E        P1      P2            P0          D0           T
+     3.6±0.2   6.9±0.2 12±0.2 5.5±0.05 1.75±0.1 4.0±0.1 2±0.05 4±0.05              Φ 1.5+0.1 0.85±0.15
+
+
+                      地址：深圳市龙华新区观澜大布头路南通邦高新产业园 A 栋 8 楼
+
+深圳市毫欧电子有限公司 | 电话: 0755-81488408 | 传真: 0755-22630181 | 网址: www.moolee.com.cn
+                                                                                系列号           HoJLR
+
+                              HoJLR2512封体合金系列规格书 修订日期                                         2019-04-13
+
+                                                                                版本号           Ho-A0
+
+
+   卷轴规格 Reel Specification
+
+
+
+
+     ΦA             ΦB           ΦC               W              T         Packaging Quantity
+    178±2           60±1         13±1            9±1           15.4±2           4000PCS
+
+
+   可靠性测试 Reliability Tests
+
+                                  Reference
+        Test Items                                           Condition of Test            Test Limits
+                                   standard
+Temperature Coefficient IEC60115-1-4.8
+                        JIS-C5201-4.8
+                                                        +25℃ ~ +125℃                  Refer 4.0
+of Resistance
+                            IEC60115-1-4.25.1          1000hours at rated power, 70℃,
+Load Life                   JIS-C5201-4.25.1                                          < ±1%
+                                                       1.5hours “ON”, 0.5hour “OFF”
+                            IEC60115-1-4.13
+Short Time Overload         JIS-C5201-4.13             5 X rated power for 5s         < ±1%
+
+                            IEC60115-1- 4.24.2.1a)
+Moisture no Load            JIS-C5201- 4.24.2.1a)
+                                                       85℃, 85%RH, 1000hrs            < ±1%
+
+                            IEC60115-1-4.19            -55℃ & +155℃, 100cycle,
+Temperature cycle           JIS-C5201-4.19                                            < ±1%
+                                                       15min per extreme condition
+Resistance to Soldering     IEC60115-1-4.18
+                                                       260±5℃ for 10±1 sec            < ±0.5%
+Heat                        JIS-C5201-4.18
+
+                            IEC60115-1-4.17                                           At least 95% of surface
+Solderability               JIS-C5201-4.17
+                                                       245±5℃, 2±0.5sec               area of electrode shall
+                                                                                      be covered with new
+                                                                                      solder
+
+                            IEC60115-1- 4.23.2
+High Temperature Exposure JIS-C5201-4.23.2             155℃, 1000hrs                  < ±1%
+
+                            EC60115-1- 4.23.4
+Low Temperature Storage     JIS-C5201-4.23.4
+                                                       -55℃, 1000hrs                  <±1%
+
+                            IEC60115-1-4.33
+Substrate Bending           JIS-C5201-4.33             Bending width 2mm              < ±0.5%
+
+                            IEC60115-1-4.6
+Insulation Resistance       JIS-C5201-4.6              100V DC for 1 minute           >100 MΩ
+
+
+
+                     地址：深圳市龙华新区观澜大布头路南通邦高新产业园 A 栋 8 楼
+
+深圳市毫欧电子有限公司 | 电话: 0755-81488408 | 传真: 0755-22630181 | 网址: www.moolee.com.cn
+

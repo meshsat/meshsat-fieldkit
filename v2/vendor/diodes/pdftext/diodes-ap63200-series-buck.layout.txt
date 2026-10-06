@@ -1,0 +1,994 @@
+                                                                                             AP63200/AP63201/AP63203/AP63205
+                         3.8V TO 32V INPUT, 2A LOW IQ SYNCHRONOUS BUCK WITH ENHANCED EMI REDUCTION
+
+Description                                                                        Pin Assignments
+The AP63200/AP63201/AP63203/AP63205 is a 2A, synchronous buck
+converter with a wide input voltage range of 3.8V to 32V and fully                                                TOP VIEW
+integrates a 125mΩ high-side power MOSFET and a 68mΩ low-side
+power MOSFET to provide high-efficiency step-down DC/DC
+conversion.
+                                                                                               FB     1                                         6     BST
+The AP63200/AP63201/AP63203/AP63205 device is easily used by
+minimizing the external component count due to its adoption of peak
+current mode control along with its integrated compensation network.
+                                                                                               EN     2                                         5      SW
+The AP63200/AP63201/AP63203/AP63205 has optimized designs for
+Electromagnetic Interference (EMI) reduction. The converter features
+Frequency Spread Spectrum (FSS) with a switching frequency jitter of
+±6%, which reduces EMI by not allowing emitted energy to stay in any
+one frequency for a significant period of time. It also has a proprietary                     VIN     3                                         4      GND
+gate driver scheme to resist switching node ringing without sacrificing
+MOSFET turn-on and turn-off times, which further erases high-
+frequency radiated EMI noise caused by MOSFET switching.
+                                                                                                                    TSOT26
+The device is available in a low-profile, TSOT26 package.
+
+
+Features
+•    VIN 3.8V to 32V                                                               Applications
+•    2A Continuous Output Current
+                                                                                   •     12V and 24V distributed power bus supplies
+•    0.8V ±1% Reference Voltage
+                                                                                   •     Flat screen TV sets and monitors
+•    22µA Ultralow Quiescent Current
+                                                                                   •     Power tools and laser printers
+•    Switching Frequency
+                                                                                   •     White goods and small home appliances
+     o    500kHz: AP63200 and AP63201
+                                                                                   •     FPGA, DSP, and ASIC supplies
+     o    1.1MHz: AP63203 and AP63205
+                                                                                   •     Home audios
+•    Pulse Width Modulation (PWM) Regardless of Output Load
+                                                                                   •     Network systems
+     o    AP63201
+                                                                                   •     Set top boxes
+•    Supports Pulse Frequency Modulation (PFM)
+                                                                                   •     Gaming consoles
+     o    AP63200, AP63203, and AP63205
+                                                                                   •     Consumer electronics
+     o    Up to 80% Efficiency at 1mA Light Load
+     o    Up to 88% Efficiency at 5mA Light Load
+•    Fixed Output Voltage
+     o    3.3V: AP63203
+     o    5.0V: AP63205
+•    Proprietary Gate Driver Design for Best EMI Reduction
+•    Frequency Spread Spectrum (FSS) to Reduce EMI
+•    Precision Enable Threshold to Adjust UVLO
+•    Protection Circuitry
+     o    Overvoltage Protection
+     o    Cycle-by-Cycle Peak Current Limit
+     o    Thermal Shutdown
+•    Totally Lead-Free & Fully RoHS Compliant (Notes 1 & 2)
+•    Halogen and Antimony Free. “Green” Device (Note 3)
+•    An automotive-compliant part is available under separate
+     datasheet (AP63200Q/AP63201Q/AP63203Q/AP63205Q)
+
+
+Notes:    1. No purposely added lead. Fully EU Directive 2002/95/EC (RoHS), 2011/65/EU (RoHS 2) & 2015/863/EU (RoHS 3) compliant.
+          2. See https://www.diodes.com/quality/lead-free/ for more information about Diodes Incorporated’s definitions of Halogen- and Antimony-free, "Green" and
+             Lead-free.
+          3. Halogen- and Antimony-free "Green” products are defined as those which contain <900ppm bromine, <900ppm chlorine (<1500ppm total Br + Cl) and
+             <1000ppm antimony compounds.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                            1 of 18                                                                   November 2024
+Document number: DS41326 Rev. 3 - 2                                    www.diodes.com                           © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                      AP63200/AP63201/AP63203/AP63205
+
+
+Typical Application Circuit
+
+
+                             INPUT
+                                                      3                 6
+                                                     VIN               BST             C3
+                                                                                      100nF
+                                                                                                L
+                                                                                              4.7µH
+                                                                                                                OUTPUT
+                                                                        5                                                VOU T
+                                                      2                SW                                                 5V
+                                                     EN    AP63205
+                                                                        1                                         C2
+                                 C1                                    FB                                       2x22μF
+                                10μF
+
+
+                                                               4
+                                                              GND
+
+
+
+
+                                                      Figure 1. Typical Application Circuit
+
+
+
+
+                                                     Figure 2. Efficiency vs. Output Current
+
+
+Pin Descriptions
+
+ Pin Number        Pin Name                                                            Function
+
+                                 Feedback sensing terminal for the output voltage. Connect this pin to the resistive divider of the output.
+       1               FB
+                                 See Setting the Output Voltage section for more details.
+                                 Enable Input. EN is a digital input that turns the regulator on or off. Drive EN high to turn on the regulator and low
+       2               EN        to turn it off. Attach to VIN or leave open for automatic startup. The EN has a precision threshold of 1.18V for
+                                 programing the UVLO. See Enable section for more details.
+                                 Power Input. VIN supplies the power to the IC, as well as the step-down converter switches. Drive VIN with a 3.8V
+       3               VIN       to 32V power source. Bypass VIN to GND with a suitably large capacitor to eliminate noise due to the switching
+                                 of the IC. See Input Capacitor section for more details.
+       4              GND        Power Ground.
+                                 Power Switching Output. SW is the switching node that supplies power to the output. Connect the output LC filter
+       5               SW
+                                 from SW to the output load. Note that a capacitor is required from SW to BST to power the high-side switch.
+                                 High-Side Gate Drive Boost Input. BST supplies the drive for the high-side N-Channel MOSFET. A 100nF
+       6              BST
+                                 capacitor is recommended from SW to BST to power the high-side switch.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                         2 of 18                                                              November 2024
+Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                      © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                        AP63200/AP63201/AP63203/AP63205
+
+
+Functional Block Diagram
+
+                                                                                             0.4V
+                                                                       Internal
+   EN 2                                         +            ON                              0.8V
+              20kΩ                    1.18V                           Reference
+                                                -                                            1.1V
+
+                                                                                                   VCC
+                                                                                                                                                     3 VIN
+                                                                                                Regulator
+                          1.5µA 4µA
+                                                                                                                              +
+                                                                                       RT = 0.2V/A
+                                                                                                                        CSA
+                                                                                                                              -
+   FB    1                   +            UVP                         SE = 0.84V/T +
+                        0.6V -                        Oscillator
+
+                                                                                                                                                     6 BST
+
+                                                                                       Ref OCP
+
+                                      -                                      VSUM        +                                                     Q1
+                                                                                                                Logic
+                                                      COMP
+                           0.8V       + gm                                               -       PWM
+                Internal SS           +                                                        Comparator
+                                           Error                   18kΩ                                                                              5 SW
+                                          Amplifier
+                                                                   7.6nF
+                                                                                                                                               Q2
+
+                                                                                                                                                     4 GND
+
+
+                                                          Figure 3. Functional Block Diagram
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                         3 of 18                                                             November 2024
+Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                     © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                             AP63200/AP63201/AP63203/AP63205
+
+
+Absolute Maximum Ratings (Note 4) (@TA = +25°C, unless otherwise specified.)
+         Symbol                                      Parameter                                                Rating                                       Unit
+                                                                                                        -0.3 to +35.0 (DC)                                  V
+           VIN                                     Supply Voltage
+                                                                                                      -0.3 to +40.0 (400ms)                                 V
+          VSW                                  Switch Node Voltage                                          -1.0 to VIN + 0.3                                V
+          VBST                                   Bootstrap Voltage                                    VSW - 0.3 to VSW + 6.0                                 V
+           VFB                                   Feedback Voltage                                            -0.3V to +6.0                                   V
+           VEN                                 Enable/UVLO Voltage                                          -0.3V to +35.0                                   V
+           TST                                 Storage Temperature                                            -65 to +150                                   °C
+            TJ                                 Junction Temperature                                              +160                                       °C
+            TL                                   Lead Temperature                                                +260                                       °C
+ESD Susceptibility (Note 5)
+        HBM                                     Human Body Mode                                                  2000                                        V
+       CDM                                     Charge Device Model                                               1000                                        V
+Notes:    4. Stresses greater than those listed under “Absolute Maximum Ratings” can cause permanent damage to the device. These are stress ratings only, and
+             functional operation of the device at these or any other conditions beyond those indicated under “Recommended Operating Conditions” is not implied.
+             Exposure to “Absolute Maximum Ratings” for extended periods can affect device reliability.
+          5. Semiconductor devices are ESD sensitive and can be damaged by exposure to ESD events. Suitable ESD precautions should be taken when
+              handling and transporting these devices.
+
+
+
+
+Thermal Resistance (Note 6)
+         Symbol                                      Parameter                                                  Rating                                     Unit
+           θJA                                  Junction to Ambient                              TSOT26                         89                        °C/W
+           θJC                                    Junction to Case                               TSOT26                         39                        °C/W
+Note:     6. Test condition for TSOT26: Device mounted on FR-4 substrate, single-layer PC board, 2oz copper, with minimum recommended pad layout.
+
+
+
+
+Recommended Operating Conditions (Note 7) (@TA = +25°C, unless otherwise specified.)
+         Symbol                                      Parameter                                        Min                       Max                        Unit
+           VIN                                     Supply Voltage                                     3.8                       32                           V
+           TA                        Operating Ambient Temperature Range                              -40                       +85                         °C
+Note:     7. The device function is not guaranteed outside of the recommended operating conditions.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                            4 of 18                                                                      November 2024
+Document number: DS41326 Rev. 3 - 2                                    www.diodes.com                              © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                                   AP63200/AP63201/AP63203/AP63205
+
+
+Electrical Characteristics (TA = +25°C, VIN = 12V, unless otherwise specified. Min/Max limits apply across the recommended ambient
+temperature range, -40°C to +85°C, and input voltage range, 3.8V to 32V.)
+
+        Symbol                            Parameter                               Test Conditions                    Min            Typ             Max              Unit
+         ISHDN           Shutdown Supply Current                          VEN = 0V                                    —               1               3               µA
+                                                                          AP63201:
+                                                                                                                      —             258               —               µA
+                                                                          VEN = OPEN, VFB = 1.0V
+          IQ             Supply Current (Quiescent)
+                                                                          AP63200/AP63203/AP63205:
+                                                                                                                      —              22               —               µA
+                                                                          VEN = OPEN, VFB = 1.0V
+                         VIN Under Voltage Threshold (Rising)             —                                         3.30            3.50            3.70               V
+        UVLO
+                         VIN Under Voltage Threshold Hysteresis           —                                           —             440               —              mV
+    RDS(ON)1             High-Side Switch On-Resistance (Note 8) —                                                    —             125               —              mΩ
+    RDS(ON)2             Low-Side Switch On-Resistance (Note 8) —                                                     —              68               —              mΩ
+   IPEAK_LIMIT           HS Peak Current Limit (Note 8)                   —                                          2.5             2.8             3.1               A
+  IVALLEY_LIMIT          LS Valley Current Limit (Note 8)                 —                                          2.5             3.2             3.9               A
+                                                                          AP63200/AP63201                             —            500                —              kHz
+         fSW             Oscillator Frequency
+                                                                          AP63203/AP63205                             —            1100               —              kHz
+         FSS             Frequency Spread Spectrum                        —                                           —             ±6                —               %
+          tON            Minimum On Time                                  —                                           —              80               —               ns
+                                                                          CCM, AP63200/AP63201                      792             800             808              mV
+         VFB             Feedback Voltage                                 CCM, AP63203                              3.27            3.30            3.33             V
+                                                                          CCM, AP63205                              4.95            5.00            5.05             V
+        VEN_H            EN Logic High                                    —                                         1.15            1.18            1.23               V
+        VEN_L            EN Logic Low                                     —                                         1.05            1.10            1.15               V
+                                                                          VEN = 1.5V                                  —              5.5              —               μA
+          IEN            EN Input Current
+                                                                          VEN = 1V                                    —              1.5              —               μA
+          tSS            Soft-Start Period                                —                                           —               4               —               ms
+         TSD             Thermal Shutdown (Note 8)                        —                                           —            +160               —               °C
+         THYS            Thermal Hysteresis (Note 8)                      —                                           —             +25               —               °C
+Note:          8. Compliance to the datasheet limits is assured by one or more methods: production test, characterization, and/or design.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                                  5 of 18                                                                   November 2024
+Document number: DS41326 Rev. 3 - 2                                          www.diodes.com                           © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                              AP63200/AP63201/AP63203/AP63205
+
+
+Typical Performance Characteristics (AP63200 @TA = +25°C, VIN = 12V, VOUT = 5V, unless otherwise specified.)
+
+
+
+
+             Figure 4. Efficiency vs. Output Current, VIN = 12V                 Figure 5. Efficiency vs. Output Current, VIN = 24V
+
+
+
+
+                   Figure 6. Load Regulation, VOUT = 5V                              Figure 7. Line Regulation, VOUT = 5V
+
+
+
+
+                 Figure 8. Feedback Voltage vs. Temperature                     Figure 9. Power Switch RDS(ON) vs. Temperature
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                  6 of 18                                                         November 2024
+Document number: DS41326 Rev. 3 - 2                          www.diodes.com                 © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                            AP63200/AP63201/AP63203/AP63205
+
+
+Typical Performance Characteristics (continued)
+
+
+
+
+                        Figure 10. IQ vs. Temperature                                    Figure 11. ISHDN vs. Temperature
+
+
+
+
+                        Figure 12. FSW vs. Temperature                             Figure 13. VIN POR and UVLO vs. Temperature
+
+
+                                                                     EN (5V/div)
+    EN (5V/div)
+                                                                    VOUT (2V/div)
+
+
+
+   VOUT (2V/div)                                                     IL (2A/div)
+
+   IL (2A/div)
+                                                                    SW (10V/div)
+
+
+   SW (10V/div)
+                                  2ms/div                                                           50µs/div
+
+
+                  Figure 14. Startup using EN, Iout = 2A                           Figure 15. Shutdown using EN, Iout = 2A
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                7 of 18                                                           November 2024
+Document number: DS41326 Rev. 3 - 2                        www.diodes.com                   © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                             AP63200/AP63201/AP63203/AP63205
+
+
+Typical Performance Characteristics (continued)
+
+     VOUT Ripple (20mV/div)
+                                                                      VOUT Ripple (500mV/div)
+
+     IL (1A/div)
+
+
+
+
+      SW (10V/div)
+                                                                      IOUT (1A/div)
+
+
+                                      2µs/div                                                       1ms/div
+
+
+                   Figure 16. Output Ripple, Iout = 2A                         Figure 17. Load Transient, Iout = 1A to 2A
+
+
+
+    VOUT (2V/div)
+
+
+                                                                      VOUT (2V/div)
+
+     IL (2A/div)
+
+
+
+     SW (10V/div)                                                     IL (2A/div)
+
+
+
+                                  10ms/div                            SW (10V/div)                 10ms/div
+
+            Figure 18. Output Short Protection, Iout = 2A                     Figure 19. Output Short Recovery, Iout = 2A
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                 8 of 18                                                         November 2024
+Document number: DS41326 Rev. 3 - 2                         www.diodes.com                 © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                      AP63200/AP63201/AP63203/AP63205
+
+
+Application Information
+
+
+                             INPUT
+                                                      3                6
+                                                     VIN              BST             C3
+                                                                                     100nF
+                                                                                               L
+                                                                                             2.2μH
+                                                                                                                                OUTPUT
+                                                                       5                                                              VOUT
+                                                      2    AP63200    SW                                                              1.2V
+                                                     EN
+                                                           AP63201                                    C4       R1
+                                                                                                     100pF   30.9kΩ
+                                                                       1
+                                 C1                                   FB                                                            C2
+                                10μF                                                                                              2x22μF
+
+                                                                                                               R2
+                                                               4                                              62kΩ
+                                                              GND
+
+
+
+
+                                          Figure 20. Typical Application Circuit of AP63200/AP63201
+
+
+                            INPUT
+                                                     3                 6
+                                                    VIN               BST              C3
+                                                                                      100nF
+
+                                                                                                L
+                                                                                                                         OUTPUT
+                                                                    5                                                              VOUT
+                                                      2    AP63203 SW
+                                                     EN
+                                                           AP63205
+                                                                        1                                                  C2
+                                C1                                     FB                                                2x22μF
+                               10μF
+
+
+                                                              4
+                                                             GND
+
+
+
+
+                                          Figure 21. Typical Application Circuit of AP63203/AP63205
+
+
+1      PWM Operation Control
+The AP63200/AP63201/AP63203/AP63205 device is a 3.8V-to-32V input, 2A output, EMI friendly, fully integrated synchronous buck converter.
+Refer to the block diagram in Figure 3. The device employs fixed-frequency peak current mode control. The internal clock’s rising edge (500kHz for
+the AP6300 and AP63201, 1.1MHz for the AP63203 and AP63205) initiates turning on the integrated high-side power MOSFET, Q1, for each cycle.
+When Q1 is on, the inductor current rises linearly, and the device charges the output capacitor. The current across Q1 is sensed and converted to
+a voltage with a ratio of RT via the CSA block. The CSA output is combined with an internal slope compensation, S E, resulting in VSUM. When VSUM
+rises higher than the internal COMP node, the device turns off Q1 and turns on the low-side power MOSFET, Q2. The inductor current decreases
+when Q2 is on. On the rising edge of next clock cycle, Q2 turns off, and Q1 turns on. This sequence repeats every clock cycle.
+
+The peak current mode control with the internal loop compensation network and                                        built-in     4ms        soft-start    simplifies   the
+AP63200/AP63201/AP63203/AP63205 footprint as well as minimizes the external component count.
+
+The error amplifier generates the COMP voltage by comparing the voltage on the FB pin with an internal 0.8V reference. An increase in load current
+causes the feedback voltage to drop. The error amplifier thus raises the COMP voltage until the average inductor current matches the increased
+load current. This feedback loop regulates the output voltage. The device also integrates internal slope compensation circuitry to prevent
+subharmonic oscillation when the duty cycle is greater than 50% for peak current mode control.
+
+The AP63200/AP63201/AP63203/AP63205 device implements Frequency Spread Spectrum (FSS) with a switching frequency jitter of ±6%. FSS
+reduces EMI by not allowing emitted energy to stay in any one frequency for a significant period of time. The converter further dampens high
+frequency radiated EMI noise through the use of its proprietary gate driver scheme to achieve a ringing-free switching node voltage without sacrificing
+the MOSFET switching times.
+
+
+AP63200/AP63201/AP63203/AP63205                                         9 of 18                                                                           November 2024
+Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                            © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                    AP63200/AP63201/AP63203/AP63205
+
+
+Application Information (continued)
+In order to provide a small output ripple in light load conditions, the AP63201 offers a fixed 500kHz switching frequency with FSS and Pulse Width
+Modulation (PWM).
+
+The hiccup mode minimizes power dissipation during prolonged output overcurrent or short conditions. The hiccup wait time is 512 cycles and the
+hiccup restart time is 8192 cycles. The AP63200/AP63201/AP63203/AP63205 also features full protections including cycle-by-cycle high-side
+MOSFET peak current limit, overvoltage protection, and overtemperature protection.
+
+2      Pulse Frequency Modulation
+In heavy load conditions, the AP63200, AP63203, and AP63205 operate at forced PWM mode. The internal COMP node voltage decreases as the
+load current decreases. At a certain limit, if the load current is low enough, the COMP node voltage is clamped and is prevented from decreasing
+any further. The voltage at which COMP is clamped corresponds to the 450mA peak inductor current. As the load current approaches zero, the
+AP63200, AP63203, and AP63205 enter Pulse Frequency Modulation (PFM) to increase the converter power efficiency at light load conditions. The
+AP63201 remains in continuous conduction mode at light load conditions. When the inductor current decreases to zero, zero-cross detection circuitry
+on the low-side power MOSFET, Q2, forces it off until the beginning of the next switching cycle. The buck converter does not sink current from the
+output when the output load is light and while the device is in PFM. Because the AP63200, AP63203, and AP63205 work in PFM during light load
+conditions, they can achieve power efficiency of up to 88% at a 5mA load condition.
+
+The quiescent current of the AP63200, AP63203 and AP63205 is 22μA typical under a no-load, non-switching condition.
+
+3     Enable
+When disabled, the device shutdown supply current is only 1μA. When applying a voltage higher than the EN upper threshold (typical 1.18V, rising),
+the AP63200/AP63201/AP63203/AP63205                 enables       all functions,     and the device initiates the soft-start phase. The
+AP63200/AP63201/AP63203/AP63205 has a built-in 4ms soft-start time to prevent output voltage overshoot and inrush current. When the EN
+voltage falls below its lower threshold (typical 1.1V, falling), the internal SS voltage is discharged to ground and device operation is disabled.
+
+An internal 1.5µA pull-up current source connected from the internal LDO-regulated VCC to the EN pin guarantees that a high on the EN pin
+automatically enables the device. For applications requiring a higher VIN UVLO voltage than is provided by the default setup, there is a 4µA
+hysteresis pull-up current source on the EN pin that configures the VIN UVLO voltage with an external resistive divider (R5 and R6) shown in Figure
+22. The resistive divider resistor values are calculated by equations Eq.1 and Eq.2.
+
+
+
+                                        VIN
+                                                                     I1               I2
+                                                                   1.5µA             4µA
+                                           R5
+                                                EN         20kΩ
+                                                     2                                      +           ON
+                                                                                    1.18V
+                                                                                            -
+                                           R6
+
+
+
+
+                                                         Figure 22. Programming UVLO
+
+                                                                    𝟎. 𝟗𝟑𝟐 ∙ 𝐕𝐎𝐍 − 𝐕𝐎𝐅𝐅
+                                                            𝐑𝟓 =                                                                                      Eq. 1
+                                                                          𝟒. 𝟏𝛍𝐀
+                                                                          𝟏. 𝟏𝐑𝟓
+                                                         𝐑𝟔 =                                                                                         Eq. 2
+                                                                𝐕𝐎𝐅𝐅 − 𝟏. 𝟏𝐕 + 𝟓. 𝟓𝛍𝐀 ∙ 𝐑𝟓
+
+Where:
+  •    VON is the rising edge voltage to enable the regulator
+  •    VOFF is the falling edge voltage to disable the regulator
+
+
+AP63200/AP63201/AP63203/AP63205                                       10 of 18                                                            November 2024
+Document number: DS41326 Rev. 3 - 2                                www.diodes.com                    © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                     AP63200/AP63201/AP63203/AP63205
+
+
+Application Information (continued)
+Alternatively, a small ceramic capacitor can be added from EN to GND. This delays the output startup voltage, which is useful when sequencing
+multiple power rails to minimize input inrush current. The amount of capacitance is calculated by equation Eq.3.
+
+                                                            𝑪𝒅 [𝐧𝐅] = 𝟏. 𝟐𝟕 ∙ 𝒕𝑺 [𝒎𝒔]                                                                  Eq. 3
+
+Where:
+  •    Cd is the time delay capacitance in nF
+  •    ts is the delay time in ms
+
+
+The EN pin is a high voltage pin and can be directly connected to VIN to automatically start up the device as VIN increases.
+
+4    Undervoltage Lockout
+Undervoltage lockout is implemented to prevent the IC from insufficient input voltages. The AP63200/AP63201/AP63203/AP63205 device has a
+UVLO comparator that monitors the input voltage and the internal bandgap reference. If the input voltage falls below 3.1V, the
+AP63200/AP63201/AP63203/AP63205 is disabled. In this event, both the high-side and low-side power MOSFETs are turned off.
+
+5     EMI Reduction with Frequency Spread Spectrum and Ringing-free Switching Node
+In some applications, the system must meet EMI standards. To improve EMI reduction, the AP63200/AP63201/AP63203/AP63205 adopts FSS to
+spread the switching noise over a wider frequency band and therefore reduces conducted and radiated interference at a particular frequency.
+
+In buck converters, the switching node’s (SW’s) ringing amplitude and cycles are critical, especially in relation to the high frequency radiation EMI
+noise. The AP63200/AP63201/AP63203/AP63205 device implements a multi-level gate driver scheme to achieve a ringing-free switching node
+without sacrificing neither the switching node’s rise and fall slew rates nor the converter’s power efficiency. The AP63203 and AP63205 also have
+the feature to remove the resonance ringing of the SW pin when the inductor current is 0A and the device operates in PFM. The zoomed in waveform
+for SW is shown in Figure 23.
+
+
+
+
+                                      SW (5V/div)                                         No SW Ringing
+
+
+
+
+                                      IL (1A/div)
+
+                                                                        2µs/div
+
+
+
+
+                                                Figure 23. AP63203/AP63205 SW Node Waveform
+
+6     Overcurrent Protection
+The AP63200/AP63201/AP63203/AP63205 has cycle-by-cycle peak current limit protection by sensing the current through the internal high-side
+power MOSFET Q1. While Q1 is on, its conduction current is monitored by the internal sensing circuitry. Once the current through Q1 exceeds the
+current peak limit, Q1 immediately turns off. If Q1 consistently hits the peak current limit for 2ms, the buck converter enters hiccup mode and shuts
+down. After 16ms of off time, the buck converter restarts powering up. Hiccup mode reduces the power dissipation in the overcurrent condition.
+
+7       Thermal Shutdown
+If the junction temperature of the device reaches the thermal shutdown limit of +150°C, the AP63200/AP63201/AP63203/AP63205 shuts down both
+their high-side and low-side power MOSFETs. When the junction temperature reduces to the required level (+130°C nominal), the device initiates a
+normal power-up cycle with soft-start.
+
+AP63200/AP63201/AP63203/AP63205                                      11 of 18                                                              November 2024
+Document number: DS41326 Rev. 3 - 2                               www.diodes.com                      © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                       AP63200/AP63201/AP63203/AP63205
+
+
+Application Information (continued)
+8     Power Derating Characteristics
+To prevent the regulator from exceeding the maximum junction temperature, some thermal analysis is required. The temperature rise is given by:
+
+                                                                 𝐓𝐑𝐈𝐒𝐄 = 𝐏𝐃 ∙ (𝛉𝑱𝑨 )                                                                     Eq. 4
+
+Where PD is the power dissipated by the regulator and JA is the thermal resistance from the junction of the die to the ambient temperature.
+
+The junction temperature, TJ, is given by:
+
+                                                                  𝐓𝑱 = 𝐓𝑨 + 𝐓𝑹𝑰𝑺𝑬                                                                        Eq. 5
+
+
+Where TA is the ambient temperature of the environment. For the TSOT26 package, the JA is 89°C/W. The actual junction temperature should not
+exceed the absolute maximum junction temperature of +125°C when considering the thermal design. A typical derating curve versus ambient
+temperature is shown in Figure 24.
+
+
+
+
+                                      Figure 24. Output Current Derating Curve vs. Temperature, VIN = 12V
+
+
+9      Setting the Output Voltage
+The AP63203 and AP63205 have fixed output voltages of 3.3V and 5V, respectively. The AP63200 and AP63201 have adjustable output voltages
+starting from 0.8V using an external resistive divider. An optional in Figure 20, of 10pF to 220pF is used to improve the transient response. Resistor
+R2 is selected based on a design tradeoff between efficiency and output voltage accuracy. There is less current consumption in the feedback
+network for high values of R2. R1 can be determined by the following equation:
+
+                                                                              𝑽
+                                                                𝐑𝟏 = 𝑹𝟐 ∙ ( 𝑶𝑼𝑻 − 𝟏)                                                                     Eq. 6
+                                                                               𝟎.𝟖𝑽
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                       12 of 18                                                               November 2024
+Document number: DS41326 Rev. 3 - 2                                www.diodes.com                       © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                         AP63200/AP63201/AP63203/AP63205
+
+
+Application Information (continued)
+Table 1 shows a list of recommended component selections for common output voltages for the AP63200 and AP63201 referencing Figure 20.
+
+                                                               AP63200/AP63201
+       Output Voltage (V)                R1 (k)         R2 (k)       L (µH)                  C1 (µF)         C2 (µF)             C3 (nF)            C4 (pF)
+              1.2                         30.9             62           2.2                      10            2 x 22               100                100
+              1.5                         54.2             62           2.2                      10            2 x 22               100                100
+              1.8                         77.5             62           3.3                      10            2 x 22               100                100
+              2.5                         131              62           3.3                      10            2 x 22               100                100
+              3.3                         196              62           6.8                      10            2 x 22               100                100
+               5                          157              30            10                      10            2 x 22               100                100
+              12                          249              18            10                      10            2 x 22               100                 56
+
+                                      Table 1. Recommended Component Selections for AP63200/AP63201
+
+Tables 2 and 3 show recommended component selections for the AP63203 and AP63205 referencing Figure 21.
+
+                                                                     AP63203
+       Output Voltage (V)                     L (µH)                   C1 (µF)                           C2 (µF)                            C3 (nF)
+              3.3                              3.9                       10                              2 x 22                              100
+
+                                          Table 2. Recommended Component Selections for AP63203
+
+                                                                     AP63205
+       Output Voltage (V)                     L (µH)                   C1 (µF)                           C2 (µF)                            C3 (nF)
+               5                               4.7                       10                              2 x 22                              100
+
+                                          Table 3. Recommended Component Selections for AP63205
+
+10     Inductor
+Calculating the inductor value is a critical factor in designing a buck converter. For most designs, the following equation can be used to calculate
+the inductor value:
+
+                                                                     𝐕     ∙(𝑽𝑰𝑵 −𝑽𝑶𝑼𝑻 )
+                                                                𝐋 = 𝑶𝑼𝑻                                                                                    Eq. 7
+                                                                         𝑽𝑰𝑵 ∙∆𝑰𝑳 ∙𝒇𝒔𝒘
+
+
+Where ∆IL is the inductor ripple current, and fSW is the buck converter switching frequency. For AP63200/AP63201/AP63203/AP63205, choose ∆IL
+to be 30% to 50% of the maximum load current of 2A.
+The inductor peak current is calculated by:
+
+                                                                                         ∆𝑰𝑳
+                                                               𝑰𝑳𝑷𝑬𝑨𝑲 = 𝑰𝑳𝑶𝑨𝑫 +                                                                            Eq. 8
+                                                                                         𝟐
+Peak current determines the required saturation current rating, which influences the size of the inductor. Saturating the inductor decreases the
+converter efficiency while increasing the temperatures of the inductor and the internal power MOSFETs. Therefore, choosing an inductor with the
+appropriate saturation current rating is important. For most applications, it is recommended to select an inductor of approximately 2.2µH to 10µH
+with a DC current rating of at least 35% higher than the maximum load current. For highest efficiency, the inductor’s DC resistance should be less
+than 100mΩ. Use a larger inductance for improved efficiency under light load conditions.
+
+11     Input Capacitor
+The input capacitor reduces the surge current drawn from the input supply as well as the switching noise from the device. The input capacitor has
+to sustain the ripple current produced during the on time of Q1. It must have a low ESR to minimize the losses.
+
+The RMS current rating of the input capacitor is a critical parameter and must be higher than the RMS input current. As a rule of thumb, select an
+input capacitor which has an RMS rating greater than half of the maximum load current.
+
+Due to large dI/dt through the input capacitor, electrolytic, or ceramics with low ESR should be used. If a tantalum capacitor is used it must be
+surge protected or else capacitor failure could occur. Using a ceramic capacitor greater than 10µF is sufficient for most applications.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                     13 of 18                                                                   November 2024
+Document number: DS41326 Rev. 3 - 2                              www.diodes.com                           © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                        AP63200/AP63201/AP63203/AP63205
+
+
+Application Information (continued)
+12    Output Capacitor
+The output capacitor keeps the output voltage ripple small, ensures feedback loop stability, and reduces the overshoot/undershoot of the output
+voltage during load transients. During the first few milliseconds of a load transient, the output capacitor supplies the current to the load. The
+converter recognizes the load transient and sets the duty cycle to maximum, but the current slope is limited by the inductor value.
+
+The output capacitor, COUT, requirements can be calculated from equations Eq. 9 and Eq. 10.
+
+
+The ESR of the output capacitor dominates the output voltage ripple. The amount of ripple can be calculated from Eq. 9:
+
+                                                              𝑽𝑶𝑼𝑻𝑹𝒊𝒑𝒑𝒍𝒆 = ∆𝑰𝑳 ∙ 𝑬𝑺𝑹                                                                    Eq. 9
+
+An output capacitor with large capacitance and low ESR is the best option. For most applications, a 22µF to 68µF ceramic capacitor is sufficient.
+To meet the load transient requirement, COUT should be greater than the following calculated from Eq. 10:
+
+                                                                                   ∆𝑰     𝟐
+                                                                          𝑳∙(𝑰𝑶𝑼𝑻 + 𝟐𝑳)
+                                                              𝑪𝑶𝑼𝑻 > (∆𝑽+𝑽                                                                            Eq. 10
+                                                                                   𝟐  𝟐
+                                                                              𝑶𝑼𝑻 ) −𝑽𝑶𝑼𝑻
+
+
+
+Where ΔV is the maximum output overshoot voltage.
+
+
+13    Bootstrap Capacitor
+To ensure the proper operation, a ceramic capacitor must be connected between the BST and SW pins. A 100nF ceramic capacitor is sufficient. If
+the BST capacitor voltage falls below 2.3V, the boot undervoltage protection circuit turns Q2 on for 220ns to refresh the BST capacitor and raise its
+voltage back above 2.85V. The BST capacitor voltage threshold is always maintained to ensure enough driving capability for Q1. This operation
+may arise during long periods of no switching such as in PFM with light load conditions. Another event requires the refreshing of the BST capacitor
+is when the input voltage drops close to the output voltage. Under this condition, the regulator enters low dropout mode by holding Q1 on for multiple
+clock cycles. To prevent the BST capacitor from discharging, Q2 is forced to refresh. The effective duty cycle is approximately 100% so that it acts
+as an LDO to maintain the output voltage regulation.
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                      14 of 18                                                               November 2024
+Document number: DS41326 Rev. 3 - 2                               www.diodes.com                       © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                        AP63200/AP63201/AP63203/AP63205
+
+
+Layout
+PCB Layout
+1. The AP63200/AP63201/AP63203/AP63205 device works at 2A current load, so heat dissipation is a major concern in the layout of the PCB.
+   2oz copper for both the top and bottom layers is recommended.
+2. Provide sufficient vias for the input and output capacitors’ GND side to dissipate heat to the bottom layer.
+3. Make the bottom layer under the device as the GND layer for heat dissipation. The GND layer should be as large as possible to provide
+   better thermal effect.
+4. Place the VIN capacitors as close to the device as possible.
+5. Place the feedback components as close to FB as possible.
+6. See Figure 25 for reference.
+
+
+
+                                                          R2             C3
+                                           R1
+                                      C4
+
+
+
+
+                                                FB    1                       6   BST
+
+                                                                                         SW L1
+                                                EN    2                       5   SW
+
+
+
+
+                                                VIN   3                       4   GND
+
+
+
+
+                                                               C1                            C2
+
+                                      VIN                                 GND                       VOUT
+                                                          Figure 25. Recommended Layout
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                        15 of 18                                                        November 2024
+Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                       AP63200/AP63201/AP63203/AP63205
+
+
+Ordering Information
+Please see http://www.diodes.com/package-outlines.html for additional latest information such as Mechanical Data and Device Tape Orientation.
+
+
+                                                        AP6320X XX - X
+
+
+
+                              Product Version                     Package                     Packing
+                                 0: AP63200                    WU : TSOT26                7 : Tape & Reel
+                                 1: AP63201
+                                 3: AP63203
+                                 5: AP63205
+
+                                                                                                                              Packing
+ Orderable Part Number         Package         Mode        Frequency            VOUT      Package Code
+                                                                                                                   Qty.                  Carrier
+      AP63200WU-7              TSOT26        PWM/PFM           500kHz      Adjustable         WU                   3000              7” Tape & Reel
+      AP63201WU-7              TSOT26        PWM Only          500kHz      Adjustable         WU                   3000              7” Tape & Reel
+      AP63203WU-7              TSOT26        PWM/PFM           1100kHz       3.3V             WU                   3000              7” Tape & Reel
+      AP63205WU-7              TSOT26        PWM/PFM           1100kHz        5V              WU                   3000              7” Tape & Reel
+
+
+
+
+Marking Information
+
+                                                                      TSOT26
+
+                                                     (Top View)
+                                                    6      5      4        XX: Identification Code
+                                                                  7
+
+
+
+
+                                                                          XXY:: Year
+                                                                                Identification
+                                                                                      0 to 9       Code
+                                                        XX Y W X
+                                                                           YW:: Year
+                                                                                Week:0~9 A to Z: 1 to 26 Week;
+                                                                           W : Week      : A~Z
+                                                                                 a to z: 27 to 52: Week;
+                                                                                                   1~26 zweek;
+                                                                                                           Represents
+                                                                                a~z   : 27~52
+                                                                                 52 and 53 Week  week;   z represents
+                                                    1      2      3          X: 52  and Code
+                                                                                Internal   53 week
+                                                                            X : Internal Code
+
+           Orderable Part Number                                      Package                                    Identification Code
+                AP63200WU-7                                           TSOT26                                                T2
+                AP63201WU-7                                           TSOT26                                                T3
+                AP63203WU-7                                           TSOT26                                                T4
+                AP63205WU-7                                           TSOT26                                                T5
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                    16 of 18                                                             November 2024
+Document number: DS41326 Rev. 3 - 2                             www.diodes.com                     © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                               AP63200/AP63201/AP63203/AP63205
+
+
+Package Outline Dimensions
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+                                                                              TSOT26
+
+                               D
+                               e1                                   01( 4x)                                                          TSOT26
+                                                                                                                         Dim     Min     Max    Typ
+        E 1/2
+                                                                                                                          A        −     1.00    −
+                                               E /2                                                                      A1     0.010 0.100      −
+                                                                                                                         A2     0.840 0.900      −
+          E1                                          E                                c                                  D     2.800 3.000 2.900
+                                                                                                 Gauge Plane              E           2.800 BSC
+                                                                                           0                             E1     1.500 1.700 1.600
+                                                                                                 S eating Plane
+                                                                                                                          b     0.300 0.450      −
+                                                                              L
+                                                                                       L2                                 c     0.120 0.200      −
+                                                                                                                          e           0.950 BSC
+                           e           b                        01( 4x)                                                   e1          1.900 BSC
+                                                          A2                                                              L      0.30    0.50    −
+                                                                                                                          L2          0.250 BSC
+                                                  A1                                                                       θ      0°      8°     4°
+                A                                                                                                         θ1      4°     12°     −
+                                                          S eating Plane                                                     All Dimensions in mm
+
+
+
+
+Suggested Pad Layout
+Please see http://www.diodes.com/package-outlines.html for the latest version.
+
+                                                                              TSOT26
+
+                                           C
+
+                                                                                                                  Dimensions Value (in mm)
+                                                                                                                      C          0.950
+                                                                                                                      X          0.700
+                                                                                                                      Y          1.000
+                                 Y1                                                                                   Y1         3.200
+
+
+
+                                                                Y
+
+
+                                                          X
+
+
+
+
+Mechanical Data
+•    Moisture Sensitivity: Level 1 per J-STD-020
+•    Terminals: Finish – Matte Tin Plated Leads, Solderable per MIL-STD-202, Method 208
+•    Weight: 0.0145 grams (Approximate)
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                         17 of 18                                                                       November 2024
+Document number: DS41326 Rev. 3 - 2                                  www.diodes.com                               © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+                                                                                        AP63200/AP63201/AP63203/AP63205
+
+
+
+                                                                 IMPORTANT NOTICE
+
+1.      DIODES INCORPORATED (Diodes) AND ITS SUBSIDIARIES MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH
+REGARDS TO ANY INFORMATION CONTAINED IN THIS DOCUMENT, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+RIGHTS (AND THEIR EQUIVALENTS UNDER THE LAWS OF ANY JURISDICTION).
+
+2.         The Information contained herein is for informational purpose only and is provided only to illustrate the operation of Diodes’ products
+described herein and application examples. Diodes does not assume any liability arising out of the application or use of this document or any product
+described herein. This document is intended for skilled and technically trained engineering customers and users who design with Diodes’ products.
+Diodes’ products may be used to facilitate safety-related applications; however, in all instances customers and users are responsible for (a) selecting
+the appropriate Diodes products for their applications, (b) evaluating the suitability of Diodes’ products for their intended applications, (c) ensuring
+their applications, which incorporate Diodes’ products, comply the applicable legal and regulatory requirements as well as safety and functional-
+safety related standards, and (d) ensuring they design with appropriate safeguards (including testing, validation, quality control techniques,
+redundancy, malfunction prevention, and appropriate treatment for aging degradation) to minimize the risks associated with their applications.
+
+3.         Diodes assumes no liability for any application-related information, support, assistance or feedback that may be provided by Diodes from
+time to time. Any customer or user of this document or products described herein will assume all risks and liabilities associated with such use, and
+will hold Diodes and all companies whose products are represented herein or on Diodes’ websites, harmless against all damages and liabilities.
+
+4.        Products described herein may be covered by one or more United States, international or foreign patents and pending patent applications.
+Product names and markings noted herein may also be covered by one or more United States, international or foreign trademarks and trademark
+applications. Diodes does not convey any license under any of its intellectual property rights or the rights of any third parties (including third parties
+whose products and services may be described in this document or on Diodes’ website) under this document.
+
+5.         Diodes’    products      are     provided     subject    to    Diodes’     Standard      Terms       and     Conditions      of     Sale
+(https://www.diodes.com/about/company/terms-and-conditions/terms-and-conditions-of-sales/) or other applicable terms. This document does not
+alter or expand the applicable warranties provided by Diodes. Diodes does not warrant or accept any liability whatsoever in respect of any products
+purchased through unauthorized sales channel.
+
+6.        Diodes’ products and technology may not be used for or incorporated into any products or systems whose manufacture, use or sale is
+prohibited under any applicable laws and regulations. Should customers or users use Diodes’ products in contravention of any applicable laws or
+regulations, or for any unintended or unauthorized application, customers and users will (a) be solely responsible for any damages, losses or
+penalties arising in connection therewith or as a result thereof, and (b) indemnify and hold Diodes and its representatives and agents harmless
+against any and all claims, damages, expenses, and attorney fees arising out of, directly or indirectly, any claim relating to any noncompliance with
+the applicable laws and regulations, as well as any unintended or unauthorized application.
+
+7.         While efforts have been made to ensure the information contained in this document is accurate, complete and current, it may contain
+technical inaccuracies, omissions and typographical errors. Diodes does not warrant that information contained in this document is error-free and
+Diodes is under no obligation to update or otherwise correct this information. Notwithstanding the foregoing, Diodes reserves the right to make
+modifications, enhancements, improvements, corrections or other changes without further notice to this document and any product described herein.
+This document is written in English but may be translated into multiple languages for reference. Only the English version of this document is the final
+and determinative format released by Diodes.
+
+8.        Any unauthorized copying, modification, distribution, transmission, display or other use of this document (or any portion hereof) is
+prohibited. Diodes assumes no responsibility for any losses incurred by the customers or users or any third parties arising from any such unauthorized
+use.
+
+9. This Notice may be periodically updated with the most recent version available at https://www.diodes.com/about/company/terms-and-
+conditions/important-notice
+
+
+The Diodes logo is a registered trademark of Diodes Incorporated in the United States and other countries.
+All other trademarks are the property of their respective owners.
+© 2024 Diodes Incorporated. All Rights Reserved.
+
+www.diodes.com
+
+
+
+
+AP63200/AP63201/AP63203/AP63205                                        18 of 18                                                                November 2024
+Document number: DS41326 Rev. 3 - 2                                 www.diodes.com                        © 2024 Copyright Diodes Incorporated. All Rights Reserved.
+

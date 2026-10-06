@@ -1,0 +1,17 @@
+{
+ "command": "pdftotext -l 1 v2/vendor/diodes/diodes-ap2112-ldo.pdf -",
+ "held_back": false,
+ "options": [
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+ "pdf_sha256": "ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/diodes/pdftext/diodes-ap2112-ldo.plain.l1.txt",
+ "text_bytes": 2756,
+ "text_sha256": "c59cee8614dfb14baef9a62a9b2eae6f387ca2b992adf59c550c9b3c1167a82f"
+}

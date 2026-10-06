@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
+ "pdf_sha256": "ba3b1474406fdaf5c7cfc87f80f691cf983f44b0e19f8757511df13f5d6241be",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/xenarc/pdftext/xenarc-709gnk-product-manual-v2.layout.txt",
+ "text_bytes": 18261,
+ "text_sha256": "f2429e6d57804e5ff0d9a2784a14a408c611464e340328db8bf04290adf1f72b"
+}

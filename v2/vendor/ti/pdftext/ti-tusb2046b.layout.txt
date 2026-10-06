@@ -1,0 +1,1682 @@
+                                 Product         Order          Technical               Tools &              Support &
+                                 Folder          Now            Documents               Software             Community
+
+
+
+                                                                                                                   TUSB2046B, TUSB2046I
+                                                                                                   SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+                   TUSB2046x 4-Port Hub for the Universal Serial Bus With Optional
+                                     Serial EEPROM Interface
+1 Features                                                              2 Applications
+1•    Fully Compliant With the USB Specification as a                   •      Computer Systems
+      Full-Speed Hub: TID #30220231                                     •      Docking Stations
+•     32-Pin LQFP (1) Package With a 0.8-mm Terminal
+      Pitch or QFN Package With a 0.5-mm Pin Pitch                      3 Description
+•     3.3-V Low-Power ASIC Logic                                        The TUSB2046x is a 3.3-V CMOS hub device that
+•     Integrated USB Transceivers                                       provides one upstream port and four downstream
+                                                                        ports in compliance with the Universal Serial Bus
+•     State Machine Implementation Requires No                          (USB) specification as a full-speed hub. Because this
+      Firmware Programming                                              device is implemented with a digital state machine
+•     One Upstream Port and Four Downstream Ports                       instead of a microcontroller, no firmware
+•     All Downstream Ports Support Full-Speed and                       programming is required. Fully compliant USB
+      Low-Speed Operations                                              transceivers are integrated into the ASIC for all
+                                                                        upstream and downstream ports. The downstream
+•     Two Power Source Modes                                            ports support full-speed and low-speed devices by
+      – Self-Powered Mode                                               automatically setting the slew rate according to the
+      – Bus-Powered Mode                                                speed of the device attached to the ports. The
+                                                                        configuration of the BUSPWR pin selects either the
+•     Power Switching and Overcurrent Reporting Is                      bus-powered or the self-powered mode.
+      Provided Ganged or Per Port
+•     Supports Suspend and Resume Operations                            Configuring the GANGED input determines the power
+                                                                        switching and overcurrent detection modes for the
+•     Supports Programmable Vendor ID and Product                       downstream ports. If GANGED is high, all PWRON
+      ID With External Serial EEPROM                                    outputs switch together and if any OVRCUR is
+•     3-State EEPROM Interface Allows EEPROM                            activated, all ports transition to the power-off state. If
+      Sharing                                                           GANGED is low, the PWRON outputs and OVRCUR
+•     Push-Pull Outputs for PWRON Eliminate the Need                    inputs operate on a per-port basis.
+      for External Pullup Resistors                                                                Device Information(1)
+•     Noise Filtering on OVRCUR Provides Immunity to                         PART NUMBER                     PACKAGE                BODY SIZE (NOM)
+      Voltage Spikes
+                                                                            TUSB2046B                 VQFN (32)                     5.00 mm × 5.00 mm
+•     Package Pinout Allows 2-Layer PCB                                     TUSB2046BI
+                                                                            TUSB2046I                 LQFP (32)                     7.00 mm × 7.00 mm
+•     Low EMI Emission Achieved by a 6-MHz Crystal
+      Input                                                                 (1) For all available packages, see the orderable addendum at
+                                                                                the end of the data sheet.
+•     Migrated From Proven TUSB2040 Hub
+•     Lower Cost Than the TUSB2040 Hub                                                  USB-Tiered Configuration Example
+•     Enhanced System ESD Performance
+                                                                                                                                            Digital Scanner
+•     No Special Driver Requirements; Works                                                                          Printer with
+                                                                                                                    TUSB2046B
+                                                                                                                                      ...
+
+
+
+
+      Seamlessly With Any Operating System With USB                                           Monitor with
+                                                                                                                     4-Port Hub
+                                                                                                                                               Scanner
+                                                                             Personal
+      Stack Support                                                          Computer
+                                                                                              TUSB2046B
+                                                                                                                       Modem
+                                                                                               4-Port Hub
+                                                                                                             ...
+
+
+
+
+•     Supports 6-MHz Operation Through a Crystal                                                                                            Right Speaker
+                                                                                                                    Keyboard with
+      Input or a 48-MHz Input Clock                                                                                 TUSB2046B                   Mouse
+                                                                                                                                      ...
+
+
+
+
+                                                                                                                     4-Port Hub
+(1)   JEDEC descriptor S-PQFP-G for low-profile quad flatpack                                                                                Left Speaker
+      (LQFP).
+
+
+
+
+1
+
+
+
+
+        An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+        intellectual property matters and other important disclaimers. PRODUCTION DATA.
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                                                          www.ti.com
+
+
+                                                                           Table of Contents
+    1   Features .................................................................. 1               8.3 Feature Description................................................. 10
+    2   Applications ........................................................... 1                  8.4 Device Functional Modes........................................ 12
+    3   Description ............................................................. 1                 8.5 Programming........................................................... 13
+    4   Revision History..................................................... 2               9    Application and Implementation ........................ 15
+                                                                                                    9.1 Application Information............................................ 15
+    5   Description (Continued) ........................................ 3
+                                                                                                    9.2 Typical Application .................................................. 15
+    6   Pin Configuration and Functions ......................... 4
+                                                                                              10 Power Supply Recommendations ..................... 17
+    7   Specifications......................................................... 6
+                                                                                                    10.1 TUSB2046x Power Supply ................................... 17
+         7.1 Absolute Maximum Ratings ..................................... 6
+                                                                                                    10.2 Downstream Port Power ....................................... 17
+         7.2 ESD Ratings.............................................................. 6
+         7.3 Recommended Operating Conditions....................... 6                        11 Layout................................................................... 18
+                                                                                                    11.1 Layout Guidelines ................................................. 18
+         7.4 Thermal Information .................................................. 7
+                                                                                                    11.2 Layout Example .................................................... 19
+         7.5 Electrical Characteristics........................................... 7
+         7.6 Differential Driver Switching Characteristics (Full                              12 Device and Documentation Support ................. 20
+             Speed Mode) ............................................................. 7            12.1    Related Links ........................................................ 20
+         7.7 Differential Driver Switching Characteristics (Low                                     12.2    Community Resources.......................................... 20
+             Speed Mode) ............................................................. 8            12.3    Trademarks ........................................................... 20
+         7.8 Typical Characteristics .............................................. 9               12.4    Electrostatic Discharge Caution ............................ 20
+    8   Detailed Description .............................................. 9                       12.5    Glossary ................................................................ 20
+         8.1 Overview ................................................................... 9   13 Mechanical, Packaging, and Orderable
+         8.2 Functional Block Diagram ....................................... 10                 Information ........................................................... 20
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision K (January 2016) to Revision L                                                                                                                           Page
+
+•   Added device TUSB2046IB to the data sheet........................................................................................................................ 1
+
+
+Changes from Revision J (July 2015) to Revision K                                                                                                                              Page
+
+•   Changed the VQFN package Body Size From: 5.00 mm x 2.00 mm To: 5.00 mm x 5.00 mm ............................................ 1
+
+
+Changes from Revision I (September 2013) to Revision J                                                                                                                         Page
+
+•   Added Pin Configuration and Functions section, ESD Ratings table, Feature Description section, Device Functional
+    Modes, Application and Implementation section, Power Supply Recommendations section, Layout section, Device
+    and Documentation Support section, and Mechanical, Packaging, and Orderable Information section .............................. 1
+
+
+
+
+2        Submit Documentation Feedback                                                                         Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                                              Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                        TUSB2046B, TUSB2046I
+www.ti.com                                                                                SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+5 Description (Continued)
+The TUSB2046x provides the flexibility of using a 6-MHz or a 48-MHz clock. The logic level of the TSTMODE
+terminal controls the selection of the clock source. When TSTMODE is low, the output of the internal APLL
+circuitry is selected to drive the internal core of the device. When TSTMODE is high, the TSTPLL/48MCLK input
+is selected as the input clock source and the APLL circuitry is powered down and bypassed. The internal
+oscillator cell is also powered down while TSTMODE is high. Low EMI emission is achieved because the
+TUSB2046x can usee a 6-MHz crystal input. Connect the crystal as shown in Figure 6. An internal PLL then
+generates the 48-MHz clock used to sample data from the upstream port and to synchronize the 12 MHz used
+for the USB clock. If low-power suspend and resume are desired, a passive crystal or resonator must be used.
+However, a 6-MHz oscillator may be used by connecting the output to the XTAL1 pin and leaving the XTAL2 pin
+open. The oscillator TTL output must not exceed 3.6 V.
+For 48-MHz operation, the clock cannot be generated with a crystal using the XTAL2 output because the internal
+oscillator cell supports only the fundamental frequency. Other useful features of the TUSB2046x include a
+package with a 0.8-mm pin pitch for easy PCB routing and assembly, push-pull outputs for the PWRON pins
+eliminate the need for pullup resistors required by traditional open-collector I/Os, and OVRCUR pins have noise
+filtering for increased immunity to voltage spikes.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                          Submit Documentation Feedback        3
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                       www.ti.com
+
+
+6 Pin Configuration and Functions
+
+                           VF Package                                                             RHB Package
+                           32-Pin LQFP                                                    32-Pin VQFN With Thermal Pad
+                            Top View                                                                Top View
+
+
+
+
+                                                            Pin Functions
+            PIN
+                                 I/O                                               DESCRIPTION
+    NAME           NO.
+                                         Power source indicator. BUSPWR is an active-high input that indicates whether the downstream
+                                         ports source their power from the USB cable or a local power supply. For the bus-power mode,
+BUSPWR               8            I
+                                         this terminal must be pulled to 3.3 V, and for the self-powered mode, this terminal must be pulled
+                                         low. Input must not change dynamically during operation.
+DM0                  2           I/O     Root port USB differential data minus. DM0 paired with DP0 constitutes the upstream USB port.
+DM1                 11
+DM2                 15                   USB differential data minus. DM1–DM4 paired with DP1–DP4 support up to four downstream USB
+                                 I/O
+DM3                 19                   ports.
+DM4                 23
+DP0                  1           I/O     Root port USB differential data plus. DP0 paired with DM0 constitutes the upstream USB port.
+DP1                 12
+DP2                 16                   USB differential data plus. DP1–DP4 paired with DM1–DM4 support up to four downstream USB
+                                 I/O
+DP3                 20                   ports.
+DP4                 24
+                                         EEPROM serial clock. When EXTMEM is high, the EEPROM interface is disabled. The EECLK
+EECLK                5           O       terminal is disabled and must be left floating (unconnected). When EXTMEM is low, EECLK acts
+                                         as a 3-state serial clock output to the EEPROM with a 100-μA internal pulldown.
+                                         EEPROM serial data/power-management mode indicator. When EXTMEM is high,
+                                         EEDATA/GANGED selects between ganged or per-port power overcurrent detection for the
+EEDATA/GA
+                     6           I/O     downstream ports. When EXTMEM is low, EEDATA/GANGED acts as a serial data I/O for the
+NGED
+                                         EEPROM and is internally pulled down with a 100-μA pulldown. This standard TTL input must not
+                                         change dynamically during operation.
+                                         When EXTMEM is high, the serial EEPROM interface of the device is disabled. When EXTMEM is
+EXTMEM              26            I      low, terminals 5 and 6 are configured as the clock and data terminals of the serial EEPROM
+                                         interface, respectively.
+GND                7, 28                 GND terminals must be tied to ground for proper operation.
+
+
+4       Submit Documentation Feedback                                                      Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                              Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                                TUSB2046B, TUSB2046I
+www.ti.com                                                                                      SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+                                                        Pin Functions (continued)
+              PIN
+                                    I/O                                               DESCRIPTION
+    NAME              NO.
+OVRCUR1                10
+                                            Overcurrent input. OVRCUR1–OVRCUR4 are active low. For per-port overcurrent detection, one
+OVRCUR2                14                   overcurrent input is available for each of the four downstream ports. In the ganged mode, any
+                                      I
+OVRCUR3                18                   OVRCUR input may be used and all OVRCUR terminals must be tied together. OVRCUR
+                                            terminals are active low inputs with noise filtering logic.
+OVRCUR4                22
+PWRON1                  9
+                                            Power-on/-off control signals. PWRON1–PWRON4 are active low, push-pull outputs. Push-pull
+PWRON2                 13                   outputs eliminate the pullup resistors which open-drain outputs require. However, the external
+                                     O
+PWRON3                 17                   power switches that connect to these terminals must be able to operate with 3.3-V inputs because
+                                            these outputs cannot drive 5-V signals.
+PWRON4                 21
+                                            RESET is an active low TTL input with hysteresis and must be asserted at power up. When
+                                            RESET is asserted, all logic is initialized. Generally, a reset with a pulse width between 100 μs
+RESET                   4             I
+                                            and 1 ms is recommended after 3.3-V VCC reaches its 90%. Clock signal has to be active during
+                                            the last 60 μs of the reset window.
+                                            Suspend status. SUSPND is an active high output available for external logic power-down
+SUSPND                 32            O
+                                            operations. During the suspend mode, SUSPND is high. SUSPND is low for normal operation.
+                                            Test/mode terminal. TSTMODE is used as a test terminal during production testing. This terminal
+TSTMODE                31             I
+                                            must be tied to ground or 3.3-V VCC for normal 6-MHz or 48-MHz operation, respectively.
+                                            Test/48-MHz clock input. TSTPLL/48MCLK is used as a test terminal during production testing.
+TSTPLL/
+                       27           I/O     This terminal must be tied to ground for normal 6-MHz operation. If 48-MHz input clock is desired,
+48MCLK
+                                            a 48-MHz clock source (no crystal) can be connected to this input terminal.
+VCC                   3, 25                 3.3-V supply voltage
+                                            Crystal 1. XTAL1 is a 6-MHz crystal input with 50% duty cycle. An internal PLL generates the 48-
+XTAL1                  30             I
+                                            MHz and 12-MHz clocks used internally by the ASIC logic.
+                                            Crystal 2. XTAL2 is a 6-MHz crystal output. This terminal must be left open when using an
+XTAL2                  29            O
+                                            oscillator.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                                 Submit Documentation Feedback              5
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                          www.ti.com
+
+
+7 Specifications
+7.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted) (1)
+                                                                                                           MIN           MAX            UNIT
+VCC        Supply voltage (2)                                                                              –0.5           3.6             V
+VI         Input voltage range                                                                             –0.5        VCC + 0.5          V
+VO         Output voltage range                                                                            –0.5        VCC + 0.5          V
+IIK        Input clamp current                            VI < 0 V or VI < VCC                                           ±20             mA
+IOK        Output clamp current                           VO < 0 V or VO < VCC                                           ±20             mA
+                                                          TUSB2046B                                         0             70
+TA         Operating free-air temperature                                                                                                °C
+                                                          TUSB2046BI, TUSB2046I                            –40            85
+Tstg       Storage temperature range                                                                       –65           150             °C
+
+(1)    Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+       only, and functional operation of the device at these or any other conditions beyond those indicated under Recommended Operating
+       Conditions is not implied. Exposure to absolute-maximum-rated conditions for extended periods may affect device reliability.
+(2)    All voltage levels are with respect to GND.
+
+7.2 ESD Ratings
+                                                                                                                       VALUE            UNIT
+                                             Human body model (HBM), per ANSI/ESDA/JEDEC JS-001 (1)                    ±4000
+V(ESD)       Electrostatic discharge         Charged-device model (CDM), per JEDEC specification JESD22-                                  V
+                                                                                                                       ±1500
+                                             C101 (2)
+
+(1)    JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(2)    JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+7.3 Recommended Operating Conditions
+                     PARAMETER                                                                   MIN         NOM           MAX          UNIT
+                                                          TUSB2046B                                 3            3.3            3.6
+VCC            Supply voltage                                                                                                             V
+                                                          TUSB2046BI, TUSB2046I                   3.3                           3.6
+VI             Input voltage, TTL/LVCMOS                                                            0                          VCC        V
+VO             Output voltage, TTL/LVCMOS                                                           0                          VCC        V
+VIH(REC)       High-level input voltage, signal-ended receiver                                      2                          VCC        V
+VIL(REC)       Low-level input voltage, signal-ended receiver                                                                   0.8       V
+VIH(TTL)       High-level input voltage, TTL/LVCMOS                                                 2                          VCC        V
+VIL(TTL)       Low-level input voltage, TTL/LVCMOS                                                  0                           0.8       V
+                                                          TUSB2046B                                 0                           70
+TA             Operating free-air temperature                                                                                            °C
+                                                          TUSB2046BI, TUSB2046I                  –40                            85
+R(DRV)         External series, differential driver resistor                                22 (–5%)                     22 (5%)         Ω
+f(OPRH)        Operating (dc differential driver) high speed mode                                                               12      Mb/s
+f(OPRL)        Operating (dc differential driver) low speed mode                                                                1.5     Mb/s
+VICR           Common mode, input range, differential receiver                                    0.8                           2.5       V
+tt             Input transition times, TTL/LVCMOS                                                   0                           25       ns
+TJ             Junction temperature range                                                        –40                            115      °C
+
+
+
+
+6          Submit Documentation Feedback                                                  Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                                   Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                                  TUSB2046B, TUSB2046I
+www.ti.com                                                                                          SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+7.4 Thermal Information
+                                                                                                                TUSB2046x
+                                             THERMAL METRIC (1)                                                 RHB (VQFN)                UNIT
+                                                                                                                  32 PINS
+RθJA                Junction-to-ambient thermal resistance                                                          35.7                  °C/W
+RθJCtop             Junction-to-case (top) thermal resistance                                                       28.4                  °C/W
+RθJB                Junction-to-board thermal resistance                                                             9.9                  °C/W
+ψJT                 Junction-to-top characterization parameter                                                       0.5                  °C/W
+ψJB                 Junction-to-board characterization parameter                                                     9.8                  °C/W
+RθJC(bot)           Junction-to-case (bottom) thermal resistance                                                     4.3                  °C/W
+
+(1)    For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+       report.
+
+7.5 Electrical Characteristics
+over recommended ranges of operating free-air temperature and supply voltage (unless otherwise noted)
+                             PARAMETER                                          TEST CONDITIONS                    MIN            MAX         UNIT
+                                                    TTL/LVCMOS           IOH = –4 mA                          VCC – 0.5
+VOH             High-level output voltage                                R(DRV) = 15 kΩ to GND                      2.8                        V
+                                                    USB data lines
+                                                                         IOH = –12 mA (without R(DRV))        VCC – 0.5
+                                                    TTL/LVCMOS           IOL = 4 mA                                                0.5
+VOL             Low-level output voltage                                 R(DRV) = 1.5 kΩ to 3.6 V                                  0.3         V
+                                                    USB data lines
+                                                                         IOL = 12 mA (without R(DRV))                              0.5
+                                                    TTL/LVCMOS                                                                     1.8
+VIT+            Positive input threshold                                                                                                       V
+                                                    Single-ended         0.8 V ≤ VICR ≤ 2.5 V                                      1.8
+                                                    TTL/LVCMOS                                                      0.8
+VIT–            Negative-input threshold                                                                                                       V
+                                                    Single-ended         0.8 V ≤ VICR ≤ 2.5 V                         1
+                Input hysteresis (1)                TTL/LVCMOS                                                      0.3            0.7
+Vhys                                                                                                                                          mV
+                (VT+ – VT–)                         Single-ended         0.8 V ≤ VICR ≤ 2.5 V                      300            500
+                                                    TTL/LVCMOS           V = VCC or GND (2)                                       ±10
+IOZ             High-impedance output current                                                                                                 μA
+                                                    USB data lines       0 V ≤ VO ≤ VCC                                           ±10
+IIL             Low-level input current             TTL/LVCMOS           VI = GND                                                  –1         μA
+IIH             High-level input current            TTL/LVCMOS           VI = VCC                                                   1         μA
+z0(DRV)         Driver output impedance             USB data lines       Static VOH or VOL                          7.1           19.9         Ω
+VID             Differential input voltage          USB data lines       0.8 V ≤ VICR ≤ 2.5 V                       0.2                        V
+                                                                         Normal operation                                          40         mA
+ICC             Input supply current
+                                                                         Suspend mode                                               1         μA
+
+(1)    Applies for input buffers with hysteresis.
+(2)    Applies for open-drain buffers.
+
+7.6 Differential Driver Switching Characteristics (Full Speed Mode)
+over recommended ranges of operating free-air temperature and supply voltage, CL = 50 pF (unless otherwise noted)
+                      PARAMETER                                               TEST CONDITIONS                              MIN      MAX        UNIT
+tr           Transition rise time for DP or DM           See Figure 1 and Figure 2                                           4           20     ns
+tf           Transition fall time for DP or DM           See Figure 1 and Figure 2                                           4           20     ns
+t(RFM)       Rise/fall time matching (1)                 (tr/tf) × 100                                                     90%     110%
+VO(CRS)      Signal crossover output voltage (1)                                                                            1.3      2.0         V
+
+(1)    Characterized only. Limits are approved by design and are not production tested.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                                    Submit Documentation Feedback                7
+                                                    Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                               www.ti.com
+
+
+7.7 Differential Driver Switching Characteristics (Low Speed Mode)
+over recommended ranges of operating free-air temperature and supply voltage, CL = 50 pF (unless otherwise noted)
+                    PARAMETER                                                      TEST CONDITIONS                              MIN     MAX     UNIT
+                                                (1)
+tr          Transition rise time for DP or DM             CL = 200 pF to 600 pF,       See Figure 1 and Figure 2                  75      300     ns
+tf          Transition fall time for DP or DM (1)         CL = 200 pF to 600 pF,       See Figure 1 and Figure 2                  75      300     ns
+t(RFM)      Rise/fall time matching (1)                   (tr/tf) × 100                                                         80%    120%
+VO(CRS)     Signal crossover output voltage (1)           CL = 200 pF to 600 pF                                                  1.3      2.0     V
+
+(1)   Characterized only. Limits are approved by design and are not production tested.
+
+
+
+
+                                                            22 Ω
+                                                                                                           1.5 kΩ
+                                                                          15 kΩ
+
+                                                            22 Ω
+
+
+                                                                          15 kΩ
+
+
+
+                                            Figure 1. Differential Driver Switching Load
+
+
+
+
+                                          Figure 2. Differential Driver Timing Waveforms
+
+                                                                                                                 VCC
+                                                                          Logic high            Vhys
+                                                                                                                 VIH
+                                                VIT+
+                                                                                        VIT-
+                                                                                                                 VIL
+                                                                          Logic low
+                                                                                                                 0V
+
+                           Figure 3. Single-Ended Receiver Input Signal Parameter Definitions
+
+
+
+
+8         Submit Documentation Feedback                                                            Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                                      Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                                                                             TUSB2046B, TUSB2046I
+www.ti.com                                                                                                                                    SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+7.8 Typical Characteristics
+                                                                                                1.5
+
+
+
+
+                                         V ID - Diff erential Receiver Input Sensitivity - V
+                                                                                               1.3
+
+
+
+                                                                                                     1
+
+
+
+
+                                                                                                0.5
+
+
+
+                                                                                               0.2
+
+
+                                                                                                     0
+                                                                                                         0          1        2          3             4
+                                                                                                                0.8               2.5          3.6
+                                                                                                             VICR - Common Mode Input Rang e - V
+                   Figure 4. Differential Receiver Input Sensitivity vs Common Mode Input Range
+
+8 Detailed Description
+
+8.1 Overview
+The TUSB2046x is a 3.3-V CMOS hub device that provides one upstream port and four downstream ports in
+compliance with the Universal Serial Bus (USB) specification as a full-speed hub. Because this device is
+implemented with a digital state machine instead of a microcontroller, no firmware programming is required. Fully
+compliant USB transceivers are integrated into the ASIC for all upstream and downstream ports. The
+downstream ports support full-speed and low-speed devices by automatically setting the slew rate according to
+the speed of the device attached to the ports. The configuration of the BUSPWR pin selects either the bus-
+powered or the self-powered mode.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                                                                                Submit Documentation Feedback      9
+                                                                                                     Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                         www.ti.com
+
+
+8.2 Functional Block Diagram
+
+                                                      DP0        DM0
+
+                                                      1          2
+                                                             USB
+                                                          Transceiver
+                                                                                                                         32
+                                                                                                                               SUSPND
+                                                                                                                         27
+                                                                                                                               TSTPLL/48MCLK
+                                                                                                                         30 XTAL1
+
+                                                                                                                         29
+                                                 Suspend/Resume                                                                XTAL2
+                                                                                                          OSC/PLL
+                                                    Logic and                          SIE
+                                                   Frame Timer
+                HUB Repeater                                                                                               4
+                                                                                                                               RESET
+                                                                                                                         26
+                                                                                                                               EXTMEM
+
+                                                                                                                           6
+                                                                     SIE Interface                   Serial                    EEDATA/GANGED
+                                                                        Logic                      EEPROM
+                                                                                                   Interface               5
+                                                                                                                               EECLK
+
+                                                 Port 1
+                                                 Logic
+                                   Port 2
+                                   Logic                                        Hub/Device
+                                                                                Command
+                    Port 3                                                       Decoder
+                    Logic                                                                                                  8
+                                                                                                                               BUSPWR
+       Port 4
+       Logic
+
+
+
+
+        USB            USB              USB              USB                  Hub
+     Transceiver    Transceiver      Transceiver      Transceiver            Power
+                                                                             Logic           10, 14, 18, 22
+24         23      20        19    16       15       12        11                                             OVRCUR1 – OVRCUR4
+                                                                                              9, 13, 17, 21
+ DP4       DM4     DP3       DM3     DP2    DM2       DP1       DM1                                           PWRON1 – PWRON4
+
+
+8.3 Feature Description
+8.3.1 USB Power Management
+External power-management devices, such as the TPS2044, are required to control the 5-V source to the
+downstream ports according to the corresponding values of the PWRON pin. Upon detecting any overcurrent
+conditions, the power-management device sets the corresponding OVRCUR pin of the TUSB2046x to a logic
+low. If GANGED is high, all PWRON outputs switch together and if any OVRCUR is activated, all ports transition
+to the power-off state. If GANGED is low, the PWRON outputs and OVRCUR inputs operate on a per-port basis.
+Both bus-powered and self-powered hubs require overcurrent protection for all downstream ports. The two types
+of protection are individual-port management (individual-port basis) or ganged-port management (multiple-port
+basis). Individual-port management requires power-management devices for each individual downstream port,
+but adds robustness to the USB system because, in the event of an overcurrent condition, the USB host only
+powers down the port that has the condition. The ganged configuration uses fewer power-management devices
+and thus has lower system costs, but in the event of an overcurrent condition on any of the downstream ports, all
+the ganged ports are disabled by the USB host.
+
+
+
+10        Submit Documentation Feedback                                                      Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                                 Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                          TUSB2046B, TUSB2046I
+www.ti.com                                                                                 SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+Feature Description (continued)
+Using a combination of the BUSPWR and EEDATA/GANGED inputs, the TUSB2046x supports four modes of
+power management: bus-powered hub with either individual-port power-management or ganged-port power
+management, and the self-powered hub with either individual-port power management or ganged-port power
+management. TI supplies the complete hub solution with the TUSB2036 (2/3-port), TUSB2046x, and the
+TUSB2077 (7-port) hubs along with the power-management devices needed to implement a fully USB
+specification-compliant system.
+
+8.3.2 Clock Generation
+The input clock configuration logic of TUSB2046x is enhanced to accept a 6-MHz crystal or 48-MHz on-the-board
+clock source with a simple tie-off change on TSTMODE (pin 31).
+• A 6-MHz input clock configuration is shown in Figure 5.
+   In this mode, both TSTMODE and TSTPLL/48MCLK pins must be tied to ground. The hub is configured to
+   use the 6-MHz clock on pins 30 and 29, which are XTAL1 and XTAL2, respectively, on the TUSB2046x. This
+   is identical to the TUSB2046.
+
+
+
+
+                                            Figure 5. 6-MHz Input Clock Configuration
+
+                                                                 CL
+
+                            XTAL1                                                                       XTAL2
+
+
+                                                        C1                        C2
+
+
+
+
+    NOTE: This figure assumes a 6-MHz fundamental crystal that is parallel loaded. The component values of C1, C2, and Rd
+          are determined using a crystal from Fox Electronics – part number HC49U-6.00MHz 30\50\0-70\20, which means
+          ±30 ppm at 25°C and ±50 ppm from 0°C to 70°C. The characteristics for the crystal include a load capacitance (CL) of
+          20 pF, maximum shunt capacitance (Co) of 7 pF, and the maximum ESR of 50 Ω. In order to insure enough negative
+          resistance, use C1 = C2 = 27 pF. The resistor Rd is used to trim the gain, and Rd = 1.5 kΩ is recommended.
+
+                                                    Figure 6. Crystal Tuning Circuit
+
+•   A 48-MHz input clock configuration is shown in Figure 7.
+    In this mode, both TSTMODE and XTAL1 pins must be tied to 3.3-V VCC. The hub accepts the 48-MHz clock
+    input on TSTPLL/48MCLK (terminal 27). XTAL2 must be left floating (open) for this configuration. Only the
+    oscillator or the onboard clock source is accepted for this mode. A crystal cannot be used for this mode,
+    because the internal oscillator cell of the chip only supports the fundamental frequency.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                            Submit Documentation Feedback      11
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                               www.ti.com
+
+
+Feature Description (continued)
+
+                                                                       TUSB2046B USB HUB
+                                                   3.3 V
+                                                                  30
+                                                                        XTAL1
+                                                                  29
+                                                           Open         XTAL2
+                                                                  31
+                                                                        TSTMODE
+                                          48-MHz Oscillator
+                                      or on Board Clock Source 27
+                                                                        TSTPLL/48MCLK
+
+
+
+                                      Figure 7. 48-MHz Input Clock Configuration
+
+
+8.4 Device Functional Modes
+8.4.1 Vendor ID and Product ID With External Serial EEPROM
+The EXTMEM pin enables or disables the optional EEPROM interface. When the EXTMEM pin is high, the
+product ID (PID) displayed during enumeration is the general-purpose USB hub. For this default, pin 5 is disabled
+and pin 6 functions as the GANGED input pin. If custom product ID (PID) and vendor ID (VID) descriptors are
+desired, the EXTMEM pin must be low (EXTMEM = 0). For this configuration, pins 5 and 6 function as the
+EEPROM interface with pins 5 and 6 functioning as EECLK and EEDATA, respectively. See Table 1 for a
+description of the EEPROM memory map. A block diagram example of how to connect the external EEPROM if a
+custom PID and VID are desired is shown in Figure 8.
+
+
+
+
+                                         Ω
+
+
+
+
+                             Figure 8. Typical Application of the TUSB2046x USB Hub
+
+
+
+
+12     Submit Documentation Feedback                                               Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                             Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                        TUSB2046B, TUSB2046I
+www.ti.com                                                                                SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+8.5 Programming
+An SGS Thompson M93C46 EEPROM, or equivalent, stores the programmable VID and PID. When the
+EEPROM interface is enabled (EXTMEM = 0), the EECLK and EEDATA are internally pulled down (100 μA)
+inside the TUSB2046x. The internal pulldowns are disabled when the EEPROM interface is disabled
+(EXTMEM = 1).
+The EEPROM is programmed with the three 16-bit locations as shown in Table 1. Connecting terminal 6 of the
+EEPROM high (ORG = 1) organizes the EEPROM memory into 64×16-bit words.
+                                                        Table 1. EEPROM Memory Map
+  ADDRESS                   D15                    D14                   D13                  D12–D8                   D7–D0
+    00000                     0                  GANGED                 00000                 00000                  00000000
+    00001                                                    VID high-byte                                          VID low-byte
+    00010                                                    PID high-byte                                          PID low-byte
+                                                                             XXXXXXXX
+
+
+The D and Q signals of the EEPROM must be tied together using a 1-kΩ resistor with the common I/O
+operations forming a single-wire bus. After system power-on reset, the TUSB2046x performs a one-time access
+read operation from the EEPROM if the EXTMEM terminal is pulled low and the chip select(s) of the EEPROM is
+connected to the system power-on reset. Initially, the EEDATA terminal is driven by the TUSB2046x to send a
+start bit (1) which is followed by the read instruction (10) and the starting-word address (00000). Once the read
+instruction is received, the instruction and address are decoded by the EEPROM, which then sends the data to
+the output shift register. At this point, the hub stops driving the EEDATA terminal and the EEPROM starts driving.
+A dummy (0) bit is then output and the first three 16-bit words in the EEPROM are output with the most
+significant bit (MSB) first.
+The output data changes are triggered by the rising edge of the clock provided by the TUSB2046x on the EECLK
+terminal. The SGS-Thompson M936C46 EEPROM is recommended because it advances to the next memory
+location by automatically incrementing the address internally. Any EEPROM used must have the automatic
+internal address advance function. After reading the three words of data from the EEPROM, the TUSB2046x
+puts the EEPROM interface into a high-impedance condition (pulled down internally) to allow other logic to share
+the EEPROM. The EEPROM read operation is summarized in Figure 9. For more details on EEPROM operation,
+refer to SGS-Thompson Microelectronics M93C46 Serial Microwire Bus EEPROM data sheet.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                          Submit Documentation Feedback       13
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+                                            14
+                                                                                                                                                                                                                                                                                                                                                             TUSB2046B, TUSB2046I
+
+
+
+
+                                            Submit Documentation Feedback
+                                                                                                                                                                                                                                                                                                              SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+
+
+                                                                                                                                                     S
+
+
+
+
+                                                                                                                                                                                                                                                                                               3-Stated
+                                                                                                                                                                                                                                                                                              With Internal
+                                                                                                                                                     C                                                                                                                                         Pulldown
+
+
+                                                                                                                                                         Start   Read OP Code(10)                     6 Bit Address (000000)                             48 Data Bits                          Don’t Care
+
+
+                                                                                                                                                     D                                                                                         D15       D14                      D0            XX
+
+
+
+
+                                                                                                                                                                                          A5           Other          A1       A0   Dummy   MSB of The              Other      LSB of       MSB of
+                                                                                                                                                                                                      Address                         Bit   First Word             Data Bits Third Word   Fourth Word
+                                                                                                                                                                                                        Bits
+
+                                                                                                                                                                              Hub Driving Data Line                                                        EEPROM Driving Data Line
+
+
+
+
+Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                    Figure 9. EEPROM Read Operation Timing Diagram
+                                                                                                                                                                                                                                                                                                              www.ti.com
+
+
+
+
+                                            Copyright © 2000–2017, Texas Instruments Incorporated
+                                                                                                                            TUSB2046B, TUSB2046I
+www.ti.com                                                                                                   SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+9 Application and Implementation
+
+                                                           NOTE
+               Information in the following applications sections is not part of the TI component
+               specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+               responsible for determining suitability of components for their purposes. Customers should
+               validate and test their design implementation to confirm system functionality.
+
+
+9.1 Application Information
+A major advantage of USB is the ability to connect 127 functions configured in up to 6 logical layers (tiers) to a
+single personal computer.
+Another advantage of USB is that all peripherals are connected using a standardized 4-wire cable that provides
+both communication and power distribution. The power configurations are bus-powered and self-powered modes.
+The maximum current that may be drawn from the USB 5-V line during power up is 100 mA. For the bus-
+powered mode, a hub can draw a maximum of 500 mA from the 5-V line of the USB cable. A bus-powered hub
+must always be connected downstream to a self-powered hub unless it is the only hub connected to the PC and
+there are no high-powered functions connected downstream. In the self-powered mode, the hub is connected to
+an external power supply and can supply up to 500 mA to each downstream port. High-powered functions may
+draw a maximum of 500 mA from each downstream port and may only be connected downstream to self-
+powered hubs. Per the USB specification, in the bus-powered mode, each downstream port can provide a
+maximum of 100 mA of current, and in the self-powered mode, each downstream port can provide a maximum of
+500 mA of current.
+
+9.2 Typical Application
+A common application for the TUSB2046x is as a self powered USB hub product. The product is powered by an
+external 5-V DC power adapter. In this application, using a USB cable TUSB2046x’s upstream port is plugged
+into a USB host controller. The downstream ports of the TUSB2046x are exposed to users for connecting USB
+cameras, keyboards, printers, and so forth.
+
+                                                                             USB
+                                                 DC                         Type B
+                                                Power                      Connector
+
+
+
+                                                                            US Port
+
+
+
+
+                                                                           TUSB2046B
+
+
+
+
+                                                  USB                                                  USB
+                                               Power Switch                                         Power Switch
+
+
+
+
+                                                DS Port 1      DS Port 2               DS Port 3        DS Port 4
+
+
+                                               USB Type A     USB Type A               USB Type A      USB Type A
+                                                Connector      Connector                Connector       Connector
+
+
+
+
+                                            Figure 10. Self-Powered USB Hub Product
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                                               Submit Documentation Feedback     15
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                                                    www.ti.com
+
+
+Typical Application (continued)
+9.2.1 Design Requirements
+For this design example, use the parameters listed in Table 2.
+
+                                                               Table 2. Design Parameters
+                      DESIGN PARAMETERS                                                                                                 VALUE
+                             VCC Supply                                                                                                 3.3-V
+                          Downstream Ports                                                                                                4
+                         Power Management                                                                                         Individual-Port
+                             Clock Source                                                                                         6-MHz Crystal
+                          External EEPROM                                                                                                No
+                         Power Source Mode                                                                                        Self-Powered
+
+
+9.2.2 Detailed Design Procedure
+In a self-powered configuration, the TUSB2046x can be implemented for individual-port power management
+when used with the TPS2044 because it is capable of supplying 500 mA of current to each downstream port and
+can provide current limiting on a per-port basis. When the hub detects a fault on a downstream port, power is
+removed from only the port with the fault and the remaining ports continue to operate normally. Self-powered
+hubs are required to implement overcurrent protection and report overcurrent conditions. The SN75240 transient
+suppressors reduce inrush current and voltage spikes on the data lines.
+
+
+                                                                                                            D
+                                                1.5 kΩ
+
+                                                                                                                    Ω
+                                            A                                                                       Ω
+                                  SN75240
+                                                                                                                                    A
+                                                                                                                          SN75240
+
+                                                      C                                                                                                  B
+                                          3.3 V LDO                                                             Ω                               100 µF
+                                                                                                                Ω
+
+
+
+
+                                                                                                        Ω
+                                                                                                        Ω
+                                                                                                                              A
+                                                                                                                    SN75240
+
+                                                                                                                                                         B
+                                                                                                                                                100 µF
+
+
+                                                                                                            A
+                                                                                                  TPS2044
+
+
+
+
+                                                                                                                                                         B
+                                                                                                                                                100 µF
+
+
+
+
+                                                                                                                                                         B
+                                                                                                                                                100 µF
+
+
+
+
+                    NOTES: A. TPS2044, TPS2042, and SN75240 are Texas Instruments devices. Two TPS2042 devices can be substituted for the TPS2044.
+                               The OCn outputs of the TPS204n are open drain. A 10-kΩ pullup is recommended.
+                           B. 120 µF per hub is the minimum required per the USB specification. However, TI recommends a 100-µF, low ESR,
+                               tantalum capacitor per port for immunity to voltage droop.
+                           C. LDO is a 5-V-to-3.3-V voltage regulator
+                           D. All USB DP, DM signal pairs require series resistors of approximately 27Ω to ensure proper termination. An optional filter
+                               capacitor of about 22 pF is recommended for EMI suppression. This capacitor, if used, must be placed between the hub
+                               terminal and the series resistor, as per section 7.1.6 of the USB specification.
+
+
+         Figure 11. TUSB2046x Self-Powered Hub, Individual-Port Power-Management Application
+
+16     Submit Documentation Feedback                                                                                    Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                                          Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                        TUSB2046B, TUSB2046I
+www.ti.com                                                                                SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+9.2.3 Application Curve
+
+
+
+
+                                                        Figure 12. Downstream Port 1
+
+
+10 Power Supply Recommendations
+
+10.1 TUSB2046x Power Supply
+VCC should be implemented as a single power plane.
+• The VCC pins of the TUSB2046x supply 3.3-V power rail to the I/O of the TUSB2046x. This power rail can be
+   isolated from all other power rails by a ferrite bead to reduce noise.
+• All power rails require a 10-μF capacitor or 1-μF capacitors for stability and noise immunity. These bulk
+   capacitors can be placed anywhere on the power rail. The smaller decoupling capacitors should be placed as
+   close to the TUSB2046x power pins as possible with an optimal grouping of two of differing values per pin.
+
+10.2 Downstream Port Power
+•   The downstream port power, VBUS, must be supplied by a source capable of supplying 5 V and up to 500
+    mA per port. Downstream port power switches can be controlled by the TUSB2046x signals. It is also
+    possible to leave the downstream port power always enabled.
+•   A large bulk low-ESR capacitor of 22 μF or larger is required on each downstream port’s VBUS to limit in-rush
+    current.
+•   The ferrite beads on the VBUS pins of the downstream USB port connections are recommended for both
+    ESD and EMI reasons. A 0.1-μF capacitor on the USB connector side of the ferrite provides a low impedance
+    path to ground for fast rise time ESD current that might have coupled onto the VBUS trace from the cable.
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                          Submit Documentation Feedback       17
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                             www.ti.com
+
+
+11 Layout
+
+11.1 Layout Guidelines
+11.1.1 Placement
+1. A 0.1-μF should be placed as close as possible on VCC power pin.
+2. The ESD and EMI protection devices (if used) should also be placed as close as possible to the USB
+   connector.
+3. If a crystal is used, it must be placed as close as possible to the TUSB2046x’s XTAL1 and XTAL2 pins.
+4. Place voltage regulators as far away as possible from the TUSB2046x, the crystal, and the differential pairs.
+5. In general, the large bulk capacitors associated with the power rail should be placed as close as possible to
+   the voltage regulators.
+
+11.1.2 Differential Pairs
+1. Must be designed with a differential impedance of 90Ω ±10%.
+2. Route all differential pairs on the same layer adjacent to a solid ground plane.
+3. Do not route differential pairs over any plane split.
+4. Adding test points will cause impedance discontinuity and will therefore negative impact signal performance.
+   If test points are used, they should be placed in series and symmetrically. They must not be placed in a
+   manner that causes stub on the differential pair.
+5. Avoid 90-degree turns in trace. The use of bends in differential traces should be kept to a minimum. When
+   bends are used, the number of left and right bends should be as equal as possible and the angle of the bend
+   should be ≥ 135 degrees. This will minimize any length mismatch causes by the bends and therefore
+   minimize the impact bends have on EMI.
+6. Minimize the trace lengths of the differential pair traces. The maximum recommended trace length for USB
+   2.0 differential pair signals is 8 inches. Longer trace lengths require very careful routing to assure proper
+   signal integrity.
+7. Match the etch lengths of the differential pair traces. The USB 2.0 differential pairs should not exceed 50 mils
+   relative trace length difference.
+8. Minimize the use of vias in the differential pair paths as much as possible. If this is not practical, make sure
+   that the same via type and placement are used for both signals in a pair. Any vias used should be placed as
+   close as possible to the TUSB2046x device.
+9. Do not place power fuses across the differential pair traces.
+
+11.1.3 Ground
+TI recommends using only one board ground plane in the design. This provides the best image plane for signal
+traces running above the plane. The thermal pad of the TUSB2046x and any of the voltage regulators should be
+connected to this plane with vias. An earth or chassis ground is implemented only near the USB port connectors
+on a different plane for EMI and ESD purposes.
+
+
+
+
+18     Submit Documentation Feedback                                             Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                           Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                        TUSB2046B, TUSB2046I
+www.ti.com                                                                                SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017
+
+
+11.2 Layout Example
+
+
+
+
+                                               Figure 13. TUSB2046x Layout Example
+
+
+
+
+Copyright © 2000–2017, Texas Instruments Incorporated                                          Submit Documentation Feedback       19
+                                                  Product Folder Links: TUSB2046B TUSB2046I
+TUSB2046B, TUSB2046I
+SLLS413L – FEBRUARY 2000 – REVISED JUNE 2017                                                                                    www.ti.com
+
+
+12 Device and Documentation Support
+
+12.1 Related Links
+The table below lists quick access links. Categories include technical documents, support and community
+resources, tools and software, and quick access to order now.
+
+                                                      Table 3. Related Links
+                                                                        TECHNICAL                TOOLS &                 SUPPORT &
+       PARTS           PRODUCT FOLDER            ORDER NOW
+                                                                        DOCUMENTS               SOFTWARE                 COMMUNITY
+     TUSB2046B              Click here             Click here             Click here              Click here               Click here
+     TUSB2046BI             Click here             Click here             Click here              Click here               Click here
+     TUSB2046I              Click here             Click here             Click here              Click here               Click here
+
+
+12.2 Community Resources
+The following links connect to TI community resources. Linked contents are provided "AS IS" by the respective
+contributors. They do not constitute TI specifications and do not necessarily reflect TI's views; see TI's Terms of
+Use.
+TI E2E™ Online Community TI's Engineer-to-Engineer (E2E) Community. Created to foster collaboration
+           among engineers. At e2e.ti.com, you can ask questions, share knowledge, explore ideas and help
+           solve problems with fellow engineers.
+Design Support TI's Design Support Quickly find helpful E2E forums along with design support tools and
+           contact information for technical support.
+
+12.3 Trademarks
+E2E is a trademark of Texas Instruments.
+All other trademarks are the property of their respective owners.
+12.4 Electrostatic Discharge Caution
+         These devices have limited built-in ESD protection. The leads should be shorted together or the device placed in conductive foam
+         during storage or handling to prevent electrostatic damage to the MOS gates.
+
+
+12.5 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+13 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+20     Submit Documentation Feedback                                                    Copyright © 2000–2017, Texas Instruments Incorporated
+
+                                             Product Folder Links: TUSB2046B TUSB2046I
+                                                                                                                                                 PACKAGE OPTION ADDENDUM
+
+
+www.ti.com                                                                                                                                                                                 6-Feb-2020
+
+
+PACKAGING INFORMATION
+
+           Orderable Device            Status   Package Type Package Pins Package             Eco Plan         Lead/Ball Finish        MSL Peak Temp       Op Temp (°C)         Device Marking          Samples
+                                         (1)                 Drawing        Qty                   (2)                 (6)                      (3)                                     (4/5)
+
+          TUSB2046BIRHBR              ACTIVE         VQFN          RHB      32     3000     Green (RoHS            NIPDAU            Level-2-260C-1 YEAR     -40 to 85    TUSB
+                                                                                             & no Sb/Br)                                                                  2046BI
+         TUSB2046BIRHBRG4             ACTIVE         VQFN          RHB      32     3000     Green (RoHS            NIPDAU            Level-2-260C-1 YEAR     -40 to 85    TUSB
+                                                                                             & no Sb/Br)                                                                  2046BI
+          TUSB2046BIRHBT              ACTIVE         VQFN          RHB      32      250     Green (RoHS            NIPDAU            Level-2-260C-1 YEAR     -40 to 85    TUSB
+                                                                                             & no Sb/Br)                                                                  2046BI
+         TUSB2046BIRHBTG4             ACTIVE         VQFN          RHB      32      250     Green (RoHS            NIPDAU            Level-2-260C-1 YEAR     -40 to 85    TUSB
+                                                                                             & no Sb/Br)                                                                  2046BI
+            TUSB2046BVF               ACTIVE         LQFP           VF      32      250     Green (RoHS            NIPDAU            Level-3-260C-168 HR      0 to 70     TUSB2046B
+                                                                                             & no Sb/Br)
+           TUSB2046BVFG4              ACTIVE         LQFP           VF      32      250     Green (RoHS            NIPDAU            Level-3-260C-168 HR      0 to 70     TUSB2046B
+                                                                                             & no Sb/Br)
+           TUSB2046BVFR               ACTIVE         LQFP           VF      32     1000     Green (RoHS            NIPDAU            Level-3-260C-168 HR      0 to 70     TUSB2046B
+                                                                                             & no Sb/Br)
+          TUSB2046BVFRG4              ACTIVE         LQFP           VF      32     1000     Green (RoHS            NIPDAU            Level-3-260C-168 HR      0 to 70     TUSB2046B
+                                                                                             & no Sb/Br)
+            TUSB2046IBVF              ACTIVE         LQFP           VF      32      250     Green (RoHS            NIPDAU            Level-3-260C-168 HR     -40 to 85    TUSB2046I
+                                                                                             & no Sb/Br)
+           TUSB2046IBVFR              ACTIVE         LQFP           VF      32     1000     Green (RoHS            NIPDAU            Level-3-260C-168 HR     -40 to 85    TUSB2046I
+                                                                                             & no Sb/Br)
+
+(1)
+   The marketing status values are defined as follows:
+ACTIVE: Product device recommended for new designs.
+LIFEBUY: TI has announced that the device will be discontinued, and a lifetime-buy period is in effect.
+NRND: Not recommended for new designs. Device is in production to support existing customers, but TI does not recommend using this part in a new design.
+PREVIEW: Device has been announced but is not in production. Samples may or may not be available.
+OBSOLETE: TI has discontinued the production of the device.
+
+(2)
+   RoHS: TI defines "RoHS" to mean semiconductor products that are compliant with the current EU RoHS requirements for all 10 RoHS substances, including the requirement that RoHS substance
+do not exceed 0.1% by weight in homogeneous materials. Where designed to be soldered at high temperatures, "RoHS" products are suitable for use in specified lead-free processes. TI may
+reference these types of products as "Pb-Free".
+RoHS Exempt: TI defines "RoHS Exempt" to mean products that contain lead but are compliant with EU RoHS pursuant to a specific EU RoHS exemption.
+Green: TI defines "Green" to mean the content of Chlorine (Cl) and Bromine (Br) based flame retardants meet JS709B low halogen requirements of <=1000ppm threshold. Antimony trioxide based
+flame retardants must also meet the <=1000ppm threshold requirement.
+
+(3)
+      MSL, Peak Temp. - The Moisture Sensitivity Level rating according to the JEDEC industry standard classifications, and peak solder temperature.
+
+
+                                                                                              Addendum-Page 1
+                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+
+www.ti.com                                                                                                                                                                                            6-Feb-2020
+
+
+
+
+(4)
+      There may be additional marking, which relates to the logo, the lot trace code information, or the environmental category on the device.
+
+(5)
+   Multiple Device Markings will be inside parentheses. Only one Device Marking contained in parentheses and separated by a "~" will appear on a device. If a line is indented then it is a continuation
+of the previous line and the two combined represent the entire Device Marking for that device.
+
+(6)
+   Lead/Ball Finish - Orderable Devices may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead/Ball Finish values may wrap to two lines if the finish
+value exceeds the maximum column width.
+
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information
+provided by third parties, and makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and
+continues to take reasonable steps to provide representative and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals.
+TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                Addendum-Page 2
+                                                                   PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                              12-Feb-2019
+
+
+
+TAPE AND REEL INFORMATION
+
+
+
+
+*All dimensions are nominal
+             Device           Package Package Pins   SPQ       Reel   Reel   A0           B0     K0     P1     W     Pin1
+                               Type Drawing                  Diameter Width (mm)         (mm)   (mm)   (mm)   (mm) Quadrant
+                                                               (mm) W1 (mm)
+    TUSB2046BIRHBR             VQFN    RHB     32    3000      330.0     12.4      5.3   5.3    1.5    8.0    12.0    Q2
+    TUSB2046BIRHBT             VQFN    RHB     32    250       180.0     12.4      5.3   5.3    1.5    8.0    12.0    Q2
+     TUSB2046BVFR              LQFP     VF     32    1000      330.0     16.4      9.6   9.6    1.9    12.0   16.0    Q2
+     TUSB2046IBVFR             LQFP     VF     32    1000      330.0     16.4      9.6   9.6    1.9    12.0   16.0    Q2
+
+
+
+
+                                                           Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                           12-Feb-2019
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins     SPQ     Length (mm)   Width (mm)   Height (mm)
+    TUSB2046BIRHBR               VQFN             RHB           32      3000       350.0        350.0         43.0
+    TUSB2046BIRHBT               VQFN             RHB           32      250        210.0        185.0         35.0
+     TUSB2046BVFR                LQFP              VF           32      1000       336.6        336.6         31.8
+     TUSB2046IBVFR               LQFP              VF           32      1000       336.6        336.6         31.8
+
+
+
+
+                                                        Pack Materials-Page 2
+                                                                  GENERIC PACKAGE VIEW
+RHB 32                                                                     VQFN - 1 mm max height
+5 x 5, 0.5 mm pitch                                                         PLASTIC QUAD FLATPACK - NO LEAD
+
+
+
+
+      Images above are just a representation of the package family, actual package may vary.
+      Refer to the product data sheet for package details.
+
+                                                                                                   4224745/A
+
+
+
+
+                                                    www.ti.com
+                                                                                                               PACKAGE OUTLINE
+RHB0032E                                                         SCALE 3.000
+                                                                                                              VQFN - 1 mm max height
+                                                                                                               PLASTIC QUAD FLATPACK - NO LEAD
+
+
+                                                       5.1                                       B
+                           A
+                                                       4.9
+
+
+
+
+         PIN 1 INDEX AREA
+
+                                                                                                 5.1                                        (0.1)
+                                                                                                 4.9
+
+
+
+
+                                                                                                                         SIDE WALL DETAIL
+                                                                                                                    OPTIONAL METAL THICKNESS
+                                                                                                                               20.000
+
+
+
+
+                                                                                                         C
+                 1 MAX
+
+                                                                                                               SEATING PLANE
+                    0.05
+                    0.00                                                                                      0.08 C
+                                                     2X 3.5
+                                                     3.45 0.1                                                                                (0.2) TYP
+                                      9                                                16        EXPOSED
+                                                                                                 THERMAL PAD
+               28X 0.5
+                               8
+                                                                                            17           SEE SIDE WALL
+                                                                                                                DETAIL
+
+
+
+                   2X                                                                       SYMM
+                                                         33
+                   3.5
+
+
+
+
+                                                                                                             0.3
+                                                                                                       32X
+                                                                                                             0.2
+                                                                                            24               0.1    C A B
+                               1
+                                                                                                             0.05    C
+
+                                       32                                             25
+                    PIN 1 ID                         SYMM
+                 (OPTIONAL)                                                     0.5
+                                                                32X
+                                                                                0.3
+                                                                                                                                        4223442/B 08/2019
+
+NOTES:
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+
+
+
+
+                                                                               www.ti.com
+                                                                                        EXAMPLE BOARD LAYOUT
+RHB0032E                                                                                              VQFN - 1 mm max height
+                                                                                                      PLASTIC QUAD FLATPACK - NO LEAD
+
+
+
+                                                                  ( 3.45)
+
+                                                                    SYMM
+                                         32                                                      25
+                32X (0.6)
+
+
+
+
+                             1                                                                                  24
+
+            32X (0.25)
+
+
+
+                                                                                                                  (1.475)
+                28X (0.5)
+
+                                                                         33                                                 SYMM
+
+
+                                                                                                                                   (4.8)
+             ( 0.2) TYP
+                     VIA
+
+
+
+
+                             8                                                                                  17
+
+                (R0.05)
+                   TYP
+
+
+                                              9                                                 16
+                                                                              (1.475)
+
+                                                                    (4.8)
+
+                                                     LAND PATTERN EXAMPLE
+                                                                 SCALE:18X
+
+                              0.07 MAX                                                  0.07 MIN
+                          ALL AROUND                                                ALL AROUND
+
+                                                                                                                SOLDER MASK
+                                                     METAL                                                      OPENING
+
+
+                                                      SOLDER MASK                                                    METAL UNDER
+                                                      OPENING                                                        SOLDER MASK
+
+                                 NON SOLDER MASK
+                                                                                              SOLDER MASK
+                                     DEFINED
+                                                                                                DEFINED
+                                   (PREFERRED)
+
+                                                           SOLDER MASK DETAILS
+                                                                                                                            4223442/B 08/2019
+
+NOTES: (continued)
+
+4. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+   number SLUA271 (www.ti.com/lit/slua271).
+5. Vias are optional depending on application, refer to device data sheet. If any vias are implemented, refer to their locations shown
+   on this view. It is recommended that vias under paste be filled, plugged or tented.
+
+
+
+
+                                                                       www.ti.com
+                                                                                EXAMPLE STENCIL DESIGN
+RHB0032E                                                                                        VQFN - 1 mm max height
+                                                                                                PLASTIC QUAD FLATPACK - NO LEAD
+
+
+
+
+                                              4X ( 1.49)
+                (R0.05) TYP                                           (0.845)
+                                    32                                                     25
+          32X (0.6)
+
+
+
+
+                       1                                                                                  24
+
+       32X (0.25)
+
+
+
+
+           28X (0.5)
+                                                                                                            (0.845)
+                                                                                                                      SYMM
+                                                                      33
+
+                                                                                                                             (4.8)
+
+
+
+
+                       8                                                                                  17
+
+
+             METAL
+             TYP
+
+
+
+                                         9                                            16
+                                                             SYMM
+
+
+                                                              (4.8)
+
+
+                                                 SOLDER PASTE EXAMPLE
+                                               BASED ON 0.125 mm THICK STENCIL
+
+                                                   EXPOSED PAD 33:
+                                 75% PRINTED SOLDER COVERAGE BY AREA UNDER PACKAGE
+                                                      SCALE:20X
+
+
+
+
+                                                                                                                  4223442/B 08/2019
+
+NOTES: (continued)
+
+6. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+  design recommendations.
+
+
+
+
+                                                                 www.ti.com
+                                                                                                                       PACKAGE OUTLINE
+VF0032A                                                       SCALE 1.700
+                                                                                                                    LQFP - 1.6 mm max height
+                                                                                                                                      PLASTIC QUAD FLATPACK
+
+
+                                                              7.2
+                                                                                                          B
+                                                              6.8
+                                                             NOTE 3                       25
+                                                 32
+                             PIN 1 ID
+
+
+
+                                      1                                                                       24
+
+
+
+
+                             7.2                                                                                   9.2
+                                                                                                                       TYP
+                             6.8                                                                                   8.8
+                            NOTE 3
+
+
+
+
+                                      8
+                                                                                                       17
+
+                                             9                                                    16
+                                  A
+                                                                                                                           0.45
+                                                                  28X 0.8                                            32X
+                                                                                                                           0.25
+                                                            4X 5.6                                                         0.2     C A B
+
+
+
+
+                                                                                                                             C
+                                                                                                              1.6 MAX
+                                                                                                                                  SEATING PLANE
+
+                         (0.13)                          SEE DETAIL A
+                           TYP
+
+
+
+
+                                                 0.25                                                       (1.4)
+                                          GAGE PLANE
+
+
+
+                                                                                                                    0.15
+                                                  0 -7                                            0.1 C             0.05
+                                                                            0.75
+                                                                            0.45
+                                                                                       DETAIL A
+                                                                                           A 15
+
+
+
+
+                                                                                         TYPICAL
+                                                                                                                                                4219769/A 04/2019
+NOTES:                                                                                                                     PowerPAD is a trademark of Texas Instruments.
+
+
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+   per ASME Y14.5M.
+2. This drawing is subject to change without notice.
+3. This dimension does not include mold flash, protrusions, or gate burrs.
+4. Reference JEDEC registration MS-026.
+
+
+
+
+                                                                                   www.ti.com
+                                                                               EXAMPLE BOARD LAYOUT
+VF0032A                                                                                  LQFP - 1.6 mm max height
+                                                                                                        PLASTIC QUAD FLATPACK
+
+
+
+
+                                                               SYMM
+
+                                                32                                25
+
+                        32X (1.5)
+
+
+
+                                     1                                                           24
+
+                   32X (0.55)
+
+
+
+                          SYMM                                 33
+                                                                                                      (8.4)
+
+
+
+                         28X (0.8)
+
+
+                                     8                                                           17
+               (R0.05) TYP
+
+
+
+
+                     SEE DETAILS                 9                                16
+
+
+                                                                (8.4)
+
+                                                  LAND PATTERN EXAMPLE
+                                                       EXPOSED METAL SHOWN
+                                                             SCALE:8X
+
+                            0.05 MAX                                                 0.05 MIN
+                        ALL AROUND                                               ALL AROUND
+
+                                                     METAL                                                SOLDER MASK
+                                                                                                          OPENING
+                                                                        EXPOSED METAL
+
+            EXPOSED METAL
+                                                                                                              METAL UNDER
+                                                     SOLDER MASK                                              SOLDER MASK
+                                                     OPENING
+
+                                NON SOLDER MASK                                            SOLDER MASK
+                                    DEFINED                                                  DEFINED
+                                                         SOLDER MASK DETAILS
+                                                                                                                 4219769/A 04/2019
+NOTES: (continued)
+
+ 5. Publication IPC-7351 may have alternate designs.
+ 6. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+
+
+
+
+                                                                www.ti.com
+                                                                               EXAMPLE STENCIL DESIGN
+VF0032A                                                                                    LQFP - 1.6 mm max height
+                                                                                                          PLASTIC QUAD FLATPACK
+
+
+
+
+                                                                 SYMM
+                                                  32                                25
+
+                         32X (1.5)
+
+
+
+                                     1                                                             24
+
+                   32X (0.55)
+
+
+
+                             SYMM                                    33
+                                                                                                        (8.4)
+
+
+
+                           28X (0.8)
+
+
+                                       8                                                           17
+               (R0.05) TYP
+
+
+
+
+                                                   9                                16
+                                                                  (8.4)
+
+
+                                                    SOLDER PASTE EXAMPLE
+                                                               SCALE:8X
+
+
+
+
+                                                                                                                  4219769/A 04/2019
+
+NOTES: (continued)
+
+7. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+   design recommendations.
+8. Board assembly site may have different recommendations for stencil design.
+
+
+
+
+                                                                 www.ti.com
+                                                 IMPORTANT NOTICE AND DISCLAIMER
+
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS”
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable
+standards, and any other safety, security, or other requirements. These resources are subject to change without notice. TI grants you
+permission to use these resources only for development of an application that uses the TI products described in the resource. Other
+reproduction and display of these resources is prohibited. No license is granted to any other TI intellectual property right or to any third
+party intellectual property right. TI disclaims responsibility for, and you will fully indemnify TI and its representatives against, any claims,
+damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale (www.ti.com/legal/termsofsale.html) or other applicable terms available either on
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable
+warranties or warranty disclaimers for TI products.
+
+
+                             Mailing Address: Texas Instruments, Post Office Box 655303, Dallas, Texas 75265
+                                            Copyright © 2020, Texas Instruments Incorporated
+

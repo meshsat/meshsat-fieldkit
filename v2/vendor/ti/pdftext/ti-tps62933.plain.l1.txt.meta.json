@@ -1,0 +1,17 @@
+{
+ "command": "pdftotext -l 1 v2/vendor/ti/ti-tps62933.pdf -",
+ "held_back": false,
+ "options": [
+  "-l",
+  "1"
+ ],
+ "pdf": "v2/vendor/ti/ti-tps62933.pdf",
+ "pdf_sha256": "16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/ti/pdftext/ti-tps62933.plain.l1.txt",
+ "text_bytes": 3328,
+ "text_sha256": "a4965834fb931ea924ebd1b847949c4230e4a7be4bb3eba0f50480030efa0b84"
+}

@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/battery/murata-prf-series.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/battery/murata-prf-series.pdf",
+ "pdf_sha256": "a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/battery/pdftext/murata-prf-series.layout.txt",
+ "text_bytes": 47158,
+ "text_sha256": "b4335bd9c42829761bd048f661b37f99190afda5712dffe4b0560bfea1701000"
+}

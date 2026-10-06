@@ -1,0 +1,63 @@
+Controller area network with flexible data rate (FDCAN)                                                                RM0433
+
+
+       Bits 2:0 LEC[2:0]: Last error code
+                 The LEC indicates the type of the last error to occur on the CAN bus. This field is cleared to 0 when
+                 a message has been transferred (reception or transmission) without error.
+                 000: No error: No error occurred since LEC has been reset by successful reception or transmission.
+                 001: Stuff error: More than 5 equal bits in a sequence have occurred in a part of a received message
+                 where this is not allowed.
+                 010: Form error: A fixed format part of a received frame has the wrong format.
+                 011: AckError: The message transmitted by the FDCAN was not acknowledged by another node.
+                 100: Bit1Error: During the transmission of a message (with the exception of the arbitration field), the
+                 device wanted to send a recessive level (bit of logical value 1), but the monitored bus value was
+                 dominant.
+                 101: Bit0Error: During the transmission of a message (or acknowledge bit, or active error flag, or
+                 overload flag), the device wanted to send a dominant level (data or identifier bit logical value 0), but
+                 the monitored bus value was recessive. During Bus_Off recovery this status is set each time a
+                 sequence of 11 recessive bits has been monitored. This enables the CPU to monitor the proceeding
+                 of the Bus_Off recovery sequence (indicating the bus is not stuck at dominant or continuously
+                 disturbed).
+                 110: CRCError: The CRC check sum of a received message was incorrect. The CRC of an incoming
+                 message does not match with the CRC calculated from the received data.
+                 111: NoChange: Any read access to the protocol status register re-initializes the LEC to ‘7. When the
+                 LEC shows the value 7, no CAN bus event was detected since the last CPU read access to the
+                 protocol status register.
+                 Access type is RS: set on read.
+
+Note:             When a frame in FDCAN format has reached the data phase with BRS flag set, the next
+                  CAN event (error or valid frame) is shown in FLEC instead of LEC. An error in a fixed stuff
+                  bit of a FDCAN CRC sequence is shown as a Form error, not Stuff error
+Note:             The Bus_Off recovery sequence (see CAN Specification Rev. 2.0 or ISO11898-1) cannot be
+                  shortened by setting or resetting FDCAN_CCCR.INIT. If the device goes Bus_Off, it sets
+                  FDCAN_CCCR.INIT of its own, stopping all bus activities. Once FDCAN_CCCR.INIT has
+                  been cleared by the CPU, the device waits for 129 occurrences of bus Idle (129 × 11
+                  consecutive recessive bits) before resuming normal operation. At the end of the Bus_Off
+                  recovery sequence, the error management counters are reset. During the waiting time after
+                  the reset of FDCAN_CCCR.INIT, each time a sequence of 11 recessive bits has been
+                  monitored, a Bit0 error code is written to FDCAN_PSR.LEC, enabling the CPU to readily
+                  check up whether the CAN bus is stuck at dominant or continuously disturbed and to
+                  monitor the Bus_Off recovery sequence. FDCAN_ECR.REC is used to count these
+                  sequences.
+
+56.5.14           FDCAN transmitter delay compensation register (FDCAN_TDCR)
+                  Address offset: 0x0048
+                  Reset value: 0x0000 0000
+
+  31        30      29     28       27       26     25       24    23     22     21     20        19       18     17      16
+
+ Res.      Res.    Res.   Res.     Res.      Res.   Res.    Res.   Res.   Res.   Res.   Res.     Res.      Res.   Res.   Res.
+
+
+
+  15        14      13     12       11       10      9       8      7      6      5      4        3         2      1      0
+
+ Res.                            TDCO[6:0]                         Res.                        TDCF[6:0]
+
+            rw      rw     rw       rw       rw      rw      rw           rw     rw     rw        rw       rw     rw      rw
+
+
+
+
+2534/3353                                                  RM0433 Rev 8
+

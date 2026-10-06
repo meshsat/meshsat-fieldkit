@@ -1,0 +1,208 @@
+TLV755P
+SBVS320D – NOVEMBER 2017 – REVISED SEPTEMBER 2024
+
+TLV755P 500mA, Low-IQ, Small-Size, Low-Dropout Regulator
+1 Features
+
+3 Description
+
+•
+•
+•
+•
+
+The TLV755P is an ultra-small, low quiescent current,
+low-dropout regulator (LDO) that sources 500mA
+with good line and load transient performance.
+The TLV755P is optimized for a wide variety of
+applications by supporting an input voltage range
+from 1.45V to 5.5V. To minimize cost and solution
+size, the device is offered in fixed output voltages
+ranging from 0.6V to 5V to support the lower
+core voltages of modern microcontrollers (MCUs).
+Additionally, the TLV755P has a low IQ with enable
+functionality to minimize standby power. This device
+features an internal soft-start to lower inrush current,
+thus providing a controlled voltage to the load and
+minimizing the input voltage drop during start up.
+When shutdown, the device actively pulls down the
+output to quickly discharge the outputs and provide a
+known start-up state.
+
+•
+•
+•
+•
+•
+•
+•
+
+SOT-23-5 package with 60.3°C/W RθJA available
+Input voltage range: 1.45V to 5.5V
+Low IQ: 25μA (typical)
+Low dropout:
+– 238mV (maximum) at 500mA (3.3VOUT)
+Output accuracy: 1% (maximum at 85°C)
+Built-in soft-start with monotonic VOUT rise
+Foldback current limit
+Active output discharge
+High PSRR: 46dB at 100kHz
+Stable with a 1µF ceramic output capacitor
+Packages:
+– 2.9mm × 2.8mm SOT-23-5 (DBV)
+– 2.9mm × 2.8mm SOT-23-5 (DYD) with thermal
+pad
+– 1mm × 1mm X2SON-4 (DQN)
+– 2mm × 2mm WSON-6 (DRV)
+
+The TLV755P is stable with small ceramic output
+capacitors allowing for a small overall solution size.
+A precision band-gap and error amplifier provides
+a typical accuracy of 1%. All device versions
+have integrated thermal shutdown, current limit, and
+undervoltage lockout (UVLO). The TLV755P has an
+internal foldback current limit that helps reduce the
+thermal dissipation during short-circuit events.
+
+2 Applications
+Set-top boxes, TV, and gaming consoles
+Portable and battery-powered equipment
+Desktops, notebooks, and ultrabooks
+Tablets and remote controls
+White goods and appliances
+Grid infrastructure and protection relays
+Camera modules and image sensors
+IN
+
+The TLV755 is available in the popular WSON,
+X2SON, and SOT23-5 (DRV, DQN, and DBV)
+packages. This device is also available in a
+thermally enhanced SOT23-5 (DYD) package with
+a thermal pad that provides significantly reduced
+thermal resistance compared to a standard SOT23-5
+package.
+
+OUT
+
+TLV755P
+
+CIN
+EN
+
+COUT
+
+GND
+
+ON
+OFF
+
+Package Information
+PART NUMBER
+
+Typical Application
+7
+
+175
+VIN
+
+VEN
+
+IOUT
+
+6
+
+150
+
+5
+
+125
+
+4
+
+100
+
+3
+
+75
+
+2
+
+50
+
+1
+
+25
+
+0
+
+TLV755P
+Output Current (mA)
+
+VOUT
+
+Voltage (V)
+
+•
+•
+•
+•
+•
+•
+•
+
+(1)
+(2)
+
+PACKAGE(1)
+
+PACKAGE SIZE(2)
+
+DQN (X2SON, 4)
+
+1mm × 1mm
+
+DBV (SOT-23, 5)
+
+2.9mm × 2.8mm
+
+DYD (SOT-23, 5)
+
+2.9mm × 2.8mm
+
+DRV (WSON, 6)
+
+2mm × 2mm
+
+For more information, see the Mechanical, Packaging, and
+Orderable Information.
+The package size (length × width) is a nominal value and
+includes pins, where applicable.
+
+0
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+1
+1.2
+Time (ms)
+
+1.4
+
+1.6
+
+1.8
+
+2
+
+Start-Up Waveform
+
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+
+

@@ -1,0 +1,353 @@
+1000BASE-T
+MAGNETICS MODULES
+Designed to Support 1:1
+Turns Ratio Transceivers
+
+                                                                                              RoHS-5 peak reflow temperature rating 235°C
+                                                                                              RoHS-6 peak reflow temperature rating 245°C°
+                                                                                              Meets IEEE 802.3 specification
+
+
+                                                  Electrical Specifications @ 25°C — Operating Temperature 0°C to 70°C
+  RoHS-5 4        RoHS-6 5 Number Insertion                                         Return Loss
+                                                                                                                                   Differential to Common
+                                                                                                                                                                     Crosstalk                   Hipot
+Compliant        Compliant             Loss                                                                                            Mode Rejection
+                                of   (dB MAX)                                          (dB MIN)                                            (dB MIN)                  (dB MIN)                    (VRMS
+   Part             Part       Ports                                                                                                                                                              MIN)
+ Number           Number             1-100MHz 1-30MHz                        40MHz         50MHz     60-80MHz 100MHz            30MHz 60MHz 100MHz          30MHz 60MHz 100MHz
+H5004 3c        H5004NL 3d       1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+HX5004 1, 3c    HX5004NL 1, 3d   1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+H5007 3c        H5007NL 3d       1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+H5008 3a        H5008NL 3a       1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+HX5008 1, 3a    HX5008NL 1, 3a   1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+H5009 3a        H5009NL 3a       1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+H5012 3a        H5012NL 3a       2      1.4      -16                          -14.4         -13.1       -12     -10               -45        -40      -35    -43.5 -37.5  -33                     1500
+H5014 3a        H5014NL 3a       2      1.4      -16                          -14.4         -13.1       -12     -10               -45        -40      -35    -43.5 -37.5  -33                     1500
+HX5014 1, 3a    HX5014NL 1, 3a   2      1.4      -16                          -14.4         -13.1       -12     -10               -45        -40      -35    -43.5 -37.5  -33                     1500
+H5015 3a        H5015NL 3a       1       1       -18                           -18           -16        -12     -10               -43        -37      -33     -43   -37   -33                     1500
+H5020 3a        H5020NL 3a       2       1       -18                          -14.4         -13.1       -12     -10               -40        -35      -30     -40   -33   -28                     1500
+HX5020 1, 3a    HX5020NL 1, 3a   2       1       -18                          -14.4         -13.1       -12     -10               -40        -35      -30     -40   -33   -28                     1500
+H5089 3a        H5089NL 3a       2      1.4      -16                          -14.4         -13.1       -12     -10               -45        -40      -35    -43.5 -37.5  -33                     1500
+1.   HX: Extended temperature version -40°C to +85° C
+2    For Tape & Reel packaging, add a “T” suffix at the end of the part number, e.g. H5007T.
+3.   MSL=Moisture Sensitivity Level: a=1 b=2 c=3 d=4
+4.   RoHS-5: Product does not contain 5 out of the 6 banned substances specified in the RoHS directive (product contains lead in applications considered solder).
+5.   RoHS-6: Product does not contain 5 out of the 6 banned substances specified in the RoHS directive. Some internal connections may contain lead in
+     high-temperature solder (solder alloys containing more than 85% lead)
+
+                                                                                            Mechanicals
+                                                                 .550
+H5004, HX5004, H5007*                                            13,97        11X
+                                                                                    .050            H5008, HX5008, H5009
+                                                                                    1,27
+                                                                     .030                                    .015
+                                                                 24X                                   24X
+                .690                                                 0,76                                    0,38
+                17,53
+
+
+                                                                            .500 .650                   .429                H500X               .537
+                                          .480 .630                         12,70 16,51                10,90                HX500X              13,64
+            H5004/7                       12,20 16,00                                                                        Date Code                                                            .429
+            HX5004/7                                                                                                       Country of Origin
+                                                                                                                                                                                                 10,90
+         DATE CODE CNTRY OF MFG                                                                            .039
+                                                                                                       11X
+                                                                                                           0,99
+                                                         SUGGESTED PAD LAYOUT                                                    .740                                   .620
+                   .050
+             11X                                                                                                                18,80           11X .039               15,75                           .025
+                   1,27                   .020                                                                                                                                                   24X
+                                    24X                                                                                         .600                0,99
+                                                                                                                                                                                                       0,64
+                                           0,51                                                                                                                         .770
+                .550                                                                                                            15,24                                  19,56
+                13,97                      * HX5004 and H5004/7 are footprint compatible
+                                             to 10/100BASE-TX part H1267.                                                                         .225      SUGGESTED PAD LAYOUT
+                                  .225                                                                                                            5,72
+                                  5,51
+                                                                                                       .004/0,10    .010           24X .045
+                                                                                                                                       1,14       0°-8°
+                                                                                                    24 Surfaces     0,25
+
+                                               .004                                         Dimensions: Inches                                               Weight . . . . . . . . . .1.6 grams
+                           .010
+                                           24 SURFACES           .045         0°8°                        mm                                                Tape & Reel . . . . . . . . . . .300
+                           0,25                            24X
+                                                                  1,14                      Unless otherwise specified, all tolerances are ± .010            Tube . . . . . . . . . . . . . . . . . .35
+                                                                                                                                             0,25
+
+     USA 858 674 8100 • Germany 49 7032 7806 0 • Singapore 65 6287 8998 • Shanghai 86 21 32181071 • China 86 755 33966678 • Taiwan 886 3 4643715
+www.pulseeng.com                                                                                        1                                                                  HC500.O (6/08)
+1000BASE-T
+MAGNETICS MODULES
+Designed to Support 1:1
+Turns Ratio Transceivers
+                                                                                      Mechanicals (continued)
+ H5012, H5014, HX5014, H5089                                                                                               H5020, HX5020
+                                                                                                                                                                                                           .075
+                      1.095                                                                                                            1.100 MAX                                                                TYP
+                      27,81                                                                                                                                                                                1,91
+                                                                                                                                       27,94
+                                                                                                                                          .020
+                                                                                                                                     50 X                                  .430
+                                                                                                         .490 .625                        0,51                                  MAX           .300
+                                                                                                         12,45 15,88                                                      10,92
+                                                 .480 .600
+                                                                                                                                                                                              7,62
+          H50XX, HX50XX                          12,19 15,24
+                                                                                                                                                H5020                       .297
+                                                                                                                                                HX5020                           MAX
+      DATE CODE        COUNTRY OF ORIGIN                                                                                                                                    7,54                                           .030
+                                                                          .025                                                 DATE CODE        CNTRY OF ORIGIN                                                       50X
+                                                                      48X                                                                                                                                                   0,76
+                                                                           0,64                                                                                                                                  .040
+                               .015                                    .040
+                          48X                                          1,02
+                                                                                                                                                                                                                 1,02
+                                0,38           .040                             .040 (.920)                                                                                                                            .040 .960
+                                                                           23X      =                                             .040                                                                           24 X       =
+               23X
+                   .040 (.920)
+                       =                       1,02                             1,02 (23,37)                                                                                                                          1,02 24,38
+                   1,02 (23,37)                                                                                                   1,02
+                                                                                                                                       .040 .960
+                                                                                                                                  24 X 1,02 = 24,38
+
+
+
+                                                                                                                                                                          .328
+                                                   .285                                                                                                                        MAX .340 MAX
+                                                   7,24
+                                                                                                     48X 0°- 8°
+                                                                                                                                                                          8,33     8,66                                           50 X 0°- 8°
+
+                                                          .004/0,10
+                                        .010                                              .036                                                             .010                     .004                                  .036
+                                        0,25
+                                                      48 Surfaces                     48X                                                                                                                             50X
+                                                                                           0,91                                                            0,25                50 SURFACES                                 0,91
+
+
+Weight . . . . . . . . . .4.0 grams                                                                                                                                                          Weight . . . . . . . . . .1.6 grams
+Tape & Reel . . . . . . .250/reel                                            Dimensions: Inches
+                                                                                            mm                                                                                               Tape & Reel . . . . . . .250/reel
+Tube . . . . . . . . . . . . . .15/tube                                      Unless otherwise specified, all tolerances are ± .010                                                           Tube . . . . . . . . . . . . . .15/tube
+                                                                                                                              0,25
+
+                              Mechanicals (continued)                                                                                                      Schematics
+  H5015                                                                                                                    H5004, HX5004, H5009
+                                                                        .550                                                                         Channel 1
+                                                                        14,0                                                          TCT1 1                                                                            24 MCT1
+                                                                      .050                           .030
+                                                                                               24X
+               .695                                                   1,27                           0,76
+                                                                                                                                      TD1+ 2                                                                            23 MX1+
+               17,7
+                                                                                                                                                                                                                         22 MX1-
+                                                                                                                                       TD1- 3
+                                                                                                                                                                                 1:1
+                                                                                          .490 .645
+                                       .480    .620                                       12,5 16,3                                                  Channel 2
+                                                                                                                                      TCT2 4
+           H5015                       12,2    15,8                                                                                                                                                                      21 MCT2
+   DATE CODE      CNTRY OF MFG
+                                                                                                                                      TD2+ 5                                                                             20 MX2+
+
+                                                                                                                                                                                                                         19 MX2-
+          .050                                                 SUGGESTED LAND PATTERN                                                 TD2- 6
+                                         .020                                                                                                                                    1:1
+          1,27                   24X
+                                          0,51                                                                                                       Channel 3
+               .550                                                                                                                   TCT3 7                                                                            18 MCT3
+               14,0
+                              .180
+                              4,57                                                                                                    TD3+ 8                                                                             17 MX3+
+
+                                                                                                                                                                                                                        16 MX3-
+                                                                                                                                       TD3- 9
+                                                                                                                                                                                 1:1
+                                            .004/0,10
+                              .010
+                                        24 SURFACES                            .040                  24X 0°8°                                       Channel 4
+                              0,25                                      24X                                                         TCT4 10                                                                             15 MCT4
+                                                                               1,02
+
+                                                                                                                                    TD4+ 11                                                                              14 MX4+
+Weight . . . . . . . . . .1.5 grams
+Tape & Reel . . . . . . .400/reel                                                                                                                                                                                       13 MX4-
+                                                                                                                                     TD4- 12
+                                                                                                                                                                                 1:1
+
+
+                                                                                                                                                                               LEGEND
+Dimensions: Inches                                                                                                                                                        Td            Mx
+                                                                                                                                                                                              MEDIA SIDE
+                                                                                                                                                              CHIP SIDE
+
+
+
+
+               mm                                                                                                                                                         Td            Mx
+Unless otherwise specified, all tolerances are ± .005                                                                                                                     Td            Mx
+                                                 0,13
+                                                                                                                                                                          Td            Mx
+
+
+
+
+   USA 858 674 8100 • Germany 49 7032 7806 0 • Singapore 65 6287 8998 • Shanghai 86 21 32181071 • China 86 755 33966678 • Taiwan 886 3 4643715
+ww.pulseeng.com                                                                                                        2                                                                                       HC500.O (6/08)
+1000BASE-T
+MAGNETICS MODULES
+Designed to Support 1:1
+Turns Ratio Transceivers
+                                                                               Schematics (continued)
+H5007*, H5008, HX5008, H5015                                                      H5012, H5089
+
+            Channel 1                                                            Channel 1 - Port 1                              Channel 1 - Port 2
+ TCT1 1                                                             24 MCT1
+                                                                                 TCT1 1                               48 CMT1    TCT5 13                      36 CMT5
+
+TD1 + 2                                                             23 MX1 +
+                                                                                 TD1+ 2                               47 MX1+    TD5+ 14                      35 MX5+
+
+                                                                    22 MX1 -
+TD1 -   3                                                                        TD1 3                               46 MX1    TD5 15                      34 MX5
+                        1:1
+                                                                                 Channel 2 - Port 1                              Channel 2 - Port 2
+            Channel 2                                                            TCT2 4                               45 CMT2    TCT6 16                      33 CMT6
+ TCT2 4                                                             21 MCT2
+                                                                                 TD2+ 5                               44 MX2+    TD6+ 17                      32 MX6+
+TD2 + 5                                                             20 MX2 +
+
+                                                                                 TD2 6                               43 MX2    TD6 18                      31 MX6
+                                                                    19 MX2 -
+TD2 -   6                                                                        Channel 3 - Port 1                              Channel 3 - Port 2
+                        1:1                                                      TCT3 7                               42 CMT3    TCT7 19                      30 CMT7
+            Channel 3
+ TCT3 7                                                             18 MCT3      TD3+ 8                               41 MX3+    TD7+ 20                      29 MX7+
+
+
+TD3 + 8                                                             17 MX3 +    TD3 9                                40 MX3   TD7 21                       28 MX7
+                                                                                 Channel 4 - Port 1                              Channel 4 - Port 2
+                                                                    16 MX3 -   TCT4 10                                39 CMT4    TCT8 22                      27 CMT8
+TD3 -   9
+                        1:1
+                                                                                TD4+ 11                               38 MX4+    TD8+ 23                      26 MX8+
+            Channel 4
+TCT4 10                                                             15 MCT4
+                                                                                TD4 12                               37 MX4    TD8 24                      25 MX8
+
+TD4 + 11                                                            14 MX4 +
+
+                                                                    13 MX4 -
+TD4 - 12
+                        1:1
+                                         LEGEND
+                                    Td            Mx
+                                                       MEDIA SIDE
+                        CHIP SIDE
+
+
+
+
+                                    Td            Mx
+                                    Td            Mx
+                                    Td            Mx
+
+
+
+
+H5014, HX5014
+                                             Channel 1 - Port 1                                       Channel 1 - Port 2
+                                              TCT1 1                                    48 CMT1       TCT5 13                              36 CMT5
+
+                                              TD1+ 2                                    47 MX1+       TD5+ 14                              35 MX5+
+
+                                              TD1 3                                    46 MX1       TD5 15                              34 MX5
+                                             Channel 2 - Port 1                                       Channel 2 - Port 2
+                                              TCT2 4                                    45 CMT2       TCT6 16                              33 CMT6
+
+                                              TD2+ 5                                    44 MX2+       TD6+ 17                              32 MX6+
+
+                                              TD2 6                                    43 MX2       TD6 18                              31 MX6
+                                             Channel 3 - Port 1                                       Channel 3 - Port 2
+                                              TCT3 7                                    42 CMT3       TCT7 19                              30 CMT7
+
+                                              TD3+ 8                                    41 MX3+       TD7+ 20                              29 MX7+
+
+                                             TD3       9                               40 MX3       TD7   21                            28 MX7
+                                             Channel 4 - Port 1                                       Channel 4 - Port 2
+                                             TCT4 10                                    39 CMT4       TCT8 22                              27 CMT8
+
+                                             TD4+ 11                                    38 MX4+       TD8+ 23                              26 MX8+
+
+                                             TD4 12                                    37 MX4       TD8 24                              25 MX8
+
+
+
+  USA 858 674 8100 • Germany 49 7032 7806 0 • Singapore 65 6287 8998 • Shanghai 86 21 32181071 • China 86 755 33966678 • Taiwan 886 3 4643715
+www.pulseeng.com                                                                                  3                                                   HC500.O (6/08)
+1000BASE-T
+MAGNETICS MODULES
+Designed to Support 1:1
+Turns Ratio Transceivers
+                                                              Schematics (continued)
+H5020, HX5020
+                                   Channel 1 - Port 1                                             Channel 1 - Port 2
+                         TCT1 2                                           49 MCT1       TCT5 15                                           36 MCT5
+
+
+                         TD1+ 1                                           48 MX1+       TD5+ 14                                           35 MX5+
+
+                                                                          50 MX1-                                                         37 MX5-
+                          TD1- 3                                                        TD5- 16
+
+                                   Channel 2 - Port 1                                             Channel 2 - Port 2
+                         TCT2 5                                           46 MCT2       TCT6 18                                           33 MCT6
+
+
+                         TD2+ 4                                           47 MX2+       TD6+ 17                                           34 MX6+
+
+                                                                          45 MX2-                                                         32 MX6-
+                          TD2- 6                                                        TD6- 19
+                                   Channel 3 - Port 1                                             Channel 3 - Port 2
+                         TCT3 8                                           43 MCT3       TCT7 21                                           30 MCT7
+
+
+                                                                          42 MX3+                                                         29 MX7+
+                         TD3+ 7                                                         TD7+ 20
+
+                                                                          44 MX3-                                                         31 MX7-
+                          TD3- 9                                                        TD7- 22
+                                   Channel 4 - Port 1                                             Channel 4 - Port 2
+                        TCT4 11                                           40 MCT4       TCT8 24                                           27 MCT8
+
+
+                        TD4+ 10                                           41 MX4+       TD8+ 23                                           28 MX8+
+
+                                                                          39 MX4-                                                         26 MX8-
+                         TD4- 12                                                        TD8- 25
+
+
+
+
+For More Information:
+Pulse Worldwide           Pulse Europe                  Pulse China Headquarters            Pulse North China          Pulse South Asia        Pulse North Asia
+Headquarters              Einsteinstrasse 1             B402, Shenzhen Academy of           Room 1503                  150 Kampong Ampat       No. 26, Kao Ching Rd.
+12220 World Trade Dr.     D-71083 Herrenberg            Aerospace Technology Bldg.          XinYin Building            #07-01/02               Yang Mei Chen
+San Diego, CA 92128       Germany                       10th Kejinan Rd.                    No. 888 YiShan Rd.         KA Centre               Taoyuan Hsien
+U.S.A.                                                  High-Tech Zone                      Shanghai 200233            Singapore 368324        Taiwan
+                                                        Nanshan District                    China                                              R. O. C.
+www.pulseeng.com                                        Shenzen, PR China 518057
+Tel: 858 674 8100         Tel: 49 7032 7806 0           TEL: 86 755 33966678                Tel: 86 21 54643211/2      Tel: 65 6287 8998       Tel: 886 3 4643715
+Fax: 858 674 8262         Fax: 49 7032 7806 135         FAX: 86 755 33966700                Fax: 86 21 54643210        Fax: 65 6280 0080       Fax: 886 3 4641911
+
+Performance warranty of products offered on this data sheet is limited to the parameters specified. Data is subject to change without notice. Other brand and product
+names mentioned herein may be trademarks or registered trademarks of their respective owners.
+© Copyright, 2008. Pulse Engineering, Inc. All rights reserved.
+
+ww.pulseeng.com                                                                     4                                                           HC500.O (6/08)
+

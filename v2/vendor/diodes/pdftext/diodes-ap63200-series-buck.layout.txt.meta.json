@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/diodes/diodes-ap63200-series-buck.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+ "pdf_sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/diodes/pdftext/diodes-ap63200-series-buck.layout.txt",
+ "text_bytes": 69403,
+ "text_sha256": "5b6d73f6d51b2b9faf4951e8aaae4cc3c7b7886f8d1200dbc1345f9aa4bc7da8"
+}
