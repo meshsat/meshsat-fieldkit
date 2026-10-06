@@ -1734,8 +1734,8 @@ sentences while drafting); `records/l4close/REMAINING-ENGINEERING.md` (the ledge
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
 check of the engineering read a later revision. The base: set 30's promoted `dd1aed00`; the lineage `31928583`, 103 commits over the
 base; record l4e7's results cache re-keyed on it in `aa332280`, 104 commits over the base; the re-key's dependents regenerated in
-`d0e283aa`, the first candidate, whose four-log gate FAILED (`records/int31/RESULT.md`, section 4a: one test of the lineage over a
-whole-suite rule, and a tracked page the suite rewrote from a stale INT-001 reading); the coordinator's test correction `5f25daf3`,
+`d0e283aa`, the first candidate, whose four-log gate FAILED (`records/int31/RESULT.md`, section 4a: four fixed-size source windows
+added in two of the lineage's test modules, `test_w11l9t5.py` and `test_w4l4e7.py`, so that `test_rule_windows` read "fixed-size source windows in the suite: 87 against the declared 83", and a tracked page the suite rewrote from a stale INT-001 reading); the coordinator's test correction `5f25daf3`,
 106 commits over the base. Gated by `_bin/suite_gate.py`, its verdict
 line over the four pass logs: `__GATE__`. `candidate_guard`, its check line on every host: `__GATE__`.
 

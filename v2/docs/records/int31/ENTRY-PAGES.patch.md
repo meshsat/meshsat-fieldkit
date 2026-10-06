@@ -3,9 +3,9 @@
 **DONE:** 24 exact rows (S-01 to S-11 for `v2/docs/handover/START-HERE.md`, U-01 to U-13 for
 `v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`) that bring the two entry pages from set 30 to set 31, applied to the two pages
 on branch fnd/adopt31 by worker W65 (queue item Q-84) with the tests that pin the replaced lines restated, and W68's findings applied
-to rows S-03, S-07, S-08, U-06 and U-07 by worker W69; the counts in rows S-04, S-08, U-03 and U-07 brought to the classification over `dd1aed00..5f25daf3` (106 commits, 25 of them REVIEWED-INPUT CHANGED) by worker W83 after the first candidate's failed gate, on the rows and the pages alike. **NOT DONE:** the values of the candidate commit and the adoption commit,
-which the freeze, the promotion and the adoption give. **NEXT:** at set 31's adoption the coordinator fills them line by line
-(`fill_res31.py`, the adoption commit in its second run); `test_adopt31.py` holds the pages to these rows.
+to rows S-03, S-07, S-08, U-06 and U-07 by worker W69; the counts in rows S-04, S-08, U-03 and U-07 brought to the classification over `dd1aed00..5f25daf3` (106 commits, 25 of them REVIEWED-INPUT CHANGED) by worker W83 after the first candidate's failed gate, on the rows and the pages alike; rows S-08 and U-07 restated with the pages by worker W91 after W86's C1 (the candidate commit is one of the 106, the classification's row 36); the candidate commit filled line by line by the coordinator at set 31's adoption (`fill_res.py --set 31`),
+and the adoption commit (named by the second run) in the fill's second run; `test_adopt31.py` holds the pages to these rows. **NOT DONE:** nothing in the rows; the Packaged row is unchanged by its definition (the paragraph "The revision rows").
+**NEXT:** the coordinator's dependency pass for the changed pages after the adoption, `<worktrees>/_runs/int30/QUEUE.md`, entry "SET 31 PROMOTED", `then the dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade)` (this header restated for the state after the fill and the adoption by W91 after W86's N5).
 
 Drafted by worker W39 on branch fnd/res31 on 6 October 2026 for queue item Q-58. Record text only: it changes no state of the pages,
 accepts nothing and closes nothing; prototype framing: nothing in the kit has been built, bought, powered or measured.
@@ -141,7 +141,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36.
 ```
 Basis: `v2/docs/records/int31/CLASSIFICATION.md`, section 2.
 
@@ -271,7 +271,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 25 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 106 commits of `dd1aed00..5f25daf3`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2); the candidate commit `5f25daf3` is one of the 106, that file's row 36.
 ```
 Basis: as S-08.
 
