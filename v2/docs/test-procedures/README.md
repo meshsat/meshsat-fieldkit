@@ -77,7 +77,8 @@ The records state the rule for a reading against a limit in two places:
 
 <!-- q src="v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md" -->
 > **Measurement uncertainty:** the K-factor within 2 %, the heating power within 1 %, the air within 1 K, stated as an expanded
-> uncertainty on Zself + 2 Zmut; a reading passes when it plus its uncertainty is under the limits of E11-29.
+> uncertainty on Zself + 2 Zmut; a reading passes when it plus its ACHIEVED expanded uncertainty is under the limits of E11-29
+> (round 14, V2R-m4: the supplier's achieved U, not a fixed figure).
 <!-- /q -->
 
 <!-- q src="v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md" -->

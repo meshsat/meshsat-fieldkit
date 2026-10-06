@@ -13,13 +13,13 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
     - owed by R-168: the charge current and the CV termination current of the CC/CV 4.2 V charge before each capacity check (Saft's
     - owed by R-168: whether S3 applies Method 507.6's humidity to the bare cell or only its temperature profile
   PROPOSED mark: present
-215345dd98f50b70 v2/docs/test-procedures/TP-E11-29.md
+e1f1caa814d205b7 v2/docs/test-procedures/TP-E11-29.md
   id TP-E11-29: The three battery FETs' installed thermal path and junction limit (Q39, Q40 and Q42)
   register R-159: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-29: exists
   5d row 'E11-29 (R-159)': exists
-  quotes: 6 table (each equal to its cell), 5 text (each found verbatim)
-  cross-references: 1 paths from v2/, all present
+  quotes: 6 table (each equal to its cell), 15 text (each found verbatim)
+  cross-references: 5 paths from v2/, all present
   TBD: 1
     - owed by R-159: the list of the parts the block counts as neighbouring sources of Q39, Q40, Q42 and R17's place, each with its
   PROPOSED mark: present
@@ -67,13 +67,13 @@ sources: v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md; v2/docs/records/l4e9/L4-PO
   cross-references: 1 paths from v2/, all present
   TBD: 0
   PROPOSED mark: present
-e093563dc1a0993e v2/docs/test-procedures/TP-E11-37.md
+2f944fdcf8d8c585 v2/docs/test-procedures/TP-E11-37.md
   id TP-E11-37: BATDRV with the three battery FETs (supplement entry, ideal diode, LDO mode, current sharing)
   register R-183: exists (OWED, PHYSICAL UNCERTAINTY)
   L4-E11 E11-37: exists
   5d row 'E11-37 (R-183)': exists
   quotes: 7 table (each equal to its cell), 5 text (each found verbatim)
-  cross-references: 4 paths from v2/, all present
+  cross-references: 7 paths from v2/, all present
   TBD: 3
     - owed by R-183: the band within which the regulated drop counts as "regulation", and until it is stated the drop is RECORDED
     - owed by R-183: the share of the current, or the junction reading, at which the three's sharing counts as a negative answer in
@@ -99,7 +99,7 @@ e7651dbea9e5a458 v2/docs/test-procedures/TP-EPAPER.md
   TBD: 1
     - owed by R-185: the comparison that decides new ghosting (a visual judgement under the fixed capture, or an optical-density di
   PROPOSED mark: present
-d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
+18325bbf0e24cf1d v2/docs/test-procedures/TP-SOLAR.md
   id TP-SOLAR: The solar input guard and the LT8705A's input sense (R-176 rows 1 to 6, R-189, R-174)
   register R-176: exists (OWED, PHYSICAL UNCERTAINTY)
   register R-189: exists (OWED, PHYSICAL UNCERTAINTY)
@@ -107,13 +107,13 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   5d row 'The solar guard's bench (R-176 rows 1 to 6; R-174 at layer 8)': exists
   5d row 'B6-ENG-2's bench (R-189; D-16)': exists
   quotes: 19 table (each equal to its cell), 3 text (each found verbatim)
-  cross-references: 2 paths from v2/, all present
+  cross-references: 5 paths from v2/, all present
   TBD: 2
     - owed by R-176: the temperature "the hot end" denotes for Q13's leakage row, with +62.1 C proposed until it is stated
     - owed by R-189: the least regulated input current that check (a)'s error budget accepts at the 25 V corner
   PROPOSED mark: present
 
-7474be23b08d7ea6 v2/docs/test-procedures/README.md
+7d1d0fd5f3e4337b v2/docs/test-procedures/README.md
   quotes: 0 table, 4 text, each checked against its source
   PROPOSED mark: present
 
@@ -121,7 +121,7 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
 | Procedure | File | Register rows | L4-E11 rows | 5d route row | Quotes | TBDs |
 |---|---|---|---|---|---|---|
 | TP-CELL | TP-CELL.md | R-168, R-169 | none | The limited sample qualification of one cell (R-168, R-169; L4-E10 15g) | 8 | 2 |
-| TP-E11-29 | TP-E11-29.md | R-159 | E11-29 | E11-29 (R-159) | 11 | 1 |
+| TP-E11-29 | TP-E11-29.md | R-159 | E11-29 | E11-29 (R-159) | 21 | 1 |
 | TP-E11-30 | TP-E11-30.md | R-160 | E11-30 | E11-30 (R-160) | 9 | 1 |
 | TP-E11-31 | TP-E11-31.md | R-161 | E11-31 | E11-31 (R-161) | 9 | 2 |
 | TP-E11-35 | TP-E11-35.md | R-179, R-188 | E11-35, E11-39 | E11-35 (R-179) | 11 | 3 |
@@ -203,4 +203,4 @@ d8564596fd7433b3 v2/docs/test-procedures/TP-SOLAR.md
   input l5r2-HW-FW-CONTRACT-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/HW-FW-CONTRACT.md; sha256 e5b4d65046f4ace5 verified
   input l5r2-L5-INTERFACES-R2-6902db8f.md: fnd/l5r2 at 6902db8f, v2/docs/records/l5r2/L5-INTERFACES-R2.md; sha256 818e348940ecd87a verified
 
-RESULT: ALL PASS (10 procedures, 112 quotes, 17 TBDs; the bring-up page with 8 TBDs)
+RESULT: ALL PASS (10 procedures, 122 quotes, 17 TBDs; the bring-up page with 8 TBDs)
