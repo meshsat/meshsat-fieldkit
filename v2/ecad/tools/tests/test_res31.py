@@ -34,6 +34,13 @@ token beside a sentence that stays. After the fill's second run the patch rows n
 records may be only there and only when it descends from the named candidate. W91 (6 October 2026, W86's N1) added section 4a's
 predicate: the first candidate's FAILED gate and the coordinator's known item, each with a mutant it must refuse.
 
+W98 (7 October 2026, W86's N6 and N2) added four predicates, each with mutants it must refuse: every REVIEWED-INPUT CHANGED row names
+the cx46 item that read its change, with cx46's words on their line of the filed check and the number cx46 itself gives that line, or
+says that none names it ("outside the 62" exactly for the rows that touch none of the 62; set 30's rule's first sentence); RESULT.md's
+section 1 counts over the base, the rows it names and its first-parent table, by git; section 2's prose classes and the merge table's
+annotations, by the table; the candidate as filled into RESULT.md, LAYER-STATUS.md and the plan, row 36's own commit and the
+promotion log's line as quoted (the log itself read in the runner pass).
+
 Read-only: git is read with `git log`, `git show`, `git diff`, `git rev-list` and `git cat-file`; nothing is written. No pytest is
 needed (tests/run.py runs the `t_` functions); `test_` aliases let pytest collect them."""
 import hashlib
@@ -71,7 +78,8 @@ OUTSIDE = {"eff28be3b80f882db545a849b0da1def0217f63d": "main's follow-up after s
            "353b41dd2144dba237f2df9616dadd452f62569f": "fnd/res31 at W50's last commit, the counts before W51's five rows",
            "7155b626a6ef2036de8843de2f1d1d94b2d01d71": "fnd/res31 at W51's last commit, the counts over the 101 before rows 32 and 33",
            "5f910eb53c753bd1f3f12b4ce7b174d2c36d33e5": "fnd/res31 at W56's last commit, the counts over the 103 before row 34",
-           "1a8dc1504a5e73956664dbfffab2524304549e7e": "fnd/res31 at W69's commit, the counts over the 104 before rows 35 and 36"}
+           "1a8dc1504a5e73956664dbfffab2524304549e7e": "fnd/res31 at W69's commit, the counts over the 104 before rows 35 and 36",
+           "ad757edb1be7e0fe3b586f986d2d704c9836fdcf": "main at set 31's adoption (the fill's second run), W98's base (W86's N6)"}
 S30 = "eff28be3b80f882db545a849b0da1def0217f63d"              # set 30's adopted classification, its rule at line 11
 S30C = "v2/docs/records/int30/CLASSIFICATION.md"
 RIC = "REVIEWED-INPUT CHANGED"
@@ -713,6 +721,240 @@ def p_section4a(result):
     return ["section 4a does not read %r" % w[:70] for w in SEC4A if w not in s]
 
 
+# W98 (7 October 2026, W86's N6): set 30's rule's first sentence asks each REVIEWED-INPUT CHANGED reason to name the cx46 item that
+# read the changed value, or to say that none names it. Each of the 25 rows carries one clause after CX46_SEG; the clause names an item,
+# a blocker or a finding with a quotation of cx46's line (`cx46:N` `words`, line N of the filed check as filed at CX46_AT), or says
+# "no cx46 item". The number named is held to cx46's own numbering of that line (an item's three lines, a blocker's line, a finding's
+# line); a clause that says "outside the 62" belongs to a row whose files include none of the 62, and such a row says so.
+CX46 = "v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md"
+CX46_AT = "0d5f855e"                                       # cx46 filed as received (set 30's row 3), in this branch's history
+CX46_SEG = "the cx46 item (W98, W86's N6): "
+CX46_ANCHOR = re.compile(r"`cx46:(\d+)` `((?:[^`\\]|\\.)+)`")
+CX46_NAMED = re.compile(r"\b(?:items?|blockers?|findings?) (\d+)(?: and (\d+))? \(`cx46:(\d+)`")
+
+
+def _cx46_numbering(lines):
+    """{line number: the numbers cx46 itself gives that line}: a classification entry's "item" line and the two after it (its class
+    and evidence), a line of the blockers list ("N." or "N and M."), a line of the evidence list ("Finding N", "Findings N and M",
+    "Findings N, M and K")."""
+    num, where = {}, None
+    for i, l in enumerate(lines, 1):
+        s = l.strip()
+        if s.startswith('"blockers": ['):
+            where = "b"
+            continue
+        if s.startswith('"evidence": ['):
+            where = "e"
+            continue
+        if s.startswith("],") or s.startswith("]"):
+            where = None
+        m = re.match(r'"item": "(\d+)\. ', s)
+        if m:
+            for k in (i, i + 1, i + 2):
+                num[k] = {int(m.group(1))}
+            continue
+        if where == "b":
+            m = re.match(r'"(\d+)(?: and (\d+))?\. ', s)
+            if m:
+                num[i] = {int(x) for x in m.groups() if x}
+        elif where == "e":
+            m = re.match(r'"Findings? ((?:\d+)(?:(?:, | and )\d+)*)', s)
+            if m:
+                num[i] = {int(x) for x in re.findall(r"\d+", m.group(1))}
+    return num
+
+
+def p_cx46_items(text, cx_lines, order=None):
+    bad = []
+    num = _cx46_numbering(cx_lines)
+    names = {o[1]: o[5] for o in order} if order else {}
+    for c in _rows(text):
+        if _placeholder_row(c):
+            continue
+        ric = _classes(c)[0] == RIC
+        k = c[7].count(CX46_SEG)
+        if ric and k != 1:
+            bad.append("row %s is %s and has %d cx46-item clauses, not one" % (c[0], RIC, k))
+            continue
+        if not ric:
+            if k:
+                bad.append("row %s is not %s but carries a cx46-item clause" % (c[0], RIC))
+            continue
+        seg = c[7].split(CX46_SEG, 1)[1]
+        if not CX46_NAMED.search(seg) and "no cx46 item" not in seg:
+            bad.append("row %s's clause names no cx46 item and does not say that none names it" % c[0])
+        s = _sha_cell(c)
+        if names and s and s[1] in names:
+            in62 = [n for n in names[s[1]] if n in _reviewed()]
+            says = re.match(r"no cx46 item(?: read the file)?: outside the 62", seg) is not None
+            if says and in62:
+                bad.append("row %s says outside the 62 but touches %d of the 62" % (c[0], len(in62)))
+            if not in62 and not says:
+                bad.append("row %s touches none of the 62 and its clause does not open with no cx46 item: outside the 62" % c[0])
+    for n, q in CX46_ANCHOR.findall(text):
+        n = int(n)
+        if n > len(cx_lines) or q.replace("\\|", "|") not in cx_lines[n - 1]:
+            bad.append("%r is not on cx46's line %d" % (q[:60], n))
+    for a, b, n in CX46_NAMED.findall(text):
+        got = {int(a)} | ({int(b)} if b else set())
+        if not got <= num.get(int(n), set()):
+            bad.append("cx46's line %s is not numbered %s by cx46 (it reads %s)" % (n, sorted(got), sorted(num.get(int(n), set()))))
+    return bad
+
+
+# W98 (7 October 2026, W86's N2): RESULT.md's section 1 counts and the classification rows it names, its first-parent table, section 2's
+# prose classes and the merge table's annotations, and the candidate as the fill wrote it into RESULT.md, LAYER-STATUS.md and the plan,
+# each held to git or to the table (W86's mutants M16, M17, M23, M33 and M39 to M41 passed every test before).
+LS = "v2/docs/handover/LAYER-STATUS.md"
+PLAN = "v2/docs/EXECUTION-PLAN.md"
+CLASS_RX = "(REVIEWED-INPUT CHANGED|RECORD TEXT|GENERATOR DATA \\(text\\)|TEST|DIGEST RE-PIN|MERGE|TOOLING)"
+
+
+def _fp_rows(order):
+    return {o[1]: int(o[0]) for o in order if "." not in o[0]}
+
+
+def p_section1(result, order):
+    bad = []
+    sec = result.split("\n## 1. The candidate", 1)[1].split("\n## 2. ", 1)[0]
+    fp = _fp_rows(order)
+    fpl = [o[1] for o in order if "." not in o[0]]
+    head, tail = sec.split("**The lineage's first-parent line**", 1)
+    seen = 0
+    for line in head.split("\n"):
+        if not line.startswith("| ") or line.startswith("| Role ") or line.startswith("|---"):
+            continue
+        c = [x.strip() for x in CELL_SPLIT.split(line.strip())[1:-1]]
+        src = re.search(r"`git rev-list --count dd1aed00\.\.([0-9a-f]{8})`", c[3])
+        if not src:
+            continue
+        seen += 1
+        full = re.search(r"`([0-9a-f]{40})`", c[1])
+        cnt = re.search(r"(\d+) commits over the base", c[2])
+        if not full or not full.group(1).startswith(src.group(1)) or not cnt:
+            bad.append("section 1: the row for %s has no full sha, count or matching rev-list" % src.group(1))
+            continue
+        k = int(_git("rev-list", "--count", "%s..%s" % (BASE, full.group(1))).strip())
+        if int(cnt.group(1)) != k:
+            bad.append("section 1: %s reads %s commits over the base, git counts %d" % (src.group(1), cnt.group(1), k))
+        for a, b in re.findall(r"\brows 1 to (\d+)\b|\brow (\d+)\b", c[2]):
+            if int(a or b) != fp.get(full.group(1)):
+                bad.append("section 1: %s names row %s, its row is %s" % (src.group(1), a or b, fp.get(full.group(1))))
+    if seen < 1:
+        bad.append("section 1 has no row with its rev-list count")
+    m = re.search(r"the (\d+) numbered rows of `CLASSIFICATION.md`", " ".join(tail.split()))
+    if not m or int(m.group(1)) != len(fpl):
+        bad.append("section 1 does not read the %d numbered rows" % len(fpl))
+    want, got = list(range(1, len(fpl) + 1)), []
+    for line in tail.split("\n"):
+        mm = re.match(r"\| (\d+)(?: to (\d+))? \| ([^|]+) \|", line)
+        if not mm:
+            continue
+        a, b = int(mm.group(1)), int(mm.group(2) or mm.group(1))
+        shas = re.findall(r"`([0-9a-f]{8})`", mm.group(3))
+        exp = [s[:8] for s in fpl[a - 1:b]]
+        ok = (shas == [exp[0], exp[-1]] and " to " in mm.group(3)) if len(exp) > 2 and " to " in mm.group(3) else shas == exp
+        if not ok:
+            bad.append("section 1's first-parent table: rows %s are not %s" % (mm.group(0)[2:20], exp))
+        got += list(range(a, b + 1))
+    if got != want:
+        bad.append("section 1's first-parent table does not cover rows 1 to %d once each in order" % len(fpl))
+    return bad
+
+
+def p_section2_prose(result, text, order):
+    bad = []
+    rows = {c[0]: _classes(c)[0] for c in _rows(text) if not _placeholder_row(c)}
+    sec = result.split("\n## 2. ", 1)[1].split("\n## 3. ", 1)[0]
+    para = " ".join(sec.split("**The classification is bound by its path:**", 1)[1].split("\n\n", 1)[0].split())
+    named = set()
+    for a, b, cls in re.findall(r"\brows? (\d+)(?: and (\d+))?,(?: [^,;]+,)? (?:are both |is an? |is )" + CLASS_RX, para):
+        for r in (a, b):
+            if r:
+                named.add(r)
+                if rows.get(r) != cls:
+                    bad.append("section 2 classes row %s %s, the table's first class is %s" % (r, cls, rows.get(r)))
+    later = {k for k in rows if "." not in k and int(k) > 31}
+    if named != later:
+        bad.append("section 2's prose classes rows %s, not the rows after the merge of main %s" % (sorted(named), sorted(later)))
+    fp = _fp_rows(order)
+    blk = sec.split("**The adopted branches, in W22's merge order**", 1)[1].split("\n\n", 2)[1]
+    seen = 0
+    for line in blk.split("\n"):
+        m = re.match(r"\| `([0-9a-f]{8})` \|", line)
+        if not m:
+            continue
+        seen += 1
+        full = [s for s in fp if s.startswith(m.group(1))]
+        if len(full) != 1:
+            bad.append("section 2: merge %s is not a first-parent row" % m.group(1))
+            continue
+        n = str(fp[full[0]])
+        last = [x.strip() for x in CELL_SPLIT.split(line.strip())[1:-1]][-1]
+        ann = set()
+        for grp in re.findall(r"((?:\d+\.\d+)(?:(?:, | and )\d+\.\d+)*) \(REVIEWED-INPUT CHANGED\)", last):
+            ann |= set(re.findall(r"\d+\.\d+", grp))
+        exp = {k for k, v in rows.items() if k.startswith(n + ".") and v == RIC}
+        if ann != exp:
+            bad.append("section 2: merge %s's rows annotated REVIEWED-INPUT CHANGED %s, the table's %s" % (m.group(1), sorted(ann), sorted(exp)))
+    if seen != 10:
+        bad.append("section 2's merge table has %d merges, not W22's ten" % seen)
+    return bad
+
+
+FILLED = ((RESULT, r"\| INTEGRATED = CANDIDATE: the candidate commit \| `([^`]+)` \|", "__CANDIDATE__"),
+          (RESULT, r"\| PROMOTED: main after the fast-forward \| `([^`]+)` \|", "__PROMOTED__"),
+          (RESULT, r"\| The candidate commit \| `git log` on fnd/int31regen \| `([^`]+)` \|", "__CANDIDATE__"),
+          (RESULT, r"\| Promotion: fast-forward of main, push, the mirror, the guard on main \| `[^`]*` \| `([^`]+)` \|", "__PROMOTED__"),
+          (RESULT, r"a DESK candidate once promoted, `([^`]+)`\)", "__PROMOTED__"),
+          (LS, r"CANDIDATE: `([^`]+)`, the commit the gated release suite", "__CANDIDATE__"),
+          (PLAN, r"### Milestone, 6 October 2026: integration set 31 promoted as a DESK candidate \(main `([^`]+)`\)", "__CANDIDATE__"),
+          (PLAN, r"\*\*Promoted:\*\* main `([^`]+)`, the candidate on fnd/int31regen", "__CANDIDATE__"))
+PROMOTE_LOG = "int31/promote-2257.log"
+PROMOTE_QUOTED = ((RESULT, r"`_runs/int31/promote-2257\.log: GitHub main at ([0-9a-f]{40})`"),
+                  (PLAN, r"`GitHub main at ([0-9a-f]{40}) \(_runs/int31/promote-2257\.log\)`"))
+
+
+def p_candidate_filled(texts):
+    """The candidate as filled: before the fill (the table's candidate cell the token) every place keeps its token; after it, every
+    place names row 36's own commit (the table's candidate cell, `p_candidate_row`) and the promotion log's line, as RESULT.md and the
+    plan quote it, names the same commit. A mixed state, or another commit in any one place (W86's M23, M39 to M41), is refused."""
+    bad = []
+    cand = _candidate(texts[CLASS])
+    if cand and p_candidate_row(texts[CLASS]):
+        cand = None
+    filled = cand is not None
+    flat = {k: " ".join(v.split()) for k, v in texts.items()}
+    for name, rx, tok in FILLED:
+        hits = re.findall(rx, flat[name])
+        if len(hits) != 1:
+            bad.append("%s: %d places for %r, not one" % (name, len(hits), rx[:50]))
+            continue
+        v = hits[0]
+        if not filled and v != tok:
+            bad.append("%s: %r before the fill, not %s" % (name, v, tok))
+        if filled and not (re.match(r"[0-9a-f]{8,40}$", v) and cand.startswith(v)):
+            bad.append("%s: %r is not row 36's commit %s" % (name, v, cand[:12]))
+    for name, rx in PROMOTE_QUOTED:
+        hits = re.findall(rx, flat[name])
+        if filled and hits != [cand]:
+            bad.append("%s: the promotion log's line as quoted names %s, not row 36's %s" % (name, hits, cand[:12]))
+        if not filled and hits:
+            bad.append("%s quotes the promotion log's line before the fill" % name)
+    return bad
+
+
+def p_promote_log(texts, runs):
+    """The promotion log itself (the coordinator's, outside the repository) names the commit RESULT.md and the plan quote."""
+    p = os.path.join(runs, PROMOTE_LOG)
+    if not os.path.isfile(p):
+        return ["_runs/%s is missing" % PROMOTE_LOG]
+    body = open(p, encoding="utf-8", errors="replace").read()
+    got = set(re.findall(r"^(?:GitHub main at|main fast-forwarded to) ([0-9a-f]{40})$", body, re.M))
+    quoted = {h for name, rx in PROMOTE_QUOTED for h in re.findall(rx, " ".join(texts[name].split()))}
+    return [] if got and got == quoted else ["the promotion log names %s, the records quote %s" % (sorted(got), sorted(quoted))]
+
+
 def _texts():
     return {RESULT: _read(RESULT), CLASS: _read(CLASS), PATCH: _read(PATCH), SOURCES: _read(SOURCES)}
 
@@ -900,6 +1142,12 @@ def t_every_cited_log_exists_and_carries_its_quote():
     _mutant_refused(p_logs, texts, RESULT, "`round 1: 18 replaced`", "`round 1: 19 replaced`", runs)
     _mutant_refused(p_logs, texts, RESULT, "targeted-w41-1623.log:22` `round 1: 15 replaced`", "targeted-w41-1623.log:22` `round 1: 16 replaced`", runs)
     _mutant_refused(p_logs, texts, RESULT, "tests-w41-1802-f8.log:127` `tests: 124 passed", "tests-w41-1802-f8.log:127` `tests: 125 passed", runs)
+    # W98 (W86's N2): the promotion log names the commit RESULT.md and the plan quote from it
+    tp = dict(texts)
+    tp[PLAN] = _read(PLAN)
+    assert not p_promote_log(tp, runs), p_promote_log(tp, runs)
+    tp[RESULT] = " ".join(tp[RESULT].split()).replace("promote-2257.log: GitHub main at " + TIP, "promote-2257.log: GitHub main at " + SUPERSEDED, 1)
+    assert p_promote_log(tp, runs), "a quoted promotion line naming another commit passed against the log"
 
 
 def t_section_4a_keeps_the_failed_gate_and_the_known_item():
@@ -917,6 +1165,107 @@ def t_section_4a_keeps_the_failed_gate_and_the_known_item():
     assert p_section4a(r.replace(g, g.replace("FAIL`", "PASS`"), 1)), "a gate read PASS passed"
     k = "which is false for set 31's cache"
     assert p_section4a(r.replace(k, "which holds for set 31's cache", 1)), "the known item's falsity softened passed"
+
+
+def t_each_reviewed_input_changed_row_names_its_cx46_item():
+    """W98 (W86's N6): one clause per REVIEWED-INPUT CHANGED row naming cx46's item with its words, or that none names it; the words on
+    their line of the filed check, the number cx46's own, "outside the 62" exactly for the rows that touch none of the 62."""
+    _need_git()
+    order = _order()
+    t = _read(CLASS)
+    cx = _show(CX46_AT, CX46)
+    assert _read(CX46).split("\n") == cx, "the filed check is not its bytes at %s" % CX46_AT
+    assert not p_cx46_items(t, cx, order), p_cx46_items(t, cx, order)
+    r = [l for l in t.split("\n") if l.startswith("| 11 |")][0]
+    seg = r.split(CX46_SEG, 1)[1].rsplit("; UNREVIEWED since cx46 |", 1)[0]
+    assert p_cx46_items(t.replace("; " + CX46_SEG + seg, "", 1), cx, order), "a REVIEWED-INPUT CHANGED row without its clause passed"
+    r = [l for l in t.split("\n") if l.startswith("| 2.2 |")][0]
+    assert p_cx46_items(t.replace(r, r[:-2] + "; " + CX46_SEG + "no cx46 item |", 1), cx, order), "a TEST row with a clause passed"
+    a = "item 15 (`cx46:188` `This disposition is correct"
+    assert a in t, "the mutation's anchor (row 1.1's item) is not in the classification"
+    assert p_cx46_items(t.replace(a, a.replace("item 15", "item 14"), 1), cx, order), "an item cx46 does not give that line passed"
+    q = "`cx46:84` `The required rest voltage is 15.1308 V"
+    assert q in t, "the mutation's anchor (row 4.1's quote) is not in the classification"
+    assert p_cx46_items(t.replace(q, q.replace("15.1308", "15.1307"), 1), cx, order), "a misquoted cx46 line passed"
+    o = CX46_SEG + "no cx46 item: outside the 62 (neither"
+    assert o in t, "the mutation's anchor (row 3.1's clause) is not in the classification"
+    assert p_cx46_items(t.replace(o, CX46_SEG + "no cx46 item: in the 62 (neither", 1), cx, order), \
+        "a row outside the 62 without saying so passed"
+    r = [l for l in t.split("\n") if l.startswith("| 12 |")][0]
+    assert p_cx46_items(t.replace(r, r.replace(CX46_SEG + "no cx46 item:", CX46_SEG + "no cx46 item: outside the 62;", 1), 1), cx, order), \
+        "outside the 62 said of a row that touches the 62 passed"
+    assert p_cx46_items(t.replace(o, CX46_SEG + "none: outside the 62 (neither", 1), cx, order), \
+        "a clause that neither names an item nor says no cx46 item passed"
+
+
+def t_result_section_1_counts_are_gits():
+    """W98 (W86's N2): section 1's commits over the base (W86's M16, M17), the classification rows it names, the numbered rows and the
+    first-parent table, each recomputed from git."""
+    order = _order()
+    r = _read(RESULT)
+    assert not p_section1(r, order), p_section1(r, order)
+    for old in ("106 commits over the base, classified (section 2, row 36)", "105 commits over the base (row 35 of the classification)"):
+        assert r.count(old) == 1, "the mutation's anchor %r is not once in RESULT.md" % old
+        n = int(old.split()[0])
+        assert p_section1(r.replace(old, old.replace(str(n), str(n + 1), 1), 1), order), "a count that is not git's passed (%d)" % n
+    old = "(row 35 of the classification)"
+    assert p_section1(r.replace(old, "(row 34 of the classification)", 1), order), "a classification row that is not the revision's passed"
+    old = "the 36 numbered rows of `CLASSIFICATION.md`"
+    assert old in r, "the mutation's anchor %r is not in RESULT.md" % old
+    assert p_section1(r.replace(old, old.replace("36", "35"), 1), order), "a wrong numbered-row count passed"
+    old = "| 35 | `d0e283aa` |"
+    assert old in r, "the mutation's anchor %r is not in RESULT.md" % old
+    assert p_section1(r.replace(old, "| 35 | `aa332280` |", 1), order), "a first-parent row naming another commit passed"
+
+
+def t_result_section_2_prose_classes_are_the_tables():
+    """W98 (W86's N2): section 2's prose classes of rows 32 to 36 (W86's M33) and the merge table's REVIEWED-INPUT CHANGED
+    annotations, each the classification's first class."""
+    order = _order()
+    r = _read(RESULT)
+    t = _read(CLASS)
+    assert not p_section2_prose(r, t, order), p_section2_prose(r, t, order)
+    old = "row 35, the re-key's dependents regenerated, is REVIEWED-INPUT CHANGED"
+    assert old in r, "the mutation's anchor (M33) is not in RESULT.md"
+    assert p_section2_prose(r.replace(old, old.replace("is REVIEWED-INPUT CHANGED", "is a DIGEST RE-PIN"), 1), t, order), \
+        "row 35's prose class changed passed (M33)"
+    old = "row 34, is a DIGEST RE-PIN"
+    assert p_section2_prose(r.replace(old, "row 34, is REVIEWED-INPUT CHANGED", 1), t, order), "row 34's prose class changed passed"
+    old = "| 4.1 and 4.4 (REVIEWED-INPUT CHANGED), 4.2, 4.3, 4.5 |"
+    assert old in r, "the mutation's anchor (merge 4's rows) is not in RESULT.md"
+    assert p_section2_prose(r.replace(old, "| 4.1 (REVIEWED-INPUT CHANGED), 4.2, 4.3, 4.4, 4.5 |", 1), t, order), \
+        "a merge's annotation missing a REVIEWED-INPUT CHANGED row passed"
+    r31 = [l for l in t.split("\n") if l.startswith("| 35 |")][0]
+    assert p_section2_prose(r, t.replace(r31, r31.replace("| REVIEWED-INPUT CHANGED + GENERATOR DATA (text) + DIGEST RE-PIN |",
+                                                         "| DIGEST RE-PIN + GENERATOR DATA (text) |"), 1), order), \
+        "row 35 re-classed in the table with the prose left passed"
+
+
+def t_the_filled_candidate_is_row_36s_commit_everywhere():
+    """W98 (W86's N2): the candidate the fill wrote into RESULT.md, LAYER-STATUS.md and the plan is row 36's own commit and the
+    promotion log's line as quoted; the first candidate in any one place (W86's M23, M39, M40, M41) is refused."""
+    _need_git()
+    texts = dict(_texts())
+    texts[LS] = _read(LS)
+    texts[PLAN] = _read(PLAN)
+    assert not p_candidate_filled(texts), p_candidate_filled(texts)
+    for name, rx, tok in FILLED:
+        flat = " ".join(texts[name].split())
+        m = re.search(rx, flat)
+        assert m, "the anchor %r is not in %s" % (rx[:40], name)
+        whole, val = m.group(0), m.group(1)
+        t = dict(texts)
+        t[name] = flat.replace(whole, whole.replace("`%s`" % val, "`%s`" % SUPERSEDED[:8], 1), 1)
+        assert p_candidate_filled(t), "%s naming the first candidate passed (%r)" % (name, rx[:40])
+        t[name] = flat.replace(whole, whole.replace("`%s`" % val, "`%s`" % ("__CANDIDATE__" if val != "__CANDIDATE__" else TIP[:8]), 1), 1)
+        assert p_candidate_filled(t), "%s in a mixed state passed (%r)" % (name, rx[:40])
+    for name, rx in PROMOTE_QUOTED:
+        flat = " ".join(texts[name].split())
+        m = re.search(rx, flat)
+        if m:
+            t = dict(texts)
+            t[name] = flat.replace(m.group(0), m.group(0).replace(m.group(1), SUPERSEDED, 1), 1)
+            assert p_candidate_filled(t), "%s quoting another commit as promoted passed" % name
 
 
 def _pytest(fn):
@@ -947,3 +1296,7 @@ test_the_copies_are_mains_bytes_and_the_three_claims_are_quoted_verbatim = _pyte
 test_every_patch_row_reads_against_the_copied_page = _pytest(t_every_patch_row_reads_against_the_copied_page)
 test_every_cited_log_exists_and_carries_its_quote = _pytest(t_every_cited_log_exists_and_carries_its_quote)
 test_section_4a_keeps_the_failed_gate_and_the_known_item = _pytest(t_section_4a_keeps_the_failed_gate_and_the_known_item)
+test_each_reviewed_input_changed_row_names_its_cx46_item = _pytest(t_each_reviewed_input_changed_row_names_its_cx46_item)
+test_result_section_1_counts_are_gits = _pytest(t_result_section_1_counts_are_gits)
+test_result_section_2_prose_classes_are_the_tables = _pytest(t_result_section_2_prose_classes_are_the_tables)
+test_the_filled_candidate_is_row_36s_commit_everywhere = _pytest(t_the_filled_candidate_is_row_36s_commit_everywhere)
