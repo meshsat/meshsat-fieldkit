@@ -1755,3 +1755,35 @@ DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BL
 pages' rows, applied); `handover/START-HERE.md` and `handover/supplier/SUPPLIER-HANDOVER.md` (section 0's revisions at set 31);
 `handover/LAYER-STATUS.md` (the blocks headed After set 31, Layers 4, 5, 8, 9 and 12). Compute: `records/int31/RESULT.md`, section 5
 (compute and storage apart, no total).
+
+### Milestone: integration set 32 promoted as a DESK candidate (main `__CANDIDATE__`)
+
+**Promoted:** main `__CANDIDATE__`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
+INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
+check of the engineering read a later revision. The base: set 31's promoted `5f25daf3`; five branches, 34 commits over their bases
+(`records/int32/RESULT.md`, section 1), merged and regenerated to convergence, with record l4e7's results cache re-keyed ONCE (section
+3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
+The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.
+
+**What it closes:** no power item. "Set 32 closes NO power item." (`records/int32/RESULT.md`, section 6). Set 32 adopts the makers' PDF
+text as committed verbatim inputs of 26 record generators (a held-back sheet's text held back with the sheet and re-taken after the
+fetch: 57 texts) with the tests' own reads of it declared (W34, W37, W42, W55, W81), each
+verdict word attributed to its check (W53), the handover ZIP's cap at 100 MiB (Q-53), N1a's phrase in V-E16 row 3 (Q-55), and record
+l4e7's results cache keyed on the sixteen numbers it reads of `l4e11_power.out` (WP-B) with ONE re-key; no baseline circuit draft,
+board generator or netlist changed. Its classification counts 2 REVIEWED-INPUT CHANGED commits among the 34 of its five branches and
+12 that touch a file cx46 read (`records/int32/CLASSIFICATION.md`, section 2), each UNREVIEWED since cx46 and credited nothing,
+counted over the branch commits alone (the integration's rows 31 to 33 are classed at the adoption), beside set 31's 25 over all 106
+of its commits (its integration's among them) and set 30's 14 over its 45. Set 31's known item, record l4e7's paragraph 0a's history
+sentence (`records/int31/RESULT.md`, section 4a), is planned to be corrected by set 32's re-key and its dependents' regeneration;
+the regenerated `records/l4e7/l4e7_p0sol.out` at the candidate prints in its paragraph 0a: `__GATE__`.
+
+**The three claims, apart, and the gate, unchanged from set 30** (the coordinator's judgement of 6 October 2026, 10:45 CEST, in
+`records/l4close/L4-DESK-GATE-ASSESSMENT.md`, section 6, of which set 32 changes no line): engineering-handover readiness READY AS A
+DESK PACKAGE OF OPEN ITEMS; power-design closure BLOCKED; fabrication release BLOCKED. Layer 4's DESK gate NOT PASSED.
+
+**Pending:** as after set 31, the owner's decision on Layer 5 (reported, not asked).
+
+**The records:** `records/int32/RESULT.md`, `records/int32/CLASSIFICATION.md` and `records/int32/ENTRY-PAGES.patch.md` (the entry
+pages' rows, applied); `handover/START-HERE.md` and `handover/supplier/SUPPLIER-HANDOVER.md` (section 0's revisions at set 32);
+`handover/LAYER-STATUS.md` (the blocks headed After set 32, Layers 4, 5, 8, 9 and 12). Compute: `records/int32/RESULT.md`, section 5
+(compute and storage apart, no total).
