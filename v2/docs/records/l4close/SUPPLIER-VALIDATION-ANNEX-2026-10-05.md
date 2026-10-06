@@ -132,7 +132,7 @@ Nothing here accepts, closes, verifies or promotes anything; it designs nothing,
 verdict. Prototype framing: nothing in the kit is built, bought, powered or measured; a MODEL figure is desk arithmetic.
 
 **Citation form.** `[ALIAS:N]` is line N and `[ALIAS:N-M]` lines N to M of the file the alias names, as it reads in this branch's
-tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads). A
+tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads; on set 31, 6 October 2026, the citations under REM, B2, P11 and OWN that later revisions of those files moved are re-cited to their lines on `fnd/int31cite`, the ledger included as it reads there). A
 file on another branch is cited as text only, by commit, path and line, read with `git show` (the worker rule that a record reads its
 inputs from its own tree): Slot L's DESK-gate draft `fnd/dgate` `249e9e47`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md`
 ("DGA" below), and Slot M's ledger amendment `fnd/ledgerfix` `99bbc0c6`, `v2/docs/records/l4close/REMAINING-ENGINEERING.md` ("REM-M"
@@ -166,8 +166,8 @@ candidate's checks cx45 and cx46. Since then, on the set 30 candidate that the c
 
 - the P0 candidate was checked twice and the method ended: cx45, "P0 CANDIDATE: NOT CONFIRMED." [CX45:10]; cx46, "P0 RECHECK:
   CORRECTIONS NOT CLOSED." [CX46:10], filed as "the second negative on the method, which ends it" (the filing's head, [CX46:3]);
-- the remaining-engineering ledger carries this annex's four items as HO-H to HO-K [REM:520-552] and counts "qualification 1;
-  external architecture fact 3" [REM:585]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
+- the remaining-engineering ledger carries this annex's four items as HO-H to HO-K [REM:549-581] and counts "qualification 1;
+  external architecture fact 3" [REM:669]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
   (REM-M lines 584-636 and 522-535, text only);
 - set 31 restated R-159 "from E11-29's row word for word (in its Acceptance)" [SET31:44] (section 6.3);
 - the DESK-gate draft named E11-37 and the back-feed as unplaced (DGA lines 258-263, its A4.4 and A4.5) and listed K-06, K-09, K-12
@@ -211,20 +211,20 @@ E11-29's row's [ANX:105].
 
 ### 6.4 The lower-source back-feed: remaining engineering inside E-1, S1's row (b) its later validation (A4.5, K-23)
 
-This annex carries no row of S1: S1 and its added row (b) are record l4e7's request P1-1 [P11:110], [P11:120-123]. Its reading here,
+This annex carries no row of S1: S1 and its added row (b) are record l4e7's request P1-1 [P11:144], [P11:154-160]. Its reading here,
 the narrower one, is the ledger's HO-F as amended on 6 October 2026 (REM-M lines 522-535 and section 6 item E, lines 720-727; text
 only). The case: a stiff source below the stage's voltage, arriving after a withdrawal, draws the stage's charge back through Q12's
-body diode; no record computes it ("Not computed here" [B2:170]; "not computed here" [SOLO:402]), so it neither fails nor passes. It
+body diode; no record computes it ("Not computed here" [B2:183-186]; "not computed here" [SOLO:402]), so it neither fails nor passes. It
 is REMAINING ENGINEERING inside E-1 (D-10), where cx46 places it: "D-10's E-1 retains F1-F4 and the lower-source back-feed case."
 [CX46:95]. The receiving company computes it on E-1's corrected circuit as part of E-1's correction, against E-1's own requirement
-that every part stays within its makers' absolute maximum ratings during the fault [P11:44] and S1's criterion for the case, "Q12's
-body-diode current inside its pulsed rating" [P11:123]; **S1's row (b) is the later validation of that computation, not a substitute
+that every part stays within its makers' absolute maximum ratings during the fault [P11:72] and S1's criterion for the case, "Q12's
+body-diode current inside its pulsed rating" [P11:160]; **S1's row (b) is the later validation of that computation, not a substitute
 for it.** Grounds, the owner's part 23: "Supplier item S1 must carry that engineering problem, rather than presenting it solely as an
-unperformed validation test." [OWN:680] and "A planned measurement alone does not establish that the selected protection works."
-[OWN:701]; cx46: "S1 is expressly subsequent qualification of a correction, not closure of the current circuit." [CX46:95]. This annex
+unperformed validation test." [OWN:681] and "A planned measurement alone does not establish that the selected protection works."
+[OWN:702]; cx46: "S1 is expressly subsequent qualification of a correction, not closure of the current circuit." [CX46:95]. This annex
 does not hand it over as a validation item; the ledger hands it over as remaining engineering (HO-F), and this annex sets no limit
 for it. Record l4e7's own words
-("validation P1-1's S1 (row added)" [B2:170]; "Validation: P1-1's S1" [SOLO:403]) are not this annex's file and stand as written
+("validation P1-1's S1 (row added)" [B2:183-186]; "Validation: P1-1's S1" [SOLO:403]) are not this annex's file and stand as written
 (section 8).
 
 ### 6.5 D-06: two items under one identifier (K-09)
@@ -290,8 +290,8 @@ inhibit [E11:1450-1451]. State on this tip: "E11-37 OPEN (TI or the bench)" [E11
 K-01, K-02, K-05, K-07, K-10, K-11, K-19, K-25 and K-27 (no stumble on the candidate, by DGA's own column); K-03 (LH-12 in
 `LAYER5-HANDOVER.md`); K-04 and K-15 (the P0 list); K-08 (E-1's two meanings, L4-E9's page and register, record l4e7); K-13 (record
 l4e7's request P1-1); K-14 (record l8p's one release); K-16 (record efuse); K-17 (the ledger's item C); K-18 (cx45 as filed); K-20,
-K-21 and K-26 (records l9t5 and l8r2); K-22 (cx46 and record l9t5, no state changes); K-23's record l4e7 side ([B2:170], [SOLO:403],
-[P11:120-123]; this page's side is section 6.4); K-06's L4-E9 side (set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's
+K-21 and K-26 (records l9t5 and l8r2); K-22 (cx46 and record l9t5, no state changes); K-23's record l4e7 side ([B2:183-186], [SOLO:403],
+[P11:154-160]; this page's side is section 6.4); K-06's L4-E9 side (set 29's 45.88 K/W per FET in D-14's rows, U-04's row and UDC-1's
 comparison, [SET31:120-122]); K-24 (record l4e7 and the change-list draft); K-28 (the connected output and
 L4-E9's pins). K-06, K-09 and K-12 are answered on these pages (sections 6.3, 6.5 and 6.2).
 
