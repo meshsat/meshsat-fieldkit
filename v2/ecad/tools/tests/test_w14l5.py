@@ -9,12 +9,17 @@ bytes of W8_COMMIT (`git diff 8840adda 27cd9cd2` on them is empty), and W8_BASE'
 
 The predicates (software predicates on text; they establish no electrical property and accept nothing):
 1. The old expectation ("exit 0, already applied") holds for both scripts on the files at W8_BASE and fails for both on the files at
-   W8_COMMIT and on a scratch copy of the tree's files (never on the tree itself): the restatement's cause is W8's commit.
-2. PATCH_L5F11_ORDER, the proposed correction of apply_l5f11_contracts.py's ORDER detector, is a PATCH ROW only: its old text is the
-   script's lines 187 to 191 exactly once, the script is never edited, and the patched source, executed in memory from the script's own
-   path on scratch copies, keeps every answer the script gives where its ORDER check is right (BASE2: ORDER; BASE3: CHECK OK, 14
-   edits; W8_BASE: already applied) and, on W8_COMMIT's files and the tree's copy, replaces the false "is not applied" by the
-   script's own accurate state (F11-09's old text gone, its new text absent: W8 restated it).
+   W8_COMMIT and on a scratch copy of the tree's files (never on the tree itself): the restatement's cause is W8's commit. On those
+   two, apply_l5f11_contracts.py as it stood at SET31_BASE (before W24 applied PATCH_L5F11_ORDER) refuses at its ORDER check (history),
+   and the tree's script, the row applied, refuses with its own state naming F11-09 (W25's restatement of 6 October 2026).
+2. PATCH_L5F11_ORDER, the proposed correction of apply_l5f11_contracts.py's ORDER detector, was a PATCH ROW here and is APPLIED since
+   W24's f0d0e54e (set 31, on fnd/int31l4e9 from a6e3a066; W25 restated this predicate on 6 October 2026). History, read through git:
+   at SET31_BASE its old text is the script's lines 187 to 191 exactly once and its new text absent, and f0d0e54e's bytes are the
+   base's with the row applied verbatim. Applied, at this tree: its new text is the script's lines 187 to 194 exactly once and its old
+   text is gone; the tree's script, on scratch copies, gives every answer the patched source gave (BASE2: ORDER, naming the first
+   script's old texts; BASE3: CHECK OK, 14 edits; W8_BASE: already applied) and, on W8_COMMIT's files and the tree's copy, the
+   script's own accurate state (F11-09's old text gone, its new text absent: W8 restated it) where the base's script, executed in
+   memory from the script's own path, still gives the false "is not applied" and the same answer wherever its ORDER check is right.
 3. l5r2 (W10's unchecked item): read by parsing, not by running, record l5r2's generators would refuse on W8's text for no reason but a
    moved digest: W8's change touches only IF-EXT-DC's protection, bench and l4_defects; no key hc5's field contract reads, no contract
    of l5r2's no-loss set and no l5r2 row targets them; every l5r2 and l5r3 excerpt in a contract file and every figure l5r2 takes
@@ -46,15 +51,19 @@ W8_COMMIT = "8840adda"   # fnd/w8l5: the restatement of L5-F14 (in this branch's
 BASE2 = "97dbcc43"       # test_l5pwr's: before apply_l5pwr2_contracts.py
 BASE3 = "1c4e0ff2"       # test_l5pwr's: after apply_l5pwr2_contracts.py, before apply_l5f11_contracts.py
 W8_FIELDS = {("IF-EXT-DC", "protection"), ("IF-EXT-DC", "bench"), ("IF-EXT-DC", "l4_defects")}
+APPLY3_REL = "v2/docs/records/l5pwr/apply_l5f11_contracts.py"
+SET31_BASE = "a6e3a066"  # fnd/int31's tip: the script before PATCH_L5F11_ORDER (W24's base)
+APPLIED_AT = "f0d0e54e"  # fnd/int31l4e9: W24 applied PATCH_L5F11_ORDER verbatim (set 31, 6 October 2026)
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
 
-# THE PATCH ROW (proposed, NOT applied: the script is record l5pwr's and pinned; the coordinator or record l5pwr's next round applies
-# it, and test_l5pwr's t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_idempotent then expects the corrected
-# answer instead of the ORDER refusal).
-# File: v2/docs/records/l5pwr/apply_l5f11_contracts.py, lines 187 to 191 (main()).
+# THE PATCH ROW (proposed here by W14; APPLIED verbatim by W24 at f0d0e54e on fnd/int31l4e9 from a6e3a066, set 31: the tests below read
+# the applied state since W25 of 6 October 2026, the new text once at lines 187 to 194 and the old text gone, and keep the base's
+# old text once at lines 187 to 191 as history; test_l5pwr's t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_
+# idempotent then expects the corrected answer instead of the ORDER refusal).
+# File: v2/docs/records/l5pwr/apply_l5f11_contracts.py, lines 187 to 191 (main()) at a6e3a066; lines 187 to 194 since f0d0e54e.
 # Basis: on W8's tree the script refuses "ORDER: apply_l5pwr2_contracts.py is not applied to these files", which is false: every old
 # text of apply_l5pwr2_contracts.py is gone from the tree (it was applied at da85ab29), and W8 then restated four of its new texts
 # (L5-F09 a to d). The detector tests the first script's verbatim "already applied" where it should test the presence of what that
@@ -131,24 +140,49 @@ def t_the_old_expectations_hold_at_w8s_base_and_fail_at_w8s_commit_and_on_a_copy
                 assert rc == 3 and out == "" and all("%s: old text 0 time(s), new text absent" % i in err
                                                      for i in ("L5-F09 a", "L5-F09 b", "L5-F09 c", "L5-F09 d")), (src, err[-400:])
                 assert "L5-F10 a: old text 0 time(s), new text present; L5-F10 b: old text 0 time(s), new text present" in err, err[-400:]
-                rc, out, err = _run(APPLY3, args)
+                # the base's script (before PATCH_L5F11_ORDER, read at SET31_BASE): its ORDER check's false reason (history)
+                rc, out, err = _call(_main_of(_git(SET31_BASE, APPLY3_REL).decode("utf-8"), "base"), args)
                 assert rc == 3 and "ORDER: apply_l5pwr2_contracts.py is not applied" in err, (src, err[-300:])
+                # the tree's script, the row applied (f0d0e54e): its own state, F11-09 named, no ORDER reason
+                rc, out, err = _run(APPLY3, args)
+                assert rc == 3 and out == "" and err == _restated() and "ORDER" not in err, (src, err[-300:])
     finally:
         shutil.rmtree(d)
     assert shas == [_sha(os.path.join(ROOT, rel)) for rel in (YAML_REL, HWFW_REL)], "a contract file of the tree changed"
 
 
-def _patched_main():
-    """apply_l5f11_contracts.py with PATCH_L5F11_ORDER applied in memory, compiled from the script's own path (so its HERE, REPO and
-    the first script it loads are the tree's); the file is never written."""
-    src = open(APPLY3, encoding="utf-8").read()
-    assert src.count(PATCH_L5F11_ORDER["old"]) == 1, "the patch row's old text is not the script's lines 187 to 191, once"
-    new = src.replace(PATCH_L5F11_ORDER["old"], PATCH_L5F11_ORDER["new"])
-    assert new != src
-    ast.parse(new)
-    ns = {"__file__": APPLY3, "__name__": "apply_l5f11_patched_by_w14"}
-    exec(compile(new, APPLY3, "exec"), ns)  # noqa: S102
+def _main_of(src, tag):
+    """A source of apply_l5f11_contracts.py executed in memory, compiled from the script's own path (so its HERE, REPO and the first
+    script it loads are the tree's); no file is written."""
+    ast.parse(src)
+    ns = {"__file__": APPLY3, "__name__": "apply_l5f11_%s_by_w25" % tag}
+    exec(compile(src, APPLY3, "exec"), ns)  # noqa: S102
     return ns["main"]
+
+
+def _lines(src, text):
+    i = src.index(text)
+    a = src[:i].count("\n") + 1
+    return a, a + text.count("\n") - 1
+
+
+def _applied_sources():
+    """(the tree's source, the base's source). History: at SET31_BASE the row's old text is the script's lines 187 to 191 once and its
+    new text absent, and APPLIED_AT's bytes are the base's with the row applied verbatim. Applied: at this tree the new text is the
+    script's lines 187 to 194 once and the old text is gone (W24, f0d0e54e; restated by W25)."""
+    old, new = PATCH_L5F11_ORDER["old"], PATCH_L5F11_ORDER["new"]
+    base = _git(SET31_BASE, APPLY3_REL).decode("utf-8")
+    assert base.count(old) == 1 and _lines(base, old) == (187, 191) and new not in base, "history: the old text at the base"
+    assert _git(APPLIED_AT, APPLY3_REL).decode("utf-8") == base.replace(old, new), "f0d0e54e did not apply the row verbatim"
+    src = open(APPLY3, encoding="utf-8").read()
+    assert src.count(new) == 1 and _lines(src, new) == (187, 194), "the row's new text is not the script's lines 187 to 194, once"
+    assert src.count(old) == 0, "the row's old text still stands in the script"
+    return src, base
+
+
+def _restated():
+    return "apply_l5f11_contracts: not in the state this script applies to: %s; refusing, nothing written\n" % "; ".join(
+        "%s: old text 0 time(s), new text %s" % (i, "absent" if i == "F11-09" else "present") for i in ["F11-%02d" % n for n in range(1, 15)])
 
 
 def _call(main, args):
@@ -165,10 +199,10 @@ def t_the_proposed_order_patch_row_reads_the_order_and_names_the_restated_edit()
     need(APPLY3, "record l5pwr's second contract script")
     need(os.path.join(ROOT, ".git"), "a git checkout")
     before = _sha(APPLY3)
-    main = _patched_main()
-    ids = ["F11-%02d" % n for n in range(1, 15)]
-    restated = "apply_l5f11_contracts: not in the state this script applies to: %s; refusing, nothing written\n" % "; ".join(
-        "%s: old text 0 time(s), new text %s" % (i, "absent" if i == "F11-09" else "present") for i in ids)
+    tree_src, base_src = _applied_sources()
+    main = _main_of(tree_src, "tree")       # the applied script (the row's new text in the tree's file)
+    base_main = _main_of(base_src, "base")  # the script before the row (SET31_BASE), the history side
+    restated = _restated()
     d = tempfile.mkdtemp(prefix="w14-patch-")
     try:
         for src, want in ((BASE2, "ORDER"), (BASE3, "CHECK OK, 14 edit(s)"), (W8_BASE, "already applied"), (W8_COMMIT, restated),
@@ -179,15 +213,17 @@ def t_the_proposed_order_patch_row_reads_the_order_and_names_the_restated_edit()
                 assert rc == 3 and err.startswith("apply_l5f11_contracts: ORDER: apply_l5pwr2_contracts.py is not applied to these files "
                                                   "(its old text still in them: L5-F10 a, L5-F10 b, L5-F09 a, L5-F09 b, L5-F09 c, "
                                                   "L5-F09 d)"), (src, err[-300:])
+                rc0, _o, err0 = _call(base_main, args)
+                assert rc0 == 3 and "ORDER: apply_l5pwr2_contracts.py is not applied" in err0, err0[-300:]
             elif want == restated:
                 assert rc == 3 and out == "" and err == restated, (src, rc, out[-200:], err[-300:])
-                # the unpatched script's answer on the same files: refused too, for the false ORDER reason
-                rc0, _o, err0 = _run(APPLY3, args)
+                # the base's script on the same files: refused too, for the false ORDER reason the row corrected
+                rc0, _o, err0 = _call(base_main, args)
                 assert rc0 == 3 and "ORDER: apply_l5pwr2_contracts.py is not applied" in err0, err0[-300:]
             else:
                 assert rc == 0 and want in out and err == "", (src, rc, out[-200:], err[-300:])
-                rc0, out0, _e = _run(APPLY3, args)
-                assert rc0 == 0 and want in out0, "the patch must not change the script's answer where its ORDER check is right"
+                rc0, out0, _e = _call(base_main, args)
+                assert rc0 == 0 and want in out0, "the row must not change the script's answer where the base's ORDER check is right"
     finally:
         shutil.rmtree(d)
     assert _sha(APPLY3) == before, "the script was written"
