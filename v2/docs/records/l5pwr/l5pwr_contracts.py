@@ -18,7 +18,12 @@ them is matched once in the tree's sources with its figures parsed from the matc
 
 Set 29 (finding L5-F13, 4 October 2026, the coordinator's integration correction): L4-E9's rounds 7 and 8 corrected LH-04's pointer,
 so the two stack voltages row LH-04b cited are no longer printed. The row is restated the same way and named as restated at set 29;
-its contract text is NOT RESTATED in the targets (Layer 5's next round)."""
+its contract text is NOT RESTATED in the targets (Layer 5's next round).
+
+Set 31 (record l5pwr's correction W1, 6 October 2026, after the set 30 integration's refusal): L4-E9's set 31 restated D-10 from
+record l4e7's P0-7 (an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's E-1) and withdrew R-186, so the
+D-10 sentence S27-B6 quoted is no longer printed. S27-B6 and S27-03 are re-read against the page and the register as set 31 left
+them (the comment above S27-B6's entry); the rows' meaning (D-10 OPEN, no loop claimed to pass, PROVISIONAL) is unchanged."""
 import hashlib
 import os
 import re
@@ -281,33 +286,68 @@ def restate(i, withdrawn, why, now, value, mark, trigger, where, target=(), find
                        target=list(target), finding=finding, at=at)
 
 
+# SET 31'S D-10, RE-READ (record l5pwr's correction W1, 6 October 2026; authority SESSION under the owner's standing rule of 26
+# September 2026). Set 31 (fnd/l4e9s31 17ce29d5, merged into the candidate at 6fe398e9; v2/docs/records/l4e9/SET31-CHANGES.md items
+# 2, 10 and 23) restated L4-E9's D-10 from record l4e7's P0-7 as an UNRESOLVED PROTECTION DEFECT in the present model (the owner's
+# part 23), the receiving company's remaining engineering item E-1 with the failing cases F1 to F4, and withdrew R-186 under R-240. The
+# D-10 sentence S27-B6 quoted at set 28 ("OPEN for the guard-on case: an absolute-rating violation at a connector fault (round 2's
+# ... WITHDRAWN as a passing floor", the page's section 6 D-10 row until bbba3e53) is no longer printed, so this script refused on the
+# set 30 candidate. S27-B6 now quotes the page's D-10 rows as set 31 left them (section 6 and 8a, and section 8's account of the P0
+# round); section 4e's guard-on row, which set 31 did not change, is still quoted for the figures it prints. S27-03's register rows
+# (R-176) are unchanged by set 31; its trigger's R-186 and B6-ENG-1 are re-read the same way. The row's meaning is kept: D-10 OPEN,
+# NOT CLOSED, no loop claimed to pass, PROVISIONAL; nothing here is widened. LH-04b's pattern (1d row IF-10, "(D-17 OPEN") still
+# matches the text set 31 left and its prose names no withdrawn item, so it is unchanged.
 restate("S27-B6", ["0.2396", "0.5287", "60.3", "3.30 uH"],
         "L4-E7's round 5 withdrew round 2's reference loop as a passing floor: at that loop a fault at the connector puts U5's pins past "
-        "their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass",
-        [("l4e9md", r"OPEN for the guard-on case: an absolute-rating violation at a connector fault \(round 2's \d+\.\d+ uH WITHDRAWN as a passing floor"),
+        "their absolute maximum, so D-10's guard-on case is OPEN and no loop is claimed to pass; set 31 (SET31-CHANGES.md items 2 and 23, "
+        "the owner's part 23) restated D-10 from record l4e7's P0-7: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving "
+        "company's remaining engineering item E-1 (the port-level transient's failing cases F1 to F4 and the lower-source back-feed), "
+        "with U5's absolute-rating violation corrected in draft by P0-7 (R-240, not applied), so set 28's D-10 sentence is no longer printed",
+        [("l4e9md", r"OPEN: an UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's remaining engineering item E-1: "
+                    r"the guard's port-level transient \(F1 and F2 absolute-rating violations below about \d+\.\d+ uH, F1 PV_F \d+\.\d+ V MODEL "
+                    r"against the port's \d+ V; F3 PV_F \d+\.\d+ V over the recommended \d+ V row at \d+\.\d+ uH; F4 the arriving source's slew "
+                    r"over its \d+ V/us line\) and the lower-source back-feed \(S1's row \(b\)\); U5's absolute-rating violation corrected in "
+                    r"draft by P0-7 \(R-240\)"),
+         ("l4e9md", r"E-1, then S1 and S2 on the correction \(R-180 and R-187 inputs, no passing route; R-186 WITHDRAWN under R-240\)"),
+         ("l4e9md", r"OPEN, REMAINING ENGINEERING: D-10 is an UNRESOLVED PROTECTION DEFECT in the present model \(\[P0SOL:\d+\]\), the "
+                    r"receiving company's item E-1 \(set \d+'s B6-ENG-1 as P0-7 restates it"),
+         ("l4e9md", r"PROVISIONAL until E-1's correction: IF-01's D-10 protection claim, R-173 as a protection, R-176 rows \d+ and \d+, R-180, "
+                    r"the port's parts and layout"),
+         ("l4e9md", r"D-16 addressed in drafts \(corrected in draft, R-240, PROVISIONAL on S3 and S4\); D-10 restated as an unresolved "
+                    r"protection defect, the receiving company's E-1"),
          ("l4e9md", r"at round 2's \d+\.\d+ uH reference loop, no loop claimed to pass \(L4-E7's round \d+\)"),
          ("l4e9md", r"U5's pins, the complete budget, -\d+\.\d+ to \+\d+\.\d+ V at a fault at the connector \(past the -\d+\.\d+ V ABSOLUTE MAXIMUM\)"),
          ("l4e9md", r"inside \d+ V; at \d+\.\d+ uH U5 \d+\.\d+ V"),
          ("l4e9md", r"turns Q12 off: at most \d+\.\d+ A within \d+\.\d+ us")],
-        "CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; it is OPEN (an absolute-rating "
-        "violation at a connector fault, no loop claimed to pass), with U5's pins at the reference loop and at the low loop and the "
-        "turn-off current as parsed above; the stage question is the engineer's B6-ENG-1",
-        "MODELED (L4-E7 round 5); DRAFTED R-173; OPEN (D-10's guard-on case, an absolute-rating violation at a connector fault), PROVISIONAL",
-        "B6-ENG-1, the engineer's stage question (R-180 an input only; R-186 Analog Devices' answer; R-187 does not hold, result (ii)); "
-        "its wider form B6-ENG-2 (R-189, D-16)",
-        "1d row IF-01, 4e (the guard-on row), 8a D-10", finding="L5-F09")
+        "CHANGES: the guard-on case is no longer every rating with its margin from the reference loop; D-10 is OPEN, NOT CLOSED, an "
+        "UNRESOLVED PROTECTION DEFECT in the present model, the receiving company's E-1 (the failing cases F1 to F4, MODELED, their figures "
+        "as parsed above), and no loop is claimed to pass; U5's pins at the reference loop and at the low loop (the absolute-rating "
+        "violation P0-7 corrects in draft, R-240, not applied) and the turn-off current are as section 4e still prints them (L4-E7's "
+        "round 5); the stage question, set 29's B6-ENG-1, is E-1",
+        "MODELED (L4-E7 round 5; P0-7's failing cases); DRAFTED R-173, R-240; OPEN (D-10, an UNRESOLVED PROTECTION DEFECT in the present "
+        "model, the receiving company's E-1; F1 and F2 absolute-rating violations), PROVISIONAL",
+        "E-1, the receiving company's remaining engineering item (set 29's B6-ENG-1 as P0-7 restates it; record l4e7's "
+        "SUPPLIER-P1-1-P0SOL.md, UNSENT): its correction or a measured model revision before any passing claim, then S1 and S2 on the "
+        "correction (R-180 and R-187 inputs, no passing route; R-186 WITHDRAWN under R-240); B6-ENG-2's D-16 addressed in drafts by "
+        "R-240, PROVISIONAL on S3 and S4",
+        "1d row IF-01, 4e (the guard-on row), section 6's D-10 row, 8 (what the P0 round changed) and 8a D-10, as set 31 restated D-10",
+        finding="L5-F09")
 restate("S27-03", ["75 V", "61 A", "3.30 uH"],
         "L4-E7's round 5 restated R-176: row 2's bound on PV_F and row 3's turn-off current changed, and row 3's pass from the reference "
-        "loop was withdrawn (no loop is claimed to pass)",
+        "loop was withdrawn (no loop is claimed to pass); set 31 left R-176 as it was, withdrew R-186 under R-240 and, on L4-E9's page, "
+        "made B6-ENG-1 the receiving company's E-1 and answered B6-ENG-2 at the desk (P0-7)",
         [("reg", r"PV_F at most \d+ V, its slew and INP inside their absolute ratings"),
          ("reg", r"U21 turning Q12 off \(at most \d+ A, within \d+ us\)"),
-         ("reg", r"no loop is claimed to pass \(round \d+\): at \d+\.\d+ uH the pins' complete budget is outside \+-\d+\.\d+ V and B6-ENG-1 decides")],
+         ("reg", r"no loop is claimed to pass \(round \d+\): at \d+\.\d+ uH the pins' complete budget is outside \+-\d+\.\d+ V and B6-ENG-1 decides"),
+         ("reg", r"WITHDRAWN \d+ October \d+, set \d+: obsolete under R-240"),
+         ("l4e9md", r"Since P0-7, B6-ENG-2 is answered at the desk and B6-ENG-1 becomes E-1, the port's remaining engineering")],
         "CHANGES in V-E16's rows 2 and 3, not in the excerpt (rows 5 and 6 stand): the parsed bounds replace those the pass wrote for "
-        "rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1 is decided",
+        "rows 2 and 3, and row 3 is no longer a pass from any loop until B6-ENG-1, now E-1, is decided",
         "TEST rows (the bounds MODELED and MAKER); DRAFTED R-173; row 3 OPEN (no loop claimed to pass), PROVISIONAL",
-        "row 3: B6-ENG-1 decides the stage (R-180 an input only, R-186, R-187 not holding; B6-ENG-2, R-189); rows 2 and 3 filed against "
-        "R-176's bounds at both fault positions",
-        "R-176 (rows 2 and 3 as L4-E7's round 5 restated them)",
+        "row 3: B6-ENG-1 decides the stage as R-176 words it, the receiving company's E-1 since P0-7 (R-180 an input only, R-187 not "
+        "holding, R-186 WITHDRAWN under R-240; B6-ENG-2, R-189, answered at the desk); rows 2 and 3 filed against R-176's bounds at both "
+        "fault positions",
+        "R-176 (rows 2 and 3 as L4-E7's round 5 restated them); R-186 (WITHDRAWN at set 31); L4-E9 8a's history note",
         [("stale", "hwfw", r"D4 carries nothing, PV_F at most \d+ V;"),
          ("stale", "hwfw", r"U21 turning Q12 off \(at most \d+ A, within \d+ us\)"),
          ("stale", "hwfw", r"a pass only for a loop at or over \d+\.\d+ uH until B6-ENG-1 is decided"),
@@ -571,7 +611,7 @@ def md_rows(R):
 
 
 def md_restated(R):
-    out = ["| id | cited at `%s`, no longer standing | why (the Layer 4 change: set 27's, or L4-E9's rounds 7 and 8 for a row restated at set 29) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`%s`) |" % (L4_BASE, SET28_COMMIT),
+    out = ["| id | cited at `%s`, no longer standing | why (the Layer 4 change: set 27's, or L4-E9's rounds 7 and 8 for a row restated at set 29; set 31's re-read for S27-B6 and S27-03) | what replaced it (file: the text, its figures parsed) | contract value | the targets at set 28 (`%s`) |" % (L4_BASE, SET28_COMMIT),
            "|---|---|---|---|---|---|"]
     for e in R["rows"]:
         r = e["restated"]
@@ -631,6 +671,8 @@ def render(R):
         p("    AND AT SET 29 (finding L5-F13; the coordinator's integration correction, authority SESSION): %d row whose cited figures"
           % (len(rows) - len(s28)))
         p("    L4-E9's rounds 7 and 8 changed; it is marked 'restated at set 29' below")
+    p("    S27-B6 and S27-03 re-read at set 31 (record l5pwr's correction W1, 6 October 2026): L4-E9's D-10 restated from record l4e7's")
+    p("    P0-7 and R-186 withdrawn; their replacing texts as set 31 left them, their why naming the change")
     for e in rows:
         r = e["restated"]
         p("   %s | %s | %s" % (e["id"], e["contract"], e["field"]))

@@ -15,8 +15,9 @@ E11-38's test target, not a bound, while 18c restated the fans' stagger (a PWM-d
   L5-F09 c  HW-FW-CONTRACT.md section 4.1, the R-173 row: row 3 restated to R-176
   L5-F09 d  HW-FW-CONTRACT.md V-E16: rows 2 and 3 replaced by R-176's rows 2 and 3, verbatim from the register
 
-Every figure written is parsed from the Layer 4 files in the tree (l4e11_power.out, L4-POWER-ARCHITECTURE.md, DOWNSTREAM-REGISTER.md):
-each source pattern below carries no typed number, must match exactly once, and its groups are what the new text prints. The old
+Every figure written is parsed from the Layer 4 files (l4e11_power.out, L4-POWER-ARCHITECTURE.md, DOWNSTREAM-REGISTER.md) as they
+stood when this script was applied (L4_AT below, in this branch's history; until 6 October 2026 they were read from the tree): each
+source pattern below carries no typed number, must match exactly once, and its groups are what the new text prints. The old
 texts are patterns too (their figures as placeholders), each matched exactly once in its target before it is replaced.
 
 Usage:  apply_l5pwr2_contracts.py [--check | --write] [--yaml PATH] [--hwfw PATH]     (default --check; default targets: the tree's)
@@ -41,6 +42,16 @@ SRC = {"l4e11out": "v2/docs/records/l4e11/l4e11_power.out",
        "l4e9md": "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md",
        "reg": "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"}
 DOCK_DRAFT = "v2/docs/records/l4e11/apply_pcb_interfaces_dock.py"
+# THE LAYER 4 FILES ARE READ AS THEY STOOD WHEN THIS SCRIPT WAS APPLIED (record l5pwr's correction W1, 6 October 2026; authority
+# SESSION under the owner's standing rule of 26 September 2026). This script was applied at da85ab29 and apply_l5f11_contracts.py,
+# which reads the Layer 4 files through src() below, at a49a2b13; both read the tree's Layer 4 files until set 31 (SET31-CHANGES.md
+# items 2 and 23) restated L4-E9's D-10, after which the D-10 sentence both quote ("OPEN for the guard-on case: an absolute-rating
+# violation at a connector fault (round 2's ...") is matched 0 times and both refused, already applied or not. An applied script is
+# history: what it wrote is fixed by the files it was written against, and a reader of the tree would refuse the day its subject moved
+# on (the same rule as L5PWR_COMMIT in l5pwr_contracts.py). So both read the Layer 4 files at a49a2b13, where every source pattern of
+# both matches once and the texts they build are the texts the contracts carry. That the contracts' D-10 texts now lag the page is
+# finding L5-F14 of L5-POWER-CONTRACTS.md, not something this script decides. Reverse: set L4_AT to None to read the tree again.
+L4_AT = "a49a2b13"
 WIDTH = 132   # the yaml's wrapped line width
 
 
@@ -63,10 +74,17 @@ _SRC = {}
 
 def src(key):
     if key not in _SRC:
-        p = os.path.join(REPO, SRC[key])
-        if not os.path.isfile(p):
-            refuse("the Layer 4 file %s is missing" % SRC[key])
-        _SRC[key] = open(p, encoding="utf-8").read()
+        if L4_AT:
+            r = subprocess.run(["git", "-C", REPO, "show", "%s:%s" % (L4_AT, SRC[key])], capture_output=True)
+            if r.returncode != 0:
+                refuse("the Layer 4 file %s is not readable at %s (a git checkout holding this branch's history is needed)"
+                       % (SRC[key], L4_AT))
+            _SRC[key] = r.stdout.decode("utf-8")
+        else:
+            p = os.path.join(REPO, SRC[key])
+            if not os.path.isfile(p):
+                refuse("the Layer 4 file %s is missing" % SRC[key])
+            _SRC[key] = open(p, encoding="utf-8").read()
     return _SRC[key]
 
 
