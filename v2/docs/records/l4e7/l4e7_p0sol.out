@@ -13,7 +13,7 @@ INPUTS (sha256, the first 16 hex digits)
   f617613b3fb9e54d v2/docs/records/l4e7/apply_gen_sch_e_p0sol_b2.py
   f846e138cb53a8c6 v2/ecad/tools/gen_sch_e.py
   2ed95a0e8069ebf8 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
-  a2089b3f6682d7fd v2/docs/records/l4e11/l4e11_power.out
+  55379e0d7e129b2d v2/docs/records/l4e11/l4e11_power.out
   8f552a0b57677bfa v2/vendor/power/lt8705a.pdf
   dbb74b6cdc543135 v2/vendor/ti/held/ti-ina169-sbos181f.pdf
   27c94a6c3a243bf5 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf
@@ -28,13 +28,13 @@ INPUTS (sha256, the first 16 hex digits)
   13326c9841e148b7 v2/docs/records/l4e7/inputs/lcsc-C44322-2026-10-01.json
 
 0. REPRODUCTION ON THE BASE (fnd/p0base e132db0e), before any change
-  0a The record's results cache (l4e7_stage_settings.results.json): its KEY holds on this tree: no part differs, the cache was
-     re-keyed on the integrated tree by set 30's integrator (a rented debian:12 box, Python 3.11 and pdftotext 22.12.0 as the
-     runner's) after L4-E11's rounds 12 to 16 had moved v2/docs/records/l4e11/l4e11_power.out (3a46198439d54bfb at 69921ce8, set
-     29's freeze, against a2089b3f6682d7fd here). The figures compute() reads from that file, with its own patterns, in both
-     versions: UVLO rising 7.87/8.14/8.44; UVLO falling 7.46/7.66/7.95; the start's slew 17.28/20.71/24.65; INP high 7.23; the
-     short-circuit threshold 10.36/12.04/13.87; the overcurrent threshold 6.364/6.8/7.136. EQUAL in both, so the cached results
-     are this base's results and the re-keyed cache's alike.
+  0a The record's results cache (l4e7_stage_settings.results.json): its KEY does NOT hold on this tree. The only part that differs
+     is the file v2/docs/records/l4e11/l4e11_power.out (a2089b3f6682d7fd at 69921ce8, set 29's freeze, against 55379e0d7e129b2d
+     here: L4-E11's rounds 12 to 16). The figures compute() reads from it, with its own patterns, in both versions: UVLO rising
+     7.87/8.14/8.44; UVLO falling 7.46/7.66/7.95; the start's slew 17.28/20.71/24.65; INP high 7.23; the short-circuit threshold
+     10.36/12.04/13.87; the overcurrent threshold 6.364/6.8/7.136. EQUAL in both, so the cached results are this base's results;
+     the cache is not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and
+     the record's tests read the cache through results(), which recomputes whenever the KEY does not hold).
   0b render(cache) against the committed l4e7_stage_settings.out: BYTE-IDENTICAL (sha256 2ad2015b0c7aea91).
   0c D-16 recomputed by the record's own sense_ripple on its cached parameters (the as-drafted split; 25 V in, the oscillator's
      least 170 kHz, L1 at -20 %, M1's edges 20 ns, RSENSE1 at its highest with 5 nH, the bulk new at 20 C): every figure equal to

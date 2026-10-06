@@ -4,7 +4,7 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
 
 0. PINS (sha256/16  path)
    3a4225fa409cb0cf v2/docs/records/l8r2/l8r2_gndret.py
-   84d4d57e4b0b8635 v2/docs/records/l8r2/l8r2_gndret.out
+   9ee6639f736f311f v2/docs/records/l8r2/l8r2_gndret.out
    b2dfb4a643f9f997 v2/docs/records/l8r2/inputs/coordinator-cases-2026-10-05-cdev-rev2.md
    3a23036c57859f1d v2/docs/records/l9stk/L9-STACKUPS.md
    6949727d3bc42a67 v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf
@@ -12,7 +12,7 @@ ASSUMPTION, MISSING, PROVISIONAL (the owner's part 19: a bounded provisional cho
    c2cbb5962c1f37da v2/vendor/battery/amass-xt60-spec-tme.pdf
    94e4568e3abe8ab5 v2/vendor/battery/amass-xt60-spec-2021v1-lcsc-c98733.pdf
    6a136feec6c9cf4e v2/ecad/tools/gen_sch_a.py
-   393305bed4edfd26 v2/ecad/tools/pcb_interfaces.yaml
+   b0ea9ce43308e789 v2/ecad/tools/pcb_interfaces.yaml
    58e26c67987b1daa v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
    2e64b5bf2d9cd3bc v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
 

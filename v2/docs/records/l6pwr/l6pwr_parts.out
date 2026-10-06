@@ -23,7 +23,7 @@ pdftotext), RECORD (a Layer 4 record's figure, its page pinned), CATALOGUE (a da
    5a50ed9e06c57efd196219087ec42da2b39ea3e035fdb22044e7761d247afd83 v2/docs/records/l4e8/L4E8-BANK.md
    0d9abf89d3675d55a7cedb912bed1935f077f28f41a49df5591d368629154f4a v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    38961dd6611cf50457fef150ecdbc891bb900263577720114237f7fc47178d8a v2/docs/records/l4e9/L4E9-ENTRY-PROPOSALS.md
-   1357ff2601a30943b73808b532292840aa16ca78f4606313c4ec1323a55195ee v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   a2e63ac72de835867aa27160dd9dff0bb634da11599745218e91ba99e8376e89 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516 v2/vendor/battery/samsung-35e-orbtronic.pdf
    e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f v2/vendor/ti/held/ti-bq25730-sluse65a.pdf (held back, fetched and matching its pin)
    ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40 v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf (held back, fetched and matching its pin)

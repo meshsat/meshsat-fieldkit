@@ -12,8 +12,8 @@ parts library, read 2026-10-03T13:41:23Z (inputs/). A stock figure or a price is
    31b82bacb31ca7efaac19627ebc97e1e7c2649c3cf1fa68e8fa513b7b61bca8c v2/ecad/tools/jlc-mismatch.yaml
    cab57e0ed5be2f638e83a2fef8e99193ef20cddd32ac0d26a0c5503db679c2ff v2/docs/records/l6r2/inputs/jlc-parts-2026-10-03.json
    687c4acafacd96d22fa89dd6cd4786280f7aeb3548c3537ece3d5389ab906cc1 v2/docs/records/l6r2/inputs/bom_from_netlist.py
-   1978ea89e6df476038d9d2a4ac486ca808f421fd2e86fc7ea1481663282c2771 v2/docs/records/l4e9/l4e9_power_path.py
-   1357ff2601a30943b73808b532292840aa16ca78f4606313c4ec1323a55195ee v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   3e3c80cea11d4952089c658b55fef9b8f668fd081a4da3f308de83d344517e41 v2/docs/records/l4e9/l4e9_power_path.py
+   a2e63ac72de835867aa27160dd9dff0bb634da11599745218e91ba99e8376e89 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648 v2/vendor/passives/yageo-cc-series.pdf
    f8cd1e49d3ae1d2b573eed34fd8d4f6a156d0d919cd0b2c1e576f8996f2b408a v2/docs/records/l6r2/inputs/kicad-xal-footprints-9.0.9.json
    b26cf975bd56a807173b05665bddd49ed49323400330eb8f6fa63e24ff6d7d15 v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf

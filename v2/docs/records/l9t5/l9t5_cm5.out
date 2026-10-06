@@ -6,7 +6,7 @@ prototype design; nothing built, bought, powered or measured; a case row's chang
    3698cc04d8eaf75b v2/ecad/tools/gen_sch_b.py
    469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
    afae23c87c38302b v2/docs/records/l9pwr/l9pwr_budget.py
-   f226c64941563f9c v2/docs/records/l9pwr/l9pwr_budget.out
+   a3aa39fc2b240a5d v2/docs/records/l9pwr/l9pwr_budget.out
    0be579949c22eab1 v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md
 
 2. WHAT THE SHEET PRINTS (Raspberry Pi Compute Module 5 datasheet, Release 3)
