@@ -11,7 +11,7 @@ The predicates, each parsed (ast for the drafts, the table cells for the page an
   From names record l8p; the released() functions are one function, so one file releases all of them or none;
 - U101 is the latch-off LM5069MM-1 wherever record l8p draws, checks or tables it, and no file of the record outside its verbatim
   input copies names the automatic-retry part number;
-- the changed pages carry a dated set 30 note with the promoted sha's placeholder and the NEXT set, and section 14 accounts for all
+- the changed pages carry a dated set 30 note with the promoted sha (W5's placeholder, filled in set 31) and the NEXT set, and section 14 accounts for all
   28 of Slot L's K items.
 Each predicate is also run on the old state or on a mutation and must refuse it. No generator, no suite, no KiCad; the tree is
 only read."""
@@ -245,12 +245,16 @@ def t_the_changed_pages_carry_the_dated_set30_note():
     readme = _read(need(README, "the l8p README"))
     sec = page.split("\n## 14. Set 30 note (6 October 2026)")[1]
     flat = re.sub(r"\s+", " ", sec)
-    for s in ("`__INTEGRATED__`", "**Adopted in the NEXT set", "`53a68c7c`", "**SESSION decision W5-D1**", "To reverse:",
+    # W5 wrote the placeholder `__INTEGRATED__` in both notes. Restated by W41 (6 October 2026; basis: W10's plan R0,
+    # `_runs/int31/PLAN.draft.md` lines 206 to 212, and W38's finding F2): filled with set 30's promoted sha, dd1aed00
+    # (`_runs/int30/ADOPTION-VALUES.md`), short as both notes name their other commits; the placeholder is gone from both files.
+    assert "__INTEGRATED__" not in page and "__INTEGRATED__" not in readme, "a placeholder is not filled"
+    for s in ("promoted candidate `dd1aed00`", "**Adopted in the NEXT set", "`53a68c7c`", "**SESSION decision W5-D1**", "To reverse:",
               "**W5-F1", "**W5-F2", "**W5-F3", "SET31-CHANGES.md` lines 107 to 108", "lines 151 to 158, 236 to 242 and 296",
               "lines 324 and 329"):
         assert s in flat, s
     first = readme.split("\n\n")[0]
-    assert first.startswith("**Set 30 note (6 October 2026") and "`__INTEGRATED__`" in first and "NEXT set" in first
+    assert first.startswith("**Set 30 note (6 October 2026") and "promoted candidate `dd1aed00`" in first and "NEXT set" in first
     assert all(w in first for w in ("DONE", "NOT DONE", "NEXT")), first
     k = flat.split("**Slot L's K items")[1]
     named = _expand(k.split("The other twenty-six (")[1].split(")")[0])

@@ -17,8 +17,8 @@ ramp, a withdrawn text still in a target names its finding, and the page's secti
 files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files printed them when the scripts
 were applied ("already applied"; their Layer 4 reads pinned at a49a2b13 since W1) on every text W8 did not restate, and on the five
 W8 restated (L5-F09 a to d, F11-09; its change record row "| 2 (W8, L5-F14) |") three properties in their place (W14, 6 October
-2026: on that tree the first script refuses by its docstring's rule and the second at its ORDER check, whose proposed correction is
-test_w14l5.PATCH_L5F11_ORDER), each script applies once to the files it was
+2026: on that tree the first script refuses by its docstring's rule and the second refused at its ORDER check until f0d0e54e applied W14's correction
+test_w14l5.PATCH_L5F11_ORDER to it in set 31, and now refuses with its own state (W35's restatement below)), each script applies once to the files it was
 written against and is idempotent, and the second refuses before the first. W1 (6 October 2026): S27-B6 reads L4-E9's D-10 as set 31
 left it, refusing set 28's sentence on the page and set 31's on a copy that carries set 28's.
 Software predicates on text: they establish no electrical property and accept nothing.
@@ -334,8 +334,8 @@ def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_
 # holds what the old "already applied" held on what W8 did not touch (verbatim) and, on what W8 restated, three properties in its
 # place: every Layer 4 value the script's text printed still stands in the field, the superseded part of the script's text is in
 # W8's change record row and gone from the field, and the field claims no more (OPEN, PROVISIONAL, no loop claimed to pass).
-# apply_l5pwr2's answer is the one its docstring prescribes (decision (a)); apply_l5f11's refusal is right but its ORDER reason is
-# not (decision (b)): test_w14l5.py carries the proposed correction PATCH_L5F11_ORDER and checks it on copies, never on the script.
+# apply_l5pwr2's answer is the one its docstring prescribes (decision (a)); apply_l5f11's refusal was right but its ORDER reason was
+# not (decision (b)): test_w14l5.py carries the correction PATCH_L5F11_ORDER, which f0d0e54e applied to the script in set 31.
 W8_ROW = "| 2 (W8, L5-F14) |"
 W8_RESTATED = ("L5-F09 a", "L5-F09 b", "L5-F09 c", "L5-F09 d", "F11-09")
 
@@ -484,15 +484,15 @@ def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_ide
     and its own state there reads thirteen of its fourteen texts verbatim and F11-09 as W8 restated it; it applies once to the files
     at BASE3, writes nothing on a second run, and refuses on the files at BASE2 (ORDER).
 
-    W14 (6 October 2026), decision (b): on the tree as W8 left it the script refuses at its ORDER check (lines 187 to 191), because
+    W14 (6 October 2026), decision (b): on the tree as W8 left it the script refused at its ORDER check (then lines 187 to 191), because
     apply_l5pwr2_contracts.py no longer answers "already applied" there (t_the_contract_restatement_of_l5f09_and_l5f10_is_in_the_tree_
-    and_idempotent). The refusal is right (nothing may be written), its reason is not: every old text of apply_l5pwr2_contracts.py is
+    and_idempotent). The refusal was right (nothing may be written), its reason was not: every old text of apply_l5pwr2_contracts.py is
     gone from the tree, so it WAS applied, and four of its texts were then restated by W8. The detector tests the first script's
     verbatim texts where it should test the presence of what that script did (its old texts removed), the way set 30 corrected
-    apply_l4e9_changelist_p0.py's applied_state(). The script is record l5pwr's and pinned, so it is not edited here: this test expects
-    its CURRENT answer, exact to the character, and the proposed correction is test_w14l5.PATCH_L5F11_ORDER (checked there on copies;
-    with it applied the answer becomes "not in the state this script applies to: F11-01: old text 0 time(s), new text present; ...",
-    naming its fourteen edits with F11-09's new text absent, and this expectation changes with it). In place of the old "already
+    apply_l4e9_changelist_p0.py's applied_state(). The script is record l5pwr's and pinned, so W14 did not edit it: this test expected
+    its answer then, exact to the character, and the correction was test_w14l5.PATCH_L5F11_ORDER (checked there on copies); f0d0e54e
+    applied it in set 31, so the answer is now "not in the state this script applies to: F11-01: old text 0 time(s), new text present; ...",
+    naming its fourteen edits with F11-09's new text absent, as W35 restated the expectation below (this prose restated by W41, 6 October 2026, W38's F7; no predicate changed). In place of the old "already
     applied": the script's own state, read with its own functions as its main() reads it after the ORDER check, is every old text
     gone, F11-01 to F11-08 and F11-10 to F11-14 verbatim, and F11-09
     restated by W8 with the properties of _w14_restated (its one Layer 4 value, L4-E9 8a's D-10 sentence at L4_AT, is the sentence

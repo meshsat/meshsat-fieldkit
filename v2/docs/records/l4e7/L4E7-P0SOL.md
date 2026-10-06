@@ -11,7 +11,7 @@ the record's own transient model runs only at its 3.30 uH reference loop and at 
 against the same failure case.
 
 **Set 30 note (6 October 2026; record text only, on branch `fnd/w4l4e7` from set 30's integration commit 2c `53a68c7c`; adopted in
-the NEXT set, where the coordinator regenerates; the promoted sha `__INTEGRATED__`).** What moved since this page was written: (1) the
+the NEXT set, where the coordinator regenerates; the promoted sha `dd1aed00`).** What moved since this page was written: (1) the
 candidate merged set 31 (`6fe398e9`; `v2/docs/records/l4e9/SET31-CHANGES.md`), so L4-E9's page and register now read D-16
 ADDRESSED IN DRAFTS, "PROVISIONAL in A7's zero-differential output (S3) and in the regulation at 25 V (S4)"
 (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`), "not independently accepted as closing D-16" (`:1031`), with the register's
@@ -188,7 +188,7 @@ back-feed of (a)); it does not resolve D-10.
 
 ## 5. Rows for L4-E9 and the register (the coordinator's; nothing of L4-E9's is edited here)
 
-**Set 30 note (6 October 2026; the promoted sha `__INTEGRATED__`).** The rows below are round 5's proposal of 5 October 2026,
+**Set 30 note (6 October 2026; the promoted sha `dd1aed00`).** The rows below are round 5's proposal of 5 October 2026,
 kept as dated history. Since then the P0 round entered R-NEW as R-240 (`v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md:336`), and set 31,
 merged into the candidate at `6fe398e9`, restated L4-E9's page, register and generator from them (`v2/docs/records/l4e9/SET31-CHANGES.md:41`,
 `:53`, `:54`): D-16 reads ADDRESSED IN DRAFTS, PROVISIONAL in S3 and S4 (`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md:841`) and

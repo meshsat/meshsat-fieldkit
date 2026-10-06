@@ -7,7 +7,7 @@ items the desk cannot close (a fifth, E11-37, added on 6 October 2026 in section
 measured quantity and pass limit, the capability needed, the affected outputs that stay PROVISIONAL until it is known, and a labelled
 cost as supporting information. **The owner is NOT asked to supply a bench, buy equipment, book a test, answer a procurement question
 or authorise an experiment before the handover.** No supplier is assumed engaged; its engineering and laboratory capability remain to
-be confirmed. Nothing here is a request for a requirement change, a purchase, an outside contact, fabrication or energisation. **Amendment of 6 October 2026** (branch `fnd/w3annex` from set 30's integration commit 2c, `53a68c7c`): written for the NEXT set and NOT merged into set 30's freeze; the coordinator adopts it there, re-pins and regenerates what reads this page, and fills the promoted sha where section 6 reads `__INTEGRATED__`. It adds E11-37 (section 7), states R17's design target as record l4e11 prints it, R-159's restatement, the lower-source back-feed's placement and D-06's two meanings (section 6), and keeps every line of sections 1 to 5 where it was (words are added inside lines only). It accepts nothing.
+be confirmed. Nothing here is a request for a requirement change, a purchase, an outside contact, fabrication or energisation. **Amendment of 6 October 2026** (branch `fnd/w3annex` from set 30's integration commit 2c, `53a68c7c`): written for the NEXT set and NOT merged into set 30's freeze; the coordinator adopts it there, re-pins and regenerates what reads this page, and fills the promoted sha into section 6 (`dd1aed00`, filled in set 31). It adds E11-37 (section 7), states R17's design target as record l4e11 prints it, R-159's restatement, the lower-source back-feed's placement and D-06's two meanings (section 6), and keeps every line of sections 1 to 5 where it was (words are added inside lines only). It accepts nothing.
 
 Three states are kept apart throughout: the LAYER DESK PACKAGE (editable design, analysis, internal consistency, reviews and the scoped
 supplier work: complete or not within the declared scope); DESIGN AND QUALIFICATION (open defects, provisional choices, unverified
@@ -125,14 +125,14 @@ The desk work of P0-1 to P0-8 does not wait for any of it, and a desk-solvable d
 **Status.** Written on branch `fnd/w3annex` from set 30's integration commit 2c, `53a68c7c` (on `fnd/p0pwr`), read from 03:10 CEST
 on 6 October 2026, by the worker the coordinator's brief names W3. **This branch is NOT merged into set 30's freeze; it is adopted
 in the next set**, where the coordinator re-pins and regenerates what reads this page and TP-E11-29 (the procedures' checker output
-`test-procedures/tp_check.out` prints TP-E11-29's sha256) and writes the promoted sha where this section reads `__INTEGRATED__`.
+`test-procedures/tp_check.out` prints TP-E11-29's sha256) and writes the promoted sha into this section (`dd1aed00`, written in set 31).
 Sections 1 to 5 keep every line where it was: each edit there adds words inside an existing line, so a citation of this annex by
 line (the remaining-engineering ledger, L4-E9's page and generator, set 31's record, the DESK-gate draft) still finds its text.
 Nothing here accepts, closes, verifies or promotes anything; it designs nothing, computes no figure, consumes no review and changes no
 verdict. Prototype framing: nothing in the kit is built, bought, powered or measured; a MODEL figure is desk arithmetic.
 
 **Citation form.** `[ALIAS:N]` is line N and `[ALIAS:N-M]` lines N to M of the file the alias names, as it reads in this branch's
-tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads; on set 31, 6 October 2026, the citations under REM, B2, P11 and OWN that later revisions of those files moved are re-cited to their lines on `fnd/int31cite`, the ledger included as it reads there). A
+tree (every file below is byte-identical to `53a68c7c` except TP29, which this branch edits and which is cited as it now reads; on set 31, 6 October 2026, the citations under REM, B2, P11 and OWN that later revisions of those files moved are re-cited to their lines on `fnd/int31cite`, the ledger included as it reads there; after set 31's merge of main (`d5d9c252`, main's adoption `836f711b` put three lines above HO-H) the two REM citations are re-cited to the ledger's lines there, and P0L names revision 2 of the P0 list at its dated name, the list its quotations read, as the ledger's P0L2 does). A
 file on another branch is cited as text only, by commit, path and line, read with `git show` (the worker rule that a record reads its
 inputs from its own tree): Slot L's DESK-gate draft `fnd/dgate` `249e9e47`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.draft.md`
 ("DGA" below), and Slot M's ledger amendment `fnd/ledgerfix` `99bbc0c6`, `v2/docs/records/l4close/REMAINING-ENGINEERING.md` ("REM-M"
@@ -146,7 +146,7 @@ below). The module `v2/ecad/tools/tests/test_w3annex.py` holds every citation an
 | E11PY | `v2/docs/records/l4e11/l4e11_power.py` |
 | E11P | `v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md` |
 | TIQ | `v2/docs/records/l4e11/clarification/TI-QUESTIONS.md` |
-| P0L | `v2/docs/records/l4close/P0-POWER-LIST.md` |
+| P0L | `v2/docs/records/l4close/P0-POWER-LIST.rev2-2026-10-05.md` |
 | REM | `v2/docs/records/l4close/REMAINING-ENGINEERING.md` |
 | CX45 | `v2/docs/records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md` |
 | CX46 | `v2/docs/records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md` |
@@ -162,17 +162,17 @@ below). The module `v2/ecad/tools/tests/test_w3annex.py` holds every citation an
 ### 6.1 The set 30 note: what moved since this annex was written (dated 6 October 2026)
 
 Sections 1 to 5 were written on 5 October 2026 between 15:30 and 16:00 CEST (commits `4f3fe604` and `b539b1b4`), before the P0
-candidate's checks cx45 and cx46. Since then, on the set 30 candidate that the coordinator promotes as `__INTEGRATED__`:
+candidate's checks cx45 and cx46. Since then, on the set 30 candidate that the coordinator promotes as `dd1aed00`:
 
 - the P0 candidate was checked twice and the method ended: cx45, "P0 CANDIDATE: NOT CONFIRMED." [CX45:10]; cx46, "P0 RECHECK:
   CORRECTIONS NOT CLOSED." [CX46:10], filed as "the second negative on the method, which ends it" (the filing's head, [CX46:3]);
-- the remaining-engineering ledger carries this annex's four items as HO-H to HO-K [REM:549-581] and counts "qualification 1;
-  external architecture fact 3" [REM:669]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
+- the remaining-engineering ledger carries this annex's four items as HO-H to HO-K [REM:552-584] and counts "qualification 1;
+  external architecture fact 3" [REM:672]; its amendment of 6 October 2026 adds E11-37 as HO-L and the back-feed's reading to HO-F
   (REM-M lines 584-636 and 522-535, text only);
 - set 31 restated R-159 "from E11-29's row word for word (in its Acceptance)" [SET31:44] (section 6.3);
 - the DESK-gate draft named E11-37 and the back-feed as unplaced (DGA lines 258-263, its A4.4 and A4.5) and listed K-06, K-09, K-12
   and K-23 against these two pages and their neighbours (DGA lines 316, 319, 322 and 333); sections 6.2 to 7 answer them;
-- the promoted revision: `__INTEGRATED__` (the coordinator's, at adoption).
+- the promoted revision: `dd1aed00d0a0a521063b5792550bc510c4707c59` (the coordinator's, at adoption).
 
 Unchanged by any of it: the four items' routes, specimens, pass limits, costs and capabilities in sections 1 to 5, and what is asked
 of the owner, nothing [ANX:113].
@@ -204,9 +204,9 @@ check are re-taken against this restatement and a supplier agrees the fixture re
 requirement" [SET31:80-81]). This branch re-takes the quotation: TP-E11-29 quotes the restated R-159 cell [TP29:613-666] and the
 restated 5d Specimen cell [TP29:130-133], and states its first condition on them [TP29:718-724]. The check's committed output is the
 coordinator's to re-take at adoption; no supplier has agreed. **The narrower statement:** TP-E11-29 stays NOT EXECUTABLE; its first
-condition is met on the promoted set (`__INTEGRATED__`) once the coordinator re-takes the check there, not before; the second, a
-supplier's written agreement, is not met. Set 29's per-FET 45.88 K/W still stands in L4-E9's D-14 rows, U-04's row and UDC-1's
-comparison [SET31:120-122], [L4E9:1401]: those are L4-E9's to restate in the next set, not this annex's; this annex's targets are
+condition is met on set 31's lineage (`fnd/int31regen`, which carries this re-quotation; set 30's promoted `dd1aed00` does not) once the coordinator re-takes the check there, not before; the second, a
+supplier's written agreement, is not met. Set 29's per-FET 45.88 K/W stood in L4-E9's D-14 rows, U-04's row and UDC-1's
+comparison [SET31:120-122], [L4E9:1401] until W7's rows were applied in set 31 (467c2aaa); those rows now label it SUPERSEDED beside 40.78 K/W without m and the 37.59 K/W target (dated history, restated by W41 on 6 October 2026: W38's F5); this annex's targets are
 E11-29's row's [ANX:105].
 
 ### 6.4 The lower-source back-feed: remaining engineering inside E-1, S1's row (b) its later validation (A4.5, K-23)

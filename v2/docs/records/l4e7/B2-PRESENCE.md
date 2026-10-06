@@ -7,7 +7,7 @@ decision, recommends nothing for adoption and credits B2 with no protection. Pro
 measured. Every figure below is printed by `l4e7_p0sol.py` (section 5 of `l4e7_p0sol.out`). Correspondence and orders: none.
 
 **Set 30 note (6 October 2026; record text only, on branch `fnd/w4l4e7` from set 30's integration commit 2c `53a68c7c`; adopted in
-the NEXT set, where the coordinator regenerates; the promoted sha `__INTEGRATED__`).** What moved since this page was written: the
+the NEXT set, where the coordinator regenerates; the promoted sha `dd1aed00`).** What moved since this page was written: the
 candidate merged set 31 (`6fe398e9`), whose L4-E9 data now reads route B2 UNSELECTED and WITHDRAWN AS DRAFTED with no owner item and
 D-10 "as P0-7 states it (E-1, F1 to F4, the lower-source back-feed)" (`v2/docs/records/l4e9/SET31-CHANGES.md:54`); and the
 remaining-engineering ledger's HO-F (`v2/docs/records/l4close/REMAINING-ENGINEERING.md` on `fnd/ledgerfix` `99bbc0c6`, cited as text

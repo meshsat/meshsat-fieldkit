@@ -42,6 +42,8 @@ CITE = re.compile(r"\[([A-Z][A-Z0-9]*):(\d+)(?:-(\d+))?\]")
 QCITE = re.compile(r"\"([^\"]{4,600}?)\"[^\"\[\]]{0,40}?\[([A-Z][A-Z0-9]*):(\d+)(?:-(\d+))?\]")
 DASHES = (chr(0x2013), chr(0x2014))
 _C = {}
+LINE10_OLD = "and fills the promoted sha where section 6 reads `__INTEGRATED__`."     # W3's placeholder sentence (line 10)
+LINE10_NEW = "and fills the promoted sha into section 6 (`dd1aed00`, filled in set 31)."   # W41's fill
 
 # (new citation, old citation, times on the page, the commit that wrote the old citation): lines moved unchanged
 LED_MOVED = [
@@ -85,16 +87,22 @@ LED_READ = [
 ]
 W3A, W3B = "406d9f90dafef87663c58c0700f2df30772bbd86", "686de0a264e71e364d33e6292a85a653aefc265f"   # W3's two commits
 LED_KEPT = [("[P11:89-92]", 2)]   # left as it was (named in the citation form): the passage it cited is rewritten at a6e3a066
+# Restated by W41 (6 October 2026; basis: W38's F1 and the coordinator's merge d5d9c252 of main eff28be3): main's adoption 836f711b
+# put three lines into the ledger above HO-H (lines 53, 54 and 62) and rewrote [P0L:n] to [P0L2:n] on three lines inside HO-H to HO-K,
+# so the annex's [REM:549-581] is re-cited to [REM:552-584] and [REM:669] to [REM:672]; the range no longer reads byte for byte what
+# [REM:520-552] read at W3A, so it moves from ANX_MOVED to ANX_READ and is held by its two headings, this module's anchors for it.
+W41_GONE = ("[REM:549-581]", "[REM:669]")    # W23's two ledger citations of the annex, re-cited by W41
 ANX_MOVED = [
-    ("[REM:549-581]", "[REM:520-552]", 1, W3A), ("[OWN:681]", "[OWN:680]", 1, W3A), ("[OWN:702]", "[OWN:701]", 1, W3B),
+    ("[OWN:681]", "[OWN:680]", 1, W3A), ("[OWN:702]", "[OWN:701]", 1, W3B),
     ("[P11:72]", "[P11:44]", 1, W3A), ("[P11:144]", "[P11:110]", 1, W3A), ("[P11:160]", "[P11:123]", 1, W3A),
 ]
 ANX_READ = [
-    ("[REM:669]", "[REM:585]", 1, ("Counts: remaining engineering 20; qualification 1; external architecture fact 3",)),
+    ("[REM:672]", "[REM:585]", 1, ("Counts: remaining engineering 20; qualification 1; external architecture fact 3",)),
+    ("[REM:552-584]", "[REM:520-552]", 1, ("### HO-H: E11-29", "### HO-K: U-04")),
     ("[B2:183-186]", "[B2:170]", 3, ("Not computed here", "validation P1-1's S1 (row added)")),
     ("[P11:154-160]", "[P11:120-123]", 2, ("(b) the lower-source back-feed", "Q12's body-diode current inside its pulsed rating")),
 ]
-ANX_ANCHOR = {"[REM:549-581]": ("### HO-H: E11-29", "### HO-K: U-04"), "[P11:144]": ("**S1, a stiff 36 V source stepping onto",),
+ANX_ANCHOR = {"[REM:552-584]": ("### HO-H: E11-29", "### HO-K: U-04"), "[P11:144]": ("**S1, a stiff 36 V source stepping onto",),
               "[OWN:681]": ("Supplier item S1 must carry that engineering problem",),
               "[OWN:702]": ("A planned measurement alone does not establish that the selected protection works.",),
               "[P11:72]": ("every part within its makers' absolute maximum ratings during the fault",),
@@ -224,6 +232,8 @@ def stale_fails(page, text):
     moved, read = _tables(page)
     news = set(r[0] for r in list(moved) + list(read))
     fails = ["%s is still on the page" % r[1] for r in list(moved) + list(read) if r[1] not in news and r[1] in text]
+    if page == ANX:
+        fails += ["%s is still on the page (re-cited by W41)" % c for c in W41_GONE if c in text]
     if page == LED:
         for c, k in LED_KEPT:
             if text.count(c) != k:
@@ -243,8 +253,11 @@ def rows_fails(text, base=None):
             fails.append("a Q-21 row is on the ledger %d times: %r" % (text.count(new), new[:50]))
         if old in text:
             fails.append("a Q-21 row's old text is still on the ledger: %r" % old[:50])
-    if base is not None and text.count("\n") != base.count("\n") + 1:
-        fails.append("the ledger has %d lines against its base's %d plus W20-14's one" % (text.count("\n"), base.count("\n")))
+    # Restated by W41 (6 October 2026; basis: W38's F1): the coordinator's merge d5d9c252 brought main's adoption 836f711b, which put
+    # three lines into the ledger (746 to 749 lines on main); so the ledger is its base plus W20-14's one plus those three.
+    if base is not None and text.count("\n") != base.count("\n") + 1 + 3:
+        fails.append("the ledger has %d lines against its base's %d plus W20-14's one and 836f711b's three" % (text.count("\n"),
+                                                                                                           base.count("\n")))
     return fails
 
 
@@ -292,7 +305,11 @@ def t_the_two_q21_rows_stand_and_the_annex_keeps_its_lines():
     assert not rows_fails(led, base_led), rows_fails(led, base_led)
     if base_anx is not None:
         assert anx.count("\n") == base_anx.count("\n"), "the annex's line count moved: a citation of it by line would drift"
-        assert anx.split("\n## 6. Amendment")[0] == base_anx.split("\n## 6. Amendment")[0], "sections 1 to 5 of the annex changed"
+        # Restated by W41 (6 October 2026; basis: W10's plan R0 and W38's F2): line 10's placeholder is filled with the promoted sha;
+        # sections 1 to 5 are otherwise the base's, byte for byte.
+        assert LINE10_OLD in base_anx.split("\n")[9] and LINE10_NEW in anx.split("\n")[9], "line 10's fill"
+        assert anx.split("\n## 6. Amendment")[0] == base_anx.split("\n## 6. Amendment")[0].replace(LINE10_OLD, LINE10_NEW, 1), \
+            "sections 1 to 5 of the annex changed"
 
 
 def t_no_long_dash_in_the_pages_or_this_module():
@@ -310,7 +327,8 @@ def t_the_predicates_refuse_broken_pages():
         ("resolve", lambda: resolve_fails(ANX, anx.replace("[B2:183-186]", "[B2:184-186]", 1))),
         ("moved", lambda: moved_fails(LED, led.replace("[BRK:1402]", "[BRK:1401]"))[0]),
         ("read", lambda: read_fails(LED, led.replace("[P11:154-160]", "[P11:155-160]"))),
-        ("read", lambda: read_fails(ANX, anx.replace("[REM:549-581]", "[REM:549-574]"))),
+        ("read", lambda: read_fails(ANX, anx.replace("[REM:552-584]", "[REM:552-577]"))),
+        ("stale", lambda: stale_fails(ANX, anx.replace("[REM:672]", "[REM:669]", 1))),
         ("quote", lambda: quote_fails(LED, led.replace("something must bound the current", "something must limit the current", 1))[0]),
         ("quote", lambda: quote_fails(ANX, anx.replace("A planned measurement alone does not", "A planned measurement does not", 1))[0]),
         ("stale", lambda: stale_fails(ANX, anx.replace("[P11:144]", "[P11:110]", 1))),
