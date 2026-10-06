@@ -20,7 +20,8 @@ gates again: "Keep physical qualification and fabrication-release gates separate
 revision the alias table gives. Revision `base` is `bbba3e53` (this branch changes no existing file, so the working tree reads the same).
 A row with another commit is a file on another branch, cited as text only (the worker rule that a record reads its inputs from its own
 tree): those lines were read with `git show <commit>:<path>` in this session. A path in backticks with no line is a repository path;
-`<worktrees>/...` is the coordinator's run folder outside the repository, named and never read as evidence. The module
+`<worktrees>/...` is the coordinator's run folder outside the repository, named as the source of a coordinator's statement and never
+as engineering evidence. The module
 `v2/ecad/tools/tests/test_dgate.py` holds every base citation against the base commit, every quotation against the file its citation
 names, every count this file states, and each other-branch citation where that commit is in the object store.
 
@@ -104,10 +105,10 @@ names, every count this file states, and each other-branch citation where that c
 - F1.3 The independent checks read the composition as passing in their stated scope: cx45, "Boards A, B, D and E composed. All 16
   connected netlist checks read DRAWN." with "This checks connectivity and intent, not routed layout or KiCad ERC." [CX45:28]; cx46,
   "Board E baseline orders agree and exclude B2." [CX46:60].
-- F1.4 Set 31, merged on the candidate at `6fe398e9`, brings L4-E9's page, register and generator data to the candidate's state (27 changes, each with its source item and
-  class [H31:28-58]) and takes the narrower claim where its two input drafts overlap [H31:68-98]; it states the design gate apart from
+- F1.4 Set 31, merged on the candidate at `6fe398e9`, brings L4-E9's page, register and generator data to the candidate's state
+  (27 changes, each with its source item and class [H31:28-58]) and takes the narrower claim where its two input drafts overlap [H31:68-98]; it states the design gate apart from
   this gate [PAGE31:965].
-- F1.5 The withdrawn items are withdrawn in the records that a receiving company reads first: route B2 "is UNSELECTED and WITHDRAWN
+- F1.5 The withdrawn items are withdrawn in the records that own them: route B2 "is UNSELECTED and WITHDRAWN
   AS DRAFTED" [B2:4]; FAN_OK's rows R-210 to R-212 read WITHDRAWN in the register [REG:304-306].
 - F1.6 One ledger gathers every handed-over item with its sources, and states that it settles no contradiction it lists: "where this
   ledger notes a gap or a contradiction between two records it settles neither" [REM:12-13].
@@ -124,7 +125,7 @@ names, every count this file states, and each other-branch citation where that c
   `6fe398e9`.
 - A1.4 Seventeen of the twenty-eight contradictions of section 5 would still stop a receiving company in the candidate as the merge
   `6fe398e9` leaves it (the column Stumble of section 5).
-- A1.5 Two drafts carry text the records withdrew: route B2 called "an unapproved PARTIAL interface proposal" and "an owner item"
+- A1.5 Two files still carry text the records withdrew: route B2 called "an unapproved PARTIAL interface proposal" and "an owner item"
   [L4PY:4293-4294] against "no owner action rests on B2" [B2:27]; Layer 5's handover row LH-12 still puts "the fans' supplies through
   FAN_OK, R-210 to R-212" [LH:28], left by set 31 ("LAYER5-HANDOVER.md is not this author's file" [H31:117]).
 - A1.6 Record pins of L4-E9's page and register are owed at the freeze ("records l4e10 and l4e11 pin this page's sha256 and l6r2 the
@@ -132,7 +133,7 @@ names, every count this file states, and each other-branch citation where that c
 
 ## 2. Part two: calculations and simulations
 
-**For acceptance at the desk gate (6).**
+**For acceptance at the desk gate (7).**
 
 - F2.1 Each record's script and output is in the tree, and the P0 cascade of eighteen outputs [CASC:9-11] ran twice for CANDIDATE
   READY 3, each pass exiting 0 [STAB:1-2], the record noting that the "second pass changed no byte" [STAB:3]; the second pass printed "already identical"
@@ -145,13 +146,17 @@ names, every count this file states, and each other-branch citation where that c
   [REM:15-17], and the connected output states that "every figure below is a MODEL reading on the composed candidate" [CON:6].
 - F2.5 Each remaining-engineering item names its reproduction command (the column Reproduce [REM:587-617]), and the order of the
   cascade is the script's [REM:645-646].
-- F2.6 Record l4e7's cached results apply to the base although its key does not hold: the figures it reads are "EQUAL in both, so the
-  cached results are this base's results" [SOLO:35], and "render(cache) against the committed l4e7_stage_settings.out:
-  BYTE-IDENTICAL" [SOLO:38].
+- F2.6 Record l4e7's own reproduction on the P0 base `e132db0e` [SOLO:30] found that its cached results apply although the key does
+  not hold: the figures it reads are "EQUAL in both, so the cached results are this base's results" [SOLO:35], and "render(cache)
+  against the committed l4e7_stage_settings.out: BYTE-IDENTICAL" [SOLO:38]. The one differing part it names, `l4e11_power.out`, has
+  at this branch's base the bytes it read there (sha256/16 `40ca9c0311440ca0` [SOLO:32], held by the test); whether any other part of
+  the key moved after `e132db0e` is not read here, and the re-key settles it (A2.2).
+- F2.7 The record tests run on any host with Python through the house runner [REM:648-649]; on set 31's branch, with the four
+  cascade outputs placed at their pinned digests for the run only, "tests: 68 passed, 0 failed, 0 skipped" [H31:25-26].
 
-**Against (7).**
+**Against (8).**
 
-- A2.1 The repository alone does not reproduce the calculations: the makers' sheets are held back and fetched by sha256 by each
+- A2.1 The repository alone does not reproduce every calculation: the makers' sheets are held back and fetched by sha256 by each
   record's `fetch_held_back.py` [REM:646-647] (seventeen such scripts in the tree); for example "l9t5_a1.py reads the printed rows
   from them and refuses without them" [FHB:9], and F01's INA250 sheet "is held back, fetched and checked by record l4e7's
   fetch_held_back.py, never committed" [F01:5].
@@ -173,6 +178,9 @@ names, every count this file states, and each other-branch citation where that c
   and set 31 change outputs after them, and stability on the integrated revision is an empty gate line in Slot D's draft [I30:116].
 - A2.7 Two pins outside P0's cascade are stale in the tree, in paused Layers 7 and 8 (`l7pwr_fans_th1.out` and `l8gnd_drafts.out`,
   as Slot D read them at `1c6d56f5` [I30:80-82]); this draft did not re-read them at the base.
+- A2.8 At the base itself L4-E9's record tests fail: Slot H read "55 passed, 13 failed" on the base with the same four outputs
+  [H31:26], and the coordinator's note gives the thirteen `test_l4e9` failures as the reason the candidate merged set 31
+  (`<worktrees>/_runs/claude/dgate/INBOX.md`). This draft ran no suite.
 
 ## 3. Part three: review evidence
 
@@ -191,7 +199,8 @@ names, every count this file states, and each other-branch citation where that c
   rejection into an independently accepted design by self-signing" [CONST:56]).
 - F3.5 Every commit between the reviewed revision and Slot D's base is classified from its diff, five bindings or presentation and
   six substantive, every substantive one narrowing a claim [I30:36-56], as part 25 asks [OWN:844].
-- F3.6 The supplier annex's revised scope was accepted by the owner's reviewer, "not independent approval of the circuitry" [OWN:502].
+- F3.6 The owner's review of the annex (part 20) found that "The revised annex now fits the clarified engineering-handover purpose."
+  [OWN:498], "not independent approval of the circuitry" [OWN:502].
 
 **Against (5).**
 
@@ -206,8 +215,8 @@ names, every count this file states, and each other-branch citation where that c
 - A3.4 Five checks the records cite are not filed in the tree: V2RG, V2RF and V2R are "the integrator's" to file [E11R:7], [E11R:23],
   [E11R:38]; record l8p's V1 and V2 are read only through its own text [BRK:778-779].
 - A3.5 The eFuse record's round 2 says it has no independent check ("round 2 has none" [EFS:213]) while the P0 row that carries round 2
-  reads "CONFIRMED AS CONDITIONAL" in cx45 [CX45:10] and cx46 [CX46:191]; a reader cannot tell from the tree which drafts the two
-  checks read.
+  reads "CONFIRMED AS CONDITIONAL" in cx45 [CX45:10] and in cx46's summary [CX46:10] (cx46 item 16, "CLOSED AS CONDITIONAL"
+  [CX46:191]); a reader cannot tell from the tree which drafts the two checks read.
 
 ## 4. Part four: outstanding supplier work clearly scoped
 
@@ -249,7 +258,7 @@ names, every count this file states, and each other-branch citation where that c
 - A4.4 P0-8, E11-37 (the charger's gate drive into three FETs), is scoped only in the P0 list and L4-E11: "E11-37 STAYS OPEN"
   [E11:1459]; its row names TI's answer Q-TI-17, UNSENT [P0L:25]; the annex names E11-37 only as left open after route (R1) [ANX:73],
   and the ledger has no item for it.
-- A4.5 The lower-source back-feed is placed two ways (section 5, K-24): cx46 counts it among E-1's retained cases [CX46:95]; the
+- A4.5 The lower-source back-feed is placed two ways (section 5, K-23): cx46 counts it among E-1's retained cases [CX46:95]; the
   records carry it as S1's added row (b), a validation run [P11:120-123], while part 23 asks S1 to carry D-10's engineering, not to
   present it as an unperformed test [OWN:680].
 - A4.6 Three items leave a choice the package does not make: HO-E's task is "a hardware bar on VOS0 or its acceptance" [REM:478],
@@ -258,14 +267,42 @@ names, every count this file states, and each other-branch citation where that c
 
 **What a receiving company could not scope from the package as it stands at the base:** E11-37's task (A4.4); whether the back-feed
 is engineering or validation (A4.5); HO-E's choice between a bar and an acceptance (A4.6); the reproduction of L4-E9 and of record
-l4e7's cache until 2b and the re-key land (A2.2, A2.3); the verdicts of the five unfiled checks (A3.4); and Slot I's four
-disagreements, which no committed file holds (section 5, left out).
+l4e7's cache until 2b and the re-key land (A2.2, A2.3); and the verdicts of the five unfiled checks (A3.4).
+
+**The items handed over, with the acceptance each record states** (the ledger's nineteen remaining-engineering items and the annex's
+four; the acceptance column quotes the ledger or the annex, which cite their records; no limit is set here):
+
+| Item | Class | The task's acceptance, as stated | Source |
+|---|---|---|---|
+| RE-1 | remaining engineering | none of engineering: the P0 list's states read from the records | [REM:105-106] |
+| RE-2 | remaining engineering | V-PA-REF "VFB within 0.5445 to 0.5555 V"; B-PA1 "at most 6.351 A less the lab's expanded uncertainty (k = 2)"; B-PA2 "no overshoot over 6.926 A at each key" | [REM:145-150] |
+| RE-4 | remaining engineering | "every ground branch inside its printed rating over every permitted aged-contact corner" | [REM:189-190] |
+| RE-5 | remaining engineering | CON-004's quorum service under every row of the fault table, a diagnostic with "a bounded detection/response interval, including faults that arise after startup and faults affecting the diagnostic itself" | [REM:221-224] |
+| RE-6 | remaining engineering | "125 C for every sustained state, 150 C only for a transient hardware ends" | [REM:252-255] |
+| RE-7 | remaining engineering | the same criterion "over tolerances and repeated faults, including measurement uncertainty where evidence is physical" | [REM:283-286] |
+| RE-8 | remaining engineering | "V-B20 in its bounded state at most 0.2183 A (the rail trip's least) and its rows re-solved" | [REM:310-311] |
+| RE-9 | remaining engineering | L4-E11's windows: "the held reading under 0.7755 V, the powered reading at most 1.981 V, RET/OUT at 0.4707 or more" | [REM:336-338] |
+| RE-10 | remaining engineering | "C-PROT rev 1, every series part within its limits below and above the trip" | [REM:368-369] |
+| RE-13 | remaining engineering | no limit of its own: "Re-run the connected trace after each of the seven rows is closed by its own task." | [REM:390] |
+| RE-17 | remaining engineering | no limit of its own: those of HO-A to HO-E | [REM:406] |
+| RE-18 | remaining engineering | none in the baseline: HO-G only if a presence-pair route is taken up again | [REM:426-427] |
+| HO-A | remaining engineering | as RE-10 | [REM:442] |
+| HO-B | remaining engineering | "against C-PROT rev 1 and the FETs' 150 C" | [REM:451] |
+| HO-C | remaining engineering | as RE-5 | [REM:460] |
+| HO-D | remaining engineering | as RE-5 and RE-6 | [REM:470] |
+| HO-E | remaining engineering | "the controller inside its printed VOS0 junction limit in every state the design serves" (or an acceptance, A4.6) | [REM:481] |
+| HO-F | remaining engineering | S1 on the corrected circuit: "PV_F under 80 V and under 90 V always, INP under 18 V, slew under 54 V/us" | [REM:502-505] |
+| HO-G | remaining engineering | none in the baseline; only for a presence-pair route taken up again | [REM:517] |
+| U-01 | external architecture fact | the kit's "10 A continuous, 18 A for 60 s and 20 A for 2 s" at its temperatures, by Saft's statement or the one-cell screen | [ANX:85-86], [ANX:89-94] |
+| U-02 | external architecture fact | each mode's reading at or above its pass line (T-H1) | [ANX:28-37] |
+| U-04 | external architecture fact | R-161's limits, "pack absent VSYS at least 12.054 V" and "D2's step within 2.054 V" | [ANX:77-79] |
+| E11-29 | qualification | "Zw at most 37.59 K/W, R17 at most 0.294 K/W, the pours 0.1 mOhm" | [ANX:105] |
 
 ## 5. The contradictions still standing between records (K-01 to K-28)
 
 The list has 28 entries; 17 read YES in the column Stumble (would a receiving company stumble on it in the candidate as the merge
-`6fe398e9` of set 31 leaves it: an instruction, a state, a limit or an identifier that two records give differently). This draft settles none. Sources: Slot F's
-C1 to C9 [S8:466-488]; Slot G's C-1 to C-5 [PC:292-296] (its PC-01 to PC-16 are in the table after this one); Slot H's
+`6fe398e9` of set 31 leaves it: an instruction, a state, a limit or an identifier that two records give differently; the reading is
+this draft's, SESSION, for the coordinator to keep or change). This draft settles none. Sources: Slot F's C1 to C9 [S8:466-488]; Slot G's C-1 to C-5 [PC:292-296] (its PC-01 to PC-16 are in the table after this one); Slot H's
 not-reconciled list, which holds five bullets [H31:105-113] (the brief counted four); Slot D's four [I30:94-109]; the draft Slot I
 folded [LS30:135-169]; the ledger's section 6, A to F [REM:621-639].
 
@@ -332,8 +369,8 @@ state at the base or on the candidate in brackets):
 - Y1. The editable sources compose and regenerate on the integrated revision as on the base [CON:365-374] (true at the base; owed on
   `<INTEGRATED-SHA>`).
 - Y2. Each contradiction of section 5 that reads YES is either resolved or carried in the package with both citations, so that a
-  receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES on the candidate; none is
-  carried in a page a receiving company reads first).
+  receiving company meets it as a named item and not as a silent difference [CONST:21] (17 stand at YES on the candidate; each is
+  named in at least one record or draft, and this draft found no single page that lists them for a receiving company).
 - Y3. The calculations reproduce from the repository plus the named fetches and the named box jobs, with every pin current: L4-E9's
   four pins [L4O:55] and record l4e7's key [SOLO:31] (both owed at the base).
 - Y4. The review evidence is complete as given: the four checks filed, their negative verdicts kept [CX46:10], the method ended
@@ -373,18 +410,18 @@ state at the base or on the candidate in brackets):
 
 ## 7. The DESIGN gate, the coordinator's words (not this gate's)
 
-As the brief gives them, and as set 31's page writes them [PAGE31:1003] (on the candidate since the merge `6fe398e9`): criterion 1 CONDITIONAL, criterion 2 FAIL (open material
-defects after cx46, carried as REMAINING ENGINEERING), criterion 3 PASS, criterion 4 PASS, criterion 5 CONDITIONAL. Set 31's page
+As the brief gives them, and as set 31's page writes them [PAGE31:1003] (on the candidate since the merge `6fe398e9`): criterion 1
+CONDITIONAL, criterion 2 FAIL (open material defects after cx46, carried as REMAINING ENGINEERING), criterion 3 PASS, criterion 4 PASS, criterion 5 CONDITIONAL. Set 31's page
 says a PASS there is "the DESIGN gate's reading of that criterion on the desk package, never a closure, a qualification or a release"
 [PAGE31:1003]. None of these words is the DESK gate's verdict, and none is restated in sections 1 to 6.
 
 ## 8. What Layer 5's first task would inherit as PROVISIONAL inputs
 
 Layers 5 to 12 stay paused until the coordinator's DESK-gate verdict lets them advance ("After that scoped desk gate passes, advance to
-the next layer." [OWN:476];
-part 15 keeps Layers 5 to 12 paused except its named prerequisites [OWN:169]). Its first task would inherit, PROVISIONAL or OPEN:
+the next layer." [OWN:476]; part 15 keeps Layers 5 to 12 paused except its named prerequisites [OWN:169]). Its first task would inherit, PROVISIONAL or OPEN:
 
-- the PA interface texts IF-A-PA and IF-AD-HARNESS and the firmware row of the cap [T5R:51-56], on F01 / D-17 "PROVISIONAL" [F01:212-214];
+- the PA interface texts IF-A-PA and IF-AD-HARNESS and the firmware row of the cap [T5R:51-56], on F01 / D-17, PROVISIONAL
+  [F01:212-214];
 - the contract rows FW-B20 to FW-B22 and V-B20 to V-B23, a draft "UNAPPLIED: the integrator runs it" [HWFW:2], with "FW-B22
   PROVISIONAL" and "V-B23's 0.2 s withdrawn" [HWFW:10];
 - CON-004's quorum service OPEN and L9T5-F21 in IOHA section 12 [T10R:201-202], [T10:662-667];
@@ -400,8 +437,8 @@ part 15 keeps Layers 5 to 12 paused except its named prerequisites [OWN:169]). I
 - Slot D's evidence draft cites L4-E9's page at `1c6d56f5` lines (criteria at 937 to 943 [EVD:39-43]); at the base the same rows are
   [PAGE:966-970] and at set 31 [PAGE31:997-1001].
 - The counts of sections 1 to 5 and the list K-01 to K-28 are held by `test_dgate.py`; a change of either changes the test's reading.
-- The verdict placeholder appears once; the five completion claims are written as briefed; the design-gate words appear in section 7
-  only.
+- The verdict placeholder appears once as the verdict (and once, as code, in the header); the completion claims (the brief's five and
+  power-design closure) are written as briefed; the design-gate words appear in section 7 only.
 
 ## 10. Left out, and why
 
