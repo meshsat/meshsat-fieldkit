@@ -1,0 +1,7 @@
+Verbatim copies read by set 31's result record (v2/docs/records/int31/), MESHSAT-1357, 6 October 2026 (W39).
+Each file is the byte-for-byte content of the named path at main eff28be3b80f882db545a849b0da1def0217f63d (the follow-up commit
+after set 30's adoption), copied because that commit is not in this branch's history (fnd/res31 from f0748b49): a record reads
+its inputs from its own tree. Columns: copy; source path; git blob at eff28be3; sha256 of the copy.
+L4-DESK-GATE-ASSESSMENT-eff28be3.md	v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md	fc397cdd4b676f583297431bd6b7f4ec94bd5a1b	af96a29353b8b76807e4d5688c9341946ae85fed44a402dc31448f344a2190ad
+START-HERE-eff28be3.md	v2/docs/handover/START-HERE.md	edda1801b8623e3286e81b85330d129c1b521650	41004a934e1d382ca26692fb5e9d0b289dbc2bee12b8c59515f034bc423e4bd7
+SUPPLIER-HANDOVER-eff28be3.md	v2/docs/handover/supplier/SUPPLIER-HANDOVER.md	63c0916a826f678dfdf03ea7a03d2e32a5301692	b9b1ab8462cbbf3ae874125f712a6e3c853f84cc7759d64f81e0b8d0f7ef3ecb
