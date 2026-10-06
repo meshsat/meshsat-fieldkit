@@ -24,8 +24,8 @@ qualification is part of the work requested; nothing in this package waits for i
 Added 6 October 2026 under MESHSAT-1357. Where this section and a later one disagree, this section is the current statement.
 `path:N` is line N of that file at commit `6fe398e9` (`6fe398e9f624160429411e975c26564e553714d3`), the commit this section was written
 from; `:N` repeats the path cited just before it; a path beginning `records/` is under `v2/docs/records/`. The owner-instruction file
-is cited as `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:N`, line N at the tested revision `dd1aed00`: part 26's row, filed after
-`6fe398e9`, moved every later line of that file by one (dated note, W33, 6 October 2026). `dd1aed00d0a0a521063b5792550bc510c4707c59` is the
+is cited as `dd1aed00:v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:N`, line N at set 30's tested revision `dd1aed00`: part 26's row, filed after
+`6fe398e9`, moved every later line of that file by one (dated note, W33, 6 October 2026). `dd1aed00d0a0a521063b5792550bc510c4707c59` is set 30's
 promoted commit (main was fast-forwarded to it on 6 October 2026), filled in at the adoption. Prototype
 framing: nothing in the kit has been built, bought, powered or measured.
 
@@ -42,7 +42,7 @@ counts 24 commits that change what cx46 read or carry another row's change into 
 | Tested | `__CANDIDATE__` | set 31's promoted revision (set 30's was `dd1aed00d0a0a521063b5792550bc510c4707c59`, kept as dated history): the commit the gated release suite and the promotion gate ran on; the package's `README.md`, section "What was tested, and how", gives the suite's line and, where the packaged commit differs, every file changed between them (section 7, item 4) |
 | Adopted | `__ADOPTION__` | set 31's adoption commit, to which main was fast-forwarded after the promotion: the first revision of main that holds these pages and the set 31 records as adopted (set 30's was `836f711b406be48d9eb58c9cf6f7491fbcf7c5ec`, 6 October 2026, 11:25 CEST, kept as dated history) |
 | Packaged | the commit the supplier delta's README names in its header | cut after the adoption; the README states its difference from the tested revision and which checks cover it |
-| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check read a later revision (`records/int31/RESULT.md`, section 1) |
+| Reviewed | `4d0ff8a2` (`4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e`) | the candidate the one targeted recheck cx46 read (`records/l4close/CHECK-CX46-P0-RECHECK-4d0ff8a2-AS-RECEIVED.md:8`); its verdict as given: "P0 RECHECK: CORRECTIONS NOT CLOSED." (`:10`), "the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`records/int31/RESULT.md`, section 1) |
 | Earlier reviewed | `06077cee` (`06077cee85d0ed44c74c2a06c9fbb2030a0dedbc`) | the candidate the one focused check cx45 read (`records/l4close/CHECK-CX45-P0-CANDIDATE-06077cee-AS-RECEIVED.md:20`); its verdict as given: "P0 CANDIDATE: NOT CONFIRMED." (`:10`) |
 
 **The reviewed revision is not the packaged revision, and no verdict moves between them by itself.** The records adopted after the promotion (RESULT.md, CLASSIFICATION.md, the P0 list revision 3, the assessment, LAYER-STATUS and these pages) are committed on main after the tested commit, first as adopted in set 30's adoption commit `836f711b` (the Adopted row's dated history) and, for set 31's records, in set 31's adoption commit (the Adopted row); a page cannot carry the sha of the commit that packages it, so the supplier delta's README.md names the packaged commit (the Packaged row) and states its difference from the tested revision (6 October 2026). Dated note (W33, 6 October 2026): the Packaged row named `dd1aed00` until W32's read of the adoption, which found RESULT.md and these pages' section 0 first in the adoption's commits, not at `dd1aed00`. The owner's binding rule (part 25,
@@ -53,8 +53,8 @@ the software suite alone cannot transfer an engineering verdict to altered claim
 binds `4d0ff8a2` and `dd1aed00d0a0a521063b5792550bc510c4707c59`, and `records/int30/CLASSIFICATION.md` classifies every commit between them. Read each verdict
 as applying to the revision its checker read.
 
-**What the promoted revision is, and is not**, in the integration record's words (`records/int30/RESULT.md`, sections 1, 2 and 6):
-"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 103 commits of `dd1aed00..31928583`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the rows after `31928583` as that file gives them at the adoption.
+**What set 30's promoted revision is, and is not**, in the integration record's words (`records/int30/RESULT.md`, sections 1, 2 and 6):
+"a DESK candidate, not an accepted power design"; "Set 30 closes NO power item."; and after cx46 "the promoted revision carries 14 UNREVIEWED CHANGES", "never as checked, never credited, each owing its own targeted verification before any credit" (14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 
 ### 0b. The states, each apart
 
@@ -71,7 +71,7 @@ The Layer 4 record states five of the six apart: "power-design closure BLOCKED, 
 implemented NONE, physical qualification NONE" (`records/l4e9/L4-POWER-ARCHITECTURE.md:965`); every circuit change is a release-guarded
 draft: "None is APPLIED" (`:401`). The constitution keeps them apart: "A promoted integration set is none of those by itself."
 (`v2/docs/EXECUTION-CONSTITUTION.md:23`). **Two gates, not one.** Layer 4's DESK gate (the owner's part 19: sequential desk acceptance
-per layer) is assessed by the coordinator in `records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which records the coordinator's judgement on the
+per layer) is assessed by the coordinator in `records/l4close/L4-DESK-GATE-ASSESSMENT.md`, which records the coordinator's judgement on set 30's
 promoted revision, dated 6 October 2026, 10:45 CEST: the gate and the three completion claims of the constitution's section 2, each
 apart and in the coordinator's words:
 

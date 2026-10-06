@@ -1,9 +1,11 @@
 # Set 31: the entry pages' rows for the adoption (START-HERE.md and SUPPLIER-HANDOVER.md; MESHSAT-1357)
 
 **DONE:** 24 exact rows (S-01 to S-11 for `v2/docs/handover/START-HERE.md`, U-01 to U-13 for
-`v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`) that bring the two entry pages from set 30 to set 31. **NOT DONE:** nothing is
-applied; the pages are the coordinator's files. **NEXT:** at set 31's adoption the coordinator fills `__CANDIDATE__` and `__ADOPTION__`,
-applies the rows, and restates the tests that pin the replaced lines (on main: `test_entrypage.py` and `test_w30entry.py`).
+`v2/docs/handover/supplier/SUPPLIER-HANDOVER.md`) that bring the two entry pages from set 30 to set 31, applied to the two pages
+on branch fnd/adopt31 by worker W65 (queue item Q-84) with the tests that pin the replaced lines restated, and W68's findings applied
+to rows S-03, S-07, S-08, U-06 and U-07 by worker W69. **NOT DONE:** the values of the candidate commit and the adoption commit,
+which the freeze, the promotion and the adoption give. **NEXT:** at set 31's adoption the coordinator fills them line by line
+(`fill_res31.py`, the adoption commit in its second run); `test_adopt31.py` holds the pages to these rows.
 
 Drafted by worker W39 on branch fnd/res31 on 6 October 2026 for queue item Q-58. Record text only: it changes no state of the pages,
 accepts nothing and closes nothing; prototype framing: nothing in the kit has been built, bought, powered or measured.
@@ -18,7 +20,7 @@ inserts the lines after it. `test_res31.py` reads each row against the copies.
 promotion gate ran on (set 31's `__CANDIDATE__`, the candidate commit, which main is fast-forwarded to, as on set 30). Adopted: the adoption
 commit to which main is fast-forwarded after the promotion (`__ADOPTION__`). Packaged: the commit the next supplier delta's README names
 in its header, unchanged as a definition, so no row changes it. Reviewed: the candidate the last independent check read, `4d0ff8a2`
-(cx46), unchanged because no independent check read a later revision. The two placeholders are the only ones; the coordinator fills
+(cx46), unchanged because no independent check of the engineering read a later revision. The two placeholders are the only ones; the coordinator fills
 them from the promotion's log and the adoption commit.
 
 **Dated note (W65, 6 October 2026, at the rows' application on branch fnd/adopt31).** W39 drafted the rows with the PROMOTED token
@@ -74,7 +76,7 @@ accepts, closes or promotes a design claim.
 during set 30's integration (record l4e7's P0 pages, record l8p's release page, records l9t5's and l8r2's hand pages, the supplier
 validation annex, Layer 5's contract restatement, the filed patch rows applied to L4-E9's page, register and generator, the citation
 re-takes), regenerated to convergence, with the coordinator's items and two tooling corrections. "Set 31 closes NO power item."
-(`v2/docs/records/int31/RESULT.md`, section 6); no circuit draft, board generator or netlist changed.
+(`v2/docs/records/int31/RESULT.md`, section 6); no baseline circuit draft, board generator or netlist changed.
 ```
 Basis: `v2/docs/records/int31/RESULT.md`, sections 2 and 6; `v2/docs/records/int31/CLASSIFICATION.md`, section 2.
 
@@ -127,9 +129,9 @@ Old text:
 ```
 New text:
 ```text
-"the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check read a later revision (`v2/docs/records/int31/RESULT.md`, section 1) |
+"the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`v2/docs/records/int31/RESULT.md`, section 1) |
 ```
-Basis: `v2/docs/records/int31/RESULT.md`, section 1 (no independent check read `dd1aed00` or the lineage).
+Basis: `v2/docs/records/int31/RESULT.md`, section 1 (no independent check of the engineering read `dd1aed00` or the lineage; W48's recheck read W41's commit for W38's findings, `CLASSIFICATION.md`, section 2).
 
 ### S-08. `v2/docs/handover/START-HERE.md`, line 117: the unreviewed changes
 
@@ -139,7 +141,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 103 commits of `dd1aed00..31928583`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the rows after `31928583` as that file gives them at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`v2/docs/records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 ```
 Basis: `v2/docs/records/int31/CLASSIFICATION.md`, section 2.
 
@@ -257,7 +259,7 @@ Old text:
 ```
 New text:
 ```text
-"the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check read a later revision (`records/int31/RESULT.md`, section 1) |
+"the second negative on the method, which ends it" (`:3`); unchanged in set 31: no independent check of the engineering read a later revision (`records/int31/RESULT.md`, section 1) |
 ```
 Basis: as S-07.
 
@@ -269,7 +271,7 @@ Old text:
 ```
 New text:
 ```text
-(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 103 commits of `dd1aed00..31928583`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the rows after `31928583` as that file gives them at the adoption.
+(14 over the 45 commits of `4d0ff8a2..dd1aed00`; 13 of them in W15's range `4d0ff8a2..6bc4424e`). Set 31 adds its own: 24 commits that change what cx46 read or carry another row's change into a file of the reviewed tree (set 30's rule, reading A) over the 104 commits of `dd1aed00..aa332280`, each "UNREVIEWED since cx46" (`records/int31/CLASSIFICATION.md`, section 2), with the candidate commit's row after `aa332280` as that file gives it at the adoption.
 ```
 Basis: as S-08.
 
