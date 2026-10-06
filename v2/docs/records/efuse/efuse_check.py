@@ -52,6 +52,33 @@ MY_DRAFTS = {"b": ["v2/docs/records/efuse/apply_gen_sch_b_u23ilm.py", "v2/docs/r
              "a": ["v2/docs/records/efuse/apply_gen_sch_a_u23ilm.py"]}
 L4E12_OUT = "v2/docs/records/l4e12/l4e12_thermal.out"     # round 2 (V6-m4): the inside air the downstream ratings are read at
 ASSEMBLY_DRAFT = "v2/docs/records/efuse/apply_assembly_rb_pads.py"
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options. Each text is a
+# verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF (a held-back sheet's text is held
+# back with it); _lib/pdftext.py returns it byte for byte and refuses when it is absent, so this script never runs pdftotext.
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/efuse
+PDFTEXT = {
+    "v2/vendor/connectors/jst-ph-catalogue.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-sh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf": [["-layout"]],
+    "v2/vendor/power/ti-tps2595-efuse.pdf": [["-layout"]],
+    "v2/vendor/power/tps2596.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps1663-slvset9g.pdf": [["-layout"]],
+    "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-lm5069.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps2065c-slvsau6i.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps22810-load-switch.pdf": [["-layout"]],
+    "v2/vendor/ti/ti-tps25740.pdf": [["-layout"]],
+    "v2/vendor/ti/tps23861-datasheet.pdf": [["-layout"]],
+}
+
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(RECS, "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 
 # ------------------------------------------------------------------------------------------------------------ the sheets
 # key: (path in the tree, document and revision, held back (not in git), how to get it). TI's current download of every TI
@@ -191,8 +218,7 @@ def sheet_text(key):
         _TEXT[key] = None
         return None
     if p.endswith(".pdf"):
-        r = subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True)
-        t = r.stdout.decode("utf-8", "replace")
+        t = PT.pdf_text(ROOT, SHEETS[key][0], ["-layout"], PDFTEXT, "v2/docs/records/efuse")
     else:
         t = open(p, encoding="utf-8", errors="replace").read()
         if p.endswith(".html"):
@@ -1059,10 +1085,12 @@ def main():
     P("0. INPUTS (sha256/16)")
     ins = sorted(set(list(GEN.values()) + [GEN_NETLIST, L9PWR_OUT, L6R2_CAT, "v2/ecad/tools/lcsc_fill.py", "v2/docs/records/l6r2/apply_gen_sch_b_lcsc.py",
                       L4E12_OUT, ASSEMBLY_DRAFT, "v2/docs/ASSEMBLY.md"] + MY_DRAFTS["b"] + MY_DRAFTS["a"]
-                     + ["v2/docs/records/" + x for b in "abep" for x in ORDER[b]] + [v[0] for v in SHEETS.values()]))
+                     + ["v2/docs/records/" + x for b in "abep" for x in ORDER[b]] + [v[0] for v in SHEETS.values()]
+                     + [t for t, _h, _held in PT.inputs(ROOT, PDFTEXT)]))
     for p in ins:
         h = sha(p)
-        P("   %s %s" % (h, p) if h else "   ABSENT          %s (held back: %s)" % (p, next((v[3] for v in SHEETS.values() if v[0] == p), "")))
+        P("   %s %s" % (h, p) if h else "   ABSENT          %s (held back: %s)" % (p, next((v[3] for v in SHEETS.values() if v[0] == p),
+                                                                                "its sheet's fetch, then " + PT.retake_command("v2/docs/records/efuse"))))
     P("")
     P("1. THE SHEETS AND THE PRINTED FIGURES: every quote searched for in its sheet's own text layer (NFKC, white space collapsed)")
     for k, (path, doc, held, fetch) in sorted(SHEETS.items()):

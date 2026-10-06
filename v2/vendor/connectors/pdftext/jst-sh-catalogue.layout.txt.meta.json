@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/connectors/jst-sh-catalogue.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/connectors/jst-sh-catalogue.pdf",
+ "pdf_sha256": "ea3071ca5ee5a6069eba534fa39a10f34c9fb742ee42135a69ab4156bfa0f5de",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/connectors/pdftext/jst-sh-catalogue.layout.txt",
+ "text_bytes": 21792,
+ "text_sha256": "baa2cae8a4a97884cf3390b2c6f5a40818f882d408af4b4c82d44db2f82c6ffa"
+}

@@ -58,6 +58,22 @@ SOURCES = {
     "ra30": "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf",
 }
 HC5 = "v2/docs/records/hc5/check_contract_fields.py"
+# W34 (Q-41 item 1, adopted in set 32): the makers' PDFs this script reads as text, each with its pdftotext options. Each text is a
+# verbatim input taken once on the runner by v2/docs/records/_lib/retake_pdf_text.py beside its PDF; _lib/pdftext.py returns it byte
+# for byte and refuses when it is absent, so this script never runs pdftotext (section 0 prints each text's sha256 after the PDFs').
+# Re-take after a sheet changes: python3 v2/docs/records/_lib/retake_pdf_text.py v2/docs/records/l5r2
+PDFTEXT = {
+    "v2/vendor/connectors/jst-vh-catalogue.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf": [["-layout"]],
+    "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf": [["-layout"]],
+    "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf": [["-layout"]],
+    "v2/vendor/power/bourns-mf-msmf-pptc.pdf": [["-layout"]],
+    "v2/vendor/power/ltc2954.pdf": [["-layout"]],
+}
+_PTS = importlib.util.spec_from_file_location("records_pdftext", os.path.join(ROOT, "v2", "docs", "records", "_lib", "pdftext.py"))
+PT = importlib.util.module_from_spec(_PTS)
+_PTS.loader.exec_module(PT)
 EIGHT = ["IF-BC-PANEL", "IF-AB-RIBBON", "IF-AB-WALL", "IF-AD-HARNESS", "IF-AC-MAINSW", "IF-AE-RF", "IF-A-PA", "IF-LID-HF"]
 TOUCHED = EIGHT + ["IF-AE-DOCK", "IF-E-FANS", "IF-B-FANS", "IF-EXT-ETH", "IF-EXT-DC", "IF-A-CHASSIS"]
 CRITERIA = {
@@ -324,12 +340,7 @@ def read_source(rel):
         refuse("missing %s" % rel)
     raw = open(p, "rb").read()
     if rel.endswith(".pdf"):
-        if shutil.which("pdftotext") is None:
-            refuse("pdftotext is needed for %s" % rel)
-        r = subprocess.run(["pdftotext", "-layout", p, "-"], capture_output=True)
-        if r.returncode != 0:
-            refuse("pdftotext failed on %s" % rel)
-        return raw, r.stdout.decode("utf-8", "replace")
+        return raw, PT.pdf_text(ROOT, rel, ["-layout"], PDFTEXT, "v2/docs/records/l5r2")
     return raw, raw.decode("utf-8", "replace")
 
 
@@ -441,7 +452,8 @@ def compute():
         sys.exit(3)
     prov = [(e["id"], e["contract"], e["trigger"]) for e in T if "PROVISIONAL" in e["mark"]]
     by_crit = {c: [e["id"] for e in T if c in e["criteria"]] for c in CRITERIA}
-    return dict(pins=pins, copies=copies, before=before, after=after, gained=gained, noloss=noloss, rows=results, tbds=tbds,
+    pins_text = [(t, h) for t, h, _held in PT.inputs(ROOT, PDFTEXT)]
+    return dict(pins=pins, pins_text=pins_text, copies=copies, before=before, after=after, gained=gained, noloss=noloss, rows=results, tbds=tbds,
                 prov=prov, by_crit=by_crit, nfig=sum(len(e["figures"]) for e in T), ncon=len(new_cs), ncon0=len(old_cs))
 
 
@@ -468,6 +480,8 @@ def render(R):
     for k in list(TARGETS) + ["base_yaml", "base_hwfw"] + list(SOURCES) + ["hc5"]:
         rel, h = R["pins"][k]
         p("   %-10s %s  %s" % (k, h, rel))
+    for t, h in R["pins_text"]:
+        p("   %-10s %s  %s" % ("pdftext", h, t))
     for k, b in sorted(R["copies"].items()):
         p("   copied input %s: body sha256 %s, equal to the sha its header declares" % (k, b))
     p("")

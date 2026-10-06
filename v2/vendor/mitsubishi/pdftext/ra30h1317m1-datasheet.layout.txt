@@ -1,0 +1,711 @@
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+DESCRIPTION                                                              BLOCK DIAGRAM
+The RA30H1317M1 is a 30-watt RF MOSFET Amplifier Module for
+12.5-volt mobile radios that operate in the 135- to 175-MHz range.
+                                                                                         2              3
+The battery can be connected directly to the drain of the
+enhancement-mode MOSFET transistors.
+The output power and drain current increase as the gate voltage
+increases. With a gate voltage around 3.5V (minimum), output
+power and drain current increases substantially.                           1                                        4
+The nominal output power becomes available at 4V (typical) and 5V
+                                                                                                                    5
+(maximum). At VGG=5V, the typical gate current is 1 mA.
+This module is designed for non-linear FM modulation.
+
+FEATURES
+• Enhancement-Mode MOSFET Transistors                                      1    RF Input (Pin)
+  (IDD0 @ VDD=12.5V, VGG=0V)                                              2    Gate Voltage (VGG), Power Control
+• Pout>30W, T>40% @ VDD=12.5V, VGG=5V, Pin=50mW                           3    Drain Voltage (VDD), Battery
+• Broadband Frequency Range: 135-175MHz                                    4    RF Output (Pout)
+• Low-Power Control Current IGG=1mA (typ) at VGG=5V                        5    RF Ground (Case)
+• Module Size: 67 x 19.4 x 9.9 mm
+                                                                                             PACKAGE CODE: H2M
+
+RoHS COMPLIANCE
+• RA30H1317M1-201 is a RoHS compliant product.
+• RoHS compliance is indicate by the letter “G” after the Lot Marking.
+• This product include the lead in the Glass of electronic parts and the lead in
+  electronic Ceramic parts.
+  However, it is applicable to the following exceptions of RoHS Directions.
+   1.Lead in the Glass of a cathode-ray tube, electronic parts, and fluorescent tubes.
+   2.Lead in electronic Ceramic parts.
+
+
+
+
+ORDERING INFORMATION:
+      ORDER NUMBER                       SUPPLY FORM
+                                          Antistatic tray,
+      RA30H1317M1-201
+                                         10 modules/tray
+
+
+
+
+ Publication Date : Oct．2011
+                                                              1
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+
+
+MAXIMUM RATINGS (Tcase=+25°C, unless otherwise specified)
+SYMBOL PARAMETER                                        CONDITIONS                                RATING             UNIT
+   VDD       Drain Voltage                              VGG<5V, ZG=ZL=50                            17               V
+   VGG       Gate Voltage                               VDD<12.5V, Pin=50mW, ZG=ZL=50               6                V
+    Pin      Input Power                                                                            100              mW
+    Pout     Output Power                               f=135-175MHz, VGG<5V                         45               W
+ Tcase(OP)   Operation Case Temperature Range                                                    -30 to +100          °C
+    Tstg     Storage Temperature Range                                                           -40 to +110          °C
+The above parameters are independently guaranteed.
+
+
+ELECTRICAL CHARACTERISTICS (Tcase=+25°C, ZG=ZL=50, unless otherwise specified)
+SYMBOL PARAMETER                        CONDITIONS                                         MIN      TYP        MAX   UNIT
+     f       Frequency Range                                                               135        -        175   MHz
+   Pout      Output Power                                                                   30        -         -     W
+    T       Total Efficiency                                                               40        -         -     %
+                 nd
+    2fo      2        Harmonic          VDD=12.5V,VGG=5V,Pin=50mW                            -        -        -35   dBc
+                 rd
+    3fo      3 Harmonic                                                                      -        -        -45   dBc
+    in      Input VSWR                                                                      -        -        3:1    —
+   IGG       Leakage Current            VDD=12.5V,VGG=0V,Pin=0W                              -        -         1    mA
+                                        VDD=10.0-15.2V, Pin=25-70mW,                      No parasitic oscillation
+    —        Stability                                                                                                —
+                                        Pout<30W (VGG control), Load VSWR=3:1              More than –60dBc
+                                        VDD=15.2V, Pin=50mW, Pout=30W (VGG control),
+    —        Load VSWR Tolerance                                                         No degradation or destroy    —
+                                        Load VSWR=20:1
+
+
+
+All parameters, conditions, ratings, and limits are subject to change without notice.
+
+
+
+
+Publication Date : Oct．2011
+                                                                     2
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+TYPICAL PERFORMANCE (Tcase=+25°C, ZG=ZL=50, unless otherwise specified)
+
+
+
+                                                                      OUTPUT POWER, TOTAL EFFICIENCY,                                                                                                                                               2nd, 3rd HARMONICS versus FREQUENCY
+                                                                      and INPUT VSWR versus Frequency
+                                                     50                                                                         100                                                                                               -20
+                                                     45                                                                         90                                                                                                -25         VDD=12.5V
+                                                                           Pout                                                                                                                                                               VGG=5V
+                                                     40                                                                         80                                                                                                -30
+                                                                                                                                                                                                                                              Pin=50mW
+
+
+
+
+                                                                                                                                          Total Efficiency ηt(%)
+        Output Power Pout(W)
+                                Input VSWR ρin (-)
+
+
+
+
+                                                     35                                                                         70                                                                                                -35
+
+
+
+
+                                                                                                                                                                                                                Harmonics (dBc)
+                                                                                         ηｔ
+                                                     30                                                                         60                                                                                                -40
+                                                     25                                                                         50                                                                                                -45
+                                                     20                                                                         40                                                                                                -50
+                                                                                                        VDD=12.5V                                                                                                                                   2nd
+                                                     15                                                                         30                                                                                                -55
+                                                                                                        VGG=5V
+                                                     10                                                 Pin=50mW                20                                                                                                -60
+                                                                  ρin
+                                                      5                                                                         10                                                                                                                                                    3rd
+                                                                                                                                                                                                                                  -65
+                                                      0                                                                         0                                                                                                 -70
+                                                          130         140          150            160         170          180                                                                                                          130          140        150        160         170              180
+                                                                                  Frequency f(MHz)                                                                                                                                                              Frequency f(MHz)
+
+
+
+
+                                                                   OUTPUT POWER, POWER GAIN and                                                                                                                                                  OUTPUT POWER, POWER GAIN and
+                                                                  DRAIN CURRENT versus INPUT POWER                                                                                                                                              DRAIN CURRENT versus INPUT POWER
+                                                     50                                                                              10                                                                                            50                                                                        10
+                                                     45                                                                              9                                                                                             45                                                                        9
+                                                                                                                         Pout                                                                                                                                                                    Pout
+                                                                Gp
+                                                     40                                                                              8                                                                                             40                                                                        8
+   Output Power Pout(dBm)
+
+
+
+
+                                                                                                                                                                                     Output Power Pout(dBm)
+
+
+
+
+                                                                                                                                                                                                                                              Gp
+                               Power Gain Gp(dB)
+
+
+
+
+                                                                                                                                                                                                              Power Gain Gp(dB)
+
+
+
+
+                                                     35                                                                              7                                                                                             35                                                                        7
+                                                                                                                                                          Drain Current IDD(A)
+
+
+
+
+                                                                                                                                                                                                                                                                                                                  Drain Current IDD(A)
+                                                     30                                                                              6                                                                                             30                                                                        6
+                                                     25                                                                              5                                                                                             25                                                                        5
+                                                     20                                                                              4                                                                                             20                                                                        4
+                                                                IDD                                                                                                                                                                           IDD
+                                                     15                                                                              3                                                                                             15                                                                        3
+                                                                                                               f=135MHz                                                                                                                                                               f=155MHz
+                                                     10                                                        VDD=12.5V             2                                                                                             10                                                 VDD=12.5V              2
+                                                      5                                                        VGG=5V                1                                                                                              5                                                 VGG=5V                 1
+                                                      0                                                                              0                                                                                              0                                                                        0
+                                                          -10         -5           0          5          10         15          20                                                                                                      -10          -5     0          5         10         15          20
+                                                                                  Input Power Pin(dBm)                                                                                                                                                     Input Power Pin(dBm)
+
+
+                                                                   OUTPUT POWER, POWER GAIN and
+                                                                  DRAIN CURRENT versus INPUT POWER
+                                                     50                                                                              10
+                                                     45                                                                              9
+                                                                                                                         Pout
+                                                     40                                                                              8
+   Output Power Pout(dBm)
+
+
+
+
+                                                                Gp
+                               Power Gain Gp(dB)
+
+
+
+
+                                                     35                                                                              7
+                                                                                                                                                          Drain Current IDD(A)
+
+
+
+
+                                                     30                                                                              6
+                                                     25                                                                              5
+                                                     20                                                                              4
+                                                                IDD
+                                                     15                                                                              3
+                                                                                                               f=175MHz
+                                                     10                                                        VDD=12.5V             2
+                                                      5                                                        VGG=5V                1
+                                                      0                                                                              0
+                                                          -10         -5           0          5          10         15          20
+                                                                                  Input Power Pin(dBm)
+
+
+
+
+Publication Date : Oct．2011
+                                                                                                                                                                                 3
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+TYPICAL PERFORMANCE (Tcase=+25°C, ZG=ZL=50, unless otherwise specified)
+
+
+
+                                         OUTPUT POWER and DRAIN CURRENT                                                                                        OUTPUT POWER and DRAIN CURRENT
+                                               versus DRAIN VOLTAGE                                                                                                  versus DRAIN VOLTAGE
+                           50                                                             10                                                     50                                                            10
+                                    f=135MHz                                                                                                              f=155MHz
+                           45                                                             9                                                      45                                                            9
+                                    VGG=5V                             Pout                                                                               VGG=5V                             Pout
+                           40       Pin=50mW                                              8                                                      40       Pin=50mW                                             8
+    Output Power Pout(W)
+
+
+
+
+                                                                                                                          Output Power Pout(W)
+                                                                                               Drain Current IDD(A)
+
+
+
+
+                                                                                                                                                                                                                    Drain Current IDD(A)
+                           35                                                             7                                                      35                                                            7
+                           30                                                             6                                                      30                                                            6
+                                                                        IDD                                                                                                                         IDD
+                           25                                                             5                                                      25                                                            5
+                           20                                                             4                                                      20                                                            4
+                           15                                                             3                                                      15                                                            3
+                           10                                                             2                                                      10                                                            2
+                            5                                                             1                                                       5                                                            1
+                            0                                                             0                                                       0                                                            0
+                                2        4      6        8       10       12         14                                                               2        4      6        8       10       12        14
+                                                Drain Voltage VDD(V)                                                                                                  Drain Voltage VDD(V)
+
+
+
+                                         OUTPUT POWER and DRAIN CURRENT
+                                               versus DRAIN VOLTAGE
+                           50                                                             10
+                                    f=175MHz
+                           45                                                             9
+                                    VGG=5V                             Pout
+                           40       Pin=50mW                                              8
+    Output Power Pout(W)
+
+
+
+
+                                                                                               Drain Current IDD(A)
+
+
+
+
+                           35                                                             7
+                                                                               IDD
+                           30                                                             6
+                           25                                                             5
+                           20                                                             4
+                           15                                                             3
+                           10                                                             2
+                            5                                                             1
+                            0                                                             0
+                                2        4      6        8       10       12         14
+                                                Drain Voltage VDD(V)
+
+
+
+
+Publication Date : Oct．2011
+                                                                                                                      4
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+TYPICAL PERFORMANCE (Tcase=+25°C, ZG=ZL=50, unless otherwise specified)
+
+
+
+                                           OUTPUT POWER and DRAIN CURRENT                                                                                                 OUTPUT POWER and DRAIN CURRENT
+                                                   versus GATE VOLTAGE                                                                                                            versus GATE VOLTAGE
+                           50                                                                      10                                                     50                                                                     10
+                           45         f=135MHz                                                     9                                                      45         f=155MHz                                                    9
+                                      VDD=12.5V                           Pout                                                                                       VDD=12.5V                          Pout
+                           40                                                                      8                                                      40                                                                     8
+                                      Pin=50mW                                                                                                                       Pin=50mW
+    Output Power Pout(W)
+
+
+
+
+                                                                                                                                   Output Power Pout(W)
+                                                                                                        Drain Current IDD(A)
+
+
+
+
+                                                                                                                                                                                                                                      Drain Current IDD(A)
+                           35                                                                      7                                                      35                                                                     7
+                           30                                                          IDD         6                                                      30                                                                     6
+                                                                                                                                                                                                                     IDD
+                           25                                                                      5                                                      25                                                                     5
+                           20                                                                      4                                                      20                                                                     4
+                           15                                                                      3                                                      15                                                                     3
+                           10                                                                      2                                                      10                                                                     2
+                            5                                                                      1                                                       5                                                                     1
+                            0                                                                      0                                                       0                                                                     0
+                                2.5       3.0     3.5     4.0      4.5           5.0         5.5                                                               2.5       3.0     3.5     4.0      4.5          5.0         5.5
+                                                   Gate Voltage VGG(V)                                                                                                            Gate Voltage VGG(V)
+
+
+                                           OUTPUT POWER and DRAIN CURRENT
+                                                   versus GATE VOLTAGE
+                           50                                                                      10
+                           45         f=175MHz                                                     9
+                                      VDD=12.5V                          Pout
+                           40                                                                      8
+                                      Pin=50mW
+    Output Power Pout(W)
+
+
+
+
+                                                                                                        Drain Current IDD(A)
+
+
+
+
+                           35                                                                      7
+                                                                                       IDD
+                           30                                                                      6
+                           25                                                                      5
+                           20                                                                      4
+                           15                                                                      3
+                           10                                                                      2
+                            5                                                                      1
+                            0                                                                      0
+                                2.5       3.0     3.5     4.0      4.5           5.0         5.5
+                                                   Gate Voltage VGG(V)
+
+
+
+
+Publication Date : Oct．2011
+                                                                                                                               5
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+
+    OUTLINE DRAWING (mm)
+
+
+
+
+                                                          67±1
+
+                                                          60±1
+
+
+
+
+                                                                                         (3.26)
+                                                          49.8±1
+ 2-R2±0.5
+
+
+
+
+                                                                                                            18±1
+         19.4±1
+
+                  10.7±1
+
+
+
+
+                                                                                                  4±0.5
+                                          ① ②                      ③   ④        ⑤
+         15±1
+
+
+
+
+                                 12.5±1                                        0.6±0.2
+                                   17±1
+                                            44±1
+
+                                                   56±1                                           7.3±0.5
+                  3.1+0.6/-0.4
+
+
+
+
+                                                                                                            （9.9）
+                                                                                         （2.6）
+
+
+
+
+                                                                           1      RF Input (Pin)
+                                                                           2      Gate Voltage (VGG)
+                                                                           3      Drain Voltage (VDD)
+                                                                           4      RF Output (Pout)
+                                                                           5      RF Ground (Case)
+
+
+
+
+Publication Date : Oct．2011
+                                                                   6
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+
+ TEST BLOCK DIAGRAM
+
+                                                             Power                        DUT                           Spectrum
+                                                             Meter                                       5              Analyzer
+                                                                                  1   2         3    4
+
+
+
+                                                                         ZG=50                          ZL=50
+   Signal                      Pre-                        Directional                                            Directional                Power
+                 Attenuator                   Attenuator                                                                        Attenuator
+  Generator                   amplifier                     Coupler                                                Coupler                   Meter
+
+                                                                              C1          C2
+
+
+
+
+                                                                                 -                  +
+                                                                                 +                  -
+                                                                             DC Power           DC Power
+       C1, C2: 4700pF, 22uF in parallel                                      Supply VGG         Supply VDD
+
+
+
+
+                                                                                                                  1     RF Input (Pin)
+                                                                                                                  2     Gate Voltage (VGG)
+                                                                                                                  3     Drain Voltage (VDD)
+                                                                                                                  4     RF Output (Pout)
+                                                                                                                  5     RF Ground (Case)
+
+
+
+      EQUIVALENT CIRCUIT
+
+
+
+                                          2                                                     3
+
+
+
+
+                                                                                                                                                4
+  1
+                                                                                                                                                5
+
+
+
+
+Publication Date : Oct．2011
+                                                                             7
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+RECOMMENDATIONS and APPLICATION INFORMATION:
+Construction:
+ This module consists of a glass-epoxy substrate soldered onto a copper flange. For mechanical protection, a metal cap is
+ attached (which makes the improvement of RF radiation easy).            The MOSFET transistor chips are die bonded onto
+ metal, wire bonded to the substrate, and coated with resin. Lines on the substrate (eventually inductors), chip capacitors,
+ and resistors form the bias and matching circuits. Wire leads soldered onto the glass-epoxy substrate provide the DC and
+ RF connection.
+ Following conditions must be avoided:
+ a) Bending forces on the glass-epoxy substrate (for example, by driving screws or from fast thermal changes)
+ b) Mechanical stress on the wire leads (for example, by first soldering then driving screws or by thermal expansion)
+ c) Defluxing solvents reacting with the resin coating on the MOSFET chips (for example, Trichloroethylene)
+ d) ESD, surge, overvoltage in combination with load VSWR, and oscillation
+ESD:
+ This MOSFET module is sensitive to ESD voltages down to 1000V. Appropriate ESD precautions are required.
+Mounting:
+ A thermal compound between module and heat sink is recommended for low thermal contact resistance.
+ The module must first be screwed to the heat sink, then the leads can be soldered to the printed circuit board.
+ M3 screws are recommended with a tightening torque of 4.0 to 6.0 kgf-cm.
+Soldering and Defluxing:
+ This module is designed for manual soldering.
+ The leads must be soldered after the module is screwed onto the heat sink.
+ The temperature of the lead (terminal) soldering should be lower than 350°C and shorter than 3 second.
+ Ethyl Alcohol is recommend for removing flux. Trichloroethylene solvents must not be used (they may cause bubbles in
+ the coating of the transistor chips which can lift off the bond wires).
+Thermal Design of the Heat Sink:
+ At Pout=30W, VDD=12.5V and Pin=50mW each stage transistor operating conditions are:
+                      Pin       Pout      Rth(ch-case)   IDD @ T=40%     VDD
+        Stage
+                     (W)        (W)        (°C/W)             (A)         (V)
+            st
+          1          0.05        5.0         2.9             0.84
+           nd
+                                                                         12.5
+          2           5.0       30.0         0.7             5.16
+ The channel temperatures of each stage transistor Tch = Tcase + (VDD x IDD - Pout + Pin) x Rth(ch-case) are:
+      Tch1 = Tcase + (12.5V x 0.84A – 5.0W + 0.05W) x 2.9°C/W = Tcase + 16.1 °C
+      Tch2 = Tcase + (12.5V x 5.16A - 30.0W + 5.0W) x 0.7°C/W = Tcase + 27.7 °C
+
+    For long-term reliability, it is best to keep the module case temperature (Tcase) below 90°C. For an ambient
+    temperature Tair=60°C and Pout=30W, the required thermal resistance Rth (case-air) = ( Tcase - Tair) / ( (Pout / T ) - Pout +
+    Pin ) of the heat sink, including the contact resistance, is:
+    Rth(case-air) = (90°C - 60°C) / (30W/40% – 30W + 0.05W) = 0.67 °C/W
+ When mounting the module with the thermal resistance of 0.67 °C/W, the channel temperature of each stage transistor is:
+    Tch1 = Tair + 46.1 °C
+    Tch2 = Tair + 57.7 °C
+
+ The 175°C maximum rating for the channel temperature ensures application under derated conditions.
+
+Output Power Control:
+ By the gate voltage (VGG).
+ Around VGG=3.5V, the output power and drain current increases substantially.
+ Around VGG=4V (typical) to VGG=5V (maximum), the nominal output power becomes available.
+Oscillation:
+ To test RF characteristics, this module is put on a fixture with two bias decoupling capacitors each on gate and drain, a
+ 4.700 pF chip capacitor, located close to the module, and a 22 µF (or more) electrolytic capacitor.
+ When an amplifier circuit around this module shows oscillation, the following may be checked:
+ a) Do the bias decoupling capacitors have a low inductance pass to the case of the module?
+ b) Is the load impedance ZL=50?
+ c) Is the source impedance ZG=50?
+
+Publication Date : Oct．2011
+                                                                8
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+
+  ATTENTION:
+    1.High Temperature ; This product might have a heat generation while operation,Please take notice that have
+      a possibility to receive a burn to touch the operating product directly or touch the product until cold after switch
+      off. At the near the product,do not place the combustible material that have possibilities to arise the fire.
+    2.Generation of High Frequency Power ; This product generate a high frequency power. Please take notice
+      that do not leakage the unnecessary electric wave and use this products without cause damage for human and
+      property per normal operation.
+    3.Before use; Before use the product,Please design the equipment in consideration of the risk for human and
+      electric wave obstacle for equipment.
+
+
+  PRECAUTIONS FOR THE USE OF MITSUBISHI SILICON RF POWER DEVICES:
+   1. The specifications of mention are not guarantee values in this data sheet. Please confirm additional details
+     regarding operation of these products from the formal specification sheet. For copies of the formal
+     specification sheets, please contact one of our sales offices.
+
+    2.RA series products (RF power amplifier modules) and RD series products (RF power transistors) are designed
+      for consumer mobile communication terminals and were not specifically designed for use in other applications.
+      In particular, while these products are highly reliable for their designed purpose, they are not manufactured
+      under a quality assurance testing protocol that is sufficient to guarantee the level of reliability typically deemed
+      necessary for critical communications elements and In the application, which is base station applications and
+      fixed station applications that operate with long term continuous transmission and a higher on-off frequency
+      during transmitting, please consider the derating, the redundancy system, appropriate setting of the maintain
+      period and others as needed. For the reliability report which is described about predicted operating life time of
+      Mitsubishi Silicon RF Products , please contact Mitsubishi Electric Corporation or an authorized Mitsubishi
+      Semiconductor product distributor.
+
+    3. RD series products use MOSFET semiconductor technology. They are sensitive to ESD voltage therefore
+      appropriate ESD precautions are required.
+
+    4. In the case of use in below than recommended frequency, there is possibility to occur that the device is
+      deteriorated or destroyed due to the RF-swing exceed the breakdown voltage.
+
+    5. In order to maximize reliability of the equipment, it is better to keep the devices temperature low. It is
+      recommended to utilize a sufficient sized heat-sink in conjunction with other cooling methods as needed (fan,
+      etc.) to keep the channel temperature for RD series products lower than 120deg/C(in case of
+      Tchmax=150deg/C) ,140deg/C(in case of Tchmax=175deg/C) under standard conditions.
+
+    6. Do not use the device at the exceeded the maximum rating condition. In case of plastic molded devices, the
+      exceeded maximum rating condition may cause blowout, smoldering or catch fire of the molding resin due to
+      extreme short current flow between the drain and the source of the device. These results causes in fire or
+      injury.
+
+    7. For specific precautions regarding assembly of these products into the equipment, please refer to the
+      supplementary items in the specification sheet.
+
+    8. Warranty for the product is void if the products protective cap (lid) is removed or if the product is modified in
+      any way from it’s original form.
+
+    9. For additional “Safety first” in your circuit design and notes regarding the materials, please refer the last page
+      of this data sheet.
+
+    10. Please refer to the additional precautions in the formal specification sheet.
+
+
+
+
+Publication Date : Oct．2011
+                                                              9
+< Silicon RF Power Modules >
+
+RA30H1317M1
+RoHS Compliance, 135-175MHz 30W 12.5V 2 Stage Amp. For MOBILE RADIO
+
+
+
+                               Keep safety first in your circuit designs!
+    Mitsubishi Electric Corporation puts the maximum effort into making semiconductor products better and more
+    reliable, but there is always the possibility that trouble may occur with them. Trouble with semiconductors may lead
+    to personal injury, fire or property damage. Remember to give due consideration to safety when making your circuit
+    designs, with appropriate measures such as (i) placement of substitutive, auxiliary circuits, (ii) use of
+    non-flammable material or (iii) prevention against any malfunction or mishap.
+
+
+
+                                      Notes regarding these materials
+    •These materials are intended as a reference to assist our customers in the selection of the Mitsubishi
+      semiconductor product best suited to the customer’s application; they do not convey any license under any
+      intellectual property rights, or any other rights, belonging to Mitsubishi Electric Corporation or a third party.
+    •Mitsubishi Electric Corporation assumes no responsibility for any damage, or infringement of any third-party’s
+      rights, originating in the use of any product data, diagrams, charts, programs, algorithms, or circuit application
+      examples contained in these materials.
+    •All information contained in these materials, including product data, diagrams, charts, programs and algorithms
+      represents information on products at the time of publication of these materials, and are subject to change by
+      Mitsubishi Electric Corporation without notice due to product improvements or other reasons. It is therefore
+      recommended that customers contact Mitsubishi Electric Corporation or an authorized Mitsubishi Semiconductor
+      product distributor for the latest product information before purchasing a product listed herein.
+     The information described here may contain technical inaccuracies or typographical errors. Mitsubishi Electric
+     Corporation assumes no responsibility for any damage, liability, or other loss rising from these inaccuracies or
+     errors.
+     Please also pay attention to information published by Mitsubishi Electric Corporation by various means, including
+     the Mitsubishi Semiconductor home page (http://www.MitsubishiElectric.com/).
+    •When using any or all of the information contained in these materials, including product data, diagrams, charts,
+      programs, and algorithms, please be sure to evaluate all information as a total system before making a final
+      decision on the applicability of the information and products. Mitsubishi Electric Corporation assumes no
+      responsibility for any damage, liability or other loss resulting from the information contained herein.
+    •Mitsubishi Electric Corporation semiconductors are not designed or manufactured for use in a device or system
+      that is used under circumstances in which human life is potentially at stake. Please contact Mitsubishi Electric
+      Corporation or an authorized Mitsubishi Semiconductor product distributor when considering the use of a product
+      contained herein for any specific purposes, such as apparatus or systems for transportation, vehicular, medical,
+      aerospace, nuclear, or undersea repeater use.
+    •The prior written approval of Mitsubishi Electric Corporation is necessary to reprint or reproduce in whole or in part
+      these materials.
+    •If these products or technologies are subject to the Japanese export control restrictions, they must be exported
+      under a license from the Japanese government and cannot be imported into a country other than the approved
+      destination.
+     Any diversion or re-export contrary to the export control laws and regulations of Japan and/or the country of
+     destination is prohibited.
+    •Please contact Mitsubishi Electric Corporation or an authorized Mitsubishi Semiconductor product distributor for
+      further details on these materials or the products contained therein.
+
+
+
+
+© 2011 MITSUBISHI ELECTRIC CORPORATION. ALL RIGHTS RESERVED.
+Publication Date : Oct．2011
+                                                              10
+

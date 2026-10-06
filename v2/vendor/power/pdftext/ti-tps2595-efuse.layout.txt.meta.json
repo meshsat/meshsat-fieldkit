@@ -1,0 +1,16 @@
+{
+ "command": "pdftotext -layout v2/vendor/power/ti-tps2595-efuse.pdf -",
+ "held_back": false,
+ "options": [
+  "-layout"
+ ],
+ "pdf": "v2/vendor/power/ti-tps2595-efuse.pdf",
+ "pdf_sha256": "6a8b67ad925b6fa88d7f3fccd94a3fc4f7c8d3f8a22abecbdfdc3c33f63f0d25",
+ "pdftotext": "pdftotext version 22.12.0",
+ "poppler_data": "poppler-data 0.4.12-1",
+ "taken": "2026-10-06",
+ "taken_by": "v2/docs/records/_lib/retake_pdf_text.py",
+ "text": "v2/vendor/power/pdftext/ti-tps2595-efuse.layout.txt",
+ "text_bytes": 191818,
+ "text_sha256": "d39df42a2eb3280f6d1280d0d32a6efd547d154589b25cb873ce405f9d070500"
+}

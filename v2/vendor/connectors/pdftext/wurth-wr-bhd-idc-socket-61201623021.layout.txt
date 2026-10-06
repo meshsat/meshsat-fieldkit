@@ -1,0 +1,351 @@
+   Dimensions: [mm]
+
+
+                                                                  1
+                                 2,54 ±0,05
+
+
+
+
+                                                           2                                End
+                                                 2,54 ±0,05
+                                                                      Pl ±0,15
+
+
+
+
+                                                                                                                                                                              3,35 ±0,15
+                                                                                                                                                                                              2,3
+                                              3,45 ±0,15
+
+
+
+
+                                                                                                                     7,15 ±0,15
+                                                                                                                                  8,45 ±0,15
+                                                                                                         2,2
+
+
+
+
+                                                                                                                                                                                                                            6,9
+                                              Open                                                                                                                                 Close
+
+
+
+
+                                                                        L ±0,15
+                                                                                                           6,0
+                                                                                                                  7,0
+
+
+
+
+                                                           3,70 ±0,15
+
+
+
+
+Article Properties:                                                                                                                                                                                                                                                                                              CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+ Properties                                                                                                    Value                                         Unit
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+ Pins                                                                                                            16
+ Pin to Pin (Middle)                                                  Pl                                       17.78                                         mm
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                  Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                  EMC & Inductive Solutions
+ Length                                                               L                                          25                                          mm                                                                                   Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                  74638 Waldenburg                                                                                                                                                  61201623021
+                                                                                                                                                                                                                                                  Germany
+                                                                                                                                                                                                                                                  Tel. +49 (0) 79 42 945 - 0                                     SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                  www.we-online.com
+                                                                                                                                                                                                                                                  eiSos@we-online.com                                            with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          1/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+Kind Properties:
+ Properties                                                                                                                                   Value                                                                        Unit
+ Pitch                                                               P                                                                         2.54                                                                        mm
+ Durability                                                                                                                          30 Mating cycles
+
+Material Properties:
+ Insulator Material                                                                                                                            PBT
+ Insulator Flammability Rating                                                                                                             UL94 V-0
+ Insulator Color                                                                                                                              Black
+ Contact Material                                                                                                                       Copper Alloy
+ Contact Plating                                                                                                                       Selective Gold
+ Contact Type                                                                                                                              Stamped
+
+General Information:
+ Operating Temperature                                                                                                             -40 up to +105 °C
+
+Electrical Properties:
+ Properties                                                                   Test conditions                                                                         Value                                   Unit         Tol.
+ Rated Current                                                       IR                                                                                                   1                                     A         max.
+ Working Voltage                                                                                                                                                       250                                  V (AC)
+ Withstanding Voltage                                                         1 min                                                                                    500                                  V (AC)
+ Contact Resistance                                                  R                                                                                                   20                                   mΩ          max.
+ Insulation Resistance                                             RISO                                                                                               1000                                    MΩ           min.
+
+Certification:
+ RoHS Approval                                                                                                       Compliant [2011/65/EU&2015/863]
+ REACh Approval                                                                                                     Conform or declared [(EC)1907/2006]
+ Halogen Free                                                                                                                Conform [JEDEC JS709B]
+ UL Approval                                                                                                                               E323964
+
+
+
+
+                                                                                                                                                                                                                                                                                                                 CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+
+
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                  Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                  EMC & Inductive Solutions
+                                                                                                                                                                                                                                                  Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                  74638 Waldenburg                                                                                                                                                  61201623021
+                                                                                                                                                                                                                                                  Germany
+                                                                                                                                                                                                                                                  Tel. +49 (0) 79 42 945 - 0                                     SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                  www.we-online.com
+                                                                                                                                                                                                                                                  eiSos@we-online.com                                            with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          2/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+   Dimensions: [mm]
+                                                                                                                                                                                                                                                                                                                                                                                                                Cover
+
+
+
+
+                                                                                                                                                                                                W2 TRA
+
+                                                                                                                                                                                                           W1 TRA
+
+                                                                                                                                                                                                                       W TRA
+                                                                                                                                                                                                                                                                                                                         A
+
+                                                                                                                                                                                                                                                                                                                                                       Tray
+
+
+
+                                                                                                                                                                                                                                                                                                                                          detail A                                                                                   Row cavity
+
+
+
+
+                                                                                                                                                                                                                                                     H TRA
+                                                                                                       L1 TRA
+
+                                                                                                        L TRA
+                                                                                                                                                                                                                                                                                                                                       Embossment
+
+    NB: Actual packaging may slightly differ from datasheet
+                                                                                                                                                                                                                     Packaging
+                 LTRA (mm)                        L1TRA (mm)                      WTRA (mm)                        W1TRA (mm)                       W2TRA (mm)                      HTRA (mm)                                                         Material
+                                                                                                                                                                                                                     Unit
+                 typ.                             typ.                            typ.                             typ.                             typ.                            typ.                             pcs.
+                 310                              280                             273                              224,79                           20,44                           7                                66                               Plastic
+
+
+
+
+                                                                                                                                                                                                                                                                                                                 CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+
+
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                  Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                  EMC & Inductive Solutions
+                                                                                                                                                                                                                                                  Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                  74638 Waldenburg                                                                                                                                                  61201623021
+                                                                                                                                                                                                                                                  Germany
+                                                                                                                                                                                                                                                  Tel. +49 (0) 79 42 945 - 0                                     SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                  www.we-online.com
+                                                                                                                                                                                                                                                  eiSos@we-online.com                                            with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          3/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+   Packaging Specification - Tray and Carton: [mm]
+
+
+
+
+                                                                                                                                                                                                           HC
+                                                                                                                W
+                                                                                                                     C
+                                                                                                                                                                                     L C
+
+
+
+    NB: Actual packaging may slightly differ from datasheet
+
+                                                                                                                                                    No. of                                     Packaging
+                 LC (mm)                                    WC (mm)                                     HC (mm)                                                                                                                            Material
+                                                                                                                                                    tray                                       Unit
+                 typ.                                       typ.                                        typ.                                        tra.                                       pcs.
+                 322                                        285                                         350                                         44                                         2904                                        Paper
+
+
+
+
+                                                                                                                                                                                                                                                                                                                 CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+
+
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                   Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                   EMC & Inductive Solutions
+                                                                                                                                                                                                                                                   Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                   74638 Waldenburg                                                                                                                                                 61201623021
+                                                                                                                                                                                                                                                   Germany
+                                                                                                                                                                                                                                                   Tel. +49 (0) 79 42 945 - 0                                    SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                   www.we-online.com
+                                                                                                                                                                                                                                                   eiSos@we-online.com                                           with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          4/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+Cautions and Warnings:                                                                                                                                                                                                                     Potting and Coating:
+
+                                                                                                                                                                                                                                           • If the product is potted in the customer application, the potting material might shrink or expand during and after hardening. Shrinking
+The following conditions apply to all goods within the product series of the Connectors of                                                                                                                                                   could lead to an incomplete seal, allowing contaminants into the components. Expansion could damage the components. We
+Würth Elektronik eiSos GmbH & Co. KG:                                                                                                                                                                                                        recommend a manual inspection after potting or coating to avoid these effects.
+
+General:                                                                                                                                                                                                                                   Storage Conditions:
+
+• This mechanical component is designed and manufactured for use in general electronic equipment.                                                                                                                                          • A storage of Würth Elektronik products for longer than 12 months is not recommended. Within other effects, the terminals may suffer
+• Würth Elektronik must be asked for written approval (following the PPAP procedure) before incorporating the components into any                                                                                                            degradation, resulting in bad solderability. Therefore, all products shall be used within the period of 12 months based on the day of
+  equipment in fields such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control,                                                                                                  shipment.
+  ship control), transportation signal, disaster prevention, medical, public information network, etc. where higher safety and reliability are                                                                                             • Do not expose the components to direct sunlight.
+  especially required and/or if there is the possibility of direct damage or human injury.                                                                                                                                                 • The storage conditions in the original packaging are defined according to DIN EN 61760-2.
+• Mechanical components that will be used in safety-critical or high-reliability applications, should be pre-evaluated by the customer.                                                                                                    • The storage conditions stated in the original packaging apply to the storage time and not to the transportation time of the components.
+• The mechanical component is designed and manufactured to be used within the datasheet specified values. If the usage and operation
+  conditions specified in the datasheet are not met, the component may be damaged or dissolved.                                                                                                                                            Packaging:
+• Do not drop or impact the components, the component may be damaged.
+• Prevent any damage or scratches on the component, especially on the actuator.                                                                                                                                                            • The packaging specifications apply only to purchase orders comprising whole packaging units. If the ordered quantity exceeds or is
+• Direct mechanical impact to the product shall be prevented (e.g overlapping of the PCB´s).                                                                                                                                                 lower than the specified packaging unit, packaging in accordance with the packaging specifications cannot be ensured.
+• Würth Elektronik products are qualified according to international standards, which are listed in each product reliability report. Würth
+  Elektronik does not warrant any customer qualified product characteristics beyond Würth Elektroniks’ specifications, for its validity and                                                                                                Handling:
+  sustainability over time.
+• The responsibility for the applicability of the customer specific products and use in a particular customer design is always within the                                                                                                  • Do not repeatedly operate the component with excessive force. It may damage or deform the component resulting in malfunction.
+  authority of the customer. All technical specifications for standard products do also apply to customer specific products.                                                                                                               • In the case a product requires particular handling precautions, in addition to the general recommendations mentioned here before, these
+• The mechanical component is designed to be used along with Würth Elektronik counterparts and tools. Würth Elektronik cannot ensure                                                                                                         will appear on the product datasheet.
+  the reliability of these components while being used with other products.                                                                                                                                                                • The temperature rise of the component must be taken into consideration. The operating temperature is comprised of ambient
+                                                                                                                                                                                                                                             temperature and temperature rise of the component.The operating temperature of the component shall not exceed the maximum
+Product Specific:                                                                                                                                                                                                                            temperature specified.
+
+Soldering:                                                                                                                                                                                                                                 These cautions and warnings comply with the state of the scientific and technical knowledge and are believed to be accurate and reliable.
+                                                                                                                                                                                                                                           However, no responsibility is assumed for inaccuracies or incompleteness.
+• The solder profile must comply with the technical product specifications. All other profiles will void the warranty.
+• All other soldering methods are at the customers’ own risk.
+
+Cleaning and Washing:
+• Washing agents used during the production to clean the customer application might damage or change the characteristics of the
+  component, body, pins and termination. Washing agents may have a negative effect on the long-term functionality of the product.
+• Using a brush during the cleaning process may deform function relevant areas. Therefore, we do not recommend using a brush during
+  the PCB cleaning process.
+
+
+
+                                                                                                                                                                                                                                                                                                                 CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+
+
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                  Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                  EMC & Inductive Solutions
+                                                                                                                                                                                                                                                  Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                  74638 Waldenburg                                                                                                                                                  61201623021
+                                                                                                                                                                                                                                                  Germany
+                                                                                                                                                                                                                                                  Tel. +49 (0) 79 42 945 - 0                                     SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                  www.we-online.com
+                                                                                                                                                                                                                                                  eiSos@we-online.com                                            with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          5/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+Important Notes                                                                                                                                                                                                                            6. Product Life Cycle
+
+                                                                                                                                                                                                                                           Due to technical progress and economical evaluation we also reserve the right to discontinue production and delivery of products. As a
+The following conditions apply to all goods within the product range of Würth Elektronik                                                                                                                                                   standard reporting procedure of the Product Termination Notification (PTN) according to the JEDEC-Standard we will inform at an early stage
+eiSos GmbH & Co. KG:                                                                                                                                                                                                                       about inevitable product discontinuance. According to this we cannot guarantee that all products within our product range will always be
+                                                                                                                                                                                                                                           available. Therefore it needs to be verified with the field sales engineer or the internal sales person in charge about the current product
+1. General Customer Responsibility                                                                                                                                                                                                         availability expectancy before or when the product for application design-in disposal is considered. The approach named above does not
+                                                                                                                                                                                                                                           apply in the case of individual agreements deviating from the foregoing for customer-specific products.
+Some goods within the product range of Würth Elektronik eiSos GmbH & Co. KG contain statements regarding general suitability for certain
+application areas. These statements about suitability are based on our knowledge and experience of typical requirements concerning the                                                                                                     7. Property Rights
+areas, serve as general guidance and cannot be estimated as binding statements about the suitability for a customer application. The
+responsibility for the applicability and use in a particular customer design is always solely within the authority of the customer. Due to this                                                                                            All the rights for contractual products produced by Würth Elektronik eiSos GmbH & Co. KG on the basis of ideas, development contracts as
+fact it is up to the customer to evaluate, where appropriate to investigate and decide whether the device with the specific product                                                                                                        well as models or templates that are subject to copyright, patent or commercial protection supplied to the customer will remain with Würth
+characteristics described in the product specification is valid and suitable for the respective customer application or not.                                                                                                               Elektronik eiSos GmbH & Co. KG. Würth Elektronik eiSos GmbH & Co. KG does not warrant or represent that any license, either expressed or
+                                                                                                                                                                                                                                           implied, is granted under any patent right, copyright, mask work right, or other intellectual property right relating to any combination,
+2. Customer Responsibility related to Specific, in particular Safety-Relevant Applications                                                                                                                                                 application, or process in which Würth Elektronik eiSos GmbH & Co. KG components or services are used.
+
+It has to be clearly pointed out that the possibility of a malfunction of electronic components or failure before the end of the usual lifetime                                                                                            8. General Terms and Conditions
+cannot be completely eliminated in the current state of the art, even if the products are operated within the range of the specifications.
+In certain customer applications requiring a very high level of safety and especially in customer applications in which the malfunction or                                                                                                 Unless otherwise agreed in individual contracts, all orders are subject to the current version of the “General Terms and Conditions of Würth
+failure of an electronic component could endanger human life or health it must be ensured by most advanced technological aid of suitable                                                                                                   Elektronik eiSos Group”, last version available at www.we-online.com.
+design of the customer application that no injury or damage is caused to third parties in the event of malfunction or failure of an electronic
+component. Therefore, customer is cautioned to verify that data sheets are current before placing orders. The current data sheets can be
+downloaded at www.we-online.com.
+
+3. Best Care and Attention
+Any product-specific notes, cautions and warnings must be strictly observed. Any disregard will result in the loss of warranty.
+
+4. Customer Support for Product Specifications
+Some products within the product range may contain substances which are subject to restrictions in certain jurisdictions in order to serve
+specific technical requirements. Necessary information is available on request. In this case the field sales engineer or the internal sales
+person in charge should be contacted who will be happy to support in this matter.
+
+5. Product R&D
+Due to constant product improvement product specifications may change from time to time. As a standard reporting procedure of the
+Product Change Notification (PCN) according to the JEDEC-Standard inform about minor and major changes. In case of further queries
+regarding the PCN, the field sales engineer or the internal sales person in charge should be contacted. The basic responsibility of the
+customer as per Section 1 and 2 remains unaffected.
+
+
+                                                                                                                                                                                                                                                                                                                 CHECKED              REVISION            DATE (YYYY-MM-DD)           GENERAL TOLERANCE                          PROJECTION
+                                                                                                                                                                                                                                                                                                                                                                                                                                 METHOD
+                                                                                                                                                                                                                                                                                                                 MPI                  002.000             2022-08-30                  DIN ISO 2768-1m
+
+                                                                                                                                                                                                                                                                                                                 DESCRIPTION
+
+
+                                                                                                                                                                                                                                                                                                                 WR-BHD Female IDC Connector
+                                                                                                                                                                                                                                                  Würth Elektronik eiSos GmbH & Co. KG
+                                                                                                                                                                                                                                                                                                                                                                                                                    ORDER CODE
+                                                                                                                                                                                                                                                  EMC & Inductive Solutions
+                                                                                                                                                                                                                                                  Max-Eyth-Str. 1
+                                                                                                                                                                                                                                                  74638 Waldenburg                                                                                                                                                  61201623021
+                                                                                                                                                                                                                                                  Germany
+                                                                                                                                                                                                                                                  Tel. +49 (0) 79 42 945 - 0                                     SIZE/TYPE                                                            BUSINESS UNIT                 STATUS                                         PAGE
+                                                                                                                                                                                                                                                  www.we-online.com
+                                                                                                                                                                                                                                                  eiSos@we-online.com                                            with Strain Relief, 2.54 mm                                          eiCan                         Valid                                          6/6
+
+This electronic component has been designed and developed for usage in general electronic equipment only. This product is not authorized for use in equipment where a higher safety standard and reliability standard is especially required or where a failure of the product is reasonably expected to cause severe personal injury or death, unless the parties have executed an agreement specifically governing such use. Moreover Würth Elektronik eiSos GmbH
+& Co KG products are neither designed nor intended for use in areas such as military, aerospace, aviation, nuclear control, submarine, transportation (automotive control, train control, ship control), transportation signal, disaster prevention, medical, public information network etc.. Würth Elektronik eiSos GmbH & Co KG must be informed about the intent of such usage before the design-in stage. In addition, sufficient reliability evaluation checks for safety
+must be performed on every electronic component which is used in electrical circuits that require high safety and reliability functions or performance.
+
