@@ -3,11 +3,16 @@
 to the tree by this record; its author ran it only on scratch copies (the tests write scratch copies).
 
 Board A's half of the pack breaker's make-last enable loop (record l9stk section 15.4, C-1b, and 15.5, THE THERMAL GUARD,
-SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb). The loop
+SELECTED; owners "board A's generator with L4-E11 for the PTC beside the battery FETs"; branch fnd/l9stk at 2c8b29fb, unchanged at 0d72880b). The loop
 from board P crosses the dock on two contacts and passes, on this board, the kit's PRF15BB103 chip PTC on the battery FETs'
-copper: 10 kOhm +-50 % cold, 47 kOhm at 130 +-3 C, 32 V. The first inverter on board P stays on to 47 kOhm at 10.6 V and is off
-from 338 kOhm at 16.8 V, so the breaker opens between the PTC's 47 kOhm point (127 to 133 C) and its 338 kOhm point (E-13), a
-guard against the battery FETs' installed path never being met, unit by unit.
+copper. Murata prints for PRF15BB103RB6RC (DM-SA16-E056 Rev.1 201608, 3.1, p.4): 10 kOhm +-50 % at 25 C, 100 kOhm at a sensing
+temperature over 110 C, 4.7 MOhm at 130 +-3 C, 32 V. The first inverter on board P is surely off from 341.2 kOhm at 16.8 V (the
+loop's parts at 1 %), so the breaker is off before the PTC's copper passes 133 C: a guard against the battery FETs' installed path
+never being met, unit by unit. Its no-trip side is NOT printed (finding L8P-F07, OPEN: L8P-BREAKER.md section 12j; E-13): the
+guard's design is record l9stk's next round, and this draft draws the part that record selected.
+(Rounds 1 to 5 quoted record l9stk 15.5 here, a 47 kOhm point at 130 +-3 C and a trip between it and a 338 kOhm point: that
+column of Murata's table belongs to its 470 ohm parts, not to this one. Corrected in round 6, in this text, in the comment the
+draft writes and in RT1's value text.)
 
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   J_DOCK  pins 3 and 5 (until now ground) carry DOCK_EN_RET and DOCK_EN_OUT, pin 4 the ground between them in the 2 x 6 field's
@@ -42,12 +47,13 @@ _ANCHOR_MAIN = ("# --- main power control LTC2954-1 (ltc2954.pdf): the panel MAI
                 "INT = shutdown request, KILL from the panel controller through Q1\n")
 _LOOP = (
     '# RECORD l8p (MESHSAT-1357, 4 October 2026; record l9stk 15.4, C-1b and condition C2, and 15.5, THE THERMAL GUARD): THE PACK\n'
-    '# BREAKER\'S DOCK ENABLE LOOP CROSSES THIS BOARD. Board P\'s LM5069-2 breaker (record l8p\'s apply_gen_sch_p_breaker.py) is held off\n'
+    '# BREAKER\'S DOCK ENABLE LOOP CROSSES THIS BOARD. Board P\'s LM5069-1 breaker (record l8p\'s apply_gen_sch_p_breaker.py) is held off\n'
     '# unless a loop from its input, out over board E and the dock and back, is closed: J_DOCK pins 5 (DOCK_EN_OUT) and 3 (DOCK_EN_RET)\n'
     '# with pin 4, between them in the 2 x 6 field\'s first row, still ground (C2: a short between the two conductors meets ground\n'
-    '# first). On this board the loop passes RT1, the kit\'s PRF15BB103 chip PTC, on the battery FETs\' copper: the breaker opens\n'
-    '# between RT1\'s 47 kOhm point (127 to 133 C) and its 338 kOhm point (E-13), the guard against the battery FETs\' installed path\n'
-    '# never being met. The two enable contacts mate at least 1 mm after every power pin (C1, Layer 7). The third battery FET is\n'
+    '# first). On this board the loop passes RT1, the kit\'s PRF15BB103 chip PTC, on the battery FETs\' copper: Murata prints 100 kOhm\n'
+    '# over 110 C and 4.7 MOhm at 130 +-3 C, so the breaker is off before RT1\'s copper passes 133 C (its no-trip side is not printed:\n'
+    '# record l8p\'s L8P-F07, OPEN; E-13), the guard against the battery FETs\' installed path never being met. The two enable\n'
+    '# contacts mate at least 1 mm after every power pin (C1, Layer 7). The third battery FET is\n'
     '# L4-E11\'s to draw and name; RT1 sits beside all three. The map is changed after the call, which is left for the drafts that\n'
     '# edit it (L4-E11\'s pin 1); it refuses if pins 3 to 5 are not all ground any more.\n'
     'for _p8 in P:\n'
@@ -60,7 +66,7 @@ _LOOP = (
     '        if _v8 == _p8["value"]:\n'
     '            raise SystemExit("record l8p: J_DOCK\'s description no longer names its ground pins as 1-7 or 2-7")\n'
     '        _p8["value"] = _v8\n'
-    'part("RT1", "Device", "Thermistor_PTC", "PRF15BB103RB6RC chip PTC 10k, 47k at 130 C (Murata): the pack breaker\'s thermal guard in the dock enable loop, on the battery FETs\' copper (record l8p; l9stk 15.5)",\n'
+    'part("RT1", "Device", "Thermistor_PTC", "PRF15BB103RB6RC chip PTC 10k, 100k over 110 C, 4.7M at 130 C (Murata): the pack breaker\'s thermal guard in the dock enable loop, on the battery FETs\' copper (record l8p; l9stk 15.5)",\n'
     '     "Resistor_SMD:R_0402_1005Metric", {"1": "DOCK_EN_OUT", "2": "DOCK_EN_RET"}, "C443668")\n'
     '_intent.node("DOCK_EN_OUT", 29.2, "the pack breaker\'s enable loop from board P (its BRK_VIN through 10 kOhm, BRK_VIN itself with the "\n'
     '             "loop open), J_DOCK pin 5 to RT1: at most the breaker\'s input clamp, 29.2 V (record l9stk 15.4)", v_work=16.8)\n'
