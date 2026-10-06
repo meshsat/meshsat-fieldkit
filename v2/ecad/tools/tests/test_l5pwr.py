@@ -15,7 +15,10 @@ parsed from the match, no figure is typed in the restatement's prose or patterns
 ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. L5-F09 and L5-F10
 (apply_l5pwr2_contracts.py) and L5-F11 (apply_l5f11_contracts.py, after it): no withdrawn text of theirs is in the tree's contract
 files, nor any wording of set 28's sweep, the tree carries both restatements as the Layer 4 files printed them when the scripts
-were applied ("already applied"; their Layer 4 reads pinned at a49a2b13 since W1), each script applies once to the files it was
+were applied ("already applied"; their Layer 4 reads pinned at a49a2b13 since W1) on every text W8 did not restate, and on the five
+W8 restated (L5-F09 a to d, F11-09; its change record row "| 2 (W8, L5-F14) |") three properties in their place (W14, 6 October
+2026: on that tree the first script refuses by its docstring's rule and the second at its ORDER check, whose proposed correction is
+test_w14l5.PATCH_L5F11_ORDER), each script applies once to the files it was
 written against and is idempotent, and the second refuses before the first. W1 (6 October 2026): S27-B6 reads L4-E9's D-10 as set 31
 left it, refusing set 28's sentence on the page and set 31's on a copy that carries set 28's.
 Software predicates on text: they establish no electrical property and accept nothing.
