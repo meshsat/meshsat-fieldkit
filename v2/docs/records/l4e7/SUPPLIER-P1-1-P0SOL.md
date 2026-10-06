@@ -14,7 +14,9 @@ whose page reads D-16 "PROVISIONAL in A7's zero-differential output (S3) and in 
 the lower-source back-feed as REMAINING ENGINEERING inside E-1 with S1's row (b) its later validation, on the owner's part 23
 (`v2/docs/handover/OWNER-INSTRUCTION-2026-10-05.md:680`). This draft now says the same: D-16's correction is ADDRESSED IN DRAFTS and
 PROVISIONAL, not completed (E-1 (d)); the back-feed is an open case inside E-1 (E-1 (a)), S1's row (b) its later validation; E-1 is
-named apart from record l9stk's E-1. No figure, limit, specimen or quantity is changed, and nothing here is sent.
+named apart from record l9stk's E-1; S1's row (a), the source in parallel with a connected panel, is read as the later validation of
+E-1's guard-on step (SESSION: it is that step, cases F1 to F3; reversed by the coordinator's revision). No figure, limit, specimen
+or quantity is changed, and nothing here is sent.
 
 ## What changed since P1-1 was written
 
