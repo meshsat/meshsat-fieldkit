@@ -453,6 +453,9 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   the three files in a scratch clone, with stand-in commits on set 31's lineage tip that hold the five pinned tips (`62300318` among
   them): `test_res32` printed 15 passed, 0 failed before the fill, after the first run (57 lines applied, ADOPTION deferred) and after
   the second (1 line applied; a third run refused, exit 2), the template reading 72 rows as above.
+  W95 repeated the three stages after naming the patch file (stand-ins on set 31's candidate holding the five tips): the template 97 rows,
+  the first run 79 lines applied with 3 ADOPTION occurrences deferred, the second 3 lines, a third refused; `test_res32` and
+  `test_patch32` read 24 passed at each stage.
 - **Open from W36's report, not settled by any branch:** ripple_dense's old-against-new run, the poppler-data dependence measured on a
   box, pdftocairo's host sensitivity, a built ZIP (W36's "Not checked" list), and the difference between W36's 108 and W37's 106 moved
   citations.
