@@ -5,7 +5,7 @@ pins): `v2/docs/records/int32/RESULT.md` and its classification `CLASSIFICATION.
 The basis of each predicate (W73's restatement): every row's sha, date, subject and file count is compared with git over the five
 ranges in the chain's merge order (each range's base is its merge base with set 31's lineage tip aa332280, or for fnd/s32attr with
 fnd/w34pdftext's tip, which the chain merges first); the declared tokens are fill_res31.py's (`_runs/int31/freeze/fill_res31.py`, its
-TOK pattern without __INTEGRATED__, which it fills only inside quoted subjects), so the same fill tool can be pointed at set 32 (the
+TOK pattern without the name INTEGRATED, which it fills only inside quoted subjects), so the same fill tool can be pointed at set 32 (the
 runner pass reads the tool and compares); the class counts are recomputed from the table; row 14's carried change names a source row
 that set 30's adopted record classes REVIEWED-INPUT CHANGED; the chain's pinned merges are the five ranges' branches, each pin inside
 its range (fnd/res32's own later commits are placeholder row 31's).
@@ -54,7 +54,7 @@ REVIEWED = "4d0ff8a2bf2b11941bab939d91c99a6d8de92e5e"      # cx46's candidate
 CX45 = "06077cee"                                           # the delta cx46 read: git diff 06077cee 4d0ff8a2
 L4E9_EXTRA = ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "v2/docs/records/l4e9/l4e9_power_path.out")
 FIXED = ("REVIEWED-INPUT CHANGED", "RECORD TEXT", "GENERATOR DATA (text)", "TEST", "DIGEST RE-PIN", "MERGE", "TOOLING")
-DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res31.py's TOK, __INTEGRATED__ apart
+DECLARED = ("__REKEY__", "__CANDIDATE__", "__GATE__", "__PROMOTED__", "__ADOPTION__")   # fill_res31.py's TOK, INTEGRATED apart
 # set 31's record draft, named by the record, on fnd/res31: in this branch's history only after set 31's adoption
 OUTSIDE = {"4196e9dfbb125cc50b091bdea47a34e432162970": "fnd/res31's tip, set 31's RESULT and CLASSIFICATION drafts (W39)"}
 ASSESS = "v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md"
