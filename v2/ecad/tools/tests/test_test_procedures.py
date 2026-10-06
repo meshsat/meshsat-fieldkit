@@ -152,7 +152,11 @@ def _edit(name, old, new, count=1):
 def t_the_checker_refuses_broken_procedures():
     T = _T()
     cases = [
-        ("C3", _edit("TP-E11-29.md", "45.88 K/W steady by the body diode", "46.88 K/W steady by the body diode")),
+        # 6 October 2026 (fnd/w3annex): the anchor follows the quote of R-159's Acceptance it mutates. Set 31 restated that cell from
+        # E11-29's row word for word (v2/docs/records/l4e9/SET31-CHANGES.md row 13), so its limit is "at most 40.78 K/W steady with the
+        # band carrying 23.93 A"; the old anchor "45.88 K/W steady by the body diode" had left the procedure with round 13's rewrite and
+        # matched nothing. The first occurrence is in R-159's quote: a changed limit there must still be refused as C3.
+        ("C3", _edit("TP-E11-29.md", "at most 40.78 K/W steady with the band carrying 23.93 A", "at most 41.78 K/W steady with the band carrying 23.93 A")),
         ("C7", _edit("TP-E11-29.md", T.MARK, "for the supplier to review")),
         ("C2", _edit("TP-E11-29.md", "register: R-159", "register: R-159, R-9999")),
         ("C8", _edit("TP-E11-29.md", "## 3. Safety", "## 3. Safety " + chr(0x2014))),
