@@ -9,7 +9,7 @@ prototype design; nothing built, bought, powered or measured; the sheets are hel
    fa9c4ece6d2584dc v2/docs/records/l9t5/fetch_held_back.py
    24d8a027f9367137 v2/docs/records/s99a/codec_floor.out
    54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
-   1defacd8c22db146 v2/docs/records/l9t5/l9t5_case.out
+   ed748f95b60d382e v2/docs/records/l9t5/l9t5_case.out
    9fda757ab1acfb6b v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
 
 2. THE PRINTED TEMPERATURE ROW NEAREST THE KIT'S 144 TO 146 MHz, PER DETECTOR (deviation from the 25 C output; the column it is printed in)
