@@ -513,8 +513,15 @@ def t_the_l5f11_restatement_and_the_sweep_hold_on_the_tree_and_the_script_is_ide
     b = _w14_load(APPLY2, "apply_l5pwr2_for_order")
     E2 = b.edits(collections.defaultdict(str))
     assert not [i for i, tg, _w, old, _n in E2 if b.rx(old).search(tree[tg])], "an old text of apply_l5pwr2_contracts.py is in the tree"
-    want = "apply_l5f11_contracts: ORDER: apply_l5pwr2_contracts.py is not applied to these files (%s); refusing, nothing written\n" \
-        % _w14_l5pwr2_answer(E2).strip()[:160]
+    # Restated by W35 (6 October 2026, set 31). Basis: f0d0e54e applied test_w14l5.PATCH_L5F11_ORDER to the script (its ORDER check
+    # now reads the first script's old texts gone), so on this tree it no longer refuses at ORDER but with its own state, as the
+    # docstring above says ("this expectation changes with it"). Quoted from a run on fnd/int31regen at 0f5b512c
+    # (`apply_l5f11_contracts.py --check`: exit 3, stdout empty), stderr: "apply_l5f11_contracts: not in the state this script applies
+    # to: F11-01: old text 0 time(s), new text present; [F11-02 to F11-08 the same]; F11-09: old text 0 time(s), new text absent;
+    # [F11-10 to F11-14 the same as F11-01]; refusing, nothing written". Still exact to the character: each of its fourteen edits in
+    # its own order, F11-09's new text absent (W8 restated it), every other new text present.
+    want = "apply_l5f11_contracts: not in the state this script applies to: %s; refusing, nothing written\n" % "; ".join(
+        "%s: old text 0 time(s), new text %s" % (i, "absent" if i in W8_RESTATED else "present") for i, _t, _w, _o, _n in E)
     r = _run([APPLY3, "--check"])
     assert r.returncode == 3 and r.stdout == "" and r.stderr == want, (r.returncode, r.stdout[-200:], r.stderr[-400:])
     V = a.l4()
