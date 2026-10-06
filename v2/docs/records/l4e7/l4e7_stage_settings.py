@@ -157,7 +157,9 @@ def load(name, rel):
 # change of the file's prose (an input digest it prints, a sentence) leaves the KEY; a changed number moves it; a missing or malformed
 # number refuses. Each row: the name, the pattern compute() reads it with on the whitespace-flattened text (the patterns compute()
 # used before this boundary, verbatim), the number of values, and what it is. The declared form of every value is a plain decimal
-# (NUM_FORM); a triple is the printed least / typical / greatest and never descends.
+# (NUM_FORM); a triple is the printed least / typical / greatest and never descends. Every pattern of the extractor is matched with
+# re.ASCII (W67, W64's F-4): \d is then the ASCII digits only, so a fullwidth or other Unicode digit refuses as malformed rather
+# than being read by float() as the ASCII number it resembles.
 L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.out"
 L4E11_NUMBERS = (
     ("uv", r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", 3, "L4-E11's UVLO"),
@@ -188,9 +190,9 @@ def l4e11_numbers(text=None, top=None):
     out_ = {}
     for name_, pat_, n_, what_ in L4E11_NUMBERS:
         wide_ = pat_.replace(r"([\d.]+)", r"(\S+)").replace(r"[\d.]+", r"\S+")
-        if re.compile(pat_).groups != n_ or re.compile(wide_).groups != n_:
+        if re.compile(pat_, re.ASCII).groups != n_ or re.compile(wide_, re.ASCII).groups != n_:
             refuse(3, "l4e11_numbers: %s (%s) is declared with %d values and its pattern reads another count" % (what_, name_, n_))
-        hits_ = list(re.finditer(wide_, t_))
+        hits_ = list(re.finditer(wide_, t_, re.ASCII))
         if not hits_:
             refuse(3, "l4e11_numbers: %s (%s) missing in %s" % (what_, name_, L4E11_OUT))
         if len(hits_) > 1:
@@ -202,13 +204,13 @@ def l4e11_numbers(text=None, top=None):
                 v_ = float(tok_)
             except ValueError:
                 refuse(3, "l4e11_numbers: %s (%s) unparsable in %s: %r" % (what_, name_, L4E11_OUT, tok_))
-            if not re.fullmatch(NUM_FORM, tok_):
+            if not re.fullmatch(NUM_FORM, tok_, re.ASCII):
                 refuse(3, "l4e11_numbers: %s (%s) out of its declared form in %s: %r is not a plain decimal" % (what_, name_, L4E11_OUT, tok_))
             vals_.append(v_)
         if n_ == 3 and not vals_[0] <= vals_[1] <= vals_[2]:
             refuse(3, "l4e11_numbers: %s (%s) out of its declared form in %s: %s descends (a least / typical / greatest triple)" % (
                 what_, name_, L4E11_OUT, " / ".join(hits_[0].groups())))
-        m_ = re.search(pat_, t_)
+        m_ = re.search(pat_, t_, re.ASCII)
         if m_ is None or m_.span() != hits_[0].span() or m_.groups() != hits_[0].groups():
             refuse(3, "l4e11_numbers: %s (%s): compute()'s pattern reads another sentence of %s" % (what_, name_, L4E11_OUT))
         out_[name_] = vals_

@@ -311,3 +311,28 @@ def t_f_d83d9f2d_and_31928583_read_to_equal_numbers():
     ka, pa, wa = _key(m, shown["d83d9f2d"])
     kb, pb, wb = _key(m, shown["31928583"])
     assert ka == kb and pa == pb and wa != wb
+
+
+def t_g_a_unicode_digit_refuses_as_malformed():
+    """W64's F-4 (W67, 6 October 2026): the declared form is a plain ASCII decimal. A consumed number printed in fullwidth digits
+    (７.２３), in Arabic-Indic digits (٧.٢٣) or with one fullwidth digit among ASCII ones (7.2３) is read by float() as 7.23, and a
+    Unicode \\d accepted it before; each now refuses with exit 3 as out of its declared form, naming the value and the file. Every
+    regular expression call of l4e11_numbers() passes re.ASCII (read with ast), so no \\d of the extractor reads a non-ASCII digit."""
+    import ast
+    m = _m()
+    for tok in ("７.２３", "٧.٢٣", "7.2３"):
+        assert float(tok) == 7.23
+        bad = _with_token(m, "inp", 0, tok)
+        code, err = _refusal(lambda: m.l4e11_numbers(text=bad))
+        assert code == 3 and "L4-E11's INP (inp) out of its declared form in %s: %r is not a plain decimal" % (m.L4E11_OUT, tok) in err, (tok, err)
+    assert m.l4e11_numbers(text=_C["text"])["inp"] == [7.23]
+    text = open(SCRIPT, encoding="utf-8").read()
+    fn = [n for n in ast.parse(text).body if isinstance(n, ast.FunctionDef) and n.name == "l4e11_numbers"][0]
+    calls = [n for n in ast.walk(fn) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+             and isinstance(n.func.value, ast.Name) and n.func.value.id == "re" and n.func.attr in ("compile", "search", "match", "fullmatch", "finditer", "findall")]
+    assert len(calls) >= 5, ast.dump(fn)[:300]
+
+    def ascii_flag(c):
+        args = list(c.args[2:] if c.func.attr != "compile" else c.args[1:]) + [k.value for k in c.keywords if k.arg == "flags"]
+        return any(isinstance(a, ast.Attribute) and isinstance(a.value, ast.Name) and a.value.id == "re" and a.attr in ("ASCII", "A") for a in args)
+    assert all(ascii_flag(c) for c in calls), [ast.get_source_segment(text, c) for c in calls if not ascii_flag(c)]
