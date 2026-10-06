@@ -61,6 +61,17 @@ def _page(nm):
     return _norm(_raw(nm))
 
 
+def _para_from(nm, anchor):
+    """The raw page's paragraph (blank-line bounded) that first holds `anchor` once normalised, from the anchor to the paragraph's end;
+    the empty string when no paragraph holds it, so a rule keeps failing rather than passing on text it never found."""
+    for para in re.split(r"\n[ \t]*\n", _raw(nm)):
+        q = _norm(para)
+        k = q.find(anchor)
+        if k >= 0:
+            return q[k:]
+    return ""
+
+
 def _unquoted(nm):
     return re.sub(r'"[^"]*"', '""', _page(nm))
 
@@ -83,7 +94,9 @@ def t_each_page_carries_a_dated_set30_note_for_the_next_set():
         p = _page(nm)
         i = p.find("Set 30 note (6 October 2026")
         assert i >= 0, "%s: no dated set 30 note" % nm
-        note = p[i:i + 1200]
+        # The note is its own paragraph of the raw page: read from the anchor to that paragraph's end, never a fixed 1200 characters
+        # (test_rule_windows; set 31's candidate d0e283aa failed it, 6 Oct 2026).
+        note = _para_from(nm, "Set 30 note (6 October 2026")
         # W4 wrote the placeholder `__INTEGRATED__`. Restated by W41 (6 October 2026; basis: W10's plan R0, `_runs/int31/PLAN.draft.md`
         # lines 206 to 212, and W38's finding F2): it is filled with set 30's promoted sha, dd1aed00 (`_runs/int30/ADOPTION-VALUES.md`),
         # short as the note names its other commits, and the placeholder is gone from the page (the page is read without backticks).
@@ -119,7 +132,7 @@ def t_nothing_reads_completed_and_d16_reads_provisional():
         p = _page(nm)
         i = p.find("ADDRESSED IN DRAFTS, PROVISIONAL, not completed")
         assert i >= 0, nm
-        span = p[i:i + 700]
+        span = _para_from(nm, "ADDRESSED IN DRAFTS, PROVISIONAL, not completed")  # its paragraph, not 700 characters (test_rule_windows)
         for w in ("S3 and S4", "R-240", "DOWNSTREAM-REGISTER.md:336", "L4-POWER-ARCHITECTURE.md:841"):
             assert w in span, (nm, w)
 

@@ -239,7 +239,10 @@ def _section11_calls(src):
 def _gen_ok(src):
     sec = _section11_calls(src)
     lits = [x for _n, x in sec]
-    ok_new = any(lits[k:k + 3] == NEW_T10 for k in range(len(lits))) and any(lits[k:k + 2] == NEW_CL for k in range(len(lits)))
+    # The run is matched at the length of the run it is looked for (set 31's candidate d0e283aa failed test_rule_windows on the fixed
+    # `k:k + 3` and `k:k + 2`, 6 Oct 2026; the comparison is the same exact subsequence match, its size read from its subject).
+    ok_new = (any(lits[k:k + len(NEW_T10)] == NEW_T10 for k in range(len(lits)))
+              and any(lits[k:k + len(NEW_CL)] == NEW_CL for k in range(len(lits))))
     stale = [s for x in lits if x for s in STALE_CON if s in x]
     return ok_new and not stale
 
