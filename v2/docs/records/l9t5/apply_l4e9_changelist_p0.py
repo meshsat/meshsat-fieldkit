@@ -54,8 +54,9 @@ def refuse(msg):
 
 
 def patch_register(text):
-    if "| R-220 |" in text:
-        refuse("the register already carries R-220: applied before")
+    already = [re.match(r"\| (R-\d+) \|", r).group(1) for _a, rows in REG_ADD for r in rows if r.split(" | ")[0] + " |" in text or re.search(r"^\| %s \|" % re.escape(re.match(r"\| (R-\d+) \|", r).group(1)), text, re.M)]
+    if already:
+        refuse("the register already carries %s: applied before (no row is ever added twice)" % ", ".join(already[:4]))
     new = text
     for anchor, rows in REG_ADD:
         m = re.search(r"^\| %s \|.*\n" % re.escape(anchor), new, re.M)
@@ -106,21 +107,25 @@ def patch_page(text, m, reg_text):
 
 def applied_state(root):
     """The APPLIED tree (set 30's integration commit 7070f106 wrote the three files): {path: current text} and the change list read from
-    them, or None when the register does not yet carry R-220. The applied texts must hold every added row, every edited row, every script
-    edit and the page's note verbatim; anything else refuses (a half-applied or edited tree is neither state)."""
+    them, or None when the register carries NONE of the rows this draft adds (the pristine tree). The test is the PRESENCE of every added row
+    (by id) and of the page's P0 note, not the verbatim texts (later rounds edit them): all present = applied; some present = a PARTIALLY
+    APPLIED tree, which refuses naming the missing ids (so a second --write can never duplicate rows); none present = pristine."""
     p_reg, p_py, p_page = (os.path.join(root, L4, f) for f in ("DOWNSTREAM-REGISTER.md", "l4e9_power_path.py", "L4-POWER-ARCHITECTURE.md"))
     reg = open(p_reg, encoding="utf-8").read()
-    if "| R-220 |" not in reg:
+    ids = [re.match(r"\| (R-\d+) \|", r).group(1) for _a, rows in REG_ADD for r in rows]
+    present = [i for i in ids if "| %s |" % i in reg]
+    if not present:
         return None
+    if len(present) != len(ids):
+        refuse("the register is PARTIALLY applied: it carries %d of the %d rows this draft adds; missing %r" % (
+            len(present), len(ids), [i for i in ids if i not in present][:6]))
     py = open(p_py, encoding="utf-8").read()
     page = open(p_page, encoding="utf-8").read()
     # The applied tree is authoritative once the rows exist: later record rounds (set 31's restatement of the page, the register and the
     # generator's data) may edit the applied texts, so the test is the PRESENCE of every row this draft adds (by id) and of the page's P0
     # note, not the verbatim text; the change list is then read from the tree's own register and script.
-    ids = [re.match(r"\| (R-\d+) \|", r).group(1) for _a, rows in REG_ADD for r in rows]
-    missing = [i for i in ids if "| %s |" % i not in reg]
-    if missing or not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\n")):
-        refuse("the register carries R-220 but not every row this draft adds, or the page lacks the P0 note: %r" % missing[:5])
+    if not any(l.startswith("**The P0 round (record l9t5") for l in page.split("\n")):
+        refuse("the register carries every row this draft adds but the page lacks the P0 note")
     m = module_of(py, p_py)
     ch = m.cons_changes(m.md_table(reg, "| ID | Kind |"))
     m.ALREADY_APPLIED = True

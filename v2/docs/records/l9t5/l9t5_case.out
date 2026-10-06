@@ -6,7 +6,7 @@ evidence bounds it).
 0. PINS (path  sha256/16)
    bq4050       v2/vendor/battery/ti-bq4050.pdf  sha256 2664e33fe6d6ebed
    budget       v2/docs/records/l9pwr/l9pwr_budget.py  sha256 afae23c87c38302b
-   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 39b34accbd29b4fd
+   budget_out   v2/docs/records/l9pwr/l9pwr_budget.out  sha256 f226c64941563f9c
    cases        v2/docs/records/l9t5/inputs/coordinator-cases-2026-10-04-rev3.md  sha256 0be579949c22eab1
    cell         v2/vendor/battery/samsung-35e-orbtronic.pdf  sha256 5ec577b952b9dc51
    chain        v2/ecad/tools/pcb_energy_chain.yaml  sha256 a09ca0293afd1f7c

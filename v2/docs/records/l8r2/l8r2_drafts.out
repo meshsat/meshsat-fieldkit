@@ -7,7 +7,7 @@ prototype design; nothing built, powered or measured; nothing applied to the tre
 55ff8ede88513049 v2/ecad/tools/gen_sch_c.py
 54f17c8187d3bd19 v2/ecad/tools/gen_sch_d.py
 eb1f5e9f5e1ca9ae v2/ecad/tools/lcsc_fill.py
-a491b0cc0a960626 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+f247b65f2cf3bcf1 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
 5ff0cf542b98a586 v2/docs/records/s120/README.md
 469d0820b046ef6f v2/docs/records/rv-pwr/pwr_budget.py
 29dbe3a0c4938274 v2/docs/ASSEMBLY.md
@@ -49,7 +49,7 @@ fd750e4dc429a790 v2/ecad/tools/track_current.py
 d3bcdc7dd4ca44cb v2/vendor/diodes/diodes-ap64500.pdf
 3a8eb81d3f58e0a5 v2/ecad/tools/gen_pcb_e3.py
 b0e303a557e38898 v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
-3bdd5e3ebba68b07 v2/docs/records/l4e12/l4e12_thermal.out
+0cfa115bdace6fee v2/docs/records/l4e12/l4e12_thermal.out
 80070fefd8db6e8a v2/vendor/cm5/cm5-datasheet.pdf
 bd97a9e446861123 v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi
 fae7e21365939be5 v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
@@ -91,6 +91,7 @@ b73235009afed2e3 v2/docs/records/l4e9/apply_gen_sch_e_f1.py
 ed22896891676446 v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py
 a859aa4a63339f3a v2/docs/records/l4e11/apply_gen_sch_e_entry.py
 eda720a68db60cd3 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
+f7547d465e0eb7d2 v2/docs/records/l4e7/apply_gen_sch_e_p0sol.py
 3d0a7b1d7d0bd8bf v2/docs/records/l4e11/apply_gen_sch_e_aux.py
 c1fa1713c6e5fe29 v2/docs/records/l8p/apply_gen_sch_e_enable.py
 78fb4e2ac0a9a9c9 v2/docs/records/d8dec31/apply_gen_sch_e_cin.py
@@ -453,11 +454,11 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
   with Layer 6's board B drafts (l6r2: xal_land, lcsc, intent) after this record's and before them: OK; OK; the same generator either way: YES
 
 6b. COMPOSITION ON BOARD E (scratch copies of gen_sch_e.py; the change list's board E round, d8dec31's cin last, and this record's pack return)
-  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_enable.py, apply_gen_sch_e_cin.py: the same as this script's E_ROUND
-  the round, then this record's packrtn:             OK at every step (13 drafts)
-  this record's packrtn first, then the round:       OK at every step (13 drafts)
-  the round with this record's packrtn before cin:   OK at every step (13 drafts)
-  this record's packrtn after every prefix of the round (0 to 12 drafts; the round's drafts depend on one another, so none is applied alone): OK at every prefix
+  the change list's board E round as L4-POWER-ARCHITECTURE.md's table gives it: apply_gen_sch_e_q1.py, apply_gen_sch_e_u5_grade.py, apply_gen_sch_e_hold.py, apply_gen_sch_e_input_limit.py, apply_gen_sch_e_backstop.py, apply_gen_sch_e_f1.py, apply_gen_sch_e_hotswap.py, apply_gen_sch_e_entry.py, apply_gen_sch_e_solar_guard.py, apply_gen_sch_e_p0sol.py, apply_gen_sch_e_aux.py, apply_gen_sch_e_enable.py, apply_gen_sch_e_cin.py: the same as this script's E_ROUND
+  the round, then this record's packrtn:             OK at every step (14 drafts)
+  this record's packrtn first, then the round:       OK at every step (14 drafts)
+  the round with this record's packrtn before cin:   OK at every step (14 drafts)
+  this record's packrtn after every prefix of the round (0 to 13 drafts; the round's drafts depend on one another, so none is applied alone): OK at every prefix
 
 7. DESIGNATORS
   A l4e6/apply_gen_sch_a_r12.py                none
@@ -531,7 +532,7 @@ cd8112da11bc536f v2/vendor/fans/held/sanyo-denki-san-ace-c1152b001-2510-p0623.pd
     after the whole round (14 drafts, this one last): CELL+ accepted; GND accepted
   board E, the draft alone: GND a rail, sources J_BATT, loads P_CN 10 (10.00 A), 10.0 / 18.0 A, returns CELL_F, share 0.5 %; intent.py on the file's CELL_F and GND declarations: CELL_F accepted; GND accepted
     on the committed netlist (pcb-e1-dock.net), each source and load's pins on GND: J_BATT 1; P_CN 1: YES
-    after the whole round (13 drafts, this one last): CELL_F accepted; GND accepted
+    after the whole round (14 drafts, this one last): CELL_F accepted; GND accepted
   the bar each return is judged against (dc_drop, PI-002): its share, 0.5 %, of the rail it returns, 72.0 mV of 14.4 V; the rules that then judge it: PI-001 (conductor capacity at the declared 18 A), PI-002 (the drop), PI-003 (the barrels), PWR-001 (the rail on the netlist), THM-001 (its watts not counted twice)
 
 10. ITEM 6, THE ENERGY CHAIN'S BOARD E TEXTS AT 1 OZ (record l9stk's second finding; v2/ecad/tools/pcb_energy_chain.yaml)

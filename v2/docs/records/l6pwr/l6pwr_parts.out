@@ -11,8 +11,8 @@ pdftotext), RECORD (a Layer 4 record's figure, its page pinned), CATALOGUE (a da
    7f664f7c46297ddeed3b15be2039b476cc5d3a716e741c3479ec7f06a646afd4 v2/docs/records/l6pwr/fetch_held_back.py
    6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b v2/ecad/tools/gen_sch_a.py
    0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
-   c238d5070b5a27555492e6b8b8c9fb26f8a015b45d1d7773f2db70b7737abb34 v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
-   bfdead54766199eb014bfc9999d97dd32352dc91ea9ee52f29cdf4ac99d49ea9 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   101b9896de5195619dda7fb97eafd24fd349abaeb879bb79edc4456ced6bf4b3 v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   0e215988ba2a929bd2eb91b7eb80fa20040da28d10c08a9c36e1022e81a789c0 v2/docs/records/l4e11/apply_gen_sch_a_charger.py
    a859aa4a63339f3aab927bc14afd7077cb66668e68858e41fcd53a926c7551f1 v2/docs/records/l4e11/apply_gen_sch_e_entry.py
    6d5a02aaeb5a76828ce9545ebb0238f5678d4d459197916effc6243c9344d0cb v2/docs/records/l4e5/L4E5-SOURCE-CONTROL.md
    acea53b3a60e88e4b391deba17e430ba71407b09f1ce8554f7f9b1bc87432212 v2/docs/records/l4e6/L4E6-FAULT-HANDLING.md
@@ -23,7 +23,7 @@ pdftotext), RECORD (a Layer 4 record's figure, its page pinned), CATALOGUE (a da
    5a50ed9e06c57efd196219087ec42da2b39ea3e035fdb22044e7761d247afd83 v2/docs/records/l4e8/L4E8-BANK.md
    0d9abf89d3675d55a7cedb912bed1935f077f28f41a49df5591d368629154f4a v2/docs/records/l4e8/apply_gen_sch_a_bank.py
    38961dd6611cf50457fef150ecdbc891bb900263577720114237f7fc47178d8a v2/docs/records/l4e9/L4E9-ENTRY-PROPOSALS.md
-   dd7a07eb421e937d7fd7a20476f4acf57c851efa360522545f7ff66e1ac5ba4c v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   1357ff2601a30943b73808b532292840aa16ca78f4606313c4ec1323a55195ee v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
    5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516 v2/vendor/battery/samsung-35e-orbtronic.pdf
    e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f v2/vendor/ti/held/ti-bq25730-sluse65a.pdf (held back, fetched and matching its pin)
    ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40 v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf (held back, fetched and matching its pin)

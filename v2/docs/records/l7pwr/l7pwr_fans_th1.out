@@ -16,12 +16,12 @@ assumption, INFERRED a reading carried from a sibling document, NOT READ a figur
    prices      v2/docs/records/l7pwr/inputs/prices-2026-10-03.json  sha256 a9f694e46b881188
    findchips   v2/docs/records/l7pwr/inputs/findchips-fans-heaters-2026-10-03.json  sha256 63fad48957e8a0f3
    th1         v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md  sha256 61fa23a04f592a9f
-   l4e11       v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md  sha256 c238d5070b5a2755
+   l4e11       v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md  sha256 101b9896de519561
    l4e11_aux   v2/docs/records/l4e11/apply_gen_sch_e_aux.py  sha256 3d0a7b1d7d0bd8bf
-   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 3a46198439d54bfb
+   l4e11_out   v2/docs/records/l4e11/l4e11_power.out  sha256 a2089b3f6682d7fd
    l8r2_fans   v2/docs/records/l8r2/apply_gen_sch_b_fans12.py  sha256 cb03ff040b0ef784
    l4e12       v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md  sha256 b0e303a557e38898
-   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 a491b0cc0a960626
+   l4e9        v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md  sha256 f247b65f2cf3bcf1
    gen_e       v2/ecad/tools/gen_sch_e.py  sha256 f846e138cb53a8c6
    gen_b       v2/ecad/tools/gen_sch_b.py  sha256 3698cc04d8eaf75b
    panel       v2/ecad/tools/panel1450.py  sha256 3bdb88df98260244

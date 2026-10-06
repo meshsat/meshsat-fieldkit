@@ -23,12 +23,12 @@ in sections 4 and 5 (and section 6, item G), and the lower-source back-feed is s
 disagreement kept named in section 6, item E. Every other line stands as written on `1c6d56f5`; nothing here accepts, closes or
 promotes anything, and the class each added row carries is this ledger's reading (SESSION), never a revision of the P0 list.
 
-**The owner's words that define an item** ([OWN:786]): "If a correction remains unsupported, hand it over as **remaining
+**The owner's words that define an item** ([OWN:787]): "If a correction remains unsupported, hand it over as **remaining
 engineering**, with the failed cases, attempted correction, unresolved fact or design decision, and affected provisional outputs.
 Preserve the receiving company's ability to reproduce and change the design. Qualification-only items remain separately
-identified." And ([OWN:848]): "The receiving company can take over genuinely unresolved engineering. Keep each affected guarantee
+identified." And ([OWN:849]): "The receiving company can take over genuinely unresolved engineering. Keep each affected guarantee
 open or provisional and identify the downstream dependency. In particular, the reported handover of latent guard and CAN cases
-must preserve any resulting limits on protection, thermal and service claims." And ([OWN:798]): "If cx46 remains negative, retain
+must preserve any resulting limits on protection, thermal and service claims." And ([OWN:799]): "If cx46 remains negative, retain
 the affected defects and transfer them as remaining engineering, not as qualification-only tasks or accepted corrections."
 
 **The recheck as filed** ([CX46:10]): "P0 RECHECK: CORRECTIONS NOT CLOSED." Its next action ([CX46:113]): "End this correction loop,
@@ -113,7 +113,7 @@ as filed.
 - **Failed cases.** No electrical case: a record defect. The list's rows P0-1 to P0-7 ([P0L:18-24]) carry the 16:50 states cx46
   names ([CX46:81]).
 - **Attempted correction and the disposition.** Main `0d5f855e` merged into the candidate: parts 23 to 25 and the four checks filed
-  ([T5R:1]); the owner file now holds part 23 ([OWN:670]), part 24 ([OWN:734]) and part 25 ([OWN:807]).
+  ([T5R:1]); the owner file now holds part 23 ([OWN:671]), part 24 ([OWN:735]) and part 25 ([OWN:808]).
 - **Unresolved.** The list's reconciliation: [P0L:1] still reads revision 2 and its rows [P0L:18-24] are unchanged on this tip.
 - **Affected outputs.** Any reader of [P0L:18-24] reads superseded states (for example P0-2 "NEXT for Slot A" at [P0L:19] against
   V6-B1 OPEN at [CON:174]).
@@ -236,7 +236,7 @@ as filed.
 - **Receiving company's task.** "the peer-silence or diagnostic circuit and the recovery proof" ([T10R:219]); acceptance: CON-004's
   quorum service held under every row of the fault table including the GPIO-toggled TX and the latent comparators, with any
   automatic diagnostic carrying "a bounded detection/response interval, including faults that arise after startup and faults
-  affecting the diagnostic itself" (the owner's part 24, [OWN:776]). Validation after it: V-B21, V-B22 ([HWFW:71-86]).
+  affecting the diagnostic itself" (the owner's part 24, [OWN:777]). Validation after it: V-B21, V-B22 ([HWFW:71-86]).
 - **Reproduce.** `python3 v2/docs/records/l9t5/l9t5_t10.py` (about 20 s, temporary directories) ([T10R:233-236]); output [T10].
 - **State on this tip.** NOT CLOSED: CON-004's quorum service OPEN, FW-B22 PROVISIONAL, L9T5-F21 OPEN ([T10:662-667], [T10R:1]).
 
@@ -479,7 +479,7 @@ as filed.
 - **Failed cases.** The fault-table row "a limiter's OUTB stuck low" reads "that transceiver's share no longer bounded: LATENT, a second
   fault (a babbler) needed" ([T10:593]); the row "the rail trip's monitor dead or its OUTB released" reads "no current bound for that
   controller: LATENT, a second fault needed" ([T10:595]); each found only on the bench (V-B22, V-B23) with no service interval ([T10:602-603]).
-- **Unresolved.** A diagnostic with a bounded interval covering faults after start-up and in the diagnostic itself ([OWN:776]).
+- **Unresolved.** A diagnostic with a bounded interval covering faults after start-up and in the diagnostic itself ([OWN:777]).
 - **Affected outputs.** The service's containment (limiter) and "T10's thermal bound and T10-A3's hardware bound" (rail trip)
   ([T10:576-577], [CON:322-323]).
 - **Task, acceptance, reproduce.** As RE-5 and RE-6.
@@ -525,9 +525,9 @@ as filed.
   ratings during the fault" ([P11:44]), with S1's own criterion for the case, "Q12's body-diode current inside its pulsed rating"
   ([P11:123]); S1's row (b) is the later validation of that computation, not a substitute for it. Grounds: the owner's part 23,
   "Supplier item S1 must carry that engineering problem, rather than presenting it solely as an unperformed validation test."
-  ([OWN:680]) and "A planned measurement alone does not establish that the selected protection works." ([OWN:701]); part 24, the
-  handover of an unsupported correction "not as qualification-only tasks or accepted corrections" ([OWN:798]); part 25, "D-10 remains
-  receiving-company engineering item E-1." ([OWN:825]); cx46, "S1 is expressly subsequent qualification of a correction, not closure
+  ([OWN:681]) and "A planned measurement alone does not establish that the selected protection works." ([OWN:702]); part 24, the
+  handover of an unsupported correction "not as qualification-only tasks or accepted corrections" ([OWN:799]); part 25, "D-10 remains
+  receiving-company engineering item E-1." ([OWN:826]); cx46, "S1 is expressly subsequent qualification of a correction, not closure
   of the current circuit." ([CX46:95]). E-1's acceptance as filed names the cases F1 to F4 ([P11:149-152]); this reading adds the
   back-feed to the cases E-1's correction answers, sets no new limit and changes no record's text. Why the narrower reading (SESSION,
   under the coordinator's brief of 6 October 2026): it claims less, since a validation row alone would present an uncomputed case
@@ -720,7 +720,7 @@ Counts: remaining engineering 20; qualification 1; external architecture fact 3;
 - **E. The lower-source back-feed's placement.** cx46 counts it among E-1's retained cases ([CX46:95], [CX46:188]); the records list it
   as "not computed here" and carry it as an added row (b) of S1, a validation run ([B2:168-170], [SOLO:399-404], [P11:120-123]), while
   E-1's failing-case table lists F1 to F4 only ([P11:29-34]). Part 23 asks S1 to carry D-10's engineering, not to present it as an
-  unperformed test ([OWN:680]). **The ledger's reading (amendment of 6 October 2026) is the narrower one** (HO-F): the back-feed is
+  unperformed test ([OWN:681]). **The ledger's reading (amendment of 6 October 2026) is the narrower one** (HO-F): the back-feed is
   REMAINING ENGINEERING inside E-1, computed by the receiving company as part of E-1's correction, and S1's row (b) is the later
   validation of that computation, not a substitute for it. Record l4e7's own text stands as written ([B2:168-170],
   [SOLO:399-404], [P11:120-123]): it is not this ledger's file, and the contradiction between that text and this reading is the
