@@ -1775,9 +1775,12 @@ def t_p0sol_d10_is_written_as_an_unresolved_defect_and_b2_never_as_its_closure()
     texts = {nm: " ".join(open(os.path.join(REC, nm), encoding="utf-8").read().split())
              for nm in ("l4e7_p0sol.out", "L4E7-P0SOL.md", "B2-PRESENCE.md", "SUPPLIER-P1-1-P0SOL.md")}
     sup = texts["SUPPLIER-P1-1-P0SOL.md"]
+    # set 30 note (6 October 2026, fnd/w4l4e7): (d)'s heading reads "what can be completed independently", the owner's part 23 words
+    # (OWNER-INSTRUCTION-2026-10-05.md:708), because the drafts it lists are ADDRESSED IN DRAFTS and PROVISIONAL, not completed (the
+    # register's R-240, DOWNSTREAM-REGISTER.md:336; L4-POWER-ARCHITECTURE.md:841; SET31-CHANGES.md:113; K-13 of the DESK-gate draft).
     for s in ("REMAINING ENGINEERING E-1 (D-10)", "UNRESOLVED PROTECTION DEFECT", "(a) The failing cases", "(b) The applicable requirements",
               "no new exclusion", "(c) The correction or justified model revision needed before any passing claim",
-              "(d) What stays PROVISIONAL, and what is completed independently", "| F1,", "| F2,", "| F3,", "| F4,"):
+              "(d) What stays PROVISIONAL, and what can be completed independently", "| F1,", "| F2,", "| F3,", "| F4,"):
         assert s in sup, s
     for nm, tx in texts.items():
         assert "UNRESOLVED PROTECTION DEFECT" in tx or "unresolved protection defect" in tx, nm
