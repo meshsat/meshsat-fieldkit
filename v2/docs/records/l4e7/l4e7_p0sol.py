@@ -12,8 +12,8 @@ only). Every figure carries its basis: PRINTED LIMIT (a maker's minimum or maxim
 MEASURED (none exists), ASSUMPTION (a figure no document gives), MODELED (a model's answer), INFERRED (method stated), SESSION (a
 design rule of this record, with its reason), NETLIST (the composed netlist), CATALOGUE (a filed distributor reading).
 
-Section 0 reproduces both failing cases on the base before any change: the record's results cache against this tree (the one
-input that differs, and the figures compute() parses from it, equal in both versions), render(cache) against the committed .out
+Section 0 reproduces both failing cases on the base before any change: the record's results cache against this tree (its KEY
+holding, and the figures compute() parses from l4e11_power.out, equal at set 29's freeze and here), render(cache) against the committed .out
 byte for byte, D-16 by the record's own sense_ripple and D-10 by the record's own guard_event_b with every bank rebuilt from the
 makers' held curves, each equal to the cached figure. Exit 4 if a reproduction or a predicate fails, 3 if an input cannot be read,
 2 if a pinned input is not the pinned file.
@@ -115,21 +115,25 @@ def key_words(diff):
     return "; ".join(w_)
 
 
-def key_state(data, parts_now, nums_now):
+def key_state(data, parts_now, nums_now, key_of):
     """0a's reading of the record's results cache (data, the committed results.json) against this tree (parts_now, the record's
-    key_parts() here; nums_now, its l4e11_numbers() here): (diff, keyed). diff: every KEY part either side holds that differs, by
-    name, and for the files part each differing file with both digests. keyed: what the cache's own fields record of its keying,
-    never a history typed here (W64's F-1, 6 October 2026): the Python and pdftotext versions its parts hold, and beside the KEY its
-    evidence (the whole sha256 of l4e11_power.out its results were computed on, and the numbers read of it). Accepted: no part
-    differs and the evidence is there, or (the P0 round's base, a cache keyed on the file's whole digest) the file
-    l4e11_power.out alone. Anything else refuses (exit 4), naming the parts plainly; a move of the part l4e11_numbers alone (a
-    number the record reads of l4e11_power.out moved, and nothing else) refuses with the numbers named."""
+    key_parts() here; nums_now, its l4e11_numbers() here; key_of, the record's key_of()): (diff, keyed). diff: every KEY part either
+    side holds that differs, by name, and for the files part each file either side holds whose digest differs, with both digests.
+    keyed: what the cache's own fields record of its keying, never a history typed here (W64's F-1, 6 October 2026): the Python and
+    pdftotext versions its parts hold, and beside the KEY its evidence (the whole sha256 of l4e11_power.out its results were
+    computed on, and the numbers read of it). Accepted only in one state: no part differs and the cache's key field is the key of
+    its own parts (so the KEY holds on this tree: the record's load_cache() would render from it), with the evidence there. Every
+    other state refuses (exit 4), naming it plainly: a move of the part l4e11_numbers alone (a number the record reads of
+    l4e11_power.out moved, and nothing else), with each moved value printed as its float's repr (W70's R-5); any other differing
+    part, a cache keyed before WP-B on the file's whole digest among them (its files part holds l4e11_power.out and it lacks the
+    part l4e11_numbers, so it never differs in that file alone: W70's R-3 removed that acceptance, which no tree could reach); a key
+    field that is not the key of the cache's own parts (W70's R-4); a holding KEY without the evidence."""
     diff = []
     for part_ in sorted(set(data["parts"]) | set(parts_now)):
         a_, b_ = data["parts"].get(part_), parts_now.get(part_)
         if part_ == "files":
             a_, b_ = a_ or {}, b_ or {}
-            diff += [("files", f_, a_[f_], b_.get(f_)) for f_ in sorted(a_) if a_[f_] != b_.get(f_)]
+            diff += [("files", f_, a_.get(f_), b_.get(f_)) for f_ in sorted(set(a_) | set(b_)) if a_.get(f_) != b_.get(f_)]
         elif a_ != b_:
             diff.append((part_, None, None, None))
     ev_ = data.get("evidence") or {}
@@ -138,43 +142,51 @@ def key_state(data, parts_now, nums_now):
     names_ = [(d_[0], d_[1]) for d_ in diff]
     if names_ == [("l4e11_numbers", None)]:
         was_ = keyed["nums"] or {}
-        moved_ = ["%s %s -> %s" % (n_, "/".join("%g" % v_ for v_ in was_[n_]) if n_ in was_ else "missing", "/".join("%g" % v_ for v_ in nums_now[n_]))
+        moved_ = ["%s %s -> %s" % (n_, "/".join(repr(v_) for v_ in was_[n_]) if n_ in was_ else "missing", "/".join(repr(v_) for v_ in nums_now[n_]))
                   for n_ in sorted(nums_now) if was_.get(n_) != nums_now[n_]]
         refuse(4, "the cache's KEY differs from this tree in the part l4e11_numbers alone: a number the L4-E7 record reads of %s "
                   "moved (%s), so the cached results are stale for this tree; re-key the cache (l4e7_stage_settings.py --recompute, "
                   "on a rented box) before this script runs" % (L4E11_OUT, "; ".join(moved_) if keyed["nums"] else
                                                                  "the cache carries no numbers beside its KEY to name which"))
-    if names_ not in ([], [("files", L4E11_OUT)]):
+    if names_:
         refuse(4, "the cache's KEY differs from this tree in: %s; the cache is stale for this tree: re-key it "
                   "(l4e7_stage_settings.py --recompute, on a rented box) before this script runs" % key_words(diff))
-    if not names_ and not keyed["o11"]:
+    if key_of(data["parts"]) != data.get("key"):
+        refuse(4, "the cache's key field (%s) is not the key of its own parts (%s), while no part differs from this tree's: the "
+                  "record's load_cache() never renders from such a cache (its KEY does not hold); re-key it (l4e7_stage_settings.py "
+                  "--recompute, on a rented box) before this script runs" % (str(data.get("key"))[:16], key_of(data["parts"])[:16]))
+    if not keyed["o11"]:
         refuse(4, "the cache's KEY holds on this tree but the cache carries no evidence beside it (the whole sha256 of %s its "
                   "results were computed on): the record's load_cache() never renders from such a cache" % L4E11_OUT)
     return diff, keyed
 
 
+NUMBER_WORDS = ("no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen",
+                "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty")
+
+
 def para_0a(O):
-    """0a's sentence: the KEY check's result and the cache's own fields (key_state()'s keyed), never a history of who re-keyed the
-    cache or when (W64's F-1); then the figures compute() reads of l4e11_power.out at set 29's freeze and here, equal."""
+    """0a's sentence, in the one state key_state() accepts (the cache's key field the key of its own parts, no KEY part differing
+    from this tree's, so the KEY holds; W70's R-3 removed the sentence of a state no tree reaches): the cache's own fields
+    (key_state()'s keyed), never a history of who re-keyed the cache or when (W64's F-1); then the figures compute() reads of
+    l4e11_power.out at set 29's freeze and here, equal. Each claim is narrowed to what its KEY part covers (W70's R-2): the part src
+    covers the definitions compute() reaches in l4e7_stage_settings.py (render() and what only it reaches are outside it), and the
+    part l4e11_numbers the numbers the record declares and reads of l4e11_power.out (O["n11"], counted from its L4E11_NUMBERS), not
+    the file's other text."""
     figs_ = "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])
-    if O["key_diff"]:
-        d_ = O["key_diff"][0]
-        return ("The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
-                "is the file %s (%s in the cache's KEY, %s here). The figures compute() reads from it, with its own patterns, at %s "
-                "(set 29's freeze) and here: %s. EQUAL in both, so the cached results are this base's results; the cache is not "
-                "re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
-                "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % (
-                    "does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], (d_[3] or "missing")[:16], CACHE_AT, figs_))
     k_ = O["cache_keyed"]
     same_ = k_["o11"] == O["o11_sha"][1]
-    return ("The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree: no part differs, so its results "
-            "were computed on this record's source and on inputs whose KEY parts equal this tree's, the part l4e11_numbers (the "
-            "numbers the record reads of %s) among them. The cache's own fields: its parts name Python %s and %s; beside the KEY its "
-            "evidence names %s at %s, %s. The figures compute() reads from that file, with its own patterns, at %s (set 29's "
-            "freeze) and here: %s. EQUAL in both, so the cached results are this base's results." % (
-                "holds" if O["key_holds"] else "does NOT hold", L4E11_OUT, k_["python"], k_["pdftotext"], L4E11_OUT, k_["o11"][:16],
-                "the same bytes as here" if same_ else "other bytes than here (%s): a difference of prose only, since the part "
-                "l4e11_numbers holds" % O["o11_sha"][1][:16], CACHE_AT, figs_))
+    n_ = NUMBER_WORDS[O["n11"]] if O["n11"] < len(NUMBER_WORDS) else str(O["n11"])
+    return ("The record's results cache (l4e7_stage_settings.results.json): its KEY holds on this tree: its key field is the key of "
+            "its own parts and no part differs from this tree's, so its results were computed on the definitions compute() reaches "
+            "in l4e7_stage_settings.py as they read here (the part src; render() and what only it reaches are outside it) and on "
+            "inputs whose KEY parts equal this tree's, the part l4e11_numbers (the %s numbers the record reads of %s) among them. "
+            "The cache's own fields: its parts name Python %s and %s; beside the KEY its evidence names %s at %s, %s. The figures "
+            "compute() reads from that file, with its own patterns, at %s (set 29's freeze) and here: %s. EQUAL in both, so the "
+            "cached results are this base's results." % (
+                n_, L4E11_OUT, k_["python"], k_["pdftotext"], L4E11_OUT, k_["o11"][:16],
+                "the same bytes as here" if same_ else "other bytes than here (%s): a difference outside the %s numbers the record "
+                "reads, since the part l4e11_numbers holds" % (O["o11_sha"][1][:16], n_), CACHE_AT, figs_))
 
 
 # ------------------------------------------------------------------------------------------------------------------------ models
@@ -279,13 +291,14 @@ def compute():
     data = json.load(open(os.path.join(TOP, LS_CACHE), encoding="utf-8"))
     R = LS._dec(data["R"])
     # ================================================================== 0. REPRODUCTION ON THE BASE
-    # 0a. the cache's KEY: the parts that differ on this tree, and the figures compute() reads from the one input that changed
+    # 0a. the cache's KEY against this tree, and the figures compute() reads from l4e11_power.out at set 29's freeze and here
     parts_now = LS.key_parts(data["parts"]["files"])
-    O["key_holds"] = LS.key_of(parts_now) == data["key"]
-    # the P0 round read a cache computed at set 29's freeze, whose KEY differed from the tree in exactly l4e11_power.out (then keyed by
-    # its whole digest); a re-keyed cache differs in NOTHING. Both states are the record's; any other difference is a stale cache, and
-    # the sentence states only what the KEY check and the cache's own fields show (key_state(), para_0a(); W64's F-1)
-    O["key_diff"], O["cache_keyed"] = key_state(data, parts_now, LS.l4e11_numbers())
+    # one state is accepted: the cache's KEY holds on this tree (its key field the key of its own parts, no part differing) with its
+    # evidence beside it; every other state is a stale or malformed cache and refuses, the P0 round's cache keyed at set 29's freeze on
+    # l4e11_power.out's whole digest among them (since WP-B it also lacks the part l4e11_numbers; W70's R-3); the sentence states only
+    # what the KEY check and the cache's own fields show (key_state(), para_0a(); W64's F-1)
+    O["key_diff"], O["cache_keyed"] = key_state(data, parts_now, LS.l4e11_numbers(), LS.key_of)
+    O["n11"] = sum(n_ for _nm, _p, n_, _w in LS.L4E11_NUMBERS)
     src_ls = open(os.path.join(TOP, LS_PY), encoding="utf-8").read()
     pats = ((r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", "UVLO rising"),
             (r"UVLO: on at [\d.]+ / [\d.]+ / [\d.]+ V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P", "UVLO falling"),

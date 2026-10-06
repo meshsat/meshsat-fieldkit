@@ -1670,51 +1670,162 @@ def t_p0sol_the_inputs_it_pins_are_this_trees_files():
         assert _sha(os.path.join(ROOT, rel)).startswith(h), rel
 
 
+def _p0sol_key_of():
+    """The L4-E7 record's own key_of() (its module executed, nothing computed: no results(), no solver)."""
+    if "LSK" not in _CACHE:
+        sp = importlib.util.spec_from_file_location("l4e7_stage_settings_for_key_of", SCRIPT)
+        m = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(m)
+        _CACHE["LSK"] = m
+    return _CACHE["LSK"]
+
+
+def _p0sol_0a_fixture(m):
+    """A re-keyed cache on fixtures: its parts, its evidence, the numbers read here; its key field the record's key_of() of its parts."""
+    import json
+    nums = {"inp": [7.23], "ocp": [6.364, 6.8, 7.136], "scp": [10.36, 12.04, 13.87], "slew": [17.28, 20.71, 24.65],
+            "uv": [7.87, 8.14, 8.44], "uvf": [7.46, 7.66, 7.95]}
+    parts = dict(src={"compute": "a" * 16}, files={"v2/docs/records/l4e7/inputs/x.json": "1" * 64}, l4e11_numbers="d" * 64,
+                 python="3.11", pdftotext="pdftotext version 22.12.0", scans={}, solver={})
+    data = dict(key=_p0sol_key_of().key_of(parts), parts=json.loads(json.dumps(parts)),
+                evidence=dict(files={m.L4E11_OUT: "e" * 64}, l4e11_numbers=nums))
+    return nums, parts, data
+
+
+def _p0sol_key_state(m, data, parts_now, nums_now):
+    """key_state() called as the version under test takes it (W71 added its key_of argument for W70's R-4), so a fixture test of
+    R-3, R-4 or R-5 fails on 2d81d8b2's script for the defect it pins, not for the changed signature."""
+    import inspect
+    if "key_of" in inspect.signature(m.key_state).parameters:
+        return m.key_state(data, parts_now, nums_now, _p0sol_key_of().key_of)
+    return m.key_state(data, parts_now, nums_now)
+
+
+def _p0sol_refusal(fn):
+    err = io.StringIO()
+    try:
+        with contextlib.redirect_stderr(err):
+            fn()
+    except SystemExit as e:
+        return e.code, err.getvalue()
+    raise AssertionError("no refusal")
+
+
 def t_p0sol_0a_states_the_caches_own_fields_and_names_a_numbers_only_move():
     """W64's F-1 (W67, 6 October 2026), on fixtures (no solver, no run of the script): 0a's reading of the results cache accepts a
     cache whose KEY parts all equal this tree's and that carries its evidence, and takes what it says of the keying from the cache's
     own fields (the Python and pdftotext versions of its parts, the evidence's sha256 of l4e11_power.out), never from a history typed
     in the script (who re-keyed it, on what box, after which rounds); a move of the part l4e11_numbers alone refuses (exit 4) naming
     that part and the moved number; the state before WP-B's re-key (the file's whole digest in the cache's files part, the part
-    l4e11_numbers and the source moved) refuses naming each part plainly; a cache without its evidence refuses."""
+    l4e11_numbers and the source moved) refuses naming each part plainly; a cache without its evidence refuses.
+    Restated by W71 (6 October 2026) on W70's recheck: the fixture's key field is the record's key_of() of its parts (R-4: a key field
+    that is not refuses, so "k" would now refuse before the evidence is read); the other-bytes sentence pins "a difference outside
+    the sixteen numbers the record reads" in place of "a difference of prose only" (R-2: the part l4e11_numbers shows those numbers
+    equal, not that the rest of the file differs in prose only); O carries n11, the count the record declares, in place of
+    key_holds and key_diff, which para_0a() no longer reads (R-3: one state reaches it)."""
     import ast
     import json
     m = _p0sol()
-    nums = {"inp": [7.23], "ocp": [6.364, 6.8, 7.136], "scp": [10.36, 12.04, 13.87], "slew": [17.28, 20.71, 24.65],
-            "uv": [7.87, 8.14, 8.44], "uvf": [7.46, 7.66, 7.95]}
-    parts = dict(src={"compute": "a" * 16}, files={"v2/docs/records/l4e7/inputs/x.json": "1" * 64}, l4e11_numbers="d" * 64,
-                 python="3.11", pdftotext="pdftotext version 22.12.0", scans={}, solver={})
-    data = dict(key="k", parts=parts, evidence=dict(files={m.L4E11_OUT: "e" * 64}, l4e11_numbers=nums))
-
-    def refusal(fn):
-        err = io.StringIO()
-        try:
-            with contextlib.redirect_stderr(err):
-                fn()
-        except SystemExit as e:
-            return e.code, err.getvalue()
-        raise AssertionError("no refusal")
-    diff, keyed = m.key_state(data, json.loads(json.dumps(parts)), nums)
+    nums, parts, data = _p0sol_0a_fixture(m)
+    diff, keyed = _p0sol_key_state(m, data, json.loads(json.dumps(parts)), nums)
     assert diff == [] and keyed == dict(python="3.11", pdftotext="pdftotext version 22.12.0", o11="e" * 64, nums=nums), (diff, keyed)
-    code, err = refusal(lambda: m.key_state(data, dict(parts, l4e11_numbers="f" * 64), dict(nums, inp=[7.24])))
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, data, dict(parts, l4e11_numbers="f" * 64), dict(nums, inp=[7.24])))
     assert code == 4 and "differs from this tree in the part l4e11_numbers alone" in err and "(inp 7.23 -> 7.24)" in err, err
     assert "re-key the cache" in err and m.L4E11_OUT in err, err
     old = dict(key="k0", parts=dict({k: v for k, v in parts.items() if k != "l4e11_numbers"}, src={"compute": "b" * 16},
                                     files=dict(parts["files"], **{m.L4E11_OUT: "a" * 64})))
-    code, err = refusal(lambda: m.key_state(old, parts, nums))
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, old, parts, nums))
     assert code == 4 and "the file %s (aaaaaaaaaaaaaaaa in the cache's KEY, not in the KEY's files part here)" % m.L4E11_OUT in err, err
     assert "the part l4e11_numbers (the numbers the L4-E7 record reads of %s)" % m.L4E11_OUT in err and "the part src" in err, err
-    code, err = refusal(lambda: m.key_state(dict(key="k", parts=parts), parts, nums))
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, dict(key=data["key"], parts=data["parts"]), parts, nums))
     assert code == 4 and "carries no evidence beside it" in err, err
-    O = dict(key_holds=True, key_diff=[], cache_keyed=keyed, o11=[("INP high", ("7.23",), ("7.23",))], o11_sha=("c" * 64, "e" * 64))
+    O = dict(n11=16, cache_keyed=keyed, o11=[("INP high", ("7.23",), ("7.23",))], o11_sha=("c" * 64, "e" * 64))
     same, other = m.para_0a(O), m.para_0a(dict(O, o11_sha=("c" * 64, "9" * 64)))
     assert "its parts name Python 3.11 and pdftotext version 22.12.0" in same and "at eeeeeeeeeeeeeeee, the same bytes as here" in same, same
-    assert "other bytes than here (9999999999999999): a difference of prose only, since the part l4e11_numbers holds" in other, other
+    assert ("other bytes than here (9999999999999999): a difference outside the sixteen numbers the record reads, since the part "
+            "l4e11_numbers holds") in other, other
     text = open(P0SOL, encoding="utf-8").read()
     words = [c.value for f in ast.parse(text).body if isinstance(f, ast.FunctionDef) and f.name in ("key_state", "key_words", "para_0a", "render")
              for c in ast.walk(f) if isinstance(c, ast.Constant) and isinstance(c.value, str)]
     for w in ("set 30's", "re-keyed on the integrated tree", "rounds 12 to 16", "debian"):
         assert not any(w in c for c in words), w
+
+
+def t_p0sol_0a_r2_the_sentence_claims_only_what_its_key_parts_cover():
+    """W70's R-2 (W71, 6 October 2026), on fixtures: 0a's sentence claims no more than the KEY parts it reads. The part src covers
+    the definitions compute() reaches in l4e7_stage_settings.py (render() and what only it reaches are outside it), so the sentence
+    says that and not "this record's source"; the part l4e11_numbers covers the numbers the record reads of l4e11_power.out, so
+    other bytes there are "a difference outside the sixteen numbers the record reads", not "a difference of prose only". The count
+    is the record's own declaration (its L4E11_NUMBERS), set by compute() as O["n11"] (read with ast). Fails on 2d81d8b2."""
+    import ast
+    m = _p0sol()
+    _n, _p, data = _p0sol_0a_fixture(m)
+    keyed = dict(python="3.11", pdftotext="pdftotext version 22.12.0", o11="e" * 64, nums=data["evidence"]["l4e11_numbers"])
+    O = dict(n11=16, key_holds=True, key_diff=[], cache_keyed=keyed, o11=[("INP high", ("7.23",), ("7.23",))],
+             o11_sha=("c" * 64, "9" * 64))
+    s = m.para_0a(O)
+    assert "a difference outside the sixteen numbers the record reads, since the part l4e11_numbers holds" in s, s
+    assert ("computed on the definitions compute() reaches in l4e7_stage_settings.py as they read here (the part src; render() and "
+            "what only it reaches are outside it)") in s, s
+    assert "the part l4e11_numbers (the sixteen numbers the record reads of %s)" % m.L4E11_OUT in s, s
+    assert "prose only" not in s and "this record's source" not in s, s
+    assert sum(n for _nm, _p, n, _w in _p0sol_key_of().L4E11_NUMBERS) == 16
+    comp = [f for f in ast.parse(open(P0SOL, encoding="utf-8").read()).body if isinstance(f, ast.FunctionDef) and f.name == "compute"][0]
+    sets = [a for a in ast.walk(comp) if isinstance(a, ast.Assign) and any(
+        isinstance(t, ast.Subscript) and isinstance(t.slice, ast.Constant) and t.slice.value == "n11" for t in a.targets)]
+    assert len(sets) == 1 and any(isinstance(x, ast.Attribute) and x.attr == "L4E11_NUMBERS" and isinstance(x.value, ast.Name)
+                                  and x.value.id == "LS" for x in ast.walk(sets[0].value)), "compute() sets O['n11'] from LS.L4E11_NUMBERS"
+
+
+def t_p0sol_0a_r3_a_cache_differing_in_the_file_alone_refuses_and_no_dead_sentence_is_left():
+    """W70's R-3 (W71, 6 October 2026), on fixtures: key_state() accepted a cache differing from this tree in the file
+    l4e11_power.out alone, a state no tree reaches since WP-B (the part l4e11_numbers is then missing from such a cache too), and
+    para_0a() kept a sentence for it. The acceptance is gone: that state refuses (exit 4) naming the file, as every stale state does,
+    and para_0a() has no branch on a KEY difference and no word of the removed sentence (read with ast). Fails on 2d81d8b2."""
+    import ast
+    import json
+    m = _p0sol()
+    nums, parts, data = _p0sol_0a_fixture(m)
+    alone = dict(data, parts=dict(data["parts"], files=dict(data["parts"]["files"], **{m.L4E11_OUT: "a" * 64})))
+    alone["key"] = _p0sol_key_of().key_of(alone["parts"])
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, alone, json.loads(json.dumps(parts)), nums))
+    assert code == 4 and "the cache's KEY differs from this tree in: the file %s (aaaaaaaaaaaaaaaa in the cache's KEY, not in the " \
+                         "KEY's files part here); the cache is stale" % m.L4E11_OUT in err, err
+    tree = ast.parse(open(P0SOL, encoding="utf-8").read())
+    fn = {f.name: f for f in tree.body if isinstance(f, ast.FunctionDef)}
+    reads = [s for s in ast.walk(fn["para_0a"]) if isinstance(s, ast.Subscript) and isinstance(s.slice, ast.Constant)
+             and s.slice.value in ("key_diff", "key_holds")]
+    assert not reads, [ast.unparse(s) for s in reads]
+    words = [c.value for f in fn.values() for c in ast.walk(f) if isinstance(c, ast.Constant) and isinstance(c.value, str)]
+    for w in ("The only part that differs", "30 to 50 core-minutes", "is not re-keyed here", "does NOT hold"):
+        assert not any(w in c for c in words), w
+
+
+def t_p0sol_0a_r4_a_key_field_not_the_key_of_its_parts_refuses():
+    """W70's R-4 (W71, 6 October 2026), on fixtures: a cache whose parts all equal this tree's but whose key field is not the key
+    of its own parts (a hand-edited cache: the record's load_cache() never renders from it, its KEY not holding) was accepted and
+    0a then printed "its KEY does NOT hold on this tree: no part differs, so its results were computed on ...". It refuses now
+    (exit 4), naming both keys; the same cache with its key field restated is accepted. Fails on 2d81d8b2."""
+    import json
+    m = _p0sol()
+    nums, parts, data = _p0sol_0a_fixture(m)
+    bad = dict(data, key="0" * 64)
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, bad, json.loads(json.dumps(parts)), nums))
+    assert code == 4 and "the cache's key field (0000000000000000) is not the key of its own parts (%s)" % data["key"][:16] in err, err
+    assert "load_cache() never renders from such a cache" in err, err
+    diff, keyed = _p0sol_key_state(m, data, json.loads(json.dumps(parts)), nums)
+    assert diff == [] and keyed["o11"] == "e" * 64
+
+
+def t_p0sol_0a_r5_a_numbers_only_move_prints_each_value_as_its_repr():
+    """W70's R-5 (W71, 6 October 2026), on fixtures: the refusal for a move of the part l4e11_numbers alone printed each value with
+    %g (six significant digits), so a small move read "inp 7.23 -> 7.23". Each value is printed as its float's repr: "inp 7.23 ->
+    7.2300001", and a triple "ocp 6.364/6.8/7.136 -> 6.364/6.8/7.1360000001". Fails on 2d81d8b2."""
+    m = _p0sol()
+    nums, parts, data = _p0sol_0a_fixture(m)
+    code, err = _p0sol_refusal(lambda: _p0sol_key_state(m, data, dict(parts, l4e11_numbers="f" * 64),
+                                                        dict(nums, inp=[7.2300001], ocp=[6.364, 6.8, 7.1360000001])))
+    assert code == 4 and "(inp 7.23 -> 7.2300001; ocp 6.364/6.8/7.136 -> 6.364/6.8/7.1360000001)" in err, err
 
 
 def t_p0sol_the_ladder_reproduces_the_records_sense_ripple_and_takes_the_selected_network():
