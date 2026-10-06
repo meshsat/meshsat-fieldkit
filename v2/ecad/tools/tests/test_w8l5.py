@@ -204,13 +204,23 @@ def t_nothing_else_moved_and_the_bench_rows_are_still_the_registers():
     a, b = cells(moved[1][0])[-1], cells(moved[1][1])[-1]
     head, tail = "B6-ENG-1 decides (", "; (4) a reversed bench panel's curve"
     assert a[:a.index(head)] == b[:b.index(head)] and a[a.index(tail):] == b[b.index(tail):]
-    # V-E16's rows 2 and 3 are the register's R-176 rows 2 and 3, verbatim (record l5pwr's L5-F09 d wrote them so)
-    need(REG, "the register")
-    r176 = [cells(ln) for ln in open(REG, encoding="utf-8").read().split("\n") if ln.startswith("| R-176 | TEST |")]
-    assert len(r176) == 1
-    rr = r176[0][2]
-    want = rr[rr.index("(2) "):rr.index("; (4) ")]
+    # V-E16's rows 2 and 3 are the register's R-176 rows 2 and 3, verbatim (record l5pwr's L5-F09 d wrote them so): stated on the
+    # fixture, the register AS IT STOOD AT W8_COMMIT, because the register moved afterwards by one intended change: the coordinator's
+    # N1a (set 31, commit b2564b59, 6 Oct 2026) annotated row 3's U5 line alone, and the live comparison failed on exactly that
+    # (a rule that fails when its subject is fixed is a rule about history). The live register is then checked to differ from W8's by
+    # N1A_WORDS and nothing else; carrying the annotation into V-E16 itself is set 32's (it moves l4e11_power.out and the l4e7 KEY).
+    N1A_WORDS = " (under R-240, drafted, not applied: under 10 mV in magnitude, a layout check, L4E7-P0SOL.md section 5)"
+    REG_REL = "v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md"
+    def r176_rows(text):
+        rows = [cells(ln) for ln in text.split("\n") if ln.startswith("| R-176 | TEST |")]
+        assert len(rows) == 1
+        rr = rows[0][2]
+        return rr[rr.index("(2) "):rr.index("; (4) ")]
+    want = r176_rows(git_show(W8_COMMIT, REG_REL) if W8_COMMIT else tree(REG_REL))
     assert b[b.index("(2) "):b.index(" (PROVISIONAL until E-1's correction")] == want
+    need(REG, "the register")
+    live = r176_rows(open(REG, encoding="utf-8").read())
+    assert live.count(N1A_WORDS) == 1 and live.replace(N1A_WORDS, "") == want, "the live register's R-176 rows 2 and 3 differ from W8's by more than N1a's annotation"
     # the change record: one row appended, three cells
     assert l1[-2].startswith("| 2 (W8, L5-F14) |") and len(cells(l1[-2])) == 3 and l1[-1] == ""
 
