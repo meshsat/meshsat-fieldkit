@@ -63,11 +63,11 @@ merge's branch commits listed under it there):
 
 **The classification is bound by its path:** `v2/docs/records/int31/CLASSIFICATION.md`, adopted with this file. It classes each of the
 101 commits of `git rev-list dd1aed00..d5d9c252` (76 commits and 25 merges) from its diff into the brief's fixed set, and counts, first
-class per row: REVIEWED-INPUT CHANGED 21; RECORD TEXT 37; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 2; MERGE 25; TOOLING 2;
+class per row: REVIEWED-INPUT CHANGED 22; RECORD TEXT 36; GENERATOR DATA (text) 0; TEST 14; DIGEST RE-PIN 2; MERGE 25; TOOLING 2;
 total 101 (its section 2; over the 73 commits to `f0748b49` alone, REVIEWED-INPUT CHANGED 17). The class is set 30's rule (line 11 of
 `records/int30/CLASSIFICATION.md` at main `eff28be3`), its second sentence read literally as the coordinator ruled on 6 October 2026
 (reading A): a change of what cx46 read, or another row's change carried into a file of the reviewed tree, each reason saying whether
-the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 21 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
+the file was in the delta cx46 read (its 60 files plus the L4-E9 page and output). **None of the 22 REVIEWED-INPUT CHANGED commits was read by an independent checker after cx46: each is UNREVIEWED since cx46,
 never credited, and owes its own targeted verification before any credit.** The method ended with cx46's second negative, and no
 further Astra run on this candidate is authorised; passing the suite transfers no engineering verdict to them. W38, a reviewer running
 beside this record, read the lineage to `f0748b49` independently (queue item Q-57) and found it not yet fit for the freeze, in its
@@ -76,7 +76,9 @@ its other findings: F2 eleven placeholders unfilled (W10's plan step R0), F3 the
 contradicting text and tests not run, F9 not an upgrade. The coordinator acted on F1 by merging main (`d5d9c252`, row 31,
 `<worktrees>/_runs/int30/QUEUE.md`, entry "15:48 (clock) the merge of main into fnd/int31regen COMMITTED", `d5d9c252`), and W41 corrects
 F2, F4 to F8 and F10 and re-runs the chain (queue item Q-60, `__ROUND2__`). W49 compared W38's table with this one row by row, and W50
-applied W49's section 4 under reading A (CLASSIFICATION.md, the paragraph after "What this is", and section 2, "Not determined here").
+applied W49's section 4 under reading A; W51 read line by line the five rows W49 left not determined and moved one, row 31.24
+(`d5acf222`), to REVIEWED-INPUT CHANGED (CLASSIFICATION.md, the paragraphs after "What this is", and section 2, "The five rows W49
+left not determined").
 
 **The adopted branches, in W22's merge order** (`<worktrees>/_runs/int31/MERGE-LOG.md`, section 1; each with the finding it answers and
 what it restated):
@@ -248,7 +250,7 @@ candidate).
 ## 6. What set 31 closes and what it does not
 
 **Set 31 closes NO power item.** It adopts record text prepared during set 30's integration, with the regenerated outputs and pins that
-text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 21
+text moves. It changes no baseline circuit draft, no board generator and no netlist (`CLASSIFICATION.md`, section 2). Its 22
 REVIEWED-INPUT CHANGED commits narrow, tighten, restate, carry, re-take, re-adopt or annotate; none is a checked correction, and none is
 credited.
 
@@ -274,7 +276,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
 
 | Record | Path | State |
 |---|---|---|
-| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 101 commits classified over `dd1aed00..d5d9c252`; 21 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; three placeholder rows |
+| The classification of set 31 | `v2/docs/records/int31/CLASSIFICATION.md` | 101 commits classified over `dd1aed00..d5d9c252`; 22 REVIEWED-INPUT CHANGED (set 30's rule, reading A), UNREVIEWED since cx46; three placeholder rows |
 | The entry pages' set 31 rows | `v2/docs/records/int31/ENTRY-PAGES.patch.md` | patch rows for `START-HERE.md` and `SUPPLIER-HANDOVER.md`, applied by the coordinator at the adoption |
 | Set 30's adopted records | `v2/docs/records/int30/RESULT.md`, `CLASSIFICATION.md`, `v2/docs/records/l4close/L4-DESK-GATE-ASSESSMENT.md` at main | on main since the adoption `836f711b` and the follow-up `eff28be3`, in the lineage since `d5d9c252`; not in this record's branch history, so the assessment and the two entry pages are copied verbatim under `inputs/` |
 | The drafts set 31 adopts as files | `v2/docs/records/int30/RESULT.draft2.md`, `RESULT.draft3.md`, `CLASSIFICATION.draft.md`, `NEXT-SET-SMALL-ITEMS.patch.md`; `v2/docs/records/l4close/P0-POWER-LIST.rev3.draft2.md`, `.draft3.md`, `.patch.md`, `L4-DESK-GATE-ASSESSMENT.draft.md`, `.draft2.md`; `v2/docs/records/l4e9/L4E9-4588-PATCH.md`, `L4E9-W5-PATCH.md` | history and patch files; where main holds the adopted record, the adopted record governs |
@@ -297,7 +299,7 @@ implemented (NONE); physical qualification (NONE). A promoted integration set is
   no such skip today (`_bin/suite_gate_skips.tsv`). The recommendation, taken as this record's under the owner's standing rule of 26
   September 2026 and the coordinator's to apply or reverse: run those two modules in the runner pass, where `_runs` exists.
 - **Not read line by line:** the regenerated outputs of `aed4bd23` and `562edf6a` (counts and quoted phrases, `CLASSIFICATION.md`
-  section 2); W38's independent table (running beside this record; compared row by row by W49 since); five record text rows of main's
-  adoption for a carried change under reading A (`CLASSIFICATION.md`, section 2).
+  section 2); W38's independent table (running beside this record; compared row by row by W49 since). The five record text rows of main's
+  adoption that W49 left unread for a carried change were read line by line by W51 since (`CLASSIFICATION.md`, section 2).
 - No generator, suite, gate, candidate_guard, regen_out or box job was run by this record's author; every chain, test and compute line
   is copied from the logs named.
