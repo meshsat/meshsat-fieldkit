@@ -19,7 +19,10 @@ outputs", L-06's "re-cited at the chain's step a5" and L-06's note on 12.1 again
 S-09's and U-07's "no independent check of the engineering read a later revision" against the scope of the planned independent read
 of set 32's lineage (a read of the integration leaves them true; a read of the engineering restates both rows); (4) the adoption
 commit; (5) the fill's second run (the ADOPTION token, here and in the pages' two ADOPTION cells, rows S-07 and U-05, which the
-tool fills since W103's extension); (6) this header and RESULT's restated for the state after the fill and the adoption; (7) the
+tool fills since W103's extension); (6) this header and RESULT's restated for the state after the fill and the adoption, and, if paragraph 0a at the candidate no longer
+names set 30's integrator, rows S-05, U-03, L-02 and P-01's "is planned to be corrected" restated with `test_patch32.py`'s pattern
+KNOWN (W110's C2: no basis for it exists before the regenerated output, so W113 left the words; the GATE value is a clause of the
+regenerated paragraph 0a that set 31's paragraph 0a does not print, which `test_patch32.py` now requires); (7) the
 coordinator's dependency pass for the changed pages (l8gnd's pin of LAYER-STATUS and its cascade), as after set 31.
 
 Record text only: it changes no state of any page, accepts nothing and closes nothing; prototype framing: nothing in the kit has been
@@ -595,7 +598,7 @@ New text:
 ```text
 `v2/ecad/tools/tests/test_adopt31.py` holds them.
 
-**After set 32 (an adoption of record text and record tooling over set 31, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 32, directly under the layer's heading and above its set 31 block: the items set 32's records move, each naming its record; every row and note not named there keeps its set 31, set 30, set 29 or H2 text. Set 32 adopts, on set 31's promoted revision `5f25daf3`, five branches, `ee940742:v2/docs/records/int32/RESULT.md:88` `34 commits of the five branches over their bases`, regenerated to convergence, with record l4e7's results cache re-keyed ONCE; in its integration record's words, `ee940742:v2/docs/records/int32/RESULT.md:385` `**Set 32 closes NO power item.**`, and `ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 32 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 32 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: set 32's integration record at fnd/res32's `ee940742`, the assessment at `3057ae43` and W53's generator line at `4d07a401` (each in this page's history after set 32's adoption); `v2/ecad/tools/tests/test_patch32.py` holds them.
+**After set 32 (an adoption of record text and record tooling over set 31, MESHSAT-1357).** Layers 4, 5, 8, 9 and 12 open with a block headed After set 32, directly under the layer's heading and above its set 31 block: the items set 32's records move, each naming its record; every row and note not named there keeps its set 31, set 30, set 29 or H2 text. Set 32 adopts, on set 31's promoted revision `5f25daf3` (the record's BASE row; its lineage starts at main's tip `be07863b`, the chain's base, which carries set 31's adoption and follow-ups over it), five branches, `ee940742:v2/docs/records/int32/RESULT.md:88` `34 commits of the five branches over their bases`, regenerated to convergence, with record l4e7's results cache re-keyed ONCE; in its integration record's words, `ee940742:v2/docs/records/int32/RESULT.md:385` `**Set 32 closes NO power item.**`, and `ee940742:v2/docs/records/int32/RESULT.md:389` `It changes no baseline circuit draft, no board generator and no netlist`. No item is raised to MET by set 32 and no layer from 4 on is COMPLETE; nothing has been built, bought or measured. **Citations in the After set 32 blocks** read commit, path and line at the commit they name, a code span right after one being the words quoted from that line: set 32's integration record at fnd/res32's `ee940742`, the assessment at `3057ae43` and W53's generator line at `4d07a401` (each in this page's history after set 32's adoption); `v2/ecad/tools/tests/test_patch32.py` holds them.
 ```
 Basis: `v2/docs/records/int32/RESULT.md`, sections 1, 2 and 6; set 31's head paragraph (line 38) as the form.
 
@@ -613,7 +616,8 @@ New text:
 The set 31 and set 30 blocks below stand; the notes here name what set 32's records change.
 
 - The chain. REVIEWED: `4d0ff8a2`, unchanged: no independent check of the engineering read a later revision. The base: set 31's
-  promoted revision `5f25daf3`. CANDIDATE: `__CANDIDATE__`, the commit the gated release suite and the promotion gate ran on, to
+  promoted revision `5f25daf3` (the record's BASE row); the lineage starts at main's tip `be07863b`, the chain's base, which descends
+  from it. CANDIDATE: `__CANDIDATE__`, the commit the gated release suite and the promotion gate ran on, to
   which main was fast-forwarded (written at the adoption). The gate, suite_gate's verdict line over the four pass logs: `__GATE__`.
 - Record l4e7's results cache (WP-B: W61, W67, W71 on fnd/l4e7cache), `ee940742:v2/docs/records/int32/RESULT.md:387` `a change of record l4e7's cache KEY that moves no computed figure`,
   re-keyed ONCE in set 32 (`v2/docs/records/int32/RESULT.md`, sections 2h and 3c). Set 31's known item, record l4e7's paragraph 0a's
@@ -731,7 +735,7 @@ New text:
 
 **Promoted:** main `__CANDIDATE__`, the candidate on set 32's integration branch, by fast-forward, the promotion log's line: `__GATE__`.
 INTEGRATED = CANDIDATE = PROMOTED. REVIEWED: `4d0ff8a2` (cx46, "P0 RECHECK: CORRECTIONS NOT CLOSED."), unchanged: no independent
-check of the engineering read a later revision. The base: set 31's promoted `5f25daf3`; five branches, 34 commits over their bases
+check of the engineering read a later revision. The base: set 31's promoted `5f25daf3` (the record's BASE row; the lineage starts at main's tip `be07863b`, the chain's base, which descends from it); five branches, 34 commits over their bases
 (`records/int32/RESULT.md`, section 1), merged and regenerated to convergence, with record l4e7's results cache re-keyed ONCE (section
 3c). Gated by suite_gate with G7 (`_bin/suite_gate.py`), its verdict line over the four pass logs: `__GATE__`.
 The candidate_guard check, every host, its PASS line on each host in one value: `__GATE__`.

@@ -37,6 +37,11 @@ heading above the set 31 block, or the plan's entry not after set 31's; the reco
 tool finds it; an em or en dash; the paragraph after the title not the DONE / NOT DONE / NEXT line. Each predicate is also run on a
 mutant it must refuse.
 
+W113's restatement for W110's C2 (7 October 2026): after the fill the known item's value must also be absent from set 31's paragraph
+0a (at d0e283aa, the candidate that carries the KNOWN ITEM), so that it is a clause the regenerated paragraph adds, not one both print;
+the rows' words "is planned to be corrected" stay until the regenerated output exists (no basis can be stated before it), and the
+coordinator restates them, with the pattern KNOWN, at the fill if paragraph 0a no longer names set 30's integrator.
+
 W113's restatement (7 October 2026, from 01:50 CEST, on W106's N-c and W110's M3, which found a re-wrapped candidate_guard line passing
 every test while the fill tool's three-host NOTE fell silent): P-01's candidate_guard line is one physical line holding its GATE token
 (p_rows), and after the fill its value is three parts joined by "; ", each "candidate_guard: PASS candidate <the candidate>" as
@@ -64,6 +69,7 @@ PINS = ("62300318cbf256a178659d7635ecfd4a318c47d3",   # set 32's chain pins othe
         "5ee1e66eb8787a788647305509ae6c2700144d9a")
 A5 = ("62300318cbf256a178659d7635ecfd4a318c47d3", "v2/docs/records/w42cite/apply_supplier_0e_pointer.py")  # the chain's step a5
 P0SOL = "v2/docs/records/l4e7/l4e7_p0sol.out"         # set 31's known item: its paragraph 0a at the candidate (W99's C2)
+S31_CAND = "d0e283aa52ceb7f303358862b539161b721475e5"  # W113 (W110's C2): set 31's candidate, whose paragraph 0a carries the KNOWN ITEM
 KNOWN_ROWS = ("S-05", "U-03", "L-02", "P-01")
 # W113 (W106's N-c, W110's M3): P-01's candidate_guard line stands as ONE physical line with its GATE on it, so the fill tool's suggestion
 # (fill_res.py's "candidate_guard check, every host", hosts=3) reaches the token and its three-host NOTE fires; after the fill the value
@@ -536,13 +542,16 @@ def p_known(rows, result):
     30's integrator (W99's C2)."""
     by, bad = {r[0]: _flat(r[7]) for r in rows}, []
     st, cand, _a = _fill_stage(result)
-    para = None
+    para = old = None
     if st in (1, 2):
         if not _has(cand):
             raise Skip("the candidate %s is not in this repository" % cand[:8])
         para = _para_0a(cand)
         if para is None:
             return ["%s at the candidate prints no paragraph 0a" % P0SOL]
+        if not _has(S31_CAND):
+            raise Skip("set 31's candidate %s is not in this repository" % S31_CAND[:8])
+        old = _para_0a(S31_CAND)
     for rid in KNOWN_ROWS:
         txt = by.get(rid, "")
         ms = KNOWN.findall(txt)
@@ -555,6 +564,9 @@ def p_known(rows, result):
             bad.append("%s: the known item's value is written before the fill" % rid)
         if para is not None and _flat(ms[0].strip('"')) not in para:
             bad.append("%s: the known item's value is not in paragraph 0a at the candidate: %r" % (rid, ms[0][:60]))
+        if old is not None and _flat(ms[0].strip('"')) in old:     # W113 (W110's C2): a fragment set 31's 0a also prints shows nothing
+            bad.append("%s: the known item's value also stands in set 31's paragraph 0a at %s, so it shows no change: %r"
+                       % (rid, S31_CAND[:8], ms[0][:60]))
         if re.search(r"\bis corrected\b", txt) and (para is None or "set 30's integrator" in para):
             bad.append("%s: says the known item is corrected, which paragraph 0a at the candidate does not show" % rid)
     return bad
@@ -806,6 +818,9 @@ def t_set_31s_known_item_reads_paragraph_0a_at_the_candidate():
         m = re.search(r"records/l4e7/l4e7_p0sol\.out` at the candidate prints in its paragraph 0a: `([^`]+)`", t)
         assert p_known(_rows(t.replace("paragraph 0a: `%s`" % m.group(1), "paragraph 0a: `a sentence 0a never printed`", 1)), result), \
             "a value outside paragraph 0a passed"
+        # W113 (W110's C2): a fragment that set 31's paragraph 0a prints too (WP-B's 0a and set 31's both begin so)
+        assert p_known(_rows(t.replace("paragraph 0a: `%s`" % m.group(1), "paragraph 0a: `its KEY holds on this tree`", 1)), result), \
+            "a fragment of set 31's paragraph 0a passed"
 
 
 def t_the_tokens_are_the_rows_and_the_fill_stage_is_resultss():
