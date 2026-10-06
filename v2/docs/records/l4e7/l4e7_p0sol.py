@@ -52,7 +52,6 @@ GEN_NETLIST = "v2/docs/records/l8p/gen_netlist.py"
 NETREAD = "v2/docs/records/l8p/check_l8p_netlist.py"
 L4E11_OUT = "v2/docs/records/l4e11/l4e11_power.out"
 CACHE_AT = "69921ce8"          # set 29's freeze: the commit whose l4e11_power.out the figure comparison of 0a reads (in this branch's history)
-KEY_AT = "c2a532a9"            # set 30's re-key of the cache (6 October 2026): the commit whose l4e11_power.out the cache KEY holds (git log -- the cache)
 LT = "v2/vendor/power/lt8705a.pdf"
 I169 = "v2/vendor/ti/held/ti-ina169-sbos181f.pdf"
 TPS = "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"
@@ -99,6 +98,83 @@ def git(*args):
     if r.returncode != 0:
         refuse(3, "git %s failed" % " ".join(args))
     return r.stdout
+
+
+# ------------------------------------------------------------------------------------------------------- 0a, the results cache
+def key_words(diff):
+    """The KEY parts of key_state()'s diff, named plainly (0a's refusal text)."""
+    w_ = []
+    for part_, f_, a_, b_ in diff:
+        if part_ == "files":
+            w_.append("the file %s (%s in the cache's KEY, %s)" % (f_, (a_ or "missing")[:16], ("%s here" % b_[:16]) if b_ else
+                                                                     "not in the KEY's files part here"))
+        elif part_ == "l4e11_numbers":
+            w_.append("the part l4e11_numbers (the numbers the L4-E7 record reads of %s)" % L4E11_OUT)
+        else:
+            w_.append("the part %s" % part_)
+    return "; ".join(w_)
+
+
+def key_state(data, parts_now, nums_now):
+    """0a's reading of the record's results cache (data, the committed results.json) against this tree (parts_now, the record's
+    key_parts() here; nums_now, its l4e11_numbers() here): (diff, keyed). diff: every KEY part either side holds that differs, by
+    name, and for the files part each differing file with both digests. keyed: what the cache's own fields record of its keying,
+    never a history typed here (W64's F-1, 6 October 2026): the Python and pdftotext versions its parts hold, and beside the KEY its
+    evidence (the whole sha256 of l4e11_power.out its results were computed on, and the numbers read of it). Accepted: no part
+    differs and the evidence is there, or (the P0 round's base, a cache keyed on the file's whole digest) the file
+    l4e11_power.out alone. Anything else refuses (exit 4), naming the parts plainly; a move of the part l4e11_numbers alone (a
+    number the record reads of l4e11_power.out moved, and nothing else) refuses with the numbers named."""
+    diff = []
+    for part_ in sorted(set(data["parts"]) | set(parts_now)):
+        a_, b_ = data["parts"].get(part_), parts_now.get(part_)
+        if part_ == "files":
+            a_, b_ = a_ or {}, b_ or {}
+            diff += [("files", f_, a_[f_], b_.get(f_)) for f_ in sorted(a_) if a_[f_] != b_.get(f_)]
+        elif a_ != b_:
+            diff.append((part_, None, None, None))
+    ev_ = data.get("evidence") or {}
+    keyed = dict(python=data["parts"].get("python"), pdftotext=data["parts"].get("pdftotext"),
+                 o11=(ev_.get("files") or {}).get(L4E11_OUT), nums=ev_.get("l4e11_numbers"))
+    names_ = [(d_[0], d_[1]) for d_ in diff]
+    if names_ == [("l4e11_numbers", None)]:
+        was_ = keyed["nums"] or {}
+        moved_ = ["%s %s -> %s" % (n_, "/".join("%g" % v_ for v_ in was_[n_]) if n_ in was_ else "missing", "/".join("%g" % v_ for v_ in nums_now[n_]))
+                  for n_ in sorted(nums_now) if was_.get(n_) != nums_now[n_]]
+        refuse(4, "the cache's KEY differs from this tree in the part l4e11_numbers alone: a number the L4-E7 record reads of %s "
+                  "moved (%s), so the cached results are stale for this tree; re-key the cache (l4e7_stage_settings.py --recompute, "
+                  "on a rented box) before this script runs" % (L4E11_OUT, "; ".join(moved_) if keyed["nums"] else
+                                                                 "the cache carries no numbers beside its KEY to name which"))
+    if names_ not in ([], [("files", L4E11_OUT)]):
+        refuse(4, "the cache's KEY differs from this tree in: %s; the cache is stale for this tree: re-key it "
+                  "(l4e7_stage_settings.py --recompute, on a rented box) before this script runs" % key_words(diff))
+    if not names_ and not keyed["o11"]:
+        refuse(4, "the cache's KEY holds on this tree but the cache carries no evidence beside it (the whole sha256 of %s its "
+                  "results were computed on): the record's load_cache() never renders from such a cache" % L4E11_OUT)
+    return diff, keyed
+
+
+def para_0a(O):
+    """0a's sentence: the KEY check's result and the cache's own fields (key_state()'s keyed), never a history of who re-keyed the
+    cache or when (W64's F-1); then the figures compute() reads of l4e11_power.out at set 29's freeze and here, equal."""
+    figs_ = "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])
+    if O["key_diff"]:
+        d_ = O["key_diff"][0]
+        return ("The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
+                "is the file %s (%s in the cache's KEY, %s here). The figures compute() reads from it, with its own patterns, at %s "
+                "(set 29's freeze) and here: %s. EQUAL in both, so the cached results are this base's results; the cache is not "
+                "re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
+                "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % (
+                    "does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], (d_[3] or "missing")[:16], CACHE_AT, figs_))
+    k_ = O["cache_keyed"]
+    same_ = k_["o11"] == O["o11_sha"][1]
+    return ("The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree: no part differs, so its results "
+            "were computed on this record's source and on inputs whose KEY parts equal this tree's, the part l4e11_numbers (the "
+            "numbers the record reads of %s) among them. The cache's own fields: its parts name Python %s and %s; beside the KEY its "
+            "evidence names %s at %s, %s. The figures compute() reads from that file, with its own patterns, at %s (set 29's "
+            "freeze) and here: %s. EQUAL in both, so the cached results are this base's results." % (
+                "holds" if O["key_holds"] else "does NOT hold", L4E11_OUT, k_["python"], k_["pdftotext"], L4E11_OUT, k_["o11"][:16],
+                "the same bytes as here" if same_ else "other bytes than here (%s): a difference of prose only, since the part "
+                "l4e11_numbers holds" % O["o11_sha"][1][:16], CACHE_AT, figs_))
 
 
 # ------------------------------------------------------------------------------------------------------------------------ models
@@ -206,20 +282,10 @@ def compute():
     # 0a. the cache's KEY: the parts that differ on this tree, and the figures compute() reads from the one input that changed
     parts_now = LS.key_parts(data["parts"]["files"])
     O["key_holds"] = LS.key_of(parts_now) == data["key"]
-    diff = []
-    for part_ in data["parts"]:
-        if part_ == "files":
-            diff += [("files", f_, data["parts"]["files"][f_], parts_now["files"].get(f_)) for f_ in sorted(data["parts"]["files"])
-                     if data["parts"]["files"][f_] != parts_now["files"].get(f_)]
-        elif data["parts"][part_] != parts_now[part_]:
-            diff.append((part_, None, None, None))
-    O["key_diff"] = diff
-    # the P0 round read a cache computed at set 29's freeze, whose KEY differed from the tree in exactly l4e11_power.out; set 30's
-    # integration re-keyed the cache on the integrated tree, so the KEY now differs in NOTHING (6 October 2026, the regeneration after the
-    # re-key: this check refused the current cache as "more than" the one file with an empty list). Both states are the record's; any
-    # other difference is a stale cache.
-    if [(d_[0], d_[1]) for d_ in diff] not in ([], [("files", L4E11_OUT)]):
-        refuse(4, "the cache's KEY differs from this tree in more than %s: %s" % (L4E11_OUT, [(d_[0], d_[1]) for d_ in diff]))
+    # the P0 round read a cache computed at set 29's freeze, whose KEY differed from the tree in exactly l4e11_power.out (then keyed by
+    # its whole digest); a re-keyed cache differs in NOTHING. Both states are the record's; any other difference is a stale cache, and
+    # the sentence states only what the KEY check and the cache's own fields show (key_state(), para_0a(); W64's F-1)
+    O["key_diff"], O["cache_keyed"] = key_state(data, parts_now, LS.l4e11_numbers())
     src_ls = open(os.path.join(TOP, LS_PY), encoding="utf-8").read()
     pats = ((r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", "UVLO rising"),
             (r"UVLO: on at [\d.]+ / [\d.]+ / [\d.]+ V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P", "UVLO falling"),
@@ -935,21 +1001,7 @@ def render(O, K, R, b6, r3, K2):
     P("")
     # ---------------------------------------------------------------- 0
     P("0. REPRODUCTION ON THE BASE (fnd/p0base e132db0e), before any change")
-    if O["key_diff"]:
-        d_ = O["key_diff"][0]
-        wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree. The only part that differs "
-             "is the file %s (%s at %s, set 30's re-key of this cache, against %s here). The figures compute() reads from it, "
-             "with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's results; the cache is "
-             "not re-keyed here (the record's own recompute, 30 to 50 core-minutes, is the integrator's on a rented box, and the "
-             "record's tests read the cache through results(), which recomputes whenever the KEY does not hold)." % ("does NOT hold" if not O["key_holds"] else "holds", d_[1], d_[2][:16], KEY_AT, (d_[3] or "missing")[:16],
-                                    "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
-    else:
-        wrap("  0a ", "     ", "The record's results cache (l4e7_stage_settings.results.json): its KEY %s on this tree: no part differs, the cache "
-             "was re-keyed on the integrated tree by set 30's integrator (a rented debian:12 box, Python 3.11 and pdftotext 22.12.0 as the "
-             "runner's) after L4-E11's rounds 12 to 16 had moved %s (%s at %s, set 29's freeze, against %s here). The figures compute() "
-             "reads from that file, with its own patterns, in both versions: %s. EQUAL in both, so the cached results are this base's "
-             "results and the re-keyed cache's alike." % ("holds" if O["key_holds"] else "does NOT hold", L4E11_OUT, O["o11_sha"][0][:16], CACHE_AT, O["o11_sha"][1][:16],
-                                    "; ".join("%s %s" % (w_, "/".join(a_)) for w_, a_, _b in O["o11"])))
+    wrap("  0a ", "     ", para_0a(O))
     wrap("  0b ", "     ", "render(cache) against the committed l4e7_stage_settings.out: BYTE-IDENTICAL (sha256 %s)." % O["out_sha"][:16])
     d16 = O["d16"]
     wrap("  0c ", "     ", "D-16 recomputed by the record's own sense_ripple on its cached parameters (the as-drafted split; 25 V in, the "

@@ -1670,6 +1670,53 @@ def t_p0sol_the_inputs_it_pins_are_this_trees_files():
         assert _sha(os.path.join(ROOT, rel)).startswith(h), rel
 
 
+def t_p0sol_0a_states_the_caches_own_fields_and_names_a_numbers_only_move():
+    """W64's F-1 (W67, 6 October 2026), on fixtures (no solver, no run of the script): 0a's reading of the results cache accepts a
+    cache whose KEY parts all equal this tree's and that carries its evidence, and takes what it says of the keying from the cache's
+    own fields (the Python and pdftotext versions of its parts, the evidence's sha256 of l4e11_power.out), never from a history typed
+    in the script (who re-keyed it, on what box, after which rounds); a move of the part l4e11_numbers alone refuses (exit 4) naming
+    that part and the moved number; the state before WP-B's re-key (the file's whole digest in the cache's files part, the part
+    l4e11_numbers and the source moved) refuses naming each part plainly; a cache without its evidence refuses."""
+    import ast
+    import json
+    m = _p0sol()
+    nums = {"inp": [7.23], "ocp": [6.364, 6.8, 7.136], "scp": [10.36, 12.04, 13.87], "slew": [17.28, 20.71, 24.65],
+            "uv": [7.87, 8.14, 8.44], "uvf": [7.46, 7.66, 7.95]}
+    parts = dict(src={"compute": "a" * 16}, files={"v2/docs/records/l4e7/inputs/x.json": "1" * 64}, l4e11_numbers="d" * 64,
+                 python="3.11", pdftotext="pdftotext version 22.12.0", scans={}, solver={})
+    data = dict(key="k", parts=parts, evidence=dict(files={m.L4E11_OUT: "e" * 64}, l4e11_numbers=nums))
+
+    def refusal(fn):
+        err = io.StringIO()
+        try:
+            with contextlib.redirect_stderr(err):
+                fn()
+        except SystemExit as e:
+            return e.code, err.getvalue()
+        raise AssertionError("no refusal")
+    diff, keyed = m.key_state(data, json.loads(json.dumps(parts)), nums)
+    assert diff == [] and keyed == dict(python="3.11", pdftotext="pdftotext version 22.12.0", o11="e" * 64, nums=nums), (diff, keyed)
+    code, err = refusal(lambda: m.key_state(data, dict(parts, l4e11_numbers="f" * 64), dict(nums, inp=[7.24])))
+    assert code == 4 and "differs from this tree in the part l4e11_numbers alone" in err and "(inp 7.23 -> 7.24)" in err, err
+    assert "re-key the cache" in err and m.L4E11_OUT in err, err
+    old = dict(key="k0", parts=dict({k: v for k, v in parts.items() if k != "l4e11_numbers"}, src={"compute": "b" * 16},
+                                    files=dict(parts["files"], **{m.L4E11_OUT: "a" * 64})))
+    code, err = refusal(lambda: m.key_state(old, parts, nums))
+    assert code == 4 and "the file %s (aaaaaaaaaaaaaaaa in the cache's KEY, not in the KEY's files part here)" % m.L4E11_OUT in err, err
+    assert "the part l4e11_numbers (the numbers the L4-E7 record reads of %s)" % m.L4E11_OUT in err and "the part src" in err, err
+    code, err = refusal(lambda: m.key_state(dict(key="k", parts=parts), parts, nums))
+    assert code == 4 and "carries no evidence beside it" in err, err
+    O = dict(key_holds=True, key_diff=[], cache_keyed=keyed, o11=[("INP high", ("7.23",), ("7.23",))], o11_sha=("c" * 64, "e" * 64))
+    same, other = m.para_0a(O), m.para_0a(dict(O, o11_sha=("c" * 64, "9" * 64)))
+    assert "its parts name Python 3.11 and pdftotext version 22.12.0" in same and "at eeeeeeeeeeeeeeee, the same bytes as here" in same, same
+    assert "other bytes than here (9999999999999999): a difference of prose only, since the part l4e11_numbers holds" in other, other
+    text = open(P0SOL, encoding="utf-8").read()
+    words = [c.value for f in ast.parse(text).body if isinstance(f, ast.FunctionDef) and f.name in ("key_state", "key_words", "para_0a", "render")
+             for c in ast.walk(f) if isinstance(c, ast.Constant) and isinstance(c.value, str)]
+    for w in ("set 30's", "re-keyed on the integrated tree", "rounds 12 to 16", "debian"):
+        assert not any(w in c for c in words), w
+
+
 def t_p0sol_the_ladder_reproduces_the_records_sense_ripple_and_takes_the_selected_network():
     """The periodic model P0-7 writes out is the record's sense_ripple term for term on the as-drafted split (to 1e-12 V), and
     with RSENSE1 removed it returns the bank's current, which at the 25 V corner never reverses."""
