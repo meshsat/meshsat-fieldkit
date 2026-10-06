@@ -431,15 +431,15 @@ The first candidate FAILED its gate and was not promoted; it is SUPERSEDED by th
 and `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite-box.log:4034` `EXIT 1`; the other three passes read 0 failed (the summary
 line above).
 
-**The two causes** (the coordinator's diagnosis as its brief to W83 states it, each read here against the log):
+**The two causes** (the coordinator's diagnosis in its dated entry, each read here against the log):
 
 1. **A test-suite rule failed on tests of set 31's own lineage** (G2, G3 and both G4 lines): `<worktrees>/_runs/int31s1/superseded-d0e283aa/suite-box.log:3347` `fixed-size source windows in the suite: 87 against the declared 83`;
-   the four windows over the declared count were added on set 31's lineage (`<worktrees>/_runs/claude/w83res31b/BRIEF.md:6` `in test_w11l9t5.py and test_w4l4e7.py`). It was not found before the
-   freeze: `test_rule_windows` is a whole-suite rule, and no test log of the lineage under
-   `_runs/int31` (section 3d, the dependents' pass) names it.
-2. **The suite changed a tracked page on the box** (G6): `pcb_interfaces.yaml` changed on the lineage (rows 3.1, `8840adda`, and 13,
-   `f08dbb97`) after the INT-001 readings that the installed evidence carried, so a page-writing test rewrote
-   `v2/docs/CURRENT-EVIDENCE.md` on the box (`<worktrees>/_runs/claude/w83res31b/BRIEF.md:6` `pcb_interfaces.yaml changed on the lineage (8840adda, f08dbb97) after the INT-001 readings`).
+   the four windows over the declared count came in on the lineage, `<worktrees>/_runs/int30/QUEUE.md`, entry "about 21:45 to 21:47 THE FOUR-LOG GATE ON d0e283aa FAILED", `test_w11l9t5.py 0 -> 2 (3057ae43, 29422b2c), test_w4l4e7.py 0 -> 2 (3057ae43, b76c1480, bf44eb8c)`.
+2. **The suite changed a tracked page on the box** (G6): `<worktrees>/_runs/int30/QUEUE.md`, entry "about 21:45 to 21:47 THE FOUR-LOG GATE ON d0e283aa FAILED", `pcb_interfaces.yaml (interfaces.py's config input) changed on set 31's lineage (8840adda 03:52, f08dbb97 05:37) after the INT-001 readings (26 Sep), so INT-001 read AWAITING_REVALIDATION (CONFIG_CHANGED) on every board and a page-writing test rewrote CURRENT-EVIDENCE.md on the box`
+   (rows 3.1 and 13 of the classification).
+
+**Why neither was found before the freeze**, in the coordinator's words: `<worktrees>/_runs/int30/QUEUE.md`, entry "about 21:45 to 21:47 THE FOUR-LOG GATE ON d0e283aa FAILED", `the preflight's affected-test selection never picks a global ratchet (no literal names a changed file), the runner pass runs 7 modules, and neither checks rule readings against their config's commits`
+(two items added to W82's preflight task, queue item Q-102).
 
 Neither cause is in a circuit draft, a figure, a verdict or a case: one is a defect of the lineage's tests, the other a stale
 reading in the evidence the freeze installed. Both are defects the four-log gate exists to find, and it refused the candidate on them.
@@ -448,14 +448,16 @@ reading in the evidence the freeze installed. Both are defects the four-log gate
 `test_w4l4e7.py` (+15 -2) and `test_w11l9t5.py` (+4 -1): the first reads the note and the D-16 sentence to their own raw
 paragraph's end, the second matches each run at its own length. Its commit message states the basis (`test_rule_windows`'s declared
 count, which may fall and never rise) and the measured paragraph lengths, two mutants it refuses and its own run of
-`test_rule_windows`, `test_w4l4e7` and `test_w11l9t5`, 23 passed, 0 failed. No independent reader has read the correction; whether
+`test_rule_windows`, `test_w4l4e7` and `test_w11l9t5`, 23 passed, 0 failed. A first attempt was rejected before any commit: `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `a first attempt bounded by blank lines on the NORMALISED page ran to the page's end, 25672 characters: rejected by the coordinator as a weakening before any commit`.
+No independent reader has read the correction; whether
 the second candidate's suite holds is the gate's (section 4).
 
-**The re-take.** The coordinator re-took INT-001 (`interfaces.py`) on the committed tree `5f25daf3`, `<worktrees>/_runs/claude/w83res31b/BRIEF.md:8` `re-took interfaces.py on the committed tree (21:49:00; the`;
-the re-taken verdict carries its own stamp (`ts` 2026-10-06T19:49:00Z, `version` 5f25daf3762e, verdict PASS; the int31 worktree's
-gitignored evidence, `v2/ecad/out/interfaces.verdict.json`), and the evidence page re-renders byte-identical,
-`<worktrees>/_runs/claude/w83res31b/BRIEF.md:9` `rules_render: 16 document(s), 0 out of date`. The re-take is evidence, not a
-commit: it changes no tracked file.
+**The re-take.** The coordinator re-took INT-001 (`interfaces.py`) on the committed tree `5f25daf3`, `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `interfaces.py re-taken from v2/ecad on the committed tree (21:49:00; "verdict: interfaces PASS of 12 ... disagreements 0"; inputs name pcb_interfaces.yaml b0ea9ce43308e789)`;
+the re-taken verdict carries its own stamp (`ts` 2026-10-06T19:49:00Z, `version` 5f25daf3762e; the int31 worktree's gitignored
+evidence, `v2/ecad/out/interfaces.verdict.json`). A first run from the wrong folder wrote evidence where it does not belong and was
+undone before the correct run: `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `A first run from v2/ecad/tools wrote into tools/out (six evidence files overwritten, two created): restored from the tar and removed`.
+The evidence page re-renders byte-identical, `<worktrees>/_runs/int30/QUEUE.md`, entry "21:48 to 21:52 CORRECTION", `rules_render: 16 document(s), 0 out of date`. The re-take is evidence,
+not a commit: it changes no tracked file; the second candidate's evidence tar carries it (`<worktrees>/_runs/int30/QUEUE.md`, entry "21:52 to 22:05 RE-FREEZE of the NEW CANDIDATE", `tar 191877120 bytes (the same 997 paths; the re-taken readings)`).
 
 **The coordinator's known item, carried and not corrected in set 31.** Record l4e7's paragraph 0a on the regenerated output is
 printed by the script's typed template: `d0e283aa:v2/docs/records/l4e7/l4e7_p0sol.out:31` `its KEY holds on this tree: no part differs`
@@ -500,9 +502,10 @@ adoption from the second freeze's logs (never from the first's).
   `<worktrees>/_runs/vast/LOG-20261006.md:23` `RENTED 54526562 meshsat-1357-recbox31-2041`, at the listed 0.0681 and 0.0516 USD/h
   (copied, not measured costs); the records box stopped after its fetch,
   `<worktrees>/_runs/vast/LOG-20261006.md:24` `STOPPED after the fetch of the records pass (disk kept)`; their passes are section
-  4a's (the first candidate's, FAILED at the gate). The suite box's stop and any box of the second candidate's freeze come after the
-  vast log's line 24, as this record was last written.
-- No other instance was rented for set 31 to the first candidate's gate (the vast log's lines 13 to 24 name these five boxes alone); every earlier instance stays
+  4a's (the first candidate's, FAILED at the gate). For the second candidate's freeze the suite box was relaunched and a fresh records
+  box rented, `<worktrees>/_runs/vast/LOG-20261006.md:25` `RENTED 54535223 meshsat-1357-recbox31-2202` (the stopped 54526562 did not
+  resume); their stops come after the vast log's line 25, as this record was last written.
+- No other instance was rented for set 31 to the second candidate's freeze (the vast log's lines 13 to 25 name these six boxes alone); every earlier instance stays
   stopped with its disk kept, none destroyed (the vast log's 10:38 line, `<worktrees>/_runs/vast/LOG-20261006.md:12` `Running instances: none.`).
 
 ## 6. What set 31 closes and what it does not
